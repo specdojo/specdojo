@@ -1,3 +1,4 @@
+import { setRegisterInput } from "./input.js";
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { atomicWriteFile, prepareRegisterEventFile, type TicketStatus } from "./core.js";
@@ -77,6 +78,7 @@ export function applyItemUpdate(opts: {
   action?: string;
   title?: string;
   description?: string;
+  inputs?: string[];
   fieldUpdates?: RegisterItemFieldUpdates;
   eventAction: RegisterEventAction;
   eventActor: string;
@@ -100,6 +102,9 @@ export function applyItemUpdate(opts: {
     const lines = [`Would update ${ticketPath} (${opts.updated.id} ${label}):`];
     if (opts.title !== undefined) lines.push(`  title: ${opts.title}`);
     if (opts.description !== undefined) lines.push(`  description: ${opts.description}`);
+    if (opts.inputs !== undefined) {
+      lines.push(`  input: ${opts.inputs.length ? JSON.stringify(opts.inputs) : "-"}`);
+    }
     lines.push(formatRegisterItemFields(updates));
     process.stdout.write(`${lines.join("\n")}\n`);
     return;
@@ -111,6 +116,7 @@ export function applyItemUpdate(opts: {
   if (opts.description !== undefined) {
     content = setRegisterItemDescription(content, opts.description);
   }
+  if (opts.inputs !== undefined) content = setRegisterInput(content, opts.inputs);
   content = applyRegisterItemFields(content, updates);
   const event = buildRegisterEvent({
     beforeContent,

@@ -489,6 +489,7 @@ specdojo schedule strategy generate \
 
 | オプション                   | 用途                                                                | 対象                                             |
 | ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `--input <text>`             | 個票の前提を記録（繰り返し可、update は一覧置換、`-` 単独で全削除） | `add` / `update`                                 |
 | `--track <track>`            | epic が担う track（epic で必須、update で置換、削除不可）           | `add` / `update`                                 |
 | `--to <PJR-ID>`              | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
 | `--registered <datetime>`    | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
@@ -516,6 +517,8 @@ specdojo schedule strategy generate \
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
+
+`--input <text>` は、対話で得た前提・制約・委任範囲を個票本文の `入力` 節へ指定順に記録します。`update` で未指定なら保持し、指定すれば一覧を置換します。追記するときは既存分も含めて再指定し、`--input -` 単独で全削除します。add での `-`、空文字、削除と他の値の混在は拒否します。既存個票に節がなければ更新時に追加します。event の `input` は変更前後の JSON 配列を保持し、空は `-` で表します。register から生成する plan は approach の有無によらず、入力がある場合だけ完了条件とは別の「個票の入力（前提）」へ載せます。
 
 `--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は、成果物カタログを優先して doc id を解決します。カタログがなくても、既存文書は文書索引と frontmatter から、新規文書は明示したパスと rulebook から解決できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
 

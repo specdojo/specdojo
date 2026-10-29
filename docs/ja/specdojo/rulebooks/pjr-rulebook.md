@@ -117,6 +117,7 @@ Project Register Documentation Rules
 | 末尾 | 関連ドキュメント | ○    | 根拠、影響先、追跡先を文書 ID で示す   |
 
 - H1 は `PJR-XXXX <タイトル>` 形式とする。
+- 実行対象の `todo`・`issue`・`change-request`・`question`・`risk` の個票は、対話で得た前提・制約・委任範囲を箇条書きで残す `入力` 節を持つ。入力がない場合は `-` とする。完了条件・回答の確定条件とは分ける。既存個票に節がなくても読み込め、初回の入力更新時に節を追加する。
 - `epic` は概要、範囲（track と domain）、完了の判断の基準、子項目、対応結果、関連ドキュメントを持つ。範囲には domain と境界、完了の基準には子項目と schedule を確認する判断条件、対応結果には人が完了を判断した根拠を記録する。
 - 子 todo は `--from <epic-id>` で起票する。`derived_from` を逆引きした epic 別ビューは直接の子を type と状態付きで表示し、子がない epic も表示する。別 project の子は project 修飾 ID で識別する。孫を再帰的に含めず、状態の自動集約や自動 close は行わない。
 - type 固有の構成は `todo` の概要・完了条件・作業内容・対応結果など、各 type 用テンプレートに従う。
@@ -157,6 +158,9 @@ Project Register Documentation Rules
 - カタログなしの完了基準は個票の完了条件と rulebook とする。recipe・sample・template は rulebook frontmatter から辿り、`not-needed` のものを対象に含めない。`fully-guided` の必要な一式、`recipe-guided` の recipe が不足する場合は起票・更新を拒否する。
 - カタログなしの `bootstrap` は `target_path`、新しい `target_rulebook`、設定の `kata_authority` を必須とする。既存 rulebook を再利用しない。rulebook の名前部分から recipe・sample・template の ID を導出し、`docs/ja/specdojo/<kind>s/<kata_authority>/` に配置する候補を plan へ示す。成果物には新しい `specdojo.rulebook` を記録する。
 - `finalize`・`bootstrap-finalize` は既存成果物だけを対象にし、カタログなしでは個票の完了条件を確認チェック表にする。後者は成果物と frontmatter から辿る kata 一式を確定対象とする。
+
+- 対話で得た前提は `register add --input <text>` で個票本文の `入力` へ記録する。繰り返し指定した順に箇条書きとし、`register update --input` は指定した一覧で置換する。追記する場合は既存分を含めて渡し、`--input -` 単独で全削除する。未指定時は保持する。空文字、削除指定と他の入力の混在、add での削除指定は拒否する。
+- 入力の変更は event の `input` フィールドへ変更前後の JSON 配列として記録し、値がない場合は `-` とする。register 経由の plan は approach の有無を問わず、入力がある場合だけ「個票の入力（前提）」に展開する。入力を完了条件へ転記しない。
 
 ### 5.2. 構造化フィールドと生成
 

@@ -1,3 +1,4 @@
+import { registerInputSection } from "../register/input.js";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { DEFAULT_PROJECT_CONTEXT } from "../shared/specdojo-config.js";
@@ -67,6 +68,7 @@ function buildEditPlanMarkdown(
     targets?: readonly string[];
     refs?: KataRefs;
     authoring?: AuthoringPlanFields;
+    registerInput?: readonly string[];
     additionalConditions?: string;
   },
 ): string {
@@ -104,8 +106,9 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_NAME_: deliverableName(deliverable),
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _DELIVERABLE_BASED_ON_: deliverableBasedOn(deliverable),
-    // Input/brief producers are introduced by follow-up tasks; keep explicit empty slots meanwhile.
-    _REGISTER_INPUT_: "なし",
+    _REGISTER_INPUT_: registerInputSection(planOverrides?.registerInput)
+      ? "下記「個票の入力（前提）」を参照。"
+      : "なし",
     _DELIVERABLE_BRIEF_: "なし",
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
@@ -168,9 +171,22 @@ function buildEditPlanMarkdown(
         )
         .join("\n")
     : template;
-  let body = expandTemplate(effectiveTemplate, values);
+  const visibleTemplate =
+    planOverrides?.origin === "register" && !planOverrides.registerInput?.length
+      ? effectiveTemplate
+          .split("\n")
+          .filter((line) => !line.includes("_REGISTER_INPUT_"))
+          .join("\n")
+      : effectiveTemplate;
+  let body = expandTemplate(visibleTemplate, values);
   if (deliverable?.catalogless && task.approach === "retrofit") {
     body = body.replace("成果物カタログの `evidence_refs` から展開した", "個票に明記する");
+  }
+  const inputSection = registerInputSection(planOverrides?.registerInput);
+  if (inputSection) {
+    body = body.includes("_COMMON_CONVENTIONS_")
+      ? body.replace("_COMMON_CONVENTIONS_", `${inputSection}\n_COMMON_CONVENTIONS_`)
+      : `${body.trimEnd()}\n\n${inputSection}`;
   }
   if (!planOverrides?.additionalConditions) return body;
   const section = [
@@ -239,7 +255,6 @@ function buildReviewPlanMarkdown(
     _DELIVERABLE_NAME_: deliverableName(deliverable),
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _DELIVERABLE_BASED_ON_: deliverableBasedOn(deliverable),
-    // Input/brief producers are introduced by follow-up tasks; keep explicit empty slots meanwhile.
     _REGISTER_INPUT_: "なし",
     _DELIVERABLE_BRIEF_: "なし",
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
@@ -309,6 +324,7 @@ async function writeTaskPlan(
     targets?: readonly string[];
     refs?: KataRefs;
     authoring?: AuthoringPlanFields;
+    registerInput?: readonly string[];
     additionalConditions?: string;
   },
 ): Promise<string> {
@@ -480,6 +496,7 @@ export async function generateRegisterApproachPlan(opts: {
   deliverable?: DeliverableInfo | null;
   refs?: KataRefs;
   authoring?: AuthoringPlanFields;
+  registerInput?: readonly string[];
   additionalConditions: string;
   outPath?: string;
   stem: string;
@@ -503,6 +520,7 @@ export async function generateRegisterApproachPlan(opts: {
     targets: opts.targets,
     ...(opts.refs ? { refs: opts.refs } : {}),
     ...(opts.authoring ? { authoring: opts.authoring } : {}),
+    registerInput: opts.registerInput,
     additionalConditions: opts.additionalConditions,
     ...(opts.outPath ? { outPath: opts.outPath } : {}),
     stem: opts.stem,

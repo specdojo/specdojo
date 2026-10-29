@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-10-28T22:22:22Z"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-65DS
   depends_on:
@@ -52,8 +51,9 @@ specdojo:
 - register 経由の plan では approach 付きの成果物・kata の plan と、approach なしの edit / investigate plan の両方に「個票の入力（前提）」を追加した。入力は完了条件とは別節にし、未入力なら節も参照行も載せない。既存の `_REGISTER_INPUT_` 差し込み口を使い、`draft` / `fully-guided` の参照一覧から前提節へ案内する。入力は plan 生成時に個票から読み直す。
 - pjr-rulebook・register-operation-guide・command-reference と `CHANGELOG.md` の Unreleased を更新した。公開済みの版の節は変更していない。
 - 回帰テストを追加した。CLI の反復指定・保持・一覧置換・削除・冪等性・dry-run・topic 同時変更・既存個票への節追加、event の往復、複数行とコード例、外部起票、approach 有無と入力有無による plan の展開を対象とする。
+- 再開時の修正: 前回の親単体テストで失敗した `fully-guided` の未入力判定を修正した。テンプレートの一般的な参照方針にも「個票の入力」が登場するため、文字列全体の不在ではなく、未入力時の参照行と前提節の不在を確認する。`draft` / `fully-guided` の両方で未入力時の省略を検証し、入力がある場合は参照行から前提節への案内も確認する。単体テストの再実行は親 runner に委ねる。
 - 保護された設定の変更案: `.agents/specdojo-orchestrator.agent.md` の「起票では `--title` と `--description` を具体的に書く。」段落の後ろへ、次の文を追加する。「対話で得た前提・制約・調査や選定を任せる範囲は、起票時に `--input <text>` を繰り返して個票の `入力` へ記録する。完了条件とは分け、会話で確認できた事実と明示的な委任範囲だけを書く。更新時の `--input` は一覧置換なので、追記では既存分も含めて渡し、全削除は `--input -` とする。」運用メモが保護対象と定め、完了条件も案の記録を指定しているため、正本と各環境のラッパーは変更していない。次の作業は、権限のある環境で正本へ反映し `npm run orchestrator:sync` と `npm run lint:orchestrator-sync` を実行すること。
-- 検証: 変更ファイルの Prettier 整形、対象 Markdown の検査、変更した event schema による本個票の event ログ検証、catalog 検証、register build、`git diff --check` が成功した。catalog は未作成成果物に関する警告のみでエラーはない。型検査、TypeScript / Frontmatter / Markdown lint、schema、単体 / 統合テストの7件は pipeline 指示に従い親 runner が実行して evidence へ追記する。
+- 検証（再開後）: 変更ファイルの Prettier 整形、変更した event schema による本個票の event ログ検証、catalog 検証、register build、`git diff --check` が成功した。catalog は未作成成果物に関する警告のみでエラーはない。型検査、TypeScript / Frontmatter / Markdown lint、schema、単体 / 統合テストの7件は pipeline 指示に従い親 runner が実行して evidence へ追記する。
 - 統合後の確認: register / exec の変更を含むため、運用メモに従い PJR-JSEY で実 CLI の start から review までを確認する。
 
 ## 5. 関連ドキュメント

@@ -38,7 +38,10 @@ describe("draft and fully-guided plans", () => {
 
   afterEach(() => rmSync(root, { recursive: true, force: true }));
 
-  async function registerPlan(approach: "draft" | "fully-guided"): Promise<string> {
+  async function registerPlan(
+    approach: "draft" | "fully-guided",
+    registerInput?: string[],
+  ): Promise<string> {
     const path = await generateRegisterApproachPlan({
       executionPath: join(root, "execution"),
       projectId: "test",
@@ -49,6 +52,7 @@ describe("draft and fully-guided plans", () => {
       approach,
       targets: ["test:proposal"],
       deliverable: info,
+      registerInput,
       additionalConditions: "指定範囲を完了する。",
       stem: `register-${approach}`,
     });
@@ -76,7 +80,6 @@ describe("draft and fully-guided plans", () => {
       "`depends_on`",
       "[[test:upstream]]",
       "`project_context`",
-      "個票の `入力`: なし",
       "カタログの `brief`: なし",
       "出典つき",
       "成果物内の文脈",
@@ -93,12 +96,37 @@ describe("draft and fully-guided plans", () => {
     }
   });
 
+  it.each(["draft", "fully-guided"] as const)(
+    "%s の入力がない register plan は前提節と入力の参照行を省く",
+    async (approach) => {
+      const plan = await registerPlan(approach);
+      expect(plan).not.toContain("## 個票の入力（前提）");
+      expect(plan).not.toMatch(/^- 個票の `入力`:/m);
+      expect(plan).not.toContain("_REGISTER_INPUT_");
+    },
+  );
+
+  it.each(["draft", "fully-guided"] as const)(
+    "%s の入力を完了条件と別の前提に載せる",
+    async (approach) => {
+      const plan = await registerPlan(approach, ["技術調査を任せる", "対象は `api_version`"]);
+      expect(plan).toContain("## 個票の入力（前提）");
+      expect(plan).toContain("- 技術調査を任せる");
+      expect(plan).toContain("対象は `api_version`");
+      expect(plan).toContain("- 個票の `入力`: 下記「個票の入力（前提）」を参照。");
+      const inputPosition = plan.indexOf("## 個票の入力（前提）");
+      const conditionPosition = plan.indexOf("## 個票の追加完了条件");
+      expect(inputPosition).toBeLessThan(conditionPosition);
+      expect(plan.slice(conditionPosition)).not.toContain("技術調査を任せる");
+      expect(plan).not.toContain("_REGISTER_INPUT_");
+    },
+  );
+
   it("fully-guided の register plan は based_on を読み、宣言された参照だけで磨く", async () => {
     const plan = await registerPlan("fully-guided");
     expect(plan).toContain("磨き込み専用");
     expect(plan).toContain("宣言された文書だけ");
     expect(plan).toContain("`based_on`（対象成果物の frontmatter）: [[test:upstream]]");
-    expect(plan).toContain("個票の `入力`: なし");
     expect(plan).toContain("カタログの `brief`: なし");
     expect(plan).toContain("磨き込みでは template は読み込まない");
     expect(plan).toContain("`_CONTEXT_:` が残っている場合");

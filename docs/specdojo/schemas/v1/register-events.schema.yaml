@@ -63,6 +63,7 @@ $defs:
           - status
           - title
           - description
+          - input
           - type
           - track
           - priority

@@ -26,6 +26,7 @@ export type RegisterAddFields = {
   track?: string;
   title: string;
   description: string;
+  inputs?: string[];
   priority: string;
   difficulty?: RegisterDifficulty;
   status: string;
@@ -92,6 +93,7 @@ export type ApplyItemUpdateOptions = {
   action?: string;
   title?: string;
   description?: string;
+  inputs?: string[];
   fieldUpdates?: RegisterItemFieldUpdates;
   eventAction: RegisterEventAction;
   eventActor: string;
@@ -164,6 +166,7 @@ export type RegisterCommandDependencies = {
     dryRun: boolean;
     title?: string;
     description?: string;
+    inputs?: string[];
     actor?: string;
     reason?: string;
   }) => void;
