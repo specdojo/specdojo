@@ -28,18 +28,24 @@ remark がファイルごとにプラグインを読み込み直すため、PJR-
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `packages/docs-lint/src/deliverable-type.cjs` の rulebook の一覧を、同じプロセスの中ではワークスペースのルートごとに 1 回だけ作り、remark のプラグインがファイルごとに読み込み直されても使い回す。remark の照合と `yaml-schema` の照合の両方に効く。
+- 照合の結果は変えない。利用リポジトリの rulebook が package 同梱の rulebook より優先される規則、`deliverable_type` の宣言の読み方、エラーと警告の文言を維持し、既存のテストが通る。
+- 単体テストで、checker を複数回作っても（プラグインの読み込みを複数回繰り返しても）一覧の作成が 1 回だけであることを確かめる。
+- 可能なら、修正前後の `lint:fm` の所要時間か、同じ条件の remark の所要時間を本個票の対応結果に書く。sandbox で測れない場合は、測れなかったことを書く。
+- `CHANGELOG.md` の `## [Unreleased]` 節の `不具合修正` に追記し、`@specdojo/docs-lint` の次の版で公開することを書く。`0.5.0` と公開済みの版の節は変えない。`packages/docs-lint` の版は変えない。
+- 作業の中で `npm run typecheck`・`npm run lint:ts`・`npm run lint:md`・`npm run test:unit` が通り、親の検証 7 件が通る。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                               | 担当     | 状態 | メモ |
+| --- | ---------------------------------- | -------- | ---- | ---- |
+| 1   | 一覧をワークスペースごとに使い回す | executor | open | -    |
+| 2   | テストと CHANGELOG を更新する      | executor | open | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-484b-deliverable-type-declaration]]
