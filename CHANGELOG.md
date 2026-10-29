@@ -4,6 +4,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+`@specdojo/docs-lint` 0.3.1 を 2026-10-29 に公開しました（下記の不具合修正のうち PJR-SC8T の修正を含みます）。`specdojo`・`@specdojo/docs-site` の版は変わりません。ほかの項目は次の版で公開します。
+
 ### 追加機能
 
 - `register add` / `update` に繰り返し指定できる `--input` を追加しました。対話で得た前提を個票の `入力` 節と event に記録し、register 経由の plan へ完了条件とは別に渡します。update は一覧置換、`--input -` は全削除です（PJR-6DD7）。
