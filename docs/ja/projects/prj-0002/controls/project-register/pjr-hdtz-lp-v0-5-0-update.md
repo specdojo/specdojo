@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: BA
   registered_at: "2026-10-29T10:37:31Z"
   due_on: "2026-10-31"
-  block_reason: "parent validation failed: lint-fm"
 ---
 
 # PJR-HDTZ specdojo-lp に v0.5.0 までの変更を反映する
@@ -77,6 +76,8 @@ register の epic を含む 8 種類と `depends_on`、init の markdownlint 設
 
 ### 4.4. 検証と申し送り
 
+- 再開時に前回の LP 差分と完了条件を再照合した。前回の `lint-md` の MD056 は、本個票の表内の文書リンクで区切りをエスケープし忘れたことが原因だったため、分割されたセルを修復した。前回の親検証 `lint-fm` はタイムアウトであり、検査エラーは示されていない。両検証の最終確認は親 runner の再実行に委ねる。
+- 再開後のソース確認では Astro parser と TypeScript parser を用い、3 コンポーネントの構文と編集前後のタグ・属性・式の構造が一致することを確認した。`GetStarted.astro`・`NextSteps.astro` の HTML テンプレート全体は不変で、8 種類の重複もない。表示コマンド例を再抽出し、`bash -n` が成功した。本個票の全表が見出しと同じ列数であることも確認した。
 - Node.js と TypeScript によるソース確認で、3 コンポーネントのタグと属性が編集前と一致し、`GetStarted.astro`・`NextSteps.astro` の HTML テンプレート全体が不変であることを確認した。`RegisterTypes.astro` は表示文言と既存のカード生成処理への epic のデータ追加だけを変えた。8 種類の重複がないこと、frontmatter の構文、コマンド例の改行継続も確認した。実際に出力される HTML の確認は sandbox 外のビルドに引き継ぐ。
 - ソース確認では Node.js から Git 子プロセスを起動すると `EPERM` になったため、shell で取得した編集前のソースを読み込む形で再実行し、成功した。
 - 表示する shell コマンド例を抽出し、`bash -n` による構文検査が成功した。導入・起票・実行の例自体は実行していない。

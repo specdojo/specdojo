@@ -1,0 +1,12 @@
+parent validation: lint-fm
+exit code: unknown
+timed out: yes
+
+--- stdout ---
+
+> specdojo@0.5.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
