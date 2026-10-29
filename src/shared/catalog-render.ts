@@ -22,6 +22,7 @@ export type DctDeliverableItem = {
   kind: DctKind;
   depends_on?: string[];
   overview: string;
+  brief?: string;
   path?: string;
   rulebook?: string | "undecided" | "not-needed";
   evidence_refs?: EvidenceRef[];

@@ -13,6 +13,8 @@ SpecDojo の利用者に影響する変更を記録します。
 - 成果物内の文脈の目印 `_CONTEXT_:` を定めました。`draft` で反映した指示を result に記録し、`fully-guided` では未反映の指示を論点として残します。finalize の確認と文書 lint で残りを検出し、lint は `ready` で error、それ以外で warning とします（PJR-JRSY）。
 - `draft` approach を追加しました。文脈で任された範囲を調べて下書きし、選定値を提案として示して出典と選定理由を記録します。register・schedule・plan で使えます（PJR-3MY5）。
 
+- 成果物カタログ（dct）の成果物に `brief` を追加しました。成果物の外から継続して渡す前提（技術スタックや制約など）を記載でき、schedule の task の plan および register 経由の plan に「前提」として反映します。`brief` が無い場合は plan に載せません。複数成果物で共有する場合は YAML アンカーを利用できます（PJR-YKMA）。
+
 ### 変更
 
 - `@specdojo/docs-lint` の `_CONTEXT_:` の検出において、`status: ready` 以外の文書では warning ではなく情報（info）として報告するように変更しました。下書き時に `_CONTEXT_:` を残したまま実行しても `--frail` 付きの `npm run lint:fm` が失敗せず、親の検証を妨げません。`status: ready` の文書では従来どおり error として失敗させます（PJR-D0GB）。

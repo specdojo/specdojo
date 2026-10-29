@@ -18,6 +18,7 @@ import {
   crossDeliverableTargetDetails,
   deliverableDependsOn,
   deliverableBasedOn,
+  deliverableBrief,
   deliverableName,
   deliverableOverview,
   deliverablePath,
@@ -109,7 +110,7 @@ function buildEditPlanMarkdown(
     _REGISTER_INPUT_: registerInputSection(planOverrides?.registerInput)
       ? "下記「個票の入力（前提）」を参照。"
       : "なし",
-    _DELIVERABLE_BRIEF_: "なし",
+    _DELIVERABLE_BRIEF_: deliverableBrief(deliverable),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: deliverable?.catalogless
@@ -171,13 +172,20 @@ function buildEditPlanMarkdown(
         )
         .join("\n")
     : template;
+  const hasBrief = Boolean(deliverable?.deliverable.brief?.trim());
+  const templateWithoutBrief = hasBrief
+    ? effectiveTemplate
+    : effectiveTemplate
+        .split("\n")
+        .filter((line) => !line.includes("_DELIVERABLE_BRIEF_"))
+        .join("\n");
   const visibleTemplate =
     planOverrides?.origin === "register" && !planOverrides.registerInput?.length
-      ? effectiveTemplate
+      ? templateWithoutBrief
           .split("\n")
           .filter((line) => !line.includes("_REGISTER_INPUT_"))
           .join("\n")
-      : effectiveTemplate;
+      : templateWithoutBrief;
   let body = expandTemplate(visibleTemplate, values);
   if (deliverable?.catalogless && task.approach === "retrofit") {
     body = body.replace("成果物カタログの `evidence_refs` から展開した", "個票に明記する");
@@ -256,7 +264,7 @@ function buildReviewPlanMarkdown(
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _DELIVERABLE_BASED_ON_: deliverableBasedOn(deliverable),
     _REGISTER_INPUT_: "なし",
-    _DELIVERABLE_BRIEF_: "なし",
+    _DELIVERABLE_BRIEF_: deliverableBrief(deliverable),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
@@ -276,7 +284,14 @@ function buildReviewPlanMarkdown(
     _GRADE_SUMMARY_: reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),
     _DONE_CRITERIA_ROWS_: reviewDoneCriteriaRows(applicableCriteria),
   };
-  return expandTemplate(template, values);
+  const hasBrief = Boolean(deliverable?.deliverable.brief?.trim());
+  const visibleTemplate = hasBrief
+    ? template
+    : template
+        .split("\n")
+        .filter((line) => !line.includes("_DELIVERABLE_BRIEF_"))
+        .join("\n");
+  return expandTemplate(visibleTemplate, values);
 }
 
 // ---------------------------------------------------------------------------

@@ -129,6 +129,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 | `depends_on` | 任意 | 依存する成果物の `local_id` 配列。なければ空配列 `[]` |
 | `overview` | ○ | 成果物の目的を1文で記述 |
+| `brief` | 任意 | 成果物の外から継続して渡す前提（技術スタックや制約など） |
 | `path` | ○（`work`） | 成果物のファイルパス |
 | `rulebook` | 任意 | rulebook の文書 ID、未判断なら `undecided`、不要なら `not-needed` |
 | `evidence_refs` | 任意 | `retrofit` で読む非成果物エビデンス |
@@ -268,6 +269,13 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - blocking な `open_questions`、未解決 placeholder、重複 `local_id`、存在しない `depends_on`、schema 違反が一件でもあれば、その domain のファイルを一件も書き込まない。
 - 既存カタログとの差分は `--dry-run` で確認する。既存ファイルは既定で保護し、内容が異なる場合の上書きには `--force` を必要とする。同一入力の再実行で内容が同じ場合は書き込まない。
 - 生成されたカタログの `status` は template に従い `draft` のままとする。生成成功を理由に Timeline の `catalog_status` を `primary` へ変更せず、人間の内容確認後に別途更新する。
+
+### 6.14. `brief`・`overview`・`done_criteria` の使い分けと YAML アンカー
+
+- `overview`: 成果物の目的・責務を 1 文で記述する。カタログの表・一覧（Markdown 表示ページ）に配置され、ドメイン全体の俯瞰や成果物の責務把握に用いる。
+- `brief`: 成果物の外から継続して渡す前提（採用する技術スタック、アーキテクチャ上の制約、設計・選定方針など）を記述する。schedule の task の plan や register 経由の plan に「前提」として展開される。未指定の場合は plan に載せない。
+- `done_criteria`: 成果物が満たすべき完了条件・受入基準を記述する。ロールコード（`roles`）とレビュー観点（`viewpoint`）を紐づけ、客観的に検証可能な形で記載する。前提や指示そのものはここに書かず、成果物が達成した検証可能な振る舞い・状態を記載する。
+- 複数の成果物で前提を共有する場合は、YAML のアンカー（`&anchor`）とエイリアス（`*anchor`）を利用して記述の重複を防ぐ。同一カタログファイル内で共通の前提をアンカー定義し、各成果物の `brief` から参照する。
 
 ## 7. 禁止事項
 
