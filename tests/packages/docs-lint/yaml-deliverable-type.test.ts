@@ -8,7 +8,7 @@ import { load } from "../../../src/shared/yaml.js";
 import { buildValidator } from "../../helpers/schema.js";
 
 const require = createRequire(import.meta.url);
-const createChecker = require("../../../packages/docs-lint/src/deliverable-type.cjs") as (
+const createChecker = require("../../../packages/docs-lint/src/deliverable-type.cjs") as ((
   root: string,
 ) => (
   metadata: unknown,
@@ -16,9 +16,13 @@ const createChecker = require("../../../packages/docs-lint/src/deliverable-type.
   source: string,
   hasSchema: boolean,
   format: "yaml",
-) => string[];
+) => string[]) & {
+  clearCache: (root?: string) => void;
+  buildRulebookIndex: (root: string) => Map<string, unknown>;
+};
 const directories: string[] = [];
 afterEach(() => {
+  createChecker.clearCache();
   for (const directory of directories.splice(0))
     rmSync(directory, { recursive: true, force: true });
 });
@@ -90,12 +94,13 @@ describe("YAML deliverable metadata", () => {
     expect(check(root, { type: "api", rulebook: "team:missing-rulebook" })).toEqual([
       expect.stringContaining("was not found"),
     ]);
-    const file = join(root, "docs/ja/specdojo/rulebooks/other.md");
+    const ambiguousRoot = workspace();
+    const file = join(ambiguousRoot, "docs/ja/specdojo/rulebooks/other.md");
     writeFileSync(file, "---\nspecdojo:\n  id: other:example-rulebook\n  type: rulebook\n---\n");
-    expect(check(root, { type: "api", rulebook: "example-rulebook" })).toEqual([
+    expect(check(ambiguousRoot, { type: "api", rulebook: "example-rulebook" })).toEqual([
       expect.stringContaining("is ambiguous"),
     ]);
-    expect(check(root, { type: "api", rulebook: "other:example-rulebook" })).toEqual([
+    expect(check(ambiguousRoot, { type: "api", rulebook: "other:example-rulebook" })).toEqual([
       expect.stringContaining("must declare deliverable_type"),
     ]);
   });

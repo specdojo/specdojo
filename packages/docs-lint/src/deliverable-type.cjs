@@ -54,8 +54,28 @@ function buildRulebookIndex(workspaceRoot) {
   return index;
 }
 
-module.exports = function createDeliverableTypeChecker(workspaceRoot) {
-  let index;
+const workspaceIndexCache = new Map();
+
+function getRulebookIndex(workspaceRoot) {
+  const resolvedRoot = path.resolve(workspaceRoot || process.cwd());
+  let index = workspaceIndexCache.get(resolvedRoot);
+  if (!index) {
+    index = (createDeliverableTypeChecker.buildRulebookIndex ?? buildRulebookIndex)(resolvedRoot);
+    workspaceIndexCache.set(resolvedRoot, index);
+  }
+  return index;
+}
+
+function clearCache(workspaceRoot) {
+  if (workspaceRoot) {
+    workspaceIndexCache.delete(path.resolve(workspaceRoot));
+  } else {
+    workspaceIndexCache.clear();
+  }
+}
+
+function createDeliverableTypeChecker(workspaceRoot) {
+  const resolvedRoot = path.resolve(workspaceRoot || process.cwd());
   return function check(metadata, relativePath, source, hasArtifactSchema, format = "markdown") {
     const isYaml = format === "yaml";
     const isRecord = (value) =>
@@ -106,7 +126,7 @@ module.exports = function createDeliverableTypeChecker(workspaceRoot) {
     const ref = target?.rulebook;
     if (typeof ref !== "string" || ref === "none") return legacyErrors;
 
-    index ??= buildRulebookIndex(workspaceRoot);
+    const index = getRulebookIndex(resolvedRoot);
     const candidates = ref.includes(":")
       ? (index.get(ref) ?? [])
       : [...index.entries()]
@@ -131,4 +151,9 @@ module.exports = function createDeliverableTypeChecker(workspaceRoot) {
       `${field}: ${JSON.stringify(target.type) ?? "missing"} does not match rulebook ${ref}; declared deliverable_type is ${JSON.stringify(rulebook.deliverable_type)}. Set type to ${JSON.stringify(rulebook.deliverable_type)}.`,
     ];
   };
-};
+}
+
+createDeliverableTypeChecker.clearCache = clearCache;
+createDeliverableTypeChecker.buildRulebookIndex = buildRulebookIndex;
+
+module.exports = createDeliverableTypeChecker;

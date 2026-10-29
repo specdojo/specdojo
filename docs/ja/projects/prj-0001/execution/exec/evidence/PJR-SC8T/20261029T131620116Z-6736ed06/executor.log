@@ -1,0 +1,28 @@
+I will wait for the format check background task to complete.
+バックグラウンドで実行中のフォーマット検査タスクの完了を待機しています。
+フォーマット確認タスクの終了通知を待機します。
+プロジェクト登録簿の項目 **PJR-SC8T**（`deliverable_type` の照合が rulebook の一覧をファイルごとに作り直し lint:fm が遅い）の executor 対応を完了しました。
+
+### 実施内容
+
+1. **ワークスペースごとの rulebook 一覧キャッシュの実装**:
+   - [deliverable-type.cjs](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SC8T/packages/docs-lint/src/deliverable-type.cjs) にプロセス共通の `workspaceIndexCache`（`Map`）を導入しました。
+   - `getRulebookIndex(workspaceRoot)` により、ワークスペースのルートパス（絶対パス）ごとに `buildRulebookIndex` の生成結果をキャッシュし、remark プラグインのファイル単位の再生成や `validate-yaml-schema` の照合時にも一覧を再利用するようにしました。
+   - テスト間の独立性を保つため `createDeliverableTypeChecker.clearCache` を公開し、テスト監視用に `createDeliverableTypeChecker.buildRulebookIndex` も公開しました。
+
+2. **単体テストの更新と追加**:
+   - [deliverable-type.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SC8T/tests/packages/docs-lint/deliverable-type.test.ts):
+     - checker を複数回生成したり remark プラグインの呼び出しを繰り返したりしても、同一ワークスペース内での `buildRulebookIndex` の呼び出しが初回の 1 回のみであることを `vi.spyOn` で検証する単体テストを追加しました。
+     - `afterEach` で `clearCache` を呼ぶようにし、途中で同一ワークスペースに rulebook を追記していたテストケースを、キャッシュ仕様に合わせて独立したワークスペースを使う形へ更新しました。
+   - [yaml-deliverable-type.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SC8T/tests/packages/docs-lint/yaml-deliverable-type.test.ts):
+     - `afterEach` で `clearCache` を実行するように整備し、同一ワークスペースへの後から追加テストケースを独立ワークスペースに分離しました。
+
+3. **Changelog の更新**:
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SC8T/CHANGELOG.md): `## [Unreleased]` 節に `### 不具合修正` を新設し、rulebook 一覧のキャッシュ化による `lint:fm` 高速化と、本修正が `@specdojo/docs-lint` の次の版（0.3.1）で公開される旨を記載しました。
+
+4. **個票の更新**:
+   - [pjr-sc8t-deliverable-type-index-cache.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SC8T/docs/ja/projects/prj-0001/controls/project-register/pjr-sc8t-deliverable-type-index-cache.md): 作業内容（No 1, No 2 を `done`）および対応結果を記載しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"deliverable_type 照合時の rulebook 一覧をワークスペースごとにキャッシュし、単体テストと CHANGELOG を更新しました。","handoff":["利用者の判断（案 A）に従い、rulebook 一覧のワークスペースごとのキャッシュ化を実施しました。本修正を @specdojo/docs-lint 0.3.1 として公開する版の変更・公開作業は、本項目の完了後に orchestrator または人間が別タスクで行う必要があります。","完了条件 4（所要時間計測）の申し送り: SpecDojo parent runner の検証規約により npm run lint:fm は sandbox 内での実行が禁止されている（parent runner が executor 終了後に自動検証する）ため、sandbox 内での全体 lint:fm 所要時間の直接計測は実施していません。単体テスト上で buildRulebookIndex の呼び出しが初回 1 回のみとなり、2 回目以降はキャッシュから即時返却されることを確認しています。"],"validations":[{"command":"npx prettier --check packages/docs-lint/src/deliverable-type.cjs tests/packages/docs-lint/deliverable-type.test.ts tests/packages/docs-lint/yaml-deliverable-type.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-sc8t-deliverable-type-index-cache.md","status":"passed","summary":"変更した 5 ファイルの Prettier コードスタイル検査に合格"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML スキーマ検査は対象外","reason":"変更ファイルに *.yaml または *.yml が含まれないため"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"カタログ検証は対象外","reason":"prj-0001 に catalog_path が設定されていないため"}]}
+</specdojo_executor_evidence>
