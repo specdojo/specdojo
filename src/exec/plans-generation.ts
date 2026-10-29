@@ -16,6 +16,7 @@ import {
   applicableReviewCriteria,
   crossDeliverableTargetDetails,
   deliverableDependsOn,
+  deliverableBasedOn,
   deliverableName,
   deliverableOverview,
   deliverablePath,
@@ -102,6 +103,10 @@ function buildEditPlanMarkdown(
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
+    _DELIVERABLE_BASED_ON_: deliverableBasedOn(deliverable),
+    // Input/brief producers are introduced by follow-up tasks; keep explicit empty slots meanwhile.
+    _REGISTER_INPUT_: "なし",
+    _DELIVERABLE_BRIEF_: "なし",
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: deliverable?.catalogless
@@ -233,6 +238,10 @@ function buildReviewPlanMarkdown(
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
+    _DELIVERABLE_BASED_ON_: deliverableBasedOn(deliverable),
+    // Input/brief producers are introduced by follow-up tasks; keep explicit empty slots meanwhile.
+    _REGISTER_INPUT_: "なし",
+    _DELIVERABLE_BRIEF_: "なし",
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),

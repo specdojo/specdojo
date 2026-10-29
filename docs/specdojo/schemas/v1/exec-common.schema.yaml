@@ -48,6 +48,7 @@ $defs:
     type: string
     enum:
       [
+        "draft",
         "fully-guided",
         "recipe-guided",
         "freeform",
@@ -69,7 +70,7 @@ $defs:
       ]
     description: >
       How the task is carried out. catalog-planning and strategy-planning create a catalog
-      or schedule strategy from register-only domain:<id> / track:<id> targets. fully-guided/recipe-guided/freeform describe how strictly
+      or schedule strategy from register-only domain:<id> / track:<id> targets. draft researches and drafts within delegated context; fully-guided refines existing deliverables using declared references. fully-guided/recipe-guided/freeform describe how strictly
       the agent follows reference materials (rulebook/recipe/sample/template) when working on
       a deliverable. bootstrap authors the deliverable and its full reference set
       (rulebook/recipe/sample/template) together in one task as a mutually consistent whole;

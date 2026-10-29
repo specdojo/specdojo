@@ -32,6 +32,8 @@ export type StrategyProfile = {
 
 type StrategyProfileApproach = Exclude<
   Approach,
+  // The scaffold/context/draft profile is supplied by a follow-up task; explicit phases accept draft.
+  | "draft"
   | "catalog-planning"
   | "strategy-planning"
   | "rulebook-authoring"
@@ -307,7 +309,7 @@ export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile>
 export function profileFor(approach: Approach): StrategyProfile {
   if (!(approach in STRATEGY_PROFILES)) {
     throw new Error(
-      `Approach "${approach}" has no schedule strategy profile; kata authoring and planning approaches are register-only`,
+      `Approach "${approach}" has no schedule strategy profile; declare phases explicitly or select a supported generated profile`,
     );
   }
   return STRATEGY_PROFILES[approach as StrategyProfileApproach];

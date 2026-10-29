@@ -99,6 +99,7 @@ properties:
             approach:
               enum:
                 [
+                  draft,
                   fully-guided,
                   recipe-guided,
                   freeform,
@@ -368,6 +369,7 @@ $defs:
   Approach:
     type: string
     enum:
+      - draft
       - fully-guided
       - recipe-guided
       - freeform
