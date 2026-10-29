@@ -5,6 +5,7 @@ import type { Plugin } from "unified";
 import type { Root, Table, TableRow } from "mdast";
 import type { VFile } from "vfile";
 import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
+import { validateContextMarkers } from "./context-marker.js";
 
 // ── Schema types ─────────────────────────────────────────────────────────────
 
@@ -442,6 +443,7 @@ const remarkMdContent: Plugin<[MdContentOptions], Root> = function (options) {
   const workspaceRoot = options.workspaceRoot ?? process.cwd();
 
   return function transformer(tree: Root, file: VFile): void {
+    validateContextMarkers(tree, file);
     const currentPath = file.path ? resolve(String(file.path)) : "";
     if (!currentPath) return;
     const relativePath = toPosix(relative(workspaceRoot, currentPath));

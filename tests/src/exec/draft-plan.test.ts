@@ -65,6 +65,9 @@ describe("draft and fully-guided plans", () => {
     expect(plan).toContain("出典と選定理由を result");
     expect(plan).toContain("任されていない範囲は従来どおり _TODO_ / _ASSUMPTION_");
     expect(plan).toContain("元の指示を result に写す");
+    expect(plan).toContain("目印と元の指示を消し");
+    expect(plan).toContain("元の指示と反映箇所を報告の `handoff` に書き");
+    expect(plan).toContain("反映できない指示は削除せず");
     for (const text of [
       "- rulebook",
       "- recipe",
@@ -98,6 +101,10 @@ describe("draft and fully-guided plans", () => {
     expect(plan).toContain("個票の `入力`: なし");
     expect(plan).toContain("カタログの `brief`: なし");
     expect(plan).toContain("磨き込みでは template は読み込まない");
+    expect(plan).toContain("`_CONTEXT_:` が残っている場合");
+    expect(plan).toContain("その指示を本文へ反映・削除せず");
+    expect(plan).toContain("必要な下書きを論点として result");
+    expect(plan).toContain("報告の `handoff` に記載");
   });
 
   it.each(["draft", "fully-guided"] as const)(
@@ -140,6 +147,12 @@ describe("draft and fully-guided plans", () => {
       expect(plan).toContain(`approach: ${approach}`);
       expect(plan).toContain("[[test:upstream]]");
       expect(plan).toContain("個票の `入力`: なし");
+      if (approach === "draft") {
+        expect(plan).toContain("目印と元の指示を消し、元の指示を result に写す");
+      } else {
+        expect(plan).toContain("その指示を本文へ反映・削除せず");
+        expect(plan).toContain("必要な下書きを論点として result");
+      }
     },
   );
 
