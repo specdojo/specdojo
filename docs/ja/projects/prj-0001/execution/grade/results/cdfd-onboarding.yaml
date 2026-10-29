@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-10-17T16:13:25.903Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-29T16:21:10.527Z"
+graded_by: flash-high-executor
 content_hash: 49e33de5aa2be69433cf813bbcbd95b37a6266c4c857b20a7fb30db27b4f47c1
 source_hashes:
   catalog-entry: 120624db7390ebb96f5026a38ef9b2ee246bb4f3507249afcfe423e507bedbf2
@@ -203,7 +203,7 @@ findings:
     message: >-
       Explicit technical constraints and validation schemas for the Kata and execution configuration data stores should
       be defined to ensure structural integrity.
-    message_ja: 構造的な完全性を確保するために、Kata および実行構成データストアに対する明示的な技術的制約とバリデーションスキーマを定義する必要があります。
+    message_ja: 構造的な整合性を確保するために、Kataおよび実行構成データストアに対する明示的な技術的制約とバリデーションスキーマを定義する必要があります。
   - id: F011
     severity: major
     rule: vp-dev-implementation-readiness
@@ -292,7 +292,7 @@ findings:
     message: >-
       The missing completion condition column forces the reader to guess the definition of done, slightly degrading the
       overall readability of the process table.
-    message_ja: 完了条件の列が不足しているため、読者が完了の定義を推測せざるを得ず、プロセス表の全体的な読みやすさがわずかに低下しています。
+    message_ja: 完了条件の列が不足しているため、読者が完了の定義（definition of done）を推測せざakざるを得ず、プロセス表全体の可読性がわずかに低下しています。
   - id: F020
     severity: major
     rule: vp-ops-release-readiness
