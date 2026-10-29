@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-65DS"]'
+- v: 1
+  id: reg_80df29d6a8e54f9e9b69652d5a9b9fbb
+  ts: "2026-10-29T10:30:26Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_820e558582eb435085164e6ae8b8b56e
