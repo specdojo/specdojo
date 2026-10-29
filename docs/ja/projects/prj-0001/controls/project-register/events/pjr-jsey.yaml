@@ -2973,3 +2973,19 @@
       from: PJR-3MY5 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された。親の lint-fm が一度時間切れになり、--resume で通過した
       to: PJR-6DD7・PJR-SC8T の統合後、exec run --register が start から review まで通った。lint-fm の時間切れは SC8T の修正で解消した
   previous_event_id: reg_de7a31f69cf54b2d9f4e9fbaedb01d27
+- v: 1
+  id: reg_3032d42b49e04e75b6e06e8af743828b
+  ts: "2026-10-29T14:18:53Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-D0GB の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-29"
+      to: "-"
+  previous_event_id: reg_77a336c2b696420795d5751b7698b1c9
