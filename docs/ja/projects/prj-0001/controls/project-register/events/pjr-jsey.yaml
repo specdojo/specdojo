@@ -3127,3 +3127,19 @@
       from: PJR-D0GB の統合と main（docs-lint 0.3.1）の取り込みの後、exec run --register が start から review まで通った。単体テストの catalogless-target が負荷で一度時間切れになり、--resume で通過した
       to: PJR-YKMA の統合後、exec run --register が start から review まで通った
   previous_event_id: reg_4154caf4a8034b3998d23f68a1a8171d
+- v: 1
+  id: reg_bf1669e76bb54d8082ffeb5320326b70
+  ts: "2026-10-29T15:37:16Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-E45K の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-30"
+      to: "-"
+  previous_event_id: reg_51853b49d54040a4ae12cd3f1e66d284
