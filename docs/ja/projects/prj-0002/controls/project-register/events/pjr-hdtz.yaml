@@ -109,3 +109,16 @@
       from: "parent validation failed: lint-fm"
       to: "-"
   previous_event_id: reg_e06a636236d042d7a0f02c713f1df08a
+- v: 1
+  id: reg_6ebb7b84ec144117bf9549b0f0e47302
+  ts: "2026-10-29T13:34:45Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1201caf4ffb5427ea2e702aa0d2914b3

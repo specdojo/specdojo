@@ -43,3 +43,20 @@ specdojo:
 ## 4. 進め方
 
 v0.5.0 での仕様変更（登録品目の分類、依存関係の明示、初期設定プロセス）を Landing Page に反映するため、主要な Astro コンポーネントと README を対象に修正を行いました。各コンポーネントの構文チェックおよび、表内のエスケープ処理による列の整合性を検証しています。
+
+## 5. トレーサビリティ
+
+runner がプロダクトリポジトリの処理後に記録した状態と、統合先の commit snapshot です。
+プロジェクトリポジトリの統合は、この result を含む merge commit で確認します。
+その merge commit には `Refs: prj-0002:PJR-HDTZ` を付けます。
+`branch-only` の行は未統合です。exec branch を保持し、push と PR 作成はプロダクト側で行います。
+PR が `not applicable` の行では、runner は PR を作成していません。
+
+<!-- markdownlint-disable MD013 -->
+
+| trace key           | repository        | integration branch | exec branch              | state     | PR             | commit snapshot                            | recorded at              |
+| ------------------- | ----------------- | ------------------ | ------------------------ | --------- | -------------- | ------------------------------------------ | ------------------------ |
+| `prj-0002:PJR-HDTZ` | `specdojo-lp`     | `develop`          | `exec/prj-0002-PJR-HDTZ` | merged    | not applicable | `48723ee4a54cdd35750d47327dcad4c150fd67f6` | 2026-10-29T13:34:45.832Z |
+| `prj-0002:PJR-HDTZ` | `specdojo-assets` | `develop`          | `exec/prj-0002-PJR-HDTZ` | unchanged | not applicable | not applicable (no changes)                | 2026-10-29T13:34:45.832Z |
+
+<!-- markdownlint-enable MD013 -->
