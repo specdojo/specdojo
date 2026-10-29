@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ykma-catalog-brief
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-10-28T22:22:41Z"
+  completed_at: "2026-10-29T15:09:44Z"
+  conclusion: dct.schema.yaml の成果物に brief を追加し、schedule と register の両経路の plan に前提として載せた。dct-rulebook・sample・ryu-guide に overview・done_criteria との使い分けと YAML アンカーでの共有を書いた
   derived_from:
     - PJR-65DS
   depends_on:
