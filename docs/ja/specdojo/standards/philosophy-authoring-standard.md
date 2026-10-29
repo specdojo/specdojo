@@ -95,6 +95,7 @@ specdojo:
 - 比較・対応・区別など、見比べる情報は表に置く。
 - 例を用いる場合は、[sample-authoring-standard.md](sample-authoring-standard.md) の `共通サンプル文脈` に合わせる。
 - 未確定事項や仮置き情報は、`_TODO_` / `_UNDECIDED_` / `_ASSUMPTION_` のラベルで記述する。
+- 下書きへの指示には `_CONTEXT_:` を使う。記法と反映・記録は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従う。
 
 ## 7. 禁止事項
 

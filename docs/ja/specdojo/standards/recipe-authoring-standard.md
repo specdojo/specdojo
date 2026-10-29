@@ -71,6 +71,7 @@ Recipe Authoring Standard
   - _TODO_: 後で人または生成 AI が確認・追記・修正する必要がある事項
   - _UNDECIDED_: 情報不足ではなく、意思決定が未了で未確定の事項
   - _ASSUMPTION_: 現時点で仮置きしている前提・仮説
+  - `_CONTEXT_:`: 下書きへの指示。記法と反映・記録は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従う。
 - リンクはファイルがある場合に記載し、ない場合はバッククォートで仮置きする。
 
 ### 5.1. Why・What・How・Trace の共通原則
@@ -134,7 +135,7 @@ Why は What の必要性を説明し、What は How が満たすべき境界を
 - rulebook / recipe / sample / template の種別ごとの役割分担表を recipe 本文に置かない（実践の型全体の役割は [kata-guide.md](../guides/kata-guide.md) が扱う）。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
 - recipe 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
-- _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。
+- `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` / `_CONTEXT_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。
 
 ## 8. 運用ルール
 

@@ -104,6 +104,7 @@ specdojo:
   - _TODO_: 後で人または生成 AI が確認・追記・修正する必要がある事項
   - _UNDECIDED_: 情報不足ではなく、意思決定が未了で未確定の事項
   - _ASSUMPTION_: 現時点で仮置きしている前提・仮説
+  - `_CONTEXT_:`: 下書きへの指示。記法と反映・記録は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従う。
 - リンクはファイルがある場合に記載し、ない場合はバッククォートで仮置きする。
 
 ## 7. 禁止事項
@@ -113,7 +114,7 @@ specdojo:
 - 規範（must ルール・規約）を guide で新規に定義しない。standard / rulebook を正本とする。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
 - デッドリンクを記載しない。
-- _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。
+- `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` / `_CONTEXT_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。
 - `導入ブロック` の3ブロックを省略しない。ラベル名を変えない。順序を入れ替えない。
 - 全 guide / reference を並べた目的別の横断一覧を、`specdojo:specdojo-overview-guide` 以外に置かない。
 
