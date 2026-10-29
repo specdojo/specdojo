@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-hdtz-lp-v0-5-0-update
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-29T10:37:31Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-29T13:40:01Z"
+  conclusion: LP の文言とコマンド例を v0.5.0 に合わせた（epic を含む 8 種類、depends_on の掲載、導入手順、orch:luna）。specdojo-lp の develop に統合し、npm run build の成功を確かめた。
 ---
 
 # PJR-HDTZ specdojo-lp に v0.5.0 までの変更を反映する
