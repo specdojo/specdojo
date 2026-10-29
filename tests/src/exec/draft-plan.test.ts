@@ -80,12 +80,12 @@ describe("draft and fully-guided plans", () => {
       "`depends_on`",
       "[[test:upstream]]",
       "`project_context`",
-      "カタログの `brief`: なし",
       "出典つき",
       "成果物内の文脈",
     ]) {
       expect(plan).toContain(text);
     }
+    expect(plan).not.toMatch(/^- カタログの `brief`:/m);
     for (const placeholder of [
       "_DELIVERABLE_BASED_ON_",
       "_REGISTER_INPUT_",
@@ -127,7 +127,7 @@ describe("draft and fully-guided plans", () => {
     expect(plan).toContain("磨き込み専用");
     expect(plan).toContain("宣言された文書だけ");
     expect(plan).toContain("`based_on`（対象成果物の frontmatter）: [[test:upstream]]");
-    expect(plan).toContain("カタログの `brief`: なし");
+    expect(plan).not.toMatch(/^- カタログの `brief`:/m);
     expect(plan).toContain("磨き込みでは template は読み込まない");
     expect(plan).toContain("`_CONTEXT_:` が残っている場合");
     expect(plan).toContain("その指示を本文へ反映・削除せず");
@@ -223,8 +223,93 @@ describe("draft and fully-guided plans", () => {
     expect(plan).toContain("[[test:upstream]]");
     expect(plan).toContain("宣言された文書だけ");
     expect(plan).toContain("既存成果物を磨き込む");
-    expect(plan).toContain("カタログの `brief`: なし");
+    expect(plan).not.toMatch(/^- カタログの `brief`:/m);
     expect(plan).not.toContain("_RULEBOOK_INCLUDES_");
+  });
+
+  it.each(["draft", "fully-guided"] as const)(
+    "%s の register plan に brief を前提として載せる",
+    async (approach) => {
+      info.deliverable.brief = "静的サイトで主流の技術スタックで書く。";
+      const plan = await registerPlan(approach);
+      expect(plan).toContain("- カタログの `brief`: 静的サイトで主流の技術スタックで書く。");
+
+      info.deliverable.brief = "- Astro と Tailwind CSS を採用する。\n- 外部 API は使わない。";
+      const multilinePlan = await registerPlan(approach);
+      expect(multilinePlan).toContain(
+        "- カタログの `brief`:\n  - Astro と Tailwind CSS を採用する。\n  - 外部 API は使わない。",
+      );
+    },
+  );
+
+  it("schedule の plan にも brief を前提として載せ、YAML アンカーでの共有を反映する", async () => {
+    const catalogPath = join(root, "catalog");
+    mkdirSync(catalogPath);
+    writeFileSync(
+      join(catalogPath, "dct-test.yaml"),
+      `id: test:dct-test
+type: project
+status: draft
+project_id: test
+domain: test
+groups:
+  - deliverables:
+      - local_id: proposal
+        name: Proposal
+        kind: work
+        overview: Draft a proposal
+        brief: &shared_brief |
+          - TypeScript と React を用いる。
+          - 状態管理は標準フックに留める。
+        path: ${relative(process.cwd(), info.resolvedPath)}
+        done_criteria: []
+      - local_id: companion
+        name: Companion
+        kind: work
+        overview: Companion deliverable
+        brief: *shared_brief
+        path: companion.md
+        done_criteria: []
+`,
+    );
+
+    const path = await generateSinglePlan({
+      executionPath: join(root, "execution"),
+      projectId: "test",
+      catalogPath,
+      task: {
+        id: "T-TEST-proposal-010",
+        local_id: "proposal",
+        mode: "edit",
+        approach: "draft",
+        schedule_file: "sch-test.yaml",
+        fifo_rank: 0,
+        critical_first_rank: 0,
+      },
+    });
+    const plan = readFileSync(path, "utf8");
+    expect(plan).toContain(
+      "- カタログの `brief`:\n  - TypeScript と React を用いる。\n  - 状態管理は標準フックに留める。",
+    );
+
+    const reviewPath = await generateSinglePlan({
+      executionPath: join(root, "execution"),
+      projectId: "test",
+      catalogPath,
+      task: {
+        id: "T-TEST-proposal-020",
+        local_id: "proposal",
+        mode: "review",
+        approach: "fully-guided",
+        schedule_file: "sch-test.yaml",
+        fifo_rank: 0,
+        critical_first_rank: 0,
+      },
+    });
+    const reviewPlan = readFileSync(reviewPath, "utf8");
+    expect(reviewPlan).toContain(
+      "- カタログの `brief`:\n  - TypeScript と React を用いる。\n  - 状態管理は標準フックに留める。",
+    );
   });
 
   it("未作成または based_on がない成果物は「なし」と表示する", async () => {

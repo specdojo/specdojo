@@ -300,6 +300,15 @@ $defs:
         minLength: 1
         description: "One-sentence description of the deliverable's purpose."
 
+      brief:
+        type: string
+        minLength: 1
+        description: >
+          Optional assumptions or context passed continuously from outside the deliverable
+          (e.g., tech stack, architecture constraints, baseline policies).
+          Populates the plan's brief field for schedule and register paths.
+          Multiple deliverables may share a brief via YAML anchors (&anchor / *anchor).
+
       path:
         type: string
         pattern: "^[^\\s]+$"

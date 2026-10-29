@@ -467,6 +467,24 @@ export function deliverableOverview(deliverable: DeliverableInfo | null): string
   return deliverable?.deliverable.overview ?? MISSING;
 }
 
+export function deliverableBrief(deliverable: DeliverableInfo | null): string {
+  const brief = deliverable?.deliverable.brief?.trim();
+  if (!brief) return "";
+  if (!brief.includes("\n")) {
+    return brief;
+  }
+  if (brief.startsWith("-")) {
+    return `\n  ${brief
+      .split("\n")
+      .map((line) => line.trimEnd())
+      .join("\n  ")}`;
+  }
+  return brief
+    .split("\n")
+    .map((line, idx) => (idx === 0 ? line : `  ${line}`))
+    .join("\n");
+}
+
 export function implementationEvidence(deliverable: DeliverableInfo | null): string {
   const refs = deliverable?.deliverable.evidence_refs ?? [];
   if (refs.length === 0) return MISSING;
