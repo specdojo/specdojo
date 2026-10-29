@@ -2861,3 +2861,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d35c5d18a2624e97856376fa86ed0c8e
+- v: 1
+  id: reg_8347fbe31bd343a990ae13e3274e3d31
+  ts: "2026-10-29T11:26:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: PJR-0QW0 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-3MY5 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された。親の lint-fm が一度時間切れになり、--resume で通過した
+  previous_event_id: reg_a4ebddf9ca2047848886c2234cc68f05
