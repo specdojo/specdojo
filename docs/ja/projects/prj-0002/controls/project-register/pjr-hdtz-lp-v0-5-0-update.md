@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-10-29T10:37:31Z"
   due_on: "2026-10-31"
+  block_reason: "parent validation failed: lint-fm, lint-md"
 ---
 
 # PJR-HDTZ specdojo-lp に v0.5.0 までの変更を反映する

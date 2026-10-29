@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_422a08d23a784ab1a24686c1fb456942
+  ts: "2026-10-29T10:50:55Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_adc2013cc35449e69b913c200aa169f5
+- v: 1
+  id: reg_6c7056c8a1e14359b3661f55e92e2b40
+  ts: "2026-10-29T11:16:51Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, lint-md"
+  previous_event_id: reg_422a08d23a784ab1a24686c1fb456942
