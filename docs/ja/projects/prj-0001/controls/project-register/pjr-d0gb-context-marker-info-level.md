@@ -23,18 +23,24 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- docs-lint の `_CONTEXT_` の検出（`packages/docs-lint/src/context-marker.ts`）が、`status: ready` 以外の文書では情報（`file.info`）として報告し、`--frail` 付きの `npm run lint:fm` を失敗させない。`status: ready` の文書では従来どおり error として失敗させる。
+- 記述規約（document-metadata-standard の「文脈の目印」など、PJR-JRSY で検出の扱いを書いた箇所）と `packages/docs-lint/README.md` の説明を、ready 以外は情報、ready は error に改める。
+- 単体テストで、ready 以外の文書の `_CONTEXT_` が warning ではなく情報として報告されること、ready の文書では error になることを確かめる。
+- `CHANGELOG.md` の `## [Unreleased]` 節に追記する。`0.5.0` と公開済みの版の節は変えない。
+- 作業の中で `npm run typecheck`・`npm run lint:ts`・`npm run lint:md`・`npm run test:unit` が通り、親の検証 7 件が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                  | 担当     | 状態 | メモ |
+| --- | ------------------------------------- | -------- | ---- | ---- |
+| 1   | 検出の重さを変え、規約・README を直す | executor | open | -    |
+| 2   | テストと CHANGELOG を更新する         | executor | open | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-jrsy-context-marker]]
+- [[prj-0001:pjr-65ds-deliverable-context-draft-approach]]
