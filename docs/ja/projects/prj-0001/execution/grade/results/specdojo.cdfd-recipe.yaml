@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-09-30T21:07:32.813Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-29T20:08:05.704Z"
+graded_by: flash-high-executor
 content_hash: b2f47bc3a871fbfdeebe9d854e6c9f853747319274a972bb40bdafeb81402116
 categories:
   purpose:
@@ -113,9 +113,11 @@ findings:
     line: 196
     anchor: "## 8. 仕上げチェック"
     message: 仕上げチェックにおいて、Rulebookが完成判定で求める Frontmatter（id、type、status等）や、適用範囲での責任分担の参照確認が漏れています。
+    message_ja: 仕上げチェックにおいて、Rulebookが完成判定で求める Frontmatter（id、type、status等）や、適用範囲での責任分担の参照確認が漏れています。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 49
     anchor: 14. 他グループの内部処理を委譲表へ移し、委譲先 `cdfd-<group>` または `cdfd-uc-<topic>`、引き渡す情報、戻す条件を記述します。
     message: 手順5・13・14および仕上げチェックにおいて、Rulebookが定義する表の項目（プロセス名、完了条件、対象プロセス、停止範囲、委譲事項）の記載指示が一部漏れています。
+    message_ja: 手順5・13・14および仕上げチェックにおいて、Rulebookが定義する表の項目（プロセス名、完了条件、対象プロセス、停止範囲、委譲事項）の記載指示が一部漏れています。

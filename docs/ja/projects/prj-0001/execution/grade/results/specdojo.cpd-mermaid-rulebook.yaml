@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 74
-graded_at: "2026-09-29T22:10:56.410Z"
-graded_by: codex-expert-executor
-content_hash: a662ed2d55e9cc1d9a836b6f9760a6ff515ce60c1352d22c16d160bd4caa847f
+graded_at: "2026-10-29T20:43:00.779Z"
+graded_by: flash-high-executor
+content_hash: f861b588e601f8cdd1cf937d417420244720a1fb9d23f8f82199ba919d8f3359
 categories:
   purpose:
     score: 75
@@ -115,54 +115,67 @@ findings:
     message: >-
       Frontmatter が `status: draft` かつ `recipe` / `template: undecided` である一方、本文に判断者、未決事項の影響、解消条件、次アクションがなく、PO
       が承認・保留・差し戻しを判断できない。
+    message_ja: >-
+      Frontmatter が `status: draft` かつ `recipe` / `template: undecided` である一方、本文に判断者、未決事項の影響、解消条件、次アクションがなく、PO
+      が承認・保留・差し戻しを判断できない。
   - id: F002
     severity: minor
     rule: vp-pm-dependency-risk
     line: 42
     anchor: ※ 既存の C4 コンテキスト図（CXD）/ C4 コンテナ図（CND）と同じ色指定を利用します。
     message: 共通色を既存の CXD / CND と同一にすると述べるだけで、対応 rulebook の ID や変更時の同期先を宣言しておらず、共有スタイル変更の影響を追跡できない。
+    message_ja: 共通色を既存の CXD / CND と同一にすると述べるだけで、対応 rulebook の ID や変更時の同期先を宣言しておらず、共有スタイル変更の影響を追跡できない。
   - id: F003
     severity: minor
     rule: vp-pm-control-reporting
     line: 1
     anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
     message: "`recipe` と `template` の要否が `undecided` だが、未決事項として影響、担当、報告先、対応方針が分離されていない。"
+    message_ja: "`recipe` と `template` の要否が `undecided` だが、未決事項として影響、担当、報告先、対応方針が分離されていない。"
   - id: F004
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 5
     anchor: 本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンポーネント図（Component Diagram）を描く際の標準ルール**です。
     message: 作成者、レビュー者、合意責任者を役割として定義しておらず、誰が図の境界や関係を確認するか読み取れない。
+    message_ja: 作成者、レビュー者、合意責任者を役割として定義しておらず、誰が図の境界や関係を確認するか読み取れない。
   - id: F005
     severity: major
     rule: vp-arc-technical-constraints
     line: 11
     anchor: "- Mermaid の **`flowchart` を C4 コンポーネント図風に利用**する。"
     message: Mermaid の対応バージョン、レンダラーまたは実行環境、HTML ラベルや絵文字の前提が未定義で、同じコードの解析・表示結果が環境差で変わる可能性がある。
+    message_ja: Mermaid の対応バージョン、レンダラーまたは実行環境、HTML ラベルや絵文字の前提が未定義で、同じコードの解析・表示結果が環境差で変わる可能性がある。
   - id: F006
     severity: minor
     rule: vp-dev-change-impact
     line: 42
     anchor: ※ 既存の C4 コンテキスト図（CXD）/ C4 コンテナ図（CND）と同じ色指定を利用します。
     message: ノード形状や共通スタイルを変更した際の既存 CPD、cpd-sample、Mermaid 生成物への互換性影響と移行方針が示されていない。
+    message_ja: ノード形状や共通スタイルを変更した際の既存 CPD、cpd-sample、Mermaid 生成物への互換性影響と移行方針が示されていない。
   - id: F007
     severity: major
     rule: vp-dev-testability
     line: 188
     anchor: "```mermaid"
     message: Mermaid コードの検証コマンド、対象ファイル、期待結果、エラー時対応がなく、変更後に構文とレンダリングの合否を再現可能に確認できない。
+    message_ja: Mermaid コードの検証コマンド、対象ファイル、期待結果、エラー時対応がなく、変更後に構文とレンダリングの合否を再現可能に確認できない。
   - id: F008
     severity: minor
     rule: vp-qe-verifiability
     line: 132
     anchor: "- 対象コンテナは **サブグラフ `subgraph ... end`** で囲う。"
     message: 必須条件が各節に分散し、最終的な受入チェックリストと pass / fail 条件がないため、「5〜15個程度」「増やしすぎない」等を含む完成判定を一意に行えない。
+    message_ja: 必須条件が各節に分散し、最終的な受入チェックリストと pass / fail 条件がないため、「5〜15個程度」「増やしすぎない」等を含む完成判定を一意に行えない。
   - id: F009
     severity: major
     rule: vp-qe-omissions-consistency
     line: 9
     anchor: "## 1. 全体方針"
     message: >-
+      `specdojo:rulebook-authoring-standard`
+      が必須とする「ファイル命名・ID規則」「本文要件」「記述ガイド」の責務が標準章構成として整理されず、対象成果物の必須・任意項目、品質・受入、運用、トレーサビリティの確認項目も欠落している。
+    message_ja: >-
       `specdojo:rulebook-authoring-standard`
       が必須とする「ファイル命名・ID規則」「本文要件」「記述ガイド」の責務が標準章構成として整理されず、対象成果物の必須・任意項目、品質・受入、運用、トレーサビリティの確認項目も欠落している。
   - id: F010
@@ -173,27 +186,34 @@ findings:
     message: >-
       Frontmatter で対応 sample として宣言した docs/ja/specdojo/samples/cpd-sample.md に Mermaid 図の完成例がなく,
       本ルールのノード、境界、関係、スタイルを適用した成果物を確認できない。
+    message_ja: >-
+      Frontmatter で対応 sample として宣言した docs/ja/specdojo/samples/cpd-sample.md に Mermaid 図の完成例がなく,
+      本ルールのノード、境界、関係、スタイルを適用した成果物を確認できない。
   - id: F011
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
     message: 参照サンプル (docs/ja/specdojo/samples/cpd-sample.md) 内のリンク先が本ルールのファイル名と不整合である。
+    message_ja: 参照サンプル (docs/ja/specdojo/samples/cpd-sample.md) 内のリンク先が本ルールのファイル名と不整合である。
   - id: F012
     severity: minor
     rule: vp-ux-readability
     line: 29
     anchor: "## 2.1. 標準の色分け（推奨）"
     message: 「2.1. 標準の色分け」を章「2. C4要素と Mermaid 記号の対応」と同じ H2 にしているため、H3 の「2.1.1」「2.1.2」を含む階層が番号体系と一致するよう見出しレベルを修正する必要がある。
+    message_ja: 「2.1. 標準の色分け」を章「2. C4要素と Mermaid 記号の対応」と同じ H2 にしているため、H3 の「2.1.1」「2.1.2」を含む階層が番号体系と一致するよう見出しレベルを修正する必要がある。
   - id: F013
     severity: major
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
     message: "`status: draft` と `recipe` / `template: undecided` のまま、ready 化に必要な判断、承認者、公開前確認、未解決事項の解消条件が本文に定義されていない。"
+    message_ja: "`status: draft` と `recipe` / `template: undecided` のまま、ready 化に必要な判断、承認者、公開前確認、未解決事項の解消条件が本文に定義されていない。"
   - id: F014
     severity: major
     rule: vp-ops-operability
     line: 42
     anchor: ※ 既存の C4 コンテキスト図（CXD）/ C4 コンテナ図（CND）と同じ色指定を利用します。
     message: Mermaid または共通スタイル更新時の改訂手順、再レンダリング手順、変更管理先、問い合わせ・表示障害時の対応がなく、継続保守を再現できない。
+    message_ja: Mermaid または共通スタイル更新時の改訂手順、再レンダリング手順、変更管理先、問い合わせ・表示障害時の対応がなく、継続保守を再現できない。

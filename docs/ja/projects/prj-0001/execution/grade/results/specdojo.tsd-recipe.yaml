@@ -5,10 +5,10 @@ path: docs/ja/specdojo/recipes/tsd-recipe.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-28T20:06:58.748Z"
+score: 98
+graded_at: "2026-10-29T20:18:01.676Z"
 graded_by: flash-high-executor
-content_hash: 928e6e1b4a44729f6d68e43c9357722914c90a8161bbe56c5518f7865c3c86ba
+content_hash: c40451b88c76d99e665bb66b3e74ea41f9cb9aaaaedc0fb5cd6ee5129f1650a8
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,19 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 36
+    anchor: >-
+      - **成果物内の `_CONTEXT_:`**: `deliverable scaffold` で生成した雛形の各章見出し直下に書く局所的な指示（例: 第 4 章で `_CONTEXT_:
+      主流のフレームワークを比較し、選定理由と採用値を提案してください`）。`draft` が本文へ反映後に削除する。
+    message: >-
+      In section 2.1, the example references a section by chapter number alone ("例: 第 4 章で") instead of by section title
+      (e.g., "「採用技術・設定」で"), violating recipe-authoring-standard.md which prohibits chapter-number-only references.
+    message_ja: >-
+      In section 2.1, the example references a section by chapter number alone ("例: 第 4 章で") instead of by section title
+      (e.g., "「採用技術・設定」で"), violating recipe-authoring-standard.md which prohibits chapter-number-only references.
