@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- `register add` / `update` に繰り返し指定できる `--input` を追加しました。対話で得た前提を個票の `入力` 節と event に記録し、register 経由の plan へ完了条件とは別に渡します。update は一覧置換、`--input -` は全削除です（PJR-6DD7）。
+
 - 成果物内の文脈の目印 `_CONTEXT_:` を定めました。`draft` で反映した指示を result に記録し、`fully-guided` では未反映の指示を論点として残します。finalize の確認と文書 lint で残りを検出し、lint は `ready` で error、それ以外で warning とします（PJR-JRSY）。
 - `draft` approach を追加しました。文脈で任された範囲を調べて下書きし、選定値を提案として示して出典と選定理由を記録します。register・schedule・plan で使えます（PJR-3MY5）。
 

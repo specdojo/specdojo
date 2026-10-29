@@ -1,3 +1,4 @@
+import { setRegisterInput } from "./input.js";
 import { randomInt, randomUUID } from "node:crypto";
 import {
   existsSync,
@@ -518,6 +519,8 @@ export function buildRegisterItemContent(opts: {
   if (!isPlaceholderCell(opts.fields.description)) {
     content = setRegisterItemDescription(content, opts.fields.description);
   }
+
+  if (opts.fields.inputs !== undefined) content = setRegisterInput(content, opts.fields.inputs);
 
   return applyRegisterItemFields(
     content,

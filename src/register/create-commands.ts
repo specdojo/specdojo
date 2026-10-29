@@ -1,3 +1,4 @@
+import { normalizeRegisterInput } from "./input.js";
 import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -114,6 +115,7 @@ export function registerCreateCommands(
   addCmd.requiredOption("--type <type>", `Item type: ${VALID_TYPES.join(" | ")}`);
   addCmd.option("--track <track>", "Track governed by an epic (required for epic)");
   addCmd.requiredOption("--title <title>", "Short title for the item");
+  addCmd.option("--input <text>", "Premise recorded in the ticket (repeatable)", collectTarget);
   addCmd.option("--description <text>", "Description shown in the list", "_TODO_");
   addCmd.option("--priority <priority>", `Priority: ${VALID_PRIORITIES.join(" | ")}`, "medium");
   addCmd.option("--difficulty <difficulty>", `Difficulty: ${VALID_DIFFICULTIES.join(" | ")}`);
@@ -222,6 +224,7 @@ export function registerCreateCommands(
         type: opts.type,
         title: opts.title,
         description: opts.description,
+        inputs: normalizeRegisterInput(opts.input),
         priority: opts.priority,
         ...(opts.difficulty !== undefined ? { difficulty: opts.difficulty } : {}),
         status: opts.status,
@@ -366,6 +369,11 @@ export function registerUpdateCommand(
     collectTarget,
   );
   updateCmd.option(
+    "--input <text>",
+    "Replace ticket premises (repeatable; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
     "--source <ref>",
     "Replace read-only *-authoring exemplars (repeatable; use - to remove)",
     collectTarget,
@@ -408,6 +416,7 @@ export function registerUpdateCommand(
         "approach",
         "target",
         "source",
+        "input",
         "targetPath",
         "targetRulebook",
         "from",
@@ -416,7 +425,7 @@ export function registerUpdateCommand(
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--track, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --depends-on, --topic)",
+          "At least one field option must be specified (--track, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --topic)",
         );
       }
 
@@ -598,8 +607,10 @@ export function registerUpdateCommand(
 
       const track = opts.track === undefined ? item.track : opts.track.trim();
       validateRegisterTrack(paths.projectId, item.type, track);
+      const inputs = normalizeRegisterInput(opts.input, true);
       const updated: PjrItem = {
         ...item,
+        ...(inputs !== undefined ? { inputs } : {}),
         ...(track !== undefined ? { track } : {}),
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
@@ -659,6 +670,7 @@ export function registerUpdateCommand(
           id: opts.id,
           topic,
           updated,
+          ...(inputs !== undefined ? { inputs } : {}),
           dryRun: opts.dryRun,
           ...(blockReasonUpdates ||
           autopilotUpdates ||
@@ -683,6 +695,7 @@ export function registerUpdateCommand(
         paths,
         view,
         updated,
+        ...(inputs !== undefined ? { inputs } : {}),
         dryRun: opts.dryRun,
         action: "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),

@@ -299,6 +299,43 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(emphasisViolations(content)).toEqual([]);
   });
 
+  it.each(["todo", "question"])(
+    "%s の register plan に個票から読んだ入力を前提として載せる",
+    async (type) => {
+      const ticket = await writeTicket();
+      const ticketPath = path.join(makeRegisterPaths().projectRegisterPath, "pjr-test-approach.md");
+      await writeFile(
+        ticketPath,
+        (await readFile(ticketPath, "utf8")) +
+          "\n## 入力\n\n- 技術調査を任せる\n- 対象は `api_version`\n",
+      );
+      const outPath = path.join(dir, "plan-input.md");
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        registerPaths: makeRegisterPaths(),
+        item: makeItem({ type, ticket }),
+        stem: "input",
+        outPath,
+      });
+      const plan = await readFile(outPath, "utf8");
+      expect(plan).toContain("## 個票の入力（前提）");
+      expect(plan).toContain("- 技術調査を任せる");
+      expect(plan).toContain("対象は `api_version`");
+      expect(emphasisViolations(plan)).toEqual([]);
+      await writeFile(ticketPath, (await readFile(ticketPath, "utf8")).split("\n## 入力")[0]);
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        registerPaths: makeRegisterPaths(),
+        item: makeItem({ type, ticket }),
+        stem: "input",
+        outPath,
+      });
+      expect(await readFile(outPath, "utf8")).not.toContain("個票の入力（前提）");
+    },
+  );
+
   it("title と description の山括弧プレースホルダをコード化し、再生成しても二重化しない", async () => {
     const outPath = path.join(dir, "plan.md");
     const input = {
@@ -381,6 +418,14 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     }
     const catalogPath = await writeCatalog();
     const ticket = await writeTicket();
+    const inputTicketPath = path.join(
+      makeRegisterPaths().projectRegisterPath,
+      "pjr-test-approach.md",
+    );
+    await writeFile(
+      inputTicketPath,
+      (await readFile(inputTicketPath, "utf8")) + "\n## 入力\n\n- 成果物作成の前提\n",
+    );
     process.env.SPECDOJO_PACKAGE_ROOT = dir;
     process.chdir(dir);
     await generateRegisterPlan({
@@ -405,6 +450,11 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("# Edit Plan: PJR-TEST");
     expect(content).toContain("Test Overview");
     expect(content).toContain("catalog criterion is satisfied");
+    expect(content).toContain("## 個票の入力（前提）");
+    expect(content).toContain("- 成果物作成の前提");
+    expect(content.slice(content.indexOf("## 個票の追加完了条件"))).not.toContain(
+      "成果物作成の前提",
+    );
     expect(content).toContain("## 個票の追加完了条件");
     expect(content).toContain("register-specific criterion is satisfied");
   });

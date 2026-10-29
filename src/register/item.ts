@@ -9,6 +9,7 @@ import { join } from "node:path";
 import { dump, load } from "../shared/yaml.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import type { Approach } from "../shared/agent-types.js";
+import { readRegisterInput } from "./input.js";
 import { registerDateFromTimestamp } from "./date.js";
 
 // ================================
@@ -23,6 +24,7 @@ export type PjrItem = {
   status: string;
   title: string;
   description: string;
+  inputs?: string[];
   type: string;
   track?: string;
   priority: string;
@@ -367,11 +369,13 @@ export function readRegisterItemContent(
   const autopilot = fields.autopilot === "approved" ? "approved" : undefined;
   const difficulty = asString(fields.difficulty) as RegisterDifficulty | undefined;
 
+  const inputs = readRegisterInput(content);
   const item: PjrItem = {
     id,
     status: asString(fields.item_status) ?? "open",
     title: titleFromBody(body, id),
     description: descriptionFromBody(body),
+    ...(inputs ? { inputs } : {}),
     type: asString(fields.item_type) ?? CELL_TODO,
     ...(asString(fields.track) ? { track: asString(fields.track) } : {}),
     priority: asString(fields.priority) ?? "medium",
