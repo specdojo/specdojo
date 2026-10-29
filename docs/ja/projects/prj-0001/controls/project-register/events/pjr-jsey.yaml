@@ -2896,3 +2896,32 @@
       from: "2026-10-29"
       to: "-"
   previous_event_id: reg_8347fbe31bd343a990ae13e3274e3d31
+- v: 1
+  id: reg_e24e81b1e97544fe88f3c35aa3c34ee6
+  ts: "2026-10-29T12:29:43Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d6ac01853f2044219e8f97dde2207f8b
+- v: 1
+  id: reg_52df7a8d5c264edbb031932d9998de59
+  ts: "2026-10-29T12:48:07Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_e24e81b1e97544fe88f3c35aa3c34ee6

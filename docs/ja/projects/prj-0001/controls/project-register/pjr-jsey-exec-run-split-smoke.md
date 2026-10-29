@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  block_reason: "parent validation failed: lint-fm"
   conclusion: PJR-3MY5 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された。親の lint-fm が一度時間切れになり、--resume で通過した
 ---
 
