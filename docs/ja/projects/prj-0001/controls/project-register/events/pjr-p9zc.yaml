@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cd9ce133988d49088cbab2654748ee22
+  ts: "2026-10-29T12:21:39Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の報告（2026-10-29、tmux 接続で別 container を選んで失敗）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 接続のスクリプトが、対象の devcontainer が止まっていると別の container へ入ろうとして失敗する
+    - field: description
+      from: ""
+      to: specdojo-tmux.sh.sample の find\_container は、ラベルで見つからないと vsc- で始まる最初の container を選ぶ。そのため対象の devcontainer が止まっていると、別の container へ docker exec して「chdir to cwd ... no such file or directory」で止まる。ラベルの一致だけで探し、見つからなければ devcontainer up するように直す
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+    - field: derived_from
+      from: ""
+      to: "[\"PJR-CCXN\"]"
