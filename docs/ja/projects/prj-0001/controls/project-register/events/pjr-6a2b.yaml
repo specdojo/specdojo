@@ -41,3 +41,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K"]'
+- v: 1
+  id: reg_0ad77df5bf9d4df987c9958a3378ba98
+  ts: "2026-10-29T15:44:45Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_95df1403feed476cac1216a598e9d283
