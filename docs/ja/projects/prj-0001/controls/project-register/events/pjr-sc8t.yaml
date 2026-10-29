@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-484B"]'
+- v: 1
+  id: reg_4a6dc893417043f7a54ddef6487d6e96
+  ts: "2026-10-29T13:16:21Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2799047026644b7eb01bf19a46a7628d
