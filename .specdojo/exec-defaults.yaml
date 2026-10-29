@@ -20,9 +20,7 @@ pipeline:
     # lint は短時間で終わるため先に実行し、executor が残した ESLint・frontmatter・Markdown の
     # エラーを統合前に検出する（PJR-K1Z5）。
     - lint-ts # npm run lint:ts
-    # lint-fm は外している。prj-0002 の作業ツリーでは npm run lint:fm に約 11 分かかり、
-    # 親の検証の固定の時間切れ（10 分）を超えて run が止まるため（PJR-HDTZ）。
-    # 時間切れを設定で変えられるようになったら戻す。
+    - lint-fm # npm run lint:fm
     - lint-md # npm run lint:md
     - test-integration # npm run test:integration（shell を介さず固定 argv で実行）
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
