@@ -149,7 +149,7 @@ specdojo:
 - `draft` は指示を本文へ反映した後、その段落から目印と元の指示を消し、元の指示と反映箇所を result に記録する。反映できない指示は残し、理由と次の行動を記録する。executor / reporter pipeline では元の指示と反映箇所を executor の報告の `handoff` に記載し、reporter と runner が result へ転記する。
 - `fully-guided` は残った指示を反映・削除せず、未反映の指示と必要な下書きを論点として result に記録し、`draft` へ申し送る。
 - `finalize` / `bootstrap-finalize` は、確定対象に未反映の指示が残っていれば承認せず差し戻す。
-- `lint:fm` の `remark-md-content` は、コード例を除き段落先頭の `_CONTEXT_:` を検出する。Frontmatter の `specdojo.status` が `ready` なら error、それ以外（状態の指定なしを含む）は warning とする。`--frail` を指定した lint は warning でも失敗する。
+- `lint:fm` の `remark-md-content` は、コード例を除き段落先頭の `_CONTEXT_:` を検出する。Frontmatter の `specdojo.status` が `ready` なら error、それ以外（状態の指定なしを含む）は情報とする。
 
 ```markdown
 ## 1. 概要

@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-JRSY"]'
+- v: 1
+  id: reg_d20c247e57e242e4be16afb6fe612939
+  ts: "2026-10-29T13:59:20Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b120b34391324d998c503c6cd0159f8d
+- v: 1
+  id: reg_0bb968c6e5574b3198fafb00ab867264
+  ts: "2026-10-29T14:16:19Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d20c247e57e242e4be16afb6fe612939

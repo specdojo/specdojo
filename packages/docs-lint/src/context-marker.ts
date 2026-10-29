@@ -36,12 +36,15 @@ export function validateContextMarkers(tree: Root, file: VFile): void {
         suffix?.type === "text" &&
         suffix.value.startsWith(":")
       ) {
-        const message = file.message(
-          "未反映の `_CONTEXT_:` が残っています。draft で指示を本文へ反映し、元の指示を result に記録してください。",
-          marker,
-          "context-marker:unresolved-context",
-        );
-        message.fatal = ready;
+        const reason =
+          "未反映の `_CONTEXT_:` が残っています。draft で指示を本文へ反映し、元の指示を result に記録してください。";
+        const ruleId = "context-marker:unresolved-context";
+        if (ready) {
+          const message = file.message(reason, marker, ruleId);
+          message.fatal = true;
+        } else {
+          file.info(reason, marker, ruleId);
+        }
       }
     }
     if ("children" in node) {

@@ -12,7 +12,7 @@ remark プラグインは次の公開 export から参照できます。
 - `@specdojo/docs-lint/remark/no-unescaped-angle-placeholder`
 - `@specdojo/docs-lint/remark/frontmatter-ajv2020`
 
-`remark/md-content` は content schema の対象にかかわらず、本文の段落先頭に残った `_CONTEXT_:` を検出します。Frontmatter の `specdojo.status` が `ready` なら error、それ以外（状態の指定なしを含む）は warning です。コードブロックやインラインコードによる記法の説明は対象外です。`remark --frail` は warning でも失敗するため、下書き時に警告だけを確認する場合は `--frail` を付けずに実行してください。
+`remark/md-content` は content schema の対象にかかわらず、本文の段落先頭に残った `_CONTEXT_:` を検出します。Frontmatter の `specdojo.status` が `ready` なら error、それ以外（状態の指定なしを含む）は情報です。コードブロックやインラインコードによる記法の説明は対象外です。
 
 検証コマンドは `specdojo-docs-lint` から実行します。
 

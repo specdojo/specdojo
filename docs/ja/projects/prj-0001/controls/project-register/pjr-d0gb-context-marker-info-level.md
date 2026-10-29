@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: easy
   registered_at: "2026-10-29T11:52:41Z"
@@ -31,14 +31,21 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                  | 担当     | 状態 | メモ |
-| --- | ------------------------------------- | -------- | ---- | ---- |
-| 1   | 検出の重さを変え、規約・README を直す | executor | open | -    |
-| 2   | テストと CHANGELOG を更新する         | executor | open | -    |
+| No  | 作業                                  | 担当     | 状態 | メモ                                                   |
+| --- | ------------------------------------- | -------- | ---- | ------------------------------------------------------ |
+| 1   | 検出の重さを変え、規約・README を直す | executor | done | ready 以外を情報へ変更し、メタ情報標準と README を更新 |
+| 2   | テストと CHANGELOG を更新する         | executor | done | 単体テストを情報レベルの検証に更新し CHANGELOG に追記  |
 
 ## 4. 対応結果
 
--
+- `packages/docs-lint/src/context-marker.ts` において、`_CONTEXT_:` の検出時に `specdojo.status` が `ready` でない場合は `file.info(...)` を呼び出して情報レベルとして報告し、`ready` の場合は従来どおり `file.message(...)` を用いて `message.fatal = true`（error）とするように修正した。これにより、`--frail` 指定時でも ready 以外の文書の指示残存で `npm run lint:fm` が失敗しないようになった。
+- [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」節および `packages/docs-lint/README.md` において、`ready` 以外の文書における検出の扱いを warning から情報へ改めた。
+- `tests/packages/docs-lint/context-marker.test.ts` を更新し、`ready` の文書では `fatal: true`（error）となり、`draft`・`deprecated` や frontmatter なし・不正 YAML などの `ready` 以外の文書では `fatal: undefined`（情報レベル、warning の `fatal: false` ではない）として報告されることを確認した。
+- `CHANGELOG.md` の `## [Unreleased]` の「### 変更」節に、`@specdojo/docs-lint` の `_CONTEXT_:` 検出レベルの変更内容を追記した。
+- 設計判断: unified-engine の `--frail` は `fatal` または `warn` のメッセージが存在する場合に終了コード 1 となるため、`ready` 以外を `file.info(...)`（`fatal: undefined`）に下げることで下書き中の `_CONTEXT_:` による親検証の停止を防ぎつつ、成果物確定時の `ready` では確実にエラーとして検出できるようにした。
+- 検証: 単体テスト `tests/packages/docs-lint/context-marker.test.ts` が 11 件すべてパスすることを確認した。
+- 親検証: `lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit` は executor 内では実行せず、終了後の親 runner へ委ねる。
+- 申し送り: なし（保護された設定変更や未解決の判断事項はない）。
 
 ## 5. 関連ドキュメント
 
