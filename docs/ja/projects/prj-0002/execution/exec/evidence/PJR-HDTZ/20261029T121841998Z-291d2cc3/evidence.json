@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-HDTZ",
+  "run_id": "20261029T121841998Z-291d2cc3",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-29T12:18:41.998Z",
+    "completed_at": "2026-10-29T12:22:25.659Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0002/controls/project-register/events/pjr-hdtz.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0002/controls/project-register/pjr-hdtz-lp-v0-5-0-update.md",
+      "status": "M"
+    },
+    {
+      "path": "specdojo-lp:README.md",
+      "status": "M"
+    },
+    {
+      "path": "specdojo-lp:src/components/sections/GetStarted.astro",
+      "status": "M"
+    },
+    {
+      "path": "specdojo-lp:src/components/sections/NextSteps.astro",
+      "status": "M"
+    },
+    {
+      "path": "specdojo-lp:src/components/sections/RegisterTypes.astro",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0002/controls/project-register/pjr-hdtz-lp-v0-5-0-update.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../controls/project-register/events/pjr-hdtz.yaml       | 16 ++++++++++++++++\n .../project-register/pjr-hdtz-lp-v0-5-0-update.md        |  7 ++++---\n 2 files changed, 20 insertions(+), 3 deletions(-)\n[specdojo-lp]\nREADME.md                                   |  2 +-\n src/components/sections/GetStarted.astro    | 27 +++++++++++++++++++--------\n src/components/sections/NextSteps.astro     |  2 +-\n src/components/sections/RegisterTypes.astro | 17 +++++++++++++----\n 4 files changed, 34 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node node_modules/prettier/bin/prettier.cjs --write docs/ja/projects/prj-0002/controls/project-register/pjr-hdtz-lp-v0-5-0-update.md",
+      "status": "passed",
+      "summary": "個票を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node tmp/pjr-hdtz-check.mjs",
+      "status": "passed",
+      "summary": "3 コンポーネントの Astro・TypeScript 構文、編集前後のタグ・属性構造、8 種類の重複と更新データを確認した。検証用一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "bash -n tmp/pjr-hdtz-commands.sh",
+      "status": "passed",
+      "summary": "抽出した表示コマンド例の shell 構文を確認した。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --input-type=module",
+      "status": "passed",
+      "summary": "標準入力の remark-parse・remark-gfm 検証で、個票の全 3 表の列数とリンク区切りのエスケープを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0002",
+      "status": "passed",
+      "summary": "登録簿の検証と派生ビュー生成が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "プロジェクト側の差分に空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "git -C ../specdojo-lp diff --check",
+      "status": "passed",
+      "summary": "LP 側の差分に空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix ../specdojo-lp run build",
+      "status": "requires_human",
+      "summary": "個票の完了条件に従い、orchestrator が sandbox 外でビルドと生成 HTML を確認する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HDTZ/project/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/\n… output omitted …\ned is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HDTZ/project/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HDTZ/project/src/shared/specdojo-config.ts\n  1221:1  warning  File has too many lines (1110). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HDTZ/project\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten:\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.5.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nms\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HDTZ/project/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HDTZ/project/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.5.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HDTZ/project\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-yFMjZk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DLEpOX/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8Ay51q/pjr-0001-topi\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0002/controls/project-register/pjr-hdtz-lp-v0-5-0-update.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0002/controls/project-register/pjr-hdtz-lp-v0-5-0-update.md",
+      "reason": ""
+    },
+    {
+      "target": "specdojo-lp:README.md",
+      "status": "changed",
+      "path": "specdojo-lp:README.md",
+      "reason": ""
+    },
+    {
+      "target": "specdojo-lp:src/components/sections/GetStarted.astro",
+      "status": "changed",
+      "path": "specdojo-lp:src/components/sections/GetStarted.astro",
+      "reason": ""
+    },
+    {
+      "target": "specdojo-lp:src/components/sections/NextSteps.astro",
+      "status": "changed",
+      "path": "specdojo-lp:src/components/sections/NextSteps.astro",
+      "reason": ""
+    },
+    {
+      "target": "specdojo-lp:src/components/sections/RegisterTypes.astro",
+      "status": "changed",
+      "path": "specdojo-lp:src/components/sections/RegisterTypes.astro",
+      "reason": ""
+    }
+  ],
+  "final_message": "v0.5.0 までの LP 更新を再確認し、個票の表の MD056 エラーを修正しました。構文・構造・コマンド例の検証は成功しています。",
+  "completion_status": "complete",
+  "handoff": [
+    "登録簿を epic を含む 8 種類に更新。epic は track ごとの仕事をまとめ、具体的な作業は子 todo に分け、epic 自体は実行しない説明とした。",
+    "`depends_on` は実行順序を利用者に伝えるため掲載した。FAQ の改善例に `--depends-on` を追加し、先行項目の完了後に実行する説明を加えた。由来を示す `--from` とは区別している。",
+    "init の `.markdownlint.yaml` 生成と既存設定の保持、任意の docs-lint・docs-site 導入、preset の既定値、Codex の起動名を現行ガイドと照合した。その他の変更を掲載しない判断と理由は個票の対応結果 4.2 に記録済み。成果物の型・grade・approach などは LP に旧値がなく、詳細は既存ガイドへ委ねる。「準備中」の表示は既存の合意を維持した。",
+    "個票の指定に従い、orchestrator が sandbox 外で LP のビルドと生成 HTML を確認する。epic のカード、依存の説明、両タブの導入手順とコマンド例を確認すること。",
+    "前回の親検証 `lint-md` の原因となった表内リンクを修復し、全表の列数を確認した。前回の `lint-fm` はタイムアウトで検査エラーは示されていない。親 runner による両検証の再実行が必要。",
+    "specdojo-lp の develop への統合、result の記入、状態遷移は親 runner に委ねる。executor は result・ステータス・Git 設定を編集していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0002/execution/exec/evidence/PJR-HDTZ/20261029T121841998Z-291d2cc3/executor.log",
+      "bytes": 4046,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0002/execution/exec/evidence/PJR-HDTZ/20261029T121841998Z-291d2cc3/parent-validation-attempt-1-lint-fm.log",
+      "bytes": 217,
+      "truncated": false
+    }
+  ]
+}
