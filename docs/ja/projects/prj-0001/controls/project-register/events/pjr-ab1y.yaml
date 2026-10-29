@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e0d83a4c5842485482c709c584d769d2
+  ts: "2026-10-27T22:58:44Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NJJ7 の決定のフォローアップとして起票するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ガイドを register を起点とする構成へ書き換える
+    - field: description
+      from: ""
+      to: register-operation、exec-operation の実行経路の使い分け、timeline-design、command-reference を、register と epic を起点とする構成へ書き換える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-NJJ7"]'
+- v: 1
+  id: reg_2aadbcc138f6498fae2ca911bfbb88a8
+  ts: "2026-10-27T23:34:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 実装に合わせてガイドを書くため
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-WAGY"]'
+  previous_event_id: reg_e0d83a4c5842485482c709c584d769d2
+- v: 1
+  id: reg_03bb1705647f4a2e8d71056d4e28522b
+  ts: "2026-10-28T00:52:58Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2aadbcc138f6498fae2ca911bfbb88a8
+- v: 1
+  id: reg_1b01abf09d8d4f80be3f24aa8188dc7d
+  ts: "2026-10-28T01:09:41Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_03bb1705647f4a2e8d71056d4e28522b
+- v: 1
+  id: reg_3778c74a095746d4a8a583f39eea64c8
+  ts: "2026-10-28T01:12:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件と docs:build の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: register-operation・exec-operation・timeline-design・specdojo-overview・quick-start の 5 本を、register と epic を起点とし schedule を子とする構成へ書き換えた
+  previous_event_id: reg_1b01abf09d8d4f80be3f24aa8188dc7d

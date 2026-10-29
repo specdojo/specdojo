@@ -1,0 +1,191 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8524b92326664dac84c9cd34fac201e1
+  ts: "2026-10-26T12:48:16Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "@specdojo/docs-siteが生成するpublic/mermaid等を.vitepress配下に集約する"
+    - field: description
+      from: ""
+      to: "現在 @specdojo/docs-site (packages/docs-site) の build / dev / mermaid 実行時に、Mermaid SVG の出力先（public/mermaid）や kata ステージング（specdojo-kata-staging）が利用リポジトリのワークスペース直下に生成されるため、利用側のルートディレクトリが散らかり .gitignore にも複数のエントリ追加が必要になっている。これらの一時・生成ディレクトリを .vitepress/ 配下（例: .vitepress/mermaid や .vitepress/kata-staging 等）に集約し、VitePress 側の静的配信設定および README / config init の .gitignore テンプレートを整理する。"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: indie
+    - field: registered
+      from: ""
+      to: "2026-10-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_99d0e6b672994d0aa79f8ad845b6b22a
+  ts: "2026-10-26T13:13:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: VitePress のページ走査と静的配信を保ちながら生成先を移す設計判断が必要なため
+  changes:
+    - field: difficulty
+      from: easy
+      to: hard
+  previous_event_id: reg_8524b92326664dac84c9cd34fac201e1
+- v: 1
+  id: reg_605c5fb2fd884ef49acbcfe2b4ec27d6
+  ts: "2026-10-26T13:18:45Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_99d0e6b672994d0aa79f8ad845b6b22a
+- v: 1
+  id: reg_2f0a311e32f042668bec7db9789d03ab
+  ts: "2026-10-26T13:35:54Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
+  previous_event_id: reg_605c5fb2fd884ef49acbcfe2b4ec27d6
+- v: 1
+  id: reg_af82f73eddf04014999b4b830608458c
+  ts: "2026-10-26T13:42:49Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
+      to: "-"
+  previous_event_id: reg_2f0a311e32f042668bec7db9789d03ab
+- v: 1
+  id: reg_70d9a88c71254c17aec5288e5b33ef5d
+  ts: "2026-10-26T13:57:33Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-unit"
+  previous_event_id: reg_af82f73eddf04014999b4b830608458c
+- v: 1
+  id: reg_16571c730be04de1a91c132f704eda47
+  ts: "2026-10-26T13:58:28Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-unit"
+      to: "-"
+  previous_event_id: reg_70d9a88c71254c17aec5288e5b33ef5d
+- v: 1
+  id: reg_438d477d6f3e461c81190cdbbfa83c15
+  ts: "2026-10-26T14:07:05Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_16571c730be04de1a91c132f704eda47
+- v: 1
+  id: reg_4ea8a87a45cc476290824869b32bd59f
+  ts: "2026-10-26T20:57:13Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_438d477d6f3e461c81190cdbbfa83c15
+- v: 1
+  id: reg_fd9925d2d9a147608020dab823d2b1e4
+  ts: "2026-10-26T21:05:30Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4ea8a87a45cc476290824869b32bd59f
+- v: 1
+  id: reg_56bfbcd1828e4084981c97174e2feb58
+  ts: "2026-10-26T22:07:47Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後の全体検査と、通常導入した配布物で完了条件を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-27"
+    - field: conclusion
+      from: "-"
+      to: 生成物を .vitepress 配下へ集約し、既存 URL、eject 優先、Git 除外を維持した。全体検査と通常導入した配布版の描画・build・dev・HTTP を確認した。
+  previous_event_id: reg_fd9925d2d9a147608020dab823d2b1e4

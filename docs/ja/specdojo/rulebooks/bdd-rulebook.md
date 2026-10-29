@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:bdd-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   target_format: yaml
   recipe: not-needed
@@ -34,7 +35,7 @@ Business Data Dictionary (BDD) Documentation Rules
 ### 3.1. ID規約
 
 - `id` は正規表現 `^bdd-[a-z0-9-]+$` に合致する一意IDを用いる。
-- `type` は `domain` 固定とする。
+- `type` は `data` 固定とする。
 - 置き換えがある場合は `supersedes` に旧IDを列挙する。
 
 ### 3.2. ファイル命名規約
@@ -50,7 +51,7 @@ Frontmatter と同等の以下の項目をYAMLドキュメントの先頭に必�
 | 項目       | 説明                                     | 必須 |
 | ---------- | ---------------------------------------- | ---- |
 | id         | データ辞書ID（`bdd-...`）                | ○    |
-| type       | `domain` 固定                            | ○    |
+| type       | `data` 固定                              | ○    |
 | title      | ドキュメント名。表示ページの見出しになる | ○    |
 | status     | `draft` / `ready` / `deprecated`         | ○    |
 | rulebook   | `specdojo:bdd-rulebook` 固定             | ○    |

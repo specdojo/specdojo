@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:mip-index-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   recipe: undecided
   sample: specdojo:mip-index-sample
@@ -55,7 +56,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 項目       | 説明                                         | 必須 |
 | ---------- | -------------------------------------------- | ---- |
 | id         | `mip-index`（固定）                          | ○    |
-| type       | `migration` 固定                             | ○    |
+| type       | `project` 固定                               | ○    |
 | title      | 移行計画: 概要（`<システム名>`）             | ○    |
 | status     | `draft` / `ready` / `deprecated`             | ○    |
 | based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |

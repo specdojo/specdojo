@@ -1,5 +1,7 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/gl.schema.yaml
 id: specdojo:gl-sample
+type: glossary
+rulebook: specdojo:gl-rulebook
 title: "用語集: 在庫・調達"
 locale: ja
 status: draft

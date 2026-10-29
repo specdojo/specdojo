@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:ifx-file-sample
-  type: project
+  type: api
   status: draft
   rulebook: specdojo:ifx-file-rulebook
 ---

@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:otp-sample
-  type: project
+  type: operations
   status: draft
   rulebook: specdojo:otp-rulebook
 ---

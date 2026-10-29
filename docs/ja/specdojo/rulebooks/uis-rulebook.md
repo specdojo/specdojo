@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:uis-rulebook
   type: rulebook
+  deliverable_type: ui
   status: draft
   recipe: undecided
   sample: specdojo:uis-sample
@@ -42,14 +43,14 @@ specdojo:
 | 項目     | 説明                                        | 必須 |
 | -------- | ------------------------------------------- | ---- |
 | id       | 画面ID（小文字ハイフン）                    | ○    |
-| type     | `screen` 固定                               | ○    |
+| type     | `ui` 固定                                   | ○    |
 | title    | 画面名                                      | ○    |
 | status   | `draft`/`ready`/`deprecated`                | ○    |
 | based_on | 根拠となる仕様ID（API/ドメイン/他画面など） | 任意 |
 
 ### NG/OK例（抜粋）
 
-- NG例: `id: UI_ProductList`（大文字/アンダースコアNG）, `type: data`（`screen`以外NG）, `extra: foo`（未定義プロパティNG）
+- NG例: `id: UI_ProductList`（大文字/アンダースコアNG）, `type: data`（`ui`以外NG）, `extra: foo`（未定義プロパティNG）
 - OK例: `id: uis-product-list`, `type: ui`, `status: ready`
 
 ## 5. 本文構成（標準テンプレ）

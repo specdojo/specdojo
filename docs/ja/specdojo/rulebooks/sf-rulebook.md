@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sf-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   recipe: undecided
   sample: specdojo:sf-sample
@@ -17,7 +18,7 @@ specdojo:
 | 項目       | 説明                          | 必須 |
 | ---------- | ----------------------------- | ---- |
 | id         | 機能一覧ID (sf-xxx-xxxx)      | ○    |
-| type       | `domain` 固定                 | ○    |
+| type       | `requirement` 固定            | ○    |
 | title      | 機能一覧名                    | ○    |
 | status     | `draft`/`ready`/`deprecated`  | ○    |
 | supersedes | 置き換え関係（古仕様→新仕様） | 任意 |
@@ -26,7 +27,7 @@ specdojo:
 
 - 機能一覧IDは正規表現 `^sf-[a-z0-9-]+$` に合致する一意IDを使用する。
 
-- `type: data` は業務ドメイン仕様であることを示す。
+- `type: requirement` は機能・業務イベントの要件であることを示します。
 
 ドキュメントID・機能IDともに `sf-` プレフィックスの `lower-kebab` 形式（正規表現: `^sf-[a-z0-9-]+$`）を使用します。
 一覧ハブには `sf-index`、個別機能には `sf-<機能名>` を付与してください（例: `sf-product-register`）。
@@ -58,7 +59,7 @@ specdojo:
 ```yaml
 ---
 id: sf-index
-type: data
+type: requirement
 title: システム化機能一覧(main)
 status: draft
 

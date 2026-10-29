@@ -64,6 +64,8 @@ package の探索では `node_modules` 全体を再帰走査せず、resolver �
 
 template は記述する部分を _TODO_ などのプレースホルダとして配置した雛形で、内容が埋まった完成例である sample と役割を分担します。
 
+sample は成果物として成り立つ完成例であり、template の `type: template` と異なり、見本にする成果物の type を持ちます。`type` と sample の識別の原則は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を正本とします。
+
 ここでいう `reference` は文書種別です。exec plan が実行時に参照する実践の型（rulebook / recipe / sample / template）とは別の役割として扱います。
 
 ## 3. 種別間の関係と成果物への紐付け

@@ -12,8 +12,8 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-25T21:29:36Z"
-  conclusion: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
+  completed_at: "2026-10-28T22:48:54Z"
+  conclusion: PJR-0QW0 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
@@ -24,7 +24,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 ## 2. 完了条件
 
-- 本個票の「対応結果」の表に、実行した日時（JST）、確認対象の項目 ID、実行した agent の nickname を 1 行追記する。確認対象の項目 ID は、実行時点で `review` または `done` になっている runner・register・exec のコード変更の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8・PJR-T46Y・PJR-8WBN・PJR-6DHY・PJR-E412・PJR-NS8Y・PJR-283N・PJR-G90K・PJR-0EFN・PJR-DKD8・PJR-A6PV・PJR-5HYP・PJR-XRAB・PJR-HE9R・PJR-W93C・PJR-CNNT・PJR-Q4CD・PJR-5B42・PJR-CT6G・PJR-EKRW・PJR-C95G・PJR-ZV60・PJR-SS72・PJR-68KR・PJR-R1FB・PJR-84F7・PJR-JJBY・PJR-6HS2・PJR-XTE6・PJR-P14M・PJR-6WQY・PJR-K87Y）のうち最も新しく統合されたものとする。
+- 本個票の「対応結果」の表に、実行した日時（JST）、確認対象の項目 ID、実行した agent の nickname を 1 行追記する。確認対象の項目 ID は、実行時点で `review` または `done` になっている runner・register・exec のコード変更の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8・PJR-T46Y・PJR-8WBN・PJR-6DHY・PJR-E412・PJR-NS8Y・PJR-283N・PJR-G90K・PJR-0EFN・PJR-DKD8・PJR-A6PV・PJR-5HYP・PJR-XRAB・PJR-HE9R・PJR-W93C・PJR-CNNT・PJR-Q4CD・PJR-5B42・PJR-CT6G・PJR-EKRW・PJR-C95G・PJR-ZV60・PJR-SS72・PJR-68KR・PJR-R1FB・PJR-84F7・PJR-JJBY・PJR-6HS2・PJR-XTE6・PJR-P14M・PJR-6WQY・PJR-K87Y・PJR-XSM8・PJR-H988・PJR-8NWR・PJR-6RVJ・PJR-B4Y4・PJR-WAGY・PJR-484B・PJR-0D0T・PJR-EXH2・PJR-0QW0）のうち最も新しく統合されたものとする。
 - 本個票以外のファイルは変更しない。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通り、統合まで終わる。
 
@@ -32,7 +32,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                              |
 | --- | --------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-K87Y の統合後の実行を記録した |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-EXH2 の統合後の実行を記録した |
 
 ## 4. 対応結果
 
@@ -78,12 +78,21 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-25 08:55 | PJR-84F7 | sonnet-executor        |
 | 2026-10-25 10:57 | PJR-XTE6 | sonnet-executor        |
 | 2026-10-26 06:21 | PJR-K87Y | sol-executor           |
+| 2026-10-27 21:35 | PJR-XSM8 | sonnet-executor        |
+| 2026-10-28 00:31 | PJR-8NWR | sonnet-executor        |
+| 2026-10-28 08:36 | PJR-6RVJ | sonnet-executor        |
+| 2026-10-28 09:18 | PJR-B4Y4 | sonnet-executor        |
+| 2026-10-28 09:47 | PJR-WAGY | sonnet-executor        |
+| 2026-10-28 20:02 | PJR-484B | sonnet-executor        |
+| 2026-10-28 21:30 | PJR-0D0T | sonnet-executor        |
+| 2026-10-28 23:15 | PJR-EXH2 | sonnet-executor        |
+| 2026-10-29 07:38 | PJR-0QW0 | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最新の統合コミット `1d6e58f4b`（2026-10-26 06:17 JST）を持つ PJR-K87Y とした。同個票の `item_status` は `review` である。今回の実行の `pipeline-state.json` に記録された executor の actor は `sol-executor` である。
+今回の確認対象は、対象一覧のうち最新の統合コミット `bf1092590`（2026-10-29 07:35 JST）を持つ PJR-0QW0 とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
 
-申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。統合後は今回の result・event・統合コミットを照合し、実体 actor が記録されていることを確認する。
+申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
-### 統合後の確認（2026-10-26）
+### 前回の統合後の確認（2026-10-26）
 
 - `PJR-JSEY` の start と review の event は、どちらも実体 actor `sol-executor` を記録した。結果文書は `complete`、親の検証 7 件はすべて `passed` で、統合 commit `c1244c193` まで完了した。
 - executor が変更した本文は本個票だけだった。runner が生成した plan・result・evidence と状態イベントを確認した。

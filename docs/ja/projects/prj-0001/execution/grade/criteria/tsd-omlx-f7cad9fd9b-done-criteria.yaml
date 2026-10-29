@@ -2,8 +2,8 @@
 id: tsd-omlx-grade-criteria
 document: tsd-omlx
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
-graded_at: "2026-10-11T16:19:55.814Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-28T16:27:49.606Z"
+graded_by: flash-high-executor
 content_hash: 7f1eeefb1bf53c1501bc80e7bd2fd3b7d38758383a042fd999946701eaec5923
 summary:
   satisfied: 0
@@ -16,9 +16,7 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: >-
-      Business requirements, acceptance criteria, and their mapping to oMLX technical selection and constraints are not
-      defined.
+    reason: The selection rationale and technical constraints are not mapped to business requirements and acceptance criteria.
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
@@ -26,24 +24,22 @@ criteria:
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
     reason: >-
-      Lacks alternative comparisons, quantitative criteria, unresolved issues, and approver definition necessary for PO
-      approval.
+      Lacks alternative comparisons, licenses, fixed versions, decision criteria, undecided issues, and approvers
+      necessary for approval.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Lacks specific version pin/update policy and licensing details for oMLX, models, and tools.
+    reason: Licenses and fixed versions or version policies for oMLX and models are not identified.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: >-
-      Lacks references to test frameworks, CI/CD integration, and quantitative verification criteria for technical stack
-      decisions.
+    reason: References to test frameworks and CI/CD environments are completely missing.
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
@@ -51,5 +47,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Lacks complete mappings of settings to CLI flags/config files, backup/rollback procedures, and multi-concurrency
-      test procedures.
+      Specific Admin UI locations, configuration file keys, CLI arguments, and restart requirements are not sufficiently
+      specified for implementation.

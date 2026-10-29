@@ -27,7 +27,7 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 - register のtypeと状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
 - Scheduleの自動・手動実行は [Schedule実行運用ガイド](schedule-operation-guide.md)、agent設定は [exec設定ガイド](exec-config-guide.md) を参照してください。
 
-各コマンドには、設定済みのオーケストレーター（`specdojo-orchestrator`）へチャットで指示する場合の文言を `# チャット:` として併記します。オーケストレーターは指示を対応する `specdojo` サブコマンドへ変換し、状態を変える操作は実行前に内容を提示して承認を求めます。導入先での設定と起動方法は [オーケストレーター運用ガイド](orchestrator-operation-guide.md) を参照してください。`<project-id>` などのプレースホルダは実際の値に読み替えてください。
+各コマンドには、設定済みのオーケストレーター（`specdojo-orchestrator`）へチャットで指示する場合の文言を `# チャット:` として併記します。オーケストレーターは指示を対応する `specdojo` サブコマンドへ変換し、状態を変える操作は実行前に内容を提示して承認を求めます。オーケストレーターはターミナル（`npm run orch:<provider>`）だけでなく、VS Code の各種拡張機能（Copilot Chat、Claude Code、Codex）からも利用できます。導入先での設定と起動方法は [オーケストレーター運用ガイド](orchestrator-operation-guide.md)（VS Code からの利用は [VS Code から使う](orchestrator-operation-guide.md#22-vs-code-から使う) 節）を参照してください。`<project-id>` などのプレースホルダは実際の値に読み替えてください。
 
 ## 1. 10分で体験する — 仕様の判断台帳
 
@@ -336,6 +336,15 @@ npx specdojo config init
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスはリポジトリルートを基準とし、`run.worktree_base` はディレクトリ名から作る `../<リポジトリ名>-worktrees` を指します。例えば `app1-specdojo/` では `../app1-specdojo-worktrees` です。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
+通常の `init` と `config init` は、markdownlint の設定がなければリポジトリ直下に
+`.markdownlint.yaml` も作ります。日本語の長い行などを許容するため、MD013・MD024・MD033・MD036・MD041・MD060
+を無効にし、ほかの記法検査は維持します。既存の設定は上書きしません。既存の利用リポジトリでも
+`npx specdojo config init --dry-run` で確認してから `npx specdojo config init` を再実行すると、
+不足する設定を追加できます。設定がないままでも、exec の result の commit 前検査は同じ基本規則を使います。
+既存設定で MD013 が有効ならその指定を優先するため、長い行を許容する場合は利用側の設定で
+`MD013: false` を指定してください。CLI2 と hook の設定の関係は
+[[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書は `app1-specdojo/docs/ja/projects/` に置きます。同梱の SpecDojo の型（Kata）は `app1-specdojo/docs/ja/specdojo/<種類>s/`、このリポジトリで新しく作る kata はその下の `<kata_authority>/` から解決します。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 
 成果物と実装を常に同じ変更・履歴として扱う場合に限り、**同一リポジトリ構成**としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
@@ -363,8 +372,11 @@ npm install
 markdownlint で検査します。対象 project の `project_register_path` 配下を変更した場合は
 `register build`、`catalog_path` 配下を変更した場合は `catalog validate` も実行します。
 `catalog_path` がない構成には catalog の検査を生成せず、時間のかかるテストも pre-commit には
-含めません。SpecDojo の文書が通る `.markdownlint.jsonc` と、provider の agent 定義を検査から外す
-`.markdownlintignore` も生成します。既存の markdownlint 設定と ignore は `--force` を付けても保持します。
+含めません。設定がなければ、同じ基本規則の `.markdownlintrc` と VS Code 向けの
+`.markdownlint-cli2.yaml`、provider の agent 定義を検査から外す `.markdownlintignore` も生成します。
+`init --lefthook` / `--slidev` もこの配置を使います。既存の `.markdownlint.yaml` などの設定と ignore は
+`--force` を付けても保持します。CLI2 の overrides を使う場合は
+[[specdojo:command-reference|CLIコマンドリファレンス]] の手順で既存設定を `.markdownlintrc` に移してください。
 `lefthook.yml` と `tools/` の既存ファイルは `--force` なしでは上書きしません。
 必要な npm script と devDependencies は書き込み前に表示し、同名の既存項目は `--force` を付けても
 保持します。linked worktree または `node_modules` がない環境では installer が安全に skip するため、
@@ -794,16 +806,17 @@ npx specdojo register add \
 
 どちらも別 project への起票では `--commit` が必須です。別リポジトリでは、相手に SpecDojo 0.4.2 以上と対象 project の統合ブランチが必要です。push は行わず、close などの状態遷移は対象 project の作業ツリーで行います。
 
-### 3.14. issueからdecision、todo、成果物カタログへ進む
+### 3.14. issueからdecision、epic、成果物カタログ・Scheduleへ進む
 
-プロジェクト立ち上げ時に、問題、判断、実施作業がまだ混在している場合は、次の順で具体化します。この流れは register の履歴を、発展手順の成果物カタログと Schedule へつなぐ橋渡しです。
+プロジェクト立ち上げ時に、問題、判断、実施作業がまだ混在している場合は、次の順で具体化します。register が起点と完了の判断を持ち、途中の進み具合は schedule が持ちます。
 
 ```text
 issue（何が問題か）
   -> decision（何を対象とするか）
-  -> todo（成果物カタログを作成する）
-  -> dct-<domain>.yaml
-  -> schedule
+  -> epic（track の仕事を起票する）
+  -> 子 todo（成果物カタログや strategy を作成する）
+  -> schedule（成果物タスクの実行と進捗）
+  -> epic を完了する（人が判断）
 ```
 
 ```bash
@@ -821,22 +834,32 @@ npx specdojo register add \
   --title "初期スコープと対象成果物を決定する" \
   --topic decide-initial-scope
 
-# チャット:「高優先度の todo『プロジェクト定義の成果物カタログを作成する』を起票して」
+# チャット:「launch トラックの epic を起票して」
+npx specdojo register add \
+  --project <project-id> \
+  --type epic \
+  --track launch \
+  --title "プロジェクト定義の仕様整備" \
+  --topic project-definition
+
+# チャット:「epic から子 todo『成果物カタログを作成する』を起票して」
 npx specdojo register add \
   --project <project-id> \
   --type todo \
-  --priority high \
+  --from <epic-id> \
   --title "プロジェクト定義の成果物カタログを作成する" \
-  --topic create-project-definition-catalog
+  --topic create-project-definition-catalog \
+  --approach catalog-planning \
+  --target domain:project-definition
 ```
 
-issue の調査結果を decision の選択肢へ、decision の結論を todo の完了条件へ引き継ぎます。decision は人が確定します。issue と todo は provider 未設定でも `exec plan --project <project-id> --register <PJR-ID>` で計画を確認でき、agent 設定後は `exec run --project <project-id> --register <PJR-ID> --worktree` で実行できます。
+issue の調査結果を decision の選択肢へ、decision の結論を track の `epic` とその子 todo へ引き継ぎます。decision は人が確定します。issue や子 todo は provider 未設定でも `exec plan --project <project-id> --register <PJR-ID>` で計画を確認でき、agent 設定後は `exec run --project <project-id> --register <PJR-ID> --worktree` で実行できます（`epic` 自体は実行対象外です）。
 
-すべての登録項目には type 別の個票が作られ、個票 Frontmatter が構造化フィールドの正本になります。個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。成果物カタログ作成の todo は、次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
+すべての登録項目には type 別の個票が作られ、個票 Frontmatter が構造化フィールドの正本になります。個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。成果物カタログ作成の todo は、次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。todo の完了により `catalog_status` が `primary` と導出され、strategy 作成と Schedule への展開（`schedule build --track launch`）が可能になります。成果物タスクの途中の進捗は schedule の依存グラフで管理し、登録簿に個々の成果物タスクを二重管理しません。トラック完了時に人が `epic` を close します。
 
 ## 4. 発展: 成果物カタログからscheduleへ展開する
 
-この経路では、成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）から Schedule を生成し、依存関係に従ってタスクを実行します。
+この経路では、epic の子 todo から成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）を作成して Schedule を生成し、依存関係に従ってタスクを実行します。
 
 ### 4.1. 成果物カタログを作成する
 

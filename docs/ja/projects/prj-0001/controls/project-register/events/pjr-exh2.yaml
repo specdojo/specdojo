@@ -32,3 +32,80 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_445a06d8616048cfb4ca460462640110
+  ts: "2026-10-28T13:35:15Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5492ec6546b0443fac7fbf633b638c4a
+- v: 1
+  id: reg_3c66d135ca6a4461b6c71b318b370878
+  ts: "2026-10-28T13:55:09Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_445a06d8616048cfb4ca460462640110
+- v: 1
+  id: reg_13350f2feee349f5b6de97576eb84b16
+  ts: "2026-10-28T13:55:52Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_3c66d135ca6a4461b6c71b318b370878
+- v: 1
+  id: reg_0e225996bfba4b6190fe9cf5e2194105
+  ts: "2026-10-28T14:12:52Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_13350f2feee349f5b6de97576eb84b16
+- v: 1
+  id: reg_d54d1c4a58fa457e8eb583d82587fb84
+  ts: "2026-10-28T14:26:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件（branch-only の E2E を含む）と JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: repos[].integration_strategy に merge / branch-only を追加した。branch-only では exec branch に commit して統合先へ merge せず branch を残し、result に未統合と branch 名・trace key を記録する。push と PR の作成は範囲外
+  previous_event_id: reg_0e225996bfba4b6190fe9cf5e2194105

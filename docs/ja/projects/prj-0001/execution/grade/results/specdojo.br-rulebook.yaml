@@ -6,41 +6,41 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 71
-graded_at: "2026-09-30T21:40:10.209Z"
-graded_by: agy-expert-executor
-content_hash: ec0ab5f1d3cb12e660fa8569dd7d6cfc51e79b484284c711c3c527800d7da0d6
+graded_at: "2026-10-28T20:34:11.267Z"
+graded_by: flash-high-executor
+content_hash: c2fca23444c60188fdb92b3745138ea0eed1ce7a78874d13c44c156e81a4e773
 categories:
   purpose:
-    score: 25
-  operations:
-    score: 100
-  planning:
-    score: 92
-  business:
     score: 50
+  operations:
+    score: 88
+  planning:
+    score: 83
+  business:
+    score: 58
   architecture:
     score: 100
   usability:
     score: 83
   implementation:
-    score: 88
-  quality:
     score: 75
+  quality:
+    score: 58
   consistency:
-    score: 25
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -48,14 +48,14 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -66,20 +66,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 3
     score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 1
     score: 25
@@ -90,11 +90,11 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 7
-  minor: 5
+  minor: 12
   note: 0
 findings:
   - id: F001
@@ -113,37 +113,90 @@ findings:
     line: 59
     anchor: ""
     message: 本文構成は各ルールの適用範囲、対象外、業務上の判断理由を要求していないため、PO がルールの必要性と上位目的との対応を確認できない。
+    message_ja: 本文構成は各ルールの適用範囲、対象外、業務上の判断理由を要求していないため、PO がルールの必要性と上位目的との対応を確認できない。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
     line: 59
     anchor: ""
     message: PO の承認・保留・差し戻しに必要な適用対象、未決事項、影響する業務プロセス、承認責任者を記載する欄がなく、業務ルールの確定判断に必要な論点が揃わない。
+    message_ja: PO の承認・保留・差し戻しに必要な適用対象、未決事項、影響する業務プロセス、承認責任者を記載する欄がなく、業務ルールの確定判断に必要な論点が揃わない。
   - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 49
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: >-
+      The rulebook does not define done criteria or responsible role codes for authoring and reviewing business rules,
+      making it difficult to verify task completion and estimate effort.
+    message_ja: rulebook には、ビジネスルールを作成およびレビューするための完了基準や担当ロールコードが定義されていないため、タスクの完了確認や工数見積もりが困難です。
+  - id: F004
     severity: minor
     rule: vp-pm-control-reporting
     line: 115
     anchor: "## 8. 階層分解ガイド"
     message: 「メモ / 将来課題」が単一の自由記述欄で、PJR へ転記すべき課題・リスク・変更要求の分類、報告先、担当 Role code を示さないため、継続管理が必要な事項を識別できない。
-  - id: F004
+    message_ja: 「メモ / 将来課題」が単一の自由記述欄で、PJR へ転記すべき課題・リスク・変更要求の分類、報告先、担当 Role code を示さないため、継続管理が必要な事項を識別できない。
+  - id: F005
     severity: major
     rule: vp-ba-business-value
     line: 72
     anchor: "- 入力は概念レベルで記述する（詳細は「9. 禁止事項」参照）。"
     message: 「概要」を何を判断・計算するかの一文だけとしており、対象業務・利用者、解決する課題、期待効果、判断理由を要求しないため、ルールの業務価値を説明できない。
-  - id: F005
+    message_ja: 「概要」を何を判断・計算するかの一文だけとしており、対象業務・利用者、解決する課題、期待効果、判断理由を要求しないため、ルールの業務価値を説明できない。
+  - id: F006
     severity: major
     rule: vp-ba-requirements-completeness
     line: 59
     anchor: ""
     message: 標準テンプレに適用範囲、対象外、前提条件、境界条件がなく、どの業務場面でルールを適用または適用除外するかを利用者視点で確認できない。
-  - id: F006
+    message_ja: 標準テンプレに適用範囲、対象外、前提条件、境界条件がなく、どの業務場面でルールを適用または適用除外するかを利用者視点で確認できない。
+  - id: F007
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 49
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: >-
+      The standard template and frontmatter do not define sections or fields for identifying stakeholders, reviewing
+      actors, or business users, making it unclear who agrees upon or operates the rule.
+    message_ja: 標準テンプレートおよびfrontmatter には、ステークホルダー、レビューア、またはビジネスユーザーを特定するためのセクションやフィールドが定義されていないため、誰がルールに合意または運用を行うのかが不明確です。
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 66
+    anchor: "### 6.2. 入力"
+    message: >-
+      The guide for inputs and outputs does not require specifying data types and domain constraints (valid ranges or
+      nullability), leaving ambiguity during implementation.
+    message_ja: 入出力のガイドには、データ型やドメイン制約（有効な範囲や null 許容性）の指定が求められていないため、実装時に曖昧さが残ります。
+  - id: F009
     severity: minor
     rule: vp-dev-change-impact
     line: 52
     anchor: ""
     message: "`supersedes` は旧仕様との置換だけを扱い、BR の条件・出力変更時に参照元 BPS、実装、テストへ及ぶ影響を識別する記述規則がない。"
-  - id: F007
+    message_ja: "`supersedes` は旧仕様との置換だけを扱い、BR の条件・出力変更時に参照元 BPS、実装、テストへ及ぶ影響を識別する記述規則がない。"
+  - id: F010
+    severity: minor
+    rule: vp-dev-testability
+    line: 126
+    anchor: ""
+    message: >-
+      The rulebook does not provide validation commands or procedures (such as lint or schema validation commands) for
+      authors to verify BR deliverables.
+    message_ja: >-
+      The rulebook does not provide validation commands or procedures (such as lint or schema validation commands) for
+      authors to verify BR deliverables.
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 126
+    anchor: ""
+    message: >-
+      The rulebook lacks clear verification checklists or pass/fail criteria to objectively validate whether an authored
+      business rule meets quality requirements.
+    message_ja: rulebook には、作成されたビジネスルールが品質要件を満たしているかを客観的に検証するための、明確な検証用チェックリストや合格/不合格の基準が不足しています。
+  - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
     line: 41
@@ -151,13 +204,17 @@ findings:
     message: >-
       第4節の Frontmatter 表は、成果物 Frontmatter の必須キー `rulebook` と `specdojo:` 名前空間を欠き、共通スキーマで未定義の `title`
       を必須化しているため、必須キー一覧を共通スキーマに合わせて修正する必要がある。
-  - id: F008
+    message_ja: >-
+      第4節の Frontmatter 表は、成果物 Frontmatter の必須キー `rulebook` と `specdojo:` 名前空間を欠き、共通スキーマで未定義の `title`
+      を必須化しているため、必須キー一覧を共通スキーマに合わせて修正する必要がある。
+  - id: F013
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 46
     anchor: "- NG例: `type: api`（列挙外）, `id: BR_LowStock`（大文字/アンダースコアNG）, `extra: foo`（未定義プロパティNG）"
     message: 第4節の ID 形式の記述 `(br-xxx-xxxx)` が、第3節で例示されているセマンティックな ID 形式 `br-low-stock-judgment` と矛盾している。
-  - id: F009
+    message_ja: 第4節の ID 形式の記述 `(br-xxx-xxxx)` が、第3節で例示されているセマンティックな ID 形式 `br-low-stock-judgment` と矛盾している。
+  - id: F014
     severity: major
     rule: vp-qe-kata-conformance
     line: 41
@@ -165,7 +222,10 @@ findings:
     message: >-
       第4節の Frontmatter 定義は、共通メタデータ標準と参照 sample が必須とする `specdojo:` 名前空間および `rulebook` を示さず、スキーマで許可されない `title`
       を必須としているため、この規則から作成した BR が成果物 Frontmatter 検証に失敗する。
-  - id: F010
+    message_ja: >-
+      第4節の Frontmatter 定義は、共通メタデータ標準と参照 sample が必須とする `specdojo:` 名前空間および `rulebook` を示さず、スキーマで許可されない `title`
+      を必須としているため、この規則から作成した BR が成果物 Frontmatter 検証に失敗する。
+  - id: F015
     severity: major
     rule: vp-qe-kata-conformance
     line: 35
@@ -173,13 +233,17 @@ findings:
     message: >-
       ファイル名を `br-＜番号＞-＜短い日本語名＞.md` とする規則が、成果物リファレンスと成果物カタログテンプレートの `br-＜term＞.md` に一致せず、この rulebook から作成した BR をカタログの
       `local_id`・`path` 規則へ整合させられない。
-  - id: F011
+    message_ja: >-
+      ファイル名を `br-＜番号＞-＜短い日本語名＞.md` とする規則が、成果物リファレンスと成果物カタログテンプレートの `br-＜term＞.md` に一致せず、この rulebook から作成した BR をカタログの
+      `local_id`・`path` 規則へ整合させられない。
+  - id: F016
     severity: minor
     rule: vp-ux-readability
     line: 46
     anchor: "- NG例: `type: api`（列挙外）, `id: BR_LowStock`（大文字/アンダースコアNG）, `extra: foo`（未定義プロパティNG）"
     message: Frontmatter 表のヘッダー区切り行と最初のデータ行の間に空行があるため、項目行が表ではなくパイプ文字を含む段落として解析され、必須・任意の対応を表形式で読めない。
-  - id: F012
+    message_ja: Frontmatter 表のヘッダー区切り行と最初のデータ行の間に空行があるため、項目行が表ではなくパイプ文字を含む段落として解析され、必須・任意の対応を表形式で読めない。
+  - id: F017
     severity: minor
     rule: vp-ux-language-consistency
     line: 46
@@ -187,3 +251,24 @@ findings:
     message: >-
       `id` の説明だけが `(br-xxx-xxxx)` となっており、第3節や NG/OK 例で一貫して使用する `br-low-stock-judgment` 型のセマンティックな kebab-case
       表記と統一されていない。
+    message_ja: >-
+      `id` の説明だけが `(br-xxx-xxxx)` となっており、第3節や NG/OK 例で一貫して使用する `br-low-stock-judgment` 型のセマンティックな kebab-case
+      表記と統一されていない。
+  - id: F018
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 36
+    anchor: "| id | ルールID (br-xxx-xxxx) | ○ |"
+    message: >-
+      The rulebook defines status values (draft/ready/deprecated) but does not provide ready criteria or release gate
+      conditions required to promote a BR deliverable to ready status.
+    message_ja: ルールブックにはステータス値（draft/ready/deprecated）が定義されていますが、BRの成果物をreadyステータスに昇格させるために必要なready基準やリリースゲートの条件が提供されていません。
+  - id: F019
+    severity: minor
+    rule: vp-ops-operability
+    line: 41
+    anchor: "| based_on | 根拠となる仕様ID（BPS/UIS/BEL/BES 等） | 任意 |"
+    message: >-
+      The rulebook lacks guidelines for lifecycle operations such as how to deprecate, update, or handle inquiries
+      regarding existing business rules, including assigned role codes.
+    message_ja: ルールブックには、割り当てられたロールコードを含む既存のビジネスルールを、どのように非推奨にするか、更新するか、または問い合わせに対応するかといった、ライフサイクル操作のガイドラインが不足しています。

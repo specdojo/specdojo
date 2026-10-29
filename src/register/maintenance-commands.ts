@@ -10,6 +10,8 @@ import { registerEventFilePath, validateRegisterEventDocs } from "./events.js";
 import { validateRegisterItemDocs } from "./item.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import type { BuildScope, RegisterCommandDependencies } from "./command-types.js";
+import { validateRegisterDependencyDocs } from "./dependency.js";
+import { validateRegisterEpicDocs } from "./epic.js";
 import { validateDerivedFromDocs } from "./derivation.js";
 
 export function registerMaintenanceCommands(
@@ -133,7 +135,11 @@ export function registerMaintenanceCommands(
       }
 
       const validation = validateRegisterItemDocs(paths.projectRegisterPath);
-      const derivationErrors = validateDerivedFromDocs(paths);
+      const derivationErrors = [
+        ...validateDerivedFromDocs(paths),
+        ...validateRegisterEpicDocs(paths),
+        ...validateRegisterDependencyDocs(paths),
+      ];
       const eventErrors = validateRegisterEventDocs(
         paths.projectRegisterPath,
         paths.registerDateTimeZone,

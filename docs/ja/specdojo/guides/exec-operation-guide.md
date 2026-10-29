@@ -43,25 +43,26 @@ exec が扱う関心事、タスクの出どころによる実行経路の選び
 
 ### 1.2. 実行経路の使い分け
 
-agent にタスクを実行させる経路は、実行対象の出どころによって schedule 実行と register 実行の 2 つがあります。routine はそれらを時刻条件で発火させるトリガー層で、それ自体は実行機構を持ちません。「何を実行するか」（schedule / register）と「いつ実行するか」（人が起動する / routine が定期起動する）は独立に選べます。
+agent にタスクを実行させる経路には、業務の起点・着手承認・完了判断を担う register と、成果物カタログに基づく途中の進み具合を担う schedule があります。両者は同格の 2 経路ではなく、register を親、schedule を子とする階層関係にあります。routine はそれらを時刻条件で発火させるトリガー層で、それ自体は実行機構を持ちません。「何を実行するか」（register の項目 / schedule のタスク）と「いつ実行するか」（人が起動する / routine が定期起動する）は独立に選べます。
 
-| 観点         | schedule 実行                             | register 実行                                     | routine（トリガー層）                    |
-| ------------ | ----------------------------------------- | ------------------------------------------------- | ---------------------------------------- |
-| 実行対象     | `sch-track-*.yaml` のタスク（依存グラフ） | `generated/pjr-index.md` の項目                   | `rtn-*.yaml` の定義（実体は左の 2 経路） |
-| 代表コマンド | `exec run --task` / `exec run --auto`     | `exec run --register`                             | `routine run --due`                      |
-| 起動         | 人、または routine（`job-exec-auto`）     | 人、または routine（`job-register-sweep`）        | 外部スケジューラ（cron / CI）            |
-| 状態追跡     | exec events（claim / complete / block）   | register の遷移（in-progress / review / waiting） | `last_run` の記録のみ                    |
-| 隔離         | worktree（`--worktree` / `--auto`）       | `run.register_execution` または CLI で選択        | -（実行経路へ委譲）                      |
-| 終端の扱い   | `complete` event（human finalize で確定） | 人が確認して `register close`                     | -（発火の記録のみ）                      |
-| 典型用途     | 計画された成果物の作成・レビュー・確定    | 立ち上げ時の課題・判断、進行中の計画外対応・調査  | 日次スイープ・夜間バッチなどの定期実行   |
+| 観点         | register 実行（親: 起点・承認・完了）                                       | schedule 実行（子: 途中の進捗・依存実行） | routine（トリガー層）                    |
+| ------------ | --------------------------------------------------------------------------- | ----------------------------------------- | ---------------------------------------- |
+| 役割         | 業務の起点、着手承認、完了判断、単発の調査・対応                            | 成果物の依存関係に基づく進捗管理・実行    | 定期起動・スケジューリング               |
+| 実行対象     | `generated/pjr-index.md` の項目（todo / issue / change-request 等）         | `sch-track-*.yaml` のタスク（依存グラフ） | `rtn-*.yaml` の定義（実体は左の 2 経路） |
+| 代表コマンド | `exec run --register`                                                       | `exec run --task` / `exec run --auto`     | `routine run --due`                      |
+| 起動         | 人、または routine（`job-register-sweep`）                                  | 人、または routine（`job-exec-auto`）     | 外部スケジューラ（cron / CI）            |
+| 状態追跡     | register の遷移（in-progress / review / waiting）                           | exec events（claim / complete / block）   | `last_run` の記録のみ                    |
+| 隔離         | `run.register_execution` または CLI で選択                                  | worktree（`--worktree` / `--auto`）       | -（実行経路へ委譲）                      |
+| 終端の扱い   | 人が確認して `register close`（epic も人が判断）                            | `complete` event（human finalize で確定） | -（発火の記録のみ）                      |
+| 典型用途     | 課題・判断、track の epic 起票、カタログ・strategy 計画、計画外の対応・調査 | 計画された成果物群の作成・レビュー・確定  | 日次スイープ・夜間バッチなどの定期実行   |
 
 迷った場合は次で判断します。
 
-- 成果物カタログと依存関係に基づく計画済みの作業は schedule 実行を使う（`exec run --auto` / `--task`。手順は [Schedule実行運用ガイド](schedule-operation-guide.md)）。
-- 立ち上げ時の未整理な課題・判断、または進行中に発生した計画外の単発対応・調査で、台帳として追跡したいものは register を使う（`register add` で登録し、agent 実行可能な type は `exec run --register`。手順は [登録簿運用ガイド](register-operation-guide.md)）。
-- 上記のどちらかを決まった時刻条件で繰り返したい場合は routine を使う（`rtn-*.yaml` を定義して外部スケジューラから `routine run --due` を呼ぶ。手順は [routine運用ガイド](routine-operation-guide.md)）。
+- 業務の起点・着手承認・完了判断、未整理な課題や判断、単発の対応・調査、およびカタログや strategy の計画は register を使う（`register add` で登録し、agent 実行可能な type は `exec run --register`。まとまった仕事は track ごとに `epic` を起票する。手順は [登録簿運用ガイド](register-operation-guide.md)）。
+- `epic` のもとで成果物カタログと依存関係を展開し、途中の進み具合を管理しながら進める作業は schedule 実行を使う（`exec run --auto` / `--task`。手順は [Schedule実行運用ガイド](schedule-operation-guide.md)）。
+- 上記のいずれかを決まった時刻条件で繰り返したい場合は routine を使う（`rtn-*.yaml` を定義して外部スケジューラから `routine run --due` を呼ぶ。手順は [routine運用ガイド](routine-operation-guide.md)）。
 
-register 実行は exec events を記録しないため、schedule の Ready・CPM・phase gate には影響しません。立ち上げ時の個票で目的・スコープ・対象成果物を決定したら、カタログ作成の個票を完了し、以後の計画済み作業を schedule のタスクとして管理します。
+register 実行は exec events を記録しないため、schedule の Ready・CPM・phase gate には影響しません。まとまった仕事は track ごとに `epic` を起票し、その子 todo でカタログ作成（`catalog-planning`）や strategy 作成（`strategy-planning`）を進めて schedule へ展開します。途中の進み具合は schedule が持ち、トラック完了時に人が `epic` の完了を判断して close します。
 
 登録の判断、type の選び方、個票の作成などの台帳運用は [登録簿運用ガイド](register-operation-guide.md) を参照します。
 

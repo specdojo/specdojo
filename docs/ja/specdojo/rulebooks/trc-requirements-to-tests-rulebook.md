@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:trc-requirements-to-tests-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   sample: specdojo:trc-requirements-to-tests-sample
 ---

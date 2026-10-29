@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:nfr-reliability-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:nfr-reliability-rulebook
 ---

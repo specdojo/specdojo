@@ -7,6 +7,7 @@ import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
 import { runDevcontainerScaffold, type DevcontainerPreset } from "../devcontainer/scaffold.js";
 import { runProviderScaffold } from "../shared/provider-scaffold.js";
 import { runLefthookScaffold } from "../shared/lefthook-scaffold.js";
+import { ensureMarkdownlintConfig } from "../shared/markdownlint-config.js";
 import { runSlidevScaffold, SLIDEV_KATA_PATTERNS } from "../shared/slidev-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "../register/register.js";
 import {
@@ -794,6 +795,7 @@ export async function runInit(
   if (answers.slidev) {
     await runSlidevScaffold({ repoRoot, dryRun });
   }
+  if (!answers.lefthook && !answers.slidev) ensureMarkdownlintConfig(repoRoot, dryRun);
 
   const firstProvider = answers.providers[0];
   const script =

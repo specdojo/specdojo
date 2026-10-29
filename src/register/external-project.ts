@@ -14,6 +14,7 @@ export const MINIMUM_EXTERNAL_SOURCE_VERSION = "0.4.5";
 export type ExternalRegisterAddOptions = {
   project?: string;
   type: string;
+  track?: string;
   title: string;
   description: string;
   priority: string;
@@ -28,6 +29,7 @@ export type ExternalRegisterAddOptions = {
   target?: string[];
   source?: string[];
   from?: string[];
+  dependsOn?: string[];
   id?: string;
   topic?: string;
   by?: string;
@@ -84,6 +86,7 @@ export function buildExternalRegisterAddArgs(
     "--conclusion",
     opts.conclusion,
   ];
+  addValue(args, "--track", opts.track);
   addValue(args, "--difficulty", opts.difficulty);
   addValue(args, "--registered", opts.registered);
   addValue(args, "--approach", opts.approach);
@@ -91,6 +94,13 @@ export function buildExternalRegisterAddArgs(
   for (const source of opts.source ?? []) addValue(args, "--source", source);
   for (const source of opts.from ?? []) {
     addValue(args, "--from", rewriteExternalDerivedFrom(source, alias, externalProject.project_id));
+  }
+  for (const predecessor of opts.dependsOn ?? []) {
+    addValue(
+      args,
+      "--depends-on",
+      rewriteExternalDerivedFrom(predecessor, alias, externalProject.project_id),
+    );
   }
   addValue(args, "--id", opts.id);
   addValue(args, "--topic", opts.topic);

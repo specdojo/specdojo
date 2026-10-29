@@ -107,6 +107,18 @@ properties:
                   finalize,
                   bootstrap-finalize,
                 ]
+      - if:
+          required: [item_type]
+          properties:
+            item_type:
+              const: epic
+        then:
+          required: [track]
+          properties:
+            track: true
+        else:
+          properties:
+            track: false
       - type: object
         required:
           - rulebook
@@ -149,6 +161,10 @@ properties:
           item_type:
             $ref: "#/$defs/ItemType"
             description: "Classification of the register item (list column: 分類)."
+
+          track:
+            $ref: "#/$defs/Track"
+            description: "Track governed by this epic; checked against tml-index.yaml when present."
 
           item_status:
             $ref: "#/$defs/ItemStatus"
@@ -226,6 +242,19 @@ properties:
               same project and <project-id>:PJR-XXXX for an item in another project. Omit the key
               when the item was not derived from another register item.
 
+          depends_on:
+            type: array
+            items:
+              oneOf:
+                - $ref: "#/$defs/LocalRegisterItemRef"
+                - $ref: "#/$defs/QualifiedRegisterItemRef"
+            minItems: 1
+            uniqueItems: true
+            description: >
+              Predecessor register item IDs. Execution requires every predecessor to be done or
+              decided; rejected and deferred do not satisfy a dependency. References use the
+              same local or project-qualified syntax as derived_from. Cycles are forbidden.
+
           autopilot:
             type: string
             const: approved
@@ -238,7 +267,8 @@ properties:
             description: >
               Execution approach. Authoring approaches use the target as the new kata id and
               sources as read-only exemplars. For compatibility, additional targets are also
-              accepted as exemplar sources. Other approaches require one compatible document id.
+              accepted as exemplar sources. Planning approaches require one domain:<id> or track:<id>
+              target. Other approaches require one compatible document id.
 
           targets:
             type: array
@@ -247,7 +277,7 @@ properties:
               minLength: 1
             minItems: 1
             description: >
-              Doc ids of documents this register item targets. Deliverable targets
+              Document IDs or planning units (domain:<id> for catalog-planning, track:<id> for strategy-planning). Deliverable targets
               used with an approach prefer the project catalog; target_path and target_rulebook or existing frontmatter allow catalog-less resolution so that
               not-yet-created deliverables can be selected; kata and standalone
               targets are resolved via the doc index. When present, exec plan
@@ -279,10 +309,15 @@ properties:
               key when the authoring task has no exemplar.
 
 $defs:
+  Track:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-]*$"
+
   ItemType:
     type: string
     enum:
       - todo
+      - epic
       - question
       - risk
       - issue
@@ -337,6 +372,8 @@ $defs:
       - recipe-guided
       - freeform
       - bootstrap
+      - catalog-planning
+      - strategy-planning
       - rulebook-authoring
       - recipe-authoring
       - sample-authoring
@@ -349,7 +386,7 @@ $defs:
       - template-maintenance
       - finalize
       - bootstrap-finalize
-    description: "Execution approach shared with src/shared/agent-types.ts."
+    description: "Execution approach shared with src/shared/agent-types.ts. catalog-planning and strategy-planning are register-only."
 
   Date:
     type: string

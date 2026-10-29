@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:ifx-msg-rulebook
   type: rulebook
+  deliverable_type: api
   status: draft
   target_format: yaml
   recipe: not-needed
@@ -51,7 +52,7 @@ ESIL 側の `spec_ref: ifx-msg-...` は、このEMSのID（およびファイル
 - `asyncapi`
 - `info`（`title`, `version` を含む）
 
-- `x-spec-meta`（`id`, `type`, `status` を含む）
+- `x-spec-meta`（`id`, `type`, `status`, `rulebook` を含む）
 - `channels`（少なくとも1つ）
 - `components/messages`（少なくとも1つ）
 
@@ -62,7 +63,8 @@ ESIL 側の `spec_ref: ifx-msg-...` は、このEMSのID（およびファイル
 | キー     | 説明                                                        | 必須 |
 | -------- | ----------------------------------------------------------- | ---- |
 | id       | メッセージ仕様ID（`ifx-msg-...`）、ESILの `spec_ref` と対応 | ○    |
-| type     | `message` 固定                                              | ○    |
+| type     | `api` 固定                                                  | ○    |
+| rulebook | `specdojo:ifx-msg-rulebook`                                 | ○    |
 | status   | `draft` / `ready` / `deprecated`                            | ○    |
 | based_on | 根拠となる他仕様のIDリスト（例: `["ifx-api-auth"]`）        | 任意 |
 

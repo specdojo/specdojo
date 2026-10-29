@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sld-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   recipe: undecided
   sample: specdojo:sld-sample
@@ -17,7 +18,7 @@ specdojo:
 | 項目 | 説明                          | 必須 |
 | ---- | ----------------------------- | ---- |
 | id   | 保管場所一覧ID (sll-xxx-xxxx) | ○    |
-| type | `domain` 固定                 | ○    |
+| type | `data` 固定                   | ○    |
 
 | title | 保管場所一覧名 | ○ |
 | status | `draft`/`ready`/`deprecated` | ○ |

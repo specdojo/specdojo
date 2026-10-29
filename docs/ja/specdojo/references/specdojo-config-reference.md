@@ -29,6 +29,12 @@ SpecDojo Configuration Reference
 
 `npx specdojo config init` は、register を開始できる次の最小構成を生成します。catalog や schedule の未使用キーは生成しません。
 
+あわせて、markdownlint の設定がなければリポジトリ直下に `.markdownlint.yaml` を生成します。
+MD013・MD024・MD033・MD036・MD041・MD060 を無効にし、日本語の長い行や SpecDojo の文書構成を許容します。
+既存設定は上書きしません。既存リポジトリでは `config init --dry-run` で確認してから再実行すると追加できます。
+exec の result の commit 前検査にも、利用リポジトリに設定がないときは同じ基本規則が適用されます。
+設定の優先順位と hook / CLI2 の配置は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 ```json
 {
   "version": 1,
@@ -182,14 +188,19 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 
 `projects.<project-id>.repos` は、プロジェクトリポジトリとは別のプロダクトリポジトリを配列で宣言します。プロジェクトリポジトリ自身は宣言しません。キーを省略した project（または空配列）は、従来どおりプロジェクトリポジトリ 1 つだけを扱います。
 
-| キー                 | 必須 | 既定値                         | 役割・利用箇所                                                                                                                    |
-| -------------------- | ---- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| `name`               | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。`project` は予約名で使えません。 |
-| `path`               | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。                                     |
-| `integration_branch` | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                             |
-| `setup`              | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                          |
+| キー                   | 必須 | 既定値                         | 役割・利用箇所                                                                                                                            |
+| ---------------------- | ---- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                 | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。`project` は予約名で使えません。         |
+| `path`                 | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。                                             |
+| `integration_branch`   | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                                     |
+| `integration_strategy` | 任意 | `merge`                        | `merge` はローカルの merge commit で統合します。`branch-only` は exec branch に commit して保持し、プロダクト側の PR レビューに渡します。 |
+| `setup`                | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                                  |
 
 register の worktree 実行では、`exec run --integration-branch <repo>=<branch>` により `integration_branch` を run ごとに上書きできます。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定方法、ローカルブランチの検査、並列実行と再開時の扱いは [[specdojo:command-reference]] を参照してください。
+
+GitHub flow などで PR レビューを必須にするリポジトリには、`"integration_strategy": "branch-only"` を指定します。`integration_branch` は exec branch の作成元と、プロダクト側で PR を作る際の統合先の目安です。runner は統合先へ merge せず、push・PR 作成（`gh` を含む）も行いません。プロダクトの commit とプロジェクトの記帳が成功すると、プロジェクト側は通常どおり `review` へ進み、result に `branch-only`（未統合）、exec branch 名、trace key を残します。プロダクト側のレビューやリリースが完了したことは意味しません。
+
+成功後は全 worktree を撤去し、`branch-only` の exec branch だけを残します。利用者はその branch を必要な承認のもと push し、プロダクト側の手順で PR を作成します。squash merge でも追跡できるよう、commit メッセージの `Refs: <project-id>:<item-id>` を保持してください。失敗時は worktree と branch を残して `--resume` で再開し、`branch-only` の worktree へ統合先を自動で取り込みません。同じ項目を新規実行する際に保持済み branch があると停止するため、既存 run を再開するか、プロダクト側の作業を終えて branch を退避・削除してから実行します。`exec worktree prune` は未統合の branch を削除しません。
 
 ```json
 {
@@ -200,6 +211,7 @@ register の worktree 実行では、`exec run --integration-branch <repo>=<bran
       "name": "app1",
       "path": "../app1",
       "integration_branch": "main",
+      "integration_strategy": "branch-only",
       "setup": { "install": true, "build": false }
     }
   ]
@@ -241,7 +253,7 @@ agent の起動コマンドには、provider ごとにプロダクト worktree �
 
 agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
 
-プロダクトリポジトリの変更は、`exec run --worktree` の統合段で runner がリポジトリごとに commit し、宣言順のプロダクト、最後にプロジェクトの順で統合します。統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの worktree と統合順序」と「複数リポジトリの統合の失敗と再開」を参照してください。`exec worktree commit` はプロダクト側を統合しないため、プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に停止します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。
+プロダクトリポジトリの変更は、`exec run --worktree` の統合段で runner がリポジトリごとに commit し、宣言順にプロダクトの設定方式を処理し、最後にプロジェクトを統合します。統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの worktree と統合順序」と「複数リポジトリの統合の失敗と再開」を参照してください。`exec worktree commit` はプロダクト側を統合しないため、プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に停止します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。
 
 exec worktree の中で設定を読む場合（agent が worktree で `specdojo` を実行する場合など）、`path` の代わりに同じタスクの `<worktree_base>/<task-id>/<name>/` へ解決します。
 
@@ -253,7 +265,7 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 - `name` がいずれかの project ID と同じである。`<name>:<...>` が doc id とリポジトリのパスのどちらか区別できなくなるためです。
 - `name` が予約名 `project` である。プロジェクトリポジトリの worktree のディレクトリ名と重なるためです。
 - `path` が空、絶対パス、存在しない、またはディレクトリでない。
-- 宣言に無いキーがある、`integration_branch` が空文字、`setup` の値が真偽値でない。
+- 宣言に無いキーがある、`integration_branch` が空文字、`integration_strategy` が `merge` / `branch-only` 以外、`setup` の値が真偽値でない。
 
 設定の形は `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` でも検証できます。リポジトリ名と project ID の重複と `path` の実在は schema で表せないため、CLI の読み込み時の検証が正本です。
 

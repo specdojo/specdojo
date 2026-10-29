@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:pr-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   recipe: not-needed
   sample: specdojo:pr-sample

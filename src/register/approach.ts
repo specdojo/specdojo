@@ -15,6 +15,7 @@ import { load } from "../shared/yaml.js";
 import { assertAuthorableKataId, authoredKataExists, authoringKind } from "../kata/authoring.js";
 import { CATALOG_LESS_APPROACHES, resolveRegisterDeliverableTarget } from "./deliverable-target.js";
 import { resolveAuthoringSources } from "./authoring-sources.js";
+import { isPlanningApproach, validatePlanningTarget } from "./planning.js";
 
 const MAINTENANCE_TARGET_KIND: Partial<Record<Approach, string>> = {
   "rulebook-maintenance": "rulebook",
@@ -136,6 +137,19 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
   if (!approach && !opts.validateTargetsWithoutApproach) return;
   if (targets.length === 0) return;
 
+  if (isPlanningApproach(approach)) {
+    validatePlanningTarget({
+      repoRoot: opts.repoRoot,
+      approach,
+      target: targets[0],
+      project:
+        opts.project ??
+        loadConfig(opts.repoRoot).config?.projects[opts.projectId] ??
+        (opts.catalogPath ? { catalog_path: opts.catalogPath } : {}),
+    });
+    return;
+  }
+
   const entries = collectDocIndexEntries(resolve(opts.repoRoot, "docs"), opts.repoRoot);
   if (!approach) {
     for (const target of targets) {
@@ -172,6 +186,15 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     const indexedPath = entries[targetId];
     if (!indexedPath) {
       throw new Error(`Target document id is not resolvable via the document index: ${targetId}`);
+    }
+    // sample は見本にする成果物の type を持つため、種類は ID の命名で判定する。
+    if (expectedKind === "sample") {
+      if (!targetId.endsWith("-sample")) {
+        throw new Error(
+          `Approach "${approach}" requires a sample document target with an id ending in -sample: ${targetId}`,
+        );
+      }
+      return;
     }
     const actualKind = targetDocumentType(resolvedIndexPath(opts.repoRoot, indexedPath));
     if (actualKind !== expectedKind) {

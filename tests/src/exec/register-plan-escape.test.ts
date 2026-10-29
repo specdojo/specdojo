@@ -532,6 +532,54 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("register-specific criterion is satisfied");
   });
 
+  it.each(["project", "sample"])(
+    "sample-maintenance の個票から type: %s の sample の plan を生成する",
+    async (type) => {
+      await writeKataFixture();
+      const templatesPath = path.join(dir, "docs/ja/specdojo/exec-templates");
+      await writeFile(
+        path.join(templatesPath, "xep-sample-maintenance-template.md"),
+        await readFile(
+          path.join(
+            specdojoSourceRoot,
+            "docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md",
+          ),
+          "utf8",
+        ),
+        "utf8",
+      );
+      const samplePath = "docs/ja/kata/samples/test-sample.md";
+      await mkdir(path.dirname(path.join(dir, samplePath)), { recursive: true });
+      await writeFile(
+        path.join(dir, samplePath),
+        `---\nspecdojo:\n  id: customer:test-sample\n  type: ${type}\n  status: draft\n  rulebook: customer:test-rulebook\n---\n\n# Test Sample\n`,
+        "utf8",
+      );
+      const ticket = await writeTicket();
+      process.env.SPECDOJO_PACKAGE_ROOT = dir;
+      process.chdir(dir);
+      const outPath = path.join(dir, "sample-plan.md");
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        registerPaths: makeRegisterPaths(),
+        item: makeItem({
+          approach: "sample-maintenance",
+          targets: ["customer:test-sample"],
+          ticket,
+        }),
+        stem: "xep-pjr-sample",
+        outPath,
+      });
+      const content = await readFile(outPath, "utf8");
+      expect(content).toContain("origin: register");
+      expect(content).toContain("approach: sample-maintenance");
+      expect(content).toContain("targets:\n    - customer:test-sample");
+      expect(content).toContain(samplePath);
+      expect(content).toContain("register-specific criterion is satisfied");
+    },
+  );
+
   it("kata authoring approach は新規 id、配置、標準、手本、参照更新条件を plan に載せる", async () => {
     const outPath = path.join(dir, "plan-with-authoring-approach.md");
     await writeAuthoringFixture();

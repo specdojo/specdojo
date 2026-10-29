@@ -30,10 +30,22 @@ describe("grade triggers", () => {
     mkdirSync(join(rootDir, "docs/ja/projects/prj-0001/schedule"), { recursive: true });
     mkdirSync(executionPath, { recursive: true });
 
-    // Config
+    // Grade results resolve configuration from the supplied fixture root.
+    mkdirSync(join(rootDir, ".specdojo"), { recursive: true });
     writeFileSync(
-      join(rootDir, "docs/ja/specdojo/specdojo-config.yaml"),
-      "version: 1\nprojects:\n  - id: prj-0001\n",
+      join(rootDir, ".specdojo/specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        current_project: "prj-0001",
+        projects: {
+          "prj-0001": {
+            base_path: "docs/ja/projects/prj-0001",
+            catalog_path: "010-deliverables-catalog",
+            schedule_path: "schedule",
+            execution_path: "execution",
+          },
+        },
+      }),
     );
 
     // Rulebook

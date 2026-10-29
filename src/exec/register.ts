@@ -52,13 +52,15 @@ import {
   type ResolvedAuthoringSource,
 } from "../register/authoring-sources.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
+import { isPlanningApproach } from "../register/planning.js";
+import { planningPlanFields } from "./plans-planning.js";
 
 // ---------------------------------------------------------------------------
 // Item category
 // ---------------------------------------------------------------------------
 
 // 登録項目の実行区分。edit は成果物・実装を変更する対応、investigate は調査して
-// 結論案を result に記録する対応（decision / note は実行対象外）。
+// 結論案を result に記録する対応（epic / decision / note は実行対象外）。
 export type RegisterTaskCategory = "edit" | "investigate";
 
 const EDIT_TYPES: ReadonlySet<string> = new Set(["todo", "issue", "change-request"]);
@@ -554,7 +556,19 @@ export async function generateRegisterPlan(opts: {
     let cataloglessConditions = "";
     let planTargets = [targetId];
     let authoring: Parameters<typeof generateRegisterApproachPlan>[0]["authoring"];
-    if (newKataKind) {
+    if (isPlanningApproach(item.approach)) {
+      const project = loadConfig(specdojoRootDir()).config?.projects[opts.projectId] ?? {};
+      const fields = planningPlanFields({
+        repoRoot: specdojoRootDir(),
+        projectId: opts.projectId,
+        project,
+        catalogPath: opts.catalogPath ?? "",
+        approach: item.approach,
+        target: targetId,
+      });
+      refs = fields.refs;
+      cataloglessConditions = fields.conditions;
+    } else if (newKataKind) {
       const sourceRefs = [...(item.targets ?? []).slice(1), ...(item.sources ?? [])];
       const project = loadConfig(specdojoRootDir()).config?.projects[opts.projectId] ?? {};
       const resolvedSources = resolveAuthoringSources({

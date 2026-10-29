@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:dmd-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   sample: specdojo:dmd-sample
 ---
@@ -56,7 +57,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 項目       | 説明                                         | 必須 |
 | ---------- | -------------------------------------------- | ---- |
 | id         | DMD ID（`dmd-<term>`）                       | ○    |
-| type       | `migration` 固定                             | ○    |
+| type       | `data` 固定                                  | ○    |
 | title      | データ移行設計: <対象名>                     | ○    |
 | status     | `draft` / `ready` / `deprecated`             | ○    |
 | based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |

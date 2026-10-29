@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:nfr-performance-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:nfr-performance-rulebook
 ---

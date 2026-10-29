@@ -1,0 +1,33 @@
+
+> specdojo@0.4.7 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-c1e4826d0f46 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=8 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-c1e4826d0f46
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
+grade pipeline complete: selected=8 processed=8 completed_now=8 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-c1e4826d0f46/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-28T16:06:28Z	docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md	1	passed	322	needs-work	67	25	agy-expert-executor	machine	none		
+2026-10-28T16:09:11Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md	1	passed	161	needs-work	71	22	agy-expert-executor	machine	none		
+2026-10-28T16:12:25Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	1	passed	192	needs-work	71	22	agy-expert-executor	machine	none		
+2026-10-28T16:15:16Z	docs/ja/product/030-architecture/020-infrastructure/tsd-index.md	1	passed	169	needs-work	71	15	agy-expert-executor	machine	none		
+2026-10-28T16:18:44Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md	1	passed	206	needs-work	62	25	agy-expert-executor	machine	none		
+2026-10-28T16:21:09Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md	1	passed	143	needs-work	63	24	agy-expert-executor	machine	none		
+2026-10-28T16:24:41Z	docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md	1	passed	210	needs-work	71	19	agy-expert-executor	machine	none		
+2026-10-28T16:27:51Z	docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md	1	passed	188	needs-work	67	21	agy-expert-executor	machine	none		

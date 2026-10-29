@@ -2238,3 +2238,552 @@
       from: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
       to: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
   previous_event_id: reg_22649382abc04cd48e200b5888bcecab
+- v: 1
+  id: reg_844872ab5e544ecaa1480b3a22f8b05d
+  ts: "2026-10-27T12:29:20Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-XSM8 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-26"
+      to: "-"
+  previous_event_id: reg_15fa80218ffc4784a785eecb460041d9
+- v: 1
+  id: reg_1c17033e962844eeaf99c5756dd11955
+  ts: "2026-10-27T12:31:11Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_844872ab5e544ecaa1480b3a22f8b05d
+- v: 1
+  id: reg_bfcea1abeb6d4499866df9adb9904176
+  ts: "2026-10-27T12:37:02Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1c17033e962844eeaf99c5756dd11955
+- v: 1
+  id: reg_d1edcfd2a8df4814b3859f4c7b815a5b
+  ts: "2026-10-27T12:38:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが統合後の run と親の検証 7 件の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-27"
+    - field: conclusion
+      from: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
+      to: PJR-XSM8 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_bfcea1abeb6d4499866df9adb9904176
+- v: 1
+  id: reg_28567233be99462eb7c494bd2b64cb38
+  ts: "2026-10-27T15:31:10Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-H988 と PJR-8NWR の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-27"
+      to: "-"
+  previous_event_id: reg_d1edcfd2a8df4814b3859f4c7b815a5b
+- v: 1
+  id: reg_a41f5f4f958c436f998f7710e998ac83
+  ts: "2026-10-27T15:31:33Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_28567233be99462eb7c494bd2b64cb38
+- v: 1
+  id: reg_657695768faf447c89e83c5bca1852f5
+  ts: "2026-10-27T15:37:49Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a41f5f4f958c436f998f7710e998ac83
+- v: 1
+  id: reg_cc528b912fbc4964b5b5b781a926488a
+  ts: "2026-10-27T15:43:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが統合後の run と親の検証 7 件の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-XSM8 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-H988 と PJR-8NWR の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_657695768faf447c89e83c5bca1852f5
+- v: 1
+  id: reg_2ac38eb093604dfc8efc315917c9ab5b
+  ts: "2026-10-27T23:35:20Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-6RVJ の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_cc528b912fbc4964b5b5b781a926488a
+- v: 1
+  id: reg_9af9bef5b4d84279af10554b7f5a232f
+  ts: "2026-10-27T23:35:37Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2ac38eb093604dfc8efc315917c9ab5b
+- v: 1
+  id: reg_0247d89bebf64cdbb6080e74a3c91164
+  ts: "2026-10-27T23:41:19Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9af9bef5b4d84279af10554b7f5a232f
+- v: 1
+  id: reg_08190e5682394a4d91b237f0838ff9a9
+  ts: "2026-10-27T23:42:09Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-H988 と PJR-8NWR の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-6RVJ の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_0247d89bebf64cdbb6080e74a3c91164
+- v: 1
+  id: reg_e962a4930291464fb3e9be9ed5c64d56
+  ts: "2026-10-28T00:17:26Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-B4Y4 の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_08190e5682394a4d91b237f0838ff9a9
+- v: 1
+  id: reg_dc103496f9fb4ca4ac98b16a289723d9
+  ts: "2026-10-28T00:17:38Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e962a4930291464fb3e9be9ed5c64d56
+- v: 1
+  id: reg_bac6753c800342e2ba7558d6dcc37d60
+  ts: "2026-10-28T00:23:36Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dc103496f9fb4ca4ac98b16a289723d9
+- v: 1
+  id: reg_3eae2f62f81c40b39281f4df288fb6ac
+  ts: "2026-10-28T00:24:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-6RVJ の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-B4Y4 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_bac6753c800342e2ba7558d6dcc37d60
+- v: 1
+  id: reg_a1b4a071cc9e43a78219ab983c10607e
+  ts: "2026-10-28T00:46:06Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-WAGY の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_3eae2f62f81c40b39281f4df288fb6ac
+- v: 1
+  id: reg_da8d56825b9f4494be603af4dd283394
+  ts: "2026-10-28T00:46:18Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a1b4a071cc9e43a78219ab983c10607e
+- v: 1
+  id: reg_22e9c26d81e046088a839ee065578d1e
+  ts: "2026-10-28T00:51:37Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_da8d56825b9f4494be603af4dd283394
+- v: 1
+  id: reg_5b0a7a153c3341f5ab37adac3b7c6bd7
+  ts: "2026-10-28T00:52:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-B4Y4 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-WAGY の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_22e9c26d81e046088a839ee065578d1e
+- v: 1
+  id: reg_5000babfd4cb476eba4d6fc727f0dd48
+  ts: "2026-10-28T11:00:06Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-484B の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_5b0a7a153c3341f5ab37adac3b7c6bd7
+- v: 1
+  id: reg_eddedfc2c3134de895b0f9d33e488f8c
+  ts: "2026-10-28T11:00:30Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5000babfd4cb476eba4d6fc727f0dd48
+- v: 1
+  id: reg_e9fbbb9a36b14a9f8b40463f434be8fe
+  ts: "2026-10-28T11:10:56Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_eddedfc2c3134de895b0f9d33e488f8c
+- v: 1
+  id: reg_4fa75a31b3fc408cabd23432fff6aac7
+  ts: "2026-10-28T11:11:47Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-WAGY の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-484B の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_e9fbbb9a36b14a9f8b40463f434be8fe
+- v: 1
+  id: reg_09561090ef0b4a5ea9429db1760c379b
+  ts: "2026-10-28T12:27:44Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-0D0T の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_4fa75a31b3fc408cabd23432fff6aac7
+- v: 1
+  id: reg_16deb863a29b4318b77a85b85f554d82
+  ts: "2026-10-28T12:28:07Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_09561090ef0b4a5ea9429db1760c379b
+- v: 1
+  id: reg_5bbd2b90f32445308629f7a73bcd9f87
+  ts: "2026-10-28T12:38:38Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_16deb863a29b4318b77a85b85f554d82
+- v: 1
+  id: reg_0eec8acb4d8348268b11ed6a44192ee6
+  ts: "2026-10-28T12:39:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-484B の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-0D0T の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_5bbd2b90f32445308629f7a73bcd9f87
+- v: 1
+  id: reg_f6f6121a49d949bfb73cbc22ea1e3023
+  ts: "2026-10-28T14:14:14Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-EXH2 の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_0eec8acb4d8348268b11ed6a44192ee6
+- v: 1
+  id: reg_ddb4a320db064cf38858ae3a9419b2ff
+  ts: "2026-10-28T14:14:27Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f6f6121a49d949bfb73cbc22ea1e3023
+- v: 1
+  id: reg_afb12e69ef0b4349b2373e2aef544977
+  ts: "2026-10-28T14:25:07Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ddb4a320db064cf38858ae3a9419b2ff
+- v: 1
+  id: reg_c0a1ace57cf641e7a2a3d0f826017c54
+  ts: "2026-10-28T14:25:59Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-0D0T の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-EXH2 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_afb12e69ef0b4349b2373e2aef544977
+- v: 1
+  id: reg_2e1d908b956f4025894b8e5a68b71024
+  ts: "2026-10-28T22:36:35Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-0QW0 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_c0a1ace57cf641e7a2a3d0f826017c54
+- v: 1
+  id: reg_7521b38d1c624c0aa15054c6a55857b2
+  ts: "2026-10-28T22:36:52Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2e1d908b956f4025894b8e5a68b71024
+- v: 1
+  id: reg_23401ce5aaa2422ebc05da6156aacc21
+  ts: "2026-10-28T22:48:00Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7521b38d1c624c0aa15054c6a55857b2
+- v: 1
+  id: reg_f3f8613cae7743fc8fc353b45bf0ef16
+  ts: "2026-10-28T22:48:54Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: PJR-EXH2 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-0QW0 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_23401ce5aaa2422ebc05da6156aacc21

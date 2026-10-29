@@ -1,0 +1,452 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0D0T",
+  "run_id": "20261028T113345264Z-af84f78d",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-28T11:33:45.264Z",
+    "completed_at": "2026-10-28T11:40:00.238Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0d0t.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0d0t-yaml-deliverable-type-alignment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/gl-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-cmd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-msg-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/ifx-cmd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/bdd.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/gl.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/ifx-cmd.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/validate-yaml-schema.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-lint/yaml-deliverable-type.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0d0t-yaml-deliverable-type-alignment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-lint/yaml-deliverable-type.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 28,
+    "summary": "CHANGELOG.md                                       |   2 +-\n .../010-business-specs/060-glossary/gl-common.yaml |   2 +\n .../controls/project-register/events/pjr-0d0t.yaml |  24 ++++-\n .../pjr-0d0t-yaml-deliverable-type-alignment.md    |   7 +-\n docs/ja/specdojo/rulebooks/bdd-rulebook.md         |   4 +-\n docs/ja/specdojo/rulebooks/gl-rulebook.md          |  14 +--\n docs/ja/specdojo/rulebooks/ifx-api-rulebook.md     |   3 +-\n docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md     |   2 +-\n docs/ja/specdojo/rulebooks/ifx-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md     |   5 +-\n docs/ja/specdojo/samples/bdd-sample.yaml           |   2 +-\n docs/ja/specdojo/samples/gl-sample.yaml            |   2 +\n docs/ja/specdojo/samples/ifx-api-sample.yaml       |   1 +\n docs/ja/specdojo/samples/ifx-cmd-sample.yaml       |   2 +-\n docs/ja/specdojo/samples/ifx-index-sample.yaml     |   1 +\n docs/ja/specdojo/samples/ifx-msg-sample.yaml       |   3 +-\n .../standards/document-metadata-standard.md        |   8 +-\n .../standards/rulebook-authoring-standard.md       |   2 +-\n docs/ja/specdojo/templates/ifx-cmd-template.yaml   |   2 +-\n docs/specdojo/schemas/v1/bdd.schema.yaml           |   2 +-\n docs/specdojo/schemas/v1/gl.schema.yaml            |   8 ++\n docs/specdojo/schemas/v1/ifx-cmd.schema.yaml       |   6 +-\n packages/docs-lint/src/deliverable-type.cjs        |  47 +++++++--\n packages/docs-lint/src/validate-yaml-schema.ts     |  29 ++++-\n src/docs/yaml-pages.ts                             |  37 +++----\n tests/packages/docs-lint/deliverable-type.test.ts  |   5 +-\n tests/src/docs/yaml-pages.test.ts                  | 117 +++++++++++++++++++--\n 27 files changed, 267 insertions(+), 71 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "bash tmp/pjr-0d0t-validate.sh format",
+      "status": "passed",
+      "summary": "変更成果物と追加テストを Prettier で整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "bash tmp/pjr-0d0t-validate.sh markdown",
+      "status": "passed",
+      "summary": "変更 Markdown の markdownlint が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --modeline 'docs/ja/specdojo/samples/*.yaml' docs/ja/specdojo/templates/ifx-cmd-template.yaml docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "status": "passed",
+      "summary": "sample 全11件・テンプレート・既存用語集を検証。構造検証を省略するファイルもメタ情報を照合した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "passed",
+      "summary": "bdd sample の直接 schema 検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/specdojo/samples/gl-sample.yaml --data docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "status": "passed",
+      "summary": "gl sample と既存用語集の直接 schema 検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/specdojo/samples/ifx-cmd-sample.yaml --data docs/ja/specdojo/templates/ifx-cmd-template.yaml",
+      "status": "passed",
+      "summary": "ifx-cmd sample とテンプレートの直接 schema 検証が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import ./tmp/pjr-0d0t-no-dotenv.mjs --import tsx src/specdojo.ts yaml-pages build",
+      "status": "passed",
+      "summary": "77件更新・64件変更なし・他生成器の19件を保持。型を持たない YAML のページから不完全な Frontmatter を除去した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import ./tmp/pjr-0d0t-no-dotenv.mjs --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿ビューを再生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import ./tmp/pjr-0d0t-no-dotenv.mjs --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証成功。未作成成果物への参照警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-10-28T11:59:28.955Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-28T11:58:29.361Z.\nfallback c\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-0d0t-yaml-deliverable-type-alignment.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0d0t-yaml-deliverable-type-alignment.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/bdd-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/gl-sample.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/gl-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/ifx-cmd-sample.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/ifx-cmd-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/samples/ifx-msg-sample.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/ifx-msg-sample.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/templates/ifx-cmd-template.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/templates/ifx-cmd-template.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/bdd.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/bdd.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/gl.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/gl.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/ifx-cmd.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/ifx-cmd.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "changed",
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-lint/src/validate-yaml-schema.ts",
+      "status": "changed",
+      "path": "packages/docs-lint/src/validate-yaml-schema.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/docs/yaml-pages.ts",
+      "status": "changed",
+      "path": "src/docs/yaml-pages.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/docs/yaml-pages.test.ts",
+      "status": "changed",
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/packages/docs-lint/yaml-deliverable-type.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-lint/yaml-deliverable-type.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "YAML の type を宣言値に統一し、旧値の移行案内・宣言照合・表示ページ継承を実装。前回の Frontmatter 欠落とテストの索引再走査を修正し、個票を更新した。result は編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "設計判断: `specdojo-schema: none` / `validate=false` は構造検証のみを省略し、メタ情報の宣言照合は実施する。外部形式は `x-spec-meta`、テンプレートは `metadata_template` を照合する。平坦な dct テンプレート自身の `type: template` は照合対象外とした。",
+    "設計判断: 表示ページは正本 YAML の `type` を継承し、配置パスから分類を補わない。ジョブ定義・評価記録など型を持たない YAML は、本文と表示先を維持して成果物 Frontmatter を付けずに生成する。この例外と理由をメタ情報標準・個票に記録した。",
+    "旧値 `domain` / `command` / `message` は `rulebook: none` でも置き換え先を示して拒否する。本文のデータ型・イベント種別は対象外。",
+    "前回タイムアウトした11件の sample 照合テストは checker を共有し、rulebook 索引の構築を1回にした。制限時間は変更していない。",
+    "親7検査の再実行と result の記入は runner・reporter が担当する。カタログ検証には未作成成果物への参照警告があるが、エラーはない。CLI の補足検証では dotenv の読み込みを無効化した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0D0T/20261028T113345264Z-af84f78d/executor.log",
+      "bytes": 9079,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0D0T/20261028T113345264Z-af84f78d/parent-validation-attempt-1-test-unit.log",
+      "bytes": 5633,
+      "truncated": false
+    }
+  ]
+}

@@ -37,6 +37,7 @@ const RESULT = [
 const MERGED: ProductIntegrationTrace = {
   repo: "app1",
   integrationBranch: "main",
+  execBranch: "exec/prj-0001-PJR-30SW",
   state: "merged",
   commit: "0123456789abcdef0123456789abcdef01234567",
   pullRequest: null,
@@ -45,6 +46,7 @@ const MERGED: ProductIntegrationTrace = {
 const UNCHANGED: ProductIntegrationTrace = {
   repo: "app2",
   integrationBranch: "release",
+  execBranch: "exec/prj-0001-PJR-30SW",
   state: "unchanged",
   commit: null,
   pullRequest: null,
@@ -103,7 +105,7 @@ describe("renderResultTraceBody", () => {
 
     expect(rows).toHaveLength(4);
     expect(rows[2]).toMatch(
-      /^\| `prj-0001:PJR-30SW` \| `app1` +\| `main` +\| not applicable \| `0123456789abcdef0123456789abcdef01234567` +\| 2026-10-01T00:00:00.000Z \|$/,
+      /^\| `prj-0001:PJR-30SW` \| `app1` +\| `main` +\| `exec\/prj-0001-PJR-30SW` +\| merged +\| not applicable \| `0123456789abcdef0123456789abcdef01234567` +\| 2026-10-01T00:00:00.000Z \|$/,
     );
     expect(rows[3]).toContain("| not applicable (no changes) ");
     expect(new Set(rows.map((row) => row.length)).size).toBe(1);
@@ -130,6 +132,24 @@ describe("renderResultTraceBody", () => {
     });
 
     expect(body).toContain("| #123 ");
+  });
+
+  it("records the retained branch, trace key and non-integration for product-side review", () => {
+    const body = renderResultTraceBody({
+      traceKey: "prj-0001:PJR-EXH2",
+      traces: [{ ...MERGED, state: "branch-only", commit: null }],
+      recordedAt: "2026-10-28T00:00:00.000Z",
+    });
+
+    expect(body).toContain("`prj-0001:PJR-EXH2`");
+    expect(body).toContain("`exec/prj-0001-PJR-30SW`");
+    expect(body).toContain("not applicable (not integrated)");
+    expect(body).toContain("`branch-only` の行は未統合です");
+    const violations = lint({
+      strings: { result: upsertResultTraceSection(RESULT, body) },
+      config: { default: true },
+    }).result;
+    expect(violations?.map((violation) => violation.ruleNames[0])).toEqual([]);
   });
 });
 

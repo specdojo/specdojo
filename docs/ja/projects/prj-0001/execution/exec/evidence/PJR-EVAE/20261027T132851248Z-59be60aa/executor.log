@@ -1,0 +1,25 @@
+`specdojo:tsd-sample`（[tsd-sample.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/docs/ja/specdojo/samples/tsd-sample.md)）を、最新の [[specdojo:tsd-rulebook|TSD ルールブック]] および [[specdojo:sample-authoring-standard|Sample 記述標準]] に準拠した完成例へと全面的に見直しました。また、前回の試行で失敗していた `lint-md` のコードブロック周辺空行エラー（MD031）を解消し、Prettier によるコードスタイルを適用しました。
+
+### 実施内容の概要
+
+1. **題材と位置づけの具体化（完了条件 1, 2）**:
+   - [[specdojo:tsd-index-sample|技術スタック一覧（TSD Index）サンプル]] で宣言された「駄菓子屋きぬや販売管理システム」のデータベース基盤（PostgreSQL 16.x / Prisma 5.x）を題材とし、販売履歴・在庫データ・常連客のつけ残高の永続化を担う特定領域の技術スタック詳細定義（TSD）として再構成しました。
+2. **Frontmatter の整合（完了条件 3）**:
+   - `type` を rulebook 推奨値および [PJR-XSM8](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/docs/ja/projects/prj-0001/controls/project-register/pjr-xsm8-sample-maintenance-target-kind.md) の原則に従い `architecture` に更新し、`part_of` に `[specdojo:tsd-index-sample]` を追加しました。個票完了条件に従い `id` は `specdojo:tsd-sample` を維持しています。
+3. **rulebook 必須章およびガイドへの準拠（完了条件 1, 4, 5）**:
+   - **概要と位置づけ**: 目的、ビジネス価値、スコープ境界（対象・対象外）、他文書（TSD Index 等）との責務分界、関係者ロール（ARC, PO, DEV, OPS）の責任分担を明記しました。
+   - **対象環境と前提条件**: 実行環境（ローカル Docker Compose、本番 Fly.io、Next.js サーバー）とリソース制約（CPU/メモリ/ストレージ）を定義しました。
+   - **全体構成と接続経路**: クライアント・サーバー・データベース間の通信プロトコルと暗号化経路を Mermaid 図で示しました。
+   - **採用技術と設定値**: rulebook 6.2 準拠の採用設定表を設け、採用値・推奨値・未決事項（`_UNDECIDED_:`）を明確に区別しました。機密情報はプレースホルダー（`<DEV_USER>`, `<DEV_PASSWORD>` 等）で示し、実値を排除しました。
+   - **導入と初期設定**: Docker 起動、Prisma 初期化、シード投入のコードブロック（MD031 適合）を設け、マイグレーション時の互換性方針（2段階適用）を定義しました。
+   - **動作確認と切り分け**: rulebook 6.4 準拠の動作確認一覧表（確認対象・実行場所・期待結果・失敗時の確認先）を設けました。
+   - **継続利用・運用・バックアップ**: 永続ボリュームマウント、日次論理バックアップ（`pg_dump`）、リストア手順を整理しました。
+   - **制約事項とトラブルシュート**: オフライン時の IndexedDB 一時退避前提、接続数制限、症状別のトラブルシューティングガイドを記載しました。
+   - **未解決事項と解決経路**: 表形式で課題 ID、論点、影響、意思決定基準・判断期日、解決経路、担当 Role を示し、`ready` ステータス達成基準を明記しました。
+4. **個票および CHANGELOG の更新（完了条件 7）**:
+   - [pjr-evae-tsd-sample-maintenance.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/docs/ja/projects/prj-0001/controls/project-register/pjr-evae-tsd-sample-maintenance.md) の作業内容テーブルを完了（done）に更新し、「4. 対応結果」に実施内容と完了条件への適合状況を記録しました。
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/CHANGELOG.md) の `## [Unreleased]` の `### 変更` に本タスク（PJR-EVAE）の対応内容を追記しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsd-sample を新しい tsd-rulebook および sample-authoring-standard に合わせて見直し、PostgreSQL / Prisma のデータベース詳細定義として再構成しました。MD031 lint エラーおよび Prettier フォーマットを解消し、CHANGELOG.md と個票の対応結果を更新しました。","handoff":["finding F017 では ID の tsd-<term> 形式への変更が指摘されていましたが、個票完了条件 3（id は変えない）に従い specdojo:tsd-sample を維持しています。","tsd-index-sample.md との記述に齟齬はありません（題材の PostgreSQL / Prisma、関連記述と完全に整合しています）。"],"validations":[{"command":"npm run validate:schema:file -- --modeline docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml","status":"passed","summary":"valid: docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml"},{"command":"npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-evae-tsd-sample-maintenance.md docs/ja/specdojo/samples/tsd-sample.md","status":"passed","summary":"all changed files use prettier code style"},{"command":"tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog validate passed"},{"command":"specdojo register build","status":"not_applicable","reason":"pjr-index.md was not changed"},{"command":"specdojo exec refresh","status":"not_applicable","reason":"sch-*.yaml was not changed"}],"target_coverage":[{"target":"specdojo:tsd-sample","status":"changed","path":"docs/ja/specdojo/samples/tsd-sample.md"}]}
+</specdojo_executor_evidence>

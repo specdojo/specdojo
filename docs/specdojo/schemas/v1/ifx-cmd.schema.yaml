@@ -26,7 +26,7 @@ properties:
     minLength: 1
   type:
     type: string
-    enum: ["command", "template"]
+    enum: ["api", "template"]
   status:
     type: string
     enum: ["draft", "ready", "deprecated"]
@@ -46,6 +46,10 @@ properties:
   metadata_template:
     type: object
     additionalProperties: true
+    properties:
+      type:
+        type: string
+        const: api
 
   command:
     type: object

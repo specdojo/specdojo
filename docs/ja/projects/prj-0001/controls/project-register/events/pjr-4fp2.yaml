@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3dbeb69686ad438092eb9ddea44d5c78
+  ts: "2026-10-28T12:06:50Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: VS Code の利用者へ onboarding の間口を広げたいという利用者の要望のため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: VS Code からオーケストレーターを使う手順を案内する
+    - field: description
+      from: ""
+      to: Copilot Chat の agent の選択、Claude Code の拡張での既定の agent の設定、Codex の拡張での使い方を、orchestrator-operation-guide・クイックスタート・templates/copilot/README.md に書き、onboarding の間口を広げる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_6363ca449e0c4721845628df9a70851c
+  ts: "2026-10-28T12:08:27Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3dbeb69686ad438092eb9ddea44d5c78
+- v: 1
+  id: reg_0e4653e4445d4e6d8ef02e9c126cbc8a
+  ts: "2026-10-28T12:24:04Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6363ca449e0c4721845628df9a70851c
+- v: 1
+  id: reg_4e81d1c4ea2f4e57a573a84ba57b4edd
+  ts: "2026-10-28T12:27:19Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、Codex の記述を未確認と明記する修正を加え、親の検証 7 件と docs:build の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: orchestrator-operation-guide に VS Code から使う節（Copilot Chat の agent の選択、Claude Code の settings の agent キー、Codex の拡張で本文を渡す使い方）を足し、クイックスタートと Copilot の README から案内した
+  previous_event_id: reg_0e4653e4445d4e6d8ef02e9c126cbc8a

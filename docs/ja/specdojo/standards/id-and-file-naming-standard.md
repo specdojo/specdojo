@@ -442,6 +442,8 @@ IDには、次の情報を含めない。
 - `<subject>`: 文書の主題を表す名詞句
 - `<type-suffix>`: `guide`、`standard`、`reference`、`philosophy`、`rulebook`、`recipe`、`sample`、`template`
 
+sample の種類の判定は `id` の local-id の末尾 `-sample` で行います。`type` は見本にする成果物の type とします（正本: [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]）。この規則は利用者の authority の sample にも適用します。
+
 - package の所有元は `specdojo:` のような authority で表し、local-id に `specdojo-` のような所属接頭辞を重ねない。
 - ただし SpecDojo 自体を主題とする文書は、主題語として `specdojo` を用いる。
 

@@ -11,11 +11,16 @@ properties:
     allOf:
       - $ref: "./common-frontmatter.schema.yaml"
       - type: object
+        required:
+          - deliverable_type
         properties:
           type:
             type: string
             const: rulebook
             description: "ドキュメント種別（rulebook 固定）"
+          deliverable_type:
+            $ref: "./deliverable-frontmatter.schema.yaml#/$defs/deliverableType"
+            description: "扱う成果物の type。Markdown 成果物・sample・生成物 Frontmatter 雛形との照合の正本。"
           target_format:
             type: string
             enum:

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sch-rulebook
   type: rulebook
+  deliverable_type: project
   status: ready
   target_format: yaml
   recipe: not-needed

@@ -48,3 +48,22 @@
       from: _TODO_
       to: "2026-10-31"
   previous_event_id: reg_437c42bcbb0f448aad7e76cb3785a699
+- v: 1
+  id: reg_8bbcc6fa177649009cafc4dc756fad97
+  ts: "2026-10-26T13:04:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者が npm 公開を承認し、公開版の動作をオーケストレーターが確認した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "-"
+      to: "PR #24 で main へ昇格し、v0.4.7 を npm に公開した。npm latest、タグの workflow、npm からの導入と init を確認した。"
+  previous_event_id: reg_d7ca57d1cc014b32ba28161d4eb90bad

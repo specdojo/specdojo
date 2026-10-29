@@ -352,6 +352,9 @@ export function productMergeBlockers(product: ProductWorktree): RepoIntegrationB
       ),
     );
   }
+  // Product-side review owns mergeability and the integration target's checkout.
+  // The exec worktree must still be clean before its project-side result is accepted.
+  if (product.integrationStrategy === "branch-only") return blockers;
   const target = productIntegrationTarget(product);
   if (target === "HEAD" || !branchExists(product.repoRoot, target)) {
     blockers.push(
@@ -572,7 +575,8 @@ function errorMessage(error: unknown): string {
  *
  * 1. check every product that still has commits to integrate and the project (`checkProject`); if
  *    any repository cannot be integrated, nothing is merged
- * 2. merge the products in declaration order, skipping those already merged (resume)
+ * 2. process products in declaration order: retain branch-only exec branches, otherwise merge,
+ *    skipping those already merged (resume)
  * 3. run `beforeProjectMerge` (record and commit the project-side state) and `mergeProject`
  *
  * Each repository's state is passed to `record`. The project is recorded as merged before
@@ -603,7 +607,7 @@ export function integrateTaskRepositories(params: {
   const record: RepoIntegrationRecorder = params.record ?? (() => undefined);
   const order = [...products.map((product) => product.name), PROJECT_REPO_NAME];
   const done = new Set<string>();
-  // 統合済み（merge 済み、または統合する変更が無い）のリポジトリ。
+  // 処理済み（merge 済み、変更なし、または branch-only の保持）のリポジトリ。
   const integratedLabels = (): string[] => order.filter((name) => done.has(name));
   const pendingNames = (): string[] => order.filter((name) => !done.has(name));
   const fail = (repo: string, cause: string): RepoIntegrationError => {
@@ -618,6 +622,10 @@ export function integrateTaskRepositories(params: {
 
   const states = new Map<string, ProductMergeState>();
   for (const product of products) {
+    if (product.integrationStrategy === "branch-only") {
+      states.set(product.name, "pending");
+      continue;
+    }
     const state = productMergeState(product);
     states.set(product.name, state);
     if (state === "pending") continue;
@@ -666,6 +674,14 @@ export function integrateTaskRepositories(params: {
   // 2. 宣言順にプロダクトを統合する。
   for (const product of products) {
     if (states.get(product.name) !== "pending") continue;
+    if (product.integrationStrategy === "branch-only") {
+      done.add(product.name);
+      record(product.name, { status: "branch-only", commit: null, merged_at: null });
+      process.stdout.write(
+        `  [integrate] ${product.name}: not merged; retained exec branch ${product.branch}\n`,
+      );
+      continue;
+    }
     let lockDir = "";
     let commit: string;
     try {

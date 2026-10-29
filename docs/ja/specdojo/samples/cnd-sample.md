@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:cnd-sample
-  type: project
+  type: architecture
   status: draft
   rulebook: specdojo:cnd-mermaid-rulebook
 ---

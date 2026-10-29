@@ -9,7 +9,7 @@ const require = createRequire(import.meta.url);
 const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cwd());
 const PACKAGE_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_ROOT = path.join(WORKSPACE_ROOT, "docs");
-const DEFAULT_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
+const DEFAULT_OUT_DIR = path.join(WORKSPACE_ROOT, ".vitepress", "mermaid");
 const PUPPETEER_CONFIG = path.join(PACKAGE_ROOT, "puppeteer-config.json");
 const MERMAID_CONFIG = path.join(PACKAGE_ROOT, "mermaid-config.json");
 const MERMAID_CLI = path.join(path.dirname(require.resolve("@mermaid-js/mermaid-cli")), "cli.js");
@@ -33,6 +33,8 @@ interface ManifestEntry {
   mtimeMs: number;
   size: number;
   hashes: string[];
+  // 一部の図が失敗したファイルは、成功した図だけを保持し、次回も再試行する。
+  hasErrors?: boolean;
   // 描画に使った mermaid-cli の版と mermaid-config.json のハッシュ。
   // 今の値と異なるエントリは、Markdown が変わっていなくてもスキップに使わない。
   mermaidCliVersion?: string;
@@ -56,11 +58,14 @@ export function mermaidSvgId(code: string): string {
     .slice(0, 8);
 }
 
-function createManifestEntry(stat: fs.Stats, hashes: string[]): ManifestEntry {
+export type MermaidErrorMode = "warn" | "throw";
+
+function createManifestEntry(stat: fs.Stats, hashes: string[], hasErrors = false): ManifestEntry {
   return {
     mtimeMs: stat.mtimeMs,
     size: stat.size,
     hashes,
+    ...(hasErrors ? { hasErrors: true } : {}),
     mermaidCliVersion: MERMAID_CLI_VERSION,
     mermaidConfigHash: MERMAID_CONFIG_HASH,
   };
@@ -222,16 +227,38 @@ function renderSvg(outDir: string, code: string): string {
     execFileSync(
       process.execPath,
       [MERMAID_CLI, "-p", PUPPETEER_CONFIG, "-c", MERMAID_CONFIG, "-i", tmpMmd, "-o", svgPath],
-      { stdio: "inherit" },
+      { stdio: ["ignore", "pipe", "pipe"] },
     );
 
     // ✅ ここで width/height を viewBox から上書き
     normalizeSvgSize(svgPath);
+  } catch (error) {
+    // mermaid-cli が途中まで書いた SVG を成功キャッシュとして再利用しない。
+    fs.rmSync(svgPath, { force: true });
+    throw error;
   } finally {
     fs.rmSync(tmpMmd, { force: true });
   }
 
   return id;
+}
+
+function renderErrorSummary(error: unknown): string {
+  const stderr = (error as { stderr?: unknown } | null)?.stderr;
+  const detail =
+    typeof stderr === "string" || Buffer.isBuffer(stderr) ? stderr.toString().trim() : "";
+  return (detail || (error instanceof Error ? error.message : String(error)))
+    .split(/\n\s+at /)[0]
+    .trim();
+}
+
+function finishGeneration(errors: Error[], errorMode: MermaidErrorMode): void {
+  if (errors.length > 0 && errorMode === "throw") {
+    throw new AggregateError(
+      errors,
+      `[mermaid] ${errors.length} diagram(s) failed:\n${errors.map((error) => error.message).join("\n")}`,
+    );
+  }
 }
 
 /**
@@ -243,8 +270,9 @@ function processMarkdown(
   mdPath: string,
   rootDir: string,
   outDir: string,
+  errors: Error[],
   prevManifest?: Manifest,
-): string[] {
+): { hashes: string[]; hasErrors: boolean } {
   const stat = fs.statSync(mdPath);
 
   if (prevManifest) {
@@ -252,20 +280,21 @@ function processMarkdown(
     const prev = prevManifest.files[relKey];
     if (
       prev &&
+      !prev.hasErrors &&
       prev.mtimeMs === stat.mtimeMs &&
       prev.size === stat.size &&
       isRenderedWithCurrentSettings(prev) &&
       prev.hashes.every((id) => fs.existsSync(svgPathFor(outDir, id)))
     ) {
       // 変更なし & 生成済み → 何もしない
-      return prev.hashes;
+      return { hashes: prev.hashes, hasErrors: false };
     }
   }
 
   const text = fs.readFileSync(mdPath, "utf8");
   const mermaidBlocks = extractMermaidBlocks(text);
   if (mermaidBlocks.length === 0) {
-    return [];
+    return { hashes: [], hasErrors: false };
   }
 
   console.log(`🌀 Generating mermaid SVG from: ${path.relative(process.cwd(), mdPath)}`);
@@ -273,11 +302,21 @@ function processMarkdown(
   fs.mkdirSync(outDir, { recursive: true });
 
   const hashes: string[] = [];
-  for (const code of mermaidBlocks) {
-    if (!code) continue;
-    hashes.push(renderSvg(outDir, code));
+  let hasErrors = false;
+  for (const [index, code] of mermaidBlocks.entries()) {
+    try {
+      hashes.push(renderSvg(outDir, code));
+    } catch (error) {
+      hasErrors = true;
+      const failure = new Error(
+        `${path.relative(process.cwd(), mdPath)} (diagram ${index + 1}, ${mermaidSvgId(code)}): ${renderErrorSummary(error)}`,
+        { cause: error },
+      );
+      errors.push(failure);
+      console.warn(`[mermaid] skipping failed diagram: ${failure.message}`);
+    }
   }
-  return hashes;
+  return { hashes, hasErrors };
 }
 
 /**
@@ -307,6 +346,7 @@ export function generateMermaidSvgs(options?: {
   rootDir?: string;
   outDir?: string;
   additionalRootDirs?: string[];
+  errorMode?: MermaidErrorMode;
 }): void {
   const rootDir = options?.rootDir ?? DEFAULT_ROOT;
   const outDir = options?.outDir ?? DEFAULT_OUT_DIR;
@@ -318,14 +358,19 @@ export function generateMermaidSvgs(options?: {
 
   const prevManifest = loadManifest(outDir);
   const nextManifest: Manifest = { version: MANIFEST_VERSION, files: {} };
+  const errors: Error[] = [];
 
   for (const mdPath of markdownFiles) {
     try {
       const stat = fs.statSync(mdPath);
-      const hashes = processMarkdown(mdPath, rootDir, outDir, prevManifest);
+      const { hashes, hasErrors } = processMarkdown(mdPath, rootDir, outDir, errors, prevManifest);
       if (hashes.length > 0) {
         // mermaid を含むファイルのみ記録する（mtime/size で次回の差分判定に使う）
-        nextManifest.files[path.relative(rootDir, mdPath)] = createManifestEntry(stat, hashes);
+        nextManifest.files[path.relative(rootDir, mdPath)] = createManifestEntry(
+          stat,
+          hashes,
+          hasErrors,
+        );
       }
     } catch (error) {
       if (!isFileNotFoundError(error)) throw error;
@@ -336,12 +381,13 @@ export function generateMermaidSvgs(options?: {
   pruneOrphanSvgs(outDir, nextManifest);
   saveManifest(outDir, nextManifest);
 
+  finishGeneration(errors, options?.errorMode ?? "throw");
   console.log("✅ Mermaid SVG generation done.");
 }
 
 export function generateMermaidSvgsForFile(
   mdPath: string,
-  options?: { rootDir?: string; outDir?: string },
+  options?: { rootDir?: string; outDir?: string; errorMode?: MermaidErrorMode },
 ): void {
   const rootDir = options?.rootDir ?? DEFAULT_ROOT;
   const outDir = options?.outDir ?? DEFAULT_OUT_DIR;
@@ -354,6 +400,7 @@ export function generateMermaidSvgsForFile(
   // 単一ファイル更新（dev のホットリロード等）では対象ファイルを常に処理し、
   // manifest の該当エントリだけを更新する。
   const manifest = loadManifest(outDir);
+  const errors: Error[] = [];
 
   const removeManifestEntry = (): void => {
     delete manifest.files[relKey];
@@ -368,10 +415,10 @@ export function generateMermaidSvgsForFile(
   }
 
   try {
-    const hashes = processMarkdown(mdPath, rootDir, outDir);
+    const { hashes, hasErrors } = processMarkdown(mdPath, rootDir, outDir, errors);
     if (hashes.length > 0) {
       const stat = fs.statSync(mdPath);
-      manifest.files[relKey] = createManifestEntry(stat, hashes);
+      manifest.files[relKey] = createManifestEntry(stat, hashes, hasErrors);
     } else {
       delete manifest.files[relKey];
     }
@@ -382,6 +429,7 @@ export function generateMermaidSvgsForFile(
     console.warn(`[mermaid] skipping missing Markdown: ${relKey}`);
     removeManifestEntry();
   }
+  finishGeneration(errors, options?.errorMode ?? "throw");
 }
 
 function isDirectRun(): boolean {

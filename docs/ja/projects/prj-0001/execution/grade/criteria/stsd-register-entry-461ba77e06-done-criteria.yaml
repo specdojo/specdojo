@@ -2,9 +2,9 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-10-20T16:07:12.167Z"
+graded_at: "2026-10-28T16:06:00.451Z"
 graded_by: flash-high-executor
-content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
+content_hash: 5f2f86eb0b753c314030e556af09fa243289336abcb1b4654d35f5125469cd33
 summary:
   satisfied: 0
   unsatisfied: 5
@@ -17,17 +17,15 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Direct terminal transitions and reopen transitions are missing, and waiting state recording locations conflict
-      with operational guide.
+      Direct terminal transitions, terminal-to-active reopening transitions, and accurate waiting/in-progress entry
+      conditions are missing or conflict with actual operations.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: >-
-      Unresolved assumptions regarding terminal and reopen transition behavior prevent approving the business validity
-      of the state model.
+    reason: Unresolved assumptions and discrepancies with actual CLI/operation rules prevent PO approval of business validity.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
@@ -35,8 +33,8 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Inconsistencies with CLI implementation guards and schema field handling prevent the document from serving as an
-      architectural implementation base.
+      State and transition definitions do not align with item_status, block_reason, completed_at fields and existing CLI
+      guards.
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
@@ -44,8 +42,8 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Qualitative transition conditions lack concrete pass/fail verification criteria necessary for state-based test
-      design.
+      Transition conditions rely on vague phrasing without concrete pass/fail criteria, and permitted/forbidden
+      transitions are not comprehensively testable.
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
@@ -53,5 +51,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Discrepancies in command-level transition rules and frontmatter key updates prevent development from using this as
-      an implementation reference.
+      Register commands, updated frontmatter keys, and rejection guards are not mapped per transition ID to support
+      implementation.

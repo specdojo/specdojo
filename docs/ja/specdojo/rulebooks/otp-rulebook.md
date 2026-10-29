@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:otp-rulebook
   type: rulebook
+  deliverable_type: operations
   status: draft
   sample: specdojo:otp-sample
 ---
@@ -56,7 +57,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 項目       | 説明                                         | 必須 |
 | ---------- | -------------------------------------------- | ---- |
 | id         | OTP ID（`otp-<term>`）                       | ○    |
-| type       | `migration` 固定                             | ○    |
+| type       | `operations` 固定                            | ○    |
 | title      | 運用切替計画: <対象名>                       | ○    |
 | status     | `draft` / `ready` / `deprecated`             | ○    |
 | based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |

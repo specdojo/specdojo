@@ -1,0 +1,22 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/specdojo/samples/tsd-sample.md:137 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/samples/tsd-sample.md:140 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]
+docs/ja/specdojo/samples/tsd-sample.md:143 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/samples/tsd-sample.md:146 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]
+docs/ja/specdojo/samples/tsd-sample.md:149 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/samples/tsd-sample.md:151 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]
+docs/ja/specdojo/samples/tsd-sample.md:154 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/samples/tsd-sample.md:193 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/samples/tsd-sample.md:196 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]
+docs/ja/specdojo/samples/tsd-sample.md:201 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]

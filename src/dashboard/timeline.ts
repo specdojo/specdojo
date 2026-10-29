@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import {
   getProjectCatalogPath,
   getProjectTimelinePath,
+  getProjectRegisterPath,
   loadConfig,
   loadEnv,
   specdojoRootDir,
@@ -18,6 +19,7 @@ import {
 function resolveTimelinePaths(opts: { project?: string }): {
   timelinePath: string;
   catalogPath: string | null;
+  registerPath?: string;
 } {
   loadEnv();
   const { config, configPath } = loadConfig();
@@ -41,10 +43,12 @@ function resolveTimelinePaths(opts: { project?: string }): {
   }
 
   const catalogPath = getProjectCatalogPath(project);
+  const registerPath = getProjectRegisterPath(project);
 
   return {
     timelinePath: resolve(baseDir, getProjectTimelinePath(project)),
     catalogPath: catalogPath ? resolve(baseDir, catalogPath) : null,
+    ...(registerPath ? { registerPath: resolve(baseDir, registerPath) } : {}),
   };
 }
 
@@ -64,6 +68,11 @@ function buildTimelineJson(result: TimelineBuildResult): string {
       {
         project_id: result.projectId,
         schedule_ready_tracks: result.scheduleReadyTracks,
+        track_catalog_status: Object.fromEntries(
+          result.waves.flatMap((wave) =>
+            wave.tracks.map((track) => [track.track, track.catalog_status]),
+          ),
+        ),
         waves: result.waves.map((wave) => ({
           wave: wave.wave,
           tracks: wave.tracks.map((track) => track.track),
@@ -106,8 +115,8 @@ export function registerTimelineCommands(program: Command): void {
   bcmd.option("--dry-run", "Print generated content to stdout without writing", false);
   bcmd.action((opts) => {
     try {
-      const { timelinePath, catalogPath } = resolveTimelinePaths(opts);
-      const result = buildTimeline({ timelinePath, catalogPath });
+      const { timelinePath, catalogPath, registerPath } = resolveTimelinePaths(opts);
+      const result = buildTimeline({ timelinePath, catalogPath, registerPath });
 
       for (const warning of result.warnings) process.stdout.write(`WARN: ${warning}\n`);
       for (const error of result.errors) process.stdout.write(`ERROR: ${error}\n`);

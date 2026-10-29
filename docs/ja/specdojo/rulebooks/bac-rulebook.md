@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:bac-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   recipe: undecided
   sample: specdojo:bac-sample
@@ -49,7 +50,7 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 | ---- | ---- | ---- |
 
 | id | 受入条件ID（`bac-...`） | ○ |
-| type | `test` 固定 | ○ |
+| type | `requirement` 固定 | ○ |
 | title | 受入条件名（例: 業務受入条件: 商品販売） | ○ |
 | status | `draft`/`ready`/`deprecated` | ○ |
 | part_of | 上位BAC ID（分割している場合） | 任意 |
@@ -149,7 +150,7 @@ Markdown で「受入対象」と「シナリオ」を記述します。
 ```markdown
 ---
 id: bac-sale-checkout
-type: test
+type: requirement
 title: 業務受入条件: 商品販売
 status: draft
 part_of: []
@@ -196,7 +197,7 @@ supersedes: []
 ```markdown
 ---
 id: bac-procurement-order-to-payment
-type: test
+type: requirement
 title: 業務受入条件: 仕入（発注〜入荷〜支払）
 status: draft
 part_of: []
@@ -285,7 +286,7 @@ supersedes: []
 ```markdown
 ---
 id: bac-sale-payment-method
-type: test
+type: requirement
 title: 業務受入条件: 会計確定（支払方法の記録）
 status: draft
 part_of: []

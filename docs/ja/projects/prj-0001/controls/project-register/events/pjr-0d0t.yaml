@@ -1,0 +1,187 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b4adecb5c4b9448da5354bc1bfe55171
+  ts: "2026-10-27T12:33:00Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-XSM8 の executor の申し送りで検出したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "YAML の sample の表示用ページに type: sample を付けない"
+    - field: description
+      from: ""
+      to: "src/docs/yaml-pages.ts は samples/ 配下の YAML から生成する表示用ページに type: sample を付ける。PJR-XSM8 で sample は見本にする成果物の type を持つと定めたため、元の YAML の type を引き継ぐようにし、テストと生成済みページを合わせる。"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-XSM8"]'
+- v: 1
+  id: reg_b373e1724efe4b179edcdf4ef054ffd0
+  ts: "2026-10-28T10:04:01Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 利用者が案 D（YAML 側の type を正しい値にし、古い値はエラーにする）を選び、type の値の範囲の見直しを先に行うと決めたため
+  changes:
+    - field: id
+      from: prj-0001:pjr-0d0t-yaml-pages-sample-type
+      to: prj-0001:pjr-0d0t-yaml-deliverable-type-alignment
+    - field: title
+      from: "YAML の sample の表示用ページに type: sample を付けない"
+      to: YAML の成果物の type を原則に沿った値にそろえる
+    - field: description
+      from: "src/docs/yaml-pages.ts は samples/ 配下の YAML から生成する表示用ページに type: sample を付ける。PJR-XSM8 で sample は見本にする成果物の type を持つと定めたため、元の YAML の type を引き継ぐようにし、テストと生成済みページを合わせる。"
+      to: bdd の domain を data、ifx-cmd・ifx-msg の command・message を api にするなど、YAML の type を成果物の type の値にそろえ、schema・rulebook・テンプレート・sample を直す。古い値はエラーにし、置き換え先を示す。YAML の表示用ページは YAML の type を引き継ぐ
+    - field: difficulty
+      from: easy
+      to: medium
+    - field: depends_on
+      from: "-"
+      to: '["PJR-RYK8"]'
+  previous_event_id: reg_b4adecb5c4b9448da5354bc1bfe55171
+- v: 1
+  id: reg_f340e3a6aa114a0dafc476e6f610771f
+  ts: "2026-10-28T10:07:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: YAML の type は PJR-484B で入れる rulebook の宣言と照合に合わせて直すため
+  changes:
+    - field: depends_on
+      from: '["PJR-RYK8"]'
+      to: '["PJR-484B"]'
+  previous_event_id: reg_b373e1724efe4b179edcdf4ef054ffd0
+- v: 1
+  id: reg_6c65193b45b64028b94ef6989d990a59
+  ts: "2026-10-28T11:12:25Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f340e3a6aa114a0dafc476e6f610771f
+- v: 1
+  id: reg_aa63aafcff9040b6b3106741ceac5cab
+  ts: "2026-10-28T11:31:46Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, test-unit"
+  previous_event_id: reg_6c65193b45b64028b94ef6989d990a59
+- v: 1
+  id: reg_70b069b0a26b4473beea7bec668e0f67
+  ts: "2026-10-28T11:33:22Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm, test-unit"
+      to: "-"
+  previous_event_id: reg_aa63aafcff9040b6b3106741ceac5cab
+- v: 1
+  id: reg_d8696865f94246f582f2d0b35df6bbdd
+  ts: "2026-10-28T11:50:12Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_70b069b0a26b4473beea7bec668e0f67
+- v: 1
+  id: reg_bc1c2656473e4b21914d1ca3c6a028d0
+  ts: "2026-10-28T11:50:52Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_d8696865f94246f582f2d0b35df6bbdd
+- v: 1
+  id: reg_8341520f81624c94914e1b18ee91f6bb
+  ts: "2026-10-28T12:03:32Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bc1c2656473e4b21914d1ca3c6a028d0
+- v: 1
+  id: reg_65d26b62eb484919b6845ba8233c6535
+  ts: "2026-10-28T12:39:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、docs:build と生成ページの実物、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: bdd を data、ifx-cmd・ifx-msg を api、gl を glossary にそろえ、旧値は置き換え先を示してエラーにした。YAML の検証でも rulebook の宣言と照合し、表示用ページは YAML の type を引き継ぐ
+  previous_event_id: reg_8341520f81624c94914e1b18ee91f6bb

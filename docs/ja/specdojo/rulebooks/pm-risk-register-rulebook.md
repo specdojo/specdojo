@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:pm-risk-register-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   sample: specdojo:pm-risk-register-sample
   template: specdojo:pm-risk-register-template

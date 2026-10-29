@@ -336,7 +336,20 @@ npm install --save-dev @specdojo/docs-site
 npx specdojo-docs-site build .
 ```
 
-開発サーバは `npx specdojo-docs-site dev .` で起動します。`build` と `dev` は、利用リポジトリに存在しない package 同梱の kata・guide・reference を、gitignore 済みの `specdojo-kata-staging/` へ一時的に複製して `/ja/specdojo/` で配信します。eject 済みの文書は利用リポジトリ側を優先するため、サイト表示のために `kata install --all` を実行する必要はありません。
+開発サーバは `npx specdojo-docs-site dev .` で起動します。`build` と `dev` は、利用リポジトリの `docs/` と package 同梱の kata・guide・reference を `.vitepress/kata-staging/docs/` に重ねた閲覧用ツリーを作り、`/ja/specdojo/` で配信します。eject 済みの文書は利用リポジトリ側を優先し、`dev` 中の編集・追加・削除も同期するため、サイト表示のために `kata install --all` を実行する必要はありません。ページ走査のルートをこのツリーに限定し、`.vitepress/dist` や cache、利用者の設定ファイルはページに含めません。
+
+Mermaid SVG の生成だけを行う場合は `npx specdojo-docs-site mermaid .` を使います。SVG と manifest は `.vitepress/mermaid/`、サイトの build 結果は `.vitepress/dist/`、cache は `.vitepress/cache/` に置きます。図の公開 URL は `/mermaid/<hash>.svg` を維持し、利用者の `public/` のファイルも従来どおり配信します。
+
+`specdojo config init` は `.gitignore` の既存の内容を保持して、次の生成ディレクトリだけを除外します。既存のリポジトリでは再実行するか、手動で追記してください。`.vitepress/` 全体を除外せず、利用者の設定ファイルは Git 管理対象に残します。
+
+```text
+/.vitepress/dist/
+/.vitepress/cache/
+/.vitepress/mermaid/
+/.vitepress/kata-staging/
+```
+
+旧配置の `public/mermaid/` と `specdojo-kata-staging/` は自動で削除しません。移行時は内容を確認し、不要な生成物だけを手動で片付けてください。
 
 ### 6.1. Mermaid 図を組み立てる
 

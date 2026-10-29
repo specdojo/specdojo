@@ -208,6 +208,7 @@ function configuredExternalRegisterDirectories(paths: RegisterPaths): Array<{
 export function collectDerivedRegisterRelations(
   paths: RegisterPaths,
   currentItems: readonly RegisterItemView[],
+  relationField: "derivedFrom" | "dependsOn" = "derivedFrom",
 ): DerivedRegisterRelation[] {
   const relations: DerivedRegisterRelation[] = [];
   const collect = (
@@ -215,7 +216,7 @@ export function collectDerivedRegisterRelations(
     items: ReadonlyArray<{ item: PjrItem; ticketPath: string }>,
   ): void => {
     for (const item of items) {
-      for (const ref of item.item.derivedFrom ?? []) {
+      for (const ref of item.item[relationField] ?? []) {
         const source = parseRegisterItemRef(ref, projectId);
         if (!source || source.projectId !== paths.projectId) continue;
         relations.push({

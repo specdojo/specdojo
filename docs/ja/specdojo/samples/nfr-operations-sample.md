@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:nfr-operations-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:nfr-operations-rulebook
 ---

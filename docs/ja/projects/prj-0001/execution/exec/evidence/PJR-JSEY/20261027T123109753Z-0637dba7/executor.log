@@ -1,0 +1,10 @@
+個票 `pjr-jsey-exec-run-split-smoke.md` の「対応結果」の表に 1 行追記しました。このファイル以外は変更していません。lint などの検証は実行していません。
+
+- **追記した行:** 2026-10-27 21:35 / PJR-XSM8 / `sonnet-executor`
+- **確認対象を PJR-XSM8 とした理由:** 対象一覧のうち最後に統合されたのが PJR-XSM8 だったためです。統合コミットは `2b53f391f`(2026-10-27 21:27 JST)です。
+- **agent の根拠:** 今回の start コミット `8d3c45c08` の event に `actor: sonnet-executor` と記録されています。
+- **本文の整理:** 前回の PJR-K87Y の確認結果は、見出しを「前回の統合後の確認(2026-10-26)」に変えて残しました。親検証 7 件、reporter の result 記入、統合、`review` 遷移はこの後の段階で確認します。申し送りにもそう記しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に 2026-10-27 21:35 / PJR-XSM8 / sonnet-executor を追記し、確認対象の説明を更新した。変更は個票のみ。","handoff":["確認対象は最新の統合コミット 2b53f391f(2026-10-27 21:27 JST)を持つ PJR-XSM8、agent は start event の actor sonnet-executor とした。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移の完了は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため executor では実行しない。"}]}
+</specdojo_executor_evidence>

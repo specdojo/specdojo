@@ -1,0 +1,13 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/specdojo/references/specdojo-config-reference.md:117:207 error MD056/table-column-count Table column count [Expected: 3; Actual: 4; Too many cells, extra data will be missing]

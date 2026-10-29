@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_468f8f2897cc4d8eba08b371845d58fe
+  ts: "2026-10-27T11:26:51Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: TSD の rulebook の見直しに続き、recipe を整備するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tsd-recipe を作る
+    - field: description
+      from: ""
+      to: 見直した tsd-rulebook に沿って、技術領域ごとの TSD を書く手順を recipe にする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: recipe-authoring
+    - field: targets
+      from: ""
+      to: '["specdojo:tsd-recipe"]'
+    - field: sources
+      from: ""
+      to: '["docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md","docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md","docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md"]'
+- v: 1
+  id: reg_18865d9fd4a34a3b8964d0fd39dc0404
+  ts: "2026-10-27T13:49:35Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_468f8f2897cc4d8eba08b371845d58fe
+- v: 1
+  id: reg_0ef4fc36dfd045fe9fd5da88a4f5409c
+  ts: "2026-10-27T14:01:26Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_18865d9fd4a34a3b8964d0fd39dc0404
+- v: 1
+  id: reg_64e7017845e1437c8c599768a6cf2dc5
+  ts: "2026-10-27T14:12:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・親の検証・docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-27"
+    - field: conclusion
+      from: "-"
+      to: tsd-recipe を作成し、tsd-rulebook の recipe に宣言した。template は作らない
+  previous_event_id: reg_0ef4fc36dfd045fe9fd5da88a4f5409c

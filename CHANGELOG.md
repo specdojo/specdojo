@@ -2,6 +2,52 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.5.0] - 2026-10-29
+
+同梱パッケージは `@specdojo/docs-lint` 0.3.0 と `@specdojo/docs-site` 0.3.0 を同時に公開します。docs-lint 0.3.0 は、rulebook の `deliverable_type` と成果物の `type` の照合、YAML 成果物の旧 type のエラー化（下記の破壊的変更の PJR-484B・PJR-0D0T）を含みます。下記の移行手順の検査には docs-lint 0.3.0 が必要です。docs-site 0.3.0 は、生成物の `.vitepress/` への集約（PJR-9ZN5）と、Mermaid の構文エラーで生成を止めない変更（PJR-N9JC）を含みます。
+
+### 破壊的変更
+
+成果物の `type` を rulebook の宣言と照合するようにし、宣言と違う値や旧値は移行期間なしでエラーになります。次の順で移行してください。詳細は下記の各項目を参照してください。
+
+1. `specdojo` を 0.5.0、`@specdojo/docs-lint` を 0.3.0 に更新する（docs-site を使う場合は `@specdojo/docs-site` も 0.3.0 に更新する）。
+2. eject した rulebook に `specdojo.deliverable_type` を追加する。
+3. Markdown 成果物・sample・テンプレートの生成物 Frontmatter の `type` を宣言値に書き換え、`lint:fm` を通す。
+4. YAML 成果物の旧 type（`domain` / `command` / `message`）を置き換え、`validate:schema:yaml` を通す。
+5. `specdojo yaml-pages build` で表示ページを再生成する。
+
+- 成果物の `type` に `requirement`（機能・非機能要件・受入基準）と `glossary`（用語集）を追加し、`project` はプロジェクトの管理文書に限定しました。各 rulebook の `specdojo.deliverable_type` を必須とし、Markdown 成果物・sample・テンプレートの生成物 Frontmatter と `lint:fm` で照合します（PJR-484B）。
+- 既存の rulebook には、扱う成果物の `type` を `specdojo.deliverable_type` として追加してください。次に、その rulebook を参照する成果物・sample の `specdojo.type` と、テンプレートの `specdojo.frontmatter_template.specdojo.type` を宣言値に書き換えてください。テンプレート自身の `specdojo.type` は `template` のままにします。`lint:fm` を実行し、エラーに表示される宣言値にそろえてください。移行期間は設けず、従来の `project` や `sample` も宣言と違えばエラーにします。
+- YAML 成果物も rulebook の宣言と照合します（PJR-0D0T）。既存の bdd は `type: domain` を `data`、ifx-cmd は `command` を `api`、ifx-msg の `x-spec-meta.type` は `message` を `api` に変更してください。gl には `type: glossary` と `rulebook: specdojo:gl-rulebook` を追加し、OpenAPI / AsyncAPI の `x-spec-meta` と IF 一覧にも対応する `rulebook` を記載してください。YAML テンプレートの `metadata_template.type` も宣言値に合わせ、自身の `type: template` は維持します。`npm run validate:schema:yaml` を実行し、エラーに示された置き換え先へ修正してください。旧値は即時エラーとなり、`specdojo-schema: none` / `validate=false` でもメタ情報は検証します。最後に `specdojo yaml-pages build` で表示ページを再生成してください。表示ページは元 YAML の `type` を引き継ぎます。
+
+### 追加機能
+
+- `repos[].integration_strategy` に `branch-only` を指定すると、プロダクトをローカルで merge せず、commit 済みの exec branch を残してプロダクト側の PR レビューへ渡せるようにしました。既定は従来どおり `merge` です。成功後は worktree を撤去し、プロジェクト側は `review` へ進んで result に未統合・branch 名・trace key を記録します。push と PR 作成は行いません（PJR-EXH2）。
+
+- register の子 todo からカタログの判定・生成を行う `catalog-planning` と、scope・intent の宣言から strategy・track を生成する `strategy-planning` を追加しました。対象は `domain:<domain>` / `track:<track>` で指定します。`timeline build` と strategy 生成は、カタログ作成 todo の完了から `catalog_status` を導き、手書き計画との差を警告します（PJR-WAGY）。
+
+- register に track ごとの仕事を管理する `epic` type と個票テンプレートを追加しました。`add` / `update --track` で担当 track を記録・検証し、`--from` でつないだ子項目と状態を epic 別ビューに表示します。epic 自体は `exec run --register`・filter・夜間 queue の実行対象から外し、完了は子項目と schedule を材料に人が判断します（PJR-B4Y4）。
+
+- 登録項目の実行順序を `depends_on` と `register add` / `update --depends-on` で指定できるようにしました。参照先・自己参照・循環を検証し、先行項目が `done` / `decided` になるまで直接実行を停止、sweep・夜間 queue を理由付きでスキップします。一覧の依存列と後続項目の逆引きビューも追加しました（PJR-6RVJ）。
+
+### 変更
+
+- 配布するオーケストレーターの指示（`templates/` の各環境向け）の type の表に `epic` を加え、track を指定して起票し、子 todo へ分解し、epic 自体は実行しない扱いを書き足しました。
+- 配布するオーケストレーターの指示に、`--depends-on` で順番のある項目の先行を記録し、`--from` の由来とは区別する扱いを書き足しました。
+- `@specdojo/docs-site` が生成するファイルを `.vitepress/` の下にまとめました。Mermaid の SVG と manifest は `.vitepress/mermaid/`、kata のステージングは `.vitepress/kata-staging/` に出力し、ビルド結果には SVG だけを含めます。利用者の `public/` は変更しません。package 同梱の文書は `/ja/specdojo/...` で公開し、eject 済みの文書は利用リポジトリ側を優先します。`config init` が生成する `.gitignore` に `/.vitepress/dist/`・`/.vitepress/cache/`・`/.vitepress/mermaid/`・`/.vitepress/kata-staging/` を追加しました。旧配置の `public/mermaid/` と `specdojo-kata-staging/` は自動では削除しないため、不要になったら削除してください（PJR-9ZN5）。
+- 技術領域別の TSD を作成する `specdojo:tsd-recipe` を追加し、`tsd-rulebook` から参照するようにしました。一冊・分冊の判断、採用値と未決事項の整理、段階的な動作確認、秘密情報の扱いを作業順に辿れます（PJR-05GN）。
+- `specdojo:tsd-sample` を新しい `tsd-rulebook` に合わせて見直しました。駄菓子屋きぬや販売管理システムのデータベース詳細定義（PostgreSQL / Prisma）を題材とし、対象環境・前提条件、採用設定、導入手順、動作確認、制約・トラブルシュートを満たす完成例に再構成しました（PJR-EVAE）。
+- `specdojo:tsd-index-sample` を新しい `tsd-index-rulebook` に合わせて見直しました。技術スタック一覧に版・正本と適用範囲の列を設け、開発・検証・文書化・運用の技術区分と必須・任意の区別を追加し、詳細 TSD サンプルへのリンクを整備しました（PJR-9SXH）。
+- sample の `type` は見本にする成果物の種類とし、sample の識別は `id` とファイル名の `-sample` で行う原則を明文化しました。同梱 sample 5 件の `type` を揃え、既存の `type: sample` は互換性のためスキーマで許容します（PJR-XSM8）。
+
+### 不具合修正
+
+- markdownlint の設定がない利用リポジトリで、result の commit 前検査が日本語の長い行（MD013）を拒否する問題を修正しました。設定がない場合は SpecDojo の基本規則を使い、既存設定は優先します。通常の `init` と `config init` は不足する `.markdownlint.yaml` を上書きせずに生成します（PJR-0QW0）。
+- plan に展開する grade の finding の `anchor` と本文を、バッククォートを含む場合も壊れないインラインコードで囲むようにしました。引用元に Markdown リンクがあっても、生成した plan が `validate:history-links` に失敗しません（PJR-H988）。
+- `@specdojo/docs-site` の Mermaid 図に構文エラーがあっても、`dev` は対象文書とエラーを警告してほかの図とページの生成を続けるようにしました。`build` と `mermaid` は全図を処理し、失敗した図をまとめて報告してから失敗します。失敗した図の SVG を cache に残さず、修正後の変更検知で再生成します（PJR-N9JC）。
+- `register add` / `update` の `sample-maintenance` が成果物の `type` を持つ sample を拒否する問題を修正しました。索引で対象を解決し、`id` の末尾 `-sample` で判定します（PJR-XSM8）。
+- `project.repos` の文書の grade 結果を `results/<repo 名>/<文書 ID>.yaml` に分離し、別リポジトリの同じ ID による上書きと前回結果の誤参照を修正しました。plan・apply・run の再開・dashboard なども同じ配置を使い、本リポジトリの既存結果の保存先は維持します（PJR-8NWR）。
+
 ## [0.4.7] - 2026-10-26
 
 ### 追加機能

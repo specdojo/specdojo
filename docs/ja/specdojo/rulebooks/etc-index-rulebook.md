@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:etc-index-rulebook
   type: rulebook
+  deliverable_type: test
   status: draft
   recipe: undecided
   sample: specdojo:etc-index-sample

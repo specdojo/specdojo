@@ -1,0 +1,32 @@
+レビューが終わりました。判定は `complete-with-findings` で、この Run は統合してかまいません。成果物と result は変更していません。
+
+**一致した点**
+- **出力範囲:** `efc09a16a..9e5434e40` の差分は23ファイルで、すべてこの Run の出力です。内訳は evidence 4件、plan、result、Run JSON、grade サイドカー15件、bes の pipeline state 1件の削除です。サイドカー15件は `results.tsv` の15文書と一対一で、それ以外の変更は入っていません。
+- **記録どうしの整合:** 次の記録がそろって正常終了を示しています。
+  - Run JSON は `state: succeeded`、attempt 1 の `exit_code: 0`。
+  - evidence の `command.exit_code` は 0 で、stderr は空。
+  - stdout の最後の行は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0`。
+  - result も「15件すべて `passed`」と書いており、食い違いはありません。
+- **Job 固有の確認事項:**
+  - 終了コード75（rate limit）や中断で残った段はありません。
+  - `failed` の段も `retry_exhausted` の文書もありません。
+  - 削除された `bes-rulebook-36aaf6396fc7.json` は、前回の Run `JBR-grade-kata-6e23633d2f4f` で stage 1 が1回失敗した（`consecutive_failures: 1`）記録です。今回 `bes-rulebook` が `passed` になったので、片付けとして筋が通っています。
+- **鮮度（`E-01`）と未完了（`E-02`）:** `grade list --target kata --changed-only` を2回実行し、どちらにも評価した15文書は出ていません。`--incomplete` は0件、`--dependency-changed` も0件、`grade state --exhausted` も0件でした。
+
+**finding（統合は止めないもの）**
+1. **`needs-work` が多い:** 15件中11件が `needs-work` で、`pass` は4件です（tsd-recipe 100、bps 93、cdfd 89、cdfd-overview 87）。score は56〜100に分布し、最低は ccd-mermaid の56です。前回より上がった文書もあります（atc-index 69→74、bds 67→73、bes 61→66、ccd-mermaid 42→56）。品質の結果として対象文書を直す対応が必要ですが、評価パイプラインの異常ではありません。
+2. **verdict が score だけで決まっていない:** cdfd-uc は score 89 でも `needs-work`、cdfd-overview は87で `pass` です。major の finding によるものと思われますが、判定規則そのものは確かめていません。
+3. **executor 名の表記が合わない:** `results.tsv` では executor が `agy-expert-executor` ですが、サイドカーの `graded_by` は全15件が `flash-high-executor` です。前回のサイドカーには `agy-expert-executor` と書かれたものがあります。同じ executor の別名（alias）なのか、記録の不具合なのかは確かめていません。
+4. **finding が前回と同じ文言のまま残っている:** bps と cdfd-uc は `content_hash` が変わったのに、score・verdict・finding の文言・行番号が前回と同じで、差分は `message_ja` の追加だけでした。前回の結果を引き継ぐのが仕様どおりなのかを確かめるよう、改善指示に残すことを勧めます。私は文書を評価し直していません。
+
+**次の Run に向けて**
+- `--changed-only` には今回の15件以外に約150件の古い文書が残り、`--ungraded` には pjr template 3件が残っています。どちらも `limit=15` で今回の対象から外れたもので、次回以降の Run で拾われます。
+
+**確認できなかった範囲**
+- `logs/grade/runs/per-document/` 配下の実ファイルと、grade 内部のログ。
+- サイドカーの finding の中身が正しいかどうか（review では評価し直さない方針のため）。
+- npm 系の検査は親 runner が実行するので、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。差分23ファイルは当該 Job Run の出力のみ（evidence 4、plan、result、Run JSON、kata サイドカー15件の更新、前回の失敗 state `bes-rulebook-36aaf6396fc7.json` の削除）。Run JSON `state: succeeded`・`exit_code` 0・stderr 空・stdout `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0`・result の記述が相互に一致。`failed`／rate limit／中断／`retry_exhausted` なし。鮮度: `grade list --target kata --changed-only` を2回実行し評価済み15文書は含まれず、`--incomplete`・`--dependency-changed`・`grade state --exhausted` は0件。finding: (1) 15件中11件が `needs-work`（pass 4件、score 56〜100、最低は ccd-mermaid 56。atc-index 69→74、bds 67→73、bes 61→66、ccd-mermaid 42→56 と上昇）、(2) cdfd-uc は 89 で `needs-work`、cdfd-overview は 87 で `pass`（verdict が score 単独で決まらない）、(3) `results.tsv` の executor `agy-expert-executor` とサイドカー `graded_by: flash-high-executor` の表記が一致しない、(4) bps・cdfd-uc は `content_hash` が変わっても finding の文言・行番号が前回と同一で、差分は `message_ja` の追加のみ。前回結果の引き継ぎが仕様どおりかの確認を推奨（再評価はしていない）。確認できなかった範囲: `logs/grade/runs/per-document/` 配下の実ファイル、grade 内部ログ、finding 内容の妥当性。npm 系検査は親 runner に委ねた。","handoff":["`graded_by: flash-high-executor` と `results.tsv` の executor `agy-expert-executor` の不一致が、同じ executor の別名（alias）によるものか記録の不具合かを確認する。","`content_hash` が変わったのに finding の文言・行番号が前回と同じサイドカー（bps-rulebook、cdfd-uc-rulebook ほか）について、前回結果の引き継ぎが仕様どおりかを確認する。","`--changed-only` に今回の15件以外の約150件、`--ungraded` に pjr template 3件が残っている（`limit=15` による対象外）。次回以降の Run で処理される。","`needs-work` 11件（とくに ccd-mermaid 56、bdd 64、bes 66）は対象 rulebook の改善対応が必要。"],"validations":[{"command":"git diff --stat efc09a16aedec5c4484a64535fd1424ecf2d9ff3..9e5434e40bc30caf3acb77687ab6ec5e21397630 && git diff --name-status efc09a16aedec5c4484a64535fd1424ecf2d9ff3..9e5434e40bc30caf3acb77687ab6ec5e21397630","status":"passed","summary":"23ファイル（+996/-242）。すべて当該 Job Run の出力で、対象外の変更なし"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"評価済み15文書は出力に含まれない（最新）。対象外の古い文書が約150件残る"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力0件（評価パイプラインの未完了なし）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"出力0件"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --ungraded","status":"passed","summary":"pjr template 3件（今回の対象外）"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力0件（`retry_exhausted` なし）"}]}
+</specdojo_executor_evidence>

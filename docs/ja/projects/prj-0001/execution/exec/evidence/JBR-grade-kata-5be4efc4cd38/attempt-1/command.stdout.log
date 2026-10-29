@@ -1,0 +1,54 @@
+
+> specdojo@0.4.7 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-5be4efc4cd38 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-5be4efc4cd38
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/tsd-recipe.md
+document complete: docs/ja/specdojo/recipes/tsd-recipe.md
+document start: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/atc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/atc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bac-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bac-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bdd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bdd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bds-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bds-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bes-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bes-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bes-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bes-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bps-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bps-rulebook.md
+document start: docs/ja/specdojo/rulebooks/br-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/br-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-5be4efc4cd38/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-28T20:07:00Z	docs/ja/specdojo/recipes/tsd-recipe.md	1	passed	351	pass	100	0	agy-expert-executor	machine	none		
+2026-10-28T20:10:08Z	docs/ja/specdojo/rulebooks/atc-index-rulebook.md	1	passed	186	needs-work	74	16	agy-expert-executor	machine	none		
+2026-10-28T20:12:16Z	docs/ja/specdojo/rulebooks/atc-rulebook.md	1	passed	126	needs-work	77	15	agy-expert-executor	machine	none		
+2026-10-28T20:14:40Z	docs/ja/specdojo/rulebooks/bac-rulebook.md	1	passed	142	needs-work	77	23	agy-expert-executor	machine	none		
+2026-10-28T20:18:06Z	docs/ja/specdojo/rulebooks/bdd-rulebook.md	1	passed	204	needs-work	64	25	agy-expert-executor	machine	none		
+2026-10-28T20:21:32Z	docs/ja/specdojo/rulebooks/bds-rulebook.md	1	passed	204	needs-work	73	19	agy-expert-executor	machine	none		
+2026-10-28T20:25:39Z	docs/ja/specdojo/rulebooks/bes-index-rulebook.md	1	passed	245	needs-work	79	17	agy-expert-executor	machine	none		
+2026-10-28T20:28:53Z	docs/ja/specdojo/rulebooks/bes-rulebook.md	1	passed	192	needs-work	66	25	agy-expert-executor	machine	none		
+2026-10-28T20:30:43Z	docs/ja/specdojo/rulebooks/bps-rulebook.md	1	passed	108	pass	93	3	agy-expert-executor	machine	none		
+2026-10-28T20:35:53Z	docs/ja/specdojo/rulebooks/br-rulebook.md	1	passed	308	needs-work	71	19	agy-expert-executor	machine	none		
+2026-10-28T20:39:04Z	docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md	1	passed	189	needs-work	56	27	agy-expert-executor	machine	none		
+2026-10-28T20:41:22Z	docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md	1	passed	136	needs-work	77	14	agy-expert-executor	machine	none		
+2026-10-28T20:43:32Z	docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md	1	passed	127	pass	87	9	agy-expert-executor	machine	none		
+2026-10-28T20:46:00Z	docs/ja/specdojo/rulebooks/cdfd-rulebook.md	1	passed	146	pass	89	10	agy-expert-executor	machine	none		
+2026-10-28T20:48:06Z	docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md	1	passed	124	needs-work	89	6	agy-expert-executor	machine	none		

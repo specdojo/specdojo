@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:itc-rulebook
   type: rulebook
+  deliverable_type: test
   status: draft
   recipe: undecided
   sample: specdojo:itc-sample

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:ifx-cmd-rulebook
   type: rulebook
+  deliverable_type: api
   status: draft
   target_format: yaml
   recipe: specdojo:ifx-cmd-recipe
@@ -48,7 +49,7 @@ YAML の先頭に次のメタ項目を置きます。
 | キー     | 説明                                             | 必須 |
 | -------- | ------------------------------------------------ | ---- |
 | id       | コマンド連携仕様 ID。成果物では `ifx-cmd-<term>` | ○    |
-| type     | `command` 固定                                   | ○    |
+| type     | `api` 固定                                       | ○    |
 | title    | 対象と実行目的が分かる仕様名                     | ○    |
 | status   | `draft` / `ready` / `deprecated`                 | ○    |
 | rulebook | `specdojo:ifx-cmd-rulebook`                      | ○    |

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cnd-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: draft
   recipe: undecided
   sample: specdojo:cnd-sample

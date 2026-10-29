@@ -1,0 +1,133 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B
+
+Updated ticket status → ready: /tmp/specdojo-ticket-3nSSDi/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-GCa5N0/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-0FWgh5/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Mw9icA/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-NwkTjB/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-EgzpjZ/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-6j5uld/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-6j5uld/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-6j5uld/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-6j5uld/.specdojo/agent-members.yaml
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-28T10:32:25.070Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-28T10:31:25.465Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-28T10:31:25.701Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-hXv7zd/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-vWaH9c/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+ ❯ tests/src/exec/review-template-table.test.ts (1 test | 1 failed) 5700ms
+     × keeps MD060 enabled and passes both raw templates and expanded criteria tables 5700ms
+
+ Test Files  1 failed | 157 passed (158)
+      Tests  1 failed | 2687 passed (2688)
+   Start at  19:30:48
+   Duration  52.57s (transform 3.08s, setup 642ms, import 23.55s, tests 58.73s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/review-template-table.test.ts > review template tables > keeps MD060 enabled and passes both raw templates and expanded criteria tables
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/review-template-table.test.ts:12:3
+     10|
+     11| describe("review template tables", () => {
+     12|   it("keeps MD060 enabled and passes both raw templates and expanded c…
+       |   ^
+     13|     const temporary = mkdtempSync(join(tmpdir(), "specdojo-review-tabl…
+     14|     try {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

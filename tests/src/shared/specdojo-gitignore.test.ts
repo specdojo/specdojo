@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   DEFAULT_GITIGNORE_PATTERNS,
   GITIGNORE_HEADER,
@@ -7,6 +11,7 @@ import {
   NODE_MODULES_PATTERN,
 } from "../../../src/shared/specdojo-gitignore.js";
 import { projectGitignoreLayout } from "../../../src/shared/specdojo-config.js";
+import { gitEnvironment } from "../../../src/shared/git-environment.js";
 
 describe("gitignorePatternsForLayouts", () => {
   it("returns only the defaults when the project lives under docs/", () => {
@@ -60,6 +65,36 @@ describe("gitignorePatternsForLayouts", () => {
 });
 
 describe("mergeGitignore", () => {
+  it("生成ディレクトリだけを除外し .vitepress の利用者設定を追跡対象に保つ", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-gitignore-"));
+    try {
+      execFileSync("git", ["init", "--quiet", root], { env: gitEnvironment() });
+      const existing = "custom-output/\n/public/mermaid/\n";
+      const merged = mergeGitignore(existing, [...DEFAULT_GITIGNORE_PATTERNS]);
+      writeFileSync(join(root, ".gitignore"), merged.content);
+      mkdirSync(join(root, ".vitepress"));
+      writeFileSync(join(root, ".vitepress/config.mts"), "export default {};");
+      expect(merged.content.startsWith(existing)).toBe(true);
+      const paths = [
+        "dist/index.html",
+        "cache/data.json",
+        "mermaid/1234abcd.svg",
+        "kata-staging/docs/index.md",
+      ].map((file) => `.vitepress/${file}`);
+      const ignored = execFileSync("git", ["check-ignore", "--stdin"], {
+        cwd: root,
+        env: gitEnvironment(),
+        input: [...paths, ".vitepress/config.mts", ".vitepress/theme/index.ts"].join("\n") + "\n",
+        encoding: "utf8",
+      })
+        .trim()
+        .split("\n");
+      expect(ignored).toEqual(paths);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("appends only the missing lines after the existing content", () => {
     const existing = "node_modules/\n.specdojo/doc-index.json\n";
 

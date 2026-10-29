@@ -148,6 +148,11 @@ $defs:
       integration_branch:
         description: Branch exec integrates into. Omit to use the repository's current branch.
         $ref: "#/$defs/NonEmptyString"
+      integration_strategy:
+        description: Local merge commit (default), or retain the exec branch for product-side PR review.
+        type: string
+        enum: [merge, branch-only]
+        default: merge
       setup:
         description: Whether exec installs dependencies and builds in the repository worktree.
         type: object

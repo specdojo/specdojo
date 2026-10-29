@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 77
-graded_at: "2026-09-28T22:20:52.432Z"
-graded_by: codex-expert-executor
-content_hash: 6be94a1e7aa525c319b3428bf2249297ee1cb0383efc11719ea56ca884b52ce6
+graded_at: "2026-10-28T20:41:20.443Z"
+graded_by: flash-high-executor
+content_hash: cecaa43553dd70883afea106beef5cc0f1fa8d377da1e76d36addfafe311d874
 categories:
   purpose:
     score: 75
@@ -113,6 +113,7 @@ findings:
     line: 66
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: "`ready` 昇格の判断に用いる完成判定、未決事項の有無、承認者、次アクションが定義されていないため、PO は承認・保留・差し戻しを一意に判断できない。"
+    message_ja: "`ready` 昇格の判断に用いる完成判定、未決事項の有無、承認者、次アクションが定義されていないため、PO は承認・保留・差し戻しを一意に判断できない。"
   - id: F002
     severity: minor
     rule: vp-po-publication-accountability
@@ -123,12 +124,14 @@ findings:
       の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
       の形状・線種と既定の色・絵文字方針に従います。
     message: 共通記法の内容に非公開情報は見当たらないが、`draft` から公開可能な状態へ移す人間の承認責任と承認記録の所在を明示する必要がある。
+    message_ja: 共通記法の内容に非公開情報は見当たらないが、`draft` から公開可能な状態へ移す人間の承認責任と承認記録の所在を明示する必要がある。
   - id: F003
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 66
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 作成順は定義されているが、必須要素、禁止事項、包含元との整合、描画確認をまとめた完了条件と確認タイミングがなく、進捗完了を一意に確認できない。
+    message_ja: 作成順は定義されているが、必須要素、禁止事項、包含元との整合、描画確認をまとめた完了条件と確認タイミングがなく、進捗完了を一意に確認できない。
   - id: F004
     severity: major
     rule: vp-pm-dependency-risk
@@ -141,6 +144,9 @@ findings:
     message: >-
       `draft` の共通部品を `ready` の二つの主 CDFD rulebook が `includes` しているため、依存先の確定性、変更時の影響範囲、互換性確認をそろえてから上位文書の ready
       状態を維持する必要がある。
+    message_ja: >-
+      `draft` の共通部品を `ready` の二つの主 CDFD rulebook が `includes` しているため、依存先の確定性、変更時の影響範囲、互換性確認をそろえてから上位文書の ready
+      状態を維持する必要がある。
   - id: F005
     severity: minor
     rule: vp-ba-stakeholder-clarity
@@ -151,6 +157,7 @@ findings:
       の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
       の形状・線種と既定の色・絵文字方針に従います。
     message: 適用先は示されているが、CDFD 作成者、業務レビュー者、共通凡例の承認者と、それぞれが本 rulebook を使う場面を明示する必要がある。
+    message_ja: 適用先は示されているが、CDFD 作成者、業務レビュー者、共通凡例の承認者と、それぞれが本 rulebook を使う場面を明示する必要がある。
   - id: F006
     severity: minor
     rule: vp-arc-technical-constraints
@@ -160,12 +167,14 @@ findings:
       の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。`TB`
       は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
     message: Mermaid の対応バージョンまたはプロジェクト標準レンダラーを明示し、絵文字、日本語ノード ID、各形状構文をどの環境で保証するか固定する必要がある。
+    message_ja: Mermaid の対応バージョンまたはプロジェクト標準レンダラーを明示し、絵文字、日本語ノード ID、各形状構文をどの環境で保証するか固定する必要がある。
   - id: F007
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 34
     anchor: "| ノード ID    | Mermaid コード内で要素を参照する識別子。短い日本語または英数字を使う       |"
     message: ノード ID の許容文字、禁止文字、予約語、重複時の扱い、表示ラベルへ分離すべき条件を Mermaid の対応版に合わせて定義し、生成時の構文エラーを防ぐ必要がある。
+    message_ja: ノード ID の許容文字、禁止文字、予約語、重複時の扱い、表示ラベルへ分離すべき条件を Mermaid の対応版に合わせて定義し、生成時の構文エラーを防ぐ必要がある。
   - id: F008
     severity: major
     rule: vp-dev-change-impact
@@ -176,18 +185,21 @@ findings:
       の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
       の形状・線種と既定の色・絵文字方針に従います。
     message: 共通記法の変更が三つの包含元、対応する template・sample、既存 CDFD、生成 SVG に波及するため、変更時の確認対象、互換性方針、移行手順を定義する必要がある。
+    message_ja: 共通記法の変更が三つの包含元、対応する template・sample、既存 CDFD、生成 SVG に波及するため、変更時の確認対象、互換性方針、移行手順を定義する必要がある。
   - id: F009
     severity: major
     rule: vp-dev-testability
     line: 66
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: Mermaid コードブロックについて `docs:build:mermaid` 等の検証コマンド、対象ファイル、期待する終了状態、構文・描画エラー時の対応を完成判定として明示する必要がある。
+    message_ja: Mermaid コードブロックについて `docs:build:mermaid` 等の検証コマンド、対象ファイル、期待する終了状態、構文・描画エラー時の対応を完成判定として明示する必要がある。
   - id: F010
     severity: minor
     rule: vp-qe-verifiability
     line: 66
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 必須ノード、全エッジのラベル、線種、図直後の注記、ID 一意性、禁止事項、包含元との整合、構文・描画成功を網羅する完成判定を追加する必要がある。
+    message_ja: 必須ノード、全エッジのラベル、線種、図直後の注記、ID 一意性、禁止事項、包含元との整合、構文・描画成功を網羅する完成判定を追加する必要がある。
   - id: F011
     severity: minor
     rule: vp-qe-omissions-consistency
@@ -197,6 +209,7 @@ findings:
       の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。`TB`
       は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
     message: "`TB` の条件が「組織・分類などの階層構造」とされており CDFD の目的外の図を許すように読めるため、CDFD 内での具体的な適用条件へ限定するか `TB` を禁止する必要がある。"
+    message_ja: "`TB` の条件が「組織・分類などの階層構造」とされており CDFD の目的外の図を許すように読めるため、CDFD 内での具体的な適用条件へ限定するか `TB` を禁止する必要がある。"
   - id: F012
     severity: major
     rule: vp-qe-kata-conformance
@@ -209,12 +222,16 @@ findings:
     message: >-
       `specdojo:cdfd-overview-rulebook` と `specdojo:cdfd-rulebook` が `ready` で本 rulebook を `includes` している一方、本 rulebook
       は `draft` のため、完成判定と承認を満たして状態を整合させるか、包含元の状態を見直す必要がある。
+    message_ja: >-
+      `specdojo:cdfd-overview-rulebook` と `specdojo:cdfd-rulebook` が `ready` で本 rulebook を `includes` している一方、本 rulebook
+      は `draft` のため、完成判定と承認を満たして状態を整合させるか、包含元の状態を見直す必要がある。
   - id: F013
     severity: major
     rule: vp-ops-release-readiness
     line: 66
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: "`draft` から `ready` へ昇格する条件、承認者、承認記録、静的検証と Mermaid 描画確認、未解決事項がないことを公開前チェックとして定義する必要がある。"
+    message_ja: "`draft` から `ready` へ昇格する条件、承認者、承認記録、静的検証と Mermaid 描画確認、未解決事項がないことを公開前チェックとして定義する必要がある。"
   - id: F014
     severity: major
     rule: vp-ops-operability
@@ -225,3 +242,4 @@ findings:
       の `includes` から適用される共通部品です。対象プロダクトの `cdfd-overview` に「凡例（本プロダクト共通）」がある場合はその割り当てを正本とし、共通凡例がない場合は本 rulebook
       の形状・線種と既定の色・絵文字方針に従います。
     message: 共通部品の更新手順、影響先の再検証、Mermaid 生成物の再生成方法、描画障害時の切り分けと問い合わせ先を定義しなければ、包含先を継続運用できない。
+    message_ja: 共通部品の更新手順、影響先の再検証、Mermaid 生成物の再生成方法、描画障害時の切り分けと問い合わせ先を定義しなければ、包含先を継続運用できない。

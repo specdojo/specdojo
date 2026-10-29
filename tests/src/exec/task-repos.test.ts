@@ -148,6 +148,14 @@ describe("resolveProductRepos", () => {
     expect(resolveProductRepos("/work/app1-specdojo", {})).toEqual([]);
     expect(projectRepoDirName([])).toBeUndefined();
   });
+
+  it("passes the product-side review strategy through repository resolution", () => {
+    expect(
+      resolveProductRepos("/work/app1-specdojo", {
+        repos: [{ name: "app1", path: "../app1", integration_strategy: "branch-only" }],
+      })[0]?.integrationStrategy,
+    ).toBe("branch-only");
+  });
 });
 
 describe("parseIntegrationBranchOverrides", () => {

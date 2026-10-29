@@ -207,11 +207,12 @@ function markdownLink(label: string, fromDirectory: string, targetPath: string):
 function generateDerivedItemsFile(
   paths: RegisterPaths,
   items: readonly RegisterItemView[],
+  relationField: "derivedFrom" | "dependsOn" = "derivedFrom",
 ): string {
   const sourceDocs = new Map(
     items.flatMap((view) => (view.ticketPath ? [[view.id, view.ticketPath] as const] : [])),
   );
-  const rows = collectDerivedRegisterRelations(paths, items).map((relation) => {
+  const rows = collectDerivedRegisterRelations(paths, items, relationField).map((relation) => {
     const sourcePath = sourceDocs.get(relation.sourceId);
     const sourceCell = sourcePath
       ? markdownLink(relation.sourceId, paths.generatedPath, sourcePath)
@@ -233,11 +234,18 @@ function generateDerivedItemsFile(
   });
   const table = [
     "<!-- prettier-ignore -->",
-    "| 元の項目 | 派生先 | 分類 | ステータス | タイトル |",
+    relationField === "dependsOn"
+      ? "| 先行項目 | 後続項目 | 分類 | ステータス | タイトル |"
+      : "| 元の項目 | 派生先 | 分類 | ステータス | タイトル |",
     "| --- | --- | --- | --- | --- |",
     ...rows,
   ].join("\n");
-  const template = loadViewTemplate("pjr-derived-items-template.md", paths.projectId);
+  const template = loadViewTemplate(
+    relationField === "dependsOn"
+      ? "pjr-dependent-items-template.md"
+      : "pjr-derived-items-template.md",
+    paths.projectId,
+  );
   return injectViewSlots(template, { "derived-items": table });
 }
 
@@ -252,6 +260,49 @@ function generateTypeFilterView(
   const template = loadViewTemplate(templateFileName, projectId);
   return injectViewSlots(template, {
     table: ["<!-- prettier-ignore -->", makeTable(filtered, heading)].join("\n"),
+  });
+}
+
+function generateEpicItemsFile(paths: RegisterPaths, items: readonly RegisterItemView[]): string {
+  const relations = collectDerivedRegisterRelations(paths, items);
+  const groups = items
+    .filter((view) => view.item.type === "epic")
+    .map((epic, index) => {
+      const label = epic.ticketPath
+        ? markdownLink(epic.id, paths.generatedPath, epic.ticketPath)
+        : epic.id;
+      const children = relations.filter((relation) => relation.sourceId === epic.id);
+      const rows = children.map((child) => {
+        const id =
+          child.derivedProjectId === paths.projectId
+            ? child.derivedItem.id
+            : `${child.derivedProjectId}:${child.derivedItem.id}`;
+        return `| ${[
+          markdownLink(id, paths.generatedPath, child.derivedTicketPath),
+          child.derivedItem.type,
+          child.derivedItem.status,
+          child.derivedItem.title,
+        ]
+          .map(toCell)
+          .join(" | ")} |`;
+      });
+      return [
+        `### 1.${index + 1}. ${label} ${toCell(epic.item.title)}`,
+        "",
+        `track: ${toCell(epic.item.track ?? "-")} / ステータス: ${toCell(epic.item.status)}`,
+        "",
+        ...(rows.length === 0
+          ? ["子項目なし"]
+          : [
+              "<!-- prettier-ignore -->",
+              "| 子項目 | 分類 | ステータス | タイトル |",
+              "| --- | --- | --- | --- |",
+              ...rows,
+            ]),
+      ].join("\n");
+    });
+  return injectViewSlots(loadViewTemplate("pjr-epic-items-template.md", paths.projectId), {
+    "epic-items": groups.join("\n\n") || "該当なし",
   });
 }
 export type BuildScope = "register" | "controls" | "all";
@@ -300,6 +351,14 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
       {
         path: join(paths.generatedPath, "pjr-derived-items.md"),
         content: generateDerivedItemsFile(paths, itemViews),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-dependent-items.md"),
+        content: generateDerivedItemsFile(paths, itemViews, "dependsOn"),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-epic-items.md"),
+        content: generateEpicItemsFile(paths, itemViews),
       },
     );
   }

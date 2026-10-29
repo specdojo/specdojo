@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cop-index-rulebook
   type: rulebook
+  deliverable_type: operations
   status: draft
   recipe: undecided
   sample: specdojo:cop-index-sample
@@ -56,7 +57,7 @@ Frontmatter は共通スキーマに従う。
 | 項目       | 説明                             | 必須 |
 | ---------- | -------------------------------- | ---- |
 | id         | `cop-index`                      | ○    |
-| type       | `migration`                      | ○    |
+| type       | `operations` 固定                | ○    |
 | title      | カットオーバー計画: 全体         | ○    |
 | status     | `draft` / `ready` / `deprecated` | ○    |
 | based_on   | 根拠となる仕様ID（配列）         | 任意 |

@@ -62,6 +62,25 @@ describe("specdojo-config.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
+  it.each(["merge", "branch-only"])("accepts product integration_strategy %s", (strategy) => {
+    expect(
+      validate(
+        configWithRepos([{ name: "app1", path: "../app1", integration_strategy: strategy }]),
+      ),
+    ).toBe(true);
+  });
+
+  it.each(["squash", "", null, false, 1, {}])(
+    "rejects product integration_strategy %j",
+    (strategy) => {
+      expect(
+        validate(
+          configWithRepos([{ name: "app1", path: "../app1", integration_strategy: strategy }]),
+        ),
+      ).toBe(false);
+    },
+  );
+
   it("accepts a repository-wide kata authority and rejects invalid or reserved values", () => {
     expect(validate({ version: 1, kata_authority: "customer-docs", projects: {} })).toBe(true);
     for (const kataAuthority of ["Customer_Docs", "prj-example", "specdojo"]) {

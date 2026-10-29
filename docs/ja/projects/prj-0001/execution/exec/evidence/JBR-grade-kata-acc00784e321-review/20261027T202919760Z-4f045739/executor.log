@@ -1,0 +1,57 @@
+証跡は確認し終えました。差分・記録・評価結果は互いに一致しています。判定は `complete-with-findings` です。
+
+## Job Run `JBR-grade-kata-acc00784e321` のレビュー結果
+
+**判定: `complete-with-findings`**。Run は `succeeded` で、評価対象 10 件はすべて評価が終わっています。品質の finding が残るのは `prj-stakeholder-register-sample.md` の 1 件だけで、これは Run の失敗ではなく文書の品質の問題です。統合して問題ありません。
+
+### 評価結果が最新かどうか
+- 現在の作業ツリーで `grade list --target kata --project prj-0001` を実行しました。条件は `--changed-only`、`--dependency-changed`、`--rubric-outdated`、`--ungraded`、`--incomplete` です。
+- どの条件でも対象は 0 件で、終了コードは 0 でした。
+- `grade state --exhausted` も 0 件です。
+- 評価結果は最新で、未完了の評価もありません。
+
+### 差分の範囲（完了条件 1）
+変更は 17 ファイルで、すべてこの Run が出力したものです。
+- Run 自身の evidence 4 件、plan、result、Run JSON。
+- 評価結果ファイル 10 件。内訳は更新 9 件と、新規の `specdojo.tsd-recipe.yaml` です。
+- 対象文書そのもの（rulebooks / samples / recipes）は変更されていません。
+
+### 記録どうしの一致（完了条件 2）
+- Run JSON、pipeline-state、evidence の状態は、いずれも成功（`succeeded`）で終了コード 0 です。stderr は 0 バイトでした。
+- stdout には `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` と出ています。
+- `results.tsv` の verdict・score・finding 件数は、評価結果ファイル側の値と一致しました（`tsd-rulebook` minor 1、`cdfd-sample` minor 3、`prj-stakeholder-register-sample` major 6 / minor 7 などを照合）。
+- Run の result の記述も上と一致していますが、新規ファイルの行数表記に小さなずれがあります。
+  - `tsd-recipe.yaml`: 表記 +110、実際は +109
+  - Run JSON: 表記 +61、実際は +64
+
+### Job 固有の確認事項
+| 確認事項 | 結果 |
+| --- | --- |
+| rate limit（終了コード 75）や中断で残った段 | なし |
+| `failed` の段 | なし |
+| `partial` 扱い | 該当しない |
+| `retry_exhausted` | 0 件 |
+| verdict と score の分布 | `pass` 9 件（score 94〜100）、`needs-work` 1 件（score 76） |
+
+score 100 が 6 件ありますが、評価設定の見直しが必要なほどの偏りとは断定しません。
+
+### score と verdict の変化（完了条件 3）
+- **`tsd-sample`**: fail / score 26（blocker 8、major 12、minor 3）から pass / score 100（finding 0）になりました。対象文書は PJR-EVAE（`36af8870b`）で書き直され、その後 `cf823f7e0` で修正されています。内容が変わったことは評価結果の `content_hash` が変わったことと整合します。
+- **`tsd-index-sample`**: needs-work 88 から pass 100 になりました。
+- **`tsd-rulebook`**: needs-work 93 から pass 100 になりました。
+- **`tsd-index-rulebook`**: score 99 から 100 になりました。
+- **`tsd-recipe`**: 今回初めて評価され、pass 100 です。
+- 残りの 4 件は、評価日時と `content_hash` の更新だけです。
+
+### 完了を妨げない finding と対応のお願い
+1. **`prj-stakeholder-register-sample.md`**: needs-work、score 76、major 6、minor 7。評価の段は成功しているので、Run の完了は妨げません。文書の手直しは、別途登録簿の項目として扱ってください。
+2. **score 100 が 6 件**: `tsd-sample` の大きな改善を含め、score 100 は agy 単段の評価だけで出た結果です。評価が甘いかどうかの疑いが残るなら、別の段や reference 評価で確かめることを検討してください。レビュー側では評価のやり直しはしていません。
+3. **Run の result の行数表記のずれ**: 上で挙げた 2 件です。軽微なもので、ファイルは修正していません。
+
+### 確認できなかった範囲
+- `logs/grade/runs/per-document/JBR-grade-kata-acc00784e321/` の作業ディレクトリと pipeline state ファイル自体は開いていません。中身は stdout と `grade state` / `grade list` の出力から判断しました。
+- 評価結果に書かれた finding の中身が妥当かどうかは確認していません（レビューの対象外です）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Run JBR-grade-kata-acc00784e321 は succeeded（exit 0、stderr 0 bytes、selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0）。差分 70887431..34da0288 は Run の evidence 4 件・plan・result・Run JSON と評価結果ファイル 10 件（更新 9、新規 specdojo.tsd-recipe.yaml）だけで、対象文書は変更されていない。results.tsv の verdict / score / finding 件数は評価結果ファイルの値と一致し、Run JSON・pipeline-state・evidence の状態も互いに一致した。現在の作業ツリーでの grade list --target kata（--changed-only / --dependency-changed / --rubric-outdated / --ungraded / --incomplete）と grade state --exhausted はいずれも 0 件で、評価結果は最新。rate limit・failed・partial・retry_exhausted はない。分布は pass 9 件（94〜100）、needs-work 1 件（prj-stakeholder-register-sample、76、major 6 / minor 7）。主な変化は tsd-sample の fail 26 → pass 100 で、対象文書の書き直し（36af8870b PJR-EVAE、cf823f7e0）と content_hash の変化に整合する。軽微な食い違いとして、Run の result の行数表記が実際と異なる（tsd-recipe.yaml は表記 +110 に対し実際 +109、Run JSON は表記 +61 に対し実際 +64）。確認できなかった範囲: logs/grade/runs/per-document/JBR-grade-kata-acc00784e321/ の作業ディレクトリと pipeline state ファイル自体は開いていない。finding の中身の妥当性は再評価していない（レビュー対象外）。","handoff":["prj-stakeholder-register-sample.md が needs-work（score 76、major 6 / minor 7）。Run の完了は妨げないが、文書の手直しは別途登録簿の項目として扱うことを推奨する。","score 100 が 6 件（tsd-sample の fail 26 → pass 100 を含む）で、agy 単段の評価だけで出た結果である。評価が甘いかどうか気になる場合は、別の段や reference 評価での確認を検討する。","Run の result の変更ファイル行数表記が実際と異なる（tsd-recipe.yaml は +110 に対し実際 +109、Run JSON は +61 に対し実際 +64）。軽微であり、修正はしていない。"],"validations":[{"command":"git diff --stat / --name-status / --numstat 70887431bc9861d0c016bd3bf0f4d3bebf4b2c30..34da0288ddbca066c5312435af8ef4b5e0b04b27","status":"passed","summary":"17 ファイル。すべて Run の evidence・plan・result・Run JSON と評価結果ファイルで、対象文書の変更はない"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"出力なし、exit 0（評価結果は最新）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"出力なし、exit 0"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし、exit 0（評価パイプラインに未完了なし）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --rubric-outdated","status":"passed","summary":"出力なし、exit 0"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --ungraded","status":"passed","summary":"出力なし、exit 0"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし、exit 0（retry_exhausted なし）"}]}
+</specdojo_executor_evidence>

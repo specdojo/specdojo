@@ -949,6 +949,8 @@ export function parseResultTaskIdentity(resultContent: string): ResultTaskIdenti
       "recipe-guided",
       "freeform",
       "bootstrap",
+      "catalog-planning",
+      "strategy-planning",
       "rulebook-authoring",
       "recipe-authoring",
       "sample-authoring",

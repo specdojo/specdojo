@@ -1,0 +1,299 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EXH2",
+  "run_id": "20261028T133513648Z-5632f1ae",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-28T13:36:16.770Z",
+    "completed_at": "2026-10-28T13:45:57.063Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-exh2-product-repo-branch-only-integration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration-sync.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-trace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/repo-trace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-repos.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-exh2-product-repo-branch-only-integration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration-sync.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-trace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/repo-trace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-repos.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 20,
+    "summary": "CHANGELOG.md                                       |   2 +\n ...jr-exh2-product-repo-branch-only-integration.md |  18 ++-\n docs/ja/specdojo/guides/docs-structure-guide.md    |  18 +--\n .../references/specdojo-config-reference.md        |  22 ++--\n .../specdojo/schemas/v1/pipeline-state.schema.yaml |   3 +-\n .../schemas/v1/specdojo-config.schema.yaml         |   5 +\n src/exec/pipeline-state.ts                         |  14 ++-\n src/exec/repo-integration-sync.ts                  |   9 ++\n src/exec/repo-integration.ts                       |  20 +++-\n src/exec/repo-trace.ts                             |  25 +++-\n src/exec/task-repos.ts                             |  27 ++++-\n src/exec/worktree.ts                               |   2 +\n src/shared/specdojo-config.ts                      |  12 +-\n .../schemas/specdojo-config-schema.test.ts         |  19 +++\n tests/src/exec/pipeline-state.test.ts              |  27 +++--\n .../exec/register-pipeline-e2e.integration.test.ts |  46 ++++++--\n tests/src/exec/repo-trace.test.ts                  |  22 +++-\n tests/src/exec/task-repos.integration.test.ts      | 129 ++++++++++++++++++++-\n tests/src/exec/task-repos.test.ts                  |   8 ++\n tests/src/shared/specdojo-config-repos.test.ts     |  27 +++++\n 20 files changed, 397 insertions(+), 58 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --name-only -z -- '*.ts' '*.md' '*.yaml' | xargs -0 npx prettier --write",
+      "status": "passed",
+      "summary": "変更した 20 ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-only -z -- '*.ts' '*.md' '*.yaml' | xargs -0 npx prettier --check",
+      "status": "passed",
+      "summary": "全変更ファイルの整形確認に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data tmp/pjr-exh2-validation/config.json",
+      "status": "passed",
+      "summary": "方式省略・merge・branch-only を含む一時設定が schema に適合。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pipeline-state.schema.yaml --data tmp/pjr-exh2-validation/pipeline-state.json",
+      "status": "passed",
+      "summary": "branch-only を記録した pipeline state が schema に適合。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。既存の参照先文書不足などの警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿と調整文書の派生ビュー生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EXH2/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EXH2/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EXH2/src/shared/specdojo-config.ts\n  1221:1  warning  File has too many lines (1104). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'\n\n\ndocs/ja/specdojo/references/specdojo-config-reference.md:117:207 error MD056/table-column-count Table column count [Expected: 3; Actual: 4; Too many cells, extra data will be missing]"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EXH2\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EXH2/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EXH2/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EXH2\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-UyLTEO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-NEf22T/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Lpcq0G/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-SmX8N2/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "PJR-EXH2 の設定・統合処理・branch 保持・trace 記録とテスト、文書、個票を更新。executor の検証は成功。親検証 7 件は runner に委任。result と登録簿のステータスは変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "設計判断: `repos[].integration_strategy` は `merge` が既定、`branch-only` は commit 後に統合先へ merge せず exec branch を保持する。push・PR 作成（`gh` を含む）は認証情報と外部操作を伴うため実装せず、必要な承認のもとプロダクト側で行う。成功後は全 worktree を撤去し、branch-only の branch は変更の有無によらず残す。失敗時は worktree と branch を保持する。",
+    "プロジェクト側はタスク成果のレビューへ進めるため通常どおり `review` へ遷移する。生成する result には未統合・exec branch 名・trace key を記録する。プロダクト側の PR 完了は意味しない。再開時は branch-only へ統合先を取り込まず、新規実行で保持済み branch が存在する場合は削除せず停止する。これらの判断は個票の対応結果にも記録済み。",
+    "実装変更: `src/shared/specdojo-config.ts`、`src/exec/worktree.ts`、`src/exec/task-repos.ts`、`src/exec/repo-integration.ts`、`src/exec/repo-integration-sync.ts`、`src/exec/pipeline-state.ts`、`src/exec/repo-trace.ts`。設定と pipeline state の schema 2 件も更新した。",
+    "テスト変更: `tests/docs/specdojo/schemas/specdojo-config-schema.test.ts`、`tests/src/shared/specdojo-config-repos.test.ts`、`tests/src/exec/task-repos.test.ts`、`tests/src/exec/task-repos.integration.test.ts`、`tests/src/exec/pipeline-state.test.ts`、`tests/src/exec/repo-trace.test.ts`、`tests/src/exec/register-pipeline-e2e.integration.test.ts`。方式の混在、競合、再開、撤去・prune 後の branch 保持、result、review 遷移を対象にした。実行は親 runner に委ねる。",
+    "文書変更: `docs/ja/specdojo/references/specdojo-config-reference.md`、`docs/ja/specdojo/guides/docs-structure-guide.md`、PJR-EXH2 個票の作業内容・対応結果、`CHANGELOG.md` の Unreleased。reporter / runner は実施内容・変更ファイル・検証結果・設計判断を result に反映する。保護された設定の変更や未解決の設計判断はない。",
+    "統合後は運用メモに従い PJR-JSEY の対象へ PJR-EXH2 を追加し、実 agent CLI の運用確認を行う。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EXH2/20261028T133513648Z-5632f1ae/executor.log",
+      "bytes": 4251,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EXH2/20261028T133513648Z-5632f1ae/parent-validation-attempt-1-lint-md.log",
+      "bytes": 373,
+      "truncated": false
+    }
+  ]
+}

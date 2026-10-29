@@ -33,6 +33,22 @@ $defs:
       - migrate
 
   RegisterEventChange:
+    allOf:
+      - if:
+          required: [field]
+          properties:
+            field:
+              const: type
+        then:
+          properties:
+            from:
+              anyOf:
+                - $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemType"
+                - enum: ["", "-", "_TODO_"]
+            to:
+              anyOf:
+                - $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemType"
+                - enum: ["", "-", "_TODO_"]
     type: object
     additionalProperties: false
     required:
@@ -48,6 +64,7 @@ $defs:
           - title
           - description
           - type
+          - track
           - priority
           - difficulty
           - owner
@@ -62,6 +79,7 @@ $defs:
           - target_path
           - target_rulebook
           - derived_from
+          - depends_on
           - autopilot
       from:
         type: string

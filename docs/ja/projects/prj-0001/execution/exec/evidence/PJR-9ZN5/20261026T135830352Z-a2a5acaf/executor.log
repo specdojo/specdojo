@@ -1,0 +1,138 @@
+前回失敗した Promise 待機と Git 環境隔離を修正しました。docs-site の型検査と追加検査は成功しています。lint・テストの再判定は親 runner が行います。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "生成先・静的配信・案内・gitignore の累積変更を確認し、前回の lint エラー5件と Git 環境隔離違反2件の原因を修正した。個票へ再開対応を記録済み。result は編集していない。",
+  "handoff": [
+    "配信方式と理由: `.vitepress/kata-staging/docs/` に利用側 docs と同梱文書を重ね、ステージング自体を VitePress の `srcDir` にした。workspace から走査すると `.vitepress/**` の除外で同梱ページが欠けるため。この方式で既存の rewrites と `/ja/specdojo/...` を維持し、出力・cache・利用者設定をページ走査から外す。個票にも記録済み。",
+    "ホスト確認: 前回の検証では Chromium 起動が Operation not permitted、dev の HTTP 待受が listen EPERM で停止した。ホストで `npm run docs:build`、および tarball を通常導入した空の利用リポジトリの build・dev・mermaid を実行し、実 SVG 描画、HTTP 取得、文書更新を確認する。前回の依存共有・既知 SVG を使った限定的な配布物確認は通常導入の代替ではない。",
+    "保護設定の変更案: ルート package.json の `docs:rebuild:mermaid` を `rm -f .vitepress/mermaid/*.svg && npm run docs:build:mermaid` に変更する。executor は保護設定を編集していない。個票にも記録済み。",
+    "前回失敗した lint と unit test を含む指定7検査は親 runner に委ねた。`npm run check` の重複実行は避け、残りの依存宣言・catalog・履歴リンク検査を実行して成功した。"
+  ],
+  "validations": [
+    {
+      "command": "npm --prefix packages/docs-site run typecheck",
+      "status": "passed",
+      "summary": "docs-site の型検査に成功。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言検査に成功。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検査に成功。既存の未作成成果物に関する警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "全体の履歴リンク検査に成功。"
+    },
+    {
+      "command": "npm run validate:history-links -- --data docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md",
+      "status": "passed",
+      "summary": "最終更新後の個票の履歴リンク検査に成功。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-9zn5.yaml",
+      "status": "passed",
+      "summary": "runner が追記したイベントの schema 検査に成功。executor はイベントを編集していない。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の生成ビューを再生成した。正本の一覧とステータスは変更していない。"
+    },
+    {
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md docs/ja/specdojo/guides/docs-editing-guide.md packages/docs-site/README.md packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/kata-staging.ts packages/docs-site/.vitepress/mermaid-assets.ts packages/docs-site/src/gen-mermaid-svg.ts src/shared/specdojo-gitignore.ts tests/packages/docs-site/gen-mermaid-svg.test.ts tests/packages/docs-site/kata-staging.test.ts tests/packages/docs-site/mermaid-assets.test.ts tests/src/shared/specdojo-gitignore.test.ts",
+      "status": "passed",
+      "summary": "変更成果物の整形に成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "累積差分の空白検査に成功。"
+    },
+    {
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "前回確認で Chromium 起動が sandbox 制約により停止。ホストで実描画を含むビルド確認が必要。"
+    },
+    {
+      "command": "npx specdojo-docs-site dev .",
+      "status": "requires_human",
+      "summary": "通常導入した空の利用リポジトリで実行する。前回は HTTP 待受が sandbox の listen EPERM で停止したため、ホストで公開 URL と文書更新を確認する。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": ".gitignore",
+      "status": "changed",
+      "path": ".gitignore"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/docs-editing-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/docs-editing-guide.md"
+    },
+    {
+      "target": "packages/docs-site/.vitepress/config.mts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/config.mts"
+    },
+    {
+      "target": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/kata-staging.ts"
+    },
+    {
+      "target": "packages/docs-site/README.md",
+      "status": "changed",
+      "path": "packages/docs-site/README.md"
+    },
+    {
+      "target": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "changed",
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts"
+    },
+    {
+      "target": "src/shared/specdojo-gitignore.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-gitignore.ts"
+    },
+    {
+      "target": "tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-site/gen-mermaid-svg.test.ts"
+    },
+    {
+      "target": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-site/kata-staging.test.ts"
+    },
+    {
+      "target": "tests/src/shared/specdojo-gitignore.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/specdojo-gitignore.test.ts"
+    },
+    {
+      "target": "packages/docs-site/.vitepress/mermaid-assets.ts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/mermaid-assets.ts"
+    },
+    {
+      "target": "tests/packages/docs-site/mermaid-assets.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-site/mermaid-assets.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

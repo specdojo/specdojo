@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:nfr-maintainability-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:nfr-maintainability-rulebook
 ---

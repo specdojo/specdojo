@@ -331,4 +331,67 @@ describe("native grade run", () => {
       readGradeResultForDocument({ documentPath: "../product/document.md", project: "test" }),
     ).toMatchObject({ graded_by: "actual-grader", done_criteria: { satisfied: 1 } });
   });
+
+  it("resumes same-id documents across repositories without replacing completed results", async () => {
+    const projectRoot = join(root, "project");
+    writeGradeRunFixture(projectRoot);
+    const configPath = join(projectRoot, ".specdojo/specdojo.config.json");
+    const config = JSON.parse(readFileSync(configPath, "utf8"));
+    config.projects.test.repos = [
+      { name: "api", path: "../api-checkout" },
+      { name: "web", path: "../web-checkout" },
+    ];
+    writeFileSync(configPath, JSON.stringify(config));
+    const content = readFileSync(GRADE_RUN_DOCUMENT, "utf8").replace(
+      "test:example-rulebook",
+      "shared-document",
+    );
+    for (const repo of ["api-checkout", "web-checkout"]) {
+      mkdirSync(join(root, repo));
+      writeFileSync(join(root, repo, "document.md"), content);
+    }
+    writeFileSync(join(projectRoot, "document.md"), content);
+    process.chdir(projectRoot);
+    const request: GradeRunOptions = {
+      target: "deliverable",
+      project: "test",
+      paths: ["document.md", "../api-checkout/document.md", "../web-checkout/document.md"],
+      runId: "same-id-repos",
+    };
+    const success = {
+      actor: "actual-grader",
+      command: "test",
+      execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+    } as const;
+    executePlan.mockResolvedValueOnce(success);
+    executePlan.mockRejectedValueOnce(new Error("interrupted"));
+    await expect(grade(request)).rejects.toThrow(/interrupted/);
+    expect(executePlan).toHaveBeenCalledTimes(3);
+    const completed = request.paths!.flatMap((path) => {
+      const stored = readGradeResultForDocument({ documentPath: path, project: "test" });
+      return stored ? [{ path, stored }] : [];
+    });
+    expect(completed).toHaveLength(2);
+
+    await grade(request);
+    expect(executePlan).toHaveBeenCalledTimes(4);
+    for (const { path, stored } of completed) {
+      expect(readGradeResultForDocument({ documentPath: path, project: "test" })).toEqual(stored);
+    }
+    for (const path of request.paths!) {
+      expect(readGradeResultForDocument({ documentPath: path, project: "test" })).toMatchObject({
+        document: "shared-document",
+        path,
+      });
+    }
+    for (const result of [
+      "shared-document.yaml",
+      "api/shared-document.yaml",
+      "web/shared-document.yaml",
+    ]) {
+      expect(existsSync(join(projectRoot, "execution/grade/results", result))).toBe(true);
+    }
+    await grade(request);
+    expect(executePlan).toHaveBeenCalledTimes(4);
+  });
 });

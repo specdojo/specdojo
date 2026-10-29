@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:opr-rulebook
   type: rulebook
+  deliverable_type: operations
   status: draft
   target_format: markdown
   sample:

@@ -1,0 +1,10 @@
+個票の対応結果の表に 1 行追記しました。確認対象は PJR-484B です。変更したのは個票だけで、`prettier --check` は通りました。親 runner の検証はまだ実行していません。
+
+- **確認対象:** 一覧のうち最後に統合されたのは PJR-484B でした。統合コミットは `887622abb`（2026-10-28 19:54 JST）です。
+- **追記した行:** 2026-10-28 20:02 JST、PJR-484B、sonnet-executor です。agent 名は、前回までの行と同じく sonnet-executor と記録しました。
+- **あわせて直した箇所:** 作業内容の表のメモを PJR-484B に変えました。本文の「今回の確認対象」の文も PJR-484B に合わせました。
+- **後続段に残る確認:** start の event の actor、親の検証 7 件、reporter の result 記入、統合、`review` への遷移です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-484B（統合コミット 887622abb）の実行を 1 行追記し、本文とメモも合わせて更新した。変更は個票のみ。","handoff":["start の event の actor が sonnet-executor になっているかは後続段で確認する。","親 runner の 7 検証、reporter の result 記入、統合、`review` 遷移は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>

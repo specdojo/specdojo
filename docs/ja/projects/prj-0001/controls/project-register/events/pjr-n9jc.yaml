@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d51b766e1c4e4cef9a69bd0e1c432ed0
+  ts: "2026-10-27T14:12:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: TSD の kata の見直しの確認で検出したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Mermaid の構文エラーで docs:dev と docs:build が止まる
+    - field: description
+      from: ""
+      to: "@specdojo/docs-site の gen-mermaid-svg.ts は、ファイルがない場合以外の図の生成のエラーを投げ直すため、1 つの図の構文エラーで dev サーバーとビルドが止まる。エラーの図を警告して飛ばし、ほかのページを表示できるようにする。ビルドで失敗として扱うかは対応時に決める。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-EVAE"]'
+- v: 1
+  id: reg_4ab6d7b3d37c49a7b8d4146454952d8e
+  ts: "2026-10-27T14:43:43Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d51b766e1c4e4cef9a69bd0e1c432ed0
+- v: 1
+  id: reg_d88ae588ca38461092a9953ad1ee4619
+  ts: "2026-10-27T14:57:23Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4ab6d7b3d37c49a7b8d4146454952d8e
+- v: 1
+  id: reg_789727eff9ba4721a37f3f6e124d0b97
+  ts: "2026-10-27T15:43:44Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・親の検証・本物の mermaid-cli での動作・docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: dev は構文エラーの図を警告して飛ばし、build はすべての図を処理してからまとめて失敗するようにした
+  previous_event_id: reg_d88ae588ca38461092a9953ad1ee4619

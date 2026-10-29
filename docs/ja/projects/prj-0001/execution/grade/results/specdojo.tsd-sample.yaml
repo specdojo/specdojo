@@ -4,97 +4,97 @@ document: specdojo:tsd-sample
 path: docs/ja/specdojo/samples/tsd-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 26
-graded_at: "2026-10-20T20:43:12.308Z"
+verdict: pass
+score: 100
+graded_at: "2026-10-27T20:26:15.564Z"
 graded_by: flash-high-executor
-content_hash: 57b9a706aa1f50e5a32d5f27aaf75a6412d842d4a31700b058e32796c006f777
+content_hash: 82f65890dc06f75a666b165caefb0de7a36700b550e25dd1e524caf36352ed84
 categories:
   purpose:
-    score: 38
+    score: 100
   operations:
-    score: 69
+    score: 100
   planning:
-    score: 50
+    score: 100
   business:
-    score: 33
+    score: 100
   architecture:
-    score: 42
+    score: 100
   usability:
-    score: 42
+    score: 100
   implementation:
-    score: 25
+    score: 100
   quality:
-    score: 0
+    score: 100
   consistency:
-    score: 0
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -102,199 +102,8 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 8
-  major: 12
-  minor: 3
+  blocker: 0
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: >-
-      The stated purpose defines a stack inventory rather than a domain-specific technology detail definition,
-      conflicting with the rulebook's intended scope.
-    message_ja: 記載された目的はドメイン固有の技術詳細の定義ではなくスタックのインベントリを定義しており、ルールブックの意図されたスコープと矛盾しています。
-  - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: >-
-      Section 5 lacks decision criteria, stakeholder impact analysis, and actionable next steps needed for approval or
-      deferral decisions.
-    message_ja: セクション5には、承認または延期の決定に必要な意思決定基準、ステークホルダーへの影響分析、および実行可能な次のステップが不足しています。
-  - id: F003
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      The sample lists responsible role as a required viewpoint in section 3, but fails to include ownership or approval
-      accountability in the example content.
-    message_ja: サンプルではセクション3において責任ある役割を必須の視点としてリストしていますが、例の内容に所有権や承認の責任が含まれていません。
-  - id: F004
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      The document lacks actionable setup steps, prerequisites, completion criteria, and role assignments required for
-      task breakdown and planning.
-    message_ja: ドキュメントには、タスクの分解と計画に必要な実行可能なセットアップ手順、前提条件、完了基準、および役割の割り当てが不足しています。
-  - id: F005
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: >-
-      Technical dependencies, environment constraints, and architecture risks are not identified in the input or content
-      sections.
-    message_ja: 技術的な依存関係、環境の制約、およびアーキテクチャのリスクが、入力またはコンテンツのセクションで特定されていません。
-  - id: F006
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: >-
-      Section 5 separates unresolved issues into a table but lacks tracking candidates, reporting targets, and assigned
-      role codes.
-    message_ja: セクション5では未解決の問題を表に分けていますが、追跡候補、報告対象、および割り当てられた役割コードが不足しています。
-  - id: F007
-    severity: major
-    rule: vp-ba-business-value
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: >-
-      The sample fails to explain the business problems, operational benefits, or user value justifying the technology
-      stack selections.
-    message_ja: サンプルでは、テクノロジースタックの選択を正当化するビジネス上の問題、運用上の利点、またはユーザー価値が説明されていません。
-  - id: F008
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: >-
-      The document lacks user-visible requirements, acceptance conditions, explicit scope boundaries, and exclusion
-      definitions.
-    message_ja: ドキュメントには、ユーザーから見える要件、受け入れ条件、明示的なスコープの境界、および除外の定義が不足しています。
-  - id: F009
-    severity: major
-    rule: vp-ba-stakeholder-clarity
-    line: 7
-    anchor: "## 2. 入力情報"
-    message: Target stakeholders, operators, reviewers, and agreement participants are not clearly identified.
-    message_ja: 対象となるステークホルダー、オペレーター、レビュワー、および合意の参加者が明確に特定されていません。
-  - id: F010
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: >-
-      Essential technical constraints, version specifications, runtime dependencies, and architectural parameters are
-      completely absent.
-    message_ja: 不可欠な技術的制約、バージョン仕様、ランタイムの依存関係、およびアーキテクチャのパラメータが完全に欠落しています。
-  - id: F011
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      Sections 1, 3, and 4 redundantly repeat generic descriptions of technology categories without providing
-      substantive information.
-    message_ja: セクション1、3、および4では、実質的な情報を提供することなく、テクノロジのカテゴリに関する一般的な説明が重複して繰り返されています。
-  - id: F012
-    severity: blocker
-    rule: vp-arc-single-responsibility
-    line: 1
-    anchor: "# [技術スタック一覧](../rulebooks/tsd-rulebook.md) サンプル"
-    message: 特定領域詳細定義のサンプルとしての責務を放棄し、インデックス形式のメタ記述となっており、主題と責務が乖離している。
-    message_ja: 特定領域詳細定義のサンプルとしての責務を放棄し、インデックス形式のメタ記述となっており、主題と責務が乖離している。
-  - id: F013
-    severity: blocker
-    rule: vp-dev-implementation-readiness
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      Concrete setup commands, configuration parameters, and environment prerequisites are completely missing,
-      preventing implementation.
-    message_ja: 具体的なセットアップコマンド、設定パラメータ、および環境の前提条件が完全に欠落しており、実装ができません。
-  - id: F014
-    severity: major
-    rule: vp-dev-change-impact
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      The document does not describe the scope of impact, schema/pipeline effects, or compatibility considerations when
-      altering the technical stack.
-    message_ja: ドキュメントには、技術スタックを変更する際の、影響の範囲、スキーマ/パイプラインへの影響、または互換性の検討事項が記載されていません。
-  - id: F015
-    severity: blocker
-    rule: vp-dev-testability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: >-
-      No test commands, validation steps, or expected outputs are specified to verify the correctness of the configured
-      technology stack.
-    message_ja: 設定されたテクノロジースタックの正当性を検証するためのテストコマンド、検証手順、または期待される出力が指定されていません。
-  - id: F016
-    severity: blocker
-    rule: vp-qe-verifiability
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: TSD詳細定義に必須となる具体的な設定値や動作確認手順などの検証可能な基準が全く記載されていない。
-    message_ja: TSD詳細定義に必須となる具体的な設定値や動作確認手順などの検証可能な基準が全く記載されていない。
-  - id: F017
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 3
-    anchor: "## 1. 目的と適用範囲"
-    message: "ID `specdojo:tsd-sample` は rulebook で規定された `tsd-＜term＞` パターン（例: `tsd-ollama`）に準拠していない。"
-    message_ja: "ID `specdojo:tsd-sample` は rulebook で規定された `tsd-＜term＞` パターン（例: `tsd-ollama`）に準拠していない。"
-  - id: F018
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 4
-    anchor: ""
-    message: Frontmatter の `type` が `architecture` ではなく `project` となっており、かつ必須項目 `part_of` が欠落している。
-    message_ja: Frontmatter の `type` が `architecture` ではなく `project` となっており、かつ必須項目 `part_of` が欠落している。
-  - id: F019
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [技術スタック一覧](../rulebooks/tsd-rulebook.md) サンプル"
-    message: rulebook が定義する「特定領域詳細定義」の構成を無視し、「技術スタック一覧（インデックス）」の構成となっており、種別としての責務を守っていない。
-    message_ja: rulebook が定義する「特定領域詳細定義」の構成を無視し、「技術スタック一覧（インデックス）」の構成となっており、種別としての責務を守っていない。
-  - id: F020
-    severity: blocker
-    rule: vp-ux-readability
-    line: 1
-    anchor: "# [技術スタック一覧](../rulebooks/tsd-rulebook.md) サンプル"
-    message: 詳細定義のサンプルとして機能しておらず, 読者が正解となる記述形式を理解できないため、実用上の blocker となる。
-    message_ja: 詳細定義のサンプルとして機能しておらず, 読者が正解となる記述形式を理解できないため、実用上の blocker となる。
-  - id: F021
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 1
-    anchor: "# [技術スタック一覧](../rulebooks/tsd-rulebook.md) サンプル"
-    message: >-
-      The document title '技術スタック一覧' contradicts the governing rulebook's terminology '特定領域 技術スタック詳細定義（TSD）', causing
-      terminology confusion.
-    message_ja: >-
-      The document title '技術スタック一覧' contradicts the governing rulebook's terminology '特定領域 技術スタック詳細定義（TSD）', causing
-      terminology confusion.
-  - id: F022
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: Criteria for achieving ready status and concrete resolution paths for unresolved items are not defined.
-    message_ja: ready ステータスを達成するための基準と、未解決事項に対する具体的な解決経路が定義されていません。
-  - id: F023
-    severity: major
-    rule: vp-ops-operability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: Maintenance procedures, operational troubleshooting guidance, and update workflows are omitted.
-    message_ja: メンテナンス手順、運用のトラブルシューティングガイダンス、およびアップデートのワークフローが省略されています。
+findings: []

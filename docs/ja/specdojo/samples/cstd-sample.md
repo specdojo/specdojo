@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:cstd-sample
-  type: sample
+  type: data
   status: deprecated
   rulebook: specdojo:cstd-rulebook
 ---
