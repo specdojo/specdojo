@@ -3047,3 +3047,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_eb7731e2a85344ca918c5c1edcdab7ab
+- v: 1
+  id: reg_a8690b39dd0a4a4184236c61e5aef9df
+  ts: "2026-10-29T14:33:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: PJR-6DD7・PJR-SC8T の統合後、exec run --register が start から review まで通った。lint-fm の時間切れは SC8T の修正で解消した
+      to: PJR-D0GB の統合と main（docs-lint 0.3.1）の取り込みの後、exec run --register が start から review まで通った。単体テストの catalogless-target が負荷で一度時間切れになり、--resume で通過した
+  previous_event_id: reg_accd3afedbb846d1bd6a39ea1eed6722
