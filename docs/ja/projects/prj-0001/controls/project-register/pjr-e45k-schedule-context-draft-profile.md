@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-e45k-schedule-context-draft-profile
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-10-28T22:23:00Z"
+  completed_at: "2026-10-29T15:44:30Z"
+  conclusion: "intent: draft-with-context で選べる draft profile（雛形作成・文脈記入（human）→ draft → refine → review → finalize）を追加し、guided-pass の草案の段を draft に替えた。人の段の result 雛形、schedule-design-guide と sch-rulebook を更新した"
   derived_from:
     - PJR-65DS
   depends_on:

@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6cc369d93aa54f82a24e4f68dc2335ef
+- v: 1
+  id: reg_fe9adc01e8d14d689fa666fa3eb24671
+  ts: "2026-10-29T15:44:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と JSEY の動作確認で完了条件を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: "-"
+      to: "intent: draft-with-context で選べる draft profile（雛形作成・文脈記入（human）→ draft → refine → review → finalize）を追加し、guided-pass の草案の段を draft に替えた。人の段の result 雛形、schedule-design-guide と sch-rulebook を更新した"
+  previous_event_id: reg_9d24317196a447e892f5b04cf340d22c
