@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-jrsy-context-marker
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-10-28T22:22:03Z"
+  completed_at: "2026-10-29T11:47:54Z"
+  conclusion: _CONTEXT_ の書き方を記述規約と document-metadata-standard に加え、draft・fully-guided の plan、finalize・bootstrap-finalize の確認チェックリスト、docs-lint の検出（ready で error、それ以外は warning）に反映した。--frail で warning も失敗になる点は別項目で扱う
   derived_from:
     - PJR-65DS
   depends_on:

@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6bd2f57dfe684d7fb940cd3f0b790d39
+- v: 1
+  id: reg_277be378f210455ea118307ed91d574e
+  ts: "2026-10-29T11:47:54Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result で完了条件を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: "-"
+      to: _CONTEXT_ の書き方を記述規約と document-metadata-standard に加え、draft・fully-guided の plan、finalize・bootstrap-finalize の確認チェックリスト、docs-lint の検出（ready で error、それ以外は warning）に反映した。--frail で warning も失敗になる点は別項目で扱う
+  previous_event_id: reg_32b883d0f1814457b32e14d3b9fa2300
