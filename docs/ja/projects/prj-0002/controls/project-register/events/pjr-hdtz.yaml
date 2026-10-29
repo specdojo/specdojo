@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_adc2013cc35449e69b913c200aa169f5
+  ts: "2026-10-29T10:37:31Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo-lp に v0.5.0 までの変更を反映する
+    - field: description
+      from: ""
+      to: register の epic を含む 8 種類と depends_on、init の markdownlint 設定生成など、v0.5.0 までの利用者に見える変更を LP の文言・コマンド例に反映する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: "2026-10-31"
