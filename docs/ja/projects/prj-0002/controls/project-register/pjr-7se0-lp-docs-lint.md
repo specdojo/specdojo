@@ -22,13 +22,19 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `specdojo-lp` の devDependencies に `@specdojo/docs-lint` を加え、`package-lock.json` を更新する。
+- `specdojo-lp` に `lint:md`（対象は `**/*.md`、`node_modules` などの生成物は除く）と `.markdownlint.yaml` を置き、`npm run lint:md` が通る。`.markdownlint.yaml` は `specdojo init` が生成する内容に合わせる。
+- `specdojo-lp` に `lint:fm`（対象は `docs/**/*.md`）を置き、`npm run lint:fm` が通る。rulebook を解決できず動かない場合は `lint:fm` を見送り、理由を対応結果に書く。
+- 検査を通すために文書を直した場合は、書式だけを直し、内容を変えない。
+- `specdojo-lp` で `npm run build` が成功する。
+- 変更は `specdojo-lp` の `feature/prj-0002/lp-docs-lint` で commit し、`develop` へ `--no-ff` で取り込む。`git push` は行わない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                   | 担当         | 状態 | メモ |
+| --- | -------------------------------------- | ------------ | ---- | ---- |
+| 1   | docs-lint を入れ、script と設定を置く  | orchestrator | open | -    |
+| 2   | 検査とビルドを通し、develop へ取り込む | orchestrator | open | -    |
 
 ## 4. 対応結果
 
@@ -36,4 +42,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-hdtz-lp-v0-5-0-update]]
