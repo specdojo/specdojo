@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b120b34391324d998c503c6cd0159f8d
+  ts: "2026-10-29T11:52:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ready 以外の文書の \_CONTEXT\_ の検出を情報に下げ、--frail で lint:fm を落とさない
+    - field: description
+      from: ""
+      to: 下書きに \_CONTEXT\_ を書くと --frail の lint:fm が warning で失敗し、draft までの間すべての exec run の親の検証が止まる。ready 以外は file.info とし、ready の error は維持する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-JRSY"]'
