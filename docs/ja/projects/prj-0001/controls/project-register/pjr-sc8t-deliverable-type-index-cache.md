@@ -51,6 +51,8 @@ remark がファイルごとにプラグインを読み込み直すため、PJR-
 - `CHANGELOG.md`: `## [Unreleased]` 節に `### 不具合修正` を新設し、rulebook 一覧のキャッシュ化による `lint:fm` の高速化と、本修正が `@specdojo/docs-lint` の次の版（0.3.1）で公開される旨を記載しました。`0.5.0` の記述および `packages/docs-lint` の版番号は変更していません。
 - 所要時間の計測について（完了条件 4）: SpecDojo parent runner の検証規約により、`npm run lint:fm` は sandbox 内での実行が禁止されている（parent runner が executor 終了後に自動検証する）ため、sandbox 内での全体 `lint:fm` 所要時間の直接計測は実施していません。単体テスト上で `buildRulebookIndex` の呼び出し回数が初回の 1 回のみに抑えられ、2 回目以降はキャッシュから即時返却されることを確認しています。これにより、ファイルごとの rulebook glob や YAML 解析（210 ファイル中約 30 秒を占めていた処理）が初回のみとなり、実行時間が大幅に短縮されます。
 
+- 公開: develop の未公開の変更を含めないため、main（v0.5.0）から切った `feature/prj-0001/docs-lint-0-3-1-hotfix` に本項目の docs-lint の修正とテストだけを取り込み、`packages/docs-lint` を 0.3.1 に上げた。同ブランチで `npm run check` が成功した。利用者が PR #26 を merge し、merge commit `0ae27b815115171834da82507f82568a47d847c6` に `docs-lint-v0.3.1` のタグを付けて npm 公開を承認した。workflow <https://github.com/specdojo/specdojo/actions/runs/40888028570> は成功し、npm の `latest` は `0.3.1` になった。main は develop へ `ad2dde550` で取り込んだ。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-484b-deliverable-type-declaration]]
