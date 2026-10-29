@@ -3066,3 +3066,19 @@
       from: PJR-6DD7・PJR-SC8T の統合後、exec run --register が start から review まで通った。lint-fm の時間切れは SC8T の修正で解消した
       to: PJR-D0GB の統合と main（docs-lint 0.3.1）の取り込みの後、exec run --register が start から review まで通った。単体テストの catalogless-target が負荷で一度時間切れになり、--resume で通過した
   previous_event_id: reg_accd3afedbb846d1bd6a39ea1eed6722
+- v: 1
+  id: reg_547f1988659e4738973e8dcd3c686075
+  ts: "2026-10-29T15:02:40Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-YKMA の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-29"
+      to: "-"
+  previous_event_id: reg_a8690b39dd0a4a4184236c61e5aef9df
