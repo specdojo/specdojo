@@ -54,3 +54,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_41bc972bc49b42a3b6f5500238e513c9
+- v: 1
+  id: reg_416afafccc5648499a9bdee8d0a23d38
+  ts: "2026-10-29T15:24:58Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: typecheck"
+  previous_event_id: reg_c43219cd77994557b0e6d1a5e8691f9c
