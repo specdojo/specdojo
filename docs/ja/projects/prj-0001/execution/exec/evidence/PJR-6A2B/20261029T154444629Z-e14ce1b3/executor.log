@@ -1,0 +1,24 @@
+PJR-6A2B「文脈を渡して成果物を作る流れをガイドにまとめる」の対応を完了しました。
+
+### 実施内容
+
+1. **`exec-operation-guide` の更新**:
+   - 第 4.7 節「文脈を渡して段階的に作成する手順」を新設しました。
+   - `deliverable scaffold`（雛形作成）→ 文脈記入（人）→ `draft`（下書き・agent）→ `fully-guided`（磨き込み・agent）→ `finalize`（確定・人）の 5 段階の役割分担を定義しました。
+   - 各段階を個票（`todo`）として起票し、`depends_on` で依存関係をつないで順次実行・統合する一連の手順とコマンド例を記載しました。
+2. **`ryu-guide` の更新**:
+   - `draft`（任された範囲の外部調査・選定・下書き、根拠のない具体化の禁止の例外、提案表示、`_CONTEXT_:` 反映・削除・result 転記）と `fully-guided`（既存草案の磨き込み専用、外部探索・独自選定なし、未反映 `_CONTEXT_:` の論点化、template 不参照）の使い分け対比表を追加しました。
+   - 文脈の置き場所 3 種（成果物内の `_CONTEXT_:`, 個票の `入力` / `--input`, カタログの `brief`）の特徴・適した用途・ライフサイクルの使い分け表を追加しました。
+3. **`tsd-recipe` の更新**:
+   - 「2. 作成前に集める情報」の表に「主な文脈の置き場所」列を追加し、集めた答えを `brief`・`--input`・`_CONTEXT_:` のどこに書くかの対応を明示しました。
+   - 文脈の置き場所の使い分け目安を追記しました。
+4. **静的サイト TSD の作成例**:
+   - tsd を「静的サイトで主流の技術スタックで書く」と指示して作る例を、`exec-operation-guide`（register 経由で個票を分けて流す手順）および `ryu-guide`（カタログの `brief`、個票の `--input`、成果物内の `_CONTEXT_:` で渡す各パターン）に掲載しました。
+5. **`CHANGELOG.md` の追記**:
+   - `## [Unreleased]` の追加機能節に本機能の追記を行いました（公開済みの版は変更していません）。
+6. **個票の更新**:
+   - `pjr-6a2b-context-draft-guides.md` の作業内容（done）と対応結果（実施内容、設計判断、検証結果、申し送り）を更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"文脈を渡して成果物を作成する流れ（scaffold・文脈記入・draft・fully-guided・finalize）と文脈置き場所の使い分けを exec-operation-guide, ryu-guide, tsd-recipe に記載し、静的サイト TSD の作成例を掲載しました。","handoff":["設計判断: draft は文脈で任された範囲の技術調査・選定と初期下書きを担い、選定値は「提案」として出典・理由とともに result に記録する。fully-guided は磨き込み専用とし、外部調査や根拠のない具体化を行わず、型（rulebook / recipe / sample）への適合・構造整理に専念させることで、PJR-65DS および PJR-3MY5 で合意された責務分離をガイド上で明確にした。","設計判断: 文脈の置き場所について、プロジェクト・成果物群全体で継続する前提はカタログの brief、対話で得た単発の前提や調査委任は個票の 入力（--input）、成果物の各章の具体的な記述に対する局所的な指示は `_CONTEXT_:` とし、粒度と持続性に応じた選択基準を各ガイド・レシピで統一した。","保護された設定（.specdojo/ や package.json など）の変更は不要であり、変更案はない。未解決の設計判断はない。"],"validations":[{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"カタログ検証が成功（既存の未配置成果物に関する based_on 警告のみでエラーなし）"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビューのビルドが成功（generated/ 配下に差分なし）"},{"command":"npm run validate:schema:file","reason":"YAML schema target files were not changed in this task","status":"not_applicable","summary":"対象 YAML ファイルの変更がないためスキップ"}]}
+</specdojo_executor_evidence>
