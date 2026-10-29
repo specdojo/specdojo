@@ -3018,3 +3018,32 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_c1c4c1235bbe450a8b084ff26f9c8eb5
+- v: 1
+  id: reg_eb7731e2a85344ca918c5c1edcdab7ab
+  ts: "2026-10-29T14:27:21Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_563e64fb8aeb46f49d9e2cb42d455916
+- v: 1
+  id: reg_accd3afedbb846d1bd6a39ea1eed6722
+  ts: "2026-10-29T14:32:45Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_eb7731e2a85344ca918c5c1edcdab7ab
