@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-jsey-20261029T122941Z-d9babda4-plan.md
   started_at: "2026-10-29T12:29:41.977Z"
-  completed_at: "2026-10-29T12:48:04.505Z"
+  completed_at: "2026-10-29T13:48:24.798Z"
   agent: sonnet-executor
-  block_reason: "parent validation failed: lint-fm"
 ---
 
 # Edit Result

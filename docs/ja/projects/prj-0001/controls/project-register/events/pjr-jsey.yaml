@@ -2925,3 +2925,32 @@
       from: "-"
       to: "parent validation failed: lint-fm"
   previous_event_id: reg_e24e81b1e97544fe88f3c35aa3c34ee6
+- v: 1
+  id: reg_8dca8b3000244b14a37642bbaf7ca548
+  ts: "2026-10-29T13:48:29Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_52df7a8d5c264edbb031932d9998de59
+- v: 1
+  id: reg_de7a31f69cf54b2d9f4e9fbaedb01d27
+  ts: "2026-10-29T13:56:39Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8dca8b3000244b14a37642bbaf7ca548
