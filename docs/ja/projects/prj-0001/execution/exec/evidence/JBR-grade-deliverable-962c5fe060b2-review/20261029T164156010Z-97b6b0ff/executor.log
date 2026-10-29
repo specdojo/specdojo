@@ -1,0 +1,68 @@
+## レビュー結果: JBR-grade-deliverable-962c5fe060b2
+
+**判定: `complete-with-findings`。** Run は成功し、選んだ 10 件すべての評価が最新の状態で記録されています。そのまま統合できます。ただし、評価結果の和訳 1 件が壊れており、Job Run の result にも 3 点の不備があります。いずれも完了は妨げません。私は成果物にも result にも手を加えていません。
+
+### 1. 差分の範囲
+
+`git diff d7a1173c..c6b3d6b6` は commit 1 件（c6b3d6b67）で、27 ファイルです。すべて今回の Job Run の出力でした。
+
+- 新規追加 7 件: evidence 4 件、plan、result、Run JSON
+- 変更 20 件: 評価結果 10 件（`grade/results/*.yaml`）と、対応する done_criteria 10 件（`grade/criteria/*-done-criteria.yaml`）
+
+対象外の変更は混入していません。
+
+### 2. 記録どうしの整合
+
+- Run JSON の `state` は `succeeded`、試行 1 の `exit_code` は 0 です。evidence.json のコマンド終了コードも 0 で、`pipeline-state.json` の executor と reporter はどちらも succeeded でした。
+- stdout の最終行は `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` でした。`results.tsv` の 10 行もすべて `passed` です。
+- 終了コード 75（rate limit）による中断、`failed` の段、`partial`、`retry_exhausted` はいずれもありません。そのため再開の判断は不要です。
+- 評価結果の `graded_by` が `flash-high-executor` になっていますが、`.specdojo/agent-members.yaml` で `agy-expert-executor` は `alias_of: flash-high-executor` と定義されています。つまり同じエージェントで、矛盾はありません。
+- 10 件とも `content_hash` は前回の評価から変わっていません。成果物の本文はそのままで、評価だけをやり直した Run です。
+
+### 3. 評価結果の鮮度
+
+レビューの最初と verdict を出す直前に、次のコマンドを実行しました。いずれも出力は 0 行でした。
+
+- `grade list --target deliverable --project prj-0001 --changed-only`
+- `grade list ... --dependency-changed`
+- `grade list ... --incomplete`
+- `grade state ... --exhausted`
+
+つまり評価は最新で、未完了の評価も retry 上限に達した成果物もありません。
+
+### 4. スコア・判定と未充足の done_criteria
+
+| 成果物 | verdict | score | findings | 未充足の done_criteria（確認担当） |
+| --- | --- | --- | --- | --- |
+| cdfd-action | needs-work | 73 | 16 | DC-001（BA）、DC-003（PO） |
+| cdfd-check | needs-work | 79 | 18 | DC-001（BA） |
+| cdfd-do | needs-work | 85 | 12 | DC-002（ARC） |
+| cdfd-onboarding | needs-work | 65 | 21 | DC-001（BA） |
+| cdfd-orchestrator | needs-work | 91 | 5 | なし |
+| cdfd-overview | needs-work | 85 | 7 | DC-002（PO）、DC-003（ARC） |
+| cdfd-plan | needs-work | 78 | 13 | DC-001（BA） |
+| cdfd-uc-deliverable | pass | 100 | 0 | なし |
+| cdfd-uc-register | needs-work | 98 | 1 | なし |
+| bps-deliverable-evaluation | pass | 96 | 3 | なし |
+
+- verdict とスコアの付き方に、評価設定の見直しが必要な偏りは見当たりませんでした。
+- 前回から変わったのは、criteria の `reason` 文の言い換えと、cdfd-uc-register F001 の行番号（205→192）と引用箇所の付け直しが中心です。満たした／満たさない、の判定自体は変わっていません。
+
+### 5. 指摘事項（完了は妨げない）
+
+1. **評価結果の和訳が壊れている:** `grade/results/cdfd-onboarding.yaml` の `message_ja` に「推測せざakざるを得ず」という崩れた文が入りました。翻訳エージェント（gemma26-translator）の不具合と見られます。次回の評価でやり直すか、翻訳経路を確認してください。
+2. **result の記述に誤りがある:** result には「Run の状態は `complete`」とありますが、Run JSON の値は `succeeded` です。
+3. **result に必要な分析がない:** Job 固有の確認事項である「未充足の done_criteria と確認担当ロール」が result に書かれていません。上の表で補っています。
+4. **result の行数の記載が違う:** Run JSON の追加行数を「+57」と書いていますが、`git diff --stat` では +58 です。
+
+2〜4 は result の書き方の問題で、評価の中身には影響しません。
+
+### 6. 確認できなかった範囲
+
+- `logs/grade/runs/per-document/...` 配下の pipeline state ファイルは直接読んでいません。代わりに `--incomplete` と `--exhausted` の CLI 出力で状態を確かめました。
+- 評価結果に記録された findings の各項目の妥当性は、再評価していません（review の役割外です）。
+- 親 runner が実行する lint・test 系の検査は、このレビューの範囲外です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。差分 d7a1173c..c6b3d6b6 は 1 commit・27 ファイルで、すべて当該 Job Run の出力（evidence・plan・result・Run JSON、評価結果 10 件、done_criteria 10 件）。Run JSON の `state` は succeeded、`exit_code` は 0、`pipeline-state` の executor と reporter も succeeded。stdout の結果は selected=10 processed=10 incomplete=0 exhausted=0 で、`results.tsv` の 10 段はすべて passed。rate limit・failed・partial・`retry_exhausted` はなし。`graded_by` の flash-high-executor は agent-members.yaml で agy-expert-executor の alias と定義されており整合。`content_hash` は 10 件とも変化がなく、評価のやり直しのみ。鮮度確認の `--changed-only`・`--dependency-changed`・`--incomplete`・`--exhausted` はレビュー開始時と終了直前のいずれも 0 行で、評価は最新。判定は pass 2 件（cdfd-uc-deliverable 100、bps-deliverable-evaluation 96）、needs-work 8 件（65〜98）で、評価設定の見直しが必要な偏りはない。未充足の done_criteria: cdfd-action DC-001(BA)・DC-003(PO)、cdfd-check DC-001(BA)、cdfd-do DC-002(ARC)、cdfd-onboarding DC-001(BA)、cdfd-overview DC-002(PO)・DC-003(ARC)、cdfd-plan DC-001(BA)。指摘事項: (1) cdfd-onboarding.yaml の F019 `message_ja` に「推測せざakざるを得ず」という翻訳の崩れ。(2) result が Run の状態を `complete` と記載しているが実際は succeeded。(3) result に未充足 done_criteria と担当ロールの分析がない。(4) result の Run JSON 行数が +57 だが実際は +58。いずれも完了は妨げない。確認できなかった範囲: logs 配下の pipeline state ファイルは直接読まず CLI 出力で代替した。findings 内容の再評価は review の役割外のため実施していない。","handoff":["cdfd-onboarding.yaml の F019 `message_ja` に「推測せざakざるを得ず」という翻訳の崩れがある。gemma26-translator の翻訳経路を確認するか、次回の評価で訳し直すこと。","Job Run の reporter が書いた result が Run の状態を `complete` と記載している（Run JSON は succeeded）。また Job 固有の確認事項である未充足 done_criteria と担当ロールの分析がない。reporter の出力品質を改善する余地がある。","未充足の done_criteria の担当: BA（cdfd-action DC-001、cdfd-check DC-001、cdfd-onboarding DC-001、cdfd-plan DC-001）、ARC（cdfd-do DC-002、cdfd-overview DC-003）、PO（cdfd-action DC-003、cdfd-overview DC-002）。"],"validations":[{"command":"git diff --stat d7a1173ca464ac2c7db15585e26cab5eb89d6041..c6b3d6b675c19a610b7b8d3ab2a5a248693d0c8e","status":"passed","summary":"27 files, +511/-65。すべて当該 Job Run の出力"},{"command":"git diff --name-status d7a1173ca464ac2c7db15585e26cab5eb89d6041..c6b3d6b675c19a610b7b8d3ab2a5a248693d0c8e","status":"passed","summary":"新規追加 7 件（evidence・plan・result・Run JSON）と、評価結果・done_criteria の変更 20 件。対象外の変更なし"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"出力 0 行。評価は最新"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"出力 0 行。依存先の変更は評価に反映済み"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力 0 行。未完了の評価パイプラインなし"},{"command":"node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力 0 行。retry 上限に達した成果物なし"}]}
+</specdojo_executor_evidence>
