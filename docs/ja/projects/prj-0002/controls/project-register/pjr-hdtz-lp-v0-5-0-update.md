@@ -12,7 +12,7 @@ specdojo:
   owner: BA
   registered_at: "2026-10-29T10:37:31Z"
   due_on: "2026-10-31"
-  block_reason: "parent validation failed: lint-fm, lint-md"
+  block_reason: "parent validation failed: lint-fm"
 ---
 
 # PJR-HDTZ specdojo-lp に v0.5.0 までの変更を反映する
@@ -62,7 +62,7 @@ register の epic を含む 8 種類と `depends_on`、init の markdownlint 設
 | 0.5.0 のプロダクトの `integration_strategy: branch-only`                                                                                                      | 既定は従来どおり `merge`。LP の `repos` 例は既定による統合を説明しているため変更不要。PR レビューへ渡す任意の構成は基本例へ加えていない。                                        |
 | Dev Container の `minimal` / `full`・Slidev・OpenCode 接続設定・常時稼働ホスト                                                                                | LP は推奨の `recommended` と Claude Code の例で、既定の選択とツールの説明は現行に合わせた。ほかの preset・任意機能や provider 固有の設定は掲載していないため、詳細を追加しない。 |
 | docs-site の `.vitepress/` への生成物集約、package 同梱文書の参照、Mermaid の描画とエラー処理                                                                 | LP に旧出力先や Mermaid の挙動の説明はなく、新しく掲載した文書サイトのコマンドも現行ガイドと一致する。出力先の移行や図の詳細は文書編集ガイドに委ねる。                           |
-| schedule・routine + Job・型と品質評価の「準備中」                                                                                                             | [[prj-0002:pjr-7t8x-lp-roadmap-pdca-matrix                                                                                                                                       | LP の PDCA マトリクス]] で合意した紹介範囲の表示方針を維持した。CLI に機能が存在することを、LP での提供範囲拡大の承認とは扱わない。 |
+| schedule・routine + Job・型と品質評価の「準備中」                                                                                                             | [[prj-0002:pjr-7t8x-lp-roadmap-pdca-matrix\|LP の PDCA マトリクス]] で合意した紹介範囲の表示方針を維持した。CLI に機能が存在することを、LP での提供範囲拡大の承認とは扱わない。  |
 | 依存更新・生成文書・検査・履歴・runner の安定性に関する不具合修正                                                                                             | LP の操作例を無効にする変更はない。内部処理や個別障害の列挙は LP に追加せず、変更履歴を正本とする。                                                                              |
 
 ### 4.3. 変更ファイル
