@@ -41,3 +41,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-3MY5"]'
+- v: 1
+  id: reg_9497ac18aa9d4facbb706e1db8c9246a
+  ts: "2026-10-29T11:48:57Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5c6d0ebfdb8e467c860b474faa420589
