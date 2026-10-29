@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-3my5-draft-approach
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-10-28T22:21:43Z"
+  completed_at: "2026-10-29T11:26:47Z"
+  conclusion: draft approach（plan 雛形・schema・CLI の検証）を追加し、fully-guided の plan・review 雛形を磨き込み専用・宣言された参照（based_on・入力・brief を含む）に改めた。schedule の guided-pass の草案の段が fully-guided のままになる食い違いは PJR-E45K の完了条件に加えて直す
   derived_from:
     - PJR-65DS
 ---
