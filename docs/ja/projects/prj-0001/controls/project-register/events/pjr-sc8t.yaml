@@ -41,3 +41,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-484B"]'
+- v: 1
+  id: reg_4a6dc893417043f7a54ddef6487d6e96
+  ts: "2026-10-29T13:16:21Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2799047026644b7eb01bf19a46a7628d
+- v: 1
+  id: reg_77d4bd2d7b244def88e1d542267bfc95
+  ts: "2026-10-29T13:35:06Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_4a6dc893417043f7a54ddef6487d6e96
