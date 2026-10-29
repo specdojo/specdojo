@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-d0gb-context-marker-info-level
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   registered_at: "2026-10-29T11:52:41Z"
+  completed_at: "2026-10-29T14:34:04Z"
+  conclusion: ready 以外の文書の _CONTEXT_ を file.info で報告し --frail の lint:fm を落とさないようにした。ready の文書では error のまま。規約・README・テスト・CHANGELOG を更新した
   derived_from:
     - PJR-JRSY
 ---

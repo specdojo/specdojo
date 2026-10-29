@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d20c247e57e242e4be16afb6fe612939
+- v: 1
+  id: reg_7669428c98ea498f8c7a590572e7b4c5
+  ts: "2026-10-29T14:34:04Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と、draft・ready の文書での lint の実際の動き、JSEY の動作確認で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: "-"
+      to: ready 以外の文書の _CONTEXT_ を file.info で報告し --frail の lint:fm を落とさないようにした。ready の文書では error のまま。規約・README・テスト・CHANGELOG を更新した
+  previous_event_id: reg_0bb968c6e5574b3198fafb00ab867264
