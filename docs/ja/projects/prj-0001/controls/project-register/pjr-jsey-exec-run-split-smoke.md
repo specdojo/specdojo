@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  block_reason: "parent validation failed: test-unit"
   conclusion: PJR-6DD7・PJR-SC8T の統合後、exec run --register が start から review まで通った。lint-fm の時間切れは SC8T の修正で解消した
 ---
 

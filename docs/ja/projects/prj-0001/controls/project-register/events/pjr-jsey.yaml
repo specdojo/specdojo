@@ -2989,3 +2989,32 @@
       from: "2026-10-29"
       to: "-"
   previous_event_id: reg_77a336c2b696420795d5751b7698b1c9
+- v: 1
+  id: reg_c1c4c1235bbe450a8b084ff26f9c8eb5
+  ts: "2026-10-29T14:19:07Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3032d42b49e04e75b6e06e8af743828b
+- v: 1
+  id: reg_563e64fb8aeb46f49d9e2cb42d455916
+  ts: "2026-10-29T14:26:10Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_c1c4c1235bbe450a8b084ff26f9c8eb5
