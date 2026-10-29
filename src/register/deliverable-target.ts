@@ -12,6 +12,7 @@ import type { Approach } from "../shared/agent-types.js";
 import { load } from "../shared/yaml.js";
 
 export const CATALOG_LESS_APPROACHES: readonly string[] = [
+  "draft",
   "fully-guided",
   "recipe-guided",
   "freeform",

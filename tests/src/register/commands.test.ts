@@ -596,38 +596,41 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it("add は approach と target を検証して個票へ書く", async () => {
-    await withRepo(async ({ root, registerDir }) => {
-      writeApproachTargets(root);
-      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+  it.each(["fully-guided", "draft"])(
+    "add は %s と target を検証して個票へ書く",
+    async (approach) => {
+      await withRepo(async ({ root, registerDir }) => {
+        writeApproachTargets(root);
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-      await runRegister([
-        "add",
-        "--type",
-        "todo",
-        "--title",
-        "成果物を直す",
-        "--topic",
-        "edit-deliverable",
-        "--id",
-        "PJR-AB12",
-        "--approach",
-        "fully-guided",
-        "--target",
-        "deliverable-doc",
-      ]);
+        await runRegister([
+          "add",
+          "--type",
+          "todo",
+          "--title",
+          "成果物を直す",
+          "--topic",
+          "edit-deliverable",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          approach,
+          "--target",
+          "deliverable-doc",
+        ]);
 
-      const ticket = readFileSync(join(registerDir, "pjr-ab12-edit-deliverable.md"), "utf8");
-      expect(ticket).toContain("  approach: fully-guided");
-      expect(ticket).toContain("  targets:\n    - deliverable-doc");
-      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toEqual(
-        expect.arrayContaining([
-          { field: "approach", from: "", to: "fully-guided" },
-          { field: "targets", from: "", to: '["deliverable-doc"]' },
-        ]),
-      );
-    });
-  });
+        const ticket = readFileSync(join(registerDir, "pjr-ab12-edit-deliverable.md"), "utf8");
+        expect(ticket).toContain(`  approach: ${approach}`);
+        expect(ticket).toContain("  targets:\n    - deliverable-doc");
+        expect(readEvents(registerDir, "PJR-AB12")[0].changes).toEqual(
+          expect.arrayContaining([
+            { field: "approach", from: "", to: approach },
+            { field: "targets", from: "", to: '["deliverable-doc"]' },
+          ]),
+        );
+      });
+    },
+  );
 
   it.each(["project", "sample"])(
     "add / update は type: %s の sample を保守対象にでき、誤った対象では記帳しない",
@@ -1668,6 +1671,9 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "utf8",
       );
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--approach", "draft"]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  approach: draft");
 
       await runRegister([
         "update",

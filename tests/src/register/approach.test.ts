@@ -141,6 +141,25 @@ describe("validateRegisterApproachTargets", () => {
     ).not.toThrow();
   });
 
+  it("draft は成果物を受け付け、kata 文書を拒否する", () => {
+    const base = { repoRoot: root, projectId: "prj-test", catalogPath, approach: "draft" } as const;
+    expect(() =>
+      validateRegisterApproachTargets({ ...base, targets: ["deliverable-doc"] }),
+    ).not.toThrow();
+    for (const target of [
+      "specdojo:example-rulebook",
+      "specdojo:example-recipe",
+      "specdojo:example-template",
+    ]) {
+      expect(() => validateRegisterApproachTargets({ ...base, targets: [target] })).toThrow(
+        /not a catalog deliverable/,
+      );
+      expect(() =>
+        validateRegisterApproachTargets({ ...base, catalogPath: undefined, targets: [target] }),
+      ).toThrow(/is a kata, not a deliverable/);
+    }
+  });
+
   it("成果物 approach は文書が未作成でも DCT の doc id を受け付ける", () => {
     expect(() =>
       validateRegisterApproachTargets({

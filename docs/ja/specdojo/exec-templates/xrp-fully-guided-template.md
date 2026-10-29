@@ -10,6 +10,9 @@ _PHASE_DESCRIPTION_
 
 - `name`: _DELIVERABLE_NAME_
 - `depends_on`: _DELIVERABLE_DEPENDS_ON_
+- `based_on`（対象成果物の frontmatter）: _DELIVERABLE_BASED_ON_
+- 個票の `入力`: _REGISTER_INPUT_
+- カタログの `brief`: _DELIVERABLE_BRIEF_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
 - `rulebook`: `_RULEBOOK_REF_`（`_MISSING_` は `undecided`、`not-needed`、または未整備）
@@ -43,20 +46,20 @@ _DONE_CRITERIA_ROWS_
 
 ## 5. 進め方
 
-fully-guided のタスクは、rulebook / recipe / sample / template に従って成果物を作成・更新することを求めた。rulebook の必須要素・禁止事項、recipe の問い、sample の粒度・文体、template の章構成との整合は grade が評価済みである。review はこれらを照合し直さず、評価結果の finding として扱う。
+fully-guided のタスクは、宣言された文書だけを参照し、rulebook / recipe / sample に沿って既存成果物を磨き込むことを求めた。下書きや調査による新しい値の選定は draft の役割である。磨き込みでは template を読み込まない。rulebook の必須要素・禁止事項、recipe の問い、sample の形式との整合は grade が評価済みである。review はこれらを照合し直さず、評価結果の finding として扱う。
 
 参照ファイル（rulebook frontmatter から解決。`_MISSING_` の項目は未宣言・未整備）:
 
 - rulebook: `_RULEBOOK_REF_`
 - recipe: `_RECIPE_REF_`
 - sample: `_SAMPLE_REF_`
-- template: `_TEMPLATE_REF_`
+- 併せて適用する rulebook（記法など）: _RULEBOOK_INCLUDES_
 
-1. フェーズ説明と完了条件が求めた作成・更新が、対象成果物に行われたかを確認する。
+1. フェーズ説明と完了条件が求めた磨き込みが、対象成果物に行われたかを確認する。
 2. 実践の型の欠落（`_MISSING_`）や内容の薄さがある場合は、実行記録にその扱いが残っているかを確認する。実践の型そのものの整備が必要な場合は、改善指示に残す。
 3. finding が残っている場合は、このタスクの完了を妨げるかを判断する。rulebook の必須要素の欠落や禁止事項への抵触など、完了条件に直結する finding は完了を妨げる。
 
-確認に用いてよい文書は、この plan に記載されたものに限る。具体的には、評価結果、対象成果物、本セクションの参照ファイル、`depends_on` 成果物、プロジェクトコンテキスト、実行記録である。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。
+確認に用いてよい文書は、宣言された文書だけに限る。具体的には、評価結果、対象成果物、本セクションの参照ファイル、`depends_on` 成果物、対象成果物の frontmatter の `based_on`、プロジェクトコンテキスト（`project_context`）、個票の `入力`、カタログの `brief`、実行記録である。`入力` と `brief` は値が無いときは「なし」と表示される。これらに宣言されていない他のプロジェクト文書や外部の情報を独自に探索・参照しない。
 
 本タスクの実行に必要な fully-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[specdojo:ryu-guide]] を参照する。
 

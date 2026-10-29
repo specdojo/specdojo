@@ -7,7 +7,9 @@ export type AgentStageRole = "executor" | "reporter";
 /** Task scheduling strategy shared by configuration and exec modules. */
 export type SchedulerStrategy = "critical-first" | "fifo";
 
-// タスクの進め方プロファイル。前3者は成果物作業で参考資料をどの程度参照するかを表し、
+// タスクの進め方プロファイル。draft は文脈で任された範囲を調べて下書きし、
+// fully-guided は宣言された参照だけで既存成果物を磨き込む。
+// fully-guided / recipe-guided / freeform は参考資料をどの程度参照するかを表し、
 // <kind>-maintenance は成果物や finding が指す規範を根拠に対象の参考資料を見直す進め方
 // （参照の向きが逆転する）。
 // bootstrap は成果物とその参考資料一式（rulebook/recipe/sample/template）を一貫した一組として
@@ -18,6 +20,7 @@ export type SchedulerStrategy = "critical-first" | "fifo";
 // bootstrap-finalize は bootstrap と対になり、成果物と参考資料一式をまとめて確定する進め方。
 // catalog-planning / strategy-planning は register の domain / track 単位で計画を生成する。
 export const APPROACHES = [
+  "draft",
   "fully-guided",
   "recipe-guided",
   "freeform",

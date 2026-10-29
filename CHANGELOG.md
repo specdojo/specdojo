@@ -2,6 +2,16 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 追加機能
+
+- `draft` approach を追加しました。文脈で任された範囲を調べて下書きし、選定値を提案として示して出典と選定理由を記録します。register・schedule・plan で使えます（PJR-3MY5）。
+
+### 変更
+
+- `fully-guided` を既存成果物の磨き込み専用に整理しました。参照は宣言された文書だけとし、対象成果物の `based_on`、個票の `入力`、カタログの `brief` を参照範囲に加えました。`入力`・`brief` の差し込み口は、値が無ければ「なし」と表示します（PJR-3MY5）。
+
 ## [0.5.0] - 2026-10-29
 
 同梱パッケージは `@specdojo/docs-lint` 0.3.0 と `@specdojo/docs-site` 0.3.0 を同時に公開します。docs-lint 0.3.0 は、rulebook の `deliverable_type` と成果物の `type` の照合、YAML 成果物の旧 type のエラー化（下記の破壊的変更の PJR-484B・PJR-0D0T）を含みます。下記の移行手順の検査には docs-lint 0.3.0 が必要です。docs-site 0.3.0 は、生成物の `.vitepress/` への集約（PJR-9ZN5）と、Mermaid の構文エラーで生成を止めない変更（PJR-N9JC）を含みます。

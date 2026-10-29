@@ -653,7 +653,7 @@ specdojo:
 #### 4.3.1. 成果物を対象にする場合
 
 - **対象（`targets`）**: 成果物カタログ（DCT）に定義されている成果物の文書 ID（doc id）を指定します（例: `prj-0001:cxd-specdojo`、`specdojo:exec-config-guide`）。プロダクト成果物の場合は `local_id` の canonical 形式（`<project-id>:<local_id>`）も受け付けます。まだ文書ファイルが作成されていない成果物であっても、カタログに定義されていればカタログで解決され、起票・実行できます。
-- **進め方（`approach`）**: 成果物を作成・修正する進め方（`fully-guided`、`recipe-guided`、`freeform`、`bootstrap`、`retrofit`、`cross-deliverable-dedup` など）から目的に応じて選びます。
+- **進め方（`approach`）**: 成果物を作成・修正する進め方（`draft`（文脈を調べて下書き）、`fully-guided`（既存成果物の磨き込み）、`recipe-guided`、`freeform`、`bootstrap`、`retrofit`、`cross-deliverable-dedup` など）から目的に応じて選びます。
 
 #### 4.3.2. kata（実践の型）を対象にする場合
 
