@@ -105,6 +105,8 @@ type は次のように使い分ける。
 
 起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルの英数字の部分から導出される。タイトルが日本語の場合は、内容を表す英語の `--topic`（小文字・ハイフン区切り。例: `payment-scope`）を渡す。
 
+対話で得た前提・制約・調査や選定を任せる範囲は、起票時に `--input <text>` を繰り返して個票の `入力` へ記録する。完了条件とは分け、会話で確認できた事実と明示的な委任範囲だけを書く。更新時の `--input` は一覧置換なので、追記では既存分も含めて渡し、全削除は `--input -` とする。
+
 ```bash
 npx specdojo register add --project <project-id> \
   --type todo --title "<title>" --description "<description>" \
