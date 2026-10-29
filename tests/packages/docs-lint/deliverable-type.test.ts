@@ -2,15 +2,17 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { remark } from "remark";
 import { buildValidator } from "../../helpers/schema.js";
 
 const require = createRequire(import.meta.url);
 const plugin = require("../../../packages/docs-lint/src/remark-frontmatter-ajv2020.cjs");
+const createChecker = require("../../../packages/docs-lint/src/deliverable-type.cjs");
 const directories: string[] = [];
 
 afterEach(() => {
+  createChecker.clearCache();
   for (const directory of directories.splice(0))
     rmSync(directory, { recursive: true, force: true });
 });
@@ -253,17 +255,88 @@ describe("Markdown deliverable type matching in the frontmatter plugin", () => {
   });
 
   it("uses installed rulebooks and gives local copies with the same ID precedence", async () => {
+    const fallbackRoot = workspace();
+    const fallbackInstalled = join(fallbackRoot, "node_modules/specdojo");
+    write(fallbackInstalled, "package.json", '{"name":"specdojo"}');
+    rulebook(fallbackInstalled, "specdojo:example-rulebook", "requirement");
+    expect(await messages(fallbackRoot, document("project"))).toEqual([
+      expect.stringContaining('declared deliverable_type is "requirement"'),
+    ]);
+
     const root = workspace();
     const installed = join(root, "node_modules/specdojo");
     write(installed, "package.json", '{"name":"specdojo"}');
     rulebook(installed, "specdojo:example-rulebook", "requirement");
-    expect(await messages(root, document("project"))).toEqual([
-      expect.stringContaining('declared deliverable_type is "requirement"'),
-    ]);
     rulebook(root, "specdojo:example-rulebook", "data");
-    expect(await messages(root, document("data"))).toEqual([]);
     rulebook(installed, "specdojo:other-rulebook", "ui");
+    expect(await messages(root, document("data"))).toEqual([]);
     expect(await messages(root, document("ui", "specdojo:other-rulebook"))).toEqual([]);
+  });
+
+  it("builds the rulebook index only once across multiple checkers and plugin invocations", async () => {
+    const root = workspace();
+    rulebook(root, "specdojo:example-rulebook", "data");
+    const spy = vi.spyOn(createChecker, "buildRulebookIndex");
+
+    try {
+      const check1 = createChecker(root);
+      expect(
+        check1(
+          { id: "example", type: "data", status: "draft", rulebook: "specdojo:example-rulebook" },
+          "target.md",
+          "",
+          true,
+          "markdown",
+        ),
+      ).toEqual([]);
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      const check2 = createChecker(root);
+      expect(
+        check2(
+          { id: "example", type: "data", status: "draft", rulebook: "specdojo:example-rulebook" },
+          "target.md",
+          "",
+          true,
+          "markdown",
+        ),
+      ).toEqual([]);
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      await messages(root, document("data"));
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      await messages(root, document("data"));
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      const otherRoot = workspace();
+      rulebook(otherRoot, "specdojo:example-rulebook", "data");
+      const checkOther = createChecker(otherRoot);
+      expect(
+        checkOther(
+          { id: "example", type: "data", status: "draft", rulebook: "specdojo:example-rulebook" },
+          "target.md",
+          "",
+          true,
+          "markdown",
+        ),
+      ).toEqual([]);
+      expect(spy).toHaveBeenCalledTimes(2);
+
+      const checkOther2 = createChecker(otherRoot);
+      expect(
+        checkOther2(
+          { id: "example", type: "data", status: "draft", rulebook: "specdojo:example-rulebook" },
+          "target.md",
+          "",
+          true,
+          "markdown",
+        ),
+      ).toEqual([]);
+      expect(spy).toHaveBeenCalledTimes(2);
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   it("does not use included rulebooks to override the primary declaration", async () => {
