@@ -9,6 +9,9 @@ import {
 import type { DeliverableInfo } from "../../../src/catalog/document-target.js";
 import { parseApproach } from "../../../src/exec/core.js";
 import { buildPhaseModeIndex, resolveApproach } from "../../../src/exec/strategy.js";
+import { buildStrategyDocument } from "../../../src/schedule/strategy-generate.js";
+import { buildScheduleTrack } from "../../../src/schedule/build.js";
+import { resolveKataRefs } from "../../../src/kata/kata.js";
 import { dump } from "../../../src/shared/yaml.js";
 
 describe("draft and fully-guided plans", () => {
@@ -93,6 +96,86 @@ describe("draft and fully-guided plans", () => {
       "_TEMPLATE_REF_",
     ]) {
       expect(plan).not.toContain(placeholder);
+    }
+  });
+
+  it("型が揃った未作成成果物は guided-pass の draft plan で文脈なしでも下書きできる", async () => {
+    rmSync(info.resolvedPath);
+    info.deliverable.rulebook = "specdojo:prj-overview-rulebook";
+    info.deliverable.depends_on = [];
+    const catalogPath = join(root, "catalog");
+    const schedulePath = join(root, "schedule");
+    mkdirSync(catalogPath);
+    mkdirSync(schedulePath);
+    writeFileSync(
+      join(catalogPath, "dct-test.yaml"),
+      dump({
+        id: "test:dct-test",
+        project_id: "test",
+        domain: "test",
+        base_path: `/${relative(process.cwd(), root)}`,
+        groups: [{ deliverables: [info.deliverable] }],
+      }),
+    );
+    const built = buildStrategyDocument({
+      projectId: "test",
+      track: "test",
+      catalogs: [
+        {
+          id: "test:dct-test",
+          path: `/${relative(root, join(catalogPath, "dct-test.yaml"))}`,
+          domain: "test",
+        },
+      ],
+      deliverables: [
+        { local_id: "proposal", catalog_id: "test:dct-test", approach: "fully-guided" },
+      ],
+      dependsOn: new Map(),
+      owners: new Map([["proposal", "DEV"]]),
+      gateOwner: "DEV",
+      milestoneOwner: "DEV",
+      bootstrapOrdering: true,
+      includeKinds: ["work"],
+      preserved: { ownerByLocalId: new Map(), approachRules: [] },
+    });
+    expect(built.errors).toEqual([]);
+    const strategyPath = join(schedulePath, "sch-strategy-test.yaml");
+    writeFileSync(strategyPath, dump(built.doc));
+    const schedule = buildScheduleTrack(strategyPath, root);
+    expect(schedule.errors).toEqual([]);
+    const task = schedule.tasks.find((entry) => entry.phase_set === "guided-pass")!;
+    expect(task.phase_suffix).toBe("020");
+    const taskId = "T-TEST-proposal-020";
+    const approach = resolveApproach(
+      task.local_id,
+      taskId,
+      buildPhaseModeIndex(schedulePath),
+      task.phase_suffix,
+      task.phase_set,
+    );
+    expect(approach).toBe("draft");
+    const path = await generateSinglePlan({
+      executionPath: join(root, "execution"),
+      projectId: "test",
+      catalogPath,
+      task: {
+        ...task,
+        id: taskId,
+        mode: "edit",
+        approach,
+        schedule_file: "sch-track-test.yaml",
+        fifo_rank: 0,
+        critical_first_rank: 0,
+      },
+    });
+    const plan = readFileSync(path, "utf8");
+    expect(plan).toContain("approach: draft");
+    expect(plan).toContain("草案作成（実践の型に沿う）");
+    expect(plan).toContain("人による文脈の記入が無い場合も、未作成なら template から下書きする");
+    expect(plan).toContain("文脈が無いことを調査・選定の委任とは解釈しない");
+    for (const ref of Object.values(resolveKataRefs(info.deliverable.rulebook, "work"))) {
+      expect(ref).not.toBe("_MISSING_");
+      expect(plan).toContain(ref);
     }
   });
 

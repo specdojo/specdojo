@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   registered_at: "2026-10-28T22:23:00Z"
-  block_reason: "parent validation failed: typecheck"
   derived_from:
     - PJR-65DS
   depends_on:
@@ -70,12 +69,13 @@ specdojo:
 
 ### 検証と申し送り
 
+- 再開時に前回の親 `typecheck` 失敗を確認し、`tests/src/exec/draft-plan.test.ts` のカタログ参照へ必須の `domain: "test"` を追加した。テスト内で生成するカタログの domain と一致させ、型定義を緩めずに修正した。親検証の再実行結果は runner が確定する。
 - 対象ファイルを Prettier で整形した。
 - `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data 'docs/ja/projects/prj-0001/schedule/sch-strategy-*.yaml'` は成功。既存 strategy 4 件との互換性を確認した。
 - `node --import tsx tools/catalog-validate-if-configured.mjs` は成功。未作成の既存成果物の `based_on` 検証を省く警告はあるが、検証エラーはない。
 - `node --import tsx src/specdojo.ts register build --project prj-0001` は成功。
 - `node --import tsx src/specdojo.ts exec refresh --project prj-0001` は成功。現行 schedule に存在しない過去タスクの event 4 件を無視する既存警告がある。
-- 対象 Markdown の hook 相当の検査と差分確認を行い、検証結果は executor evidence に記録する。
+- 再開後も schema 検査・カタログ検査・`register build`・`exec refresh` が成功した。差分の空白検査も行い、Markdown lint を含む親検証とは重複させず、検証結果を executor evidence に記録する。
 - 指定された親検証 7 件（lint-ts / lint-fm / lint-md / test-integration / validate-schema / typecheck / test-unit）は、この executor では重複実行せず親 runner に委ねる。追加した単体テストの実行結果も親 runner が確定する。
 - 保護された設定の変更は不要。未解決の設計判断はない。既存 strategy に新しい定義を反映する際は `schedule strategy generate --force` の差分を確認し、構造変更時は `schedule build --force`、続いて `exec refresh` を実行する。今回、project の実行中 strategy は再生成していない。
 - runner / claim result に関わる変更を含むため、統合後は [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] に従い、PJR-JSEY の対象へ追加して動作確認する。result には上記設計判断・検証結果・運用上の申し送りを reporter / runner が転記する。

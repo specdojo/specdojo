@@ -19,6 +19,7 @@ export const KATA_KINDS: readonly KataKindKey[] = ["rulebook", "recipe", "sample
 
 export type TaskIntent =
   | "author-deliverable"
+  | "draft-with-context"
   | "bootstrap-kata-set"
   | "reflect-implementation"
   | "deduplicate-across-deliverables"
@@ -279,11 +280,20 @@ export function resolveRecommendedApproach(input: {
         reasons: [`Kata 一式を初期整備する（成果物実在: ${input.deliverableExists}）`],
       };
     }
+    case "draft-with-context":
     case "author-deliverable": {
       const required = KATA_KINDS.filter((kind) => input.usability[kind] !== "not-needed");
       const unknown = required.filter((kind) => input.usability[kind] === "unknown");
       if (unknown.length)
         return { approach: "undecided", reasons: [`grade がない Kata: ${unknown.join(", ")}`] };
+      if (input.intent === "draft-with-context") {
+        return required.every((kind) => input.usability[kind] === "usable")
+          ? { approach: "draft", reasons: ["人が雛形へ文脈を記入してから下書きする"] }
+          : {
+              approach: "undecided",
+              reasons: ["draft-with-context には必要な Kata がすべて利用可能であることが必要"],
+            };
+      }
       if (required.every((kind) => input.usability[kind] === "usable"))
         return { approach: "fully-guided", reasons: ["必要な Kata がすべて利用可能"] };
       if (input.usability.recipe === "usable")

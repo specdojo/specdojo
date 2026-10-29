@@ -386,6 +386,38 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).not.toContain("RVP-");
   });
 
+  it.each(["human", "agent"] as const)(
+    "draft の %s result は human の文脈記入案内を実行種別で選ぶ",
+    async (execution) => {
+      const { resultPath } = await scaffoldResult({
+        executionPath,
+        taskId: "T-TEST-proposal-010",
+        mode: "edit",
+        projectId: "prj-0001",
+        agent: "writer",
+        startedAt: "2026-10-30T00:00:00.000Z",
+        execution,
+        approach: "draft",
+        targets: ["prj-0001:proposal"],
+      });
+      const body = readFileSync(resultPath, "utf8");
+      expect(parseResultTaskIdentity(body)).toMatchObject({
+        execution,
+        approach: "draft",
+        targets: ["prj-0001:proposal"],
+      });
+      if (execution === "human") {
+        expect(body).toContain("deliverable scaffold --project <project-id> --dct <catalog>");
+        expect(body).toContain("`_CONTEXT_:` を付け");
+        expect(body).toContain("claim / complete");
+        expect(body).toContain("exec complete --project");
+        expect(body).not.toContain("plan_ref:");
+      } else {
+        expect(body).not.toContain("deliverable scaffold");
+      }
+    },
+  );
+
   it("approach: bootstrap-finalize は finalize result テンプレートを使いチェックリストを焼き込む", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,

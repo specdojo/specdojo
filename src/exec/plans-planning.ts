@@ -78,6 +78,8 @@ export function planningPlanFields(opts: {
       `1. \`${join(getProjectTimelinePath(opts.project), "tml-index.yaml").replaceAll("\\", "/")}\` があれば対象 track の domains と依存・着手順を確認する。\`timeline build\` の register 由来の状態と既存カタログも確認する。`,
       `2. \`${strategy}\` に \`scope.catalogs\`（ID・リポジトリルートからのパス）、\`scope.include_kinds\` と \`approach_rules\` を宣言する。既存 scope の意図を保ち、各成果物の \`local_ids\` と \`intent\`（例: author-deliverable / bootstrap-kata-set / confirm-deliverable）、必要時の \`kata_target\` / \`bootstrap_scope\` を根拠付きで決める。`,
       "3. 主担当を `owner_rules` または生成時の `--owner` / `--default-owner` で明示する。`done_criteria.roles` を主担当と解釈しない。必要な kata の grade が不足なら先に評価し、不明な判断を推測で補わない。",
+      "   人の文脈記入から始める場合は `intent: draft-with-context` を選ぶ。必要な kata がすべて利用可能なら `draft` profile（context → draft → refine → review → finalize）になる。context と finalize は human、他は agent とし、refine は `fully-guided` で磨き込む。",
+      `   context の担当者は \`specdojo exec claim ${projectArg} --task <context-task-id> --by <human>\` で着手し、\`specdojo deliverable scaffold ${projectArg} --dct <catalog>\` で雛形を作る。既存成果物は上書きしない。本文の \`_CONTEXT_:\` に固定前提・制約・調査や選定を任せる範囲を書く（例: \`_CONTEXT_: 既存 API を維持し、認証方式の候補を調べて提案してほしい。\`）。result に記入内容を残して \`specdojo exec complete ${projectArg} --task <context-task-id> --by <human>\` で draft へ渡す。human 用の plan は生成しない。`,
       `4. \`specdojo schedule strategy generate ${projectArg} --track ${unit}\` を実行し、scope・intent・担当・依存関係に関するエラーを解消する。既存 strategy の変更は差分を確認し、必要な場合だけ \`--force\` を指定する。`,
       `5. \`specdojo schedule build ${projectArg} --track ${unit}\` を通し、\`sch-track-${unit}.yaml\` が生成され、scope の成果物とタスクの対応・依存が一致することを確認する。`,
       "6. strategy と track の保存、scope 全件の intent と担当の解決、生成・検証の成功を完了基準とし、個票の作業内容・対応結果と実行記録へ判断と検証を記録する。カタログ本体と `tml-index.yaml` は変更しない。",

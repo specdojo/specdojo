@@ -117,8 +117,10 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 ### 5.5. intent と grade からの strategy 生成
 
 - `schedule strategy generate --track <track>` は、既存 strategy の `scope.catalogs` と catalog ごとの `local_ids` を優先し、新規 track では Timeline の `domains` から物理分割を含む DCT を解決する。scope は `include_kinds: [work]` 固定とし、既存の `local_ids` がある場合は選択部分集合だけを生成対象にする。
-- `approach_rules` は scope の全 work 成果物を重複なく網羅し、7 種の intent を成果物別に宣言する。`improve-kata` は `kata_target`、`bootstrap-kata-set` と `confirm-with-kata-set` は `bootstrap_scope` も宣言する。
+- `approach_rules` は scope の全 work 成果物を重複なく網羅し、8 種の intent を成果物別に宣言する。`improve-kata` は `kata_target`、`bootstrap-kata-set` と `confirm-with-kata-set` は `bootstrap_scope` も宣言する。
 - `author-deliverable` の approach は Kata 宣言と保存済み grade から `fully-guided` / `recipe-guided` / `freeform` へ導出する。他の intent は目的別 approach へ一意に写像し、必要な evidence や追加パラメータがなければ生成を停止する。
+- 人が雛形に文脈を記入してから下書きする場合は `draft-with-context` を宣言する。必要な Kata がすべて利用可能な場合だけ `draft` profile を生成し、雛形作成・文脈記入（human）、下書き（`draft`）、磨き込み（`fully-guided`）、review、finalize（human）の順とする。human の着手と完了は claim / complete で記録する。
+- `guided-pass` の草案作成は `draft` とし、文脈がない場合も template を骨組みにして根拠のある内容を下書きする。未委任の調査・選定を行わず、`fully-guided` は後続の既存草案の磨き込みに使う。
 - 導出した approach は標準 profile へ写像し、`phase_sets`、`default_phase_sets`、`owner_rules`、phase gate、finalize 系フェーズをコードで組み立てる。profile は duration、`execution`、`mode`、`approach`、agent pipeline を一元管理する。
 - 主担当は `--owner <local_id>=<ROLE>`、既存 strategy の `owner_rules`、`--default-owner <ROLE>` の順に解決する。`done_criteria.roles` はレビュー観点であり主担当の根拠にしない。未解決または `pm-roles.yaml` に存在しない owner があれば生成を停止する。
 - `bootstrap` と他の approach が同一 track に混在する場合は成果物別に profile を分け、既定では同一カタログの非 bootstrap 成果物を代表 bootstrap 成果物の後に配置する。不要な場合だけ `--no-bootstrap-ordering` を明示する。
