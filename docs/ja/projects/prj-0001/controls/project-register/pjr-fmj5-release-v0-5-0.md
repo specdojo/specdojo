@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fmj5-release-v0-5-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: BA
   registered_at: "2026-10-28T21:40:56Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-29T10:28:50Z"
+  conclusion: "PR #25 で main へ昇格し、specdojo 0.5.0 と @specdojo/docs-lint・@specdojo/docs-site 0.3.0 を npm に公開した。npm latest、タグの workflow 4 件、npm からの導入と init を確認した"
   depends_on:
     - PJR-0QW0
 ---
