@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6dd7-register-input
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-10-28T22:22:22Z"
+  completed_at: "2026-10-29T13:58:35Z"
+  conclusion: 個票の入力節と register add/update の --input（反復・一覧置換・- で全削除、event 記録）を追加し、register 経由の plan に完了条件と別の前提として載せた。オーケストレーターの指示への追記は利用者の承認のもと feature ブランチで反映した
   derived_from:
     - PJR-65DS
   depends_on:

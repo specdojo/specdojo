@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9e87ed7f3c8e4cae8d05b42cedb68dd5
+- v: 1
+  id: reg_251046438094450a8649b6e2a22e37bf
+  ts: "2026-10-29T13:58:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と JSEY の動作確認、SC8T 起票時の plan で入力の反映を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: "-"
+      to: 個票の入力節と register add/update の --input（反復・一覧置換・- で全削除、event 記録）を追加し、register 経由の plan に完了条件と別の前提として載せた。オーケストレーターの指示への追記は利用者の承認のもと feature ブランチで反映した
+  previous_event_id: reg_313eadc147af41f49789978b1ac4d333
