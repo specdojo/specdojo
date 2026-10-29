@@ -3108,3 +3108,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1a51e8f4223d4bf1b7c8cc2841e46522
+- v: 1
+  id: reg_51853b49d54040a4ae12cd3f1e66d284
+  ts: "2026-10-29T15:09:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: PJR-D0GB の統合と main（docs-lint 0.3.1）の取り込みの後、exec run --register が start から review まで通った。単体テストの catalogless-target が負荷で一度時間切れになり、--resume で通過した
+      to: PJR-YKMA の統合後、exec run --register が start から review まで通った
+  previous_event_id: reg_4154caf4a8034b3998d23f68a1a8171d

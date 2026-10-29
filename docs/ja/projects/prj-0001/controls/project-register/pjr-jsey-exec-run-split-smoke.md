@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-D0GB の統合と main（docs-lint 0.3.1）の取り込みの後、exec run --register が start から review まで通った。単体テストの catalogless-target が負荷で一度時間切れになり、--resume で通過した
+  completed_at: "2026-10-29T15:09:26Z"
+  conclusion: PJR-YKMA の統合後、exec run --register が start から review まで通った
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
