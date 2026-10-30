@@ -41,15 +41,47 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                              | 担当     | 状態 | メモ |
-| --- | --------------------------------------------------------------------------------- | -------- | ---- | ---- |
-| 1   | `deliverable scaffold` に `--target`・`--target-path`・`--target-rulebook` を足す | executor | open | -    |
-| 2   | context-pass の説明・command-reference・CHANGELOG を直す                          | executor | open | -    |
-| 3   | 単体テストを足して検証を流す                                                      | executor | open | -    |
+| No  | 作業                                                                              | 担当     | 状態 | メモ                                                          |
+| --- | --------------------------------------------------------------------------------- | -------- | ---- | ------------------------------------------------------------- |
+| 1   | `deliverable scaffold` に `--target`・`--target-path`・`--target-rulebook` を足す | executor | done | `runGenerateTarget` と `validateDeliverableTargetPath` を実装 |
+| 2   | context-pass の説明・command-reference・CHANGELOG を直す                          | executor | done | -                                                             |
+| 3   | 単体テストを足して検証を流す                                                      | executor | done | `tests/src/deliverable/scaffold.test.ts` を追加し全件通過     |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容
+
+- `deliverable scaffold` に `--target <doc-id>`、`--target-path <path>`、`--target-rulebook <rulebook>` オプションを追加した。
+- `--target` 指定時は 1 成果物のみを生成するようにし、カタログにある成果物はカタログ情報から 1 件生成し、既存ファイルは `--force` がなければスキップするようにした。
+- カタログにない成果物は `--target-path` と `--target-rulebook` から生成できるようにした。
+- パス検証（リポジトリ内か、ファイル名か、ほかの文書が使っていないか）は `src/register/deliverable-target.ts` に共通関数 `validateDeliverableTargetPath` を切り出し、register と `deliverable scaffold` で同じ関数と規則を共有した。
+- `--target` と `--dct` を同時に指定した場合はエラーとする排他制御を実装した。
+- `--dry-run` ではファイル書き込みを行わず予定（`Would create: <path>`）のみを表示するようにした。
+- 雛形の frontmatter の `id` は project で修飾した doc id（`${projectId}:${local_id}`）とし、`status: draft` と `rulebook` を設定した。
+- template のない rulebook の扱い: template が存在しない場合（`template: not-needed` や未定義など）であってもエラーで中断せず、frontmatter（`id`、`type: project`、`status: draft`、`rulebook`）、見出し（`# <local_id>`）、`_TODO_: 本文を記述する`（YAML の場合は frontmatter / マッピングのみ）を含む最小構成の雛形を生成することとした。理由: PJR-65DS の雛形作成→文脈記入のフローにおいて、template 未定義の rulebook や独自文書であっても雛形生成を妨げずに作業を進められるようにするため。
+- `src/schedule/strategy-profiles.ts` の context-pass の説明を `deliverable scaffold --project <project-id> --target <doc-id>` に更新した。
+- `docs/ja/specdojo/references/command-reference.md` に新しいオプションと解説・使用例を追記した。
+- `CHANGELOG.md` の `## [Unreleased]` に追記した。
+- `tests/src/deliverable/scaffold.test.ts` に単体テスト（カタログ経由の 1 件生成、カタログ外成果物の生成、`--dct` 併用エラー、既存ファイルの skip と `--force`、リポジトリ外パスのエラー、CLI オプション動作）を追加した。
+
+### 成果物
+
+- `src/register/deliverable-target.ts`
+- `src/catalog/generate.ts`
+- `src/deliverable/deliverable.ts`
+- `src/schedule/strategy-profiles.ts`
+- `docs/ja/specdojo/references/command-reference.md`
+- `CHANGELOG.md`
+- `tests/src/deliverable/scaffold.test.ts`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-s23t-deliverable-scaffold-target.md`
+
+### 保護された設定
+
+- 変更なし（保護された設定への変更は不要）。
+
+### 残課題
+
+- なし。
 
 ## 6. 関連ドキュメント
 
