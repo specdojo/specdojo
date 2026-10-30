@@ -3230,3 +3230,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b69bf2aaf2f44b70895b4c239c0b3274
+- v: 1
+  id: reg_97c72a2b625643a7af2e78237c5b6580
+  ts: "2026-10-30T10:06:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、start から review までと actor の実体名の記録を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: PJR-E45K の統合後、exec run --register が start から review まで通った
+      to: PJR-S23T の統合後、exec run --register が start から review まで通った
+  previous_event_id: reg_bd1e434566ea4e0ba17e03668de38269
