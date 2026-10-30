@@ -3188,3 +3188,19 @@
       from: PJR-YKMA の統合後、exec run --register が start から review まで通った
       to: PJR-E45K の統合後、exec run --register が start から review まで通った
   previous_event_id: reg_1089ee825ebd40eeb1ef815fe875891e
+- v: 1
+  id: reg_fc3364ddf5944d6eb4a0e81ecad30c0a
+  ts: "2026-10-30T09:59:37Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-S23T の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-30"
+      to: "-"
+  previous_event_id: reg_97be73deae8449d3add5aaed1a4c12c5
