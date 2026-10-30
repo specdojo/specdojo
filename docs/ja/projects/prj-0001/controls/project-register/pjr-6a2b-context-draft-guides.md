@@ -18,6 +18,7 @@ specdojo:
     - PJR-6DD7
     - PJR-YKMA
     - PJR-E45K
+    - PJR-S23T
 ---
 
 # PJR-6A2B 文脈を渡して成果物を作る流れをガイドにまとめる
