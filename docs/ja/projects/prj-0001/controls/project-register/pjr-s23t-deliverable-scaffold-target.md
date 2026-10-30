@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-s23t-deliverable-scaffold-target
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-10-30T09:32:07Z"
+  completed_at: "2026-10-30T10:07:03Z"
+  conclusion: deliverable scaffold に --target・--target-path・--target-rulebook を追加し、成果物を 1 件だけ雛形にできるようにした。パスの検証は register と共通の関数にし、context-pass の説明・command-reference・CHANGELOG を直した
   derived_from:
     - PJR-6A2B
 ---
