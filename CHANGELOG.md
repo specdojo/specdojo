@@ -8,6 +8,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- `deliverable scaffold` に `--target <doc-id>` を追加しました。成果物を 1 つだけ指定して雛形を作成できます（`--dct` との併用は不可）。カタログにない成果物は `--target-path` と `--target-rulebook` を指定して作成できます。template のない rulebook でも最小構成の雛形を生成します（PJR-S23T）。
+
 - 文脈を渡して成果物を作成する流れ（scaffold・文脈記入・`draft`・`fully-guided`・`finalize`）と、文脈の置き場所（成果物内の `_CONTEXT_:`、個票の `入力` / `--input`、カタログの `brief`）の使い分けを `exec-operation-guide` と `ryu-guide` にまとめました。あわせて `tsd-recipe` の「作成前に集める情報」に文脈の置き場所の対応を追加し、静的サイト向け TSD の技術選定を指示して作成する例を掲載しました（PJR-6A2B）。
 
 - schedule に `draft` profile を追加しました。`strategy-planning` で `intent: draft-with-context` を宣言すると、雛形作成・文脈記入（human）→ draft → refine → review → finalize（human）を生成します。human は claim / complete で記録し、文脈記入用の result に雛形作成と `_CONTEXT_:` の案内を表示します（PJR-E45K）。

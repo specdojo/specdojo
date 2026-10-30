@@ -105,7 +105,7 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
       mode: "edit",
       approach: "draft",
       description:
-        "人が exec claim で着手を記録し、deliverable scaffold --project <project-id> --dct <catalog> で" +
+        "人が exec claim で着手を記録し、deliverable scaffold --project <project-id> --target <doc-id> で" +
         "雛形を作成する。既存成果物は上書きせず、本文に `_CONTEXT_:` を付けて固定前提、制約、調査・選定を" +
         "任せる範囲を記入する。result に対象と記入内容を記録し、exec complete で draft へ渡す。",
     },

@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-6A2B"]'
+- v: 1
+  id: reg_4b83d0fc6bfd491fa89252b17a3f9209
+  ts: "2026-10-30T09:33:27Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_573253d5dd5a4b86a90a72e2397ad46c
+- v: 1
+  id: reg_a2e4542ebc02464d81353d1553a3b6a0
+  ts: "2026-10-30T09:55:45Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4b83d0fc6bfd491fa89252b17a3f9209

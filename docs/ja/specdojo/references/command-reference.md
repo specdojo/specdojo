@@ -296,16 +296,19 @@ specdojo config scaffold --workspace --force
 
 主要オプション:
 
-| オプション           | 用途                                                                      |
-| -------------------- | ------------------------------------------------------------------------- |
-| `--size <size>`      | `small` / `medium` / `large` の成果物セットを選ぶ                         |
-| `--project-id <id>`  | 生成ファイルに埋め込む project ID を上書きする                            |
-| `--domain <domain>`  | `catalog scaffold` の対象をtemplateの`domain`で絞る（反復・カンマ区切り） |
-| `--var <NAME=value>` | `catalog scaffold` で`_NAME_` placeholderを置換する（反復可能）           |
-| `--plan`             | 保存済みの `dct-plan-<domain>.yaml` から決定論的に生成する                |
-| `--dry-run`          | `--plan` の生成結果と既存ファイルとの差分を、書き込まずに表示する         |
-| `--dct <name>`       | `deliverable scaffold` の対象を特定の `dct-*.yaml` に絞る（後述）         |
-| `--force`            | 既存ファイルを上書きする                                                  |
+| オプション                     | 用途                                                                               |
+| ------------------------------ | ---------------------------------------------------------------------------------- |
+| `--size <size>`                | `small` / `medium` / `large` の成果物セットを選ぶ                                  |
+| `--project-id <id>`            | 生成ファイルに埋め込む project ID を上書きする                                     |
+| `--domain <domain>`            | `catalog scaffold` の対象をtemplateの`domain`で絞る（反復・カンマ区切り）          |
+| `--var <NAME=value>`           | `catalog scaffold` で`_NAME_` placeholderを置換する（反復可能）                    |
+| `--plan`                       | 保存済みの `dct-plan-<domain>.yaml` から決定論的に生成する                         |
+| `--dry-run`                    | `--plan` の生成結果と既存ファイルとの差分を、書き込まずに表示する                  |
+| `--dct <name>`                 | `deliverable scaffold` の対象を特定の `dct-*.yaml` に絞る（後述）                  |
+| `--target <doc-id>`            | `deliverable scaffold` で特定の成果物 1 件だけを雛形にする（`--dct` との併用不可） |
+| `--target-path <path>`         | カタログにない成果物の配置パス（`--target` と `--target-rulebook` と併用）         |
+| `--target-rulebook <rulebook>` | カタログにない成果物の rulebook 文書 ID（`--target` と `--target-path` と併用）    |
+| `--force`                      | 既存ファイルを上書きする                                                           |
 
 `catalog scaffold`は、`--domain`を省略すると従来どおりすべてのDCT templateを対象にします。指定した場合は、ファイル名ではなくtemplate内の`domain`が一致するものだけを生成します。存在しないdomainを指定した場合は、部分的な生成を行わずエラーで終了します。
 
@@ -328,6 +331,22 @@ specdojo catalog scaffold \
 ```bash
 specdojo deliverable scaffold --project prj-0001 --dct project-definition
 specdojo deliverable scaffold --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
+```
+
+`--target <doc-id>` で成果物を 1 件だけ指定して雛形を作成できます（`--dct` とは併用できません）。カタログに登録されている成果物は、カタログの配置・rulebook・template の情報から 1 件だけ雛形を生成します。
+
+カタログにない成果物は `--target-path <path>` と `--target-rulebook <rulebook>` をあわせて指定することで雛形を作成できます。パスの検証（リポジトリの中か、ファイル名か、ほかの文書が使っていないか）は register の `--target-path` と同じ規則で行われます。
+
+`--dry-run` を指定するとファイルへの書き込みを行わず、作成予定（`Would create: <path>`）のみを表示します。既存ファイルがある場合は、`--force` が指定されていない限りスキップされます。
+
+```bash
+# カタログにある成果物を 1 件だけ雛形にする
+specdojo deliverable scaffold --project prj-0001 --target prj-charter
+
+# カタログにない成果物を雛形にする
+specdojo deliverable scaffold --project prj-0001 --target my-spec \
+  --target-path docs/ja/product/my-spec.md \
+  --target-rulebook specdojo:cdfd-rulebook
 ```
 
 `deliverable scaffold` の生成方針と `specdojo build` に含めない理由は [遂行の技活用ガイド](../guides/waza-guide.md) の `deliverable scaffold の生成方針`、生成系動詞の使い分けは同ガイドの `生成系動詞の標準`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
