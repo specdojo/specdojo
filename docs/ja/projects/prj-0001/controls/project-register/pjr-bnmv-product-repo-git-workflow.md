@@ -18,21 +18,37 @@ specdojo:
 
 ## 1. 背景
 
-git-flow や GitHub flow など任意の運用に合わせ、プロダクトのリポジトリの作業ブランチの名前、commit の 1 行目、merge commit、統合の形を設定で選べるようにし、commit の type を項目ごとに指定できるようにする方針を決める
+プロダクトのリポジトリ（`repos` で宣言したもの）へ exec が積む commit は、1 行目が `exec(register <ID>): <タイトル>` に、merge commit のメッセージも同じ形に、作業ブランチの名前が `exec/<project-id>-<ID>` に、コードで固定されている。統合先は `integration_branch` と `--integration-branch` で feature ブランチにできるが、履歴の見た目は git-flow や GitHub flow にならない。
+
+git-flow や GitHub flow など任意の運用に合わせて見た目を選べるようにし、commit の type を項目ごとに指定できるようにする方針を決める。
 
 ## 2. 検討した選択肢
 
-| 選択肢 | 内容   | 利点   | 懸念   |
-| ------ | ------ | ------ | ------ |
-| A      | _TODO_ | _TODO_ | _TODO_ |
+| 選択肢 | 内容                                                                                                                             | 利点                                                   | 懸念                                                                     |
+| ------ | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------ |
+| A      | `repos[]` の設定で、作業ブランチの名前・commit の 1 行目・merge commit の書式と統合の形を選べるようにし、type は個票の項目で持つ | 運用ごとに見た目を合わせられる。設定がなければ今と同じ | runner が `exec/` の名前に頼る処理を、記録での対応に置き換える必要がある |
+| B      | `branch-only` で作業ブランチを残し、利用者が手で feature ブランチへ squash merge する                                            | 実装が要らない                                         | 毎回の手作業が増え、ブランチ名は `exec/` のまま                          |
+| C      | commit の 1 行目だけ設定で変えられるようにする                                                                                   | 変更が小さい                                           | ブランチ名と merge commit が運用に合わない                               |
 
 ## 3. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+A を採る。対象はプロダクトのリポジトリだけとし、SpecDojo の記録のリポジトリの記帳の commit（`exec(register ...)`）は変えない。設定がない場合は今と同じ動きにする。
+
+- 作業ブランチの名前: `repos[].branch_template` で指定する。既定は `exec/{project}-{id}`。例: git-flow は `feature/{topic}`、GitHub flow は `{type}/{topic}`。
+- commit の 1 行目: `repos[].commit_subject_template` で指定する。例: `{type}({scope}): {title}`、`{type}: {title}`。本文の末尾の `Refs: <project-id>:<ID>` は常に付ける。
+- merge commit: `repos[].merge_message_template` で指定する。既定は git の標準の `Merge branch '{branch}' into {target}` に `Refs:` を付けたもの。
+- 使える変数: `{id}`（登録簿の項目の ID）・`{project}`・`{topic}`・`{type}`・`{scope}`・`{title}`・`{branch}`・`{target}`。
+- 項目ごとの type: 個票に `commit_type` と任意の `commit_scope` を持たせ、`register add` / `update` の `--commit-type` / `--commit-scope` で指定する。指定がなければ項目の type から決め（`issue` は `fix`、`todo`・`change-request` は `feat`）、この対応も設定で変えられるようにする。
+- 統合の形: 今の `merge`・`branch-only` に `ff`（merge commit を作らず早送りで積む）を足す。
+- ブランチ名の重なり: run の開始時に、同じ名前のブランチが別の項目のものとしてあれば止め、topic を変えるか `--branch` で名前を指定するよう案内する。自動の連番は付けない。同じ項目の再開では同じブランチを使い続ける。テンプレートが `{id}` も `{topic}` も含まない場合は設定エラーにする。
+- run と作業ブランチの対応は、ブランチ名の接頭辞ではなく runner の記録で持つ。
 
 ## 4. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- 利用者の前提（個票の `入力`）は、任意の運用に合わせた見た目と、項目ごとの type の選択である。B と C ではブランチ名か merge commit が運用に合わない。
+- 設定をプロダクトのリポジトリごとに持てば、git-flow と GitHub flow のリポジトリを同じ project で扱える。
+- git-flow のブランチ名は中身で付けるのが普通で、ID は commit の本文の `Refs:` でたどれる。
+- ブランチ名の重なりで止める形にすると、ブランチ名と PR の名前がいつも狙いどおりになる。
 
 ## 5. 承認
 
@@ -48,15 +64,16 @@ _TODO_: 採択した内容を明確に記載する。
 
 ## 6. 影響範囲とフォローアップ
 
-| 項目       | 内容   |
-| ---------- | ------ |
-| 影響範囲   | _TODO_ |
-| 必要な対応 | _TODO_ |
-| 追跡先     | _TODO_ |
+| 項目       | 内容                                                                                                                                                                                     |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | `specdojo.config.json` の `repos[]` の schema と設定リファレンス、個票の frontmatter と `register add` / `update`、exec の作業ブランチの作成・再開・片付け、プロダクト側の commit と統合 |
+| 必要な対応 | 決定後に todo を 3 件に分けて起票する: 項目の `commit_type`・`commit_scope`、commit と merge commit の書式、作業ブランチの名前の書式と記録での対応・重なりの検査・`ff` の統合（hard）    |
+| 追跡先     | 決定後に起票する todo                                                                                                                                                                    |
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:specdojo-config-reference]]
+- [[specdojo:command-reference]]
 
 ## 入力
 
