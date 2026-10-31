@@ -39,7 +39,10 @@ tsd-ollama-opencode は設定例で gemma4:e4b-mlx-light-8k を登録する一�
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md` の「5. 接続確認」の例（L109）のモデル名を `gemma4:e4b-light-8k` から `gemma4:e4b-mlx-light-8k` に修正した。
+- 正しい登録名の根拠: `tsd-ollama.md`「7.2. Gemma 4 E4B 軽作業用」で `ollama create gemma4:e4b-mlx-light-8k` を作成する手順が定義され、設定例（`opencode.json` の `models` キー・`small_model`）でも `gemma4:e4b-mlx-light-8k` を使用。MLX 版を正とする判断に基づき接続確認の例もこれに揃えた。
+- `docs/ja/product/` 配下で `gemma4:e4b-light-8k` を検索した結果、残存なし（修正後は出現しないことを確認）。
+- 成果物: `tsd-ollama-opencode.md`。残課題はなし。
 
 ## 5. 関連ドキュメント
 
