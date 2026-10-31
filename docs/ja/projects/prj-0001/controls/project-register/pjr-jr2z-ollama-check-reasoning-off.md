@@ -32,13 +32,18 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `tsd-ollama-opencode.md` の「接続確認」の `curl` の例の要求に `"reasoning_effort": "none"` を足す。
+- 同じ節に、期待する結果（`finish_reason` が `stop` で、`content` に短い本文が返ること）と、`reasoning_effort` を付けないと考える過程だけで `max_tokens` に達して本文が空になりうることを書く。
+- `tsd-ollama.md` の確認の例（`/api/generate` や `ollama run` など）も、考える過程で本文が空になりうるかを文書の記述から確かめ、OpenAI 互換の `/v1/chat/completions` を使う例があれば同じく直す。`/api/generate` など別の API の例は変えず、確かめた結果を本個票の対応結果に書く。
+- モデル名は PJR-AHXK でそろえた `gemma4:e4b-mlx-light-8k` のままにする。
+- 変更した文書で `npm run lint:md` と `npm run lint:fm` が通る。
+- 利用者に影響しない文書の直しのため、`CHANGELOG.md` は変えない。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                         | 担当     | 状態 | メモ |
+| --- | ------------------------------------------------------------ | -------- | ---- | ---- |
+| 1   | 接続確認の例に `reasoning_effort` を足し、期待する結果を書く | executor | open | -    |
 
 ## 5. 対応結果
 
@@ -46,4 +51,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-ahxk-tsd-ollama-opencode-model-tag]]
+- [[tsd-ollama-opencode]]
+- [[tsd-ollama]]
