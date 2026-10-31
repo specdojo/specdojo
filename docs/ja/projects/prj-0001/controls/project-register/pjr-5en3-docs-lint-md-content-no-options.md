@@ -21,7 +21,7 @@ specdojo:
 
 ## 1. 概要
 
-remark/md-content を options なしで読み込むと options.schemas の読み取りで TypeError になるため、options がないときは空として扱う
+`remark/md-content` を options なしで読み込むと `options.schemas` の読み取りで `TypeError` になるため、options がないときは空として扱う。
 
 ## 2. 入力
 
@@ -31,13 +31,18 @@ remark/md-content を options なしで読み込むと options.schemas の読み
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `packages/docs-lint/src/remark-md-content.ts` の `remarkMdContent` で、options が渡されないとき（`undefined`）は空の options として扱い、`schemas` は空、`workspaceRoot` は `process.cwd()` とする。
+- options なしで読み込んだとき、`_CONTEXT_:` の検出（ready の文書ではエラー、それ以外は情報）が動き、content schema の検査は行わないことを、単体テストで確かめる。
+- options を渡す今の使い方の動きは変えない。
+- 同じパッケージのほかの公開の remark プラグイン（`remark/no-unescaped-angle-placeholder`・`remark/frontmatter-ajv2020`）について、options なしで読み込んだときの動きを確かめ、本個票の対応結果に書く。`frontmatter-ajv2020` は schema の指定が必須で、なければ原因の分かるエラーで止まる今の動きのままでよい。
+- `CHANGELOG.md` の `## [Unreleased]` 節の不具合修正に、`@specdojo/docs-lint` の変更として書く。公開済みの版の節は変えない。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を流して通し、親の検証も通る。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                        | 担当     | 状態 | メモ |
+| --- | ----------------------------------------------------------- | -------- | ---- | ---- |
+| 1   | options がないときを空として扱い、テストと CHANGELOG を足す | executor | open | -    |
 
 ## 5. 対応結果
 
@@ -45,4 +50,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-2fv2-release-v0-6-0]]
+- [[prj-0001:pjr-jrsy-context-marker]]
