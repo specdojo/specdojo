@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-31T02:42:32Z"
   due_on: "2026-11-30"
+  block_reason: "executor validation failed or not run: npm run validate:schema:file"
   derived_from:
     - PJR-BNMV
 ---
