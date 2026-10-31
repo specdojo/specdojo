@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d66b1fb68ccf4039b5b0d38c3f0ee042
+- v: 1
+  id: reg_b75adf54cb194b0797e875ead0bf15c3
+  ts: "2026-10-31T01:01:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "差分・個票・result と、tsd-rulebook で作った雛形が type: architecture になり docs-lint の --frail を通ること、カタログ経由の --target でも型が入ることを実物で確かめた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: template のない rulebook の最小の雛形の type を rulebook の deliverable_type にし、宣言がない場合は project のままにした。一括生成と --target の両方に効き、テストを足した
+  previous_event_id: reg_46f82666ad2049738d8d513d3eab9cd7

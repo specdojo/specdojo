@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ykyk-scaffold-fallback-deliverable-type
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-10-31T00:27:20Z"
+  completed_at: "2026-10-31T01:01:14Z"
+  conclusion: template のない rulebook の最小の雛形の type を rulebook の deliverable_type にし、宣言がない場合は project のままにした。一括生成と --target の両方に効き、テストを足した
   derived_from:
     - PJR-S23T
 ---
