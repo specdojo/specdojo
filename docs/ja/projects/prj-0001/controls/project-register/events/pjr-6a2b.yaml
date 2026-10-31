@@ -80,3 +80,16 @@
       from: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K"]'
       to: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T"]'
   previous_event_id: reg_8fd068f18738498b834b246da6470bf6
+- v: 1
+  id: reg_53f562af6e0446cf8ee42669eecccdba
+  ts: "2026-10-31T00:28:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T"]'
+      to: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T","PJR-YKYK"]'
+  previous_event_id: reg_e0f3449594d84050b16ce5de7e815ae1
