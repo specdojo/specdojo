@@ -87,14 +87,25 @@ exec で確実に使うには、次のどちらかが要る。
 - SpecDojo が用意する skill（2.2.）: 案 B。CLI の入口の skill と、オーケストレーターの指示の skill を配る。本文は SSOT から生成し、Kata の中身は `npx specdojo kata show` で読ませる。
 - 外部の skill（2.3.・2.4.）: 条件付きで使う。外部の skill はプロダクトのリポジトリ（`repos` で宣言したもの）に入れ、プロダクトの git で版を固定する。使ってよい skill を `repos[]` などで宣言し、plan に「このタスクで使える skill」としてパスと版を書いて agent に必要なときに読ませ、使った skill を plan と evidence に記録する。用途別のひな型（PJR-RTD5）には、その用途で使う skill を同梱できるようにする。
 - 置き場所: SpecDojo の記録のリポジトリには、SpecDojo が配る skill だけを置く。
-- 既存の 3 件の skill（2.5.）: `reverse-rulebook`・`upsert-rulebook`・`upsert-sample` を 2.2. の生成の仕組みにそろえ、Kata の中身を含む部分は `kata show` の参照に置き換える。
+- 既存の 3 件の skill（2.5.）: `reverse-rulebook`・`upsert-rulebook`・`upsert-sample` は、移行せずに消す（2026-10-31 に改めた。下記「決定の改訂」を参照）。
+
+### 3.1. 決定の改訂
+
+2026-10-31 に、既存の 3 件の skill の扱いを「生成の仕組みにそろえ、Kata の中身は `kata show` の参照に置き換える」から「消す」に改めた（利用者の判断）。
+
+- 3 件は 2026-07 から更新がなく、コード・設定・ガイドのどこからも参照されていなかった。
+- rulebook と sample の作成・見直しは、exec の approach（`rulebook-authoring`・`rulebook-maintenance`・`sample-maintenance` など）が plan と kata で行い、grade とレビューにも乗る。
+- `.agents/skills` と `.claude/skills` の同じ名前のファイルは、中身がずれていた。npm package にも含まれず、利用者には配っていなかった。
+- 中身は Kata の書き方の写しで、本決定の「Kata の中身は skill に写さない」に当たる。使われていないものを移すより、消すほうが手間もずれもない。
+
+6 ファイルを消した commit は 10a10148a で、develop へは 74d17caa9 で取り込んだ。
 
 ## 4. 採択理由
 
 - plan を契約とし Kata を知識の正本とする中心を保てば、skill がない agent でも同じ plan で同じ結果に近づけられ、executor を差し替えられる（PJR-JSWE の結論）。
 - skill は複数の agent が読む共通の形式に広がっており、SSOT から生成する薄い入口なら、提供者中立を損なわずに「必要なときだけ読み込む」利点を得られる。
 - 外部の skill はプロダクトごとに必要なものが違うため、プロダクトのリポジトリに置くと選び方と版の固定が自然になる。exec の agent は記録のリポジトリの worktree で起動し、プロダクトのリポジトリの skill を自動で読み込む保証がないため、plan での参照と宣言で agent の種類によらず効かせ、使った skill を記録に残す。
-- 既存の 3 件を生成の仕組みにそろえると、Kata との二重管理とずれを防げる。
+- 既存の 3 件は、Kata との二重管理とずれを防ぐため消す（3.1. を参照）。
 
 ## 5. 承認
 
@@ -113,7 +124,7 @@ exec で確実に使うには、次のどちらかが要る。
 | 項目       | 内容                                                                                                                                                     |
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 影響範囲   | skill の生成と配布の仕組み（`.agents/skills` と各 agent のラッパー）、`repos[]` の設定、exec の plan と evidence、既存の 3 件の skill、PJR-RTD5 のひな型 |
-| 必要な対応 | SpecDojo の skill の生成と配布、外部の skill の宣言と plan・evidence への記録、既存の 3 件の skill の移行を、todo に分けて起票する                       |
+| 必要な対応 | SpecDojo の skill の生成と配布、外部の skill の宣言と plan・evidence への記録を、todo に分けて起票する（既存の 3 件の skill は消した）                   |
 | 追跡先     | 起票する todo（未起票）                                                                                                                                  |
 
 ## 7. 関連ドキュメント
