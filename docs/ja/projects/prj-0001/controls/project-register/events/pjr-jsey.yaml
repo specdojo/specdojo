@@ -3493,3 +3493,19 @@
       from: PJR-M1DH の統合後、exec run --register が start から review まで通り、worktree と作業ブランチが片付いた
       to: PJR-B5TY の組み込みの後、exec run --register が start から review まで通り、親の検証で lint-mermaid が流れて通った
   previous_event_id: reg_7cd5362152cd47dba7997fdd43622537
+- v: 1
+  id: reg_8090bf863df84cd2b418ffd7cc8e6398
+  ts: "2026-10-31T15:21:44Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-6NEM の統合後の runner の確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-31"
+      to: "-"
+  previous_event_id: reg_e0ea8031c5c6452a94e79c944059f7fd
