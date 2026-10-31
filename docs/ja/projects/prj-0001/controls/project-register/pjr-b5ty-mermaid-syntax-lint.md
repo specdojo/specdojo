@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T14:12:56Z"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-EVAE
 ---
@@ -55,6 +54,7 @@ markdownlint と remark は Mermaid の中身を検査せず、図の構文エ�
 - Markdown は remark の構文木で解析し、バッククォート・tilde・長い fence・リストや引用内の Mermaid を抽出する。外側のコード例の中にある Mermaid の記載は対象にしない。診断の `file:line` は元の Markdown の開始 fence 行を示す。Mermaid のエラーメッセージ内の行は図内の解析行であり、frontmatter・directive・コメントの前処理でずれる可能性があるため、元文書のエラー行として換算しない。
 - エラーごとにファイル・開始行・図の種類・解析エラーの内容を表示し、種類別の成功・構文エラー・未検査件数を集計する。未知の図、空の図、依存や Worker の障害は未検査にし、構文エラーまたは未検査が 1 件以上あれば終了コード 1 とする。
 - `tests/tools/lint-mermaid.test.ts` に 8 種類それぞれの正しい図と誤った図、`block-beta`、frontmatter / directive / 日本語ラベル、元文書の行番号、未知・空の図、Mermaid がないファイル、未一致の glob、依存・Worker 障害、CLI の終了コードの単体テストを追加した。実行は親 runner の `test-unit` に委ねる。
+- 再開時に親 runner の失敗ログを確認し、CRLF の抽出結果に対して LF を期待していたテストを修正した。抽出処理は入力の改行を保持するため、期待する図の内容も入力と同じ改行で組み立て、LF・CRLF の両方で開始行と内容を検査する。解析に渡す入力を変えない方針を維持した。単体テストの再実行は親 runner が担当する。
 - `CHANGELOG.md` の `Unreleased` に開発用 tool として追記した。公開済みの版の節は変更していない。
 
 ### 4.2. 既存図の検査
@@ -75,6 +75,8 @@ markdownlint と remark は Mermaid の中身を検査せず、図の構文エ�
 `lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` は親 runner が実行する。executor 内では重複実行しない。
 
 executor では変更した 6 ファイルを Prettier で整形し、`catalog validate` と `register build`、`git diff --check` を終了コード 0 で確認した。カタログ検証では、本変更と関係しない参照先文書の未作成による `based_on` の警告がある。登録簿の再生成は無視対象の派生ビューだけで、個票の状態や登録簿の正本は変更していない。また、`tmp/` の一時 Markdown に正しい図・誤った図・未知の図を混在させた CLI 検査で、成功 1 件・構文エラー 1 件・未検査 1 件、文書名・fence 行・図の種類・エラー内容、想定どおりの終了コード 1 を確認した。一時ファイルは検証後に削除した。
+
+再開後も同じ 3,572 文書・189 図の全件検査、6 ファイルの整形、カタログ検証、登録簿の派生ビュー生成、差分の空白検査が成功した。前回失敗した単体テストは期待値を修正済みだが、修正後の合否はこの executor の終了後に親 runner が実行する検証で確認する。
 
 ### 4.3. 保護された設定の変更案（利用者承認後に反映）
 
