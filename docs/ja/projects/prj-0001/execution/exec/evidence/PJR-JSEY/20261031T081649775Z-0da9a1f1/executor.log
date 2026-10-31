@@ -1,0 +1,9 @@
+個票 `pjr-jsey-exec-run-split-smoke.md` の「対応結果」の表に 1 行追記し、確認対象を PJR-B5TY に更新しました。変更したのはこの個票だけです。親 runner の検証はまだ実行していません。
+
+- **確認対象:** 対象一覧のうち最新の統合は PJR-B5TY でした。`review` 遷移が 2026-10-31 16:26 JST の `1efe02913`、統合コミットが `1c4f1db2d` です。
+- **追記した行:** `2026-10-31 17:20` / `PJR-B5TY` / `sonnet-executor`。日時は実行時刻の推定値です。
+- **本文の更新:** 本文の確認対象の記述も、PJR-M1DH から PJR-B5TY とそのコミット `1c4f1db2d`・`1efe02913` に差し替えました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-B5TY の行を追記し、確認対象の記述を更新した。変更したのは個票のみ。","handoff":["親 runner の 7 検証、reporter の result 記入、統合は後続段で確認する。","追記した日時 2026-10-31 17:20 は実行時刻の推定値。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
