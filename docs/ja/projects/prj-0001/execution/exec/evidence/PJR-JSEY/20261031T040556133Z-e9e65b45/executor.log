@@ -1,0 +1,11 @@
+個票の対応結果の表に 1 行を追記し、直下の説明文も更新しました。変更したのは `pjr-jsey-exec-run-split-smoke.md` だけです。lint などの検証は親 runner が実行するため、私は実行していません。
+
+- **追記した行:** `2026-10-31 13:07 | PJR-Z7GX | sonnet-executor`
+- **確認対象の根拠:** 完了条件の一覧のうち、最も新しく統合されたのは PJR-Z7GX でした。統合コミットは `c21a4b704`（13:03 JST）、`review` 遷移は `78c4837b6` です。
+- **日時の根拠:** 日時は start コミットの 13:06 JST に合わせて 13:07 にしました。
+- **実行 agent:** start の event の actor は確認していません。sonnet-executor は私の実行環境から推定した名前なので、説明文には「actor は後続段で確認する」と残しています。
+- **未更新の箇所:** 個票の `conclusion` が前回の PJR-TC62 / PJR-790T のままです。完了条件が個票の本文だけを対象にしているため、frontmatter は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-Z7GX（最新の統合）の実行記録を 1 行追記し、説明文を更新した。変更は本個票のみ。","handoff":["親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。","start の event の actor は未確認。表の agent 名 sonnet-executor は私の実行環境から推定した値なので、後続段で確認する。","個票 frontmatter の `conclusion` は前回（PJR-TC62・PJR-790T）の内容のままにしている。更新するかどうかは人間が判断する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
