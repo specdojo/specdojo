@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2zmy-document-editing-toolset
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-22T22:17:57Z"
+  completed_at: "2026-10-31T14:12:21Z"
+  conclusion: 図は案 D。単純な図は Mermaid、複雑な図は D2、人が配置を変えたい図は draw.io。プレゼンと表は本決定の対象外
 ---
 
 # PJR-2ZMY 文書の編集ツール（図・プレゼン・表）の方針を決める
