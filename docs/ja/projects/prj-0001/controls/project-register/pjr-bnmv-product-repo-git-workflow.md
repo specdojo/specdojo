@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bnmv-product-repo-git-workflow
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: DEV
   registered_at: "2026-10-31T02:38:33Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T02:41:49Z"
+  conclusion: 案 A を採る。プロダクトのリポジトリごとの設定で作業ブランチの名前・commit の 1 行目・merge commit の書式と統合の形（merge・branch-only・ff）を選べるようにし、commit の type と scope は個票で項目ごとに持つ。git-flow の例は feature/{topic} とし、ブランチ名が別の項目と重なったら run の開始時に止める
 ---
 
 # PJR-BNMV プロダクトのリポジトリの commit とブランチの形を運用に合わせて選べるようにする
