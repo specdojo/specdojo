@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f1cadd725f2b48cd93aa5eb94764fe07
+- v: 1
+  id: reg_339f002a8b644ef3bf51ad122108d698
+  ts: "2026-10-31T07:28:04Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、docs 全体の検査（189 図すべて通過）、誤った図（リストの中を含む）で行番号つきのエラーと終了コード 1 になることを手元で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: ブラウザを使わずに mermaid.parse で Markdown の Mermaid の構文を検査する tools/lint-mermaid.mjs を追加した。docs-site と同じ mermaid 12 を使い、本リポジトリの 8 種類 189 個の図はすべて通った。npm の script・lefthook・親の検証への組み込みは保護された設定のため案を個票に残し、利用者の承認のもとで反映する
+  previous_event_id: reg_1eed3e8b2bcf4d38b6a20bc13f9716f3

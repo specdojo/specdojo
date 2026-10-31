@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-b5ty-mermaid-syntax-lint
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T14:12:56Z"
+  completed_at: "2026-10-31T07:28:04Z"
+  conclusion: ブラウザを使わずに mermaid.parse で Markdown の Mermaid の構文を検査する tools/lint-mermaid.mjs を追加した。docs-site と同じ mermaid 12 を使い、本リポジトリの 8 種類 189 個の図はすべて通った。npm の script・lefthook・親の検証への組み込みは保護された設定のため案を個票に残し、利用者の承認のもとで反映する
   derived_from:
     - PJR-EVAE
 ---
