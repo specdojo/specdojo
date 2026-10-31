@@ -43,6 +43,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `specdojo-tmux.sh.sample` の `find_container` で、ラベル `devcontainer.local_folder` が一致するコンテナが見つからない場合に `vsc-` で始まる別のコンテナへ誤って接続していた問題を修正しました。ラベルの一致するコンテナだけを検索対象とし、見つからない場合は `devcontainer up` を呼び出して起動するようにしました。あわせて `docker exec` の前にコンテナ内の作業ディレクトリの存在を確認し、存在しない場合は明示的なメッセージで停止するようにしました（PJR-P9ZC）。
+
 - `decision`・`note`・`epic` など `入力` の章がない種類の個票へ `--input` を指定した際に、末尾に番号のない `## 入力` が追加されて章番号の連続性規約に違反していた問題を修正しました。最初の章の直後に `## 2. 入力` として挿入し、以降の章番号を 1 つずつ繰り下げます。既存の個票に番号のない `## 入力` がある場合も、同様に番号付きの章として適切な位置へ移動します（PJR-790T）。
 
 - `deliverable scaffold` の一括生成と `--target` において、template のない rulebook の最小の雛形の `type` を rulebook の frontmatter で宣言された `deliverable_type` に合わせるように修正しました（未宣言時は従来どおり `project`）。これにより、template のない rulebook を指定して生成した雛形が docs-lint の `frontmatter-deliverable-type` で警告にならず、コミット時ガードを通過します（PJR-YKYK）。
