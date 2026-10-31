@@ -13,7 +13,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-31T02:42:32Z"
   due_on: "2026-11-30"
-  block_reason: "executor validation failed or not run: npm run validate:schema:file"
+  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-BNMV
 ---
@@ -43,10 +43,10 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                                            | 担当     | 状態   | メモ                                                                                                                                                                          |
-| --- | ----------------------------------------------------------------------------------------------- | -------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | 個票の frontmatter・schema と `register add` / `update` に `commit_type`・`commit_scope` を足す | executor | closed | `register-item-frontmatter.schema.yaml` / `register-events.schema.yaml` および `register add` / `update` に `--commit-type` / `--commit-scope` を追加                         |
-| 2   | 既定の対応と設定、引くための関数、テスト、文書を足す                                            | executor | closed | `resolveItemCommitTypeAndScope` の実装、`specdojo-config` スキーマ拡張、単体テスト、`command-reference`・`specdojo-config-reference`・`CHANGELOG.md` への反映を完了          |
+| No  | 作業                                                                                            | 担当     | 状態   | メモ                                                                                                                                                                |
+| --- | ----------------------------------------------------------------------------------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 個票の frontmatter・schema と `register add` / `update` に `commit_type`・`commit_scope` を足す | executor | closed | `register-item-frontmatter.schema.yaml` / `register-events.schema.yaml` および `register add` / `update` に `--commit-type` / `--commit-scope` を追加               |
+| 2   | 既定の対応と設定、引くための関数、テスト、文書を足す                                            | executor | closed | `resolveItemCommitTypeAndScope` の実装、`specdojo-config` スキーマ拡張、単体テスト、`command-reference`・`specdojo-config-reference`・`CHANGELOG.md` への反映を完了 |
 
 ## 5. 対応結果
 

@@ -70,3 +70,35 @@
       from: "-"
       to: "executor validation failed or not run: npm run validate:schema:file"
   previous_event_id: reg_85585e3b62764a02b9a88384a9322a2a
+- v: 1
+  id: reg_50f894c27e964d97a0563822c6abe6f4
+  ts: "2026-10-31T03:12:02Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor validation failed or not run: npm run validate:schema:file"
+      to: "-"
+  previous_event_id: reg_df9f2f74bdaa46b8b4b1f5c6488fe04b
+- v: 1
+  id: reg_4de9529be3184edca6f25b62e08115c5
+  ts: "2026-10-31T03:27:03Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_50f894c27e964d97a0563822c6abe6f4

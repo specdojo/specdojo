@@ -1,0 +1,28 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.5.0 typecheck
+> tsc -b --noEmit
+
+src/register/input.ts(131,21): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'HeadingNode' is not assignable to type 'RootContent'.
+    Property 'children' is missing in type 'HeadingNode' but required in type 'Heading'.
+src/register/input.ts(140,41): error TS2345: Argument of type 'RootContent' is not assignable to parameter of type 'HeadingNode'.
+  Property 'depth' is missing in type 'Link' but required in type 'HeadingNode'.
+src/register/input.ts(161,63): error TS18048: 'splitOffset' is possibly 'undefined'.
+src/register/input.ts(163,55): error TS18048: 'splitOffset' is possibly 'undefined'.
+src/register/input.ts(164,51): error TS18048: 'splitOffset' is possibly 'undefined'.
+src/register/input.ts(131,21): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'HeadingNode' is not assignable to type 'RootContent'.
+    Property 'children' is missing in type 'HeadingNode' but required in type 'Heading'.
+src/register/input.ts(140,41): error TS2345: Argument of type 'RootContent' is not assignable to parameter of type 'HeadingNode'.
+  Property 'depth' is missing in type 'Link' but required in type 'HeadingNode'.
+src/register/input.ts(161,63): error TS18048: 'splitOffset' is possibly 'undefined'.
+src/register/input.ts(163,55): error TS18048: 'splitOffset' is possibly 'undefined'.
+src/register/input.ts(164,51): error TS18048: 'splitOffset' is possibly 'undefined'.
+
+
+--- stderr ---
