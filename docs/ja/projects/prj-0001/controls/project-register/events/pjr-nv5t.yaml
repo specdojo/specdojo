@@ -98,3 +98,32 @@
       from: "-"
       to: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/host/devcontainer-tmux.sh; agent must record the required change in the result handoff fo…"
   previous_event_id: reg_40c48d6d09774587a5cc8b12ab041f48
+- v: 1
+  id: reg_d0102888aa5d44859b19ca9af6a91150
+  ts: "2026-10-31T14:18:44Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/host/devcontainer-tmux.sh; agent must record the required change in the result handoff fo…"
+      to: "-"
+  previous_event_id: reg_e952e0bfbfcf475a9c8ad7d4b612f40b
+- v: 1
+  id: reg_075e4c206a3048f9abfd54a723d7b3fb
+  ts: "2026-10-31T14:33:43Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d0102888aa5d44859b19ca9af6a91150

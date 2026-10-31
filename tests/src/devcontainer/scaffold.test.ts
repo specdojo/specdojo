@@ -1228,7 +1228,7 @@ describe("runDevcontainerScaffold", () => {
       const tmuxCall = findWriteCall("specdojo-tmux.sh.sample");
       const tmuxContent = String(tmuxCall[1]);
       expect(tmuxContent).toContain(
-        'exec "$workspace_dir/.specdojo/host/devcontainer-tmux.sh" "$workspace_dir"',
+        'exec bash "$workspace_dir/.specdojo/host/devcontainer-tmux.sh" "$workspace_dir"',
       );
       expect(tmuxContent).toContain('workspace_dir="${1:-$HOME/<path-to-workspace>/<repo-name>}"');
       expect(tmuxContent).toContain(".specdojo/host/devcontainer-tmux.sh");
