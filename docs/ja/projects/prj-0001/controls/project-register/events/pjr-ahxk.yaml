@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-05GN"]'
+- v: 1
+  id: reg_d71f34733cfd423585c1d20bb3f92477
+  ts: "2026-10-31T06:51:18Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1dd3b407831349eab1811a9d9234db76
