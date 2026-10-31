@@ -41,3 +41,19 @@
     - field: depends_on
       from: ""
       to: '["PJR-8TQJ"]'
+- v: 1
+  id: reg_fdfc797741ca40bf836ec05c4061627d
+  ts: "2026-10-31T23:33:05Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: input
+      from: '["PJR-8TQJ の結果を利用者が確かめてから行う（2026-10-31 の対話で利用者が案 A を選択）"]'
+      to: '["PJR-8TQJ の結果を利用者が確かめてから行う（2026-10-31 の対話で利用者が案 A を選択）","要点に絞る書き直しと D2 への移行を 1 回で行うため、CDFD の D2 版の rulebook（PJR-TE2N）の後に行う（2026-11-01 の対話で推奨を採用）"]'
+    - field: depends_on
+      from: '["PJR-8TQJ"]'
+      to: '["PJR-8TQJ","PJR-TE2N"]'
+  previous_event_id: reg_7d3558b51cd041018b76492a0ea2acef

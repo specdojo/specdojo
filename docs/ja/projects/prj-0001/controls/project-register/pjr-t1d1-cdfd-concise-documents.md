@@ -16,6 +16,7 @@ specdojo:
     - PJR-8TQJ
   depends_on:
     - PJR-8TQJ
+    - PJR-TE2N
 ---
 
 # PJR-T1D1 残りの CDFD の文書を要点に絞った形に書き直す
@@ -27,6 +28,7 @@ PJR-8TQJ で直した rulebook と、書き直した cdfd-overview.md に合わ�
 ## 2. 入力
 
 - PJR-8TQJ の結果を利用者が確かめてから行う（2026-10-31 の対話で利用者が案 A を選択）
+- 要点に絞る書き直しと D2 への移行を 1 回で行うため、CDFD の D2 版の rulebook（PJR-TE2N）の後に行う（2026-11-01 の対話で推奨を採用）
 
 ## 3. 完了条件
 
