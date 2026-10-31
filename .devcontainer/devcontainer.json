@@ -86,6 +86,9 @@
 
   "customizations": {
     "vscode": {
+      "settings": {
+        "D2.previewLayout": "elk"
+      },
       "extensions": [
         "anthropic.claude-code",
         "streetsidesoftware.code-spell-checker",
@@ -102,6 +105,7 @@
         "esbenp.prettier-vscode",
         "unifiedjs.vscode-remark",
         "yzhang.markdown-all-in-one",
+        "terrastruct.d2",
         "vue.volar",
         "redhat.vscode-xml",
         "tamasfe.even-better-toml",
