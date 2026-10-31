@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-tc62-item-commit-type-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-31T02:42:32Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T03:47:39Z"
+  conclusion: 個票に commit_type と commit_scope を足し、register add と update の --commit-type と --commit-scope で指定と消去をできるようにした。指定がないときは項目の type から決め、対応は project と repos[] の commit_types で上書きできる。後続の項目から引く関数を設けた
   derived_from:
     - PJR-BNMV
 ---
