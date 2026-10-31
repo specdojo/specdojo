@@ -48,11 +48,18 @@ async function makeFixture(): Promise<Fixture> {
   return { dir, catalogPath, templatesPath, rulebooksPath, repoRoot };
 }
 
-function writeRulebook(fixture: Fixture, localId: string, template?: string): void {
+function writeRulebook(
+  fixture: Fixture,
+  localId: string,
+  template?: string,
+  deliverableType?: string,
+): void {
   const templateLine = template === undefined ? "" : `  template: ${template}\n`;
+  const deliverableTypeLine =
+    deliverableType === undefined ? "" : `  deliverable_type: ${deliverableType}\n`;
   writeFileSync(
     path.join(fixture.rulebooksPath, `${localId}-rulebook.md`),
-    `---\nspecdojo:\n  id: specdojo:${localId}-rulebook\n  type: rulebook\n  status: draft\n${templateLine}---\n`,
+    `---\nspecdojo:\n  id: specdojo:${localId}-rulebook\n  type: rulebook\n  status: draft\n${deliverableTypeLine}${templateLine}---\n`,
     "utf8",
   );
 }
@@ -390,5 +397,108 @@ describe("deliverable scaffold single target", () => {
 
     expect(output).toContain("Would create: out/my-doc.md");
     expect(existsSync(path.join(fx.repoRoot, "out/my-doc.md"))).toBe(false);
+  });
+
+  it("sets type to deliverable_type from rulebook with --target (catalog and catalog-less)", () => {
+    writeRulebook(fx, "tsd", "not-needed", "architecture");
+    writeRulebook(fx, "no-decl", "not-needed");
+
+    writeCatalog(
+      fx,
+      `id: prjx:dct-demo
+type: project
+status: draft
+project_id: prjx
+domain: demo
+base_path: /out
+groups:
+  - deliverables:
+      - local_id: tsd-catalog
+        name: カタログ TSD
+        kind: work
+        overview: TSD 概要
+        path: tsd-catalog.md
+        rulebook: specdojo:tsd-rulebook
+      - local_id: no-decl-catalog
+        name: カタログ宣言なし
+        kind: work
+        overview: 宣言なし概要
+        path: no-decl-catalog.md
+        rulebook: specdojo:no-decl-rulebook
+`,
+    );
+
+    // 1. Catalog target with deliverable_type declared
+    const resultCatalogDeclared = runGenerateTarget({
+      catalogPath: fx.catalogPath,
+      templatesPath: fx.templatesPath,
+      rulebooksPath: fx.rulebooksPath,
+      repoRoot: fx.repoRoot,
+      projectId: "prjx",
+      targetId: "prjx:tsd-catalog",
+      force: false,
+    });
+    expect(resultCatalogDeclared.errors).toEqual([]);
+    expect(resultCatalogDeclared.written).toEqual(["out/tsd-catalog.md"]);
+    const tsdCatalogContent = readFileSync(path.join(fx.repoRoot, "out/tsd-catalog.md"), "utf8");
+    expect(tsdCatalogContent).toContain("type: architecture");
+
+    // 2. Catalog target without deliverable_type declaration
+    const resultCatalogUndeclared = runGenerateTarget({
+      catalogPath: fx.catalogPath,
+      templatesPath: fx.templatesPath,
+      rulebooksPath: fx.rulebooksPath,
+      repoRoot: fx.repoRoot,
+      projectId: "prjx",
+      targetId: "prjx:no-decl-catalog",
+      force: false,
+    });
+    expect(resultCatalogUndeclared.errors).toEqual([]);
+    expect(resultCatalogUndeclared.written).toEqual(["out/no-decl-catalog.md"]);
+    const noDeclCatalogContent = readFileSync(
+      path.join(fx.repoRoot, "out/no-decl-catalog.md"),
+      "utf8",
+    );
+    expect(noDeclCatalogContent).toContain("type: project");
+
+    // 3. Catalog-less target with deliverable_type declared
+    const resultCataloglessDeclared = runGenerateTarget({
+      catalogPath: fx.catalogPath,
+      templatesPath: fx.templatesPath,
+      rulebooksPath: fx.rulebooksPath,
+      repoRoot: fx.repoRoot,
+      projectId: "prjx",
+      targetId: "prjx:tsd-catalogless",
+      targetPath: "out/tsd-catalogless.md",
+      targetRulebook: "specdojo:tsd-rulebook",
+      force: false,
+    });
+    expect(resultCataloglessDeclared.errors).toEqual([]);
+    expect(resultCataloglessDeclared.written).toEqual(["out/tsd-catalogless.md"]);
+    const tsdCataloglessContent = readFileSync(
+      path.join(fx.repoRoot, "out/tsd-catalogless.md"),
+      "utf8",
+    );
+    expect(tsdCataloglessContent).toContain("type: architecture");
+
+    // 4. Catalog-less target without deliverable_type declaration
+    const resultCataloglessUndeclared = runGenerateTarget({
+      catalogPath: fx.catalogPath,
+      templatesPath: fx.templatesPath,
+      rulebooksPath: fx.rulebooksPath,
+      repoRoot: fx.repoRoot,
+      projectId: "prjx",
+      targetId: "prjx:no-decl-catalogless",
+      targetPath: "out/no-decl-catalogless.md",
+      targetRulebook: "specdojo:no-decl-rulebook",
+      force: false,
+    });
+    expect(resultCataloglessUndeclared.errors).toEqual([]);
+    expect(resultCataloglessUndeclared.written).toEqual(["out/no-decl-catalogless.md"]);
+    const noDeclCataloglessContent = readFileSync(
+      path.join(fx.repoRoot, "out/no-decl-catalogless.md"),
+      "utf8",
+    );
+    expect(noDeclCataloglessContent).toContain("type: project");
   });
 });

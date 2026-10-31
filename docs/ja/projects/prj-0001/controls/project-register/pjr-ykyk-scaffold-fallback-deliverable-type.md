@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: easy
   registered_at: "2026-10-31T00:27:20Z"
-  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
   derived_from:
     - PJR-S23T
 ---
@@ -42,12 +41,25 @@ specdojo:
 
 | No  | 作業                                             | 担当     | 状態 | メモ |
 | --- | ------------------------------------------------ | -------- | ---- | ---- |
-| 1   | 最小の雛形の `type` を `deliverable_type` にする | executor | open | -    |
-| 2   | 単体テストと CHANGELOG を足して検証を流す        | executor | open | -    |
+| 1   | 最小の雛形の `type` を `deliverable_type` にする | executor | done | -    |
+| 2   | 単体テストと CHANGELOG を足して検証を流す        | executor | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - `src/catalog/generate.ts` に `resolveRulebookPath` および `resolveDeliverableType` を追加し、template のない rulebook の雛形生成（`fallbackMarkdown`、`fallbackYaml`）で `type` を rulebook の frontmatter の `deliverable_type` に設定するように変更した。rulebook がない・読めない・`deliverable_type` が未宣言の場合は従来どおり `type: project` にフォールバックする。
+  - `tests/src/catalog/generate.test.ts` に、一括生成（`--dct` あり・なし）において `deliverable_type` 宣言あり・なしの rulebook に対する雛形生成テストを追加した。
+  - `tests/src/deliverable/scaffold.test.ts` に、`--target`（カタログ登録成果物および catalog-less 成果物の両方）において `deliverable_type` 宣言あり・なしの rulebook に対する雛形生成テストを追加した。
+  - `specdojo:tsd-rulebook`（`deliverable_type: architecture`、`template: not-needed`）を指定して生成した雛形について、`@specdojo/docs-lint` の `frontmatter-deliverable-type` による検証を実施し、警告・エラーが 0 件となりパスすることを確認した。
+  - `CHANGELOG.md` の `## [Unreleased]` 節に本改修の記録を追記した。
+- 成果物:
+  - `src/catalog/generate.ts`
+  - `tests/src/catalog/generate.test.ts`
+  - `tests/src/deliverable/scaffold.test.ts`
+  - `CHANGELOG.md`
+  - `docs/ja/projects/prj-0001/controls/project-register/pjr-ykyk-scaffold-fallback-deliverable-type.md`
+- 残課題:
+  - なし。保護された設定の変更も不要。
 
 ## 6. 関連ドキュメント
 

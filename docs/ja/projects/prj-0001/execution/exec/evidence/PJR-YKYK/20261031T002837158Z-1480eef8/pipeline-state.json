@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YKYK",
+  "run_id": "20261031T002837158Z-1480eef8",
+  "updated_at": "2026-10-31T00:56:13.680Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-10-31T00:29:45.987Z",
+      "completed_at": "2026-10-31T00:40:58.858Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YKYK/20261031T002837158Z-1480eef8/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-31T00:44:51.840Z",
+      "completed_at": "2026-10-31T00:46:13.550Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ykyk-20261031T002837Z-39358dcf-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-31T00:56:13.680Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage from retries and reports it; Test Files  1 failed | 189 passed (190); Tests  1 failed | 3058 passed (3059)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-ykyk-20261031T002837Z-39358dcf-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ykyk-20261031T002837Z-39358dcf-result.md"
+  }
+}

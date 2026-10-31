@@ -33,6 +33,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `deliverable scaffold` の一括生成と `--target` において、template のない rulebook の最小の雛形の `type` を rulebook の frontmatter で宣言された `deliverable_type` に合わせるように修正しました（未宣言時は従来どおり `project`）。これにより、template のない rulebook を指定して生成した雛形が docs-lint の `frontmatter-deliverable-type` で警告にならず、コミット時ガードを通過します（PJR-YKYK）。
+
 - `@specdojo/docs-lint` の Markdown / YAML frontmatter 検証において、rulebook 一覧の生成をプロセス内でワークスペースごとに 1 回だけ行いキャッシュするように修正しました。remark のファイルごとのプラグイン読み込みで rulebook 一覧が毎回再生成されて `lint:fm` が著しく低速化していた問題を解消します。本修正は `@specdojo/docs-lint` の次の版（0.3.1）で公開されます（PJR-SC8T）。
 
 ## [0.5.0] - 2026-10-29

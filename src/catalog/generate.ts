@@ -83,15 +83,11 @@ function normalizeDctName(name: string): string {
     .replace(/^dct-/, "");
 }
 
-// Resolve a deliverable template from the rulebook frontmatter declaration. The declaration is
-// the SSOT, so local_id naming conventions are deliberately not used as a fallback. This lets
-// every deliverable in one rulebook lineage share a single template.
-function findTemplate(
-  templatesPath: string,
+// Resolve the path to a rulebook file. The declaration is the SSOT.
+function resolveRulebookPath(
   rulebooksPath: string,
   repoRoot: string,
   rulebookId: string | undefined,
-  ext: ".md" | ".yaml",
   resourceRoots?: SpecdojoResolutionRoots,
 ): string | null {
   if (
@@ -114,10 +110,53 @@ function findTemplate(
     : resourceRoots
       ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/rulebooks/${rulebookFileName}`, resourceRoots)
       : join(rulebooksPath, rulebookFileName);
-  if (!rulebookPath) return null;
-  if (!existsSync(rulebookPath)) return null;
+  if (!rulebookPath || !existsSync(rulebookPath)) return null;
+  return rulebookPath;
+}
 
-  const templateId = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).template;
+// Resolve a rulebook's declared deliverable_type from its frontmatter.
+// Falls back to "project" if the rulebook is absent, unreadable, or omits deliverable_type.
+function resolveDeliverableType(
+  rulebooksPath: string,
+  repoRoot: string,
+  rulebookId: string | undefined,
+  resourceRoots?: SpecdojoResolutionRoots,
+): string {
+  const rulebookPath = resolveRulebookPath(rulebooksPath, repoRoot, rulebookId, resourceRoots);
+  if (!rulebookPath) return "project";
+
+  try {
+    const meta = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8"));
+    if (typeof meta.deliverable_type === "string" && meta.deliverable_type.trim().length > 0) {
+      return meta.deliverable_type.trim();
+    }
+  } catch {
+    return "project";
+  }
+
+  return "project";
+}
+
+// Resolve a deliverable template from the rulebook frontmatter declaration. The declaration is
+// the SSOT, so local_id naming conventions are deliberately not used as a fallback. This lets
+// every deliverable in one rulebook lineage share a single template.
+function findTemplate(
+  templatesPath: string,
+  rulebooksPath: string,
+  repoRoot: string,
+  rulebookId: string | undefined,
+  ext: ".md" | ".yaml",
+  resourceRoots?: SpecdojoResolutionRoots,
+): string | null {
+  const rulebookPath = resolveRulebookPath(rulebooksPath, repoRoot, rulebookId, resourceRoots);
+  if (!rulebookPath) return null;
+
+  let templateId: unknown;
+  try {
+    templateId = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).template;
+  } catch {
+    return null;
+  }
   if (
     typeof templateId !== "string" ||
     templateId === "none" ||
@@ -145,10 +184,14 @@ function findTemplate(
 // Minimal Markdown scaffold built from catalog metadata when no template exists.
 // Fills the generated Frontmatter, an H1 from `name`, the catalog `overview`, and a
 // single `_TODO_` line so the author knows the body is unwritten.
-function fallbackMarkdown(item: DctDeliverableItem, projectId: string): string {
+function fallbackMarkdown(
+  item: DctDeliverableItem,
+  projectId: string,
+  deliverableType = "project",
+): string {
   const inner: Record<string, unknown> = {
     id: `${projectId}:${item.local_id}`,
-    type: "project",
+    type: deliverableType,
     status: "draft",
   };
   if (item.rulebook && item.rulebook !== "undecided") {
@@ -164,10 +207,14 @@ function fallbackMarkdown(item: DctDeliverableItem, projectId: string): string {
 }
 
 // Minimal YAML scaffold built from catalog metadata when no template exists.
-function fallbackYaml(item: DctDeliverableItem, projectId: string): string {
+function fallbackYaml(
+  item: DctDeliverableItem,
+  projectId: string,
+  deliverableType = "project",
+): string {
   const doc: Record<string, unknown> = {
     id: `${projectId}:${item.local_id}`,
-    type: "project",
+    type: deliverableType,
     status: "draft",
   };
   if (item.rulebook && item.rulebook !== "undecided") {
@@ -214,7 +261,16 @@ function generateContent(
       ".yaml",
       resourceRoots,
     );
-    return template ? expandYamlTemplate(template, item, projectId) : fallbackYaml(item, projectId);
+    if (template) {
+      return expandYamlTemplate(template, item, projectId);
+    }
+    const deliverableType = resolveDeliverableType(
+      rulebooksPath,
+      repoRoot,
+      item.rulebook,
+      resourceRoots,
+    );
+    return fallbackYaml(item, projectId, deliverableType);
   }
   const template = findTemplate(
     templatesPath,
@@ -228,7 +284,13 @@ function generateContent(
     const raw = readFileSync(template, "utf8");
     return replaceGeneratedPlaceholders(flattenTemplateFrontmatter(raw), item, projectId) as string;
   }
-  return fallbackMarkdown(item, projectId);
+  const deliverableType = resolveDeliverableType(
+    rulebooksPath,
+    repoRoot,
+    item.rulebook,
+    resourceRoots,
+  );
+  return fallbackMarkdown(item, projectId, deliverableType);
 }
 
 // Materialize the deliverable files a project's catalog points to. Only `kind: work`
