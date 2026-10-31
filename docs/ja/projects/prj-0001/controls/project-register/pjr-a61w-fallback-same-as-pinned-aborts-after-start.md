@@ -27,6 +27,7 @@ exec run --register で --executor-by に振り分けの代わりと同じ agent
 - 2026-11-01、prj-0002 の作業ツリーで specdojo 0.6.0 の exec run --project prj-0002 --register PJR-7MB3 --worktree --executor-by sol-executor --reporter-by gemma-reporter を流した。PJR-7MB3 は difficulty medium で、routing.medium の `fallback_executor_by` は sol-executor
 - 出力は worktree の setup の後に「Fallback executor must differ from the pinned agent: sol-executor」で止まり、executor は起動しなかった。終了コードは 0 だった
 - 止まった後、PJR-7MB3 は start の記帳で in-progress になり、作業ツリーに start のイベント・個票の状態・plan と result の雛形が commit されずに残った。worktree（exec/prj-0002-PJR-7MB3）も残った
+- その後 --force-restart で flash-executor を使って流し直すと review まで通ったが、新しい start は記帳されず、イベントの start の actor は実際には動かなかった sol-executor のまま残った（review の actor は flash-executor）。止まった run の plan は commit されずに残り、result は superseded として commit された
 - 検査は src/exec/run/shared.ts の代わりの agent の解決（resolution.actor === primary.actor で throw）にある
 - 直し方（検査を start の前に移す、振り分けの代わりが指定の agent と同じときは代わりなしとして扱う、など）は executor が決めて、理由を個票の対応結果に書いてよい
 
