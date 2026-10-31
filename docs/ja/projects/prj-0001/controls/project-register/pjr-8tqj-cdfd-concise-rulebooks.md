@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: medium
   owner: BA
   registered_at: "2026-10-31T14:15:36Z"
   due_on: "2026-11-30"
@@ -29,13 +30,25 @@ CDFD の文書が長く、要点がつかみにくい。主な原因は rulebook
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+1. `cdfd-overview`・`cdfd`・`cdfd-uc` の 3 つの rulebook を、次の形に直す。
+   - 目的は 1〜2 文にする。
+   - 適用範囲は、対象と対象外を 1 行ずつにする。
+   - プロセス領域は表だけにし、主要入力・主要出力の箇条書きはやめる。受け渡しは図を正本にする。
+   - 図の説明は 1〜2 文にする。
+   - 凡例は全体概要にだけ書く。
+   - 共通の原則（人と AI の責任分担など）は 1 か所に置いて参照する。
+2. 上の変更と食い違う、rulebook の中の確認の観点・禁止事項・相互対応の要求を直す。
+3. `docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md` を、直した rulebook に合わせて書き直す。中身の事実（領域・データストア・図の受け渡し）は変えない。分量は今の半分以下を目安にする。
+4. 書き直す前と後の分量を、個票の対応結果に書く。
+5. `npm run lint:md` と `npm run lint:mermaid` を通す。あわせて親の検証も通す。
+6. 残りの 8 つの CDFD の文書（PJR-T1D1）と `cdfd-mermaid-rulebook` は変えない。
+7. 未決の点は executor が決め、理由を個票の対応結果に書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ |
+| --- | ---------------------------------------------- | ---- | ---- | ---- |
+| 1   | 完了条件に沿って rulebook と全体概要を書き直す | BA   | open | -    |
 
 ## 5. 対応結果
 
@@ -43,4 +56,7 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:cdfd-overview-rulebook]]
+- [[specdojo:cdfd-rulebook]]
+- [[specdojo:cdfd-uc-rulebook]]
+- [[prj-0001:cdfd-overview]]

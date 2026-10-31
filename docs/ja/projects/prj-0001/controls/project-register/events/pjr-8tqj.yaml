@@ -35,3 +35,16 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_1ca6df0048e542838eb3b09a331cfe40
+  ts: "2026-10-31T14:18:13Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_0ad0145f284a48f3a7011e463b09ce39
