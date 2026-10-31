@@ -154,12 +154,28 @@ flowchart LR
     --type todo \
     --title "フロントエンドTSDの下書き" \
     --approach draft \
-    --target specdojo:tsd-frontend-site \
+    --target prj-0001:tsd-frontend-site \
     --input "静的サイトで主流の技術スタック（Astro 等）を調査し、選定理由と構成を下書きする"
   ```
 
 - **成果物内の `_CONTEXT_:` で渡す場合（章ごとの局所的な指示）**:
-  雛形（`deliverable scaffold`）を作成した後、特定の章（「採用技術・設定」章など）に直接指示を置きたい場合に記述します。
+  まず `deliverable scaffold` で成果物の雛形を作成します。カタログにある成果物は `--target` で 1 件だけ指定して作成でき、カタログにない成果物は `--target-path` と `--target-rulebook` を添えて作成します（template のない rulebook でも `deliverable_type` を引き継いだ最小雛形が生成されます）。
+
+  ```bash
+  # カタログにある成果物を 1 件だけ指定して作成する場合
+  specdojo deliverable scaffold \
+    --project prj-0001 \
+    --target prj-0001:tsd-frontend-site
+
+  # カタログにない成果物を雛形にする場合
+  specdojo deliverable scaffold \
+    --project prj-0001 \
+    --target prj-0001:tsd-custom-tool \
+    --target-path docs/ja/projects/prj-0001/architecture/tsd-custom-tool.md \
+    --target-rulebook specdojo:tsd-rulebook
+  ```
+
+  雛形を作成した後、特定の章（「採用技術・設定」章など）に直接指示を置きたい場合に記述します。
 
   ```markdown
   ## 4. 採用技術・設定

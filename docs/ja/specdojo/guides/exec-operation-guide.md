@@ -736,10 +736,22 @@ specdojo register close \
 
 ```bash
 # 1. 雛形を作成する
+# カタログにある成果物を 1 件だけ指定して作成する場合:
 specdojo deliverable scaffold \
   --project prj-0001 \
-  --target specdojo:tsd-frontend-site
+  --target prj-0001:tsd-frontend-site
 
+# カタログにない成果物を雛形にする場合は --target-path と --target-rulebook を指定する:
+specdojo deliverable scaffold \
+  --project prj-0001 \
+  --target prj-0001:tsd-custom-tool \
+  --target-path docs/ja/projects/prj-0001/architecture/tsd-custom-tool.md \
+  --target-rulebook specdojo:tsd-rulebook
+```
+
+`deliverable scaffold` は `--target <doc-id>` で成果物を 1 つだけ指定して雛形を作成できます。カタログにない成果物は、`--target-path` と `--target-rulebook` を添えて作成します（PJR-S23T）。また、`specdojo:tsd-rulebook` のように template を持たない（`template: not-needed` と宣言された）rulebook であっても、最小構成の雛形（frontmatter、見出し、本文の `_TODO_`）が生成されます。その際、雛形 frontmatter の `type` は rulebook の `deliverable_type`（TSD の場合は `architecture`）が自動設定されるため（未宣言なら `project`）、`docs-lint` の `frontmatter-deliverable-type` 検証をそのまま通過できます（PJR-YKYK）。
+
+```bash
 # 2. 成果物に文脈を記入する（または個票の --input で渡す）
 #    生成された docs/.../tsd-frontend-site.md の先頭章などに次のように記入する:
 #    _CONTEXT_: 静的サイトで主流の技術スタック（Astro 等）を調査し、採用理由・全体構成・導入手順を下書きしてください。
@@ -752,7 +764,7 @@ specdojo register add \
   --topic tsd-frontend-draft \
   --difficulty medium \
   --approach draft \
-  --target specdojo:tsd-frontend-site \
+  --target prj-0001:tsd-frontend-site \
   --input "静的サイトで主流の技術スタック（Astro 等）を調査して選定する" \
   --owner DEV
 
@@ -764,7 +776,7 @@ specdojo register add \
   --topic tsd-frontend-refine \
   --difficulty medium \
   --approach fully-guided \
-  --target specdojo:tsd-frontend-site \
+  --target prj-0001:tsd-frontend-site \
   --depends-on <DRAFT-PJR-ID> \
   --owner DEV
 
@@ -776,9 +788,9 @@ specdojo register add \
   --topic tsd-frontend-finalize \
   --difficulty easy \
   --approach finalize \
-  --target specdojo:tsd-frontend-site \
+  --target prj-0001:tsd-frontend-site \
   --depends-on <REFINE-PJR-ID> \
-  --owner INDIE
+  --owner PO
 ```
 
 #### 4.7.3. 順次実行と引き継ぎ
