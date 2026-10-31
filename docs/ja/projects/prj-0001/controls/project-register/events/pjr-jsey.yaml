@@ -3413,3 +3413,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c0aa502c640e4bb08f8bb202d9681696
+- v: 1
+  id: reg_7c72d1d445e346e69288adabaa84f904
+  ts: "2026-10-31T04:57:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、start から review まで、actor の実体名の記録、成功後の worktree とブランチの撤去を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: PJR-Z7GX の統合後、exec run --register が start から review まで通った
+      to: PJR-M1DH の統合後、exec run --register が start から review まで通り、worktree と作業ブランチが片付いた
+  previous_event_id: reg_e7139f398cbb4839aba061fd066a1db2

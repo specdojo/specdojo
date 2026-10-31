@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-Z7GX の統合後、exec run --register が start から review まで通った
+  completed_at: "2026-10-31T04:57:53Z"
+  conclusion: PJR-M1DH の統合後、exec run --register が start から review まで通り、worktree と作業ブランチが片付いた
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
