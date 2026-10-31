@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4837ff92bc0f40a19b9eb1d8cd2e13d1
+  ts: "2026-10-31T07:05:05Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tsd-ollama-opencode の接続確認の例で考える過程を止める
+    - field: description
+      from: ""
+      to: "接続確認の例に reasoning\\_effort: none を足し、本文が返ることを期待値として書く。tsd-ollama の確認の例も同じかを確かめる"
+    - field: input
+      from: ""
+      to: "[\"2026-10-31 に母艦の Ollama で確かめた。gemma4:e4b-mlx-light-8k と gemma4:e4b-light-8k は、tsd-ollama-opencode の接続確認の例（`max_tokens:` 32）では考える過程（reasoning）だけで上限に達し、`finish_reason` が length で content が空になる\",\"同じ要求に `\\\"reasoning_effort\\\":` \\\"none\\\" を足すと `finish_reason` が stop で本文が返った。\\\"think\\\": false では止まらなかった\",\"executor は母艦への接続を試さない。母艦での確認はオーケストレーターが行う\"]"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-AHXK"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-AHXK"]'
