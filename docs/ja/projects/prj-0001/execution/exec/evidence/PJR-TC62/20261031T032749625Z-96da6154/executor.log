@@ -1,0 +1,103 @@
+前回失敗したテストの引数を修正し、削除・復元の検証を補強しました。整形、個別スキーマ検査、カタログ・登録簿の検証は成功しました。単体テスト等の再実行は親 runner が行います。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "commit の type・scope の実装と文書を完了条件に照合し、前回失敗したテストのファイル名引数と削除検証を修正しました。sandbox 担当の検証は成功し、個票へ対応内容を記録しました。",
+  "handoff": [
+    "設計判断を result へ反映してください。`commit_type` は対応する 11 種類の固定一覧で検証し、タイポを防ぎます。`commit_scope` は後続の commit・ブランチ生成で扱いやすい `^[a-z0-9][a-z0-9-]*$` とし、個票の指定値だけを使います。",
+    "既定対応は issue→fix、todo・change-request・epic→feat、decision・note・question・risk→docs、未知の type→chore としました。複数 repo の事情に対応するため `commit_types` を project と repo の両方に置き、個票明示指定 > repo 設定 > project 設定 > 既定対応の順に解決します。既定値を個票へ保存せず利用時に解決するため、設定変更や指定削除を反映できます。",
+    "前回の test-unit は 2860 件中 1 件が失敗しました。`readRegisterItemContent` のファイル名引数へ絶対パスを渡したテスト側の誤りを修正し、同じ誤りのある復元・保持・置換・消去の検証も修正しました。修正後の test-unit と他の指定済み親検証は runner が実行してください。",
+    "result は executor の指示に従い編集していません。イベントと個票のステータスは再開時の runner による変更を維持しています。保護された設定の変更は不要です。統合後は運用メモに従い PJR-JSEY で register の動作を確認してください。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/references/specdojo-config-reference.md docs/specdojo/schemas/v1/register-events.schema.yaml docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml docs/specdojo/schemas/v1/specdojo-config.schema.yaml src/register/command-types.ts src/register/core.ts src/register/create-commands.ts src/register/event-merge.ts src/register/events.ts src/register/item.ts src/register/register.ts src/shared/specdojo-config.ts src/shared/commit-types.ts tests/src/register/commit-type-scope.test.ts",
+      "status": "passed",
+      "summary": "変更対象を整形しました。個票の追記後も再整形済みです。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc62.yaml",
+      "status": "passed",
+      "summary": "本項目のイベントログはスキーマに適合しました。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml --data tmp/pjr-tc62-schema/item.json",
+      "status": "passed",
+      "summary": "本個票の frontmatter に `commit_type: refactor` と `commit_scope: cli-parser` を加えた一時 JSON が適合しました。一時ファイルは削除済みです。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data tmp/pjr-tc62-schema/config.json",
+      "status": "passed",
+      "summary": "現行設定へ project と repo の `commit_types` を加えた一時 JSON が適合しました。保護された設定は変更せず、一時ファイルは削除済みです。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。未作成文書に関する既存の参照警告があり、エラーはありません。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "個票とイベントの整合検査に成功し、追跡対象外の派生ビューを再生成しました。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc62.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc62.yaml"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml"
+    },
+    {
+      "target": "src/register/create-commands.ts",
+      "status": "changed",
+      "path": "src/register/create-commands.ts"
+    },
+    {
+      "target": "src/register/item.ts",
+      "status": "changed",
+      "path": "src/register/item.ts"
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts"
+    },
+    {
+      "target": "src/shared/commit-types.ts",
+      "status": "changed",
+      "path": "src/shared/commit-types.ts"
+    },
+    {
+      "target": "tests/src/register/commit-type-scope.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/commit-type-scope.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

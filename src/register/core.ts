@@ -546,6 +546,8 @@ export function buildRegisterItemContent(opts: {
       ...(opts.fields.sources ? { sources: opts.fields.sources } : {}),
       ...(opts.fields.derivedFrom ? { derivedFrom: opts.fields.derivedFrom } : {}),
       ...(opts.fields.dependsOn ? { dependsOn: opts.fields.dependsOn } : {}),
+      ...(opts.fields.commitType ? { commitType: opts.fields.commitType } : {}),
+      ...(opts.fields.commitScope ? { commitScope: opts.fields.commitScope } : {}),
     }),
   );
 }
