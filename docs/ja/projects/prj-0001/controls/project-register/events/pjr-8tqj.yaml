@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0ad0145f284a48f3a7011e463b09ce39
+  ts: "2026-10-31T14:15:36Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CDFD の rulebook を要点に絞った形に直し、全体概要で試す
+    - field: description
+      from: ""
+      to: CDFD の文書が長く、要点がつかみにくい。主な原因は rulebook の要求で、受け渡しを箇条書き・図・注記の 3 か所に書かせ、図を文章でなぞらせ、定型の文を文書ごとに繰り返させている。cdfd-overview・cdfd・cdfd-uc の 3 つの rulebook を要点に絞った形に直し、試しに cdfd-overview.md を書き直す
+    - field: input
+      from: ""
+      to: '["利用者は CDFD の文章が長すぎて返って分かりにくいと感じており、要点だけに絞りたい（2026-10-31）","CDFD の 9 文書は計約 225KB、cdfd-overview.md は約 32KB。3 つの rulebook は計約 78KB","短くした形の方向（2026-10-31 の対話で利用者が案 A を選択）: 目的は 1〜2 文、適用範囲は対象と対象外を 1 行ずつで共通の原則は 1 か所を参照、プロセス領域は表だけで主要入力・主要出力の箇条書きをやめ受け渡しは図を正本にする、図の説明は 1〜2 文、凡例は全体概要に 1 回だけ","rulebook と文書を同時に揃えないと、grade や review で元の長さに戻されるため、rulebook から直す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
