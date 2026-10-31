@@ -43,11 +43,15 @@ specdojo:
 
 | No  | 作業                                                         | 担当     | 状態 | メモ |
 | --- | ------------------------------------------------------------ | -------- | ---- | ---- |
-| 1   | 接続確認の例に `reasoning_effort` を足し、期待する結果を書く | executor | open | -    |
+| 1   | 接続確認の例に `reasoning_effort` を足し、期待する結果を書く | executor | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tsd-ollama-opencode.md` の「5. 接続確認」の `curl`（`/v1/chat/completions` の OpenAI 互換 API）の要求に `"reasoning_effort": "none"` を追加した。モデルは `gemma4:e4b-mlx-light-8k`、`max_tokens` は 32 のまま。
+- 同じ節に、期待する結果（`finish_reason` が `stop` で、`content` に短い本文が返ること）と、`reasoning_effort` を付けないと考える過程だけで `max_tokens` に達して `content` が空になりうることを追記した。また、`"think": false` では止められなかった旨を記載した。
+- `tsd-ollama.md` の確認の例を確認した。本書の生成系の確認は `curl ... /api/generate`（第 6 節）と `ollama run gemma4:e4b-mlx-light-8k ...`（第 7.5 節）であり、いずれも OpenAI 互換の `/v1/chat/completions` ではなかった。完了条件は「OpenAI 互換の `/v1/chat/completions` を使う例があれば直す。`/api/generate` など別の API の例は変えずに確かめた結果を書く」としているため、`tsd-ollama.md` の `/api/generate` と `ollama run` の例は変更の対象外と判断し、変更していない。
+- モデル名は PJR-AHXK でそろえた `gemma4:e4b-mlx-light-8k` のままにしている。
+- 利用者に影響しない文書の直しのため、`CHANGELOG.md` は変更していない。
 
 ## 6. 関連ドキュメント
 

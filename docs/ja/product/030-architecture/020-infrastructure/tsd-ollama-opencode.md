@@ -111,9 +111,14 @@ curl http://host.docker.internal:11434/v1/chat/completions \
       {"role": "user", "content": "短く疎通確認してください。"}
     ],
     "max_tokens": 32,
+    "reasoning_effort": "none",
     "stream": false
   }'
 ```
+
+`gemma4:e4b-mlx-light-8k` は思考をともなったモデルのため、考える過程（reasoning）の生成にも出力枠を使う。`max_tokens: 32` のまま `reasoning_effort` を付けないと、その考えだけで上限に達して `finish_reason` が `length` になり、`content` が空になりうる（母艦の Ollama で確認済み）。期待する結果は、`reasoning_effort: "none"` を足すことで考える過程を止め、`finish_reason` が `stop` になって `content` に短い本文が返ることである。
+
+なお、`"think": false` ではこの思考の停止は実現しなかったため、考えの停止には `"reasoning_effort": "none"` を用いる。
 
 次に、opencode 側で対象モデルが使われるように実行する。
 
