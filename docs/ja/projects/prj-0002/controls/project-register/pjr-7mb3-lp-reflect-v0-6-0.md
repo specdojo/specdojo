@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0002:pjr-7mb3-lp-reflect-v0-6-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-10-31T09:38:30Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T23:26:19Z"
+  conclusion: v0.6.0 の変更を LP と照合し、LP の変更は不要と判断した（判断と理由は対応結果に記録）
   derived_from:
     - prj-0001:PJR-2FV2
 ---

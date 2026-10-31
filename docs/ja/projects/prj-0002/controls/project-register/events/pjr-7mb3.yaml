@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_136109d713dc4117ac450c8a2e48a0c9
+- v: 1
+  id: reg_2174bc1b5f4a4a36996c4e24a5a473fa
+  ts: "2026-10-31T23:26:19Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（flash-executor）で実行し、orchestrator が完了条件とビルドを確かめ、利用者が LP を変えない判断を承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: v0.6.0 の変更を LP と照合し、LP の変更は不要と判断した（判断と理由は対応結果に記録）
+  previous_event_id: reg_ddf08ca8b1c542598748807831edfd2b
