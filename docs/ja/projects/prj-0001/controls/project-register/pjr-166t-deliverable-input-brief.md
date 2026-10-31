@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-166t-deliverable-input-brief
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   registered_at: "2026-10-28T21:54:53Z"
+  completed_at: "2026-10-31T06:39:49Z"
+  conclusion: PJR-65DS の流れ（雛形・文脈の記入・draft・fully-guided・finalize）と文脈の置き場所（_CONTEXT_・入力・brief）を、3MY5・JRSY・6DD7・YKMA・E45K・6A2B・D0GB・S23T・YKYK・73KT で実装と文書に反映し、調査結果の問題をすべて解消した
 ---
 
 # PJR-166T 成果物を作るときの前提（技術スタックなど）を agent に渡す場所がない
