@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-S23T の統合後、exec run --register が start から review まで通った
+  completed_at: "2026-10-31T03:47:08Z"
+  conclusion: PJR-TC62 と PJR-790T の統合後、exec run --register が start から review まで通った
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
