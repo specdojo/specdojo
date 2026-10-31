@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-31T02:43:00Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-BNMV
   depends_on:
@@ -67,6 +66,7 @@ specdojo:
 - `repo-integration.ts` に `ff` を追加しました。全リポジトリの事前検査で祖先関係を確かめ、分岐時は統合せず停止します。統合直前にも再検査し、checkout 中なら `merge --ff-only`、それ以外は旧先端を指定した `update-ref` を使います。`ff` の再開では自動同期 merge を行いません。`repo-trace.ts` では早送り後の作業ブランチ先端を統合 snapshot として result に記録します。
 - `tests/src/exec/task-repos.integration.test.ts` に、任意名の作成・設定変更後の再利用・片付け・別 project との衝突・管理外ブランチ・`--branch`・`branch-only`・checkout 有無の `ff`・分岐時の停止・再開時の同期抑止を追加しました。旧形式の名前でも、別項目の記録があれば片付けないことも検証します。
 - `tests/src/exec/register-pipeline-e2e.integration.test.ts` に、実際の CLI のテンプレート名・明示名・`ff`・start 前の衝突停止を追加し、統合失敗位置 3 種の再開テストをテンプレート名へ拡張しました。既定設定の互換ケースも残しています。設定読み込みと schema の単体テストに有効・無効なテンプレートと `ff` を追加しました。
+- 再開時に引き継いだ親検証の失敗 3 件を修正しました。孤立ブランチの prune は現在の checkout ではなく宣言済みの統合先への取り込みを削除直前に再確認します。`ff` の再開テストは、プロダクトの統合後にプロジェクトの統合を失敗させ、再開後も早送り済みの先端が変わらないことを確かめる条件へ修正しました。prune のテストも、現在の checkout と統合先が異なるリポジトリを含め、全プロダクトのブランチと対応記録の削除を確認します。
 - 設定リファレンスに git-flow の `feature/{topic}` と GitHub flow の `{type}/{topic}` の例、command-reference に `--branch`、Unreleased に機能追加を記載しました。
 
 ### 5.2. 設計判断と理由

@@ -2,6 +2,7 @@ import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
 import dotenv from "dotenv";
+import { validateBranchTemplate } from "./branch-template.js";
 import { VALID_COMMIT_TYPES } from "./commit-types.js";
 import { validateCommitMessageTemplate } from "./commit-message-template.js";
 import { dump, load } from "./yaml.js";
@@ -95,8 +96,10 @@ export type SpecDojoRepoConfig = {
   path: string;
   /** Branch exec integrates into. Omit to use the repository's current branch. */
   integration_branch?: string;
-  /** Local merge commit (default), or retain the exec branch for product-side PR review. */
-  integration_strategy?: "merge" | "branch-only";
+  /** Local merge commit (default), fast-forward only, or retain the branch for PR review. */
+  integration_strategy?: "merge" | "branch-only" | "ff";
+  /** Product work branch name. Defaults to exec/{project}-{id}. */
+  branch_template?: string;
   setup?: SpecDojoRepoSetup;
   /** Mapping from register item types to Conventional Commits types for this repository. */
   commit_types?: Record<string, string>;
@@ -473,6 +476,7 @@ const REPO_KEYS = new Set([
   "path",
   "integration_branch",
   "integration_strategy",
+  "branch_template",
   "setup",
   "commit_types",
   "commit_subject_template",
@@ -597,6 +601,8 @@ export function validateProjectRepos(
       errors.push(...validateCommitMessageTemplate(repo[key], `${at}.${key}`));
     }
 
+    errors.push(...validateBranchTemplate(repo.branch_template, `${at}.branch_template`, rootDir));
+
     const name = repo.name;
     if (typeof name !== "string" || !REPO_NAME_PATTERN.test(name)) {
       errors.push(
@@ -649,9 +655,10 @@ export function validateProjectRepos(
     if (
       repo.integration_strategy !== undefined &&
       repo.integration_strategy !== "merge" &&
-      repo.integration_strategy !== "branch-only"
+      repo.integration_strategy !== "branch-only" &&
+      repo.integration_strategy !== "ff"
     ) {
-      errors.push(`${at}.integration_strategy must be "merge" or "branch-only" when present`);
+      errors.push(`${at}.integration_strategy must be "merge", "branch-only" or "ff" when present`);
     }
 
     const setup = repo.setup;

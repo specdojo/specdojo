@@ -1,4 +1,9 @@
 import {
+  resolveProductBranches,
+  parseProductBranchOverrides,
+} from "../../../src/exec/product-branches.js";
+import { recordedProductBranch } from "../../../src/exec/product-branch-records.js";
+import {
   chmodSync,
   existsSync,
   mkdirSync,
@@ -24,6 +29,7 @@ import {
 import { recordExecutorEvidence, snapshotWorktreeChanges } from "../../../src/exec/evidence.js";
 import {
   listOrphanedProductExecBranches,
+  ensureProductWorktrees,
   productIntegrationTarget,
   productRepoEnvironment,
   pruneOrphanedProductExecBranches,
@@ -992,6 +998,218 @@ describe("multi-repository task worktrees", () => {
     expect(statuses.get("app1")).toBe("branch-only");
     removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID, deleteBranch: true });
     expect(branchExists(app1.repoRoot, app1.branch)).toBe(true);
+  });
+
+  it("creates template branches, resumes by runner record after a configuration change, and prunes merged orphans", () => {
+    const fixture = setup();
+    fixture.products[0]!.branchTemplate = "feature/{topic}";
+    const worktree = prepare(fixture);
+    const app1 = worktree.repos![0]!;
+    expect(app1.branch).toBe(`feature/${TASK_ID.toLowerCase()}`);
+    expect(worktree.branch).toBe(`exec/${TASK_DIR_NAME}`);
+    expect(recordedProductBranch(app1.repoRoot, WORKTREE_TASK_ID)).toBe(app1.branch);
+    fixture.products[0]!.branchTemplate = "changed/{id}";
+    expect(
+      withProductWorktrees(worktree, fixture.products, WORKTREE_TASK_ID).repos![0]!.branch,
+    ).toBe(app1.branch);
+    expect(
+      ensureProductWorktrees({
+        products: fixture.products,
+        worktreeBase: fixture.worktreeBase,
+        taskId: WORKTREE_TASK_ID,
+      })[0]!.branch,
+    ).toBe(app1.branch);
+    commitIntegrationFixture(worktree);
+    integrateFixture(fixture, worktree);
+    removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID });
+    expect(listOrphanedProductExecBranches(fixture.products, "prj-0001")).toContainEqual({
+      repo: "app1",
+      branch: app1.branch,
+      mergedIntoTarget: true,
+    });
+    expect(listOrphanedProductExecBranches(fixture.products, "prj-other")).toEqual([]);
+    pruneOrphanedProductExecBranches({ products: fixture.products, projectId: "prj-0001" });
+    for (const product of worktree.repos!) {
+      expect(branchExists(product.repoRoot, product.branch)).toBe(false);
+      expect(recordedProductBranch(product.repoRoot, WORKTREE_TASK_ID)).toBeUndefined();
+    }
+  });
+
+  it("rejects collisions owned by another item and unmanaged branches without changing their tips", () => {
+    const fixture = setup();
+    fixture.products[0]!.branchTemplate = "feature/shared-{topic}";
+    fixture.products[0]!.branch = "feature/shared-topic";
+    const worktree = prepare(fixture);
+    const product = worktree.repos![0]!;
+    const tip = git(product.repoRoot, "rev-parse", product.branch);
+    expect(() =>
+      ensureProductWorktrees({
+        products: fixture.products,
+        worktreeBase: fixture.worktreeBase,
+        taskId: "prj-other:PJR-OTHER",
+      }),
+    ).toThrow(/change topic.*--branch/);
+    expect(git(product.repoRoot, "rev-parse", product.branch)).toBe(tip);
+    git(product.repoRoot, "branch", "feature/unmanaged");
+    fixture.products[0]!.branch = "feature/unmanaged";
+    expect(() =>
+      ensureProductWorktrees({
+        products: fixture.products,
+        worktreeBase: fixture.worktreeBase,
+        taskId: "prj-0001:PJR-OTHER",
+      }),
+    ).toThrow(/another item/);
+  });
+
+  it("does not discard another item's recorded branch even when its name matches the legacy convention", () => {
+    const fixture = setup();
+    const branch = `exec/${TASK_DIR_NAME}`;
+    fixture.products[0]!.branch = branch;
+    const products = ensureProductWorktrees({
+      products: fixture.products,
+      worktreeBase: fixture.worktreeBase,
+      taskId: "prj-other:PJR-OTHER",
+    });
+    const tip = git(products[0]!.repoRoot, "rev-parse", branch);
+    discardStaleExecWorktree({
+      context: fixture.context,
+      worktreeTaskId: WORKTREE_TASK_ID,
+      products: fixture.products,
+    });
+    expect(git(products[0]!.repoRoot, "rev-parse", branch)).toBe(tip);
+    expect(existsSync(products[0]!.path)).toBe(true);
+  });
+
+  it("resolves --branch and all template variables, and refuses changing a resumed branch", () => {
+    const fixture = setup();
+    fixture.products[0]!.branchTemplate = "{type}/{scope}/{project}-{id}-{topic}-{title}";
+    const params = {
+      projectId: "prj-0001",
+      taskId: WORKTREE_TASK_ID,
+      item: { id: TASK_ID, type: "todo" as const, title: "login", commitScope: "api" },
+      ticketPath: "pjr-ab12-login.md",
+    };
+    const resolved = resolveProductBranches(fixture.products, params);
+    expect(resolved[0]!.branch).toBe(`feat/api/prj-0001-${TASK_ID}-login-login`);
+    fixture.products = resolveProductBranches(fixture.products, {
+      ...params,
+      overrides: ["app1=feature/explicit"],
+    });
+    const worktree = prepare(fixture);
+    expect(worktree.repos![0]!.branch).toBe("feature/explicit");
+    expect(
+      resolveProductBranches(fixture.products, {
+        ...params,
+        item: { ...params.item, title: "changed title" },
+        resume: true,
+      })[0]!.branch,
+    ).toBe("feature/explicit");
+    expect(() =>
+      resolveProductBranches(fixture.products, {
+        ...params,
+        overrides: ["app1=feature/other"],
+        resume: true,
+      }),
+    ).toThrow(/cannot change the resumed/);
+    expect(() =>
+      resolveProductBranches(fixture.products, { ...params, overrides: ["unknown=feature/foo"] }),
+    ).toThrow(/undeclared/);
+    expect(() =>
+      resolveProductBranches(fixture.products, { ...params, overrides: ["app1=bad..name"] }),
+    ).toThrow(/Invalid product branch/);
+    for (const values of [["app1=one", "app1=two"], ["app1="], ["=foo"], ["missing-separator"]]) {
+      expect(() => parseProductBranchOverrides(values)).toThrow(/--branch/);
+    }
+  });
+
+  it("retains arbitrary branch-only names and prevents fresh runs from discarding them", () => {
+    const fixture = setup();
+    fixture.products[0]!.branchTemplate = "feature/{topic}";
+    fixture.products[0]!.integrationStrategy = "branch-only";
+    const worktree = prepare(fixture);
+    commitIntegrationFixture(worktree);
+    integrateFixture(fixture, worktree);
+    const app1 = worktree.repos![0]!;
+    removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID, deleteBranch: true });
+    pruneOrphanedProductExecBranches({ products: fixture.products, projectId: "prj-0001" });
+    expect(branchExists(app1.repoRoot, app1.branch)).toBe(true);
+    expect(() =>
+      discardStaleExecWorktree({
+        context: fixture.context,
+        worktreeTaskId: WORKTREE_TASK_ID,
+        products: fixture.products,
+      }),
+    ).toThrow(/retained exec branch/);
+  });
+
+  it.each([false, true])(
+    "fast-forwards checked-out and unchecked-out targets without merge commits (unchecked=%s)",
+    (unchecked) => {
+      const fixture = setup();
+      const product = fixture.products[0]!;
+      product.integrationStrategy = "ff";
+      product.branchTemplate = "feature/{topic}";
+      if (unchecked) {
+        git(product.repoRoot, "branch", "ff-target");
+        product.integrationBranch = "ff-target";
+      }
+      const worktree = prepare(fixture);
+      commitIntegrationFixture(worktree);
+      const app1 = worktree.repos![0]!;
+      const tip = git(app1.path, "rev-parse", "HEAD");
+      const removeHook = rejectMergeCommit(fixture.repo);
+      expect(() => integrateFixture(fixture, worktree)).toThrow(
+        /integrated repositories: app1, app2; not integrated: project/,
+      );
+      expect(git(app1.repoRoot, "rev-parse", productIntegrationTarget(app1))).toBe(tip);
+      expect(productIntegrationTrace(app1)).toMatchObject({
+        state: "merged",
+        commit: tip,
+        pullRequest: null,
+      });
+      expect(git(app1.repoRoot, "rev-list", "--parents", "-n", "1", tip).split(" ")).toHaveLength(
+        2,
+      );
+      removeHook();
+      const states = new Map<string, string>();
+      integrateFixture(fixture, worktree, (repo, patch) => {
+        if (patch.status) states.set(repo, patch.status);
+      });
+      expect(states.get("app1")).toBe("merged");
+      expect(git(app1.repoRoot, "rev-parse", productIntegrationTarget(app1))).toBe(tip);
+      removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID, deleteBranch: true });
+      expect(branchExists(app1.repoRoot, app1.branch)).toBe(false);
+    },
+  );
+
+  it("rejects diverged ff before integrating any repository and never syncs a merge into ff worktrees", () => {
+    const fixture = setup();
+    fixture.products[0]!.integrationStrategy = "ff";
+    const worktree = prepare(fixture);
+    commitIntegrationFixture(worktree);
+    const [app1, app2] = worktree.repos!;
+    writeFile(join(app1!.repoRoot, "concurrent.txt"), "concurrent\n");
+    git(app1!.repoRoot, "add", "concurrent.txt");
+    git(app1!.repoRoot, "commit", "-m", "concurrent target update");
+    const before = [
+      git(app1!.path, "rev-parse", "HEAD"),
+      git(app1!.repoRoot, "rev-parse", productIntegrationTarget(app1!)),
+      git(app2!.repoRoot, "rev-parse", productIntegrationTarget(app2!)),
+    ];
+    const sync = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: "HEAD",
+      message: "resume sync",
+    });
+    expect(sync[0]).toMatchObject({ status: "skipped", detail: "fast-forward only (ff)" });
+    expect(() => integrateFixture(fixture, worktree)).toThrow(
+      /cannot fast-forward.*histories have diverged/,
+    );
+    expect([
+      git(app1!.path, "rev-parse", "HEAD"),
+      git(app1!.repoRoot, "rev-parse", productIntegrationTarget(app1!)),
+      git(app2!.repoRoot, "rev-parse", productIntegrationTarget(app2!)),
+    ]).toEqual(before);
   });
 
   it("integrates into the branch given by --integration-branch instead of the configured one", () => {

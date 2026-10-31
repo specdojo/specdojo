@@ -83,3 +83,19 @@
       from: "-"
       to: "parent validation failed: test-integration"
   previous_event_id: reg_dd27a75b2e734578a7dab1eb4f113ab8
+- v: 1
+  id: reg_17367ff9db9040ca8b05de7f6817a67f
+  ts: "2026-10-31T04:35:47Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_daf4a6ba9fd5491e9ebc17facf275feb

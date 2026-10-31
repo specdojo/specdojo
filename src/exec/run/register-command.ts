@@ -1,3 +1,4 @@
+import { parseProductBranchOverrides } from "../product-branches.js";
 import { type Command } from "commander";
 import { loadExecDefaultsConfig, resolveRegisterPostReview } from "../agent-config.js";
 import { resolveProjectPaths } from "../project.js";
@@ -103,6 +104,11 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option(
     "--integration-branch <repo=branch>",
     "With register worktree mode: integrate the declared product repository <repo> into the local branch <branch> for this run (repeatable; overrides repos[].integration_branch; resume reuses the value recorded at the start)",
+    (value: string, previous: string[] = []) => [...previous, value],
+  );
+  rcmd.option(
+    "--branch <repo=name>",
+    "With register worktree mode: override a declared product work branch (repeatable; resume keeps the recorded branch)",
     (value: string, previous: string[] = []) => [...previous, value],
   );
   rcmd.option("--parallel <n>", "Number of worktree instances to run in parallel", "1");
@@ -250,6 +256,24 @@ export function registerRunCommand(exec: Command): void {
         );
         process.exitCode = 1;
         return;
+      }
+      const branches = parseProductBranchOverrides(opts.branch);
+      if (branches.size > 0) {
+        if (!(hasRegister && opts.worktree)) {
+          process.stdout.write(
+            "--branch requires --register (or --register-filter) in worktree mode.\n",
+          );
+          process.exitCode = 1;
+          return;
+        }
+        const products = configuredProductRepos(
+          resolveProjectPaths({ project: opts.project }).schedulePath,
+        );
+        for (const repo of branches.keys()) {
+          if (!products.some((product) => product.name === repo)) {
+            throw new Error(`--branch references undeclared product repository: ${repo}`);
+          }
+        }
       }
       const integrationBranches = opts.integrationBranch ?? [];
       if (integrationBranches.length > 0) {
