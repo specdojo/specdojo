@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: easy
   owner: DEV
@@ -42,11 +42,31 @@ specdojo:
 
 | No  | 作業                                                        | 担当     | 状態 | メモ |
 | --- | ----------------------------------------------------------- | -------- | ---- | ---- |
-| 1   | options がないときを空として扱い、テストと CHANGELOG を足す | executor | open | -    |
+| 1   | options がないときを空として扱い、テストと CHANGELOG を足す | executor | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容
+
+- `packages/docs-lint/src/remark-md-content.ts` の `remarkMdContent` において、`options` が未指定（引数省略および `undefined` 渡し）の場合に空オブジェクト `{}` を既定値として扱い、`schemas` を空（`{}`）、`workspaceRoot` を `process.cwd()` とするよう修正した。options を渡す既存の呼び出し動作は維持される。
+- `tests/packages/docs-lint/remark-md-content.test.ts` に options なし（引数なしおよび `undefined` 指定）で実行する単体テストを追加し、`status: ready` の文書では `_CONTEXT_:` の検出が error（fatal）となること、`status: draft` では info となること、`_CONTEXT_:` がない場合は content schema 検査が行われないことを確認した。
+- `CHANGELOG.md` の `## [Unreleased]` 節の「不具合修正」に、`@specdojo/docs-lint` の変更内容を追記した。
+
+### ほかの公開 remark プラグインの確認結果
+
+- `remark/no-unescaped-angle-placeholder`: options 引数を取らないプラグイン（`Plugin<[], Root>`）であり、options なしで正常にロード・動作することを確認した。
+- `remark/frontmatter-ajv2020`: options の引数既定値は `{}` となっているが、`schemaRules` または `yaml.schemas` の設定が必須と判定され、指定がない場合は明示的に `Error: remark-frontmatter-ajv2020: schema rules are required. Set options.schemaRules or options["yaml.schemas"].` という原因の分かるエラーで停止することを確認した。完了条件に合致しているため、現状の挙動のままとする。
+
+### 成果物
+
+- `packages/docs-lint/src/remark-md-content.ts`
+- `tests/packages/docs-lint/remark-md-content.test.ts`
+- `CHANGELOG.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-5en3-docs-lint-md-content-no-options.md`
+
+### 残課題
+
+- なし
 
 ## 6. 関連ドキュメント
 
