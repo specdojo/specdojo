@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf3b38bf7f0840e3a8ad0122f7e55a0a
+  ts: "2026-10-31T00:27:21Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: template のない rulebook の雛形の type を deliverable\_type にする
+    - field: description
+      from: ""
+      to: deliverable scaffold の一括生成と --target の両方で、template のない rulebook の最小の雛形の type を rulebook の deliverable\_type にし、宣言がない場合は project のままにする
+    - field: input
+      from: ""
+      to: '["template: not-needed の rulebook（tsd-rulebook など）の雛形は src/catalog/generate.ts の fallbackMarkdown・fallbackYaml で type: project になり、rulebook の `deliverable_type`（tsd は architecture）と合わないため docs-lint の frontmatter-deliverable-type が警告し、--frail の lint:fm で落ちる","PJR-65DS の流れは雛形を作ってすぐ commit するため、この不一致で止まる"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-S23T"]'
