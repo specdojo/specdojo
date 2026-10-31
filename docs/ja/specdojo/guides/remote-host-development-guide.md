@@ -84,8 +84,10 @@ npx specdojo devcontainer scaffold --provider claude,codex --editor emacs
 
 scaffold は、常時稼働ホストへの接続と tmux セッションの維持に使えるサンプルを `.devcontainer/remote-host/` に生成します。
 
-- `specdojo-tmux.sh.sample`: 常時稼働ホストの `~/bin/specdojo-tmux.sh` などへコピーし、実行権限（`chmod +x`）を付与して使います。ラベル（`devcontainer.local_folder`）が一致するコンテナだけを探して接続し、停止していれば `devcontainer up` で起動してからコンテナ内の tmux セッション（`specdojo`）へ接続します。ホスト名や作業パスはプレースホルダーになっているため、ホストの環境に合わせて調整してください。
-- `ssh-config.sample`: 接続元端末の `~/.ssh/config` へ追加して使います。ホストへの通常接続エイリアスと、`RemoteCommand` と `RequestTTY force` で `specdojo-tmux.sh` を直接呼び出すエイリアス（`Host <host>-tmux`）を含みます。`RemoteCommand` では端末の `PATH` の設定が読み込まれないため、接続元から `ssh <host> 'command -v devcontainer'` を実行して Dev Container CLI が見つかるか確かめられます。
+- `specdojo-tmux.sh.sample`: 常時稼働ホストの `~/bin/specdojo-tmux.sh` などへコピーし、実行権限（`chmod +x`）を付与して使います。workspace のパスを渡して、SpecDojo が配布する本体スクリプト（`.specdojo/host/devcontainer-tmux.sh`）を呼び出す数行のラッパーです。本体スクリプトは `npx specdojo devcontainer host-script` で workspace へ書き出せます。
+- `ssh-config.sample`: 接続元端末の `~/.ssh/config` へ追加して使います。ホストへの通常接続エイリアスと、`RemoteCommand` と `RequestTTY force` で `specdojo-tmux.sh` を直接呼び出すエイリアス（`Host <host>-tmux`）を含みます。通常の接続（稼働中または停止中のコンテナ）では Node.js は不要（Docker のみ使用）です。コンテナ未作成時のみ Dev Container CLI が起動されます。
+
+本体スクリプト（`devcontainer-tmux.sh`）の対応 OS は macOS、Linux、Windows の WSL2 です。稼働中のコンテナがあればそのまま tmux へ入り、停止中のコンテナがあれば `docker start` で起動してから接続するため、通常の接続ではホスト側に Node.js は不要です。コンテナが存在しないときだけ `devcontainer up` を動かします。Dev Container CLI の場所は環境変数 `SPECDOJO_NODE_BIN` で上書きでき、mise を使う場合は shims のディレクトリ（例: `~/.local/share/mise/shims`）を設定します。指定がない場合は利用者のログインシェル（`"$SHELL" -lic`）経由で起動します。コンテナ内の作業ディレクトリはマウント情報から、実行ユーザーは `devcontainer.json` の `remoteUser` から自動で求めます。
 
 `devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
 
@@ -199,13 +201,15 @@ Host <ホスト名>
 
 ### 6.2. 実行環境の起動に失敗する
 
-SSH 経由の非対話シェル（`RemoteCommand` など）では、ログインシェルや対話端末で読み込まれる `~/.zshrc` などの `PATH` の設定が読み込まれないため、コンテナ起動用のコマンドが見つからない場合があります。接続元から次を実行して確認します。
+新方式では、稼働中または停止中のコンテナへの接続は Docker コマンドのみで行うためホスト側に Node.js は不要です。コンテナが存在しない初回起動時のみ、`devcontainer up` を動かします。
+
+SSH 経由の非対話シェル（`RemoteCommand` など）では、ログインシェルや対話端末で読み込まれる `~/.zshrc` などの `PATH` の設定が読み込まれないため、コンテナ未作成時に起動用コマンドが見つからない場合があります。接続元から次を実行して確認します。
 
 ```bash
 ssh <ホスト名> 'command -v devcontainer'
 ```
 
-`devcontainer` が見つからない場合は、ホスト側の通常端末で `dirname "$(command -v devcontainer)"` を実行して場所を確認し、`specdojo-tmux.sh` の `node_bin_dir` に設定してください。詳細な `PATH` を確認する場合は次を実行します。
+`devcontainer` が見つからない場合は、ホスト側の環境変数 `SPECDOJO_NODE_BIN` に Dev Container CLI や Node.js の bin ディレクトリを設定してください。mise を使う場合は shims のディレクトリ（例: `~/.local/share/mise/shims`）を指定します。詳細な `PATH` を確認する場合は次を実行します。
 
 ```bash
 ssh <ホスト名> 'printf "PATH=%s\n" "$PATH"; command -v node || true; command -v devcontainer || true'
