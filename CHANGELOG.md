@@ -4,7 +4,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [0.6.0] - 2026-10-31
 
-同梱パッケージは `@specdojo/docs-lint` 0.4.0 を同時に公開します。docs-lint 0.4.0 は、成果物の文脈の目印 `_CONTEXT_:` の検出（`status: ready` の文書ではエラー、それ以外は情報。PJR-JRSY・PJR-D0GB）を含みます。0.3.1（2026-10-29 公開）の rulebook 一覧のキャッシュ（PJR-SC8T）も含みます。`@specdojo/docs-site` は変更がないため 0.3.0 のままです。
+同梱パッケージは `@specdojo/docs-lint` 0.4.0 を同時に公開します。docs-lint 0.4.0 は、成果物の文脈の目印 `_CONTEXT_:` の検出（`status: ready` の文書ではエラー、それ以外は情報。PJR-JRSY・PJR-D0GB）を含みます。`remark/md-content` を options なしで読み込むと失敗する問題の修正（PJR-5EN3）と、0.3.1（2026-10-29 公開）の rulebook 一覧のキャッシュ（PJR-SC8T）も含みます。`@specdojo/docs-site` は変更がないため 0.3.0 のままです。
 
 ### 利用者から見て動きが変わる点
 
