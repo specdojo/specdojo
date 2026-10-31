@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-09-30T21:10:22.573Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-29T20:09:54.366Z"
+graded_by: flash-high-executor
 content_hash: 311babc9ddd6ec7074c1515a4fe3400c305f98bc15ac7edbdbc76e075230a01f
 categories:
   purpose:
@@ -110,6 +110,7 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 60
-    anchor: ""
+    line: 51
+    anchor: "### 4.1. 目的"
     message: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。
+    message_ja: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。

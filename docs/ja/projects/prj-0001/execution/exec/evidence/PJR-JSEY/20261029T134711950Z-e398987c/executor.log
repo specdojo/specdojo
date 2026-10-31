@@ -1,0 +1,12 @@
+個票の「対応結果」の表に 1 行を追記し、変更したのはこの個票だけです。親の検証は未実施で、runner の確認結果を待っています。
+
+- **追記した行:** `2026-10-29 22:50`、確認対象 `PJR-SC8T`、agent `sonnet-executor`。
+- **確認対象の根拠:** `PJR-SC8T` は、対象一覧のうち最も新しく統合されたものです。統合コミットは `e359386ea`(22:45 JST)で、`review` 遷移は `84d19d224` です。前回の確認対象 `PJR-3MY5` より後になります。
+- **説明文の更新:** 表の下の「今回の確認対象は…」の段落も `PJR-SC8T` に合わせて書き換えました。
+- **実行した検査:** 個票の Prettier 整形検査だけで、通っています。親の 7 検証は指示どおり実行していません。
+- **未変更の箇所:** 個票の「申し送り」段落は元のままです。この段落は `PJR-3MY5` の実行時に書かれた内容で、executor 段の範囲を述べています。
+- **未追跡のファイル:** `git status` に `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-JSEY/...` が出ています。runner が生成した evidence で、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-SC8T の行(2026-10-29 22:50 JST、sonnet-executor)を追記し、確認対象の説明文を更新した。変更したのは個票のみ。","handoff":["確認対象は、対象一覧のうち最新の統合コミット e359386ea(2026-10-29 22:45 JST、review 遷移は 84d19d224)を持つ PJR-SC8T とした。実行した agent は sonnet-executor で、start の event の actor は後続段で確認する。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移の完了は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形検査に通った"}]}
+</specdojo_executor_evidence>

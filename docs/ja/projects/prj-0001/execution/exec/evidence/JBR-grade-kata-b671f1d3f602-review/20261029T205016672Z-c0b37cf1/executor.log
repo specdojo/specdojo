@@ -1,0 +1,46 @@
+**レビュー判定：`complete-with-findings`。** Run は正常に完了しており、評価結果は統合できます。15件中11件が `needs-work` で、指摘（finding）が残っています。これは Run の失敗ではなく、成果物の品質に関するものです。
+
+**出力範囲**
+- `164470440..480b4f9db` の差分は22ファイルで、すべてこの Run の出力でした。
+  - 評価結果ファイル（`grade/results/*.yaml`）の更新15件
+  - Run 記録（`jobs/runs/JBR-grade-kata-b671f1d3f602.json`）の新規1件
+  - 実行計画（plan）・実行結果（result）・証跡（evidence）一式の新規6件
+- 対象外の変更はありませんでした。
+
+**記録どうしの整合**
+- Run JSON は `state: succeeded`、attempt 1 の `exit_code` は 0 です。
+- 証跡の終了コードも 0 で、stderr は空でした。pipeline state は executor・reporter とも `succeeded` です。
+- stdout の集計行は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` でした。
+- `results.tsv` の15行はすべて `passed` でした。
+- result の「15件完了、未完了・`failed`・`retry_exhausted` なし、`pass` 4件／`needs-work` 11件」という記述は、上の事実と一致しています。
+
+**Job 固有の確認事項**
+- **rate limit（終了コード75）・中断：** 該当なし。
+- **`failed` の段：** なし。失敗原因の切り分けは不要です。
+- **`partial`：** 該当しません（Run は `succeeded`）。
+- **`retry_exhausted`：** なし。`grade state --exhausted` の出力も空でした。
+- **verdict・score の分布：**
+  - `pass` は4件で、すべて recipe（cdfd-overview 95、cdfd 95、cdfd-uc 97、tsd 98）です。
+  - `needs-work` は11件で、recipe 2件（bps 85、exec-human-finalize 76）と rulebook 9件全部です。
+  - rulebook の score は63〜85、finding は10〜23件でした。
+  - rulebook に低い評価が集中しています。評価設定の偏りか、rulebook 自体の品質かは、この Run の範囲では判断できません。評価設定の見直しを検討する材料として残します。
+- **評価結果ファイルとの照合：** 確認した5件（bps、cdsd、cstd、exec-human-finalize、tsd）は、`verdict`・`score` が `results.tsv` と一致し、`graded_at` も実行時刻の範囲内でした。
+
+**評価結果の鮮度**
+- `grade list --target kata` を `--changed-only`、`--dependency-changed`、`--rubric-outdated` で実行しました。今回評価した15件は、どの出力にも含まれていません。
+- `--incomplete` の出力は空でした。
+
+**指摘・改善提案**
+1. `needs-work` の11件（特に rulebook 9件）は、次の評価サイクルか rulebook の改善タスクで対応してください。
+2. rulebook に低評価が集中しているため、評価設定と rulebook 品質のどちらが原因かを人手で確認することを推奨します。
+3. `--changed-only` には、まだ評価していない kata 文書が143件残っています。これは `limit 15` による想定どおりの持ち越しで、次回以降の定期実行で処理されます。
+
+**確認できなかった範囲**
+- 15件のうち10件の評価結果ファイルは、`verdict`・`score` を個別に照合していません。
+- 個々の finding の内容が妥当かは、review の範囲外なので確認していません。
+- 実行環境のログディレクトリにある `results.tsv` の原本は読んでいません。照合は stdout に出力された内容で行いました。
+- 判定を記録する直前の鮮度の再確認は、私ではなく reporter / runner の担当です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。出力範囲は 164470440..480b4f9db の22ファイルですべて当該 Job Run の出力（評価結果ファイル15件更新、Run JSON 1件、plan・result・evidence 6件）。Run JSON の state は succeeded、`exit_code` は 0、stderr は空、pipeline state は executor・reporter とも succeeded。stdout は selected=15 processed=15 incomplete=0 exhausted=0、`results.tsv` の15行はすべて passed で、result の記述と整合。rate limit・中断・failed・`retry_exhausted` はなし（`grade state --exhausted` も空）。verdict は pass 4件（cdfd-overview 95、cdfd 95、cdfd-uc 97、tsd 98）、needs-work 11件（bps 85、exec-human-finalize 76、rulebook 9件すべて 63〜85、finding 10〜23件）で、rulebook に低評価が集中。評価結果ファイル5件（bps、cdsd、cstd、exec-human-finalize、tsd）の verdict・score は `results.tsv` と一致。鮮度確認（`grade list --target kata` の --changed-only / --dependency-changed / --rubric-outdated）の出力に評価済み15件は含まれず、--incomplete の出力は空。確認できなかった範囲: 残り10件の評価結果ファイルとの個別照合、finding 内容の妥当性（review の範囲外）、ログディレクトリにある `results.tsv` 原本（照合は stdout の内容で実施）、判定記録直前の鮮度の再確認（reporter / runner 側）。","handoff":["needs-work の11件（特に rulebook 9件）は、次の評価サイクルまたは rulebook 改善タスクでの対応を推奨。","rulebook に低評価が集中しており（score 63〜85）、評価設定（agy 単段評価）の偏りか rulebook 品質かを人手で確認することを推奨。","`--changed-only` に未評価の kata 文書が143件残る。`limit 15` による想定どおりの持ち越しで、次回以降の定期実行で処理される。"],"validations":[{"command":"git diff --stat / --name-status 164470440479a588055ebf0b83bb1e5a13b08a09..480b4f9dbe2f953ea547430e2c79be84782facaa","status":"passed","summary":"22ファイルで、すべて当該 Job Run の出力。対象外の変更なし"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"評価済み15件は出力に含まれない（0件）。未評価の143件が出力された"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"評価済み15件は出力に含まれない（0件）"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --rubric-outdated","status":"passed","summary":"評価済み15件は出力に含まれない（0件）"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力は空（未完了なし）"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力は空（`retry_exhausted` なし）"}]}
+</specdojo_executor_evidence>

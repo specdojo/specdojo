@@ -114,6 +114,19 @@ SpecDojo 自身のリポジトリへ起票する場合も、同じように別�
 
 タイトルが日本語の場合は、内容を表す英語の `--topic` を小文字・ハイフン区切りで指定します。省略して `item` や日本語タイトル中の英単語だけが topic になった場合、`register add` は作成を続けたうえで警告します。警告後も、`register update --topic` で個票名と文書 ID を変更できます。成果物や kata（実践の型）を作成・修正する todo では、`--approach <approach> --target <doc-id>` を指定して進め方と対象を宣言できます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 
+対話で確かめた前提・制約・調査を任せる範囲は、`--input <text>` を繰り返して個票本文の `入力` 節へ記録します。完了条件は別に記載します。
+
+```bash
+specdojo register add --project prj-0001 --type todo \
+  --title "技術案を作る" --topic technology-proposal \
+  --input "対象は社内向けの利用者100名" \
+  --input "認証方式の調査と選定を任せる"
+```
+
+`register update --input` は入力一覧を置き換えます。追記したい場合も既存分を含めてすべて指定し、全削除は `--input -` 単独で行います。未指定なら保持し、空文字や削除と他の入力の混在は拒否します。節のない既存個票には更新時に節を追加します。変更は event の `input` に変更前後の JSON 配列（未入力は `-`）で残ります。同じ値への再更新は event を増やしません。
+
+register 経由の plan では、approach がある成果物の plan と approach がない edit / investigate plan のどちらにも、入力がある場合だけ「個票の入力（前提）」が載ります。前提を読む範囲と完了を判定する条件を区別できます。
+
 `--priority` は次の目安で付けます（省略時は `medium`）。
 
 | priority | 目安                             |
@@ -387,7 +400,7 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 ```
 
 - `register add`、状態遷移、`register update`、`register renumber` は、現在値を個票へ、event を項目別イベントファイルへ書き込みます。`--by` と `--reason` を指定すると actor と理由を明示できます。記帳と再生成を `register lifecycle` 枠の内側で commit まで完了させる場合は `--commit` を付けます。
-- 一覧の列に現れない変更（対応結果本文の追記、個票 `status` の昇格など）は event になりません。個票の全差分が必要な場合は `git log -p` を使います。
+- 入力は一覧に出なくても `input` の変更として event に記録します。それ以外の一覧の列に現れない変更（対応結果本文の追記、個票 `status` の昇格など）は event になりません。個票の全差分が必要な場合は `git log -p` を使います。
 - `--status-only` は追加・削除・状態遷移だけを残し、変更内容も遷移に関わる項目（`status` / `type` / `completed` / `conclusion`）へ絞ります。
 - `renumber` による ID 付け替えは、`id` の変更を含む `updated` イベントとして現れます。
 - 複数の遷移を1コミットへまとめたり squash したりしても、項目別イベントファイルに残る各 event の発生日時・actor・変更内容は失われません。`register start` を含む遷移時の commit policy は別の運用判断です。

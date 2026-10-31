@@ -386,6 +386,38 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).not.toContain("RVP-");
   });
 
+  it.each(["human", "agent"] as const)(
+    "draft の %s result は human の文脈記入案内を実行種別で選ぶ",
+    async (execution) => {
+      const { resultPath } = await scaffoldResult({
+        executionPath,
+        taskId: "T-TEST-proposal-010",
+        mode: "edit",
+        projectId: "prj-0001",
+        agent: "writer",
+        startedAt: "2026-10-30T00:00:00.000Z",
+        execution,
+        approach: "draft",
+        targets: ["prj-0001:proposal"],
+      });
+      const body = readFileSync(resultPath, "utf8");
+      expect(parseResultTaskIdentity(body)).toMatchObject({
+        execution,
+        approach: "draft",
+        targets: ["prj-0001:proposal"],
+      });
+      if (execution === "human") {
+        expect(body).toContain("deliverable scaffold --project <project-id> --target <doc-id>");
+        expect(body).toContain("`_CONTEXT_:` を付け");
+        expect(body).toContain("claim / complete");
+        expect(body).toContain("exec complete --project");
+        expect(body).not.toContain("plan_ref:");
+      } else {
+        expect(body).not.toContain("deliverable scaffold");
+      }
+    },
+  );
+
   it("approach: bootstrap-finalize は finalize result テンプレートを使いチェックリストを焼き込む", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
@@ -413,6 +445,9 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).toContain("[[specdojo:exec-human-finalize-recipe|Human Finalize 実行レシピ]]");
     expect(body).toContain("[[specdojo:exec-human-finalize-standard|Human Finalize 実行標準]]");
     expect(body).toContain("- [ ] Business value is clear（BA / vp-ba-business-value）");
+    expect(body).toContain(
+      "- [ ] 確定対象の成果物と実践の型の本文に未反映の `_CONTEXT_:` が残っていない",
+    );
     expect(body).toContain("## 3. 実践の型の確認");
     expect(body).toContain("- [ ] rulebook: `docs/ja/specdojo/rulebooks/overview-rulebook.md`");
     expect(body).toContain("- judgement: _TODO_（承認 / 差し戻し）");
@@ -504,6 +539,8 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     const body = readFileSync(resultPath, "utf8");
     expect(body).toContain("# Finalize Result");
     // finalize（成果物のみ）は実践の型の確認節を持たない。
+    expect(body).toContain("- [ ] 確定対象の本文に未反映の `_CONTEXT_:` が残っていない");
+    expect(body).toContain("draft へ差し戻す");
     expect(body).not.toContain("## 2. 実践の型の確認");
     expect(body).not.toContain("_DONE_CRITERIA_CHECKLIST_");
     expect(body).not.toContain("_FINALIZE_TARGETS_CHECKLIST_");

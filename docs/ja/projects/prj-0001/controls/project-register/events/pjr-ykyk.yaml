@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf3b38bf7f0840e3a8ad0122f7e55a0a
+  ts: "2026-10-31T00:27:21Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: template のない rulebook の雛形の type を deliverable\_type にする
+    - field: description
+      from: ""
+      to: deliverable scaffold の一括生成と --target の両方で、template のない rulebook の最小の雛形の type を rulebook の deliverable\_type にし、宣言がない場合は project のままにする
+    - field: input
+      from: ""
+      to: '["template: not-needed の rulebook（tsd-rulebook など）の雛形は src/catalog/generate.ts の fallbackMarkdown・fallbackYaml で type: project になり、rulebook の `deliverable_type`（tsd は architecture）と合わないため docs-lint の frontmatter-deliverable-type が警告し、--frail の lint:fm で落ちる","PJR-65DS の流れは雛形を作ってすぐ commit するため、この不一致で止まる"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-S23T"]'
+- v: 1
+  id: reg_2df8a75677d74d65a30a57110d26957e
+  ts: "2026-10-31T00:28:38Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bf3b38bf7f0840e3a8ad0122f7e55a0a
+- v: 1
+  id: reg_21b94a8cc4184936b38ebff58e261558
+  ts: "2026-10-31T00:49:58Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
+  previous_event_id: reg_2df8a75677d74d65a30a57110d26957e
+- v: 1
+  id: reg_d66b1fb68ccf4039b5b0d38c3f0ee042
+  ts: "2026-10-31T00:52:10Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
+      to: "-"
+  previous_event_id: reg_21b94a8cc4184936b38ebff58e261558
+- v: 1
+  id: reg_46f82666ad2049738d8d513d3eab9cd7
+  ts: "2026-10-31T00:59:30Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d66b1fb68ccf4039b5b0d38c3f0ee042
+- v: 1
+  id: reg_b75adf54cb194b0797e875ead0bf15c3
+  ts: "2026-10-31T01:01:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "差分・個票・result と、tsd-rulebook で作った雛形が type: architecture になり docs-lint の --frail を通ること、カタログ経由の --target でも型が入ることを実物で確かめた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: template のない rulebook の最小の雛形の type を rulebook の deliverable_type にし、宣言がない場合は project のままにした。一括生成と --target の両方に効き、テストを足した
+  previous_event_id: reg_46f82666ad2049738d8d513d3eab9cd7

@@ -111,6 +111,7 @@ specdojo:
   - _TODO_: 後で人または生成 AI が確認・追記・修正する必要がある事項
   - _UNDECIDED_: 情報不足ではなく、意思決定が未了で未確定の事項
   - _ASSUMPTION_: 現時点で仮置きしている前提・仮説
+  - `_CONTEXT_:`: 下書きへの指示。記法と反映・記録は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従う。
 - `サンプル` 章を置く場合は、最小例をコードブロックで本文内に自己完結して埋め込む。sample ファイルの要否と所在は Frontmatter の `sample` で宣言し、本文にリンクを記載しない。
 - template が不要な場合は Frontmatter へ `template: not-needed`、要否未判断なら `template: undecided` を宣言する。項目省略は必要だが未整備を表す。いずれも `deliverable scaffold` は最小雛形へ退避する。
 
@@ -131,7 +132,7 @@ specdojo:
 - 本文に sample / recipe / template への wikilink・リンク章を置かない。対応関係は Frontmatter の `sample` / `recipe` / `template` で示す。
 - rulebook 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
-- _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。
+- `_TODO_:` / `_UNDECIDED_:` / `_ASSUMPTION_:` / `_CONTEXT_:` 以外の独自ラベルを、共通ルール未定義のまま追加しない。
 - 確定済みの内容をラベル付きのまま放置したり、ラベルを本文の代替として多用したりしない。
 
 ## 8. 運用ルール

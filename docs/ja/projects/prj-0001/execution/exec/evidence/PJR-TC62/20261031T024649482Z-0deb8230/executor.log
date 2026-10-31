@@ -1,0 +1,35 @@
+The command `npm run lint:ts` has been launched and is running in the background. I will wait for it to finish.
+The command `npm run lint:md` has been launched and is running in the background. I will wait for it to finish.
+I will wait for the task to complete.
+I will wait for the task to finish.
+I will wait for the background validation task to finish.
+The command `npm run lint:md` is running in the background. I will pause here and wait for the notification.
+The command `npm run lint:fm` is running in the background. I will pause here and wait for the notification.
+The command `npm run test:unit` is running in the background. I will pause here and wait for the notification.
+PJR-TC62「個票に commit の type と scope を持たせる」の対応を完了しました。
+
+### 実施内容の概要
+
+1. **個票 Frontmatter スキーマおよびイベントログスキーマの拡張**:
+   - [`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml) に `commit_type`（Conventional Commits の 11 種を固定一覧として定義）と `commit_scope`（小文字英数字・ハイフンパターン）を追加しました。
+   - [`docs/specdojo/schemas/v1/register-events.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/specdojo/schemas/v1/register-events.schema.yaml) の変更可能フィールドに `commit_type` と `commit_scope` を追加しました。
+
+2. **設定スキーマおよび型定義の拡張**:
+   - [`docs/specdojo/schemas/v1/specdojo-config.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/specdojo/schemas/v1/specdojo-config.schema.yaml) および [`src/shared/specdojo-config.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/src/shared/specdojo-config.ts) に `commit_types` を追加し、プロジェクト単位（`projects.<project-id>.commit_types`）およびプロダクトリポジトリ単位（`repos[].commit_types`）の双方で定義可能としました。
+
+3. **CLI コマンドへのオプション追加と更新処理**:
+   - `register add` および `register update` に `--commit-type` と `--commit-scope` を追加しました。
+   - `register update` では `-` を指定することで既存の `commit_type` や `commit_scope` を消去できるようにしました。
+   - 不正な値が渡された場合のバリデーション処理を追加しました。
+
+4. **共通解決関数の実装**:
+   - [`src/register/item.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/src/register/item.ts) に `resolveItemCommitTypeAndScope` を実装し、[`src/register/register.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/src/register/register.ts) からエクスポートしました。後続タスク（PJR-Z7GX・PJR-M1DH）で本関数を通じて一元的に type と scope を取得できます。
+
+5. **単体テストおよびドキュメントの整備**:
+   - [`tests/src/register/commit-type-scope.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/tests/src/register/commit-type-scope.test.ts) を追加し、add / update での指定と消去、不正値エラー、既定対応の導出、設定上書きの動作を網羅する 15 件のテストをすべて合格させました。
+   - [`docs/ja/specdojo/references/command-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/ja/specdojo/references/command-reference.md)、[`docs/ja/specdojo/references/specdojo-config-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/ja/specdojo/references/specdojo-config-reference.md)、[`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/CHANGELOG.md) を更新しました。
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md) の作業内容と対応結果（設計理由を含む）を更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-TC62 の全完了条件（個票 frontmatter スキーマ拡張、register add/update オプション追加、type/scope 解決関数 resolveItemCommitTypeAndScope の実装、単体テスト、設定およびコマンドリファレンスと CHANGELOG の更新）を満たし、検証を通過しました。","handoff":["設計判断: commit_type の値検証には Conventional Commits の標準 11 種類（feat, fix, docs, refactor, test, chore, perf, build, ci, style, revert）を固定一覧として検証する設計を採用しました。タイポによる意図しないコミットタイプの混入を防ぐとともに、CLI で利用可能な選択肢を案内できるようにするためです。","設計判断: 未指定時の項目の type 既定対応は、issue は fix、todo・change-request は feat、decision・note・question・risk は docs、epic は feat とし、その他の未知の type は安全のため chore にフォールバックするよう定義しました。","設計判断: 設定の置き場所はプロジェクト設定（`projects.<project-id>.commit_types`）とプロダクトリポジトリ設定（`repos[].commit_types`）の両方に配置しました。個票はプロジェクトに属し複数リポジトリを跨ぐタスクもあり得るためプロジェクト単位の一貫したマッピングを基本としつつ、リポジトリごとの個別事情（ドキュメント専用リポジトリ等）にも対応できるようにリポジトリ単位の上書きを許可する階層構造（優先順位: 個票明示指定 > `repoConfig.commit_types` > `projectConfig.commit_types` > 既定マッピング）としました。","申し送り: 項目の commit の type と scope を取得する共通関数 `resolveItemCommitTypeAndScope` を `src/register/item.ts` に実装し、`src/register/register.ts` からエクスポートしました。後続タスク（PJR-Z7GX・PJR-M1DH）でこれを利用して exec の commit メッセージやブランチ名の動的生成を行います。"],"validations":[{"command":"npx specdojo catalog validate --project prj-0001","status":"passed","summary":"010-deliverables-catalog の全カタログ検証に合格"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No changed *.yaml or *.yml deliverable files (changes are in schema/references/src)"}]}
+</specdojo_executor_evidence>

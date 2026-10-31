@@ -284,12 +284,15 @@ export function syncTaskWorktreesWithIntegrationTargets(params: {
   const synced: IntegrationTargetSync[] = [];
   for (const product of params.worktree.repos ?? []) {
     const target = productIntegrationTarget(product);
-    if (product.integrationStrategy === "branch-only") {
+    if (product.integrationStrategy === "branch-only" || product.integrationStrategy === "ff") {
       synced.push({
         repo: product.name,
         target,
         status: "skipped",
-        detail: "product-side review (branch-only)",
+        detail:
+          product.integrationStrategy === "ff"
+            ? "fast-forward only (ff)"
+            : "product-side review (branch-only)",
       });
       continue;
     }

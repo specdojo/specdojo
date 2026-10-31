@@ -99,6 +99,7 @@ properties:
             approach:
               enum:
                 [
+                  draft,
                   fully-guided,
                   recipe-guided,
                   freeform,
@@ -262,6 +263,18 @@ properties:
               Human approval that the item's stated completion conditions may be executed by the
               night orchestrator. Omit the key to keep the item out of the approved queue.
 
+          commit_type:
+            $ref: "#/$defs/CommitType"
+            description: >
+              Conventional Commits type for commits generated from this item.
+              Omit the key to derive it from item_type and configuration.
+
+          commit_scope:
+            $ref: "#/$defs/CommitScope"
+            description: >
+              Conventional Commits scope for commits generated from this item.
+              Omit the key when no scope applies.
+
           approach:
             $ref: "#/$defs/Approach"
             description: >
@@ -368,6 +381,7 @@ $defs:
   Approach:
     type: string
     enum:
+      - draft
       - fully-guided
       - recipe-guided
       - freeform
@@ -413,3 +427,24 @@ $defs:
     type: string
     pattern: "^[a-z][a-z0-9-]*:PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$"
     description: "Project-qualified display id of a register item in another project."
+
+  CommitType:
+    type: string
+    enum:
+      - feat
+      - fix
+      - docs
+      - refactor
+      - test
+      - chore
+      - perf
+      - build
+      - ci
+      - style
+      - revert
+    description: "Conventional Commits type."
+
+  CommitScope:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-]*$"
+    description: "Conventional Commits scope."

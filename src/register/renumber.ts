@@ -1,3 +1,4 @@
+import { setRegisterInput } from "./input.js";
 import { existsSync, readFileSync, unlinkSync } from "node:fs";
 import { basename, join } from "node:path";
 import {
@@ -243,6 +244,7 @@ export function retopicPjrItem(opts: {
   dryRun: boolean;
   title?: string;
   description?: string;
+  inputs?: string[];
   actor?: string;
   reason?: string;
 }): void {
@@ -254,6 +256,9 @@ export function retopicPjrItem(opts: {
     ticketWrite.content = setRegisterItemTitle(ticketWrite.content, opts.title);
   if (opts.description !== undefined) {
     ticketWrite.content = setRegisterItemDescription(ticketWrite.content, opts.description);
+  }
+  if (opts.inputs !== undefined) {
+    ticketWrite.content = setRegisterInput(ticketWrite.content, opts.inputs);
   }
   ticketWrite.content = applyRegisterItemFields(ticketWrite.content, {
     ...registerItemFieldsFromItem(opts.updated),

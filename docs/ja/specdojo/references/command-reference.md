@@ -296,16 +296,19 @@ specdojo config scaffold --workspace --force
 
 主要オプション:
 
-| オプション           | 用途                                                                      |
-| -------------------- | ------------------------------------------------------------------------- |
-| `--size <size>`      | `small` / `medium` / `large` の成果物セットを選ぶ                         |
-| `--project-id <id>`  | 生成ファイルに埋め込む project ID を上書きする                            |
-| `--domain <domain>`  | `catalog scaffold` の対象をtemplateの`domain`で絞る（反復・カンマ区切り） |
-| `--var <NAME=value>` | `catalog scaffold` で`_NAME_` placeholderを置換する（反復可能）           |
-| `--plan`             | 保存済みの `dct-plan-<domain>.yaml` から決定論的に生成する                |
-| `--dry-run`          | `--plan` の生成結果と既存ファイルとの差分を、書き込まずに表示する         |
-| `--dct <name>`       | `deliverable scaffold` の対象を特定の `dct-*.yaml` に絞る（後述）         |
-| `--force`            | 既存ファイルを上書きする                                                  |
+| オプション                     | 用途                                                                               |
+| ------------------------------ | ---------------------------------------------------------------------------------- |
+| `--size <size>`                | `small` / `medium` / `large` の成果物セットを選ぶ                                  |
+| `--project-id <id>`            | 生成ファイルに埋め込む project ID を上書きする                                     |
+| `--domain <domain>`            | `catalog scaffold` の対象をtemplateの`domain`で絞る（反復・カンマ区切り）          |
+| `--var <NAME=value>`           | `catalog scaffold` で`_NAME_` placeholderを置換する（反復可能）                    |
+| `--plan`                       | 保存済みの `dct-plan-<domain>.yaml` から決定論的に生成する                         |
+| `--dry-run`                    | `--plan` の生成結果と既存ファイルとの差分を、書き込まずに表示する                  |
+| `--dct <name>`                 | `deliverable scaffold` の対象を特定の `dct-*.yaml` に絞る（後述）                  |
+| `--target <doc-id>`            | `deliverable scaffold` で特定の成果物 1 件だけを雛形にする（`--dct` との併用不可） |
+| `--target-path <path>`         | カタログにない成果物の配置パス（`--target` と `--target-rulebook` と併用）         |
+| `--target-rulebook <rulebook>` | カタログにない成果物の rulebook 文書 ID（`--target` と `--target-path` と併用）    |
+| `--force`                      | 既存ファイルを上書きする                                                           |
 
 `catalog scaffold`は、`--domain`を省略すると従来どおりすべてのDCT templateを対象にします。指定した場合は、ファイル名ではなくtemplate内の`domain`が一致するものだけを生成します。存在しないdomainを指定した場合は、部分的な生成を行わずエラーで終了します。
 
@@ -328,6 +331,22 @@ specdojo catalog scaffold \
 ```bash
 specdojo deliverable scaffold --project prj-0001 --dct project-definition
 specdojo deliverable scaffold --project prj-0001 --dct dct-project-definition.yaml,dct-project-management.yaml
+```
+
+`--target <doc-id>` で成果物を 1 件だけ指定して雛形を作成できます（`--dct` とは併用できません）。カタログに登録されている成果物は、カタログの配置・rulebook・template の情報から 1 件だけ雛形を生成します。
+
+カタログにない成果物は `--target-path <path>` と `--target-rulebook <rulebook>` をあわせて指定することで雛形を作成できます。パスの検証（リポジトリの中か、ファイル名か、ほかの文書が使っていないか）は register の `--target-path` と同じ規則で行われます。
+
+`--dry-run` を指定するとファイルへの書き込みを行わず、作成予定（`Would create: <path>`）のみを表示します。既存ファイルがある場合は、`--force` が指定されていない限りスキップされます。
+
+```bash
+# カタログにある成果物を 1 件だけ雛形にする
+specdojo deliverable scaffold --project prj-0001 --target prj-charter
+
+# カタログにない成果物を雛形にする
+specdojo deliverable scaffold --project prj-0001 --target my-spec \
+  --target-path docs/ja/product/my-spec.md \
+  --target-rulebook specdojo:cdfd-rulebook
 ```
 
 `deliverable scaffold` の生成方針と `specdojo build` に含めない理由は [遂行の技活用ガイド](../guides/waza-guide.md) の `deliverable scaffold の生成方針`、生成系動詞の使い分けは同ガイドの `生成系動詞の標準`、成果物カタログから Schedule への展開は [Schedule設計ガイド](../guides/schedule-design-guide.md) の `成果物カタログとの責務分担` を参照します。
@@ -489,6 +508,7 @@ specdojo schedule strategy generate \
 
 | オプション                   | 用途                                                                | 対象                                             |
 | ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `--input <text>`             | 個票の前提を記録（繰り返し可、update は一覧置換、`-` 単独で全削除） | `add` / `update`                                 |
 | `--track <track>`            | epic が担う track（epic で必須、update で置換、削除不可）           | `add` / `update`                                 |
 | `--to <PJR-ID>`              | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
 | `--registered <datetime>`    | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
@@ -502,6 +522,8 @@ specdojo schedule strategy generate \
 | `--target-path <path>`       | 成果物のリポジトリ相対パス（`update` は `-` で削除）                | `add` / `update`                                 |
 | `--target-rulebook <doc-id>` | 成果物の rulebook ID（`update` は `-` で削除）                      | `add` / `update`                                 |
 | `--source <ref>`             | kata authoring の手本を指定（繰り返し可、`update` では `-` で削除） | `add` / `update`                                 |
+| `--commit-type <type>`       | Conventional Commits の type を指定（`update` は `-` で削除）       | `add` / `update`                                 |
+| `--commit-scope <scope>`     | Conventional Commits の scope を指定（`update` は `-` で削除）      | `add` / `update`                                 |
 | `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
 | `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
 | `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする                           | `add` / `update` / `renumber` / 遷移             |
@@ -516,6 +538,12 @@ specdojo schedule strategy generate \
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
+
+`--input <text>` は、対話で得た前提・制約・委任範囲を個票本文の `入力` 節へ指定順に記録します。`update` で未指定なら保持し、指定すれば一覧を置換します。追記するときは既存分も含めて再指定し、`--input -` 単独で全削除します。add での `-`、空文字、削除と他の値の混在は拒否します。既存個票に節がなければ更新時に追加します。event の `input` は変更前後の JSON 配列を保持し、空は `-` で表します。register から生成する plan は approach の有無によらず、入力がある場合だけ完了条件とは別の「個票の入力（前提）」へ載せます。
+
+`--commit-type <type>` と `--commit-scope <scope>` は、個票 Frontmatter の `commit_type` と `commit_scope` に Conventional Commits の type と scope を記録します。`update` では未指定なら保持し、`-` で削除します。`commit_type` に指定できる値は Conventional Commits の type（`feat`・`fix`・`docs`・`refactor`・`test`・`chore`・`perf`・`build`・`ci`・`style`・`revert`）です。`commit_scope` は英小文字・数字・ハイフン（`^[a-z0-9][a-z0-9-]*$`）を指定します。個票で `commit_type` を指定しなかった場合は、項目の type から既定の対応（`issue` は `fix`、`todo`・`change-request` は `feat`、`decision`・`note`・`question`・`risk` は `docs`、`epic` は `feat`、未知の type は `chore`）またはプロジェクト・リポジトリの設定により決定されます。
+
+既定値は個票へ書き込まず、共通関数で利用時に解決します。優先順位と設定例は [[specdojo:specdojo-config-reference|設定リファレンス]] を参照してください。この段階では exec の commit メッセージやブランチ名には反映しません。
 
 `--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は、成果物カタログを優先して doc id を解決します。カタログがなくても、既存文書は文書索引と frontmatter から、新規文書は明示したパスと rulebook から解決できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
 
@@ -647,6 +675,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 | `--register-commit`                    | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（worktree モードでは常に commit のため無視） | `run --register`                                                                |
 | `--post-review`                        | worktree 統合後に完了 review を行い、todo / issue を verdict に応じて close または waiting にする        | `run --register --worktree`                                                     |
 | `--on-failure <stop\|continue>`        | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                              | `run --register`                                                                |
+| `--branch <repo>=<name>`               | run ごとのプロダクト作業ブランチ名（繰り返し可）を指定する                                               | register の worktree モード                                                     |
 | `--integration-branch <repo>=<branch>` | run ごとのプロダクトリポジトリの統合先（繰り返し可）を指定する                                           | register の worktree モード                                                     |
 | `--resume`                             | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                   | register の worktree モード                                                     |
 | `--resume-from executor`               | reporter 段から再開可能な run を、既存成果を保持したまま executor 段から再開する                         | register の worktree モード（`--resume` と併用）                                |
@@ -734,6 +763,10 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 
 `--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`epic` / `decision` / `note` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--post-review` または `run.register_post_review: true` を指定すると、merge back の後に完了判定を行い、todo / issue を自動 close できます。`--parallel <n>` は worktree モードでのみ指定できます。
 
+`--branch <repo>=<name>` は、register の worktree モードでプロダクトの作業ブランチ名を上書きします。たとえば `specdojo exec run --project prj-0001 --register PJR-0012 --worktree --branch app1=feature/login` と指定します。複数のリポジトリにはオプションを繰り返します。宣言にないリポジトリ、同じリポジトリの重複、空の値、不正な Git ブランチ名は拒否します。別項目のブランチと重なると start 前に停止するため、topic を変えるかこの指定で解消します。自動の連番は付けません。SpecDojo の記帳用のブランチには適用しません。`--resume` では記録済みの名前を使うため指定の繰り返しは不要で、別名への変更は拒否します。
+
+作業ブランチ名の既定値は `exec/{project}-{id}` です。`repos[].branch_template` に git-flow の `feature/{topic}`、GitHub flow の `{type}/{topic}` などを設定できます。統合の形は `repos[].integration_strategy` の `merge`（既定）・`ff`・`branch-only` で選びます。`ff` は早送りできるときだけ統合し、分岐していれば停止します。自動の rebase や同期 merge は行いません。
+
 `--integration-branch <repo>=<branch>` は、register の worktree モードで、その run に限ってプロダクトリポジトリ `<repo>` の統合先を上書きします。複数リポジトリにはオプションを繰り返します。`<repo>` は `repos[].name` に宣言済みで、`<branch>` はそのリポジトリに存在する有効なローカルブランチでなければならず、リモートブランチの取得やローカルブランチの作成は行いません。同じ `<repo>` の重複、宣言にないリポジトリ、空の値は register の状態を変える前に拒否します。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定しない run の挙動は従来と変わりません。
 
 複数項目を `--parallel` で実行する場合、指定は選択された各 item run に同じように適用されます。中断した run を `--resume` するときは、開始時の指定を `pipeline-state.json` から再利用するため、オプションを繰り返す必要はありません。再開時に値を再指定する場合、その値は開始時の指定と一致する必要があり、run の途中で統合先を変更・追加する指定は拒否します。result の複数リポジトリ trace には、実際に使った統合先ブランチと統合後の commit snapshot が記録されます。
@@ -785,7 +818,7 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `--agent`と任意の`--reporter-by`を使うと、reporterなしまたは全trial共通reporterの従来方式になります。`--pair <executor>=<reporter>...`は2組以上を指定し、executorとreporterを一組として比較します。`--pair`は`--agent` / `--reporter-by`と併用できません。比較記録の`reporter_mode`には`none` / `shared` / `paired`のいずれかを保存します。各reporterについて構造化出力の成否、形式試行回数、形式再試行回数、`evidence_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`の失敗分類も保存します。`evidence_blocked` は reporter の申告ではなく、executor evidence から runner が機械判定した blocked を表します。
 
-`pipeline.parent_validations`に指定できるIDは`validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`、`build`、`format-check`です（各IDは組み込み許可リストの固定argvへ解決されます）。`pipeline.parent_validations`はtrialにも適用され、executor成功後・reporter起動前に各worktreeで実行されます。親検証結果は`source: runner`付きでevidenceへ保存し、失敗時はtrialを`failed`にします。比較記録と`trial status`はexecutor・親検証・全体の時間を分け、executorの検証報告総数と`passed` / `failed` / `not_run` / `requires_human`、親検証の状態と件数を別々に表示します。採用前に親検証の成功、executorの未実施・未報告、sandbox 外で人が行う確認を確認してください。
+`pipeline.parent_validations`に指定できるIDは`validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`、`lint-mermaid`、`build`、`format-check`です（各IDは組み込み許可リストの固定argvへ解決されます）。`pipeline.parent_validations`はtrialにも適用され、executor成功後・reporter起動前に各worktreeで実行されます。親検証結果は`source: runner`付きでevidenceへ保存し、失敗時はtrialを`failed`にします。比較記録と`trial status`はexecutor・親検証・全体の時間を分け、executorの検証報告総数と`passed` / `failed` / `not_run` / `requires_human`、親検証の状態と件数を別々に表示します。採用前に親検証の成功、executorの未実施・未報告、sandbox 外で人が行う確認を確認してください。
 
 記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して `.specdojo/agent-members.yaml` を更新します。
 

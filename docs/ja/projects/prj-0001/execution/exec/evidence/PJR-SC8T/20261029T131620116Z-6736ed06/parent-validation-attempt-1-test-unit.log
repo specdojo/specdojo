@@ -1,0 +1,148 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.5.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SC8T
+
+Updated ticket status → ready: /tmp/specdojo-ticket-0PFVVo/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-y95Y4z/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Vs9OiR/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-6bVZ8h/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-8jDMGN/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-8GWDoY/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-KZm4ka/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-KZm4ka/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-KZm4ka/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-KZm4ka/.specdojo/agent-members.yaml
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+ ❯ tests/src/register/approach.test.ts (22 tests | 1 failed) 16645ms
+     × authoring approach は authority・末尾・手本・既存 id を検証する 7725ms
+ ❯ tests/src/register/catalogless-target.test.ts (25 tests | 1 failed) 29246ms
+     × resolves existing frontmatter and creates a fully-guided plan 7930ms
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-29T13:34:50.144Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-29T13:33:50.522Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-29T13:33:50.805Z.
+fallback reporter complete
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Wrote agent stdout: /tmp/specdojo-agent-command-emNp8T/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-F8G35D/outputs/partial.txt
+
+ Test Files  2 failed | 160 passed (162)
+      Tests  2 failed | 2788 passed (2790)
+   Start at  22:32:40
+   Duration  85.59s (transform 4.58s, setup 797ms, import 42.90s, tests 100.61s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/register/approach.test.ts > validateRegisterApproachTargets > authoring approach は authority・末尾・手本・既存 id を検証する
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/register/approach.test.ts:379:3
+    377|   });
+    378|
+    379|   it("authoring approach は authority・末尾・手本・既存 id を検証する", () => {
+       |   ^
+    380|     const base = {
+    381|       repoRoot: root,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/src/register/catalogless-target.test.ts > catalog-less deliverable resolution and plans > resolves existing frontmatter and creates a fully-guided plan
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/register/catalogless-target.test.ts:112:79
+    110|   });
+    111|
+    112|   it.each<Approach>(["fully-guided", "recipe-guided", "freeform", "ret…
+       |                                                                               ^
+    113|     "resolves existing frontmatter and creates a %s plan",
+    114|     async (approach) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

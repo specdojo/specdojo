@@ -213,6 +213,10 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
         : value === "approved"
           ? { autopilot: "approved" }
           : undefined;
+    case "commit_type":
+      return isUnset ? { commit_type: REMOVE_REGISTER_ITEM_FIELD } : { commit_type: value };
+    case "commit_scope":
+      return isUnset ? { commit_scope: REMOVE_REGISTER_ITEM_FIELD } : { commit_scope: value };
     default:
       return undefined;
   }

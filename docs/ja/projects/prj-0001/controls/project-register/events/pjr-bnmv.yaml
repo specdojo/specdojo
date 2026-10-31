@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_30723e5f546f4d2e8244d2bf2dbbf5f9
+  ts: "2026-10-31T02:38:34Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクトのリポジトリの commit とブランチの形を運用に合わせて選べるようにする
+    - field: description
+      from: ""
+      to: git-flow や GitHub flow など任意の運用に合わせ、プロダクトのリポジトリの作業ブランチの名前、commit の 1 行目、merge commit、統合の形を設定で選べるようにし、commit の type を項目ごとに指定できるようにする方針を決める
+    - field: input
+      from: ""
+      to: '["対象は SpecDojo の記録とは別のプロダクトのリポジトリ（repos で宣言したもの）だけ。記録と同じリポジトリでは今の exec(register ...) の形のままでよい","git-flow だけでなく、GitHub flow など任意の運用に対応したい。見た目は各運用のとおりにし、commit の 1 行目に exec(register PJR-XXXX) を入れず、項目の ID は本文に入れる","commit の type（feat・fix など）は項目ごとに選びたい","git-flow のブランチ名は feature/{topic} とする。ブランチ名が別の項目のものと重なったら run の開始時に止め、topic を変えるか名前を指定するよう案内する（自動の連番は付けない）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_ba91023bc7a043b6b1d68e79e5abc928
+  ts: "2026-10-31T02:41:49Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で indie が承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 案 A を採る。プロダクトのリポジトリごとの設定で作業ブランチの名前・commit の 1 行目・merge commit の書式と統合の形（merge・branch-only・ff）を選べるようにし、commit の type と scope は個票で項目ごとに持つ。git-flow の例は feature/{topic} とし、ブランチ名が別の項目と重なったら run の開始時に止める
+  previous_event_id: reg_30723e5f546f4d2e8244d2bf2dbbf5f9

@@ -1,0 +1,28 @@
+他の検証の完了を待っています。
+プロジェクト登録簿の項目 PJR-YKMA「カタログの成果物に brief を設ける」に対応しました。
+
+### 実施内容
+
+1. **成果物カタログ schema と型定義の拡張**
+   - [`docs/specdojo/schemas/v1/dct.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/specdojo/schemas/v1/dct.schema.yaml): `DeliverableItem` に `brief`（型: `string`, `minLength: 1`）を追加。
+   - [`src/shared/catalog-render.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/src/shared/catalog-render.ts): `DctDeliverableItem` に `brief?: string;` を追加。
+   - [`docs/ja/specdojo/samples/dct-sample.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/ja/specdojo/samples/dct-sample.yaml): 成果物に `brief` を定義し、YAML アンカー（`&anchor` / `*anchor`）を用いて複数成果物間で共有する記述例を提示。
+
+2. **両経路の plan への反映**
+   - [`src/exec/plans-core.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/src/exec/plans-core.ts): `deliverableBrief` 関数を新設。単一行テキストおよび複数行・箇条書きテキストを Markdown のリスト構文を壊さないようインデント整形して展開。
+   - [`src/exec/plans-generation.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/src/exec/plans-generation.ts): `buildEditPlanMarkdown` および `buildReviewPlanMarkdown` において、3MY5 で設けた差し込み口 `_DELIVERABLE_BRIEF_` に `deliverableBrief(deliverable)` を接続。成果物に `brief` が存在しない場合はテンプレートから該当行を除外して plan に載せないよう制御。schedule 起点と register 経由の両経路に対応。
+   - [`docs/ja/specdojo/exec-templates/xep-draft-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/ja/specdojo/exec-templates/xep-draft-template.md), [`xep-fully-guided-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/ja/specdojo/exec-templates/xep-fully-guided-template.md), [`xrp-fully-guided-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md): 説明文を「値が無いときは載せない」方針へ更新。
+
+3. **Rulebook・ガイド・CHANGELOG の更新**
+   - [`docs/ja/specdojo/rulebooks/dct-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/ja/specdojo/rulebooks/dct-rulebook.md): 成果物エントリ表に `brief` を追加し、第 6.14 節を新設して `overview`（成果物の目的を1文で表す概要）・`brief`（成果物の外から継続して渡す前提）・`done_criteria`（検証可能な完了条件）の使い分け、および YAML アンカーによる共有規則を規定。
+   - [`docs/ja/specdojo/guides/ryu-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/ja/specdojo/guides/ryu-guide.md): 参照範囲の記述を未指定時は載せない方針へ修正し、使い分け原則を追記。
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/CHANGELOG.md): `## [Unreleased]` の追加機能にカタログの `brief` 追加と plan 反映について記載。
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-ykma-catalog-brief.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/docs/ja/projects/prj-0001/controls/project-register/pjr-ykma-catalog-brief.md): 作業内容（done）と対応結果（設計判断・検証内容）を記録。
+
+4. **単体テスト**
+   - [`tests/docs/specdojo/schemas/dct-schema.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/tests/docs/specdojo/schemas/dct-schema.test.ts): `dct.schema.yaml` に対する `brief`（単一行、複数行、YAML アンカー共有、空文字拒否、非文字列型拒否）の検証テストを新設。
+   - [`tests/src/exec/draft-plan.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKMA/tests/src/exec/draft-plan.test.ts): register / schedule 両経路および review における `brief` の plan への展開、YAML アンカー共有の反映、未指定時に載らないことの検証を追加・更新。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct.schema.yaml および DctDeliverableItem に brief を追加し、schedule / register 両経路の plan へ前提として反映（未指定時は非表示）。dct-rulebook、ryu-guide、plan 雛形、サンプル、単体テスト、CHANGELOG、個票を更新した。","handoff":["設計判断: brief の plan 反映において、3MY5 で設けた差し込み口 `_DELIVERABLE_BRIEF_` を直接使用し、単一行・複数行（箇条書き等）のいずれでも Markdown のリスト構造が壊れないようインデント整形して展開する方式を採用した。brief 未指定時は行そのものを省くことで、plan の対象成果物セクションの不要な行ノイズを排除した。理由は個票の対応結果にも記録済み。","設計判断: YAML アンカーによる brief 共有は、カタログのルートレベルにカスタムプロパティを置かず（`additionalProperties: false` に反するため）、先行する成果物エントリの `brief: &anchor |` で定義し、後続成果物で `brief: *anchor` として参照する標準 YAML 記法を正本とし、サンプルおよび rulebook で明示した。","親 runner が実施する 7 件の検証（lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit）に委ね、executor evidence には重複報告しない。保護された設定の変更は不要であり、変更案もない。"],"validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-ykma-catalog-brief.md docs/ja/specdojo/exec-templates/xep-draft-template.md docs/ja/specdojo/exec-templates/xep-fully-guided-template.md docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md docs/ja/specdojo/guides/ryu-guide.md docs/ja/specdojo/rulebooks/dct-rulebook.md docs/ja/specdojo/samples/dct-sample.yaml docs/specdojo/schemas/v1/dct.schema.yaml src/exec/plans-core.ts src/exec/plans-generation.ts src/shared/catalog-render.ts tests/src/exec/draft-plan.test.ts tests/docs/specdojo/schemas/dct-schema.test.ts","status":"passed","summary":"変更した TypeScript・Markdown・YAML の 14 ファイルを Prettier で整形。"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-ykma-catalog-brief.md docs/ja/specdojo/exec-templates/xep-draft-template.md docs/ja/specdojo/exec-templates/xep-fully-guided-template.md docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md docs/ja/specdojo/guides/ryu-guide.md docs/ja/specdojo/rulebooks/dct-rulebook.md","status":"passed","summary":"変更した Markdown 7 ファイルの検査に成功。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証成功。未作成成果物に関する警告あり、エラーなし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成に成功。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"}]}
+</specdojo_executor_evidence>

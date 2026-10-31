@@ -5,45 +5,45 @@ path: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 59
-graded_at: "2026-10-02T21:32:25.243Z"
-graded_by: agy-expert-executor
-content_hash: 3c91455b63d10941ccef99cfc91f6b3116a13620355c8044a6140e8fc96717da
+score: 74
+graded_at: "2026-10-29T20:28:35.071Z"
+graded_by: flash-high-executor
+content_hash: 62c28249376a73f53ba0991706fcde8b4b4a8dea8ef7704a0305fcb9a8a0e651
 categories:
   purpose:
-    score: 75
+    score: 88
   operations:
-    score: 69
+    score: 81
   planning:
-    score: 67
+    score: 83
   business:
-    score: 58
-  architecture:
-    score: 83
-  usability:
-    score: 83
-  implementation:
     score: 75
+  architecture:
+    score: 92
+  usability:
+    score: 92
+  implementation:
+    score: 88
   quality:
-    score: 33
+    score: 50
   consistency:
-    score: 25
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -51,14 +51,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,35 +66,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 1
-    score: 25
-  vp-qe-verifiability:
     level: 2
     score: 50
+  vp-qe-verifiability:
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
-  vp-ops-operability:
     level: 2
     score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -113,6 +113,7 @@ findings:
     line: 1
     anchor: "# Mermaid を用いたC4コンテナ図 作成ルール"
     message: "`recipe: undecided` と `template: undecided` を解消する判断者、判断基準、影響、次アクションがなく、PO が ready 化の条件を確認できないため明示する必要がある。"
+    message_ja: "`recipe: undecided` と `template: undecided` を解消する判断者、判断基準、影響、次アクションがなく、PO が ready 化の条件を確認できないため明示する必要がある。"
   - id: F002
     severity: minor
     rule: vp-pm-plan-feasibility
@@ -121,12 +122,14 @@ findings:
       | C4要素                                   | 意味                               | Mermaid
       での表現例                                                   |
     message: ノード、境界、関係、スタイルを作成する順序と全規則の適用を確認する完了チェックがなく、作業の進捗と完了を一貫して判断できないため簡潔な作成手順を追加する必要がある。
+    message_ja: ノード、境界、関係、スタイルを作成する順序と全規則の適用を確認する完了チェックがなく、作業の進捗と完了を一貫して判断できないため簡潔な作成手順を追加する必要がある。
   - id: F003
     severity: minor
     rule: vp-pm-dependency-risk
     line: 48
     anchor: ※ 既存の C4 コンテキスト図（CXD）と同じ色指定を利用します。
-    message: 「既存の C4 コンテキスト図（CXD）と同じ色指定」の参照先 ID または正本が示されておらず、色定義変更時の同期対象を特定できないため依存先を明示する必要がある。
+    message: 「既存の C4 コンテキスト図（CXD）と同じ色指定を利用します。」の参照先 ID または正本が示されておらず、色定義変更時の同期対象を特定できないため依存先を明示する必要がある。
+    message_ja: 「既存の C4 コンテキスト図（CXD）と同じ色指定を利用します。」の参照先 ID または正本が示されておらず、色定義変更時の同期対象を特定できないため依存先を明示する必要がある。
   - id: F004
     severity: major
     rule: vp-ba-requirements-completeness
@@ -135,48 +138,60 @@ findings:
     message: >-
       「命名・表記ルール」はノード ID と表示ラベルだけを扱い、Rulebook 記述標準で必須の成果物ファイル名・ID規則、Frontmatter、本文要件の必須／任意を定義していないため,
       利用者が完成文書の要件を判定できる構成へ補完する必要がある。
+    message_ja: >-
+      「命名・表記ルール」はノード ID と表示ラベルだけを扱い、Rulebook 記述標準で必須の成果物ファイル名・ID規則、Frontmatter、本文要件の必須／任意を定義していないため,
+      利用者が完成文書の要件を判定できる構成へ補完する必要がある。
   - id: F005
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 7
     anchor: C4 コンテナ図は「対象システム」を、**実行/配備単位（コンテナ）** に分割して俯瞰し、利用者（人）・外部システム・データストアとの関係（やり取り）を、概念レベルで合意するために用います。
     message: C4 コンテナ図で「合意する」対象は示されている一方、作成者、技術確認者、合意責任者の役割がなく、誰が図を確認するか判断できないため Role code または役割名を明示する必要がある。
+    message_ja: C4 コンテナ図で「合意する」対象は示されている一方、作成者、技術確認者、合意責任者の役割がなく、誰が図を確認するか判断できないため Role code または役割名を明示する必要がある。
   - id: F006
     severity: minor
     rule: vp-arc-technical-constraints
     line: 5
     anchor: 本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンテナ図を描く際の標準ルール**です。
     message: Mermaid の対応バージョンまたは基準とする描画環境が示されておらず、＜br＞、日本語 ID、subgraph への style の互換性を一定条件で確認できないため実行環境の前提を明示する必要がある。
+    message_ja: Mermaid の対応バージョンまたは基準とする描画環境が示されておらず、＜br＞、日本語 ID、subgraph への style の互換性を一定条件で確認できないため実行環境の前提を明示する必要がある。
   - id: F007
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 139
     anchor: "- 対象システムは **サブグラフ `subgraph ... end`** で囲う。"
     message: System Boundary の例が一貫して汎用ラベルの「対象システム」を使用し、成果物では具体的なシステム名を表示するという要件がないため、実装時に境界の識別情報が欠落しないよう規則を追加する必要がある。
+    message_ja: System Boundary の例が一貫して汎用ラベルの「対象システム」を使用し、成果物では具体的なシステム名を表示するという要件がないため、実装時に境界の識別情報が欠落しないよう規則を追加する必要がある。
   - id: F008
     severity: major
     rule: vp-dev-testability
     line: 200
     anchor: "## 7. サンプル（最小）"
     message: 完成例を提示している一方、Mermaid の構文解析または描画コマンド、期待結果、エラー時の確認箇所がなく、コード例と成果物を再現可能な方法で検証できないため検証手順を追加する必要がある。
+    message_ja: 完成例を提示している一方、Mermaid の構文解析または描画コマンド、期待結果、エラー時の確認箇所がなく、コード例と成果物を再現可能な方法で検証できないため検証手順を追加する必要がある。
   - id: F009
     severity: minor
     rule: vp-qe-verifiability
     line: 140
     anchor: "- 境界内には、対象システムの **主要コンテナ**（2〜7個程度を目安）と、必要なら主要DBを置く。"
     message: 境界内の「主要コンテナ」「必要なら主要DB」「増やしすぎない」の選定条件が定義されておらず、2〜7個という目安だけでは要素の過不足を一意に判定できないため包含・除外基準を明示する必要がある。
+    message_ja: 境界内の「主要コンテナ」「必要なら主要DB」「増やしすぎない」の選定条件が定義されておらず、2〜7個という目安だけでは要素の過不足を一意に判定できないため包含・除外基準を明示する必要がある。
   - id: F010
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# Mermaid を用いたC4コンテナ図 作成ルール"
     message: Rulebook 記述標準で必須の「ファイル命名・ID規則」「本文要件」「記述ガイド」に相当する章がなく、成果物ファイルの識別規則、必須構成、必須／任意、完了条件を判断できないため標準章構成に沿って再編する必要がある。
+    message_ja: Rulebook 記述標準で必須の「ファイル命名・ID規則」「本文要件」「記述ガイド」に相当する章がなく、成果物ファイルの識別規則、必須構成、必須／任意、完了条件を判断できないため標準章構成に沿って再編する必要がある。
   - id: F011
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 35
     anchor: "## 2.1 標準の色分け（推奨）"
     message: >-
+      `## 2.1 標準の色分け（推奨）` は H2 の章として非整数番号になっているため、Rulebook 記述標準の連番規則に合わせて H3 の `### 2.1. 標準の色分け（推奨）` とし、配下の 2.1.1、2.1.2
+      も階層と番号末尾を整合させる必要がある。
+    message_ja: >-
       `## 2.1 標準の色分け（推奨）` は H2 の章として非整数番号になっているため、Rulebook 記述標準の連番規則に合わせて H3 の `### 2.1. 標準の色分け（推奨）` とし、配下の 2.1.1、2.1.2
       も階層と番号末尾を整合させる必要がある。
   - id: F012
@@ -187,12 +202,18 @@ findings:
     message: >-
       参照サンプル `docs/ja/specdojo/samples/cnd-sample.md` の line 9 および 30 において、本ルールブックへのパスが `cnd-rulebook.md` と誤記されており, 正しくは
       `cnd-mermaid-rulebook.md` である。
+    message_ja: >-
+      参照サンプル `docs/ja/specdojo/samples/cnd-sample.md` の line 9 および 30 において、本ルールブックへのパスが `cnd-rulebook.md` と誤記されており, 正しくは
+      `cnd-mermaid-rulebook.md` である。
   - id: F013
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# Mermaid を用いたC4コンテナ図 作成ルール"
     message: >-
+      `sample: specdojo:cnd-sample` で宣言された参照サンプルには Mermaid の C4
+      コンテナ図がなく、概要表だけでは本ルールブックのノード、境界、関係、スタイル規則を適用した完成例として整合性を確認できない。
+    message_ja: >-
       `sample: specdojo:cnd-sample` で宣言された参照サンプルには Mermaid の C4
       コンテナ図がなく、概要表だけでは本ルールブックのノード、境界、関係、スタイル規則を適用した完成例として整合性を確認できない。
   - id: F014
@@ -203,12 +224,16 @@ findings:
     message: >-
       対応 sample の `docs/ja/specdojo/samples/cnd-sample.md` は完成した Mermaid 図を提示していないため、Sample 記述標準が求める「rulebook
       の必須要素を満たす最小完成例」として、ノード、境界、ラベル付き関係、スタイルを適用した図へ置き換える必要がある。
+    message_ja: >-
+      対応 sample の `docs/ja/specdojo/samples/cnd-sample.md` は完成した Mermaid 図を提示していないため、Sample 記述標準が求める「rulebook
+      の必須要素を満たす最小完成例」として、ノード、境界、ラベル付き関係、スタイルを適用した図へ置き換える必要がある。
   - id: F015
     severity: minor
     rule: vp-ux-readability
     line: 35
     anchor: "## 2.1 標準の色分け（推奨）"
     message: 「標準の色分け」が第2章の小節であるにもかかわらず H2 で配置され、第2章と第3章の間に非整数の同階層章が現れるため、H3 へ変更して初見の読者が階層を追える構成にする必要がある。
+    message_ja: 「標準の色分け」が第2章の小節であるにもかかわらず H2 で配置され、第2章と第3章の間に非整数の同階層章が現れるため、H3 へ変更して初見の読者が階層を追える構成にする必要がある。
   - id: F016
     severity: major
     rule: vp-ops-release-readiness
@@ -217,9 +242,13 @@ findings:
     message: >-
       `sample: specdojo:cnd-sample` は整備済みの参照として宣言されているが、実体は完成 Mermaid 図を欠きリンクも誤っているため、sample の修正、recipe と template
       の要否判断、レビュー承認を ready 化の前提として明示する必要がある。
+    message_ja: >-
+      `sample: specdojo:cnd-sample` は整備済みの参照として宣言されているが、実体は完成 Mermaid 図を欠きリンクも誤っているため、sample の修正、recipe と template
+      の要否判断、レビュー承認を ready 化の前提として明示する必要がある。
   - id: F017
     severity: minor
     rule: vp-ops-operability
     line: 200
     anchor: "## 7. サンプル（最小）"
     message: Mermaid コードや標準スタイルを変更した際の再描画手順、対応 sample の同期確認、描画失敗時の問い合わせ先または切り分け方法がなく、継続保守の手順を判断できないため運用方法を追記する必要がある。
+    message_ja: Mermaid コードや標準スタイルを変更した際の再描画手順、対応 sample の同期確認、描画失敗時の問い合わせ先または切り分け方法がなく、継続保守の手順を判断できないため運用方法を追記する必要がある。

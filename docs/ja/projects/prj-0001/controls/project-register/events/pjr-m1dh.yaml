@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e493e21b168d4f2194eb190492b21cc5
+  ts: "2026-10-31T02:43:01Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクトのリポジトリの作業ブランチの名前を設定で選べるようにし、早送りの統合を足す
+    - field: description
+      from: ""
+      to: repos[].branch\_template で作業ブランチの名前を選べるようにし、run と作業ブランチの対応を runner の記録で持ち、名前の重なりを run の開始時に検査し、統合の形に ff を足す
+    - field: input
+      from: ""
+      to: '["PJR-BNMV の決定: `repos[].branch_template`（既定は exec/{project}-{id}、例: git-flow は feature/{topic}、GitHub flow は {type}/{topic}）。{id} も {topic} も含まないテンプレートは設定エラー","ブランチ名が別の項目のものとしてあれば run の開始時に止め、topic を変えるか --branch で名前を指定するよう案内する。自動の連番は付けない。同じ項目の再開では同じブランチを使い続ける","runner は作業ブランチの名前が exec/ で始まることを前提に worktree の片付けや再開をしている（src/exec/worktree-ops-lifecycle.ts など）。run と作業ブランチの対応は、名前の接頭辞ではなく runner の記録で持つ","統合の形に ff（merge commit を作らず早送りで積む）を足す。既存の merge・branch-only は変えない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-BNMV"]'
+- v: 1
+  id: reg_5f42328265f54a5386cadec6b53c3c3a
+  ts: "2026-10-31T02:43:49Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-TC62","PJR-Z7GX"]'
+  previous_event_id: reg_e493e21b168d4f2194eb190492b21cc5
+- v: 1
+  id: reg_dd27a75b2e734578a7dab1eb4f113ab8
+  ts: "2026-10-31T04:13:42Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5f42328265f54a5386cadec6b53c3c3a
+- v: 1
+  id: reg_daf4a6ba9fd5491e9ebc17facf275feb
+  ts: "2026-10-31T04:35:08Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_dd27a75b2e734578a7dab1eb4f113ab8
+- v: 1
+  id: reg_17367ff9db9040ca8b05de7f6817a67f
+  ts: "2026-10-31T04:35:47Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_daf4a6ba9fd5491e9ebc17facf275feb
+- v: 1
+  id: reg_853e0da0e5e444658be02140367f8f81
+  ts: "2026-10-31T04:47:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_17367ff9db9040ca8b05de7f6817a67f
+- v: 1
+  id: reg_ccb19bc32c1d4a61bd1aed3b1852cecd
+  ts: "2026-10-31T04:58:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、実際の git と CLI を使う統合テスト 78 件（テンプレート名での作成と再開・重なりでの停止・--branch・ff と分岐時の停止・片付け）を手元で流して確かめ、JSEY も通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: "repos[].branch_template で作業ブランチの名前を選べるようにし、run と作業ブランチの対応をプロダクトの git の管理ディレクトリの記録で持つようにした。名前の重なりを start の前に検査し、exec run --branch と integration_strategy: ff を足した"
+  previous_event_id: reg_853e0da0e5e444658be02140367f8f81

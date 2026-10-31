@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_573253d5dd5a4b86a90a72e2397ad46c
+  ts: "2026-10-30T09:32:07Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: deliverable scaffold で成果物を 1 つだけ雛形にできるようにする
+    - field: description
+      from: ""
+      to: --target で成果物を 1 つだけ指定して雛形を作り、カタログにない成果物は --target-path と --target-rulebook で作れるようにする
+    - field: input
+      from: ""
+      to: '["PJR-65DS の流れ（雛形→人による文脈の記入→draft→fully-guided→finalize）は雛形を成果物 1 つ単位で作れることを前提とするが、現在の deliverable scaffold は --dct でカタログ単位に一括生成するだけで、カタログのない成果物も作れない","register の --target・--target-path・--target-rulebook の解決とパス検証（src/register/deliverable-target.ts）を使い回す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-30"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6A2B"]'
+- v: 1
+  id: reg_4b83d0fc6bfd491fa89252b17a3f9209
+  ts: "2026-10-30T09:33:27Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_573253d5dd5a4b86a90a72e2397ad46c
+- v: 1
+  id: reg_a2e4542ebc02464d81353d1553a3b6a0
+  ts: "2026-10-30T09:55:45Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4b83d0fc6bfd491fa89252b17a3f9209
+- v: 1
+  id: reg_24cc133f2bf44783b055ce23d0973fbf
+  ts: "2026-10-30T10:07:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、tarball を入れた空のリポジトリでの生成（カタログあり・なし、skip、--dct 併用とリポジトリ外のエラー）で確かめ、JSEY も通った。template のない雛形の type が deliverable_type と合わない既存の問題は別の項目で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: "-"
+      to: deliverable scaffold に --target・--target-path・--target-rulebook を追加し、成果物を 1 件だけ雛形にできるようにした。パスの検証は register と共通の関数にし、context-pass の説明・command-reference・CHANGELOG を直した
+  previous_event_id: reg_a2e4542ebc02464d81353d1553a3b6a0

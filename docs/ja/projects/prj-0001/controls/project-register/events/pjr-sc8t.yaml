@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2799047026644b7eb01bf19a46a7628d
+  ts: "2026-10-29T13:15:20Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: deliverable\_type の照合が rulebook の一覧をファイルごとに作り直し lint:fm が遅い
+    - field: description
+      from: ""
+      to: remark がファイルごとにプラグインを読み込み直すため、PJR-484B の照合が rulebook の一覧（約 0.34 秒）を毎回作り、lint:fm が 7 分かかって親の検証の上限に迫る。一覧をワークスペースごとに 1 回だけ作る
+    - field: input
+      from: ""
+      to: '["利用者の判断（案 A）: 一覧をワークスペースごとに 1 回だけ作って使い回し、修正は @specdojo/docs-lint 0.3.1 として公開する。版の変更と公開作業は本項目の後に orchestrator が別に行う。","観測: 何も動かしていない状態で npm run lint:fm が 421 秒。210 ファイルの remark で rulebook の glob が 186 回（作り直し 93 回）呼ばれ、50 秒のうち約 30 秒を占めた。親の検証の上限は 10 分で、PJR-JSEY の lint-fm が 2 回時間切れになった。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-484B"]'
+- v: 1
+  id: reg_4a6dc893417043f7a54ddef6487d6e96
+  ts: "2026-10-29T13:16:21Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2799047026644b7eb01bf19a46a7628d
+- v: 1
+  id: reg_77d4bd2d7b244def88e1d542267bfc95
+  ts: "2026-10-29T13:35:06Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_4a6dc893417043f7a54ddef6487d6e96
+- v: 1
+  id: reg_be6a6043cd9e487dbb133c7848c4aea1
+  ts: "2026-10-29T13:36:41Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_77d4bd2d7b244def88e1d542267bfc95
+- v: 1
+  id: reg_630421b99fca4aeba70a1bc1969cf5a4
+  ts: "2026-10-29T13:45:15Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_be6a6043cd9e487dbb133c7848c4aea1
+- v: 1
+  id: reg_9211cc88ea3c468889b4aacf25ec648a
+  ts: "2026-10-29T13:58:49Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と lint:fm の実測、JSEY の動作確認で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: "-"
+      to: deliverable_type の照合で rulebook の一覧をワークスペースごとに 1 回だけ作るようにし、lint:fm が 421 秒から 25 秒になった。docs-lint 0.3.1 の hotfix を main から用意した
+  previous_event_id: reg_630421b99fca4aeba70a1bc1969cf5a4

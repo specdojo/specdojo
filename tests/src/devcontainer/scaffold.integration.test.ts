@@ -176,6 +176,120 @@ exit 0`,
     );
   });
 
+  it("calls devcontainer up instead of execing into an unrelated vsc container when matching container is stopped", async () => {
+    const fixture = await createScaffoldFixture();
+    const fakeBin = join(fixture.root, "node-bin");
+    const commandLog = join(fixture.root, "commands.log");
+    const containerState = join(fixture.root, "container-started");
+    const configuredScript = join(fixture.root, "specdojo-tmux.sh");
+    mkdirSync(fakeBin);
+
+    writeExecutable(
+      join(fakeBin, "docker"),
+      fakeCommandBody(
+        "docker",
+        `case "$1" in
+  info)
+    exit 0
+    ;;
+  ps)
+    for arg in "$@"; do
+      if [ "$arg" = "--format" ]; then
+        printf 'other-container\\tvsc-other-image\\n'
+        exit 0
+      fi
+    done
+    if [ -f "$FAKE_CONTAINER_STATE" ]; then
+      printf 'target-container-456\\n'
+    fi
+    exit 0
+    ;;
+  exec)
+    exit 0
+    ;;
+esac
+exit 1`,
+      ),
+    );
+    writeExecutable(
+      join(fakeBin, "devcontainer"),
+      fakeCommandBody(
+        "devcontainer",
+        `: >"$FAKE_CONTAINER_STATE"
+exit 0`,
+      ),
+    );
+    configureTmuxScript(fixture.tmuxScript, configuredScript, {
+      nodeBinDir: fakeBin,
+      repo: fixture.repo,
+    });
+
+    const result = runScript(configuredScript, fixture.repo, {
+      COMMAND_LOG: commandLog,
+      FAKE_CONTAINER_STATE: containerState,
+      HOME: fixture.home,
+      PATH: REMOTE_COMMAND_PATH,
+    });
+
+    expect(result.status, result.stderr).toBe(0);
+    const calls = readFileSync(commandLog, "utf8").trim().split("\n");
+    expect(calls).toContain(`devcontainer\tup\t--workspace-folder\t${fixture.repo}`);
+    expect(calls).toContain(
+      "docker\texec\t-it\t--detach-keys=ctrl-]\t-u\tnode\t-w\t/workspaces/workspace/repo\ttarget-container-456\ttmux\tnew-session\t-A\t-s\tspecdojo",
+    );
+    expect(calls.some((call) => call.includes("other-container"))).toBe(false);
+  });
+
+  it("fails with diagnostics when container_workspace_dir does not exist in the container", async () => {
+    const fixture = await createScaffoldFixture();
+    const fakeBin = join(fixture.root, "node-bin");
+    const commandLog = join(fixture.root, "commands.log");
+    const configuredScript = join(fixture.root, "specdojo-tmux.sh");
+    mkdirSync(fakeBin);
+
+    writeExecutable(
+      join(fakeBin, "docker"),
+      fakeCommandBody(
+        "docker",
+        `case "$1" in
+  info)
+    exit 0
+    ;;
+  ps)
+    printf 'container-123\\n'
+    exit 0
+    ;;
+  exec)
+    for arg in "$@"; do
+      if [ "$arg" = "test" ]; then
+        exit 1
+      fi
+    done
+    exit 0
+    ;;
+esac
+exit 1`,
+      ),
+    );
+    writeExecutable(join(fakeBin, "devcontainer"), fakeCommandBody("devcontainer"));
+    configureTmuxScript(fixture.tmuxScript, configuredScript, {
+      nodeBinDir: fakeBin,
+      repo: fixture.repo,
+    });
+
+    const result = runScript(configuredScript, fixture.repo, {
+      COMMAND_LOG: commandLog,
+      HOME: fixture.home,
+      PATH: REMOTE_COMMAND_PATH,
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("container-123");
+    expect(result.stderr).toContain("/workspaces/workspace/repo");
+    const calls = readFileSync(commandLog, "utf8").trim().split("\n");
+    expect(calls.some((call) => call.includes("tmux\tnew-session"))).toBe(false);
+  });
+
   it.each([
     {
       missing: "devcontainer",

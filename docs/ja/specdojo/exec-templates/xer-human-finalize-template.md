@@ -15,6 +15,8 @@ done_criteria の各項目を確認し、満たしていればチェックを付
 
 _DONE_CRITERIA_CHECKLIST_
 
+- [ ] 確定対象の本文に未反映の `_CONTEXT_:` が残っていない（残っていれば承認せず、draft へ差し戻す）
+
 ## 3. 確定対象
 
 最終確認と frontmatter の `status` の `ready` への昇格が済んだ対象にチェックを付ける。

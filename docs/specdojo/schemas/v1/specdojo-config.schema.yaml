@@ -50,6 +50,7 @@ $defs:
         lint-ts,
         lint-fm,
         lint-md,
+        lint-mermaid,
         build,
         format-check,
       ]
@@ -99,6 +100,10 @@ $defs:
         type: array
         items:
           $ref: "#/$defs/NonEmptyString"
+      commit_types:
+        description: >-
+          Mapping from register item types to Conventional Commits types for this project.
+        $ref: "#/$defs/CommitTypeMap"
       repos:
         description: >-
           Product repositories that tasks of this project may change. The project repository is
@@ -148,10 +153,19 @@ $defs:
       integration_branch:
         description: Branch exec integrates into. Omit to use the repository's current branch.
         $ref: "#/$defs/NonEmptyString"
-      integration_strategy:
-        description: Local merge commit (default), or retain the exec branch for product-side PR review.
+      branch_template:
+        description: Product work branch template; must contain id or topic. Expanded values must be valid Git branch names.
         type: string
-        enum: [merge, branch-only]
+        default: "exec/{project}-{id}"
+        allOf:
+          - pattern: '\{(?:id|topic)\}'
+          - pattern: '^(?:[^{}\u0000]|\{(?:id|project|topic|type|scope|title)\})*$'
+          - not:
+              pattern: '[\s\u0000-\u001f\u007f~^:?*\[\\]|\.\.|@\{|^[-/]|/$|//|\.$|(^|/)\.|\.lock(/|$)'
+      integration_strategy:
+        description: Local merge commit (default), fast-forward only, or retain the branch for product-side PR review.
+        type: string
+        enum: [merge, branch-only, ff]
         default: merge
       setup:
         description: Whether exec installs dependencies and builds in the repository worktree.
@@ -162,6 +176,23 @@ $defs:
             type: boolean
           build:
             type: boolean
+      commit_types:
+        description: >-
+          Mapping from register item types to Conventional Commits types for this repository.
+        $ref: "#/$defs/CommitTypeMap"
+      commit_subject_template:
+        description: >-
+          Product commit subject. Omit to retain exec(register <ID>): <title>.
+        $ref: "#/$defs/CommitMessageTemplate"
+      merge_message_template:
+        description: >-
+          Product merge message. Omit to retain exec(register <ID>): <title>. Refs is always appended.
+        $ref: "#/$defs/CommitMessageTemplate"
+  CommitMessageTemplate:
+    type: string
+    allOf:
+      - pattern: '\S'
+      - pattern: '^(?:[^{}\u0000]|\{(?:id|project|topic|type|scope|title|branch|target)\})*$'
   Run:
     type: object
     properties:
@@ -195,3 +226,10 @@ $defs:
         type: string
       register_date_timezone:
         type: string
+  CommitTypeMap:
+    type: object
+    description: >-
+      Mapping from register item type (e.g., todo, issue) to Conventional Commits type (e.g., feat, fix).
+    additionalProperties:
+      type: string
+      enum: [feat, fix, docs, refactor, test, chore, perf, build, ci, style, revert]

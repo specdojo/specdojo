@@ -68,6 +68,7 @@ export type PlanTaskIdentity = {
 };
 
 const PLAN_APPROACHES: readonly Approach[] = [
+  "draft",
   "fully-guided",
   "recipe-guided",
   "freeform",

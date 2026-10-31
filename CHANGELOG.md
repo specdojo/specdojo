@@ -2,13 +2,65 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
-## [Unreleased]
+## [0.6.0] - 2026-10-31
 
-`@specdojo/docs-lint` 0.3.1 を公開します。`specdojo`・`@specdojo/docs-site` の版は変わりません。
+同梱パッケージは `@specdojo/docs-lint` 0.4.0 を同時に公開します。docs-lint 0.4.0 は、成果物の文脈の目印 `_CONTEXT_:` の検出（`status: ready` の文書ではエラー、それ以外は情報。PJR-JRSY・PJR-D0GB）を含みます。`remark/md-content` を options なしで読み込むと失敗する問題の修正（PJR-5EN3）と、0.3.1（2026-10-29 公開）の rulebook 一覧のキャッシュ（PJR-SC8T）も含みます。`@specdojo/docs-site` は変更がないため 0.3.0 のままです。
+
+### 利用者から見て動きが変わる点
+
+この版に破壊的変更はありません。ただし、次の 2 点は既存の使い方で結果が変わります。
+
+- schedule の strategy の `guided-pass`（草案作成）の approach が、`fully-guided` から `draft` に変わりました。既存の schedule を作り直すと、草案の段の plan が `draft` の雛形で作られます（PJR-3MY5・PJR-E45K）。
+- `fully-guided` は、既存成果物の磨き込み専用になりました。参照するのは宣言された文書（rulebook・recipe・sample、`based_on`、個票の `入力`、カタログの `brief` など）だけで、template から本文を新しく作ることはしません。文脈から下書きを作る場合は `draft` を使います（PJR-3MY5）。
+
+### 追加機能
+
+- 本リポジトリの開発用に `node tools/lint-mermaid.mjs '<Markdown のパスまたは glob>'` を追加しました。docs-site と同じ Mermaid で、ブラウザを使わずに図の構文を検査し、エラーの文書・開始行・図の種類と未検査の件数を報告します。引数なしでは `docs/` 全体を検査します。本リポジトリでは `npm run lint:mermaid` として `npm run check` と commit 時の hook（変更した Markdown）に組み込みました（PJR-B5TY）。
+
+- exec の親の検証に `lint-mermaid`（`npm run lint:mermaid`）を追加しました。`pipeline.parent_validations` に指定でき、利用するリポジトリに `lint:mermaid` script が必要です（PJR-B5TY）。
+
+- プロダクトの作業ブランチ名を `repos[].branch_template` と `exec run --branch <repo>=<name>` で選べるようにしました。項目とブランチの対応を runner が記録し、再開・片付けに使います。別項目との名前の重なりは開始前に停止します。`integration_strategy: ff` は merge commit を作らず早送りだけで統合し、分岐した履歴では停止します。未設定時の名前と `merge`・`branch-only` の動作は従来どおりです（PJR-M1DH）。
+
+- プロダクトリポジトリの `repos[].commit_subject_template` と `repos[].merge_message_template` で、register の exec が作る commit と merge commit の書式を選べるようにしました。8 種類の変数と空 scope の括弧除去に対応し、本文末尾の `Refs:` は常に付けます。未設定時の書式と SpecDojo の記帳は従来どおりです（PJR-Z7GX）。
+
+- 個票に `commit_type` と `commit_scope` を追加し、`register add` / `update` に `--commit-type` と `--commit-scope` を追加しました。Conventional Commits の type・scope を個票ごとに指定でき、`update` では `-` で削除できます。未指定時は項目の type から既定の対応（`issue` は `fix`、`todo`・`change-request` は `feat` など）で解決し、`specdojo.config.json` の `projects.<project-id>.commit_types` や `repos[].commit_types` で対応を上書きできます（PJR-TC62）。
+
+- `deliverable scaffold` に `--target <doc-id>` を追加しました。成果物を 1 つだけ指定して雛形を作成できます（`--dct` との併用は不可）。カタログにない成果物は `--target-path` と `--target-rulebook` を指定して作成できます。template のない rulebook でも最小構成の雛形を生成します（PJR-S23T）。
+
+- 文脈を渡して成果物を作成する流れ（scaffold・文脈記入・`draft`・`fully-guided`・`finalize`）と、文脈の置き場所（成果物内の `_CONTEXT_:`、個票の `入力` / `--input`、カタログの `brief`）の使い分けを `exec-operation-guide` と `ryu-guide` にまとめました。あわせて `tsd-recipe` の「作成前に集める情報」に文脈の置き場所の対応を追加し、静的サイト向け TSD の技術選定を指示して作成する例を掲載しました（PJR-6A2B）。
+
+- schedule に `draft` profile を追加しました。`strategy-planning` で `intent: draft-with-context` を宣言すると、雛形作成・文脈記入（human）→ draft → refine → review → finalize（human）を生成します。human は claim / complete で記録し、文脈記入用の result に雛形作成と `_CONTEXT_:` の案内を表示します（PJR-E45K）。
+
+- `register add` / `update` に繰り返し指定できる `--input` を追加しました。対話で得た前提を個票の `入力` 節と event に記録し、register 経由の plan へ完了条件とは別に渡します。update は一覧置換、`--input -` は全削除です（PJR-6DD7）。
+
+- 成果物内の文脈の目印 `_CONTEXT_:` を定めました。`draft` で反映した指示を result に記録し、`fully-guided` では未反映の指示を論点として残します。finalize の確認と文書 lint で残りを検出し、lint は `ready` で error、それ以外で warning とします（PJR-JRSY）。
+- `draft` approach を追加しました。文脈で任された範囲を調べて下書きし、選定値を提案として示して出典と選定理由を記録します。register・schedule・plan で使えます（PJR-3MY5）。
+
+- 成果物カタログ（dct）の成果物に `brief` を追加しました。成果物の外から継続して渡す前提（技術スタックや制約など）を記載でき、schedule の task の plan および register 経由の plan に「前提」として反映します。`brief` が無い場合は plan に載せません。複数成果物で共有する場合は YAML アンカーを利用できます（PJR-YKMA）。
+
+### 変更
+
+- `schedule-design-guide`・`xer-human-draft-template`・`plans-planning.ts` に残っていた雛形作成の案内を、成果物を 1 つだけ作成する `deliverable scaffold --project <project-id> --target <doc-id>` の形にそろえました。これに伴い、カタログ全体の未作成成果物も生成される旨の注意事項を案内から削除しました（PJR-73KT）。
+
+- strategy の `guided-pass`（草案作成）の approach を `fully-guided` から `draft` に変更しました。型がそろった未作成成果物を、文脈の記入がなくても template から下書きできます。調査・選定の委任がない範囲は保留し、後続の refine で `fully-guided` による磨き込みを行います。既存 strategy へは再生成時に反映されます（PJR-E45K）。
+
+- `@specdojo/docs-lint` の `_CONTEXT_:` の検出において、`status: ready` 以外の文書では warning ではなく情報（info）として報告するように変更しました。下書き時に `_CONTEXT_:` を残したまま実行しても `--frail` 付きの `npm run lint:fm` が失敗せず、親の検証を妨げません。`status: ready` の文書では従来どおり error として失敗させます（PJR-D0GB）。
+
+- 配布するオーケストレーターの指示に、対話で得た前提・制約・委任範囲を `--input` で個票の `入力` へ記録し、完了条件と分ける扱いを書き足しました（PJR-6DD7）。
+
+- `fully-guided` を既存成果物の磨き込み専用に整理しました。参照は宣言された文書だけとし、対象成果物の `based_on`、個票の `入力`、カタログの `brief` を参照範囲に加えました。`入力`・`brief` の差し込み口は、値が無ければ「なし」と表示します（PJR-3MY5）。
 
 ### 不具合修正
 
-- `@specdojo/docs-lint` の Markdown / YAML frontmatter 検証において、rulebook 一覧の生成をプロセス内でワークスペースごとに 1 回だけ行いキャッシュするように修正しました。remark のファイルごとのプラグイン読み込みで rulebook 一覧が毎回再生成されて `lint:fm` が著しく低速化していた問題を解消します。本修正は `@specdojo/docs-lint` の次の版（0.3.1）で公開されます（PJR-SC8T）。
+- `specdojo-tmux.sh.sample` の `find_container` で、ラベル `devcontainer.local_folder` が一致するコンテナが見つからない場合に `vsc-` で始まる別のコンテナへ誤って接続していた問題を修正しました。ラベルの一致するコンテナだけを検索対象とし、見つからない場合は `devcontainer up` を呼び出して起動するようにしました。あわせて `docker exec` の前にコンテナ内の作業ディレクトリの存在を確認し、存在しない場合は明示的なメッセージで停止するようにしました（PJR-P9ZC）。
+
+- `decision`・`note`・`epic` など `入力` の章がない種類の個票へ `--input` を指定した際に、末尾に番号のない `## 入力` が追加されて章番号の連続性規約に違反していた問題を修正しました。最初の章の直後に `## 2. 入力` として挿入し、以降の章番号を 1 つずつ繰り下げます。既存の個票に番号のない `## 入力` がある場合も、同様に番号付きの章として適切な位置へ移動します（PJR-790T）。
+
+- `deliverable scaffold` の一括生成と `--target` において、template のない rulebook の最小の雛形の `type` を rulebook の frontmatter で宣言された `deliverable_type` に合わせるように修正しました（未宣言時は従来どおり `project`）。これにより、template のない rulebook を指定して生成した雛形が docs-lint の `frontmatter-deliverable-type` で警告にならず、コミット時ガードを通過します（PJR-YKYK）。
+
+- `@specdojo/docs-lint` の Markdown / YAML frontmatter 検証において、rulebook 一覧の生成をプロセス内でワークスペースごとに 1 回だけ行いキャッシュするように修正しました。remark のファイルごとのプラグイン読み込みで rulebook 一覧が毎回再生成されて `lint:fm` が著しく低速化していた問題を解消します。本修正は `@specdojo/docs-lint` 0.3.1 で公開済みです（PJR-SC8T）。
+
+- `@specdojo/docs-lint` の `remark/md-content` を options なしで読み込んだ場合に `TypeError` で失敗する問題を修正しました。options が渡されないときは空の options として扱い、`schemas` は空、`workspaceRoot` は `process.cwd()` として動作します。これにより options なしでも `_CONTEXT_:` の検出が動作します（PJR-5EN3）。
 
 ## [0.5.0] - 2026-10-29
 

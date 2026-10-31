@@ -1,0 +1,152 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9bb5b9843433433982325be61f0b3b73
+  ts: "2026-10-31T02:42:33Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 個票に commit の type と scope を持たせる
+    - field: description
+      from: ""
+      to: プロダクトのリポジトリの commit の type と scope を項目ごとに選べるよう、個票に commit\_type と commit\_scope を持たせ、register add と update で指定できるようにする
+    - field: input
+      from: ""
+      to: '["PJR-BNMV の決定: type は個票の `commit_type`、任意の scope は `commit_scope` に持ち、register add / update の --commit-type / --commit-scope で指定する。指定がなければ項目の type から決め（issue は fix、todo・change-request は feat）、この対応も設定で変えられるようにする"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-BNMV"]'
+- v: 1
+  id: reg_85585e3b62764a02b9a88384a9322a2a
+  ts: "2026-10-31T02:46:51Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9bb5b9843433433982325be61f0b3b73
+- v: 1
+  id: reg_df9f2f74bdaa46b8b4b1f5c6488fe04b
+  ts: "2026-10-31T03:10:47Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor validation failed or not run: npm run validate:schema:file"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor validation failed or not run: npm run validate:schema:file"
+  previous_event_id: reg_85585e3b62764a02b9a88384a9322a2a
+- v: 1
+  id: reg_50f894c27e964d97a0563822c6abe6f4
+  ts: "2026-10-31T03:12:02Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor validation failed or not run: npm run validate:schema:file"
+      to: "-"
+  previous_event_id: reg_df9f2f74bdaa46b8b4b1f5c6488fe04b
+- v: 1
+  id: reg_4de9529be3184edca6f25b62e08115c5
+  ts: "2026-10-31T03:27:03Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_50f894c27e964d97a0563822c6abe6f4
+- v: 1
+  id: reg_cd6b9fe5c6df4ae786c80f2e4be90dcb
+  ts: "2026-10-31T03:27:46Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_4de9529be3184edca6f25b62e08115c5
+- v: 1
+  id: reg_9d58ce8d84474e508602d1c840a18a8d
+  ts: "2026-10-31T03:38:13Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cd6b9fe5c6df4ae786c80f2e4be90dcb
+- v: 1
+  id: reg_6e4f1093eba14924acc22a8d6df46d08
+  ts: "2026-10-31T03:47:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、試しのリポジトリでの指定・不正な値のエラー・消去を確かめ、JSEY も通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 個票に commit_type と commit_scope を足し、register add と update の --commit-type と --commit-scope で指定と消去をできるようにした。指定がないときは項目の type から決め、対応は project と repos[] の commit_types で上書きできる。後続の項目から引く関数を設けた
+  previous_event_id: reg_9d58ce8d84474e508602d1c840a18a8d

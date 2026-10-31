@@ -12,6 +12,13 @@ import {
 } from "../../../src/schedule/strategy-generate.js";
 import { resolveRecommendedApproach } from "../../../src/schedule/approach.js";
 import { registerScheduleCommands } from "../../../src/schedule/schedule.js";
+import { buildScheduleTrack } from "../../../src/schedule/build.js";
+import {
+  buildPhaseModeIndex,
+  resolveApproach,
+  resolveTaskExecution,
+  resolveTaskMode,
+} from "../../../src/exec/strategy.js";
 
 let root: string;
 let catalogPath: string;
@@ -122,7 +129,7 @@ afterEach(() => {
 });
 
 describe("strategy generator", () => {
-  it("TaskIntent 7 種を決定論的な approach へ写像する", () => {
+  it("TaskIntent 8 種を決定論的な approach へ写像する", () => {
     const usable = {
       rulebook: "usable",
       recipe: "usable",
@@ -132,6 +139,9 @@ describe("strategy generator", () => {
     const base = { usability: usable, deliverableExists: true, resolvedEvidenceCount: 1 };
     expect(resolveRecommendedApproach({ ...base, intent: "author-deliverable" }).approach).toBe(
       "fully-guided",
+    );
+    expect(resolveRecommendedApproach({ ...base, intent: "draft-with-context" }).approach).toBe(
+      "draft",
     );
     expect(
       resolveRecommendedApproach({
@@ -161,6 +171,90 @@ describe("strategy generator", () => {
         bootstrapScope: ["rulebook"],
       }).approach,
     ).toBe("bootstrap-finalize");
+  });
+
+  it.each(["unknown", "absent", "unusable"] as const)(
+    "文脈付き profile は必要な型が %s なら生成しない",
+    (template) => {
+      expect(
+        resolveRecommendedApproach({
+          intent: "draft-with-context",
+          usability: { rulebook: "usable", recipe: "usable", sample: "usable", template },
+          deliverableExists: false,
+          resolvedEvidenceCount: 0,
+        }).approach,
+      ).toBe("undecided");
+    },
+  );
+
+  it("intent から文脈付き profile を生成し、human と agent の段・approach・依存順を保つ", () => {
+    const dct = catalog();
+    // No kata is required for this catalog; separate selection tests cover required kata grades.
+    const groups = dct.groups as Array<{ deliverables: Array<Record<string, unknown>> }>;
+    for (const item of groups[0].deliverables) item.rulebook = "not-needed";
+    write("catalog/dct-demo.yaml", dump(dct));
+    const strategy = load(
+      readFileSync(join(schedulePath, "sch-strategy-demo.yaml"), "utf8"),
+    ) as Record<string, unknown>;
+    strategy.approach_rules = [
+      { local_ids: ["representative", "ordinary"], intent: "draft-with-context" },
+    ];
+    write("schedule/sch-strategy-demo.yaml", dump(strategy));
+    const generated = generateStrategy({
+      repoRoot: root,
+      schedulePath,
+      catalogPath,
+      timelinePath,
+      rolesPath,
+      projectId: "prj-0001",
+      track: "demo",
+      defaultOwner: "DEV",
+      gateOwner: "PO",
+      milestoneOwner: "PO",
+    });
+    expect(generated.errors).toEqual([]);
+    expect(validateStrategySchema(generated.doc, root)).toEqual([]);
+    write("schedule/sch-strategy-demo.yaml", generated.content);
+    const built = buildScheduleTrack(join(schedulePath, "sch-strategy-demo.yaml"), root);
+    expect(built.errors).toEqual([]);
+    const index = buildPhaseModeIndex(schedulePath);
+    const tasks = built.tasks
+      .filter((task) => task.local_id === "ordinary")
+      .map((task) => ({ ...task, id: `T-DEMO-ordinary-${task.phase_suffix}` }));
+    expect(tasks.map((task) => task.phase_set)).toEqual([
+      "context-pass",
+      "guided-pass",
+      "refine-pass",
+      "review-pass",
+      "finalize-pass",
+    ]);
+    expect(
+      tasks.map((task) =>
+        resolveApproach(task.local_id, task.id, index, task.phase_suffix, task.phase_set),
+      ),
+    ).toEqual(["draft", "draft", "fully-guided", "fully-guided", "finalize"]);
+    expect(
+      tasks.map((task) =>
+        resolveTaskExecution(task.local_id, task.id, index, task.phase_suffix, task.phase_set),
+      ),
+    ).toEqual(["human", "agent", "agent", "agent", "human"]);
+    expect(
+      tasks.map((task) =>
+        resolveTaskMode(task.local_id, task.id, index, task.phase_suffix, task.phase_set),
+      ),
+    ).toEqual(["edit", "edit", "edit", "review", "edit"]);
+    for (let i = 1; i < tasks.length; i++) {
+      expect(tasks[i].depends_on).toContain(tasks[i - 1].id);
+    }
+    const phases = generated.doc!.phase_sets as Record<string, Array<Record<string, unknown>>>;
+    expect(phases["context-pass"][0]).not.toHaveProperty("agent_pipeline");
+    expect(phases["context-pass"][0].description).toContain("deliverable scaffold");
+    expect(phases["context-pass"][0].description).toContain("_CONTEXT_:");
+    expect(phases["guided-pass"][0]).toHaveProperty("agent_pipeline");
+    expect(phases["finalize-pass"][0]).not.toHaveProperty("agent_pipeline");
+    expect(generated.doc!.phase_gates).toEqual(
+      expect.arrayContaining([expect.objectContaining({ after_phase_sets: ["guided-pass"] })]),
+    );
   });
 
   it("DCT・Timeline・intent・grade から混在 profile、owner、gate、依存を生成する", () => {

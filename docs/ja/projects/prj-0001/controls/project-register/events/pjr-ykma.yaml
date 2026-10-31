@@ -41,3 +41,48 @@
     - field: depends_on
       from: ""
       to: '["PJR-3MY5"]'
+- v: 1
+  id: reg_e75ab45726a044918e07ca9e75273d9d
+  ts: "2026-10-29T14:34:23Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bf1e5c21706141239089a6e7f1a6b351
+- v: 1
+  id: reg_71d477e3079941df8b8e837ed575aa03
+  ts: "2026-10-29T15:01:25Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e75ab45726a044918e07ca9e75273d9d
+- v: 1
+  id: reg_663abd5acf454649b4d949d0631bc7ca
+  ts: "2026-10-29T15:09:44Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と JSEY の動作確認で完了条件を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: "-"
+      to: dct.schema.yaml の成果物に brief を追加し、schedule と register の両経路の plan に前提として載せた。dct-rulebook・sample・ryu-guide に overview・done_criteria との使い分けと YAML アンカーでの共有を書いた
+  previous_event_id: reg_71d477e3079941df8b8e837ed575aa03

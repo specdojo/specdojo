@@ -17,7 +17,7 @@ Exec Operation Guide
 
 **この文書で分かること**
 
-- 実行経路の選び方、状態遷移、blocked 復帰、再実行、human タスクの扱い、register から approach を使って成果物・kata を作る・直す手順
+- 実行経路の選び方、状態遷移、blocked 復帰、再実行、human タスクの扱い、register から approach を使って成果物・kata を作る・直す手順、文脈を渡して段階的に作成する流れ
 
 **次に読む文書**
 
@@ -653,7 +653,7 @@ specdojo:
 #### 4.3.1. 成果物を対象にする場合
 
 - **対象（`targets`）**: 成果物カタログ（DCT）に定義されている成果物の文書 ID（doc id）を指定します（例: `prj-0001:cxd-specdojo`、`specdojo:exec-config-guide`）。プロダクト成果物の場合は `local_id` の canonical 形式（`<project-id>:<local_id>`）も受け付けます。まだ文書ファイルが作成されていない成果物であっても、カタログに定義されていればカタログで解決され、起票・実行できます。
-- **進め方（`approach`）**: 成果物を作成・修正する進め方（`fully-guided`、`recipe-guided`、`freeform`、`bootstrap`、`retrofit`、`cross-deliverable-dedup` など）から目的に応じて選びます。
+- **進め方（`approach`）**: 成果物を作成・修正する進め方（`draft`（文脈を調べて下書き）、`fully-guided`（既存成果物の磨き込み）、`recipe-guided`、`freeform`、`bootstrap`、`retrofit`、`cross-deliverable-dedup` など）から目的に応じて選びます。
 
 #### 4.3.2. kata（実践の型）を対象にする場合
 
@@ -711,3 +711,97 @@ specdojo register close \
   --id <PJR-ID> \
   --conclusion "設定ガイドを改訂し検証を通過"
 ```
+
+### 4.7. 文脈を渡して段階的に作成する手順
+
+成果物をゼロから作成する場合や、技術スタックの選定などの調査を伴う場合は、成果物の雛形作成から文脈の記入、下書き（`draft`）、磨き込み（`fully-guided`）、人間の確定（`finalize`）へと段階的に個票を分けて進めます。
+
+#### 4.7.1. 5つの段階と役割分担
+
+成果物作成の流れは、次の 5 段階で役割を分担します。
+
+| 段階                    | 実行主体 | approach       | 役割と進め方                                                                                                                                             |
+| ----------------------- | -------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. 雛形作成（scaffold） | CLI / 人 | -              | `deliverable scaffold` で成果物のファイル雛形を生成する                                                                                                  |
+| 2. 文脈の記入           | 人       | -              | 成果物内に `_CONTEXT_:` を記入、または個票の `入力`（`--input`）で前提・制約・調査委任の指示を渡す                                                       |
+| 3. 下書き（draft）      | agent    | `draft`        | 文脈で任された範囲を調査・選定して下書きする。選定値を提案として示し、出典と選定理由を result に記録する。反映した `_CONTEXT_:` は削除して result に写す |
+| 4. 磨き込み（refine）   | agent    | `fully-guided` | 既存成果物を実践の型（rulebook / recipe / sample）に照らして構造・用語・整合性を磨き込む（磨き込み専用）。新たな調査や外部情報の追加は行わない           |
+| 5. 確定（finalize）     | 人       | `finalize`     | `done_criteria` や未反映の文脈指示（`_CONTEXT_:` の残り）がないことを確認し、成果物の `status` を `ready` へ昇格する                                     |
+
+#### 4.7.2. 個票の分割と `depends_on` による連携
+
+この流れをプロジェクト登録簿（register）で進める場合は、`draft`、`fully-guided`、`finalize` の各段階を個票（`todo`）として起票し、`depends_on` で先行タスクに依存させて順に実行します。
+
+たとえば、フロントエンドの技術スタック詳細定義（TSD）を「静的サイトで主流の技術スタックで書く」と指示して段階的に作成する場合の手順は次のとおりです。
+
+```bash
+# 1. 雛形を作成する
+# カタログにある成果物を 1 件だけ指定して作成する場合:
+specdojo deliverable scaffold \
+  --project prj-0001 \
+  --target prj-0001:tsd-frontend-site
+
+# カタログにない成果物を雛形にする場合は --target-path と --target-rulebook を指定する:
+specdojo deliverable scaffold \
+  --project prj-0001 \
+  --target prj-0001:tsd-custom-tool \
+  --target-path docs/ja/projects/prj-0001/architecture/tsd-custom-tool.md \
+  --target-rulebook specdojo:tsd-rulebook
+```
+
+`deliverable scaffold` は `--target <doc-id>` で成果物を 1 つだけ指定して雛形を作成できます。カタログにない成果物は、`--target-path` と `--target-rulebook` を添えて作成します（PJR-S23T）。また、`specdojo:tsd-rulebook` のように template を持たない（`template: not-needed` と宣言された）rulebook であっても、最小構成の雛形（frontmatter、見出し、本文の `_TODO_`）が生成されます。その際、雛形 frontmatter の `type` は rulebook の `deliverable_type`（TSD の場合は `architecture`）が自動設定されるため（未宣言なら `project`）、`docs-lint` の `frontmatter-deliverable-type` 検証をそのまま通過できます（PJR-YKYK）。
+
+```bash
+# 2. 成果物に文脈を記入する（または個票の --input で渡す）
+#    生成された docs/.../tsd-frontend-site.md の先頭章などに次のように記入する:
+#    _CONTEXT_: 静的サイトで主流の技術スタック（Astro 等）を調査し、採用理由・全体構成・導入手順を下書きしてください。
+
+# 3. 下書き（draft）の個票を起票する（対話から得た前提は --input でも渡せる）
+specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "フロントエンドTSDの下書き（draft）" \
+  --topic tsd-frontend-draft \
+  --difficulty medium \
+  --approach draft \
+  --target prj-0001:tsd-frontend-site \
+  --input "静的サイトで主流の技術スタック（Astro 等）を調査して選定する" \
+  --owner DEV
+
+# 4. 磨き込み（fully-guided）の個票を起票し、draft 個票に依存させる
+specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "フロントエンドTSDの磨き込み（fully-guided）" \
+  --topic tsd-frontend-refine \
+  --difficulty medium \
+  --approach fully-guided \
+  --target prj-0001:tsd-frontend-site \
+  --depends-on <DRAFT-PJR-ID> \
+  --owner DEV
+
+# 5. 確定（finalize）の個票を起票し、fully-guided 個票に依存させる
+specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "フロントエンドTSDの確定（finalize）" \
+  --topic tsd-frontend-finalize \
+  --difficulty easy \
+  --approach finalize \
+  --target prj-0001:tsd-frontend-site \
+  --depends-on <REFINE-PJR-ID> \
+  --owner PO
+```
+
+#### 4.7.3. 順次実行と引き継ぎ
+
+起票した個票は、`depends_on` の順序に従って実行します。
+
+1. **下書き（draft）の実行**:
+   `exec run --register <DRAFT-PJR-ID> --worktree` を実行します。agent は成果物内の `_CONTEXT_:` や個票の `入力` を読み取り、技術スタックを調べて下書きします。反映した `_CONTEXT_:` は削除され、元の指示と選定理由は draft の result に記録されます。実行完了後に内容を確認し、`register close` します。
+2. **磨き込み（fully-guided）の実行**:
+   draft が完了したら、後続の `exec run --register <REFINE-PJR-ID> --worktree` を実行します。agent は draft で作成された草案を rulebook や recipe に適合するように磨き込みます。この段では外部調査を行わず、既存の草案の構造・記述を整理します。実行完了後に内容を確認し、`register close` します。
+3. **人間による確定（finalize）**:
+   人が成果物を確認し、`done_criteria` を満たしていること、未反映の `_CONTEXT_:` が残っていないことをチェックします。問題がなければ `status` を `ready` へ昇格し、個票を close します。
+
+夜間や自動でまとめて実行する場合は、本ガイドの「2. 実行の列の組み方」と同様に、これらを 1 本の列に並べて順に流します。先行タスクが成功して統合されることで、後続タスクがその成果物を引き継いで実行されます。

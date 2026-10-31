@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_76d977cf85084b7dbed4f4fcd5dc8c82
+  ts: "2026-10-31T06:39:49Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 調査結果の問題ごとに解消した項目を照らし、分けた項目がすべて done・decided であることを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: PJR-65DS の流れ（雛形・文脈の記入・draft・fully-guided・finalize）と文脈の置き場所（_CONTEXT_・入力・brief）を、3MY5・JRSY・6DD7・YKMA・E45K・6A2B・D0GB・S23T・YKYK・73KT で実装と文書に反映し、調査結果の問題をすべて解消した
+  previous_event_id: reg_24c6cdc5787d4d67bed8f829bb37ddc1

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fmj5-release-v0-5-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: BA
   registered_at: "2026-10-28T21:40:56Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-29T10:28:50Z"
+  conclusion: "PR #25 で main へ昇格し、specdojo 0.5.0 と @specdojo/docs-lint・@specdojo/docs-site 0.3.0 を npm に公開した。npm latest、タグの workflow 4 件、npm からの導入と init を確認した"
   depends_on:
     - PJR-0QW0
 ---
@@ -36,12 +38,12 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                    | 担当                  | 状態 | メモ                                           |
-| --- | --------------------------------------- | --------------------- | ---- | ---------------------------------------------- |
-| 1   | 版番号と変更履歴・移行手順を確定する    | specdojo-orchestrator | done | `631268836`、develop へ統合                    |
-| 2   | 全体検証と配布物の試用を行う            | specdojo-orchestrator | done | 試用で見つけた問題を PJR-0QW0 で修正後に再確認 |
-| 3   | PR を merge し、タグ 3 つを push する   | BA                    | open | -                                              |
-| 4   | npm 公開 3 件を承認し、公開版を確かめる | BA                    | open | -                                              |
+| No  | 作業                                    | 担当                  | 状態 | メモ                                             |
+| --- | --------------------------------------- | --------------------- | ---- | ------------------------------------------------ |
+| 1   | 版番号と変更履歴・移行手順を確定する    | specdojo-orchestrator | done | `631268836`、develop へ統合                      |
+| 2   | 全体検証と配布物の試用を行う            | specdojo-orchestrator | done | 試用で見つけた問題を PJR-0QW0 で修正後に再確認   |
+| 3   | PR を merge し、タグ 3 つを push する   | BA                    | done | PR #25 の merge commit `b52064d29` に 3 つのタグ |
+| 4   | npm 公開 3 件を承認し、公開版を確かめる | BA                    | done | npm の `latest` と workflow を確認               |
 
 ## 4. 対応結果
 
@@ -54,7 +56,13 @@ specdojo:
   - `epic` の起票（`--track` 必須）、`--from` でつないだ子 todo、`--depends-on` と、先行が未完了のときの `exec run` の停止、epic と依存のビューの生成（修正前の tarball で確認。本体の差分は 0QW0 だけ）。
   - docs-lint 0.3.0 の `lint:fm` が rulebook の `deliverable_type` と合わない type を検出して exit 1 になり、宣言値に直すと通る。
   - docs-site 0.3.0 の `build` が通り、生成物が `.vitepress/` の下（dist・kata-staging・mermaid）に出て、`public/` を作らない（docs-site の tarball は修正前後で同一）。
-- 残りは BA による PR の merge、`v0.5.0`・`docs-lint-v0.3.0`・`docs-site-v0.3.0` のタグの push、npm 公開の承認と、公開後の確認である。
+- 利用者が PR #25 を merge し、`main` の merge commit `b52064d2939341215989a4afdb4dcdbe300ee577` を指す `v0.5.0`・`docs-lint-v0.3.0`・`docs-site-v0.3.0` のタグを push した。npm の公開 3 件も利用者が承認した。
+- タグから起動した workflow はすべて成功した。
+  - specdojo の npm 公開: <https://github.com/specdojo/specdojo/actions/runs/40856845741>
+  - docs-lint の npm 公開: <https://github.com/specdojo/specdojo/actions/runs/40856845672>
+  - docs-site の npm 公開: <https://github.com/specdojo/specdojo/actions/runs/40856845906>
+  - 文書サイト: <https://github.com/specdojo/specdojo/actions/runs/40856845720>
+- npm registry の `latest` は `specdojo` が `0.5.0`、`@specdojo/docs-lint` と `@specdojo/docs-site` が `0.3.0`。npm registry から 3 package を空の一時リポジトリへ新規導入し、CLI の版表示が `0.5.0` であること、`init` が `.markdownlint.yaml` を生成して完了すること、`epic` を起票できることを確認した。
 
 ## 5. 関連ドキュメント
 

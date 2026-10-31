@@ -3,7 +3,13 @@ import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { qualifyTaskId, randomHex } from "../shared.js";
-import { resolveAgentMember, type AgentProvider } from "../../shared/specdojo-config.js";
+import {
+  loadConfig,
+  resolveAgentMember,
+  type AgentProvider,
+} from "../../shared/specdojo-config.js";
+import { resolveProductBranches } from "../product-branches.js";
+import { registerProductMessage } from "../register-product-message.js";
 import { buildInPlaceStem } from "../plans.js";
 import {
   generateRegisterPlan,
@@ -15,10 +21,16 @@ import {
 } from "../register.js";
 import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
-import { findExecWorktree, gitOutput, type ExecWorktree } from "../worktree.js";
+import {
+  findExecWorktree,
+  gitOutput,
+  type ExecWorktree,
+  type ProductWorktree,
+} from "../worktree.js";
 import {
   configuredProductRepos,
   integrationBranchOverrideRecord,
+  reserveProductBranches,
   withProductRepoPrompt,
 } from "../task-repos.js";
 import {
@@ -43,10 +55,8 @@ import {
 import {
   productIntegrationTrace,
   recordResultTrace,
-  refsTrailer,
   registerProjectMergeMessage,
   traceKey,
-  withCommitTrailers,
 } from "../repo-trace.js";
 import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
 import { findResumableRegisterRun } from "../register-resume.js";
@@ -324,7 +334,20 @@ export async function finalizeRegisterWorktreeRun(params: {
     // PJR-30SW: プロダクト側の commit と merge commit、プロジェクト側の merge commit に
     // `Refs: <project-id>:<item-id>` を付ける（PJR-1SXK）。
     const itemTraceKey = traceKey(projectId, item.id);
-    const productMessage = withCommitTrailers(subject, [refsTrailer(projectId, item.id)]);
+    const projectConfig =
+      (worktree.repos?.length ?? 0) > 0
+        ? loadConfig(repoRoot).config?.projects[projectId]
+        : undefined;
+    const productMessage = (product: ProductWorktree, kind: "commit" | "merge"): string =>
+      registerProductMessage({
+        projectId,
+        item,
+        ticketPath,
+        projectConfig,
+        product,
+        kind,
+        repoConfig: projectConfig?.repos?.find((repo) => repo.name === product.name),
+      });
     const integrateStartedAt = new Date().toISOString();
     recordIntegrateStage(params.pipelineStatePath, integrateStartedAt, (current) => ({
       status: "running",
@@ -338,7 +361,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       try {
         const productOutcomes = commitProductWorktrees({
           worktree,
-          message: productMessage,
+          message: (product) => productMessage(product, "commit"),
           targets: taskTargetsAtHead(wtContext, worktree, stem),
           scopeLogPath: integrateLogPath(params.pipelineStatePath),
           failureLogPath: integrateLogPath(params.pipelineStatePath),
@@ -390,7 +413,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       integrateTaskRepositories({
         worktree,
         mergeMessage,
-        productMergeMessage: productMessage,
+        productMergeMessage: (product) => productMessage(product, "merge"),
         checkProject: () =>
           projectMergeBlockers({
             context: wtContext,
@@ -592,7 +615,17 @@ export async function runSingleRegisterItemWorktree(
     : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
   // PJR-XRAB: --integration-branch は設定の integration_branch より優先する。
-  const products = configuredProductRepos(schedulePath, opts.integrationBranch);
+  const products = resolveProductBranches(
+    configuredProductRepos(schedulePath, opts.integrationBranch),
+    {
+      projectId,
+      taskId: worktreeTaskId,
+      item,
+      ticketPath,
+      projectConfig: loadConfig().config?.projects[projectId],
+      overrides: opts.branch,
+    },
+  );
   const integrationBranchOverrides = integrationBranchOverrideRecord(opts.integrationBranch);
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
@@ -637,6 +670,8 @@ export async function runSingleRegisterItemWorktree(
 
     const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId, products });
     if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
+
+    reserveProductBranches(products, worktreeTaskId);
 
     const { planPath } = await generateRegisterPlan({
       executionPath,

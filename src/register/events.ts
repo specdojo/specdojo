@@ -24,6 +24,7 @@ export const REGISTER_EVENT_FIELDS = [
   "status",
   "title",
   "description",
+  "input",
   "type",
   "track",
   "priority",
@@ -42,6 +43,8 @@ export const REGISTER_EVENT_FIELDS = [
   "derived_from",
   "depends_on",
   "autopilot",
+  "commit_type",
+  "commit_scope",
 ] as const;
 
 export type RegisterEventField = (typeof REGISTER_EVENT_FIELDS)[number];
@@ -117,6 +120,7 @@ export function registerEventFieldValues(
     status: item.status,
     title: item.title,
     description: item.description,
+    input: item.inputs?.length ? JSON.stringify(item.inputs) : CELL_NONE,
     type: item.type,
     track: item.track ?? CELL_NONE,
     priority: item.priority,
@@ -135,6 +139,8 @@ export function registerEventFieldValues(
     derived_from: item.derivedFrom ? JSON.stringify(item.derivedFrom) : CELL_NONE,
     depends_on: item.dependsOn ? JSON.stringify(item.dependsOn) : CELL_NONE,
     autopilot: item.autopilot ?? CELL_NONE,
+    commit_type: item.commitType ?? CELL_NONE,
+    commit_scope: item.commitScope ?? CELL_NONE,
   };
 }
 

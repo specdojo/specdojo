@@ -1,0 +1,76 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "既存実装を確認し、前回失敗した未入力時のテストを修正しました。整形・schema・catalog・register build は成功。親検証7件は runner が実行します。",
+  "handoff": [
+    "設計判断: update の `--input` は一覧置換、未指定は保持、`--input -` 単独は全削除とした。既存の複数値オプションと操作をそろえ、再実行での重複を防ぐ。追記では既存分も含めて指定する。",
+    "設計判断: 入力の正本は個票本文とし、event の `input` は変更前後を JSON 配列の文字列、未入力を `-` として記録する。既存個票には初回更新時に入力節を追加する。plan には完了条件とは別の前提節として展開し、未入力なら前提節と入力参照行を省く。",
+    "保護対象の変更案: `.agents/specdojo-orchestrator.agent.md` の「起票では `--title` と `--description` を具体的に書く。」段落の後ろへ次を追加する。「対話で得た前提・制約・調査や選定を任せる範囲は、起票時に `--input <text>` を繰り返して個票の `入力` へ記録する。完了条件とは分け、会話で確認できた事実と明示的な委任範囲だけを書く。更新時の `--input` は一覧置換なので、追記では既存分も含めて渡し、全削除は `--input -` とする。」個票の完了条件に従って案を記録した。権限のある環境で正本へ反映し、`npm run orchestrator:sync` と `npm run lint:orchestrator-sync` を実行する。",
+    "前回の単体テスト失敗は、一般説明にも登場する文字列全体の不在を要求したことが原因だった。未入力時の前提節と参照行の不在を確認するテストへ修正し、`draft` / `fully-guided` の両方を対象にした。親検証7件の再実行と result 記入は runner / reporter が行う。",
+    "統合後は運用メモに従い PJR-JSEY で実 CLI の start から review までを確認する。catalog 検証には未作成成果物に関する警告があるが、エラーはない。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write $(git diff --name-only --diff-filter=ACM -- '*.md' '*.ts' '*.yaml' '*.yml' '*.js' '*.json') src/register/input.ts tests/src/register/input.test.ts",
+      "status": "passed",
+      "summary": "既存差分と新規ファイルを整形した。"
+    },
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-6dd7-register-input.md",
+      "status": "passed",
+      "summary": "検証結果を追記した個票を整形した。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-6dd7.yaml",
+      "status": "passed",
+      "summary": "更新した event schema で本個票のイベントログが有効であることを確認した。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検証成功。未作成成果物に関する警告のみ。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "個票・イベントの整合検証と派生ビュー生成に成功した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {"target":"CHANGELOG.md","status":"changed","path":"CHANGELOG.md"},
+    {"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-6dd7-register-input.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-6dd7-register-input.md"},
+    {"target":"docs/ja/specdojo/exec-templates/xep-register-investigate-template.md","status":"changed","path":"docs/ja/specdojo/exec-templates/xep-register-investigate-template.md"},
+    {"target":"docs/ja/specdojo/exec-templates/xep-register-template.md","status":"changed","path":"docs/ja/specdojo/exec-templates/xep-register-template.md"},
+    {"target":"docs/ja/specdojo/guides/register-operation-guide.md","status":"changed","path":"docs/ja/specdojo/guides/register-operation-guide.md"},
+    {"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},
+    {"target":"docs/ja/specdojo/rulebooks/pjr-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/pjr-rulebook.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-change-request-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-change-request-template.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-issue-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-issue-template.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-question-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-question-template.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-risk-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-risk-template.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-todo-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-todo-template.md"},
+    {"target":"docs/specdojo/schemas/v1/register-events.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/register-events.schema.yaml"},
+    {"target":"src/exec/plans-generation.ts","status":"changed","path":"src/exec/plans-generation.ts"},
+    {"target":"src/exec/register.ts","status":"changed","path":"src/exec/register.ts"},
+    {"target":"src/register/command-types.ts","status":"changed","path":"src/register/command-types.ts"},
+    {"target":"src/register/core.ts","status":"changed","path":"src/register/core.ts"},
+    {"target":"src/register/create-commands.ts","status":"changed","path":"src/register/create-commands.ts"},
+    {"target":"src/register/events.ts","status":"changed","path":"src/register/events.ts"},
+    {"target":"src/register/external-project.ts","status":"changed","path":"src/register/external-project.ts"},
+    {"target":"src/register/item.ts","status":"changed","path":"src/register/item.ts"},
+    {"target":"src/register/renumber.ts","status":"changed","path":"src/register/renumber.ts"},
+    {"target":"src/register/update.ts","status":"changed","path":"src/register/update.ts"},
+    {"target":"tests/src/exec/draft-plan.test.ts","status":"changed","path":"tests/src/exec/draft-plan.test.ts"},
+    {"target":"tests/src/exec/register-plan-escape.test.ts","status":"changed","path":"tests/src/exec/register-plan-escape.test.ts"},
+    {"target":"tests/src/register/commands.test.ts","status":"changed","path":"tests/src/register/commands.test.ts"},
+    {"target":"tests/src/register/external-project.test.ts","status":"changed","path":"tests/src/register/external-project.test.ts"},
+    {"target":"src/register/input.ts","status":"changed","path":"src/register/input.ts"},
+    {"target":"tests/src/register/input.test.ts","status":"changed","path":"tests/src/register/input.test.ts"}
+  ]
+}
+</specdojo_executor_evidence>

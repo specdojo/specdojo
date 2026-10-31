@@ -35,6 +35,7 @@ import {
   configuredProductRepos,
   missingProductWorktrees,
   plannedProjectWorktreePath,
+  productBranchForTask,
   pruneOrphanedProductExecBranches,
   productRepoEnvironment,
   withAgentExtraRoots,
@@ -275,7 +276,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
             name: product.name,
             repoRoot: product.repoRoot,
             path: resolve(base, name, product.name),
-            branch,
+            branch: productBranchForTask(product, worktreeTaskId),
             created: false,
           })),
         }

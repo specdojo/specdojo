@@ -1,3 +1,4 @@
+import { expandBranchTemplate } from "../shared/branch-template.js";
 import { existsSync, readdirSync, rmdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import {
@@ -13,7 +14,6 @@ import {
 } from "../shared/specdojo-config.js";
 import {
   ensureExecWorktree,
-  execBranchExists,
   execWorktreePath,
   findExecWorktree,
   generateWorktreeArtifacts,
@@ -26,6 +26,16 @@ import {
   type ProductWorktree,
 } from "./worktree.js";
 
+import {
+  assertProductBranchAvailable,
+  existingProductTaskBranch,
+  forgetProductBranch,
+  productBranchExists,
+  productBranchRecords,
+  recordedProductBranch,
+  reserveProductBranch,
+} from "./product-branch-records.js";
+
 // PJR-98G4: 1 つのタスクがプロジェクトリポジトリと宣言済みのプロダクトリポジトリ（`repos`）を
 // 変更する場合の worktree を扱う。`repos` を持たない project では、ここの関数はどれも空の結果を
 // 返し、既存の 1 リポジトリ・`<worktree_base>/<task-id>/` 直下の配置を変えない。
@@ -37,6 +47,9 @@ export type ProductRepo = {
   name: string;
   repoRoot: string;
   integrationBranch?: string;
+  branchTemplate?: string;
+  /** Resolved run-scoped product branch. */
+  branch?: string;
   integrationStrategy?: SpecDojoRepoConfig["integration_strategy"];
   /** Run npm ci for tracked package-lock.json files. Defaults to true (same as the project). */
   install: boolean;
@@ -137,6 +150,7 @@ export function resolveProductRepos(
       name: repo.name,
       repoRoot: resolveRepoRoot(rootDir, repo),
       ...(integrationBranch ? { integrationBranch } : {}),
+      ...(repo.branch_template ? { branchTemplate: repo.branch_template } : {}),
       ...(repo.integration_strategy ? { integrationStrategy: repo.integration_strategy } : {}),
       install: repo.setup?.install ?? true,
       build: repo.setup?.build ?? true,
@@ -251,6 +265,30 @@ export function productIntegrationTarget(
 
 const skip = (): void => undefined;
 
+export function preflightProductBranches(products: readonly ProductRepo[], taskId: string): void {
+  for (const product of products) {
+    if (!existsSync(product.repoRoot)) {
+      throw new Error(
+        `Product repository "${product.name}" does not exist: ${product.repoRoot} (check repos[].path)`,
+      );
+    }
+    assertProductBranchAvailable(product.repoRoot, taskId, productBranchForTask(product, taskId));
+  }
+}
+
+/** Reserve every name before recording register start or creating any product worktree. */
+export function reserveProductBranches(products: readonly ProductRepo[], taskId: string): void {
+  preflightProductBranches(products, taskId);
+  for (const product of products) {
+    reserveProductBranch(
+      product.repoRoot,
+      taskId,
+      productBranchForTask(product, taskId),
+      productIntegrationTarget(product),
+    );
+  }
+}
+
 /**
  * Create (or reuse) `<worktree_base>/<task-name>/<repo>/` for every product repository. A new
  * exec branch starts from the declared `integration_branch` (or the repository's current branch)
@@ -263,14 +301,16 @@ export function ensureProductWorktrees(opts: {
   installDependencies?: (worktreePath: string) => void;
   generateArtifacts?: (worktreePath: string) => void;
 }): ProductWorktree[] {
+  reserveProductBranches(opts.products, opts.taskId);
   return opts.products.map((product) => {
     if (!existsSync(product.repoRoot)) {
       throw new Error(
         `Product repository "${product.name}" does not exist: ${product.repoRoot} (check repos[].path)`,
       );
     }
+    const branch = productBranchForTask(product, opts.taskId);
     const generate = product.build ? (opts.generateArtifacts ?? generateWorktreeArtifacts) : skip;
-    const existing = findExecWorktree(product.repoRoot, opts.taskId);
+    const existing = findExecWorktree(product.repoRoot, opts.taskId, branch);
     if (existing) {
       // Same as the project worktree on reuse: dependencies stay, generated files are rebuilt.
       generate(existing.path);
@@ -281,6 +321,7 @@ export function ensureProductWorktrees(opts: {
       worktreeBase: opts.worktreeBase,
       taskId: opts.taskId,
       repoDirName: product.name,
+      branch,
       startPoint: productIntegrationTarget(product),
       installDependencies: product.install
         ? (opts.installDependencies ?? installWorktreeDependencies)
@@ -303,6 +344,31 @@ function toProductWorktree(product: ProductRepo, worktree: ExecWorktree): Produc
   };
 }
 
+/** Recorded names survive template/topic changes and do not depend on a branch prefix. */
+export function productBranchForTask(
+  product: ProductRepo,
+  taskId: string,
+  reuseRecorded = true,
+): string {
+  const separator = taskId.indexOf(":");
+  const project = separator >= 0 ? taskId.slice(0, separator) : "";
+  const id = separator >= 0 ? taskId.slice(separator + 1) : taskId;
+  return (
+    product.branch ??
+    (reuseRecorded ? recordedProductBranch(product.repoRoot, taskId) : undefined) ??
+    (product.branchTemplate
+      ? expandBranchTemplate(product.branchTemplate, {
+          project,
+          id,
+          topic: id.toLowerCase(),
+          type: "feat",
+          scope: "",
+          title: id,
+        })
+      : `exec/${worktreeNameFromTaskId(taskId)}`)
+  );
+}
+
 /** Registered product worktrees of a task (repositories without one are omitted). */
 export function findProductWorktrees(
   products: readonly ProductRepo[],
@@ -310,7 +376,9 @@ export function findProductWorktrees(
 ): ProductWorktree[] {
   return products.flatMap((product) => {
     if (!existsSync(product.repoRoot)) return [];
-    const found = findExecWorktree(product.repoRoot, taskId);
+    const branch = existingProductTaskBranch(product.repoRoot, taskId);
+    if (!branch) return [];
+    const found = findExecWorktree(product.repoRoot, taskId, branch);
     return found ? [toProductWorktree(product, found)] : [];
   });
 }
@@ -352,7 +420,9 @@ function commitsAhead(product: ProductWorktree): number {
   return Number.parseInt(result.stdout.trim(), 10) || 0;
 }
 
-function isMergedIntoTarget(product: ProductWorktree): boolean {
+function isMergedIntoTarget(
+  product: Pick<ProductWorktree, "repoRoot" | "branch" | "integrationBranch">,
+): boolean {
   const target = productIntegrationTarget(product);
   return (
     gitResult(product.repoRoot, ["merge-base", "--is-ancestor", product.branch, target]).status ===
@@ -445,6 +515,7 @@ export function removeProductWorktrees(params: {
       // keep Git's safe `-d` so unintegrated product work is never deleted.
       const flag = isMergedIntoTarget(product) ? "-D" : "-d";
       gitOutput(product.repoRoot, ["branch", flag, product.branch]);
+      forgetProductBranch(product.repoRoot, product.branch);
     }
   }
 }
@@ -470,15 +541,16 @@ export function discardStaleProductWorktrees(
   taskId: string,
 ): string[] {
   // A retained branch is product-side review work, not abandoned scheduler residue.
-  // Check every product before removing anything, including a previous task's project worktree.
   for (const product of products) {
+    if (!existsSync(product.repoRoot)) continue;
+    const branch = existingProductTaskBranch(product.repoRoot, taskId);
     if (
       product.integrationStrategy === "branch-only" &&
-      existsSync(product.repoRoot) &&
-      execBranchExists(product.repoRoot, taskId)
+      branch &&
+      productBranchExists(product.repoRoot, branch)
     ) {
       throw new Error(
-        `${product.name}: retained exec branch exec/${worktreeNameFromTaskId(taskId)} already exists; ` +
+        `${product.name}: retained exec branch ${branch} already exists; ` +
           `resume the existing run or finish product-side review and rename/remove the branch before a fresh run`,
       );
     }
@@ -486,20 +558,21 @@ export function discardStaleProductWorktrees(
   const discarded: string[] = [];
   for (const product of products) {
     if (!existsSync(product.repoRoot)) continue;
-    const existing = findExecWorktree(product.repoRoot, taskId);
-    if (!existing && !execBranchExists(product.repoRoot, taskId)) continue;
+    const branch = existingProductTaskBranch(product.repoRoot, taskId);
+    if (!branch) continue;
+    const existing = findExecWorktree(product.repoRoot, taskId, branch);
     if (existing) {
       if (resolve(product.repoRoot) === resolve(existing.path)) {
         throw new Error(
-          `Refusing to discard the main checkout of ${product.name} as stale residue: ${existing.branch}`,
+          `Refusing to discard the main checkout of ${product.name} as stale residue: ${branch}`,
         );
       }
       gitOutput(product.repoRoot, ["worktree", "remove", "--force", existing.path]);
     }
-    const branch = `exec/${worktreeNameFromTaskId(taskId)}`;
-    if (execBranchExists(product.repoRoot, taskId)) {
+    if (productBranchExists(product.repoRoot, branch)) {
       gitOutput(product.repoRoot, ["branch", "-D", branch]);
     }
+    forgetProductBranch(product.repoRoot, branch);
     discarded.push(`${product.name}:${branch}`);
   }
   return discarded;
@@ -525,14 +598,25 @@ export function listOrphanedProductExecBranches(
         .filter((branch): branch is string => !!branch),
     );
     const target = productIntegrationTarget(product);
-    return gitOutput(product.repoRoot, [
+    const legacyBranches = gitOutput(product.repoRoot, [
       "for-each-ref",
       "--format=%(refname:short)",
       "refs/heads/exec/",
     ])
       .split(/\r?\n/)
       .map((branch) => branch.trim())
-      .filter((branch) => branch.startsWith(prefix) && !checkedOut.has(branch))
+      .filter((branch) => branch.startsWith(prefix));
+    const records = productBranchRecords(product.repoRoot);
+    const owned = records
+      .filter((record) => record.taskId.startsWith(`${projectId}:`))
+      .map((record) => record.branch);
+    return [
+      ...new Set([
+        ...owned,
+        ...legacyBranches.filter((branch) => !records.some((record) => record.branch === branch)),
+      ]),
+    ]
+      .filter((branch) => !checkedOut.has(branch) && productBranchExists(product.repoRoot, branch))
       .sort()
       .map((branch) => ({
         repo: product.name,
@@ -543,7 +627,7 @@ export function listOrphanedProductExecBranches(
   });
 }
 
-/** Delete merged orphan exec branches of product repositories with Git's safe `-d`. */
+/** Delete only orphan branches verified as merged into the product's integration target. */
 export function pruneOrphanedProductExecBranches(params: {
   products: readonly ProductRepo[];
   projectId: string;
@@ -555,7 +639,11 @@ export function pruneOrphanedProductExecBranches(params: {
     const product = params.products.find((candidate) => candidate.name === item.repo);
     if (!product) continue;
     try {
-      gitOutput(product.repoRoot, ["branch", "-d", item.branch]);
+      // The main checkout's HEAD need not be the integration target. Recheck that target
+      // before using -D, just as removeProductWorktrees does for a non-orphan branch.
+      if (!isMergedIntoTarget({ ...product, branch: item.branch })) continue;
+      gitOutput(product.repoRoot, ["branch", "-D", item.branch]);
+      forgetProductBranch(product.repoRoot, item.branch);
     } catch (error) {
       throw new Error(
         `Failed to delete merged orphaned exec branch ${item.repo}:${item.branch}; ` +

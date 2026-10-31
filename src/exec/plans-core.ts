@@ -18,7 +18,7 @@ import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "../
 import type { KataRefs } from "../kata/kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
 import { isDctPlanFileName } from "../catalog/plan.js";
-import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import { readSpecdojoNamespace, buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
 import { MISSING } from "../shared/plan-templates.js";
 export {
@@ -387,6 +387,30 @@ export function deliverableDependsOn(
   return `\n${lines.join("\n")}`;
 }
 
+// based_on is declared evidence, not a new dependency edge. Keep the document's IDs verbatim.
+export function deliverableBasedOn(deliverable: DeliverableInfo | null): string {
+  if (!deliverable) return "なし";
+  const path = resolve(specdojoRootDir(), deliverable.resolvedPath);
+  if (!/\.(md|mdx|yaml|yml|json)$/.test(path) || !existsSync(path)) return "なし";
+  let metadata: Record<string, unknown> | null;
+  try {
+    const content = readFileSync(path, "utf8");
+    const parsed = /\.mdx?$/.test(path)
+      ? readSpecdojoNamespace(content)
+      : (load(content) as Record<string, unknown> | null);
+    metadata = (parsed?.specdojo ?? parsed) as Record<string, unknown> | null;
+  } catch {
+    // Invalid metadata is reported by document validation; it must not prevent plan generation.
+    return "なし";
+  }
+  const refs = metadata?.based_on;
+  if (!Array.isArray(refs)) return "なし";
+  const ids = [
+    ...new Set(refs.filter((ref): ref is string => typeof ref === "string" && !!ref.trim())),
+  ];
+  return ids.length ? ids.map((ref) => `[[${ref}]]`).join("、") : "なし";
+}
+
 const PROJECT_CONTEXT_EXCLUDED_APPROACHES = new Set<Approach>([
   "cross-deliverable-dedup",
   "rulebook-authoring",
@@ -441,6 +465,24 @@ export function projectContextSection(
 
 export function deliverableOverview(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.overview ?? MISSING;
+}
+
+export function deliverableBrief(deliverable: DeliverableInfo | null): string {
+  const brief = deliverable?.deliverable.brief?.trim();
+  if (!brief) return "";
+  if (!brief.includes("\n")) {
+    return brief;
+  }
+  if (brief.startsWith("-")) {
+    return `\n  ${brief
+      .split("\n")
+      .map((line) => line.trimEnd())
+      .join("\n  ")}`;
+  }
+  return brief
+    .split("\n")
+    .map((line, idx) => (idx === 0 ? line : `  ${line}`))
+    .join("\n");
 }
 
 export function implementationEvidence(deliverable: DeliverableInfo | null): string {

@@ -2,8 +2,8 @@
 id: cdfd-check-grade-criteria
 document: cdfd-check
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
-graded_at: "2026-10-17T16:08:05.694Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-29T16:08:35.130Z"
+graded_by: flash-high-executor
 content_hash: e02cebf2a8ee62470a475fede1fcb6267cfcda9d93d320313a938f12c69ed3a8
 summary:
   satisfied: 2
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The major outputs for P-08 to P-10 do not include the response to Orchestrator (evaluation, reporting, and
-      generation results) specified in cdfd-overview, and the processes returning these results cannot be identified.
+      cdfd-overview specifies "Orchestrator への評価・報告・生成結果" as a primary output of Check, but it is not allocated to P-08,
+      P-09, or P-10 primary outputs, nor mapped to the finalizing processes.
   - id: DC-002
     text: 評価結果、進捗報告、派生ビュー・索引の生成先と、成果物・実行記録・登録簿・Schedule（track）からの参照がプロセス単位で識別できること
     roles:

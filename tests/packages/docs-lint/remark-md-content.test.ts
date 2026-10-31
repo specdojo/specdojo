@@ -380,3 +380,95 @@ describe("remarkMdContent forbid_thematic_break", () => {
     expect(reasons).toEqual([]);
   });
 });
+
+describe("remarkMdContent without options", () => {
+  it("detects _CONTEXT_: as an error when status is ready", async () => {
+    const processor = remark().use(remarkFrontmatter).use(remarkGfm).use(remarkMdContent);
+    const markdown = [
+      "---",
+      "specdojo:",
+      "  status: ready",
+      "---",
+      "",
+      "# タイトル",
+      "",
+      "_CONTEXT_: 本文への指示。",
+    ].join("\n");
+
+    const vfile = await processor.process({ value: markdown, path: "target.md" });
+
+    expect(vfile.messages).toHaveLength(1);
+    expect(vfile.messages[0].fatal).toBe(true);
+    expect(vfile.messages[0]).toMatchObject({
+      source: "context-marker",
+      ruleId: "unresolved-context",
+    });
+  });
+
+  it("detects _CONTEXT_: as info when status is not ready (draft)", async () => {
+    const processor = remark().use(remarkFrontmatter).use(remarkGfm).use(remarkMdContent);
+    const markdown = [
+      "---",
+      "specdojo:",
+      "  status: draft",
+      "---",
+      "",
+      "# タイトル",
+      "",
+      "_CONTEXT_: 下書きの指示。",
+    ].join("\n");
+
+    const vfile = await processor.process({ value: markdown, path: "target.md" });
+
+    expect(vfile.messages).toHaveLength(1);
+    expect(vfile.messages[0].fatal).toBeUndefined();
+    expect(vfile.messages[0]).toMatchObject({
+      source: "context-marker",
+      ruleId: "unresolved-context",
+    });
+  });
+
+  it("does not perform content schema validation and reports no errors when no _CONTEXT_: is present", async () => {
+    const processor = remark().use(remarkFrontmatter).use(remarkGfm).use(remarkMdContent);
+    const markdown = [
+      "---",
+      "specdojo:",
+      "  status: ready",
+      "---",
+      "",
+      "# 任意のタイトル",
+      "",
+      "任意の本文コンテンツ。",
+      "",
+      "| 列1 | 列2 |",
+      "| --- | --- |",
+      "| 値1 | 値2 |",
+    ].join("\n");
+
+    const vfile = await processor.process({ value: markdown, path: "target.md" });
+
+    expect(vfile.messages).toEqual([]);
+  });
+
+  it("handles explicit undefined options without throwing TypeError", async () => {
+    const processor = remark()
+      .use(remarkFrontmatter)
+      .use(remarkGfm)
+      .use(remarkMdContent, undefined);
+    const markdown = [
+      "---",
+      "specdojo:",
+      "  status: ready",
+      "---",
+      "",
+      "# タイトル",
+      "",
+      "_CONTEXT_: 指示。",
+    ].join("\n");
+
+    const vfile = await processor.process({ value: markdown, path: "target.md" });
+
+    expect(vfile.messages).toHaveLength(1);
+    expect(vfile.messages[0].fatal).toBe(true);
+  });
+});

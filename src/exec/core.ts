@@ -45,6 +45,7 @@ export const KNOWN_OWNER_LABELS = ["PO", "PM", "BA", "ARC", "DEV", "QE", "UX", "
 export const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join("|");
 
 const KNOWN_APPROACHES = [
+  "draft",
   "fully-guided",
   "recipe-guided",
   "freeform",

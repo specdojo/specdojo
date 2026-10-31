@@ -1,0 +1,9 @@
+個票の「対応結果」の表に、PJR-M1DH の行を 1 行追記しました。変更したファイルは `pjr-jsey-exec-run-split-smoke.md` だけです。Prettier の書式検査は通りました。親 runner の検証はこの段階では実行していません。
+
+- **追記した行:** 2026-10-31 13:52 JST、確認対象 PJR-M1DH、agent は sonnet-executor です。
+- **確認対象の根拠:** 対象一覧のうち最新の統合コミットは `3e68de760`(13:47 JST)で、`review` 遷移は `cf5188fe7` でした。これは PJR-M1DH のものです。
+- **本文の更新:** 対応結果の説明文の確認対象を、PJR-Z7GX から PJR-M1DH に書き換えました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-M1DH の行(2026-10-31 13:52 JST、sonnet-executor)を追記し、説明文の確認対象を更新した。変更は個票のみ。","handoff":["確認対象は git log 上で最新の統合コミット 3e68de760(2026-10-31 13:47 JST、review は cf5188fe7)を持つ PJR-M1DH とした。","start の event の actor の確認と、親 runner の 7 検証・reporter の result 記入・統合・review 遷移の完了は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

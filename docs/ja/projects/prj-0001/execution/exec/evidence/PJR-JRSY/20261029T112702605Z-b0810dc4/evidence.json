@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JRSY",
+  "run_id": "20261029T112702605Z-b0810dc4",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-29T11:28:10.979Z",
+    "completed_at": "2026-10-29T11:34:05.628Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".github/instructions/markdown.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jrsy.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jrsy-context-marker.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-draft-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-human-bootstrap-finalize-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-human-finalize-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/exec-human-finalize-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/exec-human-finalize-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/guide-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/philosophy-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/recipe-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/standard-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/README.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-md-content.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/draft-plan.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/results.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/context-marker.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/context-marker.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": ".github/instructions/markdown.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jrsy-context-marker.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-draft-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-human-bootstrap-finalize-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-human-finalize-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/exec-human-finalize-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/exec-human-finalize-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/guide-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/philosophy-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/recipe-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/standard-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/README.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-md-content.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/draft-plan.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/results.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/context-marker.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/context-marker.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": ".github/instructions/markdown.instructions.md      |  4 +++-\n CHANGELOG.md                                       |  1 +\n .../project-register/pjr-jrsy-context-marker.md    | 25 +++++++++++++++-------\n .../specdojo/exec-templates/xep-draft-template.md  |  2 +-\n .../exec-templates/xep-fully-guided-template.md    |  2 ++\n .../xer-human-bootstrap-finalize-template.md       |  2 ++\n .../exec-templates/xer-human-finalize-template.md  |  2 ++\n .../specdojo/recipes/exec-human-finalize-recipe.md |  1 +\n .../standards/document-metadata-standard.md        | 16 ++++++++++++++\n .../standards/exec-human-finalize-standard.md      |  1 +\n .../specdojo/standards/guide-authoring-standard.md |  3 ++-\n .../standards/philosophy-authoring-standard.md     |  1 +\n .../standards/recipe-authoring-standard.md         |  3 ++-\n .../standards/rulebook-authoring-standard.md       |  3 ++-\n .../standards/standard-authoring-standard.md       |  3 ++-\n packages/docs-lint/README.md                       |  2 ++\n packages/docs-lint/src/remark-md-content.ts        |  2 ++\n tests/src/exec/draft-plan.test.ts                  | 13 +++++++++++\n tests/src/exec/results.test.ts                     |  5 +++++\n 19 files changed, 77 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --name-only -- '*.md' '*.ts' | xargs -r npx prettier --check",
+      "status": "passed",
+      "summary": "変更した既存 Markdown／TypeScript の整形状態を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check packages/docs-lint/src/context-marker.ts tests/packages/docs-lint/context-marker.test.ts",
+      "status": "passed",
+      "summary": "追加した実装・テストの整形状態を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。変更対象外の未配置成果物に関する既存警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は適用外。",
+      "reason": "executor による YAML／YML ファイルの変更がないため。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JRSY/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JRSY/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JRSY/src/shared/specdojo-config.ts\n  1221:1  warning  File has too many lines (1110). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JRSY\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.5.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JRSY/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JRSY/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.5.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JRSY\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-qUv6xQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3VngQQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-QvcFkc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Kmnr6Q/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "文脈の目印の規約、draft／fully-guided の処理方針、finalize の確認、状態別の lint 検出と単体テストを追加し、個票と CHANGELOG を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "設計判断: 共通記法はドキュメントメタ情報標準に集約した。既存の `remark-md-content` に検出を組み込み、content schema の対象外でも検査する。追加の設定変更は不要。",
+    "設計判断: 段落先頭の斜体 `_CONTEXT_:` を検出する。リスト・引用内も対象とし、コード例・表・見出し・文中の説明は除外する。`specdojo.status` が `ready` なら error、それ以外は warning。元の指示を result に引用するときはコードで囲む。",
+    "既存の `lint:fm` は `--frail` により warning でも失敗する。親 runner の検証 7 件と追加単体テストの実行結果を result に記録すること。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-JRSY/20261029T112702605Z-b0810dc4/executor.log",
+      "bytes": 2147,
+      "truncated": false
+    }
+  ]
+}
