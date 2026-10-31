@@ -13,7 +13,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-31T02:42:32Z"
   due_on: "2026-11-30"
-  block_reason: "executor validation failed or not run: npm run validate:schema:file"
+  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-BNMV
 ---
@@ -43,14 +43,50 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                                            | 担当     | 状態 | メモ |
-| --- | ----------------------------------------------------------------------------------------------- | -------- | ---- | ---- |
-| 1   | 個票の frontmatter・schema と `register add` / `update` に `commit_type`・`commit_scope` を足す | executor | open | -    |
-| 2   | 既定の対応と設定、引くための関数、テスト、文書を足す                                            | executor | open | -    |
+| No  | 作業                                                                                            | 担当     | 状態   | メモ                                                                                                                                                                |
+| --- | ----------------------------------------------------------------------------------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 個票の frontmatter・schema と `register add` / `update` に `commit_type`・`commit_scope` を足す | executor | closed | `register-item-frontmatter.schema.yaml` / `register-events.schema.yaml` および `register add` / `update` に `--commit-type` / `--commit-scope` を追加               |
+| 2   | 既定の対応と設定、引くための関数、テスト、文書を足す                                            | executor | closed | `resolveItemCommitTypeAndScope` の実装、`specdojo-config` スキーマ拡張、単体テスト、`command-reference`・`specdojo-config-reference`・`CHANGELOG.md` への反映を完了 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- 個票 Frontmatter スキーマ（`register-item-frontmatter.schema.yaml`）およびイベントログスキーマ（`register-events.schema.yaml`）に `commit_type` と `commit_scope` を追加しました。
+- 設定スキーマ（`specdojo-config.schema.yaml`）および型定義（`specdojo-config.ts`）に `commit_types` を追加し、プロジェクト単位（`projects.<project-id>.commit_types`）およびプロダクトリポジトリ単位（`repos[].commit_types`）の双方で定義可能にしました。
+- `register add` と `register update` に `--commit-type` と `--commit-scope` を追加し、バリデーションおよび `update` での `-` による消去に対応しました。
+- `src/register/item.ts` に `resolveItemCommitTypeAndScope` を実装し、後続の項目（PJR-Z7GX・PJR-M1DH）から 1 つの関数で引けるようにしました。
+- 単体テスト（`tests/src/register/commit-type-scope.test.ts`）を追加し、add / update での指定と消去、不正値エラー、既定対応の導出、設定上書きの動作を検証しました。
+- `command-reference.md`、`specdojo-config-reference.md`、`CHANGELOG.md` を更新しました。
+
+### 5.2. 設計判断と理由
+
+- `commit_type` の値検証: Conventional Commits の標準 11 種類（`feat`・`fix`・`docs`・`refactor`・`test`・`chore`・`perf`・`build`・`ci`・`style`・`revert`）を固定一覧として検証する設計を採用しました。タイポによる意図しないコミットタイプの混入を防ぐとともに、CLI で利用可能な選択肢を案内できるようにするためです。
+- 未指定時の項目の type 既定対応: `issue` は `fix`、`todo`・`change-request` は `feat`、`decision`・`note`・`question`・`risk` は `docs`、`epic` は `feat` とし、その他の未知の type は安全のため `chore` にフォールバックするよう定義しました。
+- 設定の置き場所: プロジェクト設定（`projects.<project-id>.commit_types`）とプロダクトリポジトリ設定（`repos[].commit_types`）の両方に配置しました。個票はプロジェクトに属し複数リポジトリを跨ぐタスクもあり得るため、プロジェクト単位の一貫したマッピングを基本としつつ、リポジトリごとの個別事情（ドキュメント専用リポジトリ等）にも対応できるようにリポジトリ単位の上書きを許可する階層構造（優先順位: 個票明示指定 > `repoConfig.commit_types` > `projectConfig.commit_types` > 既定マッピング）としました。
+
+### 5.3. 成果物・変更ファイル
+
+- `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`
+- `docs/specdojo/schemas/v1/register-events.schema.yaml`
+- `docs/specdojo/schemas/v1/specdojo-config.schema.yaml`
+- `src/shared/specdojo-config.ts`
+- `src/register/item.ts`
+- `src/register/events.ts`
+- `src/register/event-merge.ts`
+- `src/register/command-types.ts`
+- `src/register/create-commands.ts`
+- `src/register/core.ts`
+- `src/register/register.ts`
+- `tests/src/register/commit-type-scope.test.ts`
+- `docs/ja/specdojo/references/command-reference.md`
+- `docs/ja/specdojo/references/specdojo-config-reference.md`
+- `CHANGELOG.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md`
+
+### 5.4. 残課題
+
+- なし（保護された設定ファイルの変更も不要です）。後続の項目（PJR-Z7GX・PJR-M1DH）で本関数の解決結果を利用して exec の commit メッセージやブランチ名の動的生成を行います。
 
 ## 6. 関連ドキュメント
 
