@@ -15,6 +15,8 @@ specdojo:
   due_on: "2026-11-30"
   derived_from:
     - PJR-BNMV
+  depends_on:
+    - PJR-TC62
 ---
 
 # PJR-Z7GX プロダクトのリポジトリの commit と merge commit の書式を設定で選べるようにする

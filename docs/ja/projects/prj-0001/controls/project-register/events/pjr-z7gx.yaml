@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-BNMV"]'
+- v: 1
+  id: reg_fd7e865aff684cdfb3b8089bc1ff730c
+  ts: "2026-10-31T02:43:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-TC62"]'
+  previous_event_id: reg_f8986e4bcd6d409eaf95f7aacd6b7456
