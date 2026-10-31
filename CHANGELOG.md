@@ -60,6 +60,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - `@specdojo/docs-lint` の Markdown / YAML frontmatter 検証において、rulebook 一覧の生成をプロセス内でワークスペースごとに 1 回だけ行いキャッシュするように修正しました。remark のファイルごとのプラグイン読み込みで rulebook 一覧が毎回再生成されて `lint:fm` が著しく低速化していた問題を解消します。本修正は `@specdojo/docs-lint` 0.3.1 で公開済みです（PJR-SC8T）。
 
+- `@specdojo/docs-lint` の `remark/md-content` を options なしで読み込んだ場合に `TypeError` で失敗する問題を修正しました。options が渡されないときは空の options として扱い、`schemas` は空、`workspaceRoot` は `process.cwd()` として動作します。これにより options なしでも `_CONTEXT_:` の検出が動作します（PJR-5EN3）。
+
 ## [0.5.0] - 2026-10-29
 
 同梱パッケージは `@specdojo/docs-lint` 0.3.0 と `@specdojo/docs-site` 0.3.0 を同時に公開します。docs-lint 0.3.0 は、rulebook の `deliverable_type` と成果物の `type` の照合、YAML 成果物の旧 type のエラー化（下記の破壊的変更の PJR-484B・PJR-0D0T）を含みます。下記の移行手順の検査には docs-lint 0.3.0 が必要です。docs-site 0.3.0 は、生成物の `.vitepress/` への集約（PJR-9ZN5）と、Mermaid の構文エラーで生成を止めない変更（PJR-N9JC）を含みます。

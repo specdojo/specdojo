@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c43aca065caa4b15ae84dcdbf92de3c6
+  ts: "2026-10-31T08:47:14Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-lint の md-content を設定なしで使うと落ちる
+    - field: description
+      from: ""
+      to: remark/md-content を options なしで読み込むと options.schemas の読み取りで TypeError になるため、options がないときは空として扱う
+    - field: input
+      from: ""
+      to: '["2026-10-31 の 0.6.0 の配布物の試用で見つけた。空のリポジトリの .remarkrc.yaml に @specdojo/docs-lint/remark/md-content を options なしで書くと、TypeError: Cannot read properties of undefined (reading ''schemas'') で全ファイルが Cannot process file になる","原因は packages/docs-lint/src/remark-md-content.ts の remarkMdContent が options.schemas を options の有無を確かめずに読むこと。0.3.1 から同じだが、0.4.0 の README は content schema の対象にかかわらず `_CONTEXT_:` を検出すると案内している","0.6.0（docs-lint 0.4.0）の公開の前に直す。修正はリリースのブランチ feature/prj-0001/release-v0.6.0 にも取り込む"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-2FV2"]'
+- v: 1
+  id: reg_b1c424fb52124a0e81605e8fe0167549
+  ts: "2026-10-31T08:48:00Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c43aca065caa4b15ae84dcdbf92de3c6
+- v: 1
+  id: reg_d82f8832f2484f25a093d9dcafc90e13
+  ts: "2026-10-31T09:04:18Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b1c424fb52124a0e81605e8fe0167549

@@ -38,3 +38,16 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_9083515db4064632b5e9d6472702cf9f
+  ts: "2026-10-31T08:36:33Z"
+  action: start
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_21a0325f92324ca28d326fca1dff5a87

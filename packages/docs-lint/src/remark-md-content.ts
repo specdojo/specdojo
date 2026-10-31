@@ -438,9 +438,10 @@ function validateTree(tree: Root, schema: MdContentSchema, file: VFile): void {
 
 // ── Plugin ────────────────────────────────────────────────────────────────────
 
-const remarkMdContent: Plugin<[MdContentOptions], Root> = function (options) {
-  const schemas = options.schemas ?? {};
-  const workspaceRoot = options.workspaceRoot ?? process.cwd();
+const remarkMdContent: Plugin<[MdContentOptions?], Root> = function (options = {}) {
+  const opts = options ?? {};
+  const schemas = opts.schemas ?? {};
+  const workspaceRoot = opts.workspaceRoot ?? process.cwd();
 
   return function transformer(tree: Root, file: VFile): void {
     validateContextMarkers(tree, file);
