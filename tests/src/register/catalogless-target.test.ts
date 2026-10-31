@@ -82,7 +82,9 @@ async function plan(approach: Approach, overrides: Partial<PjrItem> = {}): Promi
   return readFileSync(result.planPath, "utf8");
 }
 
-describe("catalog-less deliverable resolution and plans", () => {
+// 統合時の全件実行など負荷下で、一時ディレクトリ生成・kata 配置・plan 生成の累積により
+// 既定の 5 秒を超えることがあるため、スイート全体のタイムアウトを 30 秒へ広げる（PJR-FK0Y）。
+describe("catalog-less deliverable resolution and plans", { timeout: 30_000 }, () => {
   beforeEach(() => {
     root = mkdtempSync(join(tmpdir(), "specdojo-catalogless-"));
     write(

@@ -611,7 +611,9 @@ describe("grade per-document pipeline", () => {
     expect(existsSync(fixture.pipelineStateFile)).toBe(false);
   });
 
-  it("excludes an exhausted stage from retries and reports it", () => {
+  // 3 段構成で失敗を重ねて retry_exhausted に至るため、子プロセス（run-per-document.sh / fake-specdojo.mjs）を
+  // 4 回起動する。統合時の負荷下で既定の 5 秒を超えることがあるため、このテストに限って 30 秒へ広げる（PJR-FK0Y）。
+  it("excludes an exhausted stage from retries and reports it", { timeout: 30_000 }, () => {
     const fixture = makeFixture();
 
     for (const runId of ["fixture-failure-1", "fixture-failure-2", "fixture-failure-3"]) {
