@@ -44,10 +44,10 @@ prj-0001 の `CHANGELOG.md` の 0.6.0 の節を LP の文言とコマンド例�
 
 ## 4. 作業内容
 
-| No  | 作業                          | 担当         | 状態 | メモ                                                |
-| --- | ----------------------------- | ------------ | ---- | --------------------------------------------------- |
-| 1   | 食い違いを洗い出し、LP を直す | BA           | done | v0.6.0 の変更点と照合し、LP への変更不要と判断      |
-| 2   | ビルドを確認する              | orchestrator | open | 完了条件どおり sandbox 外でビルドと HTML を確認する |
+| No  | 作業                          | 担当         | 状態 | メモ                                                 |
+| --- | ----------------------------- | ------------ | ---- | ---------------------------------------------------- |
+| 1   | 食い違いを洗い出し、LP を直す | BA           | done | v0.6.0 の変更点と照合し、LP への変更不要と判断       |
+| 2   | ビルドを確認する              | orchestrator | done | 統合後の develop で `npm run build` の成功を確認した |
 
 ## 5. 対応結果
 
@@ -79,7 +79,7 @@ prj-0001 の `CHANGELOG.md` の 0.6.0 の節を LP の文言とコマンド例�
 
 - LP の全コンポーネント（`src/` 配下）および `README.md` を 0.6.0 CHANGELOG と現行ガイド（`exec-operation-guide`・`ryu-guide`・`specdojo-config-reference`・`command-reference`）と照合し、食い違いや無効なコマンド例がないことを確認した。
 - 本個票内の表の区切り `|` をエスケープし、Markdown の表構造と列数が正しく維持されていることを確認した。
-- `specdojo-lp` で `npm run build` を sandbox 外で実行し、エラーなくビルドが成功すること（`dist/` への静的出力生成）を確認した。完了条件に従い evidence の `validations` には `requires_human` として記録し、orchestrator が sandbox 外で確認する。
+- `specdojo-lp` の `npm run build` は、executor が evidence の `validations` に `requires_human` として記録した。orchestrator が統合後の `develop`（`2270810`）で sandbox の外から実行し、1 ページの生成がエラーなく完了することを確かめた（2026-11-01）。LP のファイルは変えていないため、出力される HTML は変わらない。
 - LP に対しては完了条件どおり Prettier や lint を実行していない。
 - prj-0002 は `catalog_path` を設定していないため、`specdojo catalog validate` は実行していない。
 - 本個票を Prettier で整形し、`node --import tsx src/specdojo.ts register build --project prj-0002` がエラーなく成功することを確認した。
