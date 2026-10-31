@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2fv2-release-v0-6-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: done
   priority: high
   difficulty: medium
   owner: PO
   registered_at: "2026-10-31T08:35:35Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T09:31:01Z"
+  conclusion: "specdojo 0.6.0 と @specdojo/docs-lint 0.4.0 を 2026-10-31 に公開した（PR #27、merge commit 9eb96b807）。docs-site は 0.3.0 のまま"
 ---
 
 # PJR-2FV2 0.6.0 でリリースする
