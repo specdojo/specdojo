@@ -2,7 +2,7 @@
 id: cdfd-onboarding-grade-criteria
 document: cdfd-onboarding
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
-graded_at: "2026-10-29T16:21:10.527Z"
+graded_at: "2026-10-31T16:14:55.616Z"
 graded_by: flash-high-executor
 content_hash: 49e33de5aa2be69433cf813bbcbd95b37a6266c4c857b20a7fb30db27b4f47c1
 summary:
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The process table lacks completion conditions, making it impossible to verify the placement of Kata and
-      initialization of operational configuration per process.
+      The process table in Section 3 lacks the mandatory completion condition column, preventing verification of Kata
+      placement and configuration initialization at the process level.
   - id: DC-002
     text: 各プロセスの起動条件、読み書きするデータストア（Kata、稼働構成）、生成先が識別でき、後続の Plan への引き渡しがグループ外委譲として示されていること
     roles:

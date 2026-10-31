@@ -5,15 +5,15 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 73
-graded_at: "2026-10-29T16:04:06.553Z"
+score: 72
+graded_at: "2026-10-31T16:04:46.679Z"
 graded_by: flash-high-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 source_hashes:
   catalog-entry: 13a3f1bee8ca15ccabb50c5aabcedc7ce92c9cdda40f595a6305268767581f05
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:cdfd-overview: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a
+  dependency:cdfd-overview: 1b08270df065ee02a0e24efde9341c2c76594e7e3460cb3a4da88b27608f515f
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
@@ -31,7 +31,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 94
+    score: 88
   implementation:
     score: 75
   quality:
@@ -71,8 +71,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -121,7 +121,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 13
-  minor: 3
+  minor: 4
   note: 0
 findings:
   - id: F001
@@ -162,76 +162,85 @@ findings:
     message: docs/ja/projects/prj-0001/030-project-management/pm-raci.mdでは変更要求の採否と継続判断のAをPOとしているため、P-12-01やP-13-01の主担当から最終判断を分離してください。
     message_ja: docs/ja/projects/prj-0001/030-project-management/pm-raci.mdでは変更要求の採否と継続判断のAをPOとしているため、P-12-01やP-13-01の主担当から最終判断を分離してください。
   - id: F006
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 31
+    anchor: "- **主要入力**: Orchestrator からの完了要求、最新の評価結果（grade・finding）、進捗報告の判断事項、完了条件"
+    message: >-
+      The bullet points for major inputs, outputs, and data stores in Section 3 duplicate the contents of Section 4 and
+      Section 6; removing them eliminates redundancy without losing decision information.
+    message_ja: セクション3における主要な入力、出力、およびデータストアの箇条書きは、セクション4とセクション6の内容と重複しています。これらを削除することで、決定に関する情報を失うことなく冗長性を排除できます。
+  - id: F007
     severity: major
     rule: vp-dev-implementation-readiness
     line: 45
     anchor: "- **主要出力**: 構成変更の決定記録、更新した稼働構成、Kata のバージョン更新、更新した成果物カタログ"
     message: 各プロセスに入出力と起動条件はあるものの完了条件がないため、実装時にどの状態まで実現すれば完了かを判定できる完了条件の列を追加してください。
     message_ja: 各プロセスに入出力と起動条件はあるものの完了条件がないため、実装時にどの状態まで実現すれば完了かを判定できる完了条件の列を追加してください。
-  - id: F007
+  - id: F008
     severity: major
     rule: vp-dev-testability
     line: 45
     anchor: "- **主要出力**: 構成変更の決定記録、更新した稼働構成、Kata のバージョン更新、更新した成果物カタログ"
     message: 全プロセス表に判定可能な完了条件がなく、変更後に主要出力や正本更新が期待どおり成立したか検証できないため、各行へ検証可能な完了事実の列を追加してください。
     message_ja: 全プロセス表に判定可能な完了条件がなく、変更後に主要出力や正本更新が期待どおり成立したか検証できないため、各行へ検証可能な完了事実の列を追加してください。
-  - id: F008
+  - id: F009
     severity: major
     rule: vp-qe-done-criteria
     line: 54
     anchor: ""
     message: DC-001の要求に対し、全体概要でActionの主要入力とされた承認結果と非推奨化判断が外部入力から内部生成へ変更されたままであるため、全体概要との対応を修正してください。
     message_ja: DC-001の要求に対し、全体概要でActionの主要入力とされた承認結果と非推奨化判断が外部入力から内部生成へ変更されたままであるため、全体概要との対応を修正してください。
-  - id: F009
+  - id: F010
     severity: major
     rule: vp-qe-verifiability
     line: 45
     anchor: "- **主要出力**: 構成変更の決定記録、更新した稼働構成、Kata のバージョン更新、更新した成果物カタログ"
     message: プロセス領域の各表にrulebook必須の「完了条件」列が存在せず業務の完了状態を判定できないため、pass/failを判定できる完了条件の列を追加してください。
     message_ja: プロセス領域の各表にrulebook必須の「完了条件」列が存在せず業務の完了状態を判定できないため、pass/failを判定できる完了条件の列を追加してください。
-  - id: F010
+  - id: F011
     severity: major
     rule: vp-qe-omissions-consistency
     line: 42
     anchor: 稼働構成の変更要求について人間が採否を判断し、承認した変更だけを稼働構成へ反映する。変更が Kata のバージョンまたは成果物定義へ及ぶ場合は、対応する正本も同じ承認結果に基づいて更新する。
     message: 全体概要のActionグループで主要出力に定義されている「Orchestrator への完了・改善判断」が、各プロセス領域の主要出力から漏れているため対応するプロセスへ追加してください。
     message_ja: 全体概要のActionグループで主要出力に定義されている「Orchestrator への完了・改善判断」が、各プロセス領域の主要出力から漏れているため対応するプロセスへ追加してください。
-  - id: F011
+  - id: F012
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 26
     anchor: ""
     message: 適用範囲にrulebookで必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
     message_ja: 適用範囲にrulebookで必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
-  - id: F012
+  - id: F013
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 136
     anchor: ""
     message: P-11・P-12・P-13の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
     message_ja: P-11・P-12・P-13の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
-  - id: F013
+  - id: F014
     severity: major
     rule: vp-qe-omissions-consistency
     line: 257
     anchor: "| `cdfd-plan` | タスク完了に至らなかった事項の再計画 | 完了条件の未充足事項、再計画要求 | 再計画に基づく対応と評価を経て、完了条件を照合できる評価結果と完了要求がそろった |"
     message: 主要例外の表にrulebookで必須の「停止範囲」列が欠落しているため、列を追加して例外検出時に停止するプロセスや出力を記述してください。
     message_ja: 主要例外の表にrulebookで必須の「停止範囲」列が欠落しているため、列を追加して例外検出時に停止するプロセスや出力を記述してください。
-  - id: F014
+  - id: F015
     severity: minor
     rule: vp-ux-user-flow
     line: 267
     anchor: ""
     message: 実在する再計画先cdfd-planがコード表記のみで文書へ遷移できないため、文書名を伴うwikilinkに変更してください。
     message_ja: 実在する再計画先cdfd-planがコード表記のみで文書へ遷移できないため、文書名を伴うwikilinkに変更してください。
-  - id: F015
+  - id: F016
     severity: major
     rule: vp-ops-release-readiness
     line: 5
     anchor: "[[cdfd-overview|概念データフロー図（全体概要）]] の Action グループを詳細化し、タスク完了、稼働構成管理、非推奨化保管の内部プロセス、判断境界、主要例外、データストアの読み書きを合意できるようにする。"
     message: 必須のプロセス完了条件や例外の停止範囲の欠落、承認責任の不整合が未解決であるため、修正と承認記録を確認してからstatusをreadyへ昇格してください。
     message_ja: 必須のプロセス完了条件や例外の停止範囲の欠落、承認責任の不整合が未解決であるため、修正と承認記録を確認してからstatusをreadyへ昇格してください。
-  - id: F016
+  - id: F017
     severity: major
     rule: vp-ops-operability
     line: 257

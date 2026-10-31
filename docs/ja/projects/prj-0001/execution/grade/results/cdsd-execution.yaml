@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-10-17T16:26:58.659Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-31T16:25:17.747Z"
+graded_by: flash-high-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 source_hashes:
   catalog-entry: 1f5324a494c341786007f485e570d673dfd7aa2eae8ca70afb4a706f1f4c6096
@@ -314,7 +314,7 @@ findings:
     message: >-
       Contrary to Rulebook 2.4, physical names like last_scheduled_for are documented directly in the content column,
       which requires adding a physicalName column or describing conceptual contents in Japanese.
-    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理名はcontent列に直接記載されています。これは、physicalName列を追加するか、概念的な内容を日本語で説明する必要があります。
+    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理名はcontent列に直接記述されています。これには、physicalName列を追加するか、概念的な内容を日本語で記述する必要があります。
   - id: F021
     severity: minor
     rule: vp-ux-language-consistency

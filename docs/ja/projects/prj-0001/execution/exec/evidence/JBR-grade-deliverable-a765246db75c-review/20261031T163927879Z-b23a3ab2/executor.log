@@ -1,0 +1,52 @@
+レビューの判定は **`complete-with-findings`** です。Run は `succeeded`（終了コード 0）で、選ばれた10件すべてが1段で評価を終えました。止まった段、失敗した段、再試行上限に達した成果物はありません。ただし評価の finding と未充足の `done_criteria` が残っています。また、Run の result には Job 固有の確認事項の一部が書かれていません。成果物・Job Run の出力・result はいずれも変更していません。
+
+**評価結果の確認**
+
+- **鮮度（`E-01`）:** `grade list --changed-only` と `--dependency-changed` を、最初と verdict を決める直前の2回実行しました。2回とも出力は `tsd-ollama-opencode.md` と `sysd-opencode-agent-settings.md` だけで、評価した10件は含まれません。この2件は今回の Run の選択対象外です。
+- **評価不能（`E-02`）:** `grade list --incomplete` と `grade state --exhausted` はどちらも0件でした。
+- **サイドカー:** 10件すべてで `verdict`・`score`・`finding_counts` の合計が `results.tsv` と一致しました。
+
+**判断根拠**
+
+1. **差分の範囲:** `200ef3d..6915df7` の変更は27ファイルです。内訳は、この Run の evidence 4件、plan、result、Run JSON、評価サイドカー10件、`done_criteria` 10件です。この Run 以外の変更はありません。
+2. **記録の整合:** Run JSON の `state: succeeded`、`exit_code: 0`、pipeline-state、evidence の `exit_code: 0`、空の stderr、stdout の `selected=10 processed=10 incomplete=0 exhausted=0` がすべて一致しています。
+3. **評価者名:** サイドカーの `graded_by: flash-high-executor` は、stdout の `agy-expert-executor` と名前が違います。`.specdojo/agent-members.yaml` で `agy-expert-executor` は `flash-high-executor` の別名と定義されているため、矛盾ではありません。
+4. **score・verdict の変化:**
+   - `cdfd-action` は 73 → 72 です。観点別の score は 94 → 88 と 100 → 75 に下がり、minor finding は 3 → 4 件です。
+   - `cdfd-overview` は 85 → 87 です。本文が変わり `content_hash` が更新されています。PO 以外の確認担当の `done_criteria` 1件が `unsatisfied` から `satisfied` に変わりました。
+   - `cdfd-overview` に依存する `cdfd-check` は、依存先の hash が新しくなっています。
+   - 残りの成果物は score・verdict とも変わらず、評価時刻と理由・訳文の言い回しが変わっただけです。
+5. **偏り:** `pass` は1件（`bps-task-completion` 96点）、`needs-work` は9件（59〜87点）です。blocker は全件0件です。分布だけからは、評価設定を見直すべき偏りは確認できませんでした。
+
+**未充足の `done_criteria` と確認担当ロール**
+
+| 成果物 | 未充足 / 全体 | 確認担当 |
+| --- | --- | --- |
+| `cdsd-execution` | 3 / 3 | BA・ARC・QE |
+| `cdsd-planning` | 3 / 3 | BA・ARC・QE |
+| `cdsd-sharing` | 3 / 3 | BA・ARC・QE |
+| `cdfd-action` | 2 / 3 | BA・PO |
+| `cdfd-check` | 1 / 3 | BA |
+| `cdfd-onboarding` | 1 / 3 | BA |
+| `cdfd-plan` | 1 / 4 | BA |
+| `cdfd-do` | 1 / 4 | ARC |
+| `cdfd-overview` | 1 / 4 | PO |
+| `bps-task-completion` | 0 / 5 | なし |
+
+**未充足事項・改善指示**
+
+この Run の範囲と完了条件は満たしているため、どれも完了を妨げません。
+
+- Run の result には、未充足の `done_criteria` と確認担当ロールの特定、score の偏りの判断が書かれていません。どちらも Job 固有の確認事項です。この review result で補ってください。
+- Run の result では `done_criteria` ファイルの変更を「評価基準を更新」と書いていますが、実際に変わったのは評価結果の判定と理由です。表現の誤りです。
+- `cdsd-*` の3件はすべての `done_criteria` が未充足で、BA・ARC・QE による対応が必要です。
+- `tsd-ollama-opencode.md` と `sysd-opencode-agent-settings.md` は評価が古いので、次回の Run で選択されるはずです。
+
+**確認できなかった範囲**
+
+- `logs/grade/runs/per-document/JBR-grade-deliverable-a765246db75c/results.tsv` の実ファイルと pipeline state ファイルの中身は直接読んでいません。stdout と evidence に写された内容で確認しました。
+- finding の中身が妥当かどうかは再評価していません。review の規約に従っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Run は succeeded（終了コード 0）で、selected=10 / processed=10 / incomplete=0 / exhausted=0。全段 passed で、rate limit（75）・failed・`retry_exhausted` はない。差分 200ef3d..6915df7 の27ファイルは、この Run の evidence・plan・result・Run JSON と評価サイドカー10件・`done_criteria` 10件だけで構成される。サイドカーの `verdict`/`score`/`finding_counts` 合計は10件とも `results.tsv` と一致する。`graded_by: flash-high-executor` は agent-members.yaml で `agy-expert-executor` の別名と定義されており矛盾しない。鮮度確認（--changed-only / --dependency-changed）は2回とも対象10件を含まない（出力は対象外の tsd-ollama-opencode.md・sysd-opencode-agent-settings.md のみ）。--incomplete と --exhausted は0件。score の変化: cdfd-action 73→72（観点別 94→88・100→75、minor 3→4）、cdfd-overview 85→87（本文の content_hash 更新、DC 1件が satisfied に）。他は score・verdict とも不変。分布は pass 1件（bps-task-completion 96）、needs-work 9件（59〜87）、blocker 0件で、評価設定を見直すべき偏りは確認できない。未充足の `done_criteria`: cdsd-execution / cdsd-planning / cdsd-sharing が各 3/3（BA・ARC・QE）、cdfd-action 2/3（BA・PO）、cdfd-check・cdfd-onboarding・cdfd-plan 各1（BA）、cdfd-do 1（ARC）、cdfd-overview 1（PO）、bps-task-completion 0。finding（完了は妨げない）: Run result に未充足 `done_criteria` と確認担当ロール、偏りの判断が書かれていない。criteria の変更を「評価基準を更新」と書いているのは評価結果の判定・理由の更新の誤り。確認できなかった範囲: logs/ 配下の results.tsv 実ファイルと pipeline state ファイルは直接読まず、stdout と evidence の写しで確認した。finding 内容の妥当性は再評価していない（規約どおり）。","handoff":["cdsd-execution / cdsd-planning / cdsd-sharing は全 `done_criteria` が unsatisfied。BA・ARC・QE による対応が必要。","Job の reporter が result に未充足 `done_criteria`・確認担当ロール・score の偏りを書いていない。reporter への指示（analysis）の改善を検討する。","tsd-ollama-opencode.md と sysd-opencode-agent-settings.md は評価が古い（changed-only / dependency-changed）。次回の Run で選択される見込み。"],"validations":[{"command":"git diff --stat / --name-status 200ef3d74d7cf79cdaec2d19aa5af329ad5242d6..6915df7fe16fdb1fb00820a67465c6d67f372838","status":"passed","summary":"27ファイル。すべて当該 Job Run の出力（evidence・plan・result・Run JSON・評価サイドカー10件・criteria 10件）"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"2回実行。対象10件は出力されない（対象外の2件のみ）"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"2回実行。対象10件は出力されない（対象外の sysd-opencode-agent-settings.md のみ）"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力0件"},{"command":"node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力0件"}]}
+</specdojo_executor_evidence>
