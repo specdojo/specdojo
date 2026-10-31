@@ -37,4 +37,17 @@
       to: "2026-10-31"
     - field: derived_from
       from: ""
-      to: "[\"PJR-CCXN\"]"
+      to: '["PJR-CCXN"]'
+- v: 1
+  id: reg_1bc2ef41059744dbb03244e5da29a4e7
+  ts: "2026-10-31T07:29:59Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cd9ce133988d49088cbab2654748ee22
