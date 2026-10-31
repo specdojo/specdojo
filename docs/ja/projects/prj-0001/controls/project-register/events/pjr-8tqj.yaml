@@ -93,3 +93,16 @@
       from: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md; integrated repositories: none; no…'
       to: "-"
   previous_event_id: reg_701482162c534e9888d6949d0e55fc5e
+- v: 1
+  id: reg_a00fdf0860b84f09bf5317f2212352ac
+  ts: "2026-10-31T15:05:07Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_71a9378011cd4581a0c4ff3565a906ef
