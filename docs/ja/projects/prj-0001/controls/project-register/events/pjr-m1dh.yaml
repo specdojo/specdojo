@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e493e21b168d4f2194eb190492b21cc5
+  ts: "2026-10-31T02:43:01Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクトのリポジトリの作業ブランチの名前を設定で選べるようにし、早送りの統合を足す
+    - field: description
+      from: ""
+      to: repos[].branch\_template で作業ブランチの名前を選べるようにし、run と作業ブランチの対応を runner の記録で持ち、名前の重なりを run の開始時に検査し、統合の形に ff を足す
+    - field: input
+      from: ""
+      to: '["PJR-BNMV の決定: `repos[].branch_template`（既定は exec/{project}-{id}、例: git-flow は feature/{topic}、GitHub flow は {type}/{topic}）。{id} も {topic} も含まないテンプレートは設定エラー","ブランチ名が別の項目のものとしてあれば run の開始時に止め、topic を変えるか --branch で名前を指定するよう案内する。自動の連番は付けない。同じ項目の再開では同じブランチを使い続ける","runner は作業ブランチの名前が exec/ で始まることを前提に worktree の片付けや再開をしている（src/exec/worktree-ops-lifecycle.ts など）。run と作業ブランチの対応は、名前の接頭辞ではなく runner の記録で持つ","統合の形に ff（merge commit を作らず早送りで積む）を足す。既存の merge・branch-only は変えない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-BNMV"]'
