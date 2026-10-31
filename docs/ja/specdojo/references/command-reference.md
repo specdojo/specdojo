@@ -1169,9 +1169,10 @@ specdojo orchestrator night --project prj-0001 \
 
 `devcontainer` は、利用リポジトリの `.devcontainer/` 環境を構築するためのサブコマンドです。VS Code Dev Container などで、オーケストレーターを起動するための分離されたコンテナ環境を生成します。
 
-| コマンド                | 用途                                        |
-| ----------------------- | ------------------------------------------- |
-| `devcontainer scaffold` | `.devcontainer/` の設定ファイル群を生成する |
+| コマンド                   | 用途                                                                    |
+| -------------------------- | ----------------------------------------------------------------------- |
+| `devcontainer scaffold`    | `.devcontainer/` の設定ファイル群を生成する                             |
+| `devcontainer host-script` | ホストから tmux へ接続するスクリプト本体を `.specdojo/host/` に書き出す |
 
 `devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。あわせて、常時稼働ホストへの接続と tmux セッション維持のためのサンプルスクリプト（`.devcontainer/remote-host/specdojo-tmux.sh.sample`）と接続元 SSH 設定サンプル（`.devcontainer/remote-host/ssh-config.sample`）も生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。`--editor emacs` / `--editor vim` を指定した場合は、それぞれ Emacs 用の `emacs/init.el` / Vim 用の `vim/vimrc` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
 
@@ -1254,6 +1255,28 @@ post-create は `~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/e
 `recommended` / `full` preset は、`gh` とその認証を保存する名前付き volume、`--editor emacs,vim --tmux` 相当のツールに加え、Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML の VS Code 拡張を追加します。選択した provider が Claude Code、Codex、GitHub Copilot の場合は、その provider の拡張だけも追加します。Markdown と YAML は保存時に Prettier で整形し、`docs/specdojo/schemas/v1/` の主要な schema を SpecDojo の YAML へ関連付けます。同じ拡張は `.vscode/extensions.json` の `recommendations` にも入り、既存の recommendation は保持されます。個別の `--editor`・`--tmux` と一緒に指定した場合は両方を重複なく適用します。`minimal` または preset を指定しない場合は `gh` と認証 volume を追加しません。
 
 Vim の雛形は `.devcontainer/vim/vimrc` に生成され、`~/.vimrc` と `~/.vim/vimrc` のどちらも無い場合だけ `~/.vimrc` へコピーされます。既存の Vim 設定は上書きしません。Emacs の雛形も上記と同じ上書き防止を維持します。
+
+### 16.1. devcontainer host-script
+
+`devcontainer host-script` は、常時稼働ホストから devcontainer 内の tmux セッションへ入るためのスクリプト本体（`.specdojo/host/devcontainer-tmux.sh`）をワークスペースへ書き出します。
+
+```bash
+npx specdojo devcontainer host-script
+```
+
+主要オプション:
+
+| オプション  | 用途                                                     |
+| ----------- | -------------------------------------------------------- |
+| `--dry-run` | 実際にファイルを作成せず、作成予定のファイルを表示する。 |
+
+本体スクリプトの対応 OS は macOS、Linux、Windows の WSL2 です。ホスト側のスクリプト（`~/bin/specdojo-tmux.sh` など）はワークスペースのパスを渡してこの本体スクリプトを呼び出す数行のみとなり、ホスト側スクリプトの保守負担を抑えられます。
+
+- ラベル `devcontainer.local_folder` が一致する稼働中のコンテナがあれば、そのまま tmux へ入ります。
+- 停止中のコンテナがあれば `docker start` で起動してから入ります。この場合ホスト側に Node.js は不要です。
+- コンテナが存在しないときだけ `devcontainer up` を動かします。環境変数 `SPECDOJO_NODE_BIN` があればそこを `PATH` に足し、なければ利用者のログインシェル（`"$SHELL" -lic`）経由で起動します。mise を利用している場合は shims のディレクトリ（例: `~/.local/share/mise/shims`）を指定してください。
+- コンテナ内の作業ディレクトリはマウント情報から、実行ユーザーは `devcontainer.json` の `remoteUser` から求めます。求められないときは原因を stderr に出力して終了します。
+- スクリプトは実行権限（`0o755`）付きで書き出され、同じ版で複数回実行しても内容は変わりません。
 
 ## 17. 関連ガイド
 

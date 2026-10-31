@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -52,13 +52,48 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                      | 担当 | 状態 | メモ |
-| --- | --------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 完了条件に沿って script・コマンド・テスト・文書を変更する | DEV  | open | -    |
+| No  | 作業                                                      | 担当 | 状態 | メモ                       |
+| --- | --------------------------------------------------------- | ---- | ---- | -------------------------- |
+| 1   | 完了条件に沿って script・コマンド・テスト・文書を変更する | DEV  | done | 完了条件 1〜9 の対応を完了 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容
+
+1. **コマンド名とファイル名の選定と実装**:
+   - コマンド名: `specdojo devcontainer host-script`
+     - 選定理由: 既存の Dev Container 関連機能（`devcontainer scaffold` など）の体系的なサブコマンドとして配置し、ホスト向けスクリプトを生成・配布する目的が直感的に分かる名称としました。
+   - ファイル名: `.specdojo/host/devcontainer-tmux.sh`
+     - 選定理由: ホスト側に置く呼び出し用ラッパー（`specdojo-tmux.sh`）と区別しやすく、コンテナ内の tmux セッションへ入る実体スクリプトであることが明確になるよう命名しました。
+   - `src/devcontainer/host-script.ts` および `src/devcontainer/command.ts` に実装し、テンプレート（`templates/devcontainer/remote-host/devcontainer-tmux.sh`）を `.specdojo/host/devcontainer-tmux.sh` へ実行権限（`0o755`）付きで書き出す処理を追加しました。同じ版で複数回実行しても内容は同一（冪等性）です。`--dry-run` にも対応しています。
+2. **スクリプト本体の動作**:
+   - 引数として `workspace` パスを 1 つ受け取り、`devcontainer.json` の `remoteUser` を抽出します。
+   - `devcontainer.local_folder` ラベルが一致する稼働中コンテナがあればそのまま tmux に接続します。
+   - 停止中コンテナがあれば `docker start` で起動して接続します（この場合ホスト側に Node.js は不要です）。
+   - コンテナが存在しない場合のみ `devcontainer up` を動かします。`SPECDOJO_NODE_BIN` があれば `PATH` に追加し、なければ利用者のログインシェル（`"$SHELL" -lic`）経由で起動します。
+   - コンテナ内の作業ディレクトリは `docker inspect` のマウント情報から自動判定します。判定できない場合やコンテナ内にディレクトリが存在しない場合は原因を stderr に出力して終了します。
+   - 対応 OS は macOS、Linux、Windows の WSL2 です。
+3. **サンプルの更新**:
+   - `templates/devcontainer/remote-host/specdojo-tmux.sh.sample` を、workspace パスを引数に渡して `.specdojo/host/devcontainer-tmux.sh` を呼び出す数行のラッパーに置き換えました。
+   - `templates/devcontainer/remote-host/ssh-config.sample` および `src/devcontainer/scaffold.ts` の接続説明を、通常接続時は Node.js 不要、コンテナ未作成時のみ CLI 起動、`SPECDOJO_NODE_BIN` を設定可能とする新方式に合わせて更新しました。
+4. **テストの追加と更新**:
+   - `tests/src/devcontainer/host-script.test.ts` を追加し、コマンドの書き出し・実行権限・冪等性・dry-run と、fake docker/devcontainer を用いた 3 つの経路（稼働中・停止中・未作成）および異常系（引数なし・ディレクトリなし・devcontainer.json なし・remoteUser なし・マウント不一致・コンテナ内パスなし・起動失敗）を検証しました。
+   - `tests/src/devcontainer/scaffold.test.ts` および `tests/src/devcontainer/scaffold.integration.test.ts` を新方式に合わせて更新しました。
+5. **ドキュメントと CHANGELOG**:
+   - [[specdojo:remote-host-development-guide]] および `docs/ja/specdojo/references/command-reference.md` を更新し、新方式の動作、対応 OS（macOS、Linux、Windows WSL2）、mise 使用時の shims ディレクトリ指定について記載しました。
+   - `CHANGELOG.md` の未公開の版の節（`## [Unreleased]`）に追記しました。
+
+### ホストでの実際の接続の確かめ方（利用者向け確認手順）
+
+1. ワークスペースで `npx specdojo devcontainer host-script` を実行し、`.specdojo/host/devcontainer-tmux.sh` が作成され実行権限が付与されていることを確認します。
+2. `.devcontainer/remote-host/specdojo-tmux.sh.sample` をホスト側の `~/bin/specdojo-tmux.sh` などへコピーし、実行権限（`chmod +x ~/bin/specdojo-tmux.sh`）を付与します。スクリプト内の `workspace_dir` をホスト上のワークスペースのパスに合わせます。
+3. **経路 1（稼働中コンテナ）の確認**: コンテナが起動している状態で `~/bin/specdojo-tmux.sh` を実行し、即座にコンテナ内の tmux セッションへ接続できることを確認します。
+4. **経路 2（停止中コンテナ）の確認**: コンテナを `docker stop` で停止させた状態で `~/bin/specdojo-tmux.sh` を実行し、コンテナが自動起動して tmux セッションへ接続できることを確認します（ホスト側の PATH に node/devcontainer がない状態でも接続できます）。
+5. **経路 3（未作成コンテナ）の確認**: コンテナを削除した状態で `~/bin/specdojo-tmux.sh` を実行し、`devcontainer up` が起動して新しいコンテナが作成され、tmux セッションへ接続できることを確認します（mise などの環境で起動しない場合は環境変数 `SPECDOJO_NODE_BIN` に shims ディレクトリを設定してください）。
+
+### 残課題・申し送り
+
+- ホスト実環境での実際の接続確認は、Docker daemon および実環境を持つホスト上で利用者が上記の手順に沿って実施します。
 
 ## 6. 関連ドキュメント
 

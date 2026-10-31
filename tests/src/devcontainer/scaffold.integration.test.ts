@@ -12,6 +12,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { runDevcontainerScaffold } from "../../../src/devcontainer/scaffold.js";
+import { runDevcontainerHostScript } from "../../../src/devcontainer/host-script.js";
 
 const PACKAGE_ROOT = resolve(process.cwd());
 const REMOTE_COMMAND_PATH = "/usr/bin:/bin";
@@ -55,6 +56,12 @@ async function createScaffoldFixture(
     dryRun: false,
   });
 
+  await runDevcontainerHostScript({
+    packageRoot: PACKAGE_ROOT,
+    repoRoot: repo,
+    dryRun: false,
+  });
+
   return {
     home,
     repo,
@@ -72,24 +79,12 @@ function writeExecutable(path: string, content: string): void {
 function configureTmuxScript(
   sourcePath: string,
   targetPath: string,
-  options: { fallbackBinDirs?: readonly [string, string]; nodeBinDir: string; repo: string },
+  options: { repo: string },
 ): void {
-  let configured = readFileSync(sourcePath, "utf8")
-    .replace(
-      'container_workspace_dir="/workspaces/<workspace-name>/<repo-name>"',
-      'container_workspace_dir="/workspaces/workspace/repo"',
-    )
-    .replace(
-      'workspace_dir="${HOME}/<path-to-workspace>/<repo-name>"',
-      `workspace_dir="${options.repo}"`,
-    )
-    .replace('node_bin_dir="/absolute/path/to/node/bin"', `node_bin_dir="${options.nodeBinDir}"`);
-  if (options.fallbackBinDirs) {
-    configured = configured.replace(
-      "/opt/homebrew/bin:/usr/local/bin",
-      options.fallbackBinDirs.join(":"),
-    );
-  }
+  const configured = readFileSync(sourcePath, "utf8").replace(
+    "${1:-$HOME/<path-to-workspace>/<repo-name>}",
+    `\${1:-${options.repo}}`,
+  );
   writeExecutable(targetPath, configured);
 }
 
@@ -141,6 +136,10 @@ describe("scaffolded devcontainer shell scripts", () => {
     fi
     exit 0
     ;;
+  inspect)
+    printf 'bind\\t${fixture.root}/workspace\\t/workspaces/workspace\\n'
+    exit 0
+    ;;
   exec)
     exit 0
     ;;
@@ -157,7 +156,6 @@ exit 0`,
       ),
     );
     configureTmuxScript(fixture.tmuxScript, configuredScript, {
-      nodeBinDir: fakeBin,
       repo: fixture.repo,
     });
 
@@ -165,7 +163,8 @@ exit 0`,
       COMMAND_LOG: commandLog,
       FAKE_CONTAINER_STATE: containerState,
       HOME: fixture.home,
-      PATH: REMOTE_COMMAND_PATH,
+      PATH: `${fakeBin}:${REMOTE_COMMAND_PATH}`,
+      SPECDOJO_NODE_BIN: fakeBin,
     });
 
     expect(result.status, result.stderr).toBe(0);
@@ -204,6 +203,10 @@ exit 0`,
     fi
     exit 0
     ;;
+  inspect)
+    printf 'bind\\t${fixture.root}/workspace\\t/workspaces/workspace\\n'
+    exit 0
+    ;;
   exec)
     exit 0
     ;;
@@ -220,7 +223,6 @@ exit 0`,
       ),
     );
     configureTmuxScript(fixture.tmuxScript, configuredScript, {
-      nodeBinDir: fakeBin,
       repo: fixture.repo,
     });
 
@@ -228,7 +230,8 @@ exit 0`,
       COMMAND_LOG: commandLog,
       FAKE_CONTAINER_STATE: containerState,
       HOME: fixture.home,
-      PATH: REMOTE_COMMAND_PATH,
+      PATH: `${fakeBin}:${REMOTE_COMMAND_PATH}`,
+      SPECDOJO_NODE_BIN: fakeBin,
     });
 
     expect(result.status, result.stderr).toBe(0);
@@ -259,6 +262,10 @@ exit 0`,
     printf 'container-123\\n'
     exit 0
     ;;
+  inspect)
+    printf 'bind\\t${fixture.root}/workspace\\t/workspaces/workspace\\n'
+    exit 0
+    ;;
   exec)
     for arg in "$@"; do
       if [ "$arg" = "test" ]; then
@@ -273,14 +280,13 @@ exit 1`,
     );
     writeExecutable(join(fakeBin, "devcontainer"), fakeCommandBody("devcontainer"));
     configureTmuxScript(fixture.tmuxScript, configuredScript, {
-      nodeBinDir: fakeBin,
       repo: fixture.repo,
     });
 
     const result = runScript(configuredScript, fixture.repo, {
       COMMAND_LOG: commandLog,
       HOME: fixture.home,
-      PATH: REMOTE_COMMAND_PATH,
+      PATH: `${fakeBin}:${REMOTE_COMMAND_PATH}`,
     });
 
     expect(result.status).toBe(1);
@@ -290,56 +296,44 @@ exit 1`,
     expect(calls.some((call) => call.includes("tmux\tnew-session"))).toBe(false);
   });
 
-  it.each([
-    {
-      missing: "devcontainer",
-      available: "docker",
-      expected: [
-        "Dev Container CLI is not installed or not in PATH.",
-        "Current PATH:",
-        'dirname "$(command -v devcontainer)"',
-      ],
-    },
-    {
-      missing: "docker",
-      available: "devcontainer",
-      expected: [
-        "Docker command was not found in PATH.",
-        "Current PATH:",
-        'dirname "$(command -v docker)"',
-      ],
-    },
-  ])("reports PATH diagnostics when $missing is not found", async ({ available, expected }) => {
+  it("fails with diagnostics when container cannot be started or found", async () => {
     const fixture = await createScaffoldFixture();
     const fakeBin = join(fixture.root, "node-bin");
     const commandLog = join(fixture.root, "commands.log");
     const configuredScript = join(fixture.root, "specdojo-tmux.sh");
-    const isolatedPath = join(fixture.root, "remote-command-path");
-    const fallbackBinDirs = [
-      join(fixture.root, "homebrew-bin"),
-      join(fixture.root, "local-bin"),
-    ] as const;
     mkdirSync(fakeBin);
-    mkdirSync(isolatedPath);
-    // Keep host-installed Docker and Dev Container CLIs unreachable in the missing-command cases.
-    writeExecutable(join(fakeBin, available), fakeCommandBody(available));
+
+    writeExecutable(join(fakeBin, "docker"), fakeCommandBody("docker", "exit 0"));
+    writeExecutable(join(fakeBin, "devcontainer"), fakeCommandBody("devcontainer", "exit 0"));
     configureTmuxScript(fixture.tmuxScript, configuredScript, {
-      fallbackBinDirs,
-      nodeBinDir: fakeBin,
       repo: fixture.repo,
     });
 
     const result = runScript(configuredScript, fixture.repo, {
       COMMAND_LOG: commandLog,
       HOME: fixture.home,
-      PATH: isolatedPath,
+      PATH: `${fakeBin}:${REMOTE_COMMAND_PATH}`,
+      SPECDOJO_NODE_BIN: fakeBin,
     });
 
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain(fakeBin);
-    for (const message of expected) {
-      expect(result.stderr).toContain(message);
-    }
+    expect(result.stderr).toContain("Failed to start or find devcontainer");
+  });
+
+  it("fails when devcontainer-tmux.sh is missing in the workspace", async () => {
+    const fixture = await createScaffoldFixture();
+    const configuredScript = join(fixture.root, "specdojo-tmux.sh");
+    configureTmuxScript(fixture.tmuxScript, configuredScript, {
+      repo: fixture.repo,
+    });
+    rmSync(join(fixture.repo, ".specdojo", "host", "devcontainer-tmux.sh"));
+
+    const result = runScript(configuredScript, fixture.repo, {
+      HOME: fixture.home,
+      PATH: REMOTE_COMMAND_PATH,
+    });
+
+    expect(result.status).not.toBe(0);
   });
 
   it("restores ~/.local ownership and creates ~/.local/bin before an agent installer", async () => {

@@ -160,8 +160,10 @@ export function generateSshConfigSample(ports: number[]): string {
     "",
     "# devcontainer 内の tmux セッションへ直接入る接続用",
     "# RemoteCommand は非対話シェルで動くため、接続先端末の ~/.zshrc などの PATH 設定は読み込まれません。",
+    "# 通常の接続（コンテナ稼働中または停止中）では Node.js は不要です（docker のみ使用）。",
+    "# コンテナ未作成時のみ Dev Container CLI が自動起動されます。",
     "# 接続元から「ssh <host> 'command -v devcontainer'」を実行して Dev Container CLI が見つかるか確認できます。",
-    "# 見つからない場合は、ホスト側の ~/bin/specdojo-tmux.sh の node_bin_dir を設定してください。",
+    "# 見つからない場合は、ホストの環境変数 SPECDOJO_NODE_BIN を設定するか、ログインシェルの PATH を確認してください。",
     "Host <host>-tmux",
     "  HostName <host>",
     "  User <user>",
@@ -439,7 +441,7 @@ fi`);
   }
 
   const specdojoTmuxTemplatePath = path.join(templateDir, "remote-host", "specdojo-tmux.sh.sample");
-  let specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
+  const specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
   const remoteUser =
     typeof devcontainer.remoteUser === "string" && devcontainer.remoteUser.trim()
       ? devcontainer.remoteUser.trim()
@@ -464,10 +466,6 @@ fi`);
     PATH: remotePath,
   };
 
-  specdojoTmuxScript = specdojoTmuxScript.replace(
-    'container_user="node"',
-    `container_user="${remoteUser}"`,
-  );
   const publishedPorts = extractPublishedPorts(devcontainer);
   const sshConfigScript = generateSshConfigSample(publishedPorts);
 

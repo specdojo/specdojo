@@ -2,6 +2,16 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 追加機能
+
+- `devcontainer host-script` コマンドを追加しました。常時稼働ホストから devcontainer 内の tmux セッションへ入るためのスクリプト本体（`devcontainer-tmux.sh`）を workspace の `.specdojo/host/` へ書き出します。ホスト側のスクリプト（`specdojo-tmux.sh`）は workspace のパスを渡して本体を呼び出す数行のみとなり、稼働中または停止中のコンテナへの接続ではホスト側に Node.js が不要になります。コンテナ未作成時のみ `devcontainer up` を動かし、`SPECDOJO_NODE_BIN` による PATH 上書きやログインシェル経由の起動に対応します。対応 OS は macOS、Linux、Windows の WSL2 です（PJR-Q8KP）。
+
+### 変更
+
+- `devcontainer scaffold` が生成する `specdojo-tmux.sh.sample` を、`.specdojo/host/devcontainer-tmux.sh` を呼び出す数行のラッパースクリプトへ置き換えました。あわせて `ssh-config.sample` の接続説明を新しい起動方式に合わせて更新しました（PJR-Q8KP）。
+
 ## [0.6.0] - 2026-10-31
 
 同梱パッケージは `@specdojo/docs-lint` 0.4.0 を同時に公開します。docs-lint 0.4.0 は、成果物の文脈の目印 `_CONTEXT_:` の検出（`status: ready` の文書ではエラー、それ以外は情報。PJR-JRSY・PJR-D0GB）を含みます。`remark/md-content` を options なしで読み込むと失敗する問題の修正（PJR-5EN3）と、0.3.1（2026-10-29 公開）の rulebook 一覧のキャッシュ（PJR-SC8T）も含みます。`@specdojo/docs-site` は変更がないため 0.3.0 のままです。
