@@ -1,0 +1,84 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "D2 の SVG 生成・構文検査・親検証 ID・Dev Container 導入処理・テスト・文書を実装しました。保護設定の反映案と実環境での確認事項を個票に記載しました。result は変更していません。",
+  "handoff": [
+    "完了条件 8 に従い、保護設定は未変更です。個票の 5.2. に従って、利用者の承認後に package.json の lint:d2 と check、lefthook.yml の Markdown 検査、.specdojo/exec-defaults.yaml の `pipeline.parent_validations` へ lint-d2 を追加してください。",
+    "CI は保護対象のため未変更です。.github/workflows/deploy.yml への具体的な追加案を個票 5.2. に記載しました。.devcontainer/install-d2.sh で固定版を導入し、D2 検査と実 CLI の統合テストをビルド前に実行してください。",
+    "sandbox には d2 がなく、ダウンロードは DNS 制限、子プロセスによるビルド試行は EPERM で実行できませんでした。Dev Container 再ビルド後に d2 version、実 CLI の統合テスト、文書ビルドと表示を確認してください。tests/tools/d2-cli.integration.test.ts は CLI がない環境では skip します。",
+    "指定された全体 lint・型検査・単体／統合テストは親 runner に委ねました。reporter は親検証の結果と上記申し送りを result に反映してください。D2 はコードブロック内で完結するルート図を対象とし、外部 import と追加ページ出力は対象外です。"
+  ],
+  "validations": [
+    {
+      "command": "npm --prefix packages/docs-site run typecheck",
+      "status": "passed",
+      "summary": "docs-site の型検査に成功しました。"
+    },
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-6nem-d2-rendering-foundation.md docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml docs/specdojo/schemas/v1/specdojo-config.schema.yaml packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/d2-auto-generate.ts packages/docs-site/.vitepress/mermaid-assets.ts packages/docs-site/README.md packages/docs-site/bin/specdojo-docs-site.js packages/docs-site/src/d2.d.mts packages/docs-site/src/d2.mjs packages/docs-site/src/gen-d2-svg.ts src/commands/init.ts src/exec/parent-validation.ts src/shared/specdojo-gitignore.ts tests/packages/docs-site/d2.test.ts tests/packages/docs-site/mermaid-assets.test.ts tests/src/exec/parent-validation.test.ts tests/src/shared/specdojo-gitignore.test.ts tests/tools/d2-cli.integration.test.ts tools/lint-d2.mjs",
+      "status": "passed",
+      "summary": "変更ファイルを整形しました。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-6nem-smoke.mjs",
+      "status": "passed",
+      "summary": "模擬子プロセスで抽出・ELK 指定・SVG キャッシュと削除・正常／異常／CLI 未導入時の動作を確認しました。実 D2 の文法検証ではありません。一時スクリプトは削除済みです。"
+    },
+    {
+      "command": "node tools/lint-d2.mjs",
+      "status": "passed",
+      "summary": "3,597 文書、D2 0 件で成功しました。実 CLI は呼び出していません。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data tmp/pjr-6nem-exec-defaults.yaml",
+      "status": "passed",
+      "summary": "lint-d2 を追加した一時設定を検証しました。一時ファイルは削除済みです。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data tmp/pjr-6nem-config.json",
+      "status": "passed",
+      "summary": "project の親検証に lint-d2 を指定した一時設定を検証しました。一時ファイルは削除済みです。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証に成功しました。今回変更していない未作成成果物への警告があります。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成に成功しました。"
+    },
+    {
+      "command": "node --check tools/lint-d2.mjs",
+      "status": "passed",
+      "summary": "JavaScript の構文検査に成功しました。"
+    },
+    {
+      "command": "node --check packages/docs-site/src/d2.mjs",
+      "status": "passed",
+      "summary": "共通処理の JavaScript 構文検査に成功しました。"
+    },
+    {
+      "command": "sh -n .devcontainer/install-d2.sh",
+      "status": "passed",
+      "summary": "インストーラーのシェル構文検査に成功しました。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査に成功しました。"
+    },
+    {
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "実 CLI を導入したホスト側で、フルビルドと D2 図の表示を確認してください。sandbox では子プロセス起動が EPERM になります。"
+    },
+    {
+      "command": "devcontainer build --workspace-folder .",
+      "status": "requires_human",
+      "summary": "Docker を使えるホスト側でコンテナを再ビルドし、固定版 D2 の導入を確認してください。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

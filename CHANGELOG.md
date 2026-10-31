@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- docs-site に D2 コードブロックの SVG 生成と配信、`specdojo-docs-site d2` を追加しました。D2 CLI v0.9.0 と既定 ELK を使い、構文検査 `node tools/lint-d2.mjs` と親検証 ID `lint-d2` を用意しました。Dev Container の CLI 導入は版と SHA-256 を固定します。`lint:d2`・`check`・commit hook・親検証設定および CI への組み込みは、保護された設定の承認後に反映します（PJR-6NEM）。
+
 - `devcontainer host-script` コマンドを追加しました。常時稼働ホストから devcontainer 内の tmux セッションへ入るためのスクリプト本体（`devcontainer-tmux.sh`）を workspace の `.specdojo/host/` へ書き出します。ホスト側のスクリプト（`specdojo-tmux.sh`）は workspace のパスを渡して本体を呼び出す数行のみとなり、稼働中または停止中のコンテナへの接続ではホスト側に Node.js が不要になります。コンテナ未作成時のみ `devcontainer up` を動かし、`SPECDOJO_NODE_BIN` による PATH 上書きやログインシェル経由の起動に対応します。対応 OS は macOS、Linux、Windows の WSL2 です（PJR-Q8KP）。
 
 ### 変更

@@ -39,6 +39,7 @@ export const DEFAULT_GITIGNORE_PATTERNS = [
   "/.vitepress/dist/",
   "/.vitepress/cache/",
   "/.vitepress/mermaid/",
+  "/.vitepress/d2/",
   "/.vitepress/kata-staging/",
 ] as const;
 
