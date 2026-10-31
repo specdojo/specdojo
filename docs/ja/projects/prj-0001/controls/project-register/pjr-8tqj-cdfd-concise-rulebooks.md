@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-8tqj-cdfd-concise-rulebooks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-10-31T14:15:36Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T23:32:10Z"
+  conclusion: 3 つの CDFD の rulebook を要点に絞った形に直し、cdfd-overview.md を書き直した。文章は約半分になり、利用者が分かりやすい密度と確認した
 ---
 
 # PJR-8TQJ CDFD の rulebook を要点に絞った形に直し、全体概要で試す

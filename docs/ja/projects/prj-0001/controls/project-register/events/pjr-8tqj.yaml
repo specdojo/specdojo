@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_71a9378011cd4581a0c4ff3565a906ef
+- v: 1
+  id: reg_1ce2835b17dd4f7da240f99c40af24a1
+  ts: "2026-10-31T23:32:10Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が cdfd-overview.md の密度を確かめて承認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: 3 つの CDFD の rulebook を要点に絞った形に直し、cdfd-overview.md を書き直した。文章は約半分になり、利用者が分かりやすい密度と確認した
+  previous_event_id: reg_a00fdf0860b84f09bf5317f2212352ac
