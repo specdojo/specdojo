@@ -119,3 +119,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6ad4ee89221341e2b6986a5156e6eca0
+- v: 1
+  id: reg_eb75829b2cda47ca980a322175117214
+  ts: "2026-10-31T01:14:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と個票・result を完了条件に照らし、例のオプションが deliverable scaffold と register add の help にあること、親の検証が通ったことを確かめた。schedule-design-guide などに残る --dct の案内は別の項目で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 文脈を渡して成果物を作る流れ（雛形・文脈の記入・draft・fully-guided・finalize）と、_CONTEXT_・--input・brief の使い分けを exec-operation-guide・ryu-guide・tsd-recipe に書いた。雛形の例は deliverable scaffold --target の形にし、ID は project で修飾し、finalize の担当は役割にした
+  previous_event_id: reg_565384460ed74ede85262d27e14987e7

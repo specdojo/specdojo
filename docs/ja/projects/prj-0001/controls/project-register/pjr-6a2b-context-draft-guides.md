@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6a2b-context-draft-guides
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-10-28T22:23:23Z"
+  completed_at: "2026-10-31T01:14:35Z"
+  conclusion: 文脈を渡して成果物を作る流れ（雛形・文脈の記入・draft・fully-guided・finalize）と、_CONTEXT_・--input・brief の使い分けを exec-operation-guide・ryu-guide・tsd-recipe に書いた。雛形の例は deliverable scaffold --target の形にし、ID は project で修飾し、finalize の担当は役割にした
   derived_from:
     - PJR-65DS
   depends_on:
