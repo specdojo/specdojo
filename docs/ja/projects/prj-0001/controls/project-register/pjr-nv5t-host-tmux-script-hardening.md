@@ -8,23 +8,28 @@ specdojo:
     - prj-0001:pjr-index
   item_type: todo
   item_status: open
-  priority: low
+  priority: high
   difficulty: easy
+  owner: DEV
   registered_at: "2026-10-31T13:54:15Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-Q8KP
 ---
 
-# PJR-NV5T ホストの tmux の script の前方一致の判定とラッパーの起動を直す
+# PJR-NV5T ホストの tmux の script でマウント元のパスを正規化して比べる
 
 ## 1. 概要
 
-PJR-Q8KP で配った devcontainer-tmux.sh は、マウント元のパスを前方一致で比べる箇所で変数を引用していないため、パスに glob の文字が含まれると判定がずれる（shellcheck SC2295）。また sample のラッパーは本体を直接実行しており、実行権限が無いと動かない。bash 経由で呼ぶ形に直す
+PJR-Q8KP で配った devcontainer-tmux.sh は、docker inspect が返すマウント元のパスを文字列のまま前方一致で比べる。Docker Desktop for Mac では workspaceMount の source が `<親>`/specdojo/.. の形で返るため一致せず、ホストで接続できない。bind のマウントだけを正規化して比べ、shellcheck の SC2295・SC2034 も直す。sample のラッパーは bash 経由で本体を呼ぶ形にする
 
 ## 2. 入力
 
 - PJR-Q8KP の close の前の確かめで、shellcheck が SC2295（info）と SC2034（`m_type` の未使用）を出した（2026-10-31）
 - ラッパーを bash 経由の起動に直すことは 2026-10-31 の対話で利用者が推奨を採用した
+- 利用者のホスト（macOS・Docker Desktop）で ~/bin/specdojo-tmux を実行すると「Could not determine container workspace directory from mounts for: /Users/naoto/workspaces/specdojo-workspace/specdojo」で止まった（2026-10-31）
+- 同じホストの docker inspect の Mounts は bind の Source を /Users/naoto/workspaces/specdojo-workspace/specdojo/..、Destination を /workspaces/specdojo-workspace と返した。ほかは volume のマウント（Source は /var/lib/docker/volumes/`<名前>``/_data`）だった
+- マウント元の正規化の不具合は本項目の範囲に含め、優先度を high にすることを 2026-10-31 の対話で利用者が選んだ（案 A）
 
 ## 3. 完了条件
 
