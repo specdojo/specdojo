@@ -60,6 +60,7 @@ if [ -z "$container_id" ]; then
   if [ -n "${SPECDOJO_NODE_BIN:-}" ]; then
     PATH="$SPECDOJO_NODE_BIN:$PATH" devcontainer up --workspace-folder "$workspace_dir" >&2
   else
+    # shellcheck disable=SC2016
     "${SHELL:-/bin/bash}" -lic 'exec devcontainer up --workspace-folder "$1"' devcontainer-launcher "$workspace_dir" >&2
   fi
   container_id="$(docker ps -q --filter "label=devcontainer.local_folder=$workspace_dir" | head -n 1)"
@@ -76,14 +77,21 @@ best_match_src=""
 best_match_dst=""
 
 while IFS=$'\t' read -r m_type m_src m_dst; do
+  [ "$m_type" != "bind" ] && continue
   [ -z "$m_src" ] && continue
-  if [ "$workspace_dir" = "$m_src" ]; then
-    best_match_src="$m_src"
+
+  norm_src="$m_src"
+  if [ -d "$m_src" ]; then
+    norm_src="$(cd "$m_src" && pwd -P)"
+  fi
+
+  if [ "$workspace_dir" = "$norm_src" ]; then
+    best_match_src="$norm_src"
     best_match_dst="$m_dst"
     break
-  elif [ "${workspace_dir#$m_src/}" != "$workspace_dir" ]; then
-    if [ ${#m_src} -gt ${#best_match_src} ]; then
-      best_match_src="$m_src"
+  elif [ "${workspace_dir#"$norm_src"/}" != "$workspace_dir" ]; then
+    if [ ${#norm_src} -gt ${#best_match_src} ]; then
+      best_match_src="$norm_src"
       best_match_dst="$m_dst"
     fi
   fi
@@ -97,7 +105,7 @@ fi
 if [ "$workspace_dir" = "$best_match_src" ]; then
   container_workspace_dir="$best_match_dst"
 else
-  rel_path="${workspace_dir#$best_match_src/}"
+  rel_path="${workspace_dir#"$best_match_src"/}"
   container_workspace_dir="${best_match_dst%/}/$rel_path"
 fi
 

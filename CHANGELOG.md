@@ -12,6 +12,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - `devcontainer scaffold` が生成する `specdojo-tmux.sh.sample` を、`.specdojo/host/devcontainer-tmux.sh` を呼び出す数行のラッパースクリプトへ置き換えました。あわせて `ssh-config.sample` の接続説明を新しい起動方式に合わせて更新しました（PJR-Q8KP）。
 
+### 不具合修正
+
+- ホストから devcontainer 内の tmux セッションへ入るスクリプト本体（`devcontainer-tmux.sh`）で、`docker inspect` のマウント情報のうち `bind` マウントのみを対象とし、ホスト側のディレクトリパスを正規化してからワークスペースパスと照合するように修正しました。Docker Desktop for Mac などでマウント元のパスが `<親>/<repo>/..` の形式で返る環境でもコンテナ内の作業ディレクトリを正しく特定できるようにします。あわせてマウントパスの前方一致判定における変数展開のクォート漏れ（SC2295）および未使用変数（SC2034）を修正し、サンプルのラッパースクリプト（`specdojo-tmux.sh.sample`）では本体スクリプトの実行権限の有無に関わらず起動できるよう `bash` 経由で呼び出すようにしました（PJR-NV5T）。
+
 ## [0.6.0] - 2026-10-31
 
 同梱パッケージは `@specdojo/docs-lint` 0.4.0 を同時に公開します。docs-lint 0.4.0 は、成果物の文脈の目印 `_CONTEXT_:` の検出（`status: ready` の文書ではエラー、それ以外は情報。PJR-JRSY・PJR-D0GB）を含みます。`remark/md-content` を options なしで読み込むと失敗する問題の修正（PJR-5EN3）と、0.3.1（2026-10-29 公開）の rulebook 一覧のキャッシュ（PJR-SC8T）も含みます。`@specdojo/docs-site` は変更がないため 0.3.0 のままです。

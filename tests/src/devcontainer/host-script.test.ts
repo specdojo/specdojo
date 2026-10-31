@@ -367,6 +367,138 @@ exec /bin/bash "$@"
       );
     });
 
+    describe("mount resolution and normalization", () => {
+      it("resolves container workspace directory when mount source is in <parent>/<repo>/.. form", () => {
+        const inspectOutput = `bind\t${workspaceDir}/..\t/workspaces\n`;
+        writeExecutable(
+          join(fakeBin, "docker"),
+          fakeCommandBody(
+            "docker",
+            `case "$1" in
+  ps)
+    printf 'running-container-norm\\n'
+    exit 0
+    ;;
+  inspect)
+    printf '${inspectOutput}'
+    exit 0
+    ;;
+  exec)
+    exit 0
+    ;;
+esac
+exit 0`,
+          ),
+        );
+
+        const result = runScript(hostScript, [workspaceDir], workspaceDir, {
+          PATH: `${fakeBin}:/usr/bin:/bin`,
+          COMMAND_LOG: commandLog,
+        });
+
+        expect(result.status, result.stderr).toBe(0);
+        const calls = readFileSync(commandLog, "utf8").trim().split("\n");
+        expect(calls).toContain(
+          `docker\texec\t-it\t--detach-keys=ctrl-]\t-u\tnode\t-w\t/workspaces/workspace\trunning-container-norm\ttmux\tnew-session\t-A\t-s\tspecdojo`,
+        );
+      });
+
+      it("resolves container workspace directory from bind mounts even when volume mounts are mixed", () => {
+        const inspectOutput =
+          [
+            "volume\t/var/lib/docker/volumes/vscode-ext/_data\t/workspaces/workspace-wrong",
+            `volume\t${workspaceDir}\t/workspaces/ignored-volume`,
+            `bind\t${tempRoot}\t/workspaces`,
+            "volume\t/var/lib/docker/volumes/cache/_data\t/root/.cache",
+          ].join("\n") + "\n";
+
+        writeExecutable(
+          join(fakeBin, "docker"),
+          fakeCommandBody(
+            "docker",
+            `case "$1" in
+  ps)
+    printf 'running-container-vol\\n'
+    exit 0
+    ;;
+  inspect)
+    printf '${inspectOutput}'
+    exit 0
+    ;;
+  exec)
+    exit 0
+    ;;
+esac
+exit 0`,
+          ),
+        );
+
+        const result = runScript(hostScript, [workspaceDir], workspaceDir, {
+          PATH: `${fakeBin}:/usr/bin:/bin`,
+          COMMAND_LOG: commandLog,
+        });
+
+        expect(result.status, result.stderr).toBe(0);
+        const calls = readFileSync(commandLog, "utf8").trim().split("\n");
+        expect(calls).toContain(
+          `docker\texec\t-it\t--detach-keys=ctrl-]\t-u\tnode\t-w\t/workspaces/workspace\trunning-container-vol\ttmux\tnew-session\t-A\t-s\tspecdojo`,
+        );
+      });
+
+      it("preserves exact prefix matching without pattern shifting when paths contain glob characters such as *", () => {
+        const inspectOutput =
+          [
+            `bind\t${tempRoot}/work*space\t/workspaces/star-pattern-wrong`,
+            `bind\t${tempRoot}\t/workspaces`,
+          ].join("\n") + "\n";
+
+        writeExecutable(
+          join(fakeBin, "docker"),
+          fakeCommandBody(
+            "docker",
+            `case "$1" in
+  ps)
+    printf 'running-container-glob\\n'
+    exit 0
+    ;;
+  inspect)
+    printf '${inspectOutput}'
+    exit 0
+    ;;
+  exec)
+    exit 0
+    ;;
+esac
+exit 0`,
+          ),
+        );
+
+        const result = runScript(hostScript, [workspaceDir], workspaceDir, {
+          PATH: `${fakeBin}:/usr/bin:/bin`,
+          COMMAND_LOG: commandLog,
+        });
+
+        expect(result.status, result.stderr).toBe(0);
+        const calls = readFileSync(commandLog, "utf8").trim().split("\n");
+        expect(calls).toContain(
+          `docker\texec\t-it\t--detach-keys=ctrl-]\t-u\tnode\t-w\t/workspaces/workspace\trunning-container-glob\ttmux\tnew-session\t-A\t-s\tspecdojo`,
+        );
+      });
+
+      const shellcheckAvailable =
+        spawnSync("shellcheck", ["--version"], {
+          encoding: "utf8",
+        }).status === 0;
+
+      it.skipIf(!shellcheckAvailable)(
+        "passes shellcheck for devcontainer-tmux.sh without SC2295 or SC2034",
+        () => {
+          const result = spawnSync("shellcheck", [hostScript], { encoding: "utf8" });
+          expect(result.status, `${hostScript}: ${result.stdout}${result.stderr}`).toBe(0);
+        },
+      );
+    });
+
     describe("failures and diagnostics", () => {
       it("fails when no arguments are provided", () => {
         const result = runScript(hostScript, [], workspaceDir, {

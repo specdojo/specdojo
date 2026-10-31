@@ -17,4 +17,4 @@ set -euo pipefail
 # ホスト上のワークスペースのパス（実際の配置場所に合わせて書き換えてください）
 workspace_dir="${1:-$HOME/<path-to-workspace>/<repo-name>}"
 
-exec "$workspace_dir/.specdojo/host/devcontainer-tmux.sh" "$workspace_dir"
+exec bash "$workspace_dir/.specdojo/host/devcontainer-tmux.sh" "$workspace_dir"
