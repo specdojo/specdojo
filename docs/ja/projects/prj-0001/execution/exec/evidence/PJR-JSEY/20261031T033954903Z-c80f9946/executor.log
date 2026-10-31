@@ -1,0 +1,12 @@
+個票の「対応結果」の表に、今回の確認対象を 1 行追記しました。親 runner の検証と統合は、まだ確認していません。
+
+- **確認対象:** PJR-TC62 です。対象一覧のうち最も新しく統合されたのは、2026-10-31 12:38 JST の統合コミット `4a9691f2d` です。`review` 遷移は `12ef81c54` です。PJR-790T の最新の統合コミットは `341fc8011` で、12:24 JST なので、より新しいのは PJR-TC62 です。
+- **追記した行:** 日時は 2026-10-31 12:41 JST、確認対象は PJR-TC62、agent は sonnet-executor です。日時は、`git log` の最新コミットが 12:40 JST だったことから、そのすぐ後として私が置いた値です。
+- **本文の更新:** 表の下の説明文にある確認対象を、PJR-S23T から PJR-TC62 に差し替えました。
+- **変更範囲:** 変更したのは本個票だけです。コミットも、`docs/ja/projects/**/execution/exec/results/**` の編集もしていません。
+
+親 runner の 7 検証は executor 側では実行していないので、結果は runner の記録が正になります。reporter の result 記入、統合、`review` 遷移も、後続の段で確認してください。個票には、前回(PJR-S23T)の申し送りの文言が残っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-TC62 の行(2026-10-31 12:41 JST、sonnet-executor)を追記し、説明文の確認対象を PJR-TC62 に更新した。変更は本個票のみ。","handoff":["確認対象は PJR-TC62(統合コミット 4a9691f2d、2026-10-31 12:38 JST、review 遷移は 12ef81c54)。PJR-790T の最新の統合コミットは 341fc8011(12:24 JST)でより古い。","追記した日時 12:41 JST は、git log の最新コミット(12:40 JST)の直後として設定した値。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移の完了は後続段で確認する。個票の申し送りには前回(PJR-S23T)の文言が残っている。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため、executor では実行していない。親 runner の結果を正とする。"}]}
+</specdojo_executor_evidence>
