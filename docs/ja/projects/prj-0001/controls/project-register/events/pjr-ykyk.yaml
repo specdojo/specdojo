@@ -86,3 +86,16 @@
       from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
       to: "-"
   previous_event_id: reg_21b94a8cc4184936b38ebff58e261558
+- v: 1
+  id: reg_46f82666ad2049738d8d513d3eab9cd7
+  ts: "2026-10-31T00:59:30Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d66b1fb68ccf4039b5b0d38c3f0ee042
