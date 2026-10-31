@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-S23T"]'
+- v: 1
+  id: reg_26f16808b96649c18967359a52af4aa0
+  ts: "2026-10-31T02:08:26Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_98df68a00bbd419492bf9e3999b3b6e8
