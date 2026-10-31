@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-B5TY の組み込みの後、exec run --register が start から review まで通り、親の検証で lint-mermaid が流れて通った
+  completed_at: "2026-10-31T15:29:50Z"
+  conclusion: PJR-6NEM の統合後も exec run --register が start から review・統合まで通った
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
