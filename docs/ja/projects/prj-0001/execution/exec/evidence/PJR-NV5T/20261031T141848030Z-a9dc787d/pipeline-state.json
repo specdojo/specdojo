@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-NV5T",
   "run_id": "20261031T141848030Z-a9dc787d",
-  "updated_at": "2026-10-31T14:30:04.444Z",
+  "updated_at": "2026-10-31T14:33:44.259Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-nv5t-20261031T140315Z-f0bda0bc-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-10-31T14:30:04.444Z",
-      "completed_at": null,
+      "completed_at": "2026-10-31T14:33:44.259Z",
       "artifact_ref": null
     }
   },
