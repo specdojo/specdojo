@@ -65,7 +65,7 @@ describe("validateProjectRepos", () => {
     expect(validateProjectRepos("prj-0001", {}, ["prj-0001"], root)).toEqual([]);
   });
 
-  it.each(["merge", "branch-only"])("accepts integration_strategy %s", (strategy) => {
+  it.each(["merge", "branch-only", "ff"])("accepts integration_strategy %s", (strategy) => {
     expect(
       validateProjectRepos(
         "prj-0001",
@@ -87,10 +87,54 @@ describe("validateProjectRepos", () => {
           root,
         ),
       ).toEqual([
-        'projects.prj-0001.repos[0].integration_strategy must be "merge" or "branch-only" when present',
+        'projects.prj-0001.repos[0].integration_strategy must be "merge", "branch-only" or "ff" when present',
       ]);
     },
   );
+
+  it.each([
+    "exec/{project}-{id}",
+    "feature/{topic}",
+    "{type}/{topic}",
+    "{type}/{scope}/{id}-{title}",
+  ])("accepts branch template %s", (template) => {
+    expect(
+      validateProjectRepos(
+        "prj-0001",
+        withRepos([{ name: "app1", path: "../app1", branch_template: template }]),
+        ["prj-0001"],
+        root,
+      ),
+    ).toEqual([]);
+  });
+
+  it.each([
+    "feature/static",
+    "{branch}/{id}",
+    "{target}/{topic}",
+    "{unknown}/{id}",
+    "feature/{id",
+    "bad name/{id}",
+    "a..b/{topic}",
+    "a.lock/{id}",
+    "-{id}",
+    "{topic}/",
+    "a//{id}",
+    "{id}\\x",
+    "{id}\u0001",
+    "",
+    null,
+    1,
+  ])("rejects invalid branch template %j", (template) => {
+    expect(
+      validateProjectRepos(
+        "prj-0001",
+        withRepos([{ name: "app1", path: "../app1", branch_template: template }]),
+        ["prj-0001"],
+        root,
+      ).join("; "),
+    ).toContain("branch_template");
+  });
 
   it("rejects a name outside [a-z0-9-] and names the offending entry", () => {
     const errors = validateProjectRepos(

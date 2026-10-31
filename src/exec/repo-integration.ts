@@ -1,3 +1,4 @@
+import { productBranchRecords } from "./product-branch-records.js";
 import { appendFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./events.js";
@@ -275,6 +276,7 @@ export function commitProductWorktrees(params: {
  *   target but not on the target's first-parent line, since the runner merges with a merge commit)
  * - unchanged: the exec branch has no commits of its own (its tip is on the first-parent line)
  * - pending: the exec branch has commits that are not in the integration target
+ * For ff, the recorded starting commit distinguishes unchanged from integrated work.
  */
 export type ProductMergeState = "merged" | "unchanged" | "pending";
 
@@ -289,6 +291,13 @@ export function productMergeState(product: ProductWorktree): ProductMergeState {
     target,
   ]);
   if (ancestor.status !== 0) return "pending";
+  if (product.integrationStrategy === "ff") {
+    const record = productBranchRecords(product.repoRoot).find(
+      (entry) => entry.branch === product.branch,
+    );
+    if (record?.startCommit)
+      return record.startCommit === gitText(tip.stdout).trim() ? "unchanged" : "merged";
+  }
   const firstParent = gitOutput(product.repoRoot, ["rev-list", "--first-parent", target])
     .split("\n")
     .map((line) => line.trim());
@@ -371,6 +380,19 @@ export function productMergeBlockers(product: ProductWorktree): RepoIntegrationB
   }
   if (productMergeState(product) !== "pending") return blockers;
 
+  if (
+    product.integrationStrategy === "ff" &&
+    gitResult(product.repoRoot, ["merge-base", "--is-ancestor", target, product.branch]).status !==
+      0
+  ) {
+    blockers.push(
+      block(
+        `cannot fast-forward ${target} to ${product.branch}: histories have diverged; no rebase or merge is performed`,
+      ),
+    );
+    return blockers;
+  }
+
   const merged = mergeTree(product.repoRoot, target, product.branch);
   if (merged.kind === "conflicts") {
     blockers.push(block(`merge conflicts with ${target}: ${merged.paths.join(", ")}`));
@@ -448,8 +470,8 @@ export function projectMergeBlockers(params: {
 // ── プロダクトの merge ─────────────────────────────────────────────────────
 
 /**
- * Merge the product exec branch into its integration target with a merge commit and return the
- * merge commit. When the target is checked out (normally the product's main checkout), a regular
+ * Integrate the product branch and return the resulting tip. The ff strategy only advances the
+ * target to the product tip, without creating a commit. For merge, when the target is checked out,
  * `git merge --no-ff` updates that working tree; a failed merge is aborted. Otherwise the merge
  * commit is written with `merge-tree` / `commit-tree` and the branch is moved with a
  * compare-and-swap `update-ref`, so a concurrent update of the target is never overwritten.
@@ -463,6 +485,31 @@ export function mergeProductIntoTarget(params: {
   const target = productIntegrationTarget(product);
   const checkout = checkoutOfBranch(product.repoRoot, target);
   const header = `=== ${new Date().toISOString()} ${product.name}: merge ${product.branch} into ${target} ===`;
+  if (product.integrationStrategy === "ff") {
+    const parent = gitOutput(product.repoRoot, ["rev-parse", `refs/heads/${target}`]).trim();
+    const tip = gitOutput(product.repoRoot, ["rev-parse", `${product.branch}^{commit}`]).trim();
+    if (gitResult(product.repoRoot, ["merge-base", "--is-ancestor", parent, tip]).status !== 0) {
+      throw new Error(
+        `cannot fast-forward ${target} to ${product.branch}: histories have diverged; no rebase or merge is performed`,
+      );
+    }
+    const result = checkout
+      ? gitResult(checkout, ["merge", "--ff-only", tip])
+      : gitResult(product.repoRoot, [
+          "update-ref",
+          "-m",
+          `exec: fast-forward ${product.branch}`,
+          `refs/heads/${target}`,
+          tip,
+          parent,
+        ]);
+    if (result.status !== 0) {
+      const detail = gitText(result.stderr).trim() || gitText(result.stdout).trim();
+      appendGitFailureLog(params.failureLogPath, [header, `fast-forward failed: ${detail}`, ""]);
+      throw new Error(`cannot fast-forward ${target} to ${product.branch}: ${detail}`);
+    }
+    return tip;
+  }
   if (checkout) {
     const result = gitResult(checkout, ["merge", "--no-ff", "-m", message, product.branch]);
     if (result.status === 0) return gitOutput(checkout, ["rev-parse", "HEAD"]).trim();

@@ -1,0 +1,77 @@
+ブランチ名の設定・衝突検査・`ff` 統合の差分を確認し、前回の検査失敗3件を修正しました。整形・schema・カタログ検査は成功しています。単体・統合テストなどは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "ブランチテンプレート、runner の対応記録、--branch、ff 統合を実装。前回失敗した prune 処理と再開テストを修正し、個票へ記録しました。指定済みの親検証は runner に委ねます。",
+  "handoff": [
+    "設計判断は個票 5.2 に記録しました。対応記録は各プロダクトの Git 共通管理ディレクトリの specdojo/product-branches/ に保存し、項目の修飾 ID・ブランチ名・開始 commit を保持します。排他的な hard link により完成済みの予約記録を公開します。再開・片付けは記録を参照し、記録のない旧 run のみ従来名を探索します。",
+    "ff は記録された開始 commit で変更なしと統合済みを区別し、再開時の自動同期 merge と rebase を行いません。register 以外では topic に task ID の小文字、title に task ID、type に feat、scope に空文字を使います。保護された設定の変更は不要でした。",
+    "前回の親検証失敗3件へ対応しました。prune は統合先への取り込みを削除直前に再確認し、現在の checkout と統合先が異なる場合にも削除できます。ff の再開テストはプロダクト統合後のプロジェクト統合失敗から再開する条件へ修正しました。再検証結果は親 runner が追記してください。",
+    "統合後は個票 5.4 と運用メモ 5.1 に従い PJR-JSEY を実行してください。JSEY の対象一覧へ PJR-M1DH を追加して開き直し、実 agent CLI で start から review、event の実体名、成功時の worktree／ブランチ撤去を確認してから close してください。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/references/specdojo-config-reference.md docs/specdojo/schemas/v1/specdojo-config.schema.yaml src/exec/repo-integration-sync.ts src/exec/repo-integration.ts src/exec/repo-trace.ts src/exec/run/register-command.ts src/exec/run/register-resume.ts src/exec/run/register-worktree.ts src/exec/run/schedule-prepare.ts src/exec/run/shared.ts src/exec/task-repos.ts src/exec/worktree-command.ts src/exec/worktree.ts src/shared/specdojo-config.ts tests/docs/specdojo/schemas/specdojo-config-schema.test.ts tests/src/exec/register-pipeline-e2e.integration.test.ts tests/src/exec/task-repos.integration.test.ts tests/src/shared/specdojo-config-repos.test.ts src/exec/product-branch-records.ts src/exec/product-branches.ts src/shared/branch-template.ts",
+      "status": "passed",
+      "summary": "対象24ファイルの整形に成功。"
+    },
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md tests/src/exec/task-repos.integration.test.ts",
+      "status": "passed",
+      "summary": "追記した個票とテストの最終整形に成功。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data .specdojo/specdojo.config.json",
+      "status": "passed",
+      "summary": "更新した設定 schema による検証に成功。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検査に成功。既存の未作成成果物に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成に成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor --reporter-by gemma26-reporter --fallback-reporter-by claude-reporter",
+      "status": "requires_human",
+      "summary": "統合後の実 agent CLI と利用枠を要する動作確認。準備と確認項目は個票 5.4 に記載。"
+    }
+  ],
+  "target_coverage": [
+    {"target":"CHANGELOG.md","status":"changed","path":"CHANGELOG.md"},
+    {"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md"},
+    {"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},
+    {"target":"docs/ja/specdojo/references/specdojo-config-reference.md","status":"changed","path":"docs/ja/specdojo/references/specdojo-config-reference.md"},
+    {"target":"docs/specdojo/schemas/v1/specdojo-config.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/specdojo-config.schema.yaml"},
+    {"target":"src/exec/repo-integration-sync.ts","status":"changed","path":"src/exec/repo-integration-sync.ts"},
+    {"target":"src/exec/repo-integration.ts","status":"changed","path":"src/exec/repo-integration.ts"},
+    {"target":"src/exec/repo-trace.ts","status":"changed","path":"src/exec/repo-trace.ts"},
+    {"target":"src/exec/run/register-command.ts","status":"changed","path":"src/exec/run/register-command.ts"},
+    {"target":"src/exec/run/register-resume.ts","status":"changed","path":"src/exec/run/register-resume.ts"},
+    {"target":"src/exec/run/register-worktree.ts","status":"changed","path":"src/exec/run/register-worktree.ts"},
+    {"target":"src/exec/run/schedule-prepare.ts","status":"changed","path":"src/exec/run/schedule-prepare.ts"},
+    {"target":"src/exec/run/shared.ts","status":"changed","path":"src/exec/run/shared.ts"},
+    {"target":"src/exec/task-repos.ts","status":"changed","path":"src/exec/task-repos.ts"},
+    {"target":"src/exec/worktree-command.ts","status":"changed","path":"src/exec/worktree-command.ts"},
+    {"target":"src/exec/worktree.ts","status":"changed","path":"src/exec/worktree.ts"},
+    {"target":"src/shared/specdojo-config.ts","status":"changed","path":"src/shared/specdojo-config.ts"},
+    {"target":"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts","status":"changed","path":"tests/docs/specdojo/schemas/specdojo-config-schema.test.ts"},
+    {"target":"tests/src/exec/register-pipeline-e2e.integration.test.ts","status":"changed","path":"tests/src/exec/register-pipeline-e2e.integration.test.ts"},
+    {"target":"tests/src/exec/task-repos.integration.test.ts","status":"changed","path":"tests/src/exec/task-repos.integration.test.ts"},
+    {"target":"tests/src/shared/specdojo-config-repos.test.ts","status":"changed","path":"tests/src/shared/specdojo-config-repos.test.ts"},
+    {"target":"src/exec/product-branch-records.ts","status":"changed","path":"src/exec/product-branch-records.ts"},
+    {"target":"src/exec/product-branches.ts","status":"changed","path":"src/exec/product-branches.ts"},
+    {"target":"src/shared/branch-template.ts","status":"changed","path":"src/shared/branch-template.ts"}
+  ]
+}
+</specdojo_executor_evidence>

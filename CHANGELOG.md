@@ -8,6 +8,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- プロダクトの作業ブランチ名を `repos[].branch_template` と `exec run --branch <repo>=<name>` で選べるようにしました。項目とブランチの対応を runner が記録し、再開・片付けに使います。別項目との名前の重なりは開始前に停止します。`integration_strategy: ff` は merge commit を作らず早送りだけで統合し、分岐した履歴では停止します。未設定時の名前と `merge`・`branch-only` の動作は従来どおりです（PJR-M1DH）。
+
 - プロダクトリポジトリの `repos[].commit_subject_template` と `repos[].merge_message_template` で、register の exec が作る commit と merge commit の書式を選べるようにしました。8 種類の変数と空 scope の括弧除去に対応し、本文末尾の `Refs:` は常に付けます。未設定時の書式と SpecDojo の記帳は従来どおりです（PJR-Z7GX）。
 
 - 個票に `commit_type` と `commit_scope` を追加し、`register add` / `update` に `--commit-type` と `--commit-scope` を追加しました。Conventional Commits の type・scope を個票ごとに指定でき、`update` では `-` で削除できます。未指定時は項目の type から既定の対応（`issue` は `fix`、`todo`・`change-request` は `feat` など）で解決し、`specdojo.config.json` の `projects.<project-id>.commit_types` や `repos[].commit_types` で対応を上書きできます（PJR-TC62）。

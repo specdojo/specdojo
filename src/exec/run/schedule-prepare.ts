@@ -27,7 +27,12 @@ import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { type ReviewGradeOutcome } from "../../review/grade.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "../results.js";
 import { worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
-import { configuredProductRepos, plannedProjectWorktreePath } from "../task-repos.js";
+import {
+  configuredProductRepos,
+  plannedProjectWorktreePath,
+  preflightProductBranches,
+  productBranchForTask,
+} from "../task-repos.js";
 import { checkpointAndEnsureWorktree, discardStaleExecWorktree } from "../worktree-ops.js";
 import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
 import {
@@ -357,7 +362,11 @@ export async function prepareSingleTask(
   const worktreeTaskId = qualifyTaskId(projectId, task.id);
   const worktreeName = worktreeNameFromTaskId(worktreeTaskId);
   // PJR-98G4: repos を宣言した project では <base>/<task>/project/ と <base>/<task>/<repo>/ を作る。
-  const products = configuredProductRepos(schedulePath);
+  const products = configuredProductRepos(schedulePath).map((product) => ({
+    ...product,
+    branch: productBranchForTask(product, worktreeTaskId, skipClaim),
+  }));
+  preflightProductBranches(products, worktreeTaskId);
 
   if (dryRun) {
     const worktree: ExecWorktree = {
@@ -370,7 +379,7 @@ export async function prepareSingleTask(
     for (const product of products) {
       process.stdout.write(
         `  [run] would setup: worktree ${join(worktreeBase, worktreeName, product.name)} ` +
-          `(${worktree.branch} in ${product.repoRoot})\n`,
+          `(${productBranchForTask(product, worktreeTaskId)} in ${product.repoRoot})\n`,
       );
     }
     const claimMsg = skipClaim

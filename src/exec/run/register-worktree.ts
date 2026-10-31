@@ -8,6 +8,7 @@ import {
   resolveAgentMember,
   type AgentProvider,
 } from "../../shared/specdojo-config.js";
+import { resolveProductBranches } from "../product-branches.js";
 import { registerProductMessage } from "../register-product-message.js";
 import { buildInPlaceStem } from "../plans.js";
 import {
@@ -29,6 +30,7 @@ import {
 import {
   configuredProductRepos,
   integrationBranchOverrideRecord,
+  reserveProductBranches,
   withProductRepoPrompt,
 } from "../task-repos.js";
 import {
@@ -613,7 +615,17 @@ export async function runSingleRegisterItemWorktree(
     : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
   // PJR-XRAB: --integration-branch は設定の integration_branch より優先する。
-  const products = configuredProductRepos(schedulePath, opts.integrationBranch);
+  const products = resolveProductBranches(
+    configuredProductRepos(schedulePath, opts.integrationBranch),
+    {
+      projectId,
+      taskId: worktreeTaskId,
+      item,
+      ticketPath,
+      projectConfig: loadConfig().config?.projects[projectId],
+      overrides: opts.branch,
+    },
+  );
   const integrationBranchOverrides = integrationBranchOverrideRecord(opts.integrationBranch);
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
@@ -658,6 +670,8 @@ export async function runSingleRegisterItemWorktree(
 
     const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId, products });
     if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
+
+    reserveProductBranches(products, worktreeTaskId);
 
     const { planPath } = await generateRegisterPlan({
       executionPath,

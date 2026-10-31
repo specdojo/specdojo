@@ -1,0 +1,332 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-M1DH",
+  "run_id": "20261031T041340528Z-48654c23",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-31T04:14:41.977Z",
+    "completed_at": "2026-10-31T04:27:35.820Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-m1dh.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration-sync.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-trace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/product-branch-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/product-branches.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/branch-template.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration-sync.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-trace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/product-branch-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/product-branches.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/branch-template.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 25,
+    "summary": "CHANGELOG.md                                       |   2 +\n .../pjr-m1dh-product-branch-template-ff.md         |  43 ++++-\n docs/ja/specdojo/references/command-reference.md   |   5 +\n .../references/specdojo-config-reference.md        |  40 ++--\n .../schemas/v1/specdojo-config.schema.yaml         |  13 +-\n src/exec/repo-integration-sync.ts                  |   7 +-\n src/exec/repo-integration.ts                       |  51 ++++-\n src/exec/repo-trace.ts                             |   3 +-\n src/exec/run/register-command.ts                   |  24 +++\n src/exec/run/register-resume.ts                    |  12 +-\n src/exec/run/register-worktree.ts                  |  16 +-\n src/exec/run/schedule-prepare.ts                   |  15 +-\n src/exec/run/shared.ts                             |   2 +\n src/exec/task-repos.ts                             | 111 +++++++++--\n src/exec/worktree-command.ts                       |   3 +-\n src/exec/worktree.ts                               |  14 +-\n src/shared/specdojo-config.ts                      |  15 +-\n .../schemas/specdojo-config-schema.test.ts         |  33 +++-\n .../exec/register-pipeline-e2e.integration.test.ts | 118 ++++++++++--\n tests/src/exec/task-repos.integration.test.ts      | 212 +++++++++++++++++++++\n tests/src/shared/specdojo-config-repos.test.ts     |  48 ++++-\n 21 files changed, 710 insertions(+), 77 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/references/specdojo-config-reference.md docs/specdojo/schemas/v1/specdojo-config.schema.yaml src/shared/branch-template.ts src/shared/specdojo-config.ts src/exec/product-branch-records.ts src/exec/product-branches.ts src/exec/task-repos.ts src/exec/worktree.ts src/exec/worktree-command.ts src/exec/repo-inte…",
+      "status": "passed",
+      "summary": "変更した24ファイルを整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-m1dh-product-branch-template-ff.md docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "passed",
+      "summary": "最終追記後の文書を整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data .specdojo/specdojo.config.json",
+      "status": "passed",
+      "summary": "更新した schema のコンパイルと現行設定の検証に成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証成功。参照先の成果物が未作成という警告があります。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビューを生成しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor --reporter-by gemma26-reporter --fallback-reporter-by claude-reporter",
+      "status": "requires_human",
+      "summary": "統合後に対象一覧の更新と reopen を行い、実 agent CLI で runner の動作を確認してください。手順は個票 5.4 に記載しました。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M1DH/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M1DH/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M1DH/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.5.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M1DH\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\nts:662:12\n    660|   const fail = (repo: string, cause: string): RepoIntegrationError => {\n    661|     record(repo, { status: \"failed\", error: cause });\n    662|     return new RepoIntegrationError({\n       |            ^\n    663|       repo,\n    664|       cause,\n ❯ integrateTaskRepositories src/exec/repo-integration.ts:773:11\n ❯ integrateFixture tests/src/exec/task-repos.integration.test.ts:229:3\n ❯ tests/src/exec/task-repos.integration.test.ts:1169:7\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.5.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M1DH/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M1DH/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.5.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M1DH\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-5kTGlG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-qR5rV0/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-byvkj8/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-e3E303/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "ブランチ名の設定・上書き・衝突検査・対応記録と ff 統合を実装し、テスト、設定リファレンス、コマンド説明、CHANGELOG、個票を更新しました。result は変更していません。親検証は runner に委ねます。",
+  "completion_status": "complete",
+  "handoff": [
+    "設計判断: 各プロダクトの Git 共通管理ディレクトリの specdojo/product-branches/ に、項目の修飾 ID・ブランチ名・開始 commit を保存します。worktree 撤去後も保持でき、別 project との衝突も検出できるためです。完成した JSON を排他的な hard link で公開し、register start 前に名前を予約します。旧 run は記録がない場合だけ従来名へフォールバックし、別項目の記録があれば削除しません。保護された設定の変更は不要でした。",
+    "設計判断: ff は事前検査と統合直前に祖先関係を確認し、checkout 中は merge --ff-only、それ以外は比較交換による update-ref を使います。再開時の自動同期 merge と rebase は行いません。開始 commit で変更なしと統合済みを区別し、result の統合 snapshot には早送り先を記録します。register 以外では topic は task ID の小文字、title は task ID、type は feat、scope は空文字です。",
+    "統合後は個票の 5.4 と運用メモに従い、PJR-JSEY の対象へ PJR-M1DH を追加して開き直し、claude-executor で start から review、event の実体 actor、成功時の片付けを確認してください。実 agent CLI と利用枠を要するため、この executor では実行していません。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-M1DH/20261031T041340528Z-48654c23/executor.log",
+      "bytes": 4480,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-M1DH/20261031T041340528Z-48654c23/parent-validation-attempt-1-test-integration.log",
+      "bytes": 243948,
+      "truncated": false
+    }
+  ]
+}

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-31T02:43:00Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-BNMV
   depends_on:
@@ -51,15 +50,47 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                       | 担当     | 状態 | メモ |
-| --- | -------------------------------------------------------------------------- | -------- | ---- | ---- |
-| 1   | `branch_template` の設定と、run と作業ブランチの対応を記録で持つ形に変える | executor | open | -    |
-| 2   | 名前の重なりの検査、`--branch`、`ff` の統合を足す                          | executor | open | -    |
-| 3   | 統合テストと文書を足す                                                     | executor | open | -    |
+| No  | 作業                                                                       | 担当     | 状態   | メモ                     |
+| --- | -------------------------------------------------------------------------- | -------- | ------ | ------------------------ |
+| 1   | `branch_template` の設定と、run と作業ブランチの対応を記録で持つ形に変える | executor | closed | 実装・テスト・文書へ反映 |
+| 2   | 名前の重なりの検査、`--branch`、`ff` の統合を足す                          | executor | closed | 実装・テスト・文書へ反映 |
+| 3   | 統合テストと文書を足す                                                     | executor | closed | 実装・テスト・文書へ反映 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容・成果物
+
+- `src/shared/specdojo-config.ts` と設定 schema に `repos[].branch_template` および `integration_strategy: ff` を追加しました。テンプレートは既定の `exec/{project}-{id}` と、`{project}`・`{id}`・`{topic}`・`{type}`・`{scope}`・`{title}` に対応します。識別用の `{id}`／`{topic}` がない値、未知の変数、`{branch}`／`{target}`、不正な Git ブランチ名は拒否します。展開後の名前も Git で検証します。
+- `src/exec/product-branches.ts` で register の項目から名前を解決し、`exec run --branch <repo>=<name>` を追加しました。別項目や管理外の既存ブランチとの衝突は start 前に停止し、topic の変更か `--branch` を案内します。再開では保存した名前を使い、別名の指定を拒否します。
+- `src/exec/product-branch-records.ts` で、項目の修飾 ID・ブランチ名・開始 commit を Git の共通管理ディレクトリに記録します。`task-repos.ts` と run／worktree の処理をこの記録へ接続し、任意の名前での作成、再開、撤去、孤立ブランチの prune、`branch-only` の保持に対応しました。SpecDojo の記帳用リポジトリの命名は従来どおりです。
+- `repo-integration.ts` に `ff` を追加しました。全リポジトリの事前検査で祖先関係を確かめ、分岐時は統合せず停止します。統合直前にも再検査し、checkout 中なら `merge --ff-only`、それ以外は旧先端を指定した `update-ref` を使います。`ff` の再開では自動同期 merge を行いません。`repo-trace.ts` では早送り後の作業ブランチ先端を統合 snapshot として result に記録します。
+- `tests/src/exec/task-repos.integration.test.ts` に、任意名の作成・設定変更後の再利用・片付け・別 project との衝突・管理外ブランチ・`--branch`・`branch-only`・checkout 有無の `ff`・分岐時の停止・再開時の同期抑止を追加しました。旧形式の名前でも、別項目の記録があれば片付けないことも検証します。
+- `tests/src/exec/register-pipeline-e2e.integration.test.ts` に、実際の CLI のテンプレート名・明示名・`ff`・start 前の衝突停止を追加し、統合失敗位置 3 種の再開テストをテンプレート名へ拡張しました。既定設定の互換ケースも残しています。設定読み込みと schema の単体テストに有効・無効なテンプレートと `ff` を追加しました。
+- 再開時に引き継いだ親検証の失敗 3 件を修正しました。孤立ブランチの prune は現在の checkout ではなく宣言済みの統合先への取り込みを削除直前に再確認します。`ff` の再開テストは、プロダクトの統合後にプロジェクトの統合を失敗させ、再開後も早送り済みの先端が変わらないことを確かめる条件へ修正しました。prune のテストも、現在の checkout と統合先が異なるリポジトリを含め、全プロダクトのブランチと対応記録の削除を確認します。
+- 設定リファレンスに git-flow の `feature/{topic}` と GitHub flow の `{type}/{topic}` の例、command-reference に `--branch`、Unreleased に機能追加を記載しました。
+
+### 5.2. 設計判断と理由
+
+- 対応記録の置き場所は、各プロダクトの Git 共通管理ディレクトリの `specdojo/product-branches/<ブランチ名の SHA-256>.json` としました。worktree の撤去後も残り、同じプロダクトを使う別 project の衝突も検出でき、追跡対象の設定や pipeline schema を増やさずに済むためです。項目の修飾 ID を所有者とし、既存 run の pipeline／worktree 記録と結び付けます。
+- 完成済みの一時記録を排他的な hard link で公開し、並行する run の同名予約と不完全な JSON の読み込みを防ぎます。register の start より前に全プロダクトの名前を予約します。失敗時の予約は同じ項目の新規実行で片付けて再利用でき、他項目へ自動で譲りません。
+- 記録のない旧 run だけは、従来の項目別 `exec/` 名を探索します。その名前が別項目の記録にあれば、名前から所有者を推測して削除しません。新しい run の再開・片付けは記録を正とします。
+- 開始 commit も記録し、`ff` の再開時に「変更なし」と「既に早送りで統合済み」を区別します。再開時に統合先を自動 merge すると線形の履歴にならないため、`ff` は同期対象から除外し、分岐の解消を利用者へ委ねます。自動 rebase は行いません。
+- register 以外の task は、topic に task ID の小文字、title に task ID、type に `feat`、scope に空文字を使います。個票の情報がない実行でも同じ変数集合を解決できるようにするためです。
+- 保護された設定の変更は不要でした。`.specdojo/`・`package.json`・hook 設定・Git 設定は変更していません。
+
+### 5.3. 検証
+
+- 変更した Markdown・TypeScript・schema を Prettier で整形しました。
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data .specdojo/specdojo.config.json` は成功しました。
+- `node --import tsx tools/catalog-validate-if-configured.mjs` は成功しました。既存カタログに、参照先の成果物が未作成という警告があります。
+- `node --import tsx src/specdojo.ts register build --project prj-0001` と `git diff --check` は成功しました。登録簿の生成物以外の状態項目は変更していません。
+- 型検査、TypeScript／Markdown／frontmatter lint、単体・統合テスト、schema 一括検査は pipeline 指示に従って親 runner の検証へ委ねます。executor では重複実行していません。親の結果は reporter／runner が result に追記します。
+
+### 5.4. 統合後の確認・申し送り
+
+- runner を変更したため、統合後に [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] の 5.1 に従い PJR-JSEY を実行してください。JSEY の対象一覧へ PJR-M1DH を加え、`register reopen --project prj-0001 --id PJR-JSEY --by specdojo-orchestrator --reason "PJR-M1DH の統合後の動作確認" --commit` で開き直し、`exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor --reporter-by gemma26-reporter --fallback-reporter-by claude-reporter` を流します。
+- start から review まで通ること、event の actor が実体名であること、成功時の worktree／ブランチの撤去を確認してから JSEY と本項目を close してください。実 agent CLI の起動と利用枠を要するため、この executor では実行していません。
+- 設計判断は 5.2 のとおりです。保護された設定の変更案や未解決の実装判断はありません。result は pipeline の reporter／runner が記入します。
 
 ## 6. 関連ドキュメント
 
