@@ -1,0 +1,19 @@
+PJR-7MB3「specdojo-lp に v0.6.0 の変更を反映する」の対応を完了しました。
+
+### 実施概要
+
+1. **v0.6.0 の変更点と LP の照合**:
+   - `prj-0001` の `CHANGELOG.md`（0.6.0）を [`specdojo-lp`](file:///workspaces/specdojo-workspace/worktrees/prj-0002-PJR-7MB3/specdojo-lp) の各コンポーネント（`src/` 配下）、コマンド例、および [`README.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0002-PJR-7MB3/specdojo-lp/README.md) と照合しました。
+   - 文脈を渡して成果物を作成する流れ（scaffold、`_CONTEXT_:`、`brief`、`draft`、`fully-guided`、`finalize`）は、LP の PDCA マトリクスで schedule や「型と品質評価」を「準備中」とする方針（[pjr-7t8x-lp-roadmap-pdca-matrix.md](file:///workspaces/specdojo-workspace/worktrees/prj-0002-PJR-7MB3/project/docs/ja/projects/prj-0002/controls/project-register/pjr-7t8x-lp-roadmap-pdca-matrix.md)）に基づき、LP には載せないと判断しました。
+   - プロダクトリポジトリの Git 運用への対応（`branch_template`、`commit_subject_template`、`merge_message_template`、`integration_strategy: ff`、`commit_type` / `commit_scope`）は、未設定時の動作が従来どおりで LP の最小構成と一致しているため、初期体験のシンプルさを優先して LP には載せないと判断しました。
+   - `fully-guided` の磨き込み専用化について、LP 上で approach や `fully-guided` への言及は一切存在しないため、既存説明との食い違いはなく変更不要と判断しました。
+   - 親の検証 `lint-mermaid` も SpecDojo 開発用のため LP には載せません。
+   - 照合の結果、LP 側の表示文言・コマンド例に変更を加える必要はなく、`specdojo-lp` のファイル変更はなし（0 件）としました。
+
+2. **個票の更新と検証**:
+   - [pjr-7mb3-lp-reflect-v0-6-0.md](file:///workspaces/specdojo-workspace/worktrees/prj-0002-PJR-7MB3/project/docs/ja/projects/prj-0002/controls/project-register/pjr-7mb3-lp-reflect-v0-6-0.md) の作業内容 No 1 を `done` に更新し、対応結果（実施内容、照合結果と判断、成果物、検証と申し送り）を記録しました。
+   - Prettier による整形、`register build`、Markdownlint、frontmatter 検証、`git diff --check` を実施し、問題がないことを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"v0.6.0 の変更点を LP の表示文言・コマンド例と照合し、LP への変更不要と判断して個票の作業内容と対応結果を記録しました。","handoff":["CHANGELOG.md の 0.6.0 の節を LP の表示文言・コマンド例および README と照合し、文脈を渡して成果物を作成する流れ（scaffold、`_CONTEXT_:`、brief、draft、fully-guided、finalize）は、LP の PDCA マトリクスで schedule や「型と品質評価」を「準備中」とする方針に基づき LP に載せないと判断した。","プロダクトリポジトリの Git 運用への対応（`branch_template`、`commit_subject_template`、`merge_message_template`、`integration_strategy` ff、`commit_type` / `commit_scope`）は、未設定時の既定動作が従来と一致し LP の最小構成の例と食い違いがないため、初期体験のシンプルさを優先して LP に載せないと判断した。","fully-guided の磨き込み専用化について、LP 上で approach や fully-guided への言及は一切存在しないため、既存説明との食い違いはなく変更不要と判断した。親の検証 lint-mermaid も開発用のため載せない。","照合の結果、LP 側の表示文言・コマンド例に変更を加える必要はなく、specdojo-lp のファイル変更はなし（0 件）。","個票 docs/ja/projects/prj-0002/controls/project-register/pjr-7mb3-lp-reflect-v0-6-0.md の作業内容を done に更新し、対応結果（実施内容、照合結果と判断、成果物、検証と申し送り）を記録した。表内の文書リンク区切りのエスケープも確認した。","個票の完了条件に従い、orchestrator が sandbox 外で specdojo-lp の npm run build と生成 HTML を確認すること（検証 requires_human）。手元の事前確認では dist/ への静的出力生成が成功している。","specdojo-lp の develop への統合、result の記入、状態遷移は親 runner に委ねる。executor は result・ステータス・Git 設定を編集していない。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-7mb3-lp-reflect-v0-6-0.md","status":"passed","summary":"個票を Prettier で整形した。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"登録簿の検証と派生ビュー生成が成功した。"},{"command":"git diff --check","status":"passed","summary":"プロジェクト側の差分に空白エラーなし。"},{"command":"git -C ../specdojo-lp diff --check","status":"passed","summary":"LP 側の差分に空白エラーなし。"},{"command":"npm --prefix ../specdojo-lp run build","status":"requires_human","summary":"個票の完了条件に従い、orchestrator が sandbox 外でビルドと生成 HTML を確認する。"}]}
+</specdojo_executor_evidence>
