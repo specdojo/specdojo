@@ -1,0 +1,30 @@
+`npm run lint:fm` の実行完了を待機しています。
+`npm run lint:fm` の完了通知を待機しています。
+`npm run lint:md` の完了通知を待機しています。
+`npm run test:unit` の完了通知を待機しています。
+タスク PJR-P9ZC「接続のスクリプトが、対象の devcontainer が止まっていると別の container へ入ろうとして失敗する」の対応を完了しました。
+
+### 実施内容
+
+1. **[`templates/devcontainer/remote-host/specdojo-tmux.sh.sample`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P9ZC/templates/devcontainer/remote-host/specdojo-tmux.sh.sample)**
+   - `find_container` から、`vsc-` で始まるイメージの container を選ぶフォールバック処理を削除し、ラベル `devcontainer.local_folder` が `workspace_dir` と一致する container のみを取得するように修正しました。
+   - コンテナが見つからない場合の `devcontainer up --workspace-folder "$workspace_dir"` の出力を標準エラー出力（`>&2`）に出すように変更しました。
+   - `docker exec` の直前に `docker exec "$container_name" test -d "$container_workspace_dir"` による作業ディレクトリ存在確認ガードを追加し、存在しない場合は container 名とディレクトリを含むエラーメッセージを出力して終了するようにしました。
+   - 冒頭コメントに、ラベルが `workspace_dir` と一致しない場合に `devcontainer up` が別の新しい container を作成することと、ラベルの確認コマンド（`docker inspect <id> --format '{{index .Config.Labels "devcontainer.local_folder"}}'`）を追記しました。
+
+2. **[`tests/src/devcontainer/scaffold.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P9ZC/tests/src/devcontainer/scaffold.integration.test.ts)**
+   - 対象 container が停止中で別の `vsc-` container が動いている場合に、無関係な container へ `docker exec` せずに `devcontainer up` を呼び出す結合テストを追加しました。
+   - コンテナ内に作業ディレクトリが存在しない場合にエラー終了する結合テストを追加しました。
+
+3. **[`docs/ja/specdojo/guides/remote-host-development-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P9ZC/docs/ja/specdojo/guides/remote-host-development-guide.md)**
+   - `specdojo-tmux.sh.sample` の説明に、ラベル（`devcontainer.local_folder`）が一致する container だけへ接続する記述を反映しました。
+
+4. **[`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P9ZC/CHANGELOG.md)**
+   - `## [Unreleased]` の「### 不具合修正」節に PJR-P9ZC の修正内容を追記しました。
+
+5. **[`docs/ja/projects/prj-0001/controls/project-register/pjr-p9zc-remote-tmux-wrong-container.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P9ZC/docs/ja/projects/prj-0001/controls/project-register/pjr-p9zc-remote-tmux-wrong-container.md)**
+   - 個票の「## 4. 対応結果」に解決内容、確認結果、再発防止策を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"specdojo-tmux.sh.sample の find_container をラベル完全一致のみに修正し、devcontainer up の出力先調整と作業ディレクトリ存在確認のガードを追加しました。結合テストの追加・ドキュメント更新・CHANGELOG更新・個票の対応結果記入も完了しました。","handoff":[],"validations":[{"command":"bash -n templates/devcontainer/remote-host/specdojo-tmux.sh.sample","status":"passed","summary":"Syntax check passed without errors."},{"command":"shellcheck templates/devcontainer/remote-host/specdojo-tmux.sh.sample","status":"passed","summary":"Shellcheck passed without warnings or errors."},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"Project catalog validated successfully."},{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-p9zc-remote-tmux-wrong-container.md docs/ja/specdojo/guides/remote-host-development-guide.md tests/src/devcontainer/scaffold.integration.test.ts","status":"passed","summary":"Prettier check and format passed."}]}
+</specdojo_executor_evidence>
