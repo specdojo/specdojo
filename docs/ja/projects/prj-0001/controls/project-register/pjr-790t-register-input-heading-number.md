@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-31T02:43:14Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: lint-ts, typecheck"
 ---
 
 # PJR-790T 入力の章がない種類の個票で入力の見出しに番号を付ける
