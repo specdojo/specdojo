@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b1c424fb52124a0e81605e8fe0167549
+- v: 1
+  id: reg_30bd23abf78a401c93744e4845c0ef2a
+  ts: "2026-10-31T09:07:13Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と個票・result を確かめ、0.6.0 のリリースのブランチから作った docs-lint 0.4.0 の tarball を空のリポジトリに入れ、options なしの md-content で draft は情報、ready はエラーになることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: remark/md-content を options なしで読み込んだときに空の options として扱うようにし、_CONTEXT_ の検出が動くことを単体テストで確かめた。ほかの公開プラグインの options なしの動きも確かめた
+  previous_event_id: reg_d82f8832f2484f25a093d9dcafc90e13

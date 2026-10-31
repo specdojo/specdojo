@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-5en3-docs-lint-md-content-no-options
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-31T08:47:12Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T09:07:13Z"
+  conclusion: remark/md-content を options なしで読み込んだときに空の options として扱うようにし、_CONTEXT_ の検出が動くことを単体テストで確かめた。ほかの公開プラグインの options なしの動きも確かめた
   derived_from:
     - PJR-2FV2
 ---
