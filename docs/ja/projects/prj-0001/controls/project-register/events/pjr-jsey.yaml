@@ -3474,3 +3474,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2ed864aabd9d4e7bb48ee64e68382ff0
+- v: 1
+  id: reg_e0ea8031c5c6452a94e79c944059f7fd
+  ts: "2026-10-31T08:24:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、evidence の親の検証に lint-mermaid が passed で記録されたことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: PJR-M1DH の統合後、exec run --register が start から review まで通り、worktree と作業ブランチが片付いた
+      to: PJR-B5TY の組み込みの後、exec run --register が start から review まで通り、親の検証で lint-mermaid が流れて通った
+  previous_event_id: reg_7cd5362152cd47dba7997fdd43622537
