@@ -19,6 +19,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import { registerConfigCommands } from "../../../src/shared/specdojo-config.js";
+import type { SpecDojoRepoConfig } from "../../../src/shared/specdojo-config.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { MARKDOWN_HOOK_ERROR, MARKDOWN_HOOK_FAILURE } from "../../helpers/git-hook-output.js";
@@ -347,6 +348,9 @@ function initProductRepository(path: string, name: string): void {
 function enableProductRepositories(
   root: string,
   strategy?: "merge" | "branch-only",
+  messages: Partial<
+    Pick<SpecDojoRepoConfig, "commit_subject_template" | "merge_message_template" | "commit_types">
+  > = {},
 ): ProductFixture {
   const app1 = `${root}-app1`;
   const app2 = `${root}-app2`;
@@ -367,6 +371,7 @@ function enableProductRepositories(
           {
             name: "app1",
             path: repoPath(app1),
+            ...messages,
             ...(strategy ? { integration_strategy: strategy } : {}),
             setup: { install: false, build: false },
           },
@@ -1425,14 +1430,29 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   // PJR-69VP: プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つ（app2 は integration_branch を
   // 宣言）で、1 つの項目が 3 つのリポジトリを変更する run が、worktree の作成から統合・trace の
   // 記録・撤去まで通ることを確かめる。
-  it.each([undefined, "branch-only"] as const)(
-    "changes three repositories with app1 strategy %s and records the qualified Refs and the trace",
+  it.each([
+    { strategy: undefined, templates: false },
+    { strategy: "branch-only", templates: false },
+    { strategy: undefined, templates: true },
+    { strategy: "branch-only", templates: true },
+  ] as const)(
+    "changes three repositories with app1 options %j and records the qualified Refs and the trace",
     { timeout: 120_000 },
-    async (strategy) => {
+    async ({ strategy, templates }) => {
       await withRepo(async ({ root, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-        const products = enableProductRepositories(root, strategy);
+        const products = enableProductRepositories(
+          root,
+          strategy,
+          templates
+            ? {
+                commit_subject_template: "{type}({scope}): {title}",
+                merge_message_template: "Merge branch '{branch}' into {target}\n\nTopic: {topic}",
+                commit_types: { todo: "fix" },
+              }
+            : {},
+        );
         const app1Before = git(products.app1, "rev-parse", products.targets.app1);
 
         try {
@@ -1477,8 +1497,27 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           }
           const app2Merge = expectIntegratedProduct(products.app2, products.targets.app2, "app2");
 
+          const app1Tip = app1Merge ? `${app1Merge}^2` : EXEC_BRANCH;
+          const legacyMessage = `exec(register PJR-AB12): pipeline test item\n\nRefs: ${TRACE_KEY}`;
+          expect(git(products.app1, "log", "-1", "--format=%B", app1Tip)).toBe(
+            templates ? `fix: pipeline test item\n\nRefs: ${TRACE_KEY}` : legacyMessage,
+          );
+          if (app1Merge) {
+            expect(git(products.app1, "log", "-1", "--format=%B", app1Merge)).toBe(
+              templates
+                ? `Merge branch '${EXEC_BRANCH}' into ${products.targets.app1}\n\nTopic: pipeline-test\n\nRefs: ${TRACE_KEY}`
+                : legacyMessage,
+            );
+          }
+          // Per-repository settings must not affect app2 or project bookkeeping.
+          expect(git(products.app2, "log", "-1", "--format=%B", app2Merge)).toBe(legacyMessage);
+          expect(git(products.app2, "log", "-1", "--format=%B", `${app2Merge}^2`)).toBe(
+            legacyMessage,
+          );
+
           // プロジェクト側は merge commit 1 件で、修飾した Refs を持つ（PJR-30SW）。
           const projectMessage = git(root, "log", "-1", "--format=%B");
+          expect(projectMessage.split("\n")[0]).toBe("exec(register PJR-AB12): pipeline test item");
           expect(projectMessage).toContain("Transition: start → review");
           expect(projectMessage).toContain(`Refs: ${TRACE_KEY}`);
           expect(projectMessage).not.toMatch(/^Refs: PJR-AB12$/m);

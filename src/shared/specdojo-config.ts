@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "no
 import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
 import dotenv from "dotenv";
 import { VALID_COMMIT_TYPES } from "./commit-types.js";
+import { validateCommitMessageTemplate } from "./commit-message-template.js";
 import { dump, load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
@@ -99,6 +100,10 @@ export type SpecDojoRepoConfig = {
   setup?: SpecDojoRepoSetup;
   /** Mapping from register item types to Conventional Commits types for this repository. */
   commit_types?: Record<string, string>;
+  /** Subject of product commits. Omit to retain the exec(register ...) subject. */
+  commit_subject_template?: string;
+  /** Product merge message, with an automatic Refs trailer. */
+  merge_message_template?: string;
 };
 
 /** A project register hosted by another repository and addressed locally by an alias. */
@@ -470,6 +475,8 @@ const REPO_KEYS = new Set([
   "integration_strategy",
   "setup",
   "commit_types",
+  "commit_subject_template",
+  "merge_message_template",
 ]);
 const REPO_SETUP_KEYS = new Set(["install", "build"]);
 const EXTERNAL_PROJECT_KEYS = new Set(["path", "project_id"]);
@@ -586,6 +593,9 @@ export function validateProjectRepos(
       if (!REPO_KEYS.has(key)) errors.push(`${at}: unknown key "${key}"`);
     }
     errors.push(...validateCommitTypes(repo.commit_types, `${at}.commit_types`));
+    for (const key of ["commit_subject_template", "merge_message_template"] as const) {
+      errors.push(...validateCommitMessageTemplate(repo[key], `${at}.${key}`));
+    }
 
     const name = repo.name;
     if (typeof name !== "string" || !REPO_NAME_PATTERN.test(name)) {

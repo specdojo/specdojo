@@ -47,14 +47,42 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                           | 担当     | 状態 | メモ |
-| --- | ------------------------------------------------------------------------------ | -------- | ---- | ---- |
-| 1   | `repos[]` の schema と設定の検証にテンプレートを足す                           | executor | open | -    |
-| 2   | プロダクト側の commit と merge commit にテンプレートを使い、テストと文書を足す | executor | open | -    |
+| No  | 作業                                                                           | 担当     | 状態   | メモ                                     |
+| --- | ------------------------------------------------------------------------------ | -------- | ------ | ---------------------------------------- |
+| 1   | `repos[]` の schema と設定の検証にテンプレートを足す                           | executor | closed | schema・型・読み込み検証へ追加           |
+| 2   | プロダクト側の commit と merge commit にテンプレートを使い、テストと文書を足す | executor | closed | 生成処理・単体／統合テスト・設定例を追加 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容・成果物
+
+- `repos[]` の型・設定読み込み検証・設定 schema に `commit_subject_template` と `merge_message_template` を追加しました。未知の変数、不正な波括弧、空白だけの値、NUL は設定エラーです。
+- `src/shared/commit-message-template.ts` で 8 変数の検証と 1 回だけの展開、`src/exec/register-product-message.ts` で項目の type・scope の解決、1 行目の制限、末尾の `Refs:` を実装しました。
+- `src/exec/run/register-worktree.ts` と `src/exec/repo-integration.ts` で、プロダクトごとの commit／merge メッセージを生成します。SpecDojo の記帳用メッセージは従来の経路を保ちます。
+- `tests/src/exec/register-product-message.test.ts`、`tests/src/shared/specdojo-config-repos.test.ts`、`tests/docs/specdojo/schemas/specdojo-config-schema.test.ts` に、展開・空 scope・未知変数・未設定互換・type の優先順位・長さ制限・`Refs:` の単体テストを追加しました。
+- `tests/src/exec/register-pipeline-e2e.integration.test.ts` に、実際の一時 git リポジトリ 3 つを使う `exec run --register` の設定あり／なしと `merge`／`branch-only` の組合せを追加しました。プロダクトの commit／merge の全文、別 repo の既定書式、プロジェクトの記帳の書式、統合・撤去まで検証します。
+- 設定リファレンスにキー・8 変数の説明、git-flow と GitHub flow の設定例を追加し、`CHANGELOG.md` の Unreleased に追記しました。
+
+### 5.2. 設計判断と理由
+
+- 空の scope は、テンプレートに書いた `({scope})` を括弧ごと除去します。Conventional Commits の `feat():` を避けつつ、ほかの文字列は勝手に書き換えないためです。
+- 未設定の merge 書式は commit と同じ従来の `exec(register <ID>): <タイトル>` に保ちます。既存運用の履歴とメッセージ検査への互換性を優先し、PJR-BNMV の標準的な merge 書式は `Merge branch '{branch}' into {target}` の明示設定で選べるようにしました。未設定の利用者の書式に互換性の変更はありません。
+- `{topic}` は個票ファイル名の topic 部分とし、個票パスがない場合は小文字の項目 ID にします。既存の登録項目には独立した topic フィールドがないためです。`{branch}` と `{target}` はプロダクトの実際の作業ブランチと統合先から取得し、run の上書きも反映します。
+- `{type}` と `{scope}` は PJR-TC62 の `resolveItemCommitTypeAndScope` を利用し、個票・repo・project・既定対応の優先順位を共有します。
+- commit は 1 行の subject として空白を正規化し、merge は本文の改行を保持します。1 行目は両方とも従来の `commitSubject` の 100 文字上限を共有し、本文は切り詰めません。テンプレート展開後の 1 行目が空の場合は停止します。
+- 必須の `Refs: <project-id>:<ID>` 行は、テンプレートに同じ行があっても末尾に 1 回だけ置きます。タイトル等の値は再展開しません。
+- 設定は統合時にプロジェクトリポジトリから読み、プロダクトの名前で照合します。worktree 作成・再開のデータ形式を変更せず、リポジトリごとの指定を反映するためです。
+
+### 5.3. 検証結果と申し送り
+
+- 単体・統合テスト、TypeScript の型・lint、Markdown・frontmatter の lint、全体 schema 検証は親 runner の検証に委ねます。executor では対象限定版も含めて重複実行しません。
+- 変更した 13 ファイルを `npx prettier --write` で整形しました。`git diff --check` も成功しました。
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data tmp/pjr-z7gx/config.json` は成功しました。両テンプレートと全 8 変数を含む一時 JSON を検証し、保護された実設定は変更していません。
+- `node --import tsx tools/catalog-validate-if-configured.mjs` は終了コード 0 で成功しました。未作成文書への既存の参照警告があります。
+- `node --import tsx src/specdojo.ts register build --project prj-0001` は成功し、個票とイベントの整合を検証して、追跡対象外の派生ビューを生成しました。
+- reporter は 5.1 の変更ファイル・実施内容、5.2 の設計判断と理由、および executor evidence の検証結果を result に反映してください。result は executor から編集していません。
+- 保護された設定の変更は不要です。個票・登録簿のステータスと runner の既存イベントは変更していません。
+- 統合後は運用メモに従い、PJR-JSEY で runner の動作を確認してください。
 
 ## 6. 関連ドキュメント
 

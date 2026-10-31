@@ -170,6 +170,19 @@ $defs:
         description: >-
           Mapping from register item types to Conventional Commits types for this repository.
         $ref: "#/$defs/CommitTypeMap"
+      commit_subject_template:
+        description: >-
+          Product commit subject. Omit to retain exec(register <ID>): <title>.
+        $ref: "#/$defs/CommitMessageTemplate"
+      merge_message_template:
+        description: >-
+          Product merge message. Omit to retain exec(register <ID>): <title>. Refs is always appended.
+        $ref: "#/$defs/CommitMessageTemplate"
+  CommitMessageTemplate:
+    type: string
+    allOf:
+      - pattern: '\S'
+      - pattern: '^(?:[^{}\u0000]|\{(?:id|project|topic|type|scope|title|branch|target)\})*$'
   Run:
     type: object
     properties:

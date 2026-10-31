@@ -53,6 +53,8 @@ describe("specdojo-config.schema.yaml", () => {
           name: "app1",
           path: "../app1",
           integration_branch: "main",
+          commit_subject_template: "{type}({scope}): {title}",
+          merge_message_template: "Merge branch '{branch}' into {target}\n\n{project}:{id} {topic}",
           setup: { install: true, build: true },
         },
       ]),
@@ -60,6 +62,25 @@ describe("specdojo-config.schema.yaml", () => {
 
     expect(validate.errors ?? []).toEqual([]);
     expect(valid).toBe(true);
+  });
+
+  it.each(["commit_subject_template", "merge_message_template"])("rejects invalid %s", (key) => {
+    for (const value of [
+      "{unknown}",
+      "{title",
+      "title}",
+      "{{title}}",
+      "{}",
+      " ",
+      false,
+      1,
+      null,
+      "a\0b",
+    ]) {
+      expect(validate(configWithRepos([{ name: "app1", path: "../app1", [key]: value }]))).toBe(
+        false,
+      );
+    }
   });
 
   it.each(["merge", "branch-only"])("accepts product integration_strategy %s", (strategy) => {
