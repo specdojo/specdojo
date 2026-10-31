@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f7c4e0689eea4a07a691253b02840931
+  ts: "2026-10-31T13:54:16Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ホストの tmux の script の前方一致の判定とラッパーの起動を直す
+    - field: description
+      from: ""
+      to: PJR-Q8KP で配った devcontainer-tmux.sh は、マウント元のパスを前方一致で比べる箇所で変数を引用していないため、パスに glob の文字が含まれると判定がずれる（shellcheck SC2295）。また sample のラッパーは本体を直接実行しており、実行権限が無いと動かない。bash 経由で呼ぶ形に直す
+    - field: input
+      from: ""
+      to: '["PJR-Q8KP の close の前の確かめで、shellcheck が SC2295（info）と SC2034（`m_type` の未使用）を出した（2026-10-31）","ラッパーを bash 経由の起動に直すことは 2026-10-31 の対話で利用者が推奨を採用した"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Q8KP"]'
