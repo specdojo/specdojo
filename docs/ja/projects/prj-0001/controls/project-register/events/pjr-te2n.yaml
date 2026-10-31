@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_15c605e40702476093fc448b89ad53ec
+  ts: "2026-10-31T14:16:03Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CDFD の D2 版の rulebook と記法の選び方を用意する
+    - field: description
+      from: ""
+      to: cdfd-mermaid-rulebook に対応する cdfd-d2-rulebook を作り、CDFD の記法を Mermaid と D2 から選べるようにする。今は cdfd-overview・cdfd・cdfd-uc の rulebook が includes で cdfd-mermaid-rulebook を固定している
+    - field: input
+      from: ""
+      to: '["利用者は cdfd-mermaid-rulebook の D2 版を求めた（2026-10-31）","記号の対応の案: プロセスは border-radius 付きの rectangle、データストアは cylinder、物理保管は border-radius を大きくした rectangle、外部主体は rectangle、イベントは hexagon、サブグラフはコンテナ、情報の流れは ->、物の流れは太線の class、色は classes で定義し class で当てる、方向は direction: right","記法をどこで選ぶか（例: プロダクトの cdfd-overview の凡例で宣言する）は executor が決め、理由を個票の対応結果に記録してよい","D2 の描画の基盤（PJR-6NEM）と、要点に絞った CDFD の rulebook（PJR-8TQJ）の後に行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-2ZMY"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-6NEM","PJR-8TQJ"]'
