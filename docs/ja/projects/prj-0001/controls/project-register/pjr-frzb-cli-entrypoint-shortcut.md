@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-frzb-cli-entrypoint-shortcut
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: low
   owner: ARC
   registered_at: "2026-09-23T12:42:58Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-31T12:37:26Z"
+  conclusion: 候補 A。配布する CLI は specdojo だけとし、alias・PATH・VS Code 統合ターミナルを文書で案内する
 ---
 
 # PJR-FRZB CLI の入口を短くする方法を決める
