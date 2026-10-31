@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-73kt-scaffold-target-guidance
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-31T02:04:03Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T02:36:23Z"
+  conclusion: schedule-design-guide・xer-human-draft-template・plans-planning.ts の雛形作成の案内を deliverable scaffold --target の形にそろえ、関連するテストの文言を合わせた
   derived_from:
     - PJR-S23T
 ---

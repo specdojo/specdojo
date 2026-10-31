@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_26f16808b96649c18967359a52af4aa0
+- v: 1
+  id: reg_8d9a51f7208f4083ac06300d49e7588e
+  ts: "2026-10-31T02:36:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と個票・result を完了条件に照らし、リポジトリ全体で --dct <catalog> による 1 件の雛形作成の案内が記録の文書以外に残っていないことを grep で確かめた。plans-planning.ts は案内の文言だけの変更で runner の動きは変わらないため JSEY は流していない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: schedule-design-guide・xer-human-draft-template・plans-planning.ts の雛形作成の案内を deliverable scaffold --target の形にそろえ、関連するテストの文言を合わせた
+  previous_event_id: reg_2bfde730b79b4fc8ae01de982419bc2a
