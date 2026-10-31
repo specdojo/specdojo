@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_eb9ce5e20dfb447f8ab4973500c9a812
+  ts: "2026-10-31T21:59:05Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002:PJR-7MB3 の実行で見つけた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 代わりの executor が振り分けと重なると start の後に止まり、終了コード 0 で終わる
+    - field: description
+      from: ""
+      to: exec run --register で --executor-by に振り分けの代わりと同じ agent を指定すると、start の記帳の後に止まり、記帳を commit しないまま終了コード 0 で終わる
+    - field: input
+      from: ""
+      to: '["prj-0002:PJR-7MB3 の実行で見つけた。prj-0001 の設定は prj-0002 を持たないため、由来は --from ではなくここに書く","2026-11-01、prj-0002 の作業ツリーで specdojo 0.6.0 の exec run --project prj-0002 --register PJR-7MB3 --worktree --executor-by sol-executor --reporter-by gemma-reporter を流した。PJR-7MB3 は difficulty medium で、routing.medium の `fallback_executor_by` は sol-executor","出力は worktree の setup の後に「Fallback executor must differ from the pinned agent: sol-executor」で止まり、executor は起動しなかった。終了コードは 0 だった","止まった後、PJR-7MB3 は start の記帳で in-progress になり、作業ツリーに start のイベント・個票の状態・plan と result の雛形が commit されずに残った。worktree（exec/prj-0002-PJR-7MB3）も残った","検査は src/exec/run/shared.ts の代わりの agent の解決（resolution.actor === primary.actor で throw）にある","直し方（検査を start の前に移す、振り分けの代わりが指定の agent と同じときは代わりなしとして扱う、など）は executor が決めて、理由を個票の対応結果に書いてよい"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
