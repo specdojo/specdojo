@@ -23,6 +23,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- `schedule-design-guide`・`xer-human-draft-template`・`plans-planning.ts` に残っていた雛形作成の案内を、成果物を 1 つだけ作成する `deliverable scaffold --project <project-id> --target <doc-id>` の形にそろえました。これに伴い、カタログ全体の未作成成果物も生成される旨の注意事項を案内から削除しました（PJR-73KT）。
+
 - strategy の `guided-pass`（草案作成）の approach を `fully-guided` から `draft` に変更しました。型がそろった未作成成果物を、文脈の記入がなくても template から下書きできます。調査・選定の委任がない範囲は保留し、後続の refine で `fully-guided` による磨き込みを行います。既存 strategy へは再生成時に反映されます（PJR-E45K）。
 
 - `@specdojo/docs-lint` の `_CONTEXT_:` の検出において、`status: ready` 以外の文書では warning ではなく情報（info）として報告するように変更しました。下書き時に `_CONTEXT_:` を残したまま実行しても `--frail` 付きの `npm run lint:fm` が失敗せず、親の検証を妨げません。`status: ready` の文書では従来どおり error として失敗させます（PJR-D0GB）。

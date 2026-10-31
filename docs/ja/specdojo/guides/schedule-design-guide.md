@@ -395,7 +395,7 @@ approach_rules:
 雛形作成と文脈記入は一つの human 段にまとめます。雛形を人が確認してその場で文脈を記入でき、独立した空の待ち段を増やさずに draft へ渡せます。各段は直前の段に依存し、human の完了前に agent は着手しません。human 段には agent pipeline を付けません。
 
 1. `specdojo exec claim --project <project-id> --task <context-task-id> --by <human>` で着手します。既存の human タスクと同じく plan は生成せず、claim が作成した result に作業案内と記録欄を持ちます。
-2. `specdojo deliverable scaffold --project <project-id> --dct <catalog>` で対象カタログの雛形を作成します。既存成果物は上書きせず、`--force` は指定しません。このコマンドはカタログ内の他の未作成成果物も生成するため、出力を確認します。
+2. `specdojo deliverable scaffold --project <project-id> --target <doc-id>` で対象成果物の雛形を作成します。既存成果物は上書きせず、`--force` は指定しません。
 3. 対象本文の `_CONTEXT_:` に固定前提・制約・調査や選定を任せる範囲を書きます。例: `_CONTEXT_: 既存 API を維持し、認証方式の候補を調べて提案してほしい。` 記法は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従います。
 4. result に対象と記入内容を残し、`specdojo exec complete --project <project-id> --task <context-task-id> --by <human>` で draft へ渡します。draft は指示を本文へ反映し、元の指示と反映箇所を実行記録へ残します。続いて refine・review を行い、最後に人が finalize を claim / complete して確定します。
 
