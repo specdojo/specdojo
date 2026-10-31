@@ -15,6 +15,9 @@ specdojo:
   due_on: "2026-11-30"
   derived_from:
     - PJR-BNMV
+  depends_on:
+    - PJR-TC62
+    - PJR-Z7GX
 ---
 
 # PJR-M1DH プロダクトのリポジトリの作業ブランチの名前を設定で選べるようにし、早送りの統合を足す
