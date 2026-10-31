@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-B5TY",
+  "run_id": "20261031T070239638Z-19c6e27a",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-31T07:02:39.638Z",
+    "completed_at": "2026-10-31T07:05:08.142Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-b5ty.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b5ty-mermaid-syntax-lint.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/lint-mermaid.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/lint-mermaid.mjs",
+      "status": "??"
+    },
+    {
+      "path": "tools/mermaid-parse-loader.mjs",
+      "status": "??"
+    },
+    {
+      "path": "tools/mermaid-parse-worker.mjs",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b5ty-mermaid-syntax-lint.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/lint-mermaid.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": "CHANGELOG.md                                           |  2 ++\n .../controls/project-register/events/pjr-b5ty.yaml     | 18 +++++++++++++++++-\n .../project-register/pjr-b5ty-mermaid-syntax-lint.md   |  6 ++++--\n 3 files changed, 23 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node tools/lint-mermaid.mjs 'docs/**/*.md'",
+      "status": "passed",
+      "summary": "Mermaid 12.0.0 で 3,572 文書・189 図、全 8 種類を解析。構文エラー 0 件・未検査 0 件。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-b5ty-mermaid-syntax-lint.md tests/tools/lint-mermaid.test.ts tools/lint-mermaid.mjs tools/mermaid-parse-loader.mjs tools/mermaid-parse-worker.mjs",
+      "status": "passed",
+      "summary": "対象 6 ファイルを整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード 0。未作成の既存参照文書に関する `based_on` 警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード 0。無視対象の登録簿派生ビューを生成。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B5TY/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B5TY/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B5TY/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B5TY\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.5.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B5TY/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B5TY/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.5.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B5TY\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-10-31T07:11:26.986Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-31T07:10:28.440Z.\nfallback c\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-b5ty-mermaid-syntax-lint.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b5ty-mermaid-syntax-lint.md",
+      "reason": ""
+    },
+    {
+      "target": "tests/tools/lint-mermaid.test.ts",
+      "status": "changed",
+      "path": "tests/tools/lint-mermaid.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tools/lint-mermaid.mjs",
+      "status": "changed",
+      "path": "tools/lint-mermaid.mjs",
+      "reason": ""
+    },
+    {
+      "target": "tools/mermaid-parse-loader.mjs",
+      "status": "changed",
+      "path": "tools/mermaid-parse-loader.mjs",
+      "reason": ""
+    },
+    {
+      "target": "tools/mermaid-parse-worker.mjs",
+      "status": "changed",
+      "path": "tools/mermaid-parse-worker.mjs",
+      "reason": ""
+    }
+  ],
+  "final_message": "前回失敗した CRLF のテスト期待値を修正し、LF・CRLF の両方を対象にした。既存 3,572 文書・189 図は構文エラー・未検査ともに 0 件。個票の対応結果を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "解析には docs-site の mermaid-cli から解決した同じ Mermaid 12.0.0 の mermaid.parse を採用した。従来の Jison 系を含む全対象種類を扱えるためである。本リポジトリの tool とし、docs-lint 利用者への依存追加を避けた。構文解析専用 Worker 内だけで DOMPurify import を置き換え、ブラウザや DOM を起動せず解析する。既存図の修正・未検査はいずれもない。",
+    "個票 4.3 に保護された設定の変更案を記載した。利用者承認後、feature ブランチで package.json に lint:mermaid と check への接続を追加し、lefthook.yml の markdown command に変更 Markdown の検査を追加する。exec 親検証は lint-mermaid の固定 registry・型・スキーマ enum・関連テストを追加してから、.specdojo/exec-defaults.yaml の `pipeline.parent_validations` に追加する。docs-site の依存は PUPPETEER_SKIP_DOWNLOAD=true npm --prefix packages/docs-site ci で導入する。",
+    "前回の test-unit 失敗は、抽出時に保持された CRLF を LF と比較した期待値が原因だった。入力と同じ改行で期待値を構築し、LF・CRLF を検査するよう修正した。修正後の単体テストと他の設定済み親検証は executor 内で重複実行していないため、親 runner で合否を確認する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-B5TY/20261031T070239638Z-19c6e27a/executor.log",
+      "bytes": 3648,
+      "truncated": false
+    }
+  ]
+}

@@ -48,11 +48,18 @@ function run(fixture: Fixture, force = false, dryRun = false, dctNames: string[]
   });
 }
 
-function writeRulebook(fixture: Fixture, localId: string, template?: string): void {
+function writeRulebook(
+  fixture: Fixture,
+  localId: string,
+  template?: string,
+  deliverableType?: string,
+): void {
   const templateLine = template === undefined ? "" : `  template: ${template}\n`;
+  const deliverableTypeLine =
+    deliverableType === undefined ? "" : `  deliverable_type: ${deliverableType}\n`;
   writeFileSync(
     path.join(fixture.rulebooksPath, `${localId}-rulebook.md`),
-    `---\nspecdojo:\n  id: specdojo:${localId}-rulebook\n  type: rulebook\n  status: draft\n${templateLine}---\n`,
+    `---\nspecdojo:\n  id: specdojo:${localId}-rulebook\n  type: rulebook\n  status: draft\n${deliverableTypeLine}${templateLine}---\n`,
     "utf8",
   );
 }
@@ -195,6 +202,118 @@ groups:
       type: "project",
       status: "draft",
     });
+  });
+
+  it("deliverable_type を宣言した rulebook ではその型、宣言しない rulebook では project にする（一括生成・--dct なし）", () => {
+    writeRulebook(fx, "declared-md", "not-needed", "architecture");
+    writeRulebook(fx, "undeclared-md", "not-needed");
+    writeRulebook(fx, "declared-yaml", "not-needed", "data");
+    writeRulebook(fx, "undeclared-yaml", "not-needed");
+
+    writeCatalog(
+      fx,
+      `id: prjx:dct-demo
+type: project
+status: draft
+project_id: prjx
+domain: demo
+base_path: /out
+groups:
+  - deliverables:
+      - local_id: declared-md
+        name: 宣言あり Markdown
+        kind: work
+        overview: architecture 宣言あり
+        path: declared-md.md
+        rulebook: specdojo:declared-md-rulebook
+      - local_id: undeclared-md
+        name: 宣言なし Markdown
+        kind: work
+        overview: deliverable_type 宣言なし
+        path: undeclared-md.md
+        rulebook: specdojo:undeclared-md-rulebook
+      - local_id: declared-yaml
+        name: 宣言あり YAML
+        kind: work
+        overview: data 宣言あり
+        path: declared-yaml.yaml
+        rulebook: specdojo:declared-yaml-rulebook
+      - local_id: undeclared-yaml
+        name: 宣言なし YAML
+        kind: work
+        overview: deliverable_type 宣言なし
+        path: undeclared-yaml.yaml
+        rulebook: specdojo:undeclared-yaml-rulebook
+`,
+    );
+
+    const result = run(fx);
+
+    expect(result.errors).toEqual([]);
+    expect(result.written).toEqual([
+      "out/declared-md.md",
+      "out/undeclared-md.md",
+      "out/declared-yaml.yaml",
+      "out/undeclared-yaml.yaml",
+    ]);
+
+    const declaredMd = readFileSync(outPath(fx, "declared-md.md"), "utf8");
+    expect(declaredMd).toContain("type: architecture");
+
+    const undeclaredMd = readFileSync(outPath(fx, "undeclared-md.md"), "utf8");
+    expect(undeclaredMd).toContain("type: project");
+
+    const declaredYaml = load(readFileSync(outPath(fx, "declared-yaml.yaml"), "utf8"));
+    expect(declaredYaml).toMatchObject({
+      type: "data",
+    });
+
+    const undeclaredYaml = load(readFileSync(outPath(fx, "undeclared-yaml.yaml"), "utf8"));
+    expect(undeclaredYaml).toMatchObject({
+      type: "project",
+    });
+  });
+
+  it("deliverable_type を宣言した rulebook と宣言しない rulebook を --dct 指定で一括生成する", () => {
+    writeRulebook(fx, "declared-md", "not-needed", "architecture");
+    writeRulebook(fx, "undeclared-md", "not-needed");
+
+    writeNamedCatalog(
+      fx,
+      "dct-target-domain.yaml",
+      `id: prjx:dct-target-domain
+type: project
+status: draft
+project_id: prjx
+domain: target-domain
+base_path: /out
+groups:
+  - deliverables:
+      - local_id: declared-md
+        name: 宣言あり Markdown
+        kind: work
+        overview: architecture 宣言あり
+        path: declared-md.md
+        rulebook: specdojo:declared-md-rulebook
+      - local_id: undeclared-md
+        name: 宣言なし Markdown
+        kind: work
+        overview: deliverable_type 宣言なし
+        path: undeclared-md.md
+        rulebook: specdojo:undeclared-md-rulebook
+`,
+    );
+
+    const result = run(fx, false, false, ["target-domain"]);
+
+    expect(result.errors).toEqual([]);
+    expect(result.written).toEqual(["out/declared-md.md", "out/undeclared-md.md"]);
+
+    const declaredMd = readFileSync(outPath(fx, "declared-md.md"), "utf8");
+    expect(declaredMd).toContain("type: architecture");
+
+    const undeclaredMd = readFileSync(outPath(fx, "undeclared-md.md"), "utf8");
+    expect(undeclaredMd).toContain("type: project");
   });
 });
 

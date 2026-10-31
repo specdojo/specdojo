@@ -123,6 +123,7 @@ properties:
           type: string
           enum:
             - author-deliverable
+            - draft-with-context
             - bootstrap-kata-set
             - reflect-implementation
             - deduplicate-across-deliverables

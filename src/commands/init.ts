@@ -33,6 +33,7 @@ const PARENT_VALIDATION_SCRIPTS = {
   "lint-ts": "lint:ts",
   "lint-fm": "lint:fm",
   "lint-md": "lint:md",
+  "lint-mermaid": "lint:mermaid",
   "test-integration": "test:integration",
   "validate-schema": "validate:schema",
   typecheck: "typecheck",

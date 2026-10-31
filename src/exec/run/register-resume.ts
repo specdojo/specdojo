@@ -1,3 +1,5 @@
+import { loadConfig } from "../../shared/specdojo-config.js";
+import { resolveProductBranches } from "../product-branches.js";
 import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -288,7 +290,15 @@ export async function resumeSingleRegisterItemWorktree(
       target.state.integration_branches,
       opts.integrationBranch,
     );
-    products = configuredProductRepos(schedulePath, overrides);
+    products = resolveProductBranches(configuredProductRepos(schedulePath, overrides), {
+      projectId,
+      taskId: worktreeTaskId,
+      item,
+      ticketPath,
+      projectConfig: loadConfig().config?.projects[projectId],
+      overrides: opts.branch,
+      resume: true,
+    });
     integrationBranchOverrides = overrides.size > 0 ? Object.fromEntries(overrides) : undefined;
   } catch (error) {
     return refuse(error instanceof Error ? error.message : String(error));

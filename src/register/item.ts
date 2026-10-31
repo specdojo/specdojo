@@ -9,6 +9,8 @@ import { join } from "node:path";
 import { dump, load } from "../shared/yaml.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import type { Approach } from "../shared/agent-types.js";
+import type { SpecDojoProjectConfig, SpecDojoRepoConfig } from "../shared/specdojo-config.js";
+import { readRegisterInput } from "./input.js";
 import { registerDateFromTimestamp } from "./date.js";
 
 // ================================
@@ -23,6 +25,7 @@ export type PjrItem = {
   status: string;
   title: string;
   description: string;
+  inputs?: string[];
   type: string;
   track?: string;
   priority: string;
@@ -51,6 +54,8 @@ export type PjrItem = {
   dependsOn?: string[];
   // 人が完了条件を確認し、夜間 orchestrator の実行対象として承認した印。
   autopilot?: "approved";
+  commitType?: string;
+  commitScope?: string;
 };
 
 export type RegisterDifficulty = "hard" | "medium" | "easy";
@@ -85,6 +90,19 @@ export const VALID_TYPES = [
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
 export const VALID_DIFFICULTIES = ["hard", "medium", "easy"] as const;
+
+export { VALID_COMMIT_TYPES, COMMIT_SCOPE_RE, type CommitType } from "../shared/commit-types.js";
+
+export const DEFAULT_ITEM_TYPE_COMMIT_TYPE_MAP: Record<string, string> = {
+  issue: "fix",
+  todo: "feat",
+  "change-request": "feat",
+  decision: "docs",
+  note: "docs",
+  question: "docs",
+  risk: "docs",
+  epic: "feat",
+};
 
 export const TERMINAL_STATUSES_SET = new Set(["done", "decided", "rejected", "deferred"]);
 
@@ -127,6 +145,8 @@ export type RegisterItemFieldUpdates = {
   derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   depends_on?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   autopilot?: "approved" | typeof REMOVE_REGISTER_ITEM_FIELD;
+  commit_type?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  commit_scope?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
 // 日時へ移行する前の個票が持っていた日付フィールド。移行処理だけが読み書きする。
@@ -176,6 +196,8 @@ const SPECDOJO_KEY_ORDER = [
   "derived_from",
   "depends_on",
   "autopilot",
+  "commit_type",
+  "commit_scope",
   "approach",
   "targets",
   "sources",
@@ -365,13 +387,17 @@ export function readRegisterItemContent(
       )
     : undefined;
   const autopilot = fields.autopilot === "approved" ? "approved" : undefined;
+  const commitType = asString(fields.commit_type);
+  const commitScope = asString(fields.commit_scope);
   const difficulty = asString(fields.difficulty) as RegisterDifficulty | undefined;
 
+  const inputs = readRegisterInput(content);
   const item: PjrItem = {
     id,
     status: asString(fields.item_status) ?? "open",
     title: titleFromBody(body, id),
     description: descriptionFromBody(body),
+    ...(inputs ? { inputs } : {}),
     type: asString(fields.item_type) ?? CELL_TODO,
     ...(asString(fields.track) ? { track: asString(fields.track) } : {}),
     priority: asString(fields.priority) ?? "medium",
@@ -396,6 +422,8 @@ export function readRegisterItemContent(
     ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
     ...(dependsOn && dependsOn.length > 0 ? { dependsOn } : {}),
     ...(autopilot ? { autopilot } : {}),
+    ...(commitType ? { commitType } : {}),
+    ...(commitScope ? { commitScope } : {}),
   };
 
   return {
@@ -536,6 +564,8 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
     ...(item.dependsOn && item.dependsOn.length > 0 ? { depends_on: item.dependsOn } : {}),
     ...(item.autopilot ? { autopilot: item.autopilot } : {}),
+    ...(item.commitType ? { commit_type: item.commitType } : {}),
+    ...(item.commitScope ? { commit_scope: item.commitScope } : {}),
   };
 }
 
@@ -717,4 +747,66 @@ export function formatRegisterItemFields(updates: RegisterItemFieldUpdates): str
       return `  ${key}: ${value === null ? "null" : value}`;
     })
     .join("\n");
+}
+
+// ================================
+// Commit Type & Scope Resolution
+// ================================
+
+export type ResolvedCommitTypeAndScope = {
+  type: string;
+  scope?: string;
+};
+
+/**
+ * 登録項目の commit の type と scope を解決する。
+ * 後続の項目（PJR-Z7GX・PJR-M1DH）から 1 つの関数で引ける共通関数。
+ *
+ * 解決優先順序:
+ * 1. 個票の `commit_type` / `commit_scope`（指定があれば最優先）
+ * 2. プロダクトリポジトリ設定（`repoConfig.commit_types`）
+ * 3. プロジェクト設定（`projectConfig.commit_types`）
+ * 4. 既定の対応マッピング（issue -> fix, todo -> feat, change-request -> feat 等）
+ * 5. 上記に該当しない未知の type は "chore"
+ */
+export function resolveItemCommitTypeAndScope(
+  item: Pick<PjrItem, "type"> & Partial<Pick<PjrItem, "commitType" | "commitScope">>,
+  options?: {
+    projectConfig?: Pick<SpecDojoProjectConfig, "commit_types">;
+    repoConfig?: Pick<SpecDojoRepoConfig, "commit_types">;
+  },
+): ResolvedCommitTypeAndScope {
+  const scope = item.commitScope?.trim() ? item.commitScope.trim() : undefined;
+
+  // 1. 個票の明示指定
+  if (item.commitType && item.commitType.trim() !== "") {
+    return { type: item.commitType.trim(), ...(scope ? { scope } : {}) };
+  }
+
+  // 2. repoConfig の指定
+  const repoTypes = options?.repoConfig?.commit_types;
+  const repoType =
+    repoTypes && Object.hasOwn(repoTypes, item.type) ? repoTypes[item.type] : undefined;
+  if (repoType && repoType.trim() !== "") {
+    return { type: repoType.trim(), ...(scope ? { scope } : {}) };
+  }
+
+  // 3. projectConfig の指定
+  const projectTypes = options?.projectConfig?.commit_types;
+  const projectType =
+    projectTypes && Object.hasOwn(projectTypes, item.type) ? projectTypes[item.type] : undefined;
+  if (projectType && projectType.trim() !== "") {
+    return { type: projectType.trim(), ...(scope ? { scope } : {}) };
+  }
+
+  // 4. 既定マッピング
+  const defaultType = Object.hasOwn(DEFAULT_ITEM_TYPE_COMMIT_TYPE_MAP, item.type)
+    ? DEFAULT_ITEM_TYPE_COMMIT_TYPE_MAP[item.type]
+    : undefined;
+  if (defaultType) {
+    return { type: defaultType, ...(scope ? { scope } : {}) };
+  }
+
+  // 5. フォールバック
+  return { type: "chore", ...(scope ? { scope } : {}) };
 }

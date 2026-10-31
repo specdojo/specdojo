@@ -2,6 +2,9 @@ import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
 import dotenv from "dotenv";
+import { validateBranchTemplate } from "./branch-template.js";
+import { VALID_COMMIT_TYPES } from "./commit-types.js";
+import { validateCommitMessageTemplate } from "./commit-message-template.js";
 import { dump, load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
@@ -68,6 +71,10 @@ export type SpecDojoProjectConfig = {
    */
   project_context?: string[];
   /**
+   * Mapping from register item types to Conventional Commits types for this project.
+   */
+  commit_types?: Record<string, string>;
+  /**
    * Product repositories that tasks of this project may change in addition to the project
    * repository itself. The project repository is implicit and never declared here. Omit (or set
    * []) to keep the single-repository behavior.
@@ -89,9 +96,17 @@ export type SpecDojoRepoConfig = {
   path: string;
   /** Branch exec integrates into. Omit to use the repository's current branch. */
   integration_branch?: string;
-  /** Local merge commit (default), or retain the exec branch for product-side PR review. */
-  integration_strategy?: "merge" | "branch-only";
+  /** Local merge commit (default), fast-forward only, or retain the branch for PR review. */
+  integration_strategy?: "merge" | "branch-only" | "ff";
+  /** Product work branch name. Defaults to exec/{project}-{id}. */
+  branch_template?: string;
   setup?: SpecDojoRepoSetup;
+  /** Mapping from register item types to Conventional Commits types for this repository. */
+  commit_types?: Record<string, string>;
+  /** Subject of product commits. Omit to retain the exec(register ...) subject. */
+  commit_subject_template?: string;
+  /** Product merge message, with an automatic Refs trailer. */
+  merge_message_template?: string;
 };
 
 /** A project register hosted by another repository and addressed locally by an alias. */
@@ -456,9 +471,29 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-const REPO_KEYS = new Set(["name", "path", "integration_branch", "integration_strategy", "setup"]);
+const REPO_KEYS = new Set([
+  "name",
+  "path",
+  "integration_branch",
+  "integration_strategy",
+  "branch_template",
+  "setup",
+  "commit_types",
+  "commit_subject_template",
+  "merge_message_template",
+]);
 const REPO_SETUP_KEYS = new Set(["install", "build"]);
 const EXTERNAL_PROJECT_KEYS = new Set(["path", "project_id"]);
+
+function validateCommitTypes(value: unknown, at: string): string[] {
+  if (value === undefined) return [];
+  if (!isRecord(value)) return [`${at} must be an object mapping item types to commit types`];
+  return Object.entries(value).flatMap(([itemType, commitType]) =>
+    typeof commitType === "string" && (VALID_COMMIT_TYPES as readonly string[]).includes(commitType)
+      ? []
+      : [`${at}.${itemType} must be one of: ${VALID_COMMIT_TYPES.join(", ")}`],
+  );
+}
 
 export type ResolvedExternalProject = SpecDojoExternalProjectConfig & {
   alias: string;
@@ -561,6 +596,12 @@ export function validateProjectRepos(
     for (const key of Object.keys(repo).sort()) {
       if (!REPO_KEYS.has(key)) errors.push(`${at}: unknown key "${key}"`);
     }
+    errors.push(...validateCommitTypes(repo.commit_types, `${at}.commit_types`));
+    for (const key of ["commit_subject_template", "merge_message_template"] as const) {
+      errors.push(...validateCommitMessageTemplate(repo[key], `${at}.${key}`));
+    }
+
+    errors.push(...validateBranchTemplate(repo.branch_template, `${at}.branch_template`, rootDir));
 
     const name = repo.name;
     if (typeof name !== "string" || !REPO_NAME_PATTERN.test(name)) {
@@ -614,9 +655,10 @@ export function validateProjectRepos(
     if (
       repo.integration_strategy !== undefined &&
       repo.integration_strategy !== "merge" &&
-      repo.integration_strategy !== "branch-only"
+      repo.integration_strategy !== "branch-only" &&
+      repo.integration_strategy !== "ff"
     ) {
-      errors.push(`${at}.integration_strategy must be "merge" or "branch-only" when present`);
+      errors.push(`${at}.integration_strategy must be "merge", "branch-only" or "ff" when present`);
     }
 
     const setup = repo.setup;
@@ -996,9 +1038,13 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
   const rootDir = dirname(dirname(configPath));
   const repoErrors = projectIds
     .sort()
-    .flatMap((projectId) =>
-      validateProjectRepos(projectId, parsed.projects[projectId], projectIds, rootDir),
-    );
+    .flatMap((projectId) => [
+      ...validateCommitTypes(
+        parsed.projects[projectId].commit_types,
+        `projects.${projectId}.commit_types`,
+      ),
+      ...validateProjectRepos(projectId, parsed.projects[projectId], projectIds, rootDir),
+    ]);
   const externalProjectErrors = validateExternalProjects(
     parsed.external_projects,
     projectIds,

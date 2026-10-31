@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-09-29T21:05:19.786Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-29T20:06:18.282Z"
+graded_by: flash-high-executor
 content_hash: 17bbb3be23983437907bf00a7a348ca6446afd929a952727a19ed9c91e0b526d
 categories:
   purpose:
@@ -110,53 +110,64 @@ findings:
     line: 57
     anchor: "### 4.2. 適用範囲"
     message: 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。
+    message_ja: 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 77
-    anchor: ""
+    line: 68
+    anchor: "### 4.3. プロセス領域"
     message: 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。
+    message_ja: 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 77
-    anchor: ""
+    line: 68
+    anchor: "### 4.3. プロセス領域"
     message: 「主な担当」について、Rulebookで定められている「採用済み Role code または組織定義にある役割名へ統一する」という制約への言及が欠けている。
+    message_ja: 「主な担当」について、Rulebookで定められている「採用済み Role code または組織定義にある役割名へ統一する」という制約への言及が欠けている。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 89
-    anchor: マスタ・構成データとトランザクションデータの 2 表に分けます。図に置くデータストアはこの一覧の行と一対一にするため、図で使いたい名称をここで確定します。
+    line: 80
+    anchor: "### 4.4. データストア"
     message: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
+    message_ja: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
   - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 89
-    anchor: マスタ・構成データとトランザクションデータの 2 表に分けます。図に置くデータストアはこの一覧の行と一対一にするため、図で使いたい名称をここで確定します。
+    line: 80
+    anchor: "### 4.4. データストア"
     message: Rulebookで定められている「複数の論理データストアが物理保管を共有する場合の境界と共有相手の注記」に関する記述ガイドが欠けている。
+    message_ja: Rulebookで定められている「複数の論理データストアが物理保管を共有する場合の境界と共有相手の注記」に関する記述ガイドが欠けている。
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 100
-    anchor: "- ノード総数が 16 を超える場合、トランザクションデータの図とマスタ・構成データの図に分け、両図で名称を統一し、グループ間の要求をトランザクションの図にだけ描いていますか。"
+    line: 91
+    anchor: "### 4.5. 概念データフロー（概要）"
     message: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
+    message_ja: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
   - id: F007
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 100
-    anchor: "- ノード総数が 16 を超える場合、トランザクションデータの図とマスタ・構成データの図に分け、両図で名称を統一し、グループ間の要求をトランザクションの図にだけ描いていますか。"
+    line: 91
+    anchor: "### 4.5. 概念データフロー（概要）"
     message: 対象範囲内の参加者から直接受け取る入力を図示省略した場合に、図直後に注記を追加するガイドが欠けている。
+    message_ja: 対象範囲内の参加者から直接受け取る入力を図示省略した場合に、図直後に注記を追加するガイドが欠けている。
   - id: F008
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 184
-    anchor: "- 対象範囲内の参加者を外部主体として描いていない。"
+    line: 175
+    anchor: "## 8. 仕上げチェック"
     message: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。
+    message_ja: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。
   - id: F009
     severity: minor
     rule: vp-qe-kata-conformance
     line: 46
     anchor: "## 4. 各章の書き方"
     message: >-
+      Recipe の章別ガイドと仕上げチェックが、Rulebook の必須要件である導入文、章冒頭の宣言、Role code、共有保管、参加者由来入力の注記、Frontmatter、および PO
+      承認記録を網羅しておらず、Template と Sample が示す記載水準を Recipe 単独では再現できない。
+    message_ja: >-
       Recipe の章別ガイドと仕上げチェックが、Rulebook の必須要件である導入文、章冒頭の宣言、Role code、共有保管、参加者由来入力の注記、Frontmatter、および PO
       承認記録を網羅しておらず、Template と Sample が示す記載水準を Recipe 単独では再現できない。

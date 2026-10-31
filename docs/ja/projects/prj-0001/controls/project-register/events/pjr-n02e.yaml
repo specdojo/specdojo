@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_b1b41ac7a9f84be2ab5cc7e3b99b8f98
+  ts: "2026-10-31T06:46:51Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者の判断で実測の代わりに Google の公式の文書（models・plans・Google One のヘルプ）で確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: Antigravity 経由の claude と GPT（gpt-oss-120b）は Google AI のプランの枠で数えられ、Anthropic 直・OpenAI 直の利用枠とは別勘定である。直の枠で止まったときの退避経路に使える
+  previous_event_id: reg_f8ad3eb3f6cf41c1ac9a3bb4b2be54b9

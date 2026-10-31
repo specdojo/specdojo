@@ -185,6 +185,12 @@ describe("planning approach plans", () => {
         expect(content).toContain("sch-rulebook.md");
         expect(content).toContain("scope.catalogs");
         expect(content).toContain("approach_rules");
+        expect(content).toContain("intent: draft-with-context");
+        expect(content).toContain("context → draft → refine → review → finalize");
+        expect(content).toContain("deliverable scaffold --project prj-0001 --target <doc-id>");
+        expect(content).toContain("`_CONTEXT_:` に固定前提");
+        expect(content).toContain("exec claim --project prj-0001");
+        expect(content).toContain("exec complete --project prj-0001");
         expect(content).toContain("schedule strategy generate --project prj-0001 --track demo");
         expect(content).toContain("schedule build --project prj-0001 --track demo");
       }

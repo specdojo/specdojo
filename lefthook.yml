@@ -18,7 +18,7 @@ pre-commit:
     # 競合が起きるため、整形→検査を 1 コマンドに連結して順序を保証する。
     markdown:
       glob: "*.md"
-      run: npx prettier --write {staged_files} && node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint {staged_files}
+      run: npx prettier --write {staged_files} && node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint {staged_files} && node tools/lint-mermaid.mjs {staged_files}
       stage_fixed: true
 
     # SSOT の変更をラッパーと配布テンプレートへ反映する。検査ではなく生成にしているのは、

@@ -1,0 +1,23 @@
+プロジェクト登録簿の項目 PJR-5EN3「docs-lint の md-content を設定なしで使うと落ちる」に対応しました。
+
+### 実施内容
+
+1. **`packages/docs-lint/src/remark-md-content.ts` の修正**:
+   - [`remarkMdContent`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5EN3/packages/docs-lint/src/remark-md-content.ts#L441-L445) のシグネチャを `Plugin<[MdContentOptions?], Root>` に更新し、引数 `options` の既定値を `{}` としました。
+   - `options` が未指定（`undefined` や引数なし）の場合に空オブジェクトとして扱い、`schemas` は空（`{}`）、`workspaceRoot` は `process.cwd()` を設定するようにしました。
+
+2. **単体テストの追加**:
+   - [`tests/packages/docs-lint/remark-md-content.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5EN3/tests/packages/docs-lint/remark-md-content.test.ts#L383-L474) に options なし（引数省略および `undefined` 指定）のテストを追加しました。
+   - `status: ready` の文書では `_CONTEXT_:` の検出が error（fatal）となること、`status: draft` では info となること、`_CONTEXT_:` がない場合は content schema 検査が行われないことを確認しました。
+
+3. **ほかの公開 remark プラグインの動作確認**:
+   - `remark/no-unescaped-angle-placeholder`: options 引数を取らないプラグイン（`Plugin<[], Root>`）であり、options なしで正常にロード・動作することを確認しました。
+   - `remark/frontmatter-ajv2020`: options の引数既定値は `{}` となっているものの、`schemaRules` または `yaml.schemas` の設定が必須と判定され、指定がない場合は明示的に `Error: remark-frontmatter-ajv2020: schema rules are required. Set options.schemaRules or options["yaml.schemas"].` という原因の分かるエラーで停止する設計であることを確認しました（現状維持）。
+
+4. **CHANGELOG および個票の更新**:
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5EN3/CHANGELOG.md#L55-L56) の `## [Unreleased]` 節「不具合修正」に `@specdojo/docs-lint` の修正内容を追記しました。
+   - 個票 [`pjr-5en3-docs-lint-md-content-no-options.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5EN3/docs/ja/projects/prj-0001/controls/project-register/pjr-5en3-docs-lint-md-content-no-options.md) の作業内容を `done` に更新し、対応結果を記載しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"options なしで remark/md-content を読み込めるように修正し、単体テスト・CHANGELOG・個票の対応結果を更新しました。","handoff":["ほかの公開 remark プラグインの確認結果: remark/no-unescaped-angle-placeholder は options 引数を取らず正常動作、remark/frontmatter-ajv2020 は schemaRules または yaml.schemas の指定が必須で原因の分かるエラーを投げて止まる仕様（現状維持）であることを確認済み。"],"validations":[{"command":"npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-5en3-docs-lint-md-content-no-options.md packages/docs-lint/src/remark-md-content.ts tests/packages/docs-lint/remark-md-content.test.ts","status":"passed","summary":"All modified files pass Prettier check"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"Catalog validation passed for prj-0001 deliverables"}]}
+</specdojo_executor_evidence>

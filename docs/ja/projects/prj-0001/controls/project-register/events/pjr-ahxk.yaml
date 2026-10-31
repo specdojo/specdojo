@@ -38,3 +38,48 @@
     - field: derived_from
       from: ""
       to: '["PJR-05GN"]'
+- v: 1
+  id: reg_d71f34733cfd423585c1d20bb3f92477
+  ts: "2026-10-31T06:51:18Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1dd3b407831349eab1811a9d9234db76
+- v: 1
+  id: reg_0dff62d308d74c1a8fd86e03ea65b7c8
+  ts: "2026-10-31T07:06:43Z"
+  action: review
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d71f34733cfd423585c1d20bb3f92477
+- v: 1
+  id: reg_ec64323599c3430c893cb4352da36da7
+  ts: "2026-10-31T07:08:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が接続確認の 1 行だけで docs/ja/product に gemma4:e4b-light-8k が残っていないこと、母艦に gemma4:e4b-mlx-light-8k（MLX 版、num_ctx 8192）があり接続確認の要求に応答することを確かめた。本文が空になる問題は PJR-JR2Z で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 軽作業用の 8k のモデル名を MLX 版の gemma4:e4b-mlx-light-8k にそろえ、tsd-ollama-opencode の接続確認の例を直した。母艦では利用者が同名のモデルを作成した
+  previous_event_id: reg_0dff62d308d74c1a8fd86e03ea65b7c8

@@ -1,0 +1,13 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.5.0 typecheck
+> tsc -b --noEmit
+
+tests/src/exec/draft-plan.test.ts(124,9): error TS2741: Property 'domain' is missing in type '{ id: string; path: string; }' but required in type 'StrategyCatalogRef'.
+
+
+--- stderr ---

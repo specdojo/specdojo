@@ -5,6 +5,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { registerRegisterCommands } from "../../../src/register/register.js";
+import { readRegisterInput } from "../../../src/register/input.js";
 import {
   appendRegisterEvent,
   buildRegisterEvent,
@@ -290,6 +291,71 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     process.exitCode = undefined;
+  });
+
+  it("--input を繰り返して記録し、未指定で保持・一覧置換・削除・topic 同時変更を行う", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "input",
+        "--title",
+        "入力",
+        "--input",
+        "前提一",
+        "--input",
+        "前提二",
+      ]);
+      const ticketPath = join(registerDir, "pjr-ab12-input.md");
+      const read = () => readRegisterInput(readFileSync(ticketPath, "utf8"));
+      expect(read()).toEqual(["前提一", "前提二"]);
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContainEqual({
+        field: "input",
+        from: "",
+        to: '["前提一","前提二"]',
+      });
+      await runRegister(["update", "--id", "PJR-AB12", "--priority", "high"]);
+      expect(read()).toEqual(["前提一", "前提二"]);
+      const beforeDryRun = readFileSync(ticketPath, "utf8");
+      await runRegister(["update", "--id", "PJR-AB12", "--input", "仮の前提", "--dry-run"]);
+      expect(readFileSync(ticketPath, "utf8")).toBe(beforeDryRun);
+      await runRegister(["update", "--id", "PJR-AB12", "--input", "新しい前提"]);
+      expect(read()).toEqual(["新しい前提"]);
+      const count = readEvents(registerDir, "PJR-AB12").length;
+      await runRegister(["update", "--id", "PJR-AB12", "--input", "新しい前提"]);
+      expect(readEvents(registerDir, "PJR-AB12")).toHaveLength(count);
+      await runRegister(["update", "--id", "PJR-AB12", "--input", "-", "--topic", "renamed"]);
+      const renamed = readFileSync(join(registerDir, "pjr-ab12-renamed.md"), "utf8");
+      expect(readRegisterInput(renamed)).toBeUndefined();
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "input",
+        from: '["新しい前提"]',
+        to: "-",
+      });
+      expect(process.exitCode).toBeUndefined();
+    });
+  });
+
+  it("入力節のない個票を update --input で更新する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const ticket = buildTicket("PJR-AB12", ["item_status: open"]);
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(ticketPath, ticket);
+      writeInitialEvent(registerDir, "PJR-AB12", "pjr-ab12-topic.md", ticket);
+      await runRegister(["update", "--id", "PJR-AB12", "--input", "既存個票への前提"]);
+      expect(readRegisterInput(readFileSync(ticketPath, "utf8"))).toEqual(["既存個票への前提"]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("- 初期値が決まっている。");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toEqual([
+        { field: "input", from: "-", to: '["既存個票への前提"]' },
+      ]);
+      expect(process.exitCode).toBeUndefined();
+    });
   });
 
   it("epic を track 付きで起票・更新・close し、子ビューと履歴を生成する", async () => {
@@ -596,38 +662,41 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it("add は approach と target を検証して個票へ書く", async () => {
-    await withRepo(async ({ root, registerDir }) => {
-      writeApproachTargets(root);
-      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+  it.each(["fully-guided", "draft"])(
+    "add は %s と target を検証して個票へ書く",
+    async (approach) => {
+      await withRepo(async ({ root, registerDir }) => {
+        writeApproachTargets(root);
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
-      await runRegister([
-        "add",
-        "--type",
-        "todo",
-        "--title",
-        "成果物を直す",
-        "--topic",
-        "edit-deliverable",
-        "--id",
-        "PJR-AB12",
-        "--approach",
-        "fully-guided",
-        "--target",
-        "deliverable-doc",
-      ]);
+        await runRegister([
+          "add",
+          "--type",
+          "todo",
+          "--title",
+          "成果物を直す",
+          "--topic",
+          "edit-deliverable",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          approach,
+          "--target",
+          "deliverable-doc",
+        ]);
 
-      const ticket = readFileSync(join(registerDir, "pjr-ab12-edit-deliverable.md"), "utf8");
-      expect(ticket).toContain("  approach: fully-guided");
-      expect(ticket).toContain("  targets:\n    - deliverable-doc");
-      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toEqual(
-        expect.arrayContaining([
-          { field: "approach", from: "", to: "fully-guided" },
-          { field: "targets", from: "", to: '["deliverable-doc"]' },
-        ]),
-      );
-    });
-  });
+        const ticket = readFileSync(join(registerDir, "pjr-ab12-edit-deliverable.md"), "utf8");
+        expect(ticket).toContain(`  approach: ${approach}`);
+        expect(ticket).toContain("  targets:\n    - deliverable-doc");
+        expect(readEvents(registerDir, "PJR-AB12")[0].changes).toEqual(
+          expect.arrayContaining([
+            { field: "approach", from: "", to: approach },
+            { field: "targets", from: "", to: '["deliverable-doc"]' },
+          ]),
+        );
+      });
+    },
+  );
 
   it.each(["project", "sample"])(
     "add / update は type: %s の sample を保守対象にでき、誤った対象では記帳しない",
@@ -1668,6 +1737,9 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "utf8",
       );
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--approach", "draft"]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  approach: draft");
 
       await runRegister([
         "update",

@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ea4e2cae8f99412f8383e7500b0bac21
+  ts: "2026-10-31T02:43:14Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 入力の章がない種類の個票で入力の見出しに番号を付ける
+    - field: description
+      from: ""
+      to: "decision など入力の章がない種類の個票へ --input を書くと、番号のない ## 入力 が末尾に足されるため、番号付きの章として適切な位置に入れる"
+    - field: input
+      from: ""
+      to: '["src/register/input.ts の setRegisterInput は、入力の章がない個票では本文の末尾に番号のない ## 入力 を足す。Markdown の規約では ## 以下の見出しに連番が要る。todo は 2 章に入るが、decision（PJR-BNMV で発生）では末尾に足された"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_cd1d53c653714f94a6b357212a2c0e88
+  ts: "2026-10-31T02:47:58Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ea4e2cae8f99412f8383e7500b0bac21
+- v: 1
+  id: reg_b7a219e018c844e280f2e4914577a3fa
+  ts: "2026-10-31T03:03:15Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, typecheck"
+  previous_event_id: reg_cd1d53c653714f94a6b357212a2c0e88
+- v: 1
+  id: reg_1d2d20800a374c75b2a321976fa31816
+  ts: "2026-10-31T03:12:06Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, typecheck"
+      to: "-"
+  previous_event_id: reg_b7a219e018c844e280f2e4914577a3fa
+- v: 1
+  id: reg_59db65fd83884c4db036018c2ac3fb41
+  ts: "2026-10-31T03:23:56Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1d2d20800a374c75b2a321976fa31816
+- v: 1
+  id: reg_3d039c3eb23645149d5bde8a4cdefa49
+  ts: "2026-10-31T03:47:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、note 形の個票での追加・再追加・消去、小節とコードブロックの扱いを関数で確かめ、JSEY も通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 入力の章がない個票へ --input を書くと、最初の章の直後に番号付きの入力の章を入れ、後ろの章と小節の番号を繰り下げるようにした。PJR-BNMV の番号のない入力の章を直した
+  previous_event_id: reg_59db65fd83884c4db036018c2ac3fb41

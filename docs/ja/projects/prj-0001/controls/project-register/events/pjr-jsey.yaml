@@ -2787,3 +2787,709 @@
       from: PJR-EXH2 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
       to: PJR-0QW0 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
   previous_event_id: reg_23401ce5aaa2422ebc05da6156aacc21
+- v: 1
+  id: reg_b92085c7409942af9ec38254aac5aaee
+  ts: "2026-10-29T10:56:32Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-3MY5 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-29"
+      to: "-"
+  previous_event_id: reg_f3f8613cae7743fc8fc353b45bf0ef16
+- v: 1
+  id: reg_64503e2729fa45b89716f8437d9cc190
+  ts: "2026-10-29T10:56:45Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b92085c7409942af9ec38254aac5aaee
+- v: 1
+  id: reg_c7531797657e49d1aac505d6d95b7ecd
+  ts: "2026-10-29T11:15:01Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_64503e2729fa45b89716f8437d9cc190
+- v: 1
+  id: reg_d35c5d18a2624e97856376fa86ed0c8e
+  ts: "2026-10-29T11:15:52Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_c7531797657e49d1aac505d6d95b7ecd
+- v: 1
+  id: reg_a4ebddf9ca2047848886c2234cc68f05
+  ts: "2026-10-29T11:25:33Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d35c5d18a2624e97856376fa86ed0c8e
+- v: 1
+  id: reg_8347fbe31bd343a990ae13e3274e3d31
+  ts: "2026-10-29T11:26:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: PJR-0QW0 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-3MY5 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された。親の lint-fm が一度時間切れになり、--resume で通過した
+  previous_event_id: reg_a4ebddf9ca2047848886c2234cc68f05
+- v: 1
+  id: reg_d6ac01853f2044219e8f97dde2207f8b
+  ts: "2026-10-29T12:29:26Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-6DD7 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-29"
+      to: "-"
+  previous_event_id: reg_8347fbe31bd343a990ae13e3274e3d31
+- v: 1
+  id: reg_e24e81b1e97544fe88f3c35aa3c34ee6
+  ts: "2026-10-29T12:29:43Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d6ac01853f2044219e8f97dde2207f8b
+- v: 1
+  id: reg_52df7a8d5c264edbb031932d9998de59
+  ts: "2026-10-29T12:48:07Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_e24e81b1e97544fe88f3c35aa3c34ee6
+- v: 1
+  id: reg_8dca8b3000244b14a37642bbaf7ca548
+  ts: "2026-10-29T13:48:29Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_52df7a8d5c264edbb031932d9998de59
+- v: 1
+  id: reg_de7a31f69cf54b2d9f4e9fbaedb01d27
+  ts: "2026-10-29T13:56:39Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8dca8b3000244b14a37642bbaf7ca548
+- v: 1
+  id: reg_77a336c2b696420795d5751b7698b1c9
+  ts: "2026-10-29T13:58:19Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: PJR-3MY5 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された。親の lint-fm が一度時間切れになり、--resume で通過した
+      to: PJR-6DD7・PJR-SC8T の統合後、exec run --register が start から review まで通った。lint-fm の時間切れは SC8T の修正で解消した
+  previous_event_id: reg_de7a31f69cf54b2d9f4e9fbaedb01d27
+- v: 1
+  id: reg_3032d42b49e04e75b6e06e8af743828b
+  ts: "2026-10-29T14:18:53Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-D0GB の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-29"
+      to: "-"
+  previous_event_id: reg_77a336c2b696420795d5751b7698b1c9
+- v: 1
+  id: reg_c1c4c1235bbe450a8b084ff26f9c8eb5
+  ts: "2026-10-29T14:19:07Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3032d42b49e04e75b6e06e8af743828b
+- v: 1
+  id: reg_563e64fb8aeb46f49d9e2cb42d455916
+  ts: "2026-10-29T14:26:10Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_c1c4c1235bbe450a8b084ff26f9c8eb5
+- v: 1
+  id: reg_eb7731e2a85344ca918c5c1edcdab7ab
+  ts: "2026-10-29T14:27:21Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_563e64fb8aeb46f49d9e2cb42d455916
+- v: 1
+  id: reg_accd3afedbb846d1bd6a39ea1eed6722
+  ts: "2026-10-29T14:32:45Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_eb7731e2a85344ca918c5c1edcdab7ab
+- v: 1
+  id: reg_a8690b39dd0a4a4184236c61e5aef9df
+  ts: "2026-10-29T14:33:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: PJR-6DD7・PJR-SC8T の統合後、exec run --register が start から review まで通った。lint-fm の時間切れは SC8T の修正で解消した
+      to: PJR-D0GB の統合と main（docs-lint 0.3.1）の取り込みの後、exec run --register が start から review まで通った。単体テストの catalogless-target が負荷で一度時間切れになり、--resume で通過した
+  previous_event_id: reg_accd3afedbb846d1bd6a39ea1eed6722
+- v: 1
+  id: reg_547f1988659e4738973e8dcd3c686075
+  ts: "2026-10-29T15:02:40Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-YKMA の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-29"
+      to: "-"
+  previous_event_id: reg_a8690b39dd0a4a4184236c61e5aef9df
+- v: 1
+  id: reg_1a51e8f4223d4bf1b7c8cc2841e46522
+  ts: "2026-10-29T15:02:52Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_547f1988659e4738973e8dcd3c686075
+- v: 1
+  id: reg_4154caf4a8034b3998d23f68a1a8171d
+  ts: "2026-10-29T15:08:32Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1a51e8f4223d4bf1b7c8cc2841e46522
+- v: 1
+  id: reg_51853b49d54040a4ae12cd3f1e66d284
+  ts: "2026-10-29T15:09:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: PJR-D0GB の統合と main（docs-lint 0.3.1）の取り込みの後、exec run --register が start から review まで通った。単体テストの catalogless-target が負荷で一度時間切れになり、--resume で通過した
+      to: PJR-YKMA の統合後、exec run --register が start から review まで通った
+  previous_event_id: reg_4154caf4a8034b3998d23f68a1a8171d
+- v: 1
+  id: reg_bf1669e76bb54d8082ffeb5320326b70
+  ts: "2026-10-29T15:37:16Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-E45K の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-30"
+      to: "-"
+  previous_event_id: reg_51853b49d54040a4ae12cd3f1e66d284
+- v: 1
+  id: reg_e88d8e6c8d52451e8d6d9cabb5906eba
+  ts: "2026-10-29T15:37:29Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bf1669e76bb54d8082ffeb5320326b70
+- v: 1
+  id: reg_1089ee825ebd40eeb1ef815fe875891e
+  ts: "2026-10-29T15:43:20Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e88d8e6c8d52451e8d6d9cabb5906eba
+- v: 1
+  id: reg_97be73deae8449d3add5aaed1a4c12c5
+  ts: "2026-10-29T15:44:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 動作確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: PJR-YKMA の統合後、exec run --register が start から review まで通った
+      to: PJR-E45K の統合後、exec run --register が start から review まで通った
+  previous_event_id: reg_1089ee825ebd40eeb1ef815fe875891e
+- v: 1
+  id: reg_fc3364ddf5944d6eb4a0e81ecad30c0a
+  ts: "2026-10-30T09:59:37Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-S23T の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-30"
+      to: "-"
+  previous_event_id: reg_97be73deae8449d3add5aaed1a4c12c5
+- v: 1
+  id: reg_b69bf2aaf2f44b70895b4c239c0b3274
+  ts: "2026-10-30T10:00:05Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fc3364ddf5944d6eb4a0e81ecad30c0a
+- v: 1
+  id: reg_bd1e434566ea4e0ba17e03668de38269
+  ts: "2026-10-30T10:05:55Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b69bf2aaf2f44b70895b4c239c0b3274
+- v: 1
+  id: reg_97c72a2b625643a7af2e78237c5b6580
+  ts: "2026-10-30T10:06:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、start から review までと actor の実体名の記録を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-30"
+    - field: conclusion
+      from: PJR-E45K の統合後、exec run --register が start から review まで通った
+      to: PJR-S23T の統合後、exec run --register が start から review まで通った
+  previous_event_id: reg_bd1e434566ea4e0ba17e03668de38269
+- v: 1
+  id: reg_42e01055685b45578caab0b039ddf634
+  ts: "2026-10-31T03:39:38Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-TC62 と PJR-790T の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-30"
+      to: "-"
+  previous_event_id: reg_97c72a2b625643a7af2e78237c5b6580
+- v: 1
+  id: reg_f9280fe050824e849df8a246dacf3b4c
+  ts: "2026-10-31T03:39:56Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_42e01055685b45578caab0b039ddf634
+- v: 1
+  id: reg_44e4f4b0e7f14ba5ad56b57e05185005
+  ts: "2026-10-31T03:46:07Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f9280fe050824e849df8a246dacf3b4c
+- v: 1
+  id: reg_0a6fec60f9d4432585bdf81317b65592
+  ts: "2026-10-31T03:47:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、start から review までと actor の実体名の記録を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: PJR-S23T の統合後、exec run --register が start から review まで通った
+      to: PJR-TC62 と PJR-790T の統合後、exec run --register が start から review まで通った
+  previous_event_id: reg_44e4f4b0e7f14ba5ad56b57e05185005
+- v: 1
+  id: reg_6b2a7595bb1c4cd3884d525eb8424e3d
+  ts: "2026-10-31T04:05:34Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-Z7GX の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-31"
+      to: "-"
+  previous_event_id: reg_0a6fec60f9d4432585bdf81317b65592
+- v: 1
+  id: reg_2c584f60b1864852b30c3e144e349bb7
+  ts: "2026-10-31T04:05:58Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6b2a7595bb1c4cd3884d525eb8424e3d
+- v: 1
+  id: reg_05f7624f073f44edad386fe4a094f2a3
+  ts: "2026-10-31T04:11:59Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2c584f60b1864852b30c3e144e349bb7
+- v: 1
+  id: reg_d744ddc231df45b08d2aa15d8f594eb3
+  ts: "2026-10-31T04:13:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、start から review までと actor の実体名の記録を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: PJR-TC62 と PJR-790T の統合後、exec run --register が start から review まで通った
+      to: PJR-Z7GX の統合後、exec run --register が start から review まで通った
+  previous_event_id: reg_05f7624f073f44edad386fe4a094f2a3
+- v: 1
+  id: reg_26127f2ee35d4ea1ad2e1f02b09a9c03
+  ts: "2026-10-31T04:50:15Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-M1DH の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-31"
+      to: "-"
+  previous_event_id: reg_d744ddc231df45b08d2aa15d8f594eb3
+- v: 1
+  id: reg_c0aa502c640e4bb08f8bb202d9681696
+  ts: "2026-10-31T04:50:36Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_26127f2ee35d4ea1ad2e1f02b09a9c03
+- v: 1
+  id: reg_e7139f398cbb4839aba061fd066a1db2
+  ts: "2026-10-31T04:56:42Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c0aa502c640e4bb08f8bb202d9681696
+- v: 1
+  id: reg_7c72d1d445e346e69288adabaa84f904
+  ts: "2026-10-31T04:57:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、start から review まで、actor の実体名の記録、成功後の worktree とブランチの撤去を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: PJR-Z7GX の統合後、exec run --register が start から review まで通った
+      to: PJR-M1DH の統合後、exec run --register が start から review まで通り、worktree と作業ブランチが片付いた
+  previous_event_id: reg_e7139f398cbb4839aba061fd066a1db2
+- v: 1
+  id: reg_0b4570789f2e45248e49679c380c246d
+  ts: "2026-10-31T08:16:34Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-B5TY の親の検証への組み込みの動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-31"
+      to: "-"
+  previous_event_id: reg_7c72d1d445e346e69288adabaa84f904
+- v: 1
+  id: reg_2ed864aabd9d4e7bb48ee64e68382ff0
+  ts: "2026-10-31T08:16:50Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0b4570789f2e45248e49679c380c246d
+- v: 1
+  id: reg_7cd5362152cd47dba7997fdd43622537
+  ts: "2026-10-31T08:23:40Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2ed864aabd9d4e7bb48ee64e68382ff0
+- v: 1
+  id: reg_e0ea8031c5c6452a94e79c944059f7fd
+  ts: "2026-10-31T08:24:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor で流し、evidence の親の検証に lint-mermaid が passed で記録されたことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: PJR-M1DH の統合後、exec run --register が start から review まで通り、worktree と作業ブランチが片付いた
+      to: PJR-B5TY の組み込みの後、exec run --register が start から review まで通り、親の検証で lint-mermaid が流れて通った
+  previous_event_id: reg_7cd5362152cd47dba7997fdd43622537

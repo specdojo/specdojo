@@ -1,0 +1,35 @@
+ユニットテストを実行中です。完了を待機しています。
+ユニットテストの完了を待機しています。
+ユニットテストが全件パスしました。引き続き TypeScript の静的検査（lint:ts）の完了を待機しています。
+Markdown の静的検査（lint:md）を実行しています。完了を待機しています。
+Frontmatter の静的検査（lint:fm）を実行しています。完了を待機しています。
+プロジェクト登録簿項目 **PJR-S23T**「deliverable scaffold で成果物を 1 つだけ雛形にできるようにする」の対応を完了しました。
+
+### 実施内容の概要
+
+1. **`deliverable scaffold` へのオプション追加**:
+   - `--target <doc-id>`: 指定した 1 成果物のみを雛形として生成。
+   - `--target-path <path>`: カタログにない成果物の配置パス（リポジトリ相対）。
+   - `--target-rulebook <rulebook>`: カタログにない成果物の rulebook 文書 ID。
+   - `--target` と `--dct` の併用時はエラーとする排他制御を実装。
+   - `--target` なしで `--target-path` または `--target-rulebook` が指定された場合もエラーとする検証を追加。
+   - `--dry-run` では書き込みを行わず予定（`Would create: <path>`）のみを表示。
+   - 既存ファイルが存在する場合は `--force` がなければスキップ（`Skipped (already exists; use --force to overwrite): <path>`）。
+
+2. **パス検証の共通化**:
+   - `src/register/deliverable-target.ts` に `validateDeliverableTargetPath` を切り出し、リポジトリ内判定・ファイル判定・既存文書との衝突検出・doc-index 整合性を register と `deliverable scaffold` で同一関数・同一規則で共有。
+
+3. **雛形 frontmatter と template 未定義 rulebook の扱い**:
+   - 雛形の frontmatter の `id` は project で修飾した doc id（`${projectId}:${local_id}`）とし、`status: draft` と `rulebook` を確実に設定。
+   - template のない rulebook（`template: not-needed` や未定義など）であってもエラーで中断せず、frontmatter（`id`、`type: project`、`status: draft`、`rulebook`）、見出し（`# <local_id>`）、`_TODO_: 本文を記述する`（YAML の場合は frontmatter / マッピングのみ）を含む最小構成の雛形を生成（PJR-65DS の雛形作成→文脈記入フローを妨げないため）。
+
+4. **ドキュメント・設定・テストの更新**:
+   - `src/schedule/strategy-profiles.ts`: context-pass の説明にある `deliverable scaffold --project <project-id> --dct <catalog>` を `--target <doc-id>` に変更。
+   - `docs/ja/specdojo/references/command-reference.md`: 新オプションと説明・使用例を追記。
+   - `CHANGELOG.md`: `## [Unreleased]` の `### 追加機能` に PJR-S23T を追記。
+   - `tests/src/deliverable/scaffold.test.ts`: 単体テスト（カタログ経由の 1 件生成、カタログ外成果物の生成、`--dct` 併用エラー、既存ファイルの skip と `--force`、リポジトリ外パスのエラー、CLI オプション動作）を新規作成し全件パスを確認。
+   - 個票（`docs/ja/projects/prj-0001/controls/project-register/pjr-s23t-deliverable-scaffold-target.md`）の作業内容および対応結果を更新。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"deliverable scaffold に --target、--target-path、--target-rulebook を追加し、単一成果物の雛形生成およびカタログ外成果物の雛形生成に対応しました。","handoff":["template のない rulebook の扱い: template が存在しない場合（`template: not-needed` や未定義など）であってもエラーで中断せず、frontmatter（`id`、`type: project`、`status: draft`、`rulebook`）、見出し（`# <local_id>`）、`_TODO_: 本文を記述する`（YAML の場合は frontmatter / マッピングのみ）を含む最小構成の雛形を生成することとしました。理由: PJR-65DS の雛形作成→文脈記入のフローにおいて、template 未定義の rulebook や独自文書であっても雛形生成を妨げずに作業を進められるようにするためです。","保護された設定への変更はありません。"],"validations":[]}
+</specdojo_executor_evidence>

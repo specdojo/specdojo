@@ -1,0 +1,29 @@
+`npm run lint:ts` をバックグラウンドで実行中です。完了を待機しています。
+`npm run lint:fm` をバックグラウンドで実行中です。完了を待機しています。
+`npm run lint:fm` の完了を待機しています。
+`npm run lint:fm` の完了を待機しています。
+検査の終了を待機しています。
+`npm run test:unit` の完了を待機しています。
+タスク PJR-YKYK「template のない rulebook の雛形の type を `deliverable_type` にする」の executor stage 作業を完了しました。
+
+### 実施内容
+1. **最小雛形生成における `deliverable_type` の反映**:
+   - [src/catalog/generate.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKYK/src/catalog/generate.ts) に `resolveRulebookPath` および `resolveDeliverableType` を追加しました。
+   - template のない rulebook（Markdown の `fallbackMarkdown` および YAML の `fallbackYaml`）で、rulebook の frontmatter に宣言された `deliverable_type` を雛形の `type` に設定するように変更しました。
+   - rulebook が存在しない、読めない、または `deliverable_type` が未宣言の場合は、従来どおり `type: project` にフォールバックします。
+   - template のある rulebook の挙動は変更していません。
+
+2. **単体テストの追加**:
+   - [tests/src/catalog/generate.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKYK/tests/src/catalog/generate.test.ts): 一括生成（`--dct` 指定あり・なし）において、`deliverable_type` 宣言あり・なしの rulebook に対する雛形生成結果を検証するテストを追加しました。
+   - [tests/src/deliverable/scaffold.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKYK/tests/src/deliverable/scaffold.test.ts): `--target`（カタログ登録成果物および catalog-less 成果物の両方）において、`deliverable_type` 宣言あり・なしの rulebook に対する雛形生成結果を検証するテストを追加しました。
+
+3. **`docs-lint` の検証**:
+   - `specdojo:tsd-rulebook`（`deliverable_type: architecture`、`template: not-needed`）を指定して生成した雛形について、`@specdojo/docs-lint` の `frontmatter-deliverable-type` ルールで検証し、警告やエラーが出ず正常にパスすることを確認しました。
+
+4. **記録・個票の更新**:
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKYK/CHANGELOG.md) の `## [Unreleased]` 節の不具合修正に本修正内容を追記しました。
+   - 個票 [docs/ja/projects/prj-0001/controls/project-register/pjr-ykyk-scaffold-fallback-deliverable-type.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YKYK/docs/ja/projects/prj-0001/controls/project-register/pjr-ykyk-scaffold-fallback-deliverable-type.md) の作業内容・対応結果を記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"template のない rulebook の最小雛形生成において、type を rulebook の deliverable_type に合わせる修正を適用し、一括生成および --target に対する単体テストを追加して CHANGELOG と個票を更新しました。","handoff":[],"validations":[{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog validation passed for prj-0001"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-ykyk-scaffold-fallback-deliverable-type.md","status":"passed","summary":"markdownlint passed on changed documentation files"},{"command":"npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-ykyk-scaffold-fallback-deliverable-type.md src/catalog/generate.ts tests/src/catalog/generate.test.ts tests/src/deliverable/scaffold.test.ts","status":"passed","summary":"Prettier check passed on all changed files"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml deliverable files were changed"}]}
+</specdojo_executor_evidence>

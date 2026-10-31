@@ -3,7 +3,11 @@ import { dirname, join } from "node:path";
 import { dump, load } from "../shared/yaml.js";
 import { type ResolvedDeliverable, collectResolvedDeliverables } from "./build.js";
 import { resolveBasePath } from "./paths.js";
-import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
+import {
+  buildSpecdojoFrontmatter,
+  parseSpecdojoDocument,
+  readSpecdojoNamespace,
+} from "../docs/frontmatter-namespace.js";
 import { parsePracticeId, practiceLocalId } from "../shared/practice-id.js";
 import { resolveKataDocumentPathIfExists } from "../kata/kata.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
@@ -12,6 +16,8 @@ import {
   resolveSpecdojoPathIfExists,
   type SpecdojoResolutionRoots,
 } from "../docs/template-resolution.js";
+import { resolveDeliverableByDocId } from "./document-target.js";
+import { validateDeliverableTargetPath } from "../register/deliverable-target.js";
 
 const PROJECT_ID_PLACEHOLDER = "_PROJECT_ID_";
 const LOCAL_ID_PLACEHOLDER = "_LOCAL_ID_";
@@ -77,15 +83,11 @@ function normalizeDctName(name: string): string {
     .replace(/^dct-/, "");
 }
 
-// Resolve a deliverable template from the rulebook frontmatter declaration. The declaration is
-// the SSOT, so local_id naming conventions are deliberately not used as a fallback. This lets
-// every deliverable in one rulebook lineage share a single template.
-function findTemplate(
-  templatesPath: string,
+// Resolve the path to a rulebook file. The declaration is the SSOT.
+function resolveRulebookPath(
   rulebooksPath: string,
   repoRoot: string,
   rulebookId: string | undefined,
-  ext: ".md" | ".yaml",
   resourceRoots?: SpecdojoResolutionRoots,
 ): string | null {
   if (
@@ -108,10 +110,53 @@ function findTemplate(
     : resourceRoots
       ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/rulebooks/${rulebookFileName}`, resourceRoots)
       : join(rulebooksPath, rulebookFileName);
-  if (!rulebookPath) return null;
-  if (!existsSync(rulebookPath)) return null;
+  if (!rulebookPath || !existsSync(rulebookPath)) return null;
+  return rulebookPath;
+}
 
-  const templateId = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).template;
+// Resolve a rulebook's declared deliverable_type from its frontmatter.
+// Falls back to "project" if the rulebook is absent, unreadable, or omits deliverable_type.
+function resolveDeliverableType(
+  rulebooksPath: string,
+  repoRoot: string,
+  rulebookId: string | undefined,
+  resourceRoots?: SpecdojoResolutionRoots,
+): string {
+  const rulebookPath = resolveRulebookPath(rulebooksPath, repoRoot, rulebookId, resourceRoots);
+  if (!rulebookPath) return "project";
+
+  try {
+    const meta = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8"));
+    if (typeof meta.deliverable_type === "string" && meta.deliverable_type.trim().length > 0) {
+      return meta.deliverable_type.trim();
+    }
+  } catch {
+    return "project";
+  }
+
+  return "project";
+}
+
+// Resolve a deliverable template from the rulebook frontmatter declaration. The declaration is
+// the SSOT, so local_id naming conventions are deliberately not used as a fallback. This lets
+// every deliverable in one rulebook lineage share a single template.
+function findTemplate(
+  templatesPath: string,
+  rulebooksPath: string,
+  repoRoot: string,
+  rulebookId: string | undefined,
+  ext: ".md" | ".yaml",
+  resourceRoots?: SpecdojoResolutionRoots,
+): string | null {
+  const rulebookPath = resolveRulebookPath(rulebooksPath, repoRoot, rulebookId, resourceRoots);
+  if (!rulebookPath) return null;
+
+  let templateId: unknown;
+  try {
+    templateId = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).template;
+  } catch {
+    return null;
+  }
   if (
     typeof templateId !== "string" ||
     templateId === "none" ||
@@ -139,10 +184,14 @@ function findTemplate(
 // Minimal Markdown scaffold built from catalog metadata when no template exists.
 // Fills the generated Frontmatter, an H1 from `name`, the catalog `overview`, and a
 // single `_TODO_` line so the author knows the body is unwritten.
-function fallbackMarkdown(item: DctDeliverableItem, projectId: string): string {
+function fallbackMarkdown(
+  item: DctDeliverableItem,
+  projectId: string,
+  deliverableType = "project",
+): string {
   const inner: Record<string, unknown> = {
     id: `${projectId}:${item.local_id}`,
-    type: "project",
+    type: deliverableType,
     status: "draft",
   };
   if (item.rulebook && item.rulebook !== "undecided") {
@@ -158,10 +207,14 @@ function fallbackMarkdown(item: DctDeliverableItem, projectId: string): string {
 }
 
 // Minimal YAML scaffold built from catalog metadata when no template exists.
-function fallbackYaml(item: DctDeliverableItem, projectId: string): string {
+function fallbackYaml(
+  item: DctDeliverableItem,
+  projectId: string,
+  deliverableType = "project",
+): string {
   const doc: Record<string, unknown> = {
     id: `${projectId}:${item.local_id}`,
-    type: "project",
+    type: deliverableType,
     status: "draft",
   };
   if (item.rulebook && item.rulebook !== "undecided") {
@@ -208,7 +261,16 @@ function generateContent(
       ".yaml",
       resourceRoots,
     );
-    return template ? expandYamlTemplate(template, item, projectId) : fallbackYaml(item, projectId);
+    if (template) {
+      return expandYamlTemplate(template, item, projectId);
+    }
+    const deliverableType = resolveDeliverableType(
+      rulebooksPath,
+      repoRoot,
+      item.rulebook,
+      resourceRoots,
+    );
+    return fallbackYaml(item, projectId, deliverableType);
   }
   const template = findTemplate(
     templatesPath,
@@ -222,7 +284,13 @@ function generateContent(
     const raw = readFileSync(template, "utf8");
     return replaceGeneratedPlaceholders(flattenTemplateFrontmatter(raw), item, projectId) as string;
   }
-  return fallbackMarkdown(item, projectId);
+  const deliverableType = resolveDeliverableType(
+    rulebooksPath,
+    repoRoot,
+    item.rulebook,
+    resourceRoots,
+  );
+  return fallbackMarkdown(item, projectId, deliverableType);
 }
 
 // Materialize the deliverable files a project's catalog points to. Only `kind: work`
@@ -326,6 +394,163 @@ export function runGenerate(opts: {
         errors.push(`${resolvedPath}: ${err instanceof Error ? err.message : String(err)}`);
       }
     }
+  }
+
+  return { written, skipped, errors };
+}
+
+function ensureFrontmatterProperties(
+  content: string,
+  isYaml: boolean,
+  expected: { id: string; status: string; rulebook?: string },
+): string {
+  if (isYaml) {
+    const loaded = load(content) as Record<string, unknown> | undefined;
+    const doc = loaded && typeof loaded === "object" && !Array.isArray(loaded) ? loaded : {};
+    doc.id = expected.id;
+    doc.status = expected.status;
+    if (expected.rulebook && expected.rulebook !== "undecided") {
+      doc.rulebook = expected.rulebook === "not-needed" ? "none" : expected.rulebook;
+    }
+    return dump(doc, { lineWidth: 120, noRefs: true });
+  }
+
+  const { data, body } = parseSpecdojoDocument(content);
+  data.id = expected.id;
+  data.status = expected.status;
+  if (expected.rulebook && expected.rulebook !== "undecided") {
+    data.rulebook = expected.rulebook === "not-needed" ? "none" : expected.rulebook;
+  }
+  const innerLines = dump(data, { lineWidth: 120, noRefs: true }).replace(/\n+$/, "").split("\n");
+  const fm = buildSpecdojoFrontmatter(innerLines);
+  return `${fm}\n\n${body.replace(/^\n+/, "")}`;
+}
+
+export type GenerateTargetOptions = {
+  catalogPath?: string;
+  templatesPath: string;
+  rulebooksPath: string;
+  repoRoot: string;
+  projectId: string;
+  targetId: string;
+  targetPath?: string;
+  targetRulebook?: string;
+  force: boolean;
+  dryRun?: boolean;
+  resourceRoots?: SpecdojoResolutionRoots;
+};
+
+export function runGenerateTarget(opts: GenerateTargetOptions): {
+  written: string[];
+  skipped: string[];
+  errors: string[];
+} {
+  const {
+    catalogPath,
+    templatesPath,
+    rulebooksPath,
+    repoRoot,
+    projectId,
+    targetId,
+    targetPath,
+    targetRulebook,
+    force,
+    dryRun = false,
+    resourceRoots,
+  } = opts;
+
+  const written: string[] = [];
+  const skipped: string[] = [];
+  const errors: string[] = [];
+
+  const localId = targetId.includes(":") ? targetId.slice(targetId.indexOf(":") + 1) : targetId;
+  const canonicalDocId = targetId.includes(":") ? targetId : `${projectId}:${targetId}`;
+
+  let item: DctDeliverableItem | undefined;
+  let resolvedPath: string | undefined;
+
+  if (catalogPath && existsSync(catalogPath)) {
+    try {
+      const resolved = resolveDeliverableByDocId(catalogPath, projectId, targetId, repoRoot);
+      item = resolved.info.deliverable;
+      resolvedPath = resolved.info.resolvedPath;
+    } catch (error) {
+      if (
+        !(error instanceof Error) ||
+        !error.message.startsWith("catalog deliverable target not found")
+      ) {
+        errors.push(error instanceof Error ? error.message : String(error));
+        return { written, skipped, errors };
+      }
+      if (!targetPath || !targetRulebook) {
+        errors.push(error.message);
+        return { written, skipped, errors };
+      }
+    }
+  }
+
+  if (!item || !resolvedPath) {
+    if (!targetPath || !targetRulebook) {
+      errors.push(
+        `Catalog-less deliverable ${targetId} requires both --target-path and --target-rulebook`,
+      );
+      return { written, skipped, errors };
+    }
+
+    try {
+      resolvedPath = validateDeliverableTargetPath(repoRoot, canonicalDocId, targetPath);
+    } catch (err) {
+      errors.push(err instanceof Error ? err.message : String(err));
+      return { written, skipped, errors };
+    }
+
+    item = {
+      local_id: localId,
+      name: localId,
+      kind: "work",
+      overview: "",
+      path: resolvedPath,
+      rulebook: targetRulebook,
+    };
+  }
+
+  if (item.kind !== "work") {
+    errors.push(
+      `Deliverable ${targetId} is kind '${item.kind}', only 'work' deliverables can be scaffolded`,
+    );
+    return { written, skipped, errors };
+  }
+
+  const outputPath = join(repoRoot, resolvedPath);
+  if (existsSync(outputPath) && !force) {
+    skipped.push(resolvedPath);
+    return { written, skipped, errors };
+  }
+
+  try {
+    let content = generateContent(
+      item,
+      resolvedPath,
+      projectId,
+      templatesPath,
+      rulebooksPath,
+      repoRoot,
+      resourceRoots,
+    );
+
+    content = ensureFrontmatterProperties(content, isYamlPath(resolvedPath), {
+      id: canonicalDocId,
+      status: "draft",
+      rulebook: item.rulebook,
+    });
+
+    if (!dryRun) {
+      mkdirSync(dirname(outputPath), { recursive: true });
+      writeFileSync(outputPath, content, "utf8");
+    }
+    written.push(resolvedPath);
+  } catch (err) {
+    errors.push(`${resolvedPath}: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   return { written, skipped, errors };

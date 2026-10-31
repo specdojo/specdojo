@@ -35,3 +35,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-5TZS","PJR-DQ9E"]'
+- v: 1
+  id: reg_22d82d87d3864d2aac68a9b2eef9f0d3
+  ts: "2026-10-31T06:38:06Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で indie が推奨での決定を指示した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: ひな型は生成・追加の設定・SpecDojo の 3 層とし、追加の設定は CLI と recipe を併用し（案 C）、GitHub の template repository を主な入口にする。作り直しは Actions の定期実行で PR にし、初期化とセキュリティの自動チェックを備える。最初はランディングページ、次に Next.js と Cloudflare を作る
+  previous_event_id: reg_53a6a360e10b40269d1edd4b6dc9d659

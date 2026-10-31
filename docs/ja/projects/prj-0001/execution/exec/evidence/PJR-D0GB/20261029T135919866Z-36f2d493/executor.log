@@ -1,0 +1,18 @@
+タスク PJR-D0GB「ready 以外の文書の `_CONTEXT_` の検出を情報に下げ、--frail で lint:fm を落とさない」の対応を完了しました。
+
+### 実施内容
+
+1. **docs-lint の検出レベル変更**:
+   - [`packages/docs-lint/src/context-marker.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0GB/packages/docs-lint/src/context-marker.ts) において、`_CONTEXT_:` 検出時に `specdojo.status` が `ready` でない場合は `file.info(...)` を呼び出して情報レベル（`fatal: undefined`）として報告するように修正しました。`ready` の場合は従来どおり `file.message(...)` を用い、`message.fatal = true`（error）として失敗させます。これにより、`--frail` 指定時でも下書き中の指示残存で `npm run lint:fm` が失敗しなくなりました。
+2. **規約・README の更新**:
+   - [`docs/ja/specdojo/standards/document-metadata-standard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0GB/docs/ja/specdojo/standards/document-metadata-standard.md) の「文脈の目印」節および [`packages/docs-lint/README.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0GB/packages/docs-lint/README.md) において、`ready` 以外の文書における検出の扱いを warning から情報へ改めました。
+3. **単体テストの更新**:
+   - [`tests/packages/docs-lint/context-marker.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0GB/tests/packages/docs-lint/context-marker.test.ts) を更新し、`ready` の文書では `fatal: true`（error）となり、`draft`・`deprecated` や frontmatter なし・不正 YAML などの `ready` 以外の文書では `fatal: undefined`（情報レベル）として報告されることを確認しました（全11件合格）。
+4. **CHANGELOG の更新**:
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0GB/CHANGELOG.md) の `## [Unreleased]` の「### 変更」節に、`@specdojo/docs-lint` の `_CONTEXT_:` 検出レベルの変更内容を追記しました。
+5. **個票の更新**:
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-d0gb-context-marker-info-level.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0GB/docs/ja/projects/prj-0001/controls/project-register/pjr-d0gb-context-marker-info-level.md) の作業内容の状態を `done` に更新し、対応結果セクションを記入しました（ステータス項目は変更していません）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ready 以外の文書における _CONTEXT_ の検出を情報（file.info）へ引き下げ、規約・README・単体テスト・CHANGELOG・個票を更新した。","handoff":[],"validations":[{"command":"git diff --name-only -- '*.md' '*.ts' | xargs -r npx prettier --check","status":"passed","summary":"変更した Markdown／TypeScript の整形状態を確認した。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"終了コード 0 で成功した。"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"個別 YAML schema 検証は適用外。","reason":"executor による YAML／YML ファイルの変更がないため。"}]}
+</specdojo_executor_evidence>

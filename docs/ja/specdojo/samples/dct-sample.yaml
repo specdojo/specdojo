@@ -3,7 +3,7 @@
 # 成果物カタログ（ドメイン別）の完成例。
 # 駄菓子屋きぬや販売管理システム構築プロジェクトのプロジェクト定義ドメインを題材とする。
 # 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct.schema.yaml に従う。
-# work / control / generated の3種別と、done_criteria の記述例を示す。
+# work / control / generated の3種別と、done_criteria、および brief（YAML アンカー共有）の記述例を示す。
 id: specdojo:dct-sample
 type: project
 status: draft
@@ -21,6 +21,9 @@ groups:
         kind: work
         depends_on: []
         overview: 駄菓子屋きぬや販売管理システムの目的・背景・ゴールを定義する
+        brief: &project_baseline_brief |
+          - 駄菓子屋の既存店舗業務を止めない段階的な移行を前提とする
+          - POS 端末および在庫管理端末はタブレット Web アプリケーションとする
         path: prj-overview.md
         rulebook: specdojo:prj-overview-rulebook
         done_criteria:
@@ -42,6 +45,7 @@ groups:
         depends_on:
           - prj-overview
         overview: 対象業務と対象外業務を明確化し、合意境界を固定する
+        brief: *project_baseline_brief
         path: prj-scope.md
         rulebook: specdojo:prj-scope-rulebook
         done_criteria:

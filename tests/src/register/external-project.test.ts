@@ -37,6 +37,17 @@ const baseOptions: ExternalRegisterAddOptions = {
 };
 
 describe("buildExternalRegisterAddArgs", () => {
+  it("外部への起票でも入力を反復オプションとして渡す", () => {
+    const args = buildExternalRegisterAddArgs(
+      "customer",
+      { path: "../target", project_id: "prj-target" },
+      { ...baseOptions, input: ["前提一", "前提二"] },
+    );
+    expect(args.filter((arg) => arg === "--input")).toHaveLength(2);
+    expect(args).toContain("前提一");
+    expect(args).toContain("前提二");
+  });
+
   it("forwards an epic's track to the target CLI", () => {
     const args = buildExternalRegisterAddArgs(
       "customer",

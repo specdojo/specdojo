@@ -1,3 +1,4 @@
+import { readRegisterInput, registerInputSection } from "../register/input.js";
 import {
   resolveRegisterDeliverableTarget,
   type RegisterDeliverableTarget,
@@ -534,6 +535,11 @@ export async function generateRegisterPlan(opts: {
   const category = requireRunnableRegisterItem(item);
   const ticketPath = ticketPathFromItem(item, opts.registerPaths.projectRegisterPath);
 
+  const inputs =
+    ticketPath && existsSync(ticketPath)
+      ? readRegisterInput(readFileSync(ticketPath, "utf8"))
+      : item.inputs;
+
   if (item.approach) {
     validateRegisterApproachTargets({
       repoRoot: specdojoRootDir(),
@@ -665,6 +671,7 @@ export async function generateRegisterPlan(opts: {
       deliverable,
       ...(refs ? { refs } : {}),
       ...(authoring ? { authoring } : {}),
+      registerInput: inputs,
       additionalConditions: [
         cataloglessConditions,
         registerCompletionConditions(item, ticketPath),
@@ -706,6 +713,7 @@ export async function generateRegisterPlan(opts: {
     _PJR_DUE_: item.due,
     _PJR_TICKET_REF_: ticketPath ? `\`${repoRelativePath(ticketPath)}\`` : "-",
     _RESULT_REF_: resultRef,
+    _REGISTER_INPUT_: registerInputSection(inputs),
     _GRADE_FINDINGS_: ticketPath ? registerGradeFindingsText(opts.projectId, ticketPath) : "- なし",
     _AUTOPILOT_CONSTRAINTS_: registerAutopilotConstraints(item),
   };

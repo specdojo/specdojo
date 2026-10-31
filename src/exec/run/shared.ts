@@ -120,6 +120,8 @@ export type RunOpts = {
   join?: boolean;
   /** Repeatable `<repo>=<branch>` product integration target overrides. */
   integrationBranch?: string[];
+  /** Repeatable product work branch overrides. */
+  branch?: string[];
   cycleRebuildStaleTracks?: boolean;
 };
 

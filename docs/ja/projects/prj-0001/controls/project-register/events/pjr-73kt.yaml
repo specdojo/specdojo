@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_98df68a00bbd419492bf9e3999b3b6e8
+  ts: "2026-10-31T02:04:04Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 雛形作成の案内を deliverable scaffold --target の形にそろえる
+    - field: description
+      from: ""
+      to: schedule-design-guide・xer-human-draft-template・plans-planning.ts に残る scaffold --dct `<catalog>` の案内を、成果物を 1 つだけ作る --target の形に直す
+    - field: input
+      from: ""
+      to: '["PJR-E45K が入れた文脈の記入の段の案内は scaffold --dct `<catalog>` で、カタログのほかの未作成成果物まで雛形を作る。PJR-S23T で --target が入り、strategy-profiles.ts だけ直した","残っている場所は docs/ja/specdojo/guides/schedule-design-guide.md・docs/ja/specdojo/exec-templates/xer-human-draft-template.md・src/exec/plans-planning.ts の 3 か所"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-S23T"]'
+- v: 1
+  id: reg_26f16808b96649c18967359a52af4aa0
+  ts: "2026-10-31T02:08:26Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_98df68a00bbd419492bf9e3999b3b6e8
+- v: 1
+  id: reg_2bfde730b79b4fc8ae01de982419bc2a
+  ts: "2026-10-31T02:22:22Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_26f16808b96649c18967359a52af4aa0
+- v: 1
+  id: reg_8d9a51f7208f4083ac06300d49e7588e
+  ts: "2026-10-31T02:36:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と個票・result を完了条件に照らし、リポジトリ全体で --dct <catalog> による 1 件の雛形作成の案内が記録の文書以外に残っていないことを grep で確かめた。plans-planning.ts は案内の文言だけの変更で runner の動きは変わらないため JSEY は流していない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: schedule-design-guide・xer-human-draft-template・plans-planning.ts の雛形作成の案内を deliverable scaffold --target の形にそろえ、関連するテストの文言を合わせた
+  previous_event_id: reg_2bfde730b79b4fc8ae01de982419bc2a

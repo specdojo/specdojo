@@ -1,0 +1,91 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4837ff92bc0f40a19b9eb1d8cd2e13d1
+  ts: "2026-10-31T07:05:05Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tsd-ollama-opencode の接続確認の例で考える過程を止める
+    - field: description
+      from: ""
+      to: "接続確認の例に reasoning\\_effort: none を足し、本文が返ることを期待値として書く。tsd-ollama の確認の例も同じかを確かめる"
+    - field: input
+      from: ""
+      to: "[\"2026-10-31 に母艦の Ollama で確かめた。gemma4:e4b-mlx-light-8k と gemma4:e4b-light-8k は、tsd-ollama-opencode の接続確認の例（`max_tokens:` 32）では考える過程（reasoning）だけで上限に達し、`finish_reason` が length で content が空になる\",\"同じ要求に `\\\"reasoning_effort\\\":` \\\"none\\\" を足すと `finish_reason` が stop で本文が返った。\\\"think\\\": false では止まらなかった\",\"executor は母艦への接続を試さない。母艦での確認はオーケストレーターが行う\"]"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-AHXK"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-AHXK"]'
+- v: 1
+  id: reg_6efd9be098f243a49ab47cdb760ae4dc
+  ts: "2026-10-31T07:08:34Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4837ff92bc0f40a19b9eb1d8cd2e13d1
+- v: 1
+  id: reg_54c34a816dad48a58933826f9d94c16f
+  ts: "2026-10-31T07:27:13Z"
+  action: review
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6efd9be098f243a49ab47cdb760ae4dc
+- v: 1
+  id: reg_911f1c11dd104140aecb748990812e3d
+  ts: "2026-10-31T07:28:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と個票・result を照らし、直った例を文書のまま母艦の Ollama に流して finish_reason が stop で本文が返ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: "tsd-ollama-opencode の接続確認の例に reasoning_effort: none を足し、期待する結果と、付けないと本文が空になりうることを書いた。tsd-ollama の確認の例は OpenAI 互換の API ではないため変えていない"
+  previous_event_id: reg_54c34a816dad48a58933826f9d94c16f

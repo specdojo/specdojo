@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cld-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 63
-graded_at: "2026-10-02T21:28:30.795Z"
-graded_by: agy-expert-executor
-content_hash: 3924b7fab041e7f3164955e1c1b11008dc4a676f169e39f9c7578350d23b9fb5
+score: 66
+graded_at: "2026-10-29T20:24:44.347Z"
+graded_by: flash-high-executor
+content_hash: bfebaaa0e9de23f31f8296ee2e5439bf944ca2693d8452b2fece67e3c938580b
 categories:
   purpose:
     score: 75
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 50
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 3
@@ -78,8 +78,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 1
     score: 25
@@ -103,8 +103,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 10
-  minor: 13
+  major: 9
+  minor: 14
   note: 0
 findings:
   - id: F001
@@ -113,135 +113,160 @@ findings:
     line: 13
     anchor: ""
     message: プロジェクト全体における本ルールの位置づけや、上位のアーキテクチャ方針への参照が不足している。
+    message_ja: プロジェクト全体における本ルールの位置づけや、上位のアーキテクチャ方針への参照が不足している。
   - id: F002
     severity: minor
     rule: vp-po-decision-readiness
     line: 1
     anchor: "# 分類一覧（Classification List）作成ルール"
     message: recipe と template の要否が undecided のままで、判断者、判断による影響、解消後の次アクションが示されていない。
+    message_ja: recipe と template の要否が undecided のままで、判断者、判断による影響、解消後の次アクションが示されていない。
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
     line: 11
     anchor: ""
     message: 公開対象の範囲や、最終的な承認責任を担う Role code が示されていない。
+    message_ja: 公開対象の範囲や、最終的な承認責任を担う Role code が示されていない。
   - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 63
     anchor: 分類定義は、**「定義項目 / 内容」** の 2 列の表で記述します。
     message: 記述作業の単位は読み取れるが、各作業の担当 Role code と成果物全体の完了条件が示されていない。
+    message_ja: 記述作業の単位は読み取れるが、各作業の担当 Role code と成果物全体の完了条件が示されていない。
   - id: F005
     severity: major
     rule: vp-pm-dependency-risk
     line: 16
     anchor: "- 業務ロジックに基づいて固定的に存在する分類"
     message: BDD、ステータス、用語集、画面、集計への依存を挙げているが, 参照先 ID と変更時の影響、PJR または Schedule への反映条件が示されていない。
+    message_ja: BDD、ステータス、用語集、画面、集計への依存を挙げているが, 参照先 ID と変更時の影響、PJR または Schedule への反映条件が示されていない。
   - id: F006
     severity: minor
     rule: vp-pm-control-reporting
     line: 56
     anchor: "- 分類を 分類定義 と 値の説明（値一覧） の二つの表で整理する。"
     message: supersedes 以外に、分類変更で生じる課題、リスク、変更要求、決定記録の報告先と担当 Role code が示されていない。
+    message_ja: supersedes 以外に、分類変更で生じる課題、リスク、変更要求、決定記録の報告先と担当 Role code が示されていない。
   - id: F007
     severity: minor
     rule: vp-ba-business-value
     line: 13
     anchor: ""
     message: ルールの適用により解決される具体的な業務課題や、期待される品質向上などの価値が明示されていない。
+    message_ja: ルールの適用により解決される具体的な業務課題や、期待される品質向上などの価値が明示されていない。
   - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
     line: 84
     anchor: ""
     message: 「値を持つ分類」の判定条件と、分類定義および値一覧の各項目の必須・任意が示されておらず、成果物の必要要素を一意に決められない。
+    message_ja: 「値を持つ分類」の判定条件と、分類定義および値一覧の各項目の必須・任意が示されておらず、成果物の必要要素を一意に決められない。
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 13
     anchor: ""
     message: 分類定義の作成者、業務内容の確認者、実装影響の確認者、最終合意者が示されていない。
+    message_ja: 分類定義の作成者、業務内容の確認者、実装影響の確認者、最終合意者が示されていない。
   - id: F010
     severity: major
     rule: vp-arc-technical-constraints
     line: 47
     anchor: ""
     message: 独立 YAML ドキュメントとして管理すると規定しているが、適用 schema、ルート構造、各キーの型制約、validate 手順が示されていない。
+    message_ja: 独立 YAML ドキュメントとして管理すると規定しているが、適用 schema、ルート構造、各キーの型制約、validate 手順が示されていない。
   - id: F011
     severity: minor
     rule: vp-arc-conciseness
     line: 18
     anchor: "- 値は少数で変動しないことが多い"
     message: 第1章と第4章で分類種類の概要説明が重複しており、冗長である。
+    message_ja: 第1章と第4章で分類種類の概要説明が重複しており、冗長である。
   - id: F012
     severity: minor
     rule: vp-arc-single-responsibility
     line: 166
     anchor: "supersedes: []"
     message: 第5章のサンプルは独立した sample ドキュメントに移譲可能であり、ルールブック内に過剰な具体例を含んでいる。
+    message_ja: 第5章のサンプルは独立した sample ドキュメントに移譲可能であり、ルールブック内に過剰な具体例を含んでいる。
   - id: F013
     severity: major
     rule: vp-dev-implementation-readiness
     line: 47
     anchor: ""
     message: YAML 成果物のキー名、配列・オブジェクト構造、値型、出力ファイル名が定義されず、Markdown 表から実装用データ構造へ一意に変換できない。
+    message_ja: YAML 成果物のキー名、配列・オブジェクト構造、値型、出力ファイル名が定義されず、Markdown 表から実装用データ構造へ一意に変換できない。
   - id: F014
     severity: major
     rule: vp-dev-change-impact
     line: 16
     anchor: "- 業務ロジックに基づいて固定的に存在する分類"
     message: 分類値の追加・変更・廃止が BDD、画面、集計、schema、生成物へ与える影響と互換性維持の手順が示されていない。
+    message_ja: 分類値の追加・変更・廃止が BDD、画面、集計、schema、生成物へ与える影響と互換性維持の手順が示されていない。
   - id: F015
     severity: minor
     rule: vp-dev-testability
     line: 60
     anchor: ""
     message: ID、メタデータ、分類値を確認する schema または lint コマンド、期待結果、エラー時対応が示されていない。
+    message_ja: ID、メタデータ、分類値を確認する schema または lint コマンド、期待結果、エラー時対応が示されていない。
   - id: F016
     severity: major
     rule: vp-qe-verifiability
     line: 28
     anchor: "### 3. **動的分類（Dynamic Classification）**"
     message: 「少数」「変動しないことが多い」などの主観的で曖昧な表現が用いられており、客観的な pass/fail 判定ができない。
+    message_ja: 「少数」「変動しないことが多い」などの主観的で曖昧な表現が用いられており、客観的な pass/fail 判定ができない。
   - id: F017
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
     line: 53
     anchor: "## 2. 記述ルール（共通）"
-    message: "メタデータの type が 「domain 固定」 とされる一方で、ID規約（61行目）では 「type: data」 が使用されており矛盾している。"
+    message: >-
+      The previous contradiction between domain and data was resolved, but Markdown table syntax flaws and structural
+      discrepancies in section 3.3 remain.
+    message_ja: ドメインとデータの間の以前の矛盾は解消されましたが、Markdownテーブルの構文の不備と、セクション 3.3 における構造的な相違が残っています。
   - id: F018
     severity: major
     rule: vp-qe-kata-conformance
     line: 11
     anchor: ""
     message: 参照されているサンプル specdojo:cld-sample が具体例となっておらず、正本の適用方法を検証できない。
+    message_ja: 参照されているサンプル specdojo:cld-sample が具体例となっておらず、正本の適用方法を検証できない。
   - id: F019
     severity: major
     rule: vp-qe-kata-conformance
     line: 47
     anchor: ""
     message: target_format の省略により Markdown が既定となる一方、本文は cll-* の独立 YAML を規定しており、Kata と適用先が矛盾している。
+    message_ja: target_format の省略により Markdown が既定となる一方、本文は cll-* の独立 YAML を規定しており、Kata と適用先が矛盾している。
   - id: F020
     severity: minor
     rule: vp-ux-readability
     line: 18
     anchor: "- 値は少数で変動しないことが多い"
     message: 分類種類の定義が重複して記載されており、効率的な読み取りを妨げている。
+    message_ja: 分類種類の定義が重複して記載されており、効率的な読み取りを妨げている。
   - id: F021
     severity: minor
     rule: vp-ux-language-consistency
     line: 11
     anchor: ""
     message: 対象成果物の名称が本文の「分類一覧」と、sample の「分類定義」で統一されていない。
+    message_ja: 対象成果物の名称が本文の「分類一覧」と、sample の「分類定義」で統一されていない。
   - id: F022
     severity: major
     rule: vp-ops-release-readiness
     line: 11
     anchor: ""
     message: draft から ready へ移行する条件、recipe と template の判断完了条件、sample と適用形式の整合確認、承認者が示されていない。
+    message_ja: draft から ready へ移行する条件、recipe と template の判断完了条件、sample と適用形式の整合確認、承認者が示されていない。
   - id: F023
     severity: minor
     rule: vp-ops-operability
     line: 119
     anchor: "- 値が3〜5個以下"
     message: コード値の追加・変更・廃止時の担当 Role code、変更履歴、利用先への通知、問い合わせおよび復旧手順が示されていない。
+    message_ja: コード値の追加・変更・廃止時の担当 Role code、変更履歴、利用先への通知、問い合わせおよび復旧手順が示されていない。

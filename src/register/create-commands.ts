@@ -1,3 +1,4 @@
+import { normalizeRegisterInput } from "./input.js";
 import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
@@ -14,6 +15,8 @@ import {
   VALID_DIFFICULTIES,
   VALID_STATUSES,
   VALID_TYPES,
+  VALID_COMMIT_TYPES,
+  COMMIT_SCOPE_RE,
   type PjrItem,
   type RegisterItemFieldUpdates,
 } from "./item.js";
@@ -114,6 +117,7 @@ export function registerCreateCommands(
   addCmd.requiredOption("--type <type>", `Item type: ${VALID_TYPES.join(" | ")}`);
   addCmd.option("--track <track>", "Track governed by an epic (required for epic)");
   addCmd.requiredOption("--title <title>", "Short title for the item");
+  addCmd.option("--input <text>", "Premise recorded in the ticket (repeatable)", collectTarget);
   addCmd.option("--description <text>", "Description shown in the list", "_TODO_");
   addCmd.option("--priority <priority>", `Priority: ${VALID_PRIORITIES.join(" | ")}`, "medium");
   addCmd.option("--difficulty <difficulty>", `Difficulty: ${VALID_DIFFICULTIES.join(" | ")}`);
@@ -153,6 +157,11 @@ export function registerCreateCommands(
     "Predecessor item ID (repeatable; use - to remove)",
     collectTarget,
   );
+  addCmd.option(
+    "--commit-type <type>",
+    `Conventional Commits type: ${VALID_COMMIT_TYPES.join(" | ")}`,
+  );
+  addCmd.option("--commit-scope <scope>", "Conventional Commits scope");
   addCmd.option("--id <id>", "Display ID (e.g., PJR-0061); auto-incremented if omitted");
   addCmd.option(
     "--topic <topic>",
@@ -191,6 +200,18 @@ export function registerCreateCommands(
           `Invalid difficulty: "${opts.difficulty}". Must be one of: ${VALID_DIFFICULTIES.join(", ")}`,
         );
       }
+      if (
+        opts.commitType !== undefined &&
+        !(VALID_COMMIT_TYPES as readonly string[]).includes(opts.commitType)
+      ) {
+        throw new Error(
+          `Invalid commit type: "${opts.commitType}". Must be one of: ${VALID_COMMIT_TYPES.join(", ")}`,
+        );
+      }
+      const commitScope = opts.commitScope?.trim();
+      if (commitScope !== undefined && !COMMIT_SCOPE_RE.test(commitScope)) {
+        throw new Error(`Invalid commit scope: "${commitScope}". Must match ${COMMIT_SCOPE_RE}`);
+      }
       if (opts.target?.some((target: string) => target.trim() === "-")) {
         throw new Error("--target - is only valid with register update");
       }
@@ -222,6 +243,7 @@ export function registerCreateCommands(
         type: opts.type,
         title: opts.title,
         description: opts.description,
+        inputs: normalizeRegisterInput(opts.input),
         priority: opts.priority,
         ...(opts.difficulty !== undefined ? { difficulty: opts.difficulty } : {}),
         status: opts.status,
@@ -237,6 +259,8 @@ export function registerCreateCommands(
           ? { targetRulebook: opts.targetRulebook.trim() }
           : {}),
         ...(sources !== undefined ? { sources } : {}),
+        ...(opts.commitType !== undefined ? { commitType: opts.commitType } : {}),
+        ...(commitScope !== undefined ? { commitScope } : {}),
       };
       const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
 
@@ -366,6 +390,11 @@ export function registerUpdateCommand(
     collectTarget,
   );
   updateCmd.option(
+    "--input <text>",
+    "Replace ticket premises (repeatable; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
     "--source <ref>",
     "Replace read-only *-authoring exemplars (repeatable; use - to remove)",
     collectTarget,
@@ -380,6 +409,11 @@ export function registerUpdateCommand(
     "Replace predecessor IDs (repeatable; use - to remove)",
     collectTarget,
   );
+  updateCmd.option(
+    "--commit-type <type>",
+    `Update Conventional Commits type (${VALID_COMMIT_TYPES.join(" | ")}; use - to remove)`,
+  );
+  updateCmd.option("--commit-scope <scope>", "Update Conventional Commits scope; use - to remove");
   updateCmd.option(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
@@ -408,15 +442,18 @@ export function registerUpdateCommand(
         "approach",
         "target",
         "source",
+        "input",
         "targetPath",
         "targetRulebook",
         "from",
         "dependsOn",
+        "commitType",
+        "commitScope",
         "topic",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--track, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --depends-on, --topic)",
+          "At least one field option must be specified (--track, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --commit-type, --commit-scope, --topic)",
         );
       }
 
@@ -439,6 +476,21 @@ export function registerUpdateCommand(
       }
       if (opts.due !== undefined && !/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
         throw new Error(`Invalid due: "${opts.due}". Must be YYYY-MM-DD, -, or _TODO_`);
+      }
+      if (
+        opts.commitType !== undefined &&
+        opts.commitType !== "-" &&
+        !(VALID_COMMIT_TYPES as readonly string[]).includes(opts.commitType)
+      ) {
+        throw new Error(
+          `Invalid commit type: "${opts.commitType}". Must be one of: ${VALID_COMMIT_TYPES.join(", ")}, -`,
+        );
+      }
+      const commitScope = opts.commitScope?.trim();
+      if (commitScope !== undefined && commitScope !== "-" && !COMMIT_SCOPE_RE.test(commitScope)) {
+        throw new Error(
+          `Invalid commit scope: "${commitScope}". Must match ${COMMIT_SCOPE_RE}, or -`,
+        );
       }
       const topic = opts.topic?.trim();
       if (topic !== undefined && !registerTopicPattern.test(topic)) {
@@ -594,12 +646,24 @@ export function registerUpdateCommand(
               derived_from: nextDerivedFrom ?? REMOVE_REGISTER_ITEM_FIELD,
             }
           : {}),
+        ...(opts.commitType !== undefined
+          ? {
+              commit_type: opts.commitType === "-" ? REMOVE_REGISTER_ITEM_FIELD : opts.commitType,
+            }
+          : {}),
+        ...(commitScope !== undefined
+          ? {
+              commit_scope: commitScope === "-" ? REMOVE_REGISTER_ITEM_FIELD : commitScope,
+            }
+          : {}),
       };
 
       const track = opts.track === undefined ? item.track : opts.track.trim();
       validateRegisterTrack(paths.projectId, item.type, track);
+      const inputs = normalizeRegisterInput(opts.input, true);
       const updated: PjrItem = {
         ...item,
+        ...(inputs !== undefined ? { inputs } : {}),
         ...(track !== undefined ? { track } : {}),
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
@@ -610,8 +674,14 @@ export function registerUpdateCommand(
         ...(opts.owner !== undefined ? { owner: opts.owner } : {}),
         ...(opts.due !== undefined ? { due: opts.due } : {}),
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
+        ...(opts.commitType !== undefined && opts.commitType !== "-"
+          ? { commitType: opts.commitType }
+          : {}),
+        ...(commitScope !== undefined && commitScope !== "-" ? { commitScope } : {}),
       };
       if (opts.difficulty === "-") delete updated.difficulty;
+      if (opts.commitType === "-") delete updated.commitType;
+      if (commitScope === "-") delete updated.commitScope;
       if (opts.autopilot !== undefined) {
         if (opts.autopilot === "-") delete updated.autopilot;
         else updated.autopilot = "approved";
@@ -659,6 +729,7 @@ export function registerUpdateCommand(
           id: opts.id,
           topic,
           updated,
+          ...(inputs !== undefined ? { inputs } : {}),
           dryRun: opts.dryRun,
           ...(blockReasonUpdates ||
           autopilotUpdates ||
@@ -683,6 +754,7 @@ export function registerUpdateCommand(
         paths,
         view,
         updated,
+        ...(inputs !== undefined ? { inputs } : {}),
         dryRun: opts.dryRun,
         action: "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),

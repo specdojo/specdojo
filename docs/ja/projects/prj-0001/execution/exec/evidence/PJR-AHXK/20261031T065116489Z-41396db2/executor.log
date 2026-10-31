@@ -1,0 +1,50 @@
+タスクを理解しました。個票の完了条件を確認するため、関連ファイルを検索しましょう。
+状況が明確になりました：
+
+- 設定例（`tsd-ollama-opencode.md` L87, L94）では `gemma4:e4b-mlx-light-8k` を登録
+- 接続確認の要求（L109）で `gemma4:e4b-light-8k`（`-mlx-` が抜けている誤記）
+- `tsd-ollama.md` L259-273「Gemma 4 E4B 軽作業用」では `gemma4:e4b-mlx-light-8k` を作成しており、こちらが正しい登録名
+
+完了条件に従い、L109 の `gemma4:e4b-light-8k` を `gemma4:e4b-mlx-light-8k` に修正します。
+次に、`docs/ja/product/` 配下で `gemma4:e4b-light-8k` が残っていないことを確認します。また、個票の対応結果を更新します。
+grep ツールで再確認します。
+`docs/ja/product/` 配下に `gemma4:e4b-light-8k` は残りません。個票の対応結果を更新します。
+個票の作業内容テーブルの状態も更新します（open → done 相当）。状態項目は runner と人間が変更するとされているものの、個票内の作業行の状態は作業対応として更新できます。規定で「個票のステータス項目は変更しない」とあるのはフロントマターの `item_status` と登録簿行のことです。作業行は保守的にそのまま残し、対応結果に記載すれば十分です。
+
+lint:md と lint:fm を実行して確認します（sandbox 安全）。
+`lint:md`・`lint:fm` はどちらもエラーなく通り、`tsd-ollama-opencode.md` L109 も `gemma4:e4b-mlx-light-8k` に統一されました。
+
+個票の `item_status` と登録簿は变更しない方針に沿っています（作業行テーブルの「状態」は変更せず、対応結果に実施内容を記載）。
+
+pipeline executor として、result ファイルは編集しません（reporter/runner が記入）。検証結果を報告します。
+
+適用条件の確認：
+- `lint-md` / `lint-fm` は `.md` / frontmatter 変更で実行済み → passed
+- `lint-ts`, `typecheck`, `test-unit`, `test-integration`, `validate-schema` は親検証（parent_validations）なので executor では実行しない → not_applicable で記録
+- `specdojo catalog validate`: `docs/ja/projects/` 配下を変更（個票更新）。catalog_path 確認が必要。
+`catalog_path` が設定されており、`docs/ja/projects/` 配下の変更（個票）を含むため `specdojo catalog validate` の適用条件を満たします。sandbox 安全なので実行します。prettier も `.md` 変更で適用ですが、`lint:md` が prettier 整形を内包している可能性を確認します。個別に prettier を実行します。
+prettier は unchanged（既に整っている）です。`specdojo catalog validate` を実行します。`docs/ja/projects/` を変更したので適用条件を満たします。
+`specdojo catalog validate` は全件 OK（WARN は既存の `based_on` 参照先未作成の注意で、本タスクの変更と無関係）。個票の `docs/ja/projects/` 変更は問題なく通過しています。
+
+個別 markdownlint も確認します。
+`; echo` 付が許可外でした。別記法で再実行します。
+markdownlint もエラーなく通過しました。`lint-md` / `lint-fm` も既に通っています（これらが markdownlint と frontmatter lint を内包する形になります）。
+
+個票の「作業内容」テーブルの状態も完了として更新しておくべきか、規定により個票のステータス項目は変更しない方針ですので、`item_status` は据え置き、対応結果に記載済みです。
+
+最終確認のため、個票の修正箇所の diff を見ます。
+変更内容は計画通りです。完了条件をすべて満たしました：
+
+1. 接続確認の例を `gemma4:e4b-light-8k` → `gemma4:e4b-mlx-light-8k` に修正 ✓
+2. 正しい登録名（MLX 版）を根拠に統一 ✓
+3. `docs/ja/product/` 配下で残存なしを確認 ✓
+4. 母艦の Ollama へは接続せず ✓
+5. `npm run lint:md` / `npm run lint:fm` 通過 ✓
+6. `CHANGELOG.md` は変更していない ✓
+7. 個票の対応結果を更新 ✓
+
+result ファイルは executor では編集しない（reporter/runner が記入）。報告します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"tsd-ollama-opencode.md の接続確認例のモデル名を gemma4:e4b-light-8k から gemma4:e4b-mlx-light-8k に統一（MLX 版を正とする個票の判断）。docs/ja/product/ 配下の残存を確認なし、個票の対応結果を更新。lint:md/lint:fm/markdownlint/prettier/catalog validate すべて通過。","handoff":[],"validations":[{"command":"npm run lint:md","status":"passed","summary":"エラーなし"},{"command":"npm run lint:fm","status":"passed","summary":"エラーなし"},{"command":"npx prettier --write docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md docs/ja/projects/prj-0001/controls/project-register/pjr-ahxk-tsd-ollama-opencode-model-tag.md","status":"passed","summary":"両ファイルとも unchanged（既に整形済み）"},{"command":"npx markdownlint docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md docs/ja/projects/prj-0001/controls/project-register/pjr-ahxk-tsd-ollama-opencode-model-tag.md","status":"passed","summary":"エラーなし"},{"command":"specdojo catalog validate","status":"passed","summary":"全 dct-*.yaml OK。WARN は既存の based_on 参照先未作成で本タスクと無関係"},{"command":"lint-ts","status":"not_applicable","reason":"parent_validations に設定済みのため executor では実行しない"},{"command":"typecheck","status":"not_applicable","reason":"parent_validations に設定済みのため executor では実行しない。かつ src/tests 等を対象にしない変更"},{"command":"test-unit","status":"not_applicable","reason":"parent_validations に設定済みのため executor では実行しない"},{"command":"test-integration","status":"not_applicable","reason":"parent_validations に設定済みのため executor では実行しない"},{"command":"validate-schema","status":"not_applicable","reason":"*.yaml 成果物の編集はなかったため該当せず（package.json に validate:schema:file も無し）"}]}
+</specdojo_executor_evidence>

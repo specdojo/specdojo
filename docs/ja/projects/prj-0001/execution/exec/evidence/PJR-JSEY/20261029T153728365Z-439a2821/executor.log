@@ -1,0 +1,11 @@
+個票の「対応結果」の表に、今回の実行分として1行追記しました。変更したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+- **追記した行:** 日時は `2026-10-30 00:39`、確認対象は `PJR-E45K`、agent は `sonnet-executor` です。
+- **確認対象の根拠:** 対象一覧のうち最も新しく統合されたのは `PJR-E45K` で、統合コミットは `018ac0274`(2026-10-30 00:36 JST)です。`review` 遷移は `ffd316dfc` です。
+- **本文の修正:** 表の下の「今回の確認対象は…」の段落が前回の `PJR-YKMA` のままだったので、`PJR-E45K` の内容に書き換えました。
+
+lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema は親 runner が実行します。そのためこちらでは実行していません。reporter の result 記入、統合、`review` 遷移も後続段の作業です。この点は個票の申し送りに記載済みです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-E45K の確認行を1行追記し、本文の確認対象の説明を更新した。変更は個票のみ。","handoff":["親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"git diff --stat","status":"passed","summary":"変更は個票1ファイルのみ"}]}
+</specdojo_executor_evidence>

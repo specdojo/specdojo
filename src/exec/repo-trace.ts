@@ -61,7 +61,7 @@ export type ProductIntegrationTrace = {
   integrationBranch: string;
   execBranch: string;
   state: ProductMergeState | "branch-only";
-  // 統合先が実装変更を含んだ直後の commit（runner が作った merge commit）。変更なしは null。
+  // 統合直後の commit（merge commit、または ff の作業ブランチ先端）。変更なしは null。
   commit: string | null;
   // merge commit の subject から分かる PR 参照（例: `#123`）。分からなければ null。
   pullRequest: string | null;
@@ -72,6 +72,7 @@ function integrationCommitOf(product: ProductWorktree, target: string): string |
   const tip = gitResult(product.repoRoot, ["rev-parse", "--verify", `${product.branch}^{commit}`]);
   if (tip.status !== 0) return null;
   const tipSha = String(tip.stdout).trim();
+  if (product.integrationStrategy === "ff") return tipSha;
   const lines = gitOutput(product.repoRoot, [
     "rev-list",
     "--first-parent",

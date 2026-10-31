@@ -1,0 +1,29 @@
+変更ファイルの静的検証（remark による frontmatter および markdown 検証）を実行しています。完了を待ちます。
+PJR-6A2B「文脈を渡して成果物を作る流れをガイドにまとめる」に対応し、関連ガイドおよびレシピの更新を行いました。
+
+### 実施内容
+
+1. [[exec-operation-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6A2B/docs/ja/specdojo/guides/exec-operation-guide.md#L715-L815)]
+   - 第 4.7 節「文脈を渡して段階的に作成する手順」において、成果物雛形作成・文脈記入・下書き（`draft`）・磨き込み（`fully-guided`）・確定（`finalize`）の 5 段階の役割分担と、register 経由で各個票を起票して `depends_on` で連携させる手順を記載しました。
+   - 雛形作成コマンドの例を `specdojo deliverable scaffold --project prj-0001 --target prj-0001:tsd-frontend-site` に更新し、カタログ外成果物向けに `--target-path` と `--target-rulebook` を添える形式（PJR-S23T）を併記しました。
+   - `specdojo:tsd-rulebook` などの template がない rulebook でも最小構成の雛形が作成され、frontmatter の `type` が rulebook の `deliverable_type`（TSD の場合は `architecture`）に自動設定される仕様（PJR-YKYK）を明記しました。
+   - 成果物 ID の例をすべて project 修飾 ID（`prj-0001:tsd-frontend-site`）に統一し、確定（`finalize`）個票の起票例の `--owner` をニックネームから pm-roles の役割（`PO`）に修正しました。
+
+2. [[ryu-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6A2B/docs/ja/specdojo/guides/ryu-guide.md#L106-L175)]
+   - `draft`（任された範囲の外部調査・選定・下書き、根拠のない具体化の禁止の例外、提案表示、`_CONTEXT_:` 反映・削除・result転記）と `fully-guided`（既存草案の磨き込み専用、外部探索・独自選定なし、未反映 `_CONTEXT_:` の論点化、template 不参照）の使い分け対比表を整備しました。
+   - 文脈の置き場所 3 種（成果物内の `_CONTEXT_:`, 個票の `入力` / `--input`, カタログの `brief`）の特徴・適した用途・ライフサイクルを整理しました。
+   - 静的サイト TSD の例における起票コマンドの `--target` を `prj-0001:tsd-frontend-site` に修正し、雛形作成の手順・コマンド例（カタログ外の `--target-path` / `--target-rulebook` 含む）を `exec-operation-guide` と同じ形にそろえました。
+
+3. [[tsd-recipe.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6A2B/docs/ja/specdojo/recipes/tsd-recipe.md#L23-L60)]
+   - 「2. 作成前に集める情報」の表に「主な文脈の置き場所」列を設け、集めた問いの答えを `brief`・`--input`・`_CONTEXT_:` のどこに書くかの対応を明示しました。
+   - 「2.1. 文脈の置き場所の使い分けの目安」および「3. 全体の作成手順」に雛形作成コマンド（`specdojo deliverable scaffold --project <project-id> --target <project-id>:tsd-<term>`、カタログ外は `--target-path` / `--target-rulebook`）を明記し、同一形式にそろえました。
+
+4. [[pjr-6a2b-context-draft-guides.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6A2B/docs/ja/projects/prj-0001/controls/project-register/pjr-6a2b-context-draft-guides.md#L45-L65)]
+   - 個票の作業内容および対応結果を最新の実施内容・設計判断・検証結果に更新しました。
+
+5. [[CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6A2B/CHANGELOG.md#L13)]
+   - `## [Unreleased]` の追加機能節に本タスクの内容が記載されていることを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"exec-operation-guide、ryu-guide、tsd-recipe、および個票を更新し、文脈を渡して成果物を作る段階的フローと文脈置き場所の使い分け、CLI scaffold仕様への統一を完了しました。","handoff":["設計判断: draft は文脈で任された範囲の技術調査・選定と初期下書きを担い、選定値は「提案」として出典・理由とともに result に記録する。fully-guided は磨き込み専用とし、外部調査や根拠のない具体化を行わず、型（rulebook / recipe / sample）への適合・構造整理に専念させることで、PJR-65DS および PJR-3MY5 で合意された責務分離をガイド上で明確にした。","設計判断: 文脈の置き場所について、プロジェクト・成果物群全体で継続する前提はカタログの brief、対話で得た単発の前提や調査委任は個票の入力（--input）、成果物の各章の具体的な記述に対する局所的な指示は `_CONTEXT_:` とし、粒度と持続性に応じた選択基準を各ガイド・レシピで統一した。","保護された設定（.specdojo/ や package.json など）の変更は不要であり、変更案もない。"],"validations":[]}
+</specdojo_executor_evidence>

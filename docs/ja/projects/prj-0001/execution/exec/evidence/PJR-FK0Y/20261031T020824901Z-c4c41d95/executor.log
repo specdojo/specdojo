@@ -1,0 +1,24 @@
+It seems the test run is continuing in the background; waiting for it to complete.
+Waiting for the catalogless-target test run to complete.
+Waiting for grade-per-document test run to complete.
+Waiting for concurrent test execution to complete.
+Waiting for concurrent catalogless-target execution to complete.
+Waiting for history-links check to complete.
+タスク PJR-FK0Y「負荷で時間切れになる単体テストを直す」の対応を完了しました。
+
+### 実施内容の概要
+
+統合時の全件テスト負荷下で 5 秒のタイムアウトを超過していた単体テストに対して、全体の `testTimeout` を変更することなく、対象ファイルおよび対象テストに限定してタイムアウトを 30 秒（`{ timeout: 30_000 }`）へ延長しました。
+
+1. [`tests/src/register/catalogless-target.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FK0Y/tests/src/register/catalogless-target.test.ts):
+   - スイート（`describe("catalog-less deliverable resolution and plans", { timeout: 30_000 }, ...)`）のタイムアウトを 30 秒に設定。
+   - 原因: テストごとの `beforeEach`/`afterEach` における一時ディレクトリ生成・kata ファイル書き込み・削除、および 15 件のテストでの `generateRegisterPlan`（Prettier 整形含む）の累積 I/O と CPU 競合。
+2. [`tests/tools/grade-per-document.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FK0Y/tests/tools/grade-per-document.test.ts):
+   - 該当テスト（`it("excludes an exhausted stage from retries and reports it", { timeout: 30_000 }, ...)`）のタイムアウトを 30 秒に設定。
+   - 原因: 3 段構成で 3 回連続失敗によるリトライ上限到達を検証するため、1 テスト内で `run-per-document.sh` を 4 回実行し、計 15〜20 回の Node 子プロセス（`fake-specdojo.mjs`）生成とログ書き出しが集中することによる遅延。
+3. [`docs/ja/projects/prj-0001/controls/project-register/pjr-fk0y-unit-test-timeout-under-load.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FK0Y/docs/ja/projects/prj-0001/controls/project-register/pjr-fk0y-unit-test-timeout-under-load.md):
+   - 作業内容・対応結果を更新し、原因分析・直し方の選定理由・並行負荷再現検証結果・単体設定のまま時間切れになりうる同型テストの一覧を記録。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"catalogless-target.test.ts および grade-per-document.test.ts のタイムアウトを局所的に 30 秒へ延長し、並行負荷下での全件パスを確認しました。","handoff":["タイムアウトの延長方針: catalogless-target.test.ts はスイート全体（describe）を 30 秒に延長、grade-per-document.test.ts は子プロセスの多重起動が集中する excludes an exhausted stage from retries and reports it テストに限定して 30 秒に延長しました。全体の testTimeout（vitest.unit.config.ts）は変更していません。","選定理由: アプローチごとの独立した計画生成や既定のリトライ回数（3 回）での exhaust 挙動といった本来の仕様・検証の厳密性を維持しつつ、高負荷時でも安全にパスさせるため。","保護された設定（package.json など）の変更案: 不要（テストコード内のローカルなタイムアウト指定で完結）。"],"validations":[{"command":"node tools/check-src-imports-in-dependencies.mjs","status":"passed","summary":"src runtime imports are declared in dependencies or peerDependencies"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js history-links","status":"passed","summary":"all document history links are valid"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_21a0325f92324ca28d326fca1dff5a87
+  ts: "2026-10-31T08:35:36Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 0.6.0 でリリースする
+    - field: description
+      from: ""
+      to: specdojo 0.6.0 と @specdojo/docs-lint 0.4.0 を公開する。docs-site は変更がないため 0.3.0 のまま
+    - field: input
+      from: ""
+      to: '["2026-10-31 の対話で利用者がリリースを指示した。版は specdojo 0.6.0、@specdojo/docs-lint 0.4.0（`_CONTEXT_` の目印の検出を追加したため minor）、@specdojo/docs-site は 0.3.0 から変更がないため上げない","CHANGELOG に破壊的変更の節はないが、schedule の guided-pass の approach が fully-guided から draft に変わったことと、fully-guided が宣言された文書だけを参照する磨き込み専用になったことを、版の節の先頭で目立たせる","手順は pm-orchestrator-playbook のリリースの手順に従う。push・PR の merge・タグ・npm の公開の承認は利用者が行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+- v: 1
+  id: reg_9083515db4064632b5e9d6472702cf9f
+  ts: "2026-10-31T08:36:33Z"
+  action: start
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_21a0325f92324ca28d326fca1dff5a87

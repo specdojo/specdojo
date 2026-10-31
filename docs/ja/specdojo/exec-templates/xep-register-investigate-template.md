@@ -18,6 +18,8 @@ _PJR_DESCRIPTION_
 - `個票`: _PJR_TICKET_REF_
 - `result`: `_RESULT_REF_`
 
+_REGISTER_INPUT_
+
 ## 3. 進め方
 
 1. 個票（存在する場合）を読み、問い・リスク内容・判断に必要な条件を把握する。登録簿の一覧は大きいため読まない。

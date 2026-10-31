@@ -56,6 +56,12 @@ describe("sch-strategy.schema.yaml agent_pipeline", () => {
     }
   });
 
+  it("accepts draft as a schedule phase approach", () => {
+    const strategy = loadStrategyFixture();
+    firstPhase(strategy).approach = "draft";
+    expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
+  });
+
   it("accepts an executor-then-reporter pipeline with per-stage requirements", () => {
     const strategy = loadStrategyFixture();
     firstPhase(strategy).agent_pipeline = {

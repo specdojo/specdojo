@@ -53,6 +53,8 @@ describe("specdojo-config.schema.yaml", () => {
           name: "app1",
           path: "../app1",
           integration_branch: "main",
+          commit_subject_template: "{type}({scope}): {title}",
+          merge_message_template: "Merge branch '{branch}' into {target}\n\n{project}:{id} {topic}",
           setup: { install: true, build: true },
         },
       ]),
@@ -62,12 +64,62 @@ describe("specdojo-config.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
-  it.each(["merge", "branch-only"])("accepts product integration_strategy %s", (strategy) => {
+  it.each(["commit_subject_template", "merge_message_template"])("rejects invalid %s", (key) => {
+    for (const value of [
+      "{unknown}",
+      "{title",
+      "title}",
+      "{{title}}",
+      "{}",
+      " ",
+      false,
+      1,
+      null,
+      "a\0b",
+    ]) {
+      expect(validate(configWithRepos([{ name: "app1", path: "../app1", [key]: value }]))).toBe(
+        false,
+      );
+    }
+  });
+
+  it.each(["merge", "branch-only", "ff"])("accepts product integration_strategy %s", (strategy) => {
     expect(
       validate(
         configWithRepos([{ name: "app1", path: "../app1", integration_strategy: strategy }]),
       ),
     ).toBe(true);
+  });
+
+  it.each(["exec/{project}-{id}", "feature/{topic}", "{type}/{topic}"])(
+    "accepts branch_template %s",
+    (template) => {
+      expect(
+        validate(configWithRepos([{ name: "app1", path: "../app1", branch_template: template }])),
+      ).toBe(true);
+    },
+  );
+
+  it.each([
+    "feature/static",
+    "{branch}/{id}",
+    "{target}/{topic}",
+    "{unknown}/{id}",
+    "{id",
+    "bad name/{id}",
+    "a..b/{topic}",
+    "a.lock/{id}",
+    "-{id}",
+    "{topic}/",
+    "a//{id}",
+    "{id}\\x",
+    "",
+    null,
+    1,
+  ])("rejects invalid branch_template %j", (template) => {
+    expect(
+      validate(configWithRepos([{ name: "app1", path: "../app1", branch_template: template }])),
+    ).toBe(false);
   });
 
   it.each(["squash", "", null, false, 1, {}])(

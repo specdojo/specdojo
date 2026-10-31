@@ -18,6 +18,7 @@ export type ParentValidationId =
   | "lint-ts"
   | "lint-fm"
   | "lint-md"
+  | "lint-mermaid"
   | "build"
   | "format-check";
 
@@ -103,6 +104,13 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
     command: process.platform === "win32" ? "npm.cmd" : "npm",
     args: ["run", "lint:md"],
     displayCommand: "npm run lint:md",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-mermaid": {
+    id: "lint-mermaid",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:mermaid"],
+    displayCommand: "npm run lint:mermaid",
     timeoutMs: 10 * 60 * 1_000,
   },
   build: {

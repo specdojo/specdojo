@@ -1,3 +1,4 @@
+import { reserveProductBranch } from "../../../src/exec/product-branch-records.js";
 import { execFileSync } from "node:child_process";
 import {
   chmodSync,
@@ -19,6 +20,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import { registerConfigCommands } from "../../../src/shared/specdojo-config.js";
+import type { SpecDojoRepoConfig } from "../../../src/shared/specdojo-config.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { MARKDOWN_HOOK_ERROR, MARKDOWN_HOOK_FAILURE } from "../../helpers/git-hook-output.js";
@@ -346,7 +348,13 @@ function initProductRepository(path: string, name: string): void {
 
 function enableProductRepositories(
   root: string,
-  strategy?: "merge" | "branch-only",
+  strategy?: "merge" | "branch-only" | "ff",
+  messages: Partial<
+    Pick<
+      SpecDojoRepoConfig,
+      "commit_subject_template" | "merge_message_template" | "commit_types" | "branch_template"
+    >
+  > = {},
 ): ProductFixture {
   const app1 = `${root}-app1`;
   const app2 = `${root}-app2`;
@@ -367,6 +375,7 @@ function enableProductRepositories(
           {
             name: "app1",
             path: repoPath(app1),
+            ...messages,
             ...(strategy ? { integration_strategy: strategy } : {}),
             setup: { install: false, build: false },
           },
@@ -1422,17 +1431,93 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
     },
   );
 
+  it(
+    "stops before register start when a template name belongs to a different item",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const products = enableProductRepositories(root, undefined, {
+          branch_template: "feature/{topic}",
+        });
+        const ticket = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        const before = readFileSync(ticket, "utf8");
+        const head = git(root, "rev-parse", "HEAD");
+        try {
+          reserveProductBranch(products.app1, "test:PJR-OTHER", "feature/pipeline-test");
+          git(products.app1, "branch", "feature/pipeline-test");
+          const tip = git(products.app1, "rev-parse", "feature/pipeline-test");
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--executor-by",
+            "exec-multi-repo",
+            "--reporter-by",
+            "report-1",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+          ]);
+          expect(process.exitCode).toBe(1);
+          expect(stdout.join("\n")).toMatch(/change topic.*--branch/);
+          expect(readFileSync(ticket, "utf8")).toBe(before);
+          expect(git(root, "rev-parse", "HEAD")).toBe(head);
+          expect(git(products.app1, "rev-parse", "feature/pipeline-test")).toBe(tip);
+          expect(execWorktreePath(root)).toBeNull();
+        } finally {
+          rmSync(products.app1, { recursive: true, force: true });
+          rmSync(products.app2, { recursive: true, force: true });
+        }
+      });
+    },
+  );
+
   // PJR-69VP: プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つ（app2 は integration_branch を
   // 宣言）で、1 つの項目が 3 つのリポジトリを変更する run が、worktree の作成から統合・trace の
   // 記録・撤去まで通ることを確かめる。
-  it.each([undefined, "branch-only"] as const)(
-    "changes three repositories with app1 strategy %s and records the qualified Refs and the trace",
+  it.each([
+    { strategy: undefined, templates: false },
+    { strategy: "branch-only", templates: false },
+    { strategy: undefined, templates: true },
+    { strategy: "branch-only", templates: true },
+    { strategy: "merge", templates: true, branchTemplate: "feature/{topic}" },
+    { strategy: "branch-only", templates: true, branchTemplate: "{type}/{topic}" },
+    { strategy: "ff", templates: true, branchTemplate: "feature/{topic}" },
+    { strategy: "ff", templates: false, branchOverride: "feature/explicit" },
+  ] as Array<{
+    strategy?: "merge" | "branch-only" | "ff";
+    templates: boolean;
+    branchTemplate?: string;
+    branchOverride?: string;
+  }>)(
+    "changes three repositories with app1 options %j and records the qualified Refs and the trace",
     { timeout: 120_000 },
-    async (strategy) => {
+    async ({ strategy, templates, branchTemplate, branchOverride }) => {
       await withRepo(async ({ root, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-        const products = enableProductRepositories(root, strategy);
+        const products = enableProductRepositories(root, strategy, {
+          ...(branchTemplate ? { branch_template: branchTemplate } : {}),
+          ...(templates
+            ? {
+                commit_subject_template: "{type}({scope}): {title}",
+                merge_message_template: "Merge branch '{branch}' into {target}\n\nTopic: {topic}",
+                commit_types: { todo: "fix" },
+              }
+            : {}),
+        });
+        const app1Branch =
+          branchOverride ??
+          branchTemplate?.replace("{topic}", "pipeline-test").replace("{type}", "fix") ??
+          EXEC_BRANCH;
         const app1Before = git(products.app1, "rev-parse", products.targets.app1);
 
         try {
@@ -1449,6 +1534,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             "--worktree",
             "--worktree-base",
             worktreeBase,
+            ...(branchOverride ? ["--branch", `app1=${branchOverride}`] : []),
           ]);
 
           expect(process.exitCode ?? 0).toBe(0);
@@ -1467,18 +1553,47 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           let app1Merge: string | null = null;
           if (strategy === "branch-only") {
             expect(git(products.app1, "rev-parse", products.targets.app1)).toBe(app1Before);
-            expect(git(products.app1, "branch", "--list", EXEC_BRANCH)).toContain(EXEC_BRANCH);
-            expect(git(products.app1, "show", `${EXEC_BRANCH}:src/feature.ts`)).toContain("app1");
-            expect(git(products.app1, "log", "-1", "--format=%B", EXEC_BRANCH)).toContain(
+            expect(git(products.app1, "branch", "--list", app1Branch)).toContain(app1Branch);
+            expect(git(products.app1, "show", `${app1Branch}:src/feature.ts`)).toContain("app1");
+            expect(git(products.app1, "log", "-1", "--format=%B", app1Branch)).toContain(
               `Refs: ${TRACE_KEY}`,
             );
+          } else if (strategy === "ff") {
+            app1Merge = git(products.app1, "rev-parse", products.targets.app1);
+            expect(git(products.app1, "show", `${app1Merge}:src/feature.ts`)).toContain("app1");
+            expect(
+              git(products.app1, "rev-list", "--parents", "-n", "1", app1Merge).split(" "),
+            ).toHaveLength(2);
           } else {
             app1Merge = expectIntegratedProduct(products.app1, products.targets.app1, "app1");
           }
           const app2Merge = expectIntegratedProduct(products.app2, products.targets.app2, "app2");
 
+          const app1Tip = app1Merge
+            ? strategy === "ff"
+              ? app1Merge
+              : `${app1Merge}^2`
+            : app1Branch;
+          const legacyMessage = `exec(register PJR-AB12): pipeline test item\n\nRefs: ${TRACE_KEY}`;
+          expect(git(products.app1, "log", "-1", "--format=%B", app1Tip)).toBe(
+            templates ? `fix: pipeline test item\n\nRefs: ${TRACE_KEY}` : legacyMessage,
+          );
+          if (app1Merge && strategy !== "ff") {
+            expect(git(products.app1, "log", "-1", "--format=%B", app1Merge)).toBe(
+              templates
+                ? `Merge branch '${app1Branch}' into ${products.targets.app1}\n\nTopic: pipeline-test\n\nRefs: ${TRACE_KEY}`
+                : legacyMessage,
+            );
+          }
+          // Per-repository settings must not affect app2 or project bookkeeping.
+          expect(git(products.app2, "log", "-1", "--format=%B", app2Merge)).toBe(legacyMessage);
+          expect(git(products.app2, "log", "-1", "--format=%B", `${app2Merge}^2`)).toBe(
+            legacyMessage,
+          );
+
           // プロジェクト側は merge commit 1 件で、修飾した Refs を持つ（PJR-30SW）。
           const projectMessage = git(root, "log", "-1", "--format=%B");
+          expect(projectMessage.split("\n")[0]).toBe("exec(register PJR-AB12): pipeline test item");
           expect(projectMessage).toContain("Transition: start → review");
           expect(projectMessage).toContain(`Refs: ${TRACE_KEY}`);
           expect(projectMessage).not.toMatch(/^Refs: PJR-AB12$/m);
@@ -1490,7 +1605,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           expect(result).toMatch(/^## \d+\. トレーサビリティ$/m);
           if (app1Merge) expect(result).toContain(`\`${app1Merge}\``);
           else {
-            expect(result).toContain(`\`${EXEC_BRANCH}\``);
+            expect(result).toContain(`\`${app1Branch}\``);
             expect(result).toContain(`\`${TRACE_KEY}\``);
             expect(result).toContain("not applicable (not integrated)");
             expect(result).toContain("`branch-only` の行は未統合です");
@@ -1511,6 +1626,8 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           expect(execWorktreePath(root)).toBeNull();
           expect(git(root, "branch", "--list", EXEC_BRANCH)).toBe("");
           expect(git(products.app2, "branch", "--list", EXEC_BRANCH)).toBe("");
+          if (strategy !== "branch-only")
+            expect(git(products.app1, "branch", "--list", app1Branch)).toBe("");
         } finally {
           rmSync(products.app1, { recursive: true, force: true });
           rmSync(products.app2, { recursive: true, force: true });
@@ -1598,7 +1715,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         await withRepo(async ({ root, worktreeBase }) => {
           vi.spyOn(process.stdout, "write").mockImplementation(() => true);
           vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-          const products = enableProductRepositories(root);
+          const products = enableProductRepositories(root, undefined, {
+            branch_template: "feature/{topic}",
+          });
           const productRoots = { app1: products.app1, app2: products.app2 };
           const failingRoot =
             position.failing === "project" ? root : productRoots[position.failing];
@@ -1637,7 +1756,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             for (const repo of ["app1", "app2"] as const) {
               const merged = isAncestor(
                 productRoots[repo],
-                "exec/test-PJR-AB12",
+                repo === "app1" ? "feature/pipeline-test" : EXEC_BRANCH,
                 products.targets[repo],
               );
               expect(merged).toBe(position.integratedBefore.includes(repo));

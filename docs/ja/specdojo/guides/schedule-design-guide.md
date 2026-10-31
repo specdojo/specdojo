@@ -358,21 +358,48 @@ phase や owner rule に書く `approach` は、タスクの目的と実践の�
 
 | 段階     | 正本・担当                             | 出力                                                         |
 | -------- | -------------------------------------- | ------------------------------------------------------------ |
-| 目的宣言 | strategy の `approach_rules`           | 7 種の `intent` と必要な target / scope                      |
+| 目的宣言 | strategy の `approach_rules`           | 8 種の `intent` と必要な target / scope                      |
 | 品質評価 | `specdojo grade`                       | grade result サイドカーの保存済み `verdict`                  |
 | 事実収集 | コード                                 | 実在、要否宣言、参照切れ、実装エビデンス                     |
 | 規則適用 | コード（`schedule strategy generate`） | 成果物ごとの approach                                        |
 | 構造生成 | コード（`schedule strategy generate`） | scope・profile・owner・gate・依存・milestone を持つ strategy |
 
-- `TaskIntent` 7 種は `author-deliverable`、`bootstrap-kata-set`、`reflect-implementation`、`deduplicate-across-deliverables`、`improve-kata`、`confirm-deliverable`、`confirm-with-kata-set` です。同じ track や owner rule 内でも成果物ごとに別の rule へ分けられます。
+- `TaskIntent` 8 種は `author-deliverable`、`draft-with-context`、`bootstrap-kata-set`、`reflect-implementation`、`deduplicate-across-deliverables`、`improve-kata`、`confirm-deliverable`、`confirm-with-kata-set` です。同じ track や owner rule 内でも成果物ごとに別の rule へ分けられます。
 - `author-deliverable` は grade が `pass` の Kata を利用可能とし、`fully-guided` / `recipe-guided` / `freeform` を導出します。他の intent は目的別の `bootstrap` / `retrofit` / 横断整理 / maintenance / finalize 系へ一意に写像します。
 - `bootstrap` は `bootstrap_scope`（作成条件から必要と判断し、一式で初期整備する実践の型）と理由の記載が必要です。`not-needed` またはすべて利用可能な型を対象にできません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
 - intent の欠落・重複、必要な grade や追加パラメータの欠落、参照切れがある場合は暫定 approach を使わず生成を停止します。
-- 標準 profile は `bootstrap`、`retrofit`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。`not-needed` の型に対応する maintenance は生成せず、成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
+- 標準 profile は `bootstrap`、`retrofit`、`draft`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。`not-needed` の型に対応する maintenance は生成せず、成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
 - owner は明示オプション、既存 strategy、既定 owner の順に解決します。DCT の `done_criteria.roles` はレビュー観点なので、主担当へ流用しません。
 - generator は書き込み前に `schedule build --dry-run` 相当を実行します。全 strategy の project ID、参照、schema、milestone ID に問題があれば既存ファイルを上書きしません。
 
-コマンドの使い方は [CLIコマンドリファレンス](../references/command-reference.md) の `schedule strategy（決定論的な strategy 生成）`、`approach` ごとの進め方は [実践の進め方ガイド](ryu-guide.md) を参照します。
+コマンドの使い方は [[specdojo:command-reference|CLIコマンドリファレンス]] の `schedule strategy（決定論的な strategy 生成）`、`approach` ごとの進め方は [[specdojo:ryu-guide|実践の進め方ガイド]] を参照します。
+
+### 3.6. 人の文脈から始める `draft` profile
+
+人が前提や調査の委任範囲を雛形へ書いてから agent に下書きを任せたい場合は、`strategy-planning` の作業で対象成果物に `intent: draft-with-context` を宣言します。必要な Kata の保存済み grade がすべて `pass` なら `draft` profile を生成します。`not-needed` の型は不要として扱い、grade 不明・型の不足があれば生成を停止します。
+
+```yaml
+approach_rules:
+  - local_ids: [prj-overview]
+    intent: draft-with-context
+```
+
+| 段                 | phase set       | suffix | execution | mode     | approach       |
+| ------------------ | --------------- | ------ | --------- | -------- | -------------- |
+| 雛形作成・文脈記入 | `context-pass`  | `010`  | `human`   | `edit`   | `draft`        |
+| 下書き             | `guided-pass`   | `020`  | `agent`   | `edit`   | `draft`        |
+| 磨き込み           | `refine-pass`   | `070`  | `agent`   | `edit`   | `fully-guided` |
+| 完成版レビュー     | `review-pass`   | `090`  | `agent`   | `review` | `fully-guided` |
+| 確定               | `finalize-pass` | `140`  | `human`   | `edit`   | `finalize`     |
+
+雛形作成と文脈記入は一つの human 段にまとめます。雛形を人が確認してその場で文脈を記入でき、独立した空の待ち段を増やさずに draft へ渡せます。各段は直前の段に依存し、human の完了前に agent は着手しません。human 段には agent pipeline を付けません。
+
+1. `specdojo exec claim --project <project-id> --task <context-task-id> --by <human>` で着手します。既存の human タスクと同じく plan は生成せず、claim が作成した result に作業案内と記録欄を持ちます。
+2. `specdojo deliverable scaffold --project <project-id> --target <doc-id>` で対象成果物の雛形を作成します。既存成果物は上書きせず、`--force` は指定しません。
+3. 対象本文の `_CONTEXT_:` に固定前提・制約・調査や選定を任せる範囲を書きます。例: `_CONTEXT_: 既存 API を維持し、認証方式の候補を調べて提案してほしい。` 記法は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従います。
+4. result に対象と記入内容を残し、`specdojo exec complete --project <project-id> --task <context-task-id> --by <human>` で draft へ渡します。draft は指示を本文へ反映し、元の指示と反映箇所を実行記録へ残します。続いて refine・review を行い、最後に人が finalize を claim / complete して確定します。
+
+文脈の記入を待つ必要がない場合は従来の `author-deliverable` を使います。必要な型がそろった場合の `fully-guided` profile も、草案作成の `guided-pass` は `approach: draft` です。文脈や成果物が未作成でも template を骨組みにして根拠のある範囲を下書きします。文脈が無いことを調査・選定の委任とは解釈せず、未委任の判断は保留します。既存 strategy の段定義を更新するには `schedule strategy generate --force` の差分を確認して適用し、構造が変わる場合は `schedule build --force`、続いて `exec refresh` を実行します。
 
 ## 4. タスク設計の品質
 

@@ -1,0 +1,11 @@
+個票の「対応結果」の表に 1 行追記しました。確認対象は PJR-S23T です。変更したのは個票 `pjr-jsey-exec-run-split-smoke.md` だけです。
+
+- **追記した行:** 2026-10-30 19:01(JST)、PJR-S23T、`sonnet-executor`。
+- **PJR-S23T を選んだ理由:** 対象一覧のうち最も新しく統合されたものです。統合コミットは `f8798e0a5`(18:55 JST)で、`review` 遷移は `3ca59cb6d` です。
+- **本文の更新:** 表の下の説明文も、前回の PJR-E45K から今回の PJR-S23T に書き換えました。
+- **未確認の点:** 親 runner の 7 検証(lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema)は、この段階では実行していません。親 runner が実行します。
+- **実行した検査:** 変更した Markdown に対する Prettier の整形チェックは通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-S23T の確認行を追記し、説明文も更新した。変更は個票のみ。","handoff":["確認対象は最新の統合コミット f8798e0a5 を持つ PJR-S23T とした。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移の完了は後続段で確認する。start event の actor も後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形に問題なし"}]}
+</specdojo_executor_evidence>

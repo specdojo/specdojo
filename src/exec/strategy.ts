@@ -95,6 +95,7 @@ function isTaskMode(value: unknown): value is TaskMode {
 
 function isApproach(value: unknown): value is Approach {
   return (
+    value === "draft" ||
     value === "fully-guided" ||
     value === "recipe-guided" ||
     value === "freeform" ||

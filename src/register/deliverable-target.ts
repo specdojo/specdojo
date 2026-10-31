@@ -12,6 +12,7 @@ import type { Approach } from "../shared/agent-types.js";
 import { load } from "../shared/yaml.js";
 
 export const CATALOG_LESS_APPROACHES: readonly string[] = [
+  "draft",
   "fully-guided",
   "recipe-guided",
   "freeform",
@@ -66,6 +67,40 @@ export function validateDeliverablePath(root: string, value: string): string {
   return path;
 }
 
+export function validateDeliverableTargetPath(
+  repoRoot: string,
+  targetId: string,
+  targetPath?: string,
+  docIndexEntries?: Record<string, string>,
+): string {
+  const entries = docIndexEntries ?? collectDocIndexEntries(resolve(repoRoot, "docs"), repoRoot);
+  const indexed = entries[targetId]?.replace(/:\d+$/, "");
+  const indexedPath = indexed ? relative(repoRoot, resolve(repoRoot, indexed)) : undefined;
+  if (!targetPath && !indexedPath) {
+    throw new Error(
+      `Target ${targetId} is not indexed; specify --target-path and --target-rulebook (catalog_path is not configured)`,
+    );
+  }
+  const path = validateDeliverablePath(repoRoot, targetPath ?? indexedPath ?? "");
+  if (indexedPath && path !== validateDeliverablePath(repoRoot, indexedPath)) {
+    throw new Error(
+      `--target-path conflicts with the indexed document ${targetId}: ${indexedPath}`,
+    );
+  }
+  const absolute = resolve(repoRoot, path);
+  const existing = existsSync(absolute);
+  const fm = existing ? metadata(absolute) : {};
+  if (existing && fm.id !== targetId) {
+    throw new Error(
+      `--target-path is occupied by another document: ${path} (expected ${targetId})`,
+    );
+  }
+  if (AUTHORING_KINDS.includes(fm.type as (typeof AUTHORING_KINDS)[number])) {
+    throw new Error(`Target ${targetId} is a kata, not a deliverable`);
+  }
+  return path;
+}
+
 export function resolveRegisterDeliverableTarget(
   opts: DeliverableTargetOptions,
 ): RegisterDeliverableTarget {
@@ -93,32 +128,15 @@ export function resolveRegisterDeliverableTarget(
     );
   }
   const entries = collectDocIndexEntries(resolve(opts.repoRoot, "docs"), opts.repoRoot);
-  const indexed = entries[opts.targetId]?.replace(/:\d+$/, "");
-  const indexedPath = indexed
-    ? relative(opts.repoRoot, resolve(opts.repoRoot, indexed))
-    : undefined;
-  if (!opts.targetPath && !indexedPath) {
-    throw new Error(
-      `Target ${opts.targetId} is not indexed; specify --target-path and --target-rulebook (catalog_path is not configured)`,
-    );
-  }
-  const path = validateDeliverablePath(opts.repoRoot, opts.targetPath ?? indexedPath ?? "");
-  if (indexedPath && path !== validateDeliverablePath(opts.repoRoot, indexedPath)) {
-    throw new Error(
-      `--target-path conflicts with the indexed document ${opts.targetId}: ${indexedPath}`,
-    );
-  }
+  const path = validateDeliverableTargetPath(
+    opts.repoRoot,
+    opts.targetId,
+    opts.targetPath,
+    entries,
+  );
   const absolute = resolve(opts.repoRoot, path);
   const existing = existsSync(absolute);
   const fm = existing ? metadata(absolute) : {};
-  if (existing && fm.id !== opts.targetId) {
-    throw new Error(
-      `--target-path is occupied by another document: ${path} (expected ${opts.targetId})`,
-    );
-  }
-  if (AUTHORING_KINDS.includes(fm.type as (typeof AUTHORING_KINDS)[number])) {
-    throw new Error(`Target ${opts.targetId} is a kata, not a deliverable`);
-  }
   const declaredRulebook = typeof fm.rulebook === "string" ? fm.rulebook : undefined;
   if (opts.targetRulebook && declaredRulebook && opts.targetRulebook !== declaredRulebook) {
     throw new Error(

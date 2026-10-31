@@ -41,3 +41,100 @@
     - field: depends_on
       from: ""
       to: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K"]'
+- v: 1
+  id: reg_0ad77df5bf9d4df987c9958a3378ba98
+  ts: "2026-10-29T15:44:45Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_95df1403feed476cac1216a598e9d283
+- v: 1
+  id: reg_8fd068f18738498b834b246da6470bf6
+  ts: "2026-10-29T15:59:00Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0ad77df5bf9d4df987c9958a3378ba98
+- v: 1
+  id: reg_e0f3449594d84050b16ce5de7e815ae1
+  ts: "2026-10-30T09:32:56Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K"]'
+      to: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T"]'
+  previous_event_id: reg_8fd068f18738498b834b246da6470bf6
+- v: 1
+  id: reg_53f562af6e0446cf8ee42669eecccdba
+  ts: "2026-10-31T00:28:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T"]'
+      to: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T","PJR-YKYK"]'
+  previous_event_id: reg_e0f3449594d84050b16ce5de7e815ae1
+- v: 1
+  id: reg_6ad4ee89221341e2b6986a5156e6eca0
+  ts: "2026-10-31T01:01:57Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_53f562af6e0446cf8ee42669eecccdba
+- v: 1
+  id: reg_565384460ed74ede85262d27e14987e7
+  ts: "2026-10-31T01:13:28Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6ad4ee89221341e2b6986a5156e6eca0
+- v: 1
+  id: reg_eb75829b2cda47ca980a322175117214
+  ts: "2026-10-31T01:14:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と個票・result を完了条件に照らし、例のオプションが deliverable scaffold と register add の help にあること、親の検証が通ったことを確かめた。schedule-design-guide などに残る --dct の案内は別の項目で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 文脈を渡して成果物を作る流れ（雛形・文脈の記入・draft・fully-guided・finalize）と、_CONTEXT_・--input・brief の使い分けを exec-operation-guide・ryu-guide・tsd-recipe に書いた。雛形の例は deliverable scaffold --target の形にし、ID は project で修飾し、finalize の担当は役割にした
+  previous_event_id: reg_565384460ed74ede85262d27e14987e7

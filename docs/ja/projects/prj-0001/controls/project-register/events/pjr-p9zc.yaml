@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cd9ce133988d49088cbab2654748ee22
+  ts: "2026-10-29T12:21:39Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の報告（2026-10-29、tmux 接続で別 container を選んで失敗）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 接続のスクリプトが、対象の devcontainer が止まっていると別の container へ入ろうとして失敗する
+    - field: description
+      from: ""
+      to: specdojo-tmux.sh.sample の find\_container は、ラベルで見つからないと vsc- で始まる最初の container を選ぶ。そのため対象の devcontainer が止まっていると、別の container へ docker exec して「chdir to cwd ... no such file or directory」で止まる。ラベルの一致だけで探し、見つからなければ devcontainer up するように直す
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CCXN"]'
+- v: 1
+  id: reg_1bc2ef41059744dbb03244e5da29a4e7
+  ts: "2026-10-31T07:29:59Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cd9ce133988d49088cbab2654748ee22
+- v: 1
+  id: reg_a44559ebefd74238bc3b9cc626586f1c
+  ts: "2026-10-31T07:46:32Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1bc2ef41059744dbb03244e5da29a4e7
+- v: 1
+  id: reg_e0c4beb7814f4bfa9b4bf34798a08d5e
+  ts: "2026-10-31T07:47:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、サンプルの bash -n と shellcheck、統合テスト 8 件（別の vsc の container へ入らず devcontainer up を呼ぶ場合と、作業ディレクトリがない場合を含む）を手元で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: specdojo-tmux.sh.sample の find_container を、ラベル devcontainer.local_folder が一致する container だけを返す形にし、見つからなければ devcontainer up を流すようにした。docker exec の前に作業ディレクトリの有無を確かめ、ガイドと冒頭のコメントにラベルの扱いを書いた
+  previous_event_id: reg_a44559ebefd74238bc3b9cc626586f1c

@@ -64,7 +64,7 @@ export type ProductWorktree = {
   /** Declared `integration_branch`; undefined means the repository's current branch. */
   integrationBranch?: string;
   /** Omitted means the conventional local merge commit. */
-  integrationStrategy?: "merge" | "branch-only";
+  integrationStrategy?: "merge" | "branch-only" | "ff";
 };
 
 export type RegisteredWorktree = {
@@ -118,9 +118,13 @@ export function listRegisteredWorktrees(repoRoot: string): RegisteredWorktree[] 
   return result;
 }
 
-export function findExecWorktree(repoRoot: string, taskId: string): ExecWorktree | null {
+export function findExecWorktree(
+  repoRoot: string,
+  taskId: string,
+  branchOverride?: string,
+): ExecWorktree | null {
   const name = worktreeNameFromTaskId(taskId);
-  const branch = `exec/${name}`;
+  const branch = branchOverride ?? `exec/${name}`;
   const registered = listRegisteredWorktrees(repoRoot).find((item) => item.branch === branch);
   if (!registered) return null;
   return { path: registered.path, branch, name, created: false };
@@ -382,6 +386,8 @@ export function ensureExecWorktree(opts: {
   worktreeBase: string;
   taskId: string;
   startPoint?: string;
+  /** Explicit product branch; project worktrees keep their conventional name. */
+  branch?: string;
   /** Directory under `<base>/<task-name>/` for multi-repository tasks (see execWorktreePath). */
   repoDirName?: string;
   installDependencies?: (worktreePath: string) => void;
@@ -393,7 +399,7 @@ export function ensureExecWorktree(opts: {
     throw new Error(`Worktree base must be outside the repository: ${opts.worktreeBase}`);
   }
   const name = worktreeNameFromTaskId(opts.taskId);
-  const branch = `exec/${name}`;
+  const branch = opts.branch ?? `exec/${name}`;
   const worktreePath = execWorktreePath(opts.worktreeBase, opts.taskId, opts.repoDirName);
   const registered = listRegisteredWorktrees(repoRoot);
   const registeredAtPath = registered.find((item) => item.path === worktreePath);
