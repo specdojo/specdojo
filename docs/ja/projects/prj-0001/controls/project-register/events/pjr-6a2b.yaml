@@ -93,3 +93,16 @@
       from: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T"]'
       to: '["PJR-JRSY","PJR-6DD7","PJR-YKMA","PJR-E45K","PJR-S23T","PJR-YKYK"]'
   previous_event_id: reg_e0f3449594d84050b16ce5de7e815ae1
+- v: 1
+  id: reg_6ad4ee89221341e2b6986a5156e6eca0
+  ts: "2026-10-31T01:01:57Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_53f562af6e0446cf8ee42669eecccdba
