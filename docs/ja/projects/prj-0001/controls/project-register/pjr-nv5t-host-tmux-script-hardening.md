@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-31T13:54:15Z"
   due_on: "2026-11-30"
+  block_reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/host/devcontainer-tmux.sh; agent must record the required change in the result handoff fo…"
   derived_from:
     - PJR-Q8KP
 ---
