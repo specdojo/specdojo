@@ -35,13 +35,25 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+1. CLI のコマンドで、実行できる bash の script を workspace の `.specdojo/host/` へ書き出せる。コマンドの名前とファイル名は executor が決め、理由を個票の対応結果に書く。同じ版で 2 回実行しても内容は変わらない。
+2. 書き出した script は、workspace のパスを引数に 1 つ受け取るだけで動く。ホスト側の script は、本体を呼ぶ 3 行程度で済む。
+3. 書き出した script は、次のとおりに動く。
+   - ラベル `devcontainer.local_folder` が一致する、動いているコンテナがあれば、そのまま tmux へ入る。
+   - 止まっているコンテナがあれば、`docker start` で起こしてから入る。この場合 node は要らない。
+   - コンテナが無いときだけ `devcontainer up` を動かす。`SPECDOJO_NODE_BIN` があればそこを PATH に足し、なければ利用者のログインシェル（`"$SHELL" -lic`）経由で起動する。
+   - コンテナの中の作業ディレクトリはマウント情報から、実行ユーザーは `devcontainer.json` の `remoteUser` から求める。求められないときは、原因を stderr に出して終了する。
+4. `docker`・`devcontainer` を差し替えた bash の挙動テストで、上の 3 つの経路と失敗時の出力を確かめる。テストは `tests/src/devcontainer/` に置く。
+5. `devcontainer scaffold` が生成する `specdojo-tmux.sh.sample` は、新しい方式を呼ぶだけの数行の例に置き換える。`ssh-config.sample` との整合も保つ。
+6. [[specdojo:remote-host-development-guide]] と command-reference を新しい方式に直す。対応 OS は mac・Linux・Windows の WSL2 と書き、mise を使う場合は shims のディレクトリを使うと書く。
+7. CHANGELOG の未公開の版の節に追記する。公開済みの節は変えない。
+8. 終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通す。あわせて親の検証も通す。
+9. ホストでの実際の接続は利用者が確かめる。確かめ方を個票の対応結果に書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                      | 担当 | 状態 | メモ |
+| --- | --------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | 完了条件に沿って script・コマンド・テスト・文書を変更する | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -49,4 +61,7 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:remote-host-development-guide]]
+- [[prj-0001:pjr-p9zc-remote-tmux-wrong-container]]
+- [[prj-0001:pjr-ccxn-devcontainer-remote-host-samples]]
+- [[prj-0001:pjr-tatp-devcontainer-named-volumes]]
