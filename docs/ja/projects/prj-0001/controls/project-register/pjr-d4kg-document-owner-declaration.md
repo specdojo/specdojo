@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-d4kg-document-owner-declaration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: low
   owner: ARC
   registered_at: "2026-09-24T13:42:55Z"
   due_on: "2026-11-14"
+  completed_at: "2026-10-31T12:37:40Z"
+  conclusion: 候補 A。owner・RACI は宣言させず、schedule の owner_rules を唯一の経路とする
 ---
 
 # PJR-D4KG 文書へ owner または RACI を宣言させるかを決める
