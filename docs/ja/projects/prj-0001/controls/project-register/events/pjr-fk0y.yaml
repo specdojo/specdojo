@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8e74bf3af6c64453a2acbf6eb82d390b
+- v: 1
+  id: reg_ff7b11bce51e47d296f643e88d868baf
+  ts: "2026-10-31T02:36:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分が対象のテストの上限の指定だけで、振る舞いの確かめ方を変えていないこと、負荷をかけた並行実行で通った記録、CHANGELOG を変えていないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: catalogless-target.test.ts のスイートと grade-per-document.test.ts の該当テストに限って上限を 30 秒に延ばした。原因の調査と、同じ形で時間切れになりうるテストの一覧を個票に残した
+  previous_event_id: reg_48e6cbed4aea49a4951d5b48565900fc

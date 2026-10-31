@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fk0y-unit-test-timeout-under-load
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-31T02:04:17Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T02:36:37Z"
+  conclusion: catalogless-target.test.ts のスイートと grade-per-document.test.ts の該当テストに限って上限を 30 秒に延ばした。原因の調査と、同じ形で時間切れになりうるテストの一覧を個票に残した
 ---
 
 # PJR-FK0Y 負荷で時間切れになる単体テストを直す
