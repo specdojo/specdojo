@@ -1,0 +1,76 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "番号付き入力章の挿入・移動、後続見出しの繰り下げを実装しました。前回の型・Lint エラーの原因を修正し、全8種類の雛形の回帰テストを補強しました。補助検証は成功し、親検証は runner に委ねます。",
+  "handoff": [
+    "設計判断: H2 の繰り下げに合わせ、親章番号を含む H3〜H6 の見出し番号も更新する。本文参照は変更しない。",
+    "設計判断: Markdown AST のオフセットを使い、後方から置換することでコードブロック・引用内の見出しを保護する。H2 がない場合は `## 1. 入力` を追加する。",
+    "既存個票は PJR-BNMV を修正した。作業ツリー内の個票には番号なし入力章が残っていない。prj-0002 は本作業ツリーに含まれないため、担当オーケストレーターが別作業ツリーで確認し、該当があれば修正する必要がある。",
+    "個票の対応結果を更新済み。保護された設定の変更は不要。result の記入と親検証の結果反映は reporter・runner が行う。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/events/pjr-790t.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-790t-register-input-heading-number.md docs/ja/projects/prj-0001/controls/project-register/pjr-bnmv-product-repo-git-workflow.md src/register/input.ts tests/src/register/input.test.ts",
+      "status": "passed",
+      "summary": "変更した6ファイルを整形済み。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-790t.yaml",
+      "status": "passed",
+      "summary": "イベント YAML はスキーマに適合。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。既存の参照先文書不在に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "個票・イベント整合性検証と派生ビュー生成に成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "rg -n '^## 入力\\s*$' docs/ja/projects/prj-0002/controls/project-register --glob 'pjr-*.md'",
+      "status": "requires_human",
+      "summary": "prj-0002 は別作業ツリーのため、担当オーケストレーターによる確認が必要。該当個票があれば修正する。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-790t.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-790t.yaml"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-790t-register-input-heading-number.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-790t-register-input-heading-number.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-bnmv-product-repo-git-workflow.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bnmv-product-repo-git-workflow.md"
+    },
+    {
+      "target": "src/register/input.ts",
+      "status": "changed",
+      "path": "src/register/input.ts"
+    },
+    {
+      "target": "tests/src/register/input.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/input.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

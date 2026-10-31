@@ -35,6 +35,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `decision`・`note`・`epic` など `入力` の章がない種類の個票へ `--input` を指定した際に、末尾に番号のない `## 入力` が追加されて章番号の連続性規約に違反していた問題を修正しました。最初の章の直後に `## 2. 入力` として挿入し、以降の章番号を 1 つずつ繰り下げます。既存の個票に番号のない `## 入力` がある場合も、同様に番号付きの章として適切な位置へ移動します（PJR-790T）。
+
 - `deliverable scaffold` の一括生成と `--target` において、template のない rulebook の最小の雛形の `type` を rulebook の frontmatter で宣言された `deliverable_type` に合わせるように修正しました（未宣言時は従来どおり `project`）。これにより、template のない rulebook を指定して生成した雛形が docs-lint の `frontmatter-deliverable-type` で警告にならず、コミット時ガードを通過します（PJR-YKYK）。
 
 - `@specdojo/docs-lint` の Markdown / YAML frontmatter 検証において、rulebook 一覧の生成をプロセス内でワークスペースごとに 1 回だけ行いキャッシュするように修正しました。remark のファイルごとのプラグイン読み込みで rulebook 一覧が毎回再生成されて `lint:fm` が著しく低速化していた問題を解消します。本修正は `@specdojo/docs-lint` の次の版（0.3.1）で公開されます（PJR-SC8T）。
