@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-10-31T14:15:36Z"
   due_on: "2026-11-30"
+  block_reason: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md; integrated repositories: none; no…'
 ---
 
 # PJR-8TQJ CDFD の rulebook を要点に絞った形に直し、全体概要で試す

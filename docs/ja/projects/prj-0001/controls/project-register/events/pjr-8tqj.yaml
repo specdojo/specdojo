@@ -48,3 +48,32 @@
       from: "-"
       to: medium
   previous_event_id: reg_0ad0145f284a48f3a7011e463b09ce39
+- v: 1
+  id: reg_862184001081483a927ecbcd717f96c2
+  ts: "2026-10-31T14:36:10Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1ca6df0048e542838eb3b09a331cfe40
+- v: 1
+  id: reg_701482162c534e9888d6949d0e55fc5e
+  ts: "2026-10-31T14:53:27Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md; integrated repositories: none; no…'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md; integrated repositories: none; no…'
+  previous_event_id: reg_862184001081483a927ecbcd717f96c2
