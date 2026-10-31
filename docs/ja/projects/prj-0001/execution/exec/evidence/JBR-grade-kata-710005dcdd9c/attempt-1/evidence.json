@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-710005dcdd9c",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-31T20:01:08.224Z",
+    "completed_at": "2026-10-31T20:44:42.575Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dec-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.gl-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-710005dcdd9c.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../results/specdojo.cdfd-overview-rulebook.yaml   | 47 ++++++++++++-------\n .../grade/results/specdojo.cdfd-rulebook.yaml      | 54 +++++++++++++---------\n .../grade/results/specdojo.cdfd-uc-rulebook.yaml   | 41 ++++++++++------\n .../results/specdojo.cxd-mermaid-rulebook.yaml     | 29 ++++++++++--\n .../grade/results/specdojo.cxd-rulebook.yaml       | 10 ++--\n .../grade/results/specdojo.dct-index-rulebook.yaml |  6 +--\n .../grade/results/specdojo.dct-rulebook.yaml       | 14 +++---\n .../grade/results/specdojo.dec-rulebook.yaml       | 14 ++++--\n .../grade/results/specdojo.dmd-index-rulebook.yaml | 13 ++++--\n .../grade/results/specdojo.dmd-rulebook.yaml       | 26 ++++-------\n .../grade/results/specdojo.etc-index-rulebook.yaml | 16 ++++---\n .../grade/results/specdojo.etc-rulebook.yaml       | 27 ++++++-----\n .../grade/results/specdojo.gl-rulebook.yaml        | 33 +++++--------\n .../results/specdojo.ifd-mermaid-rulebook.yaml     |  9 ++--\n .../grade/results/specdojo.tsd-recipe.yaml         |  7 +--\n 15 files changed, 206 insertions(+), 140 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-710005dcdd9c --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-710005dcdd9c/…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-710005dcdd9c --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-710005dcdd9c/results.tsv\nelse\n  grade_status=$?\n  cat logs/grade/runs/per-document/JBR-grade-kata-710005dcdd9c/results.tsv\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade pipeline partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-710005dcdd9c' \"$grade_status\" >&2\n  else\n    printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-710005dcdd9c' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-710005dcdd9c/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-710005dcdd9c/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.6.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-710005dcdd9c project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-710005dcdd9c\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/recipes/tsd-recipe.md\ndocument complete: docs/ja/specdojo/recipes/tsd-recipe.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cxd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cxd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dct-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/dct-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dct-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/dct-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dec-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/dec-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dmd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/dmd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/etc-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/etc-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/etc-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/etc-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/gl-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/gl-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-710005dcdd9c/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-31T20:03:47Z\tdocs/ja/specdojo/recipes/tsd-recipe.md\t1\tpassed\t149\tpass\t98\t1\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:08:49Z\tdocs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\t1\tpassed\t300\tpass\t87\t10\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:14:05Z\tdocs/ja/specdojo/rulebooks/cdfd-rulebook.md\t1\tpassed\t314\tpass\t89\t11\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:17:14Z\tdocs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\t1\tpassed\t187\tneeds-work\t87\t7\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:19:18Z\tdocs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md\t1\tpassed\t122\tneeds-work\t68\t21\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:21:52Z\tdocs/ja/specdojo/rulebooks/cxd-rulebook.md\t1\tpassed\t152\tpass\t93\t4\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:24:33Z\tdocs/ja/specdojo/rulebooks/dct-index-rulebook.md\t1\tpassed\t159\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:28:14Z\tdocs/ja/specdojo/rulebooks/dct-rulebook.md\t1\tpassed\t219\tneeds-work\t84\t8\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:30:15Z\tdocs/ja/specdojo/rulebooks/dec-rulebook.md\t1\tpassed\t119\tpass\t93\t8\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:32:52Z\tdocs/ja/specdojo/rulebooks/dmd-index-rulebook.md\t1\tpassed\t155\tneeds-work\t93\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:34:30Z\tdocs/ja/specdojo/rulebooks/dmd-rulebook.md\t1\tpassed\t97\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:36:59Z\tdocs/ja/specdojo/rulebooks/etc-index-rulebook.md\t1\tpassed\t147\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:40:40Z\tdocs/ja/specdojo/rulebooks/etc-rulebook.md\t1\tpassed\t219\tneeds-work\t88\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:42:26Z\tdocs/ja/specdojo/rulebooks/gl-rulebook.md\t1\tpassed\t104\tpass\t98\t1\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-31T20:44:41Z\tdocs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md\t1\tpassed\t133\tneeds-work\t93\t3\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-710005dcdd9c/attempt-1/command.stdout.log",
+      "bytes": 4720,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-710005dcdd9c/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 93
-graded_at: "2026-10-03T21:13:27.086Z"
-graded_by: agy-expert-executor
-content_hash: 062b226e58c3ccc3ea72ea5238f5cb521fce1ba18cce66f13128e740fae8aba9
+graded_at: "2026-10-31T20:44:39.360Z"
+graded_by: flash-high-executor
+content_hash: f2598042593ef3f271c0645819d775621ca8612a5828ca90658b3b40e6e5e2dd
 categories:
   purpose:
     score: 100
@@ -113,15 +113,18 @@ findings:
     line: 1
     anchor: "# Mermaidを用いたインフラ構成図 作成ルール"
     message: recipe が undecided であり、作成手順（問い）が定義されていない。
+    message_ja: recipe が undecided であり、作成手順（問い）が定義されていない。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# Mermaidを用いたインフラ構成図 作成ルール"
     message: template が undecided であり、成果物の骨組みが定義されていない。
+    message_ja: template が undecided であり、成果物の骨組みが定義されていない。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# Mermaidを用いたインフラ構成図 作成ルール"
     message: 参照するサンプル specdojo:ifd-sample が Mermaid 図を含まず、ルールブックと矛盾する「必須観点」を記述しているため、正しく適用されていない。
+    message_ja: 参照するサンプル specdojo:ifd-sample が Mermaid 図を含まず、ルールブックと矛盾する「必須観点」を記述しているため、正しく適用されていない。

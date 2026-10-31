@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 92
-graded_at: "2026-10-03T21:04:04.628Z"
-graded_by: agy-expert-executor
-content_hash: 10d6c1a7b71e87c2d063507e6d221cf1b44af278ba50c5241b407712b1bb526c
+score: 94
+graded_at: "2026-10-31T20:36:57.399Z"
+graded_by: flash-high-executor
+content_hash: 8ce124aabb889d18413bc7d6c12747c3e6d5c57e2d322461f8a9f153da011a77
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -110,9 +110,11 @@ findings:
     line: 300
     anchor: "## 8. サンプル（最小）"
     message: 8章のサンプルが、具体的なプロジェクトの例（決済連携など）ではなくルール本文（1～7章）の一般論と記述ガイドを反復するだけの内容になっており、削除または具体的な例への置換が可能である。
+    message_ja: 8章のサンプルが、具体的なプロジェクトの例（決済連携など）ではなくルール本文（1～7章）の一般論と記述ガイドを反復するだけの内容になっており、削除または具体的な例への置換が可能である。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 外部結合テストカタログ概要 作成ルール"
     message: 指定の sample が mandatory と定義された本文構成（1~8章）を無視し、かつ Frontmatter の type に `project` を指定しており rulebook の定義と矛盾している。
+    message_ja: 指定の sample が mandatory と定義された本文構成（1~8章）を無視し、かつ Frontmatter の type に `project` を指定しており rulebook の定義と矛盾している。

@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-10-28T20:48:03.952Z"
+score: 87
+graded_at: "2026-10-31T20:17:12.637Z"
 graded_by: flash-high-executor
-content_hash: 10f989f358c456b9d072e38eb3e0961fb32d19b0739fd3068825d0d3112d774e
+content_hash: bb8753f3a0c75f9cb4481b9d17e15a4038cc8c0cb6b60570893fa9af1d03d13b
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 75
   consistency:
     score: 50
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,7 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 2
   minor: 5
   note: 0
 findings:
@@ -118,35 +118,50 @@ findings:
     severity: major
     rule: vp-qe-omissions-consistency
     line: 10
-    anchor: "- 「プロセス領域」を順序とグループ別責務の正本、「データストア」を引き渡しで使う上位一覧の部分集合、「引き渡し」を情報・条件・戻す条件の正本、図を開始から終了までの横断順序の正本として併用します。"
+    anchor: >-
+      -
+      「プロセス領域」を順序とグループ別責務の表の正本、「データストア」を引き渡しで使う上位一覧の部分集合、「引き渡し」を情報・条件・戻す条件の正本、図を開始から終了までの横断順序の正本として併用します。プロセス領域に主要入力・主要出力の箇条書きは設けず、受け渡しは図を正本とします。
     message: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
     message_ja: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 122
+    line: 115
     anchor: "- 表は「対象引き渡し」「条件不成立」「戻り先グループ」「戻す情報」「再開条件」の 5 列とし、すべての引き渡し ID を一度以上確認します。"
     message: 戻しが発生しない引き渡しを許容する一方、「例外時の戻り先」では全引き渡し ID の行と戻り先を求めており記入方法が定義されていないため、該当なしを表す値と理由の記載方法、または戻り先表から除外できる条件を定めてください。
     message_ja: 戻しが発生しない引き渡しを許容する一方、「例外時の戻り先」では全引き渡し ID の行と戻り先を求めており記入方法が定義されていないため、該当なしを表す値と理由の記載方法、または戻り先表から除外できる条件を定めてください。
   - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 140
+    anchor: "- プロセス領域に主要入力・主要出力・データストアの箇条書きを記載する、または図の受け渡しを文章でなぞる長文の注記を書く。"
+    message: >-
+      While this rulebook strictly prohibits bullet points for main inputs, main outputs, and datastores in section 3
+      (プロセス領域), the companion Kata artifacts (cdfd-uc-recipe, cdfd-uc-sample, and cdfd-uc-template) still mandate,
+      demonstrate, and provide placeholders for these bullet points, causing a direct conflict within the Kata suite.
+    message_ja: >-
+      While this rulebook strictly prohibits bullet points for main inputs, main outputs, and datastores in section 3
+      (プロセス領域), the companion Kata artifacts (cdfd-uc-recipe, cdfd-uc-sample, and cdfd-uc-template) still mandate,
+      demonstrate, and provide placeholders for these bullet points, causing a direct conflict within the Kata suite.
+  - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 111
-    anchor: "- 一図で順序を追えない場合は連続する引き渡し単位で分割し、前図の終了側と後図の開始側へ同じ引き渡し ID を記載します。"
+    line: 72
+    anchor: 「未決事項」を設ける場合は最終章とします。図を分割する場合は「概念データフロー」に `5.1.`、`5.2.` の節を設け、引き渡し ID を接続キーにします。
     message: >-
       `specdojo:cdfd-mermaid-rulebook` は図を分割するノード数の目安を包含元 rulebook
       が定めるとしているが、本書は「一図で順序を追えない場合」という主観的条件しか示していないため、ノード数の目安または第三者が同じ判断を再現できる分割条件を定義してください。
     message_ja: >-
       `specdojo:cdfd-mermaid-rulebook` は図を分割するノード数の目安を包含元 rulebook
       が定めるとしているが、本書は「一図で順序を追えない場合」という主観的条件しか示していないため、ノード数の目安または第三者が同じ判断を再現できる分割条件を定義してください。
-  - id: F005
+  - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
     line: 76
     anchor: "### 6.1. 導入文と目的"
     message: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。
     message_ja: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。
-  - id: F006
+  - id: F007
     severity: minor
     rule: vp-ops-release-readiness
     line: 54

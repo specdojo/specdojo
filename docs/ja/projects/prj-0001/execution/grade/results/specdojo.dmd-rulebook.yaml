@@ -4,11 +4,11 @@ document: specdojo:dmd-rulebook
 path: docs/ja/specdojo/rulebooks/dmd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-10-02T21:56:06.127Z"
-graded_by: agy-expert-executor
-content_hash: 1d0c890ed73a2afa7b7a7ecdd675b3eb8e33f4374e667691ba4575b2124418a1
+verdict: pass
+score: 100
+graded_at: "2026-10-31T20:34:28.881Z"
+graded_by: flash-high-executor
+content_hash: 530f9120076b67f6450f662f2f75f839c0b7ba535c9f284044b71f265c8fe8bc
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,13 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# データ移行設計 作成ルール"
-    message: 推奨 Frontmatter の type が「migration 固定」と定義されている一方で、本書内のサンプルおよび `dmd-sample.md` では「project」となっており矛盾している。
+findings: []

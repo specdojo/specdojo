@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 89
-graded_at: "2026-10-28T20:45:58.753Z"
+graded_at: "2026-10-31T20:13:42.951Z"
 graded_by: flash-high-executor
-content_hash: 5c2d6327e8423ddb3cacdfb46fc813f732201d03e9808bde3b5dfdf8a0daaa1c
+content_hash: f21a6de5e3f4b9a1016a0342f8632ed317a03fe6b1630c7db2a7b197b3f3b707
 categories:
   purpose:
     score: 100
@@ -104,13 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 10
+  minor: 11
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 114
+    line: 110
     anchor: "- 全体概要の各領域を一つの代表ノードとして再掲せず、「プロセス領域」の各表の行を一つずつ個別のプロセスノードとして配置します。"
     message: >-
       `status: ready` の本 rulebook が `status: draft` の `specdojo:cdfd-mermaid-rulebook` を `includes`
@@ -121,36 +121,36 @@ findings:
   - id: F002
     severity: minor
     rule: vp-ba-requirements-completeness
-    line: 145
-    anchor: ""
+    line: 137
+    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
     message: 完成判定が条件付き／選択プロセスの非起動時の正常な扱い、個別プロセス主要入出力への一度だけの掲載、図直後の必須注記、主要例外の扱い、グループ外委譲の全列を確認しないため、本文要件との併用を明記するか受入条件へ追加してください。
     message_ja: 完成判定が条件付き／選択プロセスの非起動時の正常な扱い、個別プロセス主要入出力への一度だけの掲載、図直後の必須注記、主要例外の扱い、グループ外委譲の全列を確認しないため、本文要件との併用を明記するか受入条件へ追加してください。
   - id: F003
     severity: minor
     rule: vp-dev-change-impact
-    line: 145
-    anchor: ""
+    line: 137
+    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
     message: rulebookの完成判定要件がrecipeへ反映されておらず、全体手順5では完了条件、仕上げチェックではFrontmatter・ready承認記録・対象期間・停止範囲を確認できないため、関連成果物へ変更を反映する手順または整合確認を追加してください。
     message_ja: rulebookの完成判定要件がrecipeへ反映されておらず、全体手順5では完了条件、仕上げチェックではFrontmatter・ready承認記録・対象期間・停止範囲を確認できないため、関連成果物へ変更を反映する手順または整合確認を追加してください。
   - id: F004
     severity: minor
     rule: vp-dev-testability
-    line: 145
-    anchor: ""
+    line: 137
+    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
     message: 完成判定だけでは条件付き／選択プロセスの非起動経路、図直後の必須注記、主要例外の扱い、委譲表の全列を検証できないため、各条件のpass / fail確認を追加するか本文要件を併用する検証手順を明記してください。
     message_ja: 完成判定だけでは条件付き／選択プロセスの非起動経路、図直後の必須注記、主要例外の扱い、委譲表の全列を検証できないため、各条件のpass / fail確認を追加するか本文要件を併用する検証手順を明記してください。
   - id: F005
     severity: minor
     rule: vp-qe-verifiability
-    line: 145
-    anchor: ""
+    line: 137
+    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
     message: 前回指摘されたFrontmatter・目的・適用範囲・プロセス表の確認は追加済みですが、完成判定には条件付き／選択プロセスの非起動時の扱い、図直後注記の凡例・線種・省略理由・共有ノード、主要例外の「本グループでの扱い」、委譲表の各列が反映されておらず、これらを欠く文書も完成扱いにできるため、全必須条件を列挙するか本文要件との併用を明記してください。
     message_ja: 前回指摘されたFrontmatter・目的・適用範囲・プロセス表の確認は追加済みですが、完成判定には条件付き／選択プロセスの非起動時の扱い、図直後注記の凡例・線種・省略理由・共有ノード、主要例外の「本グループでの扱い」、委譲表の各列が反映されておらず、これらを欠く文書も完成扱いにできるため、全必須条件を列挙するか本文要件との併用を明記してください。
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 145
-    anchor: ""
+    line: 137
+    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
     message: >-
       完成判定が、本文で必須とした条件付き／選択プロセスの非起動時の正常な扱い、全プロセスの個別入出力表への一度だけの掲載、図直後の必須注記、主要例外の扱い, グループ外委譲の委譲先・委譲事項・戻す条件を確認対象に含めていないため,
       本文要件との併用を明記するか確認項目を過不足なく追加してください。
@@ -160,14 +160,14 @@ findings:
   - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 145
-    anchor: ""
+    line: 137
+    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
     message: rulebookとtemplate・sampleは必須Frontmatter、対象期間、完了条件、停止範囲を扱いますが、recipeはFrontmatterとready承認記録を確認せず、全体手順5から完了条件、仕上げチェックから対象期間と停止範囲が欠けているため、recipeの主要手順と最終チェックを本節の完成条件へ揃えてください。
     message_ja: rulebookとtemplate・sampleは必須Frontmatter、対象期間、完了条件、停止範囲を扱いますが、recipeはFrontmatterとready承認記録を確認せず、全体手順5から完了条件、仕上げチェックから対象期間と停止範囲が欠けているため、recipeの主要手順と最終チェックを本節の完成条件へ揃えてください。
   - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 114
+    line: 110
     anchor: "- 全体概要の各領域を一つの代表ノードとして再掲せず、「プロセス領域」の各表の行を一つずつ個別のプロセスノードとして配置します。"
     message: >-
       `status: ready` の主 rulebook と ready の template・sample が `status: draft` の共通記法 rulebook に依存しているため、共通部品を ready
@@ -177,15 +177,27 @@ findings:
       化するか、未確定な記法依存として各成果物の状態と適用条件を整合させてください。
   - id: F009
     severity: minor
-    rule: vp-ops-release-readiness
-    line: 145
-    anchor: ""
-    message: ready昇格条件が「完成判定」の全項目を参照する一方、同節は本文の必須条件を網羅していないため、本文要件との併用を明記するか全必須条件を完成判定へ追加し、不完全な成果物がreadyにならないようにしてください。
-    message_ja: ready昇格条件が「完成判定」の全項目を参照する一方、同節は本文の必須条件を網羅していないため、本文要件との併用を明記するか全必須条件を完成判定へ追加し、不完全な成果物がreadyにならないようにしてください。
+    rule: vp-qe-kata-conformance
+    line: 86
+    anchor: "- 各節はプロセスの表のみで構成します。主要入力・主要出力・データストアの箇条書きは記載せず、受け渡しは概念データフロー図を正本とします。"
+    message: >-
+      While Section 1, 5, 6.2, and 7 prohibit listing bulleted inputs, outputs, and data stores in process areas, the
+      reference recipe, sample, and template mandate and demonstrate them, causing a structural contradiction across the
+      Kata suite.
+    message_ja: >-
+      セクション 1、5、6.2、および 7
+      では、プロセスエリアにおいて箇条書きの入力、出力、およびデータストアをリストにすることを禁止していますが、リファレンスレシピ、サンプル、およびテンプレートではそれらを必須とし、かつ実演しているため、Kataスイート全体で構造的な矛盾が生じています。
   - id: F010
     severity: minor
     rule: vp-ops-release-readiness
-    line: 114
+    line: 137
+    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
+    message: ready昇格条件が「完成判定」の全項目を参照する一方、同節は本文の必須条件を網羅していないため、本文要件との併用を明記するか全必須条件を完成判定へ追加し、不完全な成果物がreadyにならないようにしてください。
+    message_ja: ready昇格条件が「完成判定」の全項目を参照する一方、同節は本文の必須条件を網羅していないため、本文要件との併用を明記するか全必須条件を完成判定へ追加し、不完全な成果物がreadyにならないようにしてください。
+  - id: F011
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 110
     anchor: "- 全体概要の各領域を一つの代表ノードとして再掲せず、「プロセス領域」の各表の行を一つずつ個別のプロセスノードとして配置します。"
     message: >-
       本rulebookは`status: ready`ですが、適用必須の`specdojo:cdfd-mermaid-rulebook`が`status:
