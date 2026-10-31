@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ahxk-tsd-ollama-opencode-model-tag
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   owner: ARC
   registered_at: "2026-10-27T14:13:09Z"
+  completed_at: "2026-10-31T07:08:06Z"
+  conclusion: 軽作業用の 8k のモデル名を MLX 版の gemma4:e4b-mlx-light-8k にそろえ、tsd-ollama-opencode の接続確認の例を直した。母艦では利用者が同名のモデルを作成した
   derived_from:
     - PJR-05GN
 ---
