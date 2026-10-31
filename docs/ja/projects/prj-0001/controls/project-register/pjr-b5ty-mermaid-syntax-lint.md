@@ -48,7 +48,7 @@ markdownlint と remark は Mermaid の中身を検査せず、図の構文エ�
 ### 4.1. 実装と選定理由
 
 - `tools/lint-mermaid.mjs` を追加した。引数は Markdown のファイルパスまたは glob を複数指定でき、省略時は `docs/**/*.md` を検査する。例えば `node tools/lint-mermaid.mjs 'docs/**/*.md'`、変更した文書だけなら `node tools/lint-mermaid.mjs path/to/changed.md` を実行する。重複した対象は一度だけ検査し、未一致の glob は終了コード 1 にする。
-- 解析には [Mermaid の公式の構文検査 API](https://mermaid.js.org/config/usage#syntax-validation-without-rendering) である `mermaid.parse` を採用した。`@mermaid-js/parser` 単体では従来の Jison 系の図も含めた全種類を扱えないため、docs-site が利用する `@mermaid-js/mermaid-cli` の解決位置から Mermaid 本体を直接ロードする。インストールされた同じパッケージを参照するため、別の版へずれず、実行時にも版を表示する。今回の版は 12.0.0。
+- 解析には Mermaid の公式の構文検査 API（<https://mermaid.js.org/config/usage#syntax-validation-without-rendering>） である `mermaid.parse` を採用した。`@mermaid-js/parser` 単体では従来の Jison 系の図も含めた全種類を扱えないため、docs-site が利用する `@mermaid-js/mermaid-cli` の解決位置から Mermaid 本体を直接ロードする。インストールされた同じパッケージを参照するため、別の版へずれず、実行時にも版を表示する。今回の版は 12.0.0。
 - 置き場所は本リポジトリの tool とした。`@specdojo/docs-lint` の一般利用者に Mermaid 一式の依存を追加せず、既存の docs-site のインストールを使う。依存追加・lockfile の変更はない。root の Markdown 解析用依存と `packages/docs-site` の依存を導入した開発環境で使う。docs-site の依存がない場合は対象図をすべて未検査として失敗する。
 - `tools/mermaid-parse-worker.mjs` と `tools/mermaid-parse-loader.mjs` は構文解析専用の Worker 内で動く。Mermaid は解析時にも DOMPurify を呼ぶため、その Worker 内で Mermaid からの DOMPurify import に限りラベル文字列をそのまま返す実装へ置き換えた。構文解析への入力は変更せず、HTML / SVG の描画・出力・サニタイズ判定は行わない。この置き換えは描画用に使えず、親プロセスや docs-site の描画には適用されない。puppeteer / chromium / DOM 実装の起動や追加は不要。
 - Markdown は remark の構文木で解析し、バッククォート・tilde・長い fence・リストや引用内の Mermaid を抽出する。外側のコード例の中にある Mermaid の記載は対象にしない。診断の `file:line` は元の Markdown の開始 fence 行を示す。Mermaid のエラーメッセージ内の行は図内の解析行であり、frontmatter・directive・コメントの前処理でずれる可能性があるため、元文書のエラー行として換算しない。
