@@ -121,6 +121,7 @@ exec の result の commit 前検査にも、利用リポジトリに設定が�
 | -------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `integration_branch` | `project/<project-id>/develop` | 別 project の作業ツリーから `register add --project <project-id> --commit` で直接記帳する統合ブランチです。                                         |
 | `project_context`    | `["prj-overview"]`             | edit / review plan へ常に渡す project 共通文書のローカル ID です。空配列 `[]` で無効化できます。`depends_on` や成果物の `based_on` は変更しません。 |
+| `commit_types`       | なし                           | 登録項目 type（`todo`・`issue` 等）から Conventional Commits type への対応マッピングです。                                                          |
 | `run`                | `{}`                           | agent 実行、worktree、登録日の表示に関する project 単位の設定です。                                                                                 |
 | `repos`              | なし                           | project のタスクが変更するプロダクトリポジトリの宣言です。詳細は「`repos`のキー」を参照してください。                                               |
 
@@ -195,8 +196,15 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 | `integration_branch`   | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                                     |
 | `integration_strategy` | 任意 | `merge`                        | `merge` はローカルの merge commit で統合します。`branch-only` は exec branch に commit して保持し、プロダクト側の PR レビューに渡します。 |
 | `setup`                | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                                  |
+| `commit_types`         | 任意 | なし                           | このリポジトリ固有の登録項目 type から Conventional Commits type への対応マッピングです。project の指定より優先されます。                 |
 
 register の worktree 実行では、`exec run --integration-branch <repo>=<branch>` により `integration_branch` を run ごとに上書きできます。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定方法、ローカルブランチの検査、並列実行と再開時の扱いは [[specdojo:command-reference]] を参照してください。
+
+`commit_types` は項目の type ごとに既定の commit type を上書きします。値は個票の `commit_type` と同じ 11 種類（`feat`・`fix`・`docs`・`refactor`・`test`・`chore`・`perf`・`build`・`ci`・`style`・`revert`）です。空文字や一覧外の値は設定読み込み時にエラーになります。未指定のキーは「個票の `commit_type` → `repos[].commit_types` → `projects.<project-id>.commit_types` → 既定対応」の順に解決します。`commit_scope` は個票で指定した場合だけ使います。
+
+既定対応は `issue` が `fix`、`todo`・`change-request`・`epic` が `feat`、`decision`・`note`・`question`・`risk` が `docs` です。未知の type は `chore` にフォールバックします。たとえば、project に `"commit_types": { "todo": "chore", "issue": "fix" }`、ドキュメント用の repo に `"commit_types": { "todo": "docs" }` を設定すると、その repo の todo は `docs`、他の repo の todo は `chore` になります。個票で `commit_type` を明示すれば、設定より優先されます。
+
+この設定は後続処理向けの解決情報です。現時点の exec の commit メッセージとブランチ名は変わりません。
 
 GitHub flow などで PR レビューを必須にするリポジトリには、`"integration_strategy": "branch-only"` を指定します。`integration_branch` は exec branch の作成元と、プロダクト側で PR を作る際の統合先の目安です。runner は統合先へ merge せず、push・PR 作成（`gh` を含む）も行いません。プロダクトの commit とプロジェクトの記帳が成功すると、プロジェクト側は通常どおり `review` へ進み、result に `branch-only`（未統合）、exec branch 名、trace key を残します。プロダクト側のレビューやリリースが完了したことは意味しません。
 

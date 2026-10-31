@@ -42,6 +42,8 @@ export type RegisterAddFields = {
   targetRulebook?: string;
   derivedFrom?: string[];
   dependsOn?: string[];
+  commitType?: string;
+  commitScope?: string;
 };
 
 export type BuildScope = "register" | "controls" | "all";

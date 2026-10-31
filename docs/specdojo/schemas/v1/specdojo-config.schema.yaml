@@ -99,6 +99,10 @@ $defs:
         type: array
         items:
           $ref: "#/$defs/NonEmptyString"
+      commit_types:
+        description: >-
+          Mapping from register item types to Conventional Commits types for this project.
+        $ref: "#/$defs/CommitTypeMap"
       repos:
         description: >-
           Product repositories that tasks of this project may change. The project repository is
@@ -162,6 +166,10 @@ $defs:
             type: boolean
           build:
             type: boolean
+      commit_types:
+        description: >-
+          Mapping from register item types to Conventional Commits types for this repository.
+        $ref: "#/$defs/CommitTypeMap"
   Run:
     type: object
     properties:
@@ -195,3 +203,10 @@ $defs:
         type: string
       register_date_timezone:
         type: string
+  CommitTypeMap:
+    type: object
+    description: >-
+      Mapping from register item type (e.g., todo, issue) to Conventional Commits type (e.g., feat, fix).
+    additionalProperties:
+      type: string
+      enum: [feat, fix, docs, refactor, test, chore, perf, build, ci, style, revert]

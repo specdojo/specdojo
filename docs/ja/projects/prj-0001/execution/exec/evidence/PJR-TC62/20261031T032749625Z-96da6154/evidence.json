@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TC62",
+  "run_id": "20261031T032749625Z-96da6154",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-31T03:27:49.625Z",
+    "completed_at": "2026-10-31T03:30:17.156Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc62.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/commit-types.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/commit-type-scope.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/commit-type-scope.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 18,
+    "summary": "CHANGELOG.md                                       |  2 +\n .../controls/project-register/events/pjr-tc62.yaml | 20 ++++-\n .../pjr-tc62-item-commit-type-scope.md             | 24 +++++-\n docs/ja/specdojo/references/command-reference.md   |  6 ++\n .../references/specdojo-config-reference.md        |  8 ++\n .../schemas/v1/register-events.schema.yaml         |  2 +\n .../v1/register-item-frontmatter.schema.yaml       | 33 ++++++++\n .../schemas/v1/specdojo-config.schema.yaml         | 15 ++++\n src/register/command-types.ts                      |  2 +\n src/register/core.ts                               |  2 +\n src/register/create-commands.ts                    | 61 ++++++++++++++-\n src/register/event-merge.ts                        |  4 +\n src/register/events.ts                             |  4 +\n src/register/item.ts                               | 88 ++++++++++++++++++++++\n src/register/register.ts                           | 14 ++++\n src/shared/specdojo-config.ts                      | 37 ++++++++-\n 16 files changed, 311 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/references/specdojo-config-reference.md docs/specdojo/schemas/v1/register-events.schema.yaml docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml docs/specdojo/schemas/v1/specdojo-config.schema.yaml src/register/command-types.ts src/register/core.ts src/register/create-commands.ts src/register/event-m…",
+      "status": "passed",
+      "summary": "変更対象を整形しました。個票の追記後も再整形済みです。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc62.yaml",
+      "status": "passed",
+      "summary": "本項目のイベントログはスキーマに適合しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml --data tmp/pjr-tc62-schema/item.json",
+      "status": "passed",
+      "summary": "本個票の frontmatter に `commit_type: refactor` と `commit_scope: cli-parser` を加えた一時 JSON が適合しました。一時ファイルは削除済みです。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data tmp/pjr-tc62-schema/config.json",
+      "status": "passed",
+      "summary": "現行設定へ project と repo の `commit_types` を加えた一時 JSON が適合しました。保護された設定は変更せず、一時ファイルは削除済みです。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。未作成文書に関する既存の参照警告があり、エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "個票とイベントの整合検査に成功し、追跡対象外の派生ビューを再生成しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/src/shared/specdojo-config.ts\n  1223:1  warning  File has too many lines (1134). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.5.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.5.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.5.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TC62\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-10-31T03:34:10.187Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-31T03:33:10.528Z.\nfallback c\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc62.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc62.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tc62-item-commit-type-scope.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "src/register/create-commands.ts",
+      "status": "changed",
+      "path": "src/register/create-commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/item.ts",
+      "status": "changed",
+      "path": "src/register/item.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/commit-types.ts",
+      "status": "changed",
+      "path": "src/shared/commit-types.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/commit-type-scope.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/commit-type-scope.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "commit の type・scope の実装と文書を完了条件に照合し、前回失敗したテストのファイル名引数と削除検証を修正しました。sandbox 担当の検証は成功し、個票へ対応内容を記録しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "設計判断を result へ反映してください。`commit_type` は対応する 11 種類の固定一覧で検証し、タイポを防ぎます。`commit_scope` は後続の commit・ブランチ生成で扱いやすい `^[a-z0-9][a-z0-9-]*$` とし、個票の指定値だけを使います。",
+    "既定対応は issue→fix、todo・change-request・epic→feat、decision・note・question・risk→docs、未知の type→chore としました。複数 repo の事情に対応するため `commit_types` を project と repo の両方に置き、個票明示指定 > repo 設定 > project 設定 > 既定対応の順に解決します。既定値を個票へ保存せず利用時に解決するため、設定変更や指定削除を反映できます。",
+    "前回の test-unit は 2860 件中 1 件が失敗しました。`readRegisterItemContent` のファイル名引数へ絶対パスを渡したテスト側の誤りを修正し、同じ誤りのある復元・保持・置換・消去の検証も修正しました。修正後の test-unit と他の指定済み親検証は runner が実行してください。",
+    "result は executor の指示に従い編集していません。イベントと個票のステータスは再開時の runner による変更を維持しています。保護された設定の変更は不要です。統合後は運用メモに従い PJR-JSEY で register の動作を確認してください。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-TC62/20261031T032749625Z-96da6154/executor.log",
+      "bytes": 6441,
+      "truncated": false
+    }
+  ]
+}

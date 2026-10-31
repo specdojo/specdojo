@@ -82,6 +82,8 @@ $defs:
           - derived_from
           - depends_on
           - autopilot
+          - commit_type
+          - commit_scope
       from:
         type: string
       to:

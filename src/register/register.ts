@@ -54,6 +54,12 @@ import {
   VALID_DIFFICULTIES,
   VALID_STATUSES,
   VALID_TYPES,
+  VALID_COMMIT_TYPES,
+  COMMIT_SCOPE_RE,
+  DEFAULT_ITEM_TYPE_COMMIT_TYPE_MAP,
+  resolveItemCommitTypeAndScope,
+  type CommitType,
+  type ResolvedCommitTypeAndScope,
   type PjrDisplayItem,
   type PjrItem,
   type RegisterDifficulty,
@@ -93,6 +99,12 @@ export {
   VALID_DIFFICULTIES,
   VALID_STATUSES,
   VALID_TYPES,
+  VALID_COMMIT_TYPES,
+  COMMIT_SCOPE_RE,
+  DEFAULT_ITEM_TYPE_COMMIT_TYPE_MAP,
+  resolveItemCommitTypeAndScope,
+  type CommitType,
+  type ResolvedCommitTypeAndScope,
   type PjrDisplayItem,
   type PjrItem,
 };
@@ -168,6 +180,8 @@ export type RegisterAddFields = {
   sources?: string[];
   derivedFrom?: string[];
   dependsOn?: string[];
+  commitType?: string;
+  commitScope?: string;
 };
 
 // 作成する個票ファイル名と割り当て ID を算出する純粋関数。I/O を持たず、
