@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-790t-register-input-heading-number
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-31T02:43:14Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T03:47:25Z"
+  conclusion: 入力の章がない個票へ --input を書くと、最初の章の直後に番号付きの入力の章を入れ、後ろの章と小節の番号を繰り下げるようにした。PJR-BNMV の番号のない入力の章を直した
 ---
 
 # PJR-790T 入力の章がない種類の個票で入力の見出しに番号を付ける

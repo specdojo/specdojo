@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1d2d20800a374c75b2a321976fa31816
+- v: 1
+  id: reg_3d039c3eb23645149d5bde8a4cdefa49
+  ts: "2026-10-31T03:47:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、note 形の個票での追加・再追加・消去、小節とコードブロックの扱いを関数で確かめ、JSEY も通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: 入力の章がない個票へ --input を書くと、最初の章の直後に番号付きの入力の章を入れ、後ろの章と小節の番号を繰り下げるようにした。PJR-BNMV の番号のない入力の章を直した
+  previous_event_id: reg_59db65fd83884c4db036018c2ac3fb41
