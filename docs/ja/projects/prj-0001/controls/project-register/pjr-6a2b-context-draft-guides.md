@@ -34,6 +34,10 @@ scaffold・文脈の記入・draft・fully-guided・finalize の流れと、_CON
 - ryu-guide に、`draft` と `fully-guided` の使い分けと、文脈の置き場所（成果物内の `_CONTEXT_`、個票の `入力`、カタログの `brief`）の使い分けを書く。
 - `tsd-recipe` の「作成前に集める情報」を、集めた答えを `_CONTEXT_`・`--input`・`brief` のどこに書くかが分かる形に直す。
 - tsd を「静的サイトで主流の技術スタックで書く」と指示して作る例を、いずれかのガイドに載せる。
+- exec-operation-guide の「文脈を渡して段階的に作成する手順」の例を、今の CLI で動く形に直す。雛形の作成は `deliverable scaffold --target <doc-id>` とし、カタログにない成果物では `--target-path` と `--target-rulebook` を添える形も示す（PJR-S23T）。template のない rulebook の雛形の `type` が rulebook の `deliverable_type` になることも書く（PJR-YKYK）。
+- 例の成果物の ID は、`specdojo:` ではなく project で修飾した ID（例: `prj-0001:tsd-frontend-site`）にする。
+- 例の finalize の個票の `--owner` は、人の nickname ではなく pm-roles の役割（例: `PO`）にする。
+- ryu-guide と tsd-recipe に雛形の作成の手順がある場合も、同じ形にそろえる。
 - 変更した文書で `npm run lint:md` と `npm run lint:fm` が通る。
 - `CHANGELOG.md` の `## [Unreleased]` 節に追記する。`0.5.0` と公開済みの版の節は変えない。
 - 設計で決めることは executor が決め、理由を本個票の対応結果に書き、報告の `handoff` にも書く。保護された設定に触れる必要がある場合は、変更せずに案を本個票の対応結果と `handoff` に書く。
