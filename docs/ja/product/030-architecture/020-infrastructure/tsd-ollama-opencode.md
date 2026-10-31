@@ -106,7 +106,7 @@ curl http://host.docker.internal:11434/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer not-needed" \
   -d '{
-    "model": "gemma4:e4b-light-8k",
+    "model": "gemma4:e4b-mlx-light-8k",
     "messages": [
       {"role": "user", "content": "短く疎通確認してください。"}
     ],
