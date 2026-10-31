@@ -67,3 +67,32 @@
       from: "-"
       to: "parent validation failed: lint-ts, typecheck"
   previous_event_id: reg_cd1d53c653714f94a6b357212a2c0e88
+- v: 1
+  id: reg_1d2d20800a374c75b2a321976fa31816
+  ts: "2026-10-31T03:12:06Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, typecheck"
+      to: "-"
+  previous_event_id: reg_b7a219e018c844e280f2e4914577a3fa
+- v: 1
+  id: reg_59db65fd83884c4db036018c2ac3fb41
+  ts: "2026-10-31T03:23:56Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1d2d20800a374c75b2a321976fa31816
