@@ -41,3 +41,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-S23T"]'
+- v: 1
+  id: reg_2df8a75677d74d65a30a57110d26957e
+  ts: "2026-10-31T00:28:38Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bf3b38bf7f0840e3a8ad0122f7e55a0a
+- v: 1
+  id: reg_21b94a8cc4184936b38ebff58e261558
+  ts: "2026-10-31T00:49:58Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
+  previous_event_id: reg_2df8a75677d74d65a30a57110d26957e

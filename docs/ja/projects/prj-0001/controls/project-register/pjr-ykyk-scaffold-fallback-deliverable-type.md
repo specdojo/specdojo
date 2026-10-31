@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   registered_at: "2026-10-31T00:27:20Z"
+  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage f…"
   derived_from:
     - PJR-S23T
 ---
