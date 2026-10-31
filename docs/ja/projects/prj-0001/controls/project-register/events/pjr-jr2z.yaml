@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6efd9be098f243a49ab47cdb760ae4dc
+- v: 1
+  id: reg_911f1c11dd104140aecb748990812e3d
+  ts: "2026-10-31T07:28:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と個票・result を照らし、直った例を文書のまま母艦の Ollama に流して finish_reason が stop で本文が返ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: "tsd-ollama-opencode の接続確認の例に reasoning_effort: none を足し、期待する結果と、付けないと本文が空になりうることを書いた。tsd-ollama の確認の例は OpenAI 互換の API ではないため変えていない"
+  previous_event_id: reg_54c34a816dad48a58933826f9d94c16f

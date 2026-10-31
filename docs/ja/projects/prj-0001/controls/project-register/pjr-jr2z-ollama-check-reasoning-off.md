@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jr2z-ollama-check-reasoning-off
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   owner: ARC
   registered_at: "2026-10-31T07:05:03Z"
+  completed_at: "2026-10-31T07:28:50Z"
+  conclusion: "tsd-ollama-opencode の接続確認の例に reasoning_effort: none を足し、期待する結果と、付けないと本文が空になりうることを書いた。tsd-ollama の確認の例は OpenAI 互換の API ではないため変えていない"
   derived_from:
     - PJR-AHXK
   depends_on:
