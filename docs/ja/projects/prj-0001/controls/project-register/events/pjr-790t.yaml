@@ -38,3 +38,32 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_cd1d53c653714f94a6b357212a2c0e88
+  ts: "2026-10-31T02:47:58Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ea4e2cae8f99412f8383e7500b0bac21
+- v: 1
+  id: reg_b7a219e018c844e280f2e4914577a3fa
+  ts: "2026-10-31T03:03:15Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, typecheck"
+  previous_event_id: reg_cd1d53c653714f94a6b357212a2c0e88

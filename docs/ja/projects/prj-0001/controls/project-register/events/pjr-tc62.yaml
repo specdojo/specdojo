@@ -54,3 +54,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_9bb5b9843433433982325be61f0b3b73
+- v: 1
+  id: reg_df9f2f74bdaa46b8b4b1f5c6488fe04b
+  ts: "2026-10-31T03:10:47Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor validation failed or not run: npm run validate:schema:file"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor validation failed or not run: npm run validate:schema:file"
+  previous_event_id: reg_85585e3b62764a02b9a88384a9322a2a
