@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a4dcad3358814d7dbf18a1c4e8099a60
+- v: 1
+  id: reg_a8f745240a4647ffb780c877f705ed74
+  ts: "2026-10-31T04:13:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、実際の git を使う統合テスト（設定あり・なし、merge・branch-only、別のリポジトリと記帳の commit が変わらないこと）を手元で流して確かめ、JSEY も通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: repos[] の commit_subject_template と merge_message_template で、プロダクトのリポジトリの commit の 1 行目と merge commit を選べるようにした。末尾の Refs は常に付き、空の scope は括弧ごと除く。未設定の merge の既定は互換のため今の exec(register ...) を保ち、Merge branch の形はテンプレートで選ぶ
+  previous_event_id: reg_57dcd4b7e0df4e08929fcc6ecbb32b11

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-z7gx-product-commit-message-template
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-31T02:42:46Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T04:13:18Z"
+  conclusion: repos[] の commit_subject_template と merge_message_template で、プロダクトのリポジトリの commit の 1 行目と merge commit を選べるようにした。末尾の Refs は常に付き、空の scope は括弧ごと除く。未設定の merge の既定は互換のため今の exec(register ...) を保ち、Merge branch の形はテンプレートで選ぶ
   derived_from:
     - PJR-BNMV
   depends_on:
