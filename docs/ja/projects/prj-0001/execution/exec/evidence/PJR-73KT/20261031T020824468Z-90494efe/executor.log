@@ -1,0 +1,22 @@
+プロジェクト登録簿 PJR-73KT「雛形作成の案内を deliverable scaffold --target の形にそろえる」の executor 担当作業を完了しました。
+
+### 実施内容
+
+1. **雛形作成の案内の修正**:
+   - [`docs/ja/specdojo/guides/schedule-design-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-73KT/docs/ja/specdojo/guides/schedule-design-guide.md#L398): `deliverable scaffold --project <project-id> --target <doc-id>` で対象成果物のみ作成する案内に変更し、`--target` では不要となったカタログ内の他成果物に関する注意書きを削除しました（上書きしないことと `--force` を指定しないことの案内は維持）。
+   - [`docs/ja/specdojo/exec-templates/xer-human-draft-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-73KT/docs/ja/specdojo/exec-templates/xer-human-draft-template.md#L7): `deliverable scaffold --project <project-id> --target <doc-id>` で対象成果物の雛形を作成する形に更新しました。
+   - [`src/exec/plans-planning.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-73KT/src/exec/plans-planning.ts#L82): `strategy-planning` 完了条件の案内を `deliverable scaffold ${projectArg} --target <doc-id>` に更新しました。
+2. **単体テストの更新**:
+   - [`tests/src/exec/results.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-73KT/tests/src/exec/results.test.ts#L410)
+   - [`tests/src/register/planning.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-73KT/tests/src/register/planning.test.ts#L190)
+   それぞれのテスト期待値を `--target <doc-id>` に合わせ、テストが通過することを確認しました。
+3. **残存確認**:
+   - リポジトリ全体を検索し、`deliverable scaffold` の案内に `--dct <catalog>` で 1 件の雛形を作らせる記述が残っていないことを確認しました。カタログ全体の雛形を作る用途の `--dct` の説明は維持しています。
+4. **CHANGELOG への追記**:
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-73KT/CHANGELOG.md#L25) の `## [Unreleased]`（`### 変更`）に本タスクの変更内容を追記しました。
+5. **個票の更新**:
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-73kt-scaffold-target-guidance.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-73KT/docs/ja/projects/prj-0001/controls/project-register/pjr-73kt-scaffold-target-guidance.md) の作業内容テーブル（状態: done）と対応結果セクションを更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"schedule-design-guide・xer-human-draft-template・plans-planning.ts の雛形作成案内を deliverable scaffold --target <doc-id> に修正し、テスト・CHANGELOG・個票を更新しました。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/guides/schedule-design-guide.md docs/ja/specdojo/exec-templates/xer-human-draft-template.md src/exec/plans-planning.ts tests/src/exec/results.test.ts tests/src/register/planning.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-73kt-scaffold-target-guidance.md","status":"passed","summary":"変更ファイルすべての Prettier 構文・整形検証に合格"}]}
+</specdojo_executor_evidence>

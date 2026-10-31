@@ -407,7 +407,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
         targets: ["prj-0001:proposal"],
       });
       if (execution === "human") {
-        expect(body).toContain("deliverable scaffold --project <project-id> --dct <catalog>");
+        expect(body).toContain("deliverable scaffold --project <project-id> --target <doc-id>");
         expect(body).toContain("`_CONTEXT_:` を付け");
         expect(body).toContain("claim / complete");
         expect(body).toContain("exec complete --project");

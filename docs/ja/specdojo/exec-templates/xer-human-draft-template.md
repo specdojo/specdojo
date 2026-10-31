@@ -4,7 +4,7 @@ _FRONTMATTER_
 
 この human タスクは雛形作成と文脈の記入を担当する。plan は生成せず、claim / complete で状態を記録する。対象は frontmatter の `targets` を成果物カタログで確認する。
 
-1. `specdojo deliverable scaffold --project <project-id> --dct <catalog>` で対象カタログの未作成成果物を雛形から生成する。既存ファイルは上書きしない。`--force` は指定しない。
+1. `specdojo deliverable scaffold --project <project-id> --target <doc-id>` で対象成果物の雛形を作成する。既存ファイルは上書きしない。`--force` は指定しない。
 2. 対象本文の必要な箇所に `_CONTEXT_:` を付け、固定前提・制約・調査や選定を任せる範囲を記入する。例: `_CONTEXT_: 既存 API を維持し、認証方式の候補を調べて提案してほしい。`
 3. 以下へ対象ファイルと記入した文脈を記録し、`specdojo exec complete --project <project-id> --task <task-id> --by <human>` で完了する。後続の agent が draft で文脈を下書きへ反映する。
 
