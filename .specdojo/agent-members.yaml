@@ -164,7 +164,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:31b-mlx-work-64k
+    model: ollama-local/gemma4:26b-mlx-work-64k
     mode: report
     stage_role: reporter
     proficiency: normal
@@ -763,7 +763,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-medium
+    model: gemini-3.8-flash-high
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -830,6 +830,29 @@ members:
     note: >-
       Antigravity CLI（agy）を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、成果物・result
       のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。
+  - nickname: flash-review-executor
+    disabled: false
+    priority: 4
+    display_name: Antigravity Flash Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: gemini-3.8-flash-high
+    mode: review
+    stage_role: executor
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities:
+      - web_search
+    scheduler_strategy: fifo
+    note: >-
+      Antigravity CLI（agy）を使用する pipeline executor（review）。成果物・result のいずれも変更しない（読み取り専用）。
+      境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。
   - nickname: flash-reporter
     disabled: false
     priority: 4
@@ -838,7 +861,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-medium
+    model: gemini-3.8-flash-high
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -1043,8 +1066,16 @@ aliases:
     alias_of: sol-review-executor
   - nickname: codex-reporter
     alias_of: luna-reporter
+  - nickname: opencode-executor
+    alias_of: gemma-executor
+  - nickname: opencode-review-executor
+    alias_of: gemma-review-executor
+  - nickname: opencode-reporter
+    alias_of: gemma-reporter
   - nickname: agy-executor
     alias_of: flash-executor
+  - nickname: agy-review-executor
+    alias_of: flash-review-executor
   - nickname: agy-expert-executor
     alias_of: flash-high-executor
   - nickname: agy-expert-review-executor
