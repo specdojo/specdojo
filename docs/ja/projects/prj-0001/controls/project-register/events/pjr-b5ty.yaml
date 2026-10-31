@@ -67,3 +67,32 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_1d07073c0d7e4232a84c8361db8621e1
+- v: 1
+  id: reg_f1cadd725f2b48cd93aa5eb94764fe07
+  ts: "2026-10-31T07:02:34Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_b9fd562e833843d987c8ba9ffa8690c5
+- v: 1
+  id: reg_1eed3e8b2bcf4d38b6a20bc13f9716f3
+  ts: "2026-10-31T07:26:17Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f1cadd725f2b48cd93aa5eb94764fe07
