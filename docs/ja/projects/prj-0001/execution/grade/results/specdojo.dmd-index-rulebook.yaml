@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 93
-graded_at: "2026-10-02T21:53:36.602Z"
-graded_by: agy-expert-executor
-content_hash: 21996265fb560ba9ee3ebfbd600cc5cbc73bc6d5d0941d88494a39a7038c99df
+graded_at: "2026-10-31T20:32:50.094Z"
+graded_by: flash-high-executor
+content_hash: b6d56780cf154fa0de2da59fdfd3c629b45d25f1fd90e303b3bed00c845c5c75
 categories:
   purpose:
     score: 100
@@ -110,15 +110,18 @@ findings:
     line: 36
     anchor: "| supersedes | 置き換え関係（ID配列。未指定は `[]` 可） | 任意 |"
     message: Frontmatter の type, title, id の定義ルールが、対応するサンプル成果物 dmd-index-sample.md の実態と矛盾している。
+    message_ja: Frontmatter の type, title, id の定義ルールが、対応するサンプル成果物 dmd-index-sample.md の実態と矛盾している。
   - id: F002
     severity: minor
     rule: vp-ux-readability
     line: 38
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 推奨 Frontmatter 項目や本文構成の表の途中に空行が含まれており、Markdownの表として正しく描画されない箇所がある。
+    message_ja: 推奨 Frontmatter 項目や本文構成の表の途中に空行が含まれており、Markdownの表として正しく描画されない箇所がある。
   - id: F003
     severity: minor
     rule: vp-ux-language-consistency
-    line: 31
-    anchor: "| type  | `migration` 固定       | ○    |"
+    line: 23
+    anchor: "- `id` は `dmd-index` を使用する。"
     message: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
+    message_ja: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
