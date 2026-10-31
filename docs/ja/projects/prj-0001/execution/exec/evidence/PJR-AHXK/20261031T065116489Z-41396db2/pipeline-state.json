@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-AHXK",
   "run_id": "20261031T065116489Z-41396db2",
-  "updated_at": "2026-10-31T07:06:23.365Z",
+  "updated_at": "2026-10-31T07:06:44.925Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ahxk-20261031T065116Z-75bc13ce-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "qwen-executor",
       "attempts": 1,
       "started_at": "2026-10-31T07:06:23.365Z",
-      "completed_at": null,
+      "completed_at": "2026-10-31T07:06:44.925Z",
       "artifact_ref": null
     }
   },
