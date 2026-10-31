@@ -2,9 +2,16 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
-## [Unreleased]
+## [0.6.0] - 2026-10-31
 
-`@specdojo/docs-lint` 0.3.1 を 2026-10-29 に公開しました（下記の不具合修正のうち PJR-SC8T の修正を含みます）。`specdojo`・`@specdojo/docs-site` の版は変わりません。ほかの項目は次の版で公開します。
+同梱パッケージは `@specdojo/docs-lint` 0.4.0 を同時に公開します。docs-lint 0.4.0 は、成果物の文脈の目印 `_CONTEXT_:` の検出（`status: ready` の文書ではエラー、それ以外は情報。PJR-JRSY・PJR-D0GB）を含みます。`remark/md-content` を options なしで読み込むと失敗する問題の修正（PJR-5EN3）と、0.3.1（2026-10-29 公開）の rulebook 一覧のキャッシュ（PJR-SC8T）も含みます。`@specdojo/docs-site` は変更がないため 0.3.0 のままです。
+
+### 利用者から見て動きが変わる点
+
+この版に破壊的変更はありません。ただし、次の 2 点は既存の使い方で結果が変わります。
+
+- schedule の strategy の `guided-pass`（草案作成）の approach が、`fully-guided` から `draft` に変わりました。既存の schedule を作り直すと、草案の段の plan が `draft` の雛形で作られます（PJR-3MY5・PJR-E45K）。
+- `fully-guided` は、既存成果物の磨き込み専用になりました。参照するのは宣言された文書（rulebook・recipe・sample、`based_on`、個票の `入力`、カタログの `brief` など）だけで、template から本文を新しく作ることはしません。文脈から下書きを作る場合は `draft` を使います（PJR-3MY5）。
 
 ### 追加機能
 
@@ -51,7 +58,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - `deliverable scaffold` の一括生成と `--target` において、template のない rulebook の最小の雛形の `type` を rulebook の frontmatter で宣言された `deliverable_type` に合わせるように修正しました（未宣言時は従来どおり `project`）。これにより、template のない rulebook を指定して生成した雛形が docs-lint の `frontmatter-deliverable-type` で警告にならず、コミット時ガードを通過します（PJR-YKYK）。
 
-- `@specdojo/docs-lint` の Markdown / YAML frontmatter 検証において、rulebook 一覧の生成をプロセス内でワークスペースごとに 1 回だけ行いキャッシュするように修正しました。remark のファイルごとのプラグイン読み込みで rulebook 一覧が毎回再生成されて `lint:fm` が著しく低速化していた問題を解消します。本修正は `@specdojo/docs-lint` の次の版（0.3.1）で公開されます（PJR-SC8T）。
+- `@specdojo/docs-lint` の Markdown / YAML frontmatter 検証において、rulebook 一覧の生成をプロセス内でワークスペースごとに 1 回だけ行いキャッシュするように修正しました。remark のファイルごとのプラグイン読み込みで rulebook 一覧が毎回再生成されて `lint:fm` が著しく低速化していた問題を解消します。本修正は `@specdojo/docs-lint` 0.3.1 で公開済みです（PJR-SC8T）。
 
 - `@specdojo/docs-lint` の `remark/md-content` を options なしで読み込んだ場合に `TypeError` で失敗する問題を修正しました。options が渡されないときは空の options として扱い、`schemas` は空、`workspaceRoot` は `process.cwd()` として動作します。これにより options なしでも `_CONTEXT_:` の検出が動作します（PJR-5EN3）。
 
