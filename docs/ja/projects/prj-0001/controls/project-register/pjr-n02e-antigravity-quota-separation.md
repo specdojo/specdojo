@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-n02e-antigravity-quota-separation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: low
   owner: ARC
   registered_at: "2026-10-10T21:23:46Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-31T06:46:51Z"
+  conclusion: Antigravity 経由の claude と GPT（gpt-oss-120b）は Google AI のプランの枠で数えられ、Anthropic 直・OpenAI 直の利用枠とは別勘定である。直の枠で止まったときの退避経路に使える
 ---
 
 # PJR-N02E Antigravity 経由の claude と GPT が各社直の利用枠と別勘定かを実測する
