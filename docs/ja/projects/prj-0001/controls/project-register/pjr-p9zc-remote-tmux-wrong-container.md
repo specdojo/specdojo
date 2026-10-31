@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-29T12:21:38Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-31T07:47:35Z"
+  conclusion: specdojo-tmux.sh.sample の find_container を、ラベル devcontainer.local_folder が一致する container だけを返す形にし、見つからなければ devcontainer up を流すようにした。docker exec の前に作業ディレクトリの有無を確かめ、ガイドと冒頭のコメントにラベルの扱いを書いた
   derived_from:
     - PJR-CCXN
 ---

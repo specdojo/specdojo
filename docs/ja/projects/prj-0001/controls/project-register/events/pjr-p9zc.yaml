@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1bc2ef41059744dbb03244e5da29a4e7
+- v: 1
+  id: reg_e0c4beb7814f4bfa9b4bf34798a08d5e
+  ts: "2026-10-31T07:47:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、サンプルの bash -n と shellcheck、統合テスト 8 件（別の vsc の container へ入らず devcontainer up を呼ぶ場合と、作業ディレクトリがない場合を含む）を手元で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: specdojo-tmux.sh.sample の find_container を、ラベル devcontainer.local_folder が一致する container だけを返す形にし、見つからなければ devcontainer up を流すようにした。docker exec の前に作業ディレクトリの有無を確かめ、ガイドと冒頭のコメントにラベルの扱いを書いた
+  previous_event_id: reg_a44559ebefd74238bc3b9cc626586f1c
