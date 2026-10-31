@@ -54,3 +54,32 @@
       from: "-"
       to: '["PJR-TC62","PJR-Z7GX"]'
   previous_event_id: reg_e493e21b168d4f2194eb190492b21cc5
+- v: 1
+  id: reg_dd27a75b2e734578a7dab1eb4f113ab8
+  ts: "2026-10-31T04:13:42Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5f42328265f54a5386cadec6b53c3c3a
+- v: 1
+  id: reg_daf4a6ba9fd5491e9ebc17facf275feb
+  ts: "2026-10-31T04:35:08Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_dd27a75b2e734578a7dab1eb4f113ab8
