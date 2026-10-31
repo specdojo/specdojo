@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-2ZMY"]'
+- v: 1
+  id: reg_d0e9e6f1d30f4eb99b3bf337f9bd2820
+  ts: "2026-10-31T14:17:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: hard
+  previous_event_id: reg_bb1fb3123adb4005afb3d45f636f0d9f

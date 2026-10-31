@@ -9,6 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: hard
   owner: BA
   registered_at: "2026-10-31T14:15:05Z"
   due_on: "2026-11-30"
