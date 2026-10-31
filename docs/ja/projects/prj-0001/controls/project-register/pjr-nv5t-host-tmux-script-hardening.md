@@ -33,13 +33,25 @@ PJR-Q8KP で配った devcontainer-tmux.sh は、docker inspect が返すマウ�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+1. `templates/devcontainer/remote-host/devcontainer-tmux.sh` のマウント元の比べ方を直す。
+   - `bind` のマウントだけを比べる。
+   - マウント元のパスは、ホストにあるディレクトリなら `pwd -P` などで正規化してから、正規化した `workspace_dir` と比べる。
+   - shellcheck の SC2295・SC2034 が出ない。
+2. `templates/devcontainer/remote-host/specdojo-tmux.sh.sample` のラッパーは、`exec bash "<本体>" "$workspace_dir"` の形で本体を呼ぶ。本体の実行権限に頼らない。
+3. `tests/src/devcontainer/host-script.test.ts` にテストを足す。
+   - マウント元が `<親>/<repo>/..` の形で返る場合に、コンテナの中の作業ディレクトリを正しく求めて tmux へ入る。
+   - `volume` のマウントが混ざっていても、`bind` のマウントから求める。
+   - パスに `*` などの glob の文字を含む場合に、前方一致の判定がずれない。
+4. 終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通す。あわせて親の検証も通す。
+5. CHANGELOG の `[Unreleased]` の節に不具合の修正として追記する。公開済みの節は変えない。
+6. このリポジトリの `.specdojo/host/devcontainer-tmux.sh` を `devcontainer host-script` で書き出し直し、テンプレートと同じ内容にする。
+7. ホストでの実際の接続は利用者が確かめる。確かめ方を個票の対応結果に書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                              | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------- | ---- | ---- | ---- |
+| 1   | 完了条件に沿って script・テスト・CHANGELOG を直す | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -47,4 +59,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-q8kp-host-tmux-script-distribution]]
+- [[specdojo:remote-host-development-guide]]
