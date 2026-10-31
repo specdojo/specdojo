@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-m1dh-product-branch-template-ff
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-31T02:43:00Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T04:58:10Z"
+  conclusion: "repos[].branch_template で作業ブランチの名前を選べるようにし、run と作業ブランチの対応をプロダクトの git の管理ディレクトリの記録で持つようにした。名前の重なりを start の前に検査し、exec run --branch と integration_strategy: ff を足した"
   derived_from:
     - PJR-BNMV
   depends_on:
