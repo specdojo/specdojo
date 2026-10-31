@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   registered_at: "2026-10-28T11:17:11Z"
   completed_at: "2026-10-31T06:45:02Z"
-  conclusion: plan を契約、Kata を正本とする中心を保ち、skill は補助とする。SpecDojo は SSOT から生成する CLI の入口とオーケストレーターの skill を配る。外部の skill はプロダクトのリポジトリに入れて版を固定し、repos[] での宣言と plan での参照で使い、plan と evidence に記録する。既存の 3 件は生成の仕組みにそろえ Kata の中身は kata show の参照にする
+  conclusion: plan を契約、Kata を正本とする中心を保ち、skill は補助とする。SpecDojo は SSOT から生成する CLI の入口とオーケストレーターの skill を配る。外部の skill はプロダクトのリポジトリに入れて版を固定し、repos[] での宣言と plan での参照で使い、plan と evidence に記録する。既存の 3 件の skill は使われていないため消した
   derived_from:
     - PJR-JSWE
 ---

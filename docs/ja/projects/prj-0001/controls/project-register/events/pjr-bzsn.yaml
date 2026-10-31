@@ -54,3 +54,16 @@
       from: "-"
       to: plan を契約、Kata を正本とする中心を保ち、skill は補助とする。SpecDojo は SSOT から生成する CLI の入口とオーケストレーターの skill を配る。外部の skill はプロダクトのリポジトリに入れて版を固定し、repos[] での宣言と plan での参照で使い、plan と evidence に記録する。既存の 3 件は生成の仕組みにそろえ Kata の中身は kata show の参照にする
   previous_event_id: reg_5a0accfa16da4989987317d23d84b61c
+- v: 1
+  id: reg_6a48470fb7444b2d9bd447fe572ab4d0
+  ts: "2026-10-31T08:25:31Z"
+  action: update
+  actor: indie
+  from_status: decided
+  to_status: decided
+  reason: fields updated
+  changes:
+    - field: conclusion
+      from: plan を契約、Kata を正本とする中心を保ち、skill は補助とする。SpecDojo は SSOT から生成する CLI の入口とオーケストレーターの skill を配る。外部の skill はプロダクトのリポジトリに入れて版を固定し、repos[] での宣言と plan での参照で使い、plan と evidence に記録する。既存の 3 件は生成の仕組みにそろえ Kata の中身は kata show の参照にする
+      to: plan を契約、Kata を正本とする中心を保ち、skill は補助とする。SpecDojo は SSOT から生成する CLI の入口とオーケストレーターの skill を配る。外部の skill はプロダクトのリポジトリに入れて版を固定し、repos[] での宣言と plan での参照で使い、plan と evidence に記録する。既存の 3 件の skill は使われていないため消した
+  previous_event_id: reg_d8df64297d1e4382b35596abd1a83002
