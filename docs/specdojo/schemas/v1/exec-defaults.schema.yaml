@@ -109,6 +109,7 @@ $defs:
         lint-fm,
         lint-md,
         lint-mermaid,
+        lint-d2,
         build,
         format-check,
       ]

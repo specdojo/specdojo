@@ -127,6 +127,16 @@ describe("parent validation allowlist", () => {
     ]);
   });
 
+  it("resolves lint-d2 to a fixed npm script", () => {
+    expect(resolveParentValidationDefinitions(["lint-d2"])).toEqual([
+      expect.objectContaining({
+        id: "lint-d2",
+        args: ["run", "lint:d2"],
+        displayCommand: "npm run lint:d2",
+      }),
+    ]);
+  });
+
   it("resolves the build and format-check IDs to fixed npm scripts", () => {
     const definitions = resolveParentValidationDefinitions(["build", "format-check"]);
 
@@ -148,7 +158,7 @@ describe("parent validation allowlist", () => {
 
   it("lists the allowed IDs when rejecting an unknown ID", () => {
     expect(() => resolveParentValidationDefinitions(["lint"])).toThrow(
-      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md, lint-mermaid, build, format-check/,
+      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, build, format-check/,
     );
   });
 

@@ -67,6 +67,7 @@ config/credentials.json
 /.vitepress/dist/
 /.vitepress/cache/
 /.vitepress/mermaid/
+/.vitepress/d2/
 /.vitepress/kata-staging/
 /packages/docs-site/.vitepress/.temp
 /public/mermaid

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-10-31T14:15:05Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-2ZMY
 ---
@@ -58,6 +57,7 @@ PJR-2ZMY の決定（複雑な図は D2 で描く）を受け、文書のサイ�
 - `.devcontainer/install-d2.sh` と Dockerfile の導入処理を追加した。Linux amd64 / arm64 の公式アーカイブの版・SHA-256 を固定し、導入後にも版を確認する。CI は保護対象なので同じインストーラーを使う案を 5.2. に記した。版と digest の出典は [D2 v0.9.0 の公式配布一覧](https://github.com/d2lang/d2/releases/expanded_assets/v0.9.0)である。
 - 生成物の `.gitignore` と `config init` が追記する既定値を更新した。
 - 正しい D2 と不正な D2 の描画・検査、エラー後の修正、CLI 未導入・版違い、生成物のキャッシュ・削除、ビルド hook、SVG の build / dev 配信のテストを追加した。実 CLI の統合テストも追加し、CLI のない環境だけ skip する。模擬 CLI のテストは、実 D2 の文法の正しさを保証する検査とは区別する。
+- 再開時に、親の `lint:ts` で検出された `tests/packages/docs-site/d2.test.ts` の `import()` 型注釈を、型専用の名前空間 import に置き換えた。その他の前回変更も完了条件と照合した。
 - [[specdojo:docs-editing-guide|ドキュメント編集ガイド]]に PJR-2ZMY の使い分け（単純な図は Mermaid、複雑な図は D2、人が配置を決める図は draw.io）と D2 の記法・検査・出力先を追記した。`packages/docs-site/README.md`、[[specdojo:exec-config-guide|exec 設定ガイド]]、[[specdojo:command-reference|コマンドリファレンス]]と CHANGELOG の `[Unreleased]` も更新した。
 - D2 はブロック内で完結するルートの図を対象とする。外部 import と layers・scenarios・steps の追加ページ出力は今回の対象外として文書に明記した。
 
@@ -104,10 +104,12 @@ PJR-2ZMY の決定（複雑な図は D2 で描く）を受け、文書のサイ�
 - 一時スクリプトによる模擬子プロセスの検証で、抽出元の行番号、ELK の呼び出し、SVG キャッシュと不要 SVG の削除、正常・異常な図と CLI 未導入時の検査結果を確認した。
 - `node --check` による JavaScript の構文検査と、`sh -n .devcontainer/install-d2.sh` は成功した。
 - 変更ファイルへの Prettier 整形、`git diff --check`、`register build` とカタログの検証は成功した。カタログの検証では、今回変更していない未作成成果物に関する警告が出た。`lint-d2` を追加した一時設定を使い、変更した 2 つの schema の `validate:schema:file` も成功した。一時ファイルは検証後に削除した。
-- `node tools/lint-d2.mjs` は 3,597 文書・D2 0 件で成功した。実 CLI の検査が通ったという根拠には用いない。
+- 再開後も docs-site の型検査、JavaScript・シェルの構文検査、カタログ検証、登録簿の派生ビュー生成、`lint-d2` を指定した一時設定の 2 つの schema 検証が成功した。
+- `node tools/lint-d2.mjs` は再開後の 3,599 文書・D2 0 件で成功した。実 CLI の検査が通ったという根拠には用いない。
 - `npm run typecheck`・`lint:ts`・`test:unit`・`lint:md` を含む指定された親検証は runner の担当とし、executor では重複実行しない。親の結果を result に反映する。
-- sandbox に `d2` がなく、外部ダウンロードは DNS 解決に失敗し、子プロセスを起動するビルドの試行も `EPERM` になった。実 CLI での正常・異常な図の統合テスト、フルの文書ビルド、Dev Container の再ビルドと CI 実行はホスト側で確認する。Dev Container の再ビルド後に `d2 version`、`npm run test:integration -- tests/tools/d2-cli.integration.test.ts`、`node tools/lint-d2.mjs`、`npm run docs:build` を実行し、図が表示されることを確認する。
+- sandbox に `d2` がなく、再開後のインストーラー実行も GitHub の DNS 解決に失敗した。`npm --prefix packages/docs-site run docs:build` は既存の Mermaid の子プロセス描画で停止し、Node.js の最小の子プロセス起動でも `EPERM` を確認した。実 CLI での正常・異常な図の統合テスト、フルの文書ビルド、Dev Container の再ビルドと CI 実行はホスト側で確認する。Dev Container の再ビルド後に `d2 version`、`npm run test:integration -- tests/tools/d2-cli.integration.test.ts`、`node tools/lint-d2.mjs`、`npm run docs:build` を実行し、図が表示されることを確認する。
 - 5.2. の保護された設定の承認・反映と 5.3. のホスト側の検証を、reporter が result の申し送りへ転記する。個票・登録簿のステータスと result ファイルは executor では変更していない。
+- 親検証の許可リストを変更したため、統合後はオーケストレーターの手順に従い PJR-JSEY を 1 回実行して runner の動作も確認する。
 
 ## 6. 関連ドキュメント
 
