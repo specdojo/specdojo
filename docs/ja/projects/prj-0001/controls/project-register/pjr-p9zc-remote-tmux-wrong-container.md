@@ -53,7 +53,7 @@ specdojo-tmux.sh.sample の find_container は、ラベルで見つからない�
 - 生成したサンプルが `bash -n` と `shellcheck` を通る。
 - 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
-- CHANGELOG は新しい未公開の版の節を作って書く。版の番号は _UNDECIDED_ とし、executor は決めずに result へ申し送る。公開済みの版（0.5.0 以前）の節は変えない。
+- `CHANGELOG.md` の `## [Unreleased]` 節に追記する。版の番号は決めない。公開済みの版（0.5.0 以前）の節は変えない。
 
 ## 4. 対応結果
 
