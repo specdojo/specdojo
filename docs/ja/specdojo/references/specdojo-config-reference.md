@@ -189,14 +189,16 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 
 `projects.<project-id>.repos` は、プロジェクトリポジトリとは別のプロダクトリポジトリを配列で宣言します。プロジェクトリポジトリ自身は宣言しません。キーを省略した project（または空配列）は、従来どおりプロジェクトリポジトリ 1 つだけを扱います。
 
-| キー                   | 必須 | 既定値                         | 役割・利用箇所                                                                                                                            |
-| ---------------------- | ---- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                 | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。`project` は予約名で使えません。         |
-| `path`                 | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。                                             |
-| `integration_branch`   | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                                     |
-| `integration_strategy` | 任意 | `merge`                        | `merge` はローカルの merge commit で統合します。`branch-only` は exec branch に commit して保持し、プロダクト側の PR レビューに渡します。 |
-| `setup`                | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                                  |
-| `commit_types`         | 任意 | なし                           | このリポジトリ固有の登録項目 type から Conventional Commits type への対応マッピングです。project の指定より優先されます。                 |
+| キー                      | 必須 | 既定値                         | 役割・利用箇所                                                                                                                            |
+| ------------------------- | ---- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                    | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。`project` は予約名で使えません。         |
+| `path`                    | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。                                             |
+| `integration_branch`      | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                                     |
+| `integration_strategy`    | 任意 | `merge`                        | `merge` はローカルの merge commit で統合します。`branch-only` は exec branch に commit して保持し、プロダクト側の PR レビューに渡します。 |
+| `setup`                   | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                                  |
+| `commit_types`            | 任意 | なし                           | このリポジトリ固有の登録項目 type から Conventional Commits type への対応マッピングです。project の指定より優先されます。                 |
+| `commit_subject_template` | 任意 | `exec(register {id}): {title}` | register の exec がプロダクトへ積む commit の 1 行目を指定します。                                                                        |
+| `merge_message_template`  | 任意 | `exec(register {id}): {title}` | register の exec がプロダクトへ積む merge commit のメッセージを指定します。改行で本文も指定できます。                                     |
 
 register の worktree 実行では、`exec run --integration-branch <repo>=<branch>` により `integration_branch` を run ごとに上書きできます。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定方法、ローカルブランチの検査、並列実行と再開時の扱いは [[specdojo:command-reference]] を参照してください。
 
@@ -204,7 +206,46 @@ register の worktree 実行では、`exec run --integration-branch <repo>=<bran
 
 既定対応は `issue` が `fix`、`todo`・`change-request`・`epic` が `feat`、`decision`・`note`・`question`・`risk` が `docs` です。未知の type は `chore` にフォールバックします。たとえば、project に `"commit_types": { "todo": "chore", "issue": "fix" }`、ドキュメント用の repo に `"commit_types": { "todo": "docs" }` を設定すると、その repo の todo は `docs`、他の repo の todo は `chore` になります。個票で `commit_type` を明示すれば、設定より優先されます。
 
-この設定は後続処理向けの解決情報です。現時点の exec の commit メッセージとブランチ名は変わりません。
+`commit_subject_template` と `merge_message_template` はプロダクトリポジトリごとに独立して指定できます。設定がない場合は commit・merge とも従来の `exec(register <ID>): <タイトル>` を保ちます。SpecDojo の記録のリポジトリの start・review・wait・merge などの記帳には適用しません。
+
+使える変数は次の 8 種類です。未知の変数、対応しない波括弧、空白だけのテンプレートは設定エラーです。値の中の波括弧は再展開しません。
+
+| 変数        | 値                                                                                      |
+| ----------- | --------------------------------------------------------------------------------------- |
+| `{id}`      | 登録項目の ID（例: `PJR-AB12`）                                                         |
+| `{project}` | project ID（例: `prj-0001`）                                                            |
+| `{topic}`   | 個票ファイル名 `pjr-ab12-<topic>.md` の topic 部分。個票パスがない場合は小文字の項目 ID |
+| `{type}`    | 個票・repo・project・既定対応の優先順で解決した commit type                             |
+| `{scope}`   | 個票の `commit_scope`。未指定なら空文字                                                 |
+| `{title}`   | 改行などの空白を 1 つにまとめた項目のタイトル                                           |
+| `{branch}`  | そのプロダクトの実際の作業ブランチ名                                                    |
+| `{target}`  | run の上書きを含む、そのプロダクトの実際の統合先                                        |
+
+scope が空のときは、テンプレートに書いた `({scope})` を括弧ごと取り除きます。たとえば `{type}({scope}): {title}` は `feat: 機能追加` になります。commit のテンプレートは空白と改行を 1 つの空白にまとめて 1 行にします。merge のテンプレートは本文の改行を保ちます。どちらも 1 行目は従来どおり最大 100 文字（超過時は末尾を `…` にして切り詰める）です。本文の末尾には設定にかかわらず `Refs: <project-id>:<ID>` を付けます。テンプレート自身に同じ `Refs:` 行があっても、末尾に 1 回だけ置きます。
+
+git-flow で develop へローカル統合する場合の `repos` 要素の例です。merge の標準的な書式は、次のように明示できます。
+
+```json
+{
+  "name": "app1",
+  "path": "../app1",
+  "integration_branch": "develop",
+  "commit_subject_template": "{type}({scope}): {title}",
+  "merge_message_template": "Merge branch '{branch}' into {target}"
+}
+```
+
+GitHub flow で作業ブランチを保持して PR レビューへ渡す場合の例です。`branch-only` では runner が merge commit を作らないため、`merge_message_template` は使いません。作業ブランチ名は引き続き従来の形式です。
+
+```json
+{
+  "name": "app1",
+  "path": "../app1",
+  "integration_branch": "main",
+  "integration_strategy": "branch-only",
+  "commit_subject_template": "{type}: {title}"
+}
+```
 
 GitHub flow などで PR レビューを必須にするリポジトリには、`"integration_strategy": "branch-only"` を指定します。`integration_branch` は exec branch の作成元と、プロダクト側で PR を作る際の統合先の目安です。runner は統合先へ merge せず、push・PR 作成（`gh` を含む）も行いません。プロダクトの commit とプロジェクトの記帳が成功すると、プロジェクト側は通常どおり `review` へ進み、result に `branch-only`（未統合）、exec branch 名、trace key を残します。プロダクト側のレビューやリリースが完了したことは意味しません。
 

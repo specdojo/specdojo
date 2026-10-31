@@ -8,6 +8,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- プロダクトリポジトリの `repos[].commit_subject_template` と `repos[].merge_message_template` で、register の exec が作る commit と merge commit の書式を選べるようにしました。8 種類の変数と空 scope の括弧除去に対応し、本文末尾の `Refs:` は常に付けます。未設定時の書式と SpecDojo の記帳は従来どおりです（PJR-Z7GX）。
+
 - 個票に `commit_type` と `commit_scope` を追加し、`register add` / `update` に `--commit-type` と `--commit-scope` を追加しました。Conventional Commits の type・scope を個票ごとに指定でき、`update` では `-` で削除できます。未指定時は項目の type から既定の対応（`issue` は `fix`、`todo`・`change-request` は `feat` など）で解決し、`specdojo.config.json` の `projects.<project-id>.commit_types` や `repos[].commit_types` で対応を上書きできます（PJR-TC62）。
 
 - `deliverable scaffold` に `--target <doc-id>` を追加しました。成果物を 1 つだけ指定して雛形を作成できます（`--dct` との併用は不可）。カタログにない成果物は `--target-path` と `--target-rulebook` を指定して作成できます。template のない rulebook でも最小構成の雛形を生成します（PJR-S23T）。

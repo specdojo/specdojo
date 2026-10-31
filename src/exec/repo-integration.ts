@@ -213,7 +213,7 @@ export function commitProductWorktree(
  */
 export function commitProductWorktrees(params: {
   worktree: ExecWorktree;
-  message: string;
+  message: string | ((product: ProductWorktree) => string);
   targets?: readonly string[];
   scopeLogPath?: string;
   failureLogPath?: string;
@@ -226,7 +226,7 @@ export function commitProductWorktrees(params: {
   for (const product of products) {
     if (!existsSync(product.path)) continue;
     const outcome = commitProductWorktree(product, {
-      message: params.message,
+      message: typeof params.message === "function" ? params.message(product) : params.message,
       targetPaths: targetPaths.get(product.name),
       failureLogPath: params.failureLogPath,
     });
@@ -588,7 +588,7 @@ export function integrateTaskRepositories(params: {
   mergeMessage: string;
   // プロダクト側の merge commit の message。省略時は `mergeMessage`。プロジェクト側の記帳
   // （遷移・executor など）をプロダクトの履歴へ複製しないために分ける（PJR-30SW）。
-  productMergeMessage?: string;
+  productMergeMessage?: string | ((product: ProductWorktree) => string);
   checkProject: () => RepoIntegrationBlocker[];
   beforeProjectMerge: () => void;
   mergeProject: () => void;
@@ -694,7 +694,10 @@ export function integrateTaskRepositories(params: {
       }
       commit = mergeProductIntoTarget({
         product,
-        message: params.productMergeMessage ?? params.mergeMessage,
+        message:
+          typeof params.productMergeMessage === "function"
+            ? params.productMergeMessage(product)
+            : (params.productMergeMessage ?? params.mergeMessage),
         failureLogPath: params.failureLogPath,
       });
     } catch (error) {

@@ -280,6 +280,27 @@ describe("resolveRepoQualifiedPath", () => {
 });
 
 describe("loadConfig with repos", () => {
+  it("loads both product message templates", () => {
+    const repo = {
+      name: "app1",
+      path: "../app1",
+      commit_subject_template: "{type}({scope}): {title}",
+      merge_message_template: "Merge branch '{branch}' into {target}\n\nTopic: {topic}",
+    };
+    writeConfig({ "prj-0001": withRepos([repo]) });
+    expect(loadConfig(root).config?.projects["prj-0001"].repos).toEqual([repo]);
+  });
+
+  it.each(["commit_subject_template", "merge_message_template"])(
+    "rejects invalid %s during config loading",
+    (key) => {
+      for (const value of ["{unknown}", "{title", "{}", " ", false, 1, null, "a\0b"]) {
+        writeConfig({ "prj-0001": withRepos([{ name: "app1", path: "../app1", [key]: value }]) });
+        expect(() => loadConfig(root)).toThrow(key);
+      }
+    },
+  );
+
   it("loads a project without repos exactly as before", () => {
     const project = {
       base_path: "docs/ja/projects/prj-0001",
