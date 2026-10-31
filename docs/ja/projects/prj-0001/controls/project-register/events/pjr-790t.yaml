@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ea4e2cae8f99412f8383e7500b0bac21
+  ts: "2026-10-31T02:43:14Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 入力の章がない種類の個票で入力の見出しに番号を付ける
+    - field: description
+      from: ""
+      to: "decision など入力の章がない種類の個票へ --input を書くと、番号のない ## 入力 が末尾に足されるため、番号付きの章として適切な位置に入れる"
+    - field: input
+      from: ""
+      to: '["src/register/input.ts の setRegisterInput は、入力の章がない個票では本文の末尾に番号のない ## 入力 を足す。Markdown の規約では ## 以下の見出しに連番が要る。todo は 2 章に入るが、decision（PJR-BNMV で発生）では末尾に足された"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
