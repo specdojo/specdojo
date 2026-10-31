@@ -51,3 +51,16 @@
       from: "-"
       to: medium
   previous_event_id: reg_f0a6e0b1fb5b408ab28e3694f8cd66f3
+- v: 1
+  id: reg_4c61030d430b4929a548cb3a05c3232a
+  ts: "2026-10-31T13:20:55Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_050c974ee16e4d36890dc30968e082d8
