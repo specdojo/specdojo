@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-EVAE"]'
+- v: 1
+  id: reg_1d07073c0d7e4232a84c8361db8621e1
+  ts: "2026-10-31T06:45:27Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ad3ee5e7e30845dd9e15ef4a441545c2
+- v: 1
+  id: reg_b9fd562e833843d987c8ba9ffa8690c5
+  ts: "2026-10-31T07:01:39Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_1d07073c0d7e4232a84c8361db8621e1
