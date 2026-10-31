@@ -3249,3 +3249,19 @@
       from: PJR-E45K の統合後、exec run --register が start から review まで通った
       to: PJR-S23T の統合後、exec run --register が start から review まで通った
   previous_event_id: reg_bd1e434566ea4e0ba17e03668de38269
+- v: 1
+  id: reg_42e01055685b45578caab0b039ddf634
+  ts: "2026-10-31T03:39:38Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-TC62 と PJR-790T の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-30"
+      to: "-"
+  previous_event_id: reg_97c72a2b625643a7af2e78237c5b6580
