@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-rtd5-starter-templates
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-10-28T10:31:41Z"
+  completed_at: "2026-10-31T06:38:06Z"
+  conclusion: ひな型は生成・追加の設定・SpecDojo の 3 層とし、追加の設定は CLI と recipe を併用し（案 C）、GitHub の template repository を主な入口にする。作り直しは Actions の定期実行で PR にし、初期化とセキュリティの自動チェックを備える。最初はランディングページ、次に Next.js と Cloudflare を作る
   derived_from:
     - PJR-5TZS
     - PJR-DQ9E
