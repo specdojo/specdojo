@@ -8,7 +8,9 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
-- 本リポジトリの開発用に `node tools/lint-mermaid.mjs '<Markdown のパスまたは glob>'` を追加しました。docs-site と同じ Mermaid で、ブラウザを使わずに図の構文を検査し、エラーの文書・開始行・図の種類と未検査の件数を報告します。引数なしでは `docs/` 全体を検査します。npm script・hook・exec 親検証への接続は別途設定が必要です（PJR-B5TY）。
+- 本リポジトリの開発用に `node tools/lint-mermaid.mjs '<Markdown のパスまたは glob>'` を追加しました。docs-site と同じ Mermaid で、ブラウザを使わずに図の構文を検査し、エラーの文書・開始行・図の種類と未検査の件数を報告します。引数なしでは `docs/` 全体を検査します。本リポジトリでは `npm run lint:mermaid` として `npm run check` と commit 時の hook（変更した Markdown）に組み込みました（PJR-B5TY）。
+
+- exec の親の検証に `lint-mermaid`（`npm run lint:mermaid`）を追加しました。`pipeline.parent_validations` に指定でき、利用するリポジトリに `lint:mermaid` script が必要です（PJR-B5TY）。
 
 - プロダクトの作業ブランチ名を `repos[].branch_template` と `exec run --branch <repo>=<name>` で選べるようにしました。項目とブランチの対応を runner が記録し、再開・片付けに使います。別項目との名前の重なりは開始前に停止します。`integration_strategy: ff` は merge commit を作らず早送りだけで統合し、分岐した履歴では停止します。未設定時の名前と `merge`・`branch-only` の動作は従来どおりです（PJR-M1DH）。
 

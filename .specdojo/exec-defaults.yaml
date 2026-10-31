@@ -22,6 +22,8 @@ pipeline:
     - lint-ts # npm run lint:ts
     - lint-fm # npm run lint:fm
     - lint-md # npm run lint:md
+    # Mermaid の構文エラーは docs:build まで分からないため、統合前に検出する（PJR-B5TY）。
+    - lint-mermaid # npm run lint:mermaid
     - test-integration # npm run test:integration（shell を介さず固定 argv で実行）
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
     # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
