@@ -42,6 +42,104 @@ if [ -z "$remote_user" ]; then
   exit 1
 fi
 
+# docker の探索は最初の呼び出しより前に行う。SSH の PATH だけには依存しない。
+docker_dir=""
+docker_search_path="$PATH"
+docker_login_shell="${SHELL:-/bin/bash}"
+docker_candidates=(
+  /usr/local/bin
+  /opt/homebrew/bin
+  "${HOME:-}/.docker/bin"
+  /Applications/Docker.app/Contents/Resources/bin
+  /snap/bin
+  /usr/bin
+)
+
+select_docker() {
+  local candidate="$1" candidate_dir
+  # command -v が返す alias や関数の説明は受け付けない。
+  case "$candidate" in
+    */docker) ;;
+    *) return 1 ;;
+  esac
+  [ -f "$candidate" ] && [ -x "$candidate" ] || return 1
+  candidate_dir="${candidate%/*}"
+  candidate_dir="$(cd "${candidate_dir:-/}" && pwd -P)" || return 1
+  docker_dir="$candidate_dir"
+}
+
+docker_hint() {
+  local failure="$1" host_os kernel
+  host_os="$(uname -s 2>/dev/null || true)"
+  kernel="$(uname -r 2>/dev/null || true)"
+  case "$host_os" in
+    Darwin)
+      if [ "$failure" = missing ]; then
+        echo "macOS: Install Docker Desktop." >&2
+      else
+        echo "macOS: Start Docker Desktop and check the Docker context." >&2
+      fi
+      ;;
+    Linux)
+      if printf '%s\n' "$kernel" | grep -qi microsoft || grep -qi microsoft /proc/version 2>/dev/null; then
+        echo "WSL2: Start Docker Desktop and enable WSL integration for this distribution." >&2
+      elif [ "$failure" = missing ]; then
+        echo "Linux: Install Docker Engine." >&2
+      else
+        echo "Linux: Start the docker service and check membership in the docker group (then log in again)." >&2
+      fi
+      ;;
+    *) echo "Install and start Docker, and check the Docker context and access permissions." >&2 ;;
+  esac
+}
+
+if [ -n "${SPECDOJO_DOCKER_BIN:-}" ]; then
+  # 明示指定はディレクトリ。誤指定を別の Docker で隠さず、下で診断する。
+  select_docker "$SPECDOJO_DOCKER_BIN/docker" || true
+else
+  if ! select_docker "$(command -v docker || true)"; then
+    # 起動時のメッセージを無視し、問い合わせの印が付いた実行ファイルだけを採る。
+    # shellcheck disable=SC2016
+    login_output="$("$docker_login_shell" -lc 'printf "\n__SPECDOJO_DOCKER__"; command -v docker' 2>/dev/null)" || login_output=""
+    while IFS= read -r line; do
+      case "$line" in
+        __SPECDOJO_DOCKER__*)
+          if select_docker "${line#__SPECDOJO_DOCKER__}"; then
+            break
+          fi
+          ;;
+      esac
+    done <<< "$login_output"
+    if [ -z "$docker_dir" ]; then
+      for candidate_dir in "${docker_candidates[@]}"; do
+        if select_docker "$candidate_dir/docker"; then
+          break
+        fi
+      done
+    fi
+  fi
+fi
+
+if [ -z "$docker_dir" ]; then
+  echo "Docker executable not found." >&2
+  if [ -n "${SPECDOJO_DOCKER_BIN:-}" ]; then
+    echo "Searched SPECDOJO_DOCKER_BIN: $SPECDOJO_DOCKER_BIN/docker (must be an executable file)." >&2
+  else
+    echo "Searched PATH: $docker_search_path" >&2
+    echo "Queried login shell: $docker_login_shell -lc 'command -v docker'" >&2
+    printf 'Searched directory: %s\n' "${docker_candidates[@]}" >&2
+  fi
+  docker_hint missing
+  exit 1
+fi
+
+export PATH="$docker_dir:$PATH"
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker is not usable: $docker_dir/docker (docker info failed)." >&2
+  docker_hint unavailable
+  exit 1
+fi
+
 # 1. 動いているコンテナを探す
 container_id="$(docker ps -q --filter "label=devcontainer.local_folder=$workspace_dir" | head -n 1)"
 
@@ -58,10 +156,10 @@ fi
 if [ -z "$container_id" ]; then
   echo "Starting devcontainer for $workspace_dir..." >&2
   if [ -n "${SPECDOJO_NODE_BIN:-}" ]; then
-    PATH="$SPECDOJO_NODE_BIN:$PATH" devcontainer up --workspace-folder "$workspace_dir" >&2
+    PATH="$docker_dir:$SPECDOJO_NODE_BIN:$PATH" devcontainer up --workspace-folder "$workspace_dir" >&2
   else
     # shellcheck disable=SC2016
-    "${SHELL:-/bin/bash}" -lic 'exec devcontainer up --workspace-folder "$1"' devcontainer-launcher "$workspace_dir" >&2
+    "${SHELL:-/bin/bash}" -lic 'export PATH="$1:$PATH"; exec devcontainer up --workspace-folder "$2"' devcontainer-launcher "$docker_dir" "$workspace_dir" >&2
   fi
   container_id="$(docker ps -q --filter "label=devcontainer.local_folder=$workspace_dir" | head -n 1)"
 fi
