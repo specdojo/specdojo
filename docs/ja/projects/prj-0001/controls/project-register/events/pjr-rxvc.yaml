@@ -41,3 +41,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-TE2N"]'
+- v: 1
+  id: reg_02164977f57640129c3345dbdee9bc7d
+  ts: "2026-11-01T02:05:47Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: medium
+  previous_event_id: reg_312b4119e10341dd9800a39591ef2c35
