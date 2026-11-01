@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-rxvc-cdfd-overview-split-by-usage
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-10-31T23:32:43Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T02:23:34Z"
+  conclusion: 全体概要の CDFD を register 系・schedule 系・routine 系・共通の 4 つの D2 図に分け、rulebook で使い方の流れによる分割を選べるようにした
   derived_from:
     - PJR-8TQJ
   depends_on:

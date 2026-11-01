@@ -80,3 +80,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_012ad01135384259a25f9565c84066a9
+- v: 1
+  id: reg_50308f61ee33409cb4a40563e84f11b0
+  ts: "2026-11-01T02:23:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・lint で確かめた。変更前の 57 本のエッジがすべて残り、新しいエッジはない。lint:md・lint:d2 が通り、status は上がっていない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: 全体概要の CDFD を register 系・schedule 系・routine 系・共通の 4 つの D2 図に分け、rulebook で使い方の流れによる分割を選べるようにした
+  previous_event_id: reg_c3efa0b7171a4978865221318f46869d
