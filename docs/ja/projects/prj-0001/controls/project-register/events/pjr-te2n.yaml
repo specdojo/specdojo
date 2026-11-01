@@ -83,3 +83,32 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_fdd8fccc29094c498d7a83acfa953c9b
+- v: 1
+  id: reg_b63f9d60920f4fb3a6878f3a17d8f52d
+  ts: "2026-11-01T00:22:59Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_40d394cbfe364ebe9ec019c87964624c
+- v: 1
+  id: reg_7764d344312b457ea9db83ec327e71ce
+  ts: "2026-11-01T00:34:45Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b63f9d60920f4fb3a6878f3a17d8f52d

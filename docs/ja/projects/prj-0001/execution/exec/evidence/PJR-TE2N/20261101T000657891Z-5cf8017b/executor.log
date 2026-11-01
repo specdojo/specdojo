@@ -1,0 +1,27 @@
+プロジェクト登録簿の項目 **PJR-TE2N「CDFD の D2 版の rulebook と記法の選び方を用意する」** に対応しました。
+
+### 実施概要
+
+1. **`specdojo:cdfd-d2-rulebook` の新規作成**:
+   - [`docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TE2N/docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md) を作成しました。
+   - [[specdojo:cdfd-mermaid-rulebook|cdfd-mermaid-rulebook]] と同じ概念（プロセス・プロセスグループ・サブグラフ・データストア・物理保管・外部主体・イベント・情報の流れ・物の流れ）を一対一に表す対応表を定義しました。
+   - 記号対応: プロセス／代表ノードは角丸四角形（`shape: rectangle`、`style.border-radius: 8`）、データストアは円柱（`shape: cylinder`）、物理保管は大角丸四角形（`shape: rectangle`、`style.border-radius: 20`）、外部主体は四角形（`shape: rectangle`）、イベントは六角形（`shape: hexagon`）、サブグラフはコンテナ（`container: { ... }`）、情報の流れはラベル付き `->`、物の流れは `material_flow` クラス（太線 `style.stroke-width: 3`）を適用したエッジとしました。
+   - 色は `classes` で概念の大分類ごとに定義して `class` で当て、ノード単位の `style` 個別指定を禁止しました（配色は Mermaid 版と統一）。
+   - 方向は `direction: right` を基本とし、配置エンジンは docs-site の既定である ELK を前提としています。
+   - [[prj-0001:pjr-8tqj-cdfd-concise-rulebooks|PJR-8TQJ]] で要約された CDFD rulebook と同じ密度・章構成で作成し、Frontmatter は `status: draft` としています。
+   - rulebook 内の D2 例はすべて ` ```d2 ` のコードブロックで記述しています。
+
+2. **CDFD rulebook 3 文書における記法選択の対応**:
+   - [`docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TE2N/docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md)、[`docs/ja/specdojo/rulebooks/cdfd-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TE2N/docs/ja/specdojo/rulebooks/cdfd-rulebook.md)、[`docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TE2N/docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md) の Frontmatter `includes` に `specdojo:cdfd-d2-rulebook` を追加しました。
+   - 各文書内の固定的な「Mermaid 図」という表現を「概念データフロー図（Mermaid または D2）」に改定しました。
+   - 記法の選択場所として、全体概要（`cdfd-overview.md`）の「凡例（本プロダクト共通）」で記法（Mermaid または D2）を宣言する方式を規定しました。
+   - 凡例章を省略した場合、または記法を宣言しない既存プロダクトは、従来どおり Mermaid（`specdojo:cdfd-mermaid-rulebook` の既定凡例）として扱われる下位互換性を確保しました。
+
+3. **個票の更新と制約の遵守**:
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-te2n-cdfd-d2-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TE2N/docs/ja/projects/prj-0001/controls/project-register/pjr-te2n-cdfd-d2-rulebook.md) の「作業内容」を `done` に更新し、「対応結果」セクションに実施内容と決定理由（記法の選択場所、後方互換性、記号対応の根拠）を記録しました。
+   - プロダクトの CDFD 文書（`docs/ja/product/010-business-specs/010-data-flow/`）は変更していません（書き直しは PJR-RXVC および PJR-T1D1 で実施予定）。
+   - 各 rulebook の `status` は格上げせず、`cdfd-d2-rulebook` は `draft`、既存の status（`ready` / `draft`）を維持しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CDFD の D2 版 rulebook（specdojo:cdfd-d2-rulebook）を新規作成し、cdfd-overview-rulebook、cdfd-rulebook、cdfd-uc-rulebook で記法を Mermaid と D2 から選択可能に改定しました。プロダクトの cdfd-overview の凡例で記法を宣言する方式とし、未宣言時は Mermaid を既定とする後方互換性を確保しました。","handoff":["記法の選択場所: 全体概要（`cdfd-overview.md`）の「凡例（本プロダクト共通）」でプロダクト共通の記法（Mermaid または D2）を宣言する方式を採用。PJR-8TQJ の凡例一元化と揃えることで、プロダクト全体の記法の一貫性を保証した。","下位互換性の維持: 凡例を省略した場合や記法を宣言しない既存プロダクトは、従来どおり Mermaid（`specdojo:cdfd-mermaid-rulebook`）を既定として扱う。","記号とスタイルの対応: 個票入力案に沿って一対一対応を設計した。物理保管は大角丸四角形（`style.border-radius: 20`）、物の流れは `material_flow` クラス（`style.stroke-width: 3`）とし、ノード単位の `style` 個別指定を禁止して `classes` による一元管理を定めた。","後続タスクへの申し送り: 本タスクではプロダクトの CDFD 文書（`docs/ja/product/010-business-specs/010-data-flow/`）は変更していない。プロダクト文書への記法反映・書き直しは PJR-RXVC および PJR-T1D1 で実施する。"],"validations":[]}
+</specdojo_executor_evidence>
