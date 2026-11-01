@@ -31,13 +31,21 @@ exec resume に --resume-from executor を足し、reporter の段で blocked �
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `exec resume --task <task-id> --resume-from executor` で、pipeline のタスクを executor の段からやり直せる。対象は、executor が成功して reporter の段で `blocked` になったタスクと、`doing` のまま中断したタスクとする。残っている worktree と前の試行の変更をそのまま引き継ぎ、executor の試行回数を 1 増やして、executor・reporter・統合の順に進める。`blocked` から再開するときは、状態遷移のイベントを記録する
+- executor は worktree にある plan を読む。止まった後に worktree の plan を直してから再開すると、直した plan が使われる
+- 再開できない場合（統合の段で止まっている、executor が成功していない、pipeline ではないタスク、`--resume-from` に `executor` 以外を渡した）は、理由を示して止まる。オプションの名前と制約は `exec run --register` の `--resume-from` とそろえる。共通にできる処理は `src/exec/register-resume.ts` と共有し、重複させない
+- 単体テストと、実際の worktree を使う統合テストで、上の 3 項目を確かめる
+- `docs/ja/specdojo/guides/exec-operation-guide.md` の「blockedタスクの復帰」の表と、`docs/ja/specdojo/references/command-reference.md` に追記する。plan を直して再開するときは、result に経緯を残す手順を書く。CHANGELOG は未公開の版の節に書き、公開済みの版の節は変えない
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` と親の検証が通る
+- 統合の後に、orchestrator が止まっている `T-DATA-FLOW-USAGE-cdfd-overview-010` で実際に使い、動作を確かめる（executor の作業ではない）
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ |
+| --- | ---------------------------------------------- | ---- | ---- | ---- |
+| 1   | exec resume に --resume-from executor を足す   | DEV  | open | -    |
+| 2   | 単体テストと統合テストを足す                   | DEV  | open | -    |
+| 3   | ガイド・コマンドリファレンス・CHANGELOG に書く | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -45,4 +53,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-operation-guide]]
+- [[specdojo:command-reference]]
