@@ -127,3 +127,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d0102888aa5d44859b19ca9af6a91150
+- v: 1
+  id: reg_be187d7ad8a3409f83dbee751458c964
+  ts: "2026-11-01T08:23:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 利用者が macOS のホストから ssh で入り、コンテナが動いているときと止まっているときの両方で tmux に接続できたと確認した（2026-11-01）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: マウント元を bind だけに絞り pwd -P で正規化して比べるようにし、Docker Desktop の /.. を含むマウント元でも作業ディレクトリを求められるようにした
+  previous_event_id: reg_075e4c206a3048f9abfd54a723d7b3fb

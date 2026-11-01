@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-nv5t-host-tmux-script-hardening
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-31T13:54:15Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T08:23:17Z"
+  conclusion: マウント元を bind だけに絞り pwd -P で正規化して比べるようにし、Docker Desktop の /.. を含むマウント元でも作業ディレクトリを求められるようにした
   derived_from:
     - PJR-Q8KP
 ---
