@@ -353,7 +353,7 @@ groups:
         name: 概念データフロー図（Onboarding）
         kind: work
         overview: SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える Onboarding グループ（P-01）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
-        path: cdfd-onboarding.md
+        path: /docs/ja/product/trash/cdfd-onboarding.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -385,7 +385,7 @@ groups:
         name: 概念データフロー図（Plan）
         kind: work
         overview: 登録簿定義、成果物カタログ定義、スケジュール計画展開、定期実行定義、ジョブ定義からなる Plan グループ（P-02〜P-06）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
-        path: cdfd-plan.md
+        path: /docs/ja/product/trash/cdfd-plan.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -423,7 +423,7 @@ groups:
         name: 概念データフロー図（Do）
         kind: work
         overview: 実行計画に基づいて人または AI Agent が Kata を参照してタスクを実行し、成果物と実行記録を残す Do グループ（P-07）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する。定期実行・ジョブ・並行実行はタスク実行の実行形態として扱う
-        path: cdfd-do.md
+        path: /docs/ja/product/trash/cdfd-do.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -449,7 +449,7 @@ groups:
         name: 概念データフロー図（Check）
         kind: work
         overview: 成果物評価、進捗可視化報告、派生生成閲覧提供からなる Check グループ（P-08〜P-10）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
-        path: cdfd-check.md
+        path: /docs/ja/product/trash/cdfd-check.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -481,7 +481,7 @@ groups:
         name: 概念データフロー図（Action）
         kind: work
         overview: タスク完了、稼働構成管理、非推奨化保管からなる Action グループ（P-11〜P-13）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
-        path: cdfd-action.md
+        path: /docs/ja/product/trash/cdfd-action.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -507,7 +507,7 @@ groups:
         name: 概念データフロー図（Orchestrator）
         kind: work
         overview: Plan・Do・Check・Action へ要求を発行して PDCA を回す Orchestrator グループ（P-14）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する。参加者の意図に基づく対話型の運転と、定期実行定義に基づく自動運転を含む
-        path: cdfd-orchestrator.md
+        path: /docs/ja/product/trash/cdfd-orchestrator.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
@@ -638,7 +638,7 @@ groups:
         name: 概念データフロー図（成果物の作成から完了まで）
         kind: work
         overview: 成果物カタログの定義からタスク展開、実行、評価、完了記録までの Plan → Do → Check → Action の順序と引き渡し条件を定義する。グループ内部のプロセスは再掲しない
-        path: cdfd-uc-deliverable.md
+        path: /docs/ja/product/trash/cdfd-uc-deliverable.md
         rulebook: specdojo:cdfd-uc-rulebook
         evidence_refs:
           - kind: implementation

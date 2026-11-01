@@ -395,9 +395,21 @@ export const PRODUCT_SEGMENT_TEXT: Record<string, string> = {
 // docs/ja/product 配下の既知ファイルのメニュー表示（PROJECTS_FILE_MENU と同じ仕組み）。
 // text: 全ファイル共通の「概念データフロー図（...）: SpecDojo」という H1 は冗長なため、
 // 固定の短い表示名（H1 より優先）にする。
-// order: cdfd-overview を先頭、以降は全体概要（P-01〜P-10）の並び順に揃える。
+// order: cdfd-overview を先頭、続けて系統別の詳細（register 系・schedule 系・routine 系）を並べる（PJR-SJQC）。
+// 廃止済み（trash）の旧文書は、旧体系ごとにまとめて後ろへ並べる。
 export const PRODUCT_FILE_MENU: Record<string, { text: string; order?: number }> = {
   "cdfd-overview": { text: "全体概要", order: 0 },
+  "cdfd-uc-register": { text: "register 系", order: 1 },
+  "cdfd-uc-schedule": { text: "schedule 系", order: 2 },
+  "cdfd-uc-routine": { text: "routine 系", order: 3 },
+  // 廃止済み（PJR-SJQC）。プロセスグループ別 CDFD と、cdfd-uc-schedule に引き継いだ旧ユースケース別 CDFD。
+  "cdfd-onboarding": { text: "（旧）Onboarding（P-01）", order: 200 },
+  "cdfd-plan": { text: "（旧）Plan（P-02〜P-06）", order: 210 },
+  "cdfd-do": { text: "（旧）Do（P-07）", order: 220 },
+  "cdfd-check": { text: "（旧）Check（P-08〜P-10）", order: 230 },
+  "cdfd-action": { text: "（旧）Action（P-11〜P-13）", order: 240 },
+  "cdfd-orchestrator": { text: "（旧）Orchestrator（P-14）", order: 250 },
+  "cdfd-uc-deliverable": { text: "（旧）成果物の作成から完了まで", order: 260 },
   "cdfd-init": { text: "初期セットアップ（P-01）", order: 10 },
   "cdfd-register-lifecycle": { text: "登録簿ライフサイクル（P-02）", order: 20 },
   "cdfd-catalog-planning": { text: "計画展開（P-03）", order: 30 },
@@ -469,6 +481,8 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
 // 番号付きの成果物ツリー（成果物カタログ〜プロダクト変更）の後ろに運用順で並べる。
 // 実行プラン・実行結果は大量の項目を含むため、進捗ビューの後ろに置く。
 export const PROJECTS_GROUP_ORDER: Record<string, number> = {
+  // 非推奨化した文書（trash）は現行の文書の後ろに置く。
+  廃止済み: 900,
   "管理台帳・管理ビュー": 10,
   スケジュール: 20,
   ルーチン: 30,
