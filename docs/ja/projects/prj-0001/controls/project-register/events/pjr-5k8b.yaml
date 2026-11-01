@@ -131,3 +131,16 @@
       from: "-"
       to: track data-flow-usage を timeline に定義し、catalog に overview の改訂と系統別の詳細 3 文書を定め、schedule 戦略から 4 件のタスクを展開した
   previous_event_id: reg_e3ca0fb450bf4c55a7bfbae384abd1f7
+- v: 1
+  id: reg_8745688b95c74eb79516cf849fa4e44d
+  ts: "2026-11-01T10:24:06Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: track data-flow-usage の epic の子として位置づける
+  changes:
+    - field: derived_from
+      from: '["PJR-SJQC"]'
+      to: '["PJR-SJQC","PJR-GEZN"]'
+  previous_event_id: reg_ad107afd9ec645bba2cfc76e01b04d2c

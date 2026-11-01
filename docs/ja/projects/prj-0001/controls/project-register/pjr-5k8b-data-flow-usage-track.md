@@ -17,6 +17,7 @@ specdojo:
   conclusion: track data-flow-usage を timeline に定義し、catalog に overview の改訂と系統別の詳細 3 文書を定め、schedule 戦略から 4 件のタスクを展開した
   derived_from:
     - PJR-SJQC
+    - PJR-GEZN
 ---
 
 # PJR-5K8B track data-flow-usage の timeline・catalog・schedule 戦略を用意する
