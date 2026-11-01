@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-USAGE-cdfd-overview-010",
+  "run_id": "20261101T102445374Z-1d263793",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-01T11:47:04.530Z",
+    "completed_at": "2026-11-01T11:51:50.737Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-overview.md                 | 484 +++++++--------------\n .../T-DATA-FLOW-USAGE-cdfd-overview-010-plan.md    |  11 +\n .../T-DATA-FLOW-USAGE-cdfd-overview-010-result.md  |  26 +-\n 3 files changed, 183 insertions(+), 338 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "passed",
+      "summary": "整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "d2 --layout elk tmp/cdfd-overview-resume/diagram-4.d2 tmp/cdfd-overview-resume/legend-preview.png",
+      "status": "passed",
+      "summary": "凡例の描画に成功し、指定した上下順を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "d2 --layout elk tmp/cdfd-overview-resume/diagram-2.d2 tmp/cdfd-overview-resume/connection-preview.png",
+      "status": "passed",
+      "summary": "接続図の描画に成功し、Job から両系統への直接接続を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。対象外成果物の未存在等に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外。",
+      "reason": "今回の成果物変更は Markdown のみで、変更した YAML ファイルがない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-USAGE-cdfd-overview-010/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-fun\n… output omitted …\nrkspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-USAGE-cdfd-overview-010/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-USAGE-cdfd-overview-010/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3640 file(s), 186 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 158 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3640 file(s), 9 diagram(s), 9 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-USAGE-cdfd-overview-010\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .mark\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.6.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ners-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-USAGE-cdfd-overview-010/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-USAGE-cdfd-overview-010/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.6.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-USAGE-cdfd-overview-010\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-01T12:06:17.313Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-0\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "cdfd-overview",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "概要の追加指示を反映しました。凡例の縦配置、Job から両系統への接続、本文の短縮、未決事項の整理を完了し、整形・描画・カタログ検証は成功しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "今回編集したのは cdfd-overview.md のみ。cdfd-uc-register.md は別タスクの対象として変更していない。result・plan・evidence の既存変更には手を加えておらず、以下を reporter が result へ記録する。",
+    "凡例を `direction: down` に変更し、外部主体・起点イベント、プロセス、データストア、物理保管の順を ELK の描画と座標で確認した。物理保管を最下段に置く透明線を2本追加し、受け渡しではない配置制御であることをコメントで明示した。",
+    "routine-operation-guide.md の job-register-sweep、job-exec-auto、rtn-grade-deliverable-recheck を根拠に、Job 定義から register 系への登録項目実行要求と schedule 系へのタスク実行・成果物評価要求を追加した。接続図の長いラベルを短縮し、既存線の端点・向きは維持した。差分の機械比較で、業務上の追加線がこの2本だけであることを確認した。",
+    "章の導入と図の説明を1〜2文へ整理し、本文によるフローの反復を削減した。同名ノードの意味は「概念データフロー（概要）」へ集約し、番号による章節参照をタイトル参照へ変更した。14領域と15データストアの定義表は維持した。",
+    "未決事項から PO 承認記録と決定済みの移行論点を削除した。旧グループ別6文書と cdfd-uc-deliverable の移行・参照切替は、plan に示された PJR-SJQC の決定と epic PJR-GEZN の担当事項として詳細一覧へ記載した。グループ別表には非推奨化までの移行期の参照である旨を1文残した。",
+    "宣言された主 rulebook、Mermaid・D2 rulebook、recipe、sample、プロジェクト概要、共通規約、追加指示で指定された routine 運用ガイドを実読した。作業規約と検査条件として AGENTS.md、orchestrator playbook、package.json、SpecDojo 設定、lefthook.yml も確認した。recipe・sample の入出力箇条書きや従来方式より、主 rulebook と既存成果物の系統方式を優先した。template、未宣言の詳細 CDFD、決定票本文、外部情報は参照していない。根拠のないパスや対応フィールドは追加していない。",
+    "F003・F004 の前回反映は維持した。F002 は参照範囲外の cdfd-action と照合できないため、判断境界の文書間統一を唯一の未決事項として残した。ARC・PM が必要資料を宣言した後続タスクで照合する。F001・F005・F006・F007 に関する PO 承認根拠は新たに特定しておらず、承認済みとは判断していない。承認記録は登録簿・レビュー結果で管理し、後続の独立評価へ引き継ぐ。成果物の `status` は `draft` を維持した。",
+    "親 runner 指定の lint・schema・型検査・テストは重複実行していない。描画確認用の一時ファイルは削除済み。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-USAGE-cdfd-overview-010/20261101T102445374Z-1d263793/executor.log",
+      "bytes": 4610,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-USAGE-cdfd-overview-010/20261101T102445374Z-1d263793/parent-validation-attempt-1-lint-fm.log",
+      "bytes": 566,
+      "truncated": false
+    }
+  ]
+}
