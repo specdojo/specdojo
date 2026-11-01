@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_695ba6a085e940f1a39487a57385c8b1
+  ts: "2026-11-01T09:54:48Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: track data-flow-usage の timeline・catalog・schedule 戦略を用意する
+    - field: description
+      from: ""
+      to: PJR-SJQC の決定に沿って、timeline に track data-flow-usage を定義し、dct-data-flow.yaml に overview の改訂と系統別の詳細 3 文書を定め、sch-strategy-data-flow-usage.yaml を作って schedule build が通る状態にする
+    - field: input
+      from: ""
+      to: '["PJR-SJQC で、作業を track data-flow-usage の epic で管理し、schedule に展開して実行すると決めた。epic の track は timeline の tml-index.yaml に定義済みである必要がある（2026-11-01）","対象は cdfd-overview の改訂、cdfd-uc-register の書き直し、cdfd-uc-schedule と cdfd-uc-routine の新規作成の 4 件。cdfd-uc-deliverable とプロセスグループ別 6 文書の非推奨化は、新しい文書がそろってから別の todo で行う","前例は track data-flow-pdca（sch-strategy-data-flow-pdca.yaml と tml-index.yaml の data-flow-pdca）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-SJQC"]'
