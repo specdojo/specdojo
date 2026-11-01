@@ -6,17 +6,17 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 72
-graded_at: "2026-10-31T16:04:46.679Z"
+graded_at: "2026-11-01T16:04:29.405Z"
 graded_by: flash-high-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 source_hashes:
   catalog-entry: 13a3f1bee8ca15ccabb50c5aabcedc7ce92c9cdda40f595a6305268767581f05
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:cdfd-overview: 1b08270df065ee02a0e24efde9341c2c76594e7e3460cb3a4da88b27608f515f
+  dependency:cdfd-overview: 9a12d2dcf050f1d8a243ae190b9786b1c8dd129f5449cf5fcda8c59db321f025
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
     score: 75
@@ -169,7 +169,7 @@ findings:
     message: >-
       The bullet points for major inputs, outputs, and data stores in Section 3 duplicate the contents of Section 4 and
       Section 6; removing them eliminates redundancy without losing decision information.
-    message_ja: セクション3における主要な入力、出力、およびデータストアの箇条書きは、セクション4とセクション6の内容と重複しています。これらを削除することで、決定に関する情報を失うことなく冗長性を排除できます。
+    message_ja: セクション3の主要な入力、出力、およびデータストアの箇条書きは、セクション4およびセクション6の内容と重複しています。これらを削除することで、決定事項を失うことなく冗長性を排除できます。
   - id: F007
     severity: major
     rule: vp-dev-implementation-readiness
@@ -206,26 +206,26 @@ findings:
     message: 全体概要のActionグループで主要出力に定義されている「Orchestrator への完了・改善判断」が、各プロセス領域の主要出力から漏れているため対応するプロセスへ追加してください。
     message_ja: 全体概要のActionグループで主要出力に定義されている「Orchestrator への完了・改善判断」が、各プロセス領域の主要出力から漏れているため対応するプロセスへ追加してください。
   - id: F012
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 26
-    anchor: ""
-    message: 適用範囲にrulebookで必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
-    message_ja: 適用範囲にrulebookで必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
-  - id: F013
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 136
-    anchor: ""
-    message: P-11・P-12・P-13の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
-    message_ja: P-11・P-12・P-13の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
-  - id: F014
     severity: major
     rule: vp-qe-omissions-consistency
     line: 257
     anchor: "| `cdfd-plan` | タスク完了に至らなかった事項の再計画 | 完了条件の未充足事項、再計画要求 | 再計画に基づく対応と評価を経て、完了条件を照合できる評価結果と完了要求がそろった |"
     message: 主要例外の表にrulebookで必須の「停止範囲」列が欠落しているため、列を追加して例外検出時に停止するプロセスや出力を記述してください。
     message_ja: 主要例外の表にrulebookで必須の「停止範囲」列が欠落しているため、列を追加して例外検出時に停止するプロセスや出力を記述してください。
+  - id: F013
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 26
+    anchor: ""
+    message: 適用範囲にrulebookで必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
+    message_ja: 適用範囲にrulebookで必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
+  - id: F014
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 136
+    anchor: ""
+    message: P-11・P-12・P-13の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
+    message_ja: P-11・P-12・P-13の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
   - id: F015
     severity: minor
     rule: vp-ux-user-flow

@@ -2,35 +2,36 @@
 id: cdfd-overview-grade-criteria
 document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
-graded_at: "2026-10-31T16:19:37.832Z"
+graded_at: "2026-11-01T16:25:00.869Z"
 graded_by: flash-high-executor
-content_hash: 1b08270df065ee02a0e24efde9341c2c76594e7e3460cb3a4da88b27608f515f
+content_hash: 9a12d2dcf050f1d8a243ae190b9786b1c8dd129f5449cf5fcda8c59db321f025
 summary:
-  satisfied: 3
-  unsatisfied: 1
+  satisfied: 4
+  unsatisfied: 0
   total: 4
 criteria:
   - id: DC-001
-    text: Onboarding・Plan・Do・Check・Action・Orchestrator の六つのプロセスグループに属する 14 のプロセス領域と、グループとデータストアの間の情報・実行要求の流れが表と図で確認できること
+    text: >-
+      プロジェクト構成の構築・管理（Onboarding、Kata、稼働構成）、文書の廃棄（非推奨化・保管）、register 系・schedule 系・routine 系、実行サイクル（実行・評価・完了）、Orchestrator
+      の関係、および 14 のプロセス領域とデータストアの流れが表と図で確認できること
     roles:
       - BA
     viewpoint: vp-ba-business-value
     status: satisfied
   - id: DC-002
-    text: 対象とするプロセス領域、および独立した業務フローに含めない補助操作の境界を承認できること
+    text: register と schedule が epic と track でつながる全体関係、および routine が Job を通じて両者を動かす業務境界を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
-    status: unsatisfied
-    reason: Approval record by PO for target scope and process areas cannot be identified.
+    status: satisfied
   - id: DC-003
-    text: 各領域の起点イベントと、プロセスグループ単位の主要入力・主要出力・データストアが識別でき、概念データフローのエッジと相互に対応し、プロセスグループ別 CDFD の構成方針として参照できること
+    text: プロセス領域の表・データストアの表・凡例が整理され、各系統の入口イベントと詳細 3 文書（cdfd-uc-register、cdfd-uc-schedule、cdfd-uc-routine）への構成方針として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: satisfied
   - id: DC-004
-    text: プロセスグループ別 CDFD とユースケース別 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
+    text: 7 区分のプロセス領域と 3 系統の詳細 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
     roles:
       - QE
     viewpoint: vp-qe-omissions-consistency
