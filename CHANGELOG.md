@@ -16,6 +16,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- SSH 経由の非対話シェルで `devcontainer-tmux.sh` が Docker を見つけられない問題を修正しました。`SPECDOJO_DOCKER_BIN`、現在の PATH、ログインシェル、代表的な配置先の順に探索し、見つかった場所を `devcontainer up` にも引き継ぎます。Docker が見つからない場合や `docker info` に失敗した場合は、macOS・WSL2・Linux に合った対処方法を表示して停止します（PJR-DWHZ）。
+
 - ホストから devcontainer 内の tmux セッションへ入るスクリプト本体（`devcontainer-tmux.sh`）で、`docker inspect` のマウント情報のうち `bind` マウントのみを対象とし、ホスト側のディレクトリパスを正規化してからワークスペースパスと照合するように修正しました。Docker Desktop for Mac などでマウント元のパスが `<親>/<repo>/..` の形式で返る環境でもコンテナ内の作業ディレクトリを正しく特定できるようにします。あわせてマウントパスの前方一致判定における変数展開のクォート漏れ（SC2295）および未使用変数（SC2034）を修正し、サンプルのラッパースクリプト（`specdojo-tmux.sh.sample`）では本体スクリプトの実行権限の有無に関わらず起動できるよう `bash` 経由で呼び出すようにしました（PJR-NV5T）。
 
 ## [0.6.0] - 2026-10-31

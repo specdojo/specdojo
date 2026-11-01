@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-01T07:10:43Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-Q8KP
 ---
@@ -70,7 +69,13 @@ ssh で入ったホストの非対話シェルでは PATH に docker がなく�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 本体テンプレートで、最初の Docker 呼び出し前に `SPECDOJO_DOCKER_BIN`（ディレクトリ）、現在の PATH、`"$SHELL" -lc`、指定された代表的な配置先の順で探索するよう修正した。ログインシェルには問い合わせの印を出させ、起動時のメッセージと区別したうえで実行可能なファイルのパスだけを採用する。明示指定が無効なら、別の Docker に切り替えず診断して停止する。
+- 見つかったディレクトリを PATH の先頭へ追加し、`SPECDOJO_NODE_BIN` を使う場合もログインシェルで起動する場合も `devcontainer up` へ引き継ぐ。コンテナ探索前の `docker info` が失敗した場合と Docker 未検出時は、macOS・WSL2・Linux ごとのヒントを標準エラーに出し、終了コード 1 で停止する。
+- `tests/src/devcontainer/host-script-docker.test.ts` に、明示指定・現在の PATH・ログインシェル・各代表配置先の探索順、起動時出力の除外、無効な指定や実行不可ファイル、OS ごとの未検出・接続失敗、WSL 判定、`devcontainer up` への PATH 引き継ぎを確認する単体テストを追加した。代表配置先と `/proc/version` を一時領域へ置き換え、偽の Docker とシェルで検証するため、実際の Docker の導入状態には依存しない。
+- [[specdojo:remote-host-development-guide|常時稼働ホスト運用ガイド]] に探索順・指定例・診断と再生成の手順を追記し、`CHANGELOG.md` の未公開の節に修正を記載した。
+- 本体の shellcheck と Bash 構文検査、変更した Markdown と TypeScript の Prettier 整形、カタログ検査、登録簿の生成確認は成功した。カタログ検査には、未作成のプロダクト文書に対する既存の参照警告がある。登録簿の生成確認は `npx tsx` が sandbox の IPC 制限で起動できなかったため、共通規約どおり `node --import tsx src/specdojo.ts register build` で成功を確認した。単体テスト・型検査・各 lint・統合テスト・全体の schema 検査は親 runner が実行する。executor では重複実行しない。
+- 統合後、orchestrator が更新後の `devcontainer host-script` で `.specdojo/host/devcontainer-tmux.sh` を再生成する。executor は保護された生成先とラッパーを変更していない。
+- 実機での動作は未確認。mac の実機確認は利用者が行い、SSH の最小 PATH からの接続と Docker Desktop 停止時の案内を確認する。WSL2 と Linux は偽コマンドによる単体テストの対象とし、実機での Docker 起動・権限・WSL integration は未確認である。
 
 ## 6. 関連ドキュメント
 
