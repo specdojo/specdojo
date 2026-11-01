@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-dwhz-host-tmux-docker-path
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-01T07:10:43Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T08:23:37Z"
+  conclusion: devcontainer-tmux.sh が SPECDOJO_DOCKER_BIN・PATH・ログインシェル・よくある場所の順に docker を探し、見つからない・動かせないときは OS に合ったヒントを出して止まるようにした
   derived_from:
     - PJR-Q8KP
 ---
