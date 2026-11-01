@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-USAGE-cdfd-overview-010
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-USAGE-cdfd-overview-010-plan.md
   started_at: "2026-11-01T10:24:46.498Z"
+  completed_at: "2026-11-01T12:09:57.533Z"
   agent: sol-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,31 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 概念データフロー図（全体概要）を改訂し、共通・基盤と3系統の関係および Job を通じた動作関係を可視化しました。
+- D2 ダイアグラムの凡例配置を `direction: down` に変更し、要素の上下順序を整理しました。
+- Job 定義から register 系への登録項目実行要求および schedule 系へのタスク実行・成果物評価要求の接続線を追加しました。
+- 本文の導入文と図の説明を簡潔に整理し、フローの重複記述を削減しました。
+- 未決事項から PO 承認記録および決定済みの移行論点を削除し、epic `PJR-GEZN` の担当事項として詳細一覧へ移行しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md`: 共通・基盤と3系統の関係、および Job からの接続関係を反映し、凡例配置の最適化と本文の記述整理を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 今回編集したのは `cdfd-overview.md` のみ。`cdfd-uc-register.md` は別タスクの対象として変更していない。
+- 凡例を `direction: down` に変更し、外部主体・起点イベント、プロセス、データストア、物理保管の順を ELK の描画と座標で確認した。物理保管を最下段に置く透明線を2本追加し、受け渡しではない配置制御であることをコメントで明示した。
+- routine-operation-guide.md の job-register-sweep、job-exec-auto、rtn-grade-deliverable-recheck を根拠に、Job 定義から register 系への登録項目実行要求と schedule 系へのタスク実行・成果物評価要求を追加した。接続図の長いラベルを短縮し、既存線の端点・向きは維持した。差分の機械比較で、業務上の追加線がこの2本だけであることを確認した。
+- 章の導入と図の説明を1〜2文へ整理し、本文によるフローの反復を削減した。同名ノードの意味は「概念データフロー（概要）」へ集約し、番号による章節参照をタイトル参照へ変更した。14領域と15データストアの定義表は維持した。
+- 未決事項から PO 承認記録と決定済みの移行論点を削除した。旧グループ別6文書と `cdfd-uc-deliverable` の移行・参照切替は、plan に示された PJR-SJQC の決定と epic `PJR-GEZN` の担当事項として詳細一覧へ記載した。グループ別表には非推奨化までの移行期の参照である旨を1文残した。
+- 宣言された主 rulebook、Mermaid・D2 rulebook、recipe、sample、プロジェクト概要、共通規約、追加指示で指定された routine 運用ガイドを実読した。作業規約と検査条件として AGENTS.md、orchestrator playbook、package.json、SpecDojo 設定、lefthook.yml も確認した。recipe・sample の入出力箇条書きや従来方式より、主 rulebook と既存成果物の系統方式を優先した。template、未宣言の詳細 CDFD、決定票本文、外部情報は参照していない。根拠のないパスや対応フィールドは追加していない。
+- F003・F004 の前回反映は維持した。F002 は参照範囲外の `cdfd-action` と照合できないため、判断境界の文書間統一を唯一の未決事項として残した。ARC・PM が必要資料を宣言した後続タスクで照合する。F001・F005・F006・F007 に関する PO 承認根拠は新たに特定しておらず、承認済みとは判断していない。承認記録は登録簿・レビュー結果で管理し、後続の独立評価へ引き継ぐ。成果物の `status` は `draft` を維持した。
+- 親 runner 指定の lint・schema・型検査・テストは重複実行していない。描画確認用の一時ファイルは削除済み。
+- 今回編集したのは cdfd-overview.md のみ。cdfd-uc-register.md は別タスクの対象として変更していない。result・plan・evidence の既存変更には手を加えておらず、以下を reporter が result へ記録する。
+- 未決事項から PO 承認記録と決定済みの移行論点を削除した。旧グループ別6文書と cdfd-uc-deliverable の移行・参照切替は、plan に示された PJR-SJQC の決定と epic PJR-GEZN の担当事項として詳細一覧へ記載した。グループ別表には非推奨化までの移行期の参照である旨を1文残した。
+- F003・F004 の前回反映は維持した。F002 は参照範囲外の cdfd-action と照合できないため、判断境界の文書間統一を唯一の未決事項として残した。ARC・PM が必要資料を宣言した後続タスクで照合する。F001・F005・F006・F007 に関する PO 承認根拠は新たに特定しておらず、承認済みとは判断していない。承認記録は登録簿・レビュー結果で管理し、後続の独立評価へ引き継ぐ。成果物の `status` は `draft` を維持した。
+- 適用外の検証: `npm run validate:schema:file`（今回の成果物変更は Markdown のみで、変更した YAML ファイルがない。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+fully-guided
