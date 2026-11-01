@@ -20,7 +20,7 @@ D2 の構文で CDFD のプロセス、イベント、データストア、外�
 
 ## 1. 全体方針
 
-- D2 を使用し、方向は全体概要・プロセスグループ別・ユースケース別 CDFD を問わず `direction: right` を基本とします。配置のエンジンは文書サイトの既定と同じ ELK を前提とします。CDFD の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。プロセスは Orchestrator・Plan・Do・Check・Action の順に左から並べ、Onboarding がある図では Onboarding を Plan の左に置きます。並び順に逆らう戻りの矢印は `b -> a` ではなく `a <- b` と書き、ELK に並びを決めさせないようにします。`direction: down` は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
+- D2 を使用し、方向は全体概要・詳細 CDFD を問わず `direction: down` を基本とします。配置のエンジンは文書サイトの既定と同じ ELK を前提とします。CDFD の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。プロセスは上から Orchestrator・Plan・Do・Check・Action の順（Onboarding がある図では Onboarding を Orchestrator の上）に並べます。並び順に逆らう戻りの矢印は `b -> a` ではなく `a <- b` と書き、ELK に並びを決めさせないようにします（矢印の向きは `b` から `a` のまま、配置上で `a` を上に保ちます）。`direction: right` は、横長での表現が適している場合に選択できます。以下では、プロセスグループ別とユースケース別を合わせて「詳細 CDFD」と呼びます。
 
 - 図が読みにくくなる原因は方向ではなく規模です。ノード数が多く一画面で関係を追いにくい場合は、方向を変えるのではなく、「凡例と可読性」の分割方針に従って図を分けます。分割の観点（全体概要はデータストアの区分、プロセスグループ別 CDFD は業務の性質が近いプロセス）とノード数の目安は包含元の rulebook が定めます。
 - 全体概要とユースケース別 CDFD では、一つのプロセスグループを一つの代表ノードで表し、グループ内の領域や処理へ展開しません。プロセスグループ別 CDFD では、一つのプロセスを一つのプロセスノードで表します。
@@ -29,17 +29,17 @@ D2 の構文で CDFD のプロセス、イベント、データストア、外�
 - 情報の流れと物の流れは線種（線の太さ）で区別し、すべてのエッジへ内容を表す名詞形のラベルを付けます。
 - 図の目的は業務上の合意であり、装飾や実装構造の再現ではありません。ノード形状で意味を区別することを基本とし、色は形状だけでは判別しにくい場合の視認性向上に、プロセス／イベント／データストア／外部主体という概念の大分類単位で付けます。色は `classes` で大分類ごとに定義して `class` で当て、ノード単位の `style` 個別指定は禁止します。業務上の区別が必要な場合は、大分類内を同系統色の濃淡・彩度で分けられます。物理名、詳細な操作は使用しません。
 
-| 概念                 | D2 表現                                                                              | 表示例                                                                |
-| -------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| プロセス             | 角丸四角形（`shape: rectangle`、`style.border-radius: 8`）                           | `sales_record: "P-01-01 販売記録\n（担当: 店員）" { class: process }` |
-| プロセスグループ     | 角丸四角形（`shape: rectangle`、`style.border-radius: 8`）（代表ノード）             | `sales: "販売\nP-01〜P-02" { class: process }`                        |
-| サブグラフ           | コンテナ `{ ... }`（関連プロセスを囲む視覚上のまとまり。グループの表現には使わない） | `sales_area: "販売領域" { ... }`                                      |
-| データストア         | 円柱（`shape: cylinder`）                                                            | `sales_ledger: "販売記録簿" { class: store }`                         |
-| 物理保管             | 大角丸四角形（`shape: rectangle`、`style.border-radius: 20`）（現物の保管先）        | `display_shelf: "売場棚" { class: physical_store }`                   |
-| 外部主体             | 四角形（`shape: rectangle`）                                                         | `customer: "顧客" { class: actor }`                                   |
-| イベント             | 六角形（`shape: hexagon`）                                                           | `purchase_request: "顧客が商品の購入を要求した" { class: event }`     |
-| 情報・実行要求の流れ | ラベル付き有向エッジ `->`（戻りの矢印は `<-`）                                       | `sales_record -> sales_ledger: "販売情報"`                            |
-| 物の流れ             | ラベル付き太線エッジ `->`（太線の class を適用）                                     | `display_shelf -> sales_record: "商品" { class: material_flow }`      |
+| 概念                 | D2 表現                                                                                                             | 表示例                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| プロセス             | 角丸四角形（`shape: rectangle`、`style.border-radius: 8`）                                                          | `sales_record: "P-01-01 販売記録\n（担当: 店員）" { class: process }` |
+| プロセスグループ     | 角丸四角形（`shape: rectangle`、`style.border-radius: 8`）（代表ノード）                                            | `sales: "販売\nP-01〜P-02" { class: process }`                        |
+| サブグラフ           | コンテナ `{ ... }`（関連プロセスを囲む視覚上のまとまり。グループの表現には使わない）                                | `sales_area: "販売領域" { ... }`                                      |
+| データストア         | 円柱（`shape: cylinder`）                                                                                           | `sales_ledger: "販売記録簿" { class: store }`                         |
+| 物理保管             | 大角丸四角形（`shape: rectangle`、`style.border-radius: 20`）（現物の保管先。トランザクションデータと同じ色を使う） | `display_shelf: "売場棚" { class: physical_store }`                   |
+| 外部主体             | 四角形（`shape: rectangle`）                                                                                        | `customer: "顧客" { class: actor }`                                   |
+| イベント             | 六角形（`shape: hexagon`）                                                                                          | `purchase_request: "顧客が商品の購入を要求した" { class: event }`     |
+| 情報・実行要求の流れ | ラベル付き有向エッジ `->`（戻りの矢印は `<-`）                                                                      | `sales_record -> sales_ledger: "販売情報"`                            |
+| 物の流れ             | ラベル付き太線エッジ `->`（太線の class を適用）                                                                    | `display_shelf -> sales_record: "商品" { class: material_flow }`      |
 
 ## 2. 位置づけと用語定義
 
@@ -84,7 +84,7 @@ D2 コードブロック内は、次の順序を基本とします。必須の�
 
 | 順序 | 区分           | 必須     | 内容                                                                                                   |
 | ---- | -------------- | -------- | ------------------------------------------------------------------------------------------------------ |
-| 1    | 方向宣言       | ○        | `direction: right` または `direction: down`                                                            |
+| 1    | 方向宣言       | ○        | `direction: down`（基本）または `direction: right`                                                     |
 | 2    | `classes` 定義 | ○        | 概念の大分類ごとに形状・スタイルを定義した `classes: { ... }` ブロック                                 |
 | 3    | プロセスノード | ○        | 全体概要・ユースケース別はグループ代表ノード、プロセスグループ別は個々のプロセス                       |
 | 4    | イベント       | 条件付き | プロセスグループ別では開始契機、ユースケース別では開始・引き渡し・終了条件。全体概要では描かない       |
@@ -106,7 +106,7 @@ D2 コードブロック内は、次の順序を基本とします。必須の�
 - コンテナ（`container: { ... }`）はプロセスグループ別 CDFD で関連プロセスを視覚的にまとめる場合にだけ使用できます。プロセスグループの表現や代表ノードの代替には使いません。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -150,7 +150,7 @@ sales_ledger: "販売記録簿" {
 - 絵文字だけに頼らず、必ずプロセス名・データストア名などのテキストも併記します。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -187,7 +187,7 @@ sales_ledger: "🗄️ 販売記録簿" {
 禁止例（絵文字がノード ID に付いている、または表示ラベルに無い）:
 
 ```text
-direction: right
+direction: down
 📋sales_record: "販売記録"
 ```
 
@@ -196,11 +196,11 @@ direction: right
 - 情報は通常エッジ `->`、物は太線のエッジ（`material_flow` class を適用）を使用します。イベントからプロセスへのエッジも `purchase_request -> sales_record: "販売開始条件"` のようにラベルを付けます。
 - エッジラベルは「販売情報」「在庫数量」「実行結果」のような名詞形にし、「処理する」など動作だけの語を使用しません。
 - 一つのエッジに異なる責務の情報を詰め込まず、受け手が別ならエッジを分けます。
-- プロセスは Orchestrator・Plan・Do・Check・Action の順に左から並べ、Onboarding がある図では Onboarding を Plan の左に置きます。並び順に逆らう戻りの矢印（Orchestrator への応答、Action から Plan への再計画要求、上流のデータストアへの更新など）は `b -> a` ではなく `a <- b` と書き、ELK に並びを決めさせないようにします（矢印の向きは `b` から `a` のまま、配置上で `a` を左に保ちます）。
-- プロセスどうしの受け渡しがなく `a <- b` では並び順を決められない図（プロセスが同一列に縦に積まれてしまう場合など）では、並び順を固定するために透明度 0 の線（`style.opacity: 0`、ラベルなし。例: `orchestrator -> plan -> do_exec -> check -> action: {style.opacity: 0}`）を使って構いません。その線は業務上の受け渡しではないため、直前に受け渡しではないことを示すコメント（例: `# 配置制御用（受け渡しではない）`）を必ず記述します。
+- プロセスは上から Orchestrator・Plan・Do・Check・Action の順（Onboarding がある図では Onboarding を Orchestrator の上）に並べます。並び順に逆らう戻りの矢印（Orchestrator への応答、Action から Plan への再計画要求、上流のデータストアへの更新など）は `b -> a` ではなく `a <- b` と書き、ELK に並びを決めさせないようにします（矢印の向きは `b` から `a` のまま、配置上で `a` を上に保ちます）。
+- プロセスどうしの受け渡しがなく `a <- b` では並び順を決められない図（プロセスが同一行に横に並んでしまう場合など）では、並び順を固定するために透明度 0 の線（`style.opacity: 0`、ラベルなし。例: `onboarding -> orchestrator -> plan -> do_exec -> check -> action: {style.opacity: 0}`）を使って構いません。その線は業務上の受け渡しではないため、直前に受け渡しではないことを示すコメント（例: `# 配置制御用（受け渡しではない）`）を必ず記述します。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -256,7 +256,7 @@ sales_record -> sales_ledger: "販売情報"
 - 色を使わなくても意味が読み取れる図では、無理に色を付けません。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -279,8 +279,8 @@ classes: {
   store: {
     shape: cylinder
     style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -315,22 +315,31 @@ sales_record -> sales_ledger: "販売情報"
 大分類「データストア」の中でマスタ・構成データとトランザクションデータを同系統色（緑系の濃淡）で塗り分ける例:
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   store_master: {
     shape: cylinder
     style: {
-      fill: "#a5d6a7"
-      stroke: "#1b5e20"
+      fill: "#e8f5e9"
+      stroke: "#43a047"
       font-color: "#000000"
     }
   }
   store_transaction: {
     shape: cylinder
     style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -344,7 +353,7 @@ sales_ledger: "販売記録簿" {
 }
 ```
 
-凡例には「円柱（濃い緑）はマスタ・構成データ、円柱（薄い緑）はトランザクションデータ」のように、大分類の形状の意味に加えてサブ分類の色の意味を明記します。
+凡例には「円柱（薄い緑 `#e8f5e9` / `#43a047`）はマスタ・構成データ、円柱（中間の緑 `#c8e6c9` / `#2e7d32`）はトランザクションデータ、大角丸四角形（トランザクションデータと同色 `#c8e6c9` / `#2e7d32`）は物理保管」のように、大分類の形状の意味に加えてサブ分類の色の意味を明記します。
 
 ## 7. 禁止事項
 
