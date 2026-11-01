@@ -17,6 +17,7 @@ specdojo:
   conclusion: CDFD の rulebook に系統の関係を描く方式を足し、ユースケース別 CDFD をプロセス領域の単位と入口のイベントで描けるようにし、D2 版を縦向きと配色 G、Mermaid 版の色を G にそろえた
   derived_from:
     - PJR-SJQC
+    - PJR-GEZN
 ---
 
 # PJR-VRVP CDFD の rulebook を overview と系統別の詳細の体系に合わせる

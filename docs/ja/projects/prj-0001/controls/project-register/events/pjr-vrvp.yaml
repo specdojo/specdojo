@@ -86,3 +86,16 @@
       from: "-"
       to: CDFD の rulebook に系統の関係を描く方式を足し、ユースケース別 CDFD をプロセス領域の単位と入口のイベントで描けるようにし、D2 版を縦向きと配色 G、Mermaid 版の色を G にそろえた
   previous_event_id: reg_53f8d29658334dccac45126951facc65
+- v: 1
+  id: reg_243021c899d0452b836bd9e8ab19665c
+  ts: "2026-11-01T10:23:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: track data-flow-usage の epic の子として位置づける
+  changes:
+    - field: derived_from
+      from: '["PJR-SJQC"]'
+      to: '["PJR-SJQC","PJR-GEZN"]'
+  previous_event_id: reg_e689453d2e3e4918914199cf9ea9d6c1
