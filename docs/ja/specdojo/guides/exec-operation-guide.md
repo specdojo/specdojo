@@ -247,18 +247,28 @@ agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdか
 
 `blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
 
-| 状況                              | コマンド                  | 結果                         |
-| --------------------------------- | ------------------------- | ---------------------------- |
-| 中断で `doing` のまま             | `exec resume`             | 既存 worktree 上で継続       |
-| pipeline の reporter で `blocked` | `exec resume --task <id>` | executor evidence から再開   |
-| pipeline の統合段で `blocked`     | `exec resume --task <id>` | agent を起動せず統合だけ再開 |
-| 障害を解消し同じ試行を続ける      | `exec unblock`            | `blocked -> doing`           |
-| 試行を破棄して最初からやり直す    | `exec release`            | `blocked -> todo`            |
-| 着手前のタスクを恒久的に中止する  | `exec cancel`             | `todo -> cancelled`          |
+| 状況                                                                             | コマンド                                         | 結果                                                               |
+| -------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------ |
+| 中断で `doing` のまま                                                            | `exec resume`                                    | 既存 worktree 上で継続                                             |
+| pipeline の reporter で `blocked`                                                | `exec resume --task <id>`                        | executor evidence から再開                                         |
+| reporter で `blocked`、または中断で `doing` の pipeline を executor からやり直す | `exec resume --task <id> --resume-from executor` | 既存 worktree と変更を引き継ぎ、executor → reporter → 統合を再実行 |
+| pipeline の統合段で `blocked`                                                    | `exec resume --task <id>`                        | agent を起動せず統合だけ再開                                       |
+| 障害を解消し同じ試行を続ける                                                     | `exec unblock`                                   | `blocked -> doing`                                                 |
+| 試行を破棄して最初からやり直す                                                   | `exec release`                                   | `blocked -> todo`                                                  |
+| 着手前のタスクを恒久的に中止する                                                 | `exec cancel`                                    | `todo -> cancelled`                                                |
 
 `release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
 
 executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。executor 中断の block event は `pipeline_stage=executor`、reporter 失敗は `pipeline_stage=reporter`、統合失敗は `pipeline_stage=integrate` を持ち、いずれも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて未完了の段から再開し、完了済みの agent 段を重複実行しません。
+
+成果物の不足を executor に直させる場合は `--resume-from executor` を付けます。対象は executor が `succeeded` で reporter が未完了の pipeline に限ります。既存 run の executor 試行回数を増やし、`blocked` からの再開は `unblock` イベントを記録します。統合段、executor 未成功、pipeline 以外、`executor` 以外の値は理由を表示して停止します。この指定には `--task` が必要で、`--due` とは併用できません。
+
+停止後に plan の指示を補う場合は、次の手順で再開します。
+
+1. `specdojo exec worktree status --project <project-id> --task <task-id>` で残っている worktree を確認する。
+2. その worktree の `<execution_path>/exec/plans/<task-id>-plan.md` を編集し、追加の指示と、変更の理由・再開までの経緯を result の申し送りへ残す指示を書く。
+3. `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor` を実行する。root で plan を生成し直さず、worktree にある編集済み plan を executor と reporter へ渡す。既存の成果物と未コミット変更も引き継ぐ。
+4. 再開後の result で経緯と検証結果を確認する。pipeline の executor は result を直接編集せず、報告の `handoff` に経緯を記載し、reporter と runner が result へ反映する。
 
 stage agent を明示する場合は次のように指定します。片方を省略すると、その stage は要件と優先度から自動選択されます。
 
