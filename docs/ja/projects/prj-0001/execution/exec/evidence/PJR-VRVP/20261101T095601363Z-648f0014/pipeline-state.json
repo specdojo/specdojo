@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-VRVP",
   "run_id": "20261101T095601363Z-648f0014",
-  "updated_at": "2026-11-01T10:12:26.936Z",
+  "updated_at": "2026-11-01T10:12:46.292Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-vrvp-20261101T095601Z-fd4e6a30-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-11-01T10:12:26.936Z",
-      "completed_at": null,
+      "completed_at": "2026-11-01T10:12:46.292Z",
       "artifact_ref": null
     }
   },
