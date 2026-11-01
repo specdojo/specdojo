@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 87
-graded_at: "2026-10-03T21:26:32.303Z"
-graded_by: agy-expert-executor
-content_hash: a3d5a331f7e79929e685d551baf6d1c548c7870b25a19c90e0e85528b93b5ee5
+graded_at: "2026-11-01T20:35:59.089Z"
+graded_by: flash-high-executor
+content_hash: acc5ad9ad77be675efe2e10553a9d58a1aa1f145884ed1b1abc7a3c05fe39537
 categories:
   purpose:
     score: 88
@@ -107,59 +107,67 @@ findings:
     line: 18
     anchor: "## 2. ファイル規約"
     message: POが承認・保留の判断を行うための未決事項（TBD）の扱い方や影響範囲をどのように可視化するかに関する記述が不足している。
+    message_ja: POが承認・保留の判断を行うための未決事項（TBD）の扱い方や影響範囲をどのように可視化するかに関する記述が不足している。
   - id: F002
     severity: minor
     rule: vp-po-publication-accountability
     line: 42
-    anchor: >-
-      | -------------- | ---------------------------------------------------------------------------------------- | ----
-      |
+    anchor: "| キー           | 説明                                                                                     | 必須 |"
     message: status項目はあるが、一覧の承認責任者や公開可否を判断する主体（オーナー）に関する記述が明記されていない。
+    message_ja: status項目はあるが、一覧の承認責任者や公開可否を判断する主体（オーナー）に関する記述が明記されていない。
   - id: F003
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 62
     anchor: ""
     message: 詳細仕様を作成する担当者（Role code）や完了期限・マイルストーンを計画として管理するための項目がない。
+    message_ja: 詳細仕様を作成する担当者（Role code）や完了期限・マイルストーンを計画として管理するための項目がない。
   - id: F004
     severity: minor
     rule: vp-pm-dependency-risk
     line: 48
-    anchor: "| format         | `CSV` / `JSON` / `XML` / `その他` / `TBD`                                                | ○    |"
+    anchor: "| kind           | `API` / `ファイル` / `メッセージ` / `コマンド`                                           | ○    |"
     message: 外部連携に伴うリスク、課題、変更要求、スケジュールの影響を識別して記載する項目が不足している。
+    message_ja: 外部連携に伴うリスク、課題、変更要求、スケジュールの影響を識別して記載する項目が不足している。
   - id: F005
     severity: minor
     rule: vp-pm-control-reporting
     line: 48
-    anchor: "| format         | `CSV` / `JSON` / `XML` / `その他` / `TBD`                                                | ○    |"
+    anchor: "| kind           | `API` / `ファイル` / `メッセージ` / `コマンド`                                           | ○    |"
     message: IFごとの進捗状況や課題を識別し、報告用や決定記録へ転記・分離すべき事項を記載するための記述がない。
+    message_ja: IFごとの進捗状況や課題を識別し、報告用や決定記録へ転記・分離すべき事項を記載するための記述がない。
   - id: F006
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 18
     anchor: "## 2. ファイル規約"
     message: 「関係者間で合意するための入口」とあるが、各IFごとの具体的な合意者や確認者を記述する項目がない。
+    message_ja: 「関係者間で合意するための入口」とあるが、各IFごとの具体的な合意者や確認者を記述する項目がない。
   - id: F007
     severity: minor
     rule: vp-dev-testability
     line: 26
     anchor: "| キー       | 説明                          | 必須 |"
     message: 参照スキーマに基づくYAMLファイルの具体的な検証手順（lintやvalidateコマンドなど）が記載されていない。
+    message_ja: 参照スキーマに基づくYAMLファイルの具体的な検証手順（lintやvalidateコマンドなど）が記載されていない。
   - id: F008
     severity: minor
     rule: vp-qe-verifiability
     line: 31
     anchor: "| status     | `draft`/`ready`/`deprecated`  | ○    |"
     message: "前回指摘未解消: 記述内容の指示に「短い」「簡潔に」などの曖昧な表現（31行目、54行目、61行目）が含まれており、客観的な品質判定基準が依然として不明確である。"
+    message_ja: "前回指摘未解消: 記述内容の指示に「短い」「簡潔に」などの曖昧な表現（31行目、54行目、61行目）が含まれており、客観的な品質判定基準が依然として不明確である。"
   - id: F009
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# 外部システムIF一覧（External System Interface List: ESIL）作成ルール"
     message: "前回指摘未解消: 誤用を防止するための「禁止事項」セクションが依然として不足しており、詳細仕様への委譲などの制約をより強く明示すべきである。"
+    message_ja: "前回指摘未解消: 誤用を防止するための「禁止事項」セクションが依然として不足しており、詳細仕様への委譲などの制約をより強く明示すべきである。"
   - id: F010
     severity: minor
     rule: vp-qe-kata-conformance
     line: 32
-    anchor: "| interfaces | 外部連携の配列（1件以上）     | ○    |"
+    anchor: "| rulebook   | `specdojo:ifx-index-rulebook` | ○    |"
     message: ルールブックで定義された id の正規表現（^ifx-[a-z0-9-]+$）と、サンプルにおける id（specdojo:ifx-index-sample）の形式が矛盾している。
+    message_ja: ルールブックで定義された id の正規表現（^ifx-[a-z0-9-]+$）と、サンプルにおける id（specdojo:ifx-index-sample）の形式が矛盾している。

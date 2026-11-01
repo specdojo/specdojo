@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 89
-graded_at: "2026-10-31T20:13:42.951Z"
+graded_at: "2026-11-01T20:19:19.239Z"
 graded_by: flash-high-executor
-content_hash: f21a6de5e3f4b9a1016a0342f8632ed317a03fe6b1630c7db2a7b197b3f3b707
+content_hash: 164a43ba1062382b2f13d7fe2f7957eae77f9ef8434ffef588b770b245980447
 categories:
   purpose:
     score: 100
@@ -186,7 +186,8 @@ findings:
       Kata suite.
     message_ja: >-
       セクション 1、5、6.2、および 7
-      では、プロセスエリアにおいて箇条書きの入力、出力、およびデータストアをリストにすることを禁止していますが、リファレンスレシピ、サンプル、およびテンプレートではそれらを必須とし、かつ実演しているため、Kataスイート全体で構造的な矛盾が生じています。
+      では、プロセス領域において箇条書きの入力、出力、およびデータストアをリストにすることを禁止していますが、リファレンスレシピ、サンプル、およびテンプレートではそれらが義務付けられ、かつ提示されているため、Kata
+      スイート全体で構造的な矛盾が生じています。
   - id: F010
     severity: minor
     rule: vp-ops-release-readiness

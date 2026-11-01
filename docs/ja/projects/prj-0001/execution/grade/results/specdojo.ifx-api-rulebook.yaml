@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 80
-graded_at: "2026-10-03T21:16:38.724Z"
-graded_by: agy-expert-executor
-content_hash: fad7b3e0df32aced804a359114a32d85033f06f8c2f9c10d8cdd84f2dcb39f38
+graded_at: "2026-11-01T20:24:17.532Z"
+graded_by: flash-high-executor
+content_hash: 8c13d456d76ffcaa4a9759256193a136fa6164b3dcddc8b0102497bc28bb3d53
 categories:
   purpose:
     score: 100
@@ -110,6 +110,7 @@ findings:
     line: 1
     anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
     message: OpenAPI YAMLの妥当性を検証するlintコマンドやschema validationの手順が記載されておらず、設定変更後の確認方法が分からないため追加する必要がある。
+    message_ja: OpenAPI YAMLの妥当性を検証するlintコマンドやschema validationの手順が記載されておらず、設定変更後の確認方法が分からないため追加する必要がある。
   - id: F002
     severity: major
     rule: vp-qe-verifiability
@@ -118,24 +119,32 @@ findings:
     message: >-
       OpenAPI 3.0.3/3.1で必須の `info.version` と各Operationの `responses`
       が必須構造・記載方針に含まれず、このrulebookの条件をすべて満たしても無効なOpenAPI文書が成立するため、両項目の必須条件と検証方法を追加する必要がある。
+    message_ja: >-
+      OpenAPI 3.0.3/3.1で必須の `info.version` と各Operationの `responses`
+      が必須構造・記載方針に含まれず、このrulebookの条件をすべて満たしても無効なOpenAPI文書が成立するため、両項目の必須条件と検証方法を追加する必要がある。
   - id: F003
     severity: minor
     rule: vp-qe-verifiability
     line: 57
-    anchor: "## 5. エラー定義（推奨）"
+    anchor: ""
     message: 見出しはエラー定義を「推奨」とする一方、本文は列挙した応答を「少なくとも定義します」と必須表現にしておりpass/failを一意に判定できないため、必須・条件付き必須・推奨のいずれかへ統一する必要がある。
+    message_ja: 見出しはエラー定義を「推奨」とする一方、本文は列挙した応答を「少なくとも定義します」と必須表現にしておりpass/failを一意に判定できないため、必須・条件付き必須・推奨のいずれかへ統一する必要がある。
   - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
     line: 35
     anchor: "## 4. 必須構造（OpenAPI YAML）"
     message: 必須構造から `info.version` およびOperationごとの `responses` が漏れており、宣言したOpenAPIバージョンの必須事項とrulebookの受入条件が整合しないため追加する必要がある。
+    message_ja: 必須構造から `info.version` およびOperationごとの `responses` が漏れており、宣言したOpenAPIバージョンの必須事項とrulebookの受入条件が整合しないため追加する必要がある。
   - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
     message: >-
+      Rulebook記述標準が求める独立した英語名と必須章への対応が明示されず、`## 4.1` も `## 4.`
+      と同じ見出し階層になっているため、標準章構成へ整理するか省略理由を示し、メタ情報節を適切な下位見出しにする必要がある。
+    message_ja: >-
       Rulebook記述標準が求める独立した英語名と必須章への対応が明示されず、`## 4.1` も `## 4.`
       と同じ見出し階層になっているため、標準章構成へ整理するか省略理由を示し、メタ情報節を適切な下位見出しにする必要がある。
   - id: F006
@@ -146,12 +155,16 @@ findings:
     message: >-
       `target_format: yaml` の必須キー定義から `info.version` とOperationの `responses` が欠落し、参照 sample も `info.version`
       を持たない無効なOpenAPI完成例になっているため、rulebookを正として必須条件を追加しsampleも同時に整合させる必要がある。
+    message_ja: >-
+      `target_format: yaml` の必須キー定義から `info.version` とOperationの `responses` が欠落し、参照 sample も `info.version`
+      を持たない無効なOpenAPI完成例になっているため、rulebookを正として必須条件を追加しsampleも同時に整合させる必要がある。
   - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 外部API仕様（External API Specification: EAPIS）作成ルール"
     message: Rulebook記述標準が指定するタイトル直下の独立した英語名、標準章構成、連続した章番号、適切な見出し階層を満たしていないため、規約内容を維持したままauthoring standard準拠の構成へ再編する必要がある。
+    message_ja: Rulebook記述標準が指定するタイトル直下の独立した英語名、標準章構成、連続した章番号、適切な見出し階層を満たしていないため、規約内容を維持したままauthoring standard準拠の構成へ再編する必要がある。
   - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
@@ -160,12 +173,18 @@ findings:
     message: >-
       参照 sample の `x-spec-meta.id` は `specdojo:ifx-api-sample` であり、ここで規定する `ifx-api-...` および ESIL の `spec_ref`
       と対応するIDの完成例になっていないため、sample 用IDの例外を規定するかESIL連携用IDを別途例示する必要がある。
+    message_ja: >-
+      参照 sample の `x-spec-meta.id` は `specdojo:ifx-api-sample` であり、ここで規定する `ifx-api-...` および ESIL の `spec_ref`
+      と対応するIDの完成例になっていないため、sample 用IDの例外を規定するかESIL連携用IDを別途例示する必要がある。
   - id: F009
     severity: minor
     rule: vp-qe-kata-conformance
     line: 57
-    anchor: "## 5. エラー定義（推奨）"
+    anchor: ""
     message: >-
+      参照 sample は `400`・`401`・`500` だけを定義し、ここで「少なくとも」とする `403`・`404`・`409`・`429`
+      を含まないため、必要な応答をsampleへ追加するか省略可能な条件をrulebookへ明記する必要がある。
+    message_ja: >-
       参照 sample は `400`・`401`・`500` だけを定義し、ここで「少なくとも」とする `403`・`404`・`409`・`429`
       を含まないため、必要な応答をsampleへ追加するか省略可能な条件をrulebookへ明記する必要がある。
   - id: F010
@@ -174,9 +193,11 @@ findings:
     line: 5
     anchor: EAPIS は ESIL（外部システムIF一覧）から参照される「詳細仕様」です。
     message: EAPISの上位参照元としてESILを示しているが文書ID・パス・参照先がなく、初見の読者が対応する一覧と `spec_ref` の正本を特定できないため、解決可能な関連文書参照を追加する必要がある。
+    message_ja: EAPISの上位参照元としてESILを示しているが文書ID・パス・参照先がなく、初見の読者が対応する一覧と `spec_ref` の正本を特定できないため、解決可能な関連文書参照を追加する必要がある。
   - id: F011
     severity: minor
     rule: vp-ux-language-consistency
     line: 57
-    anchor: "## 5. エラー定義（推奨）"
+    anchor: ""
     message: 「エラー定義（推奨）」と「少なくとも以下を定義します」が同じ節で異なる必須度を表し読み手を混乱させるため、「必須」「条件付き必須」「推奨」の用語を統一する必要がある。
+    message_ja: 「エラー定義（推奨）」と「少なくとも以下を定義します」が同じ節で異なる必須度を表し読み手を混乱させるため、「必須」「条件付き必須」「推奨」の用語を統一する必要がある。

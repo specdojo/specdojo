@@ -4,9 +4,9 @@ document: specdojo:cdfd-uc-recipe
 path: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 97
-graded_at: "2026-10-29T20:09:54.366Z"
+verdict: needs-work
+score: 93
+graded_at: "2026-11-01T20:10:02.962Z"
 graded_by: flash-high-executor
 content_hash: 311babc9ddd6ec7074c1515a4fe3400c305f98bc15ac7edbdbc76e075230a01f
 categories:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,7 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
+  major: 1
   minor: 1
   note: 0
 findings:
@@ -114,3 +114,16 @@ findings:
     anchor: "### 4.1. 目的"
     message: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。
     message_ja: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 73
+    anchor: "### 4.3. プロセス領域"
+    message: >-
+      In "4.3. プロセス領域" and related procedural steps, the recipe instructs authors to include bullet points for main
+      inputs, main outputs, and data stores, directly contradicting the rulebook which explicitly prohibits bullet
+      points in the process area.
+    message_ja: >-
+      In "4.3. プロセス領域" and related procedural steps, the recipe instructs authors to include bullet points for main
+      inputs, main outputs, and data stores, directly contradicting the rulebook which explicitly prohibits bullet
+      points in the process area.

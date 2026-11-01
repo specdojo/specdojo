@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 93
-graded_at: "2026-10-03T21:32:02.017Z"
-graded_by: agy-expert-executor
-content_hash: c6dc089eb56b153b0b5fe2aa0d50dfdaaff47399f1f18063172fb9b668f15437
+graded_at: "2026-11-01T20:39:13.579Z"
+graded_by: flash-high-executor
+content_hash: 4bc2048d7d753f3e2b161dcde961c05eb504bd4f612631fbf56b374c0553421a
 categories:
   purpose:
     score: 100
@@ -113,21 +113,25 @@ findings:
     line: 72
     anchor: ""
     message: 影響度の尺度を定義するよう禁止事項にあるが、記述ガイド（6.3）では評価観点を示すのみとなっており、尺度の定義方法についての指示が不十分である。
+    message_ja: 影響度の尺度を定義するよう禁止事項にあるが、記述ガイド（6.3）では評価観点を示すのみとなっており、尺度の定義方法についての指示が不十分である。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 101
     anchor: ""
     message: Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。
+    message_ja: Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。
   - id: F003
     severity: minor
     rule: vp-ux-readability
     line: 85
     anchor: "| 影響度 | `高` / `中` / `低` |"
     message: 影響詳細一覧の必須カラム表が「変更要否」の直後の空行で分断され、Markdown 描画では「影響度」以降の4行が表にならないため、空行を削除して1つの表に統合する必要がある。
+    message_ja: 影響詳細一覧の必須カラム表が「変更要否」の直後の空行で分断され、Markdown 描画では「影響度」以降の4行が表にならないため、空行を削除して1つの表に統合する必要がある。
   - id: F004
     severity: minor
     rule: vp-ux-language-consistency
     line: 91
     anchor: ""
     message: 本文全体では「影響度」、参考 sample の対応方針では「優先度」を用いている一方、この箇所だけ未定義の「重要度」を使用しているため、「影響度」または定義済みの優先順位用語へ統一する必要がある。
+    message_ja: 本文全体では「影響度」、参考 sample の対応方針では「優先度」を用いている一方、この箇所だけ未定義の「重要度」を使用しているため、「影響度」または定義済みの優先順位用語へ統一する必要がある。
