@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 90
-graded_at: "2026-10-03T21:23:44.589Z"
-graded_by: agy-expert-executor
-content_hash: f55c978d91c2e3882bd37121cdad68fe1092288e387612471913f995417d074f
+graded_at: "2026-11-01T20:32:35.003Z"
+graded_by: flash-high-executor
+content_hash: b66d295a5be6cfbcb0276f6e7a2797409d5e87e364b27ff021fd1c778ea34d7f
 categories:
   purpose:
     score: 100
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 2
-  minor: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
@@ -113,9 +113,22 @@ findings:
     line: 47
     anchor: ""
     message: 必須構造および主要項目の定義において、サンプルで使用されている source, target, timing キーが欠落している。
+    message_ja: 必須構造および主要項目の定義において、サンプルで使用されている source, target, timing キーが欠落している。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
     line: 67
     anchor: "- `CSV` / `TSV` / `JSON` / `XML`"
     message: 主要項目の定義において、必須構造として挙げられている「file」キーの内部構造（name, naming_rule, description）に関する詳細定義が欠落している。
+    message_ja: 主要項目の定義において、必須構造として挙げられている「file」キーの内部構造（name, naming_rule, description）に関する詳細定義が欠落している。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 53
+    anchor: "| type     | `api` 固定                                                 | ○    |"
+    message: >-
+      In section 3.1, x-spec-meta.type is specified as fixed to 'api', but all sample definitions in sections 6, 7, and
+      8 use 'type: file'.
+    message_ja: >-
+      In section 3.1, x-spec-meta.type is specified as fixed to 'api', but all sample definitions in sections 6, 7, and
+      8 use 'type: file'.

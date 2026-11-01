@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 87
-graded_at: "2026-10-31T20:17:12.637Z"
+graded_at: "2026-11-01T20:21:58.151Z"
 graded_by: flash-high-executor
-content_hash: bb8753f3a0c75f9cb4481b9d17e15a4038cc8c0cb6b60570893fa9af1d03d13b
+content_hash: 47edf3a8fff86f32b049462314c695cdaa86dacef666505444a34612619cb473
 categories:
   purpose:
     score: 100
@@ -110,7 +110,7 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 54
+    line: 57
     anchor: "- 作成途中の `status` は `draft` とし、完成判定と所定の承認を満たした後の昇格は定められた承認者が行います。"
     message: "`ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。"
     message_ja: "`ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。"
@@ -120,20 +120,20 @@ findings:
     line: 10
     anchor: >-
       -
-      「プロセス領域」を順序とグループ別責務の表の正本、「データストア」を引き渡しで使う上位一覧の部分集合、「引き渡し」を情報・条件・戻す条件の正本、図を開始から終了までの横断順序の正本として併用します。プロセス領域に主要入力・主要出力の箇条書きは設けず、受け渡しは図を正本とします。
+      「プロセス領域」を順序とグループ別（または領域別）責務の表の正本、「データストア」を引き渡しで使う上位一覧の部分集合、「引き渡し」を情報・条件・戻す条件の正本、図を開始から終了までの横断順序の正本として併用します。プロセス領域に主要入力・主要出力の箇条書きは設けず、受け渡しは図を正本とします。
     message: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
     message_ja: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 115
+    line: 118
     anchor: "- 表は「対象引き渡し」「条件不成立」「戻り先グループ」「戻す情報」「再開条件」の 5 列とし、すべての引き渡し ID を一度以上確認します。"
     message: 戻しが発生しない引き渡しを許容する一方、「例外時の戻り先」では全引き渡し ID の行と戻り先を求めており記入方法が定義されていないため、該当なしを表す値と理由の記載方法、または戻り先表から除外できる条件を定めてください。
     message_ja: 戻しが発生しない引き渡しを許容する一方、「例外時の戻り先」では全引き渡し ID の行と戻り先を求めており記入方法が定義されていないため、該当なしを表す値と理由の記載方法、または戻り先表から除外できる条件を定めてください。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
-    line: 140
+    line: 144
     anchor: "- プロセス領域に主要入力・主要出力・データストアの箇条書きを記載する、または図の受け渡しを文章でなぞる長文の注記を書く。"
     message: >-
       While this rulebook strictly prohibits bullet points for main inputs, main outputs, and datastores in section 3
@@ -146,7 +146,7 @@ findings:
   - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 72
+    line: 75
     anchor: 「未決事項」を設ける場合は最終章とします。図を分割する場合は「概念データフロー」に `5.1.`、`5.2.` の節を設け、引き渡し ID を接続キーにします。
     message: >-
       `specdojo:cdfd-mermaid-rulebook` は図を分割するノード数の目安を包含元 rulebook
@@ -157,14 +157,14 @@ findings:
   - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 76
+    line: 79
     anchor: "### 6.1. 導入文と目的"
     message: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。
     message_ja: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。
   - id: F007
     severity: minor
     rule: vp-ops-release-readiness
-    line: 54
+    line: 57
     anchor: "- 作成途中の `status` は `draft` とし、完成判定と所定の承認を満たした後の昇格は定められた承認者が行います。"
     message: "`ready` への昇格時に参照する承認者の正本と承認証跡の保管先が定義されていないため、公開前確認で承認済みか再現可能に判定できる参照方法を指定してください。"
     message_ja: "`ready` への昇格時に参照する承認者の正本と承認証跡の保管先が定義されていないため、公開前確認で承認済みか再現可能に判定できる参照方法を指定してください。"
