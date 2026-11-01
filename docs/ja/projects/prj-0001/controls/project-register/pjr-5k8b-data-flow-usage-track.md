@@ -31,13 +31,22 @@ PJR-SJQC の決定に沿って、timeline に track data-flow-usage を定義し
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- timeline の `tml-index.yaml` に track `data-flow-usage` が定義されている。`data-flow-pdca` の定義にならい、`depends_on` は `data-flow-pdca`、`note` に PJR-SJQC の決定に基づく作業であることを書く
+- `dct-data-flow.yaml` で、`cdfd-overview` の `overview` と `done_criteria` が、共通・基盤と register・schedule・routine の関係を描く役割に合っている。`cdfd-uc-register` の `overview` と `done_criteria` が、register 系の詳細（プロセス領域の単位、入口のイベント）に合っている
+- `dct-data-flow.yaml` に `cdfd-uc-schedule`（schedule 系の詳細）と `cdfd-uc-routine`（routine 系の詳細）が、`rulebook: specdojo:cdfd-uc-rulebook`、`depends_on: [cdfd-overview]`、根拠となる実装の `evidence_refs`、役割ごとの `done_criteria` を持って定義されている。`cdfd-uc-schedule` の `note` に、`cdfd-uc-deliverable` を引き継ぐ新しい ID であることを書く
+- `cdfd-uc-deliverable` とプロセスグループ別 6 文書の catalog の定義は変えない（非推奨化は別の todo で行う）
+- `sch-strategy-data-flow-usage.yaml` が、`sch-strategy-data-flow-pdca.yaml` にならって、上の 4 件（`cdfd-overview`・`cdfd-uc-register`・`cdfd-uc-schedule`・`cdfd-uc-routine`）を `local_ids` で scope にしている。作成と書き直しの違いに合う approach を、[[specdojo:schedule-design-guide]] に従って選び、理由を個票の対応結果に書く
+- `npx specdojo schedule build --project prj-0001 --track data-flow-usage` が通り、生成された `sch-track-data-flow-usage.yaml` に 4 件のタスクがある。`npx specdojo catalog validate` も通る
+- 成果物（CDFD の文書と rulebook）は変えない
+- `npm run lint:md` と親の検証が通る
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                                   | 担当 | 状態 | メモ |
+| --- | -------------------------------------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | tml-index.yaml に track data-flow-usage を足す                                         | PM   | open | -    |
+| 2   | dct-data-flow.yaml の overview と uc-register を直し、uc-schedule と uc-routine を足す | PM   | open | -    |
+| 3   | sch-strategy-data-flow-usage.yaml を作り、schedule build を通す                        | PM   | open | -    |
 
 ## 5. 対応結果
 
@@ -45,4 +54,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:dct-data-flow]]
+- [[specdojo:schedule-design-guide]]
