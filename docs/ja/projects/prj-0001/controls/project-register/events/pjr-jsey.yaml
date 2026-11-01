@@ -3596,3 +3596,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d3549b2819bf4f8e903c0ec7b85f3fcc
+- v: 1
+  id: reg_4fb3743d99dc4cd0863058793237dd84
+  ts: "2026-11-01T13:37:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: run が成功し、対応結果に PJR-RKHR の確認行が追記された
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: PJR-6NEM の統合後も exec run --register が start から review・統合まで通った
+      to: PJR-RKHR の統合後も exec run --register が start・review・統合まで通った
+  previous_event_id: reg_b38ecfb812614b0b91242c6c277c53eb
