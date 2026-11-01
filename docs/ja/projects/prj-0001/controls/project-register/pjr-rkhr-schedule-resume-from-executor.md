@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-01T11:13:16Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-GEZN
 ---
