@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_928c30e3f4fc40d49f749772091772bd
+  ts: "2026-11-01T09:52:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 概念データフローの文書体系を overview と系統別の詳細 3 文書にする
+    - field: description
+      from: ""
+      to: CDFD を、共通・基盤と register・schedule・routine の関係を描く cdfd-overview と、系統ごとの詳細 3 文書（ユースケース別 CDFD）に分ける。プロセスグループ別 6 文書は非推奨にする。図は縦向き、入口のイベントを描き、配色は G 案とする
+    - field: input
+      from: ""
+      to: '["全体概要を使い方の流れ（register 系・schedule 系・routine 系・共通）で分けた（PJR-RXVC）後、詳細の CDFD 8 文書はプロセスグループ別のままで軸が合っていない（2026-11-01）","利用者は、cdfd-overview で共通・基盤と register・schedule・routine の関係を描き、register と schedule が epic と track でつながる全体関係も overview で示し、3 系統は詳細の文書で描く分け方を提案した（2026-11-01）","PJR-RVTB の試行で、縦向き（direction: down）と系統ごとの入口のイベントを cdfd-overview で確かめた。配色は、トランザクションデータを中間の緑（#c8e6c9 / #2e7d32）、マスタ・構成データを薄い緑（#e8f5e9 / #43a047）、物理保管をトランザクションデータと同じ色にした G 案を利用者が確かめた（2026-11-01）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-T1D1","PJR-RVTB"]'
