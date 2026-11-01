@@ -1,0 +1,31 @@
+CDFD 関連の rulebook を、全体概要と系統別詳細の体系、縦向き（`direction: down`）、入口の起点イベント、配色 G に対応させました。
+
+### 変更概要
+
+1. [`cdfd-overview-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VRVP/docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md)
+   - 全体概要の構成方式として「系統の関係を描く」方式を選択可能にし、共通・基盤と使い方の系統（register・schedule・routine）の関係を描き、各系統の流れはユースケース別 CDFD で描くことを規定。
+   - プロセス領域の表、データストアの表、凡例は全体概要に置くことを明記。
+   - 系統の関係を描く方式では、全体概要の図に系統の入口の起点イベントを描いてよいことを規定。
+   - 凡例で構成方式を宣言しない場合の既定は、今の方式（データストア区分またはプロセスの流れによる分割、プロセスグループ別 CDFD を置く方式）のままとすることを明記。
+   - 完成判定および禁止事項を上記変更と整合（`status: ready` は維持）。
+
+2. [`cdfd-uc-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VRVP/docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md)
+   - 系統の関係を描く方式の詳細として使う場合は、プロセスグループ代表ノードではなくプロセス領域（`P-xx`）単位でノードを描けることを規定。
+   - 系統の入口の起点イベントを図に描き、その文言は全体概要の「プロセス領域」の表と同じにすることを規定。
+   - 完成判定および禁止事項を上記変更と整合（`status: draft` は維持）。
+
+3. [`cdfd-d2-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VRVP/docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md)
+   - 方向の基本を `direction: down` とし、プロセスは上から Orchestrator・Plan・Do・Check・Action の順（Onboarding は Orchestrator の上）に並べることを規定。
+   - 並び順に逆らう戻りの矢印は `a <- b` と書き、プロセスどうしの受け渡しがない図では透明度 0 の線（`style.opacity: 0`）を使ってよい規則を「上から」に読み替えて更新。
+   - `classes` と例の配色を、トランザクションデータ `#c8e6c9` / `#2e7d32`、マスタ・構成データ `#e8f5e9` / `#43a047`、物理保管はトランザクションデータと同色に更新（`status: draft` は維持）。
+
+4. [`cdfd-mermaid-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VRVP/docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md)
+   - 既定の凡例の色を、トランザクションデータ `#c8e6c9` / `#2e7d32`、マスタ・構成データ `#e8f5e9` / `#43a047`、物理保管はトランザクションデータと同色に更新。
+   - 方向など Mermaid 版の他の規則は変えずに維持（`status: draft` は維持）。
+
+5. [`pjr-vrvp-cdfd-rulebooks-usage-structure.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VRVP/docs/ja/projects/prj-0001/controls/project-register/pjr-vrvp-cdfd-rulebooks-usage-structure.md)
+   - 作業内容の各項目を `closed` に更新し、対応結果を記録。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CDFD 関連 rulebook を overview と系統別詳細の体系、縦向き（direction: down）、入口の起点イベント、配色 G に対応させ、個票の対応結果を記録しました。","handoff":[],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"Catalog validation passed with code 0."}]}
+</specdojo_executor_evidence>
