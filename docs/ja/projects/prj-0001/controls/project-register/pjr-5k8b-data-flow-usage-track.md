@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-5k8b-data-flow-usage-track
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-01T09:54:47Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T10:22:32Z"
+  conclusion: track data-flow-usage を timeline に定義し、catalog に overview の改訂と系統別の詳細 3 文書を定め、schedule 戦略から 4 件のタスクを展開した
   derived_from:
     - PJR-SJQC
 ---

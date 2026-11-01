@@ -112,3 +112,22 @@
       from: PM
       to: BA
   previous_event_id: reg_881f9eca61824cb8af7af7f4b91d48d8
+- v: 1
+  id: reg_ad107afd9ec645bba2cfc76e01b04d2c
+  ts: "2026-11-01T10:22:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と catalog validate で確かめた。詳細 3 件は overview の後に流れる依存を持ち、新しい YAML は draft のまま
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: track data-flow-usage を timeline に定義し、catalog に overview の改訂と系統別の詳細 3 文書を定め、schedule 戦略から 4 件のタスクを展開した
+  previous_event_id: reg_e3ca0fb450bf4c55a7bfbae384abd1f7
