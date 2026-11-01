@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-10-31T14:16:02Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-2ZMY
   depends_on:
@@ -53,8 +52,8 @@ cdfd-mermaid-rulebook に対応する cdfd-d2-rulebook を作り、CDFD の記�
 
 ## 4. 作業内容
 
-| No  | 作業                                                       | 担当 | 状態 | メモ                                           |
-| --- | ---------------------------------------------------------- | ---- | ---- | ---------------------------------------------- |
+| No  | 作業                                                       | 担当 | 状態 | メモ                                            |
+| --- | ---------------------------------------------------------- | ---- | ---- | ----------------------------------------------- |
 | 1   | 完了条件に沿って D2 版の rulebook と記法の選び方を用意する | BA   | done | D2 版 rulebook 作成と 3 rulebook の選択対応完了 |
 
 ## 5. 対応結果
@@ -77,6 +76,8 @@ cdfd-mermaid-rulebook に対応する cdfd-d2-rulebook を作り、CDFD の記�
 - **プロダクト CDFD 文書および rulebook の status の保持**:
   - プロダクトの CDFD 文書（`docs/ja/product/010-business-specs/010-data-flow/`）は一切変更していない（書き直しは PJR-RXVC および PJR-T1D1 で実施予定）。
   - 各 rulebook の `status` は格上げせず、`cdfd-d2-rulebook` は `status: draft`、既存の `cdfd-overview-rulebook`（ready）、`cdfd-rulebook`（ready）、`cdfd-uc-rulebook`（draft）の status も維持した。
+- **共通レビュー観点の更新**:
+  - `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` の `vp-ba-business-value` および `vp-arc-single-responsibility` の `confirmed_default` に `specdojo:cdfd-d2-rulebook` を追加し、rulebook 追加に伴う観点網羅テストを満たすようにした。
 
 ### 5.2. executor の未決事項と決定理由
 
