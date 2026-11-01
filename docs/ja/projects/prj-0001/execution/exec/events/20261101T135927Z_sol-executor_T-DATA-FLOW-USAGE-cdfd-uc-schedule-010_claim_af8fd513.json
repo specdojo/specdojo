@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-01T13:59:27Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-USAGE-cdfd-uc-schedule-010",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
