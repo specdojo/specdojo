@@ -519,6 +519,9 @@ config <- action: "更新した稼働構成"
 kata <- action: "バージョン更新"
 action -> deliverables: "非推奨化した文書"
 action -> trash: "保管した文書"
+
+# 配置制御用（受け渡しではない）
+orchestrator -> plan -> do_exec -> check -> action: {style.opacity: 0}
 ```
 
 凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。Onboarding（P-01）は初期セットアップ、Action（P-11〜P-13）は稼働構成管理（P-12）および非推奨化保管（P-13）を担う。
