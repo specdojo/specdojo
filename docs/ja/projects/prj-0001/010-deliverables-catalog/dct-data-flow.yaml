@@ -13,7 +13,7 @@ groups:
       - local_id: cdfd-overview
         name: 概念データフロー図（全体概要）
         kind: work
-        overview: SpecDojo を活用したプロジェクト運営について、共通・基盤（Onboarding、Kata、稼働構成、非推奨化）と register 系・schedule 系・routine 系の関係、および register と schedule が epic と track でつながる全体関係、routine が Job を通じて両者を動かす関係を可視化し定義する
+        overview: SpecDojo を活用したプロジェクト運営について、プロジェクト構成の構築・管理（Onboarding、Kata、稼働構成）、文書の廃棄（非推奨化・保管）、register 系・schedule 系・routine 系、実行サイクル（実行・評価・完了）、Orchestrator の関係、および register と schedule が epic と track でつながる全体関係、routine が Job を通じて両者を動かす関係を可視化し定義する
         path: cdfd-overview.md
         rulebook: specdojo:cdfd-overview-rulebook
         evidence_refs:
@@ -22,7 +22,7 @@ groups:
             purpose: CLI全体のコマンド領域と起動関係
         note: list・where・status・validate・dry-runなど、状態や成果物を変更しない補助操作は独立した業務フローとして分割しない
         done_criteria:
-          - text: 共通・基盤（Onboarding、Kata、稼働構成、非推奨化）と register 系・schedule 系・routine 系の関係、および 14 のプロセス領域とデータストアの流れが表と図で確認できること
+          - text: プロジェクト構成の構築・管理（Onboarding、Kata、稼働構成）、文書の廃棄（非推奨化・保管）、register 系・schedule 系・routine 系、実行サイクル（実行・評価・完了）、Orchestrator の関係、および 14 のプロセス領域とデータストアの流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
           - text: register と schedule が epic と track でつながる全体関係、および routine が Job を通じて両者を動かす業務境界を承認できること
@@ -31,7 +31,7 @@ groups:
           - text: プロセス領域の表・データストアの表・凡例が整理され、各系統の入口イベントと詳細 3 文書（cdfd-uc-register、cdfd-uc-schedule、cdfd-uc-routine）への構成方針として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: 共通・基盤と 3 系統の詳細 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
+          - text: 7 区分のプロセス領域と 3 系統の詳細 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
   - name: プロジェクト推進
