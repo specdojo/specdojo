@@ -1,0 +1,21 @@
+PJR-RXVC「全体概要の CDFD を使い方の流れで 4 つに分け、D2 で描き直す」の対応を完了しました。
+
+### 実施内容の概要
+
+1. **`cdfd-overview-rulebook` の改定**:
+   - 全体概要の図のノード数が 16 を超える場合の分割方式として、従来の「データストアの区分で分ける」に加え、「使い方の流れで分ける」を選択できるように改定しました。凡例または図の冒頭で明示しない場合は既定の「データストアの区分」として扱う方針を規定しました。
+2. **`cdfd-overview` の図の分割と D2 移行**:
+   - LP の Roadmap（register・schedule・routine + Job）に合わせて、第 5 章の概念データフロー図を以下の 4 つの図に分割し、[`specdojo:cdfd-d2-rulebook`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RXVC/docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md) に従って D2 で描き直しました。
+     - 5.1. register 系の流れ: 登録簿起票を起点とするタスク実行・評価・完了
+     - 5.2. schedule 系の流れ: カタログ・スケジュール戦略からのタスク展開・実行・評価・進捗報告
+     - 5.3. routine 系の流れ: 定期実行定義・ジョブ定義に基づく自動実行・評価・記録
+     - 5.4. 共通・基盤の流れ: Onboarding（`P-01`）、Kata・稼働構成管理（`P-12`）、非推奨化保管（`P-13`）
+   - 第 7 章「凡例（本プロダクト共通）」の図も D2 で描き直し、記法に D2 を採用すること、および全体概要の図を「使い方の流れ」に沿って 4 つの系統に分割することを明示的に宣言しました。
+   - データストアの表（マスタ・構成データとトランザクションデータ）の分類と文章密度（表中心、流れは図が正本）を完全に維持しています。
+3. **ノード ID の言語方針決定とエッジ対応の記録**:
+   - ノード ID には [`specdojo:cdfd-d2-rulebook`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RXVC/docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md) に準拠して英語の英数字・スネークケースを採用し、表示ラベルに日本語・絵文字を記述する方針を決定しました。
+   - 変更前の Mermaid 図にあった全 57 本のエッジが 4 つの図のいずれかに確実に残っていることを確認し、個票（[`pjr-rxvc-cdfd-overview-split-by-usage.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RXVC/docs/ja/projects/prj-0001/controls/project-register/pjr-rxvc-cdfd-overview-split-by-usage.md)）の対応結果に詳細な対応表を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"全体概要の CDFD を使い方の流れに沿って 4 つの図に分割して D2 で描き直し、cdfd-overview-rulebook および個票の対応結果を更新しました。","handoff":["ノード ID の言語方針: D2 コード内のノード ID には英語の英数字・スネークケース（`orchestrator`、`plan`、`do_exec`、`register`、`exec_plan` など）を採用し、表示ラベルに日本語および絵文字を記述した。理由: [[specdojo:cdfd-d2-rulebook]] 第 2 節の標準方針に準拠し、将来のパーサーやツール連携における文字化け等の不具合を防止しつつ、図の可読性を両立するため。","受け渡し（エッジ）の対応: 変更前の Mermaid 図にあった全 57 本の受け渡しエッジ（トランザクション系 35 本、マスタ・構成系 22 本）は、4 つの図（5.1. register 系の流れ、5.2. schedule 系の流れ、5.3. routine 系の流れ、5.4. 共通・基盤の流れ）のいずれか（または複数）にすべて漏れなく保持・再配置された。詳細な対応表は個票（`pjr-rxvc-cdfd-overview-split-by-usage.md`）の対応結果 5.3 節に記録した。","共通の図の構成: 共通・基盤の流れ（5.4）に、Onboarding（`P-01`）、稼働構成管理（`P-12`）、非推奨化保管（`P-13`）を確実に配置した。","rulebook の改定: [[specdojo:cdfd-overview-rulebook]] において、図のノード数が 16 を超える場合の分割方式として「データストアの区分」に加えて「使い方の流れ」を選択可能とし、凡例で明示しない場合は既定の「データストアの区分」とする方針を規定した。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"catalog validation passed with 0 errors"}]}
+</specdojo_executor_evidence>
