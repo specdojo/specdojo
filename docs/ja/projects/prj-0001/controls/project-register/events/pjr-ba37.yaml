@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-GEZN"]'
+- v: 1
+  id: reg_adee10aa35ee464b9f5ccd8dda38164c
+  ts: "2026-11-01T12:27:44Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2e28de07b2174e18b749ee3ffc9f863b
+- v: 1
+  id: reg_2a75029505734cfcbcf1892d62c87690
+  ts: "2026-11-01T12:42:03Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_adee10aa35ee464b9f5ccd8dda38164c
