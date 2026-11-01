@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_82ea476ae05d4326be37fdb0387ad828
+  ts: "2026-11-01T07:10:45Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ssh で入るとホストの tmux スクリプトが docker を見つけられない（mac・WSL2・Linux）
+    - field: description
+      from: ""
+      to: "ssh で入ったホストの非対話シェルでは PATH に docker がなく、devcontainer-tmux.sh が line 46 で docker: command not found になる。mac・WSL2・Linux で docker を探せるようにし、見つからない・動かせないときは OS に合ったヒントを出す"
+    - field: input
+      from: ""
+      to: "[\"利用者が tmux でリモートから入ると、devcontainer-tmux.sh の line 46 で docker: command not found になる（2026-11-01）\",\"ssh で入ると mac のログインシェルの設定が読まれず、PATH は /usr/bin:/bin:/usr/sbin:/sbin になる。以前のホストのスクリプトは /opt/homebrew/bin と /usr/local/bin を PATH に足していた\",\"今の本体は devcontainer up を呼ぶときだけ PATH を補い、最初の docker ps では補っていない\",\"ラッパーは小さく保ち、PATH の補いは本体で行う。mac・Windows（WSL2）・Linux で動くようにする（2026-11-01 の利用者の要望）\",\"探し方は、今の PATH、ログインシェル（\\\"$SHELL\\\" -lc）への問い合わせ、よくある場所の順とし、環境変数 `SPECDOJO_DOCKER_BIN` で直接指定もできるようにする（2026-11-01 の対話で承認）\",\"実機で確かめられるのは利用者の mac だけ。WSL2 と Linux は単体テストでの確認にとどめ、実機が未確認であることを記録する\"]"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-Q8KP"]'
