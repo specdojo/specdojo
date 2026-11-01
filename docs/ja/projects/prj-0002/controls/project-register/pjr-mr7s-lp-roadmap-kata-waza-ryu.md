@@ -93,6 +93,13 @@ LP 末尾の「これから」に、型（Kata）・技（Waza）・流（Ryu）
 - 今回の PC・スマホの実画面確認は `requires_human`。既存の確認用スクリプトを実行したが、sandbox がローカル HTTP サーバーの起動を `listen EPERM: operation not permitted 127.0.0.1` で拒否した。5.4 の実画面確認は修正前の記録であり、今回の修正後を確認したものではない。次のアクションは sandbox 外で PC（1440px）・スマホ（390px）の行名と Waza 説明の折り返し・横はみ出しを確認すること。
 - result への記入は後続の reporter／runner に引き継ぐ。変更ファイルは本個票と `specdojo-lp:src/components/sections/Roadmap.astro`。今回の修正内容、検証結果、実画面確認の制約を result に反映する。登録簿の一覧・個票のステータス項目は変更していない。
 
+### 5.6. 表記統一後の確認（specdojo-orchestrator、2026-11-01）
+
+- LP の `develop` の `5a9f5321b1a1` を確認し、実際の差分が `Roadmap.astro` の `Job` を `job` に置き換える2か所だけであることを確認した。reporter の要約には前回の役割説明の追記も含まれるが、今回その説明を追加し直したわけではない。
+- LP のビルドと親検証 8 種はすべて成功した。
+- specdojo-orchestrator が sandbox 外で `node /tmp/pjr-mr7s-preview.mjs` を実行し、修正後の PC（1440px）・スマホ（390px）のスクリーンショットを確認した。表とカードの行名、Waza の説明が小文字の `job` で表示され、折り返し・重なり・横はみ出しに問題はない。画面外にはみ出す要素は両幅とも 0 件だった。
+- 表示確認したソースと統合後のソースの Git blob は `cff50db76177678fbef9de2e4536163785483d89` で一致する。これにより、5.5 の修正後の実画面確認待ちは解消した。状態は `review` のまま残す。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0002:pjr-7t8x-lp-roadmap-pdca-matrix]]: 既存の「これから」と PDCA 表の方針。

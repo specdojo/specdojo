@@ -54,3 +54,16 @@ PR が `not applicable` の行では、runner は PR を作成していません
 | `prj-0002:PJR-MR7S` | `specdojo-assets` | `develop`          | `exec/prj-0002-PJR-MR7S` | unchanged | not applicable | not applicable (no changes)                | 2026-11-01T13:43:41.813Z |
 
 <!-- markdownlint-enable MD013 -->
+
+## 6. オーケストレーターによる追加確認
+
+- 2026-11-01、LP の `develop` の `5a9f5321b1a1` を確認した。
+  実際の差分は `Roadmap.astro` 内の `Job` を `job` に置き換える2か所のみ。
+  上記の reporter 要約にある役割説明の追記は前回分であり、今回の追加変更ではない。
+- LP のビルドと親検証 8 種はすべて成功した。
+- specdojo-orchestrator が sandbox 外で修正後の PC（1440px）・スマホ（390px）を表示し、
+  スクリーンショットで行名と Waza 説明の `job` 表記を確認した。
+  折り返し・重なり・横はみ出しに問題はなく、画面外にはみ出す要素は両幅とも 0 件だった。
+- 表示確認したソースと統合後のソースの Git blob は
+  `cff50db76177678fbef9de2e4536163785483d89` で一致する。
+  第 3 節の実画面確認待ちは解消した。個票は `review` として残す。
