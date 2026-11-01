@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ba37-cdfd-overview-concise-usage
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-01T12:26:44Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T13:22:58Z"
+  conclusion: 全体概要のプロセス領域を系統の分け方にそろえて PDCA の列を足し、旧表と未決事項を外して端的にした。その後、利用者の指示で凡例の配置、P-14 の PDCA、7 区分への分割と区分の名前を orchestrator が直した
   derived_from:
     - PJR-GEZN
 ---

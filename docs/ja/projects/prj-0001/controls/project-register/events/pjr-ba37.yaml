@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_adee10aa35ee464b9f5ccd8dda38164c
+- v: 1
+  id: reg_44691735fbb74b659e812aac58ce79ed
+  ts: "2026-11-01T13:22:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と SVG で確かめた。14 領域の中身は変わらず、lint:md・lint:d2 が通り、利用者がプレビューで確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: 全体概要のプロセス領域を系統の分け方にそろえて PDCA の列を足し、旧表と未決事項を外して端的にした。その後、利用者の指示で凡例の配置、P-14 の PDCA、7 区分への分割と区分の名前を orchestrator が直した
+  previous_event_id: reg_2a75029505734cfcbcf1892d62c87690
