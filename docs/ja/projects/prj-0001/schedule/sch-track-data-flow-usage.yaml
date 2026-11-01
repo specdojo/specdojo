@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-track.schema.yaml
+kind: track
+id: prj-0001:sch-track-data-flow-usage
+type: project
+status: draft
+title: スケジュールトラック（data-flow-usage）
+rulebook: specdojo:sch-rulebook
+version: 1
+project_id: prj-0001
+track: data-flow-usage
+settings:
+  start_date: "2026-11-01"
+tasks:
+  - local_id: cdfd-overview
+    phase_suffix: "010"
+    phase_set: rewrite-pass
+    phase_id: rewrite
+    name: 全体概要の改訂・ユースケース CDFD の書き直し
+    duration_days: 0.5
+    depends_on: []
+    owner: BA
+    description: |
+      PJR-SJQC の決定に基づき、cdfd-overview は共通・基盤と 3 系統の関係を描く形へ改訂し、
+      cdfd-uc-register はプロセス領域の単位と入口のイベント（未整理事項の発見など）を描く形へ
+      書き直す。既存の草案記述と Kata（cdfd-overview-rulebook / cdfd-uc-rulebook）を尊重し、
+      fully-guided で磨き込む。
+  - local_id: cdfd-uc-register
+    phase_suffix: "010"
+    phase_set: rewrite-pass
+    phase_id: rewrite
+    name: 全体概要の改訂・ユースケース CDFD の書き直し
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-USAGE-cdfd-overview-010
+    owner: BA
+    description: |
+      PJR-SJQC の決定に基づき、cdfd-overview は共通・基盤と 3 系統の関係を描く形へ改訂し、
+      cdfd-uc-register はプロセス領域の単位と入口のイベント（未整理事項の発見など）を描く形へ
+      書き直す。既存の草案記述と Kata（cdfd-overview-rulebook / cdfd-uc-rulebook）を尊重し、
+      fully-guided で磨き込む。
+  - local_id: cdfd-uc-schedule
+    phase_suffix: "010"
+    phase_set: author-pass
+    phase_id: author
+    name: 系統別詳細 CDFD のドラフト新規作成
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-USAGE-cdfd-overview-010
+    owner: BA
+    description: |
+      PJR-SJQC の決定に基づき、cdfd-overview と Kata（cdfd-uc-rulebook / sample / template）を
+      骨組みにして、系統別詳細 CDFD（schedule 系・routine 系）をドラフト作成する。
+      プロセス領域の単位、入口のイベント、データストアとの読み書きを定義する。
+  - local_id: cdfd-uc-routine
+    phase_suffix: "010"
+    phase_set: author-pass
+    phase_id: author
+    name: 系統別詳細 CDFD のドラフト新規作成
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-USAGE-cdfd-overview-010
+    owner: BA
+    description: |
+      PJR-SJQC の決定に基づき、cdfd-overview と Kata（cdfd-uc-rulebook / sample / template）を
+      骨組みにして、系統別詳細 CDFD（schedule 系・routine 系）をドラフト作成する。
+      プロセス領域の単位、入口のイベント、データストアとの読み書きを定義する。

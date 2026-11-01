@@ -54,6 +54,14 @@ tracks:
     depends_on: [data-flow]
     note: cdfd-overview の PDCA 構成に合わせたプロセスグループ別・ユースケース別 CDFD 8 件の新規作成（PJR-6PD7）。dct-data-flow を local_ids で部分 scope にする。
 
+  - track: data-flow-usage
+    domains: [data-flow]
+    catalog_status: primary
+    order: 4
+    parallel_group: business-specs
+    depends_on: [data-flow-pdca]
+    note: PJR-SJQC の決定に基づき、概念データフローの文書体系を overview と系統別の詳細 3 文書（register・schedule・routine）へ再編する作業。dct-data-flow を local_ids で部分 scope にする。
+
   - track: data-model
     domains: [data-model]
     catalog_status: draft

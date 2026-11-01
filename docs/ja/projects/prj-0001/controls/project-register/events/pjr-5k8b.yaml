@@ -70,3 +70,19 @@
       from: "-"
       to: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml, docs/ja/pro…'
   previous_event_id: reg_6749c400bab845f9bf8a323f3d7e8436
+- v: 1
+  id: reg_00d5c5fe2d064474931e7a493a1f9ea0
+  ts: "2026-11-01T10:19:33Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml, docs/ja/pro…'
+      to: "-"
+  previous_event_id: reg_6aab28fcc2e34a91912fa81a32ffcbf3

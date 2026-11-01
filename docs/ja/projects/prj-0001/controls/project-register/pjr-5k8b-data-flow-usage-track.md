@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-01T09:54:47Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: project: Deliverable status promotion to \"ready\" is human-only and must not be done by an agent run: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml, docs/ja/pro…"
   derived_from:
     - PJR-SJQC
 ---
