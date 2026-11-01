@@ -112,3 +112,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b63f9d60920f4fb3a6878f3a17d8f52d
+- v: 1
+  id: reg_19d05726eddf40c392a82c2f2b5599e7
+  ts: "2026-11-01T00:35:54Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と lint:d2（5 図）で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: cdfd-d2-rulebook を作り、CDFD の記法を全体概要の凡例で Mermaid と D2 から選べるようにした。宣言しないプロダクトは Mermaid のまま
+  previous_event_id: reg_7764d344312b457ea9db83ec327e71ce

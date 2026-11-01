@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-te2n-cdfd-d2-rulebook
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-10-31T14:16:02Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T00:35:53Z"
+  conclusion: cdfd-d2-rulebook を作り、CDFD の記法を全体概要の凡例で Mermaid と D2 から選べるようにした。宣言しないプロダクトは Mermaid のまま
   derived_from:
     - PJR-2ZMY
   depends_on:
