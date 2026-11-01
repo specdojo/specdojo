@@ -48,3 +48,16 @@ specdojo:
 ## 4. 進め方と実践の型の適用
 
 fully-guided
+
+## 5. 再開の経緯（orchestrator による追記）
+
+- 1 回目の試行（2026-11-01T10:24Z）は、phase の説明に `cdfd-uc-register` の書き直しが含まれていたため、executor が未完了と報告して reporter の段で `blocked` になった。`cdfd-uc-register` は別のタスク `T-DATA-FLOW-USAGE-cdfd-uc-register-010` の作業である。
+- orchestrator が worktree の plan に「再開時の追加の指示」を足し、PJR-RKHR で追加した `exec resume --task T-DATA-FLOW-USAGE-cdfd-overview-010 --resume-from executor` で executor から再開した。統合された plan には、この追加の指示が残っていない（runner が統合時に再生成した plan を採るため）。
+- 追加の指示は次の 6 点である。
+  1. 凡例の図を `direction: down` にする。
+  2. routine 系が Job を通じて register 系と schedule 系を動かす関係を直接描く。
+  3. 本文を PJR-8TQJ の密度に戻し、章・節はタイトルで参照する。
+  4. 決定済みの論点（旧文書の移行、PO の承認記録）を未決事項から除く。
+  5. 移行期のプロセスグループ別 CDFD の表に、その旨の 1 文を残す。
+  6. 上の 2 で足す線以外の受け渡しを変えず、`cdfd-uc-register.md` を変えない。
+- 2 回目の試行は、orchestrator が追加の指示の段落を `_CONTEXT_:` で始めていたため、親の検証 `lint-fm` で止まった。目印を外し、reporter の段から再開して統合した。
