@@ -2,7 +2,7 @@
 specdojo:
   id: cdfd-onboarding
   type: flow
-  status: draft
+  status: deprecated
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - cdfd-overview

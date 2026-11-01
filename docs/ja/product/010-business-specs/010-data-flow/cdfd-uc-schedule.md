@@ -5,7 +5,8 @@ specdojo:
   status: draft
   rulebook: specdojo:cdfd-uc-rulebook
   based_on: []
-  supersedes: []
+  supersedes:
+    - cdfd-uc-deliverable
 ---
 
 # 概念データフロー図（スケジュール計画から完了まで）

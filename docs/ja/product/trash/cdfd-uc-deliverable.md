@@ -2,7 +2,7 @@
 specdojo:
   id: cdfd-uc-deliverable
   type: flow
-  status: draft
+  status: deprecated
   rulebook: specdojo:cdfd-uc-rulebook
   based_on:
     - cdfd-plan
