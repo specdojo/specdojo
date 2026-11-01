@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-RXVC"]'
+- v: 1
+  id: reg_847eddf5bba745789f15b2498e2cf152
+  ts: "2026-11-01T06:51:50Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a9fd6972a06d4e52bc74748218af71d7
+- v: 1
+  id: reg_e873f7eb7de545a89d29766cdd48b463
+  ts: "2026-11-01T07:11:55Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_847eddf5bba745789f15b2498e2cf152
