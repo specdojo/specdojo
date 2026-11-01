@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-sjqc-cdfd-document-structure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: PO
   registered_at: "2026-11-01T09:52:37Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T09:53:41Z"
+  conclusion: 案 E を採択する。overview は共通・基盤と 3 系統の関係を描き、register・schedule・routine は系統別の詳細 3 文書で描く。図は縦向き、入口のイベントを描き、配色は G 案とする
   derived_from:
     - PJR-T1D1
     - PJR-RVTB

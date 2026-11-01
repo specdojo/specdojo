@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-T1D1","PJR-RVTB"]'
+- v: 1
+  id: reg_f9c2bb41895c4db699fea006c4632eca
+  ts: "2026-11-01T09:53:41Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 2026-11-01 の対話で利用者が推奨の案をすべて採択した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: 案 E を採択する。overview は共通・基盤と 3 系統の関係を描き、register・schedule・routine は系統別の詳細 3 文書で描く。図は縦向き、入口のイベントを描き、配色は G 案とする
+  previous_event_id: reg_928c30e3f4fc40d49f749772091772bd
