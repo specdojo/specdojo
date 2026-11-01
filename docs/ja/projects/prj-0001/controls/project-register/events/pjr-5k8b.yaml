@@ -99,3 +99,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_00d5c5fe2d064474931e7a493a1f9ea0
+- v: 1
+  id: reg_e3ca0fb450bf4c55a7bfbae384abd1f7
+  ts: "2026-11-01T10:21:49Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: 利用者が担当を BA に変更した（2026-11-01）
+  changes:
+    - field: owner
+      from: PM
+      to: BA
+  previous_event_id: reg_881f9eca61824cb8af7af7f4b91d48d8

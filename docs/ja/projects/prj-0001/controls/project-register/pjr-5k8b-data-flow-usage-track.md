@@ -10,7 +10,7 @@ specdojo:
   item_status: review
   priority: medium
   difficulty: medium
-  owner: PM
+  owner: BA
   registered_at: "2026-11-01T09:54:47Z"
   due_on: "2026-11-30"
   derived_from:
