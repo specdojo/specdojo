@@ -57,3 +57,16 @@
       from: '["PJR-8TQJ"]'
       to: '["PJR-8TQJ","PJR-TE2N"]'
   previous_event_id: reg_7d3558b51cd041018b76492a0ea2acef
+- v: 1
+  id: reg_57a7cbe9b2314ecf8ae21a1473ef0ed7
+  ts: "2026-11-01T06:51:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-8TQJ","PJR-TE2N"]'
+      to: '["PJR-8TQJ","PJR-TE2N","PJR-AD33"]'
+  previous_event_id: reg_fdfc797741ca40bf836ec05c4061627d

@@ -17,6 +17,7 @@ specdojo:
   depends_on:
     - PJR-8TQJ
     - PJR-TE2N
+    - PJR-AD33
 ---
 
 # PJR-T1D1 残りの CDFD の文書を要点に絞った形に書き直す
