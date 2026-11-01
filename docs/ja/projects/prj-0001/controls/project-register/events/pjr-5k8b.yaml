@@ -54,3 +54,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_695ba6a085e940f1a39487a57385c8b1
+- v: 1
+  id: reg_6aab28fcc2e34a91912fa81a32ffcbf3
+  ts: "2026-11-01T10:18:27Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml, docs/ja/pro…'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml, docs/ja/pro…'
+  previous_event_id: reg_6749c400bab845f9bf8a323f3d7e8436
