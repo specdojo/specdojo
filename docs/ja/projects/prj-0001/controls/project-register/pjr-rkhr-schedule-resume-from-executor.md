@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-01T11:13:16Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-GEZN
 ---
@@ -41,15 +42,21 @@ exec resume に --resume-from executor を足し、reporter の段で blocked �
 
 ## 4. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ |
-| --- | ---------------------------------------------- | ---- | ---- | ---- |
-| 1   | exec resume に --resume-from executor を足す   | DEV  | open | -    |
-| 2   | 単体テストと統合テストを足す                   | DEV  | open | -    |
-| 3   | ガイド・コマンドリファレンス・CHANGELOG に書く | DEV  | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ                                                                         |
+| --- | ---------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------- |
+| 1   | exec resume に --resume-from executor を足す   | DEV  | done | 既存 worktree の plan・変更・run を保持し、試行回数を加算                    |
+| 2   | 単体テストと統合テストを足す                   | DEV  | done | 再開条件、編集済み plan、変更保持、イベント、拒否条件を追加。実行は親 runner |
+| 3   | ガイド・コマンドリファレンス・CHANGELOG に書く | DEV  | done | 再開方法と result への経緯記録を追記。未公開の節へ記載                       |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `exec resume --task <task-id> --resume-from executor` を追加した。executor が成功し reporter が未完了の pipeline を対象とし、reporter 段の `blocked` と中断した `doing` から既存 worktree 上で executor・reporter・統合へ進む。executor の試行回数は同じ run で加算し、`blocked` からの再開は準備完了後に `unblock` イベントを記録する。
+- `src/exec/register-resume.ts` の最新 run 選択・変更一覧・申し送り復元を共有した。統合段・executor 未成功・pipeline 以外・無効な値・worktree／plan／evidence の欠損は理由付きで拒否し、準備失敗時に unblock しない。`--task` を必須とし、`--due` との併用も拒否する。
+- `src/exec/run/schedule-prepare.ts` では plan を再生成せず、worktree にある編集済み plan と result を使う。`src/exec/run/schedule-task.ts` へ前回の変更対象と申し送りを渡し、既存の対象網羅検査に反映した。
+- `tests/src/exec/register-resume.test.ts` と `tests/src/exec/run/resume.test.ts` に単体テストを追加した。`tests/src/exec/pipeline-e2e.integration.test.ts` には実 worktree での `blocked`／`doing`／未完了報告からの再開、編集済み plan の使用、未コミット成果の保持、試行回数、段の順序、dry-run の不変性、拒否時の agent 未起動・イベント不変性を検査するケースを追加した。
+- [[specdojo:exec-operation-guide|exec運用ガイド]] の復帰表・plan 編集後の再開手順と、[[specdojo:command-reference|コマンドリファレンス]] の対象オプションを更新した。`CHANGELOG.md` は `Unreleased` の追加機能に記載した。
+- 検証: 対象ファイルの Prettier 整形、カタログ検証、登録簿の派生ビュー生成を実行した。カタログ検証は終了コード 0（参照先文書がない旨の警告あり）。型検査・TS／文書 lint・単体／統合テスト・schema 検証は pipeline 指示により親 runner に委ねる。result は executor から編集せず、reporter と runner が記入する。
+- 申し送り: 統合後、orchestrator が `T-DATA-FLOW-USAGE-cdfd-overview-010` の残存 worktree の plan に追加指示と経緯記録の指示を書き、`exec resume --task T-DATA-FLOW-USAGE-cdfd-overview-010 --resume-from executor` を実 agent で実行して確認する。plan の変更理由・再開までの経緯は executor 報告の `handoff` に含め、result の申し送りへの反映を確認する。runner の変更を含むため、運用メモに従い統合後の PJR-JSEY も実行してから close を判断する。これは executor の作業外であり、追加の設計判断や保護設定の変更提案はない。
 
 ## 6. 関連ドキュメント
 
