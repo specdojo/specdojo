@@ -37,3 +37,20 @@ specdojo:
 ## 4. 進め方
 
 まず、LP のソースコード `src/components/sections/Roadmap.astro` を編集し、指示された通り `routine` + `job` への表記統一と、Kata（型）・Waza（技）・Ryu（流）の役割に関する説明の追記を行いました。その後、個票ファイル `docs/ja/projects/prj-0002/controls/project-register/pjr-mr7s-lp-roadmap-kata-waza-ryu.md` を更新して、実施内容と結果を記録しました。検証については、Astro の静的ビルドおよび生成された HTML に対する文字列検索により、意図した通りの表記と内容が含まれていることを確認しています。
+
+## 5. トレーサビリティ
+
+runner がプロダクトリポジトリの処理後に記録した状態と、統合先の commit snapshot です。
+プロジェクトリポジトリの統合は、この result を含む merge commit で確認します。
+その merge commit には `Refs: prj-0002:PJR-MR7S` を付けます。
+`branch-only` の行は未統合です。exec branch を保持し、push と PR 作成はプロダクト側で行います。
+PR が `not applicable` の行では、runner は PR を作成していません。
+
+<!-- markdownlint-disable MD013 -->
+
+| trace key           | repository        | integration branch | exec branch              | state     | PR             | commit snapshot                            | recorded at              |
+| ------------------- | ----------------- | ------------------ | ------------------------ | --------- | -------------- | ------------------------------------------ | ------------------------ |
+| `prj-0002:PJR-MR7S` | `specdojo-lp`     | `develop`          | `exec/prj-0002-PJR-MR7S` | merged    | not applicable | `5a9f5321b1a1ad2535bd7a5f618fc5155823bbd6` | 2026-11-01T13:43:41.813Z |
+| `prj-0002:PJR-MR7S` | `specdojo-assets` | `develop`          | `exec/prj-0002-PJR-MR7S` | unchanged | not applicable | not applicable (no changes)                | 2026-11-01T13:43:41.813Z |
+
+<!-- markdownlint-enable MD013 -->
