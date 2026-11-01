@@ -179,18 +179,18 @@ grade: "🧪 評価結果" {
 }
 
 orchestrator -> plan: "計画要求"
-plan -> orchestrator: "計画要求への応答"
+orchestrator <- plan: "計画要求への応答"
 orchestrator -> do_exec: "実行要求"
-do_exec -> orchestrator: "実行状態・判断依頼"
+orchestrator <- do_exec: "実行状態・判断依頼"
 orchestrator -> check: "評価・報告・生成要求"
-check -> orchestrator: "評価・報告・生成結果"
+orchestrator <- check: "評価・報告・生成結果"
 orchestrator -> action: "完了・改善要求"
-action -> orchestrator: "完了・改善判断"
+orchestrator <- action: "完了・改善判断"
 
 plan -> register: "登録項目・決定記録"
 plan -> exec_plan: "実行計画"
 
-exec_plan -> orchestrator: "対象・手順・完了条件"
+orchestrator <- exec_plan: "対象・手順・完了条件"
 exec_plan -> do_exec: "実行計画"
 register -> do_exec: "対象登録項目"
 deliverables -> do_exec: "対象成果物"
@@ -205,11 +205,11 @@ exec_log -> check: "実行記録・実行状態"
 check -> grade: "grade・finding"
 
 grade -> action: "最新の grade・finding（確定済みの事実）"
-action -> register: "完了・決定の記録"
-action -> exec_log: "完了記録"
-action -> plan: "再計画要求"
+register <- action: "完了・決定の記録"
+exec_log <- action: "完了記録"
+plan <- action: "再計画要求"
 
-exec_log -> orchestrator: "記録済みの実行状態"
+orchestrator <- exec_log: "記録済みの実行状態"
 orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
@@ -296,26 +296,26 @@ derived: "🗂️ 派生ビュー・索引" {
 }
 
 orchestrator -> plan: "計画要求"
-plan -> orchestrator: "計画要求への応答"
+orchestrator <- plan: "計画要求への応答"
 orchestrator -> do_exec: "実行要求"
-do_exec -> orchestrator: "実行状態・判断依頼"
+orchestrator <- do_exec: "実行状態・判断依頼"
 orchestrator -> check: "評価・報告・生成要求"
-check -> orchestrator: "評価・報告・生成結果"
+orchestrator <- check: "評価・報告・生成結果"
 orchestrator -> action: "完了・改善要求"
-action -> orchestrator: "完了・改善判断"
+orchestrator <- action: "完了・改善判断"
 
 plan -> catalog: "成果物カタログ"
 plan -> strategy: "既定値・タスク生成戦略"
 plan -> schedule: "Schedule（track）"
 plan -> exec_plan: "実行計画"
 
-strategy -> orchestrator: "phase の作業要件"
-catalog -> orchestrator: "完了条件・rulebook 参照"
+orchestrator <- strategy: "phase の作業要件"
+orchestrator <- catalog: "完了条件・rulebook 参照"
 catalog -> check: "成果物カタログ"
 catalog -> action: "完了条件"
 
 schedule -> do_exec: "タスク・担当・依存"
-exec_plan -> orchestrator: "対象・手順・完了条件"
+orchestrator <- exec_plan: "対象・手順・完了条件"
 exec_plan -> do_exec: "実行計画"
 deliverables -> do_exec: "対象成果物"
 
@@ -331,11 +331,11 @@ check -> derived: "派生ビュー・索引"
 
 grade -> action: "最新の grade・finding（確定済みの事実）"
 report -> action: "判断事項"
-action -> catalog: "更新した成果物カタログ"
-action -> exec_log: "完了記録"
-action -> plan: "再計画要求"
+catalog <- action: "更新した成果物カタログ"
+exec_log <- action: "完了記録"
+plan <- action: "再計画要求"
 
-exec_log -> orchestrator: "記録済みの実行状態"
+orchestrator <- exec_log: "記録済みの実行状態"
 orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
@@ -407,18 +407,18 @@ grade: "🧪 評価結果" {
 }
 
 orchestrator -> plan: "計画要求"
-plan -> orchestrator: "計画要求への応答"
+orchestrator <- plan: "計画要求への応答"
 orchestrator -> do_exec: "実行要求"
-do_exec -> orchestrator: "実行状態・判断依頼"
+orchestrator <- do_exec: "実行状態・判断依頼"
 orchestrator -> check: "評価・報告・生成要求"
-check -> orchestrator: "評価・報告・生成結果"
+orchestrator <- check: "評価・報告・生成結果"
 orchestrator -> action: "完了・改善要求"
-action -> orchestrator: "完了・改善判断"
+orchestrator <- action: "完了・改善判断"
 
 plan -> routine: "定期実行定義"
 plan -> job: "ジョブ定義"
 
-routine -> orchestrator: "定期実行定義"
+orchestrator <- routine: "定期実行定義"
 job -> do_exec: "ジョブ定義"
 
 do_exec -> exec_log: "実行記録・実行状態"
@@ -427,9 +427,9 @@ exec_log -> check: "実行記録・実行状態"
 check -> grade: "grade・finding"
 
 grade -> action: "最新の grade・finding（確定済みの事実）"
-action -> exec_log: "完了記録"
+exec_log <- action: "完了記録"
 
-exec_log -> orchestrator: "記録済みの実行状態"
+orchestrator <- exec_log: "記録済みの実行状態"
 orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
@@ -515,8 +515,8 @@ kata -> plan: "rulebook・template"
 kata -> do_exec: "rulebook・recipe・template"
 kata -> check: "rubric・評価観点"
 
-action -> config: "更新した稼働構成"
-action -> kata: "バージョン更新"
+config <- action: "更新した稼働構成"
+kata <- action: "バージョン更新"
 action -> deliverables: "非推奨化した文書"
 action -> trash: "保管した文書"
 ```
