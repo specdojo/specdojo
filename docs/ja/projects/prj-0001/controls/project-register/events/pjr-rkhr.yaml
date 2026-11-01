@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-GEZN"]'
+- v: 1
+  id: reg_fe3a0e8b8c854c588a83469c1463d17f
+  ts: "2026-11-01T11:14:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_611e7af89df04c99b3a489b680fe08df
