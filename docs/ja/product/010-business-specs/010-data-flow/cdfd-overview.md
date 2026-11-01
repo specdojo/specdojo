@@ -139,7 +139,7 @@ classes: {
   store_master: {
     shape: cylinder
     style: {
-      fill: "#ffffff"
+      fill: "#e8f5e9"
       stroke: "#43a047"
       font-color: "#000000"
     }
@@ -147,8 +147,8 @@ classes: {
   store_transaction: {
     shape: cylinder
     style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -257,7 +257,7 @@ classes: {
   store_master: {
     shape: cylinder
     style: {
-      fill: "#ffffff"
+      fill: "#e8f5e9"
       stroke: "#43a047"
       font-color: "#000000"
     }
@@ -265,8 +265,8 @@ classes: {
   store_transaction: {
     shape: cylinder
     style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -401,7 +401,7 @@ classes: {
   store_master: {
     shape: cylinder
     style: {
-      fill: "#ffffff"
+      fill: "#e8f5e9"
       stroke: "#43a047"
       font-color: "#000000"
     }
@@ -409,8 +409,8 @@ classes: {
   store_transaction: {
     shape: cylinder
     style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -513,7 +513,7 @@ classes: {
   store_master: {
     shape: cylinder
     style: {
-      fill: "#ffffff"
+      fill: "#e8f5e9"
       stroke: "#43a047"
       font-color: "#000000"
     }
@@ -521,8 +521,8 @@ classes: {
   store_transaction: {
     shape: cylinder
     style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -643,7 +643,7 @@ classes: {
   store_master: {
     shape: cylinder
     style: {
-      fill: "#ffffff"
+      fill: "#e8f5e9"
       stroke: "#43a047"
       font-color: "#000000"
     }
@@ -651,8 +651,8 @@ classes: {
   store_transaction: {
     shape: cylinder
     style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -660,8 +660,8 @@ classes: {
     shape: rectangle
     style: {
       border-radius: 20
-      fill: "#e8f5e9"
-      stroke: "#43a047"
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
       font-color: "#000000"
     }
   }
@@ -713,9 +713,9 @@ process_node -> physical_store_node: "物の流れ" {
 | --- | --- | --- | --- |
 | プロセス／プロセスグループ | 角丸四角形（`style.border-radius: 8`） | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: ⚙️） |
 | 起点イベント | 六角形（`shape: hexagon`） | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: ⚡） |
-| データストア（マスタ・構成データ） | 円柱（`shape: cylinder`） | 白地に緑の枠（`#ffffff` / `#43a047`） | 保管物が伝わる絵文字（例: 📐） |
-| データストア（トランザクションデータ） | 円柱（`shape: cylinder`） | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📒） |
-| 物理保管 | 大角丸四角形（`style.border-radius: 20`） | 薄い緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
+| データストア（マスタ・構成データ） | 円柱（`shape: cylinder`） | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📐） |
+| データストア（トランザクションデータ） | 円柱（`shape: cylinder`） | 中間の緑（`#c8e6c9` / `#2e7d32`） | 保管物が伝わる絵文字（例: 📒） |
+| 物理保管 | 大角丸四角形（`style.border-radius: 20`） | 中間の緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
 | 外部主体 | 四角形（`shape: rectangle`） | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 🧑） |
 | 情報の流れ | ラベル付き通常線 `->` | — | — |
 | 物の流れ | ラベル付き太線 `->`（`material_flow` class） | — | — |
