@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_46fabfd8ce4844e2a0f4db48b4454b11
+- v: 1
+  id: reg_e689453d2e3e4918914199cf9ea9d6c1
+  ts: "2026-11-01T10:20:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分で完了条件を確かめた。今の方式を既定として保ち、rulebook の status は変わらず、lint:d2 と lint:mermaid が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: CDFD の rulebook に系統の関係を描く方式を足し、ユースケース別 CDFD をプロセス領域の単位と入口のイベントで描けるようにし、D2 版を縦向きと配色 G、Mermaid 版の色を G にそろえた
+  previous_event_id: reg_53f8d29658334dccac45126951facc65

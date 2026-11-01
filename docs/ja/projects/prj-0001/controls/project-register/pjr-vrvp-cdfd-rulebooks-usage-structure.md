@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-vrvp-cdfd-rulebooks-usage-structure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-01T09:54:27Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T10:20:53Z"
+  conclusion: CDFD の rulebook に系統の関係を描く方式を足し、ユースケース別 CDFD をプロセス領域の単位と入口のイベントで描けるようにし、D2 版を縦向きと配色 G、Mermaid 版の色を G にそろえた
   derived_from:
     - PJR-SJQC
 ---
