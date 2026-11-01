@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-T1D1"]'
+- v: 1
+  id: reg_903fe986838d4b8e898dbcc8a190a6f3
+  ts: "2026-11-01T08:51:35Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3b06c8336edc4a82aab06cc689907909
+- v: 1
+  id: reg_87e5c553756940fa9ca67ceef6d93dda
+  ts: "2026-11-01T09:11:24Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_903fe986838d4b8e898dbcc8a190a6f3

@@ -109,14 +109,14 @@ SpecDojo を活用した仕様駆動開発の全体像をプロセス領域と�
 
 ## 5. 概念データフロー（概要）
 
-六つのプロセスグループとデータストアの間の受け渡しを、使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分けて示す。矢印は情報の受け渡しであり、更新エッジは更新前の参照を含む。
+六つのプロセスグループとデータストアの間の受け渡しを、使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分けて示す。矢印は情報の受け渡しであり、更新エッジは更新前の参照を含む。本試行では、文書幅での視認性向上のため図を縦向き（`direction: down`）とし、プロセスを上から Orchestrator・Plan・Do・Check・Action の順（共通・基盤では Onboarding が Orchestrator の上）に配置するとともに、各系統の入口となる起点イベントを図示している。
 
 ### 5.1. register 系の流れ
 
 登録簿起票を起点に、Orchestrator の調整のもとで Plan・Do・Check・Action が連携してタスクを実行・評価・完了する流れを示す。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -125,6 +125,14 @@ classes: {
       border-radius: 8
       fill: "#e3f2fd"
       stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
       font-color: "#000000"
     }
   }
@@ -144,6 +152,10 @@ classes: {
       font-color: "#000000"
     }
   }
+}
+
+ev_register: "⚡ タスクや課題等が判明した、意思決定した" {
+  class: event
 }
 
 orchestrator: "🎛️ Orchestrator\nP-14" {
@@ -177,6 +189,8 @@ exec_log: "🧾 実行記録" {
 grade: "🧪 評価結果" {
   class: store_transaction
 }
+
+ev_register -> plan: "起票契機"
 
 orchestrator -> plan: "計画要求"
 orchestrator <- plan: "計画要求への応答"
@@ -213,14 +227,14 @@ orchestrator <- exec_log: "記録済みの実行状態"
 orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノード（Orchestrator、Plan、Do、Check、Action、実行計画、実行記録、成果物、評価結果）は各図で同一の責務・正本を表す。
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。本試行では系統の入口となる起点イベントを図示している。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノード（Orchestrator、Plan、Do、Check、Action、実行計画、実行記録、成果物、評価結果）は各図で同一の責務・正本を表す。
 
 ### 5.2. schedule 系の流れ
 
 成果物カタログおよびスケジュール戦略から Schedule（track）を展開し、順次タスクを実行・評価して進捗や派生ビューを可視化・報告する流れを示す。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -229,6 +243,14 @@ classes: {
       border-radius: 8
       fill: "#e3f2fd"
       stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
       font-color: "#000000"
     }
   }
@@ -248,6 +270,13 @@ classes: {
       font-color: "#000000"
     }
   }
+}
+
+ev_catalog: "⚡ 何を成果物として管理するかの判断が確定した" {
+  class: event
+}
+ev_schedule: "⚡ 成果物カタログが整備された" {
+  class: event
 }
 
 orchestrator: "🎛️ Orchestrator\nP-14" {
@@ -295,6 +324,9 @@ derived: "🗂️ 派生ビュー・索引" {
   class: store_transaction
 }
 
+ev_catalog -> plan: "カタログ定義契機"
+ev_schedule -> plan: "計画展開契機"
+
 orchestrator -> plan: "計画要求"
 orchestrator <- plan: "計画要求への応答"
 orchestrator -> do_exec: "実行要求"
@@ -339,14 +371,14 @@ orchestrator <- exec_log: "記録済みの実行状態"
 orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノードは各図で同一の責務・正本を表す。
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。本試行では系統の入口となる起点イベントを図示している。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノードは各図で同一の責務・正本を表す。
 
 ### 5.3. routine 系の流れ
 
 定期実行定義およびジョブ定義に基づき、指定契機での自動実行・評価と結果記録を行う流れを示す。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -355,6 +387,14 @@ classes: {
       border-radius: 8
       fill: "#e3f2fd"
       stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
       font-color: "#000000"
     }
   }
@@ -374,6 +414,13 @@ classes: {
       font-color: "#000000"
     }
   }
+}
+
+ev_routine: "⚡ 定期的に確認・実行する事項が判明した" {
+  class: event
+}
+ev_job: "⚡ 定型的に実行する処理の手順が定まった" {
+  class: event
 }
 
 orchestrator: "🎛️ Orchestrator\nP-14" {
@@ -406,6 +453,9 @@ grade: "🧪 評価結果" {
   class: store_transaction
 }
 
+ev_routine -> plan: "定期実行定義契機"
+ev_job -> plan: "ジョブ定義契機"
+
 orchestrator -> plan: "計画要求"
 orchestrator <- plan: "計画要求への応答"
 orchestrator -> do_exec: "実行要求"
@@ -433,14 +483,14 @@ orchestrator <- exec_log: "記録済みの実行状態"
 orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノードは各図で同一の責務・正本を表す。
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。本試行では系統の入口となる起点イベントを図示している。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノードは各図で同一の責務・正本を表す。
 
 ### 5.4. 共通・基盤の流れ
 
 プロジェクト立ち上げ時の Onboarding（P-01）、Kata や稼働構成の参照・管理（P-12 稼働構成管理）、および非推奨化文書の保管庫への退避（P-13 非推奨化保管）の流れを示す。
 
 ```d2
-direction: right
+direction: down
 
 classes: {
   process: {
@@ -449,6 +499,14 @@ classes: {
       border-radius: 8
       fill: "#e3f2fd"
       stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
       font-color: "#000000"
     }
   }
@@ -468,6 +526,10 @@ classes: {
       font-color: "#000000"
     }
   }
+}
+
+ev_onboarding: "⚡ PO が新しいプロジェクトを立ち上げた" {
+  class: event
 }
 
 onboarding: "🚀 Onboarding\nP-01" {
@@ -503,6 +565,8 @@ trash: "🗃️ 保管庫（trash） / trash" {
   class: store_transaction
 }
 
+ev_onboarding -> onboarding: "立ち上げ契機"
+
 kata -> onboarding: "provider 別雛形"
 onboarding -> kata: "配置した Kata"
 onboarding -> config: "稼働構成の初期状態"
@@ -524,7 +588,7 @@ action -> trash: "保管した文書"
 orchestrator -> plan -> do_exec -> check -> action: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。Onboarding（P-01）は初期セットアップ、Action（P-11〜P-13）は稼働構成管理（P-12）および非推奨化保管（P-13）を担う。
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。本試行では系統の入口となる起点イベントを図示している。`->` は情報の受け渡しを表し、物の流れは含まない。Onboarding（P-01）は初期セットアップ、Action（P-11〜P-13）は稼働構成管理（P-12）および非推奨化保管（P-13）を担う。
 
 ## 6. 詳細 CDFD 一覧
 
@@ -553,7 +617,7 @@ orchestrator -> plan -> do_exec -> check -> action: {style.opacity: 0}
 ## 7. 凡例（本プロダクト共通）
 
 本プロダクトの全 CDFD（本書、プロセスグループ別 CDFD、ユースケース別 CDFD）が共通して参照するノード形状・線種・色・絵文字の対応を示す。
-記法には D2 を採用し、全体概要の概念データフロー図は使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分割して描画する。
+記法には D2 を採用し、全体概要の概念データフロー図は使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分割して描画する。なお、全体概要の試行として各系統の図は縦向き（`direction: down`）とし、系統ごとの入口となる起点イベントを描画している。
 
 ```d2
 direction: right
@@ -656,4 +720,4 @@ process_node -> physical_store_node: "物の流れ" {
 | 情報の流れ | ラベル付き通常線 `->` | — | — |
 | 物の流れ | ラベル付き太線 `->`（`material_flow` class） | — | — |
 
-ノード形状・線種・スタイルの記法は [[specdojo:cdfd-d2-rulebook]] に従い、本章で採用する色・絵文字の割り当てを固定する。全体概要の図は使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分割する。詳細 CDFD は本章を参照し再掲しない。
+ノード形状・線種・スタイルの記法は [[specdojo:cdfd-d2-rulebook]] に従い、本章で採用する色・絵文字の割り当てを固定する。全体概要の図は使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分割する。試行として全体概要では縦向き配置および系統入口の起点イベント描画を適用している。詳細 CDFD は本章を参照し再掲しない。
