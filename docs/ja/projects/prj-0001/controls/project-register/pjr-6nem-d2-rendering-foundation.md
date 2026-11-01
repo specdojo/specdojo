@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-6nem-d2-rendering-foundation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-10-31T14:15:05Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T00:05:43Z"
+  conclusion: D2 の描画・検査の基盤を用意した。保護された設定は利用者の承認のもとで反映し、作り直した Dev Container で d2 v0.9.0・拡張機能・実物の d2 の統合テスト・試しの図の SVG 生成・文書のサイト全体のビルドを確かめた
   derived_from:
     - PJR-2ZMY
 ---
