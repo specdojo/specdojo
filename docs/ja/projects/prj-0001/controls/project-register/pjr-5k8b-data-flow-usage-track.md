@@ -44,9 +44,9 @@ PJR-SJQC の決定に沿って、timeline に track data-flow-usage を定義し
 
 | No  | 作業                                                                                   | 担当 | 状態 | メモ |
 | --- | -------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | tml-index.yaml に track data-flow-usage を足す                                         | PM   | done | -    |
-| 2   | dct-data-flow.yaml の overview と uc-register を直し、uc-schedule と uc-routine を足す | PM   | done | -    |
-| 3   | sch-strategy-data-flow-usage.yaml を作り、schedule build を通す                        | PM   | done | -    |
+| 1   | tml-index.yaml に track data-flow-usage を足す                                         | BA   | done | -    |
+| 2   | dct-data-flow.yaml の overview と uc-register を直し、uc-schedule と uc-routine を足す | BA   | done | -    |
+| 3   | sch-strategy-data-flow-usage.yaml を作り、schedule build を通す                        | BA   | done | -    |
 
 ## 5. 対応結果
 
