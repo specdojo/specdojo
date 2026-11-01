@@ -67,3 +67,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_e5c8d2069c7f4241a121ed504177d74e
+- v: 1
+  id: reg_40d394cbfe364ebe9ec019c87964624c
+  ts: "2026-11-01T00:22:01Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_fdd8fccc29094c498d7a83acfa953c9b
