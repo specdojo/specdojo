@@ -8,6 +8,7 @@ import {
   resolveRegisterResumeArtifacts,
   selectLatestRegisterResultStem,
   selectResumableRegisterRun,
+  selectScheduleExecutorResume,
   type RegisterResumeCandidate,
 } from "../../../src/exec/register-resume.js";
 import {
@@ -124,6 +125,70 @@ function makeAgent(overrides: Partial<ProjectMember> = {}): ProjectMember {
 function makeRoster(members: ProjectMember[]): MemberRoster {
   return { version: 1, project_id: "test", members };
 }
+
+describe("selectScheduleExecutorResume", () => {
+  it.each(["pending", "running", "failed", "rate_limited"] as const)(
+    "restarts the executor before a %s reporter, preserving changes and handoff",
+    (reporterStatus) => {
+      const state = makeState({ reporterStatus });
+      const evidence = makeEvidence(state.run_id);
+      evidence.block_reason = "fix executor validation";
+      expect(selectScheduleExecutorResume([makeCandidate({ state, evidence })])).toMatchObject({
+        kind: "resumable",
+        target: {
+          stage: "executor",
+          runId: state.run_id,
+          initialChanges: ["docs/sample.md"],
+          handoff: ["fix executor validation"],
+        },
+      });
+    },
+  );
+
+  it.each(["running", "pending", "failed", "blocked", "rate_limited"] as const)(
+    "rejects an executor with status %s even when evidence exists",
+    (executorStatus) => {
+      const actual = selectScheduleExecutorResume([
+        makeCandidate({ state: makeState({ executorStatus }) }),
+      ]);
+      expect(actual).toMatchObject({ kind: "not-resumable" });
+      if (actual.kind === "not-resumable") expect(actual.reason).toContain("executor");
+    },
+  );
+
+  it("rejects integration even when an older incomplete report would select the executor", () => {
+    const state = makeState({ reporterStatus: "succeeded", integrateStatus: "failed" });
+    const evidence = { ...makeEvidence(state.run_id), completion_status: "incomplete" as const };
+    expect(
+      selectScheduleExecutorResume([makeCandidate({ state, executorEvidence: evidence })]),
+    ).toMatchObject({
+      kind: "not-resumable",
+      reason: expect.stringContaining("integrate stage"),
+    });
+  });
+
+  it("rejects missing state and missing evidence", () => {
+    expect(selectScheduleExecutorResume([])).toMatchObject({ kind: "not-resumable" });
+    expect(
+      selectScheduleExecutorResume([makeCandidate({ state: makeState(), evidence: undefined })]),
+    ).toMatchObject({ kind: "not-resumable", reason: expect.stringContaining("evidence") });
+  });
+
+  it("rejects failed incomplete evidence even when the state claims executor success", () => {
+    const state = makeState();
+    const evidence = makeEvidence(state.run_id);
+    evidence.stage.status = "failed";
+    evidence.completion_status = "incomplete";
+    expect(
+      selectScheduleExecutorResume([
+        makeCandidate({ state, executorEvidence: evidence, evidence: undefined }),
+      ]),
+    ).toMatchObject({
+      kind: "not-resumable",
+      reason: expect.stringContaining("executor evidence"),
+    });
+  });
+});
 
 describe("selectResumableRegisterRun", () => {
   it.each(["blocked", "running", "succeeded"] as const)(

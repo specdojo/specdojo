@@ -35,6 +35,11 @@ import {
 } from "../parent-validation.js";
 import { loadPipelineResumeCheckpoint } from "../pipeline-state.js";
 import {
+  loadRegisterResumeCandidates,
+  selectScheduleExecutorResume,
+  type RegisterResumeTarget,
+} from "../register-resume.js";
+import {
   buildTaskPhaseMap,
   configuredWorktreeBase,
   parseParallel,
@@ -388,12 +393,22 @@ export function prepareScheduleIntegrationResume(params: {
   };
 }
 
+function validateScheduleResumeOptions(opts: RunOpts): void {
+  if (opts.resumeFrom !== undefined) {
+    if (opts.resumeFrom !== "executor") throw new Error('--resume-from must be "executor".');
+    if (!opts.task || opts.due) {
+      throw new Error("--resume-from requires --task and cannot be combined with --due.");
+    }
+  }
+}
+
 // Resume tasks left in "doing" state by an interrupted run. Unlike --auto (which selects from
 // ready.json and provably excludes "doing"/"blocked" tasks), resume folds the event log to find
 // in-flight tasks and re-runs each on its existing worktree, reusing the claiming actor and the
 // partially-filled result (scaffoldResult is idempotent; the worktree is reused). No validate/build
 // pass — selection comes from events, not the generated cache.
 export async function runResumeMode(opts: RunOpts): Promise<void> {
+  validateScheduleResumeOptions(opts);
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
   const { schedulePath, executionPath, catalogPath, rolesPath, viewpointsPath, projectContext } =
@@ -422,6 +437,45 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
   const initTasks = buildInitialStateFromStrategy(schedulePath, schedule);
   let snapshot = foldEventsToState(events, schedule, schedulePath, initTasks);
   let doingIds: string[];
+  let executorResume: Extract<RegisterResumeTarget, { stage: "executor" }> | undefined;
+  let executorWorktree: ReturnType<typeof withProductWorktrees> | undefined;
+  let pendingExecutorUnblock: ReturnType<typeof buildEvent> | undefined;
+
+  // Validate before changing lifecycle state or generating a plan. Interrupted doing tasks may
+  // have no block metadata, so discover their latest run in the existing worktree as register does.
+  if (opts.resumeFrom === "executor" && opts.task) {
+    const task = buildTaskView(schedulePath, executionPath, opts.task);
+    if (!task.agent_pipeline) throw new Error("--resume-from requires an agent_pipeline task.");
+    const taskState = snapshot.tasks[opts.task];
+    if (taskState?.meta?.pipeline_stage === "integrate") {
+      throw new Error("cannot resume the executor from the integrate stage");
+    }
+    if (
+      taskState?.state !== "doing" &&
+      !(taskState?.state === "blocked" && taskState.meta?.pipeline_stage === "reporter")
+    ) {
+      throw new Error("--resume-from executor requires a doing task or a blocked reporter stage.");
+    }
+    const worktreeTaskId = qualifyTaskId(projectId, opts.task);
+    const found = findExecWorktree(repoRoot, worktreeTaskId);
+    if (!found) throw new Error(`no exec worktree to resume executor for ${opts.task}`);
+    const lookup = selectScheduleExecutorResume(
+      loadRegisterResumeCandidates({
+        repoRoot,
+        worktreePath: found.path,
+        executionPath,
+        taskId: opts.task,
+      }),
+    );
+    if (lookup.kind !== "resumable") throw new Error(lookup.reason);
+    if (lookup.target.stage !== "executor") throw new Error("no executor stage to resume");
+    executorResume = lookup.target;
+    executorWorktree = withProductWorktrees(
+      found,
+      configuredProductRepos(schedulePath),
+      worktreeTaskId,
+    );
+  }
 
   if (opts.due) {
     let lockDir = "";
@@ -486,24 +540,29 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
       if (canResumeBlockedPipeline) {
         const actor = taskState.last_by ?? opts.by ?? "exec-pipeline-resume";
         if (!dryRun) {
-          const meta = Object.entries(taskState.meta ?? {}).map(
-            ([key, value]) => `${key}=${String(value)}`,
-          );
+          const resumeMeta = {
+            ...taskState.meta,
+            ...(executorResume
+              ? { pipeline_stage: "executor", pipeline_state_ref: executorResume.stateRef }
+              : {}),
+          };
+          const meta = Object.entries(resumeMeta).map(([key, value]) => `${key}=${String(value)}`);
           meta.push("pipeline_resume_claimed=true");
-          writeEventFile(
-            schedulePath,
-            buildEvent("unblock", {
-              task: opts.task,
-              by: actor,
-              msg:
-                blockedPipelineStage === "integrate"
+          const event = buildEvent("unblock", {
+            task: opts.task,
+            by: actor,
+            msg:
+              opts.resumeFrom === "executor"
+                ? "resume executor from persisted pipeline state (--resume-from executor)"
+                : blockedPipelineStage === "integrate"
                   ? "resume integration from persisted pipeline state"
                   : blockedPipelineStage === "reporter"
                     ? "resume reporter from persisted pipeline state"
                     : "resume executor from persisted pipeline state",
-              meta,
-            }),
-          );
+            meta,
+          });
+          if (executorResume) pendingExecutorUnblock = event;
+          else writeEventFile(schedulePath, event);
         }
         snapshot.tasks[opts.task] = {
           ...taskState,
@@ -575,20 +634,29 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
                 execDefaults,
                 undefined,
                 {
-                  stage:
-                    snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
+                  stage: executorResume
+                    ? "executor"
+                    : snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
                       ? "reporter"
                       : snapshot.tasks[taskId]?.meta?.pipeline_stage === "executor"
                         ? "executor"
                         : undefined,
                   stateRef:
-                    typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
+                    executorResume?.stateRef ??
+                    (typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
                       ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
-                      : undefined,
+                      : undefined),
+                  ...(executorResume
+                    ? { executorTarget: executorResume, worktree: executorWorktree }
+                    : {}),
                 },
                 opts,
               );
         if (typeof prepared !== "string") {
+          if (pendingExecutorUnblock) {
+            writeEventFile(schedulePath, pendingExecutorUnblock);
+            pendingExecutorUnblock = undefined;
+          }
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
           prepared.priorLimitAttempts =
             typeof attempts === "string" && /^\d+$/.test(attempts)
@@ -665,6 +733,10 @@ export function registerResumeCommand(exec: Command): void {
     false,
   );
   cmd.option(
+    "--resume-from <stage>",
+    "Restart at executor, preserving existing work (requires --task; cannot be combined with --due)",
+  );
+  cmd.option(
     "--by <nickname>",
     "Select an agent-members.yaml agent (default: the agent that claimed the task)",
   );
@@ -705,6 +777,7 @@ export function registerResumeCommand(exec: Command): void {
 
   cmd.action(async (opts: RunOpts) => {
     try {
+      validateScheduleResumeOptions(opts);
       if (opts.by && opts.executorBy) {
         process.stdout.write("Specify either --by or --executor-by, not both.\n");
         process.exitCode = 1;
