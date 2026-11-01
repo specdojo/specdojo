@@ -109,132 +109,419 @@ SpecDojo を活用した仕様駆動開発の全体像をプロセス領域と�
 
 ## 5. 概念データフロー（概要）
 
-六つのプロセスグループとデータストアの間の受け渡しを示す。矢印は情報の受け渡しであり、更新エッジは更新前の参照を含む。
+六つのプロセスグループとデータストアの間の受け渡しを、使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分けて示す。矢印は情報の受け渡しであり、更新エッジは更新前の参照を含む。
 
-### 5.1. トランザクションデータの流れ
+### 5.1. register 系の流れ
 
-Orchestrator が PDCA を駆動し、Plan・Do・Check・Action が各トランザクションデータを更新・参照する流れを示す。
+登録簿起票を起点に、Orchestrator の調整のもとで Plan・Do・Check・Action が連携してタスクを実行・評価・完了する流れを示す。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
+```d2
+direction: right
 
-  Orchestrator("🎛️ Orchestrator<br>P-14")
-  Plan("📝 Plan<br>P-02〜P-06")
-  Register[("📒 登録簿 / register")]
-  Schedule[("📅 Schedule（track）")]
-  ExecPlan[("📋 実行計画 / plan")]
-  Do("⚙️ Do<br>P-07<br>edit phase")
-  Deliverables[("📄 成果物 / deliverable")]
-  ExecLog[("🧾 実行記録")]
-  Check("🔍 Check<br>P-08〜P-10<br>grade")
-  Grade[("🧪 評価結果")]
-  Report[("📊 進捗報告")]
-  Derived[("🗂️ 派生ビュー・索引")]
-  Action("✅ Action<br>P-11〜P-13<br>review phase")
-  Trash[("🗃️ 保管庫（trash） / trash")]
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#a5d6a7"
+      stroke: "#1b5e20"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+}
 
-  Orchestrator ~~~ Plan ~~~ Do ~~~ Check ~~~ Action
+orchestrator: "🎛️ Orchestrator\nP-14" {
+  class: process
+}
+plan: "📝 Plan\nP-02〜P-06" {
+  class: process
+}
+do_exec: "⚙️ Do\nP-07\nedit phase" {
+  class: process
+}
+check: "🔍 Check\nP-08〜P-10\ngrade" {
+  class: process
+}
+action: "✅ Action\nP-11〜P-13\nreview phase" {
+  class: process
+}
 
-  Orchestrator -->|"計画要求"| Plan
-  Orchestrator -->|"実行要求"| Do
-  Orchestrator -->|"評価・報告・生成要求"| Check
-  Orchestrator -->|"完了・改善要求"| Action
-  Plan -->|"計画要求への応答"| Orchestrator
-  Do -->|"実行状態・判断依頼"| Orchestrator
-  Check -->|"評価・報告・生成結果"| Orchestrator
-  Action -->|"完了・改善判断"| Orchestrator
-  ExecLog -->|"記録済みの実行状態"| Orchestrator
-  Orchestrator -->|"サイクルの実行記録"| ExecLog
-  ExecPlan -->|"対象・手順・完了条件"| Orchestrator
+register: "📒 登録簿 / register" {
+  class: store_transaction
+}
+exec_plan: "📋 実行計画 / plan" {
+  class: store_transaction
+}
+deliverables: "📄 成果物 / deliverable" {
+  class: store_transaction
+}
+exec_log: "🧾 実行記録" {
+  class: store_transaction
+}
+grade: "🧪 評価結果" {
+  class: store_transaction
+}
 
-  Plan -->|"登録項目・決定記録"| Register
-  Plan -->|"Schedule（track）"| Schedule
-  Plan -->|"実行計画"| ExecPlan
+orchestrator -> plan: "計画要求"
+plan -> orchestrator: "計画要求への応答"
+orchestrator -> do_exec: "実行要求"
+do_exec -> orchestrator: "実行状態・判断依頼"
+orchestrator -> check: "評価・報告・生成要求"
+check -> orchestrator: "評価・報告・生成結果"
+orchestrator -> action: "完了・改善要求"
+action -> orchestrator: "完了・改善判断"
 
-  ExecPlan -->|"実行計画"| Do
-  Schedule -->|"タスク・担当・依存"| Do
-  Deliverables -->|"対象成果物"| Do
-  Register -->|"対象登録項目"| Do
-  Do -->|"登録項目の状態遷移"| Register
-  Do -->|"作成・更新した成果物"| Deliverables
-  Do -->|"実行記録・実行状態"| ExecLog
+plan -> register: "登録項目・決定記録"
+plan -> exec_plan: "実行計画"
 
-  Deliverables -->|"評価・派生生成の対象"| Check
-  Schedule -->|"Schedule（track）"| Check
-  Register -->|"登録簿"| Check
-  ExecLog -->|"実行記録・実行状態"| Check
-  Check -->|"grade・finding"| Grade
-  Check -->|"進捗報告"| Report
-  Check -->|"派生ビュー・索引"| Derived
+exec_plan -> orchestrator: "対象・手順・完了条件"
+exec_plan -> do_exec: "実行計画"
+register -> do_exec: "対象登録項目"
+deliverables -> do_exec: "対象成果物"
 
-  Grade -->|"最新の grade・finding（確定済みの事実）"| Action
-  Report -->|"判断事項"| Action
-  Action -->|"完了・決定の記録"| Register
-  Action -->|"完了記録"| ExecLog
-  Action -->|"非推奨化した文書"| Deliverables
-  Action -->|"保管した文書"| Trash
-  Action -->|"再計画要求"| Plan
+do_exec -> register: "登録項目の状態遷移"
+do_exec -> deliverables: "作成・更新した成果物"
+do_exec -> exec_log: "実行記録・実行状態"
 
-  class Orchestrator,Plan,Do,Check,Action process
-  class Register,Schedule,ExecPlan,ExecLog,Deliverables,Grade,Report,Derived,Trash storeTransaction
+register -> check: "登録簿"
+deliverables -> check: "評価・派生生成の対象"
+exec_log -> check: "実行記録・実行状態"
+check -> grade: "grade・finding"
+
+grade -> action: "最新の grade・finding（確定済みの事実）"
+action -> register: "完了・決定の記録"
+action -> exec_log: "完了記録"
+action -> plan: "再計画要求"
+
+exec_log -> orchestrator: "記録済みの実行状態"
+orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノード（Orchestrator、Plan、Do、Check、Action、実行計画、実行記録、成果物、評価結果）は各図で同一の責務・正本を表す。
 
-### 5.2. マスタ・構成データの流れ
+### 5.2. schedule 系の流れ
 
-Onboarding が初期構成を整え、各グループがマスタ・構成データを参照し、Action が承認済み変更を反映する流れを示す。
+成果物カタログおよびスケジュール戦略から Schedule（track）を展開し、順次タスクを実行・評価して進捗や派生ビューを可視化・報告する流れを示す。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
+```d2
+direction: right
 
-  Onboarding("🚀 Onboarding<br>P-01")
-  Kata[("📐 Kata / kata")]
-  Config[("🧩 稼働構成")]
-  Catalog[("📚 成果物カタログ / catalog")]
-  Strategy[("🧭 スケジュール戦略")]
-  Routine[("⏰ 定期実行定義 / routine")]
-  Job[("🧰 ジョブ定義 / job")]
-  Orchestrator("🎛️ Orchestrator<br>P-14")
-  Plan("📝 Plan<br>P-02〜P-06")
-  Do("⚙️ Do<br>P-07<br>edit phase")
-  Check("🔍 Check<br>P-08〜P-10<br>grade")
-  Action("✅ Action<br>P-11〜P-13<br>review phase")
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#a5d6a7"
+      stroke: "#1b5e20"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+}
 
-  Kata -->|"provider 別雛形"| Onboarding
-  Onboarding -->|"配置した Kata"| Kata
-  Onboarding -->|"稼働構成の初期状態"| Config
+orchestrator: "🎛️ Orchestrator\nP-14" {
+  class: process
+}
+plan: "📝 Plan\nP-02〜P-06" {
+  class: process
+}
+do_exec: "⚙️ Do\nP-07\nedit phase" {
+  class: process
+}
+check: "🔍 Check\nP-08〜P-10\ngrade" {
+  class: process
+}
+action: "✅ Action\nP-11〜P-13\nreview phase" {
+  class: process
+}
 
-  Config -->|"agent 定義・実行既定値"| Orchestrator
-  Config -->|"agent 定義・権限"| Do
-  Config -->|"メンバー・ロール"| Plan
-  Kata -->|"rulebook・template"| Plan
-  Kata -->|"rulebook・recipe・template"| Do
-  Kata -->|"rubric・評価観点"| Check
-  Plan -->|"成果物カタログ"| Catalog
-  Catalog -->|"成果物カタログ"| Check
-  Catalog -->|"完了条件・rulebook 参照"| Orchestrator
-  Catalog -->|"完了条件"| Action
-  Plan -->|"既定値・タスク生成戦略"| Strategy
-  Strategy -->|"phase の作業要件"| Orchestrator
-  Plan -->|"定期実行定義"| Routine
-  Plan -->|"ジョブ定義"| Job
-  Routine -->|"定期実行定義"| Orchestrator
-  Job -->|"ジョブ定義"| Do
+catalog: "📚 成果物カタログ / catalog" {
+  class: store_master
+}
+strategy: "🧭 スケジュール戦略" {
+  class: store_master
+}
 
-  Action -->|"更新した稼働構成"| Config
-  Action -->|"バージョン更新"| Kata
-  Action -->|"更新した成果物カタログ"| Catalog
+schedule: "📅 Schedule（track）" {
+  class: store_transaction
+}
+exec_plan: "📋 実行計画 / plan" {
+  class: store_transaction
+}
+deliverables: "📄 成果物 / deliverable" {
+  class: store_transaction
+}
+exec_log: "🧾 実行記録" {
+  class: store_transaction
+}
+grade: "🧪 評価結果" {
+  class: store_transaction
+}
+report: "📊 進捗報告" {
+  class: store_transaction
+}
+derived: "🗂️ 派生ビュー・索引" {
+  class: store_transaction
+}
 
-  class Onboarding,Orchestrator,Plan,Do,Check,Action process
-  class Kata,Config,Catalog,Strategy,Routine,Job storeMaster
+orchestrator -> plan: "計画要求"
+plan -> orchestrator: "計画要求への応答"
+orchestrator -> do_exec: "実行要求"
+do_exec -> orchestrator: "実行状態・判断依頼"
+orchestrator -> check: "評価・報告・生成要求"
+check -> orchestrator: "評価・報告・生成結果"
+orchestrator -> action: "完了・改善要求"
+action -> orchestrator: "完了・改善判断"
+
+plan -> catalog: "成果物カタログ"
+plan -> strategy: "既定値・タスク生成戦略"
+plan -> schedule: "Schedule（track）"
+plan -> exec_plan: "実行計画"
+
+strategy -> orchestrator: "phase の作業要件"
+catalog -> orchestrator: "完了条件・rulebook 参照"
+catalog -> check: "成果物カタログ"
+catalog -> action: "完了条件"
+
+schedule -> do_exec: "タスク・担当・依存"
+exec_plan -> orchestrator: "対象・手順・完了条件"
+exec_plan -> do_exec: "実行計画"
+deliverables -> do_exec: "対象成果物"
+
+do_exec -> deliverables: "作成・更新した成果物"
+do_exec -> exec_log: "実行記録・実行状態"
+
+schedule -> check: "Schedule（track）"
+deliverables -> check: "評価・派生生成の対象"
+exec_log -> check: "実行記録・実行状態"
+check -> grade: "grade・finding"
+check -> report: "進捗報告"
+check -> derived: "派生ビュー・索引"
+
+grade -> action: "最新の grade・finding（確定済みの事実）"
+report -> action: "判断事項"
+action -> catalog: "更新した成果物カタログ"
+action -> exec_log: "完了記録"
+action -> plan: "再計画要求"
+
+exec_log -> orchestrator: "記録済みの実行状態"
+orchestrator -> exec_log: "サイクルの実行記録"
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。トランザクションデータとの受け渡しは前図を参照する。
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノードは各図で同一の責務・正本を表す。
+
+### 5.3. routine 系の流れ
+
+定期実行定義およびジョブ定義に基づき、指定契機での自動実行・評価と結果記録を行う流れを示す。
+
+```d2
+direction: right
+
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#a5d6a7"
+      stroke: "#1b5e20"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+}
+
+orchestrator: "🎛️ Orchestrator\nP-14" {
+  class: process
+}
+plan: "📝 Plan\nP-02〜P-06" {
+  class: process
+}
+do_exec: "⚙️ Do\nP-07\nedit phase" {
+  class: process
+}
+check: "🔍 Check\nP-08〜P-10\ngrade" {
+  class: process
+}
+action: "✅ Action\nP-11〜P-13\nreview phase" {
+  class: process
+}
+
+routine: "⏰ 定期実行定義 / routine" {
+  class: store_master
+}
+job: "🧰 ジョブ定義 / job" {
+  class: store_master
+}
+
+exec_log: "🧾 実行記録" {
+  class: store_transaction
+}
+grade: "🧪 評価結果" {
+  class: store_transaction
+}
+
+orchestrator -> plan: "計画要求"
+plan -> orchestrator: "計画要求への応答"
+orchestrator -> do_exec: "実行要求"
+do_exec -> orchestrator: "実行状態・判断依頼"
+orchestrator -> check: "評価・報告・生成要求"
+check -> orchestrator: "評価・報告・生成結果"
+orchestrator -> action: "完了・改善要求"
+action -> orchestrator: "完了・改善判断"
+
+plan -> routine: "定期実行定義"
+plan -> job: "ジョブ定義"
+
+routine -> orchestrator: "定期実行定義"
+job -> do_exec: "ジョブ定義"
+
+do_exec -> exec_log: "実行記録・実行状態"
+
+exec_log -> check: "実行記録・実行状態"
+check -> grade: "grade・finding"
+
+grade -> action: "最新の grade・finding（確定済みの事実）"
+action -> exec_log: "完了記録"
+
+exec_log -> orchestrator: "記録済みの実行状態"
+orchestrator -> exec_log: "サイクルの実行記録"
+```
+
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。他系と共有するノードは各図で同一の責務・正本を表す。
+
+### 5.4. 共通・基盤の流れ
+
+プロジェクト立ち上げ時の Onboarding（P-01）、Kata や稼働構成の参照・管理（P-12 稼働構成管理）、および非推奨化文書の保管庫への退避（P-13 非推奨化保管）の流れを示す。
+
+```d2
+direction: right
+
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#a5d6a7"
+      stroke: "#1b5e20"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+}
+
+onboarding: "🚀 Onboarding\nP-01" {
+  class: process
+}
+orchestrator: "🎛️ Orchestrator\nP-14" {
+  class: process
+}
+plan: "📝 Plan\nP-02〜P-06" {
+  class: process
+}
+do_exec: "⚙️ Do\nP-07\nedit phase" {
+  class: process
+}
+check: "🔍 Check\nP-08〜P-10\ngrade" {
+  class: process
+}
+action: "✅ Action\nP-11〜P-13\n稼働構成管理・非推奨化" {
+  class: process
+}
+
+kata: "📐 Kata / kata" {
+  class: store_master
+}
+config: "🧩 稼働構成" {
+  class: store_master
+}
+
+deliverables: "📄 成果物 / deliverable" {
+  class: store_transaction
+}
+trash: "🗃️ 保管庫（trash） / trash" {
+  class: store_transaction
+}
+
+kata -> onboarding: "provider 別雛形"
+onboarding -> kata: "配置した Kata"
+onboarding -> config: "稼働構成の初期状態"
+
+config -> orchestrator: "agent 定義・実行既定値"
+config -> do_exec: "agent 定義・権限"
+config -> plan: "メンバー・ロール"
+
+kata -> plan: "rulebook・template"
+kata -> do_exec: "rulebook・recipe・template"
+kata -> check: "rubric・評価観点"
+
+action -> config: "更新した稼働構成"
+action -> kata: "バージョン更新"
+action -> deliverables: "非推奨化した文書"
+action -> trash: "保管した文書"
+```
+
+凡例は「凡例（本プロダクト共通）」に従う。外部主体や各領域の内部イベントは図示を省略し、表を参照する。`->` は情報の受け渡しを表し、物の流れは含まない。Onboarding（P-01）は初期セットアップ、Action（P-11〜P-13）は稼働構成管理（P-12）および非推奨化保管（P-13）を担う。
 
 ## 6. 詳細 CDFD 一覧
 
@@ -262,46 +549,108 @@ flowchart LR
 
 ## 7. 凡例（本プロダクト共通）
 
-本プロダクトの全 CDFD（本書、プロセスグループ別 CDFD、ユースケース別 CDFD）が共通して参照するノード形状・色・絵文字の対応を示す。
+本プロダクトの全 CDFD（本書、プロセスグループ別 CDFD、ユースケース別 CDFD）が共通して参照するノード形状・線種・色・絵文字の対応を示す。
+記法には D2 を採用し、全体概要の概念データフロー図は使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分割して描画する。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+```d2
+direction: right
 
-  外部主体["🧑 外部主体"]
-  起点イベント{{"⚡ 起点イベント"}}
-  プロセス("⚙️ プロセス／プロセスグループ")
-  マスタ構成データ[("🗄️ マスタ・構成データ")]
-  トランザクションデータ[("🗄️ トランザクションデータ")]
-  物理保管(["🏬 物理保管"])
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#a5d6a7"
+      stroke: "#1b5e20"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  actor: {
+    shape: rectangle
+    style: {
+      fill: "#f5f7fa"
+      stroke: "#607d8b"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
 
-  外部主体 -->|"情報の流れ"| プロセス
-  起点イベント -->|"起動条件"| プロセス
-  プロセス -->|"参照・更新"| マスタ構成データ
-  プロセス -->|"更新"| トランザクションデータ
-  プロセス ==>|"物の流れ"| 物理保管
+actor_node: "🧑 外部主体" {
+  class: actor
+}
+event_node: "⚡ 起点イベント" {
+  class: event
+}
+process_node: "⚙️ プロセス／プロセスグループ" {
+  class: process
+}
+master_store: "🗄️ マスタ・構成データ" {
+  class: store_master
+}
+transaction_store: "🗄️ トランザクションデータ" {
+  class: store_transaction
+}
+physical_store_node: "🏬 物理保管" {
+  class: physical_store
+}
 
-  class プロセス process
-  class 起点イベント event
-  class マスタ構成データ storeMaster
-  class トランザクションデータ,物理保管 storeTransaction
-  class 外部主体 actor
+actor_node -> process_node: "情報の流れ"
+event_node -> process_node: "起動条件"
+process_node -> master_store: "参照・更新"
+process_node -> transaction_store: "更新"
+process_node -> physical_store_node: "物の流れ" {
+  class: material_flow
+}
 ```
 
 <!-- prettier-ignore -->
 | 概念 | 形状 | 色 | 絵文字例 |
 | --- | --- | --- | --- |
-| プロセス／プロセスグループ | 角丸長方形 | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: ⚙️） |
-| 起点イベント | 六角形 | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: 🚦） |
-| データストア（マスタ・構成データ） | 円柱 | 濃い緑（`#a5d6a7` / `#1b5e20`） | 保管物が伝わる絵文字（例: 📐） |
-| データストア（トランザクションデータ） | 円柱 | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📒） |
-| 物理保管 | スタジアム形 | 薄い緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
-| 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 👤） |
-| 情報の流れ | ラベル付き `-->` | — | — |
-| 物の流れ | ラベル付き `==>` | — | — |
+| プロセス／プロセスグループ | 角丸四角形（`style.border-radius: 8`） | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: ⚙️） |
+| 起点イベント | 六角形（`shape: hexagon`） | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: ⚡） |
+| データストア（マスタ・構成データ） | 円柱（`shape: cylinder`） | 濃い緑（`#a5d6a7` / `#1b5e20`） | 保管物が伝わる絵文字（例: 📐） |
+| データストア（トランザクションデータ） | 円柱（`shape: cylinder`） | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📒） |
+| 物理保管 | 大角丸四角形（`style.border-radius: 20`） | 薄い緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
+| 外部主体 | 四角形（`shape: rectangle`） | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 🧑） |
+| 情報の流れ | ラベル付き通常線 `->` | — | — |
+| 物の流れ | ラベル付き太線 `->`（`material_flow` class） | — | — |
 
-ノード形状・線種の記法は `specdojo:cdfd-mermaid-rulebook` に従い、本章で採用する色・絵文字の割り当てを固定する。詳細 CDFD は本章を参照し再掲しない。
+ノード形状・線種・スタイルの記法は [[specdojo:cdfd-d2-rulebook]] に従い、本章で採用する色・絵文字の割り当てを固定する。全体概要の図は使い方の流れに沿って 4 つの系統（register 系、schedule 系、routine 系、共通・基盤）に分割する。詳細 CDFD は本章を参照し再掲しない。
