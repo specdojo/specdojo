@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-01T09:54:47Z"
   due_on: "2026-11-30"
-  block_reason: 'integrate failed: project: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml, docs/ja/pro…'
   derived_from:
     - PJR-SJQC
 ---
@@ -45,15 +44,47 @@ PJR-SJQC の決定に沿って、timeline に track data-flow-usage を定義し
 
 | No  | 作業                                                                                   | 担当 | 状態 | メモ |
 | --- | -------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | tml-index.yaml に track data-flow-usage を足す                                         | PM   | open | -    |
-| 2   | dct-data-flow.yaml の overview と uc-register を直し、uc-schedule と uc-routine を足す | PM   | open | -    |
-| 3   | sch-strategy-data-flow-usage.yaml を作り、schedule build を通す                        | PM   | open | -    |
+| 1   | tml-index.yaml に track data-flow-usage を足す                                         | PM   | done | -    |
+| 2   | dct-data-flow.yaml の overview と uc-register を直し、uc-schedule と uc-routine を足す | PM   | done | -    |
+| 3   | sch-strategy-data-flow-usage.yaml を作り、schedule build を通す                        | PM   | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容
+
+1. `docs/ja/projects/prj-0001/timeline/tml-index.yaml` に track `data-flow-usage` を定義した。`data-flow-pdca` の定義にならい、`depends_on: [data-flow-pdca]`、`note` に PJR-SJQC の決定に基づく作業であることを記載した。
+2. `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml` で `cdfd-overview` の `overview` と `done_criteria` を共通・基盤と register・schedule・routine の関係を描く役割へ更新し、`cdfd-uc-register` の `overview` と `done_criteria` を register 系の詳細（プロセス領域の単位、入口のイベント）に合わせた内容へ更新した。あわせて `cdfd-uc-schedule`（`cdfd-uc-deliverable` を引き継ぐ新しい ID）および `cdfd-uc-routine` を、`rulebook: specdojo:cdfd-uc-rulebook`、`depends_on: [cdfd-overview]`、実装の `evidence_refs`、役割ごとの `done_criteria` を持たせて追加した。`cdfd-uc-deliverable` とプロセスグループ別 6 文書の catalog 定義は変更していない。
+3. `docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml` を作成し、上記 4 件（`cdfd-overview`、`cdfd-uc-register`、`cdfd-uc-schedule`、`cdfd-uc-routine`）を `local_ids` で scope に設定した。
+4. `npx specdojo schedule build --project prj-0001 --track data-flow-usage` を実行し、4 件のタスクを含む `sch-track-data-flow-usage.yaml` を正常に生成した。あわせて `sch-milestones.yaml` が更新された。`npx specdojo catalog validate` も通ることを確認した。
+
+### approach の選定理由
+
+[[specdojo:schedule-design-guide]] および [[specdojo:ryu-guide]] に基づき、作成と書き直しの違いに応じて以下のとおり approach を選定した。
+
+- **改訂・書き直し（`cdfd-overview`、`cdfd-uc-register`）**: `approach: fully-guided`
+  - 理由: 既に草案・既存文書が存在する成果物の改訂・品質向上を行う段階であるため。既存の草案記述とプロジェクト文脈を尊重し、template は読み込まずに宣言された実践の型（`cdfd-overview-rulebook` / `cdfd-uc-rulebook`）に適合させて保守的に磨き込むことが適切であるため。
+- **新規作成（`cdfd-uc-schedule`、`cdfd-uc-routine`）**: `approach: draft`
+  - 理由: 未作成の成果物を新規に起こす段階であるため。template を骨組みにして章構成や初期記述を起こし、根拠のある範囲から下書きを作成することが適切であるため。
+
+成果物ごとに異なる profile を適用するため、[[specdojo:schedule-design-guide]] の標準設計方針に従い、`owner_rules` の `phase_set`（改訂・書き直し用の `rewrite-pass` と新規作成用の `author-pass`）で分離した。
+
+### 成果物
+
+- `docs/ja/projects/prj-0001/timeline/tml-index.yaml`
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml`
+- `docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml`
+- `docs/ja/projects/prj-0001/schedule/sch-track-data-flow-usage.yaml`
+- `docs/ja/projects/prj-0001/schedule/sch-milestones.yaml`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-5k8b-data-flow-usage-track.md`
+
+### 残課題・申し送り
+
+- `cdfd-overview`、`cdfd-uc-register`、`cdfd-uc-schedule`、`cdfd-uc-routine` の実文書の作成・改訂は、生成された Schedule track（`data-flow-usage`）の各タスクにて順次実施する。
+- `cdfd-uc-deliverable` およびプロセスグループ別 6 文書の非推奨化（trash への退避等）は、新しい文書が完成した後に別タスクで行う。
 
 ## 6. 関連ドキュメント
 
 - [[prj-0001:dct-data-flow]]
 - [[specdojo:schedule-design-guide]]
+- [[specdojo:ryu-guide]]
+- [[prj-0001:pjr-sjqc-cdfd-document-structure]]

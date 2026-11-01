@@ -224,3 +224,20 @@ milestones:
       - T-DATA-FLOW-PDCA-cdfd-uc-register-140
       - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-140
     owner: PM
+  - id: G-DATA-FLOW-USAGE-pass
+    name: data-flow-usage pass 完了
+    artifact_name: データフロー（利用導線）
+    depends_on:
+      - T-DATA-FLOW-USAGE-cdfd-overview-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-register-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-schedule-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-routine-010
+    owner: PM
+  - id: M-DATA-FLOW-USAGE-data-flow
+    name: 利用導線構成の CDFD 完了
+    artifact_name: データフロー（利用導線）
+    depends_on:
+      - T-DATA-FLOW-USAGE-cdfd-uc-register-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-schedule-010
+      - T-DATA-FLOW-USAGE-cdfd-uc-routine-010
+    owner: PM
