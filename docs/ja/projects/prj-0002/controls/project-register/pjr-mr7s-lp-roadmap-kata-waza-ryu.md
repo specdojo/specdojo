@@ -47,6 +47,7 @@ LP 末尾の「これから」に、型（Kata）・技（Waza）・流（Ryu）
 | 1   | 関連ガイドと既存 LP を確認し、追記する文言をまとめる | BA   | done | 四つの関連ガイドと PJR-7T8X の従来方針を確認した                                            |
 | 2   | 「これから」に三つの役割と PDCA 表との関係を追記する | BA   | done | 組み合わせた成果物づくりの仕組みを「準備中」と表示した                                      |
 | 3   | PC・スマホの表示とビルドを確認し、結果を記録する     | BA   | done | executor がビルドを確認し、specdojo-orchestrator が sandbox 外で PC・スマホの表示を確認した |
+| 4   | LP の表記を `routine + job` に統一する               | BA   | done | 行名と Waza の説明文の2か所を修正し、生成 HTML とビルドを確認した                           |
 
 ## 5. 対応結果
 
@@ -81,6 +82,16 @@ LP 末尾の「これから」に、型（Kata）・技（Waza）・流（Ryu）
 - 表示確認の対象コンポーネントと統合後のコンポーネントの Git blob は `fc847b12980c96b1df82df20ca1e7896ccc582d5` で一致した。スクリーンショットは一時確認用の `/tmp/pjr-mr7s-roadmap-1440.png` と `/tmp/pjr-mr7s-roadmap-390.png` に保存した。
 - 完了条件を個票・result・実際の差分に照らして確認した。LP の変更は `src/components/sections/Roadmap.astro` の追記のみで、既存の PDCA 表・提供状況は維持され、公開時期の約束や保護された設定への変更はない。
 - 5.2・5.3 の実画面確認待ちはこの追加確認で解消した。個票は利用者による close 判断まで `review` として残す。
+
+### 5.5. 追加依頼への対応（2026-11-01）
+
+- `specdojo-lp:src/components/sections/Roadmap.astro` の行名と Waza の説明文の2か所を `routine + Job` から `routine + job` に統一した。行名は PC の PDCA 表とスマホのカードで共有されるため、両方に反映される。
+- 型（Kata）・技（Waza）・流（Ryu）の役割と既存 PDCA 表との関係、「いま使える／準備中」の表示は維持した。設計書の概念名、既存の実行履歴、本個票の過去の対応記録は書き換えていない。
+- `specdojo-lp` で `npx --no-install prettier --write src/components/sections/Roadmap.astro` と `npx --no-install prettier --check src/components/sections/Roadmap.astro` が成功した。`ASTRO_TELEMETRY_DISABLED=1 npm run build` も成功した。
+- 生成した `dist/index.html` を検査し、PC の行名・スマホの行名・Waza の説明の計3か所が `routine + job` となり、`routine + Job` が残っていないことを確認した。三つの役割の見出しと提供状況の表示も保持されている。
+- 個票の Prettier 整形・確認、`node --import tsx src/specdojo.ts register build --project prj-0002`、project と `specdojo-lp` の `git diff --check` が成功した。prj-0002 に `catalog_path` がなくカタログ検証は適用外、YAML の変更がないため個別 schema 検証も適用外。親 runner が実行する lint・型検査・テスト等は重複実行していない。
+- 今回の PC・スマホの実画面確認は `requires_human`。既存の確認用スクリプトを実行したが、sandbox がローカル HTTP サーバーの起動を `listen EPERM: operation not permitted 127.0.0.1` で拒否した。5.4 の実画面確認は修正前の記録であり、今回の修正後を確認したものではない。次のアクションは sandbox 外で PC（1440px）・スマホ（390px）の行名と Waza 説明の折り返し・横はみ出しを確認すること。
+- result への記入は後続の reporter／runner に引き継ぐ。変更ファイルは本個票と `specdojo-lp:src/components/sections/Roadmap.astro`。今回の修正内容、検証結果、実画面確認の制約を result に反映する。登録簿の一覧・個票のステータス項目は変更していない。
 
 ## 6. 関連ドキュメント
 
