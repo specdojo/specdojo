@@ -74,7 +74,7 @@ SpecDojo を活用した仕様駆動開発について、PO が共通・基盤�
 <!-- prettier-ignore -->
 | 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- | --- |
-| `P-14` | Action | オーケストレーター | プロジェクト全体のタスクやプロセスの PDCA を調整・管理する。 | PM（対話型運転は全参加者、自動運転は runner） | プロジェクトが開始された、PDCA の各サイクルが到来した |
+| `P-14` | 全体 | オーケストレーター | プロジェクト全体のタスクやプロセスの PDCA を調整・管理する。 | PM（対話型運転は全参加者、自動運転は runner） | プロジェクトが開始された、PDCA の各サイクルが到来した |
 
 ## 4. データストア
 
@@ -503,10 +503,6 @@ process_node -> transaction_store: "更新"
 process_node -> physical_store_node: "物の流れ" {
   class: material_flow
 }
-
-# 配置制御用（受け渡しではない）: 物理保管をデータストアより下に置く
-master_store -> physical_store_node: {style.opacity: 0}
-transaction_store -> physical_store_node: {style.opacity: 0}
 ```
 
 <!-- prettier-ignore -->
