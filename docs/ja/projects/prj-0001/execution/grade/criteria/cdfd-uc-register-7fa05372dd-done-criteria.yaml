@@ -2,28 +2,34 @@
 id: cdfd-uc-register-grade-criteria
 document: cdfd-uc-register
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
-graded_at: "2026-10-29T16:35:47.591Z"
+graded_at: "2026-11-01T16:37:20.770Z"
 graded_by: flash-high-executor
-content_hash: c1df04d5b03e29e8e669e24f2e41371c2f57585b0519274761981abccffcc3e9
+content_hash: aca8313889255cac77e45a3d8cbe453da9172ea37e8aaf31757334df60446c14
 summary:
-  satisfied: 3
+  satisfied: 4
   unsatisfied: 0
-  total: 3
+  total: 4
 criteria:
   - id: DC-001
-    text: 起票から完了記録までの各引き渡しについて、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件が表で確認できること
+    text: 未整理事項の検知などの入口イベントから起票、対応、評価、完了記録までの register 系の流れが、プロセス領域の単位で表と図で確認できること
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: satisfied
   - id: DC-002
-    text: 引き渡し条件を満たさない場合の戻り先がグループ単位で示され、グループ内部の例外を扱っていないこと
+    text: 各プロセス領域とデータストア（登録簿、実行計画、実行記録など）の読み書き、および引き渡し情報と条件が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: 差し戻しや保留・却下などの分岐、引き渡し条件を満たさない場合の戻り先がプロセス領域単位で確認できること
     roles:
       - QE
     viewpoint: vp-qe-omissions-consistency
     status: satisfied
-  - id: DC-003
-    text: 完了記録を人間が確定する境界が承認できること
+  - id: DC-004
+    text: 登録項目の承認、review から close への遷移、完了確定を人間が担う境界が承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness

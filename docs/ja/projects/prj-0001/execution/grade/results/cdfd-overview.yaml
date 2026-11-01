@@ -4,29 +4,29 @@ document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 87
-graded_at: "2026-10-31T16:19:37.832Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-01T16:25:00.869Z"
 graded_by: flash-high-executor
-content_hash: 1b08270df065ee02a0e24efde9341c2c76594e7e3460cb3a4da88b27608f515f
+content_hash: 9a12d2dcf050f1d8a243ae190b9786b1c8dd129f5449cf5fcda8c59db321f025
 source_hashes:
-  catalog-entry: 854431222424fde2670a168b9d6752915077799889159adc1ccafb04f8363cf1
+  catalog-entry: 4aad45cc1c891ce33192fb41ac4656064eb2b08574b8b3d986237f79d6bc6577
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 100
   business:
     score: 100
   consistency:
-    score: 50
+    score: 100
   architecture:
     score: 100
   usability:
@@ -34,14 +34,14 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 88
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -64,8 +64,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -82,14 +82,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,8 +100,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -116,81 +116,11 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 2
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 17
-    anchor: >-
-      業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。受け渡しは「概念データフロー（概要）」の図を正本とする。主な担当は [[prj-0001:pm-roles|ロール一覧]] の Role code
-      に統一する。
-    message: PO が承認対象とする境界は示されているが、現行 14 領域・六グループに対する承認状態、未解決の Action の文書間不整合、その影響と差し戻し時の次アクションが明示されず、承認・保留・差し戻しを判断できない。
-    message_ja: PO が承認対象とする境界は示されているが、現行 14 領域・六グループに対する承認状態、未解決の Action の文書間不整合、その影響と差し戻し時の次アクションが明示されず、承認・保留・差し戻しを判断できない。
-  - id: F002
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 59
-    anchor: "| `P-12` | 稼働構成管理 | SpecDojo の稼働構成を変更管理する。 | ARC | 稼働構成の変更要求が発生した |"
-    message: >-
-      本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action
-      内部で生成しており、人間の判断境界を統一する必要がある。
-    message_ja: >-
-      本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action
-      内部で生成しており、人間の判断境界を統一する必要がある。
-  - id: F003
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 205
-    anchor: Kata -->|"rulebook・template"| Plan
-    message: >-
-      本書の Plan は Kata からの入力と図 5.2 のエッジを「rulebook・template」とする一方、`cdfd-plan.md` は P-04 のスケジュール戦略定義で「Kata
-      grade・作成要件」を必須入力としているため, Plan の主要入力とエッジへ Kata grade を反映する必要がある。
-    message_ja: >-
-      本書の Plan は Kata からの入力と図 5.2 のエッジを「rulebook・template」とする一方、`cdfd-plan.md` は P-04 のスケジュール戦略定義で「Kata
-      grade・作成要件」を必須入力としているため, Plan の主要入力とエッジへ Kata grade を反映する必要がある。
-  - id: F004
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 210
-    anchor: Catalog -->|"完了条件・rulebook 参照"| Orchestrator
-    message: >-
-      本書は Orchestrator の成果物カタログ入力を「完了条件・rulebook 参照」とする一方、`cdfd-orchestrator.md` は `done_criteria`・`evidence_refs`
-      を参照して要求を判定するため、成果物カタログから受け取る根拠情報の名称を統一する必要がある。
-    message_ja: >-
-      本書は Orchestrator の成果物カタログ入力を「完了条件・rulebook 参照」とする一方、`cdfd-orchestrator.md` は `done_criteria`・`evidence_refs`
-      を参照して要求を判定するため、成果物カタログから受け取る根拠情報の名称を統一する必要がある。
-  - id: F005
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 17
-    anchor: >-
-      業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。受け渡しは「概念データフロー（概要）」の図を正本とする。主な担当は [[prj-0001:pm-roles|ロール一覧]] の Role code
-      に統一する。
-    message: DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。
-    message_ja: DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。
-  - id: F006
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 17
-    anchor: >-
-      業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。受け渡しは「概念データフロー（概要）」の図を正本とする。主な担当は [[prj-0001:pm-roles|ロール一覧]] の Role code
-      に統一する。
-    message: 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。
-    message_ja: 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。
-  - id: F007
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 5
-    anchor: "## 1. 目的"
-    message: "現行 14 領域・六グループに対する PO 承認記録がなく、Action の major な文書間不整合も残るため、`status: ready` の公開・配布判断を裏付ける前提が満たされていない。"
-    message_ja: "現行 14 領域・六グループに対する PO 承認記録がなく、Action の major な文書間不整合も残るため、`status: ready` の公開・配布判断を裏付ける前提が満たされていない。"
+findings: []
 done_criteria:
-  satisfied: 3
+  satisfied: 4
   total: 4
-  unsatisfied:
-    DC-002:
-      - PO
   detail_ref: cdfd-overview-grade-criteria
