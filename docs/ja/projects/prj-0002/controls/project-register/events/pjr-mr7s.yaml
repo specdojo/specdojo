@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_30b01a3b6dbb4ce999bd4f04eba3f6cd
+  ts: "2026-11-01T12:32:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼に基づき、LP の紹介範囲を見直す作業を登録するため。
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: LP の「これから」に Kata・Waza・Ryu の役割を追記する
+    - field: description
+      from: ""
+      to: LP 末尾の「これから」に、型（Kata）・技（Waza）・流（Ryu）の役割と仕事の回し方との関係を、平易な言葉で紹介する。既存の PDCA 表との関係および提供状況の表示を整合させる。
+    - field: input
+      from: ""
+      to: '["利用者から、LP 末尾の「これから」には register・schedule・routine + Job の記載がある一方、kata・waza・ryu の記載がないとの指摘があり、これらを記述する todo の起票を依頼された。担当 BA、期限 2026年11月末。","会話で提示した案：既存の PDCA 表に行を足すより、「これから」に「作り方も、磨いていく」という短い説明を添える。型（Kata）は規約・作り方・完成例・雛形で成果物の品質を支え、技（Waza）は記録・実行・評価をつなぎ、流（Ryu）は目的や型の整備状況に合わせて進め方を選ぶことを紹介する。具体的な文言は提案として扱う。","締めの文案：「仕事を回すだけでなく、作り方も磨いていく。型を整え、技で実行し、目的に合った流れで成果物を育てていきます。」提供状況の表示は既存の「いま使える／準備中」と整合させて決める。","既存の PJR-7T8X では導入時の分かりやすさを優先して Kata・Waza・Ryu の語を使わない方針だった。今回はこの紹介範囲を見直す。用語や体系の再設計、公開時期の決定まで範囲を広げない。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-7T8X"]'
