@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b7077dcd194b41f3a57d34db06abb6e9
+- v: 1
+  id: reg_c58457cd33734ce09e71828a099a3fdf
+  ts: "2026-11-01T13:38:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分とテストを確かめ、T-DATA-FLOW-USAGE-cdfd-overview-010 で実際に executor から再開して統合まで通ることを確かめた。JSEY の確認も通った。直した plan が統合で置き換わる問題は PJR-Z807 に分けた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: exec resume に --resume-from executor を足し、reporter の段で blocked になった、または doing のまま中断した schedule の pipeline のタスクを、残った worktree と変更を引き継いで executor からやり直せるようにした
+  previous_event_id: reg_f7040e973ef34f6a90d8a7bc10ca3c08

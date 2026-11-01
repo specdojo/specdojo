@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-rkhr-schedule-resume-from-executor
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-01T11:13:16Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-01T13:38:14Z"
+  conclusion: exec resume に --resume-from executor を足し、reporter の段で blocked になった、または doing のまま中断した schedule の pipeline のタスクを、残った worktree と変更を引き継いで executor からやり直せるようにした
   derived_from:
     - PJR-GEZN
 ---
