@@ -1,0 +1,66 @@
+LP の「これから」に Kata・Waza・Ryu の役割と PDCA との関係を追記し、個票を更新しました。ビルドと静的確認は成功しました。PC・スマホの実画面確認は sandbox の制約により申し送りです。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "specdojo-lp:src/components/sections/Roadmap.astro に三つの役割と提供状況の説明を追加し、個票の作業内容・対応結果を更新した。実画面確認は人手へ申し送り。",
+  "handoff": [
+    "sandbox がソケット操作を拒否し Chromium を起動できなかったため、PC・スマホの実画面確認は未実施。sandbox 外で PC（1440px 幅程度）とスマホ（390px 幅程度）の表示を確認し、折り返し・横はみ出し・重なり・提供状況ラベルの読みやすさを確認する。個票の検証結果と作業 No. 3 を更新する。",
+    "変更ファイルは specdojo-lp:src/components/sections/Roadmap.astro と docs/ja/projects/prj-0002/controls/project-register/pjr-mr7s-lp-roadmap-kata-waza-ryu.md。後続 reporter は実施内容・検証結果・実画面確認の申し送りを result に反映する。executor は result を編集していない。"
+  ],
+  "validations": [
+    {
+      "command": "ASTRO_TELEMETRY_DISABLED=1 npm run build",
+      "status": "passed",
+      "summary": "specdojo-lp で成功。telemetry の設定ディレクトリ作成による初回失敗を環境変数で解消し、静的 HTML・CSS を生成した。"
+    },
+    {
+      "command": "npx --no-install prettier --write src/components/sections/Roadmap.astro",
+      "status": "passed",
+      "summary": "specdojo-lp の変更コンポーネントを整形した。"
+    },
+    {
+      "command": "npx --no-install prettier --check src/components/sections/Roadmap.astro",
+      "status": "passed",
+      "summary": "specdojo-lp の変更コンポーネントの整形確認に成功した。"
+    },
+    {
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-mr7s-lp-roadmap-kata-waza-ryu.md",
+      "status": "passed",
+      "summary": "個票の整形に成功した。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0002",
+      "status": "passed",
+      "summary": "個票・イベントの整合性検証と生成ビューの再生成に成功した。"
+    },
+    {
+      "command": "node --input-type=module -",
+      "status": "passed",
+      "summary": "生成 HTML・CSS を検証し、三つの役割、既存の提供状況、レスポンシブ表示の指定を確認した。実画面確認は含まない。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "project と specdojo-lp の両方で空白エラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0002",
+      "status": "not_applicable",
+      "summary": "カタログ検証は適用外。",
+      "reason": "対象の prj-0002 に `catalog_path` が設定されていない。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 schema 検証は適用外。",
+      "reason": "executor による YAML ファイルの変更がない。"
+    },
+    {
+      "command": "chromium --headless --no-sandbox --disable-dev-shm-usage --disable-gpu --disable-crashpad-for-testing --disable-breakpad --no-zygote --single-process --no-first-run --user-data-dir=/tmp/pjr-mr7s-chromium-solo --window-size=1440,1100 --screenshot=/tmp/pjr-mr7s-desktop.png file://\"$SPECDOJO_REPO_SPECDOJO_LP\"/dist/index.html",
+      "status": "requires_human",
+      "summary": "sandbox がソケット操作を Operation not permitted で拒否した。PC・スマホの実画面確認を sandbox 外で実施する必要がある。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

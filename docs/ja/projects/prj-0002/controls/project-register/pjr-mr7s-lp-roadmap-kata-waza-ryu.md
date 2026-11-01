@@ -41,15 +41,36 @@ LP 末尾の「これから」に、型（Kata）・技（Waza）・流（Ryu）
 
 ## 4. 作業内容
 
-| No  | 作業                                                 | 担当 | 状態 | メモ                                        |
-| --- | ---------------------------------------------------- | ---- | ---- | ------------------------------------------- |
-| 1   | 関連ガイドと既存 LP を確認し、追記する文言をまとめる | BA   | open | 入力の文案と PJR-7T8X の従来方針を踏まえる  |
-| 2   | 「これから」に三つの役割と PDCA 表との関係を追記する | BA   | open | 提供状況の表示と整合させる                  |
-| 3   | PC・スマホの表示とビルドを確認し、結果を記録する     | BA   | open | `specdojo-lp` で `npm run build` を実行する |
+| No  | 作業                                                 | 担当 | 状態     | メモ                                                             |
+| --- | ---------------------------------------------------- | ---- | -------- | ---------------------------------------------------------------- |
+| 1   | 関連ガイドと既存 LP を確認し、追記する文言をまとめる | BA   | done     | 四つの関連ガイドと PJR-7T8X の従来方針を確認した                 |
+| 2   | 「これから」に三つの役割と PDCA 表との関係を追記する | BA   | done     | 組み合わせた成果物づくりの仕組みを「準備中」と表示した           |
+| 3   | PC・スマホの表示とビルドを確認し、結果を記録する     | BA   | 確認待ち | ビルドと生成 HTML・CSS は確認済み。実画面は sandbox 外で確認する |
 
 ## 5. 対応結果
 
--
+### 5.1. 実施内容
+
+- `specdojo-lp:src/components/sections/Roadmap.astro` の既存 PDCA 表の下に「作り方も、磨いていく」を追加した。
+- 型（Kata）は規約・作り方・完成例・雛形で成果物の品質を支え、技（Waza）は記録・実行・評価をつなぎ、流（Ryu）は目的や型の整備状況に合わせて進め方と型の参照範囲を選ぶことを説明した。
+- PDCA は仕事を回す流れ、register・schedule・routine + Job は技による回し方であることを示した。「いま使える register」を入口に三つを組み合わせて成果物づくりを支える仕組みを「準備中」とした。既存の各行の提供状況は維持し、公開時期や準備中の機能へのリンクは追加していない。
+- PJR-7T8X の用語を出さない方針は、本項目の指示に従って「これから」の追加説明に限って見直した。用語・体系や関連ガイドは変更していない。
+- 追加した三つの説明は PC では 3 列、スマホでは縦並びとし、既存の Material 3 テーマの class を使用した。
+
+### 5.2. 検証結果
+
+- `specdojo-lp` の `npm run build` は、Astro の telemetry が sandbox 外の設定ディレクトリを作成しようとして失敗した。設定ファイルを変更せず、`ASTRO_TELEMETRY_DISABLED=1 npm run build` で再実行し成功した。静的な `dist/index.html` と CSS が生成された。
+- `specdojo-lp` の `npx --no-install prettier --write src/components/sections/Roadmap.astro` と `npx --no-install prettier --check src/components/sections/Roadmap.astro` が成功した。
+- 生成 HTML で追加見出し・三つの役割・提供状況の表示を確認した。生成 CSS には 48rem 以上で適用される 3 列の指定があり、既存の PC 用 PDCA 表とスマホ用カードの切り替え指定も維持されている。これは生成物の静的確認であり、実画面の読みやすさの確認ではない。
+- `node --import tsx src/specdojo.ts register build --project prj-0002` が成功し、個票とイベントの整合性検証および生成ビューの再生成が完了した。
+- 個票を `npx --no-install prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-mr7s-lp-roadmap-kata-waza-ryu.md` で整形した。project と `specdojo-lp` の `git diff --check` は成功した。
+- PC・スマホの実画面を確認するため Chromium とローカル HTTP サーバーの起動を試したが、sandbox がソケット操作を `Operation not permitted` で拒否した。通信を使わずローカル HTML を直接開く Chromium の起動も同様に失敗したため、実画面の確認は未実施である。
+- prj-0002 は `catalog_path` 未設定のためカタログ検証は適用外。YAML ファイルの変更がないため個別 schema 検証は適用外。親 runner に設定された lint・型検査・テスト等は executor では重複実行しない。
+
+### 5.3. 申し送り
+
+- PC・スマホの実画面確認は `requires_human`。sandbox 外で LP を起動し、PC（例: 1440px 幅）では既存 PDCA 表と追加した 3 列の説明、スマホ（例: 390px 幅）では既存の回し方ごとのカードと追加した縦並びの説明を確認する。折り返し、横はみ出し、重なり、提供状況のラベルの読みやすさを確認し、本個票の確認結果と作業 No. 3 を更新する。
+- result は executor/reporter pipeline の後続ステージが記入する。実施内容・変更ファイル・検証結果、および実画面確認が未実施である理由と次のアクションを result に反映する。個票のステータス項目と登録簿の一覧は変更していない。
 
 ## 6. 関連ドキュメント
 
