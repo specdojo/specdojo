@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-11-01T20:06:37.927Z"
+graded_at: "2026-11-02T20:06:05.423Z"
 graded_by: flash-high-executor
 content_hash: b2f47bc3a871fbfdeebe9d854e6c9f853747319274a972bb40bdafeb81402116
 categories:
@@ -129,4 +129,6 @@ findings:
     message: >-
       Step 3, section 4.3, and section 8 instruct authors to write bullet lists of inputs/outputs/datastores under
       process areas, which directly contradicts cdfd-rulebook prohibitions.
-    message_ja: ステップ 3、セクション 4.3、およびセクション 8 では、プロセス領域の下に入出力/データストアの箇条書きを記述するように著者に指示していますが、これは cdfd-rulebook の禁止事項と直接矛盾しています。
+    message_ja: >-
+      Step 3, section 4.3, and section 8 instruct authors to write bullet lists of inputs/outputs/datastores under
+      process areas, which directly contradicts cdfd-rulebook prohibitions.
