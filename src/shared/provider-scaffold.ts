@@ -23,6 +23,10 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
       'specdojo orchestrator launch --provider codex -- -m gpt-6-luna "$(cat .specdojo/codex/orchestrator.md)"',
   },
   antigravity: {
+    "orch:argon":
+      'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" --model gemini-4-argon-medium -i "$(cat .specdojo/antigravity/orchestrator.md)"',
+    "orch:argon:work":
+      'tools/worktree/open-agent-worktree.sh argon-work specdojo orchestrator launch --provider antigravity -- --add-dir . --model gemini-4-argon-medium -i "$(cat .specdojo/antigravity/orchestrator.md)"',
     "orch:flash":
       'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"',
   },

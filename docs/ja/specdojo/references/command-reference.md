@@ -115,7 +115,7 @@ exec の result の commit 前検査は markdownlint-cli が読む利用リポ�
 `.markdownlintrc` を含む）を優先し、設定がなければ上記の6規則だけをコマンド引数で無効にします。
 フォールバック用ファイルは利用リポジトリに作りません。CLI2 専用設定はこの検査では読みません。
 
-`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
+`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity は `orch:argon`（`gemini-4-argon-medium`）・`orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
 
 agy 1.4.12 以降向けの通常導入は edit / review / report / orchestrator のセッション別プロファイルを配置し、ユーザー設定を書き換えません。非対話用 command template は `specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"`、対話型は `specdojo orchestrator launch --provider antigravity -- <agy 引数>` を使います。各入口が宣言済みルートの保護ルールを一つの `--settings` JSON として渡します。`agent launch` は runner の `SPECDOJO_REPO_*` に示された task worktree と cwd だけを追加し、任意の `--add-dir` や別 `--settings`、bypass、既存会話の再開を拒否します。review / report は全書き込み・command・MCP を拒否します。詳しい移行と実機確認は [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] を参照してください。
 
