@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_33e8bd10d9e746a299714fca03df3952
+  ts: "2026-11-02T12:57:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が確認済みの起票案を承認したため、作業範囲と検証条件を記録する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agy のセッション別権限設定に対応し、マルチリポジトリの編集境界を見直す
+    - field: description
+      from: ""
+      to: agy のセッション別設定を使い、役割ごとの権限を分離する。宣言済みプロダクトリポジトリとその worktree の編集を可能にし、秘密情報・保護設定への制限と両立させる。
+    - field: input
+      from: ""
+      to: '["利用者が agy 1.4.12 のセッション別設定を用いた allow/deny 制御と、マルチリポジトリのプロダクトリポジトリ編集境界の見直しを依頼した。担当 ARC、期限 2026-11-30。","利用者共有の agy --version は 1.4.12。ローカルの agy --help で --settings が settings.json のキーを JSON またはファイルパスで受け取り、セッション内だけに適用して保存しないことを確認した。","現在の配布設定はグローバル設定へのルール追加が中心。宣言済みプロダクトリポジトリの --add-dir 注入は既存実装にある。本リポジトリの exec-defaults には --dangerously-skip-permissions が残る。","Claude と同等の制御が可能かは未検証であり、設定マージ・優先順位・実際の許可と拒否を確認する。起票までが今回の承認範囲であり、exec の実行は別途承認する。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-02"
+    - field: due
+      from: ""
+      to: "2026-11-30"
