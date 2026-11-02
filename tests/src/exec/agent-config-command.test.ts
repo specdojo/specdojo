@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { load } from "js-yaml";
 import {
   hasMemberCommandSource,
   resolveMemberCommand,
@@ -73,6 +75,21 @@ describe("resolveMemberCommand", () => {
       "claude -p --agent claude-reporter --settings .specdojo/claude/settings.report.json",
     );
   });
+
+  it.each(["edit", "review", "report"] as const)(
+    "selects the agy session role %s through the shipped template",
+    (mode) => {
+      const config = load(
+        readFileSync("templates/init-exec-defaults.yaml", "utf8"),
+      ) as ExecDefaultsConfig;
+      expect(
+        resolveMemberCommand(
+          config,
+          buildMember({ provider: "antigravity", mode, model: "fixture" }),
+        ),
+      ).toContain(`--role ${mode} -- --sandbox --model fixture`);
+    },
+  );
 
   it("expands by_proficiency variables for the member's proficiency", () => {
     const normal = resolveMemberCommand(

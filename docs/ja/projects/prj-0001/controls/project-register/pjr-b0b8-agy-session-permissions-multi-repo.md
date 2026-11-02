@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-02T12:57:11Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
 ---
 
 # PJR-B0B8 agy のセッション別権限設定に対応し、マルチリポジトリの編集境界を見直す
@@ -42,13 +41,13 @@ agy のセッション別設定を使い、役割ごとの権限を分離する�
 
 ## 4. 作業内容
 
-| No  | 作業                                                                 | 担当 | 状態    | メモ                                                                          |
-| --- | -------------------------------------------------------------------- | ---- | ------- | ----------------------------------------------------------------------------- |
-| 1   | 役割別のセッション設定と既存設定のマージ仕様を整理する               | ARC  | partial | 1.4.12 の help と公式仕様を確認。既存設定との配列マージは実機確認へ申し送る   |
-| 2   | 起動処理・配布テンプレート・scaffold を対応させる                    | ARC  | done    | `agent launch` と orchestrator の単一 JSON 生成を実装。保護設定は下記の変更案 |
-| 3   | 宣言済みプロダクトリポジトリと worktree の権限を見直す               | ARC  | done    | 宣言済みルートだけを追加し、各ルートへ固定保護・秘密情報の deny を生成        |
-| 4   | 単体・統合・親検証、空リポジトリへの生成、実機の許可・拒否を確認する | ARC  | partial | テスト追加。親固定検証は runner、実 agy と統合後の PJR-JSEY は実機確認        |
-| 5   | 設計・ガイド・配布 README・未公開版の CHANGELOG を更新する           | ARC  | done    | 移行手順、制御範囲と差異、実機で記録する項目を追記                            |
+| No  | 作業                                                                 | 担当 | 状態    | メモ                                                                         |
+| --- | -------------------------------------------------------------------- | ---- | ------- | ---------------------------------------------------------------------------- |
+| 1   | 役割別のセッション設定と既存設定のマージ仕様を整理する               | ARC  | partial | 1.4.12 の help と公式仕様を確認。既存設定との配列マージは実機確認へ申し送る  |
+| 2   | 起動処理・配布テンプレート・scaffold を対応させる                    | ARC  | done    | 単一 JSON 生成と初期名簿の reporter の `mode: report` を対応。保護設定は下記 |
+| 3   | 宣言済みプロダクトリポジトリと worktree の権限を見直す               | ARC  | done    | 宣言済みルートだけを追加し、各ルートへ固定保護・秘密情報の deny を生成       |
+| 4   | 単体・統合・親検証、空リポジトリへの生成、実機の許可・拒否を確認する | ARC  | partial | 前回の名簿解決エラーを修正。親再検証は runner、実 agy と PJR-JSEY は実機確認 |
+| 5   | 設計・ガイド・配布 README・未公開版の CHANGELOG を更新する           | ARC  | done    | 移行手順、制御範囲と差異、実機で記録する項目を追記                           |
 
 ## 5. 対応結果
 
@@ -58,6 +57,7 @@ agy のセッション別設定を使い、役割ごとの権限を分離する�
 - 非対話起動は `specdojo agent launch --provider antigravity --role {mode}` を追加し、配布する provider template をこの入口へ変更した。既存 runner の `--add-dir` と `SPECDOJO_REPO_*` を引き継ぎ、未宣言ディレクトリ、別 settings、bypass、既存会話・別 project・agent の指定を拒否する。対話型は既存 `orchestrator launch` が宣言を解決し、専用プロファイルを渡す。
 - edit は両 repository の通常成果物を編集し、保護パスは provider 非依存ガードの固定定義から各ルートの絶対パスへ展開する。review / report は全ファイル・command・MCP・ブラウザ操作の書き込み経路を拒否し、検証は親 runner に委ねる。orchestrator は承認された保護設定編集を可能にし、秘密情報・Git metadata・push 等の制限を維持する。
 - 配布 JSON 4 件は既存 scaffold の配置規則で `.specdojo/antigravity/` へ生成される。旧 `settings.global.json` と明示的な `--global` は互換用途として維持する。既存ファイル・npm script は自動上書きしない。
+- 初期名簿 `templates/init-agent-members.yaml` の `flash-reporter` に `mode: report` を指定し、`init --exec` が生成する reporter も `{mode}` を解決できるようにした。空リポジトリの名簿統合テストでは、agy の各別名が対応する role の `agent launch` コマンドへ解決され、reporter が report 権限を選ぶことを検査する。
 - 単体テストに役割分離・全保護定義の照合・不正設定と権限上書き・symlink ルート・未宣言ディレクトリの拒否を追加した。統合テストは空 repository への scaffold と偽 agy による実 CLI の起動引数を検査し、認証・使用枠を使わない。
 - [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]]、[[specdojo:exec-config-guide|exec 設定ガイド]]、[[specdojo:command-reference|CLI コマンドリファレンス]]、配布 README、CHANGELOG の Unreleased を更新した。
 
@@ -71,8 +71,10 @@ agy のセッション別設定を使い、役割ごとの権限を分離する�
 
 ### 5.3. sandbox での検証結果
 
+- 再開前の親 `test-integration` は `init-agent-roster.integration.test.ts` で失敗した。原因は初期名簿の `flash-reporter` に `mode` がなく、provider template の `{mode}` が未解決だったこと。初期名簿と回帰テストを修正済みで、親の単体・統合テストの再実行は runner に委ねる。前回の失敗を成功扱いにはしていない。
 - `npm run build`: 成功。本体の TypeScript コンパイルを確認した。
 - `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data 'templates/{init-exec-defaults.yaml,antigravity/exec-defaults-snippet.yaml}'`: 2 ファイルとも valid。
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/agent-members.schema.yaml --data 'templates/{init-agent-members.yaml,antigravity/agent-members-snippet.yaml}'`: 初期名簿と配布スニペットの 2 ファイルとも valid。
 - `node --import tsx tools/catalog-validate-if-configured.mjs`: 終了コード 0。変更外の product 文書を参照するカタログに文書不在の WARN があるが、検証エラーはない。
 - `node --import tsx src/specdojo.ts register build --project prj-0001 --dry-run`: 成功。個票の検査と派生表示の生成を確認し、登録簿の一覧は書き換えていない。
 - `node --input-type=module` の一時 repository 検証: 配布済み scaffold 実装で役割プロファイル 4 件が生成され、既存 npm script が保持され、注入した隔離 home にユーザー設定が作られないことを確認した。CLI の子プロセスを捕捉する試行は sandbox の `spawnSync EPERM` で実行できなかったため、同じ scaffold 実装をプロセス内で検証した。実 CLI と偽 agy の起動確認は追加した親の統合テストへ委ねる。

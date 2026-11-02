@@ -400,7 +400,7 @@ providers:
         expert: { effort: high }
 
   antigravity:
-    command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
+    command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
     # model を持たない従来の 1 段の member だけが、次の model を使う
     command_params:
       by_proficiency:
@@ -574,13 +574,13 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
-| provider    | 配布内容                                                                                                                                              | 配置先                                 |
-| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`         | `.claude/agents/`、`.specdojo/claude/` |
-| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                              | `.codex/agents/`、`.codex/rules/`      |
-| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                 | `.opencode/agents/`、`opencode.json`   |
-| copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
-| antigravity | `orchestrator.md`、agent / provider 設定スニペット。`settings.global.json` は `--global` 用のマージ原本であり repository へは配置しない               | `.specdojo/antigravity/`               |
+| provider    | 配布内容                                                                                                                                                                                    | 配置先                                 |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`                                               | `.claude/agents/`、`.specdojo/claude/` |
+| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                                                                    | `.codex/agents/`、`.codex/rules/`      |
+| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                                                       | `.opencode/agents/`、`opencode.json`   |
+| copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット                                       | `.specdojo/copilot/`                   |
+| antigravity | 役割別 `settings.edit.json` / `settings.review.json` / `settings.report.json` / `settings.orchestrator.json`、orchestrator と設定スニペット。旧 `settings.global.json` は互換用途だけに使用 | `.specdojo/antigravity/`               |
 
 導入手順と手動設定（`.codex/config.toml` や接続先 URL の調整、Modelfile によるローカル派生タグの作成など）は各 `templates/<provider>/README.md` を参照します。
 
@@ -741,13 +741,13 @@ providers:
       --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
 ```
 
-**antigravity**（Antigravity CLI `agy`）は codex と同じく `--agent` による定義ファイルの選択を持たないため、役割は plan の共通規約で与えます。非対話実行は `-p` ですが、プロンプトを引数に取り stdin を読まないので、runner が stdin へ書く plan を `"$(cat)"` で引数に渡します（command は `shell: true` で実行されます）。
+**antigravity**（Antigravity CLI `agy`）の pipeline の役割指示は plan の共通規約を正本とし、権限は `agent launch --role {mode}` が分離します。非対話実行は `-p` ですが、プロンプトを引数に取り stdin を読まないので、runner が stdin へ書く plan を `"$(cat)"` で引数に渡します（command は `shell: true` で実行されます）。
 
 ```yaml
 providers:
   antigravity:
     command_template: >-
-      agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"
+      specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
@@ -760,7 +760,7 @@ providers:
 ```
 
 - `--sandbox` は書き込み先を `~/.gemini/antigravity-cli/scratch/` へ逃がすため、`--add-dir "$(pwd)"` で作業ディレクトリ（worktree）を明示して成果物へ書けるようにします。`--add-dir` なしでは成果物が更新されません。
-- 非対話実行に必要な permission rule は `config scaffold --provider antigravity --global` で設定します。すべてのリポジトリに効くため、先に `--global --dry-run` で差分を確認します。`--dangerously-skip-permissions` は deny rule を含む承認境界を迂回するため使いません。
+- `config scaffold --provider antigravity` で役割別の設定を配置します。`agent launch` がプロファイルと宣言済み task worktree ごとの絶対パスの保護を一つの `--settings` JSON にまとめます。通常導入はユーザー設定を書き換えず、`--global` は不要です。review / report は全ファイルの書き込みと command / MCP を拒否し、親 runner が検証します。対話型は `orchestrator launch` が専用の設定を渡します。`--dangerously-skip-permissions` は使いません。既存の command template・個別 command・npm script の移行と、未確認のグローバル／project 設定マージの実機検証は [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] を参照してください。
 - モデルは `agy models` で確認します。標準モデルは `by_proficiency`、Antigravity 経由の Claude / GPT は `by_nickname` で選びます。モデル ID は推論強度を含む（`gemini-3.8-flash-medium` など）ため `--effort` は併用しません。ID と `--effort` が食い違うと `invalid model selection` で起動に失敗します。
 - 資格情報はコンテナ内では `~/.gemini/antigravity-cli/antigravity-oauth-token` に保存されます。devcontainer では `~/.gemini` を名前付きボリュームにして永続化します。
 - `--output-format json --json-schema <file>` は `structured_output` を含む JSON エンベロープを返します。runner の reporter は stdout の本文から JSON を読むため、現時点では既定のテキスト出力を使います。

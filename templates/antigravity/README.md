@@ -1,64 +1,37 @@
-# Antigravity 向け配布原本
+# Antigravity CLI provider 設定
 
-`npx specdojo config scaffold --provider antigravity` が配置するファイルの原本です。この README 自体はコピーされません。
+`npx specdojo config scaffold --provider antigravity` の配布原本です。README と旧 `settings.global.json` はコピーされません。
 
-## 配置されるもの
+| 原本                                                                                                  | 配置先                   |
+| ----------------------------------------------------------------------------------------------------- | ------------------------ |
+| `settings.edit.json` / `settings.review.json` / `settings.report.json` / `settings.orchestrator.json` | `.specdojo/antigravity/` |
+| `orchestrator.md` / `exec-defaults-snippet.yaml` / `agent-members-snippet.yaml`                       | `.specdojo/antigravity/` |
 
-| 原本                         | 配置先                                             |
-| ---------------------------- | -------------------------------------------------- |
-| `orchestrator.md`            | `.specdojo/antigravity/orchestrator.md`            |
-| `exec-defaults-snippet.yaml` | `.specdojo/antigravity/exec-defaults-snippet.yaml` |
-| `agent-members-snippet.yaml` | `.specdojo/antigravity/agent-members-snippet.yaml` |
-
-`settings.global.json` はリポジトリへコピーされません。`--global` を明示した場合だけ、
-権限ルールをユーザー設定へマージするための原本として使われます。
-
-## ユーザー権限設定
-
-まず dry-run で、`~/.gemini/antigravity-cli/settings.json` へ追加されるルールだけを差分表示します。
+通常の導入ではグローバル設定を書き換えません。agy 1.4.12 以上と、同じ版の `specdojo` が PATH に必要です。
 
 ```sh
-npx specdojo config scaffold --provider antigravity --global --dry-run
+npx specdojo config scaffold --provider antigravity --dry-run
+npx specdojo config scaffold --provider antigravity
 ```
 
-内容を確認してから適用します。
+provider / member のスニペットを設定へマージし、生成ファイルを commit します。command template は次の入口を使います。
+
+```yaml
+command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
+```
+
+`mode` は edit / review / report です。起動処理が役割プロファイルと runner の宣言済み task worktree の絶対パスを単一の `--settings` JSON にまとめて渡し、保存しません。edit は通常成果物を編集し、秘密情報・保護設定を拒否します。review / report は全ファイルの書き込みと command / MCP を拒否します。検証は親 runner に委ねます。
+
+対話型は生成された `npm run orch:flash` または次の入口を使います。
 
 ```sh
-npx specdojo config scaffold --provider antigravity --global
+specdojo orchestrator launch --provider antigravity -- --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"
 ```
 
-- `--global` を付けない通常の scaffold はユーザーディレクトリへ触れません。
-- `permissions.allow` / `deny` / `ask` の既存要素と、それ以外のユーザー設定を保持し、不足するルールだけを末尾へ追加します。
-- 書き換え前のファイルは `settings.json.backup-<timestamp>` へ退避します。設定ファイルがまだ無い場合は新規作成し、バックアップは作りません。
-- 既存 JSON や permission 配列の形式が不正な場合は、バックアップも書き込みも行わずエラーにします。
-- `--force` はリポジトリ内の配布物だけに作用し、グローバル設定の既存項目を上書きしません。
+この入口は orchestrator プロファイルと選択 project の宣言済み repository を使い、cwd も `--add-dir` に加えます。保護設定の編集は利用者の承認に従い、秘密情報・Git metadata・push の制限は維持します。直接 `agy` を起動すると、この権限生成処理は適用されません。
 
-権限原本は、必要な検証コマンドを allow し、`git push`、読み取りを含む全 `gh`、破壊的コマンド、秘密情報、親 runner・hook・CI・agent 設定を変更できるパスを deny します。`.specdojo/doc-index.json` のような既知の生成物は検証で更新できるよう、`.specdojo/` 全体ではなく設定ファイルと provider ディレクトリを個別に deny します。provider 非依存の実行後ガードも併用されます。
+既存利用者は command template と個別 command を上記へ移行し、`--dangerously-skip-permissions` を削除してください。既存 npm script は scaffold が上書きしないため、`orchestrator launch` 経由へ手動変更します。旧 `--global` は互換用途で残ります。既存ルールを自動で消さず、ユーザー設定をバックアップして自身の制限を役割プロファイルへ移してください。
 
-## オーケストレーターの起動
+`--settings` と既存グローバル・project 設定の配列マージは実機で未検証です。Claude と同等の隔離を確認したとは扱いません。仕様・移行・無害なファイルでの実機検証手順は [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] を参照してください。実機の許可／拒否と、統合後の PJR-JSEY の証跡を記録してから運用へ適用します。
 
-Antigravity CLI（`agy`）はファイル定義の agent を持たないため、`--agent <name>` では起動できません。規範の本文を `-i` で渡します。
-
-```sh
-agy --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"
-```
-
-`--add-dir "$(pwd)"` を付けないと、作業ディレクトリのファイルを読み書きできず、`AGENTS.md` と `.agents/rules/*.md` も読み込まれません。
-
-`package.json` へ登録しておくと短く起動できます。
-
-```json
-{
-  "scripts": {
-    "orch:flash": "specdojo orchestrator launch --provider antigravity -- --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .specdojo/antigravity/orchestrator.md)\""
-  }
-}
-```
-
-## executor / reporter として使う
-
-`exec-defaults-snippet.yaml` を `.specdojo/exec-defaults.yaml` の `providers` へ、`agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へ写します。agent は project ごとの `pm-members.yaml` へ書きません。
-
-名簿は実体と別名の 2 段で書きます。実体（`flash-executor`・`agy-opus-executor` など）は model の系統で名付け、model の ID を `model` に持ちます。従来の名前（`agy-executor`・`agy-claude-executor` など）は `aliases` で実体を指す別名にします。スニペット末尾の `aliases` の例は、向き先の member を有効にしたものだけを写します（別名は無効な member を指せません）。
-
-使えるモデル ID は `agy models` で確認します。モデル ID は推論強度を含むため、`--effort` を併用すると起動に失敗します。headless 実行に必要な command は上記のグローバル permission で許可し、`--dangerously-skip-permissions` は使いません。
+モデル ID は `agy models` で確認し、推論強度を含むため `--effort` と併用しません。認証は利用者が別途行い、設定や成果物に資格情報を書きません。
