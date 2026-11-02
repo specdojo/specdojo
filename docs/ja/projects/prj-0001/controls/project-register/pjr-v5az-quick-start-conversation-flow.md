@@ -51,22 +51,16 @@ landing page から来た利用者が、管理対象リポジトリと Git flow 
 
 ## 5. 対応結果
 
-`docs/ja/specdojo/guides/quick-start-guide.md` を改訂し、landing page から訪れる初学者向けに対話主体の構成へ刷新した。
+統合後の実物確認で判明した現行仕様との差を、完了条件の範囲で Quick Start に反映した。照合根拠は `docs/ja/specdojo/references/command-reference.md`、`docs/ja/specdojo/references/specdojo-config-reference.md`、`docs/specdojo/schemas/v1/routine.schema.yaml`、`src/shared/specdojo-config.ts`、`src/register/create-commands.ts`、`src/register/transition-commands.ts`、`src/exec/schedule/schedule.ts` である。
 
-- **導入と管理対象リポジトリ・Git flow 設定**:
-  - `../landing-page` を共通の題材とし、ワークスペース準備・導入・起動コマンド（本文掲載）から、管理対象リポジトリ（`repos`）への追加と Git flow ブランチ運用ルール（`integration_branch: develop`、`branch_template: feature/{topic}`、`integration_strategy: ff`、`commit_subject_template: {type}({scope}): {title}` など）の設定対話を具体化した。
-- **register の起票と AI 隔離実行**:
-  - FAQ 追加の todo、スマホ表示でメニューが閉じない不具合の issue、問い合わせフォームの実装方針を比較する decision の起票例を一貫した題材で作成した。
-  - オーケストレーターが担当者・期限・判断内容を勝手に確定せず、不足事項の確認・提案・承認・実行の対話フローを徹底した。
-  - 登録した作業を Git worktree で隔離実行し、プロダクト差分や result の確認を経て完了する流れを対話と折りたたみコマンドで示した。
-- **成果物カタログ・Schedule・Routine**:
-  - 成果物カタログ（`dct-*.yaml`）の準備からトラック戦略、schedule のビルド、Ready タスクの実行までを案内した。
-  - 運用フェーズの routine 登録（`rtn-daily-register-sweep.yaml`）と dry-run、cron や CI による定期起動の仕組みを示した。
-- **構成とフォーマット**:
-  - 各節を「前提」「具体的対話」「得られる結果と確認先」「折りたたんだコマンドと設定差分（`<details>`）」の統一構成にした。
-  - 既存リンク（`use-case-guide.md` からの節参照や `waza-guide.md`、文書内アンカー等）との整合を確認した。
-- **申し送り（Handoff）**:
-  - `README.md` 冒頭にある「10分で体験する — 仕様の判断台帳」の文言案内は、保護ファイル・別タスクのスコープであるため本タスクでは変更していない。必要に応じて後続タスクで表現の微調整を検討されたい。
+- init が作る人の名簿は `projects.<id>.members_path` の `030-project-management/pm-members.yaml` と記載し、`.specdojo/pm-members.yaml` の誤記を修正した。`schedule_path` の既定配置を project base 配下の `schedule` とし、`project list` は project ID と schedule / execution パスを表示し repos を表示しない旨を記載した。
+- 初期 commit と SpecDojo 側 `develop` ブランチ、exec 用設定の commit を導入手順に追加した。`setup.install` は追跡済み `package-lock.json` ごとの `npm ci` と説明した。
+- register の正常終端を issue / risk は `done`、question は `decided` に訂正した。todo の具体的説明・入力と issue / decision の説明・入力を CLI 例に加え、decision close では `--status decided` と `--by owner` を明示した。FAQ owner 確認の重複を取り除いた。
+- 実行 agent / owner の選択を設定・名簿由来として説明し、実際に生成される task ID や成果物パスを決め打ちしないよう schedule / exec の対話を修正した。BA ロールと名簿の owner nickname を区別するようにした。
+- routine は現存する Job と入力仕様を確認してから登録する流れに修正し、未提供 Job の存在を仮定しないようにした。routine YAML の形式は現行 `routine.schema.yaml` との照合で妥当なため変更していない。
+- Markdown 文書内の参照先と導線を維持した。保護設定および実際の `../landing-page` は変更していない。
+
+**検証**: `package.json`、`.specdojo/specdojo.config.json`、`lefthook.yml` を確認した。変更は Markdown のみ。Prettier と Markdown lint は依存導入済みで適用対象だが、親 runner の `lint-md` が実行するため executor では重複実行しない。親 runner の `lint-fm` を含む allowlisted 検証結果が後段で追記される。`specdojo catalog validate` は project に `catalog_path` が設定されており変更先も `docs/ja/projects/` のため親 hook では適用されるが、本 executor では親検証に委ねる。リンク導線は Quick Start の既存リンクと `use-case-guide.md` 等からの参照を保持した。
 
 ## 6. 関連ドキュメント
 
