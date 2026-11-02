@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdfd-uc-schedule
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 100
+graded_at: "2026-11-02T16:14:22.169Z"
+graded_by: flash-high-executor
+content_hash: a13f38602523adbb3106faf8f29cd2652d8bc8e4fb02ef8c45b04261f75111c0
+source_hashes:
+  catalog-entry: 105a8eb724c928570e05764305a506dee28941b9848b568317d13b87b21c5296
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-overview: 7b2a061955c858c574b2f8a67f29cc1c9a231993f576b9f53826a21db98db6a5
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 0
+  note: 0
+findings: []
+done_criteria:
+  satisfied: 4
+  total: 4
+  detail_ref: cdfd-uc-schedule-grade-criteria

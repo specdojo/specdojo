@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-uc-schedule-grade-criteria
+document: cdfd-uc-schedule
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md
+graded_at: "2026-11-02T16:14:22.169Z"
+graded_by: flash-high-executor
+content_hash: a13f38602523adbb3106faf8f29cd2652d8bc8e4fb02ef8c45b04261f75111c0
+summary:
+  satisfied: 4
+  unsatisfied: 0
+  total: 4
+criteria:
+  - id: DC-001
+    text: 計画着手などの入口イベントからカタログ定義、スケジュール戦略、タスク展開、実行、評価、完了記録までの schedule 系の流れが、プロセス領域の単位で表と図で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 各プロセス領域とデータストア（成果物カタログ、スケジュール戦略、Schedule、成果物など）の読み書き、およびレビューによる確定と grade による評価の責務分担が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: 検証失敗、レビュー差し戻し、依存未解決などの分岐、引き渡し条件を満たさない場合の戻り先がプロセス領域単位で確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-004
+    text: マイルストーン判定、ゲート通過、成果物の完成確定（status を ready に更新）を人間が担う境界が承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied

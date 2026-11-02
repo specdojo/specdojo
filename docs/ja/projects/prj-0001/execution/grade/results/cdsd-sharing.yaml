@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 59
-graded_at: "2026-10-31T16:31:42.153Z"
+graded_at: "2026-11-02T16:24:22.418Z"
 graded_by: flash-high-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
     score: 50
@@ -369,13 +369,11 @@ findings:
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 0
+  satisfied: 1
   total: 3
   unsatisfied:
     DC-001:
       - BA
     DC-002:
       - ARC
-    DC-003:
-      - QE
   detail_ref: cdsd-sharing-grade-criteria
