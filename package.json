@@ -71,6 +71,8 @@
     "orch:copilot:work": "tools/worktree/open-agent-worktree.sh copilot-work tsx \"$(pwd)/src/specdojo.ts\" orchestrator launch --provider copilot -- --agent specdojo-orchestrator",
     "orch:flash": "tsx src/specdojo.ts orchestrator launch --provider antigravity -- --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
     "orch:flash:work": "tools/worktree/open-agent-worktree.sh agy-work tsx \"$(pwd)/src/specdojo.ts\" orchestrator launch --provider antigravity -- --add-dir . --model gemini-3.8-flash-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:argon": "tsx src/specdojo.ts orchestrator launch --provider antigravity -- --add-dir \"$(pwd)\" --model gemini-4-argon-medium -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:argon:work": "tools/worktree/open-agent-worktree.sh argon-work tsx \"$(pwd)/src/specdojo.ts\" orchestrator launch --provider antigravity -- --add-dir . --model gemini-4-argon-medium -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
     "orch:qwen": "tsx src/specdojo.ts orchestrator launch --provider opencode -- --agent qwen-orchestrator",
     "orch:qwen:work": "tools/worktree/open-agent-worktree.sh qwen-work tsx \"$(pwd)/src/specdojo.ts\" orchestrator launch --provider opencode -- --agent qwen-orchestrator",
     "orch:gemma": "tsx src/specdojo.ts orchestrator launch --provider opencode -- --agent gemma-orchestrator",
