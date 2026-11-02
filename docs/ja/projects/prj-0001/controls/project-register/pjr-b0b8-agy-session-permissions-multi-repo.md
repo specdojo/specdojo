@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-02T12:57:11Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-integration"
 ---
 
 # PJR-B0B8 agy のセッション別権限設定に対応し、マルチリポジトリの編集境界を見直す
