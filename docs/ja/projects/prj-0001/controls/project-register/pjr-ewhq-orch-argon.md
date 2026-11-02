@@ -31,13 +31,21 @@ specdojo init と config scaffold が Antigravity 用に配る起動スクリプ
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `specdojo init` と `specdojo config scaffold` が Antigravity 用に配る起動スクリプトに、`orch:argon` と `orch:argon:work` が加わっている。`orch:argon` は `orch:flash` と同じ書き方（`orchestrator launch --provider antigravity`、`--add-dir`、入口の指示の渡し方）で、モデルは `gemini-4-argon-medium` とする。`orch:argon:work` は `tools/worktree/open-agent-worktree.sh` で worktree `argon-work` に立ち上げる
+- 既存の `orch:flash` と `orch:flash:work` は変えず、残す。ほかの provider のスクリプトも変えない
+- 単体テスト（`tests/src/shared/provider-scaffold.test.ts`、`tests/src/commands/init.test.ts` など、既存の orch のスクリプトを確かめているもの）で、`orch:argon` と `orch:argon:work` が配られることを確かめる
+- README の provider と起動スクリプトの表に `orch:argon` を足す。CHANGELOG は未公開の版の節に書き、公開済みの版の節は変えない
+- このリポジトリのルートの `package.json` は保護されたファイルのため executor は変えない。足すべき 2 行の案を個票の対応結果に書き、報告の `handoff` にも書く。反映は統合の後に orchestrator が利用者の承認のもとで行う（承認済み）
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` と親の検証が通る
+- 統合の後に、orchestrator がルートの `package.json` に 2 行を足し、`npm run orch:argon` と `npm run orch:argon:work` で立ち上がることを利用者が terminal で確かめる（executor の作業ではない）
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                  | 担当 | 状態 | メモ |
+| --- | ----------------------------------------------------- | ---- | ---- | ---- |
+| 1   | 配る雛形に orch:argon と orch:argon:work を足す       | ARC  | open | -    |
+| 2   | テスト・README・CHANGELOG を合わせる                  | ARC  | open | -    |
+| 3   | ルートの package.json の案を対応結果と handoff に書く | ARC  | open | -    |
 
 ## 5. 対応結果
 
@@ -45,4 +53,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `README.md`
+- `templates/` の Antigravity 用の雛形
