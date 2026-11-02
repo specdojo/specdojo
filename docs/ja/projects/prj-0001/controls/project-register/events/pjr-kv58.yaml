@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f23e817b86664c7f834023ad4dca4d2a
+  ts: "2026-11-02T22:58:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 全体概要の Orchestrator の図を直接のデータストアだけに絞る
+    - field: description
+      from: ""
+      to: cdfd-overview の Orchestrator の調整の図で、直接読み書きするデータストアを稼働構成・登録簿・実行記録の 3 つに絞り、6 区分の位置をほかの図にそろえ、CLI 経由のデータストアは 5.1・5.2 の区分からの線で表す
+    - field: input
+      from: ""
+      to: '["PJR-5Q7R では、runner の内部の関数が読み書きするものまで Orchestrator の直接と数え、13 のデータストアに線が引かれた。図は 4558×2004px で、6 区分の位置もほかの図とそろっていない（2026-11-02）","利用者の判断: Orchestrator が直接読み書きするのは、稼働構成（参照・記録）、登録簿（参照・記録）、実行記録（参照）。進捗報告は CLI 経由（schedule 系の P-09）。CLI 経由のものは、区分からデータストアへの線で表す（2026-11-03）","利用者は、CLI 経由の線を Orchestrator の図に重ねず、5.1・5.2 の図の区分からの線で表す案 A を選んだ（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-5Q7R"]'
