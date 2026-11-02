@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-RWQV"]'
+- v: 1
+  id: reg_75f1122ef15841f3ad7acea303bff2eb
+  ts: "2026-11-02T11:07:46Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a14fa5e13e544527a8b98992b334fcc8
+- v: 1
+  id: reg_17d59fe205e2496a958a301852afca4f
+  ts: "2026-11-02T11:18:00Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_75f1122ef15841f3ad7acea303bff2eb
