@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-10-03T21:39:17.207Z"
-graded_by: agy-expert-executor
-content_hash: 9981804dade6635c23dd6aa4f55e2d21259ea92a41b219b77f15694df912695d
+graded_at: "2026-11-02T20:14:39.703Z"
+graded_by: flash-high-executor
+content_hash: 209598f81257c4a54d3cb3ecd2554be238b8c22d00d81f87b2d78ec63e92c337
 categories:
   purpose:
     score: 100
@@ -113,15 +113,18 @@ findings:
     line: 37
     anchor: ""
     message: ドキュメントIDを固定値 `imp-interface` としているが、プロジェクト固有のIDとなるよう `＜project-id＞:imp-interface` 形式で定義すべきである。
+    message_ja: ドキュメントIDを固定値 `imp-interface` としているが、プロジェクト固有のIDとなるよう `＜project-id＞:imp-interface` 形式で定義すべきである。
   - id: F002
     severity: minor
     rule: vp-ux-readability
     line: 38
     anchor: "| ---------- | -------------------------------------- | ---- |"
     message: "推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。"
+    message_ja: "推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。"
   - id: F003
     severity: minor
     rule: vp-ux-readability
     line: 47
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: テーブルのヘッダー行と区切り線の間に空行が含まれており、Markdownのテーブルとして正しくレンダリングされないため空行を削除すべきである。
+    message_ja: テーブルのヘッダー行と区切り線の間に空行が含まれており、Markdownのテーブルとして正しくレンダリングされないため空行を削除すべきである。

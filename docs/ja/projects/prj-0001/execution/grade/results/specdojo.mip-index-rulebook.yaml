@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 96
-graded_at: "2026-10-04T21:05:13.369Z"
-graded_by: agy-expert-executor
-content_hash: 123a4da38aa1faf4ed0fcb32ef9208e81485245eb52bae4a940d6eb7e6e2f4a5
+score: 86
+graded_at: "2026-11-02T20:25:04.437Z"
+graded_by: flash-high-executor
+content_hash: e6b870e9e556e52c9ff25e0b63297ce7348511fcdd896e6615f46321efcfd3fa
 categories:
   purpose:
     score: 100
@@ -19,7 +19,7 @@ categories:
   business:
     score: 100
   architecture:
-    score: 100
+    score: 75
   usability:
     score: 100
   implementation:
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 83
   consistency:
-    score: 100
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -100,19 +100,36 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 3
+  minor: 0
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 41
+    anchor: "### 4.1. 設定内容"
+    message: >-
+      Section 4.1 specifies a flat Frontmatter structure lacking the specdojo: namespace and the mandatory rulebook key,
+      conflicting directly with docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml.
+    message_ja: >-
+      Section 4.1 specifies a flat Frontmatter structure lacking the specdojo: namespace and the mandatory rulebook key,
+      conflicting directly with docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml.
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 45
+    anchor: "| 項目       | 説明                                         | 必須 |"
+    message: >-
+      Section 4.1 and Section 8 omit the mandatory rulebook key and specdojo: namespace required by
+      document-metadata-standard.md, while improperly defining title as a required Frontmatter field.
+    message_ja: >-
+      Section 4.1 と Section 8 では、document-metadata-standard.md で要求されている必須の rulebook key および specdojo: namespace
+      が省略されており、一方で title が必須の Frontmatter フィールドとして不適切に定義されています。
+  - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 移行計画 作成ルール"
     message: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 214
-    anchor: 既存システムの保守限界に伴い、新基盤へ移行するための計画を定義する。
-    message: ルール内のサンプルにおける Frontmatter の `type` が `project` となっており、4.1 節の規定（`migration` 固定）と矛盾している。
+    message_ja: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
