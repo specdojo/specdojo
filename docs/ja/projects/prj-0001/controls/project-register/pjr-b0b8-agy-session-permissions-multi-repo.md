@@ -30,18 +30,37 @@ agy のセッション別設定を使い、役割ごとの権限を分離する�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- [ ] agy 1.4.12 の `--settings` を使い、edit・review・report・orchestrator の役割別の権限を分離する。既存のグローバル・プロジェクト設定とのマージ方法と優先順位を確認し、Claude と同等に制御できる範囲と差異を記録する。
+- [ ] 起動処理・配布テンプレート・scaffold がセッション別設定に対応し、`--dangerously-skip-permissions` に依存せず実行できる。既定の導入でユーザーのグローバル設定を書き換えず、既存利用者の移行方法を示す。
+- [ ] 宣言済みプロダクトリポジトリとその task worktree の成果物を edit executor が読み書きできる。対話型 orchestrator の起動経路も確認し、未宣言の外部リポジトリへの許可は追加しない。
+- [ ] プロジェクト・プロダクト両方のリポジトリで秘密情報・保護設定への制限を維持する。review・report の役割外の編集を拒否し、既存の provider 非依存ガードと両立する。
+- [ ] 変更箇所の単体・統合テストを追加し、型検査・lint・単体テストと親の固定検証を通す。空のリポジトリで scaffold した設定を確認し、実際の agy による役割別の許可・拒否とプロダクト worktree の編集を、秘密情報を使わない検証用ファイルで確認する。
+- [ ] runner・CLI の変更を統合した後に、実際の `npx specdojo exec run --register` を通して動作を確認する。prj-0001 では運用プレイブックに従い PJR-JSEY を使用し、証跡を個票の対応結果と result に残す。
+- [ ] 関連する設計・ガイド・配布 README を更新する。CHANGELOG は未公開版の節へ記載し、公開済み版の節は変更しない。
+- [ ] 保護設定の変更案は個票の対応結果に記載し、pipeline の報告の `handoff` にも残す。反映は利用者の承認を得て feature ブランチで行う。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                 | 担当 | 状態 | メモ                                     |
+| --- | -------------------------------------------------------------------- | ---- | ---- | ---------------------------------------- |
+| 1   | 役割別のセッション設定と既存設定のマージ仕様を整理する               | ARC  | open | Claude との差異と移行方法を記録する      |
+| 2   | 起動処理・配布テンプレート・scaffold を対応させる                    | ARC  | open | 保護設定は変更案を申し送る               |
+| 3   | 宣言済みプロダクトリポジトリと worktree の権限を見直す               | ARC  | open | 追加ルートと各リポジトリの保護を確認する |
+| 4   | 単体・統合・親検証、空リポジトリへの生成、実機の許可・拒否を確認する | ARC  | open | 統合後の exec 確認を含める               |
+| 5   | 設計・ガイド・配布 README・未公開版の CHANGELOG を更新する           | ARC  | open | 検証結果と残課題を対応結果へ残す         |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[sysd-agent-settings|エージェント実行・共通設計]]
+- [[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]]
+- [[sysd-claude-agent-settings|Claude Code エージェント設定]]
+- [[specdojo:exec-config-guide|exec 設定ガイド]]
+- [[specdojo:command-reference|CLI コマンドリファレンス]]
+- [[prj-0001:pm-orchestrator-playbook|prj-0001 オーケストレーター運用メモ]]
+- [[prj-0001:pjr-0fk2-config-scaffold-agent|PJR-0FK2 パーミッション設定の生成・マージ]]
+- [Antigravity CLI の権限仕様](https://antigravity.google/docs/permissions/)
+- 主な確認対象: `src/commands/orchestrator.ts`、`src/exec/task-repos.ts`、provider の起動処理、`templates/antigravity/`、`templates/init-exec-defaults.yaml`。
