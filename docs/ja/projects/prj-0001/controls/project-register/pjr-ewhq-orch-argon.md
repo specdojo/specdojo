@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ewhq-orch-argon
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-02T23:07:23Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-02T23:38:59Z"
+  conclusion: 配る雛形とこのリポジトリの package.json に orch:argon と orch:argon:work（gemini-4-argon-medium、worktree argon-work）を足した。orch:flash は残した
 ---
 
 # PJR-EWHQ Antigravity の orchestrator に Gemini 4 Argon の起動スクリプトを足す
