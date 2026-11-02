@@ -401,39 +401,7 @@ deprecation: "📦 文書の廃棄（非推奨化・保管）\nP-13" {
   class: process
 }
 
-kata: "📐 Kata / kata" {
-  class: store_master
-}
-
-catalog: "📚 成果物カタログ / catalog" {
-  class: store_master
-}
-
-deliverables: "📄 成果物 / deliverable" {
-  class: store_transaction
-}
-
-grade: "🧪 評価結果" {
-  class: store_transaction
-}
-
-derived: "🗂️ 派生ビュー・索引" {
-  class: store_transaction
-}
-
 config: "🧩 稼働構成" {
-  class: store_master
-}
-
-strategy: "🧭 スケジュール戦略" {
-  class: store_master
-}
-
-routine: "⏰ 定期実行定義 / routine" {
-  class: store_master
-}
-
-job: "🧰 ジョブ定義 / job" {
   class: store_master
 }
 
@@ -441,15 +409,7 @@ register: "📒 登録簿 / register" {
   class: store_transaction
 }
 
-exec_plan: "📋 実行計画 / plan" {
-  class: store_transaction
-}
-
 exec_log: "🧾 実行記録" {
-  class: store_transaction
-}
-
-report: "📊 進捗報告" {
   class: store_transaction
 }
 
@@ -459,23 +419,11 @@ orchestrator -> schedule_sys: "計画要求"
 orchestrator -> routine_sys: "定義要求"
 orchestrator -> exec_cycle: "実行要求"
 orchestrator -> deprecation: "廃棄要求"
-orchestrator <- kata: "実践の型"
-orchestrator <- catalog: "完了条件"
-orchestrator <- deliverables: "対象本文"
-orchestrator <- grade: "評価鮮度"
-orchestrator <- derived: "参照索引"
 orchestrator <- config: "運転設定"
-orchestrator <- strategy: "実行方式"
-orchestrator <- routine: "起動条件"
-orchestrator -> routine: "起動状態"
-orchestrator <- job: "委譲方式"
+orchestrator -> config: "承認済構成"
 orchestrator <- register: "承認済項目"
-orchestrator <- exec_plan: "作業指示"
-orchestrator -> exec_plan: "委譲計画"
+orchestrator -> register: "登録項目・決定"
 orchestrator <- exec_log: "実行状態"
-orchestrator -> exec_log: "追跡記録"
-orchestrator <- report: "実行候補"
-orchestrator -> report: "運転報告"
 
 # 配置制御用（受け渡しではない）
 project_config -> register_sys: {style.opacity: 0}
@@ -486,7 +434,7 @@ schedule_sys -> exec_cycle: {style.opacity: 0}
 routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」を参照し、通常線は 6 区分への指示と運転対象の選択・委譲準備・起動・追跡に使う直接の読み書きを表し、他の 2 図と該当区分を共有し、各区分が CLI 経由で扱うデータと応答の線は省略する（物の流れは対象外）。
+凡例は「凡例（本プロダクト共通）」を参照し、通常線は 6 区分への指示と稼働構成・登録簿の参照・記録および実行記録の参照を表し、他の 2 図と該当区分を共有し、CLI 経由の読み書きは 5.1・5.2 の区分とデータストアを結ぶ線に示す（物の流れは対象外）。
 
 ## 6. 詳細 CDFD 一覧
 
