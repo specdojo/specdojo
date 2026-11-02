@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: BA
   registered_at: "2026-11-02T12:13:16Z"
   due_on: "2026-11-30"
-  block_reason: executor rate limit reached
   derived_from:
     - PJR-V5AZ
 ---
@@ -51,36 +50,48 @@ use-case-guide.md を LP・Next.js の Web サービス・Unity のゲームと�
 
 ## 4. 作業内容
 
-| No  | 作業                                                                 | 担当 | 状態 | メモ                                         |
-| --- | -------------------------------------------------------------------- | ---- | ---- | -------------------------------------------- |
-| 1   | Quick Start、専門ガイド、PJR-RTD5 と実際のひな型の提供状況を確認する | BA   | done | 未提供であることを確認し、通常手順で記載完了 |
-| 2   | 作りたいもの別に構成し、具体的な対話と成果物作成の流れを書く         | BA   | done | LP、Next.js、Unity の対話・成果物フロー完了  |
-| 3   | 共通運用情報とリンク・早見図を整理し、文書検証を行う                 | BA   | done | 第5章に共通運用を再構成し、早見図更新完了    |
-| 4   | ひな型の使い方を確認し、未提供分の追記対象と確認事項を対応結果へ残す | BA   | done | 提供後の追記対象と確認事項を記録完了         |
+| No  | 作業                                                             | 担当 | 状態 | メモ                                                           |
+| --- | ---------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------- |
+| 1   | Quick Start、専門ガイド、PJR-RTD5 とひな型の提供根拠を確認する   | BA   | done | 決定済みの方針と利用可能な実物を区別した                       |
+| 2   | LP・Next.js・Unity の対話と成果物作成・実装の経路を整える        | BA   | done | 文書の schedule とプロダクトの実装 todo を分離した             |
+| 3   | CLI・設定・共通運用情報とリンク・早見図を現行仕様に照合する      | BA   | done | CLI help、設定リファレンス、レビューと exec のガイドに照合した |
+| 4   | 文書検証を行い、ひな型提供後の追記対象と確認事項を対応結果へ残す | BA   | done | executor の検証と、後続 runner・ひな型提供後の作業を分けて記録 |
 
 ## 5. 対応結果
 
-`docs/ja/specdojo/guides/use-case-guide.md` を改訂し、従来の抽象的なシナリオから、作りたいプロダクト（LP、Next.js Web サービス、Unity ゲーム）に応じた実践的な対話フローと成果物作成の流れへ再構成した。
+### 5.1. 改訂内容と完了条件への対応
 
-- **作りたいもの別の構成と対話フロー**:
-  - ケース1（LP）: 完成イメージ・前提、Hero・特徴・料金・FAQ・問い合わせフォームの検討対話、Astro + Tailwind CSS と Cloudflare Pages の採択、UI 仕様書・カタログ・schedule 進行、プレビュー確認と定期チェックの流れを記載した。
-  - ケース2（Next.js Web サービス）: フルスタック構成、NextAuth.js + Prisma (PostgreSQL)・Vercel の選定対話、データモデル（CCD/CDSD）・API・非機能仕様書の作成順序、Phase 分割スケジュール進行、テスト・セキュリティ検証・運用の流れを記載した。
-  - ケース3（Unity ゲーム）: 2D アクションを題材に、エディタ作業（人間）と C# スクリプト/ScriptableObject 生成（AI）の境界合意対話、ステートマシン・パラメータ設計・テスト仕様書、Input System 採択、UTF テストと Play モード確認の流れを記載した。
-  - オーケストレーターは担当者（alice, bob, carol）、期限、技術採択などの事実を勝手に確定せず、不足事項の確認・提案・利用者の承認を得て起票・実行する対話原則を徹底した。
-- **コマンドと設定差分・リンク**:
-  - コマンドや設定例は `<details>` で折りたたみ、対話主体の可読性を確保した。
-  - 共通の導入・基本操作は [[specdojo:quick-start-guide|Quick Start ガイド]]、詳細は専門ガイド（[[specdojo:register-operation-guide|登録簿運用ガイド]]、[[specdojo:schedule-operation-guide|Schedule 実行運用ガイド]]、[[specdojo:exec-worktree-guide|exec worktree 運用ガイド]]、[[specdojo:routine-operation-guide|routine 運用ガイド]]、[[specdojo:review-guide|レビューガイド]] 等）へリンクして説明の重複を抑えた。
-- **共通運用情報と早見図**:
-  - 現行ガイドにあった重要運用情報（register による計画外課題管理、grade/review による ready 確定、worktree 隔離実行、routine 定期巡回、複数プロジェクト・ブランチ並行運用）を第 5 章に再編成し、各ケースから到達できる導線を整備した。
-  - 冒頭にプロダクト種別から各ケースや共通運用へ進める Mermaid 早見図を設置した。
-- **PJR-RTD5 と用途別ひな型の確認結果・申し送り（Handoff）**:
-  - [[prj-0001:pjr-rtd5-starter-templates|PJR-RTD5]] の決定内容（生成・追加設定・SpecDojo の 3 層、GitHub template repository による提供）を確認した。
-  - リポジトリ内および提供状況を調査し、現時点でスターター template repository および starter CLI オプションは未提供であることを確認した。
-  - そのため、本改訂では未提供のひな型を前提とせず、公式ツール（`npm create astro`, `create-next-app`, Unity Hub + Git LFS）と SpecDojo を組み合わせた手順を記載した。
-  - **ひな型提供後の後続追記・確認事項**:
-    1. LP スターター（GitHub template repository）公開時: template 複製からのワークスペース初期化手順、追加設定（Tailwind 等）の反映手順の追記。
-    2. Next.js + Cloudflare スターター公開時: template 複製、Wrangler / OpenNext 設定、セキュリティチェック（Dependabot, CodeQL）初期化手順の追記。
-    3. Unity スターター提供時: Git LFS やアセット初期設定を含めた導入手順の追記。
+[[specdojo:use-case-guide|ユースケース別ガイド]] を確認・改訂した。前回の中断時に残っていた個票の完了記述を実物と照合し、初回改訂に残っていた仕様不整合を修正した。
+
+- LP・Next.js Web サービス・Unity ゲームのケース見出しと相談対話を維持し、各ケースに完成イメージ、前提、確認事項、文書の作成順序、register / schedule の進行、受け入れ確認・変更・運用への導線を記載した。担当・期限・技術採択は架空の合意例と明示した。
+- 文書カタログに文書の ID・パス・完了条件を宣言し、strategy から文書の schedule を生成する経路と、宣言済みプロダクトの実装 todo を register から実行する経路を区別した。仕様書の ready 化による実装タスクの自動生成と、未生成の `TSK-LP-01` を実在扱いする記述を除いた。`dct-*` を成果物文書 ID として示していた例も修正した。
+- LP の Hero、Next.js の一覧 API、Unity の Player Controller について、対象・完了条件の提案、利用者の承認、採番された todo の worktree 実行を示した。Next.js の文書 todo は一度の起票とし、実装 todo を別の作業として記載した。
+- `repos` を `name` / `path` を持つ要素の配列に修正し、設定差分を折りたたんだ。初期 commit、SpecDojo 側の develop、承認済み設定の commit、プロダクト側の統合先ブランチの前提は [[specdojo:quick-start-guide|Quick Start ガイド]] へつないだ。重複していた初期化コマンドを整理し、保護設定や実プロダクトは変更していない。
+- CLI の現行 help と設定リファレンスを照合し、`schedule build --track`、`exec run --task` / `--register` の実行対象、各 `register add` の `--topic`・具体的な `--description`・`--input`・`--by specdojo-orchestrator`・`--commit` を整えた。個票の対象パス・受け入れ条件・実行する検証を確認してから実行する手順を追記した。
+- commit・統合の実施者を runner とし、統合先・方法は承認済み設定に従うとした。検証は各プロダクト側の script・依存・実行環境と設定が準備済みのものに限ると明示した。grade・review・人の最終判断を分け、human タスクを agent に実行させる経路と、人の確定判断を混同しない説明へ修正した。
+- 共通運用（register、レビュー、worktree、routine、並行ブランチ）を第 5 章に維持し、各ケースからリンクした。早見図の説明を更新し、文書内リンクには明示アンカーを設けた。参照元は `docs/ja/specdojo/index.md` と全体概要ガイド等を検索し、ガイドのファイル名・文書 ID を継続利用できることを確認した。
+
+### 5.2. 検証と確認範囲
+
+- 現行ソースの CLI help（`register add`、`schedule build`、`exec run`、`exec refresh`、`exec status`、`routine run`）と、設定・Schedule 設計・register・exec・レビューの専門ガイドを照合した。
+- Prettier、変更 Markdown の markdownlint、project の catalog 検証、register の生成検査、既存差分のイベント YAML の schema 検査を実施した。文書内アンカー・wikilink の参照先、シェル例の構文と CLI オプションの整合も確認した。VitePress の描画で文書内リンク 17 件と wikilink の参照先 16 ID を確認し、CLI 例 17 件を照合した。カタログ検証は終了コード 0 で、対象外の未作成プロダクト文書に関する警告が出たため、これを未確認範囲として引き継ぐ。コマンドと結果の詳細は executor evidence に記録する。
+- 親 runner が担当する lint・schema・typecheck・単体／結合テストは executor では重複実行せず、後続の親検証に委ねる。親検証結果は runner が evidence / result に追記する。
+- 実際の LP・Next.js・Unity の生成、agent の起動、デプロイ、DB・Unity の実行は本改訂では行っていない。ガイドの例と実装・設定の照合までを確認範囲とする。Quick Start の同種の修正は [[prj-0001:pjr-v5az-quick-start-conversation-flow|PJR-V5AZ]] に委ね、本項目では重複編集していない。
+
+### 5.3. ひな型の確認結果と提供後の追記（handoff）
+
+[[prj-0001:pjr-rtd5-starter-templates|PJR-RTD5]] の決定を確認した。構成は生成・追加設定・SpecDojo の 3 層、入口は GitHub template repository、提供順序は LP、次に Next.js + Cloudflare である。Unity スターターの採用・提供は確定していない。
+
+参照した決定文書とリポジトリの配布テンプレート・初期化実装には、用途別スターターの利用可能な実物・公開先を確認できなかった。外部の公開状況までは検証していない。本ガイドはひな型の利用を前提にせず、通常のプロダクト作成と SpecDojo 接続の手順で完結させた。公開ガイドから内部個票への依存を除き、追跡を本節に集約した。
+
+提供後に行う追記・確認は次のとおり。これは未提供のひな型の完成を待たないという本項目の完了条件に従う後続作業である。
+
+1. LP ひな型の実物と公開先を確認し、複製、project ID・名前の初期化、追加設定、SpecDojo 接続、対話開始、プレビューと検証の手順を記載する。
+2. Next.js + Cloudflare ひな型の実物で、公式生成・アダプタ等の追加設定・SpecDojo 設定の境界と、複製から build・動作確認までを検証して追記する。ガイド中の Vercel は架空の利用者の選択例であり、提供方針を変更するものではない。
+3. 複製で引き継がれないブランチ保護・セキュリティ等の設定と初期化手順を確認し、実物で有効性を確かめる。未実装のコマンドや、検査の自動実行を先取りして記載しない。
+4. Unity は採用・提供が決まった場合に限り、LFS、アセット・`.meta` 管理、エディタ・ライセンス・テスト環境、AI と人の作業境界を確認して追加の起票・追記範囲を決める。
+
+result は reporter / runner が記入する。登録簿一覧と個票のステータスは executor では変更していない。開始時から存在する runner のイベント・実行 evidence の差分は保持し、イベント YAML は共通規約の Prettier 整形のみ行った。
 
 ## 6. 関連ドキュメント
 

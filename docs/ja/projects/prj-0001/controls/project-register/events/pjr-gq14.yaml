@@ -103,3 +103,19 @@
       from: "-"
       to: executor rate limit reached
   previous_event_id: reg_88ca7df189ed44adaec3932b20d593fa
+- v: 1
+  id: reg_ad1ba03a12ee4566a4911252e3906051
+  ts: "2026-11-02T21:41:11Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: executor rate limit reached
+      to: "-"
+  previous_event_id: reg_a130e81e2e5b4c6aa2ef935c097afe45

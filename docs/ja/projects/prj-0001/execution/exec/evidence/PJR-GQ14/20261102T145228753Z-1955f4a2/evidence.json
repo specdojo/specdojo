@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GQ14",
+  "run_id": "20261102T145228753Z-1955f4a2",
+  "stage": {
+    "role": "executor",
+    "actor": "luna-executor",
+    "status": "rate_limited",
+    "started_at": "2026-11-02T14:54:00.167Z",
+    "completed_at": "2026-11-02T14:54:49.391Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-gq14.yaml",
+      "status": "MM"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ""
+  },
+  "validations": [],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-GQ14/20261102T145228753Z-1955f4a2/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}
