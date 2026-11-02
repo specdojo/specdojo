@@ -71,6 +71,13 @@ PR #1 の本番公開を確認できたため、LP の CHANGELOG.md の公開済
 - executor の編集と文書検査は完了した。後続 runner は設定済みの親検証 8 種（lint-ts・lint-fm・lint-md・lint-mermaid・test-integration・validate-schema・typecheck・test-unit）を実行し、reporter は実施内容・変更ファイル・検証結果・公開範囲の根拠と制約・本節の申し送りを result に反映する。
 - ホスト環境で PR #1 のマージコミットと本番ページを直接再照合する確認を `requires_human` として申し送る。入力の公開確認を前提に編集済みであり、公開対象外が見つかった場合はその項目を `Unreleased` に戻す。
 
+### 5.5. 統合後の確認（specdojo-orchestrator、2026-11-02）
+
+- PR #1 は `MERGED` で、2026-11-02T11:01:18Z にマージされた。GitHub の `main` はマージコミット `5c5f91ffcf5e012a96cfccda8d7295b31ade8f6a` を指す。マージコミットの tree と PR head `73455100bf0e56b23b24404438b878106cb5cee8` の tree は、ともに `f34dfa2922f544b5fd22b4f107c8d5b8d16ebc9e` だった。Workers Builds の check も成功した。
+- 公開ページは HTTP 200 を返し、「型（Kata）」「技（Waza）」「流（Ryu）」と小文字の `routine + job` を含み、大文字の `routine + Job` を含まないことを確認した。executor の通信制約による申し送りをホストで確認した。
+- LP の `develop` の `9b231e4` では `CHANGELOG.md` に日付見出しと空行を追加しただけで、既存の 8 項目と 3 分類を保持した。`Unreleased` は日付付きの節より上にある。LP の他のファイルは変更されていない。project の実行記録は `project/prj-0002/develop` の `5ed433d87` に統合された。
+- executor の LP Markdown lint・Prettier 確認と、runner の親検証 8 種（lint-ts・lint-fm・lint-md・lint-mermaid・test-integration・validate-schema・typecheck・test-unit）の成功を個票・result・実際の差分に照らして確認した。公開範囲に残る未確認事項はない。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0002:pjr-rwqv-lp-changelog]]: 変更履歴の作成と本番公開時の更新ルール。
