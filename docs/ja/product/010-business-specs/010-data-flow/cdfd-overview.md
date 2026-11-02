@@ -115,7 +115,7 @@ SpecDojo を活用した仕様駆動開発について、PO がプロジェク�
 
 ## 5. 概念データフロー（概要）
 
-「プロセス領域」のうち Orchestrator を除く 6 区分を代表ノードとし、系統間と共通領域の関係をトランザクションデータとマスタ・構成データの 2 図に分けて示す。Orchestrator の要求・応答とデータストアの読み書きは「Orchestrator の調整」の表にまとめる。
+「プロセス領域」のうち Orchestrator を除く区分を代表ノードとし、データの受け渡しがある区分をトランザクションデータとマスタ・構成データの 2 図に分けて示す。Orchestrator から 6 区分への指示とデータストアの直接の読み書きは「Orchestrator の調整」の図に示す。
 
 ### 5.1. トランザクションデータの流れ
 
@@ -140,10 +140,6 @@ classes: {
       font-color: "#000000"
     }
   }
-}
-
-project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
-  class: process
 }
 
 register_sys: "📒 register 系\nP-02" {
@@ -228,13 +224,21 @@ deliverables <- deprecation: "非推奨化文書"
 deprecation -> trash: "保管文書"
 
 # 配置制御用（受け渡しではない）
-project_config -> register_sys: {style.opacity: 0}
-project_config -> schedule_sys: {style.opacity: 0}
-project_config -> routine_sys: {style.opacity: 0}
 routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
+
+# 配置制御用（受け渡しではない。非表示の基点で 3 系統を同段にそろえる）
+layout_top: "" {
+  width: 0
+  height: 0
+  style.opacity: 0
+}
+
+layout_top -> register_sys: {style.opacity: 0}
+layout_top -> schedule_sys: {style.opacity: 0}
+layout_top -> routine_sys: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表す（物の流れは対象外）。両図で同じ 6 区分を共有し、Orchestrator の受け渡しは図の線を減らすため「Orchestrator の調整」にまとめる。
+凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表し（物の流れは対象外）、マスタ・構成データの図と register 系・schedule 系・routine 系・実行サイクルを共有し、Orchestrator の指示と直接の読み書きは「Orchestrator の調整」に示す。
 
 ### 5.2. マスタ・構成データの流れ
 
@@ -281,10 +285,6 @@ exec_cycle: "⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-0
   class: process
 }
 
-deprecation: "📦 文書の廃棄（非推奨化・保管）\nP-13" {
-  class: process
-}
-
 config: "🧩 稼働構成" {
   class: store_master
 }
@@ -313,7 +313,7 @@ job: "🧰 ジョブ定義 / job" {
 register_sys <- config: "稼働構成"
 register_sys <- kata: "実践の型"
 exec_cycle <- strategy: "作業要件・判断基準"
-routine_sys -> routine: "定期実行定義"
+schedule_sys -> strategy: "生成戦略"
 project_config -> config: "稼働構成"
 exec_cycle <- config: "稼働構成"
 exec_cycle <- catalog: "完了条件・根拠参照"
@@ -322,7 +322,7 @@ exec_cycle <- kata: "実践の型・rubric"
 routine_sys -> job: "手順・成功条件"
 schedule_sys <- config: "稼働構成"
 schedule_sys -> catalog: "成果物定義"
-schedule_sys -> strategy: "生成戦略"
+routine_sys -> routine: "定期実行定義"
 routine_sys <- kata: "定義の型"
 project_config -> kata: "配置・版"
 exec_cycle <- job: "手順・成功条件"
@@ -335,29 +335,158 @@ project_config -> schedule_sys: {style.opacity: 0}
 project_config -> routine_sys: {style.opacity: 0}
 register_sys -> exec_cycle: {style.opacity: 0}
 schedule_sys -> exec_cycle: {style.opacity: 0}
-routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
+routine_sys -> exec_cycle: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表す（物の流れは対象外）。「トランザクションデータの流れ」と同じ 6 区分を共有し、Orchestrator の定期実行判定などに用いる読み書きは「Orchestrator の調整」にまとめる。
+凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表し（物の流れは対象外）、トランザクションデータの図と register 系・schedule 系・routine 系・実行サイクルを共有し、Orchestrator の指示と直接の読み書きは「Orchestrator の調整」に示す。
 
 ### 5.3. Orchestrator の調整
 
-Orchestrator（`P-14`）は利用者または自動実行の意図に基づいて各区分へ要求を渡し、次の情報を用いて PDCA を調整する。同じ相手との受け渡しを 1 行にまとめ、データストアへの書き込みは実行記録の行に示す。
+```d2
+direction: down
 
-| 相手の区分・データストア                      | 渡すもの・書くもの                 | 受け取るもの・読むもの           |
-| --------------------------------------------- | ---------------------------------- | -------------------------------- |
-| register 系（`P-02`）                         | 登録・計画要求                     | 登録結果・判断依頼               |
-| schedule 系（`P-03`〜`P-04`・`P-09`〜`P-10`） | 計画・報告・生成要求               | 計画・進捗・判断依頼             |
-| routine 系（`P-05`〜`P-06`）                  | 定義要求                           | —                                |
-| 実行サイクル（`P-07`〜`P-08`・`P-11`）        | 実行・評価・完了要求（Job を含む） | 実行状態・判断依頼・結果         |
-| 実行計画 / plan                               | —                                  | 対象・手順・完了条件             |
-| 実行記録                                      | サイクルの実行記録                 | 記録済みの実行状態・Job 実行結果 |
-| 評価結果                                      | —                                  | 最新の grade・finding            |
-| 稼働構成                                      | —                                  | agent 定義・実行既定値           |
-| 定期実行定義 / routine                        | —                                  | 実行時期・条件・対象 Job         |
-| ジョブ定義 / job                              | —                                  | ジョブ手順・成功条件             |
-| 成果物カタログ / catalog                      | —                                  | `done_criteria`・`evidence_refs` |
-| スケジュール戦略                              | —                                  | phase の作業要件                 |
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+}
+
+orchestrator: "🧭 Orchestrator\nP-14" {
+  class: process
+}
+
+project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
+  class: process
+}
+
+register_sys: "📒 register 系\nP-02" {
+  class: process
+}
+
+schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10" {
+  class: process
+}
+
+routine_sys: "⏰ routine 系\nP-05〜P-06" {
+  class: process
+}
+
+exec_cycle: "⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-08・P-11" {
+  class: process
+}
+
+deprecation: "📦 文書の廃棄（非推奨化・保管）\nP-13" {
+  class: process
+}
+
+kata: "📐 Kata / kata" {
+  class: store_master
+}
+
+catalog: "📚 成果物カタログ / catalog" {
+  class: store_master
+}
+
+deliverables: "📄 成果物 / deliverable" {
+  class: store_transaction
+}
+
+grade: "🧪 評価結果" {
+  class: store_transaction
+}
+
+derived: "🗂️ 派生ビュー・索引" {
+  class: store_transaction
+}
+
+config: "🧩 稼働構成" {
+  class: store_master
+}
+
+strategy: "🧭 スケジュール戦略" {
+  class: store_master
+}
+
+routine: "⏰ 定期実行定義 / routine" {
+  class: store_master
+}
+
+job: "🧰 ジョブ定義 / job" {
+  class: store_master
+}
+
+register: "📒 登録簿 / register" {
+  class: store_transaction
+}
+
+exec_plan: "📋 実行計画 / plan" {
+  class: store_transaction
+}
+
+exec_log: "🧾 実行記録" {
+  class: store_transaction
+}
+
+report: "📊 進捗報告" {
+  class: store_transaction
+}
+
+orchestrator -> project_config: "構成要求"
+orchestrator -> register_sys: "登録要求"
+orchestrator -> schedule_sys: "計画要求"
+orchestrator -> routine_sys: "定義要求"
+orchestrator -> exec_cycle: "実行要求"
+orchestrator -> deprecation: "廃棄要求"
+orchestrator <- kata: "実践の型"
+orchestrator <- catalog: "完了条件"
+orchestrator <- deliverables: "対象本文"
+orchestrator <- grade: "評価鮮度"
+orchestrator <- derived: "参照索引"
+orchestrator <- config: "運転設定"
+orchestrator <- strategy: "実行方式"
+orchestrator <- routine: "起動条件"
+orchestrator -> routine: "起動状態"
+orchestrator <- job: "委譲方式"
+orchestrator <- register: "承認済項目"
+orchestrator <- exec_plan: "作業指示"
+orchestrator -> exec_plan: "委譲計画"
+orchestrator <- exec_log: "実行状態"
+orchestrator -> exec_log: "追跡記録"
+orchestrator <- report: "実行候補"
+orchestrator -> report: "運転報告"
+
+# 配置制御用（受け渡しではない）
+project_config -> register_sys: {style.opacity: 0}
+project_config -> schedule_sys: {style.opacity: 0}
+project_config -> routine_sys: {style.opacity: 0}
+register_sys -> exec_cycle: {style.opacity: 0}
+schedule_sys -> exec_cycle: {style.opacity: 0}
+routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
+```
+
+凡例は「凡例（本プロダクト共通）」を参照し、通常線は 6 区分への指示と運転対象の選択・委譲準備・起動・追跡に使う直接の読み書きを表し、他の 2 図と該当区分を共有し、各区分が CLI 経由で扱うデータと応答の線は省略する（物の流れは対象外）。
 
 ## 6. 詳細 CDFD 一覧
 
