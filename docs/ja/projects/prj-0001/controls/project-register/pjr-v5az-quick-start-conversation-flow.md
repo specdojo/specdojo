@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: in-progress
   priority: medium
   owner: BA
   registered_at: "2026-11-02T11:56:56Z"
