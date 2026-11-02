@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-10-03T21:41:55.691Z"
-graded_by: agy-expert-executor
-content_hash: 506adb0ec95a6b4646f60705a2f6d2a46da785336c1610c891ec71b5fa7eed40
+graded_at: "2026-11-02T20:16:05.857Z"
+graded_by: flash-high-executor
+content_hash: a74d6afd1362b6e32a8bf19ad82e027d1c9d904f7a7f5f0093d24c62ea54f0bc
 categories:
   purpose:
     score: 100
@@ -113,15 +113,18 @@ findings:
     line: 2
     anchor: ""
     message: Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。
+    message_ja: Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 2
     anchor: ""
     message: Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。
+    message_ja: Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。
   - id: F003
     severity: minor
     rule: vp-ux-readability
     line: 13
     anchor: ""
     message: 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。
+    message_ja: 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。
