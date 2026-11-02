@@ -87,3 +87,19 @@
       from: review
       to: in-progress
   previous_event_id: reg_afe173fd98bb4d56ad3e23f202131f11
+- v: 1
+  id: reg_a130e81e2e5b4c6aa2ef935c097afe45
+  ts: "2026-11-02T14:54:51Z"
+  action: wait
+  actor: luna-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: executor rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: executor rate limit reached
+  previous_event_id: reg_88ca7df189ed44adaec3932b20d593fa

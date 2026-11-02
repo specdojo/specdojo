@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-11-02T12:13:16Z"
   due_on: "2026-11-30"
+  block_reason: executor rate limit reached
   derived_from:
     - PJR-V5AZ
 ---
