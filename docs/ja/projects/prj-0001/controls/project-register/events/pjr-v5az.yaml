@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_8b19b11da43b46818e333a220f014a65
+  ts: "2026-11-02T14:02:46Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d96b869e532a4584a1cd89e246e532e4
