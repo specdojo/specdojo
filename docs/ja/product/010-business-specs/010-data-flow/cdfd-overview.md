@@ -115,7 +115,7 @@ SpecDojo を活用した仕様駆動開発について、PO がプロジェク�
 
 ## 5. 概念データフロー（概要）
 
-第 3 章の同じ 7 区分を代表ノードとし、系統間と共通領域の関係をトランザクションデータとマスタ・構成データの 2 図に分けて示す。
+「プロセス領域」のうち Orchestrator を除く 6 区分を代表ノードとし、系統間と共通領域の関係をトランザクションデータとマスタ・構成データの 2 図に分けて示す。Orchestrator の要求・応答とデータストアの読み書きは「Orchestrator の調整」の表にまとめる。
 
 ### 5.1. トランザクションデータの流れ
 
@@ -143,10 +143,6 @@ classes: {
 }
 
 project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
-  class: process
-}
-
-orchestrator: "🎛️ Orchestrator\nP-14" {
   class: process
 }
 
@@ -206,48 +202,39 @@ derived: "🗂️ 派生ビュー・索引" {
   class: store_transaction
 }
 
-orchestrator -> register_sys: "登録・計画要求"
-orchestrator <- register_sys: "登録結果・判断依頼"
-orchestrator -> schedule_sys: "計画・報告・生成要求"
-orchestrator <- schedule_sys: "計画・進捗・判断依頼"
-orchestrator -> routine_sys: "定義要求"
-orchestrator -> exec_cycle: "実行・評価・完了要求（Job を含む）"
-orchestrator <- exec_cycle: "実行状態・判断依頼・結果"
-orchestrator <- exec_plan: "対象・手順・完了条件"
-orchestrator <- exec_log: "記録済みの実行状態・Job 実行結果"
-orchestrator -> exec_log: "サイクルの実行記録"
-orchestrator <- grade: "最新の grade・finding"
-register_sys -> register: "登録項目・決定記録"
-register_sys <- schedule: "track 計画（epic 対応）"
-schedule_sys <- register: "epic と track の対応"
-schedule_sys -> schedule: "タスク・担当・依存"
+register_sys -> register: "登録項目・決定"
+register_sys <- schedule: "track 計画"
+schedule_sys <- register: "epic 対応"
+schedule_sys -> schedule: "タスク計画"
 schedule_sys -> exec_plan: "実行計画"
-register_sys -> exec_cycle: "登録項目の対応・評価・完了要求"
-schedule_sys -> exec_cycle: "タスク実行・成果物評価・完了要求"
-register_sys <- exec_cycle: "Job からの登録項目の実行要求"
-schedule_sys <- exec_cycle: "Job からのタスク実行・成果物評価要求"
-register <- exec_cycle: "対応内容・決定・完了記録"
-schedule -> exec_cycle: "対象タスク・担当・依存"
-exec_plan <- exec_cycle: "Job の実行計画"
-exec_plan -> exec_cycle: "対象・手順・完了条件"
-exec_cycle -> deliverables: "作成・更新した成果物"
-exec_cycle -> exec_log: "実行状態・実行結果・完了記録（Job を含む）"
+register_sys -> exec_cycle: "対応要求"
+schedule_sys -> exec_cycle: "実行要求"
+register_sys <- exec_cycle: "Job 実行要求"
+schedule_sys <- exec_cycle: "Job 実行・評価要求"
+register <- exec_cycle: "対応・完了記録"
+schedule -> exec_cycle: "タスク計画"
+exec_plan <- exec_cycle: "Job 計画"
+exec_plan -> exec_cycle: "実行計画"
+exec_cycle -> deliverables: "成果物"
+exec_cycle -> exec_log: "実行記録"
 exec_cycle -> grade: "grade・finding"
-schedule_sys <- exec_log: "実行状態・実行結果・完了記録"
+schedule_sys <- exec_log: "実行記録"
 schedule_sys <- grade: "grade・finding"
-schedule_sys <- deliverables: "派生生成の対象文書"
+schedule_sys <- deliverables: "対象文書"
 schedule_sys -> report: "進捗報告"
 schedule_sys -> derived: "派生ビュー・索引"
-exec_cycle <- report: "完了・再計画の判断事項"
-deliverables <- deprecation: "人間の判断に基づく非推奨化文書"
-deprecation -> trash: "保管した文書"
+exec_cycle <- report: "判断事項"
+deliverables <- deprecation: "非推奨化文書"
+deprecation -> trash: "保管文書"
 
 # 配置制御用（受け渡しではない）
-project_config -> orchestrator: {style.opacity: 0}
+project_config -> register_sys: {style.opacity: 0}
+project_config -> schedule_sys: {style.opacity: 0}
+project_config -> routine_sys: {style.opacity: 0}
 routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
 ```
 
-凡例は第 7 章を参照し、登録簿・計画と共用実行サイクルの受け渡し、実行・評価の記録、進捗・派生ビューと文書保管の流れを示す。
+凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表す（物の流れは対象外）。両図で同じ 6 区分を共有し、Orchestrator の受け渡しは図の線を減らすため「Orchestrator の調整」にまとめる。
 
 ### 5.2. マスタ・構成データの流れ
 
@@ -275,10 +262,6 @@ classes: {
 }
 
 project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
-  class: process
-}
-
-orchestrator: "🎛️ Orchestrator\nP-14" {
   class: process
 }
 
@@ -326,42 +309,55 @@ job: "🧰 ジョブ定義 / job" {
   class: store_master
 }
 
-project_config <- kata: "provider 別雛形"
-project_config -> kata: "配置・バージョン更新"
-project_config -> config: "初期状態・承認済み構成変更"
-orchestrator <- config: "agent 定義・実行既定値"
-orchestrator -> register_sys: "登録・計画要求"
-orchestrator -> schedule_sys: "計画要求"
-orchestrator -> routine_sys: "定義要求"
-orchestrator <- routine: "実行時期・条件・対象 Job"
-orchestrator <- job: "ジョブ手順・成功条件"
-orchestrator <- strategy: "phase の作業要件"
-orchestrator <- catalog: "done_criteria・evidence_refs"
-register_sys <- kata: "rulebook・recipe・template"
-schedule_sys <- kata: "Kata grade・作成要件・実践の型"
-routine_sys <- kata: "定義の rulebook・recipe・template"
-register_sys <- config: "メンバー・ロール・agent 定義・権限"
-schedule_sys <- config: "メンバー・ロール・agent 定義・権限"
-routine_sys <- config: "agent 定義・権限・実行既定値"
-schedule_sys -> catalog: "成果物定義・完了条件・根拠参照"
-schedule_sys -> strategy: "既定値・タスク生成戦略"
-routine_sys -> routine: "周期・条件・対象 Job"
-routine_sys -> job: "実行手順・委譲先・成功条件"
-orchestrator -> exec_cycle: "Job の実行・評価・完了要求"
-exec_cycle <- job: "実行手順・委譲先・成功条件"
-exec_cycle <- config: "メンバー・ロール・agent 定義・権限・実行既定値"
-exec_cycle <- kata: "実行・検証の型・rubric"
-exec_cycle <- catalog: "done_criteria・evidence_refs"
-exec_cycle <- strategy: "phase の作業要件・完了判断基準"
+# ELK で 3 系統の左右順をそろえるため、エッジの宣言順を維持する
+register_sys <- config: "稼働構成"
+register_sys <- kata: "実践の型"
+exec_cycle <- strategy: "作業要件・判断基準"
+routine_sys -> routine: "定期実行定義"
+project_config -> config: "稼働構成"
+exec_cycle <- config: "稼働構成"
+exec_cycle <- catalog: "完了条件・根拠参照"
+routine_sys <- config: "稼働構成"
+exec_cycle <- kata: "実践の型・rubric"
+routine_sys -> job: "手順・成功条件"
+schedule_sys <- config: "稼働構成"
+schedule_sys -> catalog: "成果物定義"
+schedule_sys -> strategy: "生成戦略"
+routine_sys <- kata: "定義の型"
+project_config -> kata: "配置・版"
+exec_cycle <- job: "手順・成功条件"
+project_config <- kata: "provider 雛形"
+schedule_sys <- kata: "Kata・作成要件"
 
 # 配置制御用（受け渡しではない）
-project_config -> orchestrator: {style.opacity: 0}
+project_config -> register_sys: {style.opacity: 0}
+project_config -> schedule_sys: {style.opacity: 0}
+project_config -> routine_sys: {style.opacity: 0}
 register_sys -> exec_cycle: {style.opacity: 0}
 schedule_sys -> exec_cycle: {style.opacity: 0}
 routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
 ```
 
-凡例は第 7 章を参照し、構成の構築・管理と各系統の定義から、Orchestrator による定期実行判定と Job を通じた共用実行サイクルへの引き渡しを示す。
+凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表す（物の流れは対象外）。「トランザクションデータの流れ」と同じ 6 区分を共有し、Orchestrator の定期実行判定などに用いる読み書きは「Orchestrator の調整」にまとめる。
+
+### 5.3. Orchestrator の調整
+
+Orchestrator（`P-14`）は利用者または自動実行の意図に基づいて各区分へ要求を渡し、次の情報を用いて PDCA を調整する。同じ相手との受け渡しを 1 行にまとめ、データストアへの書き込みは実行記録の行に示す。
+
+| 相手の区分・データストア                      | 渡すもの・書くもの                 | 受け取るもの・読むもの           |
+| --------------------------------------------- | ---------------------------------- | -------------------------------- |
+| register 系（`P-02`）                         | 登録・計画要求                     | 登録結果・判断依頼               |
+| schedule 系（`P-03`〜`P-04`・`P-09`〜`P-10`） | 計画・報告・生成要求               | 計画・進捗・判断依頼             |
+| routine 系（`P-05`〜`P-06`）                  | 定義要求                           | —                                |
+| 実行サイクル（`P-07`〜`P-08`・`P-11`）        | 実行・評価・完了要求（Job を含む） | 実行状態・判断依頼・結果         |
+| 実行計画 / plan                               | —                                  | 対象・手順・完了条件             |
+| 実行記録                                      | サイクルの実行記録                 | 記録済みの実行状態・Job 実行結果 |
+| 評価結果                                      | —                                  | 最新の grade・finding            |
+| 稼働構成                                      | —                                  | agent 定義・実行既定値           |
+| 定期実行定義 / routine                        | —                                  | 実行時期・条件・対象 Job         |
+| ジョブ定義 / job                              | —                                  | ジョブ手順・成功条件             |
+| 成果物カタログ / catalog                      | —                                  | `done_criteria`・`evidence_refs` |
+| スケジュール戦略                              | —                                  | phase の作業要件                 |
 
 ## 6. 詳細 CDFD 一覧
 
