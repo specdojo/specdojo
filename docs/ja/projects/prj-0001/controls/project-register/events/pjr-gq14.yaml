@@ -119,3 +119,16 @@
       from: executor rate limit reached
       to: "-"
   previous_event_id: reg_a130e81e2e5b4c6aa2ef935c097afe45
+- v: 1
+  id: reg_09cbf3add54e4253bb2d55c1d30611df
+  ts: "2026-11-02T21:57:25Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ad1ba03a12ee4566a4911252e3906051
