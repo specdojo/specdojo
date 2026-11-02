@@ -28,6 +28,8 @@ landing page から来た利用者が、管理対象リポジトリと Git flow 
 - 登録した作業の AI 実行と確認、成果物カタログなどの準備から schedule によるまとまった成果物の作成、routine の登録と定期起動の仕組みへ進む。
 - 各節は前提・具体的対話・得られる結果と確認先・折りたたんだコマンドと設定差分の順とし、不足事項の確認と提案・承認・実行を示す。
 - 完了時は現行 CLI・設定仕様との整合、既存リンクと見出しへの参照、Markdown lint と適用される親の文書検証を確認する。保護された設定や実際の landing-page リポジトリの変更は対象外。
+- 統合後の実物確認で現行仕様との不整合を確認したため、元の完了条件に沿って修正する（2026-11-02、specdojo-orchestrator）。init の人の名簿は `projects.<id>.members_path` が指す 030-project-management/pm-members.yaml であり .specdojo/pm-members.yaml ではない。`schedule_path` の既定は project base 配下の schedule であり execution/schedule ではない。project list は project ID と schedule/execution パスを表示し、repos 一覧は表示しない。issue/risk の正常終端は done、question は decided であり、resolved/answered/mitigated/closed は現行の登録簿状態ではない。setup.install は追跡済み package-lock.json ごとの npm ci であり npm install ではない。commit scope 未指定では {scope} は空であり、feat(add-faq-section) と出力を約束するなら --commit-scope 等を明示する。
+- 同じ修正で導入から実行までの例を CLI と設定リファレンスに照合する。初期 commit と SpecDojo 側 develop ブランチ、exec に必要な設定の commit、`catalog_path`・`roles_path`・schedule/execution・`routines_path`・`jobs_path` と Job 定義の準備を対話と設定差分で具体化し、未提供の Job や固定の task ID・成果物パスを利用可能と仮定しない。schedule の実際の生成 ID・配置と、BA ロールと owner の割当を確認する。register add 例は具体的な description と入力を残し、decision の close は --status decided と利用者 nickname の --by を明示する。FAQ の owner 質問の重複を除く。routine YAML 自体は現行 routine.schema.yaml と一致しているため、不正な形式と誤認して変えない。保護設定と実プロダクトは変更せず、対応結果に照合根拠と検証結果を記録する。
 
 ## 3. 完了条件
 
