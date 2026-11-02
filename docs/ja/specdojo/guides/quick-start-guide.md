@@ -305,6 +305,7 @@ npx specdojo register add \
   --type todo \
   --title "よくある質問（FAQ）セクションを追加する" \
   --topic add-faq-section \
+  --description "LP のページ下部に FAQ セクションを追加し、質問と回答、アコーディオン UI、モバイル表示を整える。" \
   --priority medium \
   --owner owner \
   --due 2026-11-30 \
@@ -312,6 +313,7 @@ npx specdojo register add \
   --input "FAQ の質問項目と掲載方針は実装前に利用者へ確認する" \
   --commit-type feat \
   --commit-scope add-faq-section \
+  --by specdojo-orchestrator \
   --commit
 ```
 
@@ -391,6 +393,7 @@ npx specdojo register add \
   --priority high \
   --owner owner \
   --difficulty medium \
+  --by specdojo-orchestrator \
   --commit
 ```
 
@@ -466,14 +469,13 @@ npx specdojo register add \
   --description "問い合わせフォームの方式を比較し、選択肢・トレードオフ・採択理由を記録する。" \
   --input "候補: 外部フォームサービス、自前サーバーレス関数、mailtoリンク" \
   --owner owner \
+  --by specdojo-orchestrator \
   --commit
 
 # 個票編集後のクローズ（decided への遷移）
 npx specdojo register close \
   --project prj-0001 \
   --id PJR-CF03 \
-  --status decided \
-  --by owner \
   --status decided \
   --by owner \
   --conclusion "案 A: 外部フォームサービスの埋め込み連携を採用（保守工数削減とスパム対策両立）" \
@@ -622,7 +624,7 @@ npx specdojo register close \
 }
 ```
 
-初期化後に `030-project-management/pm-members.yaml` と `pm-roles.yaml` を用意し、BA role code に対応する実在の人の nickname を確認します。実行設定を変更したらプロジェクトリポジトリへ commit してから exec を始めます。
+初期化後に `030-project-management/pm-members.yaml` と `pm-roles.yaml` を用意します。`pm-roles.yaml` に ROLE code `BA` があることを確認し、利用者の承認を得て `pm-members.yaml` の担当者（例: nickname が `owner` の人）の `roles` に `BA` を割り当てます。strategy の担当引数には ROLE code `BA`、実行時の `--by` には人の nickname（この例では `owner`）を指定します。実行設定を変更したらプロジェクトリポジトリへ commit してから exec を始めます。
 
 ```bash
 # 規模別テンプレートからカタログを生成
@@ -653,9 +655,10 @@ npx specdojo catalog build --project prj-0001
 あなた: カタログの成果物を作成するためのスケジュール戦略を作りたいです。
 オーケストレーター: トラック戦略（sch-strategy-launch.yaml）を生成します。確認事項です:
   ・トラック名: 立ち上げトラックの launch でよろしいですか？
-  ・作成担当（default-owner）: pm-roles.yaml で BA に対応づく人の nickname を確認し、pm-members.yaml に登録された owner 値を指定します。
-  ・ゲート・マイルストーン担当: 同じく BA に設定しますか？
-あなた: トラックは launch です。BA ロールに対応する nickname は <名簿で確認した nickname> なので、default-owner に指定してください。
+  ・作成担当（default-owner）: pm-roles.yaml の ROLE code BA を指定しますか？
+  ・ゲート・マイルストーン担当: 同じく ROLE code BA に設定しますか？
+  ・担当者: pm-members.yaml の nickname が owner の人の roles に BA が割り当てられていることを確認します。
+あなた: トラックは launch、作成・ゲート・マイルストーン担当のロールは BA でお願いします。担当者は owner で、roles に BA を割り当て済みです。
 オーケストレーター: sch-strategy-launch.yaml を生成しました。
   生成したファイルとタスク定義を確認し、task ID・成果物パス・依存関係・owner・execution mode を実際の出力から読み取ります。
 ```
@@ -673,9 +676,9 @@ npx specdojo catalog build --project prj-0001
 npx specdojo schedule strategy generate \
   --project prj-0001 \
   --track launch \
-  --default-owner <名簿で確認したnickname> \
-  --gate-owner <名簿で確認したnickname> \
-  --milestone-owner <名簿で確認したnickname>
+  --default-owner BA \
+  --gate-owner BA \
+  --milestone-owner BA
 ```
 
 </details>
@@ -726,8 +729,8 @@ npx specdojo exec refresh --project prj-0001
 
 ```text
 あなた: 最初の Ready タスクを進めたいです。
-オーケストレーター: Ready 一覧の task ID・成果物パス・owner・execution mode・入力要件を提示します。owner は名簿 nickname、担当ロールは役割設定から照合しました。内容を確認してください。
-  ・このタスクを提示された owner で claim しますか？
+オーケストレーター: Ready 一覧の task ID・成果物パス・owner・execution mode・入力要件を提示します。タスクの owner は ROLE code BA です。名簿で roles に BA を持つ人の nickname は owner と確認しました。内容を確認してください。
+  ・このタスクを --by owner で claim しますか？
 あなた: はい、提示された情報を確認したので claim してください。
 オーケストレーター: claim を完了しました。表示された成果物ファイルと生成された result の場所を確認してください。
   完了条件を満たしたら「完了にして」とお知らせください。
@@ -742,6 +745,8 @@ npx specdojo exec refresh --project prj-0001
 
 #### 折りたたんだコマンドと設定差分
 
+`<task-id>` は Ready 一覧に表示された実際の task ID、`<nickname>` は `pm-members.yaml` で担当ロール `BA` を持つ人の nickname（この例では `owner`）に、山括弧ごと置き換えて実行します。`BA` は strategy の担当引数に使う ROLE code であり、`--by owner` の `owner` は人の nickname です。
+
 <details>
 <summary>タスク実行の CLI コマンド（クリックで展開）</summary>
 
@@ -750,10 +755,10 @@ npx specdojo exec refresh --project prj-0001
 npx specdojo exec scheduler --project prj-0001 --by owner --dry-run
 
 # タスクを claim
-npx specdojo exec claim --project prj-0001 --task <Ready一覧のtask ID> --by <名簿nickname>
+npx specdojo exec claim --project prj-0001 --task <task-id> --by <nickname>
 
 # 成果物と result を編集後、完了を記録
-npx specdojo exec complete --project prj-0001 --task <Ready一覧のtask ID> --by <名簿nickname>
+npx specdojo exec complete --project prj-0001 --task <task-id> --by <nickname>
 
 # Ready タスクを更新
 npx specdojo exec refresh --project prj-0001

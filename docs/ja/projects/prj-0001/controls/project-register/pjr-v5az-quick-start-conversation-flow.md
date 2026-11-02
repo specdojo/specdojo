@@ -44,11 +44,11 @@ landing page から来た利用者が、管理対象リポジトリと Git flow 
 
 ## 4. 作業内容
 
-| No  | 作業                                                                 | 担当 | 状態 | メモ                                         |
-| --- | -------------------------------------------------------------------- | ---- | ---- | -------------------------------------------- |
-| 1   | 現行 CLI・設定仕様と関連ガイド、参照元の導線を確認する               | BA   | done | CLI 仕様・設定キー・参照元リンクを確認完了   |
-| 2   | 合意した利用順に構成し、対話例と折りたたんだコマンド・設定差分を書く | BA   | done | `../landing-page` を題材に対話主体で改訂完了 |
-| 3   | リンクと文書検証を確認し、対応結果へ記録する                         | BA   | done | 文書内リンク・親検証整合を確認完了           |
+| No  | 作業                                                                 | 担当 | 状態 | メモ                                                |
+| --- | -------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------- |
+| 1   | 現行 CLI・設定仕様と関連ガイド、参照元の導線を確認する               | BA   | done | ROLE code・nickname・register 引数を再照合済み      |
+| 2   | 合意した利用順に構成し、対話例と折りたたんだコマンド・設定差分を書く | BA   | done | 対話構成を維持し、2 回目の実物確認の指摘を最小修正  |
+| 3   | リンクと文書検証を確認し、対応結果へ記録する                         | BA   | done | README の旧見出し参照を修正し、検証分担と結果を記録 |
 
 ## 5. 対応結果
 
@@ -61,7 +61,23 @@ landing page から来た利用者が、管理対象リポジトリと Git flow 
 - routine は現存する Job と入力仕様を確認してから登録する流れに修正し、未提供 Job の存在を仮定しないようにした。routine YAML の形式は現行 `routine.schema.yaml` との照合で妥当なため変更していない。
 - Markdown 文書内の参照先と導線を維持した。保護設定および実際の `../landing-page` は変更していない。
 
-**検証**: `package.json`、`.specdojo/specdojo.config.json`、`lefthook.yml` を確認した。変更は Markdown のみ。Prettier と Markdown lint は依存導入済みで適用対象だが、親 runner の `lint-md` が実行するため executor では重複実行しない。親 runner の `lint-fm` を含む allowlisted 検証結果が後段で追記される。`specdojo catalog validate` は project に `catalog_path` が設定されており変更先も `docs/ja/projects/` のため親 hook では適用されるが、本 executor では親検証に委ねる。リンク導線は Quick Start の既存リンクと `use-case-guide.md` 等からの参照を保持した。
+### 2 回目の実物確認への対応
+
+- [[specdojo:command-reference|CLI コマンドリファレンス]] の schedule strategy の主担当・gate / milestone owner の説明と、`src/schedule/strategy-generate-scope.ts` の `resolveDeliverableOwners` / `loadKnownRoles`、`src/schedule/strategy-generate.ts` の gate / milestone owner 検証を照合した。strategy の担当引数は nickname ではなく `pm-roles.yaml` の ROLE code であるため、例を `--default-owner BA --gate-owner BA --milestone-owner BA` に修正した。
+- `pm-members-template.yaml` と `pm-members.schema.yaml` に照らし、人の `roles` に `BA` を割り当て、実行時は nickname を `--by owner` として使う説明を加えた。5.4 の対話も schedule の owner（ROLE code）と実行者の nickname を区別した。
+- `src/register/create-commands.ts` と `src/register/transition-commands.ts`、CLI リファレンスの actor 規則を照合した。FAQ todo に具体的な `--description` を加え、todo / issue / decision の起票例すべてに `--by specdojo-orchestrator` を明示した。decision close の `--status decided` と `--by owner` はそれぞれ 1 回にした。
+- claim / complete のシェル例を `<task-id>` / `<nickname>` に統一し、実際の Ready 一覧と人の名簿から値を読み、山括弧ごと置換する手順を記載した。
+- Quick Start の見出し、既存リンク、対話構成、設定準備、routine YAML は維持した。`README.md` 冒頭に残っていた改訂前の「10分で体験する — 仕様の判断台帳」への参照を、現在の Quick Start の内容に沿った案内へ修正した。`docs/ja/index.md`、`use-case-guide.md`、設定リファレンスからの導線も確認した。
+
+**検証分担と結果**: `package.json`、`.specdojo/specdojo.config.json`、`lefthook.yml` を確認した。変更は Markdown のみ。次の検証を executor で実施した。
+
+- `npx prettier --write README.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-v5az-quick-start-conversation-flow.md`: 成功。対象 3 ファイルを整形した。
+- `git diff --check`: 成功。指定された引数とプレースホルダーも実ファイルで再確認した。
+- `node --import tsx tools/catalog-validate-if-configured.mjs`: 成功（終了コード 0）。`catalog_path` のある project 配下の個票変更のため適用した。カタログが参照する未作成の product 文書について `based_on` を照合できない警告が出たが、今回変更した文書に関するエラーはない。
+- `node --import tsx src/specdojo.ts register build --project prj-0001`: 成功（終了コード 0）。hook に従い個票から一覧・派生ビューを再生成できることを確認した。
+- `npm run validate:schema:file`: 適用外。executor による YAML ファイルの変更はない。
+
+Markdown lint / frontmatter / Mermaid / D2 を含む指定の親検証は重複実行せず、親 runner が後段で結果を追記する。これらの成功は本段階では判定していない。保護設定、登録簿の状態、result、実際の `../landing-page` は変更していない。
 
 ## 6. 関連ドキュメント
 
