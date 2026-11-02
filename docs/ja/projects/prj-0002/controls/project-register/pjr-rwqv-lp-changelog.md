@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-rwqv-lp-changelog
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-11-02T06:36:50Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-02T07:01:16Z"
+  conclusion: specdojo-lp に CHANGELOG.md を作成し、main..develop の実差分に基づく未公開変更を Unreleased に記載した。README に更新・本番公開時のルールを追加し、LP の Markdown lint・整形確認と親検証8種の成功を確かめた。
 ---
 
 # PJR-RWQV specdojo-lp に CHANGELOG.md と更新ルールを整える

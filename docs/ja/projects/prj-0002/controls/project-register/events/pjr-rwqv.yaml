@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_19d5fd0be6f64a4684d141d7d8c8a7f9
+- v: 1
+  id: reg_9f9933d784c34c9dbd8884c9b15cc539
+  ts: "2026-11-02T07:01:16Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後の CHANGELOG.md・README.md、個票、result、検証記録を完了条件ごとに照合し、未達がなかったため。対応経路は exec run --register の sol-executor・gemma-reporter による実行と、specdojo-orchestrator による確認。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-02"
+    - field: conclusion
+      from: "-"
+      to: specdojo-lp に CHANGELOG.md を作成し、main..develop の実差分に基づく未公開変更を Unreleased に記載した。README に更新・本番公開時のルールを追加し、LP の Markdown lint・整形確認と親検証8種の成功を確かめた。
+  previous_event_id: reg_a7d34070e1cf4b6392fa7ae47e9cf7ff
