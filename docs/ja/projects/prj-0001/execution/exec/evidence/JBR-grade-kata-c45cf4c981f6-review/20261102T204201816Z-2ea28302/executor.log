@@ -1,0 +1,34 @@
+レビューは終わりました。推奨 verdict は `complete-with-findings` です。Run は統合して問題ありません。11件の文書に `needs-work` の評価が残っていますが、ジョブの完了を妨げるものではありません。私は成果物も result も変更していません。verdict の記録は reporter に任せます。
+
+**評価結果の鮮度**
+- `grade list --target kata --project prj-0001 --changed-only` は114件を出力しました。今回評価した15件はそこに1件も含まれていないので、15件とも評価結果は最新です。
+- 同じ条件の `--dependency-changed`、`--incomplete`、`--rubric-outdated`、`grade state --exhausted` はどれも0件でした。
+- 出力された114件は今回の対象外の文書で、`limit: 15` を超えた分として後続の Run に回ります。
+
+**判断根拠**
+- **差分の範囲**: `7a7c065e1..a68c725c2` の差分は22ファイルで、すべてこの Run の出力です。内訳はサイドカー15件、evidence 4件、plan、result、Run JSON です。対象外の変更はありません。
+- **相互の整合**: Run JSON は `state: succeeded`、`exit_code: 0` です。evidence も `exit_code: 0` で、stderr は空です。pipeline-state では executor と reporter がともに `succeeded` です。
+- **`results.tsv`**: 15件すべてが stage 1 で `passed` です。`completed_now=15`、`incomplete=0`、`exhausted=0` でした。
+  - 終了コード75（rate limit）や中断で残った段はなく、`failed` の段も `retry_exhausted` の文書もありません。`partial` の判定は不要です。
+- **サイドカー**: 15件の verdict と score は `results.tsv` と一致します。`graded_by: flash-high-executor` は、`.specdojo/agent-members.yaml` で `agy-expert-executor` の別名として定義されている名前なので矛盾しません。
+- **score の変化**:
+  - `mip-index-rulebook` は 96 → 86、`mtp-rulebook` は 94 → 88 です。どちらも `content_hash` が変わっており、文書の改訂を受けた再評価です。
+  - その他の13件は score に変化がありません。
+  - verdict が変わった文書はありません。
+- **verdict の分布**: `pass` 4件、`needs-work` 11件で、score は 77〜97 です。
+
+**finding と改善指示**
+1. `mm-rulebook` は score 77、finding 22件で最低点なのに verdict は `pass` です。一方、86〜96点の11件は `needs-work` で、score と verdict の関係が逆転しています。
+   - finding はすべて `minor` なので、深刻度で判定する仕様どおりの結果である可能性があります。ただしサイドカーに見えている範囲だけでは判断できません。
+   - 評価設定（rubric の pass 判定基準）が意図どおりかを人が確認することを勧めます。私はこの文書を再評価していません。
+2. `mm-rulebook` の finding では、`message_ja` が `message` と全く同じ文になっています。元の文が日本語なので害はありませんが、冗長です。
+3. Job Run result の記述に小さな誤りがあります。Run JSON を「+61 / -0 行」としていますが、実際の差分は64行です。統合には影響しません。
+
+**確認できなかった範囲**
+- `logs/grade/runs/...` 配下にある `results.tsv` の実ファイルと作業ディレクトリは直接読んでいません。evidence の stdout だけで照合しています。
+- 15件の finding の妥当性は再評価していません（review の範囲外です）。
+- `--ungraded` は3件、`--rulebook-changed` は40件を出力しました。中身は詳しく見ていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"推奨 verdict は `complete-with-findings`。範囲 7a7c065e1..a68c725c2 の差分22ファイルはすべて当該 Job Run の出力（サイドカー15件、evidence 4件、plan、result、Run JSON）で、対象外の変更はない。Run JSON は `state: succeeded`、evidence は `exit_code: 0` で stderr は空、pipeline-state の executor と reporter はともに `succeeded`。`results.tsv` では15件すべてが stage 1 で `passed`（`completed_now=15`、`incomplete=0`、`exhausted=0`）で、終了コード75や中断による未完了段、`failed` の段、`retry_exhausted` の文書はない。サイドカーの verdict と score は `results.tsv` と一致し、`graded_by: flash-high-executor` は `agy-expert-executor` の別名（agent-members.yaml の `alias_of`）なので整合する。鮮度確認では `grade list --target kata --changed-only` の出力114件に評価済みの15件は含まれず（grep 一致0件）、`--dependency-changed`、`--incomplete`、`--rubric-outdated`、`grade state --exhausted` はすべて0件だった。score の変化は `mip-index-rulebook` 96→86 と `mtp-rulebook` 94→88 で、どちらも `content_hash` が変わった再評価。verdict が変わった文書はない。分布は `pass` 4件、`needs-work` 11件、score 77〜97。finding: (1) `mm-rulebook` は score 77、finding 22件（すべて minor）で最低点なのに `pass` で、86〜96点の `needs-work` 11件と逆転しているため、評価設定の確認を推奨する。(2) `mm-rulebook` の `message_ja` が `message` と全く同じ文で冗長。(3) Job Run result が Run JSON を「+61 / -0 行」としているが実際は64行。いずれも統合を妨げない。確認できなかった範囲: `logs/grade/runs` 配下の `results.tsv` 実ファイルは直接読まず evidence の stdout で照合した。finding の妥当性は再評価していない（review の範囲外）。`--ungraded` 3件と `--rulebook-changed` 40件は件数のみ確認し、中身は詳しく見ていない。","handoff":["`mm-rulebook` が score 77、finding 22件で `pass`、86〜96点の11件が `needs-work` と score と verdict が逆転している。rubric の pass 判定基準（深刻度で判定する仕様か）が意図どおりかを人が確認する。","Job Run result の変更ファイル欄で Run JSON の行数が実際（+64）と違う（+61と記載）。reporter の要約精度は軽微な改善点。","`grade list --target kata --changed-only` の出力は今回対象外の114件で、後続の Run で処理する残件にあたる。"],"validations":[{"command":"git diff --stat 7a7c065e1e107813582481bf57e9a8e9d45c982a..a68c725c2a93395465c6bc4eaa7472bc73d8e090 && git diff --name-status 7a7c065e1e107813582481bf57e9a8e9d45c982a..a68c725c2a93395465c6bc4eaa7472bc73d8e090","status":"passed","summary":"22ファイルで、すべて当該 Job Run の出力。対象外の変更なし"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"114件を出力。今回評価した15件は含まれず（grep 一致0件）、評価結果は最新"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"出力0件"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力0件で、未完了の評価パイプラインなし"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --rubric-outdated","status":"passed","summary":"出力0件"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力0件で、retry_exhausted の文書なし"}]}
+</specdojo_executor_evidence>
