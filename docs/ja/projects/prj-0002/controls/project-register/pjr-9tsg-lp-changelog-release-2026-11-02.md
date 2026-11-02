@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-02T11:05:22Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-02T11:21:25Z"
+  conclusion: "specdojo-lp の CHANGELOG に 2026-11-02 の公開済み8項目を記録し、次の Unreleased を残した。PR #1 のマージ・本番表示、LP の文書検査と親検証8種を確認した。"
   derived_from:
     - PJR-RWQV
 ---

@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_75f1122ef15841f3ad7acea303bff2eb
+- v: 1
+  id: reg_9ded1b5979ed476e9fbeb315fd34e82f
+  ts: "2026-11-02T11:21:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "runner の統合差分と個票・result を照合し、PR #1 のマージ tree と本番表示を再確認して完了条件を満たしたため。"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-02"
+    - field: conclusion
+      from: "-"
+      to: "specdojo-lp の CHANGELOG に 2026-11-02 の公開済み8項目を記録し、次の Unreleased を残した。PR #1 のマージ・本番表示、LP の文書検査と親検証8種を確認した。"
+  previous_event_id: reg_17d59fe205e2496a958a301852afca4f
