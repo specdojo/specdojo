@@ -77,6 +77,13 @@ LP 独自の CHANGELOG.md を作成し、確認できる直近の変更を Unrel
 - executor の編集と LP の検査は完了した。後続 runner は設定済みの親検証8種を実行し、reporter は実施内容・変更ファイル・検証結果と本節の申し送りを result に反映する。親検証は executor 終了後に実行されるため、この記録時点では成功を主張しない。
 - 今回の変更で `main` への取り込みや本番公開は行っていない。次回の本番公開時に、人が公開完了と実際の公開日を確認し、公開した項目だけを日付付きの節へ移す。
 
+### 5.5. 統合後の確認（specdojo-orchestrator、2026-11-02）
+
+- LP の `develop` の `73455100bf0e` で `CHANGELOG.md` の新規作成と `README.md` の追記を確認した。未公開の変更は `Unreleased` に分類して記載され、公開日付きの節は作られていない。
+- README には変更履歴への相対リンクと、統合時・本番公開時の更新手順がある。変更された LP のファイルはこの2件のみだった。
+- LP の Markdown lint と変更した2ファイルの Prettier 確認は成功した。runner の親検証 8 種（lint-ts・lint-fm・lint-md・lint-mermaid・test-integration・validate-schema・typecheck・test-unit）もすべて成功した。
+- プロジェクトの実行記録は `project/prj-0002/develop` の `96a2cc0f8` に統合された。完了条件を個票・result・実際の差分に照らして確認し、状態は close 判断まで `review` とする。
+
 ## 6. 関連ドキュメント
 
 - `specdojo-lp:README.md`: develop と main、および本番公開の運用。
