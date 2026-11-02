@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 67
-graded_at: "2026-10-28T16:06:00.451Z"
+graded_at: "2026-11-02T16:28:14.336Z"
 graded_by: flash-high-executor
 content_hash: 5f2f86eb0b753c314030e556af09fa243289336abcb1b4654d35f5125469cd33
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
     score: 75
@@ -133,7 +133,7 @@ findings:
     message: >-
       The document states an AS-IS operational scope but omits direct termination and multi-status reopen paths
       practiced in current operations, creating an operational governance gap.
-    message_ja: ドキュメントには、現状の運用範囲が記載されているが、現在の運用で行われている直接的な終了およびマルチステータスの再オープン経路が省略されており、運用のガバナンス上のギャップが生じている。
+    message_ja: 文書にはAS-ISの運用範囲が記載されているが、現在の運用で行われている直接的な終了およびマルチステータスの再オープン経路が省略されており、運用ガバナンスのギャップが生じている。
   - id: F002
     severity: minor
     rule: vp-po-decision-readiness

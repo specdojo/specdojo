@@ -6,16 +6,16 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 96
-graded_at: "2026-10-29T16:38:09.068Z"
+graded_at: "2026-11-02T16:36:57.303Z"
 graded_by: flash-high-executor
-content_hash: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
+content_hash: 4e896f90131ef061ae0441a1d1d4ecf8ca0aac3020907a6b51d0c7751f2a8848
 source_hashes:
   catalog-entry: 3247f5eb39765fd5f1c1d12c83847bb47a3c4ed94beeef8fade45a514a9e2e8e
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
     score: 100
