@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f1e23aa3994b415c8aa571391d08ebb6
+  ts: "2026-11-02T23:07:24Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Antigravity の orchestrator に Gemini 4 Argon の起動スクリプトを足す
+    - field: description
+      from: ""
+      to: specdojo init と config scaffold が Antigravity 用に配る起動スクリプトに orch:argon と orch:argon:work（gemini-4-argon-medium、worktree argon-work）を足し、このリポジトリの package.json にも同じスクリプトを足す。orch:flash は残す
+    - field: input
+      from: ""
+      to: '["agy に Gemini 4 Argon が追加され、agy models で gemini-4-argon-high・gemini-4-argon-medium・gemini-4-argon-low を確かめた（agy 1.4.12、2026-11-03）","利用者は、orchestrator を性能の良い argon で npm run orch:argon と npm run orch:argon:work から立ち上げたい。配る雛形にも反映する案 B を選んだ（2026-11-03）","強さは medium とする。orch:sol は -m gpt-6.1-sol で、.codex/config.toml の `model_reasoning_effort` = medium が効いており、argon も medium にそろえる。性能が足りなければ high に変える（2026-11-03 の対話で合意）","worktree は argon-work とする。orch:flash:work は agy-work を使っており、同じ名前だと同時に立ち上げたときに worktree を取り合う","雛形では orch:argon を足し、orch:flash は残す（既存の利用者の手順を壊さないため。orchestrator の推奨）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
