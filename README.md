@@ -105,7 +105,7 @@ npm run orch:opus
 | `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `npm run orch:opus` ほか          |
 | `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `npm run orch:opencode`           |
 | `codex`       | `.specdojo/codex/orchestrator.md`           | `npm run orch:sol` ほか           |
-| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:flash`              |
+| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:argon` ほか         |
 
 各設定を個別に管理したい場合は、後述の「設定を個別に行う場合」にある `config init` と `config scaffold` を使います。
 

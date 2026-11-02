@@ -665,6 +665,18 @@ describe("specdojo init", () => {
       expect(roster?.members.map((member) => member.model).join(" ")).not.toMatch(
         /gemini-3\.1-pro/,
       );
+
+      const initializedPackage = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
+        scripts: Record<string, string>;
+      };
+      expect(initializedPackage.scripts["orch:argon"]).toContain("--model gemini-4-argon-medium");
+      expect(initializedPackage.scripts["orch:argon:work"]).toContain(
+        "open-agent-worktree.sh argon-work",
+      );
+      expect(initializedPackage.scripts["orch:argon:work"]).toContain(
+        "--model gemini-4-argon-medium",
+      );
+      expect(initializedPackage.scripts["orch:flash"]).toContain("--model gemini-3.8-flash-high");
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

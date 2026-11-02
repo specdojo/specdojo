@@ -22,10 +22,10 @@ command_template: 'specdojo agent launch --provider antigravity --role {mode} --
 
 `mode` は edit / review / report です。起動処理が役割プロファイルと runner の宣言済み task worktree の絶対パスを単一の `--settings` JSON にまとめて渡し、保存しません。edit は通常成果物を編集し、秘密情報・保護設定を拒否します。review / report は全ファイルの書き込みと command / MCP を拒否します。検証は親 runner に委ねます。
 
-対話型は生成された `npm run orch:flash` または次の入口を使います。
+対話型は生成された `npm run orch:argon`（または `npm run orch:flash`）あるいは次の入口を使います。
 
 ```sh
-specdojo orchestrator launch --provider antigravity -- --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"
+specdojo orchestrator launch --provider antigravity -- --model gemini-4-argon-medium -i "$(cat .specdojo/antigravity/orchestrator.md)"
 ```
 
 この入口は orchestrator プロファイルと選択 project の宣言済み repository を使い、cwd も `--add-dir` に加えます。保護設定の編集は利用者の承認に従い、秘密情報・Git metadata・push の制限は維持します。直接 `agy` を起動すると、この権限生成処理は適用されません。

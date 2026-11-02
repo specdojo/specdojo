@@ -41,15 +41,47 @@ specdojo init と config scaffold が Antigravity 用に配る起動スクリプ
 
 ## 4. 作業内容
 
-| No  | 作業                                                  | 担当 | 状態 | メモ |
-| --- | ----------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 配る雛形に orch:argon と orch:argon:work を足す       | ARC  | open | -    |
-| 2   | テスト・README・CHANGELOG を合わせる                  | ARC  | open | -    |
-| 3   | ルートの package.json の案を対応結果と handoff に書く | ARC  | open | -    |
+| No  | 作業                                                  | 担当 | 状態 | メモ                                        |
+| --- | ----------------------------------------------------- | ---- | ---- | ------------------------------------------- |
+| 1   | 配る雛形に orch:argon と orch:argon:work を足す       | ARC  | done | `src/shared/provider-scaffold.ts` に追加    |
+| 2   | テスト・README・CHANGELOG を合わせる                  | ARC  | done | 単体テスト・案内文書・CHANGELOG を更新      |
+| 3   | ルートの package.json の案を対応結果と handoff に書く | ARC  | done | 保護設定のため本対応結果と `handoff` に記載 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容
+
+- `src/shared/provider-scaffold.ts` の `ORCHESTRATOR_NPM_SCRIPTS.antigravity` に `orch:argon`（`gemini-4-argon-medium`）と `orch:argon:work`（`argon-work`）を追加した。既存の `orch:flash` は維持した。
+- 単体テスト `tests/src/shared/provider-scaffold.test.ts` と `tests/src/commands/init.test.ts` に、Antigravity 選択時に `orch:argon` と `orch:argon:work` が `package.json` へ配られることの検証を追加・更新した。
+- `README.md`、`templates/antigravity/README.md`、[[specdojo:orchestrator-operation-guide|オーケストレーター運用ガイド]]、[[specdojo:command-reference|コマンドリファレンス]]、[[sysd-antigravity-agent-settings|Antigravity CLI エージェント設定]] に `orch:argon`・`orch:argon:work` の記述を反映した。
+- `CHANGELOG.md` の `[Unreleased]` 節に起動スクリプトの追加内容を記録した。
+
+### 成果物・変更ファイル
+
+- `src/shared/provider-scaffold.ts`
+- `tests/src/shared/provider-scaffold.test.ts`
+- `tests/src/commands/init.test.ts`
+- `README.md`
+- `templates/antigravity/README.md`
+- `docs/ja/specdojo/guides/orchestrator-operation-guide.md`
+- `docs/ja/specdojo/references/command-reference.md`
+- `docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md`
+- `CHANGELOG.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-ewhq-orch-argon.md`
+
+### 本リポジトリのルート package.json に足すべき 2 行の案
+
+本リポジトリのルート `package.json` は保護された設定のため executor stage では変更しない。統合後に利用者の承認のもとで orchestrator が以下の 2 行を `package.json` の `scripts`（`orch:flash` の前）へ追加する。
+
+```json
+    "orch:argon": "tsx src/specdojo.ts orchestrator launch --provider antigravity -- --add-dir \"$(pwd)\" --model gemini-4-argon-medium -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:argon:work": "tools/worktree/open-agent-worktree.sh argon-work tsx \"$(pwd)/src/specdojo.ts\" orchestrator launch --provider antigravity -- --add-dir . --model gemini-4-argon-medium -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+```
+
+### 残課題・申し送り
+
+- 統合後に、本リポジトリの `package.json` に上記 2 行を足し、`npm run orch:argon` と `npm run orch:argon:work` で起動できることを確認する（人の確認・利用枠が必要）。
+- 個票のステータス項目（`item_status`）および登録簿（`pjr-index.md`）の行は本タスクでは変更せず、runner および人による確認後に遷移する。
 
 ## 6. 関連ドキュメント
 

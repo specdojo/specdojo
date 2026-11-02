@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- Antigravity 向けの対話型オーケストレーター起動スクリプトとして `orch:argon`（`gemini-4-argon-medium`）と `orch:argon:work`（worktree `argon-work`）を追加しました。`specdojo init` と `config scaffold` が Antigravity 選択時に配布します。既存の `orch:flash`・`orch:flash:work`（`gemini-3.8-flash-high`）も維持されます（PJR-EWHQ）。
+
 - schedule の `exec resume --task <task-id> --resume-from executor` を追加しました。executor が成功し reporter で止まった `blocked`／中断した `doing` の pipeline を、既存 worktree と変更、worktree で編集した plan を引き継いで executor から再実行できます（PJR-RKHR）。
 
 - docs-site に D2 コードブロックの SVG 生成と配信、`specdojo-docs-site d2` を追加しました。D2 CLI v0.9.0 と既定 ELK を使い、構文検査 `node tools/lint-d2.mjs` と親検証 ID `lint-d2` を用意しました。Dev Container の CLI 導入は版と SHA-256 を固定します。`lint:d2`・`check`・commit hook・親検証設定および CI への組み込みは、保護された設定の承認後に反映します（PJR-6NEM）。
