@@ -115,11 +115,9 @@ SpecDojo を活用した仕様駆動開発について、PO がプロジェク�
 
 ## 5. 概念データフロー（概要）
 
-「系統の関係を描く」方式で、プロジェクト構成の構築・管理、文書の廃棄と 3 系統の関係を 3 つの図に分けて示し、図をまたぐ同名ノードは同じ責務・正本を表す。
+第 3 章の同じ 7 区分を代表ノードとし、系統間と共通領域の関係をトランザクションデータとマスタ・構成データの 2 図に分けて示す。
 
-### 5.1. 構成の構築・管理、文書の廃棄と 3 系統
-
-構成の構築・管理と文書の廃棄が 3 系統を支える関係と、Kata・稼働構成・保管庫の正本を示す。
+### 5.1. トランザクションデータの流れ
 
 ```d2
 direction: down
@@ -134,14 +132,6 @@ classes: {
       font-color: "#000000"
     }
   }
-  store_master: {
-    shape: cylinder
-    style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
-      font-color: "#000000"
-    }
-  }
   store_transaction: {
     shape: cylinder
     style: {
@@ -152,15 +142,7 @@ classes: {
   }
 }
 
-onboarding: "🚀 Onboarding\nP-01" {
-  class: process
-}
-
-config_mgmt: "🔧 稼働構成管理\nP-12" {
-  class: process
-}
-
-deprecation: "📦 非推奨化保管\nP-13" {
+project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
   class: process
 }
 
@@ -168,100 +150,23 @@ orchestrator: "🎛️ Orchestrator\nP-14" {
   class: process
 }
 
-register_sys: "📒 register 系\nP-02・実行サイクル" {
+register_sys: "📒 register 系\nP-02" {
   class: process
 }
 
-schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10\n実行サイクル" {
+schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10" {
   class: process
 }
 
-routine_sys: "⏰ routine 系\nP-05〜P-06・実行サイクル" {
+routine_sys: "⏰ routine 系\nP-05〜P-06" {
   class: process
 }
 
-kata: "📐 Kata / kata" {
-  class: store_master
-}
-
-config: "🧩 稼働構成" {
-  class: store_master
-}
-
-deliverables: "📄 成果物 / deliverable" {
-  class: store_transaction
-}
-
-trash: "🗃️ 保管庫（trash） / trash" {
-  class: store_transaction
-}
-
-kata -> onboarding: "provider 別雛形"
-onboarding -> kata: "配置"
-config_mgmt -> kata: "バージョン更新"
-onboarding -> config: "初期状態"
-config_mgmt -> config: "承認済み構成変更"
-config -> orchestrator: "agent 定義・実行既定値"
-kata -> register_sys: "rulebook・recipe・template・rubric"
-kata -> schedule_sys: "Kata grade・作成要件・実践の型"
-kata -> routine_sys: "rulebook・recipe・template・rubric"
-config -> register_sys: "メンバー・ロール・agent 定義・権限"
-config -> schedule_sys: "メンバー・ロール・agent 定義・権限"
-config -> routine_sys: "agent 定義・権限・実行既定値"
-deprecation -> deliverables: "人間の判断に基づく非推奨化文書"
-deprecation -> trash: "保管した文書"
-```
-
-起点イベントは「プロセス領域」の表に置き、系統内の流れは「詳細 CDFD 一覧」の詳細化先へ委ねる。
-
-### 5.2. epic・track・Job による系統間の接続
-
-系統間をつなぐ epic・track・Job と Orchestrator の関係を示す。
-
-```d2
-direction: down
-
-classes: {
-  process: {
-    shape: rectangle
-    style: {
-      border-radius: 8
-      fill: "#e3f2fd"
-      stroke: "#1e88e5"
-      font-color: "#000000"
-    }
-  }
-  store_master: {
-    shape: cylinder
-    style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
-      font-color: "#000000"
-    }
-  }
-  store_transaction: {
-    shape: cylinder
-    style: {
-      fill: "#c8e6c9"
-      stroke: "#2e7d32"
-      font-color: "#000000"
-    }
-  }
-}
-
-orchestrator: "🎛️ Orchestrator\nP-14" {
+exec_cycle: "⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-08・P-11" {
   class: process
 }
 
-register_sys: "📒 register 系\nP-02・実行サイクル" {
-  class: process
-}
-
-schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10\n実行サイクル" {
-  class: process
-}
-
-routine_sys: "⏰ routine 系\nP-05〜P-06・実行サイクル" {
+deprecation: "📦 文書の廃棄（非推奨化・保管）\nP-13" {
   class: process
 }
 
@@ -269,102 +174,15 @@ register: "📒 登録簿 / register" {
   class: store_transaction
 }
 
-catalog: "📚 成果物カタログ / catalog" {
-  class: store_master
-}
-
-strategy: "🧭 スケジュール戦略" {
-  class: store_master
-}
-
 schedule: "📅 Schedule（track）" {
   class: store_transaction
 }
 
-routine: "⏰ 定期実行定義 / routine" {
-  class: store_master
-}
-
-job: "🧰 ジョブ定義 / job" {
-  class: store_master
-}
-
-orchestrator -> register_sys: "計画・実行・評価・完了要求"
-orchestrator <- register_sys: "実行状態・判断依頼・結果"
-orchestrator -> schedule_sys: "計画・実行・評価・完了要求"
-orchestrator <- schedule_sys: "実行状態・判断依頼・結果"
-orchestrator -> routine_sys: "定義・Job 実行要求"
-orchestrator <- routine_sys: "Job 実行状態・判断依頼"
-orchestrator <- routine: "実行時期・条件・対象 Job"
-orchestrator <- job: "ジョブ手順・成功条件"
-orchestrator <- strategy: "phase の作業要件"
-orchestrator <- catalog: "done_criteria・evidence_refs"
-register_sys -> register: "登録項目・決定・完了記録"
-register -> schedule_sys: "epic と track の対応"
-schedule -> register_sys: "track 計画（epic 対応）"
-schedule_sys -> catalog: "成果物定義・完了条件・根拠参照"
-schedule_sys -> strategy: "既定値・タスク生成戦略"
-schedule_sys -> schedule: "タスク・担当・依存"
-routine_sys -> routine: "周期・条件・対象 Job"
-routine_sys -> job: "実行手順・委譲先・成功条件"
-register_sys <- job: "登録項目の実行要求"
-schedule_sys <- job: "タスク実行・成果物評価要求"
-```
-
-系統内の処理順と epic・track の対応フィールドは省略し、実行成果の受け渡しは「共用する実行計画・成果物・実行記録」に示す。
-
-### 5.3. 共用する実行計画・成果物・実行記録
-
-3 系統が共用する実行成果と、進捗・派生ビューの正本を示す。
-
-```d2
-direction: down
-
-classes: {
-  process: {
-    shape: rectangle
-    style: {
-      border-radius: 8
-      fill: "#e3f2fd"
-      stroke: "#1e88e5"
-      font-color: "#000000"
-    }
-  }
-  store_master: {
-    shape: cylinder
-    style: {
-      fill: "#e8f5e9"
-      stroke: "#43a047"
-      font-color: "#000000"
-    }
-  }
-  store_transaction: {
-    shape: cylinder
-    style: {
-      fill: "#c8e6c9"
-      stroke: "#2e7d32"
-      font-color: "#000000"
-    }
-  }
-}
-
-orchestrator: "🎛️ Orchestrator\nP-14" {
-  class: process
-}
-
-register_sys: "📒 register 系\nP-02・実行サイクル" {
-  class: process
-}
-
-schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10\n実行サイクル" {
-  class: process
-}
-
-routine_sys: "⏰ routine 系\nP-05〜P-06・実行サイクル" {
-  class: process
-}
-
 exec_plan: "📋 実行計画 / plan" {
+  class: store_transaction
+}
+
+exec_log: "🧾 実行記録" {
   class: store_transaction
 }
 
@@ -372,7 +190,7 @@ deliverables: "📄 成果物 / deliverable" {
   class: store_transaction
 }
 
-exec_log: "🧾 実行記録" {
+trash: "🗃️ 保管庫（trash） / trash" {
   class: store_transaction
 }
 
@@ -388,24 +206,162 @@ derived: "🗂️ 派生ビュー・索引" {
   class: store_transaction
 }
 
+orchestrator -> register_sys: "登録・計画要求"
+orchestrator <- register_sys: "登録結果・判断依頼"
+orchestrator -> schedule_sys: "計画・報告・生成要求"
+orchestrator <- schedule_sys: "計画・進捗・判断依頼"
+orchestrator -> routine_sys: "定義要求"
+orchestrator -> exec_cycle: "実行・評価・完了要求（Job を含む）"
+orchestrator <- exec_cycle: "実行状態・判断依頼・結果"
 orchestrator <- exec_plan: "対象・手順・完了条件"
-orchestrator <- exec_log: "記録済みの実行状態"
+orchestrator <- exec_log: "記録済みの実行状態・Job 実行結果"
 orchestrator -> exec_log: "サイクルの実行記録"
-register_sys -> exec_plan: "実行計画"
+orchestrator <- grade: "最新の grade・finding"
+register_sys -> register: "登録項目・決定記録"
+register_sys <- schedule: "track 計画（epic 対応）"
+schedule_sys <- register: "epic と track の対応"
+schedule_sys -> schedule: "タスク・担当・依存"
 schedule_sys -> exec_plan: "実行計画"
-register_sys -> deliverables: "作成・更新した成果物"
-schedule_sys -> deliverables: "作成・更新した成果物"
-register_sys -> exec_log: "実行状態・実行結果・完了記録"
-schedule_sys -> exec_log: "実行状態・実行結果・完了記録"
-routine_sys -> exec_log: "ジョブ実行状態・実行結果・完了記録"
-register_sys -> grade: "grade・finding"
-schedule_sys -> grade: "grade・finding"
-routine_sys -> grade: "grade・finding"
+register_sys -> exec_cycle: "登録項目の対応・評価・完了要求"
+schedule_sys -> exec_cycle: "タスク実行・成果物評価・完了要求"
+register_sys <- exec_cycle: "Job からの登録項目の実行要求"
+schedule_sys <- exec_cycle: "Job からのタスク実行・成果物評価要求"
+register <- exec_cycle: "対応内容・決定・完了記録"
+schedule -> exec_cycle: "対象タスク・担当・依存"
+exec_plan <- exec_cycle: "Job の実行計画"
+exec_plan -> exec_cycle: "対象・手順・完了条件"
+exec_cycle -> deliverables: "作成・更新した成果物"
+exec_cycle -> exec_log: "実行状態・実行結果・完了記録（Job を含む）"
+exec_cycle -> grade: "grade・finding"
+schedule_sys <- exec_log: "実行状態・実行結果・完了記録"
+schedule_sys <- grade: "grade・finding"
+schedule_sys <- deliverables: "派生生成の対象文書"
 schedule_sys -> report: "進捗報告"
 schedule_sys -> derived: "派生ビュー・索引"
+exec_cycle <- report: "完了・再計画の判断事項"
+deliverables <- deprecation: "人間の判断に基づく非推奨化文書"
+deprecation -> trash: "保管した文書"
+
+# 配置制御用（受け渡しではない）
+project_config -> orchestrator: {style.opacity: 0}
+routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
 ```
 
-更新前の参照を更新エッジに含めるため、対象成果物・実行記録・最新の評価結果への参照エッジは省略する。
+凡例は第 7 章を参照し、登録簿・計画と共用実行サイクルの受け渡し、実行・評価の記録、進捗・派生ビューと文書保管の流れを示す。
+
+### 5.2. マスタ・構成データの流れ
+
+```d2
+direction: down
+
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+}
+
+project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
+  class: process
+}
+
+orchestrator: "🎛️ Orchestrator\nP-14" {
+  class: process
+}
+
+register_sys: "📒 register 系\nP-02" {
+  class: process
+}
+
+schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10" {
+  class: process
+}
+
+routine_sys: "⏰ routine 系\nP-05〜P-06" {
+  class: process
+}
+
+exec_cycle: "⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-08・P-11" {
+  class: process
+}
+
+deprecation: "📦 文書の廃棄（非推奨化・保管）\nP-13" {
+  class: process
+}
+
+config: "🧩 稼働構成" {
+  class: store_master
+}
+
+kata: "📐 Kata / kata" {
+  class: store_master
+}
+
+catalog: "📚 成果物カタログ / catalog" {
+  class: store_master
+}
+
+strategy: "🧭 スケジュール戦略" {
+  class: store_master
+}
+
+routine: "⏰ 定期実行定義 / routine" {
+  class: store_master
+}
+
+job: "🧰 ジョブ定義 / job" {
+  class: store_master
+}
+
+project_config <- kata: "provider 別雛形"
+project_config -> kata: "配置・バージョン更新"
+project_config -> config: "初期状態・承認済み構成変更"
+orchestrator <- config: "agent 定義・実行既定値"
+orchestrator -> register_sys: "登録・計画要求"
+orchestrator -> schedule_sys: "計画要求"
+orchestrator -> routine_sys: "定義要求"
+orchestrator <- routine: "実行時期・条件・対象 Job"
+orchestrator <- job: "ジョブ手順・成功条件"
+orchestrator <- strategy: "phase の作業要件"
+orchestrator <- catalog: "done_criteria・evidence_refs"
+register_sys <- kata: "rulebook・recipe・template"
+schedule_sys <- kata: "Kata grade・作成要件・実践の型"
+routine_sys <- kata: "定義の rulebook・recipe・template"
+register_sys <- config: "メンバー・ロール・agent 定義・権限"
+schedule_sys <- config: "メンバー・ロール・agent 定義・権限"
+routine_sys <- config: "agent 定義・権限・実行既定値"
+schedule_sys -> catalog: "成果物定義・完了条件・根拠参照"
+schedule_sys -> strategy: "既定値・タスク生成戦略"
+routine_sys -> routine: "周期・条件・対象 Job"
+routine_sys -> job: "実行手順・委譲先・成功条件"
+orchestrator -> exec_cycle: "Job の実行・評価・完了要求"
+exec_cycle <- job: "実行手順・委譲先・成功条件"
+exec_cycle <- config: "メンバー・ロール・agent 定義・権限・実行既定値"
+exec_cycle <- kata: "実行・検証の型・rubric"
+exec_cycle <- catalog: "done_criteria・evidence_refs"
+exec_cycle <- strategy: "phase の作業要件・完了判断基準"
+
+# 配置制御用（受け渡しではない）
+project_config -> orchestrator: {style.opacity: 0}
+register_sys -> exec_cycle: {style.opacity: 0}
+schedule_sys -> exec_cycle: {style.opacity: 0}
+routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
+```
+
+凡例は第 7 章を参照し、構成の構築・管理と各系統の定義から、Orchestrator による定期実行判定と Job を通じた共用実行サイクルへの引き渡しを示す。
 
 ## 6. 詳細 CDFD 一覧
 
