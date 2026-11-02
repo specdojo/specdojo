@@ -3,6 +3,7 @@ import { constants as osConstants } from "node:os";
 import { resolve } from "node:path";
 import { type Command } from "commander";
 import { agentExtraRootArguments, resolveProductRepos } from "../exec/task-repos.js";
+import { antigravitySessionArguments } from "../exec/antigravity-session.js";
 import {
   loadConfig,
   resolveExternalProjects,
@@ -158,7 +159,18 @@ export function buildOrchestratorLaunch(options: {
 }): OrchestratorLaunch {
   const env = { ...(options.env ?? process.env) };
   const args = [...options.providerArgs];
-  if (options.provider === "opencode" && options.repoRoots.length > 0) {
+  if (options.provider === "antigravity") {
+    args.splice(
+      0,
+      args.length,
+      ...antigravitySessionArguments({
+        role: "orchestrator",
+        cwd: options.cwd,
+        repoRoots: options.repoRoots,
+        providerArgs: args,
+      }),
+    );
+  } else if (options.provider === "opencode" && options.repoRoots.length > 0) {
     env.OPENCODE_CONFIG_CONTENT = inlineOpenCodeConfig(
       env.OPENCODE_CONFIG_CONTENT,
       opencodeAgentName(args),

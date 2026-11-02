@@ -14,6 +14,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- agy 1.4.12 のセッション別権限に対応する `agent launch --provider antigravity --role <edit|review|report>` と、対話型 orchestrator の専用設定を追加しました。scaffold は役割別プロファイルを配置し、宣言済みプロダクト worktree の編集許可と各リポジトリの保護ルールを一つの `--settings` JSON にまとめます。通常導入ではグローバル設定を書き換えません。既存の起動設定は配布スニペットへ移行し、設定マージ・許可／拒否の実機確認後に適用してください（PJR-B0B8）。
+
 - `devcontainer scaffold` が生成する `specdojo-tmux.sh.sample` を、`.specdojo/host/devcontainer-tmux.sh` を呼び出す数行のラッパースクリプトへ置き換えました。あわせて `ssh-config.sample` の接続説明を新しい起動方式に合わせて更新しました（PJR-Q8KP）。
 
 ### 不具合修正

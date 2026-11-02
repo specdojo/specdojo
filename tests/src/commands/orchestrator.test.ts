@@ -65,10 +65,9 @@ describe("buildOrchestratorLaunch", () => {
     ]);
   });
 
-  it("reuses repeated --add-dir arguments for codex, antigravity, and copilot", () => {
+  it("reuses repeated --add-dir arguments for codex and copilot", () => {
     for (const [provider, executable] of [
       ["codex", "codex"],
-      ["antigravity", "agy"],
       ["copilot", "copilot"],
     ] as const) {
       const launch = buildOrchestratorLaunch({
@@ -89,6 +88,23 @@ describe("buildOrchestratorLaunch", () => {
         "/workspace/admin-ui",
       ]);
     }
+  });
+
+  it("injects orchestrator session settings and declared directories for agy", () => {
+    const launch = buildOrchestratorLaunch({
+      provider: "antigravity",
+      providerArgs: ["--model", "fixture", "-i", "prompt"],
+      repoRoots,
+      cwd: "/workspace/project",
+      env: {},
+    });
+    expect(launch.command).toBe("agy");
+    expect(launch.args).toContain("/workspace/app1");
+    expect(launch.args).toContain("/workspace/project");
+    const settings = JSON.parse(launch.args.at(-1)!);
+    expect(settings.permissions.allow).toContain("write_file(/workspace/app1/)");
+    expect(settings.permissions.deny).toContain("read_file(/workspace/app1/.env)");
+    expect(settings.permissions.deny).not.toContain("write_file(/workspace/app1/package.json)");
   });
 
   it("injects an OpenCode agent override that denies undeclared external directories", () => {
@@ -131,8 +147,8 @@ describe("buildOrchestratorLaunch", () => {
     expect(launch.env.OPENCODE_CONFIG_CONTENT).not.toContain("/workspace/undeclared");
   });
 
-  it("keeps every provider command unchanged when the project has no repos", () => {
-    for (const provider of ["claude", "codex", "antigravity", "copilot", "opencode"] as const) {
+  it("keeps other provider commands unchanged when the project has no repos", () => {
+    for (const provider of ["claude", "codex", "copilot", "opencode"] as const) {
       const env = { PATH: "/bin", OPENCODE_CONFIG_CONTENT: '{"autoupdate":false}' };
       const args = ["--agent", "specdojo-orchestrator", "--user-option"];
       const launch = buildOrchestratorLaunch({

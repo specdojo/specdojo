@@ -282,6 +282,7 @@ members:
     type: agent
     provider: antigravity
     model: gemini-3.8-flash-high
+    mode: report
     stage_role: reporter
     capabilities: []
     proficiency: normal
