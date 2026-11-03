@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_64516b42cb604387b7886e20e91003bc
+- v: 1
+  id: reg_cbe39fdc1bde48a281d78e042760440a
+  ts: "2026-11-03T00:19:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 後続の修正を経た最終形を、利用者が VitePress で確かめた（2026-11-03）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: 全体概要の図から Orchestrator を外し、線をまとめてラベルを短くし、章の参照をタイトルにした
+  previous_event_id: reg_80aa3547411e4777a185f113651ee6d7

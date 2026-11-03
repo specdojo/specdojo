@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-05qs-cdfd-overview-orchestrator-table
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-02T06:26:58Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T00:19:30Z"
+  conclusion: 全体概要の図から Orchestrator を外し、線をまとめてラベルを短くし、章の参照をタイトルにした
   derived_from:
     - PJR-PZ6H
 ---
