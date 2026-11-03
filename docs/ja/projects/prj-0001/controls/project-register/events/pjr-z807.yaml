@@ -54,3 +54,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_caeeb92bd3094b69bf861580626fa2f6
+- v: 1
+  id: reg_e8936fc7797a46ebbd8cd792bd946aa6
+  ts: "2026-11-03T15:09:19Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, typecheck"
+  previous_event_id: reg_0a1bd68f01104a11a83b3fb333605faf
