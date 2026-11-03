@@ -30,9 +30,30 @@ const rulebook = (text: string, id: string, items?: SidebarItem[]): SidebarItem 
   link: specdojoLink("rulebooks", `${id}-rulebook`),
   ...(items ? { collapsed: true, items } : {}),
 });
-const recipe = (text: string, id: string): SidebarItem => ({
+const recipe = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
   text,
   link: specdojoLink("recipes", `${id}-recipe`),
+  ...(items ? { collapsed: true, items } : {}),
+});
+const sample = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
+  text,
+  link: specdojoLink("samples", `${id}-sample`),
+  ...(items ? { collapsed: true, items } : {}),
+});
+const sampleYaml = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
+  text,
+  link: specdojoLink("samples", `generated/${id}-sample`),
+  ...(items ? { collapsed: true, items } : {}),
+});
+const template = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
+  text,
+  link: specdojoLink("templates", `${id}-template`),
+  ...(items ? { collapsed: true, items } : {}),
+});
+const templateYaml = (text: string, id: string, items?: SidebarItem[]): SidebarItem => ({
+  text,
+  link: specdojoLink("templates", `generated/${id}-template`),
+  ...(items ? { collapsed: true, items } : {}),
 });
 const group = (text: string, items: SidebarItem[], collapsed = true): SidebarItem => ({
   text,
@@ -40,6 +61,7 @@ const group = (text: string, items: SidebarItem[], collapsed = true): SidebarIte
   items,
 });
 
+// --- ルール（Rulebooks） ---
 const projectDefinitionRulebooks = [
   rulebook("プロジェクト概要", "prj-overview"),
   rulebook("ステークホルダー登録簿", "prj-stakeholder-register"),
@@ -75,20 +97,40 @@ const projectManagementRulebooks = [
     rulebook("意思決定ログ", "dec"),
   ]),
   rulebook("スケジュール", "sch"),
+  rulebook("タイムライン", "tml"),
   rulebook("進捗報告", "pr"),
   rulebook("議事録", "mm"),
 ];
 
+const productChangeRulebooks = [
+  group("影響調査", [
+    rulebook("業務影響", "imp-business"),
+    rulebook("データ影響", "imp-data"),
+    rulebook("インターフェース影響", "imp-interface"),
+    rulebook("テスト影響", "imp-test"),
+    rulebook("運用影響", "imp-operations"),
+  ]),
+  group("トレーサビリティ", [
+    rulebook("要求と仕様のトレース", "trc-requirements-to-specs"),
+    rulebook("要求とテストのトレース", "trc-requirements-to-tests"),
+  ]),
+];
+
 const businessSpecificationRulebooks = [
-  rulebook("概念データフロー図", "cdfd", [rulebook("図の記法ルール", "cdfd-mermaid")]),
+  group("概念データフロー図", [
+    rulebook("全体概要", "cdfd-overview"),
+    rulebook("ユースケース別", "cdfd-uc"),
+    rulebook("プロセスグループ別", "cdfd"),
+    rulebook("図の記法ルール（Mermaid）", "cdfd-mermaid"),
+    rulebook("図の記法ルール（D2）", "cdfd-d2"),
+  ]),
   group("データモデル", [
     rulebook("業務データ辞書", "bdd"),
     rulebook("概念データストア定義", "cdsd"),
     rulebook("保管場所定義", "sld"),
-    rulebook("ステータス定義", "stsd"),
+    rulebook("ステータス定義", "stsd", [rulebook("状態遷移図（Mermaid）", "stsd-mermaid")]),
     rulebook("分類定義", "cld"),
     rulebook("概念クラス図", "ccd-mermaid"),
-    rulebook("概念状態遷移図", "cstd", [rulebook("図の記法ルール", "cstd-mermaid")]),
   ]),
   group("業務モデル", [
     rulebook("業務プロセス仕様", "bps"),
@@ -105,8 +147,9 @@ const businessSpecificationRulebooks = [
 ];
 
 const externalIfRulebooks = [
-  rulebook("外部システムI/F一覧", "ifx-index", [rulebook("外部システムIF一覧（YAML）", "ifx")]),
+  rulebook("外部システムI/F一覧", "ifx-index"),
   rulebook("外部API仕様", "ifx-api"),
+  rulebook("外部コマンド連携仕様", "ifx-cmd"),
   rulebook("外部ファイル仕様", "ifx-file"),
   rulebook("外部メッセージ仕様", "ifx-msg"),
 ];
@@ -126,6 +169,7 @@ const architectureRulebooks = [
 
 const systemDesignRulebooks = [
   rulebook("システム設計 全体構成", "sysd-index"),
+  rulebook("個別システム設計", "sysd"),
   rulebook("重要フロー", "sysd-critical-flows"),
   rulebook("横断ルール", "sysd-cross-cutting-policy"),
 ];
@@ -171,6 +215,7 @@ const migrationRulebooks = [
   rulebook("データ移行設計 全体構成", "dmd-index"),
   rulebook("データ移行設計", "dmd"),
   rulebook("移行テスト計画", "mtp"),
+  rulebook("移行テスト計画（リハーサル計画）", "ntp"),
   rulebook("カットオーバー計画 全体構成", "cop-index"),
   rulebook("カットオーバー計画", "cop"),
   rulebook("運用切替計画 全体構成", "otp-index"),
@@ -184,21 +229,7 @@ const operationsRulebooks = [
   rulebook("運用手順", "opr"),
 ];
 
-const productChangeRulebooks = [
-  group("影響調査", [
-    rulebook("業務影響", "imp-business"),
-    rulebook("データ影響", "imp-data"),
-    rulebook("インターフェース影響", "imp-interface"),
-    rulebook("テスト影響", "imp-test"),
-    rulebook("運用影響", "imp-operations"),
-  ]),
-  group("トレーサビリティ", [
-    rulebook("要求と仕様のトレース", "trc-requirements-to-specs"),
-    rulebook("要求とテストのトレース", "trc-requirements-to-tests"),
-  ]),
-  group("移行", migrationRulebooks),
-];
-
+// --- レシピ（Recipes） ---
 // recipe は rulebook と同じ並び順にし、成果物ごとに rulebook / recipe を対で辿れるようにする。
 const projectDefinitionRecipes = [
   recipe("プロジェクト概要", "prj-overview"),
@@ -212,20 +243,312 @@ const projectDefinitionRecipes = [
 ];
 
 const projectManagementRecipes = [
-  recipe("プロジェクト管理計画", "pm-plan"),
-  recipe("コミュニケーション計画", "pm-communication-plan"),
-  recipe("品質管理計画", "pm-quality-management-plan"),
-  recipe("組織とロールの定義", "pm-organization"),
-  recipe("ロール定義", "pm-roles"),
-  recipe("メンバー定義", "pm-members"),
-  recipe("組織体制とRACI", "pm-raci"),
+  group("管理計画", [
+    recipe("プロジェクト管理計画", "pm-plan"),
+    recipe("コミュニケーション計画", "pm-communication-plan"),
+    recipe("品質管理計画", "pm-quality-management-plan"),
+  ]),
+  group("組織体制", [
+    recipe("組織とロールの定義", "pm-organization"),
+    recipe("ロール定義", "pm-roles"),
+    recipe("メンバー定義", "pm-members"),
+    recipe("組織体制とRACI", "pm-raci"),
+  ]),
 ];
 
+const businessSpecificationRecipes = [
+  group("概念データフロー図", [
+    recipe("全体概要", "cdfd-overview"),
+    recipe("ユースケース別", "cdfd-uc"),
+    recipe("プロセスグループ別", "cdfd"),
+  ]),
+  group("データモデル", [recipe("ステータス定義", "stsd")]),
+  group("業務モデル", [recipe("業務プロセス仕様", "bps")]),
+];
+
+const externalIfRecipes = [recipe("外部コマンド連携仕様", "ifx-cmd")];
+
+const architectureRecipes = [group("インフラ・技術選定", [recipe("技術スタック", "tsd")])];
+
 const execRecipes = [recipe("humanタスクの確定", "exec-human-finalize")];
+
+// --- サンプル（Samples） ---
+const projectDefinitionSamples = [
+  sample("プロジェクト概要", "prj-overview"),
+  sample("ステークホルダー登録簿", "prj-stakeholder-register"),
+  sample("プロジェクト憲章", "prj-charter"),
+  sample("プロジェクトスコープ", "prj-scope"),
+  sample("成功基準と受入条件", "prj-success-criteria-and-acceptance-criteria"),
+  sample("プロジェクト課題と解決アプローチ", "prj-issues-and-approach"),
+  sample("前提・制約・依存関係", "prj-assumptions-constraints-dependencies"),
+  sample("代替案の比較", "prj-comparison-of-alternatives"),
+];
+
+const projectManagementSamples = [
+  group("成果物カタログ", [
+    sampleYaml("成果物カタログの索引", "dct-index"),
+    sampleYaml("成果物カタログ", "dct"),
+  ]),
+  group("管理計画", [
+    sample("プロジェクト管理計画", "pm-plan"),
+    sample("コミュニケーション計画", "pm-communication-plan"),
+    sample("品質管理計画", "pm-quality-management-plan"),
+  ]),
+  group("組織体制", [
+    sample("組織とロールの定義", "pm-organization"),
+    sampleYaml("ロール定義", "pm-roles"),
+    sampleYaml("メンバー定義", "pm-members"),
+    sample("組織体制とRACI", "pm-raci"),
+  ]),
+  group("管理台帳・管理ビュー", [
+    sample("リスク登録簿", "pm-risk-register"),
+    sample("課題ログ", "pm-issue-log"),
+    sample("変更要求ログ", "pm-change-request-log"),
+    sample("意思決定ログ", "dec"),
+  ]),
+  sampleYaml("タイムライン", "tml"),
+  sample("進捗報告", "pr"),
+  sample("議事録", "mm"),
+];
+
+const productChangeSamples = [
+  group("影響調査", [
+    sample("業務影響", "imp-business"),
+    sample("データ影響", "imp-data"),
+    sample("インターフェース影響", "imp-interface"),
+    sample("テスト影響", "imp-test"),
+    sample("運用影響", "imp-operations"),
+  ]),
+  group("トレーサビリティ", [
+    sample("要求と仕様のトレース", "trc-requirements-to-specs"),
+    sample("要求とテストのトレース", "trc-requirements-to-tests"),
+  ]),
+];
+
+const businessSpecificationSamples = [
+  group("概念データフロー図", [
+    sample("全体概要", "cdfd-overview"),
+    sample("ユースケース別", "cdfd-uc"),
+    sample("プロセスグループ別", "cdfd"),
+  ]),
+  group("データモデル", [
+    sampleYaml("業務データ辞書", "bdd"),
+    sample("概念データストア定義", "cdsd"),
+    sample("保管場所定義", "sld"),
+    sample("ステータス定義", "stsd"),
+    sample("分類定義", "cld"),
+    sample("概念クラス図", "ccd"),
+  ]),
+  group("業務モデル", [
+    sample("業務プロセス仕様", "bps"),
+    sample("ビジネスルール", "br"),
+    sample("業務イベント一覧", "bes-index"),
+    sample("業務イベント仕様", "bes"),
+  ]),
+  group("インターフェースモデル", [sample("画面仕様", "uis"), sample("帳票仕様", "bds")]),
+  group("共通", [
+    sample("システム化機能一覧", "sf-index"),
+    sample("システム化機能", "sf"),
+    sampleYaml("用語集", "gl"),
+  ]),
+];
+
+const externalIfSamples = [
+  sampleYaml("外部システムI/F一覧", "ifx-index"),
+  sampleYaml("外部API仕様", "ifx-api"),
+  sampleYaml("外部コマンド連携仕様", "ifx-cmd"),
+  sample("外部ファイル仕様", "ifx-file"),
+  sampleYaml("外部メッセージ仕様", "ifx-msg"),
+];
+
+const architectureSamples = [
+  group("C4", [
+    sample("コンテキスト図", "cxd"),
+    sample("コンテナ図", "cnd"),
+    sample("コンポーネント図", "cpd"),
+  ]),
+  group("インフラ・技術選定", [
+    sample("インフラ構成図", "ifd"),
+    sample("技術スタック一覧", "tsd-index"),
+    sample("技術スタック", "tsd"),
+  ]),
+];
+
+const systemDesignSamples = [
+  sample("システム設計 全体構成", "sysd-index"),
+  sample("重要フロー", "sysd-critical-flows"),
+  sample("横断ルール", "sysd-cross-cutting-policy"),
+];
+
+const nonFunctionalRequirementSamples = [
+  sample("非機能要件 全体構成", "nfr-index"),
+  sample("信頼性", "nfr-reliability"),
+  sample("可用性", "nfr-availability"),
+  sample("保守性", "nfr-maintainability"),
+  sample("完全性", "nfr-integrity"),
+  sample("機密性・安全性", "nfr-security-safety"),
+  sample("性能", "nfr-performance"),
+  sample("運用", "nfr-operations"),
+  sample("操作性", "nfr-usability"),
+];
+
+const testingSamples = [
+  sample("テスト戦略・方針", "tsp-index"),
+  group("単体テスト", [
+    sample("単体テストカタログ 概要", "utc-index"),
+    sample("単体テストカタログ 対象別", "utc"),
+  ]),
+  group("内部結合テスト", [
+    sample("内部結合テストカタログ 概要", "itc-index"),
+    sample("内部結合テストカタログ 対象別", "itc"),
+  ]),
+  group("外部結合テスト", [
+    sample("外部結合テストカタログ 概要", "etc-index"),
+    sample("外部結合テストカタログ 対象別", "etc"),
+  ]),
+  group("総合テスト", [
+    sample("総合テストカタログ 概要", "stc-index"),
+    sample("総合テストカタログ 対象別", "stc"),
+  ]),
+  group("受入テスト", [
+    sample("受入テストカタログ 概要", "atc-index"),
+    sample("受入テストカタログ 対象別", "atc"),
+  ]),
+];
+
+const migrationSamples = [
+  sample("移行計画", "mip-index"),
+  sample("データ移行設計 全体構成", "dmd-index"),
+  sample("データ移行設計", "dmd"),
+  sample("移行テスト計画", "mtp"),
+  sample("移行テスト計画（リハーサル計画）", "ntp"),
+  sample("カットオーバー計画 全体構成", "cop-index"),
+  sample("カットオーバー計画", "cop"),
+  sample("運用切替計画 全体構成", "otp-index"),
+  sample("運用切替計画", "otp"),
+];
+
+const operationsSamples = [
+  group("運用方針・設計", [
+    sample("全体構成", "opd-index"),
+    sample("運用方針・設計", "opd"),
+    sample("権限・アカウント", "opd-access-control"),
+    sample("障害対応", "opd-incident-management"),
+    sample("監視", "opd-monitoring"),
+  ]),
+  group("運用手順", [
+    sample("全体構成", "opr-index"),
+    sample("運用手順", "opr"),
+    sample("アカウント付与・剥奪", "opr-access-control"),
+    sample("バックアップ確認・リストア", "opr-backup-restore"),
+    sample("バッチ再実行・失敗対応", "opr-batch"),
+    sample("運用変更（設定変更・デプロイ）", "opr-change"),
+    sample("障害対応", "opr-incident"),
+    sample("監視・アラート対応", "opr-monitoring"),
+    sample("問い合わせ一次対応", "opr-support"),
+  ]),
+];
+
+// --- テンプレート（Templates） ---
+const projectDefinitionTemplates = [
+  template("プロジェクト概要", "prj-overview"),
+  template("ステークホルダー登録簿", "prj-stakeholder-register"),
+  template("プロジェクト憲章", "prj-charter"),
+  template("プロジェクトスコープ", "prj-scope"),
+  template("成功基準と受入条件", "prj-success-criteria-and-acceptance-criteria"),
+  template("プロジェクト課題と解決アプローチ", "prj-issues-and-approach"),
+  template("前提・制約・依存関係", "prj-assumptions-constraints-dependencies"),
+  template("代替案の比較", "prj-comparison-of-alternatives"),
+];
+
+const deliverablesCatalogTemplates = [
+  template("成果物カタログの索引", "dct-index"),
+  templateYaml("プロジェクト定義", "dct-project-definition"),
+  templateYaml("プロジェクト管理", "dct-project-management"),
+  templateYaml("業務プロセス仕様", "dct-business-model-bps"),
+  templateYaml("ビジネスルール", "dct-business-model-br"),
+  templateYaml("業務イベント仕様", "dct-business-model-bes"),
+  templateYaml("データフロー", "dct-data-flow"),
+  templateYaml("業務データ辞書", "dct-data-model-bdd"),
+  templateYaml("概念データストア定義", "dct-data-model-cdsd"),
+  templateYaml("保管場所定義", "dct-data-model-sld"),
+  templateYaml("ステータス定義・状態遷移", "dct-data-model-stsd"),
+  templateYaml("分類定義", "dct-data-model-cld"),
+  templateYaml("概念クラス図", "dct-data-model-ccd"),
+  templateYaml("ユーザーインターフェースモデル", "dct-user-interface-model"),
+  templateYaml("システム化機能", "dct-system-functions"),
+  templateYaml("用語集", "dct-glossary"),
+  templateYaml("外部IF仕様", "dct-external-interface-specs"),
+  templateYaml("アーキテクチャ", "dct-architecture"),
+  templateYaml("システム設計", "dct-system-design"),
+  templateYaml("業務受入基準", "dct-business-acceptance-criteria"),
+  templateYaml("非機能要件", "dct-non-functional-requirements"),
+  templateYaml("システム受入基準", "dct-system-acceptance-criteria"),
+  templateYaml("テスト", "dct-test-specs"),
+  templateYaml("影響調査", "dct-impact-analysis"),
+  templateYaml("移行計画", "dct-migration-planning"),
+  templateYaml("運用", "dct-operations"),
+];
+
+const projectManagementTemplates = [
+  group("成果物カタログ", deliverablesCatalogTemplates),
+  group("管理計画", [
+    template("プロジェクト管理計画", "pm-plan"),
+    template("コミュニケーション計画", "pm-communication-plan"),
+    template("品質管理計画", "pm-quality-management-plan"),
+  ]),
+  group("組織体制", [
+    template("組織とロールの定義", "pm-organization"),
+    templateYaml("ロール定義", "pm-roles"),
+    templateYaml("メンバー定義", "pm-members"),
+    templateYaml("保護された agent 定義", "agent-members"),
+    template("組織体制とRACI", "pm-raci"),
+  ]),
+  group("管理台帳・管理ビュー", [
+    template("プロジェクト登録簿", "pjr-index"),
+    template("台帳ビュー（状態別）", "pjr-views-by-status"),
+    template("台帳ビュー（優先度別）", "pjr-views-by-priority"),
+    template("台帳ビュー（担当者別）", "pjr-views-by-owner"),
+    template("登録項目の実行依存", "pjr-dependent-items"),
+    template("登録項目の派生関係", "pjr-derived-items"),
+    template("epic ごとの子項目", "pjr-epic-items"),
+    group("登録項目", [
+      template("TODO", "pjr-todo"),
+      template("課題", "pjr-issue"),
+      template("リスク", "pjr-risk"),
+      template("変更要求", "pjr-change-request"),
+      template("意思決定", "pjr-decision"),
+      template("ノート", "pjr-note"),
+      template("質問", "pjr-question"),
+      template("EPIC", "pjr-epic"),
+    ]),
+    template("リスク登録簿", "pm-risk-register"),
+    template("課題ログ", "pm-issue-log"),
+    template("変更要求ログ", "pm-change-request-log"),
+    template("意思決定ログ", "pm-decision-log"),
+  ]),
+];
+
+const businessSpecificationTemplates = [
+  group("概念データフロー図", [
+    template("全体概要", "cdfd-overview"),
+    template("ユースケース別", "cdfd-uc"),
+    template("プロセスグループ別", "cdfd"),
+  ]),
+  group("データモデル", [template("ステータス定義", "stsd")]),
+  group("業務モデル", [template("業務プロセス仕様", "bps")]),
+];
+
+const externalIfTemplates = [templateYaml("外部コマンド連携仕様", "ifx-cmd")];
+
+const operationsTemplates = [template("運用手順", "opr")];
 
 // サイドバーの表示名は対象ページの H1 に揃える。guide と philosophy はグループ配下で
 // 種別が自明なため接尾辞（「ガイド」「の考え方」）を落とし、reference は H1 をそのまま使う。
 // クリック前後でタイトルが変わらないようにするため、H1 を変更したらここも合わせて更新する。
+// rulebook / recipe / sample / template もグループ配下で種別が自明なため、接尾辞や
+// サブタイトル（例: 「作成ルール」「作成レシピ」「: 駄菓子屋きぬや...」「: _PROJECT_NAME_」等）
+// を落として対象成果物の名称に揃え、成果物ごとに相互に辿りやすくする。
 export const specdojoSidebarItems = [
   {
     text: "ガイド",
@@ -300,9 +623,48 @@ export const specdojoSidebarItems = [
     text: "レシピ",
     collapsed: true,
     items: [
-      group("プロジェクト定義", projectDefinitionRecipes),
-      group("プロジェクトマネジメント", projectManagementRecipes),
+      group("プロジェクト", [
+        group("プロジェクト定義", projectDefinitionRecipes),
+        group("プロジェクトマネジメント", projectManagementRecipes),
+      ]),
+      group("業務仕様", businessSpecificationRecipes),
+      group("外部I/F仕様", externalIfRecipes),
+      group("アーキテクチャ", architectureRecipes),
       group("実行", execRecipes),
+    ],
+  },
+  {
+    text: "サンプル",
+    collapsed: true,
+    items: [
+      group("プロジェクト", [
+        group("プロジェクト定義", projectDefinitionSamples),
+        group("プロジェクトマネジメント", projectManagementSamples),
+        group("プロダクト変更", productChangeSamples),
+      ]),
+      group("業務仕様", businessSpecificationSamples),
+      group("外部I/F仕様", externalIfSamples),
+      group("アーキテクチャ", architectureSamples),
+      group("システム設計", systemDesignSamples),
+      sample("業務受入条件", "bac"),
+      group("非機能要件", nonFunctionalRequirementSamples),
+      sample("システム受入条件", "sac"),
+      group("テスト", testingSamples),
+      group("移行", migrationSamples),
+      group("運用", operationsSamples),
+    ],
+  },
+  {
+    text: "テンプレート",
+    collapsed: true,
+    items: [
+      group("プロジェクト", [
+        group("プロジェクト定義", projectDefinitionTemplates),
+        group("プロジェクトマネジメント", projectManagementTemplates),
+      ]),
+      group("業務仕様", businessSpecificationTemplates),
+      group("外部I/F仕様", externalIfTemplates),
+      group("運用", operationsTemplates),
     ],
   },
   {
