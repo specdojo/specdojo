@@ -808,7 +808,7 @@ members:
       は更新しない。最終判断は行わない。effort は exec-defaults の command template（proficiency expert 相当）で指定する。
   - nickname: argon-executor
     disabled: false
-    priority: 3
+    priority: 9
     display_name: Antigravity Argon Executor
     email: null
     roles: []
@@ -832,7 +832,7 @@ members:
     note: >-
       Antigravity CLI（agy）で Gemini 4 Argon（high）を使う高性能 pipeline executor（edit）。難しい作業の成果物の
       編集と検証だけを担当し、result は更新しない。最終判断は行わない。model の ID は `agy models` で確かめた
-      gemini-4-argon-high（2026-11-03）。
+      gemini-4-argon-high（2026-11-03）。週あたりの利用枠が厳しいため、自動の選択では後回しにする（priority 9）。
   - nickname: flash-high-review-executor
     disabled: false
     priority: 3
