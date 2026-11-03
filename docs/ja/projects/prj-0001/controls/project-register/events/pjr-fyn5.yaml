@@ -60,3 +60,16 @@
       from: "-"
       to: '["PJR-MERV"]'
   previous_event_id: reg_bf37a5fe8a854b16a91eeea776177cdc
+- v: 1
+  id: reg_510fe59b52c94f09afa7ff4cf54b0fb7
+  ts: "2026-11-03T13:02:11Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 先行の指定は done まで実行を止めるため外し、夜間の列の順番で PJR-MERV の後に流す
+  changes:
+    - field: depends_on
+      from: '["PJR-MERV"]'
+      to: "-"
+  previous_event_id: reg_c99207756ebc453eb59c8e7f8438e447
