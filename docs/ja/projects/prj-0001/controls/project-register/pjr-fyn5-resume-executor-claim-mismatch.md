@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fyn5-resume-executor-claim-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T12:53:45Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T22:51:10Z"
+  conclusion: executor を替えて再開すると claim を新しい agent へ移し（release と claim の event を残す）、統合まで通るようにした。PJR-Z807 の再開で実地に確かめた
   derived_from:
     - PJR-GQN3
   commit_type: fix

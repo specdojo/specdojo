@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e39788e7f0a543e5a5dee98c9cb44e5a
+- v: 1
+  id: reg_d07ff68267144ab6a050914943c86ae7
+  ts: "2026-11-03T22:51:10Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: executor を替えて再開すると claim を新しい agent へ移し（release と claim の event を残す）、統合まで通るようにした。PJR-Z807 の再開で実地に確かめた
+  previous_event_id: reg_c4185d4b301d4130a664a7595dd107af
