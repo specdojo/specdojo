@@ -137,3 +137,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_30378a9f4d3c4b409507ee86361c1ef6
+- v: 1
+  id: reg_7e82112955514d6f901a5be4098916e3
+  ts: "2026-11-03T06:41:04Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・JSEY の動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: plan の生成の時点で Markdown を検査し、誤りをタスクと行を示して止めることを、単体 5 件と統合 6 件のテストと正しい説明での plan の生成で確かめた
+  previous_event_id: reg_7be9b3c4592c4185b6084ebb856b71bd

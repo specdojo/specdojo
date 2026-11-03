@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fvrz-plan-markdown-early-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-03T05:23:56Z"
   due_on: "2026-11-07"
+  completed_at: "2026-11-03T06:41:04Z"
+  conclusion: plan の生成の時点で Markdown を検査し、誤りをタスクと行を示して止めることを、単体 5 件と統合 6 件のテストと正しい説明での plan の生成で確かめた
   derived_from:
     - PJR-GQN3
   commit_type: feat
