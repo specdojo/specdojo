@@ -60,3 +60,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_dcd0e41acf8945d5950ebab70fb49bad
+- v: 1
+  id: reg_afaf56ca1e2e499a893e57e09fc2da69
+  ts: "2026-11-03T05:48:49Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_56ae1292069f4c53883e18d5c8c47e3b

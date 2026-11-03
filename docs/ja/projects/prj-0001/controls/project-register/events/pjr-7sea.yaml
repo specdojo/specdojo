@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6273a5e9b4104cb389a2566e75075191
+  ts: "2026-11-03T05:35:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指示で 0.7.0 のリリースを起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 0.7.0 でリリースする
+    - field: description
+      from: ""
+      to: specdojo 0.7.0 と @specdojo/docs-site 0.4.0 を公開する。@specdojo/docs-lint は変更がないため 0.4.0 のままとする
+    - field: input
+      from: ""
+      to: '["0.6.0 からの変更: CHANGELOG の Unreleased に 8 件（orch:argon、schedule の --resume-from executor、docs-site の D2、devcontainer host-script など）。概念データフロー図の Kata の見直し（全体概要とユースケース別、D2 記法ルール）。docs-site の D2 の SVG 生成とサイドメニューへの Kata の掲載。docs-lint と vscode-specdojo は変更なし。破壊的変更はない（2026-11-03）","利用者の判断: 本体 0.7.0、docs-site 0.4.0。不具合 3 件（PJR-561Q・PJR-FVRZ・PJR-W7YX）の修正を待って含める。docs-site に Git 管理された一時ファイル `packages/docs-site/.vitepress/config.mts.timestamp-*.mjs` を消して .gitignore に足し、CHANGELOG に Kata の見直しと docs-site のサイドメニューを追記する作業をこの todo で行う。リリースは 2026-11-03 中に行う（2026-11-03）","手順は pm-orchestrator-playbook の「リリースの手順」に従う。push・PR の merge・タグ・npm の公開の承認は利用者が行う（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-03"
+    - field: depends_on
+      from: ""
+      to: '["PJR-561Q","PJR-FVRZ","PJR-W7YX"]'
+    - field: commit_type
+      from: ""
+      to: chore
+    - field: commit_scope
+      from: ""
+      to: release
