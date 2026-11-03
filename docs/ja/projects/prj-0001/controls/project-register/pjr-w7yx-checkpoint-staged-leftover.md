@@ -15,6 +15,8 @@ specdojo:
   due_on: "2026-11-07"
   derived_from:
     - PJR-GQN3
+  depends_on:
+    - PJR-561Q
   commit_type: fix
   commit_scope: exec
 ---

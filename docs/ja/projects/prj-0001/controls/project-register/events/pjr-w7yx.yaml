@@ -47,3 +47,16 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_198899e192fb4b108b1af5169c622778
+  ts: "2026-11-03T05:25:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 同じ runner のコードに触れるため PJR-561Q の後に流す
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-561Q"]'
+  previous_event_id: reg_292b70d5e08144768d9b5f269d952d45
