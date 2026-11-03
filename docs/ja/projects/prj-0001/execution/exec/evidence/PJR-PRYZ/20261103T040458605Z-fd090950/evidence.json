@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-PRYZ",
+  "run_id": "20261103T040458605Z-fd090950",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-03T04:06:51.352Z",
+    "completed_at": "2026-11-03T04:16:46.931Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-pryz.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pryz-cdfd-uc-kata-align.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-uc-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-uc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-uc-template.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pryz-cdfd-uc-kata-align.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-uc-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-uc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-uc-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-pryz-cdfd-uc-kata-align.md                 |  55 ++++-\n docs/ja/specdojo/recipes/cdfd-uc-recipe.md         | 218 +++++++++-----------\n docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md     |  30 +--\n docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md     | 203 ++++++++++---------\n docs/ja/specdojo/samples/cdfd-uc-sample.md         | 225 ++++++++++++---------\n docs/ja/specdojo/templates/cdfd-uc-template.md     | 217 +++++++++++---------\n 6 files changed, 520 insertions(+), 428 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md docs/ja/specdojo/recipes/cdfd-uc-recipe.md docs/ja/specdojo/samples/cdfd-uc-sample.md docs/ja/specdojo/templates/cdfd-uc-template.md docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-pryz-cdfd-uc-kata-align.md",
+      "status": "passed",
+      "summary": "変更した Markdown 6 ファイルを整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "d2 --layout elk tmp/pjr-pryz/sample-1.d2 tmp/pjr-pryz/sample-1.svg && d2 --layout elk tmp/pjr-pryz/sample-2.d2 tmp/pjr-pryz/sample-2.svg",
+      "status": "passed",
+      "summary": "sample の 2 図を SVG 出力し、座標とプレビューで並び・大きさを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "d2 --layout elk tmp/pjr-pryz/template-1.d2 tmp/pjr-pryz/template-1.svg && d2 --layout elk tmp/pjr-pryz/template-2.d2 tmp/pjr-pryz/template-2.svg",
+      "status": "passed",
+      "summary": "template の通常図と任意の戻り図を SVG 出力。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検査成功。変更対象外の未作成文書に関する参照警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の検証と派生ビュー生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML スキーマ検査は対象外。",
+      "reason": "今回の編集は Markdown のみで、YAML ファイルを変更していません。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog build",
+      "status": "not_applicable",
+      "summary": "カタログ再生成は対象外。",
+      "reason": "dct-*.yaml を変更していません。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec refresh",
+      "status": "not_applicable",
+      "summary": "実行計画の再生成は対象外。",
+      "reason": "sch-*.yaml を変更していません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PRYZ/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PRYZ/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PRYZ/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3723 file(s), 178 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3723 file(s), 25 diagram(s), 25 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PRYZ\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.6.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PRYZ/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PRYZ/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.6.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PRYZ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-idxrCM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-PojIyl/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3kjlbE/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-RSl7Ys/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "Kata 4 文書と D2 共通規定を修正し、個票に変更内容・整合確認・SVG の寸法・判断理由を記録しました。整形・描画・カタログ検査・登録簿ビュー生成は成功しました。指定の親検証は runner が実施します。",
+  "completion_status": "complete",
+  "handoff": [
+    "result は編集していません。個票「対応結果」の文書別変更表、整合確認、SVG 出力結果、executor の判断を reporter が result へ反映してください。",
+    "目的を業務の存在理由・成果へ変更し、引き渡し／戻り先の章、引き渡し ID、条件イベントを廃止しました。受け渡しは線のラベル、重要な戻りは任意の図で表します。Orchestrator は全体概要へ委ね、区分と任意の PDCA 列、有効な参照先、短いイベントを規定しました。",
+    "sample の業務内容を維持しました。ELK 出力は通常図 931×1732、戻り図 942×810。在庫→仕入→販売の上下順、イベントの改行、ラベル配置を確認しました。template の 2 図も出力成功。確認用ファイルは削除済みです。",
+    "判断理由は個票に記録済みです。関連引き渡しを参加単位へ変更し、重要な戻りを図として保持しました。複数の起点イベントは原文を保って分割し、粒度・方向・イベントは主 rulebook を優先します。分割図・戻り図への開始と終了の再掲は不要としました。",
+    "4 文書の status は draft を維持しています。全体概要の Kata・全体概要・詳細 3 文書は未変更です。詳細 3 文書の改訂は後続の epic・schedule に委ねます。未決事項や保護設定の変更提案はありません。",
+    "親 runner は指定の lint・テスト等を実行し、その結果を result に反映してください。カタログ検査には、今回変更していない未作成文書の参照警告があります。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-PRYZ/20261103T040458605Z-fd090950/executor.log",
+      "bytes": 4478,
+      "truncated": false
+    }
+  ]
+}
