@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+### 不具合修正
+
+- schedule の `exec resume` で executor 段から再開するとき（`--resume-from executor` を含む）に `--executor-by` で元の claim の持ち主と別の agent を指定すると、claim が元の agent のまま残って統合前の完了確認（completion preflight）で止まる問題を修正しました。元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim を新しい executor へ移し、`complete` イベントも新しい executor で記録するようにしました。あわせて同一秒内に記録された `release` と再 `claim` のイベント順序を状態遷移に沿って解決するようにしました（PJR-FYN5）。
+
 ## [0.7.0] - 2026-11-03
 
 同梱パッケージは `@specdojo/docs-site` 0.4.0 を同時に公開します。docs-site 0.4.0 は、D2 コードブロックの SVG 生成と配信（`specdojo-docs-site d2`、PJR-6NEM）と、サイドメニューへの Kata（rulebook・recipe・sample・template）の掲載（PJR-PQG3）を含みます。`@specdojo/docs-lint` は変更がないため 0.4.0 のままです。

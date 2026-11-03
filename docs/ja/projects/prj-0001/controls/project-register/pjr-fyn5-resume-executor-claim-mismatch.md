@@ -52,7 +52,40 @@ exec resume --resume-from executor --executor-by で別の agent に替えても
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 方式の選択肢と決定理由
+
+- **選択肢**:
+  - **案 A（採用）**: executor 段から再開するときに `--executor-by` で元の claim の持ち主と異なる executor が指定された場合、元の actor による `release` イベントと新しい executor による `claim` イベントを記録して claim を新しい executor へ移し、`PreparedTask.actor` も新しい executor に揃える。
+  - **案 B（不採用）**: 完了前の確認（`readCompletionPreflight`）で、再開時に指定した executor を元の claim の持ち主と異なっていても許可する。
+- **決定理由**:
+  - 統合後の完了処理（`spawnComplete`）および失敗時の中断処理（`spawnBlock`）は、別プロセスの CLI（`specdojo exec complete --by <actor>` / `specdojo exec block --by <actor>`）を起動し、イベントログを畳み込んだ状態の `last_by` と `--by` が一致することを `canCompleteTask` / `canBlockTask` で検査する。案 B のように統合前の `readCompletionPreflight` だけを緩めても、イベントログ上の `last_by` が元の actor のまま残っていると、worktree を統合・削除した直後の `spawnComplete` や中断時の `spawnBlock` が `task is being worked on by another actor` で失敗するほか、並列実行時の `collectBusyActors` でも稼働中の actor を誤認する。
+  - 案 A で `release` と `claim` のイベントを記録して `last_by` を新しい executor に移すことで、`readCompletionPreflight`・`exec complete`・`exec block`・`collectBusyActors` のすべてでイベントログの状態（`state: "doing"`、`last_by: <新しい executor>`）が一貫し、`complete` イベントも実際に作業を完遂した新しい executor の actor で記録され、誰から誰へ引き継がれたかの履歴（`claim` → `release` → `claim` → `complete`）もイベントログに残るため、案 A を採用した。
+
+### 解決内容
+
+- `src/exec/run/schedule-prepare.ts`:
+  - `prepareSingleTask` で `skipClaim: true` かつ `stageAgentOverrides.executor`（`--executor-by`）が指定され、再開段が `reporter` 以外（executor 段からの再開）である場合、解決した新しい executor の actor を `PreparedTask.actor` に設定するように変更した。
+  - `findClaimEventPath` に worktree 参照（`worktreeRef`）を渡し、既存 worktree がある場合は worktree 内にチェックポイントされた初回 `claim` イベントファイルを優先して返すようにした。これにより、再開時に root 側で新しい `claim` イベントを追加しても、統合時の `releaseRootPaths` が初回チェックポイントの `claim` イベントファイルを対象に維持する。
+- `src/exec/run/lifecycle-commands.ts`:
+  - `runResumeMode` で、`unblock` のメモリ投影前の初期状態（`initialTaskStates`）を保持し、executor 段からの再開または `--executor-by` 指定時は `unblock` イベントの即時書き出しを保留して `prepareSingleTask` の解決後に判定するようにした。
+  - executor 段からの再開（`prepared.pipelineResumeStage` が `reporter` / `integrate` 以外）で `prepared.actor !== previousActor` の場合、元の actor による `release` イベント（`pipeline_resume_released=true`、`replaced_by=<新しい actor>`）と新しい executor による `claim` イベント（`pipeline_resume_claimed=true`、`previous_actor=<元の actor>`、および `agent_pipeline`・`pipeline_stage`・`pipeline_state_ref` などのメタデータ）を記録し、スナップショットを `state: "doing"`・`last_by: prepared.actor`・`last_type: "claim"` に更新するようにした（`--dry-run` 時はイベントを書き出さない）。
+  - `--executor-by` を指定しない場合や同じ executor で再開する場合、および reporter 段・統合段のみを再開する場合は従来どおり既存の claim を維持し、`blocked` から同じ actor で再開する場合のみ保留していた `unblock` イベントを記録する。
+- `src/exec/events.ts`:
+  - `readAllEventFiles` に `orderSameTimestampEventsByState` を追加し、同一 `task_id`・同一秒（`ts`）内に複数のイベント（`release` と再 `claim` など）が記録された場合、固定の種別順ではなく、それまでのタスク状態から有効な状態遷移順（`doing` / `blocked` からは `release` → `todo` → `claim` → `doing`）に沿って並べるようにした。
+- 文書更新:
+  - `docs/ja/specdojo/guides/exec-operation-guide.md` の「2.2. blockedタスクの復帰」に、executor 段からの再開時に `--executor-by` で別の executor を指定したときの claim の扱い（`release` と `claim` イベントによる引き継ぎと `complete` イベントの記録先、`--executor-by` 省略時の動作）を追記した。
+  - `CHANGELOG.md` の `## [Unreleased]` 節に本修正を追記した（公開済みの版の節は変更なし）。
+
+### 確認結果
+
+- `tests/src/exec/pipeline-e2e.integration.test.ts` に統合テストを追加し、`blocked` および `doing` の双方の状態から `exec resume --task <id> --resume-from executor --executor-by cloud-expert-executor`（元の claim は `local-gemma-executor`）で再開したとき、`--dry-run` で状態が変わらないこと、本実行で executor・親の検証・reporter・統合・worktree 削除まで完了すること、イベントログに `local-gemma-executor` の `release` と `cloud-expert-executor` の再 `claim` が記録され、`complete` イベントが新しい executor である `cloud-expert-executor` で記録されることを確認した。また、`--executor-by` を指定しない既存の再開テストもそのまま通ることを確認した。
+- `tests/src/exec/events.test.ts` に単体テストを追加し、同一秒内に `release` と新しい actor の `claim` が記録された場合に `release` → `claim` の順で畳み込まれ、`last_by` が新しい actor になることを確認した。
+- `npm run typecheck`、`npm run lint:ts`、`npm run test:unit` を実行し、すべて通過することを確認した。
+- 保護された設定（`.specdojo/**`、`package.json` など）の変更は不要であり、変更していない。
+
+### 再発防止策
+
+- `exec resume` で stage agent を上書きする経路では、イベントログ上の `last_by` と runner が完了・中断に使う `PreparedTask.actor` が常に一致するよう、E2E 統合テストで `doing` / `blocked` 両方からの `--resume-from executor --executor-by` 再開と完了後の `complete` イベントの `by` を継続的に検証する。
 
 ## 6. 関連ドキュメント
 

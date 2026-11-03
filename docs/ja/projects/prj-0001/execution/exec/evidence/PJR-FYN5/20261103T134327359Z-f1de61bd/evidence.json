@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-FYN5",
+  "run_id": "20261103T134327359Z-f1de61bd",
+  "stage": {
+    "role": "executor",
+    "actor": "argon-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-03T13:44:55.476Z",
+    "completed_at": "2026-11-03T14:24:27.289Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-fyn5.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-fyn5-resume-executor-claim-mismatch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/events.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-fyn5-resume-executor-claim-mismatch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/events.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": "CHANGELOG.md                                       |   4 +\n .../pjr-fyn5-resume-executor-claim-mismatch.md     |  35 ++++-\n docs/ja/specdojo/guides/exec-operation-guide.md    |   2 +\n src/exec/events.ts                                 | 147 +++++++++++++++++++++\n src/exec/run/lifecycle-commands.ts                 |  68 +++++++++-\n src/exec/run/schedule-prepare.ts                   |  36 ++++-\n tests/src/exec/events.test.ts                      |  58 ++++++++\n tests/src/exec/pipeline-e2e.integration.test.ts    | 108 +++++++++++++++\n 8 files changed, 448 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec/events.ts src/exec/run/schedule-prepare.ts src/exec/run/lifecycle-commands.ts tests/src/exec/events.test.ts tests/src/exec/pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/exec-operation-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-fyn5-resume-executor-claim-mismatch.md",
+      "status": "passed",
+      "summary": "変更した TypeScript ファイルおよび Markdown ファイルを Prettier で整形し、差分がないことを確認しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/exec-operation-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-fyn5-resume-executor-claim-mismatch.md",
+      "status": "passed",
+      "summary": "変更した Markdown 3 ファイルに対する markdownlint 検査がエラーなしで通過しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "`docs/ja/projects/` 配下の変更に伴い成果物カタログの整合性検査を実行し、エラーなしで通過しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "個票の更新に伴いプロジェクト登録簿の生成ビューを再生成し、正常に完了することを確認しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML 成果物の変更なし",
+      "reason": "YAML 成果物を変更していないため適用外です。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FYN5/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FYN5/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FYN5/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 38 problems (0 errors, 38 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3764 file(s), 178 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3764 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FYN5\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FYN5/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FYN5/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FYN5\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-BI0Xaz/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-OhB8yI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JImYhT/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-79ACpa/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "PJR-FYN5 の対応として、schedule の `exec resume` で executor 段から再開するとき（`--resume-from executor` を含む）に `--executor-by` で元の claim の持ち主と異なる executor が指定された場合、元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim（`last_by`）と `PreparedTask.actor` を新しい executor に移し、統合前の完了確認および `complete` イベントの記録が新しい executor で通るように修正しました。あわせて同一秒内の `release` と再 `claim` のイベント順序解決、E2E 統合テスト・単体テスト、`exec-operation-guide.md`、`CHANGELOG.md`（`Unreleased` 節）、および個票の対応結果を更新しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "方式の決定と理由: 案 A（executor 段からの再開時に `--executor-by` で別の executor が指定された場合、元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim を新しい executor へ移す方式）と案 B（完了前の確認 `readCompletionPreflight` で再開時に指定した executor を許す方式）を比較し、案 A を採用しました。統合後の `spawnComplete` と失敗時の `spawnBlock` は別プロセスの CLI（`specdojo exec complete/block --by <actor>`）でイベントログの `last_by` と `--by` の一致を検査するため、`readCompletionPreflight` だけを緩めても `last_by` が元の actor のままだと統合直後の `exec complete` や中断時の `exec block` が失敗し、`collectBusyActors` も稼働中の actor を誤認します。案 A により `readCompletionPreflight`・`exec complete`・`exec block`・`collectBusyActors` のすべてで状態が一貫し、引き継ぎ履歴（`claim` -> `release` -> `claim` -> `complete`）もイベントログに残ります。",
+    "完了イベントの記録先の検証結果: `tests/src/exec/pipeline-e2e.integration.test.ts` で `blocked` および `doing` の双方から `--resume-from executor --executor-by cloud-expert-executor`（元の claim は `local-gemma-executor`）で再開し、executor・親の検証・reporter・統合・worktree 削除まで通り、イベントログに `local-gemma-executor` の `release` と `cloud-expert-executor` の再 `claim` が記録され、`complete` イベントの `by` が新しい executor である `cloud-expert-executor` で記録されることを確認しました。`--executor-by` を指定しない再開の動作は従来どおり維持されています。",
+    "保護された設定（`.specdojo/**`、`package.json` など）の変更提案はありません。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-FYN5/20261103T134327359Z-f1de61bd/executor.log",
+      "bytes": 12149,
+      "truncated": false
+    }
+  ]
+}
