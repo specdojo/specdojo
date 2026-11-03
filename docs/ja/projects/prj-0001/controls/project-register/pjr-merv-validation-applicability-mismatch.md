@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T12:53:22Z"
   due_on: "2026-11-30"
-  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-merv-20261103T130253Z-9fc08e8a-result.md:39:12 error MD038/no-space-in…"
   derived_from:
     - PJR-GQN3
   commit_type: fix

@@ -69,6 +69,12 @@ export type ReporterFactOptions = {
    * (`docs/ja/projects/`), matching the validation table of the plan's common conventions.
    */
   changedPaths?: readonly string[];
+  /**
+   * Repository-relative paths modified during the executor attempt. Used to distinguish an
+   * existing `exec/plans/` or `exec/results/` file that the executor itself edited from the
+   * current run's runner-written plan and result files.
+   */
+  executorAttemptPaths?: ReadonlySet<string>;
 };
 
 export type ReporterEvidence = ExecEvidence & {
@@ -183,10 +189,16 @@ export function evidenceForReporter(
     scope.projectId ??
     factOptions.projectId ??
     projectIdForExecutionPath(config, scope.repoRoot, scope.executionPath);
+  const resultPath = scope.resultPath
+    ? repoRelativePath(scope.worktreePath, scope.resultPath)
+    : undefined;
+  const executorAttemptPaths =
+    factOptions.executorAttemptPaths ?? executorAttemptPathsForEvidence(evidence, resultPath);
   const scopedFactOptions: ReporterFactOptions = {
     ...factOptions,
     ...(projectId ? { projectId } : {}),
     changedPaths: changes.map((change) => change.path),
+    ...(executorAttemptPaths ? { executorAttemptPaths } : {}),
   };
   const mechanicallyNotApplicable = evidence.validations.flatMap((validation) => {
     if (validation.source === "runner" || validation.status !== "not_run") return [];
@@ -265,6 +277,8 @@ export function deriveReporterFacts(
   const specdojoConfig =
     options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
   const projectId = options.projectId ?? evidence.runner_scope?.project_id;
+  const executorAttemptPaths =
+    options.executorAttemptPaths ?? executorAttemptPathsForEvidence(evidence);
   const applicabilityOptions: ReporterFactOptions = {
     packageScripts,
     packageDependencies,
@@ -274,6 +288,7 @@ export function deriveReporterFacts(
       ? { productPackageManifests: options.productPackageManifests }
       : {}),
     changedPaths: options.changedPaths ?? evidence.changes.map((change) => change.path),
+    ...(executorAttemptPaths ? { executorAttemptPaths } : {}),
   };
   const passedCommandsByRepo = new Map<string, Set<string>>();
   const runnerPassedCommandsByRepo = new Map<string, Set<string>>();
@@ -461,6 +476,40 @@ function specdojoCommandArgs(command: string): string | undefined {
   );
 }
 
+function catalogValidateCommandArgs(
+  command: string,
+  scripts?: Readonly<Record<string, string>>,
+): string | undefined {
+  const normalized = normalizeValidationCommand(command);
+  const direct = specdojoCommandArgs(normalized);
+  if (direct !== undefined && /^catalog\s+validate(?:\s|$)/u.test(direct)) {
+    return direct;
+  }
+  const helperMatch =
+    /^node\s+(?:--import\s+tsx\s+)?(?:\.\/)?tools\/catalog-validate-if-configured\.mjs(?:\s+(.*))?$/u.exec(
+      normalized,
+    );
+  if (helperMatch) {
+    return `catalog validate${helperMatch[1] ? ` ${helperMatch[1]}` : ""}`;
+  }
+  const scriptMatch = /^npm run ([A-Za-z0-9:_.-]+)(?:\s+(.*))?$/u.exec(normalized);
+  if (!scriptMatch) return undefined;
+  const [, scriptName, rest] = scriptMatch;
+  if (!scriptName || (scripts !== undefined && !hasApplicableScript(scripts, scriptName))) {
+    return undefined;
+  }
+  const suffix = rest ? ` ${rest.replace(/^--\s*/u, "")}` : "";
+  if (scriptName === "validate:catalog") {
+    return `catalog validate${suffix}`;
+  }
+  const body = scripts?.[scriptName];
+  const bodyArgs = body ? specdojoCommandArgs(body) : undefined;
+  if (bodyArgs !== undefined && /^catalog\s+validate(?:\s|$)/u.test(bodyArgs)) {
+    return `${bodyArgs}${suffix}`;
+  }
+  return undefined;
+}
+
 /**
  * Returns why a validation is owned by the runner rather than the executor. `specdojo index build`
  * writes `.specdojo/doc-index.json`, which agents may not write; the runner regenerates the index
@@ -474,6 +523,51 @@ export function runnerOwnedValidationReason(command: string): string | undefined
 }
 
 const PROJECT_DOCUMENTS_ROOT = "docs/ja/projects/";
+const RUNNER_MANAGED_EXEC_RECORD_PATTERN =
+  /(?:^|\/)exec\/(?:plans|results|evidence|events|\.locks)\//u;
+const EXECUTOR_EDITABLE_EXEC_HISTORY_PATTERN = /(?:^|\/)exec\/(?:plans|results)\/.+\.md$/u;
+
+function executorAttemptPathsForEvidence(
+  evidence: ReporterEvidence,
+  resultPath?: string,
+): ReadonlySet<string> | undefined {
+  const entries = [
+    ...(evidence.attempt_changes ?? []),
+    ...(evidence.runner_context?.runner_managed_attempt_changes ?? []),
+  ];
+  if (entries.length === 0) return undefined;
+  return new Set(
+    entries
+      .flatMap((change) => changedPathSides(change.path))
+      .filter((path) => path !== resultPath),
+  );
+}
+
+function isRunnerManagedExecRecordPath(
+  path: string,
+  executorAttemptPaths?: ReadonlySet<string>,
+): boolean {
+  const normalized = path.replaceAll("\\", "/").replace(/^\.\//u, "");
+  if (!RUNNER_MANAGED_EXEC_RECORD_PATTERN.test(normalized)) return false;
+  if (
+    executorAttemptPaths?.has(normalized) &&
+    EXECUTOR_EDITABLE_EXEC_HISTORY_PATTERN.test(normalized)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function isHistoryLinkTargetPath(path: string): boolean {
+  const normalized = path.replaceAll("\\", "/").replace(/^\.\//u, "");
+  if (normalized === "pjr-index.md" || normalized.endsWith("/pjr-index.md")) {
+    return false;
+  }
+  return (
+    /(?:^|\/)pjr-[^/]+\.md$/u.test(normalized) ||
+    /^docs\/ja\/projects\/.+\/exec\/(?:plans|results)\/.+\.md$/u.test(normalized)
+  );
+}
 
 type ChangeScopedValidation = {
   /** Human-readable form of the path condition, used in runner-derived reasons. */
@@ -511,10 +605,28 @@ const CHANGE_SCOPED_VALIDATIONS: readonly ChangeScopedValidation[] = [
       /^node\s+\S*specdojo-docs-lint\.js\s+markdownlint(?:\s|$)/u.test(command),
     matchesPath: hasExtension([".md"]),
   },
+  {
+    pathCondition:
+      "履歴蓄積ファイル（pjr-*.md など、pjr-index.md と runner が書く plan・result を除く）",
+    matchesCommand: (command) =>
+      /^npm run validate:history-links(?:\s|$)/u.test(command) ||
+      /^(?:npx\s+)?specdojo-docs-lint\s+history-links(?:\s|$)/u.test(command) ||
+      /^node\s+\S*specdojo-docs-lint\.js\s+history-links(?:\s|$)/u.test(command),
+    matchesPath: isHistoryLinkTargetPath,
+  },
 ];
 
 function changedPathSides(path: string): string[] {
   return path.split(" -> ").map((side) => side.replaceAll("\\", "/").replace(/^\.\//u, ""));
+}
+
+function deliverableChangedPathSides(
+  changedPaths: readonly string[],
+  executorAttemptPaths?: ReadonlySet<string>,
+): string[] {
+  return changedPaths
+    .flatMap(changedPathSides)
+    .filter((path) => !isRunnerManagedExecRecordPath(path, executorAttemptPaths));
 }
 
 function changePathsForCommand(
@@ -522,9 +634,10 @@ function changePathsForCommand(
   repoName: string | undefined,
   config: SpecDojoConfig | null,
   projectId: string | undefined,
+  executorAttemptPaths?: ReadonlySet<string>,
 ): string[] {
   const repoNames = declaredRepos(config, projectId).map((repo) => repo.name);
-  return changedPaths.flatMap(changedPathSides).flatMap((path) => {
+  return deliverableChangedPathSides(changedPaths, executorAttemptPaths).flatMap((path) => {
     if (repoName !== undefined) {
       const prefix = `${repoName}:`;
       return path.startsWith(prefix) ? [path.slice(prefix.length)] : [];
@@ -539,13 +652,20 @@ function changeScopedValidationApplicability(
   repoName: string | undefined,
   config: SpecDojoConfig | null,
   projectId: string | undefined,
+  executorAttemptPaths?: ReadonlySet<string>,
 ): { recognized: boolean; applicable?: boolean; reason?: string } {
   const validation = CHANGE_SCOPED_VALIDATIONS.find(({ matchesCommand }) =>
     matchesCommand(command),
   );
   if (!validation) return { recognized: false };
   if (changedPaths === undefined) return { recognized: true };
-  const relevantPaths = changePathsForCommand(changedPaths, repoName, config, projectId);
+  const relevantPaths = changePathsForCommand(
+    changedPaths,
+    repoName,
+    config,
+    projectId,
+    executorAttemptPaths,
+  );
   return relevantPaths.some(validation.matchesPath)
     ? { recognized: true, applicable: true }
     : {
@@ -555,12 +675,13 @@ function changeScopedValidationApplicability(
       };
 }
 
-function changesReachProjectDocuments(changedPaths: readonly string[]): boolean {
-  return changedPaths
-    .flatMap((path) => path.split(" -> "))
-    .some((path) =>
-      path.replaceAll("\\", "/").replace(/^\.\//u, "").startsWith(PROJECT_DOCUMENTS_ROOT),
-    );
+function changesReachProjectDocuments(
+  changedPaths: readonly string[],
+  executorAttemptPaths?: ReadonlySet<string>,
+): boolean {
+  return deliverableChangedPathSides(changedPaths, executorAttemptPaths).some((path) =>
+    path.startsWith(PROJECT_DOCUMENTS_ROOT),
+  );
 }
 
 function projectOptionOf(args: string): string | undefined {
@@ -572,10 +693,14 @@ function specdojoCommandApplicability(
   config: SpecDojoConfig | null,
   runProjectId: string | undefined,
   changedPaths?: readonly string[],
+  scripts?: Readonly<Record<string, string>>,
+  executorAttemptPaths?: ReadonlySet<string>,
 ): SpecdojoCommandApplicability {
-  const args = specdojoCommandArgs(command);
-  if (args === undefined) return { recognized: false };
-  if (!/^catalog\s+validate(?:\s|$)/u.test(args)) {
+  const directArgs = specdojoCommandArgs(command);
+  const catalogArgs = catalogValidateCommandArgs(command, scripts);
+  if (directArgs === undefined && catalogArgs === undefined) return { recognized: false };
+  const args = catalogArgs ?? directArgs;
+  if (args === undefined || !/^catalog\s+validate(?:\s|$)/u.test(args)) {
     return { recognized: true, applicable: undefined };
   }
 
@@ -591,8 +716,12 @@ function specdojoCommandApplicability(
     return { recognized: true, applicable: undefined };
   }
   if (typeof project.catalog_path === "string" && project.catalog_path.trim()) {
-    // plan の共通規約は catalog validate を docs/ja/projects/ 配下の変更に限って求める。
-    if (changedPaths !== undefined && !changesReachProjectDocuments(changedPaths)) {
+    // plan の共通規約は catalog validate を docs/ja/projects/ 配下の変更（runner が書く
+    // exec/ 配下の plan・result などを除く）に限って求める。
+    if (
+      changedPaths !== undefined &&
+      !changesReachProjectDocuments(changedPaths, executorAttemptPaths)
+    ) {
       return {
         recognized: true,
         applicable: false,
@@ -622,23 +751,26 @@ export function mechanicallyNotApplicableReason(
   const normalized = normalizeValidationCommand(command);
   const config =
     options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
+  const manifest = commandManifest(normalized, options, config);
   const specdojo = specdojoCommandApplicability(
-    normalized,
+    manifest.command,
     config,
     options.projectId,
     options.changedPaths,
+    manifest.scripts,
+    options.executorAttemptPaths,
   );
   if (specdojo.recognized) {
     return specdojo.applicable === false ? specdojo.reason : undefined;
   }
 
-  const manifest = commandManifest(normalized, options, config);
   const changeScoped = changeScopedValidationApplicability(
     manifest.command,
     options.changedPaths,
     manifest.repoName,
     config,
     options.projectId,
+    options.executorAttemptPaths,
   );
   if (changeScoped.applicable === false) return changeScoped.reason;
   const packageJson =
@@ -665,22 +797,33 @@ function isValidNotApplicableValidation(
   const normalized = normalizeValidationCommand(command);
   const config =
     options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
+  const manifest = commandManifest(normalized, options, config);
   const specdojo = specdojoCommandApplicability(
-    normalized,
+    manifest.command,
     config,
     options.projectId,
     options.changedPaths,
+    manifest.scripts,
+    options.executorAttemptPaths,
   );
   if (specdojo.recognized) return specdojo.applicable !== true;
-  const manifest = commandManifest(normalized, options, config);
   const changeScoped = changeScopedValidationApplicability(
     manifest.command,
     options.changedPaths,
     manifest.repoName,
     config,
     options.projectId,
+    options.executorAttemptPaths,
   );
   if (changeScoped.applicable === false) return true;
+  if (
+    changeScoped.applicable === true &&
+    /^node\s+\S*specdojo-docs-lint\.js\s+(?:history-links|markdownlint)(?:\s|$)/u.test(
+      manifest.command,
+    )
+  ) {
+    return false;
+  }
   const scriptName = invokedScriptNameOf(manifest.command);
   if (scriptName !== undefined && hasApplicableScript(manifest.scripts, scriptName)) return false;
   const packageName = npxPackageNameOf(manifest.command);
