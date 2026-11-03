@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020",
+  "run_id": "20261103T103738149Z-67b6d96f",
+  "stage": {
+    "role": "executor",
+    "actor": "flash-high-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-03T11:16:17.689Z",
+    "completed_at": "2026-11-03T11:20:46.188Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-uc-schedule.md              | 199 +++++++++------------\n ...-FLOW-UC-REWRITE-cdfd-uc-schedule-020-result.md |  19 +-\n 2 files changed, 102 insertions(+), 116 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md",
+      "status": "passed",
+      "summary": "Prettier check passed for modified cdfd-uc-schedule.md"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog validate",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "Changes are outside docs/ja/projects/"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "No *.yaml or *.yml files changed"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines\n… output omitted …\no-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 38 problems (0 errors, 38 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3755 file(s), 178 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3755 file(s), 28 diagram(s), 28 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritte\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-03T11:25:28.198Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "cdfd-uc-schedule",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "cdfd-uc-schedule.md の磨き込み（目的の改定、実行サイクルの 1 ノード集約、絵文字の凡例統一、例外時戻りの整理）を完了し、構文・フォーマット検証を通過しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "目的の改定: schedule 系の目的を Kata および register 系の書き方にそろえ、「管理する成果物とその完了条件をカタログとスケジュールに定め、計画に沿ったタスクの実行から評価、完了記録までを進捗と対応付けることで、成果物の作成を計画どおりに進め、遅れや抜けを早く見つけられるようにする。」に更新しました。",
+    "実行サイクルの集約: 複数の系統が共通して通るプロセス領域（P-07・P-08・P-11）の内部を描き直さず、1 つのノード「⚙️ 実行サイクル（実行・評価・完了）\\nP-07〜P-08・P-11」として配置し、受け渡しの線のみを描くよう磨き込みを実施しました。役割表（3.2 節）およびデータストア表（4 章）も参加単位を統合しました。",
+    "絵文字の統一: cdfd-overview の凡例および各図に合わせて、プロセス（⚙️）、起点イベント（⚡）、マスタ（🧩, 📐, 📚, 🧭）、トランザクション（📒, 📅, 📋, 🧾, 📄, 🧪, 📊, 🗂️）のノードラベル絵文字を全図で統一しました。",
+    "例外時の戻りの整理: 実行サイクル内部の例外は全体概要に委ね、schedule 系と実行サイクルの間の再計画要求・再展開、およびカタログ定義と計画展開の間の補完・修正の戻り線（4本）に集約しました。",
+    "図ごとの測定結果（線数、データストア数、画像サイズ）:\n- 5.1. カタログ定義からスケジュール計画展開まで: 線数 13本、データストア数 7個、画像サイズ 幅 1372px × 高さ 1542px (viewBox 0 0 1372 1542)\n- 5.2. タスク実行から完了記録まで: 線数 14本、データストア数 11個、画像サイズ 幅 1972px × 高さ 1122px (viewBox 0 0 1972 1122)\n- 5.3. 進捗報告と派生情報の閲覧提供: 線数 17本、データストア数 9個、画像サイズ 幅 2627px × 高さ 1156px (viewBox 0 0 2627 1156)\n- 5.4. 例外時の戻り: 線数 4本、データストア数 0個、画像サイズ 幅 1000px × 高さ 778px (viewBox 0 0 1000 778)"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/20261103T103738149Z-67b6d96f/executor.log",
+      "bytes": 5503,
+      "truncated": false
+    }
+  ]
+}
