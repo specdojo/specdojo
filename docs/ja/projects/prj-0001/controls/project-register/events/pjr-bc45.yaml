@@ -47,3 +47,29 @@
     - field: commit_scope
       from: ""
       to: samples
+- v: 1
+  id: reg_efc9fd1c6f0c479bb8ba6d6ca1db7460
+  ts: "2026-11-03T02:40:38Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8a835c89a18f48b68255e5bd20875aa2
+- v: 1
+  id: reg_e7e4046eacdc4456a7e33424f9d9f28d
+  ts: "2026-11-03T02:57:21Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_efc9fd1c6f0c479bb8ba6d6ca1db7460
