@@ -28,6 +28,7 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
   rcmd.option("--by <nickname>", "Select an agent-members.yaml agent for a manual target");
   rcmd.option("--auto", "Automatically select and run next ready task", false);
+  rcmd.option("--track <track>", "Limit --auto selection to one schedule track");
   rcmd.option("--task <taskId>", "Task ID to run (manual selection)");
   rcmd.option(
     "--deliverable <localId>",
@@ -183,6 +184,12 @@ export function registerRunCommand(exec: Command): void {
       const hasJob = !!opts.job;
       const isManual = hasTask || hasDeliverable || hasPlan || hasRegister || hasJob;
       const isBatch = isAuto;
+
+      if (opts.track !== undefined && !isAuto) {
+        process.stdout.write("--track requires --auto.\n");
+        process.exitCode = 1;
+        return;
+      }
 
       if (hasRegisterIds && hasRegisterFilter) {
         process.stdout.write("Specify either --register or --register-filter, not both.\n");

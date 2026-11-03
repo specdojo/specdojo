@@ -5,6 +5,7 @@ import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js
 import { readAllEventFiles, foldEventsToState } from "../events.js";
 import { buildScheduleIndex, findStaleGeneratedTracks } from "../schedule/schedule.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
+import { scheduleTrackNames } from "../schedule/gantt-chart-scope.js";
 import { readReadySnapshot } from "../schedule/ready.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
 import { type ReadyTaskView } from "../types.js";
@@ -104,6 +105,15 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
   );
   const parallel = parseParallel(opts.parallel);
 
+  // Validate against the schedule, including tracks with no Ready tasks, before any claim.
+  const track = opts.track;
+  if (track !== undefined) {
+    const tracks = scheduleTrackNames(buildScheduleIndex(schedulePath));
+    if (!tracks.includes(track)) {
+      throw new Error(`Unknown schedule track: ${track}. Available tracks: ${tracks.join(", ")}`);
+    }
+  }
+
   const execDefaults = loadExecDefaultsConfig(
     resolveExecDefaultsPath(opts, schedulePath),
     executionPath,
@@ -128,14 +138,25 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
     }
 
     const readySnapshot = readReadySnapshot(readyJsonPath);
-    const orderedIds: string[] =
+    const strategyIds: string[] =
       strategy === "fifo"
         ? readySnapshot.strategies.fifo.ordered_task_ids
         : readySnapshot.strategies["critical-first"].ordered_task_ids;
 
+    const taskMap = new Map(readySnapshot.tasks.map((t) => [t.id, t]));
+    // Filter every snapshot before preparation, so setup failures and loop refills cannot
+    // escape the requested track. Use schedule_file rather than parsing hyphenated task IDs.
+    const orderedIds =
+      track === undefined
+        ? strategyIds
+        : strategyIds.filter((id) => {
+            const task = taskMap.get(id);
+            if (!task) return false;
+            const file = basename(task.schedule_file);
+            return file === `sch-track-${track}.yaml` || file === `sch-track-${track}.yml`;
+          });
     if (orderedIds.length === 0) return { preparedTasks: [], readyCount: 0 };
 
-    const taskMap = new Map(readySnapshot.tasks.map((t) => [t.id, t]));
     const preparedTasks: PreparedTask[] = [];
 
     for (const taskId of orderedIds) {
