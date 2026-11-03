@@ -1,9 +1,10 @@
 import { registerInputSection } from "../register/input.js";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { DEFAULT_PROJECT_CONTEXT } from "../shared/specdojo-config.js";
+import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "../shared/specdojo-config.js";
 import { resolveDeliverableSchemaRef, resolveKataRefs, type KataRefs } from "../kata/kata.js";
 import { formatMarkdownFile } from "./format.js";
+import { assertPlanMarkdownlint } from "./plan-markdownlint.js";
 import { expandTemplate } from "./shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./types.js";
 import type { CriteriaItem } from "../catalog/types.js";
@@ -418,7 +419,11 @@ async function writeTaskPlan(
           override,
         );
   const schemaRef = resolveDeliverableSchemaRef(deliverable?.resolvedPath);
-  const content = injectCommonConventions(body, schemaRef, ctx.templateCache, mode);
+  const content = `${injectCommonConventions(body, schemaRef, ctx.templateCache, mode).replace(/[\r\n]+$/u, "")}\n`;
+
+  if (task.schedule_file && override?.origin !== "register") {
+    await assertPlanMarkdownlint(specdojoRootDir(), task.id, outPath, content);
+  }
 
   writeFileSync(outPath, content, "utf8");
   await formatMarkdownFile(outPath);

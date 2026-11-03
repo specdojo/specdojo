@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-track.schema.yaml
+kind: track
+id: prj-0001:sch-track-data-flow-uc-rewrite
+type: project
+status: draft
+title: スケジュールトラック（data-flow-uc-rewrite）
+rulebook: specdojo:sch-rulebook
+version: 1
+project_id: prj-0001
+track: data-flow-uc-rewrite
+settings:
+  start_date: "2026-11-03"
+tasks:
+  - local_id: cdfd-uc-register
+    phase_suffix: "010"
+    phase_set: uc-rewrite-pass
+    phase_id: rewrite
+    name: 系統別の詳細 CDFD の書き直し
+    duration_days: 0.5
+    depends_on: []
+    owner: BA
+    description: |
+      PJR-PRYZ で直した Kata（cdfd-uc-rulebook / recipe / sample / template と cdfd-d2-rulebook）に
+      従って、対象の系統別の詳細 CDFD を書き直す。既存の草案の業務の中身（プロセス領域、データストア、
+      受け渡す情報）は、cdfd-overview と矛盾しない限り生かす。次の方針を守る。
+
+      - 目的は、その系統が何のためにあるかを 1〜2 文で書き、承認者や読み手の役割（BA・QE など）を書かない。
+      - 「引き渡し」と「例外時の戻り先」の章は設けない。渡す情報は図の線のラベルで表し、引き渡し条件の
+        イベント（H-xx）を図に置かない。戻りの流れが業務として大事な場合だけ、Kata に従い
+        「例外時の戻り」の図を足してよい。
+      - 図に Orchestrator（P-14）を置かない。調整は cdfd-overview の「Orchestrator による PDCA の調整」の図に任せる。
+      - イベントは 1 つのノードに 1 つの出来事とし、短い文にする。起点イベントの文言は cdfd-overview の
+        「プロセス領域」の表と同じにする。
+      - プロセス領域の区分・名称・領域 ID は cdfd-overview の 7 区分と同じにし、表の列は Kata に従う。
+      - based_on は cdfd-overview などの有効な文書とし、status が deprecated の文書（cdfd-plan・cdfd-do・
+        cdfd-check・cdfd-action・cdfd-orchestrator・cdfd-onboarding・cdfd-uc-deliverable）を based_on と
+        本文で参照しない。supersedes はそのまま残してよい。
+      - 図は D2 の direction: down とし、配色と凡例は cdfd-overview の凡例を参照して再掲しない。
+        図の題は業務の言葉で付け、説明は図から読み取れることを 1 文で書く。本文は表を中心に端的に書く。
+      - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
+  - local_id: cdfd-uc-schedule
+    phase_suffix: "010"
+    phase_set: uc-rewrite-pass
+    phase_id: rewrite
+    name: 系統別の詳細 CDFD の書き直し
+    duration_days: 0.5
+    depends_on: []
+    owner: BA
+    description: |
+      PJR-PRYZ で直した Kata（cdfd-uc-rulebook / recipe / sample / template と cdfd-d2-rulebook）に
+      従って、対象の系統別の詳細 CDFD を書き直す。既存の草案の業務の中身（プロセス領域、データストア、
+      受け渡す情報）は、cdfd-overview と矛盾しない限り生かす。次の方針を守る。
+
+      - 目的は、その系統が何のためにあるかを 1〜2 文で書き、承認者や読み手の役割（BA・QE など）を書かない。
+      - 「引き渡し」と「例外時の戻り先」の章は設けない。渡す情報は図の線のラベルで表し、引き渡し条件の
+        イベント（H-xx）を図に置かない。戻りの流れが業務として大事な場合だけ、Kata に従い
+        「例外時の戻り」の図を足してよい。
+      - 図に Orchestrator（P-14）を置かない。調整は cdfd-overview の「Orchestrator による PDCA の調整」の図に任せる。
+      - イベントは 1 つのノードに 1 つの出来事とし、短い文にする。起点イベントの文言は cdfd-overview の
+        「プロセス領域」の表と同じにする。
+      - プロセス領域の区分・名称・領域 ID は cdfd-overview の 7 区分と同じにし、表の列は Kata に従う。
+      - based_on は cdfd-overview などの有効な文書とし、status が deprecated の文書（cdfd-plan・cdfd-do・
+        cdfd-check・cdfd-action・cdfd-orchestrator・cdfd-onboarding・cdfd-uc-deliverable）を based_on と
+        本文で参照しない。supersedes はそのまま残してよい。
+      - 図は D2 の direction: down とし、配色と凡例は cdfd-overview の凡例を参照して再掲しない。
+        図の題は業務の言葉で付け、説明は図から読み取れることを 1 文で書く。本文は表を中心に端的に書く。
+      - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
+  - local_id: cdfd-uc-routine
+    phase_suffix: "010"
+    phase_set: uc-rewrite-pass
+    phase_id: rewrite
+    name: 系統別の詳細 CDFD の書き直し
+    duration_days: 0.5
+    depends_on: []
+    owner: BA
+    description: |
+      PJR-PRYZ で直した Kata（cdfd-uc-rulebook / recipe / sample / template と cdfd-d2-rulebook）に
+      従って、対象の系統別の詳細 CDFD を書き直す。既存の草案の業務の中身（プロセス領域、データストア、
+      受け渡す情報）は、cdfd-overview と矛盾しない限り生かす。次の方針を守る。
+
+      - 目的は、その系統が何のためにあるかを 1〜2 文で書き、承認者や読み手の役割（BA・QE など）を書かない。
+      - 「引き渡し」と「例外時の戻り先」の章は設けない。渡す情報は図の線のラベルで表し、引き渡し条件の
+        イベント（H-xx）を図に置かない。戻りの流れが業務として大事な場合だけ、Kata に従い
+        「例外時の戻り」の図を足してよい。
+      - 図に Orchestrator（P-14）を置かない。調整は cdfd-overview の「Orchestrator による PDCA の調整」の図に任せる。
+      - イベントは 1 つのノードに 1 つの出来事とし、短い文にする。起点イベントの文言は cdfd-overview の
+        「プロセス領域」の表と同じにする。
+      - プロセス領域の区分・名称・領域 ID は cdfd-overview の 7 区分と同じにし、表の列は Kata に従う。
+      - based_on は cdfd-overview などの有効な文書とし、status が deprecated の文書（cdfd-plan・cdfd-do・
+        cdfd-check・cdfd-action・cdfd-orchestrator・cdfd-onboarding・cdfd-uc-deliverable）を based_on と
+        本文で参照しない。supersedes はそのまま残してよい。
+      - 図は D2 の direction: down とし、配色と凡例は cdfd-overview の凡例を参照して再掲しない。
+        図の題は業務の言葉で付け、説明は図から読み取れることを 1 文で書く。本文は表を中心に端的に書く。
+      - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。

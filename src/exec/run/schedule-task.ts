@@ -250,6 +250,8 @@ export async function runPreparedTask(
         ? buildExecutorPrompt(prepared.plan, execDefaults.pipeline?.parent_validations, {
             resumed: true,
             existingChanges: worktreeStatusPaths(prepared.worktree.path),
+            initialChangeTargets: prepared.initialChangeTargets,
+            resumeHandoff: prepared.resumeHandoff,
           })
         : prepared.prompt;
     const executorOutcome = await runWithRetry(
@@ -304,6 +306,7 @@ export async function runPreparedTask(
             plan: prepared.plan,
             evidence: executorEvidence,
             evidencePath: executorEvidencePath,
+            initialChangeTargets: prepared.initialChangeTargets,
           })
         : undefined;
     if (result === "success" && coverageFailure) {

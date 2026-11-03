@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2de9cf34e2374b1eb646ffaff936cbae
+  ts: "2026-11-03T04:42:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者との対話で、スターターのリポジトリの構成と名前を決めたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: スターターのリポジトリの構成と名前を決める
+    - field: description
+      from: ""
+      to: PJR-RTD5 のスターター（ひな型）を、管理 specdojo-starters-specdojo・作る側 specdojo-starters・配る側 `specdojo-starter-<name>` の 3 種類のリポジトリで作り、作る側のディレクトリを 3 層の構成にする
+    - field: input
+      from: ""
+      to: '["GitHub の template repository は 1 つのリポジトリが 1 つのひな型で、「Use this template」はリポジトリの中身をまるごと複製する（2026-11-03）","このリポジトリの Git 管理の大きさは 63 MB で、そのうち prj-0001 の実行記録が 42 MB（6,406 ファイル）。prj-0002 の管理の文書は 1.4 MB（2026-11-03 の実測）","利用者は、管理の履歴とプロダクトの履歴が混ざらないよう、管理用のリポジトリを分ける形を選んだ。名前は、scratch-vm のようにプロダクトの名前を頭に付ける慣習と、ガイドの例の「プロダクトの名前＋-specdojo」の形に合わせる案 A を選んだ（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: derived_from
+      from: ""
+      to: '["PJR-RTD5"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: register
+- v: 1
+  id: reg_8e6a3a63277144e2b4fc40e2f1e32ec1
+  ts: "2026-11-03T04:44:12Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 2026-11-03 の対話で indie が管理用リポジトリの分離と名前の案 A を選んだ
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: スターターは管理 specdojo-starters-specdojo・作る側 specdojo-starters・配る側 `specdojo-starter-<name>` の 3 種類のリポジトリで作り、作る側は starters/`<name>`/ に生成・追加の設定・SpecDojo の 3 層を置く
+  previous_event_id: reg_2de9cf34e2374b1eb646ffaff936cbae

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 96
-graded_at: "2026-10-04T21:08:29.147Z"
-graded_by: agy-expert-executor
-content_hash: 799b25df02dbe0ec9ebc86588bd4e72812de2f198277bb912664cd1d1c26e9bb
+graded_at: "2026-11-02T20:34:44.309Z"
+graded_by: flash-high-executor
+content_hash: 0ee37cff6e857e75e6d3864d5eddecc05b29557aa7979698ce4b702384e8d5bf
 categories:
   purpose:
     score: 100
@@ -113,3 +113,4 @@ findings:
     line: 1
     anchor: "# 非機能要件 / 可用性 作成ルール"
     message: 参照サンプル specdojo:nfr-availability-sample が、Section 5 で定義した必須の見出し構成に準拠していない。
+    message_ja: 参照サンプル specdojo:nfr-availability-sample が、Section 5 で定義した必須の見出し構成に準拠していない。

@@ -1,5 +1,13 @@
 import { spawnSync } from "node:child_process";
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  cpSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "commander";
@@ -101,31 +109,132 @@ describe("register --commit", () => {
     vi.restoreAllMocks();
   });
 
-  it("コマンドが変更した個票と event だけを commit し、開始前の変更を残す", async () => {
-    vi.spyOn(process.stdout, "write").mockReturnValue(true);
-    root = await createRepository();
-    writeFileSync(join(root, "notes.md"), "user change\n", "utf8");
+  it.each(["unstaged", "staged", "partially-staged"])(
+    "コマンドが変更した個票と event だけを commit し、開始前の %s 変更を残す",
+    async (state) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      root = await createRepository();
+      writeFileSync(join(root, "notes.md"), "user change\n", "utf8");
+      if (state !== "unstaged") git(root, "add", "notes.md");
+      if (state === "partially-staged") {
+        writeFileSync(join(root, "notes.md"), "later user change\n", "utf8");
+      }
+      // 失敗した checkpoint の event が root の index に残った事象を再現する。
+      const event = `${EXECUTION_REL}/exec/events/leftover.json`;
+      mkdirSync(join(root, EXECUTION_REL, "exec/events"), { recursive: true });
+      writeFileSync(join(root, event), '{"type":"claim"}\n', "utf8");
+      git(root, "add", event);
+      const stagedBefore = git(root, "diff", "--cached", "--binary");
+      const statusBefore = git(root, "status", "--porcelain");
 
-    await runRegister([
-      "update",
-      "--project",
-      "prj-0001",
-      "--id",
-      "PJR-AB12",
-      "--owner",
-      "DEV",
-      "--commit",
-    ]);
+      await runRegister([
+        "update",
+        "--project",
+        "prj-0001",
+        "--id",
+        "PJR-AB12",
+        "--owner",
+        "DEV",
+        "--commit",
+      ]);
 
-    expect(git(root, "log", "-1", "--format=%s")).toBe(
-      "docs(register PJR-AB12): update ライフサイクル枠を確認する",
-    );
-    expect(git(root, "show", "--name-only", "--format=", "HEAD").split("\n").sort()).toEqual([
-      `${REGISTER_REL}/events/pjr-ab12.yaml`,
-      `${REGISTER_REL}/pjr-ab12-lifecycle-commit.md`,
-    ]);
-    expect(git(root, "status", "--porcelain")).toBe(" M notes.md");
-  });
+      expect(git(root, "log", "-1", "--format=%s")).toBe(
+        "docs(register PJR-AB12): update ライフサイクル枠を確認する",
+      );
+      expect(git(root, "show", "--name-only", "--format=", "HEAD").split("\n").sort()).toEqual([
+        `${REGISTER_REL}/events/pjr-ab12.yaml`,
+        `${REGISTER_REL}/pjr-ab12-lifecycle-commit.md`,
+      ]);
+      expect(git(root, "status", "--porcelain")).toBe(statusBefore);
+      expect(git(root, "diff", "--cached", "--binary")).toBe(stagedBefore);
+    },
+  );
+
+  it.each(["pre-commit", "commit-msg"])(
+    "%s が失敗してもコマンドの stage だけを戻し、本文と既存の index を残す",
+    async (hook) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      root = await createRepository();
+      writeFileSync(join(root, "notes.md"), "staged by user\n", "utf8");
+      git(root, "add", "notes.md");
+      writeFileSync(join(root, "notes.md"), "unstaged by user\n", "utf8");
+      const stagedBefore = git(root, "diff", "--cached", "--binary");
+      const headBefore = git(root, "rev-parse", "HEAD");
+      const hookPath = join(root, ".git/hooks", hook);
+      writeFileSync(hookPath, "#!/bin/sh\necho 'intentional hook failure' >&2\nexit 1\n", "utf8");
+      chmodSync(hookPath, 0o755);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--owner", "DEV", "--commit"]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain("intentional hook failure");
+      expect(git(root, "rev-parse", "HEAD")).toBe(headBefore);
+      expect(git(root, "diff", "--cached", "--binary")).toBe(stagedBefore);
+      expect(readFileSync(join(root, "notes.md"), "utf8")).toBe("unstaged by user\n");
+      expect(
+        readFileSync(join(root, REGISTER_REL, "pjr-ab12-lifecycle-commit.md"), "utf8"),
+      ).toContain("owner: DEV");
+      expect(readFileSync(join(root, REGISTER_REL, "events/pjr-ab12.yaml"), "utf8")).toContain(
+        "DEV",
+      );
+    },
+  );
+
+  it.each([false, true])(
+    "hook 整形後の amend で無関係な stage を保持する（amend 拒否: %s）",
+    async (rejectAmend) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      root = await createRepository();
+      writeFileSync(join(root, "notes.md"), "staged by user\n", "utf8");
+      git(root, "add", "notes.md");
+      const stagedBefore = git(root, "diff", "--cached", "--binary");
+      // 初回 commit 後に整形差分を作り、収束の amend を実際に通す。
+      const postCommit = join(root, ".git/hooks/post-commit");
+      writeFileSync(
+        postCommit,
+        [
+          "#!/bin/sh",
+          'marker="$(git rev-parse --git-path formatted-once)"',
+          'if [ ! -f "$marker" ]; then',
+          '  touch "$marker"',
+          `  printf '\\nHook formatted.\\n' >> '${REGISTER_REL}/pjr-ab12-lifecycle-commit.md'`,
+          "fi",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      chmodSync(postCommit, 0o755);
+      if (rejectAmend) {
+        const preCommit = join(root, ".git/hooks/pre-commit");
+        writeFileSync(
+          preCommit,
+          '#!/bin/sh\nif [ -f "$(git rev-parse --git-path formatted-once)" ]; then\n  echo "amend rejected" >&2\n  exit 1\nfi\n',
+          "utf8",
+        );
+        chmodSync(preCommit, 0o755);
+      }
+
+      await runRegister(["update", "--id", "PJR-AB12", "--owner", "DEV", "--commit"]);
+
+      expect(process.exitCode).toBe(rejectAmend ? 1 : undefined);
+      expect(git(root, "rev-list", "--count", "HEAD")).toBe("2");
+      expect(git(root, "show", "--name-only", "--format=", "HEAD").split("\n").sort()).toEqual([
+        `${REGISTER_REL}/events/pjr-ab12.yaml`,
+        `${REGISTER_REL}/pjr-ab12-lifecycle-commit.md`,
+      ]);
+      expect(git(root, "diff", "--cached", "--binary")).toBe(stagedBefore);
+      expect(
+        git(root, "show", `HEAD:${REGISTER_REL}/pjr-ab12-lifecycle-commit.md`).includes(
+          "Hook formatted.",
+        ),
+      ).toBe(!rejectAmend);
+      expect(
+        readFileSync(join(root, REGISTER_REL, "pjr-ab12-lifecycle-commit.md"), "utf8"),
+      ).toContain("Hook formatted.");
+    },
+  );
 
   it("exec と同じ register lifecycle 枠が空くまで待ってから記帳・build・commit する", async () => {
     vi.spyOn(process.stdout, "write").mockReturnValue(true);

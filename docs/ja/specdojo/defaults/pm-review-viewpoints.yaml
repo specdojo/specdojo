@@ -348,6 +348,7 @@ viewpoints:
         - specdojo:bps-rulebook
         - specdojo:br-rulebook
         - specdojo:ccd-mermaid-rulebook
+        - specdojo:cdfd-d2-rulebook
         - specdojo:cdfd-mermaid-rulebook
         - specdojo:cdfd-overview-rulebook
         - specdojo:cdfd-rulebook
@@ -564,6 +565,7 @@ viewpoints:
         - specdojo:bps-rulebook
         - specdojo:br-rulebook
         - specdojo:ccd-mermaid-rulebook
+        - specdojo:cdfd-d2-rulebook
         - specdojo:cdfd-mermaid-rulebook
         - specdojo:cdfd-rulebook
         - specdojo:cdfd-uc-rulebook

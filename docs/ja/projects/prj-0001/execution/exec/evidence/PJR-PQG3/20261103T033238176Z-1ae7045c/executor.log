@@ -1,0 +1,37 @@
+`npm run docs:build` を実行して現状のビルド確認を行っています。完了を待って結果を確認します。
+変更を反映した状態で `npm run docs:build` を実行し、ビルドの最終確認を行っています。完了通知を待ちます。
+PJR-PQG3「VitePress のサイドメニューに Kata の sample・template・recipe を載せる」の対応を完了しました。
+
+### 実施内容の概要
+
+1. **サイドメニューの並べ方（案Aの採用）**:
+   - トップレベルに「レシピ」「サンプル」「テンプレート」「標準」「ルール」を並べ、それぞれの内部の分類（「プロジェクト」「業務仕様」「外部I/F仕様」「アーキテクチャ」「システム設計」「業務受入条件」「非機能要件」「システム受入条件」「テスト」「移行」「運用」等）を統一しました。
+   - 成果物ごとに階層をまとめる案（案B）と比較し、レシピ・テンプレートの存在件数に偏りがある中で階層を深くしてクリック数が増大するのを防ぎ、既存の「型で作る」の体系に沿って目的別（テンプレート取得、サンプルの参照）の動線を明快にするため案Aを選定しました。
+
+2. **メニューに掲載する Kata の抜け漏れ補正と整理（計 306 件）**:
+   - **rulebook**: 102件（有効99件） → **107件**
+     - 欠落していた `cdfd-overview`, `cdfd-uc`, `cdfd-d2`, `ifx-cmd`, `ntp`, `stsd-mermaid`, `sysd`, `tml` の 8 件を補正。
+     - 非推奨の `cstd-rulebook` および存在しないファイル `cstd-mermaid`, `ifx` へのリンクを整理。
+   - **recipe**: 16件 → **23件**
+     - 欠落していた `cdfd-overview`, `cdfd`, `cdfd-uc`, `stsd`, `bps`, `ifx-cmd`, `tsd` の 7 件を補正。
+   - **sample**: 0件 → **108件**（非推奨の `cstd-sample` を除く実在する全 108 件を掲載。YAML から生成されるページもすべて対応）
+   - **template**: 0件 → **68件**（実在する全 68 件を掲載。成果物カタログのドメイン別テンプレートやチケット種別テンプレートを含む）
+
+3. **メニュー表示名の一貫性確保**:
+   - `sidebar-config.ts` の既存方針に従い、各ページの H1 をベースとしつつ、親グループで種別が自明なため接尾辞（「作成ルール」「作成レシピ」「サンプル」「テンプレート」）や具体名・プレースホルダー（「: 駄菓子屋きぬや...」「: `_PROJECT_NAME_`」など）を落とした対象成果物の名称に統一しました。これにより成果物間で同名で対比できるようになりました。
+
+4. **抜け漏れ防止の自動検査テスト追加**:
+   - [`tests/packages/docs-site/sidebar-kata.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PQG3/tests/packages/docs-site/sidebar-kata.test.ts) を作成し、実在する非推奨以外の Kata の網羅性、非推奨の混入防止、リンク先のファイル実在性を自動検証できるようにしました。
+
+5. **個票の更新**:
+   - [`pjr-pqg3-sidebar-kata-menus.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PQG3/docs/ja/projects/prj-0001/controls/project-register/pjr-pqg3-sidebar-kata-menus.md) の作業内容・対応結果を更新しました。
+
+### 変更ファイル
+
+- [`packages/docs-site/.vitepress/sidebar-config.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PQG3/packages/docs-site/.vitepress/sidebar-config.ts)
+- [`tests/packages/docs-site/sidebar-kata.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PQG3/tests/packages/docs-site/sidebar-kata.test.ts)
+- [`docs/ja/projects/prj-0001/controls/project-register/pjr-pqg3-sidebar-kata-menus.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PQG3/docs/ja/projects/prj-0001/controls/project-register/pjr-pqg3-sidebar-kata-menus.md)
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"VitePress サイドメニューに Kata の全 sample・template・recipe・rulebook（計306件）を掲載し、自動検査テストを追加しました。","handoff":[],"validations":[{"command":"npm run docs:build","status":"passed","summary":"docs:build が exit code 0 で完了（サイト全体のビルド成功）"},{"command":"npm --prefix packages/docs-site run typecheck","status":"passed","summary":"docs-site の TypeScript 型検査がエラーなしで完了"}]}
+</specdojo_executor_evidence>

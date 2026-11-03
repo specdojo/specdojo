@@ -12,6 +12,8 @@ import {
 } from "./sidebar-config";
 import type { SidebarItem } from "./sidebar-config";
 import { mermaidSvgId } from "../src/gen-mermaid-svg";
+import { d2SvgId } from "../src/gen-d2-svg";
+import { d2SvgAutoGenerate } from "./d2-auto-generate";
 import {
   STAGED_PACKAGE_DEAD_LINK_PATTERNS,
   stageBundledKata,
@@ -27,6 +29,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cwd());
 const CONTENT_ROOT = path.join(WORKSPACE_ROOT, "docs");
 const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, ".vitepress", "mermaid");
+const D2_OUT_DIR = path.join(WORKSPACE_ROOT, ".vitepress", "d2");
 
 // サイトから除外した exec の plan / result は、リポジトリ上の正本へリンクする。
 // URL の組み立て元をここに集約し、Markdown 本文や doc-index には GitHub 固有値を持たせない。
@@ -1027,17 +1030,18 @@ export default defineConfig({
           }
         }
 
-        if (info === "mermaid") {
+        if (info === "mermaid" || info.split(/\s/)[0] === "d2") {
           const code = token.content.trim();
-          // 生成側と同じキー（mermaid-cli の版・設定・コード）で SVG 名を求める
-          const id = mermaidSvgId(code);
-          const src = `${base}mermaid/${id}.svg`;
+          // 生成側と同じキー（CLI の版・配置設定・コード）で SVG 名を求める
+          const kind = info === "mermaid" ? "mermaid" : "d2";
+          const id = kind === "mermaid" ? mermaidSvgId(code) : d2SvgId(code);
+          const src = `${base}${kind}/${id}.svg`;
 
           // 800x800 を超える場合はスクロールさせるためのラッパーを用意
           // 具体的な判定は CSS / JS 側で行う想定（ここではクラスだけ付与）
           return `
               <p class="mermaid-container">
-                <img :src="'${src}'" alt="mermaid diagram" loading="lazy" class="mermaid-image">
+                <img :src="'${src}'" alt="${kind} diagram" loading="lazy" class="mermaid-image">
               </p>\n`;
         }
 
@@ -1122,6 +1126,13 @@ export default defineConfig({
         syncFile: (file) => kataStaging.syncFile(file),
       }),
       mermaidAssets(MERMAID_OUT_DIR, base),
+      d2SvgAutoGenerate({
+        rootDir: SITE_CONTENT_ROOT,
+        outDir: D2_OUT_DIR,
+        contentRoot: CONTENT_ROOT,
+        syncFile: (file) => kataStaging.syncFile(file),
+      }),
+      mermaidAssets(D2_OUT_DIR, base, "d2"),
     ],
     build: {
       // 最大のチャンクはローカル検索インデックス（@localSearchIndex*）で、

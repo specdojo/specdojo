@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.js";
 import { canCompleteTask, readAllEventFiles, foldEventsToState } from "../events.js";
@@ -35,6 +36,7 @@ import {
 } from "../task-repos.js";
 import { checkpointAndEnsureWorktree, discardStaleExecWorktree } from "../worktree-ops.js";
 import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
+import type { RegisterResumeTarget } from "../register-resume.js";
 import {
   collectBusyActors,
   pinnedExecutor,
@@ -56,6 +58,7 @@ import {
   buildExecutorPrompt,
   executorRequirements,
   loadPrompt,
+  pathInsideWorktree,
   reportProductWorktrees,
   reporterRequirements,
   resolveReporterAgentCandidates,
@@ -78,6 +81,8 @@ export type PreparedTask = {
   pipelineRunId?: string;
   pipelineResumeStage?: PipelineStageRole;
   pipelineStateRef?: string;
+  initialChangeTargets?: readonly string[];
+  resumeHandoff?: readonly string[];
   reporterCandidates?: AgentRunCandidate[];
   executorRateLimitOptions?: PinnedRateLimitRunOptions;
   reporterRateLimitOptions?: PinnedRateLimitRunOptions;
@@ -158,7 +163,12 @@ export async function prepareSingleTask(
   planGenPaths: PlanGenPaths,
   execDefaults: ExecDefaultsConfig,
   hasProviderCapacity?: (provider?: AgentProvider) => boolean,
-  pipelineResume?: { stage?: AgentStageRole; stateRef?: string },
+  pipelineResume?: {
+    stage?: AgentStageRole;
+    stateRef?: string;
+    executorTarget?: Extract<RegisterResumeTarget, { stage: "executor" }>;
+    worktree?: ExecWorktree;
+  },
   rateLimitOverrides: Pick<
     RunOpts,
     "onRateLimit" | "fallbackExecutorBy" | "fallbackReporterBy" | "execDefaults" | "agentConfig"
@@ -324,6 +334,45 @@ export async function prepareSingleTask(
           reporterCandidates[0],
         )
       : undefined;
+
+  if (pipelineResume?.executorTarget) {
+    const { executorTarget, worktree } = pipelineResume;
+    if (!worktree) throw new Error(`no exec worktree to resume executor for ${task.id}`);
+    const worktreeExecutionPath = pathInsideWorktree(repoRoot, worktree.path, executionPath);
+    const planPrompt = loadPrompt(worktreeExecutionPath, task.id);
+    const resultPath = join(executionPath, "exec", "results", `${task.id}-result.md`);
+    const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
+    if (!planPrompt || !existsSync(resultPath) || !existsSync(worktreeResultPath)) {
+      throw new Error(`plan or result is missing for executor resume: ${task.id}`);
+    }
+    const claimEventPath = findClaimEventPath(schedulePath, task.id);
+    if (!claimEventPath) throw new Error(`claim event is missing for executor resume: ${task.id}`);
+    reportProductWorktrees(worktree);
+    return {
+      task,
+      actor,
+      agentCandidates,
+      plan: planPrompt,
+      prompt: buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations),
+      worktree,
+      resultPath,
+      resultScaffold: readResultFrontmatterSnapshot(resultPath),
+      checkpointPaths: [
+        join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+        resultPath,
+        claimEventPath,
+        ...gradeCheckpointPaths({ repoRoot, executionPath }),
+      ],
+      pipelineRunId: executorTarget.runId,
+      pipelineResumeStage: "executor",
+      pipelineStateRef: executorTarget.stateRef,
+      initialChangeTargets: executorTarget.initialChanges,
+      resumeHandoff: executorTarget.handoff,
+      reporterCandidates,
+      executorRateLimitOptions,
+      reporterRateLimitOptions,
+    };
+  }
 
   const reviewGradeOutcome = await gradeBeforeReviewPlan({
     task,

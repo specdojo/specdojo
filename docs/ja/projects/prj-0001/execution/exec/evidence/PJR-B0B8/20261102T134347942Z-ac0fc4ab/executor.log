@@ -1,0 +1,173 @@
+`flash-reporter` の `mode: report` 欠落を修正し、回帰テストを追加しました。ビルド・schema・カタログ検査は成功しています。親テストの再実行と実 agy・PJR-JSEY の確認は申し送りに記録しました。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "役割別セッション権限、宣言済み repository の編集境界、配布設定・設計・移行手順を確認。前回の親統合テスト失敗原因だった初期名簿の reporter の mode 欠落を修正し、回帰テストと個票を更新した。sandbox 内のビルド・schema・カタログ検査は成功。親固定検証と実機確認は申し送り済み。",
+  "handoff": [
+    "前回の親 test-integration は flash-reporter の `{mode}` 未解決で失敗した。`templates/init-agent-members.yaml` に `mode: report` を追加し、空 repository の統合テストに agy の role 解決検査を追加した。親 runner は固定検証を再実行し、今回の単体・統合テスト結果を確定すること。",
+    "保護設定の変更案は個票 5.4 に記録済み。利用者承認後に feature ブランチで `.specdojo/exec-defaults.yaml` の `providers.antigravity.command_template` を `specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p \"$(cat)\"` へ変更し、旧 bypass 指定を削除する。役割別 JSON 4 件を scaffold し、既存 member の `mode` と個別 command を確認する。executor は保護設定を変更していない。",
+    "実 agy は認証・使用枠を伴うため未実行。設計書 sysd-antigravity-agent-settings の 7.1 に従い、隔離した設定と無害な検証用ファイルで global・project・session の配列マージと優先順位、edit の両 worktree 編集、秘密情報・保護設定の拒否、review・report の書き込み拒否、orchestrator の承認後の設定編集、shell と未宣言ルートの制限を確認する。Claude と同等の隔離を実証済みとは扱わない。個票 5.2 にも記録済み。",
+    "統合後は運用プレイブックに従って PJR-JSEY の対象へ PJR-B0B8 を追加し、実際の `npx specdojo exec run --register` で executor・親検証・reporter・統合を確認する。実 agy と PJR-JSEY の証跡を個票と result に追記してから close を判断する。result 記入と状態遷移は reporter・runner が担当する。"
+  ],
+  "validations": [
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "TypeScript 本体のコンパイルに成功。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data 'templates/{init-exec-defaults.yaml,antigravity/exec-defaults-snippet.yaml}'",
+      "status": "passed",
+      "summary": "provider 設定テンプレート 2 件とも valid。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/agent-members.schema.yaml --data 'templates/{init-agent-members.yaml,antigravity/agent-members-snippet.yaml}'",
+      "status": "passed",
+      "summary": "修正した初期名簿と配布スニペットの 2 件とも valid。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。変更外の参照文書不在 WARN はあるが検証エラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "終了コード 0。登録簿を書き換えず生成処理を確認。"
+    },
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/pjr-b0b8-agy-session-permissions-multi-repo.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md src/commands/agent.ts src/commands/orchestrator.ts src/exec/antigravity-session.ts templates/antigravity/README.md templates/antigravity/exec-defaults-snippet.yaml templates/init-exec-defaults.yaml templates/init-agent-members.yaml templates/antigravity/settings.edit.json templates/antigravity/settings.orchestrator.json templates/antigravity/settings.report.json templates/antigravity/settings.review.json tests/src/commands/orchestrator.test.ts tests/src/commands/init-agent-roster.integration.test.ts tests/src/exec/agent-config-command.test.ts tests/src/exec/antigravity-session.integration.test.ts tests/src/exec/antigravity-session.test.ts",
+      "status": "passed",
+      "summary": "変更成果物 21 件の整形に成功。"
+    },
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-b0b8-agy-session-permissions-multi-repo.md",
+      "status": "passed",
+      "summary": "再開後の対応結果・検証結果を追記した個票の整形に成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "agy",
+      "status": "requires_human",
+      "summary": "認証・使用枠を伴う実機確認。設計書 7.1 の隔離環境で設定マージ、役割別許可・拒否、product worktree の編集と shell 制限を検証し、証跡を追記する。"
+    },
+    {
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後にホスト側で PJR-JSEY を実施し、実 pipeline の動作証跡を個票と result に追記する。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-b0b8-agy-session-permissions-multi-repo.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b0b8-agy-session-permissions-multi-repo.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "src/commands/agent.ts",
+      "status": "changed",
+      "path": "src/commands/agent.ts"
+    },
+    {
+      "target": "src/commands/orchestrator.ts",
+      "status": "changed",
+      "path": "src/commands/orchestrator.ts"
+    },
+    {
+      "target": "templates/antigravity/README.md",
+      "status": "changed",
+      "path": "templates/antigravity/README.md"
+    },
+    {
+      "target": "templates/antigravity/exec-defaults-snippet.yaml",
+      "status": "changed",
+      "path": "templates/antigravity/exec-defaults-snippet.yaml"
+    },
+    {
+      "target": "templates/init-exec-defaults.yaml",
+      "status": "changed",
+      "path": "templates/init-exec-defaults.yaml"
+    },
+    {
+      "target": "tests/src/commands/orchestrator.test.ts",
+      "status": "changed",
+      "path": "tests/src/commands/orchestrator.test.ts"
+    },
+    {
+      "target": "tests/src/exec/agent-config-command.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/agent-config-command.test.ts"
+    },
+    {
+      "target": "src/exec/antigravity-session.ts",
+      "status": "changed",
+      "path": "src/exec/antigravity-session.ts"
+    },
+    {
+      "target": "templates/antigravity/settings.edit.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.edit.json"
+    },
+    {
+      "target": "templates/antigravity/settings.orchestrator.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.orchestrator.json"
+    },
+    {
+      "target": "templates/antigravity/settings.report.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.report.json"
+    },
+    {
+      "target": "templates/antigravity/settings.review.json",
+      "status": "changed",
+      "path": "templates/antigravity/settings.review.json"
+    },
+    {
+      "target": "tests/src/exec/antigravity-session.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/antigravity-session.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/antigravity-session.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/antigravity-session.test.ts"
+    },
+    {
+      "target": "templates/init-agent-members.yaml",
+      "status": "changed",
+      "path": "templates/init-agent-members.yaml"
+    },
+    {
+      "target": "tests/src/commands/init-agent-roster.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/commands/init-agent-roster.integration.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

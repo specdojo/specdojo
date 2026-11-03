@@ -3493,3 +3493,247 @@
       from: PJR-M1DH の統合後、exec run --register が start から review まで通り、worktree と作業ブランチが片付いた
       to: PJR-B5TY の組み込みの後、exec run --register が start から review まで通り、親の検証で lint-mermaid が流れて通った
   previous_event_id: reg_7cd5362152cd47dba7997fdd43622537
+- v: 1
+  id: reg_8090bf863df84cd2b418ffd7cc8e6398
+  ts: "2026-10-31T15:21:44Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-6NEM の統合後の runner の確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-31"
+      to: "-"
+  previous_event_id: reg_e0ea8031c5c6452a94e79c944059f7fd
+- v: 1
+  id: reg_b7118dc5c14f44b49d52ce57d7aa372b
+  ts: "2026-10-31T15:22:10Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8090bf863df84cd2b418ffd7cc8e6398
+- v: 1
+  id: reg_504ba479e5834acba96a1d8bfdaec0ed
+  ts: "2026-10-31T15:28:45Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b7118dc5c14f44b49d52ce57d7aa372b
+- v: 1
+  id: reg_92f36161d37e4aae99e3d077212002c6
+  ts: "2026-10-31T15:29:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: smoke の結果と記録を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: PJR-B5TY の組み込みの後、exec run --register が start から review まで通り、親の検証で lint-mermaid が流れて通った
+      to: PJR-6NEM の統合後も exec run --register が start から review・統合まで通った
+  previous_event_id: reg_504ba479e5834acba96a1d8bfdaec0ed
+- v: 1
+  id: reg_0b91610ad56149db991be45abc98825e
+  ts: "2026-11-01T13:25:01Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-RKHR の統合後の exec run の確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-01"
+      to: "-"
+  previous_event_id: reg_92f36161d37e4aae99e3d077212002c6
+- v: 1
+  id: reg_d3549b2819bf4f8e903c0ec7b85f3fcc
+  ts: "2026-11-01T13:25:26Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0b91610ad56149db991be45abc98825e
+- v: 1
+  id: reg_b38ecfb812614b0b91242c6c277c53eb
+  ts: "2026-11-01T13:35:03Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d3549b2819bf4f8e903c0ec7b85f3fcc
+- v: 1
+  id: reg_4fb3743d99dc4cd0863058793237dd84
+  ts: "2026-11-01T13:37:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: run が成功し、対応結果に PJR-RKHR の確認行が追記された
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: PJR-6NEM の統合後も exec run --register が start から review・統合まで通った
+      to: PJR-RKHR の統合後も exec run --register が start・review・統合まで通った
+  previous_event_id: reg_b38ecfb812614b0b91242c6c277c53eb
+- v: 1
+  id: reg_ac9084ff08784f2383940313ba7787fe
+  ts: "2026-11-03T06:17:49Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-561Q と PJR-FVRZ の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-01"
+      to: "-"
+  previous_event_id: reg_4fb3743d99dc4cd0863058793237dd84
+- v: 1
+  id: reg_56b2274487ff43e0a1ebfc40b0b9e13e
+  ts: "2026-11-03T06:18:14Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ac9084ff08784f2383940313ba7787fe
+- v: 1
+  id: reg_60e6310d98ef4668acea477ebab771c0
+  ts: "2026-11-03T06:25:19Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_56b2274487ff43e0a1ebfc40b0b9e13e
+- v: 1
+  id: reg_463abec092804d2ebbde3c0602e61195
+  ts: "2026-11-03T06:26:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor の動作確認が start・executor・親の検証・reporter・統合まで成功した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: PJR-RKHR の統合後も exec run --register が start・review・統合まで通った
+      to: PJR-561Q と PJR-FVRZ の統合後に exec run --register が start から review まで通ることを確かめた
+  previous_event_id: reg_60e6310d98ef4668acea477ebab771c0
+- v: 1
+  id: reg_bc3d55537f2d442db2365008fe410350
+  ts: "2026-11-03T07:02:52Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-W7YX の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-03"
+      to: "-"
+  previous_event_id: reg_463abec092804d2ebbde3c0602e61195
+- v: 1
+  id: reg_c5d4867bfbc9438e8bbd4d49725c00d4
+  ts: "2026-11-03T07:03:30Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bc3d55537f2d442db2365008fe410350
+- v: 1
+  id: reg_4d2e0f1650f04d60a4715e8499882d7e
+  ts: "2026-11-03T07:12:19Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c5d4867bfbc9438e8bbd4d49725c00d4
+- v: 1
+  id: reg_4c9cbe0d54ed42388e86e07dac1218ae
+  ts: "2026-11-03T07:13:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor の動作確認が start・executor・親の検証・reporter・統合まで成功した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: PJR-561Q と PJR-FVRZ の統合後に exec run --register が start から review まで通ることを確かめた
+      to: PJR-W7YX の統合後に exec run --register が start から review まで通ることを確かめた
+  previous_event_id: reg_4d2e0f1650f04d60a4715e8499882d7e

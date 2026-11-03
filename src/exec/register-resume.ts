@@ -289,6 +289,38 @@ export function findResumableRegisterRun(input: {
   );
 }
 
+// Schedule の明示的な executor 再開は、成功済み executor から reporter へ進んだ run に限る。
+// run の選択・変更一覧・申し送りの復元は register と同じ規則を使う。
+export function selectScheduleExecutorResume(
+  candidates: readonly RegisterResumeCandidate[],
+): RegisterResumeLookup {
+  const lookup = selectResumableRegisterRun(candidates, { resumeFrom: "executor" });
+  if (lookup.kind !== "resumable") return lookup;
+  const { state } = lookup.target;
+  if (state.stages.executor.status !== "succeeded") {
+    return {
+      kind: "not-resumable",
+      reason: `--resume-from executor requires a succeeded executor stage for run ${state.run_id} (status: ${state.stages.executor.status})`,
+    };
+  }
+  const candidate = candidates.find(
+    (entry) => entry.runId === lookup.target.runId && entry.stateRef === lookup.target.stateRef,
+  );
+  if ((candidate?.executorEvidence ?? candidate?.evidence)?.stage.status !== "succeeded") {
+    return {
+      kind: "not-resumable",
+      reason: `succeeded executor evidence is missing or invalid for run ${state.run_id}`,
+    };
+  }
+  if (state.stages.reporter.status === "succeeded" || (state.stages.integrate?.attempts ?? 0) > 0) {
+    return {
+      kind: "not-resumable",
+      reason: `cannot resume the executor from the integrate stage of run ${state.run_id}`,
+    };
+  }
+  return lookup;
+}
+
 // plan / result のファイル名は `<pjr-id>-<UTC>-<rand>-(plan|result).md`（buildInPlaceStem）。
 // state に artifacts が無い旧 run のために、worktree の result 一覧から最新の stem を復元する。
 export function selectLatestRegisterResultStem(

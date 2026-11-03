@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3b06c8336edc4a82aab06cc689907909
+  ts: "2026-11-01T08:50:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 全体概要の CDFD を縦向きにし、系統ごとの入口のイベントを描いて試す
+    - field: description
+      from: ""
+      to: "詳細の CDFD を作らず全体概要と BPS で表す案の判断材料として、cdfd-overview の 4 つの図を direction: down にし、系統ごとの入口の起点イベントを 1〜3 個描いて試す。rulebook は変えず、ずれを記録する"
+    - field: input
+      from: ""
+      to: '["利用者は、残りの CDFD 8 文書を作らず、cdfd-overview と BPS で表す案（D）を検討している。判断の前に、縦向きと入口のイベントを描いた cdfd-overview を見たい（2026-11-01）","D 案では起点イベントが図から抜けるため、系統ごとの図にその系統を始めるイベントだけを 1〜3 個描く（D-2）を試す（2026-11-01 の対話で利用者が選択）","横向きの register 系の図は 4432×864px で、文書の幅では約 16% に縮む。direction: down にすると 2108×2791px になり、今の a <- b の書き方と透明度 0 の線のまま、上から Orchestrator・Plan・Do・Check・Action の順に並ぶことを orchestrator が 4 つの図で確かめた","cdfd-d2-rulebook は direction: down を階層構造の図に限り、cdfd-overview-rulebook は起点イベントを図に描かないと定めている。試行では rulebook を変えず、ずれを記録する。採用する場合は decision を記録してから rulebook を直し、採用しない場合は書き直しの commit を戻す","担当と期限は、CDFD の項目について利用者が決めた値（担当は BA、期限は 11 月末）にそろえる"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-T1D1"]'
+- v: 1
+  id: reg_903fe986838d4b8e898dbcc8a190a6f3
+  ts: "2026-11-01T08:51:35Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3b06c8336edc4a82aab06cc689907909
+- v: 1
+  id: reg_87e5c553756940fa9ca67ceef6d93dda
+  ts: "2026-11-01T09:11:24Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_903fe986838d4b8e898dbcc8a190a6f3

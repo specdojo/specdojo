@@ -6,7 +6,7 @@ SpecDojo は、Spec道（仕様道）の道場です。
 **記して、形にして、磨き続ける。**
 
 **記帳ひとつから始められます。** 設定 2 行で使い始め、必要になった分だけ広げられます。
-迷いを question として起票し、decision で決め、仕様書に書き、後日 change-request で直すまでを 10 分で体験できます。kata（型）を事前に用意する必要はありません。手順は [Quick Start ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html) 冒頭の「10分で体験する — 仕様の判断台帳」を参照してください。
+導入と Git flow の初期設定、register での起票と AI 実行、schedule・routine による運用までを対話で体験できます。手順は [Quick Start ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html) を参照してください。
 
 | 道場の言葉 | SpecDojo の仕組み                                                                                       |
 | ---------- | ------------------------------------------------------------------------------------------------------- |
@@ -105,7 +105,7 @@ npm run orch:opus
 | `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `npm run orch:opus` ほか          |
 | `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `npm run orch:opencode`           |
 | `codex`       | `.specdojo/codex/orchestrator.md`           | `npm run orch:sol` ほか           |
-| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:flash`              |
+| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:argon` ほか         |
 
 各設定を個別に管理したい場合は、後述の「設定を個別に行う場合」にある `config init` と `config scaffold` を使います。
 

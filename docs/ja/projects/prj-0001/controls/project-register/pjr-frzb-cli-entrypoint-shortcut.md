@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-frzb-cli-entrypoint-shortcut
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: low
   owner: ARC
   registered_at: "2026-09-23T12:42:58Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-31T12:37:26Z"
+  conclusion: 候補 A。配布する CLI は specdojo だけとし、alias・PATH・VS Code 統合ターミナルを文書で案内する
 ---
 
 # PJR-FRZB CLI の入口を短くする方法を決める
@@ -78,16 +80,20 @@ D は危険が明確なため候補から除く。
 
 ## 4. 回答・結論
 
--
+候補 A を採る。配布する CLI は `specdojo` だけとし、入口を短くしたい利用者には alias、PATH への追加、VS Code 統合ターミナルを文書で案内する。
+
+- 単独での運用が続く間は、追加の配布物を増やさない。
+- 複数人で入口を揃える必要が出た時点で、候補 B（任意で生成する wrapper）を改めて検討する。
+- 候補 D（短い bin 名の配布）は、既存のパッケージやツールとの衝突と `npx` の自動取得の危険があるため採らない。
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 回答者   | _TODO_ |
-| 回答日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                             |
+| -------- | -------------------------------------------------------------------------------- |
+| 回答者   | indie                                                                            |
+| 回答日   | 2026-10-31                                                                       |
+| 承認方式 | commit                                                                           |
+| 証跡     | 2026-10-31 の対話で indie が候補 A を指示し、本個票の close の commit で記録した |
 
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。

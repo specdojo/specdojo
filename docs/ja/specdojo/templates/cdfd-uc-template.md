@@ -16,133 +16,170 @@ specdojo:
 
 # 概念データフロー図（ユースケース別）: _USE_CASE_NAME_
 
-_TODO_: 全体概要のケース `_CASE_ID_` が扱うユースケースと、複数のプロセスグループを横断して定める目的を一文で記述する。
+_TODO_: 全体概要のケース `_CASE_ID_` が扱うユースケースまたは系統を一文で示す。
 
 ## 1. 目的
 
-_TODO_: 対象者ごとに、横断順序、引き渡し条件、例外時の戻り先を承認・設計・確認する利用結果を記述する。
-
-- _ROLE_ は、_TODO_: グループの通過順と責任境界を承認する。
-- _ROLE_ は、_TODO_: 引き渡す情報と条件を後続設計へ利用する。
-- _ROLE_ は、_TODO_: 引き渡しと戻り経路の重複・欠落を確認する。
+_TODO_: その業務が何のためにあるか、どの出来事からどの成果までを成立させるかを 1〜2 文で書く。読み手の承認・設計・確認作業は書かない。
 
 ## 2. 適用範囲
 
-- ケース: `_CASE_ID_` _USE_CASE_NAME_。_TODO_: `cdfd-overview` と同じケース ID、名称、業務目的を書く。
-- 開始イベント: _START_EVENT_。_TODO_: 最初のグループが動き始める出来事を書く。
-- 終了条件: _END_CONDITION_。_TODO_: 最後のグループが成果を利用可能と判断できる条件を書く。
-- 横断するプロセスグループ: _PROCESS_GROUP_NAME_ → _PROCESS_GROUP_NAME_。_TODO_: 正常系の通過順で二つ以上を書く。
-- 組織境界: _TODO_: 引き渡し可否、戻し、再開を判断するロールと、対象範囲外の主体を書く。
-- システム境界: _TODO_: 横断条件の判定と情報・物の引き渡しまでを対象とし、画面・保存方式などの実装詳細を対象外とする旨を書く。
-- 対象外: グループ内部の領域・プロセス・主要例外・補助操作は各 `cdfd-_GROUP_`、状態の定義と遷移は STSD を正本とし、本書では再掲しない。
-- 責任分担: _TODO_: 人間と AI Agent の責任分担を定める既存文書への参照を書く。参照先がない場合は、承認と最終判断を人間が担う原則を書く。
+- **対象**: ケース `_CASE_ID_`「_USE_CASE_NAME_」の _START_EVENT_ から _END_EVENT_ まで、_TODO_: 参加単位と必要な組織・システム境界を 1 行で書く。
+- **対象外**: _TODO_: rulebook の「描き方の選択」に従う対象外、補助操作・実装詳細、状態定義・遷移を委ねる STSD を 1 行で示し、共通の責任分担は全体概要を参照する。
+
+<!-- based_on と本文では、有効な全体概要や後継文書を参照し、deprecated の文書は参照しない。既存文書は project 修飾 doc id の wikilink、未作成文書は ID のインラインコードにする。 -->
 
 ## 3. プロセス領域
 
-ケース `_CASE_ID_` は _GROUP_COUNT_ のプロセスグループを正常系の順序で横断する。グループ名、含む領域、業務目的は全体概要を正本とし、本章では各グループがこのユースケースで担う役割を定める。
+_TODO_: ケース `_CASE_ID_` の正常系の順序を示す。名称・領域分割は全体概要、役割は本章の表、受け渡しは図を正本とする。
 
-<!-- 正常系で通過するプロセスグループごとに 3.n の節を繰り返す。同じグループが再登場する場合は別の節とし、理由を書く。 -->
+<!-- rulebook の「描き方の選択」に従い、全体概要と同じグループ・区分ごとに節を置く。各節には役割表だけを置き、主要入力・主要出力の箇条書きは置かない。以下はグループ代表ノードの例。領域単位の場合は「含む領域」を「プロセス領域」にし、P-xx 領域名を書く。PDCA は必要な場合だけ独立した列で追加し、グループ・区分の列に入れない。 -->
 
-### 3.1. _PROCESS_GROUP_NAME_（_AREA_ID_RANGE_）
+### 3.1. _GROUP_OR_CATEGORY_NAME_（_AREA_ID_RANGE_）
 
-_TODO_: 前段から何を受け取り、次段へ何を渡すかを 1〜3 文で要約する。
+| 順序 | プロセスグループ・区分   | 含む領域          | 横断上の役割     | 参照先               |
+| ---- | ------------------------ | ----------------- | ---------------- | -------------------- |
+| 1    | _GROUP_OR_CATEGORY_NAME_ | `_AREA_ID_RANGE_` | _RESPONSIBILITY_ | _TODO_: 有効な参照先 |
 
-- **主要入力**: _TODO_: 開始イベントまたは前段から受け取る情報・物を名詞で列挙する。
-- **主要出力**: _TODO_: 次段または終了側へ渡す情報・物を名詞で列挙する。
-- **データストア**: _TODO_: 引き渡す情報または条件判定に使う「データストア」の名称を列挙する。
+### 3.2. _GROUP_OR_CATEGORY_NAME_（_AREA_ID_RANGE_）
 
-| 順序 | プロセスグループ     | 含む領域        | 横断上の役割                   | 参照先         |
-| ---- | -------------------- | --------------- | ------------------------------ | -------------- |
-| 1    | _PROCESS_GROUP_NAME_ | _AREA_ID_RANGE_ | _CROSS_CUTTING_RESPONSIBILITY_ | `cdfd-_GROUP_` |
-
-### 3.2. _PROCESS_GROUP_NAME_（_AREA_ID_RANGE_）
-
-_TODO_
-
-- **主要入力**: _TODO_
-- **主要出力**: _TODO_
-- **データストア**: _TODO_
-
-| 順序 | プロセスグループ     | 含む領域        | 横断上の役割                   | 参照先         |
-| ---- | -------------------- | --------------- | ------------------------------ | -------------- |
-| 2    | _PROCESS_GROUP_NAME_ | _AREA_ID_RANGE_ | _CROSS_CUTTING_RESPONSIBILITY_ | `cdfd-_GROUP_` |
+| 順序 | プロセスグループ・区分   | 含む領域          | 横断上の役割     | 参照先               |
+| ---- | ------------------------ | ----------------- | ---------------- | -------------------- |
+| 2    | _GROUP_OR_CATEGORY_NAME_ | `_AREA_ID_RANGE_` | _RESPONSIBILITY_ | _TODO_: 有効な参照先 |
 
 ## 4. データストア
 
-全体概要の「データストア」から、引き渡す情報または引き渡し条件の判定に使う行だけを同じ名称・区分で示す。各行は概念データフローの同名ノードと対応する。
+全体概要から、このケースで参照・更新する正本だけを同じ名称・区分で示す。
 
 ### 4.1. マスタ・構成データ
 
-| データストア      | 関連引き渡し   | 横断上の利用 |
-| ----------------- | -------------- | ------------ |
-| _DATA_STORE_NAME_ | `_HANDOFF_ID_` | _USAGE_      |
+| データストア        | 関連する参加単位              | 横断上の利用 |
+| ------------------- | ----------------------------- | ------------ |
+| _MASTER_STORE_NAME_ | _PARTICIPANT_NAME_OR_AREA_ID_ | _USAGE_      |
 
 ### 4.2. トランザクションデータ
 
-| データストア      | 関連引き渡し   | 横断上の利用 |
-| ----------------- | -------------- | ------------ |
-| _DATA_STORE_NAME_ | `_HANDOFF_ID_` | _USAGE_      |
+| データストア             | 関連する参加単位              | 横断上の利用 |
+| ------------------------ | ----------------------------- | ------------ |
+| _TRANSACTION_STORE_NAME_ | _PARTICIPANT_NAME_OR_AREA_ID_ | _USAGE_      |
 
-<!-- 該当する行がない区分は節ごと削除する。新しい名称・区分は本書だけへ追加せず、先に全体概要を更新する。 -->
+<!-- 該当する行がない区分は節ごと削除する。図のデータストアと対応させ、新しい名称・区分を本書だけへ追加しない。 -->
 
 ## 5. 概念データフロー
 
-_TODO_: 開始イベント、プロセスグループ代表ノード、引き渡し条件、関連データストア、終了条件だけを配置し、正常系の順序を左から右へたどれるようにする。内部領域・内部プロセス・状態名は描かない。
+### 5.1. _BUSINESS_FLOW_TITLE_
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
+_TODO_: 図から読み取れる流れや関係を 1 文で書く。題は「起票から完了記録まで」のような業務の言葉にする。
 
-  _START_EVENT_NODE_ID_{{"_START_EVENT_"}}
-  _SOURCE_GROUP_NODE_ID_("_SOURCE_GROUP_NAME_<br>_SOURCE_AREA_ID_RANGE_")
-  _HANDOFF_EVENT_NODE_ID_{{"_HANDOFF_ID_ _HANDOFF_CONDITION_"}}
-  _TARGET_GROUP_NODE_ID_("_TARGET_GROUP_NAME_<br>_TARGET_AREA_ID_RANGE_")
-  _END_EVENT_NODE_ID_{{"_END_CONDITION_"}}
-  _MASTER_STORE_NODE_ID_[("_MASTER_STORE_NAME_")]
-  _TRANSACTION_STORE_NODE_ID_[("_TRANSACTION_STORE_NAME_")]
+<!-- 開始から終了まで上から下へ配置する。イベントは一ノード一出来事の短い文にし、長ければ原文を保って改行する。系統の入口は全体概要の表と同じ文言にし、複数の出来事は分ける。引き渡し条件のイベント・引き渡し ID・Orchestrator は置かない。以下は D2 の例。実際の記法・色は全体概要の凡例に合わせる。 -->
 
-  _START_EVENT_NODE_ID_ -->|"起動条件"| _SOURCE_GROUP_NODE_ID_
-  _MASTER_STORE_NODE_ID_ -->|"_CONDITION_INFORMATION_"| _SOURCE_GROUP_NODE_ID_
-  _SOURCE_GROUP_NODE_ID_ -->|"_HANDOFF_ID_ _HANDOFF_INFORMATION_"| _HANDOFF_EVENT_NODE_ID_
-  _HANDOFF_EVENT_NODE_ID_ -->|"起動条件"| _TARGET_GROUP_NODE_ID_
-  _TARGET_GROUP_NODE_ID_ -->|"_RESULT_INFORMATION_"| _TRANSACTION_STORE_NODE_ID_
-  _TARGET_GROUP_NODE_ID_ -->|"完了条件"| _END_EVENT_NODE_ID_
+```d2
+direction: down
 
-  class _SOURCE_GROUP_NODE_ID_,_TARGET_GROUP_NODE_ID_ process
-  class _START_EVENT_NODE_ID_,_HANDOFF_EVENT_NODE_ID_,_END_EVENT_NODE_ID_ event
-  class _MASTER_STORE_NODE_ID_ storeMaster
-  class _TRANSACTION_STORE_NODE_ID_ storeTransaction
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
+
+start: "_START_EVENT_" { class: event }
+source: "_SOURCE_GROUP_NAME_\n_SOURCE_AREA_ID_RANGE_" { class: process }
+target: "_TARGET_GROUP_NAME_\n_TARGET_AREA_ID_RANGE_" { class: process }
+end: "_END_EVENT_" { class: event }
+master_store: "_MASTER_STORE_NAME_" { class: store_master }
+transaction_store: "_TRANSACTION_STORE_NAME_" { class: store_transaction }
+
+start -> source: "起動条件"
+master_store -> source: "_REFERENCE_INFORMATION_"
+source -> target: "_TRANSFER_INFORMATION_"
+target -> transaction_store: "_RESULT_INFORMATION_"
+target -> end: "_COMPLETION_INFORMATION_"
 ```
 
-_TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>` のうち使用した線種、グループ内部を省略したこと、図に置いたデータストアと選定理由を書く。
+_TODO_: 全体概要の「凡例（本プロダクト共通）」を参照する短い注記と、使用線種・省略事項・図を分ける場合の共有ノードを書く。
 
-<!-- 物を引き渡す場合は ==> を使用する。関連データストアがない場合は該当ノード、エッジ、class を削除する。グループや引き渡しが多く一図で追えない場合は 5.1、5.2 の連続する引き渡し単位へ分け、接続点に同じ引き渡し ID を置く。 -->
+<!-- 領域単位の場合は source / target のラベルを P-xx 領域名へ置き換える。物を渡す線には material_flow class を適用し、現物の保管先には physical_store class を使う。不要なノード・線・classes は削除する。読みづらい場合は連続する業務の範囲で分割し、同じ名称・領域 ID のノードで接続を追えるようにする。引き渡し ID は作らない。 -->
 
-## 6. 引き渡し
+<!-- 業務上重要な戻りがある場合だけ以下の節を使い、不要なら節ごと削除する。「引き渡し」「例外時の戻り先」の章や条件表は設けない。 -->
 
-| 引き渡し ID    | 送り元グループ       | 受け側グループ       | 引き渡す情報          | 引き渡し条件        | 戻す条件           |
-| -------------- | -------------------- | -------------------- | --------------------- | ------------------- | ------------------ |
-| `_HANDOFF_ID_` | _PROCESS_GROUP_NAME_ | _PROCESS_GROUP_NAME_ | _HANDOFF_INFORMATION_ | _HANDOFF_CONDITION_ | _RETURN_CONDITION_ |
+### 5.2. 例外時の戻り
 
-<!-- 引き渡し ID は正常順序に沿った H-01 形式にする。隣接する全グループ間の引き渡しを一行ずつ追加し、情報、引き渡し条件、戻す条件を空欄にしない。 -->
+_TODO_: 不足や不一致をどこへ返すか、図から読み取れることを 1 文で書く。
 
-## 7. 例外時の戻り先
+```d2
+direction: down
 
-| 対象引き渡し   | 条件不成立         | 戻り先グループ       | 戻す情報             | 再開条件           |
-| -------------- | ------------------ | -------------------- | -------------------- | ------------------ |
-| `_HANDOFF_ID_` | _FAILED_CONDITION_ | _PROCESS_GROUP_NAME_ | _RETURN_INFORMATION_ | _RESUME_CONDITION_ |
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+}
 
-<!-- 「引き渡し」の全 ID について戻す条件を確認する。戻り先はグループまでに留め、内部プロセス、内部例外、ログ、再試行手順を書かない。 -->
+source: "_SOURCE_GROUP_NAME_\n_SOURCE_AREA_ID_RANGE_" { class: process }
+target: "_TARGET_GROUP_NAME_\n_TARGET_AREA_ID_RANGE_" { class: process }
 
-<!-- 未決事項がある場合のみ、以下の章を追加する。ない場合は章ごと削除する。
+source <- target: "_RETURN_INFORMATION_"
+source -> target: "_CORRECTED_INFORMATION_"
+```
 
-## 8. 未決事項
+_TODO_: 全体概要の凡例を参照し、通常の図と共有する参加単位、省略事項、戻りが業務上重要な理由を短く注記する。
 
-| 論点                | 影響するケース・引き渡し | 決定者          | 決定時期          |
-| ------------------- | ------------------------ | --------------- | ----------------- |
-| _UNDECIDED_: _TODO_ | `_CASE_ID_` / `_HANDOFF_ID_` | _DECISION_ROLE_ | _DECISION_TIMING_ |
+<!-- 戻りは補完・再判断を担う参加単位へ向け、返す情報と再提示する情報を名詞の線のラベルにする。条件イベントや内部の再試行手順は置かない。 -->
 
--->
+<!-- 未決事項がある場合だけ以下の章を使い、ない場合は章ごと削除する。 -->
+
+## 6. 未決事項
+
+| 論点                | 影響するケース・参加単位                    | 決定者          | 決定時期          |
+| ------------------- | ------------------------------------------- | --------------- | ----------------- |
+| _UNDECIDED_: _TODO_ | `_CASE_ID_` / _PARTICIPANT_NAME_OR_AREA_ID_ | _DECISION_ROLE_ | _DECISION_TIMING_ |

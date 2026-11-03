@@ -1,0 +1,16 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.6.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[31mdocs/ja/projects/prj-0001/execution/exec/plans/T-DATA-FLOW-USAGE-cdfd-overview-010-plan.md[39m[24m
+29:1-29:10 [31merror[39m [1m未反映の [36m`_CONTEXT_:`[39m が残っています。draft で指示を本文へ反映し、元の指示を result に記録してください。[22m unresolved-context context-marker
+
+[31m✖[39m 1 error

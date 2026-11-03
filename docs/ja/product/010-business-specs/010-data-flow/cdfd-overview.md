@@ -2,7 +2,7 @@
 specdojo:
   id: cdfd-overview
   type: flow
-  status: ready
+  status: draft
   rulebook: specdojo:cdfd-overview-rulebook
   based_on: []
   supersedes: []
@@ -10,119 +10,81 @@ specdojo:
 
 # 概念データフロー図（全体概要）: SpecDojo
 
-本書は、SpecDojo を活用したプロジェクト運営の全体概要について、立ち上げから成果物作成、レビュー、承認までを PDCA サイクルに沿った業務プロセスとして整理する。
+SpecDojo を活用したプロジェクト運営の全体概要について、立ち上げから成果物作成、レビュー、承認までを PDCA サイクルに沿った業務プロセスとして整理する。
 
 ## 1. 目的
 
-SpecDojo を活用した仕様駆動開発の全体像を、プロセス領域とデータの連関として整理し、後続のプロセスグループ別 CDFD とユースケース別 CDFD の位置付けを明確にする。対象者と利用場面は次のとおり。
-
-- PO は、プロジェクト運営の対象範囲と領域分割を承認する。
-- BA は、各プロセスグループ別 CDFD の範囲と、ユースケース別 CDFD がどの領域を横断するかを本書で確認し、詳細化する。
-- ARC は、データストアと領域間の受け渡しを設計入力として使う。
-- QE は、領域とプロセスグループ別 CDFD の対応から重複・欠落を確認する。
+Spec道の道場である SpecDojo でプロジェクトを進めるときの業務の全体像として、7 つの区分のプロセス領域と、それらが読み書きするデータの関係を示す。
 
 ## 2. 適用範囲
 
-- 対象は、SpecDojo を用いたプロジェクト開始から、成果物作成・改造の計画（P）、実行（D）、評価（C）、改善（A）を含むプロジェクトライフサイクル全体である。
-- 本書が扱うのは、プロセス領域の分割と、領域間・データストア間の受け渡しまでである。各領域の内部（個別コマンドの操作手順、ファイル単位の更新内容、領域内の処理の分岐、状態を変える処理と起点イベント、例外時の復旧手順）は対象外とし、プロセスグループ別 CDFD で詳細化する。状態名・意味・成立条件・遷移元・遷移先・イベント・遷移条件はステータス定義（Status Definition: STSD、`specdojo:stsd-rulebook`）を正本とし、詳細 CDFD は参照に留める。
-- `list`、`where`、`status`、`validate`、`dry-run` など、状態や成果物を変更しない参照・検証操作は独立した業務フローに含めず、各領域を支える補助操作として扱う。
-- 人間と AI Agent の責任分担は、承認、完了判断、構成変更の承認、非推奨化の判断を人間が担い、成果物の作成・評価・派生生成は人が担うほか AI Agent へ委譲できる、という原則に従う。本書の各領域はこの原則を前提とし、人間の判断を自動処理に置き換えない。
+- **対象**: SpecDojo を用いたプロジェクト開始から成果物作成・評価・改善を含むライフサイクル全体。
+- **対象外**: 各領域の内部処理・操作手順・例外経路は詳細 CDFD へ、状態の定義・遷移は [[specdojo:stsd-rulebook|STSD の作成規範]] に従う状態定義へ委ねる。
+- 承認・主要判断・公開可否は人間が責任を持ち、AI Agent は記録・提案・実行・評価を支援する（稼働構成変更の承認と非推奨化判断を含む）；参照・検証などの補助操作は独立領域にしない。
 
 ## 3. プロセス領域
 
-業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。領域の分割と領域間の受け渡しは本書を正本とし、領域内の詳細はプロセスグループ別 CDFD を正本とする。各グループの主要入力・主要出力・データストアは「概念データフロー（概要）」のエッジの根拠である。
+業務は 14 のプロセス領域を、プロジェクト構成の構築・管理、3 系統（register・schedule・routine）、3 系統が共用してタスクを実行・評価・完了する実行サイクル、文書の廃棄、および Orchestrator の 7 区分に整理し、主な担当は [[prj-0001:pm-roles|ロール一覧]] の Role code に統一する。
 
-「主な担当」は [[prj-0001:pm-roles|ロール一覧]] の Role code に統一する。実際にタスクを実行する member・agent は Role とは区別し、タスク固有の実行責任は Schedule の `owner`、runner は実行主体として管理する。対象範囲内の参加者から直接受け取る入力は、外部主体のエッジを設けず、各グループの「主要入力」で「参加者からの〜」と明記する。
-
-### 3.1. Onboarding（P-01）
-
-SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える。
-
-- **主要入力**: 参加者からのプロジェクトの目的・文脈、参加者からのメンバー・ロール採用判断、参加者からの利用する agent・provider の選択、Kata の provider 別雛形
-- **主要出力**: 配置した Kata、稼働構成の初期状態
-- **データストア**: Kata / kata、稼働構成
+### 3.1. プロジェクト構成の構築・管理（P-01・P-12）
 
 <!-- prettier-ignore -->
-| 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
-| --- | --- | --- | --- | --- |
-| `P-01` | プロジェクト初期セットアップ | プロジェクトの推進環境を整備する。 | PO、ARC | PO が新しいプロジェクトを立ち上げた |
+| 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
+| --- | --- | --- | --- | --- | --- |
+| `P-01` | Plan | プロジェクト初期セットアップ | プロジェクトの推進環境を整備する。 | PO、ARC | PO が新しいプロジェクトを立ち上げた |
+| `P-12` | Action | 稼働構成管理 | 人間の承認に基づき SpecDojo の稼働構成を変更管理する。 | ARC | 稼働構成の変更要求が発生した |
 
-### 3.2. Plan（P-02〜P-06）
-
-何を成果物として管理し、いつ・誰が・どのような形で実行するかを定義する。登録簿は計画外事項と判断を受け止め、成果物カタログとスケジュール戦略から Schedule（track）と実行計画を作り、定期実行定義とジョブ定義は定型・定期の実行を計画へ組み込む。
-
-- **主要入力**: Orchestrator からの計画要求、Action からの再計画要求、参加者からの判明した事項と意思決定、参加者からの管理対象とする成果物の判断、メンバー・ロール、Kata の rulebook・template、参加者からの定型・定期実行の要件
-- **主要出力**: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義、Orchestrator への計画要求への応答
-- **データストア**: 稼働構成、Kata / kata、登録簿 / register、成果物カタログ / catalog、スケジュール戦略、Schedule（track）、実行計画 / plan、定期実行定義 / routine、ジョブ定義 / job
+### 3.2. register 系（P-02）
 
 <!-- prettier-ignore -->
-| 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
-| --- | --- | --- | --- | --- |
-| `P-02` | 登録簿定義 | ticket ベースで気付いた TODO や問題・課題、メモ、決定事項等を記録する。 | PM（起票は全参加者） | タスクや課題等が判明した、意思決定した |
-| `P-03` | 成果物カタログ定義 | プロジェクトの成果物を定義する。 | BA（提案は全参加者） | 何を成果物として管理するかの判断が確定した |
-| `P-04` | スケジュール計画展開 | 成果物カタログとスケジュール戦略から、作成する成果物ごとのタスクを Schedule に展開する。 | PM | 成果物カタログが整備された |
-| `P-05` | 定期実行定義 | 定義された時期・条件に基づき、継続的な確認または実行を定義する。 | PM、OPS | 定期的に確認・実行する事項が判明した |
-| `P-06` | ジョブ定義 | runner が直接実行する決定論的コマンド、または agent へ委譲する判断を定義する。 | PM（定義は全参加者） | 定型的に実行する処理の手順が定まった |
+| 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
+| --- | --- | --- | --- | --- | --- |
+| `P-02` | Plan | 登録簿定義 | ticket ベースで気付いた TODO や問題・課題、メモ、決定事項等を記録する。 | PM（起票は全参加者） | 未整理事項（タスク・問題・課題・メモなど）が発見された、意思決定した |
 
-### 3.3. Do（P-07）
-
-Plan の実行指示に基づく edit phase として、人または AI Agent が Kata を参照してタスクを実行し、成果物と検証可能な実行記録を残す。定期実行・ジョブ・並行実行はタスク実行の実行形態であり、独立した領域にしない。grade は Check、grade を事実として完了可否を判断する review phase は Action が担い、Do の出力には評価結果と完了判断を含めない。
-
-- **主要入力**: Orchestrator からの実行要求、実行計画、Schedule（track）、ジョブ定義、対象成果物、対象登録項目、Kata の rulebook・recipe・template、稼働構成の agent 定義・権限
-- **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）、Orchestrator への実行状態・判断依頼
-- **データストア**: Kata / kata、稼働構成、実行計画 / plan、Schedule（track）、ジョブ定義 / job、登録簿 / register、実行記録、成果物 / deliverable
+### 3.3. schedule 系（P-03〜P-04・P-09〜P-10）
 
 <!-- prettier-ignore -->
-| 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
-| --- | --- | --- | --- | --- |
-| `P-07` | タスク実行 | 実行可能なタスクを人または AI Agent が担当し、成果物と検証可能な実行結果を残す。 | PM（実担当は各タスクの owner ロール） | 実行指示された |
+| 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
+| --- | --- | --- | --- | --- | --- |
+| `P-03` | Plan | 成果物カタログ定義 | プロジェクトの成果物を定義する。 | BA（提案は全参加者） | 何を成果物として管理するかの判断が確定した |
+| `P-04` | Plan | スケジュール計画展開 | 成果物カタログ・スケジュール戦略と Kata grade・作成要件から、作成する成果物ごとのタスクを Schedule に展開する。 | PM | 成果物カタログが整備された |
+| `P-09` | Check | 進捗可視化報告 | プロジェクトの進捗状況を可視化し、関係者に報告する。 | PM | 定期的な報告時期が到来した |
+| `P-10` | Check | 派生生成閲覧提供 | 派生成果物の生成および閲覧を提供する。 | ARC | 派生成果物の生成が要求された |
 
-### 3.4. Check（P-08〜P-10）
-
-成果物と実行記録を評価・可視化し、判断に使える形へ変換する。P-08 の grade は editor から独立した runner が成果物の品質を一度だけ照合し、QE が grade・finding を確定する。評価結果と進捗報告は Action の判断材料になり、派生ビュー・索引は参加者の閲覧に供する。
-
-- **主要入力**: Orchestrator からの評価・報告・生成要求、作成・更新された成果物、成果物カタログ、Schedule（track）、登録簿、実行記録・実行状態、Kata の rubric・評価観点
-- **主要出力**: 評価結果（grade、finding）、進捗報告、派生ビュー・索引、Orchestrator への評価・報告・生成結果
-- **データストア**: Kata / kata、成果物カタログ / catalog、成果物 / deliverable、Schedule（track）、登録簿 / register、実行記録、評価結果、進捗報告、派生ビュー・索引
+### 3.4. routine 系（P-05〜P-06）
 
 <!-- prettier-ignore -->
-| 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
-| --- | --- | --- | --- | --- |
-| `P-08` | 成果物評価 | editor から独立した runner が成果物や登録項目の対応結果を一度だけ確認し、品質や適合性を評価する。 | QE | 成果物の内容または評価コンテキストの変化に対する評価要求が発行された |
-| `P-09` | 進捗可視化報告 | プロジェクトの進捗状況を可視化し、関係者に報告する。 | PM | 定期的な報告時期が到来した |
-| `P-10` | 派生生成閲覧提供 | 派生成果物の生成および閲覧を提供する。 | ARC | 派生成果物の生成が要求された |
+| 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
+| --- | --- | --- | --- | --- | --- |
+| `P-05` | Plan | 定期実行定義 | 定義された時期・条件に基づき、継続的な確認または実行を定義する。 | PM、OPS | 定期的に確認・実行する事項が判明した |
+| `P-06` | Plan | ジョブ定義 | runner が直接実行する決定論的コマンド、または agent へ委譲する判断を定義する。 | PM（定義は全参加者） | 定型的に実行する処理の手順が定まった |
 
-### 3.5. Action（P-11〜P-13）
-
-Check の結果と人間の判断に基づき、タスクの完了確定、稼働構成の変更反映、役割を終えた文書の退避を行い、必要に応じて Plan へ再計画を要求する。review phase は P-11 に属し、最新の grade・finding を確定済みの事実として受け取り、成果物を再評価せずにタスクの完了可否を判断する。
-
-- **主要入力**: Orchestrator からの完了・改善要求、評価結果、進捗報告の判断事項、完了条件、参加者からの構成変更要求と承認結果、参加者からの非推奨化の判断
-- **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求、Orchestrator への完了・改善判断
-- **データストア**: 稼働構成、Kata / kata、成果物カタログ / catalog、登録簿 / register、実行記録、成果物 / deliverable、保管庫（trash） / trash、評価結果、進捗報告
+### 3.5. 実行サイクル（実行・評価・完了）（P-07〜P-08・P-11）
 
 <!-- prettier-ignore -->
-| 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
-| --- | --- | --- | --- | --- |
-| `P-11` | タスク完了 | review phase で最新の grade・finding と完了条件を照合し、タスクの完了可否を確定して記録する。 | PO、PM | 最新の grade・finding と完了要求がそろった |
-| `P-12` | 稼働構成管理 | SpecDojo の稼働構成を変更管理する。 | ARC | 稼働構成の変更要求が発生した |
-| `P-13` | 非推奨化保管 | 役割を終えた、または新 ID へ引き継がれた文書を非推奨化し、誤参照を防ぐ保管場所へ移す。 | PM、ARC | 文書が新 ID へ引き継がれた、または継続利用しないと判断された |
+| 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
+| --- | --- | --- | --- | --- | --- |
+| `P-07` | Do | タスク実行 | 実行可能なタスクを人または AI Agent が担当し、成果物と検証可能な実行結果を残す。 | PM（実担当は各タスクの owner ロール） | 実行指示された |
+| `P-08` | Check | 成果物評価 | editor から独立した runner が成果物や登録項目の対応結果を一度だけ確認し、品質や適合性を評価する。 | QE | 成果物の内容または評価コンテキストの変化に対する評価要求が発行された |
+| `P-11` | Action | タスク完了 | review phase で最新の grade・finding と完了条件を照合し、タスクの完了可否を確定して記録する。 | PO、PM | 最新の grade・finding と完了要求がそろった |
 
-### 3.6. Orchestrator（P-14）
-
-Plan・Do・Check・Action へ要求を発行して PDCA を回す。参加者の意図に基づく対話型の運転と、定期実行定義に基づく自動運転を含み、各領域の内部処理は担当しない。要求先の各グループは要求への応答を Orchestrator へ直接返し、Orchestrator はその応答を実行記録へ記録したうえで、記録済みの実行状態を次の要求の判断に使う。
-
-- **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件・rulebook 参照、スケジュール戦略の作業要件、実行計画（対象・手順・完了条件）、定期実行定義、Plan からの計画要求への応答、Do からの実行状態・判断依頼、Check からの評価・報告・生成結果、Action からの完了・改善判断、実行記録に記録済みの実行状態
-- **主要出力**: Plan・Do・Check・Action への要求、サイクルの実行記録
-- **データストア**: 稼働構成、成果物カタログ / catalog、スケジュール戦略、定期実行定義 / routine、実行計画 / plan、実行記録
+### 3.6. 文書の廃棄（非推奨化・保管）（P-13）
 
 <!-- prettier-ignore -->
-| 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
-| --- | --- | --- | --- | --- |
-| `P-14` | オーケストレーター | プロジェクト全体のタスクやプロセスの PDCA を調整・管理する。 | PM（対話型運転は全参加者、自動運転は runner） | プロジェクトが開始された、PDCA の各サイクルが到来した |
+| 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
+| --- | --- | --- | --- | --- | --- |
+| `P-13` | Action | 非推奨化保管 | 人間の非推奨化判断に基づき、役割を終えた、または新 ID へ引き継がれた文書を非推奨化し、誤参照を防ぐ保管場所へ移す。 | PM、ARC | 文書が新 ID へ引き継がれた、または継続利用しないと判断された |
+
+### 3.7. Orchestrator（P-14）
+
+<!-- prettier-ignore -->
+| 領域 ID | PDCA | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
+| --- | --- | --- | --- | --- | --- |
+| `P-14` | 全体 | オーケストレーター | プロジェクト全体のタスクやプロセスの PDCA を調整・管理する。 | PM（対話型運転は全参加者、自動運転は runner） | プロジェクトが開始された、PDCA の各サイクルが到来した |
 
 ## 4. データストア
 
-SpecDojo のプロジェクト運営で読み書きするデータストアを、マスタ・構成データとトランザクションデータに分けて示す。`<project-id>` は `docs/ja/projects/<project-id>/` を指す。Git リポジトリ、exec worktree、開発環境の設定（サイトビルド、Git hook、devcontainer、lint）は業務データストアとして扱わない。
+読み書きするデータストアを承認された変更で更新するマスタ・構成データと業務活動に伴い都度更新するトランザクションデータに分類し、リポジトリや開発環境そのものは除外する（`<project-id>` は `docs/ja/projects/<project-id>/` を指す）。
 
 ### 4.1. マスタ・構成データ
 
@@ -130,8 +92,8 @@ SpecDojo のプロジェクト運営で読み書きするデータストアを�
 | データストア | 主な内容 | 主な保管先 |
 | --- | --- | --- |
 | 稼働構成 | SpecDojo を稼働させる最低限の設定。リポジトリ層は SpecDojo の依存とバージョン、プロジェクト登録・パス設定、実行既定値、索引規則、agent 名簿・権限、オーケストレーター・executor・reporter の定義と入口指示。プロジェクト層は人間のメンバー、ロール、レビュー観点 | `package.json`、<br>`.specdojo/specdojo.config.json`、<br>`.specdojo/agent-members.yaml`、<br>`.specdojo/exec-defaults.yaml`、<br>`.specdojo/index-config.yaml`、<br>`.specdojo/<provider>/`、<br>`.claude/agents/`、<br>`.claude/settings.json`、<br>`.codex/`、<br>`.opencode/`、<br>`.agents/*.agent.md`、<br>`.github/agents/`、<br>`CLAUDE.md`、<br>`AGENTS.md`、<br>`<project-id>/030-project-management/pm-members.yaml`、<br>`<project-id>/030-project-management/pm-roles.yaml`、<br>`<project-id>/030-project-management/pm-review-viewpoints.yaml` |
-| Kata / kata | rulebook、recipe、template、sample、standard、schema、plan・result テンプレート、既定レビュー観点、評価 rubric、provider 別の agent 定義・設定の雛形、agent 向けの記述ルールと skill。内容は product 側で保守し、プロジェクトでは配置とバージョン更新だけを行う | `docs/ja/specdojo/`、<br>`docs/specdojo/schemas/`、<br>`templates/<provider>/`、<br>`.github/instructions/`、<br>`.claude/rules/`、<br>`.claude/skills/`、<br>`.agents/skills/` |
-| 成果物カタログ / catalog | 成果物 ID、種別、依存、完了条件、根拠参照。担当は持たず、スケジュール戦略の `owner_rules` から Schedule（track）へ展開する | `<project-id>/010-deliverables-catalog/dct-*.yaml` |
+| Kata / kata | rulebook、recipe、template、sample、standard、schema、Kata grade・作成要件、plan・result テンプレート、既定レビュー観点、評価 rubric、provider 別の agent 定義・設定の雛形、agent 向けの記述ルールと skill。内容は product 側で保守し、プロジェクトでは配置とバージョン更新だけを行う | `docs/ja/specdojo/`、<br>`docs/specdojo/schemas/`、<br>`templates/<provider>/`、<br>`.github/instructions/`、<br>`.claude/rules/`、<br>`.claude/skills/`、<br>`.agents/skills/` |
+| 成果物カタログ / catalog | 成果物 ID、種別、依存、完了条件（`done_criteria`）、根拠参照（`evidence_refs`）。担当は持たず、スケジュール戦略の `owner_rules` から Schedule（track）へ展開する | `<project-id>/010-deliverables-catalog/dct-*.yaml` |
 | スケジュール戦略 | 既定値、トラックごとのタスク生成戦略（対象カタログ、approach、phase の作業要件、ゲート・マイルストーンの定義） | `<project-id>/schedule/sch-defaults.yaml`、<br>`<project-id>/schedule/sch-strategy-<track>.yaml` |
 | 定期実行定義 / routine | 周期・条件、対象ジョブ、次回判定に使う状態 | `<project-id>/routines/rtn-*.yaml` |
 | ジョブ定義 / job | 実行手順、runner 直接実行か agent 委譲か、成功条件 | `<project-id>/jobs/job-*.yaml` |
@@ -141,8 +103,8 @@ SpecDojo のプロジェクト運営で読み書きするデータストアを�
 <!-- prettier-ignore -->
 | データストア | 主な内容 | 主な保管先 |
 | --- | --- | --- |
-| 登録簿 / register | 登録項目の個票、登録簿索引、状態遷移イベント | `<project-id>/controls/project-register/` |
-| Schedule（track） | トラックごとのタスク、担当、期間、依存と、タスクに依存するマイルストーン。スケジュール戦略と成果物カタログから `schedule build` で生成する計画の正本であり、タスクの状態は持たない。状態は実行記録を正本とする | `<project-id>/schedule/sch-track-<track>.yaml`、<br>`<project-id>/schedule/sch-milestones.yaml`、<br>`<project-id>/timeline/` |
+| 登録簿 / register | 登録項目の個票、登録簿索引、状態遷移イベント。epic は register 側の作業のまとまりとして schedule 側の track とつながる | `<project-id>/controls/project-register/` |
+| Schedule（track） | epic とつながるトラックごとのタスク、担当、期間、依存と、タスクに依存するマイルストーン。スケジュール戦略と成果物カタログから `schedule build` で生成する計画の正本であり、タスクの状態は持たない。状態は実行記録を正本とする | `<project-id>/schedule/sch-track-<track>.yaml`、<br>`<project-id>/schedule/sch-milestones.yaml`、<br>`<project-id>/timeline/` |
 | 実行計画 / plan | plan。タスクごとの実施手順、対象文書、完了条件 | `<project-id>/execution/exec/plans/` |
 | 実行記録 | result、状態遷移イベント、evidence、trial、ジョブ実行記録、agent 実行ログ | `<project-id>/execution/exec/results/`、<br>`<project-id>/execution/exec/events/`、<br>`<project-id>/execution/exec/evidence/`、<br>`<project-id>/execution/exec/trials/`、<br>`<project-id>/execution/jobs/runs/`、<br>`logs/` |
 | 成果物 / deliverable | プロジェクトで作成・更新する成果物本体。プロジェクト定義（概要、憲章、スコープ）や計画書も含む | `docs/ja/product/`（`trash/` を除く）、<br>`<project-id>/020-project-definition/`、<br>`<project-id>/030-project-management/`（稼働構成に属する YAML を除く） |
@@ -153,208 +115,443 @@ SpecDojo のプロジェクト運営で読み書きするデータストアを�
 
 ## 5. 概念データフロー（概要）
 
-プロセスは六つのプロセスグループの代表ノード、データストアは「データストア」の各行をノードとし、トランザクションデータとマスタ・構成データの 2 図に分けて示す。矢印は情報または実行要求の受け渡しであり、実行順や毎回の通過を意味しない。更新のエッジは更新前の参照を含む。参加者は各領域の担当として内側にいるため外部主体としては描かない。
+「プロセス領域」の区分ごとに、PDCA のプロセスとデータの関係、プロセスを実行する設定・構成情報の流れ、Orchestrator による PDCA の調整の 3 つの図で示す。
 
-参加者由来の主要入力は「プロセス領域」の箇条書きを正本とし、参加者を外部主体にしないため図のエッジとの相互対応から除外する。図示を省略する入力は、Onboarding の目的・文脈、メンバー・ロール採用判断、agent・provider の選択、Plan の判明事項・意思決定、管理対象成果物の判断、定型・定期実行の要件、Action の構成変更要求・承認結果と非推奨化判断、Orchestrator の参加者の意図である。
+### 5.1. PDCA のプロセスとデータの関係
 
-### 5.1. トランザクションデータの流れ
+```d2
+direction: down
 
-Orchestrator が PDCA を駆動し、Plan が登録簿・Schedule（track）・実行計画を作り、Do が実行計画と対象の成果物・登録項目に基づいて成果物と実行記録を生み、Check がそれらを評価結果・進捗報告・派生ビュー・索引へ変換し、Action が判断結果を記録へ戻す流れを示す。Plan・Do・Check・Action はそれぞれ要求への応答を Orchestrator へ直接返し、Orchestrator は受け取った応答をサイクルの実行記録として実行記録へ残し、次の要求の判断では記録済みの実行状態を参照する。
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+}
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
+register_sys: "📒 register 系\nP-02" {
+  class: process
+}
 
-  Orchestrator("🎛️ Orchestrator<br>P-14")
-  Plan("📝 Plan<br>P-02〜P-06")
-  Register[("📒 登録簿 / register")]
-  Schedule[("📅 Schedule（track）")]
-  ExecPlan[("📋 実行計画 / plan")]
-  Do("⚙️ Do<br>P-07<br>edit phase")
-  Deliverables[("📄 成果物 / deliverable")]
-  ExecLog[("🧾 実行記録")]
-  Check("🔍 Check<br>P-08〜P-10<br>grade")
-  Grade[("🧪 評価結果")]
-  Report[("📊 進捗報告")]
-  Derived[("🗂️ 派生ビュー・索引")]
-  Action("✅ Action<br>P-11〜P-13<br>review phase")
-  Trash[("🗃️ 保管庫（trash） / trash")]
+schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10" {
+  class: process
+}
 
-  Orchestrator ~~~ Plan ~~~ Do ~~~ Check ~~~ Action
+routine_sys: "⏰ routine 系\nP-05〜P-06" {
+  class: process
+}
 
-  Orchestrator -->|"計画要求"| Plan
-  Orchestrator -->|"実行要求"| Do
-  Orchestrator -->|"評価・報告・生成要求"| Check
-  Orchestrator -->|"完了・改善要求"| Action
-  Plan -->|"計画要求への応答"| Orchestrator
-  Do -->|"実行状態・判断依頼"| Orchestrator
-  Check -->|"評価・報告・生成結果"| Orchestrator
-  Action -->|"完了・改善判断"| Orchestrator
-  ExecLog -->|"記録済みの実行状態"| Orchestrator
-  Orchestrator -->|"サイクルの実行記録"| ExecLog
-  ExecPlan -->|"対象・手順・完了条件"| Orchestrator
+exec_cycle: "⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-08・P-11" {
+  class: process
+}
 
-  Plan -->|"登録項目・決定記録"| Register
-  Plan -->|"Schedule（track）"| Schedule
-  Plan -->|"実行計画"| ExecPlan
+deprecation: "📦 文書の廃棄（非推奨化・保管）\nP-13" {
+  class: process
+}
 
-  ExecPlan -->|"実行計画"| Do
-  Schedule -->|"タスク・担当・依存"| Do
-  Deliverables -->|"対象成果物"| Do
-  Register -->|"対象登録項目"| Do
-  Do -->|"登録項目の状態遷移"| Register
-  Do -->|"作成・更新した成果物"| Deliverables
-  Do -->|"実行記録・実行状態"| ExecLog
+register: "📒 登録簿 / register" {
+  class: store_transaction
+}
 
-  Deliverables -->|"評価・派生生成の対象"| Check
-  Schedule -->|"Schedule（track）"| Check
-  Register -->|"登録簿"| Check
-  ExecLog -->|"実行記録・実行状態"| Check
-  Check -->|"grade・finding"| Grade
-  Check -->|"進捗報告"| Report
-  Check -->|"派生ビュー・索引"| Derived
+schedule: "📅 Schedule（track）" {
+  class: store_transaction
+}
 
-  Grade -->|"最新の grade・finding（確定済みの事実）"| Action
-  Report -->|"判断事項"| Action
-  Action -->|"完了・決定の記録"| Register
-  Action -->|"完了記録"| ExecLog
-  Action -->|"非推奨化した文書"| Deliverables
-  Action -->|"保管した文書"| Trash
-  Action -->|"再計画要求"| Plan
+exec_plan: "📋 実行計画 / plan" {
+  class: store_transaction
+}
 
-  class Orchestrator,Plan,Do,Check,Action process
-  class Register,Schedule,ExecPlan,ExecLog,Deliverables,Grade,Report,Derived,Trash storeTransaction
+exec_log: "🧾 実行記録" {
+  class: store_transaction
+}
+
+deliverables: "📄 成果物 / deliverable" {
+  class: store_transaction
+}
+
+trash: "🗃️ 保管庫（trash） / trash" {
+  class: store_transaction
+}
+
+grade: "🧪 評価結果" {
+  class: store_transaction
+}
+
+report: "📊 進捗報告" {
+  class: store_transaction
+}
+
+derived: "🗂️ 派生ビュー・索引" {
+  class: store_transaction
+}
+
+register_sys -> register: "登録項目・決定"
+register_sys <- schedule: "track 計画"
+schedule_sys <- register: "epic 対応"
+schedule_sys -> schedule: "タスク計画"
+schedule_sys -> exec_plan: "実行計画"
+register_sys -> exec_cycle: "対応要求"
+schedule_sys -> exec_cycle: "実行要求"
+register_sys <- exec_cycle: "Job 実行要求"
+schedule_sys <- exec_cycle: "Job 実行・評価要求"
+register <- exec_cycle: "対応・完了記録"
+schedule -> exec_cycle: "タスク計画"
+exec_plan <- exec_cycle: "Job 計画"
+exec_plan -> exec_cycle: "実行計画"
+exec_cycle -> deliverables: "成果物"
+exec_cycle -> exec_log: "実行記録"
+exec_cycle -> grade: "grade・finding"
+schedule_sys <- exec_log: "実行記録"
+schedule_sys <- grade: "grade・finding"
+schedule_sys <- deliverables: "対象文書"
+schedule_sys -> report: "進捗報告"
+schedule_sys -> derived: "派生ビュー・索引"
+exec_cycle <- report: "判断事項"
+deliverables <- deprecation: "非推奨化文書"
+deprecation -> trash: "保管文書"
+
+routine_sys -> exec_cycle: "実行要求"
+
+# 配置制御用（受け渡しではない）
+exec_cycle -> deprecation: {style.opacity: 0}
+
+# 配置制御用（受け渡しではない。非表示の基点で 3 系統を同段にそろえる）
+layout_top: "" {
+  width: 0
+  height: 0
+  style.opacity: 0
+}
+
+layout_top -> register_sys: {style.opacity: 0}
+layout_top -> schedule_sys: {style.opacity: 0}
+layout_top -> routine_sys: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、本図は現物の流れを対象外とする。本図はトランザクションデータのみを配置し、マスタ・構成データとの受け渡しは「マスタ・構成データの流れ」に示す。各領域の起点イベントと担当は「プロセス領域」の表に記載し、本図では省略する。本図に外部主体はない。参加者由来の判明事項・意思決定、管理対象成果物の判断、定型・定期実行の要件、構成変更要求・承認結果、非推奨化判断、参加者の意図は章冒頭の規則により図示を省略する。
+register・schedule・routine の 3 系統が計画を作り、実行サイクルが計画を受けて成果物と記録を残し、評価と報告が次の計画につながる関係を示す。
 
-### 5.2. マスタ・構成データの流れ
+### 5.2. プロセスを実行する設定・構成情報の流れ
 
-Onboarding が Kata を配置して稼働構成を生成し、Plan が成果物カタログ・スケジュール戦略・定期実行定義・ジョブ定義を定義し、各プロセスグループがこれらを基準情報として参照し、Action が承認済みの変更を反映する流れを示す。
+```d2
+direction: down
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+}
 
-  Onboarding("🚀 Onboarding<br>P-01")
-  Kata[("📐 Kata / kata")]
-  Config[("🧩 稼働構成")]
-  Catalog[("📚 成果物カタログ / catalog")]
-  Strategy[("🧭 スケジュール戦略")]
-  Routine[("⏰ 定期実行定義 / routine")]
-  Job[("🧰 ジョブ定義 / job")]
-  Orchestrator("🎛️ Orchestrator<br>P-14")
-  Plan("📝 Plan<br>P-02〜P-06")
-  Do("⚙️ Do<br>P-07<br>edit phase")
-  Check("🔍 Check<br>P-08〜P-10<br>grade")
-  Action("✅ Action<br>P-11〜P-13<br>review phase")
+project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
+  class: process
+}
 
-  Kata -->|"provider 別雛形"| Onboarding
-  Onboarding -->|"配置した Kata"| Kata
-  Onboarding -->|"稼働構成の初期状態"| Config
+register_sys: "📒 register 系\nP-02" {
+  class: process
+}
 
-  Config -->|"agent 定義・実行既定値"| Orchestrator
-  Config -->|"agent 定義・権限"| Do
-  Config -->|"メンバー・ロール"| Plan
-  Kata -->|"rulebook・template"| Plan
-  Kata -->|"rulebook・recipe・template"| Do
-  Kata -->|"rubric・評価観点"| Check
-  Plan -->|"成果物カタログ"| Catalog
-  Catalog -->|"成果物カタログ"| Check
-  Catalog -->|"完了条件・rulebook 参照"| Orchestrator
-  Catalog -->|"完了条件"| Action
-  Plan -->|"既定値・タスク生成戦略"| Strategy
-  Strategy -->|"phase の作業要件"| Orchestrator
-  Plan -->|"定期実行定義"| Routine
-  Plan -->|"ジョブ定義"| Job
-  Routine -->|"定期実行定義"| Orchestrator
-  Job -->|"ジョブ定義"| Do
+schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10" {
+  class: process
+}
 
-  Action -->|"更新した稼働構成"| Config
-  Action -->|"バージョン更新"| Kata
-  Action -->|"更新した成果物カタログ"| Catalog
+routine_sys: "⏰ routine 系\nP-05〜P-06" {
+  class: process
+}
 
-  class Onboarding,Orchestrator,Plan,Do,Check,Action process
-  class Kata,Config,Catalog,Strategy,Routine,Job storeMaster
+exec_cycle: "⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-08・P-11" {
+  class: process
+}
+
+config: "🧩 稼働構成" {
+  class: store_master
+}
+
+kata: "📐 Kata / kata" {
+  class: store_master
+}
+
+catalog: "📚 成果物カタログ / catalog" {
+  class: store_master
+}
+
+strategy: "🧭 スケジュール戦略" {
+  class: store_master
+}
+
+routine: "⏰ 定期実行定義 / routine" {
+  class: store_master
+}
+
+job: "🧰 ジョブ定義 / job" {
+  class: store_master
+}
+
+# ELK で 3 系統の左右順をそろえるため、エッジの宣言順を維持する
+register_sys <- config: "稼働構成"
+register_sys <- kata: "実践の型"
+exec_cycle <- strategy: "作業要件・判断基準"
+schedule_sys -> strategy: "生成戦略"
+project_config -> config: "稼働構成"
+exec_cycle <- config: "稼働構成"
+exec_cycle <- catalog: "完了条件・根拠参照"
+routine_sys <- config: "稼働構成"
+exec_cycle <- kata: "実践の型・rubric"
+routine_sys -> job: "手順・成功条件"
+schedule_sys <- config: "稼働構成"
+schedule_sys -> catalog: "成果物定義"
+routine_sys -> routine: "定期実行定義"
+routine_sys <- kata: "定義の型"
+project_config -> kata: "配置・版"
+exec_cycle <- job: "手順・成功条件"
+project_config <- kata: "provider 雛形"
+schedule_sys <- kata: "Kata・作成要件"
+
+# 配置制御用（受け渡しではない）
+project_config -> register_sys: {style.opacity: 0}
+project_config -> schedule_sys: {style.opacity: 0}
+project_config -> routine_sys: {style.opacity: 0}
+register_sys -> exec_cycle: {style.opacity: 0}
+schedule_sys -> exec_cycle: {style.opacity: 0}
+routine_sys -> exec_cycle: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、本図は現物の流れを対象外とする。本図はマスタ・構成データのみを配置し、Orchestrator から各プロセスグループへの要求とトランザクションデータとの受け渡しは「トランザクションデータの流れ」に示す。本図に外部主体はない。参加者由来の目的・文脈、メンバー・ロール採用判断、agent・provider の選択は章冒頭の規則により図示を省略する。
+プロジェクト構成の構築・管理が整えた稼働構成と Kata、各系統が定めたカタログ・戦略・定期実行・ジョブの定義を、実行サイクルが使う流れを示す。
+
+### 5.3. Orchestrator による PDCA の調整
+
+```d2
+direction: down
+
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+}
+
+orchestrator: "🧭 Orchestrator\nP-14" {
+  class: process
+}
+
+project_config: "🚀 プロジェクト構成の構築・管理\nP-01・P-12" {
+  class: process
+}
+
+register_sys: "📒 register 系\nP-02" {
+  class: process
+}
+
+schedule_sys: "📅 schedule 系\nP-03〜P-04・P-09〜P-10" {
+  class: process
+}
+
+routine_sys: "⏰ routine 系\nP-05〜P-06" {
+  class: process
+}
+
+exec_cycle: "⚙️ 実行サイクル（実行・評価・完了）\nP-07〜P-08・P-11" {
+  class: process
+}
+
+deprecation: "📦 文書の廃棄（非推奨化・保管）\nP-13" {
+  class: process
+}
+
+config: "🧩 稼働構成" {
+  class: store_master
+}
+
+register: "📒 登録簿 / register" {
+  class: store_transaction
+}
+
+exec_log: "🧾 実行記録" {
+  class: store_transaction
+}
+
+orchestrator -> project_config: "構成要求"
+orchestrator -> register_sys: "登録要求"
+orchestrator -> schedule_sys: "計画要求"
+orchestrator -> routine_sys: "定義要求"
+orchestrator -> exec_cycle: "実行要求"
+orchestrator -> deprecation: "廃棄要求"
+orchestrator <- config: "運転設定"
+orchestrator -> config: "承認済構成"
+orchestrator <- register: "承認済項目"
+orchestrator -> register: "登録項目・決定"
+orchestrator <- exec_log: "実行状態"
+
+# 配置制御用（受け渡しではない）
+project_config -> register_sys: {style.opacity: 0}
+project_config -> schedule_sys: {style.opacity: 0}
+project_config -> routine_sys: {style.opacity: 0}
+register_sys -> exec_cycle: {style.opacity: 0}
+schedule_sys -> exec_cycle: {style.opacity: 0}
+routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
+```
+
+Orchestrator が 6 つの区分に指示を出し、稼働構成・登録簿・実行記録を直接読み書きして PDCA を進める関係を示す。
 
 ## 6. 詳細 CDFD 一覧
 
-本書の詳細化先は、プロセスグループ別 CDFD とユースケース別 CDFD の 2 種類である。役割分担は次のとおり。
-
-- プロセスグループ別 CDFD は、グループに属する領域の内部プロセス、起点イベント、例外・復旧、データストアの読み書きを定める正本である。状態の定義と遷移は STSD を正本とし、プロセスグループ別 CDFD は参照に留める。各領域はちょうど一つのプロセスグループ別 CDFD に属する。
-- ユースケース別 CDFD は、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定める。グループ内部のプロセスは再掲せず、プロセスグループ別 CDFD を参照する。単一のグループに閉じる業務はユースケース別 CDFD を作らない。
-
-### 6.1. プロセスグループ別 CDFD
+各系統の流れはユースケース別 CDFD でプロセス領域の単位に詳細化し、入口・引き渡し・終了のイベントとデータストアの読み書きを定める。
 
 <!-- prettier-ignore -->
-| プロセスグループ | 含む領域 | プロセスグループ別 CDFD |
-| --- | --- | --- |
-| Onboarding | `P-01` | `cdfd-onboarding` |
-| Plan | `P-02`〜`P-06` | `cdfd-plan` |
-| Do | `P-07` | `cdfd-do` |
-| Check | `P-08`〜`P-10` | `cdfd-check` |
-| Action | `P-11`〜`P-13` | `cdfd-action` |
-| Orchestrator | `P-14` | `cdfd-orchestrator` |
-
-### 6.2. ユースケース別 CDFD
-
-複数のプロセスグループを横断する業務のうち、順序と引き渡し条件を定める必要があるものを示す。定期実行とジョブの運転、進捗報告と閲覧提供、稼働構成の変更、文書の非推奨化と保管は、Orchestrator または単一グループの CDFD で扱い、必要になった時点でユースケース別 CDFD を追加する。
-
-<!-- prettier-ignore -->
-| ケース ID | ユースケース | 業務目的 | 横断するプロセスグループ | ユースケース別 CDFD |
+| ケース ID | ユースケース（系統名） | 業務目的 | 対象系統・領域 | ユースケース別 CDFD |
 | --- | --- | --- | --- | --- |
-| `C-01` | 登録簿起票から完了まで | 登録項目の起票から、対応、評価、完了記録までの引き渡しを定める | Plan → Do → Check → Action | `cdfd-uc-register` |
-| `C-02` | 成果物の作成から完了まで | 成果物カタログの定義からタスク展開、実行、評価、完了記録までの引き渡しを定める | Plan → Do → Check → Action | `cdfd-uc-deliverable` |
+| `C-01` | register 系（登録簿起票から完了まで） | 未整理事項の発見または意思決定を入口に、登録項目の起票、対応、評価、完了記録と epic・track の引き渡しを定める | 固有: `P-02`。実行サイクル: `P-07`・`P-08`・`P-11`。調整: `P-14` | [[cdfd-uc-register\|register 系の CDFD]] |
+| `C-02` | schedule 系（成果物の作成から完了まで） | 成果物として管理する対象の確定とカタログ整備を入口に、Kata grade・作成要件から track を展開し、実行、評価、完了、進捗・派生ビュー提供までを定める | 固有: `P-03`〜`P-04`・`P-09`〜`P-10`。実行サイクル: `P-07`・`P-08`・`P-11`。調整: `P-14` | `cdfd-uc-schedule` |
+| `C-03` | routine 系（定期実行と Job） | 定期的な確認・実行事項の判明または定型手順の確定を入口に、定期実行定義と Job を定義し、指定契機で両系統への要求と実行・評価・結果記録を行う | 固有: `P-05`〜`P-06`。実行サイクル: `P-07`・`P-08`・`P-11`。調整: `P-14` | `cdfd-uc-routine` |
 
 ## 7. 凡例（本プロダクト共通）
 
-本プロダクトの全 CDFD（本書、プロセスグループ別 CDFD、ユースケース別 CDFD）が共通して参照するノード形状・色・絵文字の対応を示す。個々の CDFD は、以下の定義を再掲せず、本章への参照に留める。
+本プロダクトの全 CDFD が共通して参照する、D2 記法によるノード形状・線種・色・絵文字の対応を示す。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+```d2
+direction: down
 
-  外部主体["🧑 外部主体"]
-  起点イベント{{"⚡ 起点イベント"}}
-  プロセス("⚙️ プロセス／プロセスグループ")
-  マスタ構成データ[("🗄️ マスタ・構成データ")]
-  トランザクションデータ[("🗄️ トランザクションデータ")]
-  物理保管(["🏬 物理保管"])
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  actor: {
+    shape: rectangle
+    style: {
+      fill: "#f5f7fa"
+      stroke: "#607d8b"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
 
-  外部主体 -->|"情報の流れ"| プロセス
-  起点イベント -->|"起動条件"| プロセス
-  プロセス -->|"参照・更新"| マスタ構成データ
-  プロセス -->|"更新"| トランザクションデータ
-  プロセス ==>|"物の流れ"| 物理保管
+actor_node: "🧑 外部主体" {
+  class: actor
+}
+event_node: "⚡ 起点イベント" {
+  class: event
+}
+process_node: "⚙️ プロセス／グループ／系統" {
+  class: process
+}
+master_store: "🗄️ マスタ・構成データ" {
+  class: store_master
+}
+transaction_store: "🗄️ トランザクションデータ" {
+  class: store_transaction
+}
+physical_store_node: "🏬 物理保管" {
+  class: physical_store
+}
 
-  class プロセス process
-  class 起点イベント event
-  class マスタ構成データ storeMaster
-  class トランザクションデータ,物理保管 storeTransaction
-  class 外部主体 actor
+actor_node -> process_node: "情報の流れ"
+event_node -> process_node: "起動条件"
+process_node -> master_store: "参照・更新"
+process_node -> transaction_store: "更新"
+process_node -> physical_store_node: "物の流れ" {
+  class: material_flow
+}
 ```
 
 <!-- prettier-ignore -->
 | 概念 | 形状 | 色 | 絵文字例 |
 | --- | --- | --- | --- |
-| プロセス／プロセスグループ | 角丸長方形 | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: ⚙️） |
-| 起点イベント | 六角形 | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: 🚦） |
-| データストア（マスタ・構成データ） | 円柱 | 濃い緑（`#a5d6a7` / `#1b5e20`） | 保管物が伝わる絵文字（例: 📐） |
-| データストア（トランザクションデータ） | 円柱 | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📒） |
-| 物理保管 | スタジアム形 | 薄い緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
-| 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 👤） |
-| 情報の流れ | ラベル付き `-->` | — | — |
-| 物の流れ | ラベル付き `==>` | — | — |
+| プロセス／プロセスグループ／系統・共通基盤 | 角丸四角形（`style.border-radius: 8`） | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: ⚙️） |
+| 起点イベント | 六角形（`shape: hexagon`） | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: ⚡） |
+| データストア（マスタ・構成データ） | 円柱（`shape: cylinder`） | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📐） |
+| データストア（トランザクションデータ） | 円柱（`shape: cylinder`） | 中間の緑（`#c8e6c9` / `#2e7d32`） | 保管物が伝わる絵文字（例: 📒） |
+| 物理保管 | 大角丸四角形（`style.border-radius: 20`） | 中間の緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
+| 外部主体 | 四角形（`shape: rectangle`） | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 🧑） |
+| 情報の流れ | ラベル付き通常線 `->` | — | — |
+| 物の流れ | ラベル付き太線 `->`（`material_flow` class） | — | — |
 
-データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（稼働構成、Kata、成果物カタログ、スケジュール戦略、定期実行定義、ジョブ定義など）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（登録簿、実行記録、成果物、進捗報告など）を指す。物理保管は現物の保管先であり、マスタ・構成データとトランザクションデータのいずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
-
-ノード形状・線種そのものの記法は `specdojo:cdfd-mermaid-rulebook` に従う。本章は、その記法に基づき本プロダクトが実際に採用する色・絵文字の割り当てを固定する。
+ノード形状・線種・スタイルの記法は [[specdojo:cdfd-d2-rulebook|D2 記法ルール]] に従い、詳細 CDFD は本章を参照して再掲しない。

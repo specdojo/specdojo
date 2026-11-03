@@ -32,9 +32,10 @@ const RAW_LOG_MARKER = "raw-executor-log-marker";
 
 type AgentBehavior = {
   role: "executor" | "reporter" | "legacy";
-  kind?: "ok" | "fail" | "invalid" | "rate_limit" | "resume_ok" | "path_mismatch";
+  kind?: "ok" | "fail" | "invalid" | "rate_limit" | "resume_ok" | "path_mismatch" | "incomplete";
   task?: string;
   lockWorktree?: boolean;
+  artifactPath?: string;
 };
 
 type AgentInvocation = {
@@ -51,7 +52,7 @@ type AgentInvocation = {
 const FAKE_AGENT_SCRIPT = `
 import { execFileSync } from "node:child_process";
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 
 function arg(name) {
   const index = process.argv.indexOf("--" + name);
@@ -89,9 +90,12 @@ if (behavior.role === "executor") {
   const resumed = behavior.kind === "resume_ok";
   if (resumed) {
     mkdirSync("docs/test", { recursive: true });
-    writeFileSync("docs/test/doc.md", "# completed after resume\\n", "utf8");
+    const priorWork = behavior.artifactPath ? readFileSync(behavior.artifactPath, "utf8") : "";
+    writeFileSync("docs/test/doc.md", priorWork + "# completed after resume\\n", "utf8");
   } else {
-    writeFileSync("pipeline-artifact.md", "# " + nickname + " / " + model + "\\n", "utf8");
+    const artifactPath = behavior.artifactPath ?? "pipeline-artifact.md";
+    mkdirSync(dirname(artifactPath), { recursive: true });
+    writeFileSync(artifactPath, "# " + nickname + " / " + model + "\\n", "utf8");
     if (behavior.kind === "path_mismatch") {
       writeFileSync("pipeline-secondary.md", "# secondary artifact\\n", "utf8");
       writeFileSync("pipeline-tertiary.md", "# tertiary artifact\\n", "utf8");
@@ -102,7 +106,10 @@ if (behavior.role === "executor") {
   process.stdout.write(
     "<specdojo_executor_evidence>" +
       JSON.stringify({
-        final_message: "pipeline-artifact.md を更新し、検証を実行した。",
+        ...(behavior.kind === "incomplete"
+          ? { completion_status: "incomplete", handoff: ["finish the remaining plan instructions"] }
+          : {}),
+        final_message: (behavior.artifactPath ?? (resumed ? "docs/test/doc.md" : "pipeline-artifact.md")) + " を更新し、検証を実行した。",
         validations: [{ command: "npm test", status: "passed", summary: "全テストが成功した。" }],
         ...(resumed && target
           ? {
@@ -1048,6 +1055,207 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     worktreeBase = undefined;
     fixture = undefined;
   });
+
+  async function startReporterBlock(incomplete = false): Promise<void> {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+    // Schedule commits only the declared deliverable. Keep the prior work inside that
+    // deliverable so these scenarios exercise preservation through integration as well.
+    setBehavior(fixture.behaviorPath, {
+      "local-gemma-executor": {
+        role: "executor",
+        kind: incomplete ? "incomplete" : "ok",
+        artifactPath: "docs/test/doc.md",
+      },
+      "local-gemma-reporter": { role: "reporter", kind: incomplete ? "ok" : "fail" },
+    });
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+    expect(process.exitCode).toBe(1);
+  }
+
+  it.each(["blocked", "doing", "incomplete"] as const)(
+    "restarts a %s reporter run at executor using the edited worktree plan and existing changes",
+    async (scenario) => {
+      await startReporterBlock(scenario === "incomplete");
+      const current = fixture!;
+      const base = worktreeBase!;
+      const worktree = onlyWorktreePath(base);
+      const taskId = "T-TEST-doc-010";
+      const block = readTaskEvents(current, taskId).find((event) => event.type === "block")!;
+      const stateRef = String(block.meta?.pipeline_state_ref);
+      const statePath = join(worktree, stateRef);
+      if (scenario === "doing") {
+        // Simulate interruption before a block event was persisted: only the original claim
+        // remains, so resume has to discover the run without pipeline metadata in the events.
+        const eventsDir = join(current.executionPath, "exec", "events");
+        for (const name of readdirSync(eventsDir)) {
+          if (!name.endsWith(".json")) continue;
+          const event = JSON.parse(readFileSync(join(eventsDir, name), "utf8")) as TaskEvent;
+          if (event.task_id === taskId && event.type === "block") rmSync(join(eventsDir, name));
+        }
+      }
+      const planRef = join("execution", "exec", "plans", `${taskId}-plan.md`);
+      const rootPlan = readFileSync(join(current.repo, planRef), "utf8");
+      const editedPlan =
+        rootPlan + "\nPreserve prior work and apply the RKHR additional instructions.\n";
+      writeFileSync(join(worktree, planRef), editedPlan, "utf8");
+      const artifactRef = join("docs", "test", "doc.md");
+      const priorArtifact = readFileSync(join(worktree, artifactRef), "utf8");
+      const priorWork = priorArtifact + "\nPreserve this manual change.\n\n";
+      writeFileSync(join(worktree, artifactRef), priorWork, "utf8");
+      const stateBefore = readFileSync(statePath, "utf8");
+      const eventsBefore = readTaskEvents(current, taskId);
+      const args = [
+        "resume",
+        "--project",
+        "test",
+        "--task",
+        taskId,
+        "--resume-from",
+        "executor",
+        "--worktree-base",
+        base,
+      ];
+      await runExec([...args, "--dry-run"]);
+      expect(process.exitCode ?? 0).toBe(0);
+      expect(readFileSync(statePath, "utf8")).toBe(stateBefore);
+      expect(readFileSync(join(current.repo, planRef), "utf8")).toBe(rootPlan);
+      expect(readFileSync(join(worktree, planRef), "utf8")).toBe(editedPlan);
+      expect(readTaskEvents(current, taskId)).toEqual(eventsBefore);
+      expect(
+        readInvocations(current.logPath).filter((item) => item.role === "executor"),
+      ).toHaveLength(1);
+
+      setBehavior(current.behaviorPath, {
+        "local-gemma-executor": {
+          role: "executor",
+          kind: "resume_ok",
+          artifactPath: "docs/test/doc.md",
+        },
+      });
+      await runExec(args);
+      expect(process.exitCode ?? 0).toBe(0);
+      const invocations = readInvocations(current.logPath);
+      expect(invocations.map((item) => item.role)).toEqual([
+        "executor",
+        "reporter",
+        "executor",
+        "reporter",
+      ]);
+      expect(invocations[2].prompt).toContain("RKHR additional instructions");
+      expect(invocations[2].prompt).toContain("`docs/test/doc.md`");
+      expect(invocations[3].prompt).toContain("RKHR additional instructions");
+      if (scenario === "incomplete") {
+        expect(invocations[2].prompt).toContain("finish the remaining plan instructions");
+      }
+      expect(readFileSync(join(current.repo, artifactRef), "utf8")).toBe(
+        priorWork + "# completed after resume\n",
+      );
+      expect(readResult(current, taskId)).toContain("status: complete");
+      const state = JSON.parse(
+        readFileSync(join(evidenceRunDir(current, taskId), "pipeline-state.json"), "utf8"),
+      );
+      expect(state.stages.executor).toMatchObject({ status: "succeeded", attempts: 2 });
+      expect(state.stages.reporter.status).toBe("succeeded");
+      expect(state.stages.integrate.status).toBe("succeeded");
+      expect(
+        readTaskEvents(current, taskId).filter((event) => event.type === "unblock"),
+      ).toHaveLength(scenario === "doing" ? 0 : 1);
+      if (scenario !== "doing") {
+        expect(
+          readTaskEvents(current, taskId).find((event) => event.type === "unblock")?.meta,
+        ).toMatchObject({
+          pipeline_stage: "executor",
+          pipeline_state_ref: stateRef,
+        });
+      }
+      expect(existsSync(worktree)).toBe(false);
+    },
+  );
+
+  it.each([
+    "integrate",
+    "executor-failed",
+    "non-pipeline",
+    "missing-plan",
+    "missing-evidence",
+    "missing-worktree",
+  ] as const)(
+    "rejects --resume-from executor for %s without starting agents or unblocking",
+    async (scenario) => {
+      await startReporterBlock();
+      const current = fixture!;
+      const taskId = "T-TEST-doc-010";
+      const worktree = onlyWorktreePath(worktreeBase!);
+      const block = readTaskEvents(current, taskId).find((event) => event.type === "block")!;
+      const statePath = join(worktree, String(block.meta?.pipeline_state_ref));
+      const state = JSON.parse(readFileSync(statePath, "utf8"));
+      let reason: string;
+      if (scenario === "integrate") {
+        state.stages.reporter.status = "succeeded";
+        writeFileSync(statePath, JSON.stringify(state), "utf8");
+        reason = "integrate stage";
+      } else if (scenario === "executor-failed") {
+        state.stages.executor.status = "failed";
+        writeFileSync(statePath, JSON.stringify(state), "utf8");
+        reason = "executor stage";
+      } else if (scenario === "non-pipeline") {
+        reason = "agent_pipeline task";
+      } else if (scenario === "missing-plan") {
+        rmSync(join(worktree, "execution", "exec", "plans", `${taskId}-plan.md`));
+        reason = "plan or result is missing";
+      } else if (scenario === "missing-evidence") {
+        rmSync(join(worktree, String(state.stages.executor.artifact_ref)));
+        reason = "evidence is missing or invalid";
+      } else {
+        git(current.repo, "worktree", "remove", "--force", worktree);
+        reason = "no exec worktree";
+      }
+      const invocationsBefore = readInvocations(current.logPath);
+      const eventsBefore = readTaskEvents(current, taskId);
+      vi.mocked(process.stdout.write).mockClear();
+      vi.mocked(process.stderr.write).mockClear();
+      await runExec([
+        "resume",
+        "--project",
+        "test",
+        "--task",
+        scenario === "non-pipeline" ? "T-TEST-plain-010" : taskId,
+        "--resume-from",
+        "executor",
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(readInvocations(current.logPath)).toEqual(invocationsBefore);
+      expect(readTaskEvents(current, taskId)).toEqual(eventsBefore);
+      const output = [
+        ...vi.mocked(process.stdout.write).mock.calls,
+        ...vi.mocked(process.stderr.write).mock.calls,
+      ]
+        .flat()
+        .join("");
+      expect(output).toContain(reason);
+    },
+  );
 
   // rate limit で止まった executor を --task 経路で resume し、plan の対象を網羅するかを
   // 確かめる。rate limit の block イベントへ pipeline_state_ref が書かれないと resume できない

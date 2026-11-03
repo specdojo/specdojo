@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/mtp-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 94
-graded_at: "2026-10-04T21:07:39.306Z"
-graded_by: agy-expert-executor
-content_hash: 79265a7e33a8d2ab1152706ede850aaf22bcc8af3c3a84b26503d4d728531312
+score: 88
+graded_at: "2026-11-02T20:30:48.066Z"
+graded_by: flash-high-executor
+content_hash: 334f6d81b4a5c452186260fdfe3c630723cc897dc71a29e06d1b5acc2bf602e1
 categories:
   purpose:
     score: 100
@@ -23,11 +23,11 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 100
-  quality:
     score: 75
+  quality:
+    score: 83
   consistency:
-    score: 100
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,13 +103,40 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 3
   minor: 0
   note: 0
 findings:
   - id: F001
     severity: major
+    rule: vp-dev-implementation-readiness
+    line: 42
+    anchor: "### 4.1. 設定内容"
+    message: >-
+      Section 4.1 and Section 8 specify frontmatter without the mandatory specdojo namespace wrapper and rulebook key,
+      and incorrectly define title as a required frontmatter key, which prevents deliverables from passing frontmatter
+      schema validation.
+    message_ja: >-
+      Section 4.1 and Section 8 specify frontmatter without the mandatory specdojo namespace wrapper and rulebook key,
+      and incorrectly define title as a required frontmatter key, which prevents deliverables from passing frontmatter
+      schema validation.
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 42
+    anchor: "### 4.1. 設定内容"
+    message: >-
+      Frontmatter specifications in Section 4.1 and example blocks in Section 8 omit the required specdojo wrapper and
+      rulebook key, and contradict deliverable-frontmatter schema and document-metadata standard by requiring title in
+      frontmatter.
+    message_ja: >-
+      Frontmatter specifications in Section 4.1 and example blocks in Section 8 omit the required specdojo wrapper and
+      rulebook key, and contradict deliverable-frontmatter schema and document-metadata standard by requiring title in
+      frontmatter.
+  - id: F003
+    severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 移行テスト計画 作成ルール"
     message: 参照しているサンプルファイル (specdojo:mtp-sample) が、本ルールブックで定義した Frontmatter 設定や本文構成に従っておらず, 具体例としての責務を果たしていない。
+    message_ja: 参照しているサンプルファイル (specdojo:mtp-sample) が、本ルールブックで定義した Frontmatter 設定や本文構成に従っておらず, 具体例としての責務を果たしていない。

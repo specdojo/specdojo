@@ -12,8 +12,8 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-31T08:24:35Z"
-  conclusion: PJR-B5TY の組み込みの後、exec run --register が start から review まで通り、親の検証で lint-mermaid が流れて通った
+  completed_at: "2026-11-03T07:13:38Z"
+  conclusion: PJR-W7YX の統合後に exec run --register が start から review まで通ることを確かめた
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
@@ -24,7 +24,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 ## 2. 完了条件
 
-- 本個票の「対応結果」の表に、実行した日時（JST）、確認対象の項目 ID、実行した agent の nickname を 1 行追記する。確認対象の項目 ID は、実行時点で `review` または `done` になっている runner・register・exec のコード変更の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8・PJR-T46Y・PJR-8WBN・PJR-6DHY・PJR-E412・PJR-NS8Y・PJR-283N・PJR-G90K・PJR-0EFN・PJR-DKD8・PJR-A6PV・PJR-5HYP・PJR-XRAB・PJR-HE9R・PJR-W93C・PJR-CNNT・PJR-Q4CD・PJR-5B42・PJR-CT6G・PJR-EKRW・PJR-C95G・PJR-ZV60・PJR-SS72・PJR-68KR・PJR-R1FB・PJR-84F7・PJR-JJBY・PJR-6HS2・PJR-XTE6・PJR-P14M・PJR-6WQY・PJR-K87Y・PJR-XSM8・PJR-H988・PJR-8NWR・PJR-6RVJ・PJR-B4Y4・PJR-WAGY・PJR-484B・PJR-0D0T・PJR-EXH2・PJR-0QW0・PJR-3MY5・PJR-6DD7・PJR-SC8T・PJR-D0GB・PJR-YKMA・PJR-E45K・PJR-S23T・PJR-TC62・PJR-790T・PJR-Z7GX・PJR-M1DH・PJR-B5TY）のうち最も新しく統合されたものとする。
+- 本個票の「対応結果」の表に、実行した日時（JST）、確認対象の項目 ID、実行した agent の nickname を 1 行追記する。確認対象の項目 ID は、実行時点で `review` または `done` になっている runner・register・exec のコード変更の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8・PJR-T46Y・PJR-8WBN・PJR-6DHY・PJR-E412・PJR-NS8Y・PJR-283N・PJR-G90K・PJR-0EFN・PJR-DKD8・PJR-A6PV・PJR-5HYP・PJR-XRAB・PJR-HE9R・PJR-W93C・PJR-CNNT・PJR-Q4CD・PJR-5B42・PJR-CT6G・PJR-EKRW・PJR-C95G・PJR-ZV60・PJR-SS72・PJR-68KR・PJR-R1FB・PJR-84F7・PJR-JJBY・PJR-6HS2・PJR-XTE6・PJR-P14M・PJR-6WQY・PJR-K87Y・PJR-XSM8・PJR-H988・PJR-8NWR・PJR-6RVJ・PJR-B4Y4・PJR-WAGY・PJR-484B・PJR-0D0T・PJR-EXH2・PJR-0QW0・PJR-3MY5・PJR-6DD7・PJR-SC8T・PJR-D0GB・PJR-YKMA・PJR-E45K・PJR-S23T・PJR-TC62・PJR-790T・PJR-Z7GX・PJR-M1DH・PJR-B5TY・PJR-6NEM・PJR-RKHR・PJR-561Q・PJR-FVRZ・PJR-W7YX）のうち最も新しく統合されたものとする。
 - 本個票以外のファイルは変更しない。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通り、統合まで終わる。
 
@@ -32,7 +32,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                              |
 | --- | --------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-3MY5 の統合後の実行を記録した |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-FVRZ の統合後の実行を記録した |
 
 ## 4. 対応結果
 
@@ -97,8 +97,12 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-31 13:07 | PJR-Z7GX | sonnet-executor        |
 | 2026-10-31 13:52 | PJR-M1DH | sonnet-executor        |
 | 2026-10-31 17:20 | PJR-B5TY | sonnet-executor        |
+| 2026-11-01 00:24 | PJR-6NEM | sonnet-executor        |
+| 2026-11-01 22:27 | PJR-RKHR | sonnet-executor        |
+| 2026-11-03 15:19 | PJR-FVRZ | sonnet-executor        |
+| 2026-11-03 16:05 | PJR-W7YX | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最新の統合コミット `1c4f1db2d`（2026-10-31 16:26 JST、`review` 遷移は `1efe02913`）を持つ PJR-B5TY とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-W7YX とした（最終の実行コミット `cd2dc4bc8`、2026-11-03 16:00 JST。直前の確認対象 PJR-FVRZ より後）。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 

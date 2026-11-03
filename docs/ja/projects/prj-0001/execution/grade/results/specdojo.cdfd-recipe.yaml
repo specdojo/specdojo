@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-10-29T20:08:05.704Z"
+graded_at: "2026-11-02T20:06:05.423Z"
 graded_by: flash-high-executor
 content_hash: b2f47bc3a871fbfdeebe9d854e6c9f853747319274a972bb40bdafeb81402116
 categories:
@@ -104,7 +104,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
@@ -121,3 +121,14 @@ findings:
     anchor: 14. 他グループの内部処理を委譲表へ移し、委譲先 `cdfd-<group>` または `cdfd-uc-<topic>`、引き渡す情報、戻す条件を記述します。
     message: 手順5・13・14および仕上げチェックにおいて、Rulebookが定義する表の項目（プロセス名、完了条件、対象プロセス、停止範囲、委譲事項）の記載指示が一部漏れています。
     message_ja: 手順5・13・14および仕上げチェックにおいて、Rulebookが定義する表の項目（プロセス名、完了条件、対象プロセス、停止範囲、委譲事項）の記載指示が一部漏れています。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 38
+    anchor: 3. 各領域について、役割と内部プロセスの連携を説明し、主要入力・主要出力・データストアを箇条書きにします。
+    message: >-
+      Step 3, section 4.3, and section 8 instruct authors to write bullet lists of inputs/outputs/datastores under
+      process areas, which directly contradicts cdfd-rulebook prohibitions.
+    message_ja: >-
+      Step 3, section 4.3, and section 8 instruct authors to write bullet lists of inputs/outputs/datastores under
+      process areas, which directly contradicts cdfd-rulebook prohibitions.

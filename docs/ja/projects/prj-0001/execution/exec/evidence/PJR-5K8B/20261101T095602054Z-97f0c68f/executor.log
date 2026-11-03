@@ -1,0 +1,31 @@
+マークダウンの lint チェック（`npm run lint:md`）を実行中です。完了を待機します。
+タスク PJR-5K8B「track data-flow-usage の timeline・catalog・schedule 戦略を用意する」の executor 担当作業を完了しました。
+
+### 実施内容の概要
+
+1. **タイムライン定義の追加 (`tml-index.yaml`)**
+   - [`tml-index.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/timeline/tml-index.yaml#L57-L64) に track `data-flow-usage` を定義しました。`data-flow-pdca` の定義にならい、`depends_on: [data-flow-pdca]`、`note` に PJR-SJQC の決定に基づく作業であることを明記しました。
+
+2. **成果物カタログの改訂・追加 (`dct-data-flow.yaml`)**
+   - [`dct-data-flow.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml#L13-L37) の `cdfd-overview` について、共通・基盤と 3 系統（register・schedule・routine）の関係を描く役割に合わせて `overview` と `done_criteria` を更新しました。
+   - [`cdfd-uc-register`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml#L540-L572) について、register 系の詳細（プロセス領域の単位、入口のイベント）に合わせて `overview`、`done_criteria`、`evidence_refs` を更新しました。
+   - [`cdfd-uc-schedule`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml#L573-L606)（`cdfd-uc-deliverable` を引き継ぐ新 ID）および [`cdfd-uc-routine`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml#L607-L639) を、`rulebook: specdojo:cdfd-uc-rulebook`、`depends_on: [cdfd-overview]`、実装の `evidence_refs`、役割ごとの `done_criteria` を定義して追加しました。
+   - `cdfd-uc-deliverable` およびプロセスグループ別 6 文書の定義は変更せず維持しました。
+
+3. **スケジュール戦略の作成 (`sch-strategy-data-flow-usage.yaml`)**
+   - [`sch-strategy-data-flow-usage.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-usage.yaml) を新規作成し、上記 4 件を `local_ids` で scope に設定しました。
+   - [[specdojo:schedule-design-guide]] および [[specdojo:ryu-guide]] に従い、作成と書き直しの違いに応じて approach を選定しました：
+     - 改訂・書き直し（`cdfd-overview`、`cdfd-uc-register`）: 既存の草案記述があり実践の型に適合させて磨き込むため `approach: fully-guided`（`rewrite-pass`）
+     - 新規作成（`cdfd-uc-schedule`、`cdfd-uc-routine`）: template から骨組みを起こして下書きを作成するため `approach: draft`（`author-pass`）
+   - `owner_rules` の `phase_set` により成果物ごとの profile を分離しました。
+
+4. **スケジュールビルド・カタログ検証の実行**
+   - `npx specdojo schedule build --project prj-0001 --track data-flow-usage` を実行し、4 件のタスクを含む [`sch-track-data-flow-usage.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/schedule/sch-track-data-flow-usage.yaml) を正常に生成しました。あわせて [`sch-milestones.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/schedule/sch-milestones.yaml#L227-L243) が更新されました。
+   - `npx specdojo catalog validate` が正常に通ることを確認しました。
+
+5. **個票の更新 (`pjr-5k8b-data-flow-usage-track.md`)**
+   - [`pjr-5k8b-data-flow-usage-track.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5K8B/docs/ja/projects/prj-0001/controls/project-register/pjr-5k8b-data-flow-usage-track.md#L43-L87) の作業内容を作業完了（done）に更新し、対応結果（実施内容、approach 選定理由、成果物、残課題・申し送り）を記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"track data-flow-usage の timeline・catalog・schedule 戦略を用意し、schedule build (4 tasks) および catalog validate の通過を確認しました。","handoff":["cdfd-overview、cdfd-uc-register、cdfd-uc-schedule、cdfd-uc-routine の実文書の作成・改訂は、生成された Schedule track（data-flow-usage）の各タスクにて順次実施する。","cdfd-uc-deliverable およびプロセスグループ別 6 文書の非推奨化（trash への退避等）は、新しい文書が完成した後に別タスクで行う。"],"validations":[{"command":"npx specdojo catalog validate","status":"passed","summary":"成果物カタログ全体の整合性検証が正常終了"},{"command":"npx specdojo schedule build --project prj-0001 --track data-flow-usage","status":"passed","summary":"track data-flow-usage のスケジュールビルドが通り、4件のタスクを含む sch-track-data-flow-usage.yaml を生成"}]}
+</specdojo_executor_evidence>

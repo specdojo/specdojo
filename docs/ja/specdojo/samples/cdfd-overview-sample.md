@@ -14,12 +14,7 @@ specdojo:
 
 ## 1. 目的
 
-駄菓子屋きぬやの販売管理業務の全体像を、プロセス領域とデータの連関として整理し、後続のプロセスグループ別 CDFD とユースケース別 CDFD の位置付けを明確にする。対象者と利用場面は次のとおり。
-
-- 店主代表は、対象範囲と領域分割を承認する。
-- 開発担当は、各プロセスグループ別 CDFD の範囲と、ユースケース別 CDFD がどの領域を横断するかを本書で確認し、詳細化する。
-- 技術メンターは、データストアと領域間の受け渡しを設計入力として使う。
-- 同行レビュー担当は、領域とプロセスグループ別 CDFD の対応から重複・欠落を確認する。
+駄菓子屋きぬやの販売管理業務の全体像として、仕入・販売・在庫・顧客・締めの五つのプロセスグループと、それらが読み書きするデータの関係を示す。
 
 ## 2. 適用範囲
 
@@ -30,15 +25,9 @@ specdojo:
 
 ## 3. プロセス領域
 
-業務は 10 のプロセス領域に分かれ、五つのプロセスグループにまとめる。領域の分割と領域間の受け渡しは本書を正本とし、領域内の詳細はプロセスグループ別 CDFD を正本とする。各グループの主要入力・主要出力・データストアは「概念データフロー（概要）」のエッジの根拠である。
+業務は 10 のプロセス領域を五つのプロセスグループにまとめる。領域の分割は本書の表、受け渡しは本書の図、領域内の詳細はプロセスグループ別 CDFD を正本とする。
 
 ### 3.1. 仕入（P-01〜P-02）
-
-在庫の補充依頼と商品台帳の仕入先情報から発注を行い、入荷した商品を検品して売場へ出し、仕入記録と在庫記録を更新する。
-
-- **主要入力**: 在庫からの補充依頼、商品台帳の仕入先・発注単位、仕入先からの納品
-- **主要出力**: 仕入先への発注、売場棚へ出す商品、仕入記録、入荷数量
-- **データストア**: 商品台帳、仕入記録、在庫記録、売場棚
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -48,12 +37,6 @@ specdojo:
 
 ### 3.2. 販売（P-03〜P-04）
 
-顧客の購入依頼に対して商品を渡し、現金またはつけで販売を記録する。つけ販売では顧客台帳のつけ上限とつけ台帳の残高を確認する。
-
-- **主要入力**: 顧客からの購入依頼と支払、売場棚の商品、商品台帳の売価、顧客台帳のつけ上限、つけ台帳の残高
-- **主要出力**: 顧客へ渡す商品、販売記録、つけ販売の記録
-- **データストア**: 商品台帳、顧客台帳、販売記録、つけ台帳、売場棚
-
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -61,12 +44,6 @@ specdojo:
 | `P-04` | つけ販売 | つけ上限と残高を確認したうえで、つけ販売を記録する。 | 店主代表 | 常連客がつけでの購入を依頼した |
 
 ### 3.3. 在庫（P-05〜P-06）
-
-販売記録と入荷数量から在庫記録を更新し、商品台帳の補充基準を下回った商品について仕入へ補充を依頼する。
-
-- **主要入力**: 販売記録の販売数量、仕入からの入荷数量、商品台帳の補充基準
-- **主要出力**: 在庫記録、仕入への補充依頼
-- **データストア**: 商品台帳、販売記録、在庫記録
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -76,12 +53,6 @@ specdojo:
 
 ### 3.4. 顧客（P-07〜P-08）
 
-常連客を顧客台帳へ登録してつけ上限を定め、つけ台帳の残高を精算する。
-
-- **主要入力**: 顧客からの登録依頼とつけの支払、つけ台帳の残高
-- **主要出力**: 顧客台帳の顧客情報とつけ上限、つけ台帳の精算記録
-- **データストア**: 顧客台帳、つけ台帳
-
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -89,12 +60,6 @@ specdojo:
 | `P-08` | つけ精算 | つけ残高の支払を受け付け、残高を更新する。 | 店主代表 | 常連客がつけの支払を申し出た |
 
 ### 3.5. 締め（P-09〜P-10）
-
-日々の販売、仕入、在庫、つけを突き合わせて日次締めを確定し、月次で売価・補充基準・つけ上限を見直す。
-
-- **主要入力**: 販売記録、仕入記録、在庫記録、つけ台帳
-- **主要出力**: 日次締め記録、月次報告、商品台帳と顧客台帳の見直し
-- **データストア**: 販売記録、仕入記録、在庫記録、つけ台帳、日次締め記録、月次報告、商品台帳、顧客台帳
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -129,76 +94,156 @@ specdojo:
 
 ## 5. 概念データフロー（概要）
 
-プロセスは五つのプロセスグループの代表ノード、データストアは「データストア」の各行をノードとして示す。矢印は情報または実行要求の受け渡しであり、実行順や毎回の通過を意味しない。更新のエッジは更新前の参照を含む。店主代表と店番担当は各領域の担当として内側にいるため外部主体としては描かず、対象範囲外の顧客と仕入先を外部主体として描く。ノード総数は、外部主体を除く代表ノード 5 とデータストア 9 の計 14 のため 1 図で示す。
+本書は、データストアの区分で図を分ける今の方式を採用する。代表ノード 5 とデータストア 9 の計 14 ノードのため、1 図で示す。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+仕入から販売と締めまでのデータの関係
 
-  仕入先["🏭 仕入先"]
-  顧客["🧑 顧客"]
-  仕入("🚚 仕入<br>P-01〜P-02")
-  販売("🛒 販売<br>P-03〜P-04")
-  在庫("📦 在庫<br>P-05〜P-06")
-  顧客管理("👥 顧客<br>P-07〜P-08")
-  締め("🧮 締め<br>P-09〜P-10")
-  商品台帳[("📐 商品台帳")]
-  顧客台帳[("📐 顧客台帳")]
-  販売記録[("📒 販売記録")]
-  仕入記録[("📒 仕入記録")]
-  在庫記録[("📒 在庫記録")]
-  つけ台帳[("📒 つけ台帳")]
-  日次締め記録[("📒 日次締め記録")]
-  月次報告[("📊 月次報告")]
-  売場棚(["🏬 売場棚"])
+```d2
+direction: down
 
-  仕入先 ~~~ 仕入 ~~~ 販売 ~~~ 在庫 ~~~ 締め
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  actor: {
+    shape: rectangle
+    style: {
+      fill: "#f5f7fa"
+      stroke: "#607d8b"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
 
-  商品台帳 -->|"仕入先・発注単位"| 仕入
-  在庫 -->|"補充依頼"| 仕入
-  仕入 -->|"発注"| 仕入先
-  仕入先 ==>|"商品"| 仕入
-  仕入 ==>|"商品"| 売場棚
-  仕入 -->|"仕入情報"| 仕入記録
-  仕入 -->|"入荷数量"| 在庫記録
+supplier: "🏭 仕入先" {
+  class: actor
+}
+customer: "🧑 顧客" {
+  class: actor
+}
+purchasing: "🚚 仕入\nP-01〜P-02" {
+  class: process
+}
+sales: "🛒 販売\nP-03〜P-04" {
+  class: process
+}
+inventory: "📦 在庫\nP-05〜P-06" {
+  class: process
+}
+customer_management: "👥 顧客\nP-07〜P-08" {
+  class: process
+}
+closing: "🧮 締め\nP-09〜P-10" {
+  class: process
+}
+product_master: "📐 商品台帳" {
+  class: store_master
+}
+customer_master: "📐 顧客台帳" {
+  class: store_master
+}
+sales_record: "📒 販売記録" {
+  class: store_transaction
+}
+purchase_record: "📒 仕入記録" {
+  class: store_transaction
+}
+inventory_record: "📒 在庫記録" {
+  class: store_transaction
+}
+credit_ledger: "📒 つけ台帳" {
+  class: store_transaction
+}
+daily_closing_record: "📒 日次締め記録" {
+  class: store_transaction
+}
+monthly_report: "📊 月次報告" {
+  class: store_transaction
+}
+display_shelf: "🏬 売場棚" {
+  class: physical_store
+}
 
-  顧客 -->|"購入依頼・支払"| 販売
-  売場棚 ==>|"商品"| 販売
-  販売 ==>|"商品"| 顧客
-  商品台帳 -->|"売価"| 販売
-  顧客台帳 -->|"つけ上限"| 販売
-  つけ台帳 -->|"つけ残高"| 販売
-  販売 -->|"販売情報"| 販売記録
-  販売 -->|"つけ販売情報"| つけ台帳
+# 配置制御用（受け渡しではない）
+purchasing -> sales -> inventory -> customer_management -> closing: {style.opacity: 0}
 
-  販売記録 -->|"販売数量"| 在庫
-  商品台帳 -->|"補充基準"| 在庫
-  在庫 -->|"在庫数量"| 在庫記録
-
-  顧客 -->|"登録依頼・つけの支払"| 顧客管理
-  つけ台帳 -->|"つけ残高"| 顧客管理
-  顧客管理 -->|"顧客情報・つけ上限"| 顧客台帳
-  顧客管理 -->|"精算記録"| つけ台帳
-
-  販売記録 -->|"当日の販売"| 締め
-  仕入記録 -->|"当日の仕入額"| 締め
-  在庫記録 -->|"在庫差異"| 締め
-  つけ台帳 -->|"つけ残高合計"| 締め
-  締め -->|"日次締め"| 日次締め記録
-  締め -->|"月次の売上・欠品・つけ残高"| 月次報告
-  締め -->|"売価・補充基準の見直し"| 商品台帳
-  締め -->|"つけ上限の見直し"| 顧客台帳
-
-  class 仕入,販売,在庫,顧客管理,締め process
-  class 商品台帳,顧客台帳 storeMaster
-  class 販売記録,仕入記録,在庫記録,つけ台帳,日次締め記録,月次報告,売場棚 storeTransaction
-  class 仕入先,顧客 actor
+product_master -> purchasing: "仕入先・発注単位"
+purchasing <- inventory: "補充依頼"
+supplier <- purchasing: "発注"
+supplier -> purchasing: "商品" {
+  class: material_flow
+}
+purchasing -> display_shelf: "商品" {
+  class: material_flow
+}
+purchasing -> purchase_record: "仕入情報"
+purchasing -> inventory_record: "入荷数量"
+customer -> sales: "購入依頼・支払"
+display_shelf -> sales: "商品" {
+  class: material_flow
+}
+customer <- sales: "商品" {
+  class: material_flow
+}
+product_master -> sales: "売価"
+customer_master -> sales: "つけ上限"
+sales <- credit_ledger: "つけ残高"
+sales -> sales_record: "販売情報"
+sales -> credit_ledger: "つけ販売情報"
+sales_record -> inventory: "販売数量"
+product_master -> inventory: "補充基準"
+inventory -> inventory_record: "在庫数量"
+customer -> customer_management: "登録依頼・つけの支払"
+credit_ledger -> customer_management: "つけ残高"
+customer_master <- customer_management: "顧客情報・つけ上限"
+credit_ledger <- customer_management: "精算記録"
+sales_record -> closing: "当日の販売"
+purchase_record -> closing: "当日の仕入額"
+inventory_record -> closing: "在庫差異"
+credit_ledger -> closing: "つけ残高合計"
+closing -> daily_closing_record: "日次締め"
+closing -> monthly_report: "月次の売上・欠品・つけ残高"
+product_master <- closing: "売価・補充基準の見直し"
+customer_master <- closing: "つけ上限の見直し"
 ```
 
-凡例は「凡例（本プロダクト共通）」に従う。`-->` は情報の流れ、`==>` は商品の物の流れであり、売場棚は物理保管として描く。各領域の起点イベントと担当は「プロセス領域」の表に記載し、本図では省略する。外部主体は顧客と仕入先である。
+仕入・販売・在庫・顧客・締めの五つのグループが、商品と支払を受け渡し、台帳や記録を読み書きして店舗運営を支える関係を示す。
 
 ## 6. 詳細 CDFD 一覧
 
@@ -232,49 +277,112 @@ flowchart LR
 
 本プロダクトの全 CDFD（本書、プロセスグループ別 CDFD、ユースケース別 CDFD）が共通して参照するノード形状・色・絵文字の対応を示す。個々の CDFD は、以下の定義を再掲せず、本章への参照に留める。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+図の記法には D2（[[specdojo:cdfd-d2-rulebook|D2 記法ルール]]）を採用し、`direction: down` で縦に配置する。プロセスは五つのプロセスグループの代表ノード、データストアは一覧の各行をノードとする。矢印は情報または実行要求の受け渡しであり、実行順や毎回の通過を意味しない。更新の線は更新前の参照を含む。`->`（戻りは `<-`）の通常線は情報、`material_flow` class の太線は商品の物の流れであり、売場棚は物理保管として描く。配置制御用の非表示の線は受け渡しを表さない。起点イベントと担当はプロセス領域の表に置き、図では省略する。店主代表と店番担当は領域の担当であり、対象範囲外の顧客と仕入先だけを外部主体にする。
 
-  外部主体["🧑 外部主体"]
-  起点イベント{{"⚡ 起点イベント"}}
-  プロセス("⚙️ プロセス／プロセスグループ")
-  マスタ構成データ[("🗄️ マスタ・構成データ")]
-  トランザクションデータ[("🗄️ トランザクションデータ")]
-  物理保管(["🏬 物理保管"])
+```d2
+direction: down
 
-  外部主体 -->|"情報の流れ"| プロセス
-  起点イベント -->|"起動条件"| プロセス
-  プロセス -->|"参照・更新"| マスタ構成データ
-  プロセス -->|"更新"| トランザクションデータ
-  プロセス ==>|"物の流れ"| 物理保管
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  actor: {
+    shape: rectangle
+    style: {
+      fill: "#f5f7fa"
+      stroke: "#607d8b"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
 
-  class プロセス process
-  class 起点イベント event
-  class マスタ構成データ storeMaster
-  class トランザクションデータ,物理保管 storeTransaction
-  class 外部主体 actor
+actor_node: "🧑 外部主体" {
+  class: actor
+}
+event_node: "⚡ 起点イベント" {
+  class: event
+}
+process_node: "⚙️ プロセス／プロセスグループ" {
+  class: process
+}
+master_store: "🗄️ マスタ・構成データ" {
+  class: store_master
+}
+transaction_store: "🗄️ トランザクションデータ" {
+  class: store_transaction
+}
+physical_store_node: "🏬 物理保管" {
+  class: physical_store
+}
+
+actor_node -> process_node: "情報の流れ"
+event_node -> process_node: "起動条件"
+process_node -> master_store: "参照・更新"
+process_node -> transaction_store: "更新"
+process_node -> physical_store_node: "物の流れ" {
+  class: material_flow
+}
 ```
 
 <!-- prettier-ignore -->
 | 概念 | 形状 | 色 | 絵文字例 |
 | --- | --- | --- | --- |
-| プロセス／プロセスグループ | 角丸長方形 | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: 🛒） |
-| 起点イベント | 六角形 | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: 🚦） |
-| データストア（マスタ・構成データ） | 円柱 | 濃い緑（`#a5d6a7` / `#1b5e20`） | 保管物が伝わる絵文字（例: 📐） |
-| データストア（トランザクションデータ） | 円柱 | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📒） |
-| 物理保管 | スタジアム形 | 薄い緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
-| 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 🧑） |
-| 情報の流れ | ラベル付き `-->` | — | — |
-| 物の流れ | ラベル付き `==>` | — | — |
+| プロセス／プロセスグループ | 角丸四角形（`style.border-radius: 8`） | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: 🛒） |
+| 起点イベント | 六角形（`shape: hexagon`） | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: 🚦） |
+| データストア（マスタ・構成データ） | 円柱（`shape: cylinder`） | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📐） |
+| データストア（トランザクションデータ） | 円柱（`shape: cylinder`） | 中間の緑（`#c8e6c9` / `#2e7d32`） | 保管物が伝わる絵文字（例: 📒） |
+| 物理保管 | 大角丸四角形（`style.border-radius: 20`） | 中間の緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
+| 外部主体 | 四角形（`shape: rectangle`） | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 🧑） |
+| 情報の流れ | ラベル付き通常線 `->`（戻りは `<-`） | — | — |
+| 物の流れ | ラベル付き太線 `->`（`material_flow` class） | — | — |
 
 データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（商品台帳、顧客台帳）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（販売記録、仕入記録、在庫記録、つけ台帳、締めの記録）を指す。物理保管は現物の保管先であり、いずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
 
-ノード形状・線種そのものの記法は `specdojo:cdfd-mermaid-rulebook` に従う。本章は、その記法に基づき駄菓子屋きぬや販売管理の全 CDFD が実際に採用する色・絵文字の割り当てを固定する。
+ノード形状・線種そのものの記法は [[specdojo:cdfd-d2-rulebook|D2 記法ルール]] に従う。本章は、その記法に基づき駄菓子屋きぬや販売管理の全 CDFD が実際に採用する色・絵文字の割り当てを固定する。
 
 ## 8. 未決事項
 

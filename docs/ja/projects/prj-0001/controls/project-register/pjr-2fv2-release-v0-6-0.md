@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2fv2-release-v0-6-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: done
   priority: high
   difficulty: medium
   owner: PO
   registered_at: "2026-10-31T08:35:35Z"
   due_on: "2026-11-30"
+  completed_at: "2026-10-31T09:31:01Z"
+  conclusion: "specdojo 0.6.0 と @specdojo/docs-lint 0.4.0 を 2026-10-31 に公開した（PR #27、merge commit 9eb96b807）。docs-site は 0.3.0 のまま"
 ---
 
 # PJR-2FV2 0.6.0 でリリースする
@@ -45,14 +47,22 @@ specdojo:
 
 | No  | 作業                                                        | 担当                  | 状態 | メモ |
 | --- | ----------------------------------------------------------- | --------------------- | ---- | ---- |
-| 1   | 版と CHANGELOG を確定し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | open | -    |
-| 2   | 配布物を空のリポジトリで試す                                | specdojo-orchestrator | open | -    |
-| 3   | PR・merge・タグ・公開の承認                                 | PO                    | open | -    |
-| 4   | 公開後の確認                                                | specdojo-orchestrator | open | -    |
+| 1   | 版と CHANGELOG を確定し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | done | -    |
+| 2   | 配布物を空のリポジトリで試す                                | specdojo-orchestrator | done | -    |
+| 3   | PR・merge・タグ・公開の承認                                 | PO                    | done | -    |
+| 4   | 公開後の確認                                                | specdojo-orchestrator | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+specdojo 0.6.0 と @specdojo/docs-lint 0.4.0 を 2026-10-31 に公開した。@specdojo/docs-site は 0.3.0 のまま。
+
+- 版と CHANGELOG: `feature/prj-0001/release-v0.6.0` で specdojo を 0.6.0、docs-lint を 0.4.0 に上げ、`[Unreleased]` を `## [0.6.0] - 2026-10-31` にした。節の先頭に、同梱パッケージの説明と「利用者から見て動きが変わる点」（`guided-pass` の approach が `draft` になったこと、`fully-guided` が磨き込み専用になったこと）を書いた。
+- 検証: ルートと 3 package の `npm ci` が通り、リリースのブランチで `npm run check` が通った（193 テストファイル、3,224 テスト）。
+- 配布物の試用: 2 つの tarball を空のリポジトリに入れ、`init`、`register add`（`--input`・`--commit-type`・`--commit-scope`）、`deliverable scaffold --target` で作ったカタログのない成果物の雛形の docs-lint の通過、`_CONTEXT_:` の検出（draft は情報、ready はエラー）、`exec run --register`（claude の executor・reporter で start から review と統合）を確かめた。
+- 試用で見つけた docs-lint の `remark/md-content` を options なしで読み込むと失敗する問題は、PJR-5EN3 で公開の前に直し、0.4.0 に含めた。
+- 公開: PR #27（<https://github.com/specdojo/specdojo/pull/27>）を merge commit `9eb96b807` で main に入れ、`v0.6.0`・`docs-lint-v0.4.0` のタグを付けた。公開の workflow（41188544012・41188544055）はどちらも success。push・PR の merge・タグ・npm の公開の承認は利用者が行った。
+- 公開後の確認: npm の `latest` は specdojo が 0.6.0、@specdojo/docs-lint が 0.4.0。npm から入れた版で `init`、`register add`、`deliverable scaffold --target` の雛形の docs-lint の通過、options なしの `md-content` での `_CONTEXT_:` の検出（情報）を確かめた。
+- main を develop へ取り込んだ（早送り）。
 
 ## 6. 関連ドキュメント
 

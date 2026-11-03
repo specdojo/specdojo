@@ -356,47 +356,50 @@ function checkpointAndEnsureProjectWorktree(
 
     const worktree = ensureProjectWorktree();
     for (const path of paths) copyCheckpointPath(context.repoRoot, worktree.path, path);
-    stageCommitTargets(worktree.path, paths);
-    const checkpointArgs = ["diff", "--cached", "--quiet", "--", ...paths];
-    const checkpoint = gitResult(worktree.path, checkpointArgs);
-    assertCheckpointInspection(checkpointArgs, checkpoint, params.failureLogPath);
-    if (checkpoint.status === 1) {
-      const committed = gitResult(worktree.path, [
-        "commit",
-        "-m",
-        params.commitMessage,
-        "--",
-        ...paths,
-      ]);
-      if (committed.status !== 0) {
-        // A failing git hook (pre-commit / commit-msg) aborts the commit but leaves the staged
-        // paths in the index. Unstage only this checkpoint so a hook or caller's unrelated staged
-        // paths remain intact.
-        unstageCommitTargets(worktree.path, paths);
-        // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
-        // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
-        // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
-        const output = [committed.stdout, committed.stderr]
-          .map((part) =>
-            typeof part === "string" ? stripTerminalControlSequences(part).trim() : "",
-          )
-          .filter(Boolean)
-          .join("\n");
-        appendGitFailureLog(params.failureLogPath, [
-          `=== ${new Date().toISOString()} git commit checkpoint ===`,
-          `exit: ${committed.status ?? "unknown"}`,
-          "--- stdout ---",
-          typeof committed.stdout === "string" ? committed.stdout : "",
-          "--- stderr ---",
-          typeof committed.stderr === "string" ? committed.stderr : "",
-          "",
+    try {
+      stageCommitTargets(worktree.path, paths);
+      const checkpointArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+      const checkpoint = gitResult(worktree.path, checkpointArgs);
+      assertCheckpointInspection(checkpointArgs, checkpoint, params.failureLogPath);
+      if (checkpoint.status === 1) {
+        const committed = gitResult(worktree.path, [
+          "commit",
+          "-m",
+          params.commitMessage,
+          "--",
+          ...paths,
         ]);
-        throw new Error(
-          // register の短い block_reason にも step とエラーが残るよう、補足より先に要約を置く。
-          `Checkpoint commit failed: ${summarizeGitHookFailure(output)} ` +
-            `(${params.commitMessage}; staged changes rolled back; likely a failing git hook)`,
-        );
+        if (committed.status !== 0) {
+          // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
+          // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
+          // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
+          const output = [committed.stdout, committed.stderr]
+            .map((part) =>
+              typeof part === "string" ? stripTerminalControlSequences(part).trim() : "",
+            )
+            .filter(Boolean)
+            .join("\n");
+          appendGitFailureLog(params.failureLogPath, [
+            `=== ${new Date().toISOString()} git commit checkpoint ===`,
+            `exit: ${committed.status ?? "unknown"}`,
+            "--- stdout ---",
+            typeof committed.stdout === "string" ? committed.stdout : "",
+            "--- stderr ---",
+            typeof committed.stderr === "string" ? committed.stderr : "",
+            "",
+          ]);
+          throw new Error(
+            // register の短い block_reason にも step とエラーが残るよう、補足より先に要約を置く。
+            `Checkpoint commit failed: ${summarizeGitHookFailure(output)} ` +
+              `(${params.commitMessage}; staged changes rolled back; likely a failing git hook)`,
+          );
+        }
       }
+    } catch (error) {
+      // stage 後の検査や hook が失敗しても、この checkpoint の対象だけを戻す。
+      // root の index と、hook が別途 stage した無関係なパスには触れない。
+      unstageCommitTargets(worktree.path, paths);
+      throw error;
     }
     return worktree;
   }

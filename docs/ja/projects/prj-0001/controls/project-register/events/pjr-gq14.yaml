@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4442ab8eb07c43d1a360d205dfe5bdde
+  ts: "2026-11-02T12:13:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ユースケース別ガイドを具体的なプロダクト作成の対話フローに改訂する
+    - field: description
+      from: ""
+      to: use-case-guide.md を LP・Next.js の Web サービス・Unity のゲームという作りたいもの別に再構成し、相談から成果物作成・検証・運用までの対話フローを示す。PJR-RTD5 の用途別ひな型は提供後に使い方を追記する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-02"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-V5AZ"]'
+- v: 1
+  id: reg_64dd8a95dcb14c51a364b340b6e86583
+  ts: "2026-11-02T14:22:46Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4442ab8eb07c43d1a360d205dfe5bdde
+- v: 1
+  id: reg_eed231e4effd4ccc88c4aa1541d80b52
+  ts: "2026-11-02T14:37:58Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_64dd8a95dcb14c51a364b340b6e86583
+- v: 1
+  id: reg_afe173fd98bb4d56ad3e23f202131f11
+  ts: "2026-11-02T14:39:18Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: review
+  reason: 承認済み作業の自動進行として、実物確認で判明した仕様不整合を修正へ引き継ぐ
+  changes:
+    - field: input
+      from: "-"
+      to: '["初回改訂の実物確認で現行仕様との不整合を確認した（2026-11-02、specdojo-orchestrator）。repos は名前をキーにした辞書ではなく name/path を持つ要素の配列。schedule build は --track、exec run --worktree は --register または --task 等の実行対象を明示する。ガイド内の引数不足の例を現行 --help と設定リファレンスに照合して修正する。register add 例には日本語タイトルに対応する --topic と具体的な --description、必要な --input、記帳用 --by specdojo-orchestrator と --commit を入れ、初期 commit と SpecDojo 側の develop ブランチ・設定 commit の前提を Quick Start へ適切につなぐ。","同じ完了条件の範囲で、仕様書が ready になれば Hero 等の実装タスクが自動生成されるという説明を修正する。文書カタログを schedule に展開する経路と、宣言済みプロダクトの実装 todo を register から実行する経路を区別し、生成されていない TSK-LP-01 等を実在する task ID として扱わない。コミット・統合は executor ではなく runner が実施し、統合先は承認済み設定に従う。検証はプロダクト側に設定・準備されたものだけを実行可能とし、main への自動統合や typecheck 等の自動実施を無条件に約束しない。人の判断と agent による finalize 操作を混同せず、ready 昇格を AI が一律に禁止されるという記述は現行ガイドに照合する。`dct-*` カタログと成果物文書 ID を混同しない。Next.js 例の同じ todo の重複を除き、例の担当・期限・技術採択は架空の合意例と明示する。","LP・Next.js・Unity のケース別対話と共通運用への導線は維持する。PJR-RTD5 は LP、次に Next.js + Cloudflare の方針決定であり、スターター提供済みや Unity スターターの採用確定を仮定しない。公開ガイドは prj-0001 の内部個票がない利用者にも読めるようにし、内部の追跡は対応結果へ記録する。実際のプロダクト・保護設定は変更しない。Quick Start の同種の誤記は PJR-V5AZ で修正するため、共通手順はそこへリンクし、use-case-guide.md では同じ誤りを繰り返さない。"]'
+  previous_event_id: reg_eed231e4effd4ccc88c4aa1541d80b52
+- v: 1
+  id: reg_88ca7df189ed44adaec3932b20d593fa
+  ts: "2026-11-02T14:52:32Z"
+  action: start
+  actor: luna-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_afe173fd98bb4d56ad3e23f202131f11
+- v: 1
+  id: reg_a130e81e2e5b4c6aa2ef935c097afe45
+  ts: "2026-11-02T14:54:51Z"
+  action: wait
+  actor: luna-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: executor rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: executor rate limit reached
+  previous_event_id: reg_88ca7df189ed44adaec3932b20d593fa
+- v: 1
+  id: reg_ad1ba03a12ee4566a4911252e3906051
+  ts: "2026-11-02T21:41:11Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: executor rate limit reached
+      to: "-"
+  previous_event_id: reg_a130e81e2e5b4c6aa2ef935c097afe45
+- v: 1
+  id: reg_09cbf3add54e4253bb2d55c1d30611df
+  ts: "2026-11-02T21:57:25Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ad1ba03a12ee4566a4911252e3906051

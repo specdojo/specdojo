@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7d3558b51cd041018b76492a0ea2acef
+  ts: "2026-10-31T14:16:18Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 残りの CDFD の文書を要点に絞った形に書き直す
+    - field: description
+      from: ""
+      to: PJR-8TQJ で直した rulebook と、書き直した cdfd-overview.md に合わせて、残りの 8 つの CDFD の文書（プロセスグループ別 6、ユースケース別 2）を要点に絞った形に書き直す
+    - field: input
+      from: ""
+      to: '["PJR-8TQJ の結果を利用者が確かめてから行う（2026-10-31 の対話で利用者が案 A を選択）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-8TQJ"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-8TQJ"]'
+- v: 1
+  id: reg_fdfc797741ca40bf836ec05c4061627d
+  ts: "2026-10-31T23:33:05Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: input
+      from: '["PJR-8TQJ の結果を利用者が確かめてから行う（2026-10-31 の対話で利用者が案 A を選択）"]'
+      to: '["PJR-8TQJ の結果を利用者が確かめてから行う（2026-10-31 の対話で利用者が案 A を選択）","要点に絞る書き直しと D2 への移行を 1 回で行うため、CDFD の D2 版の rulebook（PJR-TE2N）の後に行う（2026-11-01 の対話で推奨を採用）"]'
+    - field: depends_on
+      from: '["PJR-8TQJ"]'
+      to: '["PJR-8TQJ","PJR-TE2N"]'
+  previous_event_id: reg_7d3558b51cd041018b76492a0ea2acef
+- v: 1
+  id: reg_57a7cbe9b2314ecf8ae21a1473ef0ed7
+  ts: "2026-11-01T06:51:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-8TQJ","PJR-TE2N"]'
+      to: '["PJR-8TQJ","PJR-TE2N","PJR-AD33"]'
+  previous_event_id: reg_fdfc797741ca40bf836ec05c4061627d

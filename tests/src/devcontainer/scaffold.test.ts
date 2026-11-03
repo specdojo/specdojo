@@ -1186,7 +1186,7 @@ describe("runDevcontainerScaffold", () => {
       expect(findWriteCall("ssh-config.sample")).toBeDefined();
     });
 
-    it("generates specdojo-tmux.sh.sample with -u flag and reflects remoteUser from devcontainer.json", async () => {
+    it("generates specdojo-tmux.sh.sample calling .specdojo/host/devcontainer-tmux.sh", async () => {
       const actualFs = await vi.importActual<typeof fs>("node:fs");
       const tmuxTemplate = actualFs.readFileSync(
         path.join(process.cwd(), "templates/devcontainer/remote-host/specdojo-tmux.sh.sample"),
@@ -1227,30 +1227,11 @@ describe("runDevcontainerScaffold", () => {
 
       const tmuxCall = findWriteCall("specdojo-tmux.sh.sample");
       const tmuxContent = String(tmuxCall[1]);
-      expect(tmuxContent).toContain('docker exec -it --detach-keys="ctrl-]" -u "$container_user"');
-      expect(tmuxContent).toContain('container_user="developer"');
       expect(tmuxContent).toContain(
-        "remoteUser を変更した場合は、下記 container_user の値を変更してください。",
+        'exec bash "$workspace_dir/.specdojo/host/devcontainer-tmux.sh" "$workspace_dir"',
       );
-      expect(tmuxContent).toContain('node_bin_dir="/absolute/path/to/node/bin"');
-      expect(tmuxContent).toContain(
-        'export PATH="$node_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"',
-      );
-      expect(tmuxContent).toContain('dirname "$(command -v devcontainer)"');
-      expect(tmuxContent).toContain('node_bin_dir="/opt/homebrew/bin"');
-      expect(tmuxContent).toContain('node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"');
-      expect(tmuxContent).toContain('node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"');
-      expect(tmuxContent).toContain(
-        'echo "Dev Container CLI is not installed or not in PATH." >&2',
-      );
-      expect(tmuxContent).toContain('echo "Current PATH: $PATH" >&2');
-      expect(tmuxContent).toContain(
-        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v devcontainer)\\"" >&2',
-      );
-      expect(tmuxContent).toContain('echo "Docker command was not found in PATH." >&2');
-      expect(tmuxContent).toContain(
-        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v docker)\\"" >&2',
-      );
+      expect(tmuxContent).toContain('workspace_dir="${1:-$HOME/<path-to-workspace>/<repo-name>}"');
+      expect(tmuxContent).toContain(".specdojo/host/devcontainer-tmux.sh");
     });
   });
 

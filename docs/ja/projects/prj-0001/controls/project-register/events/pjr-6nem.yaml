@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bb1fb3123adb4005afb3d45f636f0d9f
+  ts: "2026-10-31T14:15:07Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: D2 の図を描画・検査する基盤を用意する
+    - field: description
+      from: ""
+      to: PJR-2ZMY の決定（複雑な図は D2 で描く）を受け、文書のサイトのビルドで D2 のコードブロックを SVG に書き出し、Mermaid と同じく文書の検査と commit の hook で構文を検査できるようにする。Dev Container と CI に d2 の CLI を入れる
+    - field: input
+      from: ""
+      to: '["PJR-2ZMY で、図は複雑さで使い分け、複雑な図は D2 で描くと決めた（2026-10-31、indie）","D2 は MPL-2.0。配置のエンジンは同梱の dagre・ELK・TALA（2026-09-07 に MPL-2.0 で公開、D2 v0.9.0 に同梱）から選べる","Mermaid は packages/docs-site/src/gen-mermaid-svg.ts で SVG にし、tools/lint-mermaid.mjs と lint:mermaid で検査している（PJR-B5TY）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-2ZMY"]'
+- v: 1
+  id: reg_d0e9e6f1d30f4eb99b3bf337f9bd2820
+  ts: "2026-10-31T14:17:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: difficulty
+      from: "-"
+      to: hard
+  previous_event_id: reg_bb1fb3123adb4005afb3d45f636f0d9f
+- v: 1
+  id: reg_df87c5ea15fa4cf598555de43edb17b7
+  ts: "2026-10-31T14:34:53Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d0e9e6f1d30f4eb99b3bf337f9bd2820
+- v: 1
+  id: reg_73e2f4c518ee4137b24cd1ce44ccb3f2
+  ts: "2026-10-31T15:00:00Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_df87c5ea15fa4cf598555de43edb17b7
+- v: 1
+  id: reg_f8db144fa1cd4c9a88a4088cb6bad15b
+  ts: "2026-10-31T15:05:53Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_73e2f4c518ee4137b24cd1ce44ccb3f2
+- v: 1
+  id: reg_c00550d9c2074d149361e18f5f3e5e46
+  ts: "2026-10-31T15:19:46Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f8db144fa1cd4c9a88a4088cb6bad15b
+- v: 1
+  id: reg_fc542eae4573400c8dda15b442c97291
+  ts: "2026-11-01T00:05:43Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と実物で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: D2 の描画・検査の基盤を用意した。保護された設定は利用者の承認のもとで反映し、作り直した Dev Container で d2 v0.9.0・拡張機能・実物の d2 の統合テスト・試しの図の SVG 生成・文書のサイト全体のビルドを確かめた
+  previous_event_id: reg_c00550d9c2074d149361e18f5f3e5e46

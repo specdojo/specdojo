@@ -1,6 +1,6 @@
 # @specdojo/docs-site
 
-SpecDojo の VitePress 文書サイトと Mermaid SVG 生成を提供する任意パッケージです。CLI 本体の
+SpecDojo の VitePress 文書サイトと Mermaid・D2 の SVG 生成を提供する任意パッケージです。CLI 本体の
 `specdojo` には Chromium を必要とする依存を含めず、文書サイトを構築する環境だけへ明示的に
 導入します。
 
@@ -26,6 +26,7 @@ cache は `.vitepress/cache`、Mermaid SVG と manifest は `.vitepress/mermaid`
 /.vitepress/dist/
 /.vitepress/cache/
 /.vitepress/mermaid/
+/.vitepress/d2/
 /.vitepress/kata-staging/
 ```
 
@@ -63,3 +64,16 @@ event などの実行記録はページとして残しますが、サイドバ�
 ローカル検索には SpecDojo 文書と登録簿一覧 `pjr-index` を含め、登録簿の個票、派生ビュー、管理ログ、
 実行記録を含めません。登録項目は `pjr-index` のタイトル・説明・結論から検索し、一覧のリンクから
 個票へ移動します。
+
+Markdown の `d2` コードブロックも `build` / `dev` で SVG に変換します。別途 D2 CLI v0.9.0 を
+PATH に配置してください。既定の配置は ELK で、ブラウザは不要です。D2 を含む文書があるときは
+CLI の未導入・版違いで失敗し、構文エラーは文書と fence の行番号を付けて報告します。
+`npx specdojo-docs-site d2 .` で SVG だけを生成できます。出力は `.vitepress/d2/`、公開 URL は
+サイトの base に続く `/d2/<hash>.svg` です。生成・参照側は CLI の版・配置・コードから求めた
+同じハッシュを使います。生成済み SVG は再利用し、参照のなくなったハッシュ名の SVG だけを削除します。
+図はコードブロック内で完結させ、外部 import を使いません。ルートの図だけを書き出し、
+layers・scenarios・steps の追加ページは対象にしません。開発中は文書の追加・変更・削除に追従します。
+
+本リポジトリの D2 構文検査は `node tools/lint-d2.mjs [<Markdown のパスまたは glob> ...]` です。
+引数なしでは `docs/**/*.md` を検査します。CLI の導入元は
+[D2 v0.9.0 の公式リリース](https://github.com/d2lang/d2/releases/tag/v0.9.0)です。

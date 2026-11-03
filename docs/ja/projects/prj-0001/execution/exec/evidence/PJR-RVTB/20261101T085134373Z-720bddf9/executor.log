@@ -1,0 +1,21 @@
+プロジェクト登録簿の項目 **PJR-RVTB「全体概要の CDFD を縦向きにし、系統ごとの入口のイベントを描いて試す」** の対応を完了しました。
+
+### 実施概要
+
+1. **4 つの図の縦向き化（`direction: down`）**:
+   - [`cdfd-overview.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RVTB/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md) の 5.1 register 系、5.2 schedule 系、5.3 routine 系、5.4 共通・基盤の 4 つの D2 図を `direction: down` に変更しました。
+   - 戻りの矢印（`a <- b`）および共通・基盤の図の配置制御線（透明度 0 の線）を保持し、プロセスが上から順に並ぶようにしました。
+2. **系統ごとの入口起点イベントの描画**:
+   - 各図の `classes` に `event` class（六角形、橙色 `#fff3e0` / `#fb8c00`）を追加し、系統の入口となる起点イベントを 1〜2 個描画して開始プロセスへラベル付きエッジで接続しました。
+   - イベント文言は「プロセス領域」の表の「起点イベント」列と完全一致させ、先頭に絵文字 `⚡` を付与しました。
+3. **57 本の業務受け渡しエッジの完全保全**:
+   - 変更前の全 95 本（業務 94 本 + 配置制御線 1 本、重複を除くユニーク 57 本）の受け渡しが、向き・ラベルを含めてすべて残っていることを検証しました。
+4. **SVG によるプロセスの並び順の検証**:
+   - 4 つの図を `d2 --layout elk` でコンパイルし、全図において上から Orchestrator・Plan・Do・Check・Action の順（共通・基盤では Onboarding が Orchestrator の上）に配置され、同一行に横並びになるプロセスが存在しないことを確認しました。
+5. **図・凡例の説明文整合と個票更新**:
+   - 第 5 章冒頭、各図の注記、第 7 章（凡例）の説明文を縦向き・起点イベント描画の試行に合わせました。
+   - [`pjr-rvtb-cdfd-overview-vertical-trial.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RVTB/docs/ja/projects/prj-0001/controls/project-register/pjr-rvtb-cdfd-overview-vertical-trial.md) の作業内容を `done` に更新し、対応結果セクション（起点イベント選定理由、SVG 測定結果、エッジ照合結果、rulebook とのずれ一覧、申し送り）を記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"全体概要の 4 つの図を direction: down に変更し、系統ごとの入口となる起点イベント（1〜2 個）を描画・接続しました。変更前の 57 本の受け渡しを完全保全し、SVG コンパイルによりプロセスが上から順に正しく並ぶことを検証して個票へ記録しました。","handoff":["利用者が VS Code の Markdown プレビューで見た目を確かめていること（close 前に対話型オーケストレーターまたは人間が確認を行う）","試行にあたり rulebook（cdfd-d2-rulebook、cdfd-overview-rulebook）は変更せず、direction: down の使用および全体概要図への起点イベント描画を rulebook とのずれとして個票に記録したこと（採用する場合は decision 記録後に rulebook 改定、不採用の場合は変更破棄）"],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-rvtb-cdfd-overview-vertical-trial.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"Skipped schema validation for YAML files","reason":"*.yaml または *.yml ファイルの変更がないため（変更は *.md のみ）"}]}
+</specdojo_executor_evidence>

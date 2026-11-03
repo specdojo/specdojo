@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 93
-graded_at: "2026-10-02T21:38:42.403Z"
-graded_by: agy-expert-executor
-content_hash: f797ec82e42da08e5310b72841b95b39c12d04ab00b09372b87c646c189280ce
+graded_at: "2026-10-31T20:21:50.944Z"
+graded_by: flash-high-executor
+content_hash: 06fb3d25a696e916b242a28a5b1d699090fd70742d95484f78fc9a001086f64e
 categories:
   purpose:
     score: 100
@@ -113,21 +113,25 @@ findings:
     line: 244
     anchor: "```plaintext"
     message: サンプル節において Mermaid コードブロックの直後に同一内容の plaintext ブロックが重複して記載されており冗長である。
+    message_ja: サンプル節において Mermaid コードブロックの直後に同一内容の plaintext ブロックが重複して記載されており冗長である。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# C4コンテキスト図 ドキュメント作成ルール"
     message: "Frontmatter に `target_format: markdown` が不足している。"
+    message_ja: "Frontmatter に `target_format: markdown` が不足している。"
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# C4コンテキスト図 ドキュメント作成ルール"
     message: 他の rulebook と同様に、設計フローにおける本書の位置づけを定義する「位置づけ」節を設けるべきである。
+    message_ja: 他の rulebook と同様に、設計フローにおける本書の位置づけを定義する「位置づけ」節を設けるべきである。
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# C4コンテキスト図 ドキュメント作成ルール"
     message: 参照しているサンプル `specdojo:cxd-sample` が具体的な成果物の例ではなくメタ記述となっており、実装リファレンスとして不十分である。
+    message_ja: 参照しているサンプル `specdojo:cxd-sample` が具体的な成果物の例ではなくメタ記述となっており、実装リファレンスとして不十分である。

@@ -35,7 +35,7 @@ Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、デー�
 | プロセスグループ     | 角丸長方形 `("...")`（全体概要・ユースケース別 CDFD の代表ノード）                   | `販売("販売<br>P-01〜P-02")`                     |
 | サブグラフ           | `subgraph ... end`（関連プロセスを囲む視覚上のまとまり。グループの表現には使わない） | `subgraph 販売領域["販売領域"]`                  |
 | データストア         | 円柱 `[(...)]`                                                                       | `販売記録簿[("販売記録簿")]`                     |
-| 物理保管             | スタジアム形 `(["..."])`（現物の保管先。データストアと同系統色を使う）               | `売場棚(["売場棚"])`                             |
+| 物理保管             | スタジアム形 `(["..."])`（現物の保管先。トランザクションデータと同じ色を使う）       | `売場棚(["売場棚"])`                             |
 | 外部主体             | 四角 `[...]`                                                                         | `顧客["顧客"]`                                   |
 | イベント             | 六角形 `{{...}}`                                                                     | `購入要求{{"顧客が商品の購入を要求した"}}`       |
 | 情報・実行要求の流れ | ラベル付き `-->\|"..."\|`                                                            | `販売記録 -->\|"販売情報"\| 販売記録簿`          |
@@ -175,7 +175,7 @@ flowchart LR
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
   classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef store fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef store fill:#c8e6c9,stroke:#2e7d32,color:#000
   classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
 
   顧客["顧客"]
@@ -197,8 +197,9 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeMaster fill:#e8f5e9,stroke:#43a047,color:#000
+  classDef storeTransaction fill:#c8e6c9,stroke:#2e7d32,color:#000
+  classDef physicalStore fill:#c8e6c9,stroke:#2e7d32,color:#000
 
   商品マスタ[("商品マスタ")]
   販売記録簿[("販売記録簿")]
@@ -207,7 +208,7 @@ flowchart LR
   class 販売記録簿 storeTransaction
 ```
 
-凡例には「円柱（濃い緑）はマスタ・構成データ、円柱（薄い緑）はトランザクションデータ」のように、大分類の形状の意味に加えてサブ分類の色の意味を明記します。
+凡例には「円柱（薄い緑 `#e8f5e9` / `#43a047`）はマスタ・構成データ、円柱（中間の緑 `#c8e6c9` / `#2e7d32`）はトランザクションデータ、スタジアム形（トランザクションデータと同色 `#c8e6c9` / `#2e7d32`）は物理保管」のように、大分類の形状の意味に加えてサブ分類の色の意味を明記します。
 
 ## 7. 禁止事項
 

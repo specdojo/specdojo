@@ -2,12 +2,12 @@
 id: cdsd-sharing-grade-criteria
 document: cdsd-sharing
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
-graded_at: "2026-10-16T16:30:57.479Z"
-graded_by: agy-expert-executor
+graded_at: "2026-11-02T16:24:22.418Z"
+graded_by: flash-high-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 summary:
-  satisfied: 0
-  unsatisfied: 3
+  satisfied: 1
+  unsatisfied: 2
   total: 3
 criteria:
   - id: DC-001
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Deliverable entity and deliverable index are omitted as TODO, and the granularity of cost and work records remains
-      undecided.
+      The granularity for expense and work records is undecided, and deliverable and deliverable catalog stores are
+      omitted.
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
@@ -26,14 +26,11 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      The structure, authoritative classification, sources, and edit constraints of deliverable entities and deliverable
-      indexes are undefined.
+      Deliverable and deliverable catalog store definitions are omitted as TODOs, preventing the store configuration
+      from serving as a design baseline.
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: >-
-      Verification targets, comparison baselines, required fields, and pass criteria for obsolescence and untranscribed
-      records are not defined.
+    status: satisfied

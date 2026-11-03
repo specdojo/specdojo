@@ -51,3 +51,22 @@
       from: open
       to: in-progress
   previous_event_id: reg_21a0325f92324ca28d326fca1dff5a87
+- v: 1
+  id: reg_3452dc5cb14f4d09945173811cbe0107
+  ts: "2026-10-31T09:31:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: in-progress
+  to_status: done
+  reason: npm の latest、タグで起動した公開の workflow の success、npm から入れた版の init・register add・scaffold --target・docs-lint の動作を確かめた
+  changes:
+    - field: status
+      from: in-progress
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-31"
+    - field: conclusion
+      from: "-"
+      to: "specdojo 0.6.0 と @specdojo/docs-lint 0.4.0 を 2026-10-31 に公開した（PR #27、merge commit 9eb96b807）。docs-site は 0.3.0 のまま"
+  previous_event_id: reg_9083515db4064632b5e9d6472702cf9f

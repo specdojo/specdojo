@@ -1,0 +1,126 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a8f460e5ac624db781ba73a7cf9f3d84
+  ts: "2026-11-03T05:23:05Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で見つかった不具合を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --auto で選ぶタスクを track で絞れない
+    - field: description
+      from: ""
+      to: exec run --auto は対象のタスクが失敗すると、ほかの track の ready のタスクへ進む。--track で選ぶタスクを 1 つの track に限れるようにする
+    - field: input
+      from: ""
+      to: '["2026-11-03 に track data-flow-uc-rewrite の 3 タスクを exec run --auto --parallel 3 で流したところ、3 タスクとも checkpoint の commit が markdownlint の MD032 で拒否されて始まる前に失敗した（原因は phase の説明で箇条書きの前に空行がなかったこと、72749b20e で修正済み）","その後 --auto が launch の track の review タスク 3 件（T-LAUNCH-pm-communication-plan-105・pm-members-105・pm-organization-105）を claim し、worktree を作って agent を動かし始めた。オーケストレーターが止めて claim を release した（628f502e3）。execution: human のタスク 8 件は自動で飛ばされた","利用者は、この不具合を直してから 3 タスクを並列で流すと判断した。直し方の案は exec run --auto に --track `<track>` を足し、選ぶタスクをその track に限る形（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_a9d920f5c82244bfb2ed5ef7ce84d98f
+  ts: "2026-11-03T05:25:41Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a8f460e5ac624db781ba73a7cf9f3d84
+- v: 1
+  id: reg_a8ee38e0d84d49af802e669a9bd5c996
+  ts: "2026-11-03T05:39:30Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_a9d920f5c82244bfb2ed5ef7ce84d98f
+- v: 1
+  id: reg_c8fcca9a7fc64835b5f54027debba8fc
+  ts: "2026-11-03T05:41:58Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_a8ee38e0d84d49af802e669a9bd5c996
+- v: 1
+  id: reg_de480da06ff4419a8c9426eb902d92bc
+  ts: "2026-11-03T06:00:51Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c8fcca9a7fc64835b5f54027debba8fc
+- v: 1
+  id: reg_30924027f3214722858dbe9963e8cb7e
+  ts: "2026-11-03T06:40:29Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・dry-run・JSEY の動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: exec run --auto --track を追加し、指定した track の 3 タスクだけが選ばれ、存在しない track は claim の前に止まることを実物の dry-run とテスト 13 件で確かめた
+  previous_event_id: reg_de480da06ff4419a8c9426eb902d92bc

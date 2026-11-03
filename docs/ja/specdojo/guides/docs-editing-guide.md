@@ -346,6 +346,7 @@ Mermaid SVG の生成だけを行う場合は `npx specdojo-docs-site mermaid .`
 /.vitepress/dist/
 /.vitepress/cache/
 /.vitepress/mermaid/
+/.vitepress/d2/
 /.vitepress/kata-staging/
 ```
 
@@ -390,3 +391,38 @@ block
 - ローカル検索は登録簿一覧 `pjr-index` を入口にし、個票、状態別などの派生ビュー、管理ログ、実行記録を検索インデックスから除外します。個票本文を探す場合は `pjr-index` から対象個票へ移動します。
 
 ステージングの参照元、Mermaid SVG だけを生成するコマンドなど、package 固有の設定は `packages/docs-site/README.md` を参照してください。
+
+### 6.2. 図の道具を選ぶ
+
+図の目的と複雑さで道具を選びます。agent もこの基準に従って作成・修正してください。
+
+| 道具    | 選ぶ目安                                                                         | 正本                                 |
+| ------- | -------------------------------------------------------------------------------- | ------------------------------------ |
+| Mermaid | 単純な図、状態遷移図、シーケンス図など。ノードと辺がそれぞれおおむね 20 程度まで | Markdown の `mermaid` コードブロック |
+| D2      | ノード・辺が多い構成図、入れ子が多い図、Mermaid で配置が読みづらくなる図         | Markdown の `d2` コードブロック      |
+| draw.io | さらに複雑で、人が配置を決めたい図や発表用の図                                   | 圧縮しない `.drawio`                 |
+
+20 は切り替えの目安です。図を読む目的が分かれる場合は、道具の変更とともに図の分割も検討します。draw.io の自動書き出しは別途整備するため、現時点では表示用の SVG を手動で用意してください。
+
+### 6.3. D2 図を書く・検査する
+
+`d2` のコードブロックは `build` と `dev` で SVG に書き出します。D2 CLI v0.9.0 を PATH に配置してください。このリポジトリの Dev Container はコンテナの再ビルドで導入されます。Linux で手動導入する場合は、版と SHA-256 を固定した `sh .devcontainer/install-d2.sh "$HOME/.local/bin"` を使えます。
+
+````markdown
+```d2
+direction: right
+client: 利用者
+system: システム {
+  api: API
+  db: データベース {shape: cylinder}
+  api -> db: 読み書き
+}
+client -> system.api: リクエスト
+```
+````
+
+配置の既定は ELK です。図はコードブロック内で完結させ、外部ファイルの import は使いません。1 つのブロックにつきルートの図を 1 枚の SVG にします。layers・scenarios・steps の追加ページは書き出しません。生成 SVG は `.vitepress/d2/`、公開 URL はサイトの base に続く `/d2/<hash>.svg` です。SVG は生成物なので直接編集しません。
+
+生成だけを行う場合は `npx specdojo-docs-site d2 .` を使います。本リポジトリの構文検査は `node tools/lint-d2.mjs`、対象を絞る場合は `node tools/lint-d2.mjs '<Markdown のパスまたは glob>'` です。開始 fence の行番号とエラーを報告し、不正な図は終了コード 1 になります。D2 を含む文書がある場合、CLI が未導入・版違いでも失敗します。ブラウザは不要です。
+
+GitHub の Markdown 表示では D2 は図に変換されないため、文書サイトで確認します。npm の `lint:d2`・`check`、commit hook とこのリポジトリの親検証設定への登録、および CI の導入設定は、保護された設定の承認・反映後に有効になります。

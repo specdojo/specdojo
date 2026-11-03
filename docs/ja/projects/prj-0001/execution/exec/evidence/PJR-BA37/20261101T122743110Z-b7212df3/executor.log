@@ -1,0 +1,48 @@
+検証コマンドを実行中です。完了を待ちます。
+ステータスを確認中です。
+lint-d2 の完了を確認中です。
+プロジェクト登録簿の項目 **PJR-BA37「全体概要を系統の分け方にそろえ、端的に書き直す」** の対応を完了しました。
+
+### 実施内容の概要
+
+1. **プロセス領域の章の再編と PDCA 列の追加** ([`cdfd-overview.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BA37/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md#L25-L78))
+   - 「プロセス領域」の章を、概念データフロー図と同じ 6 節（共通・基盤、`register` 系、`schedule` 系、`routine` 系、共通実行領域、`Orchestrator`）に再編しました。
+     - 共通・基盤: `P-01`・`P-12`・`P-13`
+     - `register` 系: `P-02`
+     - `schedule` 系: `P-03`・`P-04`・`P-09`・`P-10`
+     - `routine` 系: `P-05`・`P-06`
+     - 共通実行領域: `P-07`・`P-08`・`P-11`
+     - `Orchestrator`: `P-14`
+   - 各表に「PDCA」列を追加しました。
+     - `P-01`（Onboarding）: `Plan`（プロジェクト推進環境の整備・準備フェーズであり、後続の業務プロセスを計画・駆動するための基盤整備として位置づけ）
+     - `P-14`（Orchestrator）: `Action`（プロジェクト全体の進行・評価結果を踏まえ、PDCA サイクル全体の進行を調整・是正・差配（Act/Adjust）する統括役として位置づけ）
+   - 章の導入文を 1 文に整理し、「各系統が共用してタスクの実行・評価・完了を担う共通実行領域」と明記して共通実行領域の役割を 1 文で分かるようにしました。
+   - 領域 ID、業務目的、主な担当、起点イベントの中身は維持しています。
+
+2. **共通・基盤ノードの分割と線の割り当て直し** ([`cdfd-overview.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BA37/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md#L114-L210))
+   - 「共通・基盤と 3 系統」の図（5.1）において、`foundation` ノードを Onboarding（`P-01`）、稼働構成管理（`P-12`）、非推奨化保管（`P-13`）の 3 ノードに分割しました。
+   - 1 本の線に 2 つの意味が含まれていた「配置・バージョン更新」および「初期状態・承認済み構成変更」を領域ごとの線に分割し、各領域の意味に合うノードへ割り当て直しました。
+   - 上記のノード分割に伴う線以外、図の受け渡しは変更していません。
+
+   | 変更前の線 | 変更後の線 | 割り当て理由 |
+   | --- | --- | --- |
+   | `kata -> foundation: "provider 別雛形"` | `kata -> onboarding: "provider 別雛形"` | 初期セットアップ（`P-01`）で Kata の雛形を参照するため |
+   | `foundation -> kata: "配置・バージョン更新"` | `onboarding -> kata: "配置"`<br>`config_mgmt -> kata: "バージョン更新"` | 2 つの意味を含む線を分割（初期セットアップで配置、稼働構成管理でバージョン更新） |
+   | `foundation -> config: "初期状態・承認済み構成変更"` | `onboarding -> config: "初期状態"`<br>`config_mgmt -> config: "承認済み構成変更"` | 2 つの意味を含む線を分割（初期セットアップで初期状態設定、稼働構成管理で承認済み構成変更を反映） |
+   | `foundation -> deliverables: "人間の判断に基づく非推奨化文書"` | `deprecation -> deliverables: "人間の判断に基づく非推奨化文書"` | 非推奨化保管（`P-13`）が非推奨化文書の移動・保管を担うため |
+   | `foundation -> trash: "保管した文書"` | `deprecation -> trash: "保管した文書"` | 非推奨化保管（`P-13`）が保管庫（trash）へ格納するため |
+
+3. **詳細 CDFD 一覧の整理と未決事項の削除** ([`cdfd-overview.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BA37/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md#L404-L414))
+   - 「詳細 CDFD 一覧」から旧プロセスグループ別 CDFD の節（旧 6.1）と表、および旧文書の移行に関する説明文を削除し、ユースケース別 CDFD の表のみを残しました。
+   - 「未決事項」の章（旧第 8 章）を削除しました（残っていた論点は、PJR-SJQC で非推奨化と決定された Action の CDFD との境界論点のため）。
+
+4. **本文の端文化**
+   - 各章・各節の導入を 1 文まで、図の説明を 1 文までとし、凡例と重なる矢印注記（`->` の意味など）を各図から削除しました。
+   - `cdfd-overview.md` の `status`（`draft`）は据え置き、詳細 CDFD 文書は変更していません。
+
+5. **個票の更新** ([`pjr-ba37-cdfd-overview-concise-usage.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BA37/docs/ja/projects/prj-0001/controls/project-register/pjr-ba37-cdfd-overview-concise-usage.md))
+   - 作業内容の状態を `done` に更新し、対応結果に対応内容・成果物・申し送りを記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-overview を系統の 6 区分（共通・基盤、3系統、共通実行領域、Orchestrator）に再編し、PDCA 列の追加、共通・基盤ノードの 3 分割と線の再割り当て、旧表・未決事項の削除、本文の端文化を完了しました。","handoff":["P-01（Onboarding）の PDCA を Plan、P-14（Orchestrator）の PDCA を Action とした理由を個票の対応結果に記録しました。","共通・基盤ノードを Onboarding（P-01）、稼働構成管理（P-12）、非推奨化保管（P-13）に分割し、線の割り当て直し表を個票の対応結果に記録しました。"],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-ba37-cdfd-overview-concise-usage.md","status":"passed","summary":"Prettier による変更ファイルの整形完了"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"成果物カタログ検証完了"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象外","reason":"*.yaml や *.yml ファイルの変更がないため適用外"}]}
+</specdojo_executor_evidence>

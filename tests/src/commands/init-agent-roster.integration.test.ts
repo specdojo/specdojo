@@ -120,6 +120,13 @@ describe("specdojo init and config scaffold agent rosters", () => {
         expect(member?.nickname, alias.nickname).toBe(alias.alias_of);
         expect(member?.model, alias.nickname).toBeTruthy();
         expect(resolveMemberCommand(defaults, member!)).toContain(`--model ${member!.model}`);
+        if (member?.provider === "antigravity") {
+          const role = member.stage_role === "reporter" ? "report" : member.mode;
+          expect(member.mode, alias.nickname).toBe(role);
+          expect(resolveMemberCommand(defaults, member), alias.nickname).toContain(
+            `agent launch --provider antigravity --role ${role} --`,
+          );
+        }
       }
 
       // claude・opencode は役割ごとの定義を mode で選ぶ。選ばれる定義が配置されていて、model を持たない。

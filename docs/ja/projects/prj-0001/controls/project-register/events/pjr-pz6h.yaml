@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dfe09ee1d6a643a297d9693035b8a2b3
+  ts: "2026-11-02T03:27:03Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 全体概要の図を 7 区分の関係を表す 2 つの図に作り直す
+    - field: description
+      from: ""
+      to: cdfd-overview の第 5 章の 3 つの図を、第 3 章の 7 区分と一対一のノードで、トランザクションデータの流れとマスタ・構成データの流れの 2 つの図に作り直す
+    - field: input
+      from: ""
+      to: '["利用者は VitePress で新しい体系を確かめ、全体的に分かりにくいと判断した。まず cdfd-overview を見直し、概念データフロー図は 3.1〜3.7 の関係を表すべきだと考えている（2026-11-02）","今の第 5 章の 3 つの図は、P-01・P-12・P-13 を個別のノードにし、3 系統は実行サイクルを含めた 1 つのノードにしていて、第 3 章の 7 区分と一対一になっていない。実行サイクルと文書の廃棄は独立したノードとして出てこない","7 区分と 15 のデータストアを 1 つの図にすると 22 ノードで rulebook の目安（16）を超えるため、同じ 7 つのノードでトランザクションデータ（16 ノード）とマスタ・構成データ（13 ノード）の 2 つの図に分ける案を利用者が承認した（2026-11-02）","orchestrator が描いたトランザクションデータの図の下書きでは、3.1 と 3.4 はほとんど線がなく、主にマスタ・構成データを扱うことが分かった。下書きは routine 系から Job の実行を経て実行記録に至る流れなどが抜けている"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-02"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GEZN"]'
+- v: 1
+  id: reg_e32b8e66ceaa48ba8454979989106e05
+  ts: "2026-11-02T03:27:52Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dfe09ee1d6a643a297d9693035b8a2b3
+- v: 1
+  id: reg_4b5bad0ed28546abb0d7f87e6ff83516
+  ts: "2026-11-02T03:42:15Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e32b8e66ceaa48ba8454979989106e05
+- v: 1
+  id: reg_1f2717f4eba846ea89d7e3b7140060ac
+  ts: "2026-11-03T00:19:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 後続の PJR-05QS・PJR-5Q7R・PJR-KV58 の修正を経た最終形を、利用者が VitePress で確かめた（2026-11-03）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: 全体概要の図を、7 区分と一対一のノードでトランザクションデータとマスタ・構成データの 2 つに作り直した
+  previous_event_id: reg_4b5bad0ed28546abb0d7f87e6ff83516

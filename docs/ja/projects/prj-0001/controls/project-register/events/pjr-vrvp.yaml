@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b92d82af81af4b4e957814e2380e8250
+  ts: "2026-11-01T09:54:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CDFD の rulebook を overview と系統別の詳細の体系に合わせる
+    - field: description
+      from: ""
+      to: PJR-SJQC の決定に合わせ、cdfd-overview-rulebook・cdfd-uc-rulebook・cdfd-d2-rulebook を、系統の関係を描く overview、プロセス領域の単位で描く系統別の詳細、縦向き、入口のイベント、配色 G に対応させる
+    - field: input
+      from: ""
+      to: '["PJR-SJQC で、overview は共通・基盤と register・schedule・routine の関係を描き、3 系統は cdfd-uc-rulebook の形の詳細 3 文書でプロセス領域の単位で描くと決めた（2026-11-01）","図は凡例を含めて縦向き、系統の入口の起点イベントを描き、配色はトランザクションデータ #c8e6c9 / #2e7d32、マスタ・構成データ #e8f5e9 / #43a047、物理保管はトランザクションデータと同じとする（PJR-SJQC）","rulebook は他のプロダクトでも使うため、今の分け方（データストアの区分とプロセスグループ別 CDFD）も選べる形を保つ"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-01"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-SJQC"]'
+- v: 1
+  id: reg_46fabfd8ce4844e2a0f4db48b4454b11
+  ts: "2026-11-01T09:56:03Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b92d82af81af4b4e957814e2380e8250
+- v: 1
+  id: reg_53f8d29658334dccac45126951facc65
+  ts: "2026-11-01T10:12:45Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_46fabfd8ce4844e2a0f4db48b4454b11
+- v: 1
+  id: reg_e689453d2e3e4918914199cf9ea9d6c1
+  ts: "2026-11-01T10:20:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分で完了条件を確かめた。今の方式を既定として保ち、rulebook の status は変わらず、lint:d2 と lint:mermaid が通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: CDFD の rulebook に系統の関係を描く方式を足し、ユースケース別 CDFD をプロセス領域の単位と入口のイベントで描けるようにし、D2 版を縦向きと配色 G、Mermaid 版の色を G にそろえた
+  previous_event_id: reg_53f8d29658334dccac45126951facc65
+- v: 1
+  id: reg_243021c899d0452b836bd9e8ab19665c
+  ts: "2026-11-01T10:23:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: track data-flow-usage の epic の子として位置づける
+  changes:
+    - field: derived_from
+      from: '["PJR-SJQC"]'
+      to: '["PJR-SJQC","PJR-GEZN"]'
+  previous_event_id: reg_e689453d2e3e4918914199cf9ea9d6c1

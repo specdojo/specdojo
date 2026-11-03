@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-10-17T16:26:58.659Z"
-graded_by: agy-expert-executor
+graded_at: "2026-11-02T16:16:28.969Z"
+graded_by: flash-high-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 source_hashes:
   catalog-entry: 1f5324a494c341786007f485e570d673dfd7aa2eae8ca70afb4a706f1f4c6096
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
 categories:
   purpose:
     score: 50
@@ -314,7 +314,7 @@ findings:
     message: >-
       Contrary to Rulebook 2.4, physical names like last_scheduled_for are documented directly in the content column,
       which requires adding a physicalName column or describing conceptual contents in Japanese.
-    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理名はcontent列に直接記載されています。これは、physicalName列を追加するか、概念的な内容を日本語で説明する必要があります。
+    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理名がcontent列に直接記載されています。これは、physicalName列を追加するか、概念的な内容を日本語で記述する必要があります。
   - id: F021
     severity: minor
     rule: vp-ux-language-consistency

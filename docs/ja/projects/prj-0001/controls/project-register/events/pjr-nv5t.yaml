@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f7c4e0689eea4a07a691253b02840931
+  ts: "2026-10-31T13:54:16Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ホストの tmux の script の前方一致の判定とラッパーの起動を直す
+    - field: description
+      from: ""
+      to: PJR-Q8KP で配った devcontainer-tmux.sh は、マウント元のパスを前方一致で比べる箇所で変数を引用していないため、パスに glob の文字が含まれると判定がずれる（shellcheck SC2295）。また sample のラッパーは本体を直接実行しており、実行権限が無いと動かない。bash 経由で呼ぶ形に直す
+    - field: input
+      from: ""
+      to: '["PJR-Q8KP の close の前の確かめで、shellcheck が SC2295（info）と SC2034（`m_type` の未使用）を出した（2026-10-31）","ラッパーを bash 経由の起動に直すことは 2026-10-31 の対話で利用者が推奨を採用した"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-31"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Q8KP"]'
+- v: 1
+  id: reg_e30ea959ae7d4915833371a263fc9565
+  ts: "2026-10-31T14:02:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: title
+      from: ホストの tmux の script の前方一致の判定とラッパーの起動を直す
+      to: ホストの tmux の script でマウント元のパスを正規化して比べる
+    - field: description
+      from: PJR-Q8KP で配った devcontainer-tmux.sh は、マウント元のパスを前方一致で比べる箇所で変数を引用していないため、パスに glob の文字が含まれると判定がずれる（shellcheck SC2295）。また sample のラッパーは本体を直接実行しており、実行権限が無いと動かない。bash 経由で呼ぶ形に直す
+      to: PJR-Q8KP で配った devcontainer-tmux.sh は、docker inspect が返すマウント元のパスを文字列のまま前方一致で比べる。Docker Desktop for Mac では workspaceMount の source が `<親>`/specdojo/.. の形で返るため一致せず、ホストで接続できない。bind のマウントだけを正規化して比べ、shellcheck の SC2295・SC2034 も直す。sample のラッパーは bash 経由で本体を呼ぶ形にする
+    - field: input
+      from: '["PJR-Q8KP の close の前の確かめで、shellcheck が SC2295（info）と SC2034（`m_type` の未使用）を出した（2026-10-31）","ラッパーを bash 経由の起動に直すことは 2026-10-31 の対話で利用者が推奨を採用した"]'
+      to: '["PJR-Q8KP の close の前の確かめで、shellcheck が SC2295（info）と SC2034（`m_type` の未使用）を出した（2026-10-31）","ラッパーを bash 経由の起動に直すことは 2026-10-31 の対話で利用者が推奨を採用した","利用者のホスト（macOS・Docker Desktop）で ~/bin/specdojo-tmux を実行すると「Could not determine container workspace directory from mounts for: /Users/naoto/workspaces/specdojo-workspace/specdojo」で止まった（2026-10-31）","同じホストの docker inspect の Mounts は bind の Source を /Users/naoto/workspaces/specdojo-workspace/specdojo/..、Destination を /workspaces/specdojo-workspace と返した。ほかは volume のマウント（Source は /var/lib/docker/volumes/`<名前>``/_data`）だった","マウント元の正規化の不具合は本項目の範囲に含め、優先度を high にすることを 2026-10-31 の対話で利用者が選んだ（案 A）"]'
+    - field: priority
+      from: low
+      to: high
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_f7c4e0689eea4a07a691253b02840931
+- v: 1
+  id: reg_40c48d6d09774587a5cc8b12ab041f48
+  ts: "2026-10-31T14:03:17Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e30ea959ae7d4915833371a263fc9565
+- v: 1
+  id: reg_e952e0bfbfcf475a9c8ad7d4b612f40b
+  ts: "2026-10-31T14:16:36Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/host/devcontainer-tmux.sh; agent must record the required change in the result handoff fo…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/host/devcontainer-tmux.sh; agent must record the required change in the result handoff fo…"
+  previous_event_id: reg_40c48d6d09774587a5cc8b12ab041f48
+- v: 1
+  id: reg_d0102888aa5d44859b19ca9af6a91150
+  ts: "2026-10-31T14:18:44Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/host/devcontainer-tmux.sh; agent must record the required change in the result handoff fo…"
+      to: "-"
+  previous_event_id: reg_e952e0bfbfcf475a9c8ad7d4b612f40b
+- v: 1
+  id: reg_075e4c206a3048f9abfd54a723d7b3fb
+  ts: "2026-10-31T14:33:43Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d0102888aa5d44859b19ca9af6a91150
+- v: 1
+  id: reg_be187d7ad8a3409f83dbee751458c964
+  ts: "2026-11-01T08:23:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 利用者が macOS のホストから ssh で入り、コンテナが動いているときと止まっているときの両方で tmux に接続できたと確認した（2026-11-01）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-01"
+    - field: conclusion
+      from: "-"
+      to: マウント元を bind だけに絞り pwd -P で正規化して比べるようにし、Docker Desktop の /.. を含むマウント元でも作業ディレクトリを求められるようにした
+  previous_event_id: reg_075e4c206a3048f9abfd54a723d7b3fb

@@ -20,7 +20,7 @@ review gate で完了要求を受け、最新の grade・finding を事実とし
 - 終了点: 完了可否の verdict と根拠が確定し、完了可能な場合は完了・決定の記録と完了記録が残った時点、完了不可の場合は改善指示を含む再計画要求が引き渡された時点
 - 対象外: 成果物の品質の再評価、grade・finding の変更、成果物の編集、再計画後の作業、完了記録を保存する物理方式
 
-本書は [[cdfd-action|概念データフロー図（Action）]] の `P-11` を具体化する。review はタスクの成果を判定する。成果物の品質は [[bps-deliverable-evaluation|成果物評価]] が一度だけ評価し、review は最新の grade・finding を事実として受け取って文書を再評価しない。grade・finding の内容に疑義がある場合も review 内で判定を置き換えず、`P-08` へ評価要求を戻す。
+本書は [[cdfd-overview|概念データフロー図（全体概要）]] の `P-11` を具体化する。review はタスクの成果を判定する。成果物の品質は [[bps-deliverable-evaluation|成果物評価]] が一度だけ評価し、review は最新の grade・finding を事実として受け取って文書を再評価しない。grade・finding の内容に疑義がある場合も review 内で判定を置き換えず、`P-08` へ評価要求を戻す。
 
 ## 2. トリガー
 

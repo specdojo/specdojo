@@ -62,7 +62,15 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 
 # FIFO順で実行する
 specdojo exec run --project <project-id> --auto --strategy fifo
+
+# 指定した track だけから最大 3 件を選ぶ（実行前の確認）
+specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --parallel 3 --dry-run
+
+# 同じ track の Ready がなくなるまで連続実行する
+specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --parallel 3 --loop
 ```
+
+`--track <track>` は自動選択を 1 つの track に限定します。`sch-track-<track>.yaml`（または `.yml`）の track 名を大文字・小文字を区別して指定します。戦略による順序は維持され、準備や実行に失敗した後、`--loop` で枠を補充するときも、ほかの track は選びません。対象 track に Ready がなければ正常終了し、存在しない track は claim 前にエラーになります。`--track` は単一指定で `--auto` が必須です。省略時は従来どおり全 track から選びます。依存関係や Ready の計算は引き続きプロジェクト全体で行います。
 
 ### 1.2. auto実行中の注意点
 
@@ -141,6 +149,12 @@ plan を先に生成して内容を確認・編集してから実行できます
 specdojo exec plan --project <project-id> --task <task-id>
 specdojo exec run --project <project-id> --plan <execution-path>/exec/plans/<task-id>-plan.md
 ```
+
+schedule のタスクから plan を生成するときは、Prettier による整形・ファイルへの書き込みより前に、phase の `description` を展開した plan 全体を markdownlint で検査します。箇条書きの前に空行がない場合（MD032）などは、タスク ID・plan のパス・生成内容の行番号・規則名を表示して停止し、既存の plan は上書きしません。表示する行番号は strategy YAML ではなく、整形前の plan に対する番号です。strategy の説明を修正し、`schedule build --track <track> --force` でトラックを更新してから plan を再生成してください。
+
+検査には利用リポジトリの markdownlint を優先し、見つからなければ SpecDojo 側のインストールを使います。どちらにもない場合は生成を停止するため、利用リポジトリで `npm install --save-dev markdownlint-cli` を実行してください。規則はリポジトリ直下の `.markdownlint.jsonc` / `.markdownlint.json` / `.markdownlint.yaml` / `.markdownlint.yml`（この順で最初にあるもの）と、上位ディレクトリを含む `.markdownlintrc` を読み、`extends` も解決します。設定がない場合は SpecDojo の標準規則を使います。CLI2 固有の設定や hook の独自ルールはこの検査の対象外です。生成履歴が `.markdownlintignore` に含まれていても、生成時の検査は行います。
+
+同じ検査は `exec run --auto` の plan 生成でも働き、`exec run --auto --dry-run` でも claim・checkpoint commit・agent 起動より前に Markdown の違反を検出できます。`exec run --task <task-id> --dry-run` のように plan を生成しない経路では検査しないため、事前確認には `exec plan --task <task-id>` を使ってください。
 
 schedule に無い成果物を catalog から直接 plan 化する場合は `--deliverable <local_id>` を使います。
 

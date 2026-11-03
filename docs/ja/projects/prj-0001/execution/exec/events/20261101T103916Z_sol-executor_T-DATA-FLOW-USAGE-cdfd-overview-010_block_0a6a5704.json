@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-01T10:39:16Z",
+  "type": "block",
+  "task_id": "T-DATA-FLOW-USAGE-cdfd-overview-010",
+  "by": "sol-executor",
+  "msg": "executor reported incomplete: 全体概要を共通・基盤と3系統の関係へ改訂し、整形と差分確認を完了。ユースケースCDFDの書き直しが残る。",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-USAGE-cdfd-overview-010/20261101T102445374Z-1d263793/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-USAGE-cdfd-overview-010/20261101T102445374Z-1d263793/pipeline-state.json",
+    "pipeline_run_id": "20261101T102445374Z-1d263793"
+  }
+}
