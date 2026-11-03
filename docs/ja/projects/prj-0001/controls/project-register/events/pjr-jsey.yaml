@@ -3718,3 +3718,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c5d4867bfbc9438e8bbd4d49725c00d4
+- v: 1
+  id: reg_4c9cbe0d54ed42388e86e07dac1218ae
+  ts: "2026-11-03T07:13:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-executor の動作確認が start・executor・親の検証・reporter・統合まで成功した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: PJR-561Q と PJR-FVRZ の統合後に exec run --register が start から review まで通ることを確かめた
+      to: PJR-W7YX の統合後に exec run --register が start から review まで通ることを確かめた
+  previous_event_id: reg_4d2e0f1650f04d60a4715e8499882d7e
