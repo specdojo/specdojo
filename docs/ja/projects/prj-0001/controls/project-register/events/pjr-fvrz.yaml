@@ -47,3 +47,16 @@
     - field: commit_scope
       from: ""
       to: schedule
+- v: 1
+  id: reg_56ae1292069f4c53883e18d5c8c47e3b
+  ts: "2026-11-03T05:27:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dcd0e41acf8945d5950ebab70fb49bad
