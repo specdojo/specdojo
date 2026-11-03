@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e32b8e66ceaa48ba8454979989106e05
+- v: 1
+  id: reg_1f2717f4eba846ea89d7e3b7140060ac
+  ts: "2026-11-03T00:19:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 後続の PJR-05QS・PJR-5Q7R・PJR-KV58 の修正を経た最終形を、利用者が VitePress で確かめた（2026-11-03）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: 全体概要の図を、7 区分と一対一のノードでトランザクションデータとマスタ・構成データの 2 つに作り直した
+  previous_event_id: reg_4b5bad0ed28546abb0d7f87e6ff83516

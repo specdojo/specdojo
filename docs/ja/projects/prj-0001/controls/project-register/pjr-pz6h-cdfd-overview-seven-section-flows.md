@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-pz6h-cdfd-overview-seven-section-flows
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-02T03:27:02Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T00:19:07Z"
+  conclusion: 全体概要の図を、7 区分と一対一のノードでトランザクションデータとマスタ・構成データの 2 つに作り直した
   derived_from:
     - PJR-GEZN
 ---
