@@ -56,7 +56,7 @@ PJR-2ZMY の決定（複雑な図は D2 で描く）を受け、文書のサイ�
 - `packages/docs-site/src/gen-d2-svg.ts` と共通処理 `d2.mjs` を追加した。VitePress の `build` / `dev` と `specdojo-docs-site d2` から D2 v0.9.0・既定 ELK で SVG を生成する。コードと版・配置から同じハッシュを生成・参照に使い、`.vitepress/d2/` にキャッシュし、参照のなくなったハッシュ名の SVG のみ削除する。クライアントビルドで SVG を出力し、SSR では重複させず、開発サーバーも同じ URL で配信する。文書の追加・変更・削除を同期する。
 - 構文検査を `tools/lint-d2.mjs` と命名した。既存の `tools/lint-mermaid.mjs` と対応を取り、npm script の候補を `lint:d2`、親検証 ID を `lint-d2` として役割を分かりやすくするためである。Markdown のパーサーで通常・長い fence・tilde・引用やリスト内の D2 を抽出し、`d2 validate -` で検査する。文書名・開始行・エラーを報告する。CLI の未導入・版違いは未検査として失敗し、描画でも成功済みキャッシュの有無にかかわらず失敗する。D2 がない文書のみなら CLI を呼び出さない。
 - `src/exec/parent-validation.ts`、初期化時の script 検出、対応する 2 つの schema に `lint-d2` を追加した。実行設定への登録は 5.2. の案とした。
-- `.devcontainer/install-d2.sh` と Dockerfile の導入処理を追加した。Linux amd64 / arm64 の公式アーカイブの版・SHA-256 を固定し、導入後にも版を確認する。CI は保護対象なので同じインストーラーを使う案を 5.2. に記した。版と digest の出典は [D2 v0.9.0 の公式配布一覧](https://github.com/d2lang/d2/releases/expanded_assets/v0.9.0)である。
+- `.devcontainer/install-d2.sh` と Dockerfile の導入処理を追加した。Linux amd64 / arm64 の公式アーカイブの版・SHA-256 を固定し、導入後にも版を確認する。CI は保護対象なので同じインストーラーを使う案を 5.2. に記した。版と digest の出典は D2 v0.9.0 の公式配布一覧（<https://github.com/d2lang/d2/releases/expanded_assets/v0.9.0>）である。
 - 生成物の `.gitignore` と `config init` が追記する既定値を更新した。
 - 正しい D2 と不正な D2 の描画・検査、エラー後の修正、CLI 未導入・版違い、生成物のキャッシュ・削除、ビルド hook、SVG の build / dev 配信のテストを追加した。実 CLI の統合テストも追加し、CLI のない環境だけ skip する。模擬 CLI のテストは、実 D2 の文法の正しさを保証する検査とは区別する。
 - 再開時に、親の `lint:ts` で検出された `tests/packages/docs-site/d2.test.ts` の `import()` 型注釈を、型専用の名前空間 import に置き換えた。その他の前回変更も完了条件と照合した。

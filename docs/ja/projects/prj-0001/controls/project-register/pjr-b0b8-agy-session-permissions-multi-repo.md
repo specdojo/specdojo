@@ -64,7 +64,7 @@ agy のセッション別設定を使い、役割ごとの権限を分離する�
 ### 5.2. 確認範囲と実機確認
 
 - 2026-11-02 のローカル `agy --version` は 1.4.12。`agy --help` は `--settings` が JSON / ファイルパスを受け取り、その session だけに適用し保存しないことを示した。認証情報・実ユーザー設定は読み取っていない。
-- [公式 CLI 権限仕様](https://antigravity.google/docs/permissions/?tab=cli) の `deny > ask > allow` と、Claude と異なる `write_file` / `command` の構文を確認した。公開仕様は既存グローバル・project 設定と `--settings` の配列マージを明示しない。_ASSUMPTION_: 一つの JSON に必須制限を含める実装とし、複数 settings のマージを前提にしない。既存ルールの結合／置換と実際の許可・拒否は未検証であり、Claude と同等の隔離を実証済みとはしない。
+- 公式 CLI 権限仕様（<https://antigravity.google/docs/permissions/?tab=cli>） の `deny > ask > allow` と、Claude と異なる `write_file` / `command` の構文を確認した。公開仕様は既存グローバル・project 設定と `--settings` の配列マージを明示しない。_ASSUMPTION_: 一つの JSON に必須制限を含める実装とし、複数 settings のマージを前提にしない。既存ルールの結合／置換と実際の許可・拒否は未検証であり、Claude と同等の隔離を実証済みとはしない。
 - sandbox 内の確認は生成・起動引数まで。実 agy は認証・使用枠を伴うため `requires_human` とし、設計書 7.1 の手順で、使い捨て project / product / task worktree の無害な通常ファイル、`.env`、`secrets/probe.txt`、保護設定を使う。edit の成果物編集、review / report の全書き込み拒否、orchestrator の承認後の設定編集、shell 経由の制限、未宣言ルートを記録する。
 - 統合後は [[prj-0001:pm-orchestrator-playbook|運用プレイブック]] に従って PJR-JSEY の対象へ PJR-B0B8 を加え、実際の `npx specdojo exec run --register` で executor・親検証・reporter・統合を確認する。実行証跡を本節と result の申し送りへ追記してから close を判断する。この executor では実 agy・JSEY を実行していない。
 - 任意の名前の秘密ファイル、入れ子配置、許可された検証 script 自身の任意処理を設定 JSON だけで保証しない。固定保護・Git 状態の事後検査を維持し、実機で sandbox の shell 制限も確認する。
@@ -105,5 +105,5 @@ agy のセッション別設定を使い、役割ごとの権限を分離する�
 - [[specdojo:command-reference|CLI コマンドリファレンス]]
 - [[prj-0001:pm-orchestrator-playbook|prj-0001 オーケストレーター運用メモ]]
 - [[prj-0001:pjr-0fk2-config-scaffold-agent|PJR-0FK2 パーミッション設定の生成・マージ]]
-- [Antigravity CLI の権限仕様](https://antigravity.google/docs/permissions/)
+- Antigravity CLI の権限仕様（<https://antigravity.google/docs/permissions/>）
 - 主な確認対象: `src/commands/orchestrator.ts`、`src/exec/task-repos.ts`、provider の起動処理、`templates/antigravity/`、`templates/init-exec-defaults.yaml`。

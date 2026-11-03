@@ -85,6 +85,6 @@ _UNDECIDED_: 比較調査後に採用案を選定する。起票時点で採用�
 - [[prj-0001:pjr-v5az-quick-start-conversation-flow]]
 - [[specdojo:quick-start-guide]]
 - [[specdojo:orchestrator-operation-guide]]
-- [Promptfoo: Simulated User](https://www.promptfoo.dev/docs/providers/simulated-user/)
-- [Inspect AI: Using Agents](https://inspect.aisi.org.uk/agents.html)
-- [DeepEval: Multi-Turn Test Case](https://deepeval.com/docs/evaluation-multiturn-test-cases)
+- Promptfoo: Simulated User（<https://www.promptfoo.dev/docs/providers/simulated-user/>）
+- Inspect AI: Using Agents（<https://inspect.aisi.org.uk/agents.html>）
+- DeepEval: Multi-Turn Test Case（<https://deepeval.com/docs/evaluation-multiturn-test-cases>）
