@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-z807-resume-edited-plan-lost
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-01T12:30:43Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T22:51:34Z"
+  conclusion: executor から再開したとき worktree で直した plan が統合の commit に残るようにし、schedule と register の両方を統合テストで確かめた
   derived_from:
     - PJR-RKHR
 ---

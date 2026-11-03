@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f3af4423d6a14d1d88aba205216fd911
+- v: 1
+  id: reg_29139184b2c54896ae0f48a5164d2319
+  ts: "2026-11-03T22:51:34Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: executor から再開したとき worktree で直した plan が統合の commit に残るようにし、schedule と register の両方を統合テストで確かめた
+  previous_event_id: reg_f756a14928e34117887a19531a39f98c
