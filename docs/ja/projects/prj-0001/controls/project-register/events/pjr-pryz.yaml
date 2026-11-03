@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9b30cad25c3c495f923676ec977ad9ba
+- v: 1
+  id: reg_faf631fc3c2245eeab093e7dd054d5d5
+  ts: "2026-11-03T04:41:37Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。完了条件を差分・個票の対応結果・sample の図の出力で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: cdfd-uc の rulebook・recipe・sample・template と cdfd-d2-rulebook を、系統の目的、引き渡しと例外の章の廃止（線のラベルと任意の戻りの図）、Orchestrator を外す、deprecated を参照しない、短いイベント、D2 の縦の流れに合わせたことを確かめた
+  previous_event_id: reg_665a9992126043a2b658422b5713b798

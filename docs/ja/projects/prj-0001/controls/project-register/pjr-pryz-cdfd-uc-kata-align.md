@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-pryz-cdfd-uc-kata-align
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-03T03:39:16Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T04:41:37Z"
+  conclusion: cdfd-uc の rulebook・recipe・sample・template と cdfd-d2-rulebook を、系統の目的、引き渡しと例外の章の廃止（線のラベルと任意の戻りの図）、Orchestrator を外す、deprecated を参照しない、短いイベント、D2 の縦の流れに合わせたことを確かめた
   derived_from:
     - PJR-GEZN
   commit_type: docs
