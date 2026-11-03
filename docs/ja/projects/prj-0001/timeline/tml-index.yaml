@@ -70,6 +70,14 @@ tracks:
     depends_on: [data-flow-usage]
     note: PJR-PRYZ で直したユースケース別 CDFD の Kata に合わせて、系統別の詳細 3 文書（register・schedule・routine）を書き直す作業。dct-data-flow を local_ids で部分 scope にする。
 
+  - track: stsd-pilot
+    domains: [data-model]
+    catalog_status: primary
+    order: 6
+    parallel_group: business-specs
+    depends_on: [data-flow-uc-rewrite]
+    note: 業務仕様を実装ベースで量産する流れ（draft → editorial-review → Kata の手入れ → Kata の確定 → retrofit → editorial-review → 磨き込み）を、ステータス定義（stsd、5 件）で 1 回通して確かめる試しの track。dct-data-model-stsd を local_ids で部分 scope にする。
+
   - track: data-model
     domains: [data-model]
     catalog_status: draft
