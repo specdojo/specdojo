@@ -4,12 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020
   mode: edit
-  status: complete
+  status: in_progress
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020-plan.md
-  started_at: "2026-11-03T10:37:42.085Z"
-  completed_at: "2026-11-03T11:27:37.577Z"
-  agent: flash-high-executor
+  started_at: "2026-11-03T11:50:22.014Z"
+  agent: opus-executor
   execution: agent
   approach: fully-guided
   targets:
