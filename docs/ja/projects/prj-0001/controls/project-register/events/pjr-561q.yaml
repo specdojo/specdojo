@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a8f460e5ac624db781ba73a7cf9f3d84
+  ts: "2026-11-03T05:23:05Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で見つかった不具合を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --auto で選ぶタスクを track で絞れない
+    - field: description
+      from: ""
+      to: exec run --auto は対象のタスクが失敗すると、ほかの track の ready のタスクへ進む。--track で選ぶタスクを 1 つの track に限れるようにする
+    - field: input
+      from: ""
+      to: '["2026-11-03 に track data-flow-uc-rewrite の 3 タスクを exec run --auto --parallel 3 で流したところ、3 タスクとも checkpoint の commit が markdownlint の MD032 で拒否されて始まる前に失敗した（原因は phase の説明で箇条書きの前に空行がなかったこと、72749b20e で修正済み）","その後 --auto が launch の track の review タスク 3 件（T-LAUNCH-pm-communication-plan-105・pm-members-105・pm-organization-105）を claim し、worktree を作って agent を動かし始めた。オーケストレーターが止めて claim を release した（628f502e3）。execution: human のタスク 8 件は自動で飛ばされた","利用者は、この不具合を直してから 3 タスクを並列で流すと判断した。直し方の案は exec run --auto に --track `<track>` を足し、選ぶタスクをその track に限る形（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
