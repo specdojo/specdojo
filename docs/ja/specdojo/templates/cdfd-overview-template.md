@@ -81,23 +81,49 @@ _TODO_: 採用する構成方式（今の方式、または系統の関係を描
 
 _TODO_: 図の題を業務の言葉で書く。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+```d2
+direction: down
 
-  _PROCESS_GROUP_NODE_ID_("_PROCESS_GROUP_NAME_<br>_PROCESS_AREA_ID_〜_PROCESS_AREA_ID_")
-  _MASTER_STORE_NODE_ID_[("_DATA_STORE_NAME_")]
-  _TRANSACTION_STORE_NODE_ID_[("_DATA_STORE_NAME_")]
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+}
 
-  _MASTER_STORE_NODE_ID_ -->|"_INPUT_LABEL_"| _PROCESS_GROUP_NODE_ID_
-  _PROCESS_GROUP_NODE_ID_ -->|"_OUTPUT_LABEL_"| _TRANSACTION_STORE_NODE_ID_
+process_group: "_PROCESS_GROUP_NAME_\n_PROCESS_AREA_ID_〜_PROCESS_AREA_ID_" {
+  class: process
+}
+master_store: "_DATA_STORE_NAME_" {
+  class: store_master
+}
+transaction_store: "_DATA_STORE_NAME_" {
+  class: store_transaction
+}
 
-  class _PROCESS_GROUP_NODE_ID_ process
-  class _MASTER_STORE_NODE_ID_ storeMaster
-  class _TRANSACTION_STORE_NODE_ID_ storeTransaction
+master_store -> process_group: "_INPUT_LABEL_"
+process_group -> transaction_store: "_OUTPUT_LABEL_"
 ```
 
 _TODO_: この図から読み取れる業務上の関係を 1 文で書く。作図の約束は凡例にまとめる。
@@ -131,51 +157,114 @@ _TODO_: 今の方式では、複数グループを横断する順序と引き渡
 
 本プロダクトの全 CDFD が共通して参照するノード形状・色・絵文字の対応を示す。個々の CDFD は、以下の定義を再掲せず、本章への参照に留める。
 
-_TODO_: 採用する記法（Mermaid または D2）を示し、必要なら以下の Mermaid の凡例を D2 に置き換える。矢印は情報または実行要求の受け渡しであって実行順ではないこと、更新の線は更新前の参照を含むこと、外部主体や起点イベントの扱い、配置制御の非表示の線は受け渡しでないことをここにまとめる。
+図の記法には D2（[[specdojo:cdfd-d2-rulebook|D2 記法ルール]]）を採用し、`direction: down` で縦に配置する。矢印は情報または実行要求の受け渡しであり、実行順や毎回の通過を意味しない。更新の線は更新前の参照を含む。`->`（戻りは `<-`）の通常線は情報、`material_flow` class の太線は物の流れを表す。配置制御用の非表示の線は受け渡しを表さない。
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+_TODO_: 外部主体と起点イベントを図に置くか省くか、およびその理由を書く。複数の代表ノードは上から下へ読める順に並べ、戻りの線は `<-` で書く。並びを固定する非表示の線を使う場合は、直前に「配置制御用（受け渡しではない）」とコメントする。
 
-  外部主体["🧑 外部主体"]
-  起点イベント{{"⚡ 起点イベント"}}
-  プロセス("⚙️ プロセス／プロセスグループ／区分")
-  マスタ構成データ[("🗄️ マスタ・構成データ")]
-  トランザクションデータ[("🗄️ トランザクションデータ")]
-  物理保管(["🏬 物理保管"])
+```d2
+direction: down
 
-  外部主体 -->|"情報の流れ"| プロセス
-  起点イベント -->|"起動条件"| プロセス
-  プロセス -->|"参照・更新"| マスタ構成データ
-  プロセス -->|"更新"| トランザクションデータ
-  プロセス ==>|"物の流れ"| 物理保管
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  actor: {
+    shape: rectangle
+    style: {
+      fill: "#f5f7fa"
+      stroke: "#607d8b"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
 
-  class プロセス process
-  class 起点イベント event
-  class マスタ構成データ storeMaster
-  class トランザクションデータ,物理保管 storeTransaction
-  class 外部主体 actor
+actor_node: "🧑 外部主体" {
+  class: actor
+}
+event_node: "⚡ 起点イベント" {
+  class: event
+}
+process_node: "⚙️ プロセス／プロセスグループ／区分" {
+  class: process
+}
+master_store: "🗄️ マスタ・構成データ" {
+  class: store_master
+}
+transaction_store: "🗄️ トランザクションデータ" {
+  class: store_transaction
+}
+physical_store_node: "🏬 物理保管" {
+  class: physical_store
+}
+
+actor_node -> process_node: "情報の流れ"
+event_node -> process_node: "起動条件"
+process_node -> master_store: "参照・更新"
+process_node -> transaction_store: "更新"
+process_node -> physical_store_node: "物の流れ" {
+  class: material_flow
+}
 ```
 
 <!-- prettier-ignore -->
 | 概念 | 形状 | 色 | 絵文字例 |
 | --- | --- | --- | --- |
-| プロセス／プロセスグループ／区分 | 角丸長方形 | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: ⚙️） |
-| 起点イベント | 六角形 | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: 🚦） |
-| データストア（マスタ・構成データ） | 円柱 | 濃い緑（`#a5d6a7` / `#1b5e20`） | 保管物が伝わる絵文字（例: 📐） |
-| データストア（トランザクションデータ） | 円柱 | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📒） |
-| 物理保管 | スタジアム形 | 薄い緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
-| 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 👤） |
-| 情報の流れ | ラベル付き `-->` | — | — |
-| 物の流れ | ラベル付き `==>` | — | — |
+| プロセス／プロセスグループ／区分 | 角丸四角形（`style.border-radius: 8`） | 青（`#e3f2fd` / `#1e88e5`） | 業務内容が伝わる絵文字（例: ⚙️） |
+| 起点イベント | 六角形（`shape: hexagon`） | 橙（`#fff3e0` / `#fb8c00`） | 出来事が伝わる絵文字（例: 🚦） |
+| データストア（マスタ・構成データ） | 円柱（`shape: cylinder`） | 薄い緑（`#e8f5e9` / `#43a047`） | 保管物が伝わる絵文字（例: 📐） |
+| データストア（トランザクションデータ） | 円柱（`shape: cylinder`） | 中間の緑（`#c8e6c9` / `#2e7d32`） | 保管物が伝わる絵文字（例: 📒） |
+| 物理保管 | 大角丸四角形（`style.border-radius: 20`） | 中間の緑（トランザクションデータと同じ） | 保管場所が伝わる絵文字（例: 🏬） |
+| 外部主体 | 四角形（`shape: rectangle`） | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 👤） |
+| 情報の流れ | ラベル付き通常線 `->`（戻りは `<-`） | — | — |
+| 物の流れ | ラベル付き太線 `->`（`material_flow` class） | — | — |
 
 データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報を指す。トランザクションデータは、業務活動に伴い都度更新される記録を指す。物理保管は現物の保管先であり、いずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
 
-ノード形状・線種そのものの記法は、採用した記法の [[specdojo:cdfd-mermaid-rulebook|Mermaid 記法ルール]] または [[specdojo:cdfd-d2-rulebook|D2 記法ルール]] に従う。本章は、その記法に基づき _TARGET_NAME_ が実際に採用する色・絵文字の割り当てを固定する。
+ノード形状・線種そのものの記法は [[specdojo:cdfd-d2-rulebook|D2 記法ルール]] に従う。本章は、その記法に基づき _TARGET_NAME_ が実際に採用する色・絵文字の割り当てを固定する。
 
 <!-- 未決事項がある場合のみ、以下の章を追加する。ない場合は章ごと削除する。本文中の未確定箇所には _UNDECIDED_ を付け、表の論点と対応させる。
 
