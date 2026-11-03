@@ -32,13 +32,22 @@ specdojo 配下のサイドメニューに sample と template を載せ、recip
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- サイドメニューの並べ方を決め、案と選んだ理由を個票の対応結果に記録している。案の例は、「ルール」と同じ分類で「サンプル」「テンプレート」のメニューを作る形と、成果物ごとに rulebook・recipe・sample・template をまとめる形
+- `docs/ja/specdojo/samples/` と `docs/ja/specdojo/templates/` の status が deprecated でない文書が、すべてサイドメニューから開ける
+- `docs/ja/specdojo/rulebooks/` と `docs/ja/specdojo/recipes/` の status が deprecated でない文書のうち、サイドメニューに載っていなかったものを補っている。概念データフロー図の cdfd-overview・cdfd-uc・cdfd-d2 の rulebook を含む
+- メニューの表示名は、既存の方針（`sidebar-config.ts` の注記）に従い、各ページの H1 にそろえている
+- 載っていない Kata を検査できるようにするか（テストやスクリプトの追加）は executor が決め、理由を個票の対応結果に記録している
+- 変えるのは `packages/docs-site/.vitepress/` 配下と、検査を足す場合はそのテストだけ。Kata の文書は変えない
+- 変更前と後で、メニューに載る Kata の数を種類ごとに個票の対応結果に記録している
+- `npm run docs:build`・`npm run typecheck`・`npm run lint:ts` と親の検証が通る
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                        | 担当 | 状態 | メモ |
+| --- | ----------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | 並べ方を決めて記録する                                      | ARC  | open | -    |
+| 2   | sample・template・recipe・rulebook をサイドメニューに載せる | ARC  | open | -    |
+| 3   | 数を記録し、文書サイトのビルドを確かめる                    | ARC  | open | -    |
 
 ## 5. 対応結果
 
@@ -46,4 +55,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `packages/docs-site/.vitepress/sidebar-config.ts`
