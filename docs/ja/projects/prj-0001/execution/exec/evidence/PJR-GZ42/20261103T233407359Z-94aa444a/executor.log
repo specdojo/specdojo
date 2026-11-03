@@ -1,0 +1,106 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "前回の型エラー原因を修正し、吹き出し・TUI の改行保持と Vue 式の文字列表示を補強しました。親検証は runner が実行します。",
+  "handoff": [
+    "ホスト環境で `npm run docs:build` を実行してください。executor では禁止された索引更新を避けて文書サイト部分をビルドしましたが、D2 起動が sandbox に `spawnSync d2 EPERM` で拒否されました。",
+    "Chromium も sandbox に起動を拒否されました。ホスト環境で吹き出しと TUI をライト／ダーク・スマートフォン幅で確認してください。",
+    "Quick Start の対話は実際には11か所あり、本文を維持して全箇所を変更しました。話者は一般的な利用者表記を利用者側、それ以外を相手側として扱います。理由と検証結果は個票に記録済みです。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write .github/instructions/markdown.instructions.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-gz42-docs-site-chat-render.md docs/ja/specdojo/guides/quick-start-guide.md packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/theme/custom.css packages/docs-site/src/chat.ts tests/packages/docs-site/chat.test.ts",
+      "status": "passed",
+      "summary": "変更ファイルを整形済み。"
+    },
+    {
+      "command": "npm --prefix packages/docs-site run typecheck",
+      "status": "passed",
+      "summary": "docs-site の型検査成功。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証成功。既存の未作成成果物に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生文書生成成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査成功。"
+    },
+    {
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "requires_human",
+      "summary": "実行を試みたが D2 起動が sandbox に EPERM で拒否された。ホスト環境で再検証が必要。"
+    },
+    {
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "禁止された索引更新を含むため、フルビルドはホスト環境で実行する。"
+    },
+    {
+      "command": "node --input-type=module -e 'import puppeteer from \"./packages/docs-site/node_modules/puppeteer/lib/puppeteer/puppeteer.js\"; const browser = await puppeteer.launch({headless: true, args: [\"--no-sandbox\"]}); await browser.close(); console.log(\"Chromium launch passed\")'",
+      "status": "requires_human",
+      "summary": "Chromium 起動が Operation not permitted で拒否された。配色・狭い画面での表示確認をホスト環境へ申し送る。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor が編集した YAML 成果物なし。",
+      "reason": "既存のイベント YAML 差分は runner による状態遷移であり、今回の編集対象ではない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": ".github/instructions/markdown.instructions.md",
+      "status": "changed",
+      "path": ".github/instructions/markdown.instructions.md"
+    },
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-gz42-docs-site-chat-render.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gz42-docs-site-chat-render.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md"
+    },
+    {
+      "target": "packages/docs-site/.vitepress/config.mts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/config.mts"
+    },
+    {
+      "target": "packages/docs-site/.vitepress/theme/custom.css",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/theme/custom.css"
+    },
+    {
+      "target": "packages/docs-site/src/chat.ts",
+      "status": "changed",
+      "path": "packages/docs-site/src/chat.ts"
+    },
+    {
+      "target": "tests/packages/docs-site/chat.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-site/chat.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

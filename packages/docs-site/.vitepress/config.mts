@@ -13,6 +13,7 @@ import {
 import type { SidebarItem } from "./sidebar-config";
 import { mermaidSvgId } from "../src/gen-mermaid-svg";
 import { d2SvgId } from "../src/gen-d2-svg";
+import { isChatFence, renderChat } from "../src/chat.js";
 import { d2SvgAutoGenerate } from "./d2-auto-generate";
 import {
   STAGED_PACKAGE_DEAD_LINK_PATTERNS,
@@ -1043,6 +1044,10 @@ export default defineConfig({
               <p class="mermaid-container">
                 <img :src="'${src}'" alt="${kind} diagram" loading="lazy" class="mermaid-image">
               </p>\n`;
+        }
+
+        if (isChatFence(info)) {
+          return renderChat(token.content, info);
         }
 
         // それ以外のコードブロックはデフォルトの描画

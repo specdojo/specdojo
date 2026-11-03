@@ -103,7 +103,7 @@ provider に応じて `npm run orch:sonnet`、`npm run orch:sol`、`npm run orch
 
 起動後、ターミナルでオーケストレーターとのセッションが始まります。
 
-```text
+```chat
 あなた: SpecDojo の導入ができました。このプロジェクトを進めたいです。
 オーケストレーター: SpecDojo の初期化を確認しました。登録簿（controls/project-register/）と名簿設定（projects.prj-0001.members_path が指す docs/ja/projects/prj-0001/030-project-management/pm-members.yaml）が準備されています。
   まずは隣にあるプロダクトリポジトリ（../landing-page）を管理対象リポジトリとして接続し、安全に開発を進めるための Git flow ブランチ運用ルールを設定することをお勧めします。
@@ -161,7 +161,7 @@ landing-page-specdojo/
 
 オーケストレーターにプロダクトリポジトリの接続と Git flow ルールの設定を依頼します。オーケストレーターはブランチ名や統合方式の不足事項を確認し、利用者が選択した後に設定を適用します。
 
-```text
+```chat
 あなた: 隣にある ../landing-page を管理対象リポジトリに追加して、Git flow のブランチルールで運用したいです。
 オーケストレーター: ../landing-page をプロダクトリポジトリ（repos）として接続し、Git flow のブランチ運用ルールを設定します。以下の運用設定について確認させてください:
   1. 統合先ブランチ（integration_branch）: develop でよろしいですか？（本番用の main と日々の開発統合用の develop を分ける Git flow 構成）
@@ -263,7 +263,7 @@ register（登録簿）は、問題・判断・作業を個票として残し、
 
 #### 具体的対話
 
-```text
+```chat
 あなた: LP によくある質問（FAQ）セクションを追加したいので、todo を起票してほしいです。
 オーケストレーター: FAQ セクション追加の todo を起票します。登録項目について確認させてください:
   ・タイトル: 「よくある質問（FAQ）セクションを追加する」
@@ -347,7 +347,7 @@ specdojo:
 
 #### 具体的対話
 
-```text
+```chat
 あなた: スマホ表示でナビゲーションメニューを開いた後、リンクをタップしてもメニューが閉じない不具合があります。issue を起票して調査したいです。
 オーケストレーター: ナビゲーションメニュー不具合の issue を起票します。以下の内容を確認させてください:
   ・タイトル: 「スマホ表示でナビゲーションメニューが閉じない不具合の調査と修正」
@@ -415,7 +415,7 @@ npx specdojo register add \
 
 #### 具体的対話
 
-```text
+```chat
 あなた: 問い合わせフォームの実装方針をいくつか比較して決めたいので、decision を起票して相談したいです。
 オーケストレーター: 問い合わせフォーム実装方針の decision を起票します。確認事項です:
   ・タイトル: 「問い合わせフォームの実装方針を比較・決定する」
@@ -514,7 +514,7 @@ register には上記のほか、以下の種別があります。目的に応�
 
 オーケストレーターに起票済みタスクの隔離実行を依頼します。オーケストレーターは実行方式（worktree）、作業ブランチ名、統合先ブランチを提示して承認を得てから実行します。
 
-```text
+```chat
 あなた: 起票した FAQ 追加の todo（PJR-FA01）を AI に実行させたいです。安全に進めてください。
 オーケストレーター: PJR-FA01 の AI 実行（exec run）を準備します。以下の計画を確認させてください:
   ・隔離実行: ../landing-page-specdojo-worktrees/<実際に割り当てられる task ID>/ に専用の作業環境を隔離作成します。
@@ -585,7 +585,7 @@ npx specdojo register close \
 
 #### 具体的対話
 
-```text
+```chat
 あなた: LP の仕様書や設計ドキュメントを体系的に揃えたいです。成果物カタログを作って進めるにはどうすればよいですか？
 オーケストレーター: 現在の設定を調べます。`catalog_path` が未設定のため、成果物カタログ（dct-*.yaml）の保存先 `010-deliverables-catalog` を提案します。Schedule / execution の出力先、名簿と role 対応、routine / Job の置き場所も次の段階に必要です。設定差分を確認してください。
   以下のカタログ内容も確認させてください:
@@ -651,7 +651,7 @@ npx specdojo catalog build --project prj-0001
 
 #### 具体的対話
 
-```text
+```chat
 あなた: カタログの成果物を作成するためのスケジュール戦略を作りたいです。
 オーケストレーター: トラック戦略（sch-strategy-launch.yaml）を生成します。確認事項です:
   ・トラック名: 立ち上げトラックの launch でよろしいですか？
@@ -691,7 +691,7 @@ npx specdojo schedule strategy generate \
 
 #### 具体的対話
 
-```text
+```chat
 あなた: スケジュールを生成して、今すぐ着手できるタスクを確認したいです。
 オーケストレーター: track launch の内容と出力先（`schedule_path` の既定は docs/ja/projects/prj-0001/schedule）を確認しました。schedule build と exec refresh を実行してよろしいですか？
 あなた: はい、実行してください。
@@ -727,7 +727,7 @@ npx specdojo exec refresh --project prj-0001
 
 #### 具体的対話
 
-```text
+```chat
 あなた: 最初の Ready タスクを進めたいです。
 オーケストレーター: Ready 一覧の task ID・成果物パス・owner・execution mode・入力要件を提示します。タスクの owner は ROLE code BA です。名簿で roles に BA を持つ人の nickname は owner と確認しました。内容を確認してください。
   ・このタスクを --by owner で claim しますか？
@@ -779,7 +779,7 @@ npx specdojo exec refresh --project prj-0001
 
 オーケストレーターに定期実行ルーチンの登録を相談します。オーケストレーターは実行頻度や対象条件を確認し、定義を作成して検証します。
 
-```text
+```chat
 あなた: オープンな高優先度 todo を毎日確認して処理する仕組み（routine）を作りたいです。
 オーケストレーター: 定期実行ルーチン（routine）を設定します。以下の設定内容を確認させてください:
   ・ルーチン ID: rtn-daily-register-sweep（既存定義と重複しないことを確認）
