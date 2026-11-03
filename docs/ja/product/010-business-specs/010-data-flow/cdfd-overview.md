@@ -223,8 +223,10 @@ exec_cycle <- report: "判断事項"
 deliverables <- deprecation: "非推奨化文書"
 deprecation -> trash: "保管文書"
 
+routine_sys -> exec_cycle: "実行要求"
+
 # 配置制御用（受け渡しではない）
-routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
+exec_cycle -> deprecation: {style.opacity: 0}
 
 # 配置制御用（受け渡しではない。非表示の基点で 3 系統を同段にそろえる）
 layout_top: "" {
