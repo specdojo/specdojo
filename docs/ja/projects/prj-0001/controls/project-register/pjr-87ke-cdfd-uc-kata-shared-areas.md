@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-87ke-cdfd-uc-kata-shared-areas
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-03T10:11:07Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T10:33:58Z"
+  conclusion: cdfd-uc の Kata に、共通して通る領域の内部は 1 か所でだけ描くこと、例外時の戻りは省かず線が多ければ図を分けること（15 本超または 1 ノード 10 本以上）、絵文字を全体概要の凡例にそろえることを、特定のプロダクトの区分名を使わずに定めた
   derived_from:
     - PJR-GQN3
   commit_type: docs

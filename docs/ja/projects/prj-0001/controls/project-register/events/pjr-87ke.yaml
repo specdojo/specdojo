@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8f48a138f7cc4ea38eab8e8c3d5b2908
+- v: 1
+  id: reg_29bccbd68763412a9af080c68e22208e
+  ts: "2026-11-03T10:33:58Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: cdfd-uc の Kata に、共通して通る領域の内部は 1 か所でだけ描くこと、例外時の戻りは省かず線が多ければ図を分けること（15 本超または 1 ノード 10 本以上）、絵文字を全体概要の凡例にそろえることを、特定のプロダクトの区分名を使わずに定めた
+  previous_event_id: reg_ff0e9d2dbb334394883430444642ab3c
