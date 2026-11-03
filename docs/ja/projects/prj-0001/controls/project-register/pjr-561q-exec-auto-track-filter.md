@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-03T05:23:03Z"
   due_on: "2026-11-07"
+  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-GQN3
   commit_type: feat
@@ -52,7 +53,25 @@ exec run --auto は対象のタスクが失敗すると、ほかの track の re
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 実施内容
+
+- `exec run --auto --track <track>` を追加し、タスク準備（agent 解決・claim・worktree 作成）の前に候補を絞る。`--parallel`・`--loop`・`--dry-run` に同じ制限を適用し、準備失敗後や loop の再選択でも指定外の track に進まない。
+- schedule index にある track 名で存在確認し、存在しない指定は claim 前にエラーとする。Ready がない既存 track は正常終了する。track を省略した場合は従来の選択順・範囲を保つ。
+- track の所属は `schedule_file` から判定する。タスク ID の分割に依存しないため、`data-flow-uc-rewrite` のようなハイフンを含む track 名や任意のタスク ID を扱える。
+- `tests/src/exec/run/track-filter.test.ts` に、dry-run／実行時の選択、並列上限、FIFO、準備失敗後、実行失敗後の loop 再選択、不明な track、Ready のない既存 track、省略時の互換性、`--auto` なしの引数拒否の回帰テストを追加した。
+- [[specdojo:command-reference|コマンドリファレンス]]・[[specdojo:exec-operation-guide|exec運用ガイド]]・[[specdojo:schedule-operation-guide|Schedule実行運用ガイド]] に指定方法と挙動を追記し、CHANGELOG の Unreleased に記録した。
+
+### 判断と確認
+
+- `--track` は 1 回の実行範囲を 1 つの track に限る用途として単一値にした。複数 track の指定は本件の目的に不要であり、既存の schedule の track 名を大文字・小文字を区別して扱う。`--auto` 以外では指定を拒否し、手動ターゲットに無効な指定が残らないようにした。
+- Ready の計算と依存関係はプロジェクト全体のままにし、戦略の順序を保って選択候補だけを絞る。対象外の依存タスクを自動的に起動することはない。
+- Prettier 整形、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build`、`git diff --check` は成功した。カタログ検証は未作成文書の `based_on` 検証に関する警告があるが、終了コードは 0 だった。`typecheck`・`lint-ts`・`test-unit`・`test-integration` を含む指定の親検証は、本 executor 内で重複実行せず、終了後に親 runner が実行する。追加テストの成否も親の `test-unit` で確定する。
+- 保護された設定、登録簿の一覧・ステータス、result は編集していない。保護設定の変更提案および未決事項はない。
+
+### 申し送り
+
+- 親 runner は型検査・lint・単体／統合テストを含む親検証の成功を確認し、reporter は変更内容と検証結果を result に反映する。
+- [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] の 5.1 に従い、統合後の close 前にオーケストレーターが PJR-JSEY に本件を含めて動作確認する。実 agent CLI を起動する確認は executor sandbox の外で行う。
 
 ## 6. 関連ドキュメント
 
