@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf37a5fe8a854b16a91eeea776177cdc
+  ts: "2026-11-03T12:53:47Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で見つかった不具合を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor から再開して executor を替えると統合の前に止まる
+    - field: description
+      from: ""
+      to: exec resume --resume-from executor --executor-by で別の agent に替えても claim が元の agent のまま残り、完了の前の確認で「別の actor が作業中」として止まる
+    - field: input
+      from: ""
+      to: '["2026-11-03 に T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020 を opus-executor の claim のまま exec resume --resume-from executor --executor-by sol-executor で再開したところ、executor・親の検証・reporter は通ったが、「completion preflight failed: task is being worked on by another actor: opus-executor」で統合の前に止まった","その後、--executor-by なしの exec resume --task で再開すると、claim の持ち主の opus-executor で executor から流し直して完了した（2026-11-03）","直し方の案: executor を替えて再開するときは claim を新しい agent へ移す（release と claim の event を残す）、または完了の確認で再開時に指定した executor を許す。PJR-RKHR で入れた --resume-from executor の動きに関わる（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
