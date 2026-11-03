@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8206cb00af0d40378e4ebe9f961bf6c0
+  ts: "2026-11-03T10:11:09Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 3 文書の 2 回目の書き直しの前に Kata の決まりを足す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ユースケース別 CDFD の Kata に共通の領域・例外の図の分け方・絵文字の決まりを足す
+    - field: description
+      from: ""
+      to: cdfd-uc の Kata に、複数の系統が通る領域の内部は 1 か所でだけ描くこと、例外時の戻りは省かずに図を分けること、絵文字を全体概要の凡例にそろえることを定める
+    - field: input
+      from: ""
+      to: '["PJR-GQN3 の 1 回目の書き直しで、3 文書が実行サイクル（P-07・P-08・P-11）をそれぞれ詳しく描き、schedule 系の図は線が約 30 本、routine 系は P-07 に 15 本ほどの線が集まり、例外時の戻りの図も線が多かった。絵文字の付け方も文書ごとにそろっていなかった（2026-11-03）","利用者の判断: 「実行サイクル」はこのプロダクトに固有の区分なので、Kata には一般化した形で書く。複数の系統（ユースケース）が共通して通るプロセス領域の内部は 1 か所（全体概要、またはその領域の詳細の文書）でだけ描き、ほかの詳細の文書では 1 つのノードとして置き、受け渡しの線だけを描く（2026-11-03）","利用者の判断: 例外時の戻りは、大事なものに絞ると必要な例外が抜けるため省略しない。1 つの図の線が多い場合は、戻り先や段ごとに図を分けて見やすくする（2026-11-03）","利用者の判断: ノードのラベルの絵文字は、全体概要の凡例に合わせて付けるか付けないかをそろえる（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: rulebooks
