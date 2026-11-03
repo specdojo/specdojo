@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-6qtk-cdfd-overview-kata-align
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-03T01:34:40Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T02:39:02Z"
+  conclusion: cdfd-overview の rulebook・recipe・sample・template を、目的は全体像、区分を代表ノードとする 3 つの図の書き方に合わせ、全体概要の 5.1 に routine 系の実行要求の線を足したことを確かめた
   derived_from:
     - PJR-GEZN
   commit_type: docs
