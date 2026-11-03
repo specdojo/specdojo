@@ -1,0 +1,11 @@
+個票の「対応結果」の表に、PJR-FVRZ の 1 行を追記しました。変更したファイルは `pjr-jsey-exec-run-split-smoke.md` だけです。親 runner が実行する検証は、sandbox 内では実行していません。
+
+- **確認対象:** PJR-FVRZ にしました。最終の実行コミットは `da82aec04`（2026-11-03 15:15 JST）で、PJR-561Q の `57fb6ad32`（15:01 JST）より新しいためです。
+- **追記した行:** 2026-11-03 15:19 JST、PJR-FVRZ、sonnet-executor。agent 名は、前回までの行に合わせて入れたものです。start の event の actor で裏付けられてはいません。
+- **併せて更新:** 作業内容表のメモを PJR-FVRZ に変えました。表の下の確認対象の説明文も、PJR-FVRZ に合わせて書き換えました。
+
+登録簿の `pjr-index.md` は、この worktree に存在しませんでした。PJR-561Q と PJR-FVRZ の状態は、git log のコミット履歴で確認しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に 2026-11-03 15:19 JST / PJR-FVRZ / sonnet-executor の 1 行を追記し、作業内容のメモと確認対象の説明文を更新した。変更は個票のみ。","handoff":["確認対象は git log から PJR-FVRZ（最終の実行コミット da82aec04、2026-11-03 15:15 JST）と判断した。PJR-561Q の最終の実行コミットは 57fb6ad32（15:01 JST）でそれより前。","agent の nickname の sonnet-executor は前回までの行に合わせて記入した。start の event の actor は後続段で確認が必要。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist の検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
