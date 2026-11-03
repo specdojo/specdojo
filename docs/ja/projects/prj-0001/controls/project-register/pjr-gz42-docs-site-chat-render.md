@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-03T23:08:13Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: typecheck"
   commit_type: feat
   commit_scope: docs-site
 ---
@@ -75,7 +74,12 @@ docs-site に `chat` 言語コードブロックのレンダリング処理（�
 6. **CHANGELOG の更新 (`CHANGELOG.md`)**:
    - `## [Unreleased]` の `### 追加機能` に docs-site の `chat` 描画機能追加を記録。
 7. **単体テストの作成 (`tests/packages/docs-site/chat.test.ts`)**:
-   - 話者判定、メッセージパース（インデント維持）、吹き出し描画、TUI 描画、インラインコード変換、HTML エスケープ、fence 判定、markdown-it との連携（他のコードブロックに影響を与えないこと）の計 9 件のテストを追加し、すべて通過。
+   - 話者判定、メッセージパース（インデント維持）、吹き出し描画、TUI 描画、インラインコード変換、HTML エスケープ、fence 判定、markdown-it との連携（他のコードブロックに影響を与えないこと）、Vue コンパイル時の改行・字下げ維持と式の文字列表示を確認する計 13 件のテストを追加。実行は親 runner の `test-unit` に委ねる。
+   - 前回の型エラーに対し、型宣言のない `markdown-it` の直接 import を、docs-site の依存を解決する `createRequire` とテストで使用する範囲の型定義に変更した。新しい依存は追加しない。
+8. **Vue 描画時の文字列と空白の保持**:
+   - 両モードの外枠に `v-pre` を付け、本文中の `{{ ... }}` を式として評価せず文字列として表示する。
+   - 本文を `<pre>` で出力し、Vue のコンパイルでも続き行の改行と字下げを維持する。吹き出しのフォントは通常の本文フォント、TUI は等幅フォントを指定する。
+   - TUI のテンプレート由来の余分な改行・字下げを除き、長い文字列を狭い画面で折り返す指定を補った。
 
 ### 話し手の名前の決め方と決定理由
 
@@ -86,9 +90,18 @@ docs-site に `chat` 言語コードブロックのレンダリング処理（�
 
 ### 検証結果
 
-- `npx vitest run tests/packages/docs-site/chat.test.ts`: 全 9 テスト成功。
-- `npm --prefix packages/docs-site run typecheck`: 成功（型エラーなし）。
+- `npm --prefix packages/docs-site run typecheck`: 成功（docs-site の型エラーなし）。ルートの `typecheck` を含む指定された親検証は runner が実行する。
+- `npm run validate:history-links`: 成功。
+- `node --import tsx tools/catalog-validate-if-configured.mjs`: 成功。未作成の既存成果物に関する警告あり。
+- 変更ファイルに Prettier を適用した。
+- Vue コンパイラで両モードをコンパイルし、改行・字下げと `{{ secret }}` の文字列表示が維持されることを確認した。
 - 新規外部依存パッケージは追加しておらず、`package.json` の変更は不要。
+
+### ホスト環境への申し送り
+
+- `npm run docs:build` は索引更新を含み、executor に禁止されている `.specdojo/doc-index.json` の書き込みを行うため、ホスト環境で実行する。代わりに文書サイト部分の `npm --prefix packages/docs-site run docs:build` を実行したが、D2 CLI の起動が sandbox に `spawnSync d2 EPERM` で拒否された。ホスト環境でフルビルドの成功を確認する。
+- 表示確認用 Chromium も sandbox に `Operation not permitted` で起動を拒否された。ホスト環境で吹き出しと TUI をライト／ダーク・スマートフォン幅で表示し、配置・折り返し・配色を確認する。
+- 対話ブロック数は入力時の 7 か所に対して実際は 11 か所であるため、本文を維持したまま全 11 か所の言語指定を変更した。話者名は利用者の一般的な表記だけを利用者側、それ以外を相手側とし、任意のエージェント名・ロール名を追加設定なしで扱えるようにした。
 
 ## 6. 関連ドキュメント
 

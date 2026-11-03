@@ -73,3 +73,19 @@
       from: "-"
       to: "parent validation failed: typecheck"
   previous_event_id: reg_bd1ebfcf70f5456cb097e09f2b348aff
+- v: 1
+  id: reg_9cced962fa294040bdda5b4b3a77303b
+  ts: "2026-11-03T23:34:01Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: typecheck"
+      to: "-"
+  previous_event_id: reg_72f52c34589c481babf9c2907bf62295
