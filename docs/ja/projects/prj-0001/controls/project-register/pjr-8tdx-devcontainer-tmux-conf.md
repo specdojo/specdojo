@@ -30,13 +30,21 @@ tmux を入れる構成で .devcontainer/tmux.conf を生成し、コンテナ�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- tmux を入れる構成（`devcontainer scaffold --tmux`、または preset が `recommended` 以上、`init --devcontainer` から呼ぶ場合も含む）で、`.devcontainer/tmux.conf` が生成される。中身は、マウス操作（`set -g mouse on`）、クリップボード（`set -g set-clipboard on`）、256 色（`set -g default-terminal "tmux-256color"` と `set -as terminal-overrides ',*:Tc'`）の設定と、説明の注記である
+- tmux を入れない構成では、`tmux.conf` もリンクの処理も生成しない
+- 生成する `post-create.sh` が、スクリプトと同じ `.devcontainer/` の下の `tmux.conf` を `~/.tmux.conf` へリンクする（`ln -sfn`）。`~/.tmux.conf` がないか、すでにリンクの場合だけ張り、普通のファイルは上書きしない。`tmux.conf` がなければ何もしない。`post-start.sh` と `postStartCommand` は足さない
+- `--dry-run` の出力に `tmux.conf` が含まれ、既存の `.devcontainer/` は `--force` なしでは上書きしない（今の動きを保つ）
+- 生成物のテスト（tmux あり・なしの両方）を足し、post-create.sh のリンクの処理を shellcheck で確かめている
+- remote-host 開発ガイド（[[specdojo:remote-host-development-guide]]）に、生成される `tmux.conf` とリンクの扱い、既存の `~/.tmux.conf` を上書きしないことを書いている
+- CHANGELOG の Unreleased の節に書いている。保護された設定（`.specdojo/**`・`package.json` など）と、このリポジトリの `.devcontainer/` は変えない
+- 作業を終える前に `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を流し、親の検証が通る。未決の点は executor が決め、理由を個票の対応結果に記録する
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ |
+| --- | ---------------------------------------------- | ---- | ---- | ---- |
+| 1   | scaffold で tmux.conf とリンクの処理を生成する | DEV  | open | -    |
+| 2   | テストとガイド・CHANGELOG を足す               | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -44,4 +52,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:remote-host-development-guide]]
