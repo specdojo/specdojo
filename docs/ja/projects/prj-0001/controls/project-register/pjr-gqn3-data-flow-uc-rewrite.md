@@ -33,11 +33,12 @@ cdfd-uc-register・cdfd-uc-schedule・cdfd-uc-routine を、PJR-PRYZ で直し�
 
 ## 3. 範囲（track と domain）
 
-_TODO_: Frontmatter の `track` が担う範囲と対象 domain、対象外の境界を記載する。
+track `data-flow-uc-rewrite` は、domain data-flow のうち系統別の詳細 3 文書（cdfd-uc-register・cdfd-uc-schedule・cdfd-uc-routine）の書き直しを担う。全体概要（cdfd-overview）、Kata、deprecated の旧文書は対象外とする。
 
 ## 4. 完了の判断の基準
 
-- _TODO_: 子項目と schedule を確認して、人が完了を判断できる基準を記載する。
+- track の 3 タスク（`T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010`・`-cdfd-uc-schedule-010`・`-cdfd-uc-routine-010`）が done になっている
+- 3 文書が PJR-PRYZ で直した Kata（[[specdojo:cdfd-uc-rulebook]]）と [[prj-0001:cdfd-overview]] に合っていることを、利用者が VitePress で確かめている
 
 ## 5. 子項目
 
@@ -49,4 +50,7 @@ _TODO_: 完了を判断した根拠と残課題を記載する。未完了の場
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を文書 ID で記載する。
+- [[prj-0001:sch-strategy-data-flow-uc-rewrite]]
+- [[prj-0001:cdfd-uc-register]]
+- [[prj-0001:cdfd-uc-schedule]]
+- [[prj-0001:cdfd-uc-routine]]
