@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ae04931cfb714be9ace837ec8af3c43a
+- v: 1
+  id: reg_015da298712f49689a01b3cba1051700
+  ts: "2026-11-03T07:15:57Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・JSEY の動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: checkpoint と register --commit の失敗時に自分が載せたファイルだけを index から外し、ほかの staged の変更を残したまま対象のパスだけを commit することを、統合テスト 63 件と JSEY の動作確認で確かめた
+  previous_event_id: reg_42fe261baaad4265b74f5b9d1fe9e4a7
