@@ -47,3 +47,16 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_353465fe9b9e40a187cbe7e024cfc619
+  ts: "2026-11-03T13:02:55Z"
+  action: start
+  actor: argon-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0a90da04a5754c989bc159fc81ce04e3
