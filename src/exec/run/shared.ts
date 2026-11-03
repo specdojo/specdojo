@@ -81,6 +81,7 @@ export type RunOpts = {
   agentConfig?: string;
   dryRun?: boolean;
   auto?: boolean;
+  track?: string;
   task?: string;
   deliverable?: string;
   plan?: string;

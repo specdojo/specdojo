@@ -670,6 +670,7 @@ schedule の `exec resume --task <task-id> --resume-from executor` は、executo
 | `--review-by <nickname>`               | `--auto` の review タスク、または register の統合後 review に使う agent nickname                         | `run --auto` / `run --register --post-review` / `resume`                                            |
 | `--strategy <name>`                    | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                   | `scheduler` / `run --auto`                                                                          |
 | `--auto` / `--loop`                    | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                                | `run`                                                                                               |
+| `--track <track>`                      | `--auto` の選択を 1 つの track に限定する。存在しない track は claim 前にエラー。省略時は全 track が対象 | `run --auto`（`--parallel` / `--loop` / `--dry-run` と併用可能）                                    |
 | `--parallel <n>`                       | 同時に走らせる agent 数の上限を指定する                                                                  | `run --auto` / register の worktree モード                                                          |
 | `--worktree`                           | worktree に隔離して実行する                                                                              | `run --task` / `run --register`                                                                     |
 | `--in-place`                           | register 項目を現在の作業ツリーで実行する（`run.register_execution` を上書き）                           | `run --register`                                                                                    |
@@ -721,6 +722,9 @@ specdojo exec run --project prj-0001 --auto --parallel 5
 
 # Ready がなくなるまで連続実行する
 specdojo exec run --project prj-0001 --auto --loop --parallel 5
+
+# 指定した track だけを連続実行する
+specdojo exec run --project prj-0001 --auto --track data-flow-uc-rewrite --loop --parallel 3
 
 # 登録簿の項目を実行する（開始で in-progress、成功で review、失敗で waiting へ遷移）
 specdojo exec run --project prj-0001 --register PJR-0012

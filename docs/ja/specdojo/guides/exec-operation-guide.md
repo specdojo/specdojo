@@ -101,6 +101,8 @@ register 実行の場所は `.specdojo/exec-defaults.yaml` の `run.register_exe
 
 schedule タスクの自動実行・手動実行の具体的な手順は [Schedule実行運用ガイド](schedule-operation-guide.md)、routine の定義と実行は [routine運用ガイド](routine-operation-guide.md) を参照してください。
 
+自動実行を 1 つの track に限る場合は、`exec run --auto --track <track>` を使います。`--parallel`・`--loop`・`--dry-run` と併用でき、失敗後もほかの track のタスクを選びません。たとえば `specdojo exec run --project prj-0001 --auto --track data-flow-uc-rewrite --parallel 3` で、その track から最大 3 件を選びます。`--track` は単一指定で、`--auto` 以外との併用と存在しない track はエラーになります。省略時は全 track が対象です。
+
 ### 1.4. project単位の実行ロック
 
 `exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます（register の worktree 実行へ `--join` で合流する場合を除きます。後述の「実行中の register worktree 実行へ後から合流する」を参照してください）。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。`exec cycle` は再開・古い track の再生成・状態再計算・`--auto` loop の一連の step をこの単一ロック内で保持し、step 間に他の実行が割り込まないことを保証します。
