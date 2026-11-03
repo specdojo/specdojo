@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-8tdx-devcontainer-tmux-conf
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-03T10:21:19Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T22:51:58Z"
+  conclusion: tmux を入れる構成で .devcontainer/tmux.conf を生成し、post-create.sh で既存の普通のファイルを上書きせずに ~/.tmux.conf へリンクするようにした
   commit_type: feat
   commit_scope: devcontainer
 ---
