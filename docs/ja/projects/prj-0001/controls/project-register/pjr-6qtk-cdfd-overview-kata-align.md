@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-03T01:34:40Z"
   due_on: "2026-11-30"
+  block_reason: "executor reported incomplete: Kata 4文書の修正と個票への記録、sandbox 内の検証は実施済み。変更対象外の全体概要に新規則との不一致が残り、整合の完了条件は未達。"
   derived_from:
     - PJR-GEZN
   commit_type: docs
