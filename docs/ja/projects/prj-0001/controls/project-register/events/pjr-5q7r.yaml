@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1d2de6f1971747d28749fe1af2e6ef3a
+- v: 1
+  id: reg_e47db9b0f7264d26bb987eefe3772d4b
+  ts: "2026-11-03T00:19:51Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 直接のデータストアの範囲は PJR-KV58 で絞り直した。最終形を利用者が VitePress で確かめた（2026-11-03）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: Orchestrator の調整を表から図にし、線のない区分を各図から外した
+  previous_event_id: reg_ed5a82acbd834320a98d8d564a3b0ff7
