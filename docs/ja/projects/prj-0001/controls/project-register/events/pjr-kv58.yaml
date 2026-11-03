@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1247770319744b9883efc779a2edce1a
+- v: 1
+  id: reg_b6c6ad0cd38640eda5118af5c21aaff3
+  ts: "2026-11-03T00:20:13Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と SVG を確かめ、利用者が VitePress で確かめた。その後の目的と題の書き直しは orchestrator が利用者の承認のもと行った（2026-11-03）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: Orchestrator の図の直接のデータストアを稼働構成・登録簿・実行記録に絞り、6 区分の位置をそろえ、CLI 経由のものは区分からの線で表すことを確かめた
+  previous_event_id: reg_d65e201fafe34eeaa6e053542af778c7

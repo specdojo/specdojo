@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-kv58-cdfd-overview-orchestrator-direct
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-02T22:58:37Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T00:20:13Z"
+  conclusion: Orchestrator の図の直接のデータストアを稼働構成・登録簿・実行記録に絞り、6 区分の位置をそろえ、CLI 経由のものは区分からの線で表すことを確かめた
   derived_from:
     - PJR-5Q7R
 ---
