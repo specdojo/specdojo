@@ -52,14 +52,22 @@ specdojo 0.7.0 と @specdojo/docs-site 0.4.0 を公開する。@specdojo/docs-li
 
 | No  | 作業                                                                            | 担当                  | 状態 | メモ |
 | --- | ------------------------------------------------------------------------------- | --------------------- | ---- | ---- |
-| 1   | 版と CHANGELOG を確定し、一時ファイルを外し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | open | -    |
-| 2   | 配布物を空のリポジトリで試す                                                    | specdojo-orchestrator | open | -    |
-| 3   | PR・merge・タグ・公開の承認                                                     | PO                    | open | -    |
-| 4   | 公開後の確認                                                                    | specdojo-orchestrator | open | -    |
+| 1   | 版と CHANGELOG を確定し、一時ファイルを外し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | done | -    |
+| 2   | 配布物を空のリポジトリで試す                                                    | specdojo-orchestrator | done | -    |
+| 3   | PR・merge・タグ・公開の承認                                                     | PO                    | done | -    |
+| 4   | 公開後の確認                                                                    | specdojo-orchestrator | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 範囲: 不具合 3 件（PJR-561Q・PJR-FVRZ・PJR-W7YX）を close してから準備に入った。
+- 版と CHANGELOG: `feature/prj-0001/release-v0.7.0` で specdojo を 0.7.0、@specdojo/docs-site を 0.4.0 にし、CHANGELOG の Unreleased を 0.7.0 の節にした。節に docs-site 0.4.0 の同時公開、概念データフロー図の Kata の見直し、サイドメニューへの Kata の掲載を加えた。docs-site に Git 管理されていた Vite の一時ファイルを外し、`.gitignore` に `*.timestamp-*.mjs` を足した。
+- 準備で見つけて直したこと:
+  - `npm run check` の `validate:history-links` が、PJR-3R8F・PJR-6NEM・PJR-B0B8 の個票の外部 URL のラベル付きリンク 6 か所で失敗した。autolink に直した。
+  - PJR-PQG3 で足したサイドメニューのテストが、Git 管理外の生成ページ（`samples/generated/*.md`）を前提にしていて、新しい clone で失敗した。閲覧ページのリンクは元の YAML で確かめる形に直した。
+  - 配布物の試用で、npm から入れた docs-site 0.4.0 の文書サイトのビルドと D2 の生成が「`markdown-it` が見つからない」で失敗した。`src/d2.mjs` が vitepress の依存として読み込んでいたが、vitepress は markdown-it を組み込みで持ち別のパッケージとして入れないためである（PJR-6NEM）。利用者の承認を得て、docs-site の `dependencies` に `markdown-it` を足し、直接読み込む形に直した。
+- 検証: ルートと 3 package の `npm ci` が成功し、リリースのブランチで `npm run check` が成功した（204 テストファイル、3,368 テスト）。2 つの tarball を空のリポジトリへ入れ、`init`（`--yes`）、`register add`（`--input`・`--commit-type`）、`exec run --register`（claude の executor・reporter で start から review、統合まで）、`exec run --auto --track`（存在しない track は claim の前に停止）、`kata show` で見直した rulebook、docs-site の D2 の生成と文書サイトのビルドを確かめた。
+- 公開: PR #28 を merge commit `a50db8a86` で main へ入れ、その commit に `v0.7.0`・`docs-site-v0.4.0` を付けた。Publish specdojo to npm と Publish @specdojo/docs-site to npm の workflow が成功し、利用者が npmjs.com で公開を承認した。
+- 公開後の確認: npm の `latest` は specdojo が 0.7.0、@specdojo/docs-site が 0.4.0。npm から入れた版で `init` と、D2 の図を含む文書の `specdojo-docs-site build` が通り、`markdown-it` が依存として入ることを確かめた。
 
 ## 6. 関連ドキュメント
 
