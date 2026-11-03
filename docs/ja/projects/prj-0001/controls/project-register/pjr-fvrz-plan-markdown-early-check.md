@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-03T05:23:56Z"
   due_on: "2026-11-07"
+  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-GQN3
   commit_type: feat
