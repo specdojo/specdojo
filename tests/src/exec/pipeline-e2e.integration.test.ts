@@ -1171,6 +1171,9 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       expect(readFileSync(join(current.repo, artifactRef), "utf8")).toBe(
         priorWork + "# completed after resume\n",
       );
+      expect(readFileSync(join(current.repo, planRef), "utf8")).toBe(editedPlan);
+      const commitLog = git(current.repo, "show", "--name-only", "--format=", "HEAD^2~1");
+      expect(commitLog).toContain(planRef);
       expect(readResult(current, taskId)).toContain("status: complete");
       const state = JSON.parse(
         readFileSync(join(evidenceRunDir(current, taskId), "pipeline-state.json"), "utf8"),
@@ -1266,6 +1269,15 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       expect(state.stages.reporter.status).toBe("succeeded");
       expect(state.stages.integrate.status).toBe("succeeded");
       expect(existsSync(worktree)).toBe(false);
+      const planRef = join("execution", "exec", "plans", `${taskId}-plan.md`);
+      const logWithoutEditedPlan = git(
+        current.repo,
+        "show",
+        "--name-only",
+        "--format=",
+        "HEAD^2~1",
+      );
+      expect(logWithoutEditedPlan).not.toContain(planRef);
 
       const taskEvents = readTaskEvents(current, taskId);
       expect(taskEvents.filter((event) => event.type === "unblock")).toHaveLength(0);

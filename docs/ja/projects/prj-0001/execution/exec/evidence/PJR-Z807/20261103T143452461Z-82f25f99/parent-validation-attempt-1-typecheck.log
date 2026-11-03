@@ -1,0 +1,17 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 typecheck
+> tsc -b --noEmit
+
+tests/src/exec/pipeline-e2e.integration.test.ts(1260,46): error TS2448: Block-scoped variable 'planRef' used before its declaration.
+tests/src/exec/pipeline-e2e.integration.test.ts(1260,46): error TS2454: Variable 'planRef' is used before being assigned.
+tests/src/exec/pipeline-e2e.integration.test.ts(1260,70): error TS2304: Cannot find name 'editedPlan'.
+tests/src/exec/pipeline-e2e.integration.test.ts(1262,35): error TS2448: Block-scoped variable 'planRef' used before its declaration.
+tests/src/exec/pipeline-e2e.integration.test.ts(1262,35): error TS2454: Variable 'planRef' is used before being assigned.
+
+
+--- stderr ---

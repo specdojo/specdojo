@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Z807",
+  "run_id": "20261103T154225907Z-6b70d4fc",
+  "stage": {
+    "role": "executor",
+    "actor": "argon-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-03T15:42:25.907Z",
+    "completed_at": "2026-11-03T16:00:31.383Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-z807.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 10,
+    "summary": "CHANGELOG.md                                       |  2 +\n .../controls/project-register/events/pjr-z807.yaml | 20 +++++++++-\n .../pjr-z807-resume-edited-plan-lost.md            | 15 ++++----\n docs/ja/specdojo/guides/exec-operation-guide.md    |  2 +-\n src/exec/run/register-resume.ts                    | 14 +++++--\n src/exec/run/register-worktree.ts                  |  4 ++\n src/exec/run/schedule-task.ts                      |  2 +\n src/exec/worktree-ops-commit.ts                    | 45 ++++++++++++++--------\n tests/src/exec/pipeline-e2e.integration.test.ts    | 12 ++++++\n .../exec/register-pipeline-e2e.integration.test.ts | 15 ++++++++\n 10 files changed, 101 insertions(+), 30 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md docs/ja/specdojo/guides/exec-operation-guide.md src/exec/run/register-resume.ts src/exec/run/register-worktree.ts src/exec/run/schedule-task.ts src/exec/worktree-ops-commit.ts tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "passed",
+      "summary": "変更した Markdown および TypeScript ファイルを Prettier で整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴蓄積ファイル（個票 `pjr-z807-resume-edited-plan-lost.md`）のリンク整合性を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "`docs/ja/projects/prj-0001/` 配下の変更に伴い、`prj-0001` のカタログ整合性を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog build",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "`dct-*.yaml` を変更していないため適用外。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo register build",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "`pjr-index.md` は状態遷移で管理され executor 自身では変更しないため適用外。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec refresh",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "`sch-*.yaml` を変更していないため適用外。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 39 problems (0 errors, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3769 file(s), 178 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3769 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-03T16:06:05.036Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-03T16:05:05.365Z.\nfallback c\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md",
+      "reason": "`[Unreleased]` の不具合修正節に PJR-Z807 の修正内容を追記した。"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-z807.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-z807.yaml",
+      "reason": "runner による登録簿の状態遷移イベントが記録されている。"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md",
+      "reason": "個票の対応方針・原因・解決内容・確認結果・再発防止策を記入した。"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "reason": "plan を編集して executor から再開する手順に、統合時に直した plan がコミットに含まれ履歴に残る旨を明記した。"
+    },
+    {
+      "target": "src/exec/run/register-resume.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-resume.ts",
+      "reason": "登録簿の executor 再開時に worktree の編集済み plan を優先して読み込みつつ、`plan_ref` 用の `planPath` は root 側を維持するよう修正した。"
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts",
+      "reason": "登録簿の executor 再開 run の統合時に `allowEditedPlan: true` を `commitWorktreeChanges` へ渡すようにした。"
+    },
+    {
+      "target": "src/exec/run/schedule-task.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-task.ts",
+      "reason": "schedule の executor 再開 run の統合時に `allowEditedPlan: true` を `commitWorktreeChanges` へ渡すようにした。"
+    },
+    {
+      "target": "src/exec/worktree-ops-commit.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-commit.ts",
+      "reason": "`allowEditedPlan` 指定時に当該タスクの `planRel` をコミット対象として許可し、`assertNoAgentReadyPromotion` で `planRel` を除外するよう修正した。"
+    },
+    {
+      "target": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "reason": "schedule の `--resume-from executor` 統合テストで、編集済み plan が統合コミットおよび統合後の root に残ることと、未編集時は不要な plan コミットが入らないことを検証した。"
+    },
+    {
+      "target": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "reason": "登録簿の `--resume-from executor` 統合テストで、編集済み plan が統合後の root とマージ差分に残ることと、未編集時はマージ差分に含まれないことを検証した。"
+    }
+  ],
+  "final_message": "PJR-Z807 の対応として、executor から再開した run（schedule の `exec resume --task <task-id> --resume-from executor` および登録簿の `exec run --register <PJR-ID> --resume --resume-from executor`）の統合時に worktree で編集した plan をコミット対象に含めるよう修正し、登録簿の executor 再開で worktree の編集済み plan を読み込むとともに `plan_ref` がリポジトリ相対パスを維持するようにした。あわせて実 worktree を用いた統合テスト、個票、運用ガイド、`CHANGELOG.md` を更新した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-Z807/20261103T154225907Z-6b70d4fc/executor.log",
+      "bytes": 10370,
+      "truncated": false
+    }
+  ]
+}

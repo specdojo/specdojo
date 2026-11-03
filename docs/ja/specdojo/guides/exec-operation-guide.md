@@ -269,7 +269,7 @@ executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/
 
 1. `specdojo exec worktree status --project <project-id> --task <task-id>` で残っている worktree を確認する。
 2. その worktree の `<execution_path>/exec/plans/<task-id>-plan.md` を編集し、追加の指示と、変更の理由・再開までの経緯を result の申し送りへ残す指示を書く。
-3. `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor` を実行する。root で plan を生成し直さず、worktree にある編集済み plan を executor と reporter へ渡す。既存の成果物と未コミット変更も引き継ぐ。
+3. `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor`（登録簿の場合は `specdojo exec run --project <project-id> --register <id> --resume --resume-from executor`）を実行する。root で plan を生成し直さず、worktree にある編集済み plan を executor と reporter へ渡す。既存の成果物と未コミット変更も引き継ぎ、統合時には直した plan がコミットに含まれて元の plan で上書きされずに履歴に残る。
 4. 再開後の result で経緯と検証結果を確認する。pipeline の executor は result を直接編集せず、報告の `handoff` に経緯を記載し、reporter と runner が result へ反映する。
 
 stage agent を明示する場合は次のように指定します。片方を省略すると、その stage は要件と優先度から自動選択されます。
