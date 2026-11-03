@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_590ca6b6100647d7b9828b2f5ed012b6
+  ts: "2026-11-03T04:11:07Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 複数人運用に移る前に統合専用 actor の仕組みを決めるため起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数人で develop を使うときの統合専用 actor の仕組みを決める
+    - field: description
+      from: ""
+      to: branch protection を入れたあと、exec の統合と register の記帳を develop へ push する統合専用 actor をどう用意するか（決まった 1 台の bot か、各自の runner に資格を持たせるか）を決める
+    - field: input
+      from: ""
+      to: '["git-branching-standard は、複数人・複数 actor 運用で develop の branch protection、層 2 の Pull Request、統合専用 actor（exec の merge と register の記帳だけに bypass を許可）を必須としている（2026-11-03）","今は exec の統合と register の記帳が手元の develop に commit され、利用者が手で push している。branch protection を入れると人の push は拒否されるため、統合専用 actor の資格で push する仕組みが要る（2026-11-03）","運用上の注意として、同じ項目や schedule タスクを 2 人が流さないための調整（実行のロックはクローンごと）と、sch-milestones.yaml・tml-index.yaml・`dct-*.yaml`・CHANGELOG.md のような共有ファイルの衝突がある（2026-11-03）","利用者は、複数人の運用に移る前に決める question として起票することを選んだ（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-12-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-PQG3"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: standards
