@@ -89,3 +89,16 @@
       from: "parent validation failed: typecheck"
       to: "-"
   previous_event_id: reg_72f52c34589c481babf9c2907bf62295
+- v: 1
+  id: reg_56220cb1bec1430da567f44d2b757040
+  ts: "2026-11-03T23:48:48Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9cced962fa294040bdda5b4b3a77303b

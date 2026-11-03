@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-GZ42",
   "run_id": "20261103T233407359Z-94aa444a",
-  "updated_at": "2026-11-03T23:44:46.480Z",
+  "updated_at": "2026-11-03T23:48:49.220Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-gz42-20261103T230909Z-f841c2b8-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-03T23:44:46.480Z",
-      "completed_at": null,
+      "completed_at": "2026-11-03T23:48:49.220Z",
       "artifact_ref": null
     }
   },
