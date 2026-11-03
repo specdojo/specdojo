@@ -1193,6 +1193,114 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     },
   );
 
+  it.each(["blocked", "doing"] as const)(
+    "transfers the claim and completes when --resume-from executor switches to a different --executor-by (%s)",
+    async (scenario) => {
+      await startReporterBlock();
+      const current = fixture!;
+      const base = worktreeBase!;
+      const worktree = onlyWorktreePath(base);
+      const taskId = "T-TEST-doc-010";
+      const block = readTaskEvents(current, taskId).find((event) => event.type === "block")!;
+      const stateRef = String(block.meta?.pipeline_state_ref);
+      if (scenario === "doing") {
+        const eventsDir = join(current.executionPath, "exec", "events");
+        for (const name of readdirSync(eventsDir)) {
+          if (!name.endsWith(".json")) continue;
+          const event = JSON.parse(readFileSync(join(eventsDir, name), "utf8")) as TaskEvent;
+          if (event.task_id === taskId && event.type === "block") rmSync(join(eventsDir, name));
+        }
+      }
+      const artifactRef = join("docs", "test", "doc.md");
+      const priorArtifact = readFileSync(join(worktree, artifactRef), "utf8");
+      const priorWork = priorArtifact + "\nPreserve this manual change across executor switch.\n\n";
+      writeFileSync(join(worktree, artifactRef), priorWork, "utf8");
+      const eventsBefore = readTaskEvents(current, taskId);
+      const args = [
+        "resume",
+        "--project",
+        "test",
+        "--task",
+        taskId,
+        "--resume-from",
+        "executor",
+        "--executor-by",
+        "cloud-expert-executor",
+        "--worktree-base",
+        base,
+      ];
+      await runExec([...args, "--dry-run"]);
+      expect(process.exitCode ?? 0).toBe(0);
+      expect(readTaskEvents(current, taskId)).toEqual(eventsBefore);
+
+      setBehavior(current.behaviorPath, {
+        "cloud-expert-executor": {
+          role: "executor",
+          kind: "resume_ok",
+          artifactPath: "docs/test/doc.md",
+        },
+      });
+      await runExec(args);
+      expect(process.exitCode ?? 0).toBe(0);
+
+      const invocations = readInvocations(current.logPath);
+      expect(invocations.map((item) => item.nickname)).toEqual([
+        "local-gemma-executor",
+        "local-gemma-reporter",
+        "cloud-expert-executor",
+        "local-gemma-reporter",
+      ]);
+      expect(readFileSync(current.parentValidationLogPath, "utf8")).toBe("run\nrun\n");
+      expect(readFileSync(join(current.repo, artifactRef), "utf8")).toBe(
+        priorWork + "# completed after resume\n",
+      );
+      expect(readResult(current, taskId)).toContain("status: complete");
+      const state = JSON.parse(
+        readFileSync(join(evidenceRunDir(current, taskId), "pipeline-state.json"), "utf8"),
+      );
+      expect(state.stages.executor).toMatchObject({
+        status: "succeeded",
+        actor: "cloud-expert-executor",
+        attempts: 2,
+      });
+      expect(state.stages.reporter.status).toBe("succeeded");
+      expect(state.stages.integrate.status).toBe("succeeded");
+      expect(existsSync(worktree)).toBe(false);
+
+      const taskEvents = readTaskEvents(current, taskId);
+      expect(taskEvents.filter((event) => event.type === "unblock")).toHaveLength(0);
+      expect(taskEvents.filter((event) => event.type === "release")).toEqual([
+        expect.objectContaining({
+          type: "release",
+          task_id: taskId,
+          by: "local-gemma-executor",
+          meta: expect.objectContaining({
+            pipeline_resume_released: "true",
+            replaced_by: "cloud-expert-executor",
+          }),
+        }),
+      ]);
+      expect(
+        taskEvents.find((event) => event.type === "claim" && event.by === "cloud-expert-executor"),
+      ).toMatchObject({
+        type: "claim",
+        task_id: taskId,
+        by: "cloud-expert-executor",
+        meta: {
+          pipeline_stage: "executor",
+          pipeline_state_ref: stateRef,
+          pipeline_resume_claimed: "true",
+          previous_actor: "local-gemma-executor",
+        },
+      });
+      expect(taskEvents.find((event) => event.type === "complete")).toMatchObject({
+        type: "complete",
+        task_id: taskId,
+        by: "cloud-expert-executor",
+      });
+    },
+  );
+
   it.each([
     "integrate",
     "executor-failed",
