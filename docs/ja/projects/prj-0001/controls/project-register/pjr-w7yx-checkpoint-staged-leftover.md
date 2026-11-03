@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-w7yx-checkpoint-staged-leftover
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-03T05:23:33Z"
   due_on: "2026-11-07"
+  completed_at: "2026-11-03T07:15:57Z"
+  conclusion: checkpoint と register --commit の失敗時に自分が載せたファイルだけを index から外し、ほかの staged の変更を残したまま対象のパスだけを commit することを、統合テスト 63 件と JSEY の動作確認で確かめた
   derived_from:
     - PJR-GQN3
   depends_on:
