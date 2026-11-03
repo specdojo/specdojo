@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-01T13:37:40Z"
   conclusion: PJR-RKHR の統合後も exec run --register が start・review・統合まで通った
 ---
 
