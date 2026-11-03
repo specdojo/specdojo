@@ -457,3 +457,10 @@ export function stageCommitTargets(repoRoot: string, paths: readonly string[]): 
   if (stageable.length === 0) return;
   gitOutput(repoRoot, ["add", "-A", "--", ...stageable]);
 }
+
+// 呼び出し元が stage した対象だけを戻し、作業ツリーと無関係な staged 変更は保持する。
+export function unstageCommitTargets(repoRoot: string, paths: readonly string[]): void {
+  const unique = [...new Set(paths)];
+  if (unique.length === 0) return;
+  gitOutput(repoRoot, ["reset", "--quiet", "--", ...unique]);
+}

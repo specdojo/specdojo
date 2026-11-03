@@ -54,7 +54,13 @@ exec run の checkpoint の commit が失敗すると、runner が index に載�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- checkpoint の既存の hook 失敗時 unstage 処理を、stage 後の検査失敗にも適用するようにした。対象パスだけを index から戻し、作業ツリーの追加・更新・削除と root の既存 staged 変更を保持する。
+- `unstageCommitTargets` を共有 Git モジュールへ移し、`register --commit` でも初回 commit・hook 整形後の amend・stage 後の検査が失敗した場合に使うようにした。register の初回 commit と amend に `--only` を明示した。
+- 判断: 無関係な staged 変更があるだけでは停止せず、対象パスを指定して commit する。既存の pathspec による分離を維持し、利用者や並行処理の stage・部分 stage を変更しないためである。対象個票・event に開始前の変更がある場合は、従来どおり書き込み前に停止する。
+- 統合テストを追加・拡充した。checkpoint は `pre-commit`／`commit-msg` 拒否、stage 後の検査失敗、追跡済みファイルの更新・削除を扱う。register は失敗した checkpoint の event が stage 済みの状況、既存の stage・部分 stage、hook 拒否、amend の成功・失敗で、commit 対象と既存 index・本文の保持を検証する。
+- [[specdojo:register-operation-guide|登録簿運用ガイド]] に失敗時の後始末と amend 失敗時の確認手順を追記し、`CHANGELOG.md` の未公開節だけに記載した。保護された設定と登録簿のステータスは変更していない。
+- executor の Prettier 整形・整形確認、`git diff --check`、`catalog validate --project prj-0001` は成功した。カタログ検証には既存の未作成文書に関する警告があるが、終了コードは 0。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` および lint・schema 検査は pipeline の指示に従って親 runner が実行し、結果を evidence と result に記録する。追加した統合テストもその親検証で実行する。result は reporter／runner が記入する。
+- 統合後は [[prj-0001:pm-orchestrator-playbook|運用メモ]] の手順に従い、PJR-JSEY で runner の実動作を確認する。
 
 ## 6. 関連ドキュメント
 

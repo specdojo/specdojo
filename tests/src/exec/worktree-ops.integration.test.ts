@@ -10,7 +10,8 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import * as worktreeGit from "../../../src/exec/worktree.js";
 import {
   findExecWorktree,
   gitOutput,
@@ -237,6 +238,7 @@ function mergeIntoRoot(
 }
 
 afterEach(() => {
+  vi.restoreAllMocks();
   while (fixtures.length > 0) {
     const fixture = fixtures.pop()!;
     const registered = git(fixture.repo, "worktree", "list", "--porcelain");
@@ -293,45 +295,119 @@ describe("exec worktree ops", () => {
     expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
   });
 
-  it("unstages checkpoint paths after commit failure without changing the root index", () => {
+  it.each(["pre-commit", "commit-msg"])(
+    "unstages checkpoint paths after %s failure without changing the root index",
+    (hook) => {
+      const fixture = setupRepository();
+      const taskId = "T-T-doc-010";
+      writeFile(join(fixture.repo, "README.md"), "staged by user\n");
+      git(fixture.repo, "add", "README.md");
+      const rootIndexBefore = git(fixture.repo, "diff", "--cached", "--binary");
+      const headBefore = git(fixture.repo, "rev-parse", "HEAD");
+      const hookPath = join(fixture.repo, ".git", "hooks", hook);
+      writeFile(
+        hookPath,
+        [
+          "#!/bin/sh",
+          "printf 'api_key=raw-checkpoint-secret\\n' >&2",
+          "printf 'FAIL  tests/src/doc-index.test.ts > project register references\\n' >&2",
+          "printf 'Test Files  1 failed | 120 passed (121)\\n' >&2",
+          "exit 1",
+          "",
+        ].join("\n"),
+      );
+      chmodSync(hookPath, 0o755);
+      const failureLogPath = join(fixture.repo, "execution", "exec", "evidence", "checkpoint.log");
+
+      expect(() => prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath)).toThrow(
+        /Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s,
+      );
+
+      expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
+      expect(git(fixture.repo, "diff", "--cached", "--binary")).toBe(rootIndexBefore);
+      expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(headBefore);
+      const worktree = findExecWorktree(fixture.repo, taskId);
+      expect(worktree).not.toBeNull();
+      expect(git(worktree!.path, "diff", "--cached", "--name-only")).toBe("");
+      expect(git(worktree!.path, "rev-parse", "HEAD")).toBe(headBefore);
+      for (const path of worktreeStatusPaths(worktree!.path)) {
+        expect(readFileSync(join(worktree!.path, path), "utf8")).toBe(
+          readFileSync(join(fixture.repo, path), "utf8"),
+        );
+      }
+      expect(worktreeStatusPaths(worktree!.path)).toEqual(
+        expect.arrayContaining([
+          `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
+          `execution/exec/plans/${taskId}-plan.md`,
+          `execution/exec/results/${taskId}-result.md`,
+        ]),
+      );
+      const failureLog = readFileSync(failureLogPath, "utf8");
+      expect(failureLog).toContain("api_key=[REDACTED]");
+      expect(failureLog).toContain("Test Files  1 failed | 120 passed (121)");
+      expect(failureLog).not.toContain("raw-checkpoint-secret");
+    },
+  );
+
+  it("unstages a checkpoint when its staged-change inspection fails", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
-    writeFile(join(fixture.repo, "README.md"), "staged by user\n");
-    git(fixture.repo, "add", "README.md");
-    const hookPath = join(fixture.repo, ".git", "hooks", "pre-commit");
-    writeFile(
-      hookPath,
-      [
-        "#!/bin/sh",
-        "printf 'api_key=raw-checkpoint-secret\\n' >&2",
-        "printf 'FAIL  tests/src/doc-index.test.ts > project register references\\n' >&2",
-        "printf 'Test Files  1 failed | 120 passed (121)\\n' >&2",
-        "exit 1",
-        "",
-      ].join("\n"),
+    const actualGitResult = worktreeGit.gitResult;
+    const inspection = vi.spyOn(worktreeGit, "gitResult").mockImplementation((repoRoot, args) => {
+      const result = actualGitResult(repoRoot, args);
+      if (args[0] === "diff" && args.includes("--quiet")) {
+        return { ...result, status: 128, stderr: "fatal: inspection failed" };
+      }
+      return result;
+    });
+
+    expect(() => prepare(fixture, taskId)).toThrow(
+      /Failed to inspect execution checkpoint changes/,
     );
+    inspection.mockRestore();
+
+    const worktree = findExecWorktree(fixture.repo, taskId)!;
+    expect(git(worktree.path, "diff", "--cached", "--name-only")).toBe("");
+    expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("");
+    expect(worktreeStatusPaths(worktree.path)).toHaveLength(3);
+  });
+
+  it("keeps checkpoint edits and deletions in the worktree after a rejected commit", () => {
+    const fixture = setupRepository();
+    const changed = "execution/grade/results/doc.yaml";
+    const deleted = "execution/grade/criteria/doc.yaml";
+    for (const path of [changed, deleted]) writeFile(join(fixture.repo, path), "before\n");
+    git(fixture.repo, "add", changed, deleted);
+    git(fixture.repo, "commit", "-m", "add checkpoint sidecars");
+    writeFile(join(fixture.repo, changed), "after\n");
+    rmSync(join(fixture.repo, deleted));
+    const hookPath = join(fixture.repo, ".git/hooks/pre-commit");
+    writeFile(hookPath, "#!/bin/sh\nexit 1\n");
     chmodSync(hookPath, 0o755);
-    const failureLogPath = join(fixture.repo, "execution", "exec", "evidence", "checkpoint.log");
+    const paths = scaffoldTask(fixture, "T-T-doc-010");
 
-    expect(() => prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath)).toThrow(
-      /Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s,
-    );
+    expect(() =>
+      checkpointAndEnsureWorktree({
+        context: fixture.context,
+        worktreeTaskId: "T-T-doc-010",
+        base: fixture.worktreeBase,
+        checkpointPaths: [
+          paths.planPath,
+          paths.resultPath,
+          paths.claimEventPath,
+          join(fixture.repo, changed),
+          join(fixture.repo, deleted),
+        ],
+        commitMessage: "test: rejected checkpoint",
+      }),
+    ).toThrow(/Checkpoint commit failed/);
 
-    expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
-    const worktree = findExecWorktree(fixture.repo, taskId);
-    expect(worktree).not.toBeNull();
-    expect(git(worktree!.path, "diff", "--cached", "--name-only")).toBe("");
-    expect(worktreeStatusPaths(worktree!.path)).toEqual(
-      expect.arrayContaining([
-        `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
-        `execution/exec/plans/${taskId}-plan.md`,
-        `execution/exec/results/${taskId}-result.md`,
-      ]),
-    );
-    const failureLog = readFileSync(failureLogPath, "utf8");
-    expect(failureLog).toContain("api_key=[REDACTED]");
-    expect(failureLog).toContain("Test Files  1 failed | 120 passed (121)");
-    expect(failureLog).not.toContain("raw-checkpoint-secret");
+    const worktree = findExecWorktree(fixture.repo, "T-T-doc-010")!;
+    for (const repo of [fixture.repo, worktree.path]) {
+      expect(git(repo, "diff", "--cached", "--name-only")).toBe("");
+      expect(readFileSync(join(repo, changed), "utf8")).toBe("after\n");
+      expect(existsSync(join(repo, deleted))).toBe(false);
+    }
   });
 
   it("carries grade result and criteria through checkpoint, update and merge", () => {
