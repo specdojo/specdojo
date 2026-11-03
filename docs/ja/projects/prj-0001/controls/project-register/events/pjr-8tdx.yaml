@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5b9d632245b14f41b4bda5bab100ea5b
+  ts: "2026-11-03T10:21:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 生成する devcontainer に tmux の設定がないことへの対応を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の生成で tmux の設定を配置する
+    - field: description
+      from: ""
+      to: tmux を入れる構成で .devcontainer/tmux.conf を生成し、コンテナの起動時に ~/.tmux.conf へリンクする。既存の ~/.tmux.conf は上書きしない
+    - field: input
+      from: ""
+      to: '["このリポジトリの .devcontainer には tmux.conf（マウス操作・クリップボード・256 色の 6 行）があり、post-start.sh が ~/.tmux.conf へ ln -sfn でリンクしている。init --devcontainer と devcontainer scaffold が作る .devcontainer には tmux.conf も配置の処理もなく、post-start.sh もない（postCreateCommand だけ）（2026-11-03）","tmux は --tmux を付けるか preset が recommended 以上のときに apt で入る。ホストから tmux で入る使い方は remote-host 開発ガイドで案内している（2026-11-03）","利用者の判断: tmux を入れる構成では、このリポジトリと同じ内容の tmux.conf を生成し、起動時に ~/.tmux.conf へリンクする。利用者が既に ~/.tmux.conf を持っている場合は上書きしない。生成物のテストと remote-host 開発ガイドの説明を足す（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: devcontainer
