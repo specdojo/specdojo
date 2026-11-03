@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-pqg3-sidebar-kata-menus
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-03T03:24:41Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T04:10:40Z"
+  conclusion: サイドメニューに非推奨でない Kata 306 件（rulebook 107・recipe 23・sample 108・template 68）を載せ、載っていない Kata を検出するテストを足し、文書サイトのビルドが通ることを確かめた
   derived_from:
     - PJR-BC45
   commit_type: docs
