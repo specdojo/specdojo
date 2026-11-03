@@ -83,3 +83,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_4d3bee2178fd4d68a750545779073e3a
+- v: 1
+  id: reg_445068c53dc7487585b8fe459af2d15c
+  ts: "2026-11-03T22:50:16Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: 利用者が期限を今月末に決めた
+  changes:
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_512c9803970c456c8a6fb7d87a72fcb8

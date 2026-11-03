@@ -12,6 +12,7 @@ specdojo:
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-03T10:21:19Z"
+  due_on: "2026-11-30"
   commit_type: feat
   commit_scope: devcontainer
 ---
