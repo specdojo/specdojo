@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9aba51d4199f415ba744688804c88bde
+- v: 1
+  id: reg_f199d01189b341089189321991d6f077
+  ts: "2026-11-03T22:50:47Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: runner が書く exec/ の下の実行管理ファイルを executor の変更範囲から外し、それだけで対象になる検査を求めないようにした。plan の共通規約と executor への指示も合わせた
+  previous_event_id: reg_afabe79089294ffe8cb92c4889866bbc

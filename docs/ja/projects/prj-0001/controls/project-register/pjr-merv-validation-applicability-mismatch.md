@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-merv-validation-applicability-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T12:53:22Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T22:50:47Z"
+  conclusion: runner が書く exec/ の下の実行管理ファイルを executor の変更範囲から外し、それだけで対象になる検査を求めないようにした。plan の共通規約と executor への指示も合わせた
   derived_from:
     - PJR-GQN3
   commit_type: fix
