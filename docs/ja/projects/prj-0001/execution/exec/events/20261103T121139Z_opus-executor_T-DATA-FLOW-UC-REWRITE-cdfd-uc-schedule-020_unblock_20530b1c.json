@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-03T12:11:39Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020",
+  "by": "opus-executor",
+  "msg": "resume executor from persisted pipeline state (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/20261103T115020710Z-dd95693f/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020/20261103T115020710Z-dd95693f/pipeline-state.json",
+    "pipeline_run_id": "20261103T115020710Z-dd95693f",
+    "pipeline_resume_claimed": "true"
+  }
+}
