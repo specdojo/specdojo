@@ -4,10 +4,9 @@ import { createRequire } from "node:module";
 
 export const D2_VERSION = "0.9.0";
 export const D2_LAYOUT = "elk";
+// VitePress bundles markdown-it internally, so depend on it directly to parse fences the same way.
 const require = createRequire(import.meta.url);
-// Use the same Markdown parser as VitePress, including nested and long fences.
-const vitepressRequire = createRequire(require.resolve("vitepress/package.json"));
-const MarkdownIt = vitepressRequire("markdown-it");
+const MarkdownIt = require("markdown-it");
 const parser = new MarkdownIt({ html: true });
 
 export function extractD2Blocks(markdown, file = "") {
