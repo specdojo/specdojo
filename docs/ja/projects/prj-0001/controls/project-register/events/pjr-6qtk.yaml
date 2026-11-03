@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c4e052ba16bf4f78b9bf555202660e3e
+  ts: "2026-11-03T01:34:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 全体概要の書き直しに Kata を合わせる作業を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 全体概要の Kata を書き直した全体概要に合わせる
+    - field: description
+      from: ""
+      to: cdfd-overview の rulebook・recipe・sample・template を、目的を全体像とし、区分を代表ノードにした 3 つの図の書き方に合わせる
+    - field: input
+      from: ""
+      to: '["PJR-PZ6H・05QS・5Q7R・KV58 で全体概要（cdfd-overview）を 7 区分を代表ノードとする 3 つの図に書き直した。Kata の 4 文書（status は ready）はその書き方を定めていない（2026-11-03）","利用者の判断: 目的は全体像を示すことにし、PO の承認や引き継ぎなどの作業や読み手の役割は書かない。図の題は業務の言葉にする（2026-11-03）","利用者の判断: 区分から区分への実行要求の線（対応要求・実行要求など）は、名詞のラベルを付けて認める。完成判定の「対象範囲と領域分割を PO が承認した記録を特定できる」は ready に上げる手続きとして残す（2026-11-03）","Orchestrator はデータの図に置かず、指示の図を別に設ける。Orchestrator からは直接読み書きするデータストアにだけ線を引き、CLI 経由のものは区分からの線で表す（2026-11-03）","cdfd-d2-rulebook は直さない。sample の図は今の方式（データストアの区分）の例として残す（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GEZN"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: rulebooks
