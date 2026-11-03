@@ -613,6 +613,7 @@ export async function runPreparedTask(
               failureLogPath: integrateLogPath(pipelineStatePath),
               productsIntegratedByCaller: true,
               productRootNewFiles,
+              allowEditedPlan: prepared.pipelineResumeStage === "executor",
             });
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
@@ -653,6 +654,7 @@ export async function runPreparedTask(
                 taskId: prepared.task.id,
                 failureLogPath: integrateLogPath(pipelineStatePath),
                 productsIntegratedByCaller: true,
+                allowEditedPlan: prepared.pipelineResumeStage === "executor",
               });
             },
             mergeProject: () =>

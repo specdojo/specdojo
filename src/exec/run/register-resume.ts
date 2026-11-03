@@ -457,12 +457,17 @@ export async function resumeSingleRegisterItemWorktree(
     });
   }
 
-  // plan は root（統合ブランチ）の checkpoint 済みファイルを正本にする。worktree 側の plan は
-  // agent が書き換えられるため、再開のプロンプト入力には使わない。
+  // plan は原則として root（統合ブランチ）の checkpoint 済みファイルを正本にする。
+  // ただし --resume-from executor の再開では、利用者が worktree 内で直した plan を
+  // 優先して読み込む。runAgentPipeline へ渡す planPath は plan_ref の計算基準になるため
+  // root 側のパスを維持する。
   const planPath = resolve(repoRoot, artifacts.planRef);
-  if (!existsSync(planPath))
+  const worktreePlanPath = resolve(worktree.path, artifacts.planRef);
+  const promptPlanPath =
+    target.stage === "executor" && existsSync(worktreePlanPath) ? worktreePlanPath : planPath;
+  if (!existsSync(promptPlanPath))
     return refuse(`plan not found for the resumed run: ${artifacts.planRef}`);
-  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const prompt = expandPromptRefs(readFileSync(promptPlanPath, "utf8"));
 
   if (target.stage === "executor") {
     const executor = resolveRegisterResumeExecutor(
@@ -543,6 +548,7 @@ export async function resumeSingleRegisterItemWorktree(
         bookkeepingPaths: bookkeepingPaths(),
         pipelineStatePath: resolve(worktree.path, outcome.stateRef),
         transitionReason: rateLimitRecoveryReason(outcome.rateLimitEvents) || undefined,
+        resumedExecutor: true,
       });
     return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
   }

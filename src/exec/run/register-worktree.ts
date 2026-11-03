@@ -186,6 +186,9 @@ export async function finalizeRegisterWorktreeRun(params: {
   // 統合段の再試行。前回の attempt が merge 済みで後段だけ失敗した場合に備え、
   // 取り込み済みの exec ブランチを再 merge せず後続の手順を続ける。
   resumedIntegration?: boolean;
+  // executor 段から再開した run の場合に true。worktree 内で直した plan を
+  // commitWorktreeChanges でコミット対象に含める。
+  resumedExecutor?: boolean;
   // runner 自身が判定した失敗理由（統合再開前の親検証の失敗など）。agent の stderr から理由を
   // 抜き出さず、この文言を waiting の理由にする。
   runnerBlockReason?: string;
@@ -379,6 +382,7 @@ export async function finalizeRegisterWorktreeRun(params: {
           failureLogPath: integrateLogPath(params.pipelineStatePath),
           productsIntegratedByCaller: true,
           productRootNewFiles,
+          allowEditedPlan: params.resumedExecutor === true,
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

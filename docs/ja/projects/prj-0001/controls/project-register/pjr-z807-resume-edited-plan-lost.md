@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-01T12:30:43Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration, typecheck"
   derived_from:
     - PJR-RKHR
 ---
@@ -41,12 +40,12 @@ exec resume --resume-from executor で worktree の plan を直して再開す�
 
 ## 4. 対応方針
 
-| 項目     | 内容                                                                                                                       |
-| -------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 項目     | 内容                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 原因     | `commitWorktreeChanges` のコミット対象判定（`isCommitTargetPath` および `resolveCommitScope`）が `exec/plans/` を常に除外していたため、worktree で直した plan が exec branch にコミットされず、統合時のマージで root 側の checkpoint 版で上書きされ、worktree 撤去時に破棄されていた。また登録簿の `--resume-from executor` 再開では、再開準備時（`register-resume.ts`）に root 側の plan を読んでおり直した plan が executor のプロンプトに渡っていなかった |
-| 対応策   | executor から再開した run を統合するときは、worktree の直した plan を記録として残す                                        |
-| 依存事項 | なし                                                                                                                       |
-| 完了条件 | 下記の条件をすべて満たすこと                                                                                               |
+| 対応策   | executor から再開した run を統合するときは、worktree の直した plan を記録として残す                                                                                                                                                                                                                                                                                                                                                                          |
+| 依存事項 | なし                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 完了条件 | 下記の条件をすべて満たすこと                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 完了条件の内訳。
 
@@ -70,7 +69,7 @@ exec resume --resume-from executor で worktree の plan を直して再開す�
 
 1. **直した plan のコミット許可**: `src/exec/worktree-ops-commit.ts` に `allowEditedPlan` オプションを追加した。`isCommitTargetPath` および `resolveCommitScope` で該当タスク自身の `planRel` をコミット対象として許容できるようにし、`assertNoAgentReadyPromotion` では成果物ではない plan をスキップするようにした。
 2. **executor 再開時の統合連携**: `src/exec/run/schedule-task.ts`（schedule 実行）および `src/exec/run/register-worktree.ts`（登録簿実行）の統合段で、executor から再開された run（`pipelineResumeStage === "executor"` / `resumedExecutor === true`）の場合に `allowEditedPlan: true` を `commitWorktreeChanges` へ渡すようにした。これにより、直した plan が exec branch にコミットされ、統合マージ後も履歴に残るようにした。plan を直さずに再開した場合や通常の run では `statusPaths` に plan が現れないため、従来のコミット・統合動作を維持する。
-3. **登録簿 executor 再開での plan 読み込み修正**: `src/exec/run/register-resume.ts` で `target.stage === "executor"` のとき、worktree 内の編集済み plan（`worktreePlanPath`）が存在すればそれを優先して読み込んで executor のプロンプトに渡すように修正した。
+3. **登録簿 executor 再開での plan 読み込み修正**: `src/exec/run/register-resume.ts` で `target.stage === "executor"` のとき、worktree 内の編集済み plan（`worktreePlanPath`）が存在すればそれを優先して読み込んで executor と reporter のプロンプトに渡すように修正した（`runAgentPipeline` が記録する `plan_ref` の計算基準となる `planPath` は root 側のパスを維持する）。
 4. **ガイドと履歴の更新**: `docs/ja/specdojo/guides/exec-operation-guide.md` の手順に、統合時に直した plan がコミットに含まれて元の plan で上書きされずに履歴に残る旨を追記した。また `CHANGELOG.md` の未公開節（`[Unreleased]`）に不具合修正を記録した。
 5. **テストの拡充**: `tests/src/exec/pipeline-e2e.integration.test.ts` および `tests/src/exec/register-pipeline-e2e.integration.test.ts` で、worktree の plan を編集して `--resume-from executor` で再開した際に、統合完了後の root の plan が直した plan と一致しコミットログに含まれること、および plan を直さずに再開した場合には余分な plan コミットが入らないことを検証するアサーションを追加した。
 

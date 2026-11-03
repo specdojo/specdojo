@@ -862,12 +862,27 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             (validation: { source: string }) => validation.source !== "runner",
           ),
         ).toBe(true);
+        let editedPlan: string | undefined;
+        const planRel = state.artifacts.plan_ref as string;
+        if (explicit) {
+          const originalPlan = readFileSync(join(worktree!, planRel), "utf8");
+          editedPlan =
+            originalPlan + "\n## Additional Instructions\n\nPreserve this edited plan in resume.\n";
+          writeFileSync(join(worktree!, planRel), editedPlan, "utf8");
+        }
         await runExec([...args, "--resume", ...(explicit ? ["--resume-from", "executor"] : [])]);
         expect(process.exitCode ?? 0).toBe(0);
         expect(readFileSync(ticketPath, "utf8")).toContain("item_status: review");
         expect(readFileSync(join(root, "docs/incomplete-artifact.md"), "utf8")).toContain(
           "completed implementation",
         );
+        const mergedFiles = git(root, "diff", "--name-only", "HEAD^1..HEAD");
+        if (explicit && editedPlan) {
+          expect(readFileSync(join(root, planRel), "utf8")).toBe(editedPlan);
+          expect(mergedFiles).toContain(planRel);
+        } else {
+          expect(mergedFiles).not.toContain(planRel);
+        }
         expect(execWorktreePath(root)).toBeNull();
       });
     },

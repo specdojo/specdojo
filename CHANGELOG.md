@@ -10,6 +10,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `exec resume --task <task-id> --resume-from executor` および `exec run --register <PJR-ID> --resume --resume-from executor` で worktree の plan を編集してから再開したとき、統合時に直した plan が破棄されて元の plan で上書きされる問題を修正しました。executor から再開した run の統合では worktree の直した plan をコミット対象に含め、統合の commit に履歴として残るようにしました。あわせて登録簿の executor 再開で worktree 内の編集済み plan を読み込むようにしました（PJR-Z807）。
+
 - schedule の `exec resume` で executor 段から再開するとき（`--resume-from executor` を含む）に `--executor-by` で元の claim の持ち主と別の agent を指定すると、claim が元の agent のまま残って統合前の完了確認（completion preflight）で止まる問題を修正しました。元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim を新しい executor へ移し、`complete` イベントも新しい executor で記録するようにしました。あわせて同一秒内に記録された `release` と再 `claim` のイベント順序を状態遷移に沿って解決するようにしました（PJR-FYN5）。
 
 - プロダクトの文書（`docs/ja/product/` など）だけを変更したタスクで、executor が `npm run validate:history-links` や `npm run validate:catalog`（`specdojo catalog validate` を含む）を `not_applicable`（または `not_run`）と報告したときに、runner が書く `exec/plans/`・`exec/results/` などの実行管理ファイルを理由に `blocked` になっていた問題を修正しました。検査の適用範囲の判定では runner が書く `exec/` 配下の記録を除外し、`validate:history-links` は履歴蓄積ファイル（`pjr-*.md`（`pjr-index.md` を除く）、または executor 自身が変更した既存の `exec/plans/**/*.md`・`exec/results/**/*.md`）の変更がある場合だけ、`validate:catalog` は `docs/ja/projects/` 配下の成果物・カタログの変更がある場合だけ求めるようにしました。executor 自身が履歴蓄積ファイルやカタログ・プロジェクト文書を変更した場合は従来どおり検査を求めます（PJR-MERV）。

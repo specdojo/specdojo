@@ -1,0 +1,50 @@
+## 対応内容のまとめ
+
+プロジェクト登録簿の課題 **PJR-Z807「executor から再開したとき、直した plan が統合で元の plan に置き換わる」** に対応しました。
+
+### 1. 原因の特定
+
+1. **コミット対象判定での一律除外**:
+   - `src/exec/worktree-ops-commit.ts` の `isCommitTargetPath` において、`normalized.startsWith(`${executionRel}/exec/plans/`)` が常に `false` を返していました。
+   - さらに schedule 由来のタスクでは `resolveCommitScope` の `allowedFiles` にも `planRel` が含まれていませんでした。
+   - このため、利用者が worktree の plan を編集して指示を補っても、統合段の `commitWorktreeChanges` のコミット対象（targets）に含まれず、exec branch にコミットされませんでした。
+2. **統合・撤去時の破棄**:
+   - exec branch に直した plan がコミットされないまま `mergeWorktreeIntoCurrent` が実行されると、root 側で解放された古い checkpoint 時の plan がマージコミットに残り、worktree 撤去時（`removeWorktree`）に未コミット差分として残った直した plan が「Discarding regenerated files in worktree: ...-plan.md」として `--force` で破棄されていました。
+3. **登録簿 executor 再開での読み込み先**:
+   - `src/exec/run/register-resume.ts` において、`--resume-from executor` 再開時でも root 側の plan（`artifacts.planRef`）を読んでプロンプトを構築していたため、worktree 内で直した plan が executor のプロンプトにも渡っていませんでした。
+
+---
+
+### 2. 変更内容
+
+1. **直した plan のコミット許可**:
+   - [`src/exec/worktree-ops-commit.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts):
+     - `isCommitTargetPath`・`resolveCommitScope`・`partitionCommitTargets`・`commitTargetPaths`・`commitWorktreeChanges` に `allowEditedPlan` オプションを追加しました。
+     - `allowEditedPlan: true` の場合、該当タスク自身の `planRel` をコミット対象として許容し、成果物ではない plan を `assertNoAgentReadyPromotion` の検査対象から除外しました。
+2. **executor 再開時の統合段連携**:
+   - [`src/exec/run/schedule-task.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/run/schedule-task.ts):
+     - schedule 実行の統合段で、`allowEditedPlan: prepared.pipelineResumeStage === "executor"` を `commitWorktreeChanges` へ渡すようにしました。
+   - [`src/exec/run/register-worktree.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/run/register-worktree.ts):
+     - 登録簿実行の `finalizeRegisterWorktreeRun` に `resumedExecutor?: boolean` を追加し、統合段の `commitWorktreeChanges` へ `allowEditedPlan: params.resumedExecutor === true` を渡すようにしました。
+3. **登録簿 executor 再開時の worktree plan 読み込み**:
+   - [`src/exec/run/register-resume.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/run/register-resume.ts):
+     - `target.stage === "executor"` のとき、worktree 内の編集済み plan（`worktreePlanPath`）が存在すればそれを優先して読み込み、プロンプトを構築するように修正しました。また、`finalizeRegisterWorktreeRun` の呼び出し時に `resumedExecutor: true` を渡すようにしました。
+4. **ガイドおよび CHANGELOG の更新**:
+   - [`docs/ja/specdojo/guides/exec-operation-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/docs/ja/specdojo/guides/exec-operation-guide.md):
+     - 停止後に plan の指示を補う再開手順に、統合時に直した plan がコミットに含まれて元の plan で上書きされずに履歴に残る旨を追記しました。
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/CHANGELOG.md):
+     - 未公開の版（`[Unreleased]`）の `### 不具合修正` に PJR-Z807 の修正内容を追記しました。
+5. **個票の更新**:
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md):
+     - 4. 対応方針の原因および 5. 対応結果（解決内容・確認結果・再発防止策）を記載しました。
+6. **統合テストの拡充**:
+   - [`tests/src/exec/pipeline-e2e.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/tests/src/exec/pipeline-e2e.integration.test.ts):
+     - schedule の executor 再開において、worktree の plan を直して再開した際に統合コミットに直した plan が含まれ root の plan と一致すること、および plan を直さずに再開した場合には統合コミットに余分な plan 差分が入らないことを検証するアサーションを追加しました。
+   - [`tests/src/exec/register-pipeline-e2e.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/tests/src/exec/register-pipeline-e2e.integration.test.ts):
+     - register の executor 再開において、worktree の plan を直して再開した際に統合後の root の plan が直した plan と一致することを検証するアサーションを追加しました。
+
+---
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-Z807: executor 再開時に worktree で直した plan を統合コミットへ含め、元の plan で上書きされずに履歴に残るよう修正しました。","handoff":["executor 再開時に worktree の編集済み plan を commitWorktreeChanges の対象に含めるよう allowEditedPlan を導入し、schedule と register の両再開経路で統合 commit に直した plan が残ることを確認しました。また plan を直さずに再開した場合は不要な差分が入らない従来の動作を維持しています。","後続の reporter / runner 段で親検証の完了と統合、および個別票・登録簿の review 遷移の確認をお願いします。"],"validations":[{"command":"specdojo catalog validate --project prj-0001","status":"passed","summary":"成果物カタログ検証に成功（OK: 26 catalogs, OK: dct-index.yaml）"}]}
+</specdojo_executor_evidence>

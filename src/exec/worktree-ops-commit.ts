@@ -81,9 +81,15 @@ export function taskPaths(
   };
 }
 
-export function isCommitTargetPath(path: string, executionRel: string, resultRel: string): boolean {
+export function isCommitTargetPath(
+  path: string,
+  executionRel: string,
+  resultRel: string,
+  allowedPlanRel?: string,
+): boolean {
   const normalized = path.replaceAll("\\", "/");
   if (normalized === resultRel) return true;
+  if (allowedPlanRel && normalized === allowedPlanRel) return true;
   // doc-index は root と worktree の双方で再生成される生成物。commit-target に含めると
   // merge 時の overlap ガードで衝突するため除外する。
   if (normalized === ".specdojo/doc-index.json") return false;
@@ -133,14 +139,14 @@ function assertNoAgentReadyPromotion(
   taskId: string,
   paths: string[],
 ): void {
-  const { resultRel } = taskPaths(context, taskId);
+  const { planRel, resultRel } = taskPaths(context, taskId);
   const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
   if (resultContent && parseResultTaskIdentity(resultContent)?.execution === "human") {
     return;
   }
   const promoted: string[] = [];
   for (const relPath of paths) {
-    if (relPath === resultRel) continue;
+    if (relPath === resultRel || relPath === planRel) continue;
     const absPath = resolve(worktree.path, relPath);
     if (!existsSync(absPath)) continue; // deletion is not a promotion
     if (deliverableStatus(readFileSync(absPath, "utf8"), relPath) !== "ready") continue;
@@ -287,6 +293,7 @@ export function resolveCommitScope(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
   taskId: string,
+  options: { allowEditedPlan?: boolean } = {},
 ): { scope: CommitScope | null; unresolvedTargets: string[] } {
   const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
   const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
@@ -300,7 +307,11 @@ export function resolveCommitScope(
 
   if (identity.mode === "review") {
     return {
-      scope: { mode: "review", allowedFiles: [resultRel], allowedDirPrefixes: [] },
+      scope: {
+        mode: "review",
+        allowedFiles: [resultRel, ...(options.allowEditedPlan ? [planRel] : [])],
+        allowedDirPrefixes: [],
+      },
       unresolvedTargets: [],
     };
   }
@@ -321,7 +332,7 @@ export function resolveCommitScope(
     );
   }
 
-  const allowedFiles = new Set<string>([resultRel]);
+  const allowedFiles = new Set<string>([resultRel, ...(options.allowEditedPlan ? [planRel] : [])]);
   const unresolvedTargets: string[] = [];
   const lookup = headDocIndexLookup(worktree.path);
   for (const target of identity.targets ?? []) {
@@ -462,12 +473,14 @@ export function partitionCommitTargets(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
   taskId: string,
+  options: { allowEditedPlan?: boolean } = {},
 ): { targets: string[]; outOfScope: string[]; unresolvedTargets: string[] } {
-  const { executionRel, resultRel } = taskPaths(context, taskId);
+  const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
+  const allowedPlanRel = options.allowEditedPlan ? planRel : undefined;
   const candidates = statusPaths(worktree.path).filter((path) =>
-    isCommitTargetPath(path, executionRel, resultRel),
+    isCommitTargetPath(path, executionRel, resultRel, allowedPlanRel),
   );
-  const { scope, unresolvedTargets } = resolveCommitScope(context, worktree, taskId);
+  const { scope, unresolvedTargets } = resolveCommitScope(context, worktree, taskId, options);
   if (!scope) {
     // 人間の作業は agent の一時ファイル対策の対象外とし、従来どおり除外リスト方式で commit する。
     if (
@@ -502,8 +515,9 @@ export function commitTargetPaths(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
   taskId: string,
+  options: { allowEditedPlan?: boolean } = {},
 ): string[] {
-  return partitionCommitTargets(context, worktree, taskId).targets;
+  return partitionCommitTargets(context, worktree, taskId, options).targets;
 }
 
 // markdownlint-cli の終了コード。1 だけが記法違反を表し、それ以外は実行環境の問題である。
@@ -741,11 +755,12 @@ export function commitWorktreeChanges(params: {
   // プロジェクト側だけを commit しない。統合後の撤去でプロダクトの変更を失わないため。
   productsIntegratedByCaller?: boolean;
   productRootNewFiles?: readonly string[];
+  allowEditedPlan?: boolean;
 }): { targets: string[]; committed: boolean } {
-  const { context, worktree, taskId } = params;
+  const { context, worktree, taskId, allowEditedPlan } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
   if (!params.productsIntegratedByCaller) assertNoPendingProductChanges(worktree);
-  let partition = partitionCommitTargets(context, worktree, taskId);
+  let partition = partitionCommitTargets(context, worktree, taskId, { allowEditedPlan });
   const scopeWarnings = [
     ...partition.unresolvedTargets.map(
       (target) => `commit-scope: unresolved target doc id (not committable): ${target}\n`,
@@ -763,7 +778,7 @@ export function commitWorktreeChanges(params: {
     mkdirSync(resolve(params.scopeLogPath, ".."), { recursive: true });
     appendFileSync(params.scopeLogPath, scopeWarnings.join(""), "utf8");
     // 追記したログ自体を commit 対象に含めるため、分類をやり直す。
-    partition = partitionCommitTargets(context, worktree, taskId);
+    partition = partitionCommitTargets(context, worktree, taskId, { allowEditedPlan });
   }
 
   const { resultRel } = taskPaths(context, taskId);
@@ -779,7 +794,7 @@ export function commitWorktreeChanges(params: {
     if (params.scopeLogPath && !params.dryRun) {
       mkdirSync(resolve(params.scopeLogPath, ".."), { recursive: true });
       appendFileSync(params.scopeLogPath, rootNewWarning, "utf8");
-      partition = partitionCommitTargets(context, worktree, taskId);
+      partition = partitionCommitTargets(context, worktree, taskId, { allowEditedPlan });
     }
   }
 
@@ -787,7 +802,7 @@ export function commitWorktreeChanges(params: {
   if (allRootNewFiles.length > 0 && !params.dryRun) {
     const resultPath = resolve(worktree.path, resultRel);
     if (recordRootNewFilesHandoff(resultPath, allRootNewFiles)) {
-      partition = partitionCommitTargets(context, worktree, taskId);
+      partition = partitionCommitTargets(context, worktree, taskId, { allowEditedPlan });
     }
   }
 
@@ -839,7 +854,7 @@ export function commitWorktreeChanges(params: {
   }
   stabilizeCommitTargets(
     worktree.path,
-    () => commitTargetPaths(context, worktree, taskId),
+    () => commitTargetPaths(context, worktree, taskId, { allowEditedPlan }),
     undefined,
     params.failureLogPath,
   );
