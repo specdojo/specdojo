@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0f16eca86b5747978cfd563aee25f287
+  ts: "2026-11-03T23:02:59Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: コードと文書のズレに気づける仕組みを決めるため decision として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: コードの変更と要件・仕様・設計の文書のズレに気づける仕組みを決める
+    - field: description
+      from: ""
+      to: 成果物と根拠のコードの対応（evidence\_refs）を使い、コードが変わったときに直すべき要件・仕様・設計の文書が分かり、直す作業につながる仕組み（対応の粒度、ズレの検出、変更時の知らせ、retrofit の自動起票、文書を先に直す運用）を決める
+    - field: input
+      from: ""
+      to: '["利用者の課題: 概念データフロー図（cdfd）を作ったが、機能を足すと cdfd の内容とコードがズレていく。トレーサビリティを確保し、コードが変わったら相応する要件定義・仕様書・設計書を直す、または直すことに気づけるようにしたい（2026-11-04）","既存の部品: カタログの `evidence_refs`（成果物ごとの根拠のコードのパス。cdfd-overview は src/specdojo.ts など粒度が粗い）、approach retrofit（`evidence_refs` を読み一致とズレを判定して直す。起票しないと動かない）、grade の `content_hash`（文書側の鮮度だけ）、`based_on` と trc-requirements-to-specs / trc-requirements-to-tests の rulebook（文書間の対応）、commit の Refs（コードの変更から登録簿の項目へたどれる）（2026-11-04）","候補の手: (1) `evidence_refs` をコマンドの領域のディレクトリ単位に整える、(2) 文書ごとに最後に照合した根拠のコードの版を記録し、それ以降に根拠が変わった文書を一覧にするコマンド（dashboard にも出す）、(3) todo の統合時に変えたファイルから `evidence_refs` を逆にたどり、関係する文書を result と申し送りに警告として出す、(4) routine で (2) の一覧を確かめ、ズレた文書ごとに retrofit の todo を起票する、(5) 大きな変更は change-request で文書を先に直してから実装する運用（2026-11-04）","推奨の順序は 1→2→3 で、4 は 2 の一覧が実用的な量に収まるのを確かめてから足す。照合の記録（最後に照合した版）を文書の frontmatter・result・カタログのどこに持つかが設計の要。今回の cdfd 3 文書を最初の対象にして試す（2026-11-04）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GEZN"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: register
