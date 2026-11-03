@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010",
+  "run_id": "20261103T085044055Z-aa723ca9",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-03T08:55:02.776Z",
+    "completed_at": "2026-11-03T09:04:19.072Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-uc-register.md              | 263 ++++++++++-----------\n 1 file changed, 119 insertions(+), 144 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "passed",
+      "summary": "変更した Markdown の整形完了。"
+    },
+    {
+      "source": "executor",
+      "command": "d2 --layout elk tmp/cdfd-uc-register-check/figure-1.d2 tmp/cdfd-uc-register-check/figure-1.svg",
+      "status": "passed",
+      "summary": "起票から実行結果までの図を描画。PNG でも配置を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "d2 --layout elk tmp/cdfd-uc-register-check/figure-2.d2 tmp/cdfd-uc-register-check/figure-2.svg",
+      "status": "passed",
+      "summary": "実行結果から完了記録までの図を描画。PNG でも配置を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "d2 --layout elk tmp/cdfd-uc-register-check/figure-3.d2 tmp/cdfd-uc-register-check/figure-3.svg",
+      "status": "passed",
+      "summary": "例外時の戻り図を描画。PNG でも配置を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "対象文書の draft 維持、有効な根拠、禁止記法の除去、入口イベントの原文、3図の direction: down を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "変更は Markdown のみで、YAML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines\n… output omitted …\no-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 38 problems (0 errors, 38 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3746 file(s), 178 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3746 file(s), 26 diagram(s), 26 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS C\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-CV8eOw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-grrj5G/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-2QWBnM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Ghz0wF/pjr-0001-t\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "cdfd-uc-register.md を Kata と全体概要に合わせて更新した。status は draft を維持。整形・D2 描画確認は成功し、親 runner の検査に引き継ぐ。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter 記録用：変更ファイルは `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md` のみ。pipeline 指示に従い result は編集していない。未解決事項・保護設定の変更提案はない。",
+    "進め方と実践の型の適用：指定の cdfd-uc-rulebook を章構成・必須要素・禁止事項の基準、cdfd-d2-rulebook を記法の基準、recipe を順序・受け渡し・描画確認の手順として使用した。併せて Mermaid rulebook も読み、参加単位・イベントなどの相違は主 rulebook を優先し、overview が採用する D2 を使用した。sample は役割表と任意の戻り図の形式だけを参照し、業務内容は転記していない。指示どおり template は読んでいない。",
+    "参照判断：対象文書、cdfd-overview、プロジェクト概要、共通規約と AGENTS.md 指定の運用メモを確認した。依存先の旧 cdfd-plan・cdfd-do・cdfd-check・cdfd-action は frontmatter で deprecated を確認し、有効な内容根拠から除外した。`based_on` と本文参照を cdfd-overview に更新した。既存の STSD 識別子は維持し、未宣言の文書を探索してパスや状態定義を具体化していない。",
+    "修正・統合・削除根拠：第1章の読者別用途を業務目的の1文へ変更。第3章は PDCA 区分を overview の区分へ修正し、実行サイクルの個別小節を役割表に統合した。第6章の引き渡し表と第7章の戻り先表は主 rulebook の禁止形式のため廃止し、承認・保留・却下・評価不能・完了未充足の業務内容を役割表と第5章の線ラベルへ移した。P-14 の役割表・図中の調整要求と条件イベント H-xx は全体概要への委譲に置き換えた。",
+    "既存内容の保持：P-02→P-07→P-08→P-11、既存9データストア、epic・track の対応、独立した評価、人間による承認と review から close への完了判断を維持した。既存の schedule 境界と補完依頼を overview の P-03・P-04・P-09 に対応付け、内部処理には展開していない。プロジェクト概要の判断・作業の継承という前提を目的へ反映した。3図を SVG・PNG に描画して配置を確認し、ラベル重複を修正した。一時ファイルは削除済み。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010/20261103T085044055Z-aa723ca9/executor.log",
+      "bytes": 4529,
+      "truncated": false
+    }
+  ]
+}
