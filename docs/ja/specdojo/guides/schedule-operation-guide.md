@@ -150,6 +150,12 @@ specdojo exec plan --project <project-id> --task <task-id>
 specdojo exec run --project <project-id> --plan <execution-path>/exec/plans/<task-id>-plan.md
 ```
 
+schedule のタスクから plan を生成するときは、Prettier による整形・ファイルへの書き込みより前に、phase の `description` を展開した plan 全体を markdownlint で検査します。箇条書きの前に空行がない場合（MD032）などは、タスク ID・plan のパス・生成内容の行番号・規則名を表示して停止し、既存の plan は上書きしません。表示する行番号は strategy YAML ではなく、整形前の plan に対する番号です。strategy の説明を修正し、`schedule build --track <track> --force` でトラックを更新してから plan を再生成してください。
+
+検査には利用リポジトリの markdownlint を優先し、見つからなければ SpecDojo 側のインストールを使います。どちらにもない場合は生成を停止するため、利用リポジトリで `npm install --save-dev markdownlint-cli` を実行してください。規則はリポジトリ直下の `.markdownlint.jsonc` / `.markdownlint.json` / `.markdownlint.yaml` / `.markdownlint.yml`（この順で最初にあるもの）と、上位ディレクトリを含む `.markdownlintrc` を読み、`extends` も解決します。設定がない場合は SpecDojo の標準規則を使います。CLI2 固有の設定や hook の独自ルールはこの検査の対象外です。生成履歴が `.markdownlintignore` に含まれていても、生成時の検査は行います。
+
+同じ検査は `exec run --auto` の plan 生成でも働き、`exec run --auto --dry-run` でも claim・checkpoint commit・agent 起動より前に Markdown の違反を検出できます。`exec run --task <task-id> --dry-run` のように plan を生成しない経路では検査しないため、事前確認には `exec plan --task <task-id>` を使ってください。
+
 schedule に無い成果物を catalog から直接 plan 化する場合は `--deliverable <local_id>` を使います。
 
 ```bash

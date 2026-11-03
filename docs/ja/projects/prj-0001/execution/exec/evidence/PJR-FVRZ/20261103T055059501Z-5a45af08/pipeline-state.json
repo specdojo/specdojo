@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-FVRZ",
+  "run_id": "20261103T055059501Z-5a45af08",
+  "updated_at": "2026-11-03T06:11:51.474Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-03T05:50:59.501Z",
+      "completed_at": "2026-11-03T05:53:31.701Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-FVRZ/20261103T055059501Z-5a45af08/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-03T06:00:46.708Z",
+      "completed_at": "2026-11-03T06:01:44.469Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-fvrz-20261103T052539Z-18a09ea8-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-03T06:11:51.474Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection error as a failure when no fallback is configured; Test Files  2 failed | 201 passed (203); Tests  2 failed | 3344 passed (3346)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-fvrz-20261103T052539Z-18a09ea8-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-fvrz-20261103T052539Z-18a09ea8-result.md"
+  }
+}
