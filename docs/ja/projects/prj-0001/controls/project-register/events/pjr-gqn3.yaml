@@ -44,3 +44,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-PRYZ"]'
+- v: 1
+  id: reg_4fb055e09e374500b3e38fd5b410ea34
+  ts: "2026-11-03T12:52:17Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: track data-flow-uc-rewrite の 6 タスクが done になり、利用者が 3 文書を確かめて close を承認した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: cdfd-uc-register・cdfd-uc-schedule・cdfd-uc-routine を、直したユースケース別 CDFD の Kata に合わせて 2 段（書き直しと磨き込み）で書き直した。目的を系統の目的にし、実行サイクルを 1 ノードにし、例外時の戻りを省かず図を分け、全図の線を 15 本以下にした
+  previous_event_id: reg_50cca015dabb4d98b0e30b33bb9802cb
