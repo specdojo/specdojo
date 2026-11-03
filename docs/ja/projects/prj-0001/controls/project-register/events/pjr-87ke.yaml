@@ -47,3 +47,29 @@
     - field: commit_scope
       from: ""
       to: rulebooks
+- v: 1
+  id: reg_8f48a138f7cc4ea38eab8e8c3d5b2908
+  ts: "2026-11-03T10:12:01Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8206cb00af0d40378e4ebe9f961bf6c0
+- v: 1
+  id: reg_ff0e9d2dbb334394883430444642ab3c
+  ts: "2026-11-03T10:29:44Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8f48a138f7cc4ea38eab8e8c3d5b2908
