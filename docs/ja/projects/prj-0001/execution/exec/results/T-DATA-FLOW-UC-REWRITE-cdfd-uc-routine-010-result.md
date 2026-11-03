@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010-plan.md
   started_at: "2026-11-03T08:52:20.008Z"
+  completed_at: "2026-11-03T09:40:01.676Z"
   agent: opus-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md` を、`cdfd-uc-rulebook` および `cdfd-d2-rulebook` の Kata と `cdfd-overview` に基づいて書き直しました。
+- grade 指摘の F001 および F002 の原因となっていた未解決の `_TODO_` 行を削除し、整合性を確保しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md`: Kata および `cdfd-overview` に基づく構造的な書き直しを実施。目的の記述を整理し、禁止されていた「引き渡し」「例外時の戻り先」の章を削除したほか、D2 図の最適化と linter 指摘のあった `_TODO_` の解消を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 未決事項として `_UNDECIDED_` が 2 件残っている（中断した試行の復旧と停止期間の補完範囲を人が判断する条件、定期実行全体の重複起動にスキップの方針を当てるか）。決定者は PM・OPS・ARC・QE。
+- `stsd-job-run` と `stsd-task-execution` は未作成のため、適用範囲の「対象外」に ID をインラインコードで仮置きしている。整備されたら wikilink に置き換える。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+前回試行時の編集内容が Kata および `cdfd-overview` と整合していることを確認し、不適合な箇所および grade 指摘の `_TODO_` 行を削除することで、ガイドされた方針に沿った書き直しを完了させました。
