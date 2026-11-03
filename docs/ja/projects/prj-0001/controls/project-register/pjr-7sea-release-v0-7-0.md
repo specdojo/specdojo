@@ -35,13 +35,27 @@ specdojo 0.7.0 と @specdojo/docs-site 0.4.0 を公開する。@specdojo/docs-li
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- PJR-561Q・PJR-FVRZ・PJR-W7YX が close されている
+- `package.json` と `package-lock.json` の版が `0.7.0` で、`CHANGELOG.md` の `[Unreleased]` を `0.7.0` の節として日付を付けて確定している。`packages/docs-site` の `package.json` と `package-lock.json` の版が `0.4.0` で、`0.7.0` の節の冒頭に `@specdojo/docs-site` 0.4.0 を同時に公開することと変更内容を書いている。`packages/docs-lint` の版は変えない
+- `CHANGELOG.md` の `0.7.0` の節に、概念データフロー図の Kata の見直しと、docs-site のサイドメニューへの Kata の掲載を書いている
+- `packages/docs-site/.vitepress/config.mts.timestamp-*.mjs` を Git の管理から外し、`.gitignore` に足して、`npm pack` の配布物に含まれない
+- ルートと `packages/docs-lint`・`packages/docs-site`・`packages/vscode-specdojo` の `npm ci` が通り、クリーンな作業ツリーで `npm run check` が通る
+- `npm pack` の配布物（本体・docs-site）を空の Git リポジトリへ入れ、次の動作を確かめる
+  - `init` と `register add`、`exec run --register`（start から review まで）
+  - `exec run --auto --track` の選択（`--dry-run`）
+  - `kata show` で見直した概念データフロー図の rulebook が読める
+  - docs-site で D2 の図を含む文書がビルドできる
+- 公開候補が PR の merge commit で `main` へ入り、その commit を指す `v0.7.0`・`docs-site-v0.4.0` のタグからそれぞれの npm の公開 workflow が起動する。push・PR の merge・タグ・npm の公開の承認は利用者が行う
+- 公開後に npm の `latest` が `specdojo` は `0.7.0`、`@specdojo/docs-site` は `0.4.0` であること、タグで起動した workflow の結果、npm から入れた版の動作を確かめる
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                            | 担当                  | 状態 | メモ |
+| --- | ------------------------------------------------------------------------------- | --------------------- | ---- | ---- |
+| 1   | 版と CHANGELOG を確定し、一時ファイルを外し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | open | -    |
+| 2   | 配布物を空のリポジトリで試す                                                    | specdojo-orchestrator | open | -    |
+| 3   | PR・merge・タグ・公開の承認                                                     | PO                    | open | -    |
+| 4   | 公開後の確認                                                                    | specdojo-orchestrator | open | -    |
 
 ## 5. 対応結果
 
@@ -49,4 +63,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pm-orchestrator-playbook]]
+- [[prj-0001:pjr-2fv2-release-v0-6-0]]
