@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9c979e4d4ee9454ba78710c49a81a1eb
+  ts: "2026-11-03T23:51:59Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 業務仕様の量産の流れを試す epic を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務仕様の量産の流れをステータス定義（stsd）で試す
+    - field: description
+      from: ""
+      to: draft → editorial-review → Kata の手入れ → Kata の確定（人）→ retrofit → editorial-review → 磨き込みの流れを、ステータス定義（stsd、5 件）で 1 回通し、残りの業務仕様の epic に使えるかを確かめる
+    - field: input
+      from: ""
+      to: '["利用者の方針: cdfd ができたので、以降の業務仕様は現行の実装をベースに記述する。複数の epic を起票して順に実行する。Kata（rulebook・recipe など）が十分でないため、1 つ作って Kata を磨き込み、同じ種類の文書を一気に作る。いきなり bootstrap より draft を先に入れる。冗長な記述は editorial-review で抜き出し、Kata が原因のものは Kata の手入れに回す（2026-11-04）","業務仕様の epic の順の案: 用語集（1）→ データモデル（bdd・cdsd・stsd・cld・ccd、32）→ 業務モデル（bps・br・bes、43）→ システム化機能・画面・外部 I/F（4）。カタログ（`dct-*.yaml`）は概念データフローの再編の前に作ったため、各 epic の最初に CDFD に合わせて見直す（catalog-planning）（2026-11-04）","流れの各段: (1) draft で代表の成果物を 1 つ、(2) editorial-review、(3) `*-maintenance` で Kata が原因の指摘を反映、(4) Kata の確定（人、ゲート）、(5) retrofit で残りを実装から並列に作成、(6) editorial-review、(7) fully-guided でこの文書だけの指摘を反映。Kata が原因の指摘がたまれば (3) へ戻す（2026-11-04）"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: stsd-pilot
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CYG0"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-1BRQ"]'
