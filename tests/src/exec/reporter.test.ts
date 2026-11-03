@@ -842,6 +842,142 @@ describe("reporter structured output", () => {
         }),
       ).toMatchObject({ outcome: "complete", block_reason: "" });
     });
+
+    it.each([
+      ["npm run validate:history-links", "not_applicable"],
+      ["npm run validate:history-links", "not_run"],
+      ["node packages/docs-lint/bin/specdojo-docs-lint.js history-links", "not_applicable"],
+      ["npx specdojo-docs-lint history-links", "not_applicable"],
+      ["npm run validate:catalog", "not_applicable"],
+      ["npm run validate:catalog", "not_run"],
+      ["node --import tsx tools/catalog-validate-if-configured.mjs", "not_applicable"],
+    ] as const)(
+      "does not block %s reported as %s when only product docs and runner-written plan/result changed",
+      (command, status) => {
+        const input = evidence();
+        input.changes = [
+          {
+            path: "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md",
+            status: "M",
+          },
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/plans/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020-plan.md",
+            status: "??",
+          },
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020-result.md",
+            status: "M",
+          },
+        ];
+        input.attempt_changes = [
+          {
+            path: "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md",
+            status: "M",
+          },
+        ];
+        input.validations = [
+          {
+            source: "executor",
+            command,
+            status,
+            summary: "プロダクトの文書のみ変更のため適用外",
+            ...(status === "not_applicable"
+              ? { reason: "変更がプロダクトの文書のみで対象外であるため" }
+              : {}),
+          },
+        ];
+
+        expect(
+          deriveReporterFacts(input, {
+            packageScripts: {
+              "validate:history-links":
+                "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+              "validate:catalog": "tsx src/specdojo.ts catalog validate",
+            },
+            packageDependencies: new Set(["specdojo", "@specdojo/docs-lint"]),
+            specdojoConfig: catalogConfig,
+          }),
+        ).toMatchObject({ outcome: "complete", block_reason: "" });
+      },
+    );
+
+    it.each([
+      {
+        command: "npm run validate:history-links",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/controls/project-register/pjr-merv-validation-applicability-mismatch.md",
+            status: "M",
+          },
+        ],
+      },
+      {
+        command: "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/controls/project-register/pjr-merv-validation-applicability-mismatch.md",
+            status: "M",
+          },
+        ],
+      },
+      {
+        command: "npm run validate:history-links",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/results/old-result.md",
+            status: "M",
+          },
+        ],
+        attemptChanges: [
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/results/old-result.md",
+            status: "M",
+          },
+        ],
+      },
+      {
+        command: "npm run validate:catalog",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+            status: "M",
+          },
+        ],
+      },
+    ])(
+      "still blocks $command reported as not_applicable when the executor changed history or catalog files",
+      ({ command, changes, attemptChanges }) => {
+        const input = evidence();
+        input.changes = changes;
+        if (attemptChanges) {
+          input.attempt_changes = attemptChanges;
+        }
+        input.validations = [
+          {
+            source: "executor",
+            command,
+            status: "not_applicable",
+            summary: "適用外として誤申告",
+            reason: "対象ファイルを変更していない",
+          },
+        ];
+
+        expect(
+          deriveReporterFacts(input, {
+            packageScripts: {
+              "validate:history-links":
+                "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+              "validate:catalog": "tsx src/specdojo.ts catalog validate",
+            },
+            packageDependencies: new Set(["specdojo", "@specdojo/docs-lint"]),
+            specdojoConfig: catalogConfig,
+          }),
+        ).toMatchObject({
+          outcome: "blocked",
+          block_reason: `executor validation failed or not run: ${command}`,
+        });
+      },
+    );
   });
 
   describe("index build owned by the runner", () => {
