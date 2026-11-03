@@ -41,3 +41,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-SJQC"]'
+- v: 1
+  id: reg_9d83057ae863463abe2619e686e0771c
+  ts: "2026-11-03T12:52:43Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: 全体概要と詳細 3 文書の再編が終わり、子の epic PJR-GQN3 も完了し、利用者が close を承認した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: 概念データフローを、全体概要（7 区分の 3 つの図）と系統別の詳細 3 文書（register・schedule・routine）に再編し、旧 7 文書を非推奨にした。Kata（全体概要・ユースケース別）も合わせて見直した
+  previous_event_id: reg_5802c04a2f0e424b91cdda5cb91813d8
