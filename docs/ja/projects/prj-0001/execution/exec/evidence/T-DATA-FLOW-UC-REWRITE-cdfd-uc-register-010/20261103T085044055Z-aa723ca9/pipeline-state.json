@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010",
+  "run_id": "20261103T085044055Z-aa723ca9",
+  "updated_at": "2026-11-03T09:28:19.922Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-03T08:55:02.776Z",
+      "completed_at": "2026-11-03T09:04:19.889Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010/20261103T085044055Z-aa723ca9/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-03T09:23:19.280Z",
+      "completed_at": "2026-11-03T09:27:49.895Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-03T09:27:51.025Z",
+      "completed_at": "2026-11-03T09:28:19.922Z",
+      "artifact_ref": null
+    }
+  }
+}
