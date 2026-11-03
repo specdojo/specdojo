@@ -92,3 +92,16 @@
       from: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-merv-20261103T130253Z-9fc08e8a-result.md:39:12 error MD038/no-space-in…"
       to: "-"
   previous_event_id: reg_a20459aeb3a64b2ba31e64e790ab65d2
+- v: 1
+  id: reg_afabe79089294ffe8cb92c4889866bbc
+  ts: "2026-11-03T15:40:14Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9aba51d4199f415ba744688804c88bde
