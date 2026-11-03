@@ -14,7 +14,7 @@ SpecDojo を活用したプロジェクト運営の全体概要について、�
 
 ## 1. 目的
 
-SpecDojo を活用した仕様駆動開発について、PO がプロジェクト構成の構築・管理、3 系統（register・schedule・routine）、実行サイクル、文書の廃棄の業務境界および 14 領域の分割を承認し、後続の詳細設計や検証へ引き継ぐための全体像を示す。
+Spec道の道場である SpecDojo でプロジェクトを進めるときの業務の全体像として、7 つの区分のプロセス領域と、それらが読み書きするデータの関係を示す。
 
 ## 2. 適用範囲
 
@@ -115,9 +115,9 @@ SpecDojo を活用した仕様駆動開発について、PO がプロジェク�
 
 ## 5. 概念データフロー（概要）
 
-「プロセス領域」のうち Orchestrator を除く区分を代表ノードとし、データの受け渡しがある区分をトランザクションデータとマスタ・構成データの 2 図に分けて示す。Orchestrator から 6 区分への指示とデータストアの直接の読み書きは「Orchestrator の調整」の図に示す。
+「プロセス領域」の区分ごとに、PDCA のプロセスとデータの関係、プロセスを実行する設定・構成情報の流れ、Orchestrator による PDCA の調整の 3 つの図で示す。
 
-### 5.1. トランザクションデータの流れ
+### 5.1. PDCA のプロセスとデータの関係
 
 ```d2
 direction: down
@@ -238,9 +238,9 @@ layout_top -> schedule_sys: {style.opacity: 0}
 layout_top -> routine_sys: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表し（物の流れは対象外）、マスタ・構成データの図と register 系・schedule 系・routine 系・実行サイクルを共有し、Orchestrator の指示と直接の読み書きは「Orchestrator の調整」に示す。
+register・schedule・routine の 3 系統が計画を作り、実行サイクルが計画を受けて成果物と記録を残し、評価と報告が次の計画につながる関係を示す。
 
-### 5.2. マスタ・構成データの流れ
+### 5.2. プロセスを実行する設定・構成情報の流れ
 
 ```d2
 direction: down
@@ -338,9 +338,9 @@ schedule_sys -> exec_cycle: {style.opacity: 0}
 routine_sys -> exec_cycle: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」を参照し、`->`・`<-` は情報・実行要求の流れを表し（物の流れは対象外）、トランザクションデータの図と register 系・schedule 系・routine 系・実行サイクルを共有し、Orchestrator の指示と直接の読み書きは「Orchestrator の調整」に示す。
+プロジェクト構成の構築・管理が整えた稼働構成と Kata、各系統が定めたカタログ・戦略・定期実行・ジョブの定義を、実行サイクルが使う流れを示す。
 
-### 5.3. Orchestrator の調整
+### 5.3. Orchestrator による PDCA の調整
 
 ```d2
 direction: down
@@ -434,7 +434,7 @@ schedule_sys -> exec_cycle: {style.opacity: 0}
 routine_sys -> exec_cycle -> deprecation: {style.opacity: 0}
 ```
 
-凡例は「凡例（本プロダクト共通）」を参照し、通常線は 6 区分への指示と稼働構成・登録簿の参照・記録および実行記録の参照を表し、他の 2 図と該当区分を共有し、CLI 経由の読み書きは 5.1・5.2 の区分とデータストアを結ぶ線に示す（物の流れは対象外）。
+Orchestrator が 6 つの区分に指示を出し、稼働構成・登録簿・実行記録を直接読み書きして PDCA を進める関係を示す。
 
 ## 6. 詳細 CDFD 一覧
 
