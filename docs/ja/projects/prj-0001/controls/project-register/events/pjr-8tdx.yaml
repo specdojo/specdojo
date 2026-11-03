@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: devcontainer
+- v: 1
+  id: reg_3e9eb80fe61d48bdb85ee3a962092559
+  ts: "2026-11-03T10:30:41Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 生成する devcontainer には post-start.sh がないため、リンクを post-create.sh で張る形に直す
+  changes:
+    - field: input
+      from: '["このリポジトリの .devcontainer には tmux.conf（マウス操作・クリップボード・256 色の 6 行）があり、post-start.sh が ~/.tmux.conf へ ln -sfn でリンクしている。init --devcontainer と devcontainer scaffold が作る .devcontainer には tmux.conf も配置の処理もなく、post-start.sh もない（postCreateCommand だけ）（2026-11-03）","tmux は --tmux を付けるか preset が recommended 以上のときに apt で入る。ホストから tmux で入る使い方は remote-host 開発ガイドで案内している（2026-11-03）","利用者の判断: tmux を入れる構成では、このリポジトリと同じ内容の tmux.conf を生成し、起動時に ~/.tmux.conf へリンクする。利用者が既に ~/.tmux.conf を持っている場合は上書きしない。生成物のテストと remote-host 開発ガイドの説明を足す（2026-11-03）"]'
+      to: '["このリポジトリの .devcontainer には tmux.conf（マウス操作・クリップボード・256 色の 6 行）があり、post-start.sh が ~/.tmux.conf へ ln -sfn でリンクしている。init --devcontainer と devcontainer scaffold が作る .devcontainer には tmux.conf も配置の処理もなく、post-start.sh もない（postCreateCommand だけ）（2026-11-03）","tmux は --tmux を付けるか preset が recommended 以上のときに apt で入る。ホストから tmux で入る使い方は remote-host 開発ガイドで案内している（2026-11-03）","利用者の判断: tmux を入れる構成では、このリポジトリと同じ内容の tmux.conf を生成し、生成する post-create.sh で ~/.tmux.conf へリンクを張る（post-start.sh と postStartCommand は足さない。リンクなので tmux.conf の中身の変更はそのまま反映される）。利用者が既に ~/.tmux.conf（リンクでないもの）を持っている場合は上書きしない。生成物のテストと remote-host 開発ガイドの説明を足す（2026-11-03）"]'
+  previous_event_id: reg_5b9d632245b14f41b4bda5bab100ea5b
