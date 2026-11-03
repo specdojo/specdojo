@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-FVRZ",
   "run_id": "20261103T055059501Z-5a45af08",
-  "updated_at": "2026-11-03T06:11:51.474Z",
+  "updated_at": "2026-11-03T06:15:40.020Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-fvrz-20261103T052539Z-18a09ea8-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 2,
       "started_at": "2026-11-03T06:11:51.474Z",
-      "completed_at": null,
+      "completed_at": "2026-11-03T06:15:40.020Z",
       "artifact_ref": null,
       "repos": {
         "project": {

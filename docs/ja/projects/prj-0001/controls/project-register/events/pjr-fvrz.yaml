@@ -124,3 +124,16 @@
       from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection…"
       to: "-"
   previous_event_id: reg_f245fbfca20545188d5bb4fda77a1e28
+- v: 1
+  id: reg_7be9b3c4592c4185b6084ebb856b71bd
+  ts: "2026-11-03T06:15:39Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_30378a9f4d3c4b409507ee86361c1ef6
