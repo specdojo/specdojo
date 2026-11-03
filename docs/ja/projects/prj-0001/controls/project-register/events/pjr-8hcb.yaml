@@ -41,3 +41,22 @@
     - field: commit_scope
       from: ""
       to: register
+- v: 1
+  id: reg_8e6a3a63277144e2b4fc40e2f1e32ec1
+  ts: "2026-11-03T04:44:12Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 2026-11-03 の対話で indie が管理用リポジトリの分離と名前の案 A を選んだ
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: スターターは管理 specdojo-starters-specdojo・作る側 specdojo-starters・配る側 `specdojo-starter-<name>` の 3 種類のリポジトリで作り、作る側は starters/`<name>`/ に生成・追加の設定・SpecDojo の 3 層を置く
+  previous_event_id: reg_2de9cf34e2374b1eb646ffaff936cbae

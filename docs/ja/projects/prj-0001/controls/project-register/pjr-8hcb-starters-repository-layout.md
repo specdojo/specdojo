@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-8hcb-starters-repository-layout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-03T04:42:37Z"
   due_on: null
+  completed_at: "2026-11-03T04:44:12Z"
+  conclusion: スターターは管理 specdojo-starters-specdojo・作る側 specdojo-starters・配る側 `specdojo-starter-<name>` の 3 種類のリポジトリで作り、作る側は starters/`<name>`/ に生成・追加の設定・SpecDojo の 3 層を置く
   derived_from:
     - PJR-RTD5
   commit_type: docs
