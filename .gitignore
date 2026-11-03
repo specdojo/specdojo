@@ -113,3 +113,6 @@ docs/**/execution/exec/.locks/
 
 /*.log
 /logs/**
+
+# Vite がビルド中に一時的に書き出す設定の bundle。配布物と Git に入れない。
+*.timestamp-*.mjs

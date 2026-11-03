@@ -4,6 +4,12 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-11-03
+
+同梱パッケージは `@specdojo/docs-site` 0.4.0 を同時に公開します。docs-site 0.4.0 は、D2 コードブロックの SVG 生成と配信（`specdojo-docs-site d2`、PJR-6NEM）と、サイドメニューへの Kata（rulebook・recipe・sample・template）の掲載（PJR-PQG3）を含みます。`@specdojo/docs-lint` は変更がないため 0.4.0 のままです。
+
+この版に破壊的変更はありません。
+
 ### 追加機能
 
 - `exec run --auto --track <track>` を追加しました。`--parallel`・`--loop`・`--dry-run` と併用でき、失敗後や次の枠の補充でも指定した track だけから選びます。存在しない track は claim 前にエラーで停止し、省略時は全 track から選ぶ従来の動作を維持します（PJR-561Q）。
@@ -17,6 +23,10 @@ SpecDojo の利用者に影響する変更を記録します。
 - `devcontainer host-script` コマンドを追加しました。常時稼働ホストから devcontainer 内の tmux セッションへ入るためのスクリプト本体（`devcontainer-tmux.sh`）を workspace の `.specdojo/host/` へ書き出します。ホスト側のスクリプト（`specdojo-tmux.sh`）は workspace のパスを渡して本体を呼び出す数行のみとなり、稼働中または停止中のコンテナへの接続ではホスト側に Node.js が不要になります。コンテナ未作成時のみ `devcontainer up` を動かし、`SPECDOJO_NODE_BIN` による PATH 上書きやログインシェル経由の起動に対応します。対応 OS は macOS、Linux、Windows の WSL2 です（PJR-Q8KP）。
 
 ### 変更
+
+- 概念データフロー図の Kata を見直しました。全体概要（`cdfd-overview`）の rulebook・recipe・sample・template は、目的を全体像として書き、プロセス領域の区分を代表ノードとする図（区分の位置をそろえる、線のない区分を置かない、調整役の指示の図を分ける、区分の間の実行要求の線を認める、業務の言葉の題）を定め、sample と template の図を D2 の縦の流れにしました（PJR-6QTK・PJR-BC45）。ユースケース別（`cdfd-uc`）の Kata は、「引き渡し」と「例外時の戻り先」の章をなくして渡す情報を図の線で表し、図から調整役を外し、イベントを 1 ノード 1 出来事の短い文にし、deprecated の文書を参照しないことを定め、sample と template の図を D2 の縦の流れにしました（PJR-PRYZ）。eject している場合は、差分を確かめて取り込んでください。
+
+- docs-site のサイドメニューに、非推奨でない Kata（rulebook・recipe・sample・template）をすべて載せました。「サンプル」と「テンプレート」のメニューを新設し、載っていない Kata を検出するテストを追加しました（PJR-PQG3）。
 
 - agy 1.4.12 のセッション別権限に対応する `agent launch --provider antigravity --role <edit|review|report>` と、対話型 orchestrator の専用設定を追加しました。scaffold は役割別プロファイルを配置し、宣言済みプロダクト worktree の編集許可と各リポジトリの保護ルールを一つの `--settings` JSON にまとめます。通常導入ではグローバル設定を書き換えません。既存の起動設定は配布スニペットへ移行し、設定マージ・許可／拒否の実機確認後に適用してください（PJR-B0B8）。
 

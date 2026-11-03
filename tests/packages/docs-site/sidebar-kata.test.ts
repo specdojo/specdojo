@@ -109,7 +109,11 @@ describe("specdojo sidebar kata menus", () => {
       const kind = parts[0];
       if (!["rulebooks", "recipes", "samples", "templates"].includes(kind)) continue;
 
-      const fileRelPath = `${relPath}.md`;
+      // generated/ の閲覧ページは docs-site のビルドで YAML から作られ Git 管理外のため、元の YAML で確かめる。
+      const isGeneratedViewer = parts[1] === "generated";
+      const fileRelPath = isGeneratedViewer
+        ? path.join(kind, `${parts.slice(2).join("/")}.yaml`)
+        : `${relPath}.md`;
       const targetFile = path.join(workspaceRoot, "docs", "ja", "specdojo", fileRelPath);
 
       if (!existsSync(targetFile)) {
