@@ -13,7 +13,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-11-03T05:23:56Z"
   due_on: "2026-11-07"
-  block_reason: "parent validation failed: lint-ts"
+  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection…"
   derived_from:
     - PJR-GQN3
   commit_type: feat
@@ -52,7 +52,15 @@ schedule の phase の説明は plan の本文に入るが、Markdown の誤り�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 検査時点は `exec plan` の共通生成処理に決定した。phase の説明だけでなく、template・共通規約も展開した plan 全体と、その生成内容の行番号を検査でき、`exec run --auto` とも同じ処理を共有できるためである。`schedule build` の検査は追加しない。
+- `src/exec/plan-markdownlint.ts` を追加し、schedule task の plan を Prettier 整形・書き込みより前に markdownlint API で検査する。違反時はタスク ID・plan のパス・生成内容の行番号・規則名を表示して失敗し、既存 plan は保持する。履歴が ignore の対象でも生成時は検査する。
+- 利用側の markdownlint を優先し、SpecDojo 側のインストールへフォールバックする。利用側の設定（JSONC・JSON・YAML・上位を含む `.markdownlintrc` と `extends`）を読み、設定がなければ既存の SpecDojo 標準規則を使う。検査の省略を防ぐため、markdownlint が使えない場合や設定が壊れている場合も生成を停止する方針に決定した。利用側での `markdownlint-cli` の導入を運用ガイドに明記した。CLI2 固有設定と hook の独自ルールは対象外である。
+- strategy から track を生成する fixture と、edit／review の MD032 検出・正常生成・既存 plan 保持、`exec run --auto --dry-run` の正常／異常系の回帰テストを追加した。設定なし・規則無効化・JSONC の `extends`・`.markdownlintrc`・不正設定の単体テストも追加した。
+- sandbox 内のスモーク検証では、strategy から生成した edit／review plan の各正常／異常系と、auto dry-run の共通処理の正常／異常系の計 6 ケースが成功した。空行不足は `T-TEST-doc-010`・plan の 21 行目・MD032 を示して停止し、正しい説明は成功した。auto dry-run でも同じ違反を検出し、claim event と agent 起動が発生しないことを確認した。CLI の validate／refresh 子プロセスを含む全経路は親の integration テストで検証する。
+- `exec run --task <task-id> --dry-run` は plan を生成しないため検査しない。schedule task を事前検査する場合は `exec plan --task <task-id>`、auto の動作確認には `exec run --auto --dry-run` を使う。この違いを [[specdojo:schedule-operation-guide|Schedule実行運用ガイド]] に記載した。
+- 設定読み込みのスモーク検証 5 ケース（標準規則・規則無効化・JSONC と `extends`・`.markdownlintrc`・不正設定時の停止）も成功した。変更ファイルの Prettier 整形・整形確認、`git diff --check`、`npm run check:src-imports`、`register build`、hook と同じカタログ検証が成功した。カタログ検証には、宣言された product 文書がこの worktree にないことによる既存の警告があるが、エラーはない。
+- `CHANGELOG.md` は `Unreleased` の不具合修正に追記した。保護された設定の変更は不要であり、変更していない。個票のステータスと登録簿の一覧行は変更していない。
+- `typecheck`・`lint:ts`・`test:unit`・`test:integration` を含む設定済みの親検証は、pipeline の規定に従って executor 内では実行せず、終了後の親 runner に委ねる。result は reporter が作成する。
 
 ## 6. 関連ドキュメント
 
