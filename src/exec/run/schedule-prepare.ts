@@ -27,7 +27,7 @@ import { ensureReviewGrade } from "../../review/grade.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { type ReviewGradeOutcome } from "../../review/grade.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "../results.js";
-import { worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
+import { findExecWorktree, worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
 import {
   configuredProductRepos,
   plannedProjectWorktreePath,
@@ -95,10 +95,24 @@ export type PlanGenPaths = {
   projectContext?: string[];
 };
 
-export function findClaimEventPath(schedulePath: string, taskId: string): string | null {
+export function findClaimEventPath(
+  schedulePath: string,
+  taskId: string,
+  worktreeRef?: { repoRoot: string; worktreePath: string },
+): string | null {
   const claims = readAllEventFiles(schedulePath).filter(
     (item) => item.event.task_id === taskId && item.event.type === "claim",
   );
+  if (worktreeRef && existsSync(worktreeRef.worktreePath)) {
+    for (let i = claims.length - 1; i >= 0; i -= 1) {
+      const candidate = claims[i]!.path;
+      if (
+        existsSync(pathInsideWorktree(worktreeRef.repoRoot, worktreeRef.worktreePath, candidate))
+      ) {
+        return candidate;
+      }
+    }
+  }
   return claims[claims.length - 1]?.path ?? null;
 }
 
@@ -211,7 +225,11 @@ export async function prepareSingleTask(
         ]
       : [];
   let actor = actorOverride ?? "auto-agent";
-  if (overrideResolution.kind === "command" && overrideResolution.actor && !skipClaim) {
+  if (
+    overrideResolution.kind === "command" &&
+    overrideResolution.actor &&
+    (!skipClaim || (Boolean(stageAgentOverrides.executor) && pipelineResume?.stage !== "reporter"))
+  ) {
     actor = overrideResolution.actor;
   }
 
@@ -345,7 +363,10 @@ export async function prepareSingleTask(
     if (!planPrompt || !existsSync(resultPath) || !existsSync(worktreeResultPath)) {
       throw new Error(`plan or result is missing for executor resume: ${task.id}`);
     }
-    const claimEventPath = findClaimEventPath(schedulePath, task.id);
+    const claimEventPath = findClaimEventPath(schedulePath, task.id, {
+      repoRoot,
+      worktreePath: worktree.path,
+    });
     if (!claimEventPath) throw new Error(`claim event is missing for executor resume: ${task.id}`);
     reportProductWorktrees(worktree);
     return {
@@ -495,7 +516,12 @@ export async function prepareSingleTask(
   // Keep the execution checkpoint visible at root, but commit it only on the exec branch. The
   // successful merge later brings plan/result/claim and deliverables to root in one first-parent
   // commit (see runPreparedTask).
-  const claimEventPath = findClaimEventPath(schedulePath, task.id);
+  const existingWorktree = skipClaim ? findExecWorktree(repoRoot, worktreeTaskId) : null;
+  const claimEventPath = findClaimEventPath(
+    schedulePath,
+    task.id,
+    existingWorktree ? { repoRoot, worktreePath: existingWorktree.path } : undefined,
+  );
   if (!claimEventPath) {
     process.stdout.write(`  Claim event not found for ${task.id}\n`);
     return "failure";

@@ -282,6 +282,8 @@ specdojo exec resume \
   --reporter-by <reporter-nickname>
 ```
 
+executor 段から再開するとき（`--resume-from executor` を付けた再開、または executor 段で止まったタスクの再開）に `--executor-by` で現在の claim の持ち主と異なる executor を指定すると、実行前に元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim を新しい executor へ移し、完了時の `complete` イベント（および中断時の `block` イベント）も新しい executor で記録します。`--executor-by` を省略した場合や同じ executor を指定した場合は既存の claim を維持します（`doing` はそのまま継続し、`blocked` は `unblock` イベントで `doing` に戻します）。reporter 段や統合段のみを再開する場合は既存の claim を維持します。
+
 ```bash
 specdojo exec release \
   --project <project-id> \

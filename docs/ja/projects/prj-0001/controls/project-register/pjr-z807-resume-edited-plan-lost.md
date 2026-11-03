@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-01T12:30:43Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-integration, typecheck"
   derived_from:
     - PJR-RKHR
 ---

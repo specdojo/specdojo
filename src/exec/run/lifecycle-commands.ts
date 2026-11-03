@@ -369,7 +369,10 @@ export function prepareScheduleIntegrationResume(params: {
   }
   // 統合再開でも、root に未 commit のまま残る claim / plan / result の作業コピーを merge 前に
   // 解放できるよう、通常実行と同じ checkpoint パスを持たせる。
-  const claimEventPath = findClaimEventPath(schedulePath, task.id);
+  const claimEventPath = findClaimEventPath(schedulePath, task.id, {
+    repoRoot,
+    worktreePath: worktree.path,
+  });
   const checkpointPaths = [
     join(executionPath, "exec", "plans", `${task.id}-plan.md`),
     resultPath,
@@ -436,6 +439,12 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
   const events = readAllEventFiles(schedulePath);
   const initTasks = buildInitialStateFromStrategy(schedulePath, schedule);
   let snapshot = foldEventsToState(events, schedule, schedulePath, initTasks);
+  const initialTaskStates = new Map(
+    Object.entries(snapshot.tasks).map(([id, state]) => [
+      id,
+      { ...state, ...(state.meta ? { meta: { ...state.meta } } : {}) },
+    ]),
+  );
   let doingIds: string[];
   let executorResume: Extract<RegisterResumeTarget, { stage: "executor" }> | undefined;
   let executorWorktree: ReturnType<typeof withProductWorktrees> | undefined;
@@ -561,7 +570,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
                     : "resume executor from persisted pipeline state",
             meta,
           });
-          if (executorResume) pendingExecutorUnblock = event;
+          if (executorResume || opts.executorBy) pendingExecutorUnblock = event;
           else writeEventFile(schedulePath, event);
         }
         snapshot.tasks[opts.task] = {
@@ -653,8 +662,59 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
                 opts,
               );
         if (typeof prepared !== "string") {
-          if (pendingExecutorUnblock) {
-            writeEventFile(schedulePath, pendingExecutorUnblock);
+          const priorTaskState = initialTaskStates.get(taskId);
+          const previousActor = priorTaskState?.last_by;
+          const resumingExecutorStage =
+            prepared.pipelineResumeStage !== "reporter" &&
+            prepared.pipelineResumeStage !== "integrate";
+          if (
+            resumingExecutorStage &&
+            previousActor &&
+            prepared.actor &&
+            prepared.actor !== previousActor
+          ) {
+            if (!dryRun) {
+              const releaseEvent = buildEvent("release", {
+                task: taskId,
+                by: previousActor,
+                msg:
+                  opts.resumeFrom === "executor"
+                    ? `release claim to switch executor to ${prepared.actor} (--resume-from executor)`
+                    : `release claim to switch executor to ${prepared.actor}`,
+                meta: ["pipeline_resume_released=true", `replaced_by=${prepared.actor}`],
+              });
+              const resumeMeta: Record<string, unknown> = {
+                ...(priorTaskState?.meta ?? {}),
+                ...(executorResume
+                  ? { pipeline_stage: "executor", pipeline_state_ref: executorResume.stateRef }
+                  : {}),
+                pipeline_resume_claimed: "true",
+                previous_actor: previousActor,
+              };
+              const meta = Object.entries(resumeMeta).map(
+                ([key, value]) => `${key}=${String(value)}`,
+              );
+              const claimEvent = buildEvent("claim", {
+                task: taskId,
+                by: prepared.actor,
+                msg:
+                  opts.resumeFrom === "executor"
+                    ? `claim task as resumed executor ${prepared.actor} (--resume-from executor)`
+                    : `claim task as resumed executor ${prepared.actor}`,
+                meta,
+              });
+              writeEventFile(schedulePath, releaseEvent);
+              writeEventFile(schedulePath, claimEvent);
+            }
+            pendingExecutorUnblock = undefined;
+            snapshot.tasks[taskId] = {
+              ...snapshot.tasks[taskId],
+              state: "doing",
+              last_by: prepared.actor,
+              last_type: "claim",
+            };
+          } else if (pendingExecutorUnblock) {
+            if (!dryRun) writeEventFile(schedulePath, pendingExecutorUnblock);
             pendingExecutorUnblock = undefined;
           }
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
