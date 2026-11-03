@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_483dbb19d63c4c269aad5d4a526d74c2
+  ts: "2026-11-03T23:50:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 業務仕様を量産する前に、冗長さを抜き出す review approach の仕様を決めるため起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 冗長さを抜き出して原因を分ける review approach（editorial-review）の仕様を決める
+    - field: description
+      from: ""
+      to: 人の代わりに成果物の冗長さを箇所ごとに抜き出し、原因を「この文書だけ」と「Kata が原因」に分け、磨き込みと Kata の手入れの段へ渡す review approach の名前、指摘の書式、渡し方、判定の基準を決める
+    - field: input
+      from: ""
+      to: '["利用者の課題: agent が作る文書は冗長なことが多い。review task で冗長な部分を抽出して磨き込みで直したい。冗長な記述のレビューは専用の人間代替の review approach を新設し、Kata の maintenance に回したい（2026-11-04）","既存の仕組み: rulebook / recipe / sample / template-maintenance は review result や finding を根拠に Kata を見直す作りだが、schedule に明示した段でしか動かない。成果物の review の指摘を Kata が原因かその文書だけの問題かに分けて手入れへ渡す仕組みはない（ryu-guide の「実践の型メンテナンスの進め方」、2026-11-04）","案: 新しい approach（仮名 editorial-review）は、冗長さ（重複、表と本文の二重の説明、図をなぞる文、目的に要らない背景など）を箇所ごとに抜き出し、直し方の案（削る・まとめる・参照に置き換える）と原因の分類（この文書だけ／Kata が原因。Kata の場合はどの Kata か）を付ける。この文書だけの指摘は fully-guided の磨き込みへ、Kata が原因の指摘は対象の Kata の手入れの段へ渡す（2026-11-04）","論点: 名前、指摘の書式と原因の分類、手入れと磨き込みの段への渡し方（plan への取り込み）、冗長さの判定の基準を何に置くか（standards・rulebook・review の観点）、grade や既存の review との役割の分け方（2026-11-04）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: register
