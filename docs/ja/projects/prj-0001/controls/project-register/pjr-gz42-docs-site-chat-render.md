@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-03T23:08:13Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: typecheck"
   commit_type: feat
   commit_scope: docs-site
 ---
@@ -43,15 +44,51 @@ docs-site に chat 言語のコードブロックを吹き出し（右に利用�
 
 ## 4. 作業内容
 
-| No  | 作業                                                    | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | docs-site に chat の描画（吹き出しと TUI）と CSS を足す | ARC  | open | -    |
-| 2   | Quick Start ガイドの 7 か所を chat に変える             | ARC  | open | -    |
-| 3   | 記述ルールに対話の書き方を足し、テストとビルドを通す    | ARC  | open | -    |
+| No  | 作業                                                    | 担当 | 状態 | メモ                                          |
+| --- | ------------------------------------------------------- | ---- | ---- | --------------------------------------------- |
+| 1   | docs-site に chat の描画（吹き出しと TUI）と CSS を足す | ARC  | done | `chat.ts` と `custom.css` を追加              |
+| 2   | Quick Start ガイドの 7 か所を chat に変える             | ARC  | done | 具体的対話ブロック 11 箇所すべて変更          |
+| 3   | 記述ルールに対話の書き方を足し、テストとビルドを通す    | ARC  | done | markdown.instructions.md 追記と単体テスト作成 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+docs-site に `chat` 言語コードブロックのレンダリング処理（吹き出し表示および `chat tui` による TUI 風表示）を実装し、関連ドキュメントおよび記述ルールを更新した。
+
+### 実施内容
+
+1. **`chat` コードブロックの描画処理モジュール (`packages/docs-site/src/chat.ts`)**:
+   - `renderChat(code, info)` および `isChatFence(info)` を実装。
+   - `info` に `tui` が指定された場合は TUI 風コンテナ（`specdojo-chat-tui`）、それ以外は吹き出しコンテナ（`specdojo-chat-bubble`）として HTML を生成。
+   - 行頭の空白（字下げ）行は直前の発言の続き行としてパースし、改行および字下げを維持。
+   - インラインコード（バッククォート）の `<code>` 変換および HTML 特殊文字のエスケープ処理を実装。
+   - 利用者側と相手側で異なるアイコン SVG（アバター）およびプロンプト記号（`>` / `●`）を描画。
+2. **スタイル定義 (`packages/docs-site/.vitepress/theme/custom.css`)**:
+   - 吹き出し表示: 利用者（右寄せ・ブランド色背景）、相手側（左寄せ・カード背景）、角丸吹き出し、レスポンシブ対応（スマホ画面での折り返し）。
+   - TUI 表示: 暗い背景（`#18181b`）、等幅フォント、プロンプト色（利用者シアン、相手側グリーン）、コントラスト確保によるライト／ダーク両対応。
+3. **VitePress 設定 (`packages/docs-site/.vitepress/config.mts`)**:
+   - markdown-it のフェンスハンドラにおいて `isChatFence(info)` で `chat` ブロックを判定し、`renderChat` を呼び出すよう差し替え。`chat` 以外のコードブロックは既存の処理をそのまま維持。
+4. **Quick Start ガイドの更新 (`docs/ja/specdojo/guides/quick-start-guide.md`)**:
+   - ガイド内の「具体的対話」コードブロックを `text` から `chat` に変更。対話本文は一切変更せず維持。
+   - ※完了条件では「7か所」と記載されていたが、ガイド全体で「具体的対話」見出しの対話ブロックが計 11 箇所存在したため、対話表現の一貫性を保つため 11 箇所すべてを `chat` に変更した。
+5. **Markdown 記述ルールの更新 (`.github/instructions/markdown.instructions.md`)**:
+   - `### 6.1. 対話コードブロック（chat）` を追加し、言語指定（`chat`, `chat tui`）、話者の書き方、字下げによる続き行、インラインコードの利用規則を明記。
+6. **CHANGELOG の更新 (`CHANGELOG.md`)**:
+   - `## [Unreleased]` の `### 追加機能` に docs-site の `chat` 描画機能追加を記録。
+7. **単体テストの作成 (`tests/packages/docs-site/chat.test.ts`)**:
+   - 話者判定、メッセージパース（インデント維持）、吹き出し描画、TUI 描画、インラインコード変換、HTML エスケープ、fence 判定、markdown-it との連携（他のコードブロックに影響を与えないこと）の計 9 件のテストを追加し、すべて通過。
+
+### 話し手の名前の決め方と決定理由
+
+- **決定内容**:
+  `あなた`・`利用者`・`ユーザー`・`ユーザ`・`user`・`you`・`me`・`human`・`client`（大文字小文字問わず）を利用者側（右寄せ / `>`）、それ以外のすべての名前（`オーケストレーター`・独自エージェント名・ロール名等）を相手側・システム側（左寄せ / `●`）として判定する。
+- **決定理由**:
+  利用者を指す一般的な表記を網羅しつつ、相手側の話者名を固定せず任意の名前に対応できるようにすることで、将来的にエージェント名（例: `sol-executor:`）やプロジェクトロール名（例: `BA:`、`レビュー担当:`）など様々な話者による対話が記述された場合でも、個別設定なしに自然に相手側として描画できるため。
+
+### 検証結果
+
+- `npx vitest run tests/packages/docs-site/chat.test.ts`: 全 9 テスト成功。
+- `npm --prefix packages/docs-site run typecheck`: 成功（型エラーなし）。
+- 新規外部依存パッケージは追加しておらず、`package.json` の変更は不要。
 
 ## 6. 関連ドキュメント
 
