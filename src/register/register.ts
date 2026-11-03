@@ -7,6 +7,7 @@ import {
   gitResult,
   repoRelative,
   stageCommitTargets,
+  unstageCommitTargets,
   worktreeStatusPaths,
 } from "../shared/git.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
@@ -328,39 +329,46 @@ function commitRegisterMutation(
     return;
   }
 
-  stageCommitTargets(repoRoot, changed);
-  const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...changed]);
-  if (staged.status === 0) {
-    process.stdout.write(`No register changes to commit for ${result.id}.\n`);
-    return;
-  }
-  if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
+  try {
+    stageCommitTargets(repoRoot, changed);
+    const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...changed]);
+    if (staged.status === 0) {
+      process.stdout.write(`No register changes to commit for ${result.id}.\n`);
+      return;
+    }
+    if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
 
-  const commitMessage = message?.trim() || defaultRegisterCommitMessage(command, result);
-  if (commitMessage === "") throw new Error("Register commit message must not be empty");
-  gitOutput(repoRoot, ["commit", "-m", commitMessage, "--", ...changed]);
+    const commitMessage = message?.trim() || defaultRegisterCommitMessage(command, result);
+    if (commitMessage === "") throw new Error("Register commit message must not be empty");
+    // --only は初回・amend とも指定し、開始前からある staged 変更を混ぜない。
+    gitOutput(repoRoot, ["commit", "--only", "-m", commitMessage, "--", ...changed]);
 
-  for (let attempt = 0; attempt < REGISTER_COMMIT_STABILIZATION_ATTEMPTS; attempt++) {
+    for (let attempt = 0; attempt < REGISTER_COMMIT_STABILIZATION_ATTEMPTS; attempt++) {
+      const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
+      if (remaining.length === 0) {
+        const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+        process.stdout.write(`Committed: ${sha} (${result.id})\n`);
+        return;
+      }
+      stageCommitTargets(repoRoot, remaining);
+      gitOutput(repoRoot, ["commit", "--only", "--amend", "--no-edit", "--", ...remaining]);
+    }
+
     const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
     if (remaining.length === 0) {
       const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
       process.stdout.write(`Committed: ${sha} (${result.id})\n`);
       return;
     }
-    stageCommitTargets(repoRoot, remaining);
-    gitOutput(repoRoot, ["commit", "--amend", "--no-edit", "--", ...remaining]);
+    throw new Error(
+      `Register commit incomplete: target paths remained dirty after hook stabilization:\n` +
+        remaining.map((path) => `  ${path}`).join("\n"),
+    );
+  } catch (error) {
+    // changed は開始前に clean だった対象だけ。本文を残して、自分の stage だけを戻す。
+    unstageCommitTargets(repoRoot, changed);
+    throw error;
   }
-
-  const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
-  if (remaining.length === 0) {
-    const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
-    process.stdout.write(`Committed: ${sha} (${result.id})\n`);
-    return;
-  }
-  throw new Error(
-    `Register commit incomplete: target paths remained dirty after hook stabilization:\n` +
-      remaining.map((path) => `  ${path}`).join("\n"),
-  );
 }
 
 async function runRegisterMutationInCurrentWorktree(

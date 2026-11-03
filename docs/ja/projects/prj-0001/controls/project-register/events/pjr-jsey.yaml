@@ -3676,3 +3676,19 @@
       from: PJR-RKHR の統合後も exec run --register が start・review・統合まで通った
       to: PJR-561Q と PJR-FVRZ の統合後に exec run --register が start から review まで通ることを確かめた
   previous_event_id: reg_60e6310d98ef4668acea477ebab771c0
+- v: 1
+  id: reg_bc3d55537f2d442db2365008fe410350
+  ts: "2026-11-03T07:02:52Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-W7YX の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-03"
+      to: "-"
+  previous_event_id: reg_463abec092804d2ebbde3c0602e61195

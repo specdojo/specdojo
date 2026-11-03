@@ -34,6 +34,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- checkpoint の stage 後の検査失敗と、`register --commit` の commit・amend 失敗時に、処理対象だけを unstage するようにしました。作業ツリーの内容と無関係な staged 変更を保持し、register の初回 commit と amend は対象パスだけを記録します（PJR-W7YX）。
+
 - schedule の phase の説明に含まれる Markdown の誤りを、checkpoint commit より前の plan 生成時に検出するようにしました。`exec plan --task` と `exec run --auto`（`--dry-run` を含む）が markdownlint の違反をタスク ID・plan のパス・行番号とともに報告し、既存 plan の上書き前に停止します。検査には利用リポジトリまたは SpecDojo 側の markdownlint が必要です（PJR-FVRZ）。
 
 - SSH 経由の非対話シェルで `devcontainer-tmux.sh` が Docker を見つけられない問題を修正しました。`SPECDOJO_DOCKER_BIN`、現在の PATH、ログインシェル、代表的な配置先の順に探索し、見つかった場所を `devcontainer up` にも引き継ぎます。Docker が見つからない場合や `docker info` に失敗した場合は、macOS・WSL2・Linux に合った対処方法を表示して停止します（PJR-DWHZ）。

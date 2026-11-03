@@ -31,6 +31,7 @@ export {
   repoRelative,
   selectStageablePaths,
   stageCommitTargets,
+  unstageCommitTargets,
   worktreeStatusPaths,
 } from "../shared/git.js";
 import {
@@ -503,18 +504,6 @@ export function commitTargetPaths(
   taskId: string,
 ): string[] {
   return partitionCommitTargets(context, worktree, taskId).targets;
-}
-
-// `git add` の pathspec は作業ツリーと index だけを照合する。削除が既に index へ入っている
-// パスはそのどちらにも存在しないため、`-A` を付けても「pathspec did not match any files」で
-// fatal になる。このようなパスは追加で stage する内容が無いので、add の対象から除外する。
-// commit / commit --amend の pathspec は HEAD も照合するため、対象から外さずに削除を記録できる。
-// runner が stage した対象だけを index から戻す。利用者や別処理が stage 済みの無関係な
-// パスは保持し、commit / hook の失敗を後続の exec run へ持ち越さない。
-export function unstageCommitTargets(repoRoot: string, paths: readonly string[]): void {
-  const unique = [...new Set(paths)];
-  if (unique.length === 0) return;
-  gitOutput(repoRoot, ["reset", "--quiet", "--", ...unique]);
 }
 
 // markdownlint-cli の終了コード。1 だけが記法違反を表し、それ以外は実行環境の問題である。
