@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0a90da04a5754c989bc159fc81ce04e3
+  ts: "2026-11-03T12:53:23Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で繰り返した停止を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 検査の対象外の判断が runner と executor で食い違う
+    - field: description
+      from: ""
+      to: runner は自分が書く plan・result を変更ファイルに含めて履歴のリンクやカタログの検査を求め、executor は自分が変えたファイルだけを見て対象外とするため、作業が済んでも blocked になる
+    - field: input
+      from: ""
+      to: '["2026-11-03 の data-flow-uc-rewrite の実行で、executor が plan の求める検査を対象外として流さず、runner が「executor validation failed or not run」で止める事象が 4 回起きた（routine の opus と schedule の opus が validate:history-links、schedule の flash-high が validate:catalog。いずれもプロダクトの文書だけを変えたタスク）","src/exec/reporter.ts の isValidNotApplicableValidation は、対象外の理由があっても、変更ファイル（runner が書く exec の plan・result を含む）から検査が対象になると判定すると block する。executor は自分が変えたプロダクトの文書だけを見て対象外と判断している（2026-11-03）","直し方の案: runner が書いたファイルによって対象になる検査は runner が流す、または plan に runner が書くファイルも検査の対象に入ることを明記する。どちらにするかは選択肢と理由を記録して決める（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
