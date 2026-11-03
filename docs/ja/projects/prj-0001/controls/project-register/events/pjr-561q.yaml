@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c8fcca9a7fc64835b5f54027debba8fc
+- v: 1
+  id: reg_30924027f3214722858dbe9963e8cb7e
+  ts: "2026-11-03T06:40:29Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・dry-run・JSEY の動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: exec run --auto --track を追加し、指定した track の 3 タスクだけが選ばれ、存在しない track は claim の前に止まることを実物の dry-run とテスト 13 件で確かめた
+  previous_event_id: reg_de480da06ff4419a8c9426eb902d92bc

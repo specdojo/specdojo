@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-561q-exec-auto-track-filter
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-03T05:23:03Z"
   due_on: "2026-11-07"
+  completed_at: "2026-11-03T06:40:29Z"
+  conclusion: exec run --auto --track を追加し、指定した track の 3 タスクだけが選ばれ、存在しない track は claim の前に止まることを実物の dry-run とテスト 13 件で確かめた
   derived_from:
     - PJR-GQN3
   commit_type: feat
