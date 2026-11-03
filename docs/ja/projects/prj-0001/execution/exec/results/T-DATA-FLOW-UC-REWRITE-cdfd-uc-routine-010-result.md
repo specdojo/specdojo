@@ -7,8 +7,8 @@ specdojo:
   status: in_progress
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010-plan.md
-  started_at: "2026-11-03T04:44:17.821Z"
-  agent: sol-executor
+  started_at: "2026-11-03T08:52:20.008Z"
+  agent: opus-executor
   execution: agent
   approach: fully-guided
   targets:
