@@ -806,6 +806,33 @@ members:
     note: >-
       Antigravity CLI（agy）を使用する高性能 pipeline executor（edit）。複雑な分析・設計判断を伴う成果物の編集と検証だけを担当し、result
       は更新しない。最終判断は行わない。effort は exec-defaults の command template（proficiency expert 相当）で指定する。
+  - nickname: argon-executor
+    disabled: false
+    priority: 3
+    display_name: Antigravity Argon Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: gemini-4-argon-high
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+      - complex-analysis
+      - architecture-judgment
+    capabilities:
+      - web_search
+    scheduler_strategy: critical-first
+    note: >-
+      Antigravity CLI（agy）で Gemini 4 Argon（high）を使う高性能 pipeline executor（edit）。難しい作業の成果物の
+      編集と検証だけを担当し、result は更新しない。最終判断は行わない。model の ID は `agy models` で確かめた
+      gemini-4-argon-high（2026-11-03）。
   - nickname: flash-high-review-executor
     disabled: false
     priority: 3
