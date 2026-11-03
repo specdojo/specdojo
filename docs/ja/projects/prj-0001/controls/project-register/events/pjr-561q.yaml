@@ -92,3 +92,16 @@
       from: "parent validation failed: lint-ts"
       to: "-"
   previous_event_id: reg_a8ee38e0d84d49af802e669a9bd5c996
+- v: 1
+  id: reg_de480da06ff4419a8c9426eb902d92bc
+  ts: "2026-11-03T06:00:51Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c8fcca9a7fc64835b5f54027debba8fc
