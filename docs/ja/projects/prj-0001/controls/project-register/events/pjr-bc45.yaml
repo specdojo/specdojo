@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_efc9fd1c6f0c479bb8ba6d6ca1db7460
+- v: 1
+  id: reg_c3e1c2c47c55459e9683b51aa7da33ef
+  ts: "2026-11-03T03:17:35Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が VitePress で sample の図を確認し、承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: cdfd-overview の sample と template の概念データフローと凡例を D2 の縦の流れにし、データストアの色を G 案に合わせ、図の中身を変えていないことを確かめた
+  previous_event_id: reg_e7e4046eacdc4456a7e33424f9d9f28d

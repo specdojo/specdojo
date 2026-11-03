@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-bc45-cdfd-overview-kata-d2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: BA
   registered_at: "2026-11-03T02:39:38Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T03:17:35Z"
+  conclusion: cdfd-overview の sample と template の概念データフローと凡例を D2 の縦の流れにし、データストアの色を G 案に合わせ、図の中身を変えていないことを確かめた
   derived_from:
     - PJR-6QTK
   commit_type: docs
