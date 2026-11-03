@@ -245,15 +245,15 @@ milestones:
     name: data-flow-uc-rewrite pass 完了
     artifact_name: データフロー（系統別の詳細）
     depends_on:
-      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010
-      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010
-      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-020
     owner: PM
   - id: M-DATA-FLOW-UC-REWRITE-data-flow
     name: 系統別の詳細 CDFD の書き直し完了
     artifact_name: データフロー（系統別の詳細）
     depends_on:
-      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010
-      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010
-      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-020
     owner: PM

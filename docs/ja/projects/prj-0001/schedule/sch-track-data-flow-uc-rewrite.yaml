@@ -38,6 +38,34 @@ tasks:
       - 図は D2 の direction: down とし、配色と凡例は cdfd-overview の凡例を参照して再掲しない。
         図の題は業務の言葉で付け、説明は図から読み取れることを 1 文で書く。本文は表を中心に端的に書く。
       - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
+  - local_id: cdfd-uc-register
+    phase_suffix: "020"
+    phase_set: uc-refine-pass
+    phase_id: refine
+    name: 系統別の詳細 CDFD の磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-register-010
+    owner: BA
+    description: |
+      PJR-87KE で足した Kata（cdfd-uc-rulebook / recipe / sample / template）の決まりに従って、
+      1 回目の書き直し（uc-rewrite-pass）の結果を磨き込む。業務の中身は cdfd-overview と矛盾しない限り
+      変えない。次の方針を守る。
+
+      - 複数の系統が共通して通るプロセス領域（このプロダクトでは実行サイクル P-07・P-08・P-11）の内部は
+        描き直さない。実行サイクルは 1 つのノードとして置き、受け渡しの線（実行要求と結果など）だけを描く。
+      - 例外時の戻りは省略しない。1 つの図の線が多い場合は、Kata の目安に従って戻り先や段ごとに図を分ける。
+      - ノードのラベルの絵文字は、cdfd-overview の凡例に合わせて、3 文書でそろえる。
+      - 目的は、register 系の書き方（何を正本に残し、何を通して、何ができるようになるか）にそろえる。
+        schedule 系の目的は次の文とする。「管理する成果物とその完了条件をカタログとスケジュールに定め、
+        計画に沿ったタスクの実行から評価、完了記録までを進捗と対応付けることで、成果物の作成を計画どおりに
+        進め、遅れや抜けを早く見つけられるようにする。」
+        routine 系の目的は次の文とする。「定期的に確認・実行する事項を定期実行と Job の定義に残し、
+        サイクルが来るたびに同じ手順で実行して結果を記録することで、特定の人の記憶や手作業に頼らずに
+        反復作業を続け、前回の結果を次の判断に生かせるようにする。」
+        register 系の目的は変えない。
+      - 図ごとに、線とデータストアの数、画像の大きさを result に記録する。
+      - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
   - local_id: cdfd-uc-schedule
     phase_suffix: "010"
     phase_set: uc-rewrite-pass
@@ -65,6 +93,34 @@ tasks:
       - 図は D2 の direction: down とし、配色と凡例は cdfd-overview の凡例を参照して再掲しない。
         図の題は業務の言葉で付け、説明は図から読み取れることを 1 文で書く。本文は表を中心に端的に書く。
       - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
+  - local_id: cdfd-uc-schedule
+    phase_suffix: "020"
+    phase_set: uc-refine-pass
+    phase_id: refine
+    name: 系統別の詳細 CDFD の磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010
+    owner: BA
+    description: |
+      PJR-87KE で足した Kata（cdfd-uc-rulebook / recipe / sample / template）の決まりに従って、
+      1 回目の書き直し（uc-rewrite-pass）の結果を磨き込む。業務の中身は cdfd-overview と矛盾しない限り
+      変えない。次の方針を守る。
+
+      - 複数の系統が共通して通るプロセス領域（このプロダクトでは実行サイクル P-07・P-08・P-11）の内部は
+        描き直さない。実行サイクルは 1 つのノードとして置き、受け渡しの線（実行要求と結果など）だけを描く。
+      - 例外時の戻りは省略しない。1 つの図の線が多い場合は、Kata の目安に従って戻り先や段ごとに図を分ける。
+      - ノードのラベルの絵文字は、cdfd-overview の凡例に合わせて、3 文書でそろえる。
+      - 目的は、register 系の書き方（何を正本に残し、何を通して、何ができるようになるか）にそろえる。
+        schedule 系の目的は次の文とする。「管理する成果物とその完了条件をカタログとスケジュールに定め、
+        計画に沿ったタスクの実行から評価、完了記録までを進捗と対応付けることで、成果物の作成を計画どおりに
+        進め、遅れや抜けを早く見つけられるようにする。」
+        routine 系の目的は次の文とする。「定期的に確認・実行する事項を定期実行と Job の定義に残し、
+        サイクルが来るたびに同じ手順で実行して結果を記録することで、特定の人の記憶や手作業に頼らずに
+        反復作業を続け、前回の結果を次の判断に生かせるようにする。」
+        register 系の目的は変えない。
+      - 図ごとに、線とデータストアの数、画像の大きさを result に記録する。
+      - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
   - local_id: cdfd-uc-routine
     phase_suffix: "010"
     phase_set: uc-rewrite-pass
@@ -91,4 +147,32 @@ tasks:
         本文で参照しない。supersedes はそのまま残してよい。
       - 図は D2 の direction: down とし、配色と凡例は cdfd-overview の凡例を参照して再掲しない。
         図の題は業務の言葉で付け、説明は図から読み取れることを 1 文で書く。本文は表を中心に端的に書く。
+      - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
+  - local_id: cdfd-uc-routine
+    phase_suffix: "020"
+    phase_set: uc-refine-pass
+    phase_id: refine
+    name: 系統別の詳細 CDFD の磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010
+    owner: BA
+    description: |
+      PJR-87KE で足した Kata（cdfd-uc-rulebook / recipe / sample / template）の決まりに従って、
+      1 回目の書き直し（uc-rewrite-pass）の結果を磨き込む。業務の中身は cdfd-overview と矛盾しない限り
+      変えない。次の方針を守る。
+
+      - 複数の系統が共通して通るプロセス領域（このプロダクトでは実行サイクル P-07・P-08・P-11）の内部は
+        描き直さない。実行サイクルは 1 つのノードとして置き、受け渡しの線（実行要求と結果など）だけを描く。
+      - 例外時の戻りは省略しない。1 つの図の線が多い場合は、Kata の目安に従って戻り先や段ごとに図を分ける。
+      - ノードのラベルの絵文字は、cdfd-overview の凡例に合わせて、3 文書でそろえる。
+      - 目的は、register 系の書き方（何を正本に残し、何を通して、何ができるようになるか）にそろえる。
+        schedule 系の目的は次の文とする。「管理する成果物とその完了条件をカタログとスケジュールに定め、
+        計画に沿ったタスクの実行から評価、完了記録までを進捗と対応付けることで、成果物の作成を計画どおりに
+        進め、遅れや抜けを早く見つけられるようにする。」
+        routine 系の目的は次の文とする。「定期的に確認・実行する事項を定期実行と Job の定義に残し、
+        サイクルが来るたびに同じ手順で実行して結果を記録することで、特定の人の記憶や手作業に頼らずに
+        反復作業を続け、前回の結果を次の判断に生かせるようにする。」
+        register 系の目的は変えない。
+      - 図ごとに、線とデータストアの数、画像の大きさを result に記録する。
       - status は draft のまま変えない。対象以外の CDFD の文書と Kata は変えない。
