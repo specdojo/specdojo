@@ -60,3 +60,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_c4e052ba16bf4f78b9bf555202660e3e
+- v: 1
+  id: reg_dbf21f42cca14c83b5f0001ce53ed0fd
+  ts: "2026-11-03T01:46:19Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: Kata 4文書の修正と個票への記録、sandbox 内の検証は実施済み。変更対象外の全体概要に新規則との不一致が残り、整合の完了条件は未達。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: Kata 4文書の修正と個票への記録、sandbox 内の検証は実施済み。変更対象外の全体概要に新規則との不一致が残り、整合の完了条件は未達。"
+  previous_event_id: reg_fd6be293af324793b470c2499b6a71eb
