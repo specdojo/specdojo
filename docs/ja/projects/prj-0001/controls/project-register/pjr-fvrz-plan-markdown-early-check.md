@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-03T05:23:56Z"
   due_on: "2026-11-07"
-  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection…"
   derived_from:
     - PJR-GQN3
   commit_type: feat
@@ -61,6 +60,8 @@ schedule の phase の説明は plan の本文に入るが、Markdown の誤り�
 - 設定読み込みのスモーク検証 5 ケース（標準規則・規則無効化・JSONC と `extends`・`.markdownlintrc`・不正設定時の停止）も成功した。変更ファイルの Prettier 整形・整形確認、`git diff --check`、`npm run check:src-imports`、`register build`、hook と同じカタログ検証が成功した。カタログ検証には、宣言された product 文書がこの worktree にないことによる既存の警告があるが、エラーはない。
 - `CHANGELOG.md` は `Unreleased` の不具合修正に追記した。保護された設定の変更は不要であり、変更していない。個票のステータスと登録簿の一覧行は変更していない。
 - `typecheck`・`lint:ts`・`test:unit`・`test:integration` を含む設定済みの親検証は、pipeline の規定に従って executor 内では実行せず、終了後の親 runner に委ねる。result は reporter が作成する。
+- 再開時に、前回の親検証 `lint:ts` のエラーが `src/exec/plan-markdownlint.ts` の `typeof import(...)` に対する `@typescript-eslint/consistent-type-imports` 違反であることを確認し、型専用の namespace import と `typeof` に置き換えた。検査の実行時の動作は維持する。再開後も変更ファイルの Prettier 整形、`git diff --check`、`npm run check:src-imports`、`register build`、hook と同じカタログ検証が成功した。親検証の再実行結果は runner が記録する。
+- 統合後は [[prj-0001:pm-orchestrator-playbook|prj-0001 のオーケストレーター運用メモ]] の手順に従い、PJR-JSEY で runner の動作を確認してから close する。
 
 ## 6. 関連ドキュメント
 
