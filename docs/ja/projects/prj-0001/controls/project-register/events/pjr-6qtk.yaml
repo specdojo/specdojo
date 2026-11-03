@@ -92,3 +92,16 @@
       from: "executor reported incomplete: Kata 4文書の修正と個票への記録、sandbox 内の検証は実施済み。変更対象外の全体概要に新規則との不一致が残り、整合の完了条件は未達。"
       to: "-"
   previous_event_id: reg_dbf21f42cca14c83b5f0001ce53ed0fd
+- v: 1
+  id: reg_63ca224beaa2491aba052392d12828a5
+  ts: "2026-11-03T02:04:17Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5fd4fdc6a4bc482d8925e5f3af86b739
