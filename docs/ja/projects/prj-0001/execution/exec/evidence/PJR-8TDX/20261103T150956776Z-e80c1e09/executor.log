@@ -1,0 +1,25 @@
+devcontainer 生成時に tmux の設定（`.devcontainer/tmux.conf`）を配置し、`post-create.sh` で `~/.tmux.conf` へシンボリックリンクする対応を完了しました。
+
+### 実施内容
+
+1. **tmux 設定テンプレートの配置**:
+   - [`templates/devcontainer/tmux.conf`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TDX/templates/devcontainer/tmux.conf) を作成し、マウス操作（`set -g mouse on`）、クリップボード（`set -g set-clipboard on`）、256 色設定（`set -g default-terminal "tmux-256color"` / `set -as terminal-overrides ',*:Tc'`）を設定しました。
+
+2. **devcontainer scaffold の生成処理更新**:
+   - [`src/devcontainer/scaffold.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TDX/src/devcontainer/scaffold.ts) において、tmux を含める構成（`--tmux`、preset が `recommended` / `full`、`init --devcontainer` 経由）の際に `.devcontainer/tmux.conf` を生成し、`post-create.sh` 内で `~/.tmux.conf` が存在しないか既にシンボリックリンクである場合にのみ `ln -sfn` でリンクする処理を追加しました（利用者の通常ファイルは上書きせず保護）。
+   - tmux を含めない構成（`preset: "minimal"` 等）では `tmux.conf` もリンク処理も生成しないようにしました。
+   - `--dry-run` 出力に `tmux.conf` を含め、既存 `.devcontainer/` は `--force` なしでは上書きしない動作を維持しました。
+   - `post-start.sh` や `postStartCommand` は追加していません。
+
+3. **テストの拡充**:
+   - [`tests/src/devcontainer/scaffold.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TDX/tests/src/devcontainer/scaffold.test.ts) に、tmux あり・なし時のファイル生成とスクリプト内容の検証、dry-run 出力検証、mock home 環境での bash 実行による `post-create.sh` のリンク制御（未作成時・既存シンボリックリンク時・通常ファイル存在時・tmux.conf 不在時）、および shellcheck による検証テストを追加しました。
+   - [`tools/e2e/devcontainer-host-e2e.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TDX/tools/e2e/devcontainer-host-e2e.ts) のコンテナ内検査項目に `~/.tmux.conf` のリンク確認を追加しました。
+
+4. **ドキュメント・台帳・CHANGELOG の更新**:
+   - 常時稼働ホスト運用ガイド（[`docs/ja/specdojo/guides/remote-host-development-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TDX/docs/ja/specdojo/guides/remote-host-development-guide.md)）に、生成される `tmux.conf` とシンボリックリンクの仕様、既存 `~/.tmux.conf` の保護について追記しました。
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TDX/CHANGELOG.md) の `[Unreleased]` の追加機能節に項目を追加しました。
+   - 個票（[`docs/ja/projects/prj-0001/controls/project-register/pjr-8tdx-devcontainer-tmux-conf.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TDX/docs/ja/projects/prj-0001/controls/project-register/pjr-8tdx-devcontainer-tmux-conf.md)）の作業内容と対応結果を更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"devcontainer 生成時の tmux.conf 配置と ~/.tmux.conf へのリンク処理の実装、テスト、ガイド、CHANGELOG の更新を完了しました。","handoff":[],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML schema validation skipped","reason":"No *.yaml or *.yml files were changed in this task"}]}
+</specdojo_executor_evidence>
