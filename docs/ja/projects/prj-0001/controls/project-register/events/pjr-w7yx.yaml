@@ -60,3 +60,16 @@
       from: "-"
       to: '["PJR-561Q"]'
   previous_event_id: reg_292b70d5e08144768d9b5f269d952d45
+- v: 1
+  id: reg_ae04931cfb714be9ace837ec8af3c43a
+  ts: "2026-11-03T06:41:32Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_198899e192fb4b108b1af5169c622778
