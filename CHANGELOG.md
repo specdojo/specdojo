@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- `exec run --auto --track <track>` を追加しました。`--parallel`・`--loop`・`--dry-run` と併用でき、失敗後や次の枠の補充でも指定した track だけから選びます。存在しない track は claim 前にエラーで停止し、省略時は全 track から選ぶ従来の動作を維持します（PJR-561Q）。
+
 - Antigravity 向けの対話型オーケストレーター起動スクリプトとして `orch:argon`（`gemini-4-argon-medium`）と `orch:argon:work`（worktree `argon-work`）を追加しました。`specdojo init` と `config scaffold` が Antigravity 選択時に配布します。既存の `orch:flash`・`orch:flash:work`（`gemini-3.8-flash-high`）も維持されます（PJR-EWHQ）。
 
 - schedule の `exec resume --task <task-id> --resume-from executor` を追加しました。executor が成功し reporter で止まった `blocked`／中断した `doing` の pipeline を、既存 worktree と変更、worktree で編集した plan を引き継いで executor から再実行できます（PJR-RKHR）。

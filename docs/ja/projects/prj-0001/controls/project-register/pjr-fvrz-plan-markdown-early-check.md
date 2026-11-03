@@ -13,7 +13,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-11-03T05:23:56Z"
   due_on: "2026-11-07"
-  block_reason: "parent validation failed: lint-ts"
+  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/run/pinned-rate-limit.test.ts > pinned-agent rate-limit recovery > keeps a connection…"
   derived_from:
     - PJR-GQN3
   commit_type: feat

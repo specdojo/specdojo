@@ -62,7 +62,15 @@ specdojo exec run --project <project-id> --auto --loop --parallel 5
 
 # FIFO順で実行する
 specdojo exec run --project <project-id> --auto --strategy fifo
+
+# 指定した track だけから最大 3 件を選ぶ（実行前の確認）
+specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --parallel 3 --dry-run
+
+# 同じ track の Ready がなくなるまで連続実行する
+specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --parallel 3 --loop
 ```
+
+`--track <track>` は自動選択を 1 つの track に限定します。`sch-track-<track>.yaml`（または `.yml`）の track 名を大文字・小文字を区別して指定します。戦略による順序は維持され、準備や実行に失敗した後、`--loop` で枠を補充するときも、ほかの track は選びません。対象 track に Ready がなければ正常終了し、存在しない track は claim 前にエラーになります。`--track` は単一指定で `--auto` が必須です。省略時は従来どおり全 track から選びます。依存関係や Ready の計算は引き続きプロジェクト全体で行います。
 
 ### 1.2. auto実行中の注意点
 
