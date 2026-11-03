@@ -47,3 +47,22 @@
     - field: commit_scope
       from: ""
       to: release
+- v: 1
+  id: reg_8498c7df968b423ead0ee7e5fbc91f4f
+  ts: "2026-11-03T08:50:00Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: 利用者が close を承認した。公開の workflow・npm の latest・npm から入れた版の動作を確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-03"
+    - field: conclusion
+      from: "-"
+      to: "specdojo 0.7.0 と @specdojo/docs-site 0.4.0 を 2026-11-03 に公開した（PR #28、merge commit a50db8a86）。docs-lint は 0.4.0 のまま"
+  previous_event_id: reg_6273a5e9b4104cb389a2566e75075191

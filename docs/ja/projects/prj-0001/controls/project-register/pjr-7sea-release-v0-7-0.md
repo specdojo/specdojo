@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-7sea-release-v0-7-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: PO
   registered_at: "2026-11-03T05:35:47Z"
   due_on: "2026-11-03"
+  completed_at: "2026-11-03T08:50:00Z"
+  conclusion: "specdojo 0.7.0 と @specdojo/docs-site 0.4.0 を 2026-11-03 に公開した（PR #28、merge commit a50db8a86）。docs-lint は 0.4.0 のまま"
   depends_on:
     - PJR-561Q
     - PJR-FVRZ
