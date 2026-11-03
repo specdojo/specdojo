@@ -247,6 +247,7 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   // options に応じて json と script を改変
   const aptPackages: string[] = [];
   const extraScripts: string[] = [];
+  let tmuxConfTemplate: string | undefined;
   let emacsInitTemplate: string | undefined;
   let vimrcTemplate: string | undefined;
 
@@ -265,6 +266,14 @@ fi`);
 
   if (effectiveTmux) {
     aptPackages.push("tmux");
+    tmuxConfTemplate = await readFile(path.join(templateDir, "tmux.conf"), "utf8");
+    extraScripts.push(`# Link bundled tmux.conf when tmux is enabled, preserving any non-symlink user configuration.
+SCRIPT_DIR="$(cd "$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "\${SCRIPT_DIR}/tmux.conf" ]; then
+  if [ ! -e "$HOME/.tmux.conf" ] || [ -L "$HOME/.tmux.conf" ]; then
+    ln -sfn "\${SCRIPT_DIR}/tmux.conf" "$HOME/.tmux.conf"
+  fi
+fi`);
   }
   if (effectiveCron) {
     aptPackages.push("cron");
@@ -472,6 +481,9 @@ fi`);
   if (dryRun) {
     process.stdout.write(`[dry-run] would write: .devcontainer/devcontainer.json\n`);
     process.stdout.write(`[dry-run] would write: .devcontainer/post-create.sh\n`);
+    if (tmuxConfTemplate !== undefined) {
+      process.stdout.write(`[dry-run] would write: .devcontainer/tmux.conf\n`);
+    }
     if (emacsInitTemplate !== undefined) {
       process.stdout.write(`[dry-run] would write: .devcontainer/emacs/init.el\n`);
     }
@@ -495,6 +507,9 @@ fi`);
     "utf8",
   );
   await writeFile(path.join(devcontainerDir, "post-create.sh"), postCreateScript, "utf8");
+  if (tmuxConfTemplate !== undefined) {
+    await writeFile(path.join(devcontainerDir, "tmux.conf"), tmuxConfTemplate, "utf8");
+  }
   if (emacsInitTemplate !== undefined) {
     await mkdir(path.join(devcontainerDir, "emacs"), { recursive: true });
     await writeFile(path.join(devcontainerDir, "emacs", "init.el"), emacsInitTemplate, "utf8");
@@ -518,6 +533,9 @@ fi`);
 
   process.stdout.write(`Written: .devcontainer/devcontainer.json\n`);
   process.stdout.write(`Written: .devcontainer/post-create.sh\n`);
+  if (tmuxConfTemplate !== undefined) {
+    process.stdout.write(`Written: .devcontainer/tmux.conf\n`);
+  }
   if (emacsInitTemplate !== undefined) {
     process.stdout.write(`Written: .devcontainer/emacs/init.el\n`);
   }

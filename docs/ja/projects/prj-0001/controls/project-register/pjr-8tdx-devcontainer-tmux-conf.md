@@ -43,12 +43,19 @@ tmux を入れる構成で .devcontainer/tmux.conf を生成し、コンテナ�
 
 | No  | 作業                                           | 担当 | 状態 | メモ |
 | --- | ---------------------------------------------- | ---- | ---- | ---- |
-| 1   | scaffold で tmux.conf とリンクの処理を生成する | DEV  | open | -    |
-| 2   | テストとガイド・CHANGELOG を足す               | DEV  | open | -    |
+| 1   | scaffold で tmux.conf とリンクの処理を生成する | DEV  | done | -    |
+| 2   | テストとガイド・CHANGELOG を足す               | DEV  | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `devcontainer scaffold` で tmux を含める構成（`--tmux`、preset `recommended` / `full`、`init --devcontainer`）において、`.devcontainer/tmux.conf`（マウス操作・クリップボード・256 色設定）を生成するようにした（`templates/devcontainer/tmux.conf` および `src/devcontainer/scaffold.ts`）。
+- 生成する `post-create.sh` で、スクリプトと同じ `.devcontainer/tmux.conf` を `~/.tmux.conf` へ `ln -sfn` でリンクする処理を追加した。`~/.tmux.conf` が存在しないか既にシンボリックリンクの場合のみリンクし、利用者の通常ファイルは上書きしない。また `tmux.conf` が存在しない場合は何もしない。`post-start.sh` と `postStartCommand` は追加しない。
+- tmux を含めない構成（`preset: "minimal"` や `--tmux` なしの個別指定）では、`tmux.conf` もリンク処理も生成しないようにした。
+- `--dry-run` 出力に `tmux.conf` を含め、既存 `.devcontainer/` は `--force` なしでは上書きしない動作を維持した。
+- `tests/src/devcontainer/scaffold.test.ts` に tmux あり・なしの両方の生成物テスト、`post-create.sh` のリンク処理の動作検証（未作成時・既存シンボリックリンク時・通常ファイル存在時・tmux.conf 不在時）、および shellcheck による検証テストを追加した。
+- `docs/ja/specdojo/guides/remote-host-development-guide.md` に生成される `tmux.conf` とシンボリックリンクの仕様、既存 `~/.tmux.conf` の保護について追記した。
+- `CHANGELOG.md` の `[Unreleased]` の追加機能節に項目を記載した。
+- 保護された設定（`.specdojo/**`、`package.json` 等）および本リポジトリの `.devcontainer/` は変更していない。
 
 ## 6. 関連ドキュメント
 

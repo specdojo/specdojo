@@ -274,6 +274,11 @@ function main(): void {
         'test "$(stat -c %U "$HOME/.local/bin")" = node && stat -c "%U %n" "$HOME/.local/bin"',
       ),
       checkInContainer(repo, "tmux is installed", "command -v tmux"),
+      checkInContainer(
+        repo,
+        "~/.tmux.conf is linked to .devcontainer/tmux.conf",
+        'test -L "$HOME/.tmux.conf" && grep -q "mouse on" "$HOME/.tmux.conf"',
+      ),
       checkInContainer(repo, "Vim is installed", "command -v vim"),
       checkInContainer(repo, "Emacs is installed", "command -v emacs"),
       checkInContainer(
