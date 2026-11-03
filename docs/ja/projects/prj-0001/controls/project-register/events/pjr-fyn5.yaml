@@ -47,3 +47,16 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_c99207756ebc453eb59c8e7f8438e447
+  ts: "2026-11-03T13:01:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 同じ runner の段に触れるため PJR-MERV の後に流す
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-MERV"]'
+  previous_event_id: reg_bf37a5fe8a854b16a91eeea776177cdc
