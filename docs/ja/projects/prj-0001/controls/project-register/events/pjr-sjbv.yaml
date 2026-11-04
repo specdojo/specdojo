@@ -140,3 +140,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_74b1bb1215f74f9da6463510a49178f9
+- v: 1
+  id: reg_1eb9e5dbb18444a1ac8816e6ff377657
+  ts: "2026-11-04T13:55:23Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果で確かめ、統合後の exec run（PJR-JSEY）も通った。利用者が承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: grade の指摘に原因（document または kata と Kata の箇所）を持たせ、Kata が原因の指摘を Kata の手入れの plan へ振り分け、磨き込みの plan には原因を添えて全件を載せるようにした
+  previous_event_id: reg_5dde2ee2950043c68e0049eb0f527785

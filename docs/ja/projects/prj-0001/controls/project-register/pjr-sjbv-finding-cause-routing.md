@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-sjbv-finding-cause-routing
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-04T11:48:08Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-04T13:55:23Z"
+  conclusion: grade の指摘に原因（document または kata と Kata の箇所）を持たせ、Kata が原因の指摘を Kata の手入れの plan へ振り分け、磨き込みの plan には原因を添えて全件を載せるようにした
   derived_from:
     - PJR-CYG0
   depends_on:
