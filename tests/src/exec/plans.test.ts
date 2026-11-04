@@ -431,7 +431,7 @@ describe("plan generation (edit done_criteria goals)", () => {
       // 共通規約は要点（リンク記法など）だけを本文に残し、詳細は参照パスで読ませる（PJR-2219）。
       expect(editPlan).toContain("`[[id|title]]` 形式");
       expect(editPlan).toContain(
-        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
       );
       // 検査の扱い（適用条件の判定・not_applicable と理由・not_run の限定）は要点として本文に残す（PJR-Z104）。
       expect(editPlan).toContain("hook 設定（`lefthook.yml` など）を読み");
@@ -469,7 +469,7 @@ describe("plan generation (edit done_criteria goals)", () => {
       // approach 違い（recipe-maintenance）の plan にも同じ参照と要点が注入される。
       expect(maintenancePlan).toContain("`[[id|title]]` 形式");
       expect(maintenancePlan).toContain(
-        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
       );
       expect(maintenancePlan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
       expect(maintenancePlan).not.toContain("### プロジェクトコンテキスト");
@@ -624,51 +624,103 @@ describe("review plan templates", () => {
 });
 
 describe("injectCommonConventions", () => {
-  const fragmentPath = execTemplatePath("xep-common-conventions-template.md");
+  const commonPath = execTemplatePath("xp-common-conventions-template.md");
+  const editPath = execTemplatePath("xep-common-conventions-template.md");
+  const reviewPath = execTemplatePath("xrp-common-conventions-template.md");
+  const marked = (rules: string) =>
+    `<!-- plan-essentials:start -->\n\n${rules}\n\n<!-- plan-essentials:end -->`;
 
-  it("要点マーカーの間だけを参照パスとともに本文へ載せ、schema の行を解決する", () => {
-    const cache = new Map<string, string>([
-      [
-        fragmentPath,
-        [
-          "## 共通: 記法・成果物規約",
-          "",
-          "<!-- plan-essentials:start -->",
-          "",
-          "- essential rule",
-          "- schema `_SCHEMA_REF_` に従う",
-          "",
-          "<!-- plan-essentials:end -->",
-          "",
-          "- detail rule",
-          "",
-        ].join("\n"),
-      ],
-    ]);
+  it.each(["edit", "review"] as const)(
+    "%s は共通と mode 別の要点だけを両方の参照パスとともに載せる",
+    (mode) => {
+      const cache = new Map<string, string>([
+        [commonPath, `## 共通: 記法・成果物規約\n\n${marked("- shared rule")}\n\n- shared detail`],
+        [editPath, `${marked("- edit rule\n- schema `_SCHEMA_REF_` に従う")}\n\n- edit detail`],
+        [reviewPath, `${marked("### review の判断手順\n\n- review rule")}\n\n- review detail`],
+      ]);
+      const actual = injectCommonConventions("# Plan\n", "docs/schema.yaml", cache, mode);
 
-    const actual = injectCommonConventions("# Plan\n", "docs/schema.yaml", cache);
+      expect(actual).toContain("## 共通: 記法・成果物規約");
+      expect(actual).toContain(
+        "`docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`",
+      );
+      expect(actual).toContain(
+        `docs/ja/specdojo/exec-templates/x${mode === "edit" ? "e" : "r"}p-common-conventions-template.md`,
+      );
+      expect(actual).toContain("- shared rule");
+      expect(actual).toContain(`- ${mode} rule`);
+      expect(actual).not.toContain(`- ${mode === "edit" ? "review" : "edit"} rule`);
+      expect(actual).not.toContain("detail");
+      expect(actual).not.toContain("plan-essentials:");
+      expect(actual).not.toContain("_SCHEMA_REF_");
+      if (mode === "edit") {
+        expect(actual).toContain("- shared rule\n- edit rule\n- schema `docs/schema.yaml` に従う");
+      } else {
+        expect(actual).not.toContain("schema");
+      }
+    },
+  );
 
-    expect(actual).toContain("## 共通: 記法・成果物規約");
-    expect(actual).toContain(
-      "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+  it("実際の規約も mode を分離し、schema がない edit では YAML の要点を除く", () => {
+    const edit = injectCommonConventions("_COMMON_CONVENTIONS_", "docs/schema.yaml", new Map());
+    const noSchema = injectCommonConventions("_COMMON_CONVENTIONS_", MISSING, new Map());
+    const review = injectCommonConventions(
+      "_COMMON_CONVENTIONS_",
+      "docs/schema.yaml",
+      new Map(),
+      "review",
     );
-    expect(actual).toContain("- essential rule\n- schema `docs/schema.yaml` に従う");
-    expect(actual).not.toContain("detail rule");
-    expect(actual).not.toContain("plan-essentials:");
+    for (const plan of [edit, review]) {
+      expect(plan).toContain("`[[id|title]]` 形式");
+      expect(plan).toContain("result の必須セクション");
+      expect(plan).not.toContain("plan-essentials:");
+    }
+    expect(edit).toContain("対応 schema `docs/schema.yaml`");
+    expect(edit).not.toContain("### review の判断手順");
+    expect(review).toContain("### review の判断手順");
+    expect(review).not.toContain("YAML 成果物を編集した場合");
+    expect(review).not.toContain("xep-common-conventions-template.md");
+    expect(noSchema).not.toContain("_SCHEMA_REF_");
+    expect(noSchema).not.toContain("YAML 成果物を編集した場合");
   });
 
-  it("要点マーカーのない断片は従来どおり全文を載せる", () => {
-    const cache = new Map<string, string>([[fragmentPath, "## Common\n\n- detail rule\n"]]);
+  it("要点マーカーのない断片は全文を載せる", () => {
+    const cache = new Map<string, string>([
+      [commonPath, "## Common\n\n- shared detail\n"],
+      [editPath, "- edit detail\n"],
+    ]);
+    expect(injectCommonConventions("# Plan\n", MISSING, cache)).toBe(
+      "# Plan\n\n## Common\n\n- shared detail\n\n- edit detail\n",
+    );
+  });
 
-    const actual = injectCommonConventions("# Plan\n", MISSING, cache);
+  it("マーカーのある共通断片と全文の mode 別断片を組み合わせる", () => {
+    const cache = new Map<string, string>([
+      [commonPath, marked("- shared rule")],
+      [editPath, "- local edit rule\n"],
+    ]);
+    const actual = injectCommonConventions("_COMMON_CONVENTIONS_", MISSING, cache);
+    expect(actual).toContain("- shared rule\n- local edit rule");
+    expect(actual).toContain("xp-common-conventions-template.md");
+    expect(actual).toContain("xep-common-conventions-template.md");
+  });
 
-    expect(actual).toBe("# Plan\n\n## Common\n\n- detail rule\n");
+  it("全文の共通断片と要点のある mode 別断片では共通見出しを重複させない", () => {
+    const cache = new Map<string, string>([
+      [commonPath, "## Local common\n\n- shared rule\n"],
+      [editPath, marked("- edit rule")],
+    ]);
+    const actual = injectCommonConventions("_COMMON_CONVENTIONS_", MISSING, cache);
+    expect(actual.match(/## Local common/g)).toHaveLength(1);
+    expect(actual).toContain("- shared rule\n- edit rule");
+    expect(actual).toContain("xp-common-conventions-template.md");
+    expect(actual).toContain("xep-common-conventions-template.md");
   });
 });
 
-describe("review-only block of the common conventions", () => {
+describe("review conventions", () => {
   const conventions = readFileSync(
-    join("docs/ja/specdojo/exec-templates", "xep-common-conventions-template.md"),
+    join("docs/ja/specdojo/exec-templates", "xrp-common-conventions-template.md"),
     "utf8",
   );
 
@@ -834,8 +886,10 @@ describe("generateSinglePlan", () => {
 
       // 条件付きの検査案内は詳細側にあり、plan はその詳細を参照させる（PJR-2219）。
       const plan = readFileSync(outPath, "utf8");
-      const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
-      expect(plan).toContain(`共通の規約の詳細 \`${referencePath}\` を読み`);
+      const referencePath = "docs/ja/specdojo/exec-templates/xp-common-conventions-template.md";
+      expect(plan).toContain(
+        `共通の規約の詳細 \`${referencePath}\`、\`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md\` を読み`,
+      );
       const detail = readFileSync(referencePath, "utf8");
       expect(detail).toContain("対象 project に `catalog_path` が設定されている");
       expect(detail).toContain(
@@ -1239,7 +1293,7 @@ describe("generateSinglePlan", () => {
       expect(plan).not.toContain("review-only:");
       // review plan も同じ参照と要点を載せ、詳細の本文は差し込まない（PJR-2219）。
       expect(plan).toContain(
-        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xrp-common-conventions-template.md` を読み",
       );
       expect(plan).toContain("`[[id|title]]` 形式");
       expect(plan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");

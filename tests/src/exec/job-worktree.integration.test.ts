@@ -194,7 +194,9 @@ function setupFixture(
   );
   for (const name of [
     "xep-job-template.md",
+    "xp-common-conventions-template.md",
     "xep-common-conventions-template.md",
+    "xrp-common-conventions-template.md",
     "xrp-job-template.md",
     "xer-template.md",
     "xrr-template.md",

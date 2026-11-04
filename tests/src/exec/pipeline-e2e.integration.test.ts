@@ -460,8 +460,9 @@ function writeTemplates(repo: string): void {
     ].join("\n"),
     "utf8",
   );
+  writeFileSync(join(templates, "xep-common-conventions-template.md"), "");
   writeFileSync(
-    join(templates, "xep-common-conventions-template.md"),
+    join(templates, "xp-common-conventions-template.md"),
     "## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n",
     "utf8",
   );

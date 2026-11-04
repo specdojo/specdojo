@@ -584,7 +584,7 @@ const hasExtension =
   };
 
 // The command-to-change mapping is kept in one place and mirrors the change-type rows in
-// xep-common-conventions-template.md. Checks such as typecheck intentionally remain outside this
+// xp-common-conventions-template.md. Checks such as typecheck intentionally remain outside this
 // table: PJR-8WBN requires their existing script-based applicability to stay unchanged.
 const CHANGE_SCOPED_VALIDATIONS: readonly ChangeScopedValidation[] = [
   {

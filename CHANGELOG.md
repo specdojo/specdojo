@@ -38,6 +38,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- exec plan の規約を edit / review 共通（`xp-common-conventions-template.md`）、edit 専用（`xep-common-conventions-template.md`）、review 専用（`xrp-common-conventions-template.md`）に分けました。生成時は共通と mode に対応する規約を組み合わせます。規則の文言は変えず、review の詳細から編集専用の指示を除きました。コピー済みの規約がある場合は3ファイルを同期してください（PJR-Y431）。
+
 - 概念データフロー図の Kata を見直しました。全体概要（`cdfd-overview`）の rulebook・recipe・sample・template は、目的を全体像として書き、プロセス領域の区分を代表ノードとする図（区分の位置をそろえる、線のない区分を置かない、調整役の指示の図を分ける、区分の間の実行要求の線を認める、業務の言葉の題）を定め、sample と template の図を D2 の縦の流れにしました（PJR-6QTK・PJR-BC45）。ユースケース別（`cdfd-uc`）の Kata は、「引き渡し」と「例外時の戻り先」の章をなくして渡す情報を図の線で表し、図から調整役を外し、イベントを 1 ノード 1 出来事の短い文にし、deprecated の文書を参照しないことを定め、sample と template の図を D2 の縦の流れにしました（PJR-PRYZ）。eject している場合は、差分を確かめて取り込んでください。
 
 - docs-site のサイドメニューに、非推奨でない Kata（rulebook・recipe・sample・template）をすべて載せました。「サンプル」と「テンプレート」のメニューを新設し、載っていない Kata を検出するテストを追加しました（PJR-PQG3）。
