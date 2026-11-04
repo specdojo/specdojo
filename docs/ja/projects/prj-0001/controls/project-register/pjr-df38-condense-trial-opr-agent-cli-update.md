@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-04T14:31:13Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-04T22:48:37Z"
+  conclusion: 完了条件を満たした
   derived_from:
     - PJR-1BRQ
   commit_type: docs

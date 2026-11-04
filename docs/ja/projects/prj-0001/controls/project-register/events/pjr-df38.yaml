@@ -79,3 +79,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2c5de83f0a17467ca41671d85d5b852b
+- v: 1
+  id: reg_8b5c7a78848347de875f53faa1700c5e
+  ts: "2026-11-04T22:48:37Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator の確認結果を利用者が承認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 完了条件を満たした
+  previous_event_id: reg_d31b82e012564c5f861f4b1d471412e8
