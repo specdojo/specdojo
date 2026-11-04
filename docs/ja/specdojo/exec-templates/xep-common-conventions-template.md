@@ -2,6 +2,9 @@
 
 <!-- plan-essentials:start -->
 
+- 冗長さの判定は [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-arc-conciseness` を正本とする。
+- 同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲は書かず、既存の記述は削る・まとめる・参照に置き換える。
+- 判断に要る背景・制約・例外・完了条件は残し、長さだけでは削らない。
 - YAML 成果物を編集した場合、対応 schema `_SCHEMA_REF_` に従って記述する。`package.json` に `validate:schema:file` script がある場合だけ、`npm run validate:schema:file -- --schema _SCHEMA_REF_ --data <対象ファイル>` で schema 検査を実施する。適用した検査でエラーが出た場合は修正してから完了とする。
 
 <!-- plan-essentials:end -->
