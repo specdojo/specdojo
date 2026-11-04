@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-1799-stsd-task-execution-draft
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-04T23:37:37Z"
+  completed_at: "2026-11-04T23:54:07Z"
+  conclusion: 実装をもとに下書きした。実装にない終了の遷移 2 件は磨き込み（PJR-Q9AW）へ引き継ぐ
   derived_from:
     - PJR-3APD
   depends_on:

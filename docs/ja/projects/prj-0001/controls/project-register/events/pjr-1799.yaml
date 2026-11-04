@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8299ba7be97c4f9bb324d47ba368ca15
+- v: 1
+  id: reg_aca685dc3f8341db971a5af60f68d32b
+  ts: "2026-11-04T23:54:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: draft の段として内容を実装で確かめた。残る 1 点は後続の項目の入力に渡した（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 実装をもとに下書きした。実装にない終了の遷移 2 件は磨き込み（PJR-Q9AW）へ引き継ぐ
+  previous_event_id: reg_fa69262e08a94ff9ac3c214992976e8b
