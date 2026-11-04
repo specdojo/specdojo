@@ -92,7 +92,7 @@ groups:
             purpose: 成果物の specdojo.status（draft/ready/deprecated）の許容値・状態遷移規則
           - kind: implementation
             path: src/deliverable/trash.ts
-            purpose: 成果物の非推奨化（deprecated）判定および trash 保管への状態遷移処理
+            purpose: 成果物の文書を trash へ移し、カタログの path を付け替える廃棄の処理（local_id は変えない）
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
