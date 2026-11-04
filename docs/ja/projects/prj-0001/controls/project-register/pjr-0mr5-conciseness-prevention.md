@@ -17,6 +17,7 @@ specdojo:
     - PJR-CYG0
   depends_on:
     - PJR-CYG0
+    - PJR-Y431
   commit_type: feat
   commit_scope: exec
 ---

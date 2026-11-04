@@ -50,3 +50,16 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_e80e97f7c0104b97b38d5576f35011f5
+  ts: "2026-11-04T12:12:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-CYG0"]'
+      to: '["PJR-CYG0","PJR-Y431"]'
+  previous_event_id: reg_1d2c1112dc4246c1a7b1ad703ed2a830
