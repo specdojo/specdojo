@@ -30,6 +30,7 @@ stsd の試行（3APD）の段 3。draft した stsd-task-execution を fully-gu
 ## 2. 入力
 
 - 磨き込みは stsd の Kata（rulebook・図の rulebook・recipe・sample・template）に沿って行う。Kata の出来は、この 1 件を材料に人が判断する（3APD の段 5）
+- draft（PJR-1799）の T-12（完了から終了、「成果物受入」）と T-13（中止から終了、「中止確定」）は実装にないイベントで、推測で埋められている。実装で確かめて直すか、終了点を置かない理由を「概要」に書く（stsd の rulebook の状態遷移図の規則）（2026-11-05 orchestrator の確認）
 
 ## 3. 完了条件
 

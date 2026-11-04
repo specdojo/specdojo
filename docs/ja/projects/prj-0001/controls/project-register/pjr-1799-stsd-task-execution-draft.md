@@ -51,7 +51,9 @@ stsd の試行（3APD）の段 2。代表の 1 件 stsd-task-execution を、現
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: executor（flash-high）が [[stsd-task-execution]] を、`src/exec/events.ts`・`src/exec/types.ts` をもとに下書きした（6b9cdc3ab）。状態一覧の 6 状態、遷移 T-01〜T-13、Mermaid の状態遷移図、今後の検討メモを書いた。
+- orchestrator の確認: 状態の導出（`ready` は記録されず依存の充足から導く）、遷移の可否（`advanceTaskState` と各 `can*Task` の判定）、`reopen` は人だけで後続が未着手のときに限ること、`cancel` は未着手のときだけ受け付けることが実装と合っていた。
+- 残課題: T-12（完了から終了、「成果物受入」）と T-13（中止から終了、「中止確定」）は実装にないイベントで、推測で埋めている。stsd の rulebook は、終了点を業務上の終了がある場合に限り、ない場合は「概要」に継続状態と理由を書くよう求めている。磨き込み（PJR-Q9AW）で直す。
 
 ## 6. 関連ドキュメント
 
