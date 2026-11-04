@@ -1,0 +1,24 @@
+PJR-9CVE「opr と bps の template で概要が 2 回出る作りを直す」の対応を完了しました。
+
+### 実施内容
+
+1. **[`opr-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9CVE/docs/ja/specdojo/templates/opr-template.md)**:
+   - H1 直下にあった `_DELIVERABLE_OVERVIEW_` の段落を削除し、「1. 概要」の章の中で `_TODO_: `_DELIVERABLE_OVERVIEW_` を基に、...` として使う形（[`stsd-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9CVE/docs/ja/specdojo/templates/stsd-template.md) と同一の形）へ一本化しました。
+2. **opr の sample（`opr-*-sample.md`）**:
+   - 全 9 件の sample を確認しました。H1 と「1. 概要」の間に導入文段落が存在するものはなく（参照リンクのみ、または章見出しに直接続く構成）、まとめ対象の記述がないため変更は行いませんでした。
+3. **opr の rulebook（[`opr-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9CVE/docs/ja/specdojo/rulebooks/opr-rulebook.md)・[`opr-index-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9CVE/docs/ja/specdojo/rulebooks/opr-index-rulebook.md)）**:
+   - もともと「## 1. 概要」の章内に手順の対象と目的を記載する規約となっており、H1 直下の導入文に関する規定はなく、改訂後の template と食い違いがないため変更は行いませんでした（recipe は未定義）。
+4. **`bps-template` の重複判断**:
+   - `vp-arc-conciseness` の下限（判断に要る背景は残す）と [`bps-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9CVE/docs/ja/specdojo/rulebooks/bps-rulebook.md)「6.1. 導入文と概要」に照らして重複を検証しました。
+   - **判断**: 重複しない（維持する）。
+   - **理由**: bps では H1 直下の導入文は起点・対象・業務成果を一文で示すリード文とし、「1. 概要」は業務目的・プロセス領域・対象者・主担当・開始点・終了点・対象外の 7 項目を構造化箇条書きで定義するものとして役割分担が確立されています。同一主張の反復ではなくリード文と詳細属性定義として機能しており、`vp-arc-conciseness` の「同じ主張の繰り返し」「二重の説明」には当たらず、判断に必要な境界情報として保持すべきと判断しました。したがって、`bps-template`、`bps-rulebook`、`bps-recipe`、`bps-sample` は変更しませんでした。
+5. **既存成果物**:
+   - `docs/ja/product/` 配下の成果物は変更していません。
+6. **[`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9CVE/CHANGELOG.md)**:
+   - `## [Unreleased]` の節に今回の変更内容を 1 行追記しました。
+7. **[`pjr-9cve-template-overview-duplication.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9CVE/docs/ja/projects/prj-0001/controls/project-register/pjr-9cve-template-overview-duplication.md)**:
+   - 個票の作業内容および対応結果（実施内容、BPS 重複判断とその理由、変更ファイル、残課題なし）を更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-9CVE: opr-template の概要記述を「1. 概要」章内に一本化し、bps-template は役割分担が確立されているため現状維持と判断して個票および CHANGELOG を更新しました。","handoff":[],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"All project-register tickets and history files validated successfully."},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No yaml or yml deliverable files were modified."},{"command":"npm run validate:catalog","status":"not_applicable","reason":"Changes did not modify deliverable catalog or project deliverables under docs/ja/projects/."}]}
+</specdojo_executor_evidence>

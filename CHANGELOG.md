@@ -16,6 +16,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - devcontainer の構成で tmux を含める場合（`--tmux`、または preset が `recommended` 以上、`init --devcontainer` を含む）に、`.devcontainer/tmux.conf` を生成し、生成する `post-create.sh` で `~/.tmux.conf` へリンク（`ln -sfn`）するようにしました。マウス操作・クリップボード・256 色の設定を含み、利用者が既に独自の `~/.tmux.conf`（通常ファイル）を持っている場合は上書きしません。tmux を含めない構成では `tmux.conf` もリンク処理も生成しません（PJR-8TDX）。
 
+### 変更
+
+- opr の template で H1 直下の概要の段落をなくし、「1. 概要」の章の中へ一本化しました。bps は導入文と概要の役割が分かれているため現状を維持します（PJR-9CVE）。
+
 ### 不具合修正
 
 - `exec resume --task <task-id> --resume-from executor` および `exec run --register <PJR-ID> --resume --resume-from executor` で worktree の plan を編集してから再開したとき、統合時に直した plan が破棄されて元の plan で上書きされる問題を修正しました。executor から再開した run の統合では worktree の直した plan をコミット対象に含め、統合の commit に履歴として残るようにしました。あわせて登録簿の executor 再開で worktree 内の編集済み plan を読み込むようにしました（PJR-Z807）。
