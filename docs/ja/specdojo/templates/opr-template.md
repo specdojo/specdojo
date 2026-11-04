@@ -15,11 +15,9 @@ specdojo:
 
 # _DELIVERABLE_NAME_
 
-_DELIVERABLE_OVERVIEW_
-
 ## 1. 概要
 
-_TODO_: 対象となる運用作業と、この手順によって再現可能にする結果を記述する。`opr-<term>` の場合は `opr-index` のどの共通規約を参照し、何を具体化する文書かを明示する。
+_TODO_: `_DELIVERABLE_OVERVIEW_` を基に、対象となる運用作業と、この手順によって再現可能にする結果を記述する。`opr-<term>` の場合は `opr-index` のどの共通規約を参照し、何を具体化する文書かを明示する。
 
 ## 2. 手順適用範囲・前提
 
