@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9ad5b5a2e1f343b7bd69257d9a53f036
+  ts: "2026-11-04T23:38:45Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-task-execution の冗長さを condense で直す
+    - field: description
+      from: ""
+      to: stsd の試行（3APD）の段 4。磨き込んだ stsd-task-execution の冗長な箇所を condense で直し、Kata が原因のものを記録する
+    - field: input
+      from: ""
+      to: '["condense は書き足しの最後の edit の後、review の前に置く（PJR-CYG0）。Kata が原因の記録は、段 5 の手入れか作り直しかの判断の材料にする"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: condense
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-task-execution"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-Q9AW"]'
