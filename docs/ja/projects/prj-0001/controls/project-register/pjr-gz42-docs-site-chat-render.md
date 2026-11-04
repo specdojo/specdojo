@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-gz42-docs-site-chat-render
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-03T23:08:13Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-04T10:21:32Z"
+  conclusion: 文書サイトで chat のコードブロックを吹き出しと TUI の見た目で描画できるようにし、Quick Start ガイドの対話 11 か所を吹き出しにした
   commit_type: feat
   commit_scope: docs-site
 ---
