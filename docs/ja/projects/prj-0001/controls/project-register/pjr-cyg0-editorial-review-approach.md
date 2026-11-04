@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-cyg0-editorial-review-approach
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-11-03T23:50:48Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-04T11:46:37Z"
+  conclusion: 予防・原因の振り分けの一般化・冗長さを直す edit の段 condense の 3 層で直す。condense は書き足しの最後の edit の後、review の前に置く
   commit_type: docs
   commit_scope: register
 ---

@@ -41,3 +41,22 @@
     - field: commit_scope
       from: ""
       to: register
+- v: 1
+  id: reg_09120242b49948b68e35c005502bb552
+  ts: "2026-11-04T11:46:37Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 後追いの review の段だけでは書く時点の原因が残るため。利用者が 3 層の方針と condense の位置を決めた
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: 予防・原因の振り分けの一般化・冗長さを直す edit の段 condense の 3 層で直す。condense は書き足しの最後の edit の後、review の前に置く
+  previous_event_id: reg_483dbb19d63c4c269aad5d4a526d74c2
