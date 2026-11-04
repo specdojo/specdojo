@@ -93,6 +93,7 @@ CDFD 4 文書において状態定義・状態遷移の正本として名指し�
 ### 5.6. 残課題
 
 - なし（後続の `PJR-3APD` 試行において、代表の 1 件である `stsd-task-execution` の draft 作成を進める）。
+- orchestrator の確認で、`stsd-deliverable` の根拠 `src/deliverable/trash.ts` の説明が実装と食い違っていた（非推奨化の判定ではなく、文書を trash へ移してカタログの path を付け替える廃棄の処理）。orchestrator が feature ブランチで説明を直して統合した（375d7b14a）。
 
 ## 6. 関連ドキュメント
 
