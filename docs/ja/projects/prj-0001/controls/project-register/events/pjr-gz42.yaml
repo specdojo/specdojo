@@ -121,3 +121,16 @@
       from: "-"
       to: 文書サイトで chat のコードブロックを吹き出しと TUI の見た目で描画できるようにし、Quick Start ガイドの対話 11 か所を吹き出しにした
   previous_event_id: reg_56220cb1bec1430da567f44d2b757040
+- v: 1
+  id: reg_ca786548b91e4ab8a7fbb955f8b5bdfc
+  ts: "2026-11-04T10:23:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: fields updated
+  changes:
+    - field: description
+      from: docs-site に chat 言語のコードブロックを吹き出し（右に利用者、左にオーケストレーター）と TUI 風の見た目で描画する処理を足し、Quick Start ガイドの対話 7 か所を chat に変える
+      to: docs-site に chat 言語のコードブロックを吹き出し（右に利用者、左にオーケストレーター）と TUI 風の見た目で描画する処理を足し、Quick Start ガイドの対話 11 か所を chat に変える
+  previous_event_id: reg_34f873b4fc3d4f80ab9ca64b075f83cc
