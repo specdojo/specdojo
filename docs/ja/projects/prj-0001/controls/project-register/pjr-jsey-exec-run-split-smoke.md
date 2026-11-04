@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: Y431・SJBV・0MR5 の統合後に exec run --register が start から review・統合まで通り、生成した plan に 3 つに分けた規約と冗長さの規則が入ることを確かめた
+  completed_at: "2026-11-04T14:38:25Z"
+  conclusion: 1BRQ の統合後に exec run --register が start から review・統合まで通ることを確かめた
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
