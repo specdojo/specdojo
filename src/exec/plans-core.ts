@@ -276,7 +276,11 @@ export function deliverableName(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.name ?? MISSING;
 }
 
-export function gradeFindingsText(projectId: string, targetPath: string): string {
+export function gradeFindingsText(
+  projectId: string,
+  targetPath: string,
+  includeCause = false,
+): string {
   if (!targetPath || targetPath === MISSING || !existsSync(join(specdojoRootDir(), targetPath))) {
     return "- なし";
   }
@@ -284,7 +288,7 @@ export function gradeFindingsText(projectId: string, targetPath: string): string
     const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
     if (!result || result.findings.length === 0) return "- なし";
     return result.findings
-      .map((finding) => `- ${finding.id} ${planGradeFindingText(finding)}`)
+      .map((finding) => `- ${finding.id} ${planGradeFindingText(finding, includeCause)}`)
       .join("\n");
   } catch {
     return "- なし";

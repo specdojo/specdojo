@@ -340,6 +340,11 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。",
     "5. 判定根拠と新しい finding の message は英語で記述する。固有名詞・識別子・引用は原文を保ってよい。日本語だけの既存 finding は互換用の正本として扱い、未解消ならその message を翻訳せず原文のまま再掲する。",
     "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
+    ...(opts.target === "deliverable"
+      ? [
+          '各 finding の直後に `CAUSE: <JSON>` を1行で記す。原因は `{"type":"document"}`、または `{"type":"kata","kind":"rulebook|recipe|sample|template","location":"Kata 内の見出し・行・引用箇所"}` とする（kind は1種類を選ぶ）。冗長さに限らず全 viewpoint で原因を判断する。成果物が宣言した rulebook とそこから辿る Kata を根拠とし、Kata の問題箇所を実際に読んで location に示せる場合だけ kata とする。資料にない・箇所を示せない場合は document とする。原因は点数・判定・前の指摘の引き継ぎ・日本語訳を変えない。',
+        ]
+      : ["Kata そのものの grade では原因を付けず、`CAUSE` 行を出力しない。"]),
     "7. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の canonical message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
     "8. 前回の指摘の確認だけで終了せず、前回の指摘にない問題もすべての viewpoint で独立して検出する。",
     ...(doneCriteria.length > 0
@@ -389,7 +394,7 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "## 4. 完了手順",
     "",
     "1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。",
-    "2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON、Markdown コードフェンス、GradeSubmission は出力しない。",
+    "2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON は `CAUSE` 行の値だけに用い、Markdown コードフェンスや GradeSubmission は出力しない。",
     "3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は英語で1行に具体的に記す。message は正本としてそのまま記録される。finding がない場合は `FINDING` 行を記さない。",
     "4. すべての viewpoint marker、0-4 の level、level 3 以下の finding、severity と非空 message が揃っていることを確認する。",
     ...(doneCriteria.length > 0
@@ -404,6 +409,7 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
       "LEVEL: <0-4>",
       "根拠を自由形式で記述する。",
       "FINDING <severity> line=<line>: level 3 以下の場合だけ、具体的な修正理由を1行で記述する。",
+      ...(opts.target === "deliverable" ? ['CAUSE: {"type":"document"}'] : []),
       "[END VIEWPOINT]",
       "",
     ]),
@@ -497,7 +503,7 @@ export function renderGradeReporterPlan(opts: {
     "## 3. 進め方",
     "",
     "1. `<grade_executor_output>` の `[VIEWPOINT <id>]` ごとに `LEVEL` とすべての `FINDING` を読み取る。対象文書や参考資料は読まない。",
-    "2. level、severity、line、message を executor の申告どおりにコピーする。message の要約、言い換え、校正を行わない。",
+    "2. level、severity、line、message を executor の申告どおりにコピーする。`CAUSE: <JSON>` は直前の finding の `cause` に構造を保ってコピーし、省略時は cause を足さない。message の要約、言い換え、校正を行わない。",
     "3. executor が述べていない finding を追加せず、述べた finding を省略しない。finding の `id` は出力しない。",
     "4. finding の severity により viewpoint の level に上限がある（`blocker` は上限 0、`major` は上限 2、`minor` は上限 3）。executor の申告が上限を超えていても level は申告どおりにコピーし、補正は `grade apply` に委ねる。marker 欠落など、それ以外の GradeSubmission 契約違反は推測で補わず異常終了する。",
     ...(doneCriteria.length > 0

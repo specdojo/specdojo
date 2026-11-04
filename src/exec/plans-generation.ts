@@ -13,6 +13,7 @@ import type { RoleDefinition } from "./role-types.js";
 import type { ReviewGradeOutcome } from "../review/grade.js";
 import { isAuthoringApproach, type AuthoringKind } from "../kata/authoring.js";
 import { isPlanningApproach } from "../register/planning.js";
+import { kataCauseFindingsText } from "./plans-kata-findings.js";
 import {
   MISSING,
   applicableReviewCriteria,
@@ -142,7 +143,15 @@ function buildEditPlanMarkdown(
     _GRADE_FINDINGS_: gradeFindingsText(
       projectId,
       gradeFindingTargetPath(task.approach, deliverable, refs),
+      task.approach === "fully-guided",
     ),
+    _KATA_CAUSE_FINDINGS_: task.approach?.endsWith("-maintenance")
+      ? kataCauseFindingsText(
+          projectId,
+          task.approach.replace(/-maintenance$/, "") as keyof KataRefs,
+          gradeFindingTargetPath(task.approach, deliverable, refs),
+        )
+      : "- なし",
     _TARGET_DELIVERABLES_: crossDeliverableTargetDetails(
       projectId,
       task.target_local_ids ?? [],

@@ -313,6 +313,10 @@ register からの `draft`・`fully-guided`・`recipe-guided`・`freeform`・`re
 
 メンテナンスのタスクでは、対象の実践の型を「見直す対象」として扱い、複数の成果物・review result・対象領域の慣行を根拠に、次の観点で妥当性を見直します。対象の実践の型に finding がある場合は、finding の message と同じ viewpoint の判定根拠から指摘の根拠となる規範を特定し、紐づく rulebook / recipe / sample / template や執筆標準も必要な根拠として読みます。たとえば rulebook との構成不整合を指摘する finding では、成果物の有無にかかわらず rulebook を正として照合します。
 
+成果物の grade は、すべての観点の finding に原因 `cause` を付けます。原因は `document`、または Kata の種類と箇所を持つ `kata` です。Kata の箇所を根拠として示せない場合と、原因を持たない旧結果は `document` として扱います。Kata そのものの grade には原因を付けません。項目の形は [[specdojo:command-reference]] の grade の説明を参照してください。
+
+手入れの edit plan は、対象 Kata 自身の指摘に加え、「成果物から届いた Kata が原因の finding」節に、その Kata を rulebook 宣言から辿れる成果物の指摘を取り込みます。対象の種類と一致する原因だけを選び、現在の成果物全体のハッシュと一致する最新サイドカーから、成果物・行・観点・内容・Kata の箇所を1件ずつ載せます。`document` の指摘と、成果物が評価後に変わった古い指摘は取り込みません。`fully-guided` の磨き込み plan は、その成果物のすべての指摘を原因付きで載せます。Kata が原因でも成果物側の修正は必要です。
+
 | `approach`             | 見直す対象 | 主な見直し観点                                                   |
 | ---------------------- | ---------- | ---------------------------------------------------------------- |
 | `rulebook-maintenance` | rulebook   | 章構成、必須項目、禁止事項、判定基準                             |

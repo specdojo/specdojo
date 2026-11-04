@@ -1,0 +1,170 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "原因の記録・Kata への振り分け実装を確認し、前回失敗したテストの2点と grade plan の出力指示を修正しました。sandbox 内の検査は成功。単体テストを含む指定の親検証は runner が実施します。",
+  "handoff": [
+    "原因は共通の `FindingCause` と schema に定義した任意項目 `cause`。省略時は document とし、Kata の場合は `kind` と `location` を持つ。項目名と追加節「成果物から届いた Kata が原因の finding」の選定理由は個票に記載済み。",
+    "前回の親単体テストの失敗に対し、既存テストの部分 mock が未置換の関数を保持するよう修正し、新しいテストデータの `message_ja` を指摘内容と揃えた。再実行は指定どおり親 runner に委ねる。result は編集していないため、reporter／runner が実施内容・変更ファイル・検証結果を反映する。",
+    "統合後は個票と運用メモに従い、PJR-JSEY の対象一覧へ追加して開き直し、実 agent による exec の動作確認を行う。実装上の未決事項はない。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-sjbv-finding-cause-routing.md docs/ja/specdojo/exec-templates/xep-{fully-guided,recipe-maintenance,rulebook-maintenance,sample-maintenance,template-maintenance}-template.md docs/ja/specdojo/guides/ryu-guide.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/{grade-result,finding-cause}.schema.yaml src/exec/plans-{core,generation,grade-findings,kata-findings}.ts src/grade/{apply,core,plan}.ts src/shared/{grade-result,finding-cause}.ts tests/src/grade/finding-cause.test.ts tests/src/exec/plans-grade-findings.test.ts",
+      "status": "passed",
+      "summary": "成果物・ソース・テストを整形。"
+    },
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-sjbv-finding-cause-routing.md",
+      "status": "passed",
+      "summary": "対応結果の追記後も整形済み。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/grade-result.schema.yaml --data tmp/pjr-sjbv-validation/result.yaml",
+      "status": "passed",
+      "summary": "原因なし・document・4種類の kata を含む結果が合格。一時データは削除済み。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。プロダクト文書不在の警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票の最終更新後も履歴リンク検証に合格。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言検査に合格。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と controls の派生ビュー生成に成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後、対象一覧の更新と開き直しを経て実 agent による動作確認を行う。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjbv-finding-cause-routing.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sjbv-finding-cause-routing.md"
+    },
+    {
+      "target": "docs/ja/specdojo/exec-templates/xep-fully-guided-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/exec-templates/xep-fully-guided-template.md"
+    },
+    {
+      "target": "docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md"
+    },
+    {
+      "target": "docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md"
+    },
+    {
+      "target": "docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md"
+    },
+    {
+      "target": "docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/ryu-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/grade-result.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/grade-result.schema.yaml"
+    },
+    {
+      "target": "src/exec/plans-core.ts",
+      "status": "changed",
+      "path": "src/exec/plans-core.ts"
+    },
+    {
+      "target": "src/exec/plans-generation.ts",
+      "status": "changed",
+      "path": "src/exec/plans-generation.ts"
+    },
+    {
+      "target": "src/exec/plans-grade-findings.ts",
+      "status": "changed",
+      "path": "src/exec/plans-grade-findings.ts"
+    },
+    {
+      "target": "src/grade/apply.ts",
+      "status": "changed",
+      "path": "src/grade/apply.ts"
+    },
+    {
+      "target": "src/grade/core.ts",
+      "status": "changed",
+      "path": "src/grade/core.ts"
+    },
+    {
+      "target": "src/grade/plan.ts",
+      "status": "changed",
+      "path": "src/grade/plan.ts"
+    },
+    {
+      "target": "src/shared/grade-result.ts",
+      "status": "changed",
+      "path": "src/shared/grade-result.ts"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/finding-cause.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/finding-cause.schema.yaml"
+    },
+    {
+      "target": "src/exec/plans-kata-findings.ts",
+      "status": "changed",
+      "path": "src/exec/plans-kata-findings.ts"
+    },
+    {
+      "target": "src/shared/finding-cause.ts",
+      "status": "changed",
+      "path": "src/shared/finding-cause.ts"
+    },
+    {
+      "target": "tests/src/grade/finding-cause.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/finding-cause.test.ts"
+    },
+    {
+      "target": "tests/src/exec/plans-grade-findings.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/plans-grade-findings.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>
