@@ -1,0 +1,23 @@
+PJR-FMYK「stsd のカタログを CDFD に合わせて見直す」の executor 作業を完了しました。
+
+### 実施内容の概要
+
+1. **CDFD および実装との照合・精査**:
+   - 概念データフロー図 4 文書（[`cdfd-overview.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md)、[`cdfd-uc-register.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md)、[`cdfd-uc-routine.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md)、[`cdfd-uc-schedule.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md)）で名指しされている状態定義の正本（`stsd-deliverable`、`stsd-task-execution`、`stsd-job-run`、`stsd-register-entry`、`stsd-routine-run`）を精査し、カタログの 5 件と過不足なく一致していることを確認しました。対象の追加・除外・分割・統合および `local_id` の変更は行っていません。
+   - 実装コード（[`src/register/`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/register/)、[`src/exec/`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/exec/)、[`src/deliverable/`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/deliverable/)、[`src/routine/`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/routine/)、[`src/job/`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/job/)）の型定義と遷移ロジックに基づき、各成果物の `overview`（許容状態値）および `evidence_refs`（実在するファイルパスと目的）を見直しました。
+     - `stsd-register-entry`: `VALID_STATUSES`（`open` / `in-progress` / `waiting` / `review` / `done` / `decided` / `rejected` / `deferred`）を明記。`evidence_refs` に [`src/register/register.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/register/register.ts) と [`src/register/item.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/register/item.ts) を指定。
+     - `stsd-task-execution`: `ExecState` および依存充足による導出状態（`todo` / `ready` / `doing` / `blocked` / `done` / `cancelled`）を明記。再エクスポートのみだった `src/exec/exec.ts` を除外除名し、実装本体である [`src/exec/events.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/exec/events.ts) と型定義 [`src/exec/types.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/exec/types.ts) を指定。
+     - `stsd-deliverable`: 状態 `draft` / `ready` / `deprecated` を維持。`evidence_refs` に [`src/deliverable/deliverable.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/deliverable/deliverable.ts) と非推奨化処理を担う [`src/deliverable/trash.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/deliverable/trash.ts) を指定。
+     - `stsd-routine-run`: `RoutineStateResult`・`RoutineExecutionResult`（`running` / `success` / `partial` / `failure` / `skipped`）を明記。`evidence_refs` に [`src/routine/routine.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/routine/routine.ts) と型定義 [`src/routine/definition.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/routine/definition.ts) を指定。
+     - `stsd-job-run`: 実装に存在しない `pending` を除去し、`JobRunState`（`running` / `succeeded` / `partial` / `failed` / `noop`、`attempt` 含む）を明記。`evidence_refs` に [`src/job/job.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/job/job.ts) と型定義 [`src/job/definition.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/src/job/definition.ts) を指定。
+
+2. **変更ファイル**:
+   - [`docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml)
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-fmyk-stsd-catalog-review.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FMYK/docs/ja/projects/prj-0001/controls/project-register/pjr-fmyk-stsd-catalog-review.md)
+
+3. **検証**:
+   - `npm run -s validate:catalog`（成果物カタログ検証）が正常にパスすることを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-data-model-stsd.yaml の 5 件を CDFD および現行実装に照らして見直し、overview と実在する evidence_refs パス・目的を更新しました。個票 pjr-fmyk-stsd-catalog-review.md の作業内容および対応結果を更新し、validate:catalog を通過しました。","handoff":["代表の 1 件である stsd-task-execution は local_id を維持しており、後続タスク（PJR-3APD）において draft 作成を進める準備が整っています。"],"validations":[{"command":"npm run -s validate:catalog","status":"passed","summary":"OK: dct-data-model-stsd.yaml を含む全カタログの整合性検証を通過"}]}
+</specdojo_executor_evidence>
