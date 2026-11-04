@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 67
-graded_at: "2026-11-02T16:28:14.336Z"
+graded_at: "2026-11-04T16:29:28.612Z"
 graded_by: flash-high-executor
 content_hash: 5f2f86eb0b753c314030e556af09fa243289336abcb1b4654d35f5125469cd33
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
+  schedule: ad0e91ae713e016cec240a034a6effd844dc295113adc7435100d118e30656f4
 categories:
   purpose:
     score: 75
@@ -133,7 +133,9 @@ findings:
     message: >-
       The document states an AS-IS operational scope but omits direct termination and multi-status reopen paths
       practiced in current operations, creating an operational governance gap.
-    message_ja: 文書にはAS-ISの運用範囲が記載されているが、現在の運用で行われている直接的な終了およびマルチステータスの再オープン経路が省略されており、運用ガバナンスのギャップが生じている。
+    message_ja: ドキュメントにはAS-ISの運用範囲が記載されていますが、現在の運用で行われている直接の終了およびマルチステータスの再オープン経路が省略されており、運用ガバナンスのギャップが生じています。
+    cause:
+      type: document
   - id: F002
     severity: minor
     rule: vp-po-decision-readiness
@@ -144,6 +146,8 @@ findings:
       | 影響する状態・遷移             | 決定者  | 決定時期                    |
     message: 二つの _ASSUMPTION_ について採用・不採用時の遷移仕様、CLI 改修要否、決定後の反映先を明記し、PO が選択結果まで判断できるようにする必要がある。
     message_ja: 二つの _ASSUMPTION_ について採用・不採用時の遷移仕様、CLI 改修要否、決定後の反映先を明記し、PO が選択結果まで判断できるようにする必要がある。
+    cause:
+      type: document
   - id: F003
     severity: minor
     rule: vp-pm-plan-feasibility
@@ -154,6 +158,8 @@ findings:
       BA      | `bdd-register-entry` 作成時 |
     message: "`bdd-register-entry` の作成と本書への `based_on` 追加を、追跡 ID、作業順序、完了条件を持つ Schedule または PJR 項目へ接続する必要がある。"
     message_ja: "`bdd-register-entry` の作成と本書への `based_on` 追加を、追跡 ID、作業順序、完了条件を持つ Schedule または PJR 項目へ接続する必要がある。"
+    cause:
+      type: document
   - id: F004
     severity: minor
     rule: vp-pm-dependency-risk
@@ -164,6 +170,8 @@ findings:
       | 影響する状態・遷移             | 決定者  | 決定時期                    |
     message: CLI 遷移差異と `bdd-register-entry` 未作成について、Schedule への影響、PJR 登録先、解消まで依存する後続作業を明記する必要がある。
     message_ja: CLI 遷移差異と `bdd-register-entry` 未作成について、Schedule への影響、PJR 登録先、解消まで依存する後続作業を明記する必要がある。
+    cause:
+      type: document
   - id: F005
     severity: minor
     rule: vp-pm-control-reporting
@@ -171,6 +179,8 @@ findings:
     anchor: "## 5. 今後の検討メモ"
     message: 各検討項目を PJR の decision・issue・change-request 等へ転記する基準、追跡 ID、報告先を追加する必要がある。
     message_ja: 各検討項目を PJR の decision・issue・change-request 等へ転記する基準、追跡 ID、報告先を追加する必要がある。
+    cause:
+      type: document
   - id: F006
     severity: minor
     rule: vp-ba-business-value
@@ -178,6 +188,8 @@ findings:
     anchor: "### 1.1. type 別の審査・承認と到達できる状態"
     message: 状態定義を共通正本にすることで誤終了、判断漏れ、引継ぎ不能を防ぐ価値と、プロジェクトの BV-03・AC-02 等との対応を補う必要がある。
     message_ja: 状態定義を共通正本にすることで誤終了、判断漏れ、引継ぎ不能を防ぐ価値と、プロジェクトの BV-03・AC-02 等との対応を補う必要がある。
+    cause:
+      type: document
   - id: F007
     severity: major
     rule: vp-ba-requirements-completeness
@@ -189,6 +201,8 @@ findings:
     message_ja: >-
       `open` から `done`・`decided` への直接終端、`in-progress`・`waiting` からの終端、終端から `in-progress`・`waiting`・`review`
       への直接再開を含め、現行運用で成立する全遷移を図と遷移表へ定義する必要がある。
+    cause:
+      type: document
   - id: F008
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -202,6 +216,8 @@ findings:
     message_ja: >-
       `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は担当・期限が未定のままでも運用できるとしているが、本書は担当と期限の反映を `in-progress`
       の成立条件にしている。
+    cause:
+      type: document
   - id: F009
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -215,6 +231,8 @@ findings:
     message_ja: >-
       `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は待機理由を `block_reason` に記録し `conclusion`
       を変更しないと定めているが、本書は結論欄または本文を記録先としている。
+    cause:
+      type: document
   - id: F010
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -226,6 +244,8 @@ findings:
     message_ja: >-
       `docs/ja/specdojo/rulebooks/pjr-rulebook.md` 5.3.3 は `open` からの直接終端を許可し、`src/register.ts` も任意の活動中状態から close
       を受け付けるが、本書は `done`・`decided` への遷移を `review` からしか定義していない。
+    cause:
+      type: document
   - id: F011
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -239,6 +259,8 @@ findings:
     message_ja: >-
       `src/register.ts` の `register reopen —status` は終端状態から `open`・`in-progress`・`waiting`・`review` への直接遷移を許可するが、本書は
       `T-15`〜`T-18` を `open` のみに限定し、直接指定を後続遷移との同時記録として扱っている。
+    cause:
+      type: document
   - id: F012
     severity: minor
     rule: vp-arc-cross-document-consistency
@@ -252,6 +274,8 @@ findings:
     message_ja: >-
       `src/register.ts` は `note` に対する `close`・`reject`・`defer` を既に拒否しているため、「拒否する検証は確認できていない」という _UNDECIDED_
       を現行制約へ更新する必要がある。
+    cause:
+      type: document
   - id: F013
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -266,6 +290,8 @@ findings:
     message_ja: >-
       `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
       `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
+    cause:
+      type: document
   - id: F014
     severity: major
     rule: vp-arc-technical-constraints
@@ -279,6 +305,8 @@ findings:
     message_ja: >-
       `item_status`、`block_reason`、`completed_at` と `src/register.ts` の活動中・終端ガードを明示的に対応付け、状態表と許可遷移を schema・CLI
       の現行制約へ整合させる必要がある。
+    cause:
+      type: document
   - id: F015
     severity: major
     rule: vp-dev-implementation-readiness
@@ -288,6 +316,8 @@ findings:
       作成・commit の失敗時は項目を終端化せず、失敗理由と result を残して待機する |
     message: 実装可能な遷移行列として使えるよう、各 `register` コマンドの遷移元・遷移先、更新する Frontmatter キー、拒否条件を T-ID 単位で現行実装へ整合させる必要がある。
     message_ja: 実装可能な遷移行列として使えるよう、各 `register` コマンドの遷移元・遷移先、更新する Frontmatter キー、拒否条件を T-ID 単位で現行実装へ整合させる必要がある。
+    cause:
+      type: document
   - id: F016
     severity: minor
     rule: vp-dev-change-impact
@@ -302,6 +332,8 @@ findings:
     message_ja: >-
       遷移方針を確定した際の影響先として `src/register.ts`、register item/event
       schema、関連テスト、`pjr-rulebook.md`、`register-operation-guide.md` を列挙する必要がある。
+    cause:
+      type: document
   - id: F017
     severity: major
     rule: vp-dev-testability
@@ -311,6 +343,8 @@ findings:
       作成・commit の失敗時は項目を終端化せず、失敗理由と result を残して待機する |
     message: 全許可・禁止遷移、type 別終端、`note` の拒否、日時・理由フィールド更新について、検証対象と期待結果を定義し `register build` および関連テストへ接続する必要がある。
     message_ja: 全許可・禁止遷移、type 別終端、`note` の拒否、日時・理由フィールド更新について、検証対象と期待結果を定義し `register build` および関連テストへ接続する必要がある。
+    cause:
+      type: document
   - id: F018
     severity: major
     rule: vp-qe-done-criteria
@@ -321,6 +355,8 @@ findings:
       | 影響する状態・遷移             | 決定者  | 決定時期                    |
     message: 再開・却下・延期・`note` の未決事項と正本文書との差異を解消し、DC-001〜DC-005 を本文根拠から再判定できる状態にする必要がある。
     message_ja: 再開・却下・延期・`note` の未決事項と正本文書との差異を解消し、DC-001〜DC-005 を本文根拠から再判定できる状態にする必要がある。
+    cause:
+      type: document
   - id: F019
     severity: major
     rule: vp-qe-verifiability
@@ -328,6 +364,8 @@ findings:
     anchor: "### 3.2. 却下・延期（T-05、T-06、T-13、T-14）"
     message: "`着手できる`、`対応結果と検証結果がそろった`、`新事実により再評価が必要` を、必須記録、承認者、確認結果による pass / fail 条件へ具体化する必要がある。"
     message_ja: "`着手できる`、`対応結果と検証結果がそろった`、`新事実により再評価が必要` を、必須記録、承認者、確認結果による pass / fail 条件へ具体化する必要がある。"
+    cause:
+      type: document
   - id: F020
     severity: major
     rule: vp-qe-omissions-consistency
@@ -338,6 +376,8 @@ findings:
       BA      | `bdd-register-entry` 作成時 |
     message: "カタログの `depends_on: bdd-register-entry` を解消して `based_on` へ反映し、recipe の完成条件に反する _TODO_ と未収載の直接終端遷移を残さないようにする必要がある。"
     message_ja: "カタログの `depends_on: bdd-register-entry` を解消して `based_on` へ反映し、recipe の完成条件に反する _TODO_ と未収載の直接終端遷移を残さないようにする必要がある。"
+    cause:
+      type: document
   - id: F021
     severity: minor
     rule: vp-ux-language-consistency
@@ -345,6 +385,8 @@ findings:
     anchor: "- 一意判定: 個票 Frontmatter の状態値が一つの状態を示す。状態を変える操作は個票内の追記型 event にも記録され、最後に成立した遷移の遷移先が現在状態と一致する"
     message: 文書成熟度の `status` と処理状態の `item_status` を明確に区別し、追記型 event は個票内ではなく `events/pjr-XXXX.yaml` に保存されることを正確に記述する必要がある。
     message_ja: 文書成熟度の `status` と処理状態の `item_status` を明確に区別し、追記型 event は個票内ではなく `events/pjr-XXXX.yaml` に保存されることを正確に記述する必要がある。
+    cause:
+      type: document
   - id: F022
     severity: major
     rule: vp-ops-release-readiness
@@ -352,6 +394,8 @@ findings:
     anchor: "## 5. 今後の検討メモ"
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    cause:
+      type: document
   - id: F023
     severity: major
     rule: vp-ops-release-readiness
@@ -361,6 +405,8 @@ findings:
       `T-15`〜`T-18`                 | ARC、PO | 本書のレビュー時            |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    cause:
+      type: document
   - id: F024
     severity: major
     rule: vp-ops-operability
@@ -370,6 +416,8 @@ findings:
       待機理由と再開条件が個票の結論欄または本文へ記録され、状態が `waiting` である                        | 個票 Frontmatter・本文  |
     message: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
     message_ja: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
+    cause:
+      type: document
   - id: F025
     severity: major
     rule: vp-qe-config-validity
