@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-FMYK",
   "run_id": "20261104T225913717Z-b18f1721",
-  "updated_at": "2026-11-04T23:14:15.068Z",
+  "updated_at": "2026-11-04T23:14:28.106Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-fmyk-20261104T225913Z-fef79d28-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-11-04T23:14:15.068Z",
-      "completed_at": null,
+      "completed_at": "2026-11-04T23:14:28.106Z",
       "artifact_ref": null
     }
   },
