@@ -34,13 +34,25 @@ PJR-CYG0 の決定に沿って、繰り返し・表と本文の二重の説明�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 書かないことの規則を、edit だけの共通の規約（`xep-common-conventions-template.md`。PJR-Y431 で分けたもの）に定める。種類は、同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲の 5 つ。直し方は、削る・まとめる・参照に置き換えるの 3 つ。下限として、判断に要る背景・制約・例外・完了条件は残し、長さだけでは削らない。
+- 規則の要点（3 行以内）を、plan の本文へ写される範囲（`plan-essentials`）に入れる。
+- 5 つの種類と下限の言葉を、grade の観点 `vp-arc-conciseness` の `check` と `evidence` にそろえる。足りない種類（図をなぞる文、目的に要らない背景）を `evidence` に書き足し、観点の一覧から作る生成物を作り直す。
+- `xep-recipe-guided-template.md` の「冗長な記述や内容の重複を避け、簡潔でわかりやすく記載する」の 1 行を消し、共通の規則に任せる。
+- 単体テストで、`draft`・`fully-guided`・`retrofit`・`bootstrap`・`*-maintenance` の edit plan に規則が載り、review の plan に載らないことを確かめる。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` を通す。親の検証として `test-integration` を通す。
+- CHANGELOG の未公開の版の節（Unreleased）に書き、公開済みの版の節は変えない。
+- 範囲の外: `condense` の段（PJR-1BRQ）、指摘の原因の振り分け（PJR-SJBV）、grade の採点の仕組みの変更、既にある grade の結果の評価のし直し。
+- 規則の文言と、要点に入れる行の選び方は executor が決め、理由を個票の対応結果に書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                              | 担当 | 状態 | メモ |
+| --- | ----------------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | 規則と要点を edit だけの共通の規約に書く                          | ARC  | open | -    |
+| 2   | `vp-arc-conciseness` に種類と下限の言葉をそろえ、生成物を作り直す | ARC  | open | -    |
+| 3   | `recipe-guided` の 1 行を消す                                     | ARC  | open | -    |
+| 4   | テストを足し、検査を通す                                          | ARC  | open | -    |
+| 5   | CHANGELOG と対応結果を書く                                        | ARC  | open | -    |
 
 ## 5. 対応結果
 
@@ -48,4 +60,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:pm-review-viewpoints]]: 規則の正本とする `vp-arc-conciseness`
+- PJR-Y431: 規則を書く edit だけのファイルを作る
+- PJR-CYG0: 冗長さを 3 層で直す決定
