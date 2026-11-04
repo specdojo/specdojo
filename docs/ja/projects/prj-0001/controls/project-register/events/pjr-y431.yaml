@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c92abecf8f8945a093eda8f2220c6495
+- v: 1
+  id: reg_6533b1817f0a4846b5bfa1f481c0b754
+  ts: "2026-11-04T12:42:47Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・生成した plan で確かめ、前後の plan の本文の一致と配布物への同梱を確認した。利用者が承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: exec plan の共通の規約を xp（共通）・xep（edit）・xrp（review）の 3 つに分け、plan の生成時に共通と mode に合うほうを組み合わせるようにした
+  previous_event_id: reg_194eae3cdf05403ba1d3d5b9b406ae6c
