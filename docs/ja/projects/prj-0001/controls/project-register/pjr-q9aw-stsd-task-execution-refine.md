@@ -33,13 +33,19 @@ stsd の試行（3APD）の段 3。draft した stsd-task-execution を fully-gu
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- [[stsd-task-execution]] を、[[specdojo:stsd-rulebook]] と stsd の recipe・sample に沿って磨き込んでいる。カタログの `done_criteria`（BA・PO・ARC・QE・DEV の観点）を満たすよう、足りない記述を補っている。
+- draft で `_UNDECIDED_` として残した点を、実装で確かめて埋めるか、残す理由を書いている。
+- Kata（rulebook・recipe・sample・template）に従うと実物に合わない点、書けない点を、Kata の種類と場所を添えて個票の対応結果に書いている。3APD の段 5（手入れか作り直しかの判断）の材料にする。
+- `docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md` 以外の成果物と Kata は変えていない。Kata に直すべき点を見つけた場合は、変えずに個票の対応結果に書く。
+- `npm run -s lint:md` と `npm run -s lint:fm` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                 | 担当 | 状態 | メモ |
+| --- | ---------------------------------------------------- | ---- | ---- | ---- |
+| 1   | Kata と done_criteria に照らして足りない点を洗い出す | BA   | open | -    |
+| 2   | 磨き込み、検査を通す                                 | BA   | open | -    |
+| 3   | Kata の合わない点を対応結果に書く                    | BA   | open | -    |
 
 ## 5. 対応結果
 
@@ -47,4 +53,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[stsd-task-execution]]: 対象の成果物
+- [[specdojo:stsd-rulebook]]: stsd の書き方の規範

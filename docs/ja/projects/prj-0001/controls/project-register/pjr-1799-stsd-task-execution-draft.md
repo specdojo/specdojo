@@ -35,13 +35,19 @@ stsd の試行（3APD）の段 2。代表の 1 件 stsd-task-execution を、現
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- [[stsd-task-execution]] の `_TODO_` とプレースホルダー（`_STATE_CODE_` など）を、現行の実装（`src/exec/events.ts`・`src/exec/types.ts` と、それらが使う状態の導出）をもとに埋めている。状態一覧には todo / ready / doing / blocked / done / cancelled が載り、`ready` が記録された状態ではなく依存の充足から導かれることが分かる。
+- 遷移の説明の各行が、実装のイベントの種類（`ExecEventType`）と対応している。実装で確かめられないことは推測で埋めず、`_UNDECIDED_` で残して理由を書く。
+- 状態遷移図は Mermaid の `stateDiagram-v2` で、状態一覧の全状態を含み、lint-mermaid を通る。
+- `docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md` 以外の成果物と Kata は変えていない。Kata に直すべき点を見つけた場合は、変えずに個票の対応結果に書く。
+- `npm run -s lint:md` と `npm run -s lint:fm` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                             | 担当 | 状態 | メモ |
+| --- | -------------------------------- | ---- | ---- | ---- |
+| 1   | 実装から状態とイベントを洗い出す | BA   | open | -    |
+| 2   | 雛形を埋め、図と遷移の説明を書く | BA   | open | -    |
+| 3   | 検査を通し、対応結果を書く       | BA   | open | -    |
 
 ## 5. 対応結果
 
@@ -49,4 +55,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[stsd-task-execution]]: 対象の成果物
+- [[specdojo:stsd-rulebook]]: stsd の書き方の規範
