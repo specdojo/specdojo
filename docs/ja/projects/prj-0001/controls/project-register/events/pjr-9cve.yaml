@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8c405e6ff17346c598208024875ac99e
+- v: 1
+  id: reg_7f040eeddd0044a78897c233f374c8e5
+  ts: "2026-11-04T23:35:43Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: opr-template の概要を「1. 概要」の章へ一本化した。bps は導入文と概要の役割が分かれるため変えない
+  previous_event_id: reg_b78067ebe98244749bf040bb2bdf95af
