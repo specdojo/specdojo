@@ -6,17 +6,17 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 100
-graded_at: "2026-11-02T16:07:09.298Z"
+graded_at: "2026-11-04T16:10:15.234Z"
 graded_by: flash-high-executor
-content_hash: aca8313889255cac77e45a3d8cbe453da9172ea37e8aaf31757334df60446c14
+content_hash: 84362df2de5530068d6feeaa8e6e892c60e2eff9eca5357eec55010c59d5d6fa
 source_hashes:
   catalog-entry: d9534928f5a04a937777795b2541516b5ccf52be65d6e16a4784b55bc4cd6283
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:cdfd-overview: 7b2a061955c858c574b2f8a67f29cc1c9a231993f576b9f53826a21db98db6a5
+  dependency:cdfd-overview: 0aecdaca4ce0a56ed8f672e9882bce4023abc8d4b6ec7cb5645fc181ca6ede74
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
+  schedule: ad0e91ae713e016cec240a034a6effd844dc295113adc7435100d118e30656f4
 categories:
   purpose:
     score: 100

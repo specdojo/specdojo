@@ -2,7 +2,7 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-11-02T16:28:14.336Z"
+graded_at: "2026-11-04T16:29:28.612Z"
 graded_by: flash-high-executor
 content_hash: 5f2f86eb0b753c314030e556af09fa243289336abcb1b4654d35f5125469cd33
 summary:
@@ -17,15 +17,15 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Direct termination and reopen transitions practiced in current operations are omitted, and entry conditions
-      conflict with actual operational rules.
+      Direct termination paths from open and direct reopen paths to multiple active statuses are missing from the
+      transition diagram and table.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: Unresolved assumptions and discrepancies with CLI behavior prevent the PO from approving operational validity.
+    reason: Unresolved assumptions and discrepancies with actual register operations prevent business sign-off.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
@@ -33,8 +33,8 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Technical mappings to item_status, block_reason, completed_at, and transition guards conflict with CLI
-      implementation and schemas.
+      Technical constraints, Frontmatter field mappings, and CLI guard behaviors are not aligned with implementation and
+      schema.
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
@@ -42,14 +42,12 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Transition conditions lack objective pass/fail criteria and do not define expected results for valid and invalid
-      transition paths.
+      Transition conditions lack concrete pass/fail verification criteria and expected field update assertions for test
+      design.
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: >-
-      Transition command mappings, Frontmatter key updates, and rejection conditions do not match current register
-      implementation.
+    reason: Transition IDs are not mapped to specific register command triggers, parameters, or Frontmatter key mutations.

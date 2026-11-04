@@ -2,9 +2,9 @@
 id: cdfd-uc-register-grade-criteria
 document: cdfd-uc-register
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
-graded_at: "2026-11-02T16:07:09.298Z"
+graded_at: "2026-11-04T16:10:15.234Z"
 graded_by: flash-high-executor
-content_hash: aca8313889255cac77e45a3d8cbe453da9172ea37e8aaf31757334df60446c14
+content_hash: 84362df2de5530068d6feeaa8e6e892c60e2eff9eca5357eec55010c59d5d6fa
 summary:
   satisfied: 4
   unsatisfied: 0

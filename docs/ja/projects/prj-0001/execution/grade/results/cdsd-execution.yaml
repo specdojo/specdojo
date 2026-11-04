@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-11-02T16:16:28.969Z"
+graded_at: "2026-11-04T16:18:36.247Z"
 graded_by: flash-high-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 19c1bd1483cbadbe965c7078d2496f9b4c8c8efb31325bc095b2275bb5463093
+  schedule: ad0e91ae713e016cec240a034a6effd844dc295113adc7435100d118e30656f4
 categories:
   purpose:
     score: 50
@@ -136,6 +136,8 @@ findings:
     message_ja: >-
       成果物カタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml`
       が対象とする実行状態、plan/result、evidence、worktree を追加するか、カタログ側のスコープを変更して目的と対象範囲を一致させる必要がある。
+    cause:
+      type: document
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
@@ -145,6 +147,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 未収録の4領域について、追加の判断者、判断時期、既存設計への影響、次アクションを明記しないと承認または保留を判断できない。
     message_ja: 未収録の4領域について、追加の判断者、判断時期、既存設計への影響、次アクションを明記しないと承認または保留を判断できない。
+    cause:
+      type: document
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
@@ -154,6 +158,8 @@ findings:
       報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
     message: "`ready` 化または公開時の対象範囲、非公開情報確認、最終承認を担う人間の PO を明記する必要がある。"
     message_ja: "`ready` 化または公開時の対象範囲、非公開情報確認、最終承認を担う人間の PO を明記する必要がある。"
+    cause:
+      type: document
   - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
@@ -163,6 +169,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 未収録データストアの追加を、担当 Role code、依存順序、判断時期、完了条件を持つ作業単位として具体化する必要がある。
     message_ja: 未収録データストアの追加を、担当 Role code、依存順序、判断時期、完了条件を持つ作業単位として具体化する必要がある。
+    cause:
+      type: document
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
@@ -176,6 +184,8 @@ findings:
     message_ja: >-
       「対応する業務データ辞書」をカタログ上の `bdd-exec-state`、`bdd-exec-plan-result`、`bdd-exec-evidence`、`bdd-worktree-branch`
       と対応付け、Schedule または PJR で追跡する必要がある。
+    cause:
+      type: document
   - id: F006
     severity: minor
     rule: vp-pm-control-reporting
@@ -185,6 +195,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 未収録データストアの追加を PJR の課題または変更要求として転記する条件、報告先、担当 Role code を明記する必要がある。
     message_ja: 未収録データストアの追加を PJR の課題または変更要求として転記する条件、報告先、担当 Role code を明記する必要がある。
+    cause:
+      type: document
   - id: F007
     severity: minor
     rule: vp-ba-business-value
@@ -194,6 +206,8 @@ findings:
       報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
     message: 実行記録の管理単位や正本区分が解決する業務課題、未整備時の影響、期待する確認結果を上位文書への参照または本文で補う必要がある。
     message_ja: 実行記録の管理単位や正本区分が解決する業務課題、未整備時の影響、期待する確認結果を上位文書への参照または本文で補う必要がある。
+    cause:
+      type: document
   - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
@@ -203,6 +217,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 実行状態、plan/result、evidence、worktree の役割、内容、更新タイミング、粒度、用途、正本区分を追加しない限り、成果物カタログが要求する対象範囲は完結しない。
     message_ja: 実行状態、plan/result、evidence、worktree の役割、内容、更新タイミング、粒度、用途、正本区分を追加しない限り、成果物カタログが要求する対象範囲は完結しない。
+    cause:
+      type: document
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
@@ -212,6 +228,8 @@ findings:
       の許可された範囲だけ進める | 運用担当、実行担当 |
     message: "`運用担当`、`実行担当`、`Job owner` を組織定義上の Role code に対応付け、定義変更の確認者と合意対象を明記する必要がある。"
     message_ja: "`運用担当`、`実行担当`、`Job owner` を組織定義上の Role code に対応付け、定義変更の確認者と合意対象を明記する必要がある。"
+    cause:
+      type: document
   - id: F010
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -225,6 +243,8 @@ findings:
     message_ja: >-
       `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` の `cdsd-execution.overview` および
       `depends_on` は実行状態、plan/result、evidence、worktree を対象とする一方、本文は追加予定として未収録なので、いずれかを修正して整合させる必要がある。
+    cause:
+      type: document
   - id: F011
     severity: major
     rule: vp-arc-technical-constraints
@@ -234,6 +254,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 実行状態、plan/result、evidence、worktree の正本・派生区分、生成元、更新制約、外部依存を定義しないと、実行系データストア全体の設計基礎として利用できない。
     message_ja: 実行状態、plan/result、evidence、worktree の正本・派生区分、生成元、更新制約、外部依存を定義しないと、実行系データストア全体の設計基礎として利用できない。
+    cause:
+      type: document
   - id: F012
     severity: major
     rule: vp-dev-implementation-readiness
@@ -243,6 +265,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: "`src/exec.ts` が扱う実行状態、plan/result、evidence、worktree について、入力、出力、正本、更新制約、対象ファイルまたは保存単位を定義する必要がある。"
     message_ja: "`src/exec.ts` が扱う実行状態、plan/result、evidence、worktree について、入力、出力、正本、更新制約、対象ファイルまたは保存単位を定義する必要がある。"
+    cause:
+      type: document
   - id: F013
     severity: minor
     rule: vp-dev-change-impact
@@ -252,6 +276,8 @@ findings:
       [[prj-0001:cdsd-sharing|概念データストア定義（活用と共有）]] で扱う。
     message: 各データストアの変更時に影響する `src/exec.ts`、`src/routine.ts`、`src/job.ts`、関連 schema、生成物またはコマンドを識別できる参照を追加する必要がある。
     message_ja: 各データストアの変更時に影響する `src/exec.ts`、`src/routine.ts`、`src/job.ts`、関連 schema、生成物またはコマンドを識別できる参照を追加する必要がある。
+    cause:
+      type: document
   - id: F014
     severity: major
     rule: vp-dev-testability
@@ -261,6 +287,8 @@ findings:
       生成前の検証に合格した定義だけを使う                                                  | Job owner          |
     message: Job Definition を含む各正本について、検証コマンド、対象ファイルまたは schema、期待結果、エラー時の停止・修正手順を明記する必要がある。
     message_ja: Job Definition を含む各正本について、検証コマンド、対象ファイルまたは schema、期待結果、エラー時の停止・修正手順を明記する必要がある。
+    cause:
+      type: document
   - id: F015
     severity: major
     rule: vp-qe-done-criteria
@@ -270,6 +298,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 成果物カタログで定義された実行状態などの対象データストアが未定義であり、完了条件を満たしていない箇所が残存している。
     message_ja: 成果物カタログで定義された実行状態などの対象データストアが未定義であり、完了条件を満たしていない箇所が残存している。
+    cause:
+      type: document
   - id: F016
     severity: major
     rule: vp-qe-verifiability
@@ -279,6 +309,8 @@ findings:
       生成前の検証に合格した定義だけを使う                                                  | Job owner          |
     message: Job Definition の合否条件、idempotency・checkpoint・precondition の必須項目と許容値、検証手順を pass/fail 判定可能な形で定義する必要がある。
     message_ja: Job Definition の合否条件、idempotency・checkpoint・precondition の必須項目と許容値、検証手順を pass/fail 判定可能な形で定義する必要がある。
+    cause:
+      type: document
   - id: F017
     severity: major
     rule: vp-qe-omissions-consistency
@@ -288,6 +320,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: カタログで `cdsd-execution` の対象とされた4領域を「概念データストア一覧」と「正本区分と更新責務」の双方へ追加し、必須情報の欠落を解消する必要がある。
     message_ja: カタログで `cdsd-execution` の対象とされた4領域を「概念データストア一覧」と「正本区分と更新責務」の双方へ追加し、必須情報の欠落を解消する必要がある。
+    cause:
+      type: document
   - id: F018
     severity: major
     rule: vp-qe-omissions-consistency
@@ -297,6 +331,8 @@ findings:
       イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    cause:
+      type: document
   - id: F019
     severity: major
     rule: vp-qe-omissions-consistency
@@ -304,6 +340,8 @@ findings:
     anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    cause:
+      type: document
   - id: F020
     severity: minor
     rule: vp-qe-omissions-consistency
@@ -314,7 +352,9 @@ findings:
     message: >-
       Contrary to Rulebook 2.4, physical names like last_scheduled_for are documented directly in the content column,
       which requires adding a physicalName column or describing conceptual contents in Japanese.
-    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理名がcontent列に直接記載されています。これは、physicalName列を追加するか、概念的な内容を日本語で記述する必要があります。
+    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理的な名前がcontent列に直接記述されています。これは、physicalName列を追加するか、概念的な内容を日本語で記述する必要があります。
+    cause:
+      type: document
   - id: F021
     severity: minor
     rule: vp-ux-language-consistency
@@ -324,6 +364,8 @@ findings:
       報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
     message: "`実行 event`、`task`、`routine`、`Job Definition`、`Job Run` の正式名称と使い分けを用語定義で示すか、日本語の業務名称へ統一する必要がある。"
     message_ja: "`実行 event`、`task`、`routine`、`Job Definition`、`Job Run` の正式名称と使い分けを用語定義で示すか、日本語の業務名称へ統一する必要がある。"
+    cause:
+      type: document
   - id: F022
     severity: minor
     rule: vp-ops-release-readiness
@@ -331,6 +373,8 @@ findings:
     anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
     message: TODO 解消後の ready 条件、公開前に確認する項目、最終承認者を明記する必要がある。
     message_ja: TODO 解消後の ready 条件、公開前に確認する項目、最終承認者を明記する必要がある。
+    cause:
+      type: document
   - id: F023
     severity: minor
     rule: vp-ops-operability
@@ -340,6 +384,8 @@ findings:
       の許可された範囲だけ進める | 運用担当、実行担当 |
     message: 正本に不整合や更新失敗が発生した場合の問い合わせ先、変更申請先、訂正・復旧手順への参照を追加する必要がある。
     message_ja: 正本に不整合や更新失敗が発生した場合の問い合わせ先、変更申請先、訂正・復旧手順への参照を追加する必要がある。
+    cause:
+      type: document
   - id: F024
     severity: major
     rule: vp-qe-config-validity
