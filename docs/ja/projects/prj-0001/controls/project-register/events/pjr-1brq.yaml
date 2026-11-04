@@ -69,3 +69,16 @@
       from: '["PJR-CYG0 の決定内容（名前、指摘の書式と原因の分類、渡し方、判定の基準）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）"]'
       to: '["PJR-CYG0 の決定内容（3 層のうち condense の段。名前、edit であること、位置、下限、記録の書式）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）","予防の規則と原因の振り分けは別の todo で実装する。condense の記録の書式は原因の振り分けの書式とそろえる（2026-11-04）"]'
   previous_event_id: reg_bf0c503340f04c86994e0913c48d54fa
+- v: 1
+  id: reg_25075ae8538e4649a0c6ea19587433b1
+  ts: "2026-11-04T13:56:24Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_821d16855128487487088e89826e38e1
