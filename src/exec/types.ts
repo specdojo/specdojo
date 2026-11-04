@@ -1,3 +1,4 @@
+import type { CondenseRecord } from "../shared/condense-records.js";
 import type {
   AgentAssignment,
   AgentStageRole,
@@ -227,6 +228,7 @@ export type ExecPlanMeta = {
 };
 
 export type ExecResultMeta = {
+  condense_records?: CondenseRecord[];
   id: string;
   type: "exec-result";
   task_id: string;

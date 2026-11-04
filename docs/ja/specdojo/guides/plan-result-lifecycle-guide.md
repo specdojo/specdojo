@@ -145,13 +145,31 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 
 `execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を正本とし、human result から参照します。
 
-`approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-retrofit-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
+`approach` が指定されていれば `xep-fully-guided-template.md`、`xep-condense-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-retrofit-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 
 register のカタログなしの成果物 plan は、個票の `target_path`・`target_rulebook` または既存文書の索引と frontmatter から対象を解決します。カタログの `done_criteria` がないことを明記し、個票の完了条件と rulebook を使います。`bootstrap` は未作成 kata の ID・パスと参照宣言の指示、`finalize`・`bootstrap-finalize` は既存成果物の確認チェック表と確定対象を plan に載せます。実 agent は `status: ready` への昇格を行いません。対象と起票の条件は [[specdojo:command-reference]] を参照してください。
 
 `approach: retrofit` では、対象成果物の DCT エントリに宣言された `evidence_refs` を edit / review plan の「実装エビデンス」へ展開します。カタログ経由で `evidence_refs` がない場合は plan 生成をエラーにします。カタログなしでは実装の調査パスを個票に明記して調査入力とします。実装エビデンスは調査入力であり、frontmatter の `targets` には追加しません。実行者は実際に参照したパス、抽出した現在動作、成果物との一致・乖離、未確認範囲を result に記録します。
 
 実践の型の扱いは [実践の進め方ガイド](ryu-guide.md) を参照します。
+
+### condense の記録
+
+`condense` は既存の 1 文書を対象とする edit で、標準フローでは磨き込みの後・review の前に置きます。plan は `xep-condense-template.md`、result は `xer-condense-template.md` を使います。判定基準は [[specdojo:pm-review-viewpoints]] の `vp-arc-conciseness` とし、判断に要る背景・制約・例外・完了条件と意味を維持します。
+
+result の `specdojo.condense_records` は修正・保持の記録のリストです。候補がなければ `[]` とし、変更不要の理由を本文へ書きます。各要素は次の 5 項目を持ち、本文の「修正・保持の記録」の表と 1 対 1 に対応します。
+
+| 項目       | 内容                                                                                                                                                            |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `location` | 修正前の成果物の見出し・行・引用                                                                                                                                |
+| `category` | `repetition`（繰り返し）、`table-prose`（表と本文）、`figure-prose`（図をなぞる文）、`unneeded-background`（不要な背景）、`canonical-restatement`（正本の再掲） |
+| `action`   | `delete`（削る）、`merge`（まとめる）、`reference`（参照）、`retain`（残す）                                                                                    |
+| `reason`   | 意味を保った根拠、または残した理由                                                                                                                              |
+| `cause`    | `FindingCause`: `{"type":"document"}`、または `{"type":"kata","kind":"recipe","location":"根拠の箇所"}`。`kind` は rulebook / recipe / sample / template        |
+
+Kata が原因とするのは、宣言された Kata の箇所を示せる場合だけです。schema は `condense-records.schema.yaml` から共通の `finding-cause.schema.yaml` を参照します。pipeline executor は最終 evidence に `condense_records` を出し、runner が検証済みの同じリストを frontmatter と表へ転記します。reporter の要約によって省略・変更しません。通常の識別項目は scaffold と照合し、`condense_records` は記録用の可変項目として検証します。完了・block などの状態更新後も記録を保持します。
+
+Kata の手入れ plan は成果物ごとの最新の完了済み `condense` result から Kata が原因の記録を展開します。成果物が宣言する rulebook から辿れる対象 Kata と原因の種類が一致する記録に限り、grade 由来とは出どころを区別します。
 
 ### 3.3. resultテンプレート
 

@@ -332,8 +332,9 @@ phase_sets:
 2. `retrofit` edit: DCT の `evidence_refs` から各成果物を新設・補正する。
 3. `cross-deliverable-dedup`: 必要な場合だけ、成果物間の正本選択と重複整理を行う。
 4. `fully-guided`: 整備済みの実践の型に沿って内容を磨き込む。
-5. `retrofit` review: 完成版と実装エビデンスの一致・乖離・未確認範囲を判定する。
-6. `finalize` または `bootstrap-finalize`: human が成果物と必要な実践の型を確定する。
+5. `condense`: 意味と判断に要る情報を保ち、1 文書内の冗長さを整理して記録する。
+6. `retrofit` review: 完成版と実装エビデンスの一致・乖離・未確認範囲を判定する。
+7. `finalize` または `bootstrap-finalize`: human が成果物と必要な実践の型を確定する。
 
 `retrofit` を使う成果物には、事前に DCT の `evidence_refs` を宣言します。実装エビデンスは Schedule の依存関係ではなく調査入力であるため、`depends_on` や `targets` へ複製しません。
 
@@ -389,15 +390,16 @@ approach_rules:
 | 雛形作成・文脈記入 | `context-pass`  | `010`  | `human`   | `edit`   | `draft`        |
 | 下書き             | `guided-pass`   | `020`  | `agent`   | `edit`   | `draft`        |
 | 磨き込み           | `refine-pass`   | `070`  | `agent`   | `edit`   | `fully-guided` |
+| 冗長さの整理       | `condense-pass` | `080`  | `agent`   | `edit`   | `condense`     |
 | 完成版レビュー     | `review-pass`   | `090`  | `agent`   | `review` | `fully-guided` |
 | 確定               | `finalize-pass` | `140`  | `human`   | `edit`   | `finalize`     |
 
-雛形作成と文脈記入は一つの human 段にまとめます。雛形を人が確認してその場で文脈を記入でき、独立した空の待ち段を増やさずに draft へ渡せます。各段は直前の段に依存し、human の完了前に agent は着手しません。human 段には agent pipeline を付けません。
+雛形作成と文脈記入は一つの human 段にまとめます。雛形を人が確認してその場で文脈を記入でき、独立した空の待ち段を増やさずに draft へ渡せます。`condense-pass` の executor / reporter はともに `normal` です。`refine-pass` を含むすべての標準 profile に、磨き込みの後・review の前の段として生成します。既存 strategy は自動更新しません。各段は直前の段に依存し、human の完了前に agent は着手しません。human 段には agent pipeline を付けません。
 
 1. `specdojo exec claim --project <project-id> --task <context-task-id> --by <human>` で着手します。既存の human タスクと同じく plan は生成せず、claim が作成した result に作業案内と記録欄を持ちます。
 2. `specdojo deliverable scaffold --project <project-id> --target <doc-id>` で対象成果物の雛形を作成します。既存成果物は上書きせず、`--force` は指定しません。
 3. 対象本文の `_CONTEXT_:` に固定前提・制約・調査や選定を任せる範囲を書きます。例: `_CONTEXT_: 既存 API を維持し、認証方式の候補を調べて提案してほしい。` 記法は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文脈の目印」に従います。
-4. result に対象と記入内容を残し、`specdojo exec complete --project <project-id> --task <context-task-id> --by <human>` で draft へ渡します。draft は指示を本文へ反映し、元の指示と反映箇所を実行記録へ残します。続いて refine・review を行い、最後に人が finalize を claim / complete して確定します。
+4. result に対象と記入内容を残し、`specdojo exec complete --project <project-id> --task <context-task-id> --by <human>` で draft へ渡します。draft は指示を本文へ反映し、元の指示と反映箇所を実行記録へ残します。続いて refine・condense・review を行い、最後に人が finalize を claim / complete して確定します。
 
 文脈の記入を待つ必要がない場合は従来の `author-deliverable` を使います。必要な型がそろった場合の `fully-guided` profile も、草案作成の `guided-pass` は `approach: draft` です。文脈や成果物が未作成でも template を骨組みにして根拠のある範囲を下書きします。文脈が無いことを調査・選定の委任とは解釈せず、未委任の判断は保留します。既存 strategy の段定義を更新するには `schedule strategy generate --force` の差分を確認して適用し、構造が変わる場合は `schedule build --force`、続いて `exec refresh` を実行します。
 

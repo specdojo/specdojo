@@ -264,6 +264,10 @@ Do not run or report \`specdojo index build\`. It writes \`.specdojo/doc-index.j
 agent may not write, and the runner regenerates the index while preparing the worktree and before
 integration.
 
+For a plan with approach \`condense\`, also include \`condense_records\` in this envelope
+as specified by the plan (an empty array if there are no candidates). The runner writes those
+validated executor facts to the result frontmatter and table; do not edit the result yourself.
+
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
 

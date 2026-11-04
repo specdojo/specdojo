@@ -153,8 +153,9 @@ Project Register Documentation Rules
 - 関連ドキュメントには、判断根拠、変更対象、影響先、追跡先のうち該当する文書を記載する。
 - 実行中に問題や後続作業を見つけて別の登録項目を起票するときは、起票元を `derived_from` に必ず記録する。decision から todo を起票する場合も同じ関係を使い、decision 本文へ追跡先を重複記載しない。既存本文の追跡先は移行のために書き換えない。
 - 本項目の実施において確実に変更する対象文書が分かっている場合は、その文書 ID を Frontmatter の `targets` 配列へ宣言する。宣言した `targets` は agent 実行時の変更網羅検証（target coverage）に用いられる。未知の場合や対象を固定しない場合は宣言を省略する。
-- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。成果物の対象はカタログを優先して解決する。`cross-deliverable-dedup` はカタログを必須とする。それ以外の成果物の approach（`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`finalize`・`bootstrap-finalize`）は、カタログなしでも既存文書の索引と `specdojo.rulebook`、または個票の `target_path` と `target_rulebook` から解決できる。新規文書は両フィールドを必須とし、リポジトリ外のパスや別文書との衝突、既存文書と指定の不一致は認めない。カタログ設定済みで対象が未登録の場合も両フィールドがある場合だけ同じ解決を使う。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
+- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。成果物の対象はカタログを優先して解決する。`cross-deliverable-dedup` はカタログを必須とする。それ以外の成果物の approach（`fully-guided`・`condense`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`finalize`・`bootstrap-finalize`）は、カタログなしでも既存文書の索引と `specdojo.rulebook`、または個票の `target_path` と `target_rulebook` から解決できる。新規文書は両フィールドを必須とし、リポジトリ外のパスや別文書との衝突、既存文書と指定の不一致は認めない。カタログ設定済みで対象が未登録の場合も両フィールドがある場合だけ同じ解決を使う。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
 
+- `condense` は既存成果物 1 件の冗長さを直す edit とし、未作成の対象は認めない。
 - カタログなしの完了基準は個票の完了条件と rulebook とする。recipe・sample・template は rulebook frontmatter から辿り、`not-needed` のものを対象に含めない。`fully-guided` の必要な一式、`recipe-guided` の recipe が不足する場合は起票・更新を拒否する。
 - カタログなしの `bootstrap` は `target_path`、新しい `target_rulebook`、設定の `kata_authority` を必須とする。既存 rulebook を再利用しない。rulebook の名前部分から recipe・sample・template の ID を導出し、`docs/ja/specdojo/<kind>s/<kata_authority>/` に配置する候補を plan へ示す。成果物には新しい `specdojo.rulebook` を記録する。
 - `finalize`・`bootstrap-finalize` は既存成果物だけを対象にし、カタログなしでは個票の完了条件を確認チェック表にする。後者は成果物と frontmatter から辿る kata 一式を確定対象とする。

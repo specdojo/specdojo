@@ -101,6 +101,7 @@ properties:
                 [
                   draft,
                   fully-guided,
+                  condense,
                   recipe-guided,
                   freeform,
                   retrofit,
@@ -383,6 +384,7 @@ $defs:
     enum:
       - draft
       - fully-guided
+      - condense
       - recipe-guided
       - freeform
       - bootstrap

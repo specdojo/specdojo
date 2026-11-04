@@ -225,6 +225,7 @@ describe("strategy generator", () => {
       "context-pass",
       "guided-pass",
       "refine-pass",
+      "condense-pass",
       "review-pass",
       "finalize-pass",
     ]);
@@ -232,17 +233,17 @@ describe("strategy generator", () => {
       tasks.map((task) =>
         resolveApproach(task.local_id, task.id, index, task.phase_suffix, task.phase_set),
       ),
-    ).toEqual(["draft", "draft", "fully-guided", "fully-guided", "finalize"]);
+    ).toEqual(["draft", "draft", "fully-guided", "condense", "fully-guided", "finalize"]);
     expect(
       tasks.map((task) =>
         resolveTaskExecution(task.local_id, task.id, index, task.phase_suffix, task.phase_set),
       ),
-    ).toEqual(["human", "agent", "agent", "agent", "human"]);
+    ).toEqual(["human", "agent", "agent", "agent", "agent", "human"]);
     expect(
       tasks.map((task) =>
         resolveTaskMode(task.local_id, task.id, index, task.phase_suffix, task.phase_set),
       ),
-    ).toEqual(["edit", "edit", "edit", "review", "edit"]);
+    ).toEqual(["edit", "edit", "edit", "edit", "review", "edit"]);
     for (let i = 1; i < tasks.length; i++) {
       expect(tasks[i].depends_on).toContain(tasks[i - 1].id);
     }
@@ -288,6 +289,7 @@ describe("strategy generator", () => {
       "bootstrap-pass",
       "freeform-pass",
       "refine-pass",
+      "condense-pass",
       "review-pass",
       "retrofit-review-pass",
       "finalize-pass",

@@ -21,6 +21,20 @@ properties:
       - status
       - project_id
     allOf:
+      - if:
+          required: [approach]
+          properties:
+            approach:
+              const: condense
+        then:
+          required: [targets]
+          properties:
+            targets:
+              type: array
+              minItems: 1
+              maxItems: 1
+            mode:
+              const: edit
       # Register-originated tasks have no predetermined target deliverable, so targets
       # cannot be resolved and is not required. Schedule tasks always carry it because
       # the commit allowlist is derived from it.

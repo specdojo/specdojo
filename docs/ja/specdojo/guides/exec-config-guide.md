@@ -75,15 +75,15 @@ phase_sets:
       mode: review
 ```
 
-| フィールド       | 必須 | 説明                                                                                                                                                                                                 |
-| ---------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `execution`      | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                             |
-| `mode`           | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                              |
-| `approach`       | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
-| `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                           |
-| `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                               |
-| `agent`          | 任意 | `executor`（必須）と `reporter`（任意）の nickname。CLI の stage override に次いで優先                                                                                                               |
-| `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                        |
+| フィールド       | 必須 | 説明                                                                                                                                                                                                              |
+| ---------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `execution`      | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                                          |
+| `mode`           | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                                           |
+| `approach`       | 任意 | `fully-guided` / `condense` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
+| `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                                        |
+| `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                                            |
+| `agent`          | 任意 | `executor`（必須）と `reporter`（任意）の nickname。CLI の stage override に次いで優先                                                                                                                            |
+| `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                                     |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。
 

@@ -551,7 +551,14 @@ specdojo schedule strategy generate \
 
 `sample-maintenance` は `type` を見ず、対象 `id` の末尾が `-sample` かどうかで判定します。利用者の authority の sample も同じ規則です。recipe・template・rulebook の maintenance は従来どおり `type` の一致を検証します。sample の `type` の規約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を参照してください。
 
-カタログなしで使える成果物の approach は `fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` です。`cross-deliverable-dedup` はカタログが必要です。
+カタログなしで使える成果物の approach は `fully-guided`・`condense`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` です。`cross-deliverable-dedup` はカタログが必要です。
+
+`condense` は既存成果物 1 件の冗長さを直す edit です。カタログなしでも索引と `specdojo.rulebook` から解決できます。未作成の文書は指定できません。記録形式と Kata の手入れへの振り分けは [[specdojo:plan-result-lifecycle-guide]] を参照してください。
+
+```bash
+specdojo register add --project prj-0001 --type todo --title "概要の冗長さを整理" --owner ARC --approach condense --target prj-0001:prj-overview
+specdojo exec run --project prj-0001 --register <PJR-ID> --worktree
+```
 
 - 新規文書には `--target-path <リポジトリ相対パス>` と `--target-rulebook <rulebook-id>` を指定します。個票の `target_path` と `target_rulebook` に保存されます。既存文書は `--target` の ID を索引で引き、パスと `specdojo.rulebook` を使います。明示指定と既存文書が矛盾した場合は停止します。
 - パスはリポジトリ外、外を指すシンボリックリンク、別の ID を持つ既存ファイルを受け付けません。更新時も同じ検証を行い、`--target-path -`・`--target-rulebook -` で各指定を削除できます。

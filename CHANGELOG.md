@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- 1 文書の冗長さを直す edit approach `condense` を追加しました。修正・保持の箇所と原因を result のリストと表に記録し、Kata が原因の記録を手入れの plan へ渡します。新規生成する標準フローでは磨き込みと review の間に `condense-pass`（080、normal）を置きます。register からカタログなしでも既存成果物を指定できます（PJR-1BRQ）。
+
 - すべての edit plan に、5種類の冗長な記述を避け、削る・まとめる・参照に置き換える規則を載せました。判断に要る背景・制約・例外・完了条件は残し、長さだけでは削りません。判定の正本である `vp-arc-conciseness` の種類と下限の言葉もそろえました。コピー済みの `xep-common-conventions-template.md` と `pm-review-viewpoints.yaml` がある場合は同期してください（PJR-0MR5）。
 
 - grade の指摘に任意の原因 `cause`（文書または種類・箇所を示した Kata）を追加しました。Kata の手入れ plan は、宣言された Kata が原因の成果物の指摘を最新の評価から取り込みます。`fully-guided` の磨き込み plan はすべての指摘に原因を添え、原因のない旧結果も文書の指摘として扱います（PJR-SJBV）。

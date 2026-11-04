@@ -211,6 +211,7 @@ describe("parsePlanTaskIdentity", () => {
     "finalize",
     "bootstrap-finalize",
     "fully-guided",
+    "condense",
     "draft",
   ])("approach %s を frontmatter から復元する", (approach) => {
     const identity = parsePlanTaskIdentity(planWithApproach(approach));

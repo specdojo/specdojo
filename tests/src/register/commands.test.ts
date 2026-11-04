@@ -662,7 +662,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it.each(["fully-guided", "draft"])(
+  it.each(["fully-guided", "condense", "draft"])(
     "add は %s と target を検証して個票へ書く",
     async (approach) => {
       await withRepo(async ({ root, registerDir }) => {

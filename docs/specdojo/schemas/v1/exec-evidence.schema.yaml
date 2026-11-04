@@ -291,3 +291,6 @@ properties:
             properties:
               bytes:
                 maximum: 65536
+
+  condense_records:
+    $ref: "condense-records.schema.yaml"

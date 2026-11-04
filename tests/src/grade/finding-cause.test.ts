@@ -228,6 +228,7 @@ describe("finding causes", () => {
         location: "## Other",
       });
       const text = kataCauseFindingsText("test", kind, refs[kind]);
+      expect(text).toContain("source=grade");
       expect(text).toContain("test:document");
       expect(text).toContain("document.md");
       expect(text).toContain("line=3");

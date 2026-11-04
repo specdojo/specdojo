@@ -52,15 +52,21 @@ PJR-CYG0 の決定に沿って、1 文書の中の冗長さを直す edit の ap
 
 | No  | 作業                                                  | 担当 | 状態 | メモ |
 | --- | ----------------------------------------------------- | ---- | ---- | ---- |
-| 1   | approach を足し、plan と result のテンプレートを作る  | ARC  | open | -    |
-| 2   | Kata の手入れの plan へ `condense` の記録を振り分ける | ARC  | open | -    |
-| 3   | 標準の流れと register に `condense` を足す            | ARC  | open | -    |
-| 4   | ガイドを直し、テストを足して検査を通す                | ARC  | open | -    |
-| 5   | CHANGELOG と対応結果を書く                            | ARC  | open | -    |
+| 1   | approach を足し、plan と result のテンプレートを作る  | ARC  | done | -    |
+| 2   | Kata の手入れの plan へ `condense` の記録を振り分ける | ARC  | done | -    |
+| 3   | 標準の流れと register に `condense` を足す            | ARC  | done | -    |
+| 4   | ガイドを直し、テストを足して検査を通す                | ARC  | done | -    |
+| 5   | CHANGELOG と対応結果を書く                            | ARC  | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `condense` を approach の型・CLI・plan/result の解決・schema・register の対象解決へ追加した。対象を既存の 1 文書に限り、カタログがない場合も索引と rulebook から解決する。plan/result の専用テンプレートは、意味と判断に必要な情報を保ちながら 5 種類の冗長さを整理し、修正・保持の候補を記録する。
+- result のキーは `specdojo.condense_records` とした。grade の `findings` と混同せず、修正した候補と意図的に保持した候補を同じリストで扱うためである。各要素は `location`・`category`・`action`・`reason`・`cause` とし、原因は PJR-SJBV の `FindingCause` をそのまま参照する。`retain` の理由を必須とし、ほかの操作では意味を保った根拠を書く。pipeline は executor evidence の同名のリストを検証し、runner が frontmatter と本文の表へ転記する。reporter による記録の省略を防ぎ、状態更新・再 claim 後も保持する。
+- Kata の手入れ plan には、成果物が宣言する rulebook から辿れる対象 Kata について、成果物ごとの最新の完了済み condense result を展開する。出どころは `source=grade` / `source=condense` とし、既存の grade の表示と区別しながら同じ節で読める形にした。condense は result ID、修正前の場所・種類・操作・理由と Kata の根拠を示す。`document`、別の種類・宣言、他 project、未完了の result を除き、最新の記録が空でも旧記録を復活させない。grade と異なり、修正済みの原因を手入れへ戻す記録なので成果物のハッシュ一致は要求しない。
+- `refine-pass` を含むすべての標準 profile に `condense-pass`（080、agent、edit、executor/reporter とも normal）を磨き込みと review の間へ追加した。既存 strategy は変更していない。
+- approach 選択図・一覧、plan/result ライフサイクル、コマンド、schedule の段、register の規約と CHANGELOG の Unreleased を更新した。単体テストでは plan 生成、register の指定と未作成対象の拒否、段と依存順、schema と原因、evidence から result への転記、状態更新、最新記録の振り分けを追加・更新した。
+- 検証: 整形・catalog 検証・履歴リンク検証を executor が担当し、型検査、TS/Markdown/frontmatter/図 lint、schema、単体・統合テストは指定された親 runner の検証に委ねる。整形、catalog 検証、履歴リンク検証、差分の空白検査は成功した。catalog の未作成成果物の参照に関する警告は残るが、エラーはない。実行結果は executor evidence に報告する。
+- 申し送り: 統合後、オーケストレーターが既存成果物 1 件で register の `--approach condense` から実行し、対象だけの編集、result のリストと表、Kata の手入れ plan への展開を確認する。runner に関わる変更を含むため、運用メモに従って PJR-JSEY の統合後の動作確認にも含める。保護設定の変更案・未決定事項はない。
 
 ## 6. 関連ドキュメント
 

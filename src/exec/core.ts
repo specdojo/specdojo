@@ -47,6 +47,7 @@ export const KNOWN_OWNER_LABELS_TEXT = KNOWN_OWNER_LABELS.join("|");
 const KNOWN_APPROACHES = [
   "draft",
   "fully-guided",
+  "condense",
   "recipe-guided",
   "freeform",
   "bootstrap",

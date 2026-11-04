@@ -111,7 +111,7 @@ describe("catalog-less deliverable resolution and plans", { timeout: 30_000 }, (
     rmSync(root, { recursive: true, force: true });
   });
 
-  it.each<Approach>(["fully-guided", "recipe-guided", "freeform", "retrofit"])(
+  it.each<Approach>(["fully-guided", "condense", "recipe-guided", "freeform", "retrofit"])(
     "resolves existing frontmatter and creates a %s plan",
     async (approach) => {
       validate(approach);
@@ -123,6 +123,16 @@ describe("catalog-less deliverable resolution and plans", { timeout: 30_000 }, (
       expect(text).not.toContain("note-template");
     },
   );
+
+  it("rejects condense on an uncreated deliverable", () => {
+    expect(() =>
+      validate("condense", {
+        targets: ["prj-test:new"],
+        targetPath: "docs/ja/product/new.md",
+        targetRulebook: "customer:note-rulebook",
+      }),
+    ).toThrow(/existing deliverable/);
+  });
 
   it.each<Approach>(["fully-guided", "recipe-guided", "freeform", "retrofit"])(
     "resolves an uncreated target with explicit path/rulebook for %s",
