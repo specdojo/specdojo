@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bcde0e5a92d049e28a2a8171e4feeae9
+  ts: "2026-11-04T14:31:14Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: エージェント CLI の更新手順の冗長さを condense で直し、condense の動きを確かめる
+    - field: description
+      from: ""
+      to: PJR-1BRQ の統合後の確認として、既にある成果物 opr-agent-cli-update に approach condense を流し、対象だけが直ること、result の記録の表とリスト、Kata が原因の記録の手入れの plan への展開を確かめる
+    - field: input
+      from: ""
+      to: '["PJR-1BRQ の完了条件: 統合の後にオーケストレーターが既にある成果物 1 件で condense を流して動きを確かめる（2026-11-05）","対象は draft の運用手順 opr-agent-cli-update（129 行、rulebook は specdojo:opr-rulebook）。stsd の試行（PJR-3APD）の対象とは重ならないものを選んだ（2026-11-05）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: approach
+      from: ""
+      to: condense
+    - field: targets
+      from: ""
+      to: '["opr-agent-cli-update"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-1BRQ"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: operations
