@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b8900699d31748d9980cd01a9d1a857d
+- v: 1
+  id: reg_db0aea37bc4c434a83ee63703142234b
+  ts: "2026-11-04T23:35:20Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: stsd の 5 件の overview と根拠を CDFD と実装に合わせた。対象の過不足はなく local_id は変えない
+  previous_event_id: reg_4d6353da055b4a3ba6798518aa8fa23b

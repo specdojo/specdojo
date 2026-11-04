@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-fmyk-stsd-catalog-review
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-04T22:58:04Z"
+  completed_at: "2026-11-04T23:35:20Z"
+  conclusion: stsd の 5 件の overview と根拠を CDFD と実装に合わせた。対象の過不足はなく local_id は変えない
   derived_from:
     - PJR-3APD
   approach: catalog-planning
