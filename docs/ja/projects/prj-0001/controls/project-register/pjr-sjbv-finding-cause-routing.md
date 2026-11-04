@@ -13,7 +13,7 @@ specdojo:
   owner: ARC
   registered_at: "2026-11-04T11:48:08Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
+  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-CYG0
   depends_on:
@@ -65,6 +65,7 @@ PJR-CYG0 の決定に沿って、grade の指摘に原因（document または k
 - 手入れの追加節名は「成果物から届いた Kata が原因の finding」とした。Kata 自身の grade の指摘と出所を区別するためであり、どちらも同じ解消手順で扱う。最新の正規サイドカーから、現在の成果物全体のハッシュ、文書 ID、rulebook 宣言から辿る対象 Kata、原因の種類を照合し、成果物・行・viewpoint・内容・Kata の箇所を展開する。非カタログ成果物と宣言済み別リポジトリのサイドカーも同じ配置規則で扱う。
 - `fully-guided` は全指摘を保持して原因を添える。原因が Kata の場合も成果物側を修正する。既存結果の再評価、`condense` の段、予防の規則は本項目の範囲に含めていない。
 - [[specdojo:ryu-guide|Ryu ガイド]] と [[specdojo:command-reference|コマンドリファレンス]]、5 種の edit plan テンプレート、CHANGELOG を更新した。原因の有無と不正な形の schema 検査、保存、reporter 改変検知、点数・severity 引き継ぎ・訳文への非干渉、4 種の手入れ plan、古い結果・別の種類・無関係な宣言の除外、磨き込み plan の回帰テストを追加した。
+- 再開時に、前回の親単体テストで失敗した 2 点を修正した。既存の指摘表示テストは `grade-result` の部分 mock で未置換の関数を保持し、追加された依存先でも `gradeContentHash` を使えるようにした。磨き込みのテストデータは、別の指摘から複製した `message_ja` も更新して表示内容と揃えた。grade plan の JSON 出力に関する指示も、`CAUSE` 行の値を例外として明示した。単体テストの再実行は親 runner が担当する。
 - 変更対象の整形、原因なし・document・4 種の kata を含むデータの schema ファイル検証、catalog 検証、履歴リンク検証、実行時 import の依存宣言検査は成功した。catalog はプロダクト文書不在の警告を伴うが終了コードは 0。型・TypeScript／Markdown／frontmatter lint・図 lint・単体／統合テスト・全体 schema 検証は pipeline の指定に従い親 runner に委ねる。結果の詳細は executor evidence と親 runner の検証記録を正本とする。
 - 申し送り: result は reporter／runner が記入する。統合後は運用メモに従い PJR-JSEY で exec の動作確認を行う。実 agent の起動を伴うため executor sandbox では実施しない。残る実装上の未決事項はない。
 

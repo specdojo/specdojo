@@ -79,3 +79,35 @@
       from: "-"
       to: "parent validation failed: test-unit"
   previous_event_id: reg_aa6a7f1626c344c38a65fa5016fb6f20
+- v: 1
+  id: reg_86a4c32778174c67befdcbe735518a00
+  ts: "2026-11-04T13:00:33Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_b7373d4c1b0a4eca802874ce8e87ba61
+- v: 1
+  id: reg_80383f9c9d084e99ae3947d51403cb2f
+  ts: "2026-11-04T13:11:27Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_86a4c32778174c67befdcbe735518a00
