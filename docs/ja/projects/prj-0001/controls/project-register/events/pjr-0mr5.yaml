@@ -89,3 +89,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ca25b540703e4c4598b1d9599c97def1
+- v: 1
+  id: reg_0e76e44e2e4e436baf2e11d8de734691
+  ts: "2026-11-04T13:55:46Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果で確かめ、統合後の exec run（PJR-JSEY）で plan に規則が入ることを確かめた。利用者が承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: 書かないことの規則（5 つの種類、3 つの直し方、下限）を edit だけの共通の規約の要点に定め、vp-arc-conciseness の言葉にそろえた
+  previous_event_id: reg_23580590b0e544c39e48b6d9ac463e0b

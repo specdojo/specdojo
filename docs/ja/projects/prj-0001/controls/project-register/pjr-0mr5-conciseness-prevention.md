@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-0mr5-conciseness-prevention
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-04T11:47:47Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-04T13:55:46Z"
+  conclusion: 書かないことの規則（5 つの種類、3 つの直し方、下限）を edit だけの共通の規約の要点に定め、vp-arc-conciseness の言葉にそろえた
   derived_from:
     - PJR-CYG0
   depends_on:
