@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-1brq-editorial-review-impl
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-03T23:51:23Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-04T22:48:13Z"
+  conclusion: 完了条件を満たした
   derived_from:
     - PJR-CYG0
   depends_on:
