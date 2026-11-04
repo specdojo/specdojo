@@ -3798,3 +3798,19 @@
       from: PJR-W7YX の統合後に exec run --register が start から review まで通ることを確かめた
       to: PJR-MERV・PJR-FYN5・PJR-Z807 の統合後に exec run --register が start から review まで通ることを確かめた
   previous_event_id: reg_d279fc9da38e4a6fa00d5a36059551bf
+- v: 1
+  id: reg_c8b893bb05f24b069c4964c04429a4ea
+  ts: "2026-11-04T13:26:20Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: Y431 と SJBV の統合後の exec run の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-04"
+      to: "-"
+  previous_event_id: reg_0a75ab41fe4343ed98bd7fc80cbbb366
