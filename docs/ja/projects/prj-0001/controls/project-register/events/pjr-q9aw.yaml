@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ffd59c800e3d4b9dbf51e898850e84f7
+  ts: "2026-11-04T23:38:13Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-task-execution を磨き込む
+    - field: description
+      from: ""
+      to: stsd の試行（3APD）の段 3。draft した stsd-task-execution を fully-guided で磨き込み、Kata の出来を測る材料にする
+    - field: input
+      from: ""
+      to: '["磨き込みは stsd の Kata（rulebook・図の rulebook・recipe・sample・template）に沿って行う。Kata の出来は、この 1 件を材料に人が判断する（3APD の段 5）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-task-execution"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-1799"]'
