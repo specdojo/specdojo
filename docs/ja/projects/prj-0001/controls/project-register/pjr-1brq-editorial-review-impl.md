@@ -21,15 +21,16 @@ specdojo:
   commit_scope: exec
 ---
 
-# PJR-1BRQ editorial-review approach を実装する
+# PJR-1BRQ condense approach を実装する
 
 ## 1. 概要
 
-PJR-CYG0 で決めた仕様に沿って、冗長さを抜き出して原因を分ける review approach を追加し、指摘を磨き込みと Kata の手入れの段へ渡せるようにする
+PJR-CYG0 の決定に沿って、1 文書の中の冗長さを直す edit の approach condense を足し、直した箇所と Kata が原因の指摘を result に記録し、標準の流れで磨き込みと review の間に置く
 
 ## 2. 入力
 
-- PJR-CYG0 の決定内容（名前、指摘の書式と原因の分類、渡し方、判定の基準）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）
+- PJR-CYG0 の決定内容（3 層のうち condense の段。名前、edit であること、位置、下限、記録の書式）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）
+- 予防の規則と原因の振り分けは別の todo で実装する。condense の記録の書式は原因の振り分けの書式とそろえる（2026-11-04）
 
 ## 3. 完了条件
 

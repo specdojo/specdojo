@@ -50,3 +50,22 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_821d16855128487487088e89826e38e1
+  ts: "2026-11-04T11:47:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: title
+      from: editorial-review approach を実装する
+      to: condense approach を実装する
+    - field: description
+      from: PJR-CYG0 で決めた仕様に沿って、冗長さを抜き出して原因を分ける review approach を追加し、指摘を磨き込みと Kata の手入れの段へ渡せるようにする
+      to: PJR-CYG0 の決定に沿って、1 文書の中の冗長さを直す edit の approach condense を足し、直した箇所と Kata が原因の指摘を result に記録し、標準の流れで磨き込みと review の間に置く
+    - field: input
+      from: '["PJR-CYG0 の決定内容（名前、指摘の書式と原因の分類、渡し方、判定の基準）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）"]'
+      to: '["PJR-CYG0 の決定内容（3 層のうち condense の段。名前、edit であること、位置、下限、記録の書式）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）","予防の規則と原因の振り分けは別の todo で実装する。condense の記録の書式は原因の振り分けの書式とそろえる（2026-11-04）"]'
+  previous_event_id: reg_bf0c503340f04c86994e0913c48d54fa
