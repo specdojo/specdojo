@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4d70bc16611e4873bdeec1e4fafecf2e
+  ts: "2026-11-04T11:48:10Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の指摘に原因を持たせて Kata の手入れへ振り分ける
+    - field: description
+      from: ""
+      to: PJR-CYG0 の決定に沿って、grade の指摘に原因（document または kata:`<kind>`）と Kata の箇所の根拠を持たせ、plan の生成時に Kata が原因の指摘をその Kata の手入れの段へ振り分ける
+    - field: input
+      from: ""
+      to: '["PJR-CYG0 の決定内容（原因の振り分けの層）を実装の正本とする。冗長さに限らず、どの観点の指摘にも効かせる。Kata の箇所を示せない指摘は document とする（2026-11-04）","今は Kata の手入れの plan が読むのは Kata そのものの grade の指摘だけで、成果物の指摘のうち Kata が原因のものが届く道がない（2026-11-04）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CYG0"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-CYG0"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: grade
