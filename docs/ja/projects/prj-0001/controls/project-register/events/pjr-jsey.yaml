@@ -3859,3 +3859,19 @@
       from: PJR-MERV・PJR-FYN5・PJR-Z807 の統合後に exec run --register が start から review まで通ることを確かめた
       to: Y431・SJBV・0MR5 の統合後に exec run --register が start から review・統合まで通り、生成した plan に 3 つに分けた規約と冗長さの規則が入ることを確かめた
   previous_event_id: reg_5bf339843f374c17abe9fe2a5ffab1fc
+- v: 1
+  id: reg_2a7db5d337c0451dac57a9d46cf9ae0c
+  ts: "2026-11-04T14:29:00Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: 1BRQ の統合後の exec run の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-04"
+      to: "-"
+  previous_event_id: reg_3a5fecdc18bf4b1aa0538d7bf700364c

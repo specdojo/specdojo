@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-04T13:51:56Z"
   conclusion: Y431・SJBV・0MR5 の統合後に exec run --register が start から review・統合まで通り、生成した plan に 3 つに分けた規約と冗長さの規則が入ることを確かめた
 ---
 
