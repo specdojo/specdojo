@@ -17,19 +17,24 @@ specdojo:
     - PJR-CYG0
   depends_on:
     - PJR-1BRQ
+    - PJR-0MR5
+    - PJR-SJBV
 ---
 
 # PJR-3APD 業務仕様の量産の流れをステータス定義（stsd）で試す
 
 ## 1. 概要
 
-draft → editorial-review → Kata の手入れ → Kata の確定（人）→ retrofit → editorial-review → 磨き込みの流れを、ステータス定義（stsd、5 件）で 1 回通し、残りの業務仕様の epic に使えるかを確かめる
+カタログの見直し → draft → 磨き込み → condense → 手入れか作り直しかの判断（人）→ Kata の手入れまたは bootstrap → Kata の確定（人）→ retrofit → 磨き込み → condense → review → 確定の流れを、ステータス定義（stsd、5 件）で 1 回通し、残りの業務仕様の epic に使えるかを確かめる
 
 ## 2. 入力
 
-- 利用者の方針: cdfd ができたので、以降の業務仕様は現行の実装をベースに記述する。複数の epic を起票して順に実行する。Kata（rulebook・recipe など）が十分でないため、1 つ作って Kata を磨き込み、同じ種類の文書を一気に作る。いきなり bootstrap より draft を先に入れる。冗長な記述は editorial-review で抜き出し、Kata が原因のものは Kata の手入れに回す（2026-11-04）
+- 利用者の方針: cdfd ができたので、以降の業務仕様は現行の実装をベースに記述する。複数の epic を起票して順に実行する。Kata（rulebook・recipe など）が十分でないため、1 つ作って Kata を磨き込み、同じ種類の文書を一気に作る。いきなり bootstrap より draft を先に入れる（2026-11-04）
 - 業務仕様の epic の順の案: 用語集（1）→ データモデル（bdd・cdsd・stsd・cld・ccd、32）→ 業務モデル（bps・br・bes、43）→ システム化機能・画面・外部 I/F（4）。カタログ（`dct-*.yaml`）は概念データフローの再編の前に作ったため、各 epic の最初に CDFD に合わせて見直す（catalog-planning）（2026-11-04）
-- 流れの各段: (1) draft で代表の成果物を 1 つ、(2) editorial-review、(3) `*-maintenance` で Kata が原因の指摘を反映、(4) Kata の確定（人、ゲート）、(5) retrofit で残りを実装から並列に作成、(6) editorial-review、(7) fully-guided でこの文書だけの指摘を反映。Kata が原因の指摘がたまれば (3) へ戻す（2026-11-04）
+- 冗長さは PJR-CYG0 の決定（予防・原因の振り分け・condense）で直す。condense は書き足しの最後の edit の後、review の前に置く。draft の直後は内容が発散しているため置かない（2026-11-04）
+- 流れの各段: (1) カタログの見直し、(2) draft で代表の 1 件、(3) 磨き込み（fully-guided）、(4) condense、(5) 人が手入れか作り直しかを判断、(6) 手入れなら `*-maintenance`、作り直しなら Kata を消して bootstrap、(7) Kata の確定（人、ゲート）、(8) retrofit で残り 4 件を並列に作成、(9) 磨き込み、(10) condense、(11) review、(12) 確定（2026-11-04）
+- 作り直しを選ぶ目安: 章立ての変更（章の追加・削除・分割）が半分を超える、図の表記を変える（Mermaid から D2 へ）、rulebook の規則の半分ほどが実物に合わず書き直しになる。どれにも当たらなければ手入れとする。register の bootstrap は rulebook が既にあると止まるため、作り直しでは先に Kata を消す。消すのは利用者の承認のもと feature ブランチで行う（2026-11-04）
+- stsd の Kata は rulebook・図の rulebook（Mermaid）・recipe・sample・template がそろい、grade は 92〜100 点。grade は書き方の規範への適合だけを見るため、出来は代表の 1 件で判断する。prj-0001 に stsd の成果物はまだない（2026-11-04）
 
 ## 3. 範囲（track と domain）
 
