@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6abe3b64da0649fbafc0ac5c2e9e0a87
+  ts: "2026-11-04T22:58:05Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd のカタログを CDFD に合わせて見直す
+    - field: description
+      from: ""
+      to: stsd の試行（3APD）の最初の段。dct-data-model-stsd.yaml の 5 件を、再編した概念データフロー図と現行の実装に照らして見直す
+    - field: input
+      from: ""
+      to: '["対象は dct-data-model-stsd.yaml だけ。data-model のほかの種類（bdd・cdsd・cld・ccd）の分割ファイルは変えない（3APD の範囲）","カタログは概念データフロー図の再編の前に作った。CDFD は stsd-deliverable・stsd-task-execution・stsd-job-run・stsd-register-entry・stsd-routine-run を状態定義の正本として名指ししている（cdfd-uc-schedule・cdfd-uc-register・cdfd-uc-routine の適用範囲）","代表の 1 件は stsd-task-execution を draft で書く（2026-11-05 利用者が決定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: catalog-planning
+    - field: targets
+      from: ""
+      to: '["domain:data-model"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
