@@ -238,6 +238,10 @@ function setupRepository(): { repo: string; executionPath: string } {
   );
   writeFileSync(
     join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-common-conventions-template.md"),
+    "",
+  );
+  writeFileSync(
+    join(repo, "docs", "ja", "specdojo", "exec-templates", "xp-common-conventions-template.md"),
     "## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n",
     "utf8",
   );

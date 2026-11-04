@@ -141,6 +141,8 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 | `mode: review`        | `xrp-template.md`            |
 | `approach` が指定済み | `xep-<approach>-template.md` |
 
+共通規約は `xp-common-conventions-template.md`（edit / review 共通）と、`mode` に対応する `xep-common-conventions-template.md`（edit 専用）または `xrp-common-conventions-template.md`（review 専用）を組み合わせます。接頭辞の `x` は exec、`p` は plan、`e` / `r` は edit / review を表します。各ファイルの `plan-essentials` マーカー間を plan の `_COMMON_CONVENTIONS_` 位置へ順に展開し、規約の詳細を読む案内には両ファイルのパスを載せます。マーカーのないローカル断片は全文を展開します。grade の plan はこれらの規約を使いません。
+
 `execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を正本とし、human result から参照します。
 
 `approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-retrofit-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。

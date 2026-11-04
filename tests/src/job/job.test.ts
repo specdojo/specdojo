@@ -224,6 +224,10 @@ function setupRepo(): string {
   );
   writeFileSync(
     join(repo, "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md"),
+    "",
+  );
+  writeFileSync(
+    join(repo, "docs/ja/specdojo/exec-templates/xp-common-conventions-template.md"),
     "## Common\n",
   );
   writeFileSync(
