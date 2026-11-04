@@ -50,3 +50,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-FMYK"]'
+- v: 1
+  id: reg_8299ba7be97c4f9bb324d47ba368ca15
+  ts: "2026-11-04T23:40:01Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4167f8a836ac4d1b9d2196c221b43a07
+- v: 1
+  id: reg_fa69262e08a94ff9ac3c214992976e8b
+  ts: "2026-11-04T23:51:47Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8299ba7be97c4f9bb324d47ba368ca15
