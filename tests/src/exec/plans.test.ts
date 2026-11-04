@@ -480,6 +480,86 @@ describe("plan generation (edit done_criteria goals)", () => {
   });
 });
 
+describe("plan generation (conciseness prevention)", () => {
+  const approaches = [
+    "draft",
+    "fully-guided",
+    "recipe-guided",
+    "retrofit",
+    "bootstrap",
+    "rulebook-maintenance",
+    "recipe-maintenance",
+    "sample-maintenance",
+    "template-maintenance",
+  ] as const;
+  const rules = [
+    "冗長さの判定は [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-arc-conciseness` を正本とする。",
+    "同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲は書かず、既存の記述は削る・まとめる・参照に置き換える。",
+    "判断に要る背景・制約・例外・完了条件は残し、長さだけでは削らない。",
+  ];
+
+  it.each(
+    approaches.flatMap((approach) => [
+      { approach, mode: "edit" as const },
+      { approach, mode: "review" as const },
+    ]),
+  )("$mode / $approach は edit 専用の予防規則の適用範囲を守る", async ({ approach, mode }) => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-conciseness-"));
+    const catalogPath = join(root, "catalog");
+    try {
+      mkdirSync(catalogPath);
+      writeFileSync(
+        join(catalogPath, "dct-test.yaml"),
+        [
+          "id: test:dct",
+          "type: project",
+          "status: draft",
+          "project_id: test",
+          "domain: test",
+          "base_path: /docs/test",
+          "groups:",
+          "  - deliverables:",
+          "      - local_id: overview",
+          "        name: Overview",
+          "        kind: work",
+          "        path: overview.md",
+          "        evidence_refs:",
+          "          - kind: implementation",
+          "            path: src/exec/plans.ts",
+          "            purpose: plan生成の現在動作",
+        ].join("\n"),
+      );
+      const path = await generateSinglePlan({
+        executionPath: join(root, "execution"),
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-overview-010",
+          local_id: "overview",
+          name: "予防規則の適用確認",
+          mode,
+          approach,
+          schedule_file: "",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+      const plan = readFileSync(path, "utf8");
+      for (const rule of rules) {
+        if (mode === "edit") {
+          expect(plan.split(rule)).toHaveLength(2);
+        } else {
+          expect(plan).not.toContain(rule);
+        }
+      }
+      expect(plan).not.toContain("成果物は、冗長な記述や内容の重複を避け");
+      expect(plan).not.toContain("plan-essentials:");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
 describe("plan generation (rulebook includes)", () => {
   // specdojoRootDir() は cwd から上方探索するため、実リポジトリのテンプレートと
   // 移行済み specdojo:cdfd-rulebook（includes: specdojo:cdfd-mermaid-rulebook）を用いて注入を検証する。
