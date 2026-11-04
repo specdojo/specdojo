@@ -45,6 +45,12 @@ _OWNER_ROLE_VIEWPOINTS_
 
 _GRADE_FINDINGS_
 
+### 成果物から届いた Kata が原因の finding
+
+_KATA_CAUSE_FINDINGS_
+
+各指摘の成果物・行・viewpoint・内容と `cause.location` を照合し、見直し対象の Kata の該当箇所を確認する。以下の手順は、この節と Kata そのものの grade の両方の finding に適用する。
+
 1. 見直し対象の sample を読み込み、現状の粒度・文体・表の書き方を把握する。
 2. plan に展開された finding は severity にかかわらず、message と同じ viewpoint ID の判定根拠を修正要件として読み取る。message と判定根拠から指摘の根拠となる規範を特定し、対象 sample の frontmatter から辿れる rulebook と recipe、該当する執筆標準のうち必要な文書を読み、指摘された問題を解消するよう該当箇所を修正する。rulebook との構成不整合を指摘する finding では、成果物の有無にかかわらず rulebook を正として照合する。
 3. 修正後、各 finding の問題が判定根拠に照らして解消したことを確認する。未解消、根拠不足、または判断不能の finding は、理由と次のアクションを result の `進め方と実践の型の適用` セクションに記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。

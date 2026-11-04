@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { load } from "./yaml.js";
+import { isFindingCause, type FindingCause } from "./finding-cause.js";
 import {
   getProjectExecutionPath,
   loadConfig,
@@ -23,6 +24,7 @@ export type StoredGradeFinding = {
   message: string;
   /** Japanese display wording. Omitted by legacy results. */
   message_ja?: string;
+  cause?: FindingCause;
 };
 
 export type StoredGradeLevelCorrection = {
@@ -166,6 +168,11 @@ export function parseGradeResult(content: string, path: string): GradeResult {
       ))
   ) {
     throw new Error(`${path}: source_hashes must map sources to SHA-256 hex digests`);
+  }
+  for (const finding of result.findings) {
+    if (finding.cause !== undefined && !isFindingCause(finding.cause)) {
+      throw new Error(`${path}: invalid finding cause`);
+    }
   }
   return result as GradeResult;
 }

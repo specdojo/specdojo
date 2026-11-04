@@ -5,6 +5,7 @@ import { unified } from "unified";
 import { viewpointAppliesToDocument } from "../review/plan.js";
 import type { ReviewViewpoint, ReviewViewpointsDoc } from "../review/types.js";
 import { gradeContentHash, type GradeResult } from "./result.js";
+import type { FindingCause } from "../shared/finding-cause.js";
 
 export type GradeTarget = "kata" | "deliverable";
 export const GRADE_TARGETS: readonly GradeTarget[] = ["kata", "deliverable"];
@@ -46,6 +47,7 @@ export type GradeFindingInput = {
   message: string;
   /** Japanese display wording. It never participates in scoring or carry-over matching. */
   message_ja?: string;
+  cause?: FindingCause;
   line?: number;
 };
 

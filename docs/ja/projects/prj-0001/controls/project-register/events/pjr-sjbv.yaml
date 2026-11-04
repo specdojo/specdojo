@@ -111,3 +111,32 @@
       from: "-"
       to: "parent validation failed: lint-ts"
   previous_event_id: reg_86a4c32778174c67befdcbe735518a00
+- v: 1
+  id: reg_74b1bb1215f74f9da6463510a49178f9
+  ts: "2026-11-04T13:12:39Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_80383f9c9d084e99ae3947d51403cb2f
+- v: 1
+  id: reg_5dde2ee2950043c68e0049eb0f527785
+  ts: "2026-11-04T13:22:48Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_74b1bb1215f74f9da6463510a49178f9

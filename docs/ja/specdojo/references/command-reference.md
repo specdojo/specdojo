@@ -934,6 +934,15 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 複数対象は、生成された executor plan を順に処理し、executor 応答を保存して直ちに `grade apply --path <document> --analysis-from <executor-output>` 相当の処理で反映します。`grade run` がこの連携を担い、後続文書が失敗しても適用済みの grade を保持します。部品ごとに実行する場合は、`agent run` で起動した応答の保存と受け渡しを呼び出し側が担います。保存済み executor plan は `exec trial` などで同じ入力を複数 agent へ渡す用途にも利用できます。
 
+finding の任意項目 `cause` は原因を表します。成果物の grade plan は、各 `FINDING` の直後に `CAUSE: <JSON>` を1行で申告させ、`grade apply` はその JSON を finding の `cause` へ保存します。Kata そのものの grade では申告しません。原因の共通定義は `src/shared/finding-cause.ts` の `FindingCause` と `docs/specdojo/schemas/v1/finding-cause.schema.yaml` であり、edit の記録でも再利用できます。
+
+| 原因     | `cause` の形                                                                   | 判定根拠                                                     |
+| -------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------ |
+| この文書 | `{"type":"document"}`                                                          | Kata の問題箇所を示せない場合も含む                          |
+| Kata     | `{"type":"kata","kind":"recipe","location":"## 2. 深掘りの問い、3行目の引用"}` | 宣言された Kata の見出し・行・引用で原因箇所を示せる場合だけ |
+
+`kind` は `rulebook` / `recipe` / `sample` / `template` のいずれかで、`location` は空にできません。原因のない旧結果は `document` として扱います。原因は冗長さに限らず全観点で付け、score・verdict・severity による level 上限・前の指摘の引き継ぎ・日本語訳には影響しません。reporter 経由でも原因の追加・省略・変更を検査します。手入れの edit plan は、宣言された該当 Kata が原因の指摘を、成果物が評価後に変わっていない最新サイドカーから展開します。`fully-guided` の plan は原因を添えてすべての指摘を残します。運用は [[specdojo:ryu-guide]] の「実践の型メンテナンスの進め方」を参照してください。
+
 ### 8.1. npm package で 1 文書を評価する
 
 npm package の部品だけで 1 文書を評価する最小手順は、plan の生成、executor agent の実行、marker の反映です。先に `.specdojo/agent-members.yaml` と agent の実行設定を用意してください。`grade plan` の出力に表示された executor plan のパスを `<executor-plan.md>` に指定し、同じ executor nickname を `agent run` と `grade apply` の `--by` に渡します。

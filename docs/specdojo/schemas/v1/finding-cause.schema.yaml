@@ -1,0 +1,22 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Finding Cause
+description: Shared cause for grade findings and edit records. Omission means document.
+oneOf:
+  - type: object
+    additionalProperties: false
+    required: [type]
+    properties:
+      type:
+        const: document
+  - type: object
+    additionalProperties: false
+    required: [type, kind, location]
+    properties:
+      type:
+        const: kata
+      kind:
+        enum: [rulebook, recipe, sample, template]
+      location:
+        type: string
+        pattern: "\\S"
+        description: Heading, line, or quoted passage in the declared Kata supporting the cause.
