@@ -34,7 +34,7 @@ specdojo:
 - 冗長さは PJR-CYG0 の決定（予防・原因の振り分け・condense）で直す。condense は書き足しの最後の edit の後、review の前に置く。draft の直後は内容が発散しているため置かない（2026-11-04）
 - 流れの各段: (1) カタログの見直し、(2) draft で代表の 1 件、(3) 磨き込み（fully-guided）、(4) condense、(5) 人が手入れか作り直しかを判断、(6) 手入れなら `*-maintenance`、作り直しなら Kata を消して bootstrap、(7) Kata の確定（人、ゲート）、(8) retrofit で残り 4 件を並列に作成、(9) 磨き込み、(10) condense、(11) review、(12) 確定（2026-11-04）
 - 作り直しを選ぶ目安: 章立ての変更（章の追加・削除・分割）が半分を超える、図の表記を変える（Mermaid から D2 へ）、rulebook の規則の半分ほどが実物に合わず書き直しになる。どれにも当たらなければ手入れとする。register の bootstrap は rulebook が既にあると止まるため、作り直しでは先に Kata を消す。消すのは利用者の承認のもと feature ブランチで行う（2026-11-04）
-- stsd の Kata は rulebook・図の rulebook（Mermaid）・recipe・sample・template がそろい、grade は 92〜100 点。grade は書き方の規範への適合だけを見るため、出来は代表の 1 件で判断する。prj-0001 に stsd の成果物はまだない（2026-11-04）
+- stsd の Kata は rulebook・図の rulebook（Mermaid）・recipe・sample・template がそろい、grade は 92〜100 点。grade は書き方の規範への適合だけを見るため、出来は代表の 1 件で判断する。prj-0001 には stsd の成果物が 2 件ある（[[stsd-register-entry]]・[[stsd-routine-run]]）。代表の 1 件をこの 2 件から選ぶか新しく下書きするかは、計画を立てるときに案を比べて決める（2026-11-05）
 
 ## 3. 範囲（track と domain）
 
