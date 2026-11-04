@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-y431-split-plan-conventions
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-04T12:10:55Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-04T12:42:47Z"
+  conclusion: exec plan の共通の規約を xp（共通）・xep（edit）・xrp（review）の 3 つに分け、plan の生成時に共通と mode に合うほうを組み合わせるようにした
   derived_from:
     - PJR-0MR5
   commit_type: refactor
