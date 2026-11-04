@@ -50,3 +50,32 @@
     - field: depends_on
       from: ""
       to: '["PJR-1799"]'
+- v: 1
+  id: reg_ca4e4881d66742c58f6e5ac2d705cad2
+  ts: "2026-11-04T23:54:48Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ffd59c800e3d4b9dbf51e898850e84f7
+- v: 1
+  id: reg_6718b79dc37d40f8979a59ac53f1b23e
+  ts: "2026-11-04T23:58:01Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 依存成果物 bdd-exec-state.yaml／bdd-exec-event.yaml が存在せず停止。個票の対応結果のみ更新し、標準エラーへ理由を出力、終了コード1。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 依存成果物 bdd-exec-state.yaml／bdd-exec-event.yaml が存在せず停止。個票の対応結果のみ更新し、標準エラーへ理由を出力、終了コード1。"
+  previous_event_id: reg_ca4e4881d66742c58f6e5ac2d705cad2
