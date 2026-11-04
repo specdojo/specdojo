@@ -20,13 +20,16 @@ groups:
         kind: work
         depends_on:
           - bdd-register-entry
-        overview: 登録項目個票が取り得る状態（open / in-progress / waiting / review / done / decided / rejected / deferred 等）と状態遷移を一覧・図で定義する
+        overview: 登録項目個票が取り得る状態（open / in-progress / waiting / review / done / decided / rejected / deferred）と状態遷移を一覧・図で定義する
         path: stsd-register-entry.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/register/register.ts
-            purpose: 登録項目個票のstatusフィールドの許容値・状態遷移規則
+            purpose: 登録項目個票の状態遷移規則・履歴イベント変換
+          - kind: implementation
+            path: src/register/item.ts
+            purpose: 登録項目個票の status フィールドの許容値（VALID_STATUSES）・終端状態定義
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
@@ -49,13 +52,16 @@ groups:
         depends_on:
           - bdd-exec-state
           - bdd-exec-event
-        overview: タスク実行が取り得る状態（ready / doing / blocked / done 等）と状態遷移を一覧・図で定義する
+        overview: タスク実行が取り得る状態（todo / ready / doing / blocked / done / cancelled）と状態遷移を一覧・図で定義する
         path: stsd-task-execution.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec/exec.ts
-            purpose: exec コマンド入口から到達するタスク状態（ready/doing/blocked/done等）をevent列から再構成する規則
+            path: src/exec/events.ts
+            purpose: exec イベント列からタスク状態（todo/doing/blocked/done/cancelled）を再構成し、依存充足から ready を導出する規則
+          - kind: implementation
+            path: src/exec/types.ts
+            purpose: タスク状態（ExecState）および実行イベント型（ExecEventType）の型定義
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
@@ -83,7 +89,10 @@ groups:
         evidence_refs:
           - kind: implementation
             path: src/deliverable/deliverable.ts
-            purpose: 成果物のspecdojo.status（draft/ready/deprecated）の許容値・状態遷移規則
+            purpose: 成果物の specdojo.status（draft/ready/deprecated）の許容値・状態遷移規則
+          - kind: implementation
+            path: src/deliverable/trash.ts
+            purpose: 成果物の非推奨化（deprecated）判定および trash 保管への状態遷移処理
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
@@ -105,13 +114,16 @@ groups:
         kind: work
         depends_on:
           - bdd-routine-definition
-        overview: 定期処理の実行結果（success / failure / skipped）が取り得る状態と実行開始から結果確定までの遷移を一覧・図で定義する
+        overview: 定期処理の実行結果（running / success / partial / failure / skipped）が取り得る状態と実行開始から結果確定までの遷移を一覧・図で定義する
         path: stsd-routine-run.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/routine/routine.ts
-            purpose: routine実行結果（last_result＝success/failure/skipped）の許容値・判定・更新規則
+            purpose: routine 実行結果（last_result＝running/success/partial/failure/skipped）の判定・更新規則
+          - kind: implementation
+            path: src/routine/definition.ts
+            purpose: routine 実行状態・実行結果の型定義（RoutineStateResult, RoutineExecutionResult）
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
@@ -133,13 +145,16 @@ groups:
         kind: work
         depends_on:
           - bdd-job-run
-        overview: Job Run が取り得る状態（pending / succeeded / failed 等、attempt を含む）と状態遷移を一覧・図で定義する
+        overview: Job Run が取り得る状態（running / succeeded / partial / failed / noop、attempt を含む）と状態遷移を一覧・図で定義する
         path: stsd-job-run.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/job/job.ts
-            purpose: Job Runのattempt状態（pending/succeeded/failed等）の許容値・判定・状態遷移規則
+            purpose: Job Run の状態（running/succeeded/partial/failed/noop、attempt の status を含む）の判定・状態遷移規則
+          - kind: implementation
+            path: src/job/definition.ts
+            purpose: Job Run の状態型定義（JobRunState）および試行レコード（JobRunAttempt）の定義
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
