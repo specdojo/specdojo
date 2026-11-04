@@ -416,6 +416,7 @@ export function deliverableBasedOn(deliverable: DeliverableInfo | null): string 
 }
 
 const PROJECT_CONTEXT_EXCLUDED_APPROACHES = new Set<Approach>([
+  "condense",
   "cross-deliverable-dedup",
   "rulebook-authoring",
   "recipe-authoring",

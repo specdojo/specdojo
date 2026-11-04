@@ -2,9 +2,6 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { load } from "js-yaml";
-import Ajv2020Module from "ajv/dist/2020.js";
-import addFormatsModule from "ajv-formats";
 import { describe, expect, it } from "vitest";
 import {
   buildExecutorEvidence,
@@ -14,8 +11,7 @@ import {
   validateResumedTargetCoverage,
 } from "../../../src/exec/evidence.js";
 
-const Ajv2020 = Ajv2020Module.default;
-const addFormats = addFormatsModule.default;
+import { buildValidator } from "../../helpers/schema.js";
 
 describe("executor evidence", () => {
   it.each([undefined, "complete", "incomplete", null, "invalid"])(
@@ -325,10 +321,7 @@ describe("executor evidence", () => {
       "v1",
       "exec-evidence.schema.yaml",
     );
-    const schema = load(readFileSync(schemaPath, "utf8")) as Record<string, unknown>;
-    const ajv = new Ajv2020({ allErrors: true, strict: false });
-    addFormats(ajv);
-    const validate = ajv.compile(schema);
+    const validate = buildValidator(schemaPath);
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
     const { handoff: _handoff, ...legacy } = evidence;
     expect(validate(legacy), JSON.stringify(validate.errors)).toBe(true);

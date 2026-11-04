@@ -1,6 +1,6 @@
 import { registerInputSection } from "../register/input.js";
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "../shared/specdojo-config.js";
 import { resolveDeliverableSchemaRef, resolveKataRefs, type KataRefs } from "../kata/kata.js";
 import { formatMarkdownFile } from "./format.js";
@@ -394,6 +394,20 @@ async function writeTaskPlan(
   ) {
     throw new Error(
       `Task ${task.id} uses approach: retrofit but the target deliverable has no evidence_refs.`,
+    );
+  }
+  if (
+    task.approach === "condense" &&
+    (mode !== "edit" ||
+      !deliverable?.resolvedPath ||
+      !existsSync(resolve(specdojoRootDir(), deliverable.resolvedPath)) ||
+      (
+        override?.targets ??
+        targetDocIdsForTask(ctx.projectId, task, deliverable, crossDeliverables)
+      ).length !== 1)
+  ) {
+    throw new Error(
+      `Task ${task.id} uses condense; exactly one existing deliverable and edit mode are required`,
     );
   }
   const template = loadPlanTemplate(mode, task.approach, ctx.templateCache);

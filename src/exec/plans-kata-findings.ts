@@ -17,6 +17,7 @@ import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { MISSING } from "../shared/plan-templates.js";
 import { inlineCode, planGradeFindingText } from "./plans-grade-findings.js";
+import { condenseKataFindingsText } from "./plans-condense-findings.js";
 
 /** Pull current deliverable findings into maintenance of the declared Kata. */
 export function kataCauseFindingsText(
@@ -26,12 +27,12 @@ export function kataCauseFindingsText(
 ): string {
   if (!kataPath || kataPath === MISSING) return "- なし";
   const root = specdojoRootDir();
-  const lines: string[] = [];
+  const lines: string[] = condenseKataFindingsText(projectId, kind, kataPath);
   let sidecars: string[];
   try {
     sidecars = listFilesRecursive(resolveGradeResultsDirectory(projectId)).sort();
   } catch {
-    return "- なし";
+    sidecars = [];
   }
   for (const sidecar of sidecars) {
     if (!/\.ya?ml$/.test(sidecar)) continue;
@@ -56,7 +57,7 @@ export function kataCauseFindingsText(
       for (const finding of result.findings) {
         if (finding.cause?.type !== "kata" || finding.cause.kind !== kind) continue;
         lines.push(
-          `- ${inlineCode(result.document)} (${inlineCode(result.path)}) ${inlineCode(finding.id)} ${planGradeFindingText(finding, true)}`,
+          `- source=grade; ${inlineCode(result.document)} (${inlineCode(result.path)}) ${inlineCode(finding.id)} ${planGradeFindingText(finding, true)}`,
         );
       }
     } catch {

@@ -18,6 +18,9 @@ import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "../docs/templa
 import { dump } from "../shared/yaml.js";
 import { gitEnvironment } from "../shared/git-environment.js";
 
+import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
+import { inlineCode } from "./plans-grade-findings.js";
+
 export const MAX_INDIVIDUAL_CHANGED_FILES = 50;
 
 export type RenderEditReporterOptions = {
@@ -67,6 +70,13 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
     inner.push("targets:");
     for (const target of meta.targets) inner.push(`  - ${serializeYamlString(target)}`);
   }
+  if (meta.condense_records) {
+    inner.push(
+      ...dump({ condense_records: meta.condense_records }, { lineWidth: -1, noRefs: true })
+        .trimEnd()
+        .split("\n"),
+    );
+  }
   // reason は agent stderr や subprocess の生出力由来で任意文字を含みうる。まず ANSI エスケープ
   // シーケンスや制御文字を除去し（色付き hook 出力が result 表示を壊すのを防ぐ）、JSON の
   // 文字列形式で YAML へ埋め込む。改行・引用符・バックスラッシュも値を変えずに保持できる。
@@ -83,6 +93,7 @@ function serializeFrontmatter(meta: ExecResultMeta): string {
 function parseFrontmatter(content: string): {
   meta: Record<string, string>;
   targets?: string[];
+  condenseRecords?: CondenseRecord[];
   body: string;
 } {
   const { data, body } = parseSpecdojoDocument(content);
@@ -97,7 +108,12 @@ function parseFrontmatter(content: string): {
     if (typeof value === "string") meta[key] = value;
     else if (typeof value === "number" || typeof value === "boolean") meta[key] = String(value);
   }
-  return { meta, ...(targets ? { targets } : {}), body };
+  return {
+    meta,
+    ...(targets ? { targets } : {}),
+    body,
+    ...(isCondenseRecords(data.condense_records) ? { condenseRecords: data.condense_records } : {}),
+  };
 }
 
 function frontmatterWithBody(frontmatter: string, body: string): string {
@@ -134,6 +150,12 @@ function loadResultTemplate(
   if (mode === "edit" && execution === "human" && approach === "draft") {
     return readFileSync(
       resolveSpecdojoPath("docs/ja/specdojo/exec-templates/xer-human-draft-template.md"),
+      "utf8",
+    );
+  }
+  if (mode === "edit" && approach === "condense") {
+    return readFileSync(
+      resolveSpecdojoPath("docs/ja/specdojo/exec-templates/xer-condense-template.md"),
       "utf8",
     );
   }
@@ -234,6 +256,9 @@ export async function scaffoldResult(opts: {
   stem?: string;
 }): Promise<{ resultPath: string; created: boolean; supersededPaths: string[] }> {
   const { executionPath, taskId, mode, projectId, planRef, agent, startedAt, approach } = opts;
+  if (approach === "condense" && (mode !== "edit" || opts.targets?.length !== 1)) {
+    throw new Error("condense requires edit mode and exactly one target");
+  }
   const stem = opts.stem ?? taskId;
   const resultPath = resultPathForTask(executionPath, stem);
 
@@ -262,6 +287,7 @@ export async function scaffoldResult(opts: {
     ...(planRef ? { plan_ref: planRef } : {}),
     ...(opts.execution ? { execution: opts.execution } : {}),
     ...(approach ? { approach } : {}),
+    ...(approach === "condense" ? { condense_records: [] } : {}),
     ...(opts.targets && opts.targets.length > 0 ? { targets: opts.targets } : {}),
   };
 
@@ -382,10 +408,26 @@ export function isResultUnfilled(
   const current = parseSpecdojoDocument(readFileSync(resultPath, "utf8"));
   if (MANDATORY_PLACEHOLDERS[mode].some((marker) => current.body.includes(marker))) return true;
   if (!hasNonEmptyScaffoldFields(current.data, mode)) return true;
+  if (
+    current.data.approach === "condense" &&
+    (mode !== "edit" ||
+      !isCondenseRecords(current.data.condense_records) ||
+      !Array.isArray(current.data.targets) ||
+      current.data.targets.length !== 1)
+  )
+    return true;
+  // Condense records are executor facts, filled after scaffolding. Identity and lifecycle
+  // fields retain the same comparisons as every other approach.
+  const comparable = (data: Record<string, unknown>): Record<string, unknown> => {
+    const copy = { ...data };
+    if (data.approach === "condense" && isCondenseRecords(data.condense_records))
+      delete copy.condense_records;
+    return copy;
+  };
 
   if (scaffoldFrontmatter !== undefined) {
     if (!hasNonEmptyScaffoldFields(scaffoldFrontmatter, mode)) return true;
-    if (!isDeepStrictEqual(current.data, scaffoldFrontmatter)) return true;
+    if (!isDeepStrictEqual(comparable(current.data), comparable(scaffoldFrontmatter))) return true;
   }
 
   // resume 時は、実行直前の worktree result を上の厳密比較に使う。さらに root に保持した
@@ -395,8 +437,8 @@ export function isResultUnfilled(
     if (!hasNonEmptyScaffoldFields(originalScaffoldFrontmatter, mode)) return true;
     if (
       !isDeepStrictEqual(
-        immutableScaffoldFields(current.data),
-        immutableScaffoldFields(originalScaffoldFrontmatter),
+        immutableScaffoldFields(comparable(current.data)),
+        immutableScaffoldFields(comparable(originalScaffoldFrontmatter)),
       )
     ) {
       return true;
@@ -746,7 +788,7 @@ export function renderEditReporterBody(
       : `${event.trigger === "connection_error" ? "接続エラー" : "rate limit"}後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
   );
   return [
-    "# Edit Result",
+    options?.approach === "condense" ? "# Condense Result" : "# Edit Result",
     "",
     "## 1. 実施内容",
     "",
@@ -810,9 +852,25 @@ function renderReviewReporterBody(output: ReviewReporterOutput, evidence: ExecEv
   ].join("\n");
 }
 
+function renderCondenseRecords(records: CondenseRecord[]): string {
+  if (!records.length) return "なし";
+  const cell = (text: string): string => inlineCode(text).replaceAll("|", "\\|");
+  return [
+    "| 場所（修正前） | 種類 | 直し方 | 残した理由／意味の維持 | 原因 |",
+    "| --- | --- | --- | --- | --- |",
+    ...records.map((record) => {
+      const cause =
+        record.cause.type === "kata"
+          ? `kata:${record.cause.kind}; location=${record.cause.location}`
+          : "document";
+      return `| ${[record.location, record.category, record.action, record.reason, cause].map(cell).join(" | ")} |`;
+    }),
+  ].join("\n");
+}
+
 /**
- * Replaces only the result body from schema-validated reporter data. The scaffolded frontmatter
- * remains byte-for-byte runner-owned until the lifecycle status update serializes it.
+ * Renders reporter prose and runner-owned facts. Condense records come only from validated
+ * executor evidence; all other approaches preserve the scaffold frontmatter byte-for-byte.
  */
 export async function renderReporterResult(
   resultPath: string,
@@ -826,7 +884,7 @@ export async function renderReporterResult(
   if (parsed.data.mode !== output.mode) {
     throw new Error(`reporter mode does not match result scaffold: ${output.mode}`);
   }
-  const frontmatter = content.match(/^---\r?\n[\s\S]*?\r?\n---/)?.[0];
+  let frontmatter = content.match(/^---\r?\n[\s\S]*?\r?\n---/)?.[0];
   if (!frontmatter) throw new Error(`Result frontmatter not found: ${resultPath}`);
 
   const approach =
@@ -841,11 +899,23 @@ export async function renderReporterResult(
     worktreeDir: options?.worktreeDir ?? findGitRoot(dirname(resultPath)) ?? undefined,
   };
 
+  let recordsBody = "";
+  if (approach === "condense" && output.mode === "edit") {
+    if (!isCondenseRecords(evidence.condense_records)) {
+      throw new Error(
+        "condense requires valid executor condense_records (use [] when no candidates)",
+      );
+    }
+    // Preserve scaffold ownership; add only validated executor facts, never reporter prose.
+    const scaffold = { ...parsed.data, condense_records: evidence.condense_records };
+    frontmatter = `---\n${dump({ specdojo: scaffold }, { lineWidth: -1, noRefs: true }).trimEnd()}\n---`;
+    recordsBody = `\n\n## 5. 修正・保持の記録\n\n${renderCondenseRecords(evidence.condense_records)}`;
+  }
   const body =
     output.mode === "edit"
       ? renderEditReporterBody(output, evidence, resolvedOptions)
       : renderReviewReporterBody(output, evidence);
-  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body), "utf8");
+  writeFileSync(resultPath, frontmatterWithBody(frontmatter, body + recordsBody), "utf8");
   await formatMarkdownFile(resultPath);
 }
 
@@ -858,7 +928,12 @@ export async function updateResultStatus(
   if (!existsSync(resultPath)) return;
 
   const content = readFileSync(resultPath, "utf8");
-  const { meta: existingMeta, targets: existingTargets, body } = parseFrontmatter(content);
+  const {
+    meta: existingMeta,
+    targets: existingTargets,
+    condenseRecords,
+    body,
+  } = parseFrontmatter(content);
 
   // block 理由は blocked のときのみ保持する。新しい reason を優先し、無ければ既存値を残す。
   // complete へ遷移した場合は理由を消す。
@@ -884,6 +959,7 @@ export async function updateResultStatus(
       : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
     ...(existingTargets ? { targets: existingTargets } : {}),
+    ...(condenseRecords ? { condense_records: condenseRecords } : {}),
     ...(blockReason ? { block_reason: blockReason } : {}),
   };
 
@@ -903,7 +979,12 @@ export async function resetResultForClaim(
   if (!existsSync(resultPath)) return;
 
   const content = readFileSync(resultPath, "utf8");
-  const { meta: existingMeta, targets: existingTargets, body } = parseFrontmatter(content);
+  const {
+    meta: existingMeta,
+    targets: existingTargets,
+    condenseRecords,
+    body,
+  } = parseFrontmatter(content);
   const existingExecution =
     existingMeta.execution === "human" || existingMeta.execution === "agent"
       ? existingMeta.execution
@@ -925,6 +1006,7 @@ export async function resetResultForClaim(
     ...(nextExecution ? { execution: nextExecution } : {}),
     approach: existingMeta.approach ? (existingMeta.approach as Approach) : undefined,
     ...(existingTargets ? { targets: existingTargets } : {}),
+    ...(condenseRecords ? { condense_records: condenseRecords } : {}),
   };
 
   writeFileSync(resultPath, frontmatterWithBody(serializeFrontmatter(updatedMeta), body), "utf8");
@@ -957,6 +1039,7 @@ export function parseResultTaskIdentity(resultContent: string): ResultTaskIdenti
     [
       "draft",
       "fully-guided",
+      "condense",
       "recipe-guided",
       "freeform",
       "bootstrap",

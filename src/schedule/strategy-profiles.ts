@@ -174,6 +174,21 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
         "沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。",
     },
   ],
+  "condense-pass": [
+    {
+      id: "condense",
+      name: "冗長さの整理",
+      task_suffix: "080",
+      duration_days: 0.25,
+      execution: "agent",
+      mode: "edit",
+      approach: "condense",
+      pipeline: NORMAL_PIPELINE,
+      description:
+        "1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、" +
+        "新しい内容を足さず、修正・保持した箇所と原因を result に記録する。",
+    },
+  ],
   "review-pass": [
     {
       id: "review",
@@ -234,6 +249,7 @@ export const PHASE_SET_ORDER: string[] = [
   "sample-maintenance-pass",
   "template-maintenance-pass",
   "refine-pass",
+  "condense-pass",
   "review-pass",
   "retrofit-review-pass",
   "finalize-pass",
@@ -258,32 +274,57 @@ export const AUTHOR_PHASE_SETS: string[] = [
 export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile> = {
   bootstrap: {
     approach: "bootstrap",
-    phase_sets: ["bootstrap-pass", "refine-pass", "retrofit-review-pass", "finalize-pass"],
+    phase_sets: [
+      "bootstrap-pass",
+      "refine-pass",
+      "condense-pass",
+      "retrofit-review-pass",
+      "finalize-pass",
+    ],
     finalize_approach: "bootstrap-finalize",
   },
   retrofit: {
     approach: "retrofit",
-    phase_sets: ["retrofit-pass", "refine-pass", "retrofit-review-pass", "finalize-pass"],
+    phase_sets: [
+      "retrofit-pass",
+      "refine-pass",
+      "condense-pass",
+      "retrofit-review-pass",
+      "finalize-pass",
+    ],
     finalize_approach: "finalize",
   },
   "fully-guided": {
     approach: "fully-guided",
-    phase_sets: ["guided-pass", "refine-pass", "review-pass", "finalize-pass"],
+    phase_sets: ["guided-pass", "refine-pass", "condense-pass", "review-pass", "finalize-pass"],
     finalize_approach: "finalize",
   },
   draft: {
     approach: "draft",
-    phase_sets: ["context-pass", "guided-pass", "refine-pass", "review-pass", "finalize-pass"],
+    phase_sets: [
+      "context-pass",
+      "guided-pass",
+      "refine-pass",
+      "condense-pass",
+      "review-pass",
+      "finalize-pass",
+    ],
     finalize_approach: "finalize",
   },
   "recipe-guided": {
     approach: "recipe-guided",
-    phase_sets: ["recipe-guided-pass", "refine-pass", "review-pass", "finalize-pass"],
+    phase_sets: [
+      "recipe-guided-pass",
+      "refine-pass",
+      "condense-pass",
+      "review-pass",
+      "finalize-pass",
+    ],
     finalize_approach: "finalize",
   },
   freeform: {
     approach: "freeform",
-    phase_sets: ["freeform-pass", "refine-pass", "review-pass", "finalize-pass"],
+    phase_sets: ["freeform-pass", "refine-pass", "condense-pass", "review-pass", "finalize-pass"],
     finalize_approach: "finalize",
   },
   "rulebook-maintenance": {
@@ -310,7 +351,12 @@ export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile>
   // starts at refine-pass; the pass is generated separately and blocks that first task.
   "cross-deliverable-dedup": {
     approach: "cross-deliverable-dedup",
-    phase_sets: ["refine-pass", "review-pass", "finalize-pass"],
+    phase_sets: ["refine-pass", "condense-pass", "review-pass", "finalize-pass"],
+    finalize_approach: "finalize",
+  },
+  condense: {
+    approach: "condense",
+    phase_sets: ["condense-pass", "review-pass", "finalize-pass"],
     finalize_approach: "finalize",
   },
   finalize: {

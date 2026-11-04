@@ -5,6 +5,8 @@ import { gitOutput } from "./worktree.js";
 import type { AgentStageRole } from "./types.js";
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
 
+import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
+
 const MAX_LOG_BYTES = 64 * 1024;
 const MAX_CHANGE_FILES = 1_000;
 const MAX_FINAL_MESSAGE_LENGTH = 4_000;
@@ -64,6 +66,7 @@ export type ExecEvidence = {
   completion_status?: "complete" | "incomplete";
   /** Executor notes preserved mechanically in the edit result handoff. Optional for legacy evidence. */
   handoff?: string[];
+  condense_records?: CondenseRecord[];
   /** Runner-derived reason for process failure, protection, or incomplete work. */
   block_reason?: string;
   command?: {
@@ -170,6 +173,7 @@ type ExecutorReport = {
   final_message?: unknown;
   completion_status?: unknown;
   handoff?: unknown;
+  condense_records?: unknown;
   validations?: unknown;
   target_coverage?: unknown;
 };
@@ -222,6 +226,7 @@ export function parseExecutorReport(stdout: string): {
   handoff: string[];
   validations: EvidenceValidation[];
   targetCoverage: EvidenceTargetCoverage[];
+  condenseRecords?: CondenseRecord[];
 } {
   const matches = [...stdout.matchAll(REPORT_PATTERN)];
   const raw = matches.at(-1)?.[1];
@@ -285,6 +290,24 @@ export function parseExecutorReport(stdout: string): {
     }
   }
 
+  const invalidCondense =
+    report.condense_records !== undefined && !isCondenseRecords(report.condense_records);
+  if (invalidCondense) {
+    report.completion_status = "incomplete";
+    report.final_message =
+      "Invalid condense_records; supply records matching condense-records.schema.yaml";
+  }
+  const condenseRecords = isCondenseRecords(report.condense_records)
+    ? report.condense_records.map((record) => ({
+        ...record,
+        location: boundedText(record.location, 4000),
+        reason: boundedText(record.reason, 4000),
+        cause:
+          record.cause.type === "kata"
+            ? { ...record.cause, location: boundedText(record.cause.location, 4000) }
+            : record.cause,
+      }))
+    : undefined;
   const fallback = stdout.replace(REPORT_PATTERN, "").trim();
   const handoff = Array.isArray(report.handoff)
     ? report.handoff
@@ -305,6 +328,7 @@ export function parseExecutorReport(stdout: string): {
     handoff,
     validations,
     targetCoverage,
+    ...(condenseRecords ? { condenseRecords } : {}),
   };
 }
 
@@ -554,6 +578,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
         summary: truncate(redactSensitiveText(input.diffStat.trim()), MAX_DIFF_SUMMARY_LENGTH),
       },
       validations,
+      ...(report.condenseRecords ? { condense_records: report.condenseRecords } : {}),
       ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       ...(input.rateLimitEvents?.length ? { rate_limit_events: input.rateLimitEvents } : {}),
       final_message: report.finalMessage,
