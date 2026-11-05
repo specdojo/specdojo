@@ -1,0 +1,247 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: stsd-job-run
+path: docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 94
+graded_at: "2026-11-05T14:34:18.047Z"
+graded_by: sol-review-executor
+content_hash: a2ced858360620b2b337500160a71b3662eff5d88a5353d4eb5b2cee111add73
+source_hashes:
+  catalog-entry: 5231b15f91c65f998adac4468c770f3db84e6b2f9039317d6f46f27cf57e0072
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 7613b8ab5d2b966fa5a7c35f5a19d1539b663a5ba1172b683fc00639bf45ce7d
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 88
+  planning:
+    score: 92
+  business:
+    score: 83
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 88
+  quality:
+    score: 88
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 81
+    anchor: >-
+      | _UNDECIDED_:
+      実行中の再実行で前の試行が実行中のまま残る。指定実装に生存確認・重複実行の排除はなく、呼出元の排他制御は未確認。安全な再試行の判断責任と残留試行の確定方法を合意する                                                                                                                                                   
+      | 実行中、`T-07`                                 | PO、運用担当、ARC | 再試行・復旧方針の合意時           |
+    message: >-
+      The retry and result-correction rows use agreement on the same policy as their decision timing; identify an
+      actionable investigation owner and a checkpoint such as completion of caller analysis or the document approval
+      review so these items can be sequenced and tracked.
+    message_ja: >-
+      The retry and result-correction rows use agreement on the same policy as their decision timing; identify an
+      actionable investigation owner and a checkpoint such as completion of caller analysis or the document approval
+      review so these items can be sequenced and tracked.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 80
+    anchor: >-
+      | _UNDECIDED_: `prj-0001:bdd-job-run`
+      は未作成。状態名・イベント名、部分成功と処理不要の業務上の境界、および成功の受入条件を合意する必要がある。指定実装は結果の受取・保存を確認できるが、呼出元による終了コード・agent
+      の成否・レビュー・統合結果からの状態選択は未確認。`partial_exit_code` の宣言だけでは選択規則全体を確定できない | 全状態、`T-02`〜`T-05`                         |
+      BA、PO、QE        | 業務データ辞書の策定・本書の承認時 |
+    message: >-
+      The meanings and entry criteria for success, partial success, failure, and noop depend on receiving identically
+      named result notifications, while their business selection and acceptance rules remain unconfirmed; define or
+      reference the observable business facts that distinguish these outcomes before treating T-02 through T-05 as
+      complete business requirements.
+    message_ja: >-
+      The meanings and entry criteria for success, partial success, failure, and noop depend on receiving identically
+      named result notifications, while their business selection and acceptance rules remain unconfirmed; define or
+      reference the observable business facts that distinguish these outcomes before treating T-02 through T-05 as
+      complete business requirements.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 82
+    anchor: >-
+      | _UNDECIDED_:
+      結果の保存処理は試行の存在を確認するが、遷移元が実行中かは確認せず、記録済み結果を再更新できる。本図は開始から結果記録までの経路を扱い、結果訂正を承認済みの業務遷移として追加しない。結果訂正を許すか、遷移元を制限するかを決める                                                                                     
+      | 成功・部分成功・失敗・処理不要、`T-02`〜`T-05` | BA、PO、ARC       | 結果訂正方針の合意時               |
+    message: >-
+      Decisions to restrict completion sources or change outcome selection affect callers in src/exec/run/job.ts and
+      regression expectations in tests/src/job/job.test.ts, but these consumers are not identified; attach the affected
+      caller and test references to the pending decisions so their compatibility impact is reviewed with the state
+      policy.
+    message_ja: >-
+      Decisions to restrict completion sources or change outcome selection affect callers in src/exec/run/job.ts and
+      regression expectations in tests/src/job/job.test.ts, but these consumers are not identified; attach the affected
+      caller and test references to the pending decisions so their compatibility impact is reviewed with the state
+      policy.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-dev-testability
+    line: 12
+    anchor: >-
+      状態値・試行の型は `src/job/definition.ts` の `JobRunState`・`JobRunAttempt`、開始・結果・レビュー記録は `src/job/job.ts` の
+      `materializeJobRun`・`completeJobRun`・`recordJobRunReview` に基づく。結果を選ぶ業務判断の未確認範囲は「今後の検討メモ」に残す。
+    message: >-
+      The implementation references do not identify how to verify a state-definition change; link the applicable
+      Markdown, frontmatter, and Mermaid checks and the focused Job Run test command, including their expected
+      successful result.
+    message_ja: >-
+      The implementation references do not identify how to verify a state-definition change; link the applicable
+      Markdown, frontmatter, and Mermaid checks and the focused Job Run test command, including their expected
+      successful result.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 60
+    anchor: >-
+      `T-01`・`T-06`・`T-07` は `src/job/job.ts` の `materializeJobRun`、`T-02`〜`T-05` は同ファイルの `completeJobRun`
+      で確認できる。結果通知は四つのうち一つを受け取る記録上の条件であり、終了コードなどから通知を選ぶ規則は参照範囲では確定しない。
+    message: >-
+      Notification-based conditions make persistence transitions testable, but they do not provide expected outcomes for
+      actual command, agent, reporter, or review results; add or reference an outcome decision table with representative
+      boundary cases once the caller investigation is complete.
+    message_ja: >-
+      Notification-based conditions make persistence transitions testable, but they do not provide expected outcomes for
+      actual command, agent, reporter, or review results; add or reference an outcome decision table with representative
+      boundary cases once the caller investigation is complete.
+    cause:
+      type: document
+  - id: F006
+    severity: major
+    rule: vp-ops-operability
+    line: 81
+    anchor: >-
+      | _UNDECIDED_:
+      実行中の再実行で前の試行が実行中のまま残る。指定実装に生存確認・重複実行の排除はなく、呼出元の排他制御は未確認。安全な再試行の判断責任と残留試行の確定方法を合意する                                                                                                                                                   
+      | 実行中、`T-07`                                 | PO、運用担当、ARC | 再試行・復旧方針の合意時           |
+    message: >-
+      T-07 can append a new attempt while the previous attempt remains running, but no agreed liveness check,
+      authorization condition, or disposition of abandoned attempts is available; define or reference that operational
+      boundary and explicitly gate use of this retry path pending human agreement so operators can make a safe retry
+      decision.
+    message_ja: >-
+      T-07 can append a new attempt while the previous attempt remains running, but no agreed liveness check,
+      authorization condition, or disposition of abandoned attempts is available; define or reference that operational
+      boundary and explicitly gate use of this retry path pending human agreement so operators can make a safe retry
+      decision.
+    cause:
+      type: document
+done_criteria:
+  satisfied: 3
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+  detail_ref: stsd-job-run-grade-criteria

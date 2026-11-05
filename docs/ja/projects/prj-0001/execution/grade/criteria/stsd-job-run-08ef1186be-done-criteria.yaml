@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: stsd-job-run-grade-criteria
+document: stsd-job-run
+path: docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md
+graded_at: "2026-11-05T14:34:18.047Z"
+graded_by: sol-review-executor
+content_hash: a2ced858360620b2b337500160a71b3662eff5d88a5353d4eb5b2cee111add73
+summary:
+  satisfied: 3
+  unsatisfied: 2
+  total: 5
+criteria:
+  - id: DC-001
+    text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      Business facts distinguishing the four recorded outcomes and their acceptance conditions remain unagreed;
+      notification labels alone do not establish business-correct transition criteria.
+  - id: DC-002
+    text: 状態遷移の業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      Outcome semantics, safe retry responsibility, and result-correction policy remain unresolved, preventing approval
+      of the lifecycle's business validity.
+  - id: DC-003
+    text: 状態遷移実装の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: 状態ベースのテスト設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: 状態管理実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied
