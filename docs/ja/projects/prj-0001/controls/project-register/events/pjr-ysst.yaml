@@ -50,3 +50,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-NEPD"]'
+- v: 1
+  id: reg_9af05c6c86af4172a7cec0d5efb011a8
+  ts: "2026-11-05T16:30:57Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2beccfdbdfc047bf9dd006084fec669f
+- v: 1
+  id: reg_89e2e3f4ade648e2829660554fccc49b
+  ts: "2026-11-05T16:44:20Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9af05c6c86af4172a7cec0d5efb011a8
