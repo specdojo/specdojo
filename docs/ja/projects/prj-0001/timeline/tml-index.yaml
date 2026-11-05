@@ -76,7 +76,7 @@ tracks:
     order: 6
     parallel_group: business-specs
     depends_on: [data-flow-uc-rewrite]
-    note: 業務仕様を実装ベースで量産する流れ（draft → editorial-review → Kata の手入れ → Kata の確定 → retrofit → editorial-review → 磨き込み）を、ステータス定義（stsd、5 件）で 1 回通して確かめる試しの track。dct-data-model-stsd を local_ids で部分 scope にする。
+    note: 業務仕様を実装ベースで量産する流れ（カタログの見直し → draft → 磨き込み → condense → 手入れか作り直しかの判断 → Kata の手入れまたは bootstrap → Kata の確定 → retrofit → 磨き込み → condense → review → 確定）を、ステータス定義（stsd、5 件）で 1 回通して確かめる試しの track。dct-data-model-stsd を local_ids で部分 scope にする。
 
   - track: data-model
     domains: [data-model]
