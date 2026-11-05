@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9af05c6c86af4172a7cec0d5efb011a8
+- v: 1
+  id: reg_3591be72264d4a26b17da6e45813e847
+  ts: "2026-11-05T16:46:11Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: template を頭書き・目的・適用範囲の記入欄と、状態名`<br>`値の図の雛形にした
+  previous_event_id: reg_89e2e3f4ade648e2829660554fccc49b

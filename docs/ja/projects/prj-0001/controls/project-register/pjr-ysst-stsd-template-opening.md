@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ysst-stsd-template-opening
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T13:03:41Z"
+  completed_at: "2026-11-05T16:46:11Z"
+  conclusion: template を頭書き・目的・適用範囲の記入欄と、状態名`<br>`値の図の雛形にした
   derived_from:
     - PJR-3APD
     - PJR-VNT1
