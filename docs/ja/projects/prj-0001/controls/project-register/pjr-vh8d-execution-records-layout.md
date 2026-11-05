@@ -30,6 +30,12 @@ exec の plan・result・evidence とジョブの記録の置き場所と命名�
 - orchestrator の調査 (5): result のない plan が 2 件、plan のない result が 16 件ある（2026-11-03 の数え）。全 plan に共通の規約（約 3 KB）が埋め込まれ、合計約 3.3 MB が重複する（2026-11-06）
 - 決めること: plan・result の分け方（出どころ別か種類別か）、done/ をやめるか移す実装をするか、ジョブの記録を寄せるか、既存のファイルを動かすか新しい分だけにするか、動かす場合に `evidence.json` の `log_refs` などパスを持つ記録をどう扱うか（2026-11-06）
 - 制約: 生のログは全文を Git に残す（PJR-2WC2 の決定）。履歴の書き換えは git-branching-standard で禁止されている（2026-11-06）
+- orchestrator の調査 (8): 定期処理の実行状態 `routine-state.json` と実行の履歴 `routine-runs.jsonl`（2026-09-19 以降 1,127 件。success 1,092・failure 22・skipped 13、うち job を起動したのは 73 件）が `routines/generated/` にあり、`.gitignore` の `docs/**/generated/*` で無視される。stsd-routine-run が管理場所とする記録の正本が生成物の扱いになっている。Git に残すか、端末の手元の状態として置き場所を変えるかを先に決める（2026-11-06）
+- orchestrator の調査 (9): 実行時のロック `routines/.locks/` が文書のツリーにあり無視されていない。`execution/exec/.locks/` は無視されており扱いが揃わない（2026-11-06）
+- orchestrator の調査 (10): docs-structure-guide の構成図と `job-weekly-report.yaml` は `reporting/progress-reports` を出力先とするが、prj-0001 に `reporting/` がない（2026-11-06）
+- orchestrator の調査 (11): docs-structure-guide は `controls/reviews/` を挙げるが実物はなく、`controls/generated/` がある（2026-11-06）
+- orchestrator の調査 (12): 廃棄した文書 22 件が `docs/ja/product/trash/` にあり、プロダクトの文書のツリーの中で公開や索引の対象になりうる。ガイドに置き場所の記載がない（2026-11-06）
+- orchestrator の調査 (13): `schedule/assessments/generated/` だけ `generated/` が 1 段深い。ほかの横断ディレクトリは直下に `generated/` を置く（2026-11-06）
 
 ## 3. 検討した選択肢
 
