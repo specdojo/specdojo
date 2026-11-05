@@ -3962,3 +3962,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_793c11846409442fb2e22171d61d0c37
+- v: 1
+  id: reg_8663106eb22a4ba6bcbd000065d2d14b
+  ts: "2026-11-05T09:55:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: runner の変更後の動作の確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: 1BRQ の統合後に exec run --register が start から review・統合まで通ることを確かめた
+      to: H2V8 の統合後も exec run --register が start から統合まで通った
+  previous_event_id: reg_143f38d4e83545ceafbb5d04fd6d9eb2
