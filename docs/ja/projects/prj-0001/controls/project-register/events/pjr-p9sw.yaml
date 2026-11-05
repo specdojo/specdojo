@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_684bff35a7554586b7ac2dd4e3581db0
+- v: 1
+  id: reg_761e0e3c46bd4797bbe8aae2f81b04a5
+  ts: "2026-11-05T16:30:16Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: recipe の概要の節を頭書き・目的・適用範囲の手順に分けた
+  previous_event_id: reg_f864bcb9faa14d5c9f391ee2aab611d5

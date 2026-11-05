@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T13:05:02Z"
+  completed_at: "2026-11-05T16:30:15Z"
+  conclusion: recipe の概要の節を頭書き・目的・適用範囲の手順に分けた
   derived_from:
     - PJR-3APD
     - PJR-VNT1
