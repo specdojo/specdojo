@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "T-STSD-PILOT-stsd-register-entry-080",
+  "run_id": "20261105T140027412Z-a9b66c23",
+  "updated_at": "2026-11-05T14:14:50.679Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-05T14:01:58.113Z",
+      "completed_at": "2026-11-05T14:06:04.173Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-STSD-PILOT-stsd-register-entry-080/20261105T140027412Z-a9b66c23/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-05T14:13:33.586Z",
+      "completed_at": "2026-11-05T14:14:33.278Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-STSD-PILOT-stsd-register-entry-080-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-05T14:14:34.050Z",
+      "completed_at": "2026-11-05T14:14:50.679Z",
+      "artifact_ref": null
+    }
+  }
+}
