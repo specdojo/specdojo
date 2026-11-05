@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-pycy-stsd-job-run-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T11:25:31Z"
+  completed_at: "2026-11-05T12:19:05Z"
+  conclusion: 新設。5 状態・7 遷移を実装で確かめて書き、閾値を超えるため 2 図に分けた
   derived_from:
     - PJR-3APD
     - PJR-PT5N
