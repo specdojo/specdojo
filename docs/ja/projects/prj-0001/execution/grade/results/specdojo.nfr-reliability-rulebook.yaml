@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 93
-graded_at: "2026-10-04T21:15:43.618Z"
-graded_by: agy-expert-executor
-content_hash: 653bbac45e75045d8b57a9f4fe97c1e68b05e0563afd136a521fad8095b667fe
+graded_at: "2026-11-05T20:30:02.461Z"
+graded_by: flash-high-executor
+content_hash: 16f97518cb9d239e9524c7d39b29961fb66cdd56b6e6fbb118256cfdb6e73bdf
 categories:
   purpose:
     score: 100
@@ -113,9 +113,11 @@ findings:
     line: 122
     anchor: "supersedes: []"
     message: 第8章のサンプルのFrontmatterに第4.1節で定義されていない `supersedes` キーが含まれています。
+    message_ja: 第8章のサンプルのFrontmatterに第4.1節で定義されていない `supersedes` キーが含まれています。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 非機能要件 / 信頼性 作成ルール"
     message: 指定サンプル(nfr-reliability-sample.md)の構成を、第5章で定義した必須構成(順序固定)に準拠させること。
+    message_ja: 指定サンプル(nfr-reliability-sample.md)の構成を、第5章で定義した必須構成(順序固定)に準拠させること。

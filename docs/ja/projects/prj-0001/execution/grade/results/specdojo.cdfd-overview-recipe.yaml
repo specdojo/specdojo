@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-11-02T20:04:07.812Z"
+graded_at: "2026-11-05T20:04:52.619Z"
 graded_by: flash-high-executor
-content_hash: 17bbb3be23983437907bf00a7a348ca6446afd929a952727a19ed9c91e0b526d
+content_hash: 5cc03323ec8b1629e0884185a438697e85c6f4968552c3157b20366259c0dbb3
 categories:
   purpose:
     score: 100
@@ -129,28 +129,28 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 80
-    anchor: "### 4.4. データストア"
+    anchor: ""
     message: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
     message_ja: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
   - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 80
-    anchor: "### 4.4. データストア"
+    anchor: ""
     message: Rulebookで定められている「複数の論理データストアが物理保管を共有する場合の境界と共有相手の注記」に関する記述ガイドが欠けている。
     message_ja: Rulebookで定められている「複数の論理データストアが物理保管を共有する場合の境界と共有相手の注記」に関する記述ガイドが欠けている。
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 91
-    anchor: "### 4.5. 概念データフロー（概要）"
+    anchor: ""
     message: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
     message_ja: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
   - id: F007
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 91
-    anchor: "### 4.5. 概念データフロー（概要）"
+    anchor: ""
     message: 対象範囲内の参加者から直接受け取る入力を図示省略した場合に、図直後に注記を追加するガイドが欠けている。
     message_ja: 対象範囲内の参加者から直接受け取る入力を図示省略した場合に、図直後に注記を追加するガイドが欠けている。
   - id: F008

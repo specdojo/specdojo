@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 87
-graded_at: "2026-11-01T20:16:03.365Z"
+graded_at: "2026-11-05T20:16:47.489Z"
 graded_by: flash-high-executor
-content_hash: afae0c98b76031a8da9b3a2aedf9c2dca0034a6bdc42ab437590cc9e87c06215
+content_hash: a0d603581a63bffda80c0a3eb47b01f6a5955a6164864b0ab351cc570e1e9e5c
 categories:
   purpose:
     score: 100
@@ -101,28 +101,28 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 10
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-ba-requirements-completeness
-    line: 181
-    anchor: "- 「データストア」が「マスタ・構成データ」と「トランザクションデータ」に分かれ、各表に「データストア」「主な内容」と、確定度に応じた「主な保管先」があります。"
+    line: 184
+    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
     message: 利用者が物の流れを扱う場合、「データストア」を2区分へ分ける受入条件と、いずれにも属さない物理保管の必須一覧化を同時に満たす本文構造が定義されておらず、物理保管をどこへ記載すれば要件を満たすか確定できない。
     message_ja: 利用者が物の流れを扱う場合、「データストア」を2区分へ分ける受入条件と、いずれにも属さない物理保管の必須一覧化を同時に満たす本文構造が定義されておらず、物理保管をどこへ記載すれば要件を満たすか確定できない。
   - id: F002
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 181
-    anchor: "- 「データストア」が「マスタ・構成データ」と「トランザクションデータ」に分かれ、各表に「データストア」「主な内容」と、確定度に応じた「主な保管先」があります。"
+    line: 184
+    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
     message: 図に物理保管を置く場合の一覧化を必須としている一方、物理保管の記入先となる表・列と template の追加方法が示されていないため、物の流れを含む CDFD を規則どおり作成できる骨組みを定義する必要がある。
     message_ja: 図に物理保管を置く場合の一覧化を必須としている一方、物理保管の記入先となる表・列と template の追加方法が示されていないため、物の流れを含む CDFD を規則どおり作成できる骨組みを定義する必要がある。
   - id: F003
     severity: minor
     rule: vp-dev-change-impact
     line: 68
-    anchor: 見出し順・表・記入欄の骨組みは template を正本とします。本章は各章の目的と必須・任意を定めます。
+    anchor: ""
     message: >-
       template を本文骨組みの正本と定めているが, rulebook の要件変更時に recipe・sample・template・包含する記法 rulebook
       のどれを同期確認するか規定がなく、物理保管のような変更影響を取りこぼすため、変更時の同期対象と確認手順を明記する必要がある。
@@ -132,15 +132,15 @@ findings:
   - id: F004
     severity: minor
     rule: vp-dev-testability
-    line: 173
-    anchor: 本節だけを `ready` 昇格のチェックリストの正本とします。次の全項目を満たす必要があります。
+    line: 176
+    anchor: ""
     message: 完成判定は内容の手動照合だけを正本としており、Frontmatter/schema 検証や Mermaid の構文・描画確認に用いるコマンドと期待結果がないため、変更後の機械的な検証手順を追加する必要がある。
     message_ja: 完成判定は内容の手動照合だけを正本としており、Frontmatter/schema 検証や Mermaid の構文・描画確認に用いるコマンドと期待結果がないため、変更後の機械的な検証手順を追加する必要がある。
   - id: F005
     severity: minor
     rule: vp-qe-verifiability
-    line: 181
-    anchor: "- 「データストア」が「マスタ・構成データ」と「トランザクションデータ」に分かれ、各表に「データストア」「主な内容」と、確定度に応じた「主な保管先」があります。"
+    line: 184
+    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
     message: >-
       物理保管を一覧へ含めることを必須にしながら、一覧をマスタ・構成データとトランザクションデータの2表に限定して物理保管をどちらへ置けば pass
       か定義していないため、条件付きの物理保管表または既存表へ配置する明示的な判定規則が必要である。
@@ -150,8 +150,8 @@ findings:
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 181
-    anchor: "- 「データストア」が「マスタ・構成データ」と「トランザクションデータ」に分かれ、各表に「データストア」「主な内容」と、確定度に応じた「主な保管先」があります。"
+    line: 184
+    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
     message: >-
       「データストア」を2区分へ分ける規則と物理保管も一覧化する規則を両立させる分類方法がなく, sample では「売場棚」をトランザクションデータ表へ置きながら凡例でどちらの区分にも属さないと説明しているため,
       物理保管の所属または例外を定義する必要がある。
@@ -161,8 +161,8 @@ findings:
   - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 181
-    anchor: "- 「データストア」が「マスタ・構成データ」と「トランザクションデータ」に分かれ、各表に「データストア」「主な内容」と、確定度に応じた「主な保管先」があります。"
+    line: 184
+    anchor: "- 「主な担当」は同じ表内で採用済み Role code または組織定義にある役割名へ統一されています。"
     message: >-
       「データストア」を2表に分け、図の各データストアを一覧行と一対一にする規則に対し, sample は「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明し, template
       にも物理保管の配置先がないため、物理保管の分類と配置先を rulebook・sample・template で統一する必要がある。
@@ -172,29 +172,16 @@ findings:
   - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 107
-    anchor: "- 章の冒頭で、領域数、プロセスグループ数、正本の所在（領域の分割は本書の表、受け渡しは本書の図、領域内部はプロセスグループ別 CDFD）を簡潔に示します。"
+    line: 108
+    anchor: ""
     message: 対応 recipe の章別手順には必須の導入文に対する問いと、プロセス領域・データストア・概念データフロー各章の冒頭宣言を確認する問いが欠けているため、本書の記述ガイドを再現可能な作成手順へ反映する必要がある。
     message_ja: 対応 recipe の章別手順には必須の導入文に対する問いと、プロセス領域・データストア・概念データフロー各章の冒頭宣言を確認する問いが欠けているため、本書の記述ガイドを再現可能な作成手順へ反映する必要がある。
   - id: F009
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 109
-    anchor: "- 各節は領域の表のみで構成します。主要入力・主要出力・データストアの箇条書きは記載せず、受け渡しは概念データフロー図を正本とします。"
-    message: >-
-      While Section 6.4 and Section 7 prohibit listing bulleted inputs, outputs, and data stores in process areas, the
-      reference recipe, sample, and template mandate and demonstrate them, causing a structural contradiction across the
-      Kata suite.
-    message_ja: >-
-      Section 6.4 および Section 7
-      では、プロセス領域において箇条書きの入力、出力、およびデータストアをリストに含めることを禁止していますが、リファレンスレシピ、サンプル、およびテンプレートではそれらを義務付け、かつ提示しており、Kataスイート全体で構造的な矛盾が生じています。
-  - id: F010
-    severity: minor
     rule: vp-ux-language-consistency
     line: 27
     anchor: >-
-      | データストア            |
-      プロセスグループが参照または更新する、台帳、文書、ファイル、設定などの論理的な正本。マスタ・構成データとトランザクションデータに区分する                                                      
-      |
+      | 系統の関係を描く方式    | プロセス領域の区分を代表ノードとし、区分とデータの関係を描く全体概要の構成方式。各系統の流れはユースケース別 CDFD
+      でプロセス領域の単位に詳細化する                                             |
     message: 「物理保管」の定義と、データストア・トランザクションデータとの包含関係が用語表にないため, sample の「売場棚」がトランザクションデータなのか図示上だけ同系統として扱う別概念なのかを統一して定義する必要がある。
     message_ja: 「物理保管」の定義と、データストア・トランザクションデータとの包含関係が用語表にないため, sample の「売場棚」がトランザクションデータなのか図示上だけ同系統として扱う別概念なのかを統一して定義する必要がある。
