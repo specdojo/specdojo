@@ -31,13 +31,22 @@ draft・fully-guided・recipe-guided の plan に、カタログの evidence_ref
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `draft`・`fully-guided`・`recipe-guided` の edit plan に、対象の成果物のカタログの `evidence_refs` を、読み取り専用の実装の根拠として載せている（`retrofit` と同じ展開）。`evidence_refs` がない成果物とカタログのない成果物では、節を載せないか「なし」と示し、異常終了の理由にしない。
+- これらの plan の「参照してよい文書」に実装の根拠を加え、実装の根拠と rulebook・`depends_on` が食い違うときの扱い（事実は実装、書き方は rulebook、意図は `depends_on` と個票の入力）を、`retrofit` の考え方に合わせて書いている。実装の根拠は読むだけで、変更許可範囲と commit の対象に入らない。
+- plan の `depends_on` の一覧で、まだない成果物を「未作成」と示し、wikilink ではなくインラインコードで書いている。未作成の依存は異常終了の理由にせず、その内容を推測で埋めずに `_TODO_` か `_ASSUMPTION_` で残すと、異常終了の条件と参照の方針の両方に書いている。異常終了の条件の「依存未解決」の言い回しは、何を指すかが読み取れる形に直している。
+- `condense` など内容を書き足さない approach と、review の plan は変えていない。変える必要があると判断した場合は、理由を個票の対応結果に書く。
+- 単体テストで、`evidence_refs` があるとき・ないとき・カタログがないときの plan の節と、未作成の依存の表示を確かめている。
+- 関連するガイド（approach の説明、exec の運用）と CHANGELOG の未公開の版の節を直している。公開済みの版の節は変えない。
+- 作業を終える前に `npm run typecheck`、`npm run lint:ts`、`npm run -s lint:md`、`npm run test:unit` を流し、親の検証がすべて通っている。
+- 保護された設定（agent の定義・名簿・`exec-defaults.yaml`・`package.json` など）は変えない。変える必要があれば、案を個票の対応結果に書き、報告の `handoff` にも書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                   | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------------ | ---- | ---- | ---- |
+| 1   | plan の生成で evidence_refs と未作成の依存を扱う       | DEV  | open | -    |
+| 2   | 3 つの edit のテンプレートの参照と異常終了の条件を直す | DEV  | open | -    |
+| 3   | テスト・ガイド・CHANGELOG を直し、検査を通す           | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -45,4 +54,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:ryu-guide]]: approach の定義
+- `docs/ja/specdojo/exec-templates/xep-retrofit-template.md`: 実装の根拠の展開と扱いの前例
+- `src/exec/plans-generation.ts`・`src/exec/plans-core.ts`: plan の生成
