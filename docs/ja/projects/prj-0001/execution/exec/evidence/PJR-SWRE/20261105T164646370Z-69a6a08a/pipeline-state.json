@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-SWRE",
   "run_id": "20261105T164646370Z-69a6a08a",
-  "updated_at": "2026-11-05T16:56:35.078Z",
+  "updated_at": "2026-11-05T16:56:47.270Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-swre-20261105T164646Z-5039b222-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-05T16:56:35.078Z",
-      "completed_at": null,
+      "completed_at": "2026-11-05T16:56:47.270Z",
       "artifact_ref": null
     }
   },
