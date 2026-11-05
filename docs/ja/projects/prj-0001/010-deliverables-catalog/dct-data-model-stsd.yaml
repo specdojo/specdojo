@@ -30,6 +30,15 @@ groups:
           - kind: implementation
             path: src/register/item.ts
             purpose: 登録項目個票の status フィールドの許容値（VALID_STATUSES）・終端状態定義
+          - kind: implementation
+            path: src/register/transition-commands.ts
+            purpose: close・reject・defer・reopen・start などの状態遷移コマンドが受け付ける遷移元と遷移の可否（ガード）
+          - kind: implementation
+            path: src/register/create-commands.ts
+            purpose: 起票時の初期状態と、update コマンドによる状態の指定
+          - kind: implementation
+            path: src/register/update.ts
+            purpose: 状態を変える操作に共通の制約（終端状態の項目は変えず reopen を先に求める、reopen は終端状態の項目だけ）
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
