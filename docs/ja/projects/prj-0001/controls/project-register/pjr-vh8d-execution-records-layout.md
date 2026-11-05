@@ -36,6 +36,9 @@ exec の plan・result・evidence とジョブの記録の置き場所と命名�
 - orchestrator の調査 (11): docs-structure-guide は `controls/reviews/` を挙げるが実物はなく、`controls/generated/` がある（2026-11-06）
 - orchestrator の調査 (12): 廃棄した文書 22 件が `docs/ja/product/trash/` にあり、プロダクトの文書のツリーの中で公開や索引の対象になりうる。ガイドに置き場所の記載がない（2026-11-06）
 - orchestrator の調査 (13): `schedule/assessments/generated/` だけ `generated/` が 1 段深い。ほかの横断ディレクトリは直下に `generated/` を置く（2026-11-06）
+- orchestrator の調査: 定期処理の失敗 22 件のうち 21 件、skip 13 件のうち 1 件は job の実行記録が Git にある。Git に跡がないのは失敗 1 件と skip 12 件で、skip 12 件は job の `precondition` が対象なしと判定した正常な「何もしない」。job を使わない定期処理（dashboard の更新）は無視される生成物だけを作り直す。job が動いて何も変えなかった実行は 6 件で、すべて `precondition` の導入前（2026-09）。`precondition` を持つのは job-grade-kata と job-grade-deliverable だけで、ほかの job は動いた記録がない（2026-11-06）
+- 利用者の決定 (#8): 定期処理の実行状態と履歴は Git の外に置き、置き場所を `generated/` から端末の状態を置く場所へ移す。Git に残すのは、job の実行記録を残さずに失敗した定期処理の実行だけとする。正常に何もしなかった実行（skip を含む）は残さない（2026-11-06）
+- 利用者の決定: `precondition` を持たない job が動いて何も変えなかった場合も、実行記録を commit しない方針とする。実現の方法（`precondition` を全 job に求めるか、runner が変更の有無で判定するか）は設計で決める（2026-11-06）
 
 ## 3. 検討した選択肢
 
