@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-PYCY",
+  "run_id": "20261105T120627860Z-cf65c750",
+  "updated_at": "2026-11-05T12:16:45.413Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-05T12:07:44.434Z",
+      "completed_at": "2026-11-05T12:10:58.442Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-PYCY/20261105T120627860Z-cf65c750/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-05T12:15:38.539Z",
+      "completed_at": "2026-11-05T12:16:34.698Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-pycy-20261105T120627Z-e8cf599c-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-05T12:16:34.711Z",
+      "completed_at": "2026-11-05T12:16:45.413Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-pycy-20261105T120627Z-e8cf599c-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-pycy-20261105T120627Z-e8cf599c-result.md"
+  }
+}
