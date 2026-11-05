@@ -51,7 +51,11 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 判断: 部分反映。対象成果物の5章構成と既存の遷移 ID `T-01`〜`T-08` を保持し、`partial`、結果集約、試行中の明示記録、再実行経路を更新した。実装・Kata・他の業務成果物は変更していない。
+- 根拠: `src/routine/routine.ts` の `recordRoutineStart`・`recordRoutineCompletion`・`spawnSelf`・`aggregateRoutineActionResults`・実行ループと、`src/routine/definition.ts` の結果型・due 判定を照合した。開始時の `running` 記録と、失敗・部分完了・スキップ・成功の優先順はカタログの対象範囲とも一致する。既存の「試行中に前回結果が残る」という記述は現在動作に合わせた。
+- 反映: `T-09`〜`T-11` を追加し、状態一覧・図・遷移表を対応させた。cron の `missed_run: skip` と探索制約、終了点を置かない理由も補った。試行中の入出力遷移が分割閾値を超えるため二図を維持した。
+- 申し送り: 例外後の復旧、`policy.overlap: skip` の扱い、古い lock の取得し直し、旧記録・欠損記録の復旧は未決事項として保持した。実装修正を伴う場合は、PO・PM・ARC・QE の判断後に別タスクとする。業務データ辞書 `bdd-routine-definition` は未作成で照合できず、作成後に用語・境界と `based_on` を確認する。委譲先内部のスキップ理由・成果物生成有無は指定エビデンスから確定できないため断定を外した。
+- 検証: executor で Prettier 整形・整形確認、差分確認、カタログ検証、履歴リンク検証を実施し、すべて成功した。カタログには未作成文書の警告がある。`lint:md`・`lint:fm`・`lint:mermaid` 等の親検証は runner に委ね、結果は reporter が result に記録する。
 
 ## 6. 関連ドキュメント
 
