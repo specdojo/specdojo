@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: BA
@@ -50,7 +50,10 @@ stsd-rulebook の本文構成を、頭書き・目的・適用範囲・状態一
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:stsd-rulebook|ステータス定義作成ルール]] の本文要件を頭書き・目的・適用範囲・状態一覧・状態遷移図・遷移の説明・今後の検討メモに更新した。状態が一つの場合の根拠と終了点の省略理由は適用範囲へ集約し、表示名・内部 ID・分割の記法は [[specdojo:stsd-mermaid-rulebook|STSD の状態遷移図を Mermaid で記述するルール]] への参照にした。
+- 判断根拠は [[prj-0001:pjr-vnt1-business-spec-opening-structure|業務仕様の冒頭構成の決定]]、[[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:cdfd-uc-rulebook|概念データフロー図（ユースケース別）作成ルール]]、[[specdojo:ryu-guide|実践の進め方ガイド]]、[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-qe-omissions-consistency` と `vp-arc-conciseness`。grade の F001 は既存の ID 不変・欠番・再利用禁止を維持して充足、F002 は管理場所と状態変更の業務範囲を本文要件・記述ガイドの適用範囲へそろえて充足した。grade サイドカーは変更していない。
+- [[prj-0001:xer-t-stsd-pilot-stsd-job-run-080|Job Run の簡潔化結果]]、[[prj-0001:xer-t-stsd-pilot-stsd-register-entry-080|登録項目個票の簡潔化結果]]、[[prj-0001:xer-t-stsd-pilot-stsd-routine-run-080|定期処理の実行結果の簡潔化結果]] の `source=condense` に該当する保持記録を、各 STSD と原因箇所へ照合した。図と遷移表の全遷移対応は俯瞰と詳細の照合に、分割図の共有状態は接続と到達性の確認に必要なため維持し、同じ説明を繰り返す規定とは判断しなかった。
+- 関連 recipe・sample・template と図の rulebook は読み込んで照合した。旧構成との不一致は利用者が決定した新要件を正とし、今回の編集対象を広げず、[[prj-0001:pjr-nepd-stsd-mermaid-display-name|PJR-NEPD]] で表示名を `状態名<br>値`（値が `-` なら状態名のみ）へ更新し、適用範囲への参照を直す。[[prj-0001:pjr-ysst-stsd-template-opening|PJR-YSST]]、[[prj-0001:pjr-swre-stsd-sample-opening|PJR-SWRE]]、[[prj-0001:pjr-p9sw-stsd-recipe-opening|PJR-P9SW]] で各 Kata の冒頭構成を追従させる。result の実施内容・変更ファイル・進め方と実践の型の適用への転記は後続 reporter が行う。
 
 ## 6. 関連ドキュメント
 
