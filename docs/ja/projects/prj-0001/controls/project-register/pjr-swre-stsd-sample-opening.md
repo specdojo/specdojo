@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-swre-stsd-sample-opening
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T13:04:22Z"
+  completed_at: "2026-11-05T16:58:28Z"
+  conclusion: sample の冒頭を頭書き・目的・適用範囲に分け、分割図の表示名を状態名`<br>`値にした
   derived_from:
     - PJR-3APD
     - PJR-VNT1

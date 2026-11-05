@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e3a69be333de4b9585e553e447682483
+- v: 1
+  id: reg_83c3227a49aa4cd6aec7e15d8159df55
+  ts: "2026-11-05T16:58:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: sample の冒頭を頭書き・目的・適用範囲に分け、分割図の表示名を状態名`<br>`値にした
+  previous_event_id: reg_5eae1138c00142b2bb866ca62a8df768
