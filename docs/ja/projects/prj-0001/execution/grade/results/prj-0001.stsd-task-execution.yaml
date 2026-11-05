@@ -1,0 +1,311 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:stsd-task-execution
+path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 84
+graded_at: "2026-11-05T15:38:54.032Z"
+graded_by: sol-review-executor
+content_hash: 1c5ff5b5b4e1e79f22dcfd10d16b3b6305698012ee37e49719d7366f4ae77d73
+source_hashes:
+  catalog-entry: 6f978281717b7f669c03f5af62abfd90a7623b086827e659a227d201fb81f78c
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 7613b8ab5d2b966fa5a7c35f5a19d1539b663a5ba1172b683fc00639bf45ce7d
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 83
+  consistency:
+    score: 75
+  architecture:
+    score: 92
+  usability:
+    score: 88
+  implementation:
+    score: 63
+  quality:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 6
+    anchor: "- スコープ: 現行実装（AS-IS）におけるタスク実行のライフサイクル（タスク登録、依存解決、着手、中断、再開、着手解放、完了、差し戻し、中止）"
+    message: >-
+      The document declares current implementation as its scope, while T-03 and T-05 retain stricter role and actor
+      requirements that section 5 explicitly says the current guards do not enforce. Separate observed behavior from
+      proposed business requirements and identify which rules govern acceptance of this AS-IS deliverable.
+    message_ja: >-
+      The document declares current implementation as its scope, while T-03 and T-05 retain stricter role and actor
+      requirements that section 5 explicitly says the current guards do not enforce. Separate observed behavior from
+      proposed business requirements and identify which rules govern acceptance of this AS-IS deliverable.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 75
+    anchor: 着手解放の「操作権限」は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。完了報告にも同じ操作権限を要する。「差し戻し条件」は、人間からの要求であり、直接・間接の後続タスクに実行中・中断中・完了が一つもないことを指す。
+    message: >-
+      T-03 says the specified actor acquires work authority, and this paragraph grants subsequent operations to the
+      assigned actor, but src/exec/events.ts foldEventsToState overwrites last_by for every event, including
+      note/link/estimate, and canCompleteTask, canBlockTask, and canReleaseTask authorize against last_by. Consequently,
+      A claiming a task followed by B adding a note gives B those permissions; reconcile this behavior with the
+      documented actor contract.
+    message_ja: >-
+      T-03 says the specified actor acquires work authority, and this paragraph grants subsequent operations to the
+      assigned actor, but src/exec/events.ts foldEventsToState overwrites last_by for every event, including
+      note/link/estimate, and canCompleteTask, canBlockTask, and canReleaseTask authorize against last_by. Consequently,
+      A claiming a task followed by B adding a note gives B those permissions; reconcile this behavior with the
+      documented actor contract.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 12
+    anchor: "- 対象タスクのイベントログ（追記型イベント列）を再生して得る基本状態を正とする。イベントがないタスクの基本状態は `todo` とし、同時刻のイベントは状態遷移として成立する順に並べて再生する。"
+    message: >-
+      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
+      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
+      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
+    message_ja: >-
+      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
+      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
+      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
+    cause:
+      type: document
+  - id: F004
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 75
+    anchor: 着手解放の「操作権限」は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。完了報告にも同じ操作権限を要する。「差し戻し条件」は、人間からの要求であり、直接・間接の後続タスクに実行中・中断中・完了が一つもないことを指す。
+    message: >-
+      Define how the assigned actor is established, retained, and transferred across claim, block, unblock, human
+      overrides, and non-state-changing events. The current text does not specify whether authority follows the claimant
+      or the latest event author, so DEV cannot implement the permission-dependent transitions consistently with both
+      this document and the current guards.
+    message_ja: >-
+      Define how the assigned actor is established, retained, and transferred across claim, block, unblock, human
+      overrides, and non-state-changing events. The current text does not specify whether authority follows the claimant
+      or the latest event author, so DEV cannot implement the permission-dependent transitions consistently with both
+      this document and the current guards.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 102
+    anchor: >-
+      | _UNDECIDED_:
+      同一アクターによる再開要件に対し、参照した再開判定は中断中であることのみを確認し、アクターを照合しない。他者による再開を許す承認根拠がないため、本文の要件を維持して責任境界を合意する                     |
+      中断中、実行中、`T-05` | BA、PO、ARC | `bdd-exec-event` 仕様策定時  |
+    message: >-
+      Expand the actor-related impact beyond T-05: enforcing assigned-actor authority also affects replay metadata and
+      the complete, block, and release guards in src/exec/events.ts. Identify T-04, T-06, T-07, T-08, T-16, and T-17 as
+      affected and record the compatibility implications for histories containing note/link/estimate events by another
+      actor.
+    message_ja: >-
+      Expand the actor-related impact beyond T-05: enforcing assigned-actor authority also affects replay metadata and
+      the complete, block, and release guards in src/exec/events.ts. Identify T-04, T-06, T-07, T-08, T-16, and T-17 as
+      affected and record the compatibility implications for histories containing note/link/estimate events by another
+      actor.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-dev-testability
+    line: 7
+    anchor: >-
+      - 利用目的と利用者:
+      業務分析担当（BA）とプロダクトオーナー（PO）はタスク進行要件と受入条件を合意し、状態遷移の業務的妥当性を確認・承認する。アーキテクト（ARC）・開発担当（DEV）は状態導出・状態管理実装に、品質確認担当（QE）は正常系・例外系・境界の状態遷移テスト設計に利用し、人と
+      AI Agent が記録を基に作業を分担・引き継げるようにする。
+    message: >-
+      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
+      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
+      checks for this document; readers currently have no linked verification procedure.
+    message_ja: >-
+      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
+      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
+      checks for this document; readers currently have no linked verification procedure.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 100
+    anchor: >-
+      | _UNDECIDED_: `prj-0001:bdd-exec-state`、`prj-0001:bdd-exec-event`
+      は未作成。状態名・通称・イベントの業務的合意を本文と照合し、承認する必要がある。現行動作の確認だけでは業務上の承認を代替しない                        | 全状態・全遷移         |
+      BA、PO      | 両業務データ辞書の仕様策定時 |
+    message: >-
+      Extend the unmet-condition record to include the undefined actor-authority contract across T-04, T-06, T-07, T-08,
+      T-16, and T-17, and identify its effect on DC-001, DC-003, and DC-005; the current T-05-only actor discussion does
+      not explain the full remaining acceptance gap.
+    message_ja: >-
+      Extend the unmet-condition record to include the undefined actor-authority contract across T-04, T-06, T-07, T-08,
+      T-16, and T-17, and identify its effect on DC-001, DC-003, and DC-005; the current T-05-only actor discussion does
+      not explain the full remaining acceptance gap.
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-qe-verifiability
+    line: 75
+    anchor: 着手解放の「操作権限」は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。完了報告にも同じ操作権限を要する。「差し戻し条件」は、人間からの要求であり、直接・間接の後続タスクに実行中・中断中・完了が一つもないことを指す。
+    message: >-
+      Specify which recorded actor must be compared with the requesting actor and whether note/link/estimate may change
+      that identity. Without this rule, a claim by A followed by a note from B has no unambiguous document-defined
+      permission oracle for completion, blocking, or release.
+    message_ja: >-
+      Specify which recorded actor must be compared with the requesting actor and whether note/link/estimate may change
+      that identity. Without this rule, a claim by A followed by a note from B has no unambiguous document-defined
+      permission oracle for completion, blocking, or release.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 102
+    anchor: >-
+      | _UNDECIDED_:
+      同一アクターによる再開要件に対し、参照した再開判定は中断中であることのみを確認し、アクターを照合しない。他者による再開を許す承認根拠がないため、本文の要件を維持して責任境界を合意する                     |
+      中断中、実行中、`T-05` | BA、PO、ARC | `bdd-exec-event` 仕様策定時  |
+    message: >-
+      Replace the unlocated reference to the examined resume check with a link to the target's catalog evidence_refs or
+      the relevant src/exec/events.ts functions, and provide the same navigation for the claim and completion
+      observations; the referenced dictionaries are unavailable and cannot lead readers to this evidence.
+    message_ja: >-
+      Replace the unlocated reference to the examined resume check with a link to the target's catalog evidence_refs or
+      the relevant src/exec/events.ts functions, and provide the same navigation for the claim and completion
+      observations; the referenced dictionaries are unavailable and cannot lead readers to this evidence.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 7
+    anchor: >-
+      - 利用目的と利用者:
+      業務分析担当（BA）とプロダクトオーナー（PO）はタスク進行要件と受入条件を合意し、状態遷移の業務的妥当性を確認・承認する。アーキテクト（ARC）・開発担当（DEV）は状態導出・状態管理実装に、品質確認担当（QE）は正常系・例外系・境界の状態遷移テスト設計に利用し、人と
+      AI Agent が記録を基に作業を分担・引き継げるようにする。
+    message: >-
+      The document expands PO as プロダクトオーナー, whereas docs/ja/projects/prj-0001/030-project-management/pm-roles.yaml
+      defines PO as Project Owner. Use the project's role name or explicitly explain the equivalence so approval
+      responsibility is not confused with a separate product-owner role.
+    message_ja: >-
+      The document expands PO as プロダクトオーナー, whereas docs/ja/projects/prj-0001/030-project-management/pm-roles.yaml
+      defines PO as Project Owner. Use the project's role name or explicitly explain the equivalence so approval
+      responsibility is not confused with a separate product-owner role.
+    cause:
+      type: document
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-005:
+      - DEV
+  detail_ref: prj-0001:stsd-task-execution-grade-criteria
