@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-04T14:38:25Z"
   conclusion: 1BRQ の統合後に exec run --register が start から review・統合まで通ることを確かめた
 ---
 
