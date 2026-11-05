@@ -4,17 +4,16 @@ specdojo:
   type: exec-result
   task_id: PJR-WSND
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-wsnd-20261105T121743Z-ec25afd5-plan.md
   started_at: "2026-11-05T12:17:44.227Z"
-  completed_at: "2026-11-05T12:22:12.392Z"
+  completed_at: "2026-11-05T12:24:02.531Z"
   agent: sol-executor
   approach: strategy-planning
   targets:
     - track:stsd-pilot
-  block_reason: "executor reported incomplete: Timeline の事前検査で既存の依存順エラーを検出したため、指定された異常終了条件に従い strategy・track の生成前に停止。PJR-WSND 個票の作業内容・対応結果に確認事項と再開手順を記録した。カタログ、Timeline、ステータス、result は変更していない。"
 ---
 
 # Edit Result

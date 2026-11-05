@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-05T11:47:44Z"
-  block_reason: "executor reported incomplete: Timeline の事前検査で既存の依存順エラーを検出したため、指定された異常終了条件に従い strategy・track の生成前に停止。PJR-WSND 個票の作業内容・対応結果に確認事項と再開手順を記録した。カタログ、Timeline、ステータス、result は変更していない。"
   derived_from:
     - PJR-3APD
   approach: strategy-planning
