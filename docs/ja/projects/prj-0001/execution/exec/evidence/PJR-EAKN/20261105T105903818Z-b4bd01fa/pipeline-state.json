@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-EAKN",
   "run_id": "20261105T105903818Z-b4bd01fa",
-  "updated_at": "2026-11-05T11:08:34.595Z",
+  "updated_at": "2026-11-05T11:09:01.822Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-eakn-20261105T105903Z-7f2f279a-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-05T11:08:34.595Z",
-      "completed_at": null,
+      "completed_at": "2026-11-05T11:09:01.822Z",
       "artifact_ref": null
     }
   },
