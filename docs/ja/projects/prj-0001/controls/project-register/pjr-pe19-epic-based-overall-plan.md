@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: hard
   registered_at: "2026-11-05T22:54:36Z"
+  block_reason: "parent validation failed: lint-ts, typecheck, test-unit"
   derived_from:
     - PJR-VYSC
 ---
@@ -45,15 +46,21 @@ epic に domains を持たせ、dashboard の全体計画・strategy の範囲�
 
 | No  | 作業                                                        | 担当     | 状態 | メモ |
 | --- | ----------------------------------------------------------- | -------- | ---- | ---- |
-| 1   | epic のスキーマと CLI に `domains` を足す                   | executor | open | -    |
-| 2   | dashboard の全体計画を epic から作る                        | executor | open | -    |
-| 3   | strategy の範囲・カタログの検出・track の確認を epic へ移す | executor | open | -    |
-| 4   | 非推奨の警告と検査を足す                                    | executor | open | -    |
-| 5   | テストと CHANGELOG を足す                                   | executor | open | -    |
+| 1   | epic のスキーマと CLI に `domains` を足す                   | executor | done | -    |
+| 2   | dashboard の全体計画を epic から作る                        | executor | done | -    |
+| 3   | strategy の範囲・カタログの検出・track の確認を epic へ移す | executor | done | -    |
+| 4   | 非推奨の警告と検査を足す                                    | executor | done | -    |
+| 5   | テストと CHANGELOG を足す                                   | executor | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- epic の任意 `domains` を frontmatter schema、読み書き、起票・更新 CLI、外部 project への起票、監査 event と event の再適用に追加した。`--domain` は繰り返し指定で置き換え、更新時の `--domain -` で削除できる。epic 以外への指定、不正な配列、track の重複を拒否する。
+- `dashboard build` の全体計画は epic の `depends_on` をたどり、着手 event と `completed_at` / `due_on` から期間を求める。稼働日数は `sch-defaults.yaml` のカレンダーで両端を含めて数え、未着手 epic は先行 epic の最も遅い終了日の翌稼働日から始める。ガントと `catalog-scaffold.md` は `execution/generated/` に出力する。
+- 期間の判断: `due_on` のない未完了 epic は終了日と稼働日数を未定とし、開始日が分かれば開始点を表示する。期限を推測すると依存先の予定まで架空になるため、先行 epic の終了日が未定なら後続の開始日も未定とする。先行 epic のない未着手項目、および着手 event のない既存項目も、開始日を推測せず未定と表示する。完了した epic は期限の有無にかかわらず実際の完了日を使う。
+- strategy の scope と未作成カタログの検出は共通の範囲解決を使い、既存 strategy の scope、epic の `domains`、互換用 `tml-index.yaml` の順に優先する。空の scope / `domains` も明示指定として尊重する。strategy-planning には対象 track を担う epic を必須とし、`register build` は epic の依存循環と track の重複を検出する。
+- 旧 timeline の読み込み、`timeline build`、`timeline_path` は互換のため維持し、それぞれプロセス内で一度だけ非推奨警告を出す。epic がない project の dashboard は旧 timeline の表示を維持する。未公開版の CHANGELOG に移行方法を追記した。
+- schema・CLI・期間の3規則・休日・複数先行項目・期限未定・範囲の優先順・物理分割カタログ・旧形式と警告・循環・重複・dashboard 出力のテストを追加した。型検査、各 lint、単体・統合テスト、全体 schema 検証は親 runner の担当である。executor の実行検証は後段の report に記録する。
+- 保護された設定の変更は不要。文書・Kata・prj-0001 の計画データの移行は PJR-JM29 の範囲として残す。統合後の register / exec の運用確認は運用メモに従って PJR-JSEY で行う。
 
 ## 6. 関連ドキュメント
 
