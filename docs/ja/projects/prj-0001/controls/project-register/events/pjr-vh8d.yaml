@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f847dafa367948fc8acf2d13e66cf7d7
+  ts: "2026-11-05T22:17:28Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 実行記録のディレクトリ体系と配置を決める
+    - field: description
+      from: ""
+      to: exec の plan・result・evidence とジョブの記録の置き場所と命名を決め、混在・散在・ガイドとの食い違いを直す方針を定める
+    - field: input
+      from: ""
+      to: '["由来: PJR-2WC2 で利用者が、ディレクトリ体系とファイルの配置のおかしい箇所を直すと決めた（2026-11-06）","orchestrator の調査 (1): exec/plans と exec/results はどちらも 1 ディレクトリに約 1,170 件。`pjr-*` 772 件・`T-*` 268 件・`JBR-grade-*` 約 100 件が混ざる（2026-11-06）","orchestrator の調査 (2): exec/plans/done/ は空で、plan-result-lifecycle-guide の「完了した plan を移す」と食い違う（2026-11-06）","orchestrator の調査 (3): exec/evidence は `PJR-*` 533・`T-*` 64・`JBR-grade-*` 96 のほか、`JBR-...-review` が本体と同じ階層に並び、成果物名の `stsd-register-entry` が 1 件ある。命名が 3 通り混ざる（2026-11-06）","orchestrator の調査 (4): ジョブの定義は prj-0001/jobs/、実行記録は execution/jobs/runs/、評価の結果は execution/grade/results/、evidence と plan は execution/exec/ の下にあり、1 回のジョブの記録が 4 か所に散る（2026-11-06）","orchestrator の調査 (5): result のない plan が 2 件、plan のない result が 16 件ある（2026-11-03 の数え）。全 plan に共通の規約（約 3 KB）が埋め込まれ、合計約 3.3 MB が重複する（2026-11-06）","決めること: plan・result の分け方（出どころ別か種類別か）、done/ をやめるか移す実装をするか、ジョブの記録を寄せるか、既存のファイルを動かすか新しい分だけにするか、動かす場合に `evidence.json` の `log_refs` などパスを持つ記録をどう扱うか（2026-11-06）","制約: 生のログは全文を Git に残す（PJR-2WC2 の決定）。履歴の書き換えは git-branching-standard で禁止されている（2026-11-06）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2WC2"]'
