@@ -65,7 +65,8 @@ export function planningPlanFields(opts: {
       `4. \`specdojo catalog plan validate ${projectArg} --domain ${unit}\` を通す。blocking な \`open_questions\` を解消する。`,
       `5. \`specdojo catalog scaffold ${projectArg} --domain ${unit} --plan\` で \`dct-${unit}.yaml\`（物理分割時は全 part）を生成する。\`dct-index.yaml\` の \`size\` がない場合は個票の範囲に合わせて \`--size <small|medium|large>\` を明示する。既存ファイルは差分を確認し、必要な場合だけ \`--force\` を使う。`,
       `6. \`specdojo catalog validate ${projectArg}\` を通す。先に \`dct-index.yaml\` の全 domain の索引を整備し、生成した domain を登録する（物理分割も同じ domain の一項目とする）。判定計画とカタログの保存、参照・依存・完了条件の整合を完了基準とする。`,
-      "7. 個票の作業内容・対応結果と実行記録に判断・検証結果を記録する。todo の close は runner と人が行う。close 後の `timeline build` が domain を `primary` と導く。`tml-index.yaml` は変更しない。",
+      "7. `evidence_refs` がある成果物は参照先を読み、状態遷移・判定・検証の本体を含むファイルが参照にあるか確認する。re-export だけのファイルを根拠にせず、転送先をたどって本体を特定する。不足する本体の参照を補い、`catalog validate` を再実行する。確認した本体のパス・判断根拠・未確認範囲を記録する。",
+      "8. 個票の作業内容・対応結果と実行記録に判断・検証結果を記録する。todo の close は runner と人が行う。close 後の `timeline build` が domain を `primary` と導く。`tml-index.yaml` は変更しない。",
     );
   } else {
     const strategy = join(

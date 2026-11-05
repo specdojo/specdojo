@@ -15,11 +15,11 @@ specdojo:
     - PJR-PSXJ
 ---
 
-# PJR-ABBM 根拠にならない evidence_refs を警告し、見直しの段で本体のファイルを確かめる
+# PJR-ABBM 根拠にならない `evidence_refs` を警告し、見直しの段で本体のファイルを確かめる
 
 ## 1. 概要
 
-catalog validate が存在しないパスと re-export だけのファイルを指す evidence_refs を警告し、catalog-planning の手順に本体のファイルの確認を足す
+`catalog validate` が根拠にならない `evidence_refs` を検出し、`catalog-planning` の手順に本体のファイルの確認を足す。存在しないパスは既存のエラーを維持し、re-export だけのファイルは警告する。
 
 ## 2. 入力
 
@@ -39,16 +39,21 @@ catalog validate が存在しないパスと re-export だけのファイルを�
 
 ## 4. 作業内容
 
-| No  | 作業                                           | 担当     | 状態 | メモ |
-| --- | ---------------------------------------------- | -------- | ---- | ---- |
-| 1   | re-export だけのファイルの判定と警告を足す     | executor | open | -    |
-| 2   | catalog-planning の手順と recipe・ガイドを直す | executor | open | -    |
-| 3   | テストと CHANGELOG を足す                      | executor | open | -    |
+| No  | 作業                                           | 担当     | 状態 | メモ                                            |
+| --- | ---------------------------------------------- | -------- | ---- | ----------------------------------------------- |
+| 1   | re-export だけのファイルの判定と警告を足す     | executor | done | JavaScript / TypeScript を対象に警告を追加      |
+| 2   | catalog-planning の手順と recipe・ガイドを直す | executor | done | plan・ルールブック・ガイドを更新。recipe はない |
+| 3   | テストと CHANGELOG を足す                      | executor | done | 判定と plan 展開のテスト、Unreleased への追記   |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/catalog/build.ts` に re-export だけのファイルを検出する警告を追加した。コメント・複数行・名前付き / 一括 / 型の re-export を扱い、本体の宣言や import が混在するファイル、空ファイル、ディレクトリには警告しない。警告にはカタログのファイル、`local_id`、参照パス、理由を含める。存在しないパス・広すぎる範囲・重複の既存エラーは維持した。
+- `src/exec/plans-planning.ts` に、状態遷移・判定・検証の本体の参照確認、転送先の追跡、不足する参照の補完、再検証と記録の手順を追加した。[[specdojo:dct-rulebook|成果物カタログ作成ルール]] と [[specdojo:timeline-design-guide|タイムライン設計ガイド]] にも反映し、旧規定の「内部ヘルパーは参照しない」を本体の参照を確認する規定へ改めた。対応する DCT recipe は存在しない。
+- `tests/src/catalog/build.test.ts` に警告の有無・文脈・ファイル種別のテスト、`tests/src/register/planning.test.ts` に手順の展開確認を追加した。`CHANGELOG.md` の Unreleased に記載した。
+- `node --import tsx src/specdojo.ts catalog validate --project prj-0001` は終了コード 0、エラー 0 件、警告計 227 件。そのうち今回追加した re-export の警告は 64 件で、全件が `src/exec/exec.ts` を指す参照だった（入力の 56 件は事前調査時点の値）。既存の `evidence_refs` は置き換えていない。
+- Prettier 整形と `npm run validate:history-links` は成功した。単体・統合テスト、型検査、TypeScript / Markdown / frontmatter / 図の lint、schema 検査は pipeline の親 runner が実施する。
+- 残課題・保護された設定の変更案・追加の申し送りはない。result は pipeline の reporter / runner が記入する。
 
 ## 6. 関連ドキュメント
 
-- PJR-PSXJ: 由来の decision
+- [[prj-0001:pjr-psxj-code-doc-traceability|PJR-PSXJ: 由来の decision]]
