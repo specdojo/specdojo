@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-MC63",
   "run_id": "20261105T101827515Z-ee101aec",
-  "updated_at": "2026-11-05T10:28:57.819Z",
+  "updated_at": "2026-11-05T10:29:09.555Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-mc63-20261105T101827Z-3b1bbb8b-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-05T10:28:57.819Z",
-      "completed_at": null,
+      "completed_at": "2026-11-05T10:29:09.555Z",
       "artifact_ref": null
     }
   },
