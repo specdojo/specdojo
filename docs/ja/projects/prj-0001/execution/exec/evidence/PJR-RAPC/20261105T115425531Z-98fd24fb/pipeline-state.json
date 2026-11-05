@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-RAPC",
   "run_id": "20261105T115425531Z-98fd24fb",
-  "updated_at": "2026-11-05T12:05:26.815Z",
+  "updated_at": "2026-11-05T12:05:38.015Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-rapc-20261105T115425Z-ac6e97c0-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-05T12:05:26.815Z",
-      "completed_at": null,
+      "completed_at": "2026-11-05T12:05:38.015Z",
       "artifact_ref": null
     }
   },
