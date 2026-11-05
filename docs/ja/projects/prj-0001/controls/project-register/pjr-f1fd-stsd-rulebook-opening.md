@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-f1fd-stsd-rulebook-opening
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T13:02:31Z"
+  completed_at: "2026-11-05T16:07:01Z"
+  conclusion: 本文構成を頭書き・目的・適用範囲・状態一覧・状態遷移図・遷移の説明・今後の検討メモにし、概要の規則を目的と適用範囲へ移した
   derived_from:
     - PJR-3APD
     - PJR-VNT1
