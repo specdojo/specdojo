@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6460bbd5fb4e494fb1fb07aa9a10e466
+  ts: "2026-11-05T13:09:22Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-deliverable の冒頭と図の表示名を新しい Kata に合わせる
+    - field: description
+      from: ""
+      to: stsd-deliverable の「概要」を頭書き・目的・適用範囲に分け、状態遷移図の表示名を状態名と値の 2 行にする。内容は変えない
+    - field: input
+      from: ""
+      to: '["PJR-VNT1 の決定に合わせて手入れした stsd の Kata（PJR-F1FD・PJR-NEPD・PJR-YSST・PJR-SWRE・PJR-P9SW）に合わせる。状態・遷移・条件などの中身は schedule の磨き込み・condense・review を通った内容を保つ"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-deliverable"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-VNT1"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-SWRE","PJR-P9SW"]'
