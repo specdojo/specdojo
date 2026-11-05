@@ -151,6 +151,8 @@ register のカタログなしの成果物 plan は、個票の `target_path`・
 
 `approach: retrofit` では、対象成果物の DCT エントリに宣言された `evidence_refs` を edit / review plan の「実装エビデンス」へ展開します。カタログ経由で `evidence_refs` がない場合は plan 生成をエラーにします。カタログなしでは実装の調査パスを個票に明記して調査入力とします。実装エビデンスは調査入力であり、frontmatter の `targets` には追加しません。実行者は実際に参照したパス、抽出した現在動作、成果物との一致・乖離、未確認範囲を result に記録します。
 
+`draft`・`fully-guided`・`recipe-guided` の edit plan にも `evidence_refs` を読み取り専用で展開します。未指定・カタログなしでは「なし」と示し、生成を拒否しません。これらの plan の `depends_on` は、既存文書を wikilink、未作成文書をインラインコードと「未作成」で表示します。未作成の依存の内容は推測せず _TODO_ / _ASSUMPTION_ として残し、存在しないことだけを理由に実行を止めません。`condense` など他 approach と review の plan は従来のままです。
+
 実践の型の扱いは [実践の進め方ガイド](ryu-guide.md) を参照します。
 
 ### condense の記録

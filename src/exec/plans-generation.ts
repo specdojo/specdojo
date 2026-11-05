@@ -102,12 +102,22 @@ function buildEditPlanMarkdown(
   const refs =
     planOverrides?.refs ??
     resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const usesOptionalImplementationEvidence =
+    task.approach === "draft" ||
+    task.approach === "fully-guided" ||
+    task.approach === "recipe-guided";
+  const evidence = implementationEvidence(deliverable);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(
+      deliverable,
+      projectId,
+      catalogPath,
+      usesOptionalImplementationEvidence,
+    ),
     _DELIVERABLE_BASED_ON_: deliverableBasedOn(deliverable),
     _REGISTER_INPUT_: registerInputSection(planOverrides?.registerInput)
       ? "下記「個票の入力（前提）」を参照。"
@@ -115,9 +125,13 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_BRIEF_: deliverableBrief(deliverable),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
-    _IMPLEMENTATION_EVIDENCE_: deliverable?.catalogless
-      ? "個票に指定された実装のパスを読み取り専用の調査入力とする。パスが未指定なら実装反映の前に個票へ明記する。"
-      : implementationEvidence(deliverable),
+    _IMPLEMENTATION_EVIDENCE_: usesOptionalImplementationEvidence
+      ? evidence === MISSING
+        ? "なし（`evidence_refs` 未指定またはカタログなし）。"
+        : evidence
+      : deliverable?.catalogless
+        ? "個票に指定された実装のパスを読み取り専用の調査入力とする。パスが未指定なら実装反映の前に個票へ明記する。"
+        : evidence,
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,

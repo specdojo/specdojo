@@ -371,7 +371,8 @@ export function kataRefState(refPath: string): "existing" | "missing" | "unresol
 }
 
 // 対象成果物の depends_on を、依存先 doc の [[id]] 参照の入れ子リストで提示する。
-// id は依存先の frontmatter、未作成なら配置規約から解決する。agent へ plan を渡すときに
+// id は依存先の frontmatter、未作成なら配置規約から解決する。markMissing の場合は
+// 未作成の依存をインラインコードで示す。agent へ plan を渡すときに
 // expandPromptRefs（src/exec/run/agent.ts, format:'path'）が
 // この [[id]] を doc-index 経由でリポジトリ相対パスへ展開し、agent が先行成果物を直接開ける。
 // テンプレート側はラベル直後にこの値を差し込むため、件数 0・成果物未解決時は先頭スペース付きの
@@ -380,13 +381,18 @@ export function deliverableDependsOn(
   deliverable: DeliverableInfo | null,
   projectId: string,
   catalogPath: string,
+  markMissing = false,
 ): string {
   if (!deliverable) return ` ${MISSING}`;
   const deps = deliverable.deliverable.depends_on ?? [];
   if (deps.length === 0) return " -";
   const lines = deps.map((dep) => {
     const info = findDeliverableInfo(catalogPath, dep);
-    return `  - [[${deliverableDocId(projectId, dep, info?.resolvedPath)}]]`;
+    const id = deliverableDocId(projectId, dep, info?.resolvedPath);
+    if (markMissing && (!info || !existsSync(resolve(specdojoRootDir(), info.resolvedPath)))) {
+      return `  - \`${id}\`（未作成）`;
+    }
+    return `  - [[${id}]]`;
   });
   return `\n${lines.join("\n")}`;
 }
