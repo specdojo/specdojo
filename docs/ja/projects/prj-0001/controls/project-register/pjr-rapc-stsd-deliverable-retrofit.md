@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-rapc-stsd-deliverable-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T11:25:14Z"
+  completed_at: "2026-11-05T12:10:19Z"
+  conclusion: 新設。3 状態・4 遷移を 1 図で書き、実装で確かめられない点は検討メモに残した
   derived_from:
     - PJR-3APD
     - PJR-PT5N
