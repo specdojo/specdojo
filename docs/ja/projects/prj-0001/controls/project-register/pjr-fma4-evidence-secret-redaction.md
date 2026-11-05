@@ -30,13 +30,23 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `src/shared/text.ts` の `redactSensitiveText` が、既存の形式に加えて次を伏せ字にする: AWS のアクセスキー（`AKIA`・`ASIA` で始まる 20 文字）、Google の API キー（`AIza` で始まる 39 文字）、Slack のトークン（`xox` で始まる形式）、GitHub の fine-grained token（`github_pat_`）、JWT（`eyJ` で始まる 3 区画）、秘密鍵の PEM ブロック（`BEGIN … PRIVATE KEY` から `END … PRIVATE KEY` まで全体）、URL に埋め込まれた認証情報（`https://user:pass@host` の `user:pass`）、Anthropic の `sk-ant-` 形式。
+- 単体テストを足す。形式ごとに伏せ字になること、伏せ字の後に元の値が残らないこと、語の一部（例: `task-judgement`、`risk-assessment`）や通常の URL を伏せ字にしないことを確かめる。
+- 実行記録に秘密が入っていないかを調べる検査のスクリプトを足す。入口は依存のない環境（`node_modules` のない linked worktree）でも動く plain JS（`.mjs`）とし、指定したファイル（hook では staged のファイル）を調べ、見つけたら終了コード 1 でファイル・行・種類を出す。値そのものは出力しない。
+- 検査の形式の定義は `redactSensitiveText` と同じ正本から取るか、二重に持つ場合は両者の一致をテストで確かめる。どちらにするかは executor が決め、理由を個票の対応結果に書く。gitleaks などの外部の道具を使うかも executor が決め、理由を書く。
+- 追跡中の実行記録（`docs/ja/projects/prj-0001/execution/` 配下）に検査を実行し、検出が 0 件であること（または検出があれば、ファイルと種類だけ）を個票の対応結果に書く。値は書かない。
+- `lefthook.yml`・`package.json`・`.github/workflows/` は保護された設定として変えない。hook や CI への登録の案（追加する設定の全文）を個票の対応結果に書き、pipeline では報告の `handoff` にも書く。反映は利用者の承認のもとで行う。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` が通り、親の検証が通る。
+- CHANGELOG は未公開の版の節に書き、公開済みの版の節を変えない。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                   | 担当     | 状態 | メモ |
+| --- | -------------------------------------- | -------- | ---- | ---- |
+| 1   | 伏せ字の形式を足し、テストを足す       | executor | open | -    |
+| 2   | 検査のスクリプトを足し、テストを足す   | executor | open | -    |
+| 3   | 既存の実行記録に検査を流し、結果を書く | executor | open | -    |
+| 4   | hook と CI への登録の案を書く          | executor | open | -    |
 
 ## 5. 対応結果
 
@@ -44,4 +54,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-2WC2: 由来の issue（生のログを全文残す決定）
