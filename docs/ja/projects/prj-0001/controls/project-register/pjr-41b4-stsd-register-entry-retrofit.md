@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-41b4-stsd-register-entry-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T11:24:41Z"
+  completed_at: "2026-11-05T11:49:07Z"
+  conclusion: 部分反映。5 章・8 状態・T-01〜T-18 を保ち、結論と履歴の正本、終了点を置かない理由を実装と Kata に合わせた
   derived_from:
     - PJR-3APD
     - PJR-PT5N

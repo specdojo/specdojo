@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_44b9aea558db4bb7a08064c11bacbe08
+- v: 1
+  id: reg_2317a0573f1c48b9bcb009c7db7f888f
+  ts: "2026-11-05T11:49:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 部分反映。5 章・8 状態・T-01〜T-18 を保ち、結論と履歴の正本、終了点を置かない理由を実装と Kata に合わせた
+  previous_event_id: reg_ca446b5383414ffa9f90d2d63de8bed2
