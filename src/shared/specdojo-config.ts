@@ -1,3 +1,4 @@
+import { warnDeprecated } from "./deprecation.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
@@ -426,6 +427,8 @@ export function getProjectExecutionPath(project: SpecDojoProjectConfig): string 
 // Timeline lives in a fixed cross-cutting directory under the project root, so an
 // unset timeline_path falls back to "timeline" instead of disabling the command.
 export function getProjectTimelinePath(project: SpecDojoProjectConfig): string {
+  if (project.timeline_path !== undefined)
+    warnDeprecated("timeline_path", "Use register epics and dashboard build.");
   return withBasePath(project, project.timeline_path?.trim() || "timeline");
 }
 
@@ -1025,6 +1028,8 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
   }
 
   for (const [projectId, project] of Object.entries(parsed.projects)) {
+    if (project?.timeline_path !== undefined)
+      warnDeprecated("timeline_path", "Use register epics and dashboard build.");
     if (!isValidProjectConfig(project)) {
       throw new Error(
         `Invalid .specdojo/specdojo.config.json: projects.${projectId} must omit ` +

@@ -531,6 +531,7 @@ export function buildRegisterItemContent(opts: {
       description: opts.fields.description,
       type: opts.fields.type,
       ...(opts.fields.track ? { track: opts.fields.track } : {}),
+      ...(opts.fields.domains !== undefined ? { domains: opts.fields.domains } : {}),
       priority: opts.fields.priority,
       ...(opts.fields.difficulty ? { difficulty: opts.fields.difficulty } : {}),
       owner: opts.fields.owner,

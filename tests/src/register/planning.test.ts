@@ -19,6 +19,7 @@ const project = {
   base_path: "docs/ja/projects/prj-0001",
   catalog_path: "catalog",
   schedule_path: "schedule",
+  project_register_path: "register",
 };
 function write(file: string, content: string) {
   mkdirSync(dirname(join(root, file)), { recursive: true });
@@ -54,6 +55,10 @@ beforeEach(() => {
         },
       ],
     }),
+  );
+  write(
+    "docs/ja/projects/prj-0001/register/pjr-ab12-demo.md",
+    "---\nspecdojo:\n  id: prj-0001:pjr-ab12-demo\n  item_type: epic\n  item_status: open\n  track: demo\n---\n\n# PJR-AB12 Demo\n",
   );
   process.env.SPECDOJO_PACKAGE_ROOT = sourceRoot;
   process.chdir(root);
@@ -101,12 +106,14 @@ describe("planning approach validation", () => {
       validate("catalog-planning", ["domain:demo"], { targetPath: "demo.yaml" }),
     ).toThrow("--target-path");
   });
-  it("timeline がない場合は明示 scope で strategy を作れる", () => {
+  it("timeline がなくても対象 track の epic が必須", () => {
     expect(() =>
       validate("strategy-planning", ["track:demo"], {
         project: { catalog_path: "catalog", schedule_path: "schedule" },
       }),
-    ).not.toThrow();
+    ).toThrow("create an epic");
+    rmSync(join(root, "docs/ja/projects/prj-0001/timeline"), { recursive: true });
+    expect(() => validate("strategy-planning", ["track:demo"])).not.toThrow();
   });
 });
 

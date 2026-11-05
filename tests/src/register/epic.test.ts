@@ -7,6 +7,7 @@ import { buildValidator, formatErrors } from "../../helpers/schema.js";
 import { buildRegisterItemContent } from "../../../src/register/core.js";
 import { buildRegisterEvent } from "../../../src/register/events.js";
 import { readRegisterItemContent, registerItemFieldsFromItem } from "../../../src/register/item.js";
+import { validateRegisterEpicDocs } from "../../../src/register/epic.js";
 import { generateDerivedViewFiles } from "../../../src/register/views.js";
 import type { RegisterAddFields, RegisterPaths } from "../../../src/register/command-types.js";
 
@@ -99,6 +100,39 @@ describe("epic", () => {
     expect(validate(data)).toBe(false);
   });
 
+  it("domains は epic の文字列配列だけを許可し、読み書きと履歴を保持する", () => {
+    const validate = buildValidator(
+      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+    );
+    const content = ticket({ domains: ["business", "data-flow"] });
+    const data = load(content.match(/^---\n([\s\S]*?)\n---/)![1]) as {
+      specdojo: Record<string, unknown>;
+    };
+    expect(validate(data), formatErrors(validate.errors)).toBe(true);
+    expect(readRegisterItemContent(content, filename)!.item.domains).toEqual([
+      "business",
+      "data-flow",
+    ]);
+    for (const domains of ["business", [42], [""], ["business", "business"]]) {
+      data.specdojo.domains = domains;
+      expect(validate(data)).toBe(false);
+    }
+    data.specdojo.domains = ["business"];
+    data.specdojo.item_type = "todo";
+    delete data.specdojo.track;
+    expect(validate(data)).toBe(false);
+    const event = buildRegisterEvent({
+      afterContent: content,
+      filename,
+      timeZone: "UTC",
+      action: "add",
+      actor: "SpecDojo",
+      reason: "domains",
+    })!;
+    const validateEvents = buildValidator("docs/specdojo/schemas/v1/register-events.schema.yaml");
+    expect(validateEvents([event]), formatErrors(validateEvents.errors)).toBe(true);
+  });
+
   it.each(["open", "in-progress", "waiting", "review", "done", "rejected", "deferred"])(
     "epic の %s 状態を schema が受け付ける",
     (status) => {
@@ -115,6 +149,27 @@ describe("epic", () => {
       ).toBe(true);
     },
   );
+
+  it("register build の検証が依存循環と track の重複を検出する", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-epic-validation-"));
+    dirs.push(root);
+    const paths: RegisterPaths = {
+      projectId: "prj-test",
+      projectRegisterPath: root,
+      generatedPath: join(root, "generated"),
+      pjrIndexPath: join(root, "pjr-index.md"),
+      controlsGeneratedPath: join(root, "controls/generated"),
+      registerDateTimeZone: "UTC",
+    };
+    writeFileSync(join(root, filename), ticket({ dependsOn: ["prj-test:PJR-AB13"] }));
+    const second = join(root, "pjr-ab13-business.md");
+    writeFileSync(second, ticket({ track: "other", dependsOn: ["PJR-AB12"] }, "PJR-AB13"));
+    expect(validateRegisterEpicDocs(paths).join(" ")).toContain("cycle");
+    writeFileSync(second, ticket({}, "PJR-AB13"));
+    expect(validateRegisterEpicDocs(paths).join(" ")).toContain("Duplicate epic track");
+    writeFileSync(second, ticket({ track: "other" }, "PJR-AB13"));
+    expect(validateRegisterEpicDocs(paths)).toEqual([]);
+  });
 
   it("epic ごとに直接の子と状態を表示し、孫・無関係な項目を含めない", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-epic-"));

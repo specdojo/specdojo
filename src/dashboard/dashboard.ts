@@ -7,6 +7,8 @@ import { listFilesRecursive, readJson } from "../shared/fs.js";
 import { readAllEventFiles } from "../exec/events.js";
 import {
   getProjectExecutionPath,
+  getProjectCatalogPath,
+  getProjectRegisterPath,
   getProjectRoutinesPath,
   getProjectSchedulePath,
   getProjectTimelinePath,
@@ -26,7 +28,15 @@ import {
   registerEventFilePath,
   type RegisterEventV1,
 } from "../register/events.js";
-import { buildTimelineWaves, loadTimelineIndex, type TimelineTrackPlan } from "./timeline-build.js";
+import {
+  buildTimelineWaves,
+  loadTimelineIndex,
+  type TimelineTrackPlan,
+  buildTimeline,
+  renderCatalogScaffoldMarkdown,
+} from "./timeline-build.js";
+import { loadEpicSchedules } from "./epic-plan.js";
+import { resolveRegisterDateTimeZone } from "../register/date.js";
 import {
   buildTimelineGanttSvg,
   computeTimelineTrackSchedules,
@@ -48,7 +58,7 @@ import { gradeFindingCount, parseGradeResult, type GradeResult } from "../grade/
 // ================================
 
 function generatedBanner(command: string): string {
-  return `> このページは \`${command}\` が生成した派生ビューです。正本は Schedule / Timeline（tml-index.yaml）/ 登録簿個票・event / exec event / routine（rtn-*.yaml・generated/routine-state.json・generated/routine-runs.jsonl）の機械可読な成果物であり、このページを手編集しても次回のビルドで失われます。`;
+  return `> このページは \`${command}\` が生成した派生ビューです。正本は Schedule / epic を含む登録簿個票・event / exec event / routine（rtn-*.yaml・generated/routine-state.json・generated/routine-runs.jsonl）の機械可読な成果物であり、このページを手編集しても次回のビルドで失われます。`;
 }
 
 export type DashboardPaths = {
@@ -56,6 +66,10 @@ export type DashboardPaths = {
   projectPath: string;
   schedulePath?: string;
   timelinePath: string;
+  catalogPath?: string | null;
+  repoRoot?: string;
+  registerPath?: string;
+  registerDateTimeZone?: string;
   executionGeneratedPath: string;
   routinesPath?: string;
   gradeResultsPath?: string;
@@ -96,7 +110,15 @@ export function resolveDashboardPaths(opts: { project?: string }): DashboardPath
 
   return {
     projectId,
-    projectPath: join(baseDir, getProjectTimelinePath(project), ".."),
+    projectPath: join(baseDir, project.base_path ?? ""),
+    catalogPath: getProjectCatalogPath(project)
+      ? join(baseDir, getProjectCatalogPath(project)!)
+      : null,
+    repoRoot: baseDir,
+    registerPath: getProjectRegisterPath(project)
+      ? join(baseDir, getProjectRegisterPath(project)!)
+      : undefined,
+    registerDateTimeZone: resolveRegisterDateTimeZone(loadConfig().config, projectId),
     schedulePath: join(baseDir, getProjectSchedulePath(project)),
     executionGeneratedPath: join(join(baseDir, getProjectExecutionPath(project)), "generated"),
     timelinePath: join(baseDir, getProjectTimelinePath(project)),
@@ -413,7 +435,52 @@ function renderScheduleSection(paths: DashboardPaths): string[] {
   return lines;
 }
 
+function dashboardEpicPlan(paths: DashboardPaths) {
+  return loadEpicSchedules({
+    registerPath: paths.registerPath ?? join(paths.projectPath, "controls", "project-register"),
+    projectId: paths.projectId,
+    calendar: resolveDashboardCalendar(paths.schedulePath ?? paths.projectPath),
+    timeZone: paths.registerDateTimeZone ?? "UTC",
+  });
+}
+
 function renderTimelineSection(paths: DashboardPaths): string[] {
+  try {
+    const { schedule } = dashboardEpicPlan(paths);
+    if (schedule.length > 0) {
+      const lines = [
+        "## 2. 全体計画（epic）",
+        "",
+        "| epic | track | 状態 | 開始日 | 終了日 | 稼働日数 | 先行 track |",
+        "| --- | --- | --- | --- | --- | ---: | --- |",
+      ];
+      for (const row of schedule)
+        lines.push(
+          `| ${sanitizeDashboardCell(row.id + " " + row.title)} | ${row.track} | ${row.itemStatus} | ${row.startDate ?? "未定"} | ${row.endDate ?? "未定"} | ${row.estimateDays ?? "-"} | ${row.depends_on.join(", ") || "-"} |`,
+        );
+      lines.push(
+        "",
+        "期限のない epic は開始点のみ表示し、終了日は未定とします。先行 epic の終了日が未定なら後続の開始日も未定です。",
+        "",
+        "![全体計画ガントチャート](./dashboard-timeline-gantt.svg)",
+        "",
+        "[未作成カタログ](./catalog-scaffold.md)",
+        "",
+      );
+      return lines;
+    }
+  } catch (error) {
+    return [
+      "## 2. 全体計画（epic）",
+      "",
+      `- 全体計画の集計に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
+      "",
+    ];
+  }
+  return renderLegacyTimelineSection(paths);
+}
+
+function renderLegacyTimelineSection(paths: DashboardPaths): string[] {
   const lines = ["## 2. タイムライン（トラック着手順序）", ""];
   const indexPath = join(paths.timelinePath, "tml-index.yaml");
 
@@ -730,20 +797,42 @@ export function writeDashboard(paths: DashboardPaths): {
   writeFileSync(recordsPath, recordsMarkdown + "\n", "utf8");
   generatedFiles.push(toArtifactPath(recordsPath));
 
-  // timeline gantt SVG を並置。tml-index が無い／壊れている場合はスキップ。
+  const { schedule: epicSchedule, plannedStartDate: epicStart } = dashboardEpicPlan(paths);
   const indexPath = join(paths.timelinePath, "tml-index.yaml");
-  if (existsSync(indexPath)) {
-    try {
-      const { index } = loadTimelineIndex(indexPath);
-      const calendar = resolveDashboardCalendar(paths.schedulePath ?? paths.timelinePath);
-      const { schedule, plannedStartDate } = computeTimelineTrackSchedules(index, calendar);
-      const svgPath = join(paths.executionGeneratedPath, "dashboard-timeline-gantt.svg");
-      writeFileSync(svgPath, buildTimelineGanttSvg(schedule, plannedStartDate) + "\n", "utf8");
-      generatedFiles.push(toArtifactPath(svgPath));
-    } catch {
-      // SVG 生成失敗は markdown に影響しないため破棄（renderTimelineSection でエラー表示済み）。
+  if (epicSchedule.length > 0 || existsSync(indexPath)) {
+    let svg: string;
+    if (epicSchedule.length > 0) {
+      svg = buildTimelineGanttSvg(
+        epicSchedule,
+        epicStart,
+        "全体計画（epic）",
+        "登録簿の着手・完了 event と期限から算出。期限未定は開始点のみ表示。",
+      );
+    } else {
+      const { index, errors } = loadTimelineIndex(indexPath);
+      if (errors.length) throw new Error(errors.join("; "));
+      const { schedule, plannedStartDate } = computeTimelineTrackSchedules(
+        index,
+        resolveDashboardCalendar(paths.schedulePath ?? paths.timelinePath),
+      );
+      svg = buildTimelineGanttSvg(schedule, plannedStartDate);
     }
+    const svgPath = join(paths.executionGeneratedPath, "dashboard-timeline-gantt.svg");
+    writeFileSync(svgPath, svg + "\n", "utf8");
+    generatedFiles.push(toArtifactPath(svgPath));
   }
+  const catalogPlan = buildTimeline({
+    timelinePath: paths.timelinePath,
+    catalogPath: paths.catalogPath ?? null,
+    registerPath: paths.registerPath ?? join(paths.projectPath, "controls", "project-register"),
+    schedulePath: paths.schedulePath,
+    projectId: paths.projectId,
+    repoRoot: paths.repoRoot ?? specdojoRootDir(),
+  });
+  if (catalogPlan.errors.length > 0) throw new Error(catalogPlan.errors.join("; "));
+  const scaffoldPath = join(paths.executionGeneratedPath, "catalog-scaffold.md");
+  writeFileSync(scaffoldPath, renderCatalogScaffoldMarkdown(catalogPlan), "utf8");
+  generatedFiles.push(toArtifactPath(scaffoldPath));
 
   return { markdown, generatedFiles };
 }
@@ -756,9 +845,12 @@ export function buildDashboard(opts: { project?: string }): DashboardBuildResult
 
 // build-command ステップで使う出力先の解決を公開する。
 export function dashboardOutputFiles(paths: DashboardPaths): string[] {
-  return ["dashboard.md", EXEC_RECORDS_FILE, "dashboard-timeline-gantt.svg"].map((name) =>
-    toArtifactPath(join(paths.executionGeneratedPath, name)),
-  );
+  return [
+    "dashboard.md",
+    EXEC_RECORDS_FILE,
+    "dashboard-timeline-gantt.svg",
+    "catalog-scaffold.md",
+  ].map((name) => toArtifactPath(join(paths.executionGeneratedPath, name)));
 }
 
 // ================================
@@ -776,7 +868,9 @@ export function registerDashboardCommands(program: Command): void {
 
   const bcmd = dash
     .command("build")
-    .description("Generate per-project dashboard.md and timeline Gantt chart SVG")
+    .description(
+      "Generate per-project dashboard.md, epic Gantt chart SVG and catalog scaffold targets",
+    )
     .option("--project <id>", "Project id in specdojo.config.json")
     .option("--dry-run", "Print generated content to stdout without writing", false);
 
@@ -807,6 +901,7 @@ export function registerDashboardCommands(program: Command): void {
 // build-command で使う path 解決ヘルパーを公開する。
 export {
   getProjectExecutionPath,
+  getProjectRegisterPath,
   getProjectRoutinesPath,
   getProjectSchedulePath,
   getProjectTimelinePath,

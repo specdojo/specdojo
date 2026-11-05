@@ -66,6 +66,7 @@ $defs:
           - input
           - type
           - track
+          - domains
           - priority
           - difficulty
           - owner
