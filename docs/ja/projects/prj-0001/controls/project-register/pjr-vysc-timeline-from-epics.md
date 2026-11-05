@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-vysc-timeline-from-epics
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-11-03T22:56:13Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-05T22:56:32Z"
+  conclusion: "C 案: timeline を非推奨にし、全体計画（順序・期間・範囲）を epic から作る。実装は PJR-PE19、文書と prj-0001 は PJR-JM29"
   commit_type: docs
   commit_scope: register
 ---

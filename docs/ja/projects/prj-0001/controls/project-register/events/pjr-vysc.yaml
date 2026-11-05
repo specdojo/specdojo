@@ -54,3 +54,22 @@
       from: '["tml-index.yaml には 22 の track があり、order・`parallel_group`・`depends_on` は「初期案。人が見直す」のまま更新されておらず、全体スケジュールの管理に使われていない（2026-11-04）","epic は 1 つの track を担い、epic 同士は register の `depends_on` で順番を持てる。tml-index.yaml の track の `depends_on` と二重になっている。epic を起票するには先に tml-index.yaml に track を書く必要がある（2026-11-03 の data-flow-uc-rewrite でも手で足した）。timeline の期間はカタログの推定日数から計算し、schedule の予定や実績が反映されない（2026-11-04）","利用者の提案: epic を起票し、epic 間の依存関係を timeline として表示する（2026-11-04）","論点: (1) 未着手の計画の表し方（open の epic を先に起票するか）、(2) epic のない古い track（data-flow・data-flow-pdca など）の扱い、(3) tml-index.yaml に残す内容（起点の日付やカレンダーなどの設定だけにするか、生成物にするか）、(4) 未着手の epic の期間（推定日数の項目を足すか）、(5) 表示の場所と形（dashboard の timeline のガントなど）（2026-11-04）"]'
       to: '["tml-index.yaml には 22 の track があり、order・`parallel_group`・`depends_on` は「初期案。人が見直す」のまま更新されておらず、全体スケジュールの管理に使われていない（2026-11-04）","epic は 1 つの track を担い、epic 同士は register の `depends_on` で順番を持てる。tml-index.yaml の track の `depends_on` と二重になっている。epic を起票するには先に tml-index.yaml に track を書く必要がある（2026-11-03 の data-flow-uc-rewrite でも手で足した）。timeline の期間はカタログの推定日数から計算し、schedule の予定や実績が反映されない（2026-11-04）","利用者の提案: epic を起票し、epic 間の依存関係を timeline として表示する（2026-11-04）","論点: (1) 未着手の計画の表し方（open の epic を先に起票するか）、(2) epic のない古い track（data-flow・data-flow-pdca など）の扱い、(3) tml-index.yaml に残す内容（起点の日付やカレンダーなどの設定だけにするか、生成物にするか）、(4) 未着手の epic の期間（推定日数の項目を足すか）、(5) 表示の場所と形（dashboard の timeline のガントなど）（2026-11-04）","利用者の決定: B 案を基本とする。全体計画の順序の正本を epic の `depends_on` に寄せ、timeline はそこから作る。epic がない track は timeline（tml-index.yaml）に置かない。tml-index.yaml はまだほとんど使っていないため、移行してよい（2026-11-06）","orchestrator の調査: tml-index.yaml の track 23 本のうち epic があるのは 3 本（PJR-3APD は open、GQN3・GEZN は done）、strategy があるのは 7 本。dashboard の timeline は tml-index の `planned_start_date` とカタログの `catalog_duration_estimate_days` から作られ、tml-index は wave・catalog scaffold の検出・strategy の入力にも使われている。手書きの order の誤りで PJR-WSND が止まった（2026-11-06）","影響: epic のない track は dashboard の timeline から外れる。利用者は了承した（2026-11-06）"]'
   previous_event_id: reg_3c7e8f2389d24e168c60a5cf58ac98fd
+- v: 1
+  id: reg_fdb29b87ca6d4bceb76b54f2e9a649cf
+  ts: "2026-11-05T22:56:32Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が timeline の非推奨化を選んだ（2026-11-06）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: "C 案: timeline を非推奨にし、全体計画（順序・期間・範囲）を epic から作る。実装は PJR-PE19、文書と prj-0001 は PJR-JM29"
+  previous_event_id: reg_12511c64eddc41f28d34e4cb501c38af
