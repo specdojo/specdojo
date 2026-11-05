@@ -121,6 +121,7 @@ properties:
         else:
           properties:
             track: false
+            domains: false
       - type: object
         required:
           - rulebook
@@ -166,7 +167,15 @@ properties:
 
           track:
             $ref: "#/$defs/Track"
-            description: "Track governed by this epic; checked against tml-index.yaml when present."
+            description: "Track governed exclusively by this epic."
+
+          domains:
+            type: array
+            items:
+              type: string
+              minLength: 1
+            uniqueItems: true
+            description: "Catalog domains governed by this epic. Omission permits legacy fallback."
 
           item_status:
             $ref: "#/$defs/ItemStatus"

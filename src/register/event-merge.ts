@@ -195,6 +195,7 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
         return undefined;
       }
     }
+    case "domains":
     case "depends_on":
     case "derived_from": {
       if (isUnset) return { [change.field]: REMOVE_REGISTER_ITEM_FIELD };

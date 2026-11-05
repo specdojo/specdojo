@@ -1,9 +1,11 @@
+import { warnDeprecated } from "../shared/deprecation.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import {
   getProjectCatalogPath,
   getProjectTimelinePath,
+  getProjectSchedulePath,
   getProjectRegisterPath,
   loadConfig,
   loadEnv,
@@ -19,6 +21,9 @@ import {
 function resolveTimelinePaths(opts: { project?: string }): {
   timelinePath: string;
   catalogPath: string | null;
+  schedulePath: string;
+  repoRoot: string;
+  projectId: string;
   registerPath?: string;
 } {
   loadEnv();
@@ -47,6 +52,9 @@ function resolveTimelinePaths(opts: { project?: string }): {
 
   return {
     timelinePath: resolve(baseDir, getProjectTimelinePath(project)),
+    schedulePath: resolve(baseDir, getProjectSchedulePath(project)),
+    repoRoot: baseDir,
+    projectId,
     catalogPath: catalogPath ? resolve(baseDir, catalogPath) : null,
     ...(registerPath ? { registerPath: resolve(baseDir, registerPath) } : {}),
   };
@@ -110,13 +118,19 @@ export function registerTimelineCommands(program: Command): void {
 
   const bcmd = tml
     .command("build")
-    .description("Derive track start order and catalog scaffold targets from tml-index.yaml");
+    .description(
+      "Deprecated: derive track order and catalog targets from epics and legacy tml-index.yaml",
+    );
   addProjectOption(bcmd);
   bcmd.option("--dry-run", "Print generated content to stdout without writing", false);
   bcmd.action((opts) => {
     try {
-      const { timelinePath, catalogPath, registerPath } = resolveTimelinePaths(opts);
-      const result = buildTimeline({ timelinePath, catalogPath, registerPath });
+      warnDeprecated(
+        "timeline build",
+        "Use dashboard build; move domains and dependencies to register epics.",
+      );
+      const { timelinePath, ...paths } = resolveTimelinePaths(opts);
+      const result = buildTimeline({ timelinePath, ...paths });
 
       for (const warning of result.warnings) process.stdout.write(`WARN: ${warning}\n`);
       for (const error of result.errors) process.stdout.write(`ERROR: ${error}\n`);

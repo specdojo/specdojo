@@ -494,20 +494,10 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it("tml-index の定義を add / update / build で検証し、削除・未定義 track を拒否する", async () => {
-    await withRepo(async ({ root, registerDir }) => {
+  it("timeline にない track も作成でき、重複 track と削除を拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
       const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
-      const timelineDir = join(root, "docs/ja/projects/prj-0001/custom-timeline");
-      mkdirSync(timelineDir, { recursive: true });
-      const config = structuredClone(CONFIG);
-      Object.assign(config.projects["prj-0001"], { timeline_path: "custom-timeline" });
-      writeFileSync(join(root, ".specdojo/specdojo.config.json"), JSON.stringify(config));
-      const timelinePath = join(timelineDir, "tml-index.yaml");
-      writeFileSync(
-        timelinePath,
-        "project_id: prj-0001\ntracks:\n  - track: business\n    domains: [business]\n    catalog_status: draft\n    order: 1\n    depends_on: []\n",
-      );
       await runRegister([
         "add",
         "--type",
@@ -519,41 +509,59 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "--title",
         "x",
         "--track",
-        "unknown",
-      ]);
-      expect(process.exitCode).toBe(1);
-      expect(existsSync(join(registerDir, "pjr-ab12-epic.md"))).toBe(false);
-      process.exitCode = undefined;
-      await runRegister([
-        "add",
-        "--type",
-        "epic",
-        "--id",
-        "PJR-AB12",
-        "--topic",
-        "epic",
-        "--title",
-        "x",
-        "--track",
-        "business",
+        "new",
+        "--domain",
+        "a",
+        "--domain",
+        "b",
       ]);
       expect(process.exitCode).toBeUndefined();
       const ticketPath = join(registerDir, "pjr-ab12-epic.md");
-      const before = readFileSync(ticketPath, "utf8");
-      for (const track of ["unknown", "-"]) {
-        process.exitCode = undefined;
-        await runRegister(["update", "--id", "PJR-AB12", "--track", track]);
-        expect(process.exitCode).toBe(1);
-        expect(readFileSync(ticketPath, "utf8")).toBe(before);
-      }
+      expect(readFileSync(ticketPath, "utf8")).toContain("domains:");
+      await runRegister(["update", "--id", "PJR-AB12", "--domain", "c"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(ticketPath, "utf8")).toContain("  - c");
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("  - a");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "domains",
+        from: '["a","b"]',
+        to: '["c"]',
+      });
+      await runRegister(["update", "--id", "PJR-AB12", "--domain", "-"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("domains:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "domains",
+        from: '["c"]',
+        to: "-",
+      });
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB13",
+        "--topic",
+        "epic",
+        "--title",
+        "y",
+        "--track",
+        "new",
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain("Duplicate epic track");
       process.exitCode = undefined;
+      await runRegister(["update", "--id", "PJR-AB12", "--track", "-"]);
+      expect(process.exitCode).toBe(1);
+      process.exitCode = undefined;
+      await runRegister(["build"]);
+      expect(process.exitCode).toBeUndefined();
       writeFileSync(
-        timelinePath,
-        readFileSync(timelinePath, "utf8").replace("track: business", "track: renamed"),
+        join(registerDir, "pjr-ab13-epic.md"),
+        readFileSync(ticketPath, "utf8").replaceAll("ab12", "ab13").replaceAll("AB12", "AB13"),
       );
       await runRegister(["build"]);
       expect(process.exitCode).toBe(1);
-      expect(stderr.mock.calls.flat().join("")).toContain('Undefined epic track "business"');
     });
   });
 

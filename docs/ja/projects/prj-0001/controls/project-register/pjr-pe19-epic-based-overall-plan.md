@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   registered_at: "2026-11-05T22:54:36Z"
-  block_reason: "parent validation failed: lint-ts, typecheck, test-unit"
   derived_from:
     - PJR-VYSC
 ---
@@ -60,6 +59,7 @@ epic に domains を持たせ、dashboard の全体計画・strategy の範囲�
 - strategy の scope と未作成カタログの検出は共通の範囲解決を使い、既存 strategy の scope、epic の `domains`、互換用 `tml-index.yaml` の順に優先する。空の scope / `domains` も明示指定として尊重する。strategy-planning には対象 track を担う epic を必須とし、`register build` は epic の依存循環と track の重複を検出する。
 - 旧 timeline の読み込み、`timeline build`、`timeline_path` は互換のため維持し、それぞれプロセス内で一度だけ非推奨警告を出す。epic がない project の dashboard は旧 timeline の表示を維持する。未公開版の CHANGELOG に移行方法を追記した。
 - schema・CLI・期間の3規則・休日・複数先行項目・期限未定・範囲の優先順・物理分割カタログ・旧形式と警告・循環・重複・dashboard 出力のテストを追加した。型検査、各 lint、単体・統合テスト、全体 schema 検証は親 runner の担当である。executor の実行検証は後段の report に記録する。
+- 再開時に、親検証で見つかった `domains` 更新先の変数名の誤りと未使用 import を修正した。更新・削除の回帰テストに CLI の終了状態と削除 event の確認を加えた。
 - 保護された設定の変更は不要。文書・Kata・prj-0001 の計画データの移行は PJR-JM29 の範囲として残す。統合後の register / exec の運用確認は運用メモに従って PJR-JSEY で行う。
 
 ## 6. 関連ドキュメント

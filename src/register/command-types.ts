@@ -24,6 +24,7 @@ export type RegisterItemView = {
 export type RegisterAddFields = {
   type: string;
   track?: string;
+  domains?: string[];
   title: string;
   description: string;
   inputs?: string[];

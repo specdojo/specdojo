@@ -249,7 +249,7 @@ describe("buildTimelineGanttSvg", () => {
     const schedule: TimelineTrackSchedule[] = [makeRow({ track: "alpha" })];
     const svg = buildTimelineGanttSvg(schedule, undefined);
     expect(svg).toContain('role="img"');
-    expect(svg).toContain("planned_start_date");
+    expect(svg).toContain("開始日を確定できる項目がありません");
     // 背景 rect は存在するが、工程バーと開始点マーカーは描画されない。
     expect(svg).not.toContain('rx="3"');
     expect(svg).not.toContain("<polygon");
@@ -582,7 +582,7 @@ describe("daily briefing", () => {
 // ---- dashboardOutputFiles ----------------------------------------------------
 
 describe("dashboardOutputFiles", () => {
-  it("dashboard.md・実行記録一覧・Gantt SVG の 3 件を返す", () => {
+  it("dashboard.md・実行記録一覧・Gantt SVG・カタログ検出の 4 件を返す", () => {
     const paths: DashboardPaths = {
       projectId: "prj-0001",
       projectPath: "docs/ja/projects/prj-0001",
@@ -590,7 +590,7 @@ describe("dashboardOutputFiles", () => {
       executionGeneratedPath: "docs/ja/projects/prj-0001/execution/generated",
     };
     const files = dashboardOutputFiles(paths);
-    expect(files).toHaveLength(3);
+    expect(files).toHaveLength(4);
     expect(files.some((f) => f.endsWith("dashboard.md"))).toBe(true);
     expect(files.some((f) => f.endsWith("exec-records.md"))).toBe(true);
     expect(files.some((f) => f.endsWith("dashboard-timeline-gantt.svg"))).toBe(true);

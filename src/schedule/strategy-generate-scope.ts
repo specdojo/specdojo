@@ -1,12 +1,11 @@
 import { existsSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
+import { relative, resolve } from "node:path";
 import { collectResolvedDeliverables } from "../catalog/build.js";
 import { resolveBasePath } from "../catalog/paths.js";
 import type { DctDoc } from "../catalog/types.js";
 import { collectCatalogFilesByDomain } from "../shared/catalog-files.js";
 import { readYaml } from "../shared/fs.js";
-import { loadTimelineIndex } from "../shared/timeline-index.js";
-import { resolveTimelineCatalogStatus } from "../register/catalog-status.js";
+import { resolveTrackDomains } from "../register/track-domains.js";
 
 export type StrategyCatalogRef = {
   id: string;
@@ -37,13 +36,13 @@ export function artifactNameFromCatalogTitle(title: string | undefined): string 
 
 export type ScopeResolution = {
   catalogs: StrategyCatalogRef[];
-  source: "strategy" | "timeline";
+  source: "strategy" | "epic" | "timeline";
   warnings: string[];
   errors: string[];
 };
 
 // Resolves the catalogs a track covers. An existing strategy is authoritative (a human may have
-// narrowed the scope on purpose); otherwise the Timeline track plan decides which domains belong
+// narrowed the scope on purpose); otherwise epic domains, then the legacy track plan decide what belongs
 // to the track, and every catalog file of those domains (including physical splits) is included.
 export function resolveTrackScopeCatalogs(opts: {
   repoRoot: string;
@@ -53,7 +52,7 @@ export function resolveTrackScopeCatalogs(opts: {
   track: string;
   existingStrategy?: Record<string, unknown> | null;
 }): ScopeResolution {
-  const { repoRoot, catalogPath, timelinePath, track } = opts;
+  const { repoRoot, catalogPath, track } = opts;
   const warnings: string[] = [];
   const errors: string[] = [];
 
@@ -73,39 +72,18 @@ export function resolveTrackScopeCatalogs(opts: {
     };
   };
 
+  const resolved = resolveTrackDomains(opts);
+  errors.push(...resolved.errors);
   const timelineCatalogs: StrategyCatalogRef[] = [];
-  const indexFile = join(timelinePath, "tml-index.yaml");
-  if (existsSync(indexFile)) {
-    const { index, errors: loadErrors } = loadTimelineIndex(indexFile);
-    const derived = resolveTimelineCatalogStatus(index.tracks, opts.registerPath);
-    index.tracks = derived.tracks;
-    warnings.push(...derived.warnings);
-    if (loadErrors.length > 0) {
-      warnings.push(`${basename(indexFile)}: ${loadErrors.join(" / ")}`);
-    }
-    const plan = index.tracks.find((entry) => entry.track === track);
-    if (plan) {
-      for (const domain of plan.domains) {
-        const files = byDomain.get(domain) ?? [];
-        if (files.length === 0) {
-          warnings.push(
-            `timeline: track '${track}' の domain '${domain}' に対応する dct-*.yaml が無い（scope から除外）。`,
-          );
-          continue;
-        }
-        for (const filePath of files) {
-          const ref = refFor(filePath);
-          if (ref) timelineCatalogs.push(ref);
-        }
-      }
-      if (plan.catalog_status !== "primary") {
-        warnings.push(
-          `timeline: track '${track}' の catalog_status は '${plan.catalog_status}'。` +
-            `カタログ作成 todo の完了を確認して timeline build を実行する。todo がない domain は手書きの計画値を使う。`,
-        );
-      }
-    } else {
-      warnings.push(`timeline: track '${track}' が tml-index.yaml に無い。`);
+  for (const domain of resolved.source === "strategy" ? [] : resolved.domains) {
+    const files = byDomain.get(domain) ?? [];
+    if (files.length === 0)
+      warnings.push(
+        `${resolved.source}: track '${track}' の domain '${domain}' に対応する dct-*.yaml が無い（scope から除外）。`,
+      );
+    for (const filePath of files) {
+      const ref = refFor(filePath);
+      if (ref) timelineCatalogs.push(ref);
     }
   }
 
@@ -113,7 +91,7 @@ export function resolveTrackScopeCatalogs(opts: {
     ? opts.existingStrategy.scope
     : undefined;
   const existingCatalogs = Array.isArray(existingScope?.catalogs) ? existingScope.catalogs : [];
-  if (existingCatalogs.length > 0) {
+  if (Array.isArray(existingScope?.catalogs)) {
     const catalogs: StrategyCatalogRef[] = [];
     for (const entry of existingCatalogs) {
       if (!isRecord(entry) || typeof entry.path !== "string") continue;
@@ -137,24 +115,16 @@ export function resolveTrackScopeCatalogs(opts: {
       const ref = refFor(filePath, localIds);
       if (ref) catalogs.push(ref);
     }
-    const known = new Set(catalogs.map((catalog) => catalog.id));
-    for (const catalog of timelineCatalogs) {
-      if (known.has(catalog.id)) continue;
-      warnings.push(
-        `timeline の domain から解決した ${catalog.id} が既存 scope に無い。scope を広げる場合は ` +
-          `sch-strategy-${track}.yaml の scope.catalogs を先に更新する。`,
-      );
-    }
     return { catalogs, source: "strategy", warnings, errors };
   }
 
   if (timelineCatalogs.length === 0) {
     errors.push(
-      `track '${track}' の scope を解決できない。tml-index.yaml の domains と ` +
+      `track '${track}' の scope を解決できない。epic の domains と ` +
         `dct-<domain>.yaml を用意するか、既存 strategy の scope.catalogs を先に定義する。`,
     );
   }
-  return { catalogs: timelineCatalogs, source: "timeline", warnings, errors };
+  return { catalogs: timelineCatalogs, source: resolved.source, warnings, errors };
 }
 
 export type CatalogDeliverable = {
