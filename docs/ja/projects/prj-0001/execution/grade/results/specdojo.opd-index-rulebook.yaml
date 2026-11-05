@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 87
-graded_at: "2026-10-05T21:01:45.671Z"
-graded_by: agy-expert-executor
-content_hash: da28ef8a6ad1bdd03d9f1116dd51f8e1be3415d3056ea600145e7dc7a70584c4
+graded_at: "2026-11-05T20:40:49.010Z"
+graded_by: flash-high-executor
+content_hash: a28d9d42e533287c5f4cf846208a75f2a1f86bc140f038108d7511c29a13f1c5
 categories:
   purpose:
     score: 100
@@ -110,39 +110,46 @@ findings:
     line: 21
     anchor: ""
     message: 推奨されるファイル配置（ディレクトリパス）の定義が欠落している。
+    message_ja: 推奨されるファイル配置（ディレクトリパス）の定義が欠落している。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 27
     anchor: ""
     message: Frontmatter の参照スキーマ（deliverable-frontmatter.schema.yaml 等）への言及がなく、共通標準との整合性が不明確である。
+    message_ja: Frontmatter の参照スキーマ（deliverable-frontmatter.schema.yaml 等）への言及がなく、共通標準との整合性が不明確である。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 42
     anchor: "| --- | ---- | ---- |"
     message: 本ルールで12章すべてを必須としているが、対応するサンプルに実装されておらず、実効性に欠ける。
+    message_ja: 本ルールで12章すべてを必須としているが、対応するサンプルに実装されておらず、実効性に欠ける。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用方針・設計 全体構成 作成ルール"
     message: サンプルとしての整合性がなく、rulebook としての機能（ exemplification ）を果たしていない。
+    message_ja: サンプルとしての整合性がなく、rulebook としての機能（ exemplification ）を果たしていない。
   - id: F005
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用方針・設計 全体構成 作成ルール"
     message: サンプル `specdojo:opd-index-sample` における rulebook 参照 ID と本ルールの ID が不整合である。
+    message_ja: サンプル `specdojo:opd-index-sample` における rulebook 参照 ID と本ルールの ID が不整合である。
   - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用方針・設計 全体構成 作成ルール"
     message: recipe が undecided であり、具体的な記述手順への導線が未定義である。
+    message_ja: recipe が undecided であり、具体的な記述手順への導線が未定義である。
   - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用方針・設計 全体構成 作成ルール"
     message: template が undecided であり、骨組みの提供がなされていない。
+    message_ja: template が undecided であり、骨組みの提供がなされていない。

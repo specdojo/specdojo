@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-10-05T21:03:30.235Z"
-graded_by: agy-expert-executor
-content_hash: 458e08e7efac1c749f300d278d5c5084e84a4bded94e9b2069859dd5bf092a03
+graded_at: "2026-11-05T20:44:08.749Z"
+graded_by: flash-high-executor
+content_hash: 37f062e5bd4e2e2e442c4b4cbb5a05e083c678db33165c7bafc6b3feed66d1ab
 categories:
   purpose:
     score: 100
@@ -113,21 +113,25 @@ findings:
     line: 79
     anchor: "| 12   | 関連ドキュメント導線（`opr` 等）                   | ○    |"
     message: 5章では `opd-＜term＞` でも全12章が必須とされているが、1.1の「差分を記述し重複記載を避ける」方針と矛盾している。
+    message_ja: 5章では `opd-＜term＞` でも全12章が必須とされているが、1.1の「差分を記述し重複記載を避ける」方針と矛盾している。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 8
     anchor: "## 1. 全体方針"
     message: 存在する `specdojo:opd-index-sample` が Frontmatter の `sample` リストから漏れている。
+    message_ja: 存在する `specdojo:opd-index-sample` が Frontmatter の `sample` リストから漏れている。
   - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
     line: 9
     anchor: ""
     message: "サンプルとして指定されている `specdojo:opd-sample` が、本ルールで定義した必須構成および Frontmatter (type: operations) に準拠していない。"
+    message_ja: "サンプルとして指定されている `specdojo:opd-sample` が、本ルールで定義した必須構成および Frontmatter (type: operations) に準拠していない。"
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
     line: 10
     anchor: "`opd-index`（必要に応じて `opd-<term>`）は、恒常運用の方針と統制基準を一元化する SSOT とする。"
     message: 指定されている term 系のサンプル群（opd-access-control-sample 等）も、本ルール5章で定義された全12章の必須構成を満たしていない。
+    message_ja: 指定されている term 系のサンプル群（opd-access-control-sample 等）も、本ルール5章で定義された全12章の必須構成を満たしていない。

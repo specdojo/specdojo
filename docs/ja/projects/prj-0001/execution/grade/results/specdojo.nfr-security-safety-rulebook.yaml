@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 84
-graded_at: "2026-10-04T21:16:53.885Z"
-graded_by: agy-expert-executor
-content_hash: 2bd1162734d21b5c4611af0c5c633e134bdafdd8c99a98f88e856385f67ae268
+graded_at: "2026-11-05T20:32:24.430Z"
+graded_by: flash-high-executor
+content_hash: 643dc36998c7090c04fe9940d00cc25ef58eef1577893ca61736bb2a02670749
 categories:
   purpose:
     score: 100
@@ -113,33 +113,39 @@ findings:
     line: 79
     anchor: ""
     message: 記述ガイドにおいて、判定基準を具体化するための例示が不十分であり、検証可能な表現への誘導が弱い。
+    message_ja: 記述ガイドにおいて、判定基準を具体化するための例示が不十分であり、検証可能な表現への誘導が弱い。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
     line: 6
     anchor: 機密性・安全性要件は、権限逸脱や情報漏えいを防ぐ基準を定量化する。
     message: Frontmatter の recipe および template が undecided となっており、成果物生成のための定義が不足している。
+    message_ja: Frontmatter の recipe および template が undecided となっており、成果物生成のための定義が不足している。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 123
     anchor: "```"
     message: セクション8のフロントマター例が `specdojo:` ブロックで囲まれておらず、ルールブック自身の形式や最新のスキーマと矛盾している。
+    message_ja: セクション8のフロントマター例が `specdojo:` ブロックで囲まれておらず、ルールブック自身の形式や最新のスキーマと矛盾している。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 7
     anchor: ""
     message: 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。
+    message_ja: 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。
   - id: F005
     severity: major
     rule: vp-ux-readability
     line: 7
     anchor: ""
     message: サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。
+    message_ja: サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。
   - id: F006
     severity: minor
     rule: vp-ux-readability
     line: 76
     anchor: "### 6.2. 適用範囲・脅威前提"
     message: 「5. 本文構成」の表で、「5 関連ドキュメント導線」の行が別の表に分断されており、表示が崩れている。
+    message_ja: 「5. 本文構成」の表で、「5 関連ドキュメント導線」の行が別の表に分断されており、表示が崩れている。

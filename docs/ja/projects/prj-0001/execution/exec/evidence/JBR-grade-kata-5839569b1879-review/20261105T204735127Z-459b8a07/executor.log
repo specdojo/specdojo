@@ -1,0 +1,81 @@
+# レビュー結果: `JBR-grade-kata-5839569b1879`
+
+**verdict 案は `complete-with-findings` です。** 15 文書の評価はすべて完了し、統合できます。ただし、Job Run result の記述が実データと食い違っているため、完了条件 2 は機械記録の範囲でしか満たしていません。
+
+## 評価結果の確認
+- **Run の状態:** Run JSON は `succeeded`、attempt 1 は `exit_code` 0、stderr は 0 バイトです。
+- **鮮度:** 15 文書を `grade list --changed-only` と `--incomplete` でパス別に確認し、30 回とも該当なしでした。判定直前に再実行した結果です。
+- **全体の一覧:** `--dependency-changed` と `--rubric-outdated` も、15 文書のいずれも出力しませんでした。
+- **`--rulebook-changed`:** recipe 2 件だけが該当しますが、plan の鮮度判定条件には含まれません（指摘 2）。
+- **Job 固有の確認事項:**
+
+| 確認事項 | 結果 |
+| --- | --- |
+| 終了コード 75 または中断による未完了の段 | なし（`incomplete=0`） |
+| `failed` の段 | なし（15 件すべて `passed`） |
+| `partial` | 該当なし |
+| `retry_exhausted` | なし（`exhausted=0`、`grade state --exhausted` も空） |
+| 選択文書 0 件の no-op | 該当なし（`selected=15`） |
+| 翻訳の拒否 | なし（全文書で `rejections` が空） |
+
+- **実行ログ:** executor 出力に rate limit 系の文言はなく、`commands.log` にも retry、reject、error、failed の文言はありませんでした。
+
+### verdict と score の分布
+`results.tsv`、`stage-1.state.tsv`、サイドカーの verdict と score は 15 件すべて一致しました。
+
+| 項目 | 値 |
+| --- | --- |
+| verdict | `pass` 6 件、`needs-work` 9 件、`fail` 0 件 |
+| score | 最小 67、中央値 93、最大 100、平均 91.2 |
+| finding | 計 68 件（blocker 0、major 28、minor 40） |
+
+## 判断根拠
+- **差分の範囲:** 22 ファイルの内訳は次のとおりで、当該 Job Run の出力だけです。`docs/ja/specdojo` 配下の変更はありません。
+  - サイドカー 15
+  - Run JSON 1
+  - plan と result 2
+  - evidence 4
+- **verdict の妥当性:** `needs-work` の 9 件はすべて major が 1 件以上あります。`pass` の 6 件は major が 0 件で、score も `pass_score: 75` 以上です。`src/grade/markdown.ts` の判定式と一致します。
+- **設定の見直し:** 見直しを要する偏りは、今回の範囲では確認できませんでした。
+  - major 28 件のうち 15 件は `ntp-rulebook` に集中しています。
+  - `ntp-rulebook` は Run の前後で score 67、major 15、minor 1 と変わっていません。文書固有の課題と読むのが自然で、result の「評価設定の見直しを検討する余地」を支える根拠は見当たりません。
+- **`graded_by` の変化:** `agy-expert-executor` から `flash-high-executor` への変化は、`.specdojo/agent-members.yaml` の `alias_of` どおりで、実行主体は同じです。
+
+### score と finding の変化
+| 文書 | 変化 | 確認した内容 |
+| --- | --- | --- |
+| `stsd-recipe` | 92 → 100、finding 5 → 0 | commit `ba219a27a` の差分に、消えた 5 件すべてに対応する修正がある |
+| `nfr-maintainability-rulebook` | 95 → 96、minor 1 件消滅 | 指摘されたスキーマ参照パスは未変更。現行パスの先にファイルが実在する |
+| `nfr-usability-rulebook` | 94 → 91、minor 1 件追加 | 指摘箇所の `title` 欄は以前からあり、commit `7d44afccf` では変更されていない。同じ内容でも評価のたびに検出が変わる例と見られる |
+| `cdfd-uc-recipe` | 93 → 97、`needs-work` → `pass`、major 1 件消滅 | 関連 commit はあるが、finding との対応は未確認 |
+
+## 未充足事項・改善指示
+1. **Job Run result の誤記（軽微、result は修正していません）:**
+   - verdict 分布が「`pass` 5 件、`needs-work` 10 件」とありますが、正しくは 6 件と 9 件です。
+   - 「Run は `complete` 状態」とありますが、Run JSON の `state` は `succeeded` です。
+   - 変更ファイルの説明に「品質評価結果의 更新」と、ハングルが混入しています。
+   - いずれも reporter の要約の誤りで、サイドカーと実行記録には影響しないため、完了を妨げないと判断しました。正しい値はこの review result に残します。
+2. **`--rulebook-changed` の再選択（要検討）:**
+   - `cdfd-overview-recipe` と `cdfd-uc-recipe` は、同じ Run で rulebook が後から評価されたため、内容が変わっていなくても該当に残ります。
+   - 判定が内容の hash ではなく `graded_at` の比較だからです（`src/grade/target-discovery.ts`）。
+   - 次の Run では 15 枠のうち 2 枠を再評価に使う見込みです。hash 比較への変更を別タスクで検討してください。
+3. **plan の記載不備:** 「Job Run result」のパスが `_RUN../worktrees/...-review-result.md` と不正でした。実際の result は Run JSON の `result_ref` から特定しました。テンプレートの確認が必要です。
+
+## approach に応じた確認
+- **approach の指定:** この plan に `approach` の指定はなく、Job の目的に照らして確認しました。
+- **対象数:** 上限 15 件に対して 15 件を処理しました。
+- **未評価の backlog:** 138 件が残っていますが、上限による想定内の繰り越しで、`succeeded` の判定には影響しません。この件数は Run 後の全セレクタの和集合で、上記の recipe 2 件も含みます。
+
+## decision
+- verdict: `complete-with-findings`
+
+## 確認できなかった範囲
+- **finding の個別対応:** `cdfd-uc-recipe`、`cdfd-uc-rulebook`、`cdfd-overview-rulebook`、`nfr-performance-rulebook` の finding と文書変更の対応は読んでいません。commit の有無と件数の変化までの確認です。
+- **文書品質:** 再評価していません。plan の規定により対象外です。
+- **`content_hash`:** 自分では再計算せず、`grade list` の判定で確認しました。
+- **実行した CLI:** `/workspaces/specdojo-workspace/specdojo/dist/specdojo.js` を使いました。Job の precondition と同じものです。
+- **親 runner の検査:** lint や test などの結果は、この時点では未確認です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 案は `complete-with-findings`。Run は `succeeded`、`exit_code` 0、15 文書すべて `passed`（`pass` 6、`needs-work` 9、`fail` 0。score は 67〜100、中央値 93。finding 68 件: blocker 0、major 28、minor 40）。差分 22 ファイルは当該 Job Run の出力のみで、15 文書の鮮度確認は該当なし。未完了、`failed`、`retry_exhausted` はなし。指摘: Job Run result の verdict 分布が 5/10 と誤記（正しくは 6/9）、Run 状態を `complete` と誤記（正しくは `succeeded`）、ハングル混入。`ntp-rulebook` は前後で score と finding 件数が不変で、評価設定の見直しを要する偏りは今回の範囲で確認できない。確認できなかった範囲: `cdfd-uc-recipe`、`cdfd-uc-rulebook`、`cdfd-overview-rulebook`、`nfr-performance-rulebook` の finding と文書変更の個別対応、文書品質の再評価（plan により対象外）、`content_hash` の独自再計算（`grade list` の判定で確認）、親 runner の検査結果。","handoff":["Job Run result の誤記を reporter の改善材料にする: verdict 分布は正しくは `pass` 6 件、`needs-work` 9 件。Run の `state` は `succeeded`。変更ファイル説明の「品質評価結果의 更新」にハングルが混入。review では result を修正していない。","`--rulebook-changed` は rulebook の `graded_at` と文書の `graded_at` を比較するため、同じ Run で後から rulebook を評価すると、内容が不変の `cdfd-overview-recipe` と `cdfd-uc-recipe` が該当に残る。次の Run で 15 枠のうち 2 枠を再評価に使う見込み。hash 比較への変更を別タスクで検討する（`src/grade/target-discovery.ts`）。","review plan の「Job Run result」のパスが `_RUN../worktrees/.../JBR-grade-kata-5839569b1879-review-result.md` と不正で、review result を指している。実際の result は Run JSON の `result_ref` で特定した。plan 生成テンプレートの確認が必要。","未評価の backlog は Run 後の全セレクタ和集合で 138 件（recipe 2 件を含む）。上限 15 件による想定内の繰り越しで、次回以降の Run で処理する。"],"validations":[{"command":"git diff --stat fa11487ae2c72b446f752200b6174e7af44a4436..737728f5601bf1bdb724c8751dd666f9b61e1fdf; git diff --name-status fa11487ae2c72b446f752200b6174e7af44a4436..737728f5601bf1bdb724c8751dd666f9b61e1fdf","status":"passed","summary":"22 ファイル（サイドカー 15、Run JSON 1、plan と result 2、evidence 4）で、当該 Job Run の出力のみ"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --changed-only --path <selection.txt の各文書>; 同じく --incomplete --path <selection.txt の各文書>","status":"passed","summary":"15 文書 × 2 条件の 30 回すべて exit 0、出力なし。評価結果は最新で、判定直前に再実行した結果"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 <--changed-only|--dependency-changed|--rulebook-changed|--unreviewed|--ungraded|--incomplete|--rubric-outdated>","status":"passed","summary":"全セレクタ exit 0。15 文書のうち該当は `--rulebook-changed` の recipe 2 件のみ（`graded_at` 比較による）。全セレクタの和集合は 138 件"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"exit 0、出力なし。`retry_exhausted` の文書はない"}]}
+</specdojo_executor_evidence>
