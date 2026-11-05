@@ -92,3 +92,32 @@
       from: '["PJR-1799"]'
       to: '["PJR-1799","PJR-H2V8"]'
   previous_event_id: reg_6718b79dc37d40f8979a59ac53f1b23e
+- v: 1
+  id: reg_2f499ee4962e4e2aa03567c28c56f906
+  ts: "2026-11-05T10:02:47Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 依存成果物 bdd-exec-state.yaml／bdd-exec-event.yaml が存在せず停止。個票の対応結果のみ更新し、標準エラーへ理由を出力、終了コード1。"
+      to: "-"
+  previous_event_id: reg_a9e3e3baab6b4a22afaa6c80c99f6615
+- v: 1
+  id: reg_802faf1d49e44019868bbd689cb19eb6
+  ts: "2026-11-05T10:16:18Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2f499ee4962e4e2aa03567c28c56f906
