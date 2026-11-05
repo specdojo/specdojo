@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-KFMB",
+  "run_id": "20261105T165904580Z-c7930dab",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-05T17:00:51.281Z",
+    "completed_at": "2026-11-05T17:03:56.802Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-kfmb.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kfmb-stsd-task-execution-opening.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kfmb-stsd-task-execution-opening.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../020-data-model/stsd-task-execution.md          | 37 ++++++++++++----------\n .../pjr-kfmb-stsd-task-execution-opening.md        | 10 +++++-\n 2 files changed, 30 insertions(+), 17 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md",
+      "status": "passed",
+      "summary": "整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-kfmb-stsd-task-execution-opening.md",
+      "status": "passed",
+      "summary": "個票の対応結果を整形。"
+    },
+    {
+      "source": "executor",
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "標準入力の照合スクリプトで概要の内容保持、状態6件・遷移16件とID・条件の不変、図の10表示名、frontmatter の保持を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。未作成文書に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "終了コード0。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は非適用。",
+      "reason": "executor の変更は Markdown 2ファイルのみで、YAML ファイルの変更はない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KFMB/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KFMB/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KFMB/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 39 problems (0 errors, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3915 file(s), 184 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3915 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KFMB\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KFMB/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KFMB/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KFMB\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-z8Flwz/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JHIXAw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-j2vd2d/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-mfjyne/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "stsd-task-execution の冒頭と図の表示名を更新。概要の全内容、状態・遷移・ID・条件を保持し、個票の対応結果に未解消指摘を記録した。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter は以下を result の「進め方と実践の型の適用」に記録すること。executor は result を編集していない。変更ファイルは stsd-task-execution.md と個票 pjr-kfmb-stsd-task-execution-opening.md。個票は pipeline 指示に従う対応結果の記録のみ。既存のイベント YAML と evidence は変更していない。",
+    "指定の rulebook・Mermaid rulebook・recipe・sample、プロジェクト概要、共通規約、運用メモ、実装エビデンス events.ts・types.ts を参照した。主 rulebook は章構成、Mermaid rulebook は表示名、recipe は目的と範囲の配置、sample は頭書きの形式に使用。業務内容の転記、削除・統合、Kata の変更はない。template、未宣言の文書・実装は参照していない。未作成の依存本文は推測していない。",
+    "F001 は未解消。内容保持条件に従い AS-IS 宣言と既存の業務要件を保持した。未作成の bdd-exec-state・bdd-exec-event の策定時に BA・PO が観測動作と要求を分け、受入を支配する規則を合意する必要がある。",
+    "F002・F004・F008 は未解消。events.ts の foldEventsToState は note・link・estimate を含む全イベントで `last_by` を更新し、canCompleteTask・canBlockTask・canReleaseTask がその値を要求者と比較する。A の着手後に B が補足記録を加えると B が権限判定の対象となる。内容保持条件と承認根拠の不足から本文は変更せず、BA・PO・ARC に担当者の確立・保持・移転、再開、人間の強制操作、補足記録時の権限契約の合意を申し送る。",
+    "F005・F007 は未解消。権限契約の影響は T-05 に加え T-04・T-06・T-07・T-08・T-16・T-17、再生メタデータと完了・中断・解放の判定に及ぶ。他者の note・link・estimate を含む既存履歴との互換性を判断する必要がある。DC-001・DC-003・DC-005 の受入差分を後続で確認する。これら DC の定義は宣言資料で確認できず具体化していない。",
+    "F003・F009 は未解消。根拠は events.ts の readAllEventFiles・orderSameTimestampEventsByState・isTransitionValidForState、および canClaimTask・canUnblockTask・canCompleteTask。型別優先順、パスによる同順位判定、有効候補の先頭選択と候補なし時の先頭選択を確認した。内容保持条件により本文への追記は見送り、後続で再生順序の契約と根拠への導線を補う。",
+    "F006 は未解消。内容保持条件により検証手順の本文追加は見送った。後続で exec validate、tests/src/exec/events.test.ts、文書の静的検査について対象と期待結果を明示する。テストファイルは参照許可範囲外のため読んでおらず個別ケースの充足は断定していない。",
+    "F010 は未解消。概要の意味を保持する条件に従い PO の既存展開名を保持した。pm-roles.yaml は参照許可範囲外のため読んでいない。後続で参照を宣言し、plan が指摘する Project Owner との名称統一を行う。",
+    "Markdown・frontmatter・Mermaid の指定 lint は親 runner に委ねた。カタログ検査は未作成文書に関する警告付きで終了コード 0、履歴リンク検査も終了コード 0。状態一覧・遷移の説明・検討メモの完全一致、概要の移動内容、図の10表示名を照合済み。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-KFMB/20261105T165904580Z-c7930dab/executor.log",
+      "bytes": 5221,
+      "truncated": false
+    }
+  ]
+}
