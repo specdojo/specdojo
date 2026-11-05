@@ -92,3 +92,16 @@
       from: "executor reported incomplete: Timeline の事前検査で既存の依存順エラーを検出したため、指定された異常終了条件に従い strategy・track の生成前に停止。PJR-WSND 個票の作業内容・対応結果に確認事項と再開手順を記録した。カタログ、Timeline、ステータス、result は変更していない。"
       to: "-"
   previous_event_id: reg_f0bd48c2fb274382bc3657ba79576367
+- v: 1
+  id: reg_988b338279834bb1b8d63f93c56cb11f
+  ts: "2026-11-05T12:37:16Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_34b3d051bb6f41dfab310c662dec5284
