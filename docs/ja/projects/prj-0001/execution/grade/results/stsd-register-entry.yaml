@@ -5,43 +5,43 @@ path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 67
-graded_at: "2026-11-04T16:29:28.612Z"
-graded_by: flash-high-executor
-content_hash: 5f2f86eb0b753c314030e556af09fa243289336abcb1b4654d35f5125469cd33
+score: 80
+graded_at: "2026-11-05T14:50:58.449Z"
+graded_by: sol-review-executor
+content_hash: 4a237504f93080167e1fb7eaea073e1d397242bf1136308d3794aaee7c7cd9b5
 source_hashes:
-  catalog-entry: 1ef0d247a997e83d8f6873af3595a7d9019157eeaaef65c4f50b39cd12893030
+  catalog-entry: 56b4acb168e2f4103cee7e5288c809d3c549003f90c945d3df50b8cda220715c
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: ad0e91ae713e016cec240a034a6effd844dc295113adc7435100d118e30656f4
+  schedule: 7613b8ab5d2b966fa5a7c35f5a19d1539b663a5ba1172b683fc00639bf45ce7d
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 69
+    score: 88
   planning:
     score: 75
   business:
-    score: 75
+    score: 83
   consistency:
     score: 38
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 94
+    score: 100
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 50
+    score: 69
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -55,8 +55,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
     level: 2
     score: 50
@@ -67,8 +67,8 @@ viewpoints:
     level: 1
     score: 25
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -76,20 +76,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 3
     score: 75
-  vp-dev-testability:
-    level: 2
-    score: 50
   vp-qe-done-criteria:
     level: 2
     score: 50
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 2
     score: 50
@@ -100,14 +100,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
-  vp-ops-operability:
     level: 2
     score: 50
+  vp-ops-operability:
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -119,326 +119,186 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 16
-  minor: 9
+  major: 7
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 5
-    anchor: >-
-      登録簿で追跡する計画外事項・判断事項（登録項目）について、現行運用（AS-IS）の起票から対応、審査、終了、再開までの状態と遷移を定義する。項目 owner と type
-      別承認者は現在状態から次の行動と終了判断を、ARC・QE・DEV は状態遷移の設計・検証・実装の基礎として利用する。
-    message: >-
-      The document states an AS-IS operational scope but omits direct termination and multi-status reopen paths
-      practiced in current operations, creating an operational governance gap.
-    message_ja: ドキュメントにはAS-ISの運用範囲が記載されていますが、現在の運用で行われている直接の終了およびマルチステータスの再オープン経路が省略されており、運用ガバナンスのギャップが生じています。
-    cause:
-      type: document
-  - id: F002
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 125
-    anchor: >-
-      |
-      論点                                                                                                                                                      
-      | 影響する状態・遷移             | 決定者  | 決定時期                    |
-    message: 二つの _ASSUMPTION_ について採用・不採用時の遷移仕様、CLI 改修要否、決定後の反映先を明記し、PO が選択結果まで判断できるようにする必要がある。
-    message_ja: 二つの _ASSUMPTION_ について採用・不採用時の遷移仕様、CLI 改修要否、決定後の反映先を明記し、PO が選択結果まで判断できるようにする必要がある。
-    cause:
-      type: document
-  - id: F003
-    severity: minor
     rule: vp-pm-plan-feasibility
-    line: 130
+    line: 221
     anchor: >-
-      | _TODO_: `stsd-register-entry` の `based_on`
-      に業務データ辞書（`bdd-register-entry`）を追加する。現時点で同文書は未作成である                               | 全状態                         |
-      BA      | `bdd-register-entry` 作成時 |
+      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
+      の根拠が不足している                                                                                                                                                                                                                                                                                                     
+      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
+      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
+      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
+      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
+      |
     message: "`bdd-register-entry` の作成と本書への `based_on` 追加を、追跡 ID、作業順序、完了条件を持つ Schedule または PJR 項目へ接続する必要がある。"
     message_ja: "`bdd-register-entry` の作成と本書への `based_on` 追加を、追跡 ID、作業順序、完了条件を持つ Schedule または PJR 項目へ接続する必要がある。"
     cause:
       type: document
-  - id: F004
+  - id: F002
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 125
+    line: 216
     anchor: >-
-      |
-      論点                                                                                                                                                      
-      | 影響する状態・遷移             | 決定者  | 決定時期                    |
+      `M-01` と `M-04` は本書内の追跡番号であり、PJR の起票済み ID ではない。依存と進捗への影響は PM、方針判断は PO へ報告し、PM が PJR の実 ID と Schedule に接続する。接続先と日程は
+      PM による設定待ちである。
     message: CLI 遷移差異と `bdd-register-entry` 未作成について、Schedule への影響、PJR 登録先、解消まで依存する後続作業を明記する必要がある。
     message_ja: CLI 遷移差異と `bdd-register-entry` 未作成について、Schedule への影響、PJR 登録先、解消まで依存する後続作業を明記する必要がある。
     cause:
       type: document
-  - id: F005
+  - id: F003
     severity: minor
     rule: vp-pm-control-reporting
-    line: 123
-    anchor: "## 5. 今後の検討メモ"
+    line: 216
+    anchor: >-
+      `M-01` と `M-04` は本書内の追跡番号であり、PJR の起票済み ID ではない。依存と進捗への影響は PM、方針判断は PO へ報告し、PM が PJR の実 ID と Schedule に接続する。接続先と日程は
+      PM による設定待ちである。
     message: 各検討項目を PJR の decision・issue・change-request 等へ転記する基準、追跡 ID、報告先を追加する必要がある。
     message_ja: 各検討項目を PJR の decision・issue・change-request 等へ転記する基準、追跡 ID、報告先を追加する必要がある。
     cause:
       type: document
+  - id: F004
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 154
+    anchor: >-
+      | `T-09`  | 対応中   | 審査待ち | 対応結果提出       | 対応結果・検証結果・承認対象・証跡候補を記録した                            | AI Agent
+      の成功時もここまでで止まり、終端化は人間の審査で行う                                           |
+    message: >-
+      Define the approval and evidence conditions for automatic closure of human-preapproved todo and issue items after
+      overnight post-review; the current AS-IS definition requires every successful agent execution to stop for
+      subsequent human review and does not cover that operational case.
+    message_ja: >-
+      Define the approval and evidence conditions for automatic closure of human-preapproved todo and issue items after
+      overnight post-review; the current AS-IS definition requires every successful agent execution to stop for
+      subsequent human review and does not cover that operational case.
+    cause:
+      type: document
+  - id: F005
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 221
+    anchor: >-
+      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
+      の根拠が不足している                                                                                                                                                                                                                                                                                                     
+      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
+      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
+      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
+      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
+      |
+    message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
+      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
+    message_ja: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
+      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
+    cause:
+      type: document
   - id: F006
-    severity: minor
-    rule: vp-ba-business-value
-    line: 17
-    anchor: "### 1.1. type 別の審査・承認と到達できる状態"
-    message: 状態定義を共通正本にすることで誤終了、判断漏れ、引継ぎ不能を防ぐ価値と、プロジェクトの BV-03・AC-02 等との対応を補う必要がある。
-    message_ja: 状態定義を共通正本にすることで誤終了、判断漏れ、引継ぎ不能を防ぐ価値と、プロジェクトの BV-03・AC-02 等との対応を補う必要がある。
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 13
+    anchor: "- AI Agent の責任範囲: AI Agent は対応・調査と検証を支援するが項目を終端化しない。完了・決定・却下・延期・再開の判断は人間が担う"
+    message: >-
+      This document prohibits agent termination and requires human review after every successful execution, whereas
+      docs/ja/specdojo/guides/register-operation-guide.md §3.2 requires automatic close after post-review for
+      human-preapproved todo and issue items; distinguish the ordinary execution path from this authorized overnight
+      path and define their respective approval conditions.
+    message_ja: >-
+      This document prohibits agent termination and requires human review after every successful execution, whereas
+      docs/ja/specdojo/guides/register-operation-guide.md §3.2 requires automatic close after post-review for
+      human-preapproved todo and issue items; distinguish the ordinary execution path from this authorized overnight
+      path and define their respective approval conditions.
     cause:
       type: document
   - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 59
-    anchor: "[*] --> open : 個票起票 / type と登録日時を個票へ記録した"
+    severity: minor
+    rule: vp-dev-testability
+    line: 212
+    anchor: >-
+      `register build` は個票 ID とファイル名の対応・一意性、派生元・依存関係、外部 event の検証を呼び出す整合検査として接続する。コマンドの許可・拒否とフィールド更新は関連テストへ T-ID
+      を対応付ける。register item/event schema と関連テストの定義本体は今回の宣言参照外であり、既存テストの網羅や schema との一致を確認済みとはしない。
     message: >-
-      `open` から `done`・`decided` への直接終端、`in-progress`・`waiting` からの終端、終端から `in-progress`・`waiting`・`review`
-      への直接再開を含め、現行運用で成立する全遷移を図と遷移表へ定義する必要がある。
+      The previously missing transition and field expectations are now defined, but verification still refers only to
+      related tests and schemas; identify the concrete test and schema paths and executable validation commands, since
+      register build alone does not verify command acceptance, rejection, and field-update behavior.
     message_ja: >-
-      `open` から `done`・`decided` への直接終端、`in-progress`・`waiting` からの終端、終端から `in-progress`・`waiting`・`review`
-      への直接再開を含め、現行運用で成立する全遷移を図と遷移表へ定義する必要がある。
+      The previously missing transition and field expectations are now defined, but verification still refers only to
+      related tests and schemas; identify the concrete test and schema paths and executable validation commands, since
+      register build alone does not verify command acceptance, rejection, and field-update behavior.
     cause:
       type: document
   - id: F008
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 37
-    anchor: >-
-      | `in-progress` | 対応中   | -      | 担当者または AI Agent が対応・調査している項目                                    |
-      担当・期限・対応内容が個票へ反映され、状態が `in-progress` である                                    | 個票 Frontmatter・本文  |
-    message: >-
-      `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は担当・期限が未定のままでも運用できるとしているが、本書は担当と期限の反映を `in-progress`
-      の成立条件にしている。
-    message_ja: >-
-      `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は担当・期限が未定のままでも運用できるとしているが、本書は担当と期限の反映を `in-progress`
-      の成立条件にしている。
-    cause:
-      type: document
-  - id: F009
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 38
-    anchor: >-
-      | `waiting`     | 待機中   | 保留   | 外部回答、前提解消、Agent 実行の失敗復旧、審査材料の補完を待つ項目                |
-      待機理由と再開条件が個票の結論欄または本文へ記録され、状態が `waiting` である                        | 個票 Frontmatter・本文  |
-    message: >-
-      `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は待機理由を `block_reason` に記録し `conclusion`
-      を変更しないと定めているが、本書は結論欄または本文を記録先としている。
-    message_ja: >-
-      `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は待機理由を `block_reason` に記録し `conclusion`
-      を変更しないと定めているが、本書は結論欄または本文を記録先としている。
-    cause:
-      type: document
-  - id: F010
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 59
-    anchor: "[*] --> open : 個票起票 / type と登録日時を個票へ記録した"
-    message: >-
-      `docs/ja/specdojo/rulebooks/pjr-rulebook.md` 5.3.3 は `open` からの直接終端を許可し、`src/register.ts` も任意の活動中状態から close
-      を受け付けるが、本書は `done`・`decided` への遷移を `review` からしか定義していない。
-    message_ja: >-
-      `docs/ja/specdojo/rulebooks/pjr-rulebook.md` 5.3.3 は `open` からの直接終端を許可し、`src/register.ts` も任意の活動中状態から close
-      を受け付けるが、本書は `done`・`decided` への遷移を `review` からしか定義していない。
-    cause:
-      type: document
-  - id: F011
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 127
-    anchor: >-
-      | _ASSUMPTION_: 再開は起票済みへ戻す遷移として定義した。再開時に対応中・待機中・審査待ちを直接指定する運用は、再開と後続遷移を同時に記録したものとして扱う   |
-      `T-15`〜`T-18`                 | ARC、PO | 本書のレビュー時            |
-    message: >-
-      `src/register.ts` の `register reopen —status` は終端状態から `open`・`in-progress`・`waiting`・`review` への直接遷移を許可するが、本書は
-      `T-15`〜`T-18` を `open` のみに限定し、直接指定を後続遷移との同時記録として扱っている。
-    message_ja: >-
-      `src/register.ts` の `register reopen —status` は終端状態から `open`・`in-progress`・`waiting`・`review` への直接遷移を許可するが、本書は
-      `T-15`〜`T-18` を `open` のみに限定し、直接指定を後続遷移との同時記録として扱っている。
-    cause:
-      type: document
-  - id: F012
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 129
-    anchor: >-
-      | _UNDECIDED_: `note` の終了を CLI で拒否するか。現行運用規則は `note` を終端させないが、完了操作が `note` を拒否する検証は確認できていない                  |
-      `T-02`、`T-05`、`T-06`         | ARC、QE | 登録簿検証の改訂時          |
-    message: >-
-      `src/register.ts` は `note` に対する `close`・`reject`・`defer` を既に拒否しているため、「拒否する検証は確認できていない」という _UNDECIDED_
-      を現行制約へ更新する必要がある。
-    message_ja: >-
-      `src/register.ts` は `note` に対する `close`・`reject`・`defer` を既に拒否しているため、「拒否する検証は確認できていない」という _UNDECIDED_
-      を現行制約へ更新する必要がある。
-    cause:
-      type: document
-  - id: F013
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 130
-    anchor: >-
-      | _TODO_: `stsd-register-entry` の `based_on`
-      に業務データ辞書（`bdd-register-entry`）を追加する。現時点で同文書は未作成である                               | 全状態                         |
-      BA      | `bdd-register-entry` 作成時 |
-    message: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
-      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
-    message_ja: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
-      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
-    cause:
-      type: document
-  - id: F014
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 42
-    anchor: >-
-      | `rejected`    | 却下     | -      | 対応・変更を行わないと判断した項目                                                |
-      却下理由を含む結論と完了日時が個票へ記録され、状態が `rejected` である                               | 個票 Frontmatter・本文  |
-    message: >-
-      `item_status`、`block_reason`、`completed_at` と `src/register.ts` の活動中・終端ガードを明示的に対応付け、状態表と許可遷移を schema・CLI
-      の現行制約へ整合させる必要がある。
-    message_ja: >-
-      `item_status`、`block_reason`、`completed_at` と `src/register.ts` の活動中・終端ガードを明示的に対応付け、状態表と許可遷移を schema・CLI
-      の現行制約へ整合させる必要がある。
-    cause:
-      type: document
-  - id: F015
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 110
-    anchor: >-
-      | `T-07`  | 対応中   | 待機中   | 対応中断           | 外部回答・前提解消・失敗復旧が必要になった                       | AI Agent 実行・検査・result
-      作成・commit の失敗時は項目を終端化せず、失敗理由と result を残して待機する |
-    message: 実装可能な遷移行列として使えるよう、各 `register` コマンドの遷移元・遷移先、更新する Frontmatter キー、拒否条件を T-ID 単位で現行実装へ整合させる必要がある。
-    message_ja: 実装可能な遷移行列として使えるよう、各 `register` コマンドの遷移元・遷移先、更新する Frontmatter キー、拒否条件を T-ID 単位で現行実装へ整合させる必要がある。
-    cause:
-      type: document
-  - id: F016
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 125
-    anchor: >-
-      |
-      論点                                                                                                                                                      
-      | 影響する状態・遷移             | 決定者  | 決定時期                    |
-    message: >-
-      遷移方針を確定した際の影響先として `src/register.ts`、register item/event
-      schema、関連テスト、`pjr-rulebook.md`、`register-operation-guide.md` を列挙する必要がある。
-    message_ja: >-
-      遷移方針を確定した際の影響先として `src/register.ts`、register item/event
-      schema、関連テスト、`pjr-rulebook.md`、`register-operation-guide.md` を列挙する必要がある。
-    cause:
-      type: document
-  - id: F017
-    severity: major
-    rule: vp-dev-testability
-    line: 110
-    anchor: >-
-      | `T-07`  | 対応中   | 待機中   | 対応中断           | 外部回答・前提解消・失敗復旧が必要になった                       | AI Agent 実行・検査・result
-      作成・commit の失敗時は項目を終端化せず、失敗理由と result を残して待機する |
-    message: 全許可・禁止遷移、type 別終端、`note` の拒否、日時・理由フィールド更新について、検証対象と期待結果を定義し `register build` および関連テストへ接続する必要がある。
-    message_ja: 全許可・禁止遷移、type 別終端、`note` の拒否、日時・理由フィールド更新について、検証対象と期待結果を定義し `register build` および関連テストへ接続する必要がある。
-    cause:
-      type: document
-  - id: F018
-    severity: major
     rule: vp-qe-done-criteria
-    line: 125
+    line: 220
     anchor: >-
-      |
-      論点                                                                                                                                                      
-      | 影響する状態・遷移             | 決定者  | 決定時期                    |
+      | `M-01` _UNDECIDED_: 業務条件と CLI の許可範囲の差異。承認・証跡・結論・待機理由の必須性は強制されず、`close` の明示指定は type 別の終端先を限定しない。`note`
+      の終端は拒否するが、着手・待機・審査は拒否しない。`add` は起票済み以外も指定できる。直接待機再開では理由の新規設定を伴わない。また、CLI
+      が許す起票済み・待機中から審査待ち、審査待ちから対応中への直接変更は、既存業務定義と plan に承認根拠がないため図表へ追加していない | 全状態、`T-01`、`T-03`〜`T-40`、未承認の直接変更 |
+      PO・ARC・QE／状態管理の実装受入確定前 | PM は実装差異を issue、強制方針と未承認経路の選択を decision に接続する。業務条件の自動検証を採用する場合は change-request で CLI
+      改修と関連テスト・schema・運用規則の整合を扱う。不採用なら CLI は維持し、4.1 の人間の確認と記録を受入手順へ明記する。未承認経路を採用する場合は条件を承認して図表へ追加し、不採用なら CLI
+      の制限要否を判断する。決定後は本書と影響先へ反映する。選択までは当該経路・自動強制を前提とする設計・テストの確定を留保し、PM が Schedule の影響を評価する |
     message: 再開・却下・延期・`note` の未決事項と正本文書との差異を解消し、DC-001〜DC-005 を本文根拠から再判定できる状態にする必要がある。
     message_ja: 再開・却下・延期・`note` の未決事項と正本文書との差異を解消し、DC-001〜DC-005 を本文根拠から再判定できる状態にする必要がある。
     cause:
       type: document
-  - id: F019
-    severity: major
-    rule: vp-qe-verifiability
-    line: 70
-    anchor: "### 3.2. 却下・延期（T-05、T-06、T-13、T-14）"
-    message: "`着手できる`、`対応結果と検証結果がそろった`、`新事実により再評価が必要` を、必須記録、承認者、確認結果による pass / fail 条件へ具体化する必要がある。"
-    message_ja: "`着手できる`、`対応結果と検証結果がそろった`、`新事実により再評価が必要` を、必須記録、承認者、確認結果による pass / fail 条件へ具体化する必要がある。"
-    cause:
-      type: document
-  - id: F020
+  - id: F009
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 130
+    line: 221
     anchor: >-
-      | _TODO_: `stsd-register-entry` の `based_on`
-      に業務データ辞書（`bdd-register-entry`）を追加する。現時点で同文書は未作成である                               | 全状態                         |
-      BA      | `bdd-register-entry` 作成時 |
+      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
+      の根拠が不足している                                                                                                                                                                                                                                                                                                     
+      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
+      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
+      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
+      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
+      |
     message: "カタログの `depends_on: bdd-register-entry` を解消して `based_on` へ反映し、recipe の完成条件に反する _TODO_ と未収載の直接終端遷移を残さないようにする必要がある。"
     message_ja: "カタログの `depends_on: bdd-register-entry` を解消して `based_on` へ反映し、recipe の完成条件に反する _TODO_ と未収載の直接終端遷移を残さないようにする必要がある。"
     cause:
       type: document
-  - id: F021
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 10
-    anchor: "- 一意判定: 個票 Frontmatter の状態値が一つの状態を示す。状態を変える操作は個票内の追記型 event にも記録され、最後に成立した遷移の遷移先が現在状態と一致する"
-    message: 文書成熟度の `status` と処理状態の `item_status` を明確に区別し、追記型 event は個票内ではなく `events/pjr-XXXX.yaml` に保存されることを正確に記述する必要がある。
-    message_ja: 文書成熟度の `status` と処理状態の `item_status` を明確に区別し、追記型 event は個票内ではなく `events/pjr-XXXX.yaml` に保存されることを正確に記述する必要がある。
-    cause:
-      type: document
-  - id: F022
+  - id: F010
     severity: major
     rule: vp-ops-release-readiness
-    line: 123
-    anchor: "## 5. 今後の検討メモ"
+    line: 221
+    anchor: >-
+      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
+      の根拠が不足している                                                                                                                                                                                                                                                                                                     
+      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
+      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
+      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
+      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
+      |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     cause:
       type: document
-  - id: F023
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 127
-    anchor: >-
-      | _ASSUMPTION_: 再開は起票済みへ戻す遷移として定義した。再開時に対応中・待機中・審査待ちを直接指定する運用は、再開と後続遷移を同時に記録したものとして扱う   |
-      `T-15`〜`T-18`                 | ARC、PO | 本書のレビュー時            |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    cause:
-      type: document
-  - id: F024
-    severity: major
-    rule: vp-ops-operability
-    line: 38
-    anchor: >-
-      | `waiting`     | 待機中   | 保留   | 外部回答、前提解消、Agent 実行の失敗復旧、審査材料の補完を待つ項目                |
-      待機理由と再開条件が個票の結論欄または本文へ記録され、状態が `waiting` である                        | 個票 Frontmatter・本文  |
-    message: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
-    message_ja: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
-    cause:
-      type: document
-  - id: F025
+  - id: F011
     severity: major
     rule: vp-qe-config-validity
-    line: 127
+    line: 221
     anchor: >-
-      | _ASSUMPTION_: 再開は起票済みへ戻す遷移として定義した。再開時に対応中・待機中・審査待ちを直接指定する運用は、再開と後続遷移を同時に記録したものとして扱う   |
-      `T-15`〜`T-18`                 | ARC、PO | 本書のレビュー時            |
+      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
+      の根拠が不足している                                                                                                                                                                                                                                                                                                     
+      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
+      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
+      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
+      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
+      |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 0
+  satisfied: 3
   total: 5
   unsatisfied:
     DC-001:
       - BA
     DC-002:
       - PO
-    DC-003:
-      - ARC
-    DC-004:
-      - QE
-    DC-005:
-      - DEV
   detail_ref: stsd-register-entry-grade-criteria
