@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wsnd-stsd-pilot-strategy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-05T11:47:44Z"
+  completed_at: "2026-11-05T12:38:33Z"
+  conclusion: stsd-pilot の strategy と schedule（18 タスク）を作り、段 9〜12 を schedule で流せるようにした
   derived_from:
     - PJR-3APD
   approach: strategy-planning
