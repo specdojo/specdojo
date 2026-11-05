@@ -2,12 +2,12 @@
 id: stsd-routine-run-grade-criteria
 document: stsd-routine-run
 path: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
-graded_at: "2026-11-04T16:34:59.425Z"
-graded_by: flash-high-executor
-content_hash: ac79a57bfeaac8af23f280fbbc1262aeba79f678bef2fe196354a1575adaa07f
+graded_at: "2026-11-05T15:20:26.823Z"
+graded_by: sol-review-executor
+content_hash: 21e215665be348c1b169e24944feb5b7bd125a1587f630cc0f7518d2086747ec
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 4
+  unsatisfied: 1
   total: 5
 criteria:
   - id: DC-001
@@ -15,10 +15,7 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: unsatisfied
-    reason: >-
-      The transition conditions and status criteria for 'running' lack identifiers to distinguish from prior completed
-      runs, and the 'missed_run: skip' path is omitted.
+    status: satisfied
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
@@ -26,32 +23,23 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      Recovery policy for in-progress states and overlap handling lack decision options and business impacts required
-      for PO approval.
+      Business approval explicitly requires resolution of M-01–M-04, including recovery, overlap, legacy-record
+      handling, and reconciliation with the missing business dictionary.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: >-
-      Lacks a mechanism or correlation rule between last_run and last_result, preventing its use as an architectural
-      foundation for implementation.
+    status: satisfied
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: >-
-      Inability to deterministically identify the current state prevents state-based test design and expected state
-      verification.
+    status: satisfied
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: unsatisfied
-    reason: >-
-      Missing correlation keys or result update rules for new execution attempts, making it insufficient as an
-      implementation reference.
+    status: satisfied
