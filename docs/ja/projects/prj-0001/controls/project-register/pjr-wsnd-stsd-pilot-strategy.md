@@ -33,13 +33,19 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `docs/ja/projects/prj-0001/schedule/sch-strategy-stsd-pilot.yaml` があり、scope は `dct-data-model-stsd` の 5 件（`local_ids` で指定）である。`approach_rules` は、retrofit の 4 件（`stsd-register-entry`・`stsd-routine-run`・`stsd-deliverable`・`stsd-job-run`）を `reflect-implementation`、`stsd-task-execution` を `confirm-deliverable` とする。`schedule strategy generate` で作り、手で直した箇所は理由を YAML のコメントに書く。
+- 4 件の phase set は `refine-pass` → `condense-pass` → `retrofit-review-pass` → `finalize-pass` の順で、`retrofit-pass` を含まない（段 8 は register で済ませるため）。`stsd-task-execution` は `retrofit-review-pass` → `finalize-pass` だけとする。
+- 各 phase の `description` に、確定した Kata（PJR-PT5N）に従うことと、図は図の rulebook の閾値を超える場合だけ分けることを書いている。
+- `npx specdojo schedule build --track stsd-pilot` が成功し、生成された `sch-track-stsd-pilot.yaml` に 4 件 × 4 段と 1 件 × 2 段の 18 タスクがある。
+- `npx specdojo catalog validate` と `npm run -s validate:schema` が通っている。
+- `tml-index.yaml` など、strategy と schedule のほかのファイルは変えていない。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                | 担当 | 状態 | メモ |
+| --- | ----------------------------------- | ---- | ---- | ---- |
+| 1   | strategy を生成し、phase set を直す | PM   | open | -    |
+| 2   | schedule を作り、検査を通す         | PM   | open | -    |
 
 ## 5. 対応結果
 
@@ -47,4 +53,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `docs/ja/projects/prj-0001/timeline/tml-index.yaml`: track `stsd-pilot` の定義
+- [[specdojo:sch-rulebook]]: strategy の書き方の規範
