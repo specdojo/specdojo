@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-pt5n-stsd-kata-confirm
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-05T11:23:37Z"
+  completed_at: "2026-11-05T11:24:16Z"
+  conclusion: 手入れした stsd の Kata をこのまま確定し、retrofit に使う
   derived_from:
     - PJR-3APD
     - PJR-00NY
