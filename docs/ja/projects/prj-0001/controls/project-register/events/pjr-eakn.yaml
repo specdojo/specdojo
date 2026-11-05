@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a6c26cc56df742088c99ff3e9b717f31
+- v: 1
+  id: reg_4a888867e04c4bd192444dda299720dc
+  ts: "2026-11-05T11:09:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 分割図の初期点の置き方と全図をつないだ判定を足し、終了点の扱いは stsd-rulebook への参照にまとめた
+  previous_event_id: reg_a9b1d666359f42b596d848c09064a139

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-eakn-stsd-mermaid-rulebook-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T10:45:09Z"
+  completed_at: "2026-11-05T11:09:57Z"
+  conclusion: 分割図の初期点の置き方と全図をつないだ判定を足し、終了点の扱いは stsd-rulebook への参照にまとめた
   derived_from:
     - PJR-3APD
     - PJR-00NY
