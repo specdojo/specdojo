@@ -30,6 +30,9 @@ exec の実行記録（evidence・plan・result）がリポジトリの 3 分の
 - 減らせる候補: 親の検証と統合の生のログ（`parent-validation-*.log`・integrate.log、約 8 MB、1 本で 1 MB に達するものがある）、executor.log（3.6 MB）、全 plan に埋め込む共通の規約（約 3 KB × 1,099 で約 3.3 MB）、JSEY の動作確認の繰り返し（plan 68 件、約 2.1 MB）、終わった試行の exec/trials（0.7 MB）（2026-11-03）
 - 構成の問題: plan と result が 1 つのディレクトリに約 1,100 件ずつ並び、`pjr-*`・`T-*`・`JBR-grade-*`・`stsd-*` が混ざる。plan-result-lifecycle-guide は --track-state の成功で plan を exec/plans/done/ へ移すとするが、done/ は空で `T-*` の plan 252 件が plans/ に残る。result のない plan が 2 件、plan のない result が 16 件ある。評価の結果・ジョブの実行記録・evidence が grade/results・jobs/runs・exec/evidence に分かれている（2026-11-03）
 - Git 管理から外しても履歴に残るため clone の重さ（pack 58 MB）は減らない。履歴の書き換えは git-branching-standard で禁止されており、対策の効果はこれから増える分を抑えることになる（2026-11-03）
+- 利用者の決定: 生のログ（executor.log・integrate.log・`parent-validation-*.log`）は監査証跡として全文を Git に残す。追跡から外さず、大きさの上限や途中の省略も設けない。成功した run でも agent が誤った報告をすることがあり、後から実物で確かめられるようにするため（2026-11-06）
+- orchestrator の実測: 生のログは作業ツリーで 13.7 MB だが、Git の pack では約 2.1 MB（pack 61.5 MB の約 3%）で、追跡から外しても clone はほとんど軽くならない。追跡中の実行記録に API キー・トークン・秘密鍵・個人のメールアドレスは見つからなかった（2026-11-06）
+- 利用者の決定: 増え方はログ以外の原因（全 plan に埋め込む共通の規約を参照に変える、完了した plan の扱い）で抑える。あわせて、ディレクトリ体系とファイルの配置のおかしい箇所を直す。配置の体系は派生の decision で決め、伏せ字と秘密の検査は派生の todo で扱う（2026-11-06）
 
 ## 3. 影響範囲
 
