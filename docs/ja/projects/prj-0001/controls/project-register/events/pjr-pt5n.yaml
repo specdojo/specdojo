@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a36943cffe7e4488bf971a41070c14cc
+  ts: "2026-11-05T11:23:38Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 手入れした stsd の Kata を確定する
+    - field: description
+      from: ""
+      to: 3APD の段 7。段 6 で手入れした stsd の Kata（rulebook・図の rulebook・sample）を確定し、retrofit に使ってよいかを決める
+    - field: input
+      from: ""
+      to: '["段 6 で stsd-rulebook（PJR-KBS6）・stsd-mermaid-rulebook（PJR-EAKN）・stsd-sample（PJR-KM8C）を手入れした。recipe と template は変えていない","KM8C で sample の図が分割の例だけになり、1 図の例がなくなった。rulebook は閾値以下の図を分けなくてよいとしているため、このまま確定し、retrofit の後の磨き込みと review で小さな図を分けていないかを確かめる（2026-11-05 利用者が推奨の案 A を選んだ）"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-00NY"]'
