@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ced076e977f546fc99fb11b0fcfe71fb
+  ts: "2026-11-05T15:55:24Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schedule の --auto --parallel の統合が、index に残った記録のファイルで止まる
+    - field: description
+      from: ""
+      to: stsd-pilot の schedule を --auto --parallel 2 で流している間に、block の event ファイルが commit されずに index に載ったまま残り、別のタスクの統合の git merge が「local changes would be overwritten」で止まった。原因を調べ、統合が止まらないようにする
+    - field: input
+      from: ""
+      to: '["2026-11-05 13:07 に T-STSD-PILOT-stsd-register-entry-070 が block され、その block の event ファイルが index に追加（A）されたまま残った。13:14 の T-STSD-PILOT-stsd-routine-run-070 の統合の git merge が、このファイルを理由に止まった（integrate.log）。index から外すと統合できた","同じ時間帯に orchestrator が register add --commit を続けて実行していた（10 件の起票）。そのうち 1 件は利用者の中断で commit の前に止まり、自分の 2 ファイルを index に載せたまま残した。どちらが block の event を index に載せたかは確かめていない","schedule の --auto で流したタスクの claim・complete・block の event は、統合の後も作業ツリーに untracked のまま残り、orchestrator が手で commit している（exec(schedule): ... を記録する）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
