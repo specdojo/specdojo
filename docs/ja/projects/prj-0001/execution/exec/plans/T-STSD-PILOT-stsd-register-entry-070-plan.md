@@ -121,6 +121,9 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 - `src/register/register.ts`（implementation）: 登録項目個票の状態遷移規則・履歴イベント変換
 - `src/register/item.ts`（implementation）: 登録項目個票の status フィールドの許容値（VALID_STATUSES）・終端状態定義
+- `src/register/transition-commands.ts`（implementation）: close・reject・defer・reopen・start などの状態遷移コマンドが受け付ける遷移元と遷移の可否（ガード）
+- `src/register/create-commands.ts`（implementation）: 起票時の初期状態と、update コマンドによる状態の指定
+- `src/register/update.ts`（implementation）: 状態を変える操作に共通の制約（終端状態の項目は変えず reopen を先に求める、reopen は終端状態の項目だけ）
 
 実装エビデンスは現在動作の事実、rulebook は書き方、`depends_on` と個票の `入力` は意図された仕様の根拠として使い分ける。食い違いは実装へ無条件に合わせず、承認根拠のある現在動作だけを反映し、未承認の乖離は意図された仕様を保持して result に記録する。実装から目的・業務判断・将来方針を推測しない。
 
