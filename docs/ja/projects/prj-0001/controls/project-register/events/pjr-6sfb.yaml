@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b32ba69a130f4a2c9a66b5da4417f87b
+- v: 1
+  id: reg_0432977ff485457ab9157b8a370158d0
+  ts: "2026-11-05T17:59:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が状態・遷移・遷移 ID の不変、表示名と状態一覧の一致、変更範囲、lint を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-deliverable の冒頭を頭書き・目的・適用範囲へ、図の表示名を 状態名`<br>`値 へ合わせた
+  previous_event_id: reg_3cabe93345b949df9b54bb2117a7de06
