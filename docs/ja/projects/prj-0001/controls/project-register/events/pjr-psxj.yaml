@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: register
+- v: 1
+  id: reg_27b176a3632843c0af9f6bc2b621eeb2
+  ts: "2026-11-05T22:16:17Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: input
+      from: '["利用者の課題: 概念データフロー図（cdfd）を作ったが、機能を足すと cdfd の内容とコードがズレていく。トレーサビリティを確保し、コードが変わったら相応する要件定義・仕様書・設計書を直す、または直すことに気づけるようにしたい（2026-11-04）","既存の部品: カタログの `evidence_refs`（成果物ごとの根拠のコードのパス。cdfd-overview は src/specdojo.ts など粒度が粗い）、approach retrofit（`evidence_refs` を読み一致とズレを判定して直す。起票しないと動かない）、grade の `content_hash`（文書側の鮮度だけ）、`based_on` と trc-requirements-to-specs / trc-requirements-to-tests の rulebook（文書間の対応）、commit の Refs（コードの変更から登録簿の項目へたどれる）（2026-11-04）","候補の手: (1) `evidence_refs` をコマンドの領域のディレクトリ単位に整える、(2) 文書ごとに最後に照合した根拠のコードの版を記録し、それ以降に根拠が変わった文書を一覧にするコマンド（dashboard にも出す）、(3) todo の統合時に変えたファイルから `evidence_refs` を逆にたどり、関係する文書を result と申し送りに警告として出す、(4) routine で (2) の一覧を確かめ、ズレた文書ごとに retrofit の todo を起票する、(5) 大きな変更は change-request で文書を先に直してから実装する運用（2026-11-04）","推奨の順序は 1→2→3 で、4 は 2 の一覧が実用的な量に収まるのを確かめてから足す。照合の記録（最後に照合した版）を文書の frontmatter・result・カタログのどこに持つかが設計の要。今回の cdfd 3 文書を最初の対象にして試す（2026-11-04）"]'
+      to: '["利用者の課題: 概念データフロー図（cdfd）を作ったが、機能を足すと cdfd の内容とコードがズレていく。トレーサビリティを確保し、コードが変わったら相応する要件定義・仕様書・設計書を直す、または直すことに気づけるようにしたい（2026-11-04）","既存の部品: カタログの `evidence_refs`（成果物ごとの根拠のコードのパス。cdfd-overview は src/specdojo.ts など粒度が粗い）、approach retrofit（`evidence_refs` を読み一致とズレを判定して直す。起票しないと動かない）、grade の `content_hash`（文書側の鮮度だけ）、`based_on` と trc-requirements-to-specs / trc-requirements-to-tests の rulebook（文書間の対応）、commit の Refs（コードの変更から登録簿の項目へたどれる）（2026-11-04）","候補の手: (1) `evidence_refs` をコマンドの領域のディレクトリ単位に整える、(2) 文書ごとに最後に照合した根拠のコードの版を記録し、それ以降に根拠が変わった文書を一覧にするコマンド（dashboard にも出す）、(3) todo の統合時に変えたファイルから `evidence_refs` を逆にたどり、関係する文書を result と申し送りに警告として出す、(4) routine で (2) の一覧を確かめ、ズレた文書ごとに retrofit の todo を起票する、(5) 大きな変更は change-request で文書を先に直してから実装する運用（2026-11-04）","推奨の順序は 1→2→3 で、4 は 2 の一覧が実用的な量に収まるのを確かめてから足す。照合の記録（最後に照合した版）を文書の frontmatter・result・カタログのどこに持つかが設計の要。今回の cdfd 3 文書を最初の対象にして試す（2026-11-04）","利用者の決定: 推奨の 2 手を先に行う。(a) 再 export だけのファイルなど、根拠にならないファイルを指す `evidence_refs` を検出する検査を足す。(b) カタログの見直し（catalog-planning）の段に、状態遷移や判定の本体を含むファイルが `evidence_refs` にあるかの確認を入れる。候補 (2)〜(5) は後に回す（2026-11-06）","orchestrator の調査: 成果物 203 件のうち 93 件に `evidence_refs` があり、参照は 181 件（ディレクトリ単位は 0 件）。最多の `src/exec/exec.ts`（56 回）は 2 行の re-export で根拠にならない。次いで `src/catalog.ts` 22 回、`src/register.ts` 15 回。stsd-register-entry の retrofit は、状態遷移の本体のファイルが参照から漏れていて止まった（2026-11-06）"]'
+  previous_event_id: reg_0f16eca86b5747978cfd563aee25f287
