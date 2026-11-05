@@ -86,3 +86,16 @@
       from: "parent validation failed: lint-ts, typecheck, test-unit"
       to: "-"
   previous_event_id: reg_2dbafc063f2445f78b1a39e1eed4ea5b
+- v: 1
+  id: reg_0b875ec9e62c4055a8ef00769787a2c2
+  ts: "2026-11-05T23:56:12Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5ec82221b7044d499ad2790580ff7372
