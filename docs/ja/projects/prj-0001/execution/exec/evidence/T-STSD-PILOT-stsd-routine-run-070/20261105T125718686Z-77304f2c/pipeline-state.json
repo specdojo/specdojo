@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-STSD-PILOT-stsd-routine-run-070",
   "run_id": "20261105T125718686Z-77304f2c",
-  "updated_at": "2026-11-05T13:26:48.739Z",
+  "updated_at": "2026-11-05T13:27:11.811Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-STSD-PILOT-stsd-routine-run-070-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 4,
       "started_at": "2026-11-05T13:26:48.739Z",
-      "completed_at": null,
+      "completed_at": "2026-11-05T13:27:11.811Z",
       "artifact_ref": null
     }
   }
