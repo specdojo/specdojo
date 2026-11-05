@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-yqf1-stsd-routine-run-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T11:24:58Z"
+  completed_at: "2026-11-05T12:10:02Z"
+  conclusion: 部分反映。5 章と T-01〜T-08 を保ち、partial・結果の集約・再実行の経路と T-09〜T-11 を実装に合わせた
   derived_from:
     - PJR-3APD
     - PJR-PT5N
