@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T13:03:06Z"
+  completed_at: "2026-11-05T16:29:47Z"
+  conclusion: 表示名を状態名`<br>`値の 2 行にする定義・規則・例にし、stsd-rulebook への参照を新しい章に直した
   derived_from:
     - PJR-3APD
     - PJR-VNT1

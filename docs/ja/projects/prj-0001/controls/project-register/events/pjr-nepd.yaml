@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b45c10795f81444a84d10e73bd616101
+- v: 1
+  id: reg_8e9daa6f63ae4afd85776f588a968d66
+  ts: "2026-11-05T16:29:47Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: 表示名を状態名`<br>`値の 2 行にする定義・規則・例にし、stsd-rulebook への参照を新しい章に直した
+  previous_event_id: reg_98e4322d7d714ffab3530466570d82cc
