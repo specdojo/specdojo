@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-05T13:30:06Z",
+  "type": "unblock",
+  "task_id": "T-STSD-PILOT-stsd-register-entry-070",
+  "by": "sol-executor",
+  "msg": "resume executor from persisted pipeline state (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-STSD-PILOT-stsd-register-entry-070/20261105T125158985Z-8c59e41b/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-STSD-PILOT-stsd-register-entry-070/20261105T125158985Z-8c59e41b/pipeline-state.json",
+    "pipeline_run_id": "20261105T125158985Z-8c59e41b",
+    "pipeline_resume_claimed": "true"
+  }
+}
