@@ -50,3 +50,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-PT5N"]'
+- v: 1
+  id: reg_44b9aea558db4bb7a08064c11bacbe08
+  ts: "2026-11-05T11:26:31Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9b0a44fa189d420989b6abc4ed0d7c5b
