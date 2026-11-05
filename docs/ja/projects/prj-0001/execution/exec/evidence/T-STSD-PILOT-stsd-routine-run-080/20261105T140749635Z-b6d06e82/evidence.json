@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "task_id": "T-STSD-PILOT-stsd-routine-run-080",
+  "run_id": "20261105T140749635Z-b6d06e82",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-05T14:09:35.350Z",
+    "completed_at": "2026-11-05T14:13:13.519Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../020-data-model/stsd-routine-run.md             | 26 ++++++++++++----------\n 1 file changed, 14 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "passed",
+      "summary": "整形済み。最終実行で追加変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "標準入力の比較スクリプトで、編集前後の frontmatter、集約規則、6状態、二図、11遷移のID・元・先・イベント・条件、検討項目 M-01〜M-04 の全行が一致することを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "変更は Markdown 一文書のみで、YAML・YML ファイルの変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票および既存の exec plan・result を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "成果物の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下への変更がない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-080/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-funct\n… output omitted …\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-080/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-080/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 39 problems (0 errors, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3887 file(s), 184 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3887 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-080\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory i\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmembers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-080\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-90nMZO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Nz0Tud/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-im0XX8/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-SW29zN/pjr-0001-topic.md\nWa\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "1. 概要、第1段落「結果と確認要否」「状態が一意に分からなければ」",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "判断目的を結果と完了確認・再実行の要否へ集約した。利用者、確認・引継ぎの負担軽減、BV-03 との対応を維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "1. 概要、第2段落の BA・PO の確認分担、および5. 今後の検討メモの最終段落",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "BA の辞書照合と PO の正常・例外経路の確認を末尾の業務承認条件へ集約した。概要には BA の状態・遷移の説明責任と ARC・QE・DEV の利用目的を残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "1. 概要、「一意判定」の冒頭2文",
+      "category": "table-prose",
+      "action": "reference",
+      "reason": "現在状態の判定説明を2. 状態一覧の成立条件への参照に置き換えた。未実行の結果値を書き込まない制約は T-01 に残し、開始時更新と不正・旧記録の扱いも維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "1.1. due 判定と実行機会の選択、末尾段落「次回も現在分の一致と処理済み時刻を比較する」",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "同節の cron 行にある現在分と処理済み時刻の比較と重複するため削除した。取りこぼし時に状態・履歴を記録しない制約と T-05 との区別は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 遷移の説明、T-05 補足「一部の段が成功していてもこの結果になる」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "2. 状態一覧のスキップ行に成功した段を伴う場合も含むと明記され、1.2 の集約優先順も保持されている。同じ実行機会を消化済みとする制約は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 遷移の説明、T-06・T-07・T-08・T-10・T-11 の補足「開始条件は T-02 と同じ」および T-06 の記録更新説明",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "各行の共通説明を表直前の T-02 補足への参照へ集約した。開始条件と記録更新の適用範囲を明記し、再評価・即時再試行・試行中の再開始に関する固有の制約は各行に維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 遷移の説明、T-09 補足「スキップが含まれていても部分完了を優先する」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "1.2 の集約優先順と2. 状態一覧の部分完了行に同じ意味があるため削除した。遷移条件は変更していない。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "1. 概要、実装エビデンスと未作成の先行辞書に関する段落、および5. 今後の検討メモの M-04",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "概要は業務整合が未確認であることと `based_on` が空である根拠、M-04 は辞書作成・照合・承認の担当と完了条件を担う。判断と後続作業に必要なため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3. 状態遷移図、二図の共有状態と4. 遷移の説明との対応",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "図と遷移表は全体像と詳細の対応に必要。6状態・11遷移でも試行中への接続数が6を超えるため二図を保持し、共有状態・遷移範囲の説明も残した。",
+      "cause": {
+        "type": "kata",
+        "kind": "rulebook",
+        "location": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md、6.3. 図の分割：一つの業務状態に接続する入出力遷移の合計が6を超える場合の分割と共有状態の指定"
+      }
+    },
+    {
+      "location": "5. 今後の検討メモ、M-01 の表行と表後の運用案",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "表は復旧案の選択肢・影響・承認条件、本文は生存確認、証跡候補、ARC への調査依頼、PO の判断範囲を示す。確定手順が未定である制約を含め、例外時の引き渡しに必要なため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "stsd-routine-run.md の重複説明を整理した。6状態・11遷移、集約規則、例外・完了条件を維持し、result は編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "既存の業務承認条件として、検討項目 M-01〜M-04 の解消が引き続き必要。復旧方針、重複起動、旧・欠損記録、先行辞書との整合に関する判断条件は対象文書に保持した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-STSD-PILOT-stsd-routine-run-080/20261105T140749635Z-b6d06e82/executor.log",
+      "bytes": 6934,
+      "truncated": false
+    }
+  ]
+}
