@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-11-03T23:02:58Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-05T22:53:16Z"
+  conclusion: "A 案: re-export だけの evidence_refs の警告と、catalog-planning での本体のファイルの確認を先に入れる。実装は PJR-ABBM"
   derived_from:
     - PJR-GEZN
   commit_type: docs
