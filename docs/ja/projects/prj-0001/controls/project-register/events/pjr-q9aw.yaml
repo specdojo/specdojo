@@ -79,3 +79,16 @@
       from: "-"
       to: "executor reported incomplete: 依存成果物 bdd-exec-state.yaml／bdd-exec-event.yaml が存在せず停止。個票の対応結果のみ更新し、標準エラーへ理由を出力、終了コード1。"
   previous_event_id: reg_ca4e4881d66742c58f6e5ac2d705cad2
+- v: 1
+  id: reg_a9e3e3baab6b4a22afaa6c80c99f6615
+  ts: "2026-11-05T03:43:23Z"
+  action: update
+  actor: SpecDojo
+  from_status: waiting
+  to_status: waiting
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-1799"]'
+      to: '["PJR-1799","PJR-H2V8"]'
+  previous_event_id: reg_6718b79dc37d40f8979a59ac53f1b23e

@@ -17,6 +17,7 @@ specdojo:
     - PJR-3APD
   depends_on:
     - PJR-1799
+    - PJR-H2V8
   approach: fully-guided
   targets:
     - prj-0001:stsd-task-execution
