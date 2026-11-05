@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f64c1cafb76e4894b1f117c3f34de235
+  ts: "2026-11-05T11:47:46Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-pilot の strategy と schedule を作り、段 9〜12 を schedule で流せるようにする
+    - field: description
+      from: ""
+      to: 3APD の段 9〜12（磨き込み・condense・review・確定）を schedule で流すため、track stsd-pilot の strategy を作り、schedule build で展開する
+    - field: input
+      from: ""
+      to: '["利用者は、段 9 以降を register の個票ではなく schedule で流す案を選んだ。本番の業務仕様の epic と同じ流し方を、この試行で確かめるため（2026-11-05）","段 8 の retrofit は register の個票（PJR-41B4・PJR-YQF1・PJR-RAPC・PJR-PYCY）で流しているため、schedule には retrofit-pass を入れない。stsd-task-execution は段 2〜4 を register で済ませた（PJR-1799・PJR-Q9AW・PJR-MC63）","標準の retrofit の profile は retrofit-pass → refine-pass → condense-pass → retrofit-review-pass → finalize-pass で、段 8〜12 と同じ順になる（src/schedule/strategy-profiles.ts）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: strategy-planning
+    - field: targets
+      from: ""
+      to: '["track:stsd-pilot"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
