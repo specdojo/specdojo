@@ -63,3 +63,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_24b67f70eb394aebb2bc5cc3c640840d
+- v: 1
+  id: reg_f864bcb9faa14d5c9f391ee2aab611d5
+  ts: "2026-11-05T16:28:27Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_684bff35a7554586b7ac2dd4e3581db0
