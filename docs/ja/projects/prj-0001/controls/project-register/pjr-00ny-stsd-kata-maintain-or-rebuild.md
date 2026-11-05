@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-00ny-stsd-kata-maintain-or-rebuild
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-05T10:44:15Z"
+  completed_at: "2026-11-05T10:46:54Z"
+  conclusion: stsd の Kata は作り直さず手入れとし、図は Mermaid のままにする
   derived_from:
     - PJR-3APD
     - PJR-MC63

@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-3APD","PJR-MC63"]'
+- v: 1
+  id: reg_d0d4b64ad9ac4e1db691ab41828e2cfd
+  ts: "2026-11-05T10:46:54Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: orchestrator の提案に利用者が推奨で回答した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: stsd の Kata は作り直さず手入れとし、図は Mermaid のままにする
+  previous_event_id: reg_74445df6012e4a0599b77ebf586d270b
