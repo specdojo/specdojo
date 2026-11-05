@@ -50,3 +50,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-YSST"]'
+- v: 1
+  id: reg_e3a69be333de4b9585e553e447682483
+  ts: "2026-11-05T16:46:58Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_11fedbad3b074f8b81238d79037142e3
+- v: 1
+  id: reg_5eae1138c00142b2bb866ca62a8df768
+  ts: "2026-11-05T16:56:46Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e3a69be333de4b9585e553e447682483
