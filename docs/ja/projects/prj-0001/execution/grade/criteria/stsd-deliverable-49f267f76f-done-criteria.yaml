@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:stsd-deliverable-grade-criteria
+document: prj-0001:stsd-deliverable
+path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
+graded_at: "2026-11-05T14:26:40.108Z"
+graded_by: sol-review-executor
+content_hash: 057310827ad4c9022b66e7100e5fc4da19a5014f294df5440553a7882110c97f
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      Approval requirements and the business rules for downgrade, restoration, and retirement without a successor remain
+      unresolved.
+  - id: DC-002
+    text: 状態遷移の業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      The lifecycle still contains provisional business assumptions and undecided transition permissions that prevent
+      approval of its overall business validity.
+  - id: DC-003
+    text: 状態遷移実装の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: 状態ベースのテスト設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: >-
+      Approval evidence and expected outcomes for exceptional transitions and invalid status values are missing, leaving
+      those state-based tests without decisive pass/fail expectations.
+  - id: DC-005
+    text: 状態管理実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: >-
+      A state-management implementation cannot determine authorization and handling for unlisted transitions and missing
+      or invalid status values from the current definition.
