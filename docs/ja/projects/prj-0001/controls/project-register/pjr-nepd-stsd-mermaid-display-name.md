@@ -52,7 +52,10 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: executor（sol）が [[specdojo:stsd-mermaid-rulebook]] の表示名の定義・規則・例を直した（6e57c0bbe）。値がある状態は `state "状態名<br>値" as state_id`、値が `-` の状態は状態名だけとし、1 行目は状態一覧の状態名、2 行目は値と完全一致させる。分割図で共有する状態も同じ表示名にする。
+- [[specdojo:stsd-rulebook]] の「概要」への参照を、新しい章（目的・適用範囲）への参照に直した。
+- orchestrator の確認: 変わった Kata は `stsd-mermaid-rulebook` だけで、親の検証はすべて通った。
+- 残課題: なし。
 
 ## 6. 関連ドキュメント
 
