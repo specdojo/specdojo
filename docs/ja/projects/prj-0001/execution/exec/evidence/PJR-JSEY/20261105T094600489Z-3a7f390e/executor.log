@@ -1,0 +1,12 @@
+個票の対応結果の表に PJR-H2V8 の行を 1 行追記しました。変更したのは個票だけです。Prettier の確認と `npm run validate:history-links` は通りました。
+
+- **追記した行:** `2026-11-05 18:47` / `PJR-H2V8` / `sonnet-executor`
+- **確認対象の根拠:** 一覧のうち最も新しく統合されたものが PJR-H2V8 です。最終の実行コミットは `73232bb5a`（2026-11-05 18:44 JST）で、直前の確認対象 PJR-1BRQ より後です。
+- **本文の差し替え:** 表の下の「今回の確認対象」の段落も、PJR-1BRQ から PJR-H2V8 の記述に直しました。
+- **残した記述:** 申し送りの段落は、後続段で確認する内容のまま変えていません。
+
+親 runner の 7 検証、reporter、統合、`review` 遷移はこの段では実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果表に PJR-H2V8 の行を追記し、確認対象の説明を更新した。変更ファイルは個票のみ。","handoff":["親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移は後続段で確認する。","start の event の actor が sonnet-executor であることは後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"Prettier の書式に適合"},{"command":"npm run -s validate:history-links","status":"passed","summary":"履歴ファイルのリンク記法に違反なし"}]}
+</specdojo_executor_evidence>
