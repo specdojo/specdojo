@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_71f839cf961f4d26acb1fe7d8b913788
+  ts: "2026-11-05T22:54:37Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: timeline を非推奨にし、全体計画を epic から作る
+    - field: description
+      from: ""
+      to: epic に domains を持たせ、dashboard の全体計画・strategy の範囲・カタログの検出を epic から作り、tml-index.yaml と timeline build を非推奨にする
+    - field: input
+      from: ""
+      to: '["由来: PJR-VYSC の決定。timeline の概念を非推奨にし、全体計画を epic から作る（2026-11-06）","orchestrator の調査: tml-index.yaml は順序・依存のほか、track と domain の対応（strategy の範囲・catalog-scaffold の検出）、`catalog_status`（register から導出済み）、`planned_start_date` と推定日数、epic と strategy-planning の track の確認に使われている。稼働日のカレンダーは sch-defaults.yaml にある（2026-11-06）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-VYSC"]'
