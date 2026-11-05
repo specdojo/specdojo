@@ -28,13 +28,22 @@ catalog validate が存在しないパスと re-export だけのファイルを�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `catalog validate`（`src/catalog/build.ts` の `evidence_refs` の検査）が、中身が re-export（`export … from` と型の re-export）だけのファイルを指す参照を警告する。警告で終了コードを変えない。存在しないパス・広すぎるパス・重複の既存のエラーは変えない。
+- 警告に、カタログのファイル、成果物の `local_id`、参照のパス、理由（re-export だけ）を含める。
+- prj-0001 で `catalog validate` を実行し、警告の件数と、`src/exec/exec.ts` を指す参照が警告に出ることを個票の対応結果に書く。参照の置き換えは行わない。
+- catalog-planning の plan の手順（`src/exec/plans-planning.ts`）に、状態遷移・判定・検証の本体を含むファイルが `evidence_refs` にあるかを確かめ、re-export だけのファイルを根拠にしない手順を足す。対応する recipe・ガイドがあれば同じ確認を書く。
+- 単体テストを足す（re-export だけのファイルで警告が出る、通常のファイルで出ない、re-export と本体が混ざるファイルで出ない）。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` が通り、親の検証が通る。
+- CHANGELOG は未公開の版の節に書き、公開済みの版の節を変えない。
+- 保護された設定（`package.json`・agent の定義・`exec-defaults.yaml` など）は変えない。変更が要る場合は、案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当     | 状態 | メモ |
+| --- | ---------------------------------------------- | -------- | ---- | ---- |
+| 1   | re-export だけのファイルの判定と警告を足す     | executor | open | -    |
+| 2   | catalog-planning の手順と recipe・ガイドを直す | executor | open | -    |
+| 3   | テストと CHANGELOG を足す                      | executor | open | -    |
 
 ## 5. 対応結果
 
@@ -42,4 +51,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-PSXJ: 由来の decision
