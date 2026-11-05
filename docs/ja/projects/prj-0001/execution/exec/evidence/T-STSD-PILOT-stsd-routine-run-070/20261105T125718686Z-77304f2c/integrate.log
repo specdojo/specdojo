@@ -24,3 +24,16 @@ Merge with strategy ort failed.
 not required
 
 
+=== 2026-11-05T13:16:29.412Z git merge --no-ff -m exec(T-STSD-PILOT-stsd-routine-run-070): 磨き込み・整合性確認 exec/prj-0001-T-STSD-PILOT-stsd-routine-run-070 ===
+exit: 2
+--- stdout ---
+
+--- stderr ---
+error: Your local changes to the following files would be overwritten by merge:
+  docs/ja/projects/prj-0001/execution/exec/events/20261105T130711Z_sol-executor_T-STSD-PILOT-stsd-register-entry-070_block_776622d2.json
+Merge with strategy ort failed.
+
+--- merge --abort ---
+not required
+
+
