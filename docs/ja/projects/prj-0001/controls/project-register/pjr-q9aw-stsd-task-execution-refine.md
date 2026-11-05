@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-q9aw-stsd-task-execution-refine
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-04T23:38:12Z"
+  completed_at: "2026-11-05T10:18:02Z"
+  conclusion: 実装の根拠と stsd の Kata に沿って磨き込んだ。Kata の判断材料 3 点を対応結果に残した
   derived_from:
     - PJR-3APD
   depends_on:
