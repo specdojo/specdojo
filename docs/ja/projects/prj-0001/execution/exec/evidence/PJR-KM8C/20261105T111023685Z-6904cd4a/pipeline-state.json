@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-KM8C",
   "run_id": "20261105T111023685Z-6904cd4a",
-  "updated_at": "2026-11-05T11:19:23.700Z",
+  "updated_at": "2026-11-05T11:19:34.905Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-km8c-20261105T111023Z-5adf4f14-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-05T11:19:23.700Z",
-      "completed_at": null,
+      "completed_at": "2026-11-05T11:19:34.905Z",
       "artifact_ref": null
     }
   },
