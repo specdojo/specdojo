@@ -57,7 +57,7 @@ tracks:
   - track: data-flow-usage
     domains: [data-flow]
     catalog_status: primary
-    order: 4
+    order: 5
     parallel_group: business-specs
     depends_on: [data-flow-pdca]
     note: PJR-SJQC の決定に基づき、概念データフローの文書体系を overview と系統別の詳細 3 文書（register・schedule・routine）へ再編する作業。dct-data-flow を local_ids で部分 scope にする。
@@ -65,7 +65,7 @@ tracks:
   - track: data-flow-uc-rewrite
     domains: [data-flow]
     catalog_status: primary
-    order: 5
+    order: 6
     parallel_group: business-specs
     depends_on: [data-flow-usage]
     note: PJR-PRYZ で直したユースケース別 CDFD の Kata に合わせて、系統別の詳細 3 文書（register・schedule・routine）を書き直す作業。dct-data-flow を local_ids で部分 scope にする。
@@ -73,7 +73,7 @@ tracks:
   - track: stsd-pilot
     domains: [data-model]
     catalog_status: primary
-    order: 6
+    order: 7
     parallel_group: business-specs
     depends_on: [data-flow-uc-rewrite]
     note: 業務仕様を実装ベースで量産する流れ（カタログの見直し → draft → 磨き込み → condense → 手入れか作り直しかの判断 → Kata の手入れまたは bootstrap → Kata の確定 → retrofit → 磨き込み → condense → review → 確定）を、ステータス定義（stsd、5 件）で 1 回通して確かめる試しの track。dct-data-model-stsd を local_ids で部分 scope にする。
