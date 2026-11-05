@@ -1,0 +1,274 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:stsd-deliverable
+path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 89
+graded_at: "2026-11-05T14:26:40.108Z"
+graded_by: sol-review-executor
+content_hash: 057310827ad4c9022b66e7100e5fc4da19a5014f294df5440553a7882110c97f
+source_hashes:
+  catalog-entry: 054b37c3d3d85e4663b695deb137aa1d438e566c0bc8e3793e50b74cd7205365
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 7613b8ab5d2b966fa5a7c35f5a19d1539b663a5ba1172b683fc00639bf45ce7d
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
+    score: 75
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 75
+  quality:
+    score: 69
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 48
+    anchor: >-
+      |
+      論点                                                                                                                                                                                                                                            
+      | 影響する状態・遷移     | 決定者       | 決定時期                   |
+    message: >-
+      Identify the PJR or decision-record destination for each outstanding item, and distinguish investigation work from
+      decisions awaiting approval so that the memo can be transferred into project controls without reclassification.
+    message_ja: >-
+      Identify the PJR or decision-record destination for each outstanding item, and distinguish investigation work from
+      decisions awaiting approval so that the memo can be transferred into project controls without reclassification.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 40
+    anchor: >-
+      | `T-02`  | 未確定   | 利用可能 | 利用可能性の承認 | 人間が内容の確定または運用利用を判断した   | agent
+      は昇格させない。成果物ごとの承認者、受入条件、証跡と、実装による権限・条件の検証は未確認                                                                      
+      |
+    message: >-
+      Define the minimum approval requirements for T-02 or reference an authoritative rule that resolves the responsible
+      human approver, applicable acceptance conditions, and approval evidence; the current generic human judgment
+      condition is insufficient to establish a valid promotion.
+    message_ja: >-
+      Define the minimum approval requirements for T-02 or reference an authoritative rule that resolves the responsible
+      human approver, applicable acceptance conditions, and approval evidence; the current generic human judgment
+      condition is insufficient to establish a valid promotion.
+    cause:
+      type: document
+  - id: F003
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 53
+    anchor: >-
+      | _UNDECIDED_:
+      降格、廃止からの復帰、後継文書を伴わない廃止、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判断条件を合意する                                                     
+      | 全状態                 | BA、PO、ARC  | 本定義の受入承認前         |
+    message: >-
+      Resolve the permitted source states, destination states, events, and conditions for downgrade, restoration, and
+      retirement without a successor, or explicitly exclude those cases from the accepted scope; leaving their
+      permission undecided prevents a complete business transition definition.
+    message_ja: >-
+      Resolve the permitted source states, destination states, events, and conditions for downgrade, restoration, and
+      retirement without a successor, or explicitly exclude those cases from the accepted scope; leaving their
+      permission undecided prevents a complete business transition definition.
+    cause:
+      type: document
+  - id: F004
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 53
+    anchor: >-
+      | _UNDECIDED_:
+      降格、廃止からの復帰、後継文書を伴わない廃止、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判断条件を合意する                                                     
+      | 全状態                 | BA、PO、ARC  | 本定義の受入承認前         |
+    message: >-
+      Provide a complete transition policy or an explicit interim decision rule for unlisted transitions and missing or
+      invalid status values; implementers currently cannot determine whether to reject, defer, or permit these
+      operations without inventing business behavior.
+    message_ja: >-
+      Provide a complete transition policy or an explicit interim decision rule for unlisted transitions and missing or
+      invalid status values; implementers currently cannot determine whether to reject, defer, or permit these
+      operations without inventing business behavior.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-dev-testability
+    line: 44
+    anchor: >-
+      廃棄は状態を保った保管場所の変更であり、自己遷移として追加しない。確認した実装は文書を `trash/` へ移し、カタログの対象エントリの `path` だけを更新して `local_id`
+      を維持する。状態が廃止でなくても警告だけで処理を続けるため、廃棄先にあることを廃止の成立条件にできない。
+    message: >-
+      Link the applicable schema and executable checks for allowed status values, initial draft creation, and
+      status-preserving disposal, and state their expected results separately from human approval checks that the CLI
+      does not enforce.
+    message_ja: >-
+      Link the applicable schema and executable checks for allowed status values, initial draft creation, and
+      status-preserving disposal, and state their expected results separately from human approval checks that the CLI
+      does not enforce.
+    cause:
+      type: document
+  - id: F006
+    severity: major
+    rule: vp-qe-verifiability
+    line: 40
+    anchor: >-
+      | `T-02`  | 未確定   | 利用可能 | 利用可能性の承認 | 人間が内容の確定または運用利用を判断した   | agent
+      は昇格させない。成果物ごとの承認者、受入条件、証跡と、実装による権限・条件の検証は未確認                                                                      
+      |
+    message: >-
+      Specify observable approval evidence and negative-case expectations for promotion, and resolve the outcomes of the
+      exceptional cases listed in section 5; checking the recorded status alone cannot verify that the business
+      transition was valid.
+    message_ja: >-
+      Specify observable approval evidence and negative-case expectations for promotion, and resolve the outcomes of the
+      exceptional cases listed in section 5; checking the recorded status alone cannot verify that the business
+      transition was valid.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-ops-operability
+    line: 53
+    anchor: >-
+      | _UNDECIDED_:
+      降格、廃止からの復帰、後継文書を伴わない廃止、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判断条件を合意する                                                     
+      | 全状態                 | BA、PO、ARC  | 本定義の受入承認前         |
+    message: >-
+      Add an interim escalation reference for operators encountering missing or invalid status values or requesting an
+      undefined transition, including where to record the case and obtain a human decision while the permanent rules
+      remain unresolved.
+    message_ja: >-
+      Add an interim escalation reference for operators encountering missing or invalid status values or requesting an
+      undefined transition, including where to record the case and obtain a human decision while the permanent rules
+      remain unresolved.
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-qe-config-validity
+    line: 51
+    anchor: >-
+      | _TODO_: カタログが許容値・遷移規則の根拠として挙げる `src/deliverable/deliverable.ts` には、その列挙・検証処理がない。全状態の値検証と `T-01`〜`T-04`
+      の実装確認は未了。委譲先の生成処理、状態変更・検証の実装を根拠に追加して業務規約と照合する | 全状態、`T-01`〜`T-04` | BA、ARC、DEV | 実装エビデンスの見直し時   |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+level_corrections:
+  - viewpoint: vp-ba-requirements-completeness
+    original_level: 2
+    corrected_level: 1
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: prj-0001:stsd-deliverable-grade-criteria
