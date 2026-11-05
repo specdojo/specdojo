@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kfmb-stsd-task-execution-opening
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T13:05:55Z"
+  completed_at: "2026-11-05T17:58:34Z"
+  conclusion: stsd-task-execution の冒頭を頭書き・目的・適用範囲へ、図の表示名を 状態名`<br>`値 へ合わせた
   derived_from:
     - PJR-3APD
     - PJR-VNT1
