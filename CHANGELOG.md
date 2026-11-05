@@ -22,6 +22,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `draft`・`fully-guided`・`recipe-guided` の edit plan に、カタログの `evidence_refs` を読み取り専用の実装の根拠として展開するようにしました。未指定・カタログなしでも停止せず、未作成の `depends_on` は「未作成」と示し、内容を仮置きして進めます。実装・書き方・意図の根拠の使い分けも明記しました（PJR-H2V8）。
+
 - `exec resume --task <task-id> --resume-from executor` および `exec run --register <PJR-ID> --resume --resume-from executor` で worktree の plan を編集してから再開したとき、統合時に直した plan が破棄されて元の plan で上書きされる問題を修正しました。executor から再開した run の統合では worktree の直した plan をコミット対象に含め、統合の commit に履歴として残るようにしました。あわせて登録簿の executor 再開で worktree 内の編集済み plan を読み込むようにしました（PJR-Z807）。
 
 - schedule の `exec resume` で executor 段から再開するとき（`--resume-from executor` を含む）に `--executor-by` で元の claim の持ち主と別の agent を指定すると、claim が元の agent のまま残って統合前の完了確認（completion preflight）で止まる問題を修正しました。元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim を新しい executor へ移し、`complete` イベントも新しい executor で記録するようにしました。あわせて同一秒内に記録された `release` と再 `claim` のイベント順序を状態遷移に沿って解決するようにしました（PJR-FYN5）。

@@ -10,6 +10,7 @@ _PHASE_DESCRIPTION_
 
 - `name`: _DELIVERABLE_NAME_
 - `depends_on`: _DELIVERABLE_DEPENDS_ON_
+- 個票の `入力`: _REGISTER_INPUT_
 - `overview`: _DELIVERABLE_OVERVIEW_
 - `path`: `_DELIVERABLE_PATH_`
 - `result`: `_RESULT_REF_`
@@ -34,11 +35,21 @@ _OWNER_ROLE_VIEWPOINTS_
 主な基準とする recipe（rulebook frontmatter から解決）: `_RECIPE_REF_`（`_MISSING_` の場合は「recipe が存在しない・内容が薄い場合」に従う）。
 
 1. recipe: 指定された recipe を読み込み、示された構成・問い・観点・深掘り手順に沿って成果物を組み立てる。
-2. recipe が答えを示さない箇所は、`depends_on` 成果物およびプロジェクトコンテキストとの整合で補う。参照してよい文書は、この plan に記載された recipe、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキストに限る。plan に列挙されていない他のプロジェクト文書を独自に探索・参照せず、判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
+2. recipe が答えを示さない箇所は、`depends_on` 成果物およびプロジェクトコンテキストとの整合で補う。参照してよい文書は、この plan に記載された recipe、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキスト、下記「実装エビデンスと未作成の依存」に列挙した読み取り専用の実装の根拠、個票の `入力` に限る。plan に列挙されていない他のプロジェクト文書・実装を独自に探索・参照せず、判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
 
-rulebook / sample / template は未成熟と判断されているため、存在しても構造・文体・粒度の必須基準としては扱わない。recipe の指示が他の文書と矛盾する場合は recipe を優先する。
+rulebook / sample / template は未成熟と判断されているため、存在しても構造・文体・粒度の必須基準としては扱わない。書き方について recipe の指示が他の文書と矛盾する場合は recipe を優先する。
 
 本タスクの実行に必要な recipe-guided の参照方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[specdojo:ryu-guide]] を参照する。
+
+### 実装エビデンスと未作成の依存
+
+次の参照は成果物カタログの `evidence_refs` から展開した読み取り専用の実装の根拠である。`targets`、変更許可範囲、commit 対象には含めない。
+
+_IMPLEMENTATION_EVIDENCE_
+
+実装エビデンスは現在動作の事実、recipe（この approach では rulebook を構造・文体の基準にしない）は書き方、`depends_on` と個票の `入力` は意図された仕様の根拠として使い分ける。食い違いは実装へ無条件に合わせず、承認根拠のある現在動作だけを反映し、未承認の乖離は意図された仕様を保持して result に記録する。実装から目的・業務判断・将来方針を推測しない。
+
+`depends_on` の「未作成」は参照できる本文がまだないことを示す。未作成の依存だけを理由に異常終了せず、存在する資料で進める。内容を推測で埋めず、必要な箇所は _TODO_ / _ASSUMPTION_ として、不足する根拠と次のアクションを残す。
 
 ### 4.1. recipe が存在しない・内容が薄い場合
 
@@ -73,7 +84,8 @@ _DONE_CRITERIA_GOALS_
 
 ## 7. 異常終了の条件
 
-- 依存未解決・対象ファイル不明・lint/test 未解消の場合は異常終了する（終了コード 1）。
+- 実行に必要なツール・パッケージの依存を解決できない、対象ファイルのパスが特定できない、または lint/test 未解消の場合は異常終了する（終了コード 1）。
+- 未作成の `depends_on` と `evidence_refs` の欠落だけでは異常終了しない。未作成の依存の内容は推測せず _TODO_ / _ASSUMPTION_ と次のアクションを残す。
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 

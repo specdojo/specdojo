@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: hard
   owner: DEV
@@ -21,7 +21,7 @@ specdojo:
 
 ## 1. 概要
 
-draft・fully-guided・recipe-guided の plan に、カタログの evidence_refs を読み取り専用の実装の根拠として載せる。まだない depends_on の成果物は未作成と示し、異常終了の理由にしない
+draft・fully-guided・recipe-guided の plan に、カタログの `evidence_refs` を読み取り専用の実装の根拠として載せる。まだない `depends_on` の成果物は未作成と示し、異常終了の理由にしない。
 
 ## 2. 入力
 
@@ -42,15 +42,22 @@ draft・fully-guided・recipe-guided の plan に、カタログの evidence_ref
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------ | ---- | ---- | ---- |
-| 1   | plan の生成で evidence_refs と未作成の依存を扱う       | DEV  | open | -    |
-| 2   | 3 つの edit のテンプレートの参照と異常終了の条件を直す | DEV  | open | -    |
-| 3   | テスト・ガイド・CHANGELOG を直し、検査を通す           | DEV  | open | -    |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                       |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------------- |
+| 1   | plan の生成で `evidence_refs` と未作成の依存を扱う     | DEV  | done | 対象の 3 approach の edit に限定                           |
+| 2   | 3 つの edit のテンプレートの参照と異常終了の条件を直す | DEV  | done | 根拠の責務と未作成時の仮置きを明記                         |
+| 3   | テスト・ガイド・CHANGELOG を直し、検査を通す           | DEV  | done | テスト追加済み。親の検証は executor 終了後に runner が実行 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `plans-generation.ts` で `draft`・`fully-guided`・`recipe-guided` の edit に実装エビデンスを展開し、`evidence_refs` 未指定・カタログなしでは「なし」と表示する。`plans-core.ts` は、この 3 approach から指定した場合だけ未作成の依存をインラインコードと「未作成」で示す。既存の依存は frontmatter の ID による wikilink を維持する。
+- 3 つの edit テンプレートに、実装の根拠を読み取り専用とし、`targets`・変更許可範囲・commit 対象へ含めないことを明記した。現在動作の事実は実装、書き方は rulebook、意図は `depends_on` と個票の `入力` で確認し、未承認の乖離は意図を保持して記録する。`recipe-guided` の書き方は既存方針に合わせて recipe を基準とし、rulebook を新たな必須基準にはしない。
+- 未作成の依存は止まる理由にせず、推測で補わず仮置きと次のアクションを残すことを、参照方針と異常終了条件の両方へ記載した。「依存未解決」は、実行に必要なツール・パッケージの依存を解決できない場合と具体化した。
+- `plan-implementation-evidence.test.ts` に、3 approach の実装の根拠あり・なし、カタログなしの register、既存／未作成／カタログで解決できない依存、プロダクト文書の ID、`targets` の不変を確認するテストを追加した。review と `condense`・`freeform` の参照範囲・表示を維持する回帰テストも追加し、これらのテンプレートは変更していない。
+- [[specdojo:ryu-guide|実践の進め方ガイド]]・[[specdojo:exec-operation-guide|exec運用ガイド]]・[[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] と CHANGELOG の Unreleased を更新した。公開済み版の節と保護された設定は変更していない。
+- 親 runner が型検査・TypeScript／Markdown などの lint・schema・単体／統合テストを executor 終了後に実行するため、sandbox 内では重複実行していない。結果は親の evidence を正とする。
+- executor では変更ファイルの Prettier 整形、`npm run validate:history-links`、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build` を実行し、すべて成功した。カタログ検査には、未作成文書の `based_on` を確認できない警告がある。変更した YAML 成果物はなく、ファイル単位の schema 検査は非適用。
+- 申し送り: 統合後は運用メモに従い、PJR-JSEY で今回の exec 変更の動作を確認する。result への記入と親検証は reporter／runner が担当する。
 
 ## 6. 関連ドキュメント
 
