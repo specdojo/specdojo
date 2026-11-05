@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-abbm-evidence-refs-quality
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-05T22:52:17Z"
+  completed_at: "2026-11-05T23:18:00Z"
+  conclusion: catalog validate が re-export だけの evidence_refs を警告し（prj-0001 で 64 件、全件 src/exec/exec.ts）、catalog-planning の手順と dct-rulebook に本体のファイルの確認を足した
   derived_from:
     - PJR-PSXJ
 ---
