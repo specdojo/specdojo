@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-km8c-stsd-sample-split-diagram
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T10:45:25Z"
+  completed_at: "2026-11-05T11:20:59Z"
+  conclusion: stsd-sample の状態遷移図を通常系と例外系の 2 図に分けた例にした
   derived_from:
     - PJR-3APD
     - PJR-00NY
