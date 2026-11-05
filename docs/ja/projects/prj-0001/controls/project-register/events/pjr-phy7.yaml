@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6274065ea07a412d91b3d10725103493
+  ts: "2026-11-05T10:45:49Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: rulebook の frontmatter の id の書き方（プロジェクト修飾の有無）を実物とそろえる
+    - field: description
+      from: ""
+      to: "stsd・cdfd・cdfd-uc・bps の rulebook は成果物の id を「プロジェクト修飾なし」と書くが、カタログから作る成果物は prj-0001: で修飾される。既存の成果物には修飾なしのものもある。どちらを正とするかを決め、rulebook と成果物をそろえる"
+    - field: input
+      from: ""
+      to: '["PJR-Q9AW の磨き込みで、stsd-rulebook の frontmatter の規則（id はプロジェクト修飾なしの `stsd-<term>`）と、scaffold が作った prj-0001:stsd-task-execution が食い違った。既存の stsd-register-entry は修飾なしの id を持つ（2026-11-05）","同じ「プロジェクト修飾なし」の書き方は cdfd・cdfd-uc・bps の rulebook にもある"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Q9AW","PJR-00NY"]'
