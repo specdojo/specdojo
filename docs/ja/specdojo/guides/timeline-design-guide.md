@@ -132,6 +132,7 @@ flowchart TD
 - 再判定時は既存の判定計画を無条件に置き換えず、差分をレビューしてから `--force` で更新します。
 - 判定後は `catalog scaffold --plan --dry-run --domain <domain>` で差分を確認し、問題がなければ `--plan` で生成します。物理分割 domain は同じ `domain` の全 template から分割 DCT をまとめて生成します。
 - 生成成功後は生成 DCT を確認・検証した後にカタログ作成の todo を close し、`timeline build` を再実行して `primary` の導出を確定します。
+- `catalog-planning` では、`evidence_refs` の参照先を読み、状態遷移・判定・検証の本体を含むファイルが参照にあるか確認します。re-export だけのファイルを根拠にせず、転送先をたどって不足する本体の参照を補い、`catalog validate` を再実行します。確認した本体のパス・判断根拠・未確認範囲を個票の対応結果と実行記録に残します。
 
 ### 3.3. Schedule strategy 生成への引き渡し
 

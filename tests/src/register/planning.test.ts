@@ -178,6 +178,8 @@ describe("planning approach plans", () => {
         expect(content).toContain("catalog plan scaffold");
         expect(content).toContain("--from <agent-output>.yaml");
         expect(content).toContain("--plan`");
+        expect(content).toContain("状態遷移・判定・検証の本体を含むファイルが参照にあるか確認する");
+        expect(content).toContain("re-export だけのファイルを根拠にせず");
         expect(content).toContain(
           "docs/ja/projects/prj-0001/catalog/plans/dct-plan-project-definition.yaml",
         );

@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { load } from "../shared/yaml.js";
 import type {
@@ -69,6 +69,30 @@ function readPracticeDocumentId(filePath: string): string | undefined {
 
 const DCT_INDEX_FILE = "dct-index.yaml";
 const DCT_INDEX_TEMPLATE = "dct-index-template.md";
+
+// Tokenize before matching so comments and spacing (including within named exports)
+// do not affect detection, and comment-like text inside strings stays intact.
+const exportIdentifier = String.raw`[$_\p{ID_Start}][$\u200c\u200d\p{ID_Continue}]*`;
+const exportString = String.raw`(?:"(?:[^"\\\r\n]|\\[^\r\n])*"|'(?:[^'\\\r\n]|\\[^\r\n])*')`;
+const exportTokens = new RegExp(
+  String.raw`//[^\r\n]*|/\*[\s\S]*?\*/|${exportString}|${exportIdentifier}|[^\s]`,
+  "gu",
+);
+const exportName = `(?:${exportIdentifier}|"")`;
+const exportSpecifier = `(?:type )?${exportName}(?: as ${exportName})?`;
+const exportClause = `(?:\\*(?: as ${exportIdentifier})?|\\{(?: ${exportSpecifier}(?: , ${exportSpecifier})*(?: ,)?)? \\})`;
+const reExportStatement = `export (?:type )?${exportClause} from ""(?: ;)?`;
+const reExportOnly = new RegExp(`^${reExportStatement}(?: ${reExportStatement})*$`, "u");
+
+function isReExportOnlyFile(filePath: string): boolean {
+  if (!/\.[cm]?[jt]sx?$/.test(filePath) || !statSync(filePath).isFile()) return false;
+  const tokens = readFileSync(filePath, "utf8").match(exportTokens) ?? [];
+  const normalized = tokens
+    .filter((token) => !token.startsWith("//") && !token.startsWith("/*"))
+    .map((token) => (token.startsWith('"') || token.startsWith("'") ? '""' : token))
+    .join(" ");
+  return reExportOnly.test(normalized);
+}
 
 export { buildMarkdown, isDctTemplateCatalog, renderCatalogTemplateBody };
 
@@ -609,6 +633,10 @@ export function validateDctDoc(
                 if (repoRoot && !existsSync(join(repoRoot, evidencePath))) {
                   errors.push(
                     `${filePath}: ${item.local_id}: evidence_refs path does not exist: ${evidencePath}`,
+                  );
+                } else if (repoRoot && isReExportOnlyFile(join(repoRoot, evidencePath))) {
+                  warnings.push(
+                    `${filePath}: ${item.local_id}: evidence_refs path contains only re-exports (re-export だけ): ${evidencePath}; reference the implementation body`,
                   );
                 }
                 if (typeof rawRef.purpose !== "string" || rawRef.purpose.trim().length === 0) {
