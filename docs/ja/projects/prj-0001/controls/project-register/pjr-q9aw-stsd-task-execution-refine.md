@@ -51,7 +51,17 @@ stsd の試行（3APD）の段 3。draft した stsd-task-execution を fully-gu
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: executor（sol）が [[stsd-task-execution]] を、stsd の rulebook・図の rulebook・recipe・sample と、実装の根拠（`src/exec/events.ts`・`src/exec/types.ts`）に沿って磨き込んだ（ae6cc5c2c）。H2V8 の後に `--force-restart` で流し直した。
+  - 実装にない終了の遷移 T-12・T-13 を除き、終了点を置かない理由（完了は差し戻せる、中止の後も記録は残る）を「概要」に書いた。
+  - draft の未決 3 件を実装で確かめた。`note`・`link`・`estimate` は状態を変えないため概要へ、依存の未充足への戻り（T-15）、依存のない初期の着手可能（T-14）、解放・差し戻しの後の分岐（T-16〜T-18）を足した。レガシーの `cancel` は互換の扱いとして概要へ移した。
+  - 図の rulebook の分割条件に従い、16 遷移を通常系と例外系の 2 図に分けた。
+  - 業務の承認の根拠を確かめられない 3 点（着手時のロールの照合の例外、再開時のアクターの照合、完了時の成果物の検証）は、実装との差と決定時期を検討メモに残した。未作成の bdd の 2 件は推測で補っていない。
+- Kata の判断材料（3APD の段 5 で使う。Kata は変えていない）:
+  - `stsd-rulebook` の「状態遷移図」と `stsd-mermaid-rulebook` は、終了点を省くときに「継続状態」で説明するが、差し戻せる完了や記録が残る中止のような境界の書き方がない。
+  - `stsd-mermaid-rulebook` の図の分割で、初期点を分割した各図に置くかが明示されていない。sample に分割の例がない。
+  - `stsd-rulebook` は frontmatter の `id` をプロジェクト修飾なしと説明するが、カタログから作る成果物は `prj-0001:stsd-task-execution` になる。
+- orchestrator の確認: 変わった成果物は対象の 1 件だけで、Kata は変わっていない。親の検証はすべて通った。executor の報告によれば、宣言された資料のほかに `AGENTS.md`・運用の playbook・`prj-overview` も読んでいるが、本文の根拠にはしていない。
+- 残課題: なし（condense は PJR-MC63）。
 
 ## 6. 関連ドキュメント
 
