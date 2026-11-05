@@ -50,3 +50,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-EAKN"]'
+- v: 1
+  id: reg_910932f731494a0aad20a39b950b5209
+  ts: "2026-11-05T11:10:29Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0aee5941b0c049d9baabc293f3d77f89
