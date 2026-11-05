@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_74445df6012e4a0599b77ebf586d270b
+  ts: "2026-11-05T10:44:16Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd の Kata は作り直さず手入れとする
+    - field: description
+      from: ""
+      to: 3APD の段 5。代表の 1 件（stsd-task-execution）を材料に、stsd の Kata を手入れするか作り直すかを決める
+    - field: input
+      from: ""
+      to: '["作り直しの目安（章立ての変更が半分を超える、図の表記を Mermaid から D2 へ変える、rulebook の規則の半分ほどが合わない）にどれも当たらない。最終版の章立ては template の 5 章と同じで、合わなかった点は 3 つ（PJR-Q9AW の対応結果）","状態遷移図は Mermaid の stateDiagram-v2 が合うため、D2 へ移さない","frontmatter の id の書き方（プロジェクト修飾の有無）は stsd に限らず cdfd・cdfd-uc・bps の rulebook にもあるため、stsd の手入れとは別の項目で扱う"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-MC63"]'
