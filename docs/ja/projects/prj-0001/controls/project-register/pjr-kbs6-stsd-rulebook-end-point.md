@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kbs6-stsd-rulebook-end-point
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-05T10:44:52Z"
+  completed_at: "2026-11-05T10:58:39Z"
+  conclusion: 終了点を置く場合と置かない場合の境界と、省くときの書き方を stsd-rulebook に足した
   derived_from:
     - PJR-3APD
     - PJR-00NY

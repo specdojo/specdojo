@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_96ad1b4e690a44159a6485938189a591
+- v: 1
+  id: reg_8d78cbc96d4f4c8680f9e7ec532fb901
+  ts: "2026-11-05T10:58:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 終了点を置く場合と置かない場合の境界と、省くときの書き方を stsd-rulebook に足した
+  previous_event_id: reg_173ba19e58d74d4ea845364234175873
