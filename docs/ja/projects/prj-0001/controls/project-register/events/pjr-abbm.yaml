@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-PSXJ"]'
+- v: 1
+  id: reg_ce9f71d147b9433aa7111ed20601065e
+  ts: "2026-11-05T22:59:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d151783c8d854c0e874a6a5bbc0ea927
