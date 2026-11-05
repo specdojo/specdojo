@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-vnt1-business-spec-opening-structure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-05T13:01:37Z"
+  completed_at: "2026-11-05T15:53:04Z"
+  conclusion: 業務仕様の冒頭は頭書き・目的・適用範囲に分ける。stsd は試行の中で直し、ほかの種類は各 epic で適用する。stsd の図の表示名は状態名`<br>`値
   derived_from:
     - PJR-3APD
 ---

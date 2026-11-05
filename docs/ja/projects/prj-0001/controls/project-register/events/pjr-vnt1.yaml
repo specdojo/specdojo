@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-3APD"]'
+- v: 1
+  id: reg_b2f5b619fdbd4fe496aa4361d8cd9144
+  ts: "2026-11-05T15:53:04Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: orchestrator の提案に利用者が案 A で回答した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: 業務仕様の冒頭は頭書き・目的・適用範囲に分ける。stsd は試行の中で直し、ほかの種類は各 epic で適用する。stsd の図の表示名は状態名`<br>`値
+  previous_event_id: reg_22f43663f67648e197eebec25b9ac5b1
