@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fc315303353b4ac5b42ab0f21b52f1f0
+- v: 1
+  id: reg_f13be84f391b41d29b8a8027cd7e2dea
+  ts: "2026-11-05T10:30:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・result で確かめた（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 冗長な 12 箇所を直し、意味を変えていないことを状態・遷移の数で確かめた
+  previous_event_id: reg_02f98e4bfe1b4f4c9dfd12b4fc6ffd19

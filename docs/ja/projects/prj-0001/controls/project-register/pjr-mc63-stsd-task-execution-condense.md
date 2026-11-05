@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-mc63-stsd-task-execution-condense
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-04T23:38:43Z"
+  completed_at: "2026-11-05T10:30:34Z"
+  conclusion: 冗長な 12 箇所を直し、意味を変えていないことを状態・遷移の数で確かめた
   derived_from:
     - PJR-3APD
   depends_on:
