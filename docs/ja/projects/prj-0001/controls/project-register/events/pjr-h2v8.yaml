@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f0abb1b4227b4d5490b1fb9d62f4005a
+  ts: "2026-11-05T03:42:22Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 書き足す edit の plan で実装の根拠を読めるようにし、未作成の依存で止めない
+    - field: description
+      from: ""
+      to: draft・fully-guided・recipe-guided の plan に、カタログの evidence\_refs を読み取り専用の実装の根拠として載せる。まだない depends\_on の成果物は未作成と示し、異常終了の理由にしない
+    - field: input
+      from: ""
+      to: '["stsd の試行で、fully-guided の executor が、まだない依存の成果物（bdd-exec-state・bdd-exec-event）を「依存未解決」とみなして止まった。同じ「依存未解決」の条件を持つ draft の executor は止まらず、解釈が executor によって分かれた（PJR-Q9AW、2026-11-05）","fully-guided の plan が読んでよい資料に実装（src/）は含まれず、カタログの `evidence_refs` を plan に載せるのは retrofit だけ（plans-generation.ts の `_IMPLEMENTATION_EVIDENCE_`）。業務仕様は現行の実装をもとに書く方針（2026-11-04）と合わない","利用者は案 B（`evidence_refs` を読める資料に加え、未作成の依存は仮置きにして止まらない）を選んだ（2026-11-05）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Q9AW","PJR-3APD"]'
