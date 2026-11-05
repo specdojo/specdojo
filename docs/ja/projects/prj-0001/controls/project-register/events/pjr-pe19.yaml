@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-VYSC"]'
+- v: 1
+  id: reg_f6f11f208c5e4c009e3e98e2bd0fbf0b
+  ts: "2026-11-05T23:18:43Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_71f839cf961f4d26acb1fe7d8b913788
