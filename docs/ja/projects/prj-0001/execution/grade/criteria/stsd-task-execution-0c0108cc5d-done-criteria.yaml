@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:stsd-task-execution-grade-criteria
+document: prj-0001:stsd-task-execution
+path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
+graded_at: "2026-11-05T15:38:54.032Z"
+graded_by: sol-review-executor
+content_hash: 1c5ff5b5b4e1e79f22dcfd10d16b3b6305698012ee37e49719d7366f4ae77d73
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      The declared AS-IS scope conflicts with retained role and resume requirements, and the assigned-actor authority
+      rule is not fully defined.
+  - id: DC-002
+    text: 状態遷移の業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      Business approval remains contingent on unresolved role exceptions, resume authority, dictionary agreement, and
+      completion-evidence responsibility in section 5.
+  - id: DC-003
+    text: 状態遷移実装の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      The authoritative actor-tracking and permission rules remain unresolved, preventing a consistent basis for
+      implementing the affected transitions.
+  - id: DC-004
+    text: 状態ベースのテスト設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: 状態管理実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: >-
+      State-management implementation still requires a defined actor-ownership lifecycle and a clear choice between
+      observed guards and retained business requirements.
