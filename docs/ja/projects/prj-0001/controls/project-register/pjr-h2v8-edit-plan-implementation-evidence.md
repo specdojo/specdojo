@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-h2v8-edit-plan-implementation-evidence
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-05T03:42:21Z"
+  completed_at: "2026-11-05T10:01:40Z"
+  conclusion: 書き足す edit の plan で実装の根拠を読めるようにし、未作成の依存を表示して止めないようにした
   derived_from:
     - PJR-Q9AW
     - PJR-3APD
