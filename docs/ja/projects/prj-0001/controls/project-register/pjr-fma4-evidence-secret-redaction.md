@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   registered_at: "2026-11-05T22:17:51Z"
+  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-fma4-20261105T235847Z-f10bb399-result.md:41:152 error MD038/no-space-i…"
   derived_from:
     - PJR-2WC2
 ---
