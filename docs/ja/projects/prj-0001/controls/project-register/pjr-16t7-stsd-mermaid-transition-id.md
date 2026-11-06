@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-16t7-stsd-mermaid-transition-id
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:13:40Z"
   due_on: null
+  completed_at: "2026-11-06T11:46:22Z"
+  conclusion: stsd-mermaid-rulebook の遷移ラベルを `T-<nn>` イベント / 条件 にし、分割図の規則と章への参照を新しい状態遷移の章に合わせた
   derived_from:
     - PJR-3APD
   depends_on:

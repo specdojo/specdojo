@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d759579321b04f7d9758afd4251f549d
+- v: 1
+  id: reg_ddae2cc964b249bab7b35ddf67ed0241
+  ts: "2026-11-06T11:46:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が差分と完了条件で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-mermaid-rulebook の遷移ラベルを `T-<nn>` イベント / 条件 にし、分割図の規則と章への参照を新しい状態遷移の章に合わせた
+  previous_event_id: reg_634380a9b7f54d0ab08b591b632f3624
