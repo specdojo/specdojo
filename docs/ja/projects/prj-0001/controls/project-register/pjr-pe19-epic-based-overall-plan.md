@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-pe19-epic-based-overall-plan
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-05T22:54:36Z"
+  completed_at: "2026-11-06T00:26:08Z"
+  conclusion: epic に domains を足し、dashboard の全体計画・strategy の範囲・カタログの検出・track の確認を epic へ移した。tml-index.yaml・timeline build・timeline_path は非推奨の警告付きで互換を維持
   derived_from:
     - PJR-VYSC
 ---
