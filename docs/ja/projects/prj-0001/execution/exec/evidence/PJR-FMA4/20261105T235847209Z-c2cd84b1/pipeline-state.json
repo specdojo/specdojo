@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-FMA4",
   "run_id": "20261105T235847209Z-c2cd84b1",
-  "updated_at": "2026-11-06T00:19:42.386Z",
+  "updated_at": "2026-11-06T00:23:59.980Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-fma4-20261105T235847Z-f10bb399-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 2,
       "started_at": "2026-11-06T00:19:42.386Z",
-      "completed_at": null,
+      "completed_at": "2026-11-06T00:23:59.980Z",
       "artifact_ref": null,
       "repos": {
         "project": {
