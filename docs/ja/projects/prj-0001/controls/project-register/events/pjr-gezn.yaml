@@ -60,3 +60,16 @@
       from: "-"
       to: 概念データフローを、全体概要（7 区分の 3 つの図）と系統別の詳細 3 文書（register・schedule・routine）に再編し、旧 7 文書を非推奨にした。Kata（全体概要・ユースケース別）も合わせて見直した
   previous_event_id: reg_5802c04a2f0e424b91cdda5cb91813d8
+- v: 1
+  id: reg_a47e6851d5ba420b8da84ab66fc89ce4
+  ts: "2026-11-06T10:58:28Z"
+  action: update
+  actor: SpecDojo
+  from_status: done
+  to_status: done
+  reason: fields updated
+  changes:
+    - field: start_on
+      from: "-"
+      to: "2026-11-01"
+  previous_event_id: reg_9d83057ae863463abe2619e686e0771c

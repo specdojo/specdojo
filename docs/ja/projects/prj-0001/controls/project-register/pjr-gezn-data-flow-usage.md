@@ -8,11 +8,13 @@ specdojo:
     - prj-0001:pjr-index
   item_type: epic
   track: data-flow-usage
-  domains: [data-flow]
+  domains:
+    - data-flow
   item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-11-01T10:23:16Z"
+  start_on: "2026-11-01"
   due_on: "2026-11-30"
   completed_at: "2026-11-03T12:52:43Z"
   conclusion: 概念データフローを、全体概要（7 区分の 3 つの図）と系統別の詳細 3 文書（register・schedule・routine）に再編し、旧 7 文書を非推奨にした。Kata（全体概要・ユースケース別）も合わせて見直した
