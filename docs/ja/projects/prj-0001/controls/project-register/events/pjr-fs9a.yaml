@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_52186bebe742402390f2e0bcf849e84f
+- v: 1
+  id: reg_209bd2703b8845a999625dc082384e2a
+  ts: "2026-11-06T12:30:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が差分と完了条件で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-rulebook の遷移 ID を、初回の確定前は図と表の順に振り直してよく、確定後は振り直さず欠番を残す規則にした
+  previous_event_id: reg_36fad96253ad4f8fa33b2c89e340f7b5
