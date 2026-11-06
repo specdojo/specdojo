@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_41465ffffbfc4a23b5f695f22c087cb1
+- v: 1
+  id: reg_2b3b0737d89e40a1b9b8db6ee89e897b
+  ts: "2026-11-06T11:32:44Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が差分と完了条件で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-rulebook を目的（状態の目的）・適用範囲・状態の判定・状態一覧・状態遷移（図の直下に遷移表）の章立てに直し、スコープは現行を既定とした
+  previous_event_id: reg_69b00e1f613b49a098393a14f812869b

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-s8ef-stsd-rulebook-review-structure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:13:12Z"
   due_on: null
+  completed_at: "2026-11-06T11:32:44Z"
+  conclusion: stsd-rulebook を目的（状態の目的）・適用範囲・状態の判定・状態一覧・状態遷移（図の直下に遷移表）の章立てに直し、スコープは現行を既定とした
   derived_from:
     - PJR-3APD
   approach: rulebook-maintenance
