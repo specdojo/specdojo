@@ -1,8 +1,15 @@
 import { existsSync, readdirSync } from "node:fs";
-import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
 import { loadPipelineResumeCheckpoint, type PipelineState } from "./pipeline-state.js";
-import { safeSlug } from "./shared.js";
+import {
+  legacyRecordDirectory,
+  legacyRecordPath,
+  recordStem,
+  resumeStatePaths,
+  runEvidencePath,
+  taskRecordPaths,
+} from "./run-records.js";
 
 // register 項目の executor/reporter pipeline を、途中で止まった段から再開するための run 特定と
 // 入力復元。途中で止まった run は worktree の未コミット成果と `pipeline-state.json` /
@@ -77,7 +84,7 @@ export function registerEvidenceDir(input: {
   taskId: string;
 }): string {
   const executionRel = relative(input.repoRoot, input.executionPath);
-  return join(input.worktreePath, executionRel, "exec", "evidence", safeSlug(input.taskId));
+  return dirname(taskRecordPaths(join(input.worktreePath, executionRel), input.taskId).directory);
 }
 
 // worktree に残っている run ディレクトリを読み、pipeline-state.json を持つものを候補にする。
@@ -89,16 +96,10 @@ export function loadRegisterResumeCandidates(input: {
   executionPath: string;
   taskId: string;
 }): RegisterResumeCandidate[] {
-  const evidenceDir = registerEvidenceDir(input);
-  if (!existsSync(evidenceDir)) return [];
-  const runIds = readdirSync(evidenceDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-
+  const executionPath = join(input.worktreePath, relative(input.repoRoot, input.executionPath));
   const candidates: RegisterResumeCandidate[] = [];
-  for (const runId of runIds) {
-    const statePath = join(evidenceDir, runId, "pipeline-state.json");
+  for (const statePath of resumeStatePaths(executionPath, input.taskId)) {
+    const runId = basename(dirname(statePath));
     if (!existsSync(statePath)) continue;
     const stateRef = relative(input.worktreePath, statePath).split(sep).join("/");
     const checkpoint = loadPipelineResumeCheckpoint({
@@ -118,9 +119,7 @@ export function loadRegisterResumeCandidates(input: {
         ? {
             evidenceRef:
               checkpoint.state.stages.executor.artifact_ref ??
-              relative(input.worktreePath, join(dirname(statePath), "evidence.json"))
-                .split(sep)
-                .join("/"),
+              relative(input.worktreePath, runEvidencePath(statePath)).split(sep).join("/"),
           }
         : {}),
     });
@@ -373,17 +372,17 @@ export function resolveRegisterResumeArtifacts(input: {
     ) {
       return null;
     }
-    const stem = artifacts.result_ref.replace(/^.*\//, "").replace(/-result\.md$/, "");
+    const stem = recordStem(artifacts.result_ref);
     return { planRef: artifacts.plan_ref, resultRef: artifacts.result_ref, stem };
   }
 
-  const resultsDir = join(input.worktreePath, executionRel, "exec", "results");
+  const resultsDir = legacyRecordDirectory(join(input.worktreePath, executionRel), "result");
   if (!existsSync(resultsDir)) return null;
   const stem = selectLatestRegisterResultStem(readdirSync(resultsDir), input.taskId);
   if (!stem) return null;
   return {
-    planRef: `${executionRel}/exec/plans/${stem}-plan.md`,
-    resultRef: `${executionRel}/exec/results/${stem}-result.md`,
+    planRef: legacyRecordPath(executionRel, "plan", stem),
+    resultRef: legacyRecordPath(executionRel, "result", stem),
     stem,
   };
 }

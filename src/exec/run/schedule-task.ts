@@ -1,14 +1,39 @@
 import { relative, resolve, sep } from "node:path";
 import { type ExecDefaultsConfig } from "../agent-config.js";
+import {
+  recordExecutorEvidence,
+  recordReporterFailureOutput,
+  writeExecutorEvidence,
+} from "../evidence.js";
 import { limitEventMeta, type AgentLimitSignal } from "../limit.js";
-import { type AgentStageRole } from "../types.js";
+import {
+  createPipelineState,
+  loadPipelineResumeCheckpoint,
+  pipelineStateLocation,
+  updatePipelineStage,
+  writePipelineState,
+  type PipelineState,
+} from "../pipeline-state.js";
+import {
+  commitProductWorktrees,
+  integrateTaskRepositories,
+  PROJECT_REPO_NAME,
+  projectMergeBlockers,
+  RepoIntegrationError,
+} from "../repo-integration.js";
+import {
+  deriveReporterFacts,
+  evidenceForReporter,
+  runReporterWithFormatRetry,
+} from "../reporter.js";
 import {
   readResultFrontmatterSnapshot,
   renderReporterResult,
   updateResultStatus,
 } from "../results.js";
-import { gitOutput } from "../worktree.js";
+import { recordPathForRead, snapshotRunAttempt } from "../run-records.js";
 import { withProductRepoPrompt } from "../task-repos.js";
+import { type AgentStageRole } from "../types.js";
 import {
   commitTargetPaths,
   commitWorktreeChanges,
@@ -20,32 +45,8 @@ import {
   WorktreeRemovedBranchDeletionError,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
-import {
-  commitProductWorktrees,
-  integrateTaskRepositories,
-  projectMergeBlockers,
-  PROJECT_REPO_NAME,
-  RepoIntegrationError,
-} from "../repo-integration.js";
-import {
-  recordExecutorEvidence,
-  recordReporterFailureOutput,
-  writeExecutorEvidence,
-} from "../evidence.js";
-import {
-  deriveReporterFacts,
-  evidenceForReporter,
-  runReporterWithFormatRetry,
-} from "../reporter.js";
-import {
-  createPipelineState,
-  loadPipelineResumeCheckpoint,
-  pipelineStateLocation,
-  updatePipelineStage,
-  writePipelineState,
-  type PipelineState,
-} from "../pipeline-state.js";
-import { type AsyncLock, type RateLimitRecoveryEvent, type RunResult } from "./shared.js";
+import { gitOutput } from "../worktree.js";
+import { refreshParentValidationsForReporterResume } from "./agent-pipeline.js";
 import {
   agentEnvironment,
   appendParentValidationsToExecutorEvidence,
@@ -55,12 +56,6 @@ import {
   resumedTargetCoverageFailure,
   runWithRetry,
 } from "./agent.js";
-import { refreshParentValidationsForReporterResume } from "./agent-pipeline.js";
-import {
-  downgradeUnfilledResult,
-  readCompletionPreflight,
-  type PreparedTask,
-} from "./schedule-prepare.js";
 import {
   commitSubject,
   integrateLogPath,
@@ -71,6 +66,12 @@ import {
   spawnBlock,
   spawnComplete,
 } from "./mode-shared.js";
+import {
+  downgradeUnfilledResult,
+  readCompletionPreflight,
+  type PreparedTask,
+} from "./schedule-prepare.js";
+import { type AsyncLock, type RateLimitRecoveryEvent, type RunResult } from "./shared.js";
 
 export async function runPreparedTask(
   prepared: PreparedTask,
@@ -218,6 +219,14 @@ export async function runPreparedTask(
       updatedAt: now,
       executorActor: prepared.agentCandidates[0]?.actor ?? prepared.actor,
       reporterActor: prepared.reporterCandidates?.[0]?.actor,
+      artifacts: {
+        plan_ref: relative(repoRoot, recordPathForRead(executionPath, "plan", prepared.task.id))
+          .split(sep)
+          .join("/"),
+        result_ref: worktreeResultPath
+          ? relative(prepared.worktree.path, worktreeResultPath).split(sep).join("/")
+          : "",
+      },
     });
     pipelineStatePath = location.path;
     pipelineStateRef = location.ref;
@@ -231,6 +240,7 @@ export async function runPreparedTask(
     pipelineState &&
     pipelineStatePath
   ) {
+    if (prepared.pipelineResumeStage === "executor") snapshotRunAttempt(pipelineStatePath);
     const executorStartedAt = new Date().toISOString();
     pipelineState = updatePipelineStage(
       pipelineState,

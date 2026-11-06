@@ -1,11 +1,13 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
-import { escapeMarkdownInline, expandTemplate, stripTerminalControlSequences } from "./shared.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "../docs/template-resolution.js";
+import { gitEnvironment } from "../shared/git-environment.js";
+import { dump } from "../shared/yaml.js";
+import type { ExecEvidence } from "./evidence.js";
 import { formatMarkdownFile } from "./format.js";
-import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./types.js";
 import {
   deriveReporterFacts,
   mechanicallyNotApplicableReason,
@@ -13,10 +15,17 @@ import {
   type ReporterOutput,
   type ReviewReporterOutput,
 } from "./reporter.js";
-import type { ExecEvidence } from "./evidence.js";
-import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "../docs/template-resolution.js";
-import { dump } from "../shared/yaml.js";
-import { gitEnvironment } from "../shared/git-environment.js";
+import {
+  isRunRecordPath,
+  listRunRecords,
+  recordPathForRead,
+  recordStem,
+  resolveRunPlanRef,
+  resultForPlan,
+  taskRecordPaths,
+} from "./run-records.js";
+import { escapeMarkdownInline, expandTemplate, stripTerminalControlSequences } from "./shared.js";
+import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./types.js";
 
 import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
 import { inlineCode } from "./plans-grade-findings.js";
@@ -182,7 +191,7 @@ function loadResultTemplate(
 // ---------------------------------------------------------------------------
 
 export function resultPathForTask(executionPath: string, nameBase: string): string {
-  return join(executionPath, "exec", "results", `${nameBase}-result.md`);
+  return recordPathForRead(executionPath, "result", nameBase);
 }
 
 // A unique-name run retains every attempt as a separate result. When a new result is scaffolded,
@@ -195,9 +204,7 @@ async function supersedePriorResults(
   supersededAt: string,
 ): Promise<string[]> {
   const supersededPaths: string[] = [];
-  for (const fileName of readdirSync(resultsDir).sort()) {
-    if (!fileName.endsWith("-result.md")) continue;
-    const candidatePath = join(resultsDir, fileName);
+  for (const candidatePath of listRunRecords(resultsDir, "result")) {
     if (candidatePath === nextResultPath) continue;
 
     let meta: Record<string, string>;
@@ -259,15 +266,18 @@ export async function scaffoldResult(opts: {
   if (approach === "condense" && (mode !== "edit" || opts.targets?.length !== 1)) {
     throw new Error("condense requires edit mode and exactly one target");
   }
-  const stem = opts.stem ?? taskId;
-  const resultPath = resultPathForTask(executionPath, stem);
+  const stem = opts.stem ?? (planRef && isRunRecordPath(planRef) ? recordStem(planRef) : taskId);
+  const resultPath =
+    planRef && isRunRecordPath(planRef)
+      ? resultForPlan(resolveRunPlanRef(executionPath, planRef))
+      : taskRecordPaths(executionPath, taskId, opts.runId ?? stem, opts.origin).result;
 
   // Idempotent: claim and exec run can both reach this; never clobber an in-progress result.
   if (existsSync(resultPath)) {
     return { resultPath, created: false, supersededPaths: [] };
   }
 
-  const resultsDir = join(executionPath, "exec", "results");
+  const resultsDir = dirname(resultPath);
   if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true });
 
   const template = loadResultTemplate(mode, approach, opts.execution);
@@ -311,7 +321,7 @@ export async function scaffoldResult(opts: {
 
   writeFileSync(resultPath, content, "utf8");
   await formatMarkdownFile(resultPath);
-  const supersededPaths = await supersedePriorResults(resultsDir, taskId, resultPath, startedAt);
+  const supersededPaths = await supersedePriorResults(executionPath, taskId, resultPath, startedAt);
   return { resultPath, created: true, supersededPaths };
 }
 

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-06T15:04:14Z"
   due_on: null
-  block_reason: "parent validation failed: lint-ts, test-integration, test-unit"
   derived_from:
     - PJR-VH8D
 ---
@@ -45,17 +44,18 @@ specdojo:
 
 | No  | 作業                                   | 担当 | 状態 | メモ                                                      |
 | --- | -------------------------------------- | ---- | ---- | --------------------------------------------------------- |
-| 1   | 置き場所のモジュールを作る             | DEV  | done | `src/exec/run-records.ts`                                 |
+| 1   | 置き場所のモジュールを作る             | DEV  | done | `src/shared/run-records.ts`                               |
 | 2   | 書き込みと読み取りをモジュールに通す   | DEV  | done | register・schedule・job・reporter・dashboard・commit 対象 |
 | 3   | 古い配置の読み取りを残し、テストを足す | DEV  | done | 単体テストと既存の再開・統合テストを更新                  |
 
 ## 5. 対応結果
 
-- `src/exec/run-records.ts` に新配置、旧配置の探索、run の特定、ログ、再開候補、commit 対象の接頭辞、dashboard のリンクを集約した。パスは `node:path` で組み立てる。
+- `src/shared/run-records.ts` に新配置、旧配置の探索、run の特定、ログ、再開候補、commit 対象の接頭辞、dashboard のリンクを集約した。パスは `node:path` で組み立てる。exec 側の `src/exec/run-records.ts` は再エクスポートのみとし、job から exec への依存を作らない。frontmatter の共通処理も共有層へ移し、従来の公開口は維持した。
 - plan 生成、register・schedule・job の実行、reporter、再開、worktree の commit・統合、dashboard、結果の探索を共通モジュールに接続した。`exec validate`・`exec refresh`・`exec status` の schedule・event 読み取りは従来のままであり、記録の配置の検査を追加する R3 は PJR-JT5J の範囲とした。
 - 新規の記録は run ごとに分け、plan・result の文書 ID の生成規則を保持した。旧配置は読み取りを残し、既存記録を移動していない。job の定義、job の状態管理用 JSON、`grade/results` はこの変更の対象外である。
 - 単体テストで 3 種類の出どころ、review の配置、長い ID、旧配置の読み取り、新規 plan・result の書き込み、worktree の state、再開時の退避、dashboard の行の区別を確認するケースを追加した。register・schedule の pipeline と再開の既存統合テストを新配置へ更新した。
-- 判断: register の executor からの再開は同一 run として扱う。前回の state・evidence・ログは同じディレクトリに `*.attempt-N.*` として退避し、plan・result と再開後のログが別の run ディレクトリに分かれることを防ぐ。review は元の項目の下の別 run にする。run ID は長さによる切り詰めをせず、末尾の乱数が失われることを防いだ。schedule の新規 run にも既存のユニークな stem の生成を使い、既存の文書 ID の生成関数へ渡すことで、過去 run と ID が重なることを避けた。
+- 判断: register・schedule の executor からの再開は同一 run として扱う。前回の state・evidence・ログは同じディレクトリに `*.attempt-N.*` として退避し、plan・result と再開後のログが別の run ディレクトリに分かれることを防ぐ。review は元の項目の下の別 run にする。run ID は長さによる切り詰めをせず、末尾の乱数が失われることを防いだ。schedule の新規 run にも既存のユニークな stem の生成を使い、既存の文書 ID の生成関数へ渡すことで、過去 run と ID が重なることを避けた。
+- 再開時の修正: root の plan・result を統合前に解放した後も、commit 対象は worktree 内の記録から解決する。旧配置の長いタスク ID は旧版の 80 文字制限で探索する。dashboard と result・job review のテストを新配置に合わせ、worktree 内の探索と長い旧 ID の回帰テストを追加した。
 - grep 確認: `src/` の TypeScript から `run-records.ts` を除き、`exec` と `plans`・`results`・`evidence` を並べる `join` / `resolve`、および旧パスを補間するテンプレート文字列を検索し、該当は 0 件だった。legacy の archive の配置も同モジュールへ集約した。
 - 検証: ビルド、変更ファイルの Prettier、履歴リンク検査、カタログ検査、register の派生一覧の生成、ステージ上の実行記録の秘密情報スキャンを実行した。カタログ検査の既存参照に関する警告以外は問題なし。主要 lint・型検査・単体／統合テスト・schema の全件検査は親 runner が実行する。
 - 保護設定の申し送り: `.prettierignore` の履歴保護へ `docs/ja/projects/**/execution/runs/**/plan.md` と `docs/ja/projects/**/execution/runs/**/result.md` を加える案とする。設定は変更していない。R3 の CI への追加と R4 のガイド照合、および既存記録とガイドの移行は後続項目で扱う。

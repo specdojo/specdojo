@@ -1,20 +1,19 @@
-import { gradeCheckpointPaths } from "./grade-checkpoint.js";
+import { type Command } from "commander";
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { join, resolve } from "node:path";
-import { type Command } from "commander";
+import { resolve } from "node:path";
 import {
-  acquireSchedulerLock,
-  foldEventsToState,
-  readAllEventFiles,
-  releaseSchedulerLock,
-} from "./events.js";
+  getProjectSchedulePath,
+  loadConfig,
+  resolveAgentMember,
+  specdojoRootDir,
+  type AgentProvider,
+} from "../shared/specdojo-config.js";
 import {
   hasMemberCommandSource,
   loadExecDefaultsConfig,
   resolveMemberCommand,
 } from "./agent-config.js";
-import { activateResolvedProjectPaths, resolveProjectPaths } from "./project.js";
 import {
   agentGitStateViolation,
   captureAgentGitStateAcrossRepos,
@@ -28,22 +27,19 @@ import {
   qualifiedRepoPaths,
 } from "./agent-protected-config.js";
 import {
+  acquireSchedulerLock,
+  foldEventsToState,
+  readAllEventFiles,
+  releaseSchedulerLock,
+} from "./events.js";
+import { gradeCheckpointPaths } from "./grade-checkpoint.js";
+import { generateSinglePlan } from "./plans.js";
+import { activateResolvedProjectPaths, resolveProjectPaths } from "./project.js";
+import {
   recordGitStateBlockAcrossRepos,
   recordProtectedConfigBlockAcrossRepos,
 } from "./protection-handoff.js";
-import {
-  configuredProductRepos,
-  missingProductWorktrees,
-  plannedProjectWorktreePath,
-  productBranchForTask,
-  pruneOrphanedProductExecBranches,
-  productRepoEnvironment,
-  withAgentExtraRoots,
-  withoutInheritedRepoEnvironment,
-  withProductRepoPrompt,
-  withProductWorktrees,
-} from "./task-repos.js";
-import { resolveAgentMember, type AgentProvider } from "../shared/specdojo-config.js";
+import { recordPathForRead, recordStem } from "./run-records.js";
 import {
   buildTaskPhaseMap,
   loadPrompt,
@@ -51,20 +47,22 @@ import {
   resolveTaskPhaseContext,
   selectCandidates,
 } from "./run/run.js";
-import { buildScheduleIndex } from "./schedule/schedule.js";
 import { buildInitialStateFromStrategy } from "./schedule/initial.js";
-import { generateSinglePlan } from "./plans.js";
+import { buildScheduleIndex } from "./schedule/schedule.js";
 import { qualifyTaskId } from "./shared.js";
-import { buildTaskView } from "./task-view.js";
 import {
-  findExecWorktree,
-  gitEnvironment,
-  gitOutput,
-  gitResult,
-  resolveWorktreeBase,
-  worktreeNameFromTaskId,
-  type ExecWorktree,
-} from "./worktree.js";
+  configuredProductRepos,
+  missingProductWorktrees,
+  plannedProjectWorktreePath,
+  productBranchForTask,
+  productRepoEnvironment,
+  pruneOrphanedProductExecBranches,
+  withAgentExtraRoots,
+  withoutInheritedRepoEnvironment,
+  withProductRepoPrompt,
+  withProductWorktrees,
+} from "./task-repos.js";
+import { buildTaskView } from "./task-view.js";
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
@@ -74,7 +72,15 @@ import {
   taskPaths,
   worktreeStatusPaths,
 } from "./worktree-ops.js";
-import { getProjectSchedulePath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import {
+  findExecWorktree,
+  gitEnvironment,
+  gitOutput,
+  gitResult,
+  resolveWorktreeBase,
+  worktreeNameFromTaskId,
+  type ExecWorktree,
+} from "./worktree.js";
 
 export { isCommitTargetPath, stabilizeCommitTargets } from "./worktree-ops.js";
 
@@ -299,8 +305,8 @@ async function prepare(opts: CommonOpts): Promise<void> {
       lockStaleMs: DEFAULT_LOCK_STALE_MS,
     });
     const lockedState = requireDoingTask(context.schedulePath, opts.task);
-    const planPath = join(context.executionPath, "exec", "plans", `${opts.task}-plan.md`);
-    const resultPath = join(context.executionPath, "exec", "results", `${opts.task}-result.md`);
+    const planPath = recordPathForRead(context.executionPath, "plan", opts.task!);
+    const resultPath = recordPathForRead(context.executionPath, "result", opts.task!);
 
     // Plans are generated on demand (exec refresh does not manage them). Generate
     // one if absent; keep an existing plan so a hand-edited plan is not clobbered.
@@ -313,6 +319,8 @@ async function prepare(opts: CommonOpts): Promise<void> {
         viewpointsPath: context.viewpointsPath,
         projectContext: context.projectContext,
         task: buildTaskView(context.schedulePath, context.executionPath, opts.task),
+        outPath: planPath,
+        stem: recordStem(planPath),
       });
     }
 
@@ -361,7 +369,7 @@ function status(opts: CommonOpts): void {
   }
   const worktree = withProductWorktrees(found, products, worktreeTaskId);
 
-  const { planRel, resultRel } = taskPaths(context, opts.task);
+  const { planRel, resultRel } = taskPaths(context, opts.task, worktree.path);
   const compareBase = gitOutput(context.repoRoot, ["merge-base", "HEAD", branch]).trim();
   const merged =
     gitResult(context.repoRoot, ["merge-base", "--is-ancestor", branch, "HEAD"]).status === 0;
@@ -436,7 +444,10 @@ async function agent(opts: AgentOpts): Promise<void> {
     child.once("close", (code) => resolveExit(code ?? 1));
   });
   // 保護機構が block した場合も、対象と提案差分を worktree 側 result の申し送りへ残す。
-  const worktreeResultPath = resolve(worktree.path, taskPaths(context, opts.task).resultRel);
+  const worktreeResultPath = resolve(
+    worktree.path,
+    taskPaths(context, opts.task, worktree.path).resultRel,
+  );
   const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
   if (protectedConfigChanges.length > 0) {
     const reason = agentProtectedConfigViolation(qualifiedRepoPaths(protectedConfigChanges));
@@ -485,8 +496,8 @@ function merge(opts: MergeOpts): void {
   // carries the commit). Release them so the merge can bring the committed versions in.
   const { claimEventPath } = taskExecutionState(context.schedulePath, opts.task);
   const releaseRootPaths = [
-    join(context.executionPath, "exec", "plans", `${opts.task}-plan.md`),
-    join(context.executionPath, "exec", "results", `${opts.task}-result.md`),
+    recordPathForRead(context.executionPath, "plan", opts.task!),
+    recordPathForRead(context.executionPath, "result", opts.task!),
     ...(claimEventPath ? [claimEventPath] : []),
     ...gradeCheckpointPaths(context),
   ];

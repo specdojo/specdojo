@@ -67,3 +67,19 @@
       from: "-"
       to: "parent validation failed: lint-ts, test-integration, test-unit"
   previous_event_id: reg_7203718b221947959a2e0a9b0a473f6c
+- v: 1
+  id: reg_4d640602e040400ea3aeb20147b205d5
+  ts: "2026-11-06T16:28:25Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_80839838cf864d0989e591c7819e0877

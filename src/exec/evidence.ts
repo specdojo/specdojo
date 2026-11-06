@@ -1,9 +1,10 @@
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
-import { gitOutput } from "./worktree.js";
-import type { AgentStageRole } from "./types.js";
+import { runLogPath, runnerRecordPrefixes, taskRecordPaths } from "./run-records.js";
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
+import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
+import type { AgentStageRole } from "./types.js";
+import { gitOutput } from "./worktree.js";
 
 import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
 
@@ -612,10 +613,8 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
 } {
   const executionRel = repoRelative(input.repoRoot, input.executionPath);
   const runnerManagedPrefixes = [
-    `${executionRel}/exec/plans/`,
-    `${executionRel}/exec/results/`,
+    ...runnerRecordPrefixes(executionRel),
     `${executionRel}/exec/events/`,
-    `${executionRel}/exec/evidence/`,
     `${executionRel}/generated/`,
   ];
   const productWorktrees = input.productWorktrees ?? [];
@@ -644,16 +643,10 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     .join("\n");
 
   const executionInWorktree = join(input.worktreePath, executionRel);
-  const evidenceDir = join(
-    executionInWorktree,
-    "exec",
-    "evidence",
-    safeSlug(input.taskId),
-    safeSlug(input.runId),
-  );
+  const evidenceDir = taskRecordPaths(executionInWorktree, input.taskId, input.runId).directory;
   ensureDir(evidenceDir);
-  const logPath = join(evidenceDir, "executor.log");
-  const evidencePath = join(evidenceDir, "evidence.json");
+  const evidencePath = taskRecordPaths(executionInWorktree, input.taskId, input.runId).evidence;
+  const logPath = runLogPath(evidencePath, "executor.log");
   const { evidence, logExcerpt } = buildExecutorEvidence({
     taskId: input.taskId,
     runId: input.runId,
@@ -684,10 +677,8 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
 } {
   const executionRel = repoRelative(input.repoRoot, input.executionPath);
   const runnerManagedPrefixes = [
-    `${executionRel}/exec/plans/`,
-    `${executionRel}/exec/results/`,
+    ...runnerRecordPrefixes(executionRel),
     `${executionRel}/exec/events/`,
-    `${executionRel}/exec/evidence/`,
     `${executionRel}/generated/`,
   ];
   const changes = parseStatusPaths(input.worktreePath)
@@ -698,18 +689,19 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
       status: boundedText(change.status, 40),
     }));
   const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
-  const evidenceDir = join(
-    input.worktreePath,
-    executionRel,
-    "exec",
-    "evidence",
-    safeSlug(input.taskId),
-    safeSlug(input.runId),
-  );
+  const evidenceDir = taskRecordPaths(
+    join(input.worktreePath, executionRel),
+    input.taskId,
+    input.runId,
+  ).directory;
   ensureDir(evidenceDir);
-  const stdoutPath = join(evidenceDir, "command.stdout.log");
-  const stderrPath = join(evidenceDir, "command.stderr.log");
-  const evidencePath = join(evidenceDir, "evidence.json");
+  const evidencePath = taskRecordPaths(
+    join(input.worktreePath, executionRel),
+    input.taskId,
+    input.runId,
+  ).evidence;
+  const stdoutPath = runLogPath(evidencePath, "command.stdout.log");
+  const stderrPath = runLogPath(evidencePath, "command.stderr.log");
   const boundedStdout = boundedLog(input.stdout);
   const boundedStderr = boundedLog(input.stderr);
   writeFileSync(stdoutPath, boundedStdout.content, "utf8");
@@ -816,8 +808,8 @@ export function recordParentValidationFailureOutput(
   const refs: ExecEvidence["log_refs"] = [];
 
   for (const output of input.failureOutputs) {
-    const logPath = join(
-      evidenceDir,
+    const logPath = runLogPath(
+      input.evidencePath,
       `parent-validation-attempt-${attempt}-${safeSlug(output.label)}.log`,
     );
     const content = redactSensitiveText(
@@ -867,7 +859,7 @@ export function recordReporterFailureOutput(input: RecordReporterFailureOutputIn
   input.invocationOutputs.forEach((output, index) => {
     const attempt = index + 1;
     for (const stream of ["stdout", "stderr"] as const) {
-      const logPath = join(evidenceDir, `reporter-attempt-${attempt}.${stream}.log`);
+      const logPath = runLogPath(input.evidencePath, `reporter-attempt-${attempt}.${stream}.log`);
       const boundedOutput = boundedLog(output[stream]);
       writeFileSync(logPath, boundedOutput.content, "utf8");
       reporterRefs.push({

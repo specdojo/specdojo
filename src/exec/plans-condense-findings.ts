@@ -2,18 +2,18 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { collectDocIndexEntries } from "../docs/doc-index.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { resolveKataRefs, type KataRefs } from "../kata/kata.js";
-import { isCondenseRecords } from "../shared/condense-records.js";
-import { listFilesRecursive } from "../shared/fs.js";
-import { load } from "../shared/yaml.js";
-import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
-import { inlineCode } from "./plans-grade-findings.js";
 import {
   isGeneratedGradeTarget,
   isTrashedGradeTarget,
   resolveSafeMarkdownPath,
   resolveSafeRepositoryPath,
 } from "../grade/targets.js";
+import { resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import { isCondenseRecords } from "../shared/condense-records.js";
+import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import { load } from "../shared/yaml.js";
+import { inlineCode } from "./plans-grade-findings.js";
+import { listRunRecords } from "./run-records.js";
 
 /** Latest completed condense result per deliverable, independent of grade freshness. */
 export function condenseKataFindingsText(
@@ -25,8 +25,7 @@ export function condenseKataFindingsText(
   const project = loadConfig(root).config?.projects[projectId];
   if (!project) return [];
   const latest = new Map<string, { meta: Record<string, unknown>; path: string; time: number }>();
-  const resultsDir = resolve(root, getProjectExecutionPath(project), "exec/results");
-  for (const path of listFilesRecursive(resultsDir).sort()) {
+  for (const path of listRunRecords(resolve(root, getProjectExecutionPath(project)), "result")) {
     if (!path.endsWith(".md")) continue;
     try {
       const meta = readSpecdojoNamespace(readFileSync(path, "utf8"));

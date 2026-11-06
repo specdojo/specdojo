@@ -1,7 +1,6 @@
-import { gradeCheckpointPaths } from "../grade-checkpoint.js";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { type Command } from "commander";
+import { existsSync } from "node:fs";
+import { specdojoRootDir, type AgentProvider } from "../../shared/specdojo-config.js";
 import {
   loadExecDefaultsConfig,
   providerSlotPoolPath,
@@ -9,36 +8,51 @@ import {
   resolveMaxConcurrentRuns,
   type ExecDefaultsConfig,
 } from "../agent-config.js";
-import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
 import {
   acquireSchedulerLock,
   buildEvent,
-  readAllEventFiles,
   foldEventsToState,
+  readAllEventFiles,
   releaseSchedulerLock,
   writeEventFile,
 } from "../events.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { selectDueDeferredLimitTasks } from "../limit.js";
-import { buildScheduleIndex } from "../schedule/schedule.js";
-import { buildInitialStateFromStrategy } from "../schedule/initial.js";
-import { qualifyTaskId } from "../shared.js";
-import { specdojoRootDir, type AgentProvider } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView, type CurrentState } from "../types.js";
-import { collectExecLockUsage, execLocksDir, formatExecLockUsage } from "./lock.js";
-import { buildTaskView } from "../task-view.js";
-import { readResultFrontmatterSnapshot, updateResultStatus } from "../results.js";
-import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
-import { configuredProductRepos, withProductWorktrees } from "../task-repos.js";
 import {
   parentValidationPoolPath,
   resolveParentValidationConcurrency,
 } from "../parent-validation.js";
 import { loadPipelineResumeCheckpoint } from "../pipeline-state.js";
+import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
 import {
   loadRegisterResumeCandidates,
   selectScheduleExecutorResume,
   type RegisterResumeTarget,
 } from "../register-resume.js";
+import { readResultFrontmatterSnapshot, updateResultStatus } from "../results.js";
+import { recordPathForRead } from "../run-records.js";
+import { buildInitialStateFromStrategy } from "../schedule/initial.js";
+import { buildScheduleIndex } from "../schedule/schedule.js";
+import { qualifyTaskId } from "../shared.js";
+import { configuredProductRepos, withProductWorktrees } from "../task-repos.js";
+import { buildTaskView } from "../task-view.js";
+import { type CurrentState, type ReadyTaskView } from "../types.js";
+import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
+import { loadRosterForExecutionPath, pathInsideWorktree } from "./agent.js";
+import { collectExecLockUsage, execLocksDir, formatExecLockUsage } from "./lock.js";
+import { spawnBlock, spawnIndexBuild, spawnRefresh, spawnValidate } from "./mode-shared.js";
+import {
+  rebuildStaleGeneratedTracksForCycle,
+  resolveClaimingActor,
+  runBatchMode,
+} from "./schedule-mode.js";
+import {
+  findClaimEventPath,
+  prepareSingleTask,
+  type PlanGenPaths,
+  type PreparedTask,
+} from "./schedule-prepare.js";
+import { runPreparedTask } from "./schedule-task.js";
 import {
   buildTaskPhaseMap,
   configuredWorktreeBase,
@@ -47,20 +61,6 @@ import {
   withProjectExecRunLock,
   type RunOpts,
 } from "./shared.js";
-import { loadRosterForExecutionPath, pathInsideWorktree } from "./agent.js";
-import {
-  type PlanGenPaths,
-  type PreparedTask,
-  findClaimEventPath,
-  prepareSingleTask,
-} from "./schedule-prepare.js";
-import { runPreparedTask } from "./schedule-task.js";
-import {
-  rebuildStaleGeneratedTracksForCycle,
-  resolveClaimingActor,
-  runBatchMode,
-} from "./schedule-mode.js";
-import { spawnBlock, spawnIndexBuild, spawnRefresh, spawnValidate } from "./mode-shared.js";
 
 // 同じ project の exec run が共有する枠（主 run・--join run・register lifecycle・provider の
 // max_concurrency・親検証）の上限と現在の使用数を表示する。ロックは取得しない。
@@ -362,7 +362,7 @@ export function prepareScheduleIntegrationResume(params: {
     );
   }
 
-  const resultPath = join(executionPath, "exec", "results", `${task.id}-result.md`);
+  const resultPath = recordPathForRead(executionPath, "result", task.id);
   const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
   if (!existsSync(resultPath) || !existsSync(worktreeResultPath)) {
     throw new Error(`result is missing for integration resume: ${task.id}-result.md`);
@@ -374,7 +374,7 @@ export function prepareScheduleIntegrationResume(params: {
     worktreePath: worktree.path,
   });
   const checkpointPaths = [
-    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+    recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     ...(claimEventPath ? [claimEventPath] : []),
     ...gradeCheckpointPaths({ repoRoot, executionPath }),
