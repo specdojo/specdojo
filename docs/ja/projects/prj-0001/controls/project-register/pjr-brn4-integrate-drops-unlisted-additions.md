@@ -67,8 +67,14 @@ PJR-XD12 の統合で、docs/ja/product/trash/ の 22 件の削除だけが comm
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 原因: register の許可外追加を commit 範囲から除外した後も統合と worktree 撤去を続けていた。既存ファイルの削除は許可されるため、未追跡の移動先だけが失われた。
+- 対応: register の commit 前と hook 後に許可外変更を検査し、残っていれば統合を停止する。プロダクトの commit より前にも検査し、撤去時にも保持を強制する。失敗は既存の waiting 遷移と統合段の再開へ接続し、`block_reason` に件数・先頭3件・`integrate.log` の場所を残す。停止理由だけ上限を拡張し、ログの場所と代表パスが通常の200文字制限で切れないようにした。最後の要約には `uncommitted=<件数>` を表示する。
+- 再開方法: 利用者の承認後、保持した worktree で移動元と移動先を明示して手動 commit し、統合先から `exec run --register <PJR-ID> --worktree --resume` する。既存の統合再開が使え、追加の自動許可オプションなしに承認したパスを Git 履歴で確認できるため、この方法を採った。手順は [[specdojo:exec-operation-guide|exec運用ガイド]] に記載した。
+- 回帰検証: 実 worktree で22件を新しい `archive/` へ移し、`links.json` と合わせた23件が未 commit のまま残り、統合先の原本を保持して waiting になるテストを追加した。同じテストで、承認を模した手動 commit 後の再開が両側を統合し、agent を再実行せず worktree を撤去することを確認する。許可外追加だけの停止、別 run の記録の保持、件数表示も既存テストへ反映した。型・lint・unit・integration の実行結果は親 runner の検証を正とする。
+- executor の検査: Prettier 整形、履歴リンク検査、登録簿の派生ビュー生成、カタログ検査は成功した。カタログには既存の参照先未作成・re-export だけの根拠パスなどの警告が残るが、エラーはない。
+- 申し送り: PJR-XD12 の消失済みファイルの復元は、本修正とは別に準備された `feature/prj-0001/restore-archived-trash` を利用者の承認後に反映する。runner 変更のため、統合後は運用メモに従い PJR-JSEY を新しいプロセスで実行してから close する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-operation-guide|exec運用ガイド]]
+- [[prj-0001:pm-orchestrator-playbook|prj-0001 のオーケストレーター運用メモ]]

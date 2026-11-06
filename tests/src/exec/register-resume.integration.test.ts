@@ -145,7 +145,7 @@ function buildTicket(): string {
 // reporter は失敗マーカーがある間だけ失敗するため、各再開段と保護機構の block を再現できる。
 function fakeAgentScript(markerPath: string, protectedWriteMarkerPath: string): string {
   return `
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
 
 function arg(name) {
   const index = process.argv.indexOf("--" + name);
@@ -158,6 +158,13 @@ const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
   writeFileSync(${JSON.stringify(ARTIFACT_NAME)}, "# executor artifact\\n", "utf8");
+  if (existsSync("docs/move-sources")) {
+    mkdirSync("archive/ja/product/trash", { recursive: true });
+    for (const name of readdirSync("docs/move-sources")) {
+      renameSync("docs/move-sources/" + name, "archive/ja/product/trash/" + name);
+    }
+    writeFileSync("archive/ja/product/trash/links.json", "{}\\n");
+  }
   if (existsSync(${JSON.stringify(protectedWriteMarkerPath)})) {
     const membersPath = ".specdojo/agent-members.yaml";
     const members = readFileSync(membersPath, "utf8");
@@ -441,6 +448,105 @@ afterEach(() => {
 });
 
 describe("exec run --register --worktree --resume", () => {
+  it(
+    "retains an untracked archive move and resumes after the human commits both sides",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const source = "docs/move-sources";
+        const destination = "archive/ja/product/trash";
+        mkdirSync(join(root, source), { recursive: true });
+        const names = Array.from(
+          { length: 22 },
+          (_, index) => `note-${String(index).padStart(2, "0")}.md`,
+        );
+        for (const name of names) writeFileSync(join(root, source, name), `# ${name}\n`);
+        git(root, "add", source);
+        git(root, "commit", "-m", "fixture: documents to archive");
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const ticket = readFileSync(join(root, TICKET_REL), "utf8");
+        expect(ticket).toContain("item_status: waiting");
+        expect(ticket).toContain("block_reason:");
+        expect(ticket).toContain("uncommitted=23");
+        expect(ticket).toContain(`${destination}/links.json`);
+        const runId = readdirSync(join(worktreePath, EXECUTION_REL, "runs/register/PJR-CD34"))[0];
+        const runRel = `${EXECUTION_REL}/runs/register/PJR-CD34/${runId}`;
+        expect(ticket).toContain(`${runRel}/integrate.log`);
+        const statePath = join(worktreePath, runRel, "pipeline-state.json");
+        const state = JSON.parse(readFileSync(statePath, "utf8"));
+        expect(state.stages.integrate.status).toBe("failed");
+        expect(state.stages.executor.attempts).toBe(1);
+        expect(state.stages.reporter.attempts).toBe(1);
+        const log = readFileSync(join(worktreePath, runRel, "integrate.log"), "utf8");
+        for (const name of names) {
+          expect(log).toContain(`${destination}/${name}`);
+          expect(readFileSync(join(root, source, name), "utf8")).toBe(`# ${name}\n`);
+          expect(readFileSync(join(worktreePath, destination, name), "utf8")).toBe(`# ${name}\n`);
+        }
+        const status = git(worktreePath, "status", "--porcelain", "-uall");
+        expect(status).toContain(` D ${source}/${names[1]}`);
+        expect(status).toContain(`?? ${destination}/${names[0]}`);
+        expect(stdout.join("")).toMatch(
+          /PJR-CD34\s+failure\s+transition=waiting\s+commit=incomplete\s+uncommitted=23/,
+        );
+
+        // Simulate explicit human approval: commit only the reviewed move and links, then resume.
+        git(worktreePath, "add", "-A", "--", source, destination);
+        git(worktreePath, "commit", "-m", "archive documents approved by human");
+        stdout.length = 0;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(worktreePathFor(root)).toBeNull();
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        for (const name of names) {
+          expect(existsSync(join(root, source, name))).toBe(false);
+          expect(readFileSync(join(root, destination, name), "utf8")).toBe(`# ${name}\n`);
+        }
+        expect(git(root, "ls-tree", "-r", "--name-only", "HEAD")).toContain(
+          `${destination}/links.json`,
+        );
+        const resumed = JSON.parse(readFileSync(join(root, runRel, "pipeline-state.json"), "utf8"));
+        expect(resumed.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
+        expect(resumed.stages.executor.attempts).toBe(1);
+        expect(resumed.stages.reporter.attempts).toBe(1);
+        expect(stdout.join("")).not.toContain("uncommitted=");
+      });
+    },
+  );
+
   it(
     "resumes only the reporter stage and completes the item without re-running the executor",
     { timeout: 120_000 },

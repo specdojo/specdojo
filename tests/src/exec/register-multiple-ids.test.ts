@@ -170,6 +170,7 @@ describe("formatRegisterRunSummary", () => {
         outcome: "failure",
         transition: "waiting",
         commit: "incomplete",
+        uncommittedFiles: 23,
         reason: "register commit incomplete: target remained dirty",
       },
     ];
@@ -182,7 +183,7 @@ describe("formatRegisterRunSummary", () => {
         "  PJR-0001  success  transition=review  commit=committed abc1234",
         "  PJR-0002  failure  transition=waiting  commit=off  reason=agent exited with non-zero code (exit 1)",
         "  PJR-0003  skipped  transition=none  commit=skipped  reason=stopped after an earlier failure (--on-failure stop)",
-        "  PJR-0004  failure  transition=waiting  commit=incomplete  reason=register commit incomplete: target remained dirty",
+        "  PJR-0004  failure  transition=waiting  commit=incomplete  uncommitted=23  reason=register commit incomplete: target remained dirty",
       ].join("\n"),
     );
   });

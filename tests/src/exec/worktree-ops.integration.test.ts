@@ -33,6 +33,7 @@ import {
   selectStageablePaths,
   worktreeStatusPaths,
   WorktreeRemovedBranchDeletionError,
+  UncommittedRegisterChangesError,
   type WorktreeOpsContext,
 } from "../../../src/exec/worktree-ops.js";
 import {
@@ -1410,6 +1411,16 @@ describe("exec worktree ops", () => {
       writeFile(join(worktree.path, otherTask), "other task\n");
       const scopeLogPath = join(worktree.path, legacy, "integrate.log");
       const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      expect(() =>
+        commitWorktreeChanges({ context: fixture.context, worktree, taskId: stem, scopeLogPath }),
+      ).toThrow(UncommittedRegisterChangesError);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(other);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(otherTask);
+      expect(stdout.mock.calls.map(([message]) => String(message)).join("")).toContain(other);
+      expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain(other);
+      // Another run's records must be reviewed before this run can be integrated.
+      rmSync(join(worktree.path, `execution/runs/register/${taskId}/run-2`), { recursive: true });
+      rmSync(join(worktree.path, "execution/runs/register/PJR-9999"), { recursive: true });
       const committed = commitWorktreeChanges({
         context: fixture.context,
         worktree,
@@ -1423,14 +1434,10 @@ describe("exec worktree ops", () => {
       }
       expect(committed.targets).not.toContain(other);
       expect(committed.targets).not.toContain(otherTask);
-      expect(readFileSync(scopeLogPath, "utf8")).toContain(other);
-      expect(readFileSync(scopeLogPath, "utf8")).toContain(otherTask);
-      expect(stdout.mock.calls.map(([message]) => String(message)).join("")).toContain(other);
-      expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain(other);
     },
   );
 
-  it("leaves agent scratch files outside known deliverable directories uncommitted for a register task", () => {
+  it("blocks register commits until non-target additions are reviewed", () => {
     const fixture = setupRepository();
     const taskId = "PJR-0142";
     writeFile(join(fixture.repo, "custom", "kept.md"), "# tracked custom dir\n");
@@ -1459,6 +1466,22 @@ describe("exec worktree ops", () => {
       "integrate.log",
     );
 
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    expect(() =>
+      commitWorktreeChanges({
+        context: fixture.context,
+        worktree,
+        taskId,
+        scopeLogPath,
+      }),
+    ).toThrow(/uncommitted=1;.*scratch\/patch.js/);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("?? scratch/patch.js");
+    expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
+      UncommittedRegisterChangesError,
+    );
+    expect(existsSync(worktree.path)).toBe(true);
+    rmSync(join(worktree.path, "scratch"), { recursive: true });
     const committed = commitWorktreeChanges({
       context: fixture.context,
       worktree,
@@ -1470,13 +1493,14 @@ describe("exec worktree ops", () => {
     expect([...committed.targets].sort()).toEqual([
       "custom/added.md",
       "docs/a.md",
+      `execution/exec/evidence/${taskId}/integrate.log`,
       `execution/exec/evidence/${taskId}/run-1/integrate.log`,
       // 最上位に追加したファイルを result の申し送りへ記録するため、result も commit 対象になる。
       `execution/exec/results/${taskId}-result.md`,
       "modify.py",
     ]);
     const log = readFileSync(scopeLogPath, "utf8");
-    expect(log).toContain("commit-scope: skipped non-target changes (left in worktree):");
+    expect(log).toContain("commit-scope: integration blocked;");
     expect(log).toContain("  scratch/patch.js");
     expect(log).toContain("最上位に追加したファイル:");
     expect(log).toContain("  modify.py");
@@ -1487,7 +1511,6 @@ describe("exec worktree ops", () => {
       "test-schema.yaml",
     );
     expect(git(worktree.path, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
-      "?? scratch/patch.js",
       "?? tmp/test-schema.yaml",
     ]);
 

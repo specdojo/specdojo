@@ -584,6 +584,45 @@ export function commitTargetPaths(
   return partitionCommitTargets(context, worktree, taskId, options).targets;
 }
 
+export class UncommittedRegisterChangesError extends Error {
+  constructor(
+    readonly files: readonly string[],
+    logPath: string,
+  ) {
+    const sample = files.slice(0, 3).join(", ");
+    super(
+      `uncommitted=${files.length}; log=${logPath}; files=${sample}${files.length > 3 ? ", …" : ""}`,
+    );
+    this.name = "UncommittedRegisterChangesError";
+  }
+}
+
+// Register integration must retain every non-target change for human review. In particular,
+// committing a deletion while dropping an untracked move destination loses the deliverable.
+export function assertRegisterCommitScope(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+  options: { allowEditedPlan?: boolean; scopeLogPath?: string; dryRun?: boolean } = {},
+): void {
+  if (!isRegisterOriginTask(context, worktree, taskId)) return;
+  const { outOfScope } = partitionCommitTargets(context, worktree, taskId, options);
+  if (outOfScope.length === 0) return;
+  const { executionRel } = taskPaths(context, taskId, worktree.path);
+  const logPath =
+    options.scopeLogPath ??
+    resolve(worktree.path, executionRel, "exec/evidence", taskId, "integrate.log");
+  const warning =
+    `commit-scope: integration blocked; ${outOfScope.length} non-target changes (worktree kept):\n` +
+    `${outOfScope.map((path) => `  ${path}`).join("\n")}\n`;
+  process.stdout.write(warning);
+  if (!options.dryRun) {
+    mkdirSync(resolve(logPath, ".."), { recursive: true });
+    appendFileSync(logPath, warning, "utf8");
+  }
+  throw new UncommittedRegisterChangesError(outOfScope, repoRelative(worktree.path, logPath));
+}
+
 // markdownlint-cli の終了コード。1 だけが記法違反を表し、それ以外は実行環境の問題である。
 const MARKDOWNLINT_EXIT_LINT_ERRORS = 1;
 
@@ -801,7 +840,7 @@ export function recordRootNewFilesHandoff(
 
 // Commit the task result and deliverable changes inside the worktree onto its exec branch.
 // The commit is limited to the mode-based allowlist (resolveCommitScope); out-of-scope
-// changes stay uncommitted in the worktree and are reported. Excludes plans, events,
+// changes block register commits; other modes leave them uncommitted and report them. Excludes plans, events,
 // generated files, and other tasks' results (see isCommitTargetPath).
 export function commitWorktreeChanges(params: {
   context: WorktreeOpsContext;
@@ -824,6 +863,7 @@ export function commitWorktreeChanges(params: {
   const { context, worktree, taskId, allowEditedPlan } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
   if (!params.productsIntegratedByCaller) assertNoPendingProductChanges(worktree);
+  assertRegisterCommitScope(context, worktree, taskId, params);
   let partition = partitionCommitTargets(context, worktree, taskId, { allowEditedPlan });
   const scopeWarnings = [
     ...partition.unresolvedTargets.map(
@@ -922,5 +962,6 @@ export function commitWorktreeChanges(params: {
     undefined,
     params.failureLogPath,
   );
+  assertRegisterCommitScope(context, worktree, taskId, params);
   return { targets: paths, committed: true };
 }

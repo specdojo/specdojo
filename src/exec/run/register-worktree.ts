@@ -46,6 +46,7 @@ import {
 } from "../task-repos.js";
 import {
   checkpointAndEnsureWorktree,
+  assertRegisterCommitScope,
   commitTargetPaths,
   commitWorktreeChanges,
   discardStaleExecWorktree,
@@ -54,6 +55,7 @@ import {
   removeWorktree,
   taskTargetsAtHead,
   WorktreeRemovedBranchDeletionError,
+  UncommittedRegisterChangesError,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
 import {
@@ -201,7 +203,7 @@ export async function finalizeRegisterWorktreeRun(params: {
   const worktreeTicketPath = ticketPath
     ? pathInsideWorktree(repoRoot, worktree.path, ticketPath)
     : null;
-  const waitSummary = (reason: string): RegisterItemSummary =>
+  const waitSummary = (reason: string, reasonMaxLength?: number): RegisterItemSummary =>
     registerWaitSummary({
       repoRoot,
       projectId,
@@ -209,6 +211,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       item,
       ticketPath,
       reason,
+      reasonMaxLength,
       actor,
       worktree,
       bookkeepingPaths: params.bookkeepingPaths,
@@ -250,6 +253,15 @@ export async function finalizeRegisterWorktreeRun(params: {
 
   const completedAt = new Date().toISOString();
   const worktreeResultPath = params.worktreeResultPath;
+  const scopeLogPath =
+    integrateLogPath(params.pipelineStatePath) ??
+    resolve(
+      worktree.path,
+      repoRelativePath(repoRoot, executionPath),
+      "exec/evidence",
+      stem,
+      "integrate.log",
+    );
   const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
     agentResult,
     worktreeResultPath,
@@ -268,6 +280,7 @@ export async function finalizeRegisterWorktreeRun(params: {
     ) {
       const { baseCommit, outputCommit } = integratedRegisterCommitRange(repoRoot, worktree.branch);
       try {
+        assertRegisterCommitScope(wtContext, worktree, stem, { scopeLogPath });
         const lifecyclePaths = new Set(
           [worktreeResultPath, params.pipelineStatePath]
             .filter((path): path is string => !!path)
@@ -298,6 +311,7 @@ export async function finalizeRegisterWorktreeRun(params: {
         } else {
           const reason = sanitizeRegisterConclusion(
             `integrate cleanup failed: ${error instanceof Error ? error.message : String(error)}`,
+            error instanceof UncommittedRegisterChangesError ? 4000 : undefined,
           );
           const integrateFailedAt = new Date().toISOString();
           recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
@@ -312,6 +326,9 @@ export async function finalizeRegisterWorktreeRun(params: {
             transition: "review",
             commit: "incomplete",
             reason,
+            ...(error instanceof UncommittedRegisterChangesError
+              ? { uncommittedFiles: error.files.length }
+              : {}),
           };
         }
       }
@@ -363,11 +380,15 @@ export async function finalizeRegisterWorktreeRun(params: {
     try {
       const productNames = (worktree.repos ?? []).map((product) => product.name);
       try {
+        assertRegisterCommitScope(wtContext, worktree, stem, {
+          scopeLogPath,
+          allowEditedPlan: params.resumedExecutor === true,
+        });
         const productOutcomes = commitProductWorktrees({
           worktree,
           message: (product) => productMessage(product, "commit"),
           targets: taskTargetsAtHead(wtContext, worktree, stem),
-          scopeLogPath: integrateLogPath(params.pipelineStatePath),
+          scopeLogPath,
           failureLogPath: integrateLogPath(params.pipelineStatePath),
           resultPath: worktreeResultPath,
         });
@@ -379,7 +400,7 @@ export async function finalizeRegisterWorktreeRun(params: {
           worktree,
           taskId: stem,
           message: subject,
-          scopeLogPath: integrateLogPath(params.pipelineStatePath),
+          scopeLogPath,
           failureLogPath: integrateLogPath(params.pipelineStatePath),
           productsIntegratedByCaller: true,
           productRootNewFiles,
@@ -393,6 +414,7 @@ export async function finalizeRegisterWorktreeRun(params: {
           status: "failed",
           error: message,
         });
+        if (error instanceof UncommittedRegisterChangesError) throw error;
         throw new RepoIntegrationError({
           repo,
           cause: message,
@@ -501,6 +523,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       } else {
         const reason = sanitizeRegisterConclusion(
           `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
+          error instanceof UncommittedRegisterChangesError ? 4000 : undefined,
         );
         const integrateFailedAt = new Date().toISOString();
         recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
@@ -521,12 +544,20 @@ export async function finalizeRegisterWorktreeRun(params: {
             transition: "review",
             commit: "incomplete",
             reason,
+            ...(error instanceof UncommittedRegisterChangesError
+              ? { uncommittedFiles: error.files.length }
+              : {}),
           };
         }
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
         process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
-        const summary = waitSummary(reason);
-        return { ...summary, commit: "incomplete" };
+        const scopeError = error instanceof UncommittedRegisterChangesError;
+        const summary = waitSummary(reason, scopeError ? 4000 : undefined);
+        return {
+          ...summary,
+          commit: "incomplete",
+          ...(scopeError ? { uncommittedFiles: error.files.length } : {}),
+        };
       }
     }
 

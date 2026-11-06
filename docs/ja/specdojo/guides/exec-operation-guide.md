@@ -530,6 +530,25 @@ reporter 段の再開の入力は、`pipeline-state.json`（stage 状態と plan
 
 統合段の再開は、executor と reporter が成功したまま commit・merge・worktree 撤去のいずれかが失敗した run が対象です。worktree は統合が完了したときにだけ撤去されるため、reporter 成功済みの worktree が残っていること自体が統合の未完了を意味します。この再開では agent を1つも起動せず、worktree に残っている成果物と記入済み result をそのまま統合します。前回の試行で merge まで完了していた場合は、取り込み済みの exec ブランチを再 merge せずに残りの手順（worktree 撤去と `register review`）だけを進めます。再開の開始時に項目は `in-progress` へ戻り、成功なら `review`、失敗なら `waiting` へ遷移するため、再試行の成否は登録簿の状態とイベントに残ります。統合段の進捗（開始と失敗）は `pipeline-state.json` の `integrate` にも記録します。
 
+register の統合で許可外の追加など commit 対象外の変更が見つかると、成果物の commit・merge を止め、項目を `waiting` にして worktree を保持します。`block_reason` に未 commit の件数・先頭3件のパス・worktree 内の `integrate.log` の場所、run の最後の要約に `uncommitted=<件数>` を表示します。ログには全対象パスが残ります。移動元の削除が許可内でも、移動先が許可外なら同じ扱いです。
+
+新しい最上位ディレクトリへの移動など必要な変更の場合は、ログと差分を確認し、利用者の承認後に保持した worktree で対象パスを明示して commit します。次は `docs/ja/product/trash/` から `archive/ja/product/trash/` への移動の例です。`<worktree-path>` は停止時に表示された場所に置き換えます。
+
+```bash
+git -C <worktree-path> status --short --untracked-files=all
+git -C <worktree-path> diff -- docs/ja/product/trash/
+# 移動先の内容と links.json も確認し、利用者の承認を得てから実行する
+git -C <worktree-path> add -A -- docs/ja/product/trash/ archive/ja/product/trash/
+git -C <worktree-path> diff --cached --stat
+git -C <worktree-path> commit -m "Archive documents approved by user"
+```
+
+その後、統合先の worktree から次を実行します。executor と reporter を再実行せず、手動 commit と残りの成果物を統合します。不要な一時ファイルだった場合は worktree 内で対象だけを除去してから同じコマンドで再開します。新しいディレクトリの自動許可や `--force-restart` による破棄は必要ありません。
+
+```bash
+specdojo exec run --project <project-id> --register <PJR-ID> --worktree --resume
+```
+
 `specdojo.config.json` の project に `repos` を宣言している場合、統合段は宣言順のプロダクトリポジトリ、最後にプロジェクトリポジトリの順で統合し、リポジトリ別の状態（`pending` / `merged` / `unchanged` / `failed`）を `pipeline-state.json` の `integrate.repos` に記録します。途中で失敗すると、統合済みのリポジトリはそのまま残し、項目を `waiting` へ戻して全リポジトリの worktree を保持します。統合段の再開では、統合先へ取り込み済みのプロダクトを merge し直さず、失敗したリポジトリから統合を続けます。統合の順序と部分状態の詳細は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの統合の失敗と再開」を参照してください。
 
 再開できるかどうかは、対象 worktree の最新 run だけで判定します。次の場合は worktree・exec ブランチ・未コミットの成果を一切変更せず、理由を出力して終了コード 1 で終わります。

@@ -185,6 +185,7 @@ export type RegisterItemSummary = {
   transition: RegisterItemTransition;
   commit: string;
   reason?: string;
+  uncommittedFiles?: number;
 };
 
 // 全ID処理後にID別の成否・状態遷移・commit結果・理由を一覧表示するための整形。
@@ -197,6 +198,7 @@ export function formatRegisterRunSummary(summaries: readonly RegisterItemSummary
       `transition=${summary.transition}`,
       `commit=${summary.commit}`,
     ];
+    if (summary.uncommittedFiles) parts.push(`uncommitted=${summary.uncommittedFiles}`);
     if (summary.reason) parts.push(`reason=${summary.reason}`);
     lines.push(parts.join("  "));
   }
@@ -336,15 +338,16 @@ export function ticketPathFromItem(item: PjrItem, projectRegisterPath: string): 
 // セル内の `|` と改行は表を壊すため置換し、読みやすさのため長さも制限する。
 const MAX_CONCLUSION_LENGTH = 200;
 
-export function sanitizeRegisterConclusion(reason: string): string {
+export function sanitizeRegisterConclusion(
+  reason: string,
+  maxLength = MAX_CONCLUSION_LENGTH,
+): string {
   const singleLine = stripTerminalControlSequences(reason)
     .replace(/\r?\n/g, " ")
     .replace(/\|/g, "/")
     .trim();
   const truncated =
-    singleLine.length <= MAX_CONCLUSION_LENGTH
-      ? singleLine
-      : `${singleLine.slice(0, MAX_CONCLUSION_LENGTH)}…`;
+    singleLine.length <= maxLength ? singleLine : `${singleLine.slice(0, maxLength)}…`;
   return inlineCodeAnglePlaceholders(truncated);
 }
 
