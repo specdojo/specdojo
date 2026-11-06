@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-jwgn-stsd-routine-run-review-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:16:29Z"
   due_on: null
+  completed_at: "2026-11-06T14:07:26Z"
+  conclusion: stsd-routine-run を新しい Kata に合わせ、状態の判定の章・図ごとの直下の表・`T-<nn>` 入りのラベルにし、遷移 ID を T-01〜T-11 に振り直した
   derived_from:
     - PJR-3APD
   depends_on:
