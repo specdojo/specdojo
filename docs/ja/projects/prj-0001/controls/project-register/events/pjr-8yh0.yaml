@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b9fff3e52c3d4498b1ae2f6486c8ffab
+  ts: "2026-11-06T23:21:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor から再開した run に前回の親の検証のログが元の名前で残る
+    - field: description
+      from: ""
+      to: 再開の前の試行の退避が写しを作るだけで元のログを残すため、成功した再開の run に、失敗した前回の親の検証のログが今回の名前のまま commit される
+    - field: input
+      from: ""
+      to: '["PJR-TA6W の executor からの再開（commit fe25cef49）。run のディレクトリに parent-validation-attempt-1-lint-fm.log と parent-validation-attempt-1-test-integration.log が残り、中身は退避の写し（`*.attempt-1.log`）と同じで exit code 1 を示す。再開後の親の検証はすべて passed で、evidence.json の `log_refs` はこれらを参照しない（2026-11-07 orchestrator の確認）","原因の見立て: snapshotRunAttempt（src/shared/run-records.ts）は pipeline-state・evidence・ログを `*.attempt-N.*` へ copyFileSync で写すだけで、元のファイルを消さない。親の検証のログは失敗したときだけ書かれるため、成功した再開では上書きされずに前回のものが残る（2026-11-07）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-07"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-TA6W"]'
