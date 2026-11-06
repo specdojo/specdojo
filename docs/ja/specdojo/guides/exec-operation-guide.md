@@ -398,7 +398,9 @@ specdojo exec run --project <project-id> --plan <execution-path>/exec/plans/<ste
   --executor-by <executor-nickname> --reporter-by <reporter-nickname>
 ```
 
-run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/` に残ります。停止位置と再開可否はここを見て判断します。
+新規 run の plan・result・evidence・ログ・state は `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/` に残ります。出どころは `register`・`schedule`・`job` です。停止位置と再開可否はここを見て判断します。
+
+旧配置の `<execution_path>/exec/evidence/<task-id>/<run-id>/` に checkpoint がある run は、`--resume`（`--resume-from executor` を含む）後も同じ run ID とディレクトリへ記録を続けます。executor を再実行すると、前回の state・evidence・ログを同じ場所の `*.attempt-N.*` に退避します。統合では result の配置にかかわらず現在の run の記録を commit します。commit 対象から外した別 run の記録は、ほかの許可外の変更とともに標準出力と `integrate.log` に一覧を表示します。
 
 | ファイル                                                              | 確認できること                                                                                 |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |

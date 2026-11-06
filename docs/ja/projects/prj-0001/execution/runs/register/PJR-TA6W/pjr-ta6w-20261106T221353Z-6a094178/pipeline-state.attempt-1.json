@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TA6W",
+  "run_id": "pjr-ta6w-20261106T221353Z-6a094178",
+  "updated_at": "2026-11-06T22:30:10.731Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-06T22:15:25.540Z",
+      "completed_at": "2026-11-06T22:24:04.168Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TA6W/pjr-ta6w-20261106T221353Z-6a094178/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-06T22:28:55.163Z",
+      "completed_at": "2026-11-06T22:30:10.731Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TA6W/pjr-ta6w-20261106T221353Z-6a094178/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TA6W/pjr-ta6w-20261106T221353Z-6a094178/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TA6W/pjr-ta6w-20261106T221353Z-6a094178/result.md"
+  }
+}

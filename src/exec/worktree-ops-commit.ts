@@ -24,11 +24,16 @@ import {
   targetReferenceDirsForApproach,
 } from "./plans.js";
 import { recordProtectedConfigBlockAcrossRepos } from "./protection-handoff.js";
+import { readPipelineState } from "./pipeline-state.js";
 import { parseResultTaskIdentity } from "./results.js";
 import {
   isOtherRunRecord,
   isPlanOrResultRecord,
+  isRunRecordPath,
   recordPathForRead,
+  recordStem,
+  resumeStatePaths,
+  runRecordPrefixes,
   taskRecordPrefixes,
 } from "./run-records.js";
 import { stripTerminalControlSequences } from "./shared.js";
@@ -93,6 +98,7 @@ export function isCommitTargetPath(
   executionRel: string,
   resultRel: string,
   allowedPlanRel?: string,
+  currentRunPrefixes: readonly string[] = [],
 ): boolean {
   const normalized = path.replaceAll("\\", "/");
   if (normalized === resultRel) return true;
@@ -101,10 +107,48 @@ export function isCommitTargetPath(
   // merge 時の overlap ガードで衝突するため除外する。
   if (normalized === ".specdojo/doc-index.json") return false;
   if (normalized === "tmp" || normalized.startsWith("tmp/")) return false;
-  if (isPlanOrResultRecord(normalized) || isOtherRunRecord(normalized, resultRel)) return false;
+  if (isPlanOrResultRecord(normalized)) return false;
+  if (
+    isOtherRunRecord(normalized, resultRel) &&
+    !currentRunPrefixes.some((prefix) => normalized.startsWith(prefix))
+  )
+    return false;
   if (normalized.startsWith(`${executionRel}/exec/events/`)) return false;
   if (normalized.startsWith(`${executionRel}/generated/`)) return false;
   return true;
+}
+
+// A legacy result filename does not contain the pipeline run ID. Recover it from the
+// checkpoint's artifact refs, including runs whose evidence was split across layouts.
+// Checkpoints predating artifact refs follow the same latest-run rule as resume.
+function currentRunPrefixes(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+  resultRel: string,
+): string[] {
+  const { executionRel, planRel } = taskPaths(context, taskId, worktree.path);
+  const plan = readWorktreeHeadFile(worktree.path, planRel);
+  const recordTaskId = (plan ? parsePlanTaskIdentity(plan)?.taskId : undefined) ?? taskId;
+  if (isRunRecordPath(resultRel)) {
+    return runRecordPrefixes(executionRel, recordTaskId, recordStem(resultRel));
+  }
+  const states = resumeStatePaths(resolve(worktree.path, executionRel), recordTaskId).flatMap(
+    (path) => {
+      try {
+        const state = readPipelineState(path);
+        return state.task_id === recordTaskId ? [state] : [];
+      } catch {
+        return [];
+      }
+    },
+  );
+  const matching = states.filter((state) => state.artifacts?.result_ref === resultRel);
+  const candidates = matching.length > 0 ? matching : states.filter((state) => !state.artifacts);
+  const latest = candidates
+    .sort((a, b) => a.updated_at.localeCompare(b.updated_at) || a.run_id.localeCompare(b.run_id))
+    .at(-1);
+  return latest ? runRecordPrefixes(executionRel, recordTaskId, latest.run_id) : [];
 }
 
 // Reads a deliverable's frontmatter `status`. Markdown deliverables carry it in the
@@ -486,8 +530,15 @@ export function partitionCommitTargets(
 ): { targets: string[]; outOfScope: string[]; unresolvedTargets: string[] } {
   const { executionRel, planRel, resultRel } = taskPaths(context, taskId, worktree.path);
   const allowedPlanRel = options.allowEditedPlan ? planRel : undefined;
-  const candidates = statusPaths(worktree.path).filter((path) =>
-    isCommitTargetPath(path, executionRel, resultRel, allowedPlanRel),
+  const runPrefixes = currentRunPrefixes(context, worktree, taskId, resultRel);
+  const changes = statusPaths(worktree.path);
+  const candidates = changes.filter((path) =>
+    isCommitTargetPath(path, executionRel, resultRel, allowedPlanRel, runPrefixes),
+  );
+  // Do not silently discard run records via the exclusion filter: report them using
+  // the same stdout/integrate.log warning as other changes outside the commit scope.
+  const excludedRecords = changes.filter(
+    (path) => isRunRecordPath(path) && !candidates.includes(path),
   );
   const { scope, unresolvedTargets } = resolveCommitScope(context, worktree, taskId, options);
   if (!scope) {
@@ -496,23 +547,27 @@ export function partitionCommitTargets(
       !isRegisterOriginTask(context, worktree, taskId) ||
       isHumanWorktreeExecution(context, worktree, taskId)
     ) {
-      return { targets: candidates, outOfScope: [], unresolvedTargets };
+      return { targets: candidates, outOfScope: excludedRecords, unresolvedTargets };
     }
     const tracked = pathsTrackedAtHead(worktree.path, candidates);
     const isAllowedNewFile = registerNewFileIsAllowed(worktree, context, taskId);
     const targets: string[] = [];
-    const outOfScope: string[] = [];
+    const outOfScope: string[] = [...excludedRecords];
     for (const path of candidates) {
-      const allowed = tracked.has(path) || isAllowedNewFile(path);
+      const allowed =
+        runPrefixes.some((prefix) => path.startsWith(prefix)) ||
+        tracked.has(path) ||
+        isAllowedNewFile(path);
       (allowed ? targets : outOfScope).push(path);
     }
     return { targets, outOfScope, unresolvedTargets };
   }
 
   const targets: string[] = [];
-  const outOfScope: string[] = [];
+  const outOfScope: string[] = [...excludedRecords];
   for (const path of candidates) {
     const allowed =
+      runPrefixes.some((prefix) => path.startsWith(prefix)) ||
       scope.allowedFiles.includes(path) ||
       scope.allowedDirPrefixes.some((prefix) => path.startsWith(prefix));
     (allowed ? targets : outOfScope).push(path);

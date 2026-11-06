@@ -9,6 +9,36 @@ import {
   normalizeResultWhitespace,
 } from "../../../src/exec/worktree-ops.js";
 import type { ExecWorktree } from "../../../src/exec/worktree.js";
+import { isCommitTargetPath } from "../../../src/exec/worktree-ops-commit.js";
+import { runRecordPrefixes } from "../../../src/exec/run-records.js";
+
+describe("run record commit targets", () => {
+  it.each([
+    "execution/exec/results/old-result.md",
+    "execution/runs/register/PJR-AB12/run-1/result.md",
+  ])("includes current run evidence independently of result %s", (result) => {
+    const prefixes = runRecordPrefixes("execution", "PJR-AB12", "run-1");
+    for (const prefix of prefixes) {
+      for (const name of [
+        "evidence.json",
+        "executor.log",
+        "pipeline-state.json",
+        "executor.attempt-1.log",
+        "nested/output.log",
+      ]) {
+        expect(
+          isCommitTargetPath(`${prefix}${name}`, "execution", result, undefined, prefixes),
+        ).toBe(true);
+      }
+    }
+    for (const path of [
+      "execution/runs/register/PJR-AB12/run-2/executor.log",
+      "execution/runs/register/PJR-OTHER/run-1/evidence.json",
+    ]) {
+      expect(isCommitTargetPath(path, "execution", result, undefined, prefixes)).toBe(false);
+    }
+  });
+});
 
 function fixture(result: string): {
   root: string;

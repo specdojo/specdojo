@@ -508,6 +508,7 @@ export async function resumeSingleRegisterItemWorktree(
       registerPaths: registerReporterManagedPaths(registerPaths),
       execDefaults: context.execDefaults,
       resumedExecutor: true,
+      runId: target.runId,
       initialChangeTargets: target.initialChanges,
       resumeHandoff: target.handoff,
       providerConcurrencyGate: context.providerConcurrencyGate,

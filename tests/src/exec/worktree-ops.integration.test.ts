@@ -43,6 +43,7 @@ import {
 } from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
+import { createPipelineState, writePipelineState } from "../../../src/exec/pipeline-state.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -1347,6 +1348,87 @@ describe("exec worktree ops", () => {
     // 許可リスト方式なら src/unrelated.ts は範囲外になるため、フォールバックの確認になる。
     expect(committed.targets).toEqual(expect.arrayContaining(["docs/a.md", "src/unrelated.ts"]));
   });
+
+  it.each([
+    { withRefs: true, mode: "edit" as const },
+    { withRefs: false, mode: "edit" as const },
+    { withRefs: true, mode: "review" as const },
+  ])(
+    "commits the current run across both layouts ($mode, artifact refs=$withRefs)",
+    ({ withRefs, mode }) => {
+      const fixture = setupRepository();
+      const taskId = "PJR-0137";
+      const stem = "pjr-0137-20261106T160500Z-aabbccdd";
+      const worktree = prepare(
+        fixture,
+        stem,
+        stem,
+        planWithIdentity(taskId, { mode, origin: "register", targets: [] }),
+      );
+      const resultRel = `execution/exec/results/${stem}-result.md`;
+      const legacy = `execution/exec/evidence/${taskId}/run-1`;
+      const current = `execution/runs/register/${taskId}/run-1`;
+      const other = `execution/runs/register/${taskId}/run-2/executor.log`;
+      const otherTask = "execution/runs/register/PJR-9999/run-1/executor.log";
+      const state = createPipelineState({
+        taskId,
+        runId: "run-1",
+        updatedAt: "2026-11-07T00:00:00Z",
+        ...(withRefs
+          ? {
+              artifacts: {
+                plan_ref: `execution/exec/plans/${stem}-plan.md`,
+                result_ref: resultRel,
+              },
+            }
+          : {}),
+      });
+      for (const directory of [legacy, current]) {
+        writePipelineState(join(worktree.path, directory, "pipeline-state.json"), state);
+      }
+      writePipelineState(
+        join(worktree.path, `execution/runs/register/${taskId}/run-2/pipeline-state.json`),
+        createPipelineState({
+          taskId,
+          runId: "run-2",
+          updatedAt: "2026-11-08T00:00:00Z",
+          artifacts: { plan_ref: "other-plan.md", result_ref: "other-result.md" },
+        }),
+      );
+      const records = [
+        "evidence.json",
+        "executor.log",
+        "parent-validation-attempt-1-lint-ts.log",
+        "evidence.attempt-1.json",
+        "executor.attempt-1.log",
+        "pipeline-state.attempt-1.json",
+      ];
+      for (const directory of [legacy, current]) {
+        for (const name of records) writeFile(join(worktree.path, directory, name), "record\n");
+      }
+      writeFile(join(worktree.path, other), "other run\n");
+      writeFile(join(worktree.path, otherTask), "other task\n");
+      const scopeLogPath = join(worktree.path, legacy, "integrate.log");
+      const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      const committed = commitWorktreeChanges({
+        context: fixture.context,
+        worktree,
+        taskId: stem,
+        scopeLogPath,
+      });
+      const tracked = git(worktree.path, "ls-tree", "-r", "--name-only", "HEAD").split("\n");
+      for (const directory of [legacy, current]) {
+        for (const name of records) expect(tracked).toContain(`${directory}/${name}`);
+        expect(tracked).toContain(`${directory}/pipeline-state.json`);
+      }
+      expect(committed.targets).not.toContain(other);
+      expect(committed.targets).not.toContain(otherTask);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(other);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(otherTask);
+      expect(stdout.mock.calls.map(([message]) => String(message)).join("")).toContain(other);
+      expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain(other);
+    },
+  );
 
   it("leaves agent scratch files outside known deliverable directories uncommitted for a register task", () => {
     const fixture = setupRepository();

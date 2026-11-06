@@ -82,6 +82,26 @@ export function legacyEvidenceDirectory(executionPath: string, taskId: string): 
   return join(executionPath, "exec", "evidence", pathSegment(legacyTaskId));
 }
 
+/** Resume legacy checkpoints in place; fresh runs always use the new layout. */
+export function taskEvidencePaths(executionPath: string, taskId: string, runId: string) {
+  const records = taskRecordPaths(executionPath, taskId, runId);
+  const legacy = join(legacyEvidenceDirectory(executionPath, taskId), pathSegment(runId));
+  const directory = existsSync(join(legacy, "pipeline-state.json")) ? legacy : records.directory;
+  return {
+    directory,
+    evidence: join(directory, "evidence.json"),
+    state: join(directory, "pipeline-state.json"),
+  };
+}
+
+/** Both layouts can contain records of the same run after an interrupted upgrade. */
+export function runRecordPrefixes(executionPath: string, taskId: string, runId: string): string[] {
+  return [
+    taskRecordPaths(executionPath, taskId, runId).directory,
+    join(legacyEvidenceDirectory(executionPath, taskId), pathSegment(runId)),
+  ].map((path) => `${path.replaceAll("\\", "/")}/`);
+}
+
 function filesBelow(path: string): string[] {
   if (!existsSync(path)) return [];
   return readdirSync(path, { withFileTypes: true })

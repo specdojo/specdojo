@@ -1,0 +1,37 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[33mdocs/ja/projects/prj-0001/execution/runs/register/PJR-TA6W/pjr-ta6w-20261106T221353Z-6a094178/plan.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (anyOf): must match a schema in anyOf[22m                         frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/runs/register/PJR-TA6W/pjr-ta6w-20261106T221353Z-6a094178/result.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (anyOf): must match a schema in anyOf[22m                         frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'rulebook'[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+
+[33m⚠[39m 20 warnings
