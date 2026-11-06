@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
-import { ensureDir, safeSlug } from "./shared.js";
-import type { AgentStageRole } from "./types.js";
+import { runEvidencePath, taskRecordPaths } from "./run-records.js";
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
+import { ensureDir } from "./shared.js";
+import type { AgentStageRole } from "./types.js";
 
 export type PipelineStageStatus =
   "pending" | "running" | "succeeded" | "failed" | "rate_limited" | "blocked";
@@ -124,15 +125,11 @@ export function pipelineStateLocation(input: {
   taskId: string;
   runId: string;
 }): PipelineStateLocation {
-  const path = join(
-    input.worktreePath,
-    executionRelative(input.repoRoot, input.executionPath),
-    "exec",
-    "evidence",
-    safeSlug(input.taskId),
-    safeSlug(input.runId),
-    "pipeline-state.json",
-  );
+  const path = taskRecordPaths(
+    join(input.worktreePath, executionRelative(input.repoRoot, input.executionPath)),
+    input.taskId,
+    input.runId,
+  ).state;
   return { path, ref: relative(input.worktreePath, path).split(sep).join("/") };
 }
 
@@ -368,9 +365,7 @@ export function loadPipelineResumeCheckpoint(input: {
   const evidenceRef =
     recordedEvidenceRef ??
     (state.stages.executor.status === "running"
-      ? relative(input.worktreePath, join(dirname(statePath), "evidence.json"))
-          .split(sep)
-          .join("/")
+      ? relative(input.worktreePath, runEvidencePath(statePath)).split(sep).join("/")
       : null);
   if (!evidenceRef) return { state, statePath };
   const evidencePath = resolveArtifactRef(input.worktreePath, evidenceRef);

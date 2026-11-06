@@ -1,12 +1,10 @@
 import { registerDependencyBlockReason } from "../../register/dependency.js";
-import { join } from "node:path";
-import { loadExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
-import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
-import { qualifyTaskId } from "../shared.js";
+import { loadRegisterItems, resolveRegisterPaths } from "../../register/register.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
-import { execLifecyclePoolPath, execLocksDir } from "./lock.js";
-import { CrossProcessMutex } from "../slot-lock.js";
+import { loadExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import { buildInPlaceStem } from "../plans.js";
+import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
+import { findResumableRegisterRun } from "../register-resume.js";
 import {
   formatRegisterRunSummary,
   parseRegisterIds,
@@ -18,9 +16,25 @@ import {
   type RegisterFailureMode,
   type RegisterItemSummary,
 } from "../register.js";
-import { loadRegisterItems, resolveRegisterPaths } from "../../register/register.js";
+import { taskRecordPaths } from "../run-records.js";
+import { qualifyTaskId } from "../shared.js";
+import { CrossProcessMutex } from "../slot-lock.js";
 import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
-import { findResumableRegisterRun } from "../register-resume.js";
+import { loadRosterForExecutionPath } from "./agent.js";
+import { execLifecyclePoolPath, execLocksDir } from "./lock.js";
+import {
+  applyRegisterDifficultyRouting,
+  isRegisterPipelineRequested,
+  parseRegisterExecutorSelection,
+  resolveRegisterCommand,
+  resolveRegisterPipelineCommand,
+  runSingleRegisterItem,
+  selectedRegisterExecutor,
+  type RegisterRunContext,
+} from "./register-core.js";
+import { resolveRegisterPostReviewAgents } from "./register-post-review.js";
+import { resumeSingleRegisterItemWorktree } from "./register-resume.js";
+import { runSingleRegisterItemWorktree } from "./register-worktree.js";
 import {
   configuredWorktreeBase,
   parseParallel,
@@ -29,20 +43,6 @@ import {
   type AsyncLock,
   type RunOpts,
 } from "./shared.js";
-import { loadRosterForExecutionPath } from "./agent.js";
-import {
-  applyRegisterDifficultyRouting,
-  resolveRegisterCommand,
-  isRegisterPipelineRequested,
-  parseRegisterExecutorSelection,
-  selectedRegisterExecutor,
-  resolveRegisterPipelineCommand,
-  type RegisterRunContext,
-  runSingleRegisterItem,
-} from "./register-core.js";
-import { runSingleRegisterItemWorktree } from "./register-worktree.js";
-import { resumeSingleRegisterItemWorktree } from "./register-resume.js";
-import { resolveRegisterPostReviewAgents } from "./register-post-review.js";
 
 // register 項目の実行（複数ID）。in-place モードは指定順に1件ずつ直列実行し、各IDが plan/result
 // 生成・start・agent実行・review/waiting 遷移まで完結してから次へ進む。worktree モードは成果物を
@@ -210,7 +210,7 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
         process.stdout.write(`[dry-run]   command: ${command}\n`);
       }
       process.stdout.write(
-        `[dry-run]   plan: ${join(executionPath, "exec", "plans", `${stem}-plan.md`)}\n`,
+        `[dry-run]   plan: ${taskRecordPaths(executionPath, item.id, stem).plan}\n`,
       );
       if (postReviewAgents) {
         process.stdout.write(

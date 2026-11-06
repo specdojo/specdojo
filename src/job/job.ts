@@ -1,18 +1,21 @@
-import { createHash } from "node:crypto";
+import type { Command } from "commander";
 import { spawn, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import type { Command } from "commander";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import { recordRef, taskRecordPaths } from "../shared/run-records.js";
 import { listFilesRecursive, writeJson } from "../shared/fs.js";
 import { gitEnvironment } from "../shared/git.js";
 import { formatMarkdownFile } from "../shared/markdown-format.js";
 import { execTemplatePath, injectCommonConventions, MISSING } from "../shared/plan-templates.js";
+import { selfRunCommand } from "../shared/spawn-self.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { expandTemplate } from "../shared/text.js";
 import {
+  getPath,
   isJobAgentTask,
   isJobCommandTask,
-  getPath,
   loadAllJobs,
   loadJobDefinition,
   loadJobRunRecord,
@@ -32,8 +35,6 @@ import {
   type JobTaskDefinition,
   type MaterializedJobRun,
 } from "./definition.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { selfRunCommand } from "../shared/spawn-self.js";
 
 export {
   isJobAgentTask,
@@ -310,7 +311,7 @@ export async function generateJobPlan(
 ): Promise<string> {
   const templatePath = execTemplatePath("xep-job-template.md");
   if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
-  const planPath = join(paths.executionPath, "exec", "plans", `${record.run_id}-plan.md`);
+  const planPath = taskRecordPaths(paths.executionPath, record.run_id, record.run_id, "job").plan;
   mkdirSync(resolve(planPath, ".."), { recursive: true });
   const commandTask = isJobCommandTask(record.task) ? record.task : undefined;
   const values: Record<string, string> = {
@@ -345,7 +346,7 @@ export async function generateJobPlan(
     _JOB_TARGETS_: record.task.targets?.map((target) => `- [[${target}]]`).join("\n") ?? "- -",
     _JOB_PATHS_: record.task.paths?.map((path) => `- \`${path}\``).join("\n") ?? "- -",
     _RESULT_REF_: repoRelative(
-      join(paths.executionPath, "exec", "results", `${record.run_id}-result.md`),
+      taskRecordPaths(paths.executionPath, record.run_id, record.run_id, "job").result,
     ),
   };
   const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
@@ -383,12 +384,11 @@ export async function generateJobReviewPlan(
 ): Promise<{ planPath: string; resultPath: string }> {
   const templatePath = execTemplatePath("xrp-job-template.md");
   if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
-  const planPath = join(paths.executionPath, "exec", "plans", `${record.run_id}-review-plan.md`);
-  const resultPath = join(
+  const { plan: planPath, result: resultPath } = taskRecordPaths(
     paths.executionPath,
-    "exec",
-    "results",
-    `${record.run_id}-review-result.md`,
+    record.run_id,
+    `${record.run_id}-review`,
+    "job",
   );
   mkdirSync(resolve(planPath, ".."), { recursive: true });
   const values: Record<string, string> = {
@@ -514,11 +514,28 @@ export async function materializeJobRun(opts: {
       inputs,
       task,
       checkpoint_before: checkpoint,
-      plan_ref: `exec/plans/${runId}-plan.md`,
-      result_ref: `exec/results/${runId}-result.md`,
+      plan_ref: recordRef(
+        paths.executionPath,
+        taskRecordPaths(paths.executionPath, runId, runId, "job").plan,
+      ),
+      result_ref: recordRef(
+        paths.executionPath,
+        taskRecordPaths(paths.executionPath, runId, runId, "job").result,
+      ),
       attempts: [],
     };
   }
+  record = {
+    ...record,
+    plan_ref: recordRef(
+      paths.executionPath,
+      taskRecordPaths(paths.executionPath, runId, runId, "job").plan,
+    ),
+    result_ref: recordRef(
+      paths.executionPath,
+      taskRecordPaths(paths.executionPath, runId, runId, "job").result,
+    ),
+  };
   if (!existingRun && !opts.dryRun && isJobCommandTask(task) && task.precondition) {
     const precondition = await executeJobPrecondition(task.precondition, specdojoRootDir());
     if (precondition.skipped) {

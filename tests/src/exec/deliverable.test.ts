@@ -10,12 +10,12 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { validateCatalogDomains, validateCatalogLocalIds } from "../../../src/catalog/build.js";
 import {
   archivePlan,
   generateDeliverablePlan,
   resolveDeliverableTarget,
 } from "../../../src/exec/plans.js";
-import { validateCatalogDomains, validateCatalogLocalIds } from "../../../src/catalog/build.js";
 
 let root: string;
 
@@ -132,7 +132,7 @@ describe("generateDeliverablePlan", () => {
       target,
     });
 
-    expect(outPath).toBe(join(executionPath, "exec", "plans", "only-a-plan.md"));
+    expect(outPath).toMatch(/\/runs\/schedule\/only-a\/[^/]+\/plan\.md$/);
     const plan = readFileSync(outPath, "utf8");
     expect(plan).toContain("task_id: only-a");
     expect(plan).toContain("criterion for only-a");

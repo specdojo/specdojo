@@ -32,7 +32,7 @@ function git(cwd: string, ...args: string[]): string {
 function reviewResultContent(repo: string): string {
   const reviewResults = git(repo, "ls-files", "execution")
     .split("\n")
-    .filter((path) => path.endsWith("-review-result.md"));
+    .filter((path) => /^execution\/runs\/job\/[^/]+\/[^/]+-review\/result\.md$/.test(path));
   expect(reviewResults).toHaveLength(1);
   return readFileSync(join(repo, reviewResults[0]), "utf8");
 }

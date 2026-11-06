@@ -28,11 +28,12 @@ import {
   runReporterWithFormatRetry,
 } from "../reporter.js";
 import { renderReporterResult } from "../results.js";
+import { isRunRecordPath, recordStem, snapshotRunAttempt } from "../run-records.js";
 import { randomHex } from "../shared.js";
 import { withProductRepoPrompt } from "../task-repos.js";
 import type { TaskMode } from "../types.js";
-import type { ProductWorktree } from "../worktree.js";
 import { worktreeStatusPaths } from "../worktree-ops.js";
+import type { ProductWorktree } from "../worktree.js";
 import {
   agentEnvironment,
   appendParentValidationsToExecutorEvidence,
@@ -251,7 +252,7 @@ export async function runReporterStage(params: {
 // 1件の plan/result を executor→reporter の2段階で実行する。register 項目と Job Run の
 // 双方が使い、in-place（cwd: repoRoot）・worktree（cwd: worktree.path）から共有する。
 // evidence・pipeline-state の記録先は
-// Schedule タスクの pipeline と同じ形式（exec/evidence/<taskId>/<runId>/）にすることで、
+// Schedule タスクの pipeline と同じ run ディレクトリにすることで、
 // 監査証跡のフォーマットを実行経路によらず統一する。state には plan / result の参照も
 // 記録し、reporter だけが失敗した場合に `--resume` が入力を復元できるようにする。
 export async function runAgentPipeline(params: {
@@ -300,7 +301,9 @@ export async function runAgentPipeline(params: {
     execDefaults,
   } = params;
   const startedAt = new Date().toISOString();
-  const runId = params.runId ?? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
+  const runId = isRunRecordPath(params.planPath)
+    ? recordStem(params.planPath)
+    : (params.runId ?? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`);
   const stateLocation = pipelineStateLocation({
     repoRoot,
     worktreePath: cwd,
@@ -308,6 +311,7 @@ export async function runAgentPipeline(params: {
     taskId,
     runId,
   });
+  if (params.resumedExecutor) snapshotRunAttempt(stateLocation.path);
   let state = createPipelineState({
     taskId,
     runId,

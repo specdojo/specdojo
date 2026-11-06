@@ -1,25 +1,25 @@
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { format } from "prettier";
 import { describe, expect, it } from "vitest";
-import { existsSync } from "node:fs";
+import type { CriteriaItem } from "../../../src/catalog/types.js";
 import {
   applicableReviewCriteria,
   buildInPlaceStem,
   deliverableDocId,
   execTemplatePath,
   finalizeResultSectionsForDeliverable,
+  generateSinglePlan,
   injectCommonConventions,
   MISSING,
-  generateSinglePlan,
   ownerRoleFields,
   parsePlanTaskIdentity,
-  targetDocIdsForDeliverable,
   stemFromPlanPath,
+  targetDocIdsForDeliverable,
 } from "../../../src/exec/plans.js";
-import type { CriteriaItem } from "../../../src/catalog/types.js";
 import type { RoleDefinition } from "../../../src/exec/role-types.js";
+import { recordPathForRead, taskRecordPaths } from "../../../src/exec/run-records.js";
 import type { ReviewViewpoint } from "../../../src/review/types.js";
 
 function roleMapOf(roles: RoleDefinition[]): Map<string, RoleDefinition> {
@@ -407,7 +407,7 @@ describe("plan generation (edit done_criteria goals)", () => {
       });
 
       const editPlan = readFileSync(
-        join(executionPath, "exec/plans/T-TEST-overview-020-plan.md"),
+        recordPathForRead(executionPath, "plan", "T-TEST-overview-020"),
         "utf8",
       );
       // Catalog base_path is root-anchored (/docs/test) but the emitted deliverable path
@@ -462,7 +462,7 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan).toContain("Why は判断軸として参照し、全文を成果物へ再掲しない");
 
       const maintenancePlan = readFileSync(
-        join(executionPath, "exec/plans/T-TEST-overview-030-plan.md"),
+        recordPathForRead(executionPath, "plan", "T-TEST-overview-030"),
         "utf8",
       );
       expect(maintenancePlan).not.toContain("viewpoints_ref:");
@@ -623,7 +623,7 @@ describe("plan generation (rulebook includes)", () => {
           critical_first_rank: 0,
         },
       });
-      return readFileSync(join(executionPath, "exec/plans/T-TEST-overview-020-plan.md"), "utf8");
+      return readFileSync(recordPathForRead(executionPath, "plan", "T-TEST-overview-020"), "utf8");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -1010,7 +1010,7 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      expect(outPath).toBe(join(plansDir, "T-TEST-overview-020-plan.md"));
+      expect(outPath).toMatch(/\/runs\/schedule\/T-TEST-overview-020\/[^/]+\/plan\.md$/);
       const plan = readFileSync(outPath, "utf8");
       expect(plan).toContain("task_id: T-TEST-overview-020");
       expect(plan).toContain("rulebook: none");
@@ -1294,7 +1294,7 @@ describe("generateSinglePlan", () => {
       });
 
       // File name uses the stem; the fixed-name plan must not also be written.
-      expect(outPath).toBe(join(executionPath, "exec", "plans", `${stem}-plan.md`));
+      expect(outPath).toBe(taskRecordPaths(executionPath, "T-TEST-overview-020", stem).plan);
       expect(existsSync(join(executionPath, "exec", "plans", "T-TEST-overview-020-plan.md"))).toBe(
         false,
       );
@@ -1302,7 +1302,7 @@ describe("generateSinglePlan", () => {
       const plan = readFileSync(outPath, "utf8");
       // id is unique per stem; the embedded result ref shares the stem; task_id stays the task id.
       expect(plan).toContain(`id: test:xep-${stem}`);
-      expect(plan).toContain(`exec/results/${stem}-result.md`);
+      expect(plan).toContain(`runs/schedule/T-TEST-overview-020/${stem}/result.md`);
       expect(plan).toContain("task_id: T-TEST-overview-020");
     } finally {
       rmSync(root, { recursive: true, force: true });

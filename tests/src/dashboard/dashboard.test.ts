@@ -295,8 +295,9 @@ describe("collectExecRecords", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-exec-records-"));
 
     try {
-      const plans = join(root, "plans");
-      const results = join(root, "results");
+      const execPath = join(root, "exec");
+      const plans = join(execPath, "plans");
+      const results = join(execPath, "results");
       mkdirSync(plans, { recursive: true });
       mkdirSync(results, { recursive: true });
       writeFileSync(
@@ -320,7 +321,7 @@ describe("collectExecRecords", () => {
         "utf8",
       );
 
-      const rows = collectExecRecords(root);
+      const rows = collectExecRecords(execPath);
 
       expect(rows).toEqual([
         {

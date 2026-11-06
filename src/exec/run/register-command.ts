@@ -1,9 +1,15 @@
-import { parseProductBranchOverrides } from "../product-branches.js";
 import { type Command } from "commander";
 import { loadExecDefaultsConfig, resolveRegisterPostReview } from "../agent-config.js";
+import { parseProductBranchOverrides } from "../product-branches.js";
 import { resolveProjectPaths } from "../project.js";
 import { isRegisterFailureMode } from "../register.js";
 import { configuredProductRepos } from "../task-repos.js";
+import { runInPlaceMode } from "./in-place.js";
+import { runJobMode } from "./job.js";
+import { spawnRefresh, spawnValidate } from "./mode-shared.js";
+import { resolveRegisterPipelineCommand } from "./register-core.js";
+import { runRegisterMode } from "./register-mode.js";
+import { runBatchMode, runManualMode } from "./schedule-mode.js";
 import {
   EXCLUSIVE_EXEC_RUN,
   parseParallel,
@@ -13,12 +19,6 @@ import {
   type ExecRunLockSharing,
   type RunOpts,
 } from "./shared.js";
-import { runBatchMode, runManualMode } from "./schedule-mode.js";
-import { runInPlaceMode } from "./in-place.js";
-import { runJobMode } from "./job.js";
-import { spawnRefresh, spawnValidate } from "./mode-shared.js";
-import { resolveRegisterPipelineCommand } from "./register-core.js";
-import { runRegisterMode } from "./register-mode.js";
 
 export function registerRunCommand(exec: Command): void {
   const rcmd = exec
@@ -99,7 +99,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--archive-on-success",
-    "Archive the generated plan to exec/plans/done/ after a successful in-place run",
+    "Keep the completed plan in its run directory after a successful in-place run",
     false,
   );
   rcmd.option(

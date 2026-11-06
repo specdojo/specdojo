@@ -189,7 +189,7 @@ describe("executor evidence", () => {
       stderr: "",
       changes: [{ path: "docs/a.md", status: "M" }],
       diffStat: "docs/a.md | 1 +",
-      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+      logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-resumed/executor.log",
     });
 
     expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], evidence)).toEqual({
@@ -225,7 +225,7 @@ describe("executor evidence", () => {
       stderr: "",
       changes: [{ path: "docs/a.md", status: "M" }],
       diffStat: "docs/a.md | 1 +",
-      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+      logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-resumed/executor.log",
     }).evidence;
 
     expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], base)).toEqual({
@@ -273,7 +273,7 @@ describe("executor evidence", () => {
       attemptChanges: [{ path: "artifact.md", status: "M" }],
       diffStat: " artifact.md | 2 +-",
       logRefPath:
-        "docs/execution/exec/evidence/T-TEST-doc-010/20260810T070334Z-aabbccdd/executor.log",
+        "docs/execution/runs/schedule/T-TEST-doc-010/20260810T070334Z-aabbccdd/executor.log",
       parentValidations: [
         {
           id: "test-integration",
@@ -306,7 +306,7 @@ describe("executor evidence", () => {
         summary: "exit 0: 66 tests passed",
       },
     ]);
-    expect(evidence.log_refs[0].path).toContain("/exec/evidence/T-TEST-doc-010/");
+    expect(evidence.log_refs[0].path).toContain("/runs/schedule/T-TEST-doc-010/");
     expect(JSON.stringify(evidence)).not.toContain("do-not-store");
     expect(logExcerpt).not.toContain("do-not-store");
 
@@ -363,7 +363,7 @@ describe("executor evidence", () => {
       stderr: "blocked: agent-config-write: protected configuration changes detected",
       changes: [],
       diffStat: "",
-      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-protected/executor.log",
+      logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-protected/executor.log",
     });
 
     expect(evidence.block_reason).toBe(
@@ -401,7 +401,7 @@ describe("executor evidence", () => {
       stderr: "",
       changes,
       diffStat: "large change",
-      logRefPath: "docs/execution/exec/evidence/T-TEST-doc-010/run-1/executor.log",
+      logRefPath: "docs/execution/runs/schedule/T-TEST-doc-010/run-1/executor.log",
     });
 
     expect(evidence.changes).toHaveLength(1_000);
@@ -414,7 +414,7 @@ describe("executor evidence", () => {
   it("persists failed reporter stdout and stderr as redacted bounded evidence refs", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-reporter-evidence-"));
     try {
-      const evidenceDir = join(root, "execution", "exec", "evidence", "T-TEST-doc-010", "run-1");
+      const evidenceDir = join(root, "execution", "runs", "schedule", "T-TEST-doc-010", "run-1");
       mkdirSync(evidenceDir, { recursive: true });
       const evidencePath = join(evidenceDir, "evidence.json");
       const { evidence } = buildExecutorEvidence({
@@ -430,7 +430,7 @@ describe("executor evidence", () => {
         stderr: "",
         changes: [],
         diffStat: "",
-        logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-1/executor.log",
+        logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-1/executor.log",
       });
 
       const updated = recordReporterFailureOutput({

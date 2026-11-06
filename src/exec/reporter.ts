@@ -1,11 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { executorCompletionFailure, type ExecEvidence } from "./evidence.js";
-import {
-  PARENT_VALIDATION_PROJECT_REPO,
-  failedParentValidationReason,
-} from "./parent-validation.js";
-import type { TaskMode } from "./types.js";
 import {
   getProjectExecutionPath,
   resolveRepoRoot,
@@ -14,13 +8,20 @@ import {
   type SpecDojoProjectConfig,
   type SpecDojoRepoConfig,
 } from "../shared/specdojo-config.js";
+import { executorCompletionFailure, type ExecEvidence } from "./evidence.js";
+import {
+  PARENT_VALIDATION_PROJECT_REPO,
+  failedParentValidationReason,
+} from "./parent-validation.js";
 import {
   MAX_TEXT_LENGTH,
   parseReporterOutput,
   reporterOutputSchemaForMode,
   type ReporterOutput,
 } from "./reporter-output.js";
+import { isRunRecordPath, runnerRecordPrefixes } from "./run-records.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
+import type { TaskMode } from "./types.js";
 
 export {
   REPORTER_OUTPUT_SCHEMA,
@@ -147,6 +148,9 @@ function isRunnerManagedChangePath(path: string, scope: ReporterEvidenceScope): 
   const execRoot = repoRelativePath(scope.repoRoot, join(scope.executionPath, "exec"));
   const managedRoots = [
     execRoot,
+    ...runnerRecordPrefixes(repoRelativePath(scope.repoRoot, scope.executionPath)).map((path) =>
+      path.replace(/\/$/u, ""),
+    ),
     ...(scope.registerPaths ?? []).map((path) => repoRelativePath(scope.repoRoot, path)),
   ];
   const resultPath = scope.resultPath
@@ -548,10 +552,12 @@ function isRunnerManagedExecRecordPath(
   executorAttemptPaths?: ReadonlySet<string>,
 ): boolean {
   const normalized = path.replaceAll("\\", "/").replace(/^\.\//u, "");
-  if (!RUNNER_MANAGED_EXEC_RECORD_PATTERN.test(normalized)) return false;
+  if (!RUNNER_MANAGED_EXEC_RECORD_PATTERN.test(normalized) && !isRunRecordPath(normalized))
+    return false;
   if (
     executorAttemptPaths?.has(normalized) &&
-    EXECUTOR_EDITABLE_EXEC_HISTORY_PATTERN.test(normalized)
+    (EXECUTOR_EDITABLE_EXEC_HISTORY_PATTERN.test(normalized) ||
+      (isRunRecordPath(normalized) && /\/(plan|result)\.md$/u.test(normalized)))
   ) {
     return false;
   }
@@ -565,7 +571,8 @@ function isHistoryLinkTargetPath(path: string): boolean {
   }
   return (
     /(?:^|\/)pjr-[^/]+\.md$/u.test(normalized) ||
-    /^docs\/ja\/projects\/.+\/exec\/(?:plans|results)\/.+\.md$/u.test(normalized)
+    /^docs\/ja\/projects\/.+\/exec\/(?:plans|results)\/.+\.md$/u.test(normalized) ||
+    (isRunRecordPath(normalized) && /\/(plan|result)\.md$/u.test(normalized))
   );
 }
 

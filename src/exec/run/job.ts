@@ -1,25 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
-import { selfRunArgs } from "../../shared/spawn-self.js";
-import {
-  loadExecDefaultsConfig,
-  resolveMemberCommand,
-  type ExecDefaultsConfig,
-} from "../agent-config.js";
-import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
-import { specdojoRootDir, type MemberRoster } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView } from "../types.js";
-import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./lock.js";
-import {
-  isResultUnfilled,
-  readResultFrontmatterSnapshot,
-  renderReporterResult,
-  scaffoldResult,
-  stripLeadingListMarker,
-  updateResultStatus,
-} from "../results.js";
-import { formatMarkdownFile } from "../format.js";
 import {
   completeJobRun,
   executeJobCommand,
@@ -36,6 +17,40 @@ import {
   type JobReviewAgentNomination,
   type JobRunRecord,
 } from "../../job/job.js";
+import { selfRunArgs } from "../../shared/spawn-self.js";
+import { specdojoRootDir, type MemberRoster } from "../../shared/specdojo-config.js";
+import {
+  loadExecDefaultsConfig,
+  resolveMemberCommand,
+  type ExecDefaultsConfig,
+} from "../agent-config.js";
+import { recordCommandEvidence } from "../evidence.js";
+import { formatMarkdownFile } from "../format.js";
+import {
+  createPipelineState,
+  pipelineStateLocation,
+  updatePipelineStage,
+  writePipelineState,
+} from "../pipeline-state.js";
+import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
+import { evidenceForReporter } from "../reporter.js";
+import {
+  isResultUnfilled,
+  readResultFrontmatterSnapshot,
+  renderReporterResult,
+  scaffoldResult,
+  stripLeadingListMarker,
+  updateResultStatus,
+} from "../results.js";
+import { taskRecordPrefixes } from "../run-records.js";
+import { type ReadyTaskView } from "../types.js";
+import {
+  mergeWorktreeIntoCurrent,
+  removeWorktree,
+  stabilizeCommitTargets,
+  stageCommitTargets,
+  worktreeStatusPaths,
+} from "../worktree-ops.js";
 import {
   ensureExecWorktree,
   formatGitResultFailure,
@@ -44,21 +59,15 @@ import {
   resolveWorktreeBase,
   summarizeGitHookFailure,
 } from "../worktree.js";
+import { runAgentPipeline, runReporterStage } from "./agent-pipeline.js";
 import {
-  mergeWorktreeIntoCurrent,
-  removeWorktree,
-  stabilizeCommitTargets,
-  stageCommitTargets,
-  worktreeStatusPaths,
-} from "../worktree-ops.js";
-import { recordCommandEvidence } from "../evidence.js";
-import { evidenceForReporter } from "../reporter.js";
-import {
-  createPipelineState,
-  pipelineStateLocation,
-  updatePipelineStage,
-  writePipelineState,
-} from "../pipeline-state.js";
+  executorRequirements,
+  expandPromptRefs,
+  loadRosterForExecutionPath,
+  resolveReporterAgentCandidates,
+} from "./agent.js";
+import { resolveInPlaceCommand, spawnAgentInPlace } from "./in-place.js";
+import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./lock.js";
 import {
   configuredWorktreeBase,
   resolveAgentOverride,
@@ -67,14 +76,6 @@ import {
   type AgentRunCandidate,
   type RunOpts,
 } from "./shared.js";
-import {
-  executorRequirements,
-  expandPromptRefs,
-  loadRosterForExecutionPath,
-  resolveReporterAgentCandidates,
-} from "./agent.js";
-import { runAgentPipeline, runReporterStage } from "./agent-pipeline.js";
-import { resolveInPlaceCommand, spawnAgentInPlace } from "./in-place.js";
 
 export type JobPipelineAgentResolver = (
   roster: MemberRoster | null,
@@ -162,7 +163,7 @@ async function runCommandJobMode(params: {
     startedAt: new Date().toISOString(),
     ...(record.task.targets ? { targets: record.task.targets } : {}),
   });
-  const evidenceRunId = `attempt-${record.attempts.length}`;
+  const evidenceRunId = record.run_id;
   process.stdout.write(`Running Job Run ${record.run_id} command in place.\n`);
   const commandOutcome = await executeJobCommand(record.task.command, repoRoot);
   const commandPartial =
@@ -752,7 +753,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   }
 
   const allowedReviewPrefixes = [
-    `${relative(worktree.path, worktreeExecutionPath).split(sep).join("/")}/exec/evidence/${reviewTaskId}/`,
+    ...taskRecordPrefixes(relative(worktree.path, worktreeExecutionPath), reviewTaskId),
   ];
   const allowedReviewFiles = new Set([
     relative(worktree.path, planPath).split(sep).join("/"),

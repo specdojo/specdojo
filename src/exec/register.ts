@@ -1,10 +1,25 @@
-import { readRegisterInput, registerInputSection } from "../register/input.js";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { basename, dirname, extname, join, relative, resolve } from "node:path";
+import { collectDocIndexEntries } from "../docs/doc-index.js";
+import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import {
+  authoredKataPath,
+  authoringKind,
+  authoringStandardId,
+  authoringStandardPath,
+} from "../kata/authoring.js";
+import { loadRulebookRefs, resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import { validateRegisterApproachTargets } from "../register/approach.js";
+import {
+  resolveAuthoringSources,
+  type ResolvedAuthoringSource,
+} from "../register/authoring-sources.js";
 import {
   resolveRegisterDeliverableTarget,
   type RegisterDeliverableTarget,
 } from "../register/deliverable-target.js";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, extname, join, relative, resolve } from "node:path";
+import { readRegisterInput, registerInputSection } from "../register/input.js";
+import { isPlanningApproach } from "../register/planning.js";
 import {
   findRegisterItem,
   loadRegisterItems,
@@ -17,44 +32,30 @@ import {
   type PjrItem,
   type RegisterPaths,
 } from "../register/register.js";
+import { loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import { formatMarkdownFile } from "./format.js";
+import {
+  findDeliverableByPath,
+  findUniqueDeliverableForKataTarget,
+  resolveDeliverableByDocId,
+  type DeliverableInfo,
+} from "./plans-core.js";
+import { generateRegisterApproachPlan } from "./plans-generation.js";
+import { planningPlanFields } from "./plans-planning.js";
 import {
   execTemplatePath,
   injectCommonConventions,
   MISSING,
   registerGradeFindingsText,
 } from "./plans.js";
-import { generateRegisterApproachPlan } from "./plans-generation.js";
-import {
-  findUniqueDeliverableForKataTarget,
-  findDeliverableByPath,
-  resolveDeliverableByDocId,
-  type DeliverableInfo,
-} from "./plans-core.js";
-import { collectDocIndexEntries } from "../docs/doc-index.js";
-import { loadRulebookRefs, resolveKataRefs, type KataRefs } from "../kata/kata.js";
-import {
-  authoredKataPath,
-  authoringKind,
-  authoringStandardId,
-  authoringStandardPath,
-} from "../kata/authoring.js";
-import { validateRegisterApproachTargets } from "../register/approach.js";
-import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import { taskRecordPaths } from "./run-records.js";
 import {
   escapeMarkdownInline,
   expandTemplate,
   inlineCodeAnglePlaceholders,
   stripTerminalControlSequences,
 } from "./shared.js";
-import { formatMarkdownFile } from "./format.js";
-import { loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
-import {
-  resolveAuthoringSources,
-  type ResolvedAuthoringSource,
-} from "../register/authoring-sources.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
-import { isPlanningApproach } from "../register/planning.js";
-import { planningPlanFields } from "./plans-planning.js";
 
 // ---------------------------------------------------------------------------
 // Item category
@@ -691,10 +692,10 @@ export async function generateRegisterPlan(opts: {
   }
   const template = readFileSync(templatePath, "utf8");
 
-  const plansDir = join(opts.executionPath, "exec", "plans");
-  mkdirSync(plansDir, { recursive: true });
-  const planPath = opts.outPath ?? join(plansDir, `${opts.stem}-plan.md`);
-  const resultRef = `${repoRelativePath(opts.executionPath)}/exec/results/${opts.stem}-result.md`;
+  const records = taskRecordPaths(opts.executionPath, item.id, opts.stem, "register");
+  const planPath = opts.outPath ?? records.plan;
+  mkdirSync(dirname(planPath), { recursive: true });
+  const resultRef = repoRelativePath(records.result);
 
   const values: Record<string, string> = {
     _FRONTMATTER_: registerPlanFrontmatter(opts.projectId, opts.stem, item),

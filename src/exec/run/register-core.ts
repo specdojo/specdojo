@@ -1,16 +1,20 @@
-import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { basename } from "node:path";
-import {
-  resolveMemberCommand,
-  type ExecDefaultsConfig,
-  type ProviderConcurrencyGate,
-} from "../agent-config.js";
+import { isAuthoringApproach } from "../../kata/authoring.js";
+import { registerDependencyBlockReason } from "../../register/dependency.js";
+import { registerEventFilePath } from "../../register/events.js";
+import { displayIdFromTicketFilename } from "../../register/item.js";
+import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import {
   resolveAgentMember,
   type MemberRoster,
   type ProjectMember,
 } from "../../shared/specdojo-config.js";
+import {
+  resolveMemberCommand,
+  type ExecDefaultsConfig,
+  type ProviderConcurrencyGate,
+} from "../agent-config.js";
 import { buildInPlaceStem } from "../plans.js";
 import {
   generateRegisterPlan,
@@ -24,36 +28,33 @@ import {
   type RegisterItemSummary,
   type RegisterItemTransition,
 } from "../register.js";
-import { type PjrItem, type RegisterPaths } from "../../register/register.js";
-import { registerEventFilePath } from "../../register/events.js";
-import { displayIdFromTicketFilename } from "../../register/item.js";
 import {
   isResultUnfilled,
   readResultFrontmatterSnapshot,
   scaffoldResult,
   updateResultStatus,
 } from "../results.js";
-import { formatGitResultFailure, gitOutput, gitResult } from "../worktree.js";
+import { recordRef } from "../run-records.js";
+import { configuredProductCheckouts } from "../task-repos.js";
 import {
   stabilizeCommitTargets,
   stageCommitTargets,
   unstageCommitTargets,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
+import { formatGitResultFailure, gitOutput, gitResult } from "../worktree.js";
+import { runAgentPipeline } from "./agent-pipeline.js";
+import { expandPromptRefs } from "./agent.js";
+import { spawnAgentInPlace } from "./in-place.js";
+import { commitSubject, repoRelativePath, spawnSelf } from "./mode-shared.js";
 import {
+  rateLimitRecoveryReason,
   resolveAgentOverride,
   resolvePinnedRateLimitRunOptions,
-  rateLimitRecoveryReason,
   selectCandidates,
   type AgentRunCandidate,
   type RunOpts,
 } from "./shared.js";
-import { expandPromptRefs } from "./agent.js";
-import { runAgentPipeline } from "./agent-pipeline.js";
-import { spawnAgentInPlace } from "./in-place.js";
-import { commitSubject, repoRelativePath, spawnSelf } from "./mode-shared.js";
-import { isAuthoringApproach } from "../../kata/authoring.js";
-import { configuredProductCheckouts } from "../task-repos.js";
 
 // CLI choices are the highest-priority layer. A difficulty route only supplies omitted stage and
 // recovery options; without a matching route the historical priority-based selection is kept.
@@ -465,7 +466,7 @@ export async function runSingleRegisterItem(
     mode: "edit",
     projectId,
     origin: "register",
-    planRef: `exec/plans/${stem}-plan.md`,
+    planRef: recordRef(executionPath, planPath),
     agent: actor,
     startedAt: new Date().toISOString(),
     stem,
@@ -499,6 +500,7 @@ export async function runSingleRegisterItem(
       executor: pipelineAgents.executor,
       reporterCandidates: pipelineAgents.reporterCandidates,
       planPath,
+      runId: stem,
       planPrompt: prompt,
       resultPath,
       registerPaths: registerReporterManagedPaths(registerPaths),

@@ -1,39 +1,38 @@
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { load } from "../shared/yaml.js";
 import {
-  deliverableDocPath,
-  parsePlanTaskIdentity,
-  targetReferenceDirsForApproach,
-} from "./plans.js";
-import { parseResultTaskIdentity } from "./results.js";
-import { stripTerminalControlSequences } from "./shared.js";
+  repoRelative,
+  stageCommitTargets,
+  worktreeStatusPaths as statusPaths,
+} from "../shared/git.js";
+import {
+  DEFAULT_MARKDOWNLINT_CONFIG,
+  hasMarkdownlintConfig,
+} from "../shared/markdownlint-config.js";
+import { specdojoPackageRootDir } from "../shared/package-paths.js";
+import { load } from "../shared/yaml.js";
 import {
   agentProtectedConfigPaths,
   agentProtectedConfigViolation,
   qualifiedRepoPaths,
   type AgentRepoPathChanges,
 } from "./agent-protected-config.js";
+import {
+  deliverableDocPath,
+  parsePlanTaskIdentity,
+  targetReferenceDirsForApproach,
+} from "./plans.js";
 import { recordProtectedConfigBlockAcrossRepos } from "./protection-handoff.js";
+import { parseResultTaskIdentity } from "./results.js";
+import {
+  isOtherRunRecord,
+  isPlanOrResultRecord,
+  recordPathForRead,
+  taskRecordPrefixes,
+} from "./run-records.js";
+import { stripTerminalControlSequences } from "./shared.js";
 import { assertNoPendingProductChanges, productIntegrationTarget } from "./task-repos.js";
-import { specdojoPackageRootDir } from "../shared/package-paths.js";
-import {
-  DEFAULT_MARKDOWNLINT_CONFIG,
-  hasMarkdownlintConfig,
-} from "../shared/markdownlint-config.js";
-import {
-  repoRelative,
-  stageCommitTargets,
-  worktreeStatusPaths as statusPaths,
-} from "../shared/git.js";
-export {
-  repoRelative,
-  selectStageablePaths,
-  stageCommitTargets,
-  unstageCommitTargets,
-  worktreeStatusPaths,
-} from "../shared/git.js";
 import {
   appendGitFailureLog,
   appendGitResultFailureLog,
@@ -42,9 +41,15 @@ import {
   gitOutput,
   gitResult,
   summarizeGitHookFailure,
-  worktreeNameFromTaskId,
   type ExecWorktree,
 } from "./worktree.js";
+export {
+  repoRelative,
+  selectStageablePaths,
+  stageCommitTargets,
+  unstageCommitTargets,
+  worktreeStatusPaths,
+} from "../shared/git.js";
 
 const MAX_COMMIT_STABILIZATION_ATTEMPTS = 3;
 
@@ -68,16 +73,18 @@ export function currentBranch(repoRoot: string): string {
 export function taskPaths(
   context: WorktreeOpsContext,
   taskId: string,
+  worktreePath = context.repoRoot,
 ): {
   planRel: string;
   resultRel: string;
   executionRel: string;
 } {
   const executionRel = repoRelative(context.repoRoot, context.executionPath);
+  const executionPath = resolve(worktreePath, executionRel);
   return {
     executionRel,
-    planRel: `${executionRel}/exec/plans/${taskId}-plan.md`,
-    resultRel: `${executionRel}/exec/results/${taskId}-result.md`,
+    planRel: repoRelative(worktreePath, recordPathForRead(executionPath, "plan", taskId)),
+    resultRel: repoRelative(worktreePath, recordPathForRead(executionPath, "result", taskId)),
   };
 }
 
@@ -94,8 +101,7 @@ export function isCommitTargetPath(
   // merge 時の overlap ガードで衝突するため除外する。
   if (normalized === ".specdojo/doc-index.json") return false;
   if (normalized === "tmp" || normalized.startsWith("tmp/")) return false;
-  if (normalized.startsWith(`${executionRel}/exec/plans/`)) return false;
-  if (normalized.startsWith(`${executionRel}/exec/results/`)) return false;
+  if (isPlanOrResultRecord(normalized) || isOtherRunRecord(normalized, resultRel)) return false;
   if (normalized.startsWith(`${executionRel}/exec/events/`)) return false;
   if (normalized.startsWith(`${executionRel}/generated/`)) return false;
   return true;
@@ -139,7 +145,7 @@ function assertNoAgentReadyPromotion(
   taskId: string,
   paths: string[],
 ): void {
-  const { planRel, resultRel } = taskPaths(context, taskId);
+  const { planRel, resultRel } = taskPaths(context, taskId, worktree.path);
   const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
   if (resultContent && parseResultTaskIdentity(resultContent)?.execution === "human") {
     return;
@@ -169,7 +175,7 @@ function isHumanWorktreeExecution(
   worktree: ExecWorktree,
   taskId: string,
 ): boolean {
-  const { resultRel } = taskPaths(context, taskId);
+  const { resultRel } = taskPaths(context, taskId, worktree.path);
   const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
   return !!resultContent && parseResultTaskIdentity(resultContent)?.execution === "human";
 }
@@ -184,7 +190,7 @@ function assertNoAgentProtectedConfigChanges(
 ): void {
   if (isHumanWorktreeExecution(context, worktree, taskId)) return;
 
-  const { resultRel } = taskPaths(context, taskId);
+  const { resultRel } = taskPaths(context, taskId, worktree.path);
   const rootHead = gitOutput(context.repoRoot, ["rev-parse", "HEAD"]).trim();
   const compareBase = gitOutput(worktree.path, ["merge-base", "HEAD", rootHead]).trim();
   const committed = zeroSeparatedPaths(worktree.path, [
@@ -295,7 +301,7 @@ export function resolveCommitScope(
   taskId: string,
   options: { allowEditedPlan?: boolean } = {},
 ): { scope: CommitScope | null; unresolvedTargets: string[] } {
-  const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
+  const { executionRel, planRel, resultRel } = taskPaths(context, taskId, worktree.path);
   const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
   const resultIdentity = resultContent ? parseResultTaskIdentity(resultContent) : null;
   const planContent = readWorktreeHeadFile(worktree.path, planRel);
@@ -310,7 +316,7 @@ export function resolveCommitScope(
       scope: {
         mode: "review",
         allowedFiles: [resultRel, ...(options.allowEditedPlan ? [planRel] : [])],
-        allowedDirPrefixes: [],
+        allowedDirPrefixes: taskRecordPrefixes(executionRel, taskId),
       },
       unresolvedTargets: [],
     };
@@ -364,7 +370,7 @@ export function resolveCommitScope(
   // Pipeline evidence is runner-owned and stored per task/run. It must be committed together with
   // the eventual reporter-generated result so the structured executor record survives worktree
   // removal. Legacy tasks create no files under this prefix, so their commit scope is unchanged.
-  allowedDirPrefixes.push(`${executionRel}/exec/evidence/${worktreeNameFromTaskId(taskId)}/`);
+  allowedDirPrefixes.push(...taskRecordPrefixes(executionRel, taskId));
   return {
     scope: { mode: "edit", allowedFiles: [...allowedFiles], allowedDirPrefixes },
     unresolvedTargets,
@@ -378,7 +384,7 @@ export function taskTargetsAtHead(
   worktree: ExecWorktree,
   taskId: string,
 ): string[] {
-  const { planRel, resultRel } = taskPaths(context, taskId);
+  const { planRel, resultRel } = taskPaths(context, taskId, worktree.path);
   const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
   const resultIdentity = resultContent ? parseResultTaskIdentity(resultContent) : null;
   if (resultIdentity?.execution === "human") return resultIdentity.targets ?? [];
@@ -415,7 +421,7 @@ function registerNewFileIsAllowed(
   context: WorktreeOpsContext,
   taskId: string,
 ): (path: string) => boolean {
-  const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
+  const { executionRel, planRel, resultRel } = taskPaths(context, taskId, worktree.path);
   const topLevelDirs = zeroSeparatedPaths(worktree.path, [
     "ls-tree",
     "-d",
@@ -426,7 +432,7 @@ function registerNewFileIsAllowed(
   const allowedDirPrefixes = [
     ...REGISTER_NEW_FILE_DIR_PREFIXES,
     ...topLevelDirs,
-    `${executionRel}/exec/evidence/${worktreeNameFromTaskId(taskId)}/`,
+    ...taskRecordPrefixes(executionRel, taskId),
   ];
   const planContent = readWorktreeHeadFile(worktree.path, planRel);
   const targets = (planContent ? parsePlanTaskIdentity(planContent) : null)?.targets ?? [];
@@ -463,7 +469,10 @@ function isRegisterOriginTask(
   worktree: ExecWorktree,
   taskId: string,
 ): boolean {
-  const planContent = readWorktreeHeadFile(worktree.path, taskPaths(context, taskId).planRel);
+  const planContent = readWorktreeHeadFile(
+    worktree.path,
+    taskPaths(context, taskId, worktree.path).planRel,
+  );
   return (planContent ? parsePlanTaskIdentity(planContent) : null)?.origin === "register";
 }
 
@@ -475,7 +484,7 @@ export function partitionCommitTargets(
   taskId: string,
   options: { allowEditedPlan?: boolean } = {},
 ): { targets: string[]; outOfScope: string[]; unresolvedTargets: string[] } {
-  const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
+  const { executionRel, planRel, resultRel } = taskPaths(context, taskId, worktree.path);
   const allowedPlanRel = options.allowEditedPlan ? planRel : undefined;
   const candidates = statusPaths(worktree.path).filter((path) =>
     isCommitTargetPath(path, executionRel, resultRel, allowedPlanRel),
@@ -550,7 +559,7 @@ export function assertResultMarkdownlint(
   worktree: ExecWorktree,
   taskId: string,
 ): void {
-  const { resultRel } = taskPaths(context, taskId);
+  const { resultRel } = taskPaths(context, taskId, worktree.path);
   const resultPath = resolve(worktree.path, resultRel);
   if (!existsSync(resultPath)) {
     process.stdout.write(
@@ -781,7 +790,7 @@ export function commitWorktreeChanges(params: {
     partition = partitionCommitTargets(context, worktree, taskId, { allowEditedPlan });
   }
 
-  const { resultRel } = taskPaths(context, taskId);
+  const { resultRel } = taskPaths(context, taskId, worktree.path);
   const trackedAtHead = pathsTrackedAtHead(worktree.path, partition.targets);
   const projectRootNewFiles = partition.targets.filter(
     (path) => !path.includes("/") && !trackedAtHead.has(path) && path !== resultRel,
