@@ -51,3 +51,16 @@
       from: "-"
       to: '["PJR-TA6W"]'
   previous_event_id: reg_f934324edc294abe923e0382f0fedd58
+- v: 1
+  id: reg_532a902cd0c648b497c3ae5830c23a30
+  ts: "2026-11-06T23:31:08Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_145248c4caa145d598fe1df508ee7a2c
