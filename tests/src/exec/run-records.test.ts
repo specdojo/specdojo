@@ -15,6 +15,7 @@ import {
   resumeStatePaths,
   runRecordPaths,
   snapshotRunAttempt,
+  taskEvidencePaths,
   taskRecordPaths,
 } from "../../../src/exec/run-records.js";
 
@@ -99,6 +100,16 @@ describe("run record layout", () => {
     );
     write(state, "{}");
     expect(resumeStatePaths(execution, taskId)).toEqual([state]);
+    expect(taskEvidencePaths(execution, taskId, "run-1").state).toBe(state);
+    expect(
+      pipelineStateLocation({
+        repoRoot: execution,
+        worktreePath: execution,
+        executionPath: execution,
+        taskId,
+        runId: "run-1",
+      }).path,
+    ).toBe(state);
   });
 
   it("resolves commit records from the worktree after root copies have been released", () => {

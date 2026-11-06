@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
-import { runEvidencePath, taskRecordPaths } from "./run-records.js";
+import { runEvidencePath, taskEvidencePaths } from "./run-records.js";
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
 import { ensureDir } from "./shared.js";
 import type { AgentStageRole } from "./types.js";
@@ -125,7 +125,7 @@ export function pipelineStateLocation(input: {
   taskId: string;
   runId: string;
 }): PipelineStateLocation {
-  const path = taskRecordPaths(
+  const path = taskEvidencePaths(
     join(input.worktreePath, executionRelative(input.repoRoot, input.executionPath)),
     input.taskId,
     input.runId,

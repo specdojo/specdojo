@@ -36,6 +36,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- 旧配置で開始した run を再開すると evidence・ログが別のディレクトリに書かれ、統合時に失われる問題を修正しました。再開後も元の run ID と保存先を維持し、result の配置にかかわらず同じ run の記録と退避した試行を commit 対象に含めます。除外した別 run の記録は標準出力と `integrate.log` に表示します（PJR-TA6W）。
+
 - 実行記録の保存前の伏せ字を AWS・Google・Slack・GitHub fine-grained token・Anthropic・JWT・秘密鍵 PEM・URL の認証情報へ広げました。依存なしで実行できる `node tools/check-evidence-secrets.mjs` を追加し、指定ファイル、ステージ上の実行記録（`--staged`）、追跡中の実行記録（`--tracked`）を値を表示せず検査できます。hook / CI への登録は承認後に反映する設定案として記録しました（PJR-FMA4）。
 
 - `draft`・`fully-guided`・`recipe-guided` の edit plan に、カタログの `evidence_refs` を読み取り専用の実装の根拠として展開するようにしました。未指定・カタログなしでも停止せず、未作成の `depends_on` は「未作成」と示し、内容を仮置きして進めます。実装・書き方・意図の根拠の使い分けも明記しました（PJR-H2V8）。

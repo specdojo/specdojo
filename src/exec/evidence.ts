@@ -1,6 +1,11 @@
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { runLogPath, runnerRecordPrefixes, taskRecordPaths } from "./run-records.js";
+import {
+  runLogPath,
+  runnerRecordPrefixes,
+  taskEvidencePaths,
+  taskRecordPaths,
+} from "./run-records.js";
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
 import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
 import type { AgentStageRole } from "./types.js";
@@ -643,9 +648,12 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     .join("\n");
 
   const executionInWorktree = join(input.worktreePath, executionRel);
-  const evidenceDir = taskRecordPaths(executionInWorktree, input.taskId, input.runId).directory;
+  const { directory: evidenceDir, evidence: evidencePath } = taskEvidencePaths(
+    executionInWorktree,
+    input.taskId,
+    input.runId,
+  );
   ensureDir(evidenceDir);
-  const evidencePath = taskRecordPaths(executionInWorktree, input.taskId, input.runId).evidence;
   const logPath = runLogPath(evidencePath, "executor.log");
   const { evidence, logExcerpt } = buildExecutorEvidence({
     taskId: input.taskId,
