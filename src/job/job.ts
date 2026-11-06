@@ -35,6 +35,7 @@ import {
   type JobTaskDefinition,
   type MaterializedJobRun,
 } from "./definition.js";
+import { jobNoopDirectory, localJobNoopPath } from "./noop.js";
 
 export {
   isJobAgentTask,
@@ -78,8 +79,10 @@ export function jobCheckpoint(paths: JobPaths, jobId: string): Record<string, un
 
 export function deriveJobState(paths: JobPaths): JobStateFile {
   const state: JobStateFile = { version: 1, jobs: {} };
-  if (!existsSync(paths.runsPath)) return state;
-  for (const filePath of listFilesRecursive(paths.runsPath)
+  for (const filePath of [
+    ...listFilesRecursive(paths.runsPath),
+    ...listFilesRecursive(jobNoopDirectory(paths.executionPath)),
+  ]
     .filter((path) => path.endsWith(".json"))
     .sort()) {
     try {
@@ -483,10 +486,11 @@ export async function materializeJobRun(opts: {
     task.description = renderJobTemplate(task.description, context);
   }
   const now = new Date().toISOString();
-  const existingRun = existsSync(runPath);
+  const localNoop = localJobNoopPath(paths.executionPath, runId);
+  const existingRun = existsSync(localNoop) || existsSync(runPath);
   let record: JobRunRecord;
   if (existingRun) {
-    record = loadJobRunRecord(runPath);
+    record = loadJobRunRecord(existsSync(localNoop) ? localNoop : runPath);
     if (record.idempotency_key !== idempotencyKey || record.job_id !== definition.id) {
       throw new Error(`Job Run identity collision: ${runId}`);
     }

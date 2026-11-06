@@ -99,3 +99,19 @@
       from: "-"
       to: "parent validation failed: lint-ts"
   previous_event_id: reg_91583a312bef4c5b88789b13bb06d67d
+- v: 1
+  id: reg_43aff76739f1479eb125afa4da38a441
+  ts: "2026-11-06T17:14:12Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_0bea842682b8431ca892c5e0b71d2aab

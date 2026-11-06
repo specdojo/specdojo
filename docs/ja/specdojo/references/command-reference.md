@@ -1071,7 +1071,7 @@ specdojo exec worktree prune --project prj-0001
 | `watch`  | ファイル変更を監視して対象 build を実行する | `specdojo watch --project prj-0001 --scope exec` |
 | `build`  | 全生成物または指定 scope を一括再生成する   | `specdojo build --project prj-0001 --scope all`  |
 
-`dashboard build --project <id>` は `execution/generated/dashboard.md` を再生成します。通常の進捗集計に加え、`routines/generated/routine-runs.jsonl` から昨日の実行と本日の予定を、登録簿個票から着手候補のおすすめ順を、register / exec の event から解除待ちの理由と次の行動を表示します。解除待ちの理由は、制御文字を除いた 1 行へ整形し、表の区切り文字をエスケープしたうえで、長い値を省略記号付きで打ち切ります。
+`dashboard build --project <id>` は `execution/generated/dashboard.md` を再生成します。通常の進捗集計に加え、端末側の `routine-runs.jsonl` から昨日の実行と本日の予定を、登録簿個票から着手候補のおすすめ順を、register / exec の event から解除待ちの理由と次の行動を表示します。解除待ちの理由は、制御文字を除いた 1 行へ整形し、表の区切り文字をエスケープしたうえで、長い値を省略記号付きで打ち切ります。
 
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 
@@ -1117,7 +1117,7 @@ specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W3
 
 `action` は単一オブジェクト、または先頭から順に実行する1件以上の配列を受け付けます。単一オブジェクトの `action.kind`、配列の各要素の `kind` は `job` または `specdojo` を受け付けます。`job` は実行内容と入力検証を参照先の Job Definition に委ね、`exec run --job` 経由で実行ロックに従います。`specdojo` は `args` に書いた specdojo サブコマンド（例: `[dashboard, build]`）へ `--project` を付けて直接起動し、実行ロックを取りません（agent を呼ばない読み取り・派生生成専用。`exec` と `--project` は `args` に書けません）。`register` / `exec-auto` / `exec-resume` / `exec-cycle` の旧 kind は廃止済みです。定義ファイルの配置、`interval`または`trigger.cron`の書式、複数 action の失敗方針、due判定は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
 
-各 routine の実行完了時には、`routine-state.json` の最新状態とは別に、`routines/generated/routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID（`specdojo` action では空）を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。
+各 routine の実行完了時には、端末側の `routine-state.json` の最新状態とは別に、同じ保存先の `routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID（`specdojo` action・無変更の Job では空）を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。保存先は `$XDG_STATE_HOME/specdojo/`（未設定時は `~/.local/state/specdojo/`）以下で、`routine where` から確認できます。旧 `generated/` のファイルは初回利用時にコピーし、新しい状態を優先します。Job Run のない失敗だけを `<execution-path>/routines/failures/` に保存して commit し、成功・skip は Git に残しません。成功した Job が何も変更しなかった場合も Run 記録を commit せず、端末側の `noop` 記録で冪等性と checkpoint を保ちます。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）

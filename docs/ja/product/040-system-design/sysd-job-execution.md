@@ -177,7 +177,7 @@ specdojo routine run --project <project-id> --due
 8. commandが`succeeded`または`partial`で`task.analysis`があれば、evidenceをreporter agentへ渡す。`failed`またはanalysisなしではagentを起動しない。
 9. agent結果またはコマンド終了コードをRunへ反映する。
 10. `succeeded`または設計上成功とみなす`noop`の場合だけcheckpointを原子的に更新する。
-11. worktree で実行した Run は、Job が作った差分だけを `chore(routine): …` で exec ブランチへ commit する。本文には Job Run ID と Run の状態を含める。
+11. 成功した Run は実行前後のファイル内容・モードと HEAD 間の差分を比べ、その Run の記録ディレクトリ全体（plan・result・evidence・ログなど）と Run JSON、`generated/`、exec の lock を除いて変更がなければ `noop` として端末側へ保存し、今回の実行記録を Git の差分から除く。記録の置き場所は共通モジュールで解決し、既存 attempt の記録は復元する。precondition の有無や in-place / worktree によらず適用し、冪等性と checkpoint は端末側で維持する。worktree も撤去し、commit・review は行わない。それ以外の worktree Run は、Job が作った差分だけを `chore(routine): …` で exec ブランチへ commit する。本文には Job Run ID と Run の状態を含める。初回 commit 前はファイルの差分で判定し、Git 未初期化の in-place 実行は差分を確定できないため従来どおり記録する。
 12. runner は `mode: review` の plan/result を作り、上記の解決順で決めた review executor と reporter で出力 commit を読み取り専用レビューする。review executor が出力を変更した場合は `changed-during-review` とする。
 13. Run が `succeeded` かつ verdict が `complete` / `complete-with-findings`、または Run が `partial` かつ verdict が `complete-with-findings` の場合だけ、runner が現在の統合先へ `--no-ff` で merge し、worktree と branch を撤去する。それ以外は review result と Job Run JSON に理由を残し、worktree を保持する。
 
@@ -205,6 +205,8 @@ policy:
 現行routineの`interval`は「前回実行からの経過時間」であり、毎週金曜日などの暦上の予定を表せない。Job連携時には`cron`と`timezone`を追加し、既存`interval`を後方互換として維持する。
 
 cronのdue判定では、実際に処理を開始した`last_run`とは別に、最後に評価した実行枠を表す`last_scheduled_for`を保持する。次の実行枠は`scheduled_at`から計算し、処理時間や外部スケジューラの起動遅延によって毎週の基準時刻がずれないようにする。`missed_run`の対象範囲も、この実行枠のcursorから求める。
+
+routine の状態・履歴・lock は `src/routine/storage.ts` で解決する端末側の保存先へ置き、CLI と dashboard が共有する。repository の識別には既存の端末用記録 `src/exec/product-branch-records.ts` と同じ Git 共通ディレクトリを使い、保存先自体は `$XDG_STATE_HOME/specdojo/`（既定 `~/.local/state/specdojo/`）以下とする。旧 `generated/` の状態・履歴はコピーして引き継ぎ、新しいファイルを上書きしない。Job Run のない routine の失敗だけは `<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴項目と `run_id` を保存して単独で commit する。成功・skip の routine 履歴と無変更 Job の記録は端末側だけに置く。保存先と移行手順は [[specdojo:routine-operation-guide|routine 運用ガイド]] を参照する。
 
 ## 5. Runポリシー
 

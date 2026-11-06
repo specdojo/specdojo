@@ -64,6 +64,7 @@ function setupFixture(
     partialCommand?: boolean;
     omitReporter?: boolean;
     reviewValidationStatus?: "not_run" | "failed";
+    noopCommand?: boolean;
   } = {},
 ): {
   repo: string;
@@ -174,8 +175,9 @@ function setupFixture(
       "  mode: command",
       ...(options.partialCommand ? ["  partial_exit_code: 2"] : []),
       "  command: |",
-      "    mkdir -p output",
-      "    git rev-parse HEAD > output/run.txt",
+      ...(options.noopCommand
+        ? ["    true"]
+        : ["    mkdir -p output", "    git rev-parse HEAD > output/run.txt"]),
       ...(options.failCommand ? ["    exit 1"] : []),
       ...(options.partialCommand ? ["    exit 2"] : []),
       "  paths: [output]",
@@ -243,7 +245,12 @@ function runJob(
     {
       cwd: repo,
       encoding: "utf8",
-      env: { ...gitEnvironment(), CI: "true", LEFTHOOK: "0" },
+      env: {
+        ...gitEnvironment(),
+        CI: "true",
+        LEFTHOOK: "0",
+        XDG_STATE_HOME: join(worktrees, "machine-state"),
+      },
       timeout: 120_000,
     },
   );
@@ -254,6 +261,25 @@ afterEach(() => {
 });
 
 describe("Job Run worktree integration", () => {
+  it.each([true, false])(
+    "does not commit a no-op Job without precondition (review=%s), and retains local idempotency",
+    (declareReview) => {
+      const fixture = setupFixture("complete", { declareReview, noopCommand: true });
+      const result = runJob(fixture.repo, fixture.worktrees, { worktreeFlag: false });
+      expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+      expect(String(result.stdout)).toContain("[routine-job] noop state=noop");
+      expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(fixture.head);
+      expect(git(fixture.repo, "worktree", "list", "--porcelain")).not.toContain("JBR-");
+      expect(git(fixture.repo, "status", "--porcelain")).toBe("M unrelated.txt");
+      expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("");
+      const again = runJob(fixture.repo, fixture.worktrees, { worktreeFlag: false });
+      expect(again.status, `${again.stdout}\n${again.stderr}`).toBe(0);
+      expect(String(again.stdout)).toContain("Job Run already complete:");
+      expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(fixture.head);
+    },
+    120_000,
+  );
+
   it("commits only Run output and merges an accepted review without moving root HEAD during the command", () => {
     const fixture = setupFixture("complete");
     const result = runJob(fixture.repo, fixture.worktrees);

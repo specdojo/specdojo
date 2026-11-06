@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import { localJobNoopPath } from "../../../src/job/noop.js";
 import {
   completeJobRun,
   deriveJobState,
@@ -823,6 +824,49 @@ describe("Job Run lifecycle", () => {
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("derives checkpoints and duplicate detection from local no-op Runs after Git artifacts are removed", async () => {
+    const repo = setupRepo();
+    const machineState = mkdtempSync(join(tmpdir(), "specdojo-job-machine-state-"));
+    const previousStateHome = process.env.XDG_STATE_HOME;
+    process.env.XDG_STATE_HOME = machineState;
+    try {
+      const first = await materializeJobRun({
+        projectId: "test",
+        jobId: "job-translate",
+        inputs: ["to_revision=abc123"],
+        scheduledAt: "2026-08-07T08:00:00Z",
+      });
+      const completed = completeJobRun({
+        projectId: "test",
+        runPath: first.runPath,
+        status: "noop",
+      });
+      const paths = resolveJobPaths("test");
+      const local = localJobNoopPath(paths.executionPath, completed.run_id);
+      mkdirSync(join(local, ".."), { recursive: true });
+      writeFileSync(local, JSON.stringify(completed));
+      rmSync(first.runPath);
+      rmSync(first.planPath);
+      expect(jobCheckpoint(paths, "job-translate")).toEqual({ revision: "abc123" });
+      const duplicate = await materializeJobRun({
+        projectId: "test",
+        jobId: "job-translate",
+        inputs: ["from_revision=initial", "to_revision=abc123"],
+        scheduledAt: "2026-08-07T08:00:00Z",
+      });
+      expect(duplicate.duplicateComplete).toBe(true);
+      expect(duplicate.record.state).toBe("noop");
+      expect(existsSync(first.runPath)).toBe(false);
+      expect(existsSync(first.planPath)).toBe(false);
+    } finally {
+      if (previousStateHome === undefined) delete process.env.XDG_STATE_HOME;
+      else process.env.XDG_STATE_HOME = previousStateHome;
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(machineState, { recursive: true, force: true });
     }
   });
 
