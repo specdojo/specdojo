@@ -21,6 +21,7 @@ specdojo:
     - PJR-8TMF
     - PJR-0QJS
     - PJR-93NK
+    - PJR-FS9A
   approach: retrofit
   targets:
     - prj-0001:stsd-task-execution

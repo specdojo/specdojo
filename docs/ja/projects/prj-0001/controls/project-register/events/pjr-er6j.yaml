@@ -47,3 +47,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK"]'
+- v: 1
+  id: reg_1bd8513b431e493db8d20fd6fefa13c9
+  ts: "2026-11-06T11:54:13Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK"]'
+      to: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK","PJR-FS9A"]'
+  previous_event_id: reg_c93dfa11661141cca3a4a706ff938891
