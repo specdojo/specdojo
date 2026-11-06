@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_79c83f8c5fe54fea80d844777d0b779c
+  ts: "2026-11-06T12:06:57Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-0QJS の確認で見つけた ID の並びを sample の手入れとして起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-sample の遷移 ID を図と表の順に振り直す
+    - field: description
+      from: ""
+      to: 分けた図ごとの表で交互になった stsd-sample の遷移 ID を、PJR-FS9A の規則に沿って図と表の順に通し番号へ振り直す
+    - field: input
+      from: ""
+      to: '["PJR-0QJS の結果、通常系の表が T-01・T-02・T-03・T-05・T-07、例外系の表が T-04・T-06・T-08 と交互になった。もとの 1 つの表の ID を図ごとの表へ分けたため（2026-11-06）","確定までは振り直してよい規則（PJR-FS9A、C 案）の手本として、sample の ID を図と表の順に振り直す（2026-11-06 indie が承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: approach
+      from: ""
+      to: sample-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:stsd-sample"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-0QJS"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-FS9A"]'
