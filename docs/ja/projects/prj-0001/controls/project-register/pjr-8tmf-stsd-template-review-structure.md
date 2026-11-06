@@ -38,13 +38,18 @@ stsd-template の見出しと骨組みを、目的・適用範囲・状態の判
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 見出しの順と骨組みが、目的・適用範囲・状態の判定・状態一覧・状態遷移（図とその下の遷移の表）・今後の検討メモになっている。記入の案内（`_TODO_` など）が、目的に状態の目的を書くよう誘導し、文書の使い方へ誘導していない。
+- スコープの既定（現行）に合わせ、AS-IS / TO-BE の記入欄を、TO-BE の文書と並ぶときだけ書く形にしている。
+- [[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]（PJR-S8EF・PJR-16T7 で直したもの）と食い違っていない。
+- 変えるのは `stsd-template` だけで、ほかの Kata と成果物（`docs/ja/product/` 配下）は変えていない。ほかの Kata に直すべき点を見つけた場合は、変えずに個票の対応結果に書き、pipeline では報告の `handoff` にも書く。
+- `npm run -s lint:md`・`npm run -s lint:fm`・`npm run -s lint:mermaid` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ |
+| --- | ---------------------------------------------- | ---- | ---- | ---- |
+| 1   | stsd-template を新しい章立てとラベルに合わせる | BA   | open | -    |
+| 2   | 検査を通す                                     | BA   | open | -    |
 
 ## 5. 対応結果
 
@@ -52,4 +57,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:stsd-template]]: 手入れの対象
+- [[specdojo:stsd-rulebook]]・[[specdojo:stsd-mermaid-rulebook]]: そろえる先
