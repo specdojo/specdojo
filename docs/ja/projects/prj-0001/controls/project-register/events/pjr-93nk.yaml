@@ -47,3 +47,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-S8EF","PJR-16T7"]'
+- v: 1
+  id: reg_741203ec92674ac9b4d9b7730e9dfe36
+  ts: "2026-11-06T12:01:59Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0f0791ae38484ee5843a00097d38c8c1
+- v: 1
+  id: reg_9774c6ef1dae49d295c21bb837be5cbe
+  ts: "2026-11-06T12:14:40Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_741203ec92674ac9b4d9b7730e9dfe36
