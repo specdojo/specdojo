@@ -15,6 +15,8 @@ specdojo:
   due_on: null
   derived_from:
     - PJR-XD12
+  depends_on:
+    - PJR-TA6W
 ---
 
 # PJR-BRN4 worktree の統合が許可外の追加を黙って落とし、移動が削除だけになる

@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-XD12"]'
+- v: 1
+  id: reg_145248c4caa145d598fe1df508ee7a2c
+  ts: "2026-11-06T22:13:15Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-TA6W"]'
+  previous_event_id: reg_f934324edc294abe923e0382f0fedd58
