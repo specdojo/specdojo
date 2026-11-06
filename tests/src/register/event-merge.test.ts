@@ -204,6 +204,32 @@ describe("rebuildRegisterTicketFromEvents", () => {
     });
   });
 
+  it("replays planned epic start dates and their removal", () => {
+    const content = ticket("waiting", "2026-10-01").replace(
+      "item_type: todo",
+      "item_type: epic\n  track: business",
+    );
+    const update = event(4, "2026-09-28T04:00:00Z", "update", "waiting", "waiting", [
+      { field: "start_on", from: "-", to: "2026-09-30" },
+    ]);
+    const rebuilt = rebuildRegisterTicketFromEvents(
+      content,
+      [...base, update],
+      new Set([eventId(4)]),
+    );
+    expect(rebuilt.appliedFields).toEqual(["start_on"]);
+    expect(readSpecdojoFields(rebuilt.content).start_on).toBe("2026-09-30");
+    const remove = event(5, "2026-09-28T05:00:00Z", "update", "waiting", "waiting", [
+      { field: "start_on", from: "2026-09-30", to: "-" },
+    ]);
+    const removed = rebuildRegisterTicketFromEvents(
+      rebuilt.content,
+      [...base, update, remove],
+      new Set([eventId(5)]),
+    );
+    expect(readSpecdojoFields(removed.content).start_on).toBeUndefined();
+  });
+
   it("keeps a later exec branch change of the same field", () => {
     const update = event(4, "2026-09-28T04:00:00Z", "update", "waiting", "waiting", [
       { field: "owner", from: "DEV", to: "PM" },

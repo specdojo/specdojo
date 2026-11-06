@@ -122,6 +122,7 @@ properties:
           properties:
             track: false
             domains: false
+            start_on: false
       - type: object
         required:
           - rulebook
@@ -205,6 +206,10 @@ properties:
               date (list column: 登録日) is derived by converting it to the project
               register timezone. Omit the key only when the registration time of a
               legacy item is unknown; newly added items always record it.
+
+          start_on:
+            $ref: "#/$defs/Date"
+            description: "Planned start calendar date for an epic. Omit while undecided."
 
           due_on:
             oneOf:

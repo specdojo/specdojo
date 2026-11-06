@@ -4,6 +4,43 @@ import { getProjectRegisterPath, loadConfig, specdojoRootDir } from "../shared/s
 import type { RegisterPaths } from "./command-types.js";
 import { loadRegisterItemDocs, readSpecdojoFields, type PjrItem } from "./item.js";
 
+export function validateRegisterStartOn(
+  itemType: string,
+  value: unknown,
+  allowRemove = false,
+): void {
+  if (value === undefined) return;
+  if (itemType !== "epic") throw new Error("--start-on / start_on is only valid for epic items");
+  if (allowRemove && value === "-") return;
+  const date = typeof value === "string" ? new Date(`${value}T00:00:00Z`) : undefined;
+  if (
+    typeof value !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(value) ||
+    !date ||
+    Number.isNaN(date.getTime()) ||
+    date.toISOString().slice(0, 10) !== value
+  ) {
+    throw new Error(
+      `Invalid start_on: "${String(value)}". Must be a valid calendar date (YYYY-MM-DD)`,
+    );
+  }
+}
+
+export function hasReversedEpicDates(item: PjrItem): boolean {
+  return (
+    item.startOn !== undefined && /^\d{4}-\d{2}-\d{2}$/.test(item.due) && item.startOn > item.due
+  );
+}
+
+export function registerEpicDateWarnings(paths: RegisterPaths): string[] {
+  return loadRegisterItemDocs(paths.projectRegisterPath)
+    .filter(({ item }) => item.type === "epic" && hasReversedEpicDates(item))
+    .map(
+      ({ item }) =>
+        `${item.id}: start_on (${item.startOn}) is after due_on (${item.due}); period is unknown`,
+    );
+}
+
 export function validateRegisterDomains(itemType: string, domains: unknown): void {
   if (domains === undefined) return;
   if (itemType !== "epic") throw new Error("--domain / domains is only valid for epic items");
@@ -89,11 +126,10 @@ export function validateRegisterEpicDocs(paths: RegisterPaths): string[] {
   const docs = loadRegisterItemDocs(paths.projectRegisterPath);
   try {
     for (const doc of docs) {
+      const fields = readSpecdojoFields(readFileSync(doc.path, "utf8"));
+      validateRegisterStartOn(doc.item.type, fields.start_on);
       validateTrack(doc.item.type, doc.item.track);
-      validateRegisterDomains(
-        doc.item.type,
-        readSpecdojoFields(readFileSync(doc.path, "utf8")).domains,
-      );
+      validateRegisterDomains(doc.item.type, fields.domains);
     }
     orderEpics(
       docs.map((doc) => doc.item),

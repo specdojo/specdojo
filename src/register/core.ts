@@ -536,6 +536,7 @@ export function buildRegisterItemContent(opts: {
       ...(opts.fields.difficulty ? { difficulty: opts.fields.difficulty } : {}),
       owner: opts.fields.owner,
       registeredAt: opts.fields.registeredAt,
+      ...(opts.fields.startOn !== undefined ? { startOn: opts.fields.startOn } : {}),
       due: opts.fields.due,
       completedAt: opts.fields.completedAt,
       conclusion: opts.fields.conclusion,

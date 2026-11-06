@@ -100,6 +100,53 @@ describe("epic", () => {
     expect(validate(data)).toBe(false);
   });
 
+  it("start_on は epic の任意の暦日として読み書きと履歴を保持する", () => {
+    const content = ticket({ startOn: "2026-02-28" });
+    const parsed = readRegisterItemContent(content, filename)!;
+    expect(parsed.item.startOn).toBe("2026-02-28");
+    expect(registerItemFieldsFromItem(parsed.item).start_on).toBe("2026-02-28");
+    const data = load(content.match(/^---\n([\s\S]*?)\n---/)![1]) as {
+      specdojo: Record<string, unknown>;
+    };
+    const validate = buildValidator(
+      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+    );
+    expect(validate(data), formatErrors(validate.errors)).toBe(true);
+    const validateDeliverable = buildValidator(
+      "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
+    );
+    expect(validateDeliverable(data), formatErrors(validateDeliverable.errors)).toBe(true);
+    for (const value of [null, "-", "2026-02-30", "2026-2-28", "2026-02-28T00:00:00Z"]) {
+      data.specdojo.start_on = value;
+      expect(validate(data), String(value)).toBe(false);
+    }
+    for (const type of [
+      "todo",
+      "question",
+      "risk",
+      "issue",
+      "change-request",
+      "decision",
+      "note",
+    ]) {
+      data.specdojo.item_type = type;
+      data.specdojo.start_on = "2026-02-28";
+      delete data.specdojo.track;
+      expect(validate(data), type).toBe(false);
+    }
+    const event = buildRegisterEvent({
+      afterContent: content,
+      filename,
+      timeZone: "Asia/Tokyo",
+      action: "add",
+      actor: "SpecDojo",
+      reason: "planned",
+    })!;
+    expect(event.changes).toContainEqual({ field: "start_on", from: "", to: "2026-02-28" });
+    const validateEvents = buildValidator("docs/specdojo/schemas/v1/register-events.schema.yaml");
+    expect(validateEvents([event]), formatErrors(validateEvents.errors)).toBe(true);
+  });
+
   it("domains は epic の文字列配列だけを許可し、読み書きと履歴を保持する", () => {
     const validate = buildValidator(
       "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
@@ -169,6 +216,13 @@ describe("epic", () => {
     expect(validateRegisterEpicDocs(paths).join(" ")).toContain("Duplicate epic track");
     writeFileSync(second, ticket({ track: "other" }, "PJR-AB13"));
     expect(validateRegisterEpicDocs(paths)).toEqual([]);
+    writeFileSync(second, ticket({ track: "other", startOn: "2026-02-30" }, "PJR-AB13"));
+    expect(validateRegisterEpicDocs(paths).join(" ")).toContain("Invalid start_on");
+    writeFileSync(
+      second,
+      ticket({ type: "todo", track: undefined, startOn: "2026-02-28" }, "PJR-AB13"),
+    );
+    expect(validateRegisterEpicDocs(paths).join(" ")).toContain("only valid for epic");
   });
 
   it("epic ごとに直接の子と状態を表示し、孫・無関係な項目を含めない", () => {

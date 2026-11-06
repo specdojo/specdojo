@@ -29,7 +29,7 @@ Timeline（`tml-index.yaml`）は非推奨です。全体計画は epic を正�
 1. 全体計画に載せる track ごとに epic を 1 件起票します。未着手の計画も `open` の epic にします。epic のない古い track は全体計画に出しません。
 2. 旧 `tracks[].domains` を各 epic の `domains` へ移します。範囲の一部だけを扱う場合は個票の範囲の章で境界を記し、strategy の `scope.catalogs[].local_ids` で限定します。
 3. 旧 track 間の `depends_on` を見直し、必要な順序を epic 間の `depends_on` に記録します。`order` と `parallel_group` は移しません。`derived_from` は由来なので依存へ自動転記しません。
-4. 期限を `due_on` に記録します。着手・完了は register の操作で記録します。旧 `planned_start_date` やカタログの見積りから実績を作らないでください。日付が分からない期間は未定のまま表示されます。
+4. 予定開始日を `start_on`、期限を `due_on` に記録します。`register add` / `update` の `--start-on <YYYY-MM-DD>` で設定できます。着手・完了は register の操作で記録します。旧 `planned_start_date` やカタログの見積りから実績を作らないでください。日付が分からない期間は未定のまま表示されます。
 5. `register build` で epic の track 重複・依存循環を検査し、`dashboard build` で `execution/generated/` の全体計画と未作成カタログを確認します。
 6. カタログから旧 `tml-index` のエントリと不要な依存を外します。外せない依存は理由と次の対応を記録して保留します。既存ファイルは互換用に保持でき、削除は利用者が判断します。
 

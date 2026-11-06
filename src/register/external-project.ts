@@ -24,6 +24,7 @@ export type ExternalRegisterAddOptions = {
   status: string;
   owner: string;
   registered?: string;
+  startOn?: string;
   due: string;
   completed: string;
   conclusion: string;
@@ -92,6 +93,7 @@ export function buildExternalRegisterAddArgs(
   for (const domain of opts.domain ?? []) addValue(args, "--domain", domain);
   addValue(args, "--difficulty", opts.difficulty);
   addValue(args, "--registered", opts.registered);
+  addValue(args, "--start-on", opts.startOn);
   addValue(args, "--approach", opts.approach);
   for (const input of opts.input ?? []) addValue(args, "--input", input);
   for (const target of opts.target ?? []) addValue(args, "--target", target);

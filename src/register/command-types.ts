@@ -33,6 +33,7 @@ export type RegisterAddFields = {
   status: string;
   owner: string;
   registeredAt: string;
+  startOn?: string;
   due: string;
   completedAt: string;
   conclusion: string;

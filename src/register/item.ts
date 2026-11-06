@@ -34,6 +34,7 @@ export type PjrItem = {
   difficulty?: RegisterDifficulty;
   owner: string;
   registeredAt: string;
+  startOn?: string;
   due: string;
   completedAt: string;
   conclusion: string;
@@ -136,6 +137,7 @@ export type RegisterItemFieldUpdates = {
   owner?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   registered_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  start_on?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   completed_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   block_reason?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
@@ -192,6 +194,7 @@ const SPECDOJO_KEY_ORDER = [
   "difficulty",
   "owner",
   "registered_at",
+  "start_on",
   "due_on",
   "completed_at",
   "block_reason",
@@ -408,6 +411,7 @@ export function readRegisterItemContent(
     ...(difficulty ? { difficulty } : {}),
     owner: asString(fields.owner) ?? CELL_TODO,
     registeredAt: asString(fields.registered_at) ?? CELL_TODO,
+    ...(asString(fields.start_on) ? { startOn: asString(fields.start_on) } : {}),
     due:
       fields.due_on === null
         ? CELL_NONE
@@ -560,6 +564,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
       ? null
       : inlineCodeAnglePlaceholders(item.conclusion.trim()),
     ...(item.track ? { track: item.track } : {}),
+    ...(item.startOn !== undefined ? { start_on: item.startOn } : {}),
     ...(item.domains !== undefined ? { domains: item.domains } : {}),
     ...(item.approach ? { approach: item.approach } : {}),
     ...(item.targetPath ? { target_path: item.targetPath } : {}),
