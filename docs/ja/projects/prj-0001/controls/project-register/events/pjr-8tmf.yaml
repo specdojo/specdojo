@@ -47,3 +47,32 @@
     - field: depends_on
       from: ""
       to: '["PJR-S8EF","PJR-16T7"]'
+- v: 1
+  id: reg_2ea72b68fd74454fafab94190328f765
+  ts: "2026-11-06T12:28:48Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cd71e2174e1f4157ad4cf9c47078c667
+- v: 1
+  id: reg_f69ae3eb4ca14246a8e40a2bfa507766
+  ts: "2026-11-06T12:39:47Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_2ea72b68fd74454fafab94190328f765
