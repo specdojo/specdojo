@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-VH8D"]'
+- v: 1
+  id: reg_7203718b221947959a2e0a9b0a473f6c
+  ts: "2026-11-06T15:09:17Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_42273036560045fe9ca656329038f31d
+- v: 1
+  id: reg_80839838cf864d0989e591c7819e0877
+  ts: "2026-11-06T15:42:33Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-integration, test-unit"
+  previous_event_id: reg_7203718b221947959a2e0a9b0a473f6c
