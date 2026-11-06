@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { load } from "../shared/yaml.js";
 import { readJson } from "../shared/fs.js";
+import { migrateRoutineStorage } from "../routine/storage.js";
 import {
   type RoutineDoc,
   cronMatches,
@@ -10,7 +11,7 @@ import {
   routineActionKindLabel,
   type RoutineExecutionResult,
   type RoutineRunHistoryEntry,
-} from "../routine/routine.js";
+} from "../routine/definition.js";
 
 export type DashboardRoutineRow = {
   id: string;
@@ -35,20 +36,22 @@ export type DashboardRoutineStateEntry = {
   last_scheduled_for?: string;
 };
 
-// routine ファイル（rtn-*.yaml）を読み、状態ファイル generated/routine-state.json と突き合わせて
+// routine ファイル（rtn-*.yaml）を読み、端末側の状態ファイルと突き合わせて
 // 最終実行・実行結果・due 状況を得る。CLI 出力（routine list）の転記に依存しない。
-export function aggregateRoutines(routinesPath: string | undefined): RoutineAggregates {
+export function aggregateRoutines(
+  routinesPath: string | undefined,
+  repoRoot?: string,
+): RoutineAggregates {
   if (!routinesPath || !existsSync(routinesPath)) return { rows: [], docs: [], history: [] };
+  const storage = migrateRoutineStorage(routinesPath, repoRoot);
 
   const result: RoutineAggregates = {
     rows: [],
     docs: [],
-    history: readRoutineRunHistory(join(routinesPath, "generated", "routine-runs.jsonl")),
+    history: readRoutineRunHistory(storage.runsPath),
     error: undefined,
   };
-  const stateEntries = readRoutineStateEntries(
-    join(routinesPath, "generated", "routine-state.json"),
-  );
+  const stateEntries = readRoutineStateEntries(storage.statePath);
   const now = new Date();
 
   const files = readdirSync(routinesPath)
@@ -241,7 +244,7 @@ export function collapseFrequentRoutineRows(
   return collapsed;
 }
 
-// generated/routine-state.json の routines.<id> が状態の正本。破損時は空。
+// 端末側の routine-state.json の routines.<id> が状態の正本。破損時は空。
 function readRoutineStateEntries(statePath: string): Record<string, DashboardRoutineStateEntry> {
   const entries: Record<string, DashboardRoutineStateEntry> = {};
   if (!existsSync(statePath)) return entries;

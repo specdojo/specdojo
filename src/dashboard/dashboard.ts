@@ -58,7 +58,7 @@ import { gradeFindingCount, parseGradeResult, type GradeResult } from "../grade/
 // ================================
 
 function generatedBanner(command: string): string {
-  return `> このページは \`${command}\` が生成した派生ビューです。正本は Schedule / epic を含む登録簿個票・event / exec event / routine（rtn-*.yaml・generated/routine-state.json・generated/routine-runs.jsonl）の機械可読な成果物であり、このページを手編集しても次回のビルドで失われます。`;
+  return `> このページは \`${command}\` が生成した派生ビューです。正本は Schedule / epic を含む登録簿個票・event / exec event / routine 定義（rtn-*.yaml）と端末側の状態・履歴（routine-state.json・routine-runs.jsonl）であり、このページを手編集しても次回のビルドで失われます。`;
 }
 
 export type DashboardPaths = {
@@ -571,7 +571,7 @@ function renderRegisterSection(projectId: string): string[] {
 }
 
 function renderRoutineSection(paths: DashboardPaths): string[] {
-  const agg = aggregateRoutines(paths.routinesPath);
+  const agg = aggregateRoutines(paths.routinesPath, paths.repoRoot);
   const lines = ["## 4. routine定義・最終実行", ""];
 
   if (agg.error) lines.push(`- routine 集計に失敗しました: ${agg.error}`);
@@ -595,7 +595,7 @@ function renderRoutineSection(paths: DashboardPaths): string[] {
 
 function renderDailyRoutineSection(paths: DashboardPaths): string[] {
   const lines = ["## 5. routine 実行状況（昨日・本日）", ""];
-  const agg = aggregateRoutines(paths.routinesPath);
+  const agg = aggregateRoutines(paths.routinesPath, paths.repoRoot);
   const rows = buildDailyRoutineRows(agg.docs, agg.history, new Date());
   if (rows.length === 0) {
     lines.push("- （昨日の実行履歴・本日の予定はありません）", "");

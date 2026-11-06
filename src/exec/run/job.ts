@@ -76,6 +76,7 @@ import {
   type AgentRunCandidate,
   type RunOpts,
 } from "./shared.js";
+import { localJobNoopPath, snapshotJobOutput } from "../../job/noop.js";
 
 export type JobPipelineAgentResolver = (
   roster: MemberRoster | null,
@@ -246,13 +247,13 @@ async function runCommandJobMode(params: {
       process.stdout.write(`Job Run complete: ${record.run_id}\n`);
     } else if (commandPartial) {
       process.stdout.write(`Job Run partial: ${record.run_id}\n`);
-      if (record.trigger === "routine") {
-        process.stdout.write(`[routine-job] complete run_id=${record.run_id} state=partial\n`);
-      }
     } else {
       process.stdout.write(`Job Run failed: ${record.run_id}\n`);
       process.exitCode = commandOutcome.exitCode || 1;
     }
+    process.stdout.write(
+      `[routine-job] complete run_id=${record.run_id} state=${commandSucceeded ? "succeeded" : commandPartial ? "partial" : "failed"}\n`,
+    );
     return;
   }
 
@@ -318,13 +319,13 @@ async function runCommandJobMode(params: {
   });
   if (reporterOutcome.exitCode === 0) {
     process.stdout.write(`Job Run ${commandPartial ? "partial" : "complete"}: ${record.run_id}\n`);
-    if (commandPartial && record.trigger === "routine") {
-      process.stdout.write(`[routine-job] complete run_id=${record.run_id} state=partial\n`);
-    }
   } else {
     process.stdout.write(`Job Run failed: ${record.run_id}\n`);
     process.exitCode = 1;
   }
+  process.stdout.write(
+    `[routine-job] complete run_id=${record.run_id} state=${reporterOutcome.exitCode === 0 ? (commandPartial ? "partial" : "succeeded") : "failed"}\n`,
+  );
 }
 
 const ACCEPTED_JOB_REVIEW_VERDICTS = new Set(["complete", "complete-with-findings"]);
@@ -561,6 +562,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     process.stdout.write(
       `Job Run already complete: ${preview.record.run_id} (${preview.record.state})\n`,
     );
+    if (preview.record.state === "noop") process.stdout.write(`[routine-job] noop state=noop\n`);
     if (trigger === "routine" && preview.record.state === "partial") {
       process.stdout.write(
         `[routine-job] complete run_id=${preview.record.run_id} state=partial\n`,
@@ -646,10 +648,23 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   const worktreeExecutionPath = resolve(worktree.path, executionRel);
   const worktreeJobPaths = resolveJobPaths(projectId);
   const runPath = resolve(worktree.path, relative(repoRoot, preview.runPath));
+  if (child.status === 0 && existsSync(localJobNoopPath(executionPath, preview.record.run_id))) {
+    removeWorktree({
+      context: { repoRoot, schedulePath, executionPath },
+      worktree,
+      taskId: `${preview.record.run_id}-review`,
+      deleteBranch: true,
+    });
+    process.stdout.write(`[routine-job] noop state=noop\n`);
+    return;
+  }
   if (!existsSync(runPath)) {
     throw new Error(`Job Run record was not created in worktree: ${preview.record.run_id}`);
   }
   let record = loadJobRunRecord(runPath);
+  // The child may fail before printing a completion marker. Its worktree still owns
+  // the diagnostic Run record even if commit or review subsequently fails.
+  process.stdout.write(`[routine-job] recorded run_id=${record.run_id} state=${record.state}\n`);
   const outputPaths = worktreeStatusPaths(worktree.path);
   const outputCommit = commitJobPaths(
     worktree.path,
@@ -829,7 +844,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   );
 }
 
-export async function runJobMode(
+async function runJobModeUnchecked(
   opts: RunOpts,
   resolvePipelineAgents: JobPipelineAgentResolver,
 ): Promise<void> {
@@ -878,6 +893,7 @@ export async function runJobMode(
   }
   if (materialized.duplicateComplete) {
     process.stdout.write(`Job Run already complete: ${record.run_id} (${record.state})\n`);
+    if (record.state === "noop") process.stdout.write(`[routine-job] noop state=noop\n`);
     if (trigger === "routine" && record.state === "partial") {
       process.stdout.write(`[routine-job] complete run_id=${record.run_id} state=partial\n`);
     }
@@ -1014,5 +1030,53 @@ export async function runJobMode(
   } else {
     process.stdout.write(`Job Run failed: ${record.run_id}\n`);
     process.exitCode = effectiveExit || 1;
+  }
+  process.stdout.write(
+    `[routine-job] complete run_id=${record.run_id} state=${effectiveExit === 0 ? "succeeded" : "failed"}\n`,
+  );
+}
+
+export async function runJobMode(
+  opts: RunOpts,
+  resolvePipelineAgents: JobPipelineAgentResolver,
+): Promise<void> {
+  const paths = resolveProjectPaths({ project: opts.project });
+  activateResolvedProjectPaths(paths);
+  const projectId = paths.projectId ?? opts.project;
+  const definition = loadJobDefinition(resolveJobPaths(projectId), String(opts.job).trim());
+  if (
+    opts.dryRun ||
+    jobRunUsesReviewedIntegration(definition, {
+      worktree: opts.worktree,
+      isWorktreeChild: process.env[JOB_REVIEW_WORKTREE_CHILD_ENV] === "1",
+    }) ||
+    // In-place command Jobs also support projects without a Git repository. There is
+    // nothing to commit there, and no reliable Git diff for suppressing Run records.
+    gitResult(specdojoRootDir(), ["rev-parse", "--is-inside-work-tree"]).status !== 0
+  ) {
+    await runJobModeUnchecked(opts, resolvePipelineAgents);
+    return;
+  }
+  const preview = await materializeJobRun({
+    projectId,
+    jobId: String(opts.job).trim(),
+    inputs: opts.input,
+    scheduledAt: opts.scheduledAt,
+    dryRun: true,
+  });
+  if (preview.duplicateComplete) {
+    await runJobModeUnchecked(opts, resolvePipelineAgents);
+    return;
+  }
+  const snapshot = snapshotJobOutput(specdojoRootDir(), paths.executionPath, preview.record);
+  await runJobModeUnchecked(
+    { ...opts, scheduledAt: preview.record.scheduled_at },
+    resolvePipelineAgents,
+  );
+  if (!existsSync(preview.runPath)) return;
+  const record = loadJobRunRecord(preview.runPath);
+  if (record.state === "succeeded" && !snapshot.hasChanges()) {
+    snapshot.discard(completeJobRun({ projectId, runPath: preview.runPath, status: "noop" }));
+    process.stdout.write(`[routine-job] noop state=noop\n`);
   }
 }

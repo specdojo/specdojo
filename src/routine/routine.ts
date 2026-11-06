@@ -39,6 +39,8 @@ import {
 } from "./definition.js";
 import { selfRunArgs } from "../shared/spawn-self.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { migrateRoutineStorage } from "./storage.js";
+import { recordRoutineFailure } from "./failure.js";
 
 export {
   cronMatches,
@@ -86,7 +88,7 @@ function readRoutineState(statePath: string): RoutineStateFile {
 }
 
 function writeRoutineState(paths: RoutinePaths, state: RoutineStateFile): void {
-  ensureDir(paths.generatedPath);
+  ensureDir(paths.stateDirectory);
   writeJson(paths.statePath, state);
 }
 
@@ -137,8 +139,7 @@ const ROUTINE_LOCK_STALE_MS = 60 * 60 * 1000;
 
 // routine run の多重起動（外部スケジューラの重複発火）を防ぐ簡易 lock。
 // 生存中の lock があれば即座に失敗し、stale（1 時間超）な lock は奪う。
-function acquireRoutineLock(routinesPath: string): string {
-  const lockDir = join(routinesPath, ".locks", "routine-run.lock");
+function acquireRoutineLock(lockDir: string): string {
   ensureDir(resolve(lockDir, ".."));
   try {
     mkdirSync(lockDir);
@@ -185,10 +186,12 @@ function ensureFreshDistForRoutineRun(): boolean {
 
 let lastRoutineSpawnReason: string | undefined;
 let lastRoutineSpawnRunId: string | undefined;
+let lastRoutineSpawnNoop = false;
 
 function spawnSelf(args: string[]): RoutineExecutionResult {
   lastRoutineSpawnReason = undefined;
   lastRoutineSpawnRunId = undefined;
+  lastRoutineSpawnNoop = false;
   const [exe, fullArgs] = selfRunArgs(args);
   const result = spawnSync(exe, fullArgs, {
     encoding: "utf8",
@@ -202,6 +205,7 @@ function spawnSelf(args: string[]): RoutineExecutionResult {
   const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
   const marker = [...output.matchAll(/^\[routine-job\]\s+([^\n]+)$/gm)].at(-1)?.[1];
   if (marker) {
+    lastRoutineSpawnNoop = /\bstate=noop\b/.test(marker);
     lastRoutineSpawnRunId = marker.match(/\brun_id=([^\s]+)/)?.[1];
     lastRoutineSpawnReason = marker.match(/\breason=(.+)$/)?.[1]?.trim();
   }
@@ -310,6 +314,7 @@ function executeRoutineAction(
   if (dryRun) {
     lastRoutineSpawnReason = undefined;
     lastRoutineSpawnRunId = undefined;
+    lastRoutineSpawnNoop = false;
     process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
     if (action.kind === "job") {
       try {
@@ -346,7 +351,7 @@ function findJobRunId(
   projectId: string,
   scheduledAt: Date,
 ): string | undefined {
-  if (action.kind !== "job") return undefined;
+  if (action.kind !== "job" || lastRoutineSpawnNoop) return undefined;
   const runsPath = resolveJobPaths(projectId).runsPath;
   if (!existsSync(runsPath)) return undefined;
   const scheduledFor = scheduledAt.toISOString();
@@ -382,39 +387,38 @@ function executeRoutine(
   const label = doc.name ?? (actions.length === 1 ? actions[0].kind : `${actions.length} actions`);
   process.stdout.write(`[routine] ${doc.id}: ${label}\n`);
 
-  if (!Array.isArray(doc.action)) {
-    const result = executeRoutineAction(doc, doc.action, projectId, dryRun, scheduledAt);
-    const jobRunId = dryRun ? undefined : findJobRunId(doc.action, projectId, scheduledAt);
-    return {
-      result,
-      jobRunIds: lastRoutineSpawnRunId ? [lastRoutineSpawnRunId] : jobRunId ? [jobRunId] : [],
-      ...(lastRoutineSpawnReason ? { reason: lastRoutineSpawnReason } : {}),
-    };
-  }
-
+  const multiple = Array.isArray(doc.action);
+  const jobRunIds: string[] = [];
+  const reasons: string[] = [];
   const actionResults = executeRoutineActions(actions, (action, index) => {
-    process.stdout.write(`  action ${index}/${actions.length}: ${action.kind}\n`);
-    const result = executeRoutineAction(doc, action, projectId, dryRun, scheduledAt);
-    process.stdout.write(`  action ${index}/${actions.length}: ${result}\n`);
+    if (multiple) process.stdout.write(`  action ${index}/${actions.length}: ${action.kind}\n`);
+    lastRoutineSpawnReason = undefined;
+    lastRoutineSpawnRunId = undefined;
+    lastRoutineSpawnNoop = false;
+    let result: RoutineExecutionResult;
+    try {
+      result = executeRoutineAction(doc, action, projectId, dryRun, scheduledAt);
+    } catch (error) {
+      result = "failure";
+      lastRoutineSpawnReason = error instanceof Error ? error.message : String(error);
+    }
+    const runId =
+      lastRoutineSpawnRunId ?? (dryRun ? undefined : findJobRunId(action, projectId, scheduledAt));
+    if (runId) jobRunIds.push(runId);
+    if (lastRoutineSpawnReason) reasons.push(lastRoutineSpawnReason);
+    if (multiple) process.stdout.write(`  action ${index}/${actions.length}: ${result}\n`);
     return result;
   });
   const result = aggregateRoutineActionResults(actionResults.map((item) => item.result));
-  process.stdout.write(
-    `  action summary: ${actionResults.map((item) => `${item.index}:${item.result}`).join(", ")} => ${result}\n`,
-  );
-  const jobRunIds = dryRun
-    ? []
-    : doc.action.flatMap((action) => {
-        const runId = findJobRunId(action, projectId, scheduledAt);
-        return runId ? [runId] : [];
-      });
+  if (multiple)
+    process.stdout.write(
+      `  action summary: ${actionResults.map((item) => `${item.index}:${item.result}`).join(", ")} => ${result}\n`,
+    );
   return {
     result,
-    actionResults,
-    jobRunIds: [
-      ...new Set([...(lastRoutineSpawnRunId ? [lastRoutineSpawnRunId] : []), ...jobRunIds]),
-    ],
-    ...(lastRoutineSpawnReason ? { reason: lastRoutineSpawnReason } : {}),
+    ...(multiple ? { actionResults } : {}),
+    jobRunIds: [...new Set(jobRunIds)],
+    ...(reasons.length ? { reason: reasons.join("; ") } : {}),
   };
 }
 
@@ -496,6 +500,7 @@ export function registerRoutineCommands(program: Command): void {
         return;
       }
 
+      migrateRoutineStorage(paths.routinesPath);
       const state = readRoutineState(paths.statePath);
       const now = new Date();
       const rows = routines.map(({ doc }) => ({
@@ -555,6 +560,7 @@ export function registerRoutineCommands(program: Command): void {
       }
       if (errors.length > 0) process.exitCode = 1;
 
+      if (!opts.dryRun) migrateRoutineStorage(paths.routinesPath);
       const state = readRoutineState(paths.statePath);
       const now = new Date();
 
@@ -592,7 +598,7 @@ export function registerRoutineCommands(program: Command): void {
           process.exitCode = 1;
           return;
         }
-        lockDir = acquireRoutineLock(paths.routinesPath);
+        lockDir = acquireRoutineLock(paths.lockPath);
       }
 
       let failed = 0;
@@ -613,7 +619,16 @@ export function registerRoutineCommands(program: Command): void {
           writeRoutineState(paths, state);
         }
 
-        const execution = executeRoutine(entry, paths.projectId, dryRun, scheduledAt);
+        let execution: RoutineRunResult;
+        try {
+          execution = executeRoutine(entry, paths.projectId, dryRun, scheduledAt);
+        } catch (error) {
+          execution = {
+            result: "failure",
+            jobRunIds: [],
+            reason: error instanceof Error ? error.message : String(error),
+          };
+        }
         const { result } = execution;
         if (result === "failure") failed++;
         if (result === "partial") partial++;
@@ -630,7 +645,7 @@ export function registerRoutineCommands(program: Command): void {
             execution.actionResults,
           );
           writeRoutineState(paths, state);
-          appendRoutineRunHistory(paths.runsPath, {
+          const history: RoutineRunHistoryEntry = {
             version: 1,
             routine_id: entry.doc.id,
             scheduled_for: scheduledAt.toISOString(),
@@ -639,7 +654,9 @@ export function registerRoutineCommands(program: Command): void {
             result,
             job_run_ids: execution.jobRunIds,
             ...(execution.reason ? { reason: execution.reason } : {}),
-          });
+          };
+          appendRoutineRunHistory(paths.runsPath, history);
+          recordRoutineFailure(specdojoRootDir(), paths.failuresPath, history);
         }
       }
 

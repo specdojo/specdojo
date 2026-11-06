@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T15:05:10Z"
   due_on: null
-  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-VH8D
 ---
@@ -56,9 +55,10 @@ routine-state.json と routine-runs.jsonl を端末の状態を置く場所へ�
 - 保存先は `$XDG_STATE_HOME/specdojo/<repository-key>/`（未設定・相対パス時は `~/.local/state/specdojo/` 以下）に決定した。既存の `src/exec/product-branch-records.ts` と同じ Git 共通ディレクトリの実パスで repository を識別し、linked worktree 間で状態を共有する。保存ファイルは文書ツリーと Git 追跡の外に置くため、既存の `.git/specdojo/` 内の記録そのものとは分けた。`src/shared/local-state.ts` が repository の保存先、`src/routine/storage.ts` が routine ツリー別の状態・履歴・lock の保存先を解決する。
 - 旧 `generated/routine-state.json` と `generated/routine-runs.jsonl` は初回の list・通常実行・dashboard 集計時にコピーし、新しいファイルは上書きしない。旧ファイルは復旧用に残し、以後の更新・参照先は端末側とする。移行前に旧プロセスを停止する手順を [[specdojo:routine-operation-guide|routine 運用ガイド]] に記載した。lock も端末側へ移したため、`.gitignore` の変更は不要。
 - routine 自身が Git に保存するのは、集約結果が `failure` かつ関連 Job Run ID が空の実行だけとした。`<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴項目と `run_id` を書き、理由を伏せ字処理して、そのファイルだけを commit する。Job Run があれば既存の実行記録を診断に使う。成功・skip の履歴は端末側だけに残す。配列 action の Job Run ID は各段の直後に回収し、前段の waiting 記録も認識する。
-- 無変更の判定は runner が実行前後の変更ファイルの内容・モードと HEAD 間の差分で行う。その Run の plan・result・evidence・Run JSON、`generated/`、exec の lock を除き、子の exec event と grade result は変更として数える。成功時だけ適用し、`precondition` の有無や in-place / worktree に依存しない。無変更なら記録を端末側の `noop` へ移して commit・統合前 review を省き、worktree を撤去する。端末側の記録で冪等性と checkpoint を維持し、既存 attempt の記録や利用者の変更は保持する。失敗・部分完了はこの抑制の対象外。
+- 無変更の判定は runner が実行前後の変更ファイルの内容・モードと HEAD 間の差分で行う。その Run の記録ディレクトリ全体（plan・result・evidence・ログなど）と Run JSON、`generated/`、exec の lock を除き、子の exec event と grade result は変更として数える。記録の配置は `src/shared/run-records.ts` で解決する。成功時だけ適用し、`precondition` の有無や in-place / worktree に依存しない。無変更なら記録を端末側の `noop` へ移して commit・統合前 review を省き、worktree を撤去する。端末側の記録で冪等性と checkpoint を維持し、既存 attempt の記録や利用者の変更は保持する。失敗・部分完了はこの抑制の対象外。
 - dashboard は `src/routine/storage.ts` を通して CLI と同じ状態・履歴を読む。[[prj-0001:stsd-routine-run|ステータス定義（定期処理の実行結果）]] の管理場所「routine 実行状態」は端末側の `routine-state.json` に対応し、履歴は dashboard の日別実績に対応する。状態値・遷移・本文は変更していない。[[prj-0001:sysd-job-execution|Job実行設計]] と運用ガイド、command reference、CHANGELOG の Unreleased を更新した。
-- 単体テストは保存先・旧状態の非上書き移行・dashboard の参照先・成功/skip/部分完了/Job Run ありの失敗の非保存・Job Run なしの失敗の単独 commit・無変更記録の除去・既存 attempt の復元・既存の利用者差分の保持・子 exec/grade の差分検出を追加した。統合テストは `precondition` のない無変更 command Job を、review 宣言あり/なしの両方で実行し、HEAD・index・作業ツリー・worktree 撤去・同じ枠の再実行抑止を検証する。
+- 単体テストは保存先・旧状態の非上書き移行・dashboard の参照先・成功/skip/部分完了/Job Run ありの失敗の非保存・Job Run なしの失敗の単独 commit・無変更記録の除去・既存 attempt の復元・既存の利用者差分の保持・子 exec/grade の差分検出を追加した。共通モジュールの配置にある evidence・ログ・pipeline 状態の除去と復元、初回 commit 前の判定、routine CLI からの成功/skip/失敗記録と lock 解放、後段の例外で前段の Job Run ID を失わないことも回帰テストにした。統合テストは `precondition` のない無変更 command Job を、review 宣言あり/なしの両方で実行し、HEAD・index・作業ツリー・worktree 撤去・同じ枠の再実行抑止を検証する。
+- 再開前の親 `test-unit` の5件の失敗は、Git 未初期化の in-place command Job に無変更判定が Git 操作を要求したためだった。Git がなければ既存の記録動作を維持し、初回 commit 前は HEAD 比較を省いてファイルの差分で判定する。Git がない場所には commit 対象もないため、この扱いとした。子コマンドの通知を親 Job の最終通知で上書きし、routine が入れ子の Job の結果を取り違えないようにした。単体・統合テストの再実行は親 runner が行う。
 - executor 検証は Prettier、`npm run validate:history-links`、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build`、`node tools/check-evidence-secrets.mjs --staged` が通過した。catalog は既存の未作成文書・re-export 参照などの警告があるが終了コードは 0。型・lint・単体/統合テスト・schema は指定された親 runner の検証に委ねる。
 - 保護設定の変更案と未決事項はない。統合後は運用メモに従い、オーケストレーターが PJR-JSEY の対象へ PJR-PZBP を追加して実 CLI の動作確認を行う。
 
