@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_413435a32eae41e58f0d4141d1f85b7a
+- v: 1
+  id: reg_f7c88c572ffd41d68ab31f2dc393542e
+  ts: "2026-11-06T00:25:43Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分、保護された設定の不変、検査の再実行（6,785 件・候補 4 件）、関連テスト 71 件、親の検証の合格を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: redactSensitiveText に 8 形式を足し、依存のない検査 tools/check-evidence-secrets.mjs を足した。既存の記録の候補は 4 件で、いずれも説明の文やテストの例。hook と CI の案は個票に記載し未反映
+  previous_event_id: reg_ef604451b8814db2bb1011e109a960be

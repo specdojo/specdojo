@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-fma4-evidence-secret-redaction
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-05T22:17:51Z"
+  completed_at: "2026-11-06T00:25:43Z"
+  conclusion: redactSensitiveText に 8 形式を足し、依存のない検査 tools/check-evidence-secrets.mjs を足した。既存の記録の候補は 4 件で、いずれも説明の文やテストの例。hook と CI の案は個票に記載し未反映
   derived_from:
     - PJR-2WC2
 ---
