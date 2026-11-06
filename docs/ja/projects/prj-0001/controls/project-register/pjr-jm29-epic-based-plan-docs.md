@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-jm29-epic-based-plan-docs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-05T22:55:07Z"
+  completed_at: "2026-11-06T00:59:41Z"
+  conclusion: tml の Kata を deprecated にし、ガイド 3 本・リファレンス 2 本・rulebook 2 本を epic ベースの全体計画に直した。epic 3 件に domains を記入し、dct-planning から tml-index を外し、tml-index.yaml は非推奨の注記付きで残した
   derived_from:
     - PJR-VYSC
   depends_on:

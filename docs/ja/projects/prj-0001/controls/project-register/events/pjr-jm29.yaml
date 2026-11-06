@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cd96a7034873420f8ca30889057a7cf1
+- v: 1
+  id: reg_774ddc797e93426487e75226ca0afe7e
+  ts: "2026-11-06T00:59:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分、runner のコードと保護された設定の不変、catalog validate、親の検証の合格、ホストでの npm run docs:build の成功（1 回目は kata-staging の片付けの一時的な失敗、再実行で成功）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: tml の Kata を deprecated にし、ガイド 3 本・リファレンス 2 本・rulebook 2 本を epic ベースの全体計画に直した。epic 3 件に domains を記入し、dct-planning から tml-index を外し、tml-index.yaml は非推奨の注記付きで残した
+  previous_event_id: reg_91732a2bff74446687acc3158e3c45d4
