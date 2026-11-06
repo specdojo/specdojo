@@ -16,8 +16,10 @@ specdojo:
   derived_from:
     - PJR-VH8D
   depends_on:
+    - PJR-VH8D
     - PJR-Z0XR
     - PJR-BVS9
+    - PJR-BRN4
 ---
 
 # PJR-9BY9 既存の実行記録を run 単位のディレクトリへ移す
