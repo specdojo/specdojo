@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6328c8f1b6df47cfadd491e536eecff8
+- v: 1
+  id: reg_5fb1d2767dfb49d5917902f7bf9ab68e
+  ts: "2026-11-06T12:53:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が差分と完了条件で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-sample の遷移 ID を図と表の順に T-01〜T-08 へ振り直し、図の前の範囲の記載も合わせた
+  previous_event_id: reg_b40aaaa083104f21ab5b070c6323269f

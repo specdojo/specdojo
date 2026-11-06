@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-cy0s-stsd-sample-transition-id-renumber
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-06T12:06:56Z"
   due_on: null
+  completed_at: "2026-11-06T12:53:24Z"
+  conclusion: stsd-sample の遷移 ID を図と表の順に T-01〜T-08 へ振り直し、図の前の範囲の記載も合わせた
   derived_from:
     - PJR-3APD
     - PJR-0QJS
