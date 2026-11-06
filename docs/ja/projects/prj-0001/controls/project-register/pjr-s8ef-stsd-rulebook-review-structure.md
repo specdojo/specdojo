@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: BA
@@ -54,7 +54,10 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:stsd-rulebook|ステータス定義作成ルール]] を改訂した。「目的」を状態による業務判断に限定し、「適用範囲」の後へ必須の「状態の判定」を追加した。現行を既定とするスコープ規則を全体方針・命名規則でそろえ、「状態遷移」に各図と直下の遷移表をまとめた。図のラベルは `T-<nn> イベント / 条件` とし、完成判定・禁止事項も整合させた。
+- grade の F001 は既存の ID 保持・欠番・再利用禁止の規則で解消済みのため維持し、図のラベルにも同じ ID を使う規則を加えた。F002 は「本文要件」の表と記述ガイドに、正本の管理場所を「状態の判定」、状態変更を起こす業務範囲を「適用範囲」として対応させた。判定根拠は [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-qe-omissions-consistency` と [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]。
+- [[prj-0001:xer-t-stsd-pilot-stsd-job-run-080|Job Run の簡潔化結果]]、[[prj-0001:xer-t-stsd-pilot-stsd-register-entry-080|登録項目の簡潔化結果]]、[[prj-0001:xer-t-stsd-pilot-stsd-routine-run-080|定期処理の簡潔化結果]] と各成果物を照合した。`vp-arc-conciseness` に照らし、図表の全遷移の対応と共有状態の宣言は判断・到達性の確認に必要なため維持した。分割閾値を緩和する根拠はなく、Mermaid 規則への委譲を維持した。共通条件の集約・表からの参照により、図表以外の説明の反復を避ける規則を加えた。[[prj-0001:stsd-task-execution|タスク実行のステータス定義]] のイベント再生・導出状態・過去イベントの互換も「状態の判定」の根拠とした。
+- 他の Kata は変更していない。後続で [[specdojo:stsd-recipe|STSD 作成レシピ]]・[[specdojo:stsd-sample|STSD サンプル]]・[[specdojo:stsd-template|STSD テンプレート]] の目的、スコープ、正本・判定・互換の配置、新章立て、図ごとの直下の表、ラベルの ID を改訂後の規則へ合わせる必要がある。[[specdojo:stsd-mermaid-rulebook|STSD の Mermaid 規則]] も章参照と遷移ラベル・構文例・完成判定を合わせる必要がある（図のラベルは PJR-16T7 の対象）。差異は主 rulebook を優先すると明記した。`docs/ja/product/` 配下は変更せず、適用する際の追随が必要である。検査結果は後続 runner の evidence・reporter の result に記録する。
 
 ## 6. 関連ドキュメント
 

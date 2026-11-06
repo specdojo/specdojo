@@ -44,3 +44,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-3APD"]'
+- v: 1
+  id: reg_41465ffffbfc4a23b5f695f22c087cb1
+  ts: "2026-11-06T11:19:44Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2483e34c7dbe4ab3bbcd49abfd1a8529
+- v: 1
+  id: reg_69b00e1f613b49a098393a14f812869b
+  ts: "2026-11-06T11:31:15Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_41465ffffbfc4a23b5f695f22c087cb1
