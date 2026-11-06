@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
@@ -104,8 +104,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-04 22:44 | PJR-SJBV | sonnet-executor        |
 | 2026-11-04 23:31 | PJR-1BRQ | sonnet-executor        |
 | 2026-11-05 18:47 | PJR-H2V8 | sonnet-executor        |
+| 2026-11-07 08:22 | PJR-TA6W | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-H2V8 とした（最終の実行コミット `73232bb5a`、2026-11-05 18:44 JST。直前の確認対象 PJR-1BRQ より後）。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-TA6W とした（review 遷移の実行コミット `39ac4f61d`、2026-11-07 08:16 JST。PJR-Z0XR・PJR-PZBP より後で、直前の確認対象 PJR-H2V8 より後）。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
