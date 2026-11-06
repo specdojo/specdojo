@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-06T17:26:33Z"
   due_on: null
+  block_reason: "parent validation failed: lint-fm, test-integration"
   derived_from:
     - PJR-Z0XR
 ---
@@ -62,8 +63,16 @@ PJR-Z0XR の統合後、古い配置で始まった PJR-PZBP を executor から
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 原因: register の executor 再開で以前の run ID を引き継がず、state と evidence の保存先を新配置で生成していた。統合の除外判定も result の親ディレクトリだけを基準にしていたため、新配置へ分かれた自分の記録を別 run として黙って除外した。
+- 修正: 再開元の run ID を pipeline へ渡し、旧 checkpoint がある場合は state・evidence・ログと `*.attempt-N.*` の保存先を元のディレクトリへそろえた。配置の決定は共有モジュールに集約し、schedule の再開でも同じ方針を使う。
+- 統合: 新配置の result から run ID を、旧配置の result からは checkpoint の成果物参照を使って現在の run を特定する。成果物参照のない旧 checkpoint では再開処理と同じく最新 run を使う。commit 処理に渡る plan の stem と、frontmatter の `task_id` を区別し、同じ run の新旧両配置の記録を許可リストにも含める。別 run の除外は維持し、除外した記録を標準出力と `integrate.log` に表示する。
+- 回帰テスト: 実 worktree を使い、旧配置の通常再開・executor 再開と続く reporter 再開、同一 run が新旧両配置に分かれた場合の commit、別 run の除外と警告、新配置の plan・result・evidence・ログ・state の commit を確認するケースを追加した。旧 checkpoint の長い task ID、result の配置別の判定、試行退避も単体テストで扱う。単体・統合テスト、型検査、各 lint の実行は親 runner が担当する。
+- executor の検証: Prettier、`git diff --check`、`npm run validate:history-links`、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build --project prj-0001` が成功した。catalog の既存の参照先不足・再エクスポート参照の警告は残る。executor の変更に YAML はなく、ファイル単位の schema 検査は適用外である。
+- 運用ガイドを再開時の保存先と除外警告に合わせ、CHANGELOG の未公開節へ記載した。PJR-PZBP の再開分の evidence・ログは既に worktree とともに削除されており、この修正では復元できない。
+- 統合後の確認: runner の実動作確認は [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] に従い、PJR-JSEY で実施する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-z0xr-exec-run-record-layout|PJR-Z0XR 実行記録の配置の共通化]]
+- [[prj-0001:pjr-brn4-integrate-drops-unlisted-additions|PJR-BRN4 統合が許可外の追加を黙って落とす]]
+- [[specdojo:exec-operation-guide|exec 運用ガイド]]
