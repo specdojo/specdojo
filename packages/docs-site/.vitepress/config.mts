@@ -24,6 +24,7 @@ import { scanLocaleSidebar } from "./locale-sidebar";
 import { mermaidAssets } from "./mermaid-assets";
 import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
 import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
+import { loadArchiveLinks, resolveArchiveWikilink } from "./archive-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
@@ -68,6 +69,7 @@ function loadDocIndex(workspaceRoot: string): Record<string, string> {
   }
 }
 const docIndex = loadDocIndex(WORKSPACE_ROOT);
+const archiveLinks = loadArchiveLinks(WORKSPACE_ROOT);
 
 // doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
 function stripEntryLineSuffix(entry: string): string {
@@ -1073,12 +1075,14 @@ export default defineConfig({
 
         if (!silent) {
           const entry = docIndex[id];
-          const execRecordLink = resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
-          if (execRecordLink) {
+          const sourceLink =
+            resolveArchiveWikilink(inner, archiveLinks, GITHUB_SOURCE) ??
+            resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
+          if (sourceLink) {
             let token = state.push("link_open", "a", 1);
-            token.attrSet("href", execRecordLink.href);
+            token.attrSet("href", sourceLink.href);
             token = state.push("text", "", 0);
-            token.content = execRecordLink.displayText;
+            token.content = sourceLink.displayText;
             state.push("link_close", "a", -1);
           } else if (entry) {
             const entryPath = stripEntryLineSuffix(entry);
