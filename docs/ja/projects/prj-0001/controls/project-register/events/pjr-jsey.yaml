@@ -3981,3 +3981,19 @@
       from: 1BRQ の統合後に exec run --register が start から review・統合まで通ることを確かめた
       to: H2V8 の統合後も exec run --register が start から統合まで通った
   previous_event_id: reg_143f38d4e83545ceafbb5d04fd6d9eb2
+- v: 1
+  id: reg_01ac894ef80d4c18bbca79d3eadb39b6
+  ts: "2026-11-06T23:19:22Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-Z0XR・PJR-PZBP・PJR-TA6W の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-05"
+      to: "-"
+  previous_event_id: reg_8663106eb22a4ba6bcbd000065d2d14b
