@@ -41,3 +41,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-Z0XR","PJR-BVS9"]'
+- v: 1
+  id: reg_5b23a325d9ae40f3842c7aae71b84de7
+  ts: "2026-11-06T16:08:19Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-Z0XR","PJR-BVS9"]'
+      to: '["PJR-VH8D","PJR-Z0XR","PJR-BVS9","PJR-BRN4"]'
+  previous_event_id: reg_a027c83f6d134cdf836e381ee9ad0db4
