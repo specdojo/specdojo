@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 概要
 
-epic に着手の記録がないため全体計画の開始日がすべて未定になる。epic に予定の開始日 start_on を持たせ、全体計画の開始日に使う
+epic に着手の記録がないため全体計画の開始日がすべて未定になる。epic に予定の開始日 start_on を持たせ、全体計画の開始日に使う。
 
 ## 2. 入力
 
@@ -30,13 +30,26 @@ epic に着手の記録がないため全体計画の開始日がすべて未定
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `register-item-frontmatter.schema.yaml` に `start_on`（`YYYY-MM-DD` の暦日、任意）を足し、持てるのは `item_type: epic` だけとする。
+- `register add` / `update` に `--start-on <YYYY-MM-DD>` を足し、`--start-on -` で外せる。epic 以外の type に指定したとき、また日付の形式が正しくないときは、記帳の前にエラーで止まる。
+- dashboard の全体計画（`src/dashboard/epic-plan.ts`）の開始日を、入力の決定の順（`start_on`、epic 自身の着手の記録、先行 epic の終わりの翌稼働日、未定）で求める。`start_on` と `due_on` の両方があれば稼働日数とガントの期間が出る。
+- `start_on` が `due_on` より後のときは `register build` が警告を出し、期間は未定として扱う。
+- 単体テストで、`start_on` があるとき、ないとき（先行 epic から求める）、どちらもないとき（未定）、`start_on` が `due_on` より後のとき、epic 以外に指定したとき（エラー）を確かめる。
+- Kata の `pjr-rulebook`（項目の表と全体計画の規則）、登録簿運用ガイド、コマンドリファレンスを `start_on` に合わせる。
+- CHANGELOG は未公開の版の節に書き、公開済みの版の節を変えない。
+- `npm run typecheck`、`npm run lint:ts`、`npm run test:unit`、`npm run lint:md` が通り、親の検証（`test-integration`）が通る。
+- 既にある epic 3 件（PJR-3APD・PJR-GEZN・PJR-GQN3）の `start_on` は入れない。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                             | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------ | ---- | ---- | ---- |
+| 1   | schema に `start_on` を足す                      | DEV  | open | -    |
+| 2   | `register add` / `update` に `--start-on` を足す | DEV  | open | -    |
+| 3   | 全体計画の開始日を決定の順で求める               | DEV  | open | -    |
+| 4   | `start_on` が `due_on` より後のときの警告を足す  | DEV  | open | -    |
+| 5   | 単体テストを足す                                 | DEV  | open | -    |
+| 6   | Kata・ガイド・リファレンス・CHANGELOG を合わせる | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -44,4 +57,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:pjr-rulebook]]: 登録簿の項目と全体計画の規則
+- [[specdojo:register-operation-guide]]: 全体計画の生成と期間未定の扱い
