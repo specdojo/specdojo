@@ -15,17 +15,18 @@ specdojo:
     - PJR-PE19
 ---
 
-# PJR-74QP 全体計画の epic の開始日を子の todo の着手から求める
+# PJR-74QP epic に予定の開始日（start_on）を持たせ全体計画に使う
 
 ## 1. 概要
 
-epic は run で流さず着手の記録がないため、dashboard の全体計画の開始日がすべて未定になる。子の todo の最初の着手などから開始日を求める
+epic に着手の記録がないため全体計画の開始日がすべて未定になる。epic に予定の開始日 start_on を持たせ、全体計画の開始日に使う
 
 ## 2. 入力
 
 - 由来: PJR-PE19 の統合後に orchestrator が dashboard build を実行した。epic 3 件（PJR-3APD・PJR-GEZN・PJR-GQN3）とも開始日が未定、稼働日数が - で、ガントに期間が出ない（2026-11-06）
 - 原因の見立て: PE19 は開始日を epic 自身の着手 event から取るが、epic は exec run --register の対象外で start が記帳されない（2026-11-06）
-- `_UNDECIDED_:` 開始日の求め方（子の todo（`derived_from` が epic）の最初の start、子がなければ epic の `registered_at` など）。利用者の確認が要る（2026-11-06）
+- 決定（A 案）: 開始日は epic の `start_on` を最優先し、なければ epic 自身の着手の記録、先行 epic の終わりの翌稼働日の順で使い、どれもなければ未定とする。子の todo の着手や起票日からは補わない。実績の開始日を別の列に出すこと（B 案）は範囲外（2026-11-06 indie が決定）
+- 既にある epic 3 件の `start_on` は日付が決まっていないため、この項目では入れない（2026-11-06）
 
 ## 3. 完了条件
 
