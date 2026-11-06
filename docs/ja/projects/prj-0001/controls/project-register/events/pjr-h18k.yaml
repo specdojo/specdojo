@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e1044274143b4f139973828249a91a3b
+- v: 1
+  id: reg_6c484e5128764e13b076b6c19ca30a8e
+  ts: "2026-11-06T14:06:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が章立て・図と表の対応・ID の連番・旧新の対応・検討メモの見直しで確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-register-entry を新しい Kata に合わせ、状態の判定の章・図ごとの直下の表・`T-<nn>` 入りのラベルにし、遷移 ID を T-01〜T-40 に振り直した
+  previous_event_id: reg_8aaf40b6531249619c00401ffa2c12a7

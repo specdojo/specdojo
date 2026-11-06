@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-h18k-stsd-register-entry-review-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:16:00Z"
   due_on: null
+  completed_at: "2026-11-06T14:06:35Z"
+  conclusion: stsd-register-entry を新しい Kata に合わせ、状態の判定の章・図ごとの直下の表・`T-<nn>` 入りのラベルにし、遷移 ID を T-01〜T-40 に振り直した
   derived_from:
     - PJR-3APD
   depends_on:
