@@ -60,6 +60,11 @@ pre-commit:
       glob: "docs/**/sch-*.yaml"
       run: npx tsx src/specdojo.ts exec refresh
 
+    # 実行記録（plan / result / evidence / log）に認証情報が残ったまま commit されるのを
+    # 止める（PJR-FMA4）。入口は依存なしで動く plain JS で、staged の追加・変更だけを見る。
+    evidence-secret-scan:
+      run: node tools/check-evidence-secrets.mjs --staged
+
     index-build:
       glob: "docs/**"
       # doc-index.json も gitignore 済みの生成物。再生成のみ行い commit に含めない。
