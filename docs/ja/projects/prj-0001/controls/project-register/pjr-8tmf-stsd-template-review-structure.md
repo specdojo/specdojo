@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:14:08Z"
   due_on: null
+  completed_at: "2026-11-06T13:06:45Z"
+  conclusion: stsd-template を目的（状態の目的）・適用範囲・状態の判定・状態一覧・状態遷移（図の直下に遷移表、`T-<nn>` 入りのラベル）の骨組みに合わせ、スコープは TO-BE と並ぶ場合だけ書く形にした
   derived_from:
     - PJR-3APD
   depends_on:
