@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9c785c35edae4245b8c999ff4856aa79
+- v: 1
+  id: reg_400dc3fcb38944e6af8fe1fe4da2f63c
+  ts: "2026-11-06T10:44:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が差分・テスト・CLI の dry-run で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: epic の start_on を追加し、全体計画の開始日を start_on・epic の着手記録・先行 epic の終了の翌稼働日・未定の順で求めるようにした
+  previous_event_id: reg_85752de7d9f44782ab513d5788a0cf51

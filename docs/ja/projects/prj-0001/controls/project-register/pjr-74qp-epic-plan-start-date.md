@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-74qp-epic-plan-start-date
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-05T23:58:10Z"
+  completed_at: "2026-11-06T10:44:17Z"
+  conclusion: epic の start_on を追加し、全体計画の開始日を start_on・epic の着手記録・先行 epic の終了の翌稼働日・未定の順で求めるようにした
   derived_from:
     - PJR-PE19
 ---
