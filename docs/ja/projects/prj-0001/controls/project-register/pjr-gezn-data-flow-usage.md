@@ -8,6 +8,7 @@ specdojo:
     - prj-0001:pjr-index
   item_type: epic
   track: data-flow-usage
+  domains: [data-flow]
   item_status: done
   priority: medium
   owner: BA
@@ -32,7 +33,7 @@ PJR-SJQC の決定に沿って、cdfd-overview を共通・基盤と 3 系統の
 
 ## 3. 範囲（track と domain）
 
-_TODO_: Frontmatter の `track` が担う範囲と対象 domain、対象外の境界を記載する。
+track `data-flow-usage` は、domain `data-flow` の全体概要（cdfd-overview）と系統別の詳細 3 文書（cdfd-uc-register・cdfd-uc-schedule・cdfd-uc-routine）への再編、および旧 7 文書の非推奨化と関連 Kata の見直しを担う。ほかの domain は対象外とする。
 
 ## 4. 完了の判断の基準
 

@@ -27,36 +27,13 @@ groups:
           - text: 索引ビューとサイドバーから全ドメインへ到達できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
-  - name: トラック順序計画
-    base_path: timeline
-    deliverables:
-      - local_id: tml-index
-        name: トラック順序計画
-        kind: work
-        depends_on: [dct-index]
-        overview: 成果物カタログ作成からトラック実行までのマクロな着手順序を計画
-        path: tml-index.yaml
-        rulebook: specdojo:tml-rulebook
-        done_criteria:
-          - text: トラックの着手順序と並行方針を承認できること
-            roles: [PO]
-            viewpoint: vp-po-decision-readiness
-          - text: order・parallel_group・depends_on が計画立案に使える粒度で定義されていること
-            roles: [PM]
-            viewpoint: vp-pm-plan-feasibility
-          - text: トラック間の依存関係に循環や矛盾がないこと
-            roles: [PM]
-            viewpoint: vp-pm-dependency-risk
-          - text: catalog_status と実際のカタログ作成状況が一致していること
-            roles: [QE]
-            viewpoint: vp-qe-config-validity
   - name: Schedule 共通計画
     base_path: schedule
     deliverables:
       - local_id: sch-defaults
         name: スケジュールデフォルト定義
         kind: work
-        depends_on: [tml-index]
+        depends_on: []
         overview: 全トラック共通のカレンダーと開始日を定義
         path: sch-defaults.yaml
         rulebook: specdojo:sch-rulebook

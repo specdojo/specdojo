@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-05T22:55:07Z"
-  block_reason: "parent validation failed: lint-fm, test-unit"
   derived_from:
     - PJR-VYSC
   depends_on:
@@ -54,6 +53,7 @@ tml の Kata を非推奨にし、ガイドとリファレンスを epic ベー�
 ## 5. 対応結果
 
 - `tml-rulebook.md` と `tml-sample.yaml` を `deprecated` にし、冒頭に epic への移行先を示した。`timeline-design-guide.md` は非推奨と移行手順・互換運用だけに絞った。
+- 再開時に、移行ガイドへ必須の英語名と導入ブロックを補い、固定サイドバーから非推奨の tml rulebook・sample を外した。前回の親検証で報告された `lint:fm` と非推奨 Kata 混入の失敗原因を修正し、再検証は親 runner に委ねる。
 - `docs-structure-guide`・`register-operation-guide`・`specdojo-overview-guide`・`specdojo-config-reference`・`command-reference`・`pjr-rulebook`・`dct-rulebook` を更新し、全体計画の正本、期間の規則と未定の扱い、範囲解決の優先順、CLI の `--domain`、旧形式の互換期間を記載した。CHANGELOG は未公開版へ追記した。
 - PJR-3APD に `domains: [data-model]`、PJR-GQN3・PJR-GEZN に `domains: [data-flow]` を記録した。個票の範囲と旧 timeline の対応から採り、PJR-GEZN の未記入だった範囲は概要・strategy の 4 文書の scope で補った。epic 間の依存は由来や旧順序から推測して追加していない。
 - `dct-planning.yaml` の `tml-index` のグループを外し、`sch-defaults` の `depends_on: [tml-index]` を空配列へ変更した。カレンダー・開始日の正本には旧 timeline の入力がなく独立して定義でき、残す必要のある依存はなかった。prj-0001 の `tml-index.yaml` は冒頭に非推奨コメントを加えて保持した。削除は利用者の判断に委ねる。

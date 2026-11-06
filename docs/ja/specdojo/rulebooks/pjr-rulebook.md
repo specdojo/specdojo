@@ -56,33 +56,35 @@ Project Register Documentation Rules
 
 個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
-| 項目              | 説明                                             | 必須        |
-| ----------------- | ------------------------------------------------ | ----------- |
-| `id`              | `<project-id>:pjr-XXXX-<topic>`                  | ○           |
-| `type`            | `project`                                        | ○           |
-| `status`          | 文書成熟度。`draft` / `ready` / `deprecated`     | ○           |
-| `rulebook`        | `specdojo:pjr-rulebook`                          | ○           |
-| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列        | ○           |
-| `item_type`       | 登録項目の分類                                   | ○           |
-| `track`           | epic が担う track。ほかの type では指定しない    | epic で必須 |
-| `item_status`     | 登録項目の処理状態                               | ○           |
-| `priority`        | 対応優先度                                       | ○           |
-| `difficulty`      | agent 振り分け用の作業難易度                     | 任意        |
-| `owner`           | 主担当者または役割                               | 任意        |
-| `registered_at`   | 起票日時                                         | 任意        |
-| `due_on`          | 対応期限または判断期限                           | 任意        |
-| `completed_at`    | 完了・却下・決定日時                             | 条件        |
-| `block_reason`    | `waiting` へ遷移した直近の理由                   | 任意        |
-| `conclusion`      | 終端時の結論要約                                 | 任意        |
-| `derived_from`    | 起票の元になった登録項目 ID の配列               | 任意        |
-| `depends_on`      | 実行前に完了しているべき先行の登録項目 ID の配列 | 任意        |
-| `approach`        | 対象を作成・修正するときの進め方                 | 任意        |
-| `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス | 任意        |
-| `target_rulebook` | 対象成果物の rulebook ID                         | 任意        |
-| `targets`         | 変更対象文書の doc id リスト                     | 任意        |
+| 項目              | 説明                                                              | 必須        |
+| ----------------- | ----------------------------------------------------------------- | ----------- |
+| `id`              | `<project-id>:pjr-XXXX-<topic>`                                   | ○           |
+| `type`            | `project`                                                         | ○           |
+| `status`          | 文書成熟度。`draft` / `ready` / `deprecated`                      | ○           |
+| `rulebook`        | `specdojo:pjr-rulebook`                                           | ○           |
+| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列                         | ○           |
+| `item_type`       | 登録項目の分類                                                    | ○           |
+| `track`           | epic が担う track。ほかの type では指定しない                     | epic で必須 |
+| `domains`         | epic が対象とする domain の文字列配列。ほかの type では指定しない | 任意        |
+| `item_status`     | 登録項目の処理状態                                                | ○           |
+| `priority`        | 対応優先度                                                        | ○           |
+| `difficulty`      | agent 振り分け用の作業難易度                                      | 任意        |
+| `owner`           | 主担当者または役割                                                | 任意        |
+| `registered_at`   | 起票日時                                                          | 任意        |
+| `due_on`          | 対応期限または判断期限                                            | 任意        |
+| `completed_at`    | 完了・却下・決定日時                                              | 条件        |
+| `block_reason`    | `waiting` へ遷移した直近の理由                                    | 任意        |
+| `conclusion`      | 終端時の結論要約                                                  | 任意        |
+| `derived_from`    | 起票の元になった登録項目 ID の配列                                | 任意        |
+| `depends_on`      | 実行前に完了しているべき先行の登録項目 ID の配列                  | 任意        |
+| `approach`        | 対象を作成・修正するときの進め方                                  | 任意        |
+| `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス                  | 任意        |
+| `target_rulebook` | 対象成果物の rulebook ID                                          | 任意        |
+| `targets`         | 変更対象文書の doc id リスト                                      | 任意        |
 
-- `epic` は track ごとの大きな仕事を表し、自身は実行しない。`track` は英小文字・数字・ハイフンの識別子とし、先頭は英小文字または数字にする。`tml-index.yaml` がある場合、定義済みの track を指定する。ない場合も識別子を保持できる。
-- `register add --type epic --track <track>` で起票し、`register update --track <track>` で変更する。epic の `track` は削除できない。変更はイベントに残す。
+- `epic` は track ごとの全体計画の正本であり、自身は実行しない。`track` は英小文字・数字・ハイフンの識別子とし、先頭は英小文字または数字にする。同じ project 内の epic どうしで track を重複させない。旧 `tml-index.yaml` への登録は不要とする。
+- `register add --type epic --track <track> --domain <domain>` で起票し、`register update --track <track> --domain <domain>` で変更する。epic の `track` は削除できない。`--domain` は反復指定で一覧を置き換え、update の `--domain -` 単独で削除する。`domains` を省略した場合だけ互換用 timeline へ範囲の解決を委ね、空配列は対象なしの明示指定とする。変更はイベントに残す。
+- 全体計画の順序は epic 間の `depends_on`、範囲は `domains`、期間は着手・完了の記録と `due_on` から導く。`register build` は epic の依存循環と track の重複を拒否する。epic のない track は全体計画へ出さない。生成と期間未定の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]] に従う。
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority`、`difficulty` の値は schema の enum だけを使用する。`difficulty` は `hard` / `medium` / `easy` のいずれかとし、省略時は従来の agent 自動選択を使う。
 - `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。

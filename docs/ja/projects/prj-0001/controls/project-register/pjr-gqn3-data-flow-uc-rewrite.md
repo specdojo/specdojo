@@ -8,6 +8,7 @@ specdojo:
     - prj-0001:pjr-index
   item_type: epic
   track: data-flow-uc-rewrite
+  domains: [data-flow]
   item_status: done
   priority: medium
   owner: BA
