@@ -8,11 +8,13 @@ specdojo:
     - prj-0001:pjr-index
   item_type: epic
   track: data-flow-uc-rewrite
-  domains: [data-flow]
+  domains:
+    - data-flow
   item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-11-03T03:46:02Z"
+  start_on: "2026-11-03"
   due_on: "2026-11-30"
   completed_at: "2026-11-03T12:52:17Z"
   conclusion: cdfd-uc-register・cdfd-uc-schedule・cdfd-uc-routine を、直したユースケース別 CDFD の Kata に合わせて 2 段（書き直しと磨き込み）で書き直した。目的を系統の目的にし、実行サイクルを 1 ノードにし、例外時の戻りを省かず図を分け、全図の線を 15 本以下にした

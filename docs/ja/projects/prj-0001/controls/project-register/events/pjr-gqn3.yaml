@@ -63,3 +63,16 @@
       from: "-"
       to: cdfd-uc-register・cdfd-uc-schedule・cdfd-uc-routine を、直したユースケース別 CDFD の Kata に合わせて 2 段（書き直しと磨き込み）で書き直した。目的を系統の目的にし、実行サイクルを 1 ノードにし、例外時の戻りを省かず図を分け、全図の線を 15 本以下にした
   previous_event_id: reg_50cca015dabb4d98b0e30b33bb9802cb
+- v: 1
+  id: reg_afedfd2c9ef84eaf877ef6544db9b77c
+  ts: "2026-11-06T10:58:54Z"
+  action: update
+  actor: SpecDojo
+  from_status: done
+  to_status: done
+  reason: fields updated
+  changes:
+    - field: start_on
+      from: "-"
+      to: "2026-11-03"
+  previous_event_id: reg_4fb055e09e374500b3e38fd5b410ea34
