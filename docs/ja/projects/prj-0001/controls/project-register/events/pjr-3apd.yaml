@@ -63,3 +63,16 @@
       from: '["PJR-1BRQ"]'
       to: '["PJR-1BRQ","PJR-0MR5","PJR-SJBV"]'
   previous_event_id: reg_9c979e4d4ee9454ba78710c49a81a1eb
+- v: 1
+  id: reg_bbeb859b04a74a928fb91ffd24fdaf65
+  ts: "2026-11-06T10:58:01Z"
+  action: update
+  actor: SpecDojo
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: start_on
+      from: "-"
+      to: "2026-11-05"
+  previous_event_id: reg_1ab058902805437399d6abded8a03bd8

@@ -8,11 +8,13 @@ specdojo:
     - prj-0001:pjr-index
   item_type: epic
   track: stsd-pilot
-  domains: [data-model]
+  domains:
+    - data-model
   item_status: open
   priority: medium
   owner: BA
   registered_at: "2026-11-03T23:51:57Z"
+  start_on: "2026-11-05"
   due_on: "2026-11-30"
   derived_from:
     - PJR-CYG0
