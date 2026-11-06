@@ -322,6 +322,16 @@ projects/<prj-id>/
 
 ファイル単位の完全なツリーは [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) の `プロジェクトドキュメントの構成` を参照してください。
 
+`reporting/progress-reports/` は週報などの成果物を初めて保存するときに作成します。job・routine の定義を置くだけでは作成されません。agent 型 job は作業指示を exec plan に展開し、報告本文と保存先ディレクトリの作成を agent が行います。出力先は project の `base_path` からの相対パスです。
+
+prj-0001 の `job-weekly-report.yaml` はこの出力先を指定していますが、対応する `rtn-weekly-report.yaml` は `enabled: false` のサンプルであり、`routine run --due` では選ばれません。週報を作成するまで `reporting/` が存在しないのは、この構成では正常です。
+
+### 8.3. 公開しない旧文書の保管
+
+現行の文書ツリーから外す旧文書は、リポジトリ直下の `archive/` に保管します。prj-0001 で廃止したプロダクト文書22件は `archive/ja/product/trash/` に置きます。`docs/` と project の外に置くことで、文書サイトのページ・サイドバー・検索と doc index の走査対象から外します。`trash` のパス区分は残し、カタログの現行文書探索や grade の対象に戻さないようにします。
+
+カタログの `path` は移動先を指し、ID と本文は保持します。過去の文書からの wikilink は `archive/ja/product/trash/links.json` で旧IDと移動先を対応付け、サイトではリポジトリ上のソースへ解決します。この対応表は公開 doc index には追加しません。
+
 ## 9. プロダクトドキュメントの構成
 
 ### 9.1. ディレクトリ構成の概観

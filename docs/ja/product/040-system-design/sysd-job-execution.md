@@ -238,7 +238,7 @@ checkpointはRun開始時ではなく成功確定時に更新する。失敗時�
 - occurrence key: `2026-W32`などのISO週
 - 入力: 期間の開始・終了、対象project
 - 根拠: Schedule/execの完了実績、registerの状態変化、前回週報
-- 出力: `reporting/weekly/<period>.md`など期間で一意な成果物
+- 出力: project の `base_path` を起点とする `reporting/progress-reports/` 配下の、期間で一意な成果物。保存先ディレクトリは報告を作成する agent が初回保存時に作る
 - 冪等性キー: `job-weekly-report:<period>`
 
 同じ週の再実行は同じRunのretryとして扱い、別名の週報を増やさない。対象期間の計算はroutineのtimezoneを基準とし、CLI実行時のローカルtimezoneへ依存させない。
