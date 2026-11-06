@@ -52,12 +52,20 @@ describe("buildExternalRegisterAddArgs", () => {
     const args = buildExternalRegisterAddArgs(
       "customer",
       { path: "../target", project_id: "prj-target" },
-      { ...baseOptions, type: "epic", track: "business", domain: ["business", "data-flow"] },
+      {
+        ...baseOptions,
+        type: "epic",
+        track: "business",
+        domain: ["business", "data-flow"],
+        startOn: "2026-11-06",
+      },
     );
     const start = args.indexOf("--track");
     expect(args.slice(start, start + 2)).toEqual(["--track", "business"]);
     expect(args.filter((arg) => arg === "--domain")).toHaveLength(2);
     expect(args).toContain("data-flow");
+    const planned = args.indexOf("--start-on");
+    expect(args.slice(planned, planned + 2)).toEqual(["--start-on", "2026-11-06"]);
   });
 
   it("forwards dependency IDs and rewrites the external project alias", () => {

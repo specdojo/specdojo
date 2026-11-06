@@ -163,6 +163,8 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
       return isUnset ? undefined : { item_type: value };
     case "track":
       return { track: isUnset ? REMOVE_REGISTER_ITEM_FIELD : value };
+    case "start_on":
+      return { start_on: isUnset ? REMOVE_REGISTER_ITEM_FIELD : value };
     case "priority":
       return isUnset ? undefined : { priority: value };
     case "difficulty":

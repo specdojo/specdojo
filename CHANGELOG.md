@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- epic の予定開始日 `start_on` と `register add` / `update --start-on` を追加しました。全体計画の開始日は予定開始日、epic 自身の着手記録、先行 epic の終了日の翌稼働日の順に使います。予定開始日が期限を超えると `register build` が警告し、期間を未定として表示します（PJR-74QP）。
+
 - `catalog validate` が、JavaScript / TypeScript の re-export だけのファイルを指す `evidence_refs` を警告するようになりました。警告で終了コードは変わりません。`catalog-planning` に状態遷移・判定・検証の本体の参照を確認する手順を追加しました（PJR-ABBM）。
 
 - 1 文書の冗長さを直す edit approach `condense` を追加しました。修正・保持の箇所と原因を result のリストと表に記録し、Kata が原因の記録を手入れの plan へ渡します。新規生成する標準フローでは磨き込みと review の間に `condense-pass`（080、normal）を置きます。register からカタログなしでも既存成果物を指定できます（PJR-1BRQ）。

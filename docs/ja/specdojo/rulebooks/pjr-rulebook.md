@@ -72,6 +72,7 @@ Project Register Documentation Rules
 | `owner`           | 主担当者または役割                                                | 任意        |
 | `registered_at`   | 起票日時                                                          | 任意        |
 | `due_on`          | 対応期限または判断期限                                            | 任意        |
+| `start_on`        | epic の予定開始日。ほかの type では指定しない                     | 任意        |
 | `completed_at`    | 完了・却下・決定日時                                              | 条件        |
 | `block_reason`    | `waiting` へ遷移した直近の理由                                    | 任意        |
 | `conclusion`      | 終端時の結論要約                                                  | 任意        |
@@ -84,7 +85,8 @@ Project Register Documentation Rules
 
 - `epic` は track ごとの全体計画の正本であり、自身は実行しない。`track` は英小文字・数字・ハイフンの識別子とし、先頭は英小文字または数字にする。同じ project 内の epic どうしで track を重複させない。旧 `tml-index.yaml` への登録は不要とする。
 - `register add --type epic --track <track> --domain <domain>` で起票し、`register update --track <track> --domain <domain>` で変更する。epic の `track` は削除できない。`--domain` は反復指定で一覧を置き換え、update の `--domain -` 単独で削除する。`domains` を省略した場合だけ互換用 timeline へ範囲の解決を委ね、空配列は対象なしの明示指定とする。変更はイベントに残す。
-- 全体計画の順序は epic 間の `depends_on`、範囲は `domains`、期間は着手・完了の記録と `due_on` から導く。`register build` は epic の依存循環と track の重複を拒否する。epic のない track は全体計画へ出さない。生成と期間未定の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]] に従う。
+- 全体計画の順序は epic 間の `depends_on`、範囲は `domains`、期間は `start_on`・着手・完了の記録と `due_on` から導く。開始日は `start_on`、epic 自身の最初の着手 event、先行 epic の最も遅い終了日の翌稼働日の順に使い、どれもなければ未定とする。子 todo の着手や起票日では補わない。`register build` は epic の依存循環と track の重複を拒否し、`start_on` が `due_on` より後なら警告する。この場合は期間を未定とする。epic のない track は全体計画へ出さない。生成は [[specdojo:register-operation-guide|登録簿運用ガイド]] に従う。
+- `register add` / `update` の `--start-on <YYYY-MM-DD>` で予定開始日を設定し、`--start-on -` で省略・削除する。ほかの type への指定と、実在しない日付や形式不正は記帳前に拒否し、変更は event に残す。
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority`、`difficulty` の値は schema の enum だけを使用する。`difficulty` は `hard` / `medium` / `easy` のいずれかとし、省略時は従来の agent 自動選択を使う。
 - `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。
@@ -97,7 +99,7 @@ Project Register Documentation Rules
 ### 3.1. 日時と日付の使い分け
 
 - 起票と終端は瞬間として記録し、`registered_at` / `completed_at` に UTC の RFC 3339・秒精度（`YYYY-MM-DDTHH:MM:SSZ`）で保存する。
-- 期限は瞬間ではなくプロジェクトタイムゾーン上の暦日であるため、`due_on` は `YYYY-MM-DD` のまま保持する。
+- 予定開始日と期限は瞬間ではなくプロジェクトタイムゾーン上の暦日であるため、`start_on` と `due_on` は `YYYY-MM-DD` のまま保持する。未定の `start_on` は省略する。
 - 一覧・派生ビューの「登録日」「完了日」は、保存した日時をプロジェクトの登録日タイムゾーンへ変換して導出する表示値であり、個票へ日付として重複保存しない。
 - 日時は register コマンドが記録する。手書きで日時を入力する場合も、タイムゾーンを含む値から UTC へ変換した値だけを保存する。
 

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { addWorkingDaysToDate, isWorkingDateUtc } from "../exec/schedule/calendar.js";
 import type { ScheduleCalendar } from "../exec/types.js";
-import { epicPredecessors, orderEpics } from "../register/epic.js";
+import { epicPredecessors, hasReversedEpicDates, orderEpics } from "../register/epic.js";
 import { registerDateFromTimestamp } from "../register/date.js";
 import { loadRegisterItemDocs, type PjrItem } from "../register/item.js";
 import { readRegisterEventsFromContent, registerEventFilePath } from "../register/events.js";
@@ -27,17 +27,23 @@ export function computeEpicSchedules(opts: {
     const predecessors = epicPredecessors(item, opts.projectId, byId);
     const actualStart = opts.starts.get(item.id);
     const completed = ["done", "decided", "rejected"].includes(item.status);
-    const endDate = completed
+    let endDate = completed
       ? registerDateFromTimestamp(item.completedAt, opts.timeZone)
       : /^\d{4}-\d{2}-\d{2}$/.test(item.due)
         ? item.due
         : undefined;
-    let startDate = actualStart ? registerDateFromTimestamp(actualStart, opts.timeZone) : undefined;
-    if (!startDate && !completed && item.status === "open" && predecessors.length > 0) {
+    let startDate =
+      item.startOn ??
+      (actualStart ? registerDateFromTimestamp(actualStart, opts.timeZone) : undefined);
+    if (!startDate && predecessors.length > 0) {
       const ends = predecessors.map((p) => rows.get(p.id)?.endDate);
       if (ends.every((end): end is string => end !== undefined)) {
         startDate = addWorkingDaysToDate(ends.sort().at(-1)!, 1, opts.calendar);
       }
+    }
+    if (hasReversedEpicDates(item) || (startDate && endDate && startDate > endDate)) {
+      startDate = undefined;
+      endDate = undefined;
     }
     // Unknown start/end stays unknown; do not fabricate a date or propagate it downstream.
     let estimateDays: number | undefined;

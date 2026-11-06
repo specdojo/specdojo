@@ -156,11 +156,11 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 
 ### 1.4. track の仕事を epic と子 todo で管理する
 
-epic は track ごとの全体計画の正本です。順序は epic 間の `depends_on`、範囲は `domains`、期間は着手・完了の記録と `due_on` で管理します。未着手の計画も `open` の epic として起票し、epic がない track は全体計画に出しません。子 todo と schedule の進捗を材料に、人が完了を判断します。
+epic は track ごとの全体計画の正本です。順序は epic 間の `depends_on`、範囲は `domains`、期間は予定開始日 `start_on`・着手・完了の記録と `due_on` で管理します。未着手の計画も `open` の epic として起票し、epic がない track は全体計画に出しません。子 todo と schedule の進捗を材料に、人が完了を判断します。
 
 ```bash
 specdojo register add --type epic --title "業務の仕様整備" --topic business-specs \
-  --track business --domain business-model --due 2026-11-30
+  --track business --domain business-model --start-on 2026-11-09 --due 2026-11-30
 specdojo register add --type todo --title "カタログを作成する" --topic business-catalog --from PJR-AB12
 specdojo register update --id PJR-AB12 --track business --domain business-model
 specdojo register build
@@ -171,19 +171,17 @@ specdojo dashboard build
 
 `--domain` は epic にだけ繰り返し指定でき、`update` では一覧を置き換えます。`--domain -` 単独で削除できます。domain の一部だけを対象にする場合は個票の範囲の章に境界を書き、strategy の `scope.catalogs[].local_ids` で限定します。strategy と未作成カタログの範囲は既存 strategy の scope、epic の `domains`、互換用 timeline の順で解決し、空の scope や `domains: []` も明示指定として扱います。変更は event に記録します。
 
+`--start-on` は epic にだけ指定できる予定開始日です。実在する暦日を `YYYY-MM-DD` で指定し、未定なら省略します。`update` では未指定なら保持し、`--start-on -` で削除します。ほかの type への指定と不正な日付は、個票・event を書く前に拒否します。
+
 `register build` は `generated/pjr-epic-items.md` に、epic ごとの直接の子項目とその type・現在の状態を表示します。別 project の子も project 修飾 ID で表示し、子がない epic も残します。孫は再帰的に表示しません。子の状態から epic を自動 close せず、完了基準を満たしたことを人が確認して `register close --id <epic-id> --conclusion "判断の根拠"` で `done` にします。`reject` / `defer` / `reopen` も todo と同じように使用できます。
 
 ### 1.5. 全体計画を確認する
 
 `dashboard build` は epic の依存順に全体計画の表とガントを `execution/generated/` へ出力します。カレンダーは `sch-defaults.yaml` を使います。
 
-| epic の状態 | 期間                                                   |
-| ----------- | ------------------------------------------------------ |
-| 完了        | 最初の着手 event から `completed_at` まで              |
-| 進行中      | 最初の着手 event から `due_on` まで                    |
-| 未着手      | 先行 epic の最も遅い終了日の翌稼働日から `due_on` まで |
+開始日は `start_on`、epic 自身の最初の着手 event、先行 epic の最も遅い終了日の翌稼働日の順に使います。どれも求められなければ未定です。子 todo の着手や起票日からは補いません。
 
-期限のない未完了 epic の終了日、着手履歴のない既存 epic の開始日、先行 epic がない未着手 epic の開始日は未定です。先行 epic の終了日が未定なら後続の開始日も未定です。`derived_from` は起票の由来であり、全体計画の順序には使いません。
+終了日は完了した epic なら `completed_at`、未完了なら `due_on` を使います。開始日と終了日がそろえば稼働日数とガントの期間を表示します。期限のない未完了 epic の終了日は未定です。先行 epic の終了日が未定でも、後続自身の予定開始日や着手記録があれば開始日に使います。`start_on` が `due_on` より後なら `register build` が警告し、開始日が終了日より後になる場合も含めて期間は未定とし、後続への終了日の引き継ぎも止めます。`derived_from` は起票の由来であり、全体計画の順序には使いません。
 
 `execution/generated/catalog-scaffold.md` には未作成の domain のカタログと作成コマンドを出力します。旧 timeline の移行は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
 

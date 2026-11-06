@@ -17,7 +17,7 @@ const legacy = {
     { track: "demo", domains: ["legacy"], catalog_status: "draft", order: 1, depends_on: [] },
   ],
 };
-function writeEpic(domains?: string[]) {
+function writeEpic(domains?: string[], dates: { start_on?: string; due_on?: string } = {}) {
   writeFileSync(
     join(root, "register/pjr-ab12-demo.md"),
     `---\n${dump({
@@ -27,6 +27,7 @@ function writeEpic(domains?: string[]) {
         item_status: "open",
         track: "demo",
         ...(domains === undefined ? {} : { domains }),
+        ...dates,
       },
     })}---\n\n# PJR-AB12 Demo\n`,
   );
@@ -147,6 +148,30 @@ describe("track domain resolution", () => {
     expect(readFileSync(join(output, "catalog-scaffold.md"), "utf8")).toContain("`epic`");
     expect(readFileSync(ticketPath, "utf8")).toBe(after);
   });
+
+  it.each([
+    { start: "2026-01-05", period: "2026-01-05 | 2026-01-09 | 5", planned: true },
+    { start: "2026-01-16", period: "未定 | 未定 | -", planned: false },
+  ])(
+    "dashboard loads planned epic dates without start events ($start)",
+    ({ start, period, planned }) => {
+      writeEpic(["epic"], { start_on: start, due_on: "2026-01-09" });
+      rmSync(join(root, "timeline/tml-index.yaml"));
+      const ticketPath = join(root, "register/pjr-ab12-demo.md");
+      const before = readFileSync(ticketPath, "utf8");
+      const output = join(root, "execution/generated");
+      const result = writeDashboard({
+        ...options(),
+        projectPath: root,
+        executionGeneratedPath: output,
+      });
+      expect(result.markdown).toContain(`| PJR-AB12 Demo | demo | open | ${period} | - |`);
+      const svg = readFileSync(join(output, "dashboard-timeline-gantt.svg"), "utf8");
+      if (planned) expect(svg).toContain('width="120" height="12" rx="3"');
+      else expect(svg).toContain("開始日未定 / 終了日 未定");
+      expect(readFileSync(ticketPath, "utf8")).toBe(before);
+    },
+  );
 
   it("legacy loading emits one deprecation warning across repeated reads", async () => {
     vi.resetModules();

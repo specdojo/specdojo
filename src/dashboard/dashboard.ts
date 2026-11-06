@@ -460,7 +460,7 @@ function renderTimelineSection(paths: DashboardPaths): string[] {
         );
       lines.push(
         "",
-        "期限のない epic は開始点のみ表示し、終了日は未定とします。先行 epic の終了日が未定なら後続の開始日も未定です。",
+        "未完了で期限のない epic は開始点のみ表示し、終了日は未定とします。開始日は予定開始日、epic 自身の着手記録、先行 epic の終了日の翌稼働日の順に求めます。日付の逆転がある期間は未定です。",
         "",
         "![全体計画ガントチャート](./dashboard-timeline-gantt.svg)",
         "",
@@ -806,7 +806,7 @@ export function writeDashboard(paths: DashboardPaths): {
         epicSchedule,
         epicStart,
         "全体計画（epic）",
-        "登録簿の着手・完了 event と期限から算出。期限未定は開始点のみ表示。",
+        "登録簿の予定開始日・着手記録・先行 epic と、完了日時・期限から算出。日付の逆転がある期間は未定。",
       );
     } else {
       const { index, errors } = loadTimelineIndex(indexPath);

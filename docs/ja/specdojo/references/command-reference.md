@@ -498,6 +498,7 @@ specdojo schedule strategy generate \
 | `--input <text>`             | 個票の前提を記録（繰り返し可、update は一覧置換、`-` 単独で全削除） | `add` / `update`                                 |
 | `--track <track>`            | epic が担う track（epic で必須、update で置換、削除不可）           | `add` / `update`                                 |
 | `--domain <domain>`          | epic の対象 domain（反復指定、update は一覧置換、`-` 単独で削除）   | `add` / `update`                                 |
+| `--start-on <YYYY-MM-DD>`    | epic の予定開始日（実在する暦日、`-` で省略・削除）                 | `add` / `update`                                 |
 | `--to <PJR-ID>`              | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
 | `--registered <datetime>`    | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
 | `--completed <datetime>`     | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
@@ -524,6 +525,8 @@ specdojo schedule strategy generate \
 | `--json`                     | イベントを JSON で出力する                                          | `history`                                        |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
+
+`--start-on` は epic の `start_on` に予定開始日を記録します。epic 以外への指定や不正な日付は記帳前に拒否します。`update` で未指定なら保持し、`-` で削除します。`start_on` が `due_on` より後でも記録は保持しますが、`register build` は警告し、全体計画の期間を未定として扱います。開始日の優先順位は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください。
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
 

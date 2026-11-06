@@ -26,7 +26,7 @@ import { validateRegisterApproachTargetsForProject } from "./approach.js";
 import { normalizeDependsOn, validateRegisterDependencies } from "./dependency.js";
 import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
 import { delegateExternalRegisterAdd } from "./external-project.js";
-import { validateRegisterDomains, validateRegisterTrack } from "./epic.js";
+import { validateRegisterDomains, validateRegisterStartOn, validateRegisterTrack } from "./epic.js";
 import { isAuthoringApproach } from "../kata/authoring.js";
 
 function collectTarget(value: string, previous: string[] = []): string[] {
@@ -133,6 +133,7 @@ export function registerCreateCommands(
     "Registration date-time (RFC 3339 with time zone, or _TODO_; defaults to now in UTC)",
   );
   addCmd.option("--due <date>", "Due date (YYYY-MM-DD, -, or _TODO_)", "_TODO_");
+  addCmd.option("--start-on <date>", "Planned epic start date (YYYY-MM-DD; - omits)");
   addCmd.option(
     "--completed <datetime>",
     "Completion date-time (RFC 3339 with time zone, or -)",
@@ -242,6 +243,7 @@ export function registerCreateCommands(
       });
 
       const track = opts.track?.trim();
+      validateRegisterStartOn(opts.type, opts.startOn, true);
       validateRegisterTrack(paths.projectId, opts.type, track);
       const domains = opts.domain?.map((value: string) => value.trim());
       validateRegisterDomains(opts.type, domains);
@@ -257,6 +259,7 @@ export function registerCreateCommands(
         status: opts.status,
         owner: opts.owner,
         registeredAt: registeredAt ?? nowUtcTimestamp(),
+        ...(opts.startOn !== undefined && opts.startOn !== "-" ? { startOn: opts.startOn } : {}),
         due: opts.due,
         completedAt: completedAt ?? CELL_NONE,
         conclusion: opts.conclusion,
@@ -382,6 +385,7 @@ export function registerUpdateCommand(
   );
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
+  updateCmd.option("--start-on <date>", "Update planned epic start date (YYYY-MM-DD; - removes)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
   updateCmd.option("--block-reason <text>", "Update the waiting reason or use - to remove it");
   updateCmd.option(
@@ -450,6 +454,7 @@ export function registerUpdateCommand(
         "difficulty",
         "owner",
         "due",
+        "startOn",
         "conclusion",
         "blockReason",
         "autopilot",
@@ -467,7 +472,7 @@ export function registerUpdateCommand(
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--track, --domain, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --commit-type, --commit-scope, --topic)",
+          "At least one field option must be specified (--track, --domain, --title, --description, --priority, --difficulty, --owner, --due, --start-on, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --input, --from, --depends-on, --commit-type, --commit-scope, --topic)",
         );
       }
 
@@ -626,6 +631,9 @@ export function registerUpdateCommand(
       const shouldUpdateSources =
         opts.source !== undefined || (authoring && providedLegacySources.length > 0);
       const approachTargetUpdates: RegisterItemFieldUpdates = {
+        ...(opts.startOn !== undefined
+          ? { start_on: opts.startOn === "-" ? REMOVE_REGISTER_ITEM_FIELD : opts.startOn }
+          : {}),
         ...(opts.dependsOn !== undefined
           ? { depends_on: nextDependsOn ?? REMOVE_REGISTER_ITEM_FIELD }
           : {}),
@@ -673,6 +681,7 @@ export function registerUpdateCommand(
       };
 
       const track = opts.track === undefined ? item.track : opts.track.trim();
+      validateRegisterStartOn(item.type, opts.startOn, true);
       validateRegisterTrack(paths.projectId, item.type, track, item.id);
       const domains = opts.domain?.map((value: string) => value.trim());
       const removeDomains = domains?.length === 1 && domains[0] === "-";
@@ -683,6 +692,9 @@ export function registerUpdateCommand(
       const inputs = normalizeRegisterInput(opts.input, true);
       const updated: PjrItem = {
         ...item,
+        ...(opts.startOn !== undefined
+          ? { startOn: opts.startOn === "-" ? undefined : opts.startOn }
+          : {}),
         ...(domains !== undefined ? { domains: removeDomains ? undefined : domains } : {}),
         ...(inputs !== undefined ? { inputs } : {}),
         ...(track !== undefined ? { track } : {}),
