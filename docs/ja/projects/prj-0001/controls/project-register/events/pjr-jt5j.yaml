@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_eb9db3401c5a46718e3ce78c321920ec
+  ts: "2026-11-06T15:06:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-VH8D・PJR-2WC2 の決定を実装する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 実行記録の置き場所を validate と CI で検査し、ガイドと照らす
+    - field: description
+      from: ""
+      to: "決まった場所の外のファイルや run のディレクトリの欠けを exec validate と CI で検出し、ガイドの構成図をモジュールと照らすテストを置き、lock・controls/reviews・assessments の置き場所をそろえる（R3・R4、VH8D の #9・#11・#13）"
+    - field: input
+      from: ""
+      to: '["PJR-VH8D の決定（2026-11-07 indie）: 実行記録は run 単位のディレクトリ execution/runs/`<出どころ>`/`<項目 ID>`/`<run ID>`/ に plan.md・result.md・evidence.json・ログを置く（R1）。出どころは register・schedule・job。置き場所を決める処理はコードの 1 つのモジュールにまとめる（R2）。exec validate と CI で置き場所を検査する（R3）。ガイドの構成図をモジュールと照らすテストを置く（R4）。grade/results と jobs/ の定義は外に残す。既存は git mv で移し、パスの欄だけ書き換える"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-VH8D"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-9BY9"]'
