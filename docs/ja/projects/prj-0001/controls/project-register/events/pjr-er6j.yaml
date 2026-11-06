@@ -60,3 +60,29 @@
       from: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK"]'
       to: '["PJR-S8EF","PJR-16T7","PJR-8TMF","PJR-0QJS","PJR-93NK","PJR-FS9A"]'
   previous_event_id: reg_c93dfa11661141cca3a4a706ff938891
+- v: 1
+  id: reg_3e45c9bfc4184daca27cd13aaeb825ef
+  ts: "2026-11-06T13:15:40Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1bd8513b431e493db8d20fd6fefa13c9
+- v: 1
+  id: reg_e5b41d3d4f754381a5383da740e2d4a2
+  ts: "2026-11-06T13:28:02Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3e45c9bfc4184daca27cd13aaeb825ef
