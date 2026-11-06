@@ -53,7 +53,7 @@ stsd-sample を新しい章立てと遷移 ID 入りのラベルに合わせる
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 他の Kata への申し送り: [[specdojo:stsd-recipe|STSD 作成レシピ]] の第 3・4・8 章と [[specdojo:stsd-template|STSD テンプレート]] は旧章構成のままで、適用範囲に正本・スコープを書き、状態遷移図と遷移の説明を別章にしている。template の遷移ラベルには遷移 ID もない。本タスクでは変更せず、[[specdojo:stsd-rulebook|STSD 作成ルール]]・[[specdojo:stsd-mermaid-rulebook|STSD Mermaid 記法ルール]] を正として sample を更新する。recipe・template の追従は PJR-93NK・PJR-8TMF で確認する。
 
 ## 6. 関連ドキュメント
 
