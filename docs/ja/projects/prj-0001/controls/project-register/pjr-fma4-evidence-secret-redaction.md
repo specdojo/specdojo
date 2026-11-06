@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: hard
   registered_at: "2026-11-05T22:17:51Z"
-  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-fma4-20261105T235847Z-f10bb399-result.md:41:152 error MD038/no-space-i…"
   derived_from:
     - PJR-2WC2
 ---
@@ -44,14 +43,79 @@ specdojo:
 
 | No  | 作業                                   | 担当     | 状態 | メモ |
 | --- | -------------------------------------- | -------- | ---- | ---- |
-| 1   | 伏せ字の形式を足し、テストを足す       | executor | open | -    |
-| 2   | 検査のスクリプトを足し、テストを足す   | executor | open | -    |
-| 3   | 既存の実行記録に検査を流し、結果を書く | executor | open | -    |
-| 4   | hook と CI への登録の案を書く          | executor | open | -    |
+| 1   | 伏せ字の形式を足し、テストを足す       | executor | done | -    |
+| 2   | 検査のスクリプトを足し、テストを足す   | executor | done | -    |
+| 3   | 既存の実行記録に検査を流し、結果を書く | executor | done | -    |
+| 4   | hook と CI への登録の案を書く          | executor | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実装と選定理由
+
+- `src/shared/text.ts` の `redactSensitiveText` に完了条件の 8 形式を追加した。秘密鍵はブロック全体、URL は認証情報全体を置換する。既存の Bearer・キー・名前付きの値も維持し、JSON や空白を含む引用符付きの値を処理する。
+- `tools/check-evidence-secrets.mjs` は Node 標準モジュールだけで動く。ファイル指定は作業ファイル、`--staged` は Git の index にある追加・変更・改名・コピー対象、`--tracked` は追跡中の作業ファイルを検査する。Git の 2 モードの対象は `docs/ja/projects/*/execution/` 配下で、削除済みの staged ファイルは対象外。NUL 区切りで列挙し、空白や改行を含むパスを扱う。
+- 診断はファイル・行・種類と件数だけとし、値やソース行、Git の stderr を出さない。検出・読み取り失敗・引数不正は終了コード 1、検出なしは 0 とする。`.env` と `secrets/`、通常ファイル以外の読み取りは拒否する。
+- gitleaks 等は導入せず、自前の検査を選んだ。対象の形式が明確であり、依存や外部バイナリのない linked worktree でも同じ検査を動かせるためである。未知の形式やエントロピーによる検出は行わない。
+- 形式定義は TS と `.mjs` に二重に持つ。現行のビルドは TS のみを配布用 `dist` へ出力するため、実行時の TS から開発用 `tools/` への依存やビルド設定の変更を避けた。`tests/tools/check-evidence-secrets.test.ts` が種類・正規表現の source / flags・置換文字列・順序の一致を検証する。
+- 形式別の完全な除去・複数出現・語や URL の保持・再適用、伏せ字後の検査 0 件を単体テストへ追加した。CLI の依存なしの起動、秘密を表示しない診断、index と作業ファイルの相違、エラー時の終了を統合テストへ追加した。[[specdojo:exec-config-guide|exec 設定ガイド]]の対象説明と CHANGELOG の未公開節も更新した。
+
+### 5.2. 既存記録の検査
+
+`node tools/check-evidence-secrets.mjs --tracked` を実行した。追跡中の実行記録 6,782 ファイル、候補 4 件、読み取り失敗なし、終了コード 1。検出メタデータは次のとおり（値は記載しない）。
+
+```text
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-fma4-20261105T235847Z-f10bb399-plan.md:38: credential-assignment
+docs/ja/projects/prj-0001/execution/exec/results/pjr-tc43-20260810T204732Z-4f04-result.md:25: credential-assignment
+docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml:215: credential-assignment
+docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml:216: credential-assignment
+```
+
+検出は形式への一致であり、実在する秘密かどうかの判定ではない。既存の履歴は編集していない。CI 案の有効化前に、利用者がこの 4 件を確認し、伏せ字や例示の書き直しが必要か判断する。広い除外設定で見逃す処理は加えていない。
+
+### 5.3. 承認後に反映する設定案
+
+`lefthook.yml`・`package.json`・`.github/workflows/` は変更していない。スクリプトは直接 Node で起動するため、npm script の追加は不要である。次の hook 案、CI 案の両方を提示し、採用と反映は利用者の承認後に行う。
+
+既存 `lefthook.yml` の `pre-commit.commands` に追加する設定の全文:
+
+```yaml
+evidence-secrets:
+  run: node tools/check-evidence-secrets.mjs --staged
+```
+
+`glob` や `{staged_files}` は使わず、スクリプトが対象を列挙して index の内容を検査する。staged の実行記録がなければ正常終了する。
+
+新規 `.github/workflows/check-evidence-secrets.yml` の全文案（Actions の版と Node 24 は既存 workflow に合わせる）:
+
+```yaml
+name: Check evidence secrets
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Check tracked execution records
+        run: node tools/check-evidence-secrets.mjs --tracked
+```
+
+依存インストールは不要。CI は追跡中の記録を全件検査するため、5.2 の候補が残っていれば失敗する。
+
+### 5.4. 検証と申し送り
+
+- sandbox でスクリプトの構文検査と、コピーした `.mjs` の単独起動を確認した。隔離した一時 Git repository では、検出時の終了コード 1 と値を含まない診断、staged と作業ファイルの読み分け、禁止パス・存在しないファイルの拒否を確認した。
+- Prettier と対象 Markdown の検査、catalog 検査、履歴リンク検査、hook に合わせた `register build` は終了コード 0。catalog 検査には既存の re-export 参照・文書未作成などの警告がある。型検査・TS lint・単体／統合テスト・その他の親検証は runner が実行し、result へ追記する。
+- reporter / runner は本節の実装理由、5.2 の検出ファイルと種類、5.3 の設定全文案と承認後の適用を result の申し送りへ反映する。登録簿の行・個票のステータス・result は executor では変更しない。
 
 ## 6. 関連ドキュメント
 

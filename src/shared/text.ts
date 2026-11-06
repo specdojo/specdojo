@@ -127,13 +127,80 @@ export function stripTerminalControlSequences(text: string): string {
   return text.replace(ANSI_ESCAPE, "").replace(CONTROL_CHARS, "");
 }
 
-/** Redacts common credential forms before subprocess output is persisted as evidence. */
+/** Kept in sync with tools/check-evidence-secrets.mjs by a parity test. */
+export const SENSITIVE_TEXT_RULES: ReadonlyArray<{
+  kind: string;
+  pattern: RegExp;
+  replacement: string;
+}> = [
+  {
+    kind: "private-key",
+    pattern: /-----BEGIN ((?:[A-Z0-9]+ )*PRIVATE KEY)-----[\s\S]*?-----END \1-----/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "url-credentials",
+    pattern: /(\b[a-z][a-z0-9+.-]*:\/\/)[^\s/@<>"'`?#]+@/giu,
+    replacement: "$1[REDACTED]@",
+  },
+  {
+    kind: "bearer-token",
+    pattern: /\bBearer\s+[A-Za-z0-9._~+/=-]+/giu,
+    replacement: "Bearer [REDACTED]",
+  },
+  {
+    kind: "aws-access-key",
+    pattern: /\b(?:AKIA|ASIA)[A-Z0-9]{16}\b/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "google-api-key",
+    pattern: /\bAIza[A-Za-z0-9_-]{35}(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "slack-token",
+    pattern: /\bxox[a-z]-[A-Za-z0-9-]{8,}(?![A-Za-z0-9-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "github-fine-grained-token",
+    pattern: /\bgithub_pat_[A-Za-z0-9_]{8,}\b/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "anthropic-api-key",
+    pattern: /\bsk-ant-[A-Za-z0-9_-]{8,}(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "api-token",
+    pattern: /\b(?:sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[oprsu]_[A-Za-z0-9_]{8,})(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "jwt",
+    pattern: /\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(?![A-Za-z0-9_-])/gu,
+    replacement: "[REDACTED]",
+  },
+  {
+    kind: "quoted-credential",
+    pattern:
+      /(\b(?:api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b["']?\s*[:=]\s*)(["'])(?:\\[\s\S]|(?!\2)[^\\\r\n])+\2/giu,
+    replacement: "$1$2[REDACTED]$2",
+  },
+  {
+    kind: "credential-assignment",
+    pattern:
+      /(\b(?:api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b["']?\s*[:=]\s*)(?:Bearer\s+)?[^\s,;}"'`\\]+/giu,
+    replacement: "$1[REDACTED]",
+  },
+];
+
+/** Redacts known credential forms before subprocess output is persisted as evidence. */
 export function redactSensitiveText(value: string): string {
-  return value
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/giu, "Bearer [REDACTED]")
-    .replace(/\b(sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[opsu]_[A-Za-z0-9_]{8,})\b/gu, "[REDACTED]")
-    .replace(
-      /\b(api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b(\s*[:=]\s*)([^\s,;]+)/giu,
-      "$1$2[REDACTED]",
-    );
+  return SENSITIVE_TEXT_RULES.reduce(
+    (text, { pattern, replacement }) => text.replace(pattern, replacement),
+    value,
+  );
 }
