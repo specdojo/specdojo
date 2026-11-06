@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f0e6be80703d4d6f9f2382250f3bd541
+- v: 1
+  id: reg_5a1504fdb61a496daa773d5e1d11548c
+  ts: "2026-11-06T13:17:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が差分と完了条件で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-recipe の作成手順と問いを、遷移 ID は確定前は振り直し可・確定後は不変・振り直しは作業の記録に残す規則に合わせた
+  previous_event_id: reg_0f37888cbe20452a992e0c9eafd35f5f

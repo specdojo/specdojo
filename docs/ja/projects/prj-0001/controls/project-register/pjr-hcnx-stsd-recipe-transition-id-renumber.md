@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-06T12:33:02Z"
   due_on: null
+  completed_at: "2026-11-06T13:17:23Z"
+  conclusion: stsd-recipe の作成手順と問いを、遷移 ID は確定前は振り直し可・確定後は不変・振り直しは作業の記録に残す規則に合わせた
   derived_from:
     - PJR-3APD
     - PJR-FS9A
