@@ -4023,3 +4023,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_feffc112bce04de99d7feb7d4dc4e4c2
+- v: 1
+  id: reg_e6df4dbe5d7f46458127c1e3ee5031b9
+  ts: "2026-11-06T23:29:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が run の記録と commit を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: H2V8 の統合後も exec run --register が start から統合まで通った
+      to: PJR-Z0XR・PJR-PZBP・PJR-TA6W の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。新しい配置の plan・result・evidence・executor のログ・state がすべて commit された
+  previous_event_id: reg_1974be5efda24bae9c94b06c50a32262
