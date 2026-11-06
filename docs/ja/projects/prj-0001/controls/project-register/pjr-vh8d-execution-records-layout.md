@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-vh8d-execution-records-layout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-05T22:17:27Z"
+  completed_at: "2026-11-06T15:02:53Z"
+  conclusion: 実行記録は run 単位のディレクトリ execution/runs/`<出どころ>`/`<項目 ID>`/`<run ID>`/ に置き、置き場所の決め方をコードの 1 か所にまとめ、validate と CI で検査し、ガイドと照らすテストを置く（R1〜R4）。grade の結果は外に残す
   derived_from:
     - PJR-2WC2
 ---
