@@ -128,3 +128,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_43aff76739f1479eb125afa4da38a441
+- v: 1
+  id: reg_5f57d2ee0e8848babd50514f285119f1
+  ts: "2026-11-06T23:32:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が JSEY の run と、統合後の実際の routine の実行（状態の置き場所・dashboard-refresh の記録が commit されないこと）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: 定期処理の状態と履歴を Git の外（XDG_STATE_HOME の下）へ移し、job の記録なしの失敗だけを Git に残し、何もしなかった job の記録を commit しないようにした
+  previous_event_id: reg_2620ca6a5ebd40f588c8ef1cc8f4adaf

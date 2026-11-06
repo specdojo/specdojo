@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-pzbp-routine-state-outside-git
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T15:05:10Z"
   due_on: null
+  completed_at: "2026-11-06T23:32:50Z"
+  conclusion: 定期処理の状態と履歴を Git の外（XDG_STATE_HOME の下）へ移し、job の記録なしの失敗だけを Git に残し、何もしなかった job の記録を commit しないようにした
   derived_from:
     - PJR-VH8D
 ---
