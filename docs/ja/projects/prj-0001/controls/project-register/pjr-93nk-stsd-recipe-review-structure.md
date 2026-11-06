@@ -52,7 +52,10 @@ stsd-recipe の手順を新しい章立てと遷移 ID 入りのラベルに合�
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:stsd-recipe|STSD 作成レシピ]] の目的の問い・例を、状態が対象の何を管理し、誰が何を判断するかを引き出す内容へ更新した。「適用範囲」から正本を分離して「状態の判定」の問いを設け、「状態遷移」は各図と直下の遷移表を一組として作る手順へ統合した。遷移ラベルの `T-<nn> イベント / 条件`、既存 ID の維持、現行を既定とするスコープの扱いを、レビュー観点・仕上げチェックまで反映した。
+- 判断根拠: [[specdojo:stsd-rulebook|STSD 作成ルール]]・[[specdojo:stsd-mermaid-rulebook|STSD Mermaid 記法ルール]]、[[specdojo:recipe-authoring-standard|Recipe 記述標準]]、[[specdojo:stsd-sample|商品のステータス定義]]。Job Run・成果物の既存 STSD と Job Run の完成版レビュー記録も確認し、正本と派生記録の区別、未決事項を判断者へ引き渡す手順は維持した。旧章立てが残る成果物・template より rulebook を優先した。recipe の既存 grade result は finding なしであり、今回は個票の利用者レビューを根拠に改訂した。
+- 検証: 変更した Markdown の Prettier 整形、`npm run validate:history-links`、hook のカタログ検証、`register build --project prj-0001`、staged の証跡秘密情報検査が通過した。カタログ検証では変更対象外の参照に関する警告がある。`lint:md`・`lint:fm`・`lint:mermaid` などの親検証は、executor 終了後に親 runner が実施する。
+- 申し送り: [[specdojo:stsd-template|STSD 雛形]] は正本を「適用範囲」に置き、「状態の判定」がなく、「状態遷移図」「遷移の説明」が別章で、遷移ラベルに ID がない。スコープも常に AS-IS / TO-BE を記入する形のため、[[prj-0001:pjr-8tmf-stsd-template-review-structure|PJR-8TMF]] で新しい章立て・ラベル・スコープの扱いへ追従する。本項目では他の Kata と `docs/ja/product/` 配下を変更していない。
 
 ## 6. 関連ドキュメント
 
