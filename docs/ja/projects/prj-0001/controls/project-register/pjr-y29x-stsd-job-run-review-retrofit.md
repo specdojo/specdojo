@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-y29x-stsd-job-run-review-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:17:24Z"
   due_on: null
+  completed_at: "2026-11-06T14:15:35Z"
+  conclusion: stsd-job-run を新しい Kata に合わせ、状態の判定の章・図ごとの直下の表・`T-<nn>` 入りのラベルにした。遷移 ID は振り直しても既存の順と一致した
   derived_from:
     - PJR-3APD
   depends_on:
