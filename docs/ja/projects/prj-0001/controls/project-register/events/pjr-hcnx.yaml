@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_45a38e2abff14b9eb24ba2f52f1b0732
+  ts: "2026-11-06T12:33:03Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-FS9A の確認で見つけた recipe の食い違いを起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-recipe の遷移 ID の手順を確定前の振り直しに合わせる
+    - field: description
+      from: ""
+      to: stsd-recipe の作成手順の、更新時に常に既存 ID を保つ記述を、PJR-FS9A の規則（確定前は振り直し可、確定後は不変、振り直しの記録）に合わせる
+    - field: input
+      from: ""
+      to: '["PJR-FS9A の確認で、stsd-recipe の「全体の作成手順」に、更新では常に既存 ID を保つ記述が残っていると分かった。FS9A の executor も後続対応として記録した（2026-11-06）","遷移 ID は確定前（status: draft）は図と表の順に振り直してよく、確定後は振り直さない（PJR-FS9A、C 案、2026-11-06 indie が決定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: approach
+      from: ""
+      to: recipe-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:stsd-recipe"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD","PJR-FS9A"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-FS9A"]'
