@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-0qjs-stsd-sample-review-structure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:14:36Z"
   due_on: null
+  completed_at: "2026-11-06T12:03:40Z"
+  conclusion: stsd-sample を目的（状態の目的）・状態の判定・状態遷移（各図の直下に遷移表、`T-<nn>` 入りのラベル）に合わせた
   derived_from:
     - PJR-3APD
   depends_on:
