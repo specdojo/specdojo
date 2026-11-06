@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-z0xr-exec-run-record-layout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-06T15:04:14Z"
   due_on: null
+  completed_at: "2026-11-06T23:30:27Z"
+  conclusion: 実行記録の置き場所を 1 つのモジュールにまとめ、新しい run は execution/runs/`<出どころ>`/`<項目 ID>`/`<run>`/ に書くようにした。lint と Prettier の規則の取りこぼしは別の commit で直した
   derived_from:
     - PJR-VH8D
 ---

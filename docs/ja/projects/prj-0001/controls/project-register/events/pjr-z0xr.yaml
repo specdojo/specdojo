@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4d640602e040400ea3aeb20147b205d5
+- v: 1
+  id: reg_6f7dfdcbbfb94286b4b9e4791a87fe84
+  ts: "2026-11-06T23:30:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が TA6W と lint の規則の修正の後、JSEY の新しい run で記録がすべて commit されることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: 実行記録の置き場所を 1 つのモジュールにまとめ、新しい run は execution/runs/`<出どころ>`/`<項目 ID>`/`<run>`/ に書くようにした。lint と Prettier の規則の取りこぼしは別の commit で直した
+  previous_event_id: reg_b9d5bcd7504f46b7878f44f9dbdf8dda
