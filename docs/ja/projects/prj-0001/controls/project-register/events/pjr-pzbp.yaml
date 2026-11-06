@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ea0000286fa94da49398516ddf183690
+  ts: "2026-11-06T15:05:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-VH8D・PJR-2WC2 の決定を実装する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 定期処理の状態を Git の外へ移し、何もしなかった job の記録を残さない
+    - field: description
+      from: ""
+      to: "routine-state.json と routine-runs.jsonl を端末の状態を置く場所へ移し、job の記録なしで失敗した実行だけを Git に残す。何も変えなかった job の実行記録は commit しない（VH8D の #8）"
+    - field: input
+      from: ""
+      to: '["PJR-VH8D の決定（2026-11-07 indie）: 実行記録は run 単位のディレクトリ execution/runs/`<出どころ>`/`<項目 ID>`/`<run ID>`/ に plan.md・result.md・evidence.json・ログを置く（R1）。出どころは register・schedule・job。置き場所を決める処理はコードの 1 つのモジュールにまとめる（R2）。exec validate と CI で置き場所を検査する（R3）。ガイドの構成図をモジュールと照らすテストを置く（R4）。grade/results と jobs/ の定義は外に残す。既存は git mv で移し、パスの欄だけ書き換える","利用者の決定（PJR-VH8D #8）: 定期処理の実行状態と履歴は Git の外の端末の状態を置く場所へ移す。Git に残すのは job の実行記録を残さずに失敗した定期処理の実行だけとし、正常に何もしなかった実行（skip を含む）は残さない。precondition を持たない job が動いて何も変えなかった場合も実行記録を commit しない。実現の方法は設計で決める（2026-11-06）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-VH8D"]'
