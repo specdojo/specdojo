@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: BA
@@ -53,7 +53,11 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:stsd-mermaid-rulebook|STSD の状態遷移図を Mermaid で記述するルール]] の遷移ラベル・必須要素・コード例を `T-<nn> イベント / 条件` に統一し、無条件の場合の `イベント発生時` と遷移表との ID 一致を明記した。章への参照は「状態遷移」に統一した。
+- [[specdojo:stsd-rulebook|ステータス定義作成ルール]] の「状態遷移」に合わせ、図ごとに直下へ遷移表を置く規則を明記した。図の前の ID 範囲は、図を読む前に対象経路を識別するために維持し、直下の表との一致を必須にした。状態の表示名、分割の閾値、初期点・終了点と到達性の既存規則は変更していない。
+- 根拠は主 rulebook の「ファイル命名・ID規則」「状態遷移」、[[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-arc-conciseness`。既存 sample と [[prj-0001:stsd-deliverable|ステータス定義（成果物）]] では図と別章の表をイベント・条件で照合する必要があり、ID の付与と図表の隣接が対応確認に役立つと判断した。既存の grade result は finding がなく、今回の改訂は個票の利用者レビューと主 rulebook を根拠にした。
+- 申し送り: [[specdojo:stsd-sample|商品のステータス定義]] は「状態遷移図」「遷移の説明」が別章で、図のラベルに遷移 ID がない。目的に文書の利用者・用途を記載し、適用範囲に状態の正本・一意判定・AS-IS 表記も残っている。主 rulebook に合わせた改訂が必要だが、本タスクでは変更していない。
+- Prettier 整形と適用される検査の結果は executor evidence に記録する。`lint:md`・`lint:fm`・`lint:mermaid` などの指定済み親検証は executor 終了後に runner が実行する。
 
 ## 6. 関連ドキュメント
 
