@@ -30,13 +30,25 @@ routine-state.json と routine-runs.jsonl を端末の状態を置く場所へ�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `routine-state.json` と `routine-runs.jsonl` の置き場所が、`docs/` の下の `generated/` から、端末の状態を置く場所（Git の外。場所は executor が決め、既存の端末の状態の置き場所があればそれにそろえて理由を書く）へ移っている。既存の状態を新しい場所へ引き継ぐ方法（初回に移す、など）がある。
+- 定期処理の実行が、job の実行記録を残さずに失敗したときだけ、その実行の記録を Git に残す（置き場所と形式は executor が決める）。成功・skip・何もしなかった実行は Git に残さない。
+- `precondition` を持たない job が動いて何も変えなかった場合、その job の実行記録を commit しない。判定の方法（runner が変更の有無で判定する、など）と理由を個票の対応結果に書いている。
+- `routines/.locks/` を文書のツリーの外へ移すか、Git の無視の対象にしている（`.gitignore` が保護されている場合は案を書く）。
+- dashboard の定期処理の表示と、stsd-routine-run が管理場所とする記録との関係を個票の対応結果に書いている（ステータス定義の本文は変えない）。
+- 単体テストで、状態の置き場所、失敗の記録の残し方、何もしなかった job の記録を commit しないことを確かめている。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` が通り、親の検証（`test-integration` を含む）が通っている。
+- CHANGELOG は未公開の版の節に書き、公開済みの版の節を変えていない。
+- 保護された設定（`package.json`・`lefthook.yml`・`.github/workflows/`・`.specdojo/` の設定・agent の定義・`.gitignore` が保護されている場合はそれも）を変える必要があるときは、変えずに案を個票の対応結果に書き、pipeline では報告の `handoff` にも書いている。反映は利用者の承認のもと行う。
+- 未決の点は executor が決め、決めた内容と理由を個票の対応結果に書き、pipeline では報告の `handoff` にも書いている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                      | 担当 | 状態 | メモ |
+| --- | ----------------------------------------- | ---- | ---- | ---- |
+| 1   | 状態と履歴の置き場所を移す                | DEV  | open | -    |
+| 2   | 失敗の記録だけを Git に残す               | DEV  | open | -    |
+| 3   | 何もしなかった job の記録を commit しない | DEV  | open | -    |
+| 4   | テストを足す                              | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -44,4 +56,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-vh8d-execution-records-layout]]: #8 の決定
+- [[prj-0001:stsd-routine-run]]: 定期処理の状態の定義
