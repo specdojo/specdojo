@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:14:08Z"
   due_on: null
-  block_reason: "parent validation failed: lint-fm"
   derived_from:
     - PJR-3APD
   depends_on:
