@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a727fc686f35457cb66bff2842ab0c54
+- v: 1
+  id: reg_851d5eece97e433f904d504d8a3477f0
+  ts: "2026-11-06T23:30:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票・result と照らし、JSEY で統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: 今の run の記録を result の置き場所にかかわらず commit の対象にし、古い配置で始まった run の再開は元のディレクトリへ書き続けるようにした。外した run の記録は integrate.log に出す
+  previous_event_id: reg_37d94fe58b4a4df994f2f7aae13a9238

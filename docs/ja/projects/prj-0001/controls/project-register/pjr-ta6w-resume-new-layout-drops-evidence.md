@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ta6w-resume-new-layout-drops-evidence
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-06T17:26:33Z"
   due_on: null
+  completed_at: "2026-11-06T23:30:01Z"
+  conclusion: 今の run の記録を result の置き場所にかかわらず commit の対象にし、古い配置で始まった run の再開は元のディレクトリへ書き続けるようにした。外した run の記録は integrate.log に出す
   derived_from:
     - PJR-Z0XR
 ---
