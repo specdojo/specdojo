@@ -36,6 +36,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- register の worktree 統合で許可外の追加などが残ると、commit・merge を止めて項目を `waiting` にし、worktree を保持するようにしました。移動元の削除だけが統合されることを防ぎ、停止理由にログの場所と代表パス、最後の要約に未 commit の件数を表示します。承認後に対象を手動 commit して `--resume` する手順を運用ガイドへ追加しました（PJR-BRN4）。
+
 - 旧配置で開始した run を再開すると evidence・ログが別のディレクトリに書かれ、統合時に失われる問題を修正しました。再開後も元の run ID と保存先を維持し、result の配置にかかわらず同じ run の記録と退避した試行を commit 対象に含めます。除外した別 run の記録は標準出力と `integrate.log` に表示します（PJR-TA6W）。
 
 - 実行記録の保存前の伏せ字を AWS・Google・Slack・GitHub fine-grained token・Anthropic・JWT・秘密鍵 PEM・URL の認証情報へ広げました。依存なしで実行できる `node tools/check-evidence-secrets.mjs` を追加し、指定ファイル、ステージ上の実行記録（`--staged`）、追跡中の実行記録（`--tracked`）を値を表示せず検査できます。hook / CI への登録は承認後に反映する設定案として記録しました（PJR-FMA4）。

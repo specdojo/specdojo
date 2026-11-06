@@ -268,13 +268,14 @@ export function registerWaitSummary(params: {
   item: PjrItem;
   ticketPath: string | null;
   reason: string;
+  reasonMaxLength?: number;
   actor: string;
   // root 側の絶対パス。worktree がある場合は plan / result だけを root へ写してから遷移する。
   bookkeepingPaths: readonly string[];
   worktree?: ExecWorktree;
 }): RegisterItemSummary {
   const { repoRoot, projectId, registerPaths, item, ticketPath, actor, worktree } = params;
-  const blockReason = sanitizeRegisterConclusion(params.reason);
+  const blockReason = sanitizeRegisterConclusion(params.reason, params.reasonMaxLength);
   const bookkeepingPaths = [...params.bookkeepingPaths];
   const preservedTicketPath =
     worktree && ticketPath ? pathInsideWorktree(repoRoot, worktree.path, ticketPath) : undefined;
