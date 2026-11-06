@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-fs9a-stsd-rulebook-transition-id-renumber
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:53:13Z"
   due_on: null
+  completed_at: "2026-11-06T12:30:45Z"
+  conclusion: stsd-rulebook の遷移 ID を、初回の確定前は図と表の順に振り直してよく、確定後は振り直さず欠番を残す規則にした
   derived_from:
     - PJR-3APD
   depends_on:
