@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-er6j-stsd-task-execution-review-retrofit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:15:32Z"
   due_on: null
+  completed_at: "2026-11-06T13:34:50Z"
+  conclusion: stsd-task-execution を新しい Kata に合わせ、目的・適用範囲・着手と再開と完了の条件をレビューの決定どおりに直し、検討メモを消して遷移 ID を T-01〜T-16 に振り直した
   derived_from:
     - PJR-3APD
   depends_on:

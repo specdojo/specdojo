@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3e45c9bfc4184daca27cd13aaeb825ef
+- v: 1
+  id: reg_62a11002f2d74db19375eb95c9f81f70
+  ts: "2026-11-06T13:34:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を orchestrator が成果物の本文・実装（events.ts）・旧新 ID の対応で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-06"
+    - field: conclusion
+      from: "-"
+      to: stsd-task-execution を新しい Kata に合わせ、目的・適用範囲・着手と再開と完了の条件をレビューの決定どおりに直し、検討メモを消して遷移 ID を T-01〜T-16 に振り直した
+  previous_event_id: reg_e5b41d3d4f754381a5383da740e2d4a2
