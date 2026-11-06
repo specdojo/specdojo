@@ -8,6 +8,7 @@ specdojo:
     - prj-0001:pjr-index
   item_type: epic
   track: stsd-pilot
+  domains: [data-model]
   item_status: open
   priority: medium
   owner: BA

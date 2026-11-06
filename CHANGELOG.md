@@ -20,6 +20,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- tml の Kata と Timeline 設計ガイドを非推奨にし、ガイドとリファレンスを epic による全体計画へ更新しました。prj-0001 の 3 件の epic に `domains` を記録し、旧 `tml-index` をカタログから外しました。旧ファイルは互換用に保持します（PJR-JM29）。
+
 - 全体計画を epic から生成するようにしました。`register add --type epic --track <track> --domain <domain>`（`--domain` は繰り返し可）で対象 domain を記録し、epic の `depends_on`、着手・完了履歴、`due_on` を使って `dashboard build` がガントと未作成カタログを `execution/generated/` へ出力します。strategy の範囲は既存 scope、epic の domains、旧 timeline の順で解決します。`tml-index.yaml`・`timeline build`・`timeline_path` は非推奨となり、互換読み込みと警告を残しています。移行時は track ごとに epic を一つ作り、domain と epic 間の依存・期限を移してください。期限のない epic の終了日は未定と表示します。strategy-planning の起票には対象 track を担う epic が必要です（PJR-PE19）。
 
 - opr の template で H1 直下の概要の段落をなくし、「1. 概要」の章の中へ一本化しました。bps は導入文と概要の役割が分かれているため現状を維持します（PJR-9CVE）。

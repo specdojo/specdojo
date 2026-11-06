@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:tml-rulebook
   type: rulebook
   deliverable_type: project
-  status: draft
+  status: deprecated
   target_format: yaml
   recipe: not-needed
   sample: specdojo:tml-sample
@@ -16,8 +16,9 @@ specdojo:
 
 Timeline Documentation Rules
 
-本ドキュメントは、Timeline（`tml-index.yaml`）を一貫した粒度と命名で作成・更新するためのルールです。
-Timeline は「どのトラックを、どの順で、いつ着手するか」というマクロな順序を**人間が着手前に決めて記録する計画層**であり、成果物カタログ作成からトラック実行までの見通しを 1 ファイルで表します。
+本 Kata は非推奨です。全体計画は epic で管理し、`dashboard build` で生成します。移行先は [[specdojo:pjr-rulebook|プロジェクト登録簿ルール]]、手順は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
+
+以下は既存の `tml-index.yaml` を互換運用するための旧規約です。新しい計画には使いません。
 
 本書は命名・ID 規則と schema で表現できない記述規範を定義し、構造・必須キーは schema を、トラックの標準構成と実行順序の考え方は [[specdojo:track-design-guide]] を参照します。
 
@@ -136,9 +137,3 @@ schema で機械検証できない記述規範だけを定める。トラック�
 - `sch-milestones.yaml` のマイルストーンを `tml-index.yaml` に複製すること。
 - プロジェクトごとに `tml-index.yaml` を複数置くこと、またはトラック単位へ分割すること。
 - `specdojo timeline build` の生成物を直接編集すること。
-
-## 7. 今後の検討
-
-- 現時点の `catalog_status` は3値の軽量フィールドであり、カタログ作成作業そのものを子カタログ（`done_criteria` 付きの成果物エントリ）として管理する「フル成果物カタログ化」は採用していない。カタログ作成の工数管理をタスク粒度で行う必要が出た場合に、フル化を再検討する。
-- フル化する場合でも `tml-index.yaml` はトラック粒度の計画層として残し、カタログ作成タスクは Schedule 側へ展開する方針を想定する。
-- 複数プロジェクトを横断したトラック順序計画（プログラム単位の Timeline）は現時点では扱わない。

@@ -422,7 +422,7 @@ Schedule設計の詳細は [Schedule設計ガイド](../guides/schedule-design-g
 
 ### 4.1. schedule strategy（決定論的な strategy 生成）
 
-`schedule strategy generate` は、DCT、Timeline、strategy の `approach_rules`、Kata の保存済み grade、標準 strategy profile から `sch-strategy-<track>.yaml` を生成します。先に strategy へ scope と成果物別 intent を宣言してください。
+`schedule strategy generate` は、DCT、epic、strategy の `approach_rules`、Kata の保存済み grade、標準 strategy profile から `sch-strategy-<track>.yaml` を生成します。範囲は既存 strategy の scope、対象 track の epic の `domains`、互換用 `tml-index.yaml` の順に解決します。先に strategy へ scope と成果物別 intent を宣言してください。
 
 ```bash
 specdojo schedule strategy generate \
@@ -456,32 +456,17 @@ specdojo schedule strategy generate \
 
 書き込み前に intent の網羅・重複、追加パラメータ、都度収集した facts、必要な grade、scope で選択した全 `kind: work` の網羅、`scope.catalogs[].local_ids` の実在、strategy schema、project ID、参照、milestone ID 重複、`schedule build --dry-run` 相当を検証します。catalog の `local_ids` を省略した場合は従来どおり対象 kind の全成果物、指定した場合はその部分集合だけを生成します。不足時は暫定値で進めず停止します。既存 strategy は `--force` なしで保護し、同一内容の再生成は `Unchanged` として書き込みません。生成後は `schedule build --track <track> --force`、`exec refresh` の順に既存コマンドを実行します。
 
-## 5. timeline
+## 5. timeline（非推奨）
 
-`timeline` は、人間が着手前に決めた `tml-index.yaml`（トラック順序計画）から、着手順序と成果物カタログ作成の準備情報を生成します。`tml-index.yaml` が正本で、生成物は `timeline/generated/` へ出力する一方通行の流れです。
+`tml-index.yaml`・`timeline build`・`timeline_path` は非推奨です。全体計画は epic で管理し、`dashboard build` で `execution/generated/` に表とガント、未作成カタログを生成します。epic のない track は全体計画に出しません。期間と範囲の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]]、移行手順は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
 
-| コマンド         | 用途                                                    | 例                                           |
-| ---------------- | ------------------------------------------------------- | -------------------------------------------- |
-| `timeline build` | `tml-index.yaml` から着手順序と scaffold 対象を生成する | `specdojo timeline build --project prj-0001` |
-| `timeline where` | timeline 関連パスを表示する                             | `specdojo timeline where --project prj-0001` |
+| コマンド          | 用途                                             | 例                                            |
+| ----------------- | ------------------------------------------------ | --------------------------------------------- |
+| `dashboard build` | epic に基づく全体計画を含む dashboard を生成する | `specdojo dashboard build --project prj-0001` |
+| `timeline build`  | 警告付きで旧形式の計画を生成する                 | `specdojo timeline build --project prj-0001`  |
+| `timeline where`  | 互換用 timeline の関連パスを表示する             | `specdojo timeline where --project prj-0001`  |
 
-主要オプション:
-
-| オプション  | 用途                                     |
-| ----------- | ---------------------------------------- |
-| `--dry-run` | 生成内容を標準出力へ表示し、書き込まない |
-
-生成物は次の3つです。
-
-| ファイル              | 内容                                                                     |
-| --------------------- | ------------------------------------------------------------------------ |
-| `timeline-order.md`   | `order` / `parallel_group` / `depends_on` から算出した着手 wave 一覧     |
-| `catalog-scaffold.md` | `dct-<domain>.yaml` が未作成のドメインと `catalog scaffold` 実行コマンド |
-| `timeline.json`       | 後続コマンドが読む機械可読サマリー                                       |
-
-`depends_on` の未定義参照・循環、`depends_on` と `order` の矛盾、track id の重複を検出した場合は、生成物を書き込まずに終了コード 1 で停止します。`catalog_status` と実カタログの有無が食い違う場合は警告のみを出します。`project_register_path` がある場合、`catalog-planning` の todo を domain ごとに読み、`done` が一件でもあればその domain を `primary`、着手中（`in-progress` / `waiting` / `review`）なら `draft`、`open` だけなら `not_started` と導きます。`rejected` / `deferred` は導出から除外します。対象 todo がない domain は従来の手書き値を使います。複数 domain の track は全 domain が `primary` なら着手可能とし、一部だけ進んでいれば `draft` とします。手書きの値との差は警告し、`tml-index.yaml` は変更しません。todo を reopen した場合も次回 build で再計算します。`timeline.json` の `track_catalog_status` は導出後の track 別状態です。strategy 生成も同じ導出を使います。カタログの突き合わせはファイル名ではなく各 `dct-*.yaml` の `domain` 値で行うため、1 ドメインが複数ファイルに分割されていても検出できます。
-
-`timeline_path` は未設定の場合、プロジェクト直下の `timeline` を既定とします。記述ルールは [タイムライン作成ルール](../rulebooks/tml-rulebook.md)、生成フローと運用タイミングは [Timeline設計ガイド](../guides/timeline-design-guide.md)、トラックの標準構成と実行順序は [トラック設計ガイド](../guides/track-design-guide.md) を参照します。
+旧 `timeline build` は `--dry-run` で書き込まずに検証できます。epic の順序と範囲を反映しつつ、既存の strategy と `timeline_path`（既定 `timeline`）の `tml-index.yaml` を互換用に読み、`timeline/generated/` に `timeline-order.md`・`catalog-scaffold.md`・`timeline.json` を出力します。track 重複、依存の未定義参照・循環、`order` との矛盾はエラーです。`catalog-planning` の todo から作成状況を導出し、手書きの状態との不一致は警告します。epic のない project の dashboard は旧 timeline 表示を維持します。
 
 ## 6. register
 
@@ -512,6 +497,7 @@ specdojo schedule strategy generate \
 | ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
 | `--input <text>`             | 個票の前提を記録（繰り返し可、update は一覧置換、`-` 単独で全削除） | `add` / `update`                                 |
 | `--track <track>`            | epic が担う track（epic で必須、update で置換、削除不可）           | `add` / `update`                                 |
+| `--domain <domain>`          | epic の対象 domain（反復指定、update は一覧置換、`-` 単独で削除）   | `add` / `update`                                 |
 | `--to <PJR-ID>`              | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
 | `--registered <datetime>`    | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
 | `--completed <datetime>`     | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
@@ -568,7 +554,7 @@ specdojo exec run --project prj-0001 --register <PJR-ID> --worktree
 - カタログなしの plan は、カタログの `done_criteria` がないことを明示し、個票の完了条件と rulebook を使います。`retrofit` の実装調査入力は個票にパスを明記します。
 - カタログ設定済みで対象が未登録の場合、パスと rulebook を両方明示した場合だけカタログなしと同じ解決を使います。未指定なら従来のエラーで停止します。カタログにある対象ではカタログの宣言を優先します。
 
-`register add --type epic --track <track>` は track ごとの仕事を起票します。type は `epic` / `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `note` です。epic は todo と同じ状態を使い、通常終端は `done`、例外終端は `rejected` / `deferred` です。track は Frontmatter の `track` に保存し、`update --track` で置換します。英小文字・数字・ハイフン（先頭は英小文字か数字）の識別子が必須で、削除やほかの type への指定は拒否します。project の `timeline_path`（既定 `timeline`）に `tml-index.yaml` があるときは、add・update・build で track の定義を検証します。子 todo は `register add --type todo --from <epic-id>` で関連付けます。`register build` は `generated/pjr-epic-items.md` に epic ごとの直接の子項目と状態を表示し、別 project の子を project 修飾 ID で識別します。子のない epic も表示し、孫の再帰表示や epic の自動 close は行いません。完了は子項目と schedule を材料に人が判断します。
+`register add --type epic --track <track>` は track ごとの仕事を起票します。type は `epic` / `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `note` です。epic は todo と同じ状態を使い、通常終端は `done`、例外終端は `rejected` / `deferred` です。track は Frontmatter の `track` に保存し、`update --track` で置換します。英小文字・数字・ハイフン（先頭は英小文字か数字）の識別子が必須で、削除やほかの type への指定は拒否します。旧 timeline への登録は不要です。add・update・build は epic どうしの track 重複を拒否し、build は依存循環も検出します。任意の `domains` は反復可能な `--domain` で指定し、ほかの type への指定は拒否します。子 todo は `register add --type todo --from <epic-id>` で関連付けます。`register build` は `generated/pjr-epic-items.md` に epic ごとの直接の子項目と状態を表示し、別 project の子を project 修飾 ID で識別します。子のない epic も表示し、孫の再帰表示や epic の自動 close は行いません。完了は子項目と schedule を材料に人が判断します。
 
 `item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
@@ -594,7 +580,7 @@ specdojo register add --project prj-0001 --type todo --from PJR-AB12 \
 ```
 
 - `catalog-planning`: `catalog_path` が必要です。plan は既存カタログと DCT の kata・domain ごとの template を参照し、`catalog plan prompt` に沿った agent の判定、`catalog plan scaffold --from`、`catalog plan validate`、`catalog scaffold --plan`、`catalog validate` を完了条件として展開します。上流資料が不足する場合は `--input` で明示し、未確定事項を推測で補いません。
-- `strategy-planning`: `catalog_path` と `schedule_path` が必要です。timeline がある場合は定義済み track に限定します。timeline がない場合は strategy の明示 scope を使います。plan は既存カタログと Schedule の kata を参照し、`sch-strategy-<track>.yaml` の `scope.catalogs`・`approach_rules` の intent・担当の宣言、`schedule strategy generate`、`schedule build --track` の成功を完了条件として展開します。
+- `strategy-planning`: `catalog_path` と `schedule_path` が必要です。対象 track を担う epic が必要です。範囲は既存 strategy の scope、epic の `domains`、互換用 timeline の順に解決します。plan は既存カタログと Schedule の kata を参照し、`sch-strategy-<track>.yaml` の `scope.catalogs`・`approach_rules` の intent・担当の宣言、`schedule strategy generate`、`schedule build --track` の成功を完了条件として展開します。
 - 対象はそれぞれ `domain:<id>` / `track:<id>` の 1 件です。ID は英小文字・数字・ハイフン、先頭は英小文字または数字、最大 63 文字です。個票の追加完了条件も plan に取り込みます。両 approach を schedule の成果物タスクへ指定することはできません。
 
 `register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にし、対象は 1 件だけです。`rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` は `--target` に新しい kata ID、繰り返し可能な `--source` に手本を指定し、個票 Frontmatter の `sources` へ保存します。

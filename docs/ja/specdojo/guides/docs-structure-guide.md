@@ -292,8 +292,9 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 - これらが成果物カタログの管理対象かどうかは配置とは独立で、
   どのドメインに分類するかは各 `dct-<domain>.yaml` の `domain` が決めます。
   例えば `controls/` と `reporting/` は `dct-project-management.yaml`
-  （`domain: project-management`）が管理します。`timeline/` と `schedule/` の計画成果物は、
-  トラック追加に伴って増えるため `dct-planning.yaml`（`domain: planning`）で管理します。
+  （`domain: project-management`）が管理します。全体計画の正本は `controls/project-register/` の epic です。
+  `schedule/` の計画成果物は `dct-planning.yaml`（`domain: planning`）で管理し、
+  旧 `timeline/tml-index.yaml` は非推奨の互換用ファイルとして扱います。
   `routines/`、`controls/reviews/`、各 `generated/` は CLI の入出力領域なのでカタログ管理対象外です。
 
 再利用可能なJob Definitionは`jobs/`、各回のJob Runは`execution/jobs/`へ置きます。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。

@@ -1,4 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/tml-index.schema.yaml
+# 非推奨: 全体計画は epic の depends_on・domains・着手と完了の記録・due_on から生成する。
+# 移行先は controls/project-register/ の epic、確認は dashboard build。
+# 本ファイルは互換用に保持する。削除は利用者が判断する（PJR-VYSC・PJR-JM29）。
 id: prj-0001:tml-index
 type: project
 status: draft

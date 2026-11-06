@@ -97,7 +97,6 @@ const projectManagementRulebooks = [
     rulebook("意思決定ログ", "dec"),
   ]),
   rulebook("スケジュール", "sch"),
-  rulebook("タイムライン", "tml"),
   rulebook("進捗報告", "pr"),
   rulebook("議事録", "mm"),
 ];
@@ -306,7 +305,6 @@ const projectManagementSamples = [
     sample("変更要求ログ", "pm-change-request-log"),
     sample("意思決定ログ", "dec"),
   ]),
-  sampleYaml("タイムライン", "tml"),
   sample("進捗報告", "pr"),
   sample("議事録", "mm"),
 ];
