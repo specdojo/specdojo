@@ -47,3 +47,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-FS9A"]'
+- v: 1
+  id: reg_6328c8f1b6df47cfadd491e536eecff8
+  ts: "2026-11-06T12:40:42Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_79c83f8c5fe54fea80d844777d0b779c
