@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_90339d60b2ee4807ad347d7883a5b9ca
+  ts: "2026-11-06T11:53:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 遷移 ID の欠番についての利用者の決定を Kata へ反映する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-rulebook の遷移 ID を確定までは振り直せるようにする
+    - field: description
+      from: ""
+      to: 遷移 ID は status が draft のあいだは通し番号に振り直してよく、確定（ready）した後は振り直さず欠番を残す規則にする
+    - field: input
+      from: ""
+      to: '["利用者のレビュー: `T-<nn>` の番号は下書きのあいだの追加・削除で欠番が出る。欠番を気にしない（A）、略号にする（B）、確定までは振り直してよい（C）を比べ、C とする。確定（status: ready）した後は振り直さず欠番を残し、外からの参照を変えない（2026-11-06 indie が決定）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-06"
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:stsd-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-S8EF"]'
