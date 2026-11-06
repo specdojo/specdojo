@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   registered_at: "2026-11-05T22:55:07Z"
+  block_reason: "parent validation failed: lint-fm, test-unit"
   derived_from:
     - PJR-VYSC
   depends_on:
