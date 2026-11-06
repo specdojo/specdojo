@@ -27,6 +27,10 @@ plugins:
   - - ./packages/docs-lint/src/remark-frontmatter-ajv2020.cjs
     - strict: true
       schemaRules: # 配列なので上から順に評価し、最初にマッチしたスキーマを適用します。
+        - glob: docs/ja/projects/**/execution/runs/**/plan.md
+          schema: docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml
+        - glob: docs/ja/projects/**/execution/runs/**/result.md
+          schema: docs/specdojo/schemas/v1/exec-result-frontmatter.schema.yaml
         - glob: docs/ja/projects/**/exec/plans/**/*.md
           schema: docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml
         - glob: docs/ja/projects/**/execution/**/plans/**/*.md

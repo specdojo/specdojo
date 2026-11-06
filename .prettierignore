@@ -16,6 +16,8 @@ public/mermaid
 # exec 履歴は commit 時に本文を書き換えない
 docs/ja/projects/**/execution/exec/plans/**
 docs/ja/projects/**/execution/exec/results/**
+docs/ja/projects/**/execution/runs/**/plan.md
+docs/ja/projects/**/execution/runs/**/result.md
 
 # vscode extension build
 tools/vscode-specdojo/node_modules
