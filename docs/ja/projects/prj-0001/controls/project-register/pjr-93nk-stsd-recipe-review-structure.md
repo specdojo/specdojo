@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-93nk-stsd-recipe-review-structure
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-06T11:15:04Z"
   due_on: null
+  completed_at: "2026-11-06T12:18:12Z"
+  conclusion: stsd-recipe の入力・手順・問いを、状態の目的・状態の判定・状態遷移（図の直下の遷移表、`T-<nn>` 入りのラベル）に合わせた
   derived_from:
     - PJR-3APD
   depends_on:
