@@ -1,16 +1,19 @@
-import { registerDependencyBlockReason } from "../../register/dependency.js";
-import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { qualifyTaskId, randomHex } from "../shared.js";
+import { isAuthoringApproach } from "../../kata/authoring.js";
+import { registerDependencyBlockReason } from "../../register/dependency.js";
+import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import {
   loadConfig,
   resolveAgentMember,
   type AgentProvider,
 } from "../../shared/specdojo-config.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
+import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
+import { buildInPlaceStem } from "../plans.js";
 import { resolveProductBranches } from "../product-branches.js";
 import { registerProductMessage } from "../register-product-message.js";
-import { buildInPlaceStem } from "../plans.js";
+import { findResumableRegisterRun } from "../register-resume.js";
 import {
   generateRegisterPlan,
   requireRunnableRegisterItem,
@@ -19,14 +22,22 @@ import {
   ticketPathFromItem,
   type RegisterItemSummary,
 } from "../register.js";
-import { type PjrItem, type RegisterPaths } from "../../register/register.js";
-import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
 import {
-  findExecWorktree,
-  gitOutput,
-  type ExecWorktree,
-  type ProductWorktree,
-} from "../worktree.js";
+  commitProductWorktrees,
+  integrateTaskRepositories,
+  PROJECT_REPO_NAME,
+  projectMergeBlockers,
+  RepoIntegrationError,
+} from "../repo-integration.js";
+import {
+  productIntegrationTrace,
+  recordResultTrace,
+  registerProjectMergeMessage,
+  traceKey,
+} from "../repo-trace.js";
+import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
+import { recordPathForRead, recordRef } from "../run-records.js";
+import { qualifyTaskId } from "../shared.js";
 import {
   configuredProductRepos,
   integrationBranchOverrideRecord,
@@ -46,28 +57,12 @@ import {
   worktreeStatusPaths,
 } from "../worktree-ops.js";
 import {
-  commitProductWorktrees,
-  integrateTaskRepositories,
-  projectMergeBlockers,
-  PROJECT_REPO_NAME,
-  RepoIntegrationError,
-} from "../repo-integration.js";
-import {
-  productIntegrationTrace,
-  recordResultTrace,
-  registerProjectMergeMessage,
-  traceKey,
-} from "../repo-trace.js";
-import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
-import { findResumableRegisterRun } from "../register-resume.js";
-import { isAuthoringApproach } from "../../kata/authoring.js";
-import {
-  resolvePinnedRateLimitRunOptions,
-  rateLimitRecoveryReason,
-  type AsyncLock,
-  type RunOpts,
-  type RunResult,
-} from "./shared.js";
+  findExecWorktree,
+  gitOutput,
+  type ExecWorktree,
+  type ProductWorktree,
+} from "../worktree.js";
+import { runAgentPipeline } from "./agent-pipeline.js";
 import {
   agentEnvironment,
   expandPromptRefs,
@@ -76,8 +71,6 @@ import {
   reportProductWorktrees,
   runWithRetry,
 } from "./agent.js";
-import { runAgentPipeline } from "./agent-pipeline.js";
-import { downgradeUnfilledResult } from "./schedule-prepare.js";
 import {
   commitSubject,
   integrateLogPath,
@@ -86,21 +79,29 @@ import {
   repoRelativePath,
 } from "./mode-shared.js";
 import {
-  resolveRegisterCommand,
   isRegisterPipelineRequested,
+  registerReporterManagedPaths,
+  registerRunnerManagedPaths,
+  resolveRegisterCommand,
   resolveRegisterPipelineCommand,
   spawnRegisterTransition,
   type RegisterRunContext,
-  registerRunnerManagedPaths,
-  registerReporterManagedPaths,
 } from "./register-core.js";
+import { runRegisterPostReview } from "./register-post-review.js";
 import {
   commitRegisterState,
-  registerPathsInsideWorktree,
   rebuildRootRegisterViews,
+  registerPathsInsideWorktree,
   registerWaitSummary,
 } from "./register-state.js";
-import { runRegisterPostReview } from "./register-post-review.js";
+import { downgradeUnfilledResult } from "./schedule-prepare.js";
+import {
+  rateLimitRecoveryReason,
+  resolvePinnedRateLimitRunOptions,
+  type AsyncLock,
+  type RunOpts,
+  type RunResult,
+} from "./shared.js";
 
 // 全体再実行が既存 run の未統合成果を破棄しないための保護。既存 worktree に再開可能な run
 // （executor 成功済みで reporter か統合が未完了）が残っている場合だけ理由を返し、呼び出し側が
@@ -227,7 +228,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       item,
       ticketPath,
       stem,
-      editPlanPath: resolve(context.executionPath, "exec", "plans", `${stem}-plan.md`),
+      editPlanPath: recordPathForRead(context.executionPath, "plan", stem),
       editResultPath: resolve(repoRoot, repoRelativePath(worktree.path, params.worktreeResultPath)),
       baseCommit,
       outputCommit,
@@ -614,9 +615,7 @@ export async function runSingleRegisterItemWorktree(
   const resolvedProvider = provider ?? resolveAgentMember(context.roster, actor)?.provider;
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
-  const pipelineRunId = pipelineAgents
-    ? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`
-    : undefined;
+  const pipelineRunId = pipelineAgents ? stem : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
   // PJR-XRAB: --integration-branch は設定の integration_branch より優先する。
   const products = resolveProductBranches(
@@ -695,7 +694,7 @@ export async function runSingleRegisterItemWorktree(
       mode: "edit",
       projectId,
       origin: "register",
-      planRef: `exec/plans/${stem}-plan.md`,
+      planRef: recordRef(executionPath, planPath),
       agent: actor,
       startedAt: new Date().toISOString(),
       stem,

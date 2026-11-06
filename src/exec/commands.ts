@@ -2,64 +2,14 @@ import { type Command } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
 import { validateCatalogLocalIds, validateRulebookKata } from "../catalog/build.js";
-import {
-  acquireSchedulerLock,
-  canBlockTask,
-  canCancelTask,
-  canClaimTask,
-  canCompleteTask,
-  canReleaseTask,
-  canReopenTask,
-  canUnblockTask,
-  computeReadyIds,
-  readAllEventFiles,
-  releaseSchedulerLock,
-  schedulerLockPath,
-  writeEventFile,
-} from "./events.js";
-import { eventsDirForProject, generatedDirForProject } from "./project.js";
+import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
+import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
 import {
   assertValidActor,
   getProjectViewpointsPath,
   loadConfig,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
-import {
-  buildScheduleIndex,
-  computeCpm,
-  exitWithCode,
-  printValidateResult,
-  selectNextTask,
-  validateAll,
-  writeCpmFiles,
-  writeGeneratedCore,
-  writeScheduleHashAndDiff,
-} from "./schedule/schedule.js";
-import { readReadySnapshot } from "./schedule/ready.js";
-import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
-import { displayWidth, nowUtcIsoSeconds, padEndDisplay, requireNonEmpty } from "./shared.js";
-import {
-  archivePlan,
-  buildInPlaceStem,
-  generateDeliverablePlan,
-  generateSinglePlan,
-  resolveDeliverableTarget,
-  stemFromPlanPath,
-} from "./plans.js";
-import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
-import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./register.js";
-import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
-import {
-  registerCycleCommand,
-  registerResumeCommand,
-  registerRunCommand,
-  registerSlotsCommand,
-} from "./run/run.js";
-import { buildTaskView } from "./task-view.js";
-import { registerExecWorktreeCommands } from "./worktree-command.js";
-import { registerExecTrialCommands } from "./trial.js";
-import { registerExecHandoffCommands } from "./handoff.js";
-import { resolveOwnerForLocalId } from "./strategy.js";
 import {
   DEFAULT_EVENT_MESSAGES,
   KNOWN_OWNER_LABELS,
@@ -87,6 +37,56 @@ import {
   scaffoldClaimResult,
   type LockedEventAction,
 } from "./core.js";
+import {
+  acquireSchedulerLock,
+  canBlockTask,
+  canCancelTask,
+  canClaimTask,
+  canCompleteTask,
+  canReleaseTask,
+  canReopenTask,
+  canUnblockTask,
+  computeReadyIds,
+  readAllEventFiles,
+  releaseSchedulerLock,
+  schedulerLockPath,
+  writeEventFile,
+} from "./events.js";
+import { registerExecHandoffCommands } from "./handoff.js";
+import {
+  archivePlan,
+  buildInPlaceStem,
+  generateDeliverablePlan,
+  generateSinglePlan,
+  resolveDeliverableTarget,
+  stemFromPlanPath,
+} from "./plans.js";
+import { eventsDirForProject, generatedDirForProject } from "./project.js";
+import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./register.js";
+import {
+  registerCycleCommand,
+  registerResumeCommand,
+  registerRunCommand,
+  registerSlotsCommand,
+} from "./run/run.js";
+import { readReadySnapshot } from "./schedule/ready.js";
+import {
+  buildScheduleIndex,
+  computeCpm,
+  exitWithCode,
+  printValidateResult,
+  selectNextTask,
+  validateAll,
+  writeCpmFiles,
+  writeGeneratedCore,
+  writeScheduleHashAndDiff,
+} from "./schedule/schedule.js";
+import { displayWidth, nowUtcIsoSeconds, padEndDisplay, requireNonEmpty } from "./shared.js";
+import { resolveOwnerForLocalId } from "./strategy.js";
+import { buildTaskView } from "./task-view.js";
+import { registerExecTrialCommands } from "./trial.js";
+import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
+import { registerExecWorktreeCommands } from "./worktree-command.js";
 
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
@@ -353,7 +353,7 @@ export function registerExecCommands(program: Command): void {
 
   const archiveCmd = exec
     .command("archive")
-    .description("Archive a completed plan to exec/plans/done/ (or delete it)");
+    .description("Keep a completed run plan (archive legacy plans), or delete it");
   addProjectOptions(archiveCmd);
   archiveCmd.option("--task <taskId>", "Scheduled task ID whose plan to archive");
   archiveCmd.option(

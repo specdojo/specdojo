@@ -1,11 +1,12 @@
+import addFormatsModule from "ajv-formats";
+import Ajv2020Module from "ajv/dist/2020.js";
+import { load } from "js-yaml";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { load } from "js-yaml";
-import Ajv2020Module from "ajv/dist/2020.js";
-import addFormatsModule from "ajv-formats";
 import { afterEach, describe, expect, it } from "vitest";
+import type { ExecEvidence } from "../../../src/exec/evidence.js";
 import {
   createPipelineState,
   integratedRepoNames,
@@ -16,7 +17,6 @@ import {
   updatePipelineStage,
   writePipelineState,
 } from "../../../src/exec/pipeline-state.js";
-import type { ExecEvidence } from "../../../src/exec/evidence.js";
 
 const Ajv2020 = Ajv2020Module.default;
 const addFormats = addFormatsModule.default;
@@ -101,7 +101,7 @@ describe("pipeline state", () => {
     );
     writePipelineState(location.path, state);
 
-    expect(location.ref).toBe("execution/exec/evidence/T-TEST-doc-010/run-1/pipeline-state.json");
+    expect(location.ref).toBe("execution/runs/schedule/T-TEST-doc-010/run-1/pipeline-state.json");
     expect(readPipelineState(location.path)).toEqual(state);
 
     const schema = load(readFileSync(schemaPath(), "utf8")) as Record<string, unknown>;

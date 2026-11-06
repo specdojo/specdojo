@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { dirname, join, relative, sep } from "node:path";
+import { relative, sep } from "node:path";
 import { selfRunArgs } from "../../shared/spawn-self.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
 import {
@@ -9,9 +9,10 @@ import {
   updatePipelineStage,
   writePipelineState,
   type PipelineRepoIntegrationState,
-  type PipelineStageState,
   type PipelineStageRole,
+  type PipelineStageState,
 } from "../pipeline-state.js";
+import { runLogPath } from "../run-records.js";
 
 export function spawnSelf(args: string[], cwd = specdojoRootDir()): boolean {
   const [exe, fullArgs] = selfRunArgs(args);
@@ -175,5 +176,5 @@ export function recordRepoIntegration(
 }
 
 export function integrateLogPath(statePath: string | undefined): string | undefined {
-  return statePath ? join(dirname(statePath), "integrate.log") : undefined;
+  return statePath ? runLogPath(statePath, "integrate.log") : undefined;
 }

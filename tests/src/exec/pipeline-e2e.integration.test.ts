@@ -1,3 +1,4 @@
+import { Command } from "commander";
 import { execFileSync } from "node:child_process";
 import {
   chmodSync,
@@ -12,9 +13,9 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
+import { recordPathForRead } from "../../../src/exec/run-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import * as spawnSelfModule from "../../../src/shared/spawn-self.js";
 
@@ -51,7 +52,7 @@ type AgentInvocation = {
 // 受け取り、behavior ファイルの指定に従って executor / reporter / 従来 agent として振る舞う。
 const FAKE_AGENT_SCRIPT = `
 import { execFileSync } from "node:child_process";
-import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, readdirSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 function arg(name) {
@@ -168,9 +169,9 @@ if (behavior.role === "reporter") {
 writeFileSync("legacy-artifact.md", "# legacy\\n", "utf8");
 const resultPath = join(
   process.env.SPECDOJO_EXECUTION_PATH ?? "",
-  "exec",
-  "results",
-  behavior.task + "-result.md",
+  "runs", "schedule", behavior.task,
+  readdirSync(join(process.env.SPECDOJO_EXECUTION_PATH ?? "", "runs", "schedule", behavior.task)).sort().at(-1),
+  "result.md",
 );
 const current = readFileSync(resultPath, "utf8");
 writeFileSync(
@@ -495,7 +496,7 @@ function setupPipelineRepository(): PipelineFixture {
   writeFileSync(
     join(repo, "parent-validation.mjs"),
     [
-      'import { appendFileSync, readFileSync } from "node:fs";',
+      'import { appendFileSync, readdirSync, readFileSync } from "node:fs";',
       `const logPath = ${JSON.stringify(parentValidationLogPath)};`,
       `const behaviorPath = ${JSON.stringify(parentValidationBehaviorPath)};`,
       'appendFileSync(logPath, "run\\n", "utf8");',
@@ -582,7 +583,7 @@ function readInvocations(logPath: string): AgentInvocation[] {
 }
 
 function evidenceRunDir(fixture: PipelineFixture, taskId: string): string {
-  const taskDir = join(fixture.executionPath, "exec", "evidence", taskId);
+  const taskDir = join(fixture.executionPath, "runs", "schedule", taskId);
   const runs = readdirSync(taskDir).sort();
   expect(runs).toHaveLength(1);
   return join(taskDir, runs[0]);
@@ -600,10 +601,7 @@ function readTaskEvents(fixture: PipelineFixture, taskId: string): TaskEvent[] {
 }
 
 function readResult(fixture: PipelineFixture, taskId: string): string {
-  return readFileSync(
-    join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
-    "utf8",
-  );
+  return readFileSync(recordPathForRead(fixture.executionPath, "result", taskId), "utf8");
 }
 
 function resultChangedFiles(result: string): Array<{ path: string; summary: string }> {
@@ -631,13 +629,10 @@ function readWorktreeResult(
   }
   const executionRelativePath = relative(fixture.repo, fixture.executionPath);
   return readFileSync(
-    join(
-      worktreeBase,
-      entries[0]!.name,
-      executionRelativePath,
-      "exec",
-      "results",
-      `${taskId}-result.md`,
+    recordPathForRead(
+      join(worktreeBase, entries[0]!.name, executionRelativePath),
+      "result",
+      taskId,
     ),
     "utf8",
   );
@@ -660,7 +655,7 @@ function readWorktreePipelineState(
 ): { stages: Record<string, { status: string; attempts: number }> } {
   const worktreePath = onlyWorktreePath(worktreeBase);
   const executionRelativePath = relative(fixture.repo, fixture.executionPath);
-  const taskDir = join(worktreePath, executionRelativePath, "exec", "evidence", taskId);
+  const taskDir = join(worktreePath, executionRelativePath, "runs", "schedule", taskId);
   const runs = readdirSync(taskDir).sort();
   expect(runs).toHaveLength(1);
   return JSON.parse(readFileSync(join(taskDir, runs[0]!, "pipeline-state.json"), "utf8")) as {
@@ -1115,7 +1110,10 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
           if (event.task_id === taskId && event.type === "block") rmSync(join(eventsDir, name));
         }
       }
-      const planRef = join("execution", "exec", "plans", `${taskId}-plan.md`);
+      const planRef = relative(
+        current.repo,
+        recordPathForRead(current.executionPath, "plan", taskId),
+      );
       const rootPlan = readFileSync(join(current.repo, planRef), "utf8");
       const editedPlan =
         rootPlan + "\nPreserve prior work and apply the RKHR additional instructions.\n";
@@ -1270,7 +1268,10 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       expect(state.stages.reporter.status).toBe("succeeded");
       expect(state.stages.integrate.status).toBe("succeeded");
       expect(existsSync(worktree)).toBe(false);
-      const planRef = join("execution", "exec", "plans", `${taskId}-plan.md`);
+      const planRef = relative(
+        current.repo,
+        recordPathForRead(current.executionPath, "plan", taskId),
+      );
       const logWithoutEditedPlan = git(
         current.repo,
         "show",
@@ -1343,7 +1344,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       } else if (scenario === "non-pipeline") {
         reason = "agent_pipeline task";
       } else if (scenario === "missing-plan") {
-        rmSync(join(worktree, "execution", "exec", "plans", `${taskId}-plan.md`));
+        rmSync(recordPathForRead(join(worktree, "execution"), "plan", taskId));
         reason = "plan or result is missing";
       } else if (scenario === "missing-evidence") {
         rmSync(join(worktree, String(state.stages.executor.artifact_ref)));
@@ -1439,7 +1440,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       "completed after resume",
     );
 
-    const evidenceRoot = join(fixture.repo, "execution", "exec", "evidence", "T-TEST-doc-010");
+    const evidenceRoot = join(fixture.repo, "execution", "runs", "schedule", "T-TEST-doc-010");
     const latestRun = readdirSync(evidenceRoot).sort().at(-1)!;
     const evidence = JSON.parse(
       readFileSync(join(evidenceRoot, latestRun, "evidence.json"), "utf8"),
@@ -1589,11 +1590,11 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const worktreeRunDir = join(
       worktreePath,
       executionRelativePath,
-      "exec",
-      "evidence",
+      "runs",
+      "schedule",
       "T-TEST-doc-010",
       readdirSync(
-        join(worktreePath, executionRelativePath, "exec", "evidence", "T-TEST-doc-010"),
+        join(worktreePath, executionRelativePath, "runs", "schedule", "T-TEST-doc-010"),
       )[0]!,
     );
     const integrateLog = readFileSync(join(worktreeRunDir, "integrate.log"), "utf8");

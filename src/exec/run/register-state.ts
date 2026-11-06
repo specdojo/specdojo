@@ -1,27 +1,19 @@
-import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
-import {
-  sanitizeRegisterConclusion,
-  type RegisterItemSummary,
-  type RegisterItemTransition,
-} from "../register.js";
-import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import {
   applyRegisterItemFields,
   CELL_NONE,
   readRegisterItemContent,
   registerItemFieldsFromItem,
 } from "../../register/item.js";
+import { type PjrItem, type RegisterPaths } from "../../register/register.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import {
-  appendGitFailureLog,
-  appendGitResultFailureLog,
-  formatGitResultFailure,
-  gitOutput,
-  gitResult,
-  summarizeGitHookFailure,
-  type ExecWorktree,
-} from "../worktree.js";
+  sanitizeRegisterConclusion,
+  type RegisterItemSummary,
+  type RegisterItemTransition,
+} from "../register.js";
+import { isRunRecordPath } from "../run-records.js";
 import {
   abortMerge,
   currentBranch,
@@ -32,12 +24,21 @@ import {
   unstageCommitTargets,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
+import {
+  appendGitFailureLog,
+  appendGitResultFailureLog,
+  formatGitResultFailure,
+  gitOutput,
+  gitResult,
+  summarizeGitHookFailure,
+  type ExecWorktree,
+} from "../worktree.js";
 import { pathInsideWorktree } from "./agent.js";
 import { repoRelativePath } from "./mode-shared.js";
 import {
-  spawnRegisterTransition,
   registerEventPathForTicket,
   registerRunnerManagedPaths,
+  spawnRegisterTransition,
 } from "./register-core.js";
 
 // register の状態遷移（start/review/wait）が変更した調整状態（pjr-index と派生ビュー）だけを
@@ -157,8 +158,10 @@ export function copyRepoPaths(
 // event は agent が編集した未検証の本文を含みうるため、root に残してある checkpoint 版を
 // wait 遷移の入力にする。派生ビューは遷移後に root で再生成する。
 export function registerFailureArtifactPaths(repoRoot: string, paths: readonly string[]): string[] {
-  return paths.filter((path) =>
-    /(?:^|\/)exec\/(?:plans|results)\//.test(repoRelativePath(repoRoot, path)),
+  return paths.filter(
+    (path) =>
+      /(?:^|\/)exec\/(?:plans|results)\//.test(repoRelativePath(repoRoot, path)) ||
+      isRunRecordPath(path),
   );
 }
 
@@ -370,7 +373,10 @@ export function commitRegisterWaitState(params: {
 }
 
 export function isRegisterResultPath(repoRoot: string, path: string): boolean {
-  return /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path));
+  return (
+    /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path)) ||
+    (isRunRecordPath(path) && path.endsWith("/result.md"))
+  );
 }
 
 // wait commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge する。

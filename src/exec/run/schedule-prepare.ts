@@ -1,42 +1,52 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.js";
-import { canCompleteTask, readAllEventFiles, foldEventsToState } from "../events.js";
-import { buildScheduleIndex } from "../schedule/schedule.js";
-import { buildInitialStateFromStrategy } from "../schedule/initial.js";
-import { qualifyTaskId, randomHex } from "../shared.js";
+import { ensureReviewGrade, type ReviewGradeOutcome } from "../../review/grade.js";
 import {
   type AgentProvider,
   type MemberRoster,
   type ProjectMember,
 } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView } from "../types.js";
-import {
-  type AgentStageRole,
-  type ScheduleIndex,
-  type StateSnapshot,
-  type TaskMode,
-} from "../types.js";
-import {
-  generateSinglePlan,
-  finalizeResultSectionsForDeliverable,
-  targetDocIdsForScheduledTask,
-  reviewGradeSubject,
-} from "../plans.js";
-import { ensureReviewGrade } from "../../review/grade.js";
+import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.js";
+import { canCompleteTask, foldEventsToState, readAllEventFiles } from "../events.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
-import { type ReviewGradeOutcome } from "../../review/grade.js";
+import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
+import {
+  finalizeResultSectionsForDeliverable,
+  generateSinglePlan,
+  reviewGradeSubject,
+  targetDocIdsForScheduledTask,
+} from "../plans.js";
+import type { RegisterResumeTarget } from "../register-resume.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "../results.js";
-import { findExecWorktree, worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
+import { findRunRecord, recordPathForRead, recordRef, recordStem } from "../run-records.js";
+import { buildInitialStateFromStrategy } from "../schedule/initial.js";
+import { buildScheduleIndex } from "../schedule/schedule.js";
+import { qualifyTaskId } from "../shared.js";
 import {
   configuredProductRepos,
   plannedProjectWorktreePath,
   preflightProductBranches,
   productBranchForTask,
 } from "../task-repos.js";
+import {
+  type AgentStageRole,
+  type ReadyTaskView,
+  type ScheduleIndex,
+  type StateSnapshot,
+  type TaskMode,
+} from "../types.js";
 import { checkpointAndEnsureWorktree, discardStaleExecWorktree } from "../worktree-ops.js";
-import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
-import type { RegisterResumeTarget } from "../register-resume.js";
+import { findExecWorktree, worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
+import {
+  buildExecutorPrompt,
+  executorRequirements,
+  loadPrompt,
+  pathInsideWorktree,
+  reportProductWorktrees,
+  reporterRequirements,
+  resolveReporterAgentCandidates,
+} from "./agent.js";
+import { integrateLogPath, spawnClaim, spawnRelease } from "./mode-shared.js";
 import {
   collectBusyActors,
   pinnedExecutor,
@@ -48,22 +58,12 @@ import {
   selectCandidates,
   type AgentRunCandidate,
   type ModeAgentOverrides,
-  type ResolvedRequirements,
-  type RunResult,
-  type RunOpts,
   type PinnedRateLimitRunOptions,
+  type ResolvedRequirements,
+  type RunOpts,
+  type RunResult,
   type StageAgentOverrides,
 } from "./shared.js";
-import {
-  buildExecutorPrompt,
-  executorRequirements,
-  loadPrompt,
-  pathInsideWorktree,
-  reportProductWorktrees,
-  reporterRequirements,
-  resolveReporterAgentCandidates,
-} from "./agent.js";
-import { integrateLogPath, spawnClaim, spawnRelease } from "./mode-shared.js";
 
 export type PreparedTask = {
   task: ReadyTaskView;
@@ -358,7 +358,7 @@ export async function prepareSingleTask(
     if (!worktree) throw new Error(`no exec worktree to resume executor for ${task.id}`);
     const worktreeExecutionPath = pathInsideWorktree(repoRoot, worktree.path, executionPath);
     const planPrompt = loadPrompt(worktreeExecutionPath, task.id);
-    const resultPath = join(executionPath, "exec", "results", `${task.id}-result.md`);
+    const resultPath = recordPathForRead(executionPath, "result", task.id);
     const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
     if (!planPrompt || !existsSync(resultPath) || !existsSync(worktreeResultPath)) {
       throw new Error(`plan or result is missing for executor resume: ${task.id}`);
@@ -379,7 +379,7 @@ export async function prepareSingleTask(
       resultPath,
       resultScaffold: readResultFrontmatterSnapshot(resultPath),
       checkpointPaths: [
-        join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+        recordPathForRead(executionPath, "plan", task.id),
         resultPath,
         claimEventPath,
         ...gradeCheckpointPaths({ repoRoot, executionPath }),
@@ -406,16 +406,17 @@ export async function prepareSingleTask(
   });
 
   // Plans are generated on demand here; `exec refresh` does not manage them.
-  await generateSinglePlan({
-    executionPath,
-    projectId: projectId ?? "",
-    catalogPath: planGenPaths.catalogPath ?? "",
-    rolesPath: planGenPaths.rolesPath,
-    viewpointsPath: planGenPaths.viewpointsPath,
-    projectContext: planGenPaths.projectContext,
-    task,
-    ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
-  });
+  if (!skipClaim || !findRunRecord(executionPath, "plan", task.id))
+    await generateSinglePlan({
+      executionPath,
+      projectId: projectId ?? "",
+      catalogPath: planGenPaths.catalogPath ?? "",
+      rolesPath: planGenPaths.rolesPath,
+      viewpointsPath: planGenPaths.viewpointsPath,
+      projectContext: planGenPaths.projectContext,
+      task,
+      ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
+    });
 
   const planPrompt = loadPrompt(executionPath, task.id);
   if (!planPrompt) {
@@ -426,7 +427,7 @@ export async function prepareSingleTask(
     ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
     : planPrompt;
   const pipelineRunId = task.agent_pipeline
-    ? `${new Date().toISOString().replace(/[-:.]/g, "").replace("Z", "Z")}-${randomHex(4)}`
+    ? recordStem(recordPathForRead(executionPath, "plan", task.id))
     : undefined;
 
   const worktreeTaskId = qualifyTaskId(projectId, task.id);
@@ -485,7 +486,7 @@ export async function prepareSingleTask(
     }
   }
 
-  const planRef = `exec/plans/${task.id}-plan.md`;
+  const planRef = recordRef(executionPath, recordPathForRead(executionPath, "plan", task.id));
   const startedAt = new Date().toISOString();
   const finalizeSections =
     task.approach === "finalize" || task.approach === "bootstrap-finalize"
@@ -542,7 +543,7 @@ export async function prepareSingleTask(
   }
 
   const checkpointPaths = [
-    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+    recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     claimEventPath,
     ...gradeCheckpointPaths({ repoRoot, executionPath }),

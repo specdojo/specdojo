@@ -22,6 +22,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- 新しい実行の plan・result・evidence・ログを `execution/runs/<出どころ>/<項目 ID>/<run ID>/` にまとめ、配置の決定と旧記録の探索を共通モジュールに集約しました。register・schedule・job と再開処理に適用し、既存の `exec/plans`・`exec/results`・`exec/evidence` は移動せず読み取ります（PJR-Z0XR）。
+
 - prj-0001 の廃止済みプロダクト文書22件を `docs/` 外の `archive/ja/product/trash/` へ移し、文書サイトと doc index の対象から外しました。既存の wikilink はサイトから archive のソースへ解決します。週報の出力先を `reporting/progress-reports/` にそろえ、初回保存時に作成されることと、週報 routine が無効なサンプルであることをガイドに明記しました（PJR-XD12）。
 
 - tml の Kata と Timeline 設計ガイドを非推奨にし、ガイドとリファレンスを epic による全体計画へ更新しました。prj-0001 の 3 件の epic に `domains` を記録し、旧 `tml-index` をカタログから外しました。旧ファイルは互換用に保持します（PJR-JM29）。

@@ -1,3 +1,4 @@
+import { Command } from "commander";
 import {
   existsSync,
   mkdirSync,
@@ -9,9 +10,13 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../../src/exec/exec.js";
+import {
+  listRunRecords,
+  recordPathForRead,
+  taskRecordPaths,
+} from "../../../../src/exec/run-records.js";
 import * as execWorktree from "../../../../src/exec/worktree.js";
 
 const originalCwd = process.cwd();
@@ -515,10 +520,7 @@ describe("exec run (in-place, default)", () => {
       expect(readFileSync(join(repo, evidence.command.stderr_ref), "utf8")).toContain(
         "failure detail",
       );
-      const result = readFileSync(
-        join(executionPath, "exec", "results", `${run.run_id}-result.md`),
-        "utf8",
-      );
+      const result = readFileSync(recordPathForRead(executionPath, "result", run.run_id), "utf8");
       expect(result).toContain("status: blocked");
       expect(result).toContain("command exited with code 7");
       expect(process.exitCode).toBe(7);
@@ -669,17 +671,11 @@ describe("exec run (in-place, default)", () => {
         readFileSync(join(executionPath, "jobs", "runs", runFile), "utf8"),
       ) as { run_id: string; state: string };
       expect(run.state).toBe("succeeded");
-      const result = readFileSync(
-        join(executionPath, "exec", "results", `${run.run_id}-result.md`),
-        "utf8",
-      );
+      const result = readFileSync(recordPathForRead(executionPath, "result", run.run_id), "utf8");
       expect(result).toContain("status: complete");
       expect(result).toContain("成果物を更新し、検証を完了した。");
       const state = JSON.parse(
-        readFileSync(
-          join(executionPath, "exec", "evidence", run.run_id, "attempt-1", "pipeline-state.json"),
-          "utf8",
-        ),
+        readFileSync(taskRecordPaths(executionPath, run.run_id, run.run_id, "job").state, "utf8"),
       ) as { stages: { executor: { actor: string }; reporter: { status: string } } };
       expect(state.stages.executor.actor).toBe("specdojo-runner");
       expect(state.stages.reporter.status).toBe("succeeded");
@@ -717,21 +713,21 @@ describe("exec run (in-place, default)", () => {
 
       expect(readFileSync(join(repo, "pipeline-artifact.md"), "utf8")).toContain("# Updated");
       const result = readFileSync(
-        join(executionPath, "exec", "results", "T-TEST-doc-010-result.md"),
+        recordPathForRead(executionPath, "result", "T-TEST-doc-010"),
         "utf8",
       );
       expect(result, output.join("")).toContain("status: complete");
       expect(result).toContain("成果物を更新し、検証を完了した。");
       expect(result).toContain("`pipeline-artifact.md`: 文書を更新した。");
       expect(result).not.toContain("_TODO_");
-      const evidenceDirs = readdirSync(join(executionPath, "exec", "evidence", "T-TEST-doc-010"));
+      const evidenceDirs = readdirSync(join(executionPath, "runs", "schedule", "T-TEST-doc-010"));
       expect(evidenceDirs).toHaveLength(1);
       expect(
         existsSync(
           join(
             executionPath,
-            "exec",
-            "evidence",
+            "runs",
+            "schedule",
             "T-TEST-doc-010",
             evidenceDirs[0],
             "evidence.json",
@@ -742,8 +738,8 @@ describe("exec run (in-place, default)", () => {
         readFileSync(
           join(
             executionPath,
-            "exec",
-            "evidence",
+            "runs",
+            "schedule",
             "T-TEST-doc-010",
             evidenceDirs[0],
             "pipeline-state.json",
@@ -765,7 +761,7 @@ describe("exec run (in-place, default)", () => {
         status: "succeeded",
         attempts: 1,
       });
-      expect(pipelineState.stages.reporter.artifact_ref).toContain("/T-TEST-doc-010-result.md");
+      expect(pipelineState.stages.reporter.artifact_ref).toContain("/result.md");
       expect(process.exitCode).toBeUndefined();
     } finally {
       process.chdir(originalCwd);
@@ -798,10 +794,10 @@ describe("exec run (in-place, default)", () => {
       ]);
 
       expect(process.exitCode).toBe(1);
-      const runId = readdirSync(join(executionPath, "exec", "evidence", "T-TEST-doc-010"))[0];
+      const runId = readdirSync(join(executionPath, "runs", "schedule", "T-TEST-doc-010"))[0];
       const state = JSON.parse(
         readFileSync(
-          join(executionPath, "exec", "evidence", "T-TEST-doc-010", runId, "pipeline-state.json"),
+          join(executionPath, "runs", "schedule", "T-TEST-doc-010", runId, "pipeline-state.json"),
           "utf8",
         ),
       ) as { stages: { executor: { status: string }; reporter: { status: string } } };
@@ -832,28 +828,21 @@ describe("exec run (in-place, default)", () => {
       expect(received).toContain("# Edit Plan: T-TEST-doc-010");
       expect(received).toContain("Content is complete");
 
-      // --task is task identity, so the plan uses the fixed `<task-id>` name (shared with the
-      // claim / run --track-state path), even without worktree or events.
-      const planFiles = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
-        f.endsWith("-plan.md"),
-      );
+      // A scheduled task retains a separate run directory even without worktree or events.
+      const planFiles = listRunRecords(executionPath, "plan");
       expect(planFiles).toHaveLength(1);
-      expect(planFiles[0]).toBe("T-TEST-doc-010-plan.md");
+      expect(planFiles[0]).toMatch(/\/runs\/schedule\/T-TEST-doc-010\/[^/]+\/plan\.md$/);
       expect(readdirSync(join(executionPath, "exec", "events"))).toHaveLength(0);
       expect(process.exitCode).toBeUndefined();
 
       // The result is scaffolded so the agent fills a frontmatter-complete file (incl. mode),
       // shares the plan's stem, and its status reflects the successful exit even without events.
-      const resultFiles = readdirSync(join(executionPath, "exec", "results")).filter((f) =>
-        f.endsWith("-result.md"),
-      );
+      const resultFiles = listRunRecords(executionPath, "result");
       expect(resultFiles).toHaveLength(1);
-      expect(resultFiles[0]).toBe("T-TEST-doc-010-result.md");
+      expect(resultFiles[0]).toBe(planFiles[0].replace(/plan\.md$/, "result.md"));
       // Plan and result share one stem (1:1 linkage).
-      expect(resultFiles[0].replace(/-result\.md$/, "")).toBe(
-        planFiles[0].replace(/-plan\.md$/, ""),
-      );
-      const result = readFileSync(join(executionPath, "exec", "results", resultFiles[0]), "utf8");
+      expect(resultFiles[0].replace(/result\.md$/, "")).toBe(planFiles[0].replace(/plan\.md$/, ""));
+      const result = readFileSync(resultFiles[0], "utf8");
       expect(result).toContain("mode: edit");
       expect(result).toContain("status: complete");
     } finally {
@@ -878,11 +867,11 @@ describe("exec run (in-place, default)", () => {
       ]);
 
       expect(readFileSync(join(repo, "agent-ran.txt"), "utf8")).toContain("Content is complete");
-      const planFiles = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
-        f.endsWith("-plan.md"),
-      );
+      const planFiles = listRunRecords(executionPath, "plan");
       expect(planFiles).toHaveLength(1);
-      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{8}-plan\.md$/);
+      expect(planFiles[0]).toMatch(
+        /\/runs\/schedule\/doc\/doc-\d{8}T\d{6}Z-[0-9a-f]{8}\/plan\.md$/,
+      );
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
@@ -913,12 +902,8 @@ describe("exec run (in-place, default)", () => {
         FAKE_AGENT_NICKNAME,
       ]);
 
-      const planFiles = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
-        f.endsWith("-plan.md"),
-      );
-      const resultFiles = readdirSync(join(executionPath, "exec", "results")).filter((f) =>
-        f.endsWith("-result.md"),
-      );
+      const planFiles = listRunRecords(executionPath, "plan");
+      const resultFiles = listRunRecords(executionPath, "result");
       // Each run leaves its own plan and result; nothing is overwritten (the trail is preserved).
       expect(planFiles).toHaveLength(2);
       expect(resultFiles).toHaveLength(2);
@@ -929,7 +914,7 @@ describe("exec run (in-place, default)", () => {
     }
   });
 
-  it("archives the plan to done/ with --archive-on-success", async () => {
+  it("keeps the plan in its run with --archive-on-success", async () => {
     const { repo, executionPath } = setupRepository();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
@@ -945,14 +930,11 @@ describe("exec run (in-place, default)", () => {
         "--archive-on-success",
       ]);
 
-      // The unique-named plan is moved out of plans/ into done/.
-      const remaining = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
-        f.endsWith("-plan.md"),
-      );
-      expect(remaining).toHaveLength(0);
-      const doneFiles = readdirSync(join(executionPath, "exec", "plans", "done"));
-      expect(doneFiles).toHaveLength(1);
-      expect(doneFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{8}-.*-plan\.md$/);
+      // Run records remain together; completed plans no longer move to done/.
+      const remaining = listRunRecords(executionPath, "plan");
+      expect(remaining).toHaveLength(1);
+      expect(remaining[0]).toMatch(/\/runs\/schedule\/doc\/[^/]+\/plan\.md$/);
+      expect(existsSync(join(executionPath, "exec", "plans", "done"))).toBe(false);
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
@@ -1024,10 +1006,7 @@ describe("exec run (in-place, default)", () => {
 
       await runExec(["run", "--project", "test", "--plan", planPath, "--by", FAKE_AGENT_NICKNAME]);
 
-      const result = readFileSync(
-        join(executionPath, "exec", "results", "custom-result.md"),
-        "utf8",
-      );
+      const result = readFileSync(recordPathForRead(executionPath, "result", "custom"), "utf8");
       expect(result).toContain("id: test:xer-custom");
       expect(result).toContain("mode: edit");
       expect(result).toContain("approach: fully-guided");
@@ -1076,11 +1055,9 @@ describe("exec run (in-place, default)", () => {
       expect(existsSync(join(repo, "agent-ran.txt"))).toBe(true);
       expect(process.exitCode).toBe(1);
 
-      const resultFiles = readdirSync(join(executionPath, "exec", "results")).filter((f) =>
-        f.endsWith("-result.md"),
-      );
+      const resultFiles = listRunRecords(executionPath, "result");
       expect(resultFiles).toHaveLength(1);
-      const result = readFileSync(join(executionPath, "exec", "results", resultFiles[0]), "utf8");
+      const result = readFileSync(resultFiles[0], "utf8");
       expect(result).toContain("status: blocked");
       expect(result).toContain("block_reason:");
     } finally {
@@ -1105,19 +1082,17 @@ describe("exec run (in-place, default)", () => {
 });
 
 describe("exec plan (command naming)", () => {
-  it("generates a fixed `<task-id>-plan.md` for --task (no --out)", async () => {
+  it("generates a run-scoped plan for --task (no --out)", async () => {
     const { repo, executionPath } = setupRepository();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
       process.chdir(repo);
       await runExec(["plan", "--project", "test", "--task", "T-TEST-doc-010"]);
 
-      // task identity → the fixed name shared with claim / run --track-state, so a later
-      // claim/complete adopts this plan/result without renaming.
-      const planFiles = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
-        f.endsWith("-plan.md"),
-      );
-      expect(planFiles).toEqual(["T-TEST-doc-010-plan.md"]);
+      // The latest task run can be found by claim/complete without renaming its records.
+      const planFiles = listRunRecords(executionPath, "plan");
+      expect(planFiles).toHaveLength(1);
+      expect(planFiles[0]).toMatch(/\/runs\/schedule\/T-TEST-doc-010\/[^/]+\/plan\.md$/);
       expect(process.exitCode).toBe(0);
     } finally {
       process.chdir(originalCwd);
@@ -1132,11 +1107,11 @@ describe("exec plan (command naming)", () => {
       process.chdir(repo);
       await runExec(["plan", "--project", "test", "--deliverable", "doc"]);
 
-      const planFiles = readdirSync(join(executionPath, "exec", "plans")).filter((f) =>
-        f.endsWith("-plan.md"),
-      );
+      const planFiles = listRunRecords(executionPath, "plan");
       expect(planFiles).toHaveLength(1);
-      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{8}-plan\.md$/);
+      expect(planFiles[0]).toMatch(
+        /\/runs\/schedule\/doc\/doc-\d{8}T\d{6}Z-[0-9a-f]{8}\/plan\.md$/,
+      );
       expect(process.exitCode).toBe(0);
     } finally {
       process.chdir(originalCwd);

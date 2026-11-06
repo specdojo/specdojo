@@ -1,3 +1,4 @@
+import { Command } from "commander";
 import { execFileSync } from "node:child_process";
 import {
   cpSync,
@@ -12,9 +13,9 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { isAbsolute, join } from "node:path";
-import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
+import { listRunRecords } from "../../../src/exec/run-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 
 // PJR-6VFN / PJR-PG6W: `exec run --register --worktree --resume` の E2E 検証。executor が
@@ -428,9 +429,9 @@ describe("exec run --register --worktree --resume", () => {
         expect(existsSync(join(worktreePath ?? "", ARTIFACT_NAME))).toBe(true);
         expect(existsSync(join(root, ARTIFACT_NAME))).toBe(false);
 
-        const evidenceDir = join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
+        const evidenceDir = join(root, EXECUTION_REL, "runs", "register", "PJR-CD34");
         const runDirsAfterFirstRun = readdirSync(
-          join(worktreePath ?? "", EXECUTION_REL, "exec", "evidence", "PJR-CD34"),
+          join(worktreePath ?? "", EXECUTION_REL, "runs", "register", "PJR-CD34"),
         );
         expect(runDirsAfterFirstRun).toHaveLength(1);
 
@@ -454,12 +455,9 @@ describe("exec run --register --worktree --resume", () => {
 
         // executor の成果と reporter の result が統合ブランチへ merge されている。
         expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
-        const resultFiles = readdirSync(join(root, EXECUTION_REL, "exec", "results"));
+        const resultFiles = listRunRecords(join(root, EXECUTION_REL), "result");
         expect(resultFiles).toHaveLength(1);
-        const result = readFileSync(
-          join(root, EXECUTION_REL, "exec", "results", resultFiles[0]),
-          "utf8",
-        );
+        const result = readFileSync(resultFiles[0], "utf8");
         expect(result).toContain("status: complete");
         expect(result).toContain("reporter 再開で result を記入した。");
         expect(result).not.toContain("_TODO_");
@@ -527,7 +525,7 @@ describe("exec run --register --worktree --resume", () => {
           .trim()
           .replace(/^gitdir:\s*/u, "");
         expect(isAbsolute(gitdir)).toBe(false);
-        const evidenceDir = join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
+        const evidenceDir = join(worktreePath, EXECUTION_REL, "runs", "register", "PJR-CD34");
         const runId = readdirSync(evidenceDir)[0];
         const readParentValidation = (): Record<string, unknown> | undefined => {
           const evidence = JSON.parse(
@@ -577,7 +575,7 @@ describe("exec run --register --worktree --resume", () => {
         );
         const mergedEvidence = JSON.parse(
           readFileSync(
-            join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34", runId, "evidence.json"),
+            join(root, EXECUTION_REL, "runs", "register", "PJR-CD34", runId, "evidence.json"),
             "utf8",
           ),
         ) as { validations: Record<string, unknown>[] };
@@ -600,7 +598,7 @@ describe("exec run --register --worktree --resume", () => {
         await runWithFailingReporter(markerPath, worktreeBase);
         const worktreePath = worktreePathFor(root) ?? "";
         expect(worktreePath).not.toBe("");
-        const evidenceDir = join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
+        const evidenceDir = join(worktreePath, EXECUTION_REL, "runs", "register", "PJR-CD34");
         const firstRunId = readdirSync(evidenceDir)[0];
 
         writeFileSync(join(root, FIX_NAME), "# human-applied integration fix\n", "utf8");
@@ -625,16 +623,29 @@ describe("exec run --register --worktree --resume", () => {
 
         expect(process.exitCode ?? 0).toBe(0);
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
-        const runIds = readdirSync(join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34"));
-        expect(runIds).toHaveLength(2);
-        const resumedRunId = runIds.find((runId) => runId !== firstRunId) ?? "";
+        const runIds = readdirSync(join(root, EXECUTION_REL, "runs", "register", "PJR-CD34"));
+        expect(runIds).toHaveLength(1);
+        const resumedRunId = firstRunId;
+        expect(
+          existsSync(
+            join(
+              root,
+              EXECUTION_REL,
+              "runs",
+              "register",
+              "PJR-CD34",
+              resumedRunId,
+              "evidence.attempt-1.json",
+            ),
+          ),
+        ).toBe(true);
         const resumedEvidence = JSON.parse(
           readFileSync(
             join(
               root,
               EXECUTION_REL,
-              "exec",
-              "evidence",
+              "runs",
+              "register",
               "PJR-CD34",
               resumedRunId,
               "evidence.json",
@@ -669,15 +680,15 @@ describe("exec run --register --worktree --resume", () => {
           "    priority: 1",
         );
         const firstRunId = readdirSync(
-          join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34"),
+          join(worktreePath, EXECUTION_REL, "runs", "register", "PJR-CD34"),
         )[0];
         const firstState = JSON.parse(
           readFileSync(
             join(
               worktreePath,
               EXECUTION_REL,
-              "exec",
-              "evidence",
+              "runs",
+              "register",
               "PJR-CD34",
               firstRunId,
               "pipeline-state.json",
@@ -879,8 +890,8 @@ describe("exec run --register --worktree --resume", () => {
         const taskEvidenceDir = join(
           worktreePath ?? "",
           EXECUTION_REL,
-          "exec",
-          "evidence",
+          "runs",
+          "register",
           "PJR-CD34",
         );
         const interruptedRunId = readdirSync(taskEvidenceDir)[0];
@@ -930,29 +941,26 @@ describe("exec run --register --worktree --resume", () => {
         expect(process.exitCode ?? 0).toBe(0);
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
         expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
-        const mergedRuns = readdirSync(join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34"));
-        expect(mergedRuns).toHaveLength(2);
-        const resumedRunId = mergedRuns.find((runId) => runId !== interruptedRunId);
+        const mergedRuns = readdirSync(join(root, EXECUTION_REL, "runs", "register", "PJR-CD34"));
+        expect(mergedRuns).toHaveLength(1);
+        const resumedRunId = interruptedRunId;
         expect(resumedRunId).toBeDefined();
         expect(
           existsSync(
             join(
               root,
               EXECUTION_REL,
-              "exec",
-              "evidence",
+              "runs",
+              "register",
               "PJR-CD34",
               resumedRunId ?? "",
               "evidence.json",
             ),
           ),
         ).toBe(true);
-        const resultFiles = readdirSync(join(root, EXECUTION_REL, "exec", "results"));
+        const resultFiles = listRunRecords(join(root, EXECUTION_REL), "result");
         expect(resultFiles).toHaveLength(1);
-        const result = readFileSync(
-          join(root, EXECUTION_REL, "exec", "results", resultFiles[0]),
-          "utf8",
-        );
+        const result = readFileSync(resultFiles[0], "utf8");
         expect(result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1]).toBe(
           `- \`${ARTIFACT_NAME}\`: 変更内容を result に記録した。`,
         );

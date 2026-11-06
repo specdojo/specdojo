@@ -1,11 +1,17 @@
-import { loadConfig } from "../../shared/specdojo-config.js";
-import { resolveProductBranches } from "../product-branches.js";
-import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { registerDependencyBlockReason } from "../../register/dependency.js";
+import { type PjrItem, type RegisterPaths } from "../../register/register.js";
+import { loadConfig, type MemberRoster } from "../../shared/specdojo-config.js";
 import { type ExecDefaultsConfig } from "../agent-config.js";
-import { qualifyTaskId } from "../shared.js";
-import { type MemberRoster } from "../../shared/specdojo-config.js";
+import { failedParentValidationReason } from "../parent-validation.js";
+import { integratedRepoNames } from "../pipeline-state.js";
+import { resolveProductBranches } from "../product-branches.js";
+import {
+  findResumableRegisterRun,
+  resolveRegisterResumeArtifacts,
+  type RegisterResumeTarget,
+} from "../register-resume.js";
 import {
   requireRunnableRegisterItem,
   resolveRegisterRunTarget,
@@ -13,9 +19,12 @@ import {
   ticketPathFromItem,
   type RegisterItemSummary,
 } from "../register.js";
-import { type PjrItem, type RegisterPaths } from "../../register/register.js";
+import {
+  syncTaskWorktreesWithIntegrationTargets,
+  type IntegrationTargetSync,
+} from "../repo-integration.js";
 import { readResultFrontmatterSnapshot } from "../results.js";
-import { findExecWorktree, type ExecWorktree } from "../worktree.js";
+import { qualifyTaskId } from "../shared.js";
 import {
   configuredProductRepos,
   missingProductWorktrees,
@@ -24,44 +33,34 @@ import {
   type ProductRepo,
 } from "../task-repos.js";
 import { currentBranch, isExecBranchMergedIntoCurrent } from "../worktree-ops.js";
-import {
-  syncTaskWorktreesWithIntegrationTargets,
-  type IntegrationTargetSync,
-} from "../repo-integration.js";
-import { failedParentValidationReason } from "../parent-validation.js";
-import {
-  findResumableRegisterRun,
-  resolveRegisterResumeArtifacts,
-  type RegisterResumeTarget,
-} from "../register-resume.js";
-import { integratedRepoNames } from "../pipeline-state.js";
-import {
-  resolveAgentOverride,
-  resolvePinnedRateLimitRunOptions,
-  rateLimitRecoveryReason,
-  type AgentRunCandidate,
-  type AsyncLock,
-  type RunOpts,
-} from "./shared.js";
-import { expandPromptRefs } from "./agent.js";
+import { findExecWorktree, type ExecWorktree } from "../worktree.js";
 import {
   refreshParentValidationsForReporterResume,
   runAgentPipeline,
   runReporterStage,
 } from "./agent-pipeline.js";
+import { expandPromptRefs } from "./agent.js";
 import { repoRelativePath } from "./mode-shared.js";
 import {
+  registerReporterManagedPaths,
   spawnRegisterTransition,
   type RegisterRunContext,
-  registerReporterManagedPaths,
 } from "./register-core.js";
 import {
   copyRepoPaths,
-  registerTransitionPaths,
-  registerBookkeepingPaths,
   rebuildRootRegisterViews,
+  registerBookkeepingPaths,
+  registerTransitionPaths,
 } from "./register-state.js";
 import { finalizeRegisterWorktreeRun } from "./register-worktree.js";
+import {
+  rateLimitRecoveryReason,
+  resolveAgentOverride,
+  resolvePinnedRateLimitRunOptions,
+  type AgentRunCandidate,
+  type AsyncLock,
+  type RunOpts,
+} from "./shared.js";
 
 // reporter 再開に使う agent を解決する。--reporter-by を優先し、省略時は再開対象 run の
 // pipeline-state に記録された reporter actor（通常は前回と同じ agent）へフォールバックする。
@@ -487,7 +486,7 @@ export async function resumeSingleRegisterItemWorktree(
 
     process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
     process.stdout.write(
-      `  Resuming executor from run ${target.runId} in a new pipeline checkpoint\n` +
+      `  Resuming executor from run ${target.runId} in the existing run directory\n` +
         `  CWD: ${worktree.path}\n  Agent: ${executor.candidate.actor} (executor)\n`,
     );
 

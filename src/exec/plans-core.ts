@@ -1,43 +1,44 @@
+import type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
 import {
   deliverableDocId,
   loadPlanCatalogDocs as loadCatalogDocs,
 } from "../catalog/document-target.js";
-import type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
+import { recordStem } from "./run-records.js";
 export {
   deliverableDocId,
-  resolveDeliverableByDocId,
   loadPlanCatalogDocs as loadCatalogDocs,
+  resolveDeliverableByDocId,
 } from "../catalog/document-target.js";
 export type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
-
-import { existsSync, readFileSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
-import { load } from "../shared/yaml.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "../kata/kata.js";
-import type { KataRefs } from "../kata/kata.js";
-import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
-import { isDctPlanFileName } from "../catalog/plan.js";
-import { readSpecdojoNamespace, buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
-import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
-import { MISSING } from "../shared/plan-templates.js";
 export {
-  MISSING,
   execTemplatePath,
   execTemplatesDir,
   injectCommonConventions,
   loadPlanTemplate,
+  MISSING,
 } from "../shared/plan-templates.js";
+
+import { existsSync, readFileSync } from "node:fs";
+import { basename, join, relative, resolve } from "node:path";
+import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
+import { isDctPlanFileName } from "../catalog/plan.js";
+import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "../catalog/types.js";
+import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
+import type { KataRefs } from "../kata/kata.js";
+import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "../kata/kata.js";
+import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
+import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
 import { resolveViewpointsDoc, viewpointAppliesToDocument } from "../review/plan.js";
+import type { ReviewViewpoint } from "../review/types.js";
+import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
+import { MISSING } from "../shared/plan-templates.js";
+import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { load } from "../shared/yaml.js";
+import { planGradeFindingText } from "./plans-grade-findings.js";
+import type { RoleDefinition, RolesDoc } from "./role-types.js";
 import { listFilesRecursive, nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./types.js";
-import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "../catalog/types.js";
-import type { ReviewViewpoint } from "../review/types.js";
-import type { RoleDefinition, RolesDoc } from "./role-types.js";
-import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
-import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
-import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
-import { planGradeFindingText } from "./plans-grade-findings.js";
 
 // Internal types
 // ---------------------------------------------------------------------------
@@ -77,7 +78,7 @@ export function buildInPlaceStem(
 // Recover the shared stem from a plan path: `.../exec/plans/<stem>-plan.md` → `<stem>`.
 // Used when re-running `--plan <path>` so the tied result is overwritten in place.
 export function stemFromPlanPath(planPath: string): string {
-  return basename(planPath).replace(/-plan\.md$/, "");
+  return recordStem(planPath);
 }
 
 // ---------------------------------------------------------------------------
