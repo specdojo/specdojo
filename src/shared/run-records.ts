@@ -3,6 +3,7 @@ import {
   existsSync,
   readdirSync,
   readFileSync,
+  renameSync,
   statSync,
   writeFileSync,
 } from "node:fs";
@@ -226,31 +227,50 @@ export function isOtherRunRecord(path: string, resultPath: string): boolean {
   return isRunRecordPath(path) && dirname(path) !== dirname(resultPath);
 }
 
-/** Keep previous checkpoint evidence when the executor restarts within the same run. */
-export function snapshotRunAttempt(statePath: string): void {
+/** Archive a checkpoint; keep original logs only when the next stage retains their refs. */
+export function snapshotRunAttempt(
+  statePath: string,
+  retainedLogRefs: readonly { path: string }[] = [],
+): void {
   if (!existsSync(statePath)) return;
   const directory = dirname(statePath);
   let attempt = 1;
   while (existsSync(join(directory, `pipeline-state.attempt-${attempt}.json`))) attempt++;
-  for (const name of readdirSync(directory).filter(
-    (file) => file === "pipeline-state.json" || file === "evidence.json" || file.endsWith(".log"),
-  )) {
-    if (name.includes(".attempt-")) continue;
+  const names = readdirSync(directory).filter(
+    (file) =>
+      !file.includes(".attempt-") &&
+      (file === "pipeline-state.json" || file === "evidence.json" || file.endsWith(".log")),
+  );
+  const retainedLogs = new Set(
+    retainedLogRefs.map((ref) => basename(ref.path.replaceAll("\\", "/"))),
+  );
+  const archivedLogs = new Map<string, string>();
+  for (const name of names.filter((file) => file.endsWith(".log"))) {
+    archivedLogs.set(name, `${name.slice(0, -4)}.attempt-${attempt}.log`);
+  }
+  for (const name of names) {
     const dot = name.lastIndexOf(".");
     const destination = join(
       directory,
       `${name.slice(0, dot)}.attempt-${attempt}${name.slice(dot)}`,
     );
-    copyFileSync(join(directory, name), destination);
+    if (name.endsWith(".log") && !retainedLogs.has(name)) {
+      renameSync(join(directory, name), destination);
+    } else {
+      copyFileSync(join(directory, name), destination);
+    }
     if (name === "evidence.json") {
       try {
         const evidence = JSON.parse(readFileSync(destination, "utf8"));
         if (Array.isArray(evidence.log_refs)) {
           evidence.log_refs = evidence.log_refs.map((ref: { path: string }) => {
-            const dot = ref.path.lastIndexOf(".");
+            const refName = basename(ref.path.replaceAll("\\", "/"));
+            const archivedName = archivedLogs.get(refName);
             return {
               ...ref,
-              path: `${ref.path.slice(0, dot)}.attempt-${attempt}${ref.path.slice(dot)}`,
+              path: archivedName
+                ? `${ref.path.slice(0, -refName.length)}${archivedName}`
+                : ref.path,
             };
           });
           writeFileSync(destination, `${JSON.stringify(evidence, null, 2)}\n`);

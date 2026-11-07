@@ -66,4 +66,11 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-07）
+
+- 親の検証の `test-integration` で、`tests/src/exec/register-resume.integration.test.ts` の「resumes only the reporter stage and completes the item without re-running the executor」が失敗した。足した `expect(executorRefs).toHaveLength(1)` に対し、`kind` が `agent-output-excerpt` の `log_refs` は 3 件あった。
+- 失敗の原因はテストの前提である。`agent-output-excerpt` は executor のログだけを指すとは限らない。executor のログの参照は、`kind` の件数ではなく、パスの名前（`executor.log`）で特定する。そのうえで、reporter から再開した後もその参照と元の名前のファイルが残り、中身が変わらないことを確かめる。
+- 既にあるテスト「resumes a reporter-stage run from executor after syncing the integration branch」の名前と筋書きを、親の検証の失敗の筋書きに書き換えている。既にあるテストは元のまま残し、親の検証が失敗した run を executor から再開する筋書きは、別のテストとして足す。
+- 直した後に、`npx vitest run --config vitest.integration.config.ts tests/src/exec/register-resume.integration.test.ts` などで、このファイルの統合テストが流せるなら流す。sandbox で流せない場合は、親の検証に任せてよい。テストを直した理由を個票の対応結果に書く。
+
 [共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b](../../../../conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt)
