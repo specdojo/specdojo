@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-Z0XR・PJR-PZBP・PJR-TA6W の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。新しい配置の plan・result・evidence・executor のログ・state がすべて commit された
+  completed_at: "2026-11-07T00:03:11Z"
+  conclusion: PJR-BRN4 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。許可外の変更が残らない run は止まらずに統合され、記録はすべて commit された
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
