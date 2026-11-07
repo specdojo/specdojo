@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-11-04T16:21:49.154Z"
+graded_at: "2026-11-07T16:18:30.183Z"
 graded_by: flash-high-executor
 content_hash: 465645a27f2f91f437f68825eea853917093aa68ab32e62fc2c271fd80e8c020
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: ad0e91ae713e016cec240a034a6effd844dc295113adc7435100d118e30656f4
+  schedule: 7613b8ab5d2b966fa5a7c35f5a19d1539b663a5ba1172b683fc00639bf45ce7d
 categories:
   purpose:
     score: 50

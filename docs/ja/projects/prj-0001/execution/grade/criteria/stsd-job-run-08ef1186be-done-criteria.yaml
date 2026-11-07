@@ -2,9 +2,9 @@
 id: stsd-job-run-grade-criteria
 document: stsd-job-run
 path: docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md
-graded_at: "2026-11-05T14:34:18.047Z"
-graded_by: sol-review-executor
-content_hash: a2ced858360620b2b337500160a71b3662eff5d88a5353d4eb5b2cee111add73
+graded_at: "2026-11-07T16:30:29.700Z"
+graded_by: flash-high-executor
+content_hash: fbfb01cb4afe503a7ac07b2d0b75f639e936d449f2e898012d6cccf44f310338
 summary:
   satisfied: 3
   unsatisfied: 2
@@ -17,17 +17,15 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Business facts distinguishing the four recorded outcomes and their acceptance conditions remain unagreed;
-      notification labels alone do not establish business-correct transition criteria.
+      The business boundaries, outcome selection rules, and acceptance criteria distinguishing success, partial success,
+      failure, and noop (T-02 through T-05) remain unconfirmed.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: >-
-      Outcome semantics, safe retry responsibility, and result-correction policy remain unresolved, preventing approval
-      of the lifecycle's business validity.
+    reason: Human agreement on safe retry policy for T-07 and outcome selection rules is pending in the undecided notes.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
