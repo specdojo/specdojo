@@ -1,0 +1,23 @@
+name: Check execution record layout
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Check execution record layout and locks
+        run: node --import tsx src/specdojo.ts exec validate --project prj-0001 --records-only
+      - name: Check guide trees and layout regressions
+        run: npm run test:unit -- tests/src/exec/run-records.test.ts tests/src/exec/validate-records.test.ts
