@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ad7744e9d7a24954b06523a68ec4c2ff
+  ts: "2026-11-07T23:24:05Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ガイドとコマンドリファレンスに残る旧来の実行記録の置き場所を直す
+    - field: description
+      from: ""
+      to: ガイドとコマンドリファレンスが、plan・result・evidence の置き場所として旧来の exec/plans/・exec/results/・exec/evidence/ を挙げたままになっている。今の execution/runs/`<origin>`/`<item>`/`<run>`/ に揃える
+    - field: input
+      from: ""
+      to: '["2026-11-08 時点で、旧来の置き場所はガイド 8 本とコマンドリファレンスの計 9 ファイル・32 か所に残っている。","quick-start-guide.md は PJR-V5AZ で書き直し中のため、この項目では旧来の置き場所の記述に限って直す。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-JT5J"]'
