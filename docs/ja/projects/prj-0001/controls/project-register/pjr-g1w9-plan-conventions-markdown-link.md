@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-g1w9-plan-conventions-markdown-link
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-07T01:16:56Z"
+  completed_at: "2026-11-07T08:31:36Z"
+  conclusion: plan の規約の版への参照をリンクにしないインラインコードの書き方に変え、末尾の参照だけを新旧の書き方で読むようにし、validate:history-links の対象に新しい置き場所を足した。.github/instructions の一覧の直しは承認待ちの案として個票に残した
   derived_from:
     - PJR-BVS9
 ---

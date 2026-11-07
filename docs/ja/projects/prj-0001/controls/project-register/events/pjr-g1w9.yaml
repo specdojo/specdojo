@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_07931b9ef7cf4e5f9bbc63302171dac2
+- v: 1
+  id: reg_ed3492c25b6546cab3409e6fa3463621
+  ts: "2026-11-07T08:31:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票の対応結果・result と照らし、develop で validate:history-links を流し、JSEY の plan で新しい書き方と規約の展開を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: plan の規約の版への参照をリンクにしないインラインコードの書き方に変え、末尾の参照だけを新旧の書き方で読むようにし、validate:history-links の対象に新しい置き場所を足した。.github/instructions の一覧の直しは承認待ちの案として個票に残した
+  previous_event_id: reg_bc599aee19544a1398de34167a0cf0c6
