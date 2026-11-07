@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-07T02:33:21Z"
   conclusion: PJR-9BY9 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。古い配置の読み取りがなくなった後も、新しい run の記録はすべて commit された
 ---
 
