@@ -1,3 +1,4 @@
+import { rebasePlanConventions } from "../../../src/shared/plan-conventions.js";
 import { Command } from "commander";
 import { execFileSync } from "node:child_process";
 import {
@@ -427,6 +428,7 @@ function convertToLegacyRun(root: string, stem: string, runId: string): void {
       content = `${JSON.stringify(record, null, 2)}\n`;
     }
     const path = join(root, EXECUTION_REL, destination);
+    if (name === "plan.md") content = rebasePlanConventions(content, join(directory, name), path);
     mkdirSync(dirname(path), { recursive: true });
     writeFileSync(path, content);
   }

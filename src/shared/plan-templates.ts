@@ -1,10 +1,10 @@
 import { existsSync, readFileSync } from "node:fs";
+import { isAbsolute, relative } from "node:path";
 import type { Approach, TaskMode } from "./agent-types.js";
-import {
-  resolveSpecdojoPath,
-  resolveSpecdojoPathIfExists,
-  specdojoReferencePath,
-} from "./template-resolution.js";
+import { storePlanConventions } from "./plan-conventions.js";
+import { specdojoPackageRootDir } from "./package-paths.js";
+import { specdojoRootDir } from "./specdojo-config.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
 export const MISSING = "_MISSING_";
 
@@ -84,6 +84,16 @@ function conventionsReferenceSentence(referencePaths: string[]): string {
   );
 }
 
+// Snapshots must not depend on the checkout supplying bundled resources. Keep local
+// paths repository-relative and external bundled paths relative to the package root.
+function conventionsResourceReference(path: string): string {
+  if (!isAbsolute(path)) return path.replaceAll("\\", "/");
+  const local = relative(specdojoRootDir(), path).replaceAll("\\", "/");
+  return local.startsWith("../") || local === ".."
+    ? relative(specdojoPackageRootDir(), path).replaceAll("\\", "/")
+    : local;
+}
+
 function planConventionsText(fragmentPaths: string[], cache: Map<string, string>): string {
   const fragments = fragmentPaths.map((path) => readTemplate(path, cache));
   const essentials = fragments.map((fragment) =>
@@ -112,7 +122,7 @@ function planConventionsText(fragmentPaths: string[], cache: Map<string, string>
     }, "");
   return [
     heading,
-    conventionsReferenceSentence(fragmentPaths.map((path) => specdojoReferencePath(path))),
+    conventionsReferenceSentence(fragmentPaths.map(conventionsResourceReference)),
     content,
   ]
     .filter(Boolean)
@@ -124,6 +134,7 @@ export function injectCommonConventions(
   schemaRef: string,
   cache: Map<string, string>,
   mode: TaskMode = "edit",
+  storage?: { executionPath: string; planPath: string },
 ): string {
   const fragmentPaths = [
     execTemplatePath(COMMON_CONVENTIONS_TEMPLATE),
@@ -136,7 +147,9 @@ export function injectCommonConventions(
           .split("\n")
           .filter((line) => !line.includes(SCHEMA_REF_PLACEHOLDER))
           .join("\n")
-      : conventions.split(SCHEMA_REF_PLACEHOLDER).join(schemaRef);
+      : conventions.split(SCHEMA_REF_PLACEHOLDER).join(conventionsResourceReference(schemaRef));
+  if (storage)
+    conventions = storePlanConventions(conventions, storage.executionPath, storage.planPath);
   if (body.includes(COMMON_CONVENTIONS_PLACEHOLDER)) {
     return body.split(COMMON_CONVENTIONS_PLACEHOLDER).join(conventions);
   }

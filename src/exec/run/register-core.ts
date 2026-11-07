@@ -1,5 +1,6 @@
+import { readPlanFile } from "../../shared/plan-conventions.js";
 import { existsSync, readFileSync } from "node:fs";
-import { basename } from "node:path";
+import { basename, dirname } from "node:path";
 import { isAuthoringApproach } from "../../kata/authoring.js";
 import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { registerEventFilePath } from "../../register/events.js";
@@ -45,6 +46,7 @@ import {
 import { formatGitResultFailure, gitOutput, gitResult } from "../worktree.js";
 import { runAgentPipeline } from "./agent-pipeline.js";
 import { expandPromptRefs } from "./agent.js";
+import { planConventionsFiles } from "../../shared/plan-conventions.js";
 import { spawnAgentInPlace } from "./in-place.js";
 import { commitSubject, repoRelativePath, spawnSelf } from "./mode-shared.js";
 import {
@@ -375,7 +377,10 @@ export function registerRunnerManagedPaths(
   // 状態遷移の書き込み先は個票（正本）。pjr-index と派生ビューは生成物として同時に更新される。
   // 移行完了後の pjr-index.md は非追跡の生成物になり存在しないため、存在する場合のみ対象に含める
   // （存在しないパスを git add すると pathspec エラーになる）。
-  const managed = [planPath, resultPath, ...additionalManagedPaths];
+  const versions = existsSync(planPath)
+    ? planConventionsFiles(readFileSync(planPath, "utf8"), dirname(planPath))
+    : [];
+  const managed = [planPath, resultPath, ...versions, ...additionalManagedPaths];
   if (existsSync(registerPaths.pjrIndexPath)) managed.push(registerPaths.pjrIndexPath);
   if (ticketPath) managed.push(ticketPath);
   const eventPath = registerEventPathForTicket(registerPaths, ticketPath);
@@ -459,7 +464,7 @@ export async function runSingleRegisterItem(
     item,
     stem,
   });
-  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const prompt = expandPromptRefs(readPlanFile(planPath));
   const { resultPath, supersededPaths } = await scaffoldResult({
     executionPath,
     taskId: item.id,

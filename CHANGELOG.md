@@ -22,6 +22,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- 保存する exec plan の共通規約を SHA-256 の版への参照にし、規約本体は `execution/conventions/` に版ごとに一度だけ保存するようにしました。agent・reporter への prompt では従来の全文を復元します。再開と `exec run --plan` に対応し、旧 plan もそのまま読めます。参照先の欠落やハッシュの不一致は、原因を示して停止します（PJR-BVS9）。
+
 - 新しい実行の plan・result・evidence・ログを `execution/runs/<出どころ>/<項目 ID>/<run ID>/` にまとめ、配置の決定と旧記録の探索を共通モジュールに集約しました。register・schedule・job と再開処理に適用し、既存の `exec/plans`・`exec/results`・`exec/evidence` は移動せず読み取ります（PJR-Z0XR）。
 
 - routine の状態・履歴・lock を端末側の状態ディレクトリへ移し、旧 `generated/` の状態を初回利用時に引き継ぎます。dashboard も同じ記録を参照します。Job Run のない失敗だけを Git に残し、成功・skip や成果物を変更しなかった Job の実行記録は commit しません（PJR-PZBP）。

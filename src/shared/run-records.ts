@@ -19,6 +19,15 @@ function pathSegment(value: string): string {
 export type RunOrigin = "register" | "schedule" | "job";
 export type RecordKind = "plan" | "result";
 
+export function planConventionsDirectory(executionPath: string): string {
+  return join(executionPath, "conventions");
+}
+
+export function planConventionsPath(executionPath: string, hash: string): string {
+  if (!/^[a-f0-9]{64}$/.test(hash)) throw new Error(`Invalid conventions SHA-256: ${hash}`);
+  return join(planConventionsDirectory(executionPath), `${hash}.txt`);
+}
+
 /** All managed execution record paths, including the temporary legacy read layout. */
 export function runRecordPaths(
   executionPath: string,
@@ -201,6 +210,7 @@ export function recordRef(executionPath: string, path: string): string {
 }
 export function runnerRecordPrefixes(executionPath: string): string[] {
   return [
+    planConventionsDirectory(executionPath),
     join(executionPath, "runs"),
     join(executionPath, "exec", "plans"),
     join(executionPath, "exec", "results"),
@@ -210,6 +220,7 @@ export function runnerRecordPrefixes(executionPath: string): string[] {
 export function taskRecordPrefixes(executionPath: string, taskId: string): string[] {
   const identity = recordIdentity(taskId);
   return [
+    planConventionsDirectory(executionPath),
     runItemDirectory(executionPath, identity.origin, identity.itemId),
     legacyEvidenceDirectory(executionPath, taskId),
   ].map((path) => `${path.replaceAll("\\", "/")}/`);

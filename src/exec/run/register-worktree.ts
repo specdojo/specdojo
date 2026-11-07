@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
+import { readPlanFile } from "../../shared/plan-conventions.js";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { isAuthoringApproach } from "../../kata/authoring.js";
 import { registerDependencyBlockReason } from "../../register/dependency.js";
@@ -718,7 +719,7 @@ export async function runSingleRegisterItemWorktree(
       item,
       stem,
     });
-    const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+    const prompt = expandPromptRefs(readPlanFile(planPath));
     const { resultPath, supersededPaths } = await scaffoldResult({
       executionPath,
       taskId: item.id,

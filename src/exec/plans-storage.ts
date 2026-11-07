@@ -1,9 +1,10 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { lookupDocIndex } from "../docs/doc-index.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { readPlanFile, rebasePlanConventions } from "../shared/plan-conventions.js";
 import { planGradeFindingText } from "./plans-grade-findings.js";
 import { isRunRecordPath, legacyArchivePlanPath, recordPathForRead } from "./run-records.js";
 import { nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
@@ -41,7 +42,10 @@ export function archivePlan(
     to = legacyArchivePlanPath(opts.executionPath, base, sequence);
   }
   mkdirSync(dirname(to), { recursive: true });
+  const original = readFileSync(from, "utf8");
+  const rebased = rebasePlanConventions(original, from, to);
   renameSync(from, to);
+  if (rebased !== original) writeFileSync(to, rebased, "utf8");
   return { from, to, deleted: false };
 }
 
@@ -51,7 +55,7 @@ export function planPathForTask(executionPath: string, taskId: string): string {
 
 export function loadPlan(executionPath: string, taskId: string): string | null {
   const planPath = planPathForTask(executionPath, taskId);
-  if (existsSync(planPath)) return readFileSync(planPath, "utf8");
+  if (existsSync(planPath)) return readPlanFile(planPath);
   return null;
 }
 

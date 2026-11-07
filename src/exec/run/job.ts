@@ -1,3 +1,4 @@
+import { readPlanFile } from "../../shared/plan-conventions.js";
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
@@ -294,7 +295,7 @@ async function runCommandJobMode(params: {
     schedulePath,
     executionPath,
     reporterCandidates: [analysisCandidate],
-    planPrompt: expandPromptRefs(readFileSync(planPath, "utf8")),
+    planPrompt: expandPromptRefs(readPlanFile(planPath)),
     resultPath,
     execDefaults,
     evidence: recorded.evidence,
@@ -729,7 +730,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
       executor: agents.executor,
       reporterCandidates: agents.reporterCandidates,
       planPath,
-      planPrompt: expandPromptRefs(readFileSync(planPath, "utf8")),
+      planPrompt: expandPromptRefs(readPlanFile(planPath)),
       resultPath,
       execDefaults,
       mode: "review",
@@ -979,7 +980,7 @@ async function runJobModeUnchecked(
     ...(record.task.targets ? { targets: record.task.targets } : {}),
   });
   const resultScaffold = readResultFrontmatterSnapshot(resultPath);
-  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const prompt = expandPromptRefs(readPlanFile(planPath));
   const repoRoot = specdojoRootDir();
   let exitCode: number;
   let reason: string | undefined;

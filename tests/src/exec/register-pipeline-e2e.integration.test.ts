@@ -205,6 +205,10 @@ function arg(name) {
 const nickname = arg("nickname");
 const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
+if (prompt.includes("[共通規約 sha256:")) throw new Error("conventions reference reached agent");
+if (prompt.includes("# Edit Plan:") && !prompt.includes("result の必須セクション")) {
+  throw new Error("common conventions missing from agent prompt");
+}
 
 if (role === "executor") {
   for (const name of (process.env.SPECDOJO_REPO_NAMES ?? "").split(",").filter(Boolean)) {
@@ -864,6 +868,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         ).toBe(true);
         let editedPlan: string | undefined;
         const planRel = state.artifacts.plan_ref as string;
+        expect(readFileSync(join(worktree!, planRel), "utf8")).toContain("[共通規約 sha256:");
         if (explicit) {
           const originalPlan = readFileSync(join(worktree!, planRel), "utf8");
           editedPlan =

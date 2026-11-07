@@ -7,3 +7,7 @@ removeGitLocalEnvironment(process.env);
 // orchestrator の対象 project を fixture に持ち込まない。テスト自身が設定する
 // SPECDOJO_PROJECT はこの後で有効になり、CLI の project 選択の検証にも使える。
 delete process.env.SPECDOJO_PROJECT;
+// The runner supplies absolute schedule/execution paths too. Never let fixture CLI
+// calls inherit them and write bookkeeping into the runner's real repository.
+delete process.env.SPECDOJO_SCHEDULE_PATH;
+delete process.env.SPECDOJO_EXECUTION_PATH;

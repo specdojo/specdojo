@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { localJobNoopPath, snapshotJobOutput } from "../../../src/job/noop.js";
 import { taskRecordPaths } from "../../../src/shared/run-records.js";
+import { storePlanConventions } from "../../../src/shared/plan-conventions.js";
 import type { JobRunRecord } from "../../../src/job/job.js";
 
 const git = vi.hoisted(() => ({ paths: [] as string[], committed: "", unborn: false }));
@@ -57,6 +58,31 @@ function fixture() {
 }
 
 describe("Job output without precondition", () => {
+  it.each([false, true])(
+    "ignores conventions and preserves a shared snapshot (shared: %s)",
+    (shared) => {
+      const { repo, execution, record, write } = fixture();
+      const snapshot = snapshotJobOutput(repo, execution, record);
+      const planPath = join(execution, record.plan_ref);
+      const ref = storePlanConventions("## Rules\n\n- common rule", execution, planPath);
+      write(`execution/${record.plan_ref}`, ref);
+      const hash = ref.match(/sha256:([a-f0-9]{64})/)![1];
+      const version = `execution/conventions/${hash}.txt`;
+      if (shared) {
+        const other = join(execution, "exec/plans/other-plan.md");
+        write(
+          "execution/exec/plans/other-plan.md",
+          storePlanConventions("## Rules\n\n- common rule", execution, other),
+        );
+      }
+      git.paths = [`execution/${record.plan_ref}`, version];
+      expect(snapshot.hasChanges()).toBe(false);
+      snapshot.discard(record);
+      expect(existsSync(planPath)).toBe(false);
+      expect(existsSync(join(repo, version))).toBe(shared);
+    },
+  );
+
   it("discards only Run artifacts, preserves existing user edits and stores idempotency/checkpoint locally", () => {
     const { repo, execution, record, write } = fixture();
     write("user.txt", "user edit");

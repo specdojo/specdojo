@@ -1,4 +1,5 @@
 import { copyFileSync, existsSync, lstatSync, mkdirSync, rmSync } from "node:fs";
+import { withPlanConventionsFiles } from "../shared/plan-conventions.js";
 import { resolve } from "node:path";
 import { stripTerminalControlSequences } from "./shared.js";
 import {
@@ -335,7 +336,9 @@ function checkpointAndEnsureProjectWorktree(
     if (currentBranch(context.repoRoot) === branch) {
       throw new Error(`Prepare must run from a branch other than ${branch}.`);
     }
-    const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
+    const paths = withPlanConventionsFiles(params.checkpointPaths).map((path) =>
+      repoRelative(context.repoRoot, path),
+    );
     const stagedFiles = zeroSeparatedPaths(context.repoRoot, [
       "diff",
       "--cached",

@@ -1,4 +1,5 @@
 import { Command } from "commander";
+import { storePlanConventions } from "../../../../src/shared/plan-conventions.js";
 import {
   existsSync,
   mkdirSync,
@@ -974,48 +975,69 @@ describe("exec run (in-place, default)", () => {
     }
   });
 
-  it("scaffolds a frontmatter-complete result from a bring-your-own --plan", async () => {
-    const { repo, executionPath } = setupRepository();
-    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    try {
-      process.chdir(repo);
-      // A bring-your-own plan carries its task identity in frontmatter; the run
-      // must recover it and scaffold the result before launching the agent so the
-      // agent fills a frontmatter-complete file instead of inventing one.
-      const planPath = join(executionPath, "exec", "plans", "custom-plan.md");
-      mkdirSync(join(executionPath, "exec", "plans"), { recursive: true });
-      writeFileSync(
-        planPath,
-        [
-          "---",
-          "specdojo:",
-          "  id: test:xep-custom",
-          "  type: exec-plan",
-          "  task_id: custom",
-          "  mode: edit",
-          "  status: ready",
-          "  project_id: test",
-          "  approach: fully-guided",
-          "---",
-          "",
-          "# Edit Plan: custom",
-          "",
-        ].join("\n"),
-        "utf8",
-      );
+  it.each([false, true])(
+    "scaffolds a bring-your-own --plan and restores its conventions (reference: %s)",
+    async (byReference) => {
+      const { repo, executionPath } = setupRepository();
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      try {
+        process.chdir(repo);
+        // A bring-your-own plan carries its task identity in frontmatter; the run
+        // must recover it and scaffold the result before launching the agent so the
+        // agent fills a frontmatter-complete file instead of inventing one.
+        const planPath = join(executionPath, "exec", "plans", "custom-plan.md");
+        mkdirSync(join(executionPath, "exec", "plans"), { recursive: true });
+        writeFileSync(
+          planPath,
+          [
+            "---",
+            "specdojo:",
+            "  id: test:xep-custom",
+            "  type: exec-plan",
+            "  task_id: custom",
+            "  mode: edit",
+            "  status: ready",
+            "  project_id: test",
+            "  approach: fully-guided",
+            "---",
+            "",
+            "# Edit Plan: custom",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
 
-      await runExec(["run", "--project", "test", "--plan", planPath, "--by", FAKE_AGENT_NICKNAME]);
+        const conventions = "## Common conventions\n\n- Keep the complete rule text in the prompt.";
+        const rules = byReference
+          ? storePlanConventions(conventions, executionPath, planPath)
+          : conventions;
+        writeFileSync(planPath, `${readFileSync(planPath, "utf8")}\n${rules}\n`, "utf8");
 
-      const result = readFileSync(recordPathForRead(executionPath, "result", "custom"), "utf8");
-      expect(result).toContain("id: test:xer-custom");
-      expect(result).toContain("mode: edit");
-      expect(result).toContain("approach: fully-guided");
-      expect(result).toContain("status: complete");
-    } finally {
-      process.chdir(originalCwd);
-      rmSync(repo, { recursive: true, force: true });
-    }
-  });
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--plan",
+          planPath,
+          "--by",
+          FAKE_AGENT_NICKNAME,
+        ]);
+
+        const prompt = readFileSync(join(repo, "agent-ran.txt"), "utf8");
+        expect(prompt).toContain(conventions);
+        expect(prompt).not.toContain("[共通規約 sha256:");
+
+        const result = readFileSync(recordPathForRead(executionPath, "result", "custom"), "utf8");
+        expect(result).toContain("id: test:xer-custom");
+        expect(result).toContain("mode: edit");
+        expect(result).toContain("approach: fully-guided");
+        expect(result).toContain("status: complete");
+      } finally {
+        process.chdir(originalCwd);
+        rmSync(repo, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("marks the result blocked (exit 1) when the agent exits 0 but leaves the result unfilled", async () => {
     const { repo, executionPath } = setupRepository();

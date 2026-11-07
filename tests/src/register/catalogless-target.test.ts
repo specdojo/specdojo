@@ -1,10 +1,11 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { validateRegisterApproachTargets } from "../../../src/register/approach.js";
 import { resolveRegisterDeliverableTarget } from "../../../src/register/deliverable-target.js";
 import { generateRegisterPlan } from "../../../src/exec/register.js";
+import { readPlanFile } from "../../../src/shared/plan-conventions.js";
 import type { PjrItem, RegisterPaths } from "../../../src/register/register.js";
 import type { Approach } from "../../../src/shared/agent-types.js";
 
@@ -79,7 +80,7 @@ async function plan(approach: Approach, overrides: Partial<PjrItem> = {}): Promi
     item,
     stem: "note",
   });
-  return readFileSync(result.planPath, "utf8");
+  return readPlanFile(result.planPath);
 }
 
 // 統合時の全件実行など負荷下で、一時ディレクトリ生成・kata 配置・plan 生成の累積により

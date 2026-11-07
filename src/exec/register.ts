@@ -726,7 +726,10 @@ export async function generateRegisterPlan(opts: {
   // expandTemplate がまとめる（PJR-283N）。
   const body = expandTemplate(template, values);
   // register 項目は対象成果物の schema を特定できないため、schema 検査の項目は落とす。
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>());
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "edit", {
+    executionPath: opts.executionPath,
+    planPath,
+  });
 
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);

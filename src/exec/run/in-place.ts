@@ -1,3 +1,4 @@
+import { readPlanFile } from "../../shared/plan-conventions.js";
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
@@ -423,7 +424,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
     });
   }
 
-  const planPrompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const planPrompt = expandPromptRefs(readPlanFile(planPath));
   const prompt = task?.agent_pipeline
     ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
     : planPrompt;

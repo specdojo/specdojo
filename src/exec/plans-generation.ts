@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { expandPlanConventions } from "../shared/plan-conventions.js";
 import { dirname, resolve } from "node:path";
 import type { CriteriaItem } from "../catalog/types.js";
 import { isAuthoringApproach, type AuthoringKind } from "../kata/authoring.js";
@@ -460,10 +461,15 @@ async function writeTaskPlan(
           override,
         );
   const schemaRef = resolveDeliverableSchemaRef(deliverable?.resolvedPath);
-  const content = `${injectCommonConventions(body, schemaRef, ctx.templateCache, mode).replace(/[\r\n]+$/u, "")}\n`;
+  const content = `${injectCommonConventions(body, schemaRef, ctx.templateCache, mode, { executionPath: ctx.executionPath, planPath: outPath }).replace(/[\r\n]+$/u, "")}\n`;
 
   if (task.schedule_file && override?.origin !== "register") {
-    await assertPlanMarkdownlint(specdojoRootDir(), task.id, outPath, content);
+    await assertPlanMarkdownlint(
+      specdojoRootDir(),
+      task.id,
+      outPath,
+      expandPlanConventions(content, dirname(outPath)),
+    );
   }
 
   writeFileSync(outPath, content, "utf8");
