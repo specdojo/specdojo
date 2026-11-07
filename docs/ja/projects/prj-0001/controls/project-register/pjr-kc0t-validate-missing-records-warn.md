@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: medium
   registered_at: "2026-11-07T06:32:53Z"
+  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-JT5J
 ---
@@ -54,18 +55,53 @@ JT5J の後、exec validate が過去の世代の記録を欠落と判定して�
 
 ## 4. 作業内容
 
-| No  | 作業                                                        | 担当 | 状態 | メモ |
-| --- | ----------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 過去の世代の記録を正常として扱う                            | DEV  | open | -    |
-| 2   | 一部だけの記録を普通は警告、`--records-only` はエラーにする | DEV  | open | -    |
-| 3   | `grade/generated` と空の lock のディレクトリを検査から外す  | DEV  | open | -    |
-| 4   | 単体テストを足す                                            | DEV  | open | -    |
-| 5   | 移さない古い記録で読めない機能を調べる                      | DEV  | open | -    |
-| 6   | リファレンス・ガイド・CHANGELOG を合わせる                  | DEV  | open | -    |
+| No  | 作業                                                        | 担当 | 状態 | メモ                                               |
+| --- | ----------------------------------------------------------- | ---- | ---- | -------------------------------------------------- |
+| 1   | 過去の世代の記録を正常として扱う                            | DEV  | done | 導入前・集約した先行試行・旧配置を正常扱い         |
+| 2   | 一部だけの記録を普通は警告、`--records-only` はエラーにする | DEV  | done | 欠落だけを通常時の終了コードから除外               |
+| 3   | `grade/generated` と空の lock のディレクトリを検査から外す  | DEV  | done | 独立形式とファイルのない lock ツリーを除外         |
+| 4   | 単体テストを足す                                            | DEV  | done | 世代・欠落・配置違反・lock・CLI の回帰テストを追加 |
+| 5   | 移さない古い記録で読めない機能を調べる                      | DEV  | done | 自動探索と明示パス参照を調査                       |
+| 6   | リファレンス・ガイド・CHANGELOG を合わせる                  | DEV  | done | 移行不要の条件と読み取りの制約を記載               |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容と成果物
+
+- `src/exec/validate-records.ts`: evidence 導入前の plan・result の対、state・evidence だけがあり同じ出どころ・項目の別 run に対がある先行試行、旧 `exec/plans/`・`exec/results/`・`exec/evidence/` を正常扱いにした。先行試行の対は同一 run 内の通常ファイルに限り、別項目・別出どころ・不正な run 名・別々の run に片方ずつある対は認めない。ログ・state・evidence の本文は読まない。
+- 同ファイルで `grade/generated/` を独立した形式として除外し、ファイルのない lock のディレクトリツリーを Git 検査へ渡さないようにした。ファイルのある lock の追跡・無視の検査と Git 確認失敗の検出は維持した。
+- `src/exec/commands.ts`: 欠落を通常時は `WARN:` とし、`--records-only` では従来どおり `ERROR:`・終了コード 1 にした。配置違反と lock のエラー、および `--schedule-only` の動作は維持した。
+- `tests/src/exec/validate-records.test.ts`: 3 出どころの過去の世代、旧配置、不完全な組合せ、集約先の条件、grade 生成物、空／非空 lock、通常／配置限定／schedule 限定の CLI 判定を追加・更新した。単体・統合テストの実行は親 runner に委ねる。
+- [[specdojo:command-reference|コマンドリファレンス]] と [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] に、正常とする世代、欠落の警告／エラー、検査に移行が不要なこと、未移行時の読み取り制約を記載した。CHANGELOG は Unreleased の不具合修正に追記した。
+
+### 未移行の記録を読む機能の調査
+
+| 機能                               | 未移行時の扱い・根拠                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| plan・result の通常の探索、archive | `src/shared/run-records.ts` の `listRunRecords`・`findRunRecord`・`recordPathForRead` は `runs/` のみを対象とする。`src/exec/plans-storage.ts` の読み込み・archive も同じ探索を使う。旧 plan を自動で再利用しない。                                                                                                                                                                                                                |
+| 再開                               | `resumeStatePaths` と `src/exec/register-resume.ts` の候補収集は `runs/` の checkpoint を探索し、register 再開と schedule の executor 再開に使う。schedule の通常実行・統合再開は plan・result の取得にも新配置の探索を使う。一方 `src/exec/pipeline-state.ts` の checkpoint 読み込みはイベントなどからの明示パスを読めるため、「すべての旧パスの読み取りが不可能」とはしない。移行コマンドは進行中 run の移行・再開を保証しない。 |
+| dashboard                          | `src/dashboard/exec-records.ts` は `listRunRecords` を使う。旧記録は実行記録一覧と plan・result 件数に含まれない。                                                                                                                                                                                                                                                                                                                 |
+| 登録簿の生成物・リンク             | `src/register/views.ts` は個票とイベントからビューを作り、実行記録を探索しない。個票に残るリンクは元のファイルがあれば利用できるが、検査による補完・パス更新はない。                                                                                                                                                                                                                                                               |
+
+### worktree の実測と検証
+
+`npm run build` で今回のソースをビルドした後、2026-11-07 に検査した。`ERROR:`・`WARN:` で始まる行の数は次のとおり。
+
+| コマンド                                                                | 終了コード | ERROR | WARN | 判定                                                                              |
+| ----------------------------------------------------------------------- | ---------- | ----- | ---- | --------------------------------------------------------------------------------- |
+| `npx specdojo exec validate --project prj-0001`                         | 254        | 0     | 0    | npm が CLI を解決できず、sandbox 外のキャッシュ作成が ENOENT で失敗。検査前に停止 |
+| `npx specdojo exec validate --project prj-0001 --records-only`          | 254        | 0     | 0    | 同上                                                                              |
+| `node dist/specdojo.js exec validate --project prj-0001`                | 0          | 0     | 28   | ビルドした同じ CLI の通常検査は成功                                               |
+| `node dist/specdojo.js exec validate --project prj-0001 --records-only` | 1          | 28    | 0    | 残る欠落だけをエラーとする期待どおりの失敗                                        |
+
+- 検出対象は 14 run・28 ファイルの欠落で、実行中の本タスクの evidence 欠落 1 件を含む。過去の世代と grade 生成物・空の lock の違反は報告されない。通常時には上表の `WARN:` のほか、schedule に存在しない旧 task の event に関する既存の警告 4 件が従来の箇条書き形式で出る。
+- Prettier、履歴リンク検査、カタログ検査、register の派生ビュー生成を実施した。カタログの既存の re-export・未作成文書の警告は残るが、エラーはない。register の `tsx` 起動は IPC の EPERM で失敗したため、共通規約に従って `node --import tsx src/specdojo.ts register build` で成功を確認した。
+- lint・型検査・単体／統合テスト・schema は親 runner が実行する。保護された設定の変更は不要で、登録簿の行・個票のステータス・result は編集していない。
+
+### 申し送り
+
+- ホスト側で指定の `npx specdojo exec validate --project prj-0001` と `--records-only` を再確認する。sandbox では起動前の npm キャッシュ作成に失敗したため、同じビルド済み CLI の直接起動で動作を確認済み。記録が増減すると警告件数は変わる。`--records-only` は残る欠落のため終了コード 1 が正常な期待値である。
+- 統合後は [[prj-0001:pm-orchestrator-playbook|運用メモ]] に従い、PJR-JSEY で exec の実 CLI 動作を確認してから close する。
 
 ## 6. 関連ドキュメント
 
