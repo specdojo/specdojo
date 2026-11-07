@@ -64,4 +64,19 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-07）
+
+前回の試行は、sandbox で Git の index に書けず、実際の移動が 0 件のまま `incomplete` で止まった。orchestrator が worktree で次を行い、commit `d17dcdeba` に記録した。
+
+- `exec migrate-records --project prj-0001 --dry-run` で、移動 5,576 件・参照の更新 3,214 件・欠落 18 件・除外 0 件を確かめた。
+- `--dry-run` を外して流し、5,576 件を `git mv` で移した。中身が変わらないもの 2,458 件、パスの欄を書き換えたもの 3,118 件、job の状態 96 件を更新した。書き換えたログは 0 件。再実行は移動・更新とも 0 件だった。
+- 移した後の `exec validate`・`exec status` は移す前と同じ結果で、`dashboard build --dry-run` の出力は生成時刻のほかは移す前と同じだった。
+- 古い配置に残るのは `exec/events`（791 件）と `exec/trials`（40 件）だけである。
+
+この試行では、移動をやり直さない。次を行う。
+
+- 個票の対応結果の「移動件数と停止理由」と「検証と申し送り」を、上の実際の結果に合わせて書き直す。`exec/events` を移さない理由を書く。
+- 移した後の状態で、残りの完了条件（古い配置の読み取りがコードにないこと、ガイド、検証）を確かめる。
+- `npm run validate:history-links` の失敗の原因だった PJR-G1W9 の個票は、develop で直した。
+
 [共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b](../../../../conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt)
