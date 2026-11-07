@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-MERV",
+  "run_id": "20261103T130253379Z-7595f210",
+  "updated_at": "2026-11-03T15:40:14.678Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "argon-executor",
+      "attempts": 1,
+      "started_at": "2026-11-03T13:04:20.138Z",
+      "completed_at": "2026-11-03T13:37:04.785Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MERV/20261103T130253379Z-7595f210/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-03T13:41:19.455Z",
+      "completed_at": "2026-11-03T13:42:32.894Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MERV/20261103T130253379Z-7595f210/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-03T15:36:03.680Z",
+      "completed_at": "2026-11-03T15:40:14.678Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-merv-20261103T130253Z-9fc08e8a-result.md:39:12 error MD038/no-space-in-code Spaces inside code span elements [Context: \"` .specdojo/**`\"]"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MERV/20261103T130253379Z-7595f210/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MERV/20261103T130253379Z-7595f210/result.md"
+  }
+}

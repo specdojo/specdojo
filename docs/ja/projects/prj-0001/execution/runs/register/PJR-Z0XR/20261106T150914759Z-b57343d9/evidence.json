@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Z0XR",
+  "run_id": "20261106T150914759Z-b57343d9",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-06T15:10:50.950Z",
+    "completed_at": "2026-11-06T15:33:04.470Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-z0xr.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z0xr-exec-run-record-layout.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-condense-findings.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/mode-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-post-review.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/deliverable.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/evidence.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plan-markdownlint.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/scheduler-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-records.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z0xr-exec-run-record-layout.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-condense-findings.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/mode-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-post-review.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/deliverable.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/evidence.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plan-markdownlint.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/scheduler-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-records.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 46,
+    "summary": "CHANGELOG.md                                       |   2 +\n .../pjr-z0xr-exec-run-record-layout.md             |  19 ++-\n src/dashboard/exec-records.ts                      |  53 +++++---\n src/exec/commands.ts                               | 106 ++++++++--------\n src/exec/core.ts                                   |  34 ++++--\n src/exec/evidence.ts                               |  54 ++++----\n src/exec/handoff.ts                                |  42 +++----\n src/exec/pipeline-state.ts                         |  19 ++-\n src/exec/plans-condense-findings.ts                |  15 ++-\n src/exec/plans-core.ts                             |  45 +++----\n src/exec/plans-generation.ts                       |  52 ++++----\n src/exec/plans-storage.ts                          |  27 ++--\n src/exec/register-resume.ts                        |  32 ++---\n src/exec/register.ts                               |  65 +++++-----\n src/exec/reporter.ts                               |  25 ++--\n src/exec/results.ts                                |  40 +++---\n src/exec/run/agent-pipeline.ts                     |  10 +-\n src/exec/run/in-place.ts                           | 136 ++++++++++-----------\n src/exec/run/job.ts                                |  87 ++++++-------\n src/exec/run/lifecycle-commands.ts                 |  62 +++++-----\n src/exec/run/mode-shared.ts                        |   7 +-\n src/exec/run/register-command.ts                   |  16 +--\n src/exec/run/register-core.ts                      |  38 +++---\n src/exec/run/register-mode.ts                      |  44 +++----\n src/exec/run/register-post-review.ts               |  22 ++--\n src/exec/run/register-resume.ts                    |  61 +++++----\n src/exec/run/register-state.ts                     |  44 ++++---\n src/exec/run/register-worktree.ts                  |  89 +++++++-------\n src/exec/run/schedule-prepare.ts                   |  95 +++++++-------\n src/exec/run/schedule-task.ts                      |  77 ++++++------\n src/exec/worktree-command.ts                       |  78 ++++++------\n src/exec/worktree-ops-commit.ts                    |  74 ++++++-----\n src/job/job.ts                                     |  45 ++++---\n tests/src/exec/deliverable.test.ts                 |   4 +-\n tests/src/exec/evidence.test.ts                    |  16 +--\n tests/src/exec/pipeline-e2e.integration.test.ts    |  53 ++++----\n tests/src/exec/pipeline-state.test.ts              |  10 +-\n .../src/exec/plan-markdownlint.integration.test.ts |  18 ++-\n tests/src/exec/plans.test.ts                       |  22 ++--\n .../exec/register-pipeline-e2e.integration.test.ts |  58 ++++-----\n tests/src/exec/register-resume.integration.test.ts |  70 ++++++-----\n tests/src/exec/run/inplace.test.ts                 | 123 ++++++++-----------\n tests/src/exec/scheduler-command.test.ts           |   5 +-\n 43 files changed, 1023 insertions(+), 971 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "最終変更後のビルド成功。"
+    },
+    {
+      "source": "executor",
+      "command": "xargs -d '\\n' npx prettier --write < tmp/task-files.txt",
+      "status": "passed",
+      "summary": "変更した成果物・ソース・テストを整形。作業用ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検査成功。既存参照に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生一覧生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象 0 ファイル、検出 0 件。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "executor が変更した YAML・YML 成果物はない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z0XR/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n5). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z0XR/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z0XR/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 40 problems (1 error, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3991 file(s), 182 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 148 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3991 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z0XR\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\nops-merge.ts:312:13\n    310|     const dirty = commitTargetPaths(context, worktree, taskId);\n    311|     if (dirty.length > 0) {\n    312|       throw new Error(`Worktree has uncommitted commit-target changes:…\n       |             ^\n    313|     }\n    314|     const compareBase = gitOutput(context.repoRoot, [\"merge-base\", \"HE…\n ❯ mergeIntoRoot tests/src/exec/worktree-ops.integration.test.ts:225:3\n ❯ tests/src/exec/worktree-ops.integration.test.ts:1412:5\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z0XR/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z0XR/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z0XR\n\n ❯ tests/src/exec/results.test.ts (53 tests | 1 failed) 1008ms\n     × uses the stem for the result file name and doc id while keeping task_id 18ms\nUpdated ticket status → ready: /tmp/specdojo-ticket-Ivfivu/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-O2A5Tj/pjr-0001-topic.md\nUpdated ticket status → ready: /tm\n… output omitted …\n// Object.is equality\n\n- Expected\n+ Received\n\n- true\n+ false\n\n ❯ tests/src/exec/results.test.ts:1503:54\n    1501|\n    1502|     expect(created).toBe(true);\n    1503|     expect(resultPath.endsWith(`${stem}-result.md`)).toBe(true);\n       |                                                      ^\n    1504|     const frontmatter = readFileSync(resultPath, \"utf8\").split(\"\\n---\"…\n    1505|     // id is unique per stem (no doc-index collision); task_id stays t…\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+    }
+  ],
+  "final_message": "run-records.ts を追加し、plan・result・evidence・ログ・state の配置と探索を集約。runner、reporter、再開、dashboard、commit・統合処理を接続し、関連テスト、個票、CHANGELOG を更新した。result は編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "判断: register の executor 再開は同一 run ディレクトリを使い、前回の state・evidence・ログを番号付きで退避する。review は元の項目配下の別 run とする。",
+    "判断: 新規 schedule run に既存のユニークな stem 生成を適用し、既存の文書 ID 生成関数を使って過去 run との ID 重複を防ぐ。run ID は切り詰めない。",
+    "保護設定案: `.prettierignore` に `docs/ja/projects/**/execution/runs/**/plan.md` と `docs/ja/projects/**/execution/runs/**/result.md` を追加する。設定は未変更。配置検査、ガイド照合、既存記録の移行は後続項目で扱う。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Z0XR/20261106T150914759Z-b57343d9/executor.log",
+      "bytes": 2581,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Z0XR/20261106T150914759Z-b57343d9/parent-validation-attempt-1-lint-ts.log",
+      "bytes": 8066,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Z0XR/20261106T150914759Z-b57343d9/parent-validation-attempt-1-test-integration.log",
+      "bytes": 260237,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Z0XR/20261106T150914759Z-b57343d9/parent-validation-attempt-1-test-unit.log",
+      "bytes": 8344,
+      "truncated": false
+    }
+  ]
+}

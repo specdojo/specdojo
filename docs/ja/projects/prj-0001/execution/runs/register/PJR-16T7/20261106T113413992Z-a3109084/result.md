@@ -1,0 +1,39 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-16t7-20261106t113413z-1f18dac7
+  type: exec-result
+  task_id: PJR-16T7
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-16T7/20261106T113413992Z-a3109084/plan.md
+  started_at: "2026-11-06T11:34:26.415Z"
+  completed_at: "2026-11-06T11:44:48.030Z"
+  agent: sol-executor
+  approach: rulebook-maintenance
+  targets:
+    - specdojo:stsd-mermaid-rulebook
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- stsd-mermaid-rulebook の遷移ラベルの記法を `T-&lt;nn&gt; イベント / 条件` の形式に統一しました。
+- 遷移ラベルの形式が、図の下に配置される遷移表の遷移 ID と一致するように改訂しました。また、条件が常に成立する場合の記法（`T-&lt;nn&gt; イベント / イベント発生時`）についても明記しました。
+- 図の分割に関する規則を、分割図の直下に遷移表を置く構成に合わせて更新しました。
+- rulebook 内の参照先を、新しい章名である「状態遷移」に合わせて更新しました。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md`: 遷移ラベルの記法（`T-&lt;nn&gt; イベント / 条件`）を定義し、遷移 ID との整合性および無条件時の記法を追加しました。また、図の分割規則と、章「状態遷移」への参照更新を行いました。
+
+## 3. 申し送り
+
+- `docs/ja/specdojo/samples/stsd-sample.md` は旧章構成で、図のラベルに遷移 ID がありません。目的に文書の利用者・用途、適用範囲に状態の正本・一意判定・AS-IS 表記も残っています。主 rulebook に合わせた改訂が必要です。
+- `docs/ja/specdojo/samples/stsd-sample.md` は旧章構成で、図のラベルに遷移 ID がありません。目的に文書の利用者・用途、適用範囲に状態の正本・一意判定・AS-IS 表記も残っています。主 rulebook に合わせた改訂が必要です。本タスクでは変更せず、PJR-16T7 の「対応結果」にも記録しました。
+
+## 4. 進め方と実践の型の適用
+
+既存の `stsd-mermaid-rulebook.md` を読み込み、遷移ラベルの新しい記法および図の分割に関する規定を適用しました。あわせて、章構成の変更に伴う内部参照の修正を行いました。

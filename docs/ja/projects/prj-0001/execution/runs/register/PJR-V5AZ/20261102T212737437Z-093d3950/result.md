@@ -1,0 +1,37 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-v5az-20261102t212737z-13f44a93
+  type: exec-result
+  task_id: PJR-V5AZ
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-V5AZ/20261102T212737437Z-093d3950/plan.md
+  started_at: "2026-11-02T21:27:37.693Z"
+  completed_at: "2026-11-02T21:39:47.387Z"
+  agent: sol-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- Quick Start ガイドにおける `ROLE` コードと `nickname` の区別、重複引数の排除、FAQ の説明具体化、起票 actor の明示、およびプレースホルダーの修正を実施しました。
+- あわせて `README.md` の導線および個票の対応結果を更新しました。
+
+## 2. 変更ファイル
+
+- `README.md`: Quick Start ガイドへの導線を更新した。
+- `docs/ja/specdojo/guides/quick-start-guide.md`: 対話ベースの構成において、`strategy generate` の引数を `ROLE` コードに変更し、重複するオプションを削除したほか、FAQ 起票例に具体的な `--description` と `--by specdojo-orchestrator` を追加し、プレースホルダーを `&lt;task-id&gt;` / `&lt;nickname&gt;` 形式に統一した。
+
+## 3. 申し送り
+
+- 変更ファイルは README.md、docs/ja/specdojo/guides/quick-start-guide.md、docs/ja/projects/prj-0001/controls/project-register/pjr-v5az-quick-start-conversation-flow.md。CLI リファレンス、strategy の担当解決・検証実装、register の起票・遷移実装、人の名簿テンプレートと schema を照合し、根拠と検証結果を個票へ記録した。
+- 親 runner の指定検証は重複実行していない。カタログ検証は成功したが、未作成の product 文書について `based_on` の照合警告が出た。result、保護設定、登録簿の状態、実際の landing-page は編集していない。
+- 変更ファイルは README.md、docs/ja/specdojo/guides/quick-start-guide.md、docs/ja/projects/prj-0001/controls/project-register/pjr-v5az-quick-start-conversation-flow.md。CLI リファレンス、strategy の担当解決・検証実装、register の起票・遷移実装、人の名簿テンプレートと schema を照合し、根拠と検証結果を個票へ記録した。reporter はこれを result に反映すること。
+- 適用外の検証: `npm run validate:schema:file`（executor の変更は Markdown 3 ファイルのみ。開始時から存在した runner 管理の event YAML 差分には手を加えていない。）
+
+## 4. 進め方
+
+個票に記載された詳細な修正要求に基づき、現行の CLI 仕様および実装（`src/schedule/strategy-generate-scope.ts` 等）と照合しながら最小限の修正を行いました。具体的には、`--default-owner` 等の引数に `nickname` ではなく `ROLE` コード（BA 等）を渡すように修正し、利用者の `nickname` を指定する `--by` と明確に区別しました。また、起票例における冗長な引数の削除や、指示通りのプレースホルダーへの置換を行い、整合性を確保しました。

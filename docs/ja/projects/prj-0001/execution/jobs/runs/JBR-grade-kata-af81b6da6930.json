@@ -32,15 +32,15 @@
     }
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-af81b6da6930-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-af81b6da6930-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-af81b6da6930/20260908T132818016Z-0c80e6ee/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-af81b6da6930/20260908T132818016Z-0c80e6ee/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-09-08T13:20:15.452Z",
       "status": "failed",
       "completed_at": "2026-09-08T13:24:56.992Z",
-      "result_ref": "exec/results/JBR-grade-kata-af81b6da6930-result.md",
+      "result_ref": "runs/job/JBR-grade-kata-af81b6da6930/20260908T132818016Z-0c80e6ee/result.md",
       "reason": "品質評価スクリプト `tools/grade/run-per-document.sh` が EPERM エラーにより失敗し、評価処理が完遂されなかったため。"
     },
     {
@@ -48,7 +48,7 @@
       "started_at": "2026-09-08T13:28:17.907Z",
       "status": "failed",
       "completed_at": "2026-09-08T13:32:56.167Z",
-      "result_ref": "exec/results/JBR-grade-kata-af81b6da6930-result.md",
+      "result_ref": "runs/job/JBR-grade-kata-af81b6da6930/20260908T132818016Z-0c80e6ee/result.md",
       "reason": "メインタスクである `tools/grade/run-per-document.sh` が EPERM エラーで失敗し、評価結果（results.tsv）が得られなかったため、プランに定義された判断および報告を行うことが不可能である。"
     }
   ]

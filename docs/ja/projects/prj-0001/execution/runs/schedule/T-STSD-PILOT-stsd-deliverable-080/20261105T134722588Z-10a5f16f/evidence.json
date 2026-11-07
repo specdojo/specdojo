@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "task_id": "T-STSD-PILOT-stsd-deliverable-080",
+  "run_id": "20261105T134722588Z-10a5f16f",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-05T13:50:19.792Z",
+    "completed_at": "2026-11-05T13:53:28.248Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../020-data-model/stsd-deliverable.md                 | 18 ++++++++----------\n 1 file changed, 8 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md",
+      "status": "passed",
+      "summary": "対象文書の整形完了。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check -- docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "変更前後を比較し、frontmatter、図、全状態定義、遷移の主要5列、検討事項の影響範囲・決定者・決定時期の維持を確認。補足の変更は意図した2箇所のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "変更したファイルは Markdown のみで、YAML ファイルの変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "executor の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下への変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票および既存の exec plan・result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-deliverable-080/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-funct\n… output omitted …\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-deliverable-080/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-deliverable-080/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 39 problems (0 errors, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3883 file(s), 184 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3883 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-deliverable-080\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory i\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmembers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-deliverable-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-deliverable-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-deliverable-080\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-AmhjaI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-We8JnF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-zGfqXM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8Acp4K/pjr-0001-topic.md\nWa\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "第2章・変更前25行「以下の値と意味はカタログと業務規約に基づく」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "概要の業務規約への参照と第5章のカタログ根拠に関する記述を維持し、具体的な値・意味は状態表に残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第2章・変更前25行「実装で未確認の事項は『今後の検討メモ』に示す」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "第1章に実装確認の境界、第5章に具体的な未確認事項と対応があり、案内文の削除で判断情報は失われない。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第3章・変更前35行「対象遷移は `T-01`〜`T-04`」",
+      "category": "figure-prose",
+      "action": "delete",
+      "reason": "分割していない図の全4遷移は第4章の4行と対応しており、対象範囲の再説明は不要。図は3状態・4遷移、最大接続数3で分割閾値以下のため維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第4章・変更前55行 `T-04` の補足",
+      "category": "repetition",
+      "action": "reference",
+      "reason": "置換手順と旧状態別の適用可否が実装未確認であることを、同じ内容を持つ `T-03` への参照にまとめた。遷移元・先・イベント・条件は維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第5章・変更前64行「照合するまで、機械的な保証として利用しない」",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "機械的な強制を保証しない制約は第1章へ集約。第5章には実装確認が未了であること、追加する根拠、照合の作業、担当と時期を残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第2章・変更前25行「成立条件は記録値の判定であり…証明ではない」",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "記録値による状態判定と承認実施の証明の違いは、状態表だけでは伝わらない判断上の制約である。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第1章・変更前21行および第5章・変更前66行の降格・復帰に関する記述",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "概要は未記載の経路を禁止と誤認しないための制約、第5章は合意対象・決定者・時期を示すため、双方を維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "第4章・変更前57行の廃棄処理の説明",
+      "category": "unneeded-background",
+      "action": "retain",
+      "reason": "廃棄が状態遷移ではない根拠と、廃棄先への移動を廃止の成立条件にできない例外を示すため、実装上の確認内容を維持した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "対象1文書の重複説明を削除・参照へ集約。状態定義、遷移条件、判断上の制約、未決事項を維持した。result は編集していない。親 runner 担当の検査は委任した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-STSD-PILOT-stsd-deliverable-080/20261105T134722588Z-10a5f16f/executor.log",
+      "bytes": 5209,
+      "truncated": false
+    }
+  ]
+}

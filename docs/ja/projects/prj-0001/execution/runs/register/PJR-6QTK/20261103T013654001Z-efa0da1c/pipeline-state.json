@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6QTK",
+  "run_id": "20261103T013654001Z-efa0da1c",
+  "updated_at": "2026-11-03T01:46:15.395Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-03T01:38:51.875Z",
+      "completed_at": "2026-11-03T01:46:15.395Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6QTK/20261103T013654001Z-efa0da1c/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6QTK/20261103T014956458Z-6de7907f/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-6QTK/20261103T014956458Z-6de7907f/result.md"
+  }
+}

@@ -1,0 +1,44 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-s8ef-20261106t111932z-61c47d62
+  type: exec-result
+  task_id: PJR-S8EF
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-S8EF/20261106T111932291Z-e6953a03/plan.md
+  started_at: "2026-11-06T11:19:42.631Z"
+  completed_at: "2026-11-06T11:31:02.307Z"
+  agent: sol-executor
+  approach: rulebook-maintenance
+  targets:
+    - specdojo:stsd-rulebook
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- stsd-rulebook の章構成を、レビュー指摘に基づき「目的」「適用範囲」「状態の判定」「状態遷移」へと再編しました。
+- 「目的」の定義を、状態が何を管理し何のために使われるかに限定するよう更新しました。
+- 「適用範囲」から状態の正本・判定規則・互換の記述を分離し、新設した「状態の判定」の章へ移動しました。
+- スコープの記述を、既定を「現行」とし、TO-BE 文書と並ぶ場合のみ AS-IS / TO-BE を明記する形式に改訂しました。
+- 「状態遷移」の章を新設し、図を分けた場合に図の直下に遷移の表を配置するルールを明記しました。
+- 図のラベルとして `T-&lt;nn&gt;` 形式の遷移 ID を使用することを規定に含め、`stsd-mermaid-rulebook` への委ねについても記述しました。
+- 既存の本文要件、記述ガイド、完成判定、禁止事項を、新しい章立てと整合させました。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/rulebooks/stsd-rulebook.md`: 「目的」の定義を管理対象と利用目的の記述に絞り込むよう修正し、「適用範囲」から「状態の判定」への章の分離、および「状態遷移」の章立てへの統合を行いました。また、図のラベル規則や表の配置ルールを追記し、各ルール（構成・要件・禁止事項）を新しい構造に合わせて更新しました。
+
+## 3. 申し送り
+
+- reporter は result の「進め方と実践の型の適用」に、rulebook-authoring-standard、共通レビュー観点の `vp-qe-omissions-consistency`・`vp-arc-conciseness`、grade result の F001・F002 を根拠として記録してください。F001 の既存 ID 保持・欠番・再利用禁止は維持し、F002 は本文要件と記述ガイドで正本の管理場所・業務範囲の配置を一致させました。
+- Job Run・登録項目・定期処理の condense result と成果物を照合し、図表の全遷移対応・共有状態宣言・分割閾値は判断と到達性確認に必要として維持しました。タスク実行のイベント再生・導出状態・旧イベント互換を「状態の判定」の根拠としました。詳細は PJR-S8EF の対応結果に記録済みです。
+- 他の Kata と docs/ja/product/ 配下は未変更です。stsd-recipe・stsd-sample・stsd-template は、目的、現行既定のスコープ、正本・判定・互換の配置、新章立て、各図直下の表、ラベルの遷移 ID を追随改訂する必要があります。stsd-mermaid-rulebook は章参照・遷移ラベル・構文例・完成判定の追随が必要です（ラベルは PJR-16T7 の対象）。差異がある場合は主 rulebook を優先すると明記しました。個票の対応結果にも記録済みです。
+- 適用外の検証: `npm run validate:schema:file`（executor の変更は Markdown のみで、YAML・YML を変更していないため。）
+
+## 4. 進め方と実践の型の適用
+
+レビュー指摘に基づき、`stsd-rulebook` の章構成を「目的」「適用範囲」「状態の判定」「状態遷移」へと再編し、整合性を確保する。具体的には、目的の定義の厳密化、適用範囲から状態の正本・判定規則の分離、スコープの記述形式の変更、および状態遷移図と遷移表の構造的な関連付け（図の直下に表を置く等）を適用した。
