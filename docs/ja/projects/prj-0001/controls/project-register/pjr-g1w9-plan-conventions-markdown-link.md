@@ -24,7 +24,7 @@ BVS9 の後の plan.md が共通規約の版を相対パスの Markdown リン�
 
 ## 2. 入力
 
-- PJR-JSEY の run（execution/runs/register/PJR-JSEY/pjr-jsey-20261107T010718Z-d209433b/plan.md）の 61 行目に、[共通規約 sha256:…](../../../../conventions/`<hash>.txt`) の形の相対リンクがある（2026-11-07 orchestrator の確認）
+- PJR-JSEY の run（execution/runs/register/PJR-JSEY/pjr-jsey-20261107T010718Z-d209433b/plan.md）の 61 行目に、`[共通規約 sha256:<hash>](../../../../conventions/<hash>.txt)` の形の相対リンクがある（2026-11-07 orchestrator の確認）
 - 規則: .github/instructions/markdown.instructions.md の「履歴蓄積ファイルのリンク記法」は、plan・result・個票でリンク先のファイル名の変更に追従が要る Markdown リンクを書かないとする。対象の glob は exec/plans・exec/results で、新しい配置（`execution/runs/**/plan.md`・result.md）は入っていない。validate:history-links（packages/docs-lint/src/validate-history-links.ts）も古い配置だけを見ている（2026-11-07）
 - 関連: PJR-JT5J（置き場所の検査）と PJR-9BY9（既存の記録の移動）。移動すると相対リンクの深さが変わる（2026-11-07）
 
