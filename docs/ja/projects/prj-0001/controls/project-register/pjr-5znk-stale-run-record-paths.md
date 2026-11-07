@@ -32,6 +32,7 @@ specdojo:
   - `docs/ja/specdojo/references/command-reference.md`
 - 旧来の置き場所を「旧来の形式」や「移行前の場所」として説明している箇所は残している。直さなかった箇所とその理由を、個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - 例に出てくる `plan_ref` の値とコマンドの `--plan` の値も、今の置き場所に合わせている。
+- 2 回目の実行（2026-11-08 追加）: `exec-operation-guide.md` と `exec-config-guide.md` にある `validate:history-links` の適用対象の説明（「executor 自身が変更した既存の `exec/plans/**/*.md`・`exec/results/**/*.md`」）は、旧来の形式の説明ではなく今の規則の説明である。実装（`src/exec/reporter.ts` の `isHistoryLinkTargetPath`）に合わせ、`execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md` を対象として書き、旧来の `exec/plans/`・`exec/results/` は旧来の置き場所として残す形にしている。個票の対応結果の「旧来の置き場所を残した箇所とその理由」から、この 2 か所を外して直した箇所として書き直している。
 - `quick-start-guide.md` は旧来の置き場所の記述だけを直し、ほかの文は変えていない（PJR-V5AZ で書き直し中のため）。
 - 上の 9 ファイル以外のファイルと、`src/`・`tests/` を変えていない。
 - `npm run lint:md`・`npm run validate:history-links`・`npm run test:unit -- tests/src/exec/run-records.test.ts` が通っている。
