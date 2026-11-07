@@ -66,6 +66,14 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-07）
+
+前回の試行は親の検証（lint-ts・test-unit・test-integration）で止まった。失敗の出力は引き継がれる。それに加えて、orchestrator が次の 2 点を確かめた。
+
+- 親の検証の間（2026-11-07T00:24:45Z）に、統合先の作業ツリー（`/workspaces/specdojo-workspace/specdojo`）の `docs/ja/projects/prj-0001/execution/conventions/` に規約の本体のファイルが 1 件書かれた。worktree の中ではない。テストや plan の生成が、一時ディレクトリや worktree の外にある本物のリポジトリへ書かないようにする。原因を個票の対応結果に書く。
+- そのファイルの本文に、worktree の絶対パス（`/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9/docs/ja/specdojo/exec-templates/...`）が入っていた。規約の本体は worktree や端末によらず同じ版になるように、リポジトリ相対のパスで書く。同じ規約からは同じハッシュが出ることを単体テストで確かめる。
+- lint-ts の error（未使用の import）と、失敗した単体テスト・統合テストをすべて直す。直せない失敗があれば、理由を個票の対応結果と報告の `handoff` に書く。
+
 ## 共通: 記法・成果物規約
 
 作業を始める前に、共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み、その内容に従う。次の箇条書きは、そのうち守らないと失敗に直結する要点である。
