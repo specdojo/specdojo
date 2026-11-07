@@ -539,7 +539,7 @@ specdojo exec run --project <project-id> --task <task-id> \
 
 ### 6.3. evidence とログの引き渡し方針
 
-executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/exec/evidence/<task-id>/<run-id>/` です。
+executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/` です。
 
 | ファイル                                                              | 内容                                                                                                    |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
@@ -685,7 +685,7 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 | git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない |
 | Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する           |
 | ready 昇格の human-only 化 | 成果物 `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する               |
-| commit 対象の除外          | `exec/plans/` `exec/events/` `generated/` 他タスクの `exec/results/` は commit しない            |
+| commit 対象の除外          | `plan.md`、対象 run 以外の `execution/runs/`、`exec/events/`、`generated/` は commit しない      |
 | merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
 
 ### 8.2. provider 別の権限設定
@@ -785,7 +785,7 @@ providers:
 | edit（maintenance / bootstrap 系 approach） | 上記に加え、実践の型ディレクトリ（rulebooks / recipes / samples / templates） |
 
 - 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力します（worktree 内には残るため、必要なら人間が確認して手動で取り込みます）。
-- 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用します。
+- 既存の除外リスト（`plan.md` や対象 run 以外の実行記録等）は許可リストの内側でも引き続き適用します。
 - agent の mode / approach / `targets` は worktree の **agent 起動前の HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent 前後の HEAD は runner が比較し、agent 自身の commit や checkout を検知した場合は統合前に block するため、許可リストの導出は改ざん耐性があります。
 - human は plan を持たないため、HEAD 側 result の `execution: human`、mode、approach、`targets` から許可リストを導出します。human には敵対 agent が存在しないため、plan を独立した改ざん耐性境界にする要件は適用しません。
 - `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は警告を出し、commit を許可しません。

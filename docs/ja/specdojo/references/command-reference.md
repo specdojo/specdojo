@@ -647,7 +647,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `exec migrate-records` は検査を通すためには不要です。移さない旧記録は、再開候補の自動探索、task ID からの plan・result の取得、dashboard の実行記録一覧・件数に含まれません。`register build` は旧記録を探索せず、個票の既存リンクを自動移行・補完しません。明示パスを読む経路などの条件と移行手順は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] の「既存記録の移行」を参照してください。
 
-schedule の `exec resume --task <task-id> --resume-from executor` は、executor が `succeeded` で reporter が未完了の pipeline を、既存 worktree・変更・同じ run を引き継いで executor → reporter → 統合の順に再実行します。対象状態は reporter 段の `blocked` または中断した `doing` で、executor の試行回数を増やし、`blocked` からの状態遷移は `unblock` イベントへ記録します。統合段、executor 未成功、pipeline 以外、`executor` 以外の値は拒否します。`--task` は必須で、`--due` とは併用できません。worktree の `<execution_path>/exec/plans/<task-id>-plan.md` を編集してから再開すると、その plan を使います。変更理由と再開の経緯を報告の `handoff` へ記載するよう plan に指示し、再開後の result の申し送りを確認してください。手順は [[specdojo:exec-operation-guide|exec運用ガイド]] の「blockedタスクの復帰」を参照してください。
+schedule の `exec resume --task <task-id> --resume-from executor` は、executor が `succeeded` で reporter が未完了の pipeline を、既存 worktree・変更・同じ run を引き継いで executor → reporter → 統合の順に再実行します。対象状態は reporter 段の `blocked` または中断した `doing` で、executor の試行回数を増やし、`blocked` からの状態遷移は `unblock` イベントへ記録します。統合段、executor 未成功、pipeline 以外、`executor` 以外の値は拒否します。`--task` は必須で、`--due` とは併用できません。worktree の `<execution_path>/runs/schedule/<task-id>/<run-id>/plan.md` を編集してから再開すると、その plan を使います。変更理由と再開の経緯を報告の `handoff` へ記載するよう plan に指示し、再開後の result の申し送りを確認してください。手順は [[specdojo:exec-operation-guide|exec運用ガイド]] の「blockedタスクの復帰」を参照してください。
 
 `exec scaffold --project <project-id>` は、対象 project の `viewpoints_path` へ `extends: specdojo:pm-review-viewpoints` を持つ空の差分ファイルを生成します。共通正本は [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] であり、scaffold 時点の全量コピーは作りません。そのため、共通側の更新は次回の review plan 生成時に継承 project へ反映されます。既存ファイルは既定で保持し、`--force` の指定時だけ差分雛形で置き換えます。
 
@@ -804,7 +804,7 @@ register 実行の対応内容、状態追跡、commit の扱いは [登録簿�
 ```bash
 specdojo exec trial run \
   --project prj-0001 \
-  --plan docs/ja/projects/prj-0001/execution/exec/plans/<task>-plan.md \
+  --plan docs/ja/projects/prj-0001/execution/runs/schedule/<task-id>/<run-id>/plan.md \
   --base <commit-before-completed-work> \
   --agent agent-a agent-b \
   --reporter-by reporter-a \
@@ -813,7 +813,7 @@ specdojo exec trial run \
 # executorとreporterを組で比較する場合
 specdojo exec trial run \
   --project prj-0001 \
-  --plan docs/ja/projects/prj-0001/execution/exec/plans/<task>-plan.md \
+  --plan docs/ja/projects/prj-0001/execution/runs/schedule/<task-id>/<run-id>/plan.md \
   --base <commit-before-completed-work> \
   --pair executor-a=reporter-a executor-b=reporter-b
 

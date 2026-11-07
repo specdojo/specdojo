@@ -530,7 +530,7 @@ register には上記のほか、以下の種別があります。目的に応�
   [4/4] 設定された方式で統合し、実行記録に統合結果を残しました。
   個票 PJR-FA01 のステータスが review（人間の講評待ち）になりました。以下の確認をお願いします:
   1. プロダクト側（../landing-page）のコミットログ（git log -1）と変更差分
-  2. 実行結果ファイル（docs/ja/projects/prj-0001/execution/exec/results/pjr-fa01-....md）
+  2. 実行結果ファイル（docs/ja/projects/prj-0001/execution/runs/register/PJR-FA01/.../result.md）
   3. ローカル開発サーバーでの FAQ 表示とアコーディオン動作
   確認後、問題がなければ完了（close）をご指示ください。
 あなた: プロダクトのコミットとローカル表示を確認しました。FAQ が期待通り動作しています。完了してください。
@@ -542,7 +542,7 @@ register には上記のほか、以下の種別があります。目的に応�
 ### 得られる結果と確認先
 
 - 成功時は設定された統合先に変更が統合されます。コミット件名の scope は未指定なら空です。`feat(add-faq-section): ...` を使う場合は登録時に `--commit-scope add-faq-section` を指定します。
-- `docs/ja/projects/prj-0001/execution/exec/results/` に result ファイルが生成され、変更ファイル一覧や検証記録が保存されます。
+- `docs/ja/projects/prj-0001/execution/runs/register/PJR-FA01/<run ID>/` に `result.md` が生成され、変更ファイル一覧や検証記録が保存されます。
 - 個票 `PJR-FA01` のステータスが `review` から `done` に遷移します。
 
 ### 折りたたんだコマンドと設定差分
@@ -740,7 +740,7 @@ npx specdojo exec refresh --project prj-0001
 
 #### 得られる結果と確認先
 
-- 成果物ファイルおよび `<execution_path>/exec/results/` の result が記録されます。
+- 成果物ファイルおよび `<execution_path>/runs/schedule/<task-id>/<run-id>/` の `result.md` が記録されます。
 - `exec refresh` により後続のタスクが Ready に繰り上がります。
 
 #### 折りたたんだコマンドと設定差分

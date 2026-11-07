@@ -147,7 +147,7 @@ plan を先に生成して内容を確認・編集してから実行できます
 
 ```bash
 specdojo exec plan --project <project-id> --task <task-id>
-specdojo exec run --project <project-id> --plan <execution-path>/exec/plans/<task-id>-plan.md
+specdojo exec run --project <project-id> --plan <execution-path>/runs/schedule/<task-id>/<run-id>/plan.md
 ```
 
 schedule のタスクから plan を生成するときは、Prettier による整形・ファイルへの書き込みより前に、phase の `description` を展開した plan 全体を markdownlint で検査します。箇条書きの前に空行がない場合（MD032）などは、タスク ID・plan のパス・生成内容の行番号・規則名を表示して停止し、既存の plan は上書きしません。表示する行番号は strategy YAML ではなく、整形前の plan に対する番号です。strategy の説明を修正し、`schedule build --track <track> --force` でトラックを更新してから plan を再生成してください。

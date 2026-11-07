@@ -202,13 +202,13 @@ specdojo exec worktree commit \
 
 commit 対象から除外する主なパス:
 
-| 除外対象                         | 理由                                           |
-| -------------------------------- | ---------------------------------------------- |
-| `tmp/`                           | agent の作業用一時ファイルは commit に含めない |
-| `exec/plans/`                    | plan は実行入力であり agent の成果物ではない   |
-| 対象 task 以外の `exec/results/` | 他タスクの記録を混ぜない                       |
-| `exec/events/`                   | event は root 側の状態管理で扱う               |
-| `generated/`                     | 再生成物を task 成果物に混ぜない               |
+| 除外対象                          | 理由                                           |
+| --------------------------------- | ---------------------------------------------- |
+| `tmp/`                            | agent の作業用一時ファイルは commit に含めない |
+| `plan.md`                         | plan は実行入力であり agent の成果物ではない   |
+| 対象 run 以外の `execution/runs/` | 他タスク・他 run の記録を混ぜない              |
+| `exec/events/`                    | event は root 側の状態管理で扱う               |
+| `generated/`                      | 再生成物を task 成果物に混ぜない               |
 
 対象 task の result は成果物変更と同じ commit に含めます。変更がない場合は commit を作成しません。
 
