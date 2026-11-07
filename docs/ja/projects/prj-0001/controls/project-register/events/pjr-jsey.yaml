@@ -4145,3 +4145,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c92a318e375c4aff84a155b0f630fa93
+- v: 1
+  id: reg_68119410bda0405782f101ad42a48482
+  ts: "2026-11-07T01:16:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が run の記録、規約の本体のハッシュと中身を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: PJR-BRN4 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。許可外の変更が残らない run は止まらずに統合され、記録はすべて commit された
+      to: PJR-BVS9 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。plan は規約の版への参照になり、規約の本体（execution/conventions/`<SHA-256>.txt`）も commit された
+  previous_event_id: reg_e9eef89b3b18436d8eb0932f3228cd5f

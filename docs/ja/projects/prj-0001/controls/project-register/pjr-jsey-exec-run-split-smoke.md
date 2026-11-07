@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-BRN4 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。許可外の変更が残らない run は止まらずに統合され、記録はすべて commit された
+  completed_at: "2026-11-07T01:16:12Z"
+  conclusion: PJR-BVS9 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。plan は規約の版への参照になり、規約の本体（execution/conventions/`<SHA-256>.txt`）も commit された
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる
