@@ -75,19 +75,45 @@ describe("run record layout", () => {
   });
 
   it.each(["plan-result-lifecycle-guide", "docs-structure-guide"])(
-    "keeps %s layout examples aligned with the path module",
+    "keeps the full %s layout tree aligned with the path module",
     (guide) => {
       const content = readFileSync(`docs/ja/specdojo/guides/${guide}.md`, "utf8");
-      const records = runRecordPaths("execution", "register", "PJR-TEST", "run-1");
-      const example = records.directory
-        .replace("register", "<出どころ>")
-        .replace("PJR-TEST", "<項目 ID>")
-        .replace("run-1", "<run ID>");
-      expect(content).toContain(example.replace("execution/", ""));
-      for (const path of [records.plan, records.result, records.evidence, records.state])
-        expect(content).toContain(`    ${path.split("/").at(-1)}`);
+      const block = content.match(/```text\n(execution\/\n[\s\S]*?)\n```/)?.[1];
+      expect(block).toBeDefined();
+      // Resolve indentation, so a correctly named file under the wrong parent also fails.
+      const parents: { indent: number; path: string }[] = [];
+      const tree = block!.split("\n").map((line) => {
+        const indent = line.length - line.trimStart().length;
+        while (parents.length && parents.at(-1)!.indent >= indent) parents.pop();
+        const path = `${parents.at(-1)?.path ?? ""}${line.trim()}`;
+        if (line.endsWith("/")) parents.push({ indent, path });
+        return path;
+      });
+      for (const origin of ["register", "schedule", "job"] as const) {
+        const records = runRecordPaths("execution", origin, "PJR-TEST", "run-1");
+        const normalize = (path: string) =>
+          path
+            .replaceAll("\\", "/")
+            .replace(`/${origin}/`, "/<出どころ>/")
+            .replace("PJR-TEST", "<項目 ID>")
+            .replace("run-1", "<run ID>");
+        expect(tree.filter((path) => path.startsWith("execution/runs/"))).toEqual([
+          `${normalize(records.directory)}/`,
+          ...[
+            records.plan,
+            records.result,
+            records.evidence,
+            records.state,
+            records.log("executor.log"),
+            records.log("reporter.log"),
+          ].map(normalize),
+        ]);
+        expect(content).toContain(`\`${origin}\``);
+      }
       expect(content).not.toContain("exec/plans/");
       expect(content).not.toContain("exec/results/");
+      expect(content).not.toContain("controls/reviews/");
+      expect(content).not.toContain("assessments/generated/");
     },
   );
 

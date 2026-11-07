@@ -16,8 +16,25 @@ function pathSegment(value: string): string {
   return segment;
 }
 
-export type RunOrigin = "register" | "schedule" | "job";
+export const RUN_ORIGINS = ["register", "schedule", "job"] as const;
+export type RunOrigin = (typeof RUN_ORIGINS)[number];
 export type RecordKind = "plan" | "result";
+
+export function runRecordsDirectory(executionPath: string): string {
+  return join(executionPath, "runs");
+}
+
+/** Accept only an exact origin/item/run directory produced by the path policy. */
+export function runRecordLocation(executionPath: string, directory: string) {
+  const parts = relative(runRecordsDirectory(executionPath), directory).split(/[\\/]/);
+  if (parts.length !== 3 || !RUN_ORIGINS.includes(parts[0] as RunOrigin)) return undefined;
+  try {
+    const paths = runRecordPaths(executionPath, parts[0] as RunOrigin, parts[1], parts[2]);
+    return resolve(paths.directory) === resolve(directory) ? paths : undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 export function planConventionsDirectory(executionPath: string): string {
   return join(executionPath, "conventions");
@@ -35,8 +52,7 @@ export function runRecordPaths(
   itemId: string,
   runId: string,
 ) {
-  if (!["register", "schedule", "job"].includes(origin))
-    throw new Error(`Invalid run origin: ${origin}`);
+  if (!RUN_ORIGINS.includes(origin)) throw new Error(`Invalid run origin: ${origin}`);
   const directory = join(runItemDirectory(executionPath, origin, itemId), pathSegment(runId));
   return {
     directory,
@@ -62,7 +78,7 @@ export function recordIdentity(taskId: string, origin?: RunOrigin) {
 }
 
 export function runItemDirectory(executionPath: string, origin: RunOrigin, itemId: string): string {
-  return join(executionPath, "runs", origin, pathSegment(itemId));
+  return join(runRecordsDirectory(executionPath), origin, pathSegment(itemId));
 }
 
 export function taskRecordPaths(
