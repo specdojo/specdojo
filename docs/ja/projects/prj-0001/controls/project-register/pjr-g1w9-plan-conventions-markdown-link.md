@@ -24,10 +24,11 @@ BVS9 の後の plan.md が共通規約の版を相対パスの Markdown リン�
 
 ## 2. 入力
 
-- PJR-JSEY の run（execution/runs/register/PJR-JSEY/pjr-jsey-20261107T010718Z-d209433b/plan.md）の 61 行目に、`[共通規約 sha256:<hash>](../../../../conventions/<hash>.txt)` の形の相対リンクがある（2026-11-07 orchestrator の確認）
+- PJR-JSEY の run（execution/runs/register/PJR-JSEY/pjr-jsey-20261107T010718Z-d209433b/plan.md）の 61 行目に、共通規約の版を表示名「共通規約 sha256 と版の値」、リンク先を相対パス（../../../../conventions/ の下の版の値の .txt）とする Markdown のリンクがある（2026-11-07 orchestrator の確認）
 - 規則: .github/instructions/markdown.instructions.md の「履歴蓄積ファイルのリンク記法」は、plan・result・個票でリンク先のファイル名の変更に追従が要る Markdown リンクを書かないとする。対象の glob は exec/plans・exec/results で、新しい配置（`execution/runs/**/plan.md`・result.md）は入っていない。validate:history-links（packages/docs-lint/src/validate-history-links.ts）も古い配置だけを見ている（2026-11-07）
 - 関連: PJR-JT5J（置き場所の検査）と PJR-9BY9（既存の記録の移動）。移動すると相対リンクの深さが変わる（2026-11-07）
-- 決定（A 案）: plan の規約の版への参照は Markdown のリンクにせず、`共通規約 sha256:<hash>` とリポジトリのルートからのパスをインラインコードで書く。prompt へ規約を戻す処理は新旧の書き方を読む。`validate:history-links` の対象に新しい置き場所を足す。`.github/instructions/markdown.instructions.md` の対象の一覧は保護された設定のため、案を書き、反映は利用者の承認のもとで行う（2026-11-07 indie が決定）
+- 決定（A 案）: plan の規約の版への参照は Markdown のリンクにせず、「共通規約 sha256:」と版の値と、リポジトリのルートからのパスをインラインコードで書く。prompt へ規約を戻す処理は新旧の書き方を読む。validate:history-links の対象に新しい置き場所を足す。.github/instructions/markdown.instructions.md の対象の一覧は保護された設定のため、案を書き、反映は利用者の承認のもとで行う（2026-11-07 indie が決定）
+- 最初の exec run --register は、plan の生成の後に「Invalid plan conventions reference: expected a SHA-256 hash and snapshot path」で止まった。個票の入力に参照の書き方の例（角括弧で始まる表示名と相対パスのリンク）をそのまま引いていたため、src/shared/plan-conventions.ts が plan の本文の引用を壊れた参照と判定した。例を言い換えて流し直した（2026-11-07 orchestrator の確認）
 
 ## 3. 影響範囲
 
