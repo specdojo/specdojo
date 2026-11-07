@@ -115,3 +115,35 @@
       from: "-"
       to: "parent validation failed: test-integration, test-unit"
   previous_event_id: reg_2175f138f6354d72b75ea2cad1d64ad7
+- v: 1
+  id: reg_5694984d6f8d4d6aa95b58251a00e361
+  ts: "2026-11-07T01:51:49Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_946fe00ec594411ba491723e14151694
+- v: 1
+  id: reg_5ccf633906a04197a87eff2673b9b151
+  ts: "2026-11-07T02:04:36Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_5694984d6f8d4d6aa95b58251a00e361
