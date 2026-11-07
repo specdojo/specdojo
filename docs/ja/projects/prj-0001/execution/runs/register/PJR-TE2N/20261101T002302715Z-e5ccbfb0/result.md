@@ -1,0 +1,44 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-te2n-20261101t000657z-0e8144d0
+  type: exec-result
+  task_id: PJR-TE2N
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-TE2N/20261101T002302715Z-e5ccbfb0/plan.md
+  started_at: "2026-11-01T00:06:58.718Z"
+  completed_at: "2026-11-01T00:34:33.454Z"
+  agent: flash-high-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- CDFD の D2 版 rulebook (`cdfd-d2-rulebook.md`) を新規作成しました。
+- 既存の CDFD 関連 rulebook (`cdfd-overview-rulebook.md`, `cdfd-rulebook.md`, `cdfd-uc-rulebook.md`) に、D2 記法を選択可能にするための更新を行いました。
+- レビュー観点 (`pm-review-viewpoints.yaml`) に、新しい D2 版 rulebook をデフォルトの検証対象として追加しました。
+- 個票 (`pjr-te2n-cdfd-d2-rulebook.md`) に作業結果を記録しました。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`: レビュー観点のデフォルト値として `specdojo:cdfd-d2-rulebook` を追加しました。
+- `docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md`: 記法の選択基準に関する記述を更新しました。
+- `docs/ja/specdojo/rulebooks/cdfd-rulebook.md`: 記法の選択基準に関する記述を更新しました。
+- `docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md`: 記法の選択基準に関する記述を更新しました。
+- `docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md`: D2 版の CDFD rulebook を新規作成しました。
+
+## 3. 申し送り
+
+- 記法の選択場所として、全体概要（cdfd-overview.md）の「凡例（本プロダクト共通）」章で宣言する方式を採用しました。凡例を省略した場合や記法を宣言しない場合は従来どおり Mermaid（specdojo:cdfd-mermaid-rulebook）が既定として適用されます。
+- cdfd-d2-rulebook の新規追加に伴い、docs/ja/specdojo/defaults/pm-review-viewpoints.yaml の `vp-ba-business-value` および `vp-arc-single-responsibility` の `confirmed_default` に `specdojo:cdfd-d2-rulebook` を追加しました。
+- プロダクトの CDFD 文書（docs/ja/product/010-business-specs/010-data-flow/）は変更していません（書き直しは後続の PJR-RXVC および PJR-T1D1 で実施予定です）。
+- 各 rulebook の `status` は格上げせず維持しています（cdfd-d2-rulebook は `draft` のまま）。`ready` への格上げは人間によるレビュー・承認で実施してください。
+- cdfd-d2-rulebook の新規追加に伴い、docs/ja/specdojo/defaults/pm-review-viewpoints.yaml の vp-ba-business-value および vp-arc-single-responsibility の `confirmed_default` に specdojo:cdfd-d2-rulebook を追加しました。
+- 各 rulebook の status は格上げせず維持しています（cdfd-d2-rulebook は draft のまま）。ready への格上げは人間によるレビュー・承認で実施してください。
+
+## 4. 進め方
+
+CDFD の記法として Mermaid 以外の選択肢（D2）を提供するため、まず `cdfd-d2-rulebook.md` を作成しました。次に、既存の `cdfd-overview-rulebook.md`、`cdfd-rulebook.md`、`cdfd-uc-rulebook.md` の各文書において、記法を明示的に宣言することで D2 を使用できるようにするルールを追記しました。また、レビューの自動検証に活用できるよう、`pm-review-viewpoints.yaml` のデフォルト設定を更新しました。最後に、個票へ作業完了の記録を行いました。

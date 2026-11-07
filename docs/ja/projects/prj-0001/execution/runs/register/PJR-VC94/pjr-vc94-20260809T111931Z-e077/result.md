@@ -1,0 +1,46 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-vc94-20260809t111931z-e077
+  type: exec-result
+  task_id: PJR-VC94
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-VC94/pjr-vc94-20260809T111931Z-e077/plan.md
+  started_at: "2026-08-09T11:19:31.671Z"
+  completed_at: "2026-08-09T11:26:18.682Z"
+  agent: codex-edit-agent
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- 表専用の `pjr-index-content.schema.yaml` とその npm 検証経路を廃止し、個票 frontmatter schema を `.remarkrc.yaml` へ接続した。これによりエディタの Remark/Ajv 検証が、個票ごとの必須項目・enum・日付形式を検証する。
+- `register build` に個票横断検証を組み込み、表示 ID の重複とファイル名・`specdojo.id` の不一致を CI/pre-commit 経路で拒否するようにした。エラーには該当 ID とファイル名を含める。
+- 個票正本の既存テストを維持し、横断検証と build 経由の不整合検出を追加した。
+- 新しい個票 schema が検出した既存の ID・ファイル名不一致を修正し、その ID を参照する個票・result のリンクと依存関係も更新した。
+
+## 2. 変更ファイル
+
+- `.remarkrc.yaml`
+- `package.json`
+- `src/register-item.ts`
+- `src/register.ts`
+- `tests/src/register-item.test.ts`
+- `tests/src/register-commands.test.ts`
+- `docs/ja/specdojo/rulebooks/pjr-rulebook.md`
+- `docs/ja/specdojo/guides/register-operation-guide.md`
+- `docs/ja/specdojo/schemas/v1/pjr-index-content.schema.yaml`（削除）
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-vc94-update-validation-and-tests.md`
+- `docs/ja/projects/prj-0001/execution/exec/results/pjr-vc94-20260809T111931Z-e077-result.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-0122-review-launch.md` と、その ID を参照する個票・result
+
+## 3. 申し送り
+
+表形式の `pjr-index` は生成ビューであり、構造化データの検証対象には含めない。`node --import tsx src/specdojo.ts register build`、`catalog validate`、`index build` は成功した。catalog validate は既存の参照先未生成に関する warning を出力したが、エラーはない。フル `npm test` は worktree 系16件だけがサンドボックスの `spawnSync git EPERM` で失敗し、今回の対象テスト41件は成功した。
+
+## 4. 進め方と実践の型の適用
+
+本タスクは `rulebook: none` の register 起点の実装であるため、個票の完了条件を作業基準にした。先行個票 [[prj-0001:pjr-rf3b-register-item-frontmatter-schema]] を確認して frontmatter schema の存在と未接続の検証経路を特定し、`src/register-item.ts`・`src/register.ts`・既存の register テストから現在の個票正本の読み書きと生成の振る舞いを確認した。表専用 schema を削除して単票検証は Remark/Ajv、複数ファイルにまたがる一意性・対応検証は `register build` と責務を分けた。`pjr-rulebook` と運用ガイドの schema 参照も新しい正本へ更新した。参照文書間に矛盾はなかった。

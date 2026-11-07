@@ -32,15 +32,15 @@
     }
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-3af1683afadd-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-3af1683afadd-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-3af1683afadd/20260908T133429540Z-4fd46972/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-3af1683afadd/20260908T133429540Z-4fd46972/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-09-08T13:34:29.312Z",
       "status": "failed",
       "completed_at": "2026-09-08T13:41:47.907Z",
-      "result_ref": "exec/results/JBR-grade-kata-3af1683afadd-result.md",
+      "result_ref": "runs/job/JBR-grade-kata-3af1683afadd/20260908T133429540Z-4fd46972/result.md",
       "reason": "評価スクリプトの終了コードは0であったが、実際には5文書すべてでagent側のファイルシステムエラーが発生し、評価結果の生成および成果物の更新という主目的が達成されなかったため。"
     }
   ]

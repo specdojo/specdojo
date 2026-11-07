@@ -53,6 +53,7 @@ import {
   writeEventFile,
 } from "./events.js";
 import { registerExecHandoffCommands } from "./handoff.js";
+import { registerRecordMigrationCommand } from "./migrate-records.js";
 import {
   archivePlan,
   buildInPlaceStem,
@@ -91,6 +92,7 @@ import { registerExecWorktreeCommands } from "./worktree-command.js";
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
   registerExecHandoffCommands(exec);
+  registerRecordMigrationCommand(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
@@ -353,7 +355,7 @@ export function registerExecCommands(program: Command): void {
 
   const archiveCmd = exec
     .command("archive")
-    .description("Keep a completed run plan (archive legacy plans), or delete it");
+    .description("Keep a completed run plan in its run directory, or delete it");
   addProjectOptions(archiveCmd);
   archiveCmd.option("--task <taskId>", "Scheduled task ID whose plan to archive");
   archiveCmd.option(
@@ -361,7 +363,7 @@ export function registerExecCommands(program: Command): void {
     "Catalog deliverable local_id (unique project-wide)",
   );
   archiveCmd.option("--plan <path>", "Plan file to archive (for unique-named in-place plans)");
-  archiveCmd.option("--delete", "Delete the plan instead of moving it to done/", false);
+  archiveCmd.option("--delete", "Delete the plan instead of retaining it", false);
   archiveCmd.action((opts) => {
     try {
       const { executionPath, catalogPath } = resolveProjectContext(opts);
@@ -371,8 +373,6 @@ export function registerExecCommands(program: Command): void {
       if ([hasTask, hasDeliverable, hasPlan].filter(Boolean).length !== 1) {
         throw new Error("Specify exactly one of --task, --deliverable, or --plan.");
       }
-      // `archivePlan` rebuilds `<slug>-plan.md`; for --plan the stem recovered from the filename
-      // is that slug, so a unique-named in-place plan archives to done/ like a fixed-name one.
       const slug = hasPlan
         ? stemFromPlanPath((opts.plan as string).trim())
         : hasTask

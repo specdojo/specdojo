@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-FMA4",
+  "run_id": "20261105T235847209Z-c2cd84b1",
+  "updated_at": "2026-11-06T00:23:59.980Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-06T00:00:52.336Z",
+      "completed_at": "2026-11-06T00:12:00.851Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FMA4/20261105T235847209Z-c2cd84b1/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-06T00:16:29.204Z",
+      "completed_at": "2026-11-06T00:17:42.902Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FMA4/20261105T235847209Z-c2cd84b1/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-06T00:19:42.386Z",
+      "completed_at": "2026-11-06T00:23:59.980Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-fma4-20261105T235847Z-f10bb399-result.md:41:152 error MD038/no-space-in-code Spaces inside code span elements [Context: \"...dence-secrets.mjs --staged ```\"] docs/ja/projects/prj-0001/execution/exec/results/pjr-fma4-20261105T235847Z-f10bb399-result.md:41:529 error MD038/no-space-in-code Spaces inside code span elements [Context: \"...ence-secrets.mjs --tracked ```\"]"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FMA4/20261105T235847209Z-c2cd84b1/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FMA4/20261105T235847209Z-c2cd84b1/result.md"
+  }
+}

@@ -79,4 +79,13 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 移した後の状態で、残りの完了条件（古い配置の読み取りがコードにないこと、ガイド、検証）を確かめる。
 - `npm run validate:history-links` の失敗の原因だった PJR-G1W9 の個票は、develop で直した。
 
+## 再開時の追加の指示 2（orchestrator、2026-11-07）
+
+前回の試行の親の検証では、`tests/src/exec/register-resume.integration.test.ts` の「keeps migrated run records committed when resuming with resume-from executor」の 2 件だけが失敗した。どちらも、worktree が残っている進行中の run を移行してから再開する場面のテストで、完了条件が求める範囲の外である。次のどちらかを選び、選んだ方と理由を個票の対応結果と報告の `handoff` に書く。
+
+- 進行中の run の移行を支える。コードを直し、この 2 件を通す。
+- 移行は進行中の run（worktree が残る run）がないときに流す前提とする。`exec migrate-records` は、移す対象に進行中の run があれば、原因が分かるエラーで止まる。この 2 件は、その動きを確かめるテストに置き換える。
+
+ほかのテストが通る状態は保つ。
+
 [共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b](../../../../conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt)

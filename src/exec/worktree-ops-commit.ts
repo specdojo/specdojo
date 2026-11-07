@@ -24,7 +24,6 @@ import {
   targetReferenceDirsForApproach,
 } from "./plans.js";
 import { recordProtectedConfigBlockAcrossRepos } from "./protection-handoff.js";
-import { readPipelineState } from "./pipeline-state.js";
 import { parseResultTaskIdentity } from "./results.js";
 import {
   isOtherRunRecord,
@@ -32,9 +31,9 @@ import {
   isRunRecordPath,
   recordPathForRead,
   recordStem,
-  resumeStatePaths,
   runRecordPrefixes,
   taskRecordPrefixes,
+  taskRecordPaths,
 } from "./run-records.js";
 import { stripTerminalControlSequences } from "./shared.js";
 import { assertNoPendingProductChanges, productIntegrationTarget } from "./task-repos.js";
@@ -118,9 +117,7 @@ export function isCommitTargetPath(
   return true;
 }
 
-// A legacy result filename does not contain the pipeline run ID. Recover it from the
-// checkpoint's artifact refs, including runs whose evidence was split across layouts.
-// Checkpoints predating artifact refs follow the same latest-run rule as resume.
+// Commit evidence and logs only from the run containing the selected result.
 function currentRunPrefixes(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
@@ -130,25 +127,7 @@ function currentRunPrefixes(
   const { executionRel, planRel } = taskPaths(context, taskId, worktree.path);
   const plan = readWorktreeHeadFile(worktree.path, planRel);
   const recordTaskId = (plan ? parsePlanTaskIdentity(plan)?.taskId : undefined) ?? taskId;
-  if (isRunRecordPath(resultRel)) {
-    return runRecordPrefixes(executionRel, recordTaskId, recordStem(resultRel));
-  }
-  const states = resumeStatePaths(resolve(worktree.path, executionRel), recordTaskId).flatMap(
-    (path) => {
-      try {
-        const state = readPipelineState(path);
-        return state.task_id === recordTaskId ? [state] : [];
-      } catch {
-        return [];
-      }
-    },
-  );
-  const matching = states.filter((state) => state.artifacts?.result_ref === resultRel);
-  const candidates = matching.length > 0 ? matching : states.filter((state) => !state.artifacts);
-  const latest = candidates
-    .sort((a, b) => a.updated_at.localeCompare(b.updated_at) || a.run_id.localeCompare(b.run_id))
-    .at(-1);
-  return latest ? runRecordPrefixes(executionRel, recordTaskId, latest.run_id) : [];
+  return runRecordPrefixes(executionRel, recordTaskId, recordStem(resultRel));
 }
 
 // Reads a deliverable's frontmatter `status`. Markdown deliverables carry it in the
@@ -611,7 +590,7 @@ export function assertRegisterCommitScope(
   const { executionRel } = taskPaths(context, taskId, worktree.path);
   const logPath =
     options.scopeLogPath ??
-    resolve(worktree.path, executionRel, "exec/evidence", taskId, "integrate.log");
+    taskRecordPaths(resolve(worktree.path, executionRel), taskId).log("integrate.log");
   const warning =
     `commit-scope: integration blocked; ${outOfScope.length} non-target changes (worktree kept):\n` +
     `${outOfScope.map((path) => `  ${path}`).join("\n")}\n`;

@@ -224,16 +224,36 @@ flowchart TB
 
 ### 6.1. dct・sch・execの対応
 
-| 情報                | 主な役割                                                             | 担当ファイル                                           |
-| ------------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
-| 成果物カタログ      | 管理する成果物、配置、依存関係、完了条件を定義する                   | `dct-<domain>.yaml`                                    |
-| トラック            | 対象成果物のスコープを決め、実行系列としてまとめる                   | `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml` |
-| 実行フェーズ / パス | 成果物ごと、または成果物群を横断して適用する作業段階を定義する       | `sch-strategy-<track>.yaml`                            |
-| タスク              | 成果物×フェーズ から生成される実行アトム。担当・期限・依存関係を持つ | `sch-track-<track>.yaml`（生成物）                     |
-| plan                | 一回の作業で確認・変更する対象と手順を示す                           | `execution/exec/plans/`                                |
-| result              | 実施内容、確認結果、残課題を記録する                                 | `execution/exec/results/`                              |
-| 実行イベント        | claim / complete / block などの実行履歴を表す                        | `execution/exec/events/`                               |
-| 実行生成物          | Ready、状態スナップショット、クリティカルパスなどを表す              | `execution/generated/`                                 |
+| 情報                | 主な役割                                                             | 担当ファイル                                             |
+| ------------------- | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| 成果物カタログ      | 管理する成果物、配置、依存関係、完了条件を定義する                   | `dct-<domain>.yaml`                                      |
+| トラック            | 対象成果物のスコープを決め、実行系列としてまとめる                   | `sch-track-<track>.yaml` / `sch-strategy-<track>.yaml`   |
+| 実行フェーズ / パス | 成果物ごと、または成果物群を横断して適用する作業段階を定義する       | `sch-strategy-<track>.yaml`                              |
+| タスク              | 成果物×フェーズ から生成される実行アトム。担当・期限・依存関係を持つ | `sch-track-<track>.yaml`（生成物）                       |
+| plan                | 一回の作業で確認・変更する対象と手順を示す                           | `execution/runs/<出どころ>/<項目 ID>/<run ID>/plan.md`   |
+| result              | 実施内容、確認結果、残課題を記録する                                 | `execution/runs/<出どころ>/<項目 ID>/<run ID>/result.md` |
+| 実行イベント        | claim / complete / block などの実行履歴を表す                        | `execution/exec/events/`                                 |
+| 実行生成物          | Ready、状態スナップショット、クリティカルパスなどを表す              | `execution/generated/`                                   |
+
+実行記録は次の配置で保持します。出どころは `register`・`schedule`・`job` です。項目 ID と run ID の決め方は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] を参照してください。
+
+```text
+execution/
+  runs/<出どころ>/<項目 ID>/<run ID>/
+    plan.md
+    result.md
+    evidence.json
+    pipeline-state.json
+    executor.log
+    reporter.log
+  conventions/
+  exec/events/
+  grade/results/
+  jobs/runs/
+  generated/
+```
+
+job の定義はプロジェクト直下の `jobs/` に置きます。`exec/trials/` は比較実験の記録であり、通常の run とは別に管理します。
 
 ### 6.2. 展開の流れ
 
@@ -287,7 +307,7 @@ idと対応させない場合（日本語名称を使用する場合等）は、
 #### 8.1.2. 横断ドキュメント
 
 - 横断ディレクトリは特定ドメインの配下に置かず、プロジェクト直下に置きます。
-  `controls/project-register/` の登録項目や `execution/exec/plans/` の実行プランは、
+  `controls/project-register/` の登録項目や `execution/runs/<出どころ>/<項目 ID>/<run ID>/plan.md` の実行プランは、
   プロジェクト定義・プロダクト変更を含む全ドメインの成果物を対象とするためです。
 - これらが成果物カタログの管理対象かどうかは配置とは独立で、
   どのドメインに分類するかは各 `dct-<domain>.yaml` の `domain` が決めます。

@@ -1,22 +1,15 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { existsSync, readFileSync, rmSync } from "node:fs";
+import { join, relative } from "node:path";
 import { lookupDocIndex } from "../docs/doc-index.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { readPlanFile, rebasePlanConventions } from "../shared/plan-conventions.js";
+import { readPlanFile } from "../shared/plan-conventions.js";
 import { planGradeFindingText } from "./plans-grade-findings.js";
-import { isRunRecordPath, legacyArchivePlanPath, recordPathForRead } from "./run-records.js";
-import { nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
+import { recordPathForRead } from "./run-records.js";
 import type { Approach, TaskMode, TaskOrigin } from "./types.js";
 
-export function archivePlan(
-  opts: { executionPath: string; slug: string; delete?: boolean },
-  dependencies: {
-    now?: () => string;
-    randomHex?: (bytes: number) => string;
-  } = {},
-): {
+export function archivePlan(opts: { executionPath: string; slug: string; delete?: boolean }): {
   from: string;
   to?: string;
   deleted: boolean;
@@ -29,24 +22,7 @@ export function archivePlan(
     return { from, deleted: true };
   }
 
-  if (isRunRecordPath(from)) return { from, to: from, deleted: false };
-
-  const now = dependencies.now ?? nowUtcIsoSeconds;
-  const makeRandomHex = dependencies.randomHex ?? randomHex;
-  const stamp = tsForFilenameUtc(now());
-  const base = `${opts.slug}-${stamp}-${makeRandomHex(4)}`;
-  let sequence = 0;
-  let to = legacyArchivePlanPath(opts.executionPath, base);
-  while (existsSync(to)) {
-    sequence += 1;
-    to = legacyArchivePlanPath(opts.executionPath, base, sequence);
-  }
-  mkdirSync(dirname(to), { recursive: true });
-  const original = readFileSync(from, "utf8");
-  const rebased = rebasePlanConventions(original, from, to);
-  renameSync(from, to);
-  if (rebased !== original) writeFileSync(to, rebased, "utf8");
-  return { from, to, deleted: false };
+  return { from, to: from, deleted: false };
 }
 
 export function planPathForTask(executionPath: string, taskId: string): string {

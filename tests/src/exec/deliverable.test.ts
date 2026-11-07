@@ -1,12 +1,4 @@
-import {
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  readdirSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -194,65 +186,24 @@ describe("generateDeliverablePlan", () => {
 
 describe("archivePlan", () => {
   function writePlan(executionPath: string, slug: string): string {
-    const plansDir = join(executionPath, "exec", "plans");
-    mkdirSync(plansDir, { recursive: true });
-    const planPath = join(plansDir, `${slug}-plan.md`);
+    const directory = join(executionPath, "runs", "schedule", slug, slug);
+    mkdirSync(directory, { recursive: true });
+    const planPath = join(directory, "plan.md");
     writeFileSync(planPath, `# plan ${slug}\n`, "utf8");
     return planPath;
   }
 
-  it("moves the plan to done/ with a UTC + random suffix", () => {
+  it("retains a completed plan in its run directory", () => {
     root = mkdtempSync(join(tmpdir(), "specdojo-archive-"));
     const executionPath = join(root, "execution");
     const from = writePlan(executionPath, "alpha-only-a");
-
-    const result = archivePlan({ executionPath, slug: "alpha-only-a" });
-
-    expect(result.deleted).toBe(false);
-    expect(existsSync(from)).toBe(false);
-    expect(result.to).toBeDefined();
-    expect(existsSync(result.to as string)).toBe(true);
-    const doneFiles = readdirSync(join(executionPath, "exec", "plans", "done"));
-    expect(doneFiles).toHaveLength(1);
-    expect(doneFiles[0]).toMatch(/^alpha-only-a-\d{8}T\d{6}Z-[0-9a-f]{8}-plan\.md$/);
-  });
-
-  it("keeps both plans when the timestamp and random suffix collide", () => {
-    root = mkdtempSync(join(tmpdir(), "specdojo-archive-"));
-    const executionPath = join(root, "execution");
-    const dependencies = {
-      now: () => "2026-10-22T12:34:56Z",
-      randomHex: (bytes: number) => {
-        expect(bytes).toBe(4);
-        return "0123abcd";
-      },
-    };
-
-    writePlan(executionPath, "alpha-only-a");
-    const first = archivePlan({ executionPath, slug: "alpha-only-a" }, dependencies);
-    writePlan(executionPath, "alpha-only-a");
-    const second = archivePlan({ executionPath, slug: "alpha-only-a" }, dependencies);
-
-    expect(first.to).toBe(
-      join(
-        executionPath,
-        "exec",
-        "plans",
-        "done",
-        "alpha-only-a-20261022T123456Z-0123abcd-plan.md",
-      ),
-    );
-    expect(second.to).toBe(
-      join(
-        executionPath,
-        "exec",
-        "plans",
-        "done",
-        "alpha-only-a-20261022T123456Z-0123abcd-1-plan.md",
-      ),
-    );
-    expect(readFileSync(first.to as string, "utf8")).toBe("# plan alpha-only-a\n");
-    expect(readFileSync(second.to as string, "utf8")).toBe("# plan alpha-only-a\n");
+    expect(archivePlan({ executionPath, slug: "alpha-only-a" })).toEqual({
+      from,
+      to: from,
+      deleted: false,
+    });
+    expect(readFileSync(from, "utf8")).toBe("# plan alpha-only-a\n");
+    expect(existsSync(join(executionPath, "exec"))).toBe(false);
   });
 
   it("deletes the plan when delete is set", () => {

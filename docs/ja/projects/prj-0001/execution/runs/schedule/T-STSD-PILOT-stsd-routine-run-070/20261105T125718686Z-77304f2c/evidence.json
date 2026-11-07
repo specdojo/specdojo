@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "T-STSD-PILOT-stsd-routine-run-070",
+  "run_id": "20261105T125718686Z-77304f2c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-05T12:58:38.242Z",
+    "completed_at": "2026-11-05T13:03:00.549Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../020-data-model/stsd-routine-run.md             | 32 +++++++++++++++-------\n 1 file changed, 22 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "passed",
+      "summary": "変更文書の整形が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "変更は Markdown 文書のみで、YAML ファイルの変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "executor の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下の成果物変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "executor は PJR、既存 exec plan、result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-070/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-funct\n… output omitted …\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-070/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-070/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 39 problems (0 errors, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3868 file(s), 184 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3868 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-070\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory i\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmembers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-070/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-070/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-STSD-PILOT-stsd-routine-run-070\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-en51sM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-CvRaSQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-hRDcDG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-PWZRUj/pjr-0001-topic.md\nWa\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "対象文書の磨き込みと整形を完了しました。業務承認・先行依存の解消は未了として申し送りました。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイルは `docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md` のみ。業務価値と BA・PO の確認責任、実装エビデンス、未決事項の追跡条件を補強し、未実行の値を `-` に修正、存在する Job Run 文書へのリンクを設定した。result、grade result、実装、設定は編集していない。",
+    "進め方と実践の型の適用: 指定の共通規約2件、stsd-rulebook、stsd-mermaid-rulebook、stsd-recipe、stsd-sample、PJR-PT5N、prj-overview、対象文書と宣言された実装2件を参照した。rulebook は必須構造と記法、recipe は一意判定・例外経路の確認、sample は形式だけに使用した。既存の章構成・状態・遷移 ID を保持した。試行中への接続数が6を超えるため既存の二図を維持した。template、未宣言の関連文書本文・実装・外部情報は参照していない。",
+    "F007・F008・F011・F012・F016・F017・F020: 既存草案には既に `missed_run: skip` と、開始時に `last_run`・`last_result: running` を更新する規則があり、今回の実装エビデンスとも一致したため保持した。取りこぼしを実行しない経路と結果としてのスキップの違いを補足した。F018 はコードを持たない未実行だけを `-` に変更し、実装値が存在する `running` は保持した。F006・F009・F021 は目的・責任・リンクの補強で対応した。",
+    "F001・F004・F010・F019・F024: `bdd-routine-definition` は未作成であり、上位の業務定義との照合はできない。未参照の依存を `based_on` に追加せず、既存の `_TODO_` を追跡項目 `M-04` に置換した。BA による辞書の draft 作成→本書照合→PO 確認→`based_on` 反映が必要。PM は PJR 登録と Schedule への影響・実日程を確定する。依存関係の実質的な解消は未了。",
+    "F002・F003・F005・F022・F023: 既存の復旧・重複起動・旧記録の論点を `M-01`〜`M-03` として、選択肢・業務影響・単一担当 Role・成果・完了条件・判断ゲート付きで補強した。PJR 登録先、報告先、運用上の確認証跡候補と引渡し案も記載した。これらは未登録・未承認の申し送りである。ARC が案を具体化し、PM が担当・日程を確定し、PO が採用方針を判断する必要がある。検知閾値、確定した復旧手順、問い合わせ先は根拠不足のため断定していない。",
+    "F013・F014: 今回は状態管理の実装変更を行っていない。`running` は既存の保存値であり、未実行には保存値を新設していない。将来の変更時は DEV・ARC が宣言された実装2件、routine state、run history、表示・監視、旧記録の互換性への影響を確認する。QE・DEV は対象テストファイルと期待結果を確定し、開始時の旧結果消去、結果集約、cron の各方針、例外・重複・旧記録を検証対象にする。未宣言のテスト・schema のパスや生成コマンドは推測していない。指定の lint・schema・typecheck・unit/integration test は親 runner に委ねる。",
+    "F015: 通常の状態判定と図表の定義は維持・補強したが、業務承認を含む成果物全体の完了判定は `M-01`〜`M-04` の解消後に行う。未決の例外方針と先行根拠を推測で確定せず、`status: draft` を保持した。実装の現在動作の確認を業務承認として扱っていない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-STSD-PILOT-stsd-routine-run-070/20261105T125718686Z-77304f2c/executor.log",
+      "bytes": 5055,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-WSND",
+  "run_id": "20261105T122340467Z-bcf4a919",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-05T12:25:11.244Z",
+    "completed_at": "2026-11-05T12:30:59.799Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-wsnd.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wsnd-stsd-pilot-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-stsd-pilot.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-track-stsd-pilot.yaml",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wsnd-stsd-pilot-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-stsd-pilot.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-track-stsd-pilot.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../project-register/pjr-wsnd-stsd-pilot-strategy.md      | 15 ++++++++++-----\n 1 file changed, 10 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts timeline build --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "register 由来の primary と track の着手順を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule strategy generate --project prj-0001 --track stsd-pilot --default-owner BA --gate-owner PM --milestone-owner PM --force",
+      "status": "passed",
+      "summary": "scope・intent・担当を解決して標準 strategy を生成後、指定の後半工程へ調整。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule build --project prj-0001 --track stsd-pilot --force",
+      "status": "passed",
+      "summary": "4件×4段、代表1件×2段の18タスクを生成。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-strategy-stsd-pilot.yaml",
+      "status": "passed",
+      "summary": "strategy の schema 適合を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-track.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-track-stsd-pilot.yaml",
+      "status": "passed",
+      "summary": "track の schema 適合を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証成功。既存の未作成文書に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001",
+      "status": "passed",
+      "summary": "実行情報を生成。旧 planning タスクの履歴に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --input-type=module",
+      "status": "passed",
+      "summary": "標準入力の検証スクリプトで5件・18タスク、intent、BA担当、前段依存、実行種別、説明の展開、初回 ready 5件を照合。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "個票更新後の登録簿ビュー生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --check docs/ja/projects/prj-0001/schedule/sch-strategy-stsd-pilot.yaml docs/ja/projects/prj-0001/schedule/sch-track-stsd-pilot.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-wsnd-stsd-pilot-strategy.md",
+      "status": "passed",
+      "summary": "変更3ファイルの整形確認成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査成功。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSND/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSND/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSND/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 39 problems (0 errors, 39 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3860 file(s), 184 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 150 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3860 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSND\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSND/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSND/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSND\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-oQa3Kp/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-TDtWia/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-NVVfUF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DLlbZd/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "stsd-pilot の strategy と18タスクの track を作成し、個票の作業内容・対応結果を更新した。担当・依存・実行種別と初回 ready 5件を確認済み。",
+  "completion_status": "complete",
+  "handoff": [
+    "生成した標準21タスクから、register で完了済みの4件の retrofit-pass を除き、代表 stsd-task-execution に実装照合 review を追加した。主担当は親 epic・先行個票の BA を継承した。手動調整の理由は strategy コメントと個票に記録済み。",
+    "保存済み recipe grade は needs-work（92点）。指定 intent は reflect-implementation と confirm-deliverable であり、grade による作成方式の選択は不要。grade を補完せず生成し、各段で PJR-PT5N の確定 Kata と図の分割条件を参照させた。",
+    "npx specdojo が起動できなかったため、規約に従い node --import tsx src/specdojo.ts で実行した。カタログの未作成文書と旧 planning 履歴の警告は残るが、検証は成功。カタログ・Timeline・既存 milestones・result は差分なし。全体 schema・lint・テストは親 runner に委ねる。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-WSND/20261105T122340467Z-bcf4a919/executor.log",
+      "bytes": 3920,
+      "truncated": false
+    }
+  ]
+}

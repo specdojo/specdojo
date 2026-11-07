@@ -6,7 +6,6 @@ import {
   findResumableRegisterRun,
   loadRegisterResumeCandidates,
   resolveRegisterResumeArtifacts,
-  selectLatestRegisterResultStem,
   selectResumableRegisterRun,
   selectScheduleExecutorResume,
   type RegisterResumeCandidate,
@@ -71,7 +70,7 @@ function makeState(
         attempts: 1,
         artifact_ref:
           overrides.evidenceRef === undefined
-            ? `${EXECUTION_REL}/exec/evidence/${TASK_ID}/${runId}/evidence.json`
+            ? `${EXECUTION_REL}/runs/register/${TASK_ID}/${runId}/evidence.json`
                 .split(path.sep)
                 .join("/")
             : overrides.evidenceRef,
@@ -298,7 +297,7 @@ describe("selectResumableRegisterRun", () => {
   });
 
   it("executor evidence 保存後に running のまま中断した run は reporter 再開対象にする", () => {
-    const evidenceRef = `${EXECUTION_REL}/exec/evidence/${TASK_ID}/run-interrupted/evidence.json`
+    const evidenceRef = `${EXECUTION_REL}/runs/register/${TASK_ID}/run-interrupted/evidence.json`
       .split(path.sep)
       .join("/");
     const candidate = makeCandidate({
@@ -321,7 +320,7 @@ describe("selectResumableRegisterRun", () => {
   });
 
   it("executor が rate_limited の run は evidence があっても executor 再開対象にする", () => {
-    const evidenceRef = `${EXECUTION_REL}/exec/evidence/${TASK_ID}/run-rate-limited/evidence.json`
+    const evidenceRef = `${EXECUTION_REL}/runs/register/${TASK_ID}/run-rate-limited/evidence.json`
       .split(path.sep)
       .join("/");
     const candidate = makeCandidate({
@@ -504,7 +503,7 @@ describe("loadRegisterResumeCandidates / findResumableRegisterRun", () => {
   });
 
   function writeRun(runId: string, state: PipelineState, evidence?: ExecEvidence): void {
-    const dir = path.join(root, EXECUTION_REL, "exec", "evidence", TASK_ID, runId);
+    const dir = path.join(root, EXECUTION_REL, "runs", "register", TASK_ID, runId);
     mkdirSync(dir, { recursive: true });
     writeFileSync(
       path.join(dir, "pipeline-state.json"),
@@ -586,28 +585,6 @@ describe("loadRegisterResumeCandidates / findResumableRegisterRun", () => {
   });
 });
 
-describe("selectLatestRegisterResultStem", () => {
-  it("同じ項目の result のうち最新のタイムスタンプの stem を返す", () => {
-    const actual = selectLatestRegisterResultStem(
-      [
-        "pjr-ab12-20260820T101010Z-0001-result.md",
-        "pjr-ab12-20260821T090000Z-abcd-result.md",
-        "pjr-cd34-20260822T090000Z-abcd-result.md",
-        "pjr-ab12-20260821T090000Z-abcd-plan.md",
-      ],
-      "PJR-AB12",
-    );
-
-    expect(actual).toBe("pjr-ab12-20260821T090000Z-abcd");
-  });
-
-  it("対象項目の result が無ければ null を返す", () => {
-    expect(
-      selectLatestRegisterResultStem(["pjr-cd34-20260821T090000Z-abcd-result.md"], "PJR-AB12"),
-    ).toBeNull();
-  });
-});
-
 describe("resolveRegisterResumeArtifacts", () => {
   let root = "";
 
@@ -645,24 +622,23 @@ describe("resolveRegisterResumeArtifacts", () => {
     });
   });
 
-  it("artifacts を持たない旧 run では worktree の result 一覧から復元する", () => {
-    const resultsDir = path.join(root, EXECUTION_REL, "exec", "results");
-    mkdirSync(resultsDir, { recursive: true });
-    writeFileSync(path.join(resultsDir, "pjr-ab12-20260820T080000Z-0001-result.md"), "", "utf8");
-    writeFileSync(path.join(resultsDir, "pjr-ab12-20260821T090000Z-abcd-result.md"), "", "utf8");
-
-    const actual = resolveRegisterResumeArtifacts({
-      repoRoot: root,
-      worktreePath: root,
-      executionPath: path.join(root, EXECUTION_REL),
-      taskId: TASK_ID,
-      state: makeState({}),
-    });
-
-    expect(actual).toEqual({
-      planRef: `${EXECUTION_REL.split(path.sep).join("/")}/exec/plans/pjr-ab12-20260821T090000Z-abcd-plan.md`,
-      resultRef: `${EXECUTION_REL.split(path.sep).join("/")}/exec/results/pjr-ab12-20260821T090000Z-abcd-result.md`,
-      stem: "pjr-ab12-20260821T090000Z-abcd",
+  it("artifacts の無い run は同じ run ディレクトリから復元する", () => {
+    const state = makeState({});
+    const runRef = `${EXECUTION_REL.split(path.sep).join("/")}/runs/register/${TASK_ID}/${state.run_id}`;
+    mkdirSync(path.join(root, runRef), { recursive: true });
+    writeFileSync(path.join(root, runRef, "result.md"), "", "utf8");
+    expect(
+      resolveRegisterResumeArtifacts({
+        repoRoot: root,
+        worktreePath: root,
+        executionPath: path.join(root, EXECUTION_REL),
+        taskId: TASK_ID,
+        state,
+      }),
+    ).toEqual({
+      planRef: `${runRef}/plan.md`,
+      resultRef: `${runRef}/result.md`,
+      stem: state.run_id,
     });
   });
 

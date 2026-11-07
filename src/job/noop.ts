@@ -14,10 +14,9 @@ import { gitOutput, gitResult, worktreeStatusPaths } from "../shared/git.js";
 import { listFilesRecursive, writeJson } from "../shared/fs.js";
 import { localStateDirectory } from "../shared/local-state.js";
 import {
-  legacyEvidenceDirectory,
   listRunRecords,
   planConventionsDirectory,
-  taskRecordPaths,
+  runItemDirectory,
 } from "../shared/run-records.js";
 import { planConventionsFiles } from "../shared/plan-conventions.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
@@ -49,14 +48,13 @@ function fingerprint(file: string): string {
 
 /** Only this Run's bookkeeping is excluded; nested exec events and grade results are output. */
 export function jobBookkeepingPaths(executionPath: string, record: JobRunRecord): string[] {
-  const directory = taskRecordPaths(executionPath, record.run_id, record.run_id, "job").directory;
+  const directory = runItemDirectory(executionPath, "job", record.run_id);
   const paths = [
     ...new Set([
       join(executionPath, "jobs", "runs", `${record.run_id}.json`),
       directory,
       join(executionPath, record.plan_ref),
       join(executionPath, record.result_ref),
-      legacyEvidenceDirectory(executionPath, record.run_id),
     ]),
   ];
   return paths.filter(
@@ -139,16 +137,11 @@ export function snapshotJobOutput(repoRoot: string, executionPath: string, recor
         writeFileSync(file, content);
       }
       // Remove only snapshots introduced by this discarded Run. Preserve versions
-      // referenced by retained plans, including archived legacy plans.
+      // referenced by retained plans, including completed plans.
       const retained = new Set(
-        [
-          ...new Set([
-            ...listRunRecords(executionPath, "plan"),
-            ...listFilesRecursive(join(executionPath, "exec", "plans")).filter((path) =>
-              path.endsWith("-plan.md"),
-            ),
-          ]),
-        ].flatMap((plan) => planConventionsFiles(readFileSync(plan, "utf8"), dirname(plan))),
+        listRunRecords(executionPath, "plan").flatMap((plan) =>
+          planConventionsFiles(readFileSync(plan, "utf8"), dirname(plan)),
+        ),
       );
       for (const version of versions) {
         if (

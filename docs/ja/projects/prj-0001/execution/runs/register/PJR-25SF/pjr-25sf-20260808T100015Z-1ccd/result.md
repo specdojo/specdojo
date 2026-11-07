@@ -1,0 +1,50 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-25sf-20260808t100015z-1ccd
+  type: exec-result
+  task_id: PJR-25SF
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-25SF/pjr-25sf-20260808T100015Z-1ccd/plan.md
+  started_at: "2026-08-08T10:00:15.364Z"
+  completed_at: "2026-08-08T10:05:12.669Z"
+  agent: claude-expert-edit-agent
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+PJR-25SF「register 系タスクへの AI レビューフェーズ導入を検討する」の調査・設計検討を実施した。
+
+- catalog 側の edit/review 2段階実行の仕組みを実装から確認した。`sch-strategy-launch.yaml` の phase_set が `mode: review` のフェーズを持ち、`src/exec-plans.ts` の `reviewViewpointRows` / `reviewResultSections` / `reviewResultSectionsForDeliverable` が catalog の done_criteria と `pm-review-viewpoints.yaml` を突き合わせて観点別（RVP-NNN）の review plan/result を機械生成することを把握した。
+- register 側（`src/exec-run.ts` の `runSingleRegisterItem`、`src/exec-register.ts`）は review agent フェーズを持たず、`register review` の `review` ステータスが「人間 close 待ちの手動チェックポイント」であることを確認した。register plan は `mode: edit` 固定で review テンプレートが無いこと、`register close` が `require-active` ガードのみで review 経由を強制しないこと、ステータス語彙に `review` / `waiting` が既存であることも確認した。
+- 個票の完了条件（6項目）に沿って、導入可否・対象範囲・状態遷移・必須/任意・レビュー用 plan テンプレートと完了条件（done_criteria 相当）の渡し方を設計し、結論を個票「対応結果」4.1〜4.7 に記録した。
+- 結論: 自動レビューパスを **任意（オプトイン）で導入** する。対象は edit 区分（todo/issue/change-request）に限定、否時は既存 `register wait`（waiting）へ差し戻し（新ステータス新設なし）、供給する done_criteria 相当は個票「完了条件」節。実装は本タスク（検討）では行わず、別途実装 todo を起票する。
+
+## 2. 変更ファイル
+
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-25sf-register-ai.md`（作業内容の状態を done へ更新、対応結果 4.1〜4.7 に検討結果を記録）
+- `docs/ja/projects/prj-0001/execution/exec/results/pjr-25sf-20260808T100015Z-1ccd-result.md`（本 result）
+
+なお、frontmatter の `status`（個票の `draft`）は据え置き、`pjr-index.md` の行および状態遷移は変更していない。
+
+## 3. 申し送り
+
+導入決定を受けて、以下の実装 todo を別途起票する（詳細は個票 対応結果 4.7）。
+
+- `exec run --register` への `--register-review`（任意）オプション追加とレビューフェーズ組み込み（`src/exec-run.ts`）。
+- review 用 plan テンプレート `xrp-register-template.md` の新設と、個票「完了条件」節の抽出・埋め込み（`src/exec-register.ts`）。
+- レビュー否時の `register wait` 差し戻し・可時の `review` 維持フロー実装。
+- [[specdojo:register-operation-guide|SpecDojo登録簿運用ガイド]] / [[specdojo:pjr-rulebook|プロジェクト登録簿ルールブック]] の該当節へのレビューフェーズ記述追加。
+
+## 4. 実践の型の活用
+
+本タスクは register 項目（`origin: register`、`item_type: todo`）の検討タスクで rulebook 準拠の成果物作成ではないため、approach は実装調査ベース（retrofit 的）で進めた。
+
+- 参照した実装: `src/exec-run.ts`（`runSingleRegisterItem` の register 実行フロー）、`src/exec-register.ts`（`registerItemCategory` / `registerPlanFrontmatter` / `REGISTER_PLAN_TEMPLATES`）、`src/exec-plans.ts`（review 系の done_criteria 展開）、`src/register.ts`（`VALID_STATUSES` / close・review・wait コマンドとガード）、`docs/ja/projects/prj-0001/schedule/sch-strategy-launch.yaml`（phase.mode）。
+- 抽出した現在動作: catalog は done_criteria + review-viewpoints で観点別自動レビューが成立するが、register は対象成果物カタログ・targets を持たないため同方式を直接適用できない。register の `review` は人間 close 待ちの手動チェックポイント。
+- 反映/新設判断: 完全新設（差し戻しステータス）ではなく既存 `waiting` 流用、レビューは任意オプトインとして最小追加とする方針を採用。個票「完了条件」節を done_criteria 相当の供給源とする。
+- 未確認範囲: `--register-review` の具体的な CLI 実装・review plan テンプレートの実文面は本検討では起票のみとし、実装は別 todo に委ねた。参照範囲として `pm-review-viewpoints.yaml` の register 適用可否は今回は「register には非適用（個票完了条件で代替）」と判断した。

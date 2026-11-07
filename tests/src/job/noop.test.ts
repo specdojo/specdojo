@@ -46,8 +46,8 @@ function fixture() {
     task: { mode: "command", command: "true" },
     checkpoint_before: {},
     checkpoint_after: { revision: "head" },
-    plan_ref: "exec/plans/JBR-test-plan.md",
-    result_ref: "exec/results/JBR-test-result.md",
+    plan_ref: "runs/job/JBR-test/JBR-test/plan.md",
+    result_ref: "runs/job/JBR-test/JBR-test/result.md",
     attempts: [{ attempt: 1, started_at: "2026-11-07T00:00:00Z", status: "succeeded" }],
   };
   const write = (path: string, content: string) => {
@@ -69,9 +69,9 @@ describe("Job output without precondition", () => {
       const hash = ref.match(/sha256:([a-f0-9]{64})/)![1];
       const version = `execution/conventions/${hash}.txt`;
       if (shared) {
-        const other = join(execution, "exec/plans/other-plan.md");
+        const other = join(execution, "runs/schedule/other/other/plan.md");
         write(
-          "execution/exec/plans/other-plan.md",
+          "execution/runs/schedule/other/other/plan.md",
           storePlanConventions("## Rules\n\n- common rule", execution, other),
         );
       }
@@ -91,7 +91,7 @@ describe("Job output without precondition", () => {
     const run = "execution/jobs/runs/JBR-test.json";
     const plan = `execution/${record.plan_ref}`;
     const result = `execution/${record.result_ref}`;
-    const evidence = "execution/exec/evidence/JBR-test/attempt-1/evidence.json";
+    const evidence = "execution/runs/job/JBR-test/attempt-1/evidence.json";
     for (const file of [run, plan, result, evidence]) write(file, "record");
     git.paths.push(run, plan, result, evidence);
     expect(snapshot.hasChanges()).toBe(false);

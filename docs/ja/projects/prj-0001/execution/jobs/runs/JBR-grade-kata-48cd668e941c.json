@@ -32,16 +32,16 @@
     "owner": "ARC"
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-48cd668e941c-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-48cd668e941c-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-48cd668e941c/attempt-2/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-48cd668e941c/attempt-2/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-09-08T22:42:11.484Z",
       "status": "failed",
       "completed_at": "2026-09-09T00:13:08.601Z",
-      "result_ref": "exec/results/JBR-grade-kata-48cd668e941c-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-1/evidence.json",
+      "result_ref": "runs/job/JBR-grade-kata-48cd668e941c/attempt-2/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-48cd668e941c/attempt-1/evidence.json",
       "exit_code": 0,
       "reason": "results.tsv の実データが evidence に含まれていないため、計画に定められた品質評価の判断（終了コード75の確認、failed段の分析、スコア分布の検証等）を行うことができない。"
     },
@@ -50,8 +50,8 @@
       "started_at": "2026-09-09T13:14:25.644Z",
       "status": "succeeded",
       "completed_at": "2026-09-09T13:16:38.326Z",
-      "result_ref": "exec/results/JBR-grade-kata-48cd668e941c-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-2/evidence.json",
+      "result_ref": "runs/job/JBR-grade-kata-48cd668e941c/attempt-2/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-48cd668e941c/attempt-2/evidence.json",
       "exit_code": 0
     }
   ]

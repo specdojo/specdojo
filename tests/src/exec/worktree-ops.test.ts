@@ -10,7 +10,7 @@ import {
 } from "../../../src/exec/worktree-ops.js";
 import type { ExecWorktree } from "../../../src/exec/worktree.js";
 import { isCommitTargetPath } from "../../../src/exec/worktree-ops-commit.js";
-import { runRecordPrefixes } from "../../../src/exec/run-records.js";
+import { runRecordPrefixes, taskRecordPaths } from "../../../src/exec/run-records.js";
 
 describe("run record commit targets", () => {
   it.each([
@@ -47,7 +47,7 @@ function fixture(result: string): {
 } {
   const root = mkdtempSync(join(tmpdir(), "specdojo-result-markdownlint-"));
   const executionPath = join(root, "execution");
-  const resultPath = join(executionPath, "exec", "results", "TASK-result.md");
+  const resultPath = taskRecordPaths(executionPath, "TASK").result;
   mkdirSync(dirname(resultPath), { recursive: true });
   // リポジトリの .markdownlint.yaml と同じく行長は検査しない。
   writeFileSync(join(root, ".markdownlint.yaml"), "MD013: false\n", "utf8");
@@ -68,7 +68,7 @@ describe("assertResultMarkdownlint", () => {
       rmSync(join(target.root, ".markdownlint.yaml"));
       expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).not.toThrow();
       writeFileSync(
-        join(target.context.executionPath, "exec/results/TASK-result.md"),
+        taskRecordPaths(target.context.executionPath, "TASK").result,
         "#Invalid heading\n",
       );
       expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).toThrow(
@@ -108,10 +108,10 @@ describe("assertResultMarkdownlint", () => {
     try {
       rmSync(join(target.root, ".markdownlint.yaml"));
       writeFileSync(join(target.root, ".markdownlintrc"), '{"MD013":true}\n');
-      mkdirSync(join(child, "execution/exec/results"), { recursive: true });
+      mkdirSync(taskRecordPaths(join(child, "execution"), "TASK").directory, { recursive: true });
       writeFileSync(
-        join(child, "execution/exec/results/TASK-result.md"),
-        readFileSync(join(target.root, "execution/exec/results/TASK-result.md")),
+        taskRecordPaths(join(child, "execution"), "TASK").result,
+        readFileSync(taskRecordPaths(join(target.root, "execution"), "TASK").result),
       );
       expect(() =>
         assertResultMarkdownlint(
@@ -139,7 +139,7 @@ describe("assertResultMarkdownlint", () => {
       });
       expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).not.toThrow();
       writeFileSync(
-        join(target.context.executionPath, "exec/results/TASK-result.md"),
+        taskRecordPaths(target.context.executionPath, "TASK").result,
         "#Invalid heading\n",
       );
       expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).toThrow(
@@ -189,7 +189,7 @@ describe("assertResultMarkdownlint", () => {
 
   it("result が存在しない場合は検査を省略して通す", () => {
     const target = fixture("# Result\n");
-    rmSync(join(target.context.executionPath, "exec", "results", "TASK-result.md"));
+    rmSync(taskRecordPaths(target.context.executionPath, "TASK").result);
     try {
       expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).not.toThrow();
     } finally {

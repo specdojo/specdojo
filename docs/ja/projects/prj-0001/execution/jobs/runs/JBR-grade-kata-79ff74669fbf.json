@@ -32,16 +32,16 @@
     "owner": "ARC"
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-79ff74669fbf-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-79ff74669fbf-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-79ff74669fbf/attempt-1/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-79ff74669fbf/attempt-1/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-09-09T16:30:56.375Z",
       "status": "succeeded",
       "completed_at": "2026-09-09T18:18:30.875Z",
-      "result_ref": "exec/results/JBR-grade-kata-79ff74669fbf-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-79ff74669fbf/attempt-1/evidence.json",
+      "result_ref": "runs/job/JBR-grade-kata-79ff74669fbf/attempt-1/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-79ff74669fbf/attempt-1/evidence.json",
       "exit_code": 0
     }
   ]

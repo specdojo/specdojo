@@ -37,7 +37,7 @@ import {
   traceKey,
 } from "../repo-trace.js";
 import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
-import { recordPathForRead, recordRef } from "../run-records.js";
+import { recordPathForRead, recordRef, taskRecordPaths } from "../run-records.js";
 import { qualifyTaskId } from "../shared.js";
 import {
   configuredProductRepos,
@@ -256,13 +256,11 @@ export async function finalizeRegisterWorktreeRun(params: {
   const worktreeResultPath = params.worktreeResultPath;
   const scopeLogPath =
     integrateLogPath(params.pipelineStatePath) ??
-    resolve(
-      worktree.path,
-      repoRelativePath(repoRoot, executionPath),
-      "exec/evidence",
+    taskRecordPaths(
+      resolve(worktree.path, repoRelativePath(repoRoot, executionPath)),
+      item.id,
       stem,
-      "integrate.log",
-    );
+    ).log("integrate.log");
   const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
     agentResult,
     worktreeResultPath,

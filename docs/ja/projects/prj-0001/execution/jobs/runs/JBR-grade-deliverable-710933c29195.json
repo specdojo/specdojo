@@ -35,16 +35,16 @@
     "owner": "ARC"
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-deliverable-710933c29195-plan.md",
-  "result_ref": "exec/results/JBR-grade-deliverable-710933c29195-result.md",
+  "plan_ref": "runs/job/JBR-grade-deliverable-710933c29195/attempt-1/plan.md",
+  "result_ref": "runs/job/JBR-grade-deliverable-710933c29195/attempt-1/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-10-02T16:00:03.848Z",
       "status": "failed",
       "completed_at": "2026-10-02T16:40:56.785Z",
-      "result_ref": "exec/results/JBR-grade-deliverable-710933c29195-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-710933c29195/attempt-1/evidence.json",
+      "result_ref": "runs/job/JBR-grade-deliverable-710933c29195/attempt-1/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-deliverable-710933c29195/attempt-1/evidence.json",
       "exit_code": 1,
       "reason": "command exited with code 1"
     }
