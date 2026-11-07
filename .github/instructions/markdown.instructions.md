@@ -135,6 +135,8 @@ plan / result / 個票（`pjr-<NNNN>-<topic>`）など、履歴として蓄積�
 - 対象は次の履歴蓄積ファイル。登録簿本体（`pjr-index.md`）は個票セルの参照に Markdown リンクを用いるため対象外とする。
   - `docs/ja/projects/**/exec/plans/` 配下の plan。
   - `docs/ja/projects/**/exec/results/` 配下の result。
+  - `docs/ja/projects/**/execution/runs/**/plan.md` の plan。
+  - `docs/ja/projects/**/execution/runs/**/result.md` の result。
   - `docs/ja/projects/**/controls/project-register/pjr-*.md` の個票。
 - `docs/` 配下の文書を参照する場合は、`id` を正とする wikilink（`[[id]]` または `[[id|表示名]]`）を使う。ファイルをリネームしても `id` は変えない運用のため、参照側の修正が不要になる。
 - `docs/` 外のファイル（`.github/instructions/` など）を参照する場合は、リポジトリルートからの相対パスをインラインコードまたはプレーンテキストで書く。
