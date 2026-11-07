@@ -54,3 +54,16 @@
       from: '["PJR-Z0XR","PJR-BVS9"]'
       to: '["PJR-VH8D","PJR-Z0XR","PJR-BVS9","PJR-BRN4"]'
   previous_event_id: reg_a027c83f6d134cdf836e381ee9ad0db4
+- v: 1
+  id: reg_e98dd58fb31a47de9174ee9c74f2cf6e
+  ts: "2026-11-07T01:17:40Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5b23a325d9ae40f3842c7aae71b84de7
