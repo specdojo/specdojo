@@ -77,3 +77,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_532a902cd0c648b497c3ae5830c23a30
+- v: 1
+  id: reg_b83176c90dc7424ebd3356d9768e8441
+  ts: "2026-11-07T00:03:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票・result と照らし、JSEY で統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: register の統合で commit しない変更が残ったら、worktree を残して waiting で止め、block_reason に件数・先頭 3 件・integrate.log の場所を書くようにした。要約に uncommitted の件数を出し、承認後に worktree で commit して --resume する手順をガイドに書いた
+  previous_event_id: reg_9ad1b099354a4e39baadc87d7f368860

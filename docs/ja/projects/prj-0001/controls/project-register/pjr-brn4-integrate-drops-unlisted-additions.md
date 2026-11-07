@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-brn4-integrate-drops-unlisted-additions
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-06T16:07:41Z"
   due_on: null
+  completed_at: "2026-11-07T00:03:37Z"
+  conclusion: register の統合で commit しない変更が残ったら、worktree を残して waiting で止め、block_reason に件数・先頭 3 件・integrate.log の場所を書くようにした。要約に uncommitted の件数を出し、承認後に worktree で commit して --resume する手順をガイドに書いた
   derived_from:
     - PJR-XD12
   depends_on:
