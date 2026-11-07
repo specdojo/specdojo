@@ -1,11 +1,6 @@
 import { readFileSync } from "node:fs";
-import { basename, dirname, relative } from "node:path";
-import {
-  executionRecordLink,
-  isRunRecordPath,
-  listRunRecords,
-  recordStem,
-} from "../exec/run-records.js";
+import { dirname, relative } from "node:path";
+import { executionRecordLink, listRunRecords } from "../exec/run-records.js";
 import { load } from "../shared/yaml.js";
 import { sanitizeDashboardCell } from "./shared.js";
 
@@ -44,7 +39,7 @@ function frontmatterText(value: unknown): string | undefined {
   return undefined;
 }
 
-// 新旧配置の記録を run 単位でまとめる。
+// 記録を run 単位でまとめる。
 // 並びは開始日時の新しい順、開始日時が無いものは後ろに stem 順で置く。
 export function collectExecRecords(execPath: string): ExecRecordRow[] {
   const rows = new Map<string, ExecRecordRow>();
@@ -57,29 +52,17 @@ export function collectExecRecords(execPath: string): ExecRecordRow[] {
   };
 
   for (const path of listRunRecords(dirname(execPath), "plan")) {
-    const row = rowFor(
-      isRunRecordPath(path)
-        ? relative(dirname(execPath), dirname(path)).replaceAll("\\", "/")
-        : recordStem(path),
-    );
+    const row = rowFor(relative(dirname(execPath), dirname(path)).replaceAll("\\", "/"));
     const fm = readSpecdojoFrontmatter(path);
-    row.planFile = isRunRecordPath(path)
-      ? relative(execPath, path).replaceAll("\\", "/")
-      : basename(path);
+    row.planFile = relative(execPath, path).replaceAll("\\", "/");
     row.taskId ??= frontmatterText(fm.task_id);
     row.mode ??= frontmatterText(fm.mode);
   }
 
   for (const path of listRunRecords(dirname(execPath), "result")) {
-    const row = rowFor(
-      isRunRecordPath(path)
-        ? relative(dirname(execPath), dirname(path)).replaceAll("\\", "/")
-        : recordStem(path),
-    );
+    const row = rowFor(relative(dirname(execPath), dirname(path)).replaceAll("\\", "/"));
     const fm = readSpecdojoFrontmatter(path);
-    row.resultFile = isRunRecordPath(path)
-      ? relative(execPath, path).replaceAll("\\", "/")
-      : basename(path);
+    row.resultFile = relative(execPath, path).replaceAll("\\", "/");
     row.taskId = frontmatterText(fm.task_id) ?? row.taskId;
     row.mode = frontmatterText(fm.mode) ?? row.mode;
     row.status = frontmatterText(fm.status);
@@ -109,7 +92,7 @@ export function buildExecRecordsMarkdown(projectId: string, rows: ExecRecordRow[
     `- project_id: \`${projectId}\``,
     `- 再生成: \`specdojo dashboard build --project ${projectId}\``,
     "",
-    "> このページは `specdojo dashboard build` が生成した派生ビューです。正本は `execution/runs/`（旧記録は `execution/exec/`）配下の plan / result であり、このページを手編集しても次回のビルドで失われます。実行記録はサイドバーに載せないため、このページから辿ります。",
+    "> このページは `specdojo dashboard build` が生成した派生ビューです。正本は `execution/runs/`配下の plan / result であり、このページを手編集しても次回のビルドで失われます。実行記録はサイドバーに載せないため、このページから辿ります。",
     "",
   ];
 

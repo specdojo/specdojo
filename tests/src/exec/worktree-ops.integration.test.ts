@@ -43,6 +43,7 @@ import {
   type RegisterEventV1,
 } from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
+import { taskRecordPaths } from "../../../src/exec/run-records.js";
 import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
 import { createPipelineState, writePipelineState } from "../../../src/exec/pipeline-state.js";
 
@@ -75,8 +76,6 @@ function setupRepository(): Fixture {
   const executionPath = join(repo, "execution");
   mkdirSync(schedulePath, { recursive: true });
   mkdirSync(join(executionPath, "exec", "events"), { recursive: true });
-  mkdirSync(join(executionPath, "exec", "plans"), { recursive: true });
-  mkdirSync(join(executionPath, "exec", "results"), { recursive: true });
 
   writeFileSync(join(repo, "README.md"), "# test\n", "utf8");
   git(repo, "init");
@@ -164,8 +163,8 @@ function scaffoldTask(
   planContent?: string,
   resultContent?: string,
 ): { planPath: string; resultPath: string; claimEventPath: string } {
-  const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
-  const resultPath = join(fixture.executionPath, "exec", "results", `${taskId}-result.md`);
+  const planPath = taskRecordPaths(fixture.executionPath, taskId).plan;
+  const resultPath = taskRecordPaths(fixture.executionPath, taskId).result;
   const claimEventPath = join(
     fixture.executionPath,
     "exec",
@@ -231,8 +230,8 @@ function mergeIntoRoot(
     message: options.message,
     failureLogPath: options.failureLogPath,
     releaseRootPaths: [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
-      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
+      taskRecordPaths(fixture.executionPath, taskId).result,
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
       ...gradeCheckpointPaths(fixture.context),
     ],
@@ -283,7 +282,7 @@ describe("exec worktree ops", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const paths = scaffoldTask(fixture, taskId);
-    git(fixture.repo, "add", `execution/exec/plans/${taskId}-plan.md`);
+    git(fixture.repo, "add", taskRecordPaths("execution", taskId).plan);
 
     expect(() =>
       checkpointAndEnsureWorktree({
@@ -319,7 +318,9 @@ describe("exec worktree ops", () => {
         ].join("\n"),
       );
       chmodSync(hookPath, 0o755);
-      const failureLogPath = join(fixture.repo, "execution", "exec", "evidence", "checkpoint.log");
+      const failureLogPath = taskRecordPaths(join(fixture.repo, "execution"), taskId).log(
+        "checkpoint.log",
+      );
 
       expect(() => prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath)).toThrow(
         /Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s,
@@ -340,8 +341,8 @@ describe("exec worktree ops", () => {
       expect(worktreeStatusPaths(worktree!.path)).toEqual(
         expect.arrayContaining([
           `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
-          `execution/exec/plans/${taskId}-plan.md`,
-          `execution/exec/results/${taskId}-result.md`,
+          taskRecordPaths("execution", taskId).plan,
+          taskRecordPaths("execution", taskId).result,
         ]),
       );
       const failureLog = readFileSync(failureLogPath, "utf8");
@@ -463,22 +464,19 @@ describe("exec worktree ops", () => {
     // Agent edits a deliverable and updates its result inside the worktree.
     writeFile(join(worktree.path, "docs", "a.md"), "v1 from task 010\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
     expect(committed.committed).toBe(true);
     expect(committed.targets).toContain("docs/a.md");
-    expect(committed.targets).toContain(`execution/exec/results/${taskId}-result.md`);
+    expect(committed.targets).toContain(taskRecordPaths("execution", taskId).result);
 
     mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("v1 from task 010\n");
     expect(
-      readFileSync(
-        join(fixture.repo, "execution", "exec", "results", `${taskId}-result.md`),
-        "utf8",
-      ),
+      readFileSync(taskRecordPaths(join(fixture.repo, "execution"), taskId).result, "utf8"),
     ).toContain("status: complete");
   });
 
@@ -487,8 +485,8 @@ describe("exec worktree ops", () => {
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
     const releaseRootPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
-      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
+      taskRecordPaths(fixture.executionPath, taskId).result,
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
     ];
 
@@ -509,14 +507,14 @@ describe("exec worktree ops", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     prepare(fixture, taskId);
-    const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
-    const invalidDirectory = join(fixture.executionPath, "exec", "results");
+    const planPath = taskRecordPaths(fixture.executionPath, taskId).plan;
+    const invalidDirectory = taskRecordPaths(fixture.executionPath, taskId).directory;
     const planBefore = readFileSync(planPath, "utf8");
 
     expect(() =>
       releaseRootWorkingCopies(fixture.repo, [
-        `execution/exec/plans/${taskId}-plan.md`,
-        "execution/exec/results",
+        taskRecordPaths("execution", taskId).plan,
+        taskRecordPaths("execution", taskId).directory,
       ]),
     ).toThrow();
     expect(readFileSync(planPath, "utf8")).toBe(planBefore);
@@ -605,8 +603,8 @@ describe("exec worktree ops", () => {
     expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
     expect(git(fixture.repo, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
       `?? execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
-      `?? execution/exec/plans/${taskId}-plan.md`,
-      `?? execution/exec/results/${taskId}-result.md`,
+      `?? ${taskRecordPaths("execution", taskId).plan}`,
+      `?? ${taskRecordPaths("execution", taskId).result}`,
     ]);
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
   });
@@ -648,7 +646,9 @@ describe("exec worktree ops", () => {
       "utf8",
     );
     chmodSync(preMergeHookPath, 0o755);
-    const failureLogPath = join(worktree.path, "execution", "exec", "evidence", "integrate.log");
+    const failureLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
+      "integrate.log",
+    );
     writeFileSync(join(fixture.repo, ".git", "reject-merge"), "reject\n", "utf8");
 
     expect(() =>
@@ -677,10 +677,10 @@ describe("exec worktree ops", () => {
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
     const targetBranch = git(fixture.repo, "rev-parse", "--abbrev-ref", "HEAD");
-    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const resultRel = taskRecordPaths("execution", taskId).result;
     const eventRel = `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`;
     const bookkeepingPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
       join(fixture.repo, resultRel),
       join(fixture.repo, eventRel),
     ];
@@ -806,8 +806,8 @@ describe("exec worktree ops", () => {
     // `prepare` leaves root-side replicas of the plan, result, and claim event. The production
     // integration releases them before merging, so the test passes them the same way.
     const rootReplicaPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
-      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
+      taskRecordPaths(fixture.executionPath, taskId).result,
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
     ];
 
@@ -891,9 +891,9 @@ describe("exec worktree ops", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
-    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const resultRel = taskRecordPaths("execution", taskId).result;
     const bookkeepingPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
       join(fixture.repo, resultRel),
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
     ];
@@ -955,26 +955,23 @@ describe("exec worktree ops", () => {
 
     // Simulate an agent that also touches a plan and a generated file (must not be committed).
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
-    writeFile(
-      join(worktree.path, "execution", "exec", "plans", `${taskId}-plan.md`),
-      "# Plan edited\n",
-    );
+    writeFile(taskRecordPaths(join(worktree.path, "execution"), taskId).plan, "# Plan edited\n");
     writeFile(join(worktree.path, "execution", "generated", "state.json"), "{}\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
     expect(committed.targets).toEqual(
-      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+      expect.arrayContaining(["docs/a.md", taskRecordPaths("execution", taskId).result]),
     );
-    expect(committed.targets).not.toContain(`execution/exec/plans/${taskId}-plan.md`);
+    expect(committed.targets).not.toContain(taskRecordPaths("execution", taskId).plan);
     expect(committed.targets).not.toContain("execution/generated/state.json");
 
     // Excluded files remain uncommitted in the worktree.
     const stillDirty = git(worktree.path, "status", "--porcelain");
-    expect(stillDirty).toContain(`execution/exec/plans/${taskId}-plan.md`);
+    expect(stillDirty).toContain(taskRecordPaths("execution", taskId).plan);
     expect(stillDirty).toContain("execution/generated/");
   });
 
@@ -1107,7 +1104,7 @@ describe("exec worktree ops", () => {
     // The reporter wrote an unwrapped `depends_on` next to `_TODO_`; this is what
     // `prettier --write` turns it into, and markdownlint MD049 rejects it (PJR-19HX).
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\n- depends*on を根拠とし、判断不能箇所があれば \\_TODO*/_ASSUMPTION_ を残す。\n`,
     );
 
@@ -1159,14 +1156,14 @@ describe("exec worktree ops", () => {
     // A prompt-injected review agent tampers with a deliverable alongside its result.
     writeFile(join(worktree.path, "docs", "tampered.md"), "injected change\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
     expect(committed.committed).toBe(true);
-    expect(committed.targets).toEqual([`execution/exec/results/${taskId}-result.md`]);
+    expect(committed.targets).toEqual([taskRecordPaths("execution", taskId).result]);
     expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("docs/tampered.md");
   });
 
@@ -1192,14 +1189,14 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "a.md"), "target deliverable\n");
     writeFile(join(worktree.path, "src", "sneaky.ts"), "// injected\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
     expect(committed.targets).toEqual(
-      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+      expect.arrayContaining(["docs/a.md", taskRecordPaths("execution", taskId).result]),
     );
     expect(committed.targets).not.toContain("src/sneaky.ts");
 
@@ -1240,7 +1237,7 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "stale.md"), "stale plan target\n");
     writeFile(join(worktree.path, "src", "unrelated.ts"), "// unrelated\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       humanResultWithIdentity(taskId, {
         mode: "edit",
         approach: "finalize",
@@ -1251,7 +1248,7 @@ describe("exec worktree ops", () => {
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
     expect(committed.targets).toEqual(
-      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+      expect.arrayContaining(["docs/a.md", taskRecordPaths("execution", taskId).result]),
     );
     expect(committed.targets).not.toContain("docs/stale.md");
     expect(committed.targets).not.toContain("src/unrelated.ts");
@@ -1355,7 +1352,7 @@ describe("exec worktree ops", () => {
     { withRefs: false, mode: "edit" as const },
     { withRefs: true, mode: "review" as const },
   ])(
-    "commits the current run across both layouts ($mode, artifact refs=$withRefs)",
+    "commits the current run and its attempts ($mode, artifact refs=$withRefs)",
     ({ withRefs, mode }) => {
       const fixture = setupRepository();
       const taskId = "PJR-0137";
@@ -1366,27 +1363,25 @@ describe("exec worktree ops", () => {
         stem,
         planWithIdentity(taskId, { mode, origin: "register", targets: [] }),
       );
-      const resultRel = `execution/exec/results/${stem}-result.md`;
-      const legacy = `execution/exec/evidence/${taskId}/run-1`;
-      const current = `execution/runs/register/${taskId}/run-1`;
+      const currentRecords = taskRecordPaths("execution", taskId, stem);
+      const resultRel = currentRecords.result;
+      const current = currentRecords.directory;
       const other = `execution/runs/register/${taskId}/run-2/executor.log`;
       const otherTask = "execution/runs/register/PJR-9999/run-1/executor.log";
       const state = createPipelineState({
         taskId,
-        runId: "run-1",
+        runId: stem,
         updatedAt: "2026-11-07T00:00:00Z",
         ...(withRefs
           ? {
               artifacts: {
-                plan_ref: `execution/exec/plans/${stem}-plan.md`,
+                plan_ref: currentRecords.plan,
                 result_ref: resultRel,
               },
             }
           : {}),
       });
-      for (const directory of [legacy, current]) {
-        writePipelineState(join(worktree.path, directory, "pipeline-state.json"), state);
-      }
+      writePipelineState(join(worktree.path, current, "pipeline-state.json"), state);
       writePipelineState(
         join(worktree.path, `execution/runs/register/${taskId}/run-2/pipeline-state.json`),
         createPipelineState({
@@ -1404,12 +1399,10 @@ describe("exec worktree ops", () => {
         "executor.attempt-1.log",
         "pipeline-state.attempt-1.json",
       ];
-      for (const directory of [legacy, current]) {
-        for (const name of records) writeFile(join(worktree.path, directory, name), "record\n");
-      }
+      for (const name of records) writeFile(join(worktree.path, current, name), "record\n");
       writeFile(join(worktree.path, other), "other run\n");
       writeFile(join(worktree.path, otherTask), "other task\n");
-      const scopeLogPath = join(worktree.path, legacy, "integrate.log");
+      const scopeLogPath = join(worktree.path, current, "integrate.log");
       const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
       expect(() =>
         commitWorktreeChanges({ context: fixture.context, worktree, taskId: stem, scopeLogPath }),
@@ -1428,10 +1421,8 @@ describe("exec worktree ops", () => {
         scopeLogPath,
       });
       const tracked = git(worktree.path, "ls-tree", "-r", "--name-only", "HEAD").split("\n");
-      for (const directory of [legacy, current]) {
-        for (const name of records) expect(tracked).toContain(`${directory}/${name}`);
-        expect(tracked).toContain(`${directory}/pipeline-state.json`);
-      }
+      for (const name of records) expect(tracked).toContain(`${current}/${name}`);
+      expect(tracked).toContain(`${current}/pipeline-state.json`);
       expect(committed.targets).not.toContain(other);
       expect(committed.targets).not.toContain(otherTask);
     },
@@ -1456,13 +1447,7 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "scratch", "patch.js"), "// scratch\n");
     // 一時ファイルが status: ready を含んでも、tmp/ 配下は commit 対象外なので ready 昇格とはみなさない。
     writeFile(join(worktree.path, "tmp", "test-schema.yaml"), "id: tmp\nstatus: ready\n");
-    const scopeLogPath = join(
-      worktree.path,
-      "execution",
-      "exec",
-      "evidence",
-      taskId,
-      "run-1",
+    const scopeLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
       "integrate.log",
     );
 
@@ -1493,10 +1478,9 @@ describe("exec worktree ops", () => {
     expect([...committed.targets].sort()).toEqual([
       "custom/added.md",
       "docs/a.md",
-      `execution/exec/evidence/${taskId}/integrate.log`,
-      `execution/exec/evidence/${taskId}/run-1/integrate.log`,
+      taskRecordPaths("execution", taskId).log("integrate.log"),
       // 最上位に追加したファイルを result の申し送りへ記録するため、result も commit 対象になる。
-      `execution/exec/results/${taskId}-result.md`,
+      taskRecordPaths("execution", taskId).result,
       "modify.py",
     ]);
     const log = readFileSync(scopeLogPath, "utf8");
@@ -1550,7 +1534,7 @@ describe("exec worktree ops", () => {
     expect([...committed.targets].sort()).toEqual([
       "README.md",
       "ROOT-NOTE.md",
-      `execution/exec/results/${taskId}-result.md`,
+      taskRecordPaths("execution", taskId).result,
     ]);
   });
 

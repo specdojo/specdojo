@@ -1,0 +1,128 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "残存 worktree がある移行対象を変更前に拒否する方式を実装し、失敗していた2件を拒否動作のテストへ置き換えました。個票・ガイドを更新し、sandbox側の検証は成功しました。親検証はrunnerが実行します。",
+  "handoff": [
+    "判断: 進行中のrunを移行せず、対象のexec worktreeが残る場合はdry-runでも項目ID・パス・ブランチと撤去指示を示して停止する方式を選択した。PJR-VH8Dの移行中はほかのrunを止める方針に沿い、再開用の未コミット成果や独立したindexを移行対象に含めないため。個票にも記録済み。",
+    "実移動はorchestratorがcommit d17dcdebaで完了済みの5,576件。内容保持2,458件、パス更新3,118件、job状態の参照更新96件、ログ本文更新0件、移せなかったもの0件。本試行では移動を再実行せず、dry-runで移動・更新・欠落・除外がすべて0件と確認した。",
+    "exec/eventsの791件はタスクの状態遷移の正本として保持する。exec/trialsの40件は比較実験独自の形式として移行対象外とした。旧plans・results・evidenceにはファイルが残っていない。移行前の対の欠落18件は個票に列挙済み。",
+    "単体・統合テスト、lint、型検査、schemaは指定された親runnerの検証に委ねた。前回失敗した2件の成功は未確認であり、修正後の親検証結果を正とする。result記入と状態遷移もreporter／runnerが行う。",
+    "保護された設定の変更案と未決の判断はない。統合後は運用メモに従いPJR-JSEYでrunnerの動作を確認してからcloseする。"
+  ],
+  "validations": [
+    {
+      "command": "node --import tsx src/specdojo.ts exec migrate-records --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "移動・参照更新・欠落・除外はすべて0件。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001",
+      "status": "passed",
+      "summary": "events 791件を検証。既存の警告のみ。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec status --project prj-0001",
+      "status": "passed",
+      "summary": "No doing tasks."
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts dashboard build --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "移行後の記録を読み取り成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts dashboard build --project prj-0001",
+      "status": "passed",
+      "summary": "dashboardと実行記録などの派生ビューを生成。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検査成功。既存の警告のみ。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "{ git diff --name-only -- CHANGELOG.md docs/ja/specdojo/guides docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md src tests; git ls-files --others --exclude-standard -- src tests; } | xargs npx prettier --write",
+      "status": "passed",
+      "summary": "累積の成果物変更27ファイルを整形。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ対象0件、検出0件。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executorによるYAML成果物の変更なし。",
+      "reason": "差分のYAMLはrunner管理の登録イベントのみ。全体のschema検査は親runnerが担当する。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9by9-exec-run-record-migration.md"
+    },
+    {
+      "target": "src/exec/worktree-ops-commit.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-commit.ts"
+    },
+    {
+      "target": "tests/src/exec/condense.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/condense.test.ts"
+    },
+    {
+      "target": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-resume.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/release-reset-worktree.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/release-reset-worktree.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/run-records.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run-records.test.ts"
+    },
+    {
+      "target": "tests/src/exec/worktree-command.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/worktree-command.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/worktree-ops.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/worktree-ops.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/worktree-ops.test.ts"
+    },
+    {
+      "target": "tests/src/exec/migrate-records.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/migrate-records.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

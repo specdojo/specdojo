@@ -407,8 +407,8 @@ function worktreePathFor(root: string): string | null {
   return line ? line.slice("worktree ".length) : null;
 }
 
-// Recreate a pre-layout checkpoint: its pipeline run ID differs from the plan stem.
-function convertToLegacyRun(root: string, stem: string, runId: string): void {
+// Recreate a pre-layout checkpoint whose run ID differs from the plan stem.
+function recreateLegacyRun(root: string, stem: string, runId: string): void {
   const runRel = `runs/register/PJR-CD34/${stem}`;
   const directory = join(root, EXECUTION_REL, runRel);
   for (const name of readdirSync(directory)) {
@@ -434,7 +434,6 @@ function convertToLegacyRun(root: string, stem: string, runId: string): void {
   }
   rmSync(join(root, EXECUTION_REL, "runs"), { recursive: true });
   git(root, "add", EXECUTION_REL);
-  git(root, "commit", "-m", "fixture: restore legacy checkpoint layout");
 }
 
 afterEach(() => {
@@ -618,97 +617,51 @@ describe("exec run --register --worktree --resume", () => {
   );
 
   it.each([false, true])(
-    "keeps legacy run records committed when resuming with resume-from executor=%s",
+    "refuses migrating a retained run worktree without changing records (dry-run=%s)",
     { timeout: 180_000 },
-    async (restartExecutor) => {
+    async (dryRun) => {
       await withRepo(async ({ root, markerPath, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-        writeFileSync(
-          join(root, "package.json"),
-          JSON.stringify({
-            private: true,
-            scripts: { "lint:ts": "node parent-validation.mjs" },
-          }),
-        );
-        // Only failed parent validations produce log files. Fail while the reporter
-        // marker exists, then pass on the final resume so we exercise log retention.
-        writeFileSync(
-          join(root, "parent-validation.mjs"),
-          `import { existsSync } from "node:fs";
-const failed = existsSync(${JSON.stringify(markerPath)});
-console.log(failed ? "parent validation failed" : "parent validation passed");
-process.exit(failed ? 1 : 0);
-`,
-        );
-        const defaults = join(root, ".specdojo", "exec-defaults.yaml");
-        writeFileSync(
-          defaults,
-          `${readFileSync(defaults, "utf8")}pipeline:\n  parent_validations:\n    - lint-ts\n`,
-        );
-        git(root, "add", "package.json", "parent-validation.mjs", ".specdojo/exec-defaults.yaml");
-        git(root, "commit", "-m", "fixture: enable parent validation logs");
+        const stderr = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
         await runWithFailingReporter(markerPath, worktreeBase);
         expect(process.exitCode).toBe(1);
         const worktree = worktreePathFor(root)!;
         expect(worktree).toBeTruthy();
         const stem = readdirSync(join(worktree, EXECUTION_REL, "runs/register/PJR-CD34"))[0]!;
         const runId = "20261106T160500718Z-12a595ba";
-        convertToLegacyRun(root, stem, runId);
-        convertToLegacyRun(worktree, stem, runId);
-        const legacyRel = `${EXECUTION_REL}/exec/evidence/PJR-CD34/${runId}`;
-        const resumeArgs = [
-          "run",
-          "--project",
-          "test",
-          "--register",
-          "PJR-CD34",
-          "--worktree",
-          "--worktree-base",
-          worktreeBase,
-          "--resume",
-        ];
-        if (restartExecutor) {
-          // Leave the reporter failing once more to inspect the resumed executor checkpoint.
-          await runExec([...resumeArgs, "--resume-from", "executor"]);
+        recreateLegacyRun(root, stem, runId);
+        recreateLegacyRun(worktree, stem, runId);
+        const snapshots = [root, worktree].map((checkout) => ({
+          status: git(checkout, "status", "--porcelain"),
+          index: git(checkout, "diff", "--cached"),
+          plan: readFileSync(join(checkout, EXECUTION_REL, `exec/plans/${stem}-plan.md`)),
+          result: readFileSync(join(checkout, EXECUTION_REL, `exec/results/${stem}-result.md`)),
+        }));
+        // Both the integration checkout and the task worktree must refuse migration.
+        for (const checkout of [root, worktree]) {
+          process.chdir(checkout);
+          stderr.mockClear();
+          await runExec(["migrate-records", "--project", "test", ...(dryRun ? ["--dry-run"] : [])]);
           expect(process.exitCode).toBe(1);
-          expect(existsSync(join(worktree, EXECUTION_REL, "runs"))).toBe(false);
-          expect(existsSync(join(worktree, legacyRel, "evidence.attempt-1.json"))).toBe(true);
-          expect(existsSync(join(worktree, legacyRel, "executor.attempt-1.log"))).toBe(true);
+          const error = stderr.mock.calls.map(([message]) => String(message)).join("");
+          expect(error).toContain(
+            "blocked: Migration target PJR-CD34 has a retained exec worktree:",
+          );
+          expect(error).toContain(worktree);
+          expect(error).toContain("remove its worktree before migrating");
+        }
+        for (const [i, checkout] of [root, worktree].entries()) {
+          expect(git(checkout, "status", "--porcelain")).toBe(snapshots[i].status);
+          expect(git(checkout, "diff", "--cached")).toBe(snapshots[i].index);
+          expect(readFileSync(join(checkout, EXECUTION_REL, `exec/plans/${stem}-plan.md`))).toEqual(
+            snapshots[i].plan,
+          );
           expect(
-            JSON.parse(readFileSync(join(worktree, legacyRel, "pipeline-state.json"), "utf8"))
-              .run_id,
-          ).toBe(runId);
+            readFileSync(join(checkout, EXECUTION_REL, `exec/results/${stem}-result.md`)),
+          ).toEqual(snapshots[i].result);
+          expect(existsSync(join(checkout, EXECUTION_REL, "runs"))).toBe(false);
         }
-        rmSync(markerPath, { force: true });
-        await runExec(resumeArgs);
-        expect(process.exitCode ?? 0).toBe(0);
-        expect(worktreePathFor(root)).toBeNull();
-        expect(existsSync(join(root, EXECUTION_REL, "runs"))).toBe(false);
-        const tracked = git(root, "ls-tree", "-r", "--name-only", "HEAD").split("\n");
-        const logs = readdirSync(join(root, legacyRel));
-        expect(logs.some((name) => /^parent-validation-.*lint-ts\.log$/.test(name))).toBe(true);
-        const evidence = JSON.parse(readFileSync(join(root, legacyRel, "evidence.json"), "utf8"));
-        expect(evidence.run_id).toBe(runId);
-        expect(evidence.validations).toContainEqual(
-          expect.objectContaining({ id: "lint-ts", source: "runner", status: "passed" }),
-        );
-        for (const ref of evidence.log_refs) expect(existsSync(join(root, ref.path))).toBe(true);
-        for (const name of logs) expect(tracked).toContain(`${legacyRel}/${name}`);
-        for (const name of ["evidence.json", "executor.log", "pipeline-state.json"]) {
-          expect(tracked).toContain(`${legacyRel}/${name}`);
-        }
-        if (restartExecutor) {
-          for (const name of [
-            "evidence.attempt-1.json",
-            "executor.attempt-1.log",
-            "pipeline-state.attempt-1.json",
-            "parent-validation-attempt-1-lint-ts.attempt-1.log",
-          ]) {
-            expect(tracked).toContain(`${legacyRel}/${name}`);
-          }
-        }
-        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(worktreePathFor(root)).toBe(worktree);
       });
     },
   );

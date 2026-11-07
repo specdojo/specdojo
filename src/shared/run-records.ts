@@ -28,7 +28,7 @@ export function planConventionsPath(executionPath: string, hash: string): string
   return join(planConventionsDirectory(executionPath), `${hash}.txt`);
 }
 
-/** All managed execution record paths, including the temporary legacy read layout. */
+/** All managed execution record paths. */
 export function runRecordPaths(
   executionPath: string,
   origin: RunOrigin,
@@ -75,40 +75,13 @@ export function taskRecordPaths(
   return runRecordPaths(executionPath, identity.origin, identity.itemId, runId);
 }
 
-export function legacyRecordDirectory(executionPath: string, kind: RecordKind): string {
-  return join(executionPath, "exec", kind === "plan" ? "plans" : "results");
-}
-export function legacyRecordPath(executionPath: string, kind: RecordKind, stem: string): string {
-  return join(legacyRecordDirectory(executionPath, kind), `${stem}-${kind}.md`);
-}
-export function legacyEvidenceDirectory(executionPath: string, taskId: string): string {
-  // Match the historical safeSlug convention, including its 80-character limit.
-  const legacyTaskId = taskId
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^A-Za-z0-9._-]/g, "_")
-    .slice(0, 80);
-  return join(executionPath, "exec", "evidence", pathSegment(legacyTaskId));
-}
-
-/** Resume legacy checkpoints in place; fresh runs always use the new layout. */
 export function taskEvidencePaths(executionPath: string, taskId: string, runId: string) {
   const records = taskRecordPaths(executionPath, taskId, runId);
-  const legacy = join(legacyEvidenceDirectory(executionPath, taskId), pathSegment(runId));
-  const directory = existsSync(join(legacy, "pipeline-state.json")) ? legacy : records.directory;
-  return {
-    directory,
-    evidence: join(directory, "evidence.json"),
-    state: join(directory, "pipeline-state.json"),
-  };
+  return { directory: records.directory, evidence: records.evidence, state: records.state };
 }
 
-/** Both layouts can contain records of the same run after an interrupted upgrade. */
 export function runRecordPrefixes(executionPath: string, taskId: string, runId: string): string[] {
-  return [
-    taskRecordPaths(executionPath, taskId, runId).directory,
-    join(legacyEvidenceDirectory(executionPath, taskId), pathSegment(runId)),
-  ].map((path) => `${path.replaceAll("\\", "/")}/`);
+  return [`${taskRecordPaths(executionPath, taskId, runId).directory.replaceAll("\\", "/")}/`];
 }
 
 function filesBelow(path: string): string[] {
@@ -122,15 +95,11 @@ function filesBelow(path: string): string[] {
 }
 
 export function listRunRecords(executionPath: string, kind: RecordKind): string[] {
-  return [
-    ...filesBelow(join(executionPath, "runs")).filter((path) => basename(path) === `${kind}.md`),
-    ...filesBelow(legacyRecordDirectory(executionPath, kind)).filter(
-      (path) => path.endsWith(`-${kind}.md`) && basename(dirname(path)) !== "done",
-    ),
-  ];
+  return filesBelow(join(executionPath, "runs")).filter((path) => basename(path) === `${kind}.md`);
 }
 
-/** Prefer the new layout; fall back to old records without ever creating old paths. */
+/** Find the latest run for an item, or a run with the requested stem. */
+
 export function findRunRecord(
   executionPath: string,
   kind: RecordKind,
@@ -141,13 +110,7 @@ export function findRunRecord(
   const newFiles = filesBelow(
     existsSync(itemDirectory) ? itemDirectory : join(executionPath, "runs"),
   ).filter((path) => basename(path) === `${kind}.md`);
-  const legacyFiles = filesBelow(legacyRecordDirectory(executionPath, kind)).filter(
-    (path) =>
-      basename(dirname(path)) !== "done" &&
-      basename(path).toLowerCase().startsWith(taskOrStem.toLowerCase()) &&
-      path.endsWith(`-${kind}.md`),
-  );
-  const matches = [...newFiles, ...legacyFiles].filter((path) => {
+  const matches = newFiles.filter((path) => {
     if (recordStem(path) === taskOrStem) return true;
     try {
       return readSpecdojoNamespace(readFileSync(path, "utf8")).task_id === taskOrStem;
@@ -173,12 +136,7 @@ export function findRunRecord(
         return time(a) - time(b) || a.localeCompare(b);
       })
       .at(-1);
-  const legacy = legacyRecordPath(executionPath, kind, taskOrStem);
-  return (
-    latest(matches.filter(isRunRecordPath)) ??
-    latest(matches) ??
-    (existsSync(legacy) ? legacy : undefined)
-  );
+  return latest(matches);
 }
 
 export function recordPathForRead(
@@ -209,28 +167,20 @@ export function recordRef(executionPath: string, path: string): string {
   return relative(executionPath, path).replaceAll("\\", "/");
 }
 export function runnerRecordPrefixes(executionPath: string): string[] {
-  return [
-    planConventionsDirectory(executionPath),
-    join(executionPath, "runs"),
-    join(executionPath, "exec", "plans"),
-    join(executionPath, "exec", "results"),
-    join(executionPath, "exec", "evidence"),
-  ].map((path) => `${path.replaceAll("\\", "/")}/`);
+  return [planConventionsDirectory(executionPath), join(executionPath, "runs")].map(
+    (path) => `${path.replaceAll("\\", "/")}/`,
+  );
 }
 export function taskRecordPrefixes(executionPath: string, taskId: string): string[] {
   const identity = recordIdentity(taskId);
   return [
     planConventionsDirectory(executionPath),
     runItemDirectory(executionPath, identity.origin, identity.itemId),
-    legacyEvidenceDirectory(executionPath, taskId),
   ].map((path) => `${path.replaceAll("\\", "/")}/`);
 }
 export function resumeStatePaths(executionPath: string, taskId: string): string[] {
   const identity = recordIdentity(taskId);
-  return [
-    runItemDirectory(executionPath, identity.origin, identity.itemId),
-    legacyEvidenceDirectory(executionPath, taskId),
-  ]
+  return [runItemDirectory(executionPath, identity.origin, identity.itemId)]
     .flatMap(filesBelow)
     .filter((path) => basename(path) === "pipeline-state.json");
 }
@@ -250,6 +200,7 @@ export function executionRecordLink(file: string, kind: RecordKind): string {
 }
 
 export function isPlanOrResultRecord(path: string): boolean {
+  // Recognize obsolete names for commit-scope protection without reading that layout.
   return (
     /(?:^|\/)exec\/(?:plans|results)\//.test(path.replaceAll("\\", "/")) ||
     (isRunRecordPath(path) && /\/(plan|result)\.md$/.test(path.replaceAll("\\", "/")))
@@ -293,15 +244,6 @@ export function snapshotRunAttempt(statePath: string): void {
       }
     }
   }
-}
-
-/** Only the legacy archive command uses this path; new run plans stay beside their result. */
-export function legacyArchivePlanPath(executionPath: string, base: string, sequence = 0): string {
-  return join(
-    legacyRecordDirectory(executionPath, "plan"),
-    "done",
-    `${base}${sequence ? `-${sequence}` : ""}-plan.md`,
-  );
 }
 
 export function resolveRunPlanRef(executionPath: string, ref: string): string {

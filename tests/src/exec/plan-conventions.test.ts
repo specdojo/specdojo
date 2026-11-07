@@ -240,9 +240,9 @@ describe("stored plan conventions", () => {
     ).toThrow("Invalid plan conventions reference");
   });
 
-  it("rebases a manually located legacy-layout plan when archiving it", () => {
+  it("retains convention references when archiving a run plan", () => {
     const f = fixture();
-    const legacy = join(f.executionPath, "exec", "plans", "custom-plan.md");
+    const legacy = join(f.executionPath, "runs", "schedule", "custom", "custom", "plan.md");
     mkdirSync(dirname(legacy), { recursive: true });
     writeFileSync(legacy, storePlanConventions("## Rules\n\n- rule", f.executionPath, legacy));
     const archived = archivePlan({ executionPath: f.executionPath, slug: "custom" });

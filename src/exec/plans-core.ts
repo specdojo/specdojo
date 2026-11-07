@@ -75,7 +75,7 @@ export function buildInPlaceStem(
   return stem;
 }
 
-// Recover the shared stem from a plan path: `.../exec/plans/<stem>-plan.md` → `<stem>`.
+// Recover the shared stem from a plan path: `.../runs/<origin>/<item>/<stem>/plan.md` → `<stem>`.
 // Used when re-running `--plan <path>` so the tied result is overwritten in place.
 export function stemFromPlanPath(planPath: string): string {
   return recordStem(planPath);

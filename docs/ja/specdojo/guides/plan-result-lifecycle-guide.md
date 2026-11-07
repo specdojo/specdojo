@@ -42,61 +42,51 @@ plan / result の frontmatter には `targets`（対象文書の doc id リス�
 
 ### 1.2. 配置
 
-| 種別          | 配置                                |
-| ------------- | ----------------------------------- |
-| plan          | `<execution_path>/exec/plans/`      |
-| 完了後の plan | `<execution_path>/exec/plans/done/` |
-| result        | `<execution_path>/exec/results/`    |
+1 回の実行を `execution/runs/<出どころ>/<項目 ID>/<run ID>/` にまとめます。配置の決め方は `src/shared/run-records.ts` を正本とします。
 
-result は完了記録であり、review などから参照されるため `done/` へ移動しません。
+```text
+execution/
+  runs/<出どころ>/<項目 ID>/<run ID>/
+    plan.md
+    result.md
+    evidence.json
+    pipeline-state.json
+    executor.log
+    reporter.log
+```
+
+ログは実行した段に応じて保存し、親検証・統合のログも同じディレクトリに置きます。human の実行は result のみです。完了しても保存先は変わりません。共通規約の版は `execution/conventions/`、成果物ごとの評価結果は `execution/grade/results/`、job の状態管理 JSON は `execution/jobs/runs/` に残します。
 
 ## 2. 命名規則
 
-task identity の有無によるファイル名の決め方と、対象成果物の解決方法を示します。
+### 2.1. 出どころと項目 ID
 
-### 2.1. task identityありの命名
+| 出どころ   | 項目 ID                    |
+| ---------- | -------------------------- |
+| `register` | 登録項目 ID（`PJR-XXXX`）  |
+| `schedule` | タスク ID（`T-...`）       |
+| `job`      | job の実行 ID（`JBR-...`） |
 
-`--task <task-id>` を使う場合、plan と result は task ID を使った固定名になります。
+review は元の項目の下の別 run とします。plan と result の文書 ID は frontmatter の `specdojo.id` を正本とし、ファイルの移動で変更しません。
 
-```text
-exec/plans/<task-id>-plan.md
-exec/results/<task-id>-result.md
+### 2.2. run ID
+
+新しい plan の生成では `<slug>-<UTC>-<rand>` のユニークな run ID を採番します。`<rand>` は4バイト（16進8桁）で、同一プロセス内で重複した場合は連番を加えます。job の attempt など、呼び出し側が run ID を指定する場合も同じ配置モジュールを通します。
+
+plan と result のファイル名はそれぞれ `plan.md` と `result.md` です。同じ task の新しい実行は別 run に保存します。同一 run の再開では保存先を維持し、executor をやり直す前の state・evidence・ログを `*.attempt-N.*` に退避します。
+
+### 2.3. 既存記録の移行
+
+移行対象の run を完了または破棄し、対応する worktree を撤去してから、Git index に書き込める環境で移行します。プロセスを止めただけで worktree が残っている場合は、`--dry-run` でも項目 ID・worktree のパス・ブランチを示して処理前に停止します。進行中の run の移行と再開は対象外です。
+
+```bash
+specdojo exec migrate-records --project <project-id> --dry-run
+specdojo exec migrate-records --project <project-id>
 ```
 
-対象:
+コマンドは移動先と参照の更新対象、対になる plan または result が欠けた記録を表示します。移動には `git mv` を使い、ログ本文と文書 ID を保持してパスの欄と共通規約への相対参照を更新します。移動先の衝突・追跡されていない移動元は処理前に拒否します。移行済みの状態で再実行すると移動は 0 件です。
 
-| 操作                     | 命名                 |
-| ------------------------ | -------------------- |
-| `exec plan --task`       | 固定名 plan          |
-| `exec run --task`        | 固定名 plan / result |
-| `exec claim`             | 固定名 result        |
-| `exec run --track-state` | 固定名 plan / result |
-| `exec run --worktree`    | 固定名 plan / result |
-
-同じ task の再生成や再実行では同じファイルを上書きします。過去内容は Git 履歴、完了の事実は event と commit 履歴で追跡します。
-
-### 2.2. task identityなしの命名
-
-`--deliverable <local_id>` や ad-hoc 実行では、task ID がないためユニーク名を使います。
-
-```text
-exec/plans/<stem>-plan.md
-exec/results/<stem>-result.md
-```
-
-`<stem>` は plan と result の連結キーです。同じ plan から実行する result は同じ `<stem>` を使います。
-
-### 2.3. stemの決定順序
-
-`<stem>` は次の優先順位で決まります。
-
-1. `--out <path>` または `--plan <path>` を指定した場合は、そのファイル名から導出します。
-2. `--task <task-id>` がある場合は、`<stem> = <task-id>` とします。
-3. task identity がない場合は、`<slug>-<UTC>-<rand>` のユニーク名を採番します。
-
-`<rand>` は4バイト（16進8桁）です。同じプロセス内で slug・UTC秒・乱数がすべて重複した場合は、`<rand>-1`、`<rand>-2` のように連番を加えます。plan path から stem を読む処理は stem 全体を連結キーとして扱うため、従来の16進4桁の名前と連番付きの名前をどちらも読み取れます。
-
-これにより、task 実行は固定名で扱い、schedule 非依存の実行は実行ごとの証跡を残せます。
+checkpoint に同じ plan / result を参照する試行が複数ある場合、対は最新の checkpoint の run に置き、先行試行の evidence とログはそれぞれの run に残します。対応が特定できない記録は元の stem を run ID とし、欠けた記録を捏造しません。比較実験の `exec/trials/` は独立した保存形式のため移行対象から外します。通常の読み取りは `runs/` のみを対象にします。
 
 ### 2.4. deliverable指定の解決
 
@@ -196,7 +186,7 @@ result の `status` は、個々の実行試行がどの状態にあるかを表
 | `blocked`     | 障害や未充足条件によって停止した試行                  | 理由を解消して再開または再実行する       |
 | `superseded`  | 後続の新しい run に置き換えられ、破棄された先行の試行 | なし。履歴として保持し、再開対象にしない |
 
-runner は一意名の新しい result を scaffold するとき、同じ `task_id` を持つ先行 result のうち `in_progress` または `blocked` のものを `superseded` へ更新します。`completed_at` には後続 run の開始時刻を記録し、先行 result の `block_reason` は除去します。`complete` の result は完了記録として変更しません。固定名 result の再利用や、同じ run を続ける `exec resume` は新しい result を作らないため、この遷移の対象外です。
+runner は一意名の新しい result を scaffold するとき、同じ `task_id` を持つ先行 result のうち `in_progress` または `blocked` のものを `superseded` へ更新します。`completed_at` には後続 run の開始時刻を記録し、先行 result の `block_reason` は除去します。`complete` の result は完了記録として変更しません。同じ run を続ける `exec resume` は新しい result を作らないため、この遷移の対象外です。
 
 `exec status` が表示・集計する Schedule の `doing` / `blocked` などは event log から導出するタスク状態であり、result の status とは別です。このため、履歴上の `superseded` result が実行中件数や対応待ちの blocked 件数へ加算されることはありません。
 
@@ -214,30 +204,17 @@ worktree を再利用する `exec resume` では、再開直前の worktree resu
 
 ### 4.1. アーカイブ
 
-完了後の plan は `exec/plans/done/` へ移動できます。
+`exec archive` は完了した plan を同じ run ディレクトリに保持します。`exec complete`、`exec run --track-state` の成功時、`--archive-on-success` でも保存先は変わりません。
 
 ```bash
 specdojo exec archive --project <project-id> --task <task-id>
 ```
 
-| ケース                          | アーカイブ                        |
-| ------------------------------- | --------------------------------- |
-| `exec complete`                 | 対象 plan を自動移動する          |
-| `exec run --track-state` 成功時 | 対象 plan を自動移動する          |
-| 軽量実行（状態追跡なし）        | `exec archive` で明示的に移動する |
-| `exec run --archive-on-success` | 成功時に移動する                  |
-
-固定名 plan を `done/` へ移動する場合は、UTC タイムスタンプと4バイトの乱数を付けます。同じ名前が既にある場合は、既存ファイルを上書きせず末尾に連番を加えます。
-
-```text
-exec/plans/done/<slug>-<UTC>-<rand>[-<sequence>]-plan.md
-```
-
-不要な plan は `done/` へ移動せず削除してもかまいません。plan は catalog と schedule から再生成でき、result が記録として残るためです。
+不要な plan は `--delete` で削除できます。result は実行記録として残ります。
 
 ### 4.2. 再実行
 
-完了済み task を軽くやり直す場合は、固定名 plan / result を再生成してカレントリポジトリで実行します。
+完了済み task をやり直す場合は、新しい run の plan / result を生成してカレントリポジトリで実行します。
 
 ```bash
 specdojo exec run --project <project-id> --task <task-id>
@@ -253,4 +230,4 @@ specdojo exec run --project <project-id> --task <task-id>
 specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"
 ```
 
-`reopen` は完了済み plan を `done/` から戻さず、固定名 result の内容も変更しません。次の `exec plan` / `exec run` で新しい固定名 plan を生成し、再 claim 時に既存 result の `status` を `in_progress`、`started_at` と `agent` を新しい試行の値へ更新し、`completed_at` と `block_reason` を除去します。result 本文は前回の記録を引き継ぎ、過去の完了状態は Git 履歴と `complete` / `reopen` event で追跡します。
+`reopen` は過去 run の plan / result を変更しません。次の `exec plan` / `exec run` は新しい run を作り、過去の完了状態は保存した記録と `complete` / `reopen` event で追跡します。同じ run の続きは `exec resume` で再開します。

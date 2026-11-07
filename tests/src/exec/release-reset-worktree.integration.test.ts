@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { taskRecordPaths } from "../../../src/exec/run-records.js";
 import { registerExecCommands } from "../../../src/exec/exec.js";
 import { findExecWorktree, gitEnvironment } from "../../../src/exec/worktree.js";
 
@@ -37,8 +38,7 @@ function setupRepository(): { repo: string; worktreeBase: string; taskId: string
   mkdirSync(join(repo, ".specdojo"), { recursive: true });
   mkdirSync(join(repo, "schedule"), { recursive: true });
   mkdirSync(join(repo, "execution", "exec", "events"), { recursive: true });
-  mkdirSync(join(repo, "execution", "exec", "plans"), { recursive: true });
-  mkdirSync(join(repo, "execution", "exec", "results"), { recursive: true });
+  mkdirSync(taskRecordPaths(join(repo, "execution"), taskId).directory, { recursive: true });
 
   writeFileSync(
     join(repo, ".specdojo", "specdojo.config.json"),
@@ -103,15 +103,11 @@ function setupRepository(): { repo: string; worktreeBase: string; taskId: string
     "utf8",
   );
   writeFileSync(
-    join(repo, "execution", "exec", "plans", `${taskId}-plan.md`),
+    taskRecordPaths(join(repo, "execution"), taskId).plan,
     "# Plan\n\nUpdate README.\n",
     "utf8",
   );
-  writeFileSync(
-    join(repo, "execution", "exec", "results", `${taskId}-result.md`),
-    "# Result\n",
-    "utf8",
-  );
+  writeFileSync(taskRecordPaths(join(repo, "execution"), taskId).result, "# Result\n", "utf8");
   return { repo, worktreeBase, taskId };
 }
 

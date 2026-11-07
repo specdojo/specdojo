@@ -1,15 +1,8 @@
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
 import { loadPipelineResumeCheckpoint, type PipelineState } from "./pipeline-state.js";
-import {
-  legacyRecordDirectory,
-  legacyRecordPath,
-  recordStem,
-  resumeStatePaths,
-  runEvidencePath,
-  taskRecordPaths,
-} from "./run-records.js";
+import { recordStem, resumeStatePaths, runEvidencePath, taskRecordPaths } from "./run-records.js";
 
 // register 項目の executor/reporter pipeline を、途中で止まった段から再開するための run 特定と
 // 入力復元。途中で止まった run は worktree の未コミット成果と `pipeline-state.json` /
@@ -320,25 +313,6 @@ export function selectScheduleExecutorResume(
   return lookup;
 }
 
-// plan / result のファイル名は `<pjr-id>-<UTC>-<rand>-(plan|result).md`（buildInPlaceStem）。
-// state に artifacts が無い旧 run のために、worktree の result 一覧から最新の stem を復元する。
-export function selectLatestRegisterResultStem(
-  fileNames: readonly string[],
-  pjrId: string,
-): string | null {
-  const pattern = new RegExp(
-    `^(${pjrId.toLowerCase()}-\\d{8}T\\d{6}Z-[0-9a-f]+)-result\\.md$`,
-    "i",
-  );
-  const stems: string[] = [];
-  for (const name of fileNames) {
-    const match = name.match(pattern);
-    if (match) stems.push(match[1]);
-  }
-  if (stems.length === 0) return null;
-  return stems.sort()[stems.length - 1];
-}
-
 export type RegisterResumeArtifacts = {
   // repo 相対（POSIX 区切り）。worktree と root で同じ相対パスを指す。
   planRef: string;
@@ -355,7 +329,7 @@ function isContainedRef(root: string, ref: string): boolean {
 }
 
 // reporter 段の入力（plan と result）を state から復元する。state に artifacts がある場合は
-// それを正本とし、無い旧 run では worktree の result ファイル名から stem を復元する。
+// それを正本とし、無い run では同じ run ディレクトリを参照する。
 export function resolveRegisterResumeArtifacts(input: {
   repoRoot: string;
   worktreePath: string;
@@ -376,13 +350,7 @@ export function resolveRegisterResumeArtifacts(input: {
     return { planRef: artifacts.plan_ref, resultRef: artifacts.result_ref, stem };
   }
 
-  const resultsDir = legacyRecordDirectory(join(input.worktreePath, executionRel), "result");
-  if (!existsSync(resultsDir)) return null;
-  const stem = selectLatestRegisterResultStem(readdirSync(resultsDir), input.taskId);
-  if (!stem) return null;
-  return {
-    planRef: legacyRecordPath(executionRel, "plan", stem),
-    resultRef: legacyRecordPath(executionRel, "result", stem),
-    stem,
-  };
+  const records = taskRecordPaths(executionRel, input.taskId, input.state.run_id);
+  if (!existsSync(join(input.worktreePath, records.result))) return null;
+  return { planRef: records.plan, resultRef: records.result, stem: input.state.run_id };
 }

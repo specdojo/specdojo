@@ -74,30 +74,42 @@ describe("run record layout", () => {
     expect(() => runRecordPaths("execution", "schedule", "task", "..")).toThrow();
   });
 
-  it("reads both layouts and prefers the new record for a task", () => {
+  it.each(["plan-result-lifecycle-guide", "docs-structure-guide"])(
+    "keeps %s layout examples aligned with the path module",
+    (guide) => {
+      const content = readFileSync(`docs/ja/specdojo/guides/${guide}.md`, "utf8");
+      const records = runRecordPaths("execution", "register", "PJR-TEST", "run-1");
+      const example = records.directory
+        .replace("register", "<出どころ>")
+        .replace("PJR-TEST", "<項目 ID>")
+        .replace("run-1", "<run ID>");
+      expect(content).toContain(example.replace("execution/", ""));
+      for (const path of [records.plan, records.result, records.evidence, records.state])
+        expect(content).toContain(`    ${path.split("/").at(-1)}`);
+      expect(content).not.toContain("exec/plans/");
+      expect(content).not.toContain("exec/results/");
+    },
+  );
+
+  it("reads run directories and ignores the retired layout", () => {
     const execution = fixture();
     const legacy = join(execution, "exec", "plans", "T-TEST-plan.md");
     write(legacy, "---\nspecdojo:\n  task_id: T-TEST\n---\nlegacy\n");
-    expect(findRunRecord(execution, "plan", "T-TEST")).toBe(legacy);
+    expect(findRunRecord(execution, "plan", "T-TEST")).toBeUndefined();
     const next = taskRecordPaths(execution, "T-TEST", "run-1");
     write(next.plan, "---\nspecdojo:\n  task_id: T-TEST\n---\nnew\n");
     expect(findRunRecord(execution, "plan", "T-TEST")).toBe(next.plan);
     expect(findRunRecord(execution, "plan", "run-1")).toBe(next.plan);
-    expect(listRunRecords(execution, "plan")).toEqual([next.plan, legacy]);
+    expect(listRunRecords(execution, "plan")).toEqual([next.plan]);
     expect(readFileSync(legacy, "utf8")).toContain("legacy");
   });
 
-  it("finds legacy resume state using the historical truncated task directory", () => {
+  it("finds resume state only in the run directory, preserving long task ids", () => {
     const execution = fixture();
     const taskId = `T-${"long-".repeat(20)}`;
-    const state = join(
-      execution,
-      "exec",
-      "evidence",
-      taskId.slice(0, 80),
-      "run-1",
-      "pipeline-state.json",
-    );
+    write(join(execution, "exec/evidence", taskId.slice(0, 80), "old/pipeline-state.json"), "{}");
+    expect(resumeStatePaths(execution, taskId)).toEqual([]);
+    const state = taskRecordPaths(execution, taskId, "run-1").state;
     write(state, "{}");
     expect(resumeStatePaths(execution, taskId)).toEqual([state]);
     expect(taskEvidencePaths(execution, taskId, "run-1").state).toBe(state);

@@ -28,6 +28,7 @@ import {
 } from "../../../src/schedule/strategy-profiles.js";
 import { buildValidator } from "../../helpers/schema.js";
 import type { Approach } from "../../../src/shared/agent-types.js";
+import { taskRecordPaths } from "../../../src/shared/run-records.js";
 
 const sourceRoot = process.cwd();
 const originalPackageRoot = process.env.SPECDOJO_PACKAGE_ROOT;
@@ -255,7 +256,7 @@ describe("condense records and standard phases", () => {
 describe("condense feedback to Kata maintenance", { timeout: 30_000 }, () => {
   function result(stem: string, started: string, records: unknown, overrides = {}): void {
     write(
-      `execution/exec/results/${stem}-result.md`,
+      taskRecordPaths("execution", "T-CONDENSE", stem).result,
       `---\n${dump({ specdojo: { id: `test:xer-${stem}`, type: "exec-result", project_id: "test", mode: "edit", approach: "condense", status: "complete", started_at: started, targets: ["test:note"], condense_records: records, ...overrides } })}---\n\n# Result\n`,
     );
   }

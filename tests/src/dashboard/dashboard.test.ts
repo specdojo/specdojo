@@ -296,27 +296,28 @@ describe("collectExecRecords", () => {
 
     try {
       const execPath = join(root, "exec");
-      const plans = join(execPath, "plans");
-      const results = join(execPath, "results");
-      mkdirSync(plans, { recursive: true });
-      mkdirSync(results, { recursive: true });
+      const run = (task: string, stem: string, file: string) => {
+        const directory = join(root, "runs", "schedule", task, stem);
+        mkdirSync(directory, { recursive: true });
+        return join(directory, file);
+      };
       writeFileSync(
-        join(plans, "t-old-plan.md"),
+        run("T-OLD", "t-old", "plan.md"),
         "---\nspecdojo:\n  task_id: T-OLD\n  mode: edit\n---\n\n# Plan\n",
         "utf8",
       );
       writeFileSync(
-        join(results, "t-old-result.md"),
+        run("T-OLD", "t-old", "result.md"),
         '---\nspecdojo:\n  task_id: T-OLD\n  mode: edit\n  status: complete\n  started_at: "2026-01-01T00:00:00Z"\n---\n\n# Result\n',
         "utf8",
       );
       writeFileSync(
-        join(results, "t-new-result.md"),
+        run("T-NEW", "t-new", "result.md"),
         '---\nspecdojo:\n  task_id: T-NEW\n  mode: review\n  status: doing\n  started_at: "2026-02-01T00:00:00Z"\n---\n\n# Result\n',
         "utf8",
       );
       writeFileSync(
-        join(plans, "t-plan-only-plan.md"),
+        run("T-PLAN", "t-plan-only", "plan.md"),
         "---\nspecdojo:\n  task_id: T-PLAN\n---\n\n# Plan\n",
         "utf8",
       );
@@ -325,23 +326,27 @@ describe("collectExecRecords", () => {
 
       expect(rows).toEqual([
         {
-          stem: "t-new",
+          stem: "runs/schedule/T-NEW/t-new",
           taskId: "T-NEW",
           mode: "review",
           status: "doing",
           startedAt: "2026-02-01T00:00:00Z",
-          resultFile: "t-new-result.md",
+          resultFile: "../runs/schedule/T-NEW/t-new/result.md",
         },
         {
-          stem: "t-old",
+          stem: "runs/schedule/T-OLD/t-old",
           taskId: "T-OLD",
           mode: "edit",
           status: "complete",
           startedAt: "2026-01-01T00:00:00Z",
-          planFile: "t-old-plan.md",
-          resultFile: "t-old-result.md",
+          planFile: "../runs/schedule/T-OLD/t-old/plan.md",
+          resultFile: "../runs/schedule/T-OLD/t-old/result.md",
         },
-        { stem: "t-plan-only", taskId: "T-PLAN", planFile: "t-plan-only-plan.md" },
+        {
+          stem: "runs/schedule/T-PLAN/t-plan-only",
+          taskId: "T-PLAN",
+          planFile: "../runs/schedule/T-PLAN/t-plan-only/plan.md",
+        },
       ]);
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -362,13 +367,20 @@ describe("collectExecRecords", () => {
 describe("buildExecRecordsMarkdown", () => {
   it("plan と result へ generated からの相対リンクを張る", () => {
     const markdown = buildExecRecordsMarkdown("prj-test", [
-      { stem: "t-a", taskId: "T-A", planFile: "t-a-plan.md", resultFile: "t-a-result.md" },
-      { stem: "t-b", taskId: "T-B", planFile: "t-b-plan.md" },
+      {
+        stem: "t-a",
+        taskId: "T-A",
+        planFile: "../runs/schedule/T-A/t-a/plan.md",
+        resultFile: "../runs/schedule/T-A/t-a/result.md",
+      },
+      { stem: "t-b", taskId: "T-B", planFile: "../runs/schedule/T-B/t-b/plan.md" },
     ]);
 
-    expect(markdown).toContain("[plan](../exec/plans/t-a-plan.md)");
-    expect(markdown).toContain("[result](../exec/results/t-a-result.md)");
-    expect(markdown).toContain("| - | `T-B` | - | - | [plan](../exec/plans/t-b-plan.md) | - |");
+    expect(markdown).toContain("[plan](../runs/schedule/T-A/t-a/plan.md)");
+    expect(markdown).toContain("[result](../runs/schedule/T-A/t-a/result.md)");
+    expect(markdown).toContain(
+      "| - | `T-B` | - | - | [plan](../runs/schedule/T-B/t-b/plan.md) | - |",
+    );
     expect(markdown.endsWith("\n")).toBe(false);
   });
 });
