@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, readdirSync, readFileSync } from "node:fs";
-import { basename, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { readSpecdojoNamespace } from "../shared/frontmatter-namespace.js";
 import { gitEnvironment } from "../shared/git-environment.js";
 import { runRecordLocation, runRecordsDirectory } from "../shared/run-records.js";
@@ -27,15 +27,52 @@ export function validateRunRecordLayout(options: {
     readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
   const isFile = (path: string) => existsSync(path) && lstatSync(path).isFile();
 
-  function collectLocks(path: string): void {
+  function collectLocks(path: string): boolean {
+    if (lstatSync(path).isDirectory()) {
+      // Empty directory trees cannot contain runtime locks and Git cannot track them.
+      const children = entries(path).map((entry) => collectLocks(join(path, entry.name)));
+      if (!children.some(Boolean)) return false;
+    }
     locks.add(resolve(path));
-    if (!lstatSync(path).isDirectory()) return;
-    for (const entry of entries(path)) collectLocks(join(path, entry.name));
+    return true;
+  }
+
+  const itemHasPair = new Map<string, boolean>();
+  function hasSiblingPair(directory: string): boolean {
+    const item = dirname(directory);
+    if (!itemHasPair.has(item)) {
+      itemHasPair.set(
+        item,
+        entries(item).some((entry) => {
+          if (!entry.isDirectory() || entry.name === basename(directory)) return false;
+          const paths = runRecordLocation(executionPath, join(item, entry.name));
+          return paths !== undefined && isFile(paths.plan) && isFile(paths.result);
+        }),
+      );
+    }
+    return itemHasPair.get(item)!;
   }
 
   function checkRun(directory: string): void {
     const paths = runRecordLocation(executionPath, directory);
     if (!paths) return;
+    // Before evidence existed, a plan/result pair was a complete run.
+    if (
+      isFile(paths.plan) &&
+      isFile(paths.result) &&
+      !existsSync(paths.state) &&
+      !existsSync(paths.evidence)
+    )
+      return;
+    // Migration consolidated shared plan/result pairs into another run of the same item.
+    if (
+      !existsSync(paths.plan) &&
+      !existsSync(paths.result) &&
+      isFile(paths.state) &&
+      isFile(paths.evidence) &&
+      hasSiblingPair(directory)
+    )
+      return;
     // Human work is explicitly result-only; absent or malformed metadata gets no exemption.
     const human =
       isFile(paths.result) &&
@@ -50,9 +87,13 @@ export function validateRunRecordLayout(options: {
   // These have independent formats and lifecycles (PJR-VH8D / PJR-9BY9 / PJR-PZBP).
   const separateTrees = new Set([
     "grade/results",
+    "grade/generated",
     "jobs/runs",
     "exec/events",
     "exec/trials",
+    "exec/plans",
+    "exec/results",
+    "exec/evidence",
     "conventions",
     "generated",
     "routines/failures",
@@ -78,11 +119,9 @@ export function validateRunRecordLayout(options: {
       } else if (
         inRuns
           ? !entry.isFile() || !runRecordLocation(executionPath, directory)
-          : /^(?:exec\/(?:plans|results|evidence))(?:\/|$)/.test(rel) ||
-            /^(?:plan\.md|result\.md|evidence(?:\.attempt-\d+)?\.json|pipeline-state(?:\.attempt-\d+)?\.json)$/.test(
+          : /^(?:plan\.md|result\.md|evidence(?:\.attempt-\d+)?\.json|pipeline-state(?:\.attempt-\d+)?\.json)$/.test(
               basename(path),
-            ) ||
-            /(?:-(?:plan|result)\.md|\.log)$/.test(entry.name)
+            ) || /(?:-(?:plan|result)\.md|\.log)$/.test(entry.name)
       ) {
         report(
           path,
