@@ -54,8 +54,9 @@ BVS9 の後の plan.md が共通規約の版を相対パスの Markdown リン�
 - 新しく作る plan の規約の版への参照を、Markdown のリンクにせず、`共通規約 sha256:<hash>` とリポジトリのルートからのパス（`docs/ja/projects/<project-id>/execution/conventions/<hash>.txt` の形）をインラインコードで書く形にする（`src/shared/plan-conventions.ts`）。
 - prompt へ規約の本文を戻す処理は、新しい書き方と、既にある plan の Markdown のリンクの書き方の両方を読む。既にある plan は書き換えない。
 - 版の本文がないときや、本文の SHA-256 が合わないときは、どちらの書き方でも今と同じくエラーにする。
+- 規約への参照として読むのは、plan の末尾にある runner が書いた参照だけにする。個票から写した本文の中に、新旧どちらの書き方の例（インラインコードやコードブロックの中を含む）があっても、plan の生成と prompt の組み立てを止めない。
 - `validate:history-links`（`packages/docs-lint/src/validate-history-links.ts`）の既定の対象に、`docs/ja/projects/**/execution/runs/**/plan.md` と `docs/ja/projects/**/execution/runs/**/result.md` を足す。既にある plan の規約へのリンクで検査が失敗する場合は、そのリンクの形だけを例外にする。どう扱ったかを個票の対応結果に書く。
-- 単体テストで次を確かめる。新しい書き方で plan が作られる。新旧どちらの書き方からも規約が戻る。版の本文がないときと SHA-256 が合わないときのエラー。新しい置き場所の plan・result にある Markdown のリンクを検査が見つける。
+- 単体テストで次を確かめる。新しい書き方で plan が作られる。本文に新旧の書き方の例を含む plan でも生成と復元が止まらない。新旧どちらの書き方からも規約が戻る。版の本文がないときと SHA-256 が合わないときのエラー。新しい置き場所の plan・result にある Markdown のリンクを検査が見つける。
 - 作業後に `npm run validate:history-links` を流し、通ることを確かめて個票の対応結果に書く。
 - `.github/instructions/markdown.instructions.md` の「履歴蓄積ファイルのリンク記法」の対象の一覧に新しい置き場所を足す案を、個票の対応結果に書き、報告の `handoff` にも書く。このファイルは保護された設定のため直接変えない。反映は利用者の承認のもとで行う。
 - 動きの説明が変わる場合は、`plan-result-lifecycle-guide` を実際の動きに合わせる。CHANGELOG は未公開の版の節に書き、公開済みの版の節は変えない。
