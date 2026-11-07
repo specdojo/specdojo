@@ -1,0 +1,54 @@
+
+> specdojo@0.7.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-451746c3a3b3 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-451746c3a3b3
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+document start: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document start: docs/ja/specdojo/recipes/stsd-recipe.md
+document complete: docs/ja/specdojo/recipes/stsd-recipe.md
+document start: docs/ja/specdojo/rulebooks/dct-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/dct-rulebook.md
+document start: docs/ja/specdojo/rulebooks/opr-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/opr-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/opr-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/opr-rulebook.md
+document start: docs/ja/specdojo/rulebooks/otp-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/otp-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/otp-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/otp-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-plan-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-plan-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-451746c3a3b3/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-11-07T20:03:48Z	docs/ja/specdojo/recipes/cdfd-overview-recipe.md	1	passed	142	pass	95	9	agy-expert-executor	machine	none		
+2026-11-07T20:05:24Z	docs/ja/specdojo/recipes/cdfd-uc-recipe.md	1	passed	94	pass	97	1	agy-expert-executor	machine	none		
+2026-11-07T20:10:08Z	docs/ja/specdojo/recipes/stsd-recipe.md	1	passed	282	pass	98	1	agy-expert-executor	machine	none		
+2026-11-07T20:13:51Z	docs/ja/specdojo/rulebooks/dct-rulebook.md	1	passed	221	needs-work	84	8	agy-expert-executor	machine	none		
+2026-11-07T20:17:06Z	docs/ja/specdojo/rulebooks/opr-index-rulebook.md	1	passed	193	needs-work	79	13	agy-expert-executor	machine	none		
+2026-11-07T20:19:40Z	docs/ja/specdojo/rulebooks/opr-rulebook.md	1	passed	152	needs-work	94	2	agy-expert-executor	machine	none		
+2026-11-07T20:22:24Z	docs/ja/specdojo/rulebooks/otp-index-rulebook.md	1	passed	162	needs-work	92	3	agy-expert-executor	machine	none		
+2026-11-07T20:23:59Z	docs/ja/specdojo/rulebooks/otp-rulebook.md	1	passed	93	pass	99	1	agy-expert-executor	machine	none		
+2026-11-07T20:26:38Z	docs/ja/specdojo/rulebooks/pjr-rulebook.md	1	passed	157	needs-work	82	6	agy-expert-executor	machine	none		
+2026-11-07T20:29:49Z	docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md	1	passed	189	needs-work	83	9	agy-expert-executor	machine	none		
+2026-11-07T20:34:04Z	docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md	1	passed	253	pass	95	2	agy-expert-executor	machine	none		
+2026-11-07T20:35:58Z	docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md	1	passed	112	needs-work	91	5	agy-expert-executor	machine	none		
+2026-11-07T20:38:45Z	docs/ja/specdojo/rulebooks/pm-members-rulebook.md	1	passed	164	pass	93	3	agy-expert-executor	machine	none		
+2026-11-07T20:40:40Z	docs/ja/specdojo/rulebooks/pm-organization-rulebook.md	1	passed	113	needs-work	89	2	agy-expert-executor	machine	none		
+2026-11-07T20:43:19Z	docs/ja/specdojo/rulebooks/pm-plan-rulebook.md	1	passed	157	needs-work	80	14	agy-expert-executor	machine	none		

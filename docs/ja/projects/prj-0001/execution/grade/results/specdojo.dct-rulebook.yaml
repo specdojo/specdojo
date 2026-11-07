@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 84
-graded_at: "2026-10-31T20:28:12.507Z"
+graded_at: "2026-11-07T20:13:49.418Z"
 graded_by: flash-high-executor
-content_hash: d25c7b5157f05808afe4a95832d62c3ecf3d31d5d62c4aaded72b7ce320d6ede
+content_hash: 43e8daff4f23b517e6c0cf04bc1519bc4da06ff4443046f491aa24208c710d7e
 categories:
   purpose:
     score: 100
@@ -126,16 +126,14 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 207
-    anchor: "- `roles` には条件を確認する責務を持つロールコードのみを記載する。"
+    anchor: "- `work` 成果物には最低 1 件の完了条件を記載する。"
     message: ドメインの `base_path` について、スキーマ（`^/[^\\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
     message_ja: ドメインの `base_path` について、スキーマ（`^/[^\\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 225
-    anchor: >-
-      - `local_id` に `_TERM_` を含むテンプレート項目（例: `cdfd-_TERM_`、`bdd-_TERM_`）は、パターンA（複数業務領域）を既定とする。業務領域が複数ある場合（例:
-      販売/調達/会計）に、業務領域ごとへ項目を複製し、`_TERM_` を各業務領域の略称へ置き換える。
+    anchor: "### 6.10. 業務領域テンプレートの反復方針（`_TERM_` の使い分け）"
     message: >-
       `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と
       schema 検証結果が一致しないため。
@@ -146,7 +144,7 @@ findings:
     severity: major
     rule: vp-qe-kata-conformance
     line: 172
-    anchor: ""
+    anchor: "### 6.3. `depends_on`"
     message: >-
       `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
       `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
@@ -157,7 +155,7 @@ findings:
     severity: major
     rule: vp-qe-kata-conformance
     line: 186
-    anchor: "### 6.5. `evidence_refs`"
+    anchor: ""
     message: >-
       recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
       `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。

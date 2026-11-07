@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 80
-graded_at: "2026-10-05T21:19:29.683Z"
-graded_by: agy-expert-executor
-content_hash: b9d6d1c7d1b127fca2be97dd1f3f7b086a6cf91371a56e9fe0b8eea26ea4f937
+graded_at: "2026-11-07T20:43:17.187Z"
+graded_by: flash-high-executor
+content_hash: f83f5466905f817e545aac4d722a453c57abe5cb74522c0d11eaab4af8a1628f
 categories:
   purpose:
     score: 100
@@ -115,12 +115,18 @@ findings:
     message: >-
       Frontmatter で `pm-plan-template` を宣言しているにもかかわらず、同じ見出し順と必須区分を「本文構成（標準テンプレ）」として再掲しており、template を骨組みの正本とする Rulebook
       記述標準に従って章固有の意味要件だけへ整理する必要がある。
+    message_ja: >-
+      Frontmatter で `pm-plan-template` を宣言しているにもかかわらず、同じ見出し順と必須区分を「本文構成（標準テンプレ）」として再掲しており、template を骨組みの正本とする Rulebook
+      記述標準に従って章固有の意味要件だけへ整理する必要がある。
   - id: F002
     severity: major
     rule: vp-qe-verifiability
     line: 63
     anchor: "### 6.2. 統合管理方針"
     message: >-
+      統合管理表に価値・リスクまたは根拠 ID と証跡・正本を結ぶ列や結合 ID がなく、冒頭で要求する「どの証跡で判断するか」と recipe の管理対象単位の Trace を pass / fail
+      判定できないため、各行から根拠と証跡を追跡できる構造を定義する必要がある。
+    message_ja: >-
       統合管理表に価値・リスクまたは根拠 ID と証跡・正本を結ぶ列や結合 ID がなく、冒頭で要求する「どの証跡で判断するか」と recipe の管理対象単位の Trace を pass / fail
       判定できないため、各行から根拠と証跡を追跡できる構造を定義する必要がある。
   - id: F003
@@ -131,6 +137,9 @@ findings:
     message: >-
       全体方針では概要・スコープ・成功基準を直接の根拠と必須化し、template もそれらを `based_on` に生成する一方、本表では `based_on` を任意としているため、rulebook
       単体利用時にも根拠参照が欠落しない必須条件へ統一する必要がある。
+    message_ja: >-
+      全体方針では概要・スコープ・成功基準を直接の根拠と必須化し、template もそれらを `based_on` に生成する一方、本表では `based_on` を任意としているため、rulebook
+      単体利用時にも根拠参照が欠落しない必須条件へ統一する必要がある。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
@@ -139,30 +148,37 @@ findings:
     message: >-
       プロジェクト概要・スコープ・成功基準を直接の根拠と定めている一方、`dct-project-management-template.yaml` の `pm-plan.depends_on` は空配列であり、前提成果物への依存が
       Schedule・scaffold に展開されないため、カタログまたは本書の依存方針を統一する必要がある。
+    message_ja: >-
+      プロジェクト概要・スコープ・成功基準を直接の根拠と定めている一方、`dct-project-management-template.yaml` の `pm-plan.depends_on` は空配列であり、前提成果物への依存が
+      Schedule・scaffold に展開されないため、カタログまたは本書の依存方針を統一する必要がある。
   - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
     line: 45
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: template 宣言済みの系統で見出し・表の骨組みを rulebook に再掲しており、rulebook は意味要件、template は骨組みという種別責務を明確に分離する必要がある。
+    message_ja: template 宣言済みの系統で見出し・表の骨組みを rulebook に再掲しており、rulebook は意味要件、template は骨組みという種別責務を明確に分離する必要がある。
   - id: F006
     severity: major
     rule: vp-qe-kata-conformance
     line: 63
     anchor: "### 6.2. 統合管理方針"
     message: recipe の仕上げチェックは管理対象ごとに価値またはリスクから証跡まで一続きで追跡することを要求するが、rulebook と template の統合管理表にはその対応を保持する欄がなく、適用方法が一致していない。
+    message_ja: recipe の仕上げチェックは管理対象ごとに価値またはリスクから証跡まで一続きで追跡することを要求するが、rulebook と template の統合管理表にはその対応を保持する欄がなく、適用方法が一致していない。
   - id: F007
     severity: major
     rule: vp-qe-kata-conformance
     line: 63
     anchor: "### 6.2. 統合管理方針"
     message: 成果物カタログの `pm-plan` 完了条件は構成管理・技術管理の観点を要求しているが、統合管理方針の管理対象にその観点も委譲先もなく、rulebook に従った成果物がカタログの完了条件を満たせないため整合させる必要がある。
+    message_ja: 成果物カタログの `pm-plan` 完了条件は構成管理・技術管理の観点を要求しているが、統合管理方針の管理対象にその観点も委譲先もなく、rulebook に従った成果物がカタログの完了条件を満たせないため整合させる必要がある。
   - id: F008
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# プロジェクト管理計画 作成ルール"
     message: 現金支出・作業時間・継続運用負荷を分ける規則に対し、sample は「参加者の時間」一行へ試用準備時間と日常操作負荷を混在させているため、完成例でも三者を区別する必要がある。
+    message_ja: 現金支出・作業時間・継続運用負荷を分ける規則に対し、sample は「参加者の時間」一行へ試用準備時間と日常操作負荷を混在させているため、完成例でも三者を区別する必要がある。
   - id: F009
     severity: major
     rule: vp-qe-kata-conformance
@@ -171,12 +187,16 @@ findings:
     message: >-
       `pm-plan-sample.md` の判断ゲートは実在する `SC-01` と `AC-01`〜`AC-04` を条件 ID
       で参照せず、条件不足時の扱いも示していないため、本書が要求する成功基準との追跡方法を完成例へ適用する必要がある。
+    message_ja: >-
+      `pm-plan-sample.md` の判断ゲートは実在する `SC-01` と `AC-01`〜`AC-04` を条件 ID
+      で参照せず、条件不足時の扱いも示していないため、本書が要求する成功基準との追跡方法を完成例へ適用する必要がある。
   - id: F010
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# プロジェクト管理計画 作成ルール"
     message: 条件 ID と不足時の扱いを要求しているのに、sample の判断ゲートは「初期成功基準と受入条件」などの総称だけを記載しており、rulebook の適用例として成立していない。
+    message_ja: 条件 ID と不足時の扱いを要求しているのに、sample の判断ゲートは「初期成功基準と受入条件」などの総称だけを記載しており、rulebook の適用例として成立していない。
   - id: F011
     severity: major
     rule: vp-qe-kata-conformance
@@ -185,21 +205,27 @@ findings:
     message: >-
       本書と組織定義 sample は成果物責任の正本を RACI としているが、`pm-plan-sample.md` は「作業順序・担当」の正本を Schedule のみとし RACI を示していないため, Task owner
       と成果物責任の正本が混同されないよう統一する必要がある。
+    message_ja: >-
+      本書と組織定義 sample は成果物責任の正本を RACI としているが、`pm-plan-sample.md` は「作業順序・担当」の正本を Schedule のみとし RACI を示していないため, Task owner
+      と成果物責任の正本が混同されないよう統一する必要がある。
   - id: F012
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# プロジェクト管理計画 作成ルール"
     message: RACI を正本として示す要件に対し、sample の正本表は担当情報を Schedule のみに割り当てて RACI を欠いており、組織定義 sample とも適用結果が矛盾している。
+    message_ja: RACI を正本として示す要件に対し、sample の正本表は担当情報を Schedule のみに割り当てて RACI を欠いており、組織定義 sample とも適用結果が矛盾している。
   - id: F013
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# プロジェクト管理計画 作成ルール"
     message: 未決事項に `_UNDECIDED_:` を付ける規則と template の「現状」欄に対し、sample は未決論点をラベルなしで記載しているため、完成例へ共通ラベルを適用する必要がある。
+    message_ja: 未決事項に `_UNDECIDED_:` を付ける規則と template の「現状」欄に対し、sample は未決論点をラベルなしで記載しているため、完成例へ共通ラベルを適用する必要がある。
   - id: F014
     severity: minor
     rule: vp-ux-readability
     line: 45
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 「本文構成（標準テンプレ）」が宣言済み template の見出し一覧を重複して示すため、読者がどちらを骨組みの正本として参照すべきか迷わないよう、章を意味要件中心へ改める必要がある。
+    message_ja: 「本文構成（標準テンプレ）」が宣言済み template の見出し一覧を重複して示すため、読者がどちらを骨組みの正本として参照すべきか迷わないよう、章を意味要件中心へ改める必要がある。

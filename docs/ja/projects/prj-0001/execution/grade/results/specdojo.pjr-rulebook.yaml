@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 82
-graded_at: "2026-10-25T20:04:35.023Z"
+graded_at: "2026-11-07T20:26:36.549Z"
 graded_by: flash-high-executor
-content_hash: 19bd7127046d13fcaa7ef8731b142cee3c89e19f40da5efddf176bf3fa938dd2
+content_hash: 4b151da8c987408591e9ebf481f53ba9753182554132184c29033914724f5af2
 categories:
   purpose:
     score: 100
@@ -110,8 +110,8 @@ findings:
   - id: F001
     severity: major
     rule: vp-qe-verifiability
-    line: 106
-    anchor: "| `generated/pjr-views-by-status.md`   | 状態別の補助一覧     | 不可     |"
+    line: 111
+    anchor: "- type 固有の構成は `todo` の概要・完了条件・作業内容・対応結果など、各 type 用テンプレートに従う。"
     message: >-
       `ready` 昇格と終端可否は「type 固有の必須節」を満たすことに依存する一方、各 `item_type` の必須節・必須記入欄を本文で列挙せず参照 ID のない「各 type 用テンプレート」に委ねているため、必須条件の
       pass / fail を決定できる定義または解決可能な参照を追加する必要がある。
@@ -132,10 +132,8 @@ findings:
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 83
-    anchor: >-
-      - 各イベントは version、イベント ID、UTC 発生日時、action、actor、遷移前後の `item_status`、reason、変更フィールド、直前イベント ID を保持する。Git
-      から移行したイベントだけは移行元 commit も保持できる。
+    line: 85
+    anchor: "- 起票と終端は瞬間として記録し、`registered_at` / `completed_at` に UTC の RFC 3339・秒精度（`YYYY-MM-DDTHH:MM:SSZ`）で保存する。"
     message: >-
       「起票と終端」を `registered_at` / `completed_at` に保存するとする記述は、`deferred` は終端だが `completed_at`
       を持たないとする後段の例外規則と整合しないため、`completed_at` の対象を完了・決定・却下に限定して記述する必要がある。
@@ -167,7 +165,7 @@ findings:
   - id: F006
     severity: minor
     rule: vp-ux-language-consistency
-    line: 208
+    line: 230
     anchor: "- `type` / `item_status` / `priority` に schema 未定義の値を使用しない。"
     message: >-
       `type` は文書種別 `project`、`item_type` は登録項目分類として区別しているのに、禁止事項を含む複数箇所で登録項目分類を裸の「type」と表記しており両者を混同し得るため、`item_type`

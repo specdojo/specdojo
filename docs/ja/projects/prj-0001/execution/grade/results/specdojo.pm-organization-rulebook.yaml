@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 89
-graded_at: "2026-10-05T21:17:21.915Z"
-graded_by: agy-expert-executor
-content_hash: abaf0d512a3e8862ae1948f20053e4d0946513a9b57c98eec498951cc7774ab9
+graded_at: "2026-11-07T20:40:38.819Z"
+graded_by: flash-high-executor
+content_hash: 5c67245a362c08078b4a44edeed2a13ac4c611b6535668c8827fb5dbb8f10e01
 categories:
   purpose:
     score: 100
@@ -113,11 +113,15 @@ findings:
     line: 1
     anchor: "# 組織定義 作成ルール"
     message: 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。
+    message_ja: 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 組織定義 作成ルール"
     message: >-
+      全Role codeを組織定義へ記載しない方針は、上位標準が同文書を採用／未採用 Role code と使用可能な owner
+      の正本としてSchedule・RACIを検証する規則と矛盾するため、採用判断を組織定義に残す責務境界へ修正してください。
+    message_ja: >-
       全Role codeを組織定義へ記載しない方針は、上位標準が同文書を採用／未採用 Role code と使用可能な owner
       の正本としてSchedule・RACIを検証する規則と矛盾するため、採用判断を組織定義に残す責務境界へ修正してください。
