@@ -4103,3 +4103,19 @@
       from: PJR-Z0XR・PJR-PZBP・PJR-TA6W の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。新しい配置の plan・result・evidence・executor のログ・state がすべて commit された
       to: PJR-BRN4 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。許可外の変更が残らない run は止まらずに統合され、記録はすべて commit された
   previous_event_id: reg_f6551686b26b418d844c39e1c44e17a5
+- v: 1
+  id: reg_43f4335cfcb6424386253bf6b2a5ff0e
+  ts: "2026-11-07T01:06:53Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-BVS9 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-07"
+      to: "-"
+  previous_event_id: reg_9dd2023e6d0b4a0a9020911d62c2241d
