@@ -131,3 +131,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_52fc9069825f4610a1875174e229366e
+- v: 1
+  id: reg_aa8b23e73807401c9373d7e44f3b0d11
+  ts: "2026-11-07T01:16:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票・result と照らし、JSEY で統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: 保存する plan の共通の規約を版（SHA-256）への参照にし、本体を execution/conventions/ に版ごとに 1 つだけ置くようにした。agent への prompt には全文を復元して渡す
+  previous_event_id: reg_15b2834a7b834c14a6fb5b4626132398

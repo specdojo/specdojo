@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-bvs9-plan-conventions-by-reference
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T15:05:39Z"
   due_on: null
+  completed_at: "2026-11-07T01:16:28Z"
+  conclusion: 保存する plan の共通の規約を版（SHA-256）への参照にし、本体を execution/conventions/ に版ごとに 1 つだけ置くようにした。agent への prompt には全文を復元して渡す
   derived_from:
     - PJR-2WC2
   depends_on:
