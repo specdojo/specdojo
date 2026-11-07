@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T23:21:32Z"
+  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-TA6W
 ---
@@ -59,8 +60,11 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/shared/run-records.ts` の `snapshotRunAttempt` を修正し、ログは `*.attempt-N.log` へ移動する。引き継ぐ `log_refs` を指定したログだけは元も保持し、`pipeline-state.json` と `evidence.json` は従来どおりコピーする。退避した evidence は実際に退避したログだけ参照を書き換え、過去の退避済みログの参照は維持する。
+- `tests/src/exec/run-records.test.ts` に、古い親検証ログの元ファイルが残らないこと、引き継ぐ evidence のログを保持すること、退避先への参照更新、複数回の退避と不正な evidence の保存を確認する単体テストを追加・拡張した。`tests/src/exec/register-resume.integration.test.ts` では、親検証の失敗後に executor から再開して成功する経路と、reporter 再開で executor ログの内容・参照を保持する経路の確認を強化した。
+- 実行記録のライフサイクルガイドに移動・保持の規則を追記し、`CHANGELOG.md` の未公開節に修正内容を記載した。保護された設定の変更は不要。
+- executor では Prettier、カタログ検査、履歴リンク検査、登録簿の派生ビュー生成、`git diff --check` が成功した。カタログ検査には変更対象外の参照に関する警告がある。単体・結合テスト、型検査と lint・schema 検査は、この executor の終了後に親 runner が実行する。result の記入と状態遷移も reporter・runner に委ねる。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]]
