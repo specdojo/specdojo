@@ -118,3 +118,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_638c8a8ea2664603a5d582daec776506
+- v: 1
+  id: reg_28b566ce82194e56873d37e7a1ab90b9
+  ts: "2026-11-07T07:20:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票の対応結果・result と照らし、develop で exec validate の両モードを流して確かめた。JSEY で exec run の動作も確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: exec validate で過去の世代の記録と古い置き場所の記録を正常とし、残る一部だけの記録を普通は警告、--records-only はエラーにした。develop で普通の検査は終了コード 0 に戻った
+  previous_event_id: reg_f7c2cdd524ac47ddad8f3389175328d4

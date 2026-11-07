@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-kc0t-validate-missing-records-warn
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   registered_at: "2026-11-07T06:32:53Z"
+  completed_at: "2026-11-07T07:20:06Z"
+  conclusion: exec validate で過去の世代の記録と古い置き場所の記録を正常とし、残る一部だけの記録を普通は警告、--records-only はエラーにした。develop で普通の検査は終了コード 0 に戻った
   derived_from:
     - PJR-JT5J
 ---
