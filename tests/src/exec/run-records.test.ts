@@ -236,6 +236,99 @@ describe("run record layout", () => {
     expect(readFileSync(join(records.directory, "evidence.attempt-2.json"), "utf8")).toBe(
       "next evidence",
     );
+    expect(readFileSync(records.state, "utf8")).toBe("old state");
+    expect(readFileSync(records.evidence, "utf8")).toBe("next evidence");
+    expect(readFileSync(join(records.directory, "pipeline-state.attempt-2.json"), "utf8")).toBe(
+      "old state",
+    );
+    expect(readFileSync(records.log("executor.attempt-1.log"), "utf8")).toBe("old log");
+    expect(existsSync(records.log("executor.log"))).toBe(false);
+    expect(existsSync(records.log("executor.attempt-2.log"))).toBe(false);
+    expect(existsSync(records.log("executor.attempt-1.attempt-2.log"))).toBe(false);
+  });
+
+  it("moves stale failure logs and rewrites archived evidence without changing older refs", () => {
+    const records = taskRecordPaths(fixture(), "PJR-AB12", "run-1");
+    const failureLog = "parent-validation-attempt-1-test-integration.log";
+    const refs = [
+      {
+        kind: "agent-output-excerpt",
+        path: records.log("executor.log"),
+        bytes: 7,
+        truncated: false,
+      },
+      {
+        kind: "parent-validation-output",
+        path: records.log(failureLog),
+        bytes: 12,
+        truncated: false,
+      },
+      {
+        kind: "agent-output-excerpt",
+        path: records.log("executor.attempt-1.log"),
+        bytes: 5,
+        truncated: false,
+      },
+    ];
+    write(records.state, "old state");
+    write(join(records.directory, "pipeline-state.attempt-1.json"), "earlier state");
+    write(records.log("executor.attempt-1.log"), "older");
+    write(records.log("executor.log"), "current");
+    write(records.log(failureLog), "exit code: 1");
+    const evidence = { log_refs: refs, validations: [{ status: "failed" }] };
+    write(records.evidence, JSON.stringify(evidence));
+
+    snapshotRunAttempt(records.state);
+
+    expect(JSON.parse(readFileSync(records.evidence, "utf8"))).toEqual(evidence);
+    // A successful executor restart writes new evidence and no parent failure output.
+    write(records.evidence, JSON.stringify({ log_refs: [], validations: [{ status: "passed" }] }));
+    expect(existsSync(records.log(failureLog))).toBe(false);
+    expect(existsSync(records.log("executor.log"))).toBe(false);
+    expect(readFileSync(records.log(failureLog.replace(".log", ".attempt-2.log")), "utf8")).toBe(
+      "exit code: 1",
+    );
+    const archived = JSON.parse(
+      readFileSync(join(records.directory, "evidence.attempt-2.json"), "utf8"),
+    );
+    expect(archived.log_refs).toEqual([
+      { ...refs[0], path: records.log("executor.attempt-2.log") },
+      { ...refs[1], path: records.log(failureLog.replace(".log", ".attempt-2.log")) },
+      refs[2],
+    ]);
+    for (const ref of archived.log_refs) expect(existsSync(ref.path)).toBe(true);
+    expect(readFileSync(records.log("executor.attempt-1.log"), "utf8")).toBe("older");
+  });
+
+  it("keeps logs referenced by retained evidence at their original paths", () => {
+    const records = taskRecordPaths(fixture(), "PJR-AB12", "run-1");
+    const retainedEvidence = {
+      log_refs: [
+        {
+          kind: "agent-output-excerpt",
+          path: records.log("executor.log"),
+          bytes: 7,
+          truncated: false,
+        },
+      ],
+    };
+    write(records.state, "old state");
+    write(records.evidence, JSON.stringify(retainedEvidence));
+    write(records.log("executor.log"), "current");
+    write(records.log("reporter-attempt-1.stderr.log"), "reporter failed");
+
+    snapshotRunAttempt(records.state, retainedEvidence.log_refs);
+
+    expect(JSON.parse(readFileSync(records.evidence, "utf8"))).toEqual(retainedEvidence);
+    expect(readFileSync(retainedEvidence.log_refs[0].path, "utf8")).toBe("current");
+    expect(readFileSync(records.log("executor.attempt-1.log"), "utf8")).toBe("current");
+    expect(existsSync(records.log("reporter-attempt-1.stderr.log"))).toBe(false);
+    const archived = JSON.parse(
+      readFileSync(join(records.directory, "evidence.attempt-1.json"), "utf8"),
+    );
+    expect(archived.log_refs).toEqual([
+      { ...retainedEvidence.log_refs[0], path: records.log("executor.attempt-1.log") },
+    ]);
   });
 
   it("keeps dashboard rows distinct when tasks share the same run id", () => {

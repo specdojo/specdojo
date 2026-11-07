@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T23:21:32Z"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-TA6W
 ---
@@ -62,8 +61,10 @@ specdojo:
 
 - `src/shared/run-records.ts` の `snapshotRunAttempt` を修正し、ログは `*.attempt-N.log` へ移動する。引き継ぐ `log_refs` を指定したログだけは元も保持し、`pipeline-state.json` と `evidence.json` は従来どおりコピーする。退避した evidence は実際に退避したログだけ参照を書き換え、過去の退避済みログの参照は維持する。
 - `tests/src/exec/run-records.test.ts` に、古い親検証ログの元ファイルが残らないこと、引き継ぐ evidence のログを保持すること、退避先への参照更新、複数回の退避と不正な evidence の保存を確認する単体テストを追加・拡張した。`tests/src/exec/register-resume.integration.test.ts` では、親検証の失敗後に executor から再開して成功する経路と、reporter 再開で executor ログの内容・参照を保持する経路の確認を強化した。
+- 前回の親検証は、`agent-output-excerpt` の参照を executor だけとみなしたテストの前提誤りで失敗した。`executor.log` のパスで参照を特定し、reporter 再開後の参照・元の名前・内容を照合するよう修正した。既存の統合先同期テストは元の名前と筋書きに戻し、親検証失敗からの executor 再開を別のテストとして追加した。
 - 実行記録のライフサイクルガイドに移動・保持の規則を追記し、`CHANGELOG.md` の未公開節に修正内容を記載した。保護された設定の変更は不要。
-- executor では Prettier、カタログ検査、履歴リンク検査、登録簿の派生ビュー生成、`git diff --check` が成功した。カタログ検査には変更対象外の参照に関する警告がある。単体・結合テスト、型検査と lint・schema 検査は、この executor の終了後に親 runner が実行する。result の記入と状態遷移も reporter・runner に委ねる。
+- 再開時の追加指示に従い、`npx vitest run --config vitest.integration.config.ts tests/src/exec/register-resume.integration.test.ts` を試したが、全14件が fixture の初期化時に `spawnSync git EPERM` で停止した。テスト本体の判定には到達していないため、親 runner の `test-integration` に検証を引き継ぐ。
+- executor では Prettier、カタログ検査、履歴リンク検査、登録簿の派生ビュー生成、`git diff --check` が成功した。カタログ検査には変更対象外の再エクスポート参照・参照文書の欠落に関する警告がある。単体・結合テストの全件、型検査と lint・schema 検査は親 runner、result の記入と状態遷移は reporter・runner が行う。
 
 ## 6. 関連ドキュメント
 

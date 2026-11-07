@@ -97,6 +97,8 @@ review は元の項目の下の別 run とします。plan と result の文書 
 
 plan と result のファイル名はそれぞれ `plan.md` と `result.md` です。同じ task の新しい実行は別 run に保存します。同一 run の再開では保存先を維持し、executor をやり直す前の state・evidence・ログを `*.attempt-N.*` に退避します。
 
+state と evidence は元も残し、ログは退避先へ移します。退避した evidence の `log_refs` も退避先を指します。引き継ぐ evidence が参照するログは元の名前でも保持します。reporter からの再開では executor の試行を退避せず、evidence とログをそのまま使います。
+
 ### 2.3. 既存記録の移行
 
 `exec migrate-records` は検査を通すためには不要です。旧配置の記録を CLI の通常の探索で使う場合に移行します。移さない場合の制約は次のとおりです。
