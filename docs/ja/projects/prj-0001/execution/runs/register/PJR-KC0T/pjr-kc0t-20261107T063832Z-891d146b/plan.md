@@ -72,4 +72,12 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-07）
+
+- 親の検証の `test-unit` で `tests/src/exec/run-records.test.ts` の「keeps the full plan-result-lifecycle-guide layout tree aligned with the path module」が失敗した。ガイドに `exec/plans/` があるため、ガイド全体に `exec/plans/` が無いことを確かめる `expect(content).not.toContain("exec/plans/")` が通らない。
+- このテストの狙いは、構成図が古い置き場所を現行の配置として描いていないことである。今回の完了条件では、ガイドで古い置き場所の記録の扱いを説明する必要がある。
+- `exec/plans/`・`exec/results/` が無いことの確認を、ガイド全体（`content`）ではなく構成図（`block`）に限る。`controls/reviews/`・`assessments/generated/` の確認は今のまま `content` に対して行う。
+- ガイドの文を言い換えてテストを通すこと（`exec/plans/` の文字列を避ける書き方）はしない。
+- 直した後に `npm run test:unit` を流して通ることを確かめ、テストを直した理由を個票の対応結果に書く。
+
 [共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b](../../../../conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt)

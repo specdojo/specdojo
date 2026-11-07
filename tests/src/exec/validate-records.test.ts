@@ -63,6 +63,9 @@ describe("run record layout audit", () => {
     }
     for (const path of [
       "grade/results/result.md",
+      "grade/generated/runs/grade-plan.md",
+      "grade/generated/runs/grade-reporter-plan.md",
+      "grade/generated/runs/pipeline-state.json",
       "jobs/runs/run.json",
       "exec/events/event.json",
       "exec/trials/trial/plan.md",
@@ -74,6 +77,81 @@ describe("run record layout audit", () => {
       f.write(join(f.executionPath, path));
     }
     expect(f.check()).toEqual([]);
+  });
+
+  it.each(["register", "schedule", "job"] as const)(
+    "accepts pre-evidence and consolidated historical runs for %s",
+    (origin) => {
+      const f = fixture();
+      const latest = runRecordPaths(f.executionPath, origin, "item", "latest");
+      f.write(latest.plan);
+      f.write(latest.result);
+      // State/evidence contents are deliberately invalid: layout checks only their presence.
+      for (const run of ["earlier-1", "earlier-2"]) {
+        const earlier = runRecordPaths(f.executionPath, origin, "item", run);
+        f.write(earlier.evidence, "not JSON");
+        f.write(earlier.state, "not JSON");
+        f.write(earlier.log("executor.log"));
+      }
+      expect(f.check()).toEqual([]);
+    },
+  );
+
+  it("accepts legacy trees without requiring evidence or pairs", () => {
+    const f = fixture();
+    for (const path of [
+      "exec/plans/old-plan.md",
+      "exec/plans/done/archived-plan.md",
+      "exec/results/other-result.md",
+      "exec/evidence/item/run/pipeline-state.json",
+    ])
+      f.write(join(f.executionPath, path));
+    expect(f.check()).toEqual([]);
+  });
+
+  it.each([
+    { files: ["plan.md"] },
+    { files: ["result.md"] },
+    { files: ["integrate.log"] },
+    { files: ["pipeline-state.json"] },
+    { files: ["plan.md", "result.md", "pipeline-state.json"] },
+    { files: ["evidence.json", "pipeline-state.json"] },
+    { files: ["plan.md", "evidence.json", "pipeline-state.json"] },
+    { files: ["result.md", "evidence.json", "pipeline-state.json"] },
+  ])("does not exempt incomplete records $files", ({ files }) => {
+    const f = fixture();
+    const paths = runRecordPaths(f.executionPath, "register", "item", "run");
+    for (const file of files) f.write(join(paths.directory, file));
+    expect(
+      f
+        .check()
+        .filter((issue) => issue.reason === "missing")
+        .map((issue) => issue.path),
+    ).toEqual(
+      ["evidence.json", "plan.md", "result.md"]
+        .filter((name) => !files.includes(name))
+        .map((name) => relative(f.repoRoot, join(paths.directory, name))),
+    );
+  });
+
+  it("requires a complete pair in a valid sibling run of the same item and origin", () => {
+    const f = fixture();
+    const paths = runRecordPaths(f.executionPath, "register", "item", "run");
+    f.write(paths.evidence);
+    f.write(paths.state);
+    for (const pair of [
+      runRecordPaths(f.executionPath, "register", "other-item", "paired").directory,
+      runRecordPaths(f.executionPath, "schedule", "item", "paired").directory,
+      join(dirname(paths.directory), "invalid run"),
+    ]) {
+      f.write(join(pair, "plan.md"));
+      f.write(join(pair, "result.md"));
+    }
+    f.write(join(dirname(paths.directory), "only-plan", "plan.md"));
+    f.write(join(dirname(paths.directory), "only-result", "result.md"));
+    expect(
+      f.check().filter((issue) => issue.path.startsWith(relative(f.repoRoot, paths.directory))),
+    ).toHaveLength(2);
   });
 
   it("reports exact missing paths, including runs containing only state or logs and empty runs", () => {
@@ -104,12 +182,9 @@ describe("run record layout audit", () => {
     expect(f.check()).toHaveLength(2);
   });
 
-  it("rejects legacy, unknown-origin, shallow, nested and stray execution records", () => {
+  it("rejects unknown-origin, shallow, nested and stray execution records", () => {
     const f = fixture();
     const paths = [
-      "exec/plans/old-plan.md",
-      "exec/results/old-result.md",
-      "exec/evidence/item/run/arbitrary.json",
       "runs/other/item/run/plan.md",
       "runs/register/plan.md",
       "runs/register/item/run/nested/evidence.json",
@@ -164,6 +239,24 @@ describe("run record layout audit", () => {
     expect(f.check().some((issue) => issue.path.startsWith("custom-routines/.locks"))).toBe(true);
   });
 
+  it("ignores empty lock directory trees but checks them once they contain files", () => {
+    const f = fixture();
+    const locks = [
+      join(f.executionPath, "exec/.locks/exec-run.lock/nested"),
+      join(f.routinesPath, ".locks/routine-run.lock/nested"),
+    ];
+    for (const lock of locks) mkdirSync(lock, { recursive: true });
+    expect(f.check()).toEqual([]);
+    for (const lock of locks) f.write(join(lock, "owner.json"));
+    for (const lock of locks)
+      expect(f.check()).toContainEqual(
+        expect.objectContaining({
+          path: relative(f.repoRoot, join(lock, "owner.json")),
+          reason: "lock-not-ignored",
+        }),
+      );
+  });
+
   it("reports failure to query Git rather than silently accepting locks", () => {
     const f = fixture();
     f.write(join(f.executionPath, "exec/.locks/owner.json"));
@@ -209,9 +302,28 @@ describe("run record layout audit", () => {
       expect(process.exitCode).toBe(1);
       expect(output).toContain("execution/runs/register/PJR-TEST/run-1/result.md: [missing]");
       expect(output).toContain("custom-routines/.locks");
+      expect(output).toContain(
+        `${flags.length ? "ERROR:" : "WARN: "} execution/runs/register/PJR-TEST/run-1/result.md: [missing]`,
+      );
+
+      rmSync(join(f.routinesPath, ".locks"), { recursive: true });
+      output = "";
+      await run(flags);
+      expect(process.exitCode).toBe(flags.length ? 1 : 0);
+      expect(output).not.toContain(flags.length ? "WARN:" : "ERROR:");
+
+      f.write(join(f.executionPath, "loose-plan.md"));
+      output = "";
+      await run(flags);
+      expect(process.exitCode).toBe(1);
+      expect(output).toContain(
+        `${flags.length ? "ERROR: " : "- "}execution/loose-plan.md: [misplaced]`,
+      );
+      rmSync(join(f.executionPath, "loose-plan.md"));
 
       // Startup/resume must tolerate partial records and live locks, while still
-      // rejecting invalid events. The public default audit remains strict above.
+      // rejecting invalid events.
+      f.write(join(f.routinesPath, ".locks/routine-run.lock/owner.json"));
       output = "";
       await run(["--schedule-only"]);
       expect(process.exitCode).toBe(0);
@@ -232,6 +344,15 @@ describe("run record layout audit", () => {
       await run(flags);
       expect(process.exitCode).toBe(0);
       expect(output).not.toContain("[missing]");
+
+      f.write(join(f.routinesPath, ".locks/owner.json"));
+      rmSync(join(f.repoRoot, ".git"), { recursive: true });
+      output = "";
+      await run(flags);
+      expect(process.exitCode).toBe(1);
+      expect(output).toContain(
+        `${flags.length ? "ERROR: " : "- "}custom-routines/.locks: [git-check-failed]`,
+      );
     },
   );
 

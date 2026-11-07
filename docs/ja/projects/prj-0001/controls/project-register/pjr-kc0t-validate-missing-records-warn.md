@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: medium
   registered_at: "2026-11-07T06:32:53Z"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-JT5J
 ---
@@ -72,6 +71,7 @@ JT5J の後、exec validate が過去の世代の記録を欠落と判定して�
 - 同ファイルで `grade/generated/` を独立した形式として除外し、ファイルのない lock のディレクトリツリーを Git 検査へ渡さないようにした。ファイルのある lock の追跡・無視の検査と Git 確認失敗の検出は維持した。
 - `src/exec/commands.ts`: 欠落を通常時は `WARN:` とし、`--records-only` では従来どおり `ERROR:`・終了コード 1 にした。配置違反と lock のエラー、および `--schedule-only` の動作は維持した。
 - `tests/src/exec/validate-records.test.ts`: 3 出どころの過去の世代、旧配置、不完全な組合せ、集約先の条件、grade 生成物、空／非空 lock、通常／配置限定／schedule 限定の CLI 判定を追加・更新した。単体・統合テストの実行は親 runner に委ねる。
+- `tests/src/exec/run-records.test.ts`: 親の単体検証で、必要な旧配置の説明まで構成図の検査が拒否していたため、`exec/plans/`・`exec/results/` がないことの確認をガイド全体の `content` から構成図の `block` に限定した。`controls/reviews/`・`assessments/generated/` は引き続きガイド全体で確認する。ガイドの文言は維持し、`npm run test:unit` の再実行は pipeline の指示に従って親 runner に委ねる。
 - [[specdojo:command-reference|コマンドリファレンス]] と [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] に、正常とする世代、欠落の警告／エラー、検査に移行が不要なこと、未移行時の読み取り制約を記載した。CHANGELOG は Unreleased の不具合修正に追記した。
 
 ### 未移行の記録を読む機能の調査
@@ -94,9 +94,18 @@ JT5J の後、exec validate が過去の世代の記録を欠落と判定して�
 | `node dist/specdojo.js exec validate --project prj-0001`                | 0          | 0     | 28   | ビルドした同じ CLI の通常検査は成功                                               |
 | `node dist/specdojo.js exec validate --project prj-0001 --records-only` | 1          | 28    | 0    | 残る欠落だけをエラーとする期待どおりの失敗                                        |
 
-- 検出対象は 14 run・28 ファイルの欠落で、実行中の本タスクの evidence 欠落 1 件を含む。過去の世代と grade 生成物・空の lock の違反は報告されない。通常時には上表の `WARN:` のほか、schedule に存在しない旧 task の event に関する既存の警告 4 件が従来の箇条書き形式で出る。
+- 初回の検出対象は 14 run・28 ファイルの欠落で、実行中の本タスクの evidence 欠落 1 件を含む。過去の世代と grade 生成物・空の lock の違反は報告されない。通常時には上表の `WARN:` のほか、schedule に存在しない旧 task の event に関する既存の警告 4 件が従来の箇条書き形式で出る。
 - Prettier、履歴リンク検査、カタログ検査、register の派生ビュー生成を実施した。カタログの既存の re-export・未作成文書の警告は残るが、エラーはない。register の `tsx` 起動は IPC の EPERM で失敗したため、共通規約に従って `node --import tsx src/specdojo.ts register build` で成功を確認した。
 - lint・型検査・単体／統合テスト・schema は親 runner が実行する。保護された設定の変更は不要で、登録簿の行・個票のステータス・result は編集していない。
+
+再開後は現在のソースを直接起動して再確認した。配置違反・lock のエラーはなく、通常検査は成功した。
+
+| コマンド                                                                            | 終了コード | ERROR | WARN |
+| ----------------------------------------------------------------------------------- | ---------- | ----- | ---- |
+| `node --import tsx src/specdojo.ts exec validate --project prj-0001`                | 0          | 0     | 27   |
+| `node --import tsx src/specdojo.ts exec validate --project prj-0001 --records-only` | 1          | 27    | 0    |
+
+再開時のテスト修正後も Prettier、`npm run validate:history-links`、hook の `node --import tsx tools/catalog-validate-if-configured.mjs` は成功した。カタログには既存の警告が残る。親の `test-unit` 再検証で、構成図に限った旧配置の検査と全単体テストの成功を確認する。
 
 ### 申し送り
 

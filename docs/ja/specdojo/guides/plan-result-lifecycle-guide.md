@@ -59,17 +59,23 @@ execution/
 
 ### 1.3. 配置の検査
 
-`exec validate` は schedule・event とともに、実行記録の配置を検査します。CI などで配置だけを検査する場合は次を使います。
+`exec validate` は schedule・event とともに実行記録の配置を検査し、欠けた記録を `WARN:` で知らせます。欠落だけなら終了コードは 0 です。CI などで配置だけを検査し、欠落もエラーにする場合は次を使います。
 
 ```bash
 specdojo exec validate --project <project-id> --records-only
 ```
 
-検査は execution 配下を読み取り、旧配置や run の外の plan・result・evidence・checkpoint・ログ、不正な出どころや深さ、run に欠けた `plan.md`・`result.md`・`evidence.json` をパスと理由つきで報告し、終了コード 1 を返します。`execution: human` を明記した result は単独で正常とします。ログと checkpoint は実行段に応じた任意の記録で、退避した試行も同じ run に保持できます。
+次の過去の世代の記録は、通常の検査でも `--records-only` でもエラー・警告にしません。
 
-`exec/events/`・`exec/trials/`、規約の版、grade の結果、job の状態、生成物、routine の失敗記録は独立した形式として検査から除きます。runtime lock は `git check-ignore` で確認し、追跡済みや無視されていない lock、Git で確認できない場合を報告します。旧 `routines/.locks/` が残る場合も、設定された routine のディレクトリで検査します。
+- evidence 導入前: `plan.md` と `result.md` がそろい、`pipeline-state.json` と `evidence.json` がない run。
+- 移行で plan・result を集約した先行試行: `pipeline-state.json` と `evidence.json` があり、plan・result が両方なく、同じ出どころ・項目の別 run に plan・result の対がある run。
+- 旧配置: `execution/exec/plans/`・`results/`・`evidence/` 配下。evidence や対になる記録がなくても検査対象から外します。
 
-生成直後の plan 単独、進行中、plan を明示削除した run、移行時から欠けていた履歴も欠落として報告します。検査は記録を書き換えず、欠けたファイルも生成しません。保存時点の完全性を調べるため、CI は実行が終了して記録がそろった revision を対象にしてください。
+このほか `execution: human` を明記した result は単独で正常とします。それ以外で `plan.md`・`result.md`・`evidence.json` が欠けた run は、通常は警告、`--records-only` では `ERROR:` と終了コード 1 で報告します。生成直後の plan 単独や中断中の run も含みます。ログと checkpoint は実行段に応じた任意の記録で、退避した試行も同じ run に保持できます。
+
+run の外の plan・result・evidence・checkpoint・ログ、不正な出どころや深さは、上の例外を除き両モードでエラーにします。`exec/events/`・`exec/trials/`、規約の版、`grade/results/`・`grade/generated/`、job の状態、生成物、routine の失敗記録は独立した形式として検査から除きます。runtime lock は `git check-ignore` で確認し、追跡済みや無視されていない lock、Git で確認できない場合は両モードで終了コード 1 を返します。旧 `routines/.locks/` も設定された routine のディレクトリで検査しますが、ファイルのない lock のディレクトリは対象外です。
+
+検査は記録を書き換えず、欠けたファイルも生成しません。CI で `--records-only` を使う場合は、実行が終了して記録がそろった revision を対象にしてください。
 
 `exec run` と `exec cycle` の事前検証は `exec validate --schedule-only` で schedule・event だけを調べます。生成途中や中断中の run と、取得中の runtime lock があっても、実行・再開を妨げません。`--schedule-only` と `--records-only` は併用できません。
 
@@ -92,6 +98,12 @@ review は元の項目の下の別 run とします。plan と result の文書 
 plan と result のファイル名はそれぞれ `plan.md` と `result.md` です。同じ task の新しい実行は別 run に保存します。同一 run の再開では保存先を維持し、executor をやり直す前の state・evidence・ログを `*.attempt-N.*` に退避します。
 
 ### 2.3. 既存記録の移行
+
+`exec migrate-records` は検査を通すためには不要です。旧配置の記録を CLI の通常の探索で使う場合に移行します。移さない場合の制約は次のとおりです。
+
+- `exec run --register ... --resume` と schedule の executor 再開は、`runs/` 内の checkpoint を候補にするため旧 `exec/evidence/` の run を発見しません。schedule の通常実行・統合再開も、plan・result の通常の探索では旧配置を参照しません。保存済みイベントや checkpoint の明示的なパス参照を読む経路はありますが、旧配置を自動探索する互換機能ではありません。
+- `dashboard build` の実行記録一覧と plan・result 件数には、旧配置の記録が含まれません。`exec archive` や task ID からの plan・result の取得も `runs/` のみを探索します。
+- `register build` は個票とイベントから派生ビューを作り、旧記録の探索やリンクの移行はしません。個票にある既存リンクは元ファイルが残れば利用できますが、検査の成功によって補完・更新されることはありません。
 
 移行対象の run を完了または破棄し、対応する worktree を撤去してから、Git index に書き込める環境で移行します。プロセスを止めただけで worktree が残っている場合は、`--dry-run` でも項目 ID・worktree のパス・ブランチを示して処理前に停止します。進行中の run の移行と再開は対象外です。
 

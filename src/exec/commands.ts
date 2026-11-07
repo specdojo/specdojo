@@ -226,11 +226,16 @@ export function registerExecCommands(program: Command): void {
         return;
       }
       const res = validateAll(schedulePath);
-      res.errors.push(
-        ...layoutIssues.map((issue) => `${issue.path}: [${issue.reason}] ${issue.message}`),
-      );
+      for (const issue of layoutIssues) {
+        const message = `${issue.path}: [${issue.reason}] ${issue.message}`;
+        if (issue.reason !== "missing") res.errors.push(message);
+      }
       res.ok = res.errors.length === 0;
       printValidateResult(res);
+      for (const issue of layoutIssues) {
+        if (issue.reason === "missing")
+          process.stdout.write(`WARN:  ${issue.path}: [${issue.reason}] ${issue.message}\n`);
+      }
       // Scheduled tasks resolve their deliverable by bare local_id, so warn when a
       // local_id is not unique project-wide across the catalogs.
       if (catalogPath && existsSync(catalogPath)) {

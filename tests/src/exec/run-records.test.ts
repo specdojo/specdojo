@@ -110,8 +110,8 @@ describe("run record layout", () => {
         ]);
         expect(content).toContain(`\`${origin}\``);
       }
-      expect(content).not.toContain("exec/plans/");
-      expect(content).not.toContain("exec/results/");
+      expect(block).not.toContain("exec/plans/");
+      expect(block).not.toContain("exec/results/");
       expect(content).not.toContain("controls/reviews/");
       expect(content).not.toContain("assessments/generated/");
     },

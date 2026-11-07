@@ -42,6 +42,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `exec validate` が evidence 導入前の run、移行で plan・result を別 run に集約した先行試行、旧配置の記録を欠落・配置違反として扱う問題を修正しました。残る一部だけの記録は通常は警告、`--records-only` ではエラーにします。grade の生成物と空の lock のディレクトリも検査から除外します。検査のための `exec migrate-records` は不要ですが、旧記録の通常の探索には移行が必要です（PJR-KC0T）。
+
 - register の worktree 統合で許可外の追加などが残ると、commit・merge を止めて項目を `waiting` にし、worktree を保持するようにしました。移動元の削除だけが統合されることを防ぎ、停止理由にログの場所と代表パス、最後の要約に未 commit の件数を表示します。承認後に対象を手動 commit して `--resume` する手順を運用ガイドへ追加しました（PJR-BRN4）。
 
 - 旧配置で開始した run を再開すると evidence・ログが別のディレクトリに書かれ、統合時に失われる問題を修正しました。再開後も元の run ID と保存先を維持し、result の配置にかかわらず同じ run の記録と退避した試行を commit 対象に含めます。除外した別 run の記録は標準出力と `integrate.log` に表示します（PJR-TA6W）。
