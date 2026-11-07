@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T23:21:32Z"
+  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-TA6W
 ---
