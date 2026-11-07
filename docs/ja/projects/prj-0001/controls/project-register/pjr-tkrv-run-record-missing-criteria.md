@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-tkrv-run-record-missing-criteria
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-07T06:34:19Z"
+  completed_at: "2026-11-07T07:39:04Z"
+  conclusion: 一部だけ残った 13 件の run の記録を外し、--records-only が develop で通るようにし、置き場所の検査を CI の workflow に入れた
   derived_from:
     - PJR-JT5J
   depends_on:
