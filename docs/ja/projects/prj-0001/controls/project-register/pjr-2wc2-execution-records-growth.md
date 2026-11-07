@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-11-03T04:54:14Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-07T07:21:37Z"
+  conclusion: 共通の規約を版への参照にし、実行記録を run 単位の置き場所へ移して検査を足した。生のログは全文を残す。残った記録の片付けと CI は PJR-TKRV で扱う
   derived_from:
     - PJR-8HCB
   commit_type: fix
