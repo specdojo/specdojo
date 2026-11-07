@@ -4164,3 +4164,19 @@
       from: PJR-BRN4 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。許可外の変更が残らない run は止まらずに統合され、記録はすべて commit された
       to: PJR-BVS9 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。plan は規約の版への参照になり、規約の本体（execution/conventions/`<SHA-256>.txt`）も commit された
   previous_event_id: reg_e9eef89b3b18436d8eb0932f3228cd5f
+- v: 1
+  id: reg_fa247e8ce1254e9c986f2894ac004f0d
+  ts: "2026-11-07T02:24:09Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-9BY9 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-07"
+      to: "-"
+  previous_event_id: reg_68119410bda0405782f101ad42a48482
