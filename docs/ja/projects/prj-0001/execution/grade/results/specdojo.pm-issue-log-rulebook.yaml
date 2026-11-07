@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 91
-graded_at: "2026-10-05T21:14:25.834Z"
-graded_by: agy-expert-executor
-content_hash: e93ea591e89456fa566d06131011aebbfc8eb8bddb1623f7dddea5f1386abea3
+graded_at: "2026-11-07T20:35:56.876Z"
+graded_by: flash-high-executor
+content_hash: 8b8f9ca08c6c5a61c2dfdb37724f7357af6d19db8bef7d9f0cdd5f94117d44f8
 categories:
   purpose:
     score: 88
@@ -113,27 +113,32 @@ findings:
     line: 73
     anchor: ""
     message: 課題の優先度変更や完了判定、期限超過時のエスカレーション先において、PO等の意思決定者がどのように関与するか（承認プロセス）が定義されていない。
+    message_ja: 課題の優先度変更や完了判定、期限超過時のエスカレーション先において、PO等の意思決定者がどのように関与するか（承認プロセス）が定義されていない。
   - id: F002
     severity: minor
     rule: vp-po-publication-accountability
     line: 16
     anchor: "- `pm-risk-register`: 潜在リスクの管理。"
     message: 課題ログに含まれる可能性のある機密情報や個人情報の取り扱い、および公開可否の判断基準に関する言及がない。
+    message_ja: 課題ログに含まれる可能性のある機密情報や個人情報の取り扱い、および公開可否の判断基準に関する言及がない。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 課題ログ 作成ルール"
     message: 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。
+    message_ja: 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 課題ログ 作成ルール"
     message: 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。
+    message_ja: 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。
   - id: F005
     severity: minor
     rule: vp-ux-language-consistency
     line: 62
     anchor: "- 優先度基準、期限設定ルール、期限超過時対応を明記する。"
     message: 課題のステータスの標準値（未着手、対応中など）が定義されておらず、運用時に表記ゆれが生じるおそれがある。
+    message_ja: 課題のステータスの標準値（未着手、対応中など）が定義されておらず、運用時に表記ゆれが生じるおそれがある。

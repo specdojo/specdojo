@@ -5,10 +5,10 @@ path: docs/ja/specdojo/recipes/stsd-recipe.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-05T20:09:43.543Z"
+score: 98
+graded_at: "2026-11-07T20:10:06.089Z"
 graded_by: flash-high-executor
-content_hash: a02e92df2ad281146fbbafa797fb8d25c9e5bec3e3d2b237ac1ef042922e842d
+content_hash: 7a0488206f1e6e6fb3c9e9c452d319307ed999abdb7d974de8bb08131ec7659a
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 12
+    anchor: "- 実装値は状態の安定識別に必要な範囲だけ扱い、実装条件式や操作手順は後続設計へ委ねます。"
+    message: >-
+      Section "1. このレシピの使い方" lacks the required articulation of Why, What, How, and Trace in STSD-specific vocabulary as
+      required by recipe-authoring-standard.
+    message_ja: >-
+      Section "1. このレシピの使い方" lacks the required articulation of Why, What, How, and Trace in STSD-specific vocabulary as
+      required by recipe-authoring-standard.
