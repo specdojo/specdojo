@@ -261,14 +261,14 @@ agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdか
 
 `release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
 
-executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。executor 中断の block event は `pipeline_stage=executor`、reporter 失敗は `pipeline_stage=reporter`、統合失敗は `pipeline_stage=integrate` を持ち、いずれも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて未完了の段から再開し、完了済みの agent 段を重複実行しません。
+executor / reporter pipeline では、run ごとの `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。executor 中断の block event は `pipeline_stage=executor`、reporter 失敗は `pipeline_stage=reporter`、統合失敗は `pipeline_stage=integrate` を持ち、いずれも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて未完了の段から再開し、完了済みの agent 段を重複実行しません。
 
 成果物の不足を executor に直させる場合は `--resume-from executor` を付けます。対象は executor が `succeeded` で reporter が未完了の pipeline に限ります。既存 run の executor 試行回数を増やし、`blocked` からの再開は `unblock` イベントを記録します。統合段、executor 未成功、pipeline 以外、`executor` 以外の値は理由を表示して停止します。この指定には `--task` が必要で、`--due` とは併用できません。
 
 停止後に plan の指示を補う場合は、次の手順で再開します。
 
 1. `specdojo exec worktree status --project <project-id> --task <task-id>` で残っている worktree を確認する。
-2. その worktree の `<execution_path>/exec/plans/<task-id>-plan.md` を編集し、追加の指示と、変更の理由・再開までの経緯を result の申し送りへ残す指示を書く。
+2. その worktree の `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/plan.md` を編集し、追加の指示と、変更の理由・再開までの経緯を result の申し送りへ残す指示を書く。
 3. `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor`（登録簿の場合は `specdojo exec run --project <project-id> --register <id> --resume --resume-from executor`）を実行する。root で plan を生成し直さず、worktree にある編集済み plan を executor と reporter へ渡す。既存の成果物と未コミット変更も引き継ぎ、統合時には直した plan がコミットに含まれて元の plan で上書きされずに履歴に残る。
 4. 再開後の result で経緯と検証結果を確認する。pipeline の executor は result を直接編集せず、報告の `handoff` に経緯を記載し、reporter と runner が result へ反映する。
 
@@ -330,7 +330,7 @@ specdojo exec refresh --project <project-id>
 
 後続 task も完了済みの場合は、依存グラフの下流から順に `reopen` します。後続 task が `doing` / `blocked` の場合は、先に同じ試行を完了させるか、`exec release` で `todo` に戻します。これにより、完了していない依存先を前提に後続 task が進行・完了している状態を防ぎます。
 
-`reopen` は plan、result、成果物、Git 履歴を削除・復元しません。完了済み plan は `exec/plans/done/` に残り、次の `exec plan` / `exec run` で新しい固定名 plan を生成します。再 claim 時は固定名 result を再利用し、新しい試行の状態と時刻に更新します。
+`reopen` は過去 run の plan・result、成果物、Git 履歴を変更・削除しません。完了済み plan は同じ run ディレクトリに残り、次の `exec plan` / `exec run` で新しい run を生成します。同じ run の続きは `exec resume` で再開します。
 
 ```bash
 specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "rerun"
@@ -394,7 +394,7 @@ specdojo exec run --project <project-id> --task <task-id> --worktree
 schedule に `agent_pipeline` を持たない plan（`exec plan --deliverable <localId> --mode review` で生成した review plan など）は、`exec run --plan` または `exec run --deliverable` に `--executor-by` / `--reporter-by` を足すと同じ 2 stage で実行します。片方だけ指定した場合、もう一方は `stage_role` による自動選択で決まります。reporter が scaffold 済みの result を記入するため、`--plan` では frontmatter に `task_id` を持つ plan が必要です。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 
 ```bash
-specdojo exec run --project <project-id> --plan <execution-path>/exec/plans/<stem>-plan.md \
+specdojo exec run --project <project-id> --plan <execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/plan.md \
   --executor-by <executor-nickname> --reporter-by <reporter-nickname>
 ```
 

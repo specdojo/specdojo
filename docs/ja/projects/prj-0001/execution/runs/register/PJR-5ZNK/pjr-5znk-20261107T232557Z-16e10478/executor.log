@@ -1,0 +1,41 @@
+`npm run lint:md` の実行完了を待機しています。
+`npm run lint:md` の実行完了を待機します。
+プロジェクト登録簿項目 PJR-5ZNK「ガイドとコマンドリファレンスに残る旧来の実行記録の置き場所を直す」の対応を完了しました。
+
+### 実施内容
+
+1. **対象箇所の洗い出しと分類**
+   - 9 ファイル中に存在した計 32 か所の旧配置（`exec/plans/`・`exec/results/`・`exec/evidence/`）を監査し、25 か所を現行配置に更新、7 か所を旧配置互換性・歴史的記録・検査免除規則の説明として意図的に保持しました。
+2. **ガイドおよびリファレンスの更新**
+   - 現行の `execution/runs/<origin>/<item>/<run>/` 配下の構成（`plan.md`、`result.md`、`evidence.json`、`pipeline-state.json`）および `plan_ref`、`--plan` の指定形式に書き換えました。
+   - `quick-start-guide.md` は PJR-V5AZ の改訂作業を阻害しないよう、旧来の置き場所の記述（3 か所）のみを最小限で更新しました。
+   - `src/` および `tests/` には一切変更を加えていません。
+3. **個票の更新**
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-5znk-stale-run-record-paths.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5ZNK/docs/ja/projects/prj-0001/controls/project-register/pjr-5znk-stale-run-record-paths.md) の作業内容テーブルを完了（`done`）とし、対応結果に対応内容および保持した 7 か所とその理由を記録しました。
+4. **検証**
+   - `npm run test:unit -- tests/src/exec/run-records.test.ts`: 全 16 テスト通過
+   - `npm run validate:history-links`: 通過
+   - `npm run lint:md`: 通過
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "ガイド 8 本およびコマンドリファレンス 1 本に残っていた旧来の実行記録の置き場所（exec/plans/・exec/results/・exec/evidence/）を洗い出し、現行の execution/runs/<origin>/<item>/<run>/ および plan_ref・--plan 形式へ更新しました。旧配置互換性や歴史的記録・検査免除規則に関する 7 か所は意図的に保持し、個票と handoff に理由を記録しました。各種検査（lint:md、validate:history-links、run-records ユニットテスト）も通過しています。",
+  "handoff": [
+    "旧来の置き場所を残した箇所とその理由:",
+    "1. `docs/ja/specdojo/guides/exec-operation-guide.md`（403 行目）: 旧配置 `<execution_path>/exec/evidence/<task-id>/<run-id>/` に checkpoint がある場合の `--resume` の復帰動作を説明しているため保持。",
+    "2. `docs/ja/specdojo/guides/exec-operation-guide.md`（413 行目）: `validate:history-links` の適用判定における履歴蓄積ファイル（既存の `exec/plans/**/*.md`・`exec/results/**/*.md`）の条件説明であるため保持。",
+    "3. `docs/ja/specdojo/guides/exec-config-guide.md`（564 行目）: `validate:history-links` の適用対象判定に関する上記と同様の説明であるため保持。",
+    "4. `docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`（72 行目）: `exec validate` における旧配置（`execution/exec/plans/`・`results/`・`evidence/`）の検査対象外免除規則を説明しているため保持。",
+    "5. `docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`（106 行目）: 旧 `exec/evidence/` 配下の run が自動再開の探索対象にならない移行制約を説明しているため保持。",
+    "6. `docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md`（50 行目）: v0.3.0 リリース時の移行対象として旧 `execution/exec/plans/` を挙げている歴史的文書であるため保持。",
+    "7. `docs/ja/specdojo/references/command-reference.md`（646 行目）: `exec validate` が旧 `exec/plans/`・`results/`・`evidence/` の記録をエラー・警告としない免除規則を説明しているため保持。"
+  ],
+  "validations": [
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed"
+    }
+  ]
+}
+</specdojo_executor_evidence>
