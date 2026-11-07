@@ -13,7 +13,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-11-06T15:06:07Z"
   due_on: null
-  block_reason: "parent validation failed: test-integration, test-unit"
+  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-VH8D
   depends_on:
@@ -66,6 +66,7 @@ specdojo:
 - `exec/events/` の 791 ファイルは claim / complete / block などのタスクの状態遷移を記録する正本であり、run ごとの plan・result・evidence・ログとは別の履歴なので移さない。`exec validate`・`exec status` は引き続きこのイベントを読み、タスク状態を導出する。
 - 通常の plan・result・evidence・再開候補の旧配置探索を削除し、`archive` は plan を同じ run に保持するようにした。job の変更なし判定は同じ job 実行の各 attempt を bookkeeping として扱う。旧名の commit 保護判定は、読み取りと切り離して保持した。
 - 移行の単体テスト、旧 checkpoint を移行してから再開する統合テスト、dashboard・archive・規約リンクの回帰テスト、2 ガイドの配置例と共通モジュールを照らすテストを追加・更新した。保護された設定は変更していない。
+- 親検証で失敗した condense・Markdown 記法検査・worktree 操作の fixture と期待値を、新配置へ揃えた。移行テストの Git 起動には `gitEnvironment()` を追加した。再開の統合テストでは root と worktree に同じ checkpoint の対応を与え、移行後の plan / result が同じ run に置かれることを確認する。root に対しかない場合は元の stem を保持するという移行規則に合わせた。
 
 ### 移動件数と実施結果
 
@@ -99,7 +100,7 @@ specdojo:
 - 初回の一時リポジトリ検証ではログ 1,257 件のバイト一致、文書 ID 2,394 件の保持、更新されたログ参照 1,231 件の存在を確認した。本体の移行前後でも、orchestrator が `exec validate`・`exec status` の同一結果と、生成時刻以外の `dashboard build --dry-run` 出力の一致を確認した。
 - 再開後の実プロジェクトで `exec validate` は成功（events 791 件）、`exec status` は `No doing tasks.`、`dashboard build` と `--dry-run` も成功した。develop から同期した新しい run を含め、plan 1,197 件・result 1,211 件を読み取った。既存の schedule・カタログ・非推奨 timeline の警告は残るが、エラーはない。
 - コードを調べ、通常の探索・再開・dashboard・job が旧配置を読まないことと、`plans/done/` への移動処理の廃止を確認した。旧配置への読み取りは移行コマンドに限り、旧名の commit 範囲などの保護判定は残している。回帰テストと、2 ガイドの構成図を共通モジュールと照らすテストも維持している。
-- PJR-G1W9 の履歴リンク違反は develop で修正済み。再開後の `npm run validate:history-links` は全件成功した。変更ファイルの Prettier、カタログ検査、register の派生生成、ステージ上の秘密情報スキャンを実施した。lint・型検査・単体／統合テスト・schema は親 runner の検証に委ね、result と登録項目の状態遷移も runner が行う。
+- PJR-G1W9 の履歴リンク違反は develop で修正済み。今回も `npm run validate:history-links`、変更ファイルの Prettier、カタログ検査、register の派生生成、ステージ上の秘密情報スキャンを実施した。lint・型検査・単体／統合テスト・schema は親 runner が修正後に実行するため、前回の失敗を成功扱いにはしていない。result と登録項目の状態遷移も runner が行う。
 - 保護された設定の変更案、未決の判断、移動の残作業はない。runner 変更の統合後は [[prj-0001:pm-orchestrator-playbook|運用メモ]] に従って PJR-JSEY で動作を確認してから close する。
 
 ## 6. 関連ドキュメント
