@@ -114,7 +114,7 @@ specdojo exec migrate-records --project <project-id> --dry-run
 specdojo exec migrate-records --project <project-id>
 ```
 
-コマンドは移動先と参照の更新対象、対になる plan または result が欠けた記録を表示します。移動には `git mv` を使い、ログ本文と文書 ID を保持してパスの欄と共通規約への相対参照を更新します。移動先の衝突・追跡されていない移動元は処理前に拒否します。移行済みの状態で再実行すると移動は 0 件です。
+コマンドは移動先と参照の更新対象、対になる plan または result が欠けた記録を表示します。移動には `git mv` を使い、ログ本文と文書 ID を保持してパスの欄と旧形式の共通規約への相対参照を更新します。ルート相対パスの新形式は移動しても変更しません。移動先の衝突・追跡されていない移動元は処理前に拒否します。移行済みの状態で再実行すると移動は 0 件です。
 
 checkpoint に同じ plan / result を参照する試行が複数ある場合、対は最新の checkpoint の run に置き、先行試行の evidence とログはそれぞれの run に残します。対応が特定できない記録は元の stem を run ID とし、欠けた記録を捏造しません。比較実験の `exec/trials/` は独立した保存形式のため移行対象から外します。通常の読み取りは `runs/` のみを対象にします。
 
@@ -163,7 +163,7 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 
 共通規約は `xp-common-conventions-template.md`（edit / review 共通）と、`mode` に対応する `xep-common-conventions-template.md`（edit 専用）または `xrp-common-conventions-template.md`（review 専用）を組み合わせます。接頭辞の `x` は exec、`p` は plan、`e` / `r` は edit / review を表します。各ファイルの `plan-essentials` マーカー間を plan の `_COMMON_CONVENTIONS_` 位置へ順に展開し、規約の詳細を読む案内には両ファイルのパスを載せます。マーカーのないローカル断片は全文を展開します。grade の plan はこれらの規約を使いません。
 
-保存する plan では、展開済みの共通規約を `[共通規約 sha256:<内容のハッシュ>](<plan からの相対パス>)` に置き換えます。規約本体は `<execution_path>/conventions/<SHA-256>.txt` に版ごとに一度だけ保存し、整形で内容が変わらないようプレーンテキストで保持します。版は mode・schema の解決後の本文（末尾の改行を含む）から計算します。規約本文の資源への参照はリポジトリ相対とし、別 checkout の同梱資源は package 内の相対パスにするため、端末の絶対パスで版が変わりません。agent と reporter へ渡す前に保存した版を復元するため、テンプレートの更新後や再開時も当時の規約が届きます。`exec run --plan` と `agent run --plan` も同じ読み取りを使います。参照先が欠けている場合やハッシュが一致しない場合は、版とパスを示すエラーで停止します。規約を埋め込んだ既存 plan はそのまま読めます。plan を別の場所で使うときは、規約ファイルも引き継ぎ、相対参照を維持してください。
+保存する plan では、末尾に展開済みの共通規約を `` `共通規約 sha256:<内容のハッシュ>` `<リポジトリルートからのパス>` `` の形で記録します。パスは `docs/ja/projects/<project-id>/execution/conventions/<SHA-256>.txt` などで、Markdown リンクにはしません。規約本体は `<execution_path>/conventions/<SHA-256>.txt` に版ごとに一度だけ保存し、整形で内容が変わらないようプレーンテキストで保持します。版は mode・schema の解決後の本文（末尾の改行を含む）から計算します。規約本文の資源への参照はリポジトリ相対とし、別 checkout の同梱資源は package 内の相対パスにするため、端末の絶対パスで版が変わりません。agent と reporter へ渡す前に保存した版を復元するため、テンプレートの更新後や再開時も当時の規約が届きます。`exec run --plan` と `agent run --plan` も同じ読み取りを使います。参照先が欠けている場合やハッシュが一致しない場合は、版とパスを示すエラーで停止します。規約を埋め込んだ既存 plan と、末尾に `[共通規約 sha256:<内容のハッシュ>](<plan からの相対パス>)` を持つ旧形式もそのまま読めます。復元するのは末尾の独立した段落の参照だけで、個票から転記した本文やコードブロックの例は読み取りません。plan に指示を追記するときは、この参照より前に置いてください。別 checkout で使うときは規約ファイルも同じルート相対パスに引き継ぎます。旧形式の plan を移す場合は、plan からの相対参照を維持してください。
 
 `execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を正本とし、human result から参照します。
 

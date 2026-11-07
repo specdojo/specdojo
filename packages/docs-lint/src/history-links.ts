@@ -61,8 +61,9 @@ function classifyLink(node: Record<string, unknown>): ForbiddenLink | null {
   return { line, column, kind: "link", url, reason };
 }
 
-function collect(node: unknown, found: ForbiddenLink[]): void {
+function collect(node: unknown, found: ForbiddenLink[], legacyReference?: unknown): void {
   if (!isRecord(node)) return;
+  if (node === legacyReference) return;
   const type = node.type;
 
   if (type === "link") {
@@ -94,15 +95,30 @@ function collect(node: unknown, found: ForbiddenLink[]): void {
   if (type === "image" || type === "imageReference") return;
 
   if (Array.isArray(node.children)) {
-    for (const child of node.children as unknown[]) collect(child, found);
+    for (const child of node.children as unknown[]) collect(child, found, legacyReference);
   }
 }
 
 // Markdown 文字列を解析し、履歴蓄積ファイルで禁止する Markdown リンクの一覧を返す。
 // `[[id]]` / `[[id|title]]` の wikilink は未定義参照としてプレーンテキスト扱いになり検出されない。
-export function findForbiddenLinks(markdown: string): ForbiddenLink[] {
+export function findForbiddenLinks(
+  markdown: string,
+  options: { allowLegacyConventionsReference?: boolean } = {},
+): ForbiddenLink[] {
   const tree = remark().use(remarkFrontmatter).use(remarkGfm).parse(markdown) as Root;
+  const tail = tree.children.at(-1);
+  const link =
+    tail?.type === "paragraph" && tail.children.length === 1 ? tail.children[0] : undefined;
+  const tailText = markdown.slice(tail?.position?.start.offset, tail?.position?.end.offset);
+  // Compatibility for the runner's old final reference only, never ordinary links
+  // in a plan body, results, tickets or reference-style definitions.
+  const legacyReference =
+    options.allowLegacyConventionsReference &&
+    link?.type === "link" &&
+    /^\[共通規約 sha256:([a-f0-9]{64})\]\((?:\.\.\/)*conventions\/\1\.txt\)$/.test(tailText)
+      ? link
+      : undefined;
   const found: ForbiddenLink[] = [];
-  collect(tree, found);
+  collect(tree, found, legacyReference);
   return found.sort((a, b) => a.line - b.line || a.column - b.column);
 }

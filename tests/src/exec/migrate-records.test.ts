@@ -1,10 +1,14 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { basename, dirname, join, relative } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { applyRecordMigration, planRecordMigration } from "../../../src/exec/migrate-records.js";
-import { readPlanFile, storePlanConventions } from "../../../src/shared/plan-conventions.js";
+import {
+  planConventionsFiles,
+  readPlanFile,
+  storePlanConventions,
+} from "../../../src/shared/plan-conventions.js";
 import { gitEnvironment } from "../../../src/shared/git.js";
 import * as worktrees from "../../../src/exec/worktree.js";
 
@@ -81,67 +85,75 @@ describe("legacy record migration", () => {
     expect(planRecordMigration(f.root, f.execution, "test").moves).toEqual([]);
   });
 
-  it("moves a checkpoint with git mv, rewrites only path fields, and is idempotent", () => {
-    const f = fixture();
-    const plan = "execution/exec/plans/pjr-ab12-stem-plan.md";
-    const result = "execution/exec/results/pjr-ab12-stem-result.md";
-    const evidence = "execution/exec/evidence/PJR-AB12/run-1";
-    const next = "execution/runs/register/PJR-AB12/run-1";
-    const header = "---\nspecdojo:\n  id: test:plan-id\n  task_id: PJR-AB12\n---\n";
-    f.write(plan, header + storePlanConventions("rules", f.execution, join(f.root, plan)));
-    f.write(
-      result,
-      `---\nspecdojo:\n  id: test:result-id\n  task_id: PJR-AB12\n  plan_ref: exec/plans/pjr-ab12-stem-plan.md\n---\nbody ${plan}\n`,
-    );
-    const state = {
-      task_id: "PJR-AB12",
-      run_id: "run-1",
-      artifacts: { plan_ref: plan, result_ref: result },
-    };
-    f.write(`${evidence}/pipeline-state.json`, JSON.stringify(state));
-    f.write(
-      `${evidence}/evidence.json`,
-      JSON.stringify({
+  it.each([false, true])(
+    "moves a checkpoint with git mv and is idempotent (legacy reference: %s)",
+    (legacy) => {
+      const f = fixture();
+      const plan = "execution/exec/plans/pjr-ab12-stem-plan.md";
+      const result = "execution/exec/results/pjr-ab12-stem-result.md";
+      const evidence = "execution/exec/evidence/PJR-AB12/run-1";
+      const next = "execution/runs/register/PJR-AB12/run-1";
+      const header = "---\nspecdojo:\n  id: test:plan-id\n  task_id: PJR-AB12\n---\n";
+      let reference = storePlanConventions("rules", f.execution, join(f.root, plan));
+      if (legacy) {
+        const [version] = planConventionsFiles(reference, dirname(join(f.root, plan)));
+        reference = `[共通規約 sha256:${basename(version, ".txt")}](${relative(dirname(join(f.root, plan)), version)})`;
+      }
+      f.write(plan, header + reference);
+      f.write(
+        result,
+        `---\nspecdojo:\n  id: test:result-id\n  task_id: PJR-AB12\n  plan_ref: exec/plans/pjr-ab12-stem-plan.md\n---\nbody ${plan}\n`,
+      );
+      const state = {
         task_id: "PJR-AB12",
         run_id: "run-1",
-        log_refs: [{ path: `${evidence}/executor.log` }],
-        changes: [{ path: `${evidence}/executor.log` }],
-        final_message: `${evidence}/executor.log`,
-      }),
-    );
-    f.write(`${evidence}/executor.log`, `raw log ${plan}\n\u0000`);
-    f.write(
-      "execution/jobs/runs/example.json",
-      JSON.stringify({ plan_ref: "exec/plans/pjr-ab12-stem-plan.md" }),
-    );
-    f.git("add", ".");
-    const migration = planRecordMigration(f.root, f.execution);
-    expect(existsSync(join(f.root, plan))).toBe(true);
-    expect(migration.moves).toHaveLength(5);
-    applyRecordMigration(f.root, migration);
-    expect(f.git("ls-files")).toContain(`${next}/executor.log`);
-    expect(existsSync(join(f.root, plan))).toBe(false);
-    expect(readPlanFile(join(f.root, next, "plan.md"))).toBe(header + "rules");
-    expect(readFileSync(join(f.root, next, "result.md"), "utf8")).toContain(`body ${plan}`);
-    expect(readFileSync(join(f.root, next, "result.md"), "utf8")).toContain("id: test:result-id");
-    expect(readFileSync(join(f.root, next, "executor.log"), "utf8")).toBe(
-      `raw log ${plan}\n\u0000`,
-    );
-    const data = JSON.parse(readFileSync(join(f.root, next, "evidence.json"), "utf8"));
-    expect(data.log_refs[0].path).toBe(`${next}/executor.log`);
-    expect(data.changes[0].path).toBe(`${evidence}/executor.log`);
-    expect(data.final_message).toBe(`${evidence}/executor.log`);
-    expect(
-      JSON.parse(readFileSync(join(f.root, next, "pipeline-state.json"), "utf8")).artifacts
-        .plan_ref,
-    ).toBe(`${next}/plan.md`);
-    expect(planRecordMigration(f.root, f.execution)).toEqual({
-      moves: [],
-      updates: [],
-      missing: [],
-      skipped: [],
-    });
-  });
+        artifacts: { plan_ref: plan, result_ref: result },
+      };
+      f.write(`${evidence}/pipeline-state.json`, JSON.stringify(state));
+      f.write(
+        `${evidence}/evidence.json`,
+        JSON.stringify({
+          task_id: "PJR-AB12",
+          run_id: "run-1",
+          log_refs: [{ path: `${evidence}/executor.log` }],
+          changes: [{ path: `${evidence}/executor.log` }],
+          final_message: `${evidence}/executor.log`,
+        }),
+      );
+      f.write(`${evidence}/executor.log`, `raw log ${plan}\n\u0000`);
+      f.write(
+        "execution/jobs/runs/example.json",
+        JSON.stringify({ plan_ref: "exec/plans/pjr-ab12-stem-plan.md" }),
+      );
+      f.git("add", ".");
+      const migration = planRecordMigration(f.root, f.execution);
+      expect(existsSync(join(f.root, plan))).toBe(true);
+      expect(migration.moves).toHaveLength(5);
+      applyRecordMigration(f.root, migration);
+      expect(f.git("ls-files")).toContain(`${next}/executor.log`);
+      expect(existsSync(join(f.root, plan))).toBe(false);
+      expect(readPlanFile(join(f.root, next, "plan.md"))).toBe(header + "rules");
+      expect(readFileSync(join(f.root, next, "result.md"), "utf8")).toContain(`body ${plan}`);
+      expect(readFileSync(join(f.root, next, "result.md"), "utf8")).toContain("id: test:result-id");
+      expect(readFileSync(join(f.root, next, "executor.log"), "utf8")).toBe(
+        `raw log ${plan}\n\u0000`,
+      );
+      const data = JSON.parse(readFileSync(join(f.root, next, "evidence.json"), "utf8"));
+      expect(data.log_refs[0].path).toBe(`${next}/executor.log`);
+      expect(data.changes[0].path).toBe(`${evidence}/executor.log`);
+      expect(data.final_message).toBe(`${evidence}/executor.log`);
+      expect(
+        JSON.parse(readFileSync(join(f.root, next, "pipeline-state.json"), "utf8")).artifacts
+          .plan_ref,
+      ).toBe(`${next}/plan.md`);
+      expect(planRecordMigration(f.root, f.execution)).toEqual({
+        moves: [],
+        updates: [],
+        missing: [],
+        skipped: [],
+      });
+    },
+  );
 
   it("preserves unpaired records and refuses collisions before moving anything", () => {
     const f = fixture();

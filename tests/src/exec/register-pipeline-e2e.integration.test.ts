@@ -205,7 +205,7 @@ function arg(name) {
 const nickname = arg("nickname");
 const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
-if (prompt.includes("[共通規約 sha256:")) throw new Error("conventions reference reached agent");
+if (prompt.includes("共通規約 sha256:")) throw new Error("conventions reference reached agent");
 if (prompt.includes("# Edit Plan:") && !prompt.includes("result の必須セクション")) {
   throw new Error("common conventions missing from agent prompt");
 }
@@ -868,11 +868,13 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         ).toBe(true);
         let editedPlan: string | undefined;
         const planRel = state.artifacts.plan_ref as string;
-        expect(readFileSync(join(worktree!, planRel), "utf8")).toContain("[共通規約 sha256:");
+        expect(readFileSync(join(worktree!, planRel), "utf8")).toContain("共通規約 sha256:");
         if (explicit) {
           const originalPlan = readFileSync(join(worktree!, planRel), "utf8");
-          editedPlan =
-            originalPlan + "\n## Additional Instructions\n\nPreserve this edited plan in resume.\n";
+          editedPlan = originalPlan.replace(
+            "`共通規約 sha256:",
+            "## Additional Instructions\n\nPreserve this edited plan in resume.\n\n`共通規約 sha256:",
+          );
           writeFileSync(join(worktree!, planRel), editedPlan, "utf8");
         }
         await runExec([...args, "--resume", ...(explicit ? ["--resume-from", "executor"] : [])]);

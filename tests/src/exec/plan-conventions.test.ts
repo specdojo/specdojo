@@ -20,6 +20,7 @@ import {
   expandPlanConventions,
   planConventionsFiles,
   readPlanFile,
+  rebasePlanConventions,
   storePlanConventions,
   withPlanConventionsFiles,
 } from "../../../src/shared/plan-conventions.js";
@@ -36,6 +37,7 @@ const originalCwd = process.cwd();
 function fixture() {
   const root = mkdtempSync(join(tmpdir(), "specdojo-conventions-"));
   roots.push(root);
+  mkdirSync(join(root, ".git"));
   const executionPath = join(root, "execution");
   const planPath = runRecordPaths(executionPath, "schedule", "T-TEST", "run-1").plan;
   mkdirSync(dirname(planPath), { recursive: true });
@@ -112,7 +114,10 @@ describe("stored plan conventions", () => {
     "stores one immutable %s version and restores the exact prompt",
     (mode) => {
       const f = save(mode);
-      expect(f.stored).toMatch(/\[共通規約 sha256:[a-f0-9]{64}\]/);
+      expect(f.stored).toMatch(
+        /`共通規約 sha256:[a-f0-9]{64}` `execution\/conventions\/[a-f0-9]{64}\.txt`/,
+      );
+      expect(f.stored).not.toContain("[共通規約 sha256:");
       expect(f.stored).not.toContain("result の必須セクション");
       expect(readPlanFile(f.planPath)).toBe(f.full);
       expect(readAgentPlan(f.planPath)).toBe(f.full);
@@ -158,7 +163,7 @@ describe("stored plan conventions", () => {
     },
   );
 
-  it("restores a moved worktree plan using its relative reference", () => {
+  it("restores a moved worktree plan using its repository-relative reference", () => {
     const f = save();
     const target = fixture();
     cpSync(f.executionPath, target.executionPath, { recursive: true });
@@ -226,7 +231,7 @@ describe("stored plan conventions", () => {
     const execution = join(f.root, "execution with space (copy)");
     const ref = storePlanConventions("## Rules\n\n- rule", execution, f.planPath);
     writeFileSync(f.planPath, ref);
-    expect(ref).toContain("%20");
+    expect(ref).toContain("execution with space (copy)/conventions/");
     expect(readPlanFile(f.planPath)).toBe("## Rules\n\n- rule");
     const hash = "a".repeat(64);
     expect(() =>
@@ -235,9 +240,80 @@ describe("stored plan conventions", () => {
     expect(relative(f.root, planConventionsFiles(ref, dirname(f.planPath))[0])).toContain(
       "execution with space",
     );
+    const [version] = planConventionsFiles(ref, dirname(f.planPath));
+    const encoded = relative(dirname(f.planPath), version)
+      .split("/")
+      .map((part) =>
+        encodeURIComponent(part).replace(/[()]/g, (char) => `%${char.charCodeAt(0).toString(16)}`),
+      )
+      .join("/");
+    expect(encoded).toContain("%20");
+    expect(
+      expandPlanConventions(
+        `[共通規約 sha256:${basename(version, ".txt")}](${encoded})`,
+        dirname(f.planPath),
+      ),
+    ).toBe("## Rules\n\n- rule");
     expect(() =>
       expandPlanConventions("[共通規約 sha256:invalid](conventions/version.txt)"),
     ).toThrow("Invalid plan conventions reference");
+  });
+
+  it.each(["new", "legacy"])("restores %s references and validates their snapshots", (format) => {
+    const f = save();
+    const hash = basename(f.version, ".txt");
+    const reference =
+      format === "new"
+        ? storePlanConventions(readFileSync(f.version, "utf8"), f.executionPath, f.planPath)
+        : `[共通規約 sha256:${hash}](${relative(dirname(f.planPath), f.version).split("/").map(encodeURIComponent).join("/")})`;
+    expect(expandPlanConventions(reference, dirname(f.planPath))).toBe(
+      readFileSync(f.version, "utf8").trimEnd(),
+    );
+    rmSync(f.version);
+    expect(() => expandPlanConventions(reference, dirname(f.planPath))).toThrow(
+      "version not found",
+    );
+    writeFileSync(f.version, "corrupted\n");
+    expect(() => expandPlanConventions(reference, dirname(f.planPath))).toThrow("SHA-256 mismatch");
+  });
+
+  it("ignores reference examples in the body when generating and restoring a plan", () => {
+    const f = fixture();
+    const examples = [
+      "[共通規約 sha256:invalid](../../conventions/example.txt)",
+      `[共通規約 sha256:${"a".repeat(64)}](../../conventions/${"a".repeat(64)}.txt)`,
+      "`共通規約 sha256:invalid` `docs/conventions/example.txt`",
+      `\`共通規約 sha256:${"a".repeat(64)}\` \`docs/conventions/${"a".repeat(64)}.txt\``,
+    ];
+    const body =
+      "# Plan\n\n" +
+      examples
+        .flatMap((example) => [example, `\`${example}\``, "```markdown\n" + example + "\n```"])
+        .join("\n\n") +
+      "\n\n_COMMON_CONVENTIONS_\n";
+    const full = injectCommonConventions(body, MISSING, new Map());
+    const stored = injectCommonConventions(body, MISSING, new Map(), "edit", f);
+    expect(expandPlanConventions(stored, dirname(f.planPath))).toBe(full);
+    expect(planConventionsFiles(stored, dirname(f.planPath))).toHaveLength(1);
+    for (const example of examples) {
+      const quoted = "# Plan\n\n```markdown\n" + example + "\n```\n";
+      expect(expandPlanConventions(quoted, f.root)).toBe(quoted);
+    }
+  });
+
+  it("rebases only a legacy final reference and leaves root-relative references unchanged", () => {
+    const f = save();
+    const hash = basename(f.version, ".txt");
+    const legacy = `[共通規約 sha256:${hash}](${relative(dirname(f.planPath), f.version)})`;
+    const moved = join(f.executionPath, "elsewhere/plan.md");
+    const body = "# Plan\n\n`[共通規約 sha256:example](missing.txt)`\n\n";
+    const rebased = rebasePlanConventions(body + legacy, f.planPath, moved);
+    expect(rebased).toContain(body);
+    expect(expandPlanConventions(rebased, dirname(moved))).toBe(
+      body + readFileSync(f.version, "utf8").trimEnd(),
+    );
+    expect(rebasePlanConventions(f.stored, f.planPath, moved)).toBe(f.stored);
+    expect(expandPlanConventions(f.stored, dirname(moved))).toBe(f.full);
   });
 
   it("retains convention references when archiving a run plan", () => {
