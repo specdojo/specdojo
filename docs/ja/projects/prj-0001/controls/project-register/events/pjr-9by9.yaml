@@ -163,3 +163,16 @@
       from: "parent validation failed: test-integration"
       to: "-"
   previous_event_id: reg_5ccf633906a04197a87eff2673b9b151
+- v: 1
+  id: reg_88db8533965c4948b534f0d6b8e01333
+  ts: "2026-11-07T02:22:03Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fc0e35bd9be8442fb2e6dd23de7cfcae
