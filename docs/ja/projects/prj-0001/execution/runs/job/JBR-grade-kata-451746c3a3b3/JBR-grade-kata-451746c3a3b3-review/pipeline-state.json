@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-451746c3a3b3-review",
+  "run_id": "JBR-grade-kata-451746c3a3b3-review",
+  "updated_at": "2026-11-07T20:53:27.214Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-07T20:46:44.751Z",
+      "completed_at": "2026-11-07T20:48:30.849Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-451746c3a3b3/JBR-grade-kata-451746c3a3b3-review/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-07T20:53:16.916Z",
+      "completed_at": "2026-11-07T20:53:27.214Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-451746c3a3b3/JBR-grade-kata-451746c3a3b3-review/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-451746c3a3b3/JBR-grade-kata-451746c3a3b3-review/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-451746c3a3b3/JBR-grade-kata-451746c3a3b3-review/result.md"
+  }
+}
