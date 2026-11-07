@@ -4267,3 +4267,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f3922aa3e2864b429113ae50acfe94bd
+- v: 1
+  id: reg_0a86047376e7437aaaf01f619f239c62
+  ts: "2026-11-07T07:19:47Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が run の記録と差分（個票とイベントだけの変更）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: PJR-9BY9 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。古い配置の読み取りがなくなった後も、新しい run の記録はすべて commit された
+      to: PJR-JT5J・PJR-KC0T の統合後に claude-executor で exec run --register を流し、事前検証・親の検証・統合・review の遷移まで通ることを確かめた
+  previous_event_id: reg_3749825c1f0a4ed7aca50c67fd7939d2
