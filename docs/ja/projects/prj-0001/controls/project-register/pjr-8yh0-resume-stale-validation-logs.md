@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8yh0-resume-stale-validation-logs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T23:21:32Z"
+  completed_at: "2026-11-07T08:31:17Z"
+  conclusion: executor から再開するときの試行の退避で、ログを写さずに *.attempt-N.* へ移すようにし、成功した再開の run に前回の失敗したログが元の名前で残らないようにした
   derived_from:
     - PJR-TA6W
 ---

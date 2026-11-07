@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_710163f14ac5423180207e49348291f7
+- v: 1
+  id: reg_7af96012e289413080ac822392e066e4
+  ts: "2026-11-07T08:31:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票の対応結果・result と照らし、既にある統合テストが元のまま残ることと親の検証の成功を確かめた。JSEY で exec run の動作も確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: executor から再開するときの試行の退避で、ログを写さずに *.attempt-N.* へ移すようにし、成功した再開の run に前回の失敗したログが元の名前で残らないようにした
+  previous_event_id: reg_8a8afb0a47fa46f2a3932c2f355ab52c
