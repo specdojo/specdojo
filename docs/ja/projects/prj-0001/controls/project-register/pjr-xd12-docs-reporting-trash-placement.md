@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-xd12-docs-reporting-trash-placement
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-06T15:04:41Z"
   due_on: null
+  completed_at: "2026-11-07T00:08:30Z"
+  conclusion: reporting/progress-reports は週報の定義が無効なサンプルのため一度も作られていないと調べてガイドに書き、trash の 22 件をリポジトリ直下の archive/ja/product/trash/ へ移して文書サイトと doc index の対象から外した。旧 ID の wikilink はソースの URL へ解決する
   derived_from:
     - PJR-VH8D
 ---

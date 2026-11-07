@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1d29197f5ed546f3965ce23d681b2f37
+- v: 1
+  id: reg_b15181119381470b8a2059f3936a2814
+  ts: "2026-11-07T00:08:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合で落ちた移動先を e99db1519 で復元した後、orchestrator が index build・docs:build（dead link 0 件）・archive への wikilink の描画を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: reporting/progress-reports は週報の定義が無効なサンプルのため一度も作られていないと調べてガイドに書き、trash の 22 件をリポジトリ直下の archive/ja/product/trash/ へ移して文書サイトと doc index の対象から外した。旧 ID の wikilink はソースの URL へ解決する
+  previous_event_id: reg_6829c9038695470aa78f4fe3b8497342
