@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c2d986b8cfac4dcb817a257cf4391d71
+  ts: "2026-11-07T23:52:59Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent へ渡す検査の適用条件の文に、今の実行記録の plan・result を足す
+    - field: description
+      from: ""
+      to: src/exec/run/agent.ts が executor へ渡す validate:history-links の適用条件の文が、履歴ファイルとして旧来の exec/plans・exec/results だけを挙げ、実装が対象にする execution/runs の plan.md・result.md を挙げていない
+    - field: input
+      from: ""
+      to: '["PJR-5ZNK の確認で、src/exec/run/agent.ts の 251〜253 行目に旧来の書き方が残っていると分かった（2026-11-08）。判定の実装は src/exec/reporter.ts の isHistoryLinkTargetPath。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-5ZNK"]'
