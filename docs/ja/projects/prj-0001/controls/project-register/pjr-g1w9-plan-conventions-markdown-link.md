@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -64,8 +64,16 @@ BVS9 の後の plan.md が共通規約の版を相対パスの Markdown リン�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/shared/plan-conventions.ts` の新規出力を、ハッシュとリポジトリルート相対パスの2つのインラインコードに変更した。読込時は plan の末尾の独立した段落だけを対象とし、新形式と旧 Markdown リンクを復元する。本文やコードブロックの例は参照として解決しない。版の欠落・SHA-256 不一致の検査は両形式で維持した。
+- 新形式は plan を移しても参照を変更しない。旧形式は従来どおり相対参照を更新する。新旧の生成・復元、本文の例、欠落・改ざん、別 checkout・配置への移動を対象にテストを追加・更新した。再開テストの追加指示も末尾の参照より前に置くようにした。既存の plan は変更していない。
+- `validate:history-links` の既定対象に `docs/ja/projects/**/execution/runs/**/plan.md` と `docs/ja/projects/**/execution/runs/**/result.md` を追加した。互換例外は plan の最終段落に単独で置かれた旧形式の規約リンクだけとし、表示名が `共通規約 sha256:<64桁のハッシュ>`、参照先が同じハッシュの `conventions/<hash>.txt`（前置きは `../` の繰り返しのみ）の場合に限った。本文中のリンク、result、個票、異なるハッシュや任意のパスには適用しない。新配置での検出と例外の範囲を検証するテストを追加した。
+- `npm run validate:history-links` は新配置を含む 3,311 ファイルで違反なし。カタログ検査（`node --import tsx tools/catalog-validate-if-configured.mjs`）は終了コード 0。既存の re-export 参照・移動済み文書に関する警告は残る。整形を実施し、型・lint・単体・統合テスト等の親検証は runner が実行する。
+- [[specdojo:plan-result-lifecycle-guide]] に新旧形式の読込、末尾の参照だけを復元すること、追加指示の挿入位置、移動時の扱いを記載し、`CHANGELOG.md` の未公開節に変更を追記した。
+- 保護設定の変更案（直接編集せず、利用者承認後に反映）: `.github/instructions/markdown.instructions.md` の「履歴蓄積ファイルのリンク記法」の対象一覧に `docs/ja/projects/**/execution/runs/**/plan.md` と `docs/ja/projects/**/execution/runs/**/result.md` を追加する。規約の版への参照はハッシュとルート相対パスをインラインコードで記載する旨と、上記の旧形式の末尾リンクだけを互換例外とする旨も追記する。承認後にオーケストレーターが反映する。
+- 統合後の次の確認: runner・register・exec を変更した項目の運用手順に従い、PJR-JSEY の対象に PJR-G1W9 を加えて実 agent で1回実行し、新しい plan の参照と prompt の復元、start から review までの通過を確認する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:plan-result-lifecycle-guide]]
+- [[prj-0001:pjr-bvs9-plan-conventions-by-reference]]
+- [[prj-0001:pm-orchestrator-playbook]]

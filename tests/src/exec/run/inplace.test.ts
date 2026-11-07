@@ -1025,7 +1025,7 @@ describe("exec run (in-place, default)", () => {
 
         const prompt = readFileSync(join(repo, "agent-ran.txt"), "utf8");
         expect(prompt).toContain(conventions);
-        expect(prompt).not.toContain("[共通規約 sha256:");
+        expect(prompt).not.toContain("共通規約 sha256:");
 
         const result = readFileSync(recordPathForRead(executionPath, "result", "custom"), "utf8");
         expect(result).toContain("id: test:xer-custom");

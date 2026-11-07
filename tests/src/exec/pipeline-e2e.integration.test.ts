@@ -732,13 +732,13 @@ describe("executor / reporter pipeline E2E", () => {
     expect(invocations[0].prompt).toContain("executor stage");
     for (const invocation of invocations) {
       expect(invocation.prompt).toContain("記法・リンク規約（共通）");
-      expect(invocation.prompt).not.toContain("[共通規約 sha256:");
+      expect(invocation.prompt).not.toContain("共通規約 sha256:");
     }
     const savedPlan = readFileSync(
       recordPathForRead(target.executionPath, "plan", "T-TEST-doc-010"),
       "utf8",
     );
-    expect(savedPlan).toContain("[共通規約 sha256:");
+    expect(savedPlan).toContain("共通規約 sha256:");
     expect(savedPlan).not.toContain("記法・リンク規約（共通）");
     // 親 runner が実行する検証は、ID と対応コマンドを添えて executor へ伝える。
     // executor 側で同じコマンドを実行させないため、prompt に含まれている必要がある。
@@ -1125,8 +1125,10 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
         recordPathForRead(current.executionPath, "plan", taskId),
       );
       const rootPlan = readFileSync(join(current.repo, planRef), "utf8");
-      const editedPlan =
-        rootPlan + "\nPreserve prior work and apply the RKHR additional instructions.\n";
+      const editedPlan = rootPlan.replace(
+        "`共通規約 sha256:",
+        "Preserve prior work and apply the RKHR additional instructions.\n\n`共通規約 sha256:",
+      );
       writeFileSync(join(worktree, planRef), editedPlan, "utf8");
       const artifactRef = join("docs", "test", "doc.md");
       const priorArtifact = readFileSync(join(worktree, artifactRef), "utf8");
@@ -1176,7 +1178,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       expect(invocations[3].prompt).toContain("RKHR additional instructions");
       for (const invocation of invocations.slice(2)) {
         expect(invocation.prompt).toContain("記法・リンク規約（共通）");
-        expect(invocation.prompt).not.toContain("[共通規約 sha256:");
+        expect(invocation.prompt).not.toContain("共通規約 sha256:");
       }
       if (scenario === "incomplete") {
         expect(invocations[2].prompt).toContain("finish the remaining plan instructions");
