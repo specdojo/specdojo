@@ -57,6 +57,22 @@ execution/
 
 ログは実行した段に応じて保存し、親検証・統合のログも同じディレクトリに置きます。human の実行は result のみです。完了しても保存先は変わりません。共通規約の版は `execution/conventions/`、成果物ごとの評価結果は `execution/grade/results/`、job の状態管理 JSON は `execution/jobs/runs/` に残します。
 
+### 1.3. 配置の検査
+
+`exec validate` は schedule・event とともに、実行記録の配置を検査します。CI などで配置だけを検査する場合は次を使います。
+
+```bash
+specdojo exec validate --project <project-id> --records-only
+```
+
+検査は execution 配下を読み取り、旧配置や run の外の plan・result・evidence・checkpoint・ログ、不正な出どころや深さ、run に欠けた `plan.md`・`result.md`・`evidence.json` をパスと理由つきで報告し、終了コード 1 を返します。`execution: human` を明記した result は単独で正常とします。ログと checkpoint は実行段に応じた任意の記録で、退避した試行も同じ run に保持できます。
+
+`exec/events/`・`exec/trials/`、規約の版、grade の結果、job の状態、生成物、routine の失敗記録は独立した形式として検査から除きます。runtime lock は `git check-ignore` で確認し、追跡済みや無視されていない lock、Git で確認できない場合を報告します。旧 `routines/.locks/` が残る場合も、設定された routine のディレクトリで検査します。
+
+生成直後の plan 単独、進行中、plan を明示削除した run、移行時から欠けていた履歴も欠落として報告します。検査は記録を書き換えず、欠けたファイルも生成しません。保存時点の完全性を調べるため、CI は実行が終了して記録がそろった revision を対象にしてください。
+
+`exec run` と `exec cycle` の事前検証は `exec validate --schedule-only` で schedule・event だけを調べます。生成途中や中断中の run と、取得中の runtime lock があっても、実行・再開を妨げません。`--schedule-only` と `--records-only` は併用できません。
+
 ## 2. 命名規則
 
 ### 2.1. 出どころと項目 ID

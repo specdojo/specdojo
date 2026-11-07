@@ -21,7 +21,9 @@ export function spawnSelf(args: string[], cwd = specdojoRootDir()): boolean {
 }
 
 export function spawnValidate(projectId: string | undefined): boolean {
-  const args = ["exec", "validate"];
+  // Run records can still be incomplete at startup or resume, and the run lock is held.
+  // Audit persisted records explicitly or in CI, independently of schedule readiness.
+  const args = ["exec", "validate", "--schedule-only"];
   if (projectId) args.push("--project", projectId);
   return spawnSelf(args);
 }

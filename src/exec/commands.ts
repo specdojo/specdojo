@@ -1,4 +1,4 @@
-import { type Command } from "commander";
+import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
 import { validateCatalogLocalIds, validateRulebookKata } from "../catalog/build.js";
@@ -7,6 +7,7 @@ import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-
 import {
   assertValidActor,
   getProjectViewpointsPath,
+  getProjectRoutinesPath,
   loadConfig,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
@@ -88,6 +89,7 @@ import { buildTaskView } from "./task-view.js";
 import { registerExecTrialCommands } from "./trial.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
+import { validateRunRecordLayout } from "./validate-records.js";
 
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
@@ -193,12 +195,41 @@ export function registerExecCommands(program: Command): void {
     }
   }
 
-  const vcmd = exec.command("validate").description("Validate schedule + events");
+  const vcmd = exec
+    .command("validate")
+    .description("Validate schedule, events and run record layout");
   addProjectOptions(vcmd);
+  vcmd.option("--records-only", "Check only run record layout and runtime lock exclusion", false);
+  vcmd.addOption(
+    new Option("--schedule-only", "Check only schedule and events (used before running tasks)")
+      .default(false)
+      .conflicts("recordsOnly"),
+  );
   vcmd.action((opts) => {
     try {
-      const { schedulePath, catalogPath } = resolveProjectContext(opts);
+      const { schedulePath, catalogPath, executionPath } = resolveProjectContext(opts);
+      const { config } = loadConfig();
+      const project = config?.projects[resolveProjectId(opts)];
+      const routinesPath = project && getProjectRoutinesPath(project);
+      const layoutIssues = opts.scheduleOnly
+        ? []
+        : validateRunRecordLayout({
+            executionPath,
+            repoRoot: specdojoRootDir(),
+            ...(routinesPath ? { routinesPath: pathResolve(specdojoRootDir(), routinesPath) } : {}),
+          });
+      if (opts.recordsOnly) {
+        for (const issue of layoutIssues)
+          process.stdout.write(`ERROR: ${issue.path}: [${issue.reason}] ${issue.message}\n`);
+        if (!layoutIssues.length) process.stdout.write("OK: run record layout validation passed\n");
+        exitWithCode(layoutIssues.length === 0);
+        return;
+      }
       const res = validateAll(schedulePath);
+      res.errors.push(
+        ...layoutIssues.map((issue) => `${issue.path}: [${issue.reason}] ${issue.message}`),
+      );
+      res.ok = res.errors.length === 0;
       printValidateResult(res);
       // Scheduled tasks resolve their deliverable by bare local_id, so warn when a
       // local_id is not unique project-wide across the catalogs.

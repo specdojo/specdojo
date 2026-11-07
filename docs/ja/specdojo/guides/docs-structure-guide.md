@@ -253,7 +253,7 @@ execution/
   generated/
 ```
 
-job の定義はプロジェクト直下の `jobs/` に置きます。`exec/trials/` は比較実験の記録であり、通常の run とは別に管理します。
+job の定義はプロジェクト直下の `jobs/` に置きます。`exec/trials/` は比較実験の記録であり、通常の run とは別に管理します。配置の検査は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]] の「配置の検査」を参照してください。
 
 ### 6.2. 展開の流れ
 
@@ -315,7 +315,9 @@ idと対応させない場合（日本語名称を使用する場合等）は、
   （`domain: project-management`）が管理します。全体計画の正本は `controls/project-register/` の epic です。
   `schedule/` の計画成果物は `dct-planning.yaml`（`domain: planning`）で管理し、
   旧 `timeline/tml-index.yaml` は非推奨の互換用ファイルとして扱います。
-  `routines/`、`controls/reviews/`、各 `generated/` は CLI の入出力領域なのでカタログ管理対象外です。
+  `routines/`、`controls/generated/`、各 `generated/` は CLI の入出力領域なのでカタログ管理対象外です。
+
+派生ビューは `controls/generated/`、`schedule/generated/` など横断ディレクトリの直下に置きます。旧 sch-assessment は廃止済みのため、専用のサブディレクトリは作りません。routine の状態・履歴・lock は [[specdojo:routine-operation-guide|routine 運用ガイド]] に従って Git の外の端末側へ保存し、exec の lock は Git が無視する `execution/exec/.locks/` に置きます。
 
 再利用可能なJob Definitionは`jobs/`、各回のJob Runは`execution/jobs/`へ置きます。詳細は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
@@ -332,7 +334,7 @@ projects/<prj-id>/
 ├── 050-impact-analysis/        # 導入・変更の影響調査
 ├── 060-migration-planning/     # 移行計画・設計・切替計画
 ├── ...                         # 070- 以降の成果物ドメイン
-├── controls/                   # 管理台帳・派生ビュー（登録簿・レビュー結果）
+├── controls/                   # 管理台帳・派生ビュー（登録簿・generated/）
 ├── schedule/                   # Schedule（sch-*.yaml）
 ├── routines/                   # 定期実行ルーチン（rtn-*.yaml）
 ├── jobs/                       # 再利用可能なJob Definition（job-*.yaml）

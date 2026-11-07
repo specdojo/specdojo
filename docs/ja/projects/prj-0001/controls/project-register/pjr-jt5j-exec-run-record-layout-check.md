@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T15:06:36Z"
   due_on: null
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-VH8D
   depends_on:
@@ -55,6 +54,7 @@ specdojo:
 ### 実装と判断
 
 - `src/exec/validate-records.ts` を追加し、`exec validate` の通常実行と `--records-only` で同じ検査を使うようにした。`src/shared/run-records.ts` の配置ポリシーで出どころ・項目・run の階層を判定し、旧配置、run 外の記録、不正な深さ、必須ファイルの欠落を、リポジトリ相対パス・理由コード・説明で報告する。違反があれば終了コード 1 とし、書き換えや補完はしない。
+- 再開時の修正: 前回の親 integration 検証で失敗した19件は、`exec run` が project lock を取得してから配置を含む検証を呼ぶ経路だった。事前検証を `exec validate --schedule-only` に限定し、`exec cycle` も同じ呼び出しと表示にそろえた。判断: 記録が生成途中や中断中でも実行・再開できるよう、保存時点の配置検査と着手可否の検証を分ける。通常の `exec validate` と CI 用の `--records-only` は引き続き欠落と lock を検出する。両限定オプションは併用を拒否する。
 - runtime lock は実物を列挙し、Git の `check-ignore` を一括実行して無視と追跡の状態を調べる。追跡済み lock も検出するため `--no-index` は使わない。Git の確認が失敗した場合もエラーにする。設定された routine の旧 `.locks/` も対象とする。
 - 判断: agent run には plan・result・evidence を必須とし、`execution: human` を明記した result だけは単独で正常とする。実行段ごとに有無が変わる checkpoint・ログは任意とする。進行中、plan 単独生成、明示削除、移行時の欠落も報告し、履歴の黙認リストは設けない。これは R3 の欠落検出と既存の human の生成規則を両立するためである。
 - 判断: grade の結果、job の状態 JSON、exec event、比較実験、規約の版、生成物、routine の失敗記録は独立した形式として除外する。PJR-VH8D・[[prj-0001:pjr-9by9-exec-run-record-migration|移行の対応結果]]・[[prj-0001:pjr-pzbp-routine-state-outside-git|routine の移行結果]] に従う。ログ・evidence・checkpoint の内容は読まず、human の判別に result のメタデータだけを使う。
@@ -97,6 +97,7 @@ jobs:
 
 - 実データの読み取り検査では499ディレクトリに欠落 645 件（plan 141・result 138・evidence 366）を検出し、配置外ファイルと lock の違反は 0 件だった。旧 evidence の不在や、移行時に plan/result の対を最新試行へ寄せた先行試行を含む。これは正常判定ではないため、上の CI 案をそのまま導入すると失敗する。履歴の捏造・変更は行わず、反映前に利用者が欠落履歴の扱いを決める。検査範囲と例外はガイドに明記した。
 - 一時リポジトリで CLI の通常実行と `--records-only` を確認し、正常な記録では終了コード 0、evidence の欠落と旧配置の plan ではパス・理由を表示して終了コード 1 になることを確認した。lock の stdin を使う Git 確認は sandbox 内で応答が完了しなかったため、10秒で確認不能を返すようにした。lock の正常・異常系は追加した単体テストを親 runner で検証する。
+- 再開後の CLI smoke では3出どころの正常配置が成功し、通常／配置限定の検査が evidence 欠落を検出すること、`--schedule-only` が欠落を除外しても不正な event JSON は拒否すること、限定オプションの併用を拒否することを確認した。同じ観点と取得中の lock を単体テストにも追加した。sandbox は Node 子プロセス起動を `EPERM` で拒否するため、worktree の実行・再開と auto dry-run の統合経路は親 runner の再検証に委ねる。前回の19件は成功扱いにしていない。
 - 変更ファイルの Prettier、履歴リンク検査、カタログ検査、register の派生ビュー生成、ステージ上の実行記録の秘密情報スキャン、`git diff --check` は成功した。カタログには既存の未作成文書・re-export 参照の警告がある。秘密情報スキャンは対象 0 件・検出 0 件であり、新規実装全体のスキャンを意味しない。
 - lint・型検査・単体／統合テスト・schema の全件検査は親 runner が実行する。executor の整形・その他の検査結果は最終 evidence で報告する。
 - CI 案の承認と反映、既存欠落履歴の扱いの判断、統合後の [[prj-0001:pm-orchestrator-playbook|運用メモ]] に従う PJR-JSEY での実 CLI 確認を申し送る。個票のステータス、登録簿、result は変更していない。

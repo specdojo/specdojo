@@ -214,7 +214,7 @@ export async function runCycleMode(opts: RunOpts): Promise<void> {
   // Step 4/5: validate + refresh schedule state before selecting Ready tasks.
   process.stdout.write("[cycle] step 4/5: validate + refresh schedule state\n");
   if (dryRun) {
-    process.stdout.write("  [dry-run] specdojo exec validate\n");
+    process.stdout.write("  [dry-run] specdojo exec validate --schedule-only\n");
     process.stdout.write("  [dry-run] specdojo exec refresh\n");
     stepOutcomes.push("refresh=success");
   } else if (!spawnValidate(projectId)) {
