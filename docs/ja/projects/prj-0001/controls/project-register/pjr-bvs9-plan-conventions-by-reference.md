@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T15:05:39Z"
   due_on: null
+  block_reason: "parent validation failed: lint-ts, test-integration, test-unit"
   derived_from:
     - PJR-2WC2
   depends_on:
@@ -45,15 +46,21 @@ agent に渡す prompt には共通の規約の全文を含めたまま、保存
 
 ## 4. 作業内容
 
-| No  | 作業                             | 担当 | 状態 | メモ |
-| --- | -------------------------------- | ---- | ---- | ---- |
-| 1   | 保存する plan の規約を参照にする | DEV  | open | -    |
-| 2   | prompt で全文を復元する          | DEV  | open | -    |
-| 3   | テストを足す                     | DEV  | open | -    |
+| No  | 作業                             | 担当 | 状態 | メモ                                               |
+| --- | -------------------------------- | ---- | ---- | -------------------------------------------------- |
+| 1   | 保存する plan の規約を参照にする | DEV  | done | 共通の保存先と SHA-256 の版を追加                  |
+| 2   | prompt で全文を復元する          | DEV  | done | schedule・register・job・再開・手動 plan・reporter |
+| 3   | テストを足す                     | DEV  | done | 参照の保存・復元・欠落・改変・旧 plan と CLI 経路  |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/shared/plan-conventions.ts` に版の保存・検証・復元を追加し、保存先は PJR-Z0XR の `src/shared/run-records.ts` で決める。schedule・register・job の生成時は、共通規約を版への相対リンクに置き換える。同じ内容は上書きせず、並行生成でも完成済みのファイルを公開する。
+- plan を読む共通処理から規約を復元し、再開・`exec run --plan`・reporter・trial に当時の全文を渡す。欠落・改変・不正な参照は原因を示して停止する。埋め込み済みの旧 plan は変更せず読み取る。worktree の checkpoint・記録の引き継ぎ・commit 対象に規約を含め、旧配置へ出力した plan の archive 時は相対参照を直す。
+- 判断: 規約は `<execution_path>/conventions/<SHA-256>.txt` に保存する。run 間で共有するため run ディレクトリの外に置き、整形によるハッシュの変化を防ぐためプレーンテキストにした。版は mode・schema を解決した注入本文と末尾の改行から計算する。現在のテンプレートへのフォールバックは、過去の指示が変わるため行わない。配置と読み取りの説明は [[specdojo:plan-result-lifecycle-guide|plan と result の扱い]] を更新した。
+- 削減量: `generateSinglePlan` で作った freeform の edit plan 1 件は、復元後の 9,297 バイトに対して保存時は 5,835 バイトで、3,462 バイト減った。規約の共有ファイルは 3,643 バイトで、同じ版の次の plan から再利用する。最初の 1 件だけでは共有ファイル分の削減効果は出ない。
+- テスト: 単体テストに版の重複防止、edit/review、schema 別の版、復元する全文、欠落・改変のエラー、旧 plan、移動後と archive 後の参照を追加した。手動 plan の CLI テストは参照と埋め込みの両方を対象にし、schedule/register の pipeline と再開の統合テストで executor と reporter へ参照が漏れず全文が届くことを確認する。
+- 検証: ビルド、スモーク検証、変更ファイルの Prettier、履歴リンク検査、カタログ検査、register の派生一覧の生成を実施した。カタログの既存文書の移動・re-export に関する警告以外は問題なし。CLI の検証では認証情報を読み込まないよう、一時ラッパーで dotenv の読み込みを無効化した。主要 lint・型検査・単体／統合テスト・schema は指定どおり親 runner に委ねる。
+- CHANGELOG は未公開の節だけを更新した。保護設定の変更は不要だった。実 agent CLI の確認は、統合後に PJR-JSEY へ対象を加えて行う。
 
 ## 6. 関連ドキュメント
 
