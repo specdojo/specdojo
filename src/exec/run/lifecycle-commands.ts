@@ -1,3 +1,4 @@
+import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { type Command } from "commander";
 import { existsSync } from "node:fs";
 import { specdojoRootDir, type AgentProvider } from "../../shared/specdojo-config.js";
@@ -373,12 +374,12 @@ export function prepareScheduleIntegrationResume(params: {
     repoRoot,
     worktreePath: worktree.path,
   });
-  const checkpointPaths = [
+  const checkpointPaths = withPlanConventionsFiles([
     recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     ...(claimEventPath ? [claimEventPath] : []),
     ...gradeCheckpointPaths({ repoRoot, executionPath }),
-  ];
+  ]);
 
   return {
     task,

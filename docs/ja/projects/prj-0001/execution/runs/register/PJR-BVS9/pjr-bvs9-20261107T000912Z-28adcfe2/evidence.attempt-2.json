@@ -1,0 +1,510 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BVS9",
+  "run_id": "pjr-bvs9-20261107T000912Z-28adcfe2",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-07T00:32:35.862Z",
+    "completed_at": "2026-11-07T00:42:58.416Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-bvs9.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-post-review.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/noop.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/plan-templates.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/run-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/setup/git-environment.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/catalogless-register.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job/noop.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/catalogless-target.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/plan-conventions.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/plan-conventions.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/noop.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/plan-templates.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/setup/git-environment.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/catalogless-register.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job/noop.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/catalogless-target.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/plan-conventions.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/plan-conventions.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 34,
+    "summary": "CHANGELOG.md                                       |   2 +\n .../controls/project-register/events/pjr-bvs9.yaml |  22 ++++-\n .../pjr-bvs9-plan-conventions-by-reference.md      |  10 +-\n .../pjr-bvs9-20261107T000912Z-28adcfe2/plan.md     |   8 ++\n .../specdojo/guides/plan-result-lifecycle-guide.md |   2 +\n src/exec/agent-plan.ts                             |   5 +-\n src/exec/plans-generation.ts                       |  10 +-\n src/exec/plans-storage.ts                          |   8 +-\n src/exec/register.ts                               |   5 +-\n src/exec/run/in-place.ts                           |   3 +-\n src/exec/run/job.ts                                |   7 +-\n src/exec/run/lifecycle-commands.ts                 |   5 +-\n src/exec/run/register-core.ts                      |  11 ++-\n src/exec/run/register-post-review.ts               |   3 +-\n src/exec/run/register-resume.ts                    |   5 +-\n src/exec/run/register-worktree.ts                  |   5 +-\n src/exec/run/schedule-prepare.ts                   |   9 +-\n src/exec/trial-commands.ts                         |   5 +-\n src/exec/worktree-ops-lifecycle.ts                 |   5 +-\n src/job/job.ts                                     |  10 +-\n src/job/noop.ts                                    |  39 +++++++-\n src/shared/plan-templates.ts                       |  27 ++++--\n src/shared/run-records.ts                          |  11 +++\n tests/setup/git-environment.ts                     |   4 +\n .../exec/catalogless-register.integration.test.ts  |   9 ++\n tests/src/exec/pipeline-e2e.integration.test.ts    |  14 +++\n tests/src/exec/plans.test.ts                       |  37 ++++----\n .../exec/register-pipeline-e2e.integration.test.ts |   5 +\n tests/src/exec/register-plan-escape.test.ts        |   3 +-\n tests/src/exec/register-resume.integration.test.ts |   2 +\n tests/src/exec/run/inplace.test.ts                 | 102 +++++++++++++--------\n tests/src/job/noop.test.ts                         |  26 ++++++\n tests/src/register/catalogless-target.test.ts      |   5 +-\n 33 files changed, 317 insertions(+), 107 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "修正後のビルド成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-bvs9-smoke.mjs",
+      "status": "passed",
+      "summary": "同一ハッシュ、全文復元、重複防止、欠落・改変の停止、archive、Job no-op と共有版保持を確認。Git 観測値はスタブ使用。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "xargs -d '\\n' npx prettier --check < tmp/pjr-bvs9-format-files.txt",
+      "status": "passed",
+      "summary": "変更した成果物・ソース・テストの整形を確認。一時一覧は削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-bvs9-cli.mjs catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検査成功。既存の参照に関する警告あり。dotenv を無効化した一時ラッパーは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-bvs9-cli.mjs register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生一覧生成成功。一時ラッパーは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は非適用。",
+      "reason": "executor が変更した成果物に YAML/YML ファイルはありません。既存の event 変更は runner 管理です。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (0 errors, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3986 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3986 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\nfa4a00fa51c91a7b.txt\"\n\n ❯ cli tests/src/exec/catalogless-register.integration.test.ts:28:25\n     26|     const versions = planConventionsFiles(readFileSync(planPath, \"utf8…\n     27|     expect(versions).toHaveLength(1);\n     28|     expect(versions[0]).toMatch(\n       |                         ^\n     29|       new RegExp(`^${root}/docs/ja/projects/prj-test/execution/convent…\n     30|     );\n ❯ tests/src/exec/catalogless-register.integration.test.ts:177:5\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BVS9\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-07T00:48:08.825Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-07T00:47:09.137Z.\nfall\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/plans-generation.ts",
+      "status": "changed",
+      "path": "src/exec/plans-generation.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/plans-storage.ts",
+      "status": "changed",
+      "path": "src/exec/plans-storage.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/register.ts",
+      "status": "changed",
+      "path": "src/exec/register.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/in-place.ts",
+      "status": "changed",
+      "path": "src/exec/run/in-place.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/job.ts",
+      "status": "changed",
+      "path": "src/exec/run/job.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-core.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-core.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-post-review.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-post-review.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-resume.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-resume.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/trial-commands.ts",
+      "status": "changed",
+      "path": "src/exec/trial-commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/job/job.ts",
+      "status": "changed",
+      "path": "src/job/job.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/plan-templates.ts",
+      "status": "changed",
+      "path": "src/shared/plan-templates.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/run-records.ts",
+      "status": "changed",
+      "path": "src/shared/run-records.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/plans.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/plans.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/run/inplace.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/plan-conventions.ts",
+      "status": "changed",
+      "path": "src/shared/plan-conventions.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/plan-conventions.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/plan-conventions.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "規約の参照保存・全文復元と、外部書き込み・ハッシュ再現性・再開・Job no-op の不具合を修正しました。ビルドとスモーク検証は成功。主要 lint・単体／統合テストは親 runner の再検証に委ねます。result は編集していません。",
+  "completion_status": "complete",
+  "handoff": [
+    "規約は `<execution_path>/conventions/<SHA-256>.txt` に保存し、欠落時に現行テンプレートへフォールバックしません。測定した plan は 9,226 バイトから 5,764 バイトへ、3,462 バイト削減しました。共有規約は 3,643 バイトです。",
+    "外部書き込みの原因は、テスト setup が親の `SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` を残していたことです。除去と保存先の回帰テストを追加しました。前回、統合先に作られたファイルは変更していません。",
+    "前回失敗した検証に対し、未使用 import、catalogless の期待値、schedule checkpoint の解放対象、旧配置を模擬する相対参照、Job no-op 判定を修正しました。合否の確定には親 runner の再検証結果を使用してください。",
+    "保護設定の変更は不要です。統合後は運用メモに従い、PJR-JSEY の対象へ追加して実 agent CLI の動作を確認してください。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BVS9/pjr-bvs9-20261107T000912Z-28adcfe2/executor.attempt-2.log",
+      "bytes": 6215,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BVS9/pjr-bvs9-20261107T000912Z-28adcfe2/parent-validation-attempt-1-test-integration.attempt-2.log",
+      "bytes": 291581,
+      "truncated": false
+    }
+  ]
+}

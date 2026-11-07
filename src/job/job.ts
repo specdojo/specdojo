@@ -353,7 +353,10 @@ export async function generateJobPlan(
     ),
   };
   const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>());
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "edit", {
+    executionPath: paths.executionPath,
+    planPath,
+  });
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);
   return planPath;
@@ -411,7 +414,10 @@ export async function generateJobReviewPlan(
     _RUN_RESULT_REF_: repoRelative(join(paths.executionPath, record.result_ref)),
   };
   const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "review");
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "review", {
+    executionPath: paths.executionPath,
+    planPath,
+  });
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);
   return { planPath, resultPath };

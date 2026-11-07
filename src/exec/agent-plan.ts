@@ -1,4 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { readPlanFile } from "../shared/plan-conventions.js";
 import { dirname, resolve } from "node:path";
 import {
   defaultExecDefaultsPath,
@@ -105,7 +106,7 @@ export function readAgentPlan(planPath: string): string {
   if (!existsSync(absolutePath)) {
     throw new Error(`--plan not found: ${planPath}`);
   }
-  const prompt = readFileSync(absolutePath, "utf8");
+  const prompt = readPlanFile(absolutePath);
   if (!prompt.trim()) {
     throw new Error(`--plan is empty: ${planPath}`);
   }

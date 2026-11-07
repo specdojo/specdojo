@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
+import { readPlanFile } from "../../shared/plan-conventions.js";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { type PjrItem, type RegisterPaths } from "../../register/register.js";
@@ -466,7 +467,7 @@ export async function resumeSingleRegisterItemWorktree(
     target.stage === "executor" && existsSync(worktreePlanPath) ? worktreePlanPath : planPath;
   if (!existsSync(promptPlanPath))
     return refuse(`plan not found for the resumed run: ${artifacts.planRef}`);
-  const prompt = expandPromptRefs(readFileSync(promptPlanPath, "utf8"));
+  const prompt = expandPromptRefs(readPlanFile(promptPlanPath));
 
   if (target.stage === "executor") {
     const executor = resolveRegisterResumeExecutor(

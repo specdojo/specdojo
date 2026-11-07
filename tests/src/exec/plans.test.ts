@@ -1,3 +1,4 @@
+import { readPlanFile } from "../../../src/shared/plan-conventions.js";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -406,9 +407,8 @@ describe("plan generation (edit done_criteria goals)", () => {
         },
       });
 
-      const editPlan = readFileSync(
+      const editPlan = readPlanFile(
         recordPathForRead(executionPath, "plan", "T-TEST-overview-020"),
-        "utf8",
       );
       // Catalog base_path is root-anchored (/docs/test) but the emitted deliverable path
       // must be canonical repo-relative (no leading slash) so the agent resolves it from
@@ -461,9 +461,8 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan).toContain("- [[test:prj-overview]]");
       expect(editPlan).toContain("Why は判断軸として参照し、全文を成果物へ再掲しない");
 
-      const maintenancePlan = readFileSync(
+      const maintenancePlan = readPlanFile(
         recordPathForRead(executionPath, "plan", "T-TEST-overview-030"),
-        "utf8",
       );
       expect(maintenancePlan).not.toContain("viewpoints_ref:");
       expect(maintenancePlan).not.toContain("全 role 観点による自己レビュー");
@@ -545,7 +544,7 @@ describe("plan generation (conciseness prevention)", () => {
           critical_first_rank: 0,
         },
       });
-      const plan = readFileSync(path, "utf8");
+      const plan = readPlanFile(path);
       for (const rule of rules) {
         if (mode === "edit") {
           expect(plan.split(rule)).toHaveLength(2);
@@ -623,7 +622,7 @@ describe("plan generation (rulebook includes)", () => {
           critical_first_rank: 0,
         },
       });
-      return readFileSync(recordPathForRead(executionPath, "plan", "T-TEST-overview-020"), "utf8");
+      return readPlanFile(recordPathForRead(executionPath, "plan", "T-TEST-overview-020"));
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -966,7 +965,7 @@ describe("generateSinglePlan", () => {
       });
 
       // 条件付きの検査案内は詳細側にあり、plan はその詳細を参照させる（PJR-2219）。
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       const referencePath = "docs/ja/specdojo/exec-templates/xp-common-conventions-template.md";
       expect(plan).toContain(
         `共通の規約の詳細 \`${referencePath}\`、\`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md\` を読み`,
@@ -1011,7 +1010,7 @@ describe("generateSinglePlan", () => {
       });
 
       expect(outPath).toMatch(/\/runs\/schedule\/T-TEST-overview-020\/[^/]+\/plan\.md$/);
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       expect(plan).toContain("task_id: T-TEST-overview-020");
       expect(plan).toContain("rulebook: none");
       expect(plan).toContain("Business value is clear");
@@ -1081,7 +1080,7 @@ describe("generateSinglePlan", () => {
             critical_first_rank: 0,
           },
         });
-        const plan = readFileSync(outPath, "utf8");
+        const plan = readPlanFile(outPath);
 
         expect(plan).toContain(`- \`kind\`: ${kind}`);
         expect(plan).toContain(`- \`path\`: \`docs/ja/specdojo/${suffix}\``);
@@ -1103,7 +1102,7 @@ describe("generateSinglePlan", () => {
           critical_first_rank: 0,
         },
       });
-      const bootstrapPlan = readFileSync(bootstrapPath, "utf8");
+      const bootstrapPlan = readPlanFile(bootstrapPath);
 
       for (const [, kind, suffix] of cases) {
         expect(bootstrapPlan).toContain(
@@ -1138,7 +1137,7 @@ describe("generateSinglePlan", () => {
           critical_first_rank: 0,
         },
       });
-      const missingPlan = readFileSync(missingPath, "utf8");
+      const missingPlan = readPlanFile(missingPath);
       expect(missingPlan).toContain(
         "- `path`: `docs/ja/specdojo/rulebooks/not-created-rulebook.md`",
       );
@@ -1158,7 +1157,7 @@ describe("generateSinglePlan", () => {
           critical_first_rank: 0,
         },
       });
-      const unresolvedPlan = readFileSync(unresolvedPath, "utf8");
+      const unresolvedPlan = readPlanFile(unresolvedPath);
       expect(unresolvedPlan).toContain("- `path`: `_MISSING_`");
       expect(unresolvedPlan).toContain("- `state`: `unresolved`");
       expect(unresolvedPlan).toContain("命名規則から推測して作成せず異常終了する");
@@ -1191,7 +1190,7 @@ describe("generateSinglePlan", () => {
           },
         });
 
-        const plan = readFileSync(outPath, "utf8");
+        const plan = readPlanFile(outPath);
         expect(plan).toContain("approach: retrofit");
         expect(plan).toContain("## 3. 実装エビデンス");
         expect(plan).toContain("`src/exec/plans.ts`（implementation）: plan生成の現在動作");
@@ -1256,7 +1255,7 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       expect(plan).toContain("approach: cross-deliverable-dedup");
       expect(plan).toContain("targets:\n    - test:overview\n    - test:summary");
       expect(plan).toContain("document: [[test:overview]]");
@@ -1299,7 +1298,7 @@ describe("generateSinglePlan", () => {
         false,
       );
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       // id is unique per stem; the embedded result ref shares the stem; task_id stays the task id.
       expect(plan).toContain(`id: test:xep-${stem}`);
       expect(plan).toContain(`runs/schedule/T-TEST-overview-020/${stem}/result.md`);
@@ -1360,7 +1359,7 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       expect(plan).toContain("| --- | --- | --- | --- |\n| DC-001 |");
       expect(plan).not.toContain("| --- | --- | --- | --- |\n\n| DC-001 |");
       expect(plan).toContain("### プロジェクトコンテキスト");
@@ -1428,7 +1427,7 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       // review は観点ごとに評価しないため、観点の check 文面は展開しない。適用条件は
       // document_kinds の宣言で判定し（PJR-AG7B）、該当する done_criteria を完了条件に残す。
       expect(plan).toContain("| vp-ba-business-value |");
@@ -1477,8 +1476,8 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      expect(readFileSync(optOutPath, "utf8")).not.toContain("### プロジェクトコンテキスト");
-      expect(readFileSync(selfPath, "utf8")).not.toContain("### プロジェクトコンテキスト");
+      expect(readPlanFile(optOutPath)).not.toContain("### プロジェクトコンテキスト");
+      expect(readPlanFile(selfPath)).not.toContain("### プロジェクトコンテキスト");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

@@ -1,3 +1,4 @@
+import { readPlanFile } from "../../../src/shared/plan-conventions.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -547,7 +548,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       });
 
       for (const outPath of [plainOutPath, approachOutPath]) {
-        const content = await readFile(outPath, "utf8");
+        const content = readPlanFile(outPath);
         expect(content, outPath).toContain(
           `共通の規約の詳細 \`${referencePath}\`、\`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md\` を読み`,
         );

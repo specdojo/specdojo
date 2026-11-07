@@ -1,3 +1,4 @@
+import { readPlanFile } from "../../shared/plan-conventions.js";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { buildSpecdojoFrontmatter } from "../../docs/frontmatter-namespace.js";
@@ -432,7 +433,7 @@ export async function runRegisterPostReview(params: {
     executor: agents.executor,
     reporterCandidates: agents.reporterCandidates,
     planPath: generated.planPath,
-    planPrompt: expandPromptRefs(readFileSync(generated.planPath, "utf8")),
+    planPrompt: expandPromptRefs(readPlanFile(generated.planPath)),
     resultPath: generated.resultPath,
     registerPaths: registerReporterManagedPaths(registerPaths),
     execDefaults: reviewExecDefaults,

@@ -1,3 +1,4 @@
+import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { ensureReviewGrade, type ReviewGradeOutcome } from "../../review/grade.js";
@@ -378,12 +379,12 @@ export async function prepareSingleTask(
       worktree,
       resultPath,
       resultScaffold: readResultFrontmatterSnapshot(resultPath),
-      checkpointPaths: [
+      checkpointPaths: withPlanConventionsFiles([
         recordPathForRead(executionPath, "plan", task.id),
         resultPath,
         claimEventPath,
         ...gradeCheckpointPaths({ repoRoot, executionPath }),
-      ],
+      ]),
       pipelineRunId: executorTarget.runId,
       pipelineResumeStage: "executor",
       pipelineStateRef: executorTarget.stateRef,
@@ -542,12 +543,12 @@ export async function prepareSingleTask(
     }
   }
 
-  const checkpointPaths = [
+  const checkpointPaths = withPlanConventionsFiles([
     recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     claimEventPath,
     ...gradeCheckpointPaths({ repoRoot, executionPath }),
-  ];
+  ]);
   const checkpointFailureLogPath = pipelineRunId
     ? integrateLogPath(
         pipelineStateLocation({

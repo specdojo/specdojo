@@ -1,0 +1,86 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "規約の参照保存・全文復元と、外部書き込み・ハッシュ再現性・再開・Job no-op の不具合を修正しました。ビルドとスモーク検証は成功。主要 lint・単体／統合テストは親 runner の再検証に委ねます。result は編集していません。",
+  "handoff": [
+    "規約は `<execution_path>/conventions/<SHA-256>.txt` に保存し、欠落時に現行テンプレートへフォールバックしません。測定した plan は 9,226 バイトから 5,764 バイトへ、3,462 バイト削減しました。共有規約は 3,643 バイトです。",
+    "外部書き込みの原因は、テスト setup が親の `SPECDOJO_SCHEDULE_PATH` と `SPECDOJO_EXECUTION_PATH` を残していたことです。除去と保存先の回帰テストを追加しました。前回、統合先に作られたファイルは変更していません。",
+    "前回失敗した検証に対し、未使用 import、catalogless の期待値、schedule checkpoint の解放対象、旧配置を模擬する相対参照、Job no-op 判定を修正しました。合否の確定には親 runner の再検証結果を使用してください。",
+    "保護設定の変更は不要です。統合後は運用メモに従い、PJR-JSEY の対象へ追加して実 agent CLI の動作を確認してください。"
+  ],
+  "validations": [
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "修正後のビルド成功。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-bvs9-smoke.mjs",
+      "status": "passed",
+      "summary": "同一ハッシュ、全文復元、重複防止、欠落・改変の停止、archive、Job no-op と共有版保持を確認。Git 観測値はスタブ使用。一時ファイルは削除済み。"
+    },
+    {
+      "command": "xargs -d '\\n' npx prettier --check < tmp/pjr-bvs9-format-files.txt",
+      "status": "passed",
+      "summary": "変更した成果物・ソース・テストの整形を確認。一時一覧は削除済み。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言を確認。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-bvs9-cli.mjs catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検査成功。既存の参照に関する警告あり。dotenv を無効化した一時ラッパーは削除済み。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-bvs9-cli.mjs register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生一覧生成成功。一時ラッパーは削除済み。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は非適用。",
+      "reason": "executor が変更した成果物に YAML/YML ファイルはありません。既存の event 変更は runner 管理です。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {"target":"CHANGELOG.md","status":"changed","path":"CHANGELOG.md"},
+    {"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-bvs9-plan-conventions-by-reference.md"},
+    {"target":"docs/ja/specdojo/guides/plan-result-lifecycle-guide.md","status":"changed","path":"docs/ja/specdojo/guides/plan-result-lifecycle-guide.md"},
+    {"target":"src/exec/plans-generation.ts","status":"changed","path":"src/exec/plans-generation.ts"},
+    {"target":"src/exec/plans-storage.ts","status":"changed","path":"src/exec/plans-storage.ts"},
+    {"target":"src/exec/register.ts","status":"changed","path":"src/exec/register.ts"},
+    {"target":"src/exec/run/in-place.ts","status":"changed","path":"src/exec/run/in-place.ts"},
+    {"target":"src/exec/run/job.ts","status":"changed","path":"src/exec/run/job.ts"},
+    {"target":"src/exec/run/register-core.ts","status":"changed","path":"src/exec/run/register-core.ts"},
+    {"target":"src/exec/run/register-post-review.ts","status":"changed","path":"src/exec/run/register-post-review.ts"},
+    {"target":"src/exec/run/register-resume.ts","status":"changed","path":"src/exec/run/register-resume.ts"},
+    {"target":"src/exec/run/register-worktree.ts","status":"changed","path":"src/exec/run/register-worktree.ts"},
+    {"target":"src/exec/trial-commands.ts","status":"changed","path":"src/exec/trial-commands.ts"},
+    {"target":"src/exec/worktree-ops-lifecycle.ts","status":"changed","path":"src/exec/worktree-ops-lifecycle.ts"},
+    {"target":"src/job/job.ts","status":"changed","path":"src/job/job.ts"},
+    {"target":"src/shared/plan-templates.ts","status":"changed","path":"src/shared/plan-templates.ts"},
+    {"target":"src/shared/run-records.ts","status":"changed","path":"src/shared/run-records.ts"},
+    {"target":"tests/src/exec/pipeline-e2e.integration.test.ts","status":"changed","path":"tests/src/exec/pipeline-e2e.integration.test.ts"},
+    {"target":"tests/src/exec/plans.test.ts","status":"changed","path":"tests/src/exec/plans.test.ts"},
+    {"target":"tests/src/exec/register-pipeline-e2e.integration.test.ts","status":"changed","path":"tests/src/exec/register-pipeline-e2e.integration.test.ts"},
+    {"target":"tests/src/exec/register-plan-escape.test.ts","status":"changed","path":"tests/src/exec/register-plan-escape.test.ts"},
+    {"target":"tests/src/exec/run/inplace.test.ts","status":"changed","path":"tests/src/exec/run/inplace.test.ts"},
+    {"target":"src/shared/plan-conventions.ts","status":"changed","path":"src/shared/plan-conventions.ts"},
+    {"target":"tests/src/exec/plan-conventions.test.ts","status":"changed","path":"tests/src/exec/plan-conventions.test.ts"}
+  ]
+}
+</specdojo_executor_evidence>

@@ -143,6 +143,8 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 
 共通規約は `xp-common-conventions-template.md`（edit / review 共通）と、`mode` に対応する `xep-common-conventions-template.md`（edit 専用）または `xrp-common-conventions-template.md`（review 専用）を組み合わせます。接頭辞の `x` は exec、`p` は plan、`e` / `r` は edit / review を表します。各ファイルの `plan-essentials` マーカー間を plan の `_COMMON_CONVENTIONS_` 位置へ順に展開し、規約の詳細を読む案内には両ファイルのパスを載せます。マーカーのないローカル断片は全文を展開します。grade の plan はこれらの規約を使いません。
 
+保存する plan では、展開済みの共通規約を `[共通規約 sha256:<内容のハッシュ>](<plan からの相対パス>)` に置き換えます。規約本体は `<execution_path>/conventions/<SHA-256>.txt` に版ごとに一度だけ保存し、整形で内容が変わらないようプレーンテキストで保持します。版は mode・schema の解決後の本文（末尾の改行を含む）から計算します。規約本文の資源への参照はリポジトリ相対とし、別 checkout の同梱資源は package 内の相対パスにするため、端末の絶対パスで版が変わりません。agent と reporter へ渡す前に保存した版を復元するため、テンプレートの更新後や再開時も当時の規約が届きます。`exec run --plan` と `agent run --plan` も同じ読み取りを使います。参照先が欠けている場合やハッシュが一致しない場合は、版とパスを示すエラーで停止します。規約を埋め込んだ既存 plan はそのまま読めます。plan を別の場所で使うときは、規約ファイルも引き継ぎ、相対参照を維持してください。
+
 `execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を正本とし、human result から参照します。
 
 `approach` が指定されていれば `xep-fully-guided-template.md`、`xep-condense-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-retrofit-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。

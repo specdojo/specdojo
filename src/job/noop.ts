@@ -4,6 +4,7 @@ import {
   lstatSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
   readlinkSync,
   rmSync,
   writeFileSync,
@@ -12,7 +13,13 @@ import { dirname, join, relative, sep } from "node:path";
 import { gitOutput, gitResult, worktreeStatusPaths } from "../shared/git.js";
 import { listFilesRecursive, writeJson } from "../shared/fs.js";
 import { localStateDirectory } from "../shared/local-state.js";
-import { legacyEvidenceDirectory, taskRecordPaths } from "../shared/run-records.js";
+import {
+  legacyEvidenceDirectory,
+  listRunRecords,
+  planConventionsDirectory,
+  taskRecordPaths,
+} from "../shared/run-records.js";
+import { planConventionsFiles } from "../shared/plan-conventions.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import type { JobRunRecord } from "./definition.js";
 
@@ -59,8 +66,13 @@ export function jobBookkeepingPaths(executionPath: string, record: JobRunRecord)
 
 export function snapshotJobOutput(repoRoot: string, executionPath: string, record: JobRunRecord) {
   const artifacts = jobBookkeepingPaths(executionPath, record);
+  const conventionsDirectory = planConventionsDirectory(executionPath);
+  const previousVersions = new Set(
+    existsSync(conventionsDirectory) ? readdirSync(conventionsDirectory) : [],
+  );
   const ignored = artifacts.map((file) => relative(repoRoot, file).split(sep).join("/"));
   ignored.push(
+    relative(repoRoot, conventionsDirectory).split(sep).join("/"),
     relative(repoRoot, join(executionPath, "exec", ".locks"))
       .split(sep)
       .join("/"),
@@ -115,10 +127,35 @@ export function snapshotJobOutput(repoRoot: string, executionPath: string, recor
         ),
       };
       writeJson(local, noop);
+      const versions = existsSync(join(executionPath, record.plan_ref))
+        ? planConventionsFiles(
+            readFileSync(join(executionPath, record.plan_ref), "utf8"),
+            dirname(join(executionPath, record.plan_ref)),
+          )
+        : [];
       for (const file of artifacts) rmSync(file, { recursive: true, force: true });
       for (const [file, content] of previous) {
         mkdirSync(dirname(file), { recursive: true });
         writeFileSync(file, content);
+      }
+      // Remove only snapshots introduced by this discarded Run. Preserve versions
+      // referenced by retained plans, including archived legacy plans.
+      const retained = new Set(
+        [
+          ...new Set([
+            ...listRunRecords(executionPath, "plan"),
+            ...listFilesRecursive(join(executionPath, "exec", "plans")).filter((path) =>
+              path.endsWith("-plan.md"),
+            ),
+          ]),
+        ].flatMap((plan) => planConventionsFiles(readFileSync(plan, "utf8"), dirname(plan))),
+      );
+      for (const version of versions) {
+        if (
+          !previousVersions.has(version.slice(conventionsDirectory.length + 1)) &&
+          !retained.has(version)
+        )
+          rmSync(version);
       }
     },
   };
