@@ -4328,3 +4328,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bb7d53c1edda4f719646688a0dc94f68
+- v: 1
+  id: reg_4125aa41228a4347b283caab234cef72
+  ts: "2026-11-07T08:30:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が run の記録、plan の末尾の参照、規約の展開の結果、差分（個票とイベントだけ）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: PJR-JT5J・PJR-KC0T の統合後に claude-executor で exec run --register を流し、事前検証・親の検証・統合・review の遷移まで通ることを確かめた
+      to: PJR-8YH0・PJR-G1W9 の統合後に claude-executor で exec run --register を流し、新しい書き方の規約の参照が plan に書かれ、規約の本文が戻り、start から review まで通ることを確かめた
+  previous_event_id: reg_d92f12f71e4b4bb5bea1ce829533f96e
