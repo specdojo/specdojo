@@ -15,20 +15,22 @@ specdojo:
     - PJR-JT5J
 ---
 
-# PJR-KC0T 普通の exec validate で実行記録の欠落を警告にする
+# PJR-KC0T 実行記録の検査で過去の記録の世代を正常として扱う
 
 ## 1. 概要
 
-JT5J の後、develop の exec validate が過去の記録の欠落などで失敗するため、欠落を警告にし、別形式の grade の生成物と空の lock のディレクトリを検査から外して終了コード 0 に戻す
+JT5J の後、exec validate が過去の世代の記録を欠落と判定して失敗するため、evidence より前の run と移行で plan と result を集めた前の試行を正常とし、別形式の grade の生成物と空の lock のディレクトリを外して、残る中途半端な記録だけを知らせる
 
 ## 2. 入力
 
 - 由来: PJR-JT5J の統合後、develop で npx specdojo exec validate --project prj-0001 がエラー 665 件で失敗した。内訳は missing 644 件、misplaced 10 件、lock-not-ignored 1 件（2026-11-07）
-- missing の大半は記録の世代の違いによる。evidence がない run 365 件のうち pipeline-state.json を持つのは 4 件で、ほかは evidence の仕組みより前の run。plan と result の欠落は、PJR-9BY9 の移行で plan と result を最新の試行のディレクトリに集めたため（2026-11-07）
+- missing の 644 件を run のディレクトリの中身で分けると、plan と result だけがあり pipeline-state.json と evidence.json がないもの 352 件、evidence.json と pipeline-state.json とログだけがあり plan と result がないもの 132 件、それ以外の一部だけがあるもの 14 件だった（2026-11-07）
+- 352 件は evidence の仕組みより前の run。132 件は、PJR-9BY9 の移行で plan と result を同じ項目の最新の試行のディレクトリに集めた、その前の試行（例: runs/register/PJR-08K1/20260911T124544877Z-ebc5e6c0。plan と result は 20260911T204039330Z-35d96f3f にある）（2026-11-07）
+- 14 件の例: result だけ（PJR-2219）、plan だけ（PJR-TNDH）、integrate.log だけ（PJR-283N）、pipeline-state.json だけ（PJR-PZBP）、plan・result・pipeline-state.json があり evidence.json がない（PJR-23DT）（2026-11-07）
 - misplaced の 10 件は、すべて execution/grade/generated/runs/ にある品質評価の plan（`*-grade-plan.md`・`*-grade-reporter-plan.md`）で、実行記録とは別の形式（2026-11-07）
 - lock-not-ignored の 1 件は docs/ja/projects/prj-0001/routines/.locks の空のディレクトリ。今の src はこの場所に lock を作らないが、ディレクトリは 2026-11-07 02:00 に更新されている。更新した主体は分かっていない（2026-11-07）
 - agent への指示（.github/instructions/specdojo-exec-workflow.instructions.md）は、作業の後の exec validate が成功で終了コード 0 になることを前提にしている（2026-11-07）
-- 決定（A 案）: 普通の exec validate では記録の欠落を警告にし、終了コードに含めない。置き場所の外のファイルと lock はエラーのまま。--records-only（CI 用）は欠落もエラーのまま。欠落の基準の見直しは別の項目で扱う（2026-11-07 indie が決定）
+- 決定: 過去の世代の記録（evidence より前の run と、移行で plan と result を集めた前の試行）は、エラーにも警告にもしない。残る一部だけの記録は、普通の exec validate では警告、--records-only ではエラーとする。案 A（欠落をすべて警告にする）から組み替えた（2026-11-07 indie が決定）
 
 ## 3. 完了条件
 
