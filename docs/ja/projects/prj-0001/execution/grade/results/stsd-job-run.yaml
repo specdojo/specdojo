@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 94
-graded_at: "2026-11-05T14:34:18.047Z"
-graded_by: sol-review-executor
-content_hash: a2ced858360620b2b337500160a71b3662eff5d88a5353d4eb5b2cee111add73
+graded_at: "2026-11-07T16:30:29.700Z"
+graded_by: flash-high-executor
+content_hash: fbfb01cb4afe503a7ac07b2d0b75f639e936d449f2e898012d6cccf44f310338
 source_hashes:
   catalog-entry: 5231b15f91c65f998adac4468c770f3db84e6b2f9039317d6f46f27cf57e0072
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -126,7 +126,7 @@ findings:
   - id: F001
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 81
+    line: 91
     anchor: >-
       | _UNDECIDED_:
       実行中の再実行で前の試行が実行中のまま残る。指定実装に生存確認・重複実行の排除はなく、呼出元の排他制御は未確認。安全な再試行の判断責任と残留試行の確定方法を合意する                                                                                                                                                   
@@ -135,16 +135,13 @@ findings:
       The retry and result-correction rows use agreement on the same policy as their decision timing; identify an
       actionable investigation owner and a checkpoint such as completion of caller analysis or the document approval
       review so these items can be sequenced and tracked.
-    message_ja: >-
-      The retry and result-correction rows use agreement on the same policy as their decision timing; identify an
-      actionable investigation owner and a checkpoint such as completion of caller analysis or the document approval
-      review so these items can be sequenced and tracked.
+    message_ja: リトライおよび結果修正の行は、決定タイミングにおける同じポリシーへの合意を使用します。これらの項目を順序立てて追跡できるように、実行可能な調査担当者と、呼び出し元分析の完了やドキュメントの承認レビューといったチェックポイントを特定してください。
     cause:
       type: document
   - id: F002
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 80
+    line: 90
     anchor: >-
       | _UNDECIDED_: `prj-0001:bdd-job-run`
       は未作成。状態名・イベント名、部分成功と処理不要の業務上の境界、および成功の受入条件を合意する必要がある。指定実装は結果の受取・保存を確認できるが、呼出元による終了コード・agent
@@ -155,17 +152,13 @@ findings:
       named result notifications, while their business selection and acceptance rules remain unconfirmed; define or
       reference the observable business facts that distinguish these outcomes before treating T-02 through T-05 as
       complete business requirements.
-    message_ja: >-
-      The meanings and entry criteria for success, partial success, failure, and noop depend on receiving identically
-      named result notifications, while their business selection and acceptance rules remain unconfirmed; define or
-      reference the observable business facts that distinguish these outcomes before treating T-02 through T-05 as
-      complete business requirements.
+    message_ja: 成功、部分的な成功、失敗、およびnoopの意味とエントリ基準は、同一の名称を持つ結果通知を受け取ることに依存していますが、それらのビジネス上の選択および受け入れルールは未確認のままです。T-02からT-05を完全なビジネス要件として扱う前に、これらの結果を区別する観測可能なビジネス事実を定義または参照してください。
     cause:
       type: document
   - id: F003
     severity: minor
     rule: vp-dev-change-impact
-    line: 82
+    line: 92
     anchor: >-
       | _UNDECIDED_:
       結果の保存処理は試行の存在を確認するが、遷移元が実行中かは確認せず、記録済み結果を再更新できる。本図は開始から結果記録までの経路を扱い、結果訂正を承認済みの業務遷移として追加しない。結果訂正を許すか、遷移元を制限するかを決める                                                                                     
@@ -176,16 +169,14 @@ findings:
       caller and test references to the pending decisions so their compatibility impact is reviewed with the state
       policy.
     message_ja: >-
-      Decisions to restrict completion sources or change outcome selection affect callers in src/exec/run/job.ts and
-      regression expectations in tests/src/job/job.test.ts, but these consumers are not identified; attach the affected
-      caller and test references to the pending decisions so their compatibility impact is reviewed with the state
-      policy.
+      完了ソースを制限する、または結果の選択を変更するという決定は、src/exec/run/job.ts の呼び出し元と tests/src/job/job.test.ts
+      の回帰テストの期待値に影響を与えますが、これらのコンシューマーが特定されていません。これらの互換性への影響をステートポリシーと共にレビューできるように、影響を受ける呼び出し元とテストの参照を保留中の決定に付与してください。
     cause:
       type: document
   - id: F004
     severity: minor
     rule: vp-dev-testability
-    line: 12
+    line: 21
     anchor: >-
       状態値・試行の型は `src/job/definition.ts` の `JobRunState`・`JobRunAttempt`、開始・結果・レビュー記録は `src/job/job.ts` の
       `materializeJobRun`・`completeJobRun`・`recordJobRunReview` に基づく。結果を選ぶ業務判断の未確認範囲は「今後の検討メモ」に残す。
@@ -194,15 +185,14 @@ findings:
       Markdown, frontmatter, and Mermaid checks and the focused Job Run test command, including their expected
       successful result.
     message_ja: >-
-      The implementation references do not identify how to verify a state-definition change; link the applicable
-      Markdown, frontmatter, and Mermaid checks and the focused Job Run test command, including their expected
-      successful result.
+      実装の参照事項には、ステート定義の変更をどのように検証するかが特定されていません。該当する Markdown、frontmatter、および Mermaid のチェックと、期待される成功結果を含む、対象の Job Run
+      テストコマンドをリンクさせてください。
     cause:
       type: document
   - id: F005
     severity: minor
     rule: vp-qe-verifiability
-    line: 60
+    line: 41
     anchor: >-
       `T-01`・`T-06`・`T-07` は `src/job/job.ts` の `materializeJobRun`、`T-02`〜`T-05` は同ファイルの `completeJobRun`
       で確認できる。結果通知は四つのうち一つを受け取る記録上の条件であり、終了コードなどから通知を選ぶ規則は参照範囲では確定しない。
@@ -210,16 +200,13 @@ findings:
       Notification-based conditions make persistence transitions testable, but they do not provide expected outcomes for
       actual command, agent, reporter, or review results; add or reference an outcome decision table with representative
       boundary cases once the caller investigation is complete.
-    message_ja: >-
-      Notification-based conditions make persistence transitions testable, but they do not provide expected outcomes for
-      actual command, agent, reporter, or review results; add or reference an outcome decision table with representative
-      boundary cases once the caller investigation is complete.
+    message_ja: 通知ベースの条件によって永続化の遷移はテスト可能になりますが、実際のコマンド、エージェント、リポーター、またはレビューの結果に対する期待される結果が提供されていません。呼び出し元の調査が完了したら、代表的な境界ケースを含む結果決定テーブルを追加または参照してください。
     cause:
       type: document
   - id: F006
     severity: major
     rule: vp-ops-operability
-    line: 81
+    line: 91
     anchor: >-
       | _UNDECIDED_:
       実行中の再実行で前の試行が実行中のまま残る。指定実装に生存確認・重複実行の排除はなく、呼出元の排他制御は未確認。安全な再試行の判断責任と残留試行の確定方法を合意する                                                                                                                                                   
@@ -230,10 +217,8 @@ findings:
       boundary and explicitly gate use of this retry path pending human agreement so operators can make a safe retry
       decision.
     message_ja: >-
-      T-07 can append a new attempt while the previous attempt remains running, but no agreed liveness check,
-      authorization condition, or disposition of abandoned attempts is available; define or reference that operational
-      boundary and explicitly gate use of this retry path pending human agreement so operators can make a safe retry
-      decision.
+      T-07
+      は、前の試行が実行中のまま新しい試行を追加できますが、合意された生存確認、承認条件、または放棄された試行の処置が存在しません。オペレーターが安全にリトライの決定を行えるよう、その運用境界を定義または参照し、人間による合意が得られるまでこのリトライパスの使用を明示的に制限してください。
     cause:
       type: document
 done_criteria:

@@ -2,9 +2,9 @@
 id: prj-0001:stsd-deliverable-grade-criteria
 document: prj-0001:stsd-deliverable
 path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
-graded_at: "2026-11-05T14:26:40.108Z"
-graded_by: sol-review-executor
-content_hash: 057310827ad4c9022b66e7100e5fc4da19a5014f294df5440553a7882110c97f
+graded_at: "2026-11-07T16:26:34.467Z"
+graded_by: flash-high-executor
+content_hash: 7bdabd6b5cfd48ceb520c5cef956a82025853f737c01cce69ceade7af65b3351
 summary:
   satisfied: 1
   unsatisfied: 4
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Approval requirements and the business rules for downgrade, restoration, and retirement without a successor remain
-      unresolved.
+      Approval requirements for T-02 and business rules for downgrade, restoration, and retirement without a successor
+      remain unresolved.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
@@ -50,5 +50,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      A state-management implementation cannot determine authorization and handling for unlisted transitions and missing
-      or invalid status values from the current definition.
+      Implementers cannot determine authorization and handling for unlisted transitions and missing or invalid status
+      values from the current definition.

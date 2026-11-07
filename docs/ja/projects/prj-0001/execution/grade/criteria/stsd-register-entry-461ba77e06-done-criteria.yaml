@@ -2,12 +2,12 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-11-05T14:50:58.449Z"
-graded_by: sol-review-executor
-content_hash: 4a237504f93080167e1fb7eaea073e1d397242bf1136308d3794aaee7c7cd9b5
+graded_at: "2026-11-07T16:34:12.799Z"
+graded_by: flash-high-executor
+content_hash: 28a1919d9966d9e1dfae12a082f3dc0b158ef478ea3d1c6eaa4f58f8d8b1af6b
 summary:
-  satisfied: 3
-  unsatisfied: 2
+  satisfied: 4
+  unsatisfied: 1
   total: 5
 criteria:
   - id: DC-001
@@ -17,17 +17,14 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The AS-IS business conditions omit human-preapproved overnight automatic closure and leave several operational
-      paths unresolved in M-01.
+      The requirements and approval conditions for automatic closure of human-preapproved todo and issue items after
+      overnight post-review are not defined.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
-    status: unsatisfied
-    reason: >-
-      The unconditional requirement for subsequent human termination approval conflicts with the overnight approval
-      model, and M-01 still defers business-policy decisions.
+    status: satisfied
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:

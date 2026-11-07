@@ -5,10 +5,10 @@ path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-11-05T14:26:40.108Z"
-graded_by: sol-review-executor
-content_hash: 057310827ad4c9022b66e7100e5fc4da19a5014f294df5440553a7882110c97f
+score: 85
+graded_at: "2026-11-07T16:26:34.467Z"
+graded_by: flash-high-executor
+content_hash: 7bdabd6b5cfd48ceb520c5cef956a82025853f737c01cce69ceade7af65b3351
 source_hashes:
   catalog-entry: 054b37c3d3d85e4663b695deb137aa1d438e566c0bc8e3793e50b74cd7205365
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -26,7 +26,7 @@ categories:
   business:
     score: 75
   consistency:
-    score: 100
+    score: 75
   architecture:
     score: 100
   usability:
@@ -91,8 +91,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -119,14 +119,14 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 5
+  major: 6
   minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-pm-control-reporting
-    line: 48
+    line: 58
     anchor: >-
       |
       論点                                                                                                                                                                                                                                            
@@ -134,15 +134,13 @@ findings:
     message: >-
       Identify the PJR or decision-record destination for each outstanding item, and distinguish investigation work from
       decisions awaiting approval so that the memo can be transferred into project controls without reclassification.
-    message_ja: >-
-      Identify the PJR or decision-record destination for each outstanding item, and distinguish investigation work from
-      decisions awaiting approval so that the memo can be transferred into project controls without reclassification.
+    message_ja: 未解決の各項目について、PJRまたはdecision-recordの転送先を特定してください。また、メモを再分類することなくプロジェクトコントロールへ転送できるよう、調査業務と承認待ちの決定事項を区別してください。
     cause:
       type: document
   - id: F002
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 40
+    line: 50
     anchor: >-
       | `T-02`  | 未確定   | 利用可能 | 利用可能性の承認 | 人間が内容の確定または運用利用を判断した   | agent
       は昇格させない。成果物ごとの承認者、受入条件、証跡と、実装による権限・条件の検証は未確認                                                                      
@@ -151,69 +149,57 @@ findings:
       Define the minimum approval requirements for T-02 or reference an authoritative rule that resolves the responsible
       human approver, applicable acceptance conditions, and approval evidence; the current generic human judgment
       condition is insufficient to establish a valid promotion.
-    message_ja: >-
-      Define the minimum approval requirements for T-02 or reference an authoritative rule that resolves the responsible
-      human approver, applicable acceptance conditions, and approval evidence; the current generic human judgment
-      condition is insufficient to establish a valid promotion.
+    message_ja: T-02の最小承認要件を定義するか、責任を持つ承認者、適用される承認条件、および承認証跡を解決する権威あるルールを参照してください。現在の汎用的な人間の判断条件では、有効なプロモーションを確立するには不十分です。
     cause:
       type: document
   - id: F003
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 53
+    line: 62
     anchor: >-
       | _UNDECIDED_:
-      降格、廃止からの復帰、後継文書を伴わない廃止、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判断条件を合意する                                                     
+      降格、廃止からの復帰、後継文書を伴わない廃止、旧状態値・旧イベントの読み替え、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判定・移行の規則を合意する             
       | 全状態                 | BA、PO、ARC  | 本定義の受入承認前         |
     message: >-
       Resolve the permitted source states, destination states, events, and conditions for downgrade, restoration, and
       retirement without a successor, or explicitly exclude those cases from the accepted scope; leaving their
       permission undecided prevents a complete business transition definition.
-    message_ja: >-
-      Resolve the permitted source states, destination states, events, and conditions for downgrade, restoration, and
-      retirement without a successor, or explicitly exclude those cases from the accepted scope; leaving their
-      permission undecided prevents a complete business transition definition.
+    message_ja: ダウングレード、復元、および後継のないリタイアメントにおける許可されたソース状態、デスティネーション状態、イベント、および条件を解決するか、それらのケースを承認されたスコープから明示的に除外してください。許可が未決定のままだと、完全なビジネス遷移の定義が妨げられます。
     cause:
       type: document
   - id: F004
     severity: major
     rule: vp-dev-implementation-readiness
-    line: 53
+    line: 62
     anchor: >-
       | _UNDECIDED_:
-      降格、廃止からの復帰、後継文書を伴わない廃止、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判断条件を合意する                                                     
+      降格、廃止からの復帰、後継文書を伴わない廃止、旧状態値・旧イベントの読み替え、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判定・移行の規則を合意する             
       | 全状態                 | BA、PO、ARC  | 本定義の受入承認前         |
     message: >-
       Provide a complete transition policy or an explicit interim decision rule for unlisted transitions and missing or
       invalid status values; implementers currently cannot determine whether to reject, defer, or permit these
       operations without inventing business behavior.
-    message_ja: >-
-      Provide a complete transition policy or an explicit interim decision rule for unlisted transitions and missing or
-      invalid status values; implementers currently cannot determine whether to reject, defer, or permit these
-      operations without inventing business behavior.
+    message_ja: 未記載の遷移、および不足または無効なステータス値に対する完全な遷移ポリシー、または明示的な暫定決定ルールを提供してください。現在、実装者はビジネス上の振る舞いを独自に考案することなく、これらの操作を拒否するのか、延期するのか、あるいは許可するのかを判断できません。
     cause:
       type: document
   - id: F005
     severity: minor
     rule: vp-dev-testability
-    line: 44
+    line: 54
     anchor: >-
       廃棄は状態を保った保管場所の変更であり、自己遷移として追加しない。確認した実装は文書を `trash/` へ移し、カタログの対象エントリの `path` だけを更新して `local_id`
-      を維持する。状態が廃止でなくても警告だけで処理を続けるため、廃棄先にあることを廃止の成立条件にできない。
+      を維持する。状態が廃止でなくても警告だけで処理を続ける。
     message: >-
       Link the applicable schema and executable checks for allowed status values, initial draft creation, and
       status-preserving disposal, and state their expected results separately from human approval checks that the CLI
       does not enforce.
-    message_ja: >-
-      Link the applicable schema and executable checks for allowed status values, initial draft creation, and
-      status-preserving disposal, and state their expected results separately from human approval checks that the CLI
-      does not enforce.
+    message_ja: 許可されたステータス値、初期ドラフトの作成、およびステータスを維持した廃棄に関する、適用可能なスキーマと実行可能なチェックをリンクさせ、それらの期待される結果を、CLIが強制しない人間の承認チェックとは別に記載してください。
     cause:
       type: document
   - id: F006
     severity: major
     rule: vp-qe-verifiability
-    line: 40
+    line: 50
     anchor: >-
       | `T-02`  | 未確定   | 利用可能 | 利用可能性の承認 | 人間が内容の確定または運用利用を判断した   | agent
       は昇格させない。成果物ごとの承認者、受入条件、証跡と、実装による権限・条件の検証は未確認                                                                      
@@ -222,43 +208,44 @@ findings:
       Specify observable approval evidence and negative-case expectations for promotion, and resolve the outcomes of the
       exceptional cases listed in section 5; checking the recorded status alone cannot verify that the business
       transition was valid.
-    message_ja: >-
-      Specify observable approval evidence and negative-case expectations for promotion, and resolve the outcomes of the
-      exceptional cases listed in section 5; checking the recorded status alone cannot verify that the business
-      transition was valid.
+    message_ja: プロモーションにおける観察可能な承認証跡とネガティブケースの期待事項を特定し、セクション5に記載されている例外的なケースの結果を解決してください。記録されたステータスを確認するだけでは、ビジネス遷移が有効であったことを検証できません。
     cause:
       type: document
   - id: F007
-    severity: minor
-    rule: vp-ops-operability
-    line: 53
-    anchor: >-
-      | _UNDECIDED_:
-      降格、廃止からの復帰、後継文書を伴わない廃止、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判断条件を合意する                                                     
-      | 全状態                 | BA、PO、ARC  | 本定義の受入承認前         |
-    message: >-
-      Add an interim escalation reference for operators encountering missing or invalid status values or requesting an
-      undefined transition, including where to record the case and obtain a human decision while the permanent rules
-      remain unresolved.
-    message_ja: >-
-      Add an interim escalation reference for operators encountering missing or invalid status values or requesting an
-      undefined transition, including where to record the case and obtain a human decision while the permanent rules
-      remain unresolved.
-    cause:
-      type: document
-  - id: F008
     severity: major
-    rule: vp-qe-config-validity
-    line: 51
+    rule: vp-qe-omissions-consistency
+    line: 61
     anchor: >-
       | _TODO_: カタログが許容値・遷移規則の根拠として挙げる `src/deliverable/deliverable.ts` には、その列挙・検証処理がない。全状態の値検証と `T-01`〜`T-04`
       の実装確認は未了。委譲先の生成処理、状態変更・検証の実装を根拠に追加して業務規約と照合する | 全状態、`T-01`〜`T-04` | BA、ARC、DEV | 実装エビデンスの見直し時   |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-level_corrections:
-  - viewpoint: vp-ba-requirements-completeness
-    original_level: 2
-    corrected_level: 1
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-ops-operability
+    line: 62
+    anchor: >-
+      | _UNDECIDED_:
+      降格、廃止からの復帰、後継文書を伴わない廃止、旧状態値・旧イベントの読み替え、欠落・規約外の状態値の扱いは参照範囲で確定できない。未確認の矢印や暗黙の初期値を追加せず、許可する遷移元・先と判定・移行の規則を合意する             
+      | 全状態                 | BA、PO、ARC  | 本定義の受入承認前         |
+    message: >-
+      Add an interim escalation reference for operators encountering missing or invalid status values or requesting an
+      undefined transition, including where to record the case and obtain a human decision while the permanent rules
+      remain unresolved.
+    message_ja: 不足または無効なステータス値に遭遇した場合、あるいは未定義の遷移を要求した場合のオペレーター向けに、暫定的なエスカレーション参照を追加してください。これには、恒久的なルールが解決されるまでの間、どこにケースを記録し、どのように人間の決定を得るべきかを含めてください。
+    cause:
+      type: document
+  - id: F009
+    severity: major
+    rule: vp-qe-config-validity
+    line: 61
+    anchor: >-
+      | _TODO_: カタログが許容値・遷移規則の根拠として挙げる `src/deliverable/deliverable.ts` には、その列挙・検証処理がない。全状態の値検証と `T-01`〜`T-04`
+      の実装確認は未了。委譲先の生成処理、状態変更・検証の実装を根拠に追加して業務規約と照合する | 全状態、`T-01`〜`T-04` | BA、ARC、DEV | 実装エビデンスの見直し時   |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
   satisfied: 1
   total: 5

@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 80
-graded_at: "2026-11-05T14:50:58.449Z"
-graded_by: sol-review-executor
-content_hash: 4a237504f93080167e1fb7eaea073e1d397242bf1136308d3794aaee7c7cd9b5
+graded_at: "2026-11-07T16:34:12.799Z"
+graded_by: flash-high-executor
+content_hash: 28a1919d9966d9e1dfae12a082f3dc0b158ef478ea3d1c6eaa4f58f8d8b1af6b
 source_hashes:
   catalog-entry: 56b4acb168e2f4103cee7e5288c809d3c549003f90c945d3df50b8cda220715c
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -126,15 +126,13 @@ findings:
   - id: F001
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 221
+    line: 230
     anchor: >-
-      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
-      の根拠が不足している                                                                                                                                                                                                                                                                                                     
-      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
-      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
-      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
-      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
-      |
+      | `M-01` _UNDECIDED_: 業務条件の強制と、CLI で許可される未承認経路の採否。「現行制約との対応」で示す現在動作だけでは、業務上の承認・証跡・type 別終了先・`note` の扱いを確定できない |
+      全状態、`T-01`、`T-03`〜`T-40`、図表にない直接変更 | PO・ARC・QE／状態管理の実装受入確定前 | PM が実装差異と方針判断を PJR に接続する。自動強制や経路制限を採用する場合は
+      change-request
+      で実装・テスト・schema・運用規則の変更を扱い、採用しない場合は人間の確認と記録を受入手順へ明記する。経路を追加する場合も先に条件を承認する。決定までは当該経路・自動強制を前提とする設計・テストの確定を留保し、PM が
+      Schedule の影響を評価する |
     message: "`bdd-register-entry` の作成と本書への `based_on` 追加を、追跡 ID、作業順序、完了条件を持つ Schedule または PJR 項目へ接続する必要がある。"
     message_ja: "`bdd-register-entry` の作成と本書への `based_on` 追加を、追跡 ID、作業順序、完了条件を持つ Schedule または PJR 項目へ接続する必要がある。"
     cause:
@@ -142,10 +140,8 @@ findings:
   - id: F002
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 216
-    anchor: >-
-      `M-01` と `M-04` は本書内の追跡番号であり、PJR の起票済み ID ではない。依存と進捗への影響は PM、方針判断は PO へ報告し、PM が PJR の実 ID と Schedule に接続する。接続先と日程は
-      PM による設定待ちである。
+    line: 225
+    anchor: ""
     message: CLI 遷移差異と `bdd-register-entry` 未作成について、Schedule への影響、PJR 登録先、解消まで依存する後続作業を明記する必要がある。
     message_ja: CLI 遷移差異と `bdd-register-entry` 未作成について、Schedule への影響、PJR 登録先、解消まで依存する後続作業を明記する必要がある。
     cause:
@@ -153,10 +149,8 @@ findings:
   - id: F003
     severity: minor
     rule: vp-pm-control-reporting
-    line: 216
-    anchor: >-
-      `M-01` と `M-04` は本書内の追跡番号であり、PJR の起票済み ID ではない。依存と進捗への影響は PM、方針判断は PO へ報告し、PM が PJR の実 ID と Schedule に接続する。接続先と日程は
-      PM による設定待ちである。
+    line: 225
+    anchor: ""
     message: 各検討項目を PJR の decision・issue・change-request 等へ転記する基準、追跡 ID、報告先を追加する必要がある。
     message_ja: 各検討項目を PJR の decision・issue・change-request 等へ転記する基準、追跡 ID、報告先を追加する必要がある。
     cause:
@@ -164,32 +158,29 @@ findings:
   - id: F004
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 154
+    line: 95
     anchor: >-
-      | `T-09`  | 対応中   | 審査待ち | 対応結果提出       | 対応結果・検証結果・承認対象・証跡候補を記録した                            | AI Agent
-      の成功時もここまでで止まり、終端化は人間の審査で行う                                           |
+      | `T-06`  | 待機中   | 対応中   | 対応再開           | 記録した再開条件が成立した                                                  | 5.1
+      の共通条件。失敗復旧後は保持した成果物・result を確認してから再実行または人対応を選ぶ                               |
     message: >-
       Define the approval and evidence conditions for automatic closure of human-preapproved todo and issue items after
       overnight post-review; the current AS-IS definition requires every successful agent execution to stop for
       subsequent human review and does not cover that operational case.
     message_ja: >-
-      Define the approval and evidence conditions for automatic closure of human-preapproved todo and issue items after
-      overnight post-review; the current AS-IS definition requires every successful agent execution to stop for
-      subsequent human review and does not cover that operational case.
+      夜間のポストレビュー後に、人間が事前承認した todo および issue アイテムを自動的にクローズするための承認条件とエビデンス条件を定義してください。現在の AS-IS
+      の定義では、エージェントの実行が成功するたびにその後の人間によるレビューのために停止する必要があり、この運用ケースがカバーされていません。
     cause:
       type: document
   - id: F005
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 221
+    line: 230
     anchor: >-
-      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
-      の根拠が不足している                                                                                                                                                                                                                                                                                                     
-      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
-      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
-      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
-      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
-      |
+      | `M-01` _UNDECIDED_: 業務条件の強制と、CLI で許可される未承認経路の採否。「現行制約との対応」で示す現在動作だけでは、業務上の承認・証跡・type 別終了先・`note` の扱いを確定できない |
+      全状態、`T-01`、`T-03`〜`T-40`、図表にない直接変更 | PO・ARC・QE／状態管理の実装受入確定前 | PM が実装差異と方針判断を PJR に接続する。自動強制や経路制限を採用する場合は
+      change-request
+      で実装・テスト・schema・運用規則の変更を扱い、採用しない場合は人間の確認と記録を受入手順へ明記する。経路を追加する場合も先に条件を承認する。決定までは当該経路・自動強制を前提とする設計・テストの確定を留保し、PM が
+      Schedule の影響を評価する |
     message: >-
       `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
       `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
@@ -201,48 +192,42 @@ findings:
   - id: F006
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 13
-    anchor: "- AI Agent の責任範囲: AI Agent は対応・調査と検証を支援するが項目を終端化しない。完了・決定・却下・延期・再開の判断は人間が担う"
+    line: 54
+    anchor: ""
     message: >-
       This document prohibits agent termination and requires human review after every successful execution, whereas
       docs/ja/specdojo/guides/register-operation-guide.md §3.2 requires automatic close after post-review for
       human-preapproved todo and issue items; distinguish the ordinary execution path from this authorized overnight
       path and define their respective approval conditions.
     message_ja: >-
-      This document prohibits agent termination and requires human review after every successful execution, whereas
-      docs/ja/specdojo/guides/register-operation-guide.md §3.2 requires automatic close after post-review for
-      human-preapproved todo and issue items; distinguish the ordinary execution path from this authorized overnight
-      path and define their respective approval conditions.
+      このドキュメントはエージェントの終了を禁止し、実行成功ごとに人間によるレビューを求めていますが、docs/ja/specdojo/guides/register-operation-guide.md §3.2
+      では、人間が事前承認した todo および issue アイテムについてポストレビュー後の自動クローズを求めています。通常の実行パスと、この許可された夜間パスを区別し、それぞれの承認条件を定義してください。
     cause:
       type: document
   - id: F007
     severity: minor
     rule: vp-dev-testability
-    line: 212
-    anchor: >-
-      `register build` は個票 ID とファイル名の対応・一意性、派生元・依存関係、外部 event の検証を呼び出す整合検査として接続する。コマンドの許可・拒否とフィールド更新は関連テストへ T-ID
-      を対応付ける。register item/event schema と関連テストの定義本体は今回の宣言参照外であり、既存テストの網羅や schema との一致を確認済みとはしない。
+    line: 221
+    anchor: ""
     message: >-
       The previously missing transition and field expectations are now defined, but verification still refers only to
       related tests and schemas; identify the concrete test and schema paths and executable validation commands, since
       register build alone does not verify command acceptance, rejection, and field-update behavior.
     message_ja: >-
-      The previously missing transition and field expectations are now defined, but verification still refers only to
-      related tests and schemas; identify the concrete test and schema paths and executable validation commands, since
-      register build alone does not verify command acceptance, rejection, and field-update behavior.
+      以前は欠落していた遷移とフィールドの期待値が定義されましたが、検証は依然として関連するテストとスキーマのみを参照しています。register
+      ビルドだけではコマンドの受け入れ、拒否、およびフィールド更新の動作を検証できないため、具体的なテストとスキーマのパス、および実行可能なバリデーションコマンドを特定してください。
     cause:
       type: document
   - id: F008
     severity: major
     rule: vp-qe-done-criteria
-    line: 220
+    line: 229
     anchor: >-
-      | `M-01` _UNDECIDED_: 業務条件と CLI の許可範囲の差異。承認・証跡・結論・待機理由の必須性は強制されず、`close` の明示指定は type 別の終端先を限定しない。`note`
-      の終端は拒否するが、着手・待機・審査は拒否しない。`add` は起票済み以外も指定できる。直接待機再開では理由の新規設定を伴わない。また、CLI
-      が許す起票済み・待機中から審査待ち、審査待ちから対応中への直接変更は、既存業務定義と plan に承認根拠がないため図表へ追加していない | 全状態、`T-01`、`T-03`〜`T-40`、未承認の直接変更 |
-      PO・ARC・QE／状態管理の実装受入確定前 | PM は実装差異を issue、強制方針と未承認経路の選択を decision に接続する。業務条件の自動検証を採用する場合は change-request で CLI
-      改修と関連テスト・schema・運用規則の整合を扱う。不採用なら CLI は維持し、4.1 の人間の確認と記録を受入手順へ明記する。未承認経路を採用する場合は条件を承認して図表へ追加し、不採用なら CLI
-      の制限要否を判断する。決定後は本書と影響先へ反映する。選択までは当該経路・自動強制を前提とする設計・テストの確定を留保し、PM が Schedule の影響を評価する |
+      |
+      ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      | -------------------------------------------------- | ------------------------------------- |
+      -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      |
     message: 再開・却下・延期・`note` の未決事項と正本文書との差異を解消し、DC-001〜DC-005 を本文根拠から再判定できる状態にする必要がある。
     message_ja: 再開・却下・延期・`note` の未決事項と正本文書との差異を解消し、DC-001〜DC-005 を本文根拠から再判定できる状態にする必要がある。
     cause:
@@ -250,15 +235,13 @@ findings:
   - id: F009
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 221
+    line: 230
     anchor: >-
-      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
-      の根拠が不足している                                                                                                                                                                                                                                                                                                     
-      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
-      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
-      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
-      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
-      |
+      | `M-01` _UNDECIDED_: 業務条件の強制と、CLI で許可される未承認経路の採否。「現行制約との対応」で示す現在動作だけでは、業務上の承認・証跡・type 別終了先・`note` の扱いを確定できない |
+      全状態、`T-01`、`T-03`〜`T-40`、図表にない直接変更 | PO・ARC・QE／状態管理の実装受入確定前 | PM が実装差異と方針判断を PJR に接続する。自動強制や経路制限を採用する場合は
+      change-request
+      で実装・テスト・schema・運用規則の変更を扱い、採用しない場合は人間の確認と記録を受入手順へ明記する。経路を追加する場合も先に条件を承認する。決定までは当該経路・自動強制を前提とする設計・テストの確定を留保し、PM が
+      Schedule の影響を評価する |
     message: "カタログの `depends_on: bdd-register-entry` を解消して `based_on` へ反映し、recipe の完成条件に反する _TODO_ と未収載の直接終端遷移を残さないようにする必要がある。"
     message_ja: "カタログの `depends_on: bdd-register-entry` を解消して `based_on` へ反映し、recipe の完成条件に反する _TODO_ と未収載の直接終端遷移を残さないようにする必要がある。"
     cause:
@@ -266,15 +249,13 @@ findings:
   - id: F010
     severity: major
     rule: vp-ops-release-readiness
-    line: 221
+    line: 230
     anchor: >-
-      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
-      の根拠が不足している                                                                                                                                                                                                                                                                                                     
-      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
-      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
-      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
-      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
-      |
+      | `M-01` _UNDECIDED_: 業務条件の強制と、CLI で許可される未承認経路の採否。「現行制約との対応」で示す現在動作だけでは、業務上の承認・証跡・type 別終了先・`note` の扱いを確定できない |
+      全状態、`T-01`、`T-03`〜`T-40`、図表にない直接変更 | PO・ARC・QE／状態管理の実装受入確定前 | PM が実装差異と方針判断を PJR に接続する。自動強制や経路制限を採用する場合は
+      change-request
+      で実装・テスト・schema・運用規則の変更を扱い、採用しない場合は人間の確認と記録を受入手順へ明記する。経路を追加する場合も先に条件を承認する。決定までは当該経路・自動強制を前提とする設計・テストの確定を留保し、PM が
+      Schedule の影響を評価する |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     cause:
@@ -282,23 +263,20 @@ findings:
   - id: F011
     severity: major
     rule: vp-qe-config-validity
-    line: 221
+    line: 231
     anchor: >-
-      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成であり、用語照合と `based_on`
-      の根拠が不足している                                                                                                                                                                                                                                                                                                     
-      | 全状態                                           | BA／`bdd-register-entry` 作成時       | PM は辞書作成と本書への反映を todo または
-      Schedule の作業へ接続する。順序は辞書の作成・確認、状態名・用語の照合、不整合の修正、許可された `prj-0001:bdd-register-entry` の `based_on`
-      追加とする。完了条件は辞書が存在し、その定義との一致と参照を確認できること。日程は PM
-      が設定し、解消まで用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                                                   
+      | `M-04` _TODO_: `depends_on` の業務データ辞書（`bdd-register-entry.yaml`）は未作成で、用語照合と `based_on`
+      の根拠が不足している                                                    | 全状態                                             |
+      BA／`bdd-register-entry` 作成時       | PM が辞書作成と本書への反映を todo または Schedule に接続し、日程を設定する。辞書の作成・確認後に状態名・用語を照合し、不整合の修正と
+      `based_on`
+      への追加を行う。それまでは用語の最終確定と依存成果物に基づく適合判断を留保する                                                                                                            
       |
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 3
+  satisfied: 4
   total: 5
   unsatisfied:
     DC-001:
       - BA
-    DC-002:
-      - PO
   detail_ref: stsd-register-entry-grade-criteria
