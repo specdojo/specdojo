@@ -176,3 +176,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fc0e35bd9be8442fb2e6dd23de7cfcae
+- v: 1
+  id: reg_95fb25a9af5041adb896e1a89a95a3a2
+  ts: "2026-11-07T02:33:40Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: sandbox で移せなかった移動を orchestrator が worktree で流して commit した（d17dcdeba）。統合後に exec validate・exec status・dashboard build が移す前と同じ結果になることと、JSEY の run を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: exec migrate-records を足し、既存の実行記録 5,576 件を execution/runs/ へ git mv で移してパスの欄だけを書き換えた。古い配置の読み取りと plans/done/ の処理をコードから外した。exec/events と exec/trials は対象外として残す
+  previous_event_id: reg_88db8533965c4948b534f0d6b8e01333

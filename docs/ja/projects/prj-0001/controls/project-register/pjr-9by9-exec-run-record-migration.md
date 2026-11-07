@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-9by9-exec-run-record-migration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-06T15:06:07Z"
   due_on: null
+  completed_at: "2026-11-07T02:33:40Z"
+  conclusion: exec migrate-records を足し、既存の実行記録 5,576 件を execution/runs/ へ git mv で移してパスの欄だけを書き換えた。古い配置の読み取りと plans/done/ の処理をコードから外した。exec/events と exec/trials は対象外として残す
   derived_from:
     - PJR-VH8D
   depends_on:
