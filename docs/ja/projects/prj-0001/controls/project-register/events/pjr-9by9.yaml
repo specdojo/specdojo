@@ -54,3 +54,32 @@
       from: '["PJR-Z0XR","PJR-BVS9"]'
       to: '["PJR-VH8D","PJR-Z0XR","PJR-BVS9","PJR-BRN4"]'
   previous_event_id: reg_a027c83f6d134cdf836e381ee9ad0db4
+- v: 1
+  id: reg_e98dd58fb31a47de9174ee9c74f2cf6e
+  ts: "2026-11-07T01:17:40Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5b23a325d9ae40f3842c7aae71b84de7
+- v: 1
+  id: reg_0f393f8d53eb49ad9bccf05fa40515f2
+  ts: "2026-11-07T01:33:20Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。"
+  previous_event_id: reg_e98dd58fb31a47de9174ee9c74f2cf6e

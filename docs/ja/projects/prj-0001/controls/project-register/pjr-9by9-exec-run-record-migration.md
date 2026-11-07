@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-06T15:06:07Z"
   due_on: null
+  block_reason: "executor reported incomplete: 移行CLI・旧配置探索の廃止・ガイド・テストを実装。一時リポジトリで全5,576件の移行を検証したが、本体はGit indexが読み取り専用のため実移動0件。詳細を個票へ記録した。"
   derived_from:
     - PJR-VH8D
   depends_on:
