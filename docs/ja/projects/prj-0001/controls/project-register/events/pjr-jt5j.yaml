@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_31f1263b946d4da3a4dff574c92b0b5a
+- v: 1
+  id: reg_05afc31c6e5e462d96d2850afd613725
+  ts: "2026-11-07T07:20:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分と個票の対応結果を確かめ、KC0T の統合後に develop で exec validate を流し、JSEY で exec run の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: exec validate に実行記録の置き場所と lock の検査（--records-only）を足し、exec run の事前検証を --schedule-only に絞り、ガイドの構成図をコードと照らすテストを足した。過去の記録での失敗は PJR-KC0T で直し、CI の workflow の反映と残った記録の片付けは PJR-TKRV に引き継いだ
+  previous_event_id: reg_c8e6eb19e454436bac2b91207acb8bb5

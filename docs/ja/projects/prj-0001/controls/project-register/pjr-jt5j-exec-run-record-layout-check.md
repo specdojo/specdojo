@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-jt5j-exec-run-record-layout-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-06T15:06:36Z"
   due_on: null
+  completed_at: "2026-11-07T07:20:24Z"
+  conclusion: exec validate に実行記録の置き場所と lock の検査（--records-only）を足し、exec run の事前検証を --schedule-only に絞り、ガイドの構成図をコードと照らすテストを足した。過去の記録での失敗は PJR-KC0T で直し、CI の workflow の反映と残った記録の片付けは PJR-TKRV に引き継いだ
   derived_from:
     - PJR-VH8D
   depends_on:
