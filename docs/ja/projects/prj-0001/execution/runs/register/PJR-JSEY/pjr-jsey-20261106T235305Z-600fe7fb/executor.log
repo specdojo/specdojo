@@ -1,0 +1,11 @@
+個票の対応結果の表に、確認対象 PJR-BRN4 の行を追記しました。変更したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。lint などの検証は、親 runner が実行する分を含めて、私は実行していません。
+
+追記した行は `2026-11-07 08:55 | PJR-BRN4 | sonnet-executor` です。
+
+PJR-BRN4 を選んだのは、`git log` で 08:50 JST に `exec(register PJR-BRN4): review` の実行コミット `23552159a` を確認したためです。これは直前の確認対象 PJR-TA6W より後です。表の下の説明文も PJR-BRN4 に更新しました。
+
+追記した日時 08:55 はコミット時刻から決めた概算です。start の event の actor が `sonnet-executor` であることは、私は確認していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-BRN4 の行を追記し、説明文を更新した。変更は個票のみ。","handoff":["追記した日時 08:55 は、start の実行コミット（08:54）の直後として決めた概算。start の event の actor が sonnet-executor であることは未確認で、後続段で確認する。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run validate:history-links","status":"not_applicable","summary":"実行しなかった。","reason":"変更した個票は pjr-index.md ではなく履歴ファイルだが、Markdown リンクを追加しておらず、親 runner が検証する。"}]}
+</specdojo_executor_evidence>
