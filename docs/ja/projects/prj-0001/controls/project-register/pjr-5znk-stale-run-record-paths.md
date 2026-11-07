@@ -18,7 +18,7 @@ specdojo:
 
 ## 1. 概要
 
-ガイドとコマンドリファレンスが、plan・result・evidence の置き場所として旧来の exec/plans/・exec/results/・exec/evidence/ を挙げたままになっている。今の execution/runs/`<origin>`/`<item>`/`<run>`/ に揃える
+ガイドとコマンドリファレンスが、plan・result・evidence の置き場所として旧来の `exec/plans/`・`exec/results/`・`exec/evidence/` を挙げたままになっている。今の `execution/runs/<origin>/<item>/<run>/` に揃える。
 
 ## 2. 入力
 
@@ -27,13 +27,22 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 次の 9 ファイルの旧来の置き場所（`exec/plans/`・`exec/results/`・`exec/evidence/`）を、今の `execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md`・`evidence.json`・`pipeline-state.json` に直している。
+  - `docs/ja/specdojo/guides/` の `exec-operation-guide.md`・`review-guide.md`・`exec-config-guide.md`・`quick-start-guide.md`・`exec-worktree-guide.md`・`plan-result-lifecycle-guide.md`・`schedule-operation-guide.md`・`release-v0-3-0-migration-guide.md`
+  - `docs/ja/specdojo/references/command-reference.md`
+- 旧来の置き場所を「旧来の形式」や「移行前の場所」として説明している箇所は残している。直さなかった箇所とその理由を、個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
+- 例に出てくる `plan_ref` の値とコマンドの `--plan` の値も、今の置き場所に合わせている。
+- `quick-start-guide.md` は旧来の置き場所の記述だけを直し、ほかの文は変えていない（PJR-V5AZ で書き直し中のため）。
+- 上の 9 ファイル以外のファイルと、`src/`・`tests/` を変えていない。
+- `npm run lint:md`・`npm run validate:history-links`・`npm run test:unit -- tests/src/exec/run-records.test.ts` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                             | 担当   | 状態 | メモ |
+| --- | ---------------------------------------------------------------- | ------ | ---- | ---- |
+| 1   | 9 ファイルの旧来の置き場所を洗い出し、直す箇所と残す箇所に分ける | _TODO_ | open | -    |
+| 2   | 直す箇所を今の置き場所に書き換える                               | _TODO_ | open | -    |
+| 3   | 検査を流し、残した箇所とその理由を対応結果に書く                 | _TODO_ | open | -    |
 
 ## 5. 対応結果
 
@@ -41,4 +50,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 由来: [[prj-0001:pjr-jt5j-exec-run-record-layout-check]]
+- 対象: [[specdojo:exec-operation-guide]]、[[specdojo:review-guide]]、[[specdojo:exec-config-guide]]、[[specdojo:quick-start-guide]]、[[specdojo:exec-worktree-guide]]、[[specdojo:plan-result-lifecycle-guide]]、[[specdojo:schedule-operation-guide]]、[[specdojo:release-v0-3-0-migration-guide]]、[[specdojo:command-reference]]
