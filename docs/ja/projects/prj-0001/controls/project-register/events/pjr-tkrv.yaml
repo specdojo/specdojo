@@ -44,3 +44,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-KC0T"]'
+- v: 1
+  id: reg_d490592bfce84f8182be93c07b124028
+  ts: "2026-11-07T06:37:57Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: title
+      from: 実行記録の欠落の基準を記録の世代に合わせて見直す
+      to: 一部だけ残った実行記録を片付け、記録の置き場所の検査を CI に入れる
+    - field: description
+      from: exec validate の欠落の検査が、evidence より前の run や移行で plan と result を集めた前の試行も欠落と判定するため、記録の世代ごとに求める記録を決め、--records-only と CI を過去の記録で通るようにする
+      to: PJR-KC0T の後に残る、記録の一部だけがある run のディレクトリ（14 件ほど）を片付け、--records-only を流す CI の workflow を反映する
+    - field: input
+      from: '["由来: PJR-JT5J の統合後、develop の exec validate で missing が 644 件出た。内訳は plan 141 件、result 138 件、evidence 365 件（2026-11-07）","evidence がない run 365 件のうち、pipeline-state.json を持つのは 4 件。ほかは evidence の仕組みより前の run で、ディレクトリ名に日時がないか、7 月から 10 月の run（2026-11-07）","plan と result の欠落は、PJR-9BY9 の移行で plan と result を最新の試行のディレクトリに集めたため、その前の試行のディレクトリに残っていない（2026-11-07）","欠落は schedule の T-LAUNCH（155 件）と T-DATA-FLOW（68 件）に多い（2026-11-07）","JT5J の個票の対応結果に CI の workflow の案（.github/workflows/check-run-record-layout.yml、--records-only を流す）がある。欠落の扱いが決まるまで反映しない（2026-11-07）","決定: PJR-KC0T で普通の exec validate の欠落を警告にした後に、この項目で基準を見直す（2026-11-07 indie が決定）"]'
+      to: '["由来: PJR-JT5J の統合後の exec validate の欠落のうち、過去の世代の記録でないものが 14 件ほど残る。例: result だけ（PJR-2219）、plan だけ（PJR-TNDH）、integrate.log だけ（PJR-283N）、pipeline-state.json だけ（PJR-PZBP）、evidence.json がない（PJR-23DT）（2026-11-07）","JT5J の個票の対応結果に CI の workflow の案（.github/workflows/check-run-record-layout.yml、--records-only を流す）がある。保護された設定のため、反映は利用者の承認のもとで行う（2026-11-07）","決定: 過去の世代の記録を正常として扱う基準は PJR-KC0T で決める。この項目は残った記録の片付けと CI の反映だけを扱う（2026-11-07 indie が決定）"]'
+  previous_event_id: reg_28ed33d694774e3c8a19b56802a4591c
