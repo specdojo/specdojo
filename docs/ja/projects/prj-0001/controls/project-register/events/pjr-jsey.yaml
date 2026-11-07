@@ -4206,3 +4206,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b0207c5f49b84a77b1a02e6aef2597b8
+- v: 1
+  id: reg_64855cff98984a8fb6108b73848be3d1
+  ts: "2026-11-07T02:33:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が run の記録と commit を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: PJR-BVS9 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。plan は規約の版への参照になり、規約の本体（execution/conventions/`<SHA-256>.txt`）も commit された
+      to: PJR-9BY9 の統合後に sonnet-executor で exec run --register を流し、start から review まで通った。古い配置の読み取りがなくなった後も、新しい run の記録はすべて commit された
+  previous_event_id: reg_828d77e3c3d9440c8a257621f48e7f98
