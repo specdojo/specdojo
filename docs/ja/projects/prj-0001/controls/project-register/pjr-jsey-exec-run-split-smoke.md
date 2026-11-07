@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-07T07:19:47Z"
   conclusion: PJR-JT5J・PJR-KC0T の統合後に claude-executor で exec run --register を流し、事前検証・親の検証・統合・review の遷移まで通ることを確かめた
 ---
 
