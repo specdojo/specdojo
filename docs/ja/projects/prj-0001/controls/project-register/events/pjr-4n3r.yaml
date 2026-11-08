@@ -64,15 +64,18 @@
       to: in-progress
   previous_event_id: reg_102dc4d9329446e7a7a0cc64142451ea
 - v: 1
-  id: reg_74c48fb205d34dc38e2c548f020e7ab7
-  ts: "2026-11-08T03:33:03Z"
-  action: review
+  id: reg_182e991308a648ac9c9bac7d7e489afc
+  ts: "2026-11-08T03:33:22Z"
+  action: wait
   actor: flash-high-executor
   from_status: in-progress
-  to_status: review
-  reason: ready for review
+  to_status: waiting
+  reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
   changes:
     - field: status
       from: in-progress
-      to: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
   previous_event_id: reg_323eaac9a46e4464889aed9a376797b3

@@ -4,7 +4,7 @@ specdojo:
   type: exec-result
   task_id: PJR-4N3R
   mode: edit
-  status: complete
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-4N3R/pjr-4n3r-20261108T030421Z-bbee27c3/plan.md
@@ -14,6 +14,7 @@ specdojo:
   approach: rulebook-maintenance
   targets:
     - specdojo:ifx-cmd-rulebook
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
 ---
 
 # Edit Result

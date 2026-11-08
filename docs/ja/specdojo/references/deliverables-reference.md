@@ -251,8 +251,8 @@ flowchart
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) | System Functions Index | `sf-index` | システムで実現する機能の全体構成と一覧を定義する | 機能ID、機能名、概要、関連プロセス、関連仕様ID など |
-| [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) | System Function | `sf-<term>` | 個別のシステム化機能の概要・関連仕様を定義する | 機能概要、関連プロセス、関連画面、関連IF、関連ルール など |
+| [システム化機能一覧 / 全体構成](../rulebooks/sf-index-rulebook.md) | System Functions Index | `sf-index` | システムで実現する機能の全体構成と一覧を定義する | 機能ID、機能名、概要、関連プロセス、関連仕様ID など |
+| [システム化機能（個別）](../rulebooks/sf-rulebook.md) | System Function | `sf-<term>` | 個別のシステム化機能の目的、業務プロセス・画面との対応、処理要件を定義する | 機能目的・概要、業務プロセス・画面との対応、入出力・前提条件、処理要件、非機能制約、操作手順・コマンド参照、検証観点 |
 
 #### 2.1.6. 用語集
 
