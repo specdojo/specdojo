@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_32a642a713f64177adc2607f1f36add4
+  ts: "2026-11-08T00:33:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 概念クラス図（ccd）の型を、実装と同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: 概念クラス図の型を手入れする。属性は主キーだけにし、そのほかの属性は bdd を参照する。図と本文は関連の意味・多重度・役割名に絞る
+    - field: input
+      from: ""
+      to: '["方針（indie が決定、2026-11-08）: 属性は主キーだけにし、そのほかの属性は bdd を参照する。図と本文は関連の意味・多重度・役割名に絞る。","rulebook にあわせて ccd-sample も揃える。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:ccd-mermaid-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-HMV6"]'
