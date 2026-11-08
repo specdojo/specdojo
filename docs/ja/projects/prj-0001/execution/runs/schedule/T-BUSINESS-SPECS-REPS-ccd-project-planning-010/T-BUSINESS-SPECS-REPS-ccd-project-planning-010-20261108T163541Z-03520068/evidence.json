@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010",
+  "run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-08T22:09:12.880Z",
+    "completed_at": "2026-11-08T22:11:17.790Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../plan.md                                        | 13 ++++++++++\n .../result.md                                      | 28 ++++++++++++++++++----\n 2 files changed, 36 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "passed",
+      "summary": "対象成果物を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "passed",
+      "summary": "Prettier の整形規則への適合を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML スキーマ検査は対象外。",
+      "reason": "今回の編集対象は Markdown のみで、YAML ファイルの変更はない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証の変更範囲条件に該当しない。",
+      "reason": "executor が編集した成果物は `docs/ja/product/` 配下のみで、`docs/ja/projects/` 配下は変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証の変更範囲条件に該当しない。",
+      "reason": "executor は登録簿個票、既存 plan、result を編集していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-ccd-project-planning-010/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-li\n… output omitted …\nspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-ccd-project-planning-010/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-ccd-project-planning-010/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4111 file(s), 139 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 7 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4111 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-ccd-project-planning-010\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWri\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ncoverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-ccd-project-planning-010/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-ccd-project-planning-010/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-ccd-project-planning-010\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-08T22:17:27.747Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fall\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "ccd-project-planning",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "前回の11概念・19関連を維持し、多重度表記と frontmatter を修正しました。Prettier 確認は通過し、lint 再検証は親 runner に委ねます。",
+  "completion_status": "complete",
+  "handoff": [
+    "経緯・判断: 前回の新設草案を引き継ぎ、今回は部分反映とした。11概念・19関連、多重度の業務根拠、辞書参照、整合性条件を保持し、作り直していない。再開指示に従い、未作成辞書と Schedule 実体の未確認は完了を妨げる条件としていない。",
+    "今回の変更: `ccd-project-planning.md` の関連表16行で多重度をインラインコード化し、MD037 の原因を修正した。schema にない frontmatter の `depends_on` を削除し、依存管理は成果物カタログ、辞書参照は本文に委ねた。`status` は draft を維持した。",
+    "実装調査・一致: `src/catalog/catalog.ts` 全768行を再読した。project の選択、設定とカタログ配置の確認、カタログ群の読込、個別検証、`based_on` と依存閉包の照合、ドメイン・索引・論理IDの検証呼出しを確認した。project 単位のカタログ管理と成果物識別の意図に対応する。委譲先の検証内部まで確認したとは扱っていない。",
+    "実装から確認不能・未確認: `src/exec/exec.ts` 全2行は `resolveClaimOwner` と `registerExecCommands` の再公開のみだった。Schedule 戦略・トラック・登録項目・カタログ間の実体の関係は確認できない。列挙外の実装、型定義・検証委譲先、外部依存内部は未調査。PM が必要に応じて実体を示す `evidence_refs` を追加し、別調査を手配する。実装は編集していない。",
+    "先行入力: `bdd-register-entry` を再読し、登録項目と epic の識別、起票元と先行依存の区別、人間による完了判断との対応を確認した。他の5辞書は未作成で、本文の予定IDと「未作成」表記を維持した。属性詳細との照合は辞書作成時に BA が行う。",
+    "未反映の乖離・review finding 候補: `cdsd-planning` の「計画・状態遷移の正本」という表現と、`cdfd-uc-schedule` の Schedule にタスク状態を保持しない境界は異なる。本成果物は CDFD の境界を維持した。BA・ARC がデータストア定義の文書修正要否を確認する。実装修正の要否は指定エビデンスから判断できない。",
+    "規則の保守候補: CCD rulebook 第4章は frontmatter の `depends_on` を必須としているが、今回は明示された再開指示と schema に従って削除した。rulebook の記載整合は別タスクで確認する。",
+    "完了条件・検証: 必須章、主キーのみのクラス、全関連の種別・役割名・多重度根拠、全概念の辞書参照を確認した。PO の範囲承認、ARC・DEV の設計、QE の整合性検証の入力を保持した。Prettier は通過。`npm run lint:md`、`npm run lint:fm` を含む指定の親検証は executor 内で重複実行しておらず、通過を主張しない。result は編集せず、調査結果と修正経緯を reporter へ引き継ぐ。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/executor.log",
+      "bytes": 4894,
+      "truncated": false
+    }
+  ]
+}

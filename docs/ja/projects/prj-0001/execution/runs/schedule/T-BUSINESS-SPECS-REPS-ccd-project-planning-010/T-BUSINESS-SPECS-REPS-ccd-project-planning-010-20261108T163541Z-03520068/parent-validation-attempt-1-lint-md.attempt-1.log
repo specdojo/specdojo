@@ -1,0 +1,19 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md:103:42 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* 対"]
+docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md:104:37 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* 対"]
+docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md:105:39 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* 対"]
+docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md:110:44 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* 対"]
+docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md:111:42 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* 対"]
+docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md:115:44 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* 対"]
+docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md:116:44 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* 対"]
