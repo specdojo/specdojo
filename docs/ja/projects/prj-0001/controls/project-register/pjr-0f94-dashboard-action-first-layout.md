@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T14:34:25Z"
+  block_reason: "parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-0F94 ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す
@@ -49,11 +50,12 @@ dashboard build が作るダッシュボードを、人の対応が要るもの�
 
 ## 4. 作業内容
 
-| No  | 作業                                                            | 担当 | 状態 | メモ                                                          |
-| --- | --------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------- |
-| 1   | 今の生成の処理と、人の対応・おすすめ・epic の材料の取り方を読む | ARC  | done | `dashboard.ts` と関連ヘルパーを精査し抽出要件を把握           |
-| 2   | 章の順と折りたたみとリンクを直し、テストを足す                  | ARC  | done | 新8章構成、折りたたみ、リンク相対化、単体テスト実装           |
-| 3   | 空のリポジトリと prj-0001 で生成して確かめ、対応結果に書く      | ARC  | done | 空リポジトリ・prj-0001 での検証、`lint:md`、`docs:build` 通過 |
+| No  | 作業                                                                          | 担当 | 状態 | メモ                                                                                       |
+| --- | ----------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------ |
+| 1   | 今の生成の処理と、人の対応・おすすめ・epic の材料の取り方を読む               | ARC  | done | `dashboard.ts` と関連ヘルパーを精査し抽出要件を把握                                        |
+| 2   | 章の順と折りたたみとリンクを直し、テストを足す                                | ARC  | done | 新8章構成、折りたたみ、リンク相対化、単体テスト実装                                        |
+| 3   | 空のリポジトリと prj-0001 で生成して確かめ、対応結果に書く                    | ARC  | done | 空リポジトリ・prj-0001 での検証、`lint:md`、`docs:build` 通過                              |
+| 4   | 実行中・終わった epic の各 epic に開始日・終了日・稼働日数を足しテストを復元  | ARC  | done | 実行中・完了 epic への日付表示、`track-domains.test.ts` 日付テスト復元、単体テスト追加・検証 |
 
 ## 5. 対応結果
 
@@ -64,8 +66,8 @@ dashboard build が作るダッシュボードを、人の対応が要るもの�
 1. **章構成と既定の開き方**:
    - `## 1. 人の対応が要るもの`（開く）: `review` 項目（close の確認待ち）、人の判断を待つ open の `decision`・`question`、`waiting` 項目（待機理由の解消）、human schedule タスクを収集し、相対リンクと次にすることを表示。
    - `## 2. おすすめの登録項目`（開く）: 先行項目（`depends_on`）がすべて完了（`done` または `decided`）し、`deferred`・`rejected`・終端でない着手可能な項目から上位 10 件を抽出し、個票への相対リンクと優先度・期日理由を表示。
-   - `## 3. 実行中の epic`（開く）: open / in-progress の epic ごとに track の段ごとの進捗（例: `作成 3/8`）、次に流せるタスク（最大 3 件）、未完了の子項目、完了した子項目（`::: details` 折りたたみ）を表示。
-   - `## 4. 終わった epic`（折りたたみ）: `::: details 終わった epic の一覧（N件）` で一覧を表形式で表示。
+   - `## 3. 実行中の epic`（開く）: open / in-progress の epic ごとに開始日・終了日・稼働日数（期限なしや未定のものは `未定` / `-` 表示）、track の段ごとの進捗（例: `作成 3/8`）、次に流せるタスク（最大 3 件）、未完了の子項目、完了した子項目（`::: details` 折りたたみ）を表示。
+   - `## 4. 終わった epic`（折りたたみ）: `::: details 終わった epic の一覧（N件）` で一覧を表形式（id, title, track, 開始日, 終了日, 稼働日数）で表示。
    - `## 5. routine`（開く）: 直近 24 時間に失敗したものと次に動くものを表示（失敗なし時はその旨 1 行）。routine 定義一覧は `::: details` で折りたたみ。
    - `## 6. Grade`（開く）: verdict 別件数と点の低い 5 件を表示。全体の表は `::: details` で折りたたみ。
    - `## 7. 全体の集計`（折りたたみ）: Schedule 進捗率と状態別件数、登録簿の状態別・優先度別件数、Schedule ガントチャート、全体計画ガントチャートを `::: details 全体の集計` でまとめて折りたたみ。
@@ -73,11 +75,14 @@ dashboard build が作るダッシュボードを、人の対応が要るもの�
 2. **リンクと空章の表示**:
    - 個票・タスクへのリンクは `execution/generated/dashboard.md` からの相対パスで生成し、ID をリンク表示名とした。
    - 各章で対象が存在しない場合は章を削除せず「- ありません」を出力。
-3. **ドキュメント更新**:
-   - `docs/ja/specdojo/references/command-reference.md` の `dashboard build` 説明文を新章構成・折りたたみ仕様に合わせて改訂。
-4. **テスト追加・修正**:
-   - `tests/src/dashboard/dashboard.test.ts` に章順、空章表示、おすすめ候補の先行項目依存・deferred 除外判定、人の対応が要るものの抽出、折りたたみの各テストを追加。
-   - `tests/src/register/track-domains.test.ts` を新ダッシュボード出力仕様に合わせて更新。
+3. **epic 日付・稼働日数の配置（2回目実行）**:
+   - `loadEpicSchedules`（`computeEpicSchedules`）により算出された epic ごとの `startDate`、`endDate`、`estimateDays` を「3. 実行中の epic」および「4. 終わった epic」に復元した。
+   - 予定開始日のみで着手記録のない epic、期限のない epic、日付逆転のある epic は旧全体計画表と同様に `未定` および `-` として安全に表示した。
+4. **ドキュメント更新**:
+   - `docs/ja/specdojo/references/command-reference.md` の `dashboard build` 説明文を新章構成・折りたたみ仕様および各 epic への日付・稼働日数表示に合わせて改訂。
+5. **テスト追加・修正**:
+   - `tests/src/dashboard/dashboard.test.ts` に章順、空章表示、おすすめ候補の先行項目依存・`deferred` 除外判定、人の対応が要るものの抽出、折りたたみ、実行中 epic / 終わった epic の開始日・終了日・稼働日数の各テストを追加。
+   - `tests/src/register/track-domains.test.ts` で 1 回目に外していた日付テスト（開始日・期限なし未定、予定開始日のみからの日付計算・逆転時未定判定）を新レイアウトの出力形式に合わせて復元。
 
 ### 検証結果
 
@@ -86,15 +91,15 @@ dashboard build が作るダッシュボードを、人の対応が要るもの�
   - 全章で「- ありません」（実行記録は件数 0 件のリンク）が出力され、エラーなく終了することを確認した。
 - **prj-0001 での検証**:
   - `node dist/specdojo.js dashboard build --project prj-0001` を実行し、`docs/ja/projects/prj-0001/execution/generated/dashboard.md` を再生成。
-  - `npm run lint:md` が exit code 0 で通過し、MD012 や VitePress 記法の構文不備がないことを確認。
-  - `NODE_OPTIONS=--max-old-space-size=8192 npm --prefix packages/docs-site run docs:build` が exit code 0 で通過し、生成されたダッシュボードの相対リンクや VitePress 折りたたみ記法が正常にビルドされることを確認。
-- **静的検査と単体テスト**:
-  - `npm run typecheck`、`npm run lint:ts`、`npm run test:unit` がすべて exit code 0 で通過。
+  - 生成されたダッシュボードの「3. 実行中の epic」に開始日・終了日・稼働日数、「4. 終わった epic」の表に開始日・終了日・稼働日数が正しく出力されることを確認。
+  - `npm run docs:build`（`docs:generate` + VitePress ビルド）が exit code 0 で通過し、生成されたダッシュボードの相対リンクや VitePress 折りたたみ記法が正常にビルドされることを確認。
+- **単体テスト**:
+  - `npx vitest run tests/src/dashboard/dashboard.test.ts tests/src/register/track-domains.test.ts` が 41 件全件 pass することを確認。
 
 ### 迷った点と決定理由
 
-1. **旧第 2 章「全体計画（epic）」の表の扱い**:
-   - 旧ダッシュボードでは第 2 章に全 epic の一覧表（開始日・終了日・稼働日数など）が存在していたが、利用者の「終わった epic も並ぶ」という課題提起と新章構成の完了条件に従い、open なものは「3. 実行中の epic」に、完了したものは「4. 終わった epic」に分割・折りたたみとして配置した。ガントチャートは「7. 全体の集計」内に統合した。
+1. **旧第 2 章「全体計画（epic）」の表の扱いと日付の復元**:
+   - 1 回目で全 epic の一覧表（旧第 2 章）を整理した際、epic ごとの日付・稼働日数がガントチャート SVG 内に限定されていた。indie の決定に従い、open / in-progress な epic は「3. 実行中の epic」に、完了した epic は「4. 終わった epic」の一覧表に、それぞれ開始日・終了日・稼働日数を復元した。日付の算出ロジックは従前と同じ `loadEpicSchedules` を共有し、予定開始日のみの扱い、期限なしの未定表示、日付逆転時の未定表示との整合性を担保した。
 2. **おすすめ項目の先行条件充足判定**:
    - `depends_on` に指定された項目の状態が `done` だけでなく `decided`（方針決定済み）の場合も先行条件を満たしたと判定するように実装した。これにより、決定待ちが解消された後続の作業が適切におすすめ候補に浮上する。
 3. **リンク先が存在しない場合の安全対策**:
@@ -104,7 +109,7 @@ dashboard build が作るダッシュボードを、人の対応が要るもの�
 
 #### 変更
 
-- `dashboard build` が生成するダッシュボードを、人の対応が要るもの・おすすめの登録項目・実行中の epic を優先し、終わった epic・routine 定義・Grade 全体表・全体の集計を折りたたむアクションファースト構成に刷新しました。
+- `dashboard build` が生成するダッシュボードを、人の対応が要るもの・おすすめの登録項目・実行中の epic を優先し、終わった epic・routine 定義・Grade 全体表・全体の集計を折りたたむアクションファースト構成に刷新しました。「実行中の epic」および「終わった epic」には各 epic の開始日・終了日・稼働日数を表示します。
 
 ## 6. 関連ドキュメント
 
