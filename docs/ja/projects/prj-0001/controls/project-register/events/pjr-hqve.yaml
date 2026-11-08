@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2d7521b3216d4af29db3483bbb1301d7
+- v: 1
+  id: reg_0a4e68c4e92242258a18ef028bcb6362
+  ts: "2026-11-08T00:38:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（sol-executor）で対応。親の検証をすべて通り、JSEY の run の実行中に流した register add / update --commit 10 件が、いずれも自分の個票とイベントだけを commit したことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: register --commit が開始前の dirty を除いた全体の差分を stage していたため、並行して書かれた block の event を巻き込んでいた。操作が変えるパスだけを stage し、中断時も自分の stage を外す形に直し、統合の前に無関係な stage があれば対象と直し方を示して止まるようにした
+  previous_event_id: reg_6a571e027c404e389a0c7c7ca9185fb6

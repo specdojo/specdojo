@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-hqve-auto-parallel-staged-event-blocks-merge
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   registered_at: "2026-11-05T15:55:21Z"
+  completed_at: "2026-11-08T00:38:28Z"
+  conclusion: register --commit が開始前の dirty を除いた全体の差分を stage していたため、並行して書かれた block の event を巻き込んでいた。操作が変えるパスだけを stage し、中断時も自分の stage を外す形に直し、統合の前に無関係な stage があれば対象と直し方を示して止まるようにした
   derived_from:
     - PJR-3APD
 ---
