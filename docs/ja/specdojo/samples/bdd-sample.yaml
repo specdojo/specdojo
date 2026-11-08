@@ -41,27 +41,29 @@ entities:
           required: true
         example: 100
 
+  - logical_name: 取引
+    physical_name: transaction
+    description: 店頭での購買取引記録（TypeScript 型定義を参照する例）
+    type_ref: src/types/transaction.ts#TransactionRecord
+    key_fields: [transaction_id]
+    fields:
+      - logical_name: 取引ID
+        physical_name: transaction_id
+        description: 取引を一意に識別する業務ID
+      - logical_name: 取引種別
+        physical_name: transaction_type
+        description: 店頭現金販売、掛売り、返品の業務区分
+
   - logical_name: 支払い
     physical_name: payment
-    description: 顧客からの支払い情報
+    description: 顧客からの支払い情報（スキーマを参照する例）
     glossary_term_id: tm-payment
+    schema_ref: schemas/payment.schema.yaml
     key_fields: [payment_id]
     fields:
-      - logical_name: 支払いID
-        physical_name: payment_id
-        type: string
-        glossary_term_id: tm-payment-id
-        description: 支払いを一意に識別するID
-        constraints:
-          required: true
-          unique: true
-        example: PAY-0001
       - logical_name: 支払ステータス
         physical_name: payment_status
-        type: enum
-        description: 支払い処理の現在状態
-        constraints:
-          required: true
+        description: 支払い処理の現在状態。未処理・支払済・取消の3状態で遷移する
         allowed_values_detailed:
           - value: PENDING
             label: 未処理

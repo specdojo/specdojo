@@ -1,0 +1,26 @@
+PJR-MECY「業務データ辞書（bdd）の型を、実装と同じことを書かない形に手入れする」の作業を完了しました。
+
+### 実施概要
+
+1. **Rulebook の改訂 ([bdd-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/docs/ja/specdojo/rulebooks/bdd-rulebook.md))**:
+   - スキーマが存在するエンティティは `schema_ref` で正本スキーマを参照し、`fields` にはスキーマから読み取れない業務上の意味（項目の業務的定義、enum 値が表す業務状態遷移など）のみを記述し、データ型（`type`）や制約条件（`constraints`）の重複記述を排除する規則を策定しました。
+   - スキーマが存在しないエンティティについて、実装未着手や言語非依存の独立モデルを定義する「スタンドアロン定義（今の形）」と、すでに実装コードが存在する場合に物理仕様の二重管理を防ぐ「TypeScript 型参照（`type_ref`）」の選定基準と記述規則を明記しました。
+   - [[rulebook-authoring-standard|Rulebook 記述標準]] に準拠し、章立てを整理（本文要件の表の空行分断解消、enum フィールドの `allowed_values` / `allowed_values_detailed` 追加、関係者ロールと確認観点の明確化など、全25件の指摘 F001 - F025 をすべて解消）しました。
+
+2. **Schema の改訂 ([bdd.schema.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/docs/specdojo/schemas/v1/bdd.schema.yaml))**:
+   - `entities` に `schema_ref`（正本スキーマ参照）および `type_ref`（TypeScript 型参照）を任意プロパティとして追加しました（同時指定は禁止）。
+   - `fields` の各項目で `type` を任意化し、参照時は省略可能としました。
+   - `schema_ref` / `type_ref` のいずれも指定しないスタンドアロン定義の場合は `fields` を必須とし、既存のスタンドアロン文書に対する完全な後方互換性を維持しました。
+
+3. **Sample の改訂 ([bdd-sample.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/docs/ja/specdojo/samples/bdd-sample.yaml))**:
+   - `商品`（スタンドアロン定義）、`取引`（TypeScript 型参照: `type_ref`）、`支払い`（スキーマ参照: `schema_ref`）の 3 形態の例を提示し、新規則に適合させました。
+
+4. **CHANGELOG の更新 ([CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/CHANGELOG.md))**:
+   - `[Unreleased]` の `### 変更` に、業務データ辞書の型手入れ・参照規則の追加・後方互換維持の内容を記録しました。
+
+5. **登録項目個票の更新 ([pjr-mecy-bdd-kata-reference-to-implementation.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/docs/ja/projects/prj-0001/controls/project-register/pjr-mecy-bdd-kata-reference-to-implementation.md))**:
+   - 作業内容および対応結果（実施内容、スキーマ変更の理由、PJR-RZ9Q 向けの決定事項・選定基準）を記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"業務データ辞書（bdd）の型手入れを完了しました。schema_ref によるスキーマ参照規則と type_ref による TypeScript 型参照規則、および選定基準を明記し、bdd.schema.yaml と bdd-sample.yaml を新規則に対応させました。既存記述との後方互換性および指摘 F001-F025 の解消を確認済みです。","handoff":["スキーマ変更: docs/specdojo/schemas/v1/bdd.schema.yaml において、entities に schema_ref および type_ref を追加し、fields 内の type を任意化しました。schema_ref / type_ref がない場合は fields を必須とし、既存のスタンドアロン文書との後方互換性を維持しています。","決定事項（PJR-RZ9Q 申し送り）: スキーマ参照キーを schema_ref、型参照キーを type_ref（src/types/xxx.ts#Type 形式）と決定しました。また、初期企画・分析フェーズや言語非依存モデルではスタンドアロン定義（今の形）、既存 TypeScript 実装の二重管理防止には type_ref、スキーマが存在する場合は schema_ref を選択する基準を整理しました。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/bdd-sample.yaml is valid against bdd.schema.yaml"},{"command":"npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-mecy-bdd-kata-reference-to-implementation.md docs/ja/specdojo/rulebooks/bdd-rulebook.md docs/ja/specdojo/samples/bdd-sample.yaml docs/specdojo/schemas/v1/bdd.schema.yaml","status":"passed","summary":"All changed files match Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"All project register history links valid"},{"command":"npm run validate:catalog","status":"passed","summary":"Catalog definitions and dependencies validated successfully"}]}
+</specdojo_executor_evidence>
