@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bfacd8581dc04485ba85bee69ff31d53
+  ts: "2026-11-08T11:53:29Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CLI 仕様（clis）の図を単純にし、自システムの API と外部コマンドの参照先を足す
+    - field: description
+      from: ""
+      to: clis の位置づけの図を入力情報・出力情報の仕様への線だけにし、入力と出力の規則に自システムの API と CLI が起動する外部コマンドの参照先を足す
+    - field: input
+      from: ""
+      to: '["PJR-K4PM（indie が決定、2026-11-08）: 図に ifx-cmd を参照先として結ぶと、clis と ifx-cmd が別物であることがかえって分かりにくくなるため、図は入力情報・出力情報の仕様への線だけにする。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:clis-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-K4PM"]'
