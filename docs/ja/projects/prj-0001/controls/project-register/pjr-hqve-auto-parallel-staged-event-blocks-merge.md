@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: in-progress
   priority: medium
   registered_at: "2026-11-05T15:55:21Z"
   derived_from:
