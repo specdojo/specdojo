@@ -76,3 +76,32 @@
       from: '["PJR-V6RB","PJR-RZ9Q","PJR-HQVE","PJR-6MCW"]'
       to: '["PJR-V6RB","PJR-RZ9Q","PJR-HQVE","PJR-6MCW","PJR-PJYJ","PJR-8J47"]'
   previous_event_id: reg_6e958a297c38488aa2f653a2cebd3562
+- v: 1
+  id: reg_7934bf945d1b4a52b616bdb4d083bc41
+  ts: "2026-11-08T14:02:00Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b69b5701f05049e6be6defe161e15f74
+- v: 1
+  id: reg_059f0aa94a2b4590bd784949c1d1a232
+  ts: "2026-11-08T14:44:14Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_7934bf945d1b4a52b616bdb4d083bc41
