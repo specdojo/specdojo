@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-bfw0-orchestrator-revision-same-item
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: low
   difficulty: easy
   registered_at: "2026-11-08T13:51:58Z"
+  completed_at: "2026-11-08T13:57:01Z"
+  conclusion: オーケストレーターの本文の「close の前の確かめ方」に、同じ型の手直しは同じ項目で回す決まりを足し、develop へ統合した
 ---
 
 # PJR-BFW0 オーケストレーターの本文に、同じ型の手直しは同じ項目で回す決まりを足す

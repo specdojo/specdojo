@@ -38,3 +38,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_95d740b8c51d454b8b7da4dd2b2cd203
+  ts: "2026-11-08T13:57:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が直接対応した（利用者の承認のもと feature ブランチで commit し、--no-ff で統合、dcd5f7fdf）。ラッパーのそろいを validate-orchestrator-sync で確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: オーケストレーターの本文の「close の前の確かめ方」に、同じ型の手直しは同じ項目で回す決まりを足し、develop へ統合した
+  previous_event_id: reg_f006818a18094ad3b22458cc38b0e511
