@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9dedf11f481743a5a641f682180d5840
+  ts: "2026-11-08T02:15:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs:build が既定のメモリの上限で止まらないようにする
+    - field: description
+      from: ""
+      to: npm run docs:build が既定の heap では JavaScript heap out of memory で止まる。手元の検査と CI で同じ上限になるよう、docs:build の実行にメモリの上限を設定する
+    - field: input
+      from: ""
+      to: '["2026-11-08 の PJR-HMV6 の確認で、既定の heap の docs:build が FATAL ERROR: Ineffective mark-compacts near heap limit で止まり、`NODE_OPTIONS=--max-old-space-size=8192` では 665 秒で通った（環境のメモリは 15GB）。","CI の .github/workflows/deploy.yml は `NODE_OPTIONS:` --max-old-space-size=4096 を設定している。package.json の scripts には設定がない。","package.json は保護された設定のため、executor は変更案を個票の対応結果と報告の handoff に書き、反映は利用者の承認のもと feature ブランチで行う。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-HMV6"]'
