@@ -250,8 +250,9 @@ blocking completion, but rejects the claim when it can confirm the check applies
   requires a changed \`*.md\`, \`*.ts\`, \`*.js\`, \`*.json\`, \`*.yaml\`, or \`*.yml\` file;
   markdownlint requires a changed \`*.md\` file; \`npm run validate:history-links\` requires a
   changed history file (\`docs/ja/projects/**/controls/project-register/pjr-*.md\` excluding
-  \`pjr-index.md\`, or an existing \`exec/plans/**/*.md\` / \`exec/results/**/*.md\` that you
-  changed yourself).
+  \`pjr-index.md\`, or an existing \`plan.md\` / \`result.md\` under
+  \`execution/runs/<origin>/<item>/<run>/\` or legacy \`exec/plans/**/*.md\` /
+  \`exec/results/**/*.md\` that you changed yourself).
 - A command that targets a declared product repository (a \`<repo>:<path>\` argument or
   \`--prefix <repo>\`) is judged by that repository's package.json, not the project repository's.
 - \`specdojo catalog validate\` / \`npm run validate:catalog\`: the run's target project (or

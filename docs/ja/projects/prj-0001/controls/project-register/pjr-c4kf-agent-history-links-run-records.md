@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   registered_at: "2026-11-07T23:52:58Z"
   derived_from:
@@ -33,15 +33,31 @@ src/exec/run/agent.ts が executor へ渡す validate:history-links の適用条
 
 ## 4. 作業内容
 
-| No  | 作業                             | 担当   | 状態 | メモ |
-| --- | -------------------------------- | ------ | ---- | ---- |
-| 1   | 指示の文と判定の実装を読み比べる | _TODO_ | open | -    |
-| 2   | 指示の文を直し、テストを合わせる | _TODO_ | open | -    |
-| 3   | 検査を流し、対応結果に書く       | _TODO_ | open | -    |
+| No  | 作業                             | 担当  | 状態 | メモ                                                                                  |
+| --- | -------------------------------- | ----- | ---- | ------------------------------------------------------------------------------------- |
+| 1   | 指示の文と判定の実装を読み比べる | agent | done | `src/exec/reporter.ts` の `isHistoryLinkTargetPath` と `src/exec/run/agent.ts` を突合 |
+| 2   | 指示の文を直し、テストを合わせる | agent | done | `agent.ts` に現行配置を追記し、`run.test.ts` で検証                                   |
+| 3   | 検査を流し、対応結果に書く       | agent | done | 単体テスト等の検証と個票の記帳                                                        |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `src/exec/run/agent.ts` の `buildExecutorPrompt` 内で生成される `validate:history-links` の適用条件説明文に、現行の実行記録配置である `execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md` を追記した。
+- 旧来の `exec/plans/**/*.md`・`exec/results/**/*.md` は互換性の記述として残し、`src/exec/reporter.ts` の `isHistoryLinkTargetPath` の判定実装と一致させた。
+- `tests/src/exec/run/run.test.ts` に、プロンプト内に `execution/runs/<origin>/<item>/<run>/` が含まれることを検証するアサーションを追加した。
+
+### 5.2. 変更した成果物
+
+- `src/exec/run/agent.ts`: executor 向けプロンプトの `validate:history-links` 適用条件文を更新
+- `tests/src/exec/run/run.test.ts`: プロンプト期待値テストの追従
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-c4kf-agent-history-links-run-records.md`: 本個票の作業内容および対応結果を記入
+
+### 5.3. CHANGELOG に書く事項
+
+- **区分**: 変更
+- **行の文案**:
+  - agent へ渡すプロンプト内の `validate:history-links` 適用条件の説明に、現行の実行記録配置（`execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md`）を追記し、実装の判定範囲と一致させました（PJR-C4KF）。
 
 ## 6. 関連ドキュメント
 
