@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_959301d86e674438b9d30450a3dac665
+  ts: "2026-11-08T08:11:47Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 入力ファイルの規則を足した clis の型を確定する
+    - field: description
+      from: ""
+      to: 入力ファイルの規則を足した clis の型を人が確かめ、確定するか直すかを決める
+    - field: input
+      from: ""
+      to: '["型の確定は人が行う（PJR-PJYJ と同じ扱い）。"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-PJYJ"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-6AQF"]'
