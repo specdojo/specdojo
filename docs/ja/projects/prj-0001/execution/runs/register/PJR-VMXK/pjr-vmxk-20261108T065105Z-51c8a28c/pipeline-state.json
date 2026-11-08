@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-VMXK",
   "run_id": "pjr-vmxk-20261108T065105Z-51c8a28c",
-  "updated_at": "2026-11-08T07:15:01.069Z",
+  "updated_at": "2026-11-08T07:15:21.138Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-VMXK/pjr-vmxk-20261108T065105Z-51c8a28c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-11-08T07:15:01.069Z",
-      "completed_at": null,
+      "completed_at": "2026-11-08T07:15:21.138Z",
       "artifact_ref": null
     }
   },
