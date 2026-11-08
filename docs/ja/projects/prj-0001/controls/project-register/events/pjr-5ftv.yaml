@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_03d6dd678beb44c493c5215799706803
+  ts: "2026-11-08T15:50:46Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: テストか agent が /tmp の直下に init の出力を残し、ほかのテストを落とす
+    - field: description
+      from: ""
+      to: /tmp の直下に specdojo init の出力（.markdownlint.yaml・.specdojo/・docs/ja/projects/prj-1234・lefthook.yml など）が残り、/tmp の下に一時ディレクトリを作るテスト（init.test.ts など）が既存の設定を見つけて落ちた。どの処理が残したかを特定し、再発を防ぐ
+    - field: input
+      from: ""
+      to: '["2026-11-09 00:25 と 00:33 に作られた。prj-1234 は tests/src/commands/init.test.ts が使う project ID。同じ時間帯に PJR-0F94 の executor（agy）が「空のリポジトリで dashboard build を確かめる」完了条件のために作業していた。どちらが残したかは確かめていない。","PJR-FTRC の親の検証で test-unit と test-integration が落ち、develop でも同じテストが落ちた。orchestrator が /tmp の直下の出力を消すと init.test.ts の 31 件が通った。/tmp/.git（空、2026-11-05 作成）は残している。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-09"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-FTRC"]'
