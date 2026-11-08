@@ -44,3 +44,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_9a44105362e241bc85534bc0caaf627f
+  ts: "2026-11-08T00:36:01Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 起票のスクリプトの誤りで epic を依存に入れていたため、カタログへの追加の todo（PJR-V6RB）に付け直す
+  changes:
+    - field: depends_on
+      from: '["PJR-2GD6"]'
+      to: '["PJR-V6RB"]'
+  previous_event_id: reg_bc42a5ccdfa34326bf119642f0a00f7f

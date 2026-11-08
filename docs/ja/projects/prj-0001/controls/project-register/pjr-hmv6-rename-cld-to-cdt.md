@@ -14,7 +14,7 @@ specdojo:
   derived_from:
     - PJR-2GD6
   depends_on:
-    - PJR-2GD6
+    - PJR-V6RB
 ---
 
 # PJR-HMV6 分類一覧の略号を cld から cdt に変える
