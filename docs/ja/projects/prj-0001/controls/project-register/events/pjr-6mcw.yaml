@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e453ec535ad04bd793c1a20d54162cc9
+- v: 1
+  id: reg_08cba21524da410c8612d98863bc0dd0
+  ts: "2026-11-08T07:25:56Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。負荷による単体テストの時間切れを --resume で流し直した。差分・catalog validate を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: カタログの ifx-cmd-ai-provider-cli の overview と done_criteria から引数の記述を外し、正本の参照と入出力の約束を書く形にした
+  previous_event_id: reg_6f863ebc127e43c295f35e4afc606252

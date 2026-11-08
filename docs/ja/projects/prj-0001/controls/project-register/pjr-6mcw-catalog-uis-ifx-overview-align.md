@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6mcw-catalog-uis-ifx-overview-align
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-11-08T04:01:37Z"
+  completed_at: "2026-11-08T07:25:56Z"
+  conclusion: カタログの ifx-cmd-ai-provider-cli の overview と done_criteria から引数の記述を外し、正本の参照と入出力の約束を書く形にした
   derived_from:
     - PJR-2GD6
   depends_on:
