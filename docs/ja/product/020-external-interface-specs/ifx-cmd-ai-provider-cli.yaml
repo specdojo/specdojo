@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
+id: ifx-cmd-ai-provider-cli
+type: api
+status: draft
+title: AI provider CLI 非対話起動のコマンド連携仕様
+rulebook: specdojo:ifx-cmd-rulebook
+version: 1
+based_on:
+  - specdojo:exec-config-guide
+  - sysd-agent-settings
+  - opr-agent-cli-update
+
+command:
+  # provider ごとに実行可能ファイルが異なるため、command_template の先頭要素を正本とする。
+  executable: providers.<provider>.command_template の先頭要素（claude / codex / copilot / opencode / agy）
+  purpose: >-
+    specdojo exec run が exec plan を AI provider CLI（Claude Code / Codex CLI / GitHub Copilot CLI /
+    opencode / Antigravity CLI）へ非対話で渡し、executor は対象成果物の編集と検証、reporter は
+    evidence からの result 記入を行う。成功後は作業ディレクトリに plan が許可した変更が残り、
+    stdout に最終報告が出力された状態になる。
+  reference: >-
+    起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
+    （{nickname} / {model} / {mode} / {proficiency} と command_params の変数で展開）を正本とし、
+    設定項目の意味は [[specdojo:exec-config-guide]]、provider 固有の認証・モデル・権限は
+    [[sysd-agent-settings]] 配下の provider 別設計を正本とする。member の command はテンプレートを
+    持たない構成専用の上書きとする。
+  # 意図された仕様（rulebook）は shell: false。現在の実装は展開後の文字列をシェル経由で起動し、
+  # command_template も $(pwd) / $(cat) を使うため乖離している（handoff 参照）。
+  shell: false
+
+streams:
+  stdin:
+    mode: required
+    format: text
+    encoding: UTF-8
+    description: >-
+      exec plan 本文（[[id]] を repository 相対パスへ展開済み）に、pipeline の段階別指示と
+      evidence 報告の契約を連結したプロンプト。書き込み後に stdin を閉じる。stdin を読まずに
+      終了するコマンドでも書き込み失敗で中断せず、成否は終了コードで判定する。
+  stdout:
+    format: text
+    encoding: UTF-8
+    description: >-
+      進捗と最終報告。executor は末尾に <specdojo_executor_evidence> タグで JSON
+      （completion_status / final_message / handoff / validations）を出力する。呼び出し元は
+      このタグを構造化出力として解析し、可変文言に依存しない。CLI によっては利用上限の通知も
+      stdout に出るため、上限検出の走査対象に含める。
+  stderr:
+    format: text
+    encoding: UTF-8
+    description: >-
+      診断・警告・失敗詳細。異常終了時は「blocked: <reason>; need=<next action>; ref=<path>」
+      （review は review-blocked:）の行を出力し、呼び出し元は block 理由として優先採用する。
+      秘密値は出力しない。
+
+files:
+  inputs:
+    - path: 作業ディレクトリ配下の repository 相対パス（plan が参照する成果物・rulebook・実装エビデンス等）
+      format: text
+      encoding: UTF-8
+      description: plan に列挙された入力を agent が直接読む。plan 自体は stdin で渡し、ファイル渡しはしない。
+  outputs:
+    - path: 作業ディレクトリ配下の plan が変更を許可した成果物（targets）
+      format: text
+      encoding: UTF-8
+      description: >-
+        executor が編集する成果物。result・evidence・実行ログは呼び出し元（runner）が作成し、
+        executor は作らない。reporter は runner が scaffold した result だけを記入する。
+
+side_effects:
+  - 作業ディレクトリ（task worktree、宣言されたプロダクト worktree を含む）のファイルを変更する
+  - provider の API 利用枠を消費する（利用上限・課金の対象になり得る）
+  - Git の commit・設定変更と保護対象設定の変更は行わない。起動前後の差分で検知した場合、呼び出し元は失敗として block する
+
+exit_codes:
+  - code: 0
+    meaning: plan の作業を終えて正常終了した。完了扱いは stdout の completion_status と親検証の結果で別途判定する
+    category: success
+    retryable: false
+  - code: 1
+    meaning: >-
+      非ゼロ終了かつ stdout / stderr が provider 別 rate_limit_detection の stderr_patterns
+      （例: rate limit / 429 / overloaded / session limit）に一致した。exit_codes に明示した
+      コードは文言なしでも該当する
+    category: rate_limit
+    retryable: true
+  - code: 1
+    meaning: 非ゼロ終了かつ出力が provider 別 connection_error_detection に一致した（接続失敗）
+    category: transient_failure
+    retryable: true
+  - code: 1
+    meaning: >-
+      認証失敗。現在は専用の検出がなく、下記の汎用失敗として block される
+    category: authentication_error
+    retryable: false
+  - code: 1
+    meaning: >-
+      上記以外の非ゼロ終了（agent 自身の block、異常終了、プロセス起動失敗）。保護対象設定や
+      Git 状態の変更を検知した場合も、呼び出し元はこの扱いにする
+    category: permanent_failure
+    retryable: false
+
+authentication:
+  method: provider_login
+  injection:
+    mechanism: cli_profile
+    names:
+      - 各 provider CLI のログインプロファイル（claude / codex / copilot / opencode / agy）
+  secret_source: >-
+    各 provider CLI が保持する認証状態（開発コンテナの named volume に永続化）。SpecDojo は
+    認証値を扱わず、起動時の環境変数にも注入しない。呼び出し元の Git 環境変数は除去して渡す。
+  log_policy: >-
+    evidence と executor / reporter のログは保存前に秘匿値（Bearer、各社 API キー・トークン、
+    JWT、秘密鍵、URL の認証情報、名前付きの password 等）を伏せ字化する。コマンド引数に
+    秘密値を含めない。
+
+execution:
+  working_directory: task worktree のルート（in-place 実行時は repository_root）
+  # 現在の実装は起動上限時間を設けていない（handoff 参照）。
+  timeout_seconds: _UNDECIDED_
+  network_required: true
+  # 同時実行数は exec run の --parallel と providers.<provider>.max_concurrency
+  # （現行設定では opencode が 1）で決まり、本仕様で固定値を持たない。
+  max_parallel: _UNDECIDED_
+  idempotency:
+    guaranteed: false
+    condition: >-
+      agent の出力は非決定的で、同じ plan でも変更内容は一致しない。再実行は同じ worktree で
+      行い、既存の変更を部分的な実装として引き継ぐ（executor resume）ことで二重適用を避ける。
+
+error_handling:
+  retry:
+    on_categories:
+      - rate_limit
+      - transient_failure
+    # rate_limit は次の候補 agent へ即時に切り替え、全候補が上限のとき待機して再試行する
+    # （session limit / quota は待機せず block）。transient_failure は名前指定の agent に
+    # fallback がある場合だけ 1 回切り替える。回数は現行の rate_limit_policy.on_critical.retry.max_attempts。
+    max_attempts: 3
+    backoff: exponential
+  timeout_action: >-
+    _UNDECIDED_: 起動上限時間とタイムアウト時の子プロセス終了・不完全出力の扱いは未定義。
+    現在は終了まで待ち続ける。
+  malformed_output_action: >-
+    stdout に evidence タグがない場合は、残りの stdout を最終メッセージとして扱う。自動再試行は
+    せず、completion_status が incomplete の場合は worktree を保持して executor resume に委ねる。
+  authentication_failure_action: >-
+    自動再試行しない。利用者が provider CLI へ再ログインし、CLI 更新が原因の場合は
+    [[opr-agent-cli-update]] の手順で確認する。
