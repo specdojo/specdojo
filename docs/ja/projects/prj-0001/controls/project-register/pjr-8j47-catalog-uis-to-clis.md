@@ -16,6 +16,7 @@ specdojo:
     - PJR-RMMM
   depends_on:
     - PJR-PJYJ
+    - PJR-025M
 ---
 
 # PJR-8J47 カタログの uis の 2 件を clis に付け替える
