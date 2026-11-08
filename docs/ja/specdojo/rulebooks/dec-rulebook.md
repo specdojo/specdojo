@@ -29,13 +29,14 @@ Decision Log Documentation Rulebook
 
 - 推奨: `dec-<NNNN>-<topic>.md`
 - 連番は4桁ゼロ埋めとする（例: `dec-0001-auth`）。
+- 文書 ID は `<project-id>:dec-<NNNN>-<topic>` 形式とする（例: `prj-0001:dec-0001-auth`）。
 
 ## 4. 推奨 Frontmatter 項目
 
 | 項目 | 説明 | 必須 |
 | ---- | ---- | ---- |
 
-| id | `dec-<NNNN>-<topic>` | ○ |
+| id | `<project-id>:dec-<NNNN>-<topic>` | ○ |
 | type | `project` | ○ |
 | status | `draft` / `ready` / `deprecated` | ○ |
 
