@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_31b8d83704ce45ec82c2cb88ce8590b5
+- v: 1
+  id: reg_2c3c746d5dee4de2aa5758efc1b779d5
+  ts: "2026-11-08T04:52:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で案を作り、orchestrator が実測（既定・4GB は停止、8GB は通過）のうえ利用者の承認で feature ブランチから反映した。NODE_OPTIONS なしの docs:build が 650 秒で通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: package.json の docs:build と CI の deploy.yml のメモリの上限を 8GB にそろえ、NODE_OPTIONS なしの npm run docs:build が通るようにした
+  previous_event_id: reg_f78a4cd3e0a44d1db1f4f440baa2a2e5

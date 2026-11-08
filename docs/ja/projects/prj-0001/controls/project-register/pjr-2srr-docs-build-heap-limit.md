@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2srr-docs-build-heap-limit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-11-08T02:15:46Z"
+  completed_at: "2026-11-08T04:52:27Z"
+  conclusion: package.json の docs:build と CI の deploy.yml のメモリの上限を 8GB にそろえ、NODE_OPTIONS なしの npm run docs:build が通るようにした
   derived_from:
     - PJR-HMV6
 ---
