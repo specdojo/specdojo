@@ -4424,3 +4424,16 @@
       from: "2026-11-08"
       to: "-"
   previous_event_id: reg_6e730c1016724a92a27fb48c518a55f3
+- v: 1
+  id: reg_26e3066bafca4148a8c3e4a831ec396a
+  ts: "2026-11-08T15:29:32Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fdf04e6ce3c340adbe3235a82ca2b0b5
