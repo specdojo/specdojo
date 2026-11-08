@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:34:51Z"
+  completed_at: "2026-11-08T03:53:16Z"
+  conclusion: sf-rulebook を機能の目的と bps・uis との対応に絞り、操作手順は参照に留める形に改め、sf-sample を書き直した
   derived_from:
     - PJR-2GD6
   depends_on:

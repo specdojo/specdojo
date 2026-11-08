@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_edb2e938096e4d4d91e5bfff91466ba4
+- v: 1
+  id: reg_4eccc90b230d4e73a0f2eeaf118b3b16
+  ts: "2026-11-08T03:53:16Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。executor が個票の対応結果を書かなかったため、orchestrator が result から書き写した。差分・親の検証を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: sf-rulebook を機能の目的と bps・uis との対応に絞り、操作手順は参照に留める形に改め、sf-sample を書き直した
+  previous_event_id: reg_2b230404ccc34f3fa95d74bab3dacbc7
