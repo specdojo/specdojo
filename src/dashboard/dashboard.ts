@@ -1,10 +1,9 @@
-import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { join, relative } from "node:path";
 import type { Command } from "commander";
-import type { ExecEventV1, StateSnapshot } from "../exec/types.js";
+import type { ExecEventV1, ReadyTaskView, StateSnapshot } from "../exec/types.js";
 import { toArtifactPath } from "../shared/artifact-path.js";
 import { listFilesRecursive, readJson } from "../shared/fs.js";
-import { readAllEventFiles } from "../exec/events.js";
 import {
   getProjectExecutionPath,
   getProjectCatalogPath,
@@ -20,8 +19,10 @@ import type { SpecDojoProjectConfig } from "../shared/specdojo-config.js";
 import {
   resolveRegisterPaths,
   loadRegisterItems,
+  TERMINAL_STATUSES_SET,
   type PjrItem,
   type RegisterItemView,
+  type RegisterPaths,
 } from "../register/register.js";
 import {
   readRegisterEventsFromContent,
@@ -29,9 +30,7 @@ import {
   type RegisterEventV1,
 } from "../register/events.js";
 import {
-  buildTimelineWaves,
   loadTimelineIndex,
-  type TimelineTrackPlan,
   buildTimeline,
   renderCatalogScaffoldMarkdown,
 } from "./timeline-build.js";
@@ -46,12 +45,24 @@ import {
   aggregateRoutines,
   buildDailyRoutineRows,
   formatZonedDateTime,
-  ROUTINE_ROW_COLLAPSE_THRESHOLD,
   zonedDateKey,
 } from "./routines.js";
 import { buildExecRecordsMarkdown, collectExecRecords, EXEC_RECORDS_FILE } from "./exec-records.js";
 import { sanitizeDashboardCell } from "./shared.js";
 import { gradeFindingCount, parseGradeResult, type GradeResult } from "../grade/result.js";
+import { load } from "../shared/yaml.js";
+import type { DctDoc } from "../catalog/types.js";
+import { isDctCatalogFileName } from "../catalog/types.js";
+import {
+  collectResolvedDeliverables,
+  type ResolvedDeliverable,
+} from "../catalog/build-references.js";
+import { resolveBasePath } from "../catalog/paths.js";
+import { extractLocalId } from "../schedule/phase-sets.js";
+import { buildScheduleIndex } from "../exec/schedule/schedule.js";
+import { type ScheduleNode } from "../shared/schedule-index.js";
+import { readReadySnapshot } from "../exec/schedule/ready.js";
+import { findRunRecord } from "../shared/run-records.js";
 
 // ================================
 // Types
@@ -133,38 +144,6 @@ export function resolveDashboardPaths(opts: { project?: string }): DashboardPath
 export { buildTimelineGanttSvg, computeTimelineTrackSchedules, resolveDashboardCalendar };
 export type { TimelineTrackSchedule } from "./dashboard-timeline.js";
 
-// ================================
-// 3. Register aggregation (ticket frontmatter = source of truth)
-// ================================
-
-type RegisterAggregates = {
-  statusCounts: Record<string, number>;
-  priorityCounts: Record<string, number>;
-  total: number;
-  error?: string;
-};
-
-function aggregateRegister(projectId: string): RegisterAggregates {
-  const result: RegisterAggregates = {
-    statusCounts: {},
-    priorityCounts: {},
-    total: 0,
-  };
-  try {
-    const paths = resolveRegisterPaths({ project: projectId });
-    const items = loadRegisterItems(paths);
-    for (const view of items) {
-      const item: PjrItem = view.item;
-      result.statusCounts[item.status] = (result.statusCounts[item.status] ?? 0) + 1;
-      result.priorityCounts[item.priority] = (result.priorityCounts[item.priority] ?? 0) + 1;
-    }
-    result.total = items.length;
-  } catch (error) {
-    result.error = error instanceof Error ? error.message : String(error);
-  }
-  return result;
-}
-
 const EXECUTABLE_REGISTER_TYPES = new Set(["todo", "issue", "change-request", "question", "risk"]);
 const PRIORITY_RANK: Record<string, number> = { high: 0, medium: 1, low: 2 };
 
@@ -176,14 +155,88 @@ export type DashboardRegisterCandidate = {
   due: string;
   registeredAt: string;
   relatedOpenPjrCount: number;
+  ticketPath?: string;
+  dependsOn?: string[];
 };
 
-export type DashboardAttentionRow = {
-  source: "register" | "exec";
+export type DashboardActionRequiredRow = {
+  kind: string;
   id: string;
-  reason: string;
+  link: string;
   nextAction: string;
 };
+
+export function buildCatalogDocMap(catalogPath?: string | null): Map<string, string> {
+  const map = new Map<string, string>();
+  if (!catalogPath || !existsSync(catalogPath)) return map;
+  try {
+    const files = readdirSync(catalogPath).filter(isDctCatalogFileName).sort();
+    for (const f of files) {
+      const filePath = join(catalogPath, f);
+      try {
+        const doc = load(readFileSync(filePath, "utf8")) as DctDoc;
+        if (!doc || !Array.isArray(doc.groups)) continue;
+        const deliverables: ResolvedDeliverable[] = [];
+        collectResolvedDeliverables(doc.groups, resolveBasePath("", doc.base_path), deliverables);
+        for (const { item, resolvedPath } of deliverables) {
+          if (item.path) {
+            map.set(item.local_id, resolvedPath);
+          }
+        }
+      } catch {
+        // ignore malformed catalog
+      }
+    }
+  } catch {
+    // ignore directory read error
+  }
+  return map;
+}
+
+export function formatTicketLink(
+  view: { id: string; ticketPath?: string },
+  generatedDir: string,
+): string {
+  if (view.ticketPath && existsSync(view.ticketPath)) {
+    const rel = relative(generatedDir, view.ticketPath).replaceAll("\\", "/");
+    return `[${view.id}](${rel})`;
+  }
+  return `\`${view.id}\``;
+}
+
+export function formatTaskLink(
+  taskId: string,
+  paths: DashboardPaths,
+  catalogDocMap: Map<string, string>,
+): string {
+  const execDir = join(paths.executionGeneratedPath, "..");
+  if (paths.schedulePath && existsSync(execDir)) {
+    try {
+      const plan = findRunRecord(execDir, "plan", taskId);
+      if (plan && existsSync(plan)) {
+        const rel = relative(paths.executionGeneratedPath, plan).replaceAll("\\", "/");
+        return `[${taskId}](${rel})`;
+      }
+      const result = findRunRecord(execDir, "result", taskId);
+      if (result && existsSync(result)) {
+        const rel = relative(paths.executionGeneratedPath, result).replaceAll("\\", "/");
+        return `[${taskId}](${rel})`;
+      }
+    } catch {
+      // ignore run record lookup error
+    }
+  }
+  const localId = extractLocalId(taskId);
+  if (localId && catalogDocMap.has(localId)) {
+    const docRel = catalogDocMap.get(localId)!;
+    const docFull = join(paths.repoRoot ?? specdojoRootDir(), docRel);
+    if (existsSync(docFull)) {
+      const rel = relative(paths.executionGeneratedPath, docFull).replaceAll("\\", "/");
+      return `[${taskId}](${rel})`;
+    }
+  }
+  return `\`${taskId}\``;
+}
 
 function dateOnlyMs(value: string): number | undefined {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
@@ -222,15 +275,35 @@ function pjrLinks(content: string): string[] {
   ].map((match) => `PJR-${match[1].toUpperCase()}`);
 }
 
-function buildRegisterCandidates(
+export function buildRegisterCandidates(
   paths: ReturnType<typeof resolveRegisterPaths>,
 ): DashboardRegisterCandidate[] {
   const views = loadRegisterItems(paths);
+  const itemMap = new Map<string, PjrItem>(views.map((v) => [v.id, v.item]));
   const openIds = new Set(
     views.filter((view) => view.item.status === "open").map((view) => view.id),
   );
   return views
-    .filter((view) => view.item.status === "open" && EXECUTABLE_REGISTER_TYPES.has(view.item.type))
+    .filter((view) => {
+      const status: string = view.item.status;
+      // 1. deferred, rejected, 終端（done, decided）の除外
+      if (status === "deferred" || TERMINAL_STATUSES_SET.has(status)) {
+        return false;
+      }
+      // 2. open かつ着手可能タイプ
+      if (status !== "open" || !EXECUTABLE_REGISTER_TYPES.has(view.item.type)) {
+        return false;
+      }
+      // 3. 先行の項目（depends_on）がすべて終わり（done または decided）
+      const deps = view.item.dependsOn ?? [];
+      for (const depId of deps) {
+        const depItem = itemMap.get(depId);
+        if (!depItem || (depItem.status !== "done" && depItem.status !== "decided")) {
+          return false;
+        }
+      }
+      return true;
+    })
     .map((view) => {
       const links = view.ticketPath
         ? pjrLinks(readFileSync(view.ticketPath, "utf8")).filter(
@@ -245,6 +318,8 @@ function buildRegisterCandidates(
         due: view.item.due,
         registeredAt: view.item.registeredAt,
         relatedOpenPjrCount: new Set(links).size,
+        ticketPath: view.ticketPath,
+        dependsOn: view.item.dependsOn,
       };
     });
 }
@@ -271,40 +346,103 @@ function readRegisterEvents(view: RegisterItemView, registerPath: string): Regis
   return readRegisterEventsFromContent(readFileSync(path, "utf8"), path);
 }
 
-function aggregateAttention(paths: DashboardPaths): DashboardAttentionRow[] {
-  const rows: DashboardAttentionRow[] = [];
-  const registerPaths = resolveRegisterPaths({ project: paths.projectId });
-  const views = loadRegisterItems(registerPaths);
-  for (const view of views.filter((item) => item.item.status === "waiting")) {
+export function aggregateActionRequired(
+  paths: DashboardPaths,
+  views: RegisterItemView[],
+  catalogDocMap: Map<string, string>,
+): DashboardActionRequiredRow[] {
+  const rows: DashboardActionRequiredRow[] = [];
+  const registerPath =
+    paths.registerPath ?? join(paths.projectPath, "controls", "project-register");
+
+  // 1. review の項目（close の確認待ち）
+  for (const view of views.filter((v) => v.item.status === "review")) {
     rows.push({
-      source: "register",
+      kind: "review",
       id: view.id,
-      reason:
-        latestRegisterWaitReason(readRegisterEvents(view, registerPaths.projectRegisterPath)) ??
-        "-",
-      nextAction: `待機理由を解消し \`specdojo register start --project ${paths.projectId} --id ${view.id}\``,
+      link: formatTicketLink(view, paths.executionGeneratedPath),
+      nextAction: "close の確認待ち",
     });
   }
 
-  if (!paths.schedulePath) return rows;
-  const statePath = join(paths.executionGeneratedPath, "state.json");
-  if (!existsSync(statePath)) return rows;
-  const state = readJson(statePath) as StateSnapshot;
-  const blockedIds = Object.entries(state.tasks)
-    .filter(([, task]) => task.state === "blocked")
-    .map(([id]) => id);
-  const reasons = latestExecBlockReasons(
-    blockedIds,
-    readAllEventFiles(paths.schedulePath).map(({ event }) => event),
-  );
-  for (const id of blockedIds.sort()) {
+  // 2. 人の判断を待つ open の decision・question
+  for (const view of views.filter(
+    (v) => v.item.status === "open" && (v.item.type === "decision" || v.item.type === "question"),
+  )) {
     rows.push({
-      source: "exec",
-      id,
-      reason: reasons.get(id) ?? state.tasks[id].last_msg ?? "-",
-      nextAction: `原因を解消し \`specdojo exec unblock --project ${paths.projectId} --task ${id} --by <actor> --msg <reason>\``,
+      kind: view.item.type,
+      id: view.id,
+      link: formatTicketLink(view, paths.executionGeneratedPath),
+      nextAction:
+        view.item.type === "decision" ? "意思決定を行い状態を更新" : "回答・判断を行い状態を更新",
     });
   }
+
+  // 3. waiting の項目
+  for (const view of views.filter((v) => v.item.status === "waiting")) {
+    const waitReason = latestRegisterWaitReason(readRegisterEvents(view, registerPath));
+    rows.push({
+      kind: "waiting",
+      id: view.id,
+      link: formatTicketLink(view, paths.executionGeneratedPath),
+      nextAction: waitReason
+        ? `待機理由を解消: ${sanitizeDashboardCell(waitReason)}`
+        : "待機理由の解消",
+    });
+  }
+
+  // 4. 人が行う schedule のタスク（execution が human のもの）
+  if (paths.schedulePath && existsSync(paths.executionGeneratedPath)) {
+    const readyPath = join(paths.executionGeneratedPath, "ready.json");
+    const statePath = join(paths.executionGeneratedPath, "state.json");
+    const humanTaskIds = new Set<string>();
+
+    if (existsSync(readyPath)) {
+      try {
+        const ready = readReadySnapshot(readyPath);
+        for (const task of ready.tasks) {
+          if (task.execution === "human") {
+            humanTaskIds.add(task.id);
+            rows.push({
+              kind: "human",
+              id: task.id,
+              link: formatTaskLink(task.id, paths, catalogDocMap),
+              nextAction: task.name
+                ? `${sanitizeDashboardCell(task.name)}を実施`
+                : "人手による作業を実施",
+            });
+          }
+        }
+      } catch {
+        // ignore ready.json read error
+      }
+    }
+
+    if (existsSync(statePath)) {
+      try {
+        const state = readJson(statePath) as StateSnapshot;
+        for (const [taskId, taskState] of Object.entries(state.tasks)) {
+          if (
+            (taskState.state === "doing" || taskState.state === "blocked") &&
+            !humanTaskIds.has(taskId)
+          ) {
+            rows.push({
+              kind: taskState.state === "blocked" ? "blocked" : "human",
+              id: taskId,
+              link: formatTaskLink(taskId, paths, catalogDocMap),
+              nextAction:
+                taskState.state === "blocked"
+                  ? `ブロッキング原因を解消: ${sanitizeDashboardCell(taskState.last_msg ?? "-")}`
+                  : "作業の継続・完了",
+            });
+          }
+        }
+      } catch {
+        // ignore state.json read error
+      }
+    }
+  }
+
   return rows;
 }
 
@@ -364,17 +502,404 @@ function countTable(
   return lines.join("\n");
 }
 
+function dashboardEpicPlan(paths: DashboardPaths) {
+  return loadEpicSchedules({
+    registerPath: paths.registerPath ?? join(paths.projectPath, "controls", "project-register"),
+    projectId: paths.projectId,
+    calendar: resolveDashboardCalendar(paths.schedulePath ?? paths.projectPath),
+    timeZone: paths.registerDateTimeZone ?? "UTC",
+  });
+}
+
+export function readDashboardGradeResults(resultsPath: string): GradeResult[] {
+  if (!existsSync(resultsPath)) return [];
+  return listFilesRecursive(resultsPath)
+    .filter((path) => path.endsWith(".yaml") || path.endsWith(".yml"))
+    .sort()
+    .flatMap((path) => {
+      try {
+        return [parseGradeResult(readFileSync(path, "utf8"), path)];
+      } catch {
+        return [];
+      }
+    });
+}
+
 // ================================
-// Section renderers
+// Section renderers (Action-first layout)
 // ================================
 
-function renderScheduleSection(paths: DashboardPaths): string[] {
-  const lines = ["## 1. Schedule進捗", ""];
+function renderActionRequiredSection(
+  paths: DashboardPaths,
+  views: RegisterItemView[],
+  catalogDocMap: Map<string, string>,
+): string[] {
+  const lines = ["## 1. 人の対応が要るもの", ""];
+  const rows = aggregateActionRequired(paths, views, catalogDocMap);
+  if (rows.length === 0) {
+    lines.push("- ありません", "");
+    return lines;
+  }
+
+  lines.push("| 種別 | 項目 | 次にすること |");
+  lines.push("| --- | --- | --- |");
+  for (const row of rows) {
+    lines.push(`| \`${row.kind}\` | ${row.link} | ${sanitizeDashboardCell(row.nextAction)} |`);
+  }
+  lines.push("");
+  return lines;
+}
+
+function getRegisterPathsForDashboard(paths: DashboardPaths): RegisterPaths | null {
+  if (paths.registerPath) {
+    return {
+      projectId: paths.projectId,
+      projectRegisterPath: paths.registerPath,
+      pjrIndexPath: join(paths.registerPath, "pjr-index.md"),
+      generatedPath: join(paths.registerPath, "generated"),
+      controlsGeneratedPath: join(paths.registerPath, "generated"),
+      registerDateTimeZone: paths.registerDateTimeZone ?? "UTC",
+    };
+  }
+  try {
+    return resolveRegisterPaths({ project: paths.projectId });
+  } catch {
+    return null;
+  }
+}
+
+function renderRecommendedRegisterSection(
+  paths: DashboardPaths,
+  _views: RegisterItemView[],
+): string[] {
+  const lines = ["## 2. おすすめの登録項目", ""];
+  let rows: DashboardRegisterCandidate[] = [];
+  const today = zonedDateKey(new Date(), paths.registerDateTimeZone ?? "UTC");
+  try {
+    const regPaths = getRegisterPathsForDashboard(paths);
+    if (regPaths) {
+      rows = rankRegisterCandidates(buildRegisterCandidates(regPaths), today).slice(0, 10);
+    }
+  } catch {
+    rows = [];
+  }
+  if (rows.length === 0) {
+    lines.push("- ありません", "");
+    return lines;
+  }
+  lines.push("| 順位 | id | type | title | 期日 | 優先度 | 関連 open PJR | 登録日時 | 理由 |");
+  lines.push("| ---: | --- | --- | --- | --- | --- | ---: | --- | --- |");
+  const todayMs = dateOnlyMs(today) ?? 0;
+  rows.forEach((row, index) => {
+    const dueMs = dateOnlyMs(row.due);
+    const dueReason =
+      dueMs === undefined
+        ? "期日なし"
+        : dueMs < todayMs
+          ? `期日超過 ${Math.ceil((todayMs - dueMs) / 86_400_000)}日`
+          : `期日まで ${Math.ceil((dueMs - todayMs) / 86_400_000)}日`;
+    const link = formatTicketLink(
+      { id: row.id, ticketPath: row.ticketPath },
+      paths.executionGeneratedPath,
+    );
+    lines.push(
+      `| ${index + 1} | ${link} | \`${row.type}\` | ${sanitizeDashboardCell(row.title)} | ${row.due} | \`${row.priority}\` | ${row.relatedOpenPjrCount} | ${row.registeredAt} | ${dueReason}、優先度 ${row.priority}、関連 open PJR ${row.relatedOpenPjrCount}件 |`,
+    );
+  });
+  lines.push("");
+  return lines;
+}
+
+function renderActiveEpicsSection(
+  paths: DashboardPaths,
+  views: RegisterItemView[],
+  catalogDocMap: Map<string, string>,
+): string[] {
+  const lines = ["## 3. 実行中の epic", ""];
+  const activeEpics = views.filter(
+    (v) => v.item.type === "epic" && (v.item.status === "open" || v.item.status === "in-progress"),
+  );
+
+  if (activeEpics.length === 0) {
+    lines.push("- ありません", "");
+    return lines;
+  }
+
+  let scheduleNodes: Map<string, ScheduleNode> = new Map();
+  if (paths.schedulePath && existsSync(paths.schedulePath)) {
+    try {
+      const schedule = buildScheduleIndex(paths.schedulePath);
+      scheduleNodes = schedule.nodes;
+    } catch {
+      // ignore
+    }
+  }
+
+  let readyTasks: ReadyTaskView[] = [];
+  if (existsSync(join(paths.executionGeneratedPath, "ready.json"))) {
+    try {
+      const ready = readReadySnapshot(join(paths.executionGeneratedPath, "ready.json"));
+      readyTasks = ready.tasks;
+    } catch {
+      // ignore
+    }
+  }
+
+  let state: StateSnapshot | undefined;
+  if (existsSync(join(paths.executionGeneratedPath, "state.json"))) {
+    try {
+      state = readJson(join(paths.executionGeneratedPath, "state.json")) as StateSnapshot;
+    } catch {
+      // ignore
+    }
+  }
+
+  for (const epic of activeEpics) {
+    const epicLink = formatTicketLink(epic, paths.executionGeneratedPath);
+    lines.push(`### ${epicLink} ${sanitizeDashboardCell(epic.item.title)}`, "");
+    const track = epic.item.track;
+    lines.push(`- track: \`${track ?? "-"}\``);
+
+    if (track && scheduleNodes.size > 0) {
+      const trackTasks = [...scheduleNodes.values()].filter(
+        (node) =>
+          node.kind === "task" &&
+          (node.schedule_file.includes(`sch-track-${track}.yaml`) ||
+            node.id.startsWith(`T-${track.toUpperCase()}-`)),
+      );
+      if (trackTasks.length > 0) {
+        const stages: Array<{ name: string; total: number; done: number }> = [];
+        const stageIndex = new Map<string, number>();
+
+        for (const task of trackTasks) {
+          const stageName = task.name || task.phase_id || task.phase_set || "作業";
+          let idx = stageIndex.get(stageName);
+          if (idx === undefined) {
+            idx = stages.length;
+            stageIndex.set(stageName, idx);
+            stages.push({ name: stageName, total: 0, done: 0 });
+          }
+          stages[idx].total++;
+          if (state?.tasks[task.id]?.state === "done") {
+            stages[idx].done++;
+          }
+        }
+
+        const stageStr = stages.map((s) => `${s.name} ${s.done}/${s.total}`).join(", ");
+        lines.push(`- 段ごとの進捗: ${stageStr}`);
+      } else {
+        lines.push("- 段ごとの進捗: schedule 未登録");
+      }
+    } else {
+      lines.push("- 段ごとの進捗: schedule 未登録");
+    }
+
+    if (track && readyTasks.length > 0) {
+      const nextForTrack = readyTasks
+        .filter(
+          (t) =>
+            t.schedule_file?.includes(`sch-track-${track}.yaml`) ||
+            t.id.startsWith(`T-${track.toUpperCase()}-`),
+        )
+        .slice(0, 3);
+      if (nextForTrack.length > 0) {
+        lines.push("- 次に流せるタスク:");
+        for (const t of nextForTrack) {
+          lines.push(`  - ${formatTaskLink(t.id, paths, catalogDocMap)}`);
+        }
+      } else {
+        lines.push("- 次に流せるタスク: なし");
+      }
+    } else {
+      lines.push("- 次に流せるタスク: なし");
+    }
+
+    const children = views.filter((v) => v.item.derivedFrom?.includes(epic.id));
+    const openChildren = children.filter((v) => !TERMINAL_STATUSES_SET.has(v.item.status));
+    const doneChildren = children.filter((v) => TERMINAL_STATUSES_SET.has(v.item.status));
+
+    if (children.length === 0) {
+      lines.push("- 子の項目: なし");
+    } else {
+      lines.push("- 子の項目:");
+      if (openChildren.length > 0) {
+        for (const child of openChildren) {
+          const childLink = formatTicketLink(child, paths.executionGeneratedPath);
+          lines.push(
+            `  - ${childLink} (\`${child.item.status}\`): ${sanitizeDashboardCell(child.item.title)}`,
+          );
+        }
+      } else {
+        lines.push("  - （未完了の項目はありません）");
+      }
+
+      if (doneChildren.length > 0) {
+        lines.push("");
+        lines.push(`::: details 完了した子項目（${doneChildren.length}件）`);
+        lines.push("");
+        for (const child of doneChildren) {
+          const childLink = formatTicketLink(child, paths.executionGeneratedPath);
+          lines.push(
+            `- ${childLink} (\`${child.item.status}\`): ${sanitizeDashboardCell(child.item.title)}`,
+          );
+        }
+        lines.push("");
+        lines.push(":::");
+      }
+    }
+
+    lines.push("");
+  }
+
+  return lines;
+}
+
+function renderCompletedEpicsSection(paths: DashboardPaths, views: RegisterItemView[]): string[] {
+  const lines = ["## 4. 終わった epic", ""];
+  const completedEpics = views.filter(
+    (v) => v.item.type === "epic" && TERMINAL_STATUSES_SET.has(v.item.status),
+  );
+
+  if (completedEpics.length === 0) {
+    lines.push("- ありません", "");
+    return lines;
+  }
+
+  lines.push(`::: details 終わった epic の一覧（${completedEpics.length}件）`);
+  lines.push("");
+  lines.push("| id | title | track | 終了日 |");
+  lines.push("| --- | --- | --- | --- |");
+  for (const epic of completedEpics) {
+    const epicLink = formatTicketLink(epic, paths.executionGeneratedPath);
+    const completedDate = epic.item.completedAt ? epic.item.completedAt.slice(0, 10) : "-";
+    lines.push(
+      `| ${epicLink} | ${sanitizeDashboardCell(epic.item.title)} | \`${epic.item.track ?? "-"}\` | ${completedDate} |`,
+    );
+  }
+  lines.push("");
+  lines.push(":::");
+  lines.push("");
+  return lines;
+}
+
+function renderRoutineSection(paths: DashboardPaths): string[] {
+  const lines = ["## 5. routine", ""];
+  const agg = aggregateRoutines(paths.routinesPath, paths.repoRoot);
+
+  if (agg.error) lines.push(`- routine 集計に失敗しました: ${agg.error}`);
+  if (agg.rows.length === 0) {
+    lines.push("- ありません", "");
+    return lines;
+  }
+
+  const now = new Date();
+  const cutoff24h = now.getTime() - 24 * 60 * 60 * 1000;
+  const recentFailures = agg.history.filter((h) => {
+    const t = Date.parse(h.completed_at || h.started_at);
+    return !Number.isNaN(t) && t >= cutoff24h && h.result === "failure";
+  });
+
+  if (recentFailures.length === 0) {
+    lines.push("- 直近 24 時間に失敗した routine はありません。");
+  } else {
+    lines.push("### 直近 24 時間に失敗した routine");
+    lines.push("");
+    lines.push("| routine | 実行時刻 | 結果 | Job Run |");
+    lines.push("| --- | --- | --- | --- |");
+    for (const f of recentFailures) {
+      lines.push(
+        `| \`${f.routine_id}\` | ${f.completed_at || f.started_at} | \`${f.result}\` | ${f.job_run_ids.map((id) => `\`${id}\``).join(", ") || "-"} |`,
+      );
+    }
+    lines.push("");
+  }
+
+  // 次に動くもの
+  const dailyRows = buildDailyRoutineRows(agg.docs, agg.history, now);
+  const futureRuns = dailyRows.filter(
+    (r) => r.day === "本日" && r.result === "予定" && Date.parse(r.scheduledFor) >= now.getTime(),
+  );
+  if (futureRuns.length > 0) {
+    const next = futureRuns[0];
+    lines.push(
+      `- 次に動くもの: \`${next.routineId}\`（予定: ${formatZonedDateTime(next.scheduledFor, "Asia/Tokyo")}）`,
+    );
+  } else {
+    lines.push("- 次に動くもの: 予定なし");
+  }
+  lines.push("");
+
+  lines.push(`::: details routine 定義一覧（${agg.rows.length}件）`);
+  lines.push("");
+  lines.push("| id | name | enabled | 間隔 / cron | kind | 最終実行 / 結果 | due |");
+  lines.push("| --- | --- | --- | --- | --- | --- | :---: |");
+  for (const row of agg.rows) {
+    lines.push(
+      `| \`${row.id}\` | ${sanitizeDashboardCell(row.name ?? "-")} | ${row.enabled ? "enabled" : "disabled"} | \`${sanitizeDashboardCell(row.schedule)}\` | \`${row.kind}\` | ${sanitizeDashboardCell(row.lastRun)} | ${row.due} |`,
+    );
+  }
+  lines.push("");
+  lines.push(":::");
+  lines.push("");
+
+  return lines;
+}
+
+function renderGradeSection(paths: DashboardPaths): string[] {
+  const lines = ["## 6. Grade", ""];
+  const results = paths.gradeResultsPath ? readDashboardGradeResults(paths.gradeResultsPath) : [];
+  if (results.length === 0) {
+    lines.push("- ありません", "");
+    return lines;
+  }
+
+  const verdictCounts: Record<string, number> = {};
+  for (const r of results) {
+    verdictCounts[r.verdict] = (verdictCounts[r.verdict] ?? 0) + 1;
+  }
+  const verdictSummary = Object.entries(verdictCounts)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([v, count]) => `${v}=${count}`)
+    .join(", ");
+  lines.push(`- verdict 別件数: \`${verdictSummary}\``);
+  lines.push("");
+
+  const lowest5 = [...results]
+    .sort((a, b) => a.score - b.score || a.document.localeCompare(b.document))
+    .slice(0, 5);
+
+  lines.push("### 点の低い 5 件");
+  lines.push("");
+  lines.push("| 成果物 | 対象 | verdict | score | findings |");
+  lines.push("| --- | --- | --- | ---: | ---: |");
+  for (const r of lowest5) {
+    lines.push(
+      `| \`${sanitizeDashboardCell(r.document)}\` | \`${r.target}\` | \`${r.verdict}\` | ${r.score} | ${gradeFindingCount(r)} |`,
+    );
+  }
+  lines.push("");
+
+  lines.push(`::: details 全体の表（${results.length}件）`);
+  lines.push("");
+  lines.push("| 成果物 | 対象 | verdict | score | findings |");
+  lines.push("| --- | --- | --- | ---: | ---: |");
+  for (const r of results) {
+    lines.push(
+      `| \`${sanitizeDashboardCell(r.document)}\` | \`${r.target}\` | \`${r.verdict}\` | ${r.score} | ${gradeFindingCount(r)} |`,
+    );
+  }
+  lines.push("");
+  lines.push(":::");
+  lines.push("");
+
+  return lines;
+}
+
+function renderScheduleSectionContent(paths: DashboardPaths): string[] {
+  const lines: string[] = [];
 
   if (!existsSync(paths.executionGeneratedPath)) {
-    lines.push(
-      "- Schedule はまだ生成されていません（`specdojo exec refresh` を実行してください）。",
-    );
+    lines.push("- Schedule はまだ生成されていません。");
     lines.push("");
     return lines;
   }
@@ -382,10 +907,6 @@ function renderScheduleSection(paths: DashboardPaths): string[] {
   try {
     const state = existsSync(join(paths.executionGeneratedPath, "state.json"))
       ? (readJson(join(paths.executionGeneratedPath, "state.json")) as StateSnapshot)
-      : undefined;
-
-    const ready = existsSync(join(paths.executionGeneratedPath, "ready.json"))
-      ? readJson(join(paths.executionGeneratedPath, "ready.json"))
       : undefined;
 
     if (state) {
@@ -407,25 +928,10 @@ function renderScheduleSection(paths: DashboardPaths): string[] {
       lines.push(
         `- 状態別: \`todo=${counts.todo}, doing=${counts.doing}, blocked=${counts.blocked}, done=${counts.done}, cancelled=${counts.cancelled}\``,
       );
-
-      lines.push("");
-    }
-
-    if (ready && typeof ready === "object") {
-      const r = ready as {
-        ready_count?: number;
-        strategies?: Record<string, { next_task_id?: string | null }>;
-      };
-      lines.push(`- 着手可能タスク（ready）: \`${r.ready_count ?? 0}\`件`);
-      if (r.strategies?.["critical-first"]?.next_task_id) {
-        lines.push(
-          `- 次の着手候補（critical-first）: \`${r.strategies["critical-first"].next_task_id}\``,
-        );
-      }
       lines.push("");
     }
   } catch {
-    lines.push("- Schedule の集計に失敗しました（state.json / ready.json が不正）。");
+    lines.push("- Schedule の集計に失敗しました。");
     lines.push("");
   }
 
@@ -435,285 +941,64 @@ function renderScheduleSection(paths: DashboardPaths): string[] {
   return lines;
 }
 
-function dashboardEpicPlan(paths: DashboardPaths) {
-  return loadEpicSchedules({
-    registerPath: paths.registerPath ?? join(paths.projectPath, "controls", "project-register"),
-    projectId: paths.projectId,
-    calendar: resolveDashboardCalendar(paths.schedulePath ?? paths.projectPath),
-    timeZone: paths.registerDateTimeZone ?? "UTC",
-  });
-}
-
-function renderTimelineSection(paths: DashboardPaths): string[] {
-  try {
-    const { schedule } = dashboardEpicPlan(paths);
-    if (schedule.length > 0) {
-      const lines = [
-        "## 2. 全体計画（epic）",
-        "",
-        "| epic | track | 状態 | 開始日 | 終了日 | 稼働日数 | 先行 track |",
-        "| --- | --- | --- | --- | --- | ---: | --- |",
-      ];
-      for (const row of schedule)
-        lines.push(
-          `| ${sanitizeDashboardCell(row.id + " " + row.title)} | ${row.track} | ${row.itemStatus} | ${row.startDate ?? "未定"} | ${row.endDate ?? "未定"} | ${row.estimateDays ?? "-"} | ${row.depends_on.join(", ") || "-"} |`,
-        );
-      lines.push(
-        "",
-        "未完了で期限のない epic は開始点のみ表示し、終了日は未定とします。開始日は予定開始日、epic 自身の着手記録、先行 epic の終了日の翌稼働日の順に求めます。日付の逆転がある期間は未定です。",
-        "",
-        "![全体計画ガントチャート](./dashboard-timeline-gantt.svg)",
-        "",
-        "[未作成カタログ](./catalog-scaffold.md)",
-        "",
-      );
-      return lines;
-    }
-  } catch (error) {
-    return [
-      "## 2. 全体計画（epic）",
-      "",
-      `- 全体計画の集計に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
-      "",
-    ];
-  }
-  return renderLegacyTimelineSection(paths);
-}
-
-function renderLegacyTimelineSection(paths: DashboardPaths): string[] {
-  const lines = ["## 2. タイムライン（トラック着手順序）", ""];
-  const indexPath = join(paths.timelinePath, "tml-index.yaml");
-
-  if (!existsSync(indexPath)) {
-    lines.push("- タイムラインデータを読み込めませんでした（tml-index.yaml が存在しません）。");
-    lines.push("");
-    return lines;
+function renderRegisterSectionContent(views: RegisterItemView[]): string[] {
+  const lines: string[] = [];
+  const statusCounts: Record<string, number> = {};
+  const priorityCounts: Record<string, number> = {};
+  for (const view of views) {
+    statusCounts[view.item.status] = (statusCounts[view.item.status] ?? 0) + 1;
+    priorityCounts[view.item.priority] = (priorityCounts[view.item.priority] ?? 0) + 1;
   }
 
-  try {
-    const { index } = loadTimelineIndex(indexPath);
-    const scheduleReadyTracks = index.tracks
-      .filter((t) => t.catalog_status === "primary")
-      .map((t) => t.track)
-      .sort();
-
-    const waves = buildTimelineWaves(index.tracks);
-
-    const calendar = resolveDashboardCalendar(paths.schedulePath ?? paths.timelinePath);
-    const { schedule, plannedStartDate } = computeTimelineTrackSchedules(index, calendar);
-
-    lines.push(`- 計画開始日（planned_start_date）: \`${plannedStartDate ?? "-"}\``);
-    lines.push(`- wave数: \`${waves.length}\``);
-    lines.push(
-      `- Schedule展開準備状況（catalog_status=primary）: \`${scheduleReadyTracks.join(", ") || "-"}\``,
-    );
-    lines.push("");
-
-    lines.push("### Wave・トラック一覧");
-    lines.push("");
-    lines.push(
-      "| wave | track | catalog_status | 推定稼働日数 | 予定開始日 | 予定終了日 | parallel_group | depends_on |",
-    );
-    lines.push("| ---: | --- | --- | ---: | --- | --- | --- | --- |");
-    for (const wave of waves) {
-      for (const tk of wave.tracks) {
-        const row = schedule.find((s) => s.track === tk.track);
-        if (!row) continue;
-        lines.push(
-          `| ${wave.wave} | \`${tk.track}\` | \`${tk.catalog_status}\` | ${formatEstimate(tk)} | ${row.startDate ?? "-"} | ${row.endDate ?? "-"} | ${sanitizeDashboardCell(row.parallel_group ?? "-")} | ${sanitizeDashboardCell(row.depends_on.join(", ") || "-")} |`,
-        );
-      }
-    }
-    lines.push("");
-
-    lines.push("### トラック計画ガントチャート");
-    lines.push("");
-    lines.push("![トラック計画ガントチャート](./dashboard-timeline-gantt.svg)");
-    lines.push("");
-
-    return lines;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    lines.push(`- タイムラインの集計に失敗しました: ${message}`);
-    lines.push("");
-    return lines;
-  }
-}
-
-function formatEstimate(track: TimelineTrackPlan): string {
-  return track.catalog_duration_estimate_days === undefined
-    ? "-"
-    : String(track.catalog_duration_estimate_days);
-}
-
-function renderRegisterSection(projectId: string): string[] {
-  const agg = aggregateRegister(projectId);
-  const lines = ["## 3. 登録簿状況", ""];
-
-  if (agg.error) {
-    lines.push(`- 登録簿の集計に失敗しました: ${agg.error}`);
-    lines.push("");
-    return lines;
-  }
-
-  lines.push(`- 総件数: \`${agg.total}\``);
+  lines.push(`- 総件数: \`${views.length}\``);
   lines.push("");
-  lines.push("### 状態別");
+  lines.push("#### 状態別");
   lines.push("");
-  lines.push(countTable("状態", agg.statusCounts, STATUS_ORDER));
+  lines.push(countTable("状態", statusCounts, STATUS_ORDER));
   lines.push("");
-  lines.push("### 優先度別");
+  lines.push("#### 優先度別");
   lines.push("");
-  lines.push(countTable("優先度", agg.priorityCounts, PRIORITY_ORDER));
-  lines.push("");
-
-  return lines;
-}
-
-function renderRoutineSection(paths: DashboardPaths): string[] {
-  const agg = aggregateRoutines(paths.routinesPath, paths.repoRoot);
-  const lines = ["## 4. routine定義・最終実行", ""];
-
-  if (agg.error) lines.push(`- routine 集計に失敗しました: ${agg.error}`);
-  if (agg.rows.length === 0) {
-    lines.push("- （定義された routine がありません）");
-    lines.push("");
-    return lines;
-  }
-
-  lines.push("| id | name | enabled | 間隔 / cron | kind | 最終実行 / 結果 | due |");
-  lines.push("| --- | --- | --- | --- | --- | --- | :---: |");
-  for (const row of agg.rows) {
-    lines.push(
-      `| \`${row.id}\` | ${sanitizeDashboardCell(row.name ?? "-")} | ${row.enabled ? "enabled" : "disabled"} | \`${sanitizeDashboardCell(row.schedule)}\` | \`${row.kind}\` | ${sanitizeDashboardCell(row.lastRun)} | ${row.due} |`,
-    );
-  }
-
+  lines.push(countTable("優先度", priorityCounts, PRIORITY_ORDER));
   lines.push("");
   return lines;
 }
 
-function renderDailyRoutineSection(paths: DashboardPaths): string[] {
-  const lines = ["## 5. routine 実行状況（昨日・本日）", ""];
-  const agg = aggregateRoutines(paths.routinesPath, paths.repoRoot);
-  const rows = buildDailyRoutineRows(agg.docs, agg.history, new Date());
-  if (rows.length === 0) {
-    lines.push("- （昨日の実行履歴・本日の予定はありません）", "");
+function renderAggregationSection(paths: DashboardPaths, views: RegisterItemView[]): string[] {
+  const lines = ["## 7. 全体の集計", ""];
+
+  const hasSchedule =
+    existsSync(paths.executionGeneratedPath) &&
+    existsSync(join(paths.executionGeneratedPath, "state.json"));
+  const hasRegister = views.length > 0;
+
+  if (!hasSchedule && !hasRegister) {
+    lines.push("- ありません", "");
     return lines;
   }
-  const timeZone = "Asia/Tokyo";
-  lines.push(
-    `- 時刻は ${timeZone}。1 日に ${ROUTINE_ROW_COLLAPSE_THRESHOLD} 回以上動く routine は最新の実行 1 行に件数をまとめる。`,
-  );
-  lines.push("");
-  lines.push("| 日 | routine | 予定 | 開始 | 完了 | 結果 | 回数 | Job Run |");
-  lines.push("| --- | --- | --- | --- | --- | --- | ---: | --- |");
-  for (const row of rows) {
-    const fmt = (value: string): string =>
-      value === "-" ? "-" : formatZonedDateTime(value, timeZone);
-    lines.push(
-      `| ${row.day} | \`${row.routineId}\` | ${fmt(row.scheduledFor)} | ${fmt(row.startedAt)} | ${fmt(row.completedAt)} | ${row.result} | ${row.runCount} | ${row.jobRunIds.map((id) => `\`${id}\``).join(", ") || "-"} |`,
-    );
-  }
-  lines.push("");
-  return lines;
-}
 
-export function readDashboardGradeResults(resultsPath: string): GradeResult[] {
-  if (!existsSync(resultsPath)) return [];
-  return listFilesRecursive(resultsPath)
-    .filter((path) => path.endsWith(".yaml") || path.endsWith(".yml"))
-    .sort()
-    .flatMap((path) => {
-      try {
-        return [parseGradeResult(readFileSync(path, "utf8"), path)];
-      } catch {
-        return [];
-      }
-    });
-}
-
-function renderGradeSection(paths: DashboardPaths): string[] {
-  const lines = ["## 8. Grade", ""];
-  const results = paths.gradeResultsPath ? readDashboardGradeResults(paths.gradeResultsPath) : [];
-  if (results.length === 0) {
-    lines.push("- grade result はまだありません。", "");
-    return lines;
-  }
-  lines.push("| 成果物 | 対象 | verdict | score | findings |", "| --- | --- | --- | ---: | ---: |");
-  for (const result of results) {
-    lines.push(
-      `| \`${sanitizeDashboardCell(result.document)}\` | \`${result.target}\` | \`${result.verdict}\` | ${result.score} | ${gradeFindingCount(result)} |`,
-    );
-  }
+  lines.push("::: details 全体の集計");
   lines.push("");
-  return lines;
-}
 
-function renderRecommendedRegisterSection(projectId: string): string[] {
-  const lines = ["## 6. 着手可能な登録項目（おすすめ順）", ""];
-  let rows: DashboardRegisterCandidate[];
-  let today: string;
-  try {
-    const paths = resolveRegisterPaths({ project: projectId });
-    today = zonedDateKey(new Date(), paths.registerDateTimeZone);
-    rows = rankRegisterCandidates(buildRegisterCandidates(paths), today).slice(0, 10);
-  } catch (error) {
-    lines.push(
-      `- 登録簿の集計に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
-      "",
-    );
-    return lines;
-  }
-  if (rows.length === 0) {
-    lines.push("- （着手可能な登録項目はありません）", "");
-    return lines;
-  }
-  lines.push("| 順位 | id | type | title | 期日 | 優先度 | 関連 open PJR | 登録日時 | 根拠 |");
-  lines.push("| ---: | --- | --- | --- | --- | --- | ---: | --- | --- |");
-  const todayMs = dateOnlyMs(today) ?? 0;
-  rows.forEach((row, index) => {
-    const dueMs = dateOnlyMs(row.due);
-    const dueReason =
-      dueMs === undefined
-        ? "期日なし"
-        : dueMs < todayMs
-          ? `期日超過 ${Math.ceil((todayMs - dueMs) / 86_400_000)}日`
-          : `期日まで ${Math.ceil((dueMs - todayMs) / 86_400_000)}日`;
-    lines.push(
-      `| ${index + 1} | \`${row.id}\` | \`${row.type}\` | ${sanitizeDashboardCell(row.title)} | ${row.due} | \`${row.priority}\` | ${row.relatedOpenPjrCount} | ${row.registeredAt} | ${dueReason}、優先度 ${row.priority}、関連 open PJR ${row.relatedOpenPjrCount}件 |`,
-    );
-  });
+  lines.push("### Schedule 進捗");
   lines.push("");
-  return lines;
-}
+  lines.push(...renderScheduleSectionContent(paths));
 
-function renderAttentionSection(paths: DashboardPaths): string[] {
-  const lines = ["## 7. 要対応（解除待ち）", ""];
-  try {
-    const rows = aggregateAttention(paths);
-    if (rows.length === 0) {
-      lines.push("- （解除待ちの登録項目・exec タスクはありません）", "");
-      return lines;
-    }
-    lines.push("| 種別 | id | 理由 | 次の行動 |");
-    lines.push("| --- | --- | --- | --- |");
-    for (const row of rows) {
-      lines.push(
-        `| ${row.source} | \`${row.id}\` | ${sanitizeDashboardCell(row.reason)} | ${sanitizeDashboardCell(row.nextAction)} |`,
-      );
-    }
-  } catch (error) {
-    lines.push(
-      `- 要対応一覧の集計に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
-    );
-  }
+  lines.push("### 登録簿状況");
+  lines.push("");
+  lines.push(...renderRegisterSectionContent(views));
+
+  lines.push("### 全体計画ガントチャート");
+  lines.push("");
+  lines.push("![全体計画ガントチャート](./dashboard-timeline-gantt.svg)");
+  lines.push("");
+
+  lines.push(":::");
   lines.push("");
   return lines;
 }
 
 // ================================
-// 9. Exec records (plan / result 一覧)
+// 8. Exec records (plan / result 一覧)
 // ================================
 
 export { buildExecRecordsMarkdown, collectExecRecords, EXEC_RECORDS_FILE };
@@ -724,7 +1009,7 @@ function execRecordsPath(paths: DashboardPaths): string {
 }
 
 function renderExecRecordsSection(paths: DashboardPaths): string[] {
-  const lines = ["## 9. 実行記録", ""];
+  const lines = ["## 8. 実行記録", ""];
   const rows = collectExecRecords(execRecordsPath(paths));
   const plans = rows.filter((row) => row.planFile).length;
   const results = rows.filter((row) => row.resultFile).length;
@@ -759,14 +1044,24 @@ export function buildDashboardMarkdown(paths: DashboardPaths): string {
   lines.push(generatedBanner("specdojo dashboard build"));
   lines.push("");
 
-  lines.push(...renderScheduleSection(paths));
-  lines.push(...renderTimelineSection(paths));
-  lines.push(...renderRegisterSection(paths.projectId));
+  let views: RegisterItemView[] = [];
+  try {
+    const regPaths = getRegisterPathsForDashboard(paths);
+    if (regPaths) {
+      views = loadRegisterItems(regPaths);
+    }
+  } catch {
+    views = [];
+  }
+  const catalogDocMap = buildCatalogDocMap(paths.catalogPath);
+
+  lines.push(...renderActionRequiredSection(paths, views, catalogDocMap));
+  lines.push(...renderRecommendedRegisterSection(paths, views));
+  lines.push(...renderActiveEpicsSection(paths, views, catalogDocMap));
+  lines.push(...renderCompletedEpicsSection(paths, views));
   lines.push(...renderRoutineSection(paths));
-  lines.push(...renderDailyRoutineSection(paths));
-  lines.push(...renderRecommendedRegisterSection(paths.projectId));
-  lines.push(...renderAttentionSection(paths));
   lines.push(...renderGradeSection(paths));
+  lines.push(...renderAggregationSection(paths, views));
   lines.push(...renderExecRecordsSection(paths));
 
   // 各セクションは次のセクションとの区切りとして空行で終わる。最後のセクションの空行を
