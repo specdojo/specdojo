@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ae38de77d1204f67ad0cec25fba82240
+  ts: "2026-11-08T06:49:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: カタログの uis の 2 件を clis に付け替える
+    - field: description
+      from: ""
+      to: prj-0001 のカタログの uis-index・uis-exec-commands を clis-index・clis-exec-commands にし、rulebook と overview と done\_criteria を確定した clis の型に合わせる
+    - field: input
+      from: ""
+      to: '["PJR-RMMM（indie が決定、2026-11-08）: uis の代表は作らず（SpecDojo に GUI はない）、clis の代表 clis-exec-commands を作る。成果物も schedule のタスクもまだないため、名前を変えるだけで済む。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-RMMM"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-PJYJ"]'
