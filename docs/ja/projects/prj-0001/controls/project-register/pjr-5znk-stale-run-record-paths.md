@@ -39,19 +39,20 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                             | 担当  | 状態 | メモ                                            |
-| --- | ---------------------------------------------------------------- | ----- | ---- | ----------------------------------------------- |
-| 1   | 9 ファイルの旧来の置き場所を洗い出し、直す箇所と残す箇所に分ける | agent | done | 計 32 か所を洗い出し、25 か所更新・7 か所保持   |
-| 2   | 直す箇所を今の置き場所に書き換える                               | agent | done | `execution/runs/` の現在配置・`plan_ref` に修正 |
-| 3   | 検査を流し、残した箇所とその理由を対応結果に書く                 | agent | done | 単体テスト・`validate:history-links` 通過確認   |
+| No  | 作業                                                             | 担当  | 状態 | メモ                                                 |
+| --- | ---------------------------------------------------------------- | ----- | ---- | ---------------------------------------------------- |
+| 1   | 9 ファイルの旧来の置き場所を洗い出し、直す箇所と残す箇所に分ける | agent | done | 計 32 か所を洗い出し、27 か所更新・5 か所保持        |
+| 2   | 直す箇所を今の置き場所に書き換える                               | agent | done | `execution/runs/` の現在配置・`plan_ref`・規則に修正 |
+| 3   | 検査を流し、残した箇所とその理由を対応結果に書く                 | agent | done | 単体テスト・`validate:history-links` 通過確認        |
 
 ## 5. 対応結果
 
 ### 実施内容
 
 - ガイド 8 本およびコマンドリファレンス 1 本の計 9 ファイルに残っていた旧来の実行記録の置き場所（`exec/plans/`・`exec/results/`・`exec/evidence/`）を監査し、現行の `execution/runs/<origin>/<item>/<run>/`（`plan.md`・`result.md`・`evidence.json`・`pipeline-state.json`）および `plan_ref`・`--plan` の指定形式へ更新した。
+- `exec-operation-guide.md` および `exec-config-guide.md` の `validate:history-links` 適用対象の説明において、実装（`src/exec/reporter.ts` の `isHistoryLinkTargetPath`）に合わせて `execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md` を対象として追記し、旧来の `exec/plans/`・`exec/results/` も旧配置として併記する形に更新した（2 回目の実行）。
 - `quick-start-guide.md` は PJR-V5AZ での改訂作業と干渉しないよう、旧来の置き場所の記述（3 か所）のみを最小限で更新した。
-- `src/` および `tests/` には一切変更を加えていない。
+- `src/` および `tests/` には一切変更を加えていない（`agent.ts` 側の更新は PJR-C4KF にて対応）。
 
 ### 変更した成果物
 
@@ -65,21 +66,17 @@ specdojo:
 
 ### 旧来の置き場所を残した箇所とその理由
 
-次の 7 か所は、旧配置互換性・歴史的記録・検査免除規則の説明として正当な言及であるため、意図的に保持した。
+次の 5 か所は、旧配置互換性・歴史的記録・検査免除規則の説明として正当な言及であるため、意図的に保持した。
 
 1. `docs/ja/specdojo/guides/exec-operation-guide.md`（403 行目）:
    旧配置 `<execution_path>/exec/evidence/<task-id>/<run-id>/` に checkpoint がある場合の `--resume` の復帰動作を説明しているため保持。
-2. `docs/ja/specdojo/guides/exec-operation-guide.md`（413 行目）:
-   `validate:history-links` の適用判定における履歴蓄積ファイル（既存の `exec/plans/**/*.md`・`exec/results/**/*.md`）の条件説明であるため保持。
-3. `docs/ja/specdojo/guides/exec-config-guide.md`（564 行目）:
-   `validate:history-links` の適用対象判定に関する上記と同様の説明であるため保持。
-4. `docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`（72 行目）:
+2. `docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`（72 行目）:
    `exec validate` における旧配置（`execution/exec/plans/`・`results/`・`evidence/`）の検査対象外免除規則を説明しているため保持。
-5. `docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`（106 行目）:
+3. `docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`（106 行目）:
    旧 `exec/evidence/` 配下の run が自動再開の探索対象にならない移行制約を説明しているため保持。
-6. `docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md`（50 行目）:
+4. `docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md`（50 行目）:
    v0.3.0 リリース時の移行対象として旧 `execution/exec/plans/` を挙げている歴史的文書であるため保持。
-7. `docs/ja/specdojo/references/command-reference.md`（646 行目）:
+5. `docs/ja/specdojo/references/command-reference.md`（646 行目）:
    `exec validate` が旧 `exec/plans/`・`results/`・`evidence/` の記録をエラー・警告としない免除規則を説明しているため保持。
 
 ### 検証
