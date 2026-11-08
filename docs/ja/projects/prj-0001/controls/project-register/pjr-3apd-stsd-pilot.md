@@ -43,12 +43,13 @@ specdojo:
 
 - track `stsd-pilot` は、domain `data-model` のうちステータス定義（stsd）の 5 件（`dct-data-model-stsd.yaml`）と、stsd の Kata（rulebook・図の rulebook・recipe・sample・template）を担う。
 - 代表の 1 件は、まだない `stsd-task-execution` を現行の実装をもとに draft で書く。既にある [[stsd-register-entry]]・[[stsd-routine-run]] は、残りの 2 件（`stsd-deliverable`・`stsd-job-run`）と一緒に retrofit で Kata に合わせる（2026-11-05 利用者が決定）。
+- 範囲の変更（2026-11-08、indie が決定）: stsd をすべて確定するのではなく、代表の `stsd-task-execution` 1 件だけを確定まで進める。残りの 4 件（`stsd-register-entry`・`stsd-deliverable`・`stsd-routine-run`・`stsd-job-run`）は review までの下書きとして置き、`sch-strategy-stsd-pilot.yaml` から確定の段を外した。業務仕様のほかの種類の代表は [[prj-0001:pjr-2gd6-business-specs-reps]] で作る。
 - 対象外: data-model のほかの種類（bdd・cdsd・cld・ccd）と、ほかの domain。これらは後の業務仕様の epic で扱う。
 
 ## 4. 完了の判断の基準
 
 - 流れの 12 段が子項目としてすべて終端している（手入れか作り直しかの判断と、Kata の確定は人の判断として記録されている）。
-- stsd の 5 件が確定し、condense と review を通っている。
+- 代表の `stsd-task-execution` が確定し、condense と review を通っている。残りの 4 件は review まで済んだ下書きとして置かれている。
 - 流れをほかの業務仕様の epic に使えるか、直すべき点は何かを、対応結果に書いている。
 
 ## 5. 子項目

@@ -128,6 +128,12 @@ owner_rules:
       - stsd-register-entry
       - stsd-routine-run
     owner: BA
+    # PJR-3APD の範囲を代表の 1 件に絞ったため（2026-11-08、indie が決定）、
+    # 残りの 4 件は review までの下書きとして置き、確定の段を作らない。
+    phase_sets:
+      - phase_set: refine-pass
+      - phase_set: condense-pass
+      - phase_set: retrofit-review-pass
 # 生成された phase_gates と group_milestones は除外した。
 # 各成果物の前段への依存で順序を保証し、全件の待ち合わせを増やさず、
 # 既存 sch-milestones.yaml を変えずに対象の 18 タスクだけを追加する。
