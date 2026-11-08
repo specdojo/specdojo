@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-epq3-changelog-from-register-handoff
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-08T04:02:27Z"
+  completed_at: "2026-11-08T04:03:55Z"
+  conclusion: 各項目は CHANGELOG.md を変えず、個票の対応結果の「CHANGELOG に書く事項」に書く。リリースの todo が close 済みの項目から集めて書く
 ---
 
 # PJR-EPQ3 CHANGELOG は各項目が直接書かず、個票の申し送りからリリースでまとめる
