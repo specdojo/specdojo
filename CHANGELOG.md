@@ -22,6 +22,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- 業務データ辞書（BDD）の型を手入れし、スキーマがあるエンティティは正本スキーマを参照（`schema_ref`）して `fields` にはスキーマから読めない業務上の意味のみを記載し、型や制約の重複を排除する規則に変更しました。スキーマのないエンティティは、開発フェーズや正本の所在に応じてスタンドアロン定義（今の形）または TypeScript の型参照（`type_ref`）を選択する選定基準を明記しました。あわせて `bdd.schema.yaml` と `bdd-sample` を新規則に対応させ、既存のスタンドアロン記述との後方互換性を維持しています（PJR-MECY）。
+
 - 分類一覧（Classification List）の略号を cld から cdt（code table）に変え、新しい型 `specdojo:cdt-rulebook`・`specdojo:cdt-sample`・`specdojo:dct-data-model-cdt-template` を追加しました。旧 ID（`cld-rulebook`、`cld-sample`、`dct-data-model-cld-template`）は非推奨とし、移行の案内のみを残しています。prj-0001 のカタログ `dct-data-model-cld.yaml` を `dct-data-model-cdt.yaml` へ更新し、成果物の略号を `cdt-*` に揃えました（PJR-HMV6）。
 
 - `exec validate` に実行記録の配置、plan・result・evidence の欠落、Git に無視されていない lock の検査を追加しました。`--records-only` は配置のみ、`--schedule-only` は schedule・event のみを検査します。`exec run`・`exec cycle` の事前検証は後者を使い、生成途中や中断中の記録があっても実行・再開できます。2 ガイドの構成図を配置モジュールと照合するテストを強化し、派生ビューと lock の配置説明を現行実装にそろえました（PJR-JT5J）。

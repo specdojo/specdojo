@@ -1,0 +1,18 @@
+`npm run lint:md` を実行し、完了を待機しています。
+`npm run validate:history-links` を実行し、完了を待機しています。
+親の検証 `lint-md` で報告された [bdd-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/docs/ja/specdojo/rulebooks/bdd-rulebook.md) のコードブロック周囲の空行不足（MD031）を修正し、静的検証の通過を確認しました。
+
+### 実施内容
+
+1. **MD031（blanks-around-fences）違反の解消**:
+   - [bdd-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/docs/ja/specdojo/rulebooks/bdd-rulebook.md) の「6.5. 成果物の検証手順」において、番号付きリスト項目内の各コードブロックの前後に空行を挿入しました。
+   - `npm run lint:md` を再実行し、エラーなく正常終了（終了コード 0）することを確認しました。
+2. **フォーマットおよび整合性検証**:
+   - `npx prettier --check` により変更ファイルのコードスタイルを検証。
+   - `npm run validate:history-links`、`npm run validate:schema:file`、`npm run validate:catalog` により、リンクおよびスキーマ整合性を確認。
+3. **登録簿個票の追記**:
+   - [pjr-mecy-bdd-kata-reference-to-implementation.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MECY/docs/ja/projects/prj-0001/controls/project-register/pjr-mecy-bdd-kata-reference-to-implementation.md) の対応結果に MD031 修正の経緯を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"業務データ辞書（bdd）の型手入れおよび親検証（lint-md）の MD031 指摘箇所の修正を完了しました。コードブロック前後の空行を補正し、lint:md の通過を確認済みです。","handoff":["親検証 lint-md（MD031）対応: docs/ja/specdojo/rulebooks/bdd-rulebook.md の検証手順節において、番号付きリスト内のコードブロック前後に空行を追加して MD031（blanks-around-fences）違反を解消し、npm run lint:md が正常通過することを確認しました。","スキーマ変更: docs/specdojo/schemas/v1/bdd.schema.yaml において、entities に schema_ref および type_ref を追加し、fields 内の type を任意化しました。schema_ref / type_ref がない場合は fields を必須とし、既存のスタンドアロン文書との後方互換性を維持しています。","決定事項（PJR-RZ9Q 申し送り）: スキーマ参照キーを schema_ref、型参照キーを type_ref（src/types/xxx.ts#Type 形式）と決定しました。また、初期企画・分析フェーズや言語非依存モデルではスタンドアロン定義（今の形）、既存 TypeScript 実装の二重管理防止には type_ref、スキーマが存在する場合は schema_ref を選択する基準を整理しました。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml","status":"passed","summary":"docs/ja/specdojo/samples/bdd-sample.yaml is valid against bdd.schema.yaml"},{"command":"npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-mecy-bdd-kata-reference-to-implementation.md docs/ja/specdojo/rulebooks/bdd-rulebook.md docs/ja/specdojo/samples/bdd-sample.yaml docs/specdojo/schemas/v1/bdd.schema.yaml","status":"passed","summary":"All changed files match Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"All project register history links valid"},{"command":"npm run validate:catalog","status":"passed","summary":"Catalog definitions and dependencies validated successfully"}],"target_coverage":[{"target":"specdojo:bdd-rulebook","status":"changed","path":"docs/ja/specdojo/rulebooks/bdd-rulebook.md"}]}
+</specdojo_executor_evidence>

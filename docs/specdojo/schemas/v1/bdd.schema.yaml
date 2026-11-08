@@ -59,7 +59,6 @@ properties:
         - logical_name
         - physical_name
         - key_fields
-        - fields
 
       properties:
         logical_name:
@@ -72,6 +71,16 @@ properties:
 
         description:
           type: string
+
+        schema_ref:
+          type: string
+          pattern: "^[^\\s]+$"
+          description: "正本となるスキーマ（JSON Schema / YAML Schema 等）の参照パス"
+
+        type_ref:
+          type: string
+          pattern: "^[^\\s]+$"
+          description: "正本となる型定義（TypeScript 等）の参照パス（例: src/types/xxx.ts#Type）"
 
         glossary_term_id:
           type: string
@@ -99,7 +108,6 @@ properties:
             required:
               - logical_name
               - physical_name
-              - type
 
             properties:
               logical_name:
@@ -173,58 +181,18 @@ properties:
                       type: string
                 uniqueItems: true
 
-      # key_fields が fields 内の physical_name に存在することを検証
-      allOf:
-        - $comment: "key_fields must be included in fields[].physical_name"
-        - type: object
-          properties:
-            key_fields:
-              type: array
-            fields:
-              type: array
-          required: ["key_fields", "fields"]
-          allOf:
-            # key_fields の各値が fields[].physical_name に存在すること
-            - $comment: "Check each key_field is present in fields[].physical_name"
-            - type: object
-              properties:
-                key_fields:
-                  type: array
-                  items:
-                    type: string
-                fields:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      physical_name:
-                        type: string
-              required: ["key_fields", "fields"]
-              allOf:
-                - $comment: "Ensure each key_fields item is contained in fields[].physical_name"
-                  properties:
-                    key_fields:
-                      type: array
-                      items:
-                        type: string
-                  required: ["key_fields"]
-                  allOf:
-                    - $comment: "for each key in key_fields check membership"
-                      type: object
-                      properties:
-                        key_fields:
-                          type: array
-                          contains:
-                            type: string
-                      # membership check is implicit via contains + const matching below
-                      # 各 key_field が fields[].physical_name のいずれかに一致
-                - type: object
-                  properties:
-                    fields:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          physical_name:
-                            type: string
-                  required: ["fields"]
+      # schema_ref または type_ref がない（スタンドアロン定義）の場合は fields を必須とする
+      if:
+        not:
+          anyOf:
+            - required: ["schema_ref"]
+            - required: ["type_ref"]
+      then:
+        required:
+          - fields
+
+      # schema_ref と type_ref は同時に指定できない
+      not:
+        allOf:
+          - required: ["schema_ref"]
+          - required: ["type_ref"]

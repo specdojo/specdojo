@@ -147,4 +147,9 @@ approach 全体の定義は [[specdojo:ryu-guide]] の「実践の型メンテ�
 - CHANGELOG の未公開の版の節に型の変更を書き、公開済みの版の節を変えていない。
 - `npm run lint:md`・`npm run validate:schema`・`npm run test:unit` が通っている。
 
+## 再開時の追加の指示（orchestrator、2026-11-08）
+
+- 親の検証 `lint-md` が、`docs/ja/specdojo/rulebooks/bdd-rulebook.md` の 199〜211 行目付近で MD031（コードブロックの前後に空行がない）により失敗した。各コードブロックの前後に空行を 1 行置き、ほかの内容は変えない。
+- 直した後に `npm run lint:md` を流して通ることを確かめ、経緯を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
