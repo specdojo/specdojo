@@ -86,3 +86,16 @@
       from: "parent validation failed: test-integration, test-unit"
       to: "-"
   previous_event_id: reg_58462e74858946b6af670de15f5587a5
+- v: 1
+  id: reg_4619f0300fd2467abbed9bbef041cba9
+  ts: "2026-11-08T16:05:39Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_81cddb751d944c7c8e907b1450bac153
