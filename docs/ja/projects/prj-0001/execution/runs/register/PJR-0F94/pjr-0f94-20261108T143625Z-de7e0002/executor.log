@@ -1,0 +1,78 @@
+ユニットテスト全体（`npm test`）を実行中です。完了を待機します。
+`tests/src/exec/pipeline-e2e.integration.test.ts` を単体で実行中です。完了を待機します。
+`npm run test:unit` を実行中です。完了を待機します。
+`git grep` の完了を待機します。
+`npm run lint:ts` を実行中です。完了を待機します。
+`npm run lint:ts` を実行中です。完了を待機します。
+`dashboard build --project prj-0001` を実行中です。完了を待機します。
+`npm run lint:md` を実行中です。完了を待機します。
+`docs:build` を実行中です。完了を待機します。
+`git status` を確認中です。完了を待機します。
+`npm run validate:history-links` を実行中です。完了を待機します。
+# 実施概要
+
+プロジェクト登録簿 PJR-0F94「ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す」の executor 作業を完了しました。
+
+### 実施した主な内容
+1. **ダッシュボード構成のアクションファースト化 (`src/dashboard/dashboard.ts`)**:
+   - `specdojo dashboard build` が生成する `dashboard.md` を、指示された 8 章の構成へ再編しました。
+     1. `## 1. 人の対応が要るもの`（開く）: `review` 項目、人の判断待ち open の `decision`・`question`、`waiting` 項目、人が行う schedule タスク（`execution: human`）
+     2. `## 2. おすすめの登録項目`（開く）: 先行項目（`depends_on`）がすべて完了（`done` または `decided`）し、着手可能な上位 10 件
+     3. `## 3. 実行中の epic`（開く）: open / in-progress の epic ごとの段ごとの進捗、次に流せるタスク（最大 3 件）、未完了の子項目、完了した子項目（`::: details` 折りたたみ）
+     4. `## 4. 終わった epic`（折りたたみ）: 一覧表（`::: details`）
+     5. `## 5. routine`（開く）: 直近 24 時間に失敗したものと次に動くもの（定義一覧は `::: details` 折りたたみ）
+     6. `## 6. Grade`（開く）: verdict 別件数と点の低い 5 件（全体表は `::: details` 折りたたみ）
+     7. `## 7. 全体の集計`（折りたたみ）: Schedule 進捗率・件数、登録簿集計、ガントチャート（`::: details`）
+     8. `## 8. 実行記録`（開く）: 一覧ページへの相対リンク 1 行
+   - 各種リンクを `dashboard.md` からの相対パスとし、ID をリンク表示名に設定。項目が存在しない章は「- ありません」を表示。
+2. **仕様ドキュメント改訂**:
+   - [`command-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/docs/ja/specdojo/references/command-reference.md#L1078) の `dashboard build` 説明文を新章構成・折りたたみ仕様に合わせて更新。
+3. **単体テスト追加・更新**:
+   - [`dashboard.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/tests/src/dashboard/dashboard.test.ts) に章順・折りたたみ・おすすめ抽出・人の対応抽出の検証テストを追加。
+   - [`track-domains.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/tests/src/register/track-domains.test.ts) を新ダッシュボード出力仕様に合わせて更新。
+4. **検証と個票更新**:
+   - 空リポジトリでの `dashboard build` 検証（全章「ありません」の正常出力）。
+   - prj-0001 での `dashboard build`、`lint:md`、`docs:build` の正常終了を確認。
+   - 個票 [`pjr-0f94-dashboard-action-first-layout.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md) の作業内容・対応結果・CHANGELOG に書く事項を更新。
+
+### 後続の pipeline / reporter 作業と次のアクション
+- 後続の reporter / runner ステージにて、本報告内容および個票の記載内容に基づき `result.md` への記入と commit / 検証確認が行われます。
+
+<specdojo_executor_evidence>
+{
+  "command": "specdojo exec run --register PJR-0F94",
+  "completion_status": "complete",
+  "task_id": "PJR-0F94",
+  "approach": "target",
+  "targets": [],
+  "sources": [],
+  "modified_files": [
+    "src/dashboard/dashboard.ts",
+    "tests/src/dashboard/dashboard.test.ts",
+    "tests/src/register/track-domains.test.ts",
+    "docs/ja/specdojo/references/command-reference.md",
+    "docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md"
+  ],
+  "test_commands": [
+    "npm run typecheck",
+    "npm run lint:ts",
+    "npm run test:unit",
+    "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/execution/generated/dashboard.md",
+    "npm run validate:history-links",
+    "NODE_OPTIONS=--max-old-space-size=8192 npm --prefix packages/docs-site run docs:build"
+  ],
+  "validations": [
+    {
+      "name": "validate-history-links",
+      "status": "passed",
+      "command": "npm run validate:history-links",
+      "exit_code": 0
+    }
+  ],
+  "handoff": [
+    "CHANGELOG に書く事項（区分: 変更、文案: dashboard build が生成するダッシュボードを、人の対応が要るもの・おすすめの登録項目・実行中の epic を優先し、終わった epic・routine 定義・Grade 全体表・全体の集計を折りたたむアクションファースト構成に刷新しました。）を個票に記載しました。",
+    "空リポジトリ（config init と register scaffold 直後）での dashboard build 検証および prj-0001 での dashboard build、lint:md、docs:build がすべて正常に完了したことを確認しました。"
+  ],
+  "final_message": "ダッシュボードのアクションファーストな章構成と折りたたみ表示への刷新および検証を完了しました。"
+}
+</specdojo_executor_evidence>

@@ -1,0 +1,24 @@
+タスク PJR-FTRC「lint:fm が git の管理外の生成物まで検査して親の検証を落とさないようにする」の対応を完了しました。
+
+### 実施内容の要約
+
+1. **除外方法の選定と実装**:
+   - remark-cli の標準的な設定規約に従い、[.remarkignore](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FTRC/.remarkignore) に `docs/**/generated/**` を追加しました。
+   - remark-cli（unified-engine）の仕様上、引数として渡された glob に合致したファイルが ignore されていると `error Cannot process specified file: it's ignored`（204 件のエラー）で失敗するため、ラッパーである [packages/docs-lint/bin/specdojo-docs-lint.js](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FTRC/packages/docs-lint/bin/specdojo-docs-lint.js) において `command === "remark"` 実行時に `--silently-ignore` を自動付与するように改修しました。
+   - これにより、保護されたファイルである `package.json`（`lint:fm` のスクリプト定義）を変更することなく、git 管理外の生成物を安全にスキップできるようにしました。
+
+2. **対象文書の検証**:
+   - 外す前: `docs/**/*.{md,mdx}` の総対象 4,099 件（git 管理下 3,895 件 + gitignore 管理外生成物 204 件）。
+   - 外した後: gitignore 管理外生成物 204 件が除外され、git 管理下の 3,895 件のみが検査対象となります。
+   - git 管理下にあるファイル名に `generated` を含む文書 11 件（`pjr-0004-pjr-generated.md` 等）もすべて検査対象に含まれており、誤って除外された管理文書が 0 件であることを確認しました。
+
+3. **管理外生成物存在時の動作確認とテスト作成**:
+   - `docs/ja/projects/prj-0001/execution/grade/generated/runs/` 配下に不正な frontmatter を含むダミーファイルを配置した状態で `node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail` を実行し、終了コード 0 で通過することを確認しました。
+   - 単体テスト [tests/packages/docs-lint/specdojo-docs-lint-remark.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FTRC/tests/packages/docs-lint/specdojo-docs-lint-remark.test.ts) を追加し、`.remarkignore` 配下のファイルが `--silently-ignore` でスキップされること、および管理下のファイルで schema エラーがある場合は正常に検出されることを検証しました。
+
+4. **個票の更新**:
+   - 個票 [docs/ja/projects/prj-0001/controls/project-register/pjr-ftrc-lint-fm-skip-gitignored-generated.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FTRC/docs/ja/projects/prj-0001/controls/project-register/pjr-ftrc-lint-fm-skip-gitignored-generated.md) の作業内容・対応結果を記入し、「CHANGELOG に書く事項」節（PJR-EPQ3）を記載しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Excluded gitignored generated files from lint:fm via .remarkignore and --silently-ignore, verified 0 regressions on tracked docs, and added unit tests.","handoff":["CHANGELOG (改善): docs-lint: specdojo-docs-lint remark の実行時に --silently-ignore を自動付与し、.remarkignore で指定された無視対象ファイルをエラーにせずスキップするように改善","CHANGELOG (改善): lint: .remarkignore に docs/**/generated/** を指定し、git 管理外の生成物（grade の一時ファイル等）が lint:fm の検査対象から外れるように設定"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"validated deliverables catalog without error"},{"command":"npm run validate:history-links","status":"passed","summary":"validated history links without error"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"no YAML files changed by executor"}]}
+</specdojo_executor_evidence>

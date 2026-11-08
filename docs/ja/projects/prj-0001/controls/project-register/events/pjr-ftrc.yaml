@@ -41,3 +41,80 @@
     - field: derived_from
       from: ""
       to: '["PJR-STM9"]'
+- v: 1
+  id: reg_51e9d6b6d8444cd3b1113869e724e22b
+  ts: "2026-11-08T15:24:43Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_16964958fd1a444db32a4e977ce5f1c2
+- v: 1
+  id: reg_58462e74858946b6af670de15f5587a5
+  ts: "2026-11-08T15:47:03Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_51e9d6b6d8444cd3b1113869e724e22b
+- v: 1
+  id: reg_81cddb751d944c7c8e907b1450bac153
+  ts: "2026-11-08T15:51:28Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_58462e74858946b6af670de15f5587a5
+- v: 1
+  id: reg_4619f0300fd2467abbed9bbef041cba9
+  ts: "2026-11-08T16:05:39Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_81cddb751d944c7c8e907b1450bac153
+- v: 1
+  id: reg_28b87769e08547fba6a820fe6db1c8e1
+  ts: "2026-11-08T16:12:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。親の検証の失敗は /tmp の直下に残った init の出力によるもので（PJR-5FTV）、片付けて --resume した。差分・個票の対応結果・管理下の generated の Markdown が 0 件であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: "-"
+      to: .remarkignore に docs/**/generated/** を足し、docs-lint の remark に --silently-ignore を付けて、lint:fm が管理外の生成物を検査しないようにした。管理下の 3,895 件は今までどおり検査される
+  previous_event_id: reg_4619f0300fd2467abbed9bbef041cba9
