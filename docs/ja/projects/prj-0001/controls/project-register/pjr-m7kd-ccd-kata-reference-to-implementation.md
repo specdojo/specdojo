@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-m7kd-ccd-kata-reference-to-implementation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:33:10Z"
+  completed_at: "2026-11-08T03:52:39Z"
+  conclusion: ccd-mermaid-rulebook を属性は主キーだけ・関連の意味と多重度とその業務上の根拠に絞る形に改め、ccd-sample を新しい規則の完成例にした
   derived_from:
     - PJR-2GD6
   depends_on:

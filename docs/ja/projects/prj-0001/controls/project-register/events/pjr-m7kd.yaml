@@ -108,3 +108,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_63b81841ae1241cda521c1a857bc56f1
+- v: 1
+  id: reg_9e1b9ace23b549509c4089471bbf00fb
+  ts: "2026-11-08T03:52:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。lint-fm の失敗と再開前の CHANGELOG の衝突を直して再開した。差分・個票の対応結果・親の検証を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: ccd-mermaid-rulebook を属性は主キーだけ・関連の意味と多重度とその業務上の根拠に絞る形に改め、ccd-sample を新しい規則の完成例にした
+  previous_event_id: reg_0dfe00a55b3542ddb7b00f5b8126a1ee
