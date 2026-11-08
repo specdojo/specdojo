@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bc2f0312723d4e8aaafed4cbc621b613
+  ts: "2026-11-08T04:01:39Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: カタログの uis・ifx の代表の説明を、確定した型に合わせる
+    - field: description
+      from: ""
+      to: カタログの uis-exec-commands と ifx-cmd-ai-provider-cli の overview と done\_criteria が「引数・オプションを書く」としているため、確定した型（正本を参照し、要点や入出力の約束に絞る）に合わせる
+    - field: input
+      from: ""
+      to: '["PJR-V6RB の確認で、2 件の overview に引数・オプションを書く記述があると分かった（2026-11-08）。直すことは indie が推奨どおりと決定。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-RMMM"]'
