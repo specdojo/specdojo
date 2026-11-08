@@ -4,30 +4,30 @@ specdojo:
   type: exec-result
   task_id: PJR-6MCW
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-6MCW/pjr-6mcw-20261108T065107Z-208afecb/plan.md
   started_at: "2026-11-08T06:52:35.853Z"
-  completed_at: "2026-11-08T07:05:45.591Z"
+  completed_at: "2026-11-08T07:23:07.335Z"
   agent: flash-high-executor
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- カタログの `uis-exec-commands` および `ifx-cmd-ai-provider-cli` の `overview` と `done_criteria` を、確定した型（引数・オプションの記述を外した形式）に修正しました。
+- カタログの `uis-exec-commands` および `ifx-cmd-ai-provider-cli` の説明を確定した型に合わせて更新しました。
+- `dct-external-interface-specs.yaml` において、`ifx-cmd-ai-provider-cli` の `overview` および `done_criteria` から引数・オプションに関する詳細な記述を削除し、正本のルールブック（`ifx-cmd-rulebook`）への参照と、入出力の約束に絞った簡潔な記述へ変更しました。
 
 ## 2. 変更ファイル
 
-- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml`: `ifx-cmd-ai-provider-cli` の `overview` と `done_criteria` において、引数に関する記述を削除し、正本（`ifx-cmd-rulebook`）に基づいた要点と言語仕様の約束に更新しました。
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml`: `ifx-cmd-ai-provider-cli` の `overview` と `done_criteria` を、引数詳細を省き、正本への参照と入出力の要点に絞った形式に更新しました。
 
 ## 3. 申し送り
 
-- エグゼキュータによる `docs/ja/projects/prj-0001/controls/project-register/pjr-6mcw-catalog-uis-ifx-overview-align.md` および `docs/ja/projects/prj-0001/controls/project-register/events/pjr-6mcw.yaml` の変更は、本タスクの成果物（`docs/`）の変更には含まれません。
+- 個票 `pjr-6mcw-catalog-uis-ifx-overview-align.md` および関連するイベントファイルは、`runner_managed_attempt_changes` に含まれているため、成果物としての変更リストからは除外されています。
 
 ## 4. 進め方
 
-カタログの外部インターフェース定義ファイル `dct-external-interface-specs.yaml` を確認し、指示に従って `ifx-cmd-ai-provider-cli` の説明内容を、引数・オプションの具体的な記述から、入出力の約束に絞った簡潔な記述へと書き換えました。
+対象ファイル `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml` を確認し、`ifx-cmd-ai-provider-cli` の説明箇所を特定しました。指示に従い、詳細な引数・オプションの記述を削除することで、確定した型（ルールブック参照と入出力の要点）に合わせた簡潔な記述へと修正を行いました。

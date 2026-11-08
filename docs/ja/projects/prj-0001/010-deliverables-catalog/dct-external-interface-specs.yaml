@@ -49,7 +49,7 @@ groups:
         kind: work
         depends_on:
           - ifx-index
-        overview: AI provider CLI（Claude Code / Codex CLI / opencode 等）を外部プロセスとして起動・連携するための実行契約、引数、入出力ストリーム、終了コード、エラー処理を定義する
+        overview: AI provider CLI（Claude Code / Codex CLI / opencode 等）を外部プロセスとして起動・連携するための実行契約、正本の参照、入出力の約束（渡すもの・受け取るもの・終了コードの意味・作るファイル・副作用・失敗の扱い）、認証注入を定義する
         path: ifx-cmd-ai-provider-cli.yaml
         rulebook: specdojo:ifx-cmd-rulebook
         evidence_refs:
@@ -60,13 +60,13 @@ groups:
             path: src/exec/agent-config.ts
             purpose: プロバイダ別コマンドテンプレートとモデル・実行時引数の解決処理の実装
         done_criteria:
-          - text: AI provider CLI の実行契約・入出力・エラー処理が業務観点で整理されていること
+          - text: AI provider CLI の実行契約・入出力の約束・エラー処理が業務観点で整理されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
           - text: AI provider CLI との連携スコープと方式を承認できること
             roles: [PO]
             viewpoint: vp-po-purpose-alignment
-          - text: 外部コマンド連携仕様（引数契約・終了コード・認証注入）の設計として妥当であること
+          - text: 外部コマンド連携仕様（正本参照・入出力の約束・認証注入）の設計として妥当であること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
           - text: 外部 CLI 起動テスト・結合テスト設計に活用できること

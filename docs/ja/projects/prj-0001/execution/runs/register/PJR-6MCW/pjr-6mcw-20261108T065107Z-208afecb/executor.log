@@ -1,0 +1,20 @@
+### 対応完了報告: PJR-6MCW カタログの uis・ifx の代表の説明を、確定した型に合わせる
+
+#### 1. 実施内容
+
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml`:
+  - `ifx-cmd-ai-provider-cli` の `overview` を、確定した型（[[specdojo:ifx-cmd-rulebook]]）に合わせて「引数」の記述を外し、正本の参照と入出力の約束（渡すもの・受け取るもの・終了コードの意味・作るファイル・副作用・失敗の扱い）および認証注入を定義する記述へ更新しました。
+  - `done_criteria` について、ARC の観点（`vp-arc-technical-constraints`）から「引数契約」を外して「正本参照・入出力の約束・認証注入」へ改め、BA の観点（`vp-ba-requirements-completeness`）も「入出力の約束」に表現を合わせました。
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml` の `uis-exec-commands` は、PJR-RMMM の決定により将来 clis へ付け替える（PJR-8J47）方針に従い、完了条件の指示どおり本タスクでは変更せず据え置きました。
+- 他のカタログおよび項目は変更していません。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-6mcw-catalog-uis-ifx-overview-align.md` の作業内容および対応結果を更新しました。
+
+#### 2. 検証結果
+
+- `specdojo catalog validate --project prj-0001`: exit code 0 で正常終了することを確認しました。
+- `prettier --check` / `markdownlint`: 変更したファイルについてスタイル・構文規則を満たしていることを確認しました。
+- `npm run validate:schema` は親 runner の allowlisted validations に含まれているため、本 executor 終了後に親 runner により検証されます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-external-interface-specs.yaml の ifx-cmd-ai-provider-cli の overview と done_criteria を確定した型（ifx-cmd-rulebook）に合わせて引数記述を外し、正本参照と入出力の約束へ更新しました。","handoff":[],"validations":[{"command":"specdojo catalog validate --project prj-0001","status":"passed","summary":"全カタログの構文・参照が正常であることを確認"}]}
+</specdojo_executor_evidence>
