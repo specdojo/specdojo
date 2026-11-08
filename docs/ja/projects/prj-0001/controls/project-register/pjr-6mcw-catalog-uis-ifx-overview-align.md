@@ -29,9 +29,10 @@ specdojo:
 
 ## 3. 完了条件
 
-- `dct-user-interface-model.yaml` の `uis-exec-commands` と、`dct-external-interface-specs.yaml` の `ifx-cmd-ai-provider-cli` の `overview` と `done_criteria` を、確定した型（[[specdojo:uis-rulebook]]・[[specdojo:ifx-cmd-rulebook]]）に合わせている。引数・オプションを書くという記述を外し、uis は利用目的・操作の流れ・表示・エラー表示の要点、ifx-cmd は正本の参照と入出力の約束を書く形にする。
-- 2 件以外の項目と、ほかのカタログを変えていない。
-- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の `### CHANGELOG に書く事項` の節に、区分（追加・変更・不具合修正など）と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
+- `dct-external-interface-specs.yaml` の `ifx-cmd-ai-provider-cli` の `overview` と `done_criteria` を、確定した型（[[specdojo:ifx-cmd-rulebook]]）に合わせている。引数・オプションを書くという記述を外し、正本の参照と入出力の約束（渡すもの・受け取るもの・終了コードの意味・作るファイル・副作用・失敗の扱い）を書く形にする。
+- uis の項目は、PJR-RMMM の決定で clis に付け替える（PJR-8J47）ため、この項目では変えない（2026-11-08 に範囲を ifx だけに絞った）。
+- ほかの項目とカタログを変えていない。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分（追加・変更・不具合修正など）と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
 - `specdojo catalog validate --project prj-0001`・`npm run validate:schema` が通っている。
 
 ## 4. 作業内容

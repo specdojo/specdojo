@@ -30,13 +30,19 @@ prj-0001 のカタログの uis-index・uis-exec-commands を clis-index・clis-
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `dct-user-interface-model.yaml` の `uis-index`・`uis-exec-commands` を `clis-index`・`clis-exec-commands` にし、`path`・`rulebook`（`specdojo:clis-rulebook`。索引に専用の rulebook がなければ、その扱いを決めて書く）・`overview`・`done_criteria`・`note`・`depends_on` を確定した clis の型に合わせている。引数・オプションを書くという記述は外している。
+- 成果物も schedule のタスクもまだないため、古い `uis-*` の項目は残していない。ほかのカタログで `uis-index`・`uis-exec-commands` を参照している箇所（`sf-index` の説明など）があれば直している。
+- ほかの項目とカタログを変えていない。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分（追加・変更・不具合修正など）と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
+- `specdojo catalog validate --project prj-0001`・`npm run validate:schema`・`npm run lint:md` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                     | 担当   | 状態 | メモ |
+| --- | -------------------------------------------------------- | ------ | ---- | ---- |
+| 1   | 確定した clis の型と、カタログの uis の 2 件と参照を読む | _TODO_ | open | -    |
+| 2   | 2 件を clis に付け替え、参照を直す                       | _TODO_ | open | -    |
+| 3   | 検査を流し、対応結果に書く                               | _TODO_ | open | -    |
 
 ## 5. 対応結果
 
@@ -44,4 +50,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 決定: [[prj-0001:pjr-rmmm-uis-kata-confirm]]
+- 先行: [[prj-0001:pjr-pjyj-clis-uis-kata-confirm]]

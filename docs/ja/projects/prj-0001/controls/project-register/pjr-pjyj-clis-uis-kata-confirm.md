@@ -22,7 +22,7 @@ specdojo:
 
 ## 1. 背景
 
-新しく作った clis の型と、GUI だけにした uis の型を人が確かめ、確定するか直すかを決める
+PJR-RMMM で CLI を新しい種類 clis に分け、uis は GUI の画面仕様だけにすると決めた。PJR-VMXK で作った clis の型と、PJR-X3T8 で直した uis の型を人が確かめて確定する。確定した clis の型で、カタログの付け替え（PJR-8J47）と clis の代表の作成を進める。
 
 ## 2. 入力
 
@@ -64,4 +64,5 @@ _TODO_: 採択した内容を明確に記載する。
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 決定: [[prj-0001:pjr-rmmm-uis-kata-confirm]]
+- 型: [[prj-0001:pjr-vmxk-clis-kata-bootstrap]]、[[prj-0001:pjr-x3t8-uis-kata-gui-only]]

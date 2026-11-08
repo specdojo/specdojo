@@ -40,7 +40,7 @@ specdojo:
 
 - `docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-reps.yaml` を、`schedule strategy generate --project prj-0001 --track business-specs-reps` で作っている。対象（`scope.catalogs[].local_ids`）は次の 8 件だけである。
   - `bdd-register-entry`・`ccd-project-planning`・`cdt-register-type`・`br-task-selection-strategy`・`bes-task-ready-selected`
-  - PJR-V6RB でカタログに足した sf・uis・ifx-cmd の各 1 件（個票の対応結果で `local_id` を確かめる）
+  - `sf-task-execution`・`ifx-cmd-ai-provider-cli`（PJR-V6RB）と `clis-exec-commands`（PJR-8J47 で `uis-exec-commands` から付け替える）
 - 各対象の段が、作成 → 磨き込み（fully-guided）→ 冗長さの整理（condense）→ agent の review → 確定（人）の順になっている。`approach_rules` の `intent` は、対象がまだない成果物を型から作る `author-deliverable` を基本とし、生成の結果がこの並びにならない場合は、どの intent を選んだかと理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - 書き込みの前に `--dry-run` で差分を確かめ、`schedule build --project prj-0001 --track business-specs-reps` で `sch-track-business-specs-reps.yaml` を作っている。
 - ほかの track の strategy・track と `sch-milestones.yaml` のうち business-specs-reps と関係のない項目を変えていない。
