@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-stm9-business-specs-reps-strategy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:37:07Z"
+  completed_at: "2026-11-08T15:18:52Z"
+  conclusion: 代表 8 件の sch-strategy-business-specs-reps.yaml と track（40 タスク）を作った。実装がある 6 件は retrofit、br・bes は freeform で作り、磨き込み・condense・review・確定（人）へ進む。milestone は business-specs-reps の 11 件だけを足した
   derived_from:
     - PJR-2GD6
   depends_on:
@@ -49,15 +51,47 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                 | 担当   | 状態 | メモ |
-| --- | -------------------------------------------------------------------- | ------ | ---- | ---- |
-| 1   | 対象の 8 件と型の grade を確かめ、`--dry-run` で strategy を生成する | _TODO_ | open | -    |
-| 2   | strategy を書き込み、track を作る                                    | _TODO_ | open | -    |
-| 3   | 検査を流し、選んだ intent と理由を対応結果に書く                     | _TODO_ | open | -    |
+| No  | 作業                                                                 | 担当 | 状態 | メモ                                                                  |
+| --- | -------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------- |
+| 1   | 対象の 8 件と型の grade を確かめ、`--dry-run` で strategy を生成する | DEV  | done | scope 8 件、Kata grade（bdd/bes 評価済み）と実装エビデンスを確認      |
+| 2   | strategy を書き込み、track を作る                                    | DEV  | done | sch-strategy (40 tasks, 11 milestones) と sch-track を生成・反映      |
+| 3   | 検査を流し、選んだ intent と理由を対応結果に書く                     | DEV  | done | schedule validate, validate:schema, lint:md 全て pass。選定理由を記載 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 成果物:
+  - `docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-reps.yaml`（新規作成: 40 tasks, 11 milestones）
+  - `docs/ja/projects/prj-0001/schedule/sch-track-business-specs-reps.yaml`（新規作成: 40 tasks）
+  - `docs/ja/projects/prj-0001/schedule/sch-milestones.yaml`（更新: `business-specs-reps` 由来の phase gates 3件 + group milestones 8件の計 11件を追加）
+- 対象 8 件のスコープ定義:
+  - `bdd-register-entry` (`dct-data-model-bdd.yaml`)
+  - `ccd-project-planning` (`dct-data-model-ccd.yaml`)
+  - `cdt-register-type` (`dct-data-model-cdt.yaml`)
+  - `br-task-selection-strategy` (`dct-business-model-br.yaml`)
+  - `bes-task-ready-selected` (`dct-business-model-bes.yaml`)
+  - `sf-task-execution` (`dct-system-functions.yaml`, PJR-V6RB)
+  - `ifx-cmd-ai-provider-cli` (`dct-external-interface-specs.yaml`, PJR-V6RB)
+  - `clis-exec-commands` (`dct-external-interface-specs.yaml`, PJR-8J47)
+- 各成果物の段の構成:
+  - 全 8 件において、要求された「作成 → 磨き込み（fully-guided） → 冗長さの整理（condense） → agent の review → 確定（人）」の 5 段構成（計 40 タスク）を実現した。
+- 選定した intent と理由:
+  - 実装エビデンスが存在する 6 件（`bdd-register-entry`, `ccd-project-planning`, `cdt-register-type`, `sf-task-execution`, `ifx-cmd-ai-provider-cli`, `clis-exec-commands`）:
+    - 選定 intent: `reflect-implementation`（→ approach: `retrofit`）
+    - 理由: 親 epic（[[prj-0001:pjr-2gd6-business-specs-reps|PJR-2GD6]]）の方針「実装と同じことを 2 回書かない」「実装参照に寄せる」に従い、既存の実装エビデンス（`evidence_refs`）からドラフトを作成するアプローチを採用した。`retrofit` profile により、`retrofit-pass`（作成） → `refine-pass`（磨き込み: fully-guided） → `condense-pass`（整理） → `retrofit-review-pass`（agent review: 実装照合） → `finalize-pass`（確定: 人）が導出され、完了条件の並びを満たす。また、YAML サンプル等で Kata grade が未評価の成果物であっても実装エビデンスにより安定して生成できる。
+  - 実装エビデンスが存在しない純粋な仕様・ルール 2 件（`br-task-selection-strategy`, `bes-task-ready-selected`）:
+    - 選定 intent: `author-deliverable`（→ approach: `freeform`）
+    - 理由: 実装エビデンスを持たず新規に型から書き起こす仕様であるため `author-deliverable` を指定した。Kata grade の一部が不足していたため、`bdd-rulebook.md`（pass: 90点）および `bes-sample.md`（fail: 50点）の評価を実施した上で、`freeform` approach を採用した。`freeform` profile により、`freeform-pass`（作成） → `refine-pass`（磨き込み: fully-guided） → `condense-pass`（整理） → `review-pass`（agent review） → `finalize-pass`（確定: 人）が導出され、完了条件の並びを満たす。
+- 他 track との分離:
+  - `sch-milestones.yaml` において他 track（planning 等）の差分が混入しないよう、`business-specs-reps` 由来の 11 件のみを厳格にマージした。
+  - カタログ本体（`dct-*.yaml`）および `tml-index.yaml` は変更していない。
+- 検証結果:
+  - `specdojo exec validate --project prj-0001 --schedule-only`: OK (passed)
+  - `npm run validate:schema`: OK (passed, strategy/track/milestones 全て schema 適合)
+  - `npm run lint:md`: OK (passed)
+- CHANGELOG に書く事項:
+  - なし（プロジェクト内部のスケジュール策定作業のため）
+- 残課題:
+  - なし（後続のスケジュールタスク実行は別個票にて実施予定）
 
 ## 6. 関連ドキュメント
 

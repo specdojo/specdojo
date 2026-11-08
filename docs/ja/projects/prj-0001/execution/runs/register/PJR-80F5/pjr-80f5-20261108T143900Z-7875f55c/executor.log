@@ -1,0 +1,90 @@
+タスク PJR-80F5「rulebook の成果物の ID の決まりを命名の標準と照らして直す」の executor 作業を完了しました。
+
+### 実施概要
+
+1. **rulebook の全件調査と命名標準との照合**:
+   - `docs/ja/specdojo/rulebooks/` 配下に存在する全 110 件の rulebook の「ファイル命名・ID規則」章（または ID 規則記述箇所）を、[[specdojo:id-and-file-naming-standard|ドキュメントIDおよびファイル命名標準]] と照合しました。
+   - 成果物の例に `specdojo:` を付けていた記述は先行修正済みの `clis-rulebook` と `uis-rulebook` 以外にはなく、`bdd`・`cdt`・`sf` などを含むプロダクト文書（64 件）は namespace なしのローカル ID として正しく整合していることを確認しました。
+   - プロジェクト文書（`type: project`）の rulebook において、成果物 ID から `<project-id>:` が欠落してローカル ID のみとなっていた 13 件の rulebook を検出し、標準形式（`<project-id>:<local-id>`）に修正しました。
+
+2. **変更対象ファイル（13 件の rulebook）**:
+   - [`pm-risk-register-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md): ID 規則を `<project-id>:pm-risk-register` に修正
+   - [`pm-issue-log-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md): ID 規則を `<project-id>:pm-issue-log` に修正
+   - [`pm-change-request-log-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md): ID 規則を `<project-id>:pm-change-request-log` に修正
+   - [`dec-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/dec-rulebook.md): ID 規則を `<project-id>:dec-<NNNN>-<topic>` に修正
+   - [`mm-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/mm-rulebook.md): ID 規則を `<project-id>:mm-<yyyy-mm-dd>-<nn>` に修正
+   - [`pr-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/pr-rulebook.md): ID 規則を `<project-id>:pr-<yyyy-mm-dd>-<nn>` に修正
+   - [`imp-business-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/imp-business-rulebook.md): ID 規則を `<project-id>:imp-business` に修正
+   - [`imp-data-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/imp-data-rulebook.md): ID 規則を `<project-id>:imp-data` に修正
+   - [`imp-interface-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/imp-interface-rulebook.md): ID 規則を `<project-id>:imp-interface` に修正
+   - [`imp-operations-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/imp-operations-rulebook.md): ID 規則を `<project-id>:imp-operations` に修正
+   - [`imp-test-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/imp-test-rulebook.md): ID 規則を `<project-id>:imp-test` に修正
+   - [`trc-requirements-to-specs-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md): ID 規則を `<project-id>:trc-requirements-to-specs` に修正
+   - [`trc-requirements-to-tests-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md): ID 規則を `<project-id>:trc-requirements-to-tests` に修正
+
+3. **登録簿個票の更新**:
+   - [`pjr-80f5-rulebook-deliverable-id-rules-audit.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/projects/prj-0001/controls/project-register/pjr-80f5-rulebook-deliverable-id-rules-audit.md) の作業内容テーブルおよび対応結果（実施内容、成果物、全 110 件の照合一覧、CHANGELOG に書く事項）を記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"全110件のrulebookをドキュメントIDおよびファイル命名標準と照合し、成果物IDから<project-id>:が欠落していたプロジェクト文書向けrulebook 13件を修正しました。個票に対応結果・全件照合一覧・CHANGELOG事項を記録し、Prettierおよびvalidate:history-links等の検証を通過しました。","handoff":["CHANGELOG に書く事項（区分: 変更）: プロジェクト文書向け rulebook（pm-risk-register、pm-issue-log、pm-change-request-log、dec、mm、pr、imp-*、trc-*）の成果物 ID 規則をドキュメント ID 標準（`<project-id>:<local-id>`）に合わせて修正"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md docs/ja/specdojo/rulebooks/dec-rulebook.md docs/ja/specdojo/rulebooks/mm-rulebook.md docs/ja/specdojo/rulebooks/pr-rulebook.md docs/ja/specdojo/rulebooks/imp-business-rulebook.md docs/ja/specdojo/rulebooks/imp-data-rulebook.md docs/ja/specdojo/rulebooks/imp-interface-rulebook.md docs/ja/specdojo/rulebooks/imp-operations-rulebook.md docs/ja/specdojo/rulebooks/imp-test-rulebook.md docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-80f5-rulebook-deliverable-id-rules-audit.md","status":"passed","summary":"Prettier check passed on all changed markdown files"},{"command":"npm run validate:history-links","status":"passed","summary":"Changed history file validated successfully with exit code 0"},{"command":"npm run validate:schema:rulebook-enums","status":"passed","summary":"Rulebook schema enums coverage valid"},{"command":"npm run validate:catalog","status":"passed","summary":"Deliverables catalog validated with exit code 0"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"Skipped schema:file validation","reason":"No *.yaml or *.yml files were changed"}]}
+</specdojo_executor_evidence>
+`lint:fm` と `lint:md` の実行完了を待機しています。
+検査プロセス（`npm run lint:fm && npm run lint:md`）の完了を待機しています。
+タスク `PJR-80F5`（「rulebook の成果物の ID の決まりを命名の標準と照らして直す」）の executor stage におけるすべての対応および検証が完了しました。
+
+### 実施内容の概要
+
+1. **rulebook の精査（110件）**:
+   - `docs/ja/specdojo/rulebooks/` 配下の全 110 ファイルの「ファイル命名・ID規則」の章を [[specdojo:id-and-file-naming-standard|ドキュメントIDおよびファイル命名標準]] と照合しました。
+   - プロダクト文書（14.2・14.3）は namespace なし、同梱の型（rulebook・sample・template 等）のみ `specdojo:`、プロジェクト文書（14.1）は `<project-id>:` に揃えられていることを確認しました。
+   - 成果物例に誤って `specdojo:` が付いていたものは先行コミット（`c12de26`）で修正済みの `clis-rulebook` と `uis-rulebook` 以外に存在しないことを確認しました。
+   - プロジェクト文書（`type: project`）の成果物 ID で `<project-id>:` が欠落していた 13 件（`pm-risk-register`, `pm-issue-log`, `pm-change-request-log`, `dec`, `mm`, `pr`, `imp-business`, `imp-data`, `imp-interface`, `imp-operations`, `imp-test`, `trc-requirements-to-specs`, `trc-requirements-to-tests`）を修正しました。
+2. **個票の更新**:
+   - [`pjr-80f5-rulebook-deliverable-id-rules-audit.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-80F5/docs/ja/projects/prj-0001/controls/project-register/pjr-80f5-rulebook-deliverable-id-rules-audit.md) の作業内容テーブルおよび「5. 対応結果」（実施内容、成果物、110件の照合分類結果、CHANGELOG 文案、残課題）を更新しました。
+3. **検証**:
+   - `prettier`: 修正した 14 ファイルすべてで整形済み。
+   - `npm run validate:history-links`: 正常終了（code 0）。
+   - `npm run validate:schema:rulebook-enums`: 正常終了（code 0）。
+   - `npm run validate:catalog`: 正常終了（code 0）。
+   - `npm run lint:fm && npm run lint:md`: 全件正常終了（code 0）。
+
+```specdojo_executor_evidence
+completion_status: complete
+final_message: "rulebook 全 110 件の成果物 ID 規則を照合し、プロジェクト文書で `<project-id>:` が欠落していた 13 件の rulebook と個票を更新しました。各種検証（prettier, validate:history-links, validate:schema:rulebook-enums, validate:catalog, lint:fm, lint:md）をパスしています。"
+changed_files:
+  - docs/ja/projects/prj-0001/controls/project-register/pjr-80f5-rulebook-deliverable-id-rules-audit.md
+  - docs/ja/specdojo/rulebooks/dec-rulebook.md
+  - docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+  - docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+  - docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
+  - docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
+  - docs/ja/specdojo/rulebooks/imp-test-rulebook.md
+  - docs/ja/specdojo/rulebooks/mm-rulebook.md
+  - docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md
+  - docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md
+  - docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md
+  - docs/ja/specdojo/rulebooks/pr-rulebook.md
+  - docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md
+  - docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md
+validations:
+  - id: format-prettier
+    command: npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-80f5-rulebook-deliverable-id-rules-audit.md docs/ja/specdojo/rulebooks/dec-rulebook.md docs/ja/specdojo/rulebooks/imp-business-rulebook.md docs/ja/specdojo/rulebooks/imp-data-rulebook.md docs/ja/specdojo/rulebooks/imp-interface-rulebook.md docs/ja/specdojo/rulebooks/imp-operations-rulebook.md docs/ja/specdojo/rulebooks/imp-test-rulebook.md docs/ja/specdojo/rulebooks/mm-rulebook.md docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md docs/ja/specdojo/rulebooks/pr-rulebook.md docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md
+    status: passed
+  - id: validate-history-links
+    command: npm run validate:history-links
+    status: passed
+  - id: validate-schema-rulebook-enums
+    command: npm run validate:schema:rulebook-enums
+    status: passed
+  - id: validate-catalog
+    command: npm run validate:catalog
+    status: passed
+  - id: lint-fm
+    command: npm run lint:fm
+    status: passed
+  - id: lint-md
+    command: npm run lint:md
+    status: passed
+handoff:
+  - "CHANGELOG への記載（Changed）: 成果物 ID の命名規則で、プロジェクト文書（pm-risk-register, pm-issue-log, pm-change-request-log, dec, mm, pr, imp-*, trc-*）の rulebook における成果物 ID の決まりを標準に合わせて `<project-id>:` プレフィックス付きの形式に修正"
+```

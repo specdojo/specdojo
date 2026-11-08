@@ -1,0 +1,38 @@
+I am waiting for the local sanity checks (`npm run typecheck && npm run lint:ts && npm run test:unit`) to finish.
+I will wait for the test task to complete.
+ローカル検証（型チェック・lint・単体テスト）の完了を待機しています。
+単体テストの実行完了を待機しています。
+引き続き検証完了を待機します。
+単体テストの実行が順調に進んでいます。完了を待機します。
+テスト完了の通知を待機しています。
+テストの完了を待機します。
+引き続きテスト完了の通知を待機します。
+テスト完了を待機しています。
+テスト完了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の終了を待機しています。
+検証の完了を待機しています。
+検証完了を待機しています。
+検証完了を待機しています。
+検証完了を待機しています。
+検証完了を待機しています。
+検証完了を待機しています。
+PJR-C4KF の作業を完了しました。
+
+### 実施内容
+- `src/exec/run/agent.ts` の `buildExecutorPrompt` 内で生成される `validate:history-links` 適用条件の説明文に、現行の実行記録配置である `execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md` を追記しました。旧来の `exec/plans/**/*.md`・`exec/results/**/*.md` は互換性の記述として残し、`src/exec/reporter.ts` の `isHistoryLinkTargetPath` の判定実装と範囲を一致させました。
+- `tests/src/exec/run/run.test.ts` に、プロンプト内に `execution/runs/<origin>/<item>/<run>/` が含まれることを検証するアサーションを追加しました。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-c4kf-agent-history-links-run-records.md` の作業内容および対応結果（「CHANGELOG に書く事項」を含む）を記入しました。
+- Prettier 整形、`npm run validate:history-links`、`npm run validate:catalog`、ローカルの型チェック・lint・単体テストをすべて正常に通過させています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"agent へ渡す validate:history-links 適用条件の説明文に現行の execution/runs 配下の plan.md・result.md を追記し、テストと個票の記帳を完了しました。","handoff":["CHANGELOG に書く事項: 区分=変更、文案=agent へ渡すプロンプト内の `validate:history-links` 適用条件の説明に、現行の実行記録配置（`execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md`）を追記し、実装の判定範囲と一致させました（PJR-C4KF）。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"履歴蓄積ファイルのリンク検証に合格"},{"command":"npm run validate:catalog","status":"passed","summary":"成果物カタログ検証に合格"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML schema 検証は適用外","reason":"No *.yaml or *.yml files were changed in this task."}]}
+</specdojo_executor_evidence>

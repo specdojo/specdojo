@@ -214,6 +214,7 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("`npm run validate:schema:file` requires a changed `*.yaml`");
     expect(prompt).toContain("markdownlint requires a changed `*.md` file");
     expect(prompt).toContain("`npm run validate:history-links` requires a");
+    expect(prompt).toContain("execution/runs/<origin>/<item>/<run>/");
     expect(prompt).toContain("judged by that repository's package.json");
     expect(prompt).toContain("`specdojo catalog validate` / `npm run validate:catalog`");
     expect(prompt).toContain("sets `catalog_path`");

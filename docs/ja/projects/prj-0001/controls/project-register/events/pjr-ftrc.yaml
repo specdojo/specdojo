@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_16964958fd1a444db32a4e977ce5f1c2
+  ts: "2026-11-08T15:04:25Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: lint:fm が git の管理外の生成物まで検査して親の検証を落とさないようにする
+    - field: description
+      from: ""
+      to: lint:fm（remark の frontmatter 検査）が docs/\*\*/\*.md をすべて読み、.gitignore で管理外にした生成物（grade の一時ファイルなど）の schema の警告で --frail により失敗する。git の管理外の生成物を検査の対象から外す
+    - field: input
+      from: ""
+      to: "[\"2026-11-08、PJR-STM9 の executor が worktree で grade を流し、docs/ja/projects/prj-0001/execution/grade/generated/runs/ に一時ファイル（.gitignore の `docs/**/generated/*` で管理外）が残り、親の検証 lint-fm がその frontmatter の警告で失敗した。orchestrator が一時ファイルを消して --resume した（indie が承認）。\",\".remarkignore は空で、lint:fm は node packages/docs-lint/bin/specdojo-docs-lint.js remark `\\\"docs/**/*.{md,mdx}\\\"` --quiet --frail で動く。\",\"直し方（.remarkignore に足す、.gitignore を読む、docs-lint 側で除外する、など）は executor が決め、理由を個票の対応結果に書く。\"]"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-09"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-STM9"]'
+- v: 1
+  id: reg_51e9d6b6d8444cd3b1113869e724e22b
+  ts: "2026-11-08T15:24:43Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_16964958fd1a444db32a4e977ce5f1c2
+- v: 1
+  id: reg_58462e74858946b6af670de15f5587a5
+  ts: "2026-11-08T15:47:03Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_51e9d6b6d8444cd3b1113869e724e22b

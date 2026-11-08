@@ -30,12 +30,13 @@ Meeting Minutes Documentation Rulebook
 
 - 推奨: `mm-<yyyy-mm-dd>-<nn>.md`
 - 日付はISO形式、連番は2桁ゼロ埋めを推奨する。
+- 文書 ID は `<project-id>:mm-<yyyy-mm-dd>-<nn>` 形式とする（例: `prj-0001:mm-2026-03-01-01`）。
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目 | 説明                   | 必須 |
-| ---- | ---------------------- | ---- |
-| id   | `mm-<yyyy-mm-dd>-<nn>` | ○    |
+| 項目 | 説明                                | 必須 |
+| ---- | ----------------------------------- | ---- |
+| id   | `<project-id>:mm-<yyyy-mm-dd>-<nn>` | ○    |
 
 | type | `project` | ○ |
 | status | `draft` / `ready` / `deprecated` | ○ |
