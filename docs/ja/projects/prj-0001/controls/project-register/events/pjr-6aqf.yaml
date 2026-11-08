@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ecdc1c303a304cf59777dda02d6499d4
+  ts: "2026-11-08T08:11:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CLI 仕様（clis）の型に入力ファイルの規則を足す
+    - field: description
+      from: ""
+      to: clis の本文の「出力と生成ファイルの要点」を「入力と出力のファイルの要点」にし、コマンドが読むファイルと作る・変えるファイルを分けて書く規則と、sample の例を足す
+    - field: input
+      from: ""
+      to: '["PJR-PJYJ（indie が決定、2026-11-08）: clis は入力ファイルの規則を足して直す。読むファイルの中身は書かず、そのファイルの rulebook か schema を参照する。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:clis-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-PJYJ"]'
