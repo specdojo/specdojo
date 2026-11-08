@@ -356,6 +356,7 @@ viewpoints:
         - specdojo:cdsd-rulebook
         - specdojo:cdt-rulebook
         - specdojo:cld-rulebook
+        - specdojo:clis-rulebook
         - specdojo:cnd-mermaid-rulebook
         - specdojo:cnd-rulebook
         - specdojo:cop-index-rulebook
@@ -574,6 +575,7 @@ viewpoints:
         - specdojo:cdsd-rulebook
         - specdojo:cdt-rulebook
         - specdojo:cld-rulebook
+        - specdojo:clis-rulebook
         - specdojo:cnd-mermaid-rulebook
         - specdojo:cnd-rulebook
         - specdojo:cop-rulebook

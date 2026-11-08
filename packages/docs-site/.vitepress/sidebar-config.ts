@@ -137,7 +137,11 @@ const businessSpecificationRulebooks = [
     rulebook("業務イベント一覧", "bes-index"),
     rulebook("業務イベント仕様", "bes"),
   ]),
-  group("インターフェースモデル", [rulebook("画面仕様", "uis"), rulebook("帳票仕様", "bds")]),
+  group("インターフェースモデル", [
+    rulebook("画面仕様", "uis"),
+    rulebook("CLI仕様", "clis"),
+    rulebook("帳票仕様", "bds"),
+  ]),
   group("共通", [
     rulebook("システム化機能一覧", "sf-index"),
     rulebook("システム化機能", "sf"),
@@ -343,7 +347,11 @@ const businessSpecificationSamples = [
     sample("業務イベント一覧", "bes-index"),
     sample("業務イベント仕様", "bes"),
   ]),
-  group("インターフェースモデル", [sample("画面仕様", "uis"), sample("帳票仕様", "bds")]),
+  group("インターフェースモデル", [
+    sample("画面仕様", "uis"),
+    sample("CLI仕様", "clis"),
+    sample("帳票仕様", "bds"),
+  ]),
   group("共通", [
     sample("システム化機能一覧", "sf-index"),
     sample("システム化機能", "sf"),
