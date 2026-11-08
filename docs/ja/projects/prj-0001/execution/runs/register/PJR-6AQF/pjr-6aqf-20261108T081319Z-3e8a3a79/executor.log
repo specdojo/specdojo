@@ -1,0 +1,30 @@
+ユニットテスト（`npm run test:unit`）の完了を待機しています。
+テスト完了の通知を待機しています。
+バックグラウンドのテスト完了を待機しています。
+ユニットテストの実行完了を待機します。
+テスト完了を待機しています。
+テスト実行完了を待機します。
+ユニットテストの完了通知を待機しています。
+ユニットテストの完了を待機しています。
+PJR-6AQF の計画に従い、CLI 仕様（clis）の型に入力ファイルの規則を追加し、サンプルの更新および登録簿個票の対応結果の記入を完了しました。
+
+### 主な実施内容
+
+1. **[`clis-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6AQF/docs/ja/specdojo/rulebooks/clis-rulebook.md)**:
+   - 本文要件および記述ガイドの「出力と生成ファイルの要点」を「入力と出力のファイルの要点」に改訂しました。
+   - コマンドが読むファイル（設定・正本・先行コマンド作成ファイル）と、作る・変えるファイルを分離して記述する規則を追加しました。
+   - 読むファイルごとに、存在しない場合および形式破損時の扱い（エラーで停止するか、既定値で進むか）を明記する規則を策定しました。
+   - 読むファイルの中身（項目や形式）は記述せず、正本（rulebook または schema）を参照する規則（二重管理防止）を規定しました。
+   - 読むファイルの誤りで生じるエラーを、終了コードとエラー表示・利用者の次の手の表につなげる規則を明記しました。
+   - 全体方針、用語定義、禁止事項、運用ルールも整合させました。
+
+2. **[`clis-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6AQF/docs/ja/specdojo/samples/clis-sample.md)**:
+   - 第5章を「入力と出力のファイルの要点」とし、「5.1. 読むファイル（入力ファイル）の要点」小節を追加しました（店舗設定ファイル、商品マスタ、一時セッションファイル）。
+   - 第6章「終了コードとエラー表示・利用者の次の手」に、商品マスタ未検出（ない場合）、商品マスタ破損（壊れている場合）、店舗設定ファイル破損の具体的なエラー要点と回復アクション（次の手）を追加しました。
+
+3. **[`pjr-6aqf-clis-kata-input-files.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6AQF/docs/ja/projects/prj-0001/controls/project-register/pjr-6aqf-clis-kata-input-files.md)**:
+   - 作業内容のステータスを更新し、対応結果（実施内容、成果物、スキーマ変更要否、PJR-025M への判断材料となる決定事項と理由、CHANGELOG に書く事項、残課題・申し送り）を漏れなく記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CLI仕様（clis）の型に入力ファイルの要点（読むファイル、ない場合・破損時の扱い、正本参照、エラー連携）を追加し、clis-sampleおよび個票PJR-6AQFの対応結果を更新しました。","handoff":["CHANGELOG に書く事項 - 区分: 変更, 行の文案: CLI 仕様（clis）の型に入力ファイルの要点（読むファイル、ない場合・形式破損時の扱い、正本参照、エラー連携）を追加し、clis-sample に商品マスタ等の例とエラー回復例を追加（specdojo:clis-rulebook, specdojo:clis-sample）","規則と sample の書き方で executor が決めた内容と理由（PJR-025M への判断材料）: 1) 章立てと小節構成（第5章を入力と出力のファイルの要点とし、読むファイル、標準出力、作る・変えるファイルの3小節に分離）、2) 中身の重複排除と正本参照（中身は書かずrulebook/schema参照）、3) ない場合と形式破損時の扱いの明記、4) 終了コード・エラー表示・利用者の次の手との連携、5) ifx-cmd の型との用語・概念の整合性（渡すファイル/作るファイルと読むファイル/作る・変えるファイルの一貫性維持）","後続アクション: uis の型、ほかの型、カタログ（dct-*.yaml）は変更なし。後続の確定タスク（PJR-025M）にて本対応結果の決定内容と clis の型の確定判断を行う。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"All history links validated successfully"},{"command":"npm run validate:catalog","status":"passed","summary":"Deliverables catalog validated successfully"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"Skipped schema validation for individual files","reason":"No *.yaml or *.yml deliverable files were changed"}]}
+</specdojo_executor_evidence>
