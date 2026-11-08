@@ -79,3 +79,32 @@
       from: "-"
       to: "parent validation failed: lint-fm"
   previous_event_id: reg_35e3b806c9384a92b6d61da2dc56bdb9
+- v: 1
+  id: reg_63b81841ae1241cda521c1a857bc56f1
+  ts: "2026-11-08T03:35:50Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_820d38b42a7a42ed8dc236dd0d680a5d
+- v: 1
+  id: reg_0dfe00a55b3542ddb7b00f5b8126a1ee
+  ts: "2026-11-08T03:47:09Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_63b81841ae1241cda521c1a857bc56f1

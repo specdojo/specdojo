@@ -1,0 +1,24 @@
+概念クラス図（CCD）の型手入れタスク（PJR-M7KD）の executor 段階の作業を完了しました。
+
+### 実施内容の概要
+
+1. **rulebook の手入れ（[`ccd-mermaid-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md)）**:
+   - クラスの属性は主キー（`: PK`）のみとし、その他の属性（名称・金額・日付・状態等）は業務データ辞書（bdd）を参照する規則を明記しました。
+   - Mermaid クラス図および本文の記載対象を、関係の種類（継承・親子・参照）・多重度・関連の意味（役割名）に絞り込みました。
+   - 全関係線への役割名（エッジラベル）および多重度の記述を必須化し、本文に「3. 関連定義と多重度の根拠」章を設けて関連ごとに業務上なぜその多重度になるかを記載する規則を定義しました。
+   - メソッドの記述、型・可視性、技術的属性の記述を例外なく全面禁止としました。
+   - [`rulebook-authoring-standard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/docs/ja/specdojo/standards/rulebook-authoring-standard.md) に準拠した標準章構成（全9章）に再編し、plan に展開された 27 件の finding（F001〜F027）を解消しました。
+
+2. **sample の整備（[`ccd-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/docs/ja/specdojo/samples/ccd-sample.md)）**:
+   - 新しい規則に従い、駄菓子屋の販売管理システムを題材とした完成例を作成しました。
+   - クラス定義は主キーのみとし、継承・親子・参照の関係線、役割名、多重度、多重度の業務根拠一覧表、参照先 bdd 一覧を整備しました。
+
+3. **登録簿チケットの更新（[`pjr-m7kd-ccd-kata-reference-to-implementation.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/docs/ja/projects/prj-0001/controls/project-register/pjr-m7kd-ccd-kata-reference-to-implementation.md)）**:
+   - 作業内容および対応結果を記入しました。スキーマ変更の要否（不要の旨と理由）や、規則と sample の書き方で決めた内容と理由（PJR-RZ9Q 向けの判断材料）を記録しました。
+
+4. **CHANGELOG の更新（[`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/CHANGELOG.md)）**:
+   - `## [Unreleased]` の `### 変更` に、CCD の型およびサンプルの改訂内容を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"概念クラス図（CCD）の型およびサンプルの手入れを完了しました。クラス属性は主キーのみとし他属性は bdd 参照とする規則への改訂、関連の意味・多重度・役割名への絞り込み、多重度の業務根拠記述の義務付け、および finding 27 件の解消を実施しました。","handoff":["スキーマ変更の要否と理由: スキーマ変更なし。概念クラス図（CCD）は Markdown 文書（`target_format: markdown`）形式であり、`docs/specdojo/schemas/v1/` に専用の YAML スキーマは存在しない。Frontmatter は共通の `rulebook-frontmatter.schema.yaml` および `deliverable-frontmatter.schema.yaml` で検証され、後方互換性にも影響はない。","規則と sample の書き方で決めた内容と理由（PJR-RZ9Q 向けの判断材料）: 1) `recipe` と `template` の要否: `recipe: not-needed`、`template: not-needed` と決定。Mermaid 概念クラス図は rulebook の本文要件・記述ガイドおよび sample（`ccd-sample.md`）によって必要な構成・記法が十分に網羅されており、独立した recipe やテンプレートを設けるよりも rulebook と sample の2点で統制する方が保守性と一貫性が高いため。2) 継承関係（is-a）の記述方向と多重度: `親 <|-- 子 : 役割名`（三角 `<|` が親を指す）を標準記法とし、多重度は UML 一般化定義に従い記述禁止とした。継承は特化・一般化関係でありインスタンス多重度の概念が存在しないため。親子関係（`*--`）と参照関係（`-->`）では多重度を必須とする。3) 属性を持たない概念クラスの表現: 主キーを親から継承する下位概念など、個別主キーを持たない場合は属性行を書かず空（`class お菓子 {}`）とした。属性は主キーのみとする原則を徹底するため。4) 多重度の業務根拠の記述形式: 本文の「3. 関連定義と多重度の根拠」に表形式で全関連の業務理由を網羅する構成とした。多重度の理由が明文化されることで、後続の設計・テストへの確実なトレーサビリティが確保できるため。","残課題: 本タスクではプロダクト成果物（`docs/ja/product/` 配下）の作成・変更は行わない制約に従い、既存 CCD の更新は実施していない。型の確定（PJR-RZ9Q）およびプロダクト側の後続タスクで、新規則に基づいた CCD 成果物の更新を反映する。"],"validations":[{"command":"git diff --check","status":"passed","summary":"空白エラー・構文エラーなし"},{"command":"npm run validate:history-links","status":"passed","summary":"変更したプロジェクト登録簿の履歴リンクが有効であることを確認"},{"command":"npm run validate:catalog","reason":"成果物の変更が docs/ja/projects/ 配下の deliverable に及ばないため","status":"not_applicable","summary":"対象外"}]}
+</specdojo_executor_evidence>

@@ -28,6 +28,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 分類一覧（CDT）の型を手入れし、schema の enum や TypeScript の union 型を正本として参照（`schema_ref` / `type_ref`）し、分類一覧には値そのものの機械的な列挙を繰り返さず、値ごとの業務上の意味と使い分け・選定基準に絞って記述する規則に変更しました。実装に型定義が存在しない業務上の分類（人が判断する区分など）は、スタンドアロン形式で値の一覧と成立条件を記述する選定基準を明記しました。あわせて `cdt-rulebook` を Rulebook 記述標準に準拠させ、`cdt-sample` を新規則に適合させました（PJR-7FXC）。
 
+- 概念クラス図（CCD）の型 `specdojo:ccd-mermaid-rulebook` と `specdojo:ccd-sample` を手入れしました。クラス属性は主キーのみとし、そのほかの属性は業務データ辞書（bdd）を参照する規則へ変更しました。Mermaid 図と本文は関係の意味（役割名）・多重度・関係の種類に絞り、関連ごとに多重度の業務上の根拠を記述する形式に統一しました（PJR-M7KD）。
+
 - 分類一覧（Classification List）の略号を cld から cdt（code table）に変え、新しい型 `specdojo:cdt-rulebook`・`specdojo:cdt-sample`・`specdojo:dct-data-model-cdt-template` を追加しました。旧 ID（`cld-rulebook`、`cld-sample`、`dct-data-model-cld-template`）は非推奨とし、移行の案内のみを残しています。prj-0001 のカタログ `dct-data-model-cld.yaml` を `dct-data-model-cdt.yaml` へ更新し、成果物の略号を `cdt-*` に揃えました（PJR-HMV6）。
 
 - `exec validate` に実行記録の配置、plan・result・evidence の欠落、Git に無視されていない lock の検査を追加しました。`--records-only` は配置のみ、`--schedule-only` は schedule・event のみを検査します。`exec run`・`exec cycle` の事前検証は後者を使い、生成途中や中断中の記録があっても実行・再開できます。2 ガイドの構成図を配置モジュールと照合するテストを強化し、派生ビューと lock の配置説明を現行実装にそろえました（PJR-JT5J）。

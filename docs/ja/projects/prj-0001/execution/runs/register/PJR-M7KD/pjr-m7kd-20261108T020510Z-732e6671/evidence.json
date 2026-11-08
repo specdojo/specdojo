@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-M7KD",
+  "run_id": "pjr-m7kd-20261108T020510Z-732e6671",
+  "stage": {
+    "role": "executor",
+    "actor": "flash-high-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-08T03:35:54.818Z",
+    "completed_at": "2026-11-08T03:40:57.809Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-m7kd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-m7kd-ccd-kata-reference-to-implementation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ccd-sample.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-m7kd-ccd-kata-reference-to-implementation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ccd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": "CHANGELOG.md                                       |   2 +\n .../controls/project-register/events/pjr-m7kd.yaml |  24 +-\n ...jr-m7kd-ccd-kata-reference-to-implementation.md |   4 +-\n .../pjr-m7kd-20261108T020510Z-732e6671/plan.md     |   5 +\n docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md | 363 ++++++++++-----------\n docs/ja/specdojo/samples/ccd-sample.md             |  73 ++++-\n 6 files changed, 258 insertions(+), 213 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラー・構文エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更したプロジェクト登録簿の履歴リンクが有効であることを確認"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "対象外",
+      "reason": "成果物の変更が docs/ja/projects/ 配下の deliverable に及ばないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (0 errors, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4045 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 6 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4045 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-8unqHO/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-OY5wqi/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M7KD\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-08T03:46:09.881Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-08T03:45:10.205Z.\nfall\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "specdojo:ccd-mermaid-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "概念クラス図（CCD）の型および完成サンプルを手入れし、親検証（lint-fm）で指摘された sample frontmatter の `depends_on` を除去してすべての検証を通過させました。",
+  "completion_status": "complete",
+  "handoff": [
+    "親の検証 lint-fm が docs/ja/specdojo/samples/ccd-sample.md の frontmatter の schema エラー（unevaluatedProperties: `depends_on`）で失敗したため、frontmatter から `depends_on` を除去しました。bdd への参照は本文（「1. 目的と適用範囲」「4. 参照業務データ辞書」）で明記しているため十分であり、修正後に npm run lint:fm が正常に通過（exit 0）することを確認しました。",
+    "schema 変更の要否: 概念クラス図（CCD）は Markdown 文書形式（`target_format: markdown`）であり、docs/specdojo/schemas/v1/ 配下に専用 YAML スキーマは存在せず、Frontmatter も既存の共通スキーマで検証されるため、schema 変更は不要（変更なし）と判断しました。既存文書の後方互換性にも影響はありません。",
+    "規則と sample の書き方で決めた内容と理由（PJR-RZ9Q 向けの判断材料）: 1) recipe と template の要否: rulebook と sample の2点で十分に統制可能なため `recipe: not-needed`、`template: not-needed` と決定。2) 継承関係の記述方向と多重度: `親 <|-- 子 : 役割名` を標準とし、多重度は UML 一般化定義に従い記述禁止。3) 属性を持たないクラスの表現: 主キーを継承する概念等は属性行を書かず空（`class お菓子 {}`）とし、主キー以外の属性混入を防止。4) 多重度の業務根拠: 本文「3. 関連定義と多重度の根拠」に表形式で全関連の業務理由を網羅する構成としました。",
+    "次のアクション: 型の確定（PJR-RZ9Q）で人間の確認・判断を実施後、プロダクト側の後続タスクで新規則に基づいた CCD 成果物の更新を反映します。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-M7KD/pjr-m7kd-20261108T020510Z-732e6671/executor.log",
+      "bytes": 4181,
+      "truncated": false
+    }
+  ]
+}
