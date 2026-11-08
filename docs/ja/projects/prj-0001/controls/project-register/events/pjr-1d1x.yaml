@@ -47,3 +47,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-2GD6","PJR-K4PM"]'
+- v: 1
+  id: reg_a447d728b30e4e47a757df003ba27aa8
+  ts: "2026-11-08T11:55:18Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bfacd8581dc04485ba85bee69ff31d53
+- v: 1
+  id: reg_514ac1b4feb94c6abef344e7bcf0e331
+  ts: "2026-11-08T12:10:02Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a447d728b30e4e47a757df003ba27aa8
