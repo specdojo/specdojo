@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-ccd-project-planning-070
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-070/T-BUSINESS-SPECS-REPS-ccd-project-planning-070-20261108T233453Z-d8ce5108/plan.md
   started_at: "2026-11-08T23:34:55.708Z"
+  completed_at: "2026-11-08T23:54:27.426Z"
   agent: luna-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 宣言された参照資料および実装エビデンスを照合し、対象成果物の内容を確認しましたが、修正が必要な明確な不整合や不足は確認できず、成果物の変更は行いませんでした。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 未作成の `bdd-project-config`、`bdd-operations-config`、`bdd-deliverables-catalog`、`bdd-schedule-strategy`、`bdd-schedule-track` が整備された後、主キーの名称・識別範囲と関連を照合してください。
+- 宣言された実装根拠では `src/catalog/catalog.ts` はカタログ関連コマンド入口、`src/exec/exec.ts` はコマンド登録の再公開に留まり、計画モデルの関係は確認できません。必要ならモデル定義・参照解決を対象にした調査入力を追加してください。既存の成果物第5章にも記録済みです。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+指定された `rulebook` (`docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md`) および `sample` を参照し、必須要素（章構成、主キー、関連の役割名・多重度およびその根拠）が満たされているかを確認しました。また、`depends_on` の成果物および実装エビデンス (`src/catalog/catalog.ts`, `src/exec/exec.ts`) を照合し、現状の記述に修正が必要な不整合がないことを検証しました。未確定事項については既存の記載を維持し、今後の依存成果物の整備後に再確認することを申し送りとしました。
