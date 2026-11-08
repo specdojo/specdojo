@@ -4,31 +4,43 @@ specdojo:
   type: exec-result
   task_id: PJR-MECY
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-MECY/pjr-mecy-20261108T020509Z-5d09a989/plan.md
   started_at: "2026-11-08T02:05:17.834Z"
+  completed_at: "2026-11-08T02:28:33.166Z"
   agent: flash-high-executor
   approach: rulebook-maintenance
   targets:
     - specdojo:bdd-rulebook
+  block_reason: "parent validation failed: lint-md"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 業務データ辞書（bdd）の型手入れを完了しました。
+- schema があるエンティティは `schema_ref` を使用してスキーマを参照し、schema がないエンティティは `type_ref` を用いて TypeScript の型を参照する形式に統一しました。
+- fields 内の `type` を任意化することで、スキーマ参照時の重複定義を避け、後方互換性を維持しています。
+- `bdd-sample.yaml` を新しい規則（`schema_ref` および `type_ref` の活用）に合わせて更新しました。
+- 指摘事項 `F001` から `F025` までの内容を、新しい型定義の仕組みに基づいて反映・解消しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `CHANGELOG.md`: 業務データ辞書（bdd）の型定義変更に関する履歴を追記しました。
+- `docs/ja/specdojo/rulebooks/bdd-rulebook.md`: エンティティの型参照に関する新しい規則（`schema_ref` によるスキーマ参照と `type_ref` による TypeScript 型参照の使い分け）およびその選定基準を追記しました。
+- `docs/ja/specdojo/samples/bdd-sample.yaml`: 新しい型参照規則（`schema_ref` を用いた例と `type_ref` を用いた例）に基づいたサンプルデータに更新しました。
+- `docs/specdojo/schemas/v1/bdd.schema.yaml`: エンティティの定義に `schema_ref` と `type_ref` を追加し、`fields` 内の `type` を任意化することで、スキーマ参照時の制約重複を回避できるように拡張しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- スキーマ変更: `docs/specdojo/schemas/v1/bdd.schema.yaml` において、entities に `schema_ref` および `type_ref` を追加し、fields 内の `type` を任意化しました。`schema_ref` / `type_ref` がない場合は `fields` を必須とし、既存のスタンドアロン文書との後方互換性を維持しています。
+- 決定事項（PJR-RZ9Q 申し送り）: スキーマ参照キーを `schema_ref`、型参照キーを `type_ref`（`src/types/xxx.ts#Type` 形式）と決定しました。また、初期企画・分析フェーズや言語非依存モデルではスタンドアロン定義（今の形）、既存 TypeScript 実装の二重管理防止には `type_ref`、スキーマが存在する場合は `schema_ref` を選択する基準を整理しました。
+- スキーマ変更: docs/specdojo/schemas/v1/bdd.schema.yaml において、entities に `schema_ref` および `type_ref` を追加し、fields 内の type を任意化しました。`schema_ref` / `type_ref` がない場合は fields を必須とし、既存のスタンドアロン文書との後方互換性を維持しています。
+- 決定事項（PJR-RZ9Q 申し送り）: スキーマ参照キーを `schema_ref`、型参照キーを `type_ref`（src/types/xxx.ts#Type 形式）と決定しました。また、初期企画・分析フェーズや言語非依存モデルではスタンドアロン定義（今の形）、既存 TypeScript 実装の二重管理防止には `type_ref`、スキーマが存在する場合は `schema_ref` を選択する基準を整理しました。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+業務データ辞書（bdd）の型を手入れするため、`docs/ja/specdojo/rulebooks/bdd-rulebook.md` を編集しました。schema がある場合は `schema_ref` でスキーマを、ない場合は `type_ref` で TypeScript の型を参照する新しい基準を導入しました。これに伴い、`docs/specdojo/schemas/v1/bdd.schema.yaml` の拡張と、`docs/ja/specdojo/samples/bdd-sample.yaml` の更新を行いました。

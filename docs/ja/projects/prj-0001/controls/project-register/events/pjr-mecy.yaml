@@ -63,3 +63,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_d1674373ba004468bf356c9feec70ea1
+- v: 1
+  id: reg_e28a012145d54806b565dcd59144fb6e
+  ts: "2026-11-08T02:28:35Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_dcc6ac67373c48a0b22c0b4059ca2309
