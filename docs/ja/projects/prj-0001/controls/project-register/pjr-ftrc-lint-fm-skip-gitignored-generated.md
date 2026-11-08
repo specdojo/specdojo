@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ftrc-lint-fm-skip-gitignored-generated
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-11-08T15:04:22Z"
+  completed_at: "2026-11-08T16:12:55Z"
+  conclusion: .remarkignore に docs/**/generated/** を足し、docs-lint の remark に --silently-ignore を付けて、lint:fm が管理外の生成物を検査しないようにした。管理下の 3,895 件は今までどおり検査される
   derived_from:
     - PJR-STM9
 ---

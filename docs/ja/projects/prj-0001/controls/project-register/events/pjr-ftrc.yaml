@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_81cddb751d944c7c8e907b1450bac153
+- v: 1
+  id: reg_28b87769e08547fba6a820fe6db1c8e1
+  ts: "2026-11-08T16:12:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。親の検証の失敗は /tmp の直下に残った init の出力によるもので（PJR-5FTV）、片付けて --resume した。差分・個票の対応結果・管理下の generated の Markdown が 0 件であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: "-"
+      to: .remarkignore に docs/**/generated/** を足し、docs-lint の remark に --silently-ignore を付けて、lint:fm が管理外の生成物を検査しないようにした。管理下の 3,895 件は今までどおり検査される
+  previous_event_id: reg_4619f0300fd2467abbed9bbef041cba9
