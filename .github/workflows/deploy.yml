@@ -69,10 +69,11 @@ jobs:
         run: npm run test:integration -- tests/tools/d2-cli.integration.test.ts
 
       # 既定のヒープ（環境により約 2 GB）では VitePress のビルドがメモリ不足で落ちる
-      # （2026-10-11、2,536 文書で確認。4 GB で通過）。
+      # （2026-10-11、2,536 文書では 4 GB で通過。2026-11-08、4,039 文書では 4 GB で止まり、
+      # 8 GB で通過。PJR-2SRR）。package.json の docs:build も同じ値にそろえる。
       - name: Build VitePress site
         env:
-          NODE_OPTIONS: --max-old-space-size=4096
+          NODE_OPTIONS: --max-old-space-size=8192
         run: npm run docs:build
 
       - name: Upload artifact
