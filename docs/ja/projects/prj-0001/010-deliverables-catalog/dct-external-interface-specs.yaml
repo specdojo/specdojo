@@ -23,7 +23,7 @@ groups:
         overview: 外部システムとの連携を一覧（YAML）で定義する。SpecDojo自身の連携はAI provider CLIとGit/GitHubが中心
         path: ifx-index.yaml
         rulebook: specdojo:ifx-index-rulebook
-        note: interfaces の kind はコマンドを使用し、個別の ifx-cmd-<term> 詳細仕様が未作成の間は spec_ref を TBD とする
+        note: interfaces の kind はコマンドを使用する。業務仕様の種類ごとに代表を1件作る方針（PJR-2GD6）に基づき、AI provider CLI の起動（ifx-cmd-ai-provider-cli）を代表として個別作成する。詳細仕様が未作成の個別連携は spec_ref を TBD とする
         evidence_refs:
           - kind: implementation
             path: src/exec/exec.ts
@@ -42,5 +42,36 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
           - text: 外部I/F実装スコープの参照として使えること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: ifx-cmd-ai-provider-cli
+        name: 外部コマンド連携仕様（AI provider CLI）
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: AI provider CLI（Claude Code / Codex CLI / opencode 等）を外部プロセスとして起動・連携するための実行契約、引数、入出力ストリーム、終了コード、エラー処理を定義する
+        path: ifx-cmd-ai-provider-cli.yaml
+        rulebook: specdojo:ifx-cmd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/run/agent.ts
+            purpose: AI provider CLI の起動コマンド組み立て・非対話プロセス実行・エラー検知の実装
+          - kind: implementation
+            path: src/exec/agent-config.ts
+            purpose: プロバイダ別コマンドテンプレートとモデル・実行時引数の解決処理の実装
+        done_criteria:
+          - text: AI provider CLI の実行契約・入出力・エラー処理が業務観点で整理されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: AI provider CLI との連携スコープと方式を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 外部コマンド連携仕様（引数契約・終了コード・認証注入）の設計として妥当であること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 外部 CLI 起動テスト・結合テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: プロセス起動・連携エラー処理実装の基礎として参照できること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness

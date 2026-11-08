@@ -14,7 +14,7 @@ groups:
         kind: work
         overview: SpecDojoの操作単位（CLIコマンド群）の利用目的・表示項目・操作・遷移の要点を、command-referenceや運用ガイドへの導線としてまとめる
         path: uis-index.md
-        note: SpecDojoはCLIツールのためGUI画面を持たない。command-reference.md の11コマンド群を「画面」に見立てて要点を記述し、詳細はcommand-reference・各運用ガイドへリンクする。個別画面（uis-<term>）は作成しない
+        note: SpecDojoはCLIツールのためGUI画面を持たない。command-reference.md のコマンド群を「画面」に見立てて要点を記述し、業務仕様の種類ごとに代表を1件作る方針（PJR-2GD6）に基づき、exec コマンド群（uis-exec-commands）を代表として個別作成する。その他のコマンド群はuis-indexからcommand-reference・各運用ガイドへリンクする
         done_criteria:
           - text: 利用目的・表示項目・操作・遷移・エラー表示が業務観点で記述されていること
             roles: [BA]
@@ -29,6 +29,34 @@ groups:
             roles: [QE]
             viewpoint: vp-qe-verifiability
           - text: 業務ユーザーが操作しやすい表現・構成になっていること
+            roles: [UX]
+            viewpoint: vp-ux-readability
+      - local_id: uis-exec-commands
+        name: 画面仕様（exec コマンド群）
+        kind: work
+        depends_on:
+          - uis-index
+        overview: exec コマンド群の CLI 操作単位としての利用目的・引数・オプション・表示項目・操作・遷移・エラー表示を定義する
+        path: uis-exec-commands.md
+        rulebook: specdojo:uis-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/commands.ts
+            purpose: exec サブコマンド群（run・plan・review・worktree等）の引数・オプション・対話出力・エラー表示を定義するCLI操作部
+        done_criteria:
+          - text: exec コマンド群の利用目的・入出力項目・操作・エラー表示が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: exec コマンド群のスコープと利用フローを承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: CLI 実装・コマンド体系設計の入力として参照できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: CLI テスト・受入テスト設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 開発者・運用者が操作しやすい表現・構成になっていること
             roles: [UX]
             viewpoint: vp-ux-readability
       - local_id: bds-index
