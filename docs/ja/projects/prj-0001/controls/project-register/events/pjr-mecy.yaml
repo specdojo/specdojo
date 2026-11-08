@@ -108,3 +108,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_db1c959c108c491fb8f48b80c4f6da66
+- v: 1
+  id: reg_59cc59954e984ca28275d0f677e83e40
+  ts: "2026-11-08T03:52:20Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。lint-md の失敗を plan の追加の指示で直して再開した。差分・個票の対応結果・親の検証・validate:schema を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: bdd-rulebook に schema_ref・type_ref による参照の規則と選び方の基準を書き、bdd.schema.yaml を後方互換のまま緩め、bdd-sample に 3 つの形の例を載せた
+  previous_event_id: reg_c1ad82a823e44ac3a9245abb2ca56da2
