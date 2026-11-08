@@ -1,0 +1,23 @@
+分類一覧（CDT）の型手入れタスク（PJR-7FXC）の作業を完了しました。
+
+### 実施概要
+
+1. **着手前提の確認**:
+   - PJR-HMV6 において `specdojo:cdt-rulebook` および `specdojo:cdt-sample` が作成済みであることを確認しました。
+2. **`specdojo:cdt-rulebook` の改訂 (`docs/ja/specdojo/rulebooks/cdt-rulebook.md`)**:
+   - スキーマ（JSON/YAML Schema の enum）または実装（TypeScript の union 型等）が存在する分類について、それらを正本（SSOT）として参照（`schema_ref` または `type_ref`）し、値の一覧そのものの機械的再掲を排除する規則を策定しました。
+   - 分類一覧には、実装から読み取れない各値の「業務上の意味と使い分け（選定基準・適用条件）」に特化して記述する規約を明記しました。
+   - 実装にない業務上の分類（人が業務判断で区分する区分など）について、スタンドアロン形式で値・分類名・表示名・説明の一覧を記述する選定基準を明記しました。
+   - [`rulebook-authoring-standard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7FXC/docs/ja/specdojo/standards/rulebook-authoring-standard.md) に準拠し、章構成を標準 8 章構成へ全面再構成しました。
+3. **`specdojo:cdt-sample` の改訂 (`docs/ja/specdojo/samples/cdt-sample.md`)**:
+   - 駄菓子屋販売管理システムにおける「商品区分」の実例ドキュメントとして再構築しました。
+   - TypeScript 型定義（`src/types/product.ts#ProductType`）を参照する業務分類の定義と、各値（`snack`, `toy`, `drink`）の業務上の意味・使い分けの表を例示しました。
+   - 実装に型を持たない人が判断する業務分類（`staple`, `seasonal`, `experimental`）のスタンドアロン定義例も併せて提示しました。
+4. **`CHANGELOG.md` の更新**:
+   - `[Unreleased]` -> `### 変更` に、分類一覧（CDT）の型手入れ・正本参照規則の追加・選定基準の内容を追記しました。
+5. **登録簿個票の対応結果記録**:
+   - [`pjr-7fxc-cdt-kata-reference-to-implementation.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7FXC/docs/ja/projects/prj-0001/controls/project-register/pjr-7fxc-cdt-kata-reference-to-implementation.md) の作業内容・対応結果・決定事項と判断理由を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"分類一覧（CDT）の型手入れ（正本参照規則の策定、業務上の意味と使い分けへの特化、スタンドアロン選定基準の明記、rulebook 記述標準準拠）および cdt-sample の新規則適合を完了しました。","handoff":["スキーマ変更の有無と理由: 変更なし。分類一覧（CDT）は Markdown ドキュメント形式（target_format: markdown）として管理されており、docs/specdojo/schemas/v1/ 配下に直接 CDT の本文構造を制約する YAML スキーマは存在しないため、スキーマの変更は不要でした。既存の frontmatter スキーマ（type: data）により完全な後方互換性が維持されています。","決定事項と判断理由（PJR-RZ9Q 申し送り）: 正本参照の記述方式として、分類定義表内に schema_ref: <path>#<pointer>（スキーマ参照）、type_ref: <path>#<TypeName>（TypeScript 型参照）、または「なし（スタンドアロン定義）」を明記する規約としました（BDD の選定およびカタログの evidence_refs と統一）。正本参照がある場合の値表は「値」「分類名」「業務上の意味と使い分け」の 3 列構成とし、コード定義の機械的再掲を避けて使い分けの判断基準に特化する方針としました。実装にない業務上の分類（人が決める区分など）は「値」「分類名」「表示名」「説明・成立条件」の 4 列構成によるスタンドアロン記述としました。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更された登録簿個票の履歴リンク検証に合格"},{"command":"npm run validate:catalog","status":"passed","summary":"成果物カタログ検証に合格"},{"command":"npm run format:check","status":"passed","summary":"Prettier コードスタイル検証に合格"}]}
+</specdojo_executor_evidence>
