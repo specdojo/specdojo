@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7cc491d975174ec6981c0452d000c816
+  ts: "2026-11-08T04:04:26Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 運用メモの完了条件とリリースの手順を、CHANGELOG を個票の申し送りからまとめる形に直す
+    - field: description
+      from: ""
+      to: PJR-EPQ3 の決定に合わせ、運用メモの完了条件の書き方・衝突の対処・リリースの手順を直し、配布するオーケストレーターの本文の変更案を作る
+    - field: input
+      from: ""
+      to: '["PJR-EPQ3（indie が決定、2026-11-08）: 各項目は CHANGELOG.md を変えず、個票の対応結果の「### CHANGELOG に書く事項」に区分と文案を書く。リリースの todo が close 済みの項目から集める。",".agents/specdojo-orchestrator.agent.md は保護された設定で、4 つの環境の薄いラッパーと本文をそろえて保守している。executor は変更案を個票の対応結果と報告の handoff に書き、反映は利用者の承認のもと feature ブランチで行う。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-EPQ3"]'
