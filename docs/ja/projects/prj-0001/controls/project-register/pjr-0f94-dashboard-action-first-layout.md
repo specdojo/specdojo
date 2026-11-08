@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T14:34:25Z"
+  block_reason: "parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-0F94 ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す
