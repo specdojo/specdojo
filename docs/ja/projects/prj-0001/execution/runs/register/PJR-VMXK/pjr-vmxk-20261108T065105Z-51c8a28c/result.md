@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-VMXK
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-VMXK/pjr-vmxk-20261108T065105Z-51c8a28c/plan.md
   started_at: "2026-11-08T06:51:15.746Z"
+  completed_at: "2026-11-08T07:15:01.060Z"
   agent: flash-high-executor
   approach: rulebook-authoring
   targets:
@@ -19,16 +20,29 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- CLI 仕様（`clis`）の型を新設し、`specdojo:clis-rulebook` および `specdojo:clis-sample` を作成しました。
+- 作成した新しい型を、命名標準、成果物リファレンス、サイトのサイドバー構成、およびレビュー観点の設定ファイルへ反映しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`: レビュー観点の設定に `clis` を追加しました。
+- `docs/ja/specdojo/references/deliverables-reference.md`: 成果物リファレンスに `clis` の定義を追加しました。
+- `docs/ja/specdojo/standards/id-and-file-naming-standard.md`: ID およびファイル命名の標準に `clis` を追加しました。
+- `packages/docs-site/.vitepress/sidebar-config.ts`: ドキュメントサイトのサイドバー構成に `clis` を追加しました。
+- `docs/ja/specdojo/rulebooks/clis-rulebook.md`: `specdojo:clis-rulebook` を新規作成しました。
+- `docs/ja/specdojo/samples/clis-sample.md`: `specdojo:clis-sample` を新規作成しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- CLI 仕様（`clis`）の型新設に伴う決定事項: `recipe` および `template` はコマンド群の業務目的に応じてフローや出力の構造が大きく異なり定型化の必要性が低いため、Frontmatter で `recipe: not-needed`、`template: not-needed` と判断した。PJR-PJYJ で人が要否を最終判断する。
+- 保護された設定（`.specdojo/`、`package.json`、`.agents/` など）における種類一覧の変更対象は存在せず、変更提案なし。
+- CHANGELOG に書く事項: [追加] CLI 仕様（`clis`）の型を新設し、コマンドリファレンスを参照して操作の流れ・出力と生成ファイル要点・終了コード・エラー表示と利用者の次の手を記述する `rulebook` と `sample` を追加（`specdojo:clis-rulebook`, `specdojo:clis-sample`）
+- 後続タスクへの申し送り: `uis` の型および `prj-0001` のカタログは本タスクの制約に従い変更していない。後続タスク（PJR-PJYJ）にて `uis` からの CLI 記述の分離確認および必要な場合のカタログ反映・実成果物への適用を判断する。
+- CLI仕様（clis）の型新設に伴う決定事項: recipe および template はコマンド群の業務目的に応じてフローや出力の構造が大きく異なり定型化の必要性が低いため、Frontmatter で recipe: not-needed、template: not-needed と判断した。PJR-PJYJ で人が要否を最終判断する。
+- 保護された設定（.specdojo/、package.json、.agents/ など）における種類一覧の変更対象は存在せず、変更提案なし。
+- CHANGELOG に書く事項: [追加] CLI 仕様（clis）の型を新設し、コマンドリファレンスを参照して操作の流れ・出力と生成ファイル要点・終了コード・エラー表示と利用者の次の手を記述する rulebook と sample を追加（specdojo:clis-rulebook, specdojo:clis-sample）
+- 後続タスクへの申し送り: uis の型および prj-0001 のカタログは本タスクの制約に従い変更していない。後続タスク（PJR-PJYJ）にて uis からの CLI 記述の分離確認および必要な場合のカタログ反映・実成果物への適用を判断する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+新しく定義された `clis` 型の `rulebook` と `sample` を作成し、SpecDojo のエコシステム全体（命名標準、リファレンス、サイドバー、レビュー観点）にその存在を組み込みました。既存の `uis` 成果物から CLI 関連の記述を分離するための準備工程となります。

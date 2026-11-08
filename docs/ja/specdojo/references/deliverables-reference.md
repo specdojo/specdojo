@@ -244,6 +244,7 @@ flowchart
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | [画面仕様](../rulebooks/uis-rulebook.md) | UI Specification | `uis-<term>` | 業務ユーザー視点の画面の利用目的や表示項目、操作を定義する | 画面概要、利用目的、表示項目、操作、遷移、エラー表示 など |
+| [CLI仕様](../rulebooks/clis-rulebook.md) | CLI Specification | `clis-<term>` | 利用者視点での CLI コマンド群の利用目的や操作の流れ、出力・エラーを定義する | 概要、利用目的、操作の流れ、操作とコマンド参照、出力・生成ファイルの要点、終了コードとエラー表示・利用者の次の手 など |
 | [帳票仕様](../rulebooks/bds-rulebook.md) | Business Document Specification | `bds-<term>` | 業務ユーザー視点の帳票の利用目的や表示項目を定義する | 帳票概要、利用目的、表示項目、出力タイミング など |
 
 #### 2.1.5. システム化機能

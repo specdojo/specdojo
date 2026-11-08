@@ -888,6 +888,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | 業務プロセス仕様 | Business Process Specification | bps- | bps-order-flow |
 | ビジネスルール | Business Rule | br- | br-discount |
 | 画面仕様 | UI Specification | uis- | uis-order-edit |
+| CLI仕様 | CLI Specification | clis- | clis-exec-commands |
 | 帳票仕様 | Business Document Specification | bds- | bds-order-summary |
 | システム化機能 | System Function | sf- | sf-index, sf-product-register |
 | 業務イベント仕様 | Business Event Specification | bes- | bes-index, bes-order-approved |
