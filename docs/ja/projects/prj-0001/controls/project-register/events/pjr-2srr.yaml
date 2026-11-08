@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-HMV6"]'
+- v: 1
+  id: reg_31b8d83704ce45ec82c2cb88ce8590b5
+  ts: "2026-11-08T02:29:32Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9dedf11f481743a5a641f682180d5840
