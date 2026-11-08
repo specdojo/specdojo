@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dc6e1e980aca4ef7a4113671ce67656f
+  ts: "2026-11-08T04:00:39Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 画面仕様（uis）の型を、コマンドリファレンスと同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: 画面仕様の型を手入れする。CLI のコマンド群を画面に見立てる uis で、引数・オプションの表は持たずコマンドリファレンスを参照し、利用目的・操作の流れ・表示・エラー表示の要点に絞る
+    - field: input
+      from: ""
+      to: '["uis も実装と同じことを書かない対象に加える（indie が推奨どおりと決定、2026-11-08）。","rulebook にあわせて uis-sample も揃える。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:uis-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
