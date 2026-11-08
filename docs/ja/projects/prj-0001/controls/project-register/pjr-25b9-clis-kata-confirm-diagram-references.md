@@ -21,7 +21,7 @@ specdojo:
 
 ## 1. 背景
 
-図と参照先を直した clis の型を人が確かめ、確定するか直すかを決める
+PJR-K4PM で、clis の図を入力情報・出力情報の仕様への線だけにし、自システムの API と CLI が起動する外部コマンドの参照先を足すと決めた。PJR-1D1X で直した clis の型を人が確かめて確定する。確定した型で、カタログの付け替え（PJR-8J47）と clis の代表の作成を進める。
 
 ## 2. 入力
 
@@ -63,4 +63,5 @@ _TODO_: 採択した内容を明確に記載する。
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 決定: [[prj-0001:pjr-k4pm-clis-kata-confirm-input-output-info]]
+- 型の直し: [[prj-0001:pjr-1d1x-clis-kata-diagram-references]]
