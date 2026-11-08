@@ -4347,3 +4347,19 @@
       from: PJR-JT5J・PJR-KC0T の統合後に claude-executor で exec run --register を流し、事前検証・親の検証・統合・review の遷移まで通ることを確かめた
       to: PJR-8YH0・PJR-G1W9 の統合後に claude-executor で exec run --register を流し、新しい書き方の規約の参照が plan に書かれ、規約の本文が戻り、start から review まで通ることを確かめた
   previous_event_id: reg_d92f12f71e4b4bb5bea1ce829533f96e
+- v: 1
+  id: reg_af0db4e1df754752a5eff9ccf21435d7
+  ts: "2026-11-08T00:24:41Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-HQVE（register --commit の stage 範囲と統合前の index 検査）の統合後の動作を実際の exec run --register で確かめるため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-07"
+      to: "-"
+  previous_event_id: reg_4125aa41228a4347b283caab234cef72
