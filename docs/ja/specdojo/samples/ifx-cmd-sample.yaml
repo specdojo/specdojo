@@ -13,31 +13,9 @@ command:
     - orders
     - submit
   purpose: 駄菓子屋きぬやで確定した発注データを仕入先サービスへ登録する
+  reference: 仕入先 CLI 公式リファレンス v2.3（https://supplier-example.internal/docs/cli/orders-submit）
   version_constraint: ">=2.1.0 <3.0.0"
   shell: false
-
-arguments:
-  - name: --file
-    kind: option
-    required: true
-    value_type: path
-    value_source: generated
-    description: 発注 ID、商品 ID、数量を含む JSON ファイルのパス
-    example: tmp/orders/ORD-0001.json
-  - name: --request-id
-    kind: option
-    required: true
-    value_type: string
-    value_source: generated
-    description: 同じ発注の重複登録を防ぐリクエスト ID
-    example: req-order-0001
-  - name: --output
-    kind: option
-    required: true
-    value_type: string
-    value_source: literal
-    description: 機械処理する出力形式
-    example: json
 
 streams:
   stdin:
@@ -46,11 +24,27 @@ streams:
   stdout:
     format: json
     encoding: UTF-8
-    description: order_id、request_id、status、accepted_at を含む登録結果
+    description: order_id、request_id、status、accepted_at を含む登録結果 JSON
   stderr:
     format: text
     encoding: UTF-8
     description: 進捗、警告、失敗の診断情報。認証情報は出力しない
+
+files:
+  inputs:
+    - path: tmp/orders/{order_id}.json
+      format: json
+      encoding: UTF-8
+      description: 発注 ID、商品 ID、数量を含む発注データ JSON ファイル
+  outputs:
+    - path: tmp/orders/{order_id}-receipt.json
+      format: json
+      encoding: UTF-8
+      description: 仕入先サービスから発行された受付番号と登録日時を含む発注受領書ファイル
+
+side_effects:
+  - 仕入先サービス上の発注台帳へ発注レコードを新規登録する
+  - 同一 request_id の再送時は既存レコードを返し、二重登録を防止する
 
 exit_codes:
   - code: 0
@@ -77,6 +71,10 @@ exit_codes:
     meaning: 仕入先サービスが一時的に利用できない
     category: transient_failure
     retryable: true
+  - code: 80
+    meaning: 短時間の連続リクエストによるレート制限超過
+    category: rate_limit
+    retryable: true
 
 authentication:
   method: api_token
@@ -100,6 +98,7 @@ error_handling:
   retry:
     on_categories:
       - transient_failure
+      - rate_limit
     max_attempts: 3
     backoff: exponential
   timeout_action: 子プロセスを終了し、不完全な stdout を破棄して人の確認待ちにする

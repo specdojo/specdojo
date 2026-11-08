@@ -22,17 +22,9 @@ command:
   subcommands:
     - _SUBCOMMAND_
   purpose: "_TODO_: 呼び出し側から見た実行目的と成功後の状態を記載する。"
+  reference: "_TODO_: コマンドリファレンス、exec-defaults.yaml の command_template と exec-config-guide.md、または外部CLI公式ドキュメント等の正本への参照を記載する。"
   version_constraint: _VERSION_CONSTRAINT_
   shell: false
-
-arguments:
-  - name: _ARGUMENT_NAME_
-    kind: _ARGUMENT_KIND_
-    required: _ARGUMENT_REQUIRED_
-    value_type: _ARGUMENT_VALUE_TYPE_
-    value_source: _ARGUMENT_VALUE_SOURCE_
-    description: "_TODO_: 引数の意味と制約を記載する。"
-    example: _PUBLIC_EXAMPLE_VALUE_
 
 streams:
   stdin:
@@ -48,6 +40,21 @@ streams:
     format: _STDERR_FORMAT_
     encoding: UTF-8
     description: "_TODO_: 進捗、警告、失敗詳細の用途と、秘密値を出力しない条件を記載する。"
+
+files:
+  inputs:
+    - path: _INPUT_FILE_PATH_
+      format: _INPUT_FILE_FORMAT_
+      encoding: UTF-8
+      description: "_TODO_: 入力として渡すファイルがある場合に記載する（不要なら inputs 自体を省略可）。"
+  outputs:
+    - path: _OUTPUT_FILE_PATH_
+      format: _OUTPUT_FILE_FORMAT_
+      encoding: UTF-8
+      description: "_TODO_: コマンドが作成・更新するファイルがある場合に記載する（不要なら outputs 自体を省略可）。"
+
+side_effects:
+  - "_TODO_: 外部システムや環境に与える状態変化を記載する（ない場合は「なし」等）。"
 
 exit_codes:
   - code: 0
