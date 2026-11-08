@@ -96,3 +96,19 @@
       from: "-"
       to: "parent validation failed: lint-fm"
   previous_event_id: reg_601d82acdd7e442db7644f443e33968f
+- v: 1
+  id: reg_0ac6ee35ea224fdcb969e0dd5364e50e
+  ts: "2026-11-08T05:08:20Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_bb93dca892fa4e4ea4d02fcc838c6888

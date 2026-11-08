@@ -64,4 +64,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-08）
+
+- 親の検証 `lint-fm` が、個票 `pjr-ksgc-changelog-handoff-playbook.md` の 79 行目（変更案（A）の「新:」の行）で失敗した。インラインコードの中にバッククォートを入れたためコードの書式が切れ、`<n>`・`<m>` がむき出しの山括弧になっている。
+- 変更案の文は、外側をバッククォート 2 つのコードの書式（例: ``` `` 文 `` ```）で囲むか、旧と新の文をコードの書式にせず地の文で書き、中の `### <n>.<m>. CHANGELOG に書く事項` だけを 1 つのコードの書式にする。変更案（B）の行も同じ書き方なら同じく直す。
+- 直した後に `npm run lint:fm` と `npm run lint:md` を流して通ることを確かめ、経緯を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
