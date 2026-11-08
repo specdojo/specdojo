@@ -13,7 +13,6 @@ required:
   - title
   - rulebook
   - command
-  - arguments
   - streams
   - exit_codes
   - authentication
@@ -43,6 +42,11 @@ properties:
     items:
       type: string
     uniqueItems: true
+  supersedes:
+    type: array
+    items:
+      type: string
+    uniqueItems: true
   metadata_template:
     type: object
     additionalProperties: true
@@ -56,7 +60,6 @@ properties:
     additionalProperties: false
     required:
       - executable
-      - subcommands
       - purpose
       - shell
     properties:
@@ -65,11 +68,14 @@ properties:
         minLength: 1
       subcommands:
         type: array
-        minItems: 1
+        minItems: 0
         items:
           type: string
           minLength: 1
       purpose:
+        type: string
+        minLength: 1
+      reference:
         type: string
         minLength: 1
       version_constraint:
@@ -95,7 +101,9 @@ properties:
           minLength: 1
         kind:
           type: string
-          enum: ["argument", "option", "_ARGUMENT_KIND_"]
+          enum: ["argument", "option", "positional", "_ARGUMENT_KIND_"]
+        position:
+          $ref: "#/$defs/PositiveIntegerOrPlaceholder"
         required:
           $ref: "#/$defs/BooleanOrPlaceholder"
         value_type:
@@ -103,7 +111,8 @@ properties:
           minLength: 1
         value_source:
           type: string
-          enum: ["literal", "generated", "secret", "user_input", "_ARGUMENT_VALUE_SOURCE_"]
+          enum:
+            ["literal", "generated", "config", "secret", "user_input", "_ARGUMENT_VALUE_SOURCE_"]
         description:
           type: string
           minLength: 1
@@ -123,6 +132,28 @@ properties:
         $ref: "#/$defs/Stream"
       stderr:
         $ref: "#/$defs/Stream"
+
+  files:
+    type: object
+    additionalProperties: false
+    properties:
+      inputs:
+        type: array
+        items:
+          $ref: "#/$defs/FileContract"
+      outputs:
+        type: array
+        items:
+          $ref: "#/$defs/FileContract"
+
+  side_effects:
+    oneOf:
+      - type: string
+        minLength: 1
+      - type: array
+        items:
+          type: string
+          minLength: 1
 
   exit_codes:
     type: array
@@ -148,6 +179,7 @@ properties:
             - input_error
             - authentication_error
             - authorization_error
+            - rate_limit
             - permanent_failure
             - transient_failure
             - _FAILURE_CATEGORY_
@@ -220,6 +252,14 @@ properties:
           condition:
             type: string
             minLength: 1
+      side_effects:
+        oneOf:
+          - type: string
+            minLength: 1
+          - type: array
+            items:
+              type: string
+              minLength: 1
 
   error_handling:
     type: object
@@ -295,3 +335,23 @@ $defs:
         type: string
       description:
         type: string
+
+  FileContract:
+    type: object
+    additionalProperties: false
+    required:
+      - path
+      - format
+      - description
+    properties:
+      path:
+        type: string
+        minLength: 1
+      format:
+        type: string
+        minLength: 1
+      encoding:
+        type: string
+      description:
+        type: string
+        minLength: 1

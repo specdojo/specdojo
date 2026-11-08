@@ -1,0 +1,30 @@
+テストの実行完了を待っています。
+テスト完了まで待機します。
+単体テストの実行が継続中です。完了を待機します。
+単体テストの実行完了を待機しています。
+単体テストの実行完了を待機しています。
+フォーマット確認の完了を待機しています。
+フォーマット確認の完了を待機しています。
+フォーマット確認の完了を待機しています。
+外部 I/F（コマンド）（`ifx-cmd`）の型手入れ作業が完了しました。
+
+### 実施内容の要約
+
+1. **正本参照への一本化と実装重複の排除**:
+   - [`ifx-cmd-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md) を改訂し、引数・オプションの表は持たず、正本（SpecDojo コマンドならコマンドリファレンス、外部 CLI / AI provider CLI なら `.specdojo/exec-defaults.yaml` の `command_template` と [`exec-config-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/ja/specdojo/guides/exec-config-guide.md)、外部サービスなら公式ドキュメント）を `command.reference` で参照する規則を明記しました。
+2. **入出力の約束（6要素）への特化**:
+   - 呼び出し元と外部 CLI 間の合意境界として、渡すもの（`streams.stdin`, `files.inputs`）、受け取るもの（`streams.stdout`, `streams.stderr`）、作るファイル（`files.outputs`）、副作用（`side_effects`, `execution.idempotency`）、終了コードの意味（`exit_codes`）、失敗の扱い（`error_handling`）に絞った構成を規定しました。
+3. **Kata 成果物の同期**:
+   - [`ifx-cmd-sample.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/ja/specdojo/samples/ifx-cmd-sample.yaml) および [`ifx-cmd-template.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/ja/specdojo/templates/ifx-cmd-template.yaml) を新規則に合わせて更新しました。
+   - [`ifx-cmd-recipe.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/ja/specdojo/recipes/ifx-cmd-recipe.md) の手順、各要素の書き方、良い例/悪い例、レビュー観点を改訂しました。
+   - `yaml-pages build` により表示用ページ（`generated`）を最新 YAML から再生成しました。
+4. **スキーマ更新と後方互換性の維持**:
+   - [`ifx-cmd.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/specdojo/schemas/v1/ifx-cmd.schema.yaml) で `arguments` を `required` から除外（optional 化）し、`command.reference`、`files`、`side_effects`、終了カテゴリ `rate_limit`、`supersedes` を追加しました。従来の引数定義を持つ既存文書も引き続き検査を通過する後方互換性を確保しています。
+5. **リファレンスと CHANGELOG の更新**:
+   - [`deliverables-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/ja/specdojo/references/deliverables-reference.md) の `ifx-cmd` 説明を新規則に同期しました。
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/CHANGELOG.md) の `## [Unreleased]` に変更内容を追記しました。
+   - 個票 [`pjr-4n3r-ifx-cmd-kata-reference-to-implementation.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4N3R/docs/ja/projects/prj-0001/controls/project-register/pjr-4n3r-ifx-cmd-kata-reference-to-implementation.md) の作業内容と対応結果（schema 変更理由、決定事項と理由）を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"外部 I/F（コマンド）（ifx-cmd）の型を手入れし、引数・オプション表を持たず正本を参照して入出力の約束（6要素）に絞る規則へ改訂しました。schema・recipe・sample・template・CHANGELOG・個票を同期し、後方互換性を維持した上で全検査を通過しました。","handoff":["schema 変更の有無と理由: docs/specdojo/schemas/v1/ifx-cmd.schema.yaml を変更しました。新規則で引数・オプション表を廃止し正本参照（command.reference）へ一本化するため、ルートの required から arguments を除外（optional 化）し、正本参照プロパティ command.reference を追加しました。また、入出力の約束のうち「渡すファイル」「作るファイル」を定義する files プロパティ（inputs, outputs）および $defs/FileContract を追加し、「副作用」を定義する side_effects プロパティを追加しました。さらに終了カテゴリに rate_limit を追加し（finding F006 解消）、先頭メタ項目に supersedes を追加しました（finding F003 解消）。従来の引数定義や positional / config を含む既存文書も引き続き検査を通過する後方互換性を完全に維持しています。","executor が決定した内容と理由（PJR-RZ9Q への判断材料）: (1) 正本参照先（command.reference）はルートではなく command オブジェクト内に配置しました（コマンド実行体定義としてのコンテキストを統一し based_on と区別するため）。(2) 「作るファイル」「渡すファイル」はルートキー files 配下に inputs / outputs 配列として配置しました（ストリーム streams と明確に分離し、ファイル入出力のないコマンドでの省略を容易にするため）。(3) 「副作用」はルートキー side_effects（および execution.side_effects）として配置し、既存の execution.idempotency（冪等性保証条件）と組み合わせて記述する規則としました。(4) 終了カテゴリに rate_limit を追加しました（AI provider CLI や外部 API ラッパー CLI で頻発するレート制限を transient_failure と区別して再試行制御するため）。(5) arguments は rulebook・sample・template では廃止しましたが schema 上は optional として残し後方互換性を担保しました。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"History links validated successfully"},{"command":"npm run validate:catalog","status":"passed","summary":"Catalog validated successfully"}]}
+</specdojo_executor_evidence>
