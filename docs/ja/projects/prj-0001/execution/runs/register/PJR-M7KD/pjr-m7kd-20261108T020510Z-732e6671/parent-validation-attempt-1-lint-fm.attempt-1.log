@@ -1,0 +1,16 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[33mdocs/ja/specdojo/samples/ccd-sample.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+
+[33m⚠[39m 1 warning

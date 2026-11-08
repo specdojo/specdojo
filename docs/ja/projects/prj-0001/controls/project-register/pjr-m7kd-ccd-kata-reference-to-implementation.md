@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:33:10Z"
-  block_reason: "parent validation failed: lint-fm"
   derived_from:
     - PJR-2GD6
   depends_on:
@@ -65,6 +64,7 @@ specdojo:
 2. **sample の整備（`specdojo:ccd-sample`）**:
    - 新しい規則に従い、駄菓子屋の販売管理システムを題材とした完成サンプルを作成した。
    - クラスには主キーのみを配置し、親子・参照・継承の関連、多重度、役割名、多重度の業務上の根拠表、参照先 bdd 一覧を整備した。
+   - 親検証（lint-fm）で sample の frontmatter に `depends_on` が定義できない schema 制約（unevaluatedProperties）が検出されたため、frontmatter から `depends_on` を除去し、bdd への参照は本文（「1. 目的と適用範囲」「4. 参照業務データ辞書」）で明記する構成とした。
 3. **CHANGELOG の更新**:
    - `CHANGELOG.md` の `## [Unreleased]` 配下の `### 変更` に CCD の手入れ内容を記録した。
 
