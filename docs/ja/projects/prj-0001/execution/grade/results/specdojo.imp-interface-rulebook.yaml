@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-02T20:14:39.703Z"
+score: 99
+graded_at: "2026-11-08T20:44:09.235Z"
 graded_by: flash-high-executor
-content_hash: 209598f81257c4a54d3cb3ecd2554be238b8c22d00d81f87b2d78ec63e92c337
+content_hash: f202ef3668b12e15cc1777dd6008ee43d63ce3e601e4d7fcd9af8a382c4557e4
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 3
     score: 75
@@ -104,24 +104,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 37
-    anchor: ""
-    message: ドキュメントIDを固定値 `imp-interface` としているが、プロジェクト固有のIDとなるよう `＜project-id＞:imp-interface` 形式で定義すべきである。
-    message_ja: ドキュメントIDを固定値 `imp-interface` としているが、プロジェクト固有のIDとなるよう `＜project-id＞:imp-interface` 形式で定義すべきである。
-  - id: F002
-    severity: minor
     rule: vp-ux-readability
     line: 38
-    anchor: "| ---------- | -------------------------------------- | ---- |"
+    anchor: "| ---------- | ---------------------------------------------------- | ---- |"
     message: "推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。"
     message_ja: "推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。"
-  - id: F003
+  - id: F002
     severity: minor
     rule: vp-ux-readability
     line: 47

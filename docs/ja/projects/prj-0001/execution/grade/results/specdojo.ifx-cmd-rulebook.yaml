@@ -4,11 +4,11 @@ document: specdojo:ifx-cmd-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 82
-graded_at: "2026-11-01T20:30:17.097Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-08T20:33:07.684Z"
 graded_by: flash-high-executor
-content_hash: 96786fc0ad02432613a3f84b3982dd409da390f06124417b14463189262e7e34
+content_hash: 7e80232abf5c97380b43d3b64c2cb2e558a02fb2f1ef9b3f147d1b62686370bb
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 100
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -72,14 +72,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,76 +100,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 1
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-verifiability
-    line: 64
-    anchor: ""
-    message: >-
-      ルートキーだけでなく、`command`、`arguments`、`streams`、`authentication`、`execution`、`error_handling`
-      の各入れ子キーについて必須・任意と条件付き必須を明記し、仕様だけで pass / fail を判定できるようにしてください。
-    message_ja: >-
-      ルートキーだけでなく、`command`、`arguments`、`streams`、`authentication`、`execution`、`error_handling`
-      の各入れ子キーについて必須・任意と条件付き必須を明記し、仕様だけで pass / fail を判定できるようにしてください。
-  - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 118
-    anchor: ""
-    message: error_handling 内で記載すべき具体的なキー名（timeout_action, malformed_output_action, authentication_failure_action 等）を明記してください。
-    message_ja: error_handling 内で記載すべき具体的なキー名（timeout_action, malformed_output_action, authentication_failure_action 等）を明記してください。
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 56
-    anchor: "| arguments      | option／positional の種別、必須性、型、値の供給元、説明                          | ○    |"
-    message: >-
-      `version` に SemVer、`supersedes` に ID 配列を許可していますが、対応 schema は `version` を正整数に限定し、`supersedes` を許可していないため, メタ項目の契約を
-      schema と一致させてください。
-    message_ja: >-
-      `version` に SemVer、`supersedes` に ID 配列を許可していますが、対応 schema は `version` を正整数に限定し、`supersedes` を許可していないため, メタ項目の契約を
-      schema と一致させてください。
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 64
-    anchor: ""
-    message: >-
-      対応 schema が必須とする
-      `command.purpose`、`command.subcommands`、`command.shell`、各引数属性、各認証属性、実行属性、エラー処理属性の必須性を本文要件へ追加してください。
-    message_ja: >-
-      対応 schema が必須とする
-      `command.purpose`、`command.subcommands`、`command.shell`、各引数属性、各認証属性、実行属性、エラー処理属性の必須性を本文要件へ追加してください。
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 83
-    anchor: ""
-    message: >-
-      `arguments[].kind` の `positional`、`position` キー、`value_source` の `config` は対応 schema で許可されず、rulebook
-      に従った引数定義が検証エラーになるため、許容キーと enum を統一してください。
-    message_ja: >-
-      `arguments[].kind` の `positional`、`position` キー、`value_source` の `config` は対応 schema で許可されず、rulebook
-      に従った引数定義が検証エラーになるため、許容キーと enum を統一してください。
-  - id: F006
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 100
-    anchor: ""
-    message: 終了カテゴリとして定義した `rate_limit` は対応 schema の `exit_codes[].category` で許可されていないため, rulebook と schema の enum を一致させてください。
-    message_ja: 終了カテゴリとして定義した `rate_limit` は対応 schema の `exit_codes[].category` で許可されていないため, rulebook と schema の enum を一致させてください。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 83
-    anchor: ""
-    message: >-
-      rulebook と recipe が許容する `positional` および rulebook が許容する `config` を対応 schema
-      が拒否するため、rulebook・recipe・template・schemaを通じた引数契約を統一してください。
-    message_ja: >-
-      rulebook と recipe が許容する `positional` および rulebook が許容する `config` を対応 schema
-      が拒否するため、rulebook・recipe・template・schemaを通じた引数契約を統一してください。
+findings: []

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 93
-graded_at: "2026-10-31T20:30:13.981Z"
+graded_at: "2026-11-08T20:30:38.051Z"
 graded_by: flash-high-executor
-content_hash: c7e1b6021de1dc5fe7924a02532392081b61dad7d4242cb61f3c58551e702af5
+content_hash: aff26e86c4629e172603fe3aed790d86dd051dbe59eb7aee529badf3375c4eab
 categories:
   purpose:
     score: 88
@@ -111,7 +111,7 @@ findings:
     severity: minor
     rule: vp-po-decision-readiness
     line: 32
-    anchor: "## 5. 本文構成（標準テンプレ）"
+    anchor: ""
     message: 本文構成に「判断者」や「未決事項」を設けておらず、誰が判断を下したか、および残存する論点が不明瞭になる恐れがある。
     message_ja: 本文構成に「判断者」や「未決事項」を設けておらず、誰が判断を下したか、および残存する論点が不明瞭になる恐れがある。
   - id: F002
@@ -125,7 +125,7 @@ findings:
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 32
-    anchor: "## 5. 本文構成（標準テンプレ）"
+    anchor: ""
     message: 影響範囲をタスク化するための「次アクション」や「担当者」の項目が標準テンプレに含まれておらず、実行可能性を担保しにくい。
     message_ja: 影響範囲をタスク化するための「次アクション」や「担当者」の項目が標準テンプレに含まれておらず、実行可能性を担保しにくい。
   - id: F004
@@ -139,7 +139,7 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 23
-    anchor: "## 4. 推奨 Frontmatter 項目"
+    anchor: ""
     message: Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。
     message_ja: Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。
   - id: F006
@@ -153,13 +153,13 @@ findings:
     severity: minor
     rule: vp-ux-readability
     line: 27
-    anchor: ""
+    anchor: "| ---- | ---- | ---- |"
     message: Markdownの表のヘッダーとデータ行の間に空行が含まれており、レンダリングが崩れる恐れがあるため削除すべきである。
     message_ja: Markdownの表のヘッダーとデータ行の間に空行が含まれており、レンダリングが崩れる恐れがあるため削除すべきである。
   - id: F008
     severity: minor
     rule: vp-ux-readability
     line: 42
-    anchor: "## 6. 記述ガイド"
+    anchor: ""
     message: 「記述ガイド」の具体性が不足しており、「判断軸」の書き方や曖昧さを排除する記述方法など、作成者が迷わないための具体的な指針を追記すべきである。
     message_ja: 「記述ガイド」の具体性が不足しており、「判断軸」の書き方や曖昧さを排除する記述方法など、作成者が迷わないための具体的な指針を追記すべきである。

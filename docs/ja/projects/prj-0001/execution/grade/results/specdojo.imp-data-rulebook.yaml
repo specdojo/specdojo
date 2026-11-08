@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 78
-graded_at: "2026-11-01T20:42:46.022Z"
+graded_at: "2026-11-08T20:39:43.641Z"
 graded_by: flash-high-executor
-content_hash: f1fbde029f78704f3c028b741c83e04a378d9159a509ea2b1988d485a9a5fc7d
+content_hash: 1bad4c935f56c95372179f70b2e0c0a49e26e9397893245e65acd83af0fcebc6
 categories:
   purpose:
     score: 100
@@ -125,7 +125,7 @@ findings:
     severity: major
     rule: vp-qe-omissions-consistency
     line: 38
-    anchor: "| -------- | ----------------------------------- | ---- |"
+    anchor: "| -------- | ---------------------------------------------- | ---- |"
     message: >-
       `type: project` の成果物IDを `imp-data` 固定としているが、参照先の命名標準は正規IDを `＜project-id＞:＜local-id＞` と定めているため、`imp-data` は
       local_id と明記し、Frontmatter の `id` は `＜project-id＞:imp-data` とする必要がある。
