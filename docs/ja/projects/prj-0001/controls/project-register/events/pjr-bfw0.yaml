@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f006818a18094ad3b22458cc38b0e511
+  ts: "2026-11-08T13:52:01Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの本文に、同じ型の手直しは同じ項目で回す決まりを足す
+    - field: description
+      from: ""
+      to: 確かめた結果や利用者の確認で直す点が出たとき、同じ目的・同じファイルの手直しは新しく起票せず、元の todo に回目の完了条件を足して流し直し、確定の decision は確定まで開けておく決まりを、配布するオーケストレーターの本文に足す
+    - field: input
+      from: ""
+      to: '["2026-11-08、clis の型の手直しで todo と decision を 4 回ずつ起票したことへの indie の指摘から。運用メモではなく配布する本文に書く（indie が決定）。orchestrator が直接対応する。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
