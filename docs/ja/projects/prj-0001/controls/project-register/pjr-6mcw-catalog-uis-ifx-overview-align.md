@@ -29,13 +29,18 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `dct-user-interface-model.yaml` の `uis-exec-commands` と、`dct-external-interface-specs.yaml` の `ifx-cmd-ai-provider-cli` の `overview` と `done_criteria` を、確定した型（[[specdojo:uis-rulebook]]・[[specdojo:ifx-cmd-rulebook]]）に合わせている。引数・オプションを書くという記述を外し、uis は利用目的・操作の流れ・表示・エラー表示の要点、ifx-cmd は正本の参照と入出力の約束を書く形にする。
+- 2 件以外の項目と、ほかのカタログを変えていない。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の `### CHANGELOG に書く事項` の節に、区分（追加・変更・不具合修正など）と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
+- `specdojo catalog validate --project prj-0001`・`npm run validate:schema` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                | 担当   | 状態 | メモ |
+| --- | ----------------------------------- | ------ | ---- | ---- |
+| 1   | 確定した型と 2 件の項目を読み比べる | _TODO_ | open | -    |
+| 2   | overview と done_criteria を直す    | _TODO_ | open | -    |
+| 3   | 検査を流し、対応結果に書く          | _TODO_ | open | -    |
 
 ## 5. 対応結果
 
@@ -43,4 +48,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 親: [[prj-0001:pjr-2gd6-business-specs-reps]]
+- 由来: [[prj-0001:pjr-v6rb-catalog-add-sf-uis-ifx-reps]]

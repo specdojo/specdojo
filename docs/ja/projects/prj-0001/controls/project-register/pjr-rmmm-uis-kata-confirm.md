@@ -20,7 +20,7 @@ specdojo:
 
 ## 1. 背景
 
-手入れした uis の型を人が確かめ、確定するか直すかを決める
+uis も実装と同じことを書かない対象に加えたため（2026-11-08）、PJR-0YNQ で手入れした uis の型を人が確かめて確定する。確定した型で、カタログの説明の直し（PJR-6MCW）と代表の作成を進める。
 
 ## 2. 入力
 
@@ -62,4 +62,6 @@ _TODO_: 採択した内容を明確に記載する。
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 親: [[prj-0001:pjr-2gd6-business-specs-reps]]
+- 型の手入れ: [[prj-0001:pjr-0ynq-uis-kata-reference-to-command-reference]]
+- 前例: [[prj-0001:pjr-rz9q-business-specs-reps-kata-confirm]]
