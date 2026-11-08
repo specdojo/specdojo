@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8e193f05a64d48409889d80b3d6b654b
+- v: 1
+  id: reg_aaa5a2efc38645f5a222d1eedf8f6df5
+  ts: "2026-11-08T22:56:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor、2 回）で対応。2 回目で epic の開始日・終了日・稼働日数と日付のテストを戻し、空のリポジトリの確かめを一時ディレクトリの中に限った。生成した dashboard.md の章立て・lint:md・/tmp の直下に出力がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: "-"
+      to: ダッシュボードを、人の対応が要るもの・おすすめ（リンク付き、先行の項目がそろったものだけ）・実行中の epic（段ごとの進み具合と次のタスク、開始日・終了日）を先に出し、終わった epic・routine の定義・Grade の表・全体の集計を折りたたむ構成にした
+  previous_event_id: reg_5dfdbdd8b7884ac4871a93133e0fe1c9

@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0f94-dashboard-action-first-layout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T14:34:25Z"
+  completed_at: "2026-11-08T22:56:22Z"
+  conclusion: ダッシュボードを、人の対応が要るもの・おすすめ（リンク付き、先行の項目がそろったものだけ）・実行中の epic（段ごとの進み具合と次のタスク、開始日・終了日）を先に出し、終わった epic・routine の定義・Grade の表・全体の集計を折りたたむ構成にした
 ---
 
 # PJR-0F94 ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す
