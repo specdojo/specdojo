@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bc42a5ccdfa34326bf119642f0a00f7f
+  ts: "2026-11-08T00:30:13Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 分類一覧の略号を cld から cdt に変える
+    - field: description
+      from: ""
+      to: 分類一覧（Classification List）の略号 cld が概念クラス図の ccd と紛れるため、code table の cdt に変える。公開済みの kata ID は経路 B で新しい ID に切り替え、古い ID は非推奨として残す
+    - field: input
+      from: ""
+      to: '["略号は cdt にする（indie が決定、2026-11-08）。prj-0001 には cld の成果物も schedule のタスクもまだない。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-2GD6"]'
