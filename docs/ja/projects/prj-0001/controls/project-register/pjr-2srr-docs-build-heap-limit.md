@@ -29,13 +29,20 @@ npm run docs:build が既定の heap では JavaScript heap out of memory で止
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `npm run docs:build` を手元で流したときのメモリの上限の設定の仕方を決めている。候補は `package.json` の scripts で設定するか、`packages/docs-site/bin/specdojo-docs-site.js` が子プロセスを起動するときに設定するかで、executor が選び、理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
+- 上限の値を、今の実測（4GB で足りるか、8GB が要るか）をもとに決め、CI の `.github/workflows/deploy.yml` の値とそろえるか、分ける理由を書いている。
+- `package.json` と `.github/workflows/` は executor が変えず、変更案を個票の対応結果と報告の `handoff` に書いている。反映は利用者の承認のもと feature ブランチで行う。
+- `packages/docs-site/` のコードを変える場合は、その変更で `npm run docs:build` が既定の環境で通ることを確かめている。
+- CHANGELOG は未公開の版の節にだけ書き、公開済みの版の節を変えていない。
+- `npm run lint:md` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                 | 担当   | 状態 | メモ |
+| --- | ------------------------------------ | ------ | ---- | ---- |
+| 1   | 設定の仕方と上限の値を決める         | _TODO_ | open | -    |
+| 2   | コードを変えるか、変更案を書く       | _TODO_ | open | -    |
+| 3   | 検査を流し、理由と案を対応結果に書く | _TODO_ | open | -    |
 
 ## 5. 対応結果
 
@@ -43,4 +50,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 由来: [[prj-0001:pjr-hmv6-rename-cld-to-cdt]]
