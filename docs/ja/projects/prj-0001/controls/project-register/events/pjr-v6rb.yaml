@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_97e45d1f465b47569e52f2be339565c7
+  ts: "2026-11-08T00:31:29Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: カタログに sf・uis・ifx の代表を 1 件ずつ足す
+    - field: description
+      from: ""
+      to: システム化機能・画面・外部 I/F のカタログには索引しかないため、代表として作る個別の文書を 1 件ずつ足す
+    - field: input
+      from: ""
+      to: '["候補（indie が推奨どおりと決定）: sf はタスクの実行の機能、uis は exec コマンド群、ifx は AI provider CLI の起動（ifx-cmd）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
