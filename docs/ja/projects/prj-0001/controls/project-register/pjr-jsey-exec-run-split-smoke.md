@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: HQVE の統合後の dist で、claude-executor（sonnet-executor）の exec run --register が start から review・統合まで通った
+  completed_at: "2026-11-08T17:35:47Z"
+  conclusion: C4KF の統合後の dist で、claude-executor の exec run --register が start から review・統合まで通った
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる

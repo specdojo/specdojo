@@ -4482,3 +4482,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f5ba33c4399e45f68e7acd13d4888314
+- v: 1
+  id: reg_ea60976e627749e89372cfb0709c27b4
+  ts: "2026-11-08T17:35:47Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（claude-executor）で確認。最初の run は /tmp の直下に残った init の出力（PJR-5FTV）で親の検証が落ち、片付けて --resume した。統合の commit に入ったのは JSEY の個票・イベント・実行記録だけだった
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: HQVE の統合後の dist で、claude-executor（sonnet-executor）の exec run --register が start から review・統合まで通った
+      to: C4KF の統合後の dist で、claude-executor の exec run --register が start から review・統合まで通った
+  previous_event_id: reg_fabf8ed4bd834f379cbf61341cb8ecad
