@@ -103,6 +103,24 @@ Lines 71-76 の `Build VitePress site` ステップの `NODE_OPTIONS` を `4096`
 - 利用者の承認を得た後、feature ブランチにて上記変更案を反映し、手元および CI での `docs:build` の通過を確認すること。
 - 反映コミットに合わせて、`CHANGELOG.md` の `[Unreleased]` の `変更` または `不具合修正` に本対応（手元および CI の docs:build メモリ上限を 8GB に設定）を記載すること。
 
+### orchestrator による実測と反映（2026-11-08）
+
+executor の対応結果にある「4GB でも不足した」は、executor の時点では測っていなかった。orchestrator が同じ環境（メモリ 15GB）で測った結果は次のとおりで、8GB が要るという結論は変わらない。
+
+| 上限                               | 結果                               |
+| ---------------------------------- | ---------------------------------- |
+| 既定                               | heap out of memory で停止          |
+| 4GB（`--max-old-space-size=4096`） | 554 秒で heap out of memory で停止 |
+| 8GB（`--max-old-space-size=8192`） | 665 秒で通過                       |
+
+- 利用者の承認のもと、`feature/prj-0001/docs-build-heap` で `package.json` の `docs:build` と `.github/workflows/deploy.yml` の `NODE_OPTIONS` を 8GB にし、develop へ `--no-ff` で統合した（`70f90e695`）。
+- scripts の `NODE_OPTIONS=...` の書き方は Windows の cmd では動かないが、この repo は devcontainer と CI（どちらも Linux）で使うため問題にしない。
+
+### CHANGELOG に書く事項
+
+- 区分: 変更
+- 文案: `npm run docs:build` と CI の文書サイトの生成で、Node.js のメモリの上限を 8GB にしました。文書が 4,000 件を超え、4GB では生成が止まるためです。
+
 ## 6. 関連ドキュメント
 
 - 由来: [[prj-0001:pjr-hmv6-rename-cld-to-cdt]]
