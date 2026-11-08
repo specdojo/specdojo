@@ -4408,3 +4408,48 @@
       from: PJR-8YH0・PJR-G1W9 の統合後に claude-executor で exec run --register を流し、新しい書き方の規約の参照が plan に書かれ、規約の本文が戻り、start から review まで通ることを確かめた
       to: HQVE の統合後の dist で、claude-executor（sonnet-executor）の exec run --register が start から review・統合まで通った
   previous_event_id: reg_c360926d7eff412c9682e29f32b4d6f0
+- v: 1
+  id: reg_fdf04e6ce3c340adbe3235a82ca2b0b5
+  ts: "2026-11-08T15:28:47Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-C4KF（executor に渡す検査の適用条件の文）の統合後の動作を実際の exec run --register で確かめるため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-08"
+      to: "-"
+  previous_event_id: reg_6e730c1016724a92a27fb48c518a55f3
+- v: 1
+  id: reg_26e3066bafca4148a8c3e4a831ec396a
+  ts: "2026-11-08T15:29:32Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fdf04e6ce3c340adbe3235a82ca2b0b5
+- v: 1
+  id: reg_0c13be89146e48c3a32fec79a91ab52c
+  ts: "2026-11-08T15:39:02Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_26e3066bafca4148a8c3e4a831ec396a
