@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cd1da7a96e684b1ba69f506bd59afca5
+- v: 1
+  id: reg_5a4b66b6e306468e8397a6370cdb13c5
+  ts: "2026-11-08T17:36:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分（指示の文とテストの期待値 1 行）・親の検証・JSEY の run を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: "-"
+      to: executor に渡す validate:history-links の適用条件の文に、execution/runs の plan.md・result.md を足し、判定の実装と同じ範囲にした
+  previous_event_id: reg_0e702835e95248cebb553f5ed9e69f78

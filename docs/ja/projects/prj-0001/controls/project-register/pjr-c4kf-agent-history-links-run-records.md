@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-c4kf-agent-history-links-run-records
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   registered_at: "2026-11-07T23:52:58Z"
+  completed_at: "2026-11-08T17:36:06Z"
+  conclusion: executor に渡す validate:history-links の適用条件の文に、execution/runs の plan.md・result.md を足し、判定の実装と同じ範囲にした
   derived_from:
     - PJR-5ZNK
 ---
