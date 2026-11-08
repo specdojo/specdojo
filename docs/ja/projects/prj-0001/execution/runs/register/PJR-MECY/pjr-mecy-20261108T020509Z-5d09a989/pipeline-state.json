@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-MECY",
   "run_id": "pjr-mecy-20261108T020509Z-5d09a989",
-  "updated_at": "2026-11-08T02:41:30.689Z",
+  "updated_at": "2026-11-08T02:42:03.157Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MECY/pjr-mecy-20261108T020509Z-5d09a989/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-11-08T02:41:30.689Z",
-      "completed_at": null,
+      "completed_at": "2026-11-08T02:42:03.157Z",
       "artifact_ref": null
     }
   },
