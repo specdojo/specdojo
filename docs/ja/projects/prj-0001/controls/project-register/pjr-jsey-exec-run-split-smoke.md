@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  block_reason: "parent validation failed: test-integration, test-unit"
   conclusion: HQVE の統合後の dist で、claude-executor（sonnet-executor）の exec run --register が start から review・統合まで通った
 ---
 
@@ -111,8 +112,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-07 16:12 | PJR-KC0T | sonnet-executor        |
 | 2026-11-07 17:24 | PJR-G1W9 | sonnet-executor        |
 | 2026-11-08 09:26 | PJR-HQVE | sonnet-executor        |
+| 2026-11-09 00:31 | PJR-C4KF | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-HQVE とした（review 遷移の実行コミット `ab1d8142e`、2026-11-08 09:23 JST）。実行した agent は、sonnet-executor である。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-C4KF とした（review 遷移の実行コミット `1a8ec6ee6`、2026-11-09 00:02 JST）。実行した agent は、sonnet-executor である。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 

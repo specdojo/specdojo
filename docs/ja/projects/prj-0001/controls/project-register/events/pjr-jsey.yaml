@@ -4437,3 +4437,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_fdf04e6ce3c340adbe3235a82ca2b0b5
+- v: 1
+  id: reg_0c13be89146e48c3a32fec79a91ab52c
+  ts: "2026-11-08T15:39:02Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_26e3066bafca4148a8c3e4a831ec396a
