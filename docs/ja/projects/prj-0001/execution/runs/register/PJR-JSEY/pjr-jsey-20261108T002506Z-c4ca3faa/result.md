@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JSEY/pjr-jsey-20261108T002506Z-c4ca3faa/plan.md
   started_at: "2026-11-08T00:25:06.907Z"
+  completed_at: "2026-11-08T00:33:32.913Z"
   agent: sonnet-executor
 ---
 
@@ -16,16 +17,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` の対応結果の表に `PJR-HQVE` の確認行を追記し、直下の説明文を更新しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 親 runner の7検証、reporter の result 記入、統合、`review` 遷移は後続段で確認する(個票の既存の申し送り段落に記載済み)。
+- 適用外の検証: `npm run validate:history-links`（追記内容に Markdown リンクがなく、リンク記法の違反は生じないため。）
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` を開き、対応結果の表への追記および説明文の更新を実施しました。

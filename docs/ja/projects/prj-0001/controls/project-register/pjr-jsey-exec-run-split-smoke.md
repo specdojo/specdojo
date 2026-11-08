@@ -110,8 +110,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-07 11:25 | PJR-9BY9 | sonnet-executor        |
 | 2026-11-07 16:12 | PJR-KC0T | sonnet-executor        |
 | 2026-11-07 17:24 | PJR-G1W9 | sonnet-executor        |
+| 2026-11-08 09:26 | PJR-HQVE | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-G1W9 とした（review 遷移の実行コミット `1ed274159`、2026-11-07 17:19 JST。PJR-8YH0 の review は 17:00 でそれより前）。実行した agent は、sonnet-executor である。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-HQVE とした（review 遷移の実行コミット `ab1d8142e`、2026-11-08 09:23 JST）。実行した agent は、sonnet-executor である。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
