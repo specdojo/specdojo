@@ -47,3 +47,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-2GD6","PJR-025M"]'
+- v: 1
+  id: reg_c2eceb5a90c84cff9e3d3c35dcb18c1c
+  ts: "2026-11-08T09:03:05Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_200dd36cf0d241a29a463e4786f12344
+- v: 1
+  id: reg_52a47f87b2934fa985f8c1a504dbe179
+  ts: "2026-11-08T09:22:34Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c2eceb5a90c84cff9e3d3c35dcb18c1c

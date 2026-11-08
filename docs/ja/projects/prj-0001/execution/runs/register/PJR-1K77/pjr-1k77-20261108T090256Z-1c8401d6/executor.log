@@ -1,0 +1,36 @@
+コマンドの確認を実行しています。通知を受け取ったら作業を続行します。
+進捗を確認中です。
+単体テストの実行完了を待機しています。
+単体テストの実行完了を待機しています。
+単体テストの実行完了を待機しています。
+単体テストを実行中です。通知を受け取り次第処理を継続します。
+単体テストの実行中ですので、完了まで待機します。
+単体テストの実行完了を待機します。
+テストの完了を待機中です。
+待機中です。
+待機中です。
+待機中です。
+タスク PJR-1K77（CLI 仕様（clis）の入出力を、ファイルに限らない入力情報と出力情報に直す）の executor フェーズ作業を完了しました。
+
+### 実施概要
+
+1. **`clis-rulebook`（[[clis-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1K77/docs/ja/specdojo/rulebooks/clis-rulebook.md)]）の改訂**:
+   - 本文要件の第 5 章を「入力と出力の要点」とし、小節を「5.1. 入力情報」と「5.2. 出力情報」の 2 つに再構成（標準出力の要点は出力情報へ統合）。
+   - 記述ガイド（6.5 節）に、入力情報の表（種類・対象・役割・正本参照・ない／壊れている／届かないときの扱い）および出力情報の表（種類・対象・役割・正本参照）の構成と、正本参照規約（ファイルは rulebook/schema、API は [[ifx-api-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1K77/docs/ja/specdojo/rulebooks/ifx-api-rulebook.md)] 準拠文書）、API 失敗（つながらない・時間切れ・拒否）のエラー表接続、認証情報の保護規約（名前と用途のみ、値非記載）、取得・更新 API の両方記載規約を明文化。
+   - 全体方針、位置づけ図（Mermaid）、用語定義、禁止事項、運用ルールにおける「読むファイル」「作るファイル」等の記述を入力情報・出力情報へ整合。
+   - `##` 以下の全見出しに連番を付与。
+
+2. **`clis-sample`（[[clis-sample.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1K77/docs/ja/specdojo/samples/clis-sample.md)]）の改訂**:
+   - 第 5 章を「5.1. 入力情報」「5.2. 出力情報」の新章立てに刷新。
+   - ファイル（店舗設定、一時セッション）に加え、環境変数（`KINUYA_API_KEY`）、対話での入力（預かり金額入力）、API の応答（商品マスタ取得 API）、API への送信（本部売上登録 API）の具体例を追加。
+   - 取得と更新を行う売上登録 API を入力情報・出力情報の双方に明記。
+   - 第 6 章に、商品マスタ API および売上登録 API の失敗（接続失敗、タイムアウト、認証拒否、404未登録）、環境変数未設定に関する終了コード（3: 外部 API・通信エラー等）・表示要点・原因・利用者の次の手を網羅。
+   - `##` 以下の全見出しに連番を付与。
+
+3. **登録簿個票（[[pjr-1k77-clis-kata-input-output-info.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1K77/docs/ja/projects/prj-0001/controls/project-register/pjr-1k77-clis-kata-input-output-info.md)]）の記録**:
+   - 作業内容の進捗・メモを更新。
+   - 対応結果に実施内容、成果物、スキーマ変更要否、executor 設計判断と理由（PJR-K4PM への判断材料）、CHANGELOG 記載文案（PJR-EPQ3）、残課題・申し送りを記録。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"clis-rulebook および clis-sample の入出力要点をファイルから入力情報・出力情報へ刷新し、API・環境変数等の規則と例、エラー連携を追加完了","handoff":["[CHANGELOG] 区分: 変更 / 文案: CLI 仕様（clis）の型を入出力ファイルから入力情報・出力情報（ファイル、標準入力、環境変数、対話での入力、API 連携、正本参照、エラー連携）へ刷新し、clis-sample に API・環境変数の入出力例と通信失敗エラー回復例を追加（specdojo:clis-rulebook, specdojo:clis-sample）","[設計判断] 1. 第5章の見出しを「入力と出力の要点」とし、「5.1. 入力情報」「5.2. 出力情報」の2小節に改組（標準出力は出力情報へ統合）。","[設計判断] 2. 入力情報・出力情報の表にコマンド列およびエラー表連携列（対応エラー事象）を配置し、正本参照と欠損・破損・不達時（つながらない・時間切れ・拒否）の扱いを定義。","[設計判断] 3. clis-sample の終了コード体系に終了コード 3（外部 API・通信エラー）を定義し、通信障害・タイムアウト・認証拒否とユーザー入力不正（404未登録）を分離。","[設計判断] 4. 取得と更新を行う API（売上登録 API）は入力情報（受付結果の受領）と出力情報（売上データの送信）の双方に記載。","[設計判断] 5. 認証情報（KINUYA_API_KEY）は環境変数名と用途のみ記載し値は非記載を徹底。","[次のアクション] 後続の確定タスク（PJR-K4PM）にて、本対応結果の決定内容と clis の型の確定判断を行う。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更された個票の履歴リンク検証に合格"},{"command":"npm run validate:catalog","status":"passed","summary":"成果物カタログ検証に合格"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml files were changed in this task."}]}
+</specdojo_executor_evidence>
