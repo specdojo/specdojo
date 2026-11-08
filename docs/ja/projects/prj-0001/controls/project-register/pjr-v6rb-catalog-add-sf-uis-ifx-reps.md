@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-v6rb-catalog-add-sf-uis-ifx-reps
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:31:26Z"
+  completed_at: "2026-11-08T00:57:55Z"
+  conclusion: カタログに sf-task-execution・uis-exec-commands・ifx-cmd-ai-provider-cli を足し、3 つの索引の note を代表を作る方針に合わせた
   derived_from:
     - PJR-2GD6
 ---
