@@ -17,6 +17,7 @@ specdojo:
     - PJR-V6RB
     - PJR-RZ9Q
     - PJR-HQVE
+    - PJR-6MCW
   approach: strategy-planning
   targets:
     - track:business-specs-reps
