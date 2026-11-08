@@ -62,8 +62,9 @@ Web やデスクトップ等の GUI 画面を対象とします。コマンド�
 - ファイル名:
   - GUI 画面: `uis-<番号>-<短い日本語名>.md`（例: `uis-0010-商品一覧.md`）
 - Frontmatter:
-  - 同梱（コア）: `specdojo:uis-<kebab-case>`（例: `specdojo:uis-product-list`）
-  - 利用者作成（プロジェクト）: `<authority>:uis-<kebab-case>` または `uis-<kebab-case>`（例: `uis-product-list`）
+  - プロダクト文書: `uis-<kebab-case>`（例: `uis-product-list`）。namespace は付けません。
+  - プロジェクト文書: `<project-id>:uis-<kebab-case>`（例: `prj-0001:uis-product-list`）。同じプロジェクトの中で参照するときは `<project-id>:` を省略できます。
+  - SpecDojo が同梱する sample: `specdojo:uis-sample`。記述例を識別するための例外で、成果物の ID には `specdojo:` を付けません。
 - ドキュメント名（画面名）:
   - 本文先頭の H1 に記述します（Frontmatter の `title` プロパティは使用しません）。
 

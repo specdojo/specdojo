@@ -78,8 +78,9 @@ graph TD
 - ファイル名:
   - `clis-<機能名またはコマンド群名>.md`（例: `clis-sales-commands.md`, `clis-exec-commands.md`）
 - Frontmatter ID:
-  - 同梱（コア）: `specdojo:clis-<kebab-case>`（例: `specdojo:clis-exec-commands`）
-  - 利用者作成（プロジェクト）: `<authority>:clis-<kebab-case>` または `clis-<kebab-case>`（例: `prj-0001:clis-sales-commands`）
+  - プロダクト文書: `clis-<kebab-case>`（例: `clis-exec-commands`）。namespace は付けません。
+  - プロジェクト文書: `<project-id>:clis-<kebab-case>`（例: `prj-0001:clis-exec-commands`）。同じプロジェクトの中で参照するときは `<project-id>:` を省略できます。
+  - SpecDojo が同梱する sample: `specdojo:clis-sample`。記述例を識別するための例外で、成果物の ID には `specdojo:` を付けません。
 - ドキュメント名（H1）:
   - 本文先頭の H1 に記述します（Frontmatter の `title` プロパティは使用しません）。
 
