@@ -1,0 +1,3 @@
+標準章立てと入力・判定・出力・例外の記述を確認し、未作成の依存 BPS に関する TODO を、未確認の境界として明確化しました。Prettier と `git diff --check` は通過しています。PO 判断が必要な項目は申し送りに残しました。
+
+{"completion_status":"complete","final_message":"成果物の未確認事項を最小修正し、整形と差分検査を完了しました。","handoff":["`bps-task-selection-preparation` が作成された後、本書の適用範囲・対象外と同仕様の手順との対応を確認してください。","PO は `fifo` をタスク ID 辞書順とする現行定義を維持するか、到着順に意味を合わせるか判断してください。","PO はメンバー既定戦略として受け付ける `dependency-first` / `manual` を選択時にも扱うか判断してください。","PO はエージェント実行の自動選択が実行主体の既定戦略を参照しない差を維持するか判断してください。"],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md","status":"passed","summary":"ファイルを確認・整形し、変更なし。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし."}]}"}
