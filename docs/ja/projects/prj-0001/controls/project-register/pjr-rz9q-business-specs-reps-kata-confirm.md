@@ -24,7 +24,7 @@ specdojo:
 
 ## 1. 背景
 
-実装と同じことを書かない形に手入れした 5 種類の型を人が確かめ、確定するか直すかを決める。確定した型で業務仕様の代表を schedule で作る
+業務仕様の代表を作る前に、実装と同じことを 2 回書かないよう、5 種類の型（bdd・ccd・cdt・sf・ifx-cmd）を手入れする（PJR-MECY・PJR-M7KD・PJR-7FXC・PJR-C1RG・PJR-4N3R）。手入れした型で代表を作ると、型の誤りが代表の文書にそのまま入るため、schedule を作る前に人が型を確かめて確定する。
 
 ## 2. 入力
 
@@ -32,9 +32,14 @@ specdojo:
 
 ## 3. 検討した選択肢
 
-| 選択肢 | 内容   | 利点   | 懸念   |
-| ------ | ------ | ------ | ------ |
-| A      | _TODO_ | _TODO_ | _TODO_ |
+種類ごとに、次のどちらかを選ぶ。
+
+| 選択肢 | 内容                                                                                          |
+| ------ | --------------------------------------------------------------------------------------------- |
+| 確定   | 手入れした rulebook と sample（ifx-cmd は recipe・template も）を、代表を作る型として確定する |
+| 直す   | 直す点を書いて、その種類の型の手入れの todo を起票し直す。その種類の代表は直した後に作る      |
+
+判断の材料は、各 todo の個票の対応結果にある「executor が決めた点と理由」と、型の差分である。
 
 ## 4. 決定内容
 
@@ -66,4 +71,6 @@ _TODO_: 採択した内容を明確に記載する。
 
 ## 8. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 親: [[prj-0001:pjr-2gd6-business-specs-reps]]
+- 型の手入れ: [[prj-0001:pjr-mecy-bdd-kata-reference-to-implementation]]、[[prj-0001:pjr-m7kd-ccd-kata-reference-to-implementation]]、[[prj-0001:pjr-7fxc-cdt-kata-reference-to-implementation]]、[[prj-0001:pjr-c1rg-sf-kata-reference-to-implementation]]、[[prj-0001:pjr-4n3r-ifx-cmd-kata-reference-to-implementation]]
+- 前例: [[prj-0001:pjr-pt5n-stsd-kata-confirm]]
