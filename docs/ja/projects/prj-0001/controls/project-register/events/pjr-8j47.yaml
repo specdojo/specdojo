@@ -109,3 +109,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_518258a26aad459a93ebf16a3a27fe40
+- v: 1
+  id: reg_ed66fed9c96847a6ac09c092c746bf84
+  ts: "2026-11-08T13:56:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・catalog validate を確かめた。索引専用の rulebook がないため clis-index は rulebook を宣言しない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: カタログの uis-index・uis-exec-commands を clis-index・clis-exec-commands に付け替え、説明と完了条件を確定した clis の型に合わせた。sf-index の参照も直した
+  previous_event_id: reg_18e33c7ec6ba4667a1c71f50f4595c31

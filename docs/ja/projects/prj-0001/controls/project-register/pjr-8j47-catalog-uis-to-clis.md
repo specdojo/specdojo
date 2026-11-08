@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-8j47-catalog-uis-to-clis
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-11-08T06:49:16Z"
+  completed_at: "2026-11-08T13:56:38Z"
+  conclusion: カタログの uis-index・uis-exec-commands を clis-index・clis-exec-commands に付け替え、説明と完了条件を確定した clis の型に合わせた。sf-index の参照も直した
   derived_from:
     - PJR-2GD6
     - PJR-RMMM
