@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-25b9-clis-kata-confirm-diagram-references
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-08T11:53:47Z"
+  completed_at: "2026-11-08T13:39:43Z"
+  conclusion: clis の型を確定する（図と ID の決まりの直しを含む）
   derived_from:
     - PJR-2GD6
     - PJR-K4PM

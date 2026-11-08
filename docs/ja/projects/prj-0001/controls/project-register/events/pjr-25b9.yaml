@@ -41,3 +41,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-1D1X"]'
+- v: 1
+  id: reg_35242f6b07be4b66b5f854692d55afbd
+  ts: "2026-11-08T13:39:43Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（2026-11-08）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: clis の型を確定する（図と ID の決まりの直しを含む）
+  previous_event_id: reg_a4178980ef7941b483cb2831c9e18bc9
