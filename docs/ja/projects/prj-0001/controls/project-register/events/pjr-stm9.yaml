@@ -63,3 +63,16 @@
       from: '["PJR-V6RB","PJR-RZ9Q","PJR-HQVE"]'
       to: '["PJR-V6RB","PJR-RZ9Q","PJR-HQVE","PJR-6MCW"]'
   previous_event_id: reg_a83b3181d8b546ca8886ff780fad7f52
+- v: 1
+  id: reg_b69b5701f05049e6be6defe161e15f74
+  ts: "2026-11-08T06:49:36Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: uis を clis に分ける直し（PJR-RMMM）を schedule を作る前に入れるため
+  changes:
+    - field: depends_on
+      from: '["PJR-V6RB","PJR-RZ9Q","PJR-HQVE","PJR-6MCW"]'
+      to: '["PJR-V6RB","PJR-RZ9Q","PJR-HQVE","PJR-6MCW","PJR-PJYJ","PJR-8J47"]'
+  previous_event_id: reg_6e958a297c38488aa2f653a2cebd3562
