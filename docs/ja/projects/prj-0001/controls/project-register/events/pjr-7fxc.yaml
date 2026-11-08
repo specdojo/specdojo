@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bce3dcda0d6a401db4c2fae46d650fbb
+  ts: "2026-11-08T00:36:20Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 分類一覧（cdt）の型を、実装と同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: 分類一覧の型を手入れする。値の一覧は schema の enum と TypeScript の union 型を正として参照し、値ごとの業務上の意味と使い分けだけを書く
+    - field: input
+      from: ""
+      to: '["方針（indie が決定、2026-11-08）: 値の一覧は schema の enum と TypeScript の union 型を正として参照し、値ごとの業務上の意味と使い分けだけを書く。","rulebook にあわせて cdt-sample も揃える。cdt-rulebook は PJR-HMV6 で作られるため、起票の時点では approach と対象を付けていない。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-HMV6"]'
