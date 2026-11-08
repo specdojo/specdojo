@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-stm9-business-specs-reps-strategy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:37:07Z"
+  completed_at: "2026-11-08T15:18:52Z"
+  conclusion: 代表 8 件の sch-strategy-business-specs-reps.yaml と track（40 タスク）を作った。実装がある 6 件は retrofit、br・bes は freeform で作り、磨き込み・condense・review・確定（人）へ進む。milestone は business-specs-reps の 11 件だけを足した
   derived_from:
     - PJR-2GD6
   depends_on:

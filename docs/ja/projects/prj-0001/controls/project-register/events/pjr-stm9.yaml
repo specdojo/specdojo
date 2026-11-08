@@ -134,3 +134,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f067d55b682f4846bd18f08648707955
+- v: 1
+  id: reg_17bd2a3cf57d4bd58249890a5ede802e
+  ts: "2026-11-08T15:18:52Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。lint-fm の失敗は管理外の grade の一時ファイルによるもので、indie の承認で消して --resume した。段の並び・schedule build --dry-run・exec validate --schedule-only を確かめた。strategy の生成のため bdd-rulebook（pass 90）と bes-sample（fail 50）の grade が更新された
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: "-"
+      to: 代表 8 件の sch-strategy-business-specs-reps.yaml と track（40 タスク）を作った。実装がある 6 件は retrofit、br・bes は freeform で作り、磨き込み・condense・review・確定（人）へ進む。milestone は business-specs-reps の 11 件だけを足した
+  previous_event_id: reg_2b3c86fe877946b99b13a053e062901e
