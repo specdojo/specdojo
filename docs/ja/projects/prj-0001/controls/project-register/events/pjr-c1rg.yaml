@@ -50,3 +50,16 @@
     - field: depends_on
       from: ""
       to: '["PJR-HMV6"]'
+- v: 1
+  id: reg_edb2e938096e4d4d91e5bfff91466ba4
+  ts: "2026-11-08T02:46:56Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dbff09e17d6d40989c7025cb11a13410
