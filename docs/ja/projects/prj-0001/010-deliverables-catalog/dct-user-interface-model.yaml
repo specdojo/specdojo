@@ -9,42 +9,42 @@ domain: user-interface-model
 base_path: /docs/ja/product/010-business-specs/040-user-interface-model
 groups:
   - deliverables:
-      - local_id: uis-index
-        name: 画面仕様（全体構成）
+      - local_id: clis-index
+        name: CLI仕様（全体構成）
         kind: work
-        overview: SpecDojoの操作単位（CLIコマンド群）の利用目的・表示項目・操作・遷移の要点を、command-referenceや運用ガイドへの導線としてまとめる
-        path: uis-index.md
-        note: SpecDojoはCLIツールのためGUI画面を持たない。command-reference.md のコマンド群を「画面」に見立てて要点を記述し、業務仕様の種類ごとに代表を1件作る方針（PJR-2GD6）に基づき、exec コマンド群（uis-exec-commands）を代表として個別作成する。その他のコマンド群はuis-indexからcommand-reference・各運用ガイドへリンクする
+        overview: SpecDojoが提供するCLIコマンド群の全体構成、利用目的、操作の流れ、入力と出力の要点を、command-referenceや運用ガイドへの導線としてまとめる
+        path: clis-index.md
+        note: 業務仕様の種類ごとに代表を1件作る方針（PJR-2GD6）に基づき、exec コマンド群（clis-exec-commands）を代表として個別作成する。その他のコマンド群は clis-index から command-reference・各運用ガイドへリンクする。索引専用の rulebook（clis-index-rulebook）は未整備のため、個別成果物用の rulebook は流用せず未宣言とする
         done_criteria:
-          - text: 利用目的・表示項目・操作・遷移・エラー表示が業務観点で記述されていること
+          - text: CLIコマンド群の利用目的・操作の流れ・入力と出力の要点・エラー時の次の手が業務観点で記述されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
-          - text: 画面のスコープと利用フローを承認できること
+          - text: CLIコマンド群のスコープと利用フローを承認できること
             roles: [PO]
             viewpoint: vp-po-purpose-alignment
-          - text: フロントエンド設計・API連携設計の入力として参照できること
+          - text: CLI実装・コマンド体系設計の入力として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: UIテスト・受入テスト設計に活用できること
+          - text: CLIテスト・受入テスト設計に活用できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-          - text: 業務ユーザーが操作しやすい表現・構成になっていること
+          - text: 開発者・運用者が操作しやすい表現・構成になっていること
             roles: [UX]
             viewpoint: vp-ux-readability
-      - local_id: uis-exec-commands
-        name: 画面仕様（exec コマンド群）
+      - local_id: clis-exec-commands
+        name: CLI仕様（exec コマンド群）
         kind: work
         depends_on:
-          - uis-index
-        overview: exec コマンド群の CLI 操作単位としての利用目的・引数・オプション・表示項目・操作・遷移・エラー表示を定義する
-        path: uis-exec-commands.md
-        rulebook: specdojo:uis-rulebook
+          - clis-index
+        overview: exec コマンド群の利用目的、操作の流れ、コマンドリファレンスへの参照、入力情報と出力情報の要点、終了コード、エラー表示、および利用者の次の手を定義する
+        path: clis-exec-commands.md
+        rulebook: specdojo:clis-rulebook
         evidence_refs:
           - kind: implementation
             path: src/exec/commands.ts
-            purpose: exec サブコマンド群（run・plan・review・worktree等）の引数・オプション・対話出力・エラー表示を定義するCLI操作部
+            purpose: exec サブコマンド群（run・plan・review・worktree等）のコマンド定義・対話出力・エラー表示を処理するCLI操作部
         done_criteria:
-          - text: exec コマンド群の利用目的・入出力項目・操作・エラー表示が業務観点で記述されていること
+          - text: exec コマンド群の利用目的・操作の流れ・入力情報と出力情報の要点・利用者の次の手が業務観点で記述されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
           - text: exec コマンド群のスコープと利用フローを承認できること
