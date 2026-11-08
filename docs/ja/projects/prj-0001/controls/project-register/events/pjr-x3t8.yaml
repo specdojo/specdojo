@@ -50,3 +50,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-VMXK"]'
+- v: 1
+  id: reg_3afb709ea8564a8c9c34b29d38db1deb
+  ts: "2026-11-08T07:24:38Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b182b37f553846e585414f7c590aa94a
+- v: 1
+  id: reg_e02523ccf29b48379bdce6a62d430584
+  ts: "2026-11-08T07:43:12Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3afb709ea8564a8c9c34b29d38db1deb
