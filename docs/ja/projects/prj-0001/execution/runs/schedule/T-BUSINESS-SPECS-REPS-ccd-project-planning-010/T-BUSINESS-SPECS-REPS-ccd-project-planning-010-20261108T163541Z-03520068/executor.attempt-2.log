@@ -1,0 +1,53 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "前回の11概念・19関連の草案を維持し、未作成辞書を待たず概念設計へ利用できるよう部分反映しました。整形確認は通過しました。",
+  "handoff": [
+    "経緯・判断: 前回は対象不存在のため新設し、辞書5件の未作成とSchedule実体の未確認を理由に未完了としていた。今回はPJR-2GD6と2026-11-09の再開指示に従い、既存草案へ部分反映した。11概念・19関連、多重度の根拠、辞書参照、整合性条件を保持し、作り直していない。",
+    "変更内容: `docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md` の第1・4・5章を更新した。未作成辞書を下流利用の前提とする記述を修正し、関連定義の根拠を業務フロー・作成規則、属性詳細の将来の照合先を辞書として明確化した。`status` はdraftを維持した。",
+    "実装調査・一致: `src/catalog/catalog.ts` 全体を再読した。projectは明示オプション、環境変数、設定中の先頭projectの順に解決し、設定とカタログ配置設定を確認する。カタログ群の読込、個別検証、`based_on` と依存閉包の照合、ドメイン・索引・論理ID等の検証呼出しを確認した。project単位のカタログ管理と、project内で一意な成果物識別という意図された仕様に対応する。実装は編集していない。",
+    "実装から確認不能・未確認: `src/exec/exec.ts` 全2行を再読した。`resolveClaimOwner` と `registerExecCommands` の再公開のみで、Schedule戦略・トラック・登録項目・カタログ間の実体の関係は確認できない。列挙外の `src/exec/core.ts`、`src/exec/commands.ts`、カタログの型定義・検証委譲先や外部依存の内部は未調査。実装との一致・乖離を推測していない。PMは必要に応じて実体を示す `evidence_refs` を追加し、別の調査を手配する。",
+    "先行入力: `bdd-register-entry` を再読し、登録項目・エピックの識別、起票元と先行依存の区別、人間による完了判断との対応を確認した。`bdd-project-config`、`bdd-operations-config`、`bdd-deliverables-catalog`、`bdd-schedule-strategy`、`bdd-schedule-track` は未作成。予定IDと「未作成」の表記を保持し、確認済みの属性定義とは扱っていない。再開指示により今回の完了を妨げず、辞書作成時にBAが対応を照合する。",
+    "未反映の文書間乖離・review finding候補: `cdsd-planning` はScheduleを「計画・状態遷移の正本」と記す一方、`cdfd-uc-schedule` はタスク状態を実行記録に保持する。本成果物はCDFDの境界を維持した。BA・ARCが `cdsd-planning` の文書修正要否を確認する。実装修正の必要性は指定エビデンスから判断できない。",
+    "完了条件の照合: 必須4章、主キーのみのクラス、全関連の関係種別・役割名・多重度根拠、全概念の辞書参照を確認した。対象範囲はPOの承認入力、識別・関連はARC・DEVの設計入力、整合性条件はQEのテストデータ設計入力として利用できる。人間による承認や属性詳細の確定を実施済みとはしていない。",
+    "executorとしてresultは編集していない。以上の調査結果・判断根拠・確認範囲をreporterへ引き継ぐ。指定された静的検査・テストは親runnerが実行するため、sandbox内では重複実行していない。Gitコミット・設定変更・状態遷移操作は行っていない。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "passed",
+      "summary": "対象成果物を整形した。"
+    },
+    {
+      "command": "npx prettier --check docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md",
+      "status": "passed",
+      "summary": "Prettier形式への適合を確認した。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別YAMLスキーマ検査は対象外。",
+      "reason": "executorの成果物変更はMarkdownのみで、YAMLの変更はない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証の変更範囲条件に該当しない。",
+      "reason": "executorが編集した成果物は `docs/ja/product/` 配下のみであり、`docs/ja/projects/` 配下の成果物を変更していない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証の変更範囲条件に該当しない。",
+      "reason": "executorは登録簿個票や既存のplan・resultを編集していない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "ccd-project-planning",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md"
+    }
+  ]
+}
+</specdojo_executor_evidence>

@@ -133,4 +133,17 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-09）
+
+- この track は業務仕様の種類ごとに代表を 1 件ずつ作る（PJR-2GD6）。bdd は代表の `bdd-register-entry` だけを作り、ほかの bdd はまだない。
+- 属性の参照先の bdd がまだない概念は、その bdd の ID と「未作成」を書いて参照し、作成を待たずに進めてよい（indie が決定、2026-11-09）。存在しない bdd を理由に未完了としない。
+- Schedule の実体を確かめられない点は、確かめた範囲と確かめられなかった点を報告の `handoff` に書いたうえで、完了として報告してよい。
+- 前回の下書き（概念 11、関連 19、多重度の根拠、辞書の参照、整合性の条件）を引き継ぎ、作り直さない。経緯を報告の `handoff` に書く。
+
+## 再開時の追加の指示（orchestrator、2026-11-09、2 回目）
+
+- 親の検証 `lint-md` が、`ccd-project-planning.md` の表の多重度（`0..*` など）の `*` を強調の記号と読んで MD037 で失敗した。表の多重度はコードの書式（例: `` `1` 対 `0..*` ``）で書く。
+- 親の検証 `lint-fm` が、frontmatter の `depends_on` を schema にない項目として警告した。成果物の依存は成果物カタログが持つため、frontmatter から `depends_on` を外す。bdd の参照は本文の「辞書の参照」で示しているので足りる。
+- 直した後に `npm run lint:md` と `npm run lint:fm` を流して通ることを確かめ、経緯を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
