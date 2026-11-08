@@ -60,3 +60,16 @@
       from: "-"
       to: '["specdojo:cdt-rulebook"]'
   previous_event_id: reg_bce3dcda0d6a401db4c2fae46d650fbb
+- v: 1
+  id: reg_03e99fd6e575421d9cb9a52394b6ad75
+  ts: "2026-11-08T02:44:39Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bd4a5564d5d848c38ebcc12640a4013c
