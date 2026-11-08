@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-KSGC",
+  "run_id": "pjr-ksgc-20261108T045235Z-f369d692",
+  "updated_at": "2026-11-08T05:07:16.199Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-11-08T04:54:09.573Z",
+      "completed_at": "2026-11-08T05:01:17.226Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-KSGC/pjr-ksgc-20261108T045235Z-f369d692/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-08T05:06:12.641Z",
+      "completed_at": "2026-11-08T05:07:16.199Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-KSGC/pjr-ksgc-20261108T045235Z-f369d692/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-KSGC/pjr-ksgc-20261108T045235Z-f369d692/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-KSGC/pjr-ksgc-20261108T045235Z-f369d692/result.md"
+  }
+}

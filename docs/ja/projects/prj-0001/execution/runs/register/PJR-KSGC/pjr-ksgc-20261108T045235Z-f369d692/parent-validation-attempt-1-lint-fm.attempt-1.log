@@ -1,0 +1,17 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[31mdocs/ja/projects/prj-0001/controls/project-register/pjr-ksgc-changelog-handoff-playbook.md[39m[24m
+79:40-79:43 [31merror[39m [1m未エスケープの山括弧プレースホルダ [36m`<n>`[39m を検知しました。実在しない HTML タグ名のため、VitePress の Vue コンパイラが未クローズタグと解釈し docs:build が失敗します。インラインコード（バッククォート）で囲んでください（例: [36m`<n>`[39m）。[22m
+79:44-79:47 [31merror[39m [1m未エスケープの山括弧プレースホルダ [36m`<m>`[39m を検知しました。実在しない HTML タグ名のため、VitePress の Vue コンパイラが未クローズタグと解釈し docs:build が失敗します。インラインコード（バッククォート）で囲んでください（例: [36m`<m>`[39m）。[22m
+
+[31m✖[39m 2 errors
