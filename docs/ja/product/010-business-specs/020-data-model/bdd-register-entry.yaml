@@ -1,0 +1,206 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/bdd.schema.yaml
+id: prj-0001:bdd-register-entry
+type: data
+title: 業務データ辞書（登録項目個票）
+status: draft
+rulebook: specdojo:bdd-rulebook
+owners: [BA]
+
+entities:
+  - logical_name: 登録項目
+    physical_name: register_entry
+    description: >-
+      登録簿で個別に追跡する作業・課題・懸念・問い・判断・記録の管理単位。
+      担当が交代しても背景、対応条件、判断根拠と結果を引き継げるよう、一項目を一個票で管理する。
+      track 全体の計画と完了判断は epic、具体的な対応は子 todo、成果物ごとの計画済みタスクは
+      Schedule で扱い、個々のタスクを登録簿へ重複登録しない。
+      構造化された現在値は個票 Frontmatter の `specdojo` 配下を正本とし、下記の物理名はそのキーに対応する。
+      タイトルは H1、概要・入力（前提や委任範囲）・完了条件・対応結果・承認の証跡は本文に保持する。
+      本文の構成は [[specdojo:pjr-rulebook|プロジェクト登録簿 作成ルール]] に従う。
+      表示 ID、一覧のタイトル・説明・登録日・完了日は個票からの導出値であり、独立した属性として保存しない。
+      項目別 event は変更履歴の別の正本、一覧・派生ビューは閲覧用の生成物であり、本エンティティの現在値と区別する。
+      データ型・必須性・書式・条件付き制約は参照スキーマ、状態遷移と人間による審査・承認条件は
+      [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] を参照する。
+      スキーマ検証の合格だけで業務上の完了・承認を満たしたとは判定しない。
+    schema_ref: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml
+    related_terms: [tm-register, tm-filing, tm-record-keeping, tm-schedule, tm-derived-view]
+    key_fields: [id]
+    fields:
+      - logical_name: 文書識別子
+        physical_name: id
+        description: >-
+          project と主題を含めて個票を特定し、他文書から参照するための識別子。
+          表示 ID は同一 project 内の項目識別に使い、別 project の項目は project を付けて識別する。
+          主題を変える場合と ID 競合を解消する場合は登録簿の変更操作で参照との整合を保つ。
+      - logical_name: 所属登録簿
+        physical_name: part_of
+        description: この項目を追跡する project の登録簿を示し、一覧への所属を定める。
+      - logical_name: 文書成熟度
+        physical_name: status
+        description: >-
+          個票の記述がどこまで固まっているかを表す。対応が終わったかを表す `item_status` とは別の判断軸。
+        allowed_values_detailed:
+          - value: draft
+            label: 記述を作成・整理している
+          - value: ready
+            label: 分類ごとの必要な記述が固まっている
+          - value: deprecated
+            label: 却下・破棄により成熟度を追う必要がない
+      - logical_name: 分類
+        physical_name: item_type
+        description: >-
+          何を追跡し、どのような結果をもって通常の追跡を終えるかを分ける業務区分。
+          `question`・`decision` は回答・判断の確定、`note` 以外の他分類は対応完了を通常の終端とする。
+          `note` は継続更新する記録であり、対応や判断が必要になれば別の項目を起票する。
+        allowed_values_detailed:
+          - value: todo
+            label: 実施が決まっている作業
+          - value: epic
+            label: track 全体の計画と着手・完了判断
+          - value: question
+            label: 回答・確認が必要な事項
+          - value: risk
+            label: まだ顕在化していない懸念
+          - value: issue
+            label: 顕在化している問題
+          - value: change-request
+            label: 成果物・仕様・計画に対する変更の要望
+          - value: decision
+            label: 記録・追跡する意思決定
+          - value: note
+            label: 共有・備忘のための記録
+      - logical_name: 計画トラック
+        physical_name: track
+        description: >-
+          epic が全体計画と完了判断を担う仕事のまとまり。
+          子 todo の作業と Schedule の進捗を確認する際の計画単位であり、子の状態から自動で完了を判断しない。
+      - logical_name: 対象領域
+        physical_name: domains
+        description: >-
+          epic の範囲に含める成果物カタログの domain。
+          領域の一部だけを扱う場合の境界は個票本文で明らかにする。
+          省略は互換用の範囲解決に委ねること、空配列は対象なしの明示を意味する。
+      - logical_name: 処理状態
+        physical_name: item_status
+        description: >-
+          対応・判断の現在位置と追跡継続の要否を表す。日時や結論、子項目の状態から推測しない。
+          終端からの再評価には再開を使い、延期を完了と数えない。
+          許可経路、分類別の終端、人間による判断条件は状態定義に従う。
+        allowed_values_detailed:
+          - value: open
+            label: 起票済み
+          - value: in-progress
+            label: 対応中
+          - value: waiting
+            label: 待機中
+          - value: review
+            label: 審査待ち
+          - value: decided
+            label: 決定済み
+          - value: done
+            label: 完了
+          - value: deferred
+            label: 延期
+          - value: rejected
+            label: 却下
+      - logical_name: 対応優先度
+        physical_name: priority
+        description: 限られた参加時間の中で、他の作業・判断への影響と期限を踏まえて対応順を判断するための目安。
+        allowed_values_detailed:
+          - value: high
+            label: 放置すると他の作業や判断が止まる
+          - value: medium
+            label: 期限までに対応が必要
+          - value: low
+            label: 影響が限定的で後回しにできる
+      - logical_name: 作業難易度
+        physical_name: difficulty
+        description: >-
+          作業に合う agent の実行・報告経路を選ぶための評価。
+          対応の急ぎ具合を示す優先度とは区別し、省略時は既存の優先度に基づく自動選択に委ねる。
+        allowed_values_detailed:
+          - value: hard
+            label: 高難度
+          - value: medium
+            label: 中難度
+          - value: easy
+            label: 低難度
+      - logical_name: 主担当
+        physical_name: owner
+        description: >-
+          対応を引き受ける人または役割。省略は担当未定を意味する。
+          操作を行った actor や、終了を承認する人を自動的に表すものではない。
+      - logical_name: 起票日時
+        physical_name: registered_at
+        description: >-
+          事項を共有の追跡対象として登録した時点。未整理事項の滞留を確認するために使い、着手時点とは区別する。
+          一覧の登録日は project の登録日タイムゾーンへ変換して表示する。
+      - logical_name: 予定開始日
+        physical_name: start_on
+        description: epic の仕事を始める予定の暦日。実際の着手記録や子 todo の起票日とは区別する。
+      - logical_name: 期限
+        physical_name: due_on
+        description: >-
+          対応または回答・意思決定を必要とする project のタイムゾーン上の暦日。
+          省略は期限未定、明示的な null は期限なしを意味し、同じ未設定として扱わない。
+      - logical_name: 完了日時
+        physical_name: completed_at
+        description: >-
+          対応完了・回答や判断の確定・却下によって追跡を終えた時点。
+          一覧の完了日は project の登録日タイムゾーンへ変換して表示する。
+          延期は完了時点を持たず、再開時は過去の完了を現在値から除いて履歴に残す。
+      - logical_name: 待機理由
+        physical_name: block_reason
+        description: >-
+          外部回答、前提の解消、実行失敗からの復旧などを待っている直近の理由。
+          待機から離れた後は履歴で確認し、最終結果を表す結論とは分ける。再開条件の詳細は本文へ残す。
+      - logical_name: 結論
+        physical_name: conclusion
+        description: >-
+          対応結果、確定した回答・決定、却下・延期の判断を一文で引き継ぐための要約。
+          根拠と検証結果、承認の証跡、再評価条件は本文で確認する。待機や失敗の理由で最終結果を上書きしない。
+          再開後も旧結論は保持し、再開理由を履歴で区別する。
+      - logical_name: 起票元
+        physical_name: derived_from
+        description: >-
+          この項目がどの作業・判断・記録から派生したかを追跡する関係。
+          epic と子 todo の関係にも使うが、実行の先後関係や完了条件を自動的に意味しない。
+      - logical_name: 先行項目
+        physical_name: depends_on
+        description: >-
+          実行前に完了している必要がある登録項目。先行項目の対応完了または判断確定を必要とし、却下・延期では充足しない。
+          起票の由来とは別に指定する。依存が未充足であることと、自項目の処理状態が待機中であることを同一視しない。
+      - logical_name: 実行承認
+        physical_name: autopilot
+        description: >-
+          記載した完了条件の範囲を夜間 orchestrator が実行してよいという人間の承認。
+          作業結果の受入・終了判断まで承認済みであることは意味しない。
+        allowed_values_detailed:
+          - value: approved
+            label: 記載された作業範囲の実行を人が承認済み
+      - logical_name: 進め方
+        physical_name: approach
+        description: >-
+          対象を作成・修正・確認する際に選ぶ実行方式。完了条件の代わりにはしない。
+          方式ごとの対象・参照元の組合せは参照スキーマと登録簿ルールに従う。
+      - logical_name: 対象
+        physical_name: targets
+        description: >-
+          この項目で扱う成果物・Kata、または計画単位を特定する宣言。
+          文書を変更する実行では変更対象の網羅を確認する基準にし、読み取り専用の根拠資料と区別する。
+      - logical_name: 対象配置
+        physical_name: target_path
+        description: カタログで解決できない成果物をどこに作成・更新するかを特定する配置先。
+      - logical_name: 対象作成ルール
+        physical_name: target_rulebook
+        description: >-
+          カタログで解決できない成果物の記述基準を特定する。個票自身が従う rulebook とは区別する。
+      - logical_name: 参考資料
+        physical_name: sources
+        description: Kata の作成時に参考とする既存文書や実装。変更対象ではなく、読み取り専用の調査入力として扱う。
+      - logical_name: コミット区分
+        physical_name: commit_type
+        description: 項目から生成する変更記録の区分。業務上の分類と分けて指定し、省略時は分類と設定からの導出に委ねる。
+      - logical_name: コミット範囲
+        physical_name: commit_scope
+        description: 項目から生成する変更記録で対象領域を示す識別子。成果物の業務スコープや完了条件を置き換えるものではない。
