@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-1d1x-clis-kata-diagram-references
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T11:53:28Z"
+  completed_at: "2026-11-08T12:13:12Z"
+  conclusion: clis の図を sf・コマンドリファレンス・入力情報の仕様・出力情報の仕様への線だけにし、ifx-cmd との違いを文で示した。参照先に自システムの API（sysd-index の内部 API）と外部コマンド（ifx-cmd）を足し、sample にレシート印刷コマンドの例を足した
   derived_from:
     - PJR-2GD6
     - PJR-K4PM

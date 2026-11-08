@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a447d728b30e4e47a757df003ba27aa8
+- v: 1
+  id: reg_b7aead390a764c05a05bb2c84f18def2
+  ts: "2026-11-08T12:13:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。図が入力情報と出力情報を 1 つの箱にまとめていたため、orchestrator が 2 つの箱に分け、種類の API に外部を明記した（bcfafe9bb）。lint:md・lint:mermaid を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: clis の図を sf・コマンドリファレンス・入力情報の仕様・出力情報の仕様への線だけにし、ifx-cmd との違いを文で示した。参照先に自システムの API（sysd-index の内部 API）と外部コマンド（ifx-cmd）を足し、sample にレシート印刷コマンドの例を足した
+  previous_event_id: reg_514ac1b4feb94c6abef344e7bcf0e331
