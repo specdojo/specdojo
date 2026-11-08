@@ -63,6 +63,7 @@ groups:
         kind: work
         depends_on:
           - bes-index
+          - cdfd-overview
         overview: 実行可能なタスクが選択されたイベント（単発／自動／並列など起点が一意にならない）を定義する
         path: bes-task-ready-selected.md
         rulebook: specdojo:bes-rulebook
