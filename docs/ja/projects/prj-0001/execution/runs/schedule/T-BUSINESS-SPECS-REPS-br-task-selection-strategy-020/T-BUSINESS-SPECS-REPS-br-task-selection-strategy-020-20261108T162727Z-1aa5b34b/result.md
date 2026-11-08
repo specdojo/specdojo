@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-br-task-selection-strategy-020
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-020/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-020-20261108T162727Z-1aa5b34b/plan.md
   started_at: "2026-11-08T16:27:29.348Z"
+  completed_at: "2026-11-08T16:41:17.251Z"
   agent: opus-executor
   execution: agent
   approach: freeform
@@ -19,16 +20,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- ビジネスルール（タスク選択戦略）の草案を新規作成し、`status`: `draft` として保存した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md`: タスク選択戦略（critical-first / fifo 等）のルール定義を含む草案を新規作成した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 依存成果物 `bps-task-selection-preparation`（docs/ja/product/010-business-specs/030-business-model/bps-task-selection-preparation.md）が未作成のまま、スケジューラは本タスクを Ready と判定した。本書の適用範囲と対象外は実装（src/exec/schedule/ready.ts, src/exec/core.ts, src/exec/commands.ts, src/exec/run/schedule-mode.ts）、dct-business-model-br / dct-business-model-bps の定義、gl-common.yaml、prj-overview.md から仮置きした。同仕様の作成後に `P-07-01` の手順との対応を確認する必要がある。
+- PO の判断待ち: `fifo` はタスク ID の辞書順で、到着順ではない。業務上の意味（到着順）に合わせるか、名称・説明を ID 順へ改めるかを決める必要がある。
+- 判断待ち: agent-members / pm-members の schema の `scheduler_strategy` は dependency-first / manual も受け付けるが、選択時（`resolveSchedulerStrategy`）にエラーになる。受け付ける値を揃えるか、両戦略を定義する必要がある。
+- 判断待ち: `exec scheduler` はメンバーの `scheduler_strategy` を参照するが、`exec run --auto` / `exec cycle` は参照せず、そのまま critical-first を既定値として使う。揃えるか、意図した差として明記するかを決める必要がある。
+- result の『進め方と実践の型の適用』に記録する内容: 既存記述はなく新規作成した。実践の型は br-rulebook の章構成だけを参考にし、判定内容は実装を正とした。Web 検索は行っていない（内部情報で判断できたため）。
+- 適用外の検証: `npm run validate:history-links`（変更したのは docs/ja/product 配下の成果物だけで、plan / result / pjr 個票は変更していない）
+- 適用外の検証: `specdojo catalog validate`（変更は docs/ja/product/ 配下だけで、docs/ja/projects/ には及んでいない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+既存記述がないため新規作成を行い、依存成果物 `bps-task-selection-preparation` が未作成であることから、実装コードやカタログ定義、プロジェクト概要などの内部情報を根拠に草案を組み立てた。実践の型については `br-rulebook` の章構成を参考にしつつ、具体的な判定ロジックは実装に基づいた記述とした。
