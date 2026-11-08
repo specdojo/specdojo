@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020",
   "run_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005",
-  "updated_at": "2026-11-08T22:22:26.885Z",
+  "updated_at": "2026-11-08T22:22:45.862Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 4,
       "started_at": "2026-11-08T22:22:26.885Z",
-      "completed_at": null,
+      "completed_at": "2026-11-08T22:22:45.862Z",
       "artifact_ref": null,
       "repos": {
         "project": {
