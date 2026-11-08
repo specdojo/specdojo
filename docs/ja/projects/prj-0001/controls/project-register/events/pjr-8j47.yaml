@@ -70,3 +70,16 @@
       from: '["PJR-PJYJ","PJR-025M"]'
       to: '["PJR-PJYJ","PJR-025M","PJR-K4PM"]'
   previous_event_id: reg_288209672a07413f838dfb3a16787f21
+- v: 1
+  id: reg_169bdb57e57d49df83bc492a1f495b7a
+  ts: "2026-11-08T11:54:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: clis の型の直し（PJR-K4PM）の確定を待ってからカタログを付け替えるため
+  changes:
+    - field: depends_on
+      from: '["PJR-PJYJ","PJR-025M","PJR-K4PM"]'
+      to: '["PJR-PJYJ","PJR-025M","PJR-K4PM","PJR-25B9"]'
+  previous_event_id: reg_530048927d014816be2cf737afd9a320
