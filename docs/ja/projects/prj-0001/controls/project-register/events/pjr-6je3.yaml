@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_101fe5f99b2d484a9b91bea9991e8c6f
+  ts: "2026-11-08T14:26:34Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: VS Code 拡張を別のリポジトリに分けるか
+    - field: description
+      from: ""
+      to: packages/vscode-specdojo の VS Code 拡張を、このリポジトリに置いたままにするか、別のリポジトリに分けるかを決める。今は置いたままとし、分けることを考える条件に当たったときに判断する
+    - field: input
+      from: ""
+      to: '["2026-11-08 時点の様子: 378 行、コマンドは 2 つ（Markdown の表の整形、ID から文書を開く）。commit は 2026-09-06 の 2 件だけ。npm package の files に含めず、.vsix は手で作り git の管理外。専用の CI はない。","拡張の「ID から開く」は CLI が作る .specdojo/doc-index.json と frontmatter の id: の書き方に頼るため、同じリポジトリにあれば索引の形を変えたときに同じ commit で直せる。","今は置いたままにする（indie が推奨どおりと同意、2026-11-08）。分けることを考える条件: VS Code Marketplace で npm と別の版で公開するようになった／拡張の機能が増え専用の CI やテストが要るようになった／別の人やチームが保守するようになった。","分ける場合は、doc-index.json の形を CLI と拡張の間の約束として外部 I/F の仕様（ifx の型）に先に書く。"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
