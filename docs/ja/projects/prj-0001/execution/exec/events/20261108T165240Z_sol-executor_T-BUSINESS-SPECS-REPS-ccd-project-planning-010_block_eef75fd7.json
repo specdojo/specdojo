@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T16:52:40Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010",
+  "by": "sol-executor",
+  "msg": "executor reported incomplete: 概念クラス図の草案を新設。11概念・19関連、多重度の根拠、辞書参照、整合性条件を記載した。先行辞書5件の未作成とSchedule実体の未確認により、完了条件の照合は未完了。",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068"
+  }
+}

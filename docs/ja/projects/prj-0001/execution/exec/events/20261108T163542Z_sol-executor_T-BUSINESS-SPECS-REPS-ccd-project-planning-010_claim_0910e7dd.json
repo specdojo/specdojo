@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T16:35:42Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
