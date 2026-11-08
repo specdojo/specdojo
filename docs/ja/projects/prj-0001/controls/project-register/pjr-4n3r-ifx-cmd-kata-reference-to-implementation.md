@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-4n3r-ifx-cmd-kata-reference-to-implementation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:35:12Z"
+  completed_at: "2026-11-08T03:53:35Z"
+  conclusion: ifx-cmd-rulebook を引数の表を持たず正本を参照し、入出力の約束に絞る形に改め、recipe・sample・template・ifx-cmd.schema.yaml を合わせた
   derived_from:
     - PJR-2GD6
   depends_on:

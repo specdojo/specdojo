@@ -108,3 +108,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_62b5c95d46ca418db482f8b4e9e921a3
+- v: 1
+  id: reg_d767f931ebab437b8a56f9c94c57f03b
+  ts: "2026-11-08T03:53:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。統合の CHANGELOG の衝突を運用メモの手順で解いて再開した。差分・個票の対応結果・親の検証・validate:schema を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: ifx-cmd-rulebook を引数の表を持たず正本を参照し、入出力の約束に絞る形に改め、recipe・sample・template・ifx-cmd.schema.yaml を合わせた
+  previous_event_id: reg_19f2ebfdcc76477eb3ec1c64dadc49e6
