@@ -65,4 +65,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-09）
+
+- 個票の完了条件に足した 2 回目の分（epic の開始日・終了日・稼働日数を戻し、外した日付のテストを戻す）を行う。
+- 空のリポジトリでの確かめは、`mktemp -d` などで作った一時ディレクトリの中だけで行い、終わったら消す。`/tmp` の直下や一時ディレクトリの外に `config init` などの出力を書かない。前回の実行中に `/tmp` の直下へ init の出力が残り、ほかの run のテストが落ちた（PJR-5FTV）。
+- 経緯を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`

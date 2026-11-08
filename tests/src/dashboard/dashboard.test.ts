@@ -953,4 +953,103 @@ describe("PJR-0F94 action-first dashboard layout", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("実行中の epic と終わった epic に開始日・終了日・稼働日数が表示される", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-epic-dates-test-"));
+
+    try {
+      const regDir = join(root, "controls", "project-register");
+      mkdirSync(regDir, { recursive: true });
+
+      const paths: DashboardPaths = {
+        projectId: "prj-test",
+        projectPath: root,
+        timelinePath: join(root, "timeline"),
+        executionGeneratedPath: join(root, "execution", "generated"),
+        registerPath: regDir,
+      };
+
+      // 1. 完了した epic（開始日・終了日・稼働日数が計算できるもの）
+      writeFileSync(
+        join(regDir, "pjr-00e1-done.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: prj-test:pjr-00e1",
+          "  item_status: done",
+          "  item_type: epic",
+          "  track: trk1",
+          '  start_on: "2026-01-05"',
+          '  completed_at: "2026-01-09T00:00:00Z"',
+          "---",
+          "",
+          "# PJR-00E1 完了Epic",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      // 2. 実行中の epic（開始日のみで期限なし）
+      writeFileSync(
+        join(regDir, "pjr-00e2-open.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: prj-test:pjr-00e2",
+          "  item_status: in-progress",
+          "  item_type: epic",
+          "  track: trk2",
+          '  start_on: "2026-01-12"',
+          "---",
+          "",
+          "# PJR-00E2 実行中Epic",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      // 3. 実行中の epic（開始日・終了日がそろっているもの）
+      writeFileSync(
+        join(regDir, "pjr-00e3-open.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: prj-test:pjr-00e3",
+          "  item_status: open",
+          "  item_type: epic",
+          "  track: trk3",
+          '  start_on: "2026-01-12"',
+          '  due_on: "2026-01-16"',
+          "---",
+          "",
+          "# PJR-00E3 期限あり実行中Epic",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const markdown = buildDashboardMarkdown(paths);
+
+      // 終わった epic の表ヘッダーと行
+      expect(markdown).toContain("| id | title | track | 開始日 | 終了日 | 稼働日数 |");
+      expect(markdown).toContain(
+        "| [PJR-00E1](../../controls/project-register/pjr-00e1-done.md) | 完了Epic | `trk1` | 2026-01-05 | 2026-01-09 | 5 |",
+      );
+
+      // 実行中の epic
+      // 期限なし: 開始日はあり、終了日は未定、稼働日数は -
+      expect(markdown).toContain(
+        "### [PJR-00E2](../../controls/project-register/pjr-00e2-open.md) 実行中Epic",
+      );
+      expect(markdown).toContain("- 開始日: 2026-01-12\n- 終了日: 未定\n- 稼働日数: -");
+
+      // 期限あり: 開始日・終了日・稼働日数がそろう
+      expect(markdown).toContain(
+        "### [PJR-00E3](../../controls/project-register/pjr-00e3-open.md) 期限あり実行中Epic",
+      );
+      expect(markdown).toContain("- 開始日: 2026-01-12\n- 終了日: 2026-01-16\n- 稼働日数: 5");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
 });

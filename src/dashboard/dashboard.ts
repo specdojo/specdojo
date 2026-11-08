@@ -34,7 +34,7 @@ import {
   buildTimeline,
   renderCatalogScaffoldMarkdown,
 } from "./timeline-build.js";
-import { loadEpicSchedules } from "./epic-plan.js";
+import { loadEpicSchedules, type EpicSchedule } from "./epic-plan.js";
 import { resolveRegisterDateTimeZone } from "../register/date.js";
 import {
   buildTimelineGanttSvg,
@@ -503,12 +503,16 @@ function countTable(
 }
 
 function dashboardEpicPlan(paths: DashboardPaths) {
-  return loadEpicSchedules({
-    registerPath: paths.registerPath ?? join(paths.projectPath, "controls", "project-register"),
-    projectId: paths.projectId,
-    calendar: resolveDashboardCalendar(paths.schedulePath ?? paths.projectPath),
-    timeZone: paths.registerDateTimeZone ?? "UTC",
-  });
+  try {
+    return loadEpicSchedules({
+      registerPath: paths.registerPath ?? join(paths.projectPath, "controls", "project-register"),
+      projectId: paths.projectId,
+      calendar: resolveDashboardCalendar(paths.schedulePath ?? paths.projectPath),
+      timeZone: paths.registerDateTimeZone ?? "UTC",
+    });
+  } catch {
+    return { schedule: [], plannedStartDate: undefined };
+  }
 }
 
 export function readDashboardGradeResults(resultsPath: string): GradeResult[] {
@@ -614,6 +618,7 @@ function renderActiveEpicsSection(
   paths: DashboardPaths,
   views: RegisterItemView[],
   catalogDocMap: Map<string, string>,
+  epicScheduleMap: Map<string, EpicSchedule>,
 ): string[] {
   const lines = ["## 3. 実行中の epic", ""];
   const activeEpics = views.filter(
@@ -659,6 +664,15 @@ function renderActiveEpicsSection(
     lines.push(`### ${epicLink} ${sanitizeDashboardCell(epic.item.title)}`, "");
     const track = epic.item.track;
     lines.push(`- track: \`${track ?? "-"}\``);
+
+    const scheduleRow = epicScheduleMap.get(epic.id);
+    const startDate = scheduleRow?.startDate ?? "未定";
+    const endDate = scheduleRow?.endDate ?? "未定";
+    const estimateDays =
+      scheduleRow?.estimateDays !== undefined ? `${scheduleRow.estimateDays}` : "-";
+    lines.push(`- 開始日: ${startDate}`);
+    lines.push(`- 終了日: ${endDate}`);
+    lines.push(`- 稼働日数: ${estimateDays}`);
 
     if (track && scheduleNodes.size > 0) {
       const trackTasks = [...scheduleNodes.values()].filter(
@@ -754,7 +768,11 @@ function renderActiveEpicsSection(
   return lines;
 }
 
-function renderCompletedEpicsSection(paths: DashboardPaths, views: RegisterItemView[]): string[] {
+function renderCompletedEpicsSection(
+  paths: DashboardPaths,
+  views: RegisterItemView[],
+  epicScheduleMap: Map<string, EpicSchedule>,
+): string[] {
   const lines = ["## 4. 終わった epic", ""];
   const completedEpics = views.filter(
     (v) => v.item.type === "epic" && TERMINAL_STATUSES_SET.has(v.item.status),
@@ -767,13 +785,21 @@ function renderCompletedEpicsSection(paths: DashboardPaths, views: RegisterItemV
 
   lines.push(`::: details 終わった epic の一覧（${completedEpics.length}件）`);
   lines.push("");
-  lines.push("| id | title | track | 終了日 |");
-  lines.push("| --- | --- | --- | --- |");
+  lines.push("| id | title | track | 開始日 | 終了日 | 稼働日数 |");
+  lines.push("| --- | --- | --- | --- | --- | ---: |");
   for (const epic of completedEpics) {
     const epicLink = formatTicketLink(epic, paths.executionGeneratedPath);
-    const completedDate = epic.item.completedAt ? epic.item.completedAt.slice(0, 10) : "-";
+    const scheduleRow = epicScheduleMap.get(epic.id);
+    const startDate = scheduleRow?.startDate ?? "未定";
+    const endDate = scheduleRow
+      ? (scheduleRow.endDate ?? "未定")
+      : epic.item.completedAt
+        ? epic.item.completedAt.slice(0, 10)
+        : "未定";
+    const estimateDays =
+      scheduleRow?.estimateDays !== undefined ? `${scheduleRow.estimateDays}` : "-";
     lines.push(
-      `| ${epicLink} | ${sanitizeDashboardCell(epic.item.title)} | \`${epic.item.track ?? "-"}\` | ${completedDate} |`,
+      `| ${epicLink} | ${sanitizeDashboardCell(epic.item.title)} | \`${epic.item.track ?? "-"}\` | ${startDate} | ${endDate} | ${estimateDays} |`,
     );
   }
   lines.push("");
@@ -1054,11 +1080,13 @@ export function buildDashboardMarkdown(paths: DashboardPaths): string {
     views = [];
   }
   const catalogDocMap = buildCatalogDocMap(paths.catalogPath);
+  const { schedule: epicSchedule } = dashboardEpicPlan(paths);
+  const epicScheduleMap = new Map<string, EpicSchedule>(epicSchedule.map((s) => [s.id, s]));
 
   lines.push(...renderActionRequiredSection(paths, views, catalogDocMap));
   lines.push(...renderRecommendedRegisterSection(paths, views));
-  lines.push(...renderActiveEpicsSection(paths, views, catalogDocMap));
-  lines.push(...renderCompletedEpicsSection(paths, views));
+  lines.push(...renderActiveEpicsSection(paths, views, catalogDocMap, epicScheduleMap));
+  lines.push(...renderCompletedEpicsSection(paths, views, epicScheduleMap));
   lines.push(...renderRoutineSection(paths));
   lines.push(...renderGradeSection(paths));
   lines.push(...renderAggregationSection(paths, views));
