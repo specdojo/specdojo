@@ -128,7 +128,7 @@ const businessSpecificationRulebooks = [
     rulebook("概念データストア定義", "cdsd"),
     rulebook("保管場所定義", "sld"),
     rulebook("ステータス定義", "stsd", [rulebook("状態遷移図（Mermaid）", "stsd-mermaid")]),
-    rulebook("分類定義", "cld"),
+    rulebook("分類一覧", "cdt"),
     rulebook("概念クラス図", "ccd-mermaid"),
   ]),
   group("業務モデル", [
@@ -334,7 +334,7 @@ const businessSpecificationSamples = [
     sample("概念データストア定義", "cdsd"),
     sample("保管場所定義", "sld"),
     sample("ステータス定義", "stsd"),
-    sample("分類定義", "cld"),
+    sample("分類一覧", "cdt"),
     sample("概念クラス図", "ccd"),
   ]),
   group("業務モデル", [
@@ -471,7 +471,7 @@ const deliverablesCatalogTemplates = [
   templateYaml("概念データストア定義", "dct-data-model-cdsd"),
   templateYaml("保管場所定義", "dct-data-model-sld"),
   templateYaml("ステータス定義・状態遷移", "dct-data-model-stsd"),
-  templateYaml("分類定義", "dct-data-model-cld"),
+  templateYaml("分類一覧", "dct-data-model-cdt"),
   templateYaml("概念クラス図", "dct-data-model-ccd"),
   templateYaml("ユーザーインターフェースモデル", "dct-user-interface-model"),
   templateYaml("システム化機能", "dct-system-functions"),

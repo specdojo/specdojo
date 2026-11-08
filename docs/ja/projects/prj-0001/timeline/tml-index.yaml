@@ -88,7 +88,7 @@ tracks:
     order: 3
     parallel_group: business-specs
     depends_on: [launch]
-    note: bdd / ccd / cld / cstd / cdsd / stsd の6カタログを持つため、他ドメインより見積りが大きい。
+    note: bdd / ccd / cdt / cstd / cdsd / stsd の6カタログを持つため、他ドメインより見積りが大きい。
 
   - track: business-model
     domains: [business-model]

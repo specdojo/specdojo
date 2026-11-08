@@ -54,6 +54,13 @@ properties:
       $ref: "#/$defs/DocId"
     uniqueItems: true
 
+  supersedes:
+    type: array
+    description: "Optional superseded document IDs."
+    items:
+      $ref: "#/$defs/DocId"
+    uniqueItems: true
+
   project_id:
     type: string
     pattern: "^prj-[0-9]{4,}$"
@@ -109,6 +116,9 @@ else:
     - project_id
   properties:
     part_of:
+      items:
+        $ref: "#/$defs/StrictDocId"
+    supersedes:
       items:
         $ref: "#/$defs/StrictDocId"
     groups:

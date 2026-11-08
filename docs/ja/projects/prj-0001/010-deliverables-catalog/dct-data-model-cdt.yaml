@@ -1,32 +1,32 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/dct.schema.yaml
-id: prj-0001:dct-data-model-cld
+id: prj-0001:dct-data-model-cdt
 type: project
 status: draft
-title: 成果物カタログ（データモデル／分類定義）
+title: 成果物カタログ（データモデル／分類一覧）
 rulebook: specdojo:dct-rulebook
 project_id: prj-0001
 domain: data-model
 base_path: /docs/ja/product/010-business-specs/020-data-model
 
-# data-model ドメインの物理分割ファイル（cld 部分）。domain キーは分割前と同じ data-model を保つ。
-# cld-rulebook.md は「1対象エンティティ（分類軸） = 1ファイル」を想定するため、分類を持つ
+# data-model ドメインの物理分割ファイル（cdt 部分）。domain キーは分割前と同じ data-model を保つ。
+# cdt-rulebook.md は「1対象エンティティ（分類軸） = 1ファイル」を想定するため、分類を持つ
 # 属性・エンティティごとに local_id を列挙する。
 
 groups:
-  - name: 分類定義
+  - name: 分類一覧
     deliverables:
-      - local_id: cld-register-type
-        name: 分類定義（登録項目の種別）
+      - local_id: cdt-register-type
+        name: 分類一覧（登録項目の種別）
         kind: work
         depends_on:
           - bdd-register-entry
-        overview: 登録項目の種別（type）が取り得る risk／issue／change-request／decision の分類を一覧で定義する
-        path: cld-register-type.md
-        rulebook: specdojo:cld-rulebook
+        overview: 登録項目の種別（type）が取り得る issue・decision・todo・question・risk・change-request・note・epic の分類を一覧で定義する
+        path: cdt-register-type.md
+        rulebook: specdojo:cdt-rulebook
         evidence_refs:
           - kind: implementation
             path: src/register/register.ts
-            purpose: register コマンド入口から到達する登録項目のtype（risk/issue/change-request/decision等）の許容値定義
+            purpose: register コマンド入口から到達する登録項目のtype（issue/decision/todo/question/risk/change-request/note/epic等）の許容値定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -34,15 +34,15 @@ groups:
           - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
-      - local_id: cld-deliverable-kind
-        name: 分類定義（成果物の種別）
+      - local_id: cdt-deliverable-kind
+        name: 分類一覧（成果物の種別）
         kind: work
         depends_on:
           - bdd-deliverable
           - bdd-deliverables-catalog
         overview: 成果物の種別（kind）が取り得る work／control／generated の分類を一覧で定義する
-        path: cld-deliverable-kind.md
-        rulebook: specdojo:cld-rulebook
+        path: cdt-deliverable-kind.md
+        rulebook: specdojo:cdt-rulebook
         evidence_refs:
           - kind: implementation
             path: src/catalog/catalog.ts
@@ -54,14 +54,14 @@ groups:
           - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
-      - local_id: cld-exec-mode
-        name: 分類定義（実行のmode・execution）
+      - local_id: cdt-exec-mode
+        name: 分類一覧（実行のmode・execution）
         kind: work
         depends_on:
           - bdd-schedule-track
         overview: 実行のmode（edit / review）・execution（agent / human）区分を一覧で定義する
-        path: cld-exec-mode.md
-        rulebook: specdojo:cld-rulebook
+        path: cdt-exec-mode.md
+        rulebook: specdojo:cdt-rulebook
         evidence_refs:
           - kind: implementation
             path: src/exec/exec.ts
@@ -73,14 +73,14 @@ groups:
           - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
-      - local_id: cld-routine-action-kind
-        name: 分類定義（定期処理のaction kind）
+      - local_id: cdt-routine-action-kind
+        name: 分類一覧（定期処理のaction kind）
         kind: work
         depends_on:
           - bdd-routine-definition
         overview: 定期処理のaction kind（register / exec-auto / exec-resume / exec-cycle / job）分類を一覧で定義する
-        path: cld-routine-action-kind.md
-        rulebook: specdojo:cld-rulebook
+        path: cdt-routine-action-kind.md
+        rulebook: specdojo:cdt-rulebook
         evidence_refs:
           - kind: implementation
             path: src/routine/routine.ts
@@ -92,14 +92,14 @@ groups:
           - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
-      - local_id: cld-role
-        name: 分類定義（ロールコード）
+      - local_id: cdt-role
+        name: 分類一覧（ロールコード）
         kind: work
         depends_on:
           - bdd-operations-config
         overview: プロジェクトで用いるロールコード（PO / PM / BA / ARC / DEV / QE / UX / OPS）の分類を一覧で定義する
-        path: cld-role.md
-        rulebook: specdojo:cld-rulebook
+        path: cdt-role.md
+        rulebook: specdojo:cdt-rulebook
         evidence_refs:
           - kind: implementation
             path: src/exec/exec.ts
