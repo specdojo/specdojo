@@ -1,0 +1,53 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/generated/runs/grade-bes-sample-1/1/stage-1/bes-sample-6945427ffb-grade-plan.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (anyOf): must match a schema in anyOf[22m                         frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/generated/runs/grade-bes-sample-1/1/stage-1/bes-sample-6945427ffb-grade-reporter-plan.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (anyOf): must match a schema in anyOf[22m                         frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/generated/runs/test-grade-1/1/stage-1/bdd-rulebook-d8442e1708-grade-plan.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (anyOf): must match a schema in anyOf[22m                         frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/generated/runs/test-grade-1/1/stage-1/bdd-rulebook-d8442e1708-grade-reporter-plan.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (anyOf): must match a schema in anyOf[22m                         frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (enum): must be equal to one of the allowed values[22m            frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+ [33mwarning[39m [1mFrontmatter schema error (unevaluatedProperties): must NOT have unevaluated properties[22m frontmatter-schema-2020
+
+[33m⚠[39m 32 warnings

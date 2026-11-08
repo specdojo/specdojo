@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:37:07Z"
-  block_reason: "parent validation failed: lint-fm"
   derived_from:
     - PJR-2GD6
   depends_on:
@@ -50,10 +49,10 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                 | 担当 | 状態 | メモ                                                                   |
-| --- | -------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------- |
-| 1   | 対象の 8 件と型の grade を確かめ、`--dry-run` で strategy を生成する | DEV  | done | scope 8 件、Kata grade（bdd/bes 評価済み）と実装エビデンスを確認       |
-| 2   | strategy を書き込み、track を作る                                    | DEV  | done | sch-strategy (40 tasks, 11 milestones) と sch-track を生成・反映       |
+| No  | 作業                                                                 | 担当 | 状態 | メモ                                                                  |
+| --- | -------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------- |
+| 1   | 対象の 8 件と型の grade を確かめ、`--dry-run` で strategy を生成する | DEV  | done | scope 8 件、Kata grade（bdd/bes 評価済み）と実装エビデンスを確認      |
+| 2   | strategy を書き込み、track を作る                                    | DEV  | done | sch-strategy (40 tasks, 11 milestones) と sch-track を生成・反映      |
 | 3   | 検査を流し、選んだ intent と理由を対応結果に書く                     | DEV  | done | schedule validate, validate:schema, lint:md 全て pass。選定理由を記載 |
 
 ## 5. 対応結果

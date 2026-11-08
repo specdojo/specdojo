@@ -257,3 +257,87 @@ milestones:
       - T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020
       - T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-020
     owner: PM
+  - id: G-BUSINESS-SPECS-REPS-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-010
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-010
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-010
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-020
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-010
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-010
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-010
+    owner: PM
+  - id: G-BUSINESS-SPECS-REPS-refine-pass
+    name: 磨き込み完了
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-070
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-070
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-070
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-070
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-070
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-070
+    owner: PM
+  - id: G-BUSINESS-SPECS-REPS-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-090
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-090
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-090
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-090
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-090
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-090
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-090
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-data-model-bdd
+    name: ドメイン完了
+    artifact_name: データモデル／業務データ辞書
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bdd-register-entry-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-data-model-ccd
+    name: ドメイン完了
+    artifact_name: データモデル／概念クラス図
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-ccd-project-planning-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-data-model-cdt
+    name: ドメイン完了
+    artifact_name: データモデル／分類一覧
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-cdt-register-type-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-business-model-br
+    name: ドメイン完了
+    artifact_name: 業務モデル／ビジネスルール
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-br-task-selection-strategy-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-business-model-bes
+    name: ドメイン完了
+    artifact_name: 業務モデル／業務イベント仕様
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-bes-task-ready-selected-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-system-functions
+    name: ドメイン完了
+    artifact_name: システム化機能
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-sf-task-execution-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-140
+    owner: PM
+  - id: M-BUSINESS-SPECS-REPS-user-interface-model
+    name: ドメイン完了
+    artifact_name: ユーザーインターフェースモデル
+    depends_on:
+      - T-BUSINESS-SPECS-REPS-clis-exec-commands-140
+    owner: PM
