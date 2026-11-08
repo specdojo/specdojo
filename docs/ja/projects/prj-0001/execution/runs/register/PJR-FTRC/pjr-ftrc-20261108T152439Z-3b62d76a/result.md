@@ -4,33 +4,32 @@ specdojo:
   type: exec-result
   task_id: PJR-FTRC
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-FTRC/pjr-ftrc-20261108T152439Z-3b62d76a/plan.md
   started_at: "2026-11-08T15:24:39.873Z"
-  completed_at: "2026-11-08T15:46:58.381Z"
+  completed_at: "2026-11-08T15:59:15.189Z"
   agent: flash-high-executor
-  block_reason: "parent validation failed: test-integration, test-unit"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- lint:fm (`specdojo-docs-lint.js`) において、`.gitignore` で管理外とされている生成物（`docs/**/generated/**` など）を検査対象から除外するよう改善しました。
-- 具体的には、`specdojo-docs-lint.js` の実行時に `--silently-ignore` フラグを自動付与するように変更し、`.remarkignore` に除外対象を指定することで、一時ファイルの frontmatter 警告による検証失敗を防げるようにしました。
-- また、変更内容を検証するためのユニットテストを追加しました。
+- lint:fm (`specdojo-docs-lint.js`) が `.gitignore` で管理外とされている生成物（`docs/**/generated/**` 等）を検査してエラーを出す問題を解決しました。
+- `.remarkignore` に除外設定を追加し、`specdojo-docs-lint.js` の実行時に `--silently-ignore` フラグを自動付与するように変更しました。
+- 変更に伴い、ユニットテストを追加しました。
 
 ## 2. 変更ファイル
 
-- `.remarkignore`: lint の対象外とするディレクトリとして `docs/**/generated/**` を追加しました。
-- `packages/docs-lint/bin/specdojo-docs-lint.js`: remark 実行時に `--silently-ignore` フラグを自動的に付与するようロジックを変更しました。
-- `tests/packages/docs-lint/specdojo-docs-lint-remark.test.ts`: 修正内容を検証するための新しいテストファイルを追加しました。
+- `.remarkignore`: `.gitignore` のルールに基づき、`docs/**/generated/**` を lint の対象外とする設定を追加しました。
+- `packages/docs-lint/bin/specdojo-docs-lint.js`: `remark` 実行時に `--silently-ignore` を付与して、`.remarkignore` にあるファイルをエラーにせずスキップするように改善しました。
+- `tests/packages/docs-lint/specdojo-docs-lint-remark.test.ts`: 変更内容を検証するためのユニットテストを追加しました。
 
 ## 3. 申し送り
 
-- CHANGELOG (改善): docs-lint: `specdojo-docs-lint` remark の実行時に `--silently-ignore` を自動付与し、`.remarkignore` で指定された無視対象ファイルをエラーにせずスキップするように改善
+- CHANGELOG (改善): docs-lint: `specdojo-docs-lint` の `remark` 実行時に `--silently-ignore` を自動付与し、`.remarkignore` で指定された無視対象ファイルをエラーにせずスキップするように改善
 - CHANGELOG (改善): lint: `.remarkignore` に `docs/**/generated/**` を指定し、git 管理外の生成物（grade の一時ファイル等）が `lint:fm` の検査対象から外れるように設定
 - CHANGELOG (改善): docs-lint: specdojo-docs-lint remark の実行時に --silently-ignore を自動付与し、.remarkignore で指定された無視対象ファイルをエラーにせずスキップするように改善
 - CHANGELOG (改善): lint: .remarkignore に `docs/**/generated/**` を指定し、git 管理外の生成物（grade の一時ファイル等）が lint:fm の検査対象から外れるように設定
@@ -38,4 +37,4 @@ specdojo:
 
 ## 4. 進め方
 
-まず、`.gitignore` に含まれる `docs/**/generated/**` パスが `lint:fm` の実行時にエラーを引き起こしていることを解消するため、`.remarkignore` に当該パターンを追加しました。次に、`specdojo-docs-lint.js` が `remark` を呼び出す際に `--silently-ignore` を付与するように変更することで、`.remarkignore` に記載されたファイルが警告として検出されないように調整しました。最後に、これらの変更が正しく動作することを確認するためのテストコードを作成しました。
+まず、`.remarkignore` を更新して `docs/**/generated/**` を明示的に除外対象としました。次に、`specdojo-docs-lint.js` が `remark` を呼び出す際に `--silently-ignore` 引数を追加することで、無視設定されたファイルが frontmatter の警告（`--frail` モード時）によって検証を失敗させないように調整しました。最後に、新機能の動作を保証するためのテストを追加しました。

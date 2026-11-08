@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: easy
   registered_at: "2026-11-08T15:04:22Z"
-  block_reason: "parent validation failed: test-integration, test-unit"
   derived_from:
     - PJR-STM9
 ---
