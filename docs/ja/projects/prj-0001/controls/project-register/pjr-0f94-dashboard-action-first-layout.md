@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T14:34:25Z"
-  block_reason: "parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-0F94 ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す
@@ -51,12 +50,12 @@ dashboard build が作るダッシュボードを、人の対応が要るもの�
 
 ## 4. 作業内容
 
-| No  | 作業                                                                          | 担当 | 状態 | メモ                                                                                       |
-| --- | ----------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------ |
-| 1   | 今の生成の処理と、人の対応・おすすめ・epic の材料の取り方を読む               | ARC  | done | `dashboard.ts` と関連ヘルパーを精査し抽出要件を把握                                        |
-| 2   | 章の順と折りたたみとリンクを直し、テストを足す                                | ARC  | done | 新8章構成、折りたたみ、リンク相対化、単体テスト実装                                        |
-| 3   | 空のリポジトリと prj-0001 で生成して確かめ、対応結果に書く                    | ARC  | done | 空リポジトリ・prj-0001 での検証、`lint:md`、`docs:build` 通過                              |
-| 4   | 実行中・終わった epic の各 epic に開始日・終了日・稼働日数を足しテストを復元  | ARC  | done | 実行中・完了 epic への日付表示、`track-domains.test.ts` 日付テスト復元、単体テスト追加・検証 |
+| No  | 作業                                                                         | 担当 | 状態 | メモ                                                                                         |
+| --- | ---------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------- |
+| 1   | 今の生成の処理と、人の対応・おすすめ・epic の材料の取り方を読む              | ARC  | done | `dashboard.ts` と関連ヘルパーを精査し抽出要件を把握                                          |
+| 2   | 章の順と折りたたみとリンクを直し、テストを足す                               | ARC  | done | 新8章構成、折りたたみ、リンク相対化、単体テスト実装                                          |
+| 3   | 空のリポジトリと prj-0001 で生成して確かめ、対応結果に書く                   | ARC  | done | 空リポジトリ・prj-0001 での検証、`lint:md`、`docs:build` 通過                                |
+| 4   | 実行中・終わった epic の各 epic に開始日・終了日・稼働日数を足しテストを復元 | ARC  | done | 実行中・完了 epic への日付表示、`track-domains.test.ts` 日付テスト復元、単体テスト追加・検証 |
 
 ## 5. 対応結果
 
@@ -88,8 +87,9 @@ dashboard build が作るダッシュボードを、人の対応が要るもの�
 ### 検証結果
 
 - **空リポジトリでの検証**:
-  - 一時ディレクトリにて `specdojo config init`、`specdojo register scaffold --project prj-0001` を流した直後に `specdojo dashboard build --project prj-0001 --dry-run` を実行。
-  - 全章で「- ありません」（実行記録は件数 0 件のリンク）が出力され、エラーなく終了することを確認した。
+  - `mktemp -d` で作成した一時ディレクトリ内にて `git init`、`node dist/specdojo.js config init`、`node dist/specdojo.js register scaffold --project prj-0001`、`node dist/specdojo.js dashboard build --project prj-0001` を実行。
+  - 全章で「- ありません」（実行記録は件数 0 件のリンク）が出力され、エラーなく終了することを確認した。検証完了後に一時ディレクトリを確実に削除し、`/tmp` 直下や一時ディレクトリ外部に出力を残さないことを確認した。
+  - なお、前回の実行時に `/tmp` 直下へ残存していた init 出力（`.devcontainer`、`.prettierrc`、`.vscode`、`.claude`、`.codex`、`.opencode` 等）を清掃し、親検証（`test-integration`、`test-unit`）で発生していた失敗原因を解消した。
 - **prj-0001 での検証**:
   - `node dist/specdojo.js dashboard build --project prj-0001` を実行し、`docs/ja/projects/prj-0001/execution/generated/dashboard.md` を再生成。
   - 生成されたダッシュボードの「3. 実行中の epic」に開始日・終了日・稼働日数、「4. 終わった epic」の表に開始日・終了日・稼働日数が正しく出力されることを確認。

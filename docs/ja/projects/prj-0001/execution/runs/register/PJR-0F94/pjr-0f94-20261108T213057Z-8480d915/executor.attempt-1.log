@@ -1,0 +1,53 @@
+現在、単体テストを実行中です。結果を待機します。
+単体テストの実行完了を待機しています。
+単体テストの実行完了を待機しています。
+単体テストの実行完了を待機しています。
+結果を待機しています。
+ダッシュボードの再生成完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build の完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+docs:build のレンダリング完了を待機しています。
+git status の結果を待機しています。
+# PJR-0F94 対応報告（2 回目の実行）
+
+プロジェクト登録簿 PJR-0F94「ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す」の追加要件（各 epic への日付・稼働日数の表示およびテストの復元）に対応しました。
+
+## 実施内容
+
+1. **実行中の epic（第 3 章）への日付・稼働日数表示**:
+   - [`src/dashboard/dashboard.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/src/dashboard/dashboard.ts) の `renderActiveEpicsSection` を改修し、各 open / in-progress epic のヘッダー直下に `- 開始日: ${startDate}`、`- 終了日: ${endDate}`、`- 稼働日数: ${estimateDays}` を出力するようにしました。
+   - 期限のない epic や日付逆転がある epic は、従前の全体計画表と同様に `未定` および `-` と安全に表示されます。
+
+2. **終わった epic（第 4 章）への日付・稼働日数表示**:
+   - `renderCompletedEpicsSection` を改修し、一覧テーブルの列を `| id | title | track | 開始日 | 終了日 | 稼働日数 |` に拡張しました。
+   - `loadEpicSchedules` から得られる算出結果に基づき、各完了 epic の開始日・終了日・稼働日数を出力します。
+
+3. **ドキュメント更新**:
+   - [`docs/ja/specdojo/references/command-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/docs/ja/specdojo/references/command-reference.md) の `dashboard build` の説明文を、実行中 epic および終わった epic での日付・稼働日数表示に合わせて更新しました。
+
+4. **テストの復元と追加**:
+   - [`tests/src/register/track-domains.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/tests/src/register/track-domains.test.ts): 1 回目の実行で外されていた日付テスト（期限なし epic の終了日未定検証、および予定開始日のみの epic・日付逆転 epic の検証）を、新レイアウトの表示形式に合わせて復元しました。
+   - [`tests/src/dashboard/dashboard.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/tests/src/dashboard/dashboard.test.ts): 実行中 epic（期限あり・期限なし）および終わった epic の日付・稼働日数の出力を確認する単体テストを追加しました。
+
+5. **個票の更新**:
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94/docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md) の作業内容・対応結果を、2 回目の実施内容と検証結果に合わせて更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"「実行中の epic」と「終わった epic」の各 epic への開始日・終了日・稼働日数の表示を実装し、テストを復元・追加して検証を完了しました。","handoff":[],"validations":[{"command":"npm run docs:build","status":"passed","summary":"docs:build completed successfully without dead links or errors"},{"command":"npm run validate:history-links","status":"passed","summary":"history links validated successfully"},{"command":"npm run validate:catalog","status":"passed","summary":"catalog validated successfully"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"skipped schema file validation","reason":"no changed *.yaml or *.yml file"}]}
+</specdojo_executor_evidence>

@@ -1075,7 +1075,7 @@ specdojo exec worktree prune --project prj-0001
 | `watch`  | ファイル変更を監視して対象 build を実行する | `specdojo watch --project prj-0001 --scope exec` |
 | `build`  | 全生成物または指定 scope を一括再生成する   | `specdojo build --project prj-0001 --scope all`  |
 
-`dashboard build --project <id>` は `execution/generated/dashboard.md`、全体計画ガントチャート SVG、未作成カタログを再生成します。ダッシュボードは人の対応が要るもの（review、判断待ち、waiting、human タスク）、おすすめの登録項目（先行項目充足済み上位 10 件）、実行中の epic（段ごとの進捗と次に流せるタスク）を先頭に表示し、終わった epic、routine 定義一覧、Grade 全体表、全体の集計（Schedule 進捗・登録簿集計・ガントチャート）を `::: details` で折りたたみ表示します。各項目には文書サイトで開ける相対リンクを付与し、項目がない章は「ありません」を表示します。
+`dashboard build --project <id>` は `execution/generated/dashboard.md`、全体計画ガントチャート SVG、未作成カタログを再生成します。ダッシュボードは人の対応が要るもの（review、判断待ち、waiting、human タスク）、おすすめの登録項目（先行項目充足済み上位 10 件）、実行中の epic（開始日・終了日・稼働日数、段ごとの進捗と次に流せるタスク）を先頭に表示し、終わった epic（開始日・終了日・稼働日数一覧）、routine 定義一覧、Grade 全体表、全体の集計（Schedule 進捗・登録簿集計・ガントチャート）を `::: details` で折りたたみ表示します。各項目には文書サイトで開ける相対リンクを付与し、項目がない章は「ありません」を表示します。
 
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 

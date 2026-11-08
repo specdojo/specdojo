@@ -141,6 +141,9 @@ describe("track domain resolution", () => {
     expect(result.generatedFiles).toHaveLength(4);
     expect(result.markdown).toContain("全体計画ガントチャート");
     expect(result.markdown).toContain("PJR-AB12");
+    expect(result.markdown).toContain("- 開始日: 2026-01-05");
+    expect(result.markdown).toContain("- 終了日: 未定");
+    expect(result.markdown).toContain("- 稼働日数: -");
     expect(readFileSync(join(output, "dashboard-timeline-gantt.svg"), "utf8")).toContain(
       "<polygon",
     );
@@ -149,25 +152,43 @@ describe("track domain resolution", () => {
   });
 
   it.each([
-    { start: "2026-01-05", planned: true },
-    { start: "2026-01-16", planned: false },
-  ])("dashboard loads planned epic dates without start events ($start)", ({ start, planned }) => {
-    writeEpic(["epic"], { start_on: start, due_on: "2026-01-09" });
-    rmSync(join(root, "timeline/tml-index.yaml"));
-    const ticketPath = join(root, "register/pjr-ab12-demo.md");
-    const before = readFileSync(ticketPath, "utf8");
-    const output = join(root, "execution/generated");
-    const result = writeDashboard({
-      ...options(),
-      projectPath: root,
-      executionGeneratedPath: output,
-    });
-    expect(result.markdown).toContain("PJR-AB12");
-    const svg = readFileSync(join(output, "dashboard-timeline-gantt.svg"), "utf8");
-    if (planned) expect(svg).toContain('width="120" height="12" rx="3"');
-    else expect(svg).toContain("開始日未定 / 終了日 未定");
-    expect(readFileSync(ticketPath, "utf8")).toBe(before);
-  });
+    {
+      start: "2026-01-05",
+      startDate: "2026-01-05",
+      endDate: "2026-01-09",
+      estimateDays: "5",
+      planned: true,
+    },
+    {
+      start: "2026-01-16",
+      startDate: "未定",
+      endDate: "未定",
+      estimateDays: "-",
+      planned: false,
+    },
+  ])(
+    "dashboard loads planned epic dates without start events ($start)",
+    ({ start, startDate, endDate, estimateDays, planned }) => {
+      writeEpic(["epic"], { start_on: start, due_on: "2026-01-09" });
+      rmSync(join(root, "timeline/tml-index.yaml"));
+      const ticketPath = join(root, "register/pjr-ab12-demo.md");
+      const before = readFileSync(ticketPath, "utf8");
+      const output = join(root, "execution/generated");
+      const result = writeDashboard({
+        ...options(),
+        projectPath: root,
+        executionGeneratedPath: output,
+      });
+      expect(result.markdown).toContain("PJR-AB12");
+      expect(result.markdown).toContain(`- 開始日: ${startDate}`);
+      expect(result.markdown).toContain(`- 終了日: ${endDate}`);
+      expect(result.markdown).toContain(`- 稼働日数: ${estimateDays}`);
+      const svg = readFileSync(join(output, "dashboard-timeline-gantt.svg"), "utf8");
+      if (planned) expect(svg).toContain('width="120" height="12" rx="3"');
+      else expect(svg).toContain("開始日未定 / 終了日 未定");
+      expect(readFileSync(ticketPath, "utf8")).toBe(before);
+    },
+  );
 
   it("legacy loading emits one deprecation warning across repeated reads", async () => {
     vi.resetModules();

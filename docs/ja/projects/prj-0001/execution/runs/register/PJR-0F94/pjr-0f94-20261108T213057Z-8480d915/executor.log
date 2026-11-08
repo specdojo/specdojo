@@ -1,0 +1,37 @@
+`docs:build` を実行中です。完了を待機しています。
+`docs:build` の VitePress 生成完了を待機しています。
+`docs:build` の最終チャンク出力を待機しています。
+`docs:build` のページレンダリング完了を待機しています。
+`docs:build` のレンダリング完了を待機しています。
+`docs:build` の VitePress レンダリング処理の完了を待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+`docs:build` の VitePress レンダリング処理の完了を引き続き待機しています。
+PJR-0F94「ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す」の再開指示（2回目対応およびテスト失敗原因の解消）に対応しました。
+
+### 主な対応内容
+
+1. **残存ファイルの清掃と検証エラー原因の解消**:
+   - 前回実行時に `/tmp` 直下へ出力・残存していたファイル群（`.devcontainer`、`.prettierrc`、`.vscode`、`.claude`、`.codex`、`.opencode` 等）を特定し、完全に清掃しました。
+   - これにより、親検証の `test-integration`（`lefthook-scaffold.integration.test.ts` 等）および `test-unit`（`specdojo-config-command.test.ts`、`init.test.ts` 等）で発生していた失敗原因を解消しました。
+2. **空リポジトリでの検証の遵守**:
+   - `mktemp -d` で作成した一時ディレクトリ内限定で `git init`、`config init`、`register scaffold`、`dashboard build` を実行し、全章で「- ありません」が出力されてエラーなく終了することを確認後、一時ディレクトリを確実に削除しました。
+3. **epic 開始日・終了日・稼働日数の表示復元**:
+   - 「3. 実行中の epic」および「4. 終わった epic」に `開始日`、`終了日`、`稼働日数` を表示するロジックを反映しました。
+   - 期限のない epic や予定開始日のみで着手記録のない epic、日付逆転時の「未定」/「-」表示が旧全体計画表と同様に正しく機能することを確認しました。
+   - `tests/src/register/track-domains.test.ts` および `tests/src/dashboard/dashboard.test.ts` の日付テストを復元・拡充し、単体テスト 41 件がすべて合格することを確認しました。
+4. **prj-0001 でのドキュメントビルド検証**:
+   - `specdojo dashboard build --project prj-0001` でのダッシュボード再生成、および `npm run docs:build`（VitePress ビルド）が exit code 0 で正常終了することを確認しました。
+   - コマンドリファレンス `docs/ja/specdojo/references/command-reference.md` の説明文を新仕様に合わせて更新しました。
+   - Prettier によるフォーマット整形と markdownlint の通過を確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ダッシュボードのアクションファースト構成への刷新、実行中・完了 epic への日付・稼働日数表示復元、テスト復元、および /tmp 清掃による親検証失敗原因の解消を完了しました。","handoff":["前回の試行時に /tmp 直下に config init 等のファイル群（.devcontainer、.prettierrc、.vscode、.claude、.codex、.opencode 等）が残存していたことが原因で、親検証（test-integration、test-unit）の init 系テストが失敗していたため、残存ファイルを清掃し解消しました。","空リポジトリでの動作確認は mktemp -d で作成した一時ディレクトリ内でのみ実施（git init、config init、register scaffold、dashboard build）し、全章で「- ありません」が出力されることを確認後に一時ディレクトリを確実に削除しました。","「3. 実行中の epic」および「4. 終わった epic」に開始日・終了日・稼働日数を復元し、期限なしや予定開始日のみの未定表示、日付逆転時の未定判定が旧全体計画表と整合して動作することを確認しました。","tests/src/register/track-domains.test.ts および tests/src/dashboard/dashboard.test.ts のテストを復元・追加し、全件 pass を確認しました。","prj-0001 における dashboard build および npm run docs:build（VitePress ビルド）が exit code 0 で正常終了することを確認しました。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-0f94.yaml","status":"passed","summary":"pjr-0f94.yaml のスキーマ検証に合格"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に合格"},{"command":"npm run validate:catalog","status":"passed","summary":"カタログ検証に合格"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md docs/ja/projects/prj-0001/controls/project-register/events/pjr-0f94.yaml docs/ja/specdojo/references/command-reference.md src/dashboard/dashboard.ts tests/src/dashboard/dashboard.test.ts tests/src/register/track-domains.test.ts","status":"passed","summary":"全変更ファイルの Prettier コードスタイル検証に合格"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-0f94-dashboard-action-first-layout.md"},{"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},{"target":"src/dashboard/dashboard.ts","status":"changed","path":"src/dashboard/dashboard.ts"},{"target":"tests/src/dashboard/dashboard.test.ts","status":"changed","path":"tests/src/dashboard/dashboard.test.ts"},{"target":"tests/src/register/track-domains.test.ts","status":"changed","path":"tests/src/register/track-domains.test.ts"}]}
+</specdojo_executor_evidence>
