@@ -41,3 +41,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-VMXK","PJR-X3T8"]'
+- v: 1
+  id: reg_7c936dadaeaa4ea3a8c6e4c4af69563c
+  ts: "2026-11-08T08:10:54Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（2026-11-08）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: uis はワイヤーフレームを含めない今の形で確定する。clis は入力ファイルの規則を足して直す
+  previous_event_id: reg_79fa24aa626140fb93207feabecda8cc
