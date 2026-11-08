@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_79a3b704760d43458ea50b4fc6b03990
+  ts: "2026-11-08T06:48:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CLI 仕様（clis）の型を新しく作る
+    - field: description
+      from: ""
+      to: SpecDojo 自身の CLI を利用者から見た仕様を書く新しい種類 clis の rulebook と sample を作る。PJR-0YNQ で uis に足した CLI の部分を土台にし、コマンドリファレンスを参照して操作の流れ・出力の要点・終了とエラーと次の手に絞る
+    - field: input
+      from: ""
+      to: '["PJR-RMMM（indie が決定、2026-11-08）: CLI を新しい種類 clis（CLI Specification）に分け、uis は GUI の画面仕様だけにする。","clis は SpecDojo 自身の CLI を利用者から見た仕様で、SpecDojo が起動する外部の CLI との約束である ifx-cmd とは分ける。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-authoring
+    - field: targets
+      from: ""
+      to: '["specdojo:clis-rulebook"]'
+    - field: sources
+      from: ""
+      to: '["specdojo:uis-rulebook","specdojo:uis-sample"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-RMMM"]'
