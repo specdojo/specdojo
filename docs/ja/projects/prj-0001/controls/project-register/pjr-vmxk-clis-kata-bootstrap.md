@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-vmxk-clis-kata-bootstrap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T06:48:18Z"
+  completed_at: "2026-11-08T07:17:18Z"
+  conclusion: clis-rulebook と clis-sample を作り、コマンドリファレンスを参照して操作の流れ・出力と作るファイル・終了コードとエラーと次の手に絞る 7 章の型にした。種類の一覧（命名の標準・成果物のリファレンス・sidebar・レビューの観点）に clis を足した
   derived_from:
     - PJR-2GD6
     - PJR-RMMM
