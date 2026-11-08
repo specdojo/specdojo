@@ -107,8 +107,8 @@ describe("mergeDomainCatalogs", () => {
       "dct-data-model-cdsd.yaml": dctWithGroups("data-model", [
         { name: "業務データ辞書", deliverables: [deliverable("cdsd-x")] },
       ]),
-      "dct-data-model-cld.yaml": dctWithGroups("data-model", [
-        { name: "業務データ辞書", deliverables: [deliverable("cld-x")] },
+      "dct-data-model-cdt.yaml": dctWithGroups("data-model", [
+        { name: "業務データ辞書", deliverables: [deliverable("cdt-x")] },
       ]),
     });
 
@@ -119,7 +119,7 @@ describe("mergeDomainCatalogs", () => {
     expect(merged[0].files).toEqual([
       "dct-data-model-bdd.yaml",
       "dct-data-model-cdsd.yaml",
-      "dct-data-model-cld.yaml",
+      "dct-data-model-cdt.yaml",
       "dct-data-model-sld.yaml",
       "dct-data-model-stsd.yaml",
     ]);
@@ -128,7 +128,7 @@ describe("mergeDomainCatalogs", () => {
     expect(merged[0].doc.groups[0].deliverables?.map((item) => item.local_id)).toEqual([
       "bdd-x",
       "cdsd-x",
-      "cld-x",
+      "cdt-x",
       "sld-x",
       "stsd-x",
     ]);
@@ -315,7 +315,7 @@ describe("buildCatalog", () => {
       "dct-data-model-bdd.yaml",
       "dct-data-model-ccd.yaml",
       "dct-data-model-cdsd.yaml",
-      "dct-data-model-cld.yaml",
+      "dct-data-model-cdt.yaml",
       "dct-data-model-sld.yaml",
       "dct-data-model-stsd.yaml",
     ]);
@@ -330,7 +330,7 @@ describe("buildCatalog", () => {
     const dictionaryPositions = [
       "bdd-sample",
       "cdsd-sample",
-      "cld-sample",
+      "cdt-sample",
       "sld-sample",
       "stsd-sample",
     ].map((id) => md.indexOf(id));

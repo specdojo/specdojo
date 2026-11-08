@@ -225,7 +225,7 @@ flowchart
 | [業務データ辞書 / 概念データストア定義](../rulebooks/cdsd-rulebook.md) | Conceptual Data Store Definition | `cdsd-<term>` | 概念データストア（情報の保管場所）を一覧で定義する | データストア名、対応プロセス、内容、更新タイミング、粒度、主な用途 など |
 | [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) | Storage Location Definition | `sld-<term>` | 業務対象となる物の物理的な保管場所を一覧で定義する | 保管場所名、保管対象、内容・目的、関連プロセス、管理頻度 など |
 | [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) | Status Definition | `stsd-<term>` | 業務上のエンティティが取り得る状態と状態間の遷移を一文書で定義する | 対象、状態名、通称、意味、成立条件、管理場所、状態遷移図、イベント、遷移条件など |
-| [業務データ辞書 / 分類定義](../rulebooks/cld-rulebook.md) | Classification Definition | `cld-<term>` | 業務上の分類（カテゴリ、種別、区分など）を一覧で定義する | 分類定義名、種別、分類名、説明など |
+| [業務データ辞書 / 分類一覧](../rulebooks/cdt-rulebook.md) | Code Table | `cdt-<term>` | 業務上の分類（カテゴリ、種別、区分など）を一覧で定義する | 分類定義名、種別、分類名、説明など |
 | [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md) | Conceptual Class Diagram | `ccd-<term>` | 業務上のエンティティ関係を図で定義する | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など |
 
 #### 2.1.3. 業務モデル
