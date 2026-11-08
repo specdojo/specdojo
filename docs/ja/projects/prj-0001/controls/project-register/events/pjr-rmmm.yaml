@@ -41,3 +41,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-0YNQ"]'
+- v: 1
+  id: reg_c8da7bf5c76944f8bcff9232a8fc9ea5
+  ts: "2026-11-08T06:47:11Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（推奨どおり、2026-11-08）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: uis の型は直す。CLI を新しい種類 clis に分け、uis は GUI の画面仕様だけにし、rulebook のサンプルの章を消す
+  previous_event_id: reg_bc09906d6f714a58a7d929431e1dc9fe

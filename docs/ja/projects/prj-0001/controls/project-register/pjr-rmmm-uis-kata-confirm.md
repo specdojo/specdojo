@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-rmmm-uis-kata-confirm
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-08T04:01:13Z"
+  completed_at: "2026-11-08T06:47:11Z"
+  conclusion: uis の型は直す。CLI を新しい種類 clis に分け、uis は GUI の画面仕様だけにし、rulebook のサンプルの章を消す
   derived_from:
     - PJR-2GD6
   depends_on:
