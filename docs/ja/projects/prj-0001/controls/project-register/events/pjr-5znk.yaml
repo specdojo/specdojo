@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_91fc3162da594c94860a8e987713e48c
+- v: 1
+  id: reg_505e824d135d4e15be9c613663823750
+  ts: "2026-11-08T00:08:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor、2 回）で対応。2 回目で validate:history-links の適用対象の説明 2 か所を実装に合わせ、差分・対応結果・lint:md・validate:history-links を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: ガイド 7 本とコマンドリファレンスの旧来の実行記録の置き場所を今の execution/runs に直した。旧来の形式を説明する 5 か所は理由を記して残した
+  previous_event_id: reg_172f966983274c52b3979516f6fc83f1

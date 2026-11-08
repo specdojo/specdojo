@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-5znk-stale-run-record-paths
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   registered_at: "2026-11-07T23:24:02Z"
+  completed_at: "2026-11-08T00:08:36Z"
+  conclusion: ガイド 7 本とコマンドリファレンスの旧来の実行記録の置き場所を今の execution/runs に直した。旧来の形式を説明する 5 か所は理由を記して残した
   derived_from:
     - PJR-JT5J
 ---
