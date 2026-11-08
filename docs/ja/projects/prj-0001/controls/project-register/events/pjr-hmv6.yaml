@@ -83,3 +83,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f552a508fcc548a9ab4f778c8e15f965
+- v: 1
+  id: reg_6abc2231ef944bc5bc72fb5ea35702d6
+  ts: "2026-11-08T02:03:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・残る cld の参照・親の検証・catalog validate・docs:build（heap 8GB で通過）を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: 分類一覧の略号を cdt にし、cdt の rulebook・sample・カタログのテンプレートを正本とした。古い cld の 3 件は非推奨の案内として残し、prj-0001 のカタログと参照を cdt に揃えた
+  previous_event_id: reg_b2ab1438c8f94d63bda6ff4ba26fcfbf

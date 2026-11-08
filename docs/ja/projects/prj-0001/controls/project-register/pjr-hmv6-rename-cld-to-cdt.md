@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-hmv6-rename-cld-to-cdt
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:30:11Z"
+  completed_at: "2026-11-08T02:03:42Z"
+  conclusion: 分類一覧の略号を cdt にし、cdt の rulebook・sample・カタログのテンプレートを正本とした。古い cld の 3 件は非推奨の案内として残し、prj-0001 のカタログと参照を cdt に揃えた
   derived_from:
     - PJR-2GD6
   depends_on:
