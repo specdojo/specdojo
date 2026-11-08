@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-80f5-rulebook-deliverable-id-rules-audit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   registered_at: "2026-11-08T12:31:17Z"
+  completed_at: "2026-11-08T15:27:53Z"
+  conclusion: "110 件の rulebook の ID の決まりを命名の標準と照らし、プロジェクト文書の ID を `<project-id>`: 付きにするなど 13 件の rulebook を直した"
   derived_from:
     - PJR-25B9
 ---

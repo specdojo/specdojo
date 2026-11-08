@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_275d5aa2a903459d83415d4d4453d071
+- v: 1
+  id: reg_eca6e07a80bd4ec28be4918abafe000d
+  ts: "2026-11-08T15:27:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分（ID の決まりの記述だけ）・個票の対応結果・親の検証を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: "-"
+      to: "110 件の rulebook の ID の決まりを命名の標準と照らし、プロジェクト文書の ID を `<project-id>`: 付きにするなど 13 件の rulebook を直した"
+  previous_event_id: reg_6a4239713fd541ca9254cac6adea32b6
