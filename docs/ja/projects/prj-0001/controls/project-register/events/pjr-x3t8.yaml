@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3afb709ea8564a8c9c34b29d38db1deb
+- v: 1
+  id: reg_eabfec0432b94e9a9b5366c3d9d718fb
+  ts: "2026-11-08T07:44:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・親の検証を確かめた。clis の型とカタログは変わっていない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: uis-rulebook を GUI の画面仕様だけにし、CLI は clis で書くと案内した。サンプルの章を消し、uis-sample を GUI の販売登録画面の完成例にした
+  previous_event_id: reg_e02523ccf29b48379bdce6a62d430584

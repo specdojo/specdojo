@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-x3t8-uis-kata-gui-only
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T06:48:38Z"
+  completed_at: "2026-11-08T07:44:24Z"
+  conclusion: uis-rulebook を GUI の画面仕様だけにし、CLI は clis で書くと案内した。サンプルの章を消し、uis-sample を GUI の販売登録画面の完成例にした
   derived_from:
     - PJR-2GD6
     - PJR-RMMM
