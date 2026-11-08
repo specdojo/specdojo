@@ -141,3 +141,16 @@
       from: "parent validation failed: test-integration, test-unit"
       to: "-"
   previous_event_id: reg_85c46a3a1ac84c07b73bfb14d508bdcc
+- v: 1
+  id: reg_5dfdbdd8b7884ac4871a93133e0fe1c9
+  ts: "2026-11-08T22:53:31Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8e193f05a64d48409889d80b3d6b654b
