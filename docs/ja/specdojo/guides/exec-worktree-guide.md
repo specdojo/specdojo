@@ -233,9 +233,12 @@ specdojo exec worktree merge \
 | exec branch 側に未統合 commit がある             | merge する差分が存在する        |
 | task worktree に commit 対象の未commit変更がない | result / 成果物を取りこぼさない |
 | 現在ブランチが exec branch ではない              | 自分自身へ merge しない         |
+| 統合先の index に stage 済み変更がない           | 別の操作の stage を保持する     |
 | 現在の未commit変更と merge 対象パスが重複しない  | 手作業の変更を壊さない          |
 
 `prepare` が root に残した plan、result、claim event の複製は、重複判定の前に解放します（exec branch の commit 済み内容が merge で入るため）。それ以外の未commit変更が merge 対象パスと重複する場合は停止します。
+
+stage 済み変更は merge 対象との重複にかかわらず、複製の解放前に対象パスと復旧手順を示して停止します。表示された worktree で commit するか、各パスに `git restore --staged -- <path>` を実行して本文を残してから再開します。複数リポジトリの統合も、いずれかの統合先に stage 済み変更があれば全体の事前検査で停止します。
 
 通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
 

@@ -269,7 +269,7 @@ specdojo register close \
 
 `--commit` は register の worktree 実行の記帳・統合と同じ `register lifecycle` 枠が空くまで待ち、枠の内側で記帳、`register build` 相当の検証・再生成、commit を順に行います。commit 対象はそのコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの未 commit 変更は残します。対象個票やevent自体に開始前の変更がある場合は、既存差分を混ぜないため書き込み前に停止します。既定の件名は `docs(register PJR-XXXX): <command> <title>` で、`-m <message>` または `--message <message>` で上書きできます。`--dry-run` と同時に指定した場合は表示だけを行い、枠の取得と commit は行いません。
 
-ほかのファイルがすでに stage されていても、初回 commit と hook 整形後の amend は対象パスだけを記録し、既存の staged 変更を保持します。stage 後の検査や commit・amend が失敗した場合は、そのコマンドが stage した対象だけを unstage し、作業ツリーの本文を残します。amend の失敗時は初回 commit も残るため、本文と HEAD の差分を確認してから再実行してください。
+ほかのファイルがすでに stage されていても、初回 commit と hook 整形後の amend は対象パスだけを記録し、既存の staged 変更を保持します。実行中に別タスクの exec event が増えても対象へ取り込みません。stage 後の検査や commit・amend が失敗した場合、または `SIGINT`・`SIGTERM`・`SIGHUP` で中断された場合は、そのコマンドが stage した対象だけを unstage し、作業ツリーの本文を残します。Git の実行中に届いた中断は Git が戻ってから処理します。初回 commit 後の失敗・中断では commit が残るため、本文と HEAD の差分を確認してから再実行してください。
 
 別 project への起票では、対象登録簿全体が clean であることを追加で確認します。元の作業ツリーのブランチと HEAD は変更しません。
 
