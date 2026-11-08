@@ -187,7 +187,7 @@ npx specdojo exec validate --project <project-id>
 | agent の rate limit・つながらない              | `--fallback-executor-by` / `--fallback-reporter-by` で代わりの agent を指定して再開する。解除の時刻が分かれば待つ    |
 | 親の検証の失敗（型・lint・テストの本当の失敗） | `--resume --resume-from executor` で executor からやり直す。失敗した検証の結果が引き継がれる                         |
 | 負荷による時間切れ                             | 負荷を下げてから `--resume` で親の検証を流し直す                                                                     |
-| 統合での衝突（CHANGELOG の同じ節など）         | 両方の行を残す形に exec ブランチ側をそろえてから `--resume` する。記帳のファイルの衝突は runner に任せ、手で解かない |
+| 統合での衝突（同じファイルの同じ行など）       | 両方の行を残す形に exec ブランチ側をそろえてから `--resume` する。記帳のファイルの衝突は runner に任せ、手で解かない |
 | 保護された設定への変更                         | worktree でその変更だけを戻して `--resume` するか、`exec handoff apply` で利用者の承認のもと当てる                   |
 | commit の hook の失敗                          | 失敗した段（markdownlint など）の出力を読み、記録のファイルを規約に合わせてから commit する                          |
 | 既に統合済みで再開できない                     | 新しい run として `--force-restart` で流す                                                                           |
@@ -196,7 +196,7 @@ npx specdojo exec validate --project <project-id>
 
 - 検証できる形で書く。完了条件は `exec plan` の入力になり、曖昧だと agent が意図と違う範囲を実装する。
 - 作業を終える前に流す検査（型検査・lint・単体テスト）と、通すべき親の検証を書く。
-- CHANGELOG は未公開の版の節に書き、公開済みの版の節を変えないと書く。
+- CHANGELOG の書き方は、プロジェクトの運用メモの決まりに従うと書く。決まりがなければ、各項目が CHANGELOG の同じ節へ直接書くと並べて流したときに統合で衝突しやすいことを踏まえ、書き方を利用者と決める。公開済みの版の節は変えないと書く。
 - 保護された設定に触れる場合、register の項目では案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く。反映は利用者の承認のもとで行うと書く。「result に書く」は executor が result を直接書ける実行形式に限る。
 - 未決の点は `_UNDECIDED_` で残すか、executor に決めさせて理由を記録させるかを明記する。register の項目では個票の対応結果に書かせ、pipeline では報告の `handoff` にも書かせる。「result に書く」は executor が result を直接書ける実行形式に限る。
 - Markdown では、`*` や `_` を含む語（glob など）をコードの書式にする。コードの書式の中を空白で始めたり終えたりしない。
