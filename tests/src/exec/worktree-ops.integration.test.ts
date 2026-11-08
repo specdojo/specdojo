@@ -45,6 +45,7 @@ import {
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { taskRecordPaths } from "../../../src/exec/run-records.js";
 import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
+import { projectMergeBlockers } from "../../../src/exec/repo-integration.js";
 import { createPipelineState, writePipelineState } from "../../../src/exec/pipeline-state.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
@@ -502,6 +503,60 @@ describe("exec worktree ops", () => {
     expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
     for (const path of releaseRootPaths) expect(existsSync(path)).toBe(true);
   });
+
+  it.each([false, true])(
+    "unrelated staged block event stops integration with recovery instructions (dry-run: %s)",
+    (dryRun) => {
+      const fixture = setupRepository();
+      const taskId = "T-T-doc-010";
+      const worktree = prepare(fixture, taskId);
+      const event = "execution/exec/events/other-task-block.json";
+      writeFile(join(fixture.repo, event), '{"type":"block"}\n');
+      git(fixture.repo, "add", event);
+      // Also preserve partially staged content, which must not enter the task's merge commit.
+      writeFile(join(fixture.repo, "README.md"), "staged\n");
+      git(fixture.repo, "add", "README.md");
+      writeFile(join(fixture.repo, "README.md"), "unstaged\n");
+      const index = git(fixture.repo, "diff", "--cached", "--binary");
+      const status = git(fixture.repo, "status", "--porcelain");
+      const head = git(fixture.repo, "rev-parse", "HEAD");
+      const releaseRootPaths = [
+        taskRecordPaths(fixture.executionPath, taskId).plan,
+        taskRecordPaths(fixture.executionPath, taskId).result,
+        join(fixture.executionPath, "exec/events", `20260613T000000Z_agent_${taskId}_claim.json`),
+      ];
+      const blockers = projectMergeBlockers({
+        context: fixture.context,
+        worktree,
+        taskId,
+        releasePaths: releaseRootPaths,
+      });
+      expect(
+        blockers.some(
+          ({ message }) =>
+            message.includes(event) && message.includes("git restore --staged -- <path>"),
+        ),
+      ).toBe(true);
+      expect(() =>
+        mergeWorktreeIntoCurrent({
+          context: fixture.context,
+          worktree,
+          taskId,
+          releaseRootPaths,
+          dryRun,
+        }),
+      ).toThrow(/Staged changes.*other-task-block\.json.*git restore --staged/);
+      expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(head);
+      expect(git(fixture.repo, "status", "--porcelain")).toBe(status);
+      expect(git(fixture.repo, "diff", "--cached", "--binary")).toBe(index);
+      expect(gitResult(fixture.repo, ["rev-parse", "--verify", "MERGE_HEAD"]).status).not.toBe(0);
+
+      git(fixture.repo, "restore", "--staged", "--", event, "README.md");
+      mergeIntoRoot(fixture, worktree, taskId);
+      expect(readFileSync(join(fixture.repo, event), "utf8")).toBe('{"type":"block"}\n');
+      expect(readFileSync(join(fixture.repo, "README.md"), "utf8")).toBe("unstaged\n");
+    },
+  );
 
   it("restores files already released when releasing a later path fails", () => {
     const fixture = setupRepository();

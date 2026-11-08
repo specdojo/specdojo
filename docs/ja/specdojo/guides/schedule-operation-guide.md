@@ -78,12 +78,15 @@ specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --p
 
 | 状況                                                                        | 挙動                                              |
 | --------------------------------------------------------------------------- | ------------------------------------------------- |
-| root index に stage 済み変更がある                                          | checkpoint 前に停止する                           |
+| root index の stage 済み変更が checkpoint 対象と重複する                    | checkpoint 前に停止する                           |
+| root index に stage 済み変更がある                                          | merge 前に対象パスと解除手順を示して停止する      |
 | root の未commit変更（runner が置いた複製を除く）と merge 対象パスが重複する | merge 前に停止する                                |
 | agent が失敗して `blocked` になる                                           | worktree を保持し、auto の Ready 選択から除外する |
 | プロセス中断で `doing` が残る                                               | `exec resume` で再開する                          |
 
 parallel 実行中でも、claim、checkpoint、merge、complete、`exec refresh` は runner が直列化します。agent プロセスだけを並列に走らせ、root 側の状態更新や Ready 再計算は1件ずつ処理します。
+
+stage 済み変更による停止では、表示された worktree で対象を commit するか、各パスに `git restore --staged -- <path>` を実行してから `exec resume` します。後者はファイルの内容を残して stage だけを解除します。runner は別タスクや手作業の変更を自動で commit・unstage しません。
 
 agent が成功した後、runner は commit / merge / worktree 削除へ進む前に、最新の event log から task state を再構築し、`exec complete` と同じ完了可否を検証します。task が `doing` でない場合や、実行 actor が claim actor と一致しない場合は統合を中止し、成果物を未統合のまま worktree に保持します。これにより、`exec resume --by` などで別 actor を指定しても、Schedule が `doing` のまま成果物だけが統合される状態を防ぎます。
 

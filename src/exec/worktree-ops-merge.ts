@@ -9,6 +9,7 @@ import {
 import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "../register/events.js";
 import { displayIdFromTicketFilename } from "../register/item.js";
 import { isGradeCheckpointPath } from "./grade-checkpoint.js";
+import { stagedMergeBlocker } from "../shared/git.js";
 import {
   appendGitFailureLog,
   gitOutput,
@@ -260,6 +261,10 @@ export function mergeWorktreeIntoCurrent(params: {
         lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
         lockStaleMs: DEFAULT_LOCK_STALE_MS,
       });
+    }
+    const stagedBlocker = stagedMergeBlocker(context.repoRoot);
+    if (stagedBlocker) throw new Error(stagedBlocker);
+    if (!params.dryRun) {
       // Canonical grades may have been refreshed in the root after branching. Release only
       // the checkpoint copies; refuse to discard a newer root-side evaluation.
       const gradePaths = releasePaths.filter((path) =>

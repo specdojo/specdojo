@@ -41,6 +41,7 @@ import { gitOutput, gitResult, type ExecWorktree } from "../../../src/exec/workt
 import {
   commitProductWorktrees,
   integrateTaskRepositories,
+  mergeProductIntoTarget,
   productMergeBlockers,
   projectMergeBlockers,
   syncTaskWorktreesWithIntegrationTargets,
@@ -641,6 +642,34 @@ describe("multi-repository task worktrees", () => {
       gitResult(fixture.repo, ["merge-base", "--is-ancestor", worktree.branch, "HEAD"]).status,
     ).toBe(1);
   });
+
+  it.each(["project", "product"])(
+    "rejects unrelated staged changes in the %s before merging any repository",
+    (target) => {
+      const fixture = setup();
+      const worktree = prepare(fixture);
+      commitIntegrationFixture(worktree);
+      const app1 = worktree.repos![0]!;
+      const checkout = target === "project" ? fixture.repo : app1.repoRoot;
+      writeFile(join(checkout, "unrelated.txt"), "keep staged\n");
+      git(checkout, "add", "unrelated.txt");
+      const roots = [fixture.repo, ...fixture.products.map((product) => product.repoRoot)];
+      const heads = roots.map((root) => git(root, "rev-parse", "HEAD"));
+      const index = git(checkout, "diff", "--cached", "--binary");
+
+      expect(() => integrateFixture(fixture, worktree)).toThrow(
+        /Staged changes.*unrelated\.txt.*git restore --staged/,
+      );
+      if (target === "product") {
+        expect(() => mergeProductIntoTarget({ product: app1, message: "merge" })).toThrow(
+          /Staged changes/,
+        );
+      }
+      expect(roots.map((root) => git(root, "rev-parse", "HEAD"))).toEqual(heads);
+      expect(git(checkout, "diff", "--cached", "--binary")).toBe(index);
+      expect(readFileSync(join(checkout, "unrelated.txt"), "utf8")).toBe("keep staged\n");
+    },
+  );
 
   it("allows unrelated uncommitted files on product and project integration targets", () => {
     const fixture = setup();

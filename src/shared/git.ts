@@ -464,3 +464,17 @@ export function unstageCommitTargets(repoRoot: string, paths: readonly string[])
   if (unique.length === 0) return;
   gitOutput(repoRoot, ["reset", "--quiet", "--", ...unique]);
 }
+
+// A non-fast-forward merge requires a clean index even when staged paths do not overlap the
+// incoming diff. Never reset or commit another operation's staged work on its behalf.
+export function stagedMergeBlocker(repoRoot: string): string | undefined {
+  const paths = gitOutput(repoRoot, ["diff", "--cached", "--no-renames", "--name-only", "-z"])
+    .split("\0")
+    .filter(Boolean);
+  if (paths.length === 0) return undefined;
+  return (
+    `Staged changes in integration target ${repoRoot}: ${paths.join(", ")}. ` +
+    `Commit them, or run git restore --staged -- <path> for each listed path in that worktree ` +
+    `(file contents are preserved), then retry integration.`
+  );
+}
