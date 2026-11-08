@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_861736fe8b014215b873416b0bbe9cf9
+  ts: "2026-11-08T12:31:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: rulebook の成果物の ID の決まりを命名の標準と照らして直す
+    - field: description
+      from: ""
+      to: "rulebook の「ファイル命名・ID規則」の章に、成果物の例へ specdojo: を付けるなど命名の標準と違う決まりが残っていないかを洗い出し、プロダクト文書は namespace なし、プロジェクト文書は `<project-id>`:、specdojo: は同梱の型だけ、に揃える"
+    - field: input
+      from: ""
+      to: '["2026-11-08、clis と uis の rulebook で成果物の例に specdojo: を付けた行が見つかり、orchestrator が直した（bdd・cdt・sf は正しかった）。ほかの rulebook は未確認。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-25B9"]'
