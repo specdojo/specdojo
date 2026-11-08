@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010",
+  "run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068",
+  "updated_at": "2026-11-08T16:52:36.622Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-08T16:37:15.678Z",
+      "completed_at": "2026-11-08T16:43:55.394Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-08T16:48:53.569Z",
+      "completed_at": "2026-11-08T16:52:36.622Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-010/T-BUSINESS-SPECS-REPS-ccd-project-planning-010-20261108T163541Z-03520068/result.md"
+  }
+}
