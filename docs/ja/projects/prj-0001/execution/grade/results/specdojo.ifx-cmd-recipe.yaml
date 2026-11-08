@@ -4,11 +4,11 @@ document: specdojo:ifx-cmd-recipe
 path: docs/ja/specdojo/recipes/ifx-cmd-recipe.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-11-02T20:10:55.807Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-08T20:03:52.241Z"
 graded_by: flash-high-executor
-content_hash: 71696bf1a7b50506d0b3695553f90ef467da2b521b55f0f24e8f48193594476f
+content_hash: 6c856fe9b3f9675d68095035a96229a587e05e91db32777615f59dbeb0d329fe
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,40 +100,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 41
-    anchor: "### 4.1. 実行目的とコマンド"
-    message: >-
-      `positional` を引数種別として指示しているが、対応 schema の `arguments[].kind` は `argument` と `option` しか許可しないため、recipe
-      に従った成果物が検証エラーにならないよう recipe・rulebook・schema の許容値を統一してください。
-    message_ja: >-
-      `positional` を引数種別として指示しているが、対応 schema の `arguments[].kind` は `argument` と `option` しか許可しないため、recipe
-      に従った成果物が検証エラーにならないよう recipe・rulebook・schema の許容値を統一してください。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 41
-    anchor: "### 4.1. 実行目的とコマンド"
-    message: >-
-      recipe と rulebook が許容する `positional` および `rate_limit` を対応 schema が拒否し、template のプレースホルダを recipe
-      に従って埋めても有効な成果物にならない場合があるため、kata 一式と schema を同一の引数種別・終了カテゴリ契約へ統一してください。
-    message_ja: >-
-      recipe と rulebook が許容する `positional` および `rate_limit` を対応 schema が拒否し、template のプレースホルダを recipe
-      に従って埋めても有効な成果物にならない場合があるため、kata 一式と schema を同一の引数種別・終了カテゴリ契約へ統一してください。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 123
-    anchor: "| 目的と境界       | ESIL の 1 連携と対応し、API／ファイル／メッセージ仕様の責務を重複定義していないか  |"
-    message: >-
-      `rate_limit` を終了カテゴリとして扱う例になっているが、対応 schema の `exit_codes[].category` は `rate_limit` を許可しないため,
-      正しく識別したレート制限でも成果物が検証エラーにならないようカテゴリ契約を統一してください。
-    message_ja: >-
-      `rate_limit` を終了カテゴリとして扱う例になっているが、対応 schema の `exit_codes[].category` は `rate_limit` を許可しないため,
-      正しく識別したレート制限でも成果物が検証エラーにならないようカテゴリ契約を統一してください。
+findings: []

@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-10-09T21:02:20.799Z"
-graded_by: agy-expert-executor
+graded_at: "2026-11-08T20:08:44.110Z"
+graded_by: flash-high-executor
 content_hash: 95105c117df50ea0d2cef0f9306e0215107fe2d3ed8a86452aa5245c84d36fc4
 categories:
   purpose:
@@ -140,7 +140,7 @@ findings:
     message: >-
       The procedure for setting metadata omits the required fields `type: project` and `rulebook` specified in the
       rulebook.
-    message_ja: "メタデータを設定する手順において、rulebookで指定されている必須フィールドの `type: project` および `rulebook` が省略されています。"
+    message_ja: "メタデータを設定する手順において、ルールブックで指定されている必須フィールドの `type: project` と `rulebook` が漏れています。"
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
