@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_200dd36cf0d241a29a463e4786f12344
+  ts: "2026-11-08T08:51:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CLI 仕様（clis）の入出力を、ファイルに限らない入力情報と出力情報に直す
+    - field: description
+      from: ""
+      to: clis の 5 章を「入力と出力の要点」にし、入力情報と出力情報に分けて、ファイル・標準入力・環境変数・対話の入力・API を種類の列で並べる。API は ifx-api を参照する
+    - field: input
+      from: ""
+      to: '["PJR-025M（indie が決定、2026-11-08）: CLI の中から API を呼び出すこともあるため、読むファイル・作る変えるファイルではなく入力情報・出力情報とする。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:clis-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-025M"]'
