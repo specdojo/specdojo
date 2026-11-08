@@ -80,3 +80,19 @@
       from: review
       to: in-progress
   previous_event_id: reg_707a9adf016e4943a3297667eba31200
+- v: 1
+  id: reg_bb93dca892fa4e4ea4d02fcc838c6888
+  ts: "2026-11-08T05:07:19Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_601d82acdd7e442db7644f443e33968f
