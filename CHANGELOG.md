@@ -22,6 +22,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- システム化機能（sf）の型を手入れし、個別機能仕様（`sf-<term>`）は機能の目的と業務プロセス仕様（BPS）・画面仕様（UIS）との対応に絞り、コマンドの使い方やオプション、操作手順はコマンドリファレンスや各種ガイドを参照する規則に変更しました。あわせて `sf-rulebook` と `sf-sample` を新規則に対応させ、`rulebook-authoring-standard` に準拠した標準章構成（目的と概要、業務プロセス・画面との対応、入出力と前提条件、処理要件、非機能制約、操作手順・コマンド参照、検証・受入観点、未決事項）へ揃えました。なお、全体構成を扱う `sf-index` の型および schema は変更していません（PJR-C1RG）。
+
 - 業務データ辞書（BDD）の型を手入れし、スキーマがあるエンティティは正本スキーマを参照（`schema_ref`）して `fields` にはスキーマから読めない業務上の意味のみを記載し、型や制約の重複を排除する規則に変更しました。スキーマのないエンティティは、開発フェーズや正本の所在に応じてスタンドアロン定義（今の形）または TypeScript の型参照（`type_ref`）を選択する選定基準を明記しました。あわせて `bdd.schema.yaml` と `bdd-sample` を新規則に対応させ、既存のスタンドアロン記述との後方互換性を維持しています（PJR-MECY）。
 
 - 分類一覧（Classification List）の略号を cld から cdt（code table）に変え、新しい型 `specdojo:cdt-rulebook`・`specdojo:cdt-sample`・`specdojo:dct-data-model-cdt-template` を追加しました。旧 ID（`cld-rulebook`、`cld-sample`、`dct-data-model-cld-template`）は非推奨とし、移行の案内のみを残しています。prj-0001 のカタログ `dct-data-model-cld.yaml` を `dct-data-model-cdt.yaml` へ更新し、成果物の略号を `cdt-*` に揃えました（PJR-HMV6）。
