@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-010",
   "run_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-010-20261108T170001Z-07c4248c",
-  "updated_at": "2026-11-08T17:17:32.267Z",
+  "updated_at": "2026-11-08T17:17:42.846Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-010/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-010-20261108T170001Z-07c4248c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-08T17:17:32.267Z",
-      "completed_at": null,
+      "completed_at": "2026-11-08T17:17:42.846Z",
       "artifact_ref": null
     }
   },
