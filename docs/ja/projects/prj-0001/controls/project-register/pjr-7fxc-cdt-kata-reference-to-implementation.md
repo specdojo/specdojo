@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-7fxc-cdt-kata-reference-to-implementation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:36:19Z"
+  completed_at: "2026-11-08T03:52:58Z"
+  conclusion: cdt-rulebook に schema の enum・TypeScript の型を正とする参照の規則と、実装にない分類の書き方を書き、cdt-sample に両方の例を載せた
   derived_from:
     - PJR-2GD6
   depends_on:

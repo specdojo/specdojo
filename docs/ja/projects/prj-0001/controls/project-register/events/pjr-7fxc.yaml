@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_03e99fd6e575421d9cb9a52394b6ad75
+- v: 1
+  id: reg_e406446b823a43df9741216e78ed59e9
+  ts: "2026-11-08T03:52:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・親の検証を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: cdt-rulebook に schema の enum・TypeScript の型を正とする参照の規則と、実装にない分類の書き方を書き、cdt-sample に両方の例を載せた
+  previous_event_id: reg_cdfb44dbf29044e8bd7587f3856a05a6
