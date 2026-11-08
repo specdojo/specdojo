@@ -15,6 +15,9 @@ specdojo:
     - PJR-2GD6
   depends_on:
     - PJR-HMV6
+  approach: rulebook-maintenance
+  targets:
+    - specdojo:cdt-rulebook
 ---
 
 # PJR-7FXC 分類一覧（cdt）の型を、実装と同じことを書かない形に手入れする
