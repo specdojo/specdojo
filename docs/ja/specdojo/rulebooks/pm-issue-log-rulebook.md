@@ -28,14 +28,14 @@ Issue Log Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- `id` は `pm-issue-log` を使用する。
+- `id` は `<project-id>:pm-issue-log` を使用する。
 - ファイル名は `pm-issue-log-課題ログ.md` など一意にする。
 
 ## 4. 推奨 Frontmatter 項目
 
 | 項目       | 説明                             | 必須 |
 | ---------- | -------------------------------- | ---- |
-| id         | `pm-issue-log`                   | ○    |
+| id         | `<project-id>:pm-issue-log`      | ○    |
 | type       | `project` 固定                   | ○    |
 | status     | `draft` / `ready` / `deprecated` | ○    |
 | based_on   | 根拠仕様ID（配列）               | 任意 |

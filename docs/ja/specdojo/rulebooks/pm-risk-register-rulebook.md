@@ -28,14 +28,14 @@ Risk Register Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- `id` は `pm-risk-register` を使用する。
+- `id` は `<project-id>:pm-risk-register` を使用する。
 - ファイル名は `pm-risk-register-リスク登録簿.md` など一意にする。
 
 ## 4. 推奨 Frontmatter 項目
 
 | 項目       | 説明                             | 必須 |
 | ---------- | -------------------------------- | ---- |
-| id         | `pm-risk-register`               | ○    |
+| id         | `<project-id>:pm-risk-register`  | ○    |
 | type       | `project` 固定                   | ○    |
 | status     | `draft` / `ready` / `deprecated` | ○    |
 | based_on   | 根拠仕様ID（配列）               | 任意 |

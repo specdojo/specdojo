@@ -35,10 +35,10 @@ Impact Analysis (Interface) Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 対象ドキュメント ID は `imp-interface` とする。
+- 対象ドキュメント ID は `<project-id>:imp-interface` とする（例: `prj-0001:imp-interface`）。
 - 対象ドキュメントの推奨ファイル名は `imp-interface.md` とする。
 - `id` は [id-and-file-naming-standard.md](../standards/id-and-file-naming-standard.md) の規則に従い、英小文字・数字・ハイフンで構成する。
-- 関連する追補文書を分割する場合は `imp-interface-<term>` 形式を用いる。
+- 関連する追補文書を分割する場合は `<project-id>:imp-interface-<term>` 形式を用いる。
 
 ## 4. 推奨 Frontmatter 項目
 
@@ -46,8 +46,8 @@ Impact Analysis (Interface) Rulebook
 
 | 項目 | 説明 | 必須 |
 
-| ---------- | -------------------------------------- | ---- |
-| id | ドキュメント ID（例: `imp-interface`） | ○ |
+| ---------- | ---------------------------------------------------- | ---- |
+| id | ドキュメント ID（例: `<project-id>:imp-interface`） | ○ |
 | type | `project` | ○ |
 | status | `draft` / `ready` / `deprecated` | ○ |
 | rulebook | `specdojo:imp-interface-rulebook` 固定 | ○ |

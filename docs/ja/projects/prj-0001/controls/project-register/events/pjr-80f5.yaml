@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-25B9"]'
+- v: 1
+  id: reg_275d5aa2a903459d83415d4d4453d071
+  ts: "2026-11-08T14:39:32Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_861736fe8b014215b873416b0bbe9cf9
+- v: 1
+  id: reg_6a4239713fd541ca9254cac6adea32b6
+  ts: "2026-11-08T15:23:12Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_275d5aa2a903459d83415d4d4453d071

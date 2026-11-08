@@ -34,10 +34,10 @@ Requirements Traceability (Requirements to Tests) Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 対象ドキュメント ID は `trc-requirements-to-tests` とする。
+- 対象ドキュメント ID は `<project-id>:trc-requirements-to-tests` とする（例: `prj-0001:trc-requirements-to-tests`）。
 - 推奨ファイル名は `trc-requirements-to-tests.md` とする。
 - 本 rulebook の ID は `specdojo:trc-requirements-to-tests-rulebook` とする。
-- 追加分割が必要な場合は `trc-requirements-to-tests-<term>` 形式を用いる。
+- 追加分割が必要な場合は `<project-id>:trc-requirements-to-tests-<term>` 形式を用いる。
 
 ## 4. 推奨 Frontmatter 項目
 
@@ -45,7 +45,7 @@ Requirements Traceability (Requirements to Tests) Rulebook
 
 | 項目     | 説明                                          | 必須 |
 | -------- | --------------------------------------------- | ---- |
-| id       | `trc-requirements-to-tests`                   | ○    |
+| id       | `<project-id>:trc-requirements-to-tests`      | ○    |
 | type     | `project`                                     | ○    |
 | status   | `draft` / `ready` / `deprecated`              | ○    |
 | rulebook | `specdojo:trc-requirements-to-tests-rulebook` | ○    |
