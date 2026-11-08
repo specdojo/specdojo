@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0ac6ee35ea224fdcb969e0dd5364e50e
+- v: 1
+  id: reg_fd7cc1f46cb24296a9c85aa65a63249f
+  ts: "2026-11-08T05:23:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応（1 回目 qwen-executor、2 回目 flash-high-executor、lint-fm の失敗を plan の追加の指示で直して再開）。運用メモの第 2 節・第 9 節の文、個票の見出しと変更案、lint:md・validate:history-links を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: 運用メモの完了条件の書き方・衝突の対処・リリースの手順を、CHANGELOG を個票の番号付きの節「CHANGELOG に書く事項」から集める形に直し、オーケストレーターの本文の変更案（A・B）を個票に書いた
+  previous_event_id: reg_9b6b358dc29a410b90710e4518b8fc7b

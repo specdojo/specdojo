@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ksgc-changelog-handoff-playbook
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-11-08T04:04:24Z"
+  completed_at: "2026-11-08T05:23:11Z"
+  conclusion: 運用メモの完了条件の書き方・衝突の対処・リリースの手順を、CHANGELOG を個票の番号付きの節「CHANGELOG に書く事項」から集める形に直し、オーケストレーターの本文の変更案（A・B）を個票に書いた
   derived_from:
     - PJR-EPQ3
 ---
