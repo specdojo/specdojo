@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T00:32:15Z"
-  block_reason: "parent validation failed: lint-md"
   derived_from:
     - PJR-2GD6
   depends_on:
@@ -61,6 +60,7 @@ specdojo:
    - schema があるエンティティは正本スキーマを参照（`schema_ref`）し、`fields` にはスキーマから読めない業務上の意味のみを記載し、データ型（`type`）や制約（`constraints`）の重複記述を排除する規則を策定。
    - schema のないエンティティについて、スタンドアロン定義（今の形）と TypeScript 型参照（`type_ref`）の選定基準と記述規則を明確化。
    - `docs/ja/specdojo/standards/rulebook-authoring-standard.md` に準拠し、章立てを整理（本文要件の表の空行分断解消、enum フィールドの `allowed_values` / `allowed_values_detailed` 追加等、全 25 件の指摘 F001 - F025 を解消）。
+   - 検証手順節のコードブロック前後に空行を追加し、markdownlint MD031 エラーを解消。
 2. **schema の改訂 (`docs/specdojo/schemas/v1/bdd.schema.yaml`)**:
    - `entities` に `schema_ref`（正本スキーマ参照）および `type_ref`（TypeScript 型参照）を任意プロパティとして追加（両者の同時指定は禁止）。
    - `fields` の各項目で `type` を任意化（`schema_ref` または `type_ref` 指定時は省略可能）。

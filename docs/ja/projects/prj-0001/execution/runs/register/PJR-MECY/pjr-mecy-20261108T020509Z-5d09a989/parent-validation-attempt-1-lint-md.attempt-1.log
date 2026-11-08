@@ -1,0 +1,18 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/specdojo/rulebooks/bdd-rulebook.md:199 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/rulebooks/bdd-rulebook.md:201 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]
+docs/ja/specdojo/rulebooks/bdd-rulebook.md:204 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/rulebooks/bdd-rulebook.md:206 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]
+docs/ja/specdojo/rulebooks/bdd-rulebook.md:209 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```bash"]
+docs/ja/specdojo/rulebooks/bdd-rulebook.md:211 error MD031/blanks-around-fences Fenced code blocks should be surrounded by blank lines [Context: "```"]

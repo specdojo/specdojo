@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-MECY",
+  "run_id": "pjr-mecy-20261108T020509Z-5d09a989",
+  "updated_at": "2026-11-08T02:28:33.163Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-11-08T02:06:37.766Z",
+      "completed_at": "2026-11-08T02:21:00.524Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MECY/pjr-mecy-20261108T020509Z-5d09a989/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-08T02:27:20.740Z",
+      "completed_at": "2026-11-08T02:28:33.163Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MECY/pjr-mecy-20261108T020509Z-5d09a989/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MECY/pjr-mecy-20261108T020509Z-5d09a989/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-MECY/pjr-mecy-20261108T020509Z-5d09a989/result.md"
+  }
+}
