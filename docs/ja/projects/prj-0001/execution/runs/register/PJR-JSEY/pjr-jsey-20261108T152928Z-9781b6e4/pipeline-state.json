@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-JSEY",
   "run_id": "pjr-jsey-20261108T152928Z-9781b6e4",
-  "updated_at": "2026-11-08T17:34:02.718Z",
+  "updated_at": "2026-11-08T17:34:22.807Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JSEY/pjr-jsey-20261108T152928Z-9781b6e4/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 1,
       "started_at": "2026-11-08T17:34:02.718Z",
-      "completed_at": null,
+      "completed_at": "2026-11-08T17:34:22.807Z",
       "artifact_ref": null
     }
   },
