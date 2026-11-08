@@ -41,3 +41,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-1K77"]'
+- v: 1
+  id: reg_f2adf770473e4cd2abecc213ee0caba4
+  ts: "2026-11-08T11:52:57Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（2026-11-08）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: clis の型は直す。図は入力情報・出力情報の仕様への線だけにし、参照先に自システムの API（sysd-index の内部 API）と外部コマンド（ifx-cmd）を足す
+  previous_event_id: reg_6b8a51ac84cc4ecba3d4f4968d4aa580

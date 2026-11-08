@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-k4pm-clis-kata-confirm-input-output-info
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-08T08:52:01Z"
+  completed_at: "2026-11-08T11:52:57Z"
+  conclusion: clis の型は直す。図は入力情報・出力情報の仕様への線だけにし、参照先に自システムの API（sysd-index の内部 API）と外部コマンド（ifx-cmd）を足す
   derived_from:
     - PJR-2GD6
     - PJR-025M
