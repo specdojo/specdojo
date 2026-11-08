@@ -41,3 +41,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-MECY","PJR-M7KD","PJR-7FXC","PJR-C1RG","PJR-4N3R"]'
+- v: 1
+  id: reg_02e5ce8deda5416cbfd49442038bcb6a
+  ts: "2026-11-08T03:58:47Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（オーケストレーターの判断の材料を見て「全て推奨で」と回答、2026-11-08）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: bdd・ccd・cdt・sf・ifx-cmd の手入れした型をすべて確定する
+  previous_event_id: reg_83bcbde4aa6b4ddc9ed21ba28daba9bb

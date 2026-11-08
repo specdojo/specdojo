@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-rz9q-business-specs-reps-kata-confirm
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-08T00:36:48Z"
+  completed_at: "2026-11-08T03:58:47Z"
+  conclusion: bdd・ccd・cdt・sf・ifx-cmd の手入れした型をすべて確定する
   derived_from:
     - PJR-2GD6
   depends_on:
