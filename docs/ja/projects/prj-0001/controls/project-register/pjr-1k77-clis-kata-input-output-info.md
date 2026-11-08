@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-1k77-clis-kata-input-output-info
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T08:51:42Z"
+  completed_at: "2026-11-08T09:23:48Z"
+  conclusion: clis の 5 章を入力と出力の要点にし、入力情報（ファイル・標準入力・環境変数・対話の入力・API の応答）と出力情報（標準出力・標準エラー・作る変えるファイル・API への送信）を種類の列で並べる形にした。sample に環境変数と API の例と失敗のエラーを足した
   derived_from:
     - PJR-2GD6
     - PJR-025M
