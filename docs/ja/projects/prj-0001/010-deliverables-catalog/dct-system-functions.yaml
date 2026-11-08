@@ -24,8 +24,8 @@ groups:
           - bps-derived-project-scoped
           - bps-reporting-monitoring-detection
           - bps-deprecation-process
-          - uis-index
-        overview: システムで実現する機能の全体構成と一覧を定義する。行ごとに業務プロセス仕様（bps-*）・画面仕様（uis-index配下のCLIコマンド群）を要約参照する
+          - clis-index
+        overview: システムで実現する機能の全体構成と一覧を定義する。行ごとに業務プロセス仕様（bps-*）・CLI仕様（clis-index配下のCLIコマンド群）を要約参照する
         path: sf-index.md
         rulebook: specdojo:sf-index-rulebook
         note: 業務仕様の種類ごとに代表を1件作る方針（PJR-2GD6）に基づき、タスク実行の機能（sf-task-execution）を代表として個別作成する。その他の個別機能はsf-indexの一覧行で要約し、詳細化が必要になった時点で個別追加を検討する。sf-index-rulebookとsf-rulebookは別ドキュメントとして整備する（sf-rulebookは個別sf-<term>用に使用）

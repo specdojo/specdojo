@@ -83,3 +83,29 @@
       from: '["PJR-PJYJ","PJR-025M","PJR-K4PM"]'
       to: '["PJR-PJYJ","PJR-025M","PJR-K4PM","PJR-25B9"]'
   previous_event_id: reg_530048927d014816be2cf737afd9a320
+- v: 1
+  id: reg_518258a26aad459a93ebf16a3a27fe40
+  ts: "2026-11-08T13:40:16Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_169bdb57e57d49df83bc492a1f495b7a
+- v: 1
+  id: reg_18e33c7ec6ba4667a1c71f50f4595c31
+  ts: "2026-11-08T13:54:30Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_518258a26aad459a93ebf16a3a27fe40
