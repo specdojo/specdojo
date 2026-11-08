@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_de8d298baca34aab99c10ad2c78f1b35
+- v: 1
+  id: reg_db98186e15f147629342b109c15059e4
+  ts: "2026-11-08T06:47:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・親の検証を確かめた。完了条件は満たしており、分け方の変更は RMMM の決定から別の項目で行う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: uis-rulebook と uis-sample を、コマンドリファレンスを参照し利用目的・操作の流れ・表示・エラーと次の手に絞る形に手入れした。型の確定（PJR-RMMM）で CLI を clis に分けると決まったため、CLI の部分は clis の土台にする
+  previous_event_id: reg_e3ae246dea85417fb581af6cf2314b92

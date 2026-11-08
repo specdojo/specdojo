@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0ynq-uis-kata-reference-to-command-reference
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T04:00:16Z"
+  completed_at: "2026-11-08T06:47:30Z"
+  conclusion: uis-rulebook と uis-sample を、コマンドリファレンスを参照し利用目的・操作の流れ・表示・エラーと次の手に絞る形に手入れした。型の確定（PJR-RMMM）で CLI を clis に分けると決まったため、CLI の部分は clis の土台にする
   derived_from:
     - PJR-2GD6
   approach: rulebook-maintenance
