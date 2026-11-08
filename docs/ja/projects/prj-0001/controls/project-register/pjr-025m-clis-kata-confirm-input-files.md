@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-025m-clis-kata-confirm-input-files
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-08T08:11:46Z"
+  completed_at: "2026-11-08T08:50:57Z"
+  conclusion: clis の型は直す。5 章を入力と出力の要点にし、ファイル・標準入力・環境変数・対話の入力・API を種類の列で並べる。API は ifx-api を参照する
   derived_from:
     - PJR-2GD6
     - PJR-PJYJ

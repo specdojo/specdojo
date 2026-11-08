@@ -41,3 +41,22 @@
     - field: depends_on
       from: ""
       to: '["PJR-6AQF"]'
+- v: 1
+  id: reg_e969ed92466042bb98a7ee3be945b6c0
+  ts: "2026-11-08T08:50:57Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（2026-11-08）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: clis の型は直す。5 章を入力と出力の要点にし、ファイル・標準入力・環境変数・対話の入力・API を種類の列で並べる。API は ifx-api を参照する
+  previous_event_id: reg_959301d86e674438b9d30450a3dac665
