@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6aqf-clis-kata-input-files
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-08T08:11:27Z"
+  completed_at: "2026-11-08T08:32:45Z"
+  conclusion: clis の 5 章を「入力と出力のファイルの要点」にし、読むファイル・標準出力・作る変えるファイルの小節に分けた。読むファイルはない・壊れているときの扱いを書き、中身は正本を参照し、エラーの表とつなげる規則にした。sample に例を足した
   derived_from:
     - PJR-2GD6
     - PJR-PJYJ

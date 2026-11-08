@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a827df723edc4d2ba86b1bb38b006314
+- v: 1
+  id: reg_937f35ce75c9433aaa5ce880604af97e
+  ts: "2026-11-08T08:32:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・親の検証を確かめた。小見出しの連番の抜けは orchestrator が直した（d64a5f2b7）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: clis の 5 章を「入力と出力のファイルの要点」にし、読むファイル・標準出力・作る変えるファイルの小節に分けた。読むファイルはない・壊れているときの扱いを書き、中身は正本を参照し、エラーの表とつなげる規則にした。sample に例を足した
+  previous_event_id: reg_0762b7d6ab9a4e789acf423a85663f66
