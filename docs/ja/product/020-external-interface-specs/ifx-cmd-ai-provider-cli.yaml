@@ -11,11 +11,9 @@ based_on:
   - opr-agent-cli-update
 
 command:
-  # provider ごとに実行可能ファイルが異なるため、command_template の先頭要素を正本とする。
-  executable: providers.<provider>.command_template の先頭要素（claude / codex / copilot / opencode / agy）
+  executable: providers.<provider>.command_template の先頭要素（provider 一覧は command_template の鍵を正本とする）
   purpose: >-
-    specdojo exec run が exec plan を AI provider CLI（Claude Code / Codex CLI / GitHub Copilot CLI /
-    opencode / Antigravity CLI）へ非対話で渡し、executor は対象成果物の編集と検証、reporter は
+    specdojo exec run が exec plan を AI provider CLI へ非対話で渡し、executor は対象成果物の編集と検証、reporter は
     evidence からの result 記入を行う。成功後は作業ディレクトリに plan が許可した変更が残り、
     stdout に最終報告が出力された状態になる。
   reference: >-

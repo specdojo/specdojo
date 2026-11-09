@@ -1,0 +1,63 @@
+I'll start by reading the common conventions and the target document, then work through the condense plan step by step.
+Now let me read the rulebook, recipe, sample, template, and schema to understand the structure and judgment criteria.
+Let me read the schema, package.json, and config files to understand validation requirements.
+Now let me look at the result file location and the lefthook config to understand validations, plus check config for catalog_path.
+The bash tool has restrictive rules. Let me use the approved commands (`ls`, `cat`) and other specialized tools.
+The bash with `;`/`&&` is being denied — I need simple single commands. Let me run allowed ones.
+Let me read the result lifecycle guide and check referenced canonical docs to determine what can be reduced.
+Now let me verify the canonical documents that are referenced in `based_on` to assess whether any content is a restatement that could be replaced by reference.
+Now I have a full picture. Let me analyze the conciseness candidates carefully. This document is well-structured and follows the canonical "正本参照" principle already. Let me examine specific potential redundancies against `vp-arc-conciseness`.
+
+Let me check whether referenced docs (`sysd-agent-settings`, `opr-agent-cli-update`) are project-modified (wikilink valid) vs specdojo.
+Let me check for cross-deliverable overlaps with the system design docs that share provider auth topics.
+Now I have a thorough understanding. Let me set up my analysis and check the remaining sysd content for any in-document overlaps, then carefully determine candidates.
+I've now completed a thorough analysis. The document is well-structured and already follows the rulebook's "正本参照" principle (no argument tables, references to canonical configs). Let me verify the exact `executable` and provider-list wording for a safe merge.
+I've completed my analysis. Let me record the plan with a todo list, then make the single safe condense edit.
+
+My finding: The document is already well-structured and consistently applies the rulebook's "canonical reference" principle (no argument tables; references to `command_template`, `exec-config-guide`, `sysd-agent-settings`). The only internal redundancy under `vp-arc-conciseness` is the provider enumeration repeated three times. I'll merge the two structurally identical occurrences into one and point the rest at the canonical `command_template`.
+Now I'll make the merge edit on the `command` block — collapsing the provider enumeration repeated 3 times to a single place and pointing the rest at the canonical `command_template`.
+Now let me verify the edited document and check meaning is preserved:
+The edit is clean. Now let me run the schema validation and prettier on the changed YAML file. First, let me run `npm run validate:schema:file` against this specific file as the plan and common conventions instruct for YAML edits.
+Prettier is clean. Now let me run the schema validation on the changed YAML file (the plan instructs to run this when `validate:schema:file` exists in package.json — it does).
+Both validations pass. Let me update my todos and run a final review to confirm meaning is preserved — checking that no other redundancy was missed and that the judgment-carrying content (execution contract, I/O promises, error handling) remains intact.
+Let me confirm the provider enumeration now appears only once as a literal list (in `authentication.injection.names`), and that all judgment-carrying content remains.
+The grep confirms the edit is correct: in the source YAML, the only remaining literal occurrence of the provider list is now line 105 (`authentication.injection.names`) — a distinct meaning (auth profile naming). The `executable` comment and `purpose` parenthetical are gone. There's a generated `.md` mirror that still echoes the old text; let me check whether it is a tracked managed artifact or a regenerated generated file (which I must not hand-edit).
+The generated `.md` is not in the change set (it's a regenerated file, updated by the runner — I correctly left it untouched). Let me check whether prettier normalizes my hand-wrapped lines so the committed form stays canonical.
+Prettier reports the file is unchanged (already canonical). Let me read the final `command` block to confirm exact state.
+Let me get a precise diff to document the change accurately, and confirm schema validation in git terms.
+The diff confirms my changes exactly as intended. Let me run the catalog validation since the change reaches `docs/ja/projects/` territory and the project has `catalog_path` set (per the applicability table). Let me first check if the validation tool is available.
+Let me check the catalog entry for this deliverable to confirm meaning/done-criteria preservation, and verify node_modules presence for tooling.
+Let me read the catalog entry's done_criteria to confirm my condense preserves it.
+All done_criteria remain fully satisfied by my condense. Note the catalog itself retains "等" in its overview — a separate canonical document that cross-deliverable-dedup owns, not this task. Let me do one final confirmation of the source file state after prettier.
+All verification complete. My change is minimal (2 insertions, 4 deletions), schema-valid, prettier-clean, and all 5 done_criteria plus the BA owner goal remain satisfied. The single remaining provider-list occurrence in the source (`authentication.injection.names`) carries a distinct meaning (auth profile naming) and is correctly retained.
+
+Let me finalize the todo list and prepare the report.
+冗長さの整理を完了しました。以下が成果物編集の結果です。
+
+## 実施内容
+
+対象 `ifx-cmd-ai-provider-cli.yaml` を `vp-arc-conciseness` の 5 カテゴリで精査し、正本参照（rulebook 第1・6.1）に従い provider 名リストの重複を 1 件へ集約しました。文書整体は実行契約・入出力の約束・エラー処理が業務観点的に整っており、`repetition` で整理可能な箇所は `command` ブロック内のみでした。
+
+## 変更ファイル
+
+- `docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml`（2 追加 / 4 削除）
+  - `command.executable` のコメント（「provider ごとに…正本とする」）と provider 列挙を統合し、`executable` を「…先頭要素（provider 一覧は `command_template` の鍵を正本とする）」へ。
+  - `command.purpose` の provider 括弧列挙（Claude Code / Codex CLI / GitHub Copilot CLI / opencode / Antigravity CLI）を削除し、`AI provider CLI` とする。
+
+## 修正・保持の記録（`condense_records`）
+
+| location | category | action | reason | cause |
+| --- | --- | --- | --- | --- |
+| `command.executable` の前コメントと `executable` 内括弧＋`command.purpose` 内括弧 | `repetition` | `merge` | 同一の provider 列挙は 3 箇所（executable/purpose/`authentication.injection.names`）に反復。`command_template` が正本（`reference` に明記済み）のため、`executable`・`purpose` 内の列挙は削除し「一覧は `command_template` の鍵を正本」と参照化。意味上の制約は保持 | `kata` / `recipe` / 「6.1 command と 正本の参照」（引数・オプションの再掲排除） |
+| `authentication.injection.names` の provider 列挙（105 行目） | `repetition` | `retain` | 認証注入機構 `cli_profile` の注入対象名として別意味を持つ（rulebook 6.5）。正本の参照には置換不可のため保持 | `document` |
+
+## 検証結果
+
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml` → **valid**
+- `npx prettier --check` / `--write`（対象 yaml）→ **変更なし（整形済み）**
+
+5 件の `done_criteria`（BA owner 目標・PO/ARC/QE/DEV の入力適合）はすべて維持。生成ミラー `generated/*.md` は runner が再生成するため未編集です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-cmd-ai-provider-cli.yaml の command ブロック内にあった provider 名リストの反復（3箇所、repetition）を 1 件へ集約し、正本 command_template の鍵へ参照化。executable の前コメントと executable/purpose の列挙を統合削除し、authentication.injection.names の列挙は注入対象名として保持。schema バリデーション valid・prettier 整形済み。実行契約・入出力の約束・エラー処理の意味と必須情報を維持。","handoff":["生成ミラー generated/ifx-cmd-ai-provider-cli.md は runner が再生成するため未編集（正本 yaml のみ変更）"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml","status":"passed","summary":"対象 yaml は ifx-cmd.schema.yaml に対して valid"},{"command":"npx prettier --write docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml","status":"passed","summary":"prettier で整形・チェック済み（変更なし）"}],"condense_records":[{"location":"command.executable の前コメント『provider ごとに実行可能ファイルが異なるため、command_template の先頭要素を正本とする。』と executable 内括弧（claude / codex / copilot / opencode / agy）、および command.purpose 内の括弧列挙（Claude Code / Codex CLI / GitHub Copilot CLI / opencode / Antigravity CLI）","category":"repetition","action":"merge","reason":"同一の provider 列挙が 3 箇所（executable・purpose・authentication.injection.names）に反復。command_template が正本（command.reference に明記済み）のため、executable は『providers.<provider>.command_template の先頭要素（provider 一覧は command_template の鍵を正本とする）』へ統合し、purpose の括弧を削除して列挙を正本への参照へ置換。制約（provider ごとに実行ファイルが異なる・command_template の先頭要素が実行ファイル）は保持","cause":{"type":"kata","kind":"recipe","location":"ifx-cmd-recipe.md §6.1 command と 正本の参照（引数・オプションの再掲排除、正本参照に一本化）"}},{"location":"authentication.injection.names の『各 provider CLI のログインプロファイル（claude / codex / copilot / opencode / agy）』（約105行目）","category":"repetition","action":"retain","reason":"cli_profile 機構の注入対象名として独立した意味を持つ（rulebook §6.5 認証注入、secret_source/log_policy と連動）。正本への参照に置換すると注入名が不明確になり判断情報が失われるため保持","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
