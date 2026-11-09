@@ -47,3 +47,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-T88P"]'
+- v: 1
+  id: reg_40b08e35c4ca4bca800ce7a829ecd1f9
+  ts: "2026-11-09T22:19:12Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f25991995c62472ab0af6f0df7aaa691
