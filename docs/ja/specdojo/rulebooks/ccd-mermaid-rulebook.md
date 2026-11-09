@@ -70,13 +70,13 @@ Conceptual Class Diagram (CCD) Rules using Mermaid
 
 CCD の Markdown 成果物は以下の Frontmatter を持ちます。
 
-| 項目       | 必須 | 説明                                                                                  |
-| ---------- | ---- | ------------------------------------------------------------------------------------- |
-| id         | 必須 | 成果物の一意 ID（例: `prj-0001:ccd-project-planning`）                                |
-| type       | 必須 | `data` 固定                                                                           |
-| status     | 必須 | `draft` / `ready` / `deprecated`（作成時は `draft`）                                  |
-| rulebook   | 必須 | `specdojo:ccd-mermaid-rulebook`                                                       |
-| depends_on | 必須 | 参照する業務データ辞書 ID の配列（例: `[bdd-project-config, bdd-operations-config]`） |
+| 項目     | 必須 | 説明                                                                                                                                                          |
+| -------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id       | 必須 | 成果物の一意 ID（例: `prj-0001:ccd-project-planning`）                                                                                                        |
+| type     | 必須 | `data` 固定                                                                                                                                                   |
+| status   | 必須 | `draft` / `ready` / `deprecated`（作成時は `draft`）                                                                                                          |
+| rulebook | 必須 | `specdojo:ccd-mermaid-rulebook`                                                                                                                               |
+| based_on | 必須 | 参照する業務データ辞書 ID の配列（例: `[bdd-project-config, bdd-operations-config]`）。成果物の依存はカタログの `depends_on` で持ち、frontmatter には書かない |
 
 記述例:
 
@@ -87,7 +87,7 @@ specdojo:
   type: data
   status: draft
   rulebook: specdojo:ccd-mermaid-rulebook
-  depends_on:
+  based_on:
     - bdd-sales
     - bdd-product
 ---
