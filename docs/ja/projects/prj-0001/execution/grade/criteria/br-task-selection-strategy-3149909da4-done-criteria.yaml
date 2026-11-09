@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: br-task-selection-strategy-grade-criteria
+document: br-task-selection-strategy
+path: docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md
+graded_at: "2026-11-09T20:52:07.094Z"
+graded_by: sonnet-review-executor
+content_hash: 736b4dbb4bf26a439ade61af872d420b631b2acce664d968f2035deda91a85a1
+summary:
+  satisfied: 5
+  unsatisfied: 0
+  total: 5
+criteria:
+  - id: DC-001
+    text: ルール・入力・出力・例外が業務観点で明確に記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+    reason: ルール・入力・出力・例外が業務観点で記述されています。
+  - id: DC-002
+    text: ルールの業務的妥当性と適用範囲を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+    reason: 業務価値と適用範囲が明示されており、PO が承認できます。
+  - id: DC-003
+    text: ルール実装（バリデーション・ドメインロジック）の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+    reason: 工程計算への依存、代替順位、例外が実装の基礎として参照できます。
+  - id: DC-004
+    text: ルールベースのテストケース設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+    reason: 判定例 7 件と例外 ID が、テストケース設計に使えます。
+  - id: DC-005
+    text: ビジネスロジック実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied
+    reason: 擬似コードとルールが、ビジネスロジック実装の参照になります。
