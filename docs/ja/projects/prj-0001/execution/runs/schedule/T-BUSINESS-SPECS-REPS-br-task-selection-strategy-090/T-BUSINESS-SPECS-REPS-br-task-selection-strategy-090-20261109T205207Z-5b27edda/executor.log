@@ -1,0 +1,37 @@
+レビューは完了しました。成果物は変更していません。
+
+**評価結果の確認**
+- 鮮度確認を 3 件実行しました。`grade list --target deliverable --path <対象> --changed-only`、同 `--dependency-changed`、同 `--incomplete` です。出力はどれも空で、評価結果は最新かつ評価パイプライン完了です。サイドカーも存在します。
+- 確認後に対象ファイルの変更はありません。`git status` に出た差分は、未追跡の `pipeline-state.json` だけです。`changed-during-review` には該当しません。
+- grade は `verdict` が `needs-work`、`score` が 90 です。finding は blocker 0 / major 1 / minor 8 / note 0 です。
+
+**判断根拠**
+- 対象成果物 `br-task-selection-strategy` を読みました。概要、入力、ルール（戦略の確定、`critical-first`、`fifo`、工程計算不能時、着手タスクの決定、判定例 7 件）、出力、例外 `E-01`〜`E-04`、メモ / 将来課題が揃っています。DC-001〜DC-005 の趣旨とは整合します。
+  - DC-001 は、ルール・入力・出力・例外が記述されているので満たします。
+  - DC-002 は、適用範囲と対象外が明記されているので満たします。
+  - DC-003 と DC-005 は、擬似コードと判定例があるので参照可能です。
+  - DC-004 は、判定例があるのでテスト設計に使えます。
+- grade の観点別 level は、完了条件に対応する観点（`vp-ba-requirements-completeness`、`vp-arc-technical-constraints`、`vp-qe-verifiability`、`vp-dev-implementation-readiness`）で 3〜4 です。完了条件に直結する blocker はありません。
+- F009（major）は、未解決の `_TODO_` / `_ASSUMPTION_` が残っているという指摘です。これらは意図的に「メモ / 将来課題」へ記録された PO 判断待ちの事項で、`status: draft` のままです。`ready` への昇格は人間だけが行います。したがって、このタスク（完成版レビュー）の完了は妨げません。
+- 先行する edit タスクの result は読んでいません。参照した履歴は、対象ファイルのコミット履歴 `-020`、`-070`、`-080` だけです。
+- 参照先 `bps-task-selection-preparation` は `docs/ja/product` 配下で見つかりません。成果物自身も `_TODO_` で未作成と明記しており、記録として扱われています（F002）。
+
+**verdict は `complete-with-findings` です。**
+
+**未充足事項・改善指示（次回以降の磨き込み候補）**
+1. F003 / F006: 余裕日数があって最早開始日（ES）がない場合の比較規則を定義します。判定例も追加します。
+2. F005: 「辞書順」を、コードポイント順など、ロケール非依存の比較として明記します。擬似コードの `localeCompare` も合わせて直します。
+3. F007: E-04 が依存する Ready 一覧の派生ビューを、入力表か規則の章で定義します。
+4. F001 / F008: `_TODO_` ごとに決定者と時期を示します。`ready` への昇格条件も明記します。
+5. F002: `bps-task-selection-preparation` の作成後に、`based_on` 宣言と適用範囲の整合を確認します。
+6. F004: 擬似コードと 3.2〜3.4 の記述の重複を圧縮します。
+
+**確認できなかった範囲**
+- 先行する edit タスクの result（実行記録）は特定・参照していません。
+- `depends_on` 先の成果物は存在しなかったため、内容の照合ができていません。
+- プロジェクトコンテキスト `prj-overview.md` は読んでいません。
+- 検査コマンド（lint など）は親 runner の担当です。このタスクでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"レビュー完了（成果物は変更なし）。評価結果は最新で、評価パイプラインも完了済み（--changed-only / --dependency-changed / --incomplete はいずれも出力なし。サイドカーは存在）。grade は needs-work、score 90、finding は major 1 / minor 8。major の F009 は PO 判断待ちの _TODO_/_ASSUMPTION_ の残存で、draft の据え置きは想定どおりのため完了を妨げない。推奨 verdict は complete-with-findings。改善指示は ES 欠落時の比較規則の定義、辞書順のロケール非依存化、Ready 一覧の派生ビューの定義、_TODO_ の決定者・時期と ready 昇格条件の明記、bps-task-selection-preparation 作成後の整合確認、擬似コードの圧縮。確認できなかった範囲は、先行 edit の result、depends_on 先（成果物が存在しない）、prj-overview.md、lint 等の検査。","handoff":["推奨 verdict: complete-with-findings","改善指示: F003/F006 ES 欠落時の比較規則と判定例の追加","改善指示: F005 辞書順をコードポイント順など非ロケール依存で明記し、擬似コードの localeCompare も修正","改善指示: F007 Ready 一覧の派生ビューを入力表か規則の章で定義","改善指示: F001/F008 _TODO_ ごとの決定者・時期と ready 昇格条件を明記","改善指示: F002 bps-task-selection-preparation 作成後に based_on 宣言と適用範囲の整合を確認","改善指示: F004 擬似コードと 3.2〜3.4 の重複を圧縮","未確認: 先行 edit の result、depends_on 先の内容（成果物が存在しない）、prj-overview.md"],"validations":[{"command":"npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新。"},{"command":"npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md --dependency-changed","status":"passed","summary":"出力なし。依存の変更は未反映なし。"},{"command":"npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md --incomplete","status":"passed","summary":"出力なし。評価パイプラインは完了済み。"}]}
+</specdojo_executor_evidence>
