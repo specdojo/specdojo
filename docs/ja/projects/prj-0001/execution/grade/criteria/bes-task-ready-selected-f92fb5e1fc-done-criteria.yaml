@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: bes-task-ready-selected-grade-criteria
+document: bes-task-ready-selected
+path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md
+graded_at: "2026-11-09T05:28:15.460Z"
+graded_by: luna-review-executor
+content_hash: 73a5594cdaee3ebc22619713ee230a6b4e8491e6a67bce09d28830e01edcde76
+summary:
+  satisfied: 0
+  unsatisfied: 5
+  total: 5
+criteria:
+  - id: DC-001
+    text: イベント内容・発生条件・タイミングが業務観点で正確に記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      The event cases are described, but applicability across schedule, register, and routine task flows remains
+      unresolved, preventing confirmation of business correctness for the full event scope.
+  - id: DC-002
+    text: イベント仕様の業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      The document leaves event scope and automated selection timing undecided and does not record PO approval of the
+      business definition.
+  - id: DC-003
+    text: イベント処理実装・メッセージ設計の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      The parallel-request correlation data is not defined against the execution-record model, so the specification is
+      not yet a complete basis for message design.
+  - id: DC-004
+    text: イベントテスト設計への活用が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: >-
+      Event conditions suggest test cases, but the document does not identify an event test-design reference or
+      verification of the unresolved parallel-request correlation.
+  - id: DC-005
+    text: イベントハンドラ・パブリッシャー実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: >-
+      The parallel-request identifier is unresolved, and event applicability across task-flow types has not been
+      confirmed for handler and publisher implementation.
