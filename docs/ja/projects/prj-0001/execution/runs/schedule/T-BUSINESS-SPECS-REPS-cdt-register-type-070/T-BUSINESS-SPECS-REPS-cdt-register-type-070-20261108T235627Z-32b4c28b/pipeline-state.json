@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-070",
   "run_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-070-20261108T235627Z-32b4c28b",
-  "updated_at": "2026-11-09T00:17:21.841Z",
+  "updated_at": "2026-11-09T00:17:49.317Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-070/T-BUSINESS-SPECS-REPS-cdt-register-type-070-20261108T235627Z-32b4c28b/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "luna-executor",
       "attempts": 1,
       "started_at": "2026-11-09T00:17:21.841Z",
-      "completed_at": null,
+      "completed_at": "2026-11-09T00:17:49.317Z",
       "artifact_ref": null
     }
   },
