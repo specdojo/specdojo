@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080",
+  "run_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497",
+  "updated_at": "2026-11-09T13:55:46.987Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "luna-executor",
+      "attempts": 2,
+      "started_at": "2026-11-09T13:46:46.810Z",
+      "completed_at": "2026-11-09T13:47:28.167Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 3,
+      "started_at": "2026-11-09T13:53:14.897Z",
+      "completed_at": "2026-11-09T13:55:45.571Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "luna-executor",
+      "attempts": 1,
+      "started_at": "2026-11-09T13:55:46.987Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497/result.md"
+  }
+}
