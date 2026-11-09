@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-090",
+  "run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T210451Z-8b3869fc",
+  "updated_at": "2026-11-09T21:15:58.809Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-09T21:06:51.893Z",
+      "completed_at": "2026-11-09T21:07:35.985Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-090/T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T210451Z-8b3869fc/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-09T21:12:35.867Z",
+      "completed_at": "2026-11-09T21:15:57.834Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-090/T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T210451Z-8b3869fc/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sonnet-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-09T21:15:58.809Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-090/T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T210451Z-8b3869fc/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-090/T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T210451Z-8b3869fc/result.md"
+  }
+}
