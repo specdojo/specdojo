@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-clis-exec-commands-080",
   "run_id": "T-BUSINESS-SPECS-REPS-clis-exec-commands-080-20261109T045325Z-85f9da83",
-  "updated_at": "2026-11-09T05:09:39.039Z",
+  "updated_at": "2026-11-09T05:10:02.262Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-clis-exec-commands-080/T-BUSINESS-SPECS-REPS-clis-exec-commands-080-20261109T045325Z-85f9da83/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "luna-executor",
       "attempts": 1,
       "started_at": "2026-11-09T05:09:39.039Z",
-      "completed_at": null,
+      "completed_at": "2026-11-09T05:10:02.262Z",
       "artifact_ref": null
     }
   },
