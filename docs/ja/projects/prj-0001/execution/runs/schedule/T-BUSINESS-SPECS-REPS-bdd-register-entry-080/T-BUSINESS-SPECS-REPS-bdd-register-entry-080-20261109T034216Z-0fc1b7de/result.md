@@ -4,38 +4,45 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-bdd-register-entry-080
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-bdd-register-entry-080/T-BUSINESS-SPECS-REPS-bdd-register-entry-080-20261109T034216Z-0fc1b7de/plan.md
   started_at: "2026-11-09T03:42:17.195Z"
+  completed_at: "2026-11-09T13:28:20.193Z"
   agent: qwen-executor
   execution: agent
   approach: condense
   targets:
     - bdd-register-entry
-  condense_records: []
+  condense_records:
+    - location: entities[0].description (旧14行目・旧17行目の二重参照)
+      category: repetition
+      action: merge
+      reason: 業務範囲の境界と状態遷移・審査・承認条件の2方面を同じ stsd-register-entry へ個別に参照していた。両者は同一文書を正本とする関係であり、1文に統合して判断内容を保持できる。
+      cause:
+        type: document
 ---
 
 # Condense Result
 
 ## 1. 実施内容
 
-_TODO_: 冗長さの整理内容と、内容・決定・完了条件の意味および必須情報を維持した確認結果を書く。変更不要の場合は根拠を書く。
+- `docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml` における冗長な記述を整理しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 対象文書と変更内容を書く。
+- `docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml`: エンティティ記述において、`stsd-register-entry` への二重参照（業務範囲の境界と状態遷移・審査・承認条件）を1つに統合し、冗長さを削減しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続への申し送りを書く。なければ「なし」。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `vp-arc-conciseness` と宣言済み Kata の適用、意味の維持の根拠を書く。
+対象文書を精査し、同一文書（`stsd-register-entry`）への重複した参照を特定。意味と必須情報を保持したまま 1 つの記述に統合することで、`vp-arc-conciseness` に基づく冗長さの整理を行いました。
 
 ## 5. 修正・保持の記録
 
-frontmatter の `condense_records` と 1 対 1 に対応する表を記入する。場所は修正前の見出し・行・引用、種類は 5 種類、直し方は `delete` / `merge` / `reference` / `retain`、理由は意味を保った根拠または保持の必要性、原因は `FindingCause`。Kata が原因なら種類と根拠の箇所も示す。候補がなければ表の代わりに「なし」と記入する。
-
-_TODO_: 場所・種類・直し方・残した理由／意味の維持・原因の表。
+| 場所（修正前） | 種類 | 直し方 | 残した理由／意味の維持 | 原因 |
+| --- | --- | --- | --- | --- |
+| `entities[0].description (旧14行目・旧17行目の二重参照)` | `repetition` | `merge` | `業務範囲の境界と状態遷移・審査・承認条件の2方面を同じ stsd-register-entry へ個別に参照していた。両者は同一文書を正本とする関係であり、1文に統合して判断内容を保持できる。` | `document` |
