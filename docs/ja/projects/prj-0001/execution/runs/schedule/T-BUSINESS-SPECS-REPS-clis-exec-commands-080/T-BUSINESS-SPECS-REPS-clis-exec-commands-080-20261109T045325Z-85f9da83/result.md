@@ -4,38 +4,45 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-clis-exec-commands-080
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-clis-exec-commands-080/T-BUSINESS-SPECS-REPS-clis-exec-commands-080-20261109T045325Z-85f9da83/plan.md
   started_at: "2026-11-09T04:53:27.642Z"
+  completed_at: "2026-11-09T05:09:37.392Z"
   agent: luna-executor
   execution: agent
   approach: condense
   targets:
     - clis-exec-commands
-  condense_records: []
+  condense_records:
+    - location: 「4. 操作とコマンド参照」の操作一覧（修正前の利用目的・操作の意味列）
+      category: repetition
+      action: delete
+      reason: 操作の流れと重複する説明列を削除し、操作分類・対象コマンド・正本リファレンスを残したため、利用目的と参照先を保てる。
+      cause:
+        type: document
 ---
 
 # Condense Result
 
 ## 1. 実施内容
 
-_TODO_: 冗長さの整理内容と、内容・決定・完了条件の意味および必須情報を維持した確認結果を書く。変更不要の場合は根拠を書く。
+- CLI仕様（exec コマンド群）の冗長さを整理し、文書を簡潔にしました。
 
 ## 2. 変更ファイル
 
-_TODO_: 対象文書と変更内容を書く。
+- `docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md`: 「4. 操作とコマンド参照」の操作一覧において、操作の流れと重複していた利用目的・操作の意味に関する列を削除し、冗長さを排除しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続への申し送りを書く。なければ「なし」。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `vp-arc-conciseness` と宣言済み Kata の適用、意味の維持の根拠を書く。
+「4. 操作とコマンド参照」の操作一覧において、操作の流れと重複する説明列を `delete` することで、正本リファレンスへの参照と操作分類を維持しつつ冗長さを削減しました。
 
 ## 5. 修正・保持の記録
 
-frontmatter の `condense_records` と 1 対 1 に対応する表を記入する。場所は修正前の見出し・行・引用、種類は 5 種類、直し方は `delete` / `merge` / `reference` / `retain`、理由は意味を保った根拠または保持の必要性、原因は `FindingCause`。Kata が原因なら種類と根拠の箇所も示す。候補がなければ表の代わりに「なし」と記入する。
-
-_TODO_: 場所・種類・直し方・残した理由／意味の維持・原因の表。
+| 場所（修正前） | 種類 | 直し方 | 残した理由／意味の維持 | 原因 |
+| --- | --- | --- | --- | --- |
+| `「4. 操作とコマンド参照」の操作一覧（修正前の利用目的・操作の意味列）` | `repetition` | `delete` | `操作の流れと重複する説明列を削除し、操作分類・対象コマンド・正本リファレンスを残したため、利用目的と参照先を保てる。` | `document` |
