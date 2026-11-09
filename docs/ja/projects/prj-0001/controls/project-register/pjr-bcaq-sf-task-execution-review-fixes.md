@@ -35,7 +35,11 @@ business-specs-reps の review で incomplete となった sf-task-execution を
 - `docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md` を、カタログの `done_criteria` のうち DC-001（業務プロセス仕様との整合）と DC-004（検証可能性）を満たすように磨き込んでいる。
   - 対応する業務プロセス仕様（カタログの `depends_on` にある `bps-task-selection-preparation` など）と、機能の入出力・処理要件の対応を、文書の中で確かめられる形で書いている。
   - 機能ごとに、何をもって満たしたと確かめるか（検証の観点）を書いている。
-- 実装エビデンス `src/exec/run/agent-pipeline.ts` と文書の記述を照らし、記述ごとの一致・乖離・未確認を表にして文書に書いている。乖離は実装に合わせて直すか、意図された仕様として残す理由を書いている。
+- 実装エビデンス `src/exec/run/agent-pipeline.ts` と文書の記述を照らし、記述ごとの一致・乖離・未確認を表にしている（2 回目で、表の置き場所を個票の対応結果に移す）。乖離は実装に合わせて直すか、意図された仕様として残す理由を書いている。
+- 2 回目の実行（2026-11-10 追加）: 1 回目の完了条件にあった「実装との照合の表を文書に書く」は、[[specdojo:sf-rulebook]] の「実装の名前・内部の構造を書かない」規則に反していた（orchestrator の完了条件の誤り）。やり直した review（T-BUSINESS-SPECS-REPS-sf-task-execution-090）の指摘 F004・F005・F007 に合わせ、次のように直している。
+  - 文書の「実装エビデンスとの照合」の節と、本文にある実装の関数名・型名（`ProviderConcurrencyGate`・`ExecEvidence`・`PipelineState` など）を外し、業務の言葉に置き換えている。実装との対応は、カタログの `evidence_refs` が示す。
+  - 外した照合の表は、個票の対応結果に「実装との照合の記録」として移し、一致・乖離・未確認の判定を残している。
+  - 業務プロセス仕様との対応と、検証・受入の観点は残している。
 - [[specdojo:sf-rulebook]] の規則（機能の目的と bps・uis との対応に絞り、操作手順は参照に留める）を守っている。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。
 - CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
