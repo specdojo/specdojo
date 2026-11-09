@@ -1,0 +1,5 @@
+仕様を更新し、対象 YAML の schema 検査は通過しました。未解決の判断事項は `handoff` に記録しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"明示された方針に従って仕様を更新し、schema 検査に合格しました。未解決の整合点は handoff に記録しています。","handoff":["command.shell を true としました。実装と .specdojo/exec-defaults.yaml の $(cat) 等のシェル置換に基づく判断ですが、rulebook は shell: false を要求するため、rulebook と仕様の整合には別途判断が必要です。","timeout_seconds と error_handling.timeout_action は未決定のままです。現状は起動上限なしで終了まで待ちます。上限を設けるか、上限到達時の処置を決める必要があります。","実効同時実行数は .specdojo/exec-defaults.yaml の run.max_concurrent_runs と provider ごとの max_concurrency を参照する旨を記載しました。schema は正の整数または placeholder を要求するため、固定値なしでこの契約を表現する方法は未決定です。"] ,"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml","status":"passed","summary":"対象 YAML は schema に適合しました。"}],"target_coverage":[{"target":"ifx-cmd-ai-provider-cli","status":"changed","path":"docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml"}]}
+</specdojo_executor_evidence>

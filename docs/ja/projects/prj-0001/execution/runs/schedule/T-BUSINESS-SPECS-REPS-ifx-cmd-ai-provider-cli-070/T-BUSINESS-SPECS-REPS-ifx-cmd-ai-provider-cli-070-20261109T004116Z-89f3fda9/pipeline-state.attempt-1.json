@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070",
+  "run_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9",
+  "updated_at": "2026-11-09T01:02:23.528Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "luna-executor",
+      "attempts": 1,
+      "started_at": "2026-11-09T00:44:30.264Z",
+      "completed_at": "2026-11-09T00:45:10.757Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-09T00:53:11.403Z",
+      "completed_at": "2026-11-09T01:02:23.528Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/result.md"
+  }
+}

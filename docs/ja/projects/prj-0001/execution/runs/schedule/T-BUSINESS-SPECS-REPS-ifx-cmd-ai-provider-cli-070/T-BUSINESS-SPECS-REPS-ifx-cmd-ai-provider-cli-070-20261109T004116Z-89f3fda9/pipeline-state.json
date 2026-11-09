@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070",
+  "run_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9",
+  "updated_at": "2026-11-09T03:40:53.682Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "luna-executor",
+      "attempts": 2,
+      "started_at": "2026-11-09T03:32:06.968Z",
+      "completed_at": "2026-11-09T03:33:04.840Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-09T03:37:54.107Z",
+      "completed_at": "2026-11-09T03:40:52.998Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "luna-executor",
+      "attempts": 1,
+      "started_at": "2026-11-09T03:40:53.682Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/result.md"
+  }
+}

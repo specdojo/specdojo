@@ -159,4 +159,11 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-09）
+
+- `command.shell` は今の実装どおり `true` とし、理由（`exec-defaults.yaml` の起動コマンドの雛形が `"$(cat)"` などシェルの置き換えを使う）を書く（indie が決定、2026-11-09）。型が `false` を求める点との食い違いは、報告の `handoff` に書く。
+- 起動の時間切れは、仕様に「今は上限なし」と書き、上限を決めるかは `_UNDECIDED_` で残す。`error_handling.timeout_action` も同じく `_UNDECIDED_` とする。
+- 同時に動かす数は固定の値を書かず、`.specdojo/exec-defaults.yaml` の `run.max_concurrent_runs` と provider ごとの上限を参照する。schema が正の整数を求めて書けない場合は、その食い違いを報告の `handoff` に書く。
+- 上記の点を除いて磨き込みを行い、完了として報告する。
+
 `共通規約 sha256:52952054ce0f0bcec27dc5a05d69342eab31a2b80e422ca13ed16d4fd9537d5a` `docs/ja/projects/prj-0001/execution/conventions/52952054ce0f0bcec27dc5a05d69342eab31a2b80e422ca13ed16d4fd9537d5a.txt`
