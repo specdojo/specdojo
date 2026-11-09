@@ -18,7 +18,7 @@ specdojo:
     - location: command.executable の前コメント『provider ごとに実行可能ファイルが異なるため、command_template の先頭要素を正本とする。』と executable 内括弧（claude / codex / copilot / opencode / agy）、および command.purpose 内の括弧列挙（Claude Code / Codex CLI / GitHub Copilot CLI / opencode / Antigravity CLI）
       category: repetition
       action: merge
-      reason: 同一の provider 列挙が 3 箇所（executable・purpose・authentication.injection.names）に反復。command_template が正本（command.reference に明記済み）のため、executable は『providers.<provider>.command_template の先頭要素（provider 一覧は command_template の鍵を正本とする）』へ統合し、purpose の括弧を削除して列挙を正本への参照へ置換。制約（provider ごとに実行ファイルが異なる・command_template の先頭要素が実行ファイル）は保持
+      reason: 同一の provider 列挙が 3 箇所（executable・purpose・authentication.injection.names）に反復。command_template が正本（command.reference に明記済み）のため、executable は『`providers.<provider>.command_template` の先頭要素（provider 一覧は command_template の鍵を正本とする）』へ統合し、purpose の括弧を削除して列挙を正本への参照へ置換。制約（provider ごとに実行ファイルが異なる・command_template の先頭要素が実行ファイル）は保持
       cause:
         type: kata
         kind: recipe
