@@ -42,21 +42,21 @@ specdojo:
 
 構文・引数・オプションの正本は [[specdojo:command-reference|CLIコマンドリファレンス]] の「exec」「exec worktree」とする。
 
-| 操作                           | 対象コマンド                                    | 利用目的・操作の意味                                                                  | 正本リファレンス                                                          |
-| ------------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 保存先・状況確認               | `exec where` / `exec status`                    | 解決されたパスと、状態・actor で絞った schedule task を確認する                       | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 検証・再計算                   | `exec validate` / `exec refresh`                | 前提を検証し、event に基づく進捗と Ready を再生成する                                 | [[specdojo:command-reference#7-exec\|exec]]                               |
-| plan の準備・保管              | `exec plan` / `exec archive`                    | 指示を生成し、完了後の plan を同じ run に保持する。削除を選ぶ場合は対象を確認する     | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 次の作業を確保                 | `exec scheduler` / `exec claim`                 | 担当ロールに合う着手可能な作業を選ぶ、または指定 task の着手を記録する                | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 実行                           | `exec run`                                      | plan に従って編集・レビューを行い、結果を記録する                                     | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 完了・完了訂正                 | `exec complete` / `exec reopen`                 | 完了を記録し、誤った完了判断は履歴を残して訂正する                                    | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 障害・再着手・中止             | `exec block` / `unblock` / `release` / `cancel` | 停止理由を共有する。同じ試行の継続、未着手への戻し、恒久中止を使い分ける              | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 補足記録                       | `exec note` / `exec link` / `exec estimate`     | 判断メモ、参照先、見積もりを event として残す                                         | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 再開・連続運転                 | `exec resume` / `exec cycle` / `exec slots`     | 保存済み作業を再開し、定期的な再計算・自動実行や共有枠の確認を行う                    | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 段階的な隔離実行               | `exec worktree`                                 | 準備、実行、差分確認、commit、統合、撤去を段階ごとに行う                              | [[specdojo:command-reference#9-exec-worktree\|exec worktree]]             |
-| 比較試行                       | `exec trial`                                    | 同じ plan を複数 agent で試し、評価後に採用・破棄を判断する。通常の進捗とは分けて扱う | [[specdojo:command-reference#71-agent比較trial\|agent比較trial]]          |
-| 設定の準備・保護設定の引き継ぎ | `exec scaffold` / `exec handoff`                | レビュー観点の差分雛形を準備し、保護設定の提案は人が差分を確認して適用する            | [[specdojo:command-reference#7-exec\|exec]]                               |
-| 旧記録の移行                   | `exec migrate-records`                          | 必要な旧記録を現行の run 配置へ移す                                                   | [[specdojo:plan-result-lifecycle-guide\|plan/resultライフサイクルガイド]] |
+| 操作                     | 対象コマンド                                    | 正本リファレンス                                                          |
+| ------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------- |
+| 保存先・状況確認         | `exec where` / `exec status`                    | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 検証・再計算             | `exec validate` / `exec refresh`                | [[specdojo:command-reference#7-exec\|exec]]                               |
+| plan の準備・保管        | `exec plan` / `exec archive`                    | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 作業の選択・着手         | `exec scheduler` / `exec claim`                 | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 実行                     | `exec run`                                      | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 完了・完了訂正           | `exec complete` / `exec reopen`                 | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 障害・再着手・中止       | `exec block` / `unblock` / `release` / `cancel` | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 補足記録                 | `exec note` / `exec link` / `exec estimate`     | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 再開・連続運転           | `exec resume` / `exec cycle` / `exec slots`     | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 段階的な隔離実行         | `exec worktree`                                 | [[specdojo:command-reference#9-exec-worktree\|exec worktree]]             |
+| 比較試行                 | `exec trial`                                    | [[specdojo:command-reference#71-agent比較trial\|agent比較trial]]          |
+| 設定・保護設定の引き継ぎ | `exec scaffold` / `exec handoff`                | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 旧記録の移行             | `exec migrate-records`                          | [[specdojo:plan-result-lifecycle-guide\|plan/resultライフサイクルガイド]] |
 
 ## 5. 入力と出力の要点
 
