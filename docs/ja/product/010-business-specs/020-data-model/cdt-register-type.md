@@ -54,6 +54,6 @@ specdojo:
 ## 4. 関連仕様との関係
 
 - 業務データ辞書: [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]] の `item_type` の許容値と区分の説明に対応する。分類名は同辞書の論理名・ラベルに合わせる。
-- 状態定義: [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] が、分類別の終端（`decision`・`question` は決定済み、`note` 以外の他分類は完了）、終了承認者、`note` の継続記録を定める。
+- 状態定義: 分類別の終端・終了承認者・継続記録は [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] を参照する。
 - 派生ビュー: 登録簿の生成時に、`epic` はエピック別の子項目一覧、`risk`・`issue`・`change-request`・`decision` はそれぞれリスク登録簿・課題ログ・変更要求ログ・決定ログへ振り分けられる。`todo`・`question`・`note` は分類別の専用ビューを持たず、一覧と状態・優先度・担当別ビューで扱う。
 - commit 種別: 個票・リポジトリ・プロジェクトで指定がない場合、分類から既定の commit 種別が決まる（`issue` は `fix`、`todo`・`change-request`・`epic` は `feat`、他は `docs`）。

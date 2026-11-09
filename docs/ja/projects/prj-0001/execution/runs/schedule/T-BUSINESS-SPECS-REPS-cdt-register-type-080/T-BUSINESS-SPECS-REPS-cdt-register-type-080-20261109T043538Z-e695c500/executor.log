@@ -1,0 +1,4 @@
+状態定義の詳細な再掲を正本への参照にまとめ、分類別の終端・承認者・継続記録の情報を保ちました。対象文書に Prettier を適用し、`git diff --check` も通過しました。親 runner が許可リストの検証を実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"状態定義の再掲を正本への参照に整理しました。分類別の終端・承認者・継続記録は参照で維持しています。","handoff":[],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md","status":"passed","summary":"Prettier は変更不要と判定しました。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーはありません。"}],"condense_records":[{"location":"4. 関連仕様との関係「状態定義」箇条書き","category":"canonical-restatement","action":"reference","reason":"分類別の終端・終了承認者・継続記録の詳細をステータス定義の正本への参照にまとめ、判断に必要な情報は参照先で維持しました。","cause":{"type":"document"}}]}</specdojo_executor_evidence>
