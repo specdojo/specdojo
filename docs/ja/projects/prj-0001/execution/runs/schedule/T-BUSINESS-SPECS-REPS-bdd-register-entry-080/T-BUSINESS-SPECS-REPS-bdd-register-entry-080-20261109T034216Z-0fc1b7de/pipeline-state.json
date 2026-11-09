@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-bdd-register-entry-080",
   "run_id": "T-BUSINESS-SPECS-REPS-bdd-register-entry-080-20261109T034216Z-0fc1b7de",
-  "updated_at": "2026-11-09T13:28:21.281Z",
+  "updated_at": "2026-11-09T13:28:32.144Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bdd-register-entry-080/T-BUSINESS-SPECS-REPS-bdd-register-entry-080-20261109T034216Z-0fc1b7de/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "qwen-executor",
       "attempts": 1,
       "started_at": "2026-11-09T13:28:21.281Z",
-      "completed_at": null,
+      "completed_at": "2026-11-09T13:28:32.144Z",
       "artifact_ref": null
     }
   },
