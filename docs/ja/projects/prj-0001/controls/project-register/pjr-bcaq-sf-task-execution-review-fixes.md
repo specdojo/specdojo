@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: review
   priority: medium
   difficulty: medium
   registered_at: "2026-11-09T20:49:35Z"
-  completed_at: "2026-11-09T21:35:00Z"
   conclusion: sf-task-execution に業務プロセス仕様との対応、機能ごとの検証・受入観点、agent-pipeline.ts との照合の表を足して磨き込んだ
   derived_from:
     - PJR-2GD6

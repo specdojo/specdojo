@@ -92,3 +92,19 @@
       from: "-"
       to: sf-task-execution に業務プロセス仕様との対応、機能ごとの検証・受入観点、agent-pipeline.ts との照合の表を足して磨き込んだ
   previous_event_id: reg_b1599a0ef4804720b52c03a2fcb17e56
+- v: 1
+  id: reg_bbdbba59ecbf4e319c257fda28bd383e
+  ts: "2026-11-09T22:05:12Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: review
+  reason: やり直した review が、本文の実装の名前と実装との照合の表を sf の型の規則違反と指摘したため、2 回目を流す（indie が案 A を決定）
+  changes:
+    - field: status
+      from: done
+      to: review
+    - field: completed
+      from: "2026-11-10"
+      to: "-"
+  previous_event_id: reg_eec2c6a98fe44ce09550df5c30635367
