@@ -161,4 +161,10 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-09）
+
+- 「いつ」の境界、「発生条件」の `_ASSUMPTION_`、事実データの識別の情報など、宣言された根拠だけでは決められない点は、`_UNDECIDED_` か `_ASSUMPTION_` のまま、決められない理由（どの成果物がまだないか、どの成果物を読む必要があるか）を本文に書いて残す（indie が決定、2026-11-09）。
+- 代表の目的は型の確かめなので、ほかの成果物（`bes-index`・`bps-task-selection-preparation`・データモデルの成果物など）がないことを理由に未完了としない。残した点を除いて磨き込みを行い、完了として報告する。
+- 残した点の一覧を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
