@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-cdt-register-type-070
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-070/T-BUSINESS-SPECS-REPS-cdt-register-type-070-20261108T235627Z-32b4c28b/plan.md
   started_at: "2026-11-08T23:56:29.655Z"
+  completed_at: "2026-11-09T00:17:19.555Z"
   agent: luna-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 対象成果物 `docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md` を確認した結果、分類名および説明が業務観点で正確に定義されており、完了条件を満たしているため、変更は不要と判断しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 対象成果物が参照する状態定義（[[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]]）は計画の宣言参照範囲に含まれず、今回確認していない。状態遷移や分類別終端の整合を確認する場合は、その文書を宣言した後続作業で扱う。
+- 計画上の依存 `bdd-register-entry` は Markdown パスでは見つからなかったが、同じ ID の `docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml` を確認した。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+対象成果物、CDT ルールブック、サンプル、プロジェクト概要、および実装根拠（`src/register/register.ts`）を参照し、既存の内容が `done_criteria` および rulebook の要求を満たしていることを確認しました。既存記述を尊重し、不整合や不足がないため、保守的な磨き込み方針に基づき修正を行わず完了としました。
