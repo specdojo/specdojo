@@ -108,3 +108,29 @@
       from: "2026-11-10"
       to: "-"
   previous_event_id: reg_eec2c6a98fe44ce09550df5c30635367
+- v: 1
+  id: reg_e26272f6fcae43e594537884ad4f614e
+  ts: "2026-11-09T22:06:22Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_bbdbba59ecbf4e319c257fda28bd383e
+- v: 1
+  id: reg_d999e8b2c5394afb8eeb9ce1b57019d5
+  ts: "2026-11-09T22:23:10Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e26272f6fcae43e594537884ad4f614e
