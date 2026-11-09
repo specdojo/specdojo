@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T12:12:54Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-090",
+  "by": "luna-review-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23",
+    "pipeline_resume_claimed": "true"
+  }
+}
