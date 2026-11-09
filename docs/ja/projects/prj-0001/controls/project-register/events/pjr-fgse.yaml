@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d127973bbd574a2299c0d9ef17e4f002
+  ts: "2026-11-09T03:21:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "ifx-cmd の型の shell: false の決まりに、雛形で外部の CLI を起動する場合の扱いを足すか見直す"
+    - field: description
+      from: ""
+      to: 'ifx-cmd-rulebook は command.shell に false を求めるが、SpecDojo は exec-defaults.yaml の起動コマンドの雛形（"$(cat)" などシェルの置き換え）で AI provider CLI を shell: true で起動している。雛形で起動する場合の例外を型に足すか、実装を shell を使わない形に変えるかを見直す'
+    - field: input
+      from: ""
+      to: '["2026-11-09、代表の ifx-cmd-ai-provider-cli の磨き込みで、型（shell: false）と実装（src/exec/run/agent.ts の shell: true）の食い違いが出た。代表は今の実装どおり shell: true とし理由を書く、型の見直しは別の todo にする（indie が推奨どおりと決定）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-09"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
