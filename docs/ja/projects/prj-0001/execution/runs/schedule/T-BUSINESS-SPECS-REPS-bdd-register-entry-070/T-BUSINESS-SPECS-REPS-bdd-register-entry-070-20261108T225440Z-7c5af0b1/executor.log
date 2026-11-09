@@ -1,0 +1,102 @@
+開始前に共通規約の詳細を読み、対象成果物・rulebook・sample・プロジェクトコンテキストを確認します。
+共通規約を読みました。次に、対象成果物・rulebook・sample・プロジェクトコンテキストを並行して読みます。
+対象成果物・rulebook・sample・プロジェクト概要を確認しました。次に、実装エビデンス（`register.ts`）と `depends_on` の対象（状態定義 `stsd-register-entry`）が実在するか確認します。同時に検査の設定（`package.json`、schema、hook）も読み込みます。
+実装エビデンス`register.ts`では、登録項目個票のフィールド（type・difficulty・status・owner・registered_at・due・completed_at・conclusion・approach・targets・sources・derived_from・depends_on・commit_type・commit_scope 等）と状態遷移・派生ビュー・ID競合復旧を確認できました。次に対象ファイルが参照する `stsd-register-entry.md` と `bdd.schema.yaml`、および catalog で `catalog_path` の確認を行います。
+実機エビデンス`register.ts`、状態定義`stsd-register-entry.md`、schema を確認しました。`stsd-register-entry.md` の「今後の検討メモ」にある `M-04` が、本個票を未作成と指摘している点が重要です。catalog の `catalog_path` 設定と成果物の `depends_on` 推移閉包を確認するため、catalog/plan/result を読み込みます。
+run ディレクトリの plan.md と result.md、`catalog_path` の有無を確認します。また `depends_on` の推移閉包と、この個票が catalog でどう登録されているかも把握する必要があります。
+計画・result の状態を把握しました。`depends_on` は「-」（なし）、成果物の frontmatter に `based_on` もありません。次に catalog でこの個票の登録状況（`catalog_path`、`depends_on` 推移閉包）と、対象ファイル内に `_CONTEXT_:` が残っていないかを確認します。
+重要な点が見えました。`stsd-register-entry.yaml` の grade result は「`bdd-register-entry` 未作成」と評価していますが、実際にはファイルが存在します。これは `M-04`（_TODO_）への対応状況と整合性が取れるか確認が必要です。catalog の `dct-data-model-bdd.yaml` と、対象ファイルの frontmatter に `based_on` が本当に無いかを確認し、さらに `stsd-register-entry.md` の `M-04` の位置づけを見直します。カタログと schedule を読みます。
+カタログで `bdd-register-entry` の定義を確認できました。`depends_on` は「-」で、`based_on` も frontmatter にありません。次に specdojo 設定（`catalog_path`、hook）と関連ファイルの存在有無を確認します。
+`grep`/`cat` の複雑なコマンドは拒否されています。read ツールで設定ファイルを読みます。
+`.specdojo` 配下の json ファイルは glob で見つかりません（worktree では生成されない可能性）。specdojo の設定ファイルは通常 `.specdojo/specdojo.config.json`。worktree 全体を確認します。
+`ls -la .specdojo/` の `|` パイプが問題でした。パイプを使わずに読みます。
+`.specdojo/specdojo.config.json` があります。read で読み、`catalog_path` を確認します。
+`.specdojo/specdojo.config.json` で `catalog_path: "010-deliverables-catalog"` が設定されていることを確認しました。対象は `*.yaml` なので、sandbox-safe な検査は **Prettier 整形**と **schema 検証（`validate:schema:file`）**です（他の lint/test は parent runner の実行対象で executor は実行しない）。
+
+成果物の frontmatter （`status`）が schema 通りか確認するため、念のため現状を確認済み。次に、対象ファイルの記述を精査します。エンティティ定義を schema と rulebook で照合し、「完成条件」「禁止事項」「重複」の観点で整合性を確認します。特に `stsd-register-entry.md` の `M-04` が「`bdd-register-entry.yaml` は未作成」と述べているが、実際にはファイルが存在するという齟齬を、計画の宣言参照範囲内で判断します。
+
+対象ファイルの全フィールドを schema 制約で照合します。
+対象ファイルのフィールドを schema と rulebook で精査します。実装上、`register.ts` 経由の `RegisterAddFields`（type, title, description, priority, difficulty, status, owner, registered_at, due, completed_at, conclusion, approach, targets, sources, derived_from, depends_on, commit_type, commit_scope）と state transition・derived view・ID競合復旧を確認しました。
+
+対象ファイルには `id`, `part_of`, `status`, `item_type`, `track`, `domains`, `item_status`, `priority`, `difficulty`, `owner`, `registered_at`, `start_on`, `due_on`, `completed_at`, `block_reason`, `conclusion`, `derived_from`, `depends_on`, `autopilot`, `approach`, `targets`, `target_path`, `target_rulebook`, `sources`, `commit_type`, `commit_scope` が定義されています。
+
+schema 検証で問題になり得る点を点検します: 
+
+1. `id` パターン: `^(?:[a-z][a-z0-9-]*:)?bdd-[a-z0-9\\-]+$` → `prj-0001:bdd-register-entry` は一致。
+2. `status`: `draft` あり、OK。
+3. `rulebook`: `specdojo:bdd-rulebook` → パターン `^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$` に一致。OK。
+4. entity: `logical_name` `登録項目` (文字+数字+空白のみでOK), `physical_name` `register_entry` (lower_snake, OK), `key_fields: [id]` (pattern `^[a-z][a-z0-9_]*$`, OK)。
+5. fields の各 `physical_name` を確認:
+   - `id`, `part_of`, `status`, `item_type`, `track`, `domains`, `item_status`, `priority`, `difficulty`, `owner`, `registered_at`, `start_on`, `due_on`, `completed_at`, `block_reason`, `conclusion`, `derived_from`, `depends_on`, `autopilot`, `approach`, `targets`, `target_path`, `target_rulebook`, `sources`, `commit_type`, `commit_scope` — すべて lower_snake。OK。
+6. `allowed_values_detailed`: 各 value/label が string。OK。
+7. `related_terms: [tm-register, tm-filing, tm-record-keeping, tm-schedule, tm-derived-view]` → パターン `^tm-[A-Za-z0-9\\-]+$`。各々 tm- で始まる英字/数字/hyphen のみ。OK。
+
+rulebook の完成条件を確認:
+- 必須メタデータ `id, type, title, status, rulebook` + entity の `logical_name, physical_name, key_fields` → すべて充足。
+- `schema_ref` を持つエンティティは `fields` で型・制約を再掲しないこと → 対象ファイルは `type`/`constraints`/`unit`/`example` を一切使わず、業務的意味のみ。OK。
+- 用語集・CCD と照合: `related_terms` に 5 語。用語集の存在を確認する必要がありますが、宣言参照範囲には用語集は含まれません。
+
+実装エビデンス (`register.ts`) との整合:
+- `RegisterAddFields` に `due`（暦日）を持つが、対象ファイルは `due_on` を定義。CLI は `--due` オプションだが frontmatter への物理名は `due_on` でよい（rulebook も `due_on` 相当を想定）。矛盾なし。
+- `RegisterAddFields` に `type`, `title`, `description`, `priority`, `difficulty`, `status`, `owner`, `registered_at`, `due`, `completed_at`, `conclusion`, `approach`, `targets`, `sources`, `derived_from`, `depends_on`, `commit_type`, `commit_scope`。
+- 対象ファイルの `part_of`、`item_type`、`track`, `domains`、`start_on`、`block_reason`, `autopilot`, `target_path`, `target_rulebook` は `RegisterAddFields` に直接現れないが、これらは register 個票/frontmatter の別側面（状態定義 stsd / catalog）。実装エビデンスは「register コマンド入口から到達する」と限定しており、それらの欠如は矛盾を意味しない。
+
+`stsd-register-entry.md` の `M-04` は「`bdd-register-entry.yaml` 未作成」と _TODO_ として記録。しかし実際にはファイルが存在する。これは **stsd 側の _TODO_ 解除** の問題であり、本タスクの対象成果物 (`bdd-register-entry.yaml`) 側では変更不要。本タスクでは宣言参照範囲外の編集は行わないため、`M-04` の _TODO_ 解除自体には触れず、result/handoff に申し送りとして記録する。
+
+対象ファイル自身に、修正が要る不整合・欠陥はあるか再確認:
+- 重複: `description` と fields の説明で同一主張の繰り返しは無し。
+- `part_of` field の説明が短文: rulebook は任意のため可。
+- `target_path` / `target_rulebook`: 説明あり、`key_fields` とは無関係だが entity 全体は `id` を key。OK。
+
+実態として、対象ファイルは既に rulebook・schema に適合し、禁止事項にも抵触しない完成度の高い状態。修正箇所が見つからない可能性が高い。
+
+念のため、rulebook 6.2 の選定基準を確認 → 本エンティティは `schema_ref` を持つ形（スキーマ参照エンティティ）であり、`fields` に type/constraints を持たず業務的定義のみ。これは選定基準と整合。
+
+`status: draft` → rulebook の `ready` 昇格条件（schema と enum 網羅検証合格、5 ロールレビュー）は人が行うため、`draft` のまま維持するのが妥当。
+
+結論として、**対象ファイルへの具体的な修正の必要がない**可能性が高い。その場合、plan 4.2 で「上記いずれにも該当しない場合…それだけを理由に修正しない」、共通規約で「成果物に変更が不要と判断した場合でも、result の記入は省略しない」に従い、報告/handoff に根拠を記述する。
+
+ただし、念のため Prettier 整形と schema 検証を実際に走らせて、整形差分・スキーマエラーがないことを機械的に確認します。まず現在のファイルがすでに prettier 整形済みか、schema に適合するかを確認します。
+Prettier 整形と schema validate:schema:file の双方が合格しました。対象ファイルは rulebook の完成条件・禁止事項・章構成すべてに適合しており、内容上の変更不要箇所です。
+
+念のため、実装エビデンス `register.ts` が到達する「登録項目の状態遷移・派生ビュー更新・ID競合復旧の扱い」と、対象ファイルの記述間で食い違いがないか確認します。対象ファイルのエンティティ `description` では:
+- 「track 全体の計画と完了判断は epic、具体的な対応は子 todo、成果物ごとの計画済みタスクは Schedule で扱い、個々のタスクを登録簿へ重複登録しない」→ stsd と整合
+- 「構造化された現在値は個票 Frontmatter の `specdojo` 配下を正本とし…本文の構成は pjr-rulebook に従う」→ 妥当
+- 「状態遷移と人間による審査・承認条件は stsd-register-entry を参照」→ 妥当な責任分割
+
+実装 (transition/event/derived view) との食い違いは、stsd が既に `M-01`（CLI 制約と業務条件の境界）として記録しており、本個票の責務範囲外。対象個票自体の記述に不整合はありません。
+
+以上の精査結果から、**対象成果物 `bdd-register-entry.yaml` への具体的な加筆・修正是不要**と判断します。plan §4.2「いずれにも該当しない場合…それだけを理由に修正しない」に従い、既存記述を維持し、報告へ根拠を残します。
+
+念のため、schema 検証全体（validate:schema:yaml）も対象ファイルが modeline で参照していることを確認済み。他の lint/test は parent runner の実行対象で executor は走らせません（pipeline-state/pipeline instructions 明記）。
+
+todo を更新して完了報告へ進みます。
+検証を完了しました。最終報告を出力します。
+検証・精査を完了しました。以下に結果を報告します。
+
+## 実施内容の要約
+
+対象成果物 `docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml`（業務データ辞書・登録項目個票）について、fully-guided（磨き込み）として、整備済みの実践の型と先行・隣接成果物を参照し構造面の整合性を確認しました。**既存記述の変更不要**と判断し、ファイル内容を保持したまま完了します。
+
+- rulebook（`specdojo:bdd-rulebook`）の必須メタデータ `id`/`type`/`title`/`status`/`rulebook`、エンティティ必須キー `logical_name`/`physical_name`/`key_fields` をすべて充足。
+- 選定基準 6.2「スキーマ参照エンティティ」の形（`schema_ref` 使用、`fields` に型・制約を再掲せず業務的定義のみ）に整合。禁止事項（技術的属性の無断追加、二重管理、言語混在、不整合、曖昧記述）への抵触なし。同一成果物内の重複も無し。
+- `depends_on` は「-」で frontmatter にも `based_on` がないため、根拠関係の不整合修正対象なし。
+- 実装エビデンス `src/register/register.ts`（個票フィールド・状態遷移・派生ビュー・ID競合復旧）と食い違いは無く、CLI 制約と業務条件の境界は `stsd-register-entry` が `M-01` として別途追跡済みで本個票の責務範囲外。
+
+sandbox-safe な静的検査を実行し、いずれも合格:
+
+- Prettier: `npx prettier --check <対象>` → All matched files use Prettier code style
+- schema: `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data <対象>` → `valid`
+
+※ lint-ts / lint-fm / lint-md / lint-mermaid / lint-d2 / test-integration / validate:schema（全体）/ typecheck / test-unit は本 run の parent runner が許可リストから実行するため、executor 側では走らせていません。
+
+## 申し送り（handoff / result へ転記）
+
+1. 対象個票 `bdd-register-entry.yaml` は `stsd-register-entry.md` の「今後の検討メモ」`M-04` で「未作成・用語照合と `based_on` が不足」と _TODO_ として記録されているが、実際にはファイルが存在する。この `M-04` の _TODO_ 解除（`stsd-register-entry` 側への `based_on` 追加・状態名・用語照合）は本タスクの宣言参照範囲外のため未実施。後続で `stsd-register-entry` の更新と `catalog_path` 下 `dct-data-model-stsd.yaml` の `based_on` 同期を要する。
+2. 用語集（glossary）への用語照合は宣言参照範囲に用語集が無く、本タスクでは未実施。`related_terms` の 5 語（`tm-register` 等）と `glossary_term_id` の照合・追加は後続の glossary を扱う task で確認を要する。
+3. frontmatter `status: draft` は人手による `ready` 昇格が必要（rulebook §1 の 5 ロールレビュー・enum 網羅検証合格条件）ため、据え置き。
+4. `M-04`/`M-01` の解消まで、本個票の状態名・用語の最終確定と依存成果物に基づく適合判断は留保する。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象 bdd-register-entry.yaml を fully-guided で精査。rulebook 完成条件・禁止事項・章構成・重複・実装エビデンスとの整合を確認し、既存記述の変更不要と判断した。Prettier と validate:schema:file の双方が合格。stsd-register-entry M-04（bdd 未作成の _TODO_）と用語照合は宣言参照範囲外のため手配として申し送った。","handoff":["対象個票 docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml は既存記述のまま維持（rulebook 完成条件・禁止事項・章構成・重複・実装エビデンス register.ts とも整合。変更不要）。","stsd-register-entry.md の M-04 は『bdd-register-entry.yaml は未作成』と _TODO_ だが実際はファイルが存在する。M-04 の TODO 解除（stsd 側 based_on 追加・状態名・用語照合）は本タスク宣言参照範囲外のため未実施。後続で stsd-register-entry と dct-data-model-stsd.yaml の based_on 同期を要する。","用語集への用語照合は宣言参照範囲に glossary が無く未実施。related_terms(tm-register, tm-filing, tm-record-keeping, tm-schedule, tm-derived-view) と glossary_term_id の照合・追加は後続の glossary タスクで確認を要する。","frontmatter status: draft は人手による ready 昇格が必要(rulebook §1: 5 ロールレビュー・enum 網羅検証合格)のため据え置き。","M-04/M-01 の解消まで、本個票の状態名・用語の最終確定と依存成果物に基づく適合判断は留保する。"],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml","status":"passed","summary":"All matched files use Prettier code style (整形差分なし)"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml","status":"passed","summary":"docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml: valid"},{"command":"npm run lint:ts","status":"not_applicable","reason":"parent runner が許可リストから実行。executor sandbox 内では対象外（対象ファイルは *.yaml で typecheck/lint-ts の glob.src/ts の対象外）"},{"command":"npm run lint:fm","status":"not_applicable","reason":"parent runner が許可リストから実行。対象は docs/**/*.{md,mdx} で、変更対象の *.yaml は対象外。executor 側で実行しない"},{"command":"npm run lint:md","status":"not_applicable","reason":"parent runner が許可リストから実行。変更は *.md でなく *.yaml のみのため markdownlint は対象外。executor 側で実行しない"},{"command":"npm run lint:mermaid","status":"not_applicable","reason":"parent runner が許可リストから実行。変更対象の yaml に mermaid は含まれず、本タスクでは対象外。executor 側で実行しない"},{"command":"npm run lint:d2","status":"not_applicable","reason":"parent runner が許可リストから実行。変更対象の yaml に d2 は含まれず、本タスクでは対象外。executor 側で実行しない"},{"command":"npm run test:integration","status":"not_applicable","reason":"parent runner が許可リストから実行。executor sandbox 内では対象外。"},{"command":"npm run validate:schema","status":"not_applicable","reason":"全体スキーマ/enum/glossary 検証は parent runner が許可リストから実行。executor は対象限定の validate:schema:file を実施済み。"},{"command":"npm run typecheck","status":"not_applicable","reason":"parent runner が許可リストから実行。変更対象は src/tests/tsconfig の glob 外 (docs/**/*{.yaml}) ため対象外。"},{"command":"npm run test:unit","status":"not_applicable","reason":"parent runner が許可リストから実行。executor sandbox 内では対象外。"}]}
+</specdojo_executor_evidence>
