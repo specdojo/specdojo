@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-090",
   "run_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-090-20261109T062421Z-d09c585d",
-  "updated_at": "2026-11-09T13:42:28.318Z",
+  "updated_at": "2026-11-09T13:42:57.066Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-sf-task-execution-090/T-BUSINESS-SPECS-REPS-sf-task-execution-090-20261109T062421Z-d09c585d/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "luna-review-executor",
       "attempts": 2,
       "started_at": "2026-11-09T13:42:28.318Z",
-      "completed_at": null,
+      "completed_at": "2026-11-09T13:42:57.066Z",
       "artifact_ref": null
     }
   },
