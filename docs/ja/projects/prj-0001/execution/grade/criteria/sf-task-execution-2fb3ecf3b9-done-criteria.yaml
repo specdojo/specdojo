@@ -2,12 +2,12 @@
 id: sf-task-execution-grade-criteria
 document: sf-task-execution
 path: docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md
-graded_at: "2026-11-09T21:36:18.565Z"
-graded_by: sonnet-review-executor
-content_hash: b555f7799233af6d6e50233a8fd44b7d0d08e97040cd6a40f69811430ebe82a5
+graded_at: "2026-11-09T22:40:30.836Z"
+graded_by: sol-review-executor
+content_hash: f3e30a0a157e87f33c5021825edbe2746cc01a8bf199dc87164bf4aa9bb9efcd
 summary:
-  satisfied: 4
-  unsatisfied: 1
+  satisfied: 3
+  unsatisfied: 2
   total: 5
 criteria:
   - id: DC-001
@@ -17,33 +17,32 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Input/output and processing requirements are not yet confirmed against the business-process specifications,
-      because the upstream BPS documents are not yet created and the step mapping is deferred.
+      Section 2 explicitly defers detailed correspondence with the upstream business-process specifications, and section
+      8 retains that reconciliation as an unresolved gate.
   - id: DC-002
     text: タスク実行機能の機能スコープと振る舞いを承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
-    status: satisfied
-    reason: 機能スコープ、振る舞い、人間の判断境界が明示され、PO が承認判断できる。
+    status: unsatisfied
+    reason: >-
+      The body still leaves business-process boundaries and final resource acceptance values pending agreement,
+      preventing final approval of the stated scope and behavior.
   - id: DC-003
     text: タスク実行コンポーネント設計・アーキテクチャ境界の入力として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: satisfied
-    reason: 技術制約、データ契約、責務境界が示され、設計入力として参照できる。
   - id: DC-004
     text: タスク実行機能のテスト観点・検証可能性が確認できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: satisfied
-    reason: V-01〜V-15 に客観的な合否条件がある。
   - id: DC-005
     text: 実装スコープ・機能境界の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: satisfied
-    reason: 入出力、制約、機能境界が示され、実装スコープの参照に使える。

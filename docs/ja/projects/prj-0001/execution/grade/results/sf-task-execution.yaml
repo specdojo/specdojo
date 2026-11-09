@@ -6,16 +6,16 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 89
-graded_at: "2026-11-09T21:36:18.565Z"
-graded_by: sonnet-review-executor
-content_hash: b555f7799233af6d6e50233a8fd44b7d0d08e97040cd6a40f69811430ebe82a5
+graded_at: "2026-11-09T22:40:30.836Z"
+graded_by: sol-review-executor
+content_hash: f3e30a0a157e87f33c5021825edbe2746cc01a8bf199dc87164bf4aa9bb9efcd
 source_hashes:
   catalog-entry: 17f72f54ccb2f437707048cfbe73a6d73ab7db79effd066df7f7474c9eb17857
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
+  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
 categories:
   purpose:
     score: 88
@@ -30,11 +30,11 @@ categories:
   architecture:
     score: 92
   usability:
-    score: 94
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 94
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 3
@@ -64,17 +64,17 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 3
     score: 75
-  vp-arc-technical-constraints:
+  vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-conciseness:
-    level: 3
-    score: 75
   vp-arc-single-responsibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -88,11 +88,11 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -172,35 +172,47 @@ findings:
     cause:
       type: document
   - id: F004
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 180
-    anchor: "### 7.2. 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）"
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 117
+    anchor: >-
+      - executor および reporter の 1 試行あたりの実行時間上限は、稼働構成（[[specdojo:exec-config-guide|exec設定ガイド]] 参照）を正本とする。既定値は agent 実行で
+      600 秒（10 分）、親検証バッチ全体で 300 秒（5 分）とし、超過時はプロセスを強制停止してタイムアウト失敗として証跡に記録する。
     message: >-
-      Section 7.2 largely restates behaviours already defined in sections 4 and 5 as a per-function match table; replace
-      it with a reference to the review/implementation evidence record to avoid duplication.
+      Reconcile section 5.1 and V-13/V-14 with the existing resource-control contracts: the SF states a 300-second
+      timeout for the whole parent-validation batch and a default provider limit of one, whereas
+      `src/exec/parent-validation.ts` assigns 600 seconds to each validation command and
+      `docs/ja/specdojo/guides/exec-config-guide.md` defines an omitted provider limit as unlimited and excludes several
+      explicit Schedule execution routes from the gate; correct the baseline and applicability or explicitly identify an
+      approved behavior change.
     message_ja: >-
-      Section 7.2 largely restates behaviours already defined in sections 4 and 5 as a per-function match table; replace
-      it with a reference to the review/implementation evidence record to avoid duplication.
+      Reconcile section 5.1 and V-13/V-14 with the existing resource-control contracts: the SF states a 300-second
+      timeout for the whole parent-validation batch and a default provider limit of one, whereas
+      `src/exec/parent-validation.ts` assigns 600 seconds to each validation command and
+      `docs/ja/specdojo/guides/exec-config-guide.md` defines an omitted provider limit as unlimited and excludes several
+      explicit Schedule execution routes from the gate; correct the baseline and applicability or explicitly identify an
+      approved behavior change.
     cause:
       type: document
   - id: F005
     severity: minor
-    rule: vp-arc-single-responsibility
-    line: 180
-    anchor: "### 7.2. 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）"
+    rule: vp-arc-technical-constraints
+    line: 126
+    anchor: "- 実行証跡および段状態の記録は、下流の reporter・runner・監査ツールが参照する公開データ契約である。"
     message: >-
-      Move the implementation-evidence reconciliation in 7.2 to a review or traceability record, because it is a
-      separate topic with a different update cycle from the functional specification.
+      Identify the authoritative logical contract and version source for evidence and pipeline-stage records; section
+      5.2 requires schema compatibility and version changes without identifying the interface definition that component
+      designers must use.
     message_ja: >-
-      Move the implementation-evidence reconciliation in 7.2 to a review or traceability record, because it is a
-      separate topic with a different update cycle from the functional specification.
+      Identify the authoritative logical contract and version source for evidence and pipeline-stage records; section
+      5.2 requires schema compatibility and version changes without identifying the interface definition that component
+      designers must use.
     cause:
       type: document
   - id: F006
     severity: minor
     rule: vp-qe-done-criteria
-    line: 201
+    line: 182
     anchor: >-
       | 未作成の上流 BPS（`bps-task-selection-preparation` 等）の詳細処理ステップ ID との本機能の最終照合 |
       実行受入・準備ステップの詳細シーケンスとの整合。未確定のままでは下流のコンポーネント設計境界に影響するリスクがあるため、プロジェクト登録簿で追跡する | `_UNDECIDED_` | BA・PO（境界は ARC
@@ -215,39 +227,45 @@ findings:
     cause:
       type: document
   - id: F007
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 180
-    anchor: "### 7.2. 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）"
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 174
+    anchor: >-
+      | V-13    | 5.1 実行時間制約       | 実行時間制限（タイムアウト）の超過                                          | 既定時間（agent: 600秒、親検証:
+      300秒）超過時にプロセスが強制停止され、タイムアウト失敗として証跡に残ること  | 単体/結合  |
     message: >-
-      Remove implementation class, function and file names and internal data structures (e.g. `ProviderConcurrencyGate`,
-      `ExecEvidence`, `PipelineState`, `agent-pipeline.ts` functions) and the in-body review reconciliation, which
-      sf-rulebook section 7 explicitly prohibits.
+      Parameterize V-13 and V-14 by the effective configured timeout and concurrency limits, and cover overridden and
+      omitted limits; the current acceptance rows use fixed defaults even though section 5.1 makes runtime configuration
+      authoritative.
     message_ja: >-
-      Remove implementation class, function and file names and internal data structures (e.g. `ProviderConcurrencyGate`,
-      `ExecEvidence`, `PipelineState`, `agent-pipeline.ts` functions) and the in-body review reconciliation, which
-      sf-rulebook section 7 explicitly prohibits.
+      Parameterize V-13 and V-14 by the effective configured timeout and concurrency limits, and cover overridden and
+      omitted limits; the current acceptance rows use fixed defaults even though section 5.1 makes runtime configuration
+      authoritative.
     cause:
       type: document
   - id: F008
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 153
-    anchor: >-
-      - **一次対応**: 実行担当者または Orchestrator が `exec運用ガイド` および `exec worktree運用ガイド` に従い、停止段の証跡・worktree を確認して `--resume`
-      による再開または手動回復を実施する。
+    line: 65
+    anchor: "- 隔離実行の場合、検証済み成果が統合ブランチへ反映され、タスク進捗状態が完了へ遷移していること。"
     message: >-
-      Replace the command option `—resume` and similar command-specific wording with a reference to the command
-      reference, since sf-rulebook prohibits command usage in the body.
+      The former implementation names, internal structures, reconciliation table, and command option have been removed,
+      resolving the previous major and minor findings; qualify the task-completion postcondition in section 3.2 and V-11
+      to apply only to state-tracked execution, because section 4.1 explicitly forbids implicit state changes for
+      untracked single runs.
     message_ja: >-
-      Replace the command option `—resume` and similar command-specific wording with a reference to the command
-      reference, since sf-rulebook prohibits command usage in the body.
+      The former implementation names, internal structures, reconciliation table, and command option have been removed,
+      resolving the previous major and minor findings; qualify the task-completion postcondition in section 3.2 and V-11
+      to apply only to state-tracked execution, because section 4.1 explicitly forbids implicit state changes for
+      untracked single runs.
     cause:
       type: document
 done_criteria:
-  satisfied: 4
+  satisfied: 3
   total: 5
   unsatisfied:
     DC-001:
       - BA
+    DC-002:
+      - PO
   detail_ref: sf-task-execution-grade-criteria
