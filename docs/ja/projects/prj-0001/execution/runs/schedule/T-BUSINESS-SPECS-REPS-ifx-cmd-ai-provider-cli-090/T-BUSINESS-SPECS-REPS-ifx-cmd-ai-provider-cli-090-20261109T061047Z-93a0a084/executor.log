@@ -1,0 +1,66 @@
+I'll start by reading the key configuration and convention files, then the review plan target artifacts. Let me begin in parallel.
+The bash tool is restricted. Let me use the `read` tool to explore the directory structure instead.
+Let me read the result.md, plan.md, and the implementation evidence files. Let me also check the run directory structure.
+This is the executor stage. Per the override instructions, I must NOT create or update the result file — that belongs to the reporter/runner stage. But first let me confirm whether the implementation evidence files actually exist (a precondition for this review task), and gather context. Let me explore.
+Both implementation evidence files exist. Now let me read them and the common conventions, plus check the deliverable catalog for this artifact. Let me look at the catalog and the run directory's prior results (execution record).
+Both evidence files exist. Now let me read the common conventions and look for the execution record (evidence of a corresponding edit task), plus check the result frontmatter type note. Let me set up a todo list and continue reading.
+Now let me test the bash tool with an allowed command to run the freshness check, and look for the execution record (prior edit task).
+The bash restriction blocks combined commands. Let me try a single allowed command to understand the runner behavior, and find the prior edit task's execution record.
+There's a prior edit task `ifx-cmd-ai-provider-cli-080` (note "REPS" vs this being "REPS"... same name with -080). Let me read it as the likely execution record. Also let me look at the deliverable catalog entry for this artifact and check for grade sidecars.
+The -080 result is a `condense` task on the same deliverable — not the retrofit execution record, and it does NOT contain per-path correspondence records for `agent.ts` / `agent-config.ts`. Let me check the catalog entry (for `evidence_refs`, `done_criteria`) and look for any grade sidecar.
+No grade sidecar files found. Let me read the external-interface-specs catalog entry and check for where grade results might be stored, plus confirm how the `-080` task related (it was `condense`, not a retrofit). Let me also verify whether a retrofit/REPS task exists that produced correspondence records.
+Let me read the external-interface-specs catalog entry and check the deliverable's grade job runs for `ifx-cmd-ai-provider-cli`.
+These are grade pipeline job runs, not a per-deliverable grade verdict sidecar. Let me read the catalog entry to confirm `evidence_refs`, and check how grade verdicts are stored (the generated dct md and any sidecar).
+The catalog confirms `evidence_refs` (both files present) and `done_criteria` (DC-001..DC-005). There's no grade verdict sidecar anywhere. Let me confirm the full picture of this run directory and check whether bash can run `specdojo` at all in this sandbox.
+`git` commands work but `specdojo` is blocked. No grade sidecar exists — the `-090` run is currently at executor stage (running), reporter pending. Let me verify whether a retrofit edit task for THIS task produced correspondence records, by checking the git log scope and searching executed results for the agent.ts / agent-config.ts cross-reference.
+The git log shows only `-080` (condense/reduntancy) tasks for this deliverable plus `-090`'s own `prepare execution` — no retrofit edit produced correspondence records. Let me confirm there's no `specdojo` binary available at all in the sandbox (to be precise about the freshness-check scope).
+No `specdojo` binary is available; the freshness command cannot be executed in this sandbox. I now have enough to complete the retro review analysis. Let me finalize the todo list and verify my cross-reference conclusions against the two evidence files (a few targeted checks for the "retrofit correspondence" determination).
+I have completed the multi-perspective review. This is a `retrofit` review task for `ifx-cmd-ai-provider-cli`. Let me consolidate findings.
+
+Key determinations:
+1. **Grade freshness (E-01)**: No grade sidecar exists (`glob **/grade*.json` → none; catalog has no inline verdict). Plan §4 already states the runner's grade did not run ("Markdown frontmatter is required"). Per `review の判断手順`, this makes the grade **stale/unavailable** → cannot reach `complete` / `complete-with-findings`.
+2. **Retrofit correspondence record (§6 step 2)**: The only execution record touching this deliverable is `-080` (`condense`/冗長さの整理). It did NOT record per-path implementation correspondence for `src/exec/run/agent.ts` or `src/exec/agent-config.ts`. Those per-path判定 (一致/乖離/未確認) are **missing** → unmet item.
+3. **Evidence existence**: Both evidence files exist (`evidence_refs` satisfied). My direct cross-check (allowed by the review plan) found the deliverable's runtime contract broadly 一致 with both files, with several 未確認 ranges — but no such record exists in the run's execution record.
+
+Because grade freshness is not established and the retrofit correspondence record is absent, the task cannot be judged `complete`. This falls to an unfinished-task verdict: `incomplete`. Review itself can complete normally (result recorded by reporter), so exit 0 — not an exceptional termination (§8 conditions not met). Let me mark my final todo and report.
+レビュー（実装照合）を完了しました。以下が所感です。
+
+## 実施した確認
+
+**対象成果物**: `docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml`（`id: ifx-cmd-ai-provider-cli`, type `api`, status `draft`）
+
+### 1. 評価結果の鮮度 (`E-01`)
+- 「評価結果サイドカー」は plan §4 で `_MISSING_`、runner の grade 実行は「実行していない（Markdown frontmatter is required）」。
+- 成果物 `ifx-cmd-ai-provider-cli.yaml` の冒頭は YAML 本体から始まり Markdown frontmatter を持たないため、grade の Markdown 鮮度判定が失敗する構造を再確認。
+- サイドラ検索（リポジトリ内の grade 判定ファイル）で当該成果物の verdict/score/finding を載せた側car は存在せず、実行ジョブ `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-*.json` は評価パイプラインのジョブリストであり特定成果物の確定 verdict ではない。
+- sandbox には `specdojo` バインダリが存在せず、所定コマンド（`specdojo grade list --target deliverable --path <対象> --changed-only` / `--dependency-changed` / `--incomplete`）は実行できなかった。
+- 結論: 評価結果が最新でない／確定できない。`complete`・`complete-with-findings` には到達できない。
+
+### 2. retrofit 対応記録の確認（plan §6）
+- 先行実行記録として、この成果物を編集したタスクは `-080`（`T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-080`, `mode: condense`, 冗長さの整理）のみ。その result は provider 列挙の正本一本化を記録しており、**実装エビデンス各パス（`src/exec/run/agent.ts`・`src/exec/agent-config.ts`）と成果物記述との対応判定（一致／乖離／確認不能／未確認）は記載なし**。
+- 対象タスク `-090` 自身の実行記録（edit 成果）もなく、git log は `...-090: prepare execution` のみ。retrofit として求めた実装照合の記録が実行記録に存在しない → 「記録のないパスは未充足事項」（§6 step 2）に該当。
+
+### 3. 実装エビデンスの存在と直接照合（review として許容された範囲・未確認の明示用）
+- `evidence_refs`（catalog `dct-external-interface-specs.yaml`）列挙の両パスは存在。catalog の `done_criteria`（DC-001〜DC-005）も plan §5 と一致。
+- 私が直接照合した範囲での判定（実行記録に未記載だが、未確認範囲の明示のため）:
+  - `command.shell: true`（成果物 L26）↔ `executeAgent` の `spawn(..., {shell:true, stdio:["pipe","pipe","pipe"]})`、EPIPE 無視・終了コード判別（agent.ts L488-537）→ **一致**
+  - `streams.stdin` 契約 ↔ `child.stdin.end(prompt)`、`expandPromptRefs`/`loadPrompt`（L88-110）→ 概ね**一致**
+  - `exit_codes`・`error_handling.retry`（rate_limit/transient_failure, max_attempts=3, exponential）↔ `runWithRetry`/`isRateLimitError`/`resolveRateLimitPolicy` → **概ね一致**（ただし実装には接続エラー時 fallback、quota/session 上限は待機せず block、`pinned` wait/fallback、保護設定・git 状態の変化で block、provider 単位 `max_concurrency` 等があり、成果物がこれらを網羅しているかは未確認）
+  - `authentication.injection.mechanism: cli_profile`「環境変数に注入しない・Git 環境変数は除去」↔ `agentEnvironment` の `withoutInheritedRepoEnvironment`（L879-892）→ **概ね一致**（注入の実態は各 provider CLI 側で未確認）
+  - `command_executable`/`command_params`（{nickname}/{model}/{mode}/{proficiency}・member `command` が優先）↔ `resolveMemberCommand`/`buildCommandVariables`（agent-config.ts L120-246）→ **一致**
+  - 成果物で `_UNDECIDED_` とした箇所 ↔ 実装: `execution.timeout_seconds`・`max_parallel` ↔ 実装に起動時間上限がない、`max_concurrent_runs`/provider 単位 `max_concurrency`（L313-482, L392-398）→ 成果物が「未決定」とした範囲は実装上の値と対応関係が未確認。
+- 記述上の疑義（grade の finding に類する・再評価に要する可能性）: authentication は `mechanism: cli_profile`、`secret_source` は各 provider CLI が保持し SpecDojo は注入しないと書くが、実装の `agentEnvironment` は `SPECDOJO_SCHEDULE_PATH` 等を環境変数として渡す。両者の整合（認証値は渡さないという制約との線引き）は確認せず推測しない。
+
+### 4. 実装からの推測混入（§6 step 4）
+成果物は実装から目的・業務判断を一方的に推測して書き込んだ形跡ではなく、`_UNDECIDED_` で将来方針を未決定として明示しており、混入の形跡は認めない。
+
+## verdict
+`incomplete` — retrofit が求めた「実装エビデンス各パスとの対応判定を実行記録に残す」ことがなされていない上、評価結果が確定していないため完了条件を満たすと判定できない（品質判断は grade に委ね、ここでは不完了とする）。review 自体は完遂可能なので正常終了（終了コード 0）。
+
+## 確認できなかった範囲（reporter が result に反映）
+- `specdojo grade list --changed-only` / `--dependency-changed` / `--incomplete` の結果（sandbox に `specdojo` なし）。
+- 成果物と実装の網羅的照合（provider 単位並列上限・保護機構 block・pinned wait/fallback・`max_concurrent_runs`、認証注入の実態）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"retrofit review for ifx-cmd-ai-provider-cli.yaml 実施。評価結果が確定していない（plan §4 にて runner grade 未実行・Markdown frontmatter is required、サイドカー存在せず sandbox に specdojo なしで鮮度確認コマンドも非実行）ため fresh ではなく complete/complete-with-findings に到達できない。また先行実行記録（-080 condense タスク）に実装エビデンス src/exec/run/agent.ts・src/exec/agent-config.ts への対応判定（一致/乖離/確認不能/未確認）の記載はなく未完成事項。私の直接照合では実行契約大半が実装と概ね一致するが、保護機構 block・provider 単位 max_concurrency・pinned wait/fallback・接続エラー fallback・max_concurrent_runs・認証注入実態等を確認せず、_UNDECIDED_ の timeout_seconds/max_parallel も対応未確認。verdict=incomplete（unfinished、不完了）。review 自体は完遂し異常終了とはしないため executor 作業は complete。result 記入は reporter 段へ委ねる。","handoff":["評価結果の確定が必須: grade の Markdown frontmatter 要件を成果物側で満たすか、或いは frontmatter なし YAML を評価対象として扱える方式を確定し、specdojo grade list --target deliverable --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml --changed-only / --dependency-changed / --incomplete を実行して fresh な sidecar(verdict/score/finding_counts/findings)を取得する。sidecar 取得後は review を再実行して complete か complete-with-findings かを判定する。","retrofit 対応記録の作成が必要: 先行実行記録（T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-080 の condense result）には実装エビデンス src/exec/run/agent.ts, src/exec/agent-config.ts と成果物記述との対応判定が記載されていない。各パスについて『一致/乖離/確認不能/未確認』を記録し(plan §6 step2)、乖離あれば修正対象候補(実装/文書/意思決定)と根拠(step3)、調査未了範囲の明示(step3)を追記する先行 edit タスクを立てる。","未確認範囲(reporter が result の『approach に応じた確認』へ反映): 保護機構 block(agent-protected-config.ts, agent-git-state.ts, protection-handoff.ts 経由の blocked: レイアウトと block 理由)、provider 単位 max_concurrency と run.max_concurrent_runs、rate_limit の session/quota 上限は待機せず block、pinned で wait/fallback、接続エラー時 connection_error_detection と fallback_candidate の 1 回切り替え、authentication.injection.cli_profile と実装 agentEnvironment(withoutInheritedRepoEnvironment で Git 環境変数を除去)の整合。これらは私が推測で確定せず未確認のまま残す。","成果物内 _UNDECIDED_(execution.timeout_seconds, execution.max_parallel, error_handling.timeout_action)は将来方針として未決定で保持。実装上 timeout は不存在、max_parallel は run.max_concurrent_runs/各 provider max_concurrency へ依存するため、意思決定後に対応を確定するよう記録する。","result 記入(reporter 段): 『評価結果の確認』に鮮度確認コマンドと非実行の根拠、verdict が取得できない事実、『判断根拠』に照合結果、『未充足事項・改善指示』に上記 handoff、『approach に応じた確認』に実装エビデンス対応記録不在と未確認範囲、『decision』に verdict=incomplete を記載。executor は result.md を編集しない。","異常終了ではなく正常終了: evidence_refs は両パスとも存在、対象ファイルは特定可能 result も更新可能(plan §8 の異常終了事由なし)。評価結果が最新でない・未確定であることは verdict として記録する項目。","sandbox 制約の報告: bash が specdojo 実行を拒否し、node_modules/dist に specdojo バインダリ無しのため、所定鮮度確認コマンドは agent 側で非実行。実チェックは runner/人間側へ依頼。"]
+</specdojo_executor_evidence>
