@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-080",
   "run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-080-20261109T041451Z-f6e35f73",
-  "updated_at": "2026-11-09T04:33:48.037Z",
+  "updated_at": "2026-11-09T04:34:12.912Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-080/T-BUSINESS-SPECS-REPS-ccd-project-planning-080-20261109T041451Z-f6e35f73/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "luna-executor",
       "attempts": 1,
       "started_at": "2026-11-09T04:33:48.037Z",
-      "completed_at": null,
+      "completed_at": "2026-11-09T04:34:12.912Z",
       "artifact_ref": null
     }
   },
