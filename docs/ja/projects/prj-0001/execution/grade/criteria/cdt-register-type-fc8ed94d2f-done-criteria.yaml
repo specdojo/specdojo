@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:cdt-register-type-grade-criteria
+document: prj-0001:cdt-register-type
+path: docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md
+graded_at: "2026-11-09T05:51:43.976Z"
+graded_by: luna-review-executor
+content_hash: 6d3fe39312408d84f2b4ebfc56e3b6270d1f0f7bab82804d68c0a6057a5d56a8
+summary:
+  satisfied: 2
+  unsatisfied: 0
+  total: 2
+criteria:
+  - id: DC-001
+    text: 分類名・説明が業務観点で正確に定義されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

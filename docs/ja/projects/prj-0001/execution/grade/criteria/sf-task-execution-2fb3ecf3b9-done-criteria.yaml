@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sf-task-execution-grade-criteria
+document: sf-task-execution
+path: docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md
+graded_at: "2026-11-09T06:24:21.657Z"
+graded_by: luna-review-executor
+content_hash: 69aa14fb2186e6398e3891c117fb7d875370cd9a5e875dcd9f708c9298e8d69e
+summary:
+  satisfied: 3
+  unsatisfied: 2
+  total: 5
+criteria:
+  - id: DC-001
+    text: タスク実行機能の入出力・処理要件が業務プロセス仕様と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      The document describes inputs and outputs, but detailed correspondence to the business-process steps remains
+      unresolved because the upstream BPS specifications are not yet available.
+  - id: DC-002
+    text: タスク実行機能の機能スコープと振る舞いを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: タスク実行コンポーネント設計・アーキテクチャ境界の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: タスク実行機能のテスト観点・検証可能性が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: Acceptance scenarios are provided, but measurable execution-time and concurrency limits remain undecided.
+  - id: DC-005
+    text: 実装スコープ・機能境界の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

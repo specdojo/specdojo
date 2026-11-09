@@ -1,0 +1,353 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: clis-exec-commands
+path: docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 84
+graded_at: "2026-11-09T06:05:25.474Z"
+graded_by: luna-review-executor
+content_hash: 4da948a2d0394e48c04c06e4dd7793ba0e414215264ea6a047b70eba64bb40e9
+source_hashes:
+  catalog-entry: 5131bd7b6f6330042d3e0177441a75175caa3c5a26820b1503e22e09555d58ea
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 92
+  business:
+    score: 83
+  consistency:
+    score: 75
+  architecture:
+    score: 92
+  usability:
+    score: 75
+  implementation:
+    score: 88
+  quality:
+    score: 88
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 16
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 7
+    anchor: "## 2. 利用目的と対象ユーザー"
+    message: >-
+      The empty `based_on` field leaves the CLI’s relationship to its higher-level purpose undocumented; link the
+      relevant source when it is available.
+    message_ja: >-
+      The empty `based_on` field leaves the CLI’s relationship to its higher-level purpose undocumented; link the
+      relevant source when it is available.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 109
+    anchor: ""
+    message: >-
+      State which downstream work or schedule decisions depend on `clis-index` and the external agent contract so
+      project managers can assess their impact.
+    message_ja: >-
+      State which downstream work or schedule decisions depend on `clis-index` and the external agent contract so
+      project managers can assess their impact.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-ba-business-value
+    line: 14
+    anchor: >-
+      対象は exec 配下の準備・実行・状態記録・隔離・回復操作とする。登録簿の起票と完了判断、schedule の設計、定期起動の設定は、それぞれの管理コマンドへ引き渡す。実行経路の責務は
+      [[specdojo:exec-operation-guide|exec運用ガイド]]、外部 agent の設定は [[specdojo:exec-config-guide|exec設定ガイド]] を正本とする。
+    message: >-
+      Connect the stated handoff and recovery benefits to the higher-level project outcome so readers can see the
+      business value of the command group.
+    message_ja: >-
+      Connect the stated handoff and recovery benefits to the higher-level project outcome so readers can see the
+      business value of the command group.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 18
+    anchor: >-
+      1. **対象と前提を確認する**: `exec where` で対象 project の保存先、`exec status` で実行中・停止中の schedule task を確認する。`exec validate` で
+      schedule・event・実行記録の不整合を確認し、`exec refresh` で Ready と進捗表示を更新する。
+    message: >-
+      Identify the role that confirms the proposed workflow and the open execution behavior, so stakeholders know whose
+      agreement is needed.
+    message_ja: >-
+      Identify the role that confirms the proposed workflow and the open execution behavior, so stakeholders know whose
+      agreement is needed.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 7
+    anchor: "## 2. 利用目的と対象ユーザー"
+    message: >-
+      The empty `based_on` field omits the higher-level source relationship; align it with the project catalog and
+      relevant function document when that relationship is established.
+    message_ja: >-
+      The empty `based_on` field omits the higher-level source relationship; align it with the project catalog and
+      relevant function document when that relationship is established.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 110
+    anchor: ""
+    message: >-
+      Mark the external agent contract as an unresolved implementation dependency and identify the behavior that must be
+      specified before implementation can rely on it.
+    message_ja: >-
+      Mark the external agent contract as an unresolved implementation dependency and identify the behavior that must be
+      specified before implementation can rely on it.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 82
+    anchor: ""
+    message: >-
+      Remove or shorten the generic failure-message row because the error section already describes failure displays and
+      recovery actions.
+    message_ja: >-
+      Remove or shorten the generic failure-message row because the error section already describes failure displays and
+      recovery actions.
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 111
+    anchor: ""
+    message: >-
+      Identify the outstanding behavior and specification inputs that implementers must resolve before treating this
+      document as an implementation basis.
+    message_ja: >-
+      Identify the outstanding behavior and specification inputs that implementers must resolve before treating this
+      document as an implementation basis.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-dev-testability
+    line: 92
+    anchor: >-
+      | 再開条件不足                                    | `1`                                                  |
+      worktree・plan・evidence がない、再開段が不適合                      | 残存成果と最新 run
+      の記録を確認する。同じ試行の再開か、新規のやり直しかを判断し、既存成果を確認する前に破棄しない                                                 |
+    message: >-
+      Add references to the test specifications or identify the expected assertions for the listed exit codes and error
+      cases so QA can turn them into repeatable acceptance checks.
+    message_ja: >-
+      Add references to the test specifications or identify the expected assertions for the listed exit codes and error
+      cases so QA can turn them into repeatable acceptance checks.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 94
+    anchor: >-
+      | 検証・統合失敗、保護対象への変更                | 非 `0`                                               | 失敗した検査・段・対象パス、block
+      理由                               | result・evidence・ログと保持 worktree を確認して原因を解消し、該当段から再開する。保護設定は提案差分を人が確認し、handoff
+      経路で適用する                          |
+    message: >-
+      Define observable success and recovery outcomes for the representative workflows so acceptance tests can determine
+      pass or fail consistently.
+    message_ja: >-
+      Define observable success and recovery outcomes for the representative workflows so acceptance tests can determine
+      pass or fail consistently.
+    cause:
+      type: document
+  - id: F011
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 111
+    anchor: ""
+    message: >-
+      Resolve or explicitly track the unverified execution, integration, and exit-code behavior against the operation
+      guide before considering the specification complete.
+    message_ja: >-
+      Resolve or explicitly track the unverified execution, integration, and exit-code behavior against the operation
+      guide before considering the specification complete.
+    cause:
+      type: document
+  - id: F012
+    severity: minor
+    rule: vp-ux-readability
+    line: 30
+    anchor: >-
+      中断した同じ試行は、保存済みの run と worktree を確認して再開する。schedule は `exec resume`、登録簿の worktree 実行は `exec run --register`
+      の再開経路を使う。完了判断の訂正は人が `exec reopen` で `done` から `todo` へ戻す。追加作業は新しい task として扱う。
+    message: >-
+      Define or link the workflow terms `review`, `waiting`, `Ready`, and `runner` at first use so new operators can
+      follow the state transitions.
+    message_ja: >-
+      Define or link the workflow terms `review`, `waiting`, `Ready`, and `runner` at first use so new operators can
+      follow the state transitions.
+    cause:
+      type: document
+  - id: F013
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 47
+    anchor: >-
+      | 段階的な隔離実行         | `exec worktree`                                 |
+      [[specdojo:command-reference#9-exec-worktree\|exec worktree]]             |
+    message: >-
+      Link each operation to the specific command-reference subsection where available so users can quickly find the
+      syntax for the command they need.
+    message_ja: >-
+      Link each operation to the specific command-reference subsection where available so users can quickly find the
+      syntax for the command they need.
+    cause:
+      type: document
+  - id: F014
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 30
+    anchor: >-
+      中断した同じ試行は、保存済みの run と worktree を確認して再開する。schedule は `exec resume`、登録簿の worktree 実行は `exec run --register`
+      の再開経路を使う。完了判断の訂正は人が `exec reopen` で `done` から `todo` へ戻す。追加作業は新しい task として扱う。
+    message: >-
+      Provide consistent Japanese labels or brief definitions for the English state and workflow terms used in the
+      procedure.
+    message_ja: >-
+      Provide consistent Japanese labels or brief definitions for the English state and workflow terms used in the
+      procedure.
+    cause:
+      type: document
+  - id: F015
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 109
+    anchor: ""
+    message: >-
+      State the human owner and completion check for resolving the missing index, external contract, and unverified
+      execution behavior before promoting this document to `ready`.
+    message_ja: >-
+      State the human owner and completion check for resolving the missing index, external contract, and unverified
+      execution behavior before promoting this document to `ready`.
+    cause:
+      type: document
+  - id: F016
+    severity: minor
+    rule: vp-ops-operability
+    line: 110
+    anchor: ""
+    message: >-
+      Specify the operational owner and resolution path for the missing external agent contract so operators know where
+      to direct integration questions.
+    message_ja: >-
+      Specify the operational owner and resolution path for the missing external agent contract so operators know where
+      to direct integration questions.
+    cause:
+      type: document
+done_criteria:
+  satisfied: 5
+  total: 5
+  detail_ref: clis-exec-commands-grade-criteria
