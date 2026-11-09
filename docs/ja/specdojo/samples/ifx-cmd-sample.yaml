@@ -2,105 +2,137 @@
 id: specdojo:ifx-cmd-sample
 type: api
 status: draft
-title: 仕入先への発注登録コマンド連携仕様サンプル
+title: 駄菓子屋きぬや レシート印刷コマンド連携仕様サンプル
 rulebook: specdojo:ifx-cmd-rulebook
 version: 1
-based_on: []
+based_on:
+  - specdojo:clis-sample
+
+# _ASSUMPTION_: receipt-print は学習用の架空 CLI。本例では USB 直結・同期印字とし、
+# 1 回の起動上限を 30 秒、同時起動を店舗端末全体で 1 件とする。
+# 未同梱のリファレンスと印字形式の識別子は参照名だけを示し、実在するリンクにしない。
 
 command:
-  executable: supplier-cli
-  subcommands:
-    - orders
-    - submit
-  purpose: 駄菓子屋きぬやで確定した発注データを仕入先サービスへ登録する
-  reference: 仕入先 CLI 公式リファレンス v2.3（https://supplier-example.internal/docs/cli/orders-submit）
-  version_constraint: ">=2.1.0 <3.0.0"
+  executable: receipt-print
+  purpose: >-
+    [[specdojo:clis-sample|販売管理 CLI 仕様サンプル]] の会計完了時に、
+    確定済みレシートを店舗プリンタで印刷し、呼び出し元が印字結果を判定できる状態にする。
+    売上登録や会計確定の再実行はこの連携に含めない。
+    印字失敗時も会計を取り消さず、販売 CLI は警告を表示して未印字の控えを保持する。
+  reference: >-
+    `receipt-print-reference` v1 の「ファイル印刷」を起動方法の正本とする。
+    入力パスの渡し方、結果 JSON と診断の構造、送信前失敗の識別条件は同リファレンス、
+    印字内容は `kinuya-receipt-format-schema` を参照する。
+  version_constraint: ">=1.0.0 <2.0.0"
   shell: false
 
 streams:
   stdin:
     mode: none
     format: none
+    description: 入力はファイルで渡す。呼び出し元は stdin を閉じ、対話入力を要求しない。
   stdout:
     format: json
     encoding: UTF-8
-    description: order_id、request_id、status、accepted_at を含む登録結果 JSON
+    description: >-
+      起動ごとに結果 JSON を 1 件返す。呼び出し元は対象取引と印字完了を照合する。
+      進捗は混在させず、結果の詳細構造は `receipt-print-reference` の「結果」を参照する。
+      exit 0 でも報告が欠落・不正・対象不一致なら印字完了扱いにしない。
   stderr:
     format: text
     encoding: UTF-8
-    description: 進捗、警告、失敗の診断情報。認証情報は出力しない
+    description: >-
+      進捗、警告、失敗診断。送信前失敗の機械判定は `receipt-print-reference` の「診断」に従う。
+      可変の説明文や stderr が空であることを成功の根拠にしない。
 
 files:
   inputs:
-    - path: tmp/orders/{order_id}.json
-      format: json
+    - path: receipts/receipt-YYYYMMDD-NNNN.txt
+      format: text
       encoding: UTF-8
-      description: 発注 ID、商品 ID、数量を含む発注データ JSON ファイル
-  outputs:
-    - path: tmp/orders/{order_id}-receipt.json
-      format: json
-      encoding: UTF-8
-      description: 仕入先サービスから発行された受付番号と登録日時を含む発注受領書ファイル
+      description: >-
+        呼び出し元の販売 CLI が会計確定時に作成する印字用テキスト。
+        パスは店舗データディレクトリを基準とし、日付・連番は確定済み取引から解決する。
+        CLI は読み取りだけを行い、内容は `kinuya-receipt-format-schema` を参照する。
+  # 印刷 CLI はファイルを作らない。電子控え、未印字状態、実行ログの保存は呼び出し元の責務。
+  outputs: []
 
 side_effects:
-  - 仕入先サービス上の発注台帳へ発注レコードを新規登録する
-  - 同一 request_id の再送時は既存レコードを返し、二重登録を防止する
+  - プリンタへ印字データを送り、用紙を消費する。途中失敗でも紙面の一部が印字される場合がある
+  - 売上・在庫・つけ残高および入力レシートは変更しない。外部サービスの利用枠・課金は発生しない
 
 exit_codes:
   - code: 0
-    meaning: 発注を登録した、または同じ request_id の登録済み結果を返した
+    meaning: >-
+      プリンタが印字完了を通知し、CLI が正常終了した。
+      呼び出し元は stdout の対象取引と完了状態も確認して印字済みにする。
+      会計全体の完了判定は販売 CLI が行う。
     category: success
     retryable: false
   - code: 2
-    meaning: 必須引数の欠落、または発注データの形式が不正
+    meaning: >-
+      入力ファイルがない、読めない、または印字形式に適合しない。プリンタへは送信していない。
+      開発担当が入力生成とファイル権限を修正してから再実行する
     category: input_error
     retryable: false
-  - code: 4
-    meaning: 認証情報が未設定、失効、または有効期限切れ
-    category: authentication_error
-    retryable: false
   - code: 5
-    meaning: 発注登録に必要な権限がない
+    meaning: ローカルのプリンタデバイスへのアクセス権がない。権限を直すまで再試行しない
     category: authorization_error
     retryable: false
-  - code: 69
-    meaning: 指定した仕入先または商品を登録できない
-    category: permanent_failure
-    retryable: false
-  - code: 75
-    meaning: 仕入先サービスが一時的に利用できない
+  - code: 1
+    meaning: >-
+      exit 1 かつ送信前にプリンタが一時的なビジー状態であると診断で確認できた場合。
+      exit 1 の分類ではこの条件を先に評価し、一致する場合に限り自動再試行する
     category: transient_failure
     retryable: true
-  - code: 80
-    meaning: 短時間の連続リクエストによるレート制限超過
-    category: rate_limit
-    retryable: true
+  - code: 1
+    meaning: >-
+      上記の送信前失敗と識別できない汎用失敗。送信開始後の用紙切れ・切断、
+      診断欠落、および未定義の非ゼロ終了もこの扱いとする。
+      印字の有無を断定せず、自動再試行を止めて店頭利用者の確認へ進む
+    category: permanent_failure
+    retryable: false
 
 authentication:
-  method: api_token
+  method: none
   injection:
-    mechanism: environment_variable
+    mechanism: none
     names:
-      - SUPPLIER_CLI_TOKEN
-  secret_source: 実行環境のシークレットストア
-  log_policy: 環境変数の値をコマンド表示、stdout、stderr、エラー記録に出力しない
+      - none
+  secret_source: >-
+    USB 直結のため認証情報は不要で、秘密値の供給元・注入対象はない。
+    OS のデバイス権限は開発担当が管理し、認可失敗は exit 5 として扱う。
+  log_policy: >-
+    起動引数と標準入力に秘密値を含めず、環境変数の値とレシート本文をログへ記録しない。
+    呼び出し元は stdout・stderr の診断を保存する前に秘密値をマスクし、
+    取引識別子と印字結果だけを実行記録へ残す。
 
 execution:
-  working_directory: repository_root
-  timeout_seconds: 60
-  network_required: true
+  working_directory: 店舗データディレクトリ（販売 CLI と共通。入力パスはこの配下に限定する）
+  timeout_seconds: 30
+  network_required: false
   max_parallel: 1
   idempotency:
-    guaranteed: true
-    condition: 同じ --request-id に対して既存の登録結果を返す
+    guaranteed: false
+    condition: >-
+      同じ取引を再実行しても CLI・プリンタによる重複排除はなく、二重印字になり得る。
+      印字結果が不明なときは店頭利用者が紙面とプリンタ状態を確認してから手動再印刷する。
+      再印刷は保存済みレシートだけを使い、会計や売上送信を再実行しない。
 
 error_handling:
   retry:
     on_categories:
       - transient_failure
-      - rate_limit
+    # 初回起動を含む最大 3 回、待機は 1 秒・2 秒。上限後は自動起動を止め、利用者へ通知する。
     max_attempts: 3
     backoff: exponential
-  timeout_action: 子プロセスを終了し、不完全な stdout を破棄して人の確認待ちにする
-  malformed_output_action: 自動再試行せず、出力解析失敗として人の確認待ちにする
-  authentication_failure_action: 自動再試行せず、運用担当に認証状態の確認を依頼する
+  timeout_action: >-
+    呼び出し元は 30 秒で子プロセスとその子孫を終了し、不完全な stdout を結果として採用しない。
+    送信済みデータの印字は停止できたとみなさず、自動再試行せずに印字結果不明として通知する。
+    保存済みレシートを保持し、店頭利用者による紙面・プリンタ状態の確認後に手動再印刷する。
+  malformed_output_action: >-
+    JSON の欠落・解析失敗・対象不一致・完了状態の矛盾は印字結果不明として扱う。
+    自動再試行せず、既存のレシートとマスク済み診断を保持して店頭利用者へ確認を依頼する。
+  authentication_failure_action: >-
+    認証は不要。認証要求が現れた場合は想定外の実行環境として自動再試行を止め、
+    開発担当へ実行ファイルと接続方式の確認を依頼する。OS 権限不足は認可失敗として同担当へ依頼する。
