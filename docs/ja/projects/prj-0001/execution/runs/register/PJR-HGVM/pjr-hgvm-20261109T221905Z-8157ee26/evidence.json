@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-HGVM",
+  "run_id": "pjr-hgvm-20261109T221905Z-8157ee26",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-09T22:22:46.228Z",
+    "completed_at": "2026-11-09T22:29:55.502Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-hgvm.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-hgvm-business-specs-kata-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-milestones.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-kata.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-track-business-specs-kata.yaml",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-hgvm-business-specs-kata-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-milestones.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-kata.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-track-business-specs-kata.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-hgvm-business-specs-kata-strategy.md       | 71 ++++++++++++++++++++--\n .../projects/prj-0001/schedule/sch-milestones.yaml | 70 +++++++++++++++++++++\n 2 files changed, 135 insertions(+), 6 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule strategy generate --project prj-0001 --track business-specs-kata --gate-owner PM --milestone-owner PM --force --dry-run",
+      "status": "passed",
+      "summary": "標準 profile の25タスク・10マイルストーンと差分を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule strategy generate --project prj-0001 --track business-specs-kata --gate-owner PM --milestone-owner PM --force",
+      "status": "passed",
+      "summary": "strategy を生成。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule build --project prj-0001 --track business-specs-kata --force",
+      "status": "passed",
+      "summary": "追加段を含む32タスクを生成。既存マイルストーンを保持し、新規10項目との対応も確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001",
+      "status": "passed",
+      "summary": "実行状態の派生ビューを更新。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001 --schedule-only",
+      "status": "passed",
+      "summary": "schedule 検証成功。旧タスクIDの既存履歴警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-strategy.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-kata.yaml",
+      "status": "passed",
+      "summary": "strategy の schema 適合。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-track.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-track-business-specs-kata.yaml",
+      "status": "passed",
+      "summary": "track の schema 適合。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/sch-milestones.schema.yaml --data docs/ja/projects/prj-0001/schedule/sch-milestones.yaml",
+      "status": "passed",
+      "summary": "milestones の schema 適合。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検証成功。既存参照・未作成文書の警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票を含む履歴リンク検証成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-hgvm-business-specs-kata-strategy.md docs/ja/projects/prj-0001/schedule/sch-strategy-business-specs-kata.yaml docs/ja/projects/prj-0001/schedule/sch-track-business-specs-kata.yaml docs/ja/projects/prj-0001/schedule/sch-milestones.yaml",
+      "status": "passed",
+      "summary": "変更した4ファイルを整形。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HGVM/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HGVM/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HGVM/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4211 file(s), 139 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 7 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4211 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HGVM\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HGVM/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HGVM/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-HGVM\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-DOBO66/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-wlSZdE/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3xJpJr/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-v3A64G/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "7種類を対象とする strategy と track（32タスク・10マイルストーン）を生成しました。個票に判断根拠と検証結果を記録しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "sf・cdt・ccd・bdd・ifx-cmd は `improve-kata` を選択し、rulebook → sample（ifx-cmd は recipe・template も）→ review → human の型確定を配置した。bes・br は rulebook の有効な grade がともに needs-work のため、`bootstrap_scope: [rulebook, sample]` で bootstrap → refine → condense → review → human の型確定を配置できた。全件の主担当は ARC、全 review 完了後の確定は `bootstrap-finalize` とした。",
+    "標準 generator の出力に専用 maintenance 段・指示・agent 指定を追加した。strategy を再生成する際は dry-run の差分を確認し、追加内容を維持する必要がある。編集は sol-executor、review は sol-review-executor を指定済み。",
+    "build が生じさせた既存 planning の4マイルストーンの対象外差分は元に戻し、既存項目を保持して本 track の10項目だけを追加した。再 build 時も対象外差分を確認すること。他 track・カタログ・互換 Timeline・CHANGELOG・result は編集していない。",
+    "全体の schema・Markdown lint など指定された親検証は runner に委ねた。schedule のタスクは実行していない。型確定後の business-specs-reps 再実行は別作業。個票の「CHANGELOG に書く事項」は「なし」と記録した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-HGVM/pjr-hgvm-20261109T221905Z-8157ee26/executor.log",
+      "bytes": 4935,
+      "truncated": false
+    }
+  ]
+}
