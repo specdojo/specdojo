@@ -24,9 +24,8 @@ command:
     設定項目の意味は [[specdojo:exec-config-guide]]、provider 固有の認証・モデル・権限は
     [[sysd-agent-settings]] 配下の provider 別設計を正本とする。member の command はテンプレートを
     持たない構成専用の上書きとする。
-  # 意図された仕様（rulebook）は shell: false。現在の実装は展開後の文字列をシェル経由で起動し、
-  # command_template も $(pwd) / $(cat) を使うため乖離している（handoff 参照）。
-  shell: false
+  # exec-defaults.yaml の起動コマンド雛形が $(cat) 等のシェル置換を使うため、シェル経由で起動する。
+  shell: true
 
 streams:
   stdin:
@@ -116,11 +115,12 @@ authentication:
 
 execution:
   working_directory: task worktree のルート（in-place 実行時は repository_root）
-  # 現在の実装は起動上限時間を設けていない（handoff 参照）。
+  # 現在は起動上限なし。上限を設けるかは未決定。
   timeout_seconds: _UNDECIDED_
   network_required: true
-  # 同時実行数は exec run の --parallel と providers.<provider>.max_concurrency
-  # （現行設定では opencode が 1）で決まり、本仕様で固定値を持たない。
+  # 実効上限は .specdojo/exec-defaults.yaml の run.max_concurrent_runs と
+  # provider ごとの max_concurrency を参照する。schema が正の整数または placeholder を
+  # 要求するため、固定値を避ける値表現は未決定。
   max_parallel: _UNDECIDED_
   idempotency:
     guaranteed: false
@@ -139,8 +139,8 @@ error_handling:
     max_attempts: 3
     backoff: exponential
   timeout_action: >-
-    _UNDECIDED_: 起動上限時間とタイムアウト時の子プロセス終了・不完全出力の扱いは未定義。
-    現在は終了まで待ち続ける。
+    _UNDECIDED_: 起動時間の上限を設けるか、また上限到達時に子プロセスを終了するか、
+    不完全出力をどう扱うかは未決定。現在は終了まで待ち続ける。
   malformed_output_action: >-
     stdout に evidence タグがない場合は、残りの stdout を最終メッセージとして扱う。自動再試行は
     せず、completion_status が incomplete の場合は worktree を保持して executor resume に委ねる。
