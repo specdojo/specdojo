@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-090",
+  "run_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23",
+  "updated_at": "2026-11-09T12:23:00.037Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "luna-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-09T05:53:48.775Z",
+      "completed_at": "2026-11-09T05:54:54.266Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-09T12:19:48.627Z",
+      "completed_at": "2026-11-09T12:22:59.022Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "luna-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-09T12:23:00.037Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/result.md"
+  }
+}

@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-cdt-register-type-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/plan.md
   started_at: "2026-11-09T05:51:45.660Z"
+  completed_at: "2026-11-09T12:22:59.024Z"
   agent: luna-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,23 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+以下のコマンドを実行し、初回および最終回ともに空出力で終了したことを確認した。 - `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md --changed-only` - `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md --dependency-changed` - `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md --incomplete`
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果は最新であり、`verdict`: `pass`、`score`: 87 である。grade による完了条件の判定は `DC-001`/`DC-002` ともに satisfied となっている。
+- 実装エビデンスである `src/register/register.ts`（およびその re-export 先の `src/register/item.ts` の `VALID_TYPES`）および schema enum における許容 8 値（todo, epic, question, risk, issue, change-request, decision, note）が、成果物の記述と一致していることを確認した。
+- minor finding 14 件は品質改善事項であり、本タスクの完了条件である「分類名・説明の正確な定義」および「実装の基礎としての参照可能性」を妨げるものではない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- grade により指摘された minor finding 14 件（PO/PM/DEV/OPS 観点の記述不足など）への対応を検討すること。
+- 派生ビューへの振り分けおよび既定 commit 種別とのマッピングについて、現在は実装のみが根拠となっており承認済み仕様の裏付けが未確認である。BA/PO による業務仕様としての承認、または根拠となる仕様書の整備を行うこと。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+retrofit 照合として、初回作成時の実行記録および現行の `src/register/item.ts` と schema を確認し、定義されている分類値が成果物の記述と一致することを検証した。状態定義、派生ビューの詳細動作、CLI 実装全体については、今回の `evidence_refs` の範囲外であるため独立した詳細検証は行っていない。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings

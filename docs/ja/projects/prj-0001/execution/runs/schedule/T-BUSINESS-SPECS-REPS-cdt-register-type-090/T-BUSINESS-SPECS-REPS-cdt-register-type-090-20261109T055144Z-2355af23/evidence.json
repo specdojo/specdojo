@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-090",
+  "run_id": "T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23",
+  "stage": {
+    "role": "executor",
+    "actor": "luna-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-09T05:53:48.775Z",
+    "completed_at": "2026-11-09T05:54:53.567Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines\n… output omitted …\no-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4170 file(s), 139 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 7 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4170 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-bXU0SD/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-TtRNfy/T-T-doc-010\nWritten: lefthook.yml\nPlanned markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-09T12:20:09.954Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallbac\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "{\"completion_status\":\"complete\",\"final_message\":\"Grade の鮮度確認は初回・最終回とも `--changed-only` と `--dependency-changed` が空出力で終了し、`--incomplete` も空出力でした。サイドカーは `pass`、score 87、finding は blocker 0 / major 0 / minor 14 / note 0、done criteria は 2/2 satisfied です。初回作成時の実行記録に `src/register/register.ts` と schema、BDD の 8 値一致が記録され、現行 schema と `src/register/item.ts` の `VALID_TYPES` でも同値を確認しました。実装のみを根拠とする派生ビュー・既定 commit 種別の記述は、承認仕様での裏付け未確認として実行記録に残っています。レビュー結果の記入は reporter に引き継ぎます。\",\"handoff\":[\"Reporter: verdict は `complete-with-findings` を推奨。DC-001/002 は grade が 2/2 satisfied と判定し、コード・schema の許容 8 値は成果物記述と一致。minor finding 14 件は完了条件の範囲外の品質改善として記録し、改善指示を残す。\",\"Reporter: retrofit 照合では初回作成タスクの result/evidence に `src/register/register.ts`（そこから re-export される `VALID_TYPES`）と文書の値の対応・一致が記録済み。`src/register/item.ts` と schema の現在値も todo, epic, question, risk, issue, change-request, decision, note で一致。追加した確認範囲は schema enum と item.ts の定義。\",\"Reporter: 初回作成記録は、派生ビュー振り分けと既定 commit 種別マッピングについて「実装だけが根拠で承認済み仕様の裏付け未確認」と明示。今回の完了条件は業務分類名・説明および分類実装の基礎を対象とするため、実装から導いたこれらの追加説明は完了を阻害しないものの、BA/PO が業務仕様として承認するか、根拠仕様を補うか、削除するかを改善指示に残す。状態定義・派生ビュー動作・CLI 実装全体は今回の evidence_refs 範囲外で独立検証していない。\",\"Grade freshness command: `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md --changed-only` and corresponding `--dependency-changed`; both initial and final runs exited 0 with empty output. `--incomplete` also exited 0 with empty output. Result file was not edited in executor stage.\"],\"validations\":[]}",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/executor.log",
+      "bytes": 2499,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-cdt-register-type-090/T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261109T055144Z-2355af23/parent-validation-attempt-1-lint-fm.log",
+      "bytes": 650,
+      "truncated": false
+    }
+  ]
+}
