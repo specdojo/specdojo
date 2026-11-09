@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_812a1a2976f84c479c6cf64aaa9d3d3c
+  ts: "2026-11-09T13:39:25Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 並べて流す review の段が、主の作業ツリーの grade の進み具合のファイルを取り合って統合の前に止まる
+    - field: description
+      from: ""
+      to: schedule の review の段を --parallel で流すと、ある run の grade が主の作業ツリーの grade/pipeline の進み具合のファイルを書き換え、ほかの run が統合の前に Grade sidecar changed after checkpoint で止まる。grade の agent が権限で失敗した場合にも書き換わる。原因を特定して解消する
+    - field: input
+      from: ""
+      to: '["2026-11-09、business-specs-reps の review の段で、ccd-project-planning-090 の grade（opencode の agent）がコマンドの実行を権限で拒まれて失敗し、grade/pipeline/ccd-project-planning-b57132c2f259.json が書き換わった。clis・sf・ifx-cmd の review の 3 件が統合の前にこのファイルの変更を検出して止まった。","orchestrator がそのファイルを commit した版に戻し、3 件を 1 件ずつ再開した（indie が承認）。ccd の review の grade の agent の権限の問題は未解決。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-09"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
