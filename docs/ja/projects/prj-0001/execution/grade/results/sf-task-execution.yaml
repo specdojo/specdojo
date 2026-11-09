@@ -4,11 +4,11 @@ document: sf-task-execution
 path: docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: pass
-score: 87
-graded_at: "2026-11-09T06:24:21.657Z"
-graded_by: luna-review-executor
-content_hash: 69aa14fb2186e6398e3891c117fb7d875370cd9a5e875dcd9f708c9298e8d69e
+verdict: needs-work
+score: 89
+graded_at: "2026-11-09T21:36:18.565Z"
+graded_by: sonnet-review-executor
+content_hash: b555f7799233af6d6e50233a8fd44b7d0d08e97040cd6a40f69811430ebe82a5
 source_hashes:
   catalog-entry: 17f72f54ccb2f437707048cfbe73a6d73ab7db79effd066df7f7474c9eb17857
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -20,21 +20,21 @@ categories:
   purpose:
     score: 88
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
     score: 92
   consistency:
-    score: 88
+    score: 63
   architecture:
     score: 92
   usability:
-    score: 100
+    score: 94
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 81
+    score: 94
 viewpoints:
   vp-po-purpose-alignment:
     level: 3
@@ -43,17 +43,17 @@ viewpoints:
     level: 4
     score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -67,32 +67,32 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
     level: 4
     score: 100
-  vp-dev-implementation-readiness:
-    level: 3
-    score: 75
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-done-criteria:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 3
-    score: 75
-  vp-qe-omissions-consistency:
     level: 4
     score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,11 +103,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -119,17 +119,18 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 15
+  major: 1
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-purpose-alignment
-    line: 18
+    line: 21
     anchor: >-
-      全体の位置づけは [[cdfd-overview|概念データフロー図（全体概要）]] の `P-07` とする。先行成果物 `sf-index`・`bps-task-selection-preparation`
-      は未作成のため、次表の `P-07` 内の対応は成果物カタログの業務区分に基づく。BPS 固有の処理ステップ ID との対応は第 8 章の確認対象とする。
+      先行成果物 `sf-index`
+      および上流の業務プロセス仕様群は未作成のため、成果物カタログの業務区分および処理ステップ定義（`P-07-01`〜`P-07-05`、`P-11-01`〜`P-11-02`）に基づき、本機能の入出力（第 3
+      章）および処理要件（第 4 章）との対応を次表のとおり定義する。上流 BPS 正本作成時の詳細ステップ照合は第 8 章の未決事項として管理する。
     message: >-
       Complete the `P-07` and task-selection mappings against the planned business-process specifications before final
       approval; the current table explicitly leaves their detailed correspondence unresolved.
@@ -137,201 +138,116 @@ findings:
       Complete the `P-07` and task-selection mappings against the planned business-process specifications before final
       approval; the current table explicitly leaves their detailed correspondence unresolved.
     cause:
-      type: kata
-      kind: rulebook
-      location: "sf-rulebook, section 5, required chapter 2: business-process and screen correspondence"
+      type: document
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# システム化機能（タスク実行）"
+    rule: vp-ba-requirements-completeness
+    line: 21
+    anchor: >-
+      先行成果物 `sf-index`
+      および上流の業務プロセス仕様群は未作成のため、成果物カタログの業務区分および処理ステップ定義（`P-07-01`〜`P-07-05`、`P-11-01`〜`P-11-02`）に基づき、本機能の入出力（第 3
+      章）および処理要件（第 4 章）との対応を次表のとおり定義する。上流 BPS 正本作成時の詳細ステップ照合は第 8 章の未決事項として管理する。
     message: >-
-      Identify the human owner of the publication decision and the intended audience before changing the document from
-      `draft` to `ready`.
+      Complete the business-process step mapping and confirm the resource constraints that affect acceptance; until
+      then, the business alignment and acceptance scope are not fully established.
     message_ja: >-
-      Identify the human owner of the publication decision and the intended audience before changing the document from
-      `draft` to `ready`.
+      Complete the business-process step mapping and confirm the resource constraints that affect acceptance; until
+      then, the business alignment and acceptance scope are not fully established.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 145
-    anchor: ""
+    rule: vp-arc-cross-document-consistency
+    line: 21
+    anchor: >-
+      先行成果物 `sf-index`
+      および上流の業務プロセス仕様群は未作成のため、成果物カタログの業務区分および処理ステップ定義（`P-07-01`〜`P-07-05`、`P-11-01`〜`P-11-02`）に基づき、本機能の入出力（第 3
+      章）および処理要件（第 4 章）との対応を次表のとおり定義する。上流 BPS 正本作成時の詳細ステップ照合は第 8 章の未決事項として管理する。
     message: >-
-      For the unresolved decisions, add an accountable task owner and a target date or decision checkpoint so PMs can
-      schedule and track the required follow-up.
+      Reconcile the stated `P-07` correspondence with the detailed BPS specifications when they are created; the current
+      mapping is based on catalog categories rather than confirmed process-step identifiers.
     message_ja: >-
-      For the unresolved decisions, add an accountable task owner and a target date or decision checkpoint so PMs can
-      schedule and track the required follow-up.
+      Reconcile the stated `P-07` correspondence with the detailed BPS specifications when they are created; the current
+      mapping is based on catalog categories rather than confirmed process-step identifiers.
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 149
-    anchor: ""
+    rule: vp-arc-conciseness
+    line: 180
+    anchor: "### 7.2. 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）"
     message: >-
-      State the schedule or downstream-deliverable impact of the missing BPS mappings and identify whether the
-      unresolved dependency should be tracked as a project risk or issue.
+      Section 7.2 largely restates behaviours already defined in sections 4 and 5 as a per-function match table; replace
+      it with a reference to the review/implementation evidence record to avoid duplication.
     message_ja: >-
-      State the schedule or downstream-deliverable impact of the missing BPS mappings and identify whether the
-      unresolved dependency should be tracked as a project risk or issue.
+      Section 7.2 largely restates behaviours already defined in sections 4 and 5 as a per-function match table; replace
+      it with a reference to the review/implementation evidence record to avoid duplication.
     cause:
       type: document
   - id: F005
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 145
-    anchor: ""
+    rule: vp-arc-single-responsibility
+    line: 180
+    anchor: "### 7.2. 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）"
     message: >-
-      Identify the project-control record or reporting destination for the unresolved decisions and their follow-up
-      status so they can be monitored outside this specification.
+      Move the implementation-evidence reconciliation in 7.2 to a review or traceability record, because it is a
+      separate topic with a different update cycle from the functional specification.
     message_ja: >-
-      Identify the project-control record or reporting destination for the unresolved decisions and their follow-up
-      status so they can be monitored outside this specification.
+      Move the implementation-evidence reconciliation in 7.2 to a review or traceability record, because it is a
+      separate topic with a different update cycle from the functional specification.
     cause:
       type: document
   - id: F006
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 28
-    anchor: 利用接点は GUI ではなく [[clis-exec-commands|CLI仕様（exec コマンド群）]] である。
+    rule: vp-qe-done-criteria
+    line: 201
+    anchor: >-
+      | 未作成の上流 BPS（`bps-task-selection-preparation` 等）の詳細処理ステップ ID との本機能の最終照合 |
+      実行受入・準備ステップの詳細シーケンスとの整合。未確定のままでは下流のコンポーネント設計境界に影響するリスクがあるため、プロジェクト登録簿で追跡する | `_UNDECIDED_` | BA・PO（境界は ARC
+      と確認）        | 上流 BPS 正本作成時（M-02）                | プロジェクト登録簿 `PJR-2GD6` / `PJR-BCAQ` 後続レビュー | 上流 BPS
+      が承認され、本機能との処理ステップ対応がレビューで合意されていること        |
     message: >-
-      Complete the business-process step mapping and confirm the resource constraints that affect acceptance; until
-      then, the business alignment and acceptance scope are not fully established.
+      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
+      the related completion conditions as fully evidenced.
     message_ja: >-
-      Complete the business-process step mapping and confirm the resource constraints that affect acceptance; until
-      then, the business alignment and acceptance scope are not fully established.
+      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
+      the related completion conditions as fully evidenced.
     cause:
-      type: kata
-      kind: rulebook
-      location: sf-rulebook, section 5, required chapters 2, 5, and 7
+      type: document
   - id: F007
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 27
-    anchor: ""
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 180
+    anchor: "### 7.2. 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）"
     message: >-
-      Reconcile the stated `P-07` correspondence with the detailed BPS specifications when they are created; the current
-      mapping is based on catalog categories rather than confirmed process-step identifiers.
+      Remove implementation class, function and file names and internal data structures (e.g. `ProviderConcurrencyGate`,
+      `ExecEvidence`, `PipelineState`, `agent-pipeline.ts` functions) and the in-body review reconciliation, which
+      sf-rulebook section 7 explicitly prohibits.
     message_ja: >-
-      Reconcile the stated `P-07` correspondence with the detailed BPS specifications when they are created; the current
-      mapping is based on catalog categories rather than confirmed process-step identifiers.
+      Remove implementation class, function and file names and internal data structures (e.g. `ProviderConcurrencyGate`,
+      `ExecEvidence`, `PipelineState`, `agent-pipeline.ts` functions) and the in-body review reconciliation, which
+      sf-rulebook section 7 explicitly prohibits.
     cause:
       type: document
   - id: F008
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 111
-    anchor: "| [[specdojo:command-reference\\|CLIコマンドリファレンス]]                   | 起動・状態記録・再開の構文と指定方法                |"
-    message: >-
-      Define measurable execution-time and concurrency acceptance limits, or explicitly reference their approved source,
-      before using this specification as a finalized architecture input.
-    message_ja: >-
-      Define measurable execution-time and concurrency acceptance limits, or explicitly reference their approved source,
-      before using this specification as a finalized architecture input.
-    cause:
-      type: document
-  - id: F009
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 111
-    anchor: "| [[specdojo:command-reference\\|CLIコマンドリファレンス]]                   | 起動・状態記録・再開の構文と指定方法                |"
-    message: >-
-      Specify or link the approved measurable limits for execution time and concurrency so implementation and
-      configuration work can derive complete acceptance constraints.
-    message_ja: >-
-      Specify or link the approved measurable limits for execution time and concurrency so implementation and
-      configuration work can derive complete acceptance constraints.
-    cause:
-      type: document
-  - id: F010
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 39
-    anchor: ""
-    message: >-
-      Identify the affected record or schema contracts and compatibility expectations for changes to execution evidence
-      and stage state, so implementers can assess downstream change impact.
-    message_ja: >-
-      Identify the affected record or schema contracts and compatibility expectations for changes to execution evidence
-      and stage state, so implementers can assess downstream change impact.
-    cause:
-      type: document
-  - id: F011
-    severity: minor
-    rule: vp-dev-testability
-    line: 110
+    rule: vp-qe-omissions-consistency
+    line: 153
     anchor: >-
-      | ------------------------------------------------------------------------- |
-      --------------------------------------------------- |
+      - **一次対応**: 実行担当者または Orchestrator が `exec運用ガイド` および `exec worktree運用ガイド` に従い、停止段の証跡・worktree を確認して `--resume`
+      による再開または手動回復を実施する。
     message: >-
-      Add measurable acceptance checks for execution-time and concurrency constraints, which are currently deferred and
-      cannot be objectively tested from this specification.
+      Replace the command option `—resume` and similar command-specific wording with a reference to the command
+      reference, since sf-rulebook prohibits command usage in the body.
     message_ja: >-
-      Add measurable acceptance checks for execution-time and concurrency constraints, which are currently deferred and
-      cannot be objectively tested from this specification.
-    cause:
-      type: document
-  - id: F012
-    severity: minor
-    rule: vp-qe-done-criteria
-    line: 149
-    anchor: ""
-    message: >-
-      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
-      the related completion conditions as fully evidenced.
-    message_ja: >-
-      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
-      the related completion conditions as fully evidenced.
-    cause:
-      type: document
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 111
-    anchor: "| [[specdojo:command-reference\\|CLIコマンドリファレンス]]                   | 起動・状態記録・再開の構文と指定方法                |"
-    message: >-
-      Define numeric or otherwise objectively bounded execution-time and concurrency criteria so QE can determine
-      whether these constraints pass or fail.
-    message_ja: >-
-      Define numeric or otherwise objectively bounded execution-time and concurrency criteria so QE can determine
-      whether these constraints pass or fail.
-    cause:
-      type: document
-  - id: F014
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 149
-    anchor: ""
-    message: >-
-      Resolve the listed upstream mapping and resource-limit decisions before promoting the specification to `ready`,
-      and make that readiness gate explicit.
-    message_ja: >-
-      Resolve the listed upstream mapping and resource-limit decisions before promoting the specification to `ready`,
-      and make that readiness gate explicit.
-    cause:
-      type: document
-  - id: F015
-    severity: minor
-    rule: vp-ops-operability
-    line: 116
-    anchor: ""
-    message: >-
-      Identify the operational contact or support route for execution failures and recovery questions, or link to the
-      authoritative support procedure.
-    message_ja: >-
-      Identify the operational contact or support route for execution failures and recovery questions, or link to the
-      authoritative support procedure.
+      Replace the command option `—resume` and similar command-specific wording with a reference to the command
+      reference, since sf-rulebook prohibits command usage in the body.
     cause:
       type: document
 done_criteria:
-  satisfied: 3
+  satisfied: 4
   total: 5
   unsatisfied:
     DC-001:
       - BA
-    DC-004:
-      - QE
   detail_ref: sf-task-execution-grade-criteria

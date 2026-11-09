@@ -2,12 +2,12 @@
 id: sf-task-execution-grade-criteria
 document: sf-task-execution
 path: docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md
-graded_at: "2026-11-09T06:24:21.657Z"
-graded_by: luna-review-executor
-content_hash: 69aa14fb2186e6398e3891c117fb7d875370cd9a5e875dcd9f708c9298e8d69e
+graded_at: "2026-11-09T21:36:18.565Z"
+graded_by: sonnet-review-executor
+content_hash: b555f7799233af6d6e50233a8fd44b7d0d08e97040cd6a40f69811430ebe82a5
 summary:
-  satisfied: 3
-  unsatisfied: 2
+  satisfied: 4
+  unsatisfied: 1
   total: 5
 criteria:
   - id: DC-001
@@ -17,30 +17,33 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The document describes inputs and outputs, but detailed correspondence to the business-process steps remains
-      unresolved because the upstream BPS specifications are not yet available.
+      Input/output and processing requirements are not yet confirmed against the business-process specifications,
+      because the upstream BPS documents are not yet created and the step mapping is deferred.
   - id: DC-002
     text: タスク実行機能の機能スコープと振る舞いを承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: satisfied
+    reason: 機能スコープ、振る舞い、人間の判断境界が明示され、PO が承認判断できる。
   - id: DC-003
     text: タスク実行コンポーネント設計・アーキテクチャ境界の入力として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: satisfied
+    reason: 技術制約、データ契約、責務境界が示され、設計入力として参照できる。
   - id: DC-004
     text: タスク実行機能のテスト観点・検証可能性が確認できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: Acceptance scenarios are provided, but measurable execution-time and concurrency limits remain undecided.
+    status: satisfied
+    reason: V-01〜V-15 に客観的な合否条件がある。
   - id: DC-005
     text: 実装スコープ・機能境界の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: satisfied
+    reason: 入出力、制約、機能境界が示され、実装スコープの参照に使える。
