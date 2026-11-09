@@ -134,3 +134,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e26272f6fcae43e594537884ad4f614e
+- v: 1
+  id: reg_2dd73d6fb1df411880c7a1f7c78dcb2a
+  ts: "2026-11-09T22:24:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor、2 回）で対応。本文に実装の関数名・型名が残っていないこと、照合の記録が個票にあること、lint:md を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-10"
+    - field: conclusion
+      from: sf-task-execution から実装詳細・照合表を除去して個票へ移送し、業務プロセス対応・検証観点を維持した上で sf-rulebook に適合させた
+      to: sf-task-execution に業務プロセス仕様との対応と検証・受入の観点を足し、2 回目で本文の実装の名前と照合の表を外して、照合の記録は個票の対応結果に移した
+  previous_event_id: reg_d999e8b2c5394afb8eeb9ce1b57019d5

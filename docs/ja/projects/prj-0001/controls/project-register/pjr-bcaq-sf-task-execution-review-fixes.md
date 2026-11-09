@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-09T20:49:35Z"
-  conclusion: sf-task-execution から実装詳細・照合表を除去して個票へ移送し、業務プロセス対応・検証観点を維持した上で sf-rulebook に適合させた
+  completed_at: "2026-11-09T22:24:46Z"
+  conclusion: sf-task-execution に業務プロセス仕様との対応と検証・受入の観点を足し、2 回目で本文の実装の名前と照合の表を外して、照合の記録は個票の対応結果に移した
   derived_from:
     - PJR-2GD6
   approach: fully-guided
