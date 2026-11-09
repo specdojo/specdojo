@@ -1,0 +1,250 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: br-task-selection-strategy
+path: docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 90
+graded_at: "2026-11-09T20:52:07.094Z"
+graded_by: sonnet-review-executor
+content_hash: 736b4dbb4bf26a439ade61af872d420b631b2acce664d968f2035deda91a85a1
+source_hashes:
+  catalog-entry: 06967746e3f53eed01b7b2dbb62c00bebe1df11f8c2a76ad9a42cbb0245bf25d
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
+    score: 92
+  consistency:
+    score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 94
+  implementation:
+    score: 88
+  quality:
+    score: 81
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 8
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 114
+    anchor: >-
+      - _TODO_:
+      前提とする実行受入の業務プロセス仕様（`bps-task-selection-preparation`）が未作成のため、本書の適用場面と対象外の境界は確認できていない。同仕様の作成後に、本書の「適用範囲」「対象外」とその手順との対応を確認する。
+    message: >-
+      The TODOs name open decisions but give no decider (only one names PO), no decision timing, and no impact on
+      downstream consumers, so a PO cannot easily approve, defer, or reject them.
+    message_ja: >-
+      The TODOs name open decisions but give no decider (only one names PO), no decision timing, and no impact on
+      downstream consumers, so a PO cannot easily approve, defer, or reject them.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 8
+    anchor: "- 参照する業務プロセス: 実行受入（`bps-task-selection-preparation`、`P-07-01`）で、実行対象の候補を絞り込んだ後の着手順の決定に使う。"
+    message: >-
+      The upstream process spec `bps-task-selection-preparation` is referenced but does not yet exist, and the
+      dependency is not declared via `based_on` in the frontmatter, so the dependency risk is only visible in prose.
+    message_ja: >-
+      The upstream process spec `bps-task-selection-preparation` is referenced but does not yet exist, and the
+      dependency is not declared via `based_on` in the frontmatter, so the dependency risk is only visible in prose.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 46
+    anchor: 工程計算結果を持たないタスクは、持つタスクすべての後ろに置き、その中ではタスク ID の辞書順に並べる。
+    message: >-
+      The rule does not define how to compare tasks that have a slack value but no earliest start (ES), although the
+      code compares ES with a non-null assertion; the "has no calculation result" condition needs to be defined per
+      field.
+    message_ja: >-
+      The rule does not define how to compare tasks that have a slack value but no earliest start (ES), although the
+      code compares ES with a non-null assertion; the "has no calculation result" condition needs to be defined per
+      field.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 62
+    anchor: "```ts"
+    message: >-
+      The pseudo-code block restates the ordering rules already written in the numbered steps of 3.2 to 3.4; it could be
+      shortened or reduced to the tie-break parts that the prose leaves ambiguous.
+    message_ja: >-
+      The pseudo-code block restates the ordering rules already written in the numbered steps of 3.2 to 3.4; it could be
+      shortened or reduced to the tie-break parts that the prose leaves ambiguous.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 66
+    anchor: "const ID順 = (a: 候補, b: 候補) => a.タスクID.localeCompare(b.タスクID);"
+    message: >-
+      The spec says task IDs are ordered by "dictionary order" but the pseudo-code uses localeCompare, which is
+      locale-dependent; the comparison (for example code-point order) should be stated so implementations produce the
+      same ranking.
+    message_ja: >-
+      The spec says task IDs are ordered by "dictionary order" but the pseudo-code uses localeCompare, which is
+      locale-dependent; the comparison (for example code-point order) should be stated so implementations produce the
+      same ranking.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 46
+    anchor: 工程計算結果を持たないタスクは、持つタスクすべての後ろに置き、その中ではタスク ID の辞書順に並べる。
+    message: >-
+      Test-case design is ambiguous where ES is missing or where the dictionary-order comparison is locale-dependent;
+      add a decision example for these cases.
+    message_ja: >-
+      Test-case design is ambiguous where ES is missing or where the dictionary-order comparison is locale-dependent;
+      add a decision example for these cases.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 102
+    anchor: ""
+    message: >-
+      E-04 depends on the Ready-list derived view, which is not listed in the inputs table and has no rule section
+      defining when it is used, so input and exception definitions are inconsistent.
+    message_ja: >-
+      E-04 depends on the Ready-list derived view, which is not listed in the inputs table and has no rule section
+      defining when it is used, so input and exception definitions are inconsistent.
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 114
+    anchor: >-
+      - _TODO_:
+      前提とする実行受入の業務プロセス仕様（`bps-task-selection-preparation`）が未作成のため、本書の適用場面と対象外の境界は確認できていない。同仕様の作成後に、本書の「適用範囲」「対象外」とその手順との対応を確認する。
+    message: >-
+      The document is draft with four open TODOs, but the conditions for moving it to ready (which TODOs must be
+      resolved and who approves) are not stated.
+    message_ja: >-
+      The document is draft with four open TODOs, but the conditions for moving it to ready (which TODOs must be
+      resolved and who approves) are not stated.
+    cause:
+      type: document
+  - id: F009
+    severity: major
+    rule: vp-qe-config-validity
+    line: 36
+    anchor: >-
+      _ASSUMPTION_: 実行主体の既定戦略（2.）は、1 件ずつ着手を割り当てる自動 claim では参照されるが、エージェント実行の自動選択では参照されず、明示指定がなければ直ちに 3.
+      になる。両者をそろえるべきかは「メモ / 将来課題」に記録した。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 5
+  total: 5
+  detail_ref: br-task-selection-strategy-grade-criteria

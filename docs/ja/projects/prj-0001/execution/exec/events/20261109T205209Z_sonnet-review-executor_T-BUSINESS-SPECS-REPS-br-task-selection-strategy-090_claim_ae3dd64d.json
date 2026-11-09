@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T20:52:09Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090",
+  "by": "sonnet-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
