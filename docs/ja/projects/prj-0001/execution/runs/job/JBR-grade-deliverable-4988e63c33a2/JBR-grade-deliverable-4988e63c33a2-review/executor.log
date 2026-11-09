@@ -1,0 +1,50 @@
+レビューの判定は **`complete-with-findings`** です。Run は `succeeded` で、評価結果はそのまま統合してよい状態です。ただし評価内容の finding と、Job Run の result の記載漏れが残っています。
+
+**確認できたこと**
+
+- **差分の範囲**: 対象範囲 `55ee20c7c..fbba42c28` の差分は 28 ファイルで、すべて今回の Job Run の出力でした。内訳は評価結果・評価基準の各 yaml、Run JSON、`runs/job/JBR-…/` 配下の plan・result・evidence・ログ類です。評価対象の文書本体は変更されていません。
+- **記録の整合**: Run JSON（`state: succeeded`、exit 0）、`evidence.json`（exit 0）、`pipeline-state.json`（executor・reporter とも `succeeded`）が一致しています。stdout の `results.tsv` も 10 件すべての段が `passed` で、stderr は空です。
+- **中断・失敗・上限到達**: 終了コード 75 や中断で残った段はありません。`failed` と `retry_exhausted` も 0 件です。
+- **ccd-project-planning の再開**: 前回失敗した状態（連続失敗 1 回、上限 3 回）から再開して完了しました。役目を終えた進行状態ファイル `ccd-project-planning-b57132c2f259.json` の削除も正当です。
+- **評価結果の鮮度**: `specdojo grade list --target deliverable --project prj-0001` を `--changed-only`・`--dependency-changed`・`--incomplete` で実行し、判定直前にも同じ確認を繰り返しました。どの出力にも今回の 10 件は含まれず、評価結果は最新です。`grade state --exhausted` の出力は空でした。
+- **再評価の理由**: 10 件とも文書本体の `content_hash` は前回と同じで、依存ファイル `schedule` の hash だけが変わっています。依存ファイルの変化を受けた再評価だと判断しました。
+
+**verdict と score**
+
+| 成果物 | verdict | score | finding 数 |
+| --- | --- | --- | --- |
+| cdfd 系 4 件 | `pass` | 100 | 0 |
+| ccd-project-planning（新規） | `pass` | 98 | 1（minor） |
+| cdsd-execution | `needs-work` | 65 | 24 |
+| cdsd-planning | `needs-work` | 65 | 22 |
+| cdsd-sharing | `needs-work` | 59 | 27 |
+| stsd-deliverable | `needs-work` | 85 | 9 |
+| stsd-job-run | `needs-work` | 94 | 6 |
+
+既存 9 件の verdict と score は前回から変わっていません。
+
+**未充足の done_criteria と確認担当ロール**
+
+- cdsd-execution: 3/3 件が未充足（BA・ARC・QE）
+- cdsd-planning: 3/3 件が未充足（BA・ARC・QE）
+- cdsd-sharing: 2/3 件が未充足（DC-001 が BA、DC-002 が ARC）
+- stsd-deliverable: 4/5 件が未充足（BA・PO・QE・DEV）
+- stsd-job-run: 1/5 件が未充足（DC-001 が BA）
+
+**finding（完了は妨げないが改善が必要）**
+
+1. **評価のぶれ**: 文書本体の hash が同じなのに、done_criteria の判定が変わったものがあります。cdsd-sharing の DC-003（QE）と stsd-job-run の DC-002（PO）が、未充足から充足になりました。agy 単段評価の再現性を見直す候補です。
+2. **翻訳の不具合**: cdsd-execution の finding の 1 件で、日本語訳 `message_ja` が日本語から英語に置き換わっています。翻訳段（`gemma26-translator`）の不具合と見られます。
+3. **Job Run の result の記載漏れ**: Job が求めた「未充足の done_criteria がある成果物と確認担当ロールの特定」が書かれていません。新規の ccd-project-planning も「変更ファイル」の一覧から漏れています。
+4. **品質の偏り**: verdict は data-flow 系が全件 `pass`、data-model 系（cdsd 系 3 件と stsd 系 2 件）が全件 `needs-work` に分かれています。
+
+**確認できなかった範囲**
+
+- 作業用ディレクトリ `logs/grade/runs/per-document/…` の実ファイルは見ていません。stdout に出力された内容で確認しました。
+- `--ungraded`・`--rubric-outdated` などでの対象選定が正しかったかは、再現して確かめていません。
+
+成果物にも Job Run の出力にも手を加えていません。review result への記入は reporter が行います。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Run は succeeded（Run JSON・evidence・pipeline-state・results.tsv とも exit 0、10/10 passed）。差分 28 ファイルはすべて当 Job Run の出力（grade results/criteria、Run JSON、runs/job 配下の記録類、再開完了した ccd-project-planning の進行状態ファイルの削除）。評価結果の鮮度: `specdojo grade list --target deliverable --project prj-0001` を `--changed-only`・`--dependency-changed`・`--incomplete` で実行し、判定直前にも再実行したが、対象 10 件はどの出力にも含まれない。`grade state --exhausted` は空。終了コード 75・`failed`・`retry_exhausted` は 0 件。再評価の理由は依存ファイル `schedule` の `source_hashes` の変化で、`content_hash` は不変。既存 9 件の verdict と score は前回から変化なし。新規の ccd-project-planning は pass・98・minor 1 件。未充足の `done_criteria`: cdsd-execution 3/3（BA・ARC・QE）、cdsd-planning 3/3（BA・ARC・QE）、cdsd-sharing 2/3（BA・ARC）、stsd-deliverable 4/5（BA・PO・QE・DEV）、stsd-job-run 1/5（BA）。finding: (1) `content_hash` が不変なのに cdsd-sharing DC-003 と stsd-job-run DC-002 が unsatisfied から satisfied に変わった（評価のぶれ）。(2) cdsd-execution の finding 1 件で `message_ja` が英語に置き換わった（翻訳段の不具合の疑い）。(3) Job Run の result に、未充足の `done_criteria` と確認担当ロールの特定が欠け、新規の ccd-project-planning も変更ファイルの一覧から漏れている。(4) verdict は data-flow 系が全件 pass、data-model 系が全件 needs-work。確認できなかった範囲: `logs/grade/runs/per-document/` の実ファイル（stdout に出力された results.tsv で確認）と、`--ungraded`・`--rubric-outdated` などでの対象選定の再現。","handoff":["評価のぶれ: cdsd-sharing DC-003（QE）と stsd-job-run DC-002（PO）は content_hash が不変のまま unsatisfied から satisfied に変わった。agy 単段評価の再現性の見直しを検討する。","cdsd-execution.yaml の finding 1 件で message_ja が英語に置き換わった。gemma26-translator の出力検証を検討する。","Job Run の result は Job が求める『未充足の done_criteria と確認担当ロールの特定』を欠き、新規の ccd-project-planning も変更ファイルの一覧から漏れている。reporter への指示の改善を検討する。","未充足の done_criteria の担当ロール: cdsd-execution と cdsd-planning は BA・ARC・QE、cdsd-sharing は BA・ARC、stsd-deliverable は BA・PO・QE・DEV、stsd-job-run は BA。"],"validations":[{"command":"git diff --stat / --name-status 55ee20c7c53e53fc001ae579382a0a283387d277..fbba42c2858928d9acd70bbe262b155455d3c065","status":"passed","summary":"28 ファイルすべてが当 Job Run の出力で、対象外の変更はない"},{"command":"specdojo grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"対象 10 件は出力されず、判定直前の再実行でも同じ（評価結果は最新）"},{"command":"specdojo grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"対象 10 件は出力されず、判定直前の再実行でも同じ"},{"command":"specdojo grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力は br-task-selection-strategy.md のみで、対象 10 件は含まれない"},{"command":"specdojo grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力は空（retry_exhausted は 0 件）"}]}
+</specdojo_executor_evidence>

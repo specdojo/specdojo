@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:ccd-project-planning-grade-criteria
+document: prj-0001:ccd-project-planning
+path: docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md
+graded_at: "2026-11-09T16:25:25.163Z"
+graded_by: flash-high-executor
+content_hash: cbfbfdce1517885094920babbd0fec79a56dd809c1e7bb218dc4b78020889c38
+summary:
+  satisfied: 5
+  unsatisfied: 0
+  total: 5
+criteria:
+  - id: DC-001
+    text: エンティティ関係・属性が業務観点で正確に表現されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: スコープ範囲のエンティティを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: データモデル・クラス設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テストデータ設計・整合性検証に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: ER図・実装モデルの基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

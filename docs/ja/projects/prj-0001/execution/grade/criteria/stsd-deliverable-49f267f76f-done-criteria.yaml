@@ -2,7 +2,7 @@
 id: prj-0001:stsd-deliverable-grade-criteria
 document: prj-0001:stsd-deliverable
 path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
-graded_at: "2026-11-07T16:26:34.467Z"
+graded_at: "2026-11-09T16:41:38.752Z"
 graded_by: flash-high-executor
 content_hash: 7bdabd6b5cfd48ceb520c5cef956a82025853f737c01cce69ceade7af65b3351
 summary:
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Approval requirements for T-02 and business rules for downgrade, restoration, and retirement without a successor
-      remain unresolved.
+      Approval conditions for T-02 and lifecycle rules for downgrade, restoration, and retirement without a successor
+      remain undecided.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
@@ -26,8 +26,8 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      The lifecycle still contains provisional business assumptions and undecided transition permissions that prevent
-      approval of its overall business validity.
+      Approval requirements for promotion and exception transition rules are unresolved, preventing full business
+      validity approval.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
@@ -41,8 +41,8 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Approval evidence and expected outcomes for exceptional transitions and invalid status values are missing, leaving
-      those state-based tests without decisive pass/fail expectations.
+      Observable approval evidence and negative test expectations for invalid transitions or status values are not
+      specified.
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
@@ -50,5 +50,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Implementers cannot determine authorization and handling for unlisted transitions and missing or invalid status
-      values from the current definition.
+      Interim handling rules for unlisted transitions and invalid status values are missing for implementation
+      reference.
