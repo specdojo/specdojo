@@ -22,8 +22,9 @@ schedule の review の段を --parallel で流すと、ある run の grade が
 
 ## 2. 入力
 
-- 2026-11-09、business-specs-reps の review の段で、ccd-project-planning-090 の grade（opencode の agent）がコマンドの実行を権限で拒まれて失敗し、grade/pipeline/ccd-project-planning-b57132c2f259.json が書き換わった。clis・sf・ifx-cmd の review の 3 件が統合の前にこのファイルの変更を検出して止まった。
-- orchestrator がそのファイルを commit した版に戻し、3 件を 1 件ずつ再開した（indie が承認）。ccd の review の grade の agent の権限の問題は未解決。
+- 2026-11-09、business-specs-reps の review の段で、ccd-project-planning-090 の grade（opencode の qwen-review-executor）が、指摘の原因の値が決まった値でない（invalid finding cause）として失敗し、grade/pipeline/ccd-project-planning-b57132c2f259.json が書き換わった。clis・sf・ifx-cmd の review の 3 件が統合の前にこのファイルの変更を検出して止まった。
+- grade の agent がコマンドの実行を拒まれたログもあったが、review の agent を読むだけに絞る設定どおりの動きで、失敗の原因ではなかった（orchestrator が最初に権限が原因と見たのは誤り）。
+- orchestrator がそのファイルを commit した版に戻し、3 件を 1 件ずつ再開して通った。ccd の review は grade の agent を sonnet-review-executor に替えて通った（indie が承認）。
 
 ## 3. 影響範囲
 
