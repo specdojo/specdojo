@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-clis-exec-commands-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-clis-exec-commands-090/T-BUSINESS-SPECS-REPS-clis-exec-commands-090-20261109T060525Z-c3607d73/plan.md
   started_at: "2026-11-09T06:05:27.592Z"
+  completed_at: "2026-11-09T12:51:02.672Z"
   agent: luna-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,22 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+以下のコマンドで鮮度を確認し、対象パスが出力されず正常終了（exit 0）したため、評価結果は最新であると判定した。 - `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md --changed-only` - `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md --dependency-changed` - `node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md --incomplete`
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 最新の grade 結果は `verdict`: `pass`、`score`: 84 であり、blocker および major finding は存在しない。
+- 完了条件（DC-001 〜 DC-005）の 5 項目すべてについて、grade の記録において充足（satisfied 5/5）していることが確認された。
+- 実装エビデンスである `src/exec/commands.ts` との対応記録および未確認範囲については、先行する edit タスクの result および対象文書の第7章に明示されており、review 計画の要求を満たしている。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- grade で指摘された minor finding（F001 〜 F016）に基づき、`based_on` フィールドの整備、下流への影響記述の追加、ワークフロー用語の定義、外部 agent コントラクトの詳細化などの品質改善を行うこと。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+最新の grade 結果を事実として受け取り、完了条件の充足状況を照合した。また、実装エビデンス `src/exec/commands.ts` との整合性確認について、先行する edit タスクの result および成果物内での明示的な未確認範囲の記述を確認した。なお、run・resume・統合・外部 agent 連携の全分岐および終了コードの実動作については、本エビデンスの範囲外であり確認できなかったことを明記している。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
