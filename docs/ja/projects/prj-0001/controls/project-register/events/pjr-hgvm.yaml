@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f25991995c62472ab0af6f0df7aaa691
+  ts: "2026-11-09T22:17:24Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務仕様の型の schedule（business-specs-kata）を作る
+    - field: description
+      from: ""
+      to: sf・cdt・ccd・bdd・ifx-cmd の型の手入れと、bes・br の型の作り直し、人による型の確定の段を持つ sch-strategy-business-specs-kata.yaml を作り、schedule build する
+    - field: input
+      from: ""
+      to: '["対象の型と扱い（indie が承認、2026-11-10）: 手入れ = sf-rulebook・cdt-rulebook・ccd-mermaid-rulebook・bdd-rulebook・ifx-cmd-rulebook と各 sample（ifx-cmd は recipe・template も）。作り直し = bes-rulebook・br-rulebook と各 sample。","各段の説明に書く指示: rulebook-authoring-standard の章立て、サンプルの章の外出し、##〜#### の見出しの連番、記述ガイドに章ごとの判断の基準と良い例・悪い例、clis-sample 程度の厚さの sample、recipe と template の要否の判断。実装と同じことを書かない方針（PJR-2GD6）は保つ。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: strategy-planning
+    - field: targets
+      from: ""
+      to: '["track:business-specs-kata"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'
