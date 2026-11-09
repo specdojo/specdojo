@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/bdd.schema.yaml
 id: specdojo:bdd-sample
 type: data
-title: 業務データ辞書(main)
+title: 業務データ辞書（駄菓子屋の販売管理）
 status: draft
 rulebook: specdojo:bdd-rulebook
 supersedes: []
@@ -9,65 +9,171 @@ supersedes: []
 entities:
   - logical_name: 商品
     physical_name: product
-    description: 駄菓子屋で販売する個々の商品
-    glossary_term_id: tm-product
-    related_terms: [tm-price, tm-stock]
-    key_fields: [product_code]
+    description: >-
+      店舗で販売対象として管理する商品の種類。一個ずつの現物や販売時の明細とは区別する。
+      商品・売上記録・売上明細は実装前の業務モデルとして本辞書で定義し、管理単位と関連は [[specdojo:ccd-sample|概念クラス図 サンプル]] に合わせる。
+      用語参照は [[specdojo:gl-sample|用語集 在庫・調達]] を対象とする。
+    related_terms: [tm-standard-product]
+    key_fields: [product_id]
     fields:
-      - logical_name: 商品コード
-        physical_name: product_code
-        glossary_term_id: tm-product-code
+      - logical_name: 商品ID
+        physical_name: product_id
         type: string
-        description: 各商品を一意に識別するコード
+        description: 商品名や価格を変更しても同じ商品を追跡するための識別子。商品名をキーにしない。
         constraints:
           required: true
           unique: true
-        example: 45-14603-32581-2
+        example: PRD-001
       - logical_name: 商品名
         physical_name: product_name
         type: string
-        glossary_term_id: tm-product-name
-        description: おばあちゃんやお客さんが読める商品名
+        description: 店主代表と来店客が商品を見分けるための表示名。同名の商品があっても識別は商品IDで行う。
         constraints:
           required: true
         example: うまか棒 たこ焼き味
-      - logical_name: 価格
-        physical_name: price
-        type: integer
-        glossary_term_id: tm-price
-        description: 商品の販売価格（税抜き）
+      - logical_name: 標準販売価格
+        physical_name: standard_price
+        type: money
+        description: 現在の商品案内に使う税抜価格。過去の売上明細に残す販売単価とは区別する。
         unit: 円
         constraints:
           required: true
         example: 100
+      - logical_name: 発注点
+        physical_name: reorder_point
+        glossary_term_id: tm-reorder-point
+        type: integer
+        description: >-
+          定番商品で在庫不足判定に使う基準数量。未設定はゼロを意味しない。
+          判定と入力不備の扱いは [[specdojo:br-sample|在庫不足判定]] に従う。
+        unit: 個
+        constraints:
+          required: false
+          min: 0
+        example: 10
 
-  - logical_name: 取引
-    physical_name: transaction
-    description: 店頭での購買取引記録（TypeScript 型定義を参照する例）
-    type_ref: src/types/transaction.ts#TransactionRecord
-    key_fields: [transaction_id]
+  - logical_name: 売上記録
+    physical_name: sale
+    description: >-
+      一回の店頭販売で確定した会計の管理単位。一件以上の売上明細を持ち、入力途中や取り消した取引は含めない。
+      顧客が特定されない現金販売も記録する。顧客の基本情報とつけ残高の台帳は本辞書の対象外とする。
+    related_terms: [tm-sales, tm-accounts-receivable]
+    key_fields: [sale_id]
     fields:
-      - logical_name: 取引ID
-        physical_name: transaction_id
-        description: 取引を一意に識別する業務ID
-      - logical_name: 取引種別
-        physical_name: transaction_type
-        description: 店頭現金販売、掛売り、返品の業務区分
+      - logical_name: 売上ID
+        physical_name: sale_id
+        type: string
+        description: 一回の販売を識別し、所属する全明細をまとめて確認するための識別子。
+        constraints:
+          required: true
+          unique: true
+        example: SALE-001
+      - logical_name: 売上日時
+        physical_name: sold_at
+        type: datetime
+        description: 販売を確定した時点。入力を開始した時点や外部決済の応答時点とは区別する。
+        constraints:
+          required: true
+        example: "2026-11-08T10:00:00+09:00"
+      - logical_name: 合計金額
+        physical_name: total_amount
+        type: money
+        description: >-
+          この会計で顧客へ請求する税込金額。預かり金や釣銭、顧客の過去のつけ残高を含めない。
+          税額と請求額を確認する操作は [[specdojo:clis-sample|販売管理 CLI 仕様]] に従う。
+        unit: 円
+        constraints:
+          required: true
+        example: 108
+      - logical_name: 支払方法
+        physical_name: payment_method
+        type: enum
+        description: 販売時に代金を受領するか、顧客のつけとして後日受領するかを区別する。決済サービスの処理状態とは別の判断軸。
+        constraints:
+          required: true
+        allowed_values_detailed:
+          - value: cash
+            label: 店頭で現金を受領する
+          - value: credit
+            label: 顧客のつけとして後日受領する
+        example: cash
+      - logical_name: 顧客ID
+        physical_name: customer_id
+        type: string
+        description: >-
+          購入者として特定した顧客の識別子。一見客の現金販売では省略できる。
+          つけ販売では請求先を特定するために必要であり、未設定を現金販売と読み替えない。
+        constraints:
+          required: false
+        example: CUS-001
+
+  - logical_name: 売上明細
+    physical_name: sale_line
+    description: >-
+      一回の販売に含まれる一行分の商品・単価・数量。売上IDと明細番号の組で識別し、売上記録から独立して管理しない。
+      商品IDだけでは同じ販売に複数の行がある場合を識別できないため、キーにはしない。
+    key_fields: [sale_id, line_number]
+    fields:
+      - logical_name: 売上ID
+        physical_name: sale_id
+        type: string
+        description: 所属する売上記録の識別子。同じ売上に属する明細は同じ値を持つ。
+        constraints:
+          required: true
+        example: SALE-001
+      - logical_name: 明細番号
+        physical_name: line_number
+        type: integer
+        description: 一回の販売の中で行を識別する番号。他の販売で同じ番号を使ってよい。
+        constraints:
+          required: true
+          min: 1
+        example: 1
+      - logical_name: 商品ID
+        physical_name: product_id
+        type: string
+        description: この行で販売した商品の識別子。商品名の変更後も販売対象を確認できるようにする。
+        constraints:
+          required: true
+        example: PRD-001
+      - logical_name: 販売単価
+        physical_name: unit_price
+        type: money
+        description: この販売で適用した一個あたりの税抜価格。販売後に商品の標準販売価格が変わっても変更しない。
+        unit: 円
+        constraints:
+          required: true
+        example: 100
+      - logical_name: 販売数量
+        physical_name: quantity
+        type: integer
+        description: この行で販売する商品の個数。販売対象のない行や返品の数量は含めない。
+        unit: 個
+        constraints:
+          required: true
+          min: 1
+        example: 1
 
   - logical_name: 支払い
     physical_name: payment
-    description: 顧客からの支払い情報（スキーマを参照する例）
-    glossary_term_id: tm-payment
-    schema_ref: schemas/payment.schema.yaml
+    description: >-
+      決済サービス連携を検討する際に扱う支払い応答の管理単位。店頭販売の売上確定やつけ残高の管理とは区別する。
+      応答の識別と受領状況の判断に必要な項目のみ注釈し、通信仕様・応答構造は [[specdojo:ifx-api-sample|決済サービスAPI]] を正本とする。
+    schema_ref: docs/ja/specdojo/samples/ifx-api-sample.yaml#/components/schemas/CreatePaymentResponse
     key_fields: [payment_id]
     fields:
+      - logical_name: 支払ID
+        physical_name: payment_id
+        description: 決済サービス側で支払いを識別する番号。店舗の売上IDとは別の識別子として照合に使う。
       - logical_name: 支払ステータス
-        physical_name: payment_status
-        description: 支払い処理の現在状態。未処理・支払済・取消の3状態で遷移する
+        physical_name: status
+        description: >-
+          決済サービスが返す支払いの処理結果。未処理や失敗を支払済みと扱わず、売上の確定とは別に確認する。
+          許容値は応答スキーマに合わせ、ここでは業務上の意味を対応付ける。
         allowed_values_detailed:
           - value: PENDING
-            label: 未処理
+            label: 未処理で支払済みを確認できない
           - value: PAID
-            label: 支払済
-          - value: CANCELED
-            label: 取消
+            label: 決済サービスで支払済みと確認された
+          - value: FAILED
+            label: 決済処理に失敗し支払済みを確認できない
