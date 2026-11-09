@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T23:12:36Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070",
+  "by": "luna-executor",
+  "msg": "executor reported incomplete: 対象成果物の記述と宣言された根拠資料を確認した。rulebook の必須構成は満たしているが、既存の未解決事項を解消する根拠が参照範囲にないため編集を保留した。",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070-20261108T225651Z-ae7abd56/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070-20261108T225651Z-ae7abd56/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070-20261108T225651Z-ae7abd56"
+  }
+}

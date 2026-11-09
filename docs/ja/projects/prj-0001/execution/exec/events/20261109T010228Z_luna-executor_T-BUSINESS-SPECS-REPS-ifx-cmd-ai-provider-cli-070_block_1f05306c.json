@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T01:02:28Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070",
+  "by": "luna-executor",
+  "msg": "executor reported incomplete: 対象仕様を確認しましたが、実装とrulebookのシェル実行契約が不一致で、タイムアウトと並列上限も宣言資料から確定できないため、推測による編集は行いませんでした。",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9"
+  }
+}
