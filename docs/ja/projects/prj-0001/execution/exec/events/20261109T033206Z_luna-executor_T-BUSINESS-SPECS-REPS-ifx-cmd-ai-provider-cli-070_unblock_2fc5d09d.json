@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T03:32:06Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070",
+  "by": "luna-executor",
+  "msg": "resume executor from persisted pipeline state (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070/T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-070-20261109T004116Z-89f3fda9",
+    "pipeline_resume_claimed": "true"
+  }
+}
