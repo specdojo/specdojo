@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "deliverable",
+  "document": "docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+  "content_hash": "736b4dbb4bf26a439ade61af872d420b631b2acce664d968f2035deda91a85a1",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "review-prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T143351Z",
+  "updated_at": "2026-11-09T14:42:05.139Z"
+}
