@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_446a5688129a4f85ad6ce733c169d230
+  ts: "2026-11-09T20:47:34Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: YAML の成果物は grade の対象にならず、review の段が grade を流せないまま止まる
+    - field: description
+      from: ""
+      to: grade は Markdown の frontmatter を前提とし、YAML の成果物（bdd・ifx-cmd など）は Markdown frontmatter is required で評価できない。review の段は grade の結果を前提にするため、YAML の成果物の review が grade-unavailable から進まない。YAML の成果物を評価する方法を決めて解消する
+    - field: input
+      from: ""
+      to: '["2026-11-09、business-specs-reps の review の段で、bdd-register-entry.yaml と ifx-cmd-ai-provider-cli.yaml の review が grade-unavailable になった。runner の grade は「Markdown frontmatter is required」で流れなかった。","当面は、この 2 件の review を grade を使わない形で人が確定のときに確かめる（indie が推奨どおりと決定）。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
