@@ -1,0 +1,5 @@
+対象文書の第4章冒頭から、第1章の業務フロー・作成規則を根拠として再掲する一文を削りました。主キー対応と未作成辞書の属性未確認は維持し、判断に必要な情報は残しています。Prettier は変更なしで完了しました。親 runner に委ねる検証は実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"第4章で第1章の根拠を再掲していた一文を削除し、主キー対応と辞書の属性未確認は保持しました。図後の補足と関連定義・未解決事項は固有の判断情報を含むため保持しました。","handoff":[],"condense_records":[{"location":"第4章「参照業務データ辞書」冒頭","category":"canonical-restatement","action":"delete","reason":"第1章の業務フロー・作成規則を根拠とする説明の再掲を削除しました。主キーの対応と未作成辞書の属性未確認は同段落に残し、辞書表の利用に必要な情報を維持しました。","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md","status":"passed","summary":"整形を実行。対象文書は変更なしでした。"}]}
+</specdojo_executor_evidence>
