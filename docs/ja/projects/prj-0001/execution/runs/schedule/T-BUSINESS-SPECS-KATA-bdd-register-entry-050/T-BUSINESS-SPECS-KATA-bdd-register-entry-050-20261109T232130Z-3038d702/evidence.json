@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-bdd-register-entry-050",
+  "run_id": "T-BUSINESS-SPECS-KATA-bdd-register-entry-050-20261109T232130Z-3038d702",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-09T23:23:07.384Z",
+    "completed_at": "2026-11-09T23:27:21.322Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/bdd-sample.yaml | 180 ++++++++++++++++++++++++-------\n 1 file changed, 143 insertions(+), 37 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "passed",
+      "summary": "整形済みで変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "passed",
+      "summary": "対象 YAML は valid、終了コード 0。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "passed",
+      "summary": "modeline による検証は valid、終了コード 0。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/samples/bdd-sample.yaml",
+      "status": "passed",
+      "summary": "整形差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "staged の実行記録は 0 ファイル、検出 0 件。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint",
+      "status": "not_applicable",
+      "summary": "Markdown ファイルの変更なし。",
+      "reason": "編集対象は YAML sample のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検証の適用対象外。",
+      "reason": "executor の変更は docs/ja/specdojo/samples/ 配下のみで、docs/ja/projects/ 配下に及ばない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証の適用対象外。",
+      "reason": "履歴蓄積ファイル、既存 plan/result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bdd-register-entry-050/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-line\n… output omitted …\nworkspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bdd-register-entry-050/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bdd-register-entry-050/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4223 file(s), 139 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 7 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4223 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bdd-register-entry-050\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this \n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nnum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bdd-register-entry-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bdd-register-entry-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bdd-register-entry-050\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-FCkOoK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0WVPha/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-2dhDM5/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-KKPJcb/pjr-0001-\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "BDD sample を販売管理の完成例へ更新し、実在する正本への参照と業務注釈を整備した。個別 schema・modeline・整形検査は合格。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter の実施内容・変更ファイルには、docs/ja/specdojo/samples/bdd-sample.yaml のみを編集し、商品・売上記録・売上明細・支払いの完成例へ再構成したことを記録する。成果物本体、rulebook、schema、result、grade サイドカーは変更していない。",
+    "進め方と実践の型の適用の判断根拠: BDD rulebook、Sample 記述標準、Rulebook 記述標準、ドキュメントメタ情報標準、ドキュメント構成ガイド、共通規約、ryu-guide のメンテナンス手順、共通レビュー観点の冗長性・Kata 適合性、BDD schema、PJR-2GD6・PJR-MECY を確認した。代表成果物 bdd-register-entry.yaml から、管理境界、識別子、異なる判断軸、省略の意味を説明する粒度を採用し、登録簿固有の属性は複写していない。",
+    "review result の根拠: BDD の -080 condense result、-090 review result、前工程 -040 rulebook-maintenance result、rulebook の grade result を確認した。condense の原因は document であり sample の欠陥とは扱っていない。review が求めた独立 YAML への Markdown Frontmatter 追加は現行 rulebook・メタ情報標準と矛盾するため採用せず、ルートメタ情報と modeline を維持した。本 plan の対象 finding はない。",
+    "改訂判断: 存在しない src/types/transaction.ts への型参照を除き、実装前の販売モデルをスタンドアロン定義にした。存在しない schemas/payment.schema.yaml は既存 API sample の /components/schemas/CreatePaymentResponse への参照に置き換えた。支払いの注釈には型・制約を再掲せず、実在する項目 payment_id・status と PENDING・PAID・FAILED の業務的意味だけを記述した。実在する販売業務の TypeScript 型がないため、三形態を形式的に揃えるための型や参照先は新設していない。",
+    "手動照合: スタンドアロンの全14フィールドに型があり、キーは商品ID、売上ID、売上IDと明細番号の複合キーに対応する。CCD sample の管理単位・識別キー・顧客の任意関連と照合した。用語参照 tm-standard-product・tm-reorder-point・tm-sales・tm-accounts-receivable は gl-sample に実在する。支払いの参照先とポインタ、全注釈項目・キーが実在し、列挙値は参照元と過不足なく一致する。支払方法と支払ステータスはいずれも詳細列挙一方式で、値の重複はない。",
+    "recipe・template の要否: rulebook の recipe: not-needed、template: not-needed を維持した。定義形態の選定・検証手順は rulebook で完結し、YAML の骨格は schema と必須キー表で判断できるため、独立した recipe・template は不要。未解決判断や保護設定の変更提案はない。全体検証は親 runner に委ねる。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-bdd-register-entry-050/T-BUSINESS-SPECS-KATA-bdd-register-entry-050-20261109T232130Z-3038d702/executor.log",
+      "bytes": 4975,
+      "truncated": false
+    }
+  ]
+}
