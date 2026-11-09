@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090",
+  "run_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T144205Z-717f9d45",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-09T14:43:59.032Z",
+    "completed_at": "2026-11-09T14:56:53.720Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  \n… output omitted …\nees/prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4190 file(s), 139 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 7 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4190 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Op\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-sWFvsO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yFuwNQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-PwGWNI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-devhPj/p\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "対象成果物 br-task-selection-strategy の grade サイドカーが存在せず、grade パイプラインは stage_failed=1/1（last_run_id review-prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T143351Z、原因 line 90: malformed FINDING for vp-arc-technical-constraints）。対象ファイルは未修改（git status で確認、changed-during-review ではない）。共通規約 review の判断手順に従い verdict=grade-stale と判定。完了は runner による再 grade を待ってから再開する。改善指示: (1) grade パイプラインの finding フォーマット不具合を修正して content_hash 736b4dbb... で grade を再確定、(2) depends_on の bps-task-selection-preparation が未作成であることを catalog/plan に反映し、(3) reporter が result.md §1〜§5 を本判定根拠・改善指示とともに埋める。sandbox 内で実施した検査なし（review task では quality が review の対象外で、所有 parent runner が allowlisted validations を実行するため）。",
+  "completion_status": "complete",
+  "handoff": [
+    "verdict=grade-stale: grade サイドカー results/br-task-selection-strategy.yaml は存在しない（read で File not found、grep で 0 件）。pipeline JSON br-task-selection-strategy-3149909da42e.json が stage_failed=1/stage_total=1、last_run_id review-prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T143351Z、failure 原因は line 90: malformed FINDING for vp-arc-technical-constraints。再 grade を要する。",
+    "改善指示 1 (QE/grade): vp-arc-technical-constraints の finding 生成で line 90 で malformed となるパイプライン不具合を修正し、content_hash 736b4dbb4bf26a439ade61af872d420b631b2acce664d968f2035deda91a85a1 に対する grade・finding を確定してから再 review。",
+    "改善指示 2 (PO/Plan): plan §2 の depends_on [[bps-task-selection-preparation]] が成果物ファイルとして未作成（glob で不在）。対象成果物 §6「メモ / 将来課題」で既に _TODO_ と記録。この整合確認は BPS 作成後に延期する、または catalog/plan で depends_on を暫定無効化する判断（PO 側）が必要。",
+    "改善指示 3 (reporter): review result docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T144205Z-717f9d45/result.md の §1〜§5 を、本判定根拠（サイドカー不在・pipeline 失敗・対象ファイル未修改）と改善指示、verdict=grade-stale で埋める。executor は書き込みを行わない。",
+    "確認できなかった範囲: grade 再実行は QE/runner の責務であり今回未実施。対象の lint / typecheck / schema / test 等は parent runner が allowlist で実行するため本 executor sandbox では実施せず、validations は空。再生成後の grade・finding 内容は確定できていない",
+    "対象ファイル br-task-selection-strategy.md は git status で未修改、pipeline JSON content_hash と整合、changed-during-review に該当しないことを verifiered（verdict 直前で再確認済み）"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T144205Z-717f9d45/executor.log",
+      "bytes": 20381,
+      "truncated": false
+    }
+  ]
+}
