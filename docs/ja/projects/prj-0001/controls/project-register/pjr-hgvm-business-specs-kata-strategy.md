@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-hgvm-business-specs-kata-strategy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-09T22:17:20Z"
+  completed_at: "2026-11-09T22:38:07Z"
+  conclusion: business-specs-kata の strategy と track を作った。sf・cdt・ccd・bdd・ifx-cmd は improve-kata で rulebook・sample（ifx-cmd は recipe・template も）の maintenance、bes・br は bootstrap-kata-set で作り直し、最後に人が型一式を確定する（bootstrap-finalize）。各段の説明に標準の章立てと中身の厚さの指示を書いた
   derived_from:
     - PJR-T88P
   approach: strategy-planning
