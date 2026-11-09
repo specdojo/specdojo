@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-11-07T16:15:30.398Z"
+graded_at: "2026-11-09T16:28:26.939Z"
 graded_by: flash-high-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 7613b8ab5d2b966fa5a7c35f5a19d1539b663a5ba1172b683fc00639bf45ce7d
+  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
 categories:
   purpose:
     score: 50
@@ -352,7 +352,9 @@ findings:
     message: >-
       Contrary to Rulebook 2.4, physical names like last_scheduled_for are documented directly in the content column,
       which requires adding a physicalName column or describing conceptual contents in Japanese.
-    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理名はコンテンツ列に直接記載されています。これには、physicalName列を追加するか、概念的な内容を日本語で説明する必要があります。
+    message_ja: >-
+      Contrary to Rulebook 2.4, physical names like last_scheduled_for are documented directly in the content column,
+      which requires adding a physicalName column or describing conceptual contents in Japanese.
     cause:
       type: document
   - id: F021

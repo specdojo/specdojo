@@ -2,12 +2,12 @@
 id: cdsd-sharing-grade-criteria
 document: cdsd-sharing
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
-graded_at: "2026-11-07T16:21:34.321Z"
+graded_at: "2026-11-09T16:34:28.321Z"
 graded_by: flash-high-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 summary:
-  satisfied: 0
-  unsatisfied: 3
+  satisfied: 1
+  unsatisfied: 2
   total: 3
 criteria:
   - id: DC-001
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Deliverable body and deliverable index data stores are omitted, and granularity for cost/work records remains
-      undecided.
+      Deliverable body and deliverable index data stores are missing, and the granularity of cost and work records
+      remains undecided.
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
@@ -26,14 +26,11 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Data store structure, master partition, generation source, and editing constraints for deliverable body and index
-      are missing.
+      Data store structure, authority classification, and editing constraints for deliverable body and index are
+      missing.
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: >-
-      Verification targets, comparison baselines, and criteria for obsolescence and omitted postings are not
-      specifically defined.
+    status: satisfied

@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 85
-graded_at: "2026-11-07T16:26:34.467Z"
+graded_at: "2026-11-09T16:41:38.752Z"
 graded_by: flash-high-executor
 content_hash: 7bdabd6b5cfd48ceb520c5cef956a82025853f737c01cce69ceade7af65b3351
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 7613b8ab5d2b966fa5a7c35f5a19d1539b663a5ba1172b683fc00639bf45ce7d
+  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
 categories:
   purpose:
     score: 100
@@ -134,7 +134,7 @@ findings:
     message: >-
       Identify the PJR or decision-record destination for each outstanding item, and distinguish investigation work from
       decisions awaiting approval so that the memo can be transferred into project controls without reclassification.
-    message_ja: 未解決の各項目について、PJRまたはdecision-recordの転送先を特定してください。また、メモを再分類することなくプロジェクトコントロールへ転送できるよう、調査業務と承認待ちの決定事項を区別してください。
+    message_ja: 未解決の各項目について、PJR または決定記録の移行先を特定してください。また、メモが再分類されることなくプロジェクトコントロールに移管できるよう、調査作業と承認待ちの決定を区別してください。
     cause:
       type: document
   - id: F002
@@ -149,7 +149,7 @@ findings:
       Define the minimum approval requirements for T-02 or reference an authoritative rule that resolves the responsible
       human approver, applicable acceptance conditions, and approval evidence; the current generic human judgment
       condition is insufficient to establish a valid promotion.
-    message_ja: T-02の最小承認要件を定義するか、責任を持つ承認者、適用される承認条件、および承認証跡を解決する権威あるルールを参照してください。現在の汎用的な人間の判断条件では、有効なプロモーションを確立するには不十分です。
+    message_ja: T-02 の最小承認要件を定義するか、責任者となる承認者、適用される受け入れ条件、および承認の証跡を解決する権威あるルールを参照してください。現在の一般的な人間による判断条件では、有効な昇格を確立するには不十分です。
     cause:
       type: document
   - id: F003
@@ -164,7 +164,7 @@ findings:
       Resolve the permitted source states, destination states, events, and conditions for downgrade, restoration, and
       retirement without a successor, or explicitly exclude those cases from the accepted scope; leaving their
       permission undecided prevents a complete business transition definition.
-    message_ja: ダウングレード、復元、および後継のないリタイアメントにおける許可されたソース状態、デスティネーション状態、イベント、および条件を解決するか、それらのケースを承認されたスコープから明示的に除外してください。許可が未決定のままだと、完全なビジネス遷移の定義が妨げられます。
+    message_ja: ダウングレード、復元、および後続のない廃棄に関する許可されたソース状態、デスティネーション状態、イベント、および条件を解決するか、それらのケースを許可された範囲から明示的に除外してください。許可が未決定のままでは、完全なビジネス遷移の定義ができません。
     cause:
       type: document
   - id: F004
@@ -179,7 +179,7 @@ findings:
       Provide a complete transition policy or an explicit interim decision rule for unlisted transitions and missing or
       invalid status values; implementers currently cannot determine whether to reject, defer, or permit these
       operations without inventing business behavior.
-    message_ja: 未記載の遷移、および不足または無効なステータス値に対する完全な遷移ポリシー、または明示的な暫定決定ルールを提供してください。現在、実装者はビジネス上の振る舞いを独自に考案することなく、これらの操作を拒否するのか、延期するのか、あるいは許可するのかを判断できません。
+    message_ja: リストされていない遷移や、不足または無効なステータス値に対して、完全な遷移ポリシーまたは明示的な暫定決定ルールを提供してください。現在、実装者はビジネス挙動を独自に発明しなければ、これらの操作を拒否すべきか、延期すべきか、あるいは許可すべきかを判断できません。
     cause:
       type: document
   - id: F005
@@ -193,7 +193,7 @@ findings:
       Link the applicable schema and executable checks for allowed status values, initial draft creation, and
       status-preserving disposal, and state their expected results separately from human approval checks that the CLI
       does not enforce.
-    message_ja: 許可されたステータス値、初期ドラフトの作成、およびステータスを維持した廃棄に関する、適用可能なスキーマと実行可能なチェックをリンクさせ、それらの期待される結果を、CLIが強制しない人間の承認チェックとは別に記載してください。
+    message_ja: 許可されたステータス値、初期ドラフトの作成、およびステータスを維持した廃棄のための適用可能なスキーマと実行可能なチェックをリンクさせ、CLI が強制しない人間による承認チェックとは別に、期待される結果を記載してください。
     cause:
       type: document
   - id: F006
@@ -208,7 +208,9 @@ findings:
       Specify observable approval evidence and negative-case expectations for promotion, and resolve the outcomes of the
       exceptional cases listed in section 5; checking the recorded status alone cannot verify that the business
       transition was valid.
-    message_ja: プロモーションにおける観察可能な承認証跡とネガティブケースの期待事項を特定し、セクション5に記載されている例外的なケースの結果を解決してください。記録されたステータスを確認するだけでは、ビジネス遷移が有効であったことを検証できません。
+    message_ja: >-
+      昇格における観測可能な承認の証跡と、否定的なケースの期待事項を指定し、セクション 5
+      に記載されている例外的なケースの結果を解決してください。記録されたステータスを確認するだけでは、ビジネス遷移が有効であったことを検証できません。
     cause:
       type: document
   - id: F007
@@ -234,7 +236,7 @@ findings:
       Add an interim escalation reference for operators encountering missing or invalid status values or requesting an
       undefined transition, including where to record the case and obtain a human decision while the permanent rules
       remain unresolved.
-    message_ja: 不足または無効なステータス値に遭遇した場合、あるいは未定義の遷移を要求した場合のオペレーター向けに、暫定的なエスカレーション参照を追加してください。これには、恒久的なルールが解決されるまでの間、どこにケースを記録し、どのように人間の決定を得るべきかを含めてください。
+    message_ja: 不足または無効なステータス値に遭遇した場合や、未定義の遷移を要求した場合のオペレーター向けに、暫定的なエスカレーション先を追加してください。これには、恒久的なルールが解決されるまでの間、どこにケースを記録し、どのように人間の決定を得るべきかを含めてください。
     cause:
       type: document
   - id: F009
