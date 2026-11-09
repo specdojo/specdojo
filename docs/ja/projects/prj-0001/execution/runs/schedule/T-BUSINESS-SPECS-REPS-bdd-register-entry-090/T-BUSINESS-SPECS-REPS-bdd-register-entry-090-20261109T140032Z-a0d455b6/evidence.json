@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-bdd-register-entry-090",
+  "run_id": "T-BUSINESS-SPECS-REPS-bdd-register-entry-090-20261109T140032Z-a0d455b6",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-09T14:02:38.025Z",
+    "completed_at": "2026-11-09T14:24:03.959Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml",
+      "status": "passed",
+      "summary": "bdd-register-entry.yaml: valid against bdd.schema.yaml (構造検証・DC-003/DC-005 の入力を補強。品質再査定ではない)"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bdd-register-entry-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-line\n… output omitted …\nworkspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bdd-register-entry-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bdd-register-entry-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4188 file(s), 139 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 7 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4188 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bdd-register-entry-090\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this \n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nnum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bdd-register-entry-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bdd-register-entry-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bdd-register-entry-090\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-omGkUo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lx6suv/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-wwC5OG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lA59YB/pjr-0001-\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "多観点レビューを実施（read-only）。評価対象 bdd-register-entry.yaml + evidence_refs src/register/register.ts を照合。構造検証 validate:schema:file は valid。grade サイドカーは _MISSING_（grade/pipeline 内にこの deliverable のファイル無し、runner が grade 未実行「Markdown frontmatter is required」を報告）ため E-02→verdict=grade-unavailable。retrofit 対応確認では register.ts/item.ts とのフィールド・enum・日時・due_on 三値区分が全て一致し乖離なし。先行 edit 記録は -080(condense) のみで register.ts 対応記録は無し。sandbox で specdojo grade list は不可(freshness 再確定不能)、part_of の生成元は schema/enum 対応まで確認。成果物・result・タスク状態は変更せず、結果を下へ handoff。",
+  "completion_status": "complete",
+  "handoff": [
+    "E-01/E-02: 評価対象 docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml(--target deliverable)の sidecar は _MISSING_。grade/pipeline/ には他タスクの ccd-project-planning のみで本 deliverable の grade file 無し。runner report: grade 実行=未実施(「Markdown frontmatter is required」、鮮度=確認不能)。→ verdict=grade-unavailable(E-02、完了可否は保留)。freshness 再確定コマンド specdojo grade list は sandbox 権限で不可のためサイドカー不在はプランの runner 報告＋存在探索で確認したのみ。",
+    "retrofit(B-1/B-2): evidence_refs=src/register/register.ts を核心に core.ts,item.ts を併読。実装 RegisterItemFieldUpdates の22フィールドは全て BDD physical_name に存在し、BDD の26 physical_name も全て実装/schema で定義済み→欠落・過剰なし。enum 全一致: status→VALID_TICKET_STATUSES(draft/ready/deprecated), item_type→VALID_TYPES(8値), item_status→VALID_STATUSES(8値), priority→high/medium/low, difficulty→hard/medium/easy, autopilot=\"approved\"のみ。",
+    "retrofit(B-2): DC-001〜DC-005 全観点とも構造面は実装と矛盾なし。DC-003/DC-005 は npm run validate:schema:file(--schema docs/specdojo/schemas/v1/bdd.schema.yaml --data 当該BDD)=valid を確認済み。ID競合復旧(generatePjrId)、状態遷移(actionFromLegacyHistory)、派生ビュー更新(rebuildRegisterViews)は register.ts に実在し BDD 記述と不一致なし。",
+    "軽微(U-2): part_of(BDD「所属登録簿」)・id は実装 create 経路(registerItemFieldsFromItem)で書き込まれないが、register-item-frontmatter.schema.yaml で必須/定義があり SPECDOJO_KEY_ORDER も保持。BDD 記述は schema 準拠で正当。もし BA が BDD description に業務的補足したいなら任意対応。retrofit の目的推測混入は確認できず(BDD 本文は実装準拠の業務的意味/状態軸記述)。",
+    "実行記録(B-3): git status --short で対象 BDD と src/register/ は clean(本 run 追跡ファイル未変更→changed-during-review なし)。先行同 deliverable 実行タスクは T-BUSINESS-SPECS-REPS-bdd-register-entry-080(approach=condense、2重参照統合のみ)。register.ts↔BDD の対応・判定を記録した retrofit 実行結果は実行管理探索範囲内に見当たらず、本 task(090)自身の result.md は scaffold(_TODO_)、pipeline-state executor:running/attempts:0。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bdd-register-entry-090/T-BUSINESS-SPECS-REPS-bdd-register-entry-090-20261109T140032Z-a0d455b6/executor.log",
+      "bytes": 36392,
+      "truncated": false
+    }
+  ]
+}

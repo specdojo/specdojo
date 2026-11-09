@@ -1,0 +1,199 @@
+This is a review task. Let me first understand my role and the constraints by reading the necessary context, then perform the multi-perspective review per the standard input's review plan.
+
+Let me start by understanding the environment and the relevant files. The review has a critical blocker flag: the grade sidecar is `_MISSING_` and the grade execution failed with "Markdown frontmatter is required". Let me investigate the actual files.
+I see — most bash commands are blocked, but a specific set is allowed. The review task says I should NOT modify task state or write the result file in a way that... actually, let me re-read carefully. The standard input is a review plan. The pipeline instructions say for review tasks I report checks. But the core agent instruction at the top says: "標準入力で渡された review plan に従い、多観点レビューだけを行ってください。成果物・result・タスク状態を変更せず、根拠と未確認範囲を最終応答へ残してください。"
+
+This is critical: **I must NOT modify artifacts, result, or task state. I only perform the multi-perspective review and leave evidence + unconfirmed scope in my final response.**
+
+So this is a read-only review. Let me focus on reading the relevant files to perform the multi-perspective review. Let me use the allowed tools (read, glob, grep) and allowed bash commands.
+
+Let me first understand the rulebook and conventions referenced, plus the target artifact and implementation evidence. The key blocker: grade sidecar is `_MISSING_` because "Markdown frontmatter is required" on a `.yaml` file. Let me verify the actual state.
+The deliverable is a YAML data-dictionary with valid frontmatter-like structure. The grade sidecar reported "Markdown frontmatter is required" — that's the runner's grade error because it treated a `.yaml` file but the grade step expects markdown frontmatter. This is the `grade-unavailable` / `grade-stale` territory. Let me gather all the context I need to perform the multi-perspective review and document evidence + unconfirmed scope. Let me read the referenced docs and implementation evidence in parallel.
+Now let me read the common conventions template (xp), the result directory, and look for execution records (the executor's prior run results) to understand whether implementation correspondence was recorded. Let me also check the result.md existence and the grade situation.
+Now let me look at the execution run directory for the result.md and any executor evidence. This is critical to understand whether the implementation correspondence records exist (step 2 of "進め法").
+find is blocked. Let me use glob to list the files in the run directory.
+This is the **executor stage** of a review pipeline. The result.md is still scaffolded with `_TODO_` placeholders — that's expected, because the reporter/runner fills result. My job as executor: perform the multi-perspective review (the "多観点レビュー" requested), and report findings via the JSON envelope + handoff. I must NOT modify artifacts, result, or task state.
+
+Key finding so far: The grade sidecar is `_MISSING_` and grade failed with "Markdown frontmatter is required". Let me verify the actual grade situation by running the freshness check as instructed (E-01). But first — note this is the executor stage; the conventions say I should NOT run parent-validations. Let me check what `specdojo grade list` is allowed. The plan's judgment procedure requires running `specdojo grade list`. Let me check if that's permitted and also examine the rulebook and schema to understand whether the artifact could even be graded.
+
+Let me read the bdd-rulebook and check the grade-related setup.
+The bash with `&&` chaining seems to trip the permission rule (the rule denies arbitrary bash but allows specific patterns; the `&&` compound may be failing). Let me run git commands separately as simple invocations.
+The only change is the untracked pipeline-state.json. The deliverable `bdd-register-entry.yaml` is tracked and unchanged in this review run. Now let me check git log to see whether the artifact was created by a prior edit task, and check for the grade sidecar. Let me also look at the schema referenced to verify the artifact's validity claim.
+The most recent commit `5b6a2f8bc` is "prepare execution" for our task — meaning the artifact was prepared but there's no "apply task changes" or grade commit yet for this run. This confirms this is the executor stage of the review, and the artifact is in its prepared state. Let me check whether a prior edit/grade produced a grade sidecar. Let me look for grade sidecars related to this deliverable.
+These grade job runs are generic across all deliverables (not specific to this task). The plan already told me the grade sidecar is `_MISSING_` and grade failed with "Markdown frontmatter is required". This is the key fact. Let me verify the freshness situation by attempting the grade freshness check as instructed (E-01). First let me check what's available — is `specdojo grade list` executable here? The allowed bash patterns include `specdojo exec validate*` but not `specdojo grade`. Let me try to run the freshness check to confirm.
+`npx specdojo grade list` is blocked by the permission allowlist (only `specdojo exec validate*` is allowed, plus git/lint/validate:schema:file). So I cannot run the freshness check command myself in this sandbox. This is an important fact for my review: the freshness check could not be executed, and the plan already reports grade sidecar `_MISSING_` with the error "Markdown frontmatter is required".
+
+This is exactly the `grade-unavailable` situation per E-02: "サイドカーを読み取れない場合と、`specdojo grade list --target <対象種別> --path <評価対象> --incomplete` が評価対象のパスを出力する場合（評価パイプラインが未完了）". The sidecar is literally `_MISSING_` (not present / not resolvable). 
+
+But wait — I need to think carefully. The task at the top says: "多観点レビューだけを行ってください。成果物・result・タスク状態を変更せず、根拠と未確認範囲を最終応答へ残してください." (Perform only the multi-perspective review. Do not modify artifacts/result/task state. Leave evidence and unconfirmed scope in the final response.)
+
+And the pipeline executor instructions say I report via JSON envelope + handoff, NOT writing result. So my deliverable here is: the multi-perspective review findings + a machine-readable evidence envelope. The "root" task wants me to leave root-cause/unconfirmed scope in the FINAL response.
+
+Let me now look more deeply at the relationship between the implementation (register.ts) and the deliverable, to do a genuine multi-perspective review. Let me examine a few things: the catalog entry for this deliverable (to check evidence_refs, done_criteria), and verify whether the artifact's fields align with the actual register.ts field definitions.
+
+Let me check the catalog and look at whether register.ts's RegisterAddFields map to the BDD fields. Let me also check the dependent bps-task-completion referenced.
+The catalog is elsewhere. Let me find the catalog and the schema. The plan's done_criteria came from a catalog. Let me search for the catalog referencing this deliverable.
+Let me find where the done_criteria / catalog for this deliverable lives. The plan's done_criteria table came from somewhere. Let me search project config and catalog files broadly.
+The catalog for the BDD data-model deliverable is `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml`. Let me read the relevant portion — the entry that defines this task's done_criteria and evidence_refs.
+Confirmed: the catalog matches the plan — `evidence_refs` = `src/register/register.ts`, and the 5 done_criteria match DC-001..DC-005 in the plan. 
+
+Now I have a clear picture of the situation. Let me do the genuine multi-perspective review by cross-referencing the BDD deliverable's fields against the actual implementation in `register.ts`. The key question for a retrofit review: does the BDD deliverable's field set correspond to what register.ts actually produces, and is any correspondence/finding recorded?
+
+Let me compare. From register.ts `RegisterAddFields` (lines 167-187), the fields written to a register item are:
+- type, title, description, priority, difficulty?, status, owner, registeredAt, due, completedAt, conclusion, approach?, targets?, sources?, derivedFrom?, dependsOn?, commitType?, commitScope?
+
+The BDD deliverable defines these physical_name fields: `id`, `part_of`, `status`, `item_type`, `track`, `domains`, `item_status`, `priority`, `difficulty`, `owner`, `registered_at`, `start_on`, `due_on`, `completed_at`, `block_reason`, `conclusion`, `derived_from`, `depends_on`, `autopilot`, `approach`, `targets`, `target_path`, `target_rulebook`, `sources`, `commit_type`, `commit_scope`.
+
+Let me verify the actual register item frontmatter schema to understand which fields exist, and check how register.ts builds content. Let me look at the core.js to confirm `buildRegisterItemContent` and the frontmatter field names/allowed values (status, type, priority, etc.) — these are key for QE verifiability (DC-004) and DEV readiness (DC-005).
+This confirms the field mapping. The BDD deliverable maps directly to register.ts fields. Now let me examine item.ts for `VALID_STATUSES`, `VALID_TYPES`, `VALID_PRIORITIES`, `VALID_DIFFICULTIES` and the frontmatter physical name mapping, to verify the BDD's allowed_values_detailed lists match the implementation (relevant for DC-004 QE verifiability and the "retrofit" correspondence).
+I now have a thorough understanding. Let me do the field-by-field cross-check between BDD deliverable and the implementation, which is the heart of the retrofit review (evidence correspondence). I'll compare the BDD `physical_name` list with the frontmatter fields register.ts actually reads/writes (`RegisterItemFieldUpdates` / `SPECDOJO_KEY_ORDER`), and the enum allowed values.
+
+Let me create a structured comparison. Mapping BDD physical_name → implementation source:
+
+| BDD field | impl evidence | status |
+|---|---|---|
+| id | PjrItem.id; SPECDOJO_KEY_ORDER id; frontmatter specdojo.id; PJR_ID_RE validation | consistent (id is documented in BDD, impl validates via PJR_ID_RE) |
+| part_of | NOT in RegisterItemFieldUpdates / item.ts — only `part_of` appears in BDD. item.ts SPECDOJO_KEY_ORDER includes "part_of" but registerItemFieldsFromItem does not set it. | needs check |
+| status | SPECDOJO_KEY_ORDER "status"; but this is the *ticket* document status (VALID_TICKET_STATUSES draft/ready/deprecated), distinct from item_status. BDD `status` allowed_values = draft/ready/deprecated ✓ consistent with VALID_TICKET_STATUSES | consistent |
+| item_type | VALID_TYPES = todo/epic/question/risk/issue/change-request/decision/note ✓ matches BDD item_type allowed_values_detailed | consistent |
+| track | present in PjrItem/RegisterAddFields ✓ | consistent |
+| domains | ✓ | consistent |
+| item_status | VALID_STATUSES = open/in-progress/waiting/review/decided/done/deferred/rejected ✓ matches BDD item_status allowed_values_detailed | consistent |
+| priority | VALID_PRIORITIES = high/medium/low ✓ | consistent |
+| difficulty | VALID_DIFFICULTIES = hard/medium/easy ✓ | consistent |
+| owner | ✓ | consistent |
+| registered_at | REGISTER_TIMESTAMP_RE (RFC3339 UTC seconds) ✓ BDD says RFC3339 seconds | consistent |
+| start_on | ✓ PjrItem.startOn / start_on | consistent |
+| due_on | due_on null = 期限なし, omit = 未定 ✓ BDD says explicitly | consistent |
+| completed_at | ✓ | consistent |
+| block_reason | asString(fields.block_reason) ✓ | consistent |
+| conclusion | inlineCodeAnglePlaceholders ✓ | consistent |
+| derived_from | ✓ | consistent |
+| depends_on | ✓ | consistent |
+| autopilot | "approved" only ✓ BDD single value | consistent |
+| approach | Approach type ✓ | consistent |
+| targets | ✓ | consistent |
+| target_path | ✓ | consistent |
+| target_rulebook | ✓ | consistent |
+| sources | ✓ | consistent |
+| commit_type / commit_scope | resolveItemCommitTypeAndScope, COMMIT_SCOPE_RE ✓ | consistent |
+
+Let me verify the `part_of` question and check the schema to be thorough about DC-004/DC-005. Let me look at the register-item-frontmatter schema referenced by `schema_ref`.
+`part_of` appears in `item.ts` only inside `SPECDOJO_KEY_ORDER` (line 187) as a key-ordering entry, but it is NOT in `RegisterAddFields`, NOT in `RegisterItemFieldUpdates`, and NOT set by `registerItemFieldsFromItem`. It's also used in catalog code. This means `part_of` is a recognized register-item frontmatter key (ordering-wise, so existing tickets may carry it) but the register command's create path doesn't write it; it's likely part of the broader specdojo namespace / catalog. The BDD documents it as "所属登録簿" — this is a reasonable business definition and not necessarily a deviation. But it's a potential minor point: BDD documents `part_of` whose generation is not in register.ts create path. This is the kind of correspondence nuance a retrofit review should flag as "minor / needs confirmation".
+
+Now, the critical determinant for verdict: the grade sidecar is `_MISSING_`. Let me check whether there's a grade sidecar file anywhere for this specific deliverable that I might read (the plan said runner reported "Markdown frontmatter is required"). Let me search for grade results referencing bdd-register-entry.
+There's a `docs/ja/projects/prj-0001/execution/grade/pipeline/` directory. Let me check whether there's a grade pipeline file for this deliverable (`bdd-register-entry`), which would be the sidecar.
+Only one grade pipeline file exists (`ccd-project-planning`), which belongs to a different task. There is **no grade sidecar for `bdd-register-entry`**. This confirms the `_MISSING_` status: the evaluation result for this deliverable does not exist / cannot be resolved. 
+
+Per E-02 in the conventions: "サイドカーを読み取れない場合と、`specdojo grade list ... --incomplete` が評価対象のパスを出力する場合が該当する" → verdict = `grade-unavailable`. The runner already reported grade execution failed ("Markdown frontmatter is required"), which aligns with the sidecar being missing.
+
+Now I have enough to form a complete, evidence-based multi-perspective review. Let me verify one more thing — that I cannot run the grade freshness commands in this sandbox (they're blocked), so per conventions I should NOT claim I ran them. Let me also confirm the schema validity of the BDD via the allowed `validate:schema:file` command, since that is a legitimate check the executor can perform for DC-003/DC-004 (schema as DB design input). But wait — the plan/review says "reviewは成果物の品質を判定しない。gradeが一度だけ評価". I should not re-grade. However, running `validate:schema:file` is a structural check that supports the evidence correspondence confirmation for DC-003/DC-005 (is it valid as DB/impl input). It's borderline. Given the strong instruction "多観点レビューだけを ... 成果物・result・タスク状態を変更せず", and "reviewは成果物を再評価しない", I will avoid running grading-style validation that produces a quality judgment. The schema validity is itself a grade concern. 
+
+Actually, re-reading: the task explicitly wants me to do the multi-perspective review and leave evidence + unconfirmed scope in the final response. Running `validate:schema:file` on the BDD confirms structural validity against bdd.schema.yaml — this is relevant to "実装の基礎として参照できるか" (DC-005) and is a read-only check. But it could be seen as re-evaluating quality. The cleaner posture: report what I could and could not confirm, leave the grade freshness as the blocking issue (grade-unavailable), and document the unconfirmed scope. Let me try the allowed schema validation to strengthen the evidence about structural correspondence (DC-003/DC-005) since it's explicitly in the allowlist — this is informative, not a quality re-judgment.
+The `--` pipe/redirect with `tail` may be tripping the matcher. Let me run it plainly (no pipe).
+The BDD is structurally valid against `bdd.schema.yaml`. This confirms DC-003/DC-005 (DB/impl input readiness) at the structural level. Now I have comprehensive evidence.
+
+I should NOT run grading/quality re-evaluation. I've confirmed:
+1. The deliverable exists and is structurally valid against its schema.
+2. The grade sidecar for this deliverable is `_MISSING_` (no grade pipeline file); the runner reported "Markdown frontmatter is required" — so grade could not be resolved → `grade-unavailable`.
+3. I cannot run `specdojo grade list` in this sandbox (blocked), so I cannot re-confirm freshness myself.
+
+Now let me check the executor's evidence / result for the prior edit task to see whether the implementation correspondence was recorded. The plan says "実行記録への対応". Let me look at the 080 task's result/plan since the BDD was likely created/refined there. But more importantly, this review task's own result.md is unfilled (scaffold) and pipeline-state shows executor running/attempts:0. This IS the run producing the review. There's no prior "execution record" (executor result) of the retrofit correspondence that I can find beyond this being a fresh review run. Let me check the 080 result to see if it documents register.ts correspondence for the BDD.
+This is important. The prior task T-...-080 (condense) on this same deliverable was a redundancy-cleanup task, NOT an "implementation correspondence" / retrofit task that would record the register.ts mapping. So there's no executed edit task in this chain that recorded the register.ts ↔ BDD correspondence with judgments (一致・乖離・未確認). The current review task (090) is itself the one expected to confirm correspondence per the plan's "進め方" step 2, but as the executor stage of a review I am NOT writing result and must only do the multi-perspective review.
+
+Now I have everything needed. Let me check the git diff for this run to confirm no artifact changes happened during/before my review (change-during-review check), and verify the BDD file wasn't modified since the last grade attempt. Since git status already showed only the untracked pipeline-state.json, the tracked BDD is unchanged.
+
+Let me now also double check: the `part_of` field in the BDD vs implementation. The BDD lists `part_of` (所属登録簿). In `register/item.ts`, `RegisterItemFieldUpdates` and `SPECDOJO_KEY_ORDER` include it as a key, but register create path doesn't write it. Let me verify whether the register-item-frontmatter schema even includes `part_of`, to judge if it's a documented-but-unused field (a minor deviation candidate).
+Let me look at the schema around `part_of` (lines 155-160) to understand it.
+Now I understand `part_of` fully: it's a REQUIRED frontmatter key (a register item belongs to a pjr-index via `part_of`), validated by the schema, just not written by the register *create* CLI path (it's set elsewhere / by the catalog scaffolding). The BDD documenting `part_of` as 所属登録簿 is therefore a correct business definition consistent with the schema. This is NOT a deviation — it confirms correspondence, with a minor note that the create-path in register.ts doesn't populate it (out of scope of this BDD's purpose; the BDD is a data dictionary not the CLI).
+
+I now have a complete, evidence-based picture. Let me confirm the git diff state for this run to check change-during-review hasn't happened to the tracked artifact, and that my read of register.ts/item.ts is current.
+No changes to the deliverable or implementation during this run — confirms no change-during-review. The BDD and register.ts are in their committed state.
+
+I now have all evidence to perform the multi-perspective review and report it. Let me compile findings per viewpoint (DC-001..DC-005 / BA, PO, ARC, QE, DEV), with the implementation correspondence assessment.
+
+Key determination: **The grade sidecar for `bdd-register-entry` is `_MISSING_`** (only `ccd-project-planning` grade pipeline exists; no grade pipeline file for this deliverable; runner reported "Markdown frontmatter is required" and "runner の grade 実行: 実行していない"). Per E-02, when the sidecar cannot be read / grade pipeline is incomplete → verdict = `grade-unavailable`. I cannot run `specdojo grade list` in this sandbox (blocked), so I confirm this via the plan's pre-stated runner result and the absence of a grade file.
+
+Now let me write up the multi-perspective review findings as the final response (the task says leave root/unconfirmed-scope in final response). I will NOT modify the result.md (that's the reporter/runner's job, and the core instruction forbids changing result/task state). Let me record the handoff via the JSON envelope.
+
+Let me compile the deliverable's field set vs implementation one more time precisely for the evidence table, then produce the final structured review.
+
+The BDD entity `register_entry` fields (26 physical_names): id, part_of, status, item_type, track, domains, item_status, priority, difficulty, owner, registered_at, start_on, due_on, completed_at, block_reason, conclusion, derived_from, depends_on, autopilot, approach, targets, target_path, target_rulebook, sources, commit_type, commit_scope.
+
+Implementation `RegisterItemFieldUpdates` keys (the register frontmatter fields the create/update path writes): item_type, item_status, priority, difficulty, owner, registered_at, due_on, completed_at, conclusion, track, start_on, domains, approach, target_path, target_rulebook, targets, sources, derived_from, depends_on, autopilot, commit_type, commit_scope = 22 fields. Plus spec namespace meta keys: id, type, status, rulebook(part_of), (SPECDOJO_KEY_ORDER also lists based_on, targets, sources, target_path, target_rulebook). 
+
+The BDD documents `part_of` and `id` which are namespace/schema-level (not in the register create field-update path but valid per schema) — consistent.
+
+All 22 writable register item fields in implementation map to a BDD physical_name (consistent), and all BDD physical_names map back to either schema-defined or implementation-defined keys. No missing/extra-field deviation detected. The enum allowed values match: status→VALID_TICKET_STATUSES(draft/ready/deprecated)✓, item_type→VALID_TYPES(8 values)✓, item_status→VALID_STATUSES(8 values)✓, priority→VALID_PRIORITIES(high/medium/low)✓, difficulty→VALID_DIFFICULTIES(hard/medium/easy)✓, autopilot→"approved"✓. All consistent.
+
+This is a genuinely consistent correspondence. The only blocking issue is the unavailable grade.
+
+Let me verify the enum match precisely with one grep of VALID_STATUSES etc — already have from item.ts reads. Good.
+
+Now produce final response + JSON envelope. I'll mark completion_status incomplete? No — the review work itself (the multi-perspective analysis requested by the user) IS complete; I've completed the multi-perspective review and will record it via the envelope handoff. The verdict for the task is `grade-unavailable`, which is a normal-completion non-`complete` verdict (exit 0). Since this is executor stage and I'm asked to "leave findings in final response" without writing result, I report completion_status `complete` for the review work I was asked to do, with the grade-unavailable verdict carried in handoff. Actually — the pipeline executor instruction says use `complete` only when all work required by the plan is done. The plan's "完了手順" requires filling result.md, but that belongs to the reporter/runner per the stage instructions. I did the multi-perspective review thoroughly. I'll set completion_status `complete` and carry the full verdict+findings in handoff so the reporter records it.
+
+Let me write the final response now.
+
+Now I have all the evidence needed. Let me record my findings via the machine-readable envelope (the pipeline executor instruction), carrying the verdict through `handoff` since I must not edit the result file myself.
+
+---
+
+## 多観点レビュー結果（T-BUSINESS-SPECS-REPS-bdd-register-entry-090 / 完成版レビュー・実装照合）
+
+### A. 評価結果の鮮度確認（E-01/E-02）
+
+- **評価対象** `docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml`、`--target deliverable`。
+- **サイドカー**: プラン §4 に `評価結果サイドカー: _MISSING_` と記述済み。実行ファイル系を確認した結果、`docs/ja/projects/prj-0001/execution/grade/pipeline/` には他タスクの `ccd-project-planning-b57132c2f259.json` のみ存在し、**この deliverable 用の grade pipeline ファイル（サイドカー）が存在しない**。
+- runner の grade 実行状況（プラン §4）: 「実行していない（…Markdown frontmatter is required）」「鮮度: 確認できない（…Markdown frontmatter is required）」。
+- **sandbox での再確認の可否**: `npx specdojo grade list …` は本 sandbox の権限許可リストに無く実行不可であった。よって freshness を自分で再確定することはできず、プランが示す runner の事実（サイドカー不在＋grade 未実行）を根拠とする。
+- **判定**: E-02（サイドカーを読めない／評価パイプライン未完了）→ verdict = **`grade-unavailable`**。完了可否の判断は保留する。
+
+### B. 実装との対応確認（approach=retrofit、plan §6・§3 の「進め法」ステップ1〜4）
+
+`evidence_refs` = `src/register/register.ts`（implementation）を、到達可能な `src/register/core.ts` / `src/register/item.ts` と合わせて読んだ。
+
+**B-1. フィールド対応（一致）** — 実装 `RegisterItemFieldUpdates` が書く登録項目 frontmatter フィールド22件は全て BDD の `physical_name` に存在。BDD の26個の `physical_name`も、すべて実装・スキーマで定義済み。欠落・過剰フィールドの乖離は検出されなかった。
+- `id` / `part_of`: 実装 create 経路（`registerItemFieldsFromItem`）で書かないが、`register-item-frontmatter.schema.yaml` で必須/定義あり（`SPECDOJO_KEY_ORDER` も保持）。BDD「所属登録簿 `part_of`」の記述はスキーマ準拠で正当（乖離ではなく一致）。
+- 日時: `registered_at` / `completed_at` は RFC 3339 秒精度（`REGISTER_TIMESTAMP_RE`）で一致。`due_on` の省略＝未定、明示 `null`＝期限なしの三値区分（`item.ts:415-419`, `556-561`）も BDD line 134 と一致。
+- enum 対応一覧（全一致）: `status`→`VALID_TICKET_STATUSES`(draft/ready/deprecated)✓、`item_type`→`VALID_TYPES`(todo/epic/question/risk/issue/change-request/decision/note 8値)✓、`item_status`→`VALID_STATUSES`(open/in-progress/waiting/review/decided/done/deferred/rejected 8値)✓、`priority`→`VALID_PRIORITIES`(high/medium/low)✓、`difficulty`→`VALID_DIFFICULTIES`(hard/medium/easy)✓、`autopilot`→"approved" のみ✓。
+
+**B-2. 各観点（done_criteria）への対応判定**
+
+| DC | viewpoint / role | 判定 | 根拠 |
+| --- | --- | --- | --- |
+| DC-001 | BA 要求完全性 | 一致（構造面） | `entities[0]` に26フィールドが業務的定義付きで記載。実装 enum と値対応一致。 |
+| DC-002 | PO 目的整合・境界 | 確認可能 | エンティティ1個、正本は個票 frontmatter の `specdojo` 配下という境界が line 15 で明示。`stsd-register-entry`（状態遷移）へ譲示。 |
+| DC-003 | ARC 技術制約・DB設計入力 | 構造一致 | `npm run validate:schema:file --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data <BDD>` → **valid**。`schema_ref` で正本指向。 |
+| DC-004 | QE 検証可能性 | 一致（構造面） | enum の許容値が実装常数と一致、制約は schema へ委譲（二重記述なし＝rulebook §1 遵守）。 |
+| DC-005 | DEV 実装照合 | 一致 | `type_ref` 相当としての `register.ts` との対応が成立。ID競合復旧（`generatePjrId`, item.ts:334）、状態遷移（`actionFromLegacyHistory`, register.ts:534）、派生ビュー（`rebuildRegisterViews`, line 287）も register.ts に実在し、BDD の記述と矛盾なし。 |
+
+**B-3. 対象外変更・実行記録**
+- `git status --short` で、対象 BDD と `src/register/` は clean（本 run では追跡済みファイルが未変更 → change-during-review なし）。
+- 先行する edit 実行記録: 直近の同 deliverable 実行タスクは `T-BUSINESS-SPECS-REPS-bdd-register-entry-080`（approach=`condense`、冗長2重参照の統合のみ）。**register.ts↔BDD の対応と判定（一致・乖離・未確認）を記録した retrofit 実行結果は、実行管理の探索範囲内に見つからなかった**。本タスク(090)自身の実行記録（result.md）は scaffold（`_TODO_`）のまま、pipeline-state は `executor: running / attempts:0`。
+- 「実装から目的・業務判断・将来方針を推測して wrote」形跡: BDD 本文は業務的意味・状態軸（`status` と `item_status` の区別、`autopilot` の承認範囲等）の実装準拠記述であり、実装からの無根拠な目的推測の混入は確認できず。
+
+### C. 未充足事項・改善指示
+
+- **U-1（完了を妨げる）**: evaluate 結果（grade/finding）が最新かつ確定していない。サイドカー不在、runner が grade を未実行（"Markdown frontmatter is required"）。→ **再評価を要する**。grade パイプラインを完走させてサイドカーを生成し直す。本 review で品質を再判定しないため、`grade-unavailable` として保留。
+- **U-2（軽微・確認要）**: register.ts create 経路が `part_of` / `id` を書き込まないことと、BDD がそれらを含むことの整合は「スキーマ側で必須/定義」の根拠で成立したが、業務的記述としては BDD に明記していない。必要なら BA が BDD の `description` へ補足。
+- **U-3（未確認範囲）**: E-01 の freshness 確定コマンド `specdojo grade list …` が sandbox で不可のため、サイドカー不在のことは「プランの runner 報告＋grade ファイルの不在探索」で確認したのみ。
+
+### D. decision
+
+- **verdict: `grade-unavailable`**（E-02：評価結果のサイドカーを読めない／評価パイプライン未完了）。完了可否は判定せず保留する。
+- 上記 U-1〜U-3、および A〜B の照合根拠・未確認範囲を report の `handoff` へ記録し、reporter が review result へ書き込む（本 executor は成果物・result・タスク状態を変更しない）。
+
+### E. 確認ができなかった範囲
+
+- grade 新鮮度の再実行（権限不可）、grade 後の finding 詳細（サイドカー不在のため存在せず）。
+- `part_of` の生成元（register create 以外）の特定は schema/enum 対応までで、catalog 側での実際の書き込み箇所までは読まない。
+I've completed the multi-perspective review with read-only operations. I did not modify the deliverable, the result file, or task state (as required). The review work is done; I record the outcome via the machine-readable envelope, carrying the verdict and findings through `handoff` for the reporter to write into the review result.
+
+Summary of what was confirmed and the unconfirmed scope:
+- **grade sidecar `_MISSING_`** → only `ccd-project-planning` grade pipeline exists; none for this deliverable; runner reported "Markdown frontmatter is required" and did not run grade → verdict `grade-unavailable` (E-02). Freshness re-command (`specdojo grade list`) is not permitted in this sandbox.
+- **Implementation correspondence** (evidence_refs `src/register/register.ts` + reachable `core.ts`/`item.ts`): field set, enums, datetime/due_on semantics all consistent with the BDD; no missing/extra-field deviation; schema validation passes (`validate:schema:file` → valid). No evidence of purpose/speculation written from implementation.
+- **Prior edit record**: the only recent same-deliverable run was `-080` (condense, redundancy merge) — it did not record the register.ts↔BDD correspondence; that confirmation is left to this review.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"多観点レビューを実施（read-only）。評価対象 bdd-register-entry.yaml + evidence_refs src/register/register.ts を照合。構造検証 validate:schema:file は valid。grade サイドカーは _MISSING_（grade/pipeline 内にこの deliverable のファイル無し、runner が grade 未実行「Markdown frontmatter is required」を報告）ため E-02→verdict=grade-unavailable。retrofit 対応確認では register.ts/item.ts とのフィールド・enum・日時・due_on 三値区分が全て一致し乖離なし。先行 edit 記録は -080(condense) のみで register.ts 対応記録は無し。sandbox で specdojo grade list は不可(freshness 再確定不能)、part_of の生成元は schema/enum 対応まで確認。成果物・result・タスク状態は変更せず、結果を下へ handoff。","handoff":["E-01/E-02: 評価対象 docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml(--target deliverable)の sidecar は _MISSING_。grade/pipeline/ には他タスクの ccd-project-planning のみで本 deliverable の grade file 無し。runner report: grade 実行=未実施(「Markdown frontmatter is required」、鮮度=確認不能)。→ verdict=grade-unavailable(E-02、完了可否は保留)。freshness 再確定コマンド specdojo grade list は sandbox 権限で不可のためサイドカー不在はプランの runner 報告＋存在探索で確認したのみ。","retrofit(B-1/B-2): evidence_refs=src/register/register.ts を核心に core.ts,item.ts を併読。実装 RegisterItemFieldUpdates の22フィールドは全て BDD physical_name に存在し、BDD の26 physical_name も全て実装/schema で定義済み→欠落・過剰なし。enum 全一致: status→VALID_TICKET_STATUSES(draft/ready/deprecated), item_type→VALID_TYPES(8値), item_status→VALID_STATUSES(8値), priority→high/medium/low, difficulty→hard/medium/easy, autopilot=\"approved\"のみ。","retrofit(B-2): DC-001〜DC-005 全観点とも構造面は実装と矛盾なし。DC-003/DC-005 は npm run validate:schema:file(--schema docs/specdojo/schemas/v1/bdd.schema.yaml --data 当該BDD)=valid を確認済み。ID競合復旧(generatePjrId)、状態遷移(actionFromLegacyHistory)、派生ビュー更新(rebuildRegisterViews)は register.ts に実在し BDD 記述と不一致なし。","軽微(U-2): part_of(BDD「所属登録簿」)・id は実装 create 経路(registerItemFieldsFromItem)で書き込まれないが、register-item-frontmatter.schema.yaml で必須/定義があり SPECDOJO_KEY_ORDER も保持。BDD 記述は schema 準拠で正当。もし BA が BDD description に業務的補足したいなら任意対応。retrofit の目的推測混入は確認できず(BDD 本文は実装準拠の業務的意味/状態軸記述)。","実行記録(B-3): git status --short で対象 BDD と src/register/ は clean(本 run 追跡ファイル未変更→changed-during-review なし)。先行同 deliverable 実行タスクは T-BUSINESS-SPECS-REPS-bdd-register-entry-080(approach=condense、2重参照統合のみ)。register.ts↔BDD の対応・判定を記録した retrofit 実行結果は実行管理探索範囲内に見当たらず、本 task(090)自身の result.md は scaffold(_TODO_)、pipeline-state executor:running/attempts:0。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/bdd.schema.yaml --data docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml","status":"passed","summary":"bdd-register-entry.yaml: valid against bdd.schema.yaml (構造検証・DC-003/DC-005 の入力を補強。品質再査定ではない)"}]}
+</specdojo_executor_evidence>
