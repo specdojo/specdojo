@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-REPS-sf-task-execution-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-REPS-sf-task-execution-090/T-BUSINESS-SPECS-REPS-sf-task-execution-090-20261109T213618Z-f8987c9d/plan.md
   started_at: "2026-11-09T21:36:20.590Z"
+  completed_at: "2026-11-09T21:46:49.911Z"
   agent: sonnet-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,25 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md --changed-only / --dependency-changed / --incomplete 出力: なし（評価結果は最新かつ完了済み）
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度は最新であり、`verdict`: `needs-work`、`score`: 89、finding は blocker 0 / major 1 / minor 7 であることを確認した。
+- 実装エビデンスとして指定された `src/exec/run/agent-pipeline.ts` について、成果物のセクション 7.2 に実装との照合表（一致・乖離・仕様先行）が記述されており、対応記録が存在することを確認した。
+- finding として指摘されている事項（`F001`-`F008`）は成果物の品質に関するものであり、本タスクの範囲である「実装との照合および記録」という完了条件は満たしていると判断した。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `F007`: `sf-rulebook` で禁止されている実装クラス名、関数名、内部構造名（`ProviderConcurrencyGate`, `ExecEvidence`, `PipelineState` 等）および本文内での照合記録を成果物から除去し、レビュー記録等へ移設すること。
+- `F004`, `F005`: セクション 7.2 の実装照合内容を、機能仕様書とは更新サイクルの異なるレビュー/トレサビリティ記録へ移設すること。
+- `F001`-`F003`, `F006`: `P-07` および BPS（業務プロセス仕様）との詳細な対応付けを完了させ、リソース受入値を確定させること。
+- `F008`: `--resume` などのコマンド固有の表記を、本文内ではなくコマンドリファレンスへの参照に置換すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+実装エビデンス `src/exec/run/agent-pipeline.ts` と成果物 `docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md` の照合記録（セクション 7.2）を確認した。ただし、各行が実際にコードと一致しているかの詳細な精査および先行する edit result の特定までは実施できていない。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: complete-with-findings
