@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   difficulty: medium
   registered_at: "2026-11-09T20:49:35Z"
-  conclusion: sf-task-execution に業務プロセス仕様との対応、機能ごとの検証・受入観点、agent-pipeline.ts との照合の表を足して磨き込んだ
+  conclusion: sf-task-execution から実装詳細・照合表を除去して個票へ移送し、業務プロセス対応・検証観点を維持した上で sf-rulebook に適合させた
   derived_from:
     - PJR-2GD6
   approach: fully-guided
@@ -47,50 +47,69 @@ business-specs-reps の review で incomplete となった sf-task-execution を
 
 ## 4. 作業内容
 
-| No  | 作業                                                | 担当           | 状態 | メモ                                                                                                                           |
-| --- | --------------------------------------------------- | -------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | review の指摘と、業務プロセス仕様・実装を読み比べる | executor (agy) | done | Finding 15件および `agent-pipeline.ts`、カタログ `dct-business-model-bps.yaml`（P-07 業務プロセス区分）の照合完了              |
-| 2   | 整合・検証の観点・実装との照合の表を書く            | executor (agy) | done | `sf-task-execution.md` に BPS 処理ステップ対応、客観的検証観点（V-01〜V-15）、実装エビデンス照合表、未決事項・昇格ゲートを反映 |
-| 3   | 検査を流し、対応結果に書く                          | executor (agy) | done | `lint:md`、`lint:fm`、`catalog validate` を実施し適合を確認                                                                    |
+| No  | 作業                                                                      | 担当           | 状態 | メモ                                                                                                                           |
+| --- | ------------------------------------------------------------------------- | -------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | review の指摘と、業務プロセス仕様・実装を読み比べる                       | executor (agy) | done | Finding 15件および `agent-pipeline.ts`、カタログ `dct-business-model-bps.yaml`（P-07 業務プロセス区分）の照合完了              |
+| 2   | 整合・検証の観点・実装との照合の表を書く                                  | executor (agy) | done | `sf-task-execution.md` に BPS 処理ステップ対応、客観的検証観点（V-01〜V-15）、実装エビデンス照合表、未決事項・昇格ゲートを反映 |
+| 3   | 検査を流し、対応結果に書く                                                | executor (agy) | done | `lint:md`、`lint:fm`、`catalog validate` を実施し適合を確認                                                                    |
+| 4   | review 指摘（F004, F005, F007, F008）に基づく実装詳細の除去と個票への移送 | executor (agy) | done | 本文から 7.2 照合表を除去し個票 5.2 へ移送。型名・内部キー名・オプション名の業務用語化と CLI 参照への置換                      |
+| 5   | 2回目修正後の適合検査と個票記録                                           | executor (agy) | done | `sf-task-execution.md` の `sf-rulebook` 適合性確認、個票対応結果の整備                                                         |
 
 ## 5. 対応結果
 
 ### 5.1. 実施内容
 
-2026-11-09 の review（T-BUSINESS-SPECS-REPS-sf-task-execution-090）で incomplete と判定された指摘事項、および Plan に展開された 15 件の Finding（F001〜F015）に基づき、代表成果物 `sf-task-execution`（タスク実行）を磨き込んだ。
+2026-11-09 の review（T-BUSINESS-SPECS-REPS-sf-task-execution-090）での指摘事項に対応した後、再度の review において、成果物本文に実装詳細（型名・関数名・照合表）を記載したことが [[specdojo:sf-rulebook|sf-rulebook]] 第 7 章（禁止事項）に抵触するとの指摘（F004, F005, F007）、および本文中にコマンドオプション名（`--resume`）が含まれているとの指摘（F008）を受けた。
 
-1. **業務プロセス仕様との整合（DC-001, F001, F006, F007）**:
-   - `dct-business-model-bps.yaml` で定義されている P-07 領域の業務プロセス仕様（`bps-task-selection-preparation`、`bps-task-edit`、`bps-task-verification`、`bps-task-judgment-integration`、並行実行群）および P-11（`bps-task-completion`）の処理ステップ ID（`P-07-01`〜`P-07-05`、`P-11-01・02`）と、本機能の入出力（第 3 章）および処理要件（第 4 章の各節）との対応表を第 2 章に確定・拡充した。
-2. **公開責任者と対象読者の明確化（F002）**:
-   - 第 1 章において、公開判断責任者が PO（indie）であること、本成果物の状態は `draft` として維持し `ready` への昇格判定は PO が行うこと、および対象読者（PM, Orchestrator, PO, QE, ARC, DEV）の利用目的を明記した。
-3. **客観的な検証・受入観点の定義（DC-004, F008, F009, F011, F012, F013）**:
-   - 第 5 章に測定可能な実行時間制限（既定タイムアウト: agent 600秒、親検証 300秒）と同時実行数制限（provider 単位枠: 既定 1、`ProviderConcurrencyGate` による制御）、データ契約（`ExecEvidence`、`PipelineState` のスキーマ互換性方針）を明記した。
-   - 第 7 章に機能ごとの客観的合否判定基準（V-01〜V-15）を網羅し、QE・PO・PM が検証可能な水準に磨き込んだ。
-4. **実装エビデンスとの照合表（個票条件）**:
-   - 第 7 章に `### 7.2. 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）` を新設し、段状態管理、変更スナップショット、未完了・保護違反検知、親検証バッチ実行、reporter 再試行、再開時検証再評価、同時実行ゲート等の実装事実と仕様の整合性を照合表として明記した。
-5. **運用エスカレーションルートと未決事項・昇格ゲートの整備（F003, F004, F005, F014, F015）**:
-   - 第 6 章に障害時の一次対応およびエスカレーション窓口（Orchestrator, PM, ARC）を明記した。
-   - 第 8 章に未作成上流 BPS の詳細照合および外部連携仕様の受入値確定について、影響・リスク、決定責任者、時期、追跡先（プロジェクト登録簿 `PJR-2GD6` / `PJR-BCAQ` 後続）、および `ready` 昇格ゲート条件を定義した。
+2026-11-10 の 2 回目実行において、上記指摘および Plan の完了条件に基づき、以下のとおり見直しを実施した。
 
-### 5.2. 成果物
+1. **成果物本文からの実装詳細・照合表の除去（F004, F005, F007）**:
+   - `sf-task-execution.md` 第 7 章の `7.2 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）` を全面削除し、個票の対応結果「5.2 実装との照合の記録」へ移送した。実装エビデンスと機能の対応関係は成果物カタログの `evidence_refs` が示す。
+   - 本文各所に含まれていた実装固有の型名・クラス名・内部キー名（`ProviderConcurrencyGate`、`ExecEvidence`、`PipelineState`、`outcome.protectionBlock`、`rate_limit_events`、`completion_status: incomplete` など）を機能・業務論理の表現（プロバイダ同時実行ゲート機能、実行証跡、パイプライン段状態記録、保護違反による停止、未完了ステータスの通知など）へ置換した。
+2. **コマンドオプション記述の排除とリファレンス委任（F008）**:
+   - 第 6 章「6.1 運用エスカレーションルート」の一次対応にあった `--resume` の記述を削除し、再開コマンドによる再開または手動回復とし、起動構文は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照する形に改めた。表内の個別コマンド名も機能表現に整理した。
+3. **業務プロセス仕様との対応および検証・受入観点の維持（DC-001, DC-004）**:
+   - 第 2 章の業務プロセス仕様対応表（`P-07-01`〜`P-07-05`、`P-11-01・02`）および第 7 章の客観的検証観点一覧（V-01〜V-15）を維持し、業務プロセス整合性と検証可能性を確保した。
+
+### 5.2. 実装との照合の記録
+
+本タスクの前提・エビデンス確認として、実装エビデンス `src/exec/run/agent-pipeline.ts` と `sf-task-execution.md` の仕様記述を照合した記録を次表に示す。照合区分は、一致（実装と仕様が合致）、乖離（実装と記述の差異を調整済み、または仕様として意図的に維持）、仕様先行（未作成機能・外部連携仕様の先行定義）とする。
+
+| 仕様項目（節）                           | 実装エビデンスの該当処理（`agent-pipeline.ts`）                                                     | 区分 | 照合内容および乖離の扱い                                                                                                                                                |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4.2 段状態の独立管理                     | `createPipelineState`, `updatePipelineStage`, `writePipelineState`                                  | 一致 | executor 段と reporter 段の状態（running / succeeded / blocked / failed / rate_limited）をタスク進捗状態とは独立して `pipeline-state.json` へ記録しており、仕様と一致。 |
+| 4.2 作業前変更スナップショット           | `snapshotWorktreeChanges`                                                                           | 一致 | executor 起動前に作業ツリーの変更状況を取得し、今回の試行差分を既存変更と識別可能にしており、仕様と一致。                                                               |
+| 4.2 未完了・保護違反・範囲不足の早期停止 | `executorCompletionFailure`, `resumedTargetCoverageFailure`, `outcome.protectionBlock`              | 一致 | exit code 0 であっても未完了報告や保護違反、再開時の範囲不足を検知し、親検証・reporter へ進まず早期中断しており、仕様と一致。                                           |
+| 4.3 親検証バッチの実行と証跡反映         | `appendParentValidationsToExecutorEvidence`                                                         | 一致 | executor 成功後に runner が親検証を実行し evidence に追記する。親検証失敗時も reporter を呼んで result を残す構造となっており、仕様と一致。                             |
+| 4.3 reporter 形式再試行と結果描画        | `runReporterWithFormatRetry`, `renderReporterResult`, `deriveReporterFacts`                         | 一致 | reporter 出力の形式リトライ、Markdown 描画、事実判定による成否判定（`facts.outcome === "complete"` のみ exit 0）を担っており、仕様と一致。                              |
+| 4.5 reporter 再開時の親検証再評価        | `refreshParentValidationsForReporterResume`                                                         | 一致 | 再開前に統合先の変更が取り込まれた場合（force）や失敗時に親検証を再実行し、成功済みかつ変更なしの場合は既存検証を再利用しており、仕様と一致。                           |
+| 4.5 前試行スナップショット退避           | `snapshotRunAttempt`                                                                                | 一致 | 再開実行時（`resumedExecutor`）に前試行の段状態を退避しており、履歴保護の仕様と一致。                                                                                   |
+| 5.1 同時実行ゲート制御                   | `params.providerConcurrencyGate?.run`                                                               | 一致 | executor および reporter の双方で provider 単位の同時実行ゲート制御を通過させており、仕様と一致。                                                                       |
+| 5.1 実行時間・資源制約の受入値           | `execDefaults` による外部注入                                                                       | 一致 | ハードコードせず `execDefaults` からタイムアウト値等を注入する実装となっており、設定契約として仕様を整合させた。                                                        |
+| 4.1, 4.4 worktree 隔離と Git 統合操作    | `agent-pipeline.ts` 外部の runner が担当（呼び出し元で `worktreeStatusPaths` 等を組み合わせて制御） | 一致 | `agent-pipeline.ts` は段実行と証跡記録に特化し、Git 統合やタスク完了記録は呼び出し元の runner が担う責務分担となっており、境界定義として仕様と一致。                    |
+
+### 5.3. 成果物
 
 - `docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md`
 
-### 5.3. 迷った点とその判断理由
+### 5.4. 迷った点とその判断理由
 
-- **実装エビデンス照合表の配置場所**:
-  - `sf-rulebook.md` では第 1 章〜第 8 章の構成が規定されており、実装クラス名やメソッド名を本文（処理要件）に書くことは禁止されている。一方、個票の追加完了条件では `agent-pipeline.ts` との照合表を文書に書くことが要求されていた。
-  - 判断: rulebook の章立て要件を保ちつつ検証可能性（DC-004）に資する形とするため、第 7 章「検証・受入観点」のサブセクション `7.2` に照合表を配置した。本文の処理要件（第 4 章）は業務論理的な機能責務として記述し、照合表側で実装ファイルとの対応を対比させることで、rulebook の禁止事項と個票の完了条件の双方を満たした。
-- **未作成 BPS との対応記述**:
-  - `bps-task-selection-preparation` など先行 BPS が未作成の段階で、処理要件との対応をどこまで確定させるか。
-  - 判断: カタログ `dct-business-model-bps.yaml` で既に確定している処理ステップ ID（`P-07-01`〜`P-07-05`、`P-11-01・02`）に基づき、各ステップの責務と本機能の処理要件節（4.1〜4.5）の対応を仕様として確定させた。これにより DC-001 を充足しつつ、将来の詳細 BPS 作成時の確認事項を第 8 章の未決事項・昇格ゲートとして管理する整理とした。
+- **実装エビデンス照合表の移送先と記録方針（F004, F005, F007）**:
+  - 1 回目の指示では成果物本文への照合表追加が求められていたが、[[specdojo:sf-rulebook|sf-rulebook]] の「実装の名前・内部の構造を書かない」規則に反していた。レビュー指摘 F004・F005・F007 に従い、成果物本文から照合表を削除した。
+  - 判断: タスク完了条件である実装整合性エビデンスを担保しつつ rulebook の要件を満たすため、外した照合の表は個票（本登録簿項目）の対応結果「5.2 実装との照合の記録」に移送して記録・保持することとした。
+- **実装固有用語・オプション名の業務論理表現への置換（F007, F008）**:
+  - `ProviderConcurrencyGate`、`ExecEvidence`、`PipelineState`、`--resume` など、実装ファイル内の識別子や CLI オプションが本文に残存していた。
+  - 判断: `sf-rulebook` の精神に従い、これらを「プロバイダ同時実行ゲート機能」「実行証跡」「パイプライン段状態記録」「再開コマンド」のように、機能責務を客観的に表現する業務論理用語に置換し、操作や構文の詳細は各参照ガイド・コマンドリファレンスへ委ねる構成とした。
+- **未作成 BPS との対応記述方針（F001〜F003, F006）**:
+  - 先行成果物 `bps-task-selection-preparation` 等が未作成である中での対応付け方針。
+  - 判断: カタログ `dct-business-model-bps.yaml` で確定している処理ステップ ID（`P-07-01`〜`P-07-05`、`P-11-01・02`）に基づき、各ステップの責務と本機能の処理要件節（4.1〜4.5）の対応関係を確定させた。詳細ステップの最終確認については第 8 章の未決事項および `ready` 昇格ゲートとして管理する整理を維持した。
 
-### 5.4. 残課題
+### 5.5. 残課題
 
 - 上流 BPS（`bps-task-selection-preparation` 等）の正本作成時に、詳細処理ステップ ID と本仕様の整合性を最終確認する（`PJR-2GD6` で追跡）。
 - 外部連携仕様 `ifx-cmd-ai-provider-cli` の作成および本番運用における資源制約（実行時間・同時実行数）の最終受入値確定（`PJR-BCAQ` 後続レビューで追跡）。
 
-### 5.5. CHANGELOG に書く事項
+### 5.6. CHANGELOG に書く事項
 
 なし
 

@@ -1,0 +1,26 @@
+I have started the markdown lint check in the background and am waiting for it to finish.
+I will wait for the markdown lint task to complete.
+Lint タスクの完了を待機しています。
+マークダウン検査の完了を待機しています。
+frontmatter の lint 検査完了を待機しています。
+frontmatter lint の完了を待機しています。
+代表成果物 `sf-task-execution`（タスク実行）および個票 `pjr-bcaq-sf-task-execution-review-fixes.md` について、レビュー指摘事項（F004, F005, F007, F008）およびタスク完了条件に基づく磨き込みを完了しました。
+
+### 実施概要
+
+1. **成果物本文からの実装詳細・照合表の除去（F004, F005, F007）**:
+   - `docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md` から、実装との詳細対比となっていた第 7 章 `7.2 実装エビデンスとの照合（src/exec/run/agent-pipeline.ts）` を削除し、個票（`docs/ja/projects/prj-0001/controls/project-register/pjr-bcaq-sf-task-execution-review-fixes.md`）の「5.2 実装との照合の記録」へ移送しました。
+   - 本文中に残存していた実装固有の型名・クラス名・内部キー名（`ProviderConcurrencyGate`、`ExecEvidence`、`PipelineState`、`outcome.protectionBlock`、`rate_limit_events`、`completion_status: incomplete` など）を、業務・機能論理の表現（プロバイダ同時実行ゲート機能、実行証跡、パイプライン段状態記録、保護違反による停止、未完了ステータスの通知など）へ置換しました。
+2. **コマンドオプション記述の排除とリファレンス委任（F008）**:
+   - 第 6 章「6.1 運用エスカレーションルート」の一次対応にあった `--resume` の記述を削除し、再開コマンドによる再開または手動回復とし、起動構文は `[[specdojo:command-reference|CLIコマンドリファレンス]]` を参照する形に改めました。
+3. **業務プロセス仕様との対応および検証・受入観点の維持（DC-001, DC-004）**:
+   - 第 2 章の業務プロセス仕様対応表（`P-07-01`〜`P-07-05`、`P-11-01・02`）および第 7 章の客観的検証観点一覧（V-01〜V-15）を維持し、業務プロセス整合性と検証可能性を担保しました。
+4. **個票の更新**:
+   - 外した照合表を個票の「5.2 実装との照合の記録」に移送し、一致・乖離・未確認の判定を記録しました。
+   - 迷った点とその判断理由、残課題、CHANGELOG に書く事項（「なし」）を明記しました。
+5. **検証**:
+   - `npx specdojo catalog validate --project prj-0001`、`npm run lint:md`、`npm run lint:fm` の適合を確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sf-task-execution のレビュー指摘（F004, F005, F007, F008）に対応し、成果物本文から実装詳細・照合表を除去して個票へ移送、コマンドオプションのCLI参照化を行い、sf-rulebook・BPS対応・検証観点に適合させました。","handoff":["上流 BPS（bps-task-selection-preparation 等）の正本作成時に、詳細処理ステップ ID と本仕様の整合性を最終確認する（PJR-2GD6 で追跡）。","外部連携仕様 ifx-cmd-ai-provider-cli の作成および本番運用における資源制約（実行時間・同時実行数）の最終受入値確定（PJR-BCAQ 後続レビューで追跡）。"],"validations":[{"command":"npx specdojo catalog validate --project prj-0001","status":"passed","summary":"Catalog validation passed for prj-0001"}]}
+</specdojo_executor_evidence>

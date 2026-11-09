@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-BCAQ
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-BCAQ/pjr-bcaq-20261109T220613Z-04034b3c/plan.md
   started_at: "2026-11-09T22:06:19.181Z"
+  completed_at: "2026-11-09T22:22:49.062Z"
   agent: flash-high-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物 `docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md` を、前回 review の指摘事項に基づき磨き込みました。
+- 具体的には、`sf-rulebook` の禁止事項に基づき、本文中から実装の詳細（関数名や内部データ構造）を削除し、実装との照合結果を文書から切り離して個票へ移送しました。
+- また、コマンドオプションに関する具体的な記述をコマンドリファレンスへの参照に置き換え、業務プロセス仕様（`bps-task-selection-preparation` 等）との整合および検証の観点を整理しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md`: 実装の詳細（関数名や型名）および実装との照合表を削除し、業務プロセスの観点からの記述と検証・受入基準の定義に整理。コマンドの具体的な指定をリファレンス参照に変更。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 上流 BPS（`bps-task-selection-preparation` 等）の正本作成時に、詳細処理ステップ ID と本仕様の整合性を最終確認する（`PJR-2GD6` で追跡）。
+- 外部連携仕様 `ifx-cmd-ai-provider-cli` の作成および本番運用における資源制約（実行時間・同時実行数）の最終受入値確定（`PJR-BCAQ` 後続レビューで追跡）。
+- 上流 BPS（bps-task-selection-preparation 等）の正本作成時に、詳細処理ステップ ID と本仕様の整合性を最終確認する（PJR-2GD6 で追跡）。
+- 外部連携仕様 ifx-cmd-ai-provider-cli の作成および本番運用における資源制約（実行時間・同時実行数）の最終受入値確定（PJR-BCAQ 後続レビューで追跡）。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+Review 指摘（F004, F005, F007, F008）に基づき、`sf-rulebook` の構造的制約（実装詳細の排除、コマンド指定の回避）を遵守する形で成果物を修正。実装との照合については、個票へ移送することで文書の責務を「機能仕様」に集中させた。
