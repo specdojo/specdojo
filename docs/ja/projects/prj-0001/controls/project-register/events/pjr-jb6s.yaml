@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-MXQB"]'
+- v: 1
+  id: reg_8b45c9eae78b4649aa56298c26a09393
+  ts: "2026-11-10T12:59:16Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 完了条件と変更範囲を承認し、夜間の実行に加える（indie が決定、2026-11-10）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_c5633649b8c94ed59569a6785ddb1ddc

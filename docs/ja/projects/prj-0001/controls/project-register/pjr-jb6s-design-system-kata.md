@@ -13,6 +13,7 @@ specdojo:
   registered_at: "2026-11-10T12:46:14Z"
   derived_from:
     - PJR-MXQB
+  autopilot: approved
 ---
 
 # PJR-JB6S GUI のデザインのルール（デザインシステム）の型を新しく作る
