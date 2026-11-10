@@ -2,12 +2,12 @@
 id: bes-task-ready-selected-grade-criteria
 document: bes-task-ready-selected
 path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md
-graded_at: "2026-11-09T05:28:15.460Z"
-graded_by: luna-review-executor
-content_hash: 73a5594cdaee3ebc22619713ee230a6b4e8491e6a67bce09d28830e01edcde76
+graded_at: "2026-11-10T07:05:00.879Z"
+graded_by: sol-review-executor
+content_hash: c539d8cb9264c1afd68dd6a13c92c0d453b206ffdccb79e120df9e5c183530db
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The event cases are described, but applicability across schedule, register, and routine task flows remains
-      unresolved, preventing confirmation of business correctness for the full event scope.
+      The automated-selection occurrence boundary remains provisional at line 33, so business correctness of the timing
+      is not yet established for all stated origins.
   - id: DC-002
     text: イベント仕様の業務的妥当性を承認できること
     roles:
@@ -26,8 +26,8 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      The document leaves event scope and automated selection timing undecided and does not record PO approval of the
-      business definition.
+      Task-flow applicability, the automated-selection boundary, and the identified human PO required for business
+      approval remain unresolved.
   - id: DC-003
     text: イベント処理実装・メッセージ設計の基礎として参照できること
     roles:
@@ -35,17 +35,14 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      The parallel-request correlation data is not defined against the execution-record model, so the specification is
-      not yet a complete basis for message design.
+      The correlation field has not been reconciled with the execution-record model, and the selection-count observation
+      point remains undecided.
   - id: DC-004
     text: イベントテスト設計への活用が確認できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: >-
-      Event conditions suggest test cases, but the document does not identify an event test-design reference or
-      verification of the unresolved parallel-request correlation.
+    status: satisfied
   - id: DC-005
     text: イベントハンドラ・パブリッシャー実装の参照として使えること
     roles:
@@ -53,5 +50,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      The parallel-request identifier is unresolved, and event applicability across task-flow types has not been
-      confirmed for handler and publisher implementation.
+      Authoritative correlation representation and event-boundary confirmation are still pending, and line 25 explicitly
+      withholds definitive implementation handoff.
