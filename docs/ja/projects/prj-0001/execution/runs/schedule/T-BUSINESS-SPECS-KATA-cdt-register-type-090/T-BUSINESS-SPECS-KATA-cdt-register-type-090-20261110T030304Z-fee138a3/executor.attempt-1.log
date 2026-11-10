@@ -1,0 +1,302 @@
+Reading prompt from stdin...
+OpenAI Codex v0.167.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a1c3b4-67d8-78a2-a8fb-57f4cdf46290
+--------
+user
+---
+specdojo:
+  id: prj-0001:xrp-t-business-specs-kata-cdt-register-type-090-20261110t030304z-fee138a3
+  type: exec-plan
+  rulebook: none
+  task_id: T-BUSINESS-SPECS-KATA-cdt-register-type-090
+  name: "完成版レビュー"
+  mode: review
+  status: ready
+  project_id: prj-0001
+  owner: ARC
+  approach: fully-guided
+  targets:
+    - prj-0001:cdt-register-type
+---
+
+# Review Plan: T-BUSINESS-SPECS-KATA-cdt-register-type-090
+
+## 1. このフェーズで行うこと
+
+対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria` だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+docs/ja/specdojo/standards/rulebook-authoring-standard.md（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は docs/ja/specdojo/samples/clis-sample.md（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+## 2. 対象成果物
+
+- `name`: 分類一覧（登録項目の種別）
+- `depends_on`:
+  - [[bdd-register-entry]]
+- `based_on`（対象成果物の frontmatter）: なし
+- 個票の `入力`: なし
+- `overview`: 登録項目の種別（type）が取り得る issue・decision・todo・question・risk・change-request・note・epic の分類を一覧で定義する
+- `path`: `docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md`
+- `rulebook`: `docs/ja/specdojo/rulebooks/cdt-rulebook.md`（`_MISSING_` は `undecided`、`not-needed`、または未整備）
+- `result`: `docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-cdt-register-type-090/T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3/result.md`
+
+### プロジェクトコンテキスト
+
+以下は `depends_on` とは独立したプロジェクト共通の文脈であり、実行順序・成果物間の根拠関係を表さない。作業開始前に実際に読み、プロジェクトレベルの Why、用語、判断原則と成果物の内容を整合させる。
+
+- docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+
+プロジェクトレベルの Why は判断軸として参照し、全文を成果物へ再掲しない。対象成果物の責務に必要な結論・影響だけを反映する。
+
+## 3. 評価結果
+
+review は成果物を再評価しない。次の評価結果を事実として受け取り、共通規約の `review の判断手順` に従ってタスクの完了可否を判断する。
+
+- 評価対象: `docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md`
+- grade の対象種別（`--target`）: `deliverable`
+- 評価結果サイドカー: `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdt-register-type.yaml`（`_MISSING_` は評価対象が未作成、または評価対象の `id` を解決できないことを示す。この場合は評価結果が最新でないものとして扱う）
+
+runner が review の前に確認した評価結果を次に示す。これは grade が確定済みの事実であり、review で観点を評価し直したり、同じ finding を改めて指摘したりしない。
+
+- runner の grade 実行: 省略した（評価対象の `content_hash` が評価結果と一致したため、既存の評価結果を使う）
+- 鮮度: 最新（評価対象の `content_hash` が評価結果の `content_hash` と一致する）
+- `verdict`: `pass`
+- `score`: 87
+- `graded_at`: 2026-11-09T05:51:43.976Z（`graded_by`: luna-review-executor）
+- finding 件数: blocker 0 / major 0 / minor 14 / note 0
+
+grade が判定した観点（全観点）:
+
+| 観点 | level | score |
+| --- | --- | --- |
+| `vp-arc-conciseness` | 4 | 100 |
+| `vp-arc-cross-document-consistency` | 3 | 75 |
+| `vp-arc-document-structure` | 4 | 100 |
+| `vp-arc-single-responsibility` | 4 | 100 |
+| `vp-arc-technical-constraints` | 3 | 75 |
+| `vp-ba-business-value` | 4 | 100 |
+| `vp-ba-requirements-completeness` | 4 | 100 |
+| `vp-ba-stakeholder-clarity` | 4 | 100 |
+| `vp-dev-change-impact` | 3 | 75 |
+| `vp-dev-implementation-readiness` | 3 | 75 |
+| `vp-dev-testability` | 3 | 75 |
+| `vp-ops-agent-boundary` | 4 | 100 |
+| `vp-ops-operability` | 3 | 75 |
+| `vp-ops-release-readiness` | 3 | 75 |
+| `vp-pm-control-reporting` | 3 | 75 |
+| `vp-pm-dependency-risk` | 3 | 75 |
+| `vp-pm-plan-feasibility` | 3 | 75 |
+| `vp-po-decision-readiness` | 3 | 75 |
+| `vp-po-publication-accountability` | 3 | 75 |
+| `vp-po-purpose-alignment` | 4 | 100 |
+| `vp-qe-config-validity` | 4 | 100 |
+| `vp-qe-done-criteria` | 4 | 100 |
+| `vp-qe-omissions-consistency` | 3 | 75 |
+| `vp-qe-verifiability` | 3 | 75 |
+| `vp-ux-language-consistency` | 4 | 100 |
+| `vp-ux-readability` | 4 | 100 |
+| `vp-ux-user-flow` | 4 | 100 |
+
+finding:
+
+- `F001` [minor/`vp-po-decision-readiness`; line=10]: Add any unresolved classification or policy decision and its impact or next action, or state that no PO decision remains, so the reviewer can determine whether to approve or return the document.
+- `F002` [minor/`vp-po-publication-accountability`; line=4]: State the human PO's responsibility for final approval and whether the draft contains only information suitable for publication, so publication accountability is explicit.
+- `F003` [minor/`vp-pm-plan-feasibility`; line=10]: Add a review or implementation checkpoint and an observable completion condition, so the stated roles can use this document to plan and track follow-up work.
+- `F004` [minor/`vp-pm-dependency-risk`; line=22]: Identify any outstanding dependency or risk affecting the referenced dictionary, status definition, schema, or CLI, and its tracking or schedule impact; state that none remain if applicable.
+- `F005` [minor/`vp-pm-control-reporting`; line=10]: Identify any items requiring project reporting, their destination and responsible role, or state that there are none, so follow-up can be transferred into project controls.
+- `F006` [minor/`vp-arc-cross-document-consistency`; line=22]: Confirm that the referenced dictionary, status definition, schema, CLI values, and catalog entry agree with the classifications and scope stated here, and record or link the verification result.
+- `F007` [minor/`vp-arc-technical-constraints`; line=24]: State how the schema and CLI references are checked for existence and value alignment, so technical consumers can verify the declared sources.
+- `F008` [minor/`vp-dev-implementation-readiness`; line=22]: Add an implementation check that compares the schema enum and CLI accepted values with the classification meanings and derived-view routing, so DEV can confirm the mapping is complete.
+- `F009` [minor/`vp-dev-change-impact`; line=22]: Specify the synchronization impacts and update targets when a classification value, meaning, or routing rule changes, so implementers can assess compatibility and required updates.
+- `F010` [minor/`vp-dev-testability`; line=24]: Provide or reference the validation command and expected result for checking schema and CLI value alignment, so changes to classification values can be tested consistently.
+- `F011` [minor/`vp-qe-verifiability`; line=24]: Define an explicit pass/fail check for confirming that every SSOT value has a corresponding business definition and that CLI validation accepts exactly those values.
+- `F012` [minor/`vp-qe-omissions-consistency`; line=22]: Record the consistency check against the business data dictionary, status definition, schema, CLI, and catalog, or link to its result, so omissions or mismatches can be identified.
+- `F013` [minor/`vp-ops-release-readiness`; line=4]: State the human approval required for promotion to `ready` and the outstanding release checks, or indicate that no blockers remain, so release readiness can be judged.
+- `F014` [minor/`vp-ops-operability`; line=22]: Describe or reference the change and maintenance procedure for synchronizing classification meanings, schema values, CLI validation, and derived views when they are updated.
+
+## 4. 完了条件
+
+成果物カタログの `done_criteria` を、このタスクの完了条件として照合する。観点ごとに成果物を評価し直すための表ではない。
+
+<!-- markdownlint-disable MD055 MD056 -->
+
+<!-- prettier-ignore-start -->
+| ID | ロール | `viewpoint_id` | 完了条件 |
+| --- | --- | --- | --- |
+| DC-001 | BA | vp-ba-requirements-completeness | 分類名・説明が業務観点で正確に定義されていること |
+| DC-002 | DEV | vp-dev-implementation-readiness | 分類実装（マスタデータ・コード値）の基礎として参照できること |
+<!-- prettier-ignore-end -->
+
+<!-- markdownlint-enable MD055 MD056 -->
+
+## 5. 進め方
+
+fully-guided のタスクは、宣言された文書だけを参照し、rulebook / recipe / sample に沿って既存成果物を磨き込むことを求めた。下書きや調査による新しい値の選定は draft の役割である。磨き込みでは template を読み込まない。rulebook の必須要素・禁止事項、recipe の問い、sample の形式との整合は grade が評価済みである。review はこれらを照合し直さず、評価結果の finding として扱う。
+
+参照ファイル（rulebook frontmatter から解決。`_MISSING_` の項目は未宣言・未整備）:
+
+- rulebook: `docs/ja/specdojo/rulebooks/cdt-rulebook.md`
+- recipe: `_MISSING_`
+- sample: `docs/ja/specdojo/samples/cdt-sample.md`
+- 併せて適用する rulebook（記法など）: _MISSING_
+
+1. フェーズ説明と完了条件が求めた磨き込みが、対象成果物に行われたかを確認する。
+2. 実践の型の欠落（`_MISSING_`）や内容の薄さがある場合は、実行記録にその扱いが残っているかを確認する。実践の型そのものの整備が必要な場合は、改善指示に残す。
+3. finding が残っている場合は、このタスクの完了を妨げるかを判断する。rulebook の必須要素の欠落や禁止事項への抵触など、完了条件に直結する finding は完了を妨げる。
+
+確認に用いてよい文書は、宣言された文書だけに限る。具体的には、評価結果、対象成果物、本セクションの参照ファイル、`depends_on` 成果物、対象成果物の frontmatter の `based_on`、プロジェクトコンテキスト（`project_context`）、個票の `入力`、カタログの `brief`、実行記録である。`入力` と `brief` は値が無いときは載せない。これらに宣言されていない他のプロジェクト文書や外部の情報を独自に探索・参照しない。
+
+本タスクの実行に必要な fully-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として docs/ja/specdojo/guides/ryu-guide.md を参照する。
+
+## 6. 完了手順
+
+1. 共通規約の `review の判断手順` に従い、評価結果の鮮度を確認してから完了可否を判断する。
+2. result の各セクションを埋める。`評価結果の確認` には鮮度確認のコマンドと出力、grade の `verdict` / `score` / finding 件数を書く。`判断根拠` には照合した内容を、`未充足事項・改善指示` には未充足事項と改善指示を書く。`approach に応じた確認` には前章で確認した内容を、`decision` には `verdict` を書く。review result の記入はタスク完了に必須であり、未記入のまま終了しない（詳細は共通規約を参照）。
+3. 文書の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は本文で述べる。
+4. verdict が `complete` 以外でも、review result を記録できた場合は正常終了する（終了コード 0）。
+
+## 7. 異常終了の条件
+
+- 対象ファイル不明・依存未解決・result 更新不能など、review 自体を完了できない場合は異常終了する（終了コード 1）。評価結果が最新でない・評価不能であることは異常終了の理由にせず、verdict として記録する。
+- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; ref=<path>`）。
+- agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+作業を始める前に、共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xrp-common-conventions-template.md` を読み、その内容に従う。次の箇条書きは、そのうち守らないと失敗に直結する要点である。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定（`lefthook.yml` など）を読み、本共通規約の詳細にある検査表の適用条件で、実行する検査を決める。
+- 適用条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。適用される検査が 1 つもない場合も同じく、該当する検査ごとに `not_applicable` と理由を記録する。
+- `not_run` は、適用される検査を実行できたのに実行しなかった場合だけに使う。runner は `not_run` を検証失敗として扱い、タスクを先へ進めない。
+- `pipeline.parent_validations` に設定された検査は executor evidence の validations に含めなくてよい。executor が同じ検査を `not_run` または `not_applicable` として含めても、同じリポジトリで実行した親 runner の結果を正とする。
+
+### review の判断手順
+
+review plan に共通で適用する。review はタスクの成果を判定し、成果物の品質は判定しない。成果物の品質は grade が一度だけ評価する。review はその評価結果（grade・finding）を事実として受け取り、このタスクを完了してよいかを判断する（docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md）。
+
+- 成果物を再評価しない。観点ごとの pass / fail を付け直したり、評価結果の判定を自分の判断で置き換えたりしない。評価結果の内容に疑義がある場合は、疑義の内容と再評価が必要な理由を改善指示に記録する。
+- 評価結果の鮮度を最初に確認する（`E-01`）。plan の「評価結果」章に示す評価対象と `--target` を使い、`specdojo grade list --target <対象種別> --path <評価対象> --changed-only` を実行する。`--target deliverable` の場合は `--dependency-changed` でも同様に実行する。いずれかが評価対象のパスを出力した場合、または評価結果サイドカーが存在しない場合は、評価結果が最新でない。成果物を自分で評価して補わず、verdict を `grade-stale` とする。
+- 評価結果を確定できない場合（`E-02`）は、verdict を `grade-unavailable` とする。サイドカーを読み取れない場合と、`specdojo grade list --target <対象種別> --path <評価対象> --incomplete` が評価対象のパスを出力する場合（評価パイプラインが未完了）が該当する。
+- 評価結果が最新であれば、サイドカーの `verdict` / `score` / `finding_counts` / `findings`、および `done_criteria`（存在する場合）を読み取る。
+- 変更内容・この plan・実行記録・完了条件・最新の finding を照合し、このタスクの範囲と完了条件を満たすかを判断する（`S-02`）。完了条件の充足は、評価結果に判定がある場合はそれを事実として用いる。評価結果が扱わない事項を review で確かめる。対象は、フェーズ説明が求めた変更が行われたか、対象外の変更が混入していないか、実行記録の検証結果が成功しているかである。実行記録（先行する edit タスクの result）を特定できない場合は、確認できなかったことを判断根拠に記録する。
+- finding が残っていても、このタスクの範囲と完了条件を満たしていれば完了できる。その場合は finding を消去・再評価せず、完了を妨げない理由と必要な改善指示を記録する。
+- 判断の根拠は、評価結果・成果物・plan・実行記録を実際に読んで得た具体的な事実に限る。executor の最終メッセージや result の自己申告を、そのまま、または言い換えて根拠にしない。
+- verdict を記録する直前に鮮度の確認を再実行する。最初の確認の後に成果物が変更されて評価結果が最新でなくなった場合は、verdict を `changed-during-review` とする（review 中の成果物変更）。
+
+verdict は次の 6 値から 1 つを選ぶ。各値は docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md の検証・受入観点と一対一に対応する。
+
+| verdict                  | 受入観点                | 選ぶ条件                                                                          | 記録すること                                               |
+| ------------------------ | ----------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `complete`               | 完了可能                | 評価結果が最新で、plan と完了条件を満たし、完了を妨げる未充足事項がない           | 照合した根拠                                               |
+| `complete-with-findings` | 品質 finding を伴う完了 | 評価結果に finding があるが、このタスクの範囲と完了条件は満たしている             | finding が完了を妨げない理由と改善指示                     |
+| `incomplete`             | 品質良好だが未完了      | plan または完了条件に未充足事項がある（grade の良否は問わない）                   | 未充足事項と、再計画に使う改善指示                         |
+| `grade-stale`            | 評価結果が最新でない    | 評価結果がない、`content_hash` が一致しない、または評価コンテキストの変化が未反映 | 鮮度確認のコマンドと出力。完了可否は判断しない             |
+| `grade-unavailable`      | 評価不能                | 評価結果を読み取れない、または評価パイプラインが未完了で grade・finding が未確定  | 評価不能の理由と不足情報。完了は保留する                   |
+| `changed-during-review`  | review 中の成果物変更   | 最初の鮮度確認の後に成果物が変更され、評価結果が最新でなくなった                  | 変更を検知した確認の出力。verdict を確定せず再評価を求める |
+
+- verdict が `complete` 以外でも、review result を記録できた場合は正常終了する（終了コード 0）。runner は verdict に応じて再評価または再計画へ進む。
+- review result の章立ては `評価結果の確認`、`判断根拠`、`未充足事項・改善指示`、`approach に応じた確認`、`decision` である。`decision` の `verdict` は必ず上表の値で埋める。
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+Put unresolved decisions, proposed protected-configuration changes, and next actions in the
+report's optional `handoff` array (up to 100 non-empty strings, each at most 4000 characters).
+For register tasks, also record them in the ticket's response/results section. If a completion
+condition asks for a note in the result, write it in both places instead of editing the result.
+The runner preserves `handoff` in the edit result's handoff section after the reporter stage.
+Use an empty array when there are no handoff notes. Reports without this field remain valid.
+
+Report task completion in `completion_status`: use `complete` only when all work required by
+the plan is done. If you stop with unfinished work, use `incomplete`, summarize the reason in
+`final_message`, and list the remaining work in `handoff`. A zero exit code and passing parent
+validations do not override `incomplete`; the runner preserves the worktree for executor resume.
+Omitting this field is supported for legacy reports and implies `complete`.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+Do not create disposable or scratch files at the repository root; place them in `tmp/` within
+the worktree or outside the repository. Files under `tmp/` are excluded from commits.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run lint:mermaid, npm run lint:d2, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+For a review task, report only checks you actually ran in `validations`. Do not add optional
+checks you chose not to run as `not_run` or `not_applicable`. Describe them instead in
+`final_message` under "確認できなかった範囲" so the reporter can record that scope in the
+review result and reflect it in the verdict.
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when it can confirm the check applies:
+- `npm run <script>` / `npm test`: the script exists in package.json and any change-type
+  condition below is met. The placeholder `test` script that `npm init` writes
+  (`echo "Error: no test specified" && exit 1`) counts as absent.
+- `npx <package>`: the package is in package.json dependencies or devDependencies and any
+  change-type condition below is met.
+- `npm run validate:schema:file` requires a changed `*.yaml` or `*.yml` file; Prettier
+  requires a changed `*.md`, `*.ts`, `*.js`, `*.json`, `*.yaml`, or `*.yml` file;
+  markdownlint requires a changed `*.md` file; `npm run validate:history-links` requires a
+  changed history file (`docs/ja/projects/**/controls/project-register/pjr-*.md` excluding
+  `pjr-index.md`, or an existing `plan.md` / `result.md` under
+  `execution/runs/<origin>/<item>/<run>/` or legacy `exec/plans/**/*.md` /
+  `exec/results/**/*.md` that you changed yourself).
+- A command that targets a declared product repository (a `<repo>:<path>` argument or
+  `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
+- `specdojo catalog validate` / `npm run validate:catalog`: the run's target project (or
+  `--project <id>`) sets `catalog_path` and your deliverable changes reach `docs/ja/projects/`.
+  Runner-managed files under `exec/` (`plans/`, `results/`, `evidence/`, `events/`, `.locks/`)
+  do not count as your changes. A project without `catalog_path`, or changes
+  outside `docs/ja/projects/`, is a valid reason; state it in `reason`.
+
+Do not run or report `specdojo index build`. It writes `.specdojo/doc-index.json`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
+
+For a plan with approach `condense`, also include `condense_records` in this envelope
+as specified by the plan (an empty array if there are no candidates). The runner writes those
+validated executor facts to the result frontmatter and table; do not edit the result yourself.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete|incomplete","final_message":"concise outcome","handoff":[],"validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at Nov 11th, 2026 9:02 PM.
+ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at Nov 11th, 2026 9:02 PM.
