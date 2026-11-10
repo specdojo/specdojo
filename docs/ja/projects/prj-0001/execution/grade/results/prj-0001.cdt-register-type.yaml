@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 87
-graded_at: "2026-11-09T05:51:43.976Z"
-graded_by: luna-review-executor
+graded_at: "2026-11-10T16:28:53.448Z"
+graded_by: flash-high-executor
 content_hash: 6d3fe39312408d84f2b4ebfc56e3b6270d1f0f7bab82804d68c0a6057a5d56a8
 source_hashes:
   catalog-entry: 4ff68e579f58f65b8dd720622e0ad71797b137788e5f4e46b53840a3876b51bd
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
+  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
 categories:
   purpose:
     score: 88
@@ -131,9 +131,7 @@ findings:
     message: >-
       Add any unresolved classification or policy decision and its impact or next action, or state that no PO decision
       remains, so the reviewer can determine whether to approve or return the document.
-    message_ja: >-
-      Add any unresolved classification or policy decision and its impact or next action, or state that no PO decision
-      remains, so the reviewer can determine whether to approve or return the document.
+    message_ja: 未解決の分類またはポリシーの決定事項とその影響、あるいは次のアクションを追加するか、あるいはPOの決定事項が残っていないことを明記してください。これにより、レビュアーはドキュメントを承認するか差し戻すかを判断できます。
     cause:
       type: document
   - id: F002
@@ -144,9 +142,7 @@ findings:
     message: >-
       State the human PO's responsibility for final approval and whether the draft contains only information suitable
       for publication, so publication accountability is explicit.
-    message_ja: >-
-      State the human PO's responsibility for final approval and whether the draft contains only information suitable
-      for publication, so publication accountability is explicit.
+    message_ja: 最終承認における人間のPOの責任と、ドラフトが公開に適した情報のみを含んでいるかどうかを明記してください。これにより、公開の責任が明確になります。
     cause:
       type: document
   - id: F003
@@ -157,9 +153,7 @@ findings:
     message: >-
       Add a review or implementation checkpoint and an observable completion condition, so the stated roles can use this
       document to plan and track follow-up work.
-    message_ja: >-
-      Add a review or implementation checkpoint and an observable completion condition, so the stated roles can use this
-      document to plan and track follow-up work.
+    message_ja: レビューまたは実装のチェックポイントと、観察可能な完了条件を追加してください。これにより、記載された役割の担当者がこのドキュメントを使用して、フォローアップ作業の計画と追跡を行うことができます。
     cause:
       type: document
   - id: F004
@@ -170,9 +164,7 @@ findings:
     message: >-
       Identify any outstanding dependency or risk affecting the referenced dictionary, status definition, schema, or
       CLI, and its tracking or schedule impact; state that none remain if applicable.
-    message_ja: >-
-      Identify any outstanding dependency or risk affecting the referenced dictionary, status definition, schema, or
-      CLI, and its tracking or schedule impact; state that none remain if applicable.
+    message_ja: 参照されているディクショナリ、ステータス定義、スキーマ、またはCLIに影響を与える未解決の依存関係やリスク、およびその追跡やスケジュールの影響を特定してください。該当がない場合は、残っていない旨を明記してください。
     cause:
       type: document
   - id: F005
@@ -183,9 +175,7 @@ findings:
     message: >-
       Identify any items requiring project reporting, their destination and responsible role, or state that there are
       none, so follow-up can be transferred into project controls.
-    message_ja: >-
-      Identify any items requiring project reporting, their destination and responsible role, or state that there are
-      none, so follow-up can be transferred into project controls.
+    message_ja: プロジェクト報告が必要な項目、その提出先、および責任のある役割を特定するか、あるいは該当がない旨を明記してください。これにより、フォローアップをプロジェクト管理に移管できます。
     cause:
       type: document
   - id: F006
@@ -196,9 +186,7 @@ findings:
     message: >-
       Confirm that the referenced dictionary, status definition, schema, CLI values, and catalog entry agree with the
       classifications and scope stated here, and record or link the verification result.
-    message_ja: >-
-      Confirm that the referenced dictionary, status definition, schema, CLI values, and catalog entry agree with the
-      classifications and scope stated here, and record or link the verification result.
+    message_ja: 参照されているディクショナリ、ステータス定義、スキーマ、CLIの値、およびカタログのエントリが、ここに記載されている分類およびスコープと一致していることを確認し、検証結果を記録またはリンクしてください。
     cause:
       type: document
   - id: F007
@@ -209,9 +197,7 @@ findings:
     message: >-
       State how the schema and CLI references are checked for existence and value alignment, so technical consumers can
       verify the declared sources.
-    message_ja: >-
-      State how the schema and CLI references are checked for existence and value alignment, so technical consumers can
-      verify the declared sources.
+    message_ja: スキーマとCLIの参照が、存在および値の一致についてどのように確認されるかを明記してください。これにより、技術的な利用者が宣言されたソースを検証できます。
     cause:
       type: document
   - id: F008
@@ -222,9 +208,7 @@ findings:
     message: >-
       Add an implementation check that compares the schema enum and CLI accepted values with the classification meanings
       and derived-view routing, so DEV can confirm the mapping is complete.
-    message_ja: >-
-      Add an implementation check that compares the schema enum and CLI accepted values with the classification meanings
-      and derived-view routing, so DEV can confirm the mapping is complete.
+    message_ja: スキーマのenumとCLIの受け入れ値が、分類の意味および派生ビューのルーティングと一致しているかを比較する実装チェックを追加してください。これにより、DEVはマッピングが完了していることを確認できます。
     cause:
       type: document
   - id: F009
@@ -235,9 +219,7 @@ findings:
     message: >-
       Specify the synchronization impacts and update targets when a classification value, meaning, or routing rule
       changes, so implementers can assess compatibility and required updates.
-    message_ja: >-
-      Specify the synchronization impacts and update targets when a classification value, meaning, or routing rule
-      changes, so implementers can assess compatibility and required updates.
+    message_ja: 分類の値、意味、またはルーティングルールが変更された際の、同期の影響と更新対象を明記してください。これにより、実装者が互換性と必要な更新を評価できます。
     cause:
       type: document
   - id: F010
@@ -248,9 +230,7 @@ findings:
     message: >-
       Provide or reference the validation command and expected result for checking schema and CLI value alignment, so
       changes to classification values can be tested consistently.
-    message_ja: >-
-      Provide or reference the validation command and expected result for checking schema and CLI value alignment, so
-      changes to classification values can be tested consistently.
+    message_ja: スキーマとCLIの値の一致を確認するための検証コマンドと期待される結果を提供するか、参照してください。これにより、分類値の変更を一貫してテストできます。
     cause:
       type: document
   - id: F011
@@ -261,9 +241,7 @@ findings:
     message: >-
       Define an explicit pass/fail check for confirming that every SSOT value has a corresponding business definition
       and that CLI validation accepts exactly those values.
-    message_ja: >-
-      Define an explicit pass/fail check for confirming that every SSOT value has a corresponding business definition
-      and that CLI validation accepts exactly those values.
+    message_ja: すべてのSSOTの値に対応するビジネス定義が存在すること、およびCLIの検証が正確にそれらの値を受け入れることを確認するための、明示的な合格/不合格チェックを定義してください。
     cause:
       type: document
   - id: F012
@@ -274,9 +252,7 @@ findings:
     message: >-
       Record the consistency check against the business data dictionary, status definition, schema, CLI, and catalog, or
       link to its result, so omissions or mismatches can be identified.
-    message_ja: >-
-      Record the consistency check against the business data dictionary, status definition, schema, CLI, and catalog, or
-      link to its result, so omissions or mismatches can be identified.
+    message_ja: ビジネスデータディクショナリ、ステータス定義、スキーマ、CLI、およびカタログに対する一致確認の結果を記録するか、その結果にリンクしてください。これにより、漏れや不一致を特定できます。
     cause:
       type: document
   - id: F013
@@ -287,9 +263,7 @@ findings:
     message: >-
       State the human approval required for promotion to `ready` and the outstanding release checks, or indicate that no
       blockers remain, so release readiness can be judged.
-    message_ja: >-
-      State the human approval required for promotion to `ready` and the outstanding release checks, or indicate that no
-      blockers remain, so release readiness can be judged.
+    message_ja: "`ready` への昇格に必要な人間の承認と、未完了のリリースのチェック事項を明記するか、あるいはブロッカーが残っていないことを示してください。これにより、リリースの準備状況を判断できます。"
     cause:
       type: document
   - id: F014
@@ -300,9 +274,7 @@ findings:
     message: >-
       Describe or reference the change and maintenance procedure for synchronizing classification meanings, schema
       values, CLI validation, and derived views when they are updated.
-    message_ja: >-
-      Describe or reference the change and maintenance procedure for synchronizing classification meanings, schema
-      values, CLI validation, and derived views when they are updated.
+    message_ja: 分類の意味、スキーマの値、CLIの検証、および派生ビューが更新された際の、それらを同期するための変更およびメンテナンスの手順を説明するか、参照してください。
     cause:
       type: document
 done_criteria:
