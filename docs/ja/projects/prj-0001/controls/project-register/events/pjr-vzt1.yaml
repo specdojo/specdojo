@@ -47,3 +47,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-T88P"]'
+- v: 1
+  id: reg_bbdc4c497aee44f48b4d732d02a141bf
+  ts: "2026-11-10T12:58:43Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 完了条件と変更範囲を承認し、夜間の実行に加える（indie が決定、2026-11-10）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_310e6b8c28954e98abb5b73ea9fdade1

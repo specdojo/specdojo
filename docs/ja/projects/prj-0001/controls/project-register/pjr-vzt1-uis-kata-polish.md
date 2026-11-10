@@ -13,6 +13,7 @@ specdojo:
   registered_at: "2026-11-10T12:44:22Z"
   derived_from:
     - PJR-T88P
+  autopilot: approved
   approach: rulebook-maintenance
   targets:
     - specdojo:uis-rulebook
