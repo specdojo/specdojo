@@ -47,3 +47,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-2GD6","PJR-T88P"]'
+- v: 1
+  id: reg_22946c42594b404f94a8411f194711a1
+  ts: "2026-11-10T13:15:52Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 代表の流し直しを今夜の夜間実行で行う（indie が決定、2026-11-10）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_9faf177abf864cddb4896a868a0c6dea
