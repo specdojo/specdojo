@@ -5,10 +5,10 @@ path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selec
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 78
-graded_at: "2026-11-09T05:28:15.460Z"
-graded_by: luna-review-executor
-content_hash: 73a5594cdaee3ebc22619713ee230a6b4e8491e6a67bce09d28830e01edcde76
+score: 88
+graded_at: "2026-11-10T07:05:00.879Z"
+graded_by: sol-review-executor
+content_hash: c539d8cb9264c1afd68dd6a13c92c0d453b206ffdccb79e120df9e5c183530db
 source_hashes:
   catalog-entry: 2584b0d3c9b1e33a54da977a6307eb41c36383ad364e84e7da2a67f44b950134
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -17,57 +17,57 @@ source_hashes:
   dependency:stsd-task-execution: be94d1a9dc4e8bc3eb7220466a50ccb06c2d8f26e362e2ace062dc5b97b924cc
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
+  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 81
+    score: 94
   planning:
-    score: 75
+    score: 100
   business:
-    score: 75
+    score: 92
   consistency:
-    score: 75
+    score: 88
   architecture:
     score: 92
   usability:
-    score: 88
+    score: 100
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 69
+    score: 63
 viewpoints:
   vp-po-purpose-alignment:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
     level: 3
     score: 75
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 3
     score: 75
@@ -81,11 +81,11 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-done-criteria:
     level: 1
     score: 25
@@ -96,20 +96,20 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-user-flow:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -117,307 +117,186 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 21
+  major: 3
+  minor: 8
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-purpose-alignment
-    line: 43
-    anchor: ""
-    message: >-
-      Resolve the event’s scope across schedule, register, and routine task flows, or state a supported boundary, so
-      readers can determine which task selections this specification covers.
-    message_ja: >-
-      Resolve the event’s scope across schedule, register, and routine task flows, or state a supported boundary, so
-      readers can determine which task selections this specification covers.
-    cause:
-      type: document
-  - id: F002
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 22
-    anchor: ""
-    message: >-
-      Name the decision owner and decision timing for whether automated selection and claim share one business event
-      boundary.
-    message_ja: >-
-      Name the decision owner and decision timing for whether automated selection and claim share one business event
-      boundary.
-    cause:
-      type: document
-  - id: F003
-    severity: minor
     rule: vp-po-publication-accountability
-    line: 4
-    anchor: ""
+    line: 23
+    anchor: >-
+      | 承認者の識別 | _UNDECIDED_: 業務定義の妥当性と公開可否（`status: ready` への昇格を含む）を承認する人間の PO の Member ID
+      または氏名は、宣言された参照範囲から確認できない         | PM が業務レビューの依頼前に人間の PO を特定し、その識別と承認結果をレビュー結果に記録する。AI Agent
+      による承認で代替しない                                                                        |
     message: Identify the human PO responsible for approving the event definition and its publication readiness.
     message_ja: Identify the human PO responsible for approving the event definition and its publication readiness.
     cause:
       type: document
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 87
+    anchor: >-
+      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
+      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
+      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
+      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
+    message: >-
+      Specify the event-data field that correlates selections made by the same parallel request, based on the
+      execution-record model.
+    message_ja: >-
+      Specify the event-data field that correlates selections made by the same parallel request, based on the
+      execution-record model.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 70
+    anchor: >-
+      | 同じ要求で確定した件数     |
+      一括要求での選択数。集計時点は下記の未決事項                                                                                                        
+      | 並列。発生時点で観測可能な範囲に限る |
+    message: >-
+      Define whether the selection count is cumulative at each event or determined when the request finishes, and
+      specify when that value is available or omitted.
+    message_ja: >-
+      Define whether the selection count is cumulative at each event or determined when the request finishes, and
+      specify when that value is available or omitted.
+    cause:
+      type: document
   - id: F004
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 43
-    anchor: ""
+    rule: vp-arc-technical-constraints
+    line: 87
+    anchor: >-
+      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
+      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
+      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
+      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
     message: >-
-      Add an owner role and decision timing for resolving the task-flow scope before this event can be treated as
-      complete.
+      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
+      represented consistently.
     message_ja: >-
-      Add an owner role and decision timing for resolving the task-flow scope before this event can be treated as
-      complete.
+      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
+      represented consistently.
     cause:
       type: document
   - id: F005
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 54
-    anchor: ""
+    rule: vp-dev-implementation-readiness
+    line: 87
+    anchor: >-
+      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
+      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
+      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
+      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
     message: >-
-      Identify the execution-record data-model dependency by document ID and specify the follow-up needed to confirm the
-      parallel-request identifier.
+      Define the parallel-request correlation field against the execution-record model before using this event
+      specification as an implementation reference.
     message_ja: >-
-      Identify the execution-record data-model dependency by document ID and specify the follow-up needed to confirm the
-      parallel-request identifier.
+      Define the parallel-request correlation field against the execution-record model before using this event
+      specification as an implementation reference.
     cause:
       type: document
   - id: F006
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 43
-    anchor: ""
-    message: Specify who records and follows up the unresolved task-flow scope, and where that decision is reported.
-    message_ja: Specify who records and follows up the unresolved task-flow scope, and where that decision is reported.
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 21
+    anchor: >-
+      | 対象系統     | _UNDECIDED_: 3 系統（schedule・register・routine）と実行サイクル全体で同一イベントとするかは、一覧と各系統の起点イベント仕様が揃っておらず、人間の PO
+      の判断も未了 | BA が `bes-index`（`prj-0001:bes-index`）と各系統の起点イベント仕様を照合し、人間の PO が実装・テスト設計への引き渡し前に判断する。PM
+      は判断結果と未解決事項を登録簿（`pjr-*`）でも追跡・報告する |
+    message: >-
+      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
+      specification is complete.
+    message_ja: >-
+      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
+      specification is complete.
     cause:
       type: document
   - id: F007
-    severity: minor
-    rule: vp-ba-business-value
-    line: 6
-    anchor: ""
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 87
+    anchor: >-
+      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
+      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
+      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
+      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
     message: >-
-      State the operational problem this event definition addresses and a success criterion for determining whether it
-      resolves that problem.
+      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
+      support implementation and test design.
     message_ja: >-
-      State the operational problem this event definition addresses and a success criterion for determining whether it
-      resolves that problem.
+      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
+      support implementation and test design.
     cause:
       type: document
   - id: F008
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 43
-    anchor: ""
+    rule: vp-qe-verifiability
+    line: 87
+    anchor: >-
+      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
+      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
+      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
+      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
     message: >-
-      Define which task-flow types are in scope and how the event applies to them, or explicitly exclude the unresolved
-      flows.
+      Define the observation point and expected per-event value for the parallel selection count so two selections from
+      one request have unambiguous pass/fail expectations.
     message_ja: >-
-      Define which task-flow types are in scope and how the event applies to them, or explicitly exclude the unresolved
-      flows.
+      Define the observation point and expected per-event value for the parallel selection count so two selections from
+      one request have unambiguous pass/fail expectations.
     cause:
       type: document
   - id: F009
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 54
-    anchor: ""
+    rule: vp-qe-omissions-consistency
+    line: 22
+    anchor: >-
+      | 一覧との接続 | _UNDECIDED_: 依存の
+      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                                    |
+      一覧が作成された時点で ARC が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する           |
     message: >-
-      Specify the event-data field that correlates selections made by the same parallel request, based on the
-      execution-record model.
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
     message_ja: >-
-      Specify the event-data field that correlates selections made by the same parallel request, based on the
-      execution-record model.
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
     cause:
       type: document
   - id: F010
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 28
+    rule: vp-qe-omissions-consistency
+    line: 22
     anchor: >-
-      | 自動     | 実行主体（人または AI Agent）、または Orchestrator      | runner（選択戦略の順位に従ってシステムが確定する）   | 要求時点では対象が決まらない。順位が最も高い 1
-      件を選ぶ                    |
+      | 一覧との接続 | _UNDECIDED_: 依存の
+      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                                    |
+      一覧が作成された時点で ARC が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する           |
     message: >-
-      Identify the role that reviews and agrees the event’s business definition, including the unresolved scope and
-      parallel-request data.
+      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
+      connected.
     message_ja: >-
-      Identify the role that reviews and agrees the event’s business definition, including the unresolved scope and
-      parallel-request data.
+      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
+      connected.
     cause:
       type: document
   - id: F011
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 8
-    anchor: ""
-    message: >-
-      Add the event-index link when the index is created and verify this event’s catalog entry against the
-      specification.
-    message_ja: >-
-      Add the event-index link when the index is created and verify this event’s catalog entry against the
-      specification.
-    cause:
-      type: document
-  - id: F012
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 54
-    anchor: ""
-    message: >-
-      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
-      represented consistently.
-    message_ja: >-
-      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
-      represented consistently.
-    cause:
-      type: document
-  - id: F013
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 54
-    anchor: ""
-    message: >-
-      Define the parallel-request correlation field against the execution-record model before using this event
-      specification as an implementation reference.
-    message_ja: >-
-      Define the parallel-request correlation field against the execution-record model before using this event
-      specification as an implementation reference.
-    cause:
-      type: document
-  - id: F014
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 54
-    anchor: ""
-    message: >-
-      Identify the execution-record model and the downstream event or implementation artifacts affected by changing the
-      parallel-selection data.
-    message_ja: >-
-      Identify the execution-record model and the downstream event or implementation artifacts affected by changing the
-      parallel-selection data.
-    cause:
-      type: document
-  - id: F015
-    severity: minor
-    rule: vp-dev-testability
-    line: 52
-    anchor: ""
-    message: >-
-      Define the parallel-request correlation field and identify the event test cases that verify selections from one
-      request are associated correctly.
-    message_ja: >-
-      Define the parallel-request correlation field and identify the event test cases that verify selections from one
-      request are associated correctly.
-    cause:
-      type: document
-  - id: F016
     severity: major
-    rule: vp-qe-done-criteria
-    line: 43
-    anchor: ""
-    message: >-
-      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
-      specification is complete.
-    message_ja: >-
-      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
-      specification is complete.
-    cause:
-      type: document
-  - id: F017
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 54
-    anchor: ""
-    message: >-
-      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
-      support implementation and test design.
-    message_ja: >-
-      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
-      support implementation and test design.
-    cause:
-      type: document
-  - id: F018
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 52
-    anchor: ""
-    message: Name the field and verification rule that demonstrate which parallel selections belong to the same request.
-    message_ja: Name the field and verification rule that demonstrate which parallel selections belong to the same request.
-    cause:
-      type: document
-  - id: F019
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 8
-    anchor: ""
-    message: >-
-      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
-      connected.
-    message_ja: >-
-      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
-      connected.
-    cause:
-      type: document
-  - id: F020
-    severity: minor
-    rule: vp-ux-readability
-    line: 43
-    anchor: ""
-    message: >-
-      State the confirmed task-flow scope near the event definition so readers can tell which selections the
-      specification covers.
-    message_ja: >-
-      State the confirmed task-flow scope near the event definition so readers can tell which selections the
-      specification covers.
-    cause:
-      type: document
-  - id: F021
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 29
+    rule: vp-qe-config-validity
+    line: 17
     anchor: >-
-      | 並列     | 人または Orchestrator（件数の上限を指定して一括で要求） | runner（順位に従い、上限と実行能力の範囲で確定する） | 1
-      回の要求から複数件が確定する。実行能力が足りない候補は、今回は確定しない |
-    message: >-
-      Define `runner` and use a consistent actor label that makes clear whether it is a role, system component, or
-      execution subject.
-    message_ja: >-
-      Define `runner` and use a consistent actor label that makes clear whether it is a role, system component, or
-      execution subject.
-    cause:
-      type: document
-  - id: F022
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 43
-    anchor: ""
-    message: State the approval owner and readiness condition for closing the unresolved event-scope decision.
-    message_ja: State the approval owner and readiness condition for closing the unresolved event-scope decision.
-    cause:
-      type: document
-  - id: F023
-    severity: minor
-    rule: vp-ops-operability
-    line: 54
-    anchor: ""
-    message: >-
-      Add the responsible role and follow-up route for validating the parallel-request identifier when the
-      execution-record model is available.
-    message_ja: >-
-      Add the responsible role and follow-up route for validating the parallel-request identifier when the
-      execution-record model is available.
-    cause:
-      type: document
-level_corrections:
-  - viewpoint: vp-qe-done-criteria
-    original_level: 2
-    corrected_level: 1
+      _ASSUMPTION_: 本書の未決事項における確認・判断の担当割当は未承認の進め方案である。判断結果は本書の該当箇所と本成果物のレビュー結果に記録し、PM
+      が未解決事項や変更要求を登録簿（`pjr-*`）への転記候補と併せて追跡・報告する。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 0
+  satisfied: 1
   total: 5
   unsatisfied:
     DC-001:
@@ -426,8 +305,6 @@ done_criteria:
       - PO
     DC-003:
       - ARC
-    DC-004:
-      - QE
     DC-005:
       - DEV
   detail_ref: bes-task-ready-selected-grade-criteria
