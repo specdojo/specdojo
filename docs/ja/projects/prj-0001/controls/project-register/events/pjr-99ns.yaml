@@ -73,3 +73,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_22946c42594b404f94a8411f194711a1
+- v: 1
+  id: reg_51cde05392b04e25b68a5510f3bc9b1d
+  ts: "2026-11-10T15:22:37Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_3e741fc3c7f44b1e8ffd97cdf9d766ee
