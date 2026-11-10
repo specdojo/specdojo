@@ -14,6 +14,7 @@ specdojo:
   derived_from:
     - PJR-JQSB
     - PJR-V05D
+  autopilot: approved
 ---
 
 # PJR-CBV6 grade で YAML の成果物を評価できるようにする
