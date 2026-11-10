@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-08T20:33:07.684Z"
-graded_by: flash-high-executor
-content_hash: 7e80232abf5c97380b43d3b64c2cb2e558a02fb2f1ef9b3f147d1b62686370bb
+score: 96
+graded_at: "2026-11-10T08:26:04.022Z"
+graded_by: sol-review-executor
+content_hash: f777a9e096505fa2a6bd879adb8fdd7a56bd037ec2d828b2ba6352ab2c628044
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,6 +101,34 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-dev-testability
+    line: 37
+    anchor: >-
+      YAML の構造、入れ子キー、型、列挙値は `docs/specdojo/schemas/v1/ifx-cmd.schema.yaml` を参照する。以下は契約として満たす内容要件であり、schema
+      が互換性のため任意としている項目も、ここで必須とした場合は記述する。
+    message: >-
+      Add a reference to the canonical YAML validation procedure or a concrete command using ifx-cmd.schema.yaml,
+      including the target file and expected successful result; the schema path alone does not tell authors how to run
+      the structural check.
+    message_ja: >-
+      Add a reference to the canonical YAML validation procedure or a concrete command using ifx-cmd.schema.yaml,
+      including the target file and expected successful result; the schema path alone does not tell authors how to run
+      the structural check.
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 75
+    anchor: "- **判断基準**: 入力と出力を分け、パスの基準ディレクトリ、可変部分の解決方法、形式、作成・更新主体を特定する。外部 CLI が作るファイルと呼び出し元が保存する実行記録を区別する。"
+    message: >-
+      Reconcile the mandatory file-contract requirements with the declared completed sample: its files entries do not
+      explicitly identify the input-file producer, the source used to resolve {order_id}, or the corresponding content
+      specifications; align the sample with these requirements or document a justified exception in the rulebook.
+    message_ja: >-
+      Reconcile the mandatory file-contract requirements with the declared completed sample: its files entries do not
+      explicitly identify the input-file producer, the source used to resolve {order_id}, or the corresponding content
+      specifications; align the sample with these requirements or document a justified exception in the rulebook.

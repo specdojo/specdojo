@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/bdd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 90
-graded_at: "2026-11-08T14:21:13.576Z"
+score: 96
+graded_at: "2026-11-10T08:12:26.417Z"
 graded_by: sol-review-executor
-content_hash: 16682edc9fa617297e29f1881cc380b90827e4de76257e3f41d87b33b2615ee0
+content_hash: 7f1d8402e6af92bcc3441fd1e8006d55225d317760350834f687dde0410b08ea
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 94
   planning:
     score: 100
   business:
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 75
 viewpoints:
@@ -57,20 +57,20 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 3
     score: 75
@@ -101,97 +101,34 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 7
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 5
-    anchor: 本ドキュメントは、業務分析・要求定義・システム設計のために **業務データ辞書（BDD）を記述する標準ルール**です。
-    message: 導入文と全体方針がエンティティ/属性の定義と共通理解形成という同一主張を反復しているため、どちらか一方に統合する。
-    message_ja: 導入文と全体方針がエンティティ/属性の定義と共通理解形成という同一主張を反復しているため、どちらか一方に統合する。
+    rule: vp-qe-omissions-consistency
+    line: 49
+    anchor: "- フィールドの非推奨・廃止時は、直接削除せず `description` に非推奨理由および代替フィールドを明記して移行期間を設ける。"
+    message: >-
+      The mandatory retention of deprecated fields during a migration period conflicts with the manual acceptance
+      condition at body line 218 when a referenced schema or type has already removed a field; define how legacy
+      annotations are retained separately or tied to a compatible source version so the migration can satisfy both
+      requirements.
+    message_ja: >-
+      The mandatory retention of deprecated fields during a migration period conflicts with the manual acceptance
+      condition at body line 218 when a referenced schema or type has already removed a field; define how legacy
+      annotations are retained separately or tied to a compatible source version so the migration can satisfy both
+      requirements.
   - id: F002
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 83
-    anchor: 業務データ辞書のルートには `entities` キーを配置し、各エンティティの構成要素を定義する。
-    message: >-
-      The previous fragmented-table defect is resolved, but the required yaml-language-server $schema comment is only
-      demonstrated in the example; explicitly require this comment and explain that its path must resolve from the
-      output file's directory, because the documented full validation rejects files without it.
-    message_ja: >-
-      The previous fragmented-table defect is resolved, but the required yaml-language-server $schema comment is only
-      demonstrated in the example; explicitly require this comment and explain that its path must resolve from the
-      output file's directory, because the documented full validation rejects files without it.
-  - id: F003
-    severity: minor
-    rule: vp-dev-testability
-    line: 200
-    anchor: "- **期待結果**: YAML スキーマ検証、enum 網羅検証、用語集参照検証がすべてエラーなく完了すること。"
-    message: >-
-      The previous absence of validation commands is resolved, but validate:schema:glossary checks glossary terms rather
-      than BDD glossary_term_id or related_terms references, and bdd.schema.yaml does not enforce standalone field type
-      requirements, enum-list exclusivity, or referenced-source consistency; add explicit manual checks or additional
-      validators for these requirements and state the limits of command success.
-    message_ja: >-
-      The previous absence of validation commands is resolved, but validate:schema:glossary checks glossary terms rather
-      than BDD glossary_term_id or related_terms references, and bdd.schema.yaml does not enforce standalone field type
-      requirements, enum-list exclusivity, or referenced-source consistency; add explicit manual checks or additional
-      validators for these requirements and state the limits of command success.
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 83
-    anchor: 業務データ辞書のルートには `entities` キーを配置し、各エンティティの構成要素を定義する。
-    message: >-
-      The previous placement, chapter-title, and table defects are resolved, but the YAML requirements omit the schema
-      modeline required by validate:schema:yaml; add it as a required file-level directive so an artifact constructed
-      from the requirements can pass the prescribed full validation.
-    message_ja: >-
-      The previous placement, chapter-title, and table defects are resolved, but the YAML requirements omit the schema
-      modeline required by validate:schema:yaml; add it as a required file-level directive so an artifact constructed
-      from the requirements can pass the prescribed full validation.
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 220
-    anchor: 完成例の正本は `specdojo:bdd-sample`（`docs/ja/specdojo/samples/bdd-sample.yaml`）を参照する。以下に、3つのエンティティ定義形態の最小例を示す。
-    message: >-
-      The previous type, ID, and enum-key inconsistencies are resolved, but this paragraph repeats the sample
-      relationship in the body despite the Rulebook Authoring Standard requiring that relationship to be declared only
-      in Frontmatter; retain the existing sample declaration and the permitted transitional minimal example, and remove
-      the repeated body reference.
-    message_ja: >-
-      The previous type, ID, and enum-key inconsistencies are resolved, but this paragraph repeats the sample
-      relationship in the body despite the Rulebook Authoring Standard requiring that relationship to be declared only
-      in Frontmatter; retain the existing sample declaration and the permitted transitional minimal example, and remove
-      the repeated body reference.
-  - id: F006
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 20
-    anchor: "- ルールブック内の enum 値網羅検証（`npm run validate:schema:rulebook-enums`）に合格していること。"
-    message: >-
-      validate:schema:rulebook-enums skips draft rulebooks, including the current bdd-rulebook, so a successful command
-      exit does not establish this target's pre-ready enum coverage; document a candidate-validation procedure and
-      require target-specific coverage evidence before final approval.
-    message_ja: >-
-      validate:schema:rulebook-enums skips draft rulebooks, including the current bdd-rulebook, so a successful command
-      exit does not establish this target's pre-ready enum coverage; document a candidate-validation procedure and
-      require target-specific coverage evidence before final approval.
-  - id: F007
-    severity: minor
     rule: vp-ops-operability
-    line: 59
-    anchor: >-
-      - 用語集（`gl-*.yaml`）や概念クラス図（CCD）が改訂された場合は、保守担当（BA / ARC）が関連する `bdd-*.yaml` の `logical_name`, `glossary_term_id`,
-      `related_terms` を同期更新する。
+    line: 49
+    anchor: "- フィールドの非推奨・廃止時は、直接削除せず `description` に非推奨理由および代替フィールドを明記して移行期間を設ける。"
     message: >-
-      Extend the BA/ARC update procedure to changes in schema_ref and type_ref sources, including field renames, key
-      changes, and enum-value changes, and require reconciliation of the dictionary's business annotations before
-      accepting the update; the current trigger covers only glossary and CCD revisions.
+      Add an operational path for upstream field removals, including responsibility and timing for moving legacy
+      annotations out of active fields or retaining a compatible source version; otherwise the required migration-period
+      retention prevents the source reconciliation and validation needed to accept the update.
     message_ja: >-
-      Extend the BA/ARC update procedure to changes in schema_ref and type_ref sources, including field renames, key
-      changes, and enum-value changes, and require reconciliation of the dictionary's business annotations before
-      accepting the update; the current trigger covers only glossary and CCD revisions.
+      Add an operational path for upstream field removals, including responsibility and timing for moving legacy
+      annotations out of active fields or retaining a compatible source version; otherwise the required migration-period
+      retention prevents the source reconciliation and validation needed to accept the update.

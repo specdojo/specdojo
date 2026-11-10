@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cdt-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 94
-graded_at: "2026-11-08T20:18:57.674Z"
-graded_by: flash-high-executor
-content_hash: c97101bfb5e3aeb45f9a68262a78d558c143ce3b7bcf8bddfa35dc4616e541b2
+score: 100
+graded_at: "2026-11-10T08:22:39.566Z"
+graded_by: sol-review-executor
+content_hash: 3605ae1e995270f4a9d7a88b3a1534adebbf7d22199444a2efdf27dd5aa8a6c3
 categories:
   purpose:
     score: 100
@@ -19,15 +19,15 @@ categories:
   business:
     score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,33 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 70
-    anchor: "| title      | ドキュメント名（分類名）                 | ○    |"
-    message: >-
-      Section 4 designates `title` as a required Frontmatter property for Markdown deliverables, which conflicts with
-      `deliverable-frontmatter.schema.yaml` prohibiting undefined properties under `specdojo:`.
-    message_ja: セクション4では、Markdownの成果物において`title`を必須のFrontmatterプロパティとして指定していますが、これは`specdojo:`の下での未定義のプロパティを禁止している`deliverable-frontmatter.schema.yaml`と矛盾しています。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 70
-    anchor: "| title      | ドキュメント名（分類名）                 | ○    |"
-    message: >-
-      Section 4 lists `title` as mandatory in the Frontmatter table, but the following YAML example omits `title` and
-      standard metadata rules mandate H1 headings instead of Frontmatter `title`.
-    message_ja: セクション4のFrontmatterテーブルでは`title`が必須とされていますが、以下のYAML例では`title`が省略されており、標準的なメタデータルールではFrontmatterの`title`の代わりにH1見出しを使用することが定められています。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 70
-    anchor: "| title      | ドキュメント名（分類名）                 | ○    |"
-    message: >-
-      Section 4 requires `title` in the Frontmatter table, whereas the accompanying Kata sample `cdt-sample.md` does not
-      define `title` in Frontmatter and instead uses the top-level H1 heading.
-    message_ja: セクション4のFrontmatterテーブルでは`title`が求められていますが、付随するKataのサンプルである`cdt-sample.md`ではFrontmatterに`title`が定義されておらず、代わりに最上位のH1見出しが使用されています。
+findings: []
