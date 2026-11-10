@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070",
+  "run_id": "T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070-20261110T022110Z-6c162adf",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T03:41:25.742Z",
+    "completed_at": "2026-11-10T03:43:58.319Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../030-business-model/bes-task-ready-selected.md  | 67 +++++++++++-----------\n .../result.md                                      | 25 ++++++--\n packages/docs-site/.vitepress/sidebar-config.ts    | 12 +++-\n 3 files changed, 64 insertions(+), 40 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "passed",
+      "summary": "対象 Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check -- docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "executor の変更は Markdown のみで、変更した YAML ファイルがない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "executor の成果物変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下への変更はない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "executor は登録簿の履歴ファイル、plan、result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max\n… output omitted …\nworktrees/prj-0001-T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4251 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4251 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\n\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nge valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-10T03:50:21.892Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to f\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "業務イベント仕様の磨き込みを完了。参照範囲外の文書を未作成と断定する記述を修正し、並列確定件数の観測条件を明確化した。整形・差分検査は成功。業務承認とモデル照合は後続確認事項として保持した。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更対象は docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md のみ。本 executor は既存差分を保持し、「いつ」と「データモデルとの未照合事項」の未作成断定を参照範囲外・未照合の説明へ修正した。未確認の排他区間に関する記述を整理し、モデル確認を実装・テスト設計への引き渡し前とした。事実データ表には確定件数を発生時点で観測可能な範囲に限る条件を追加した。業務上の境界や物理項目は新たに確定していない。",
+    "result の「進め方と実践の型の適用」へ記録する参照資料：指定された共通規約2件、bes-rulebook.md、bes-recipe.md、bes-sample.md、cdfd-overview.md、stsd-task-execution.md、prj-overview.md、rulebook-authoring-standard.md、clis-sample.md を読んだ。rulebook は必須要素と禁止事項、recipe は発生境界と相関の確認手順、sample は完成例の粒度の確認に使った。業務内容・固有値は sample から転記していない。既存の五章構成を維持した。",
+    "template は fully-guided の指示に従い未読。未作成と宣言された bes-index、参照範囲外の BR 本文・BR の型・BPS・実行記録モデル・メンバー定義・カタログ・実装・外部資料は探索していない。したがって BR との直接照合、個人の割当確認、カタログ整合の実証は未実施。対象に `_CONTEXT_:` はなく、draft への下書き申し送りは不要。result・grade サイドカー・設定・既存の他ファイル差分は変更していない。",
+    "型の要否判断：recipe は複数起点の境界・相関を具体化する手順が必要なため必要、template は五章と表の骨組みを共通化するため必要と判断した。既存 rulebook frontmatter の `recipe: specdojo:bes-recipe` と `template: specdojo:bes-template` を維持する。BES rulebook は標準の七章構成、連番、章ごとの判断基準と良い例・悪い例、sample の外出しを既に備えており、型自体の変更は行っていない。BES sample は成立・不成立・主体・データ対応を備える完成例だが、並列要求の完成例はないため、maintenance で追加要否を検討する。値・構文・構造は正本へ委譲する PJR-2GD6 方針を維持した。",
+    "F001・F004・F006・F008・F016・F020・F022：現在説明可能な範囲を schedule 系とし、register・routine 系を適用未判定とする既存境界を維持した。最終的な適用範囲の解決・承認は未了。BA が一覧と各系統を照合し、人間の PO が実装・テスト設計への引き渡し前に判断し、PM が本書・レビュー結果と登録簿で追跡する進め方案を残した。役割割当自体も未承認であり、F016 を解消済みとは扱わない。",
+    "F002・F003・F010：自動選択と `claim` の同一境界判断は未了。BA・ARC によるプロセス仕様の依存追加と照合、人間の PO による引き渡し前の判断が必要。承認する人間の氏名・Member ID は参照資料から特定できず、PM が業務レビュー依頼前に識別し、承認結果を記録する。役割案の記載を実際の承認・担当確定とは扱わない。",
+    "F005・F009・F012・F013・F014・F015・F017・F018・F023：論理項目「並列選択要求識別子」と同一要求・別要求・見送りを区別する確認例を保持した。照合先候補は状態定義の `based_on` にある `prj-0001:bdd-exec-event`、関連モデルは `prj-0001:bdd-exec-state`。モデル本文は参照範囲外であり、正本項目と件数の観測単位は未決。ARC が引き渡し前に所在・利用可否を確認し、依存追加後に照合する。BA が単位を整理し、PM が追跡し、人間の PO の合意後に QE がテスト設計へ引き継ぐ。変更影響は BPS、発行・利用側実装、相関テスト設計を確認する。F017 のモデル照合は未解消。",
+    "F011・F019：bes-index は未作成のため仮置き参照を維持した。作成時に ARC が P-07 の起点イベント、一覧の対応行、成果物カタログの定義と突き合わせ、双方向リンクを設定して完成判断前に PM へ報告する。実際のリンク追加・整合確認は後続作業。F007 の業務上の混同と成功基準、F021 の runner をシステム構成要素とする定義・統一表記は既存記述で満たすため保持した。",
+    "親 runner 所管の lint-ts・lint-fm・lint-md・lint-mermaid・lint-d2・test-integration・validate-schema・typecheck・test-unit は重複実行していない。result の記入は reporter が本 handoff を用いて行う。編集工程の完了は業務仕様の承認完了を意味せず、対象の `status: draft` を維持した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070/T-BUSINESS-SPECS-KATA-bes-task-ready-selected-070-20261110T022110Z-6c162adf/executor.log",
+      "bytes": 6802,
+      "truncated": false
+    }
+  ]
+}

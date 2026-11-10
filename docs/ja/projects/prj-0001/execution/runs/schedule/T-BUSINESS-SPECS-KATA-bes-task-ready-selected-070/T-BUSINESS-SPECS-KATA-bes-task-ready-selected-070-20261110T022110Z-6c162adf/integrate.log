@@ -1,0 +1,2 @@
+commit-scope: skipped non-target changes (left in worktree):
+  packages/docs-site/.vitepress/sidebar-config.ts
