@@ -1,0 +1,44 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "レビューを実施しました。初回・最終の鮮度確認で対象が出力されたため、review verdict は grade-stale です。成果物・型・result は編集していません。確認できなかった範囲：最新の評価結果に基づく完了可否、未作成5辞書との照合。result への記録は reporter に引き継ぎます。",
+  "handoff": [
+    "評価結果の確認：validations の3種類の grade list コマンドを開始時と終了直前に各1回実行した。すべて exit 0。両回とも --changed-only は docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md を出力し、--dependency-changed と --incomplete は出力なし。最初から評価結果が最新でないため、decision の verdict は grade-stale とする。changed-during-review には該当しない。",
+    "サイドカーの記録値は verdict=pass、score=98、graded_at=2026-11-09T16:25:25.163Z、finding 件数は blocker 0 / major 0 / minor 1 / note 0、done_criteria は5件中5件充足。ただし鮮度確認が最新でないことを示したため、この記録値から現在の完了可否は判断しない。既存 result の「runner の一致確認済み」「全完了条件を充足」「complete-with-findings」は今回の確認結果へ更新すること。",
+    "型の確認根拠：[[specdojo:ccd-mermaid-rulebook|CCD作成ルール]] は [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]] の全体方針から禁止事項までの7章構成で、完成例のサンプル章を持たない。見出しは階層ごとに連番。記述ガイドには成果物の5章それぞれの判断基準・良例・悪例があり、関連表のカラム定義もある。一般属性はBDD、値・構造詳細はその参照正本へ委ねる記載があり、PJR-2GD6 の方針に対応している。成果物の品質観点は採点し直していない。",
+    "完成例の確認根拠：[[specdojo:ccd-sample|概念クラス図 サンプル]] は対象者・適用時点・対象外、6クラスと5関連の図、全関連の両方向の多重度根拠、複合主キーと識別範囲、条件付きの顧客必須、辞書対応、未照合事項の影響・解消責務・確認条件を記載している。[[specdojo:clis-sample|販売管理CLI仕様]] と比較し、CCDの責務に応じた具体的な完成例として内容を確認した。代表成果物 [[prj-0001:ccd-project-planning|概念クラス図（プロジェクトの立上と計画）]] と [[prj-0001:prj-overview|プロジェクト概要]]、直接根拠の [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]] も実際に読んだ。",
+    "approach に応じた確認：rulebook frontmatter は recipe: not-needed、template: not-needed、sample: specdojo:ccd-sample を宣言している。recipe・template は未宣言ではなく不要判断済み。本文要件が章構成を、記述ガイドが判断基準と推奨表を、sample が具体的な記入例を提供するため、別の手順書・骨組みを増やさない判断理由が先行実行記録にも残っている。開くべき template ID は宣言されていない。先行040・050の result と evidence・pipeline state を読み、両タスクの親検証9件がすべて passed、統合が succeeded であることを確認した。これらの過去の検証は今回の validations へ転記しない。",
+    "未充足事項・改善指示：最新の grade を取得して review を再実施する。F001 は既存 finding として保持し、review で取り消さない。[[specdojo:ccd-mermaid-rulebook|CCD作成ルール]] の「推奨 Frontmatter 項目」は依存をカタログの `depends_on`、直接根拠を成果物の `based_on` としている一方、F001 は成果物への `depends_on` 追加を求めており、現行規定との疑義がある。再評価時に確認すること。未作成5辞書との照合と実装内部の検証は行っておらず、代表成果物の未解決事項に記された責務・確認条件を維持する。",
+    "範囲確認：開始時から存在する result・実行管理ファイルと packages/docs-site/.vitepress/sidebar-config.ts の変更は編集していない。sidebar の差分はビジネスルール・業務イベント仕様の recipe/template メニュー追加で、本CCDレビューの対象外である。runner は統合前にこの既存差分の扱いを確認すること。今回は新たなファイル変更なし。result の5必須セクションは reporter が今回の事実と grade-stale の判断で更新すること。"
+  ],
+  "validations": [
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・終了直前とも exit 0。出力は docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md。評価結果が最新でないことを確認した。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・終了直前とも exit 0、出力なし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・終了直前とも exit 0、出力なし。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "exit 0、出力なし。累積差分に空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "prj-0001:ccd-project-planning",
+      "status": "unchanged",
+      "reason": "対象成果物と型一式を読み取り専用でレビューした。plan が成果物・型の編集を禁止しており、評価結果の鮮度確認でも再評価が必要と判明したため、成果物は変更していない。"
+    }
+  ]
+}
+</specdojo_executor_evidence>
