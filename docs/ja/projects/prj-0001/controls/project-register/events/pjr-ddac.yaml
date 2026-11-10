@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e1d9aad7a0c14bb3ba4c1eacd299387f
+  ts: "2026-11-10T13:13:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 代表の bdd-register-entry を、確定した型で磨き込む
+    - field: description
+      from: ""
+      to: business-specs-kata で確定した型（specdojo:bdd-rulebook と sample）に合わせて、代表の bdd-register-entry を磨き込み、冗長さを整理する。review は schedule の review の段で流す
+    - field: input
+      from: ""
+      to: '["型一式の確定（2026-11-10、indie が決定）の後に、代表を磨き込みから流し直す。schedule の磨き込み・condense の段はゲートで bes・br・clis の段まで巻き戻すことになるため、register の todo で行う（orchestrator の判断、indie に報告）。","夜間の register の routine で流す（indie が承認）。review は T-BUSINESS-SPECS-REPS-bdd-register-entry-090 を reopen 済みで、6:00 の exec cycle で流す。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:bdd-register-entry"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-T88P"]'
