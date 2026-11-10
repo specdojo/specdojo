@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T02:22:52Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-070",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
