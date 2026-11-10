@@ -24,6 +24,7 @@ grade（2026-11-10）が、ifx-cmd-sample の files の約束が規則の必須�
 ## 2. 入力
 
 - grade の run id kata-bsk-20261110 の minor の指摘から。軽い指摘は型を確定したうえで後で直す（indie が決定）。
+- 2026-11-10 の型一式の確定で、ifx-cmd-rulebook を ready にすると validate:schema の enum の網羅の検査が落ちた（arguments の kind・`value_source`、type の template、status の ready・deprecated などの値の説明がない）。引数の表を持たない方針（PJR-4N3R）と、ready の rulebook に求める enum の網羅をどう両立するかを決めて直す。それまで ifx-cmd-rulebook は draft のまま。
 
 ## 3. 完了条件
 
