@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:42:25Z"
+  block_reason: "parent validation failed: test-integration, test-unit"
   derived_from:
     - PJR-JQSB
     - PJR-V05D
@@ -43,15 +44,37 @@ PJR-JQSB の決定どおり、grade が YAML の成果物のメタ情報を vali
 
 ## 4. 作業内容
 
-| No  | 作業                                                             | 担当   | 状態 | メモ |
-| --- | ---------------------------------------------------------------- | ------ | ---- | ---- |
-| 1   | grade の文書の読み込みと、validate:schema の YAML の読み方を読む | _TODO_ | open | -    |
-| 2   | YAML の読み込み・ハッシュ・行番号を足し、テストを足す            | _TODO_ | open | -    |
-| 3   | 検査を流し、対応結果に書く                                       | _TODO_ | open | -    |
+| No  | 作業                                                             | 担当     | 状態 | メモ                                       |
+| --- | ---------------------------------------------------------------- | -------- | ---- | ------------------------------------------ |
+| 1   | grade の文書の読み込みと、validate:schema の YAML の読み方を読む | executor | done | PJR-JQSB とメタ情報標準を確認              |
+| 2   | YAML の読み込み・ハッシュ・行番号を足し、テストを足す            | executor | done | 共通読み取り・サイドカー・回帰テストを追加 |
+| 3   | 検査を流し、対応結果に書く                                       | executor | done | sandbox の検査を実施。親検証は runner 担当 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `src/shared/document-metadata.ts` と `docs/specdojo/lib/yaml-metadata.cjs` に YAML の読み取りを追加し、`validate:schema` のメタ情報照合と選択処理を共有した。grade の対象探索・plan・apply・result・比較資料・依存元ハッシュと pipeline 状態を `.yaml` / `.yml` に対応させた。
+- YAML の本文はファイル全体を保持する。plan の埋め込み、指摘の `line` と `anchor`、サイドカーと pipeline 状態の `content_hash` は元ファイルを基準にする。評価時に YAML 自体を書き換えない。
+- `tests/src/grade/yaml.test.ts` と `run.test.ts` に、最上位・`x-spec-meta`・不足メタ情報・従来の Markdown、元の行番号、ハッシュの鮮度、review からの起動と結果再利用の単体テストを追加した。`yaml.integration.test.ts` ではローカルの偽 agent を使って `list|plan|run|apply|result` とカタログからの選択を検証する。これらの実行は親 runner が担当する。
+- [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の対象形式と行番号の説明、CLI ヘルプ、pipeline 状態 schema の許可拡張子を更新した。
+
+### 5.2. 実装時の判断
+
+- `x-spec-meta` が mapping ならそれを優先し、そうでなければ最上位を使う。両方の値は混ぜず、既存の `validate:schema` の選択順序を維持した。共有関数は既存の配布対象 `docs/specdojo/` に置き、保護された package 設定を変更しない。docs-lint 単独導入・旧版 SpecDojo との併用では既存相当の読み方へフォールバックし、新しい依存関係を要求しない。
+- 対象 YAML では `id`・`type`・`status`・`rulebook` に空でない文字列を要求し、不足時はキー名を含む理由を表示して探索から除外する。`rulebook: none` は明示値として受け付ける。Markdown の必須条件・読み取り・ハッシュには追加制約を課さない。
+- YAML は Markdown の H1 を持たないため、機械判定の H1 検査を YAML に適用しない。コメントやメタ情報も評価対象に含め、行番号をずらす加工は行わない。
+
+### 5.3. 検証結果と統合後の確認
+
+- 対象の成果物 2 件と sample 2 件について、実 CLI の `grade list` と `grade plan --embed-documents` が成功した。4 件とも `grade run --dry-run` でも選択・実行担当の解決に成功した。plan の出力先は一時ディレクトリとし、評価結果サイドカーは作成・編集していない。
+- Prettier、変更 Markdown の検査、catalog・履歴リンク・実行時 import の検査に合格した。hook に対応する `register build` も成功し、ステージ済み実行記録の秘密情報検査は対象 0 件で合格した。catalog は tsx CLI の IPC が sandbox で拒否されたため、規約に従い `node --import tsx` で実行し、既存の警告を伴って終了コード 0 だった。型検査・lint・単体テスト・統合テスト・全体 schema 検査は指定された親 runner に委ね、executor では重複実行しない。実行結果は executor evidence と親の検証記録を正本とする。
+- pipeline 状態 schema は Draft 2020-12 のメタスキーマで検証した。メタスキーマ自体を直接指定する方法では Ajv の既登録 ID と重複したため、同じメタスキーマを `$ref` で参照する一時 schema を用いた `validate:schema:file` で合格を確認した。
+- 統合後の実 agent による `grade run` は使用量を消費するため、この executor では実行していない。orchestrator は `--project prj-0001` と一意な `--run-id` を付け、成果物は `--target deliverable` で `bdd-register-entry.yaml`・`ifx-cmd-ai-provider-cli.yaml`、sample は `--target kata --kind sample` で `bdd-sample.yaml`・`ifx-cmd-sample.yaml` を指定して実行する。`grade result --path <対象>` でサイドカーの生成を確認し、本節へ結果を追記する。これは人の確認事項として報告の `handoff` にも引き継ぐ。
+
+### 5.4. CHANGELOG に書く事項
+
+- 追加: `grade list|plan|run|apply|result` が YAML の成果物と sample に対応。最上位または `x-spec-meta` のメタ情報を読み、元の YAML の内容ハッシュと行番号で評価結果をサイドカーに保存し、review でも利用できるようにした。
 
 ## 6. 関連ドキュメント
 
