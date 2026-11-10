@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_088bb5182aca41c6bd01861aa79f2886
+  ts: "2026-11-10T21:29:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 夜間の register の実行の環境が、子の run の統合テストに漏れて落とす
+    - field: description
+      from: ""
+      to: rtn-night-approved-register（orchestrator night）が job の worktree の中から各項目の exec run を起動すると、子の run の親の検証で job-worktree.integration.test.ts の merge の commit の親が 1 つになり落ちる。同じテストは通常の環境では 13 件すべて通る。夜間の実行の環境の何が漏れているかを特定し、子の run を通常と同じ環境で動かす
+    - field: input
+      from: ""
+      to: '["2026-11-11 0:00 の夜間の実行で、PJR-7ZZR と PJR-99NS の 2 件が親の検証 test-integration で落ち、`max_consecutive_failures` 2 で残り 6 件が流れなかった。落ちたのは tests/src/exec/job-worktree.integration.test.ts の 5 件（expected [ '''' ] to have a length of 2 but got 1 など、git log -1 --pretty=%P の親の数）。","子の run の worktree は /workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-7ZZR のように job の worktree の下に入れ子になっていた。git の設定や環境変数（`GIT_*` など）が漏れている可能性がある。","直るまで rtn-night-approved-register は止めておく（orchestrator の案）。"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-11"
+    - field: due
+      from: ""
+      to: _TODO_
