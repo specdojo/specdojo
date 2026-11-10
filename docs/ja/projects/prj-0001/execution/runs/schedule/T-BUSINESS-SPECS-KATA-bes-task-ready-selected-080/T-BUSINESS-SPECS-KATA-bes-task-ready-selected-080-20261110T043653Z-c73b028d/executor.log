@@ -1,0 +1,125 @@
+対象文書の重複5件を整理しました。発生条件・例外・承認条件・確認例は保持しています。整形と差分検査は通過し、result は変更していません。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "対象1文書の重複5件を整理。発生条件、例外、9件の事実データ、5件の確認例、未決事項と承認条件の保持を確認した。",
+  "handoff": [
+    "recipe は発生境界・相関情報・根拠照合を段階的に判断するため必要、template は五章と主体・事実データ表の骨組みを再利用するため必要と判断した。rulebook frontmatter の既存宣言 specdojo:bes-recipe / specdojo:bes-template を維持する。完成例は既存の specdojo:bes-sample に外出し済みであり、対象文書だけを編集する指定に従って Kata は変更していない。判断理由を result に記録すること。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "passed",
+      "summary": "対象文書を整形した。"
+    },
+    {
+      "command": "git diff --check -- docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "標準入力スクリプトで frontmatter、導入、事実境界、発生時点・条件、承認条件、データ項目数、確認例、文書リンク、未決の制約、見出し構成の保持を確認した。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検査対象の staged 実行記録は0件、検出0件。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は非適用。",
+      "reason": "executor の変更は Markdown 1文書のみで、変更した YAML ファイルがない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は非適用。",
+      "reason": "executor の成果物変更は docs/ja/product/ 配下であり、docs/ja/projects/ 配下に達していない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は非適用。",
+      "reason": "executor は登録簿・plan・result などの履歴ファイルを変更していない。"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "bes-task-ready-selected.md 修正前21行目の導入と33行目の「対象系統」行",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "共通の進め方案を「適用範囲と承認の未決事項」冒頭へ集約し、BA・ARC の具体的な確認責務は各論に残した。担当割当の未承認、判断結果の記録先、PM の追跡・報告、および対象系統の登録簿での追跡を保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "bes-task-ready-selected.md 修正前55行目「誰が／何が」の並列行",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "実行能力不足の候補を確定しないという説明を削除。同じ条件と、後で空きができて確定した時点で発生する例外は「発生条件」に保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "bes-task-ready-selected.md 修正前71行目と83行目「事実データ」",
+      "category": "table-prose",
+      "action": "merge",
+      "reason": "並列選択要求識別子の意味を表の該当行へ集約。同一要求の相関、対象タスク・実行・個別イベントとの単位の区別、正本項目名が未確認であることを保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "bes-task-ready-selected.md 修正前87行目「相関と発生の確認例」導入",
+      "category": "table-prose",
+      "action": "delete",
+      "reason": "直後の表をなぞる相関規則の説明を削除。同一要求・別要求・見送り候補の判定は表に保持し、検証規則であること、実装済み証跡ではないこと、QE への引き継ぎ条件も残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "bes-task-ready-selected.md 修正前99〜101行目「データモデルとの未照合事項」",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "モデル照合と引き渡し前の判断手順を、未決の内容・制約と確認手順に整理。照合先候補、参照範囲外、識別情報と集計時点の未決、最終件数の制約、依存宣言、各ロールの責務と PO の合意期限を保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "bes-task-ready-selected.md 修正前37行目「完成した業務仕様として扱う条件」",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "各未決事項と一部重なるが、確定入力として扱うための完了条件をまとめた判断箇所である。人間の PO の承認と draft 維持の理由を失わないため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "bes-task-ready-selected.md 修正前42行目「いつ」の ready の説明",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "状態定義に関係する説明だが、過去の着手可能判定を流用せず選択時点で再判定するための制約として必要であり、状態遷移の詳細を複製していないため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "bes-task-ready-selected.md 修正前89〜95行目「相関と発生の確認例」の表",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "発生条件と一部重なるが、発生回数、同一要求への帰属、不成立、後続失敗を具体的に判定する QE の入力となるため、5件の確認例を保持した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ]
+}
+</specdojo_executor_evidence>
