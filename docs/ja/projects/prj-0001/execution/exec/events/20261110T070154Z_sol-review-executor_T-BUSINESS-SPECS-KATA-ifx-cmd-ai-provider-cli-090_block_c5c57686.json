@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T07:01:54Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090",
+  "by": "sol-review-executor",
+  "msg": "executor validation failed or not run: node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml --changed-only, node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml --dependency-changed, node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml --incomplete",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090-20261110T031008Z-9bde43d6/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090-20261110T031008Z-9bde43d6/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090-20261110T031008Z-9bde43d6"
+  }
+}

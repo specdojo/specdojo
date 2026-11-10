@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T01:08:11Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005",
+  "by": "sol-executor",
+  "msg": "executor reported incomplete: イベント仕様と実践の型の5文書を整備しました。整形・差分検査は成功しましたが、依存の bes-index 不在、業務承認・相関項目の照合未了により未完了です。",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005/T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005-20261110T004314Z-5050aae8/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005/T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005-20261110T004314Z-5050aae8/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-KATA-bes-task-ready-selected-005-20261110T004314Z-5050aae8"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T03:38:36Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-KATA-sf-task-execution-090",
+  "by": "sol-review-executor",
+  "msg": "parent validation failed: test-unit",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-sf-task-execution-090/T-BUSINESS-SPECS-KATA-sf-task-execution-090-20261110T032519Z-f11cc4b4/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-sf-task-execution-090/T-BUSINESS-SPECS-KATA-sf-task-execution-090-20261110T032519Z-f11cc4b4/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-KATA-sf-task-execution-090-20261110T032519Z-f11cc4b4"
+  }
+}

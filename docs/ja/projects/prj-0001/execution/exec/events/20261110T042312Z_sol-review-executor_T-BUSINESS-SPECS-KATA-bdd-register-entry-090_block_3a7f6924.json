@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T04:23:12Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-KATA-bdd-register-entry-090",
+  "by": "sol-review-executor",
+  "msg": "executor validation failed or not run: node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml --changed-only, node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml --dependency-changed, node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml --incomplete",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-bdd-register-entry-090/T-BUSINESS-SPECS-KATA-bdd-register-entry-090-20261110T024129Z-d2e0d898/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-bdd-register-entry-090/T-BUSINESS-SPECS-KATA-bdd-register-entry-090-20261110T024129Z-d2e0d898/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-KATA-bdd-register-entry-090-20261110T024129Z-d2e0d898"
+  }
+}

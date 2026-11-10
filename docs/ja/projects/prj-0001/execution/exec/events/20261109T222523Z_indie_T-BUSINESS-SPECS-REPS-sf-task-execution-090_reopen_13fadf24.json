@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T22:25:23Z",
+  "type": "reopen",
+  "task_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-090",
+  "by": "indie",
+  "msg": "BCAQ の 2 回目で実装の名前と照合の表を外したため、review をやり直す（indie が決定、orchestrator が記帳）"
+}
