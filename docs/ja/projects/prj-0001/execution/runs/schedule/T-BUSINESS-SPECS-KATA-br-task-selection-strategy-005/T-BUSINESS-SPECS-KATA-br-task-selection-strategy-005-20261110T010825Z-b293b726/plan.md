@@ -162,4 +162,15 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-10）
+
+- 依存の成果物（`bes-index`・`bps-*`・データモデルの成果物など）がまだないことや、業務の承認・判断がまだのことを理由に未完了としない。
+- 決められない点は、成果物の本文に `_UNDECIDED_` か `_ASSUMPTION_` のまま、決められない理由（どの成果物がない、誰の判断が要る）を書いて残す（代表の bes の磨き込みと同じ扱い、indie が決定）。
+- 前回整備した型（rulebook・sample など）と代表の文書を引き継ぎ、作り直さない。残した点の一覧を報告の `handoff` に書き、完了として報告する。
+
+## 再開時の追加の指示（orchestrator、2026-11-10、2 回目）
+
+- 親の検証 `test-unit` の `tests/packages/docs-site/sidebar-kata.test.ts` が、新しく作った `br-recipe` と `br-template` が文書サイトの sidebar にないとして失敗した。`packages/docs-site/.vitepress/sidebar-config.ts` の recipe と template の一覧に、ほかの型と同じ書き方で `br` を足す。
+- 直した後に `npm run test:unit -- tests/packages/docs-site/sidebar-kata.test.ts` を流して通ることを確かめ、経緯を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
