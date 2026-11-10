@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-ccd-project-planning-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T06:21:50.946Z",
+    "completed_at": "2026-11-10T06:24:03.952Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                         | 19 +++++++++++++------\n packages/docs-site/.vitepress/sidebar-config.ts       | 12 ++++++++++--\n 2 files changed, 23 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・終了直前とも exit 0。出力は docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md。評価結果が最新でないことを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・終了直前とも exit 0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・終了直前とも exit 0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "exit 0、出力なし。累積差分に空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-li\n… output omitted …\nspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4251 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4251 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWri\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ncoverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-10T06:30:11.309Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fall\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "prj-0001:ccd-project-planning",
+      "status": "unchanged",
+      "reason": "対象成果物と型一式を読み取り専用でレビューした。plan が成果物・型の編集を禁止しており、評価結果の鮮度確認でも再評価が必要と判明したため、成果物は変更していない。"
+    }
+  ],
+  "final_message": "レビューを実施しました。初回・最終の鮮度確認で対象が出力されたため、review verdict は grade-stale です。成果物・型・result は編集していません。確認できなかった範囲：最新の評価結果に基づく完了可否、未作成5辞書との照合。result への記録は reporter に引き継ぎます。",
+  "completion_status": "complete",
+  "handoff": [
+    "評価結果の確認：validations の3種類の grade list コマンドを開始時と終了直前に各1回実行した。すべて exit 0。両回とも --changed-only は docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md を出力し、--dependency-changed と --incomplete は出力なし。最初から評価結果が最新でないため、decision の verdict は grade-stale とする。changed-during-review には該当しない。",
+    "サイドカーの記録値は verdict=pass、score=98、graded_at=2026-11-09T16:25:25.163Z、finding 件数は blocker 0 / major 0 / minor 1 / note 0、done_criteria は5件中5件充足。ただし鮮度確認が最新でないことを示したため、この記録値から現在の完了可否は判断しない。既存 result の「runner の一致確認済み」「全完了条件を充足」「complete-with-findings」は今回の確認結果へ更新すること。",
+    "型の確認根拠：[[specdojo:ccd-mermaid-rulebook|CCD作成ルール]] は [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]] の全体方針から禁止事項までの7章構成で、完成例のサンプル章を持たない。見出しは階層ごとに連番。記述ガイドには成果物の5章それぞれの判断基準・良例・悪例があり、関連表のカラム定義もある。一般属性はBDD、値・構造詳細はその参照正本へ委ねる記載があり、PJR-2GD6 の方針に対応している。成果物の品質観点は採点し直していない。",
+    "完成例の確認根拠：[[specdojo:ccd-sample|概念クラス図 サンプル]] は対象者・適用時点・対象外、6クラスと5関連の図、全関連の両方向の多重度根拠、複合主キーと識別範囲、条件付きの顧客必須、辞書対応、未照合事項の影響・解消責務・確認条件を記載している。[[specdojo:clis-sample|販売管理CLI仕様]] と比較し、CCDの責務に応じた具体的な完成例として内容を確認した。代表成果物 [[prj-0001:ccd-project-planning|概念クラス図（プロジェクトの立上と計画）]] と [[prj-0001:prj-overview|プロジェクト概要]]、直接根拠の [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]] も実際に読んだ。",
+    "approach に応じた確認：rulebook frontmatter は recipe: not-needed、template: not-needed、sample: specdojo:ccd-sample を宣言している。recipe・template は未宣言ではなく不要判断済み。本文要件が章構成を、記述ガイドが判断基準と推奨表を、sample が具体的な記入例を提供するため、別の手順書・骨組みを増やさない判断理由が先行実行記録にも残っている。開くべき template ID は宣言されていない。先行040・050の result と evidence・pipeline state を読み、両タスクの親検証9件がすべて passed、統合が succeeded であることを確認した。これらの過去の検証は今回の validations へ転記しない。",
+    "未充足事項・改善指示：最新の grade を取得して review を再実施する。F001 は既存 finding として保持し、review で取り消さない。[[specdojo:ccd-mermaid-rulebook|CCD作成ルール]] の「推奨 Frontmatter 項目」は依存をカタログの `depends_on`、直接根拠を成果物の `based_on` としている一方、F001 は成果物への `depends_on` 追加を求めており、現行規定との疑義がある。再評価時に確認すること。未作成5辞書との照合と実装内部の検証は行っておらず、代表成果物の未解決事項に記された責務・確認条件を維持する。",
+    "範囲確認：開始時から存在する result・実行管理ファイルと packages/docs-site/.vitepress/sidebar-config.ts の変更は編集していない。sidebar の差分はビジネスルール・業務イベント仕様の recipe/template メニュー追加で、本CCDレビューの対象外である。runner は統合前にこの既存差分の扱いを確認すること。今回は新たなファイル変更なし。result の5必須セクションは reporter が今回の事実と grade-stale の判断で更新すること。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/executor.log",
+      "bytes": 6413,
+      "truncated": false
+    }
+  ]
+}
