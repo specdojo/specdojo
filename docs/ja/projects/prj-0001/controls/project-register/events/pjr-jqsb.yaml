@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cdb06126c93549fa99376c8c131e3ebf
+  ts: "2026-11-10T12:38:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: YAML の成果物を grade で評価する方式を決める
+    - field: description
+      from: ""
+      to: grade は Markdown の frontmatter を前提とし、YAML の成果物（bdd・ifx-cmd など）を評価できない。YAML のメタ情報の読み方と、評価の対象・結果のハッシュの扱いを決める
+    - field: input
+      from: ""
+      to: '["grade は src/grade/core.ts と src/shared/grade-result.ts で Markdown frontmatter を読み、YAML では Markdown frontmatter is required で止まる（2026-11-10 確認）。","YAML のメタ情報は 2 通り: bdd などは最上位の id・type・status・rulebook、OpenAPI の形（ifx-api など）は x-spec-meta。validate:schema はどちらも読んでいる。","案: A（推奨）grade が YAML のメタ情報を validate:schema と同じ読み方で読み、YAML の本文をそのまま評価する。B yaml-pages の表示用 Markdown を評価する。C YAML は grade の対象外とし review は人が行う。indie は推奨（A）で起票するよう指示（2026-11-10）。"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-V05D"]'
