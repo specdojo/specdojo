@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_54b4025e79c94755938a334bc574a6ee
+  ts: "2026-11-10T12:27:39Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ifx-cmd・bes の sample と規則の小さな食い違いを直す
+    - field: description
+      from: ""
+      to: grade（2026-11-10）が、ifx-cmd-sample の files の約束が規則の必須の項目を一部満たさないこと、bes-sample の仮の bes-index の参照に確認の手と担当・時期がないこと、売上の規則や記録のモデルを説明の文だけで書いていることなどを指摘した。sample と規則をそろえる。sf・cdt・ccd・bdd の残りの軽い指摘もここで扱う
+    - field: input
+      from: ""
+      to: '["grade の run id kata-bsk-20261110 の minor の指摘から。軽い指摘は型を確定したうえで後で直す（indie が決定）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'
