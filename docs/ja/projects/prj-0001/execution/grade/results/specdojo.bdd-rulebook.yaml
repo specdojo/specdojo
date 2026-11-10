@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 96
-graded_at: "2026-11-10T08:12:26.417Z"
-graded_by: sol-review-executor
-content_hash: 7f1d8402e6af92bcc3441fd1e8006d55225d317760350834f687dde0410b08ea
+graded_at: "2026-11-10T20:18:33.523Z"
+graded_by: flash-high-executor
+content_hash: 383778f0d5245ad81074ddb6b9df5b34179335e1cda7ade83247095cfc9a9a7f
 categories:
   purpose:
     score: 100
@@ -115,10 +115,8 @@ findings:
       annotations are retained separately or tied to a compatible source version so the migration can satisfy both
       requirements.
     message_ja: >-
-      The mandatory retention of deprecated fields during a migration period conflicts with the manual acceptance
-      condition at body line 218 when a referenced schema or type has already removed a field; define how legacy
-      annotations are retained separately or tied to a compatible source version so the migration can satisfy both
-      requirements.
+      移行期間中における非推奨フィールドの必須保持は、参照されているスキーマまたは型がすでにフィールドを削除している場合の、body line
+      218における手動Acceptance条件と競合します。レガシーなアノテーションを個別に保持するか、互換性のあるソースバージョンに紐付けるかを定義し、移行が両方の要件を満たせるようにしてください。
   - id: F002
     severity: minor
     rule: vp-ops-operability
@@ -128,7 +126,4 @@ findings:
       Add an operational path for upstream field removals, including responsibility and timing for moving legacy
       annotations out of active fields or retaining a compatible source version; otherwise the required migration-period
       retention prevents the source reconciliation and validation needed to accept the update.
-    message_ja: >-
-      Add an operational path for upstream field removals, including responsibility and timing for moving legacy
-      annotations out of active fields or retaining a compatible source version; otherwise the required migration-period
-      retention prevents the source reconciliation and validation needed to accept the update.
+    message_ja: アップストリームでのフィールド削除に対する運用パスを追加してください。これには、レガシーなアノテーションをアクティブなフィールドから移動させる、あるいは互換性のあるソースバージョンを保持するための責任とタイミングを含めてください。そうしないと、必要な移行期間の保持によって、アップデートを受け入れるために必要なソースの照合と検証が妨げられます。
