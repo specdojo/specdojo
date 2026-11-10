@@ -32,13 +32,23 @@ business-specs-kata で確定した型（specdojo:cdt-rulebook と sample）に�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 代表の [[prj-0001:cdt-register-type]] を、確定した型 [[specdojo:cdt-rulebook]] と [[specdojo:cdt-sample]] に合わせて磨き込んでいる。型の本文要件の章立て・必須の項目・記述ガイドの判断の基準に沿い、型が禁止することを書いていない。
+- 冗長さを整理している（判断に要る背景・制約・例外と意味は保ち、新しい内容を足さない）。
+- 実装・schema・リファレンスと同じことを書かず、正本を参照する方針（PJR-2GD6）を保っている。
+- 決められない点は `_UNDECIDED_` か `_ASSUMPTION_` のまま、理由（どの成果物がない、誰の判断が要る）を書いて残してよい。依存の成果物がないことを理由に未完了としない。
+- これまでの review の指摘のうち、確定した型の範囲で直せるものを直し、直さないものは理由を個票の対応結果に書いている。
+- 型と、ほかの成果物とカタログを変えていない。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
+- `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`specdojo catalog validate --project prj-0001` が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                               | 担当   | 状態 | メモ |
+| --- | ---------------------------------- | ------ | ---- | ---- |
+| 1   | 確定した型と代表の文書を読み比べる | _TODO_ | open | -    |
+| 2   | 磨き込みと冗長さの整理を行う       | _TODO_ | open | -    |
+| 3   | 検査を流し、対応結果に書く         | _TODO_ | open | -    |
 
 ## 5. 対応結果
 
@@ -46,4 +56,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- 親: [[prj-0001:pjr-2gd6-business-specs-reps]]、[[prj-0001:pjr-t88p-business-specs-kata]]
+- 対象: [[prj-0001:cdt-register-type]]
+- 型: [[specdojo:cdt-rulebook]]
