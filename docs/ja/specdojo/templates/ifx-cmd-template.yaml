@@ -1,64 +1,69 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
 # specdojo-schema: validate=false reason=template
-# Template: external command interface specification
-# Replace _TERM_ with a kebab-case integration name and fill every remaining
-# _UPPER_SNAKE_ or _TODO_ placeholder before treating the generated file as complete.
+# 記入判断は [[specdojo:ifx-cmd-recipe|外部コマンド連携仕様 作成レシピ]]、
+# 完成例は [[specdojo:ifx-cmd-sample|外部コマンド連携仕様サンプル]] を参照する。
+# 生成時プレースホルダを展開し、残る記入欄を埋める。値・型は対応 schema を参照する。
 id: specdojo:ifx-cmd-template
 type: template
 status: draft
 title: 外部コマンド連携仕様テンプレート
 rulebook: none
 metadata_template:
-  id: ifx-cmd-_TERM_
+  id: _PROJECT_ID_:_LOCAL_ID_
   type: api
   status: draft
-  title: _COMMAND_SPEC_TITLE_
+  title: _DELIVERABLE_NAME_
   rulebook: specdojo:ifx-cmd-rulebook
   version: 1
-  based_on: []
+  based_on: _BASED_ON_
 
 command:
+  # 固定名または正本からの解決規則。可変の実行ファイル一覧は転載しない。
   executable: _EXECUTABLE_
+  # サブコマンドがなければ省略する。
   subcommands:
     - _SUBCOMMAND_
   purpose: "_TODO_: 呼び出し側から見た実行目的と成功後の状態を記載する。"
-  reference: "_TODO_: コマンドリファレンス、exec-defaults.yaml の command_template と exec-config-guide.md、または外部CLI公式ドキュメント等の正本への参照を記載する。"
+  reference: "_TODO_: 起動方法の正本の文書・設定キーと対象操作を特定する。"
   version_constraint: _VERSION_CONSTRAINT_
-  shell: false
+  # 原則 false。true の場合は必要な理由と設定の管理・展開値の検証先を reference に記す。
+  shell: _SHELL_
 
 streams:
   stdin:
     mode: _STDIN_MODE_
     format: _STDIN_FORMAT_
     encoding: UTF-8
-    description: "_TODO_: stdin を使う場合は入力の意味を記載する。使わない場合は mode と format を none にする。"
+    description: "_TODO_: 渡す内容と入力終了の約束。使わない場合も要否と形式を明示する。"
   stdout:
     format: _STDOUT_FORMAT_
     encoding: UTF-8
-    description: "_TODO_: 呼び出し元が利用する成功出力の安定契約を記載する。"
+    description: "_TODO_: 採用する出力の範囲、内容の正本、終了コードとは別に確認する完了条件。"
   stderr:
     format: _STDERR_FORMAT_
     encoding: UTF-8
-    description: "_TODO_: 進捗、警告、失敗詳細の用途と、秘密値を出力しない条件を記載する。"
+    description: "_TODO_: 診断用途と成否判定に使う信号の区別。秘密値を出力しない条件。"
 
+# 入出力がなければ files を省略する。片側だけなければ該当配列を [] にするか省略する。
 files:
   inputs:
     - path: _INPUT_FILE_PATH_
       format: _INPUT_FILE_FORMAT_
       encoding: UTF-8
-      description: "_TODO_: 入力として渡すファイルがある場合に記載する（不要なら inputs 自体を省略可）。"
+      description: "_TODO_: パスの基準・解決規則、用途、作成主体、内容の正本。"
   outputs:
     - path: _OUTPUT_FILE_PATH_
       format: _OUTPUT_FILE_FORMAT_
       encoding: UTF-8
-      description: "_TODO_: コマンドが作成・更新するファイルがある場合に記載する（不要なら outputs 自体を省略可）。"
+      description: "_TODO_: パスの基準・解決規則、用途、作成・更新主体、内容の正本。呼び出し元が保存する記録と区別する。"
 
 side_effects:
-  - "_TODO_: 外部システムや環境に与える状態変化を記載する（ない場合は「なし」等）。"
+  - "_TODO_: 外部状態・ローカル環境への変更、利用枠・課金への影響、変更禁止の境界。副作用がなければその旨を記す。"
 
+# 代表的な失敗ごとに複製する。同じコードの分類には追加信号・判定順・未分類時の扱いを meaning に記す。
 exit_codes:
-  - code: 0
-    meaning: _SUCCESS_MEANING_
+  - code: _SUCCESS_EXIT_CODE_
+    meaning: "_TODO_: プロセスの成功が保証する範囲。業務完了の確認条件は stdout と対応させる。"
     category: success
     retryable: false
   - code: _FAILURE_EXIT_CODE_
@@ -67,14 +72,16 @@ exit_codes:
     retryable: _FAILURE_RETRYABLE_
 
 authentication:
+  # 認証不要の場合も明示し、injection の参照名を含め schema に従って埋める。秘密値は書かない。
   method: _AUTHENTICATION_METHOD_
   injection:
     mechanism: _AUTHENTICATION_INJECTION_MECHANISM_
     names:
       - _AUTHENTICATION_REFERENCE_NAME_
-  secret_source: "_TODO_: シークレットストアや CLI プロファイルなど値の管理境界を記載する。"
-  log_policy: "_TODO_: 引数、環境変数、stdout、stderr、エラー記録のマスク条件を記載する。"
+  secret_source: "_TODO_: 認証状態・値の供給元と管理主体の境界。"
+  log_policy: "_TODO_: 引数・環境変数・stdout・stderr・保存ログのマスク対象と実施時点。"
 
+# 制約は根拠に従って埋める。未決定なら現在動作・必要な判断・確認先をコメント等に残す。
 execution:
   working_directory: _WORKING_DIRECTORY_
   timeout_seconds: _TIMEOUT_SECONDS_
@@ -82,14 +89,16 @@ execution:
   max_parallel: _MAX_PARALLEL_
   idempotency:
     guaranteed: _IDEMPOTENCY_GUARANTEED_
-    condition: "_TODO_: 重複実行を防ぐ条件、または冪等性を保証できない理由を記載する。"
+    condition: "_TODO_: 重複処理を防ぐ条件、または保証できない理由と既存変更を確認して再開する条件。"
 
 error_handling:
   retry:
+    # exit_codes の retryable と揃える。対象がなければ [] とし、回数・待機方式は再試行しない契約に合わせる。
     on_categories:
       - _RETRYABLE_CATEGORY_
+    # 初回を含むか、条件付き再試行の根拠と併せて記す。
     max_attempts: _MAX_ATTEMPTS_
     backoff: _BACKOFF_STRATEGY_
-  timeout_action: "_TODO_: 子プロセスと不完全出力の扱いを記載する。"
-  malformed_output_action: "_TODO_: stdout を契約どおり解析できない場合の処置を記載する。"
-  authentication_failure_action: "_TODO_: 再認証の依頼先と自動再試行しない条件を記載する。"
+  timeout_action: "_TODO_: 子プロセス・不完全出力・既存変更の扱いと、再開条件または確認先。"
+  malformed_output_action: "_TODO_: 出力の欠落・解析失敗時の停止・再試行の判断、既存変更の扱いと確認先。"
+  authentication_failure_action: "_TODO_: 検出できる範囲、自動再試行しない条件と再認証の依頼先。認証不要なら想定外の要求の扱い。"
