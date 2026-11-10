@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 99
-graded_at: "2026-11-10T08:18:18.115Z"
-graded_by: sol-review-executor
-content_hash: ac8c5f7754e545486775b6de4940515ba7e10f72f8bb402f92115343c1449e0f
+graded_at: "2026-11-10T20:22:39.056Z"
+graded_by: flash-high-executor
+content_hash: 9e7a9e6a7e55fdb5e8c108392d3f645d7ce0bdf84dcb3c96a7c412432be8bfad
 categories:
   purpose:
     score: 100
@@ -117,9 +117,8 @@ findings:
       reporting handoff remains unspecified; reference the common procedure for classifying persistent risks, issues,
       change requests, and decisions in PJR, including the responsible Role code and destination record.
     message_ja: >-
-      The previous unrestricted-memo problem is resolved by mandatory decision fields and shared labels, but the
-      reporting handoff remains unspecified; reference the common procedure for classifying persistent risks, issues,
-      change requests, and decisions in PJR, including the responsible Role code and destination record.
+      以前の unrestricted-memo に関する問題は、必須の決定フィールドと共有ラベルによって解決されましたが、レポートの引き継ぎについては未規定のままです。担当の Role コードおよび転送先レコードを含む、PJR
+      における永続的なリスク、問題、変更要求、および決定を分類するための共通手順を参照してください。
   - id: F002
     severity: minor
     rule: vp-dev-change-impact
@@ -135,6 +134,4 @@ findings:
     message: >-
       The rulebook lacks guidelines for lifecycle operations such as how to deprecate, update, or handle inquiries
       regarding existing business rules, including assigned role codes.
-    message_ja: >-
-      The rulebook lacks guidelines for lifecycle operations such as how to deprecate, update, or handle inquiries
-      regarding existing business rules, including assigned role codes.
+    message_ja: ルールブックには、割り当てられたロールコードを含む、既存のビジネスルールを廃止、更新、または問い合わせに対応する方法といったライフサイクル操作のガイドラインが不足しています。

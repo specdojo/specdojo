@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 96
-graded_at: "2026-11-10T08:20:55.423Z"
-graded_by: sol-review-executor
-content_hash: 315aa3ef96b390e9bc65356d59b09f9c6bff14c4857368f1a1068285e7eb798a
+graded_at: "2026-11-10T20:24:53.284Z"
+graded_by: flash-high-executor
+content_hash: ab06e9e835684f65a3706ff6ea370993419f210de46c43ebf25cffbe7e69e798
 categories:
   purpose:
     score: 100
@@ -117,9 +117,8 @@ findings:
       provide a validation reference or illustrative commands such as npm run lint:md, npm run lint:fm, and npm run
       lint:mermaid, while allowing destination repositories to define their equivalents.
     message_ja: >-
-      The required Markdown, Frontmatter, and Mermaid checks have no executable commands or linked execution procedure;
-      provide a validation reference or illustrative commands such as npm run lint:md, npm run lint:fm, and npm run
-      lint:mermaid, while allowing destination repositories to define their equivalents.
+      必要な Markdown、Frontmatter、および Mermaid のチェックには、実行可能なコマンドやリンクされた実行手順がありません。npm run lint:md、npm run lint:fm、および npm
+      run lint:mermaid のような検証リファレンスや例示的なコマンドを提供しつつ、移行先のレポジトリがそれらに相当するものを定義できるようにしてください。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
