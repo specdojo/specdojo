@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-jqsb-grade-yaml-method
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-11-10T12:38:14Z"
+  completed_at: "2026-11-10T12:41:46Z"
+  conclusion: grade は YAML のメタ情報を validate:schema と同じ読み方（最上位か x-spec-meta）で読み、YAML の本文を評価する。ハッシュは YAML の内容、行番号は元の YAML の行
   derived_from:
     - PJR-V05D
 ---

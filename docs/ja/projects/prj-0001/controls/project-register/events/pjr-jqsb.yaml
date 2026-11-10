@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-V05D"]'
+- v: 1
+  id: reg_9efb876b824b4480848d49fb510ab652
+  ts: "2026-11-10T12:41:46Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: indie が決定（案 A、2026-11-10）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-10"
+    - field: conclusion
+      from: "-"
+      to: grade は YAML のメタ情報を validate:schema と同じ読み方（最上位か x-spec-meta）で読み、YAML の本文を評価する。ハッシュは YAML の内容、行番号は元の YAML の行
+  previous_event_id: reg_cdb06126c93549fa99376c8c131e3ebf
