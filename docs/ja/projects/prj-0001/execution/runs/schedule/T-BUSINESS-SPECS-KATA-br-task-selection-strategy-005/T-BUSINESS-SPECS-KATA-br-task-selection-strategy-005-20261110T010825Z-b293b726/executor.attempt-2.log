@@ -1,0 +1,69 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "前回の5文書を引き継ぎ、再開指示に沿って仮置きの理由を補正しました。整形・差分検査は通過し、業務判断6件は未決のまま引き継ぎます。",
+  "handoff": [
+    "代表成果物は既存の業務境界と順位規則を維持しました。累積変更では `based_on`、条件付き入力、Ready 一覧の参照経路、未決事項の判断先・判断時点・下流影響・承認条件を追加しています。今回、依存仕様未作成による適用境界と既定戦略の経路差を `_ASSUMPTION_` として理由付きで明示しました。",
+    "rulebook は記述標準に沿った7章構成を維持し、各記述ガイドに判断基準・良い例・悪い例を備えています。完成例は sample、骨組みは template に分担し、実装・schema・リファレンスの詳細を再掲しない方針を維持しています。",
+    "sample は駄菓子屋きぬやの在庫不足判定を題材とする完成例です。通常・境界・欠損・予約超過・入力不備の競合を含む11例を維持し、代表成果物の機械的複写を避けています。",
+    "kata-guide の作成条件に照らし、境界・欠損・競合条件を掘り下げる recipe と、BR 系統で6章の骨組みを共有する template を必要と判断しています。前回追加した `docs/ja/specdojo/recipes/br-recipe.md` と `docs/ja/specdojo/templates/br-template.md` を引き継ぎました。rulebook の3種の宣言は実在する完全 ID であり、カタログの `rulebook: specdojo:br-rulebook` は適合するため維持しました。",
+    "前回の構造上の手本は ready の `specdojo:prj-overview-rulebook`・`specdojo:prj-overview-recipe`・`specdojo:prj-overview-template`、sample の粒度の手本は plan 指定の `specdojo:clis-sample` です。BR 成果物に同種 ready 文書はありません。外部情報を内容根拠とする追加はありません。",
+    "finding 対応は F001 の判断情報、F002 の依存宣言、F004 の重複擬似コード削除、F007 の派生ビュー入力・参照経路、F008 の承認条件を反映しています。依存仕様自体は未作成です。F003・F005・F006 の欠損時順位・照合方法・追加判定例、F009 の未決事項・仮説は未解消として残しました。再開指示に従い、業務判断待ちを理由に本タスクを未完了とはしていません。",
+    "残る判断は代表成果物の U-01〜U-06 です。U-01 は PM に先行 BPS の整備、PO に適用境界の判断を依頼します。U-02 は fifo の意味、U-03 は許容戦略の差、U-04 は既定戦略の経路差、U-05 は slack・ES の一部欠損、U-06 は ID 照合方法について PO の判断が必要です。ARC は比較規則と定義間整合、PM・Orchestrator は経路確認を支援し、判断後に影響する規則・期待順位を更新してください。",
+    "仕上げの4操作は前回の1巡を引き継ぎました。旧規定と重複擬似コードの削除、代替順位の参照への統合、判定規則・判定例と例外処理・回復行動の分離、代表成果物・sample・template の章構成整合を維持しています。今回も再現性を達成済みと読める表現を目的の表現へ補正し、未確認の仮説を確定事項と区別しました。",
+    "全5文書の `status: draft` を維持しています。executor は result・評価サイドカー・Git 状態を更新していません。reporter は上記の判断根拠と残る事項を result の「進め方と実践の型の適用」へ反映してください。指定の lint・schema・型検査・テストは親 runner、独立した多観点レビューは後続 task が担当します。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md docs/ja/specdojo/rulebooks/br-rulebook.md docs/ja/specdojo/samples/br-sample.md docs/ja/specdojo/recipes/br-recipe.md docs/ja/specdojo/templates/br-template.md",
+      "status": "passed",
+      "summary": "対象5文書の整形が完了しました。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検出0件。staged ファイルは0件のため、内容検査の対象はありませんでした。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外です。",
+      "reason": "executor の成果物変更は Markdown 5文書であり、変更した YAML ファイルがありません。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査の変更条件に該当しません。",
+      "reason": "executor の成果物変更は product と specdojo 配下だけです。projects 配下の既存差分は runner 管理の実行記録であり、今回編集していません。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査の変更条件に該当しません。",
+      "reason": "executor は登録簿履歴および既存の plan・result を編集していません。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "br-task-selection-strategy",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md"
+    },
+    {
+      "target": "specdojo:br-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md"
+    },
+    {
+      "target": "specdojo:br-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/br-sample.md"
+    }
+  ]
+}
+</specdojo_executor_evidence>
