@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:sf-rulebook
   type: rulebook
   deliverable_type: requirement
-  status: draft
+  status: ready
   target_format: markdown
   recipe: not-needed
   sample: specdojo:sf-sample

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T13:02:59Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-140",
+  "by": "indie",
+  "msg": "型一式の確定を始める（indie が決定、orchestrator が代行）",
+  "meta": {
+    "claim_owner": "ARC",
+    "planned_owner": "ARC"
+  }
+}

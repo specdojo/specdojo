@@ -5,7 +5,7 @@
 # 生成時プレースホルダを展開し、残る記入欄を埋める。値・型は対応 schema を参照する。
 id: specdojo:ifx-cmd-template
 type: template
-status: draft
+status: ready
 title: 外部コマンド連携仕様テンプレート
 rulebook: none
 metadata_template:

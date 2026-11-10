@@ -2,7 +2,7 @@
 id: specdojo:bdd-sample
 type: data
 title: 業務データ辞書（駄菓子屋の販売管理）
-status: draft
+status: ready
 rulebook: specdojo:bdd-rulebook
 supersedes: []
 

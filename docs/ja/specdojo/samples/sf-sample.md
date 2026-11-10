@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sf-sample
   type: requirement
-  status: draft
+  status: ready
   rulebook: specdojo:sf-rulebook
 ---
 

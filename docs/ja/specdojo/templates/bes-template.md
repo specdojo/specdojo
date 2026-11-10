@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:bes-template
   type: template
-  status: draft
+  status: ready
   frontmatter_template:
     specdojo:
       id: _PROJECT_ID_:_LOCAL_ID_

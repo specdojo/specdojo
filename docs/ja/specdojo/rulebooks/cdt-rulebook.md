@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:cdt-rulebook
   type: rulebook
   deliverable_type: data
-  status: draft
+  status: ready
   recipe: not-needed
   sample: specdojo:cdt-sample
   template: not-needed

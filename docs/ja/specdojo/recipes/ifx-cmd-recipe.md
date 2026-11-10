@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:ifx-cmd-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:ifx-cmd-rulebook
   sample: specdojo:ifx-cmd-sample
 ---

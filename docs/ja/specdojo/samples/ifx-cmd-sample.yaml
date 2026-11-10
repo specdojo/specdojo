@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
 id: specdojo:ifx-cmd-sample
 type: api
-status: draft
+status: ready
 title: 駄菓子屋きぬや レシート印刷コマンド連携仕様サンプル
 rulebook: specdojo:ifx-cmd-rulebook
 version: 1

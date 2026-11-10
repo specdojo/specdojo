@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:ccd-sample
   type: data
-  status: draft
+  status: ready
   rulebook: specdojo:ccd-mermaid-rulebook
 ---
 

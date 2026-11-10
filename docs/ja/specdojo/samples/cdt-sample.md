@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cdt-sample
   type: data
-  status: draft
+  status: ready
   rulebook: specdojo:cdt-rulebook
   supersedes:
     - specdojo:cld-sample

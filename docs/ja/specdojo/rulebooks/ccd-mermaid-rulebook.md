@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:ccd-mermaid-rulebook
   type: rulebook
   deliverable_type: data
-  status: draft
+  status: ready
   target_format: markdown
   recipe: not-needed
   sample: specdojo:ccd-sample

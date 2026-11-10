@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:bes-sample
   type: requirement
-  status: draft
+  status: ready
   rulebook: specdojo:bes-rulebook
   based_on: []
   supersedes: []

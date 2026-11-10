@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:br-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:br-rulebook
   sample: specdojo:br-sample
 ---

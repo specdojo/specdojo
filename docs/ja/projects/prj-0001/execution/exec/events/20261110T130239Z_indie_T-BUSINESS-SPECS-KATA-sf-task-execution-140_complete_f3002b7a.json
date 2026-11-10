@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T13:02:39Z",
+  "type": "complete",
+  "task_id": "T-BUSINESS-SPECS-KATA-sf-task-execution-140",
+  "by": "indie",
+  "msg": "型一式を確定した。型の status を ready に上げ、代表の成果物は流し直しのため draft のまま（indie が決定、orchestrator が代行）"
+}

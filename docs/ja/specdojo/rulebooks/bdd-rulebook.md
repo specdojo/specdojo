@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:bdd-rulebook
   type: rulebook
   deliverable_type: data
-  status: draft
+  status: ready
   target_format: yaml
   recipe: not-needed
   sample: specdojo:bdd-sample
