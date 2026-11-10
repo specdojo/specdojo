@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-090",
   "run_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-090-20261110T223153Z-212d9a36",
-  "updated_at": "2026-11-10T22:45:06.927Z",
+  "updated_at": "2026-11-10T22:45:17.619Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-sf-task-execution-090/T-BUSINESS-SPECS-REPS-sf-task-execution-090-20261110T223153Z-212d9a36/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-review-executor",
       "attempts": 1,
       "started_at": "2026-11-10T22:45:06.927Z",
-      "completed_at": null,
+      "completed_at": "2026-11-10T22:45:17.619Z",
       "artifact_ref": null
     }
   },
