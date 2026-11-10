@@ -17,6 +17,12 @@ inputs:
   max_rounds:
     type: integer
     minimum: 1
+  edit_by:
+    type: string
+    default: ""
+  review_by:
+    type: string
+    default: ""
 task:
   mode: command
   owner: ARC
@@ -28,6 +34,12 @@ task:
         set -- "$@" --max-rounds "{{inputs.max_rounds}}"
       fi
     fi
+    if [ -n "{{inputs.edit_by}}" ]; then
+      set -- "$@" --edit-by "{{inputs.edit_by}}"
+    fi
+    if [ -n "{{inputs.review_by}}" ]; then
+      set -- "$@" --review-by "{{inputs.review_by}}"
+    fi
     {{specdojo}} "$@"
 run:
-  idempotency_key: "{{job_id}}:{{scheduled_at}}:{{inputs.strategy}}:{{inputs.parallel}}:{{inputs.loop}}:{{inputs.max_rounds}}"
+  idempotency_key: "{{job_id}}:{{scheduled_at}}:{{inputs.strategy}}:{{inputs.parallel}}:{{inputs.loop}}:{{inputs.max_rounds}}:{{inputs.edit_by}}:{{inputs.review_by}}"
