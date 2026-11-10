@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T12:35:09Z",
+  "type": "cancel",
+  "task_id": "T-LAUNCH-pm-organization-105",
+  "by": "indie",
+  "msg": "PJR-06RE（2026-09-27）で review の段を後から足したときに、もう終わった型に対して生まれ、流さないまま残っていた。型はその後に別の項目で手入れと grade を済ませているため流さない（indie が決定、orchestrator が記帳）"
+}
