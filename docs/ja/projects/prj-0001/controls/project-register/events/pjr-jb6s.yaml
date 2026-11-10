@@ -54,3 +54,32 @@
       from: "-"
       to: approved
   previous_event_id: reg_c5633649b8c94ed59569a6785ddb1ddc
+- v: 1
+  id: reg_f2b7e99099ac4e3996143e63bf0a6db1
+  ts: "2026-11-10T23:13:36Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8b45c9eae78b4649aa56298c26a09393
+- v: 1
+  id: reg_47128ab0ecf742f7a0ab5227b9e7f708
+  ts: "2026-11-10T23:36:38Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
+  previous_event_id: reg_f2b7e99099ac4e3996143e63bf0a6db1
