@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_63b6f5fe999542df8a507556db2cef29
+  ts: "2026-11-10T12:27:07Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ccd と ifx-cmd の型に、規則の検査を流すコマンドを書く
+    - field: description
+      from: ""
+      to: ccd-mermaid-rulebook と ifx-cmd-rulebook の grade（2026-11-10）が、規則にある Markdown・Frontmatter・Mermaid・YAML schema の検査をどのコマンドで流すかが書かれていないと指摘した。検査の手順とコマンドを書く
+    - field: input
+      from: ""
+      to: '["grade の run id kata-bsk-20261110 の minor の指摘から。軽い指摘は型を確定したうえで後で直す（indie が決定）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'
