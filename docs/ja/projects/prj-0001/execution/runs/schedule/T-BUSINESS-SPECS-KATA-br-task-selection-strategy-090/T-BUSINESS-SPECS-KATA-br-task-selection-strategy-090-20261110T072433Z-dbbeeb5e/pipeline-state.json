@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090-20261110T072433Z-dbbeeb5e",
+  "updated_at": "2026-11-10T07:38:11.802Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-10T07:25:58.893Z",
+      "completed_at": "2026-11-10T07:29:14.751Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090-20261110T072433Z-dbbeeb5e/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-10T07:34:03.260Z",
+      "completed_at": "2026-11-10T07:37:58.750Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090-20261110T072433Z-dbbeeb5e/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-10T07:38:00.915Z",
+      "completed_at": "2026-11-10T07:38:11.802Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090-20261110T072433Z-dbbeeb5e/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-090-20261110T072433Z-dbbeeb5e/result.md"
+  }
+}
