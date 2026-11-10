@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c5633649b8c94ed59569a6785ddb1ddc
+  ts: "2026-11-10T12:46:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: GUI のデザインのルール（デザインシステム）の型を新しく作る
+    - field: description
+      from: ""
+      to: uis はワイヤーフレームとレイアウトを含めないため、画面をまたいで見た目を揃えるデザインのルール（色・文字・余白などの基本の値、部品、レイアウトの型、アクセシビリティ）を、設計の新しい種類として定める rulebook と sample を作る
+    - field: input
+      from: ""
+      to: '["indie の要望（2026-11-10）: uis はワイヤーフレームを含めないので、デザインシステムを別途設計として定める型を作る。","orchestrator の案（PJR-MXQB の入力、2026-11-08）: デザインのルールは設計の範疇で、実装の共通ルールを扱う sysd-cross-cutting-policy とは分けた新しい型にする。ワイヤーフレームは文書として保守せず、uis とデザインのルールから agent に試作を作らせ、プロダクトのリポジトリに置く。nfr-usability は測れる目標を決める要求で、デザインのルールはそれを満たす設計の決まりにあたる。","略号・ID・置き場所（設計の文書の階層）は executor が既存の命名の標準と設計の型を読んで決め、理由を個票の対応結果に書く。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-MXQB"]'
