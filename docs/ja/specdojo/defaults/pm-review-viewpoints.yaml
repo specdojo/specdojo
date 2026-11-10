@@ -369,6 +369,7 @@ viewpoints:
         - specdojo:dec-rulebook
         - specdojo:dmd-index-rulebook
         - specdojo:dmd-rulebook
+        - specdojo:dss-rulebook
         - specdojo:etc-index-rulebook
         - specdojo:etc-rulebook
         - specdojo:ifd-mermaid-rulebook
@@ -587,6 +588,7 @@ viewpoints:
         - specdojo:dct-rulebook
         - specdojo:dec-rulebook
         - specdojo:dmd-rulebook
+        - specdojo:dss-rulebook
         - specdojo:etc-rulebook
         - specdojo:gl-rulebook
         - specdojo:ifd-mermaid-rulebook

@@ -302,6 +302,7 @@ flowchart
 - **System Design Index**：設計のSSOT（OpenAPI / AsyncAPI / migration / job定義 / config schema 等）への導線
 - **System Design Critical Flows**：事故や仕様誤解の原因になりやすい“重要フロー”だけを少数（最大5件）定義
 - **System Design Cross-cutting Policy**：エラー・冪等・リトライ・監査・トレーシング等の横断ルール（実装の共通前提）
+- **Design System Specification**：画面をまたぐ GUI のデザインの決まり。既存のトークンや部品の正本は参照する
 
 #### 2.4.1. ドキュメント一覧と概要（最小構成）
 
@@ -311,6 +312,9 @@ flowchart
 | 全体構成（リンク集） | System Design Index | `sysd-index` | システム設計のSSOTへの導線を1箇所に集約し、設計情報を迷子にしない | 内部API定義（OpenAPI等）/イベント定義（AsyncAPI等）/DBスキーマ（migration等）/バッチ定義（workflow/cron等）/設定スキーマ（config schema等）/コード配置規約（モジュール境界） |
 | 重要フロー | System Design Critical Flows | `sysd-critical-flows` | “読まないと事故る”フローだけを可視化し、実装・テスト・運用の共通理解を作る | 最大5フロー（冪等/補償/非同期/順序/整合性/外部I/F障害など）について、境界・永続化点・再実行性・失敗時挙動を図または箇条書きで定義 |
 | 横断ルール | System Design Cross-cutting Policy | `sysd-cross-cutting-policy` | 実装全体に影響する共通ルールをSSOT化し、各所の実装ブレを防ぐ | エラー形式/例外分類、タイムアウト・リトライ、冪等キー、トランザクション境界、ログ/監査ログ、トレーシング、セキュリティ（認証・認可の実装原則）、バージョニング、設定の上書き階層 |
+| [[specdojo:dss-rulebook\|デザインシステム]] | Design System Specification | `dss-<term>`（既定: `dss-common`） | GUI の見た目と操作時の表現を揃え、操作性目標を満たす設計の決まりを定める | デザイントークン、部品の使い方、レイアウトの型、状態表示、アクセシビリティ、正本への参照、検証方法 |
+
+DSS の成果物は `docs/ja/product/040-system-design/` へ置きます。画面ごとの目的・項目・操作・遷移は UIS、測れる操作性目標は NFR が持ちます。ワイヤーフレームは文書として保守せず、UIS と DSS から試作を作ってプロダクトのリポジトリに置きます。
 
 > 補足：従来の「実装データフロー図／実装クラス図／DB論理・物理／実装画面仕様／内部I/F／バッチ設計／設定一覧」は、
 > **“SSOTをコード（定義ファイル）に寄せる”** 方針により、個別ドキュメントとしては作りません。
