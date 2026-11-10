@@ -14,6 +14,7 @@ specdojo:
   derived_from:
     - PJR-2GD6
     - PJR-T88P
+  autopilot: approved
   approach: fully-guided
   targets:
     - prj-0001:ifx-cmd-ai-provider-cli
