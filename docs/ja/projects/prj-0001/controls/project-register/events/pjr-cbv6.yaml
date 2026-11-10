@@ -54,3 +54,32 @@
       from: "-"
       to: approved
   previous_event_id: reg_65661e869d6d4348a11ef66fa694d232
+- v: 1
+  id: reg_b46cc5b3561f4ebaa2e2d67bf6f142a7
+  ts: "2026-11-10T22:46:41Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_947f237786484386bdeb89990c822d05
+- v: 1
+  id: reg_d1893838cfd04ccf94e153b141216ac3
+  ts: "2026-11-10T23:12:14Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_b46cc5b3561f4ebaa2e2d67bf6f142a7
