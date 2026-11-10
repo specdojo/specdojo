@@ -266,7 +266,11 @@ const businessSpecificationRecipes = [
     recipe("プロセスグループ別", "cdfd"),
   ]),
   group("データモデル", [recipe("ステータス定義", "stsd")]),
-  group("業務モデル", [recipe("業務プロセス仕様", "bps")]),
+  group("業務モデル", [
+    recipe("業務プロセス仕様", "bps"),
+    recipe("ビジネスルール", "br"),
+    recipe("業務イベント仕様", "bes"),
+  ]),
 ];
 
 const externalIfRecipes = [recipe("外部コマンド連携仕様", "ifx-cmd")];
@@ -542,7 +546,11 @@ const businessSpecificationTemplates = [
     template("プロセスグループ別", "cdfd"),
   ]),
   group("データモデル", [template("ステータス定義", "stsd")]),
-  group("業務モデル", [template("業務プロセス仕様", "bps")]),
+  group("業務モデル", [
+    template("業務プロセス仕様", "bps"),
+    template("ビジネスルール", "br"),
+    template("業務イベント仕様", "bes"),
+  ]),
 ];
 
 const externalIfTemplates = [templateYaml("外部コマンド連携仕様", "ifx-cmd")];
