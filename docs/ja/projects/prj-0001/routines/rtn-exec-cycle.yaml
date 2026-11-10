@@ -6,7 +6,7 @@
 # 一連の処理は単一の project 実行ロック内で保持されるため、step 間に手動実行・
 # 別 routine・CI の exec run / exec resume が割り込まない。
 # 2026-11-10: 業務仕様の代表の review を夜間に流すため有効にした（indie が決定）。0:00 の
-# rtn-night-approved-register の後に動くよう 5 時 30 分だけにし（5 時の rtn-grade-recheck の後に動かすため）、編集は sol-executor、review は
+# rtn-night-approved-register の後に動くよう 6 時だけにし（5 時の rtn-grade-recheck の後で、毎時 0 分に routine を確かめる cron に合わせるため）、編集は sol-executor、review は
 # sol-review-executor を指定する。並べる review が grade の共有ファイルを取り合う（PJR-Z4H8）ため parallel は 1。
 # 毎日1時と6時（Asia/Tokyo）に起動し、取りこぼした実行枠が複数ある場合は
 # 最新の1回だけを実行する。実行中の重複起動は skip する。
@@ -15,7 +15,7 @@ name: 延期 task 再開と Ready task 自動実行の順次処理
 description: 毎日1時と6時（Asia/Tokyo）に、due な利用制限 task の再開、Schedule 状態の再計算、Ready task の auto loop を単一ロック内で順次実行する。
 enabled: true
 trigger:
-  cron: "30 5 * * *"
+  cron: "0 6 * * *"
   timezone: Asia/Tokyo
 action:
   kind: job
