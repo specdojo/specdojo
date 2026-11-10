@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080",
   "run_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080-20261110T045621Z-aab8595d",
-  "updated_at": "2026-11-10T06:19:57.547Z",
+  "updated_at": "2026-11-10T06:20:07.977Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080-20261110T045621Z-aab8595d/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-10T06:19:57.547Z",
-      "completed_at": null,
+      "completed_at": "2026-11-10T06:20:07.977Z",
       "artifact_ref": null
     }
   },
