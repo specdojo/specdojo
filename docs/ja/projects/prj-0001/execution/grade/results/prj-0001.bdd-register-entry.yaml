@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 99
-graded_at: "2026-11-11T00:51:37.681Z"
+score: 97
+graded_at: "2026-11-11T03:20:36.215Z"
 graded_by: sol-review-executor
 content_hash: fb50dc46b6c846efa398ad202b067d11d2f7018d9599aeacb6209f2ccc1ae91b
 source_hashes:
@@ -26,7 +26,7 @@ categories:
   business:
     score: 100
   consistency:
-    score: 100
+    score: 88
   architecture:
     score: 100
   usability:
@@ -61,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -117,10 +117,27 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 134
+    anchor: "description: 対応完了・回答や判断の確定・却下で追跡を終えた時点。"
+    message: >-
+      docs/ja/product/010-business-specs/020-data-model/generated/bdd-register-entry.md:154 still embeds a completed_at
+      description containing UTC formatting, deferral, and reopening rules, whereas this YAML now describes only the
+      completion instant and delegates those rules through the entity references; regenerate the Markdown so its
+      embedded source matches the authoritative YAML.
+    message_ja: >-
+      docs/ja/product/010-business-specs/020-data-model/generated/bdd-register-entry.md:154 still embeds a completed_at
+      description containing UTC formatting, deferral, and reopening rules, whereas this YAML now describes only the
+      completion instant and delegates those rules through the entity references; regenerate the Markdown so its
+      embedded source matches the authoritative YAML.
+    cause:
+      type: document
+  - id: F002
     severity: minor
     rule: vp-ux-user-flow
     line: 18

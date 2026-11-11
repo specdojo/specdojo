@@ -112,3 +112,32 @@
       from: in-progress
       to: review
   previous_event_id: reg_579e84cc7ba14bf5bf7a38adb7766315
+- v: 1
+  id: reg_c1d7a5310374441b8a297549e7ca6f32
+  ts: "2026-11-11T03:36:27Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_552ead509ede43bdb846720a99604d51
+- v: 1
+  id: reg_687907bc350f494c92f778c2b85ab6e2
+  ts: "2026-11-11T03:45:27Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
+  previous_event_id: reg_c1d7a5310374441b8a297549e7ca6f32

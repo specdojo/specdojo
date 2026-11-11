@@ -1,0 +1,33 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-jb6s-20261111t033624z-7bd891bf
+  type: exec-result
+  task_id: PJR-JB6S
+  mode: edit
+  status: blocked
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-JB6S/pjr-jb6s-20261111T033624Z-7bd891bf/plan.md
+  started_at: "2026-11-11T03:36:25.421Z"
+  completed_at: "2026-11-11T03:45:23.255Z"
+  agent: sol-executor
+  block_reason: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+_TODO_: 実施した内容の要約を記入する。
+
+## 2. 変更ファイル
+
+_TODO_: 変更したファイルのパスを記入する。
+
+## 3. 申し送り
+
+_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+
+## 4. 進め方
+
+_TODO_: どう進めたか、根拠にした文書や規約を記入する。

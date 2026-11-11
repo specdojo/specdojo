@@ -4,11 +4,11 @@ document: sf-task-execution
 path: docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-11-09T22:40:30.836Z"
+verdict: pass
+score: 91
+graded_at: "2026-11-11T03:32:34.840Z"
 graded_by: sol-review-executor
-content_hash: f3e30a0a157e87f33c5021825edbe2746cc01a8bf199dc87164bf4aa9bb9efcd
+content_hash: 687046ec82abbc0f6a21ba5d4eddece883142e30dde23199465d988f9626bec4
 source_hashes:
   catalog-entry: 17f72f54ccb2f437707048cfbe73a6d73ab7db79effd066df7f7474c9eb17857
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -26,13 +26,13 @@ categories:
   business:
     score: 92
   consistency:
-    score: 63
+    score: 88
   architecture:
     score: 92
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 75
   quality:
     score: 88
 viewpoints:
@@ -64,8 +64,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 3
     score: 75
@@ -76,11 +76,11 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -119,18 +119,17 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 7
+  major: 0
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-purpose-alignment
-    line: 21
+    line: 23
     anchor: >-
-      先行成果物 `sf-index`
-      および上流の業務プロセス仕様群は未作成のため、成果物カタログの業務区分および処理ステップ定義（`P-07-01`〜`P-07-05`、`P-11-01`〜`P-11-02`）に基づき、本機能の入出力（第 3
-      章）および処理要件（第 4 章）との対応を次表のとおり定義する。上流 BPS 正本作成時の詳細ステップ照合は第 8 章の未決事項として管理する。
+      先行成果物 `sf-index` と `bps-task-selection-preparation` 等が未作成のため、次表は既存の業務区分に基づく暫定対応とする。詳細処理ステップ ID は確定扱いにせず、上流との照合を第 8
+      章で管理する。
     message: >-
       Complete the `P-07` and task-selection mappings against the planned business-process specifications before final
       approval; the current table explicitly leaves their detailed correspondence unresolved.
@@ -142,11 +141,10 @@ findings:
   - id: F002
     severity: minor
     rule: vp-ba-requirements-completeness
-    line: 21
+    line: 23
     anchor: >-
-      先行成果物 `sf-index`
-      および上流の業務プロセス仕様群は未作成のため、成果物カタログの業務区分および処理ステップ定義（`P-07-01`〜`P-07-05`、`P-11-01`〜`P-11-02`）に基づき、本機能の入出力（第 3
-      章）および処理要件（第 4 章）との対応を次表のとおり定義する。上流 BPS 正本作成時の詳細ステップ照合は第 8 章の未決事項として管理する。
+      先行成果物 `sf-index` と `bps-task-selection-preparation` 等が未作成のため、次表は既存の業務区分に基づく暫定対応とする。詳細処理ステップ ID は確定扱いにせず、上流との照合を第 8
+      章で管理する。
     message: >-
       Complete the business-process step mapping and confirm the resource constraints that affect acceptance; until
       then, the business alignment and acceptance scope are not fully established.
@@ -157,12 +155,11 @@ findings:
       type: document
   - id: F003
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 21
+    rule: vp-ba-requirements-completeness
+    line: 23
     anchor: >-
-      先行成果物 `sf-index`
-      および上流の業務プロセス仕様群は未作成のため、成果物カタログの業務区分および処理ステップ定義（`P-07-01`〜`P-07-05`、`P-11-01`〜`P-11-02`）に基づき、本機能の入出力（第 3
-      章）および処理要件（第 4 章）との対応を次表のとおり定義する。上流 BPS 正本作成時の詳細ステップ照合は第 8 章の未決事項として管理する。
+      先行成果物 `sf-index` と `bps-task-selection-preparation` 等が未作成のため、次表は既存の業務区分に基づく暫定対応とする。詳細処理ステップ ID は確定扱いにせず、上流との照合を第 8
+      章で管理する。
     message: >-
       Reconcile the stated `P-07` correspondence with the detailed BPS specifications when they are created; the current
       mapping is based on catalog categories rather than confirmed process-step identifiers.
@@ -172,100 +169,114 @@ findings:
     cause:
       type: document
   - id: F004
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 117
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 122
     anchor: >-
-      - executor および reporter の 1 試行あたりの実行時間上限は、稼働構成（[[specdojo:exec-config-guide|exec設定ガイド]] 参照）を正本とする。既定値は agent 実行で
-      600 秒（10 分）、親検証バッチ全体で 300 秒（5 分）とし、超過時はプロセスを強制停止してタイムアウト失敗として証跡に記録する。
+      実行証跡と段状態は reporter・runner・監査ツールの入力となる。保存・対応関係は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]]
+      を参照する。論理契約・schema・版管理の正本は未特定のため、第 8 章で ARC の確認対象とする。未知フィールドの許容、既存記録の読み込み、破壊的変更時の移行要否はその契約に従い、互換性の受入は正本の特定・照合後に行う。
     message: >-
-      Reconcile section 5.1 and V-13/V-14 with the existing resource-control contracts: the SF states a 300-second
-      timeout for the whole parent-validation batch and a default provider limit of one, whereas
-      `src/exec/parent-validation.ts` assigns 600 seconds to each validation command and
-      `docs/ja/specdojo/guides/exec-config-guide.md` defines an omitted provider limit as unlimited and excludes several
-      explicit Schedule execution routes from the gate; correct the baseline and applicability or explicitly identify an
-      approved behavior change.
+      Identify the authoritative logical contract and version source for evidence and pipeline-stage records; section
+      5.2 requires schema compatibility and version changes without identifying the interface definition that component
+      designers must use.
     message_ja: >-
-      Reconcile section 5.1 and V-13/V-14 with the existing resource-control contracts: the SF states a 300-second
-      timeout for the whole parent-validation batch and a default provider limit of one, whereas
-      `src/exec/parent-validation.ts` assigns 600 seconds to each validation command and
-      `docs/ja/specdojo/guides/exec-config-guide.md` defines an omitted provider limit as unlimited and excludes several
-      explicit Schedule execution routes from the gate; correct the baseline and applicability or explicitly identify an
-      approved behavior change.
+      Identify the authoritative logical contract and version source for evidence and pipeline-stage records; section
+      5.2 requires schema compatibility and version changes without identifying the interface definition that component
+      designers must use.
     cause:
       type: document
   - id: F005
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 126
-    anchor: "- 実行証跡および段状態の記録は、下流の reporter・runner・監査ツールが参照する公開データ契約である。"
+    rule: vp-dev-implementation-readiness
+    line: 122
+    anchor: >-
+      実行証跡と段状態は reporter・runner・監査ツールの入力となる。保存・対応関係は [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]]
+      を参照する。論理契約・schema・版管理の正本は未特定のため、第 8 章で ARC の確認対象とする。未知フィールドの許容、既存記録の読み込み、破壊的変更時の移行要否はその契約に従い、互換性の受入は正本の特定・照合後に行う。
     message: >-
-      Identify the authoritative logical contract and version source for evidence and pipeline-stage records; section
-      5.2 requires schema compatibility and version changes without identifying the interface definition that component
-      designers must use.
+      Provide authoritative interface references for evidence producers, stage-state writers, reporter consumers, and
+      resume readers before implementing their integration; the lifecycle-guide reference identifies storage
+      relationships but section 5.2 explicitly leaves their logical contracts, schemas, and versions unspecified.
     message_ja: >-
-      Identify the authoritative logical contract and version source for evidence and pipeline-stage records; section
-      5.2 requires schema compatibility and version changes without identifying the interface definition that component
-      designers must use.
+      Provide authoritative interface references for evidence producers, stage-state writers, reporter consumers, and
+      resume readers before implementing their integration; the lifecycle-guide reference identifies storage
+      relationships but section 5.2 explicitly leaves their logical contracts, schemas, and versions unspecified.
     cause:
       type: document
   - id: F006
     severity: minor
-    rule: vp-qe-done-criteria
-    line: 182
-    anchor: >-
-      | 未作成の上流 BPS（`bps-task-selection-preparation` 等）の詳細処理ステップ ID との本機能の最終照合 |
-      実行受入・準備ステップの詳細シーケンスとの整合。未確定のままでは下流のコンポーネント設計境界に影響するリスクがあるため、プロジェクト登録簿で追跡する | `_UNDECIDED_` | BA・PO（境界は ARC
-      と確認）        | 上流 BPS 正本作成時（M-02）                | プロジェクト登録簿 `PJR-2GD6` / `PJR-BCAQ` 後続レビュー | 上流 BPS
-      が承認され、本機能との処理ステップ対応がレビューで合意されていること        |
+    rule: vp-dev-change-impact
+    line: 145
+    anchor: "- **エスカレーション**: 原因が保護設定違反、AI provider 障害、未定義の競合である場合は、PM および ARC へエスカレーションし、設定変更またはプロジェクト登録簿での課題化を行う。"
     message: >-
-      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
-      the related completion conditions as fully evidenced.
+      Add a change-impact procedure identifying who checks affected BPS, BR, STSD, CLIS, component interfaces, schemas,
+      acceptance tests, and operating guides, and how PM records resulting Schedule or PJR actions; the current
+      escalation route covers incidents and unresolved issues but does not govern revisions to established requirements.
     message_ja: >-
-      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
-      the related completion conditions as fully evidenced.
+      Add a change-impact procedure identifying who checks affected BPS, BR, STSD, CLIS, component interfaces, schemas,
+      acceptance tests, and operating guides, and how PM records resulting Schedule or PJR actions; the current
+      escalation route covers incidents and unresolved issues but does not govern revisions to established requirements.
     cause:
       type: document
   - id: F007
     severity: minor
-    rule: vp-qe-verifiability
-    line: 174
+    rule: vp-qe-done-criteria
+    line: 175
     anchor: >-
-      | V-13    | 5.1 実行時間制約       | 実行時間制限（タイムアウト）の超過                                          | 既定時間（agent: 600秒、親検証:
-      300秒）超過時にプロセスが強制停止され、タイムアウト失敗として証跡に残ること  | 単体/結合  |
+      | 上流 BPS の詳細対応（`_UNDECIDED_`）    | `sf-index`・`bps-task-selection-preparation` 等が未作成で、選択・受入から完了までの詳細対応と設計境界が未照合   
+      | BA が照合、ARC が境界確認、PO が判断  | 上流 BPS 正本作成時                        | BA が第 2 章の暫定対応と第 3・4 章を照合し、詳細ステップ ID を確定する。PM が
+      `PJR-2GD6` / `PJR-BCAQ` の後続レビューで追跡する                                 | 上流 BPS と本機能の対応が未合意                  |
     message: >-
-      Parameterize V-13 and V-14 by the effective configured timeout and concurrency limits, and cover overridden and
-      omitted limits; the current acceptance rows use fixed defaults even though section 5.1 makes runtime configuration
-      authoritative.
+      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
+      the related completion conditions as fully evidenced.
     message_ja: >-
-      Parameterize V-13 and V-14 by the effective configured timeout and concurrency limits, and cover overridden and
-      omitted limits; the current acceptance rows use fixed defaults even though section 5.1 makes runtime configuration
-      authoritative.
+      Resolve the missing business-process correspondence and the undecided resource acceptance values before treating
+      the related completion conditions as fully evidenced.
     cause:
       type: document
   - id: F008
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 65
-    anchor: "- 隔離実行の場合、検証済み成果が統合ブランチへ反映され、タスク進捗状態が完了へ遷移していること。"
+    rule: vp-qe-verifiability
+    line: 167
+    anchor: >-
+      | V-15    | 5.2 データ契約         | 正本特定後、証跡・段状態の契約または版を変更                                |
+      正本が定める版・互換性条件で既存記録を読み込める。契約不一致は受入を保留する（正本未特定の間は未判定）                                       | 単体/結合  |
     message: >-
-      The former implementation names, internal structures, reconciliation table, and command option have been removed,
-      resolving the previous major and minor findings; qualify the task-completion postcondition in section 3.2 and V-11
-      to apply only to state-tracked execution, because section 4.1 explicitly forbids implicit state changes for
-      untracked single runs.
+      Identify the authoritative compatibility rules used by V-15 and the parent-validation timeout contract used by
+      V-13 so their pass/fail results can be determined; V-15 is explicitly unjudgeable until the contract is
+      identified, and section 8 still leaves the timeout authority unresolved.
     message_ja: >-
-      The former implementation names, internal structures, reconciliation table, and command option have been removed,
-      resolving the previous major and minor findings; qualify the task-completion postcondition in section 3.2 and V-11
-      to apply only to state-tracked execution, because section 4.1 explicitly forbids implicit state changes for
-      untracked single runs.
+      Identify the authoritative compatibility rules used by V-15 and the parent-validation timeout contract used by
+      V-13 so their pass/fail results can be determined; V-15 is explicitly unjudgeable until the contract is
+      identified, and section 8 still leaves the timeout authority unresolved.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 128
+    anchor: >-
+      - **外部依存と秘匿**: AI provider CLI、検証環境、Git
+      の障害時は、設定された停止・待機・フォールバックに従う。認証情報や秘密鍵を成果物・ログへ残さず、失敗出力は秘匿処理（マスキング）して調査用記録とする。
+    message: >-
+      Add an acceptance case for section 5.3 confidentiality using synthetic credentials in provider and validation
+      failure output, with checks that retained logs, evidence, and result contain no exposed credentials; V-01–V-15
+      currently omit this explicit requirement.
+    message_ja: >-
+      Add an acceptance case for section 5.3 confidentiality using synthetic credentials in provider and validation
+      failure output, with checks that retained logs, evidence, and result contain no exposed credentials; V-01–V-15
+      currently omit this explicit requirement.
     cause:
       type: document
 done_criteria:
-  satisfied: 3
+  satisfied: 1
   total: 5
   unsatisfied:
     DC-001:
       - BA
     DC-002:
       - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
   detail_ref: sf-task-execution-grade-criteria

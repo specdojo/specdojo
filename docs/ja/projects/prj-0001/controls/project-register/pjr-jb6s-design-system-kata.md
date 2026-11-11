@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:46:14Z"
+  block_reason: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
   derived_from:
     - PJR-MXQB
   autopilot: approved
