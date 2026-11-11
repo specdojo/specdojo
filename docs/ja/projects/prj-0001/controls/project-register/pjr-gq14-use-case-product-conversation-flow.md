@@ -14,8 +14,6 @@ specdojo:
   due_on: "2026-11-30"
   derived_from:
     - PJR-V5AZ
-  depends_on:
-    - PJR-WNQJ
 ---
 
 # PJR-GQ14 ユースケース別ガイドを具体的なプロダクト作成の対話フローに改訂する

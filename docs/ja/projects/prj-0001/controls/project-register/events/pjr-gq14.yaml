@@ -145,3 +145,16 @@
       from: "-"
       to: '["PJR-WNQJ"]'
   previous_event_id: reg_09cbf3add54e4253bb2d55c1d30611df
+- v: 1
+  id: reg_9608e0bc821c4292a83eff5bf33d117a
+  ts: "2026-11-11T15:18:11Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: orchestrator が記帳。PJR-WNQJ は統合済みで、空行の書き方は develop に入った。WNQJ は利用者の見た目の確認待ちで review のため、GQ14 の前提から外す
+  changes:
+    - field: depends_on
+      from: '["PJR-WNQJ"]'
+      to: "-"
+  previous_event_id: reg_5c3240be60a44262b5728a6de8e96321
