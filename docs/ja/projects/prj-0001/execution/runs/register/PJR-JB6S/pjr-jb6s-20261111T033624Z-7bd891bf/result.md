@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-JB6S
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JB6S/pjr-jb6s-20261111T033624Z-7bd891bf/plan.md
   started_at: "2026-11-11T03:36:25.421Z"
+  completed_at: "2026-11-11T03:45:23.255Z"
   agent: sol-executor
+  block_reason: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
 ---
 
 # Edit Result
