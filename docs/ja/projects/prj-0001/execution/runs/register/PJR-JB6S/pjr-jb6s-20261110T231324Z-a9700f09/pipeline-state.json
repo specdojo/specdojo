@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-JB6S",
   "run_id": "pjr-jb6s-20261110T231324Z-a9700f09",
-  "updated_at": "2026-11-10T23:36:04.844Z",
+  "updated_at": "2026-11-11T00:36:38.996Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JB6S/pjr-jb6s-20261110T231324Z-a9700f09/result.md"
     },
     "integrate": {
-      "status": "succeeded",
-      "actor": "sol-executor",
-      "attempts": 1,
-      "started_at": "2026-11-10T23:35:33.765Z",
-      "completed_at": "2026-11-10T23:36:04.844Z",
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-11T00:36:38.996Z",
+      "completed_at": null,
       "artifact_ref": null
     }
   },
