@@ -2,12 +2,12 @@
 id: ifx-cmd-ai-provider-cli-grade-criteria
 document: ifx-cmd-ai-provider-cli
 path: docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml
-graded_at: "2026-11-11T00:54:59.954Z"
+graded_at: "2026-11-11T03:36:21.809Z"
 graded_by: sol-review-executor
 content_hash: cdc15bce86fa5272bac8be860b1d5fd4c10106993248e84cf0940982192332c5
 summary:
-  satisfied: 4
-  unsatisfied: 1
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -15,7 +15,8 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: Invalid evidence-tag JSON has no defined caller-visible completion, edit-retention, or recovery outcome.
   - id: DC-002
     text: AI provider CLI との連携スコープと方式を承認できること
     roles:
@@ -29,17 +30,21 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      The authentication design requires login profiles for OpenCode even though its referenced local Ollama
-      configuration requires no authentication.
+      The universal provider_login/cli_profile contract does not accommodate supported unauthenticated local
+      OpenCode/Ollama execution.
   - id: DC-004
     text: 外部 CLI 起動テスト・結合テスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: Invalid evidence-tag JSON lacks observable expected outcomes for integration-test design.
   - id: DC-005
     text: プロセス起動・連携エラー処理実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      The processing sequence, state transition, and resume eligibility after evidence JSON parsing failure remain
+      undecided.

@@ -5,8 +5,8 @@ path: docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 79
-graded_at: "2026-11-11T00:54:59.954Z"
+score: 73
+graded_at: "2026-11-11T03:36:21.809Z"
 graded_by: sol-review-executor
 content_hash: cdc15bce86fa5272bac8be860b1d5fd4c10106993248e84cf0940982192332c5
 source_hashes:
@@ -26,15 +26,15 @@ categories:
   business:
     score: 63
   consistency:
-    score: 75
+    score: 50
   architecture:
     score: 83
   usability:
-    score: 100
+    score: 94
   implementation:
     score: 75
   quality:
-    score: 69
+    score: 63
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -82,20 +82,20 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-user-flow:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -116,8 +116,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
-  minor: 7
+  major: 9
+  minor: 8
   note: 0
 findings:
   - id: F001
@@ -277,6 +277,21 @@ findings:
       type: document
   - id: F012
     severity: major
+    rule: vp-qe-done-criteria
+    line: 146
+    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
+    message: >-
+      Complete the malformed-evidence contract before treating DC-001, DC-004, or DC-005 as satisfied; the current text
+      provides no defined completion outcome, downstream processing sequence, or recovery expectation for invalid
+      evidence-tag JSON.
+    message_ja: >-
+      Complete the malformed-evidence contract before treating DC-001, DC-004, or DC-005 as satisfied; the current text
+      provides no defined completion outcome, downstream processing sequence, or recovery expectation for invalid
+      evidence-tag JSON.
+    cause:
+      type: document
+  - id: F013
+    severity: major
     rule: vp-qe-verifiability
     line: 146
     anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
@@ -290,7 +305,35 @@ findings:
       oracle.
     cause:
       type: document
-  - id: F013
+  - id: F014
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 146
+    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
+    message: >-
+      Replace the undecided invalid-JSON branch with a defined disposition or an authoritative reference that specifies
+      it; malformed_output_action currently omits the caller behavior for a recognized output-parsing failure.
+    message_ja: >-
+      Replace the undecided invalid-JSON branch with a defined disposition or an authoritative reference that specifies
+      it; malformed_output_action currently omits the caller behavior for a recognized output-parsing failure.
+    cause:
+      type: document
+  - id: F015
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 24
+    anchor: "[[prj-0001:sysd-agent-settings|エージェント実行・共通設計]] を入口とする。"
+    message: >-
+      Change the links prj-0001:sysd-agent-settings at line 24 and prj-0001:opr-agent-cli-update at line 151 to their
+      declared IDs sysd-agent-settings and opr-agent-cli-update, or use valid relative paths, so readers can reach the
+      provider-design entry point and update recovery procedure.
+    message_ja: >-
+      Change the links prj-0001:sysd-agent-settings at line 24 and prj-0001:opr-agent-cli-update at line 151 to their
+      declared IDs sysd-agent-settings and opr-agent-cli-update, or use valid relative paths, so readers can reach the
+      provider-design entry point and update recovery procedure.
+    cause:
+      type: document
+  - id: F016
     severity: minor
     rule: vp-ops-release-readiness
     line: 4
@@ -303,7 +346,7 @@ findings:
       which require resolution and which may be deferred by an accountable human decision.
     cause:
       type: document
-  - id: F014
+  - id: F017
     severity: major
     rule: vp-ops-operability
     line: 146
@@ -319,9 +362,15 @@ findings:
     cause:
       type: document
 done_criteria:
-  satisfied: 4
+  satisfied: 1
   total: 5
   unsatisfied:
+    DC-001:
+      - BA
     DC-003:
       - ARC
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
   detail_ref: ifx-cmd-ai-provider-cli-grade-criteria
