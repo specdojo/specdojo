@@ -14,6 +14,7 @@ specdojo:
   registered_at: "2026-11-11T11:58:00Z"
   depends_on:
     - PJR-0X0S
+    - PJR-A7CR
   commit_type: chore
   commit_scope: release
 ---
@@ -32,7 +33,7 @@ specdojo:
 
 ## 3. 完了条件
 
-- PJR-0X0S が close されている。review の 7 件は、利用者の確認の結果で close するか次の版に回すかが決まっている。
+- PJR-0X0S と PJR-A7CR が close されている。review の 7 件は、利用者の確認の結果で close するか次の版に回すかが決まっている。
 - 版を変更内容から決め、利用者の確認を得ている。本体は `0.8.0`。`packages/docs-site`・`packages/docs-lint` は前の公開の後に変更があるため、版を上げるかを確かめる。
 - `package.json` と `package-lock.json` の版を上げ、`CHANGELOG.md` の `[Unreleased]` を版の節として日付を付けて確定している。PJR-EPQ3 の後に close した項目の個票の「CHANGELOG に書く事項」を集めて書き、close の件数と集めた件数を照合している。
 - ルートと `packages/*` の `npm ci` が通り、クリーンな作業ツリーで `npm run check` が通る。

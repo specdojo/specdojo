@@ -47,3 +47,29 @@
     - field: commit_scope
       from: ""
       to: release
+- v: 1
+  id: reg_625dfd7b28ac4060a5d690d78afc8dff
+  ts: "2026-11-11T13:32:49Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。PJR-A7CR も 0.8.0 の前提にする（indie が承認）
+  changes:
+    - field: depends_on
+      from: '["PJR-0X0S"]'
+      to: '["PJR-A7CR"]'
+  previous_event_id: reg_c40b06428d14412cafc78268755e0997
+- v: 1
+  id: reg_c37d5c8165c2439a97a1d8d6d5b9ef00
+  ts: "2026-11-11T13:33:15Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。前提を PJR-0X0S と PJR-A7CR の両方にする
+  changes:
+    - field: depends_on
+      from: '["PJR-A7CR"]'
+      to: '["PJR-0X0S","PJR-A7CR"]'
+  previous_event_id: reg_625dfd7b28ac4060a5d690d78afc8dff

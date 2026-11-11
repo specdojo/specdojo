@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ae8518571f724cbf990a0e96c4fad864
+  ts: "2026-11-11T13:31:45Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 夜間の register の統合と朝報告が、job の worktree で検査に落ちる
+    - field: description
+      from: ""
+      to: job の worktree への merge が commitlint で落ち、朝報告の frontmatter が lint-fm で落ちるため、夜間の routine が最後まで通らない
+    - field: input
+      from: ""
+      to: '["2026-11-11 の PJR-0X0S の確認で夜間の routine を 1 回流した（JBR-night-approved-register-44790542c979）。子の run の親の検証は通ったが、統合で commitlint が .git/worktrees/`<job>``/COMMIT_EDITMSG` を見つけられず失敗し、job の review の段で朝報告 night-orchestrator-20261111T130227127Z.md が lint-fm（type: report・rulebook なし）で落ちた"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-11"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-RX14"]'
