@@ -4,6 +4,8 @@ specdojo:
   type: data
   status: ready
   rulebook: specdojo:ccd-mermaid-rulebook
+  based_on:
+    - specdojo:bdd-sample
 ---
 
 # 概念クラス図 サンプル
