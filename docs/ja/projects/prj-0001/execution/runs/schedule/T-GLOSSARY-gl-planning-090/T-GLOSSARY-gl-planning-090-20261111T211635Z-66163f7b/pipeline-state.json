@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-GLOSSARY-gl-planning-090",
+  "run_id": "T-GLOSSARY-gl-planning-090-20261111T211635Z-66163f7b",
+  "updated_at": "2026-11-11T21:29:20.176Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-11T21:18:06.682Z",
+      "completed_at": "2026-11-11T21:20:16.879Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-planning-090/T-GLOSSARY-gl-planning-090-20261111T211635Z-66163f7b/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-11T21:25:18.645Z",
+      "completed_at": "2026-11-11T21:29:18.022Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-planning-090/T-GLOSSARY-gl-planning-090-20261111T211635Z-66163f7b/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-11T21:29:20.176Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-planning-090/T-GLOSSARY-gl-planning-090-20261111T211635Z-66163f7b/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-planning-090/T-GLOSSARY-gl-planning-090-20261111T211635Z-66163f7b/result.md"
+  }
+}
