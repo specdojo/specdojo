@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-smw7-ccd-project-planning-refine-confirmed-kata
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:13:18Z"
+  completed_at: "2026-11-11T00:32:08Z"
+  conclusion: 代表の ccd-project-planning を、確定した型で磨き込み、冗長さを整理した
   derived_from:
     - PJR-2GD6
     - PJR-T88P

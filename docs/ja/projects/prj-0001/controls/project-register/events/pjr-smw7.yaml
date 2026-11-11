@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a743ccb6cbd6486a84eeb690eb5adc69
+- v: 1
+  id: reg_6ea16a50acbb4ed19504fbf4b72561f6
+  ts: "2026-11-11T00:32:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（夜間の実行の後、日中に sol-executor で流した）で対応。差分が対象の文書だけで、lint が通ることを確かめた。型への合い方は、この後の review の段で確かめる
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: 代表の ccd-project-planning を、確定した型で磨き込み、冗長さを整理した
+  previous_event_id: reg_288f3fd810304050afad3f81138b7f12
