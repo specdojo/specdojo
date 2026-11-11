@@ -1,0 +1,159 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: gl-common
+path: docs/ja/product/010-business-specs/060-glossary/gl-common.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 97
+graded_at: "2026-11-11T20:42:10.067Z"
+graded_by: sol-review-executor
+content_hash: 2c0aafb67a2c3ee22738b389b89efb7362505d6544513f815db9921284a066c8
+source_hashes:
+  catalog-entry: c9259c73048c4295d4b9fa6134d422ec44cb0becadd5f97619aa3f40cebd9de0
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 31bad5f39bf71e076f7ed4a050b28b6a02091ae1fc2c81b473d5aedcc6f97373
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 94
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 84
+    anchor: "englishName: schedule"
+    message: >-
+      Regenerate docs/ja/product/010-business-specs/060-glossary/generated/gl-common.md: its tm-schedule entry at lines
+      60-65 declares englishName: track, whereas the YAML at line 84 declares englishName: schedule, and it omits
+      tm-rulebook, tm-recipe, tm-sample, tm-template, tm-task, and tm-document-maturity that the YAML now defines.
+    message_ja: >-
+      Regenerate docs/ja/product/010-business-specs/060-glossary/generated/gl-common.md: its tm-schedule entry at lines
+      60-65 declares englishName: track, whereas the YAML at line 84 declares englishName: schedule, and it omits
+      tm-rulebook, tm-recipe, tm-sample, tm-template, tm-task, and tm-document-maturity that the YAML now defines.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 84
+    anchor: "englishName: schedule"
+    message: >-
+      Complete DC-004 verification after refreshing the generated glossary: the current YAML defines Schedule as
+      schedule, but generated/gl-common.md still defines it as track and lacks six current terms, so consistency across
+      the source and its display document cannot yet be confirmed.
+    message_ja: >-
+      Complete DC-004 verification after refreshing the generated glossary: the current YAML defines Schedule as
+      schedule, but generated/gl-common.md still defines it as track and lacks six current terms, so consistency across
+      the source and its display document cannot yet be confirmed.
+    cause:
+      type: document
+done_criteria:
+  satisfied: 4
+  total: 5
+  unsatisfied:
+    DC-004:
+      - QE
+  detail_ref: gl-common-grade-criteria
