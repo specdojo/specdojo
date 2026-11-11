@@ -112,3 +112,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6ce0c262817e4d9d93f8738ed2371697
+- v: 1
+  id: reg_fa62dcd5124d4cd3bee26127852215a7
+  ts: "2026-11-11T01:00:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（sol-executor、親の検証の失敗を plan の追加の指示で直して再開）で対応。親の検証・JSEY の run・YAML の 4 件の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: grade が YAML の成果物と kata を、validate:schema と同じ読み方のメタ情報で評価できるようにした。bdd-register-entry.yaml（pass 99）・ifx-cmd-ai-provider-cli.yaml（needs-work 79）・bdd-sample.yaml（pass 100）・ifx-cmd-sample.yaml（pass 98）に grade を流して結果ができた
+  previous_event_id: reg_4021581ddcdb41449d162d528554f240

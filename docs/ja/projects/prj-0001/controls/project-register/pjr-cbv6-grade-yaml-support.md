@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-cbv6-grade-yaml-support
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:42:25Z"
+  completed_at: "2026-11-11T01:00:08Z"
+  conclusion: grade が YAML の成果物と kata を、validate:schema と同じ読み方のメタ情報で評価できるようにした。bdd-register-entry.yaml（pass 99）・ifx-cmd-ai-provider-cli.yaml（needs-work 79）・bdd-sample.yaml（pass 100）・ifx-cmd-sample.yaml（pass 98）に grade を流して結果ができた
   derived_from:
     - PJR-JQSB
     - PJR-V05D
