@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
@@ -32,7 +32,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                              |
 | --- | --------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-CBV6 の統合後の実行を記録した |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-0X0S の統合後の実行を記録した |
 
 ## 4. 対応結果
 
@@ -114,10 +114,11 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-08 09:26 | PJR-HQVE | sonnet-executor        |
 | 2026-11-09 00:31 | PJR-C4KF | sonnet-executor        |
 | 2026-11-11 09:41 | PJR-CBV6 | sonnet-executor        |
+| 2026-11-11 23:32 | PJR-0X0S | sol-executor           |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-CBV6 とした（review 遷移の実行コミット `d52334132`、2026-11-11 09:27 JST）。実行した agent は、sonnet-executor である。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-0X0S とした（統合コミット `f13ee6c20`、2026-11-11 21:27 JST）。実行時点で個票とイベントの状態は `done`。今回の pipeline state に記録された executor の実体名は `sol-executor` である。
 
-申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
+申し送り: executor が変更した成果物は本個票のみ。親 runner の検証（lint-ts・lint-fm・lint-md・lint-mermaid・lint-d2・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
 ### 前回の統合後の確認（2026-10-26）
 
