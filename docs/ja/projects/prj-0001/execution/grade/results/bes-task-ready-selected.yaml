@@ -5,10 +5,10 @@ path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selec
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 88
-graded_at: "2026-11-10T07:05:00.879Z"
+score: 89
+graded_at: "2026-11-11T12:50:22.773Z"
 graded_by: sol-review-executor
-content_hash: c539d8cb9264c1afd68dd6a13c92c0d453b206ffdccb79e120df9e5c183530db
+content_hash: 0b9b80923a69480c7e80d96ab82353abb4abe940ff58e4230a48ec699a1f6af0
 source_hashes:
   catalog-entry: 2584b0d3c9b1e33a54da977a6307eb41c36383ad364e84e7da2a67f44b950134
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -36,7 +36,7 @@ categories:
   implementation:
     score: 88
   quality:
-    score: 63
+    score: 69
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -90,8 +90,8 @@ viewpoints:
     level: 1
     score: 25
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -122,17 +122,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 3
-  minor: 8
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-publication-accountability
-    line: 23
+    line: 25
     anchor: >-
-      | 承認者の識別 | _UNDECIDED_: 業務定義の妥当性と公開可否（`status: ready` への昇格を含む）を承認する人間の PO の Member ID
-      または氏名は、宣言された参照範囲から確認できない         | PM が業務レビューの依頼前に人間の PO を特定し、その識別と承認結果をレビュー結果に記録する。AI Agent
-      による承認で代替しない                                                                        |
+      | 承認者の識別 | _UNDECIDED_: 業務定義の妥当性と公開可否（`status: ready` への昇格を含む）を承認する人間の PO の Member ID または氏名は、宣言された参照範囲から確認できない |
+      PM が業務レビューの依頼前に人間の PO を特定し、その識別と承認結果をレビュー結果に記録する。AI Agent
+      による承認で代替しない                                                              |
     message: Identify the human PO responsible for approving the event definition and its publication readiness.
     message_ja: Identify the human PO responsible for approving the event definition and its publication readiness.
     cause:
@@ -140,12 +140,12 @@ findings:
   - id: F002
     severity: minor
     rule: vp-ba-requirements-completeness
-    line: 87
+    line: 90
     anchor: >-
-      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
-      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
-      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
-      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および `prj-0001:bdd-exec-state`）と対応 schema
+      は本タスクの参照範囲に宣言されておらず、要求単位の項目の有無自体が未確認である。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の ID
+      での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
     message: >-
       Specify the event-data field that correlates selections made by the same parallel request, based on the
       execution-record model.
@@ -156,151 +156,118 @@ findings:
       type: document
   - id: F003
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 70
+    rule: vp-arc-technical-constraints
+    line: 90
     anchor: >-
-      | 同じ要求で確定した件数     |
-      一括要求での選択数。集計時点は下記の未決事項                                                                                                        
-      | 並列。発生時点で観測可能な範囲に限る |
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および `prj-0001:bdd-exec-state`）と対応 schema
+      は本タスクの参照範囲に宣言されておらず、要求単位の項目の有無自体が未確認である。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の ID
+      での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
     message: >-
-      Define whether the selection count is cumulative at each event or determined when the request finishes, and
-      specify when that value is available or omitted.
+      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
+      represented consistently.
     message_ja: >-
-      Define whether the selection count is cumulative at each event or determined when the request finishes, and
-      specify when that value is available or omitted.
+      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
+      represented consistently.
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 87
+    rule: vp-dev-implementation-readiness
+    line: 90
     anchor: >-
-      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
-      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
-      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
-      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および `prj-0001:bdd-exec-state`）と対応 schema
+      は本タスクの参照範囲に宣言されておらず、要求単位の項目の有無自体が未確認である。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の ID
+      での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
     message: >-
-      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
-      represented consistently.
+      Define the parallel-request correlation field against the execution-record model before using this event
+      specification as an implementation reference.
     message_ja: >-
-      Resolve the parallel-request correlation field against the execution-record data model so the event payload can be
-      represented consistently.
+      Define the parallel-request correlation field against the execution-record model before using this event
+      specification as an implementation reference.
     cause:
       type: document
   - id: F005
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 87
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 23
     anchor: >-
-      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
-      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
-      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
-      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
+      | 対象系統     |
+      上記の前提は業務承認前であり、一覧と各系統の起点イベント仕様が揃っていない                                                                                
+      | BA が `bes-index`（`prj-0001:bes-index`）と各系統の起点イベント仕様を照合し、人間の PO
+      が確定の段で、実装・テスト設計への引き渡し前に適用範囲を判断する                                 |
     message: >-
-      Define the parallel-request correlation field against the execution-record model before using this event
-      specification as an implementation reference.
+      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
+      specification is complete.
     message_ja: >-
-      Define the parallel-request correlation field against the execution-record model before using this event
-      specification as an implementation reference.
+      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
+      specification is complete.
     cause:
       type: document
   - id: F006
     severity: major
     rule: vp-qe-done-criteria
-    line: 21
+    line: 90
     anchor: >-
-      | 対象系統     | _UNDECIDED_: 3 系統（schedule・register・routine）と実行サイクル全体で同一イベントとするかは、一覧と各系統の起点イベント仕様が揃っておらず、人間の PO
-      の判断も未了 | BA が `bes-index`（`prj-0001:bes-index`）と各系統の起点イベント仕様を照合し、人間の PO が実装・テスト設計への引き渡し前に判断する。PM
-      は判断結果と未解決事項を登録簿（`pjr-*`）でも追跡・報告する |
+      _UNDECIDED_: 「並列選択要求識別子」の正本上の対応項目は未確定である。[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]
+      が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event` および `prj-0001:bdd-exec-state`）と対応 schema
+      は本タスクの参照範囲に宣言されておらず、要求単位の項目の有無自体が未確認である。照合先候補は `prj-0001:bdd-exec-event`（実行イベント）とし、実行 1 回の ID
+      での代用や新規項目の必要性は断定しない。この対応が確定するまで、並列のイベントデータを実装・テスト設計への確定入力にはできない。
     message: >-
-      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
-      specification is complete.
+      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
+      support implementation and test design.
     message_ja: >-
-      Resolve the task-flow scope and obtain business approval of the event’s applicability before claiming the event
-      specification is complete.
+      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
+      support implementation and test design.
     cause:
       type: document
   - id: F007
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 87
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 24
     anchor: >-
-      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
-      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
-      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
-      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
+      | 一覧との接続 | _UNDECIDED_: 依存の
+      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                            | 一覧が作成された時点で ARC
+      が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する |
     message: >-
-      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
-      support implementation and test design.
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
     message_ja: >-
-      Specify the parallel-request correlation field and verify it against the execution-record model so the event can
-      support implementation and test design.
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
     cause:
       type: document
   - id: F008
     severity: minor
-    rule: vp-qe-verifiability
-    line: 87
+    rule: vp-qe-omissions-consistency
+    line: 24
     anchor: >-
-      _UNDECIDED_: [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] が根拠（`based_on`）に挙げる実行記録モデル（`prj-0001:bdd-exec-event`
-      および `prj-0001:bdd-exec-state`）は本タスクの参照範囲外のため未照合である。主な照合先候補
-      `prj-0001:bdd-exec-event`（実行イベント）での「並列選択要求識別子」の対応項目と、「同じ要求で確定した件数」の観測時点（各対象の確定時点までの件数か、要求終了時の件数か）は未決定である。実行 1 回の
-      ID が一括要求と同じ単位とは限らないため、既存項目で表せるとも新規フィールドが必要とも断定しない。発生後にしか分からない最終件数を、途中の発生時点の確定データとして扱わない。
+      | 一覧との接続 | _UNDECIDED_: 依存の
+      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                            | 一覧が作成された時点で ARC
+      が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する |
     message: >-
-      Define the observation point and expected per-event value for the parallel selection count so two selections from
-      one request have unambiguous pass/fail expectations.
+      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
+      connected.
     message_ja: >-
-      Define the observation point and expected per-event value for the parallel selection count so two selections from
-      one request have unambiguous pass/fail expectations.
+      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
+      connected.
     cause:
       type: document
   - id: F009
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 22
-    anchor: >-
-      | 一覧との接続 | _UNDECIDED_: 依存の
-      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                                    |
-      一覧が作成された時点で ARC が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する           |
-    message: >-
-      Add the event-index link when the index is created and verify this event’s catalog entry against the
-      specification.
-    message_ja: >-
-      Add the event-index link when the index is created and verify this event’s catalog entry against the
-      specification.
-    cause:
-      type: document
-  - id: F010
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 22
-    anchor: >-
-      | 一覧との接続 | _UNDECIDED_: 依存の
-      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                                    |
-      一覧が作成された時点で ARC が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する           |
-    message: >-
-      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
-      connected.
-    message_ja: >-
-      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
-      connected.
-    cause:
-      type: document
-  - id: F011
     severity: major
     rule: vp-qe-config-validity
     line: 17
     anchor: >-
-      _ASSUMPTION_: 本書の未決事項における確認・判断の担当割当は未承認の進め方案である。判断結果は本書の該当箇所と本成果物のレビュー結果に記録し、PM
-      が未解決事項や変更要求を登録簿（`pjr-*`）への転記候補と併せて追跡・報告する。
+      _ASSUMPTION_: 本書は、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
+      系（スケジュール帳票のタスク）の対象確定に適用する前提で記述する。3 系統が共用する実行サイクル全体への適用は、人間の PO による確定の段での業務承認を要する。register 系・routine
+      系は適用未判定とし、本書の条件をそのまま適用しない。恒久的な対象外ともせず、executor による承認済みの判断にはしない。
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 1
+  satisfied: 2
   total: 5
   unsatisfied:
-    DC-001:
-      - BA
     DC-002:
       - PO
     DC-003:

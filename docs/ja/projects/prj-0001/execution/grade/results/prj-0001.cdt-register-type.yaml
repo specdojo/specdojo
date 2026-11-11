@@ -4,11 +4,11 @@ document: prj-0001:cdt-register-type
 path: docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 83
-graded_at: "2026-11-11T03:27:46.381Z"
+verdict: pass
+score: 95
+graded_at: "2026-11-11T12:47:03.238Z"
 graded_by: sol-review-executor
-content_hash: d802d0737b7501493bcad8acaa0bec0e1e1b3b088b9dd3cfc92a16b4e40bb33f
+content_hash: 21416ed8f221473f9ba2f88aa7a5523f75dade2fb810e1934e507243816698f8
 source_hashes:
   catalog-entry: 4ff68e579f58f65b8dd720622e0ad71797b137788e5f4e46b53840a3876b51bd
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -19,48 +19,48 @@ source_hashes:
   schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 83
+    score: 100
   consistency:
     score: 75
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 75
+    score: 94
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -68,8 +68,8 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -77,20 +77,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -104,11 +104,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -120,232 +120,56 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 14
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 7
-    anchor: "- 主担当ロール: BA（分類の業務的意味と使い分けの定義）、人間の PO（区分けの方針・公開可否の最終承認）。`ready` への昇格は人間が判断する。"
+    rule: vp-arc-cross-document-consistency
+    line: 40
+    anchor: >-
+      - 照合: 正本のファイル・定義位置が解決でき、各正本値に業務説明が過不足なく対応し、CLI の許容値が同じ集合であることを確認する。確認結果と承認前に残る照合は
+      [[prj-0001:pjr-7zzr-cdt-register-type-refine-confirmed-kata|PJR-7ZZR の対応結果]] を参照する。
     message: >-
-      Add any unresolved classification or policy decision and its impact or next action, or state that no PO decision
-      remains, so the reviewer can determine whether to approve or return the document.
+      Confirm that the referenced dictionary, status definition, schema, CLI values, and catalog entry agree with the
+      classifications and scope stated here, and record or link the verification result.
     message_ja: >-
-      Add any unresolved classification or policy decision and its impact or next action, or state that no PO decision
-      remains, so the reviewer can determine whether to approve or return the document.
+      Confirm that the referenced dictionary, status definition, schema, CLI values, and catalog entry agree with the
+      classifications and scope stated here, and record or link the verification result.
     cause:
       type: document
   - id: F002
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 7
-    anchor: "- 主担当ロール: BA（分類の業務的意味と使い分けの定義）、人間の PO（区分けの方針・公開可否の最終承認）。`ready` への昇格は人間が判断する。"
+    rule: vp-dev-testability
+    line: 40
+    anchor: >-
+      - 照合: 正本のファイル・定義位置が解決でき、各正本値に業務説明が過不足なく対応し、CLI の許容値が同じ集合であることを確認する。確認結果と承認前に残る照合は
+      [[prj-0001:pjr-7zzr-cdt-register-type-refine-confirmed-kata|PJR-7ZZR の対応結果]] を参照する。
     message: >-
-      State the human PO's responsibility for final approval and whether the draft contains only information suitable
-      for publication, so publication accountability is explicit.
+      Provide or reference the validation command and expected result for checking schema and CLI value alignment, so
+      changes to classification values can be tested consistently.
     message_ja: >-
-      State the human PO's responsibility for final approval and whether the draft contains only information suitable
-      for publication, so publication accountability is explicit.
+      Provide or reference the validation command and expected result for checking schema and CLI value alignment, so
+      changes to classification values can be tested consistently.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 41
-    anchor: "- 変更影響: 値・意味を変更するときは、BA・PO が区分方針、ARC・DEV がスキーマ・CLI・派生ビューとの対応、QE が選定境界を確認し、辞書・状態定義との不整合を実行結果へ残す。"
-    message: >-
-      Add a review or implementation checkpoint and an observable completion condition, so the stated roles can use this
-      document to plan and track follow-up work.
-    message_ja: >-
-      Add a review or implementation checkpoint and an observable completion condition, so the stated roles can use this
-      document to plan and track follow-up work.
-    cause:
-      type: document
-  - id: F004
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 39
-    anchor: "- 状態定義: 分類別の終端・終了承認者・継続記録は [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] を参照する。"
-    message: >-
-      Identify any outstanding dependency or risk affecting the referenced dictionary, status definition, schema, or
-      CLI, and its tracking or schedule impact; state that none remain if applicable.
-    message_ja: >-
-      Identify any outstanding dependency or risk affecting the referenced dictionary, status definition, schema, or
-      CLI, and its tracking or schedule impact; state that none remain if applicable.
-    cause:
-      type: document
-  - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 41
-    anchor: "- 変更影響: 値・意味を変更するときは、BA・PO が区分方針、ARC・DEV がスキーマ・CLI・派生ビューとの対応、QE が選定境界を確認し、辞書・状態定義との不整合を実行結果へ残す。"
-    message: >-
-      Identify any items requiring project reporting, their destination and responsible role, or state that there are
-      none, so follow-up can be transferred into project controls.
-    message_ja: >-
-      Identify any items requiring project reporting, their destination and responsible role, or state that there are
-      none, so follow-up can be transferred into project controls.
-    cause:
-      type: document
-  - id: F006
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 23
-    anchor: 分類は表の上から順に判断する。
-    message: >-
-      Replace the blanket top-to-bottom precedence with explicit boundaries between `decision` and `change-request`:
-      choosing between alternatives that modify an approved plan satisfies the earlier `decision` description even
-      though line 32 assigns changes to existing agreements to `change-request`, potentially selecting the wrong
-      approval path.
-    message_ja: >-
-      Replace the blanket top-to-bottom precedence with explicit boundaries between `decision` and `change-request`:
-      choosing between alternatives that modify an approved plan satisfies the earlier `decision` description even
-      though line 32 assigns changes to existing agreements to `change-request`, potentially selecting the wrong
-      approval path.
-    cause:
-      type: document
-  - id: F007
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 38
-    anchor: "- 業務データ辞書: 第1章の辞書の `item_type` に対応し、分類名と意味を同辞書の論理名・ラベルに合わせる。"
-    message: >-
-      Confirm that the referenced dictionary, status definition, schema, CLI values, and catalog entry agree with the
-      classifications and scope stated here, and record or link the verification result.
-    message_ja: >-
-      Confirm that the referenced dictionary, status definition, schema, CLI values, and catalog entry agree with the
-      classifications and scope stated here, and record or link the verification result.
-    cause:
-      type: document
-  - id: F008
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 18
-    anchor: >-
-      | 正本参照（SSOT） | `schema_ref: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemType`。CLI
-      の対応確認先: `src/register/item.ts#VALID_TYPES` |
-    message: >-
-      State how the schema and CLI references are checked for existence and value alignment, so technical consumers can
-      verify the declared sources.
-    message_ja: >-
-      State how the schema and CLI references are checked for existence and value alignment, so technical consumers can
-      verify the declared sources.
-    cause:
-      type: document
-  - id: F009
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 40
-    anchor: "- 派生ビュー: 分類は登録簿の一覧・派生ビューの振り分けに使われる。生成処理は `src/register/register.ts` が参照する実装を正とする。"
-    message: >-
-      Add an implementation check that compares the schema enum and CLI accepted values with the classification meanings
-      and derived-view routing, so DEV can confirm the mapping is complete.
-    message_ja: >-
-      Add an implementation check that compares the schema enum and CLI accepted values with the classification meanings
-      and derived-view routing, so DEV can confirm the mapping is complete.
-    cause:
-      type: document
-  - id: F010
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 41
-    anchor: "- 変更影響: 値・意味を変更するときは、BA・PO が区分方針、ARC・DEV がスキーマ・CLI・派生ビューとの対応、QE が選定境界を確認し、辞書・状態定義との不整合を実行結果へ残す。"
-    message: >-
-      Specify the synchronization impacts and update targets when a classification value, meaning, or routing rule
-      changes, so implementers can assess compatibility and required updates.
-    message_ja: >-
-      Specify the synchronization impacts and update targets when a classification value, meaning, or routing rule
-      changes, so implementers can assess compatibility and required updates.
-    cause:
-      type: document
-  - id: F011
-    severity: minor
-    rule: vp-dev-testability
-    line: 18
-    anchor: >-
-      | 正本参照（SSOT） | `schema_ref: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemType`。CLI
-      の対応確認先: `src/register/item.ts#VALID_TYPES` |
-    message: >-
-      Provide or reference the validation command and expected result for checking schema and CLI value alignment, so
-      changes to classification values can be tested consistently.
-    message_ja: >-
-      Provide or reference the validation command and expected result for checking schema and CLI value alignment, so
-      changes to classification values can be tested consistently.
-    cause:
-      type: document
-  - id: F012
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 23
-    anchor: 分類は表の上から順に判断する。
-    message: >-
-      Resolve the conflicting selection precedence between `decision` and `change-request`, or explicitly record DC-001
-      as unmet, because the current instruction can classify an approved-plan change under the wrong business category.
-    message_ja: >-
-      Resolve the conflicting selection precedence between `decision` and `change-request`, or explicitly record DC-001
-      as unmet, because the current instruction can classify an approved-plan change under the wrong business category.
-    cause:
-      type: document
-  - id: F013
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 18
-    anchor: >-
-      | 正本参照（SSOT） | `schema_ref: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemType`。CLI
-      の対応確認先: `src/register/item.ts#VALID_TYPES` |
-    message: >-
-      Define an explicit pass/fail check for confirming that every SSOT value has a corresponding business definition
-      and that CLI validation accepts exactly those values.
-    message_ja: >-
-      Define an explicit pass/fail check for confirming that every SSOT value has a corresponding business definition
-      and that CLI validation accepts exactly those values.
-    cause:
-      type: document
-  - id: F014
-    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 38
-    anchor: "- 業務データ辞書: 第1章の辞書の `item_type` に対応し、分類名と意味を同辞書の論理名・ラベルに合わせる。"
+    line: 40
+    anchor: >-
+      - 照合: 正本のファイル・定義位置が解決でき、各正本値に業務説明が過不足なく対応し、CLI の許容値が同じ集合であることを確認する。確認結果と承認前に残る照合は
+      [[prj-0001:pjr-7zzr-cdt-register-type-refine-confirmed-kata|PJR-7ZZR の対応結果]] を参照する。
     message: >-
       Record the consistency check against the business data dictionary, status definition, schema, CLI, and catalog, or
       link to its result, so omissions or mismatches can be identified.
     message_ja: >-
       Record the consistency check against the business data dictionary, status definition, schema, CLI, and catalog, or
       link to its result, so omissions or mismatches can be identified.
-    cause:
-      type: document
-  - id: F015
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 7
-    anchor: "- 主担当ロール: BA（分類の業務的意味と使い分けの定義）、人間の PO（区分けの方針・公開可否の最終承認）。`ready` への昇格は人間が判断する。"
-    message: >-
-      State the human approval required for promotion to `ready` and the outstanding release checks, or indicate that no
-      blockers remain, so release readiness can be judged.
-    message_ja: >-
-      State the human approval required for promotion to `ready` and the outstanding release checks, or indicate that no
-      blockers remain, so release readiness can be judged.
-    cause:
-      type: document
-  - id: F016
-    severity: minor
-    rule: vp-ops-operability
-    line: 41
-    anchor: "- 変更影響: 値・意味を変更するときは、BA・PO が区分方針、ARC・DEV がスキーマ・CLI・派生ビューとの対応、QE が選定境界を確認し、辞書・状態定義との不整合を実行結果へ残す。"
-    message: >-
-      Describe or reference the change and maintenance procedure for synchronizing classification meanings, schema
-      values, CLI validation, and derived views when they are updated.
-    message_ja: >-
-      Describe or reference the change and maintenance procedure for synchronizing classification meanings, schema
-      values, CLI validation, and derived views when they are updated.
     cause:
       type: document
 done_criteria:
-  satisfied: 1
+  satisfied: 2
   total: 2
-  unsatisfied:
-    DC-001:
-      - BA
   detail_ref: prj-0001:cdt-register-type-grade-criteria

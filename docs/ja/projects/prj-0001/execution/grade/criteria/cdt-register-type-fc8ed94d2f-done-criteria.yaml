@@ -2,12 +2,12 @@
 id: prj-0001:cdt-register-type-grade-criteria
 document: prj-0001:cdt-register-type
 path: docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md
-graded_at: "2026-11-11T03:27:46.381Z"
+graded_at: "2026-11-11T12:47:03.238Z"
 graded_by: sol-review-executor
-content_hash: d802d0737b7501493bcad8acaa0bec0e1e1b3b088b9dd3cfc92a16b4e40bb33f
+content_hash: 21416ed8f221473f9ba2f88aa7a5523f75dade2fb810e1934e507243816698f8
 summary:
-  satisfied: 1
-  unsatisfied: 1
+  satisfied: 2
+  unsatisfied: 0
   total: 2
 criteria:
   - id: DC-001
@@ -15,10 +15,7 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: unsatisfied
-    reason: >-
-      The blanket selection order can select `decision` before `change-request` for a choice that changes an approved
-      plan, leaving the business classification boundary inconsistent.
+    status: satisfied
   - id: DC-002
     text: 分類実装（マスタデータ・コード値）の基礎として参照できること
     roles:

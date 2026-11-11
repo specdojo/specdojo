@@ -2,12 +2,12 @@
 id: bes-task-ready-selected-grade-criteria
 document: bes-task-ready-selected
 path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md
-graded_at: "2026-11-10T07:05:00.879Z"
+graded_at: "2026-11-11T12:50:22.773Z"
 graded_by: sol-review-executor
-content_hash: c539d8cb9264c1afd68dd6a13c92c0d453b206ffdccb79e120df9e5c183530db
+content_hash: 0b9b80923a69480c7e80d96ab82353abb4abe940ff58e4230a48ec699a1f6af0
 summary:
-  satisfied: 1
-  unsatisfied: 4
+  satisfied: 2
+  unsatisfied: 3
   total: 5
 criteria:
   - id: DC-001
@@ -15,10 +15,7 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: unsatisfied
-    reason: >-
-      The automated-selection occurrence boundary remains provisional at line 33, so business correctness of the timing
-      is not yet established for all stated origins.
+    status: satisfied
   - id: DC-002
     text: イベント仕様の業務的妥当性を承認できること
     roles:
@@ -26,8 +23,8 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      Task-flow applicability, the automated-selection boundary, and the identified human PO required for business
-      approval remain unresolved.
+      The provisional applicability and automatic-selection boundary still require human PO judgment before business
+      validity can be approved.
   - id: DC-003
     text: イベント処理実装・メッセージ設計の基礎として参照できること
     roles:
@@ -35,8 +32,8 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      The correlation field has not been reconciled with the execution-record model, and the selection-count observation
-      point remains undecided.
+      The parallel-request correlation requirement has not been verified against the execution-record model and
+      corresponding schema.
   - id: DC-004
     text: イベントテスト設計への活用が確認できること
     roles:
@@ -50,5 +47,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Authoritative correlation representation and event-boundary confirmation are still pending, and line 25 explicitly
-      withholds definitive implementation handoff.
+      The unresolved model-backed correlation field prevents using the parallel event payload as finalized handler and
+      publisher implementation input.
