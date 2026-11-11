@@ -13,6 +13,7 @@ import {
   isRecord,
   levelCapForFindings,
   parseMarkdown,
+  parseGradeDocument,
   preserveStoredFindingSeverities,
   sanitizeCommentText,
   type GradeCriterionInput,
@@ -31,7 +32,7 @@ import { applicableDoneCriteria, deterministicResults, gradePlanFilename } from 
 import {
   gradeContentHash,
   gradeResultPathForDocument,
-  markdownDocumentId,
+  gradeDocumentId,
   readGradeResult,
   writeGradeResult,
   type GradeResult,
@@ -572,7 +573,7 @@ export function validateGradeSubmission(
     const absoluteDocumentPath = resolve(specdojoRootDir(), document.path);
     const normalizedDocumentPath = repoRelativePath(absoluteDocumentPath);
     const metadata = existsSync(absoluteDocumentPath)
-      ? (parseMarkdown(readFileSync(absoluteDocumentPath, "utf8"), normalizedDocumentPath).data
+      ? (parseGradeDocument(readFileSync(absoluteDocumentPath, "utf8"), normalizedDocumentPath).data
           .specdojo as Record<string, unknown>)
       : {};
     const required = agentViewpoints(doc, target, metadata);
@@ -779,14 +780,14 @@ export function applyGradeSubmission(opts: {
       throw new Error(`${rel}: criteriaDirectory is required to record done_criteria`);
     }
     if (opts.resultsDirectory) {
-      const documentId = markdownDocumentId(current, rel);
+      const documentId = gradeDocumentId(current, rel);
       const resultPath = gradeResultPathForDocument({
         documentPath: absolute,
         project: opts.project,
         resultsDirectory: opts.resultsDirectory,
       });
       const previous = readGradeResult(resultPath);
-      const document = parseMarkdown(current, rel);
+      const document = parseGradeDocument(current, rel);
       const agentResults = preserveStoredFindingSeverities(previous, input.viewpoints);
       const correctionByViewpoint = new Map(
         (input.level_corrections ?? []).map((correction) => [

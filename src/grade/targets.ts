@@ -1,3 +1,4 @@
+import { isGradeDocument, isYamlDocument } from "../shared/document-metadata.js";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
@@ -13,7 +14,7 @@ import {
   KATA_REFERENCE_FIELDS,
   gradedViewpoints,
   isRecord,
-  parseMarkdown,
+  parseGradeDocument,
   type GradeDoneCriterion,
   type GradeTarget,
   type MarkdownDocument,
@@ -124,8 +125,8 @@ function parseKataReference(path: string, kind: KataReference["kind"]): KataRefe
   try {
     const extension = extname(path).toLowerCase();
     let metadata: Record<string, unknown>;
-    if (extension === ".md") {
-      metadata = parseMarkdown(readFileSync(path, "utf8"), repoRelativePath(path)).data
+    if (extension === ".md" || isYamlDocument(path)) {
+      metadata = parseGradeDocument(readFileSync(path, "utf8"), repoRelativePath(path)).data
         .specdojo as Record<string, unknown>;
     } else {
       const parsed = load(readFileSync(path, "utf8"));
@@ -167,7 +168,7 @@ export function resolveGradeReferencePathsFromCatalog(
   project?: string,
 ): string[] {
   const target = resolveSafeMarkdownPath(path, specdojoRootDir(), project);
-  const targetDocument = parseMarkdown(readFileSync(target, "utf8"), repoRelativePath(target));
+  const targetDocument = parseGradeDocument(readFileSync(target, "utf8"), repoRelativePath(target));
   const targetMetadata = targetDocument.data.specdojo as Record<string, unknown>;
   const targetId = typeof targetMetadata.id === "string" ? targetMetadata.id.trim() : "";
   if (!targetId) return [];
@@ -226,7 +227,7 @@ export function parseGradeReferenceExample(
 ): GradeReferenceExample | null {
   try {
     const absolute = resolveSafeMarkdownPath(path, specdojoRootDir(), project);
-    const document = parseMarkdown(readFileSync(absolute, "utf8"), repoRelativePath(absolute));
+    const document = parseGradeDocument(readFileSync(absolute, "utf8"), repoRelativePath(absolute));
     const metadata = document.data.specdojo as Record<string, unknown>;
     return {
       path: absolute,
@@ -246,7 +247,7 @@ export function selectGradeReferenceExampleFromCatalog(opts: {
   random?: () => number;
 }): string | undefined {
   const target = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.project);
-  const targetDocument = parseMarkdown(readFileSync(target, "utf8"), repoRelativePath(target));
+  const targetDocument = parseGradeDocument(readFileSync(target, "utf8"), repoRelativePath(target));
   const targetMetadata = targetDocument.data.specdojo as Record<string, unknown>;
   const family = gradeReferenceExampleFamily(opts.target, target, targetMetadata);
   if (!family) return undefined;
@@ -310,8 +311,8 @@ export function resolveSafeMarkdownPath(
   }
   if (!roots.some((base) => inside(base, absolute)))
     throw new Error(`Path is outside repository or declared project.repos: ${input}`);
-  if (extname(absolute).toLowerCase() !== ".md") {
-    throw new Error(`${input}: grade currently writes inline findings only for Markdown`);
+  if (!isGradeDocument(absolute)) {
+    throw new Error(`${input}: grade supports Markdown and YAML documents`);
   }
   if (!existsSync(absolute)) throw new Error(`Document not found: ${input}`);
   if (!roots.some((base) => existsSync(base) && inside(realpathSync(base), realpathSync(absolute))))
@@ -355,7 +356,7 @@ function criterionId(index: number): string {
   return `DC-${String(index + 1).padStart(3, "0")}`;
 }
 
-// カタログの Markdown 成果物を絶対パスで引ける形にする。grade の対象探索と
+// カタログの評価可能な成果物を絶対パスで引ける形にする。grade の対象探索と
 // done_criteria の解決が同じ集合を見るよう、両者はこの関数を共有する。
 export function loadDeliverableCatalog(
   projectOption?: string,
@@ -374,7 +375,7 @@ export function loadDeliverableCatalog(
     );
     for (const item of resolved) {
       if (item.item.kind === "generated" || !item.item.path) continue;
-      if (!item.resolvedPath.endsWith(".md")) continue;
+      if (!isGradeDocument(item.resolvedPath)) continue;
       if (isTrashedPath(item.resolvedPath)) continue;
       const path = resolve(root, item.resolvedPath);
       if (!existsSync(path) || entries.has(path)) continue;
@@ -597,7 +598,7 @@ export function resolveGradeSourceHashes(
   rootDir = specdojoRootDir(),
 ): Record<string, string> {
   const absolute = resolveSafeMarkdownPath(opts.path, rootDir, opts.project);
-  const document = parseMarkdown(
+  const document = parseGradeDocument(
     readFileSync(absolute, "utf8"),
     relativePathFromRoot(absolute, rootDir),
   );

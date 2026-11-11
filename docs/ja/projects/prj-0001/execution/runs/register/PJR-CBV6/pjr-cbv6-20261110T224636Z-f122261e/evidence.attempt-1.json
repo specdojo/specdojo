@@ -1,0 +1,380 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-CBV6",
+  "run_id": "pjr-cbv6-20261110T224636Z-f122261e",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T22:48:39.451Z",
+    "completed_at": "2026-11-10T23:02:04.366Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-cbv6.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cbv6-grade-yaml-support.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/lib/yaml-metadata.cjs",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/document-metadata.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/yaml.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/yaml.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cbv6-grade-yaml-support.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/lib/yaml-metadata.cjs",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/document-metadata.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/yaml.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/yaml.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 21,
+    "summary": ".../pjr-cbv6-grade-yaml-support.md                 |  34 ++++--\n .../standards/document-metadata-standard.md        |   4 +-\n .../schemas/v1/grade-pipeline-state.schema.yaml    |   2 +-\n packages/docs-lint/src/deliverable-type.cjs        |  19 +++-\n src/grade/apply.ts                                 |   9 +-\n src/grade/command-inspect.ts                       |   4 +-\n src/grade/command-shared.ts                        |   2 +-\n src/grade/core.ts                                  |   9 +-\n src/grade/markdown.ts                              |   5 +-\n src/grade/pipeline-state.ts                        |  13 +--\n src/grade/plan.ts                                  |  31 ++++--\n src/grade/result.ts                                |   4 +-\n src/grade/target-discovery.ts                      |  19 +++-\n src/grade/targets.ts                               |  23 ++--\n src/shared/grade-result.ts                         |  12 ++-\n tests/src/grade/run.test.ts                        | 117 ++++++++++++++++++++-\n 16 files changed, 254 insertions(+), 53 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/specdojo/lib/yaml-metadata.cjs docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml packages/docs-lint/src/deliverable-type.cjs src/shared/document-metadata.ts src/shared/grade-result.ts src/grade/apply.ts src/grade/command-inspect.ts src/grade/command-shared.ts src/grade/core.ts src/grade/markdown.ts src/grade/pipeline-state.ts src/grade/plan.ts src/grade/result.ts src/grade/target-discovery.ts src/grade/targets.ts tests/src/grade/run.test.ts tests/src/grade/yaml…",
+      "status": "passed",
+      "summary": "変更した実装・テスト・標準文書を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-cbv6-grade-yaml-support.md",
+      "status": "passed",
+      "summary": "個票を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-cbv6-grade-yaml-support.md docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "passed",
+      "summary": "変更 Markdown に違反なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema tmp/pjr-cbv6-schema.schema.yaml --data docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "passed",
+      "summary": "Draft 2020-12 メタスキーマを参照する一時 schema で合格。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "既存警告を伴い終了コード0。npm script の tsx IPC 拒否は規約の起動方法で回避した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査に合格。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言に違反なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "hook に対応する登録簿ビュー生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象0件、指摘0件。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --path docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml",
+      "status": "passed",
+      "summary": "実在する YAML 成果物2件を選択できた。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target kata --project prj-0001 --path docs/ja/specdojo/samples/bdd-sample.yaml --path docs/ja/specdojo/samples/ifx-cmd-sample.yaml",
+      "status": "passed",
+      "summary": "実在する YAML sample 2件を選択できた。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade plan --target deliverable --project prj-0001 --path docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml --out tmp/pjr-cbv6-plans --embed-documents",
+      "status": "passed",
+      "summary": "成果物2件の plan を生成し、元 YAML の行番号表記を確認した。出力は削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade plan --target kata --project prj-0001 --path docs/ja/specdojo/samples/bdd-sample.yaml --path docs/ja/specdojo/samples/ifx-cmd-sample.yaml --out tmp/pjr-cbv6-plans --embed-documents",
+      "status": "passed",
+      "summary": "sample 2件の plan を生成した。出力は削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade run --target deliverable --project prj-0001 --path docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml --run-id pjr-cbv6-dry-run --dry-run",
+      "status": "passed",
+      "summary": "成果物2件の選択と実行担当の解決に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade run --target kata --kind sample --project prj-0001 --path docs/ja/specdojo/samples/bdd-sample.yaml --path docs/ja/specdojo/samples/ifx-cmd-sample.yaml --run-id pjr-cbv6-samples-dry-run --dry-run",
+      "status": "passed",
+      "summary": "sample 2件の選択と実行担当の解決に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade run --target deliverable --project prj-0001 --path docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml --path docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml --run-id pjr-cbv6-post-merge-deliverables\nnode --import tsx src/specdojo.ts grade run --target kata --kind sample --project prj-0001 --path docs/ja/specdojo/samples/bdd-sample.yaml --path docs/ja/specdojo/samples/ifx-cmd-sample.yaml --run-id pjr-cbv6-po…",
+      "status": "requires_human",
+      "summary": "統合後に実 agent で4件を評価し、サイドカー生成を確認して個票へ追記する。実 agent の使用量を消費するため sandbox では実行していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CBV6/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CBV6/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CBV6/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4303 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4303 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CBV6\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\nv24.15.0\n\n: expected 1 to be +0 // Object.is equality\n\n- Expected\n+ Received\n\n- 0\n+ 1\n\n ❯ cli tests/src/grade/yaml.integration.test.ts:29:86\n     27|         },\n     28|       );\n     29|       expect(result.status, `${args.join(\" \")}\\n${result.stderr}\\n${re…\n       |                                                                                      ^\n     30|       return result.stdout;\n     31|     };\n ❯ tests/src/grade/yaml.integration.test.ts:55:24\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nv1/bdd.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CBV6/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CBV6/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CBV6\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-toJxWo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-oZRDQL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-nX3pgb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8LH7EL/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nript から git を起動する箇所はすべて gitEnvironment() を使う\nError: Test timed out in 5000ms.\nIf this is a long-running test, pass a timeout value as the last argument or configure it globally with \"testTimeout\".\n ❯ tests/src/shared/git-environment-isolation.test.ts:187:3\n    185|   });\n    186|\n    187|   it(\"TypeScript から git を起動する箇所はすべて gitEnvironment() を使う\", () => {\n       |   ^\n    188|     const offenders: string[] = [];\n    189|     for (const dir of SCAN_DIRS) {\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯"
+    }
+  ],
+  "final_message": "grade の YAML 対応を実装。メタ情報の選択を validate:schema と共有し、元 YAML の本文・ハッシュ・行番号でサイドカーを保存する。Markdown の既存処理を維持し、単体・統合テストと個票を更新した。親検証は runner に委ねる。",
+  "completion_status": "complete",
+  "handoff": [
+    "統合後、orchestrator は実 agent で次の4件に grade run を実行し、grade result でサイドカー生成を確認して個票 5.3 に追記する。成果物（--target deliverable）: docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml、docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml。sample（--target kata --kind sample）: docs/ja/specdojo/samples/bdd-sample.yaml、docs/ja/specdojo/samples/ifx-cmd-sample.yaml。--project prj-0001 と一意な --run-id を指定する。使用量を消費する実行のため executor では実施していない。",
+    "実装判断は個票 5.2 に記録した。mapping の x-spec-meta を優先し、最上位と混ぜない。YAML は id・type・status・rulebook の非空文字列を必須とし、rulebook: none は許容する。不足時は理由付きで探索から除外する。YAML の H1 検査を省き、コメント・メタ情報を含む全文を評価する。共有処理は既存の配布対象に置き、docs-lint 単独導入・旧版併用の互換動作を維持した。",
+    "CHANGELOG 文案（追加）: grade list|plan|run|apply|result が YAML の成果物と sample に対応。最上位または x-spec-meta のメタ情報を読み、元の YAML の内容ハッシュと行番号で評価結果をサイドカーに保存し、review でも利用できるようにした。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CBV6/pjr-cbv6-20261110T224636Z-f122261e/executor.attempt-1.log",
+      "bytes": 7182,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CBV6/pjr-cbv6-20261110T224636Z-f122261e/parent-validation-attempt-1-test-integration.attempt-1.log",
+      "bytes": 280245,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CBV6/pjr-cbv6-20261110T224636Z-f122261e/parent-validation-attempt-1-test-unit.attempt-1.log",
+      "bytes": 9065,
+      "truncated": false
+    }
+  ]
+}

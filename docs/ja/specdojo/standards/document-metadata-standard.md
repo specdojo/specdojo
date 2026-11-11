@@ -313,7 +313,7 @@ Markdown 文書の最新の継続品質評価は、プロジェクトの `<execu
 
 未充足条件がある場合だけ `done_criteria.unsatisfied` を置き、条件 ID をキー、その条件の `roles` を値として記録します。これにより詳細を grade result へ複製せず、次の確認担当を特定できます。詳細 YAML は `grade-done-criteria.schema.yaml` に従い、成果物と同じ `content_hash` を持ちます。
 
-`findings[].line` は Frontmatter を除く本文での指摘行（1始まり）、`anchor` は評価時点の該当行の引用です。`message` は executor が出力した原文を正本として保存し、前回 finding の一致にも使います。`message_ja` は表示専用で、判定、score、severity、引き継ぎに使いません。旧サイドカーのように `message_ja` がない場合は `message` を表示します。本文編集で行番号がずれた場合は `anchor` を照合に使います。`grade validate` はサイドカーの文書 ID・対象・件数・内容ハッシュを成果物と突き合わせます。
+`findings[].line` は Markdown では Frontmatter を除く本文、YAML ではコメント・メタ情報を含む元ファイル全体での指摘行（1始まり）、`anchor` は評価時点の該当行の引用です。`message` は executor が出力した原文を正本として保存し、前回 finding の一致にも使います。`message_ja` は表示専用で、判定、score、severity、引き継ぎに使いません。旧サイドカーのように `message_ja` がない場合は `message` を表示します。本文編集で行番号がずれた場合は `anchor` を照合に使います。`grade validate` はサイドカーの文書 ID・対象・件数・内容ハッシュを成果物と突き合わせます。
 
 再評価で正本の `message` が同じ finding が残る場合は未解消として扱い、severity を前回より引き下げません。`message_ja` の一致は使いません。日本語の `message` だけを持つ旧サイドカーはその日本語を互換用の正本として扱うため、英語へ翻訳した別文とは一致しません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に severity を引き下げる根拠を含めます。
 
@@ -321,7 +321,7 @@ executor は新しい判定根拠と finding を英語で出力します。機�
 
 機械変換では、finding の severity が許す level 上限を超えた viewpoint だけを上限まで下げます。level を上げる補正や、viewpoint・severity・line の変更は行いません。補正した場合は `level_corrections` に viewpoint、`original_level`、`corrected_level` を保存します。
 
-サイドカーは `grade-result.schema.yaml` に従います。現在の評価対象は Markdown 文書であり、YAML / JSON を対象へ指定した場合はエラーとします。
+サイドカーは `grade-result.schema.yaml` に従います。評価対象は Markdown と YAML（`.yaml` / `.yml`）です。YAML は `validate:schema` と共通の処理で最上位または `x-spec-meta` のメタ情報を読み、ファイル全体を評価し、その内容からハッシュを取ります。`id`・`type`・`status`・`rulebook` がない YAML は理由を表示して対象から外します。JSON は評価対象外です。
 
 ## 7. 成果物の値制約
 

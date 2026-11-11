@@ -3,12 +3,13 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { basename, extname, join } from "node:path";
 import { dump } from "../shared/yaml.js";
+import { isYamlDocument } from "../shared/document-metadata.js";
 import {
   GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT,
   agentViewpoints,
   gradedViewpoints,
   levelCapForFindings,
-  parseMarkdown,
+  parseGradeDocument,
   type GradeDoneCriterion,
   type GradeFindingInput,
   type GradeTarget,
@@ -46,12 +47,15 @@ export function deterministicResults(
         if (typeof specdojo[key] !== "string" || !String(specdojo[key]).trim()) {
           findings.push({
             severity: "major",
-            message: `Frontmatter の specdojo.${key} が未設定です。`,
+            message:
+              document.format === "yaml"
+                ? `YAML のメタ情報 ${key} が未設定です。`
+                : `Frontmatter の specdojo.${key} が未設定です。`,
             line: 1,
           });
         }
       }
-      if (!/^#\s+\S/m.test(document.body)) {
+      if (document.format !== "yaml" && !/^#\s+\S/m.test(document.body)) {
         findings.push({ severity: "major", message: "本文に H1 見出しがありません。", line: 1 });
       }
     }
@@ -149,7 +153,10 @@ function splitDocumentForEmbedding(content: string): { frontmatter?: string; bod
 
 function renderEmbeddedGradeDocument(path: string, roles: readonly string[]): string[] {
   const content = readFileSync(resolveSafeRepositoryPath(path, "embedded document"), "utf8");
-  const { frontmatter, body } = splitDocumentForEmbedding(content);
+  const yaml = isYamlDocument(path);
+  const { frontmatter, body } = yaml
+    ? { body: content.replace(/\r\n?/g, "\n").replace(/\n$/, "") }
+    : splitDocumentForEmbedding(content);
   const bodyLines = body === "" ? [] : body.split("\n");
   const numberedBody = bodyLines.map((line, index) => `${index + 1} | ${line}`).join("\n");
   const lines = [
@@ -166,7 +173,9 @@ function renderEmbeddedGradeDocument(path: string, roles: readonly string[]): st
   }
   const bodyFence = markdownFence(numberedBody);
   lines.push(
-    "本文（左端は `finding.line` と同じ、Frontmatter を除く1始まりの行番号）:",
+    yaml
+      ? "YAML 全文（左端は元ファイルの1始まりの行番号であり、`finding.line` に使う）:"
+      : "本文（左端は `finding.line` と同じ、Frontmatter を除く1始まりの行番号）:",
     "",
     `${bodyFence}text`,
     numberedBody,
@@ -223,7 +232,7 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
   const rubric = assertRubric(opts.viewpoints);
   const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.projectId);
   const rel = repoRelativePath(absolute);
-  const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
+  const document = parseGradeDocument(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
@@ -329,7 +338,9 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "",
     ...(embedding.embedded
       ? [
-          "1. plan の「埋め込み資料」にある評価対象の本文を全文読む。Frontmatter は行番号の対象外であり、本文左端の番号を finding の `line` に使う。",
+          document.format === "yaml"
+            ? "1. plan の「埋め込み資料」にある YAML 全文を読む。左端の元ファイル行番号を finding の `line` に使う。"
+            : "1. plan の「埋め込み資料」にある評価対象の本文を全文読む。Frontmatter は行番号の対象外であり、本文左端の番号を finding の `line` に使う。",
           "2. 埋め込まれた参考資料と良い実例がある場合はすべて読む。ファイル読み取りツールと検索ツールを使わず、plan に埋め込まれた資料だけで判定し、参考資料や良い実例を評価対象と混同しない。",
         ]
       : [
@@ -339,7 +350,9 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "3. 良い実例がある場合は、章ごとの具体性、根拠の密度、過不足を評価対象と比較して記載水準を判定する。表現の類似や実例自体の欠点を評価理由にせず、rubric と viewpoint を最終的な判定基準にする。",
     "4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。",
     "5. 判定根拠と新しい finding の message は英語で記述する。固有名詞・識別子・引用は原文を保ってよい。日本語だけの既存 finding は互換用の正本として扱い、未解消ならその message を翻訳せず原文のまま再掲する。",
-    "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
+    document.format === "yaml"
+      ? "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、元の YAML ファイルの1始まりの行番号、具体的な修正理由を含める。コメント・メタ情報を含む YAML 全文を評価し、Markdown の見出しや Frontmatter を要求しない。level 4 は finding なしとする。"
+      : "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
     ...(opts.target === "deliverable"
       ? [
           '各 finding の直後に `CAUSE: <JSON>` を1行で記す。原因は `{"type":"document"}`、または `{"type":"kata","kind":"rulebook|recipe|sample|template","location":"Kata 内の見出し・行・引用箇所"}` とする（kind は1種類を選ぶ）。冗長さに限らず全 viewpoint で原因を判断する。成果物が宣言した rulebook とそこから辿る Kata を根拠とし、Kata の問題箇所を実際に読んで location に示せる場合だけ kata とする。資料にない・箇所を示せない場合は document とする。原因は点数・判定・前の指摘の引き継ぎ・日本語訳を変えない。',
@@ -455,7 +468,7 @@ export function renderGradeReporterPlan(opts: {
   const rubric = assertRubric(opts.viewpoints);
   const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.projectId);
   const rel = repoRelativePath(absolute);
-  const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
+  const document = parseGradeDocument(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
