@@ -73,7 +73,7 @@ pre-commit:
 commit-msg:
   commands:
     commitlint:
-      run: npx commitlint --edit $1
+      run: npx commitlint --edit "{1}"
 
 # Git が pre-push の標準入力へ渡す remote ref を検査する。リモート名にかかわらず
 # refs/heads/main への更新だけを拒否し、develop / feature / exec は妨げない。
