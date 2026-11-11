@@ -1,0 +1,270 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: gl-setup
+path: docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 87
+graded_at: "2026-11-11T22:05:17.858Z"
+graded_by: sol-review-executor
+content_hash: ff6cdd9f2c96db5568dfeb5696c952707f99bd631dde85e4c54f2df5b96651bb
+source_hashes:
+  catalog-entry: feb519bb9a5487654dfd1c6e32580fd45a4d86ffcc5349865229705f4149937d
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:gl-common: 2c0aafb67a2c3ee22738b389b89efb7362505d6544513f815db9921284a066c8
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 31bad5f39bf71e076f7ed4a050b28b6a02091ae1fc2c81b473d5aedcc6f97373
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 100
+  business:
+    score: 75
+  consistency:
+    score: 75
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 75
+  quality:
+    score: 81
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 255
+    anchor: >-
+      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    message: >-
+      Identify the unresolved difference between the schema's critical-path policy and the guide/runtime's recovery
+      behavior, and state which human role must resolve the intended terminology before approval.
+    message_ja: >-
+      Identify the unresolved difference between the schema's critical-path policy and the guide/runtime's recovery
+      behavior, and state which human role must resolve the intended terminology before approval.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 255
+    anchor: >-
+      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    message: >-
+      The rate-limit policy entry presents skipping non-critical tasks as unconditional automatic-selection behavior,
+      while exec-config-guide section 4 and runWithRetry apply candidate retries to both critical and non-critical
+      tasks; qualify the intended-versus-current behavior so users can determine what recovery to expect.
+    message_ja: >-
+      The rate-limit policy entry presents skipping non-critical tasks as unconditional automatic-selection behavior,
+      while exec-config-guide section 4 and runWithRetry apply candidate retries to both critical and non-critical
+      tasks; qualify the intended-versus-current behavior so users can determine what recovery to expect.
+    cause:
+      type: document
+  - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 255
+    anchor: >-
+      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    message: >-
+      gl-setup says automatic selection skips non-critical tasks and offers retry or stop for critical tasks, whereas
+      docs/ja/specdojo/guides/exec-config-guide.md:168 and src/exec/run/agent.ts:540–544,813–821 describe retries for
+      both; reconcile this with the policy represented in docs/specdojo/schemas/v1/exec-defaults.schema.yaml rather than
+      presenting the sources as consistent.
+    message_ja: >-
+      gl-setup says automatic selection skips non-critical tasks and offers retry or stop for critical tasks, whereas
+      docs/ja/specdojo/guides/exec-config-guide.md:168 and src/exec/run/agent.ts:540–544,813–821 describe retries for
+      both; reconcile this with the policy represented in docs/specdojo/schemas/v1/exec-defaults.schema.yaml rather than
+      presenting the sources as consistent.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 264
+    anchor: >-
+      notes: "利用枠制限時の方針の `on_critical.retry` に対応し、次候補での再試行を選ぶ場合に使う。`max_attempts` は初回を含めて数える。適用条件と項目の正本は schema の
+      `RateLimitPolicy`・`RetryPolicy` とする。"
+    message: >-
+      Specify that max_attempts counts candidate passes, including the initial pass:
+      docs/ja/specdojo/guides/exec-config-guide.md:168 and src/exec/run/agent.ts:596–624,821–829 allow multiple agent
+      invocations within each pass, which the current generic attempt wording does not distinguish.
+    message_ja: >-
+      Specify that max_attempts counts candidate passes, including the initial pass:
+      docs/ja/specdojo/guides/exec-config-guide.md:168 and src/exec/run/agent.ts:596–624,821–829 allow multiple agent
+      invocations within each pass, which the current generic attempt wording does not distinguish.
+    cause:
+      type: document
+  - id: F005
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 255
+    anchor: >-
+      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    message: >-
+      A developer following the stated critical-path distinction could implement behavior that differs from
+      runWithRetry; distinguish the schema-level policy from current CLI behavior and identify the unresolved
+      specification decision before using this entry as implementation guidance.
+    message_ja: >-
+      A developer following the stated critical-path distinction could implement behavior that differs from
+      runWithRetry; distinguish the schema-level policy from current CLI behavior and identify the unresolved
+      specification decision before using this entry as implementation guidance.
+    cause:
+      type: document
+  - id: F006
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 255
+    anchor: >-
+      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    message: >-
+      DC-001, DC-002, and DC-003 remain unmet because the rate-limit policy description does not resolve its conflict
+      with the cited guide and current retry implementation; qualify or reconcile that behavior before treating the
+      glossary as complete.
+    message_ja: >-
+      DC-001, DC-002, and DC-003 remain unmet because the rate-limit policy description does not resolve its conflict
+      with the cited guide and current retry implementation; qualify or reconcile that behavior before treating the
+      glossary as complete.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 264
+    anchor: >-
+      notes: "利用枠制限時の方針の `on_critical.retry` に対応し、次候補での再試行を選ぶ場合に使う。`max_attempts` は初回を含めて数える。適用条件と項目の正本は schema の
+      `RateLimitPolicy`・`RetryPolicy` とする。"
+    message: >-
+      State whether max_attempts limits individual agent launches or complete passes over the candidate list;
+      identifying the latter explicitly is necessary to derive an unambiguous pass/fail expectation when several
+      candidates are available.
+    message_ja: >-
+      State whether max_attempts limits individual agent launches or complete passes over the candidate list;
+      identifying the latter explicitly is necessary to derive an unambiguous pass/fail expectation when several
+      candidates are available.
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-ops-operability
+    line: 255
+    anchor: >-
+      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    message: >-
+      Operators are told that non-critical tasks are skipped, although exec-config-guide section 4 and runWithRetry
+      retry candidates for those tasks; document the applicable recovery behavior and any unresolved schema/runtime
+      divergence so operators can predict continuation and waiting.
+    message_ja: >-
+      Operators are told that non-critical tasks are skipped, although exec-config-guide section 4 and runWithRetry
+      retry candidates for those tasks; document the applicable recovery behavior and any unresolved schema/runtime
+      divergence so operators can predict continuation and waiting.
+    cause:
+      type: document
+done_criteria:
+  satisfied: 2
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+  detail_ref: gl-setup-grade-criteria
