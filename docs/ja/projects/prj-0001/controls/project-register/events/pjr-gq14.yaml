@@ -132,3 +132,16 @@
       from: in-progress
       to: review
   previous_event_id: reg_ad1ba03a12ee4566a4911252e3906051
+- v: 1
+  id: reg_5c3240be60a44262b5728a6de8e96321
+  ts: "2026-11-11T14:52:13Z"
+  action: update
+  actor: indie
+  from_status: review
+  to_status: review
+  reason: orchestrator が記帳。chat の空行の書き方（PJR-WNQJ）の後に 2 回目を流す
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-WNQJ"]'
+  previous_event_id: reg_09cbf3add54e4253bb2d55c1d30611df
