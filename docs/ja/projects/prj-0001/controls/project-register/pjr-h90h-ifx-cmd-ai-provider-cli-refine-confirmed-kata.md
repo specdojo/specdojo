@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:14:30Z"
-  block_reason: "executor reported incomplete: 認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。"
   conclusion: 代表の ifx-cmd-ai-provider-cli を、確定した型で磨き込み、冗長さを整理した
   derived_from:
     - PJR-2GD6
@@ -107,7 +106,7 @@ business-specs-kata で確定した型（specdojo:ifx-cmd-rulebook と sample）
 
 ### 5.6. 2 回目の実施内容・変更ファイル（2026-11-11）
 
-今回の実行は未完了。追加完了条件の evidence タグ内 JSON 解析失敗時の契約確定に必要な根拠が、宣言された参照範囲にない。以下の根拠がある修正を残し、未承認の動作は新設していない。5.1〜5.5 は 1 回目の記録として保持する。
+再開前の試行は未完了。追加完了条件の evidence タグ内 JSON 解析失敗時の契約確定に必要な根拠が、当時宣言された参照範囲になかった。5.6〜5.10 はその試行、5.1〜5.5 は 1 回目の記録として保持する。参照根拠が追加された再開後の結果は 5.11〜5.15 を参照する。
 
 - 対象 YAML の `authentication` を provider 設定に応じた条件付きの記述へ修正した。認証を要する構成は `provider_login` / `cli_profile`、ローカル OpenCode / Ollama の認証不要構成は `none` とし、後者に認証情報の供給元・ログインプロファイルの永続化を要求しない。`method` と `mechanism` は schema が許容する文字列で条件を示し、schema や provider 設定は変えていない。
 - `side_effects` の外部 API 利用枠消費を外部 API 利用時に限定し、`authentication_failure_action` で認証不要構成の接続先確認を区別した。認証要否の根拠は本 plan の追加完了条件、共通設計の子設計一覧、exec設定ガイドのローカル LLM 構成である。provider 固有の値や設定キーは新設していない。
@@ -154,6 +153,54 @@ business-specs-kata で確定した型（specdojo:ifx-cmd-rulebook と sample）
 
 - 区分: 不具合修正（仕様文書）。文案: 「AI provider CLI 連携仕様で認証要否を provider 設定に応じて区別し、ローカル OpenCode / Ollama の認証不要構成へのログイン要求を修正。」
 - 実行コード・設定の変更はない。JSON 解析失敗時の契約確定は未完了のため、解消済みとして CHANGELOG に記載しない。
+
+### 5.11. 2 回目・再開後の実施内容（2026-11-11）
+
+再開前に残した evidence JSON 解析失敗の未決定を解消した。対象 YAML と本個票の対応結果を更新し、認証不要構成・リンク・未決事項の追跡に関する既存変更を引き継いだ。
+
+- 再開指示で読み取り専用根拠に加わった `src/exec/evidence.ts` の `parseExecutorReport` を確認した。最後のタグの JSON 解析失敗時は、構造化報告を空として扱い、以前のタグへ戻らない。`completion_status`・`handoff`・`validations`・`target_coverage` は未受領、`final_message` はタグを除いた標準出力本文になる。
+- `error_handling.malformed_output_action` に解析関数を正本として示し、タグ欠落時と共通の処置へ統合した。編集を保持し、解析失敗だけでは失敗・未完了や executor の自動再試行にしない。完了状態省略時は `complete` とし、プロセス結果と親側の検証で完了可否を判定する。プロセス成功後の親検証、reporter、result 確定の順序、別の停止条件、利用者の確認と executor resume の条件を記した。
+- `streams.stdout` は解析失敗の処置への参照、exit 0 は完了状態の省略時の意味だけを補った。先頭の「JSON 解析失敗の契約確定待ち」を削除し、時間・schema 表現の未決事項の追跡先と昇格条件は維持した。
+
+実装・schema・型・カタログ・保護設定・CHANGELOG と、開始時から存在した plan・event・evidence・pipeline state は変更していない。result の作成・更新と状態遷移は reporter / runner が担当する。
+
+### 5.12. 再開後の進め方と実践の型の適用
+
+- rulebook・recipe・sample を再読した。rulebook の本文要件と 6.3・6.5・6.8 を構造・完了判定・回復条件の基準、recipe を欠落・解析失敗・再開の分岐整理、sample をキー配置と記述粒度の確認に用いた。既存構成を維持し、sample の業務内容・値は転記していない。型の不足・矛盾はなく、template は fully-guided の指定に従い読んでいない。
+- 対象 YAML、`based_on` の [[specdojo:exec-config-guide|exec設定ガイド]]・[[sysd-agent-settings|エージェント実行・共通設計]]・[[opr-agent-cli-update|外部エージェントCLI更新]]、[[prj-0001:prj-overview|プロジェクト概要]]、本 plan・個票を参照した。Why は判断の共有と人間の判断責任として参照し、全文や新しい `based_on` は加えていない。
+- 実装根拠は宣言済みの `src/exec/run/agent.ts` と `src/exec/agent-config.ts`、追加された `src/exec/evidence.ts` の解析関数に限定した。解析結果は関数で、完了状態省略時の意味、親検証から reporter への順序と再開はガイド 6.3 で照合した。再開指示がこの現在動作を採用する根拠となるため、新たな失敗方針の decision は行っていない。
+- schema は型制約、共通規約・運用メモは実行・報告方法、`vp-arc-conciseness` は重複整理、package・設定・hook は検査の適用判定に用いた。未作成の `ifx-index`、未宣言の実装・テスト・provider 子設計・外部情報は参照していない。OpenCode / Ollama の認証不要の前提は追加完了条件を根拠とし、共通設計とガイドのローカル構成への導線を維持した。
+- 型 6.8 と追加完了条件に従い、根拠不足を説明していた解析失敗の段落を確定した契約へ置き換えた。欠落と解析失敗を一箇所へ統合し、不要になった解析契約の昇格ゲートだけを削除した。内部処理の転載はせず、正本の関数名と呼び出し元に必要な受領・状態・回復の意味を残すと executor が判断した。`_CONTEXT_:` はなく、draft への差し戻しは不要。
+- F005・F009・F012・F013・F014・F017 は上記契約で対応した。観測可能な期待結果は「解析不能 JSON はタグ欠落と同じ報告未受領」「編集を保持」「解析失敗単独では自動再試行しない」「プロセスと親側の確認が成功すれば完了可能」である。有効な `incomplete` 報告や非ゼロ終了、再開時の対象報告確認など別の停止条件を無効化しない。
+- F007・F008・F011 は認証要否による分岐、F015 は ID 修正を維持した。F001〜F004・F006・F016 は時間・表現事項の人間の ARC への判断依頼、PM への追跡・報告依頼、PJR-H90H の記録先、昇格前の確認条件で補強済み。ただし人の担当任命・延期承認は行わず、責務依頼案は `_ASSUMPTION_` のまま残した。
+- F010 は schema 検査コマンド、親検証とテスト配置の既存導線、および解析の正本まで対応した。個別テストのファイル名・ケース名は宣言資料だけで特定できず、未宣言の探索による補完は見送った。後続 review で個別テスト参照の必要性を確認する。指摘との対応確認にとどめ、多観点の自己レビューや grade は実行していない。
+
+### 5.13. 再開後の申し送り
+
+1. 5.8 の参照範囲追加依頼は再開指示で充足し、解析失敗の契約未確定という停止理由は解消した。時間上限・子プロセス終了・部分出力、設定参照を表せない schema 欄は、再開指示に従い `_UNDECIDED_` を維持する。本磨き込みの未完了理由にはしない。ready 昇格前に、人間の ARC に方針または延期理由・運用条件の確認を依頼し、PM に本個票での追跡・報告を依頼する。担当任命は未確認の前提である。
+2. `ifx-index` 作成後の連携目的・方向・`spec_ref` の照合を ARC へ申し送る。F010 の個別テスト参照は根拠不足として後続 review に残す。未作成依存の内容、時間上限や並列数の固定値を推測していない。
+3. 親検証は runner、独立 review は `T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-090`、統合後の grade は orchestrator が担当する。grade の pass は本 executor では確認していない。カタログ検証の対象外警告も本タスクでは修正しない。
+4. 変更根拠、指摘対応、残る未決事項、検証結果、5.15 の文案は executor evidence の `handoff` にも記録し、reporter / runner に result への転記を委ねる。
+
+### 5.14. 再開後の検証
+
+再開後も、次の executor 検査・生成はすべて終了コード 0。
+
+- `npx prettier --write docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata.md`
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml`
+- `npm run validate:history-links`
+- `node --import tsx src/specdojo.ts catalog validate --project prj-0001`
+- `node --import tsx src/specdojo.ts register build --project prj-0001`
+- `git diff --check`
+
+カタログ検証は、対象外の未作成文書と再エクスポートのみの `evidence_refs` に関する警告付きで成功した。register の派生ビューは Git 差分に含まれない。`lint:md`・`lint:fm`・`validate:schema` を含む指定された親検証は runner が実行し、executor では重複実行していない。
+
+### 5.15. CHANGELOG に書く事項
+
+5.5・5.10 の文案に対し、今回の最終文案は次のとおり。
+
+- 区分: 不具合修正（仕様文書）。文案: 「AI provider CLI 連携仕様で、認証不要のローカル OpenCode / Ollama 構成と、evidence JSON 解析失敗時の完了判定・変更保持・再開条件を明記。」
+- 実行コード・設定の変更はない。`CHANGELOG.md` は変更していない。
 
 ## 6. 関連ドキュメント
 

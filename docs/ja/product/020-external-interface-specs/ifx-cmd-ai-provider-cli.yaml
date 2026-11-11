@@ -10,6 +10,14 @@ based_on:
   - sysd-agent-settings
   - opr-agent-cli-update
 
+# _ASSUMPTION_: 未決事項の技術判断は人間の ARC、追跡・報告は PM に依頼する。
+# ready 昇格前に、時間制約と schema の設定参照表現は解決するか、人間が延期理由・運用条件を承認する。
+# 判断・延期の記録先は
+# [[prj-0001:pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata|PJR-H90H]] の対応結果とする。
+# 検証: npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml
+# 起動・失敗分類・報告解析の検証入口は exec設定ガイド 6.3 の親検証（test-unit / test-integration）、
+# テスト配置の入口は [[sysd-agent-settings|エージェント実行・共通設計]] の「検証観点・関連文書」を参照する。
+
 command:
   executable: providers.<provider>.command_template の先頭要素から解決する（member の command による上書きは reference を参照）
   purpose: >-
@@ -21,7 +29,7 @@ command:
     member の command による特殊構成の上書き、設定の管理境界と展開値の検証・制限は
     [[specdojo:exec-config-guide|exec設定ガイド]] の「エージェントの定義」と
     「agent 権限とプロンプトインジェクション対策」を参照する。provider 固有の認証・モデル・権限は
-    [[prj-0001:sysd-agent-settings|エージェント実行・共通設計]] を入口とする。
+    [[sysd-agent-settings|エージェント実行・共通設計]] を入口とする。
   # stdin を起動引数へ変換するテンプレートのためシェルを使う。管理・検証の根拠は reference を参照する。
   shell: true
 
@@ -39,7 +47,8 @@ streams:
     encoding: UTF-8
     description: >-
       進捗と最終報告が混在するテキスト。呼び出し元は末尾の <specdojo_executor_evidence> タグ内の
-      JSON を executor の構造化報告として採用する。報告構造と reporter の出力契約は
+      JSON を executor の構造化報告として採用する。タグ欠落・JSON 解析失敗は error_handling を参照する。
+      報告構造と reporter の出力契約は
       [[specdojo:exec-config-guide|exec設定ガイド]] の「evidence とログの引き渡し方針」を参照する。
       利用上限・接続失敗の検出では stdout も走査する。
   stderr:
@@ -65,14 +74,14 @@ files:
 
 side_effects:
   - 作業ディレクトリ（task worktree、宣言されたプロダクト worktree を含む）のファイルを変更する
-  - provider の API 利用枠を消費する（利用上限・課金の対象になり得る）
+  - 外部 API を使う構成では provider の API 利用枠を消費する（利用上限・課金の対象になり得る）。ローカル OpenCode / Ollama 構成は外部クラウド LLM の利用枠を消費しない
   - Git の commit・設定変更と保護対象設定の変更は行わない。起動前後の差分で検知した場合、呼び出し元は失敗として block する
 
 # 失敗の code: 1 は非ゼロ終了の代表値。provider ごとの識別条件は command.reference の
 # ガイドと起動設定を参照する。保護違反は他の分類より優先して停止する。
 exit_codes:
   - code: 0
-    meaning: プロセスが正常終了した。作業の完了扱いは stdout の completion_status と親検証の結果で別途判定する
+    meaning: プロセスが正常終了した。作業の完了扱いは stdout の completion_status（省略時は complete）と親側の検証で別途判定する
     category: success
     retryable: false
   - code: 1
@@ -94,14 +103,16 @@ exit_codes:
     retryable: false
 
 authentication:
-  method: provider_login
+  method: 選択した provider 設定が認証を要する場合は provider_login、ローカル OpenCode / Ollama の認証不要構成では none
   injection:
-    mechanism: cli_profile
+    mechanism: ログインを要する構成では cli_profile、認証不要構成では none
     names:
-      - 各 provider CLI のログインプロファイル（claude / codex / copilot / opencode / agy）
+      - 選択した provider 設定が使用する CLI ログインプロファイル（認証不要構成は none）
   secret_source: >-
-    各 provider CLI が保持する認証状態（開発コンテナの named volume に永続化）。SpecDojo は
-    認証値を扱わず、起動時の環境変数にも注入しない。呼び出し元の Git 環境変数は除去して渡す。
+    認証を要する構成では各 provider CLI が認証状態を管理し、開発コンテナの named volume に永続化する。
+    認証不要構成には認証情報の供給元・注入対象・ログインプロファイルの永続化要件はない。
+    要否と管理境界は command.reference の provider 固有設計への導線で確認する。
+    SpecDojo は認証値を起動引数・stdin・環境変数へ注入しない。呼び出し元の Git 環境変数は除去して渡す。
   log_policy: >-
     コマンド引数・stdin・stdout・stderr に秘密値を含めない。呼び出し元は stdout / stderr を含む
     evidence と executor / reporter のログを保存する前に秘匿値を伏せ字化する。対象と保存境界は
@@ -114,7 +125,7 @@ execution:
   network_required: true
   # _UNDECIDED_: 並列数は固定せず、run.max_concurrent_runs と providers.<provider>.max_concurrency
   # の適用範囲を exec設定ガイドで解決する。schema では設定参照や上限なしを表せないため、
-  # 連携設計の承認者が値表現を判断する。
+  # 人間の ARC に値表現の判断を依頼する。追跡先・昇格条件は先頭コメントを参照する。
   max_parallel: _UNDECIDED_
   idempotency:
     guaranteed: false
@@ -132,20 +143,30 @@ error_handling:
     # 全候補の短時間の利用制限で待機・再パスする（session limit / quota は除く）。
     # 上限は rate_limit_policy.on_critical.retry.max_attempts（初回パスを含む）を参照する。
     # 指名時の停止・待機・切替と接続失敗時の 1 回限りの fallback は exec設定ガイドを参照する。
-    # _UNDECIDED_: 設定依存の上限を schema で表せないため、連携設計の承認者が値表現を判断する。
+    # _UNDECIDED_: 設定依存の上限を schema で表せない。判断者・追跡先は max_parallel と同じ。
     max_attempts: _UNDECIDED_
     # 自動選択の再パス待機方式。待機時間・倍率は同じ起動設定の retry を参照する。
     backoff: exponential
   timeout_action: >-
     _UNDECIDED_: 起動時間の上限を設けるか、また上限到達時に子プロセスを終了するか、
-    不完全出力をどう扱うかは未決定。現在は終了まで待ち続ける。連携設計の承認者が
-    時間制約と終了・出力処置を判断する。
+    不完全出力をどう扱うかは未決定。現在は終了まで待ち続け、worktree を保持して実行枠や
+    適用対象の provider 枠を占有し続け得る。人間の ARC に時間制約と終了・出力処置の判断を依頼し、
+    PM は枠占有を許容する運用条件と実行計画への影響を追跡する。昇格前に方針、または延期の承認と
+    待機中の監視・停止判断の担当を記録する（追跡先は先頭コメント参照）。
   malformed_output_action: >-
-    stdout に evidence タグがない場合は、残りの stdout を最終メッセージとして扱う。自動再試行は
-    せず、completion_status が incomplete の場合は worktree を保持して executor resume に委ねる。
-    _UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の
-    契約がなく、連携設計の承認者による判断が必要。reporter の形式不正は exec設定ガイドの
-    「evidence とログの引き渡し方針」に従い、同じ plan と evidence で reporter だけを再実行する。
+    最後の evidence タグ内 JSON を解析できない場合は、タグ欠落時と同じく構造化報告を空として扱う。
+    解析の正本は src/exec/evidence.ts の parseExecutorReport とする。
+    completion_status・handoff・validations・target_coverage は未受領となり、final_message は
+    stdout から evidence タグを除いた本文になる。編集は保持し、解析失敗だけを理由に未完了・失敗に
+    したり executor を自動再試行したりしない。完了状態の省略を complete として扱い、プロセス結果と
+    親側の検証で完了可否を決める。プロセス成功時は設定された親検証、reporter、result 確定へ進み、
+    必要な確認を通過すれば task を完了できる。ただし再開時の対象報告確認など、別の停止条件は適用する。
+    CLI 利用者は解析失敗だけなら復旧操作を要しない。別の理由で停止した場合は evidence・ログ・差分と
+    失敗理由を確認し、成果物の修正が必要なら保持した変更を executor resume で引き継ぐ。
+    有効な報告の completion_status が incomplete の場合も worktree を保持して executor resume に委ねる。
+    親検証・reporter の再開条件は exec設定ガイドの「evidence とログの引き渡し方針」を参照する。
+    reporter の形式不正は同ガイドに従い、同じ plan と evidence で reporter だけを再実行する。
   authentication_failure_action: >-
-    自動再試行しない。利用者が provider CLI へ再ログインし、CLI 更新が原因の場合は
-    [[prj-0001:opr-agent-cli-update|運用手順: 外部エージェントCLI更新]] の手順で確認する。
+    自動再試行しない。認証を要する構成では CLI 利用者が provider CLI へ再ログインする。
+    認証不要構成で認証要求が現れた場合は、CLI 利用者が選択した provider・接続先の設定を確認する。
+    CLI 更新が原因の場合は [[opr-agent-cli-update|運用手順: 外部エージェントCLI更新]] の手順で確認する。

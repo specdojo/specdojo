@@ -202,4 +202,12 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 公開済み CHANGELOG 節の変更、未承認項目の実行、完了条件や変更範囲の拡張。
 - 別の登録項目を自分で実行すること。見つけた別問題は夜間 orchestrator が承認待ちとして起票する。
 
+## 再開時の追加の指示（orchestrator、2026-11-11）
+
+- evidence タグの中の JSON が壊れているときの振る舞いは、`src/exec/evidence.ts` の `parseExecutorReport` を読み取り専用の根拠として加えるので、そこで確かめて書く。orchestrator が読んだ範囲では次のとおり。
+  - 最後の evidence タグの JSON の解析に失敗すると、報告は空として扱われ、タグがないときと同じになる（コメント「A malformed optional report must not discard the executor's process outcome」）。`completion_status`・`handoff`・`validations`・`target_coverage` は無いものとして扱い、`final_message` は標準出力からタグを除いた本文になる。
+  - そのため、完了の判定は executor のプロセスの結果と親の検証で決まり、編集は保たれる。タグがないときの既存の振る舞いと同じ契約として書き、正本としてこの関数を参照する。新しい失敗方針は作らない。
+- 時間の上限・子プロセスの終了・部分出力の扱いなど、この 2 回目の完了条件にない未決の事項は `_UNDECIDED_` のまま残してよく、未完了の理由にしない。
+- grade は統合の後に orchestrator が流す。grade を流せないことを理由に未完了としない。
+
 `共通規約 sha256:52952054ce0f0bcec27dc5a05d69342eab31a2b80e422ca13ed16d4fd9537d5a` `docs/ja/projects/prj-0001/execution/conventions/52952054ce0f0bcec27dc5a05d69342eab31a2b80e422ca13ed16d4fd9537d5a.txt`
