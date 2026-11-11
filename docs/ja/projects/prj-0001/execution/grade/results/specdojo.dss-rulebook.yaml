@@ -1,0 +1,135 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:dss-rulebook
+path: docs/ja/specdojo/rulebooks/dss-rulebook.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 97
+graded_at: "2026-11-11T03:01:18.298Z"
+graded_by: sol-review-executor
+content_hash: 3ba1c10697135e699bc6f49a740441fb7da3fa46c34cd6c0ec2745f1968f1352
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 40
+    anchor: >-
+      - 同梱の型は `specdojo:dss-rulebook`、完成例は `specdojo:dss-sample` です。成果物の規則を個別に追跡する場合は `dss-<カテゴリ>-<連番>`（例:
+      `dss-a11y-01`）を文書内で一意に付けます。
+    message: >-
+      Remove the completed-example identifier clause from the naming section because the sample relationship is already
+      declared in Frontmatter; retain the document-local rule ID convention, which provides separate guidance.
+    message_ja: >-
+      Remove the completed-example identifier clause from the naming section because the sample relationship is already
+      declared in Frontmatter; retain the document-local rule ID convention, which provides separate guidance.
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 40
+    anchor: >-
+      - 同梱の型は `specdojo:dss-rulebook`、完成例は `specdojo:dss-sample` です。成果物の規則を個別に追跡する場合は `dss-<カテゴリ>-<連番>`（例:
+      `dss-a11y-01`）を文書内で一意に付けます。
+    message: >-
+      Keep the correspondence to specdojo:dss-sample only in Frontmatter and remove its declaration from the body; the
+      Rulebook Authoring Standard makes Frontmatter the sole authority for rulebook-to-sample relationships.
+    message_ja: >-
+      Keep the correspondence to specdojo:dss-sample only in Frontmatter and remove its declaration from the body; the
+      Rulebook Authoring Standard makes Frontmatter the sole authority for rulebook-to-sample relationships.
