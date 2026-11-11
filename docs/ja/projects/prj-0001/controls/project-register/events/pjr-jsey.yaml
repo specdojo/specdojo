@@ -4562,3 +4562,19 @@
       from: C4KF の統合後の dist で、claude-executor の exec run --register が start から review・統合まで通った
       to: CBV6 の統合後の dist で、claude-executor の exec run --register が start から review・統合まで通った
   previous_event_id: reg_6da4c7c5f7af4933bafae3707d1d33d2
+- v: 1
+  id: reg_86ee589c4c0f403cbf2b55da6f30d00c
+  ts: "2026-11-11T12:59:15Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-0X0S の統合後の動作確認。夜間の register の routine で流して、子の run が入れ子にならず統合まで通ることも確かめる
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-11"
+      to: "-"
+  previous_event_id: reg_d239751c5f9e4b28b86c278f2421e7b3
