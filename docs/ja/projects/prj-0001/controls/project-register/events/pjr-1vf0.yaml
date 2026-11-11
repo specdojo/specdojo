@@ -83,3 +83,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_700ff6fdd3914cbfb44c6caf20aa99ab
+- v: 1
+  id: reg_f0e492a39346445daaaa8f058787d4d5
+  ts: "2026-11-11T15:37:58Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 登録項目の完了条件1について: `ccd-mermaid-rulebook` に `lint:md` / `lint:fm` / `lint:mermaid` のコマンド例と期待結果が記載されていることを確認しました。また、`ifx-cmd-rulebook` において `ifx-cmd.schema.…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-12"
+  previous_event_id: reg_7cc0fbd5d5404ab7829f5668f06b88f6

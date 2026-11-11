@@ -1,0 +1,35 @@
+判定は `complete-with-findings` です。個票の完了条件 3 件はすべて満たしており、差分に対象外の変更はありません。軽微な指摘が 3 点残ります。
+
+**完了条件ごとの確認**
+1. **ccd-mermaid-rulebook の検証手順**: 満たしています。「6.6.1. 静的検査の手順とコマンド」に `npm run lint:md`、`npm run lint:fm`、`npm run lint:mermaid` のコマンド例、実行手順、期待結果（終了コード 0）、移行先リポジトリで代わりのコマンドを使ってよいこと、検証の限界が書かれています。手動で照合する手順は 6.6.2 に分けて残っています。3 つのスクリプトは `package.json` にあります。
+2. **ifx-cmd-rulebook の検証手順**: 満たしています。
+   - 第 5 章「本文要件」から検証手順の節へ参照を追加しています。
+   - 第 6 章「記述ガイド」の 6.9 に、個別のスキーマ検証（`npm run validate:schema:file -- --schema …/ifx-cmd.schema.yaml --data …`）、modeline 検証、全体検証（`npm run validate:schema`）、`prettier --check`、期待結果が書かれています。
+   - 書かれている個別検証と modeline 検証を `ifx-cmd-sample.yaml` で実際に流し、どちらも「`valid`、終了コード 0」で、記載どおりの期待結果になりました。
+3. **整形・静的検査・規約**: 満たしています。変更した 3 ファイルは Prettier の整形差分なし、markdownlint の指摘なし、`npm run validate:history-links` も終了コード 0 でした。executor evidence でも、runner 側で `lint:md`、`lint:fm`、`lint:mermaid`、`validate:schema`、`typecheck`、`test:unit`、`test:integration` などがすべて passed です。
+
+**差分の範囲（`d20bb93..b22aa9d`）**
+変更は 9 ファイルで、内訳は次のとおりです。対象外の変更はありません。
+- rulebook 2 件
+- 個票
+- 個票のイベント記録（start と review への遷移）
+- runner が管理する run 成果物（plan、result、evidence、executor.log、pipeline-state）
+
+**edit result と evidence**
+evidence は `completion_status: complete`、終了コード 0 で、失敗した検証はありません。申し送りは F002（ccd の `based_on` の整合性と、ifx-cmd の `files` 契約要件）を対象外として別課題に回すものだけで、本項目の完了は妨げません。
+
+**評価結果の確認**
+この review では grade を使わず、edit 段階の検証結果と、自分で実行した読み取り専用の検証で判定しました。
+
+**指摘（軽微）**
+- edit result の「申し送り」に F002 の行が 2 回出ています。
+- edit result の「変更ファイル」で、ccd-mermaid-rulebook にもスキーマ検証を追記したと書かれていますが、実際は静的検査だけです。
+- ccd-mermaid-rulebook 6.6.1 の「個別ファイルは各ツールにファイルパスを渡す」は具体的なコマンドがなく、曖昧です。
+
+**確認できなかった範囲**
+- `npm run lint:fm` と `npm run lint:mermaid` の再実行はしていません。runner evidence の passed に頼っています。
+- 個別ファイルにファイルパスを渡す実行方法が実際に動くかは試していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"判定: complete-with-findings。個票の完了条件3件はすべて満たしている。(1) ccd-mermaid-rulebook の 6.6.1 に lint:md / lint:fm / lint:mermaid のコマンド例・実行手順・期待結果（終了コード0）・移行先リポジトリでの代替コマンドの扱い・検証の限界が書かれている。(2) ifx-cmd-rulebook は第5章「本文要件」から検証手順の節へ参照し、第6章「記述ガイド」の 6.9 に `ifx-cmd.schema.yaml` による個別検証（validate:schema:file）、modeline 検証、全体検証（validate:schema）、prettier --check、期待結果が書かれている。書かれている個別検証と modeline 検証を `ifx-cmd-sample.yaml` で実行し、どちらも valid・終了コード0で期待結果どおりだった。(3) 変更した3ファイルは Prettier・markdownlint・validate:history-links がすべて合格し、runner evidence でも lint:md / lint:fm / lint:mermaid / validate:schema / typecheck / test:unit / test:integration が passed。差分 d20bb93..b22aa9d は rulebook 2件、個票、個票のイベント記録（start と review への遷移）、runner が管理する run 成果物だけで、対象外の変更はない。evidence は completion_status complete・終了コード0で、未解消の申し送りは F002 を対象外として別課題に回すものだけで、完了を妨げない。評価結果の確認: この review では grade を使わず、edit 段階の検証結果と自分で実行した読み取り専用の検証で判定した。指摘（軽微）: edit result の申し送りに F002 の行が2回出ている。edit result の変更ファイル欄で ccd-mermaid-rulebook にもスキーマ検証を追記したと書かれているが、実際は静的検査だけ。ccd 6.6.1 の『個別ファイルは各ツールにファイルパスを渡す』は具体的なコマンドがなく曖昧。確認できなかった範囲: lint:fm と lint:mermaid は再実行しておらず runner evidence の passed に頼った。個別ファイルにパスを渡す実行方法が実際に動くかは試していない。","handoff":["edit result の申し送りで F002 の行が2回出ている（軽微）。","edit result の変更ファイル欄で、ccd-mermaid-rulebook にもスキーマ検証を追記したと書かれているが、実際は静的検査だけ（軽微）。","ccd-mermaid-rulebook 6.6.1 の個別ファイル検査の書き方が具体的なコマンドを欠き曖昧（軽微。必要なら次回の型の手直しで具体化する）。","F002（ccd の based_on の整合性、ifx-cmd の files 契約要件）は別課題として扱う必要がある。"],"validations":[{"command":"git diff --stat d20bb9353bfd6c9c0be99915ff9745f3f8faf3c6..b22aa9d3f0ee6be746dfdabeab03987ea4e4a40c","status":"passed","summary":"9ファイル変更。対象外の変更なし"},{"command":"git diff --name-status d20bb9353bfd6c9c0be99915ff9745f3f8faf3c6..b22aa9d3f0ee6be746dfdabeab03987ea4e4a40c","status":"passed","summary":"rulebook 2件、個票とイベント記録、runner 管理の run 成果物だけ"},{"command":"npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"valid・終了コード0。rulebook に書かれた期待結果と一致"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline docs/ja/specdojo/samples/ifx-cmd-sample.yaml","status":"passed","summary":"valid・終了コード0"},{"command":"npx prettier --check docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-1vf0-kata-validation-commands.md","status":"passed","summary":"3ファイルとも整形差分なし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-1vf0-kata-validation-commands.md","status":"passed","summary":"指摘0件"},{"command":"npm run -s validate:history-links","status":"passed","summary":"終了コード0"}]}
+</specdojo_executor_evidence>
