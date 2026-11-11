@@ -5,10 +5,10 @@ path: docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 73
-graded_at: "2026-11-11T03:36:21.809Z"
+score: 96
+graded_at: "2026-11-11T13:01:12.185Z"
 graded_by: sol-review-executor
-content_hash: cdc15bce86fa5272bac8be860b1d5fd4c10106993248e84cf0940982192332c5
+content_hash: 474aef1d36d169f75ab3a28e83c1adc086846c8413395ed3e59da2a4537bc901
 source_hashes:
   catalog-entry: 4a4c5e506d083c25f5eb2eb05327947d44c577cd0d730d29c5c53c50055f02e7
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -18,54 +18,54 @@ source_hashes:
   schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 75
+    score: 100
   business:
-    score: 63
+    score: 100
   consistency:
-    score: 50
+    score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 94
+    score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 63
+    score: 81
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -73,8 +73,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -82,29 +82,29 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-user-flow:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -112,265 +112,37 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
 finding_counts:
   blocker: 0
-  major: 9
-  minor: 8
+  major: 1
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 147
-    anchor: 契約がなく、連携設計の承認者による判断が必要。reporter の形式不正は exec設定ガイドの
+    rule: vp-dev-testability
+    line: 18
+    anchor: "# 起動・失敗分類・報告解析の検証入口は exec設定ガイド 6.3 の親検証（test-unit / test-integration）、"
     message: >-
-      Replace the generic integration-design approver with a responsible Role code or responsibility reference, and
-      identify when the pending timeout and malformed-output decisions must be accepted or deferred.
+      Add a concise verification reference identifying the schema-validation command and the relevant launch,
+      failure-classification, and report-parsing test entry points, so maintainers can select the checks required after
+      changing this contract.
     message_ja: >-
-      Replace the generic integration-design approver with a responsible Role code or responsibility reference, and
-      identify when the pending timeout and malformed-output decisions must be accepted or deferred.
+      Add a concise verification reference identifying the schema-validation command and the relevant launch,
+      failure-classification, and report-parsing test entry points, so maintainers can select the checks required after
+      changing this contract.
     cause:
       type: document
   - id: F002
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 140
-    anchor: "_UNDECIDED_: 起動時間の上限を設けるか、また上限到達時に子プロセスを終了するか、"
-    message: >-
-      Associate the unresolved timeout and malformed-output work with responsible Role codes and observable completion
-      conditions so these decisions can be scheduled and tracked before finalization.
-    message_ja: >-
-      Associate the unresolved timeout and malformed-output work with responsible Role codes and observable completion
-      conditions so these decisions can be scheduled and tracked before finalization.
-    cause:
-      type: document
-  - id: F003
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 141
-    anchor: 不完全出力をどう扱うかは未決定。現在は終了まで待ち続ける。連携設計の承認者が
-    message: >-
-      Record that waiting indefinitely can retain a worktree and occupy an execution or provider slot, and identify the
-      planning decision or operational dependency needed to manage that risk.
-    message_ja: >-
-      Record that waiting indefinitely can retain a worktree and occupy an execution or provider slot, and identify the
-      planning decision or operational dependency needed to manage that risk.
-    cause:
-      type: document
-  - id: F004
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 146
-    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
-    message: >-
-      Identify the PJR handoff destination or tracking reference for the pending malformed-output and execution-policy
-      decisions, including the reporting Role code, so they remain traceable outside this draft.
-    message_ja: >-
-      Identify the PJR handoff destination or tracking reference for the pending malformed-output and execution-policy
-      decisions, including the reporting Role code, so they remain traceable outside this draft.
-    cause:
-      type: document
-  - id: F005
     severity: major
-    rule: vp-ba-requirements-completeness
-    line: 146
-    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
-    message: >-
-      Define the caller-visible outcome when evidence-tag JSON cannot be parsed, including whether the task may
-      complete, whether edits are retained, and what action permits resumption; the current undecided branch leaves
-      users without a complete failure-handling contract.
-    message_ja: >-
-      Define the caller-visible outcome when evidence-tag JSON cannot be parsed, including whether the task may
-      complete, whether edits are retained, and what action permits resumption; the current undecided branch leaves
-      users without a complete failure-handling contract.
-    cause:
-      type: document
-  - id: F006
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 147
-    anchor: 契約がなく、連携設計の承認者による判断が必要。reporter の形式不正は exec設定ガイドの
-    message: >-
-      Identify the human confirmation role for the pending integration behavior and distinguish it from the CLI user who
-      performs reauthentication, so readers can determine who must agree to the remaining contract decisions.
-    message_ja: >-
-      Identify the human confirmation role for the pending integration behavior and distinguish it from the CLI user who
-      performs reauthentication, so readers can determine who must agree to the remaining contract decisions.
-    cause:
-      type: document
-  - id: F007
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 101
-    anchor: "- 各 provider CLI のログインプロファイル（claude / codex / copilot / opencode / agy）"
-    message: >-
-      This specification includes opencode among providers requiring login profiles and persistent authentication state
-      at lines 97–104, whereas docs/ja/product/040-system-design/sysd-opencode-agent-settings.md section 1 explicitly
-      defines ollama-local without an API key or external cloud LLM; represent the unauthenticated OpenCode path and
-      scope login-profile requirements to providers that need them.
-    message_ja: >-
-      This specification includes opencode among providers requiring login profiles and persistent authentication state
-      at lines 97–104, whereas docs/ja/product/040-system-design/sysd-opencode-agent-settings.md section 1 explicitly
-      defines ollama-local without an API key or external cloud LLM; represent the unauthenticated OpenCode path and
-      scope login-profile requirements to providers that need them.
-    cause:
-      type: document
-  - id: F008
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 97
-    anchor: "method: provider_login"
-    message: >-
-      Make the authentication mechanism conditional on the selected provider configuration, including a
-      no-authentication mechanism for local OpenCode/Ollama, instead of requiring provider_login and cli_profile for
-      every invocation.
-    message_ja: >-
-      Make the authentication mechanism conditional on the selected provider configuration, including a
-      no-authentication mechanism for local OpenCode/Ollama, instead of requiring provider_login and cli_profile for
-      every invocation.
-    cause:
-      type: document
-  - id: F009
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 146
-    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
-    message: >-
-      Specify the state transition and processing sequence after evidence JSON parsing fails, including parent
-      validation, reporter execution, preservation of edits, and resume eligibility, so implementations do not choose
-      incompatible behaviors.
-    message_ja: >-
-      Specify the state transition and processing sequence after evidence JSON parsing fails, including parent
-      validation, reporter execution, preservation of edits, and resume eligibility, so implementations do not choose
-      incompatible behaviors.
-    cause:
-      type: document
-  - id: F010
-    severity: minor
-    rule: vp-dev-testability
-    line: 1
-    anchor: "# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml"
-    message: >-
-      Add a concise verification reference identifying the schema-validation command and the relevant launch,
-      failure-classification, and report-parsing test entry points, so maintainers can select the checks required after
-      changing this contract.
-    message_ja: >-
-      Add a concise verification reference identifying the schema-validation command and the relevant launch,
-      failure-classification, and report-parsing test entry points, so maintainers can select the checks required after
-      changing this contract.
-    cause:
-      type: document
-  - id: F011
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 97
-    anchor: "method: provider_login"
-    message: >-
-      Correct the universal login-profile assumption before claiming DC-003 is satisfied; the declared authentication
-      design must accommodate the supported local OpenCode/Ollama configuration.
-    message_ja: >-
-      Correct the universal login-profile assumption before claiming DC-003 is satisfied; the declared authentication
-      design must accommodate the supported local OpenCode/Ollama configuration.
-    cause:
-      type: document
-  - id: F012
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 146
-    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
-    message: >-
-      Complete the malformed-evidence contract before treating DC-001, DC-004, or DC-005 as satisfied; the current text
-      provides no defined completion outcome, downstream processing sequence, or recovery expectation for invalid
-      evidence-tag JSON.
-    message_ja: >-
-      Complete the malformed-evidence contract before treating DC-001, DC-004, or DC-005 as satisfied; the current text
-      provides no defined completion outcome, downstream processing sequence, or recovery expectation for invalid
-      evidence-tag JSON.
-    cause:
-      type: document
-  - id: F013
-    severity: major
-    rule: vp-qe-verifiability
-    line: 146
-    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
-    message: >-
-      Define observable pass/fail expectations for invalid JSON inside the evidence tag, including completion state,
-      retained changes, retry behavior, and permitted downstream stages; an undecided disposition cannot serve as a test
-      oracle.
-    message_ja: >-
-      Define observable pass/fail expectations for invalid JSON inside the evidence tag, including completion state,
-      retained changes, retry behavior, and permitted downstream stages; an undecided disposition cannot serve as a test
-      oracle.
-    cause:
-      type: document
-  - id: F014
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 146
-    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
-    message: >-
-      Replace the undecided invalid-JSON branch with a defined disposition or an authoritative reference that specifies
-      it; malformed_output_action currently omits the caller behavior for a recognized output-parsing failure.
-    message_ja: >-
-      Replace the undecided invalid-JSON branch with a defined disposition or an authoritative reference that specifies
-      it; malformed_output_action currently omits the caller behavior for a recognized output-parsing failure.
-    cause:
-      type: document
-  - id: F015
-    severity: minor
-    rule: vp-ux-user-flow
-    line: 24
-    anchor: "[[prj-0001:sysd-agent-settings|エージェント実行・共通設計]] を入口とする。"
-    message: >-
-      Change the links prj-0001:sysd-agent-settings at line 24 and prj-0001:opr-agent-cli-update at line 151 to their
-      declared IDs sysd-agent-settings and opr-agent-cli-update, or use valid relative paths, so readers can reach the
-      provider-design entry point and update recovery procedure.
-    message_ja: >-
-      Change the links prj-0001:sysd-agent-settings at line 24 and prj-0001:opr-agent-cli-update at line 151 to their
-      declared IDs sysd-agent-settings and opr-agent-cli-update, or use valid relative paths, so readers can reach the
-      provider-design entry point and update recovery procedure.
-    cause:
-      type: document
-  - id: F016
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 4
-    anchor: "status: draft"
-    message: >-
-      State the ready gate for the unresolved timeout, schema-representation, and malformed-output items, identifying
-      which require resolution and which may be deferred by an accountable human decision.
-    message_ja: >-
-      State the ready gate for the unresolved timeout, schema-representation, and malformed-output items, identifying
-      which require resolution and which may be deferred by an accountable human decision.
-    cause:
-      type: document
-  - id: F017
-    severity: major
-    rule: vp-ops-operability
-    line: 146
-    anchor: "_UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の"
-    message: >-
-      Provide an operational disposition for malformed executor evidence that identifies what to preserve, how to
-      establish task state, who confirms recovery, and when executor resume is allowed; the current pending decision
-      leaves this failure without a usable recovery procedure.
-    message_ja: >-
-      Provide an operational disposition for malformed executor evidence that identifies what to preserve, how to
-      establish task state, who confirms recovery, and when executor resume is allowed; the current pending decision
-      leaves this failure without a usable recovery procedure.
-    cause:
-      type: document
+    rule: vp-qe-config-validity
+    line: 13
+    anchor: "# _ASSUMPTION_: 未決事項の技術判断は人間の ARC、追跡・報告は PM に依頼する。"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 1
+  satisfied: 5
   total: 5
-  unsatisfied:
-    DC-001:
-      - BA
-    DC-003:
-      - ARC
-    DC-004:
-      - QE
-    DC-005:
-      - DEV
   detail_ref: ifx-cmd-ai-provider-cli-grade-criteria
