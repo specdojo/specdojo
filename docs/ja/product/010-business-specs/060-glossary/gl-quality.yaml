@@ -1,0 +1,172 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/gl.schema.yaml
+id: gl-quality
+type: glossary
+rulebook: specdojo:gl-rulebook
+title: 用語集（評価とレビュー）
+locale: ja
+status: draft
+# 共通の評価結果・判定結果（grade）・指摘事項（finding）は gl-common を正本とする。
+# 本書は品質の評価基準とタスク完了の判断を扱い、実行状態・完了報告の操作は gl-execution に委ねる。
+terms:
+  - id: tm-quality-assessment
+    term: 成果物評価
+    englishName: quality assessment
+    aliases: [品質評価]
+    definition: 成果物の内容を共通の観点と評価基準に照らし、品質の判定結果と指摘事項を確定する活動。
+    notes: CLI の入口は `specdojo grade`。QE が評価対象と結果を管理し、作成者から独立した runner が評価する。出力の grade・finding の定義は [[gl-common|用語集（共通）]] を参照する。
+    relatedTerms: [tm-review, tm-grade-target, tm-review-viewpoint, tm-grade-verdict]
+    source: "[[bps-deliverable-evaluation|成果物評価]]、`docs/specdojo/schemas/v1/grade-result.schema.yaml`"
+  - id: tm-review
+    term: 完了可否レビュー
+    englishName: review
+    aliases: [レビュー]
+    definition: 最新の品質評価を事実として変更内容・実行計画・実行記録・完了条件と照合し、タスクを完了してよいかと改善指示を判断する活動。
+    notes: 観点ごとの品質を再評価しない。PO・PM の完了判断を支援し、最終承認と文書の `ready` への昇格は人間が担う。
+    relatedTerms: [tm-quality-assessment, tm-done-criteria, tm-review-verdict, tm-grade-freshness]
+    source: "[[bps-task-completion|タスク完了]]、[[specdojo:review-guide|レビューガイド]]"
+  - id: tm-grade-target
+    term: 評価対象区分
+    englishName: grade target
+    definition: 品質評価の対象が実践の型か、その型を用いて作る成果物かを示す区分。
+    notes: CLI の `--target` と評価結果の `target` は `kata`・`deliverable` を区別する。実践の型の定義は [[gl-common|用語集（共通）]] を参照する。
+    category: tm-quality-assessment
+    relatedTerms: [tm-viewpoint-applicability, tm-grade-rubric]
+    source: "`docs/specdojo/schemas/v1/grade-result.schema.yaml` の `target`、[[specdojo:review-guide|レビューガイド]]"
+  - id: tm-done-criteria
+    term: 完了条件
+    englishName: done criteria
+    definition: 成果物が満たすべき目的を、確認するロールとレビュー観点に対応付けて示した条件。
+    notes: 成果物カタログの `done_criteria` を正本とし、grade が条件ごとの充足を判定する。review はその結果を今回のタスク範囲・実行計画と照合する。
+    category: tm-review
+    relatedTerms: [tm-done-criteria-judgement, tm-review-viewpoint]
+    source: "[[specdojo:review-guide|レビューガイド]]、`docs/specdojo/schemas/v1/grade-done-criteria.schema.yaml`"
+  - id: tm-done-criteria-judgement
+    term: 完了条件の充足判定
+    englishName: done criteria judgement
+    definition: 完了条件ごとに、対象成果物が条件を満たすかを記録した評価結果。
+    notes: 詳細記録の `criteria` は条件文・担当ロール・観点・`status`（`satisfied`・`unsatisfied`）と理由（`reason`）を扱い、`summary` は充足数・未充足数・総数を示す。品質の点数とは独立した判定である。
+    category: tm-review
+    relatedTerms: [tm-done-criteria, tm-grade-score, tm-grade-freshness]
+    source: "`docs/specdojo/schemas/v1/grade-done-criteria.schema.yaml`、[[specdojo:review-guide|レビューガイド]]"
+  - id: tm-review-viewpoint
+    term: レビュー観点
+    englishName: viewpoint
+    aliases: [評価観点]
+    definition: 担当ロール、確認すべき問い、確認材料、標準の重大度、判定規準の区分を結び付けた評価の単位。
+    notes: "`viewpoints` の各観点を `vp-...` で識別し、`role_viewpoint_sets` でロールに対応付ける。共通定義とプロジェクト定義を区別し、共通定義を継承する場合は差分と無効化を扱う。継承・全量定義の構成条件は参照先 schema を正本とする。"
+    relatedTerms:
+      [
+        tm-review-category,
+        tm-review-coverage-type,
+        tm-viewpoint-evaluation,
+        tm-viewpoint-applicability,
+      ]
+    source: "[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]]、`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `Viewpoint`"
+  - id: tm-review-category
+    term: レビュー観点カテゴリ
+    englishName: review category
+    aliases: [評価カテゴリ]
+    definition: 目的・判断、品質、読みやすさなど、評価する性質に沿ってレビュー観点をまとめる分類。
+    notes: 観点の `category` は一つのカテゴリを示す。評価結果の `categories` にカテゴリ別の点数を記録し、評価基準の `weights` で重みを定める。
+    category: tm-review-viewpoint
+    relatedTerms: [tm-grade-rubric, tm-grade-score]
+    source: "`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `Category`、`docs/specdojo/schemas/v1/grade-result.schema.yaml`"
+  - id: tm-review-coverage-type
+    term: 確認対象の型
+    englishName: coverage type
+    definition: 関係者、例外、権限など、レビュー観点が何を確認するかを整理する探索軸。
+    notes: "`coverage_types` に対応し、一つの観点に複数を対応付けられる。型ごとの `applies_to` は要求・仕様・設計・テスト・運用への適用先を示す。確認項目そのものや、確認済みであることを表す値ではない。"
+    category: tm-review-viewpoint
+    relatedTerms: [tm-viewpoint-applicability]
+    source: "`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `CoverageType`、[[specdojo:review-guide|レビューガイド]]"
+  - id: tm-viewpoint-evaluation
+    term: 判定規準の区分
+    englishName: viewpoint evaluation
+    definition: 何を正しいとするかを決める規準がどこにあるかによって、レビュー観点を分ける区分。
+    notes: "`evaluation` の `deterministic` は機械可読な規則、`referential` は参照文書・宣言された定義・確認の問い自身に書かれた規準、`discretionary` は判定者が持ち込む規準を用いる。判定経路を選ぶ属性であり、観点の適用範囲や人間の承認責任を定めない。"
+    category: tm-review-viewpoint
+    relatedTerms: [tm-viewpoint-applicability]
+    source: "`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `Viewpoint.evaluation`"
+  - id: tm-viewpoint-applicability
+    term: レビュー観点の適用範囲
+    englishName: viewpoint applicability
+    definition: 評価対象区分と文書の種類に基づいて、どの文書へレビュー観点を用いるかを定める範囲。
+    notes: "`grade_targets` は評価対象区分、`document_kinds` は rulebook による文書の種類を扱う。種類を限定・除外する指定に伴う `confirmed_default` は既定の扱いを確認した記録であり、適用先を変えない。指定の組合せ・未分類文書の扱いは参照先 schema とガイドを正本とする。"
+    category: tm-review-viewpoint
+    relatedTerms: [tm-grade-target]
+    source: "`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `DocumentKindApplicability`、[[specdojo:review-guide|レビューガイド]]"
+  - id: tm-grade-rubric
+    term: 品質評価基準
+    englishName: grade rubric
+    aliases: [ルーブリック]
+    definition: 観点別の品質段階、合格点、カテゴリの重みと、完了可否判断の起点を共通に定める基準。
+    notes: 定義の `grade_rubric` と結果の `rubric` に対応する。段階ごとの `review_verdict` は review の判断の起点を示し、タスクの完了可否を自動確定しない。段階の意味と計算規則は共通定義とガイドを参照する。
+    category: tm-quality-assessment
+    relatedTerms: [tm-grade-level, tm-grade-score, tm-grade-verdict, tm-review-verdict]
+    source: "[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]]、`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `GradeRubric`、[[specdojo:review-guide|レビューガイド]]"
+  - id: tm-grade-level
+    term: 観点別品質段階
+    englishName: grade level
+    aliases: [評価レベル]
+    definition: レビュー観点ごとの品質を、共通の評価基準に沿って段階で示した値。
+    notes: 評価結果の `viewpoints` に観点ごとの `level`（0〜4）と点数を記録する。
+    category: tm-quality-assessment
+    relatedTerms: [tm-review-viewpoint, tm-grade-rubric, tm-grade-score]
+    source: "`docs/specdojo/schemas/v1/grade-result.schema.yaml` の `viewpoints`"
+  - id: tm-grade-score
+    term: 品質評価点
+    englishName: grade score
+    aliases: [評価スコア]
+    definition: 観点ごと・カテゴリごと・文書全体の品質を数値で示した値。
+    notes: 評価結果の `score` は 0〜100 の整数で、カテゴリ別・観点別の点数も記録する。合格点や重みは品質評価基準に従い、点数だけでタスク完了や文書の確定を判断しない。
+    category: tm-quality-assessment
+    relatedTerms: [tm-grade-rubric, tm-grade-verdict, tm-done-criteria-judgement]
+    source: "`docs/specdojo/schemas/v1/grade-result.schema.yaml`、[[specdojo:review-guide|レビューガイド]]"
+  - id: tm-grade-verdict
+    term: 品質判定
+    englishName: grade verdict
+    definition: 成果物の品質を、評価点と指摘の重大度に基づいて総合的に示す区分。
+    notes: grade の `verdict` は `pass`・`needs-work`・`fail`。共通用語集の判定結果（grade）を構成する項目であり、タスクの完了可否とは判定対象も語彙も異なる。
+    category: tm-quality-assessment
+    relatedTerms: [tm-grade-score, tm-finding-severity, tm-review-verdict]
+    source: "`docs/specdojo/schemas/v1/grade-result.schema.yaml` の `verdict`、[[prj-0001:pjr-xtan-unify-verdict-vocabulary|判定対象ごとの語彙の決定記録]]"
+  - id: tm-review-verdict
+    term: タスク完了可否判定
+    englishName: review verdict
+    definition: レビューで、タスクを完了としてよいか、または何を補って判断を再開するかを示す区分。
+    notes: "`verdict_definitions` と review result の `verdict` は、完了の `complete`、指摘を残す完了の `complete-with-findings`、未充足の `incomplete`、鮮度不足の `grade-stale`、評価不能の `grade-unavailable`、レビュー中の変更の `changed-during-review` を共通に使う。選択条件はガイドを正本とする。"
+    category: tm-review
+    relatedTerms: [tm-grade-verdict, tm-done-criteria, tm-grade-freshness]
+    source: "`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `VerdictDefinition`、[[specdojo:review-guide|レビューガイド]]、[[prj-0001:pjr-xtan-unify-verdict-vocabulary|判定対象ごとの語彙の決定記録]]"
+  - id: tm-finding-severity
+    term: 指摘の重大度
+    englishName: finding severity
+    definition: 指摘が完了判断や後続作業へ与える影響の大きさを表す区分。
+    notes: "`severity` は `blocker`・`major`・`minor`・`note` を区別する。観点の `default_severity` は標準値、評価結果の `finding_counts` は重大度別の件数を示す。各値の意味は共通レビュー観点一覧を参照する。"
+    category: tm-quality-assessment
+    relatedTerms: [tm-review-viewpoint, tm-grade-verdict, tm-finding-cause]
+    source: "[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]]、`docs/specdojo/schemas/v1/grade-result.schema.yaml` の `findings`"
+  - id: tm-finding-cause
+    term: 指摘の原因
+    englishName: finding cause
+    definition: 指摘された不備の発生元が対象文書か実践の型かを示し、改善先の判断に用いる情報。
+    notes: "`cause` の省略は `document` として扱う。`type: kata` とするのは、原因となる型の種類（`kind`）とその中の箇所（`location`）を根拠として示せる場合に限る。記録条件は参照先 schema を正本とし、原因によって点数や品質判定を変えない。"
+    category: tm-quality-assessment
+    relatedTerms: [tm-finding-severity]
+    source: "`docs/specdojo/schemas/v1/finding-cause.schema.yaml`、[[prj-0001:pjr-sjbv-finding-cause-routing|指摘の原因と改善先の決定記録]]"
+  - id: tm-evaluation-context
+    term: 評価コンテキスト
+    englishName: evaluation context
+    definition: 評価対象以外で、品質判定が依拠する完了条件・依存成果物・実践の型などの前提。
+    notes: 観点の `comparison_sources` は比較先を宣言し、結果の `source_hashes` は参照元の内容のハッシュを記録する。参照元追跡前の結果には記録がない場合がある。対象文書が同じでも前提が変われば評価結果の鮮度を確認する。
+    category: tm-quality-assessment
+    relatedTerms: [tm-review-viewpoint, tm-grade-freshness]
+    source: "[[bps-deliverable-evaluation|成果物評価]]、`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `Viewpoint.comparison_sources`、`docs/specdojo/schemas/v1/grade-result.schema.yaml` の `source_hashes`"
+  - id: tm-grade-freshness
+    term: 評価結果の鮮度
+    englishName: grade freshness
+    definition: 保存された品質評価が、現在の対象文書と評価コンテキストに対応しているかを表す性質。
+    notes: "`content_hash` は評価対象の内容を識別する。対象内容と前提に変化がない結果は再利用し、鮮度不足・評価不能・レビュー中の変更は区別して完了可否判定に用いる。判別手順はレビューガイドを正本とする。"
+    category: tm-quality-assessment
+    relatedTerms: [tm-evaluation-context, tm-review-verdict]
+    source: "`docs/specdojo/schemas/v1/grade-result.schema.yaml`、`docs/specdojo/schemas/v1/grade-done-criteria.schema.yaml`、[[bps-task-completion|タスク完了]]、[[specdojo:review-guide|レビューガイド]]"
