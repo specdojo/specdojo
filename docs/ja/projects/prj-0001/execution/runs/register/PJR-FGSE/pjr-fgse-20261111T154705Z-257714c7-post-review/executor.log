@@ -1,0 +1,48 @@
+**判定: `complete-with-findings`。** 個票 PJR-FGSE の完了条件 5 件はすべて満たしています。ただ、個票の記述に軽い不正確さが 2 点あり、edit result の申し送りに重複が 1 件あるため、指摘を残したうえで完了とします。
+
+**差分の範囲**
+
+`441d79fd..7ceaaa38` で変わったファイルは 7 件で、どれも PJR-FGSE のものです。
+- 個票の本文と events/pjr-fgse.yaml（追加は start と review の 2 遷移だけ）
+- run ディレクトリ配下の plan / result / evidence.json / executor.log / pipeline-state.json
+
+型の文書、schema、実装、exec-defaults は変更されておらず、「追加の改修は不要」という結論と合っています。対象外の変更は入っていません。
+
+**完了条件ごとの確認**
+
+1. **型と実装の現状調査と比較: 満たしている。** 個票の主張をリポジトリの実体と照らしました。
+   - ifx-cmd-rulebook の 6.2「コマンドと正本参照」に「シェル起動の例外」があり、禁止事項にも同じ趣旨の行があります。
+   - recipe は 4.2 と 6 章、template は 29 行目のコメント、schema は `shell` が `BooleanOrPlaceholder` です。
+   - 実装では src/exec/run/agent.ts 491 行目が `shell: true` です。
+   - exec-defaults.yaml の copilot と antigravity は `-p "$(cat)"`、antigravity は `"$(pwd)"` も使っています。
+2. **`shell: false` 化の評価: 満たしている。** 引数長の上限（`ARG_MAX`）、stdin 非対応の CLI、シェル置換パーサを自前で実装するリスクを評価しています。
+3. **kata-040 の例外規定と代表仕様との整合: 満たしている。**
+   - commit `9a41e1c84` は kata-040 のもので、ifx-cmd-rulebook.md を変更しています。
+   - 代表仕様 `docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml` の 34 行目は `shell: true` で、直前に理由のコメントがあり、reference も示されています。
+4. **結論と根拠の記録: 満たしている。** 個票の対応結果 5.1 と、evidence の `handoff` に記録されています。
+5. **CHANGELOG の確認: 満たしている。** 個票の 5.2 に「なし」、`handoff` にも「なし」とその理由があります。
+
+**edit の evidence**
+
+`completion_status` は complete で、失敗や block はありません。
+- executor の検証（prettier、`validate:history-links`、catalog validate、`git diff --check`）は passed です。
+- runner の親検証（`lint:ts` は error 0 で warning 42 件、`lint:fm`、`lint:md`、`lint:mermaid`、`lint:d2`、`test:integration`、`validate:schema`、`typecheck`、`test:unit`）もすべて passed です。
+- `validate:schema:file` は YAML を変更していないので not_applicable で、妥当です。
+
+この review では grade を使わず、edit の検証結果を確認しました。
+
+**指摘（軽微・close を妨げない）**
+
+- F1: 個票は nickname を「英数字に限定（`NICKNAME_PATTERN`）」と書いています。実際のパターン `/^[a-z0-9][a-z0-9_-]{0,62}$/` は英小文字・数字に加えて `_` と `-` も許すので、表現が少し不正確です。
+- F2: 個票が書く「3層の多層防御」を構成する 3 つが何かは、本文にも exec-config-guide にも明記がなく、確認できませんでした。
+- F3: edit result の申し送りで「完了条件の仮説と達成状況」が 2 回出ています（30 行目と 33 行目）。
+
+**確認できなかった範囲**
+
+- 「3層の多層防御」の各層が実装のどこにあるかは調べていません（`NICKNAME_PATTERN` 以外）。
+- copilot と antigravity に stdin からプロンプトを読むオプションが本当にないかは、外部資料で確かめていません。
+- 統合後に lint や test を自分で再実行してはおらず、runner の evidence に頼っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。PJR-FGSE の完了条件5件をすべて満たすことを確認した。根拠: ifx-cmd-rulebook の 6.2「コマンドと正本参照」にシェル起動の例外と禁止事項の行がある（kata-040 の commit 9a41e1c84）。recipe は 4.2 と 6章、template は 29行目コメント、schema は `BooleanOrPlaceholder`。代表仕様 docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml は 34行目で shell: true とし、理由コメントと reference がある。実装は src/exec/run/agent.ts 491行目が shell: true で、exec-defaults の copilot/agy は -p \"$(cat)\" を使う。結論は個票の対応結果 5.1 と `handoff` に、CHANGELOG「なし」は個票 5.2 と `handoff` に記録されている。差分 441d79fd..7ceaaa38 は個票、events/pjr-fgse.yaml（start と review の遷移のみ）、run ディレクトリの成果物の計7件だけで、対象外の変更はない。edit evidence は completion_status complete で、executor と runner の検証（lint:ts は error 0、lint:fm、lint:md、lint:mermaid、lint:d2、test:integration、validate:schema、typecheck、test:unit）はすべて passed、block と未解消の申し送りはない。この review では grade を使わず、edit の検証結果を確認した。指摘（軽微）: F1 個票は nickname を「英数字に限定」と書くが、実際の `NICKNAME_PATTERN` は /^[a-z0-9][a-z0-9_-]{0,62}$/ で `_` と `-` も許す。F2「3層の多層防御」の3層が何かは個票にも exec-config-guide にも明記がなく確認できない。F3 edit result の申し送りで「完了条件の仮説と達成状況」が重複している（30行目と33行目）。確認できなかった範囲: 多層防御の各層の実装箇所（`NICKNAME_PATTERN` 以外）、copilot/agy に stdin からプロンプトを読むオプションがないかの外部資料での裏取り、統合後の lint/test の再実行（runner の evidence に依拠）。","handoff":["個票の nickname の記述（英数字に限定）を、実際のパターン（英小文字・数字・_・-）に合わせて直すか、次に個票を触るときに検討する。","「3層の多層防御」の内訳を個票または exec-config-guide で明示するかを検討する。"],"validations":[{"command":"git diff --stat 441d79fda0eec6bfad919b438d4e2d4ac209e8ef..7ceaaa38c9fd37794d3e7524f604c8bc2d683f7d","status":"passed","summary":"変更は7ファイル（412行追加、7行削除）で、すべて PJR-FGSE の個票、イベント、run ディレクトリの成果物"},{"command":"git diff --name-status 441d79fda0eec6bfad919b438d4e2d4ac209e8ef..7ceaaa38c9fd37794d3e7524f604c8bc2d683f7d","status":"passed","summary":"M は2件（個票とイベント）、A は5件（run の成果物）。対象外の変更はない"},{"command":"git diff 441d79fda0eec6bfad919b438d4e2d4ac209e8ef..7ceaaa38c9fd37794d3e7524f604c8bc2d683f7d -- docs/ja/projects/prj-0001/controls/project-register/events/pjr-fgse.yaml","status":"passed","summary":"追加は start（open→in-progress）と review（in-progress→review）の2イベントだけ"},{"command":"git show --stat 9a41e1c84","status":"passed","summary":"kata-040 の commit で ifx-cmd-rulebook.md を変更しており、個票の記述と一致する"}]}
+</specdojo_executor_evidence>
