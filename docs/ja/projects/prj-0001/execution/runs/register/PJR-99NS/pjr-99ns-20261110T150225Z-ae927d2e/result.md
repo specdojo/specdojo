@@ -4,7 +4,7 @@ specdojo:
   type: exec-result
   task_id: PJR-99NS
   mode: edit
-  status: complete
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-99NS/pjr-99ns-20261110T150225Z-ae927d2e/plan.md
@@ -14,6 +14,7 @@ specdojo:
   approach: fully-guided
   targets:
     - prj-0001:sf-task-execution
+  block_reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md"
 ---
 
 # Edit Result
