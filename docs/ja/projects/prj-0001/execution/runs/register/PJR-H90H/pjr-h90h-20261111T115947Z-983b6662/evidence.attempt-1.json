@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-H90H",
+  "run_id": "pjr-h90h-20261111T115947Z-983b6662",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T12:03:37.965Z",
+    "completed_at": "2026-11-11T12:08:44.883Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-h90h.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../ifx-cmd-ai-provider-cli.yaml                   | 46 +++++++++++++-------\n ...fx-cmd-ai-provider-cli-refine-confirmed-kata.md | 50 ++++++++++++++++++++++\n 2 files changed, 81 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata.md",
+      "status": "passed",
+      "summary": "対象２ファイルの整形成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-cmd.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml",
+      "status": "passed",
+      "summary": "対象 YAML は schema に適合。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証成功。対象外の文書欠落・実装参照の警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿生成成功。生成物は Git 差分に含まれない。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "final_message": "認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "対象 YAML と個票の対応結果を更新。result、型、schema、実装、カタログ、保護設定、CHANGELOG、runner 管理記録は変更していない。",
+    "F007・F008・F011 は provider 設定に応じた認証とローカル OpenCode / Ollama の認証不要構成で対応。F015 は文書 ID を修正。F001〜F004・F006・F016 は判断・追跡先と昇格条件を補強したが、人間の ARC・PM への責務依頼は `_ASSUMPTION_` として確認が必要。",
+    "F005・F009・F012・F013・F014・F017 は未解消。許可された実装２ファイルには JSON 解析処理がなく、exec 設定ガイドにも解析失敗時の個別契約がない。解析実装と pipeline 呼び出し元を読み取り専用根拠へ追加した後、完了可否・変更保持・親検証・reporter・再試行・利用者の復旧操作と再開条件を確定する必要がある。未宣言の実装は探索していない。",
+    "F010 は schema 検査コマンドと既存文書の検証入口を追加。個別テストの特定と解析失敗時の期待結果は未解決。時間制約と設定参照の schema 表現も人間の判断待ち。未作成の `ifx-index` だけを未完了理由にはしていない。",
+    "rulebook を必須内容・禁止事項、recipe を分岐整理、sample を形式確認に用い、既存構成と正本参照方針を維持した。詳しい変更根拠・参照範囲・指摘対応は個票 5.6〜5.9 に記録済み。共通検査は親 runner、grade と独立 review は orchestrator に委ねる。",
+    "CHANGELOG 文案（個票 5.10）: 不具合修正（仕様文書）「AI provider CLI 連携仕様で認証要否を provider 設定に応じて区別し、ローカル OpenCode / Ollama の認証不要構成へのログイン要求を修正。」",
+    "カタログ検証は成功したが、対象外の未作成文書と再エクスポートのみの `evidence_refs` に関する警告がある。今回の範囲では変更していない。"
+  ],
+  "block_reason": "executor reported incomplete: 認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-H90H/pjr-h90h-20261111T115947Z-983b6662/executor.attempt-1.log",
+      "bytes": 3537,
+      "truncated": false
+    }
+  ]
+}
