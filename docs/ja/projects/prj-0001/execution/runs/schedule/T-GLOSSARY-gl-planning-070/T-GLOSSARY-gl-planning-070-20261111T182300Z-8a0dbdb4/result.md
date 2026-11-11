@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-GLOSSARY-gl-planning-070
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-GLOSSARY-gl-planning-070/T-GLOSSARY-gl-planning-070-20261111T182300Z-8a0dbdb4/plan.md
   started_at: "2026-11-11T18:23:01.214Z"
+  completed_at: "2026-11-11T18:34:17.853Z"
   agent: sol-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 用語集（計画） `docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml` のもき込みを行い、記述を整理しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml`: `tm-task-intent` に追加項目（`improve-kata`, `bootstrap-kata-set`, `confirm-with-kata-set`）の対応付けを追記し、`tm-cross-deliverable-pass` にエージェント実行時のパイプライン利用に関する補足を加えました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result の「進め方と実践の型の適用」への記録事項: gl-rulebook.md を必須項目・定義・同一用語集内の参照規則の基準とし、gl-sample.yaml は形式のみ確認した。既存の構成と粒度を優先し、sample の業務内容は転記していない。recipe は plan で未指定、rulebook では undecided のため参照できず、既存草案・rulebook・依存成果物で確認を進めた。
+- 参照範囲: 対象の gl-planning.yaml、依存の gl-common.yaml、プロジェクトコンテキストの prj-overview.md、指定された dct.schema.yaml・sch-strategy.schema.yaml・sch-track.schema.yaml・sch-milestones.schema.yaml、対応する gl.schema.yaml を読んだ。共通規約2文書、AGENTS.md、指定の運用メモ、検査判定に必要な package.json・.specdojo/specdojo.config.json・lefthook.yml も確認した。
+- 変更根拠: tm-task-intent の notes は追加項目を使う意図の識別子がなく、schema 項目の参照として不足していたため、既存の説明に improve-kata・bootstrap-kata-set・confirm-with-kata-set を対応付けた。tm-cross-deliverable-pass の notes は実行方式との関係を schema 参照だけに委ねていたため、agent 実行でパイプラインを用いる関係を補足した。いずれも sch-strategy.schema.yaml に基づき、条件の詳細は schema を正本として保持した。
+- 既存の用語ID・定義・別名・分類・責務境界を維持し、削除・統合・全面的な書き換えは行っていない。共通概念は gl-common を正本とし、人間の承認と計画上の節目を分ける既存記述も維持した。対象に `_CONTEXT_` はなく、未解決判断はない。
+- 参照しなかった文書: template は磨き込みの指示に従い未参照。既存 source にあるガイド・他 rulebook・決定記録・gl-execution は、plan の宣言範囲外のため本文を参照せず、既存参照を保持した。approach 全体の比較は不要なため任意の ryu-guide も未参照。result は executor stage の指示に従い編集していない。
+- 適用外の検証: `npm run validate:catalog`（executor の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していない。）
+- 適用外の検証: `npm run validate:history-links`（executor は登録簿個票・plan・result などの履歴ファイルを変更していない。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+fully-guided
