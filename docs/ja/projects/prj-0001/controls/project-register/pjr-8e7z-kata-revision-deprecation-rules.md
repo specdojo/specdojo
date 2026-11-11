@@ -10,9 +10,11 @@ specdojo:
   item_status: open
   priority: low
   difficulty: medium
+  owner: sol-executor
   registered_at: "2026-11-10T12:26:29Z"
   derived_from:
     - PJR-T88P
+  autopilot: approved
 ---
 
 # PJR-8E7Z 業務仕様の型に、文書の改訂と廃止のときに関係する文書を追って直す決まりを足す
