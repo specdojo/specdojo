@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:14:30Z"
+  block_reason: "executor reported incomplete: 認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。"
   conclusion: 代表の ifx-cmd-ai-provider-cli を、確定した型で磨き込み、冗長さを整理した
   derived_from:
     - PJR-2GD6
