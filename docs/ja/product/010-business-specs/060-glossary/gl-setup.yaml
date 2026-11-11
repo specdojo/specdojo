@@ -1,0 +1,276 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/gl.schema.yaml
+id: gl-setup
+type: glossary
+rulebook: specdojo:gl-rulebook
+title: 用語集（導入と設定）
+locale: ja
+status: draft
+# 稼働構成の総称は gl-common、計画上の担当割当は gl-planning、実行段の役割・親検証は gl-execution を正本とする。
+# 本書は初期導入、設定の単位、人と agent の識別・責務・実行属性、共通実行設定を扱う。
+terms:
+  - id: tm-initialization
+    term: 初期導入
+    englishName: initialization
+    aliases: [初期化, init]
+    definition: SpecDojo を使い始めるために、プロジェクトの稼働構成と必要な文書・実行環境を準備する活動。
+    notes: CLI の入口は `specdojo init`。設定だけを準備する `config init` と区別する。成果物カタログを必須とせず、必要になった段階で追加する。
+    relatedTerms: [tm-repository-settings, tm-project-settings, tm-human-roster, tm-agent-registry]
+    source: "[[specdojo:quick-start-guide|Quick Startガイド]]、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]、[[prj-0001:pjr-g5ab-init-without-catalog-prompt|初期導入でカタログを必須にしない決定記録]]"
+  - id: tm-repository-settings
+    term: リポジトリ共通設定
+    englishName: repository settings
+    definition: 同じリポジトリの全プロジェクトで共有する、プロジェクト一覧や agent 名簿の参照先などの設定。
+    notes: 稼働構成の総称は [[gl-common|用語集（共通）]] を参照する。`.specdojo/specdojo.config.json` のトップレベルに対応し、`projects` に個別のプロジェクト設定を持つ。
+    relatedTerms: [tm-project-settings, tm-agent-registry, tm-external-project, tm-kata-authority]
+    source: "`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` のルート定義"
+  - id: tm-project-settings
+    term: プロジェクト設定
+    englishName: project settings
+    definition: 一つのプロジェクトで使う文書の配置先、参照する共通文脈、実行時の設定を定める稼働構成の単位。
+    notes: "`projects.<project-id>` に対応する。対象は CLI の `--project` で明示できる。`project_context` は共通の判断前提であり、成果物の先行依存ではない。パスの基準と省略時の扱いは設定リファレンスを参照する。"
+    category: tm-repository-settings
+    relatedTerms: [tm-human-roster, tm-role, tm-product-repository, tm-exec-defaults]
+    source: "`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `Project`・`Run`、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]"
+  - id: tm-product-repository
+    term: プロダクトリポジトリ
+    englishName: product repository
+    aliases: [管理対象リポジトリ]
+    definition: プロジェクトのタスクが変更対象として宣言する、プロジェクトリポジトリとは別のリポジトリ。
+    notes: "`projects.<project-id>.repos` に名前と配置先を宣言し、対象パスを `<name>:<path>` で参照する。プロジェクトリポジトリ自身は宣言しない。`integration_strategy` に応じて統合またはブランチ保持を選び、条件の正本は schema の `Repo` とする。"
+    category: tm-project-settings
+    relatedTerms: [tm-external-project]
+    source: "`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `Repo`、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]"
+  - id: tm-external-project
+    term: 外部プロジェクト参照
+    englishName: external project reference
+    definition: 別リポジトリで管理するプロジェクトの登録簿を、呼び出し元の別名で参照する設定。
+    notes: "`external_projects` に相手の `path` と `project_id` を宣言する。タスクの変更対象を宣言する `repos` とは用途を分ける。"
+    category: tm-repository-settings
+    relatedTerms: [tm-product-repository]
+    source: "`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `ExternalProject`、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]"
+  - id: tm-kata-authority
+    term: 実践の型の名前空間
+    englishName: kata authority
+    aliases: [kata authority]
+    definition: 利用者が作る実践の型を、配布元やプロジェクトの文書と区別するリポジトリ単位の識別範囲。
+    notes: "`kata_authority` に対応する。実践の型自体の定義は [[gl-common|用語集（共通）]] を参照する。名前の制約は schema、配置と解決の扱いは設定リファレンスを正本とする。"
+    category: tm-repository-settings
+    source: "`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `kata_authority`、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]"
+  - id: tm-member
+    term: メンバー
+    englishName: member
+    definition: プロジェクトで実際に作業または支援を行う、人間または agent の実行主体。
+    notes: 責務を表すロールと、誰が作業するかを表すメンバーを分ける。人と agent は別の名簿で管理し、利用時に合成する。主要な判断と最終承認の責任は人間に残す。
+    relatedTerms: [tm-human-member, tm-agent-member, tm-member-nickname, tm-role]
+    source: "[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]]、[[prj-0001:pjr-2t63-agent-members-split|人とagentの名簿を分離する決定記録]]"
+  - id: tm-human-member
+    term: 人間メンバー
+    englishName: human member
+    definition: プロジェクトの名簿に登録し、作業と人間としての判断を担う参加者。
+    notes: "人の名簿の `members` に `type: human` で記載する。一人が `roles` に複数のロールを持つことができる。"
+    category: tm-member
+    relatedTerms: [tm-human-roster, tm-role]
+    source: "`docs/specdojo/schemas/v1/pm-members.schema.yaml` の `HumanMember`、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]]"
+  - id: tm-agent-member
+    term: agent メンバー
+    englishName: agent member
+    aliases: [エージェントメンバー]
+    definition: 共通の agent 名簿に登録し、実行基盤と能力などの属性に基づいて作業を委任する実行主体。
+    notes: "`type: agent` で記載し、`disabled` で無効化できる。`roles: []` は特定ロールに固定しない agent を表す。`mode` は作業モード、`stage_role` は実行段の役割であり、業務ロールとは区別する。pipeline では担当する段に合う `stage_role` を使い、省略した agent は単一 agent フローで使う。実行段の意味は [[gl-execution|用語集（実行）]] を参照する。"
+    category: tm-member
+    relatedTerms: [tm-agent-registry, tm-provider, tm-agent-capability, tm-agent-proficiency]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember`、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-human-roster
+    term: 人の名簿
+    englishName: human member roster
+    aliases: [人間名簿]
+    definition: プロジェクトごとの人間メンバーの識別情報と対応ロールを管理する一覧。
+    notes: "`members_path` が参照する `pm-members.yaml` に対応する。agent の実行定義は含めない。"
+    category: tm-project-settings
+    relatedTerms: [tm-human-member, tm-agent-registry, tm-member-nickname]
+    source: "`docs/specdojo/schemas/v1/pm-members.schema.yaml`、`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `Project.members_path`、[[prj-0001:pjr-2t63-agent-members-split|人とagentの名簿を分離する決定記録]]"
+  - id: tm-agent-registry
+    term: agent の名簿
+    englishName: agent member registry
+    aliases: [エージェント名簿, agent 定義]
+    definition: 同じリポジトリの全プロジェクトで共有する、agent の識別情報・実行属性・別名を管理する保護された一覧。
+    notes: "`agent_members_path` が参照する `.specdojo/` 配下の YAML に対応する。既定は `.specdojo/agent-members.yaml`。人の名簿とは配置と変更権限を分ける。"
+    category: tm-repository-settings
+    relatedTerms: [tm-agent-member, tm-human-roster, tm-agent-alias]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml`、`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `agent_members_path`、[[prj-0001:pjr-2t63-agent-members-split|人とagentの名簿を分離する決定記録]]"
+  - id: tm-member-nickname
+    term: メンバー識別名
+    englishName: member nickname
+    aliases: [nickname, ニックネーム]
+    definition: CLI での実行者指定と実行記録を同じメンバーへ結び付ける安定した名前。
+    notes: "`nickname` に対応し、`display_name` の表示名とは分ける。CLI の `--by`・`--executor-by`・`--reporter-by` などで指定する。合成名簿で一意とし、履歴に使った名前は変更せず、agent の旧名は別名でつなぐ。"
+    category: tm-member
+    relatedTerms: [tm-agent-alias]
+    source: "`docs/specdojo/schemas/v1/pm-members.schema.yaml` の `HumanMember.nickname`、`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentNickname`、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]]"
+  - id: tm-agent-alias
+    term: agent の別名
+    englishName: agent alias
+    aliases: [エージェント別名]
+    definition: 従来の名前などから有効な agent メンバーの実体を参照するための互換用の名前。
+    notes: "名簿の `aliases` に `nickname` と `alias_of` を記載する。別名の連鎖は有効な実体に終端させ、別のメンバーとして数えない。実行記録の actor は実体の識別名にそろえる。参照関係の条件は schema と決定記録を正本とする。"
+    category: tm-agent-registry
+    relatedTerms: [tm-member-nickname, tm-agent-member, tm-agent-model]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentAlias`、[[prj-0001:pjr-yk1c-agent-alias-resolution|agentの別名解決と記録の決定記録]]"
+  - id: tm-role
+    term: ロール
+    englishName: role
+    aliases: [業務ロール, Role]
+    definition: 個人や agent の名前とは独立して、プロジェクト上の責務・判断権限・専門性を表す論理的な役割。
+    notes: "採用ロールは `roles_path` が参照する `pm-roles.yaml` で `code` と `name` により定義し、メンバーの `roles` に対応付ける。Schedule の `owner` はロールコードであり、実行者の識別名ではない。主担当の割当は [[gl-planning|用語集（計画）]] を参照する。"
+    category: tm-project-settings
+    relatedTerms: [tm-member, tm-member-nickname]
+    source: "`docs/specdojo/schemas/v1/pm-roles.schema.yaml` の `Role`、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]]"
+  - id: tm-provider
+    term: agent 実行基盤
+    englishName: provider
+    aliases: [provider, プロバイダー]
+    definition: 登録された agent の起動と、基盤ごとに異なる実行設定を対応付ける実行環境の区分。
+    notes: "agent の `provider` と実行既定の `providers.<name>` を結ぶ。モデルの提供会社ではなく、実行する CLI などの基盤を指す。選択可能な区分は agent 名簿と実行既定の schema を正本とする。"
+    category: tm-agent-registry
+    relatedTerms: [tm-agent-member, tm-agent-model, tm-provider-override, tm-agent-command-template]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.provider`、`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `providers`"
+  - id: tm-agent-model
+    term: agent モデル
+    englishName: agent model
+    aliases: [モデル]
+    definition: agent の実体が利用する推論モデルを、必要に応じて版も含めて識別する値。
+    notes: "agent の `model` に対応する。実行基盤とモデルは別に管理し、識別名に版を埋め込まない。実体の `model` は `command_params` のモデル値に優先し、持たない構成も維持する。"
+    category: tm-agent-registry
+    relatedTerms: [tm-provider, tm-agent-effort, tm-agent-alias, tm-agent-command-parameters]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.model`、[[prj-0001:pjr-yk1c-agent-alias-resolution|agentの別名解決と記録の決定記録]]、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-agent-effort
+    term: 推論強度
+    englishName: reasoning effort
+    aliases: [effort]
+    definition: 対応する実行基盤へ渡す、agent の推論に用いる強度の指定。
+    notes: "agent の `effort` に対応する。利用できる値と渡し方は実行基盤によって異なり、メンバー選択に使う習熟度とは分ける。"
+    category: tm-agent-registry
+    relatedTerms: [tm-agent-model, tm-provider, tm-agent-proficiency]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.effort`"
+  - id: tm-agent-capability
+    term: agent 能力
+    englishName: agent capability
+    aliases: [capabilities]
+    definition: agent が作業で利用できるツールなどの機能を、作業要件との照合用に宣言した属性。
+    notes: "`capabilities` に対応する。習熟度や業務ロールとは分ける。能力の値は agent 名簿 schema が参照する共通定義、作業要件との照合方法は exec 設定ガイドを正本とする。"
+    category: tm-agent-registry
+    relatedTerms: [tm-agent-proficiency, tm-role]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.capabilities`、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-agent-proficiency
+    term: agent 習熟度
+    englishName: agent proficiency
+    aliases: [proficiency]
+    definition: agent を作業に求める品質水準と照合するために宣言した熟練の区分。
+    notes: "`proficiency` に対応する。推論強度や成果物の評価点を表さない。区分の値は agent 名簿 schema が参照する共通定義を正本とする。"
+    category: tm-agent-registry
+    relatedTerms: [tm-agent-capability, tm-agent-priority, tm-agent-effort]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.proficiency`、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-agent-priority
+    term: agent 選択優先度
+    englishName: agent selection priority
+    aliases: [選択優先度]
+    definition: 作業要件に合う agent 候補の選択順序を決めるための優先値。
+    notes: "agent の `priority` に対応し、値が小さいほど優先する。タスク自体の優先順位とは別の属性であり、これだけで実行者は確定しない。選択順序の詳細は exec 設定ガイドを参照する。"
+    category: tm-agent-registry
+    relatedTerms: [tm-agent-capability, tm-agent-proficiency]
+    source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.priority`、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-exec-defaults
+    term: 共通実行設定
+    englishName: exec defaults
+    aliases: [実行の既定, exec defaults]
+    definition: トラックをまたいで利用する、agent の起動、振り分け、障害検出、回復方針などの実行時の既定値。
+    notes: "`projects.<project-id>.run.exec_defaults` が参照するファイルに対応する。phase の作業要件や名簿のメンバー属性とは分担する。`pipeline.parent_validations` の設定対象である親検証は [[gl-execution|用語集（実行）]] を参照する。"
+    relatedTerms:
+      [tm-project-settings, tm-provider-override, tm-difficulty-routing, tm-rate-limit-policy]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml`、`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `Run.exec_defaults`、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-provider-override
+    term: 実行基盤別設定
+    englishName: provider override
+    aliases: [provider 別設定]
+    definition: 同じ実行基盤を使う agent に適用する、共通実行設定の上書きと基盤固有の起動設定。
+    notes: "`providers.<name>` に対応する。障害検出と利用枠制限時の方針は、指定した項目全体を共通値と置き換え、省略した項目は共通値を使う。起動コマンドのテンプレートと変数には共通値を持たない。組合せの正本は schema の `ProviderOverride` とする。"
+    category: tm-exec-defaults
+    relatedTerms:
+      [
+        tm-provider,
+        tm-agent-command-template,
+        tm-rate-limit-detection,
+        tm-connection-error-detection,
+      ]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `ProviderOverride`"
+  - id: tm-agent-command-template
+    term: agent 起動コマンド雛形
+    englishName: agent command template
+    aliases: [起動コマンドテンプレート]
+    definition: メンバーの属性と設定した変数を埋め込み、agent を非対話で起動するための実行基盤ごとのコマンド雛形。
+    notes: "`providers.<name>.command_template` に対応する。通常は雛形を使い、特殊な構成だけ名簿の `command` で上書きする。起動方法がない agent は自動実行の候補にせず、未解決の変数は設定エラーとする。条件と使用可能な変数は schema と exec 設定ガイドを正本とする。"
+    category: tm-provider-override
+    relatedTerms: [tm-agent-command-parameters, tm-agent-member, tm-agent-model]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `ProviderOverride.command_template`、`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.command`、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-agent-command-parameters
+    term: 起動コマンド変数
+    englishName: command parameters
+    definition: 起動コマンド雛形の追加の埋め込み値を、メンバーの作業モード・習熟度・識別名に対応付けた設定。
+    notes: "`command_params` に対応し、`by_nickname`・`by_proficiency`・`by_mode` の優先順で解決する。モデルを持つ実体との関係は agent モデルの定義を参照する。"
+    category: tm-provider-override
+    relatedTerms:
+      [tm-agent-command-template, tm-agent-model, tm-agent-proficiency, tm-member-nickname]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `CommandParams`・`CommandVariableSet`"
+  - id: tm-difficulty-routing
+    term: 難易度別実行者振り分け
+    englishName: difficulty routing
+    aliases: [難易度別ルーティング]
+    definition: 登録項目の難易度に応じて、作業遂行者・実行報告者と利用枠制限時の代替先を選ぶ既定の対応付け。
+    notes: "`routing` に対応する。設定した難易度の経路は実行者と利用枠制限時の動作を持ち、CLI の対応する明示指定を優先する。経路を持たない難易度は従来の自動選択を保つ。構成条件は schema の `DifficultyRoute` を正本とする。"
+    category: tm-exec-defaults
+    relatedTerms: [tm-member-nickname, tm-rate-limit-policy]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `DifficultyRouting`・`DifficultyRoute`"
+  - id: tm-rate-limit-detection
+    term: 利用枠制限の検出設定
+    englishName: rate limit detection
+    aliases: [レートリミット検出]
+    definition: agent の終了コードや出力のパターンから、利用枠の制限などによる一時的な実行失敗を識別する設定。
+    notes: "`rate_limit_detection` に対応する。実行基盤別に上書きでき、検出した失敗への対応は利用枠制限時の方針で定める。出力と終了コードの組合せは schema の `AgentErrorDetection` を正本とする。"
+    category: tm-exec-defaults
+    relatedTerms: [tm-connection-error-detection, tm-rate-limit-policy, tm-provider-override]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `rate_limit_detection`・`AgentErrorDetection`"
+  - id: tm-connection-error-detection
+    term: 接続障害の検出設定
+    englishName: connection error detection
+    definition: agent の終了コードや出力のパターンから、実行基盤に接続できない失敗を識別する設定。
+    notes: "`connection_error_detection` に対応する。指名実行で検出した場合は、利用枠制限時の動作指定とは独立して設定済みの代替 agent へ一度切り替える。検出条件は schema の `AgentErrorDetection` を正本とする。"
+    category: tm-exec-defaults
+    relatedTerms: [tm-rate-limit-detection, tm-rate-limit-policy, tm-provider-override]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `connection_error_detection`・`AgentErrorDetection`"
+  - id: tm-rate-limit-policy
+    term: 利用枠制限時の方針
+    englishName: rate limit policy
+    aliases: [レートリミット方針]
+    definition: agent の利用枠制限を検出したときの停止・待機・代替先への切替や再試行を定める実行方針。
+    notes: "`rate_limit_policy` に対応し、実行基盤別に上書きできる。指名実行の回復設定は `pinned`、CLI の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema と exec 設定ガイドを参照する。"
+    category: tm-exec-defaults
+    relatedTerms: [tm-rate-limit-detection, tm-retry-policy, tm-difficulty-routing]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `RateLimitPolicy`、[[specdojo:exec-config-guide|exec設定ガイド]]"
+  - id: tm-retry-policy
+    term: 再試行設定
+    englishName: retry policy
+    aliases: [リトライ設定]
+    definition: 再試行を行う場合の試行回数と、失敗が続くときの待機時間の増やし方・上限を定める設定。
+    notes: "利用枠制限時の方針の `retry` に対応する。次候補での再試行を選ぶ方針と組み合わせ、`max_attempts` は初回を含めて数える。項目の条件は schema の `RetryPolicy` を参照する。"
+    category: tm-exec-defaults
+    relatedTerms: [tm-rate-limit-policy]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `RetryPolicy`・`RateLimitPolicy.on_critical`"
+  - id: tm-provider-concurrency
+    term: 実行基盤別同時実行上限
+    englishName: provider concurrency limit
+    aliases: [provider 別同時実行上限]
+    definition: 同じ実行基盤を使う agent の同時実行数を抑え、共有する利用資源への集中を避ける上限。
+    notes: "`providers.<name>.max_concurrency` に対応する。省略時は基盤別の上限を設けない。プロジェクト全体の run 数や親検証の同時実行上限とは区別し、適用する実行方法は exec 設定ガイドを正本とする。"
+    category: tm-provider-override
+    relatedTerms: [tm-provider, tm-agent-priority]
+    source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `ProviderOverride.max_concurrency`、[[specdojo:exec-config-guide|exec設定ガイド]]"
