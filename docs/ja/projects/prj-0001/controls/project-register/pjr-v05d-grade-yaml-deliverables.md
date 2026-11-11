@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   registered_at: "2026-11-09T20:47:31Z"
+  completed_at: "2026-11-11T01:00:50Z"
+  conclusion: PJR-JQSB で方式を決め、PJR-CBV6 で grade が YAML の成果物を評価できるようにした。review の段が grade を流せない問題は解消した
   derived_from:
     - PJR-2GD6
 ---
