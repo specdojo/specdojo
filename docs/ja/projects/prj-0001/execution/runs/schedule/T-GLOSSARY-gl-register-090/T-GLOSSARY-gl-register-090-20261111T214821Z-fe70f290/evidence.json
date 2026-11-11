@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "task_id": "T-GLOSSARY-gl-register-090",
+  "run_id": "T-GLOSSARY-gl-register-090-20261111T214821Z-fe70f290",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T21:49:50.453Z",
+    "completed_at": "2026-11-11T21:52:11.426Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-register.yaml --changed-only",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。成果物変更による評価の陳腐化なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-register.yaml --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。依存変更による評価の陳腐化なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-register.yaml --incomplete",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。評価パイプライン未完了の対象なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "終了コード0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git status --short",
+      "status": "passed",
+      "summary": "開始時と終了時とも runner 管理の未追跡 `pipeline-state.json` のみ。executor による変更なし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-register-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/w\n… output omitted …\n-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-register-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-register-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4436 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4436 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-register-090\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-register-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-register-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-register-090\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-wfk7Ko/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-QtLmHZ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-9GjlIj/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-wQLO1R/pjr-0001-topic.md\nWarning: \n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "review の verdict は `complete`。成果物・実装・result は変更していない。result の記入は pipeline 指示に従い reporter に引き継ぐ。\n\n評価結果の確認: サイドカー `docs/ja/projects/prj-0001/execution/grade/results/gl-register.yaml` を確認。`verdict: pass`、`score: 100`、`finding_counts` は blocker・major・minor・note すべて0、`findings: []`。`graded_at` は 2026-11-11T21:48:21.272Z。開始時と判定直前の鮮度確認はいずれも3コマンドすべて終了コード0・出力なし。評価結果は最新かつ確定済みで、review 中の成果物変更もない。\n\n判断根拠: [[gl-register|用語集（登録簿）]]、plan、先行記録 [[prj-0001:xer-t-glossary-gl-register-010-20261111t172441z-5e75530f]]、[[prj-0001:xer-t-glossary-gl-register-070-20261111t184628z-de9b3d71]]、[[prj-0001:xer-t-glossary-gl-register-080-20261111t201311z-71630490]] と対応する evidence を確認した。grade の完了条件詳細は DC-001〜DC-005 すべて satisfied（5/5）であり、再評価せず採用した。Git の c3913cb45・9a5b2ef16・911403421 の変更一覧と成果物差分では、実行管理ファイルを除く変更は対象 YAML のみ。42語の新設後、共通語の重複説明と補足の反復が整理されている。各先行 evidence の親 runner 検証9件はすべて passed。最終作業ツリーは開始時と同じ runner 管理の未追跡 `pipeline-state.json` のみ。\n\napproach に応じた確認: ① `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` は、010 の対応記録に8分類・8状態・日時・エピック固有項目・対象と手本の関係が記載されている。現行 schema と用語の参照箇所を確認し、一致。② `docs/specdojo/schemas/v1/register-events.schema.yaml` は、操作・実行者・理由・遷移前後・変更差分の対応記録があり、`tm-register-event` と schema の `action`・`actor`・`from_status`・`to_status`・`changes` を確認し、一致。③ `src/register` は、010 にコマンド・遷移・個票と履歴の分離・依存・エピック・対象解決の対応記録と乖離・未確認範囲がある。現行の `transition-commands.ts`・`create-commands.ts`・`update.ts`・`events.ts`・`epic.ts`・`dependency.ts` 等で、終了先の既定、note の終端拒否、再開時の完了日時削除、待機を離れる際の理由削除、依存充足条件を確認した。既知の乖離は下記申し送りのとおりで、記録のないエビデンスパスはない。人間の判断、note の継続記録、エピックの扱い、起票と記帳の区別には状態定義・既存決定記録の根拠があり、実装から業務方針を推測したことを示す grade finding はない。\n\n未充足事項・改善指示: 今回の完了を妨げる未充足事項はなし。既知の実装差異は修正対象候補と判断担当が先行記録に残っており、実装修正・方針決定は本 review の対象外。grade finding の追加・変更は行っていない。\n\n確認できなかった範囲: コマンドの実行による全遷移・全分岐の再現確認、保守・移行・履歴統合・プロジェクト横断処理の網羅確認、範囲外の exec・夜間 queue・agent 選択実装、外部リポジトリ操作は未実施。親 runner 所有の lint・schema・型検査・テストは再実行していない。これらは実装全体の受入保証とは区別し、対応記録の確認を目的とする今回の verdict を妨げない。",
+  "completion_status": "complete",
+  "handoff": [
+    "既知の乖離の継続追跡: `src/register/transition-commands.ts` は close の明示指定で種類別終了先を強制せず、wait の理由省略と note の start・wait・review を受理する。承認証跡・結論・審査提出条件も全面的には強制しない。[[stsd-register-entry|ステータス定義（登録項目個票）]] の M-01 と010の対応記録に根拠・判断担当・修正候補がある。PM が追跡先を接続し、PO・ARC・QE が強制範囲と経路を判断する。採用方針に応じて実装・テスト・schema、または人間の確認と記録を扱う運用文書を別タスクで更新する。今回の review 完了は妨げない。",
+    "070で記録済みの論点: `tm-register-update` は分類の変更を定義に含む一方、`src/register/create-commands.ts` の registerUpdateCommand に分類変更引数がない。現行コードでも確認した。PO・ARC が意図と承認根拠を確認し、文書の操作範囲を明確にするか CLI 対応を追加するかを別途判断する。今回の grade 判定は置き換えず、対応記録のある継続論点として引き継ぐ。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-register-090/T-GLOSSARY-gl-register-090-20261111T214821Z-fe70f290/executor.log",
+      "bytes": 6217,
+      "truncated": false
+    }
+  ]
+}
