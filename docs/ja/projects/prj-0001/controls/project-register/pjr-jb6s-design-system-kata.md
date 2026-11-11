@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-jb6s-design-system-kata
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:46:14Z"
+  completed_at: "2026-11-11T04:04:26Z"
+  conclusion: GUI のデザインのルール（dss）の rulebook と sample を作り、種類の一覧と uis から案内した
   derived_from:
     - PJR-MXQB
   autopilot: approved
