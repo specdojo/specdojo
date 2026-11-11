@@ -4617,3 +4617,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_8a185b6640d54b56b92f8a5dad74f5b1
+- v: 1
+  id: reg_fd31de7ca63248d5beab7d941424b4d6
+  ts: "2026-11-11T14:46:11Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 完了条件1: 個票の対応結果表に `2026-11-11 23:32 / PJR-0X0S / sol-executor` の行が正しく追記されており、統合対象として最新の項目であること、およびイベントが close 済みであることを確認した。 完了条件2: 統合差分 `6022b589..5fb90f…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+  previous_event_id: reg_5ac17115e3be47a6b6b7130d3f94e604
