@@ -13,6 +13,7 @@ specdojo:
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
   conclusion: CBV6 の統合後の dist で、claude-executor の exec run --register が start から review・統合まで通った
+  autopilot: approved
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる

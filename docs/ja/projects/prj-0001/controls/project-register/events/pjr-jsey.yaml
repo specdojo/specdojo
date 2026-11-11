@@ -4578,3 +4578,16 @@
       from: "2026-11-11"
       to: "-"
   previous_event_id: reg_d239751c5f9e4b28b86c278f2421e7b3
+- v: 1
+  id: reg_58977229f5184b139ee331747f2c8644
+  ts: "2026-11-11T12:59:33Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。PJR-0X0S の夜間の実行の確認に使う（indie が修正と有効化の流れを承認）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_86ee589c4c0f403cbf2b55da6f30d00c
