@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   registered_at: "2026-11-10T21:29:34Z"
+  completed_at: "2026-11-11T13:34:57Z"
+  conclusion: PJR-0X0S で、子の run の入れ子と job の環境の漏れを直した。その先で見つかった統合と朝報告の不具合は PJR-MJEH で扱う
 ---
 
 # PJR-RX14 夜間の register の実行の環境が、子の run の統合テストに漏れて落とす
