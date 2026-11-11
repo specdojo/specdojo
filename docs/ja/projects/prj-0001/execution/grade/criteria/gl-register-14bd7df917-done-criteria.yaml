@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: gl-register-grade-criteria
+document: gl-register
+path: docs/ja/product/010-business-specs/060-glossary/gl-register.yaml
+graded_at: "2026-11-11T21:48:21.272Z"
+graded_by: sol-review-executor
+content_hash: 562af29229404bcfbcb4f4806013d7ac0ee0a636b12364d85fd658044168e202
+summary:
+  satisfied: 5
+  unsatisfied: 0
+  total: 5
+criteria:
+  - id: DC-001
+    text: 領域の主要用語が洗い出され、定義・別名・分類が正確に記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 用語スコープと定義の妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: 技術実装・CLI の引数・schema の項目名の参照として使えること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied
+  - id: DC-004
+    text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-005
+    text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied
