@@ -1,3 +1,4 @@
+import { isGradeDocument, isYamlDocument } from "../shared/document-metadata.js";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { buildScheduleIndex } from "../shared/schedule-index.js";
@@ -7,7 +8,7 @@ import {
   KATA_DIRS,
   isRecord,
   legacyInlineContentHash,
-  parseMarkdown,
+  parseGradeDocument,
   type GradePipelineState,
   type GradeTarget,
   type GradeTargetFilters,
@@ -64,7 +65,7 @@ export function discoverGradeTargets(
     // 対象の列挙は利用リポジトリ限定。eject されていない kata は評価対象にしない。
     candidates = KATA_DIRS.flatMap((dir) =>
       listFilesRecursive(join(rootDir, "docs/ja/specdojo", dir)).filter((entry) =>
-        entry.endsWith(".md"),
+        isGradeDocument(entry),
       ),
     );
   } else {
@@ -73,6 +74,16 @@ export function discoverGradeTargets(
   const unique = [...new Set(candidates)]
     .filter((path) => !isGeneratedGradeTarget(path, rootDir))
     .filter((path) => !isTrashedGradeTarget(path, rootDir))
+    .filter((path) => {
+      if (!isYamlDocument(path)) return true;
+      try {
+        parseGradeDocument(readFileSync(path, "utf8"), relativePathFromRoot(path, rootDir));
+        return true;
+      } catch (error) {
+        console.warn(`grade: skipped ${error instanceof Error ? error.message : String(error)}`);
+        return false;
+      }
+    })
     .sort();
   if (
     !opts.changedOnly &&
@@ -141,7 +152,7 @@ export function discoverGradeTargets(
   return unique.filter((path) => {
     const rel = relativePathFromRoot(path, rootDir);
     const content = readFileSync(path, "utf8");
-    const document = parseMarkdown(content, rel);
+    const document = parseGradeDocument(content, rel);
     const pipelineState = currentGradePipelineState(
       document,
       rel,
@@ -344,7 +355,7 @@ export function matchesGradeTargetFilters(
   pipelineState?: GradePipelineState,
 ): boolean {
   validateGradeTargetFilters(filters);
-  const document = parseMarkdown(content, path);
+  const document = parseGradeDocument(content, path);
   const currentState = currentGradePipelineState(document, path, pipelineState);
   return matchesParsedGradeTargetFilters(
     document,

@@ -72,4 +72,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-11）
+
+- 親の検証で、足したテストのうち `tests/src/grade/yaml.test.ts` の「reads metadata and preserves every source line for top-level.yaml」（読んだメタ情報に期待にない項目が 1 つ多い）と、`tests/src/grade/yaml.integration.test.ts` の「lists, plans, runs, applies and reads YAML deliverables and samples」が落ちた。実装とテストのどちらが正しいかを確かめて直す。
+- `tests/src/shared/git-environment-isolation.test.ts` と `tests/packages/docs-lint/history-links.test.ts` は 5 秒の時間切れで、負荷によるものとみられる。足したコードで git を起動する箇所があれば `gitEnvironment()` を使っていることを確かめる。
+- 直した後に `npm run test:unit -- tests/src/grade/yaml.test.ts` と `npm run test:integration -- tests/src/grade/yaml.integration.test.ts` を流して通ることを確かめ、経緯を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`

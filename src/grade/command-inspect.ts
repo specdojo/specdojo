@@ -53,7 +53,7 @@ export function registerGradeInspectionCommands(grade: Command): void {
   grade
     .command("result")
     .description("Print the stored grade result sidecar for one document as JSON")
-    .requiredOption("--path <path>", "Markdown document whose grade result is read")
+    .requiredOption("--path <path>", "Markdown or YAML document whose grade result is read")
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .action((options) => {
       try {
@@ -71,7 +71,7 @@ export function registerGradeInspectionCommands(grade: Command): void {
     .description("Read or update persistent per-document grade pipeline state")
     .requiredOption("--target <target>", "kata or deliverable")
     .option("--project <projectId>", "Project id in specdojo.config.json")
-    .option("--path <path>", "Markdown document whose pipeline state is read or updated")
+    .option("--path <path>", "Markdown or YAML document whose pipeline state is read or updated")
     .option("--status <status>", "Record passed, failed, or complete", requirePipelineStatus)
     .option("--stage <number>", "Current pipeline stage", requirePositiveInteger)
     .option("--stage-total <number>", "Total pipeline stages", requirePositiveInteger, 3)
