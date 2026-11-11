@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JSEY/pjr-jsey-20261111T003948Z-a07fccbd/plan.md
   started_at: "2026-11-11T00:39:49.289Z"
+  completed_at: "2026-11-11T00:47:46.410Z"
   agent: sonnet-executor
 ---
 
@@ -16,16 +17,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` を更新し、PJR-CBV6 の行を追記して確認対象の記述とメモを更新しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- executor 段階では個票への追記までを実施した。親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。
+- 適用外の検証（runner の判定）: `npm run lint:md`（変更に Markdown ファイル（`*.md`） がない）
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` を読み、作業内容に基づき、個票の対応結果の表に `PJR-CBV6` の行を追記して、作業内容とメモを更新しました。

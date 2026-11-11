@@ -1,0 +1,12 @@
+個票の対応結果の表に 1 行を追記しました。確認対象は PJR-CBV6 です。review 遷移のコミット `d52334132`（2026-11-11 09:27 JST）が、対象一覧で最も新しい統合でした。
+
+編集したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。次の 3 点を変えました。
+- 表に `2026-11-11 09:41 | PJR-CBV6 | sonnet-executor` の行を足しました。
+- 本文の「今回の確認対象」の記述を PJR-CBV6 とコミット `d52334132` に更新しました。
+- 作業内容の表のメモを PJR-CBV6 に更新しました。
+
+親 runner の 7 検証は runner が実行するため、私は実行していません。他に実行が必要な検査はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-CBV6 の行を追記し、確認対象の記述とメモを更新した。変更は個票 1 ファイルのみ。","handoff":["executor 段階では個票への追記までを実施した。親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため executor では実行していない。"}]}
+</specdojo_executor_evidence>
