@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ef20d2410f314f7489555831f679a57f
+- v: 1
+  id: reg_ae230f06c7f041fc8cb6957e837c8b84
+  ts: "2026-11-11T13:34:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 夜間の routine を 1 回流し（JBR-night-approved-register-44790542c979）、子の run が入れ子にならず test-integration を含む親の検証が通ることを確かめた。統合と朝報告の別の不具合は PJR-MJEH・PJR-A7CR で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: 子の run の worktree の置き場所を主の作業ツリー基準にし、job の内部の印と git の環境を子に引き継がないようにした
+  previous_event_id: reg_2bf7e1d7dc0b4f4faf66a6fec21915f2

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0x0s-night-register-child-run-env-isolation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-11T11:57:33Z"
+  completed_at: "2026-11-11T13:34:28Z"
+  conclusion: 子の run の worktree の置き場所を主の作業ツリー基準にし、job の内部の印と git の環境を子に引き継がないようにした
   derived_from:
     - PJR-RX14
   commit_type: fix
