@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-FGSE",
   "run_id": "pjr-fgse-20261111T154705Z-257714c7",
-  "updated_at": "2026-11-11T16:01:50.385Z",
+  "updated_at": "2026-11-11T16:02:13.099Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-FGSE/pjr-fgse-20261111T154705Z-257714c7/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-11-11T16:01:50.385Z",
-      "completed_at": null,
+      "completed_at": "2026-11-11T16:02:13.099Z",
       "artifact_ref": null
     }
   },
