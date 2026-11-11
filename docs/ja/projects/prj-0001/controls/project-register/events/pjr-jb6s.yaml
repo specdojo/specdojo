@@ -99,3 +99,16 @@
       from: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
       to: "-"
   previous_event_id: reg_47128ab0ecf742f7a0ab5227b9e7f708
+- v: 1
+  id: reg_552ead509ede43bdb846720a99604d51
+  ts: "2026-11-11T00:36:57Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_579e84cc7ba14bf5bf7a38adb7766315
