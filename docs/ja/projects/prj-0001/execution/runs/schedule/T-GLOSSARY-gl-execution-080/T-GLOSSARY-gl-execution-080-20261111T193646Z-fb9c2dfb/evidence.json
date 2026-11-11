@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "task_id": "T-GLOSSARY-gl-execution-080",
+  "run_id": "T-GLOSSARY-gl-execution-080-20261111T193646Z-fb9c2dfb",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T19:38:16.480Z",
+    "completed_at": "2026-11-11T19:40:06.104Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml",
+      "status": "passed",
+      "summary": "整形済み。追加変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml",
+      "status": "passed",
+      "summary": "対象用語集は schema に適合。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ済み対象は0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。成果物の変更は対象用語集のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml",
+      "status": "not_applicable",
+      "summary": "Markdown 検査は適用外。",
+      "reason": "変更対象は YAML のみで、Markdown ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "成果物の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "履歴ファイル、plan、result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-execution-080/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/\n… output omitted …\ner-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-execution-080/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-execution-080/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4414 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4414 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-execution-080\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a De\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-execution-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-execution-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-GLOSSARY-gl-execution-080\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-JcvCGt/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0lt764/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-4VU2Nb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3gjHKv/pjr-0001-topic.md\nWarning:\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "gl-execution.yaml 修正前107行、tm-worktree の notes「隔離実行に用い、」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "隔離用途は同用語の定義にある作業分離の説明で示されるため削除。失敗時の成果・再開記録の保持と利用条件は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "gl-execution.yaml 修正前125行、tm-executor の notes「適用する実行方式を確認する」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "実行方式ごとの担当範囲を直前の二文で明示しているため、確認を促す文言を削除。pipeline と単独 Job の責務の違いは保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "gl-execution.yaml 修正前143行、tm-execution-pipeline の notes「親検証は runner が実行し、」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "親検証の実行主体は tm-parent-validation の定義にあるため重複を削除。親検証を `stages` の独立した段に記録しない制約は保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "gl-execution.yaml 修正前310行、tm-routine-action の notes「Job 出力の統合前レビューは Job 側で宣言し」",
+      "category": "repetition",
+      "action": "reference",
+      "reason": "同文書の「ジョブ統合前レビュー宣言」への参照に置換。同用語に Job 側の宣言と起動元を問わない適用範囲があり、既存の関連用語も維持した。routine の `commit` が互換用途に限られる制約は残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "gl-execution.yaml 修正前38〜39行、tm-task-state の definition・notes",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "定義は状態の概念、補足は各状態値と日本語の対応・導出方法を示す。CLI や設計の参照と文書成熟度との区別に必要なため保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "gl-execution.yaml 修正前116行・134行、tm-runner と tm-reporter の notes",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "証跡を正とする説明は重なるが、runner の事実管理責任と reporter の報告責任の境界を各用語で判断するために必要。報告生成の成功だけでは完了・統合成功にならない制約も保持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "gl-execution.yaml 修正前236行、tm-job-input の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "型と列挙値・整数範囲・checkpoint 引き継ぎの関係は用語を利用する条件の要約であり、schema の条件式の転載ではない。項目名と正本への参照を含めて保持した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "gl-execution の補足4箇所を整理。定義・別名・分類・関連用語・制約・例外を保持し、整形と個別 schema 検査に合格した。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-execution-080/T-GLOSSARY-gl-execution-080-20261111T193646Z-fb9c2dfb/executor.log",
+      "bytes": 5314,
+      "truncated": false
+    }
+  ]
+}
