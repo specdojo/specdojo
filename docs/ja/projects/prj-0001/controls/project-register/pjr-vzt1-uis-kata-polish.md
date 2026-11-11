@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-vzt1-uis-kata-polish
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:44:22Z"
+  completed_at: "2026-11-11T03:06:38Z"
+  conclusion: uis-rulebook と uis-sample を標準の章立てと中身の厚さに磨き込み、grade で rulebook は pass 100（前 83）、sample は 2 回目の後に pass 100（前 fail 54）になった
   derived_from:
     - PJR-T88P
   autopilot: approved

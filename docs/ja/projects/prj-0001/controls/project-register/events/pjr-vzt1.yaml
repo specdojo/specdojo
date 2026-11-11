@@ -112,3 +112,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_30e7e73f37064da3b9af00b69ce8b48f
+- v: 1
+  id: reg_fce60a3394c54b09b07d134f269d0d8e
+  ts: "2026-11-11T03:06:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（夜間の後、日中に sol-executor で 2 回）で対応。orchestrator が grade を流して両方の pass を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: uis-rulebook と uis-sample を標準の章立てと中身の厚さに磨き込み、grade で rulebook は pass 100（前 83）、sample は 2 回目の後に pass 100（前 fail 54）になった
+  previous_event_id: reg_df6a7daff7834f42b97cd7a897028763
