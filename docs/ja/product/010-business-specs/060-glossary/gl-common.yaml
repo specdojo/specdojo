@@ -5,6 +5,7 @@ rulebook: specdojo:gl-rulebook
 title: 用語集（共通）
 locale: ja
 status: draft
+# 複数領域で共有する概念を扱う。領域固有の種類・状態・操作は、カタログで定める領域別用語集に委ねる。
 terms:
   - id: tm-config
     term: 稼働構成
@@ -14,18 +15,52 @@ terms:
   - id: tm-kata
     term: Kata
     englishName: kata
-    definition: rulebook、recipe、templateなどの規約や雛形の集合。
+    aliases: [型]
+    definition: 成果物の作成・更新・レビューを支える方針、規約、手順、具体例、雛形などの文書の集合。
+    notes: rulebook・recipe・sample・template の 4 種を実践の型と呼ぶ。
     category: tm-data-store
+    relatedTerms: [tm-rulebook, tm-recipe, tm-sample, tm-template, tm-deliverable]
+    source: "[[specdojo:specdojo-overview-guide|SpecDojo概要ガイド]]"
+  - id: tm-rulebook
+    term: 作成規範
+    englishName: rulebook
+    aliases: [ルールブック]
+    definition: 成果物に必要な構成・項目・記述規則を定める実践の型。
+    category: tm-kata
+    relatedTerms: [tm-deliverable, tm-recipe]
+  - id: tm-recipe
+    term: 作成手順
+    englishName: recipe
+    aliases: [レシピ]
+    definition: 成果物を作成・更新するための手順と判断の進め方を示す実践の型。
+    category: tm-kata
+    relatedTerms: [tm-rulebook]
+  - id: tm-sample
+    term: 記述例
+    englishName: sample
+    aliases: [サンプル]
+    definition: 完成した成果物の具体的な記述を示す実践の型。
+    category: tm-kata
+    relatedTerms: [tm-template]
+  - id: tm-template
+    term: 雛形
+    englishName: template
+    aliases: [テンプレート]
+    definition: 新しい成果物を書き始めるための構造を提供する実践の型。
+    category: tm-kata
+    relatedTerms: [tm-sample]
   - id: tm-catalog
     term: 成果物カタログ
     englishName: catalog
-    definition: プロジェクトの成果物を定義するカタログ。
+    definition: プロジェクトで管理する成果物の目的、配置先、完了条件、根拠参照を定義する台帳。
     category: tm-data-store
+    relatedTerms: [tm-deliverable, tm-schedule-strategy, tm-schedule]
   - id: tm-schedule-strategy
     term: スケジュール戦略
     definition: トラックごとのタスク生成戦略や既定値の定義。
     notes: 単一の英語名を持たない。
     category: tm-data-store
+    relatedTerms: [tm-catalog, tm-schedule]
   - id: tm-routine
     term: 定期実行定義
     englishName: routine
@@ -39,25 +74,50 @@ terms:
   - id: tm-register
     term: 登録簿
     englishName: register
-    definition: タスクや課題、決定事項などの記録。
+    definition: 作業・課題・質問・決定事項などを項目ごとに記録し、担当、処理状態、結論を共有する台帳。
+    notes: 個票を正本とし、一覧は派生ビューとする。epic の項目は Schedule のトラックと結び付く。完了・決定・却下の項目は完了日時を持ち、保留とは区別する。種類・処理状態による項目の条件は参照先 schema を正本とし、文書成熟度と処理状態を混同しない。
     category: tm-data-store
+    relatedTerms: [tm-schedule, tm-document-maturity, tm-derived-view]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`"
   - id: tm-schedule
     term: Schedule
-    englishName: track
+    englishName: schedule
     aliases:
+      - スケジュール
       - Schedule（track）
-    definition: 作成する成果物ごとのタスクを展開した計画の正本。
+    definition: 成果物の作業をトラックごとのタスクに展開し、担当、期間、順序、依存関係、マイルストーンを定める計画の正本。
+    notes: track は計画を分ける管理単位を指す。Schedule はタスクの実行状態を持たず、状態の正本は実行記録とする。段・ゲート・マイルストーンの詳細は領域別用語集 `gl-planning` に委ねる。
     category: tm-data-store
+    relatedTerms: [tm-catalog, tm-schedule-strategy, tm-task, tm-exec-log]
+    source: "[[cdfd-overview|概念データフロー図（全体概要）]]、[[prj-0001:pjr-bb92-cdfd-overview-propagation|Schedule と実行状態の責務の決定記録]]、`docs/specdojo/schemas/v1/sch-common.schema.yaml`"
+  - id: tm-task
+    term: タスク
+    englishName: task
+    definition: 計画と実行記録を対応付けて、担当者または AI Agent が実施する作業の単位。
+    notes: Schedule、登録簿、ジョブを起点として実行され、作成・更新とレビューを区別する。起点と作業モードの正本は参照先 schema の `TaskOrigin`・`TaskMode` とする。タスクの完了は成果物の成熟度と区別する。
+    relatedTerms: [tm-schedule, tm-register, tm-job, tm-plan, tm-exec-log, tm-document-maturity]
+    source: "`docs/specdojo/schemas/v1/exec-common.schema.yaml`"
   - id: tm-plan
     term: 実行計画
     englishName: plan
     definition: タスクごとの実施手順や対象文書、完了条件の定義。
+    notes: 登録簿の項目に進め方を指定する場合は対象成果物と結び付け、実践の型を新規作成する場合は参照元も扱う。対象・参照元の条件は登録簿個票の schema を正本とする。
     category: tm-data-store
+    relatedTerms: [tm-task, tm-deliverable, tm-kata]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`、`docs/specdojo/schemas/v1/exec-common.schema.yaml`"
   - id: tm-deliverable
     term: 成果物
     englishName: deliverable
     definition: プロジェクトで作成・更新する対象成果物。
     category: tm-data-store
+    relatedTerms: [tm-kata, tm-catalog, tm-document-maturity]
+  - id: tm-document-maturity
+    term: 文書成熟度
+    aliases: [文書の状態]
+    definition: 文書の内容が確定しているか、非推奨かを表す区分。
+    notes: 文書の `status` で表し、登録簿の処理状態である `item_status` とは別に管理する。実行成功だけで文書を確定せず、`ready` への昇格は人間が行う。
+    relatedTerms: [tm-deliverable, tm-register, tm-task]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`、`docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`"
   - id: tm-trash
     term: 保管庫
     englishName: trash
@@ -72,30 +132,32 @@ terms:
     category: tm-data-store
   - id: tm-derived-view
     term: 派生ビュー・索引
-    definition: YAMLの閲覧ページや文書索引などの派生成果物。
+    definition: 正本の文書や構造化データから生成する閲覧ページ・一覧・索引で、進捗報告に含まれる生成ビューを除いたもの。
     notes: 単一の英語名を持たない。
     category: tm-data-store
   - id: tm-data-store
     term: データストア
-    definition: SpecDojo のプロジェクト運営で読み書きする、マスタ・構成データとトランザクションデータの保管先。概念データフロー図（全体概要）の「データストア」章で定義する。
-    notes: 本用語集の各データストアの用語は、この用語を category に持つ。
+    definition: SpecDojo のプロジェクト運営で読み書きする、マスタ・構成データとトランザクションデータの保管先。
+    notes: 概念データフロー図の論理的な保管先を指し、物理的なデータベースの存在を意味しない。本用語集では保管先に当たる用語の `category` に指定する。
+    source: "[[cdfd-overview|概念データフロー図（全体概要）]] の「データストア」章"
   - id: tm-exec-log
     term: 実行記録
     definition: タスクの実行で残る記録の総称。result、状態遷移イベント、evidence、trial、ジョブ実行記録、agent 実行ログを含む。
-    notes: 単一の英語名を持たない。構成要素は実行結果・状態遷移イベント・証跡・試行記録として個別に定義し、各構成要素の category に本用語を指定する。
+    notes: 単一の英語名を持たない。タスクの実行状態はここを正本とし、計画である Schedule と区別する。構成要素の `category` に本用語を指定する。
     category: tm-data-store
     relatedTerms: [tm-result, tm-event, tm-evidence, tm-trial]
   - id: tm-evaluation
     term: 評価結果
     definition: 成果物に対する評価の記録の総称。完了条件の判定、grade、finding を含む。
-    notes: 単一の英語名を持たない。構成要素は判定結果・指摘事項として個別に定義し、各構成要素の category に本用語を指定する。
+    notes: 単一の英語名を持たない。構成要素の `category` に本用語を指定する。
     category: tm-data-store
     relatedTerms: [tm-grade, tm-finding]
   - id: tm-result
     term: 実行結果
     englishName: result
-    definition: タスクの実行によって得られた結果（実行記録の構成要素）。
+    definition: タスクで実施した内容、変更した成果物、検証結果、残課題をまとめる記録（実行記録の構成要素）。
     category: tm-exec-log
+    relatedTerms: [tm-task, tm-plan, tm-evidence]
   - id: tm-event
     term: 状態遷移イベント
     englishName: event
@@ -124,14 +186,16 @@ terms:
   - id: tm-filing
     term: 起票
     englishName: filing
-    definition: 登録簿に 1 件の項目を新しく作ること。`register add` に当たる。記帳の 1 つの具体例（記帳の一部）であり、状態遷移や結論の記録ではない。
-    notes: 記帳（tm-record-keeping）の 1 要素。起票は必ず記帳に含まれる。register の技（Waza）としての呼び名は記帳である。
+    definition: 登録簿に 1 件の項目を新しく作ること。記帳の一部であり、状態遷移や結論の記録とは区別する。
+    notes: "`register add` に当たる。記帳と起票の区別は決定記録に従う。"
     category: tm-exec-log
     relatedTerms: [tm-register, tm-record-keeping]
+    source: "[[prj-0001:pjr-s64h-glossary-kicho-kihyo|記帳と起票の用語定義]]"
   - id: tm-record-keeping
     term: 記帳
     englishName: record-keeping
     definition: 登録簿へ書き込むこと全般。起票、状態遷移、結論の記録、commit を含む。register の技（Waza）としての呼び名でもある。
-    notes: 起票（tm-filing）は記帳の一部である。[[specdojo:specdojo-overview-guide]] の『register を「記帳」と呼びます』に一致する。
+    notes: CLI のコマンド名は `register` のままとする。
     category: tm-exec-log
     relatedTerms: [tm-register, tm-filing]
+    source: "[[specdojo:specdojo-overview-guide|SpecDojo概要ガイド]]、[[prj-0001:pjr-s64h-glossary-kicho-kihyo|記帳と起票の用語定義]]"
