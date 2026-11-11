@@ -175,6 +175,8 @@ function setupFixture(
       "  mode: command",
       ...(options.partialCommand ? ["  partial_exit_code: 2"] : []),
       "  command: |",
+      // The re-entry marker must be consumed before a Job command starts another CLI/test.
+      '    test "${SPECDOJO_JOB_REVIEW_WORKTREE_CHILD:-}" != "1"',
       ...(options.noopCommand
         ? ["    true"]
         : ["    mkdir -p output", "    git rev-parse HEAD > output/run.txt"]),
@@ -210,8 +212,6 @@ function setupFixture(
   }
   write(join(repo, "unrelated.txt"), "committed\n");
   git(repo, "init", "-b", "project/test/develop");
-  git(repo, "config", "user.name", "SpecDojo Test");
-  git(repo, "config", "user.email", "specdojo@example.invalid");
   git(repo, "add", ".");
   git(repo, "commit", "-m", "test: fixture");
   const head = git(repo, "rev-parse", "HEAD");
@@ -261,6 +261,20 @@ afterEach(() => {
 });
 
 describe("Job Run worktree integration", () => {
+  it("reviews and merges a Job launched from another Job worktree", () => {
+    const fixture = setupFixture("complete", { declareReview: true });
+    const parentJob = join(fixture.worktrees, "parent-job");
+    git(fixture.repo, "worktree", "add", "-b", "exec/parent-job", parentJob);
+    const rootHead = git(fixture.repo, "rev-parse", "HEAD");
+    const result = runJob(parentJob, fixture.worktrees, { worktreeFlag: false });
+
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+    expect(git(parentJob, "log", "-1", "--pretty=%P").split(" ")).toHaveLength(2);
+    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(rootHead);
+    expectSingleTrailingNewline(reviewResultContent(parentJob));
+    expect(git(parentJob, "worktree", "list", "--porcelain")).not.toContain("JBR-");
+  }, 120_000);
+
   it.each([true, false])(
     "does not commit a no-op Job without precondition (review=%s), and retains local idempotency",
     (declareReview) => {

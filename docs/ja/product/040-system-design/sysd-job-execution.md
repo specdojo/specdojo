@@ -181,6 +181,10 @@ specdojo routine run --project <project-id> --due
 12. runner は `mode: review` の plan/result を作り、上記の解決順で決めた review executor と reporter で出力 commit を読み取り専用レビューする。review executor が出力を変更した場合は `changed-during-review` とする。
 13. Run が `succeeded` かつ verdict が `complete` / `complete-with-findings`、または Run が `partial` かつ verdict が `complete-with-findings` の場合だけ、runner が現在の統合先へ `--no-ff` で merge し、worktree と branch を撤去する。それ以外は review result と Job Run JSON に理由を残し、worktree を保持する。
 
+Job worktree 内で `orchestrator night` が起動する register run は、子の worktree を主の作業ツリーと同じ配置規則で作る。設定の `run.worktree_base` と既定値の相対パスは `git worktree list --porcelain` の先頭にある主の作業ツリーを基準とし、CLI の明示的な `--worktree-base` は起動元を基準とする。子の成果物・plan・result・実行記録は起動元の Job ブランチへ統合され、その後 Job 全体の review・統合で上位の統合先へ入る。
+
+Git の repository 固有環境変数の除去は `src/shared/git-environment.ts` の `gitEnvironment()` に集約し、Job の再起動と夜間の子 run にも適用する。Job を worktree 内で再起動する印 `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD` は Job の入口で消費し、command・agent・子 run の親検証には渡さない。これにより子が起動する別の Job も自身の `task.review` と起動オプションで統合経路を選ぶ。project 実行 lock の継承 token は保持する。
+
 routineから起動する場合は、routineのactionにJobを指定する。
 
 ```yaml
