@@ -179,3 +179,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cff5aefdacf54cc1a946d9e00f08f48a
+- v: 1
+  id: reg_77a69ed86d354480a70c99a70b37caa1
+  ts: "2026-11-11T12:51:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の実行の後、grade（reps-r2-20261111）で pass 95 を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: 代表の cdt-register-type を、確定した型で磨き込み、冗長さを整理した
+      to: 代表の cdt-register-type を、確定した型で磨き込み、decision と change-request の境界を明示した（grade pass 95）
+  previous_event_id: reg_dc87b8b5ee7d4c9aba655c2e2a9a64e2

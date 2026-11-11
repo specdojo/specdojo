@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:12:42Z"
-  conclusion: 代表の cdt-register-type を、確定した型で磨き込み、冗長さを整理した
+  completed_at: "2026-11-11T12:51:03Z"
+  conclusion: 代表の cdt-register-type を、確定した型で磨き込み、decision と change-request の境界を明示した（grade pass 95）
   derived_from:
     - PJR-2GD6
     - PJR-T88P
