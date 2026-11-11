@@ -40,9 +40,10 @@ External Command Interface Specification (ECIS) Documentation Rules
 ## 4. 先頭メタ項目
 
 - YAML は Frontmatter を持たない。先頭メタ項目の共通原則は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「独立 YAML データファイルのメタ情報」に従う。
-- 成果物は `type: api`、`rulebook: specdojo:ifx-cmd-rulebook` とし、`title` で対象と実行目的を識別する。項目の必須性・型・許容値は `docs/specdojo/schemas/v1/ifx-cmd.schema.yaml` を正本とする。
+- 成果物は `type: api`、再利用可能な雛形は `type: template` とし、`rulebook: specdojo:ifx-cmd-rulebook` を指定する。`title` で対象と実行目的を識別する。項目の必須性・型・許容値は `docs/specdojo/schemas/v1/ifx-cmd.schema.yaml` を正本とする。
+- 成果物の状態（`status`）は `draft`（作成・改訂中）、`ready`（確定・承認済み）、`deprecated`（非推奨・廃止予定）のいずれかを指定する。成果物の状態を agent が独断で確定（`ready`）へ昇格させない。
 - `based_on` には実際に確認した直接の根拠だけを書く。カタログ管理下では `depends_on` の推移閉包内に限定し、起動方法の参照先を示す `command.reference` と役割を混同しない。
-- メタ項目の `version` は呼び出し契約の改版、`command.version_constraint` は CLI の対応バージョンを表す。成果物の状態は agent が確定へ昇格させない。
+- メタ項目の `version` は呼び出し契約の改版、`command.version_constraint` は CLI の対応バージョンを表す。
 
 ## 5. 本文要件
 
@@ -59,7 +60,7 @@ YAML の構造、入れ子キー、型、列挙値は `docs/specdojo/schemas/v1/
 | `execution`      | 必須                           | 作業ディレクトリ、時間・並列実行・ネットワークの制約、冪等性の成立条件または保証できない理由                                   |
 | `error_handling` | 必須                           | 再試行の対象と上限・待機方式、タイムアウト、出力解析失敗、認証失敗に対する個別の処置                                           |
 
-既存形式の `arguments` が schema 上許容されても、新規作成・改訂では引数表を追加せず正本参照へ置き換える。
+schema の後方互換性定義として残されている `arguments` の各項目（種別 `kind` の `argument` / `option` / `positional`、値の供給元 `value_source` の `literal` / `generated` / `config` / `secret` / `user_input`）は、過去の既存仕様との互換性のための定義である。新規作成および改訂では引数表を持たず（PJR-4N3R）、正本参照（`command.reference`）および入出力の約束（`streams`・`files`・`exit_codes`・`side_effects`）へ一本化する。
 
 ## 6. 記述ガイド
 
@@ -84,9 +85,10 @@ YAML の構造、入れ子キー、型、列挙値は `docs/specdojo/schemas/v1/
 
 ### 6.4. ファイル
 
-- **判断基準**: 入力と出力を分け、パスの基準ディレクトリ、可変部分の解決方法、形式、作成・更新主体を特定する。外部 CLI が作るファイルと呼び出し元が保存する実行記録を区別する。
-- **良い例**: 入力は作業ディレクトリからの相対パスと内容の正本を示す。executor が成果物を編集し runner がログを保存するなら、その責務境界を説明し、ログを CLI 自身の生成物に含めない。
-- **悪い例**: 出力を「各種ファイル」とだけ書く。呼び出し元が保存するログや別段階で作成する result を、同じ CLI の出力として列挙する。
+- **判断基準**: 入力と出力を分け、パスの基準ディレクトリ、可変部分の解決方法（可変パラメータの供給元と書式）、形式、作成・更新主体（producer / consumer）、内容仕様の正本を特定する。外部 CLI が作るファイルと呼び出し元が保存する実行記録を区別する。
+- **ファイル入出力を伴わない場合の例外**: CLI がファイルを作成しない場合は `outputs: []`（入力ファイルがない場合は `inputs: []`）を明記し、呼び出し元が保存する実行ログや電子控えの責務と区別する。ファイル入出力を一切行わない CLI では `files` キー自体を省略できる。
+- **良い例**: 入力ファイルについて作業ディレクトリからの相対パス、可変部分の解決元（確定済み取引の識別情報など）、作成主体（呼び出し元プロセス）、内容仕様の正本（schema やフォーマット仕様）を示す。CLI 自身が出力ファイルを作成しない場合は `outputs: []` と明記し、呼び出し元のログ保存と責務境界を分ける。
+- **悪い例**: 出力を「各種ファイル」とだけ書く。呼び出し元が保存するログや別段階で作成する result を、同じ CLI の出力として列挙する。入力ファイルの作成主体や可変部分の解決元が書かれていない。
 
 ### 6.5. 終了状態と識別条件
 

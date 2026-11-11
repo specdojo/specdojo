@@ -1,0 +1,34 @@
+PJR-8BSV「ifx-cmd・bes の sample と規則の小さな食い違いを直す」の対応を完了しました。
+
+### 実施内容
+
+1. **[`ifx-cmd-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md) の enum 網羅と `files` 記述指針整備**:
+   - [`ifx-cmd.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/specdojo/schemas/v1/ifx-cmd.schema.yaml) に定義された string enum のうち、rulebook 本文に未記載だった `type: template`、`status`（`draft` / `ready` / `deprecated`）、および `arguments` の `kind`（`argument` / `option` / `positional`）と `value_source`（`literal` / `generated` / `config` / `secret` / `user_input`）を第 4 節・第 5 節に追記しました。
+   - `arguments` の各項目については過去資産に対する後方互換性定義であることを明記し、PJR-4N3R の引数表を持たない方針（正本参照 `command.reference` および入出力の約束への一本化）を維持・徹底する記述としました。
+   - 第 6.4 節に CLI が出力ファイルを生成しない場合（`outputs: []`）の例外規定と、呼び出し元ログ保存責務との境界分離に関する指針を追加しました。
+   - `validate:schema:rulebook-enums` の網羅性検査をすべて満たすことを確認しました。
+
+2. **[`ifx-cmd-sample.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/ja/specdojo/samples/ifx-cmd-sample.yaml) の `files` 約束補正**:
+   - `files.inputs` の説明に、作成主体が呼び出し元の販売管理 CLI（[[specdojo:clis-sample|販売管理 CLI 仕様サンプル]]）であること、パス可変部の日付 `YYYYMMDD` と連番 `NNNN` の解決元、および印字テキスト仕様が `kinuya-receipt-format-schema` であることを明記しました。
+   - `yaml-pages build` を実行し、表示用ページを同期しました。
+
+3. **[`bes-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/ja/specdojo/samples/bes-sample.md) の未解決参照・委譲先識別子の補正**:
+   - 上位一覧 `bes-index`（仮置き）の照合担当（BA）、確認アクション、および確定時期（BEL 作成時・引き渡し前）を明記し、承認基準にも未解決参照の引き渡し条件（BA による照合原則、未解決時は PO 承認による制限事項記録）を反映しました。
+   - 販売金額計算の業務ルール（`br-sales-amount` / [[specdojo:br-sample|販売金額計算の業務ルールサンプル]]）、販売プロセス（仮置き ID `bps-sales-order-flow`）、販売記録データモデル（仮置き ID `bdd-sales-record` / `schema:sales-record`）、および未確定状態定義（`payment_status: unconfirmed`、`cdsd-order-status`）の各識別子を明記しました。
+
+4. **[`sf-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/ja/specdojo/samples/sf-sample.md) の上位一覧および対応機能の補正**:
+   - 第 1 節に上位のシステム化機能一覧 `sf-index`（仮置き）、対応機能 ID `SF-POS-01`、機能名「店頭商品販売」、および照合担当（BA）と時期を明記しました。
+   - 第 8 節の未決事項 `Q-01` にも上位一覧 `sf-index` の `SF-POS-01` の照合アクションを反映しました。
+
+5. **[`cdt-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/ja/specdojo/samples/cdt-sample.md) の棚札表示同期責務の追記**:
+   - 第 3.2.2 節（区分を変更する場合）に、取扱区分（`staple` / `seasonal` / `experimental`）の変更適用日までに店番担当（店主代表または家族利用者代表）が店頭の棚札表示（表示名: `★定番` / `季節限定` / `お試し`）を新しい取扱区分に合わせて貼り替える責務を明記しました。
+
+6. **[`ccd-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/ja/specdojo/samples/ccd-sample.md) の Frontmatter `based_on` 追記**:
+   - Frontmatter に `based_on: [specdojo:bdd-sample]` を追加し、本文で照合済みの既存辞書との直接根拠関係を CCD 規則に従って明示しました。
+
+7. **個票 [`pjr-8bsv-kata-sample-rule-mismatches.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8BSV/docs/ja/projects/prj-0001/controls/project-register/pjr-8bsv-kata-sample-rule-mismatches.md) の更新**:
+   - 完了条件、作業内容（完了状態）、対応結果（実施内容・成果物・申し送り・CHANGELOG に書く事項）、および関連ドキュメントを更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-cmd・bes・sf・cdt・ccd の sample と rulebook の食い違いを解消し、schema enum 網羅と整合性を確保しました","handoff":["ifx-cmd-rulebook.md の Frontmatter status は規約に基づき draft のまま維持しています。enum 網羅検査（validate:schema:rulebook-enums）がすべて通過することを確認済みのため、人間による確認・承認時に安全に ready へ昇格可能です。","CHANGELOG に書く事項: [変更] 業務仕様および外部 I/F 仕様の型・サンプル（ifx-cmd, bes, sf, cdt, ccd）における記述の軽微な不整合を解消し、スキーマ enum 網羅・正本参照および棚札同期責務を明確化"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"カタログ検証が正常に通過しました"},{"command":"npm run validate:history-links","status":"passed","summary":"変更された個票の履歴文書リンク検証が正常に通過しました"}]}
+</specdojo_executor_evidence>
