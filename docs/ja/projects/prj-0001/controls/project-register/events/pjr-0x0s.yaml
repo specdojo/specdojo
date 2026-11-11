@@ -60,3 +60,16 @@
       from: codex-executor
       to: sol-executor
   previous_event_id: reg_899711b497de42b490743dcd2a1302b5
+- v: 1
+  id: reg_ef20d2410f314f7489555831f679a57f
+  ts: "2026-11-11T11:59:49Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f9c3e03b03f34260bf67f65db191e888
