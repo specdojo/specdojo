@@ -60,7 +60,7 @@ terms:
     term: メンバー
     englishName: member
     definition: プロジェクトで実際に作業または支援を行う、人間または agent の実行主体。
-    notes: 責務を表すロールと、誰が作業するかを表すメンバーを分ける。人と agent は別の名簿で管理し、利用時に合成する。主要な判断と最終承認の責任は人間に残す。
+    notes: 人と agent は別の名簿で管理し、利用時に合成する。主要な判断と最終承認の責任は人間に残す。
     relatedTerms: [tm-human-member, tm-agent-member, tm-member-nickname, tm-role]
     source: "[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]]、[[prj-0001:pjr-2t63-agent-members-split|人とagentの名簿を分離する決定記録]]"
   - id: tm-human-member
@@ -235,7 +235,7 @@ terms:
     englishName: rate limit detection
     aliases: [レートリミット検出]
     definition: agent の終了コードや出力のパターンから、利用枠の制限などによる一時的な実行失敗を識別する設定。
-    notes: "`rate_limit_detection` に対応する。実行基盤別に上書きでき、検出した失敗への対応は利用枠制限時の方針で定める。出力と終了コードの組合せは schema の `AgentErrorDetection` を正本とする。"
+    notes: "`rate_limit_detection` に対応する。検出した失敗への対応は利用枠制限時の方針で定める。出力と終了コードの組合せは schema の `AgentErrorDetection` を正本とする。"
     category: tm-exec-defaults
     relatedTerms: [tm-connection-error-detection, tm-rate-limit-policy, tm-provider-override]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `rate_limit_detection`・`AgentErrorDetection`"
@@ -252,7 +252,7 @@ terms:
     englishName: rate limit policy
     aliases: [レートリミット方針]
     definition: agent の利用枠制限を検出したときの停止・待機・代替先への切替や再試行を定める実行方針。
-    notes: "`rate_limit_policy` に対応し、実行基盤別に上書きできる。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     category: tm-exec-defaults
     relatedTerms: [tm-rate-limit-detection, tm-retry-policy, tm-difficulty-routing]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `RateLimitPolicy`、[[specdojo:exec-config-guide|exec設定ガイド]]"

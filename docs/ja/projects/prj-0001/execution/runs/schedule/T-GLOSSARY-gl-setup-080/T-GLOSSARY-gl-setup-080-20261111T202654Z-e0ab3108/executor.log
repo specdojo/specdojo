@@ -1,0 +1,93 @@
+`gl-setup.yaml` の重複説明を3か所削除しました。定義・別名・分類・制約・例外を維持し、整形と schema 検査は通過しています。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "対象文書の重複説明を3か所削除。用語定義・別名・分類・参照先と、判断に必要な制約・例外を維持した。result は編集していない。",
+  "handoff": [],
+  "condense_records": [
+    {
+      "location": "gl-setup.yaml:63、tm-member の notes 第1文",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "メンバーを実行主体、ロールを責務・判断権限・専門性とする各 definition に同じ区別があるため削除。名簿の分離・合成と人間の判断・最終承認責任は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "gl-setup.yaml:238、tm-rate-limit-detection の notes「実行基盤別に上書きでき」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "tm-provider-override の notes が障害検出の上書きを説明しているため削除。同用語への関連付け、設定項目との対応、失敗への対応方針、schema 参照は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "gl-setup.yaml:255、tm-rate-limit-policy の notes「実行基盤別に上書きできる」",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "tm-provider-override の notes が利用枠制限時の方針の上書きを説明しているため削除。設定項目との対応、自動選択・指名実行・CLI 指定の区別、適用条件の参照は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "gl-setup.yaml:79、tm-agent-member の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "`mode`・`stage_role`・業務ロールの区別と、pipeline・単一 agent フローで使う条件は実行者選択の判断に必要。条件の詳細を列挙せず既存の参照を維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "gl-setup.yaml:196、tm-provider-override の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "指定項目全体の置換、省略時の共通値利用、起動テンプレートと変数には共通値がないという例外は上書きの意味を判断するために必要。組合せ条件は引き続き schema を正本とした。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "gl-setup.yaml:255、tm-rate-limit-policy の notes 第2文以降",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "クリティカルパス内外の動作差、指名実行の `pinned`、CLI の明示指定は適用場面を区別するために必要。実行方法ごとの詳細条件は schema と設定ガイドの参照を維持した。",
+      "cause": {"type": "document"}
+    }
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml",
+      "status": "passed",
+      "summary": "整形済みで追加変更なし。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml",
+      "status": "passed",
+      "summary": "対象 YAML は glossary schema に適合。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式の問題なし。差分確認で対象文書の notes 3か所だけの変更と確認。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検査対象の staged 実行記録は0件、検出0件。"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml",
+      "status": "not_applicable",
+      "summary": "Markdown 検査は適用外。",
+      "reason": "executor の変更は YAML のみで、Markdown ファイルの変更がない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "executor は履歴ファイル、plan、result を変更していない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "変更対象は docs/ja/product/ 配下であり、docs/ja/projects/ 配下の成果物変更がない。"
+    }
+  ]
+}
+</specdojo_executor_evidence>
