@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-GLOSSARY-gl-quality-090",
+  "run_id": "T-GLOSSARY-gl-quality-090-20261111T213232Z-e45f456c",
+  "updated_at": "2026-11-11T21:44:23.435Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-11T21:34:02.343Z",
+      "completed_at": "2026-11-11T21:35:48.493Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-quality-090/T-GLOSSARY-gl-quality-090-20261111T213232Z-e45f456c/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-11T21:40:48.346Z",
+      "completed_at": "2026-11-11T21:44:10.999Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-quality-090/T-GLOSSARY-gl-quality-090-20261111T213232Z-e45f456c/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-11T21:44:12.649Z",
+      "completed_at": "2026-11-11T21:44:23.435Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-quality-090/T-GLOSSARY-gl-quality-090-20261111T213232Z-e45f456c/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-quality-090/T-GLOSSARY-gl-quality-090-20261111T213232Z-e45f456c/result.md"
+  }
+}
