@@ -1,0 +1,40 @@
+統合差分の確認は終わりました。判定を報告します。
+
+## PJR-8E7Z 統合後レビュー：判定は `complete-with-findings`（指摘を残して完了扱い）
+
+完了条件は6件とも、統合差分で中身を確かめて満たしています。完了を妨げる問題はありません。ただし完了条件そのものの出どころと edit result の書き方に、軽い指摘が2点あります。今回の判定に grade は使っておらず、edit の検証結果と差分本文で判断しました。
+
+### 完了条件ごとの照合
+
+1. **`document-metadata-standard.md`**：6.3 節「文書の改訂・廃止とライフサイクル変更管理」が新しく入っています。`supersedes` での置き換え、`deprecated` への移行、一覧・プロセス・データ・実装・テストへの影響の追い方、6つの Role（BA・PO・ARC・DEV・QE・PM）の分担、未決事項の PJR への引き継ぎがすべて書かれています。満たしています。
+2. **`rulebook-authoring-standard.md`**：各 rulebook が上の共通の決まりに従い、自分の型で何を追って直すか、誰が担当するかを決める、という1行が足されています。満たしています。
+3. **`bes-rulebook.md`**：Role の一覧、改訂・廃止の手順、BEL・BPS・外部インターフェース/実装・テストBAC/ATCへの追従、`supersedes`・`status` の説明、禁止事項2行が足されています。満たしています。
+4. **`br-rulebook.md`**：Role の一覧、`supersedes`・`status` の説明、更新・廃止・問い合わせ対応、BPS・実装・テストへの追従、PJR への引き継ぎ手順、禁止事項2行が足されています。満たしています。
+5. **`bdd-rulebook.md`**：上流で項目が消えたときの2つの進め方（古い注釈を退避する、互換バージョンに固定する）、手動照合の表の「フィールドとキー」行の合格条件と証跡の更新、PO 承認の明記が入っています。Role は既存の BA・PO・ARC・DEV・QE を使っています。満たしています。
+6. **検証**：executor evidence では、executor 側と runner 側の検証がすべて passed です。`validate:schema:file` だけは、YAML の成果物を変えていないので対象外になっています。満たしています。
+
+Role code の6つは、プロジェクトの `pm-roles.yaml` とサンプルの `pm-roles-sample.yaml` にどちらも定義されていることを確かめました。存在しない Role を作ってはいません。
+
+### 差分の範囲
+
+`6a8d64bb..15ef5a73` の変更は12ファイルです。内訳は次のとおりで、対象外の変更は混ざっていません。
+
+- 成果物5件（rulebook 3件、standards 2件）
+- 個票とイベントログ
+- 今回の run の記録5件（plan・result・evidence・executor.log・pipeline-state）
+
+edit result と evidence には、失敗、未実施の必須検証、block 理由、未解消の申し送りはありません。申し送りは CHANGELOG の文案と、完了条件を満たしたという報告だけです。
+
+### 指摘（軽微）
+
+- **F1：完了条件は executor が立てた仮説です。** 統合前の個票では完了条件が `_TODO_` のままでした。executor が「仮説」として6件を立て、それを基準に作業しています。どれも概要や grade の指摘と矛盾しませんが、人がまだ合意していない基準です。
+- **F2：edit result の「変更ファイル」の説明が不正確です。** 5ファイルにほぼ同じ文が貼られています。そのため、上流で項目が消えたときの進め方が bes と br にも入ったように読めますが、実際には bdd にしか入っていません。
+
+### 確認できなかった範囲
+
+- lint・prettier・`validate:history-links` などの検証は、このレビューでは実行し直していません。evidence に記録された結果を使っています。
+- 書き足した文が業務として妥当かどうか（例：BR を廃止するときの承認を PO にする判断）は、人が最終確認する範囲です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"判定: complete-with-findings。個票の完了条件1〜6を統合差分 6a8d64bb..15ef5a73 と照合し、すべて充足を確認した。document-metadata-standard 6.3 の共通の決まり、rulebook-authoring-standard の準拠要件、bes/br/bdd 各 rulebook への反映（`supersedes`/`deprecated`、BEL・BPS・実装・テストへの影響追跡、Role code、BR の PJR 引き継ぎ、BDD の上流削除時の2つの進め方）がある。Role code（BA/PO/ARC/DEV/QE/PM）は prj-0001 の pm-roles.yaml に実在する。差分は成果物5件・個票・イベントログ・run 記録のみで対象外の変更はない。edit result と evidence に失敗・未実施の必須検証・未解消の申し送りはなく、runner の検証（lint:ts/fm/md/mermaid/d2、test:unit/integration、typecheck、validate:schema）はすべて passed。grade は判定に使っていない。指摘: F1 完了条件は統合前は `_TODO_` で、executor が仮説として立てたもの（人の合意はまだ）。F2 edit result の変更ファイル説明が5ファイルで同じ文になっており、上流削除時の進め方が bes/br にも入ったように読めるが、実際は bdd のみ。確認できなかった範囲: lint・prettier・`validate:history-links` 等は再実行せず evidence の記録を使った。追記内容の業務上の妥当性（BR 廃止の承認を PO にする判断など）は人の確認範囲。","handoff":["F1: PJR-8E7Z の完了条件は executor が仮説として立てたもの（統合前は `_TODO_`）。close 前後に、人がこの基準を受け入れるか確認するとよい。","F2: edit result の変更ファイル説明が不正確（上流削除時の進め方は bdd-rulebook のみで、bes/br には入っていない）。記録の精度の問題で、成果物は直さなくてよい。"],"validations":[{"command":"git diff --stat 6a8d64bbddb53407fddfcd55aa2f2e73af9ba725..15ef5a739419da395345aa5cc82467d394eba5ab","status":"passed","summary":"変更12ファイル、追加521行・削除28行。成果物5件・個票・イベントログ・run 記録のみ。"},{"command":"git diff --name-status 6a8d64bbddb53407fddfcd55aa2f2e73af9ba725..15ef5a739419da395345aa5cc82467d394eba5ab","status":"passed","summary":"M 7件・A 5件（run 記録）。対象外の変更はない。"},{"command":"git diff 6a8d64bbddb53407fddfcd55aa2f2e73af9ba725..15ef5a739419da395345aa5cc82467d394eba5ab -- docs/ja/specdojo docs/ja/projects/prj-0001/controls/project-register/","status":"passed","summary":"差分本文を読み、完了条件1〜5の記述がそろっていることを確認した。"},{"command":"grep -rn -E \"code: (BA|PO|ARC|DEV|QE|PM)\\b\" docs/ja/specdojo docs/ja/projects/prj-0001 --include=*.yaml","status":"passed","summary":"Role code 6つが prj-0001 の pm-roles.yaml とサンプル・テンプレートに実在する。"}]}
+</specdojo_executor_evidence>

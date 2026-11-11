@@ -83,3 +83,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_59bef03a69f342abb7c1209b9108f57f
+- v: 1
+  id: reg_d6bf2bd8fc2844629be7a529d814d1ef
+  ts: "2026-11-11T16:11:19Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 登録項目の完了条件 1〜6 を、統合差分 `6a8d64bb..15ef5a73` と照らし合わせて確認した。以下の内容が網羅されていることを確認した：document-metadata-standard 6.3 に基づく共通の決まり、rulebook-authoring-standard の準拠要件、…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-12"
+  previous_event_id: reg_f09962654bea4bd39d7d3651882c875b
