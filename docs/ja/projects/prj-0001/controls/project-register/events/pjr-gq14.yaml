@@ -158,3 +158,16 @@
       from: '["PJR-WNQJ"]'
       to: "-"
   previous_event_id: reg_5c3240be60a44262b5728a6de8e96321
+- v: 1
+  id: reg_01135f372de2456792a21f7483d75996
+  ts: "2026-11-11T22:20:50Z"
+  action: start
+  actor: flash-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_9608e0bc821c4292a83eff5bf33d117a
