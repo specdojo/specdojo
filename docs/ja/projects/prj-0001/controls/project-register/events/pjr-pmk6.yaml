@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c40b06428d14412cafc78268755e0997
+  ts: "2026-11-11T11:58:01Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 0.8.0 でリリースする
+    - field: description
+      from: ""
+      to: 0.7.0 の後の完了分（業務仕様の型の標準化・clis・uis・dss・grade の YAML 対応など）と PJR-RX14 の修正を 0.8.0 として公開する
+    - field: input
+      from: ""
+      to: '["範囲は 0.7.0 の後に close した項目と、PJR-RX14 の修正（PJR-0X0S）。代表の確定と cdt・bes・ifx-cmd の 2 回目、予定の epic、中程度の issue は次に回す（indie が 2026-11-11 に承認）","review で止まっている 7 件（PJR-AD33・B0B8・GQ14・Q8KP・RVTB・SZGZ・V5AZ）は、利用者の確認の結果で含めるかを決める","手順は pm-orchestrator-playbook の「リリースの手順」に従う。push・PR の merge・タグ・npm の公開の承認は利用者が行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-11"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: depends_on
+      from: ""
+      to: '["PJR-0X0S"]'
+    - field: commit_type
+      from: ""
+      to: chore
+    - field: commit_scope
+      from: ""
+      to: release

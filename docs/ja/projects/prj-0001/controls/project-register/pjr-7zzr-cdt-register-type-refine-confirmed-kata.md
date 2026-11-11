@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:12:42Z"
-  completed_at: "2026-11-11T03:51:33Z"
   conclusion: 代表の cdt-register-type を、確定した型で磨き込み、冗長さを整理した
   derived_from:
     - PJR-2GD6
@@ -44,6 +43,9 @@ business-specs-kata で確定した型（specdojo:cdt-rulebook と sample）に�
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`specdojo catalog validate --project prj-0001` が通っている。
+- 2 回目の実行（2026-11-11 追加）: 1 回目の後の grade（run id `reps5-20261111`）は needs-work 83 だった。次を直し、grade で pass になっている（grade は統合の後に orchestrator が流す。grade を流せないことを理由に未完了としない）。
+  - 種別の選び方を「上から順に当てはめる」と書いているため、承認済みの計画を変える選択肢の比較が `decision` に分類され、`change-request` と矛盾するという指摘（major 2 件）。`decision` と `change-request` の境界を、[[specdojo:pjr-rulebook]] の種別の定義と矛盾しないように明示する。
+  - そのほかの grade の指摘のうち、確定した型の範囲で直せるもの。
 
 ## 4. 作業内容
 

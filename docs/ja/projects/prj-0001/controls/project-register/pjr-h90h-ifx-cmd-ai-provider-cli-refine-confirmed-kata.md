@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:14:30Z"
-  completed_at: "2026-11-11T00:33:45Z"
   conclusion: 代表の ifx-cmd-ai-provider-cli を、確定した型で磨き込み、冗長さを整理した
   derived_from:
     - PJR-2GD6
@@ -44,6 +43,10 @@ business-specs-kata で確定した型（specdojo:ifx-cmd-rulebook と sample）
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`specdojo catalog validate --project prj-0001` が通っている。
+- 2 回目の実行（2026-11-11 追加）: 1 回目の後の grade（run id `reps5-20261111`）は needs-work 73 だった。次を直し、grade で pass になっている（grade は統合の後に orchestrator が流す。grade を流せないことを理由に未完了としない）。
+  - executor の報告の evidence タグの JSON が壊れているときの扱い（task を完了にしてよいか、編集を残すか、再試行するか、利用者が取る行動）が未定義という指摘。実装の振る舞いを確かめて書くか、正本を参照し、`_UNDECIDED_` のまま残さない。
+  - すべての provider にログインのプロファイルと認証の状態が要る前提になっているという指摘。認証の要否を provider の設定で分け、ローカルの OpenCode / Ollama のように認証が要らない場合を含める。docs/ja/product の関連仕様と矛盾させない。
+  - そのほかの grade の指摘のうち、確定した型の範囲で直せるもの。
 
 ## 4. 作業内容
 
