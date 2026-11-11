@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/dss-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-11T03:47:42.616Z"
+score: 100
+graded_at: "2026-11-11T04:01:46.663Z"
 graded_by: sol-review-executor
-content_hash: 3ba1c10697135e699bc6f49a740441fb7da3fa46c34cd6c0ec2745f1968f1352
+content_hash: 7b4ea6323a1612f967f891d49f25fb8354aa3d6dd629a560ae462c0fe9a0fddd
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,32 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 40
-    anchor: >-
-      - 同梱の型は `specdojo:dss-rulebook`、完成例は `specdojo:dss-sample` です。成果物の規則を個別に追跡する場合は `dss-<カテゴリ>-<連番>`（例:
-      `dss-a11y-01`）を文書内で一意に付けます。
-    message: >-
-      Remove the completed-example identifier clause from the naming section because the sample relationship is already
-      declared in Frontmatter; retain the document-local rule ID convention, which provides separate guidance.
-    message_ja: >-
-      Remove the completed-example identifier clause from the naming section because the sample relationship is already
-      declared in Frontmatter; retain the document-local rule ID convention, which provides separate guidance.
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 40
-    anchor: >-
-      - 同梱の型は `specdojo:dss-rulebook`、完成例は `specdojo:dss-sample` です。成果物の規則を個別に追跡する場合は `dss-<カテゴリ>-<連番>`（例:
-      `dss-a11y-01`）を文書内で一意に付けます。
-    message: >-
-      Keep the correspondence to specdojo:dss-sample only in Frontmatter and remove its declaration from the body; the
-      Rulebook Authoring Standard makes Frontmatter the sole authority for rulebook-to-sample relationships.
-    message_ja: >-
-      Keep the correspondence to specdojo:dss-sample only in Frontmatter and remove its declaration from the body; the
-      Rulebook Authoring Standard makes Frontmatter the sole authority for rulebook-to-sample relationships.
+findings: []

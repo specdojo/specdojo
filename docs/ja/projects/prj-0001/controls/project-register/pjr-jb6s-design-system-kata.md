@@ -51,12 +51,12 @@ uis はワイヤーフレームとレイアウトを含めないため、画面�
 
 ## 4. 作業内容
 
-| No  | 作業                                               | 担当         | 状態    | メモ                                           |
-| --- | -------------------------------------------------- | ------------ | ------- | ---------------------------------------------- |
-| 1   | 命名の標準と設計の型を読み、略号と置き場所を決める | executor     | done    | 既存の DSS の命名と設計階層を確認              |
-| 2   | rulebook と sample を作り、種類の一覧に足す        | executor     | done    | 既存の一覧追加を確認し、2 回目の改訂を実施     |
-| 3   | 検査を流し、決めた点と理由を対応結果に書く         | executor     | done    | sandbox 内の検査は成功。親検証は runner が実施 |
-| 4   | 改訂後の rulebook・sample を grade で再評価する    | orchestrator | pending | 再開指示に従い、統合後に sandbox 外で実行      |
+| No  | 作業                                               | 担当         | 状態 | メモ                                           |
+| --- | -------------------------------------------------- | ------------ | ---- | ---------------------------------------------- |
+| 1   | 命名の標準と設計の型を読み、略号と置き場所を決める | executor     | done | 既存の DSS の命名と設計階層を確認              |
+| 2   | rulebook と sample を作り、種類の一覧に足す        | executor     | done | 既存の一覧追加を確認し、2 回目の改訂を実施     |
+| 3   | 検査を流し、決めた点と理由を対応結果に書く         | executor     | done | sandbox 内の検査は成功。親検証は runner が実施 |
+| 4   | 改訂後の rulebook・sample を grade で再評価する    | orchestrator | done | run id `dss-20261111c` で両方 pass 100         |
 
 ## 5. 対応結果
 
@@ -113,6 +113,8 @@ node --import tsx src/specdojo.ts grade run --project prj-0001 --target kata \
 ```
 
 grade サイドカーと result は executor では編集していない。公開・昇格・decision の決定・保護された設定変更も行っていない。
+
+統合の後、orchestrator が run id `dss-20261111c` で grade を流し、dss-rulebook・dss-sample とも pass 100 を確かめた（2026-11-11）。
 
 ### 5.5. CHANGELOG に書く事項
 
