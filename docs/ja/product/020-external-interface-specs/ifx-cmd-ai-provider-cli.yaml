@@ -11,18 +11,18 @@ based_on:
   - opr-agent-cli-update
 
 command:
-  executable: providers.<provider>.command_template の先頭要素（provider 一覧は command_template の鍵を正本とする）
+  executable: providers.<provider>.command_template の先頭要素から解決する（member の command による上書きは reference を参照）
   purpose: >-
     specdojo exec run が exec plan を AI provider CLI へ非対話で渡し、executor は対象成果物の編集と検証、reporter は
-    evidence からの result 記入を行う。成功後は作業ディレクトリに plan が許可した変更が残り、
+    evidence から result 用の報告を返す。成功後は作業ディレクトリに plan が許可した変更が残り、
     stdout に最終報告が出力された状態になる。
   reference: >-
-    起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
-    （{nickname} / {model} / {mode} / {proficiency} と command_params の変数で展開）を正本とし、
-    設定項目の意味は [[specdojo:exec-config-guide]]、provider 固有の認証・モデル・権限は
-    [[sysd-agent-settings]] 配下の provider 別設計を正本とする。member の command はテンプレートを
-    持たない構成専用の上書きとする。
-  # exec-defaults.yaml の起動コマンド雛形が $(cat) 等のシェル置換を使うため、シェル経由で起動する。
+    起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template を正本とする。
+    member の command による特殊構成の上書き、設定の管理境界と展開値の検証・制限は
+    [[specdojo:exec-config-guide|exec設定ガイド]] の「エージェントの定義」と
+    「agent 権限とプロンプトインジェクション対策」を参照する。provider 固有の認証・モデル・権限は
+    [[prj-0001:sysd-agent-settings|エージェント実行・共通設計]] を入口とする。
+  # stdin を起動引数へ変換するテンプレートのためシェルを使う。管理・検証の根拠は reference を参照する。
   shell: true
 
 streams:
@@ -38,17 +38,16 @@ streams:
     format: text
     encoding: UTF-8
     description: >-
-      進捗と最終報告。executor は末尾に <specdojo_executor_evidence> タグで JSON
-      （completion_status / final_message / handoff / validations）を出力する。呼び出し元は
-      このタグを構造化出力として解析し、可変文言に依存しない。CLI によっては利用上限の通知も
-      stdout に出るため、上限検出の走査対象に含める。
+      進捗と最終報告が混在するテキスト。呼び出し元は末尾の <specdojo_executor_evidence> タグ内の
+      JSON を executor の構造化報告として採用する。報告構造と reporter の出力契約は
+      [[specdojo:exec-config-guide|exec設定ガイド]] の「evidence とログの引き渡し方針」を参照する。
+      利用上限・接続失敗の検出では stdout も走査する。
   stderr:
     format: text
     encoding: UTF-8
     description: >-
       診断・警告・失敗詳細。異常終了時は「blocked: <reason>; need=<next action>; ref=<path>」
       （review は review-blocked:）の行を出力し、呼び出し元は block 理由として優先採用する。
-      秘密値は出力しない。
 
 files:
   inputs:
@@ -62,38 +61,35 @@ files:
       encoding: UTF-8
       description: >-
         executor が編集する成果物。result・evidence・実行ログは呼び出し元（runner）が作成し、
-        executor は作らない。reporter は runner が scaffold した result だけを記入する。
+        executor は作らない。reporter はファイルを書かず、報告を runner が result に反映する。
 
 side_effects:
   - 作業ディレクトリ（task worktree、宣言されたプロダクト worktree を含む）のファイルを変更する
   - provider の API 利用枠を消費する（利用上限・課金の対象になり得る）
   - Git の commit・設定変更と保護対象設定の変更は行わない。起動前後の差分で検知した場合、呼び出し元は失敗として block する
 
+# 失敗の code: 1 は非ゼロ終了の代表値。provider ごとの識別条件は command.reference の
+# ガイドと起動設定を参照する。保護違反は他の分類より優先して停止する。
 exit_codes:
   - code: 0
-    meaning: plan の作業を終えて正常終了した。完了扱いは stdout の completion_status と親検証の結果で別途判定する
+    meaning: プロセスが正常終了した。作業の完了扱いは stdout の completion_status と親検証の結果で別途判定する
     category: success
     retryable: false
   - code: 1
     meaning: >-
-      非ゼロ終了かつ stdout / stderr が provider 別 rate_limit_detection の stderr_patterns
-      （例: rate limit / 429 / overloaded / session limit）に一致した。exit_codes に明示した
-      コードは文言なしでも該当する
+      起動設定の rate_limit_detection に一致した。既定では非ゼロ終了と stdout / stderr の
+      パターン一致で識別し、設定された終了コードだけでの識別もある。接続失敗より先に評価する
     category: rate_limit
     retryable: true
   - code: 1
-    meaning: 非ゼロ終了かつ出力が provider 別 connection_error_detection に一致した（接続失敗）
+    meaning: 利用制限に該当せず、非ゼロ終了と stdout / stderr が起動設定の connection_error_detection に一致した（接続失敗）
     category: transient_failure
     retryable: true
   - code: 1
     meaning: >-
-      認証失敗。現在は専用の検出がなく、下記の汎用失敗として block される
-    category: authentication_error
-    retryable: false
-  - code: 1
-    meaning: >-
-      上記以外の非ゼロ終了（agent 自身の block、異常終了、プロセス起動失敗）。保護対象設定や
-      Git 状態の変更を検知した場合も、呼び出し元はこの扱いにする
+      上記以外の非ゼロ終了（agent 自身の block、異常終了、プロセス起動失敗）。
+      認証失敗の専用検出はなく、この汎用失敗として停止し、利用者が診断を確認する。
+      保護対象設定や Git 状態の変更もこの扱いとする
     category: permanent_failure
     retryable: false
 
@@ -107,41 +103,49 @@ authentication:
     各 provider CLI が保持する認証状態（開発コンテナの named volume に永続化）。SpecDojo は
     認証値を扱わず、起動時の環境変数にも注入しない。呼び出し元の Git 環境変数は除去して渡す。
   log_policy: >-
-    evidence と executor / reporter のログは保存前に秘匿値（Bearer、各社 API キー・トークン、
-    JWT、秘密鍵、URL の認証情報、名前付きの password 等）を伏せ字化する。コマンド引数に
-    秘密値を含めない。
+    コマンド引数・stdin・stdout・stderr に秘密値を含めない。呼び出し元は stdout / stderr を含む
+    evidence と executor / reporter のログを保存する前に秘匿値を伏せ字化する。対象と保存境界は
+    [[specdojo:exec-config-guide|exec設定ガイド]] の「evidence とログの引き渡し方針」を参照する。
 
 execution:
   working_directory: task worktree のルート（in-place 実行時は repository_root）
-  # 現在は起動上限なし。上限を設けるかは未決定。
+  # 未決定の理由・現在動作・確認先は error_handling.timeout_action にまとめる。
   timeout_seconds: _UNDECIDED_
   network_required: true
-  # 実効上限は .specdojo/exec-defaults.yaml の run.max_concurrent_runs と
-  # provider ごとの max_concurrency を参照する。schema が正の整数または placeholder を
-  # 要求するため、固定値を避ける値表現は未決定。
+  # _UNDECIDED_: 並列数は固定せず、run.max_concurrent_runs と providers.<provider>.max_concurrency
+  # の適用範囲を exec設定ガイドで解決する。schema では設定参照や上限なしを表せないため、
+  # 連携設計の承認者が値表現を判断する。
   max_parallel: _UNDECIDED_
   idempotency:
     guaranteed: false
     condition: >-
-      agent の出力は非決定的で、同じ plan でも変更内容は一致しない。再実行は同じ worktree で
-      行い、既存の変更を部分的な実装として引き継ぐ（executor resume）ことで二重適用を避ける。
+      agent の出力は非決定的で、同じ plan でも変更内容は一致しない。二重適用を避けるため、
+      executor が同じ worktree の既存変更を確認して引き継ぐ（executor resume）。
+      再起動ごとに利用枠を消費し得る。
 
 error_handling:
   retry:
     on_categories:
       - rate_limit
       - transient_failure
-    # rate_limit は次の候補 agent へ即時に切り替え、全候補が上限のとき待機して再試行する
-    # （session limit / quota は待機せず block）。transient_failure は名前指定の agent に
-    # fallback がある場合だけ 1 回切り替える。回数は現行の rate_limit_policy.on_critical.retry.max_attempts。
-    max_attempts: 3
+    # 再試行の変更引継ぎは execution.idempotency を参照する。自動選択は候補を即時切替し、
+    # 全候補の短時間の利用制限で待機・再パスする（session limit / quota は除く）。
+    # 上限は rate_limit_policy.on_critical.retry.max_attempts（初回パスを含む）を参照する。
+    # 指名時の停止・待機・切替と接続失敗時の 1 回限りの fallback は exec設定ガイドを参照する。
+    # _UNDECIDED_: 設定依存の上限を schema で表せないため、連携設計の承認者が値表現を判断する。
+    max_attempts: _UNDECIDED_
+    # 自動選択の再パス待機方式。待機時間・倍率は同じ起動設定の retry を参照する。
     backoff: exponential
   timeout_action: >-
     _UNDECIDED_: 起動時間の上限を設けるか、また上限到達時に子プロセスを終了するか、
-    不完全出力をどう扱うかは未決定。現在は終了まで待ち続ける。
+    不完全出力をどう扱うかは未決定。現在は終了まで待ち続ける。連携設計の承認者が
+    時間制約と終了・出力処置を判断する。
   malformed_output_action: >-
     stdout に evidence タグがない場合は、残りの stdout を最終メッセージとして扱う。自動再試行は
     せず、completion_status が incomplete の場合は worktree を保持して executor resume に委ねる。
+    _UNDECIDED_: タグ内 JSON の解析失敗時の完了判定・変更保持・再開条件は宣言資料に個別の
+    契約がなく、連携設計の承認者による判断が必要。reporter の形式不正は exec設定ガイドの
+    「evidence とログの引き渡し方針」に従い、同じ plan と evidence で reporter だけを再実行する。
   authentication_failure_action: >-
     自動再試行しない。利用者が provider CLI へ再ログインし、CLI 更新が原因の場合は
-    [[opr-agent-cli-update]] の手順で確認する。
+    [[prj-0001:opr-agent-cli-update|運用手順: 外部エージェントCLI更新]] の手順で確認する。
