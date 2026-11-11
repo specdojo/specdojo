@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-GLOSSARY-gl-planning-010",
   "run_id": "T-GLOSSARY-gl-planning-010-20261111T165324Z-31fa2135",
-  "updated_at": "2026-11-11T17:08:21.004Z",
+  "updated_at": "2026-11-11T17:08:32.629Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-GLOSSARY-gl-planning-010/T-GLOSSARY-gl-planning-010-20261111T165324Z-31fa2135/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-11T17:08:21.004Z",
-      "completed_at": null,
+      "completed_at": "2026-11-11T17:08:32.629Z",
       "artifact_ref": null
     }
   },
