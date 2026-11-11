@@ -153,3 +153,16 @@
       from: "2026-11-11"
       to: "-"
   previous_event_id: reg_bf47b318d61b42abab87c816d747130f
+- v: 1
+  id: reg_cff5aefdacf54cc1a946d9e00f08f48a
+  ts: "2026-11-11T12:09:12Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7a26075db51e4cad8c3914742392409c
