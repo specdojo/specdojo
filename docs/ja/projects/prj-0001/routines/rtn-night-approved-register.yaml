@@ -1,10 +1,9 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
-# 2026-11-11: 子の run の統合テストに環境が漏れて落ちる（PJR-RX14）ため、直るまで止める。
-# 有効化は保護設定を扱える人が、時刻・上限・fallback agent を確認した後に行う。
+# 2026-11-11: PJR-RX14・PJR-MJEH の修正の後、1 回流して統合と review まで通ることを確かめ、有効に戻した。
 id: rtn-night-approved-register
 name: 承認済み登録項目の夜間実行
 description: 毎晩 0 時に、人が autopilot を承認した open todo・issue を実行して朝報告を作る。
-enabled: false
+enabled: true
 trigger:
   cron: "0 0 * * *"
   timezone: Asia/Tokyo
