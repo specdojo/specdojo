@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-11T17:24:42Z",
+  "type": "claim",
+  "task_id": "T-GLOSSARY-gl-register-010",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
