@@ -57,3 +57,16 @@
       from: "-"
       to: approved
   previous_event_id: reg_63b6f5fe999542df8a507556db2cef29
+- v: 1
+  id: reg_700ff6fdd3914cbfb44c6caf20aa99ab
+  ts: "2026-11-11T15:20:11Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c1f87ee9150e40fdacbc5430a6af1c13
