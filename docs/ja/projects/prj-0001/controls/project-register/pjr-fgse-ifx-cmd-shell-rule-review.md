@@ -10,9 +10,11 @@ specdojo:
   item_status: open
   priority: low
   difficulty: medium
+  owner: sol-executor
   registered_at: "2026-11-09T03:21:10Z"
   derived_from:
     - PJR-2GD6
+  autopilot: approved
 ---
 
 # PJR-FGSE ifx-cmd の型の shell: false の決まりに、雛形で外部の CLI を起動する場合の扱いを足すか見直す

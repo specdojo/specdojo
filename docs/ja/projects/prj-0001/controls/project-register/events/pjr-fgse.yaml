@@ -41,3 +41,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_29c11c1e376c43cf89c278cccf730ba4
+  ts: "2026-11-11T15:01:21Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今夜 0:00 の夜間の実行で流す（indie が承認）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: sol-executor
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_d127973bbd574a2299c0d9ef17e4f002
