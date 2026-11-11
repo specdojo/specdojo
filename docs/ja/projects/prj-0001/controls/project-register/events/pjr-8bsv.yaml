@@ -54,3 +54,19 @@
       from: '["grade の run id kata-bsk-20261110 の minor の指摘から。軽い指摘は型を確定したうえで後で直す（indie が決定）。"]'
       to: '["grade の run id kata-bsk-20261110 の minor の指摘から。軽い指摘は型を確定したうえで後で直す（indie が決定）。","2026-11-10 の型一式の確定で、ifx-cmd-rulebook を ready にすると validate:schema の enum の網羅の検査が落ちた（arguments の kind・`value_source`、type の template、status の ready・deprecated などの値の説明がない）。引数の表を持たない方針（PJR-4N3R）と、ready の rulebook に求める enum の網羅をどう両立するかを決めて直す。それまで ifx-cmd-rulebook は draft のまま。"]'
   previous_event_id: reg_54b4025e79c94755938a334bc574a6ee
+- v: 1
+  id: reg_098f0a7f89634bb1ad3d5b45c7df5817
+  ts: "2026-11-11T14:59:37Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今夜 0:00 の夜間の実行で流す（indie が承認）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: sol-executor
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_20499bf2eeea42c9ab97d532be8a12c5

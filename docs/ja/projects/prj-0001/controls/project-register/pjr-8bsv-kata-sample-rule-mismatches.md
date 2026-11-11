@@ -10,9 +10,11 @@ specdojo:
   item_status: open
   priority: low
   difficulty: medium
+  owner: sol-executor
   registered_at: "2026-11-10T12:27:37Z"
   derived_from:
     - PJR-T88P
+  autopilot: approved
 ---
 
 # PJR-8BSV ifx-cmd・bes の sample と規則の小さな食い違いを直す
