@@ -11,7 +11,7 @@ terms:
     englishName: register item
     aliases: [登録簿項目]
     definition: 登録簿で作業・課題・懸念・問い・判断・記録を個別に追跡する管理単位。
-    notes: 登録簿・起票・記帳の基本定義は [[gl-common|用語集（共通）]] を正本とする。起票は `register add`、記帳は状態遷移・結論の記録・commit も含む。Schedule の計画済みタスクを重複登録しない。
+    notes: 登録簿・起票・記帳の基本定義は [[gl-common|用語集（共通）]] を正本とする。Schedule の計画済みタスクを重複登録しない。
     relatedTerms: [tm-register-ticket, tm-register-item-type, tm-register-item-status]
     source: "[[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]]"
   - id: tm-register-ticket
