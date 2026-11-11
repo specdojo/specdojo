@@ -1,7 +1,9 @@
 import { Command } from "commander";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
+import { createRequire } from "node:module";
 import { join } from "node:path";
+import { remark } from "remark";
 import { describe, expect, it, vi } from "vitest";
 import {
   consecutiveFailureCount,
@@ -14,6 +16,10 @@ import {
 import type { PjrItem } from "../../../src/register/register.js";
 import { GIT_LOCAL_ENV_VARS } from "../../../src/shared/git-environment.js";
 import { EXEC_RUN_LOCK_TOKEN_ENV } from "../../../src/exec/run/lock.js";
+import { assertPlanMarkdownlint } from "../../../src/exec/plan-markdownlint.js";
+
+const require = createRequire(import.meta.url);
+const frontmatterValidator = require("../../../packages/docs-lint/src/remark-frontmatter-ajv2020.cjs");
 
 function item(id: string, overrides: Partial<PjrItem> = {}): PjrItem {
   return {
@@ -171,4 +177,53 @@ console.log("  PJR-AB12  success  transition=review  commit=committed abc123");
     expect(report).toContain("- `waiting`: PJR-AB13");
     expect(report).toContain("PJR-CD34（PJR-AB13 由来）");
   });
+
+  it.each([false, true])(
+    "空 queue を含む朝報告が既存の frontmatter と Markdown の規約を満たす（empty=%s）",
+    async (empty) => {
+      const report = renderNightReport({
+        projectId: "prj-0001",
+        startedAt: "2026-11-11T13:02:27.127Z",
+        completedAt: "2026-11-11T13:10:00.000Z",
+        selected: empty ? [] : [item("PJR-AB12")],
+        outcomes: empty
+          ? []
+          : [
+              {
+                id: "PJR-AB12",
+                outcome: "failure",
+                transition: "waiting",
+                reason: "検査失敗 | 再開待ち\n詳細",
+              },
+            ],
+        approvalIssues: new Map(),
+        stopReason: empty ? undefined : "連続失敗が上限 2 件に達した",
+      });
+      const file = await remark()
+        .use(frontmatterValidator, {
+          workspaceRoot: process.cwd(),
+          strict: true,
+          schemaRules: [
+            {
+              glob: "**",
+              schema: "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
+              require_frontmatter: true,
+            },
+          ],
+        })
+        .process({
+          value: report,
+          path: join(
+            process.cwd(),
+            "docs/ja/projects/prj-0001/execution/reports/night-orchestrator/report.md",
+          ),
+        });
+      expect(file.messages.map((message) => message.reason)).toEqual([]);
+      await expect(
+        assertPlanMarkdownlint(process.cwd(), "night-report", "report.md", report),
+      ).resolves.toBeUndefined();
+      expect(report.match(/^## .+$/gmu)).toEqual(["## 1. 集計", "## 2. 実行結果"]);
+      expect(report).toContain("  type: project\n  status: draft\n  rulebook: none\n");
+    },
+  );
 });
