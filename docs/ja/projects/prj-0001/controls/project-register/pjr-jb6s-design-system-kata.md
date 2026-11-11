@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:46:14Z"
-  block_reason: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
   derived_from:
     - PJR-MXQB
   autopilot: approved
@@ -52,12 +51,12 @@ uis はワイヤーフレームとレイアウトを含めないため、画面�
 
 ## 4. 作業内容
 
-| No  | 作業                                               | 担当         | 状態    | メモ                                             |
-| --- | -------------------------------------------------- | ------------ | ------- | ------------------------------------------------ |
-| 1   | 命名の標準と設計の型を読み、略号と置き場所を決める | executor     | done    | 既存の DSS の命名と設計階層を確認                |
-| 2   | rulebook と sample を作り、種類の一覧に足す        | executor     | done    | 既存の一覧追加を確認し、2 回目の改訂を実施       |
-| 3   | 検査を流し、決めた点と理由を対応結果に書く         | executor     | done    | sandbox 内の検査は成功。親検証は runner が実施   |
-| 4   | 改訂後の rulebook・sample を grade で再評価する    | orchestrator | pending | 実 agent CLI と使用量を伴うため sandbox 外で実行 |
+| No  | 作業                                               | 担当         | 状態    | メモ                                           |
+| --- | -------------------------------------------------- | ------------ | ------- | ---------------------------------------------- |
+| 1   | 命名の標準と設計の型を読み、略号と置き場所を決める | executor     | done    | 既存の DSS の命名と設計階層を確認              |
+| 2   | rulebook と sample を作り、種類の一覧に足す        | executor     | done    | 既存の一覧追加を確認し、2 回目の改訂を実施     |
+| 3   | 検査を流し、決めた点と理由を対応結果に書く         | executor     | done    | sandbox 内の検査は成功。親検証は runner が実施 |
+| 4   | 改訂後の rulebook・sample を grade で再評価する    | orchestrator | pending | 再開指示に従い、統合後に sandbox 外で実行      |
 
 ## 5. 対応結果
 
@@ -102,7 +101,9 @@ sandbox 内では次の検査が成功した。
 
 親 runner の lint・schema・型検査・単体／結合試験は executor から二重実行していない。`specdojo index build` も runner の責務とし、executor は実行していない。変更した成果物は Markdown だけであり、`validate:schema:file` は対象 YAML がないため適用外。
 
-成果物の編集は完了した。タスク全体の完了は、親検証と両文書の再 grade の pass を待つ。改訂後の grade は未実施であり、両文書の pass の完了条件は未確認。実 agent CLI の起動・使用量を伴うため、orchestrator が sandbox 外で次を実行し、両方の最新結果が pass であることを確認する。前回とは内容が変わるので新しい run ID を使う。
+2026-11-11 の再開では、前回の運用ルール・章ごとの判断基準と例・sample の修正を引き継ぎ、完了条件と種類一覧への反映を再確認した。前回は再 grade が残ることを理由に executor が未完了と報告したが、同日の orchestrator の再開指示に従い、executor の編集・sandbox 内検査は完了として報告する。
+
+改訂後の grade は未実施であり、両文書の pass は未確認。実 agent CLI の起動・使用量を伴うため、統合後に orchestrator が sandbox 外で次を実行し、両方の最新結果が pass であることを確認する。再評価で指摘が残る場合は修正する。前回とは内容が変わるので新しい run ID を使う。
 
 ```bash
 node --import tsx src/specdojo.ts grade run --project prj-0001 --target kata \
