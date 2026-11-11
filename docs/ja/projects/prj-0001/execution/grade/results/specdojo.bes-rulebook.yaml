@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-11-10T08:15:26.504Z"
-graded_by: sol-review-executor
-content_hash: 935fe908f7b742c325be5f3bb9f9e85d0b3ab22b92afa78068db5d62080ad438
+graded_at: "2026-11-10T20:20:42.233Z"
+graded_by: flash-high-executor
+content_hash: 40f41e9c357badf53ae4c5ce6f90979469fed7ee6e9528b4d5039a5a842a196b
 categories:
   purpose:
     score: 100
@@ -129,10 +129,8 @@ findings:
       required here. Align the sample with this missing-list exception so the completed example demonstrates the
       mandatory conditions.
     message_ja: >-
-      The former sample-format and non-instance problems are resolved; the remaining mismatch is minor: the declared
-      sample leaves the upper-list ID `bes-index` provisional without identifying the reconciliation owner and timing
-      required here. Align the sample with this missing-list exception so the completed example demonstrates the
-      mandatory conditions.
+      以前のsample-formatおよびnon-instanceの問題は解決されました。残っている不一致は軽微なものです。宣言されたsampleでは、上部リストのID `bes-index`
+      が、ここで必要とされる調整の責任者と時期を特定しないまま暫定的な状態になっています。このmissing-listの例外とsampleを一致させ、完成した例が必須条件を満たしていることを示してください。
   - id: F003
     severity: minor
     rule: vp-ops-operability

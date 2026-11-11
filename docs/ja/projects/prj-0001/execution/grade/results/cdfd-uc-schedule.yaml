@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 100
-graded_at: "2026-11-09T16:21:18.136Z"
+graded_at: "2026-11-10T16:14:16.374Z"
 graded_by: flash-high-executor
 content_hash: c64e6c8be92f091bbaf4b739d9aa32b42b83bb4e24e5eb3ed65e0309a2ef38b9
 source_hashes:
@@ -16,7 +16,7 @@ source_hashes:
   dependency:cdfd-overview: 0aecdaca4ce0a56ed8f672e9882bce4023abc8d4b6ec7cb5645fc181ca6ede74
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
+  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
 categories:
   purpose:
     score: 100

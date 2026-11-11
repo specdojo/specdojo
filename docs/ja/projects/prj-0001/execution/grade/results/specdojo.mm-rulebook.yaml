@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 77
-graded_at: "2026-11-02T20:27:57.162Z"
+graded_at: "2026-11-10T20:32:19.554Z"
 graded_by: flash-high-executor
-content_hash: aa75bddc7eb9d491ffca6c4bbc3c56c5c4d5ec2a9dba38941b53260d456fdaae
+content_hash: 4124fe77a2db24d02c112633f8a8549ab31c93ff76ab5f34afc2270a9c60ebdc
 categories:
   purpose:
     score: 75
@@ -124,7 +124,7 @@ findings:
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
-    line: 42
+    line: 43
     anchor: "## 6. 記述ガイド"
     message: 議事録に記載すべきでない情報（非公開情報や個人情報）の扱いや公開方針に関する記述がない。
     message_ja: 議事録に記載すべきでない情報（非公開情報や個人情報）の扱いや公開方針に関する記述がない。
@@ -166,7 +166,7 @@ findings:
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 42
+    line: 43
     anchor: "## 6. 記述ガイド"
     message: 議事録の確認者や承認者、および合意事項に関する記述が不足している。
     message_ja: 議事録の確認者や承認者、および合意事項に関する記述が不足している。
@@ -180,14 +180,14 @@ findings:
   - id: F011
     severity: minor
     rule: vp-arc-conciseness
-    line: 23
+    line: 24
     anchor: "## 4. 推奨 Frontmatter 項目"
     message: 項目4と5の「必須」列がすべて「○」であり、例外や条件が不明確なまま重複した表現になっている。
     message_ja: 項目4と5の「必須」列がすべて「○」であり、例外や条件が不明確なまま重複した表現になっている。
   - id: F012
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 23
+    line: 24
     anchor: "## 4. 推奨 Frontmatter 項目"
     message: 自動生成やツール連携を行う場合に必要な、入力・出力の制約や作業対象が読み取れない。
     message_ja: 自動生成やツール連携を行う場合に必要な、入力・出力の制約や作業対象が読み取れない。
@@ -201,14 +201,14 @@ findings:
   - id: F014
     severity: minor
     rule: vp-dev-testability
-    line: 42
+    line: 43
     anchor: "## 6. 記述ガイド"
     message: 作成された議事録がルールに準拠しているかを検証する手段（lint、検証コマンドなど）が示されていない。
     message_ja: 作成された議事録がルールに準拠しているかを検証する手段（lint、検証コマンドなど）が示されていない。
   - id: F015
     severity: minor
     rule: vp-qe-verifiability
-    line: 48
+    line: 49
     anchor: "## 7. 禁止事項"
     message: 「結論不明の議論のみを羅列しない」「過度に記載しない」といった禁止事項が主観的で、客観的に判定しづらい。
     message_ja: 「結論不明の議論のみを羅列しない」「過度に記載しない」といった禁止事項が主観的で、客観的に判定しづらい。
@@ -222,21 +222,21 @@ findings:
   - id: F017
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 27
-    anchor: "| id   | `mm-<yyyy-mm-dd>-<nn>` | ○    |"
+    line: 28
+    anchor: "| id   | `<project-id>:mm-<yyyy-mm-dd>-<nn>` | ○    |"
     message: サンプル (`mm-sample.md`) の ID が、本書で必須と定義している形式 (`mm-＜yyyy-mm-dd＞-＜nn＞`) に準拠していない。
     message_ja: サンプル (`mm-sample.md`) の ID が、本書で必須と定義している形式 (`mm-＜yyyy-mm-dd＞-＜nn＞`) に準拠していない。
   - id: F018
     severity: minor
     rule: vp-ux-readability
-    line: 42
+    line: 43
     anchor: "## 6. 記述ガイド"
     message: 「記述ガイド」の内容が簡潔すぎるため、具体的にどのような記述が「良い/悪い」のかを判断するための例示や詳細な基準が不足している。
     message_ja: 「記述ガイド」の内容が簡潔すぎるため、具体的にどのような記述が「良い/悪い」のかを判断するための例示や詳細な基準が不足している。
   - id: F019
     severity: minor
     rule: vp-ux-language-consistency
-    line: 42
+    line: 43
     anchor: "## 6. 記述ガイド"
     message: 「記述ガイド」で言及されている「保留事項」が、本文構成の標準テンプレには含まれておらず、一貫性がない。
     message_ja: 「記述ガイド」で言及されている「保留事項」が、本文構成の標準テンプレには含まれておらず、一貫性がない。

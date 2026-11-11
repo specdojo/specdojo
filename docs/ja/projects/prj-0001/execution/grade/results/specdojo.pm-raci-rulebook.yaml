@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 82
-graded_at: "2026-10-05T21:22:21.541Z"
-graded_by: agy-expert-executor
-content_hash: 9230b43d5f1ed94c813c217f9db2d23a7275d6286b9da22223943c5329c3bc5b
+graded_at: "2026-11-10T20:41:30.787Z"
+graded_by: flash-high-executor
+content_hash: ad3d145f50bef46b752e5d40b9c74fd0c56b6f66756ce71fb645872f856294b7
 categories:
   purpose:
     score: 100
@@ -113,27 +113,32 @@ findings:
     line: 55
     anchor: ""
     message: Frontmatterでtemplateを宣言しているにもかかわらず見出し骨格を本文へ再掲しているため、本文要件には目的と判定規則だけを残し骨格はtemplateへ集約してください。
+    message_ja: Frontmatterでtemplateを宣言しているにもかかわらず見出し骨格を本文へ再掲しているため、本文要件には目的と判定規則だけを残し骨格はtemplateへ集約してください。
   - id: F002
     severity: major
     rule: vp-qe-verifiability
     line: 81
     anchor: "- Schedule owner は成果物行またはプロセス行の主たる `R` と一致させます。"
     message: 一つ以上の`R`を許容する一方で複数`R`から主たる`R`を識別する表記や選定規則がなく、Schedule ownerとの一致を判定できないため、主担当の明示方法を定義してください。
+    message_ja: 一つ以上の`R`を許容する一方で複数`R`から主たる`R`を識別する表記や選定規則がなく、Schedule ownerとの一致を判定できないため、主担当の明示方法を定義してください。
   - id: F003
     severity: major
     rule: vp-qe-omissions-consistency
     line: 94
     anchor: "## 7. 禁止事項"
     message: 業務・技術・品質の各観点の責任分担を確認する網羅条件がなく、かつSchedule ownerを常に主たる`R`と一致させる規則が上位標準のタスク種別例外と矛盾するため修正してください。
+    message_ja: 業務・技術・品質の各観点の責任分担を確認する網羅条件がなく、かつSchedule ownerを常に主たる`R`と一致させる規則が上位標準のタスク種別例外と矛盾するため修正してください。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 75
     anchor: "- 当事者価値、費用・負荷、変更、品質例外、公開など最終判断者が異なる対象を分けます。"
     message: 採用済みRoleのみを使う規則に対し固定Role列表記を例示し、かつtemplateと見出しが重複するなどKata相互の責務に矛盾があるため、プレースホルダー化と正本の統一を行ってください。
+    message_ja: 採用済みRoleのみを使う規則に対し固定Role列表記を例示し、かつtemplateと見出しが重複するなどKata相互の責務に矛盾があるため、プレースホルダー化と正本の統一を行ってください。
   - id: F005
     severity: minor
     rule: vp-ux-readability
     line: 75
     anchor: "- 当事者価値、費用・負荷、変更、品質例外、公開など最終判断者が異なる対象を分けます。"
     message: 表の列が例示か必須構造か示されず、直前の採用済みRoleのみを使う規則と読み分けにくいため、「列は例であり採用Roleに置換する」と直前に明記してください。
+    message_ja: 表の列が例示か必須構造か示されず、直前の採用済みRoleのみを使う規則と読み分けにくいため、「列は例であり採用Roleに置換する」と直前に明記してください。

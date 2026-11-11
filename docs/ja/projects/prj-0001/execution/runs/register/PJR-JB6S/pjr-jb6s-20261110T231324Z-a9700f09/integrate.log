@@ -1,0 +1,18 @@
+=== 2026-11-10T23:36:34.347Z git merge --no-ff -m exec(register PJR-JB6S): GUI のデザインのルール（デザインシステム）の型を新しく作る
+
+Transition: start → review
+Executor: sol-executor
+Reporter: gemma26-reporter
+Refs: prj-0001:PJR-JB6S exec/prj-0001-PJR-JB6S ===
+exit: 1
+--- stdout ---
+Auto-merging docs/ja/specdojo/rulebooks/uis-rulebook.md
+CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr ---
+
+--- merge --abort ---
+exit: 0
+
+

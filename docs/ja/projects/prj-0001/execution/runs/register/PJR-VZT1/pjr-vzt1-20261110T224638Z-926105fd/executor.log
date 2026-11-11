@@ -1,0 +1,50 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "uis-rulebook の標準章構成と章別ガイド、uis-sample の GUI 販売登録の完成例を整備しました。整形・登録簿生成・履歴リンク・カタログ検証は通過しました。実 grade と親 runner の検証結果は後続確認です。",
+  "handoff": [
+    "個票 docs/ja/projects/prj-0001/controls/project-register/pjr-vzt1-uis-kata-polish.md の対応結果に、実施内容、参照規範、旧 finding の照合結果、判断理由、検証、CHANGELOG 文案を記録済みです。reporter は実行結果へ転記してください。",
+    "recipe と template は、本文要件・章別ガイド・完成例で記述を支援できるため、双方 not-needed と判断しました。入力がある画面のバリデーションは条件付き必須としました。",
+    "sample は会計結果不明時に同じ取引番号を照会して復帰する仕様とし、二重登録を防ぐ操作制限を具体化しました。金額例は合計326円・預かり金500円・釣銭174円です。接続不能時の紙による営業継続は、店主が判断する仮定として明示しました。",
+    "実 grade は実 agent CLI の起動と利用枠の消費を伴うため requires_human です。下記コマンドをホスト側で実行し、両文書の pass を確認してください。指摘が残る場合は修正または対応理由を個票へ追記してください。lint・単体テスト等の指定済み親検証は runner が実行します。",
+    "CHANGELOG の区分は「変更」。文案は「画面仕様（uis）の型を標準章構成へ整理し、章別の判断基準と良い例・悪い例、入力境界・会計結果確認・回復操作まで含む GUI 販売登録画面の完成例を整備」。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/uis-rulebook.md docs/ja/specdojo/samples/uis-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-vzt1-uis-kata-polish.md",
+      "status": "passed",
+      "summary": "変更した Markdown 3 件の整形を確認。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の生成に成功。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証が終了コード 0。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。既存カタログの再エクスポート参照と未作成仕様に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade run --project prj-0001 --target kata --path docs/ja/specdojo/rulebooks/uis-rulebook.md --path docs/ja/specdojo/samples/uis-sample.md --run-id pjr-vzt1-uis-polish-20261111 --dry-run",
+      "status": "passed",
+      "summary": "対象 2 文書と評価担当 sol-review-executor の解決を確認。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade run --project prj-0001 --target kata --path docs/ja/specdojo/rulebooks/uis-rulebook.md --path docs/ja/specdojo/samples/uis-sample.md --run-id pjr-vzt1-uis-polish-20261111",
+      "status": "requires_human",
+      "summary": "実 agent CLI を起動するためホスト側で実行し、両文書の pass を確認する必要があります。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

@@ -68,7 +68,7 @@ export function addGradeSelectionOptions(command: Command): Command {
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .option(
       "--path <path>",
-      "Grade only this Markdown document (repeatable)",
+      "Grade only this Markdown or YAML document (repeatable)",
       collectPathOption,
       [],
     )

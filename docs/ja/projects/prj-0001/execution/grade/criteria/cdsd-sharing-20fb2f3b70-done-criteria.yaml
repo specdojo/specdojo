@@ -2,12 +2,12 @@
 id: cdsd-sharing-grade-criteria
 document: cdsd-sharing
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
-graded_at: "2026-11-09T16:34:28.321Z"
+graded_at: "2026-11-10T16:26:35.218Z"
 graded_by: flash-high-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 summary:
-  satisfied: 1
-  unsatisfied: 2
+  satisfied: 0
+  unsatisfied: 3
   total: 3
 criteria:
   - id: DC-001
@@ -26,11 +26,14 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Data store structure, authority classification, and editing constraints for deliverable body and index are
-      missing.
+      The data store configuration lacks definitions for deliverable body and deliverable index, making it incomplete as
+      a design baseline.
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      Criteria, baseline timing, and verification procedures for detecting staleness and untranscribed entries are not
+      defined.

@@ -2,7 +2,7 @@
 id: cdsd-execution-grade-criteria
 document: cdsd-execution
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
-graded_at: "2026-11-09T16:28:26.939Z"
+graded_at: "2026-11-10T16:20:57.215Z"
 graded_by: flash-high-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 summary:
@@ -16,16 +16,14 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: Business roles, contents, and granularity for execution state, plan/result, evidence, and worktree are unrecorded.
+    reason: Execution state, plan/result, evidence, and worktree data stores are missing and deferred as TODO.
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: >-
-      The data store structure cannot serve as an architectural baseline because four execution domains remain
-      undefined.
+    reason: Technical constraints, sources, and primary/derived distinctions for the four deferred stores are not defined.
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
@@ -33,5 +31,5 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Pass/fail criteria, validation rules, and verification targets for canonical data stores are not sufficiently
-      specified.
+      Pass/fail verification criteria, required fields, and check procedures for Job Definition and execution records
+      are missing.
