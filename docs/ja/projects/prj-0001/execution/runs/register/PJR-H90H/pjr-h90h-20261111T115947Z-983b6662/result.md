@@ -4,15 +4,17 @@ specdojo:
   type: exec-result
   task_id: PJR-H90H
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-H90H/pjr-h90h-20261111T115947Z-983b6662/plan.md
   started_at: "2026-11-11T12:02:04.401Z"
+  completed_at: "2026-11-11T12:08:45.570Z"
   agent: sol-executor
   approach: fully-guided
   targets:
     - prj-0001:ifx-cmd-ai-provider-cli
+  block_reason: "executor reported incomplete: 認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。"
 ---
 
 # Edit Result

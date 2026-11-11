@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ad33-cdfd-d2-pdca-order
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-01T06:50:27Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-11T12:07:26Z"
+  conclusion: P・D・C・A の左からの並び順の規則を足した。その後 PJR-SJQC・PJR-VRVP で図を縦向きにし、並び順の規則は上からの順に引き継いだ
   derived_from:
     - PJR-RXVC
 ---
