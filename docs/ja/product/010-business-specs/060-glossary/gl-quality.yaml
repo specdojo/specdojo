@@ -118,7 +118,7 @@ terms:
     englishName: grade score
     aliases: [評価スコア]
     definition: 観点ごと・カテゴリごと・文書全体の品質を数値で示した値。
-    notes: 評価結果の `score` は 0〜100 の整数で、カテゴリ別・観点別の点数も記録する。合格点や重みは品質評価基準に従い、点数だけでタスク完了や文書の確定を判断しない。
+    notes: 評価結果の `score` は 0〜100 の整数。合格点や重みは品質評価基準に従い、点数だけでタスク完了や文書の確定を判断しない。
     category: tm-quality-assessment
     relatedTerms: [tm-grade-rubric, tm-grade-verdict, tm-done-criteria-judgement]
     source: "`docs/specdojo/schemas/v1/grade-result.schema.yaml`、[[specdojo:review-guide|レビューガイド]]"
