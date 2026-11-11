@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "deliverable",
+  "document": "docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md",
+  "content_hash": "d802d0737b7501493bcad8acaa0bec0e1e1b3b088b9dd3cfc92a16b4e40bb33f",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "review-prj-0001-T-BUSINESS-SPECS-REPS-cdt-register-type-090-20261111T020131Z",
+  "updated_at": "2026-11-11T02:01:36.286Z"
+}

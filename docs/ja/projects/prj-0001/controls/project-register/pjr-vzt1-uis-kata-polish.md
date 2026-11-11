@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-vzt1-uis-kata-polish
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:44:22Z"
+  completed_at: "2026-11-11T03:06:38Z"
+  conclusion: uis-rulebook と uis-sample を標準の章立てと中身の厚さに磨き込み、grade で rulebook は pass 100（前 83）、sample は 2 回目の後に pass 100（前 fail 54）になった
   derived_from:
     - PJR-T88P
   autopilot: approved
@@ -109,10 +111,45 @@ node --import tsx src/specdojo.ts grade run --project prj-0001 --target kata \
 
 - 区分は「変更」。
 - 行の文案は「画面仕様（uis）の型を標準章構成へ整理し、章別の判断基準と良い例・悪い例、入力境界・会計結果確認・回復操作まで含む GUI 販売登録画面の完成例を整備」。
+- 2 回目の区分は「不具合修正」。行の文案は「画面仕様（uis）の完成例で、在庫 0 の初回追加と既存明細の回復操作を区別し、未確認事項の担当・報告先、採用先への引継ぎ、承認責任と公開前確認条件を明記」。
 
-### 5.6. 申し送り
+### 5.6. 初回の申し送り
 
 - 実 agent による grade の実行と両文書の pass 確認、親 runner による検証結果の確認が残る。編集成果物は uis の rulebook・sample と本個票であり、後続段は本節の根拠と判断内容を実行結果へ転記する。
+
+### 5.7. 2 回目の実施内容と判断根拠（2026-11-11）
+
+- 初回後の `uis-20261111` の保存済み grade を確認した。rulebook は pass 100、sample は needs-work 93（minor 5 件・major 1 件）。初回の申し送りに対する評価結果として扱い、再評価済みの rulebook は変更しない。
+- [[specdojo:uis-rulebook|画面仕様作成ルール]] の本文要件・記述ガイド・禁止事項、[[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:sample-authoring-standard|Sample 記述標準]]、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]] を根拠とした。[[specdojo:ryu-guide|進め方活用ガイド]] に従い、finding の観点を [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の判定根拠と照合した。
+
+| 保存済み sample の指摘                                           | 修正箇所と判断                                                                                                                                                            |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F001（`vp-po-decision-readiness`）                               | 「本仕様内の未確認事項」に接続前提の影響、DEV・PO の確認分担、仕様承認前の判断、PO・PM への報告を記載。未確認なら採用先の承認を保留する                                   |
+| F002（`vp-po-publication-accountability`）                       | 「同梱 sample の承認と公開前確認」に一般公開する範囲と非公開情報の除外、SpecDojo 側の人間の PO の最終承認・説明責任を記載                                                 |
+| F003（`vp-pm-control-reporting`）                                | sample 内の未確認事項と採用先の PJR 転記候補を別節・別表にし、各行に Role code、判断時点、報告先を記載                                                                    |
+| F004・F005（`vp-qe-omissions-consistency`・`vp-ux-readability`） | 在庫不足を初回追加と既存明細に分割。初回追加失敗では行が作られないため、コードを空にして取りやめるか別の商品を選ぶ。既存行だけを「明細削除」の対象とした                  |
+| F006（`vp-ops-release-readiness`、major）                        | 追加完了条件が参照する同じ grade にある未解決指摘として対応。必須項目・状態整合、静的検査・grade、未確認事項・転記候補、公開情報と承認記録を `ready` 化前の確認条件とした |
+
+- 文書の承認条件は既存の任意章「メモ / 将来課題」の小節に収めた。画面仕様に独立したプロジェクト管理章を増やさず、採用時に人間の PO（店主代表）が行う業務判断と、SpecDojo 側の人間の PO が行う同梱 sample の公開判断を区別するためである。架空の接続前提の実地確認を同梱 sample の公開条件とせず、採用先で確認する条件とした。
+- rulebook は標準の 7 章、章別の判断基準と良い例・悪い例、GUI 専用、CLI は clis、ワイヤーフレーム・レイアウトを含めない規定を維持する。`recipe: not-needed` と `template: not-needed` は初回の理由を維持し、完成例の具体化で指摘を解消する。構造・必須項目・禁止事項に矛盾はなく、規則を追加する根拠はない。
+- [[specdojo:clis-sample|販売管理 CLI の完成例]] の粒度と比較し、sample の表示項目・操作・遷移・入力境界の厚さは維持した。`vp-arc-conciseness` に照らし、接続前提の本文と管理記録の間は節名参照で結び、操作の詳細は再掲しない。uis 以外の型、カタログ、保護された設定、`CHANGELOG.md`、grade サイドカー、result は変更していない。
+
+### 5.8. 2 回目の検証と申し送り
+
+- 変更ファイルは [[specdojo:uis-sample|販売登録画面の完成例]] と本個票。sample の在庫不足時の回復と未確認事項・承認条件を修正し、本個票に判断根拠・CHANGELOG 文案・検証結果を追記した。result の記入は pipeline の reporter に委ねる。
+- `npx prettier --write` と `npx prettier --check` を変更した 2 ファイルへ実行し、整形確認は通過した。`git diff --check`、`node --import tsx src/specdojo.ts register build --project prj-0001`、`npm run validate:history-links` は終了コード 0。
+- hook 指定の `node --import tsx tools/catalog-validate-if-configured.mjs` は終了コード 0。既存の実装参照が再エクスポートのみである警告と、未作成仕様の参照確認を省略する警告が出た。これらは今回の編集対象外として維持した。YAML ファイルは編集していないため、`validate:schema:file` は非適用。
+- 次のコマンドに `--dry-run` を付け、両文書が `sol-review-executor` の対象へ解決されることを確認した。実 grade は実 agent CLI の起動・利用枠の消費を伴うため、pipeline 指示に従い `requires_human` としてホスト側の orchestrator に引き継ぐ。編集後の sample の pass は未確認であり、指摘の内容に沿った修正と再評価の完了を区別する。
+
+```bash
+node --import tsx src/specdojo.ts grade run --project prj-0001 --target kata \
+  --path docs/ja/specdojo/rulebooks/uis-rulebook.md \
+  --path docs/ja/specdojo/samples/uis-sample.md \
+  --run-id uis-20261111-r2
+```
+
+- rulebook の現行 SHA-256 は `72d92b5f1f1e67203de095b6fc669be592ea372098e5d3e378537dd26c2cd310` で、保存済み pass 100 の `content_hash` と一致する。sample は編集済みのため、旧 needs-work 93 を修正後の評価として扱わない。orchestrator は上記で両方の pass を確認し、残る指摘があれば修正または未対応理由を追記する。
+- `npm run lint:md`・`npm run lint:fm`・`npm run test:unit` を含む指定済み検証は親 runner が実行する。executor 内で重複実行していない。承認・公開・状態遷移は行わず、両文書と本個票の `status` は `draft` のままとする。
 
 ## 6. 関連ドキュメント
 

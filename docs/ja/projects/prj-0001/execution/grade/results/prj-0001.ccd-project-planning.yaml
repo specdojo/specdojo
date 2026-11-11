@@ -4,15 +4,16 @@ document: prj-0001:ccd-project-planning
 path: docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: pass
-score: 100
-graded_at: "2026-11-10T16:17:26.353Z"
-graded_by: flash-high-executor
-content_hash: cbfbfdce1517885094920babbd0fec79a56dd809c1e7bb218dc4b78020889c38
+verdict: needs-work
+score: 94
+graded_at: "2026-11-11T01:35:13.253Z"
+graded_by: sol-review-executor
+content_hash: ca3f2276be7f2eef98ea031e4a78d30ef4385f4cdd144c49b1e282cfe3ce1714
 source_hashes:
   catalog-entry: aefaf9ad88779632dd194274444c66890a2247976ea5b0b2edd11da4e8f0b2fe
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:bdd-register-entry: fb50dc46b6c846efa398ad202b067d11d2f7018d9599aeacb6209f2ccc1ae91b
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
@@ -26,7 +27,7 @@ categories:
   business:
     score: 100
   consistency:
-    score: 100
+    score: 88
   architecture:
     score: 100
   usability:
@@ -34,7 +35,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 81
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -64,8 +65,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -88,8 +89,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -115,15 +116,62 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 0
+  major: 1
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 129
+    anchor: >-
+      | 既存データストア定義の状態管理の表現 | `_UNDECIDED_` 既存記述では [[prj-0001:cdsd-planning\|概念データストア定義（プロジェクトの立上と計画）]] が Schedule
+      を「計画・状態遷移の正本」とするとされる。本書は計画と実行状態の正本を分ける扱いを維持する。参照範囲に当該定義・CDFD が含まれず、今回の読み合わせは未実施。 | BA・ARC
+      がデータストア定義の責務を確認し、必要な文書修正を別タスクへ申し送る。実装修正の必要性は指定エビデンスからは判断できない。 |
+    message: >-
+      Reconcile the acknowledged state-authority conflict with
+      docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md, section 3: that document calls Schedule the
+      authority for planning and state transitions, whereas this document's line 106 assigns state authority to
+      execution records and prj-0001:cdfd-uc-schedule section 4.2 explicitly excludes task state from Schedule; retain
+      one consistent authority definition across these documents.
+    message_ja: >-
+      Reconcile the acknowledged state-authority conflict with
+      docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md, section 3: that document calls Schedule the
+      authority for planning and state transitions, whereas this document's line 106 assigns state authority to
+      execution records and prj-0001:cdfd-uc-schedule section 4.2 explicitly excludes task state from Schedule; retain
+      one consistent authority definition across these documents.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 104
+    anchor: "- 計画要素と登録項目の先行依存では自己参照・循環を禁止する。"
+    message: >-
+      Specify whether self-dependencies and cycles are permitted for the deliverable-definition dependency shown at
+      lines 57 and 86, or cite its governing policy; the current prohibition covers only planning elements and register
+      entries, leaving QE without an explicit expected result for cyclic deliverable-dependency test data.
+    message_ja: >-
+      Specify whether self-dependencies and cycles are permitted for the deliverable-definition dependency shown at
+      lines 57 and 86, or cite its governing policy; the current prohibition covers only planning elements and register
+      entries, leaving QE without an explicit expected result for cyclic deliverable-dependency test data.
+    cause:
+      type: document
+  - id: F003
+    severity: major
+    rule: vp-qe-config-validity
+    line: 110
+    anchor: 主キーの対応名と識別範囲を示す。タスクの ID が導出値でも業務上の識別単位は維持する。未作成辞書との対応は既存の識別単位に基づく `_ASSUMPTION_` とし、辞書の物理名・属性定義は未照合である。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 5
+  satisfied: 4
   total: 5
+  unsatisfied:
+    DC-001:
+      - BA
   detail_ref: prj-0001:ccd-project-planning-grade-criteria

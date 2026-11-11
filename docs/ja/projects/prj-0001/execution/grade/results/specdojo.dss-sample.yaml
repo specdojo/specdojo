@@ -1,0 +1,214 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:dss-sample
+path: docs/ja/specdojo/samples/dss-sample.md
+target: kata
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 94
+graded_at: "2026-11-11T03:04:16.375Z"
+graded_by: sol-review-executor
+content_hash: 8aa72ed0cb1770e0ed3fbd801e38f2fb2480dcba7471e56389df603d25584ffa
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 69
+  planning:
+    score: 75
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 125
+    anchor: "### 8.2. 変更・例外と導線"
+    message: >-
+      Identify who approves the overall DSS baseline, when that decision occurs, and which verification results or
+      unresolved assumptions must accompany it; section 8.2 currently defines approval only for exceptions.
+    message_ja: >-
+      Identify who approves the overall DSS baseline, when that decision occurs, and which verification results or
+      unresolved assumptions must accompany it; section 8.2 currently defines approval only for exceptions.
+  - id: F002
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 128
+    anchor: "- 現在の例外はなし。例外の提案は対象規則、理由、適用画面、影響、期限、承認を担う店主を明記して判断記録へ渡し、採用前に検証する。"
+    message: >-
+      Define the bundled sample's publication scope and assign final publication approval and accountability to the
+      human SpecDojo PO; the fictional store owner's exception approval does not establish responsibility for releasing
+      this sample.
+    message_ja: >-
+      Define the bundled sample's publication scope and assign final publication approval and accountability to the
+      human SpecDojo PO; the fictional store owner's exception approval does not establish responsibility for releasing
+      this sample.
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 118
+    anchor: >-
+      | 対象                                              | 対応する要求・仕様                                 |
+      確認方法                                                                                                             |
+      担当                       |
+    message: >-
+      Add completion checkpoints for prototype review, rule verification, and user evaluation, including which results
+      are required before implementation adoption, so the listed activities can be sequenced and tracked.
+    message_ja: >-
+      Add completion checkpoints for prototype review, rule verification, and user evaluation, including which results
+      are required before implementation adoption, so the listed activities can be sequenced and tracked.
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 116
+    anchor: >-
+      本例の `nfr-usability`、`sac-usability`、`stc-store-gui`、`sysd-index`、`sysd-cross-cutting-policy` は、利用先で作る文書の想定 ID
+      であり、同梱の型や完成例を指さない。
+    message: >-
+      For the hypothetical upstream requirements and downstream verification documents, identify the responsible Role
+      codes and when their definitions must be confirmed; otherwise adopters cannot tell which missing inputs should
+      delay implementation or acceptance.
+    message_ja: >-
+      For the hypothetical upstream requirements and downstream verification documents, identify the responsible Role
+      codes and when their definitions must be confirmed; otherwise adopters cannot tell which missing inputs should
+      delay implementation or acceptance.
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 127
+    anchor: "- GUI 設計担当は変更した規則・トークンと、それを使う部品・画面・検証の対応を確認する。見た目だけの変更では UIS を変更せず、操作の意味や回復操作が変わる場合は UIS も変更する。"
+    message: >-
+      Distinguish verification failures, rule-change requests, and exception decisions, and identify their reporting
+      destinations and responsible Role codes so these items can be transferred into the adopting project's management
+      records.
+    message_ja: >-
+      Distinguish verification failures, rule-change requests, and exception decisions, and identify their reporting
+      destinations and responsible Role codes so these items can be transferred into the adopting project's management
+      records.
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 128
+    anchor: "- 現在の例外はなし。例外の提案は対象規則、理由、適用画面、影響、期限、承認を担う店主を明記して判断記録へ渡し、採用前に検証する。"
+    message: >-
+      Express exception approval responsibility with the PO Role code and explain its mapping to the store-owner role;
+      the Sample Authoring Standard requires Role codes for approval responsibility, whereas this sample uses only the
+      display role 店主.
+    message_ja: >-
+      Express exception approval responsibility with the PO Role code and explain its mapping to the store-owner role;
+      the Sample Authoring Standard requires Role codes for approval responsibility, whereas this sample uses only the
+      display role 店主.
+  - id: F007
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 112
+    anchor: "## 8. 検証・変更管理と関連文書"
+    message: >-
+      Add explicit draft-to-ready and publication gates covering rulebook conformance, Markdown and Frontmatter
+      validation, review findings, and recorded human approval; the current section describes GUI verification without
+      defining when the bundled sample may be released.
+    message_ja: >-
+      Add explicit draft-to-ready and publication gates covering rulebook conformance, Markdown and Frontmatter
+      validation, review findings, and recorded human approval; the current section describes GUI verification without
+      defining when the bundled sample may be released.
+  - id: F008
+    severity: minor
+    rule: vp-ops-operability
+    line: 128
+    anchor: "- 現在の例外はなし。例外の提案は対象規則、理由、適用画面、影響、期限、承認を担う店主を明記して判断記録へ渡し、採用前に検証する。"
+    message: >-
+      Identify the decision-record destination or its expected identifier, assign its maintenance owner, and state how
+      approved, rejected, or expired exceptions are linked back to the affected rules so exception status remains
+      traceable during updates.
+    message_ja: >-
+      Identify the decision-record destination or its expected identifier, assign its maintenance owner, and state how
+      approved, rejected, or expired exceptions are linked back to the affected rules so exception status remains
+      traceable during updates.

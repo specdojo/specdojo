@@ -4,40 +4,40 @@ document: specdojo:uis-sample
 path: docs/ja/specdojo/samples/uis-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 93
-graded_at: "2026-11-11T01:04:18.490Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-11T03:05:50.894Z"
 graded_by: sol-review-executor
-content_hash: 2cb9890a8794ffc50487d6459d52c850acfb9ed932061f1272a853b22a51d6c8
+content_hash: 00da1415ffb74af70ac33a219f2aa4ca740bd24b5998fa0afbff60a29dc96986
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 81
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
     score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
     level: 4
     score: 100
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -78,20 +78,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,81 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 5
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-po-decision-readiness
-    line: 12
-    anchor: >-
-      - _ASSUMPTION_:
-      店舗サービスに接続して商品情報の取得と会計確定を行う。接続できない間は入力済みの明細を保持して復旧を待つ。営業中に復旧できない場合は店主が取引番号と状況を控えて開発担当へ連絡し、紙の販売記録による継続を判断する。
-    message: >-
-      The previous issues-table deficiency is resolved through concrete specifications and scoped future reviews. Assign
-      a confirmation owner and decision timing to the store-service connectivity assumption so approval can account for
-      its operational consequences.
-    message_ja: >-
-      The previous issues-table deficiency is resolved through concrete specifications and scoped future reviews. Assign
-      a confirmation owner and decision timing to the store-service connectivity assumption so approval can account for
-      its operational consequences.
-  - id: F002
-    severity: minor
-    rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# 駄菓子屋きぬや 販売登録画面 画面仕様"
-    message: The document does not explicitly define the human PO approval responsibility and target publication scope.
-    message_ja: The document does not explicitly define the human PO approval responsibility and target publication scope.
-  - id: F003
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 144
-    anchor: "- 電子マネー・QR 決済を導入する際は、店主が決済方法と取消手順を確認し、預かり金・会計確定・結果確認の仕様を見直す。"
-    message: >-
-      The unresolved issue lacks reporting destinations, responsible role codes, and clear separation for transfer to
-      project management records.
-    message_ja: >-
-      The unresolved issue lacks reporting destinations, responsible role codes, and clear separation for transfer to
-      project management records.
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 131
-    anchor: >-
-      | 在庫不足                     | 指定数量が現在庫数を超過                             |
-      「在庫が不足しています」と商品名、現在庫数                               | 販売・在庫は未更新。入力・明細を保持                                       |
-      数量を現在庫数以下へ修正。現在庫数が 0 なら「明細削除」                                                    |
-    message: >-
-      For an initial product addition with zero stock, the failed operation creates no detail row, so the prescribed
-      明細削除 action has no target. Define separate recovery actions for a rejected initial addition and an existing detail
-      row.
-    message_ja: >-
-      For an initial product addition with zero stock, the failed operation creates no detail row, so the prescribed
-      明細削除 action has no target. Define separate recovery actions for a rejected initial addition and an existing detail
-      row.
-  - id: F005
-    severity: minor
-    rule: vp-ux-readability
-    line: 131
-    anchor: >-
-      | 在庫不足                     | 指定数量が現在庫数を超過                             |
-      「在庫が不足しています」と商品名、現在庫数                               | 販売・在庫は未更新。入力・明細を保持                                       |
-      数量を現在庫数以下へ修正。現在庫数が 0 なら「明細削除」                                                    |
-    message: >-
-      When the first addition of a zero-stock product fails, the user is instructed to delete a nonexistent detail row.
-      Explain how to abandon or replace that attempted addition, and reserve 明細削除 for products already in the details.
-    message_ja: >-
-      When the first addition of a zero-stock product fails, the user is instructed to delete a nonexistent detail row.
-      Explain how to abandon or replace that attempted addition, and reserve 明細削除 for products already in the details.
-  - id: F006
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 142
-    anchor: "## 8. メモ / 将来課題"
-    message: >-
-      Concrete readiness criteria and checklist items required to transition the document from draft to ready are not
-      defined.
-    message_ja: >-
-      Concrete readiness criteria and checklist items required to transition the document from draft to ready are not
-      defined.
+findings: []
