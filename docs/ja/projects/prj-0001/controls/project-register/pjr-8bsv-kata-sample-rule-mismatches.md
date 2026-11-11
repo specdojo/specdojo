@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-8bsv-kata-sample-rule-mismatches
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-10T12:27:37Z"
+  completed_at: "2026-11-11T15:46:44Z"
   derived_from:
     - PJR-T88P
   autopilot: approved
