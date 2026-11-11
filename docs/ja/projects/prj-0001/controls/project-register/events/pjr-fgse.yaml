@@ -57,3 +57,45 @@
       from: "-"
       to: approved
   previous_event_id: reg_d127973bbd574a2299c0d9ef17e4f002
+- v: 1
+  id: reg_8f9b858c2916484c9513c85ebb173a1f
+  ts: "2026-11-11T15:48:50Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_29c11c1e376c43cf89c278cccf730ba4
+- v: 1
+  id: reg_6d611351f6f34e40b7848c5388d5f01f
+  ts: "2026-11-11T16:02:12Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8f9b858c2916484c9513c85ebb173a1f
+- v: 1
+  id: reg_0f69f86688de495ea3dd46f0f1c9eb7b
+  ts: "2026-11-11T16:05:27Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 完了条件の全項目が満たされていることを確認しました。 `ifx-cmd-rulebook.md` の 6.2「コマンドと正本参照」において、シェル起動の例外と禁止事項が記載されていることを確認しました（commit `9a41e1c84` による変更）。 recipe（4.2 および 6章）、templ…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-12"
+  previous_event_id: reg_6d611351f6f34e40b7848c5388d5f01f

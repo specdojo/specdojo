@@ -51,9 +51,9 @@ files:
       format: text
       encoding: UTF-8
       description: >-
-        呼び出し元の販売 CLI が会計確定時に作成する印字用テキスト。
-        パスは店舗データディレクトリを基準とし、日付・連番は確定済み取引から解決する。
-        CLI は読み取りだけを行い、内容は `kinuya-receipt-format-schema` を参照する。
+        呼び出し元の販売 CLI（[[specdojo:clis-sample|販売管理 CLI 仕様サンプル]]）が会計確定時に作成する印字用テキスト。
+        パスは店舗データディレクトリを基準とし、可変部の日付 `YYYYMMDD`（会計確定日・8桁）と連番 `NNNN`（当日取引連番・4桁）は確定済み取引情報から解決する。
+        印字テキストの内容仕様は `kinuya-receipt-format-schema` を参照する。印刷 CLI は読み取りのみを行い、変更・削除は行わない。
   # 印刷 CLI はファイルを作らない。電子控え、未印字状態、実行ログの保存は呼び出し元の責務。
   outputs: []
 

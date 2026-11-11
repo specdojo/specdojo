@@ -1,0 +1,45 @@
+Please wait while the validation command finishes.
+検知コマンドの完了を待機しています。
+プロジェクト登録簿の項目 **PJR-FGSE**「ifx-cmd の型の `shell: false` の決まりに、雛形で外部の CLI を起動する場合の扱いを足すか見直す」の対応を完了しました。
+
+### 1. 実施内容と見直し結果
+
+1. **現状調査と背景整理**:
+   - 2026-11-09 起票時、[`specdojo:ifx-cmd-rulebook`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md) は `command.shell: false` を絶対要件とし、`command.shell: true` やコマンド置換を禁止していました。
+   - 一方で SpecDojo 本体（[`src/exec/run/agent.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/src/exec/run/agent.ts)）は、AI provider CLI（`copilot`, `antigravity` 等）の起動において `.specdojo/exec-defaults.yaml` の `command_template` に含まれる `"$(cat)"` や `"$(pwd)"` を展開するため、`shell: true` で child process を起動していました。
+
+2. **「実装を `shell: false` に変える」案の妥当性評価**:
+   - `copilot` や `antigravity` などの一部 CLI は stdin から直接プロンプトを読み込むオプションを持たず、コマンドライン引数（`-p`）でプロンプトを渡す仕様となっています。
+   - これらを `shell: false`（固定 argv による直接 `spawn`）で動かすには、SpecDojo 自身がプロンプト文字列を引数配列に埋め込む必要がありますが、exec plan のような大規模プロンプト（数万〜数十万文字）を引数に渡すと、OS のコマンドライン引数長上限（`ARG_MAX`）に抵触するリスクがあります。
+   - また、設定内のコマンド置換を展開するための独自シェルパーサを実装することは、不具合やセキュリティリスクの温床となります。
+   - 現行の実装は [`src/exec/agent-config.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/src/exec/agent-config.ts) において `nickname` を英数字に限定（`NICKNAME_PATTERN`）するなど、3層の多層防御によってシェルインジェクションを防止しており、安全性が担保されています。
+   - 従って、実装を無理に `shell: false` 化することは不適切であり、既存の `shell: true` を維持することが妥当と判断しました。
+
+3. **「型に例外を足す」案の評価と整合性確認**:
+   - 先行する kata 改訂タスク（`T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-040`、2026-11-10 コミット `9a41e1c84`）において、すでに [`specdojo:ifx-cmd-rulebook`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md) の 6.2 節に「シェル起動の例外」が新設されていました。
+     - 管理された起動設定を展開し、シェルを必要とする場合は `shell: true` を認める。
+     - シェルを必要とする理由、テンプレートの正本と管理境界、展開値の検証・制限を確認できる参照先を示す。
+     - 禁止事項も「シェル起動の例外条件を満たさず `shell: true` とすること、または実際の起動方式を隠して `false` とすること」に見直されている。
+   - [`specdojo:ifx-cmd-recipe`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/specdojo/recipes/ifx-cmd-recipe.md)（4.2 節・6 節）、[`specdojo:ifx-cmd-template`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/specdojo/templates/ifx-cmd-template.yaml)（29 行目）、[`docs/specdojo/schemas/v1/ifx-cmd.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/specdojo/schemas/v1/ifx-cmd.schema.yaml)（`BooleanOrPlaceholder`）も整合しています。
+   - 代表仕様 [`prj-0001:ifx-cmd-ai-provider-cli`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml) も [`prj-0001:pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/projects/prj-0001/controls/project-register/pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata.md) において、この例外規定に従って `shell: true` とその根拠が記述され確定しています。
+
+4. **結論**:
+   - 実装の `shell: false` 化は行わず、多層防御による `shell: true` 起動を維持する。
+   - 型へのシェル例外の追加は kata-040 で完了しており、型体系・代表仕様・実装は完全に整合している。
+   - 追加のコード・型文書変更は不要であり、見直し結果を個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-fgse-ifx-cmd-shell-rule-review.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/projects/prj-0001/controls/project-register/pjr-fgse-ifx-cmd-shell-rule-review.md) の作業内容・対応結果に記録しました。
+
+---
+
+### 2. 変更ファイル
+
+- [`docs/ja/projects/prj-0001/controls/project-register/pjr-fgse-ifx-cmd-shell-rule-review.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FGSE/docs/ja/projects/prj-0001/controls/project-register/pjr-fgse-ifx-cmd-shell-rule-review.md)
+
+---
+
+### 3. CHANGELOG に書く事項
+
+なし（設計・型の整合性調査と方針確認であり、利用者への機能・インターフェースの変更はないため）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-FGSE の見直しを完了。ifx-cmd-rulebook のシェル例外規定と実装（多層防御による shell: true）の妥当性・整合性を確認し、個票を更新。","handoff":["完了条件の仮説と達成状況: ifx-cmd の型定義と実装におけるシェル起動の仕様・実態を調査し、実装の shell: false 化と型への例外追加の両案を評価した。実装の shell: false 化は引数長制約（`ARG_MAX`）や stdin 非対応 CLI への対応、自前置換パーサのリスクから不適切であり、既存の多層防御による `shell: true` を維持することが妥当と判断した。型への例外追加は kata-040 で rulebook・recipe・template に反映済みであり、代表仕様（`prj-0001:ifx-cmd-ai-provider-cli`）とも整合しているため、追加の変更は不要と結論づけた。","CHANGELOG に書く事項: なし（設計・型の整合性調査と方針確認であり、利用者への機能・インターフェースの変更はないため）。","次のアクション: 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-fgse-ifx-cmd-shell-rule-review.md` を更新完了。人間またはオーケストレーターによるレビューおよび close 遷移へ引き継ぐ。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-fgse-ifx-cmd-shell-rule-review.md","status":"passed","summary":"Ticket markdown formatted successfully"},{"command":"npm run validate:history-links","status":"passed","summary":"History links validated successfully across project registers and runs"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"Catalog validation passed successfully for prj-0001"},{"command":"git diff --check","status":"passed","summary":"No whitespace or conflict marker errors in git diff"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No yaml files were modified in this run"}]}
+</specdojo_executor_evidence>

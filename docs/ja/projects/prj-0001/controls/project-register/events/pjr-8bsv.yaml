@@ -70,3 +70,45 @@
       from: "-"
       to: approved
   previous_event_id: reg_20499bf2eeea42c9ab97d532be8a12c5
+- v: 1
+  id: reg_8db2766c550a4a629b8b64a5892c2a77
+  ts: "2026-11-11T15:21:48Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_098f0a7f89634bb1ad3d5b45c7df5817
+- v: 1
+  id: reg_ef1b39cab8374f97a11e1fdfc6e26d36
+  ts: "2026-11-11T15:43:13Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8db2766c550a4a629b8b64a5892c2a77
+- v: 1
+  id: reg_177dd8ca443a4ea0bbca87b3cc6c4c17
+  ts: "2026-11-11T15:46:44Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 統合後の差分（`f8e9c7c40e652939045e9d0965284ed631d207ce..db91dd6af356bf64e2444587a45026fc2cbfe3fe`）において、対象外の変更は含まれていません。 個票の完了条件は `_TODO_` から具体的な 7 つの条件へと書き換えら…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-12"
+  previous_event_id: reg_ef1b39cab8374f97a11e1fdfc6e26d36

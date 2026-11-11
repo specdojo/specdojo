@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-8E7Z-post-review",
+  "run_id": "pjr-8e7z-20261111T154704Z-d122cc28-post-review",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T16:09:47.125Z",
+    "completed_at": "2026-11-11T16:10:43.057Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-night-approved-register-a8a4379f38e2.json",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat 6a8d64bbddb53407fddfcd55aa2f2e73af9ba725..15ef5a739419da395345aa5cc82467d394eba5ab",
+      "status": "passed",
+      "summary": "変更12ファイル、追加521行・削除28行。成果物5件・個票・イベントログ・run 記録のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-status 6a8d64bbddb53407fddfcd55aa2f2e73af9ba725..15ef5a739419da395345aa5cc82467d394eba5ab",
+      "status": "passed",
+      "summary": "M 7件・A 5件（run 記録）。対象外の変更はない。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff 6a8d64bbddb53407fddfcd55aa2f2e73af9ba725..15ef5a739419da395345aa5cc82467d394eba5ab -- docs/ja/specdojo docs/ja/projects/prj-0001/controls/project-register/",
+      "status": "passed",
+      "summary": "差分本文を読み、完了条件1〜5の記述がそろっていることを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "grep -rn -E \"code: (BA|PO|ARC|DEV|QE|PM)\\b\" docs/ja/specdojo docs/ja/projects/prj-0001 --include=*.yaml",
+      "status": "passed",
+      "summary": "Role code 6つが prj-0001 の pm-roles.yaml とサンプル・テンプレートに実在する。"
+    }
+  ],
+  "final_message": "判定: complete-with-findings。個票の完了条件1〜6を統合差分 6a8d64bb..15ef5a73 と照合し、すべて充足を確認した。document-metadata-standard 6.3 の共通の決まり、rulebook-authoring-standard の準拠要件、bes/br/bdd 各 rulebook への反映（`supersedes`/`deprecated`、BEL・BPS・実装・テストへの影響追跡、Role code、BR の PJR 引き継ぎ、BDD の上流削除時の2つの進め方）がある。Role code（BA/PO/ARC/DEV/QE/PM）は prj-0001 の pm-roles.yaml に実在する。差分は成果物5件・個票・イベントログ・run 記録のみで対象外の変更はない。edit result と evidence に失敗・未実施の必須検証・未解消の申し送りはなく、runner の検証（lint:ts/fm/md/mermaid/d2、test:unit/integration、typecheck、validate:schema）はすべて passed。grade は判定に使っていない。指摘: F1 完了条件は統合前は `_TODO_` で、executor が仮説として立てたもの（人の合意はまだ）。F2 edit result の変更ファイル説明が5ファイルで同じ文になっており、上流削除時の進め方が bes/br にも入ったように読めるが、実際は bdd のみ。確認できなかった範囲: lint・prettier・`validate:history-links` 等は再実行せず evidence の記録を使った。追記内容の業務上の妥当性（BR 廃止の承認を PO にする判断など）は人の確認範囲。",
+  "completion_status": "complete",
+  "handoff": [
+    "F1: PJR-8E7Z の完了条件は executor が仮説として立てたもの（統合前は `_TODO_`）。close 前後に、人がこの基準を受け入れるか確認するとよい。",
+    "F2: edit result の変更ファイル説明が不正確（上流削除時の進め方は bdd-rulebook のみで、bes/br には入っていない）。記録の精度の問題で、成果物は直さなくてよい。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-8E7Z/pjr-8e7z-20261111T154704Z-d122cc28-post-review/executor.log",
+      "bytes": 7277,
+      "truncated": false
+    }
+  ]
+}
