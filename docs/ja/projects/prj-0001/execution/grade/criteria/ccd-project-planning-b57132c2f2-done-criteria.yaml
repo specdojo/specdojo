@@ -2,12 +2,12 @@
 id: prj-0001:ccd-project-planning-grade-criteria
 document: prj-0001:ccd-project-planning
 path: docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md
-graded_at: "2026-11-10T16:17:26.353Z"
-graded_by: flash-high-executor
-content_hash: cbfbfdce1517885094920babbd0fec79a56dd809c1e7bb218dc4b78020889c38
+graded_at: "2026-11-11T01:35:13.253Z"
+graded_by: sol-review-executor
+content_hash: ca3f2276be7f2eef98ea031e4a78d30ef4385f4cdd144c49b1e282cfe3ce1714
 summary:
-  satisfied: 5
-  unsatisfied: 0
+  satisfied: 4
+  unsatisfied: 1
   total: 5
 criteria:
   - id: DC-001
@@ -15,7 +15,10 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      Key mappings and relationships involving five uncreated dictionaries remain explicit assumptions awaiting BA
+      reconciliation, so their business accuracy is not yet confirmed.
   - id: DC-002
     text: スコープ範囲のエンティティを承認できること
     roles:
