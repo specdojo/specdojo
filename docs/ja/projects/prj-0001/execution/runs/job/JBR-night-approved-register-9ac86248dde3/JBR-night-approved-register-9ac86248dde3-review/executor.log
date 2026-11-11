@@ -1,0 +1,42 @@
+I判定は `complete-with-findings` です。Job Run（`succeeded`）は統合してよいと判断しました。完了を妨げる問題はなく、軽微な指摘が3件あります。成果物と result は変更していません。
+
+**評価結果の確認**
+- この review plan には「評価結果」章がなく、grade の対象と `--target` が決まっていません。そのため `specdojo grade list` による鮮度確認（`E-01`）と評価不能の確認（`E-02`）は行っていません。
+
+**判断根拠（確認した事実）**
+1. **出力範囲:** `6022b589..26e93f63` には次の6コミットがあり、変更は19ファイル（+1660/-4）です。
+   - `c156ab7e4` から `3b957c918` までの5コミット: 夜間 orchestrator が起動した PJR-JSEY の start・edit・review・post-review の各段。
+   - `26e93f638` `chore(routine)`: Job の出力。
+   - 変更ファイルは次のものだけで、対象外の変更はありません。
+     - PJR-JSEY の個票とイベント
+     - `execution/runs/register/PJR-JSEY/` の2つの run ディレクトリ
+     - Job Run の JSON
+     - 朝報告
+     - Job Run の run ディレクトリ（plan / result / evidence / stdout / stderr）
+2. **状態・evidence・result の整合:** 次の記録は互いに一致しています。
+   - Run JSON: `state: succeeded`、attempt 1 が `exit_code: 0`。
+   - evidence: `job-command` が passed（exit 0）。
+   - result: `status: complete` で、終了コード 0 と記載。
+   - stdout 末尾の `Register run summary: PJR-JSEY success transition=done commit=committed 3b957c918`。
+   - 朝報告: close が PJR-JSEY、`waiting` も新しい承認待ちもなし、停止理由なし。
+   - stderr を error / fail で検索すると、ヒットは埋め込まれた plan の文中だけで、実際のエラーはありませんでした。
+3. **verdict と finding の変化:**
+   - PJR-JSEY の個票は `item_status` が open から done に変わり、`completed_at` が付きました。対応結果表には `2026-11-11 23:32 / PJR-0X0S / sol-executor` の行が追記されています。
+   - イベントは start、review、close（`complete-with-findings`）が前のイベントへ正しくつながっています。
+   - edit run の evidence は親 runner の9検証を含め、すべて passed です。対象外の `validate:schema:file` だけが `not_applicable` でした。
+   - post-review の verdict は `complete-with-findings` で、F1・F2 の2件を残しています（下記）。
+4. Run は `partial` でも `failed` でもないため、それらの条件は該当しません。
+
+**未充足事項・改善指示（いずれも軽微）**
+- **F1（post-review から引き継ぎ）:** PJR-JSEY の edit result では「変更ファイル」が「なし」になっていますが、実際には個票を変更しています。
+- **F2（post-review から引き継ぎ）:** 個票 frontmatter の `conclusion` が前回の CBV6 / claude-executor の内容のままです。差分で確認しました。次回の更新で直す必要があります。
+- **F3（この review で確認）:** Job evidence の `changes` と result の「変更ファイル」に載っているのは、Run JSON と朝報告の2件だけです。実際の差分には、入れ子の register run のコミットと Job Run ディレクトリのファイルも含まれています。記録として不完全ですが、統合は妨げません。
+
+**確認できなかった範囲**
+- grade サイドカーの鮮度と内容（plan に評価対象の指定がないため）。
+- stderr ログは 65535 バイトで切り詰められており（`truncated: true`）、全文は確認できていません。
+- 生成された `pjr-index.md` などの views が差分に含まれない理由は調べていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Job Run JBR-night-approved-register-9ac86248dde3 は succeeded で、Run JSON・evidence（`job-command` passed、exit 0）・result（complete）・stdout 末尾・朝報告（PJR-JSEY close、`waiting`・承認待ちなし）が一致する。差分 6022b589..26e93f63 は6コミット・19ファイルで、夜間 orchestrator が起動した PJR-JSEY の start・edit・review・post-review の各段と Job 出力（`chore(routine)`）だけで構成され、対象外変更はない。PJR-JSEY の edit run の検証は親 runner の9検証を含めすべて passed、post-review は `complete-with-findings`。finding: F1 edit result の変更ファイルが「なし」と記載されているが実際は個票を変更（軽微）、F2 個票の `conclusion` が前回の CBV6 の内容のまま（軽微）、F3 Job evidence の `changes` と result の変更ファイルが2件だけで、入れ子の register run のコミットと Job Run ディレクトリを含まない（軽微）。確認できなかった範囲: review plan に評価結果章がないため grade の鮮度確認（`E-01`・`E-02`）は未実施。stderr ログは65535バイトで切り詰められ全文は未確認。生成 views が差分に含まれない理由は未調査。","handoff":["PJR-JSEY 個票 frontmatter の `conclusion` を PJR-0X0S / sol-executor の内容へ更新する（post-review F2）。","Job Run の evidence `changes` と result の変更ファイルに、入れ子の register run が作ったコミット分と Job Run ディレクトリの記録を含めるかを検討する（F3）。"],"validations":[{"command":"git diff --stat 6022b589561d7fb7aa473ba3c23f06be16bb9f1f..26e93f6387a4aa832cd1ed978d1bad40ec3cb7ea","status":"passed","summary":"19 files changed, 1660 insertions(+), 4 deletions(-)"},{"command":"git diff --name-status 6022b589561d7fb7aa473ba3c23f06be16bb9f1f..26e93f6387a4aa832cd1ed978d1bad40ec3cb7ea","status":"passed","summary":"PJR-JSEY の個票・イベント・run ディレクトリと Job Run 出力だけで、対象外変更なし"},{"command":"git diff 6022b589561d7fb7aa473ba3c23f06be16bb9f1f..26e93f6387a4aa832cd1ed978d1bad40ec3cb7ea -- docs/ja/projects/prj-0001/controls/project-register/","status":"passed","summary":"open から done への遷移、start・review・close のイベント、対応結果表へ1行追記。`conclusion` は未更新"}]}
+</specdojo_executor_evidence>
