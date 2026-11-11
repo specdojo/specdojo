@@ -1,0 +1,179 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/gl.schema.yaml
+id: gl-planning
+type: glossary
+rulebook: specdojo:gl-rulebook
+title: 用語集（計画）
+locale: ja
+status: draft
+terms:
+  - id: tm-planning
+    term: 計画策定
+    englishName: planning
+    definition: 管理する成果物と完了条件を選び、作業の担当・順序・期間・確認地点を定める活動。
+    notes: 成果物カタログ・スケジュール戦略・Schedule・タスクの基本定義は [[gl-common|用語集（共通）]] を正本とする。本書は計画固有の区分と関係を扱い、実行操作・状態は [[gl-execution|用語集（実行）]] に委ねる。用語の分類にも本用語を使う。
+    relatedTerms: [tm-catalog-domain, tm-track, tm-task-intent]
+    source: "[[specdojo:schedule-design-guide|Schedule設計ガイド]]"
+  - id: tm-catalog-domain
+    term: 成果物ドメイン
+    englishName: domain
+    aliases: [ドメイン]
+    definition: 成果物カタログで成果物を責務ごとに分類する論理的な領域。
+    notes: カタログの `domain` に対応し、配置先を表す `base_path` とは区別する。同一ドメインを複数ファイルへ分割しても、ドメインの分類と成果物の識別を保つ。
+    category: tm-planning
+    relatedTerms: [tm-catalog-group, tm-deliverable-local-id, tm-track]
+    source: "`docs/specdojo/schemas/v1/dct.schema.yaml` の `domain`・`base_path`"
+  - id: tm-catalog-group
+    term: 成果物グループ
+    englishName: group
+    aliases: [カタログのグループ]
+    definition: 成果物カタログ内で、成果物または子グループをまとめる章に相当する分類単位。
+    notes: カタログの `groups` に対応し、階層化できる。戦略ではカタログとグループの組でゲートやマイルストーンの対象を指す。
+    category: tm-planning
+    relatedTerms: [tm-catalog-domain, tm-planning-scope]
+    source: "`docs/specdojo/schemas/v1/dct.schema.yaml` の `Section`、`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `group_milestones`・`phase_gates`"
+  - id: tm-deliverable-local-id
+    term: 成果物論理名
+    englishName: local ID
+    aliases: [local_id]
+    definition: プロジェクト内で成果物を識別し、カタログの依存関係と戦略の対象指定を結び付ける固定の名前。
+    notes: カタログの `local_id` に対応する。反復して作る個別成果物の名前の型は `instance_id_pattern` で表し、依存先には固定の論理名を使う。
+    category: tm-planning
+    relatedTerms: [tm-planning-dependency, tm-planning-scope]
+    source: "`docs/specdojo/schemas/v1/dct.schema.yaml` の `DeliverableItem`、[[specdojo:dct-rulebook|成果物カタログ作成ルール]]"
+  - id: tm-deliverable-kind
+    term: 成果物種別
+    englishName: deliverable kind
+    definition: 成果物を作業対象・運営用の管理文書・生成物に分け、計画への展開対象を判断する区分。
+    notes: カタログの `kind` の `work` は作成・更新する作業対象、`control` は運営用の管理文書、`generated` は入力から生成する成果物を指す。作業対象では配置先と完了条件を持つ。通常の戦略は作業対象を選ぶ。詳細条件は schema を正本とする。
+    category: tm-planning
+    relatedTerms: [tm-planning-scope, tm-implementation-evidence-ref]
+    source: "`docs/specdojo/schemas/v1/dct.schema.yaml` の `DeliverableItem`、[[specdojo:dct-rulebook|成果物カタログ作成ルール]]"
+  - id: tm-implementation-evidence-ref
+    term: 実装エビデンス参照
+    englishName: implementation evidence reference
+    aliases: [実装エビデンス]
+    definition: 実装反映の作業で現在動作を調べるために、成果物カタログへ登録する読み取り専用の調査入力。
+    notes: "`evidence_refs` は参照の種別・パス・確認目的を持つ。`reflect-implementation` の意図から選ぶ `retrofit` で用い、成果物間の依存、編集対象、意図された仕様の正本にはしない。実行の証跡である evidence とは区別する。"
+    category: tm-planning
+    relatedTerms: [tm-task-intent, tm-approach, tm-planning-dependency]
+    source: "`docs/specdojo/schemas/v1/dct.schema.yaml` の `EvidenceRef`、[[specdojo:dct-rulebook|成果物カタログ作成ルール]] の `evidence_refs`"
+  - id: tm-track
+    term: トラック
+    englishName: track
+    aliases: [管理トラック]
+    definition: 対象成果物の作業を一つの戦略とタスク群にまとめて管理する、Schedule の計画単位。
+    notes: 戦略と展開済み計画の `track` に対応し、CLI では `--track` で指定する。ドメインは成果物の分類、トラックは作業の管理単位である。戦略がある場合はカタログと戦略を生成入力とし、展開済み計画を直接編集しない。実行状態の正本は実行記録とする。
+    category: tm-planning
+    relatedTerms: [tm-catalog-domain, tm-planning-scope, tm-phase-set, tm-milestone]
+    source: "`docs/specdojo/schemas/v1/sch-track.schema.yaml`、[[specdojo:sch-rulebook|スケジュール作成ルール]]、[[prj-0001:pjr-bb92-cdfd-overview-propagation|Schedule と実行状態の責務の決定記録]]"
+  - id: tm-planning-scope
+    term: 計画対象範囲
+    englishName: scope
+    aliases: [スコープ]
+    definition: 戦略全体、ゲート、横断作業のそれぞれが扱う成果物の集合。
+    notes: 戦略の `scope.catalogs` と `include_kinds` で対象を選び、カタログごとの `local_ids` で絞り込む。ゲートと横断作業の `scope` はカタログ・グループ・成果物論理名で対象をまとめる。選択方法の詳細は schema を参照する。
+    category: tm-planning
+    relatedTerms: [tm-deliverable-kind, tm-phase-gate, tm-cross-deliverable-pass]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `scope`・`phase_gates`・`cross_deliverable_passes`"
+  - id: tm-planning-dependency
+    term: 先行依存
+    englishName: dependency
+    aliases: [依存関係]
+    definition: ある成果物の根拠または作業の開始に先立って必要となる、他の成果物や作業との関係。
+    notes: カタログの `depends_on` は根拠となる成果物論理名を参照し、Schedule の `depends_on` は実行順序を定めるタスクまたはマイルストーンを参照する。戦略の `cross_domain_dependencies` はカタログにないドメイン間の順序を補う。実装エビデンス参照は依存を作らない。
+    category: tm-planning
+    relatedTerms: [tm-deliverable-local-id, tm-phase-gate, tm-initial-completion]
+    source: "`docs/specdojo/schemas/v1/dct.schema.yaml` の `depends_on`、`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `cross_domain_dependencies`、[[specdojo:sch-rulebook|スケジュール作成ルール]]"
+  - id: tm-phase
+    term: 段
+    englishName: phase
+    aliases: [フェーズ, 計画段]
+    definition: 成果物の作業を下書き・レビュー・確定などの目的で分け、タスクへ展開する計画上の段階。
+    notes: 戦略の `Phase` に対応する。`execution` は人間と agent の実行方式を、`mode` は編集とレビューを、`approach` は進め方を表す。agent の段では実行パイプラインを指定でき、その役割ごとの処理段とは区別する。実行方式とパイプラインの組合せは schema を正本とする。
+    category: tm-phase-set
+    relatedTerms: [tm-approach, tm-owner-rule]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `Phase`・`Execution`・`AgentPipeline`、[[gl-execution|用語集（実行）]] の実行段"
+  - id: tm-phase-set
+    term: 段の組
+    englishName: phase set
+    aliases: [フェーズセット]
+    definition: 成果物へ適用する一つ以上の段を、実施順にまとめて名前を付けたもの。
+    notes: 戦略の `phase_sets` に定義し、`owner_rules` で適用する組と順序を選ぶ。指定しない成果物には既定の組を使う。単数・複数の指定方法と優先関係は schema を参照する。
+    category: tm-planning
+    relatedTerms: [tm-phase, tm-phase-cycle, tm-phase-iteration, tm-phase-gate]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `phase_sets`・`default_phase_set`・`default_phase_sets`・`owner_rules`"
+  - id: tm-phase-cycle
+    term: 周回
+    englishName: cycle
+    definition: 選択した段の組の並び全体を繰り返す、一回分の実施単位。
+    notes: 段の組の選択における `cycles` で回数を表す。個別の組の反復とは区別する。
+    category: tm-phase-set
+    relatedTerms: [tm-phase-iteration]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `PhaseSetSelection`、[[specdojo:schedule-design-guide|Schedule設計ガイド]]"
+  - id: tm-phase-iteration
+    term: 個別の組の反復
+    englishName: iteration
+    definition: 段の組の並びの中で、特定の組だけを繰り返す一回分の実施単位。
+    notes: 段の組の参照における `iterations` で回数を表す。周回と組み合わせて、どの実施回かを識別する。
+    category: tm-phase-set
+    relatedTerms: [tm-phase-cycle, tm-initial-completion]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `PhaseSetReference`・`initial_state`、[[specdojo:schedule-design-guide|Schedule設計ガイド]]"
+  - id: tm-owner-rule
+    term: 主担当割当
+    englishName: owner rule
+    definition: 対象成果物の主たる実作業責任を担うロールと、適用する段の組を結び付ける戦略上の指定。
+    notes: 戦略の `owner_rules` に対応する。完了条件を確認するレビューロールや承認者とは区別し、個々の人・agent の指名とは分ける。必要な場合は `phase_overrides` で段の実行要件を上書きする。
+    category: tm-planning
+    relatedTerms: [tm-phase-set, tm-task-intent]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `owner_rules`、[[specdojo:sch-rulebook|スケジュール作成ルール]]"
+  - id: tm-milestone
+    term: マイルストーン
+    englishName: milestone
+    definition: ゲート・承認・リリースなどの到達地点を表し、作業期間を持たない計画上の節目。
+    notes: トラック内またはプロジェクト全体の `milestones` で扱う。戦略の `group_milestones` はグループ内の成果物の最終作業を集約する。節目の計画と、人間による承認・文書成熟度の判断は分ける。
+    category: tm-planning
+    relatedTerms: [tm-phase-gate, tm-planning-dependency]
+    source: "`docs/specdojo/schemas/v1/sch-track.schema.yaml` の `milestones`、`docs/specdojo/schemas/v1/sch-milestones.schema.yaml`、`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `group_milestones`、[[specdojo:sch-rulebook|スケジュール作成ルール]]"
+  - id: tm-phase-gate
+    term: 段の同期ゲート
+    englishName: phase gate
+    aliases: [ゲート, フェーズゲート]
+    definition: 対象成果物群が指定した段の組を終えるまで、後続の段の組への開始を待ち合わせるマイルストーン。
+    notes: 戦略の `phase_gates` に対応する。`after_phase_sets` で待ち合わせ地点を指定し、対象全体の足並みをそろえる。人間の承認作業が必要な場合は別に人間が実施する段を計画する。
+    category: tm-milestone
+    relatedTerms: [tm-planning-scope, tm-phase-set, tm-cross-deliverable-pass]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `phase_gates`、[[specdojo:sch-rulebook|スケジュール作成ルール]]"
+  - id: tm-cross-deliverable-pass
+    term: 成果物横断作業
+    englishName: cross-deliverable pass
+    aliases: [横断パス, 横断タスク]
+    definition: 対象成果物群をまとめて扱い、群全体につき一つのタスクとして進める作業。
+    notes: 戦略の `cross_deliverable_passes` で、先行ゲートを表す `after_gate` と後続の組を表す `before_phase_set` の間に置く。成果物ごとに同じ作業を複製せず、`scope` で共同の編集対象を示す。agent の実行パイプラインを付ける場合の関係は schema に従う。
+    category: tm-planning
+    relatedTerms: [tm-phase-gate, tm-planning-scope, tm-approach]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `cross_deliverable_passes`"
+  - id: tm-initial-completion
+    term: 開始前の完了範囲
+    definition: トラック開始時点ですでに終わっている成果物の作業範囲を、計画の初期条件として指定したもの。
+    notes: "`initial_state.completed_deliverables` に対応し、`completed_through` で完了済みの段までを指す。反復がある場合は周回・個別の組の反復も指定できる。`completed_through` の省略時は全段の完了を表す。実行中の状態記録とは区別する。表記と指定条件は schema を正本とする。"
+    category: tm-planning
+    relatedTerms: [tm-phase, tm-phase-cycle, tm-phase-iteration]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `initial_state`"
+  - id: tm-task-intent
+    term: 作業意図
+    englishName: intent
+    aliases: [タスクの目的]
+    definition: 対象成果物に対して何を達成する作業かを宣言し、進め方を導くための目的区分。
+    notes: 戦略の `approach_rules` に成果物ごとに宣言する。型を改善する意図では `kata_target` で対象の型を、一式の初期整備や一式を伴う確定では `bootstrap_scope` で型の範囲を指定する。これらの追加項目を使う意図と、それ以外の意図との対応は schema を正本とする。
+    category: tm-planning
+    relatedTerms: [tm-approach, tm-implementation-evidence-ref]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `approach_rules`、[[specdojo:schedule-design-guide|Schedule設計ガイド]] の intent 宣言"
+  - id: tm-approach
+    term: 実践の進め方
+    englishName: approach
+    aliases: [進め方, Ryu, 流]
+    definition: 作業の目的と実践の型の利用可能性に応じて、成果物を作成・更新・レビューする手順の方針。
+    notes: 戦略の段や段ごとの上書きの `approach` に対応し、plan の進め方を選ぶ。作業意図と保存済みの型の評価結果などから導出する。値ごとの意味は進め方ガイド、許容値は戦略 schema が参照する `Approach` を正本とする。
+    category: tm-planning
+    relatedTerms: [tm-task-intent, tm-phase, tm-cross-deliverable-pass]
+    source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `Phase.approach`・`owner_rules`、[[specdojo:ryu-guide|実践の進め方ガイド]]"
