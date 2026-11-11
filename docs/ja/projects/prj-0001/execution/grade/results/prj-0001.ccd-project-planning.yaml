@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-09T16:25:25.163Z"
+score: 100
+graded_at: "2026-11-10T16:17:26.353Z"
 graded_by: flash-high-executor
 content_hash: cbfbfdce1517885094920babbd0fec79a56dd809c1e7bb218dc4b78020889c38
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 448c5c998a746821876b7f08987a2e8950f9e1e857988e16e7dff5290e0518d3
+  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
 categories:
   purpose:
     score: 100
@@ -26,7 +26,7 @@ categories:
   business:
     score: 100
   consistency:
-    score: 88
+    score: 100
   architecture:
     score: 100
   usability:
@@ -91,8 +91,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -120,20 +120,9 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 概念クラス図（プロジェクトの立上と計画）"
-    message: >-
-      The frontmatter lacks the required 'depends_on' field as specified in 'specdojo:ccd-mermaid-rulebook' section 4,
-      using 'based_on' instead.
-    message_ja: フロントマターに 'specdojo:ccd-mermaid-rulebook' セクション 4 で指定されている必須の 'depends_on' フィールドが不足しており、代わりに 'based_on' が使用されています。
-    cause:
-      type: document
+findings: []
 done_criteria:
   satisfied: 5
   total: 5

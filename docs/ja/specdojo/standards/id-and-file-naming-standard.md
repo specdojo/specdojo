@@ -907,6 +907,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | システム設計-全体構成 | System Design Index | sysd- | sysd-index |
 | システム設計-重要フロー | System Design Critical Flows | sysd- | sysd-critical-flows |
 | システム設計-横断ルール | System Design Cross-cutting Policy | sysd- | sysd-cross-cutting-policy |
+| デザインシステム | Design System Specification | dss- | dss-common, dss-store-gui |
 | 非機能要件 | Non-Functional Requirements | nfr- | nfr-performance |
 | システム受入条件 | System Acceptance Criteria | sac- | sac-performance |
 | テスト戦略・方針 | Test Strategy and Policy | tsp- | tsp-index |

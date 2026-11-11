@@ -2,8 +2,8 @@
 id: prj-0001:cdt-register-type-grade-criteria
 document: prj-0001:cdt-register-type
 path: docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md
-graded_at: "2026-11-09T05:51:43.976Z"
-graded_by: luna-review-executor
+graded_at: "2026-11-10T16:28:53.448Z"
+graded_by: flash-high-executor
 content_hash: 6d3fe39312408d84f2b4ebfc56e3b6270d1f0f7bab82804d68c0a6057a5d56a8
 summary:
   satisfied: 2

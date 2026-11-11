@@ -1,3 +1,4 @@
+import { isYamlDocument, readYamlMetadata } from "./document-metadata.js";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
@@ -78,6 +79,15 @@ export function markdownDocumentId(content: string, path: string): string {
   return id;
 }
 
+export function gradeDocumentId(content: string, path: string): string {
+  if (!isYamlDocument(path)) return markdownDocumentId(content, path);
+  const id = readYamlMetadata(content, path).id;
+  if (typeof id !== "string" || !DOCUMENT_ID_RE.test(id)) {
+    throw new Error(`${path}: YAML metadata id is required to store a grade result`);
+  }
+  return id;
+}
+
 export function resolveGradeResultsDirectory(
   projectOption?: string,
   rootDir = specdojoRootDir(),
@@ -134,7 +144,7 @@ export function gradeResultPathForDocument(opts: {
     : resolveGradeResultsDirectory(opts.project, rootDir);
   return gradeResultPath(
     repo ? join(resultsDirectory, repo.name) : resultsDirectory,
-    markdownDocumentId(content, opts.documentPath),
+    gradeDocumentId(content, opts.documentPath),
   );
 }
 

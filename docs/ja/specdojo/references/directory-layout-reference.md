@@ -235,7 +235,8 @@ docs/
 │       ├── 040-system-design/                    # システム設計
 │       │   ├── sysd-index.md                     # 全体構成（リンク集）
 │       │   ├── sysd-critical-flows.md            # 重要フロー
-│       │   └── sysd-cross-cutting-policy.md      # 横断ルール
+│       │   ├── sysd-cross-cutting-policy.md      # 横断ルール
+│       │   └── dss-common.md                    # GUI デザインシステム
 │       │
 │       ├── 050-business-acceptance-criteria/     # 業務受入条件
 │       │   └── bac-sales-order.md                # 業務受入条件（例：受注）

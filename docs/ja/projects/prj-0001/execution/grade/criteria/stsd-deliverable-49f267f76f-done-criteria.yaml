@@ -2,12 +2,12 @@
 id: prj-0001:stsd-deliverable-grade-criteria
 document: prj-0001:stsd-deliverable
 path: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
-graded_at: "2026-11-09T16:41:38.752Z"
+graded_at: "2026-11-10T16:32:36.819Z"
 graded_by: flash-high-executor
 content_hash: 7bdabd6b5cfd48ceb520c5cef956a82025853f737c01cce69ceade7af65b3351
 summary:
-  satisfied: 1
-  unsatisfied: 4
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -17,7 +17,7 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Approval conditions for T-02 and lifecycle rules for downgrade, restoration, and retirement without a successor
+      Approval conditions for T-02 and transition rules for downgrade, restoration, and retirement without successor
       remain undecided.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
@@ -26,14 +26,15 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      Approval requirements for promotion and exception transition rules are unresolved, preventing full business
-      validity approval.
+      Business validity of state transitions cannot be fully approved while T-02 approval requirements and exceptional
+      transition paths remain unresolved.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: Policy for unlisted transitions and missing or invalid status values is not established for implementation design.
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
@@ -41,8 +42,8 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Observable approval evidence and negative test expectations for invalid transitions or status values are not
-      specified.
+      Observable approval evidence, negative-case expectations, and outcomes for exceptional transitions are not defined
+      for test design.
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
@@ -50,5 +51,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Interim handling rules for unlisted transitions and invalid status values are missing for implementation
-      reference.
+      Implementation validation against source code is still pending (_TODO_) and fallback behavior for undefined
+      transitions is not specified.

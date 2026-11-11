@@ -1,0 +1,68 @@
+推奨 verdict は **`complete-with-findings`** です。Run は `succeeded` で、評価した10件すべての結果が最新でした。完了を妨げる事項はありませんが、評価内容の finding と軽微な記録の食い違いが残っています。
+
+## 評価結果の確認
+
+- **鮮度**: `grade list --target deliverable --project prj-0001` を `--changed-only` / `--dependency-changed` / `--rulebook-changed` / `--rubric-outdated` で実行しました。評価した10件はどれにも出てきません。verdict の直前にも `--changed-only` を再実行し、該当は0件でした。`--incomplete` と `grade state --exhausted` の出力はどちらも空です。
+- **終了状態**: Run JSON は `state: succeeded`、attempt 1 の `exit_code: 0`、evidence の command も `exit_code: 0`、stderr は空です。`pipeline-state` では executor と reporter の両段が `succeeded` です。
+- **集計行**: stdout に `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` とあります。
+  - 終了コード75（rate limit）や中断で残った段はなく、`failed` の段もありません。
+  - `retry_exhausted` の成果物もなく、Run は `partial` ではありません。
+- **評価者**: 指定した `agy-expert-executor` は `.specdojo/agent-members.yaml` で `alias_of: flash-high-executor` です。結果ファイルの `graded_by: flash-high-executor` はこの設定と一致します。
+- **件数の照合**: 結果ファイルの verdict・score・`finding_counts` は、results.tsv の値と全件一致しました。
+
+| 成果物 | verdict / score | finding（major / minor） | 未充足の `done_criteria`（確認担当ロール） |
+| --- | --- | --- | --- |
+| `cdfd-overview` | pass / 100 | 0 / 0 | なし（4/4 充足） |
+| `cdfd-uc-register` | pass / 100 | 0 / 0 | なし（4/4 充足） |
+| `cdfd-uc-routine` | pass / 100 | 0 / 0 | なし（4/4 充足） |
+| `cdfd-uc-schedule` | pass / 100 | 0 / 0 | なし（4/4 充足） |
+| `ccd-project-planning` | pass / 100（前回98） | 0 / 0（前回の minor F001 が消えた） | なし（5/5 充足） |
+| `cdt-register-type` | pass / 87 | 0 / 14 | なし（2/2 充足） |
+| `cdsd-execution` | needs-work / 65 | 13 / 11 | DC-001（BA）、DC-002（ARC）、DC-003（QE） |
+| `cdsd-planning` | needs-work / 65 | 15 / 7 | DC-001（BA）、DC-002（ARC）、DC-003（QE） |
+| `cdsd-sharing` | needs-work / 59 | 21 / 6 | DC-001（BA）、DC-002（ARC）、DC-003（QE。今回 satisfied から unsatisfied に変化） |
+| `stsd-deliverable` | needs-work / 85 | 6 / 3 | DC-001（BA）、DC-002（PO）、DC-003（ARC。今回 satisfied から unsatisfied に変化）、DC-004（QE）、DC-005（DEV） |
+
+## 判断根拠
+
+- **差分の範囲**: `4eb4ad3c..fb13c386` の27ファイルはすべて、この Job Run の出力でした。
+  - 評価結果10件と、`done_criteria` の criteria 10件の更新
+  - Run JSON の追加
+  - この Run の plan・result・evidence・`pipeline-state`・stdout / stderr ログの追加
+- **成果物本文**: 成果物の本文は変更されていません。10件とも `content_hash` は前回と同じです。今回の評価が走ったのは、`source_hashes.schedule` が `448c5c99…` から `04012afc…` に変わったため（依存の変化）です。
+- **前回からの変化**:
+  - 結果ファイルの差分の多くは、`graded_at`、`schedule` のハッシュ、`message_ja` の翻訳の更新です。
+  - `ccd-project-planning`、`cdsd-sharing`、`stsd-deliverable` の3件は、本文が同じなのに score や `done_criteria` の判定が変わっています。
+  - `cdt-register-type` は、評価者が `luna-review-executor` から `flash-high-executor` に変わりました。
+- **記録どうしの整合**: Run の状態、evidence、result の記述は互いに整合しています。ただし result の「変更ファイル」には2点の小さな食い違いがあります。
+  - Run JSON の行数を「+57」と書いていますが、実際の差分は +58 です。
+  - runs 配下の plan・result・evidence などの記録ファイルが一覧に載っていません。
+- **修正の有無**: このレビューでは、Job Run の出力も成果物も一切変更していません。
+
+## 未充足事項・改善指示
+
+完了を妨げる未充足事項はありません。残っている finding は、評価対象の文書の品質に関するものです。この Job の範囲は「評価を最新にすること」なので、Job の完了は妨げません。
+
+1. **担当ロールによる改善**: `cdsd-execution`、`cdsd-planning`、`cdsd-sharing` は BA・ARC・QE に、`stsd-deliverable` は BA・PO・ARC・QE・DEV に、未充足の `done_criteria` を確認して改善するよう引き継ぐ必要があります。どれも major の finding が残っています。
+2. **評価のぶれの確認**: 本文が同じなのに判定が変わった3件（`cdsd-sharing` の DC-003、`stsd-deliverable` の DC-003、`ccd-project-planning` の score と F001）は、評価結果のぶれの可能性があります。評価設定（agy 単段・ルーブリック）を見直すべきかを判断するため、人手で再評価を確認してください。このレビューでは成果物を再評価していません。
+3. **残りの評価対象**: `--changed-only` には、今回の上限10件を超えた別の成果物が39件残っています。次回以降の Run で順に評価されます。
+4. **result の記載**: result の「変更ファイル」の食い違い（上記2点）は記録の正確さの問題です。統合は妨げません。
+
+## approach に応じた確認
+
+- **no-op ではない**: 選択された成果物は10件で、0件ではありません。
+- **再開・再試行**: `--run-id` での再開や、次の Run の `--incomplete` での再試行は不要です。
+
+## decision
+
+- **verdict**: `complete-with-findings`
+
+## 確認できなかった範囲
+
+- `logs/grade/runs/per-document/` 配下の作業ファイルは直接読んでいません。results.tsv の内容は stdout に出力された分で確認しました。
+- 成果物の品質そのものは再評価していません（review の範囲外です）。
+- 評価のぶれの原因は特定していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"推奨 verdict は complete-with-findings。Run は succeeded（attempt 1・command とも exit 0、stderr は空）。評価した10件はすべて完了し、`failed`・`retry_exhausted`・未完了の段はない（`selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0`）。鮮度: `grade list --target deliverable` を `--changed-only`・`--dependency-changed`・`--rulebook-changed`・`--rubric-outdated` で実行し、対象10件はどれにも出てこない。verdict 直前の `--changed-only` 再実行でも0件、`--incomplete` と `grade state --exhausted` は空。差分27ファイルはすべてこの Job Run の出力（評価結果と `done_criteria` criteria の更新各10件、Run JSON、run 記録）。10件とも `content_hash` は不変で、今回の評価は `source_hashes.schedule` の変化による。結果ファイルの verdict・score・`finding_counts` は results.tsv と全件一致し、`agy-expert-executor` は `alias_of: flash-high-executor` で `graded_by` と一致。pass 6件（cdfd-overview / cdfd-uc-register / cdfd-uc-routine / cdfd-uc-schedule / ccd-project-planning が 100、cdt-register-type が 87 で minor 14）。needs-work 4件: cdsd-execution 65（major 13・minor 11）、cdsd-planning 65（major 15・minor 7）、cdsd-sharing 59（major 21・minor 6）、stsd-deliverable 85（major 6・minor 3）。未充足の `done_criteria`: cdsd-execution / cdsd-planning / cdsd-sharing は DC-001 BA・DC-002 ARC・DC-003 QE、stsd-deliverable は DC-001 BA・DC-002 PO・DC-003 ARC・DC-004 QE・DC-005 DEV。finding: 本文が同じなのに判定が変わった3件（cdsd-sharing DC-003 と stsd-deliverable DC-003 が satisfied から unsatisfied、ccd-project-planning が score 98 から 100 で F001 消失）は評価のぶれの可能性がある。result の「変更ファイル」は Run JSON を +57 と書くが実際は +58 で、runs 配下の記録ファイルも載っていない（軽微）。確認できなかった範囲: `logs/grade/runs/per-document/` 配下の作業ファイル（results.tsv は stdout 出力分で確認）、成果物品質の再評価（review の範囲外）、評価のぶれの原因の特定。","handoff":["cdsd-execution・cdsd-planning・cdsd-sharing は BA・ARC・QE、stsd-deliverable は BA・PO・ARC・QE・DEV に、未充足の `done_criteria` の確認と改善を引き継ぐ。","本文が同じ（`content_hash` 不変）なのに判定が変わった3件（cdsd-sharing DC-003、stsd-deliverable DC-003、ccd-project-planning の score と F001）について、評価のぶれとして評価設定（agy 単段・ルーブリック）の見直しが要るかを人手で判断する。","`--changed-only` には上限10件を超えた別の成果物が39件残っており、次回以降の Run で評価される。"],"validations":[{"command":"git diff --stat / --name-status 4eb4ad3cf758f75eb9dbedf91bf9ef1c3f8954a4..fb13c386ad3d4c1cdebb56cb81fcab5cfd10d617","status":"passed","summary":"27ファイルすべてがこの Job Run の出力（評価結果・criteria・Run JSON・run 記録）で、対象外の変更は混入していない"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only | grep -cE <10 docs>","status":"passed","summary":"0件（最初の確認と verdict 直前の再確認の両方）"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed / --rulebook-changed / --rubric-outdated | grep -cE <10 docs>","status":"passed","summary":"いずれも0件"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力なし（未完了の評価パイプラインはない）"},{"command":"node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なし（retry_exhausted の成果物はない）"}]}
+</specdojo_executor_evidence>

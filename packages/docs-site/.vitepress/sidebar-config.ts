@@ -175,6 +175,7 @@ const systemDesignRulebooks = [
   rulebook("個別システム設計", "sysd"),
   rulebook("重要フロー", "sysd-critical-flows"),
   rulebook("横断ルール", "sysd-cross-cutting-policy"),
+  rulebook("デザインシステム", "dss"),
 ];
 
 const nonFunctionalRequirementRulebooks = [
@@ -388,6 +389,7 @@ const systemDesignSamples = [
   sample("システム設計 全体構成", "sysd-index"),
   sample("重要フロー", "sysd-critical-flows"),
   sample("横断ルール", "sysd-cross-cutting-policy"),
+  sample("デザインシステム", "dss"),
 ];
 
 const nonFunctionalRequirementSamples = [
