@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-A7CR",
+  "run_id": "pjr-a7cr-20261111T133521Z-199dc50a",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T13:37:01.649Z",
+    "completed_at": "2026-11-11T13:44:34.659Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-a7cr.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-a7cr-night-register-integrate-and-report-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/night-orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/night-orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/commit-msg-merge.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-a7cr-night-register-integrate-and-report-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/night-orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/night-orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/commit-msg-merge.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../040-system-design/sysd-job-execution.md        |  2 +\n ...a7cr-night-register-integrate-and-report-fix.md | 48 ++++++++++++++++---\n .../ja/specdojo/guides/register-operation-guide.md |  4 ++\n src/commands/night-orchestrator.ts                 |  7 +--\n tests/src/commands/night-orchestrator.test.ts      | 55 ++++++++++++++++++++++\n 5 files changed, 106 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/commands/night-orchestrator.ts tests/src/commands/night-orchestrator.test.ts tests/tools/commit-msg-merge.integration.test.ts docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "passed",
+      "summary": "実装・テスト・関連文書を整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-a7cr-night-register-integrate-and-report-fix.md",
+      "status": "passed",
+      "summary": "対応結果と申し送りを記載した個票を整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査に成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検証に成功しました。既存の再 export 参照・未作成文書の警告があります。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の生成に成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象 0 ファイル、検出 0 件でした。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "ファイル単位の YAML schema 検査は非適用です。",
+      "reason": "executor 自身が変更した YAML ファイルはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts routine run --project prj-0001 --id rtn-night-approved-register",
+      "status": "requires_human",
+      "summary": "保護設定反映後、orchestrator が PJR-JSEY を対象に実行し、子の統合から Job の review・統合まで確認してください。実 agent の起動と利用枠消費を伴います。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A7CR/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A7CR/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A7CR/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4344 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4344 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A7CR\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nv1/bdd.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A7CR/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A7CR/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A7CR\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-lP0aLZ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-92vt3Q/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DDeqQy/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yzr7rf/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "朝報告の frontmatter・見出しを修正し、回帰テストと設計・ガイドを更新しました。hook の原因を再現し、保護設定の変更案を個票に記録しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "orchestrator が承認後に `lefthook.yml` の commit-msg コマンドを `npx commitlint --edit $1` から `npx commitlint --edit \"{1}\"` へ変更してください。executor は保護設定を変更していません。現行 hook は主の作業ツリーで古い `COMMIT_EDITMSG` を検査して不正な merge を通し、新しい linked worktree では ENOENT になることを再現しました。",
+    "設定反映・統合後、orchestrator が PJR-JSEY を使って夜間 routine を実行し、子 register の統合、朝報告の検査、Job の review・統合まで確認してください。その後に `rtn-night-approved-register` を有効に戻してください。",
+    "判断: 朝報告はプロジェクト管理文書として既存の `type: project` と `rulebook: none` を採用しました。schema・型の列挙は変更していません。hook の入口追加は不要と判断しました。",
+    "0.8.0 の CHANGELOG 文案（不具合修正）: 夜間の承認済み登録項目の朝報告を、既存の frontmatter schema と番号付き見出しの規約に合わせ、Job の review 前の文書検査で停止する問題を修正。保護設定反映後の追加文案: merge の commit-msg hook で Git が渡すメッセージファイルを検査し、linked worktree のファイル不在による失敗と、古いメッセージによる誤受理を修正。`CHANGELOG.md` は未変更です。",
+    "追加した朝報告の単体テストと merge hook の統合テストを含む全件検査は、指示どおり親 runner に委ねています。result は編集していません。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-A7CR/pjr-a7cr-20261111T133521Z-199dc50a/executor.log",
+      "bytes": 3866,
+      "truncated": false
+    }
+  ]
+}

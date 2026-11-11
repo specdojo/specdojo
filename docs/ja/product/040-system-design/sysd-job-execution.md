@@ -306,6 +306,8 @@ checkpoint:
 
 一晩の件数、wave の並列数、連続失敗で停止する閾値、rate limit 時の stop / fallback は Job input とする。停止判定は完了した wave の ID 順の結果で行うため、同じ wave に入った項目は完走し、次の wave から止める。承認範囲外の操作を要求する失敗は、元項目を `derived_from` に持つ承認待ち issue として分離する。close、`waiting`、新しい承認待ちは 1 件の朝報告にまとめる。
 
+朝報告は `execution/reports/night-orchestrator/` に保存するプロジェクト管理文書とし、frontmatter は `type: project`・`status: draft`・`rulebook: none`、本文は番号付きの「1. 集計」「2. 実行結果」を持つ。既存の成果物 frontmatter schema と Markdown 規約を適用し、専用の文書型は追加しない。
+
 Job 自体は `task.review` を宣言し、個別項目の統合に加えて朝報告と派生 issue を外側の Job review でも確認してから統合する。routine は時刻だけを担当し、保護された `enabled` の変更は人が行う。
 
 ## 7. 保存領域と監査
