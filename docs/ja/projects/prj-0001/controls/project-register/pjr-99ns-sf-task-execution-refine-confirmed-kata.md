@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:12:06Z"
-  block_reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md"
   derived_from:
     - PJR-2GD6
     - PJR-T88P

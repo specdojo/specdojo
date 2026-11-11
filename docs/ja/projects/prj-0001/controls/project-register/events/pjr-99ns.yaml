@@ -121,3 +121,32 @@
       from: "-"
       to: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md"
   previous_event_id: reg_ccd5cd0742524d2594d78222aaa5db99
+- v: 1
+  id: reg_914f1016d22a424a8ff80fae4b2e2186
+  ts: "2026-11-11T03:10:23Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md"
+      to: "-"
+  previous_event_id: reg_0ba1d3733bf749dbad7cfc17a6246e18
+- v: 1
+  id: reg_0ec806ab582b4300bf8fecd0726e583a
+  ts: "2026-11-11T03:16:33Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_914f1016d22a424a8ff80fae4b2e2186
