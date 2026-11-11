@@ -4591,3 +4591,16 @@
       from: "-"
       to: approved
   previous_event_id: reg_86ee589c4c0f403cbf2b55da6f30d00c
+- v: 1
+  id: reg_8a185b6640d54b56b92f8a5dad74f5b1
+  ts: "2026-11-11T14:29:45Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_58977229f5184b139ee331747f2c8644
