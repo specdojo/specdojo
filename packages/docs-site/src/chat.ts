@@ -36,18 +36,13 @@ function formatInline(text: string): string {
 }
 
 export function parseChatMessages(code: string): ChatMessage[] {
-  const rawLines = code.split(/\r?\n/);
-  while (rawLines.length > 0 && rawLines[rawLines.length - 1].trim() === "") {
-    rawLines.pop();
-  }
-  while (rawLines.length > 0 && rawLines[0].trim() === "") {
-    rawLines.shift();
-  }
-
   const messages: ChatMessage[] = [];
   let currentMsg: ChatMessage | null = null;
 
-  for (const line of rawLines) {
+  for (const line of code.split(/\r?\n/)) {
+    // Blank separators never become message content, even between continuation lines.
+    if (line.trim() === "") continue;
+
     const isIndented = /^\s/.test(line);
     const speakerMatch = !isIndented ? line.match(/^([^:：\n]+?)[:：]\s*(.*)$/) : null;
 

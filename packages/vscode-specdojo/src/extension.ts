@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import { formatMarkdownTable } from "./markdown-table";
+import { extendChatMarkdownIt } from "./chat-preview";
 
 interface DocIndex {
   version: number;
@@ -227,8 +228,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate(): void {}
 
-// Markdown preview support: converts [[id]] wikilinks into clickable links
+// Markdown preview support: chat fences and clickable [[id]] wikilinks.
 export function extendMarkdownIt(md: any): any {
+  extendChatMarkdownIt(md);
   // VS Code calls md.parse() directly (not md.render()).
   // Wrapping md.parse lets us identify the source document before inline rules fire.
   let _currentRenderFsPath = "";
