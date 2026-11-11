@@ -82,6 +82,8 @@ specdojo exec complete \
 
 `exec worktree` は独自の JSON や状態ファイルを作りません。必要な情報は毎回既存情報から導出します。
 
+worktree の配置は `--worktree-base`、project 設定の `run.worktree_base`、既定値 `../worktrees` の順で決まります。設定値と既定値の相対パスは主の作業ツリーを基準に解決するため、Job worktree 内からの起動でも同じ配置になります。明示的な `--worktree-base` の相対パスは起動元の作業ツリーが基準で、絶対パスはそのまま使います。統合先は起動元のブランチです。
+
 | 情報                | 導出元                                                     |
 | ------------------- | ---------------------------------------------------------- |
 | worktree名 / branch | project 修飾 task ID から `<slug>` と `exec/<slug>` を導出 |

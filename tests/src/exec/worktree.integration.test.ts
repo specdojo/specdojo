@@ -132,6 +132,27 @@ describe("exec worktree", () => {
     expect(resolveWorktreeBase(root, undefined, undefined)).toBe(resolve(root, "../worktrees"));
   });
 
+  it("anchors configured and default bases at the main checkout from a Job worktree", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-nested-worktrees-"));
+    const job = join(base, "job");
+    try {
+      git(repo, "worktree", "add", "-b", "exec/job", job);
+      for (const configured of [undefined, "../configured", "task-worktrees"]) {
+        expect(resolveWorktreeBase(job, undefined, configured)).toBe(
+          resolveWorktreeBase(repo, undefined, configured),
+        );
+      }
+      expect(resolveWorktreeBase(job, "../explicit", "../configured")).toBe(
+        resolve(job, "../explicit"),
+      );
+      expect(resolveWorktreeBase(job, undefined, base)).toBe(base);
+    } finally {
+      rmSync(base, { recursive: true, force: true });
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("creates and reuses a task worktree", () => {
     const repo = createGitRepository();
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));

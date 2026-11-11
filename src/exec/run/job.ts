@@ -55,6 +55,7 @@ import {
 import {
   ensureExecWorktree,
   formatGitResultFailure,
+  gitEnvironment,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -627,7 +628,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   const child = spawnSync(executable, fullArgs, {
     cwd: worktree.path,
     env: {
-      ...process.env,
+      ...gitEnvironment(),
       [ROUTINE_EXEC_ENV]: trigger === "routine" ? "1" : "0",
       [JOB_REVIEW_WORKTREE_CHILD_ENV]: "1",
     },
@@ -848,10 +849,10 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
 async function runJobModeUnchecked(
   opts: RunOpts,
   resolvePipelineAgents: JobPipelineAgentResolver,
+  isWorktreeChild: boolean,
 ): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
-  const isWorktreeChild = process.env[JOB_REVIEW_WORKTREE_CHILD_ENV] === "1";
   if (!isWorktreeChild) {
     // A Job's task.review declaration takes precedence over the caller: it routes the Run
     // through the reviewed integration path even without --worktree (routine action.commit).
@@ -1041,6 +1042,10 @@ export async function runJobMode(
   opts: RunOpts,
   resolvePipelineAgents: JobPipelineAgentResolver,
 ): Promise<void> {
+  const isWorktreeChild = process.env[JOB_REVIEW_WORKTREE_CHILD_ENV] === "1";
+  // This marker routes only this Job's re-entry. Preconditions, commands, agents and
+  // their tests must choose their own worktree/review mode rather than inherit it.
+  delete process.env[JOB_REVIEW_WORKTREE_CHILD_ENV];
   const paths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(paths);
   const projectId = paths.projectId ?? opts.project;
@@ -1049,13 +1054,13 @@ export async function runJobMode(
     opts.dryRun ||
     jobRunUsesReviewedIntegration(definition, {
       worktree: opts.worktree,
-      isWorktreeChild: process.env[JOB_REVIEW_WORKTREE_CHILD_ENV] === "1",
+      isWorktreeChild,
     }) ||
     // In-place command Jobs also support projects without a Git repository. There is
     // nothing to commit there, and no reliable Git diff for suppressing Run records.
     gitResult(specdojoRootDir(), ["rev-parse", "--is-inside-work-tree"]).status !== 0
   ) {
-    await runJobModeUnchecked(opts, resolvePipelineAgents);
+    await runJobModeUnchecked(opts, resolvePipelineAgents, isWorktreeChild);
     return;
   }
   const preview = await materializeJobRun({
@@ -1066,13 +1071,14 @@ export async function runJobMode(
     dryRun: true,
   });
   if (preview.duplicateComplete) {
-    await runJobModeUnchecked(opts, resolvePipelineAgents);
+    await runJobModeUnchecked(opts, resolvePipelineAgents, isWorktreeChild);
     return;
   }
   const snapshot = snapshotJobOutput(specdojoRootDir(), paths.executionPath, preview.record);
   await runJobModeUnchecked(
     { ...opts, scheduledAt: preview.record.scheduled_at },
     resolvePipelineAgents,
+    isWorktreeChild,
   );
   if (!existsSync(preview.runPath)) return;
   const record = loadJobRunRecord(preview.runPath);

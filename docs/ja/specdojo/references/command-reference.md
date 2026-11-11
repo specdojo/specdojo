@@ -1183,6 +1183,8 @@ specdojo orchestrator night --project prj-0001 \
 
 各 wave は worktree と post-review を必須にし、成功は close、未完了は `waiting` にします。`--max-items` は一晩の件数、`--parallel` は wave の同時数、`--max-consecutive-failures` は次の wave を止める閾値です。`--on-rate-limit fallback` では fallback executor の指定が必須です。失敗を含む朝報告を保存できた場合は部分成功を表す終了コード 2、コマンド自体の異常は 1 を返します。
 
+Job worktree 内から起動しても、子 run の worktree は主の作業ツリーから起動した場合と同じ場所へ作られます。子の plan・result・実行記録は Job のブランチへ統合されます。Job の worktree 再起動用の内部印と Git の repository 固有環境変数は子の処理へ引き継がれません。配置の指定方法は [[specdojo:exec-worktree-guide|exec worktree運用ガイド]] を参照してください。
+
 ## 16. devcontainer
 
 `devcontainer` は、利用リポジトリの `.devcontainer/` 環境を構築するためのサブコマンドです。VS Code Dev Container などで、オーケストレーターを起動するための分離されたコンテナ環境を生成します。
