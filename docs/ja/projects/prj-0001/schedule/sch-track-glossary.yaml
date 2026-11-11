@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-track.schema.yaml
+kind: track
+id: prj-0001:sch-track-glossary
+type: project
+status: draft
+title: スケジュールトラック（glossary）
+rulebook: specdojo:sch-rulebook
+version: 1
+project_id: prj-0001
+track: glossary
+settings: {}
+tasks:
+  - local_id: gl-common
+    phase_suffix: "010"
+    phase_set: retrofit-pass
+    phase_id: retrofit
+    name: 実装調査・草案反映
+    duration_days: 0.5
+    depends_on: []
+    owner: BA
+    description: >
+      成果物カタログの evidence_refs から現在動作を調査し、既存成果物・決定記録・プロジェクト文脈が示す意図された仕様、および done_criteria
+      と照合する。一致する内容は成果物へ反映し、乖離は実装へ無条件に合わせず result に記録する。
+  - local_id: gl-common
+    phase_suffix: "070"
+    phase_set: refine-pass
+    phase_id: refine
+    name: 磨き込み・整合性確認
+    duration_days: 0.25
+    depends_on:
+      - T-GLOSSARY-gl-common-010
+    owner: BA
+    description: |
+      整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+  - local_id: gl-common
+    phase_suffix: "080"
+    phase_set: condense-pass
+    phase_id: condense
+    name: 冗長さの整理
+    duration_days: 0.25
+    depends_on:
+      - T-GLOSSARY-gl-common-070
+    owner: BA
+    description: |
+      1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+  - local_id: gl-common
+    phase_suffix: "090"
+    phase_set: retrofit-review-pass
+    phase_id: review
+    name: 完成版レビュー（実装照合）
+    duration_days: 0.25
+    depends_on:
+      - T-GLOSSARY-gl-common-080
+    owner: BA
+    description: |
+      完成版を変更せず、evidence_refs が示す現在動作、意図された仕様、done_criteria を照合する。実装との一致・乖離・未確認範囲を判定し、根拠と修正対象候補を review result に記録する。
+  - local_id: gl-common
+    phase_suffix: "140"
+    phase_set: finalize-pass
+    phase_id: finalize
+    name: 完成版確定
+    duration_days: 0.125
+    depends_on:
+      - T-GLOSSARY-gl-common-090
+    owner: BA
+    description: >
+      担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template
+      もあわせて確認する。

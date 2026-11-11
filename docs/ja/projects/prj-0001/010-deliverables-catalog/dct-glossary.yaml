@@ -17,6 +17,19 @@ groups:
         path: gl-common.yaml
         rulebook: specdojo:gl-rulebook
         note: SpecDojoの用語は複数ドメインを横断して使われるため、ドメイン別に分割せず単一の用語集にまとめる（id-and-file-naming-standard.md の-common定義に準拠）
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: CLI のコマンドと引数で使う用語（用語の名前と英語名の根拠）
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml
+            purpose: 登録簿の項目の種類と状態の用語
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/exec-common.schema.yaml
+            purpose: 実行（exec）のタスクの状態と記録の用語
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/sch-common.schema.yaml
+            purpose: schedule の段・ゲート・マイルストーンの用語
         done_criteria:
           - text: 業務上の主要用語の定義・別名・分類が正確に記述されていること
             roles: [BA]

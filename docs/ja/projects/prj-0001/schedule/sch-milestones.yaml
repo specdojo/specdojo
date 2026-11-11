@@ -156,6 +156,7 @@ milestones:
     name: ドメイン完了
     artifact_name: 計画
     depends_on:
+      - T-PLANNING-dct-index-140
       - T-PLANNING-sch-strategy-launch-140
       - T-PLANNING-sch-strategy-data-flow-140
     owner: PM
@@ -164,7 +165,6 @@ milestones:
     artifact_name: 計画
     depends_on:
       - T-PLANNING-dct-index-020
-      - T-PLANNING-tml-index-020
       - T-PLANNING-sch-defaults-020
       - T-PLANNING-sch-strategy-launch-020
       - T-PLANNING-sch-strategy-data-flow-020
@@ -174,7 +174,6 @@ milestones:
     artifact_name: 計画
     depends_on:
       - T-PLANNING-dct-index-070
-      - T-PLANNING-tml-index-070
       - T-PLANNING-sch-defaults-070
       - T-PLANNING-sch-strategy-launch-070
       - T-PLANNING-sch-strategy-data-flow-070
@@ -184,7 +183,6 @@ milestones:
     artifact_name: 計画
     depends_on:
       - T-PLANNING-dct-index-090
-      - T-PLANNING-tml-index-090
       - T-PLANNING-sch-defaults-090
       - T-PLANNING-sch-strategy-launch-090
       - T-PLANNING-sch-strategy-data-flow-090
@@ -411,3 +409,9 @@ milestones:
     depends_on:
       - T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-140
     owner: PM
+  - id: M-GLOSSARY-glossary
+    name: ドメイン完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-common-140
+    owner: PO
