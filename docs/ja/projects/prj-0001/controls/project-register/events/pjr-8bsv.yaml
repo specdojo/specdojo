@@ -83,3 +83,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_098f0a7f89634bb1ad3d5b45c7df5817
+- v: 1
+  id: reg_ef1b39cab8374f97a11e1fdfc6e26d36
+  ts: "2026-11-11T15:43:13Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8db2766c550a4a629b8b64a5892c2a77
