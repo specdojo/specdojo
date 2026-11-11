@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-a7cr-night-register-integrate-and-report-fix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-11T13:31:51Z"
+  completed_at: "2026-11-11T14:57:26Z"
+  conclusion: commit-msg の hook に Git が渡すメッセージのファイルを渡し、朝報告を frontmatter の schema と番号付きの見出しに合わせた
   derived_from:
     - PJR-MJEH
   commit_type: fix

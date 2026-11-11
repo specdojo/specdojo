@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1bfd49d4148642039b183b9e47c4084f
+- v: 1
+  id: reg_a77bd564d0a54fdda652133c258f545c
+  ts: "2026-11-11T14:57:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: lefthook.yml の変更を feature ブランチで反映した後、夜間の routine を 1 回流し、統合と job の review まで通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: commit-msg の hook に Git が渡すメッセージのファイルを渡し、朝報告を frontmatter の schema と番号付きの見出しに合わせた
+  previous_event_id: reg_1d5ed151d4524009a82b22780ff31bed
