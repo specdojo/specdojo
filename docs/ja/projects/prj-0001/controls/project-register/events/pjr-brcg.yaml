@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_53687a3f5ce84dc0a808fee6e507ea97
+  ts: "2026-11-10T23:27:01Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo の英語版の進め方と始める条件を決める
+    - field: description
+      from: ""
+      to: 機能と型が固まった後に英語版を作るため、コードの多言語化・文書の英語化・型の英語化の範囲、正本の言語、同期の仕方、始める条件、epic の分け方を決める。決まったらこの decision から epic を起票する
+    - field: input
+      from: ""
+      to: '["indie の要望（2026-11-11）: SpecDojo の機能と型が固まってきたら英語版を作りたい。コードの多言語化、文書と型の英語化がある。","すでにあるもの: docs/en/ の置き場所（docs-site は docs/en がなくてもビルドできる、PJR-EA20）、命名の標準の多言語文書の ID 方針（翻訳は同じ論理文書の言語違いとして同じ ID）、更新文書の翻訳の routine rtn-translate-updated-docs（今は止めてある）、grade の英語の判定を正本にし gemma26-translator で日本語へ翻訳する仕組み、用語集 gl-common の概念名と英語名の対応（PJR-QD81）。","論点: (1) 範囲（CLI の表示・エラー・agent への指示の文の多言語化、ガイドとリファレンスの英語化、rulebook・recipe・sample・template の英語化）、(2) 正本の言語（日本語を正本にするか、型は英語を正本にするか）、(3) 日本語の正本を変えたときの英語版の追い方、(4) 始める条件（例: 業務仕様とプロジェクトの型の手入れの epic が終わり型が ready にそろったら）、(5) epic の分け方（コードと文書・型の 2 つにするか）。","epic ではなく decision で起票する（indie が決定）。担当は PO、期限は 2026-12-31。"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-11"
+    - field: due
+      from: ""
+      to: "2026-12-31"

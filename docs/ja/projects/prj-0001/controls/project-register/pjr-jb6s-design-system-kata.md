@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T12:46:14Z"
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
   derived_from:
     - PJR-MXQB
   autopilot: approved
