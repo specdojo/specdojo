@@ -155,33 +155,33 @@ terms:
   - id: tm-result
     term: 実行結果
     englishName: result
-    definition: タスクで実施した内容、変更した成果物、検証結果、残課題をまとめる記録（実行記録の構成要素）。
+    definition: タスクで実施した内容、変更した成果物、検証結果、残課題をまとめる記録。
     category: tm-exec-log
     relatedTerms: [tm-task, tm-plan, tm-evidence]
   - id: tm-event
     term: 状態遷移イベント
     englishName: event
-    definition: タスクや成果物の状態が遷移した記録（実行記録の構成要素）。
+    definition: タスクや成果物の状態が遷移した記録。
     category: tm-exec-log
   - id: tm-evidence
     term: 証跡
     englishName: evidence
-    definition: 実行の過程や結果を裏付ける記録（実行記録の構成要素）。
+    definition: 実行の過程や結果を裏付ける記録。
     category: tm-exec-log
   - id: tm-trial
     term: 試行記録
     englishName: trial
-    definition: タスク実行時の試行錯誤の過程（実行記録の構成要素）。
+    definition: タスク実行時の試行錯誤の過程。
     category: tm-exec-log
   - id: tm-grade
     term: 判定結果
     englishName: grade
-    definition: 成果物の品質や適合性に対する総合的な評価判定（評価結果の構成要素）。
+    definition: 成果物の品質や適合性に対する総合的な評価判定。
     category: tm-evaluation
   - id: tm-finding
     term: 指摘事項
     englishName: finding
-    definition: 評価によって発見された改善点や問題点（評価結果の構成要素）。
+    definition: 評価によって発見された改善点や問題点。
     category: tm-evaluation
   - id: tm-filing
     term: 起票

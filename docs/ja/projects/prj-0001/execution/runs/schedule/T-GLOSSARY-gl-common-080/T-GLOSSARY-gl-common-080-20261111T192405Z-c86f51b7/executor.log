@@ -1,0 +1,126 @@
+用語集の重複表現 6 件を削除しました。30 用語の定義の意味・別名・分類・関連参照を維持し、schema 検査と整形は成功しています。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "gl-common.yaml の6定義から分類と重複する括弧書きを削除。30用語の必須情報と責務境界・制約・schema参照を維持し、対象文書のみ変更した。result は未編集。",
+  "handoff": [],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "status": "passed",
+      "summary": "整形済み。追加の整形差分なし。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "status": "passed",
+      "summary": "対象 YAML は schema に適合。"
+    },
+    {
+      "command": "node tmp/verify-gl-common-condense.mjs",
+      "status": "passed",
+      "summary": "6箇所の括弧書き削除以外は変更なし。全30用語のID重複なし、分類・関連参照の参照先が存在。検証スクリプトと比較用データは削除済み。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象となる staged 実行記録は0件、検出0件。"
+    },
+    {
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint",
+      "status": "not_applicable",
+      "summary": "Markdown 個別検査の対象なし。",
+      "reason": "executor が変更したのは YAML 1ファイルのみで、Markdown の変更がないため。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査の対象なし。",
+      "reason": "履歴蓄積ファイルおよび既存 plan・result を変更していないため。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査の適用条件外。",
+      "reason": "成果物の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下の変更がないため。"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:158 tm-result.definition",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「（実行記録の構成要素）」を削除。同じ所属関係は直下の category: tm-exec-log に保持され、実施内容・変更成果物・検証結果・残課題という固有の定義は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:164 tm-event.definition",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「（実行記録の構成要素）」を削除。所属関係は category: tm-exec-log に保持され、タスクや成果物の状態遷移の記録という意味は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:169 tm-evidence.definition",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「（実行記録の構成要素）」を削除。所属関係は category: tm-exec-log に保持され、実行の過程や結果を裏付ける記録という意味は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:174 tm-trial.definition",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「（実行記録の構成要素）」を削除。所属関係は category: tm-exec-log に保持され、タスク実行時の試行錯誤の過程という意味は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:179 tm-grade.definition",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「（評価結果の構成要素）」を削除。所属関係は category: tm-evaluation に保持され、品質や適合性の総合的な評価判定という意味は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:184 tm-finding.definition",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "「（評価結果の構成要素）」を削除。所属関係は category: tm-evaluation に保持され、評価で発見した改善点や問題点という意味は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:89,146 tm-schedule.notes / tm-exec-log.notes",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "計画と実行状態の正本の区別は、各用語を参照する際の責務判断に必要なため、両側の説明を保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:78,118 tm-register.notes / tm-document-maturity.notes",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "登録簿の処理状態と文書成熟度の区別は状態管理の制約として必要。完了日時と保留の区別、人間による ready 昇格の条件も保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:104 tm-plan.notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "進め方と対象成果物・実践の型の参照元との関係を短く示す記述であり、形式的な条件は複写せず schema を正本としているため保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml:13,61,131,136,146,152 各 notes の「単一の英語名を持たない。」",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "用語ごとに英語名を持たないことを明示する情報であり、英語名フィールドの欠落だけでは未記入と区別できないため保持した。",
+      "cause": {"type": "document"}
+    }
+  ]
+}
+</specdojo_executor_evidence>
