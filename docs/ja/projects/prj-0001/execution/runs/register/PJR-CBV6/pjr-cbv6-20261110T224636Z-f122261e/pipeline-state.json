@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-CBV6",
   "run_id": "pjr-cbv6-20261110T224636Z-f122261e",
-  "updated_at": "2026-11-11T00:22:44.277Z",
+  "updated_at": "2026-11-11T00:27:23.200Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CBV6/pjr-cbv6-20261110T224636Z-f122261e/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-11T00:22:44.277Z",
-      "completed_at": null,
+      "completed_at": "2026-11-11T00:27:23.200Z",
       "artifact_ref": null
     }
   },
