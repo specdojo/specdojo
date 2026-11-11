@@ -413,5 +413,42 @@ milestones:
     name: ドメイン完了
     artifact_name: 用語集
     depends_on:
-      - T-GLOSSARY-gl-common-140
+      - T-GLOSSARY-gl-register-140
+      - T-GLOSSARY-gl-planning-140
+      - T-GLOSSARY-gl-execution-140
+      - T-GLOSSARY-gl-quality-140
+      - T-GLOSSARY-gl-setup-140
+    owner: PO
+  - id: G-GLOSSARY-first-pass
+    name: 初回パス完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-common-010
+      - T-GLOSSARY-gl-register-010
+      - T-GLOSSARY-gl-planning-010
+      - T-GLOSSARY-gl-execution-010
+      - T-GLOSSARY-gl-quality-010
+      - T-GLOSSARY-gl-setup-010
+    owner: PO
+  - id: G-GLOSSARY-refine-pass
+    name: 磨き込み完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-common-070
+      - T-GLOSSARY-gl-register-070
+      - T-GLOSSARY-gl-planning-070
+      - T-GLOSSARY-gl-execution-070
+      - T-GLOSSARY-gl-quality-070
+      - T-GLOSSARY-gl-setup-070
+    owner: PO
+  - id: G-GLOSSARY-review-pass
+    name: レビュー完了
+    artifact_name: 用語集
+    depends_on:
+      - T-GLOSSARY-gl-common-090
+      - T-GLOSSARY-gl-register-090
+      - T-GLOSSARY-gl-planning-090
+      - T-GLOSSARY-gl-execution-090
+      - T-GLOSSARY-gl-quality-090
+      - T-GLOSSARY-gl-setup-090
     owner: PO

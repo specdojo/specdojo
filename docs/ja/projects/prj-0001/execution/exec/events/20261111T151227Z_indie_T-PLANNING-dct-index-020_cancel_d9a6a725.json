@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-11T15:12:27Z",
+  "type": "cancel",
+  "task_id": "T-PLANNING-dct-index-020",
+  "by": "indie",
+  "msg": "orchestrator が記帳。2026-09 から Ready のまま動いておらず、計画の文書はその後の流れで作り直したため取りやめる（indie が承認）"
+}

@@ -15,6 +15,11 @@ scope:
 approach_rules:
   - local_ids:
       - gl-common
+      - gl-register
+      - gl-planning
+      - gl-execution
+      - gl-quality
+      - gl-setup
     intent: reflect-implementation
 phase_sets:
   retrofit-pass:
@@ -103,7 +108,40 @@ default_phase_sets:
 owner_rules:
   - local_ids:
       - gl-common
+      - gl-execution
+      - gl-planning
+      - gl-quality
+      - gl-register
+      - gl-setup
     owner: BA
+phase_gates:
+  - id: G-GLOSSARY-first-pass
+    name: 初回パス完了
+    artifact_name: 用語集
+    after_phase_sets:
+      - retrofit-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-glossary
+  - id: G-GLOSSARY-refine-pass
+    name: 磨き込み完了
+    artifact_name: 用語集
+    after_phase_sets:
+      - refine-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-glossary
+  - id: G-GLOSSARY-review-pass
+    name: レビュー完了
+    artifact_name: 用語集
+    after_phase_sets:
+      - retrofit-review-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-glossary
 group_milestones:
   - catalog_id: prj-0001:dct-glossary
     milestone:

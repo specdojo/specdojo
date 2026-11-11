@@ -16,7 +16,7 @@ groups:
         overview: 業務・システムで使用する用語の意味を、ドメインを横断して統一的に定義する
         path: gl-common.yaml
         rulebook: specdojo:gl-rulebook
-        note: SpecDojoの用語は複数ドメインを横断して使われるため、ドメイン別に分割せず単一の用語集にまとめる（id-and-file-naming-standard.md の-common定義に準拠）
+        note: 複数の領域で使う横断の用語（成果物・Kata・データストアなど）を置く。領域に閉じた用語は gl-register・gl-planning・gl-execution・gl-quality・gl-setup に分け、同じ用語を 2 つの用語集で定義しない（2026-11-12 indie の依頼で領域別に分けた）
         evidence_refs:
           - kind: implementation
             path: src/specdojo.ts
@@ -43,3 +43,194 @@ groups:
           - text: ドキュメント間の用語の一貫性が確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
+          - text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+      - local_id: gl-register
+        name: 用語集（登録簿）
+        kind: work
+        overview: 登録簿の項目の種類・状態・操作（起票・記帳・close・reopen など）と、epic・decision などの用語を定義する
+        path: gl-register.yaml
+        rulebook: specdojo:gl-rulebook
+        depends_on:
+          - gl-common
+        evidence_refs:
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml
+            purpose: 項目の種類と状態
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/register-events.schema.yaml
+            purpose: 登録簿の操作と event
+          - kind: implementation
+            path: src/register
+            purpose: register のコマンドと遷移
+        done_criteria:
+          - text: 領域の主要用語が洗い出され、定義・別名・分類が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 用語スコープと定義の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術実装・CLI の引数・schema の項目名の参照として使えること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+      - local_id: gl-planning
+        name: 用語集（計画）
+        kind: work
+        overview: 成果物カタログ・スケジュール戦略・schedule・track・段・ゲート・マイルストーン・intent・approach など、計画の用語を定義する
+        path: gl-planning.yaml
+        rulebook: specdojo:gl-rulebook
+        depends_on:
+          - gl-common
+        evidence_refs:
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/dct.schema.yaml
+            purpose: 成果物カタログの項目
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/sch-strategy.schema.yaml
+            purpose: 戦略・intent・approach
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/sch-track.schema.yaml
+            purpose: track・段・依存
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/sch-milestones.schema.yaml
+            purpose: ゲートとマイルストーン
+        done_criteria:
+          - text: 領域の主要用語が洗い出され、定義・別名・分類が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 用語スコープと定義の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術実装・CLI の引数・schema の項目名の参照として使えること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+      - local_id: gl-execution
+        name: 用語集（実行）
+        kind: work
+        overview: exec のタスク・claim・worktree・executor・reporter・pipeline・親の検証・統合・routine・job など、実行の用語を定義する
+        path: gl-execution.yaml
+        rulebook: specdojo:gl-rulebook
+        depends_on:
+          - gl-common
+        evidence_refs:
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/exec-common.schema.yaml
+            purpose: タスクの状態と event
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/exec-evidence.schema.yaml
+            purpose: 証跡と検証
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/pipeline-state.schema.yaml
+            purpose: pipeline の段
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/job.schema.yaml
+            purpose: job
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/routine.schema.yaml
+            purpose: routine
+        done_criteria:
+          - text: 領域の主要用語が洗い出され、定義・別名・分類が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 用語スコープと定義の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術実装・CLI の引数・schema の項目名の参照として使えること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+      - local_id: gl-quality
+        name: 用語集（評価とレビュー）
+        kind: work
+        overview: grade・review・完了条件・レビュー観点・指摘・判定など、評価とレビューの用語を定義する
+        path: gl-quality.yaml
+        rulebook: specdojo:gl-rulebook
+        depends_on:
+          - gl-common
+        evidence_refs:
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/grade-result.schema.yaml
+            purpose: 評価結果と判定
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/grade-done-criteria.schema.yaml
+            purpose: 完了条件
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml
+            purpose: レビュー観点
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/finding-cause.schema.yaml
+            purpose: 指摘の原因
+        done_criteria:
+          - text: 領域の主要用語が洗い出され、定義・別名・分類が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 用語スコープと定義の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術実装・CLI の引数・schema の項目名の参照として使えること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+      - local_id: gl-setup
+        name: 用語集（導入と設定）
+        kind: work
+        overview: init・稼働構成の設定・人と agent の名簿・ロール・provider など、導入と設定の用語を定義する
+        path: gl-setup.yaml
+        rulebook: specdojo:gl-rulebook
+        depends_on:
+          - gl-common
+        evidence_refs:
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/specdojo-config.schema.yaml
+            purpose: 稼働構成の設定
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/agent-members.schema.yaml
+            purpose: agent の名簿
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/pm-members.schema.yaml
+            purpose: 人の名簿
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/pm-roles.schema.yaml
+            purpose: ロール
+          - kind: implementation
+            path: docs/specdojo/schemas/v1/exec-defaults.schema.yaml
+            purpose: provider と実行の既定
+        done_criteria:
+          - text: 領域の主要用語が洗い出され、定義・別名・分類が正確に記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 用語スコープと定義の妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術実装・CLI の引数・schema の項目名の参照として使えること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
