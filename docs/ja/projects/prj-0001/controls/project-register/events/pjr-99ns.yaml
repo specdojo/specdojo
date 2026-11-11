@@ -150,3 +150,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_914f1016d22a424a8ff80fae4b2e2186
+- v: 1
+  id: reg_91a06309efb8424682f7bdce05cfd6d4
+  ts: "2026-11-11T03:51:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。夜間の実行で executor は済んだが統合が残り（PJR-RX14）、日中に --resume で統合した。差分が対象の文書だけで lint が通ること、grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: 代表の sf-task-execution を、確定した型で磨き込み、冗長さを整理した
+  previous_event_id: reg_0ec806ab582b4300bf8fecd0726e583a
