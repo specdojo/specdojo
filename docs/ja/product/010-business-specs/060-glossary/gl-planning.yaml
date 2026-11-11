@@ -62,7 +62,7 @@ terms:
     englishName: track
     aliases: [管理トラック]
     definition: 対象成果物の作業を一つの戦略とタスク群にまとめて管理する、Schedule の計画単位。
-    notes: 戦略と展開済み計画の `track` に対応し、CLI では `--track` で指定する。ドメインは成果物の分類、トラックは作業の管理単位である。戦略がある場合はカタログと戦略を生成入力とし、展開済み計画を直接編集しない。実行状態の正本は実行記録とする。
+    notes: 戦略と展開済み計画の `track` に対応し、CLI では `--track` で指定する。戦略がある場合はカタログと戦略を生成入力とし、展開済み計画を直接編集しない。実行状態の正本は実行記録とする。
     category: tm-planning
     relatedTerms: [tm-catalog-domain, tm-planning-scope, tm-phase-set, tm-milestone]
     source: "`docs/specdojo/schemas/v1/sch-track.schema.yaml`、[[specdojo:sch-rulebook|スケジュール作成ルール]]、[[prj-0001:pjr-bb92-cdfd-overview-propagation|Schedule と実行状態の責務の決定記録]]"
@@ -80,7 +80,7 @@ terms:
     englishName: dependency
     aliases: [依存関係]
     definition: ある成果物の根拠または作業の開始に先立って必要となる、他の成果物や作業との関係。
-    notes: カタログの `depends_on` は根拠となる成果物論理名を参照し、Schedule の `depends_on` は実行順序を定めるタスクまたはマイルストーンを参照する。戦略の `cross_domain_dependencies` はカタログにないドメイン間の順序を補う。実装エビデンス参照は依存を作らない。
+    notes: カタログの `depends_on` は根拠となる成果物論理名を参照し、Schedule の `depends_on` は実行順序を定めるタスクまたはマイルストーンを参照する。戦略の `cross_domain_dependencies` はカタログにないドメイン間の順序を補う。
     category: tm-planning
     relatedTerms: [tm-deliverable-local-id, tm-phase-gate, tm-initial-completion]
     source: "`docs/specdojo/schemas/v1/dct.schema.yaml` の `depends_on`、`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `cross_domain_dependencies`、[[specdojo:sch-rulebook|スケジュール作成ルール]]"
@@ -139,7 +139,7 @@ terms:
     englishName: phase gate
     aliases: [ゲート, フェーズゲート]
     definition: 対象成果物群が指定した段の組を終えるまで、後続の段の組への開始を待ち合わせるマイルストーン。
-    notes: 戦略の `phase_gates` に対応する。`after_phase_sets` で待ち合わせ地点を指定し、対象全体の足並みをそろえる。人間の承認作業が必要な場合は別に人間が実施する段を計画する。
+    notes: 戦略の `phase_gates` に対応する。`after_phase_sets` で待ち合わせ地点を指定する。人間の承認作業が必要な場合は別に人間が実施する段を計画する。
     category: tm-milestone
     relatedTerms: [tm-planning-scope, tm-phase-set, tm-cross-deliverable-pass]
     source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `phase_gates`、[[specdojo:sch-rulebook|スケジュール作成ルール]]"
@@ -148,7 +148,7 @@ terms:
     englishName: cross-deliverable pass
     aliases: [横断パス, 横断タスク]
     definition: 対象成果物群をまとめて扱い、群全体につき一つのタスクとして進める作業。
-    notes: 戦略の `cross_deliverable_passes` で、先行ゲートを表す `after_gate` と後続の組を表す `before_phase_set` の間に置く。成果物ごとに同じ作業を複製せず、`scope` で共同の編集対象を示す。実行パイプラインは agent が実行する横断作業で用いる。実行方式との組合せは schema を正本とする。
+    notes: 戦略の `cross_deliverable_passes` で、先行ゲートを表す `after_gate` と後続の組を表す `before_phase_set` の間に置く。`scope` で共同の編集対象を示す。実行パイプラインは agent が実行する横断作業で用いる。実行方式との組合せは schema を正本とする。
     category: tm-planning
     relatedTerms: [tm-phase-gate, tm-planning-scope, tm-approach]
     source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `cross_deliverable_passes`"
