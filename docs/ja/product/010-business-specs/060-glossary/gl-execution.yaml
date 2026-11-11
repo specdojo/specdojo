@@ -104,7 +104,7 @@ terms:
     englishName: worktree
     aliases: [ワークツリー]
     definition: タスクの変更をほかの作業から分離し、検証・統合・回復の単位とする Git の作業場所。
-    notes: 隔離実行に用い、失敗時は成果と再開に必要な記録を保持する。タスク起点と実行方式によって利用の有無が異なる。
+    notes: 失敗時は成果と再開に必要な記録を保持する。タスク起点と実行方式によって利用の有無が異なる。
     category: tm-execution
     relatedTerms: [tm-integration, tm-execution-resume]
     source: "[[sf-task-execution|システム化機能（タスク実行）]]、`docs/specdojo/schemas/v1/exec-common.schema.yaml` の `TaskOrigin`"
@@ -122,7 +122,7 @@ terms:
     englishName: executor
     aliases: [エグゼキューター]
     definition: 実行計画に従う成果物の編集またはレビューと、担当する検証を行う agent の役割。
-    notes: pipeline では result の直接更新とタスク状態の記録を担当しない。reporter を伴わない単独の Job 実行では result も担当するため、適用する実行方式を確認する。
+    notes: pipeline では result の直接更新とタスク状態の記録を担当しない。reporter を伴わない単独の Job 実行では result も担当する。
     category: tm-execution-pipeline
     relatedTerms: [tm-task-mode, tm-reporter, tm-executor-completion]
     source: "[[sf-task-execution|システム化機能（タスク実行）]]、`docs/specdojo/schemas/v1/job.schema.yaml` の `agentTask.agent`"
@@ -140,7 +140,7 @@ terms:
     englishName: executor/reporter pipeline
     aliases: [pipeline]
     definition: 作業遂行と証跡に基づく報告を別の役割へ分け、runner が検証と統合を制御する実行方式。
-    notes: Job の agent 指名では reporter を伴うとこの方式になり、伴わない場合は executor が単独で実行する。親検証は runner が実行し、段状態の `stages` に独立した段としては記録しない。
+    notes: Job の agent 指名では reporter を伴うとこの方式になり、伴わない場合は executor が単独で実行する。親検証は段状態の `stages` に独立した段としては記録しない。
     category: tm-execution
     relatedTerms: [tm-pipeline-stage, tm-pipeline-state, tm-parent-validation]
     source: "`docs/specdojo/schemas/v1/pipeline-state.schema.yaml`、`docs/specdojo/schemas/v1/job.schema.yaml` の `agentTask.agent`、[[sf-task-execution|システム化機能（タスク実行）]]"
@@ -307,7 +307,7 @@ terms:
     term: 定期実行アクション
     englishName: routine action
     definition: 定期実行の機会に、Job への委譲または読み取り・派生生成用コマンドの直接起動を指定する実行単位。
-    notes: "`action.kind: job` は Job と入力を参照する。`kind: specdojo` は agent を呼ばず exec と競合しないサブコマンドを `args` で直接起動する。単一または配列で定義し、種類ごとの項目は schema を正本とする。Job 出力の統合前レビューは Job 側で宣言し、routine の `commit` は互換用途に限る。"
+    notes: "`action.kind: job` は Job と入力を参照する。`kind: specdojo` は agent を呼ばず exec と競合しないサブコマンドを `args` で直接起動する。単一または配列で定義し、種類ごとの項目は schema を正本とする。統合前レビューは「ジョブ統合前レビュー宣言」を参照し、routine の `commit` は互換用途に限る。"
     category: tm-execution
     relatedTerms: [tm-routine-trigger, tm-job-run, tm-job-review]
     source: "`docs/specdojo/schemas/v1/routine.schema.yaml` の `action`、[[prj-0001:pjr-2jye-dashboard-daily-briefing|dashboard 更新用の直接アクションの決定記録]]"
