@@ -6,6 +6,7 @@ import type { Command } from "commander";
 import { resolveProjectPaths } from "../exec/project.js";
 import { loadRegisterItems, resolveRegisterPaths, type PjrItem } from "../register/register.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { gitEnvironment } from "../shared/git-environment.js";
 
 export type NightRunOutcome = {
   id: string;
@@ -142,7 +143,7 @@ async function runCaptured(command: string, args: string[]): Promise<CapturedRes
   return await new Promise((resolveRun, reject) => {
     const child = spawn(command, args, {
       cwd: specdojoRootDir(),
-      env: process.env,
+      env: gitEnvironment(),
       stdio: "pipe",
     }) as ChildProcessWithoutNullStreams;
     let stdout = "";

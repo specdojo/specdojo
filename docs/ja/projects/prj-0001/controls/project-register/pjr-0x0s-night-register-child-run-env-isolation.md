@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: hard
   owner: sol-executor
@@ -43,15 +43,38 @@ orchestrator night から起動する子の exec run の worktree の置き場�
 
 ## 4. 作業内容
 
-| No  | 作業                                           | 担当         | 状態 | メモ |
-| --- | ---------------------------------------------- | ------------ | ---- | ---- |
-| 1   | 原因を確かめる                                 | executor     | open | -    |
-| 2   | 置き場所と環境を隔離し、回帰テストを足す       | executor     | open | -    |
-| 3   | 夜間の routine を 1 回流して確かめ、有効に戻す | orchestrator | open | -    |
+| No  | 作業                                           | 担当         | 状態 | メモ                                 |
+| --- | ---------------------------------------------- | ------------ | ---- | ------------------------------------ |
+| 1   | 原因を確かめる                                 | executor     | done | 5.1 節に切り分けを記載               |
+| 2   | 置き場所と環境を隔離し、回帰テストを足す       | executor     | done | 親 runner が単体・統合検証を実行する |
+| 3   | 夜間の routine を 1 回流して確かめ、有効に戻す | orchestrator | open | 統合後の実運用確認                   |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 原因と修正
+
+merge commit の親数が足りなくなる直接原因は、Job worktree への再起動で設定した `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD=1` が command → night → register run → 親検証へ残ることだった。統合テスト内の別の Job も再起動済みと判定され、worktree・review・merge を飛ばして in-place で完了する。`jobRunUsesReviewedIntegration()` は同じ review 宣言と worktree 指定でも、この印に対応する `isWorktreeChild` が true なら false、false なら true を返すことを確認した。Job の入口で印を消費してローカルな引数へ渡し、precondition を含む子孫へ継承しないようにした。
+
+入れ子の配置は別の不具合で、`resolveWorktreeBase()` が設定値・既定値の相対パスを Job worktree 基準で解決していた。主の作業ツリーを基準に変更し、この実行の linked worktree と主の作業ツリーで既定の配置がともに `/workspaces/specdojo-workspace/worktrees` になることを確認した。統合先は従来どおり起動元の Job ブランチで、Job 全体の review・統合を通して上位へ渡す。
+
+Git の repository 固有変数は既存の command 実行・Git 操作・親検証で `gitEnvironment()` により除去されており、今回の親数不足を説明する原因ではない。再起動と夜間の子起動にも同じ正本を適用し、直接起動した場合も隔離する。project 実行 lock の token や通常の Git identity は保持する。
+
+### 5.2. 成果物と検証
+
+- 実装: `src/exec/worktree.ts`、`src/exec/run/job.ts`、`src/commands/night-orchestrator.ts`。
+- 回帰テスト: 夜間の子プロセスの Git 環境除去と lock 継承、主・Job worktree 間の配置一致、Job command への内部印の非継承、Job worktree 内での別 Job の review・merge、register run の plan・result・evidence・pipeline 状態の Job ブランチへの統合を追加した。`job-worktree.integration.test.ts` の fixture の Git identity は既存のテスト共通環境を使う。
+- 設計・ガイド: [[prj-0001:sysd-job-execution|Job実行設計]]、[[specdojo:exec-worktree-guide|exec worktree運用ガイド]]、[[specdojo:command-reference|CLIコマンドリファレンス]] を更新した。
+- 変更ファイルの Prettier 整形、カタログ検証、履歴リンク検証、register build、差分の空白検査は成功した。単体・統合テスト、型検査、各 lint、schema 検証は指定どおり親 runner が実行し、確定結果を追記する。
+
+### 5.3. 判断と申し送り
+
+- 互換性のため、明示的な `--worktree-base` の相対パスは起動元基準を維持した。設定値・既定値だけを主の作業ツリー基準にし、絶対パスは変更しない。Git 未初期化などで主の作業ツリーを取得できなければ従来の起動元基準に戻す。
+- orchestrator は統合後に夜間の register routine を 1 回実行し、子の記録が最終統合先へ入ることと親検証の成功を確認してから `rtn-night-approved-register` を有効に戻す。実 agent の起動と使用量消費を伴うため executor では実行しない。
+- runner・register・exec の統合後確認として、[[prj-0001:pm-orchestrator-playbook|prj-0001 のオーケストレーター運用メモ]] 6.1 節に従い PJR-JSEY の動作確認も orchestrator が行う。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: 不具合修正（v0.8.0）。文案: 夜間の register 実行で子の worktree が入れ子になり、Job の内部環境が子の統合テストへ漏れて review・merge を飛ばす問題を修正しました。
 
 ## 6. 関連ドキュメント
 

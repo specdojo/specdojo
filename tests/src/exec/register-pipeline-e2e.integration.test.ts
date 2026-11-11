@@ -743,6 +743,72 @@ afterEach(() => {
 });
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
+  it(
+    "integrates child run records into the invoking Job branch without nesting worktrees",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const parentJob = join(worktreeBase, "parent-job");
+        writeFileSync(
+          join(root, ".specdojo/specdojo.config.json"),
+          JSON.stringify({
+            ...CONFIG,
+            projects: {
+              test: {
+                ...CONFIG.projects.test,
+                run: { ...CONFIG.projects.test.run, worktree_base: relative(root, worktreeBase) },
+              },
+            },
+          }),
+        );
+        git(root, "add", ".specdojo/specdojo.config.json");
+        git(root, "commit", "-m", "configure relative worktree base");
+        git(root, "worktree", "add", "-b", "exec/parent-job", parentJob);
+        const rootHead = git(root, "rev-parse", "HEAD");
+        process.chdir(parentJob);
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+        ]);
+
+        expect(process.exitCode ?? 0, output.join("")).toBe(0);
+        expect(output.join("")).toContain(join(worktreeBase, TASK_DIR_NAME));
+        expect(existsSync(join(worktreeBase, "worktrees"))).toBe(false);
+        expect(existsSync(join(worktreeBase, TASK_DIR_NAME))).toBe(false);
+        const records = git(parentJob, "ls-files", `${EXECUTION_REL}/runs/register/PJR-AB12`).split(
+          "\n",
+        );
+        for (const name of ["plan.md", "result.md", "evidence.json", "pipeline-state.json"]) {
+          expect(
+            records.some((path) => path.endsWith(`/${name}`)),
+            name,
+          ).toBe(true);
+        }
+        expect(readRootResult(parentJob)).toContain("status: complete");
+        expect(git(parentJob, "log", "-1", "--pretty=%P").split(" ")).toHaveLength(2);
+        expect(git(root, "rev-parse", "HEAD")).toBe(rootHead);
+        expect(git(parentJob, "worktree", "list", "--porcelain")).not.toContain(EXEC_BRANCH);
+      });
+    },
+  );
+
   it.each([
     {
       run: { parent_validations_exclude: ["arbitrary-command"] },

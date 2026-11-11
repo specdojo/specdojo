@@ -88,7 +88,14 @@ export function resolveWorktreeBase(
   configured: string | undefined,
 ): string {
   const value = override?.trim() || configured?.trim() || "../worktrees";
-  return isAbsolute(value) ? resolve(value) : resolve(repoRoot, value);
+  if (isAbsolute(value)) return resolve(value);
+  // An explicit CLI override remains relative to the invoking checkout. Persistent
+  // configuration and the default use the main checkout, also from a Job worktree.
+  if (override?.trim()) return resolve(repoRoot, value);
+  const listed = gitResult(repoRoot, ["worktree", "list", "--porcelain"]);
+  const mainPath =
+    listed.status === 0 ? String(listed.stdout ?? "").match(/^worktree (.+)$/m)?.[1] : undefined;
+  return resolve(mainPath ?? repoRoot, value);
 }
 
 export function listRegisteredWorktrees(repoRoot: string): RegisteredWorktree[] {
