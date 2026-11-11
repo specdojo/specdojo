@@ -252,7 +252,7 @@ terms:
     englishName: rate limit policy
     aliases: [レートリミット方針]
     definition: agent の利用枠制限を検出したときの停止・待機・代替先への切替や再試行を定める実行方針。
-    notes: "`rate_limit_policy` に対応し、実行基盤別に上書きできる。指名実行の回復設定は `pinned`、CLI の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema と exec 設定ガイドを参照する。"
+    notes: "`rate_limit_policy` に対応し、実行基盤別に上書きできる。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     category: tm-exec-defaults
     relatedTerms: [tm-rate-limit-detection, tm-retry-policy, tm-difficulty-routing]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `RateLimitPolicy`、[[specdojo:exec-config-guide|exec設定ガイド]]"
@@ -261,7 +261,7 @@ terms:
     englishName: retry policy
     aliases: [リトライ設定]
     definition: 再試行を行う場合の試行回数と、失敗が続くときの待機時間の増やし方・上限を定める設定。
-    notes: "利用枠制限時の方針の `retry` に対応する。次候補での再試行を選ぶ方針と組み合わせ、`max_attempts` は初回を含めて数える。項目の条件は schema の `RetryPolicy` を参照する。"
+    notes: "利用枠制限時の方針の `on_critical.retry` に対応し、次候補での再試行を選ぶ場合に使う。`max_attempts` は初回を含めて数える。適用条件と項目の正本は schema の `RateLimitPolicy`・`RetryPolicy` とする。"
     category: tm-exec-defaults
     relatedTerms: [tm-rate-limit-policy]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `RetryPolicy`・`RateLimitPolicy.on_critical`"
