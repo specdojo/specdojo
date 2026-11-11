@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ddac-bdd-register-entry-refine-confirmed-kata
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-10T13:13:54Z"
+  completed_at: "2026-11-11T00:33:00Z"
+  conclusion: 代表の bdd-register-entry を、確定した型で磨き込み、冗長さを整理した
   derived_from:
     - PJR-2GD6
     - PJR-T88P
