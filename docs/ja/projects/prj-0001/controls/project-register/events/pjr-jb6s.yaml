@@ -157,3 +157,16 @@
       from: "executor reported incomplete: DSS rulebook・sample の改訂と個票への記録、sandbox 内検査を完了。両文書の再 grade による pass 確認が残っています。"
       to: "-"
   previous_event_id: reg_687907bc350f494c92f778c2b85ab6e2
+- v: 1
+  id: reg_8bfefc054a7643d29d7b2c3686af2519
+  ts: "2026-11-11T03:59:16Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3fa78928f8484c99abee284d4d8d797f
