@@ -44,7 +44,7 @@ terms:
     term: 作業
     englishName: todo
     definition: 実施することが決まっている具体的な作業を追跡する登録項目の分類。
-    notes: やるかどうか自体が未定なら問いまたは判断を使う。対応と必要な確認を終えたら完了とする。
+    notes: やるかどうか自体が未定なら問いまたは判断を使う。
     category: tm-register-item-type
     relatedTerms: [tm-register-question, tm-register-decision, tm-register-done]
   - id: tm-register-epic
@@ -74,7 +74,6 @@ terms:
     term: 課題
     englishName: issue
     definition: すでに発生している問題を追跡する登録項目の分類。
-    notes: 対応と必要な確認を終えたら完了とする。
     category: tm-register-item-type
     relatedTerms: [tm-register-risk, tm-register-done]
   - id: tm-register-change-request
@@ -97,7 +96,7 @@ terms:
     englishName: note
     aliases: [共有記録, 備忘]
     definition: 共有・備忘のために、起票済みのまま内容を継続更新する登録項目の分類。
-    notes: 審査・終了承認の対象とせず、対応・回答・判断が必要なら目的に合う別項目を起票する。`open` は生きている記録を表し、対応漏れを意味しない。
+    notes: 審査・終了承認の対象とせず、対応・回答・判断が必要なら目的に合う別項目を起票する。
     category: tm-register-item-type
     relatedTerms: [tm-register-open, tm-register-update]
     source: "[[prj-0001:pjr-s5ya-register-item-type-lifecycle|分類別ライフサイクルの決定]]、`src/register/update.ts`"
@@ -114,7 +113,7 @@ terms:
     englishName: open
     aliases: [未着手]
     definition: 起票または再開され、対応に着手していない登録項目の処理状態。
-    notes: 記録の分類では、継続して更新する生きている記録を表す。
+    notes: 記録の分類では、継続して更新する生きている記録を表し、対応漏れを意味しない。
     category: tm-register-item-status
     relatedTerms: [tm-register-note, tm-register-start]
   - id: tm-register-in-progress
@@ -176,7 +175,7 @@ terms:
     term: 登録項目の待機
     englishName: register wait
     definition: 活動中の登録項目を、外部回答や復旧などを待つ待機中へ移す操作。
-    notes: "`register wait --id --reason` に対応する。待機理由は結論と分け、再開条件は本文へ記録する。"
+    notes: "`register wait --id --reason` に対応する。再開条件は本文へ記録する。"
     category: tm-register-entry
     relatedTerms: [tm-register-waiting, tm-register-block-reason]
     source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
