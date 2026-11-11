@@ -60,3 +60,64 @@
       from: "-"
       to: approved
   previous_event_id: reg_9faf177abf864cddb4896a868a0c6dea
+- v: 1
+  id: reg_3e741fc3c7f44b1e8ffd97cdf9d766ee
+  ts: "2026-11-10T15:04:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_22946c42594b404f94a8411f194711a1
+- v: 1
+  id: reg_51cde05392b04e25b68a5510f3bc9b1d
+  ts: "2026-11-10T15:22:37Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_3e741fc3c7f44b1e8ffd97cdf9d766ee
+- v: 1
+  id: reg_ccd5cd0742524d2594d78222aaa5db99
+  ts: "2026-11-11T01:04:31Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_51cde05392b04e25b68a5510f3bc9b1d
+- v: 1
+  id: reg_0ba1d3733bf749dbad7cfc17a6246e18
+  ts: "2026-11-11T01:12:55Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/execution/runs/register/PJR-7ZZR/pjr-7zzr-20261110T150224Z-75308872/plan.md"
+  previous_event_id: reg_ccd5cd0742524d2594d78222aaa5db99
