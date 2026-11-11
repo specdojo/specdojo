@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   registered_at: "2026-11-11T13:31:42Z"
+  completed_at: "2026-11-11T14:58:09Z"
+  conclusion: PJR-A7CR で直した。夜間の routine は統合と job の review まで通る
   derived_from:
     - PJR-RX14
 ---

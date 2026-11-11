@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-RX14"]'
+- v: 1
+  id: reg_c1cbb3324a89432aa831207795084486
+  ts: "2026-11-11T14:58:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: PJR-A7CR の close に合わせる
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: PJR-A7CR で直した。夜間の routine は統合と job の review まで通る
+  previous_event_id: reg_ae8518571f724cbf990a0e96c4fad864
