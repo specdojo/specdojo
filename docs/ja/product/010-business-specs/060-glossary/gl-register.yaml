@@ -1,0 +1,337 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/gl.schema.yaml
+id: gl-register
+type: glossary
+rulebook: specdojo:gl-rulebook
+title: 用語集（登録簿）
+locale: ja
+status: draft
+terms:
+  - id: tm-register-entry
+    term: 登録項目
+    englishName: register item
+    aliases: [登録簿項目]
+    definition: 登録簿で作業・課題・懸念・問い・判断・記録を個別に追跡する管理単位。
+    notes: 登録簿・起票・記帳の基本定義は [[gl-common|用語集（共通）]] を正本とする。起票は `register add`、記帳は状態遷移・結論の記録・commit も含む。Schedule の計画済みタスクを重複登録しない。
+    relatedTerms: [tm-register-ticket, tm-register-item-type, tm-register-item-status]
+    source: "[[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]]"
+  - id: tm-register-ticket
+    term: 登録項目個票
+    englishName: register ticket
+    aliases: [個票]
+    definition: 一つの登録項目の現在値、入力、対応結果、判断の証跡を保持する正本の文書。
+    notes: 構造化した現在値は Frontmatter の `specdojo` 配下、タイトル・概要・入力・完了条件・対応結果は本文に置く。一覧は派生ビュー、変更履歴は別のイベント記録とする。所属登録簿は `part_of` で示す。
+    category: tm-register-entry
+    relatedTerms: [tm-register-item-id, tm-register-event]
+    source: "[[specdojo:pjr-rulebook|プロジェクト登録簿 作成ルール]]、`src/register/item.ts`"
+  - id: tm-register-item-id
+    term: 登録項目表示 ID
+    englishName: register item ID
+    aliases: [PJR-ID]
+    definition: 同一プロジェクト内の登録項目を識別し、CLI 操作や項目間参照に使う短い識別子。
+    notes: "`PJR-XXXX` 形式で `--id` に指定する。別プロジェクトの派生元・先行項目は `<project-id>:PJR-XXXX` で参照する。個票の文書 ID（`id`）はプロジェクトと主題を含み、表示 ID と区別する。形式の正本は schema とする。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-derived-from, tm-register-dependency]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `id`・`LocalRegisterItemRef`・`QualifiedRegisterItemRef`、`src/register/item.ts`"
+  - id: tm-register-item-type
+    term: 登録項目の分類
+    englishName: item type
+    aliases: [登録項目の種別]
+    definition: 何を追跡し、どの結果をもって通常の追跡を終えるかを分ける登録項目の区分。
+    notes: "`item_type` に保持し、CLI では `--type` で指定する。分類ごとの使い分けは分類一覧、終了判断は状態定義を参照する。許容値の正本は schema の `ItemType` とする。"
+    category: tm-register-entry
+    source: "[[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemType`"
+  - id: tm-register-todo
+    term: 作業
+    englishName: todo
+    definition: 実施することが決まっている具体的な作業を追跡する登録項目の分類。
+    notes: やるかどうか自体が未定なら問いまたは判断を使う。対応と必要な確認を終えたら完了とする。
+    category: tm-register-item-type
+    relatedTerms: [tm-register-question, tm-register-decision, tm-register-done]
+  - id: tm-register-epic
+    term: エピック
+    englishName: epic
+    definition: 一つのトラック全体の計画と、着手・完了の判断を担う登録項目の分類。
+    notes: "[[gl-planning|用語集（計画）]] のトラックを `track` で必ず結び付ける。対象領域の `domains`、着手予定日の `start_on` もエピックに限って使う。具体的な作業は派生元で結んだ子作業で行う。自身を `exec run --register` の実行対象にせず、子項目と Schedule を見て人間が完了を判断する。種類に応じた項目の条件は schema を正本とする。"
+    category: tm-register-item-type
+    relatedTerms: [tm-register-todo, tm-register-derived-from, tm-register-done]
+    source: "[[prj-0001:pjr-njj7-register-epic-track-governance|エピックによるトラック管理の決定]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`、`src/register/epic.ts`"
+  - id: tm-register-question
+    term: 問い
+    englishName: question
+    aliases: [質問]
+    definition: 回答や確認が必要な事項を追跡する登録項目の分類。
+    notes: 回答が確定したら決定済みとする。回答から方針選択や作業が生じたら、判断または作業を別に起票する。
+    category: tm-register-item-type
+    relatedTerms: [tm-register-decision, tm-register-decided]
+  - id: tm-register-risk
+    term: リスク
+    englishName: risk
+    definition: まだ顕在化していない懸念を追跡する登録項目の分類。
+    notes: 顕在化したら課題として起票する。対応完了または受容の判断で追跡を終える。
+    category: tm-register-item-type
+    relatedTerms: [tm-register-issue, tm-register-done]
+  - id: tm-register-issue
+    term: 課題
+    englishName: issue
+    definition: すでに発生している問題を追跡する登録項目の分類。
+    notes: 対応と必要な確認を終えたら完了とする。
+    category: tm-register-item-type
+    relatedTerms: [tm-register-risk, tm-register-done]
+  - id: tm-register-change-request
+    term: 変更要求
+    englishName: change-request
+    definition: 承認済みの成果物・仕様・計画を変える要望を追跡する登録項目の分類。
+    notes: 選択肢の比較を伴っても既存合意の変更を求める場合に使う。採択した変更の反映と必要な確認を終えて完了とする。
+    category: tm-register-item-type
+    relatedTerms: [tm-register-decision, tm-register-done]
+  - id: tm-register-decision
+    term: 判断
+    englishName: decision
+    aliases: [決定事項]
+    definition: 既存合意の変更要求を除き、当該領域の意思決定者が選択肢から方針を決める事項を追跡する登録項目の分類。
+    notes: 決定内容と理由・承認の証跡を残して決定済みとする。決定後の作業は別に起票する。分類の `decision` と処理状態の `decided` を区別する。
+    category: tm-register-item-type
+    relatedTerms: [tm-register-change-request, tm-register-decided, tm-register-conclusion]
+  - id: tm-register-note
+    term: 記録
+    englishName: note
+    aliases: [共有記録, 備忘]
+    definition: 共有・備忘のために、起票済みのまま内容を継続更新する登録項目の分類。
+    notes: 審査・終了承認の対象とせず、対応・回答・判断が必要なら目的に合う別項目を起票する。`open` は生きている記録を表し、対応漏れを意味しない。
+    category: tm-register-item-type
+    relatedTerms: [tm-register-open, tm-register-update]
+    source: "[[prj-0001:pjr-s5ya-register-item-type-lifecycle|分類別ライフサイクルの決定]]、`src/register/update.ts`"
+  - id: tm-register-item-status
+    term: 登録項目の処理状態
+    englishName: item status
+    definition: 登録項目の対応・判断の現在位置と、追跡を続ける必要性を表す区分。
+    notes: "`item_status` を正本とし、起票時は `--status` で指定する。個票の `status` が表す文書成熟度やタスク実行状態とは別に管理する。活動中は起票済み・対応中・待機中・審査待ち、終端は完了・決定済み・却下・延期とする。終了・再開の判断は人間が担う。業務条件は状態定義、許容値は schema を正本とする。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-close, tm-register-reopen]
+    source: "[[stsd-register-entry|ステータス定義（登録項目個票）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemStatus`"
+  - id: tm-register-open
+    term: 起票済み
+    englishName: open
+    aliases: [未着手]
+    definition: 起票または再開され、対応に着手していない登録項目の処理状態。
+    notes: 記録の分類では、継続して更新する生きている記録を表す。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-note, tm-register-start]
+  - id: tm-register-in-progress
+    term: 対応中
+    englishName: in-progress
+    definition: 担当者または AI Agent が対応・調査している登録項目の処理状態。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-start, tm-register-wait]
+  - id: tm-register-waiting
+    term: 待機中
+    englishName: waiting
+    aliases: [保留]
+    definition: 外部回答、前提解消、失敗復旧、審査材料の補完を待つ登録項目の処理状態。
+    notes: 活動中の状態であり、追跡を停止する延期とは区別する。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-block-reason, tm-register-deferred]
+  - id: tm-register-review-status
+    term: 審査待ち
+    englishName: review
+    definition: 対応結果について人間の審査・承認を待つ登録項目の処理状態。
+    notes: タスク実行の成功だけでは終了を意味しない。完了可否レビューの定義は [[gl-quality|用語集（評価とレビュー）]] を参照する。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-submit-review, tm-register-close]
+  - id: tm-register-done
+    term: 完了
+    englishName: done
+    definition: 対応と必要な確認を終え、追跡を終了した登録項目の処理状態。
+    notes: 作業・エピック・リスク・課題・変更要求の通常の終了先とする。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-close, tm-register-completed-at]
+  - id: tm-register-decided
+    term: 決定済み
+    englishName: decided
+    definition: 判断または問いの決定・回答が確定し、追跡を終了した登録項目の処理状態。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-decision, tm-register-question, tm-register-close]
+  - id: tm-register-rejected
+    term: 却下
+    englishName: rejected
+    definition: 実施・回答・判断の対象外または不採択と判断して、追跡を終了した登録項目の処理状態。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-reject, tm-register-completed-at]
+  - id: tm-register-deferred
+    term: 延期
+    englishName: deferred
+    definition: 再開条件または再評価時期を定め、現時点での追跡を停止した登録項目の処理状態。
+    notes: 遷移上は終端だが、完了日時を新たに付与しない。完了・決定済み・却下とは区別する。
+    category: tm-register-item-status
+    relatedTerms: [tm-register-defer, tm-register-reopen]
+  - id: tm-register-start
+    term: 登録項目の着手
+    englishName: register start
+    definition: 活動中の登録項目を、対応・調査を進める対応中へ移す操作。
+    notes: "`register start --id` に対応し、待機から対応を再開するときも使う。終端項目は先に再開する。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-in-progress, tm-register-reopen]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-wait
+    term: 登録項目の待機
+    englishName: register wait
+    definition: 活動中の登録項目を、外部回答や復旧などを待つ待機中へ移す操作。
+    notes: "`register wait --id --reason` に対応する。待機理由は結論と分け、再開条件は本文へ記録する。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-waiting, tm-register-block-reason]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-submit-review
+    term: 登録項目の審査提出
+    englishName: register review
+    definition: 活動中の登録項目を、対応結果の審査待ちへ移す操作。
+    notes: "`register review --id` に対応する。対応結果・検証結果・承認対象・証跡候補を確認できることを提出の前提とする。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-review-status]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-close
+    term: 登録項目の終了
+    englishName: register close
+    aliases: [クローズ]
+    definition: 対応結果または決定・回答を確認し、活動中の登録項目を完了または決定済みに移す操作。
+    notes: "`register close --id` に対応する。既定の終了先は判断・問いが `decided`、ほかが `done`。記録は終了させない。結論・完了日時と人間の承認の証跡を残す。種類別の業務判断は状態定義を正本とし、CLI が受理するだけで承認済みとは扱わない。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-done, tm-register-decided, tm-register-conclusion]
+    source: "`src/register/transition-commands.ts`、`src/register/update.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-reject
+    term: 登録項目の却下
+    englishName: register reject
+    definition: 不採択などの判断により、活動中の登録項目を却下へ移す操作。
+    notes: "`register reject --id` に対応する。記録の分類には使わず、判断理由と完了日時を残す。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-rejected, tm-register-conclusion]
+    source: "`src/register/transition-commands.ts`、`src/register/update.ts`"
+  - id: tm-register-defer
+    term: 登録項目の延期
+    englishName: register defer
+    definition: 再開条件や再評価時期を定め、活動中の登録項目を延期へ移す操作。
+    notes: "`register defer --id` に対応する。記録の分類には使わず、延期理由を結論、再評価条件を本文に残す。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-deferred, tm-register-conclusion]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-reopen
+    term: 登録項目の再開
+    englishName: register reopen
+    aliases: [リオープン]
+    definition: 終端の登録項目を再評価するため、活動中の処理状態へ戻す操作。
+    notes: "`register reopen --id` の既定先は `open`。`--status` で活動中の状態を選び、完了日時を削除して旧結論を保持する。待機中からの対応再開とは区別する。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-item-status, tm-register-completed-at, tm-register-start]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-update
+    term: 登録項目の更新
+    englishName: register update
+    definition: 登録項目の処理状態を維持したまま、分類・担当・結論・入力などの内容を変更する操作。
+    notes: "`register update --id` に対応し、終端の項目も更新できる。処理状態を変える場合は専用の遷移操作を使う。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-ticket, tm-register-event]
+    source: "`src/register/create-commands.ts`、`src/register/update.ts`"
+  - id: tm-register-event
+    term: 登録項目イベント
+    englishName: register event
+    definition: 登録項目に加えた操作・変更内容を、実行者・理由・日時とともに追記する監査履歴。
+    notes: "`events/pjr-xxxx.yaml` に個票と分けて保持する。`action` は操作、`from_status`・`to_status` は遷移前後の処理状態、`changes` はフィールド差分を表す。状態が変わらない更新も含み、現在状態の正本は個票とする。`actor` は実行者であり、承認者とは限らない。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-ticket, tm-register-item-status, tm-register-update]
+    source: "`docs/specdojo/schemas/v1/register-events.schema.yaml`、`src/register/events.ts`"
+  - id: tm-register-priority
+    term: 対応優先度
+    englishName: priority
+    definition: 他の作業や判断への影響と期限を踏まえ、登録項目の対応順を判断する目安。
+    notes: "`priority` に保持し、`--priority` で `high`・`medium`・`low` を指定する。作業難易度とは区別する。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-difficulty]
+    source: "[[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/Priority`"
+  - id: tm-register-difficulty
+    term: 作業難易度
+    englishName: difficulty
+    definition: 登録項目の作業の難しさを示し、実行を担う agent の経路選択に用いる区分。
+    notes: "`difficulty` に保持し、`--difficulty` で `hard`・`medium`・`easy` を指定する。省略時は優先度による既存の自動選択を使う。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-priority]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/Difficulty`、`src/register/item.ts`"
+  - id: tm-register-conclusion
+    term: 登録項目の結論
+    englishName: conclusion
+    definition: 登録項目の対応結果・決定・却下、または延期理由を一文で要約する記録。
+    notes: "`conclusion` に保持し、`--conclusion` で指定する。詳細は個票本文に置き、未確定ならキーを省略する。待機・実行失敗の理由によって結論を上書きしない。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-block-reason, tm-register-close, tm-register-defer]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `conclusion`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-block-reason
+    term: 待機理由
+    englishName: block reason
+    definition: 登録項目が待機中である理由を、結論と分けて示す運用記録。
+    notes: "`block_reason` に保持する。`register wait --reason` または待機中の `register update --block-reason` で設定し、待機を離れると削除する。過去の理由はイベントに残す。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-waiting, tm-register-conclusion, tm-register-event]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `block_reason`、`src/register/update.ts`、`src/register/create-commands.ts`"
+  - id: tm-register-registered-at
+    term: 登録日時
+    englishName: registered at
+    definition: 登録項目を起票した瞬間を示す日時。
+    notes: "`registered_at` に UTC・秒精度で保持し、`--registered` に対応する。登録日はプロジェクトのタイムゾーンへ変換した表示値。新規起票では日時を記録し、時刻が不明な旧項目では省略する。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-completed-at, tm-register-due-on]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `registered_at`、`src/register/date.ts`、`src/register/create-commands.ts`"
+  - id: tm-register-completed-at
+    term: 完了日時
+    englishName: completed at
+    definition: 登録項目の完了・決定・却下が確定した瞬間を示す日時。
+    notes: "`completed_at` に UTC・秒精度で保持し、`--completed` に対応する。完了・決定済み・却下に必要で、延期では新たに付与せず、再開時は削除する。状態に応じた必須条件は schema の `ClosedItemStatus` と条件付き定義を正本とする。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-done, tm-register-decided, tm-register-rejected, tm-register-reopen]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`、`src/register/transition-commands.ts`"
+  - id: tm-register-due-on
+    term: 登録項目の期限
+    englishName: due date
+    definition: 登録項目の対応または判断を予定する、プロジェクトのタイムゾーン上の暦日。
+    notes: "`due_on` に保持し、`--due` に対応する。日時ではなく日付として扱い、キー省略は期限未定、明示的な null は期限なしを表す。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-registered-at, tm-register-completed-at]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `due_on`、`src/register/item.ts`"
+  - id: tm-register-derived-from
+    term: 登録項目の派生元
+    englishName: derived from
+    definition: その登録項目を起票するきっかけとなった元の登録項目との関係。
+    notes: "`derived_from` に保持し、`--from` で指定する。エピックと子作業の関係にも使い、実行順序の制約とは区別する。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-epic, tm-register-item-id, tm-register-dependency]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `derived_from`、`src/register/derivation.ts`"
+  - id: tm-register-dependency
+    term: 登録項目の先行依存
+    englishName: register item dependency
+    definition: 対象項目の実行に先立ち、別の登録項目の完了または決定を必要とする関係。
+    notes: "`depends_on` に保持し、`--depends-on` で指定する。却下・延期は依存を満たさず、自己依存・循環は認めない。派生元や、カタログ・Schedule の先行依存とは参照対象を区別する。"
+    category: tm-register-entry
+    relatedTerms:
+      [tm-register-item-id, tm-register-derived-from, tm-register-done, tm-register-decided]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `depends_on`、`src/register/dependency.ts`"
+  - id: tm-register-target
+    term: 登録項目の実行対象
+    englishName: register target
+    definition: 登録項目からの実行計画で、作成・更新などの作業を行う文書または計画単位。
+    notes: "`targets` を `--target` で指定する。進め方（`approach`）は [[gl-planning|用語集（計画）]] を参照する。進め方に対象を結び付け、実践の型の新規作成では新しい型と手本を区別する。カタログなしで成果物を解決する場合は `target_path`・`target_rulebook` を使う。進め方に応じた対象の条件は schema を正本とする。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-source]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `approach`・`targets`・`target_path`・`target_rulebook`、`src/register/approach.ts`、`src/register/deliverable-target.ts`"
+  - id: tm-register-source
+    term: 実践の型の手本参照
+    englishName: authoring source
+    definition: 登録項目で実践の型を新規作成するときに参照する、読み取り専用の具体例。
+    notes: "`sources` を `--source` で指定する。文書 ID、プロジェクト内パス、宣言済みリポジトリのパスを参照し、編集対象とは分ける。新規作成の進め方との関係は schema を正本とする。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-target]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `sources`、`src/register/authoring-sources.ts`、`src/register/create-commands.ts`"
+  - id: tm-register-autopilot
+    term: 夜間実行承認
+    englishName: autopilot approval
+    definition: 登録項目の完了条件を人間が確認し、夜間オーケストレーターによる実行対象として認めた印。
+    notes: "`autopilot: approved` で保持する。省略時は承認済みの実行待ち列に含めない。実行への承認であり、対応結果の終了承認を代替しない。"
+    category: tm-register-entry
+    relatedTerms: [tm-register-close]
+    source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `autopilot`、`src/register/item.ts`"
