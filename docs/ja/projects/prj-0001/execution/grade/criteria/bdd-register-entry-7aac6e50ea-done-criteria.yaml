@@ -1,0 +1,42 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:bdd-register-entry-grade-criteria
+document: prj-0001:bdd-register-entry
+path: docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml
+graded_at: "2026-11-11T00:51:37.681Z"
+graded_by: sol-review-executor
+content_hash: fb50dc46b6c846efa398ad202b067d11d2f7018d9599aeacb6209f2ccc1ae91b
+summary:
+  satisfied: 5
+  unsatisfied: 0
+  total: 5
+criteria:
+  - id: DC-001
+    text: エンティティ・属性の業務的定義が正確に記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: データスコープとエンティティ境界を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: DB設計・システム設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: データ検証ルール・制約が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: 実装（テーブル設計・モデル定義）の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

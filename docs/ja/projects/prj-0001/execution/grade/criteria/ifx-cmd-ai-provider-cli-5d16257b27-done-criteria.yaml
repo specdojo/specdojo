@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: ifx-cmd-ai-provider-cli-grade-criteria
+document: ifx-cmd-ai-provider-cli
+path: docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml
+graded_at: "2026-11-11T00:54:59.954Z"
+graded_by: sol-review-executor
+content_hash: cdc15bce86fa5272bac8be860b1d5fd4c10106993248e84cf0940982192332c5
+summary:
+  satisfied: 4
+  unsatisfied: 1
+  total: 5
+criteria:
+  - id: DC-001
+    text: AI provider CLI の実行契約・入出力の約束・エラー処理が業務観点で整理されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: AI provider CLI との連携スコープと方式を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: 外部コマンド連携仕様（正本参照・入出力の約束・認証注入）の設計として妥当であること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      The authentication design requires login profiles for OpenCode even though its referenced local Ollama
+      configuration requires no authentication.
+  - id: DC-004
+    text: 外部 CLI 起動テスト・結合テスト設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: プロセス起動・連携エラー処理実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

@@ -38,6 +38,11 @@ uis-rulebook と uis-sample を、ほかの業務仕様の型と同じく標準�
 - GUI の画面仕様だけを対象とし、CLI は clis で書く、ワイヤーフレーム・レイアウトは含めない、という今の決まり（PJR-RMMM・PJR-PJYJ）を保っている。
 - recipe と template の要否を決め、frontmatter に書いている。
 - 磨き込みの後に `specdojo grade run --project prj-0001 --target kata --path docs/ja/specdojo/rulebooks/uis-rulebook.md --path docs/ja/specdojo/samples/uis-sample.md --run-id <任意>` を流し、rulebook と sample がどちらも pass になっている。pass にならない指摘は直すか、直さない理由を個票の対応結果に書いている（grade を流すのは orchestrator が行ってもよい）。
+- 2 回目の実行（2026-11-11 追加）: 1 回目の後の grade（run id `uis-20261111`）で、uis-rulebook は pass 100 になったが、uis-sample は needs-work 93 で pass に届かなかった。次の minor の指摘を直し、grade で uis-sample が pass になっている（grade は orchestrator が流してよい）。
+  - 未解決の点の表に、確認の担当（Role code）と報告先を書く。
+  - PO の承認の責任と、公開の対象の範囲を書く。
+  - プロジェクト側へ引き継ぐ未解決の点を、sample の中の点と分けて書く。
+  - 在庫 0 の商品を初めて足すときに失敗した操作では明細の行ができないため、「明細削除」を次の手としている例を、実際の状態に合う次の手に直す。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - uis 以外の型と、カタログを変えていない。
 - CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。
