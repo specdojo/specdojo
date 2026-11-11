@@ -118,3 +118,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_64461f2a9cdc4fa0bfd7cffa720e76c7
+- v: 1
+  id: reg_bf47b318d61b42abab87c816d747130f
+  ts: "2026-11-11T03:51:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。夜間の実行で executor は済んだが統合が残り（PJR-RX14）、日中に --resume で統合した。差分が対象の文書だけで lint が通ること、grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: 代表の cdt-register-type を、確定した型で磨き込み、冗長さを整理した
+  previous_event_id: reg_da9e539e0bfb42bfa8cca075c6db50dc
