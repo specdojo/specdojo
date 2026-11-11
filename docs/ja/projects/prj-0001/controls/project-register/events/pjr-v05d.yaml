@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_23d73c4627f5458aab0ccfb16f2745e4
+  ts: "2026-11-11T01:00:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: CBV6 の close と、YAML の 4 件の grade の結果で確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: PJR-JQSB で方式を決め、PJR-CBV6 で grade が YAML の成果物を評価できるようにした。review の段が grade を流せない問題は解消した
+  previous_event_id: reg_446a5688129a4f85ad6ce733c169d230
