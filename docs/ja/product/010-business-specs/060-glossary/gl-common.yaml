@@ -108,7 +108,7 @@ terms:
   - id: tm-deliverable
     term: 成果物
     englishName: deliverable
-    definition: プロジェクトで作成・更新する対象成果物。
+    definition: プロジェクトで作成・更新し、目的や完了条件に照らして確認する文書・構造化データ。
     category: tm-data-store
     relatedTerms: [tm-kata, tm-catalog, tm-document-maturity]
   - id: tm-document-maturity
@@ -188,7 +188,6 @@ terms:
     englishName: filing
     definition: 登録簿に 1 件の項目を新しく作ること。記帳の一部であり、状態遷移や結論の記録とは区別する。
     notes: "`register add` に当たる。記帳と起票の区別は決定記録に従う。"
-    category: tm-exec-log
     relatedTerms: [tm-register, tm-record-keeping]
     source: "[[prj-0001:pjr-s64h-glossary-kicho-kihyo|記帳と起票の用語定義]]"
   - id: tm-record-keeping
@@ -196,6 +195,5 @@ terms:
     englishName: record-keeping
     definition: 登録簿へ書き込むこと全般。起票、状態遷移、結論の記録、commit を含む。register の技（Waza）としての呼び名でもある。
     notes: CLI のコマンド名は `register` のままとする。
-    category: tm-exec-log
     relatedTerms: [tm-register, tm-filing]
     source: "[[specdojo:specdojo-overview-guide|SpecDojo概要ガイド]]、[[prj-0001:pjr-s64h-glossary-kicho-kihyo|記帳と起票の用語定義]]"
