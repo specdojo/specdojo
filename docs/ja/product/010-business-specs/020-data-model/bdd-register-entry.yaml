@@ -11,9 +11,9 @@ entities:
     physical_name: register_entry
     description: >-
       登録簿で個別に追跡する作業・課題・懸念・問い・判断・記録の管理単位。担当交代時の引き継ぎのため、一項目を一個票として運用する。
-      track 全体の計画と完了判断は epic、具体的な対応は子 todo、成果物ごとの計画済みタスクは Schedule で扱い、個々のタスクを登録簿へ重複登録しない。業務範囲の境界、状態遷移、審査・承認条件は [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] を正本とするが、スキーマ検証の合格だけで業務上の完了・承認を満たしたとは判定しない。
-      構造化された現在値は個票 Frontmatter の `specdojo` 配下を正本とし、下記フィールドはその物理名に対応する。タイトル・概要・入力（前提や委任範囲）・完了条件・対応結果・承認の証跡は本文に保持し、本文構成は [[specdojo:pjr-rulebook|プロジェクト登録簿 作成ルール]] に従う。
-      表示 ID、一覧のタイトル・説明・登録日・完了日は個票からの導出値であり独立属性として保存しない。項目 event は変更履歴の別の正本、一覧・派生ビューは閲覧用の生成物として、本エンティティの現在値と区別する。
+      track 全体の計画と完了判断は epic、具体的な対応は子 todo、成果物ごとの計画済みタスクは Schedule で扱い、個々のタスクを登録簿へ重複登録しない。業務範囲の境界、状態遷移、審査・承認条件は [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] を正本とする。スキーマ検証と業務上の完了・承認は別に判定する。
+      構造化された現在値は個票 Frontmatter の `specdojo` 配下を正本とし、下記フィールドはその物理名に対応する業務上の意味を注釈する。タイトル・概要・入力（前提や委任範囲）・完了条件・対応結果・承認の証跡は本文に保持し、本文構成は [[specdojo:pjr-rulebook|プロジェクト登録簿 作成ルール]] に従う。
+      表示 ID、一覧のタイトル・説明・登録日・完了日は個票からの導出値とし、登録日・完了日は日時を project の登録日タイムゾーンへ変換する。項目 event は変更履歴の正本、一覧・派生ビューは閲覧用の生成物として管理する。
     schema_ref: docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml
     related_terms: [tm-register, tm-filing, tm-record-keeping, tm-schedule, tm-derived-view]
     key_fields: [id]
@@ -41,9 +41,7 @@ entities:
       - logical_name: 分類
         physical_name: item_type
         description: >-
-          何を追跡し、どのような結果をもって通常の追跡を終えるかを分ける業務区分。
-          `question`・`decision` は回答・判断の確定、`note` 以外の他分類は対応完了を通常の終端とする。
-          `note` は継続更新する記録であり、対応や判断が必要になれば別の項目を起票する。
+          追跡する事項と求める結果を分ける業務区分。`note` は継続更新する記録であり、対応や判断が必要になれば別の項目を起票する。
         allowed_values_detailed:
           - value: todo
             label: 実施が決まっている作業
@@ -74,8 +72,7 @@ entities:
           省略は互換用の範囲解決に委ねること、空配列は対象なしの明示を意味する。
       - logical_name: 処理状態
         physical_name: item_status
-        description: >-
-          対応・判断の現在位置と追跡継続の要否を表す値。許可経路・分類別の終端・人間による審査・承認条件は [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] へ譲る。
+        description: 対応・判断の現在位置と追跡継続の要否を表す値。
         allowed_values_detailed:
           - value: open
             label: 起票済み
@@ -123,7 +120,7 @@ entities:
       - logical_name: 起票日時
         physical_name: registered_at
         description: >-
-          事項を共有の追跡対象として登録した UTC・RFC 3339・秒精度の時点。一覧の登録日は project の登録日タイムゾーンへ変換して表示する。着手時点は区別し、未整理事項の滞留の確認に使う。
+          事項を共有の追跡対象として登録した時点。着手時点と区別し、未整理事項の滞留の確認に使う。
       - logical_name: 予定開始日
         physical_name: start_on
         description: epic の仕事を始める予定の暦日。実際の着手記録や子 todo の起票日とは区別する。
@@ -134,8 +131,7 @@ entities:
           省略は期限未定、明示的な null は期限なしを意味し、同じ未設定として扱わない。
       - logical_name: 完了日時
         physical_name: completed_at
-        description: >-
-          対応完了・回答や判断の確定・却下で追跡を終えた UTC・RFC 3339・秒精度の時点。一覧の完了日は project の登録日タイムゾーンへ変換して表示する。延期は完了時点を持たず、再開時は過去の完了を現在値から除いて履歴に残す（[[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]] 5.4）。
+        description: 対応完了・回答や判断の確定・却下で追跡を終えた時点。
       - logical_name: 待機理由
         physical_name: block_reason
         description: >-

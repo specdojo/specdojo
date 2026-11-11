@@ -4,13 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-JB6S
   mode: edit
-  status: complete
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JB6S/pjr-jb6s-20261110T231324Z-a9700f09/plan.md
   started_at: "2026-11-10T23:13:26.766Z"
   completed_at: "2026-11-10T23:35:33.746Z"
   agent: sol-executor
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/rulebooks/uis-rulebook.md"
 ---
 
 # Edit Result
