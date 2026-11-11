@@ -148,7 +148,7 @@ terms:
     englishName: cross-deliverable pass
     aliases: [横断パス, 横断タスク]
     definition: 対象成果物群をまとめて扱い、群全体につき一つのタスクとして進める作業。
-    notes: 戦略の `cross_deliverable_passes` で、先行ゲートを表す `after_gate` と後続の組を表す `before_phase_set` の間に置く。成果物ごとに同じ作業を複製せず、`scope` で共同の編集対象を示す。agent の実行パイプラインを付ける場合の関係は schema に従う。
+    notes: 戦略の `cross_deliverable_passes` で、先行ゲートを表す `after_gate` と後続の組を表す `before_phase_set` の間に置く。成果物ごとに同じ作業を複製せず、`scope` で共同の編集対象を示す。実行パイプラインは agent が実行する横断作業で用いる。実行方式との組合せは schema を正本とする。
     category: tm-planning
     relatedTerms: [tm-phase-gate, tm-planning-scope, tm-approach]
     source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `cross_deliverable_passes`"
@@ -164,7 +164,7 @@ terms:
     englishName: intent
     aliases: [タスクの目的]
     definition: 対象成果物に対して何を達成する作業かを宣言し、進め方を導くための目的区分。
-    notes: 戦略の `approach_rules` に成果物ごとに宣言する。型を改善する意図では `kata_target` で対象の型を、一式の初期整備や一式を伴う確定では `bootstrap_scope` で型の範囲を指定する。これらの追加項目を使う意図と、それ以外の意図との対応は schema を正本とする。
+    notes: 戦略の `approach_rules` に成果物ごとに宣言する。型を改善する `improve-kata` は `kata_target` で対象の型を、一式の初期整備 `bootstrap-kata-set` や一式を伴う確定 `confirm-with-kata-set` は `bootstrap_scope` で型の範囲を指定する。意図ごとの追加項目の要否は schema を正本とする。
     category: tm-planning
     relatedTerms: [tm-approach, tm-implementation-evidence-ref]
     source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `approach_rules`、[[specdojo:schedule-design-guide|Schedule設計ガイド]] の intent 宣言"
