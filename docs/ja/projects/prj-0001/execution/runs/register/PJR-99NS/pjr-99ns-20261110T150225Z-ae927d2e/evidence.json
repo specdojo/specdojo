@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-99NS",
+  "run_id": "pjr-99ns-20261110T150225Z-ae927d2e",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T15:05:47.264Z",
+    "completed_at": "2026-11-10T15:11:04.157Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-99ns.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-99ns-sf-task-execution-refine-confirmed-kata.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-99ns-sf-task-execution-refine-confirmed-kata.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../050-system-functions/sf-task-execution.md      | 124 ++++++++++-----------\n ...99ns-sf-task-execution-refine-confirmed-kata.md |  45 +++++++-\n 2 files changed, 98 insertions(+), 71 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md docs/ja/projects/prj-0001/controls/project-register/pjr-99ns-sf-task-execution-refine-confirmed-kata.md",
+      "status": "passed",
+      "summary": "対象 2 文書を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査が終了コード 0 で完了した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード 0。既存の参照に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿を生成した。追加の追跡ファイル変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象 0 件・検出 0 件。今回の編集内容は runner のステージ後に検査する。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-99NS/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspace\n… output omitted …\ns 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-99NS/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-99NS/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4322 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4322 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-99NS\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritte\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-99NS/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-99NS/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/worktrees/prj-0001-PJR-99NS\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-11T01:11:09.180Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-11T01:10:09.\n… output omitted …\n a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "sf-task-execution を確定した型に合わせて磨き込み、冗長さと未根拠の保証を整理した。個票に指摘別対応・判断理由・CHANGELOG 文案を記録した。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter は個票 docs/ja/projects/prj-0001/controls/project-register/pjr-99ns-sf-task-execution-refine-confirmed-kata.md の 5.1〜5.4 を result の実施内容・変更ファイル・進め方と実践の型の適用へ反映すること。executor は result・型・カタログ・実装・CHANGELOG を編集していない。",
+    "rulebook を構造・必須要素・禁止事項の基準とし、sample は不足箇所の形式確認に限定した。既存の 8 章構成と判断に必要な背景・制約・例外を保持した。詳細ステップ ID、固定の資源制約値、未合意の互換性保証を除き、重複説明は第 4 章と参照表へ統合した。具体化を見送った理由と参照・非参照資料は個票 5.2 に記録済み。",
+    "F001・F003 の詳細 BPS 対応、F002・F006 の業務対応と最終受入値は未解消。未作成の上流仕様を推測せず、第 8 章に担当・判断時点・次アクション・追跡先・承認保留条件を残した。BA・ARC・QE・PO による後続確認が必要。",
+    "F004 は固定の 300 秒・provider 既定 1 の断定を除き、コマンド単位の親検証上限とゲート適用経路の有効設定へ委ねた。F007 は上書き・省略・適用外を含む判定へ修正した。詳細な実装・設定正本の照合は参照制限のため未実施で、ARC・QE に引き継ぐ。動作変更や新しい既定値は導入していない。",
+    "F005 の論理契約・schema・版管理の正本特定は未解消。ARC が正本を特定し、DEV・QE が互換性を照合するまで V-15 と公開承認を保留する。F008 は正常時の事後条件と V-11 の完了記録を状態追跡する実行に限定して対応した。",
+    "CHANGELOG に書く事項：区分「変更」。文案「タスク実行の機能仕様を確定した SF の型に合わせ、状態追跡の適用範囲、設定正本による資源制約の判定、未確定契約の承認条件を明確化しました。」個票 5.5 にも記録済み。",
+    "指定の lint・schema 等の親検証は runner の実行結果を正とする。カタログ検査には対象外の既存文書・実装参照に関する警告があったが終了コードは 0。別項目の実行や変更範囲の拡張は行っていない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-99NS/pjr-99ns-20261110T150225Z-ae927d2e/executor.log",
+      "bytes": 3986,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-99NS/pjr-99ns-20261110T150225Z-ae927d2e/parent-validation-attempt-1-test-integration.log",
+      "bytes": 317031,
+      "truncated": false
+    }
+  ]
+}
