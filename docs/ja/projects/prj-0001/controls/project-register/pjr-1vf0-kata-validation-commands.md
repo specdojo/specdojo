@@ -10,9 +10,11 @@ specdojo:
   item_status: open
   priority: low
   difficulty: medium
+  owner: sol-executor
   registered_at: "2026-11-10T12:27:05Z"
   derived_from:
     - PJR-T88P
+  autopilot: approved
 ---
 
 # PJR-1VF0 ccd と ifx-cmd の型に、規則の検査を流すコマンドを書く

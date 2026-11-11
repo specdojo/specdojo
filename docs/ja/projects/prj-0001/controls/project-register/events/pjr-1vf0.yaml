@@ -41,3 +41,19 @@
     - field: derived_from
       from: ""
       to: '["PJR-T88P"]'
+- v: 1
+  id: reg_c1f87ee9150e40fdacbc5430a6af1c13
+  ts: "2026-11-11T14:59:03Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今夜 0:00 の夜間の実行で流す（indie が承認）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: sol-executor
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_63b6f5fe999542df8a507556db2cef29
