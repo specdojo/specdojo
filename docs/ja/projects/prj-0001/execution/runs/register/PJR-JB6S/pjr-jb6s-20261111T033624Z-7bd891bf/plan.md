@@ -73,4 +73,9 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-11）
+
+- grade は agent を起動するため sandbox の中では流せない。完了条件のとおり、grade は統合の後に orchestrator が流す。grade を流せないことを理由に未完了としない。
+- 前回の改訂（運用ルールの章、記述ガイドの判断の基準と例、sample の直し）を引き継ぎ、作り直さない。完了として報告し、経緯を報告の `handoff` に書く。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
