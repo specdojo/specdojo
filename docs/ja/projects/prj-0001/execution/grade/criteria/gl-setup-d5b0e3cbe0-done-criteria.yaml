@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: gl-setup-grade-criteria
+document: gl-setup
+path: docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml
+graded_at: "2026-11-11T22:05:17.858Z"
+graded_by: sol-review-executor
+content_hash: ff6cdd9f2c96db5568dfeb5696c952707f99bd631dde85e4c54f2df5b96651bb
+summary:
+  satisfied: 2
+  unsatisfied: 3
+  total: 5
+criteria:
+  - id: DC-001
+    text: 領域の主要用語が洗い出され、定義・別名・分類が正確に記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      The rate-limit policy qualification conflicts with the cited guide and current implementation, preventing
+      confirmation that all principal term descriptions are accurate.
+  - id: DC-002
+    text: 用語スコープと定義の妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      The scope is explicit, but definition validity cannot be approved until the intended-versus-current automatic
+      recovery behavior is resolved.
+  - id: DC-003
+    text: 技術実装・CLI の引数・schema の項目名の参照として使えること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: unsatisfied
+    reason: >-
+      The critical-path recovery description conflicts with current CLI behavior, and max_attempts does not explicitly
+      identify candidate passes as its counting unit.
+  - id: DC-004
+    text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-005
+    text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied
