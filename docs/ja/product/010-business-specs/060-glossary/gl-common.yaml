@@ -22,30 +22,30 @@ terms:
     relatedTerms: [tm-rulebook, tm-recipe, tm-sample, tm-template, tm-deliverable]
     source: "[[specdojo:specdojo-overview-guide|SpecDojo概要ガイド]]"
   - id: tm-rulebook
-    term: 作成規範
+    term: rulebook
     englishName: rulebook
-    aliases: [ルールブック]
+    aliases: [作成規範, ルールブック]
     definition: 成果物に必要な構成・項目・記述規則を定める実践の型。
     category: tm-kata
     relatedTerms: [tm-deliverable, tm-recipe]
   - id: tm-recipe
-    term: 作成手順
+    term: recipe
     englishName: recipe
-    aliases: [レシピ]
+    aliases: [作成手順, レシピ]
     definition: 成果物を作成・更新するための手順と判断の進め方を示す実践の型。
     category: tm-kata
     relatedTerms: [tm-rulebook]
   - id: tm-sample
-    term: 記述例
+    term: sample
     englishName: sample
-    aliases: [サンプル]
+    aliases: [記述例, サンプル]
     definition: 完成した成果物の具体的な記述を示す実践の型。
     category: tm-kata
     relatedTerms: [tm-template]
   - id: tm-template
-    term: 雛形
+    term: template
     englishName: template
-    aliases: [テンプレート]
+    aliases: [雛形, テンプレート]
     definition: 新しい成果物を書き始めるための構造を提供する実践の型。
     category: tm-kata
     relatedTerms: [tm-sample]
@@ -62,13 +62,15 @@ terms:
     category: tm-data-store
     relatedTerms: [tm-catalog, tm-schedule]
   - id: tm-routine
-    term: 定期実行定義
+    term: routine
     englishName: routine
+    aliases: [定期実行定義]
     definition: 周期や条件に基づき、継続的な確認や実行を定義するもの。
     category: tm-data-store
   - id: tm-job
-    term: ジョブ定義
+    term: Job
     englishName: job
+    aliases: [ジョブ定義]
     definition: 定型的に実行する処理の手順や判断の定義。
     category: tm-data-store
   - id: tm-register
@@ -98,8 +100,9 @@ terms:
     relatedTerms: [tm-schedule, tm-register, tm-job, tm-plan, tm-exec-log, tm-document-maturity]
     source: "`docs/specdojo/schemas/v1/exec-common.schema.yaml`"
   - id: tm-plan
-    term: 実行計画
+    term: plan
     englishName: plan
+    aliases: [実行計画]
     definition: タスクごとの実施手順や対象文書、完了条件の定義。
     notes: 登録簿の項目に進め方を指定する場合は対象成果物と結び付け、実践の型を新規作成する場合は参照元も扱う。対象・参照元の条件は登録簿個票の schema を正本とする。
     category: tm-data-store
@@ -153,34 +156,40 @@ terms:
     category: tm-data-store
     relatedTerms: [tm-grade, tm-finding]
   - id: tm-result
-    term: 実行結果
+    term: result
     englishName: result
+    aliases: [実行結果]
     definition: タスクで実施した内容、変更した成果物、検証結果、残課題をまとめる記録。
     category: tm-exec-log
     relatedTerms: [tm-task, tm-plan, tm-evidence]
   - id: tm-event
-    term: 状態遷移イベント
+    term: event
     englishName: event
+    aliases: [状態遷移イベント]
     definition: タスクや成果物の状態が遷移した記録。
     category: tm-exec-log
   - id: tm-evidence
-    term: 証跡
+    term: evidence
     englishName: evidence
+    aliases: [証跡]
     definition: 実行の過程や結果を裏付ける記録。
     category: tm-exec-log
   - id: tm-trial
-    term: 試行記録
+    term: trial
     englishName: trial
+    aliases: [試行記録]
     definition: タスク実行時の試行錯誤の過程。
     category: tm-exec-log
   - id: tm-grade
-    term: 判定結果
+    term: grade
     englishName: grade
+    aliases: [判定結果]
     definition: 成果物の品質や適合性に対する総合的な評価判定。
     category: tm-evaluation
   - id: tm-finding
-    term: 指摘事項
+    term: finding
     englishName: finding
+    aliases: [指摘事項]
     definition: 評価によって発見された改善点や問題点。
     category: tm-evaluation
   - id: tm-filing

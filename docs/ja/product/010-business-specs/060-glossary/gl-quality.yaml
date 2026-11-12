@@ -5,7 +5,7 @@ rulebook: specdojo:gl-rulebook
 title: 用語集（評価とレビュー）
 locale: ja
 status: draft
-# 共通の評価結果・判定結果（grade）・指摘事項（finding）は gl-common を正本とする。
+# 共通の評価結果・grade・finding は gl-common を正本とする。
 # 本書は品質の評価基準とタスク完了の判断を扱い、実行状態・完了報告の操作は gl-execution に委ねる。
 terms:
   - id: tm-quality-assessment
@@ -17,9 +17,9 @@ terms:
     relatedTerms: [tm-review, tm-grade-target, tm-review-viewpoint, tm-grade-verdict]
     source: "[[bps-deliverable-evaluation|成果物評価]]、`docs/specdojo/schemas/v1/grade-result.schema.yaml`"
   - id: tm-review
-    term: 完了可否レビュー
+    term: review
     englishName: review
-    aliases: [レビュー]
+    aliases: [完了可否レビュー, レビュー]
     definition: 最新の品質評価を事実として変更内容・実行計画・実行記録・完了条件と照合し、タスクを完了してよいかと改善指示を判断する活動。
     notes: 観点ごとの品質を再評価しない。PO・PM の完了判断を支援し、最終承認と文書の `ready` への昇格は人間が担う。
     relatedTerms: [tm-quality-assessment, tm-done-criteria, tm-review-verdict, tm-grade-freshness]
@@ -126,7 +126,7 @@ terms:
     term: 品質判定
     englishName: grade verdict
     definition: 成果物の品質を、評価点と指摘の重大度に基づいて総合的に示す区分。
-    notes: grade の `verdict` は `pass`・`needs-work`・`fail`。共通用語集の判定結果（grade）を構成する項目であり、タスクの完了可否とは判定対象も語彙も異なる。
+    notes: grade の `verdict` は `pass`・`needs-work`・`fail`。共通用語集の grade を構成する項目であり、タスクの完了可否とは判定対象も語彙も異なる。
     category: tm-quality-assessment
     relatedTerms: [tm-grade-score, tm-finding-severity, tm-review-verdict]
     source: "`docs/specdojo/schemas/v1/grade-result.schema.yaml` の `verdict`、[[prj-0001:pjr-xtan-unify-verdict-vocabulary|判定対象ごとの語彙の決定記録]]"
