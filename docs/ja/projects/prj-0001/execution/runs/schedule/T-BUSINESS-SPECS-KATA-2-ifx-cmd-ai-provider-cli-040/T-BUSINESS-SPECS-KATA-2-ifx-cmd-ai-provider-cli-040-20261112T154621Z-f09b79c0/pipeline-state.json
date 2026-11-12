@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-040",
   "run_id": "T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-040-20261112T154621Z-f09b79c0",
-  "updated_at": "2026-11-12T16:06:47.532Z",
+  "updated_at": "2026-11-12T16:07:17.870Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-040/T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-040-20261112T154621Z-f09b79c0/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-12T16:06:47.532Z",
-      "completed_at": null,
+      "completed_at": "2026-11-12T16:07:17.870Z",
       "artifact_ref": null
     }
   },
