@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-KATA-2-cdsd-execution-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-KATA-2-cdsd-execution-050/T-BUSINESS-SPECS-KATA-2-cdsd-execution-050-20261112T162825Z-a6783823/plan.md
   started_at: "2026-11-12T16:28:29.911Z"
+  completed_at: "2026-11-12T16:45:47.213Z"
   agent: sol-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/specdojo/samples/cdsd-sample.md` を、標準6列・5つの管理単位（商品台帳、販売記録、日次販売集計、日次締め記録、月次報告）を含む完成例として更新しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/cdsd-sample.md`: 標準6列のデータストア一覧表を追加し、更新責務、例外対応、検証手順、変更影響を具体化した完成例へと再構成しました。また、重複していた要約表を撤去し、見出しに階層連番を付与しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result の実施内容・変更ファイルへ記録: 変更は docs/ja/specdojo/samples/cdsd-sample.md のみ。成果物本体・rulebook・grade サイドカー・result は変更していない。標準5章へ再構成し、商品台帳・販売記録・日次販売集計・日次締め記録・月次報告を定義した。
+- 進め方と実践の型の適用へ記録する根拠: cdsd-rulebook、sample-authoring-standard、rulebook-authoring-standard、document-metadata-standard、people-and-organization-definition-standard、共通規約、ryu-guide、pm-review-viewpoints の該当5観点、PJR-2GD6 を確認。cdsd-execution・cdsd-planning・cdsd-sharing と、cdsd-sample・cdsd-rulebook・cdsd-execution の grade result を参照した。業務文脈・名称・関連は cdfd-overview-sample、bdd-sample、ccd-sample と照合し、clis-sample を内容の厚さと操作参照の根拠にした。
+- finding 対応: F001 は目的・主内容を繰り返す旧要約表を撤去。F002 は具体的な更新契機・粒度・合否条件を追加。F003 は標準6列の一覧を追加。F004 は rulebook を正として必須章・更新責務・関連仕様を適用。F005 は販売・締めの具体例と例外時の次の行動を提示した。本文照合上の未解消 finding はない。正式な再評価は後続段で行う。
+- recipe・template の要否判断: 既存 frontmatter の recipe: not-needed、template: not-needed を維持する。作業順序と受入条件は rulebook にあり、章・表の記入粒度は今回の完成例で確認できるため、追加の手順書・骨組みは不要と判断した。PJR-2GD6 に従い、型・許容値・構文・保存構造の詳細は複製せず正本参照とした。
+- 例示プロジェクト内の未作成仕様は予定IDで示し、担当・判断時期・影響・次の行動・追跡先候補と対応付けた。実リポジトリで新規作成する指示ではない。親 runner 指定の lint・schema・テストは executor では実行せず、後続の親検証に委ねた。
+- 適用外の検証: `npm run validate:schema:file`（変更は Markdown sample のみで、変更した YAML ファイルがない。）
+- 適用外の検証: `npm run validate:catalog`（executor の変更は docs/ja/specdojo/samples/ 内のみで、docs/ja/projects/ 配下への変更がない。）
+- 適用外の検証: `npm run validate:history-links`（executor は PJR・既存 plan・result の履歴ファイルを変更していない。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`cdsd-sample.md` を対象とし、grade result の finding (F001-F005) および `rulebook` を正として、必須項目（標準6列の一覧表等）の充足と冗長性の排除を行いました。具体例には販売・締め処理の文脈を採用し、`clis-sample` と同等の厚みを持つ完成例として再構成しています。また、`recipe` および `template` は `not-needed` と判断し、既存の宣言を維持しました。
