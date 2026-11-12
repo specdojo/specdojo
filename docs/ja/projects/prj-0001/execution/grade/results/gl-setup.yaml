@@ -4,38 +4,38 @@ document: gl-setup
 path: docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 87
-graded_at: "2026-11-11T22:05:17.858Z"
+verdict: pass
+score: 93
+graded_at: "2026-11-12T14:11:56.552Z"
 graded_by: sol-review-executor
-content_hash: ff6cdd9f2c96db5568dfeb5696c952707f99bd631dde85e4c54f2df5b96651bb
+content_hash: f4f6c37cd3553689a1c21fdb04ab754be663bd1d154d13b5ac46919696f6de6d
 source_hashes:
   catalog-entry: feb519bb9a5487654dfd1c6e32580fd45a4d86ffcc5349865229705f4149937d
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:gl-common: 2c0aafb67a2c3ee22738b389b89efb7362505d6544513f815db9921284a066c8
+  dependency:gl-common: 7eb79bc9c501b4a94f61048b342459be8cdad9ae3ec66aacd17ac6ff176b3ab7
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 31bad5f39bf71e076f7ed4a050b28b6a02091ae1fc2c81b473d5aedcc6f97373
+  schedule: 67f05e70f3154de35fbb11dcc9083db1f716505d2f3eb0a3023925fa66f7b87f
 categories:
   purpose:
     score: 88
   operations:
-    score: 88
+    score: 94
   planning:
     score: 100
   business:
-    score: 75
+    score: 88
   consistency:
-    score: 75
+    score: 88
   architecture:
     score: 100
   usability:
     score: 100
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 81
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -56,14 +56,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -74,8 +74,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -83,8 +83,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -104,8 +104,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -117,8 +117,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 3
+  major: 0
+  minor: 10
   note: 0
 findings:
   - id: F001
@@ -126,7 +126,8 @@ findings:
     rule: vp-po-decision-readiness
     line: 255
     anchor: >-
-      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      notes: "`rate_limit_policy` に対応する。自動選択では、クリティカルパスの内外にかかわらず、待たずに次の候補の agent へ切り替え、全候補が制限に当たった場合だけ
+      `on_critical.retry` に従って待機と再試行を行い、尽きたら止める。schema の `on_non_critical`（見送る）は今の振る舞いには使われていない。指名実行の回復設定は `pinned`、CLI
       の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     message: >-
       Identify the unresolved difference between the schema's critical-path policy and the guide/runtime's recovery
@@ -137,39 +138,34 @@ findings:
     cause:
       type: document
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-ba-requirements-completeness
-    line: 255
+    line: 264
     anchor: >-
-      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
-      の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+      notes: "利用枠制限時の方針の `on_critical.retry` に対応し、次候補での再試行を選ぶ場合に使う。`max_attempts` は初回を含めて数える。適用条件と項目の正本は schema の
+      `RateLimitPolicy`・`RetryPolicy` とする。"
     message: >-
-      The rate-limit policy entry presents skipping non-critical tasks as unconditional automatic-selection behavior,
-      while exec-config-guide section 4 and runWithRetry apply candidate retries to both critical and non-critical
-      tasks; qualify the intended-versus-current behavior so users can determine what recovery to expect.
+      The previous critical/non-critical behavior mismatch is resolved; specify that max_attempts counts candidate-list
+      passes rather than individual agent launches so the retry definition has an unambiguous counting unit.
     message_ja: >-
-      The rate-limit policy entry presents skipping non-critical tasks as unconditional automatic-selection behavior,
-      while exec-config-guide section 4 and runWithRetry apply candidate retries to both critical and non-critical
-      tasks; qualify the intended-versus-current behavior so users can determine what recovery to expect.
+      The previous critical/non-critical behavior mismatch is resolved; specify that max_attempts counts candidate-list
+      passes rather than individual agent launches so the retry definition has an unambiguous counting unit.
     cause:
       type: document
   - id: F003
-    severity: major
-    rule: vp-arc-cross-document-consistency
+    severity: minor
+    rule: vp-ba-requirements-completeness
     line: 255
     anchor: >-
-      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      notes: "`rate_limit_policy` に対応する。自動選択では、クリティカルパスの内外にかかわらず、待たずに次の候補の agent へ切り替え、全候補が制限に当たった場合だけ
+      `on_critical.retry` に従って待機と再試行を行い、尽きたら止める。schema の `on_non_critical`（見送る）は今の振る舞いには使われていない。指名実行の回復設定は `pinned`、CLI
       の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     message: >-
-      gl-setup says automatic selection skips non-critical tasks and offers retry or stop for critical tasks, whereas
-      docs/ja/specdojo/guides/exec-config-guide.md:168 and src/exec/run/agent.ts:540–544,813–821 describe retries for
-      both; reconcile this with the policy represented in docs/specdojo/schemas/v1/exec-defaults.schema.yaml rather than
-      presenting the sources as consistent.
+      Qualify the automatic wait/retry description for session_limit and quota_exhausted: src/exec/run/agent.ts:807–810
+      returns after candidate exhaustion for those signals without entering the short backoff loop.
     message_ja: >-
-      gl-setup says automatic selection skips non-critical tasks and offers retry or stop for critical tasks, whereas
-      docs/ja/specdojo/guides/exec-config-guide.md:168 and src/exec/run/agent.ts:540–544,813–821 describe retries for
-      both; reconcile this with the policy represented in docs/specdojo/schemas/v1/exec-defaults.schema.yaml rather than
-      presenting the sources as consistent.
+      Qualify the automatic wait/retry description for session_limit and quota_exhausted: src/exec/run/agent.ts:807–810
+      returns after candidate exhaustion for those signals without entering the short backoff loop.
     cause:
       type: document
   - id: F004
@@ -190,40 +186,76 @@ findings:
     cause:
       type: document
   - id: F005
-    severity: major
-    rule: vp-dev-implementation-readiness
+    severity: minor
+    rule: vp-arc-cross-document-consistency
     line: 255
     anchor: >-
-      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      notes: "`rate_limit_policy` に対応する。自動選択では、クリティカルパスの内外にかかわらず、待たずに次の候補の agent へ切り替え、全候補が制限に当たった場合だけ
+      `on_critical.retry` に従って待機と再試行を行い、尽きたら止める。schema の `on_non_critical`（見送る）は今の振る舞いには使われていない。指名実行の回復設定は `pinned`、CLI
       の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     message: >-
-      A developer following the stated critical-path distinction could implement behavior that differs from
-      runWithRetry; distinguish the schema-level policy from current CLI behavior and identify the unresolved
-      specification decision before using this entry as implementation guidance.
+      The former critical/non-critical inconsistency is resolved, but gl-setup still describes waiting and retrying
+      after all candidates are limited without the session_limit and quota_exhausted exception in
+      src/exec/run/agent.ts:807–810; qualify this statement, consistent with the quota-exhaustion handling in
+      docs/ja/specdojo/guides/exec-operation-guide.md section 2.5.
     message_ja: >-
-      A developer following the stated critical-path distinction could implement behavior that differs from
-      runWithRetry; distinguish the schema-level policy from current CLI behavior and identify the unresolved
-      specification decision before using this entry as implementation guidance.
+      The former critical/non-critical inconsistency is resolved, but gl-setup still describes waiting and retrying
+      after all candidates are limited without the session_limit and quota_exhausted exception in
+      src/exec/run/agent.ts:807–810; qualify this statement, consistent with the quota-exhaustion handling in
+      docs/ja/specdojo/guides/exec-operation-guide.md section 2.5.
     cause:
       type: document
   - id: F006
-    severity: major
-    rule: vp-qe-done-criteria
+    severity: minor
+    rule: vp-dev-implementation-readiness
     line: 255
     anchor: >-
-      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      notes: "`rate_limit_policy` に対応する。自動選択では、クリティカルパスの内外にかかわらず、待たずに次の候補の agent へ切り替え、全候補が制限に当たった場合だけ
+      `on_critical.retry` に従って待機と再試行を行い、尽きたら止める。schema の `on_non_critical`（見送る）は今の振る舞いには使われていない。指名実行の回復設定は `pinned`、CLI
       の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     message: >-
-      DC-001, DC-002, and DC-003 remain unmet because the rate-limit policy description does not resolve its conflict
-      with the cited guide and current retry implementation; qualify or reconcile that behavior before treating the
-      glossary as complete.
+      The previous critical-path implementation mismatch is resolved; add the session_limit and quota_exhausted
+      early-return exception from src/exec/run/agent.ts:807–810 so an implementation based on this entry does not
+      introduce backoff retries for those signals.
     message_ja: >-
-      DC-001, DC-002, and DC-003 remain unmet because the rate-limit policy description does not resolve its conflict
-      with the cited guide and current retry implementation; qualify or reconcile that behavior before treating the
-      glossary as complete.
+      The previous critical-path implementation mismatch is resolved; add the session_limit and quota_exhausted
+      early-return exception from src/exec/run/agent.ts:807–810 so an implementation based on this entry does not
+      introduce backoff retries for those signals.
     cause:
       type: document
   - id: F007
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 264
+    anchor: >-
+      notes: "利用枠制限時の方針の `on_critical.retry` に対応し、次候補での再試行を選ぶ場合に使う。`max_attempts` は初回を含めて数える。適用条件と項目の正本は schema の
+      `RateLimitPolicy`・`RetryPolicy` とする。"
+    message: >-
+      Define max_attempts as the number of candidate-list passes, including the initial pass, so implementations do not
+      mistakenly cap individual agent invocations.
+    message_ja: >-
+      Define max_attempts as the number of candidate-list passes, including the initial pass, so implementations do not
+      mistakenly cap individual agent invocations.
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 264
+    anchor: >-
+      notes: "利用枠制限時の方針の `on_critical.retry` に対応し、次候補での再試行を選ぶ場合に使う。`max_attempts` は初回を含めて数える。適用条件と項目の正本は schema の
+      `RateLimitPolicy`・`RetryPolicy` とする。"
+    message: >-
+      The previous major critical/non-critical conflict is resolved; DC-001, DC-002, and DC-003 remain unmet because the
+      retry counting unit is unspecified and line 255 omits the session_limit and quota_exhausted exception to immediate
+      wait/backoff retries.
+    message_ja: >-
+      The previous major critical/non-critical conflict is resolved; DC-001, DC-002, and DC-003 remain unmet because the
+      retry counting unit is unspecified and line 255 omits the session_limit and quota_exhausted exception to immediate
+      wait/backoff retries.
+    cause:
+      type: document
+  - id: F009
     severity: minor
     rule: vp-qe-verifiability
     line: 264
@@ -240,21 +272,22 @@ findings:
       candidates are available.
     cause:
       type: document
-  - id: F008
-    severity: major
+  - id: F010
+    severity: minor
     rule: vp-ops-operability
     line: 255
     anchor: >-
-      notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI
+      notes: "`rate_limit_policy` に対応する。自動選択では、クリティカルパスの内外にかかわらず、待たずに次の候補の agent へ切り替え、全候補が制限に当たった場合だけ
+      `on_critical.retry` に従って待機と再試行を行い、尽きたら止める。schema の `on_non_critical`（見送る）は今の振る舞いには使われていない。指名実行の回復設定は `pinned`、CLI
       の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     message: >-
-      Operators are told that non-critical tasks are skipped, although exec-config-guide section 4 and runWithRetry
-      retry candidates for those tasks; document the applicable recovery behavior and any unresolved schema/runtime
-      divergence so operators can predict continuation and waiting.
+      The previous non-critical skipping error is resolved; state that session_limit and quota_exhausted bypass the
+      short wait/backoff loop after candidate exhaustion, as implemented in src/exec/run/agent.ts:807–810, so operators
+      do not expect an immediate retry for those limits.
     message_ja: >-
-      Operators are told that non-critical tasks are skipped, although exec-config-guide section 4 and runWithRetry
-      retry candidates for those tasks; document the applicable recovery behavior and any unresolved schema/runtime
-      divergence so operators can predict continuation and waiting.
+      The previous non-critical skipping error is resolved; state that session_limit and quota_exhausted bypass the
+      short wait/backoff loop after candidate exhaustion, as implemented in src/exec/run/agent.ts:807–810, so operators
+      do not expect an immediate retry for those limits.
     cause:
       type: document
 done_criteria:

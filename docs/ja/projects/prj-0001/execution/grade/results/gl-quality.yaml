@@ -6,17 +6,17 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 100
-graded_at: "2026-11-11T21:32:32.519Z"
+graded_at: "2026-11-12T14:08:40.775Z"
 graded_by: sol-review-executor
-content_hash: f21b6bddb819e892e5e816f77fd021bcfad5658f5f87f2553d4f10246ed1dfa8
+content_hash: 6abcdc40659c606d950334d81918f214d78d73ff39fc7d6222a9e272d2668f37
 source_hashes:
   catalog-entry: c07d08c1702aff93a8e97a40aa0aea2484632a85d0a895b236b258fd15c35732
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:gl-common: 2c0aafb67a2c3ee22738b389b89efb7362505d6544513f815db9921284a066c8
+  dependency:gl-common: 7eb79bc9c501b4a94f61048b342459be8cdad9ae3ec66aacd17ac6ff176b3ab7
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 31bad5f39bf71e076f7ed4a050b28b6a02091ae1fc2c81b473d5aedcc6f97373
+  schedule: 67f05e70f3154de35fbb11dcc9083db1f716505d2f3eb0a3023925fa66f7b87f
 categories:
   purpose:
     score: 100

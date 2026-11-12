@@ -2,9 +2,9 @@
 id: gl-quality-grade-criteria
 document: gl-quality
 path: docs/ja/product/010-business-specs/060-glossary/gl-quality.yaml
-graded_at: "2026-11-11T21:32:32.519Z"
+graded_at: "2026-11-12T14:08:40.775Z"
 graded_by: sol-review-executor
-content_hash: f21b6bddb819e892e5e816f77fd021bcfad5658f5f87f2553d4f10246ed1dfa8
+content_hash: 6abcdc40659c606d950334d81918f214d78d73ff39fc7d6222a9e272d2668f37
 summary:
   satisfied: 5
   unsatisfied: 0

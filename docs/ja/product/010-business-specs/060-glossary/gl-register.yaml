@@ -199,8 +199,8 @@ terms:
     term: register update
     englishName: register update
     aliases: [登録項目の更新]
-    definition: 登録項目の処理状態を維持したまま、分類・担当・結論・入力などの内容を変更する操作。
-    notes: "`register update --id` に対応し、終端の項目も更新できる。処理状態を変える場合は専用の遷移操作を使う。"
+    definition: 登録項目の処理状態と分類を維持したまま、題名・担当・優先度・期限・結論・入力・依存などの内容を変更する操作。
+    notes: "`register update --id` に対応し、終端の項目も更新できる。分類（`item_type`）は変えられない。処理状態を変える場合は専用の遷移操作を使う。"
     category: tm-register-operation
     relatedTerms: [tm-register-ticket, tm-register-event]
     source: "`src/register/create-commands.ts`、`src/register/update.ts`"

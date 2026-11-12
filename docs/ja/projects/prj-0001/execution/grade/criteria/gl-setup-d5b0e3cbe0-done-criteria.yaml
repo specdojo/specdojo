@@ -2,9 +2,9 @@
 id: gl-setup-grade-criteria
 document: gl-setup
 path: docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml
-graded_at: "2026-11-11T22:05:17.858Z"
+graded_at: "2026-11-12T14:11:56.552Z"
 graded_by: sol-review-executor
-content_hash: ff6cdd9f2c96db5568dfeb5696c952707f99bd631dde85e4c54f2df5b96651bb
+content_hash: f4f6c37cd3553689a1c21fdb04ab754be663bd1d154d13b5ac46919696f6de6d
 summary:
   satisfied: 2
   unsatisfied: 3
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The rate-limit policy qualification conflicts with the cited guide and current implementation, preventing
-      confirmation that all principal term descriptions are accurate.
+      The retry definition does not identify candidate-list passes as the counting unit, and the rate-limit definition
+      omits the session/quota exception to immediate backoff retries.
   - id: DC-002
     text: 用語スコープと定義の妥当性を承認できること
     roles:
@@ -26,8 +26,8 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      The scope is explicit, but definition validity cannot be approved until the intended-versus-current automatic
-      recovery behavior is resolved.
+      The recovery definitions require the counting-unit clarification and session/quota qualification before their
+      accuracy can be approved.
   - id: DC-003
     text: 技術実装・CLI の引数・schema の項目名の参照として使えること
     roles:
@@ -35,8 +35,8 @@ criteria:
     viewpoint: vp-arc-cross-document-consistency
     status: unsatisfied
     reason: >-
-      The critical-path recovery description conflicts with current CLI behavior, and max_attempts does not explicitly
-      identify candidate passes as its counting unit.
+      The max_attempts mapping is ambiguous, and the automatic recovery statement is broader than the behavior
+      implemented in runWithRetry.
   - id: DC-004
     text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
     roles:

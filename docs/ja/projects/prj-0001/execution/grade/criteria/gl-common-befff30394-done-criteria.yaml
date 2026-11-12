@@ -2,9 +2,9 @@
 id: gl-common-grade-criteria
 document: gl-common
 path: docs/ja/product/010-business-specs/060-glossary/gl-common.yaml
-graded_at: "2026-11-11T20:42:10.067Z"
+graded_at: "2026-11-12T13:54:49.503Z"
 graded_by: sol-review-executor
-content_hash: 2c0aafb67a2c3ee22738b389b89efb7362505d6544513f815db9921284a066c8
+content_hash: 7eb79bc9c501b4a94f61048b342459be8cdad9ae3ec66aacd17ac6ff176b3ab7
 summary:
   satisfied: 4
   unsatisfied: 1
@@ -35,8 +35,8 @@ criteria:
     viewpoint: vp-qe-omissions-consistency
     status: unsatisfied
     reason: >-
-      The generated glossary retains Schedule's obsolete English name track and omits six terms present in the canonical
-      YAML.
+      The generated display document retains outdated formal names and aliases for thirteen terms, so terminology
+      consistency with the current YAML cannot be confirmed.
   - id: DC-005
     text: schema の条件付きの決まり（if・then などで、状態や種類によって必須の項目が変わるもの）を、用語どうしの関係（どの状態・種類のときに使うか）として短く書き、条件を写さず schema を正本として参照していること
     roles:
