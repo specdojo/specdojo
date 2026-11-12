@@ -10,7 +10,7 @@ terms:
     term: 計画策定
     englishName: planning
     definition: 管理する成果物と完了条件を選び、作業の担当・順序・期間・確認地点を定める活動。
-    notes: 成果物カタログ・スケジュール戦略・Schedule・タスクの基本定義は [[gl-common|用語集（共通）]] を正本とする。本書は計画固有の区分と関係を扱い、実行操作・状態は [[gl-execution|用語集（実行）]] に委ねる。用語の分類にも本用語を使う。
+    notes: 成果物カタログ・スケジュール戦略・Schedule・タスクの基本定義は [[gl-common|用語集（共通）]] を正本とする。本書は計画固有の区分と関係を扱い、実行操作・状態は [[gl-execution|用語集（実行）]] に委ねる。
     relatedTerms: [tm-catalog-domain, tm-track, tm-task-intent]
     source: "[[specdojo:schedule-design-guide|Schedule設計ガイド]]"
   - id: tm-catalog-domain
