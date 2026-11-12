@@ -9,9 +9,9 @@ status: draft
 # 本書は初期導入、設定の単位、人と agent の識別・責務・実行属性、共通実行設定を扱う。
 terms:
   - id: tm-initialization
-    term: 初期導入
+    term: init
     englishName: initialization
-    aliases: [初期化, init]
+    aliases: [初期導入, 初期化]
     definition: SpecDojo を使い始めるために、プロジェクトの稼働構成と必要な文書・実行環境を準備する活動。
     notes: CLI の入口は `specdojo init`。設定だけを準備する `config init` と区別する。成果物カタログを必須とせず、必要になった段階で追加する。
     relatedTerms: [tm-repository-settings, tm-project-settings, tm-human-roster, tm-agent-registry]
@@ -49,9 +49,9 @@ terms:
     relatedTerms: [tm-product-repository]
     source: "`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `ExternalProject`、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]"
   - id: tm-kata-authority
-    term: 実践の型の名前空間
+    term: kata authority
     englishName: kata authority
-    aliases: [kata authority]
+    aliases: [実践の型の名前空間]
     definition: 利用者が作る実践の型を、配布元やプロジェクトの文書と区別するリポジトリ単位の識別範囲。
     notes: "`kata_authority` に対応する。実践の型自体の定義は [[gl-common|用語集（共通）]] を参照する。名前の制約は schema、配置と解決の扱いは設定リファレンスを正本とする。"
     category: tm-repository-settings
@@ -76,7 +76,7 @@ terms:
     englishName: agent member
     aliases: [エージェントメンバー]
     definition: 共通の agent 名簿に登録し、実行基盤と能力などの属性に基づいて作業を委任する実行主体。
-    notes: "`type: agent` で記載し、`disabled` で無効化できる。`roles: []` は特定ロールに固定しない agent を表す。`mode` は作業モード、`stage_role` は実行段の役割であり、業務ロールとは区別する。pipeline では担当する段に合う `stage_role` を使い、省略した agent は単一 agent フローで使う。実行段の意味は [[gl-execution|用語集（実行）]] を参照する。"
+    notes: "`type: agent` で記載し、`disabled` で無効化できる。`roles: []` は特定ロールに固定しない agent を表す。`mode` は作業モード、`stage_role` は実行段の役割であり、業務ロールとは区別する。pipeline では担当する段に合う `stage_role` を使い、省略した agent は単一 agent フローで使う。pipeline の段の意味は [[gl-execution|用語集（実行）]] を参照する。"
     category: tm-member
     relatedTerms: [tm-agent-registry, tm-provider, tm-agent-capability, tm-agent-proficiency]
     source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember`、[[specdojo:exec-config-guide|exec設定ガイド]]"
@@ -99,9 +99,9 @@ terms:
     relatedTerms: [tm-agent-member, tm-human-roster, tm-agent-alias]
     source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml`、`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `agent_members_path`、[[prj-0001:pjr-2t63-agent-members-split|人とagentの名簿を分離する決定記録]]"
   - id: tm-member-nickname
-    term: メンバー識別名
+    term: nickname
     englishName: member nickname
-    aliases: [nickname, ニックネーム]
+    aliases: [メンバー識別名, ニックネーム]
     definition: CLI での実行者指定と実行記録を同じメンバーへ結び付ける安定した名前。
     notes: "`nickname` に対応し、`display_name` の表示名とは分ける。CLI の `--by`・`--executor-by`・`--reporter-by` などで指定する。合成名簿で一意とし、履歴に使った名前は変更せず、agent の旧名は別名でつなぐ。"
     category: tm-member
@@ -126,9 +126,9 @@ terms:
     relatedTerms: [tm-member, tm-member-nickname]
     source: "`docs/specdojo/schemas/v1/pm-roles.schema.yaml` の `Role`、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]]"
   - id: tm-provider
-    term: agent 実行基盤
+    term: provider
     englishName: provider
-    aliases: [provider, プロバイダー]
+    aliases: [agent 実行基盤, プロバイダー]
     definition: 登録された agent の起動と、基盤ごとに異なる実行設定を対応付ける実行環境の区分。
     notes: "agent の `provider` と実行既定の `providers.<name>` を結ぶ。モデルの提供会社ではなく、実行する CLI などの基盤を指す。選択可能な区分は agent 名簿と実行既定の schema を正本とする。"
     category: tm-agent-registry
@@ -144,27 +144,27 @@ terms:
     relatedTerms: [tm-provider, tm-agent-effort, tm-agent-alias, tm-agent-command-parameters]
     source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.model`、[[prj-0001:pjr-yk1c-agent-alias-resolution|agentの別名解決と記録の決定記録]]、[[specdojo:exec-config-guide|exec設定ガイド]]"
   - id: tm-agent-effort
-    term: 推論強度
+    term: effort
     englishName: reasoning effort
-    aliases: [effort]
+    aliases: [推論強度]
     definition: 対応する実行基盤へ渡す、agent の推論に用いる強度の指定。
     notes: "agent の `effort` に対応する。利用できる値と渡し方は実行基盤によって異なり、メンバー選択に使う習熟度とは分ける。"
     category: tm-agent-registry
     relatedTerms: [tm-agent-model, tm-provider, tm-agent-proficiency]
     source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.effort`"
   - id: tm-agent-capability
-    term: agent 能力
+    term: capabilities
     englishName: agent capability
-    aliases: [capabilities]
+    aliases: [agent 能力]
     definition: agent が作業で利用できるツールなどの機能を、作業要件との照合用に宣言した属性。
     notes: "`capabilities` に対応する。習熟度や業務ロールとは分ける。能力の値は agent 名簿 schema が参照する共通定義、作業要件との照合方法は exec 設定ガイドを正本とする。"
     category: tm-agent-registry
     relatedTerms: [tm-agent-proficiency, tm-role]
     source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.capabilities`、[[specdojo:exec-config-guide|exec設定ガイド]]"
   - id: tm-agent-proficiency
-    term: agent 習熟度
+    term: proficiency
     englishName: agent proficiency
-    aliases: [proficiency]
+    aliases: [agent 習熟度]
     definition: agent を作業に求める品質水準と照合するために宣言した熟練の区分。
     notes: "`proficiency` に対応する。推論強度や成果物の評価点を表さない。区分の値は agent 名簿 schema が参照する共通定義を正本とする。"
     category: tm-agent-registry
@@ -222,10 +222,10 @@ terms:
       [tm-agent-command-template, tm-agent-model, tm-agent-proficiency, tm-member-nickname]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `CommandParams`・`CommandVariableSet`"
   - id: tm-difficulty-routing
-    term: 難易度別実行者振り分け
+    term: 難易度別の振り分け
     englishName: difficulty routing
-    aliases: [難易度別ルーティング]
-    definition: 登録項目の難易度に応じて、作業遂行者・実行報告者と利用枠制限時の代替先を選ぶ既定の対応付け。
+    aliases: [難易度別実行者振り分け, 難易度別ルーティング]
+    definition: 登録項目の難易度に応じて、executor・reporter と利用枠制限時の代替先を選ぶ既定の対応付け。
     notes: "`routing` に対応する。設定した難易度の経路は実行者と利用枠制限時の動作を持ち、CLI の対応する明示指定を優先する。経路を持たない難易度は従来の自動選択を保つ。構成条件は schema の `DifficultyRoute` を正本とする。"
     category: tm-exec-defaults
     relatedTerms: [tm-member-nickname, tm-rate-limit-policy]
