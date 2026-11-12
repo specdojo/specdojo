@@ -500,3 +500,39 @@ milestones:
     depends_on:
       - T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-140
     owner: PO
+  - id: G-PROJECT-KATA-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-PROJECT-KATA-pm-organization-050
+      - T-PROJECT-KATA-pm-roles-050
+      - T-PROJECT-KATA-pm-plan-050
+      - T-PROJECT-KATA-pm-quality-management-plan-050
+      - T-PROJECT-KATA-pm-raci-050
+      - T-PROJECT-KATA-prj-assumptions-constraints-dependencies-050
+      - T-PROJECT-KATA-prj-comparison-of-alternatives-050
+    owner: PO
+  - id: G-PROJECT-KATA-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-PROJECT-KATA-pm-organization-090
+      - T-PROJECT-KATA-pm-roles-090
+      - T-PROJECT-KATA-pm-plan-090
+      - T-PROJECT-KATA-pm-quality-management-plan-090
+      - T-PROJECT-KATA-pm-raci-090
+      - T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090
+      - T-PROJECT-KATA-prj-comparison-of-alternatives-090
+    owner: PO
+  - id: M-PROJECT-KATA-project-management
+    name: ドメイン完了
+    artifact_name: プロジェクト管理
+    depends_on:
+      - T-PROJECT-KATA-pm-quality-management-plan-140
+      - T-PROJECT-KATA-pm-raci-140
+    owner: PO
+  - id: M-PROJECT-KATA-project-definition
+    name: ドメイン完了
+    artifact_name: プロジェクト定義
+    depends_on:
+      - T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140
+      - T-PROJECT-KATA-prj-comparison-of-alternatives-140
+    owner: PO
