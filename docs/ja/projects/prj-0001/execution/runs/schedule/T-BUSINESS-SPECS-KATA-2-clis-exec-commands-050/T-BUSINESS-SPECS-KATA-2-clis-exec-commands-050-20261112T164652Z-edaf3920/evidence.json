@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050",
+  "run_id": "T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050-20261112T164652Z-edaf3920",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-12T16:48:33.564Z",
+    "completed_at": "2026-11-12T16:53:04.261Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/clis-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/clis-sample.md | 188 ++++++++++++++++----------------\n 1 file changed, 93 insertions(+), 95 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/clis-sample.md",
+      "status": "passed",
+      "summary": "対象 Markdown の整形に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検査対象の staged 実行記録は0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外。",
+      "reason": "変更は Markdown sample のみで、YAML ファイルの変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は対象外。",
+      "reason": "登録簿個票および既存 plan・result を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は対象外。",
+      "reason": "executor の変更は docs/ja/specdojo/samples/ 配下のみで、docs/ja/projects/ 配下に及ばない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-li\n… output omitted …\nspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4471 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4471 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open thi\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ncoverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-5pXggh/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ZQ7mjF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-GAKO1n/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jK1nMD/pjr-000\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "clis-sample.md を更新し、利用者・確認者、会計と印字の判定、通信失敗後の照合・回復を明確化しました。整形と差分検査は成功しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイルは docs/ja/specdojo/samples/clis-sample.md のみ。7章構成、主要5コマンド、入力7行・出力11行と代表的な正常・警告・異常の完成例を維持し、図と手順の重複や構文・構造の詳細再掲を整理した。成果物本体、rulebook、grade result、result は変更していない。",
+    "判断根拠: docs/ja/specdojo/rulebooks/clis-rulebook.md、docs/ja/specdojo/standards/sample-authoring-standard.md、docs/ja/specdojo/standards/rulebook-authoring-standard.md、docs/ja/specdojo/defaults/pm-review-viewpoints.yaml の `vp-arc-conciseness`、PJR-2GD6。構造・必須情報・禁止事項は rulebook を正とした。",
+    "代表成果物 clis-exec-commands.md、その grade result、clis-rulebook の grade result、exec-operation-guide.md の中断・再開、ifx-cmd-sample.yaml、sf-sample.md、bps-sample.md を確認した。plan に展開された finding はなし。実成果物のコマンドを複写せず、完了と部分成功の区別、保持成果の確認、担当者への引き継ぎを販売管理の例に反映した。",
+    "既存の預かり金の再入力と終了コードの不整合、印字警告と異常終了の不整合、将来案 `sales sync` を現行回復操作に使う矛盾を解消した。印刷契約は既存の ifx-cmd-sample へ接続し、会計を再実行しない再印刷と結果不明時の紙面確認を整合させた。",
+    "recipe・template は既存の `not-needed` 宣言を維持した。recipe は rulebook の章別判断基準と sample で執筆判断を示せるため不要、template は rulebook の本文要件と sample に骨組み・表があり別管理による重複を避けるため不要と判断した。",
+    "未同梱の架空リファレンス・schema、本部受付照会・重複排除・回復手順は sample の「メモ / 将来課題」に影響・担当・解消条件を記録した。未確定の詳細を推測せず、結果不明時は照合・保留とした。reporter は以上を result の実施内容・変更ファイル・進め方と実践の型の適用へ記載すること。親 runner 担当の検査は重複実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050/T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050-20261112T164652Z-edaf3920/executor.log",
+      "bytes": 3563,
+      "truncated": false
+    }
+  ]
+}
