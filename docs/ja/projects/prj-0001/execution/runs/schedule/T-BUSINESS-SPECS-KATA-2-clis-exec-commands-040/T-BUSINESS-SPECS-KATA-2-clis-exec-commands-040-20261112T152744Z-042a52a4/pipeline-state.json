@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-KATA-2-clis-exec-commands-040",
   "run_id": "T-BUSINESS-SPECS-KATA-2-clis-exec-commands-040-20261112T152744Z-042a52a4",
-  "updated_at": "2026-11-12T15:44:00.820Z",
+  "updated_at": "2026-11-12T15:44:44.272Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-clis-exec-commands-040/T-BUSINESS-SPECS-KATA-2-clis-exec-commands-040-20261112T152744Z-042a52a4/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-12T15:44:00.820Z",
-      "completed_at": null,
+      "completed_at": "2026-11-12T15:44:44.272Z",
       "artifact_ref": null
     }
   },
