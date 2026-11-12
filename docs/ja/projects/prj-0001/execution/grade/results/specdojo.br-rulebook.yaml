@@ -5,17 +5,17 @@ path: docs/ja/specdojo/rulebooks/br-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 99
-graded_at: "2026-11-10T20:22:39.056Z"
+score: 100
+graded_at: "2026-11-12T20:17:50.366Z"
 graded_by: flash-high-executor
-content_hash: 9e7a9e6a7e55fdb5e8c108392d3f645d7ce0bdf84dcb3c96a7c412432be8bfad
+content_hash: 5b83a2ab2118624b47df3559980f627d96c6672377e34cccee859934453f093a
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -23,7 +23,7 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
     score: 100
   consistency:
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,34 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 85
-    anchor: "- 判断基準: 作成済みの仕様で判断できる範囲と、承認前に解消すべき論点を区別できること。意思決定の未了は `_UNDECIDED_`、確認作業の不足は `_TODO_`、仮説は `_ASSUMPTION_` で示す。"
-    message: >-
-      The previous unrestricted-memo problem is resolved by mandatory decision fields and shared labels, but the
-      reporting handoff remains unspecified; reference the common procedure for classifying persistent risks, issues,
-      change requests, and decisions in PJR, including the responsible Role code and destination record.
-    message_ja: >-
-      以前の unrestricted-memo に関する問題は、必須の決定フィールドと共有ラベルによって解決されましたが、レポートの引き継ぎについては未規定のままです。担当の Role コードおよび転送先レコードを含む、PJR
-      における永続的なリスク、問題、変更要求、および決定を分類するための共通手順を参照してください。
-  - id: F002
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 31
-    anchor: "- `based_on` は判断の根拠となる先行成果物を示す。依存先が未作成の場合は本文にも未確認の範囲を残し、内容を確認済みと扱わない。"
-    message: "`supersedes` は旧仕様との置換だけを扱い、BR の条件・出力変更時に参照元 BPS、実装、テストへ及ぶ影響を識別する記述規則がない。"
-    message_ja: "`supersedes` は旧仕様との置換だけを扱い、BR の条件・出力変更時に参照元 BPS、実装、テストへ及ぶ影響を識別する記述規則がない。"
-  - id: F003
-    severity: minor
-    rule: vp-ops-operability
-    line: 32
-    anchor: "- `part_of` は親ルールへの所属がある場合だけ用いる。ルールの名称は H1 に置き、未承認の文書を `ready` にしない。"
-    message: >-
-      The rulebook lacks guidelines for lifecycle operations such as how to deprecate, update, or handle inquiries
-      regarding existing business rules, including assigned role codes.
-    message_ja: ルールブックには、割り当てられたロールコードを含む、既存のビジネスルールを廃止、更新、または問い合わせに対応する方法といったライフサイクル操作のガイドラインが不足しています。
+findings: []
