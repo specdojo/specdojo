@@ -11,7 +11,6 @@ terms:
     term: 稼働構成
     englishName: SpecDojo configuration
     definition: SpecDojoを稼働させる最低限の設定（リポジトリ層とプロジェクト層）。
-    notes: 単一の英語名を持たない。
     category: tm-data-store
   - id: tm-kata
     term: Kata
@@ -60,7 +59,6 @@ terms:
     term: スケジュール戦略
     englishName: schedule strategy
     definition: トラックごとのタスク生成戦略や既定値の定義。
-    notes: 単一の英語名を持たない。
     category: tm-data-store
     relatedTerms: [tm-deliverable-catalog, tm-schedule]
   - id: tm-routine
@@ -70,7 +68,7 @@ terms:
     definition: 周期や条件に基づき、継続的な確認や実行を定義するもの。
     category: tm-data-store
   - id: tm-job
-    term: Job
+    term: job
     englishName: job
     aliases: [ジョブ定義]
     definition: 定型的に実行する処理の手順や判断の定義。
@@ -84,7 +82,7 @@ terms:
     relatedTerms: [tm-schedule, tm-document-maturity, tm-derived-view]
     source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`"
   - id: tm-schedule
-    term: Schedule
+    term: schedule
     englishName: schedule
     aliases:
       - スケジュール
@@ -136,32 +134,30 @@ terms:
     term: 進捗報告
     englishName: progress report
     definition: プロジェクトの進捗状況を可視化して関係者に報告するビュー。
-    notes: 単一の英語名を持たない。
     category: tm-data-store
   - id: tm-derived-view
     term: 派生ビュー・索引
     englishName: derived view and index
     definition: 正本の文書や構造化データから生成する閲覧ページ・一覧・索引で、進捗報告に含まれる生成ビューを除いたもの。
-    notes: 単一の英語名を持たない。
     category: tm-data-store
   - id: tm-data-store
     term: データストア
     englishName: data store
     definition: SpecDojo のプロジェクト運営で読み書きする、マスタ・構成データとトランザクションデータの保管先。
-    notes: 概念データフロー図の論理的な保管先を指し、物理的なデータベースの存在を意味しない。本用語集では保管先に当たる用語の `category` に指定する。
+    notes: 概念データフロー図の論理的な保管先を指し、物理的なデータベースの存在を意味しない。成果物カタログ・登録簿・実行記録などがこれに当たる。
     source: "[[cdfd-overview|概念データフロー図（全体概要）]] の「データストア」章"
   - id: tm-execution-record
     term: 実行記録
     englishName: execution record
     definition: タスクの実行で残る記録の総称。result、状態遷移イベント、evidence、trial、ジョブ実行記録、agent 実行ログを含む。
-    notes: 単一の英語名を持たない。タスクの実行状態はここを正本とし、計画である Schedule と区別する。構成要素の `category` に本用語を指定する。
+    notes: タスクの実行状態はここを正本とし、計画である Schedule と区別する。result・状態遷移イベント・evidence・trial などがこの記録に当たる。
     category: tm-data-store
     relatedTerms: [tm-result, tm-event, tm-evidence, tm-trial]
   - id: tm-evaluation-record
     term: 評価結果
     englishName: evaluation record
     definition: 成果物に対する評価の記録の総称。完了条件の判定、grade、finding を含む。
-    notes: 単一の英語名を持たない。構成要素の `category` に本用語を指定する。
+    notes: 完了条件の判定、grade、finding がこの記録に当たる。
     category: tm-data-store
     relatedTerms: [tm-grade, tm-finding]
   - id: tm-result
