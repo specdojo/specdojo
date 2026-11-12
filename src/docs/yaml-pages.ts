@@ -52,6 +52,10 @@ function glossaryText(value: unknown): string {
   return typeof value === "string" ? value : "";
 }
 
+function escapeAnchorText(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 function glossaryStrings(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === "string")
@@ -121,7 +125,8 @@ function renderGlossaryBody(
         })
         .join("、");
       const cells = [
-        `<span id="${id}"></span>${glossaryText(term.term)}（\`${id}\`）`,
+        // 用語名そのものをページ内の飛び先にする。<a> は空要素ではないため閉じタグを省かない。
+        `<a id="${id}">${escapeAnchorText(glossaryText(term.term))}</a>（\`${id}\`）`,
         names,
         glossaryText(term.definition),
         supplement,
