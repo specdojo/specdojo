@@ -73,3 +73,32 @@
       from: "-"
       to: approved
   previous_event_id: reg_c26b1b5d172d47d79a251ad3bdd3f02a
+- v: 1
+  id: reg_885c686b6f7640f1801460f1bc6b7e4a
+  ts: "2026-11-12T14:16:22Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e76382610d4a432e8f898dc66f4a4674
+- v: 1
+  id: reg_1ce0798ce54e43e093d6b2c2a5c4a8f9
+  ts: "2026-11-12T14:34:12Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md, test-unit"
+  previous_event_id: reg_885c686b6f7640f1801460f1bc6b7e4a
