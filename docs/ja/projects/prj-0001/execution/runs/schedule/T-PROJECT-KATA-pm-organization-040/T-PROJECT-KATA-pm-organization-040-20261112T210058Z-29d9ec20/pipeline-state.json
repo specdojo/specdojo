@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-PROJECT-KATA-pm-organization-040",
   "run_id": "T-PROJECT-KATA-pm-organization-040-20261112T210058Z-29d9ec20",
-  "updated_at": "2026-11-12T21:13:41.651Z",
+  "updated_at": "2026-11-12T21:13:53.089Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-organization-040/T-PROJECT-KATA-pm-organization-040-20261112T210058Z-29d9ec20/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-12T21:13:41.651Z",
-      "completed_at": null,
+      "completed_at": "2026-11-12T21:13:53.089Z",
       "artifact_ref": null
     }
   },
