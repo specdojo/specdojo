@@ -154,6 +154,7 @@ terms:
     source: "`docs/specdojo/schemas/v1/sch-strategy.schema.yaml` の `cross_deliverable_passes`"
   - id: tm-initial-completion
     term: 開始前の完了範囲
+    englishName: initial completed deliverables
     definition: トラック開始時点ですでに終わっている成果物の作業範囲を、計画の初期条件として指定したもの。
     notes: "`initial_state.completed_deliverables` に対応し、`completed_through` で完了済みの段までを指す。反復がある場合は周回・個別の組の反復も指定できる。`completed_through` の省略時は全段の完了を表す。実行中の状態記録とは区別する。表記と指定条件は schema を正本とする。"
     category: tm-planning

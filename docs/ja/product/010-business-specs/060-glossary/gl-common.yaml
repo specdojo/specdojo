@@ -7,8 +7,9 @@ locale: ja
 status: draft
 # 複数領域で共有する概念を扱う。領域固有の種類・状態・操作は、カタログで定める領域別用語集に委ねる。
 terms:
-  - id: tm-config
+  - id: tm-specdojo-config
     term: 稼働構成
+    englishName: SpecDojo configuration
     definition: SpecDojoを稼働させる最低限の設定（リポジトリ層とプロジェクト層）。
     notes: 単一の英語名を持たない。
     category: tm-data-store
@@ -49,18 +50,19 @@ terms:
     definition: 新しい成果物を書き始めるための構造を提供する実践の型。
     category: tm-kata
     relatedTerms: [tm-sample]
-  - id: tm-catalog
+  - id: tm-deliverable-catalog
     term: 成果物カタログ
-    englishName: catalog
+    englishName: deliverable catalog
     definition: プロジェクトで管理する成果物の目的、配置先、完了条件、根拠参照を定義する台帳。
     category: tm-data-store
     relatedTerms: [tm-deliverable, tm-schedule-strategy, tm-schedule]
   - id: tm-schedule-strategy
     term: スケジュール戦略
+    englishName: schedule strategy
     definition: トラックごとのタスク生成戦略や既定値の定義。
     notes: 単一の英語名を持たない。
     category: tm-data-store
-    relatedTerms: [tm-catalog, tm-schedule]
+    relatedTerms: [tm-deliverable-catalog, tm-schedule]
   - id: tm-routine
     term: routine
     englishName: routine
@@ -90,14 +92,15 @@ terms:
     definition: 成果物の作業をトラックごとのタスクに展開し、担当、期間、順序、依存関係、マイルストーンを定める計画の正本。
     notes: track は計画を分ける管理単位を指す。Schedule はタスクの実行状態を持たず、状態の正本は実行記録とする。段・ゲート・マイルストーンの詳細は領域別用語集 `gl-planning` に委ねる。
     category: tm-data-store
-    relatedTerms: [tm-catalog, tm-schedule-strategy, tm-task, tm-exec-log]
+    relatedTerms: [tm-deliverable-catalog, tm-schedule-strategy, tm-task, tm-execution-record]
     source: "[[cdfd-overview|概念データフロー図（全体概要）]]、[[prj-0001:pjr-bb92-cdfd-overview-propagation|Schedule と実行状態の責務の決定記録]]、`docs/specdojo/schemas/v1/sch-common.schema.yaml`"
   - id: tm-task
     term: タスク
     englishName: task
     definition: 計画と実行記録を対応付けて、担当者または AI Agent が実施する作業の単位。
     notes: Schedule、登録簿、ジョブを起点として実行され、作成・更新とレビューを区別する。起点と作業モードの正本は参照先 schema の `TaskOrigin`・`TaskMode` とする。タスクの完了は成果物の成熟度と区別する。
-    relatedTerms: [tm-schedule, tm-register, tm-job, tm-plan, tm-exec-log, tm-document-maturity]
+    relatedTerms:
+      [tm-schedule, tm-register, tm-job, tm-plan, tm-execution-record, tm-document-maturity]
     source: "`docs/specdojo/schemas/v1/exec-common.schema.yaml`"
   - id: tm-plan
     term: plan
@@ -113,9 +116,10 @@ terms:
     englishName: deliverable
     definition: プロジェクトで作成・更新し、目的や完了条件に照らして確認する文書・構造化データ。
     category: tm-data-store
-    relatedTerms: [tm-kata, tm-catalog, tm-document-maturity]
+    relatedTerms: [tm-kata, tm-deliverable-catalog, tm-document-maturity]
   - id: tm-document-maturity
     term: 文書成熟度
+    englishName: document maturity
     aliases: [文書の状態]
     definition: 文書の内容が確定しているか、非推奨かを表す区分。
     notes: 文書の `status` で表し、登録簿の処理状態である `item_status` とは別に管理する。実行成功だけで文書を確定せず、`ready` への昇格は人間が行う。
@@ -130,27 +134,32 @@ terms:
     category: tm-data-store
   - id: tm-progress-report
     term: 進捗報告
+    englishName: progress report
     definition: プロジェクトの進捗状況を可視化して関係者に報告するビュー。
     notes: 単一の英語名を持たない。
     category: tm-data-store
   - id: tm-derived-view
     term: 派生ビュー・索引
+    englishName: derived view and index
     definition: 正本の文書や構造化データから生成する閲覧ページ・一覧・索引で、進捗報告に含まれる生成ビューを除いたもの。
     notes: 単一の英語名を持たない。
     category: tm-data-store
   - id: tm-data-store
     term: データストア
+    englishName: data store
     definition: SpecDojo のプロジェクト運営で読み書きする、マスタ・構成データとトランザクションデータの保管先。
     notes: 概念データフロー図の論理的な保管先を指し、物理的なデータベースの存在を意味しない。本用語集では保管先に当たる用語の `category` に指定する。
     source: "[[cdfd-overview|概念データフロー図（全体概要）]] の「データストア」章"
-  - id: tm-exec-log
+  - id: tm-execution-record
     term: 実行記録
+    englishName: execution record
     definition: タスクの実行で残る記録の総称。result、状態遷移イベント、evidence、trial、ジョブ実行記録、agent 実行ログを含む。
     notes: 単一の英語名を持たない。タスクの実行状態はここを正本とし、計画である Schedule と区別する。構成要素の `category` に本用語を指定する。
     category: tm-data-store
     relatedTerms: [tm-result, tm-event, tm-evidence, tm-trial]
-  - id: tm-evaluation
+  - id: tm-evaluation-record
     term: 評価結果
+    englishName: evaluation record
     definition: 成果物に対する評価の記録の総称。完了条件の判定、grade、finding を含む。
     notes: 単一の英語名を持たない。構成要素の `category` に本用語を指定する。
     category: tm-data-store
@@ -160,38 +169,38 @@ terms:
     englishName: result
     aliases: [実行結果]
     definition: タスクで実施した内容、変更した成果物、検証結果、残課題をまとめる記録。
-    category: tm-exec-log
+    category: tm-execution-record
     relatedTerms: [tm-task, tm-plan, tm-evidence]
   - id: tm-event
     term: event
     englishName: event
     aliases: [状態遷移イベント]
     definition: タスクや成果物の状態が遷移した記録。
-    category: tm-exec-log
+    category: tm-execution-record
   - id: tm-evidence
     term: evidence
     englishName: evidence
     aliases: [証跡]
     definition: 実行の過程や結果を裏付ける記録。
-    category: tm-exec-log
+    category: tm-execution-record
   - id: tm-trial
     term: trial
     englishName: trial
     aliases: [試行記録]
     definition: タスク実行時の試行錯誤の過程。
-    category: tm-exec-log
+    category: tm-execution-record
   - id: tm-grade
     term: grade
     englishName: grade
     aliases: [判定結果]
     definition: 成果物の品質や適合性に対する総合的な評価判定。
-    category: tm-evaluation
+    category: tm-evaluation-record
   - id: tm-finding
     term: finding
     englishName: finding
     aliases: [指摘事項]
     definition: 評価によって発見された改善点や問題点。
-    category: tm-evaluation
+    category: tm-evaluation-record
   - id: tm-filing
     term: 起票
     englishName: filing
