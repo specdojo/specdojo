@@ -252,7 +252,7 @@ terms:
     englishName: rate limit policy
     aliases: [レートリミット方針]
     definition: agent の利用枠制限を検出したときの停止・待機・代替先への切替や再試行を定める実行方針。
-    notes: "`rate_limit_policy` に対応する。自動選択ではクリティカルパス外のタスクを見送り、クリティカルパス上のタスクは次候補での再試行か停止を選ぶ。指名実行の回復設定は `pinned`、CLI の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
+    notes: "`rate_limit_policy` に対応する。自動選択では、クリティカルパスの内外にかかわらず、待たずに次の候補の agent へ切り替え、全候補が制限に当たった場合だけ `on_critical.retry` に従って待機と再試行を行い、尽きたら止める。schema の `on_non_critical`（見送る）は今の振る舞いには使われていない。指名実行の回復設定は `pinned`、CLI の明示指定は `--on-rate-limit` と段ごとの fallback 指定に対応する。実行方法に応じた適用条件は schema の `RateLimitPolicy` と exec 設定ガイドを参照する。"
     category: tm-exec-defaults
     relatedTerms: [tm-rate-limit-detection, tm-retry-policy, tm-difficulty-routing]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `RateLimitPolicy`、[[specdojo:exec-config-guide|exec設定ガイド]]"
