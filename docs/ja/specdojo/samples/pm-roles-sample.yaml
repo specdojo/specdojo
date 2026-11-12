@@ -2,7 +2,7 @@
 id: specdojo:pm-roles-sample
 type: project
 status: ready
-title: ロール一覧
+title: "ロール一覧: 駄菓子屋きぬや 販売管理システム"
 rulebook: specdojo:pm-roles-rulebook
 based_on:
   - specdojo:people-and-organization-definition-standard
@@ -10,32 +10,33 @@ based_on:
 version: 1
 project_id: prj-0001
 
-# ロール一覧。Role code の共通定義・責務は specdojo:people-and-organization-definition-standard を参照する。
-# 兼務の割り当ては pm-members.yaml の roles フィールドで管理する。
-# ロール採用の方針・根拠は pm-organization.md を参照する。
+# 単一店舗・タブレット1台での初期リリースと店頭試用に用いる、採用済み8ロールの一覧。
+# 採用判断・Schedule の owner 使用可否・見直し条件の正本: [[specdojo:pm-organization-sample|組織定義]]。
+# 人間の実行主体と兼務: [[specdojo:pm-members-sample|メンバー定義]]。agent は利用先の .specdojo/agent-members.yaml で管理する。
+# 成果物・主要判断の責任分担: [[specdojo:pm-raci-sample|RACI]]。共通責務は based_on の上位標準を参照する。
 
 roles:
   - code: PO
     name: Project Owner
-    project_note: 初期リリースの目的、優先順位、公開可否を最終判断し、店頭運用を変えすぎない方針を承認する。
+    project_note: 店頭運用を大きく変えない範囲で販売・在庫・つけの記録を優先し、人間が範囲・費用・参加時間の上限、受入、公開・継続を最終判断する。
   - code: PM
     name: Project Manager
-    project_note: 計画・進捗・課題・リスク管理を担う。週次管理が継続的に滞る場合に専任化を検討する。
+    project_note: 店頭試用までの作業順序と参加負荷を週次で確認する。兼務による期限超過は課題化し、分担変更と追従タスクを整理して、上限変更は PO に判断を求める。
   - code: BA
     name: Business Analyst
-    project_note: 販売・在庫・つけ管理の業務整理と、店主・家族店番の利用者視点を反映した受入条件整理を担う。
+    project_note: 店主以外の家族も同じ手順で販売・在庫・つけを確認できるよう、利用者確認を主導し、操作説明への UX の助言を受入条件へ反映する。
   - code: ARC
     name: Architect
-    project_note: 店頭タブレット 1 台での利用を前提に、構成方針、データ管理方針、成果物間の整合を整理する。
+    project_note: タブレット1台の構成・データ管理方針を専門支援として検討し、DEV が主導する設計へ助言する。初期は独立タスクの主責任を持たない。
   - code: DEV
     name: Developer
-    project_note: 実装・設定・技術的変更作業を担う。実装タスクが継続増加した場合に専任化を検討する。
+    project_note: 販売・在庫・つけの実装・データ設計と技術的な是正を主導し、店頭試用で見つかった記録漏れや残高誤りの修正結果を QE の再確認へ渡す。
   - code: QE
     name: Quality Engineer
-    project_note: 欠品削減、つけ残高の記録漏れ防止、店頭操作の受入確認観点を管理する。
+    project_note: 人気商品の欠品、つけの記録漏れ・残高誤り、家族の店番時の操作を実装作業と分けて確認し、試験結果と未解消事項を PO の受入判断へ渡す。
   - code: UX
     name: UX / Documentation Designer
-    project_note: 家族店番向け説明や画面文言改善を担う。利用者導線の改善が増えた場合に専任化を検討する。
+    project_note: 店主・家族向けの画面文言と操作説明を専門支援として検討し、BA が主導する利用者確認へ助言する。独立タスク化は組織定義の見直し後とする。
   - code: OPS
     name: Operations / Release Manager
-    project_note: リリース・公開・配布・変更管理を担う。公開可否の最終判断は人間の PO に残す。
+    project_note: 導入・障害時対応・引き継ぎを専門支援として準備し、PM が主導するリリース準備へ取り込む。公開・継続の最終判断は人間の PO に残す。
