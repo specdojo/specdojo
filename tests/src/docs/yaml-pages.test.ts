@@ -10,7 +10,10 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { load } from "../../../src/shared/yaml.js";
+import { dump, load } from "../../../src/shared/yaml.js";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
 import { buildValidator } from "../../helpers/schema.js";
 import {
   buildYamlPages,
@@ -200,6 +203,143 @@ describe("renderYamlPage", () => {
     expect(page).toContain("**`cxd-_CONTEXT_`** の完了条件:");
     expect(page).toContain(YAML_PAGE_MARKER);
     expect(page).not.toContain("```yaml");
+  });
+
+  const glossarySources = [
+    "docs/ja/specdojo/samples/gl-sample.yaml",
+    ...["common", "execution", "planning", "quality", "register", "setup"].map(
+      (name) => `docs/ja/product/010-business-specs/060-glossary/gl-${name}.yaml`,
+    ),
+  ];
+
+  it.each(glossarySources)("renders every term and related link from %s", (path) => {
+    const content = readFileSync(path, "utf8");
+    const doc = load(content) as {
+      id: string;
+      locale: string;
+      status: string;
+      terms: { id: string; term: string; category?: string; relatedTerms?: string[] }[];
+    };
+    const validate = buildValidator("docs/specdojo/schemas/v1/gl.schema.yaml");
+    expect(validate(doc), JSON.stringify(validate.errors)).toBe(true);
+
+    const page = renderYamlPage(path, content);
+    const visible = page.split("<details>")[0];
+    expect(visible).toContain(`\`${path}\` から生成された表示用ページ`);
+    expect(visible).toContain(
+      `| ${doc.id} | ${doc.locale} | ${doc.status} | ${doc.terms.length} |`,
+    );
+    const categories = [...new Set(doc.terms.map((term) => term.category ?? ""))];
+    const headings = visible.split("\n").filter((line) => line.startsWith("## "));
+    expect(headings).toEqual([
+      ...categories.map((category, index) => {
+        const categoryTerm = doc.terms.find((term) => term.id === category);
+        const label = categoryTerm ? `${categoryTerm.term}（${category}）` : category || "その他";
+        return `## ${index + 1}. ${label}`;
+      }),
+      `## ${categories.length + 1}. YAML の正本`,
+    ]);
+    for (const term of doc.terms) {
+      expect(visible).toContain(`<span id="${term.id}"></span>${term.term}（\`${term.id}\`）`);
+      for (const related of term.relatedTerms ?? []) {
+        expect(visible).toContain(
+          `[${doc.terms.find((item) => item.id === related)?.term}](#${related})`,
+        );
+      }
+    }
+    // GFM として解釈しても、分類ごとに 5 列の表と全用語が残る。
+    const tables = unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .parse(visible)
+      .children.filter((node) => node.type === "table");
+    expect(tables).toHaveLength(categories.length + 1);
+    expect(tables[0].children).toHaveLength(2);
+    tables.slice(1).forEach((table, index) => {
+      expect(table.children).toHaveLength(
+        doc.terms.filter((term) => (term.category ?? "") === categories[index]).length + 1,
+      );
+      expect(table.children.every((row) => row.children.length === 5)).toBe(true);
+    });
+    expect(page).toContain(`<details>\n<summary>YAML の正本を表示</summary>`);
+    expect(page).not.toContain("<details open");
+    expect(page).toContain(`\`\`\`yaml\n${content}\`\`\`\n`);
+    expect(page.trimEnd()).toMatch(/<\/details>$/);
+  });
+
+  it("keeps multiline text, pipes, aliases and supplements inside five cells", () => {
+    const content = dump({
+      id: "gl-edge",
+      type: "glossary",
+      rulebook: "none",
+      title: "境界の確認",
+      locale: "ja",
+      terms: [
+        {
+          id: "tm-first",
+          term: "最初",
+          category: "分類A",
+          englishName: "first | term",
+          aliases: ["別名\n一", "別名二"],
+          definition: "定義\r\nの続き | 区切り",
+          notes: "[[gl-other|別の用語集]]\n注記",
+          example: "```yaml\n例: 値\n```",
+          source: "https://example.com",
+          relatedTerms: ["tm-other"],
+        },
+        { id: "tm-other", term: "関連[用語]", definition: "分類なし" },
+        {
+          id: "tm-third",
+          term: "三番目",
+          definition: "既存の \\| と \\\\| を保つ",
+          category: "分類B",
+        },
+        { id: "tm-last", term: "最後", definition: "同じ分類に戻る", category: "分類A" },
+      ],
+    });
+    const page = renderYamlPage("docs/ja/gl-edge.yaml", content);
+    const visible = page.split("<details>")[0];
+    expect(visible.match(/^## .+$/gm)).toEqual([
+      "## 1. 分類A",
+      "## 2. その他",
+      "## 3. 分類B",
+      "## 4. YAML の正本",
+    ]);
+    expect(visible).toContain("英語名: first \\| term / 別名: 別名 一、別名二");
+    expect(visible).toContain("定義 の続き \\| 区切り");
+    expect(visible).toContain("既存の \\| と \\\\\\| を保つ");
+    expect(visible).toContain(
+      "注記: [[gl-other\\|別の用語集]] 注記 / 用例: ```yaml 例: 値 ``` / 出典: <https://example.com>",
+    );
+    expect(visible).toContain("[関連\\[用語\\]](#tm-other)");
+    expect(visible).toContain("| - | 分類なし | - | - |");
+    const tables = unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .parse(visible)
+      .children.filter((node) => node.type === "table");
+    expect(tables.map((table) => table.children.length)).toEqual([2, 3, 2, 2]);
+    expect(
+      tables.slice(1).every((table) => table.children.every((row) => row.children.length === 5)),
+    ).toBe(true);
+    expect(page).toContain(`\`\`\`\`yaml\n${content}\`\`\`\`\n`);
+  });
+
+  it("renders an empty glossary with a numbered source chapter", () => {
+    const page = renderYamlPage(
+      "docs/ja/gl-empty.yaml",
+      "id: gl-empty\ntype: glossary\nterms: []\n",
+    );
+    expect(page).toContain("| gl-empty | - | - | 0 |");
+    expect(page).toContain("## 1. YAML の正本");
+  });
+
+  it("keeps non-glossary YAML with terms in its original code block", () => {
+    const content = "id: example\ntype: project\nterms: []\n";
+    const page = renderYamlPage("docs/ja/example.yaml", content);
+    expect(page).toContain(`\`\`\`yaml\n${content}\`\`\`\n`);
+    expect(page).not.toContain("<details>");
+    expect(page).not.toContain("| 用語（ID） |");
   });
 });
 

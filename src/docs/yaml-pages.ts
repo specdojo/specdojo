@@ -5,8 +5,8 @@ import { collectDocIndexEntries } from "./doc-index.js";
 import { isDctTemplateCatalog, renderCatalogTemplateBody } from "../shared/catalog-render.js";
 
 // YAML は VitePress のページにならないため、doc-index に載っている YAML ごとに
-// 同階層の generated/<name>.md へ表示用ページ（本文を yaml コードブロックで埋め込んだ
-// Markdown）を生成する。wikilink・frontmatter リンクはこのページへ解決される。
+// 同階層の generated/<name>.md へ表示用ページを生成する。
+// wikilink・frontmatter リンクはこのページへ解決される。
 
 // 自前で生成したページの識別マーカー。これを含まない既存ファイル
 // （catalog build が生成する dct-*.md 等）は上書きしない。
@@ -36,6 +36,102 @@ interface YamlPageMeta {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+// YAML 内の Markdown（wikilink やインラインコード）は保ち、表の区切りだけを整える。
+function glossaryCell(value: string): string {
+  return value
+    .replace(/\s*[\r\n]+\s*/g, " ")
+    .replace(
+      /(\\*)\|/g,
+      (_match, slashes: string) => `${slashes}${slashes.length % 2 === 0 ? "\\" : ""}|`,
+    );
+}
+
+function glossaryText(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function glossaryStrings(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : [];
+}
+
+function renderGlossaryBody(
+  doc: Record<string, unknown>,
+  terms: Record<string, unknown>[],
+): string {
+  const byId = new Map(terms.map((term) => [glossaryText(term.id), term]));
+  const groups = new Map<string, Record<string, unknown>[]>();
+  for (const term of terms) {
+    const category = glossaryText(term.category);
+    const group = groups.get(category) ?? [];
+    group.push(term);
+    groups.set(category, group);
+  }
+
+  const lines = [
+    "<!-- prettier-ignore -->",
+    "| ID | 言語 | 状態 | 用語の数 |",
+    "| --- | --- | --- | --- |",
+    `| ${[doc.id, doc.locale, doc.status].map((value) => glossaryCell(glossaryText(value)) || "-").join(" | ")} | ${terms.length} |`,
+  ];
+
+  let chapter = 0;
+  for (const [category, group] of groups) {
+    const categoryTerm = byId.get(category);
+    const label = categoryTerm
+      ? `${glossaryText(categoryTerm.term)}（${category}）`
+      : category || "その他";
+    lines.push(
+      "",
+      `## ${++chapter}. ${glossaryCell(label)}`,
+      "",
+      "<!-- prettier-ignore -->",
+      "| 用語（ID） | 英語名と別名 | 定義 | 補足 | 関連 |",
+      "| --- | --- | --- | --- | --- |",
+    );
+    for (const term of group) {
+      const id = glossaryText(term.id);
+      const names = [
+        term.englishName ? `英語名: ${glossaryText(term.englishName)}` : "",
+        glossaryStrings(term.aliases).length
+          ? `別名: ${glossaryStrings(term.aliases).join("、")}`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" / ");
+      const supplement = [
+        ["notes", "注記"],
+        ["example", "用例"],
+        ["source", "出典"],
+      ]
+        .flatMap(([key, label]) => {
+          const text = glossaryText(term[key]);
+          // URL 単独の出典は autolink にして MD034 に合わせる。
+          return text ? [`${label}: ${/^https?:\/\/\S+$/.test(text) ? `<${text}>` : text}`] : [];
+        })
+        .join(" / ");
+      const related = glossaryStrings(term.relatedTerms)
+        .map((ref) => {
+          const target = byId.get(ref);
+          const text = glossaryText(target?.term) || ref;
+          return target ? `[${text.replace(/[[\]\\]/g, "\\$&")}](#${ref})` : `\`${ref}\``;
+        })
+        .join("、");
+      const cells = [
+        `<span id="${id}"></span>${glossaryText(term.term)}（\`${id}\`）`,
+        names,
+        glossaryText(term.definition),
+        supplement,
+        related,
+      ];
+      lines.push(`| ${cells.map((cell) => glossaryCell(cell) || "-").join(" | ")} |`);
+    }
+  }
+  lines.push("", `## ${++chapter}. YAML の正本`, "");
+  return lines.join("\n");
 }
 
 // doc-index の "path:42" 形式から行番号サフィックスを除去する。
@@ -116,7 +212,8 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { titl
   };
 }
 
-// 表示ページの Markdown を組み立てる。YAML 本文はコードブロックで埋め込み、
+// 表示ページの Markdown を組み立てる。用語集は分類ごとの表を描き、
+// YAML 本文はコードブロックで埋め込み、
 // 本文中のバッククォート連続より長いフェンスを使って壊れないようにする。
 export function renderYamlPage(yamlRelPath: string, content: string): string {
   const { title, ...meta } = deriveMeta(yamlRelPath, content);
@@ -157,6 +254,29 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
   const fence = "`".repeat(Math.max(3, longestRun + 1));
 
   const body = content.endsWith("\n") ? content : `${content}\n`;
+
+  if (isRecord(parsed) && parsed.type === "glossary" && Array.isArray(parsed.terms)) {
+    const terms = parsed.terms.filter(isRecord);
+    return [
+      ...header,
+      `# ${heading}`,
+      "",
+      note,
+      "",
+      YAML_PAGE_MARKER,
+      "",
+      renderGlossaryBody(parsed, terms),
+      "<details>",
+      "<summary>YAML の正本を表示</summary>",
+      "",
+      "<!-- prettier-ignore -->",
+      `${fence}yaml`,
+      `${body}${fence}`,
+      "",
+      "</details>",
+      "",
+    ].join("\n");
+  }
 
   return [
     ...header,
