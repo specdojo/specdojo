@@ -94,7 +94,7 @@ phase_sets:
             proficiency: normal
           - stage_role: reporter
             proficiency: normal
-      task_suffix: 090
+      task_suffix: "090"
       duration_days: 0.25
       description:
         "対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria` だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
