@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-03T05:01:37Z"
   due_on: "2026-12-31"
+  block_reason: "parent validation failed: lint-md, test-unit"
   derived_from:
     - PJR-8HCB
   autopilot: approved
@@ -52,12 +53,45 @@ project を管理用の別リポジトリへ移す手順（履歴の切り出し
 
 | No  | 作業                                          | 担当     | 状態 | メモ |
 | --- | --------------------------------------------- | -------- | ---- | ---- |
-| 1   | 移す手順のガイドを書き、一覧と sidebar に足す | executor | open | -    |
+| 1   | 移す手順のガイドを書き、一覧と sidebar に足す | executor | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `docs/ja/specdojo/guides/project-move-guide.md`（ドキュメント ID: `specdojo:project-move-guide`）を新設した。
+- 個票の入力にある 5 つの手順（`git subtree split` による履歴切り出し、Kata の npm 版固定、`specdojo.config.json` 等の設定移行と元リポジトリからの削除、`external_projects` による相互起票連携、元リポジトリの文書サイトからの除外）を、前提・実行コマンド・確かめ方・戻し方・取り返しのつかない操作の前の確認ポイントとともに網羅して記述した。
+- 準備中の機能「読むだけの点検（PJR-9XEG）」および「リポジトリをまたぐリンクの記述（PJR-66ER）」について、「用意されたら使う」と明記し、現時点での手動点検・代替記法を明示・整理した。
+- `packages/docs-site/.vitepress/sidebar-config.ts` のサイドバー「ガイド」セクションに `guide("プロジェクト移行", "project-move-guide")` を追加した。
+- `docs/ja/specdojo/guides/specdojo-overview-guide.md` の第 8 章「目的別の次の読み物」の表に本ガイドへのリンクを追加した。
+
+### 5.2. 成果物
+
+- `docs/ja/specdojo/guides/project-move-guide.md`
+- `packages/docs-site/.vitepress/sidebar-config.ts`
+- `docs/ja/specdojo/guides/specdojo-overview-guide.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md`
+
+### 5.3. 迷った点・決めた事項（executor 判断）
+
+- **ガイドの ID とファイル名**: 命名標準にならい `specdojo:project-move-guide` / `project-move-guide.md` とし、H1 を `# プロジェクト移行ガイド` とした。
+- **サイドバーの配置位置**: `sidebar-config.ts` の「ガイド」内「技で回す」グループの末尾に、既存の運用ガイドと並列で `guide("プロジェクト移行", "project-move-guide")` を配置した。
+- **新リポジトリ内の配置構造**: `git subtree split` 直後はファイル群がルートに展開されるが、SpecDojo の標準ディレクトリ配置および ID とファイルパスの整合性を保つため、新リポジトリでも `docs/ja/projects/prj-0002` 配下へ再配置する手順を標準とした。
+- **外部起票の別名**: 元リポジトリ側では `specdojo-lp`、新リポジトリ側では `specdojo-core` とし、直感的に識別できる別名例を示した。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: 追加
+- 行文案: `docs: project を別リポジトリへ移す手順と安全確認をまとめたプロジェクト移行ガイドを追加`
+
+### 5.5. 残課題
+
+- PJR-9XEG（読むだけの点検）および PJR-66ER（リポジトリをまたぐリンクの書き方）の実装完了後、本ガイドの該当節を標準機能の記述へ更新する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- `[[specdojo:project-move-guide|プロジェクト移行ガイド]]`
+- `[[specdojo:specdojo-overview-guide|全体概要ガイド]]`
+- `[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]`
+- `[[specdojo:branch-workflow-guide|ブランチワークフローガイド]]`
+- `[[specdojo:id-and-file-naming-standard|ドキュメントIDおよびファイル命名標準]]`
