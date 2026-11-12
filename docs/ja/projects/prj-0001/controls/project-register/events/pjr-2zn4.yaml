@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_28dacc2dfe77491c900d641f05c2fabe
+  ts: "2026-11-12T13:48:50Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: テストと検証が /tmp の直下に init の出力を残さないようにする
+    - field: description
+      from: ""
+      to: どの処理が /tmp の直下に specdojo init の出力を残したかを確かめ、テストと agent の確認の手順を一時ディレクトリに閉じ込める
+    - field: input
+      from: ""
+      to: '["PJR-5FTV の修正。今晩の夜間に流す（indie が 2026-11-12 に承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-12"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-5FTV"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: test
+- v: 1
+  id: reg_f523959f21524253a3c22906594c1522
+  ts: "2026-11-12T13:50:32Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今晩の夜間の実行で流す（indie が承認）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_28dacc2dfe77491c900d641f05c2fabe

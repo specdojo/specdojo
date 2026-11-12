@@ -47,3 +47,29 @@
     - field: commit_scope
       from: ""
       to: guides
+- v: 1
+  id: reg_c26b1b5d172d47d79a251ad3bdd3f02a
+  ts: "2026-11-12T13:50:21Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。完了条件を書き、今晩の夜間に流す（indie が承認）
+  changes:
+    - field: owner
+      from: ARC
+      to: sol-executor
+  previous_event_id: reg_8d575e2e9762465889e2c310bd23b04e
+- v: 1
+  id: reg_e76382610d4a432e8f898dc66f4a4674
+  ts: "2026-11-12T13:50:54Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今晩の夜間の実行で流す（indie が承認）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_c26b1b5d172d47d79a251ad3bdd3f02a
