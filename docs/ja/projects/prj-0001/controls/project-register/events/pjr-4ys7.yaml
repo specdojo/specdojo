@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3ba90c3a5a7c4341bf8f2e660530beb8
+  ts: "2026-11-12T13:33:39Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が案を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 用語集の YAML の表示用ページを、分類ごとの表で描く
+    - field: description
+      from: ""
+      to: "yaml-pages が type: glossary の YAML を、コードブロックではなく分類ごとの表で描き、YAML の正本は折りたたんで残す"
+    - field: input
+      from: ""
+      to: '["用語集の確定の段の前に、表示用ページが YAML をコードブロックに埋めただけでレビューしにくいと indie が気づいた。表示の案を orchestrator が出し、indie が承認した（2026-11-12）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-12"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6XQ4"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs
