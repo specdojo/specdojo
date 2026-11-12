@@ -1,0 +1,186 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-business-specs-kata-2
+type: project
+status: draft
+title: スケジュール戦略（業務仕様の型の整備 2）
+rulebook: specdojo:sch-rulebook
+track: business-specs-kata-2
+scope:
+  catalogs:
+    - id: prj-0001:dct-data-model-stsd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml
+      local_ids:
+        - stsd-task-execution
+    - id: prj-0001:dct-data-model-cdsd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml
+      local_ids:
+        - cdsd-execution
+    - id: prj-0001:dct-data-flow
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+      local_ids:
+        - cdfd-uc-register
+    - id: prj-0001:dct-user-interface-model
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml
+      local_ids:
+        - clis-exec-commands
+    - id: prj-0001:dct-external-interface-specs
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml
+      local_ids:
+        - ifx-cmd-ai-provider-cli
+  include_kinds:
+    - work
+approach_rules:
+  - local_ids:
+      - stsd-task-execution
+      - cdsd-execution
+      - cdfd-uc-register
+      - clis-exec-commands
+      - ifx-cmd-ai-provider-cli
+    intent: improve-kata
+    kata_target: rulebook
+phase_sets:
+  rulebook-maintenance-pass:
+    - id: rulebook-maintenance
+      name: rulebook の見直し
+      execution: agent
+      mode: edit
+      approach: rulebook-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "040"
+      duration_days: 0.5
+      description:
+        "代表成果物の実績から stsd-rulebook・cdsd-rulebook・cdfd-uc-rulebook・clis-rulebook・ifx-cmd-rulebook のうち対応する rulebook を手入れする。成果物本体は変更しない。sample の完成例は後続の sample-maintenance で整備する。ifx-cmd の recipe・template は、rulebook の改訂に合わせて同じ段で同期する。他に必要と判断した recipe・template は対応結果に次の作業案を残す。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+  sample-maintenance-pass:
+    - id: sample-maintenance
+      name: sample の見直し
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "050"
+      duration_days: 0.5
+      description:
+        "改訂した rulebook に沿い、対応する stsd-sample・cdsd-sample・cdfd-uc-sample・clis-sample・ifx-cmd-sample を完成例として手入れする。代表成果物から判断に要る場面・例外を拾い、例を単純に複写しない。成果物本体は変更しない。clis-sample は他の型の厚さの基準でもあるため、薄くしない。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+      agent:
+        executor: sol-executor
+  review-pass:
+    - id: review
+      name: 完成版レビュー
+      execution: agent
+      mode: review
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: 090
+      duration_days: 0.25
+      description:
+        "対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria` だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+  finalize-pass:
+    - id: finalize
+      name: 完成版確定
+      execution: human
+      mode: edit
+      approach: finalize
+      task_suffix: "140"
+      duration_days: 0.125
+      description:
+        "担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template もあわせて確認する。
+
+        "
+default_phase_sets:
+  - phase_set: rulebook-maintenance-pass
+  - phase_set: sample-maintenance-pass
+  - phase_set: review-pass
+  - phase_set: finalize-pass
+owner_rules:
+  - local_ids:
+      - cdfd-uc-register
+      - cdsd-execution
+      - clis-exec-commands
+      - ifx-cmd-ai-provider-cli
+      - stsd-task-execution
+    owner: BA
+phase_gates:
+  - id: G-BUSINESS-SPECS-KATA-2-first-pass
+    name: 初回パス完了
+    after_phase_sets:
+      - rulebook-maintenance-pass
+      - sample-maintenance-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-data-model-stsd
+        - prj-0001:dct-data-model-cdsd
+        - prj-0001:dct-data-flow
+        - prj-0001:dct-user-interface-model
+        - prj-0001:dct-external-interface-specs
+  - id: G-BUSINESS-SPECS-KATA-2-review-pass
+    name: レビュー完了
+    after_phase_sets:
+      - review-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-data-model-stsd
+        - prj-0001:dct-data-model-cdsd
+        - prj-0001:dct-data-flow
+        - prj-0001:dct-user-interface-model
+        - prj-0001:dct-external-interface-specs
+group_milestones:
+  - catalog_id: prj-0001:dct-data-model-stsd
+    milestone:
+      id: M-BUSINESS-SPECS-KATA-2-data-model-stsd
+      name: ドメイン完了
+      artifact_name: データモデル／ステータス定義・状態遷移
+      owner: PO
+  - catalog_id: prj-0001:dct-data-model-cdsd
+    milestone:
+      id: M-BUSINESS-SPECS-KATA-2-data-model-cdsd
+      name: ドメイン完了
+      artifact_name: データモデル／概念データストア定義
+      owner: PO
+  - catalog_id: prj-0001:dct-data-flow
+    milestone:
+      id: M-BUSINESS-SPECS-KATA-2-data-flow
+      name: ドメイン完了
+      artifact_name: データフロー
+      owner: PO
+  - catalog_id: prj-0001:dct-user-interface-model
+    milestone:
+      id: M-BUSINESS-SPECS-KATA-2-user-interface-model
+      name: ドメイン完了
+      artifact_name: ユーザーインターフェースモデル
+      owner: PO
+  - catalog_id: prj-0001:dct-external-interface-specs
+    milestone:
+      id: M-BUSINESS-SPECS-KATA-2-external-interface-specs
+      name: ドメイン完了
+      artifact_name: 外部I/F仕様
+      owner: PO

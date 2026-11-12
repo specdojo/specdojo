@@ -452,3 +452,51 @@ milestones:
       - T-GLOSSARY-gl-quality-090
       - T-GLOSSARY-gl-setup-090
     owner: PO
+  - id: G-BUSINESS-SPECS-KATA-2-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-stsd-task-execution-050
+      - T-BUSINESS-SPECS-KATA-2-cdsd-execution-050
+      - T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-050
+      - T-BUSINESS-SPECS-KATA-2-clis-exec-commands-050
+      - T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-050
+    owner: PO
+  - id: G-BUSINESS-SPECS-KATA-2-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-stsd-task-execution-090
+      - T-BUSINESS-SPECS-KATA-2-cdsd-execution-090
+      - T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-090
+      - T-BUSINESS-SPECS-KATA-2-clis-exec-commands-090
+      - T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-090
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-data-model-stsd
+    name: ドメイン完了
+    artifact_name: データモデル／ステータス定義・状態遷移
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-data-model-cdsd
+    name: ドメイン完了
+    artifact_name: データモデル／概念データストア定義
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-cdsd-execution-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-data-flow
+    name: ドメイン完了
+    artifact_name: データフロー
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-user-interface-model
+    name: ドメイン完了
+    artifact_name: ユーザーインターフェースモデル
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-clis-exec-commands-140
+    owner: PO
+  - id: M-BUSINESS-SPECS-KATA-2-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-140
+    owner: PO
