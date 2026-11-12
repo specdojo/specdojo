@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-11-12T13:54:49.503Z"
+graded_at: "2026-11-12T14:49:54.523Z"
 graded_by: sol-review-executor
-content_hash: 7eb79bc9c501b4a94f61048b342459be8cdad9ae3ec66aacd17ac6ff176b3ab7
+content_hash: 8d34c0a429bdeae8d5e1b7d537ac3e65b1981b8eaf4f2820d9111ab6672ce0b5
 source_hashes:
   catalog-entry: c9259c73048c4295d4b9fa6134d422ec44cb0becadd5f97619aa3f40cebd9de0
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -30,11 +30,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 94
   implementation:
     score: 100
   quality:
-    score: 94
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -61,8 +61,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -82,14 +82,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -97,8 +97,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -122,44 +122,37 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 25
-    anchor: "term: rulebook"
+    rule: vp-qe-omissions-consistency
+    line: 14
+    anchor: "notes: 単一の英語名を持たない。"
     message: >-
-      Regenerate docs/ja/product/010-business-specs/060-glossary/generated/gl-common.md: its tm-rulebook entry at lines
-      40-43 declares term: 作成規範 and aliases: [ルールブック], whereas the source YAML at lines 24-27 declares term: rulebook
-      and aliases: [作成規範, ルールブック]; equivalent stale term/aliases fields remain for tm-recipe, tm-sample, tm-template,
-      tm-routine, tm-job, tm-plan, tm-result, tm-event, tm-evidence, tm-trial, tm-grade, and tm-finding.
+      Reconcile the notes claiming "単一の英語名を持たない" with the explicit englishName values for tm-specdojo-config,
+      tm-schedule-strategy, tm-progress-report, tm-derived-view, tm-execution-record, and tm-evaluation-record; remove
+      the claims or clarify that they concern the absence of a single corresponding implementation identifier rather
+      than the absence of an English conceptual name.
     message_ja: >-
-      Regenerate docs/ja/product/010-business-specs/060-glossary/generated/gl-common.md: its tm-rulebook entry at lines
-      40-43 declares term: 作成規範 and aliases: [ルールブック], whereas the source YAML at lines 24-27 declares term: rulebook
-      and aliases: [作成規範, ルールブック]; equivalent stale term/aliases fields remain for tm-recipe, tm-sample, tm-template,
-      tm-routine, tm-job, tm-plan, tm-result, tm-event, tm-evidence, tm-trial, tm-grade, and tm-finding.
+      Reconcile the notes claiming "単一の英語名を持たない" with the explicit englishName values for tm-specdojo-config,
+      tm-schedule-strategy, tm-progress-report, tm-derived-view, tm-execution-record, and tm-evaluation-record; remove
+      the claims or clarify that they concern the absence of a single corresponding implementation identifier rather
+      than the absence of an English conceptual name.
     cause:
       type: document
   - id: F002
     severity: minor
-    rule: vp-qe-done-criteria
-    line: 25
-    anchor: "term: rulebook"
+    rule: vp-ux-language-consistency
+    line: 14
+    anchor: "notes: 単一の英語名を持たない。"
     message: >-
-      Complete DC-004 verification after regenerating
-      docs/ja/product/010-business-specs/060-glossary/generated/gl-common.md: the source defines tm-rulebook as rulebook
-      with 作成規範 as an alias, while the display document still defines 作成規範 as its formal name, and twelve other entries
-      retain outdated term/aliases fields, preventing confirmation of terminology consistency between source and
-      display.
+      Clarify the naming status of the six entries whose notes say "単一の英語名を持たない" despite providing englishName values at
+      lines 12, 61, 136, 142, 154, and 161, so readers can distinguish an English conceptual label from an exact CLI or
+      schema identifier.
     message_ja: >-
-      Complete DC-004 verification after regenerating
-      docs/ja/product/010-business-specs/060-glossary/generated/gl-common.md: the source defines tm-rulebook as rulebook
-      with 作成規範 as an alias, while the display document still defines 作成規範 as its formal name, and twelve other entries
-      retain outdated term/aliases fields, preventing confirmation of terminology consistency between source and
-      display.
+      Clarify the naming status of the six entries whose notes say "単一の英語名を持たない" despite providing englishName values at
+      lines 12, 61, 136, 142, 154, and 161, so readers can distinguish an English conceptual label from an exact CLI or
+      schema identifier.
     cause:
       type: document
 done_criteria:
-  satisfied: 4
+  satisfied: 5
   total: 5
-  unsatisfied:
-    DC-004:
-      - QE
   detail_ref: gl-common-grade-criteria
