@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-cnd-specdojo-045
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-cnd-specdojo-045/T-KATA-WAVE-1-cnd-specdojo-045-20261113T224534Z-e9632dfa/plan.md
   started_at: "2026-11-13T22:45:38.231Z"
+  completed_at: "2026-11-13T22:57:55.278Z"
   agent: sol-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,25 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- CND の `recipe` を改訂済みの `rulebook` に同期し、記述内容を具体化しました。
+- VitePress のサイドバー設定を更新し、CND の `recipe` および `template` のメニュー登録を補完しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/cnd-recipe.md`: 上位図の経路網羅、図と定義の対応、正常時の期待結果、確認者、課題転送先・判断時点、変更影響、承認範囲と公開対象を具体化する問いと手順を追加し、改訂 `rulebook` と同期しました。
+- `packages/docs-site/.vitepress/sidebar-config.ts`: CND の `recipe` および `template` を型メニューに追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result 記載用: 変更ファイルは docs/ja/specdojo/recipes/cnd-recipe.md と packages/docs-site/.vitepress/sidebar-config.ts。recipe に上位図の経路網羅、図と定義の対応、正常時の期待結果、確認者、課題転送先・判断時点、変更影響、承認範囲と公開対象を具体化する問いと手順を追加した。
+- 判断根拠: recipe-authoring-standard、rulebook-authoring-standard、cnd-rulebook、cnd-mermaid-rulebook、共通実行規約、pm-review-viewpoints の `vp-arc-conciseness`、PJR-2GD6 を確認した。cnd-specdojo、cxd-specdojo、cnd-sample、cnd-template と既存の CND rulebook・sample の grade result を参照し、現行 rulebook を正として同期した。plan に展開された finding はない。
+- 維持した記述: 実行・配備単位での分割、正本と生成物、構築時と閲覧時、失敗と結果不明の区別は成果物と整合するため維持した。構文・値・schema・実装詳細は複製していない。
+- 要否判断: recipe は境界・経路・観測結果を導く作成支援に必要、template は図と定義表の骨組みを再利用するため必要。rulebook の既存 ID 宣言を維持した。完成例は既存 cnd-sample に外出し済みで、主 rulebook にサンプル章はないため変更不要と判断した。result と grade result サイドカーは編集していない。
+- 判断根拠: recipe-authoring-standard、rulebook-authoring-standard、cnd-rulebook、cnd-mermaid-rulebook、共通実行規約、pm-review-viewpoints の vp-arc-conciseness、PJR-2GD6 を確認した。cnd-specdojo、cxd-specdojo、cnd-sample、cnd-template と既存の CND rulebook・sample の grade result を参照し、現行 rulebook を正として同期した。plan に展開された finding はない。
+- 適用外の検証: `npm run validate:schema:file`（変更した YAML/YML ファイルがない。）
+- 適用外の検証: `npm run validate:catalog`（変更は recipe とサイドバーのみで、docs/ja/projects/ 配下の成果物を変更していない。）
+- 適用外の検証: `npm run validate:history-links`（履歴蓄積ファイルを変更していない。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+recipe-maintenance
