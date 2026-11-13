@@ -1,0 +1,352 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-kata-wave-1
+type: project
+status: draft
+title: スケジュール戦略（型の整備 第 1 波）
+rulebook: specdojo:sch-rulebook
+track: kata-wave-1
+scope:
+  catalogs:
+    - id: prj-0001:dct-architecture
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml
+      local_ids:
+        - cxd-specdojo
+        - cnd-specdojo
+        - cpd-specdojo-cli
+        - ifd-specdojo
+    - id: prj-0001:dct-system-design
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml
+      local_ids:
+        - sysd-index
+        - sysd-critical-flows
+        - sysd-cross-cutting-policy
+    - id: prj-0001:dct-business-model-bes
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml
+      local_ids:
+        - bes-index
+    - id: prj-0001:dct-system-functions
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml
+      local_ids:
+        - sf-index
+    - id: prj-0001:dct-external-interface-specs
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml
+      local_ids:
+        - ifx-index
+    - id: prj-0001:dct-planning
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml
+      local_ids:
+        - dct-index
+  include_kinds:
+    - work
+approach_rules:
+  - local_ids:
+      - cxd-specdojo
+      - cnd-specdojo
+      - cpd-specdojo-cli
+      - ifd-specdojo
+      - bes-index
+      - sf-index
+    intent: bootstrap-kata-set
+    bootstrap_scope:
+      - rulebook
+      - sample
+      - recipe
+      - template
+  - local_ids:
+      - sysd-index
+      - sysd-critical-flows
+      - sysd-cross-cutting-policy
+      - ifx-index
+    intent: bootstrap-kata-set
+    bootstrap_scope:
+      - rulebook
+      - sample
+  - local_ids:
+      - dct-index
+    intent: bootstrap-kata-set
+    bootstrap_scope:
+      - rulebook
+      - sample
+      - template
+phase_sets:
+  bootstrap-pass:
+    - id: bootstrap
+      name: 代表成果物・実践の型の初期整備
+      execution: agent
+      mode: edit
+      approach: bootstrap
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "005"
+      duration_days: 0.5
+      description:
+        "対象の成果物を代表として、対応する rulebook・sample（必要なら recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+  rulebook-maintenance-pass:
+    - id: rulebook-maintenance
+      name: rulebook の見直し
+      execution: agent
+      mode: edit
+      approach: rulebook-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "040"
+      duration_days: 0.5
+      description:
+        "初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+      agent:
+        executor: sol-executor
+  recipe-maintenance-pass:
+    - id: recipe-maintenance
+      name: recipe の見直し
+      execution: agent
+      mode: edit
+      approach: recipe-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "045"
+      duration_days: 0.5
+      description:
+        "改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が not-needed の型は変更せず、その旨を result に書いて完了とする。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+      agent:
+        executor: sol-executor
+  sample-maintenance-pass:
+    - id: sample-maintenance
+      name: sample の見直し
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "050"
+      duration_days: 0.5
+      description:
+        "改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+      agent:
+        executor: sol-executor
+  template-maintenance-pass:
+    - id: template-maintenance
+      name: template の見直し
+      execution: agent
+      mode: edit
+      approach: template-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "060"
+      duration_days: 0.5
+      description:
+        "改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed の型は変更せず、その旨を result に書いて完了とする。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+      agent:
+        executor: sol-executor
+  refine-pass:
+    - id: refine
+      name: 磨き込み・整合性確認
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "070"
+      duration_days: 0.25
+      description:
+        "整備済みの実践の型と先行・隣接成果物を参照し、既存の草案を保守的に磨き込む。責務境界と depends_on に沿った情報の受け渡しを確認し、不足や不整合だけを最小限修正して done_criteria を満たす状態へ整える。
+
+        "
+  condense-pass:
+    - id: condense
+      name: 冗長さの整理
+      execution: agent
+      mode: edit
+      approach: condense
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "080"
+      duration_days: 0.25
+      description:
+        "1 文書の冗長さを削る・まとめる・参照に置き換える。判断に要る背景・制約・例外・完了条件と意味を保ち、新しい内容を足さず、修正・保持した箇所と原因を result に記録する。
+
+        "
+  retrofit-review-pass:
+    - id: review
+      name: 完成版レビュー（実装照合）
+      execution: agent
+      mode: review
+      approach: retrofit
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "090"
+      duration_days: 0.25
+      description:
+        "対応する型一式（rulebook・sample、あれば recipe・template）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria` だけで完了としない。成果物・型は変更せず、指摘と根拠を review result に残す。
+
+        [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は [[specdojo:clis-sample|CLI仕様の完成例]]（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+        "
+  finalize-pass:
+    - id: finalize
+      name: 完成版確定
+      execution: human
+      mode: edit
+      approach: finalize
+      task_suffix: "140"
+      duration_days: 0.125
+      description:
+        "担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定する。bootstrap 対象では、同じタスクで整備した rulebook / recipe / sample / template もあわせて確認する。
+
+        "
+default_phase_sets:
+  - phase_set: bootstrap-pass
+  - phase_set: rulebook-maintenance-pass
+  - phase_set: recipe-maintenance-pass
+  - phase_set: sample-maintenance-pass
+  - phase_set: template-maintenance-pass
+  - phase_set: refine-pass
+  - phase_set: condense-pass
+  - phase_set: retrofit-review-pass
+  - phase_set: finalize-pass
+owner_rules:
+  - local_ids:
+      - bes-index
+      - cnd-specdojo
+      - cpd-specdojo-cli
+      - cxd-specdojo
+      - dct-index
+      - ifd-specdojo
+      - ifx-index
+      - sf-index
+      - sysd-critical-flows
+      - sysd-cross-cutting-policy
+      - sysd-index
+    owner: ARC
+    phase_overrides:
+      - phase: finalize
+        approach: bootstrap-finalize
+phase_gates:
+  - id: G-KATA-WAVE-1-first-pass
+    name: 初回パス完了
+    after_phase_sets:
+      - template-maintenance-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-architecture
+        - prj-0001:dct-system-design
+        - prj-0001:dct-business-model-bes
+        - prj-0001:dct-system-functions
+        - prj-0001:dct-external-interface-specs
+        - prj-0001:dct-planning
+  - id: G-KATA-WAVE-1-refine-pass
+    name: 磨き込み完了
+    after_phase_sets:
+      - refine-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-architecture
+        - prj-0001:dct-system-design
+        - prj-0001:dct-business-model-bes
+        - prj-0001:dct-system-functions
+        - prj-0001:dct-external-interface-specs
+        - prj-0001:dct-planning
+  - id: G-KATA-WAVE-1-review-pass
+    name: レビュー完了
+    after_phase_sets:
+      - retrofit-review-pass
+    owner: PO
+    scope:
+      catalogs:
+        - prj-0001:dct-architecture
+        - prj-0001:dct-system-design
+        - prj-0001:dct-business-model-bes
+        - prj-0001:dct-system-functions
+        - prj-0001:dct-external-interface-specs
+        - prj-0001:dct-planning
+group_milestones:
+  - catalog_id: prj-0001:dct-architecture
+    milestone:
+      id: M-KATA-WAVE-1-architecture
+      name: ドメイン完了
+      artifact_name: アーキテクチャ
+      owner: PO
+  - catalog_id: prj-0001:dct-system-design
+    milestone:
+      id: M-KATA-WAVE-1-system-design
+      name: ドメイン完了
+      artifact_name: システム設計
+      owner: PO
+  - catalog_id: prj-0001:dct-business-model-bes
+    milestone:
+      id: M-KATA-WAVE-1-business-model
+      name: ドメイン完了
+      artifact_name: 業務モデル／業務イベント仕様
+      owner: PO
+  - catalog_id: prj-0001:dct-system-functions
+    milestone:
+      id: M-KATA-WAVE-1-system-functions
+      name: ドメイン完了
+      artifact_name: システム化機能
+      owner: PO
+  - catalog_id: prj-0001:dct-external-interface-specs
+    milestone:
+      id: M-KATA-WAVE-1-external-interface-specs
+      name: ドメイン完了
+      artifact_name: 外部I/F仕様
+      owner: PO
+  - catalog_id: prj-0001:dct-planning
+    milestone:
+      id: M-KATA-WAVE-1-planning
+      name: ドメイン完了
+      artifact_name: 計画
+      owner: PO

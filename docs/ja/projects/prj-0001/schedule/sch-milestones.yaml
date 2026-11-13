@@ -536,3 +536,86 @@ milestones:
       - T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140
       - T-PROJECT-KATA-prj-comparison-of-alternatives-140
     owner: PO
+  - id: G-KATA-WAVE-1-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-KATA-WAVE-1-cxd-specdojo-060
+      - T-KATA-WAVE-1-cnd-specdojo-060
+      - T-KATA-WAVE-1-cpd-specdojo-cli-060
+      - T-KATA-WAVE-1-ifd-specdojo-060
+      - T-KATA-WAVE-1-sysd-index-060
+      - T-KATA-WAVE-1-sysd-critical-flows-060
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-060
+      - T-KATA-WAVE-1-bes-index-060
+      - T-KATA-WAVE-1-sf-index-060
+      - T-KATA-WAVE-1-ifx-index-060
+      - T-KATA-WAVE-1-dct-index-060
+    owner: PO
+  - id: G-KATA-WAVE-1-refine-pass
+    name: 磨き込み完了
+    depends_on:
+      - T-KATA-WAVE-1-cxd-specdojo-070
+      - T-KATA-WAVE-1-cnd-specdojo-070
+      - T-KATA-WAVE-1-cpd-specdojo-cli-070
+      - T-KATA-WAVE-1-ifd-specdojo-070
+      - T-KATA-WAVE-1-sysd-index-070
+      - T-KATA-WAVE-1-sysd-critical-flows-070
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-070
+      - T-KATA-WAVE-1-bes-index-070
+      - T-KATA-WAVE-1-sf-index-070
+      - T-KATA-WAVE-1-ifx-index-070
+      - T-KATA-WAVE-1-dct-index-070
+    owner: PO
+  - id: G-KATA-WAVE-1-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-KATA-WAVE-1-cxd-specdojo-090
+      - T-KATA-WAVE-1-cnd-specdojo-090
+      - T-KATA-WAVE-1-cpd-specdojo-cli-090
+      - T-KATA-WAVE-1-ifd-specdojo-090
+      - T-KATA-WAVE-1-sysd-index-090
+      - T-KATA-WAVE-1-sysd-critical-flows-090
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-090
+      - T-KATA-WAVE-1-bes-index-090
+      - T-KATA-WAVE-1-sf-index-090
+      - T-KATA-WAVE-1-ifx-index-090
+      - T-KATA-WAVE-1-dct-index-090
+    owner: PO
+  - id: M-KATA-WAVE-1-architecture
+    name: ドメイン完了
+    artifact_name: アーキテクチャ
+    depends_on:
+      - T-KATA-WAVE-1-cpd-specdojo-cli-140
+      - T-KATA-WAVE-1-ifd-specdojo-140
+    owner: PO
+  - id: M-KATA-WAVE-1-system-design
+    name: ドメイン完了
+    artifact_name: システム設計
+    depends_on:
+      - T-KATA-WAVE-1-sysd-critical-flows-140
+      - T-KATA-WAVE-1-sysd-cross-cutting-policy-140
+    owner: PO
+  - id: M-KATA-WAVE-1-business-model
+    name: ドメイン完了
+    artifact_name: 業務モデル／業務イベント仕様
+    depends_on:
+      - T-KATA-WAVE-1-bes-index-140
+    owner: PO
+  - id: M-KATA-WAVE-1-system-functions
+    name: ドメイン完了
+    artifact_name: システム化機能
+    depends_on:
+      - T-KATA-WAVE-1-sf-index-140
+    owner: PO
+  - id: M-KATA-WAVE-1-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-KATA-WAVE-1-ifx-index-140
+    owner: PO
+  - id: M-KATA-WAVE-1-planning
+    name: ドメイン完了
+    artifact_name: 計画
+    depends_on:
+      - T-KATA-WAVE-1-dct-index-140
+    owner: PO

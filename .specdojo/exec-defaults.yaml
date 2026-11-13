@@ -153,6 +153,8 @@ providers:
         - "premium request"
 
   codex:
+    # codex と agy を 2 本ずつ並べるため、同時に走らせる codex の agent を 2 本までにする（2026-11-13 indie の依頼）。
+    max_concurrency: 2
     # codex exec には worker 名を選択するオプションがないため {nickname} は使わない。
     # モデルは実体の member の model、reasoning effort は proficiency で切り替える。--ephemeral は rollout
     # ファイルを保存しない（実行履歴の正本は SpecDojo の event・plan・result）。
@@ -222,6 +224,8 @@ providers:
         on_exhausted: block
 
   antigravity:
+    # codex と agy を 2 本ずつ並べるため、同時に走らせる agy の agent を 2 本までにする（2026-11-13 indie の依頼）。
+    max_concurrency: 2
     # Antigravity CLI（agy）は --agent による定義ファイルの選択を持たず、codex と同じく
     # プロンプト（plan）だけで役割を与える。-p はプロンプトを引数に取り stdin を読まないため、
     # runner が stdin へ書く plan を "$(cat)" で引数に渡す（shell: true で実行される）。
