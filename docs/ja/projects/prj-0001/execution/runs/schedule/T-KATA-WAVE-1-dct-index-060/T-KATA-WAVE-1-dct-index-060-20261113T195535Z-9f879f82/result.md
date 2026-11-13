@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-dct-index-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-dct-index-060/T-KATA-WAVE-1-dct-index-060-20261113T195535Z-9f879f82/plan.md
   started_at: "2026-11-13T19:55:41.619Z"
+  completed_at: "2026-11-13T20:13:41.179Z"
   agent: sol-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物カタログ索引の Markdown template (`docs/ja/specdojo/templates/dct-index-template.md`) を見直し、冗長な記述を整理し、最新の rulebook および執筆標準に整合させました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/dct-index-template.md`: 古い共通ルールや重複した説明を削除し、YAML 正本・ドメイン別生成ビュー・`rulebook` の役割分担を明示するように整理しました。また、`frontmatter_template` や生成時プレースホルダ、一覧スロット、章の連番、生成表の列名などの骨組みを維持し、正本への参照を明確にしました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- reporter は result の必須セクションへ変更内容と判断根拠を記録してください。変更ファイルは docs/ja/specdojo/templates/dct-index-template.md のみです。古い共通ルールと重複説明を削除し、YAML 正本・ドメイン別生成ビュー・rulebook の役割を明示しました。
+- 判断根拠は template-authoring-standard.md、rulebook-authoring-standard.md、document-metadata-standard.md、ryu-guide.md のメンテナンス節、共通規約、`vp-arc-conciseness`、PJR-2GD6、dct-index-rulebook.md、dct-index.schema.yaml、prj-0001 の dct-index.yaml、dct-index-sample.yaml、template の grade result（finding なし）、先行タスク T-KATA-WAVE-1-dct-index-040・045 の result、および src/catalog/build.ts・tests/src/catalog/index.test.ts です。
+- recipe は分類・規模等の判断を rulebook の記述ガイドで扱えるため `not-needed` を維持。template は生成ビューの共通本文と一覧挿入スロットに必要です。rulebook の `target_format: yaml` は索引正本を対象としますが、本計画の編集対象と先行タスクの判断、生成処理の参照先に従い Markdown template を維持しました。`frontmatter_template`、生成時プレースホルダ、一覧スロット、章の連番、生成表の列名を維持しています。
+- 新規文書はなく、既存 rulebook・sample・template は sidebar-config.ts に掲載済みのため、メニュー追加は不要です。result と grade サイドカーは編集していません。指定された lint・schema 全体検証・型検査・単体／結合テストは親 runner が実行します。
+- 適用外の検証: `npm run validate:schema:file`（変更ファイルは Markdown template のみで、YAML ファイルを変更していないため。）
+- 適用外の検証: `npm run validate:catalog`（成果物の変更が docs/ja/specdojo/ 配下のみで、docs/ja/projects/ 配下に及ばないため。）
+- 適用外の検証: `npm run validate:history-links`（登録簿個票、既存 plan、result を変更していないため。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`docs/ja/specdojo/templates/dct-index-template.md` を対象に、`vp-arc-conciseness` および PJR-2GD6 (正本の再掲禁止) に基づき、重複するルール説明を削除し、正本への参照に置き換えることで簡潔化しました。同時に、生成ビューとしての構造（プレースホルダやスロット）を維持し、`rulebook-authoring-standard.md` 等の執筆標準に準拠した整合性を確保しました。
