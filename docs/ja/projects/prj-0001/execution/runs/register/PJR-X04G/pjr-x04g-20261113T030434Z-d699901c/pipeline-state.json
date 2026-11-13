@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-X04G",
   "run_id": "pjr-x04g-20261113T030434Z-d699901c",
-  "updated_at": "2026-11-13T05:53:02.502Z",
+  "updated_at": "2026-11-13T05:57:49.739Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-X04G/pjr-x04g-20261113T030434Z-d699901c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-13T05:53:02.502Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T05:57:49.739Z",
       "artifact_ref": null
     }
   },

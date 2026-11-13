@@ -105,3 +105,16 @@
       from: "parent validation failed: test-integration, typecheck"
       to: "-"
   previous_event_id: reg_eb120b50827e44ac80ec3b775ec884ba
+- v: 1
+  id: reg_576488dea9814ca4a2d024a062b619e5
+  ts: "2026-11-13T05:57:48Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_470c45ddf49a4a4985dbee3aa4811233
