@@ -1,0 +1,67 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/esil.schema.yaml
+id: prj-0001:ifx-index
+type: api
+title: SpecDojo 外部システムI/F一覧
+status: draft
+rulebook: specdojo:ifx-index-rulebook
+based_on: []
+supersedes: []
+
+# _ASSUMPTION_: 初版の候補範囲は AI provider CLI と Git/GitHub のコマンド連携。
+# 人と AI Agent が同じ仕様・作業結果を引き継ぐための境界を整理する。
+# 特定 provider・モデル・ホスティング先を必須化せず、業務上の採否・公開可否は人間が判断する。
+# 外部 CLI の内部通信、内部ファイル操作、全依存パッケージの列挙は本一覧の対象外。
+# 以下のタイミング・失敗時の扱いは設計入力の仮定であり、現行実装の保証を表さない。
+
+interfaces:
+  # 依頼と実行結果の受け渡しを一契約としてまとめる。
+  # provider ごとの起動・出力・認証条件は詳細仕様へ委譲する。
+  - name: AI provider CLI への仕様作成・検証作業の依頼
+    source: SpecDojo の作業実行機能
+    target: 利用者が選択した AI provider CLI
+    direction: bidirectional
+    kind: コマンド
+    # 依頼文・診断・構造化報告を含むため、全体を JSON とみなさない。
+    format: その他
+    timing: 人が指定した作業、または合意した実行計画の対象作業を開始する時
+    error_handling: >-
+      起動失敗・出力欠落・利用制限時は完了扱いにせず、既存の成果物変更と実行記録を確認する。
+      再実行による利用枠消費・重複変更を考慮し、作業担当へ再開判断を引き継ぐ。
+      認証とエラー識別・回復条件は詳細仕様を参照する。
+    spec_ref: prj-0001:ifx-cmd-ai-provider-cli
+
+  # ローカルの変更履歴とリモートの共有状態は失敗時の確認対象が異なるため分ける。
+  - name: Git による成果物の作業分離・変更履歴の管理
+    source: SpecDojo の成果物管理機能
+    target: Git CLI とローカルリポジトリ
+    direction: bidirectional
+    kind: コマンド
+    # 作業分離・履歴記録の要求と状態・差分・操作結果を扱う。
+    format: その他
+    timing: 対象作業の環境を分離する時、または成果物の変更を確認して履歴へ記録する時
+    error_handling: >-
+      競合・権限不足・操作結果不明時は作業場所、既存の変更と履歴を照合する。
+      変更を破棄せず、作業担当へ競合解消・権限確認・再開判断を引き継ぐ。
+    spec_ref: TBD
+    # _TODO_: ARC が DEV と作業分離・履歴記録の権限境界と成功判定を整理し、
+    # 詳細仕様へ接続する。リモート通信を要する操作はこのローカル契約へ混ぜない。
+
+  - name: GitHub との成果物共有状態の確認・更新
+    source: SpecDojo の成果物管理機能
+    target: gh CLI を介した GitHub
+    direction: bidirectional
+    kind: コマンド
+    # 操作要求と共有状態・受付結果を扱う。形式は操作別の契約で確定する。
+    format: その他
+    timing: 共有状態を確認する時、または人の判断条件を満たした成果物の共有操作を要求する時
+    error_handling: >-
+      接続失敗・認証拒否・権限不足・受付結果不明時は共有完了扱いにしない。
+      作業担当がリモート状態とローカル記録を照合し、認証・権限の復旧と再開判断を行う。
+      結果を確認する前に重複する共有操作を先行させない。
+    spec_ref: TBD
+    # _TODO_: ARC が接続・認証方式、権限、許可する操作と受付結果の判定を DEV と整理し、
+    # 詳細仕様へ接続する。Git によるリモート転送が必要なら、その方式も別途確認する。
+    # 公開条件は PO の判断へ引き継ぎ、QE は合意した契約から結合テストを具体化する。
+
+# _TODO_: ARC は上記の設計仮定を詳細契約へ照合し、BA と利用場面、PO と採否・公開条件を確認する。
+# 新たな外部連携が必要になった場合は範囲を確認して追加し、DEV/QE へ対象変更を引き継ぐ。

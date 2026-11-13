@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/esil.schema.yaml
+# specdojo-schema: validate=false reason=template
+id: specdojo:ifx-index-template
+type: template
+status: draft
+title: 外部システムI/F一覧テンプレート
+rulebook: none
+metadata_template:
+  id: _PROJECT_ID_:_LOCAL_ID_
+  type: api
+  title: _DELIVERABLE_NAME_
+  status: draft
+  rulebook: specdojo:ifx-index-rulebook
+  based_on: _BASED_ON_
+  supersedes: []
+
+# _TODO_: 対象システム・連携境界・対象外と、採否が未決の範囲を記す。
+# 連携ごとに要素を複製する。schema の値域から direction・kind・format を選ぶ。
+interfaces:
+  # _TODO_: 名前だけで伝わらない目的・渡す内容・成功後の結果を補う。
+  - name: _INTERFACE_NAME_
+    source: _SOURCE_SYSTEM_
+    target: _TARGET_SYSTEM_
+    direction: _DIRECTION_
+    kind: _INTERFACE_KIND_
+    format: _DATA_FORMAT_
+    timing: _TRIGGER_AND_CONDITION_
+    error_handling: "_TODO_: 失敗・結果不明時の停止または保留、確認対象と担当を記す。"
+    spec_ref: TBD
+    # _TODO_: 実在する詳細仕様の ID へ置換する。未整備なら TBD を維持し、
+    # 担当 Role・確認する接続/認証/回復条件・引き継ぎ先を記す。
