@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ebn6-glossary-everyday-terms
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-12T13:29:28Z"
+  completed_at: "2026-11-13T13:11:11Z"
+  conclusion: 用語集 6 件の見出しをガイドと CLI で使う言い方に合わせた。登録簿の操作のまとめは、確定のレビューで 1 語ずつに戻した
   derived_from:
     - PJR-6XQ4
   commit_type: docs

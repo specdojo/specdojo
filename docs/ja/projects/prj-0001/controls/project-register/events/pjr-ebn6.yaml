@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5d482ce8cece488abd66a14089bf6285
+- v: 1
+  id: reg_ad04700ea2d74dd5be254c67fae71eaf
+  ts: "2026-11-13T13:11:11Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を満たし、確定のレビューで直した後の 6 件の grade がすべて pass。用語集 6 件は確定済み
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-13"
+    - field: conclusion
+      from: "-"
+      to: 用語集 6 件の見出しをガイドと CLI で使う言い方に合わせた。登録簿の操作のまとめは、確定のレビューで 1 語ずつに戻した
+  previous_event_id: reg_d2602a31d0304b01b97d63c83d2f9539
