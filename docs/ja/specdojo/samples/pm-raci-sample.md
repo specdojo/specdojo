@@ -5,6 +5,7 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-raci-rulebook
   based_on:
+    - specdojo:people-and-organization-definition-standard
     - specdojo:pm-organization-sample
     - specdojo:pm-roles-sample
     - specdojo:pm-members-sample
@@ -55,7 +56,7 @@ specdojo:
 
 ### 4.1. 主担当と照合先
 
-作業順序・個別タスクの正本は、管理計画で整備先を示す `kinuya-schedule` とする。本例に未同梱の架空記録であり、`PM` が準備着手前に整備する。WBS を導入する場合は、WBS の明示 `owner` を先に確認する。未指定の作成作業は本表の主担当 `R` から展開する。`R` が一つならその Role、複数なら行の注記で示した担当範囲から決め、一意に決まらなければタスクを分割する。
+作業順序・個別タスクの正本は、管理計画で整備先を示す `kinuya-schedule` とする。本例に未同梱の架空記録であり、`PM` が準備着手前に整備する。担当の展開・照合は [[specdojo:people-and-organization-definition-standard|人と組織の定義標準]] の「Schedule への担当展開」に従う。
 
 | 対象作業                               | 主担当・`owner` | 対応する行と照合内容                           |
 | -------------------------------------- | --------------- | ---------------------------------------------- |
@@ -65,8 +66,6 @@ specdojo:
 | リリース候補の対象版を組み立てる       | `DEV`           | 複数 `R` のうち技術作業の主担当                |
 | リリース可否を承認する                 | `PO`            | 判断行の `A`。準備作業とは別の承認タスク       |
 | 利用者要求・操作設計を技術レビューする | `DEV`           | 成果物行の `C`。作成とは別のレビュータスク     |
-
-承認・レビュー・外部待ちを別 Task / Milestone にする場合は、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]] の「Schedule への担当展開」に従い、対象の `A` / `C` と照合する。通知だけの `I` を `owner` にしない。
 
 人間の実行主体と兼務は [[specdojo:pm-members-sample|メンバー定義]]、agent は利用先の `.specdojo/agent-members.yaml` を正本とする。本書へ個人名・agent 名・割り当て一覧を複製しない。
 

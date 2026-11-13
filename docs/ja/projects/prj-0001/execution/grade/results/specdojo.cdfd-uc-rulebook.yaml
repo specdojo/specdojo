@@ -4,16 +4,16 @@ document: specdojo:cdfd-uc-rulebook
 path: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-11-05T20:18:58.159Z"
-graded_by: flash-high-executor
-content_hash: b552486abd3ccd68c6d251654d354be2768928a12413a4d9db414d2c6e33188d
+verdict: pass
+score: 99
+graded_at: "2026-11-13T06:13:10.696Z"
+graded_by: sol-review-executor
+content_hash: 4658df77a19bec06f9e5a069f8ec68ad5bb2e27937973c1cc02119d416676902
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 4
     score: 100
@@ -103,35 +103,22 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 3
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 50
-    anchor: "- 作成途中の `status` は `draft` とし、完成判定と所定の承認を満たした後の昇格は定められた承認者が行います。"
-    message: "`ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。"
-    message_ja: "`ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。"
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 10
-    anchor: "- 「プロセス領域」は順序と責務の正本、「データストア」は全体概要の一覧の部分集合、図は開始から終了までの順序と受け渡しの正本とします。主要入力・主要出力の箇条書きや、引き渡しを列挙する章は設けません。"
-    message: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
-    message_ja: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 84
-    anchor: "### 6.2. 導入文と目的"
-    message: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。
-    message_ja: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。
-  - id: F004
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 50
-    anchor: "- 作成途中の `status` は `draft` とし、完成判定と所定の承認を満たした後の昇格は定められた承認者が行います。"
-    message: "`ready` への昇格時に参照する承認者の正本と承認証跡の保管先が定義されていないため、公開前確認で承認済みか再現可能に判定できる参照方法を指定してください。"
-    message_ja: "`ready` への昇格時に参照する承認者の正本と承認証跡の保管先が定義されていないため、公開前確認で承認済みか再現可能に判定できる参照方法を指定してください。"
+    rule: vp-arc-conciseness
+    line: 175
+    anchor: "- 共通して通る領域の内部を複数の詳細文書へ重複して描く、必要な例外時の戻りを重要度や線の多さを理由に省略する、または全体概要の凡例と異なる絵文字の有無・割り当てにする。"
+    message: >-
+      This prohibition repeats the shared-area internal-detail rule at line 69, emoji consistency rule at line 117, and
+      exception-return coverage rule at line 130, all of which are also checked in “完成判定”; replace this repeated wording
+      with references to “描き方の選択”, “概念データフロー”, and “例外時の戻りの図” while retaining their detailed guidance and completion
+      checks.
+    message_ja: >-
+      This prohibition repeats the shared-area internal-detail rule at line 69, emoji consistency rule at line 117, and
+      exception-return coverage rule at line 130, all of which are also checked in “完成判定”; replace this repeated wording
+      with references to “描き方の選択”, “概念データフロー”, and “例外時の戻りの図” while retaining their detailed guidance and completion
+      checks.

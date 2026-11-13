@@ -4,11 +4,11 @@ document: specdojo:cdsd-sample
 path: docs/ja/specdojo/samples/cdsd-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 70
-graded_at: "2026-10-11T21:05:54.491Z"
-graded_by: agy-expert-executor
-content_hash: 52b962ba44374970e1b92e3f62bf481499647f9448480be8e0779d1a2e864cfd
+verdict: pass
+score: 98
+graded_at: "2026-11-13T06:10:19.209Z"
+graded_by: sol-review-executor
+content_hash: ca513c598454ca4b7eac63f36e60eed7fb74e4e5780a30f43be5fd27ece4daf5
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 50
+    score: 92
   consistency:
-    score: 0
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,17 +75,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -102,47 +102,27 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 2
-  major: 2
+  blocker: 0
+  major: 0
   minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 20
-    anchor: >-
-      | 項目         | 値                                                                      |
-      備考                                 |
-    message: >-
-      Section 4 merely duplicates the purpose and main content summary already stated in Sections 1 and 3 without
-      providing distinct content.
-    message_ja: セクション 4 は、独自のコンテンツを提供することなく、セクション 1 および 3 ですでに述べられている目的と主要な内容の要約を単に複製しているだけである。
-  - id: F002
-    severity: major
-    rule: vp-qe-verifiability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: ルールブックで定義された標準列や語彙に基づく具体的な記述がなく、検証不可能な状態である。
-    message_ja: ルールブックで定義された標準列や語彙に基づく具体的な記述がなく、検証不可能な状態である。
-  - id: F003
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: ルールブックで必須とされている「標準列（データストア名、対応プロセス等）」を含むデータストア一覧表が欠落している。
-    message_ja: ルールブックで必須とされている「標準列（データストア名、対応プロセス等）」を含むデータストア一覧表が欠落している。
-  - id: F004
-    severity: blocker
     rule: vp-qe-kata-conformance
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: サンプルとして成果物の具体的な記述例を示す責務を果たしておらず、ルールブックの標準定義を全く適用していない。
-    message_ja: サンプルとして成果物の具体的な記述例を示す責務を果たしておらず、ルールブックの標準定義を全く適用していない。
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 成果物の具体的な記述例が欠落しており、初見の読者がどのように具体的に記述すべきかを理解できない。
-    message_ja: 成果物の具体的な記述例が欠落しており、初見の読者がどのように具体的に記述すべきかを理解できない。
+    line: 64
+    anchor: >-
+      | 販売記録       | [[specdojo:bdd-sample\|販売管理の辞書]] の売上記録・売上明細、[[specdojo:ccd-sample\|概念クラス図]] |
+      売上と明細の所属・粒度、商品参照、つけ販売時の購入者。会計確定までの操作は [[specdojo:clis-sample\|販売管理 CLI 仕様]] を参照する |
+    message: >-
+      The completed six-column inventory and concrete responsibility and verification examples resolve the previous
+      blocker; the remaining issue is that this row refers all pre-confirmation sales operations to
+      specdojo:clis-sample, although that CLI explicitly excludes credit sales while this store covers both cash and
+      credit sales. Qualify the CLI reference as cash-only and identify credit-sale confirmation as pending in
+      specdojo:cdfd-sales.
+    message_ja: >-
+      The completed six-column inventory and concrete responsibility and verification examples resolve the previous
+      blocker; the remaining issue is that this row refers all pre-confirmation sales operations to
+      specdojo:clis-sample, although that CLI explicitly excludes credit sales while this store covers both cash and
+      credit sales. Qualify the CLI reference as cash-only and identify credit-sale confirmation as pending in
+      specdojo:cdfd-sales.

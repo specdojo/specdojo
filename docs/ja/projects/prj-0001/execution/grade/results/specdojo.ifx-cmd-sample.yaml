@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/ifx-cmd-sample.yaml
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-11T00:58:57.640Z"
+score: 100
+graded_at: "2026-11-13T06:26:34.412Z"
 graded_by: sol-review-executor
-content_hash: fee71092b3c413ff1dec65965695de2f6d024334699899eeb238ebba4af6e258
+content_hash: 14fce7f362952d240d5c42dc807736bc267f0b3c386b06d7303b79e5e58bd834
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,19 +101,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 4
-    anchor: "status: ready"
-    message: >-
-      Regenerate docs/ja/specdojo/samples/generated/ifx-cmd-sample.md from the current YAML so its frontmatter and
-      embedded status match ready. Both currently show draft, giving readers conflicting lifecycle states for the same
-      sample.
-    message_ja: >-
-      Regenerate docs/ja/specdojo/samples/generated/ifx-cmd-sample.md from the current YAML so its frontmatter and
-      embedded status match ready. Both currently show draft, giving readers conflicting lifecycle states for the same
-      sample.
+findings: []

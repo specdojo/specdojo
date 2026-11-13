@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-11-12T20:27:16.600Z"
-graded_by: flash-high-executor
-content_hash: 60fb79cbfab5ebea6164d52e3bd4bb14d60294919fb23f079f1ada9afd24fbad
+score: 89
+graded_at: "2026-11-13T06:40:57.670Z"
+graded_by: agy-opus-review-executor
+content_hash: 20d87c9c979790ff2d7f717e3a2edb7292aeceee5faa9062ced72b5a3e6edfe9
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 67
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -69,23 +69,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 3
-    score: 75
-  vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -100,43 +100,54 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
+  major: 2
   minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 72
-    anchor: "| 要素         | 必須 | 内容                 |"
-    message: 第5章の `id` から `project_id` までの表は第4章のメタ項目表と重複するため, メタ項目は第4章へ一本化し、第5章は `roles` のルート要件だけに絞る必要がある。
-    message_ja: 第5章の `id` から `project_id` までの表は第4章のメタ項目表と重複するため, メタ項目は第4章へ一本化し、第5章は `roles` のルート要件だけに絞る必要がある。
+    line: 9
+    anchor: "- ロールの採用判断と使用可能な `owner` は組織定義を正本とし、本成果物では採用結果を転記します。"
+    message: >-
+      The first Section 1 bullet restates what the Section 2 table rows for `pm-organization.md` and `pm-roles.yaml`
+      (lines 19-20) already define (source of truth for adoption and `owner` vs. machine-readable transcription), so
+      remove the bullet or merge it into Section 2 to avoid explaining the same boundary twice in prose and table.
+    message_ja: >-
+      The first Section 1 bullet restates what the Section 2 table rows for `pm-organization.md` and `pm-roles.yaml`
+      (lines 19-20) already define (source of truth for adoption and `owner` vs. machine-readable transcription), so
+      remove the bullet or merge it into Section 2 to avoid explaining the same boundary twice in prose and table.
   - id: F002
     severity: minor
-    rule: vp-arc-conciseness
-    line: 104
-    anchor: "- `code` には標準 Role code のみを使用する。"
-    message: "`roles[].code` 節の標準コード限定・独自コード禁止は直前の `roles` 節と重複するため、配列全体の規則と各 code 値の規則を分担させて反復を除く必要がある。"
-    message_ja: "`roles[].code` 節の標準コード限定・独自コード禁止は直前の `roles` 節と重複するため、配列全体の規則と各 code 値の規則を分担させて反復を除く必要がある。"
+    rule: vp-dev-testability
+    line: 93
+    anchor: >-
+      改訂・廃止はメタ情報標準の「文書の改訂・廃止とライフサイクル変更管理」に従います。PM は組織定義、WBS・Schedule の `owner`、RACI、両 member
+      定義、レビュー観点の参照を調べ、波及更新をタスク化します。ARC は参照・schema との整合、QE は機械検証と採用集合・コード重複・名称対応の照合を確認し、人間の PO が採用変更と公開可否を判断します。
+    message: >-
+      The change-completion guidance says QE performs machine validation, but no validation command or entry point,
+      expected result, or method for the code-duplicate and adopted-set checks (which the schema's object-level
+      `uniqueItems` does not enforce) is named, so add the concrete check procedure or a reference to where it is
+      defined.
+    message_ja: >-
+      The change-completion guidance says QE performs machine validation, but no validation command or entry point,
+      expected result, or method for the code-duplicate and adopted-set checks (which the schema's object-level
+      `uniqueItems` does not enforce) is named, so add the concrete check procedure or a reference to where it is
+      defined.
   - id: F003
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 11
-    anchor: "- 標準 Role code は `PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS` を基本セットとし、プロジェクト内で採用する責務語彙をこの集合から選ぶ。"
-    message: 上位標準では `PO` が最低限の必須 Role code だが、本行は8コードから任意に選べるように読めるため、`roles` に `PO` を必須とする条件を明記しなければ最終判断主体を欠く成果物を許してしまう。
-    message_ja: 上位標準では `PO` が最低限の必須 Role code だが、本行は8コードから任意に選べるように読めるため、`roles` に `PO` を必須とする条件を明記しなければ最終判断主体を欠く成果物を許してしまう。
-  - id: F004
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 61
-    anchor: "| `rulebook` | `specdojo:pm-roles-rulebook` 固定 | ○ |"
+    line: 38
+    anchor: >-
+      | `rulebook`                    | 必須。準拠先として `specdojo:pm-roles-rulebook`
+      を指定すること                                                  |
     message: >-
       `rulebook` は schema の必須キーで sample・template にも存在する一方、対応 recipe が schema 非許可キーとして追加を禁止しているため、recipe の手順と悪い例を本行および
       schema に合わせて修正しなければ生成物が schema 不適合になる。
     message_ja: >-
       `rulebook` は schema の必須キーで sample・template にも存在する一方、対応 recipe が schema 非許可キーとして追加を禁止しているため、recipe の手順と悪い例を本行および
       schema に合わせて修正しなければ生成物が schema 不適合になる。
-  - id: F005
+  - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
@@ -147,21 +158,33 @@ findings:
     message_ja: >-
       対応 recipe が本章の構造・必須キー・禁止事項を独自に再定義し、特に必須の `rulebook` を禁止しているため、recipe は問いと作成手順に責務を限定し、本 rulebook・schema
       と矛盾しない内容へ修正する必要がある。
-  - id: F006
+  - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 27
-    anchor: "| `pm-roles.yaml` | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ |"
+    line: 47
+    anchor: "| `roles`                | 必須       | 採用した全 Role code の配列。`PO` を必ず含め、各コードを一意にする。組織定義で採用した集合と一致させる |"
     message: >-
-      本行は `pm-roles.yaml` を `owner` 語彙の正本とするが、`based_on` の人と組織の定義標準は採用 Role code と使用可能な `owner` を `pm-organization.md`
-      の管理対象としているため、正本と machine-readable な転記先の関係を両文書で統一する必要がある。
+      The template enumerates all eight standard roles without any comment instructing authors to remove roles not
+      adopted in the organization definition, while this row requires `roles` to match the adopted set, so add that
+      scaffold guidance to the template (or state it here) to prevent unadopted roles from being transcribed.
     message_ja: >-
-      本行は `pm-roles.yaml` を `owner` 語彙の正本とするが、`based_on` の人と組織の定義標準は採用 Role code と使用可能な `owner` を `pm-organization.md`
-      の管理対象としているため、正本と machine-readable な転記先の関係を両文書で統一する必要がある。
-  - id: F007
+      The template enumerates all eight standard roles without any comment instructing authors to remove roles not
+      adopted in the organization definition, while this row requires `roles` to match the adopted set, so add that
+      scaffold guidance to the template (or state it here) to prevent unadopted roles from being transcribed.
+  - id: F006
     severity: minor
-    rule: vp-ux-readability
-    line: 72
-    anchor: "| 要素         | 必須 | 内容                 |"
-    message: 第4章とほぼ同じメタ項目表を再掲しているため、第5章を `roles` 固有のルート構造と配列要件に絞り、初見の読者が主要な判断点へ直接進める構成にする必要がある。
-    message_ja: 第4章とほぼ同じメタ項目表を再掲しているため、第5章を `roles` 固有のルート構造と配列要件に絞り、初見の読者が主要な判断点へ直接進める構成にする必要がある。
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# プロジェクトロール定義 作成ルール"
+    message: >-
+      The deliverable is named "プロジェクトロール定義" in the H1 but "ロール一覧" in line 22 and in the template/sample titles, and the
+      member artifacts alternate between "member 定義" (lines 5, 93) and "メンバー定義" (lines 28, 89), so unify each name to
+      one form across the rulebook and its Kata.
+    message_ja: >-
+      The deliverable is named "プロジェクトロール定義" in the H1 but "ロール一覧" in line 22 and in the template/sample titles, and the
+      member artifacts alternate between "member 定義" (lines 5, 93) and "メンバー定義" (lines 28, 89), so unify each name to
+      one form across the rulebook and its Kata.
+level_corrections:
+  - viewpoint: vp-qe-kata-conformance
+    original_level: 2
+    corrected_level: 1

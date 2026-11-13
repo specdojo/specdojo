@@ -5,9 +5,9 @@ path: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-12T20:24:37.650Z"
-graded_by: flash-high-executor
+score: 98
+graded_at: "2026-11-13T06:24:32.612Z"
+graded_by: sol-review-executor
 content_hash: 4881b3747f8dc026833bb7c0c6cfd6b66b47a4c2202e1d0748d151ed9b8b4c78
 categories:
   purpose:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,6 +101,36 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 31
+    anchor: >-
+      - 成果物は `type: api`、再利用可能な雛形は `type: template` とし、`rulebook: specdojo:ifx-cmd-rulebook` を指定する。`title`
+      で対象と実行目的を識別する。項目の必須性・型・許容値は `docs/specdojo/schemas/v1/ifx-cmd.schema.yaml` を正本とする。
+    message: >-
+      Distinguish template metadata from generated artifact metadata: document-metadata-standard requires rulebook: none
+      on the template itself and rulebook: specdojo:ifx-cmd-rulebook inside metadata_template, as the supplied template
+      already demonstrates; the current sentence appears to require the artifact rulebook on both.
+    message_ja: >-
+      Distinguish template metadata from generated artifact metadata: document-metadata-standard requires rulebook: none
+      on the template itself and rulebook: specdojo:ifx-cmd-rulebook inside metadata_template, as the supplied template
+      already demonstrates; the current sentence appears to require the artifact rulebook on both.
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 78
+    anchor: >-
+      - **入出力がない場合**: `files` を記述する場合、CLI がファイルを作成しなければ `outputs: []`、入力ファイルがなければ `inputs: []` と明記する。ファイル入出力を一切行わない CLI
+      では `files` キー自体を省略できる。
+    message: >-
+      Reconcile the absent-file-array rule with the companion template: this paragraph requires explicit inputs: [] or
+      outputs: [] whenever files is present, but the template comment also permits omitting the unused array; establish
+      one policy and synchronize the template YAML source and generated display page.
+    message_ja: >-
+      Reconcile the absent-file-array rule with the companion template: this paragraph requires explicit inputs: [] or
+      outputs: [] whenever files is present, but the template comment also permits omitting the unused array; establish
+      one policy and synchronize the template YAML source and generated display page.

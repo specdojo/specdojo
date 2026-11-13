@@ -47,3 +47,29 @@
     - field: commit_scope
       from: ""
       to: kata
+- v: 1
+  id: reg_e39bf01439324df3a884e25be7eb28f0
+  ts: "2026-11-13T09:42:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_48bd5bf3c5e44716b8c8958de633d838
+- v: 1
+  id: reg_62b93350580241dc84c3616f3c06d3f0
+  ts: "2026-11-13T10:12:06Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e39bf01439324df3a884e25be7eb28f0

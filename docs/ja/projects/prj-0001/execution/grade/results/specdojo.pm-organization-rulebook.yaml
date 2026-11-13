@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-11-07T20:40:38.819Z"
-graded_by: flash-high-executor
-content_hash: 5c67245a362c08078b4a44edeed2a13ac4c611b6535668c8827fb5dbb8f10e01
+score: 96
+graded_at: "2026-11-13T06:34:07.178Z"
+graded_by: sol-review-executor
+content_hash: a131d94e8a82668d5533fde03b7045e940c75aef3d09d527ce86a47021c3e27b
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 83
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -103,25 +103,24 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
+  major: 1
   minor: 0
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# 組織定義 作成ルール"
-    message: 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。
-    message_ja: 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。
-  - id: F002
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# 組織定義 作成ルール"
+    line: 36
+    anchor: 以下はすべて必須です。見出し順・表・記入欄の骨組みは Frontmatter で宣言した template を正本とします。
     message: >-
-      全Role codeを組織定義へ記載しない方針は、上位標準が同文書を採用／未採用 Role code と使用可能な owner
-      の正本としてSchedule・RACIを検証する規則と矛盾するため、採用判断を組織定義に残す責務境界へ修正してください。
+      Align the declared Kata with the mandatory requirements at lines 41–43: pm-organization-recipe.md still delegates
+      the complete Role-code inventory to other authoritative documents, while pm-organization-template.md provides no
+      fields for adopted and unadopted Role codes, decision reasons, non-adoption alternatives, or the explicit
+      usable-owner set. Revise the recipe and the template designated here as the scaffold authority so following them
+      produces the organization-level adoption record required by this rulebook and demonstrated by its sample.
     message_ja: >-
-      全Role codeを組織定義へ記載しない方針は、上位標準が同文書を採用／未採用 Role code と使用可能な owner
-      の正本としてSchedule・RACIを検証する規則と矛盾するため、採用判断を組織定義に残す責務境界へ修正してください。
+      Align the declared Kata with the mandatory requirements at lines 41–43: pm-organization-recipe.md still delegates
+      the complete Role-code inventory to other authoritative documents, while pm-organization-template.md provides no
+      fields for adopted and unadopted Role codes, decision reasons, non-adoption alternatives, or the explicit
+      usable-owner set. Revise the recipe and the template designated here as the scaffold authority so following them
+      produces the organization-level adoption record required by this rulebook and demonstrated by its sample.

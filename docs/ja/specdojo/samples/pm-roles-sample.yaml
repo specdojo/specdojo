@@ -2,7 +2,7 @@
 id: specdojo:pm-roles-sample
 type: project
 status: ready
-title: "ロール一覧: 駄菓子屋きぬや 販売管理システム"
+title: "ロール定義: 駄菓子屋きぬや 販売管理システム"
 rulebook: specdojo:pm-roles-rulebook
 based_on:
   - specdojo:people-and-organization-definition-standard
@@ -39,4 +39,4 @@ roles:
     project_note: 店主・家族向けの画面文言と操作説明を専門支援として検討し、BA が主導する利用者確認へ助言する。独立タスク化は組織定義の見直し後とする。
   - code: OPS
     name: Operations / Release Manager
-    project_note: 導入・障害時対応・引き継ぎを専門支援として準備し、PM が主導するリリース準備へ取り込む。公開・継続の最終判断は人間の PO に残す。
+    project_note: 導入・障害時対応・引き継ぎを専門支援として準備し、PM が主導するリリース準備へ取り込む。初期は独立した Schedule タスクの主責任を持たず、公開・継続の最終判断は人間の PO に残す。
