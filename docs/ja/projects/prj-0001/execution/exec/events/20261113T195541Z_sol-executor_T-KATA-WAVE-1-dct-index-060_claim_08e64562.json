@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T19:55:41Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-dct-index-060",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
