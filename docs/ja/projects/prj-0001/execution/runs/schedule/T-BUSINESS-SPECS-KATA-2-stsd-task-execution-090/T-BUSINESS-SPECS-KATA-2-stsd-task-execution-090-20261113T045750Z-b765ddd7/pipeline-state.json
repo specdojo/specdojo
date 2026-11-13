@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-BUSINESS-SPECS-KATA-2-stsd-task-execution-090",
   "run_id": "T-BUSINESS-SPECS-KATA-2-stsd-task-execution-090-20261113T045750Z-b765ddd7",
-  "updated_at": "2026-11-13T05:12:17.499Z",
+  "updated_at": "2026-11-13T05:12:28.751Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-2-stsd-task-execution-090/T-BUSINESS-SPECS-KATA-2-stsd-task-execution-090-20261113T045750Z-b765ddd7/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-review-executor",
       "attempts": 1,
       "started_at": "2026-11-13T05:12:17.499Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T05:12:28.751Z",
       "artifact_ref": null
     }
   },
