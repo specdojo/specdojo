@@ -4,11 +4,11 @@ document: specdojo:prj-assumptions-constraints-dependencies-rulebook
 path: docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 87
-graded_at: "2026-11-12T20:32:39.419Z"
-graded_by: flash-high-executor
-content_hash: 85f46568121a0fb8e7bebf4786ebec6804eee84f9f4772bca4eea0d97e691ebf
+verdict: pass
+score: 100
+graded_at: "2026-11-13T10:33:33.477Z"
+graded_by: sol-review-executor
+content_hash: c8723f57bdf1699768a89217cede41e1ac594cd2118305792e601f9967e07527
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,79 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 6
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 61
-    anchor: ""
-    message: 各表と変更記録で項目 ID を必須の追跡キーとして使う一方, 「ドキュメント ID」では文書 ID しか定義していないため, 前提・制約・依存ごとの接頭辞, 文書内一意性, 採番後の不変性を規定する必要がある。
-    message_ja: 各表と変更記録で項目 ID を必須の追跡キーとして使う一方, 「ドキュメント ID」では文書 ID しか定義していないため, 前提・制約・依存ごとの接頭辞, 文書内一意性, 採番後の不変性を規定する必要がある。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 61
-    anchor: ""
-    message: >-
-      sample は `ACD-A01`・`ACD-C01`・`ACD-D01` を使用し, template も種別別 ID を要求しているが, rulebook は項目 ID の形式・一意性・安定性を定義していないため,
-      必須キーの規則として追加する必要がある。
-    message_ja: >-
-      sample は `ACD-A01`・`ACD-C01`・`ACD-D01` を使用し, template も種別別 ID を要求しているが, rulebook は項目 ID の形式・一意性・安定性を定義していないため,
-      必須キーの規則として追加する必要がある。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 120
-    anchor: "推奨表:"
-    message: >-
-      継続提供される基盤を依存関係とする本規定に対し, recipe の「4.1. 前提条件」は「店頭で使う端末を利用できる」を前提の例とし, sample の ACD-D01 は同じ端末可用性を依存関係としているため,
-      誤登録を防ぐよう分類を統一する必要がある。
-    message_ja: >-
-      継続提供される基盤を依存関係とする本規定に対し, recipe の「4.1. 前提条件」は「店頭で使う端末を利用できる」を前提の例とし, sample の ACD-D01 は同じ端末可用性を依存関係としているため,
-      誤登録を防ぐよう分類を統一する必要がある。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 120
-    anchor: "推奨表:"
-    message: >-
-      rulebook と sample は継続利用する端末・作業基盤を依存関係として扱うが, recipe は店頭端末の利用可能性を前提条件の例としているため, recipe による適用結果が rulebook
-      に反しないよう分類例を統一する必要がある。
-    message_ja: >-
-      rulebook と sample は継続利用する端末・作業基盤を依存関係として扱うが, recipe は店頭端末の利用可能性を前提条件の例としているため, recipe による適用結果が rulebook
-      に反しないよう分類例を統一する必要がある。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 120
-    anchor: "推奨表:"
-    message: "`rulebook-authoring-standard` は章参照を章タイトルで記載するよう求めているが, 「依存関係（6.3.）」は番号で参照しているため, 「依存関係」のような章タイトル参照へ改める必要がある。"
-    message_ja: "`rulebook-authoring-standard` は章参照を章タイトルで記載するよう求めているが, 「依存関係（6.3.）」は番号で参照しているため, 「依存関係」のような章タイトル参照へ改める必要がある。"
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 148
-    anchor: "### 6.5. 監視・変更管理"
-    message: 依存関係の推奨表は「内容または依存先」「確認方法または成立条件」等を用いる一方, template と sample は「依存先・条件」「受領・成立条件」等を用いているため, 列の必須意味が揺れないよう名称を統一する必要がある。
-    message_ja: 依存関係の推奨表は「内容または依存先」「確認方法または成立条件」等を用いる一方, template と sample は「依存先・条件」「受領・成立条件」等を用いているため, 列の必須意味が揺れないよう名称を統一する必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 148
-    anchor: "### 6.5. 監視・変更管理"
-    message: rulebook の依存関係表と template・sample の列名が一致せず, 成立条件と確認方法の必須性が異なって読めるため, rulebook を正本として同一の項目定義へ揃える必要がある。
-    message_ja: rulebook の依存関係表と template・sample の列名が一致せず, 成立条件と確認方法の必須性が異なって読めるため, rulebook を正本として同一の項目定義へ揃える必要がある。
-  - id: F008
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 148
-    anchor: "### 6.5. 監視・変更管理"
-    message: >-
-      「内容または依存先」「影響・必要な理由」「確認方法または成立条件」「トリガー」は, template・sample の「依存先・条件」「必要となる理由」「受領・成立条件」「変化のトリガー」と表記と意味範囲が異なるため,
-      読み手が同じ必須項目として認識できる名称へ統一する必要がある。
-    message_ja: >-
-      「内容または依存先」「影響・必要な理由」「確認方法または成立条件」「トリガー」は, template・sample の「依存先・条件」「必要となる理由」「受領・成立条件」「変化のトリガー」と表記と意味範囲が異なるため,
-      読み手が同じ必須項目として認識できる名称へ統一する必要がある。
+findings: []

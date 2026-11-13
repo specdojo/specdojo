@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/pm-roles-sample.yaml
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-11-13T06:42:36.458Z"
-graded_by: agy-opus-review-executor
-content_hash: a137c1cead0921d6cec2292b6d6e8f59edc12dcd027863cf93308280136dfb4d
+score: 100
+graded_at: "2026-11-13T10:24:58.011Z"
+graded_by: sol-review-executor
+content_hash: 33213309cf03025b5e8bfe3901d1887d024aa791bcfdb0edf9f63a2bffef0465
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,32 +101,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 42
-    anchor: "project_note: 導入・障害時対応・引き継ぎを専門支援として準備し、PM が主導するリリース準備へ取り込む。公開・継続の最終判断は人間の PO に残す。"
-    message: >-
-      The OPS project_note omits the restriction stated for the other specialist-support roles (ARC line 30
-      "初期は独立タスクの主責任を持たない", UX line 39 "独立タスク化は組織定義の見直し後"); add an equivalent statement that OPS does not own independent
-      Schedule tasks initially, so the YAML stays consistent with pm-organization-sample where OPS owner usage is 不可.
-    message_ja: >-
-      The OPS project_note omits the restriction stated for the other specialist-support roles (ARC line 30
-      "初期は独立タスクの主責任を持たない", UX line 39 "独立タスク化は組織定義の見直し後"); add an equivalent statement that OPS does not own independent
-      Schedule tasks initially, so the YAML stays consistent with pm-organization-sample where OPS owner usage is 不可.
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 6
-    anchor: "rulebook: specdojo:pm-roles-rulebook"
-    message: >-
-      The sample's `rulebook: specdojo:pm-roles-rulebook` correctly follows the rulebook (§4, §6.1) and schema (required
-      key), but pm-roles-recipe lines 21 and 113 classify exactly this key as a schema-violating bad example; align the
-      recipe with the rulebook/schema so the sample and recipe do not contradict each other (keep line 6 as is).
-    message_ja: >-
-      The sample's `rulebook: specdojo:pm-roles-rulebook` correctly follows the rulebook (§4, §6.1) and schema (required
-      key), but pm-roles-recipe lines 21 and 113 classify exactly this key as a schema-violating bad example; align the
-      recipe with the rulebook/schema so the sample and recipe do not contradict each other (keep line 6 as is).
+findings: []

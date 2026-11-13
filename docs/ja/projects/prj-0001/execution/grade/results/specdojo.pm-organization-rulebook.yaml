@@ -4,9 +4,9 @@ document: specdojo:pm-organization-rulebook
 path: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-11-13T06:34:07.178Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-13T10:19:57.097Z"
 graded_by: sol-review-executor
 content_hash: a131d94e8a82668d5533fde03b7045e940c75aef3d09d527ce86a47021c3e27b
 categories:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,24 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 36
-    anchor: 以下はすべて必須です。見出し順・表・記入欄の骨組みは Frontmatter で宣言した template を正本とします。
-    message: >-
-      Align the declared Kata with the mandatory requirements at lines 41–43: pm-organization-recipe.md still delegates
-      the complete Role-code inventory to other authoritative documents, while pm-organization-template.md provides no
-      fields for adopted and unadopted Role codes, decision reasons, non-adoption alternatives, or the explicit
-      usable-owner set. Revise the recipe and the template designated here as the scaffold authority so following them
-      produces the organization-level adoption record required by this rulebook and demonstrated by its sample.
-    message_ja: >-
-      Align the declared Kata with the mandatory requirements at lines 41–43: pm-organization-recipe.md still delegates
-      the complete Role-code inventory to other authoritative documents, while pm-organization-template.md provides no
-      fields for adopted and unadopted Role codes, decision reasons, non-adoption alternatives, or the explicit
-      usable-owner set. Revise the recipe and the template designated here as the scaffold authority so following them
-      produces the organization-level adoption record required by this rulebook and demonstrated by its sample.
+findings: []

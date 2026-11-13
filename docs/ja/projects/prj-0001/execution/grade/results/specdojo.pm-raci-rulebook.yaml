@@ -4,11 +4,11 @@ document: specdojo:pm-raci-rulebook
 path: docs/ja/specdojo/rulebooks/pm-raci-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-11-13T06:44:50.950Z"
-graded_by: agy-opus-review-executor
-content_hash: 976bfdd9823ac03ac1b1cb66ae8f20067b73b8d7b5b2700358000c5f2e322372
+verdict: pass
+score: 100
+graded_at: "2026-11-13T10:26:29.708Z"
+graded_by: sol-review-executor
+content_hash: c9f00799875cc024f3b47834a643de714bc34dec036ce0db196fdb4319acdb93
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,14 +81,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,71 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 3
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 51
-    anchor: "- 推奨表では、対象列で成果物を識別し、採用 Role code の各列でその Role の責任を示します。セルには RACI 記号を使い、相談・共有の関与がない場合は空欄または `—` とし、表内で統一します。"
-    message: >-
-      The sentence describing the recommended table layout (target column plus one column per adopted Role code, RACI
-      symbols in cells) restates the skeleton owned by the declared template; keep only the rule that empty cells use
-      blank or `—` consistently within a table.
-    message_ja: >-
-      The sentence describing the recommended table layout (target column plus one column per adopted Role code, RACI
-      symbols in cells) restates the skeleton owned by the declared template; keep only the rule that empty cells use
-      blank or `—` consistently within a table.
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 44
-    anchor: "- 雛形などの `_ROLE_CODE_` は列の例であり、採用 Role に置換して必要数に増減します。固定の Role 一式を必須列として読み替えません。"
-    message: 採用済みRoleのみを使う規則に対し固定Role列表記を例示し、かつtemplateと見出しが重複するなどKata相互の責務に矛盾があるため、プレースホルダー化と正本の統一を行ってください。
-    message_ja: 採用済みRoleのみを使う規則に対し固定Role列表記を例示し、かつtemplateと見出しが重複するなどKata相互の責務に矛盾があるため、プレースホルダー化と正本の統一を行ってください。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 64
-    anchor: >-
-      - Schedule の `owner` の優先順と例外は、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]] の「Schedule
-      への担当展開」に従います。照合時は WBS の明示 `owner` を先に確認し、作成作業の主担当と、承認・レビュー・外部待ちの別 Task / Milestone を区別します。後者では対象に応じた `A` / `C`
-      を許容し、全タスクを `R` へ一律に合わせません。
-    message: >-
-      The rulebook now defers Schedule owner precedence to the upper standard and allows `A`/`C` owners for approval,
-      review and wait tasks, but the recipe (steps, §4.4, good-example table) and the template TODO still instruct
-      aligning every Schedule owner with the primary `R`; align the recipe and template with the rulebook, or state in
-      the rulebook that it overrides them.
-    message_ja: >-
-      The rulebook now defers Schedule owner precedence to the upper standard and allows `A`/`C` owners for approval,
-      review and wait tasks, but the recipe (steps, §4.4, good-example table) and the template TODO still instruct
-      aligning every Schedule owner with the primary `R`; align the recipe and template with the rulebook, or state in
-      the rulebook that it overrides them.
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 63
-    anchor: >-
-      - 判断基準: `R` が一つならその Role を主担当とします。複数なら、行に付随する注記で対象作業ごとに一つの主担当 Role code と担当範囲を明記します。タスクの action に最も近い `R`
-      を選び、一意に決められない作業は責任境界を確認してタスクを分割します。`A/R` も `R` として扱います。
-    message: >-
-      The criterion bullet combines five separate rules (single R, multi-R annotation, closest-to-action selection, task
-      split, A/R treatment) and uses the undefined term "action"; split it into separate items and identify "action" as
-      the Schedule task field.
-    message_ja: >-
-      The criterion bullet combines five separate rules (single R, multi-R annotation, closest-to-action selection, task
-      split, A/R treatment) and uses the undefined term "action"; split it into separate items and identify "action" as
-      the Schedule task field.
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 34
-    anchor: "- 対象範囲、省略範囲と理由、採用 Role の参照、兼務・Agent 支援の扱いを必須とし、責任の確認範囲を判断できるようにします。記号の説明は上位標準への参照とプロジェクト固有の補足で足ります。"
-    message: >-
-      The rulebook mixes "Agent"/"agent" and "Member"/"member" for the same concepts and uses the abbreviation "PJR"
-      (line 73) without expansion or reference; unify the casing per the upper standard and expand or link PJR.
-    message_ja: >-
-      The rulebook mixes "Agent"/"agent" and "Member"/"member" for the same concepts and uses the abbreviation "PJR"
-      (line 73) without expansion or reference; unify the casing per the upper standard and expand or link PJR.
+findings: []

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 94
-graded_at: "2026-11-13T06:31:49.056Z"
+graded_at: "2026-11-13T10:18:33.273Z"
 graded_by: sol-review-executor
-content_hash: 9060e92c3edcb29f64d4b7733f9e98ed7fc0df99b26cd58cc7b030687347a619
+content_hash: 8a633361446b6f730bf49b20637ee91e4fe218e15c3d433819b0a202b1a6d9a6
 categories:
   purpose:
     score: 100
@@ -110,48 +110,56 @@ findings:
   - id: F001
     severity: major
     rule: vp-pm-plan-feasibility
-    line: 87
+    line: 75
     anchor: >-
-      | 人気商品の対象範囲・除外条件          | _UNDECIDED_: 成功条件の「例外条件と未解決事項」を正本とする。`BA`
-      が後続のベースライン測定へ引き継ぎ、初期受入の合否には含めない                      | 決定時期は参照先を正本とする                     | 判断者は参照先を正本とする |
+      SC-04 の比較期間を失わないよう、`PM` は `kinuya-schedule` に「人間の `PO` による対象商品・除外条件の確定 → `BA` による運用開始前1か月の日次欠品記録の採取 → `QE`
+      による対象・期間・欠測の照合 → 店頭試用開始」の依存を置く。採取結果は `kinuya-trial-log` の SC-04・対象商品・営業日で識別する。`BA` が採取を担う参加者と期間を準備着手時に確保し、`PM`
+      は比較期間の欠落リスクと軽減策をリスク登録簿へ記録する。記録をそろえられない場合は課題化し、人間の `PO`
+      が試用開始の延期または測定条件の変更要求を判断する。試用終了時には採取済みの基準値と運用後の観測・比較だけを後続へ渡す。
     message: >-
-      Baseline measurement is handed to subsequent work, although SC-04 requires the month before operation as its
-      baseline. Schedule BA's target-definition and baseline-collection work before store trial starts, with the
-      required measurement period and dependencies, so later evaluation remains executable.
+      The preparation chain schedules only the SC-04 baseline, while SC-05 also requires a pre-operation inventory-waste
+      baseline. Add work to collect or validate the preceding month's waste quantities and amounts and their annualized
+      baseline, with a responsible Role, effort estimate, completion evidence, and a dependency before operation starts;
+      otherwise the later SC-05 comparison may become impossible.
     message_ja: >-
-      Baseline measurement is handed to subsequent work, although SC-04 requires the month before operation as its
-      baseline. Schedule BA's target-definition and baseline-collection work before store trial starts, with the
-      required measurement period and dependencies, so later evaluation remains executable.
+      The preparation chain schedules only the SC-04 baseline, while SC-05 also requires a pre-operation inventory-waste
+      baseline. Add work to collect or validate the preceding month's waste quantities and amounts and their annualized
+      baseline, with a responsible Role, effort estimate, completion evidence, and a dependency before operation starts;
+      otherwise the later SC-05 comparison may become impossible.
   - id: F002
     severity: major
     rule: vp-pm-dependency-risk
-    line: 36
+    line: 35
     anchor: >-
-      | 店頭試用後の継続           | 成功条件 SC-02・SC-03 が合格し、保守・引き継ぎの担当と負荷を引き受けられる。SC-04〜SC-06
-      は所定時期の後続観測を割り当てる                                                            | 2週間の営業日別記録、追加操作時間、保守実績、利用者所感、後続観測タスク
-      | `BA`、`PM`（`QE` が条件結果を照合） | 人間の `PO` | `kinuya-trial-log` の条件結果・継続／停止判断・改善先の課題 ID  |
+      | 初期リリース・店頭試用開始 | 成功条件 SC-01 と AC-01〜AC-04 の全条件が合格。M-03・M-04 が上限内で、実運用開始前の未決事項が解消し、SC-04
+      の運用前ベースライン採取と照合が完了している                             | 条件 ID ごとの受入結果、対象版、支出・作業記録、SC-04 の基準値記録、未達・未決一覧 |
+      `QE`、`PM`                          | 人間の `PO` | `kinuya-acceptance-record` の合否と公開可否の判断、根拠、判断日 |
     message: >-
-      Assigning SC-04 observation at the post-trial continuation gate does not protect its required pre-operation
-      baseline. Identify baseline availability as a preparation dependency and register the risk of losing the
-      comparison period, with a responsible role and action before trial starts.
+      The trial-start gate checks SC-04 baseline availability but does not require the pre-operation baseline needed by
+      SC-05. Identify SC-05 baseline availability as a preparation dependency and register the risk of losing its
+      comparison period, with an assigned Role and mitigation before trial starts; defer only the subsequent observation
+      and comparison.
     message_ja: >-
-      Assigning SC-04 observation at the post-trial continuation gate does not protect its required pre-operation
-      baseline. Identify baseline availability as a preparation dependency and register the risk of losing the
-      comparison period, with a responsible role and action before trial starts.
+      The trial-start gate checks SC-04 baseline availability but does not require the pre-operation baseline needed by
+      SC-05. Identify SC-05 baseline availability as a preparation dependency and register the risk of losing its
+      comparison period, with an assigned Role and mitigation before trial starts; defer only the subsequent observation
+      and comparison.
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
-    line: 87
+    line: 75
     anchor: >-
-      | 人気商品の対象範囲・除外条件          | _UNDECIDED_: 成功条件の「例外条件と未解決事項」を正本とする。`BA`
-      が後続のベースライン測定へ引き継ぎ、初期受入の合否には含めない                      | 決定時期は参照先を正本とする                     | 判断者は参照先を正本とする |
+      SC-04 の比較期間を失わないよう、`PM` は `kinuya-schedule` に「人間の `PO` による対象商品・除外条件の確定 → `BA` による運用開始前1か月の日次欠品記録の採取 → `QE`
+      による対象・期間・欠測の照合 → 店頭試用開始」の依存を置く。採取結果は `kinuya-trial-log` の SC-04・対象商品・営業日で識別する。`BA` が採取を担う参加者と期間を準備着手時に確保し、`PM`
+      は比較期間の欠落リスクと軽減策をリスク登録簿へ記録する。記録をそろえられない場合は課題化し、人間の `PO`
+      が試用開始の延期または測定条件の変更要求を判断する。試用終了時には採取済みの基準値と運用後の観測・比較だけを後続へ渡す。
     message: >-
-      Deferring the popular-product baseline measurement to subsequent work conflicts with SC-04 in
-      prj-success-criteria-and-acceptance-criteria-sample and the pre-operation baseline specified in
-      prj-overview-sample section 5. Require the baseline to be collected before operation, and hand only subsequent
-      observation and comparison to later work.
+      The completed example operationalizes only the SC-04 pre-operation baseline, although prj-overview-sample section
+      5 also requires a preceding-month inventory-waste baseline and SC-05 compares against its annualized value. Extend
+      the preparation dependencies, evidence, and trial-start prerequisite to cover SC-05 while keeping its twelve-month
+      outcome assessment in subsequent work.
     message_ja: >-
-      Deferring the popular-product baseline measurement to subsequent work conflicts with SC-04 in
-      prj-success-criteria-and-acceptance-criteria-sample and the pre-operation baseline specified in
-      prj-overview-sample section 5. Require the baseline to be collected before operation, and hand only subsequent
-      observation and comparison to later work.
+      The completed example operationalizes only the SC-04 pre-operation baseline, although prj-overview-sample section
+      5 also requires a preceding-month inventory-waste baseline and SC-05 compares against its annualized value. Extend
+      the preparation dependencies, evidence, and trial-start prerequisite to cover SC-05 while keeping its twelve-month
+      outcome assessment in subsequent work.

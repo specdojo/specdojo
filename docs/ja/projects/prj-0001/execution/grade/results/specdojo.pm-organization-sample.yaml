@@ -4,9 +4,9 @@ document: specdojo:pm-organization-sample
 path: docs/ja/specdojo/samples/pm-organization-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-11-13T06:36:22.789Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-13T10:21:22.198Z"
 graded_by: sol-review-executor
 content_hash: 3dcaf4a5c36f5a27158c4db084af2f193390a6616e206711c66f4ee0cbc1451e
 categories:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,26 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 49
-    anchor: >-
-      | 人間の実行主体と兼務                   | [[specdojo:pm-members-sample\|メンバー定義]]                                 |
-      責任領域の欠落と負荷集中の確認                     |
-    message: >-
-      The member definition presented as a completed companion example contains only one human assigned PO, PM, and OPS,
-      leaving this sample's BA, DEV, and QE responsibilities without corresponding human coverage, including the DEV
-      final decision required by lines 13 and 19. Align the delegated member example with this organization model, or
-      explicitly identify the missing coverage as an unresolved prerequisite with a responsible Role and a completion
-      gate.
-    message_ja: >-
-      The member definition presented as a completed companion example contains only one human assigned PO, PM, and OPS,
-      leaving this sample's BA, DEV, and QE responsibilities without corresponding human coverage, including the DEV
-      final decision required by lines 13 and 19. Align the delegated member example with this organization model, or
-      explicitly identify the missing coverage as an unresolved prerequisite with a responsible Role and a completion
-      gate.
+findings: []

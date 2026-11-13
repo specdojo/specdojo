@@ -4,9 +4,9 @@ document: specdojo:pm-plan-rulebook
 path: docs/ja/specdojo/rulebooks/pm-plan-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-11-13T06:29:11.509Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-13T10:16:24.409Z"
 graded_by: sol-review-executor
 content_hash: 74faf1d4f6717cdc0c746d8c52d33fcd422690798fd4a33c8f7258461710775f
 categories:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,27 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 10
-    anchor: "- プロジェクト概要、スコープ、成功基準を直接の根拠とし、作業完了ではなく期待価値の検証を管理目的にします。これらの先行成果物を成果物カタログの依存関係に含め、Schedule・scaffold に展開できる状態にします。"
-    message: >-
-      プロジェクト概要・スコープ・成功基準を直接の根拠と定めている一方、`dct-project-management-template.yaml` の `pm-plan.depends_on` は空配列であり、前提成果物への依存が
-      Schedule・scaffold に展開されないため、カタログまたは本書の依存方針を統一する必要がある。
-    message_ja: >-
-      プロジェクト概要・スコープ・成功基準を直接の根拠と定めている一方、`dct-project-management-template.yaml` の `pm-plan.depends_on` は空配列であり、前提成果物への依存が
-      Schedule・scaffold に展開されないため、カタログまたは本書の依存方針を統一する必要がある。
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 61
-    anchor: >-
-      - 表の列の意味は、管理対象が追跡単位、根拠が価値・リスクの文書 ID と該当箇所または条件 ID、基準・上限が判定条件、確認契機が観測時点、逸脱時対応が次の行動、責任が担当 Role
-      code、証跡・正本が記録先と確認する記録の識別方法です。これらを各行で保持するか、行の結合 ID から一意に辿れるようにし、文書全体への参照だけで済ませません。
-    message: recipe の仕上げチェックは管理対象ごとに価値またはリスクから証跡まで一続きで追跡することを要求するが、rulebook と template の統合管理表にはその対応を保持する欄がなく、適用方法が一致していない。
-    message_ja: recipe の仕上げチェックは管理対象ごとに価値またはリスクから証跡まで一続きで追跡することを要求するが、rulebook と template の統合管理表にはその対応を保持する欄がなく、適用方法が一致していない。
+findings: []

@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/pm-raci-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-13T06:46:51.534Z"
-graded_by: agy-opus-review-executor
-content_hash: ee71d09d357955ca38db5b995bd3fe2e41bb8d89fb29509b40779028842835c8
+score: 100
+graded_at: "2026-11-13T10:28:07.179Z"
+graded_by: sol-review-executor
+content_hash: 4db7c4eb145a0fcb275c8379d64dbd8db9a59db4266f397061b0d53655a0cef0
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,38 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 46
-    anchor: >-
-      作業順序・個別タスクの正本は、管理計画で整備先を示す `kinuya-schedule` とする。本例に未同梱の架空記録であり、`PM` が準備着手前に整備する。WBS を導入する場合は、WBS の明示 `owner`
-      を先に確認する。未指定の作成作業は本表の主担当 `R` から展開する。`R` が一つならその Role、複数なら行の注記で示した担当範囲から決め、一意に決まらなければタスクを分割する。
-    message: >-
-      The paragraph restates the generic owner-derivation rule (check WBS owner first, single R vs. noted primary R,
-      split when ambiguous) that is canonical in the people-and-organization standard's "Schedule への担当展開" and already
-      referenced at line 57; keep only the project-specific facts (kinuya-schedule, PM prepares it) and replace the
-      generic rule with the reference.
-    message_ja: >-
-      The paragraph restates the generic owner-derivation rule (check WBS owner first, single R vs. noted primary R,
-      split when ambiguous) that is canonical in the people-and-organization standard's "Schedule への担当展開" and already
-      referenced at line 57; keep only the project-specific facts (kinuya-schedule, PM prepares it) and replace the
-      generic rule with the reference.
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# RACI: 駄菓子屋きぬや 販売管理システム"
-    message: >-
-      Frontmatter based_on omits specdojo:people-and-organization-definition-standard, which the template's
-      frontmatter_template declares and which the body relies on for RACI symbol meanings (line 9) and Schedule owner
-      expansion (line 57); align the sample's based_on with the template or make the template reflect the roles/members
-      bases the sample uses.
-    message_ja: >-
-      Frontmatter based_on omits specdojo:people-and-organization-definition-standard, which the template's
-      frontmatter_template declares and which the body relies on for RACI symbol meanings (line 9) and Schedule owner
-      expansion (line 57); align the sample's based_on with the template or make the template reflect the roles/members
-      bases the sample uses.
+findings: []

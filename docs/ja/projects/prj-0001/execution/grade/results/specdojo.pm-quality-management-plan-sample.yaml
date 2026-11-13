@@ -4,11 +4,11 @@ document: specdojo:pm-quality-management-plan-sample
 path: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 91
-graded_at: "2026-11-13T06:50:45.032Z"
-graded_by: agy-opus-review-executor
-content_hash: f612e021eb4361c4ddfeba45a70f2c88234f21b50e4a9553f3a00fa9863ceda4
+verdict: pass
+score: 100
+graded_at: "2026-11-13T10:31:47.831Z"
+graded_by: sol-review-executor
+content_hash: 8ddb43e55cbd98719d3e8a257314e5fe2ba943f0094c1680cf8df6691b5effc3
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -75,20 +75,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,86 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 4
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 72
-    anchor: >-
-      期限までに決まらなければ、`PM` が課題ログへ担当 Role、判断期限、保留対象を転記し、本表と Schedule へ転送先の課題 ID を残す。人間の `PO`
-      が縮小・延期・中止を判断し、未決の条件や未整備の証跡を合格として扱わない。
-    message: >-
-      The closing clause "未決の条件や未整備の証跡を合格として扱わない" restates the pass/fail/hold rule already defined in line 25 (missing
-      evidence or undecided conditions are held and block gates); remove it or refer to that rule to avoid duplicate
-      statements.
-    message_ja: >-
-      The closing clause "未決の条件や未整備の証跡を合格として扱わない" restates the pass/fail/hold rule already defined in line 25 (missing
-      evidence or undecided conditions are held and block gates); remove it or refer to that rule to avoid duplicate
-      statements.
-  - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 32
-    anchor: >-
-      | 対象版の文書・実装・生成レポート | 目的・範囲・条件・操作メモとの整合、検証の再現性 | `QE`（`DEV` が検証結果を提示）                                | AC-04
-      と検証計画の適用条件がすべて合格し、参照矛盾と未解決の重大指摘がない                                           | 文書照合、差分、条件別検証結果、指摘別の是正・再判定結果   |
-      `execution/reviews/release-1/result.md`        |
-    message: >-
-      Exit conditions in lines 32-33 and the stop rule in line 48 rely on "重大指摘"/"重大な不適合", but the nonconformance table
-      classifies only by type (軽微/利用価値/技術/公開・安全) and never defines what is "重大"; state the criterion (e.g., all non-軽微
-      classes) so pass/fail can be judged objectively.
-    message_ja: >-
-      Exit conditions in lines 32-33 and the stop rule in line 48 rely on "重大指摘"/"重大な不適合", but the nonconformance table
-      classifies only by type (軽微/利用価値/技術/公開・安全) and never defines what is "重大"; state the criterion (e.g., all non-軽微
-      classes) so pass/fail can be judged objectively.
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 29
-    anchor: >-
-      | 対象                             | 主な観点                                         |
-      実施責任                                                      |
-      出口条件                                                                                                             |
-      証跡                                                       | 記録先                                         |
-    message: >-
-      The sample's review table (対象/主な観点/実施責任/出口条件/証跡/記録先) and nonconformance table (line 41: 再判定条件/再判定責任) follow
-      rulebook 6.3/6.4, but the template declares "出口条件・証跡" as one column without 記録先 and a single "再判定" column, while
-      rulebook section 5 makes the template canonical for table skeletons; align the template with the rulebook so
-      sample, template and rulebook agree.
-    message_ja: >-
-      The sample's review table (対象/主な観点/実施責任/出口条件/証跡/記録先) and nonconformance table (line 41: 再判定条件/再判定責任) follow
-      rulebook 6.3/6.4, but the template declares "出口条件・証跡" as one column without 記録先 and a single "再判定" column, while
-      rulebook section 5 makes the template canonical for table skeletons; align the template with the rulebook so
-      sample, template and rulebook agree.
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 54
-    anchor: "### 5.1. 見直しと後続作業"
-    message: >-
-      Section 5 of the sample uses 5.1/5.2 subsections and an undecided-items table that the template does not provide,
-      and the recipe's chapter guidance has no entry for "見直し条件と未決事項"; add the corresponding skeleton to the template
-      and guidance to the recipe so the sample structure is reproducible.
-    message_ja: >-
-      Section 5 of the sample uses 5.1/5.2 subsections and an undecided-items table that the template does not provide,
-      and the recipe's chapter guidance has no entry for "見直し条件と未決事項"; add the corresponding skeleton to the template
-      and guidance to the recipe so the sample structure is reproducible.
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 19
-    anchor: >-
-      | 技術・公開 | 対象版を再現し、安全に店頭利用・公開できる     | 成功条件 AC-04 と、`kinuya-verification-plan` の対象版に適用する検証条件を満たし、公開前レビューの出口条件を満たす |
-      `DEV` が検証し、`QE` が対象版・検証結果・公開対象の差分を照合する。証跡は `execution/reviews/release-1/result.md`                               |
-      主要変更後、初期受入前、公開対象変更時 | `DEV`、`QE` / 人間の `PO`      |
-    message: >-
-      "公開前レビュー" (lines 19, 46) is not a label used in the review table, whose corresponding row is "公開する画面・文書・記録", and
-      line 56 calls the document "品質計画" instead of "品質管理計画"; unify these labels so readers can map references to the
-      defined rows and document name.
-    message_ja: >-
-      "公開前レビュー" (lines 19, 46) is not a label used in the review table, whose corresponding row is "公開する画面・文書・記録", and
-      line 56 calls the document "品質計画" instead of "品質管理計画"; unify these labels so readers can map references to the
-      defined rows and document name.
+findings: []
