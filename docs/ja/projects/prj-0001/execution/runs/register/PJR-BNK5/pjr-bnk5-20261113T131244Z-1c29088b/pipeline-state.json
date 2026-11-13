@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-BNK5",
   "run_id": "pjr-bnk5-20261113T131244Z-1c29088b",
-  "updated_at": "2026-11-13T13:48:35.673Z",
+  "updated_at": "2026-11-13T13:48:54.904Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-BNK5/pjr-bnk5-20261113T131244Z-1c29088b/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-reporter",
       "attempts": 1,
       "started_at": "2026-11-13T13:48:35.673Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T13:48:54.904Z",
       "artifact_ref": null
     }
   },
