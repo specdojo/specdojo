@@ -5,17 +5,17 @@ path: docs/ja/product/010-business-specs/060-glossary/gl-common.yaml
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-12T14:49:54.523Z"
+score: 99
+graded_at: "2026-11-13T10:54:02.083Z"
 graded_by: sol-review-executor
-content_hash: 8d34c0a429bdeae8d5e1b7d537ac3e65b1981b8eaf4f2820d9111ab6672ce0b5
+content_hash: 9c615820fd581d40d3222c8402210943e085855dde4bd317e1961f81d7aed85b
 source_hashes:
   catalog-entry: c9259c73048c4295d4b9fa6134d422ec44cb0becadd5f97619aa3f40cebd9de0
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 67f05e70f3154de35fbb11dcc9083db1f716505d2f3eb0a3023925fa66f7b87f
+  schedule: 1bd233283dc93b916e0783284633349b63610f498ea9d6bf3e9368e6020c854c
 categories:
   purpose:
     score: 100
@@ -26,7 +26,7 @@ categories:
   business:
     score: 100
   consistency:
-    score: 88
+    score: 100
   architecture:
     score: 100
   usability:
@@ -67,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -88,8 +88,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -97,8 +97,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -117,39 +117,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 14
-    anchor: "notes: 単一の英語名を持たない。"
+    rule: vp-arc-conciseness
+    line: 153
+    anchor: "notes: タスクの実行状態はここを正本とし、計画である Schedule と区別する。result・状態遷移イベント・evidence・trial などがこの記録に当たる。"
     message: >-
-      Reconcile the notes claiming "単一の英語名を持たない" with the explicit englishName values for tm-specdojo-config,
-      tm-schedule-strategy, tm-progress-report, tm-derived-view, tm-execution-record, and tm-evaluation-record; remove
-      the claims or clarify that they concern the absence of a single corresponding implementation identifier rather
-      than the absence of an English conceptual name.
+      Remove the repeated result/event/evidence/trial membership list from tm-execution-record.notes and the repeated
+      completion-criteria/grade/finding list from tm-evaluation-record.notes at line 160; both lists already appear in
+      the corresponding definitions at lines 152 and 159, so retain the execution-state ownership distinction and delete
+      only the redundant text.
     message_ja: >-
-      Reconcile the notes claiming "単一の英語名を持たない" with the explicit englishName values for tm-specdojo-config,
-      tm-schedule-strategy, tm-progress-report, tm-derived-view, tm-execution-record, and tm-evaluation-record; remove
-      the claims or clarify that they concern the absence of a single corresponding implementation identifier rather
-      than the absence of an English conceptual name.
-    cause:
-      type: document
-  - id: F002
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 14
-    anchor: "notes: 単一の英語名を持たない。"
-    message: >-
-      Clarify the naming status of the six entries whose notes say "単一の英語名を持たない" despite providing englishName values at
-      lines 12, 61, 136, 142, 154, and 161, so readers can distinguish an English conceptual label from an exact CLI or
-      schema identifier.
-    message_ja: >-
-      Clarify the naming status of the six entries whose notes say "単一の英語名を持たない" despite providing englishName values at
-      lines 12, 61, 136, 142, 154, and 161, so readers can distinguish an English conceptual label from an exact CLI or
-      schema identifier.
+      Remove the repeated result/event/evidence/trial membership list from tm-execution-record.notes and the repeated
+      completion-criteria/grade/finding list from tm-evaluation-record.notes at line 160; both lists already appear in
+      the corresponding definitions at lines 152 and 159, so retain the execution-state ownership distinction and delete
+      only the redundant text.
     cause:
       type: document
 done_criteria:

@@ -4,7 +4,7 @@ type: glossary
 rulebook: specdojo:gl-rulebook
 title: 用語集（実行）
 locale: ja
-status: draft
+status: ready
 # 共通概念の task・plan・result・event・evidence・trial・routine・job は gl-common を正本とする。
 # 本書は実行固有の操作・役割・管理単位を扱い、計画・品質評価・導入設定の詳細は各領域へ委ねる。
 terms:

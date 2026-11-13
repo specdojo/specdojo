@@ -4,7 +4,7 @@ type: glossary
 rulebook: specdojo:gl-rulebook
 title: 用語集（共通）
 locale: ja
-status: draft
+status: ready
 # 複数領域で共有する概念を扱う。領域固有の種類・状態・操作は、カタログで定める領域別用語集に委ねる。
 terms:
   - id: tm-specdojo-config

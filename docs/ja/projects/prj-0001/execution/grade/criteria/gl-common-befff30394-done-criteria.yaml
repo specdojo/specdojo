@@ -2,9 +2,9 @@
 id: gl-common-grade-criteria
 document: gl-common
 path: docs/ja/product/010-business-specs/060-glossary/gl-common.yaml
-graded_at: "2026-11-12T14:49:54.523Z"
+graded_at: "2026-11-13T10:54:02.083Z"
 graded_by: sol-review-executor
-content_hash: 8d34c0a429bdeae8d5e1b7d537ac3e65b1981b8eaf4f2820d9111ab6672ce0b5
+content_hash: 9c615820fd581d40d3222c8402210943e085855dde4bd317e1961f81d7aed85b
 summary:
   satisfied: 5
   unsatisfied: 0
