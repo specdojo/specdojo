@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_48bd5bf3c5e44716b8c8958de633d838
+  ts: "2026-11-13T09:41:13Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロジェクトの型 7 種類の recipe と template を、改訂した rulebook に合わせる
+    - field: description
+      from: ""
+      to: PJR-960C で改訂した rulebook に、recipe と template を合わせ、grade で出た sample の指摘も直す
+    - field: input
+      from: ""
+      to: '["PJR-960C の schedule に recipe と template の手直しの段がなく（orchestrator の作りの誤り）、改訂後の grade（2026-11-13）で rulebook の指摘の多くが recipe・template との食い違いだった。indie が直すことを承認した"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-960C"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
