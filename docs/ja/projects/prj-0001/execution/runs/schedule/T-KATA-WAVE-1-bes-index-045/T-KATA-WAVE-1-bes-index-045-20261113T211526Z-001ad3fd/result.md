@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-bes-index-045
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-bes-index-045/T-KATA-WAVE-1-bes-index-045-20261113T211526Z-001ad3fd/plan.md
   started_at: "2026-11-13T21:15:28.696Z"
+  completed_at: "2026-11-13T21:25:45.076Z"
   agent: sol-executor
   execution: agent
   approach: recipe-maintenance
@@ -19,16 +20,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 対象成果物 `docs/ja/product/010-business-specs/030-business-model/bes-index.md` に紐づく `docs/ja/specdojo/rulebooks/bes-index-rulebook.md` を確認した結果、`recipe` および `template` は `not-needed` と宣言されていたため、計画の例外規定に従い変更なしで完了とした。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result の「実施内容」「変更ファイル」「進め方と実践の型の適用」に変更不要の判断を記録すること。成果物 docs/ja/product/010-business-specs/030-business-model/bes-index.md の rulebook 宣言から docs/ja/specdojo/rulebooks/bes-index-rulebook.md を確認し、recipe: not-needed、template: not-needed、sample: specdojo:bes-index-sample を確認した。計画上の unresolved は recipe 不要宣言として判断できるため、パスを推測して作成しない。
+- recipe・template 不要の判断を維持する根拠: rulebook の「本文要件」に構成と列定義、「記述ガイド」に判断基準と良い例・悪い例が揃っている。recipe-authoring-standard の規則再定義禁止とも整合する。新規文書はなく、既存 rulebook・sample は sidebar-config.ts に登録済み。
+- 適用外の検証: `npx prettier --write`（executor によるファイル変更がないため。）
+- 適用外の検証: `npm run validate:schema:file`（変更した YAML ファイルがないため。）
+- 適用外の検証: `npm run validate:history-links`（executor が変更した履歴ファイルがないため。）
+- 適用外の検証: `npm run validate:catalog`（executor による docs/ja/projects/ 配下の成果物変更がないため。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+対象 `rulebook` の `recipe` および `template` が `not-needed` であることを確認し、計画（「rulebook frontmatter で recipe が not-needed の型は変更せず、その旨を result に書いて完了とする」）に基づき、文書の作成・編集を行わずに終了した。
