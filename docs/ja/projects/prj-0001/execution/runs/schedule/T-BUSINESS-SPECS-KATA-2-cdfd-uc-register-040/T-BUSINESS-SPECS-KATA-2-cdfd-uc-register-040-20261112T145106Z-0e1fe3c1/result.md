@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040/T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040-20261112T145106Z-0e1fe3c1/plan.md
   started_at: "2026-11-12T14:51:21.613Z"
+  completed_at: "2026-11-13T03:34:03.806Z"
   agent: sol-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,25 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `cdfd-uc-rulebook` を改訂し、grade result から展開された 4 件の finding (F001〜F004) に対応しました。
+- 各章の判断基準および「良い例・悪い例」を補い、記述標準に沿った整形を実施しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md`: finding F001〜F004 に対応するため、完成判定における承認者の特定手順と承認証跡の定義を具体化し、横断順序の正本を図に限定する方針を統一しました。また、recipe の不足を補うため導入文の記述手順を明記し、章ごとの判断基準と具体例を追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 変更ファイルは `docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md` のみ。reporter は result の「実施内容」「変更ファイル」「進め方と実践の型の適用」に以下の判断根拠を反映してください。result と grade サイドカーは編集していません。
+- F001・F004: 「完成判定」に、RACI の該当する A とメンバー定義から人間の承認者を特定する手順、RACI がない場合の参照方法、登録簿個票の対応結果またはタスク result に残す承認証跡、対象版・レビュー結果・検査証跡の照合を追加しました。F002: 横断順序は図だけを正本とし、役割表と章冒頭の通過順を図へ追従させる方針を全体方針・記述ガイド・完成判定で統一しました。F003: recipe の不足を補うため、ケース選定直後、目的を書く前に導入文を書く手順を rulebook に明記しました。4件とも該当観点の判定根拠に照らして対応を確認しました。grade の再評価は後続に委ねます。
+- 規範として `docs/ja/specdojo/standards/rulebook-authoring-standard.md`、`document-metadata-standard.md`、`people-and-organization-definition-standard.md`、共通レビュー観点の `vp-qe-verifiability`・`vp-qe-omissions-consistency`・`vp-qe-kata-conformance`・`vp-ops-release-readiness`・`vp-arc-conciseness` を確認しました。プロジェクトのレビュー観点は共通正本を継承し、固有差分がないことも確認しました。本文要件の骨組みの重複と Frontmatter の共通値一覧を参照へ整理し、章番号、各章の内容要件、列の意味、禁止事項を維持しました。
+- 根拠成果物は `cdfd-uc-register`・`cdfd-overview` と schedule・routine 系の関連記述。レビュー根拠は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-rulebook.yaml` の F001〜F004、および `cdfd-uc-register.yaml` の最新 pass・指摘なし。展開された finding は grade 由来で、condense 由来の記録と `cause.location` はありません。register 系の 20261103T103452747Z-c6824940 の edit result も確認し、共用領域を1ノードにする境界と戻りの分割方針を維持しました。代表成果物で使われている条件付きの計画連携・補完の順序表示を明文化しました。旧レビューが要求した引き渡し表は PJR-PRYZ の後続決定と現行規範に合わないため復活させていません。
+- recipe と template は必要と判断し、既存の完全 ID 宣言を維持しました。recipe は参加単位・境界を選んで流れを具体化する手順、template は見出し・表・記入欄の骨組みに必要です。構造・必須項目・禁止事項では rulebook を優先すると明記しました。次の recipe・template メンテナンス案: recipe に導入文の問いと手順、図を正本とする順序照合、承認証跡の確認を反映し、template の通過順の記入指示も図への追従と明示する。現段階は rulebook の補足で適用できます。
+- 完成例は既存の `specdojo:cdfd-uc-sample` を正本とし、サンプル章は追加していません。sample の充実は計画どおり後続の sample-maintenance で行います。PJR-2GD6 の重複回避方針に従い、実装・schema の詳細は転載していません。改訂・廃止時の追従対象と担当責務を上位標準に沿って補いました。成果物本体・recipe・template・sample・保護設定は変更せず、rulebook の `status: draft` を維持しました。
+- 適用外の検証: `npm run validate:schema:file`（変更は Markdown のみで、変更した YAML ファイルがありません。）
+- 適用外の検証: `npm run validate:catalog`（executor の変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下に及びません。）
+- 適用外の検証: `npm run validate:history-links`（登録簿個票や既存の plan・result などの履歴ファイルを変更していません。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+grade result から展開された finding (F001〜F004) を修正要件として読み取り、対応する rulebook (`cdfd-uc-rulebook.md`) を改訂することで問題を解消しました。具体的には、承認者の特定手順と証跡の定義を具体化し、正本となる図への追従方針を統一し、導入文の記述手順を補完しました。また、`docs/ja/specdojo/standards/rulebook-authoring-standard.md` に基づき、章ごとの判断基準と好例・不良例を追記し、構造を整備しました。
