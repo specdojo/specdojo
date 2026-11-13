@@ -4,7 +4,7 @@ type: glossary
 rulebook: specdojo:gl-rulebook
 title: 用語集（評価とレビュー）
 locale: ja
-status: draft
+status: ready
 # 共通の評価結果・grade・finding は gl-common を正本とする。
 # 本書は品質の評価基準とタスク完了の判断を扱い、実行状態・完了報告の操作は gl-execution に委ねる。
 terms:
@@ -91,7 +91,7 @@ terms:
     term: レビュー観点の適用範囲
     englishName: viewpoint applicability
     definition: 評価対象区分と文書の種類に基づいて、どの文書へレビュー観点を用いるかを定める範囲。
-    notes: "`grade_targets` は評価対象区分、`document_kinds` は rulebook による文書の種類を扱う。種類を限定・除外する指定に伴う `confirmed_default` は既定の扱いを確認した記録であり、適用先を変えない。指定の組合せ・未分類文書の扱いは参照先 schema とガイドを正本とする。"
+    notes: "評価対象の区分と、文書の種類で絞る。既定の扱いを確かめた記録を付けることがあるが、それで適用先は変わらない。"
     category: tm-review-viewpoint
     relatedTerms: [tm-grade-target]
     source: "`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `DocumentKindApplicability`、[[specdojo:review-guide|レビューガイド]]"
@@ -134,7 +134,7 @@ terms:
     term: タスク完了可否判定
     englishName: review verdict
     definition: レビューで、タスクを完了としてよいか、または何を補って判断を再開するかを示す区分。
-    notes: "`verdict_definitions` と review result の `verdict` は、完了の `complete`、指摘を残す完了の `complete-with-findings`、未充足の `incomplete`、鮮度不足の `grade-stale`、評価不能の `grade-unavailable`、レビュー中の変更の `changed-during-review` を共通に使う。選択条件はガイドを正本とする。"
+    notes: "完了・指摘を残して完了・未充足・grade がないか古い・評価ができない・review 中に変更された、の 6 つを区別する。どれを選ぶかの条件は review のガイドを正本とする。"
     category: tm-review
     relatedTerms: [tm-grade-verdict, tm-done-criteria, tm-grade-freshness]
     source: "`docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` の `VerdictDefinition`、[[specdojo:review-guide|レビューガイド]]、[[prj-0001:pjr-xtan-unify-verdict-vocabulary|判定対象ごとの語彙の決定記録]]"

@@ -2,9 +2,9 @@
 id: gl-setup-grade-criteria
 document: gl-setup
 path: docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml
-graded_at: "2026-11-12T14:11:56.552Z"
+graded_at: "2026-11-13T13:05:58.924Z"
 graded_by: sol-review-executor
-content_hash: f4f6c37cd3553689a1c21fdb04ab754be663bd1d154d13b5ac46919696f6de6d
+content_hash: c29f966ff5b78c8005fbda64a43417beb0fb3ea4b43d151ab57468d73151a42b
 summary:
   satisfied: 2
   unsatisfied: 3
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The retry definition does not identify candidate-list passes as the counting unit, and the rate-limit definition
-      omits the session/quota exception to immediate backoff retries.
+      Retry definitions omit candidate-pass counting and session/quota recovery exceptions, and the agent-mode
+      description omits report.
   - id: DC-002
     text: 用語スコープと定義の妥当性を承認できること
     roles:
@@ -26,8 +26,8 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      The recovery definitions require the counting-unit clarification and session/quota qualification before their
-      accuracy can be approved.
+      Recovery definitions remain incomplete, and the intended schema/runtime policy difference lacks an explicit human
+      PO resolution requirement.
   - id: DC-003
     text: 技術実装・CLI の引数・schema の項目名の参照として使えること
     roles:
@@ -35,8 +35,8 @@ criteria:
     viewpoint: vp-arc-cross-document-consistency
     status: unsatisfied
     reason: >-
-      The max_attempts mapping is ambiguous, and the automatic recovery statement is broader than the behavior
-      implemented in runWithRetry.
+      The retry descriptions do not fully match runtime behavior, and the agent-mode list omits report supported by the
+      schema and configuration guide.
   - id: DC-004
     text: gl-common とほかの領域の用語集と重複せず、文書間の用語が一貫していること
     roles:

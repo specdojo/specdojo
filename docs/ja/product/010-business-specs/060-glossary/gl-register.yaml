@@ -4,7 +4,7 @@ type: glossary
 rulebook: specdojo:gl-rulebook
 title: 用語集（登録簿）
 locale: ja
-status: draft
+status: ready
 terms:
   - id: tm-register-entry
     term: 登録項目
@@ -53,7 +53,7 @@ terms:
     englishName: epic
     aliases: [エピック]
     definition: 一つのトラック全体の計画と、着手・完了の判断を担う登録項目の分類。
-    notes: "[[gl-planning|用語集（計画）]] のトラックを `track` で必ず結び付ける。対象領域の `domains`、着手予定日の `start_on` もエピックに限って使う。具体的な作業は派生元で結んだ子作業で行う。自身を `exec run --register` の実行対象にせず、子項目と Schedule を見て人間が完了を判断する。種類に応じた項目の条件は schema を正本とする。"
+    notes: "必ず 1 つの track（[[gl-planning|用語集（計画）]]）と結び付け、対象の領域と着手予定日も epic だけが持つ。具体的な作業は子の項目で行い、epic 自身は実行の対象にしない。完了は、子の項目と Schedule を見て人が判断する。"
     category: tm-register-item-type
     relatedTerms: [tm-register-todo, tm-register-derived-from, tm-register-done]
     source: "[[prj-0001:pjr-njj7-register-epic-track-governance|エピックによるトラック管理の決定]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`、`src/register/epic.ts`"
@@ -109,7 +109,7 @@ terms:
     term: 登録項目の処理状態
     englishName: item status
     definition: 登録項目の対応・判断の現在位置と、追跡を続ける必要性を表す区分。
-    notes: "`item_status` を正本とし、起票時は `--status` で指定する。個票の `status` が表す文書成熟度やタスク実行状態とは別に管理する。活動中は起票済み・対応中・待機中・審査待ち、終端は完了・決定済み・却下・延期とする。終了・再開の判断は人間が担う。業務条件は状態定義、許容値は schema を正本とする。"
+    notes: "活動中は起票済み・対応中・待機中・審査待ち、終端は完了・決定済み・却下・延期。個票の文書成熟度やタスク実行状態とは別に管理する。終了と再開は人が判断する。"
     category: tm-register-entry
     relatedTerms: [tm-register-operation]
     source: "[[stsd-register-entry|ステータス定義（登録項目個票）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/$defs/ItemStatus`"
@@ -172,7 +172,7 @@ terms:
     term: 登録簿の操作
     englishName: register operation
     definition: 登録項目の処理状態や内容を変更し、対応の開始・待機・審査・終了・再開と記録の更新を行う操作の総称。
-    notes: "状態を変える操作（`register start`・`wait`・`review`・`close`・`reject`・`defer`・`reopen`）と、状態を変えずに内容を変える `register update` がある。各操作は、この分類に属する用語を参照する。CLI が受け付けただけで人の承認済みとは扱わない。状態・種類に応じた項目の条件は schema を正本とする。"
+    notes: "状態を変える操作（start・wait・review・close・reject・defer・reopen）と、状態を変えずに内容を変える update がある。CLI が受け付けただけで、人が承認したとは扱わない。"
     category: tm-register-entry
     relatedTerms:
       [tm-register-item-status, tm-register-conclusion, tm-register-wait, tm-register-update]
@@ -253,7 +253,7 @@ terms:
     term: 登録項目イベント
     englishName: register event
     definition: 登録項目に加えた操作・変更内容を、実行者・理由・日時とともに追記する監査履歴。
-    notes: "`events/pjr-xxxx.yaml` に個票と分けて保持する。`action` は操作、`from_status`・`to_status` は遷移前後の処理状態、`changes` はフィールド差分を表す。状態が変わらない更新も含み、現在状態の正本は個票とする。`actor` は実行者であり、承認者とは限らない。"
+    notes: "個票とは別のファイルに、操作ごとに追記する。操作の種類、前後の処理状態、変えた項目を残す。状態が変わらない更新も含む。今の状態の正本は個票で、記録した実行者が承認者とは限らない。"
     category: tm-register-entry
     relatedTerms: [tm-register-ticket, tm-register-item-status, tm-register-update]
     source: "`docs/specdojo/schemas/v1/register-events.schema.yaml`、`src/register/events.ts`"
@@ -335,7 +335,7 @@ terms:
     term: 登録項目の実行対象
     englishName: register target
     definition: 登録項目からの実行計画で、作成・更新などの作業を行う文書または計画単位。
-    notes: "`targets` を `--target` で指定する。進め方（`approach`）は [[gl-planning|用語集（計画）]] を参照する。進め方に対象を結び付け、実践の型の新規作成では新しい型と手本を区別する。カタログなしで成果物を解決する場合は `target_path`・`target_rulebook` を使う。進め方に応じた対象の条件は schema を正本とする。"
+    notes: "進め方（approach、[[gl-planning|用語集（計画）]]）と組で指定する。型を新しく作るときは、作る型と手本を分けて指定する。カタログにない成果物は、配置先と型を直接指定する。"
     category: tm-register-entry
     relatedTerms: [tm-register-source]
     source: "`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` の `approach`・`targets`・`target_path`・`target_rulebook`、`src/register/approach.ts`、`src/register/deliverable-target.ts`"

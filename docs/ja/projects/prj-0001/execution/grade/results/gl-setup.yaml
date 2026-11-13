@@ -6,17 +6,17 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 93
-graded_at: "2026-11-12T14:11:56.552Z"
+graded_at: "2026-11-13T13:05:58.924Z"
 graded_by: sol-review-executor
-content_hash: f4f6c37cd3553689a1c21fdb04ab754be663bd1d154d13b5ac46919696f6de6d
+content_hash: c29f966ff5b78c8005fbda64a43417beb0fb3ea4b43d151ab57468d73151a42b
 source_hashes:
   catalog-entry: feb519bb9a5487654dfd1c6e32580fd45a4d86ffcc5349865229705f4149937d
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:gl-common: 7eb79bc9c501b4a94f61048b342459be8cdad9ae3ec66aacd17ac6ff176b3ab7
+  dependency:gl-common: fdd7a60fb4fbcecb72d88addd74d20c583bafca5ca410a7164a8ca32b95918a3
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 67f05e70f3154de35fbb11dcc9083db1f716505d2f3eb0a3023925fa66f7b87f
+  schedule: 1bd233283dc93b916e0783284633349b63610f498ea9d6bf3e9368e6020c854c
 categories:
   purpose:
     score: 88
@@ -118,7 +118,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 10
+  minor: 12
   note: 0
 findings:
   - id: F001
@@ -207,6 +207,23 @@ findings:
       type: document
   - id: F006
     severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 79
+    anchor: >-
+      notes: "人のメンバーと分けて agent の名簿に載せ、無効にもできる。業務のロールとは別に、作業モード（編集・review）と pipeline の段の役割（executor・reporter）を持つ。段の意味は
+      [[gl-execution|用語集（実行）]] を参照する。"
+    message: >-
+      Include report in the agent member's mode description: docs/specdojo/schemas/v1/agent-members.schema.yaml:85–86
+      permits edit, review, and report, and docs/ja/specdojo/guides/exec-config-guide.md:589 explicitly assigns report
+      to reporters, while this entry lists only editing and review.
+    message_ja: >-
+      Include report in the agent member's mode description: docs/specdojo/schemas/v1/agent-members.schema.yaml:85–86
+      permits edit, review, and report, and docs/ja/specdojo/guides/exec-config-guide.md:589 explicitly assigns report
+      to reporters, while this entry lists only editing and review.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
     rule: vp-dev-implementation-readiness
     line: 255
     anchor: >-
@@ -223,7 +240,7 @@ findings:
       introduce backoff retries for those signals.
     cause:
       type: document
-  - id: F007
+  - id: F008
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 264
@@ -238,7 +255,24 @@ findings:
       mistakenly cap individual agent invocations.
     cause:
       type: document
-  - id: F008
+  - id: F009
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 79
+    anchor: >-
+      notes: "人のメンバーと分けて agent の名簿に載せ、無効にもできる。業務のロールとは別に、作業モード（編集・review）と pipeline の段の役割（executor・reporter）を持つ。段の意味は
+      [[gl-execution|用語集（実行）]] を参照する。"
+    message: >-
+      Explain that agent members can use mode: report and distinguish this attribute from the task's edit/review mode;
+      the referenced exec-config-guide.md:589 requires report for Claude reporters so command templates select the
+      reporting permission profile.
+    message_ja: >-
+      Explain that agent members can use mode: report and distinguish this attribute from the task's edit/review mode;
+      the referenced exec-config-guide.md:589 requires report for Claude reporters so command templates select the
+      reporting permission profile.
+    cause:
+      type: document
+  - id: F010
     severity: minor
     rule: vp-qe-done-criteria
     line: 264
@@ -255,7 +289,7 @@ findings:
       wait/backoff retries.
     cause:
       type: document
-  - id: F009
+  - id: F011
     severity: minor
     rule: vp-qe-verifiability
     line: 264
@@ -272,7 +306,7 @@ findings:
       candidates are available.
     cause:
       type: document
-  - id: F010
+  - id: F012
     severity: minor
     rule: vp-ops-operability
     line: 255

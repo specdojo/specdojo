@@ -4,7 +4,7 @@ type: glossary
 rulebook: specdojo:gl-rulebook
 title: 用語集（導入と設定）
 locale: ja
-status: draft
+status: ready
 # 稼働構成の総称は gl-common、計画上の担当割当は gl-planning、実行段の役割・親検証は gl-execution を正本とする。
 # 本書は初期導入、設定の単位、人と agent の識別・責務・実行属性、共通実行設定を扱う。
 terms:
@@ -36,7 +36,7 @@ terms:
     englishName: product repository
     aliases: [管理対象リポジトリ]
     definition: プロジェクトのタスクが変更対象として宣言する、プロジェクトリポジトリとは別のリポジトリ。
-    notes: "`projects.<project-id>.repos` に名前と配置先を宣言し、対象パスを `<name>:<path>` で参照する。プロジェクトリポジトリ自身は宣言しない。`integration_strategy` に応じて統合またはブランチ保持を選び、条件の正本は schema の `Repo` とする。"
+    notes: "名前と配置先を設定に宣言し、文書からは「名前:パス」で参照する。プロジェクトのリポジトリ自身は宣言しない。統合するか、branch に残すかを選べる。"
     category: tm-project-settings
     relatedTerms: [tm-external-project]
     source: "`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `Repo`、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]"
@@ -76,7 +76,7 @@ terms:
     englishName: agent member
     aliases: [エージェントメンバー]
     definition: 共通の agent 名簿に登録し、実行基盤と能力などの属性に基づいて作業を委任する実行主体。
-    notes: "`type: agent` で記載し、`disabled` で無効化できる。`roles: []` は特定ロールに固定しない agent を表す。`mode` は作業モード、`stage_role` は実行段の役割であり、業務ロールとは区別する。pipeline では担当する段に合う `stage_role` を使い、省略した agent は単一 agent フローで使う。pipeline の段の意味は [[gl-execution|用語集（実行）]] を参照する。"
+    notes: "人のメンバーと分けて agent の名簿に載せ、無効にもできる。業務のロールとは別に、作業モード（編集・review）と pipeline の段の役割（executor・reporter）を持つ。段の意味は [[gl-execution|用語集（実行）]] を参照する。"
     category: tm-member
     relatedTerms: [tm-agent-registry, tm-provider, tm-agent-capability, tm-agent-proficiency]
     source: "`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember`、[[specdojo:exec-config-guide|exec設定ガイド]]"
@@ -121,7 +121,7 @@ terms:
     englishName: role
     aliases: [業務ロール, Role]
     definition: 個人や agent の名前とは独立して、プロジェクト上の責務・判断権限・専門性を表す論理的な役割。
-    notes: "採用ロールは `roles_path` が参照する `pm-roles.yaml` で `code` と `name` により定義し、メンバーの `roles` に対応付ける。Schedule の `owner` はロールコードであり、実行者の識別名ではない。主担当の割当は [[gl-planning|用語集（計画）]] を参照する。"
+    notes: "採用するロールは pm-roles で定義し、メンバーに割り当てる。Schedule の担当（owner）はロールで書き、実行者の名前では書かない。主担当の割り当ては [[gl-planning|用語集（計画）]] を参照する。"
     category: tm-project-settings
     relatedTerms: [tm-member, tm-member-nickname]
     source: "`docs/specdojo/schemas/v1/pm-roles.schema.yaml` の `Role`、[[specdojo:people-and-organization-definition-standard|人と組織の定義標準]]"
@@ -184,7 +184,7 @@ terms:
     englishName: exec defaults
     aliases: [実行の既定, exec defaults]
     definition: トラックをまたいで利用する、agent の起動、振り分け、障害検出、回復方針などの実行時の既定値。
-    notes: "`projects.<project-id>.run.exec_defaults` が参照するファイルに対応する。phase の作業要件や名簿のメンバー属性とは分担する。`pipeline.parent_validations` の設定対象である親検証は [[gl-execution|用語集（実行）]] を参照する。"
+    notes: "プロジェクトの設定が指す exec-defaults のファイルに当たる。段の作業要件や名簿のメンバーの属性とは役割を分ける。親の検証の設定もここに置く（[[gl-execution|用語集（実行）]]）。"
     relatedTerms:
       [tm-project-settings, tm-provider-override, tm-difficulty-routing, tm-rate-limit-policy]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml`、`docs/specdojo/schemas/v1/specdojo-config.schema.yaml` の `Run.exec_defaults`、[[specdojo:exec-config-guide|exec設定ガイド]]"
@@ -208,7 +208,7 @@ terms:
     englishName: agent command template
     aliases: [起動コマンドテンプレート]
     definition: メンバーの属性と設定した変数を埋め込み、agent を非対話で起動するための実行基盤ごとのコマンド雛形。
-    notes: "`providers.<name>.command_template` に対応する。通常は雛形を使い、特殊な構成だけ名簿の `command` で上書きする。起動方法がない agent は自動実行の候補にせず、未解決の変数は設定エラーとする。条件と使用可能な変数は schema と exec 設定ガイドを正本とする。"
+    notes: "通常は実行基盤ごとの雛形を使い、特殊な構成だけ名簿で上書きする。起動の方法がない agent は自動実行の候補にしない。使える変数は exec 設定ガイドを正本とする。"
     category: tm-provider-override
     relatedTerms: [tm-agent-command-parameters, tm-agent-member, tm-agent-model]
     source: "`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `ProviderOverride.command_template`、`docs/specdojo/schemas/v1/agent-members.schema.yaml` の `AgentMember.command`、[[specdojo:exec-config-guide|exec設定ガイド]]"
