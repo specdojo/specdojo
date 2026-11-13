@@ -2,12 +2,12 @@
 id: prj-0001:stsd-task-execution-grade-criteria
 document: prj-0001:stsd-task-execution
 path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
-graded_at: "2026-11-05T15:38:54.032Z"
+graded_at: "2026-11-13T04:57:50.469Z"
 graded_by: sol-review-executor
-content_hash: 1c5ff5b5b4e1e79f22dcfd10d16b3b6305698012ee37e49719d7366f4ae77d73
+content_hash: be94d1a9dc4e8bc3eb7220466a50ccb06c2d8f26e362e2ace062dc5b97b924cc
 summary:
-  satisfied: 1
-  unsatisfied: 4
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The declared AS-IS scope conflicts with retained role and resume requirements, and the assigned-actor authority
-      rule is not fully defined.
+      The assigned actor and authority changes across supplemental events and actor handover are not defined precisely
+      enough to establish the business conditions of all transitions.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
@@ -26,8 +26,8 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      Business approval remains contingent on unresolved role exceptions, resume authority, dictionary agreement, and
-      completion-evidence responsibility in section 5.
+      The business validity of completion, blocking, and release cannot be approved unambiguously while claimant-based
+      and latest-event-author authority remain unreconciled.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
@@ -35,14 +35,17 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      The authoritative actor-tracking and permission rules remain unresolved, preventing a consistent basis for
-      implementing the affected transitions.
+      The actor-authority contract and deterministic same-timestamp replay-order contract are incomplete as foundations
+      for transition implementation.
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      Permission-dependent transition tests lack a document-defined expected result for A claiming a task followed by B
+      recording supplemental information or resuming work.
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
@@ -50,5 +53,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      State-management implementation still requires a defined actor-ownership lifecycle and a clear choice between
-      observed guards and retained business requirements.
+      State-management implementation lacks the rules for establishing, retaining, and transferring the actor identity
+      used by permission guards.

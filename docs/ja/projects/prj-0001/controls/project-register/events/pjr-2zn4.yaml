@@ -60,3 +60,64 @@
       from: "-"
       to: approved
   previous_event_id: reg_28dacc2dfe77491c900d641f05c2fabe
+- v: 1
+  id: reg_d0575a95a7224d158a8247ac30f4d4c1
+  ts: "2026-11-12T14:14:25Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f523959f21524253a3c22906594c1522
+- v: 1
+  id: reg_9c5d5a4f36a345238668b313f24503bb
+  ts: "2026-11-12T14:41:53Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_d0575a95a7224d158a8247ac30f4d4c1
+- v: 1
+  id: reg_136b569d9cd44ce9a4dc9cf2d70fbdeb
+  ts: "2026-11-13T05:14:22Z"
+  action: start
+  actor: flash-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_9c5d5a4f36a345238668b313f24503bb
+- v: 1
+  id: reg_f60403a6a5a849aca5f4050539409007
+  ts: "2026-11-13T05:26:31Z"
+  action: wait
+  actor: flash-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
+  previous_event_id: reg_136b569d9cd44ce9a4dc9cf2d70fbdeb
