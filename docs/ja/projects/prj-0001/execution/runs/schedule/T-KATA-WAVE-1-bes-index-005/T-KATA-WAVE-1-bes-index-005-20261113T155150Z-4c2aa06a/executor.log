@@ -1,0 +1,31 @@
+`bes-index` の代表成果物を新しく作り、rulebook と sample を作り直しました。検証は Prettier の整形と確認だけで、通っています。markdownlint・`lint:fm` などはこのあと runner が実行するので、その結果はまだ出ていません。result ファイルは編集していません。
+
+**変更したファイル**
+
+- `docs/ja/product/010-business-specs/030-business-model/bes-index.md`（新規・`status: draft`）
+  - `cdfd-overview` の 14 領域の起点イベントを 16 行の一覧にしました。起点イベントに「、」で別々の出来事が並ぶ `P-02` と `P-14` は行を分け、「または」で成立の仕方が並ぶ `P-13` は 1 行のまま発生条件で区別しています。
+  - 列は「イベントID・イベント名・起点領域・何が起きたか・いつ・誰が／何が・発生条件・事実データ」です。イベント名は CDFD の文言をそのまま使いました。
+  - 「個別仕様への詳細化」の表で、行と個別仕様を対応させています。`bes-task-ready-selected` はリンク済みで、`bes-routine-due` と `bes-derived-content-requested` は未作成のため ID だけ仮置きしています。
+  - 「未決事項と承認条件」には、立ち上げ（`P-01`）と開始（`P-14`）が同じ出来事かどうか、推定で書いた主体、データモデルと照合していない事実データ、範囲の承認を残しました。
+- `docs/ja/specdojo/rulebooks/bes-index-rulebook.md`（作り直し）
+  - Rulebook 記述標準の 1〜7 章に合わせました。網羅は上位 CDFD を基準に判定すること、行の分け方、ID の扱い（個別 BES が行の一部だけを扱う場合や廃止時）、列の定義を定めています。
+  - 記述ガイドは 9 節に分け、それぞれ判断基準と良い例・悪い例を書きました。禁止事項は表にしています。
+  - frontmatter は `recipe: not-needed`、`sample: specdojo:bes-index-sample`、`template: not-needed` です。
+- `docs/ja/specdojo/samples/bes-index-sample.md`（作り直し）
+  - 駄菓子屋きぬやの 10 領域を題材にした完成例です。`cdfd-overview-sample` の起点イベントに合わせ、現金会計の行は `bes-sample` の ID（`bes-cash-sale-confirmed`）と揃えました。
+  - 個別仕様への詳細化と未決事項の表も含めています。
+
+**判断の根拠**
+
+- 手本にした ready 文書は、`bes-rulebook`、`tsd-index-rulebook`、`bes-sample`、`tsd-index-sample`、`cdfd-overview-sample` です。
+- recipe は作りません。行は上位 CDFD からほぼ決まり、詳細化するかどうかの判断は `bes-rulebook` が正本だからです。
+- template も作りません。一覧はシステムごとに 1 つで、主な表が 1 つしかないので、本文要件の章で骨組みを示せば足ります。
+- 個別 BES の詳細化基準、廃止時の変更管理、frontmatter の構文は再掲せず、`bes-rulebook` とドキュメントメタ情報標準への参照にしました。
+
+**PO・BA の判断が要る点**
+
+カタログ `dct-business-model-bes.yaml` の `bes-index` の `overview` は「10プロセス領域」となっていますが、`cdfd-overview` の現状は 14 領域です。成果物は 14 領域で作りました。カタログ側は保護された構成のため直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"代表成果物 bes-index.md を新規作成（cdfd-overview の14領域・16起点イベント）し、bes-index-rulebook を記述標準の章立てで作り直し（recipe/template は not-needed）、bes-index-sample を駄菓子屋きぬやの完成例として作り直した。","handoff":["成果物カタログ `dct-business-model-bes.yaml` の `bes-index` の `overview` は「10プロセス領域」だが、`cdfd-overview` の現状は14領域。成果物は14領域で作成した。カタログの `overview` の更新要否を BA/PO が判断する。","recipe: not-needed の理由: 一覧の行は上位 CDFD の起点イベントからほぼ一意に決まり、個別 BES への詳細化の判断は `specdojo:bes-rulebook` が正本のため、別の作成手順を要しない。","template: not-needed の理由: 一覧はシステムごとに1つで主な表も1つのため、本文要件の章で列と本文構成を示せば足り、雛形を毎回起点にする系統ではない。","手本にした ready 文書: `specdojo:bes-rulebook`、`specdojo:tsd-index-rulebook`、`specdojo:bes-sample`、`specdojo:tsd-index-sample`、`specdojo:cdfd-overview-sample`（構造・記法のみ）。","成果物の未決事項: `P-01` の立ち上げと `P-14` の開始が同じ出来事か（_UNDECIDED_）、`P-09`/`P-10`/`P-14` の主体の推定、事実データとデータモデルの未照合、一覧の範囲承認。PO/BA/ARC の判断を待つ。","仕上げの品質チェック: 個別 BES の詳細化基準・変更管理・frontmatter 構文は再掲せず `bes-rulebook`・ドキュメントメタ情報標準への参照に置き換えた。成果物のイベント名は CDFD の文言に揃え、sample の現金会計の行は `bes-sample` の ID（`bes-cash-sale-confirmed`）と一致させた。"],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/030-business-model/bes-index.md docs/ja/specdojo/rulebooks/bes-index-rulebook.md docs/ja/specdojo/samples/bes-index-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の成果物を変更していない","reason":"変更は docs/ja/product/ と docs/ja/specdojo/ のみで、docs/ja/projects/ に及ばない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"pjr 個票・plan.md・result.md を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更ファイルに *.yaml / *.yml がない"}]}
+</specdojo_executor_evidence>
