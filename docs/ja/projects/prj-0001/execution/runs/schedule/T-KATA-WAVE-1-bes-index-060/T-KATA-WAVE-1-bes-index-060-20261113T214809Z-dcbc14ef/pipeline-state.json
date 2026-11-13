@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-bes-index-060",
   "run_id": "T-KATA-WAVE-1-bes-index-060-20261113T214809Z-dcbc14ef",
-  "updated_at": "2026-11-13T22:09:01.279Z",
+  "updated_at": "2026-11-13T22:09:13.008Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-060/T-KATA-WAVE-1-bes-index-060-20261113T214809Z-dcbc14ef/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-13T22:09:01.279Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T22:09:13.008Z",
       "artifact_ref": null
     }
   },
