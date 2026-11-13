@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b6ce8b85674f4bf5a04245ef61de2c68
+  ts: "2026-11-13T21:53:07Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor の変更が commit の対象外のまま統合されないようにする
+    - field: description
+      from: ""
+      to: PJR-1Y1M の修正
+    - field: input
+      from: ""
+      to: '["PJR-1Y1M の修正。kata-wave-1 の後、wave-2 を作る前に流す（indie が 2026-11-14 に承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-1Y1M"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: commit-scope
