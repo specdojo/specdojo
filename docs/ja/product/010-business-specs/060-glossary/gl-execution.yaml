@@ -36,7 +36,7 @@ terms:
     term: タスク実行状態
     englishName: task execution state
     definition: Schedule のタスクについて、着手前から進行・中断・完了・中止までの進捗を表す状態。
-    notes: "`todo`（未着手）、`ready`（着手可能）、`doing`（実行中）、`blocked`（中断中）、`done`（完了）、`cancelled`（中止）を区別する。状態変更イベントから基本状態を求め、着手可能は先行依存の充足から導出する。遷移・権限は状態定義を正本とし、成果物の文書成熟度と区別する。"
+    notes: "`todo`（未着手）・`ready`（着手可能）・`doing`（実行中）・`blocked`（中断中）・`done`（完了）・`cancelled`（中止）を区別する。着手可能は先行依存がそろったことから求める。成果物の文書成熟度とは別のもの。"
     category: tm-execution
     relatedTerms: [tm-claim, tm-task-completion, tm-task-block, tm-pipeline-stage]
     source: "[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]"
@@ -180,7 +180,7 @@ terms:
     englishName: validation result
     aliases: [実行検査結果]
     definition: 実行した検査の成否、未実行、適用外、または sandbox 外での確認が必要なことを区別して残す証跡の要素。
-    notes: "`validations.status` の `passed`・`failed`・`not_run`・`not_applicable`・`requires_human` に対応する。適用外は理由を伴い、人の確認が必要な検査は sandbox 内で実行できないものに限る。発行元による識別情報と適用外理由の条件は schema を正本とする。検証出力の参照は `log_refs` に残し、親検証出力と agent 出力抜粋では記録可能な量が異なる。"
+    notes: "成功・失敗のほか、流さなかった（`not_run`）、当てはまらない（`not_applicable`、理由を付ける）、人が確かめる（`requires_human`、sandbox で流せない検査だけ）を区別する。検査の出力は記録へのリンクで残す。"
     category: tm-execution-pipeline
     relatedTerms: [tm-parent-validation, tm-executor-completion]
     source: "`docs/specdojo/schemas/v1/exec-evidence.schema.yaml` の `validations`・`log_refs`"
@@ -215,7 +215,7 @@ terms:
     englishName: integrate
     aliases: [統合]
     definition: 検証済みで許可された成果と実行記録を runner が commit・merge し、隔離作業を片付ける処理。
-    notes: 段状態の `stages.integrate` に対応する。複数リポジトリでは `repos` で処理結果を分け、`branch-only` は merge を伴わない取り扱いの成功を表す。明示した統合先は `integration_branches` に保存し、再開時も使う。互換性・記録条件は schema を正本とする。
+    notes: "許可された成果だけを統合する。複数のリポジトリにまたがるときは、リポジトリごとに結果を残す。統合先を指定した場合は、再開のときも同じ統合先を使う。"
     category: tm-execution-pipeline
     relatedTerms: [tm-runner, tm-worktree, tm-task-completion]
     source: "`docs/specdojo/schemas/v1/pipeline-state.schema.yaml` の `integrateStage`・`repoIntegration`、[[sf-task-execution|システム化機能（タスク実行）]]"
@@ -284,7 +284,7 @@ terms:
     englishName: job review declaration
     aliases: [ジョブ統合前レビュー宣言]
     definition: ジョブの出力を worktree で commit し、レビューで受理された場合だけ統合することを定める宣言。
-    notes: "`task.review` は agent 委譲とコマンド実行の両方で使う。起動元が手動か routine かにかかわらず適用し、review agent の指名は `task.review.agent` に置く。routine の `commit` より Job 側の宣言を優先する。"
+    notes: "agent に任せる Job にもコマンドの Job にも使え、手動でも routine からでも同じに働く。review の agent も Job の側で指名する。"
     category: tm-job-run
     relatedTerms: [tm-worktree, tm-integration, tm-job-agent-task, tm-job-command-task]
     source: "`docs/specdojo/schemas/v1/job.schema.yaml` の `review`、`docs/specdojo/schemas/v1/routine.schema.yaml` の `jobAction.commit`"
@@ -309,7 +309,7 @@ terms:
     term: 定期実行の起動条件
     englishName: routine trigger
     definition: 定期実行定義について、経過時間または暦上の予定により実行機会を選ぶための条件。
-    notes: 定期実行定義自体は [[gl-common|用語集（共通）]] の `tm-routine` を参照する。周期の `interval` と、`cron`・`timezone` を持つ `trigger` は選択肢として使い分ける。指定の組み合わせは schema、due 判定の詳細は状態定義を正本とする。
+    notes: "一定の間隔（`interval`）か、暦の予定（`cron` とタイムゾーン）のどちらかで決める。定期実行定義そのものは [[gl-common|用語集（共通）]] の routine を参照する。"
     category: tm-execution
     relatedTerms: [tm-routine-action, tm-routine-policy]
     source: "`docs/specdojo/schemas/v1/routine.schema.yaml`、[[stsd-routine-run|ステータス定義（定期処理の実行結果）]]"
@@ -317,7 +317,7 @@ terms:
     term: 定期実行アクション
     englishName: routine action
     definition: 定期実行の機会に、Job への委譲または読み取り・派生生成用コマンドの直接起動を指定する実行単位。
-    notes: "`action.kind: job` は Job と入力を参照する。`kind: specdojo` は agent を呼ばず exec と競合しないサブコマンドを `args` で直接起動する。単一または配列で定義し、種類ごとの項目は schema を正本とする。統合前レビューは「Job の統合前 review」を参照し、routine の `commit` は互換用途に限る。"
+    notes: "Job に任せる（`kind: job`）か、agent を使わない specdojo のコマンドを直接流す（`kind: specdojo`）かを選ぶ。複数を並べることもできる。統合の前の review は「Job の統合前 review」を参照する。"
     category: tm-execution
     relatedTerms: [tm-routine-trigger, tm-job-run, tm-job-review]
     source: "`docs/specdojo/schemas/v1/routine.schema.yaml` の `action`、[[prj-0001:pjr-2jye-dashboard-daily-briefing|dashboard 更新用の直接アクションの決定記録]]"
@@ -326,7 +326,7 @@ terms:
     englishName: routine policy
     aliases: [定期実行の機会処理方針]
     definition: 定期実行で取りこぼした予定と重複起動の扱いを宣言する方針。
-    notes: "`policy.missed_run` と `policy.overlap` に対応する。宣言可能な値は schema を正本とする。`overlap: skip` の宣言と routine 全体の lock 取得失敗時の停止には既存の未決事項があり、スキップ結果が必ず記録されるとは扱わない。"
+    notes: "取りこぼした予定（`missed_run`）と、前の回がまだ動いているときの重複（`overlap`）の扱いを決める。別の実行が lock を持っているために skip した回は、取りこぼしとして流し直されない。"
     category: tm-execution
     relatedTerms: [tm-routine-trigger, tm-routine-action]
     source: "`docs/specdojo/schemas/v1/routine.schema.yaml` の `policy`、[[stsd-routine-run|ステータス定義（定期処理の実行結果）]] の検討項目 `M-02`"

@@ -2,9 +2,9 @@
 id: gl-execution-grade-criteria
 document: gl-execution
 path: docs/ja/product/010-business-specs/060-glossary/gl-execution.yaml
-graded_at: "2026-11-13T10:56:27.135Z"
+graded_at: "2026-11-13T12:36:07.701Z"
 graded_by: sol-review-executor
-content_hash: 7a10fb32499879ea1bad9e9a924acdfe8196121cca011ce228e11602db861780
+content_hash: 3e99447175437bc2eb8533c2973d718e9edc0f2bb295080752a1afc56ae0e5eb
 summary:
   satisfied: 5
   unsatisfied: 0
