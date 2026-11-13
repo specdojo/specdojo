@@ -137,11 +137,11 @@ terms:
     relatedTerms: [tm-register-block-reason, tm-register-deferred]
   - id: tm-register-review-status
     term: 審査待ち
-    englishName: review
+    englishName: in review
     definition: 対応結果について人間の審査・承認を待つ登録項目の処理状態。
-    notes: タスク実行の成功だけでは終了を意味しない。完了可否レビューの定義は [[gl-quality|用語集（評価とレビュー）]] を参照する。
+    notes: "状態の値は `review`。タスク実行の成功だけでは終了を意味しない。完了可否レビューの定義は [[gl-quality|用語集（評価とレビュー）]] を参照する。"
     category: tm-register-item-status
-    relatedTerms: [tm-register-operation]
+    relatedTerms: [tm-register-submit-review, tm-register-close]
   - id: tm-register-done
     term: 完了
     englishName: done
