@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-12T13:48:46Z"
-  block_reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
   derived_from:
     - PJR-5FTV
   autopilot: approved

@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-2ZN4
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-2ZN4/pjr-2zn4-20261112T141421Z-0ce5ad78/plan.md
   started_at: "2026-11-12T14:14:23.499Z"
-  completed_at: "2026-11-13T05:21:17.992Z"
+  completed_at: "2026-11-13T06:09:48.335Z"
   agent: flash-high-executor
-  block_reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
 ---
 
 # Edit Result
