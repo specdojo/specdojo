@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b0e901586b554655a8167a1a59f21981
+  ts: "2026-11-13T13:36:36Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が進め方を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の整備 第 1 波（アーキテクチャ・システム設計・業務仕様の一覧）
+    - field: description
+      from: ""
+      to: 代表の文書と型を一緒に整える（bootstrap-kata-set）。cxd・cnd・cpd・ifd-mermaid・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy・bes-index・sf-index・ifx-index・dct-index の 11 種類
+    - field: input
+      from: ""
+      to: '["indie の方針（2026-11-13）: 成果物の作成より先に、型の整備を一通り終わらせる。epic の schedule で進め、codex 2 本・agy 2 本の 4 本で並べて流す","第 2 波（非機能要件・受け入れ基準）、第 3 波（試験）、第 4 波（運用・移行・影響分析）は第 1 波の結果を見て起票する。カタログに宣言がない約 25 種類は、その後にカタログの見直しから行う"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: kata-wave-1
+    - field: domains
+      from: ""
+      to: '["architecture","system-design","business-model-bes","system-functions","external-interface-specs","planning"]'
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'
