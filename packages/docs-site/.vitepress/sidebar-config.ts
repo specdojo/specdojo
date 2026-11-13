@@ -274,7 +274,10 @@ const businessSpecificationRecipes = [
   ]),
 ];
 
-const externalIfRecipes = [recipe("外部コマンド連携仕様", "ifx-cmd")];
+const externalIfRecipes = [
+  recipe("外部システムI/F一覧", "ifx-index"),
+  recipe("外部コマンド連携仕様", "ifx-cmd"),
+];
 
 const architectureRecipes = [
   group("C4", [recipe("コンテキスト図", "cxd")]),
@@ -560,7 +563,10 @@ const businessSpecificationTemplates = [
   ]),
 ];
 
-const externalIfTemplates = [templateYaml("外部コマンド連携仕様", "ifx-cmd")];
+const externalIfTemplates = [
+  templateYaml("外部システムI/F一覧", "ifx-index"),
+  templateYaml("外部コマンド連携仕様", "ifx-cmd"),
+];
 
 const operationsTemplates = [template("運用手順", "opr")];
 
