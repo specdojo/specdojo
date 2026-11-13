@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-PROJECT-KATA-prj-assumptions-constraints-dependencies-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-050/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-050-20261113T002343Z-56401c82/plan.md
   started_at: "2026-11-13T00:23:51.197Z"
+  completed_at: "2026-11-13T00:41:28.655Z"
   agent: sol-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 駄菓子屋プロジェクトの文脈に合わせ、前提・制約・依存関係の完成例（sample）を更新しました。
+- 成立確認の証跡や時点、部分決定と未決事項、変更時の報告・判断責任などを具体化し、実用的な完成例として整備しました。
+- Prettier による整形および静的検査を通過しています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md`: 駄菓子屋の完成例として内容を更新。憲章を `based_on` に追加し、前提の確認方法、支出・公開情報の制約、依存の成立条件、課題・リスク・変更要求・決定への接続を補完しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- reporter は result の「実施内容」「変更ファイル」に、変更対象が `docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md` のみであることを記録してください。憲章を `based_on` に追加し、前提の確認方法、支出・公開情報の制約、依存の成立条件、課題・リスク・変更要求・決定への接続を補完しました。代表成果物・grade サイドカー・result は編集していません。
+- 「進め方と実践の型の適用」の根拠は、対応 rulebook・recipe・template、[[specdojo:sample-authoring-standard|Sample 記述標準]]、[[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]]、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、[[specdojo:ryu-guide|実践の型活用の進め方ガイド]]、PJR-2GD6。代表の前提・制約・依存関係とその grade result、およびスコープ・憲章・成功条件・管理計画・組織定義の各 sample も照合しました。代表からは部分決定、証跡不足、公開不適合時の保留という場面を抽出し、内容は転記していません。
+- F001（`vp-qe-kata-conformance`）・F002（`vp-ux-language-consistency`）は現行 rulebook「依存関係」と照合済みです。推奨表は sample と同じ「依存先・条件」「必要となる理由」等の7列であり、指摘された列名不一致は現行文書では再現しません。rulebook を正として列名を維持しました。サイドカーは直接更新せず、再評価で解消を確認してください。今回の plan に成果物由来の Kata finding・condense 記録はありません。
+- recipe は条件抽出・分類・具体化の手順、template は5章と必須表の骨組みに必要と判断しました。rulebook frontmatter に既存の完全 ID `specdojo:prj-assumptions-constraints-dependencies-recipe` と `specdojo:prj-assumptions-constraints-dependencies-template` が宣言され、ファイルも存在するため宣言を維持しました。rulebook は既に連番・章別の判断基準と良い例／悪い例を持ち、完成例のサンプル章もないため変更不要です。
+- 維持・改訂理由として、端末と技術メンターへの依存は維持し、確認時点・証跡・保留対象を補いました。ACD-C01 はスコープの業務判断境界と重複するため参照へ統合して廃止を明示し、ID を再利用していません。未同梱の記録名と架空の PJR 項目は明示し、実際の登録・承認済み証跡と区別しました。
+- 関連 recipe の「前提条件」に端末を前提として扱う例、「良い例／悪い例」に単一店舗運用を前提として再掲する例が残り、現行 rulebook と不整合があります。本タスクの sample は rulebook を優先しました。別の recipe メンテナンスタスクで当該例の修正を検討してください。親 runner 所有の lint・schema・型検査・テストは executor で重複実行していません。
+- 適用外の検証: `npm run validate:schema:file`（executor が変更したファイルは Markdown sample のみで、変更した YAML ファイルがない。）
+- 適用外の検証: `npm run validate:catalog`（executor の変更は `docs/ja/specdojo/samples/` 内のみで、`docs/ja/projects/` 配下の成果物を変更していない。）
+- 適用外の検証: `npm run validate:history-links`（PJR 個票や既存の plan・result などの履歴ファイルを変更していない。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+対応する rulebook、recipe、template および各種記述標準（Sample/Rulebook 等）を参照し、駄菓子屋プロジェクトという共通サンプル文脈に基づいた完成例へと見直しました。代表成果物からは、判断に要る場面や例外的なケースを抽出して反映させ、実成果物の単純な転記を避けています。また、finding F001/F002 については現行 rulebook との整合性を確認し、rulebook を正として記述を維持しました。
