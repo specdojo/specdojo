@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-12T13:48:52Z"
-  block_reason: "parent validation failed: test-integration, typecheck"
   derived_from:
     - PJR-Z4H8
   autopilot: approved
@@ -69,7 +68,8 @@ agent の異常終了や応答の変換・適用エラーは、runner の catch 
 
 - `tests/src/exec/worktree-ops.integration.test.ts` に、共有失敗状態を checkpoint に含む review と別 review を重ね、後者の grade が agent failure でも前者が実 Git の merge まで進む回帰テストを追加した。共有状態の保持、失敗 run 専用状態、失敗側 worktree の保持、生成物が追跡されないことも確認する。
 - `tests/src/grade/run.test.ts` に、agent failure・不正応答、共有状態と他 run から独立した失敗上限、`--work-dir`、成功再開時の専用状態削除を追加した。CLI からのオプション伝達と `tests/src/review/grade.test.ts` の review 呼び出し引数も更新した。
-- executor の Prettier 整形、`npm run validate:history-links`、`node --import tsx tools/catalog-validate-if-configured.mjs`、個票の secret scan、`git diff --check` は合格。カタログ検証は既存の未作成文書や re-export の参照に関する警告を伴うが、終了コードは 0。型検査・TS / Markdown 等の lint・schema・unit / integration テストは指定された親 runner の検証に委ね、executor で二重実行しない。最終的な合否は runner が result に追記する。
+- 再開時、前回の親検証の typecheck と上記統合テストを止めていた未定義の `resultWithIdentity` 呼び出し 2 箇所を、同ファイルにある `humanResultWithIdentity` に置き換えた。grade と実 Git merge の検証経路は維持し、修正後の typecheck と統合テストの合否は親 runner の再検証で確認する。
+- executor の Prettier 整形、`npm run validate:history-links`、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build --project prj-0001`、個票の secret scan、`git diff --check` は合格。カタログ検証は既存の未作成文書や re-export の参照に関する警告を伴うが、終了コードは 0。型検査・TS / Markdown 等の lint・schema・unit / integration テストは指定された親 runner の検証に委ね、executor で二重実行しない。最終的な合否は runner が result に追記する。
 
 ### 5.4. 並列数を上げる判断材料と申し送り
 
