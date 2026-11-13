@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-bes-index-005",
+  "run_id": "T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a",
+  "updated_at": "2026-11-13T17:23:14.614Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-13T15:53:31.372Z",
+      "completed_at": "2026-11-13T15:58:45.300Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-13T17:01:30.660Z",
+      "completed_at": "2026-11-13T17:04:42.292Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-13T17:22:39.561Z",
+      "completed_at": "2026-11-13T17:23:14.614Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: catalog-validate: ERROR: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-bes-index-005/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-index: based_on 'cdfd-overview' (prj-0001:cdfd-overview) が depends_on の推移閉包に含まれていません（根拠ドキュメントは先行成果物である必要があります）"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a/result.md"
+  }
+}
