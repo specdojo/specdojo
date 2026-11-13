@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-12T17:02:25Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-050",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

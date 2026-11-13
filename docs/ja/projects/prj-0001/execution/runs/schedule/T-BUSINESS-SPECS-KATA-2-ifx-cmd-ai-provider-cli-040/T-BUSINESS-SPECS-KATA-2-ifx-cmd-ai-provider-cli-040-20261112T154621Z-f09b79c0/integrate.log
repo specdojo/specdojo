@@ -1,0 +1,4 @@
+commit-scope: unresolved target doc id (not committable): specdojo:ifx-cmd-rulebook
+commit-scope: skipped non-target changes (left in worktree):
+  docs/ja/specdojo/recipes/ifx-cmd-recipe.md
+  docs/ja/specdojo/templates/ifx-cmd-template.yaml

@@ -2,9 +2,9 @@
 id: gl-planning-grade-criteria
 document: gl-planning
 path: docs/ja/product/010-business-specs/060-glossary/gl-planning.yaml
-graded_at: "2026-11-11T21:16:35.840Z"
+graded_at: "2026-11-12T14:52:59.134Z"
 graded_by: sol-review-executor
-content_hash: 89e4da14481c9ce249b75203b457f3e97ddab995fe15d8ca35b4c85d165e21d7
+content_hash: 497b48e1cdacc6dccf62a560beba6f64ca27f18e10809ce2c95c829441ab1f5e
 summary:
   satisfied: 5
   unsatisfied: 0

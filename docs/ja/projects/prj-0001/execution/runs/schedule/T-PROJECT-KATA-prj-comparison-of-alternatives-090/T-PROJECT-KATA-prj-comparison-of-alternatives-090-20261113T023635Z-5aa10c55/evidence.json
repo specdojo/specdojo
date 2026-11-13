@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "T-PROJECT-KATA-prj-comparison-of-alternatives-090",
+  "run_id": "T-PROJECT-KATA-prj-comparison-of-alternatives-090-20261113T023635Z-5aa10c55",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T02:38:50.118Z",
+    "completed_at": "2026-11-13T02:41:12.356Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・判定直前とも exit 0。出力: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md。評価結果は最新ではない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判定直前とも exit 0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・判定直前とも exit 0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --exit-code && git diff --cached --exit-code && git status --short",
+      "status": "passed",
+      "summary": "exit 0、tracked 差分なし。未追跡ファイルは本実行の runner 管理 pipeline-state.json のみ。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-comparison-of-alternatives-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max\n… output omitted …\nworktrees/prj-0001-T-PROJECT-KATA-prj-comparison-of-alternatives-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-comparison-of-alternatives-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4523 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4523 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-comparison-of-alternatives-090\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext st\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nge valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-comparison-of-alternatives-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-comparison-of-alternatives-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-comparison-of-alternatives-090\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 976\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m116 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 53\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/pla\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "review executor の確認を完了。判定は `grade-stale`。開始時と判定直前の `--changed-only` が対象成果物のパスを出力したため、既存 grade によるタスク完了可否は判断しない。成果物・型・result は未変更。確認できなかった範囲: 最新評価に基づく完了条件の充足と finding の阻害性。template 本文は fully-guided の参照制限に従って未読。result の記入は reporter が本報告から行う。",
+  "completion_status": "complete",
+  "handoff": [
+    "評価結果の確認: [[prj-0001:prj-comparison-of-alternatives|代替案比較]] の評価サイドカーを実読した。既存値は `verdict: needs-work`、`score: 90`、`graded_at: 2026-10-12T16:32:20.172Z`、finding は blocker 0 / major 4 / minor 1 / note 0。`done_criteria` は2/4充足、DC-001・DC-004未充足との記録。ただし現在の完了判定には使用しない。開始時・判定直前とも validations 記載の3コマンドを実行し、すべて終了コード0。`--changed-only` は対象パスを出力、`--dependency-changed` と `--incomplete` は空出力だった。",
+    "判断根拠: plan の「最新」という記載に対し、実際の鮮度確認は開始時から対象を変更検知対象として返した。共通規約 E-01 に従い `grade-stale` とする。開始時から同じ結果であり `changed-during-review` ではない。既存 finding を再評価・再起票せず、タスク完了可否を保留する。tracked 差分は作業前後ともなく、未追跡の runner 管理ファイルだけが存在した。",
+    "未充足事項・改善指示: runner で現在の成果物・評価コンテキストに対する grade を更新し、鮮度確認後に再レビューする。既存 F001〜F005 は旧評価の記録として保持し、最新評価で確定した finding と完了条件を照合する。[[specdojo:prj-comparison-of-alternatives-recipe|代替案比較 作成レシピ]] の「運用適合」は rulebook・sample の「業務適合」に未追従であり、先行040・050の申し送りにも残っている。別の recipe メンテナンスで名称と意味、省略・統合時の問いを現行 rulebook に合わせる。",
+    "approach に応じた確認: 宣言された文書と実行記録を読んだ。[[specdojo:prj-comparison-of-alternatives-rulebook|代替案比較 作成ルール]] は全体方針から禁止事項までの7章を置き、記述ガイドの各成果物章に判断条件・良い例・悪い例がある。サンプル章はなく、完成例は [[specdojo:prj-comparison-of-alternatives-sample|代替案比較の完成例]] に分離されている。sample は6章で、4候補・8評価軸・判定境界・未判定・集約規則・案ごとの理由・技術影響・試行条件・移行撤退・担当・見直しを具体化している。これらは型整備の実施事実であり、代表成果物の品質の再評価ではない。実装・構文・構造の詳細は正本や後続設計へ委譲している。主 rulebook・recipe・sample は存在し、併用 rulebook は未宣言。",
+    "recipe / template の要否: recipe は課題から候補探索・比較判断へ進める問いと手順、template は章・表・記入欄の骨組みを担うため、ともに必要と判断する。rulebook frontmatter はそれぞれ `specdojo:prj-comparison-of-alternatives-recipe` と `specdojo:prj-comparison-of-alternatives-template` を宣言済み。template 本文の整合は確認範囲に含めない。",
+    "実行記録: [[prj-0001:xer-t-project-kata-prj-comparison-of-alternatives-040-20261113t000615z-a8b4cb86|rulebook 整備の実行結果]] と [[prj-0001:xer-t-project-kata-prj-comparison-of-alternatives-050-20261113t004304z-9e09e912|sample 整備の実行結果]]、各 evidence を実読した。evidence の変更一覧はそれぞれ rulebook 1件、sample 1件。親 runner の9検証は両実行とも全件 passed。自己申告の完了状態だけを完了根拠にはしていない。",
+    "decision: reporter は review result の5セクションを上記の確認事実と未確認範囲で埋め、`verdict: grade-stale` を記録する。executor の `completion_status: complete` はレビュー確認と申し送りの完了を表し、対象タスクの完了可能判定を表さない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-comparison-of-alternatives-090/T-PROJECT-KATA-prj-comparison-of-alternatives-090-20261113T023635Z-5aa10c55/executor.log",
+      "bytes": 5899,
+      "truncated": false
+    }
+  ]
+}

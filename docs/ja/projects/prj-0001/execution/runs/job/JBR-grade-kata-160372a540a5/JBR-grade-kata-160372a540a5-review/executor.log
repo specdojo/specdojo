@@ -1,0 +1,36 @@
+レビューは完了しました。判定は `complete-with-findings` です。Run 本体（15文書の評価）は問題なく完了していて統合できますが、評価結果に品質 finding が残っているため、`complete` ではなくこちらにしています。
+
+**照合して一致したこと**
+- **出力範囲:** 実行前→出力 commit の差分は22ファイルで、すべてこの Job Run の出力でした。評価結果ファイル15件と、Run JSON・実行ログ・evidence・pipeline state・plan・result です。対象外の変更はありません。
+- **状態の整合:** Run JSON は `succeeded`（終了コード 0、1回目で成功）です。evidence は終了コード 0、stderr は空、pipeline state は executor・reporter とも `succeeded` で、互いに食い違いはありません。
+- **評価パイプライン:** stdout の末尾は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` でした。`results.tsv` の15行はすべて `passed` で、`failed` の段・rate limit（75）・中断・`retry_exhausted` はありません。`partial` 時の確認事項は今回は該当しません。
+- **評価結果ファイル:** 15件の `verdict` と `score` は `results.tsv` と完全に一致しています。`graded_at` はすべて Run 期間内で、`rubric` は全件 `grade-rubric-v2` です。
+- **鮮度:** `--changed-only`・`--dependency-changed`・`--incomplete`・`grade state --exhausted` を実行し、どれにも対象15件は出ませんでした。評価結果は最新です。`--changed-only` には対象外の137件が出ますが、`limit 15` で今回選ばれなかった文書の残りで、次回以降の Run で扱われます。
+- **点数の変化:** 一例として cdsd-rulebook は 63 点（needs-work）から 100 点（pass）に上がっています。`content_hash` が変わっており、前回評価（10/29）の後に該当文書を変更した commit が git log にあるので、文書の改訂を反映した結果と見ています。
+
+**評価結果の分布**
+
+| 判定 | 件数 | 内容 |
+| --- | --- | --- |
+| pass | 12件 | 89〜100点。うち9件が100点・finding 0件 |
+| needs-work | 3件 | 下記 |
+
+needs-work の3件は次のとおりです。
+- pm-raci-recipe：73点、finding 19件
+- pm-roles-rulebook：84点、finding 7件
+- prj-assumptions-constraints-dependencies-rulebook：87点、finding 8件
+
+**完了は妨げない finding と改善指示**
+1. needs-work の3件は文書側の品質課題で、このタスクの完了条件には関わりません。文書の改訂として別途扱ってください。
+2. 15件中9件が満点・finding 0件で、上限に張り付いている可能性があります。評価設定を見直すかどうかを判断する材料として残します。今回は評価のやり直しはしていません。
+3. 評価結果ファイルの評価者（`graded_by`）が全件 `flash-high-executor` で、実行ログ上の executor 名 `agy-expert-executor` と一致しません。実体が同じものの別名かどうかは確認できていません。
+4. Job Run の result は Run JSON の追加行数を「+61」と書いていますが、commit の差分では +64 です。reporter の記入後に Run JSON が更新されたためと考えられ、軽微な食い違いです。
+
+**確認できなかった範囲**
+- `--rulebook-changed` と `--rubric-outdated` による鮮度確認は実行していません。
+- 評価者名の対応（`flash-high-executor` と `agy-expert-executor`）は確認していません。
+- 実行ログの中間ファイル（`logs/grade/runs/per-document/...`）は直接読んでおらず、stdout に出た `results.tsv` で代わりに確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。差分 1997110a..65add91c は Job Run 出力のみ（評価結果ファイル15件・Run JSON・実行ログ・evidence・pipeline-state・plan・result）。Run JSON の `state` は succeeded（`exit_code` 0）、evidence・pipeline-state とも整合。stdout は selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0、`results.tsv` 15行はすべて passed で failed・rate limit（75）・中断・`retry_exhausted` はなし。評価結果ファイル15件の verdict/score は `results.tsv` と一致し、`graded_at` は Run 期間内、rubric は全件 grade-rubric-v2。鮮度確認（`--changed-only`・`--dependency-changed`・`--incomplete`・`grade state --exhausted`）に対象15件は出なかった（評価結果は最新）。分布は pass 12件（89〜100点、9件が100点・finding 0件）、needs-work 3件（pm-raci-recipe 73点・finding 19件、pm-roles-rulebook 84点・finding 7件、prj-assumptions-constraints-dependencies-rulebook 87点・finding 8件）。cdsd-rulebook の 63→100 は `content_hash` の変化と10/29以降の文書変更 commit から、文書改訂の反映と見ている。軽微な点：(1) `graded_by` は全件 flash-high-executor で実行ログの agy-expert-executor と一致しない（別名かは未確認）、(2) Job result は Run JSON を +61 行と書くが commit 差分は +64 行。確認できなかった範囲：`--rulebook-changed`・`--rubric-outdated` による鮮度確認は未実施、`graded_by` と executor 名の対応は未確認、`logs/grade/runs/per-document/...` は直接読まず stdout の `results.tsv` で代わりに確認。","handoff":["needs-work の3件（pm-raci-recipe 73点、pm-roles-rulebook 84点、prj-assumptions-constraints-dependencies-rulebook 87点）は文書の改訂として別途扱う。このタスクの完了は妨げない。","15件中9件が満点・finding 0件で、上限に張り付いている可能性がある。評価設定を見直すかどうか判断する材料として残す。","評価結果ファイルの `graded_by`（flash-high-executor）と実行ログの executor 名（agy-expert-executor）の対応を確認する。","kata の `--changed-only` に対象外の137件が残っている。limit 15 で選ばれなかった文書で、次回以降の Run で扱われる。"],"validations":[{"command":"git diff --stat / --name-status 1997110a6dc112e86322702c1e672885586b6b63..65add91c5ed7dbc24b474ad5f9329f614143e2c4","status":"passed","summary":"22ファイル、すべて Job Run の出力"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"対象15件は該当なし（対象外の137件が出力）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"対象15件は該当なし"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし"}]}
+</specdojo_executor_evidence>

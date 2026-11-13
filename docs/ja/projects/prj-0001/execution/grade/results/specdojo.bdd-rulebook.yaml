@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/bdd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-11-10T20:18:33.523Z"
+score: 100
+graded_at: "2026-11-12T20:14:02.224Z"
 graded_by: flash-high-executor
-content_hash: 383778f0d5245ad81074ddb6b9df5b34179335e1cda7ade83247095cfc9a9a7f
+content_hash: 859d592685dad808ba5e2c9c64b096e1277d63331df59eb23f02fd2174dee2da
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -101,29 +101,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 49
-    anchor: "- フィールドの非推奨・廃止時は、直接削除せず `description` に非推奨理由および代替フィールドを明記して移行期間を設ける。"
-    message: >-
-      The mandatory retention of deprecated fields during a migration period conflicts with the manual acceptance
-      condition at body line 218 when a referenced schema or type has already removed a field; define how legacy
-      annotations are retained separately or tied to a compatible source version so the migration can satisfy both
-      requirements.
-    message_ja: >-
-      移行期間中における非推奨フィールドの必須保持は、参照されているスキーマまたは型がすでにフィールドを削除している場合の、body line
-      218における手動Acceptance条件と競合します。レガシーなアノテーションを個別に保持するか、互換性のあるソースバージョンに紐付けるかを定義し、移行が両方の要件を満たせるようにしてください。
-  - id: F002
-    severity: minor
-    rule: vp-ops-operability
-    line: 49
-    anchor: "- フィールドの非推奨・廃止時は、直接削除せず `description` に非推奨理由および代替フィールドを明記して移行期間を設ける。"
-    message: >-
-      Add an operational path for upstream field removals, including responsibility and timing for moving legacy
-      annotations out of active fields or retaining a compatible source version; otherwise the required migration-period
-      retention prevents the source reconciliation and validation needed to accept the update.
-    message_ja: アップストリームでのフィールド削除に対する運用パスを追加してください。これには、レガシーなアノテーションをアクティブなフィールドから移動させる、あるいは互換性のあるソースバージョンを保持するための責任とタイミングを含めてください。そうしないと、必要な移行期間の保持によって、アップデートを受け入れるために必要なソースの照合と検証が妨げられます。
+findings: []
