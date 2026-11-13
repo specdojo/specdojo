@@ -1,6 +1,7 @@
 import { warnDeprecated } from "./deprecation.js";
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
 import dotenv from "dotenv";
 import { validateBranchTemplate } from "./branch-template.js";
@@ -359,27 +360,40 @@ export type ConfigLoadResult = {
   config: SpecDojoConfig | null;
 };
 
-function findUpward(startDir: string, name: string): string | null {
-  let currentDir = resolve(startDir);
+export function specdojoRootDir(startDir: string = process.cwd()): string {
+  const current = resolve(startDir);
+  const systemTmp = resolve(tmpdir());
+
+  let dir = current;
+  let firstGitDir: string | null = null;
 
   while (true) {
-    const candidate = resolve(currentDir, name);
-    if (existsSync(candidate)) return candidate;
+    // 一時ディレクトリのルートそのもの（/tmp など）にある設定は、テストや検証の
+    // 漏洩・干渉を防ぐため親として拾わない。また一時ディレクトリ内から systemTmp を越えて探索しない。
+    if (dir === systemTmp) {
+      break;
+    }
 
-    const parentDir = resolve(currentDir, "..");
-    if (parentDir === currentDir) return null;
-    currentDir = parentDir;
+    if (existsSync(join(dir, ".specdojo", "specdojo.config.json"))) {
+      return dir;
+    }
+
+    if (!firstGitDir && existsSync(join(dir, ".git"))) {
+      firstGitDir = dir;
+      // リポジトリ境界に到達した。.git より親の .specdojo は拾わない。
+      break;
+    }
+
+    const parent = dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
   }
-}
 
-export function specdojoRootDir(): string {
-  const configPath = findUpward(process.cwd(), join(".specdojo", "specdojo.config.json"));
-  if (configPath) return dirname(dirname(configPath));
+  if (firstGitDir) {
+    return firstGitDir;
+  }
 
-  const gitMarker = findUpward(process.cwd(), ".git");
-  if (gitMarker) return dirname(gitMarker);
-
-  return process.cwd();
+  return current;
 }
 
 /** Default worktree directory beside the repository, derived from its directory name. */
@@ -1118,9 +1132,15 @@ export function registerConfigCommands(program: Command): void {
       false,
     )
     .action((opts: { dryRun?: boolean }) => {
+      const rootDir = specdojoRootDir();
+      if (resolve(rootDir) === resolve(tmpdir())) {
+        throw new Error(
+          "Refusing to initialize specdojo configuration directly under temporary directory root.",
+        );
+      }
       const dryRun = !!opts.dryRun;
-      const { configPath, config } = loadConfig();
-      ensureMarkdownlintConfig(specdojoRootDir(), dryRun);
+      const { configPath, config } = loadConfig(rootDir);
+      ensureMarkdownlintConfig(rootDir, dryRun);
       if (config) {
         process.stdout.write(`Already exists: ${configPath}\n`);
         writeGitignoreForConfig(config, dryRun);
