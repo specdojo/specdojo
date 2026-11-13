@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T18:47:02Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-ifx-index-040",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
