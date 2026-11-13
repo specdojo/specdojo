@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0122699ec22746a7af6c7d67215ac0f7
+- v: 1
+  id: reg_1c558493e5944a718fc22b2355cbb010
+  ts: "2026-11-13T11:03:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の実行の後、grade（kata-*-20261113c、pm-plan は 20261113e）で 7 種類の rulebook・sample がすべて pass になったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-13"
+    - field: conclusion
+      from: "-"
+      to: プロジェクトの型 7 種類の recipe と template を改訂した rulebook に合わせ、sample の指摘も直した。7 種類とも rulebook・sample が grade で pass
+  previous_event_id: reg_6c4c8198548a4a5e8cf3af62d6dd8170

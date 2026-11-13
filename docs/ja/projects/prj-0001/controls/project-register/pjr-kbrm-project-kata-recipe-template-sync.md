@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kbrm-project-kata-recipe-template-sync
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T09:41:10Z"
+  completed_at: "2026-11-13T11:03:31Z"
+  conclusion: プロジェクトの型 7 種類の recipe と template を改訂した rulebook に合わせ、sample の指摘も直した。7 種類とも rulebook・sample が grade で pass
   derived_from:
     - PJR-960C
   commit_type: docs
