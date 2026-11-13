@@ -8,13 +8,13 @@
 id: specdojo:pm-roles-template
 type: template
 status: ready
-title: ロール一覧テンプレート
+title: ロール定義テンプレート
 rulebook: none
 metadata_template:
   id: _PROJECT_ID_:pm-roles
   type: project
   status: draft
-  title: ロール一覧
+  title: ロール定義
   rulebook: specdojo:pm-roles-rulebook
   based_on:
     - _PROJECT_ID_:pm-organization
@@ -22,6 +22,7 @@ metadata_template:
   project_id: _PROJECT_ID_
 
 # Role code の採用方針・根拠は pm-organization.md を参照する。
+# 以下は標準ロールの候補。組織定義の未採用ロールを削除し、採用集合と一致させる。
 # 実行主体、member nickname、兼務の割り当ては pm-members.yaml で管理する。
 # `project_note` は PO が承認判断できる公開可能な一行メモとして記述する。
 # メタ項目は pm-roles.schema.yaml で許可されたものだけを使用する。
