@@ -276,7 +276,12 @@ const businessSpecificationRecipes = [
 
 const externalIfRecipes = [recipe("外部コマンド連携仕様", "ifx-cmd")];
 
-const architectureRecipes = [group("インフラ・技術選定", [recipe("技術スタック", "tsd")])];
+const architectureRecipes = [
+  group("C4", [recipe("コンテキスト図", "cxd")]),
+  group("インフラ・技術選定", [recipe("技術スタック", "tsd")]),
+];
+
+const architectureTemplates = [group("C4", [template("コンテキスト図", "cxd")])];
 
 const execRecipes = [recipe("humanタスクの確定", "exec-human-finalize")];
 
@@ -681,6 +686,7 @@ export const specdojoSidebarItems = [
       ]),
       group("業務仕様", businessSpecificationTemplates),
       group("外部I/F仕様", externalIfTemplates),
+      group("アーキテクチャ", architectureTemplates),
       group("運用", operationsTemplates),
     ],
   },
