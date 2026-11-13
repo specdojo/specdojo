@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-PROJECT-KATA-pm-quality-management-plan-090",
   "run_id": "T-PROJECT-KATA-pm-quality-management-plan-090-20261113T013154Z-7045bb5c",
-  "updated_at": "2026-11-13T01:45:10.847Z",
+  "updated_at": "2026-11-13T01:45:21.256Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-quality-management-plan-090/T-PROJECT-KATA-pm-quality-management-plan-090-20261113T013154Z-7045bb5c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-review-executor",
       "attempts": 1,
       "started_at": "2026-11-13T01:45:10.847Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T01:45:21.256Z",
       "artifact_ref": null
     }
   },
