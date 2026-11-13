@@ -67,13 +67,34 @@ function renderGlossaryBody(
   terms: Record<string, unknown>[],
 ): string {
   const byId = new Map(terms.map((term) => [glossaryText(term.id), term]));
-  const groups = new Map<string, Record<string, unknown>[]>();
+  // ほかの用語の分類として使われる用語は先頭の「分類」の章にまとめ、各用語は 1 か所にだけ出す。
+  const categoryIds = new Set(
+    terms.map((term) => glossaryText(term.category)).filter((category) => category !== ""),
+  );
+  const sections: { label: string; terms: Record<string, unknown>[] }[] = [];
+  const categoryTerms = terms.filter((term) => categoryIds.has(glossaryText(term.id)));
+  if (categoryTerms.length > 0) sections.push({ label: "分類", terms: categoryTerms });
+  const byCategory = new Map<string, Record<string, unknown>[]>();
+  const others: Record<string, unknown>[] = [];
   for (const term of terms) {
+    if (categoryIds.has(glossaryText(term.id))) continue;
     const category = glossaryText(term.category);
-    const group = groups.get(category) ?? [];
+    if (category === "") {
+      others.push(term);
+      continue;
+    }
+    const group = byCategory.get(category) ?? [];
     group.push(term);
-    groups.set(category, group);
+    byCategory.set(category, group);
   }
+  for (const [category, group] of byCategory) {
+    const categoryTerm = byId.get(category);
+    const label = categoryTerm
+      ? `[${glossaryText(categoryTerm.term).replace(/[[\]\\]/g, "\\$&")}](#${category})（${category}）`
+      : category;
+    sections.push({ label, terms: group });
+  }
+  if (others.length > 0) sections.push({ label: "その他", terms: others });
 
   const lines = [
     "<!-- prettier-ignore -->",
@@ -83,11 +104,7 @@ function renderGlossaryBody(
   ];
 
   let chapter = 0;
-  for (const [category, group] of groups) {
-    const categoryTerm = byId.get(category);
-    const label = categoryTerm
-      ? `${glossaryText(categoryTerm.term)}（${category}）`
-      : category || "その他";
+  for (const { label, terms: group } of sections) {
     lines.push(
       "",
       `## ${++chapter}. ${glossaryCell(label)}`,

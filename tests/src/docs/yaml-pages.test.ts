@@ -229,15 +229,24 @@ describe("renderYamlPage", () => {
     expect(visible).toContain(
       `| ${doc.id} | ${doc.locale} | ${doc.status} | ${doc.terms.length} |`,
     );
-    const categories = [...new Set(doc.terms.map((term) => term.category ?? ""))];
+    const categoryIds = new Set(
+      doc.terms.map((term) => term.category ?? "").filter((category) => category !== ""),
+    );
+    const members = doc.terms.filter((term) => !categoryIds.has(term.id));
+    const labels = [
+      ...(doc.terms.some((term) => categoryIds.has(term.id)) ? ["分類"] : []),
+      ...[...new Set(members.map((term) => term.category ?? "").filter(Boolean))].map(
+        (category) => {
+          const categoryTerm = doc.terms.find((term) => term.id === category);
+          return categoryTerm ? `[${categoryTerm.term}](#${category})（${category}）` : category;
+        },
+      ),
+      ...(members.some((term) => !term.category) ? ["その他"] : []),
+    ];
     const headings = visible.split("\n").filter((line) => line.startsWith("## "));
     expect(headings).toEqual([
-      ...categories.map((category, index) => {
-        const categoryTerm = doc.terms.find((term) => term.id === category);
-        const label = categoryTerm ? `${categoryTerm.term}（${category}）` : category || "その他";
-        return `## ${index + 1}. ${label}`;
-      }),
-      `## ${categories.length + 1}. YAML の正本`,
+      ...labels.map((label, index) => `## ${index + 1}. ${label}`),
+      `## ${labels.length + 1}. YAML の正本`,
     ]);
     for (const term of doc.terms) {
       expect(visible).toContain(`<a id="${term.id}">${term.term}</a>（\`${term.id}\`）`);
@@ -253,18 +262,45 @@ describe("renderYamlPage", () => {
       .use(remarkGfm)
       .parse(visible)
       .children.filter((node) => node.type === "table");
-    expect(tables).toHaveLength(categories.length + 1);
+    expect(tables).toHaveLength(labels.length + 1);
     expect(tables[0].children).toHaveLength(2);
-    tables.slice(1).forEach((table, index) => {
-      expect(table.children).toHaveLength(
-        doc.terms.filter((term) => (term.category ?? "") === categories[index]).length + 1,
-      );
+    // 分類の表・分類ごとの表・その他の表を合わせると、どの用語もちょうど 1 行ずつ出る。
+    const rows = tables.slice(1).reduce((sum, table) => sum + table.children.length - 1, 0);
+    expect(rows).toBe(doc.terms.length);
+    tables.slice(1).forEach((table) => {
       expect(table.children.every((row) => row.children.length === 5)).toBe(true);
     });
     expect(page).toContain(`<details>\n<summary>YAML の正本を表示</summary>`);
     expect(page).not.toContain("<details open");
     expect(page).toContain(`\`\`\`yaml\n${content}\`\`\`\n`);
     expect(page.trimEnd()).toMatch(/<\/details>$/);
+  });
+
+  it("puts category terms in the first chapter and lists each term only once", () => {
+    const content = dump({
+      id: "gl-category",
+      type: "glossary",
+      rulebook: "none",
+      title: "分類の確認",
+      locale: "ja",
+      terms: [
+        { id: "tm-top", term: "最上位", definition: "分類を持たない" },
+        { id: "tm-store", term: "保管先", definition: "分類の用語", category: "tm-top" },
+        { id: "tm-item", term: "記録", definition: "保管先に属する", category: "tm-store" },
+        { id: "tm-loose", term: "単独", definition: "分類なし" },
+      ],
+    });
+    const page = renderYamlPage("docs/ja/gl-category.yaml", content);
+    const visible = page.split("<details>")[0];
+    expect(visible.match(/^## .+$/gm)).toEqual([
+      "## 1. 分類",
+      "## 2. [保管先](#tm-store)（tm-store）",
+      "## 3. その他",
+      "## 4. YAML の正本",
+    ]);
+    for (const id of ["tm-top", "tm-store", "tm-item", "tm-loose"]) {
+      expect(visible.split(`<a id="${id}">`)).toHaveLength(2);
+    }
   });
 
   it("keeps multiline text, pipes, aliases and supplements inside five cells", () => {
@@ -301,8 +337,8 @@ describe("renderYamlPage", () => {
     const visible = page.split("<details>")[0];
     expect(visible.match(/^## .+$/gm)).toEqual([
       "## 1. 分類A",
-      "## 2. その他",
-      "## 3. 分類B",
+      "## 2. 分類B",
+      "## 3. その他",
       "## 4. YAML の正本",
     ]);
     expect(visible).toContain("英語名: first \\| term / 別名: 別名 一、別名二");
