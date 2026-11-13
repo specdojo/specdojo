@@ -106,15 +106,18 @@
       to: "-"
   previous_event_id: reg_9c5d5a4f36a345238668b313f24503bb
 - v: 1
-  id: reg_c84567b34c1b403eb82c8854e072a80b
-  ts: "2026-11-13T05:26:03Z"
-  action: review
+  id: reg_f60403a6a5a849aca5f4050539409007
+  ts: "2026-11-13T05:26:31Z"
+  action: wait
   actor: flash-reporter
   from_status: in-progress
-  to_status: review
-  reason: ready for review
+  to_status: waiting
+  reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
   changes:
     - field: status
       from: in-progress
-      to: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
   previous_event_id: reg_136b569d9cd44ce9a4dc9cf2d70fbdeb
