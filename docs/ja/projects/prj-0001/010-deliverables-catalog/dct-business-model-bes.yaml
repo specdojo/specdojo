@@ -18,6 +18,8 @@ groups:
       - local_id: bes-index
         name: 業務イベント仕様（全体構成）
         kind: work
+        depends_on:
+          - cdfd-overview
         overview: cdfd-overview.md の10プロセス領域の起点イベントを一覧で定義する
         path: bes-index.md
         rulebook: specdojo:bes-index-rulebook
