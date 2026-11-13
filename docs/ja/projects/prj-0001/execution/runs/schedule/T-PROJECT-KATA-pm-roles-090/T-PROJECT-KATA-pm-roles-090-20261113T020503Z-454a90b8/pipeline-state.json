@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-PROJECT-KATA-pm-roles-090",
   "run_id": "T-PROJECT-KATA-pm-roles-090-20261113T020503Z-454a90b8",
-  "updated_at": "2026-11-13T02:18:42.276Z",
+  "updated_at": "2026-11-13T02:18:53.504Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-roles-090/T-PROJECT-KATA-pm-roles-090-20261113T020503Z-454a90b8/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-review-executor",
       "attempts": 1,
       "started_at": "2026-11-13T02:18:42.276Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T02:18:53.504Z",
       "artifact_ref": null
     }
   },
