@@ -513,7 +513,7 @@ members:
       .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json（成果物への Edit を許可）で定義。
   - nickname: opus-executor
     disabled: false
-    priority: 2
+    priority: 5
     display_name: Claude Expert Executor
     email: null
     roles: []
@@ -565,7 +565,7 @@ members:
       .specdojo/claude/settings.review.json（成果物への Edit を禁止し、result への Edit のみ許可）で定義。
   - nickname: opus-review-executor
     disabled: false
-    priority: 2
+    priority: 5
     display_name: Claude Expert Review Executor
     email: null
     roles: []
@@ -782,7 +782,7 @@ members:
       相当）で指定し、タスク固有の手順は edit plan を正本とする。
   - nickname: flash-high-executor
     disabled: false
-    priority: 3
+    priority: 5
     display_name: Antigravity Expert Executor
     email: null
     roles: []
@@ -835,7 +835,7 @@ members:
       gemini-4-argon-high（2026-11-03）。週あたりの利用枠が厳しいため、自動の選択では後回しにする（priority 9）。
   - nickname: flash-high-review-executor
     disabled: false
-    priority: 3
+    priority: 5
     display_name: Antigravity Expert Review Executor
     email: null
     roles: []
