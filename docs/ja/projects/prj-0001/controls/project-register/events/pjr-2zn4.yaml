@@ -105,3 +105,16 @@
       from: "parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_9c5d5a4f36a345238668b313f24503bb
+- v: 1
+  id: reg_c84567b34c1b403eb82c8854e072a80b
+  ts: "2026-11-13T05:26:03Z"
+  action: review
+  actor: flash-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_136b569d9cd44ce9a4dc9cf2d70fbdeb
