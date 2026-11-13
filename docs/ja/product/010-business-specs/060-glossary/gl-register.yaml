@@ -172,20 +172,65 @@ terms:
     term: 登録簿の操作
     englishName: register operation
     definition: 登録項目の処理状態や内容を変更し、対応の開始・待機・審査・終了・再開と記録の更新を行う操作の総称。
-    notes: |-
-      - 着手: `register start --id`。活動中の項目を対応中へ移す。待機中からの対応再開にも使い、終端項目は先に reopen する。
-      - 待機: `register wait --id --reason`。活動中の項目を待機中へ移す。詳細は `tm-register-wait` を参照する。
-      - 審査提出: `register review --id`。活動中の項目を審査待ちへ移す。対応結果・検証結果・承認対象・証跡候補を確認できることを前提とする。
-      - 終了（クローズ）: `register close --id`。対応結果・決定・回答を確認し、完了または決定済みへ移す。既定の終了先は decision・question が `decided`、ほかが `done`。note は終了させない。結論・完了日時と人間の承認の証跡を残す。
-      - 却下: `register reject --id`。不採択などの判断により活動中の項目を却下へ移す。note には使わず、判断理由と完了日時を残す。
-      - 延期: `register defer --id`。再開条件や再評価時期を定め、活動中の項目を延期へ移す。note には使わず、延期理由を結論、再評価条件を本文に残す。完了日時は新たに付与しない。
-      - 再開（リオープン）: `register reopen --id`。終端項目を活動中へ戻す。既定先は `open` で、`--status` で活動中の状態を選べる。完了日時を削除し旧結論を保持する。待機中からの対応再開とは区別する。
-      - 更新: `register update --id`。処理状態を維持して内容を変更する。詳細は `tm-register-update` を参照する。
-      種類別の業務判断は状態定義、状態・種類に応じた項目の条件は schema を正本とする。CLI が受理するだけで人間の承認済みとは扱わない。登録簿・起票・記帳の基本定義は [[gl-common|用語集（共通）]] を参照する。
+    notes: "状態を変える操作（`register start`・`wait`・`review`・`close`・`reject`・`defer`・`reopen`）と、状態を変えずに内容を変える `register update` がある。各操作は、この分類に属する用語を参照する。CLI が受け付けただけで人の承認済みとは扱わない。状態・種類に応じた項目の条件は schema を正本とする。"
     category: tm-register-entry
     relatedTerms:
       [tm-register-item-status, tm-register-conclusion, tm-register-wait, tm-register-update]
     source: "[[specdojo:register-operation-guide|登録簿運用ガイド]]、[[stsd-register-entry|ステータス定義（登録項目個票）]]、`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`、`src/register/transition-commands.ts`、`src/register/create-commands.ts`、`src/register/update.ts`"
+  - id: tm-register-start
+    term: register start
+    englishName: register start
+    aliases: [登録項目の着手]
+    definition: 活動中の登録項目を対応中へ移す操作。
+    notes: "`register start --id` に対応する。待機中からの対応の再開にも使う。終端の項目は先に `register reopen` で戻す。"
+    category: tm-register-operation
+    relatedTerms: [tm-register-in-progress, tm-register-reopen]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-submit-review
+    term: register review
+    englishName: register review
+    aliases: [登録項目の審査提出]
+    definition: 活動中の登録項目を、人の審査を待つ審査待ちへ移す操作。
+    notes: "`register review --id` に対応する。対応結果・検証結果・承認の対象・証跡を確かめられることを前提とする。"
+    category: tm-register-operation
+    relatedTerms: [tm-register-review-status, tm-register-close]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-close
+    term: register close
+    englishName: register close
+    aliases: [登録項目の終了]
+    definition: 対応結果・決定・回答を確かめ、登録項目を完了または決定済みへ移す操作。
+    notes: "`register close --id` に対応する。既定の終了先は decision と question が `decided`、ほかが `done`。note は終了させない。結論・完了日時と人の承認の証跡を残す。"
+    category: tm-register-operation
+    relatedTerms: [tm-register-done, tm-register-decided, tm-register-conclusion]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-reject
+    term: register reject
+    englishName: register reject
+    aliases: [登録項目の却下]
+    definition: 不採択などの判断により、活動中の登録項目を却下へ移す操作。
+    notes: "`register reject --id` に対応する。note には使わない。判断の理由と完了日時を残す。"
+    category: tm-register-operation
+    relatedTerms: [tm-register-rejected, tm-register-conclusion]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-defer
+    term: register defer
+    englishName: register defer
+    aliases: [登録項目の延期]
+    definition: 再開の条件や見直しの時期を定め、活動中の登録項目を延期へ移す操作。
+    notes: "`register defer --id` に対応する。note には使わない。延期の理由を結論に、見直しの条件を本文に残す。完了日時は付けない。"
+    category: tm-register-operation
+    relatedTerms: [tm-register-deferred, tm-register-reopen]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
+  - id: tm-register-reopen
+    term: register reopen
+    englishName: register reopen
+    aliases: [登録項目の再開]
+    definition: 終端の登録項目を活動中へ戻す操作。
+    notes: "`register reopen --id` に対応する。既定の戻り先は `open` で、`--status` で活動中の状態を選べる。完了日時を消し、前の結論は残す。待機中からの再開（`register start`）とは区別する。"
+    category: tm-register-operation
+    relatedTerms: [tm-register-start, tm-register-close]
+    source: "`src/register/transition-commands.ts`、[[stsd-register-entry|ステータス定義（登録項目個票）]]"
   - id: tm-register-wait
     term: register wait
     englishName: register wait
