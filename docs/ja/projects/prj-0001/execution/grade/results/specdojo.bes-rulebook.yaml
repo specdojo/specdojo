@@ -5,17 +5,17 @@ path: docs/ja/specdojo/rulebooks/bes-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-11-10T20:20:42.233Z"
+score: 100
+graded_at: "2026-11-12T20:15:57.391Z"
 graded_by: flash-high-executor
-content_hash: 40f41e9c357badf53ae4c5ce6f90979469fed7ee6e9528b4d5039a5a842a196b
+content_hash: a5f65305af457f47927038793d3b2ac1209d38b77428bd59a8561eaac6bd0442
 categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -42,8 +42,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,39 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 30
-    anchor: >-
-      - イベント一覧が存在する場合は対応行から個別 BES へリンクし、BES からも一覧の対応イベントを識別できるようにします。一覧がなければ未解決の参照を wikilink にせず、文書 ID
-      を仮置きして照合担当と時期を残します。
-    message: BEL からのリンク更新だけを定めていて、BES の廃止・置き換え（`supersedes`）時に BEL・BPS 側で必要な更新と、その影響が識別されていない。
-    message_ja: BEL からのリンク更新だけを定めていて、BES の廃止・置き換え（`supersedes`）時に BEL・BPS 側で必要な更新と、その影響が識別されていない。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 30
-    anchor: >-
-      - イベント一覧が存在する場合は対応行から個別 BES へリンクし、BES からも一覧の対応イベントを識別できるようにします。一覧がなければ未解決の参照を wikilink にせず、文書 ID
-      を仮置きして照合担当と時期を残します。
-    message: >-
-      The former sample-format and non-instance problems are resolved; the remaining mismatch is minor: the declared
-      sample leaves the upper-list ID `bes-index` provisional without identifying the reconciliation owner and timing
-      required here. Align the sample with this missing-list exception so the completed example demonstrates the
-      mandatory conditions.
-    message_ja: >-
-      以前のsample-formatおよびnon-instanceの問題は解決されました。残っている不一致は軽微なものです。宣言されたsampleでは、上部リストのID `bes-index`
-      が、ここで必要とされる調整の責任者と時期を特定しないまま暫定的な状態になっています。このmissing-listの例外とsampleを一致させ、完成した例が必須条件を満たしていることを示してください。
-  - id: F003
-    severity: minor
-    rule: vp-ops-operability
-    line: 30
-    anchor: >-
-      - イベント一覧が存在する場合は対応行から個別 BES へリンクし、BES からも一覧の対応イベントを識別できるようにします。一覧がなければ未解決の参照を wikilink にせず、文書 ID
-      を仮置きして照合担当と時期を残します。
-    message: BES の改訂・廃止時の変更管理（`supersedes` の運用、`deprecated` への移行、BEL・BPS 側の追従）と担当 Role code が書かれていない。
-    message_ja: BES の改訂・廃止時の変更管理（`supersedes` の運用、`deprecated` への移行、BEL・BPS 側の追従）と担当 Role code が書かれていない。
+findings: []

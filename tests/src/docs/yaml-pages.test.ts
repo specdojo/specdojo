@@ -240,7 +240,7 @@ describe("renderYamlPage", () => {
       `## ${categories.length + 1}. YAML の正本`,
     ]);
     for (const term of doc.terms) {
-      expect(visible).toContain(`<span id="${term.id}"></span>${term.term}（\`${term.id}\`）`);
+      expect(visible).toContain(`<a id="${term.id}">${term.term}</a>（\`${term.id}\`）`);
       for (const related of term.relatedTerms ?? []) {
         expect(visible).toContain(
           `[${doc.terms.find((item) => item.id === related)?.term}](#${related})`,

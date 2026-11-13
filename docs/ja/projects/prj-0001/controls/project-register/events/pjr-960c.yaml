@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_adb84d0e517647b5956a20241574f41f
+  ts: "2026-11-12T15:35:11Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロジェクトの型（pm-plan など 7 種類）を標準の章立てと厚さに整える
+    - field: description
+      from: ""
+      to: 代表の文書があるプロジェクトの型 7 種類を、代表を手本に rulebook と sample を磨き込み、grade で pass にする
+    - field: input
+      from: ""
+      to: '["indie の優先順の 3 番目（2026-11-12 承認）。今晩の業務仕様の型（PJR-ERR7）が順調なら、昼も同じ流れで続ける（indie の依頼、2026-11-13）","代表が登録簿から生成される一覧の型（pm-risk-register・pm-issue-log・pm-change-request-log・pjr）は、生成の処理に関わるため外す。gl は用語集の確定の後に足す"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: project-kata
+    - field: domains
+      from: ""
+      to: '["project-management","project-definition"]'
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'

@@ -2,9 +2,9 @@
 id: gl-register-grade-criteria
 document: gl-register
 path: docs/ja/product/010-business-specs/060-glossary/gl-register.yaml
-graded_at: "2026-11-11T21:48:21.272Z"
+graded_at: "2026-11-12T14:15:41.025Z"
 graded_by: sol-review-executor
-content_hash: 562af29229404bcfbcb4f4806013d7ac0ee0a636b12364d85fd658044168e202
+content_hash: 071c316e256d1193a76e6c4f7187f14ff7ec0cbb88cd3fc2e36e4618076d6458
 summary:
   satisfied: 5
   unsatisfied: 0

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T00:23:50Z",
+  "type": "claim",
+  "task_id": "T-PROJECT-KATA-prj-assumptions-constraints-dependencies-050",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}
