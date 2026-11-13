@@ -1,0 +1,178 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:gl-sample
+path: docs/ja/specdojo/samples/gl-sample.yaml
+target: kata
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 84
+graded_at: "2026-11-13T13:41:48.709Z"
+graded_by: sol-review-executor
+content_hash: 3bb3ed7e9b6fa10cd35156d47cefb02a3fb6685915f08d67aa634baf05bcb7a0
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 75
+  architecture:
+    score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
+  quality:
+    score: 67
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 24
+    anchor: "definition: 常に棚に置いておきたい、よく売れる商品。"
+    message: >-
+      Define 定番商品 using an explicit business designation or inclusion rule rather than the subjective phrases
+      常に棚に置いておきたい and よく売れる; line 14 makes this classification determine which products use a reorder point.
+    message_ja: >-
+      Define 定番商品 using an explicit business designation or inclusion rule rather than the subjective phrases
+      常に棚に置いておきたい and よく売れる; line 14 makes this classification determine which products use a reorder point.
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 43
+    anchor: "definition: 管理対象の物品。"
+    message: >-
+      Clarify which goods 在庫 covers in this shop and how their stock quantity relates to 発注点; 管理対象の物品 alone does not
+      distinguish saleable stock from other managed property.
+    message_ja: >-
+      Clarify which goods 在庫 covers in this shop and how their stock quantity relates to 発注点; 管理対象の物品 alone does not
+      distinguish saleable stock from other managed property.
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 24
+    anchor: "definition: 常に棚に置いておきたい、よく売れる商品。"
+    message: >-
+      Specify how a reviewer determines whether a product is 定番商品, including whether designation or sales performance
+      controls membership, so the 定番商品-only condition in line 14 can be checked consistently.
+    message_ja: >-
+      Specify how a reviewer determines whether a product is 定番商品, including whether designation or sales performance
+      controls membership, so the 定番商品-only condition in line 14 can be checked consistently.
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 17
+    anchor: "source: https://example.com"
+    message: >-
+      Replace https://example.com with a specific supporting reference, remove the optional source field, or explicitly
+      mark it as illustrative; the current value does not identify evidence for the definition marked official on line
+      18.
+    message_ja: >-
+      Replace https://example.com with a specific supporting reference, remove the optional source field, or explicitly
+      mark it as illustrative; the current value does not identify evidence for the definition marked official on line
+      18.
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 36
+    anchor: "term: おばあちゃん"
+    message: >-
+      Replace おばあちゃん with a role-based term such as 店主代表 and align tm-grandma with that role; sample-authoring-standard
+      sections 3.6, 6, and 8 require role-based identification and prohibit personal nicknames in samples. Check
+      dependent references and regenerate the display page after changing the identifier.
+    message_ja: >-
+      Replace おばあちゃん with a role-based term such as 店主代表 and align tm-grandma with that role; sample-authoring-standard
+      sections 3.6, 6, and 8 require role-based identification and prohibit personal nicknames in samples. Check
+      dependent references and regenerate the display page after changing the identifier.
+  - id: F006
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 23
+    anchor: "aliases: [レギュラー商品, 人気商品, 定番]"
+    message: >-
+      Remove 人気商品 from the aliases of 定番商品 unless their equivalence is explicitly established; a popular seasonal
+      product can fall outside a permanent stocking designation, and treating the terms as interchangeable changes the
+      population eligible for reorder-point settings.
+    message_ja: >-
+      Remove 人気商品 from the aliases of 定番商品 unless their equivalence is explicitly established; a popular seasonal
+      product can fall outside a permanent stocking designation, and treating the terms as interchangeable changes the
+      population eligible for reorder-point settings.
