@@ -19,6 +19,9 @@ tasks:
     depends_on: []
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -41,6 +44,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -61,6 +67,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -82,6 +91,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -102,6 +114,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -177,6 +192,9 @@ tasks:
       - T-KATA-WAVE-1-cxd-specdojo-060
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -199,6 +217,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -219,6 +240,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -240,6 +264,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -260,6 +287,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -335,6 +365,9 @@ tasks:
       - T-KATA-WAVE-1-cnd-specdojo-060
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -357,6 +390,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -377,6 +413,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -398,6 +437,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -418,6 +460,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -493,6 +538,9 @@ tasks:
       - T-KATA-WAVE-1-cnd-specdojo-060
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -515,6 +563,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -535,6 +586,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -556,6 +610,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -576,6 +633,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -650,6 +710,9 @@ tasks:
     depends_on: []
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -672,6 +735,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -692,6 +758,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -713,6 +782,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -733,6 +805,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -808,6 +883,9 @@ tasks:
       - T-KATA-WAVE-1-sysd-index-060
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -830,6 +908,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -850,6 +931,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -871,6 +955,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -891,6 +978,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -966,6 +1056,9 @@ tasks:
       - T-KATA-WAVE-1-sysd-index-060
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -988,6 +1081,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1008,6 +1104,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1029,6 +1128,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1049,6 +1151,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1123,6 +1228,9 @@ tasks:
     depends_on: []
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -1145,6 +1253,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1165,6 +1276,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1186,6 +1300,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1206,6 +1323,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1280,6 +1400,9 @@ tasks:
     depends_on: []
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -1302,6 +1425,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1322,6 +1448,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1343,6 +1472,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1363,6 +1495,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1437,6 +1572,9 @@ tasks:
     depends_on: []
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -1459,6 +1597,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1479,6 +1620,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1500,6 +1644,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1520,6 +1667,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1594,6 +1744,9 @@ tasks:
     depends_on: []
     owner: ARC
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       対象の成果物を代表として、対応する rulebook・sample（必要なら
       recipe・template）を起こし直すか、型に沿う代表の初版を作る。代表がすでにある場合は、その実績から型を整え、代表は型との整合に必要な範囲だけ直す。代表がない場合は、型に沿って
       SpecDojo（prj-0001）の代表の初版を作る。機械的な複写を避け、他の案件に使える型にする。業務判断は確定しない。
@@ -1616,6 +1769,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       初期整備した代表の実績から rulebook を手入れする。成果物本体は変更しない。sample・recipe・template の整合は後続の段で行う。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1636,6 +1792,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って recipe を同期する。recipe は問いと作成手順に責務を絞り、rulebook の規則を再定義しない。rulebook の frontmatter で recipe が
       not-needed の型は変更せず、その旨を result に書いて完了とする。
 
@@ -1657,6 +1816,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿い、sample を共通サンプル文脈（駄菓子屋のプロジェクト）の完成例として手入れする。代表（prj-0001）の内容を写さず、判断に要る場面・例外を拾う。成果物本体は変更しない。
 
       [[specdojo:rulebook-authoring-standard|Rulebook
@@ -1677,6 +1839,9 @@ tasks:
     agent:
       executor: sol-executor
     description: >
+      新しく作った型の文書（rulebook・recipe・sample・template）は、packages/docs-site/.vitepress/sidebar-config.ts
+      の型のメニューにも足す（tests/packages/docs-site/sidebar-kata.test.ts が確かめる）。
+
       改訂した rulebook に沿って template を同期する。template は骨組みに責務を絞り、必須の章・項目・表の列名を rulebook と一致させる。template が not-needed
       の型は変更せず、その旨を result に書いて完了とする。
 
