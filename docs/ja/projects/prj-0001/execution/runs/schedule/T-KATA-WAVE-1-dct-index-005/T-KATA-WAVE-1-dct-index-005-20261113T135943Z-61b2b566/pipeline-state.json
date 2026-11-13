@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-dct-index-005",
   "run_id": "T-KATA-WAVE-1-dct-index-005-20261113T135943Z-61b2b566",
-  "updated_at": "2026-11-13T14:13:44.544Z",
+  "updated_at": "2026-11-13T14:14:15.914Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-dct-index-005/T-KATA-WAVE-1-dct-index-005-20261113T135943Z-61b2b566/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-13T14:13:44.544Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T14:14:15.914Z",
       "artifact_ref": null
     }
   },
