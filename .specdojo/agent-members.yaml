@@ -512,8 +512,8 @@ members:
       Claude Code CLI を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。ツールは
       .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json（成果物への Edit を許可）で定義。
   - nickname: opus-executor
-    disabled: true
-    priority: 5
+    disabled: false
+    priority: 9
     display_name: Claude Expert Executor
     email: null
     roles: []
@@ -564,8 +564,8 @@ members:
       へ引き継ぐ。ツールは .claude/agents/claude-review-executor.md、権限は
       .specdojo/claude/settings.review.json（成果物への Edit を禁止し、result への Edit のみ許可）で定義。
   - nickname: opus-review-executor
-    disabled: true
-    priority: 5
+    disabled: false
+    priority: 9
     display_name: Claude Expert Review Executor
     email: null
     roles: []
