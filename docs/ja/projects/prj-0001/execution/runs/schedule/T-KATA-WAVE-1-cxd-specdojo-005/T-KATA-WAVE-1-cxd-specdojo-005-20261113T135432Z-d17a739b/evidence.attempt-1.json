@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-cxd-specdojo-005",
+  "run_id": "T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T14:49:32.959Z",
+    "completed_at": "2026-11-13T14:58:47.906Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cxd-specdojo.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cxd-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cxd-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../result.md                                      |  25 +-\n docs/ja/specdojo/rulebooks/cxd-rulebook.md         | 378 +++++++--------------\n docs/ja/specdojo/samples/cxd-sample.md             | 120 +++++--\n 3 files changed, 241 insertions(+), 282 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/030-architecture/010-c4/cxd-specdojo.md docs/ja/specdojo/rulebooks/cxd-rulebook.md docs/ja/specdojo/recipes/cxd-recipe.md docs/ja/specdojo/samples/cxd-sample.md docs/ja/specdojo/templates/cxd-template.md",
+      "status": "passed",
+      "summary": "変更した5文書を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check -- docs/ja/product/030-architecture/010-c4/cxd-specdojo.md docs/ja/specdojo/rulebooks/cxd-rulebook.md docs/ja/specdojo/recipes/cxd-recipe.md docs/ja/specdojo/samples/cxd-sample.md docs/ja/specdojo/templates/cxd-template.md",
+      "status": "passed",
+      "summary": "対象の追跡済み差分に空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ済み検査対象0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "executor が変更したファイルは Markdown のみで、変更した YAML / YML ファイルがない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検証の変更条件に該当しない。",
+      "reason": "executor の変更は docs/ja/product/ と docs/ja/specdojo/ のみで、docs/ja/projects/ 配下を変更していない。開始時点の result 差分は本 executor の変更に含めない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査の変更条件に該当しない。",
+      "reason": "executor 自身が登録簿個票・既存 plan・result などの履歴ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n… output omitted …\nction\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail\n\n\n\u001b[4m\u001b[31mdocs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-005/T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b/result.md\u001b[39m\u001b[24m\n1:1-20:4 \u001b[31merror\u001b[39m \u001b[1mfrontmatter に未エスケープの山括弧 \u001b[36m`<changed yaml files>`\u001b[39m を検知しました。インラインコード（例: \u001b[36m`<changed yaml files>`\u001b[39m）で囲んでください。\u001b[22m\n\n\u001b[31m✖\u001b[39m 1 error"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4561 file(s), 140 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 107 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4561 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-CcJlQU/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-1N7dEo/T-T-doc-010\nSkipping worktree dependencies: no tracked packag\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-13T15:05:46.557Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-\n… output omitted …\neceived\n\n- []\n+ [\n+   {\n+     \"expectedLink\": \"/ja/specdojo/recipes/cxd-recipe\",\n+     \"file\": \"cxd-recipe.md\",\n+     \"kind\": \"recipes\",\n+   },\n+   {\n+     \"expectedLink\": \"/ja/specdojo/templates/cxd-template\",\n+     \"file\": \"cxd-template.md\",\n+     \"kind\": \"templates\",\n+   },\n+ ]\n\n ❯ tests/packages/docs-site/sidebar-kata.test.ts:91:21\n     89|     }\n     90|\n     91|     expect(missing).toEqual([]);\n       |                     ^\n     92|   });\n     93|\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    }
+  ],
+  "final_message": "CXD の代表初版と rulebook・recipe・sample・template を整備した。result は編集せず、判断根拠を handoff に記録した。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイル: docs/ja/product/030-architecture/010-c4/cxd-specdojo.md、docs/ja/specdojo/rulebooks/cxd-rulebook.md、docs/ja/specdojo/recipes/cxd-recipe.md、docs/ja/specdojo/samples/cxd-sample.md、docs/ja/specdojo/templates/cxd-template.md。すべて `status: draft` を維持。",
+    "進め方と実践の型の適用: 開始時点の既存差分を引き継いだ。代表成果物は利用者・AI provider CLI・Git / GitHub の関係を維持し、コマンド一覧、実装詳細、文書生成ツールへの範囲拡張、根拠未確認の障害時保証を整理した。プロジェクト概要から、人間の主要判断責任と仕様・判断記録による継承を反映した。`depends_on` が空なので `based_on` は空のままとした。",
+    "型の要否: 境界・利用者・外部依存の選択は schema で規定できないため rulebook が必要。境界判断と結果不明の扱いは書き手による品質差が出るため recipe、完成時の粒度を示すため sample、同系統で定型の見出し・表を共有するため template が必要と判断した。rulebook に specdojo:cxd-recipe、specdojo:cxd-sample、specdojo:cxd-template を宣言した。",
+    "既存評価と一般化: rulebook は単一システム・外部関係という方針を維持し、記述標準の章立て、章別の判断基準と良い例・悪い例へ再構成した。完成例の章は削除して sample へ外出しした。sample は説明だけの旧版から、販売管理 CLI の境界・外部依存・検証観点を埋めた完成例へ改稿した。recipe と template は新規作成し、製品固有の値を持ち込まない形に一般化した。",
+    "手本: ready の tsd-index-rulebook.md を規約・正本委譲の記述形式、cdfd-overview-recipe.md を問い・手順・レビュー表の形式、cdfd-overview-template.md を生成物 Frontmatter の分離と記入欄の形式として参照した。CXD 系統に ready の代表・sample はなく、plan 指定の clis-sample.md を完成例の厚さと学習用 CLI 文脈の手本にした。手本の内容は代表成果物の追加根拠にしていない。Web 参照なし。",
+    "相互整合: 意味要件は rulebook、見出し・記入欄の骨組みは template、作成時の問いは recipe、完成例は sample に分担した。Mermaid 記法は既存の specdojo:cxd-mermaid-rulebook を `includes` で適用し、同文書自体は維持した。成果物カタログ dct-architecture.yaml の対象には既に specdojo:cxd-rulebook が宣言されており、変更不要だった。",
+    "仕上げ4操作を1巡実施: 境界合意に不要な実装列挙と作業経緯の注記を削除。図形・構文は記法ルール、値・構造は詳細仕様へ委譲して重複を整理。技術前提と検証観点、要素と関係を分割。図・表の名称、型の宣言、章構成、仮定と保証の区別を整合させた。多観点の自己レビューループは行っていない。",
+    "下流への論点: 代表成果物のローカル配置は仮定として残し、Git / GitHub の接続経路・認証境界・失敗時の保持範囲、AI 実行結果不明時の扱いは担当と解消条件を付けて将来課題へ記録した。業務判断や未確認の復旧保証は確定していない。",
+    "reporter への申し送り: result.md と実行管理ファイルには開始時点から差分があったが、本 executor 段階では編集していない。result の実施内容・変更ファイル・進め方と実践の型の適用には、本報告の判断根拠を反映すること。以前の recipe・template 不要という記録があれば今回の必要判断へ更新すること。親 runner 所有の lint・schema・テストは sandbox 内で重複実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-005/T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b/executor.attempt-1.log",
+      "bytes": 6018,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-005/T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b/parent-validation-attempt-1-lint-fm.attempt-1.log",
+      "bytes": 632,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-005/T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b/parent-validation-attempt-1-test-unit.attempt-1.log",
+      "bytes": 7687,
+      "truncated": false
+    }
+  ]
+}
