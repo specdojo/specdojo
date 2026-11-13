@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-dct-index-045
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-dct-index-045/T-KATA-WAVE-1-dct-index-045-20261113T190539Z-bd0e1427/plan.md
   started_at: "2026-11-13T19:05:40.025Z"
+  completed_at: "2026-11-13T19:19:59.532Z"
   agent: sol-executor
   execution: agent
   approach: recipe-maintenance
@@ -19,16 +20,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 根拠成果物 `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml` が参照する `docs/ja/specdojo/rulebooks/dct-index-rulebook.md` において `recipe: not-needed` が宣言されていたため、計画に基づき文書の変更を行わず完了とした。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result の実施内容・変更ファイル・進め方と実践の型の適用へ記録すること。変更ファイルはなし。根拠成果物 docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml が参照する docs/ja/specdojo/rulebooks/dct-index-rulebook.md は recipe: not-needed を宣言している。rulebook-authoring-standard.md は not-needed を不要と定義しており、計画冒頭の変更せず完了する条件を適用した。編集対象欄の unresolved から命名を推測して作成する必要はない。
+- recipe 不要の判断理由は、分類・規模・ドメイン説明・変更時の判断を rulebook の記述ガイドで扱え、独立した作成手順を追加する必要がないため。T-KATA-WAVE-1-dct-index-005 および T-KATA-WAVE-1-dct-index-040 の result にも同じ要否判断が記録されている。template は生成ビューの骨組みとして必要なため specdojo:dct-index-template の宣言を維持。完成例は specdojo:dct-index-sample を維持。新規文書がなくサイドバー追加は不要で、既存 rulebook・sample・template の掲載を確認した。result 自体は executor 指示に従い編集していない。
+- 適用外の検証: `npx prettier --write`（executor によるファイル変更がないため。）
+- 適用外の検証: `npm run validate:schema:file`（YAML ファイルを変更していないため。）
+- 適用外の検証: `npm run validate:catalog`（executor による docs/ja/projects/ 配下の成果物変更がないため。）
+- 適用外の検証: `npm run validate:history-links`（履歴蓄積ファイル・plan・result を変更していないため。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+recipe-maintenance
