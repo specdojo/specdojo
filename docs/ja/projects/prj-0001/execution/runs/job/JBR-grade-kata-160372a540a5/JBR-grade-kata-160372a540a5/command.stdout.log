@@ -1,0 +1,54 @@
+
+> specdojo@0.7.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-160372a540a5 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-160372a540a5
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/bes-recipe.md
+document complete: docs/ja/specdojo/recipes/bes-recipe.md
+document start: docs/ja/specdojo/recipes/br-recipe.md
+document complete: docs/ja/specdojo/recipes/br-recipe.md
+document start: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
+document start: docs/ja/specdojo/recipes/pm-raci-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-raci-recipe.md
+document start: docs/ja/specdojo/rulebooks/bdd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bdd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bes-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bes-rulebook.md
+document start: docs/ja/specdojo/rulebooks/br-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/br-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/clis-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/clis-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pr-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pr-rulebook.md
+document start: docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md
+document start: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-160372a540a5/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-11-12T20:04:51Z	docs/ja/specdojo/recipes/bes-recipe.md	1	passed	148	pass	95	2	agy-expert-executor	machine	none		
+2026-11-12T20:07:42Z	docs/ja/specdojo/recipes/br-recipe.md	1	passed	169	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:09:56Z	docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md	1	passed	132	pass	92	10	agy-expert-executor	machine	none		
+2026-11-12T20:12:44Z	docs/ja/specdojo/recipes/pm-raci-recipe.md	1	passed	166	needs-work	73	19	agy-expert-executor	machine	none		
+2026-11-12T20:14:04Z	docs/ja/specdojo/rulebooks/bdd-rulebook.md	1	passed	78	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:15:59Z	docs/ja/specdojo/rulebooks/bes-rulebook.md	1	passed	113	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:17:52Z	docs/ja/specdojo/rulebooks/br-rulebook.md	1	passed	111	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:19:14Z	docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md	1	passed	80	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:20:50Z	docs/ja/specdojo/rulebooks/cdsd-rulebook.md	1	passed	94	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:22:57Z	docs/ja/specdojo/rulebooks/clis-rulebook.md	1	passed	125	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:24:39Z	docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md	1	passed	100	pass	100	0	agy-expert-executor	machine	none		
+2026-11-12T20:27:18Z	docs/ja/specdojo/rulebooks/pm-roles-rulebook.md	1	passed	157	needs-work	84	7	agy-expert-executor	machine	none		
+2026-11-12T20:29:48Z	docs/ja/specdojo/rulebooks/pr-rulebook.md	1	passed	148	pass	89	12	agy-expert-executor	machine	none		
+2026-11-12T20:32:41Z	docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md	1	passed	170	needs-work	87	8	agy-expert-executor	machine	none		
+2026-11-12T20:34:37Z	docs/ja/specdojo/rulebooks/prj-charter-rulebook.md	1	passed	114	pass	90	7	agy-expert-executor	machine	none		

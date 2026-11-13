@@ -13,7 +13,7 @@ terms:
     englishName: exec
     aliases: [実行]
     definition: 実行計画に従う作業を人または AI Agent が進め、成果・検証結果・停止理由を記録して後続へ引き渡す活動。
-    notes: 基本概念は [[gl-common|用語集（共通）]] を参照する。本用語集では実行固有の用語の分類にも用いる。CLI の入口は `specdojo exec`。
+    notes: 基本概念は [[gl-common|用語集（共通）]] を参照する。CLI の入口は `specdojo exec`。
     relatedTerms: [tm-task-origin, tm-task-mode, tm-task-state, tm-execution-pipeline]
     source: "[[sf-task-execution|システム化機能（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
   - id: tm-task-origin
@@ -229,8 +229,8 @@ terms:
     relatedTerms: [tm-pipeline-state, tm-worktree, tm-execution-handoff, tm-task-unblock]
     source: "[[sf-task-execution|システム化機能（タスク実行）]]、[[clis-exec-commands|CLI仕様（exec コマンド群）]]"
   - id: tm-job-run
-    term: Job Run
-    englishName: Job Run
+    term: job run
+    englishName: job run
     aliases: [ジョブ実行, ジョブラン]
     definition: ジョブ定義と解決済みの入力から具体化され、冪等キーで同じ論理実行を識別する一件の実行単位。
     notes: ジョブ定義自体は [[gl-common|用語集（共通）]] の `tm-job` を参照する。起動は `exec run --job` または routine から行い、実行ごとの試行履歴と結果を管理する。結果の成功は受入承認・統合完了を単独では保証しない。

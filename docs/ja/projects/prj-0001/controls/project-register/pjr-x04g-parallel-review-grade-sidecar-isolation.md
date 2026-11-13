@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-12T13:48:52Z"
+  block_reason: "parent validation failed: test-integration, typecheck"
   derived_from:
     - PJR-Z4H8
   autopilot: approved

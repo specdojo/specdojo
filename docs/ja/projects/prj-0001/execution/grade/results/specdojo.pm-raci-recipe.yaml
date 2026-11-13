@@ -5,17 +5,17 @@ path: docs/ja/specdojo/recipes/pm-raci-recipe.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 67
-graded_at: "2026-10-06T21:09:09.855Z"
-graded_by: agy-expert-executor
+score: 73
+graded_at: "2026-11-12T20:12:42.364Z"
+graded_by: flash-high-executor
 content_hash: d46cfa81055b14c35bc9bb9d3d9592f055251944a6d21873f856aa9463bf9b9e
 categories:
   purpose:
-    score: 25
+    score: 50
   operations:
-    score: 75
+    score: 81
   planning:
-    score: 42
+    score: 58
   business:
     score: 83
   architecture:
@@ -23,27 +23,27 @@ categories:
   usability:
     score: 83
   implementation:
-    score: 50
+    score: 63
   quality:
-    score: 50
+    score: 58
   consistency:
     score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
     level: 3
     score: 75
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -75,8 +75,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -90,8 +90,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 3
     score: 75
