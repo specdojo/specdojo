@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-dct-index-005
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-dct-index-005/T-KATA-WAVE-1-dct-index-005-20261113T135943Z-61b2b566/plan.md
   started_at: "2026-11-13T13:59:45.876Z"
+  completed_at: "2026-11-13T14:13:42.971Z"
   agent: opus-executor
   execution: agent
   approach: bootstrap
@@ -22,16 +23,25 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物カタログ索引 `dct-index.yaml` の代表成果物として、対応する実践の型（rulebook, sample, template）を整備した。
+- rulebook は標準的な章立て（本文要件・記述ガイド・禁止事項）へ移行し、判断基準やサイドバー表示名・並び順の制約を追加した。
+- sample を 1 段および 2 段構成の両方を示す完成例として充実させ、記述レベルを向上させた。
+- recipe は `not-needed` と判断し、template は現状を維持した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/dct-index-rulebook.md`: 章構成を標準の「本文要件／記述ガイド／禁止事項」に変更し、判断基準およびサイドバーのキー順に関する規約を追加した。
+- `docs/ja/specdojo/samples/dct-index-sample.yaml`: 1 段・2 段構成の両方を示す完成例として内容を充実させ、分類の判断基準が伝わる形式に修正した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- rulebook の章構成を「4. 本文要件／5. 記述ガイド／6. 禁止事項」へ変更した。旧章タイトル（「YAML 構成」「記述・生成・検証ガイド」）への外部参照は docs 配下（execution を除く）に見つからなかった。
+- サイドバーの表示名と並び順の制約（`domain` の直後の `name` を読む）は、plan の根拠範囲外である `packages/docs-site/.vitepress/config.mts` の実装から確認した。完了条件の QE 項目（索引ビューとサイドバーからの到達）に対応するため rulebook へ記載した。妥当性は review で確認してほしい。
+- 型の要否: recipe は `not-needed` のまま（規約と schema でほぼ内容が決まり、判断点は rulebook の記述ガイドで足りる）。sample は分類の判断が schema だけでは伝わらないため維持して充実させた。template は生成ビューの骨組みとして必要なため維持した。
+- 手本: 同種の ready 文書として `docs/ja/specdojo/standards/rulebook-authoring-standard.md`（章立て）と `docs/ja/specdojo/samples/clis-sample.md`（sample の厚さ）を参照した。
+- 適用外の検証: `npm run validate:catalog`（変更は docs/ja/specdojo/ 配下だけで、成果物の変更が docs/ja/projects/ に及ばない）
+- 適用外の検証: `npm run validate:history-links`（pjr 個票・plan・result を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+既存の成果物 `dct-index.yaml` および template を維持し、不足していた判断基準や具体例を rulebook と sample に反映させて実践の型を完結させた。recipe については不要と判断し `not-needed` とした。
