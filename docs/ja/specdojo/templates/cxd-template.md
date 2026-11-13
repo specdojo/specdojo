@@ -56,28 +56,28 @@ _TODO_: 矢印の向き、応答の省略など読み取りに必要な注記を
 
 ### 3.1. 対象システムとシステム境界
 
-| 項目               | 内容                        |
-| ------------------ | --------------------------- |
-| システム名         | _SYSTEM_NAME_               |
-| 提供する中核責務   | _CORE_RESPONSIBILITY_       |
-| 境界内に含める範囲 | _IN_SCOPE_                  |
-| 境界外へ委ねる範囲 | _OUT_OF_SCOPE_AND_DELEGATE_ |
+| 項目                                 | 内容                        |
+| ------------------------------------ | --------------------------- |
+| システム名                           | _SYSTEM_NAME_               |
+| 提供する中核責務                     | _CORE_RESPONSIBILITY_       |
+| 境界内に含める範囲                   | _IN_SCOPE_                  |
+| 境界外へ委ねる範囲（対象外と委譲先） | _OUT_OF_SCOPE_AND_DELEGATE_ |
 
 ### 3.2. Person（人・ロール）
 
-| Person（図中ラベル） | 対応ロール・利用者区分 | 利用目的・主な関わり | 境界上の接点・確認責務 |
-| -------------------- | ---------------------- | -------------------- | ---------------------- |
-| _PERSON_NAME_        | _ROLE_OR_USER_GROUP_   | _USE_PURPOSE_        | _USER_RESPONSIBILITY_  |
+| Person（図中ラベル） | 対応ロール           | 利用目的・主な関わり | 境界上の接点・確認責務 |
+| -------------------- | -------------------- | -------------------- | ---------------------- |
+| _PERSON_NAME_        | _ROLE_OR_USER_GROUP_ | _USE_PURPOSE_        | _USER_RESPONSIBILITY_  |
 
 ### 3.3. External Software System（外部システム）
 
-| 外部システム（図中ラベル） | 区分・利用条件         | 対象システムとの責任分界  | 不在・障害時の影響と境界上の扱い |
-| -------------------------- | ---------------------- | ------------------------- | -------------------------------- |
-| _EXTERNAL_SYSTEM_NAME_     | _DEPENDENCY_CONDITION_ | _RESPONSIBILITY_BOUNDARY_ | _FAILURE_IMPACT_                 |
+| 外部システム（図中ラベル） | 区分・位置づけ         | 対象システムとの責任分界  | 不在・障害時の影響と扱い |
+| -------------------------- | ---------------------- | ------------------------- | ------------------------ |
+| _EXTERNAL_SYSTEM_NAME_     | _DEPENDENCY_CONDITION_ | _RESPONSIBILITY_BOUNDARY_ | _FAILURE_IMPACT_         |
 
 ### 3.4. Relationship（関係・連携契約）
 
-| 関係 ID  | 起点 → 終点                            | 図中ラベル         | やり取りする情報・制御の要点 | 連携方式・境界        | 正本・関連仕様             |
+| 関係ID   | 起点 → 終点                            | 図中ラベル         | やり取りする情報・制御の要点 | 連携方式・境界        | 正本・関連仕様             |
 | -------- | -------------------------------------- | ------------------ | ---------------------------- | --------------------- | -------------------------- |
 | `REL-01` | _PERSON_NAME_ → _SYSTEM_NAME_          | _USE_LABEL_        | _USER_INPUT_OUTPUT_          | _USER_CHANNEL_        | _USER_SPEC_REFERENCE_      |
 | `REL-02` | _SYSTEM_NAME_ → _EXTERNAL_SYSTEM_NAME_ | _DEPENDENCY_LABEL_ | _EXTERNAL_INPUT_OUTPUT_      | _INTEGRATION_CHANNEL_ | _INTERFACE_SPEC_REFERENCE_ |
