@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-dct-index-040",
+  "run_id": "T-KATA-WAVE-1-dct-index-040-20261113T142156Z-13a964b8",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "rate_limited",
+    "started_at": "2026-11-13T14:23:47.351Z",
+    "completed_at": "2026-11-13T14:23:52.162Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-dct-index-040/T-KATA-WAVE-1-dct-index-040-20261113T142156Z-13a964b8/executor.attempt-1.log",
+      "bytes": 20194,
+      "truncated": false
+    }
+  ]
+}
