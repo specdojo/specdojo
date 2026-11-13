@@ -1,0 +1,20 @@
+dct-index の型一式を見直し、rulebook と sample の2ファイルを更新しました。成果物 `dct-index.yaml` と template は変更していません。sample の schema 検査と Prettier の整形検査は通っています。Markdown lint などの残りの検査は、このあと runner が実行します。
+
+**判断と変更**
+- **成果物 `dct-index.yaml`**: 実在する20ドメインがそれぞれ1回ずつ宣言され、重複も漏れもないことを確かめました。分類も構成ガイドに沿っているため、そのまま維持しています。
+- **rulebook（修正）**:
+  - 章立てを標準の「本文要件・記述ガイド・禁止事項」に合わせました。従来の「YAML 構成」と「生成物の本文構成」を `本文要件` の4.1〜4.5にまとめ、記述ガイドは5.1〜5.4に分けています。
+  - 記述ガイドに、グループ分類・`name`/`overview` の書き方・`size`・生成と検証について、判断基準と良い例・悪い例の表を足しました。
+  - 文書サイトのコードを読んで分かった制約を明記しました。サイドバーの表示名と並び順は `dct-index.yaml` から読まれ、各ドメインは `domain` の直後に書いた `name` が表示名になります。そのためキーを `domain`→`name`→`overview` の順に書く規約と、それに対応する禁止事項を追加しました。
+  - schema の詳細は schema 側を正本とする方針を保ち、内容が重なっていた検証規則と生成規則は1か所に統合しました。
+- **sample（充実化）**: ルートグループに `domains` を直接置く1段構成と、サブグループに分ける2段構成の両方を、駄菓子屋の文脈で示す完成例にしました。分類の判断理由は YAML コメントに残しています。
+- **template（維持）**: 生成ビューの骨組みとして機能しているため変更していません。
+- **型の要否**: recipe は `not-needed`、sample と template は現在の ID 宣言のまま変えていません。
+
+**未解決の点**
+- サイドバーのキー順の制約は、plan が根拠に認める文書ではなく、文書サイトのコード（`packages/docs-site/.vitepress/config.mts`）を根拠にしています。完了条件がサイドバーからの到達を求めているため載せましたが、rulebook に書いてよいかはレビューで確認してください。
+- 章番号が変わったため、外部から「YAML 構成」などの章タイトルで参照している箇所を探しました。`docs` 配下の `execution` 以外では見つかっていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-index の型一式を見直した。成果物 dct-index.yaml は20ドメインの重複・漏れがないことを確認して維持し、template も維持した。rulebook は章立てを標準（本文要件・記述ガイド・禁止事項）へ寄せ、判断基準と良い例・悪い例、サイドバーのキー順の規約を追加した。sample は1段・2段構成の両方を示す完成例へ充実させた。recipe は not-needed のまま。","handoff":["rulebook の章構成を「4. 本文要件／5. 記述ガイド／6. 禁止事項」へ変更した。旧章タイトル（「YAML 構成」「記述・生成・検証ガイド」）への外部参照は docs 配下（execution を除く）に見つからなかった。","サイドバーの表示名と並び順の制約（`domain` の直後の `name` を読む）は、plan の根拠範囲外である `packages/docs-site/.vitepress/config.mts` の実装から確認した。完了条件の QE 項目（索引ビューとサイドバーからの到達）に対応するため rulebook へ記載した。妥当性は review で確認してほしい。","型の要否: recipe は `not-needed` のまま（規約と schema でほぼ内容が決まり、判断点は rulebook の記述ガイドで足りる）。sample は分類の判断が schema だけでは伝わらないため維持して充実させた。template は生成ビューの骨組みとして必要なため維持した。","手本: 同種の ready 文書として `docs/ja/specdojo/standards/rulebook-authoring-standard.md`（章立て）と `docs/ja/specdojo/samples/clis-sample.md`（sample の厚さ）を参照した。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/specdojo/samples/dct-index-sample.yaml","status":"passed","summary":"dct-index-sample.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/samples/dct-index-sample.yaml docs/ja/specdojo/rulebooks/dct-index-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"成果物カタログ配下は変更していない","reason":"変更は docs/ja/specdojo/ 配下だけで、成果物の変更が docs/ja/projects/ に及ばない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"pjr 個票・plan・result を変更していない"}]}
+</specdojo_executor_evidence>

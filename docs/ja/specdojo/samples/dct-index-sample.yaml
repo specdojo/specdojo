@@ -2,6 +2,8 @@
 # dct-index-sample.yaml
 # 駄菓子屋きぬや販売管理システム構築プロジェクトの成果物カタログ索引宣言例。
 # 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct-index.schema.yaml に従う。
+# ルートグループへ domains を直接置く 1 段構成と、groups でサブグループへ分ける 2 段構成の両方を示す。
+# 各ドメインのキーは domain、name、overview の順に書く（サイドバーが domain 直後の name を表示名に使う）。
 id: specdojo:dct-index-sample
 type: project
 status: draft
@@ -10,30 +12,54 @@ rulebook: specdojo:dct-index-rulebook
 project_id: prj-0001
 size: small
 groups:
+  # 小規模な店舗案件のため、プロジェクト側はドメインが少なく 1 表に収まる。サブグループに分けず domains を直接置く。
   - name: プロジェクト成果物
-    groups:
-      - name: プロジェクト定義
-        domains:
-          - domain: project-definition
-            name: プロジェクト定義
-            overview: 駄菓子屋きぬや販売管理システムの目的、スコープ、前提条件を管理する。
-      - name: プロジェクトマネジメント
-        domains:
-          - domain: project-management
-            name: プロジェクト管理
-            overview: 計画、課題、進捗、関係者との合意を管理する。
+    domains:
+      - domain: project-definition
+        name: プロジェクト定義
+        overview: 販売管理システム導入の目的、スコープ、前提条件を管理する。
+      - domain: project-management
+        name: プロジェクト管理
+        overview: 店主との合意事項、課題、進捗を管理する。
+      - domain: current-state
+        name: 現状
+        overview: ノートと暗算に頼る現行の販売・つけ管理の把握に必要な成果物を管理する。
+  # プロダクト側は探索単位が分かれるため、文書構成図のまとまりに合わせてサブグループへ分ける。
   - name: プロダクト成果物
     groups:
-      - name: 業務仕様
+      - name: 業務仕様群
         domains:
+          - domain: business-model
+            name: 業務モデル
+            overview: 店頭販売、つけ払い、仕入れの業務ルールと流れを管理する。
           - domain: data-flow
             name: データフロー
             overview: 販売、在庫、つけ管理を横断するデータの流れを管理する。
           - domain: system-functions
             name: システム化機能
             overview: 店頭販売と在庫確認を支援するシステム機能を管理する。
-      - name: システム設計
+          # 本部 API との接続仕様は、構成図で業務仕様群の枠内に置かれるためここへ 1 か所だけ宣言する。
+          - domain: external-interface-specs
+            name: 外部I/F仕様
+            overview: 本部の商品マスタ・売上登録 API との接続仕様を管理する。
+          - domain: glossary
+            name: 用語集
+            overview: つけ、駄菓子の商品区分など店舗固有の用語と定義を管理する。
+      - name: アーキテクチャ・システム設計
         domains:
           - domain: system-design
             name: システム設計
             overview: 店頭タブレットで動作する販売管理システムの設計を管理する。
+      - name: 品質保証
+        domains:
+          - domain: business-acceptance-criteria
+            name: 業務受入条件
+            overview: 店主と家族が日々の店番で使えると判断するための条件を管理する。
+          - domain: test-specs
+            name: テスト
+            overview: 会計と在庫記録の正しさを検証するテスト成果物を管理する。
+      - name: 運用
+        domains:
+          - domain: operations
+            name: 運用
+            overview: 閉店後の売上照合、端末障害時の対応など稼働後の運用成果物を管理する。
