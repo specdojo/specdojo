@@ -152,4 +152,10 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-14）
+
+- 親の検証の test-unit が `tests/packages/docs-site/sidebar-kata.test.ts`（非推奨でない rulebook・recipe・sample・template がすべて文書サイトの型のメニューに載っている）で落ちた。この段で新しく作った型の文書（recipe・template など）を、`packages/docs-site/.vitepress/sidebar-config.ts` の対応するメニューに足す。
+- 親の検証の lint-fm が、result などの frontmatter に山括弧のプレースホルダ（例: `<changed yaml files>`）がそのまま残っていて落ちた場合は、インラインコードで囲むか言い換える。
+- test-integration の `pipeline-e2e.integration.test.ts` の時間切れは負荷によるもので、この段の変更とは関係しない。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
