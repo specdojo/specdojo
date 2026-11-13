@@ -513,7 +513,7 @@ members:
       .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json（成果物への Edit を許可）で定義。
   - nickname: opus-executor
     disabled: false
-    priority: 5
+    priority: 9
     display_name: Claude Expert Executor
     email: null
     roles: []
@@ -565,7 +565,7 @@ members:
       .specdojo/claude/settings.review.json（成果物への Edit を禁止し、result への Edit のみ許可）で定義。
   - nickname: opus-review-executor
     disabled: false
-    priority: 5
+    priority: 9
     display_name: Claude Expert Review Executor
     email: null
     roles: []

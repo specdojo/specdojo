@@ -42,7 +42,7 @@ run:
 # register 項目の難しさ（個票の difficulty）ごとの agent の振り分け（PJR-5HYP）。
 # exec run --register と orchestrator night が使い、CLI の --executor-by などの指定が優先する。
 # difficulty のない個票は、従来どおり stage_role と priority で選ぶ。
-# - hard: codex（sol）。上限のときは解除を待つ。待たずに切り替える場合の代わりは opus。
+# - hard: codex（sol）。上限のときは解除を待つ。待たずに切り替える場合の代わりは argon（Claude の agent は 2026-11-13 から止めている）。
 # - medium: agy の flash-high。代わりは codex（sol）。
 # - easy: ローカルの qwen。docs・src・tests の外を触らない小さな作業に限る。代わりは flash-high。
 routing:
@@ -50,7 +50,7 @@ routing:
     executor_by: sol-executor
     reporter_by: gemma26-reporter
     on_rate_limit: wait
-    fallback_executor_by: opus-executor
+    fallback_executor_by: argon-executor
     fallback_reporter_by: sonnet-reporter
   medium:
     executor_by: flash-high-executor
@@ -224,8 +224,8 @@ providers:
         on_exhausted: block
 
   antigravity:
-    # codex と agy を 2 本ずつ並べるため、同時に走らせる agy の agent を 2 本までにする（2026-11-13 indie の依頼）。
-    max_concurrency: 2
+    # agy の片方のモデルが長い上限に当たったため、同時に走らせる agy の agent を 1 本にする（2026-11-13 indie の依頼）。
+    max_concurrency: 1
     # Antigravity CLI（agy）は --agent による定義ファイルの選択を持たず、codex と同じく
     # プロンプト（plan）だけで役割を与える。-p はプロンプトを引数に取り stdin を読まないため、
     # runner が stdin へ書く plan を "$(cat)" で引数に渡す（shell: true で実行される）。

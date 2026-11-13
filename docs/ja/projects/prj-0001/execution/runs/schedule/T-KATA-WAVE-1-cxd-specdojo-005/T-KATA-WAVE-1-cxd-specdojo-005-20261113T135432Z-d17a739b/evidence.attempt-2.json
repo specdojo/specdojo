@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-cxd-specdojo-005",
+  "run_id": "T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T15:12:13.760Z",
+    "completed_at": "2026-11-13T15:15:02.306Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cxd-specdojo.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cxd-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cxd-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../result.md                                      |  27 +-\n .../plan.md                                        |   7 +\n docs/ja/specdojo/rulebooks/cxd-rulebook.md         | 378 +++++++--------------\n docs/ja/specdojo/samples/cxd-sample.md             | 120 +++++--\n packages/docs-site/.vitepress/sidebar-config.ts    |   8 +-\n 5 files changed, 257 insertions(+), 283 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/030-architecture/010-c4/cxd-specdojo.md docs/ja/specdojo/rulebooks/cxd-rulebook.md docs/ja/specdojo/samples/cxd-sample.md docs/ja/specdojo/recipes/cxd-recipe.md docs/ja/specdojo/templates/cxd-template.md packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "passed",
+      "summary": "対象6ファイルの整形が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "累積差分に空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "成果物変更は Markdown と TypeScript のみで、変更した YAML / YML ファイルがない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "本 executor の成果物変更は docs/ja/product/、docs/ja/specdojo/、packages/docs-site/ 配下であり、docs/ja/projects/ 配下は変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "本 executor は既存 plan・result・登録簿個票などの履歴ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n… output omitted …\nction\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'\n\n\ndocs/ja/projects/prj-0001/execution/runs/schedule/stsd-register-entry/stsd-register-entry-20260928T151609Z-8813/plan.md:217 error MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4561 file(s), 140 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 107 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4561 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UIkZid/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-B9p4dO/T-T-doc-010\nSkipping worktree dependencies: no tracked packag\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-005\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-13T15:20:42.017Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "cxd-specdojo",
+      "status": "changed",
+      "path": "docs/ja/product/030-architecture/010-c4/cxd-specdojo.md",
+      "reason": ""
+    },
+    {
+      "target": "specdojo:cxd-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "specdojo:cxd-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/cxd-sample.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "代表成果物と実践の型の整合を確認し、CXD recipe・template の文書サイト登録漏れを修正した。result は編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "累積変更: cxd-specdojo.md の代表初版、cxd-rulebook.md の規約再構成、cxd-sample.md の完成例への改稿、cxd-recipe.md と cxd-template.md の新規作成を維持した。対象5文書はすべて draft。今回 packages/docs-site/.vitepress/sidebar-config.ts に recipe・template のアーキテクチャ → C4 メニューを追加した。",
+    "型の要否判断: 境界・利用者・外部依存の選択には schema だけで規定できない判断があるため rulebook が必要。境界判断と依存失敗時の具体化には品質差が出るため recipe、完成時の粒度・文体を示すため sample、共通の章立て・表から開始するため template が必要。rulebook frontmatter の3種の ID 宣言と実在ファイルは対応している。成果物カタログの rulebook 宣言は既に specdojo:cxd-rulebook であり変更不要。",
+    "既存評価と手本: 単一システムと外部関係を扱う既存方針を維持し、rulebook の完成例を sample へ外出しした累積変更を確認した。ready の tsd-index-rulebook.md、cdfd-overview-recipe.md、cdfd-overview-template.md の構造・記法を手本とし、plan 指定の clis-sample.md を完成例の厚さと学習用 CLI 文脈の参考とした。製品固有の値を recipe・template へ持ち込まず一般化している。Web 参照なし。",
+    "相互整合と仕上げ: 意味要件は rulebook、見出し・記入欄は template、問いと手順は recipe、完成例は sample とした。Mermaid 記法は includes の specdojo:cxd-mermaid-rulebook へ委譲する。前回の仕上げ1巡による不要な実装列挙の削除、詳細仕様への重複の統合、技術前提と検証観点の分割、図・表・型宣言の整合を維持した。今回の再開ではサイドバー登録のみを追加修正し、観点別の自己レビューループは実施していない。",
+    "内容上の引き継ぎ: `depends_on` が空のため代表成果物の `based_on` は空のままとした。ローカル配置の仮定、Git / GitHub の接続経路・認証境界・失敗時の保持範囲、AI 実行結果不明時の扱いは、担当と解消条件を付けて代表成果物の将来課題に残した。業務判断や未確認の復旧保証は確定していない。",
+    "前回失敗への対応: test-unit が指摘した cxd-recipe と cxd-template のメニュー欠落を修正した。現在の result frontmatter を読み取り確認し、前回 lint-fm が指摘した山括弧プレースホルダは残っていなかった。reporter は検証記録を生成する際、説明用プレースホルダをそのまま frontmatter に埋め込まず、必要な識別子はインラインコードで表記すること。result・既存の別タスク plan・実行管理ファイルは今回編集していない。result の変更ファイル欄と進め方・実践の型の適用欄へ本報告を反映すること。親 runner 所有の検証は重複実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-005/T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b/executor.attempt-2.log",
+      "bytes": 5483,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-005/T-KATA-WAVE-1-cxd-specdojo-005-20261113T135432Z-d17a739b/parent-validation-attempt-1-lint-md.attempt-2.log",
+      "bytes": 402,
+      "truncated": false
+    }
+  ]
+}
