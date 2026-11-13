@@ -28,6 +28,7 @@ export type GradeRunOptions = GradeTargetFilters & {
   runId: string;
   by?: string;
   workDir?: string;
+  isolatePipelineState?: boolean;
   reference?: string;
   embedDocuments?: boolean;
   maxStageFailures?: number;
@@ -116,6 +117,11 @@ async function runGradeUnlocked(
     "--work-dir",
   );
   const statePath = join(directory, "run.json");
+  // Review preparation runs in the integration worktree. Its failures must never mutate
+  // shared retry state that another task may already have included in its checkpoint.
+  const pipelineStateDirectory = opts.isolatePipelineState
+    ? join(directory, "pipeline")
+    : undefined;
   const requestOptions = Object.fromEntries(
     Object.entries(opts).filter(([key]) => key !== "dryRun"),
   );
@@ -229,6 +235,7 @@ async function runGradeUnlocked(
   for (const [index, document] of state.documents.entries()) {
     if (document.status === "complete") {
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -242,6 +249,7 @@ async function runGradeUnlocked(
       continue;
     }
     const prior = readGradePipelineState({
+      directory: pipelineStateDirectory,
       target: opts.target,
       project: projectId,
       path: document.path,
@@ -253,6 +261,7 @@ async function runGradeUnlocked(
     // The native runner has one stage. Old experimental three-stage retries cannot be reused.
     if (prior && prior.stage_total !== 1)
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -345,6 +354,7 @@ async function runGradeUnlocked(
       document.resultHash = digest(result);
       writeState(statePath, state);
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -360,6 +370,7 @@ async function runGradeUnlocked(
       document.error = error instanceof Error ? error.message : String(error);
       writeState(statePath, state);
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,

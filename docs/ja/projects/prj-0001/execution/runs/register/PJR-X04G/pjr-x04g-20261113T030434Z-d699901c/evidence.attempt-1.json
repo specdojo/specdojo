@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-X04G",
+  "run_id": "pjr-x04g-20261113T030434Z-d699901c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T03:07:05.740Z",
+    "completed_at": "2026-11-13T03:14:54.766Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-x04g.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": ".../040-system-design/sysd-critical-flows.md       |   1 +\n ...x04g-parallel-review-grade-sidecar-isolation.md |  38 +++++-\n .../ja/specdojo/guides/schedule-operation-guide.md |   2 +\n docs/ja/specdojo/references/command-reference.md   |   2 +\n src/grade/command-run.ts                           |   1 +\n src/grade/pipeline-state.ts                        |  26 +++-\n src/grade/run.ts                                   |  11 ++\n src/review/grade.ts                                |   1 +\n tests/src/exec/worktree-ops.integration.test.ts    | 133 +++++++++++++++++++++\n tests/src/grade/run.test.ts                        |  57 +++++++++\n tests/src/review/grade.test.ts                     |   1 +\n 11 files changed, 266 insertions(+), 7 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/grade/command-run.ts src/grade/pipeline-state.ts src/grade/run.ts src/review/grade.ts tests/src/exec/worktree-ops.integration.test.ts tests/src/grade/run.test.ts tests/src/review/grade.test.ts docs/ja/product/040-system-design/sysd-critical-flows.md docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md",
+      "status": "passed",
+      "summary": "変更した11ファイルを整形。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証に合格。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。既存の未作成文書・re-export参照に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md",
+      "status": "passed",
+      "summary": "検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査に合格。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は適用外。",
+      "reason": "executor が変更した成果物に YAML／YML ファイルはない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X04G/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X04G/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X04G/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4525 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4525 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X04G\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\nworktree ops > merges a parallel review while another review grade fails without changing shared retry state\nReferenceError: resultWithIdentity is not defined\n ❯ tests/src/exec/worktree-ops.integration.test.ts:532:9\n    530|         \"REVIEW-PASS\",\n    531|         \"REVIEW-PASS\",\n    532|         planWithIdentity(\"REVIEW-PASS\", { mode: \"review\" }),\n       |         ^\n    533|         resultWithIdentity(\"REVIEW-PASS\", { mode: \"review\" }),\n    534|       );\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nv1/bdd.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X04G/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X04G/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "failed",
+      "summary": "exit 2: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit\n\ntests/src/exec/worktree-ops.integration.test.ts(533,9): error TS2552: Cannot find name 'resultWithIdentity'. Did you mean 'humanResultWithIdentity'?\ntests/src/exec/worktree-ops.integration.test.ts(547,11): error TS2552: Cannot find name 'resultWithIdentity'. Did you mean 'humanResultWithIdentity'?"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X04G\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-vZEhcg/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-H8XPsy/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-G5HZ90/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-syYkr3/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "review 前の grade に --isolate-pipeline-state を指定し、共有 pipeline 状態への干渉を解消。src/grade/command-run.ts・pipeline-state.ts・run.ts、src/review/grade.ts、対応する unit／integration テスト3ファイル、設計・ガイド3文書、PJR-X04G 個票を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "原因: review 前の grade は主の作業ツリーで動き、agent／apply の失敗時にも runner が共有 pipeline JSON を更新していた。別 run が checkpoint に取り込んだ状態との差が統合を停止させていた。",
+    "判断: 再試行状態を run 保存先の pipeline/ へ分離し、失敗記録・再開判定・成功時の削除を同じ範囲に限定した。正本の評価結果・完了条件詳細の checkpoint と統合前ガード、通常 grade の共有状態は維持した。",
+    "親 runner の型検査・lint・schema・unit／integration テストの合否を result に反映すること。executor では指定に従い二重実行していない。",
+    "並列数の設定は変更していない。親検証と統合後の PJR-JSEY・独立 review 2 件の実 CLI 確認を踏まえ、parallel: 2 を判断する。project 単位の grade lock と同一成果物・正本サイドカーの競合ガードは維持される。",
+    "CHANGELOG 文案（不具合修正）: Schedule の review 前に実行する grade の再試行状態を run ごとに分離し、grade の失敗状態の更新が別 review の統合を止める問題を修正。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-X04G/pjr-x04g-20261113T030434Z-d699901c/executor.attempt-1.log",
+      "bytes": 3260,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-X04G/pjr-x04g-20261113T030434Z-d699901c/parent-validation-attempt-1-test-integration.attempt-1.log",
+      "bytes": 283214,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-X04G/pjr-x04g-20261113T030434Z-d699901c/parent-validation-attempt-1-typecheck.attempt-1.log",
+      "bytes": 435,
+      "truncated": false
+    }
+  ]
+}

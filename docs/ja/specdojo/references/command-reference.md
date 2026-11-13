@@ -873,6 +873,8 @@ specdojo grade validate --target kata --project prj-0001
 
 `grade run` の `--run-id` は必須です。選択文書と完了状況を `execution_path/grade/generated/runs/<run-id>/run.json` へ保存し、同じ引数での再実行では完了済み文書を再適用しません。選択は初回に固定するため、`--changed-only` で実行中に文書が選択から外れても再開できます。対象内容、観点、完了条件、突き合わせ先、引数が変わった場合や保存済み結果が置き換わった場合は、新しい run ID を使います。`--work-dir` で保存先を変更できます。`--limit` は初回の選択件数を制限します。
 
+`--isolate-pipeline-state` は、文書別の再試行状態を共有の `<execution_path>/grade/pipeline/` から run 保存先の `pipeline/` へ分離します。`--work-dir` を併用すればその配下になります。再開判定では共有 state を使わず、連続失敗回数と再試行上限も run 内だけで管理し、共有 state の更新・削除は行いません。同じ引数と run ID なら失敗段から再開し、成功後は自分の state だけを削除します。Schedule の review 前の grade はこのオプションを常に指定し、他 run の checkpoint を失敗状態の更新で変更しません。分離した状態は `grade state --exhausted` や `grade list --incomplete` の共有状態一覧には含めません。正本の評価結果と完了条件詳細の保存先、および project 単位の grade 排他制御は変わりません。
+
 `--by`（別名 `--stage-1-executor`）を省略すると、名簿の有効な review executor を既存の priority 規則で選びます。該当しなければ旧形式の review agent を選びます。別名で指定してもサイドカーの `graded_by` と run 記録には実体名を残します。`--exec-defaults` で起動設定を引き継げます。`--dry-run` は選択と actor を表示し、agent の起動とファイル更新を行いません。同一 project の grade 実行は排他制御します。
 
 ネイティブ経路は `--stages 1` と機械 reporter を扱います。`--reference` と `--embed-documents` は plan に反映し、`--kind` は kata の `rulebook` / `recipe` / `sample` / `template` / `all`（既定）を選びます。失敗した文書と理由は run 記録に残し、終了コード 1 を返します。`--max-stage-failures`（既定 3）に達するまでは未完了段を再開できます。日本語 finding の表示用翻訳は `translation-plan` / `localize` で別途行います。開発用シェルの実験的な 3 段構成は CLI の対象外です。

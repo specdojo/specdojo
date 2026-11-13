@@ -47,6 +47,17 @@ import { taskRecordPaths } from "../../../src/exec/run-records.js";
 import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
 import { projectMergeBlockers } from "../../../src/exec/repo-integration.js";
 import { createPipelineState, writePipelineState } from "../../../src/exec/pipeline-state.js";
+import { ensureReviewGrade, type ReviewGradeInvoke } from "../../../src/review/grade.js";
+import { runGrade } from "../../../src/grade/run.js";
+import {
+  readGradePipelineState,
+  recordGradePipelineStage,
+} from "../../../src/grade/pipeline-state.js";
+import {
+  GRADE_RUN_DOCUMENT,
+  GRADE_RUN_MARKERS,
+  writeGradeRunFixture,
+} from "../../helpers/grade-run-fixture.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -441,6 +452,128 @@ describe("exec worktree ops", () => {
       /Grade sidecar changed after checkpoint/,
     );
     expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
+  });
+
+  it("merges a parallel review while another review grade fails without changing shared retry state", async () => {
+    const fixture = setupRepository();
+    const previousCwd = process.cwd();
+    writeGradeRunFixture(fixture.repo);
+    writeFile(join(fixture.repo, ".gitignore"), "execution/grade/generated/\n");
+    const other = GRADE_RUN_DOCUMENT.replace("example", "other");
+    writeFile(
+      join(fixture.repo, other),
+      readFileSync(join(fixture.repo, GRADE_RUN_DOCUMENT), "utf8").replace(
+        "test:example",
+        "test:other",
+      ),
+    );
+    git(fixture.repo, "add", ".");
+    git(fixture.repo, "commit", "-m", "test: grade inputs");
+    process.chdir(fixture.repo);
+    try {
+      const subject = { target: "kata" as const, project: "test", path: other };
+      // This dirty state used to be captured by the successful review's checkpoint,
+      // then overwritten by the next review's grade failure before the first merged.
+      const shared = recordGradePipelineStage({
+        ...subject,
+        runId: "earlier-job",
+        stage: 1,
+        stageTotal: 1,
+        maxFailures: 3,
+        status: "failed",
+      });
+      const invoke: ReviewGradeInvoke = async (_command, args) => {
+        const value = (flag: string): string => args[args.indexOf(flag) + 1]!;
+        try {
+          await runGrade(
+            {
+              target: "kata",
+              project: value("--project"),
+              paths: [value("--path")],
+              runId: value("--run-id"),
+              isolatePipelineState: args.includes("--isolate-pipeline-state"),
+            },
+            {
+              resolveActor: () => "actual-grader",
+              executePlan: async () => ({
+                actor: "actual-grader",
+                command: "test",
+                execution: {
+                  result: value("--path") === other ? "failure" : "success",
+                  exitCode: value("--path") === other ? 1 : 0,
+                  stdout: GRADE_RUN_MARKERS,
+                  stderr: "",
+                },
+              }),
+            },
+          );
+          return { exitCode: 0, stderr: "" };
+        } catch (error) {
+          return { exitCode: 1, stderr: String(error) };
+        }
+      };
+      const reviewGrade = (taskId: string, subjectPath: string) =>
+        ensureReviewGrade({
+          taskId,
+          subjectPath,
+          target: "kata",
+          projectId: "test",
+          repoRoot: fixture.repo,
+          dryRun: false,
+          invoke,
+        });
+      expect(await reviewGrade("REVIEW-PASS", GRADE_RUN_DOCUMENT)).toMatchObject({
+        action: "executed",
+      });
+      const successful = prepare(
+        fixture,
+        "REVIEW-PASS",
+        "REVIEW-PASS",
+        planWithIdentity("REVIEW-PASS", { mode: "review" }),
+        humanResultWithIdentity("REVIEW-PASS", { mode: "review" }),
+      );
+      // The first review remains active while a second review is prepared and fails grade.
+      const failingReview = (async () => {
+        const outcome = await reviewGrade("REVIEW-FAIL", other);
+        expect(outcome).toMatchObject({
+          action: "failed",
+          detail: expect.stringContaining("agent actual-grader: failure"),
+        });
+        const worktree = prepare(
+          fixture,
+          "REVIEW-FAIL",
+          "REVIEW-FAIL",
+          planWithIdentity("REVIEW-FAIL", { mode: "review" }),
+          humanResultWithIdentity("REVIEW-FAIL", { mode: "review" }),
+        );
+        return { outcome, worktree };
+      })();
+      const successfulReview = (async () => {
+        await failingReview;
+        mergeIntoRoot(fixture, successful, "REVIEW-PASS");
+      })();
+      const [{ outcome, worktree: retained }] = await Promise.all([
+        failingReview,
+        successfulReview,
+      ]);
+      expect(readGradePipelineState(subject)).toEqual(shared);
+      expect(outcome.action).toBe("failed");
+      if (outcome.action !== "failed") throw new Error("Expected a failed grade");
+      expect(
+        readGradePipelineState({
+          ...subject,
+          directory: `execution/grade/generated/runs/${outcome.runId}/pipeline`,
+        }),
+      ).toMatchObject({ stage_failed: 1, consecutive_failures: 1 });
+      expect(existsSync(retained.path)).toBe(true);
+      expect(
+        isExecBranchMergedIntoCurrent({ context: fixture.context, worktree: successful }),
+      ).toBe(true);
+      expect(git(fixture.repo, "diff", "--name-only", "--", "execution/grade/pipeline")).toBe("");
+      expect(git(fixture.repo, "ls-files", "execution/grade/generated")).toBe("");
+    } finally {
+      process.chdir(previousCwd);
+    }
   });
 
   it("keeps an unrelated root grade created after branching while merging the task", () => {

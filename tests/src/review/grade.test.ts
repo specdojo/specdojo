@@ -166,6 +166,7 @@ describe("reviewGradeArgs", () => {
     expect(actual).toEqual([
       "grade",
       "run",
+      "--isolate-pipeline-state",
       "--run-id",
       "review-T-1-20260928T000000Z",
       "--project",

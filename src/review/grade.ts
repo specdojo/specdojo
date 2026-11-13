@@ -135,6 +135,7 @@ export function reviewGradeArgs(opts: {
   const args = [
     "grade",
     "run",
+    "--isolate-pipeline-state",
     "--run-id",
     opts.runId,
     "--project",

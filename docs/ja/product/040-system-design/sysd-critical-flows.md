@@ -120,6 +120,7 @@ flowchart LR
 
 - **永続化点**: claim / block / complete event、task result、agent evidence、統合commit。
 - **整合性・冪等・再実行**: 最新eventをlock内で再読込して重複claimを防ぐ。同じmemberの活動中taskを考慮し、provider別parallel limitを超えない。
+- **review 前の grade**: runner は主の作業ツリーで評価結果を確定してから plan と checkpoint を作る。再試行の到達状況は `grade run --isolate-pipeline-state` により `<execution_path>/grade/generated/runs/<grade-run-id>/pipeline/` へ分離し、失敗時も共有の `grade/pipeline/` を更新しない。正本の評価結果・完了条件詳細は従来どおり checkpoint に含め、統合前の変更検出を維持する。
 - **失敗時**: 一taskの失敗は該当taskをblockし、独立taskを継続する。統合はscheduler lockで直列化し、失敗後にReadyと依存を再計算する。
 - **観測性**: round、worker slot、task、member、provider、claim時刻、終了種別、統合順、Ready再計算結果を記録する。
 - **参照**: `cdfd-task-execution`、`sysd-cross-cutting-policy`の`scp-EXE-*` / `scp-SEL-001`、exec統合テスト。
