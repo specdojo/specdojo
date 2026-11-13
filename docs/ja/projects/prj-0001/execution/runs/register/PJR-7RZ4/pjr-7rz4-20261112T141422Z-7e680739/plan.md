@@ -74,4 +74,9 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-13）
+
+- 親の検証の lint-md が、`docs/ja/specdojo/guides/project-move-guide.md` の番号付きの箇条書きで MD029（ol-prefix、90・98・104・142・148 行など）に落ちた。手順の間にコードブロックや段落を挟むと番号が続かないため、手順を見出し（`###`）に分けるか、コードブロックを箇条書きの中に字下げして入れるなど、`npm run lint:md` が通る形に直す。
+- test-unit の失敗は、develop 側の strategy の不具合（`0a9b37428` で修正済み）と負荷による時間切れで、このガイドの変更とは関係しない。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`

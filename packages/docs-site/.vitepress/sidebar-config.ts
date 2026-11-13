@@ -610,6 +610,7 @@ export const specdojoSidebarItems = [
             guide("exec worktree運用", "exec-worktree-guide"),
             guide("ブランチワークフロー", "branch-workflow-guide"),
           ]),
+          guide("プロジェクト移行", "project-move-guide"),
         ],
         false,
       ),

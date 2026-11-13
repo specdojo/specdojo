@@ -86,6 +86,8 @@ specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --p
 
 parallel 実行中でも、claim、checkpoint、merge、complete、`exec refresh` は runner が直列化します。agent プロセスだけを並列に走らせ、root 側の状態更新や Ready 再計算は1件ずつ処理します。
 
+review plan の生成前に runner が実行する grade は、再試行状態を `<execution_path>/grade/generated/runs/<grade-run-id>/pipeline/` へ run ごとに保存します。grade の agent や応答の適用が失敗しても共有の `grade/pipeline/` は変えず、別 review の統合確認を妨げません。失敗内容は review plan に渡され、評価結果の鮮度に応じた review 判定に使います。正本の評価結果・完了条件詳細の checkpoint と統合前の変更検出は引き続き行います。
+
 stage 済み変更による停止では、表示された worktree で対象を commit するか、各パスに `git restore --staged -- <path>` を実行してから `exec resume` します。後者はファイルの内容を残して stage だけを解除します。runner は別タスクや手作業の変更を自動で commit・unstage しません。
 
 agent が成功した後、runner は commit / merge / worktree 削除へ進む前に、最新の event log から task state を再構築し、`exec complete` と同じ完了可否を検証します。task が `doing` でない場合や、実行 actor が claim actor と一致しない場合は統合を中止し、成果物を未統合のまま worktree に保持します。これにより、`exec resume --by` などで別 actor を指定しても、Schedule が `doing` のまま成果物だけが統合される状態を防ぎます。

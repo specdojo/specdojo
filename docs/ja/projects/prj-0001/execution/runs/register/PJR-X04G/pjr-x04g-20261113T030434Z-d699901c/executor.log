@@ -1,0 +1,107 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "未定義 helper 2 箇所を既存の humanResultWithIdentity に修正し、個票を更新しました。sandbox 内の検査は合格。型検査と統合テストの再実行は親 runner に委ねます。",
+  "handoff": [
+    "再試行状態の保存先を run ごとに分離する判断を維持した。通常 grade の共有再試行契約、正本 sidecar の checkpoint、統合前ガード、project lock は維持する。",
+    "親 runner の typecheck と test-integration で、修正後の型検査と回帰テスト「merges a parallel review while another review grade fails without changing shared retry state」の合格を確認する。executor では親検証を二重実行していない。",
+    "統合後は orchestrator 側で PJR-JSEY と独立 review 2 件の実 CLI 確認を行い、その結果を踏まえて `rtn-exec-cycle` の `parallel: 2` を判断する。project lock と同一成果物の競合制約は残る。設定は変更していない。",
+    "CHANGELOG 文案（不具合修正）: Schedule の review 前に実行する grade の再試行状態を run ごとに分離し、grade の失敗状態の更新が別 review の統合を止める問題を修正。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/040-system-design/sysd-critical-flows.md docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/specdojo/references/command-reference.md src/grade/command-run.ts src/grade/pipeline-state.ts src/grade/run.ts src/review/grade.ts tests/src/exec/worktree-ops.integration.test.ts tests/src/grade/run.test.ts tests/src/review/grade.test.ts",
+      "status": "passed",
+      "summary": "対象11ファイルを整形確認。個票の最終追記後も再整形済み。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "終了コード0。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。既存の未作成文書・re-export 参照について警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿検証と派生ビュー生成が終了コード0。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md",
+      "status": "passed",
+      "summary": "1ファイル、検出0件。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor 成果物に対象 YAML 変更なし。",
+      "reason": "変更した成果物は Markdown と TypeScript。既存のイベント YAML 差分は runner 管理であり、本 executor は編集していない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x04g-parallel-review-grade-sidecar-isolation.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "src/grade/command-run.ts",
+      "status": "changed",
+      "path": "src/grade/command-run.ts"
+    },
+    {
+      "target": "src/grade/pipeline-state.ts",
+      "status": "changed",
+      "path": "src/grade/pipeline-state.ts"
+    },
+    {
+      "target": "src/grade/run.ts",
+      "status": "changed",
+      "path": "src/grade/run.ts"
+    },
+    {
+      "target": "src/review/grade.ts",
+      "status": "changed",
+      "path": "src/review/grade.ts"
+    },
+    {
+      "target": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/worktree-ops.integration.test.ts"
+    },
+    {
+      "target": "tests/src/grade/run.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/run.test.ts"
+    },
+    {
+      "target": "tests/src/review/grade.test.ts",
+      "status": "changed",
+      "path": "tests/src/review/grade.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

@@ -191,6 +191,7 @@ describe("native grade run", () => {
       GRADE_RUN_DOCUMENT,
       "--run-id",
       "cli-options",
+      "--isolate-pipeline-state",
       "--by",
       "grader-alias",
       "--exec-defaults",
@@ -199,6 +200,7 @@ describe("native grade run", () => {
     expect(resolveActor).toHaveBeenCalledWith(
       expect.objectContaining({
         by: "grader-alias",
+        isolatePipelineState: true,
         execDefaultsPath: "custom-defaults.yaml",
       }),
     );
@@ -319,6 +321,61 @@ describe("native grade run", () => {
     expect(
       readGradePipelineState({ target: "kata", project: "test", path: GRADE_RUN_DOCUMENT }),
     ).toMatchObject({ stage_failed: 1 });
+  });
+
+  it("isolates retry limits and completion from shared and other run state", async () => {
+    const subject = { target: "kata" as const, project: "test", path: GRADE_RUN_DOCUMENT };
+    const shared = recordGradePipelineStage({
+      ...subject,
+      runId: "shared-failure",
+      stage: 1,
+      stageTotal: 1,
+      maxFailures: 1,
+      status: "failed",
+    });
+    const request = {
+      ...options,
+      isolatePipelineState: true,
+      workDir: "execution/grade/generated/custom-review",
+      maxStageFailures: 2,
+    };
+    const directory = `${request.workDir}/pipeline`;
+    executePlan.mockRejectedValueOnce(new Error("agent failed"));
+    await expect(grade(request)).rejects.toThrow(/agent failed/);
+    expect(readGradePipelineState({ ...subject, directory })).toMatchObject({
+      stage_failed: 1,
+      consecutive_failures: 1,
+    });
+    executePlan.mockResolvedValueOnce({
+      actor: "actual-grader",
+      command: "test",
+      execution: { result: "success", exitCode: 0, stdout: "invalid analysis", stderr: "" },
+    });
+    await expect(grade(request)).rejects.toThrow(/grade run incomplete/);
+    expect(readGradePipelineState({ ...subject, directory })).toMatchObject({
+      consecutive_failures: 2,
+    });
+    await expect(grade(request)).rejects.toThrow(/stage failure limit reached/);
+    expect(executePlan).toHaveBeenCalledTimes(2);
+    // A new review run starts independently, even for the same document.
+    await grade({ ...options, runId: "another-review", isolatePipelineState: true });
+    expect(readGradePipelineState(subject)).toEqual(shared);
+    expect(readGradePipelineState({ ...subject, directory })?.consecutive_failures).toBe(2);
+    expect(executePlan).toHaveBeenCalledTimes(3);
+  });
+
+  it("removes only its private failure state when an isolated run resumes successfully", async () => {
+    const request = { ...options, isolatePipelineState: true };
+    const subject = { target: "kata" as const, project: "test", path: GRADE_RUN_DOCUMENT };
+    const directory = `execution/grade/generated/runs/${request.runId}/pipeline`;
+    executePlan.mockRejectedValueOnce(new Error("interrupted"));
+    await expect(grade(request)).rejects.toThrow(/interrupted/);
+    expect(readGradePipelineState(subject)).toBeUndefined();
+    expect(readGradePipelineState({ ...subject, directory })?.stage_failed).toBe(1);
+    await grade(request);
+    expect(readGradePipelineState({ ...subject, directory })).toBeUndefined();
+    await grade(request);
+    expect(executePlan).toHaveBeenCalledTimes(2);
   });
 
   it("rejects work directories outside the repository", async () => {
