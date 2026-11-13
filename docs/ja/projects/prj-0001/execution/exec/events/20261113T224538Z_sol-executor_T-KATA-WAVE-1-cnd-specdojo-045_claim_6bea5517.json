@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T22:45:38Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-cnd-specdojo-045",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
