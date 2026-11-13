@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040",
+  "run_id": "T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040-20261112T234651Z-d630e725",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-12T23:49:45.264Z",
+    "completed_at": "2026-11-12T23:55:00.883Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "...ssumptions-constraints-dependencies-rulebook.md | 103 ++++++++++-----------\n 1 file changed, 47 insertions(+), 56 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md",
+      "status": "passed",
+      "summary": "対象 rulebook を整形。最終実行では変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --input-type=module",
+      "status": "passed",
+      "summary": "標準入力の確認スクリプトで見出し連番、本文要件、記述ガイド全5章の良否例、rulebook/template/sample の依存関係表の列名一致、宣言先ファイルの存在を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外。",
+      "reason": "executor が変更したファイルは Markdown のみで、YAML ファイルの変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は対象外。",
+      "reason": "変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は対象外。",
+      "reason": "executor は登録簿の履歴ファイルおよび既存 plan/result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed i\n… output omitted …\n-PROJECT-KATA-prj-assumptions-constraints-dependencies-040/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4502 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4502 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.samp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\ns/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 785\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m116 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 55\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/sr\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "対象 rulebook の見直しを完了。成果物本体・result・grade サイドカーは変更せず、recipe 等の後続修正を申し送る。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイルは docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md のみ。reporter は実施内容・変更ファイル・進め方と実践の型の適用へ本報告を反映すること。",
+    "判断根拠: rulebook-authoring-standard、document-metadata-standard、docs-structure-guide、共通レビュー観点の vp-qe-verifiability・vp-qe-omissions-consistency・vp-qe-kata-conformance・vp-ux-language-consistency・vp-arc-conciseness、ryu-guide、PJR-2GD6、対象成果物・スコープ・憲章、宣言済み recipe/sample/template と各 grade result、T-LAUNCH-prj-assumptions-constraints-dependencies-090 の review result を実読した。成果物および recipe/sample/template の grade ハッシュは現在のファイルと一致。成果物側 finding に `cause` はなく、Kata 原因の finding および source=condense の展開記録は plan にない。",
+    "F001/F002: 種別別接頭辞、採番、一意性、変更・並べ替え時の不変性、廃止 ID の再利用禁止、分類変更時の新旧対応を追加。F005: 番号参照を章タイトル参照へ変更。F006/F007/F008: 依存関係表を template/sample と同じ7列に統一し、受領・成立条件には成立判定と確認方法の両方が必要と明記した。",
+    "F003/F004: rulebook では端末を含む継続提供基盤を依存関係とする分類を維持し、良い例・悪い例を追加した。ただし recipe の「前提条件」に端末可用性を前提とする例が残るため、Kata 間の矛盾は未解消。本フェーズは rulebook のみを編集し recipe/template は次の作業案を残す指定のため、後続 recipe-maintenance で当該例を依存関係へ移し、前提の例を運用上の成立条件へ置換すること。単一店舗運用を前提とする良い例も、スコープ境界の再掲を避ける例へ修正し、仕上げチェックの参照先を rulebook の「本文要件」に合わせること。",
+    "recipe は分類・具体化・レビュー手順の支援に、template は必須5章と表の記入漏れ防止に必要と判断し、frontmatter の完全 ID 宣言を維持した。後続 template-maintenance では ID プレースホルダに ACD-A/ACD-C/ACD-D の採番指示、受領・成立条件に確認者・証跡・時期の指示を補い、番号による章参照を章タイトルへ改めること。",
+    "後続 sample-maintenance では docs/ja/specdojo/samples/clis-sample.md 程度の完成例として、依存の成立確認者・証跡・時期、未決部分の扱い、変化から課題・リスク・変更要求・決定記録への接続例を充実させること。完成例は宣言済み sample に置き、rulebook にサンプル章は設けない。",
+    "上位文書の再掲禁止、継続監視を補う場合の例外、人間の最終判断、公開情報の制約、構造整合の確認責任は維持した。成果物 grade に公開制約や責任分担の不足があることは規定過剰の根拠にならないため緩和せず、委譲先の条件の実在確認、部分的な決定と未決部分の分離、受入証跡への参照、PM による計画・Schedule・PJR への接続を明確化した。共通メタ情報の値・構文・構造は標準/schema 参照へ整理し、重複した用語説明と図の説明文を削除した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-040-20261112T234651Z-d630e725/executor.log",
+      "bytes": 5226,
+      "truncated": false
+    }
+  ]
+}
