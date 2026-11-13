@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-PROJECT-KATA-prj-comparison-of-alternatives-040",
+  "run_id": "T-PROJECT-KATA-prj-comparison-of-alternatives-040-20261113T000615Z-a8b4cb86",
+  "updated_at": "2026-11-13T00:22:17.596Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-13T00:09:00.158Z",
+      "completed_at": "2026-11-13T00:13:42.469Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-comparison-of-alternatives-040/T-PROJECT-KATA-prj-comparison-of-alternatives-040-20261113T000615Z-a8b4cb86/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-13T00:18:41.866Z",
+      "completed_at": "2026-11-13T00:22:14.884Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-comparison-of-alternatives-040/T-PROJECT-KATA-prj-comparison-of-alternatives-040-20261113T000615Z-a8b4cb86/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-13T00:22:17.596Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-comparison-of-alternatives-040/T-PROJECT-KATA-prj-comparison-of-alternatives-040-20261113T000615Z-a8b4cb86/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-comparison-of-alternatives-040/T-PROJECT-KATA-prj-comparison-of-alternatives-040-20261113T000615Z-a8b4cb86/result.md"
+  }
+}
