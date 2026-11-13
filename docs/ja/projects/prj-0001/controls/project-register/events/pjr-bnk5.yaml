@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b1191d751b7d4c819da6f6065a45f354
+  ts: "2026-11-13T13:11:53Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が進め方を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 用語集の型（gl）を、確定した用語集 6 件を手本に磨き込む
+    - field: description
+      from: ""
+      to: 確定した用語集 6 件と確定のレビューで決めた決まりを、gl-rulebook と gl-sample に反映し、grade で pass にする
+    - field: input
+      from: ""
+      to: '["用語集 6 件（gl-common など）を 2026-11-13 に確定した。PJR-960C に足すとゲートで 7 種類の確定が止まるため、別の todo にした（orchestrator の判断、indie が進め方を承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:gl-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-960C","PJR-6XQ4","PJR-2RHB"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
