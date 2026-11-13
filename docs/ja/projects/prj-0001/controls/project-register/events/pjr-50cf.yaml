@@ -35,3 +35,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_cf164771ef364a05911dd3bfb1598a60
+  ts: "2026-11-13T21:50:47Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼で、再開のときの同期の衝突を追記
+  changes:
+    - field: input
+      from: '["2026-11-12〜13 の型の整備と夜間の実行で、orchestrator が手作業やシェルスクリプトで補った"]'
+      to: '["2026-11-14 の kata-wave-1 でも起きた。develop の直しを再開したタスクに入れるため orchestrator が worktree の branch へ手で develop を merge したが、executor が同じファイル（sidebar-config.ts）を直していると merge が止まり、黙って失敗していた。再開のときに統合先と同期し、ぶつかったら知らせる必要がある"]'
+  previous_event_id: reg_915380f7ff374498abbe5946eba95d67

@@ -20,7 +20,7 @@ specdojo:
 
 ## 2. 入力
 
-- 2026-11-12〜13 の型の整備と夜間の実行で、orchestrator が手作業やシェルスクリプトで補った
+- 2026-11-14 の kata-wave-1 でも起きた。develop の直しを再開したタスクに入れるため orchestrator が worktree の branch へ手で develop を merge したが、executor が同じファイル（sidebar-config.ts）を直していると merge が止まり、黙って失敗していた。再開のときに統合先と同期し、ぶつかったら知らせる必要がある
 
 ## 3. 影響範囲
 
