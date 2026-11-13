@@ -1,29 +1,67 @@
-# specdojo-schema: none reason=not-implemented
-
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/esil.schema.yaml
 id: specdojo:ifx-index-sample
 type: api
-title: 外部システムIF一覧(main)
+title: 駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧
 status: draft
 rulebook: specdojo:ifx-index-rulebook
 supersedes: []
 
-interfaces:
-  - name: 発注データ送信
-    source: 受発注管理（コンテナ）
-    target: 仕入先システム
-    direction: source_to_target
-    kind: ファイル
-    format: CSV
-    timing: 発注確定時
-    error_handling: 異常時は再送・管理者通知
-    spec_ref: ifx-file-orders
+# _ASSUMPTION_: 単一店舗の学習用 CLI について、商品照会・売上登録・レシート印字を整理する。
+# 通常利用のタブレット画面とは別の操作例であり、実案件で採用済みの仕様を表さない。
+# 仕入先システム連携、本格会計、EC、キャッシュレス決済、オフライン同期は対象外。
+# 本部 API を用いる仮定は [[specdojo:clis-sample|販売管理 CLI 仕様]] と共有する。
+# 本部の二つの詳細仕様は未同梱。spec_ref は TBD とし、参照名をコメントで区別する。
 
-  - name: 決済依頼/結果
-    source: 決済（コンテナ）
-    target: 決済サービス
+interfaces:
+  # 商品コードを渡し、商品名・販売単価・税区分を得る。商品マスタ自体は更新しない。
+  # 売上登録と同じ本部が相手でも、成功後の状態と失敗の影響が異なるため分ける。
+  - name: 本部商品マスタの照会
+    source: 店舗端末の販売管理 CLI
+    target: 本部の商品マスタ API
     direction: bidirectional
     kind: API
     format: JSON
-    timing: 決済時
-    error_handling: 失敗時はリトライ/保留
-    spec_ref: ifx-api-payment
+    timing: 店番担当が購入明細へ商品を追加する時、明細を保存する前
+    error_handling: >-
+      商品未登録ならコードを訂正する。接続不能・時間切れ・認証拒否なら明細を追加せず停止する。
+      店番担当が接続を、開発担当が認証・権限を確認し、復旧後に同じ取引へ追加する。
+    spec_ref: TBD
+    # _TODO_: 開発担当が `ifx-api-kinuya-products.yaml` に接続・認証と応答の契約を定義する。
+    # 技術メンターと同行レビュー担当が、商品未登録と通信失敗で明細が増えないことを確認して接続する。
+
+  # 同一取引の販売実績を渡し、受付結果を受け取る。商品照会の成功は会計成功を意味しない。
+  - name: 本部への売上登録
+    source: 店舗端末の販売管理 CLI
+    target: 本部の売上登録 API
+    direction: bidirectional
+    kind: API
+    format: JSON
+    timing: 店番担当が購入明細と預かり金を確認し、会計確定を要求した時
+    error_handling: >-
+      接続不能・時間切れ・拒否時は送信内容と受付状態を保持し、結果不明を未登録と断定しない。
+      店主代表と開発担当が本部受付とローカル記録を照合し、確認できなければ保留する。
+      会計・取消を繰り返さず、回復条件は詳細契約で確認する。
+    spec_ref: TBD
+    # _TODO_: 開発担当と技術メンターが `ifx-api-kinuya-sales.yaml` に受付照会・重複排除・
+    # 保存失敗後の回復契約を定義する。店主代表が保留・確定の判断を確認し、
+    # 同行レビュー担当が受付済み・未受付・結果不明の期待結果を確認するまで受入を保留する。
+
+  # 保存済みレシートを渡し、印字結果を受け取る。売上の再登録は委ねない。
+  - name: 確定済みレシートの印字
+    source: 店舗端末の販売管理 CLI
+    target: receipt-print CLI と店舗プリンタ
+    direction: bidirectional
+    kind: コマンド
+    # 入力テキストと結果 JSON・診断が混在する。形式・構造の詳細は印刷契約が正本。
+    format: その他
+    timing: 会計確定後、保存済みレシートを印刷する時。再印刷は紙面確認後に手動で要求した時
+    error_handling: >-
+      印字失敗・結果不明なら会計を維持し、未印字の警告と控えを残す。
+      自動再試行の可否は詳細仕様の送信前失敗の識別条件に従う。
+      結果不明なら店番担当が紙面を確認し、必要時は保存済みレシートだけを再印刷する。
+    spec_ref: specdojo:ifx-cmd-sample
+    # 詳細契約: [[specdojo:ifx-cmd-sample|レシート印刷コマンド連携仕様]]。
+    # USB 直結・認証不要の仮定、OS 権限、起動制約と失敗分類は同契約に委譲する。
+
+# スコープ・方式の変更時は技術メンターが詳細契約との対応を整理し、開発担当と
+# 同行レビュー担当へ実装・結合テスト対象の変更を渡す。業務上の採否は店主代表が判断する。

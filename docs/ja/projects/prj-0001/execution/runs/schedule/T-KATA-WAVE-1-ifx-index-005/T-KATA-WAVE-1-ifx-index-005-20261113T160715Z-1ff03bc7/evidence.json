@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-ifx-index-005",
+  "run_id": "T-KATA-WAVE-1-ifx-index-005-20261113T160715Z-1ff03bc7",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T16:09:13.114Z",
+    "completed_at": "2026-11-13T16:19:54.688Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/esil.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/ifx-index-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/ifx-index-template.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md | 123 ++++++++++++++++-------\n docs/ja/specdojo/samples/ifx-index-sample.yaml   |  74 ++++++++++----\n docs/specdojo/schemas/v1/esil.schema.yaml        |  10 +-\n 3 files changed, 146 insertions(+), 61 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/020-external-interface-specs/ifx-index.yaml docs/ja/specdojo/rulebooks/ifx-index-rulebook.md docs/ja/specdojo/recipes/ifx-index-recipe.md docs/ja/specdojo/samples/ifx-index-sample.yaml docs/ja/specdojo/templates/ifx-index-template.yaml docs/specdojo/schemas/v1/esil.schema.yaml",
+      "status": "passed",
+      "summary": "変更した6ファイルの整形チェック成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/esil.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-index.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "status": "passed",
+      "summary": "代表一覧と sample が schema に適合。"
+    },
+    {
+      "source": "executor",
+      "command": "node --input-type=module",
+      "status": "passed",
+      "summary": "標準入力の確認スクリプトで記入済み template、旧形式・修飾 ID、参照、不正入力拒否、連携名の一意性、詳細仕様パスの存在を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。対象外の未作成文書・re-export 参照に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票および既存の plan/result を変更していないため。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-005/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/\n… output omitted …\ner-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-005/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-005/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4584 file(s), 141 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 107 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4584 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-005\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-yUMyo8/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-akaJlk/T-T-doc-010\nSkipping worktree dependencies: no tracked package-l\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-005\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-13T18:09:46.772Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-13T\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "代表一覧と実践の型を整備しました。schema・整形・カタログ検査は成功し、未決の設計判断は担当付きで残しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter 向け判断記録: 代表 `docs/ja/product/020-external-interface-specs/ifx-index.yaml` は未存在のため新規作成。AI provider CLI、ローカル Git、GitHub の3連携を整理した。失敗影響が異なる Git/GitHub は分割し、接続・認証・公開条件を推測で確定せず設計仮定として明示した。`based_on` は空配列を維持した。",
+    "既存 `docs/ja/specdojo/rulebooks/ifx-index-rulebook.md` は項目表中心で判断基準が不足していたため再構成。標準章立て、階層別連番、記入領域ごとの判断基準・良い例・悪い例を整備した。完成例の章は設けず、値域・構文・型は schema へ委譲した。",
+    "recipe は連携単位・境界・結果不明時の扱いが規約だけでは一意にならず、書き手による品質差が生じるため必要と判断。`docs/ja/specdojo/recipes/ifx-index-recipe.md` を作成し、既存の `not-needed` 宣言を完全 ID へ更新した。",
+    "template は同じキー構成から開始する系統のため必要と判断。`docs/ja/specdojo/templates/ifx-index-template.yaml` を作成し、完全 ID を宣言した。自身のメタ情報と `metadata_template` を分離し、固有データを含めていない。",
+    "既存 `docs/ja/specdojo/samples/ifx-index-sample.yaml` は汎用的な発注・決済の2例から、共通文脈の駄菓子屋きぬやへ再構成した。商品照会・売上登録・印字の3連携について、目的・発生条件・異常時判断・詳細参照を記載。未同梱契約は `TBD` と担当付き確認事項で区別した。",
+    "形の手本: ready の `tsd-index-rulebook.md`、`ifx-cmd-recipe.md`、`ifx-cmd-sample.yaml`、`ifx-cmd-template.yaml` を参照。指定された `clis-sample.md` は厚さと共通文脈を参照した。同種の ready な代表一覧は見つからなかった。固有の provider 一覧・起動引数・数値は複写していない。",
+    "`docs/specdojo/schemas/v1/esil.schema.yaml` は旧 ID 制約が修飾 ID と不整合だったため、一覧 ID・文書参照・詳細参照の制約を最小限更新した。旧 `esil-` 形式を維持し、未知キー・不正な方式・空一覧の拒否も確認した。カタログの既存 rulebook 宣言は正しいため維持した。",
+    "仕上げ4操作は1巡実施。旧項目表の重複を schema 参照へ統合し、代表末尾の重複説明を削除。Git/GitHub と記述ガイドを判断単位で分割し、用語・方向・詳細参照を揃えた。構造・必須性・禁止事項は rulebook を正とした。Web 出典は使用していない。",
+    "後続判断: ARC/DEV が Git・GitHub の詳細契約、権限境界、成功・結果不明の判定とリモート転送方式を整理する。BA/PO は利用場面、採否・公開条件を確認する。本タスクでは業務判断を確定していない。",
+    "executor 指示に従い result は編集していない。上記の変更・判断・仕上げ記録を reporter が result へ反映する。親 runner 指定の lint・schema 全件検査・型検査・単体／統合テストは実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-005/T-KATA-WAVE-1-ifx-index-005-20261113T160715Z-1ff03bc7/executor.log",
+      "bytes": 4961,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-005/T-KATA-WAVE-1-ifx-index-005-20261113T160715Z-1ff03bc7/parent-validation-attempt-1-test-unit.log",
+      "bytes": 7979,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-005/T-KATA-WAVE-1-ifx-index-005-20261113T160715Z-1ff03bc7/parent-validation-attempt-2-test-unit.log",
+      "bytes": 7719,
+      "truncated": false
+    }
+  ]
+}
