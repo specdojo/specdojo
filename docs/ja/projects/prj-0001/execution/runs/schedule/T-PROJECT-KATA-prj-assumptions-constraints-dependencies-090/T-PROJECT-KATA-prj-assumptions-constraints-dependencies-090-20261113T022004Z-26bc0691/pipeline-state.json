@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090",
   "run_id": "T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090-20261113T022004Z-26bc0691",
-  "updated_at": "2026-11-13T02:35:10.881Z",
+  "updated_at": "2026-11-13T02:35:22.383Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090/T-PROJECT-KATA-prj-assumptions-constraints-dependencies-090-20261113T022004Z-26bc0691/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-review-executor",
       "attempts": 1,
       "started_at": "2026-11-13T02:35:10.881Z",
-      "completed_at": null,
+      "completed_at": "2026-11-13T02:35:22.383Z",
       "artifact_ref": null
     }
   },
