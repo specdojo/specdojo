@@ -5,36 +5,36 @@ path: docs/ja/specdojo/rulebooks/gl-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-10-31T20:42:24.546Z"
-graded_by: flash-high-executor
-content_hash: 9a3ada383ead55674776ef6a1930793a4bd6c58407aeccc3061dfc31b922156e
+score: 90
+graded_at: "2026-11-13T13:54:22.536Z"
+graded_by: sol-review-executor
+content_hash: dae2d5f874ef055cbcd57b57802aa427b134826aa753e5e28ca99cc659b170c3
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 92
   business:
-    score: 100
+    score: 88
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -45,20 +45,20 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
     level: 4
     score: 100
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -66,20 +66,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
-  vp-qe-kata-conformance:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -87,11 +87,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -101,13 +101,127 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 28
-    anchor: ""
-    message: 用語集IDの形式を ^gl-[a-z0-9-]+$ と定めているが、サンプル（gl-sample）では specdojo:gl-sample のようにコロンを含む形式が使われており矛盾している。
-    message_ja: 用語集IDの形式を ^gl-[a-z0-9-]+$ と定めているが、サンプル（gl-sample）では specdojo:gl-sample のようにコロンを含む形式が使われており矛盾している。
+    rule: vp-po-decision-readiness
+    line: 72
+    anchor: "| `status`       | 用語の採用状態。`official` / `deprecated` / `candidate` | 任意 |"
+    message: >-
+      Define who confirms a candidate term, what evidence supports promotion to official, and how unresolved definitions
+      are returned for clarification; listing statuses alone does not establish the glossary-specific approval decision.
+    message_ja: >-
+      Define who confirms a candidate term, what evidence supports promotion to official, and how unresolved definitions
+      are returned for clarification; listing statuses alone does not establish the glossary-specific approval decision.
+  - id: F002
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 116
+    anchor: "- 未確定の内容には共通ラベル（`_TODO_` / `_UNDECIDED_` / `_ASSUMPTION_`）を使い、確定時には解消する。"
+    message: >-
+      Add the required handoff for persistent unresolved definitions, assumptions, and terminology decisions to the
+      appropriate PJR issue, risk, change, or decision record, identifying the responsible Role code and destination
+      record.
+    message_ja: >-
+      Add the required handoff for persistent unresolved definitions, assumptions, and terminology decisions to the
+      appropriate PJR issue, risk, change, or decision record, identifying the responsible Role code and destination
+      record.
+  - id: F003
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 131
+    anchor: >-
+      意味の変更・廃止では、共通メタ情報標準の「文書の改訂・廃止とライフサイクル変更管理」に従い、BA が用語 ID を参照するデータ辞書・業務ルール・画面や CLI の用語を洗い出し、DEV が実装、QE
+      がテスト・受入条件の追従を確認する。廃止・確定は PO が判断し、PM が移行作業を管理する。schema にない変更管理項目は YAML に増やさず、個票などの変更記録へ残す。
+    message: >-
+      Identify the Role codes responsible for collecting and maintaining terms, confirming business meanings with domain
+      stakeholders, and reviewing affected technical references; project-level maintenance alone does not identify who
+      must participate in agreement.
+    message_ja: >-
+      Identify the Role codes responsible for collecting and maintaining terms, confirming business meanings with domain
+      stakeholders, and reviewing affected technical references; project-level maintenance alone does not identify who
+      must participate in agreement.
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 75
+    anchor: 必須は `id`・`term`・`definition` の 3 項目とする。任意項目は説明に必要なものだけ記載し、用語の `status` とルートの文書成熟度を混同しない。
+    message: >-
+      Remove the sentence restating that id, term, and definition are required, because the table's required-column
+      markers already provide that information; retain the guidance on optional fields and the distinction between
+      document maturity and term status.
+    message_ja: >-
+      Remove the sentence restating that id, term, and definition are required, because the table's required-column
+      markers already provide that information; retain the guidance on optional fields and the distinction between
+      document maturity and term status.
+  - id: F005
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 131
+    anchor: >-
+      意味の変更・廃止では、共通メタ情報標準の「文書の改訂・廃止とライフサイクル変更管理」に従い、BA が用語 ID を参照するデータ辞書・業務ルール・画面や CLI の用語を洗い出し、DEV が実装、QE
+      がテスト・受入条件の追従を確認する。廃止・確定は PO が判断し、PM が移行作業を管理する。schema にない変更管理項目は YAML に増やさず、個票などの変更記録へ残す。
+    message: >-
+      Define the follow-up changes required when a term ID, meaning, or lifecycle state changes, including BDD and BR
+      references, affected implementation and tests, and generated glossary pages, with responsible Role codes; the
+      authoring standard requires glossary-specific impact tracking.
+    message_ja: >-
+      Define the follow-up changes required when a term ID, meaning, or lifecycle state changes, including BDD and BR
+      references, affected implementation and tests, and generated glossary pages, with responsible Role codes; the
+      authoring standard requires glossary-specific impact tracking.
+  - id: F006
+    severity: minor
+    rule: vp-dev-testability
+    line: 127
+    anchor: "- `validate:schema` はファイル内の用語 ID の重複と参照先の存在を検証する。用語集をまたぐ ID の一意性と同じ概念の重複定義は、別途横断で照合する。"
+    message: >-
+      Provide executable schema and glossary-reference validation commands, explain the required YAML schema modeline or
+      explicit schema selection, and state expected results; also clarify that the glossary-reference validator checks
+      references within each glossary and does not verify downstream BDD or BR references.
+    message_ja: >-
+      Provide executable schema and glossary-reference validation commands, explain the required YAML schema modeline or
+      explicit schema selection, and state expected results; also clarify that the glossary-reference validator checks
+      references within each glossary and does not verify downstream BDD or BR references.
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 11
+    anchor: "- 領域別に分ける場合は、横断の用語を `gl-common`（対象名を付ける場合は `gl-<対象>-common`）へ集め、同じ概念を複数の用語集に定義しない。"
+    message: >-
+      Define an explicit translation exception to the prohibition on representing the same concept in multiple
+      glossaries, and specify translated-term ID handling; separate translation files are required at line 25, while
+      line 32 requires term IDs to be unique across project glossaries.
+    message_ja: >-
+      Define an explicit translation exception to the prohibition on representing the same concept in multiple
+      glossaries, and specify translated-term ID handling; separate translation files are required at line 25, while
+      line 32 requires term IDs to be unique across project glossaries.
+  - id: F008
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 47
+    anchor: "`status` は schema 上は省略可能だが、共通メタ情報の規約に従って記載する。`ready` への昇格は人間が行う。"
+    message: >-
+      Define the ready gate for a glossary, including successful structural and reference checks, review of business
+      definitions, disposition of unresolved labels and candidate terms, and human PO confirmation; the status
+      enumeration alone does not establish release prerequisites.
+    message_ja: >-
+      Define the ready gate for a glossary, including successful structural and reference checks, review of business
+      definitions, disposition of unresolved labels and candidate terms, and human PO confirmation; the status
+      enumeration alone does not establish release prerequisites.
+  - id: F009
+    severity: minor
+    rule: vp-ops-operability
+    line: 131
+    anchor: >-
+      意味の変更・廃止では、共通メタ情報標準の「文書の改訂・廃止とライフサイクル変更管理」に従い、BA が用語 ID を参照するデータ辞書・業務ルール・画面や CLI の用語を洗い出し、DEV が実装、QE
+      がテスト・受入条件の追従を確認する。廃止・確定は PO が判断し、PM が移行作業を管理する。schema にない変更管理項目は YAML に増やさず、個票などの変更記録へ残す。
+    message: >-
+      Add a glossary maintenance procedure covering change intake, term deprecation or replacement without ID reuse,
+      validation, regeneration of generated display pages from YAML, and responsible Role codes; the current maintenance
+      statement does not explain how to perform an update.
+    message_ja: >-
+      Add a glossary maintenance procedure covering change intake, term deprecation or replacement without ID reuse,
+      validation, regeneration of generated display pages from YAML, and responsible Role codes; the current maintenance
+      statement does not explain how to perform an update.

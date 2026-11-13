@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/samples/gl-sample.yaml",
+  "content_hash": "74dd149a72fd5dbadb91c24a1ce73385c913b49772a0c73a92cfca8ead4af31b",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "kata-gl-20261113b",
+  "updated_at": "2026-11-13T13:54:26.514Z"
+}
