@@ -72,4 +72,9 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-13）
+
+- 親の検証の typecheck が、`tests/src/exec/worktree-ops.integration.test.ts` の 533・547 行で `Cannot find name 'resultWithIdentity'`（TS2552）に落ちた。存在する helper（`humanResultWithIdentity` など）を使うか、必要な helper を定義して直す。
+- 同じファイルの追加したテスト「merges a parallel review while another review grade fails without changing shared retry state」が、test-integration で落ちた。型の誤りを直した後に、このテストが意図どおり通ることを確かめる。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
