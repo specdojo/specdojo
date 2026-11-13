@@ -808,7 +808,7 @@ members:
       は更新しない。最終判断は行わない。effort は exec-defaults の command template（proficiency expert 相当）で指定する。
   - nickname: argon-executor
     disabled: false
-    priority: 9
+    priority: 4
     display_name: Antigravity Argon Executor
     email: null
     roles: []
