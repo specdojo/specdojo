@@ -5,29 +5,29 @@ path: docs/ja/specdojo/samples/pm-plan-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-10-16T20:49:54.443Z"
-graded_by: agy-expert-executor
-content_hash: d7ffe63f7c636e8a02f1689b7635a24f5ddc9804d892a5b7bfd58d085abb9f43
+score: 94
+graded_at: "2026-11-13T06:31:49.056Z"
+graded_by: sol-review-executor
+content_hash: 9060e92c3edcb29f64d4b7733f9e98ed7fc0df99b26cd58cc7b030687347a619
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 67
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 83
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -39,11 +39,11 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -75,17 +75,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
     level: 2
     score: 50
-  vp-qe-kata-conformance:
-    level: 1
-    score: 25
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -103,72 +103,55 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 4
+  major: 3
+  minor: 0
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 22
-    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
-    message: 判断条件が総称的であり、具体的にどの項目で pass/fail を判定するかが不明確である。
-    message_ja: 判断条件が総称的であり、具体的にどの項目で pass/fail を判定するかが不明確である。
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 87
+    anchor: >-
+      | 人気商品の対象範囲・除外条件          | _UNDECIDED_: 成功条件の「例外条件と未解決事項」を正本とする。`BA`
+      が後続のベースライン測定へ引き継ぎ、初期受入の合否には含めない                      | 決定時期は参照先を正本とする                     | 判断者は参照先を正本とする |
+    message: >-
+      Baseline measurement is handed to subsequent work, although SC-04 requires the month before operation as its
+      baseline. Schedule BA's target-definition and baseline-collection work before store trial starts, with the
+      required measurement period and dependencies, so later evaluation remains executable.
+    message_ja: >-
+      Baseline measurement is handed to subsequent work, although SC-04 requires the month before operation as its
+      baseline. Schedule BA's target-definition and baseline-collection work before store trial starts, with the
+      required measurement period and dependencies, so later evaluation remains executable.
   - id: F002
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 33
-    anchor: "| 作業順序・担当           | Schedule               | 節目、遅延、依存変更時 | PM         |"
-    message: 正本表に RACI が欠落している。
-    message_ja: 正本表に RACI が欠落している。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 42
-    anchor: "| 論点                                 | 決定期限           | 判断者 |"
-    message: 未決事項表に template で定義されている「現状」列が欠落している。
-    message_ja: 未決事項表に template で定義されている「現状」列が欠落している。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 14
+    rule: vp-pm-dependency-risk
+    line: 36
     anchor: >-
-      | 参加者の時間       | 店舗営業や学業を圧迫しない。日常操作の追加負担は1日10分以内    | 試用準備時と試用中                 | 機能または確認手順を減らす                |
-      PM   |
-    message: 現金支出、作業時間、運用負荷を区別して管理する規則 (6.2) が適用されず、「参加者の時間」に混在している。
-    message_ja: 現金支出、作業時間、運用負荷を区別して管理する規則 (6.2) が適用されず、「参加者の時間」に混在している。
-  - id: F005
+      | 店頭試用後の継続           | 成功条件 SC-02・SC-03 が合格し、保守・引き継ぎの担当と負荷を引き受けられる。SC-04〜SC-06
+      は所定時期の後続観測を割り当てる                                                            | 2週間の営業日別記録、追加操作時間、保守実績、利用者所感、後続観測タスク
+      | `BA`、`PM`（`QE` が条件結果を照合） | 人間の `PO` | `kinuya-trial-log` の条件結果・継続／停止判断・改善先の課題 ID  |
+    message: >-
+      Assigning SC-04 observation at the post-trial continuation gate does not protect its required pre-operation
+      baseline. Identify baseline availability as a preparation dependency and register the risk of losing the
+      comparison period, with a responsible role and action before trial starts.
+    message_ja: >-
+      Assigning SC-04 observation at the post-trial continuation gate does not protect its required pre-operation
+      baseline. Identify baseline availability as a preparation dependency and register the risk of losing the
+      comparison period, with a responsible role and action before trial starts.
+  - id: F003
     severity: major
     rule: vp-qe-kata-conformance
-    line: 22
-    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
-    message: 判断ゲートの条件に成功基準等の ID（SC-01等）による参照がなく、正本との追跡可能性が欠如している。
-    message_ja: 判断ゲートの条件に成功基準等の ID（SC-01等）による参照がなく、正本との追跡可能性が欠如している。
-  - id: F006
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 22
-    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
-    message: 判断ゲートにおいて条件 ID を参照せず総称で記載しており、rulebook (6.3) に違反している。
-    message_ja: 判断ゲートにおいて条件 ID を参照せず総称で記載しており、rulebook (6.3) に違反している。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 33
-    anchor: "| 作業順序・担当           | Schedule               | 節目、遅延、依存変更時 | PM         |"
-    message: 正本表に RACI が含まれておらず、責任の正本が不明確である。
-    message_ja: 正本表に RACI が含まれておらず、責任の正本が不明確である。
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 44
-    anchor: "| 現金支出と試用準備時間の具体的な上限 | 初期リリース着手前 | PO     |"
-    message: "未決事項に _UNDECIDED_: ラベルが付与されておらず、rulebook (6.5) に違反している。"
-    message_ja: "未決事項に _UNDECIDED_: ラベルが付与されておらず、rulebook (6.5) に違反している。"
-  - id: F009
-    severity: minor
-    rule: vp-ux-readability
-    line: 22
-    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
-    message: 判断ゲートの条件が抽象的であり、参照先を即座に特定できないため、可読性が低い。
-    message_ja: 判断ゲートの条件が抽象的であり、参照先を即座に特定できないため、可読性が低い。
+    line: 87
+    anchor: >-
+      | 人気商品の対象範囲・除外条件          | _UNDECIDED_: 成功条件の「例外条件と未解決事項」を正本とする。`BA`
+      が後続のベースライン測定へ引き継ぎ、初期受入の合否には含めない                      | 決定時期は参照先を正本とする                     | 判断者は参照先を正本とする |
+    message: >-
+      Deferring the popular-product baseline measurement to subsequent work conflicts with SC-04 in
+      prj-success-criteria-and-acceptance-criteria-sample and the pre-operation baseline specified in
+      prj-overview-sample section 5. Require the baseline to be collected before operation, and hand only subsequent
+      observation and comparison to later work.
+    message_ja: >-
+      Deferring the popular-product baseline measurement to subsequent work conflicts with SC-04 in
+      prj-success-criteria-and-acceptance-criteria-sample and the pre-operation baseline specified in
+      prj-overview-sample section 5. Require the baseline to be collected before operation, and hand only subsequent
+      observation and comparison to later work.

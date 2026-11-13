@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md",
+  "content_hash": "39b25641a63e56aa6dbc2e1c9112bfa8c05aa0144d2dc5598e1957edea7d9189",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 2,
+  "max_failures": 3,
+  "last_run_id": "kata-prj-comparison-of-alternatives-20261113b",
+  "updated_at": "2026-11-13T06:51:03.814Z"
+}

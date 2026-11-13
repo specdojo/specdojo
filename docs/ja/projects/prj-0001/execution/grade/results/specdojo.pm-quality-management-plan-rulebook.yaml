@@ -5,27 +5,27 @@ path: docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 81
-graded_at: "2026-11-10T20:38:54.398Z"
-graded_by: flash-high-executor
-content_hash: c16c4fdfa4b715cdb86800381462a0037286fdcfbdb545e7fecb8d8cc7391f94
+score: 84
+graded_at: "2026-11-13T06:49:04.452Z"
+graded_by: agy-opus-review-executor
+content_hash: 60abb10b4d9914de3590fc7a4040162121291f6b49f88aa422f43115b36d6409
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 83
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 75
   consistency:
     score: 50
 viewpoints:
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -81,14 +81,14 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,100 +103,111 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 8
+  major: 2
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 43
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: 宣言済み template が見出し・表・記入欄の骨組みの正本であるのに、「本文構成（標準テンプレ）」や6章で構造を再掲しているため、本章は各章の目的・必須性・記述規約に限定する必要がある。
-    message_ja: 宣言済み template が見出し・表・記入欄の骨組みの正本であるのに、「本文構成（標準テンプレ）」や6章で構造を再掲しているため、本章は各章の目的・必須性・記述規約に限定する必要がある。
+    rule: vp-pm-control-reporting
+    line: 86
+    anchor: "- 重大な不適合は課題または変更要求として登録し、是正完了または承認済み基準が認める期限付き例外の判断まで該当ゲートを通過させません。例外には理由、期限、人間の承認者、再判定条件を記録します。"
+    message: >-
+      The rulebook routes serious nonconformances to issues or change requests but never mentions risks, and names no
+      Role code for reporting and registering; it should require anticipated quality risks to go to the risk register
+      and name the Role code that reports and registers serious nonconformances (e.g. report to `PM`, who registers
+      them), as the sample does.
+    message_ja: >-
+      The rulebook routes serious nonconformances to issues or change requests but never mentions risks, and names no
+      Role code for reporting and registering; it should require anticipated quality risks to go to the risk register
+      and name the Role code that reports and registers serious nonconformances (e.g. report to `PM`, who registers
+      them), as the sample does.
   - id: F002
     severity: minor
-    rule: vp-qe-verifiability
-    line: 73
-    anchor: "| 対象 | 主な観点 | 実施責任 | 出口条件・証跡 |"
-    message: 「出口条件・証跡」を一つの列にまとめた結果、sample では証跡だけが記載されレビューの pass / fail 条件が欠落しているため、出口条件と証跡を分離するか両方を必須と明記する必要がある。
-    message_ja: 「出口条件・証跡」を一つの列にまとめた結果、sample では証跡だけが記載されレビューの pass / fail 条件が欠落しているため、出口条件と証跡を分離するか両方を必須と明記する必要がある。
+    rule: vp-arc-conciseness
+    line: 10
+    anchor: "- 成功基準・受入条件、成果物 rulebook、検証手順を正本とし、条件 ID と参照先で品質ゲートへ接続します。"
+    message: >-
+      The structural duplication flagged previously is resolved, but section 1 bullets on lines 10–14 restate the
+      section 7 prohibitions almost verbatim (duplicated targets/metrics, AI Agent final judgment, cash vs workload,
+      single-source principle also in line 5); merge each principle into one place (e.g. keep it in section 7 with its
+      reason) to remove the duplication without losing decision information.
+    message_ja: >-
+      The structural duplication flagged previously is resolved, but section 1 bullets on lines 10–14 restate the
+      section 7 prohibitions almost verbatim (duplicated targets/metrics, AI Agent final judgment, cash vs workload,
+      single-source principle also in line 5); merge each principle into one place (e.g. keep it in section 7 with its
+      reason) to remove the duplication without losing decision information.
   - id: F003
     severity: minor
     rule: vp-qe-verifiability
-    line: 82
-    anchor: "| 区分 | 対応 | 再判定 | 記録先 |"
-    message: 「再判定」が再判定する条件・ゲートを指すのか実施責任者を指すのか定義されず、sample では Role code が記載されているため、再判定条件と再判定責任を別々に判定できる列へ分ける必要がある。
-    message_ja: 「再判定」が再判定する条件・ゲートを指すのか実施責任者を指すのか定義されず、sample では Role code が記載されているため、再判定条件と再判定責任を別々に判定できる列へ分ける必要がある。
+    line: 86
+    anchor: "- 重大な不適合は課題または変更要求として登録し、是正完了または承認済み基準が認める期限付き例外の判断まで該当ゲートを通過させません。例外には理由、期限、人間の承認者、再判定条件を記録します。"
+    message: >-
+      The gate-blocking rule depends on "重大な不適合", but only 不適合 is defined in the terms table, so reviewers cannot decide
+      pass/fail of the blocking rule; define the criterion (e.g. affects value-quality conditions, publication safety,
+      or acceptance condition IDs) or require each plan to define it per nonconformance category.
+    message_ja: >-
+      The gate-blocking rule depends on "重大な不適合", but only 不適合 is defined in the terms table, so reviewers cannot decide
+      pass/fail of the blocking rule; define the criterion (e.g. affects value-quality conditions, publication safety,
+      or acceptance condition IDs) or require each plan to define it per nonconformance category.
   - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 48
-    anchor: "| 1 | 品質方針と適用範囲 | ○ | 価値品質、成果物品質、対象期間、人と AI の境界 |"
-    message: 本文要件で対象期間を必須とする一方、記述ガイド（6.1章）、template、sample に対象期間がなく必須要件を満たしたか確認できないため、適用開始・終了などの記入規則を追加する必要がある。
-    message_ja: 本文要件で対象期間を必須とする一方、記述ガイド（6.1章）、template、sample に対象期間がなく必須要件を満たしたか確認できないため、適用開始・終了などの記入規則を追加する必要がある。
+    line: 42
+    anchor: 見出し順・表・記入欄の骨組みは Frontmatter で宣言した template を正本とし、本書では各章が満たす意味要件を定めます。
+    message: >-
+      The previous gap on the application period is resolved in 6.1 and the sample, but line 42 makes the declared
+      template canonical for table skeletons while lines 77 and 85 mandate separate 出口条件/証跡/記録先 and 再判定条件/再判定責任 columns
+      that the template lacks (it still has "出口条件・証跡" and "再判定" and omits 適用開始・終了), so following the canonical template
+      violates the rulebook; align the template or state which requirement prevails.
+    message_ja: >-
+      The previous gap on the application period is resolved in 6.1 and the sample, but line 42 makes the declared
+      template canonical for table skeletons while lines 77 and 85 mandate separate 出口条件/証跡/記録先 and 再判定条件/再判定責任 columns
+      that the template lacks (it still has "出口条件・証跡" and "再判定" and omits 適用開始・終了), so following the canonical template
+      violates the rulebook; align the template or state which requirement prevails.
   - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 64
-    anchor: "| ゲート | 品質観点 | 合格条件 | 方法・証跡 | 時期 | 確認者 / 承認者 |"
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 40
+    anchor: "## 5. 本文要件"
     message: >-
-      `people-and-organization-definition-standard` を根拠に持ちながら役割欄に定義済み Role code を用いる規則がないため、責任欄は RACI と整合するよう Role code
-      で指定する条件を明記する必要がある。
+      rulebook が「対象期間」「人と AI の境界」「レビューの出口条件」「記録先」を必須とする一方、template や sample に反映されていないため、rulebook・template・sample
+      の必須項目と見出し・列名を完全に一致させる必要がある。
     message_ja: >-
-      `people-and-organization-definition-standard` を根拠に持ちながら役割欄に定義済み Role code を用いる規則がないため、責任欄は RACI と整合するよう Role code
-      で指定する条件を明記する必要がある。
+      rulebook が「対象期間」「人と AI の境界」「レビューの出口条件」「記録先」を必須とする一方、template や sample に反映されていないため、rulebook・template・sample
+      の必須項目と見出し・列名を完全に一致させる必要がある。
   - id: F006
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 43
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: >-
-      rulebook が「対象期間」「人と AI の境界」「レビューの出口条件」「記録先」を必須とする一方、template や sample に反映されていないため、rulebook・template・sample
-      の必須項目と見出し・列名を完全に一致させる必要がある。
-    message_ja: >-
-      rulebook が「対象期間」「人と AI の境界」「レビューの出口条件」「記録先」を必須とする一方、template や sample に反映されていないため、rulebook・template・sample
-      の必須項目と見出し・列名を完全に一致させる必要がある。
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 43
-    anchor: "## 5. 本文構成（標準テンプレ）"
-    message: >-
-      template を文書 ID で宣言しているのに rulebook が「標準テンプレ」として骨格を再掲しているため、骨組みは template、意味要件は rulebook、完成例は sample
-      という種別境界へ修正する必要がある。
-    message_ja: >-
-      template を文書 ID で宣言しているのに rulebook が「標準テンプレ」として骨格を再掲しているため、骨組みは template、意味要件は rulebook、完成例は sample
-      という種別境界へ修正する必要がある。
-  - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 品質管理計画 作成ルール"
     message: 宣言済み recipe の「各章の書き方」が問いの形式ではなく、また「レビュー観点」が表形式になっていないため、Kata の標準仕様に合わせて recipe を修正する必要がある。
     message_ja: 宣言済み recipe の「各章の書き方」が問いの形式ではなく、また「レビュー観点」が表形式になっていないため、Kata の標準仕様に合わせて recipe を修正する必要がある。
-  - id: F009
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 品質管理計画 作成ルール"
+    message: >-
+      The declared recipe's 各章の書き方 covers only 4.1–4.4 and omits the 見直し条件と未決事項 chapter required by rulebook lines 50–51
+      and present in the template and sample, and 4.1 omits the application start/end; add the missing chapter guidance
+      so recipe, rulebook, template and sample cover the same chapters.
+    message_ja: >-
+      The declared recipe's 各章の書き方 covers only 4.1–4.4 and omits the 見直し条件と未決事項 chapter required by rulebook lines 50–51
+      and present in the template and sample, and 4.1 omits the application start/end; add the missing chapter guidance
+      so recipe, rulebook, template and sample cover the same chapters.
+  - id: F008
     severity: minor
     rule: vp-ux-readability
-    line: 43
-    anchor: "## 5. 本文構成（標準テンプレ）"
+    line: 44
+    anchor: >-
+      | 要件               | 必須条件                 | 記載する判断・根拠                                                            
+      |
     message: >-
-      「本文構成（標準テンプレ）」、6章の表、別ファイルの template に同じ構造情報が分散しているため、template を骨組みの参照先とし、rulebook
-      には判断理由・必須性・例外だけを残して読み分けを明確にする必要がある。
+      The section 5 requirement names (e.g. 適用する品質の選定, 不適合からの復帰, 計画の維持) do not correspond by name to the 6.x headings or
+      template chapters (品質方針と適用範囲, 不適合と是正, 見直し条件と未決事項), so readers must infer the mapping; add the target chapter to
+      each requirement row or align the names.
     message_ja: >-
-      「本文構成（標準テンプレ）」、6章の表、別ファイルの template に同じ構造情報が分散しているため、template を骨組みの参照先とし、rulebook
-      には判断理由・必須性・例外だけを残して読み分けを明確にする必要がある。
-  - id: F010
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 15
-    anchor: "- AI Agent は検証や指摘整理を支援できますが、利用者価値、例外、公開可否の最終判断は人間が行います。"
-    message: 同じ判断主体を「AI Agent」「人と AI」「Agent」と表記しているため、「AI Agent」など一つの用語へ統一し、人間との判断境界を同じ名称で記述する必要がある。
-    message_ja: 同じ判断主体を「AI Agent」「人と AI」「Agent」と表記しているため、「AI Agent」など一つの用語へ統一し、人間との判断境界を同じ名称で記述する必要がある。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 73
-    anchor: "| 対象 | 主な観点 | 実施責任 | 出口条件・証跡 |"
-    message: rulebook の表の列名「対象・実施責任・出口条件・証跡」に対して sample は「レビュー・実施者・証跡」と異なるラベルを用いているため、列名と用語を統一する必要がある。
-    message_ja: rulebook の表の列名「対象・実施責任・出口条件・証跡」に対して sample は「レビュー・実施者・証跡」と異なるラベルを用いているため、列名と用語を統一する必要がある。
+      The section 5 requirement names (e.g. 適用する品質の選定, 不適合からの復帰, 計画の維持) do not correspond by name to the 6.x headings or
+      template chapters (品質方針と適用範囲, 不適合と是正, 見直し条件と未決事項), so readers must infer the mapping; add the target chapter to
+      each requirement row or align the names.
