@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ee37a050428d4421b97e53f8b0260036
+  ts: "2026-11-13T14:08:22Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼（2026-11-13）で、orchestrator の知見と手作業をコマンドと文書に移す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register update で、個票の章の本文をファイルから入れられるようにする
+    - field: description
+      from: ""
+      to: 完了条件・作業内容・範囲などの章の本文を、CLI で差し替えられるようにする（orchestrator の Python での書き換えの置き換え）
+    - field: input
+      from: ""
+      to: '["2026-11-12〜13 の型の整備と夜間の実行で、orchestrator が手作業やシェルスクリプトで補った"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: register

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_35f0907995594eadb9d0f29c0c63a983
+  ts: "2026-11-13T14:07:57Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼（2026-11-13）で、orchestrator の知見と手作業をコマンドと文書に移す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの本体と運用メモに、型の整備と夜間の実行の知見を書き足す
+    - field: description
+      from: ""
+      to: どのプロジェクトでも同じ振る舞いは specdojo-orchestrator の本体に、prj-0001 だけの運用は運用メモに書き足す
+    - field: input
+      from: ""
+      to: '["2026-11-12〜13 の型の整備と夜間の実行で、orchestrator が手作業やシェルスクリプトで補った"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: orchestrator
