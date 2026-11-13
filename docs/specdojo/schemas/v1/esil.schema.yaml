@@ -29,8 +29,8 @@ $defs:
 properties:
   id:
     type: string
-    pattern: "^esil-[a-z0-9-]+$"
-    description: "一意なID（esil-...）"
+    pattern: "^(?:[a-z][a-z0-9-]*:)?(?:esil-[a-z0-9-]+|ifx-index(?:-[a-z0-9-]+)?)$"
+    description: "一意なID（esil-... または ifx-index）。プロジェクトの修飾（例: prj-0001:ifx-index）を付けてよい"
   type:
     type: string
     const: "api"
@@ -137,6 +137,6 @@ properties:
           description: "エラー処理・備考"
         spec_ref:
           type: string
-          pattern: "^(?:ifx-api|ifx-file|ifx-msg|ifx-cmd)-[a-z0-9-]+$|^TBD$"
+          pattern: "^(?:[a-z][a-z0-9-]*:)?(?:ifx-api|ifx-file|ifx-msg|ifx-cmd)-[a-z0-9-]+$|^TBD$"
           description: >-
             詳細仕様ドキュメントの id（ifx-api-/ifx-file-/ifx-msg-/ifx-cmd-...）または TBD

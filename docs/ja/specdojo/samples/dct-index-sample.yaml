@@ -1,18 +1,26 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/dct-index.schema.yaml
 # dct-index-sample.yaml
-# 駄菓子屋きぬや販売管理システム構築プロジェクトの成果物カタログ索引宣言例。
-# 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct-index.schema.yaml に従う。
-# ルートグループへ domains を直接置く 1 段構成と、groups でサブグループへ分ける 2 段構成の両方を示す。
-# 各ドメインのキーは domain、name、overview の順に書く（サイドバーが domain 直後の name を表示名に使う）。
+# 駄菓子屋きぬや 販売管理システム構築の成果物カタログ索引。
+# 背景・対象範囲は [[specdojo:sample-authoring-standard|Sample 記述標準]] の共通サンプル文脈に従う。
+# 単一店舗・タブレット1台で、店頭販売、在庫、つけの記録と確認を支援する。
+# EC、本格会計、仕入れ先とのシステム連携は対象外。本部 API を使う CLI 固有の拡張例は含めない。
+# 構造・値の制約は先頭の schema、分類は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] を正本とする。
+#
+# _ASSUMPTION_: 以下は、宣言した全ドメインのカタログを整備した学習用プロジェクトの完成時点を表す。
+# 同梱の [[specdojo:dct-sample|成果物カタログ（ドメイン別）]] は project-definition の記述例に対応する。
+# 他ドメインのカタログ一式は未同梱であり、samples ディレクトリ全体を実在カタログの集合とはみなさない。
+# `project_id` は dct-sample と同じ例示値で、SpecDojo 本体の prj-0001 のドメイン集合を表さない。
 id: specdojo:dct-index-sample
 type: project
 status: draft
 title: 成果物カタログ
 rulebook: specdojo:dct-index-rulebook
 project_id: prj-0001
+# 店主代表と開発担当が最小限の成果物セットで導入するため small とする。
+# 品質確認や障害時対応のドメインを含めても、scaffold の規模を拡大する判断はしていない。
 size: small
 groups:
-  # 小規模な店舗案件のため、プロジェクト側はドメインが少なく 1 表に収まる。サブグループに分けず domains を直接置く。
+  # 店主代表と導入の目的・合意・現状をまとめて確認するため、プロジェクト側は1つの探索単位とする。
   - name: プロジェクト成果物
     domains:
       - domain: project-definition
@@ -23,28 +31,34 @@ groups:
         overview: 店主との合意事項、課題、進捗を管理する。
       - domain: current-state
         name: 現状
-        overview: ノートと暗算に頼る現行の販売・つけ管理の把握に必要な成果物を管理する。
-  # プロダクト側は探索単位が分かれるため、文書構成図のまとまりに合わせてサブグループへ分ける。
+        overview: ノートと暗算に頼る現行の販売・在庫・つけ管理の把握に必要な成果物を管理する。
+  # プロダクト側は、業務の確認、設計、受入・検証、稼働後の対応で参照する目的が分かれる。
+  # 以後の配列順はその探索順であり、開発担当の着手順は Schedule で管理する。
   - name: プロダクト成果物
     groups:
       - name: 業務仕様群
         domains:
+          # _ASSUMPTION_: 販売とつけの仕様は `dct-business-sales.yaml` と `dct-business-credit.yaml` に分割済み。
+          # 両ファイルの `domain` は business-model のため、索引では1件にまとめる（分割ファイルは未同梱）。
           - domain: business-model
             name: 業務モデル
             overview: 店頭販売、つけ払い、仕入れの業務ルールと流れを管理する。
           - domain: data-flow
             name: データフロー
             overview: 販売、在庫、つけ管理を横断するデータの流れを管理する。
+          - domain: data-model
+            name: データモデル
+            overview: 商品、販売明細、在庫、顧客、つけ残高の関係と状態を表す成果物を管理する。
+          - domain: user-interface-model
+            name: ユーザーインターフェースモデル
+            overview: 店主と家族が同じ手順で記録・確認できるタブレットの画面と操作を管理する。
           - domain: system-functions
             name: システム化機能
-            overview: 店頭販売と在庫確認を支援するシステム機能を管理する。
-          # 本部 API との接続仕様は、構成図で業務仕様群の枠内に置かれるためここへ 1 か所だけ宣言する。
-          - domain: external-interface-specs
-            name: 外部I/F仕様
-            overview: 本部の商品マスタ・売上登録 API との接続仕様を管理する。
+            overview: 店頭販売、在庫確認、つけ残高の記録・照会を支援するシステム機能を管理する。
           - domain: glossary
             name: 用語集
             overview: つけ、駄菓子の商品区分など店舗固有の用語と定義を管理する。
+      # システム設計は1ドメインでも、開発担当が設計を探す独立した入口として分ける。
       - name: アーキテクチャ・システム設計
         domains:
           - domain: system-design
@@ -52,12 +66,18 @@ groups:
             overview: 店頭タブレットで動作する販売管理システムの設計を管理する。
       - name: 品質保証
         domains:
+          # 操作性や顧客情報保護は機能の有無と分けて判断し、品質保証の枠に置く。
+          - domain: non-functional-requirements
+            name: 非機能要件
+            overview: 店番での操作性、記録の保全、顧客情報の保護に関する品質要求を管理する。
+          # つけ残高の確認は業務仕様にも関係するが、店主代表の受入判断は品質保証へ1か所だけ置く。
           - domain: business-acceptance-criteria
             name: 業務受入条件
             overview: 店主と家族が日々の店番で使えると判断するための条件を管理する。
           - domain: test-specs
             name: テスト
-            overview: 会計と在庫記録の正しさを検証するテスト成果物を管理する。
+            overview: 販売・在庫・つけの記録と、入力訂正・端末障害時の振る舞いを検証する成果物を管理する。
+      # 端末障害時の業務判断と復旧後の照合は運用へ置き、その検証方法を持つテストとは分ける。
       - name: 運用
         domains:
           - domain: operations
