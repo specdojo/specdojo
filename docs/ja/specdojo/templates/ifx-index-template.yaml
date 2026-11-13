@@ -14,10 +14,12 @@ metadata_template:
   based_on: _BASED_ON_
   supersedes: []
 
-# _TODO_: 対象システム・連携境界・対象外と、採否が未決の範囲を記す。
-# 連携ごとに要素を複製する。schema の値域から direction・kind・format を選ぶ。
+# _TODO_: 対象システム・利用場面・連携境界・主要な対象外を記す。
+# _TODO_: 一覧の管理担当 Role code、人間の PO による承認・公開判断の対象と公開先を記す。
+# 仮定・意思決定待ちは rulebook の共通ラベルで区別する。
+# 連携ごとに要素を複製する。値域・構文は先頭 modeline の schema を参照する。
 interfaces:
-  # _TODO_: 名前だけで伝わらない目的・渡す内容・成功後の結果を補う。
+  # _TODO_: 連携目的・渡す内容・成功後の結果を、名前だけで伝わらない場合に補う。
   - name: _INTERFACE_NAME_
     source: _SOURCE_SYSTEM_
     target: _TARGET_SYSTEM_
@@ -25,7 +27,14 @@ interfaces:
     kind: _INTERFACE_KIND_
     format: _DATA_FORMAT_
     timing: _TRIGGER_AND_CONDITION_
-    error_handling: "_TODO_: 失敗・結果不明時の停止または保留、確認対象と担当を記す。"
+    error_handling: "_TODO_: 失敗で未完了・結果不明になる結果、停止・保留条件、確認対象と担当を記す。"
     spec_ref: TBD
-    # _TODO_: 実在する詳細仕様の ID へ置換する。未整備なら TBD を維持し、
-    # 担当 Role・確認する接続/認証/回復条件・引き継ぎ先を記す。
+    # _TODO_: 実在する対応仕様の ID へ置換する。未整備・対応未確認なら TBD を維持し、
+    # 論点・担当 Role code・解消条件・期限または判断するマイルストーン、
+    # 影響する業務・後続作業・公開範囲と保留範囲、次アクションを記す。
+    # _TODO_: BA（利用場面・業務影響）、ARC・DEV（契約）、QE（期待結果）の
+    # 確認者・合意対象を記す。必要な外部窓口は、未特定なら担当と特定時点を記す。
+    # _TODO_: 残作業は Schedule の作業 ID と引き継ぎ時点の未完了事項を記す。
+    # リスク・課題・変更・決定があれば、連携への影響・対応担当・報告先と
+    # PJR 等の管理レコードへの参照を記す。未登録なら PM への登録依頼と登録時点を記す。
+    # 採否・公開条件が未決なら、PO へ渡す判断対象と保留範囲を記す。
