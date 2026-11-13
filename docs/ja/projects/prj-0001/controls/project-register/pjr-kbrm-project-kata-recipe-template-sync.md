@@ -44,6 +44,7 @@ PJR-960C で改訂した rulebook に、recipe と template を合わせ、grade
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` と親の検証が通っている。grade は統合の後に orchestrator が流す。grade を流せないことを理由に未完了としない。
+- 2 回目の実行（2026-11-13 追加）: 1 回目の後の grade（run id `kata-pm-plan-20261113c`）で、pm-plan-sample が needs-work 94 だった。成功基準 SC-05（在庫の廃棄の年換算）も運用の前月の基準値を要するのに、準備の作業・試行の開始の前提・リスクに SC-04 の基準値しか入っていない。SC-05 の基準値（前月の廃棄の数量と金額、年換算の値）を集めるか確かめる作業を、担当のロール・見積もり・完了の証跡とともに準備に入れ、試行の開始の前提とリスク（比べる期間を失う）にも足して、grade で pass になっている（grade は orchestrator が流す）。
 
 ## 4. 作業内容
 
