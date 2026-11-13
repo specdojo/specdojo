@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-sf-index-005",
+  "run_id": "T-KATA-WAVE-1-sf-index-005-20261113T161432Z-452d6806",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T16:16:10.668Z",
+    "completed_at": "2026-11-13T16:21:58.629Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/sf-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sf-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/050-system-functions/sf-index.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": "docs/ja/specdojo/rulebooks/sf-index-rulebook.md | 124 ++++++++++++++++++------\n docs/ja/specdojo/samples/sf-index-sample.md     |  63 ++++++++----\n 2 files changed, 135 insertions(+), 52 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/010-business-specs/050-system-functions/sf-index.md docs/ja/specdojo/rulebooks/sf-index-rulebook.md docs/ja/specdojo/samples/sf-index-sample.md",
+      "status": "passed",
+      "summary": "All 3 changed Markdown files match Prettier style (after prettier --write)"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/050-system-functions/sf-index.md docs/ja/specdojo/rulebooks/sf-index-rulebook.md docs/ja/specdojo/samples/sf-index-sample.md",
+      "status": "passed",
+      "summary": "No markdownlint errors"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "No history files changed",
+      "reason": "No pjr-*.md, plan.md or result.md was changed by the executor"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "No YAML changed",
+      "reason": "No *.yaml or *.yml file was changed"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog validate",
+      "status": "not_applicable",
+      "summary": "Catalog not changed",
+      "reason": "The deliverable changes are outside docs/ja/projects/ (product docs and specdojo kata); no catalog file was edited"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sf-index-005/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/w\n… output omitted …\n-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sf-index-005/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sf-index-005/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4582 file(s), 141 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 107 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4582 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sf-index-005\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-lePPJD/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-lePPJD/worktrees/prj-0001-T-T-doc-010/app1\nSkipping worktree dependencies: no t\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sf-index-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sf-index-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sf-index-005\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-13T17:43:43.493Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-13T1\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "Created representative deliverable sf-index.md (8 function areas / 13 functions mapped to P-01..P-14 and top-level CLI commands, CLI mapping verified against src/specdojo.ts), rebuilt sf-index-rulebook (standard chapters, SF-<AREA>-<NN> ID rule, guidance with good/bad examples, recipe/template not-needed) and rewrote sf-index-sample as a Kinuya-context complete example consistent with sf-sample. Catalog rulebook declaration was already correct and unchanged.",
+  "completion_status": "complete",
+  "handoff": [
+    "Recorded for the result's 進め方と実践の型の適用 section: rulebook was rebuilt because the existing one was a generic scaffold with a broken H1 link and generic sections. Exemplars (form only): specdojo:tsd-index-rulebook / specdojo:tsd-index-sample (ready index type), specdojo:sf-rulebook / specdojo:sf-sample (ready, same family). Kept consistent with sf-sample: function ID SF-POS-01, sf-inventory, and P-04/P-06 delegation.",
+    "recipe set to not-needed: the content follows almost entirely from the upstream BPS / interface specs and the catalog, so there is little room for quality differences between authors (same reasoning as tsd-index). template set to not-needed: sf-index is one document per system, so there is no recurring skeleton to scaffold from.",
+    "Deliverable sf-index: most `depends_on` BPS documents and `clis-index` are not created yet, so rows are provisional and based on catalog definitions (dct-business-model-bps / dct-user-interface-model) and the catalog evidence_ref src/specdojo.ts. Tracked as Q-01; BA should reconcile once the BPS documents exist.",
+    "Catalog issue for BA/PM (Q-02): the sf-index `depends_on` in dct-system-functions.yaml does not include the BPS for P-04 (bps-planning-schedule-event-update), P-06 (bps-routine-job-run), P-08 (bps-deliverable-evaluation) or P-14 (bps-routine-register-schedule-cycle), although the list references them. Decide whether to add them or state that only area-representative BPS are dependencies.",
+    "Q-03 (assumption): SF-DEPR-01 maps `deliverable trash` to deprecation/storage; to be confirmed in bps-deprecation-process.",
+    "Polish pass, one round: merged a separate coverage table into the 機能構成 chapter (no duplicate coverage table); replaced the cdfd-overview link with the depends_on catalog as the source of the P-xx area IDs; removed an ungrounded 20-row threshold from the rulebook."
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sf-index-005/T-KATA-WAVE-1-sf-index-005-20261113T161432Z-452d6806/executor.log",
+      "bytes": 5871,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sf-index-005/T-KATA-WAVE-1-sf-index-005-20261113T161432Z-452d6806/parent-validation-attempt-1-test-integration.log",
+      "bytes": 283810,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sf-index-005/T-KATA-WAVE-1-sf-index-005-20261113T161432Z-452d6806/parent-validation-attempt-1-test-unit.log",
+      "bytes": 7682,
+      "truncated": false
+    }
+  ]
+}
