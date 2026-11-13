@@ -4,48 +4,35 @@ specdojo:
   type: exec-result
   task_id: PJR-7RZ4
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-7RZ4/pjr-7rz4-20261112T141422Z-7e680739/plan.md
   started_at: "2026-11-12T14:16:17.632Z"
-  completed_at: "2026-11-12T14:34:07.924Z"
+  completed_at: "2026-11-13T05:40:36.253Z"
   agent: flash-high-executor
-  block_reason: "parent validation failed: lint-md, test-unit"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- プロジェクトを別リポジトリへ移すための「プロジェクト移行ガイド」を新設しました。
-- 新設したガイドを文書サイトのサイドバーおよびガイド一覧に追加しました。
-- ガイドの作成に伴い、`docs/ja/specdojo/guides/specdojo-overview-guide.md` および `packages/docs-site/.vitepress/sidebar-config.ts` を更新しました。
+- プロジェクトを別リポジトリへ移す手順をまとめたプロジェクト移行ガイドを新規作成し、親検証で指摘された MD029 を解消する小見出し構成に整理した。
+- 概要ガイドおよび VitePress ドキュメントサイトのサイドバー設定に、新規追加した移行ガイドへの参照・導線を追加した。
 
 ## 2. 変更ファイル
 
-- `docs/ja/specdojo/guides/specdojo-overview-guide.md`: プロジェクト移行ガイドに関する記述を追加しました。
-- `packages/docs-site/.vitepress/sidebar-config.ts`: サイドバーの「技で回す」セクションに「プロジェクト移行」を追加しました。
-- `docs/ja/specdojo/guides/project-move-guide.md`: プロジェクトを別リポジトリへ安全に移すための手順（履歴の切り出し、設定の写し、`external_projects` の宣言、Kata の版の固定、文書サイトからの削除）をまとめたガイドを新設しました。
+- `docs/ja/specdojo/guides/specdojo-overview-guide.md`: 運用ガイドの一覧にプロジェクト移行ガイドへのリンクと説明を追加。
+- `packages/docs-site/.vitepress/sidebar-config.ts`: サイドバーの運用ガイド項目にプロジェクト移行ガイドのナビゲーションを追加。
+- `docs/ja/specdojo/guides/project-move-guide.md`: 履歴の切り出し、設定配置、Kata の版固定、`external_projects` による相互起票などをまとめたプロジェクト移行ガイドを新規作成し、MD029 に配慮した小見出し構造を採用。
 
 ## 3. 申し送り
 
-- ガイドの ID とファイル名は命名標準にならい `specdojo:project-move-guide` / `project-move-guide.md` とし、H1 を「# プロジェクト移行ガイド」としました。
-- サイドバーは `sidebar-config.ts` の「技で回す」末尾に「プロジェクト移行」として配置しました。
-- 新リポジトリでの配置は標準パス `docs/ja/projects/prj-0002` 配下へ再配置する手順を標準としました。
-- 外部起票の別名は元リポジトリ側を `specdojo-lp`、新リポジトリ側を `specdojo-core` としました。
-- CHANGELOG に書く事項: [追加] `docs`: project を別リポジトリへ移す手順と安全確認をまとめたプロジェクト移行ガイドを追加
-- 残課題: `PJR-9XEG`（読むだけの点検）および `PJR-66ER`（リポジトリをまたぐリンクの書き方）の実装完了後、本ガイドの該当節を標準機能の記述へ更新する必要があります。
-- ガイドの ID とファイル名は命名標準にならい specdojo:project-move-guide / project-move-guide.md とし、H1 を「# プロジェクト移行ガイド」としました。
-- サイドバーは sidebar-config.ts の「技で回す」末尾に「プロジェクト移行」として配置しました。
-- 新リポジトリでの配置は標準パス docs/ja/projects/prj-0002 配下へ再配置する手順を標準としました。
-- 外部起票の別名は元リポジトリ側を specdojo-lp、新リポジトリ側を specdojo-core としました。
-- CHANGELOG に書く事項: [追加] docs: project を別リポジトリへ移す手順と安全確認をまとめたプロジェクト移行ガイドを追加
-- 残課題: PJR-9XEG（読むだけの点検）および PJR-66ER（リポジトリをまたぐリンクの書き方）の実装完了後、本ガイドの該当節を標準機能の記述へ更新する必要があります。
-- 適用外の検証: `npm run validate:catalog`（Changes do not reach deliverables in docs/ja/projects/）
-- 適用外の検証: `npm run validate:schema:file`（No `*.yaml` or `*.yml` files changed）
-- 人の確認が必要: `npm run validate:history-links`（sandbox daemon is unavailable; manual inspection confirmed all links in ticket use canonical [[doc-id]] format without relative Markdown links）
+- ガイドの ID は specdojo:project-move-guide。既存の運用ガイドと並べて sidebar と概要ガイドに追加し、新リポジトリでも docs/ja/projects/prj-0002 の配置を維持する方針を個票に記録した。外部起票の別名例は specdojo-lp と specdojo-core。
+- コマンド例は Bash と同階層のリポジトリ配置を前提とし、移行元の版を --save-exact で固定する。外部起票の確認は必須の --commit と --dry-run を併用し、切り出し前後の SHA を記録する判断を個票にも記載した。
+- PJR-9XEG と PJR-66ER の提供後に該当手順を更新する。それまではガイド記載の手動点検を使う。
+- CHANGELOG 文案（追加）: docs: project を別リポジトリへ移す手順と安全確認をまとめたプロジェクト移行ガイドを追加
 
 ## 4. 進め方
 
-まず、プロジェクト移行のための手順をまとめた `docs/ja/specdojo/guides/project-move-guide.md` を作成しました。次に、この新しいガイドをユーザーが発見できるように、`packages/docs-site/.vitepress/sidebar-config.ts` を編集してサイドバーに追加し、関連する `docs/ja/specdojo/guides/specdojo-overview-guide.md` も更新しました。
+親検証で発生していた箇条書きの番号付け違反（MD029）を解消するため、コードブロックを挟む手順を小見出しに分割した構造を採用した。`base_path` の履歴切り出し、設定や名簿の移行、Kata の版固定、`external_projects` を用いた相互起票の安全確認手順をプロジェクト移行ガイドとして整理し、概要ガイドと VitePress サイドバー設定に導線を追加した。

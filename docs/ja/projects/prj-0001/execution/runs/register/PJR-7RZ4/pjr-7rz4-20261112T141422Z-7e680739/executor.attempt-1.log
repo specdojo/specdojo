@@ -1,0 +1,45 @@
+プロジェクト登録簿の項目 **PJR-7RZ4「project を別リポジトリへ移す手順のガイドを書く」** に対応しました。
+
+## 1. 実施内容の概要
+
+1. **プロジェクト移行ガイドの新設**:
+   - [`docs/ja/specdojo/guides/project-move-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/ja/specdojo/guides/project-move-guide.md) を作成しました（ドキュメント ID: `specdojo:project-move-guide`、タイトル: `# プロジェクト移行ガイド`）。
+   - 個票で指定された 5 つの手順を網羅しました：
+     - `git subtree split` による `base_path` 履歴の抽出と新リポジトリへの取り込み（共有履歴の書き換え防止）。
+     - 新リポジトリでの Kata（型）の版固定（npm パッケージ `specdojo` 参照）。
+     - `specdojo.config.json` および `.specdojo` 配下の設定・名簿・`exec-defaults.yaml` の移行と、新環境動作確認後の元リポジトリからの削除。
+     - 相互起票を可能にする双方の `external_projects` 宣言。
+     - 元リポジトリのドキュメントサイト（VitePress）からの除外とビルド確認。
+   - 各手順に「前提」「実行するコマンド」「確かめ方」「戻し方」を記述し、取り返しのつかない操作の前の確認ポイントを明示しました。
+   - 準備中の機能（読むだけの点検: PJR-9XEG、リポジトリをまたぐリンク: PJR-66ER）について「用意されたら使う」と明記し、現時点での手動点検手順および暫定記法を整理しました。
+   - プロジェクト ID（`prj-0002`）を維持することで、登録簿項目 ID（`PJR-xxxx`）やコミットの `Refs: <project-id>:<ID>` が移行後もそのまま使える継続性の原則を記載しました。
+
+2. **ドキュメントサイトへの追加**:
+   - サイドバー設定 [`packages/docs-site/.vitepress/sidebar-config.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/packages/docs-site/.vitepress/sidebar-config.ts) の「ガイド」セクション（「技で回す」の末尾）に `guide("プロジェクト移行", "project-move-guide")` を追加しました。
+   - ガイド一覧 [`docs/ja/specdojo/guides/specdojo-overview-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/ja/specdojo/guides/specdojo-overview-guide.md) の第 8.4 節「プロジェクトを実行・管理する」の表に本ガイドへのリンクを追加しました。
+
+3. **個票の更新**:
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md) の作業内容、対応結果（実施内容・成果物・判断事項・CHANGELOG に書く事項・残課題）、および関連ドキュメントを更新しました。
+
+## 2. 成果物・変更ファイル
+
+- [`docs/ja/specdojo/guides/project-move-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/ja/specdojo/guides/project-move-guide.md)（新規作成）
+- [`packages/docs-site/.vitepress/sidebar-config.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/packages/docs-site/.vitepress/sidebar-config.ts)（サイドバー追加）
+- [`docs/ja/specdojo/guides/specdojo-overview-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/ja/specdojo/guides/specdojo-overview-guide.md)（ガイド一覧リンク追加）
+- [`docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md)（個票の対応結果更新）
+
+## 3. 迷った点・決めた事項（executor 判断）
+
+- **ID とファイル名**: ドキュメント命名標準にならい `specdojo:project-move-guide` / `project-move-guide.md` とし、ページ見出しを `# プロジェクト移行ガイド` としました。
+- **サイドバーの表示位置**: `sidebar-config.ts` の「ガイド」内「技で回す」グループの末尾に、既存の運用ガイドと並列で `guide("プロジェクト移行", "project-move-guide")` を配置しました。
+- **新リポジトリでの配置パス**: `git subtree split` の直後はルート直下に展開されますが、SpecDojo の標準ディレクトリ配置および ID とファイルパスの整合性を維持するため、新リポジトリでも `docs/ja/projects/prj-0002` 配下に再配置する手順を標準としました。
+- **外部起票の別名例**: 元リポジトリ側を `specdojo-lp`、新リポジトリ側を `specdojo-core` とし、直感的に識別できる別名例を示しました。
+
+## 4. CHANGELOG に書く事項（PJR-EPQ3）
+
+- **区分**: 追加
+- **行文案**: `docs: project を別リポジトリへ移す手順と安全確認をまとめたプロジェクト移行ガイドを追加`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"project を別リポジトリへ移す手順のガイド（docs/ja/specdojo/guides/project-move-guide.md）を新設し、sidebar およびガイド一覧へ追加しました。","handoff":["ガイドの ID とファイル名は命名標準にならい specdojo:project-move-guide / project-move-guide.md とし、H1 を「# プロジェクト移行ガイド」としました。","サイドバーは sidebar-config.ts の「技で回す」末尾に「プロジェクト移行」として配置しました。","新リポジトリでの配置は標準パス docs/ja/projects/prj-0002 配下へ再配置する手順を標準としました。","外部起票の別名は元リポジトリ側を specdojo-lp、新リポジトリ側を specdojo-core としました。","CHANGELOG に書く事項: [追加] docs: project を別リポジトリへ移す手順と安全確認をまとめたプロジェクト移行ガイドを追加","残課題: PJR-9XEG（読むだけの点検）および PJR-66ER（リポジトリをまたぐリンクの書き方）の実装完了後、本ガイドの該当節を標準機能の記述へ更新する必要があります。"],"validations":[{"command":"npm run validate:catalog","status":"not_applicable","reason":"Changes do not reach deliverables in docs/ja/projects/"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml files changed"},{"command":"npm run validate:history-links","status":"requires_human","summary":"sandbox daemon is unavailable; manual inspection confirmed all links in ticket use canonical [[doc-id]] format without relative Markdown links"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-7RZ4",
+  "run_id": "pjr-7rz4-20261112T141422Z-7e680739",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T05:27:56.556Z",
+    "completed_at": "2026-11-13T05:34:00.125Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/project-move-guide.md",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/project-move-guide.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../controls/project-register/events/pjr-7rz4.yaml | 20 ++++++++++++++--\n .../pjr-7rz4-project-move-guide.md                 | 27 +++++++++++++++-------\n .../pjr-7rz4-20261112T141422Z-7e680739/plan.md     |  5 ++++\n docs/ja/specdojo/guides/specdojo-overview-guide.md |  1 +\n packages/docs-site/.vitepress/sidebar-config.ts    |  1 +\n 5 files changed, 44 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/guides/project-move-guide.md docs/ja/specdojo/guides/specdojo-overview-guide.md packages/docs-site/.vitepress/sidebar-config.ts docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md",
+      "status": "passed",
+      "summary": "対象4ファイルの整形確認に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "終了コード0。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード0。変更範囲外の実装参照・未作成文書に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4540 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4540 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-XMANMl/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-lDNLsc/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nv1/bdd.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7RZ4\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-13T05:40:03.194Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-13T05:39:03.549Z.\nfall\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-project-move-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/project-move-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/project-move-guide.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "移行ガイドの MD029 原因を小見出し化で解消し、設定配置・版固定・履歴再配置・相互起票の例を修正しました。個票も更新し、整形・履歴リンク・カタログ検証は成功しました。指定の親検証は runner が実行します。",
+  "completion_status": "complete",
+  "handoff": [
+    "ガイドの ID は specdojo:project-move-guide。既存の運用ガイドと並べて sidebar と概要ガイドに追加し、新リポジトリでも docs/ja/projects/prj-0002 の配置を維持する方針を個票に記録した。外部起票の別名例は specdojo-lp と specdojo-core。",
+    "コマンド例は Bash と同階層のリポジトリ配置を前提とし、移行元の版を --save-exact で固定する。外部起票の確認は必須の --commit と --dry-run を併用し、切り出し前後の SHA を記録する判断を個票にも記載した。",
+    "PJR-9XEG と PJR-66ER の提供後に該当手順を更新する。それまではガイド記載の手動点検を使う。",
+    "CHANGELOG 文案（追加）: docs: project を別リポジトリへ移す手順と安全確認をまとめたプロジェクト移行ガイドを追加"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-7RZ4/pjr-7rz4-20261112T141422Z-7e680739/executor.log",
+      "bytes": 2660,
+      "truncated": false
+    }
+  ]
+}
