@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-sf-index-045
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-sf-index-045/T-KATA-WAVE-1-sf-index-045-20261113T192120Z-69df0796/plan.md
   started_at: "2026-11-13T19:21:22.233Z"
+  completed_at: "2026-11-13T19:37:46.712Z"
   agent: sol-executor
   execution: agent
   approach: recipe-maintenance
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `sf-index` の rulebook において `recipe: not-needed` が宣言されていたため、計画の指示に基づき recipe の変更および新規作成は行わず、そのまま完了としました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- reporter は result の実施内容・変更ファイル・進め方と実践の型の適用へ、変更不要と判断した旨を記録してください。根拠は docs/ja/specdojo/rulebooks/sf-index-rulebook.md の recipe: not-needed 宣言、docs/ja/specdojo/standards/rulebook-authoring-standard.md の要否宣言の規定、および本計画の not-needed の型は変更しないという指示です。対象成果物 sf-index.md と recipe-authoring-standard.md も確認しました。template: not-needed と sample: specdojo:sf-index-sample の既存宣言を維持しました。新規文書がないため sidebar への追加も不要です。executor による変更ファイルはなく、result は reporter の責務として編集していません。
+- 適用外の検証: `npx prettier --write docs/ja/specdojo/rulebooks/sf-index-rulebook.md`（executor によるファイル変更がないため。）
+- 適用外の検証: `npm run validate:schema:file`（変更した YAML ファイルがないため。）
+- 適用外の検証: `npm run validate:catalog`（executor による docs/ja/projects/ 配下の成果物変更がないため。）
+- 適用外の検証: `npm run validate:history-links`（executor による履歴ファイルの変更がないため。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`sf-index` の rulebook frontmatter で `recipe` が `not-needed` と定義されていることを確認しました。計画における「rulebook frontmatter で recipe が not-needed の型は変更せず、その旨を result に書いて完了とする」という指示に従い、 recipe の見直しおよび修正をスキップし、現状維持として処理しました。
