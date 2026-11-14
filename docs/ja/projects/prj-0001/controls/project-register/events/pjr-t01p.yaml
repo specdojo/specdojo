@@ -44,3 +44,32 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_e0c4202fbb2b47878a683465fa77d1c3
+  ts: "2026-11-14T11:49:01Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ac132a5aec6e4cd98ace9f68d54bda90
+- v: 1
+  id: reg_868a17e3fe4a45c785b70adb1c2a7a4a
+  ts: "2026-11-14T12:02:21Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: agent exited with non-zero code
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: agent exited with non-zero code
+  previous_event_id: reg_e0c4202fbb2b47878a683465fa77d1c3
