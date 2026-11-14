@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ac86da55aa4f475ba276a1ba1a3cabd2
+  ts: "2026-11-14T03:47:12Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 実装の段に、どの文書の型（Kata）を置くか
+    - field: description
+      from: ""
+      to: 要求→要件→仕様→設計→実装→テスト→移行→運用の流れのうち、実装の段にだけ型がない。設計の次に置く文書（実装の方針・コーディングの決まり・実装の設計など）を決める
+    - field: input
+      from: ""
+      to: '["2026-11-14 に型 108 種類を流れで整理した。`imp-*` は影響分析の型で、実装の段の型ではない。テスト・移行・運用には型がある","前提（indie、2026-11-14）: 型の整備は設計までを先に仕上げる。非機能要件（`nfr-*`）とシステムの受け入れ基準（sac）は後回しでよい","考える点の例: 実装の方針（使う言語・ライブラリ・構成の決まり）、コーディングの決まり（.github/instructions の typescript・vitest のような規約を型にするか）、実装の設計（モジュールの分け方・依存の向き）、設計の文書（`sysd-*`）との分担、SpecDojo のように実装が先にある場合に実装から文書へ反映する向きの扱い"]'
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
