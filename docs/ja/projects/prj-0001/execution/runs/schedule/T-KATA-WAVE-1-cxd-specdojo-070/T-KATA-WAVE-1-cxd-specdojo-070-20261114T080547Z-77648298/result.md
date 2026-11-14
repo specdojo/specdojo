@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-cxd-specdojo-070
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-cxd-specdojo-070/T-KATA-WAVE-1-cxd-specdojo-070-20261114T080547Z-77648298/plan.md
   started_at: "2026-11-14T08:05:49.440Z"
+  completed_at: "2026-11-14T08:48:08.358Z"
   agent: flash-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- C4コンテキスト図（`cxd-specdojo`）の磨き込みを実施し、成果物の整合性を向上させました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/030-architecture/010-c4/cxd-specdojo.md`: 既存成果物（`cnd-specdojo`、`cpd-specdojo-cli`、`ifd-specdojo`）への参照リンクを整備し、Prettierによる整形を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 適用外の検証: `npm run validate:schema:file`（変更されたファイルに `*.yaml` または `*.yml` が含まれないため）
+- 適用外の検証: `npm run validate:history-links`（変更されたファイルに履歴ファイル（project-register や plan.md/result.md）が含まれないため）
+- 適用外の検証: `npm run validate:catalog`（変更が docs/ja/product/ 内のみであり docs/ja/projects/ に及ばないため）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+既存の成果物を基礎として、関連する成果物へのリンク整備と構造の整合性を確保する保守的な磨き込みを行い、完了の狙いである「アーキテクチャ全体構造の共通理解」に寄与する状態に整えました。
