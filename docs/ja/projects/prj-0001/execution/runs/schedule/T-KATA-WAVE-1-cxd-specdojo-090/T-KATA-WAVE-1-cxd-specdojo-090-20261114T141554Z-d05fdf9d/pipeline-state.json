@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-cxd-specdojo-090",
   "run_id": "T-KATA-WAVE-1-cxd-specdojo-090-20261114T141554Z-d05fdf9d",
-  "updated_at": "2026-11-14T15:25:46.361Z",
+  "updated_at": "2026-11-14T18:23:40.789Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-090/T-KATA-WAVE-1-cxd-specdojo-090-20261114T141554Z-d05fdf9d/result.md"
     },
     "integrate": {
-      "status": "succeeded",
+      "status": "running",
       "actor": "sonnet-review-executor",
-      "attempts": 1,
-      "started_at": "2026-11-14T15:25:04.733Z",
-      "completed_at": "2026-11-14T15:25:46.361Z",
+      "attempts": 2,
+      "started_at": "2026-11-14T18:23:40.789Z",
+      "completed_at": null,
       "artifact_ref": null
     }
   },
