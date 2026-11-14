@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_19f59922637b44758831ef9c932ae2fc
+  ts: "2026-11-14T22:53:25Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: claim した agent と別の agent の段で失敗しても blocked にする
+    - field: description
+      from: ""
+      to: pipeline の失敗時は claim した actor に依らず blocked へ遷移させる
+    - field: input
+      from: ""
+      to: '["2026-11-15 の夜間に dct-index-080 と sysd-cross-cutting-policy-080 で、agy-gpt-oss-executor が claim したあと別の agent が段を進め、失敗時の block が「task is being worked on by another actor」で弾かれ doing のまま残った"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-52EE"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
