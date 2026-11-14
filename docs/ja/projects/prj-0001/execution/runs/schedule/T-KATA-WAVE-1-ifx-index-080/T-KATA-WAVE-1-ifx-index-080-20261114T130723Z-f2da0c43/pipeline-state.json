@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-ifx-index-080",
   "run_id": "T-KATA-WAVE-1-ifx-index-080-20261114T130723Z-f2da0c43",
-  "updated_at": "2026-11-14T14:12:13.078Z",
+  "updated_at": "2026-11-14T14:13:31.018Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-080/T-KATA-WAVE-1-ifx-index-080-20261114T130723Z-f2da0c43/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-14T14:12:13.078Z",
-      "completed_at": null,
+      "completed_at": "2026-11-14T14:13:31.018Z",
       "artifact_ref": null
     }
   },
