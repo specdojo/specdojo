@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_147c806daad04e3a84ecfd999ebc8f2b
+  ts: "2026-11-13T21:50:35Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor の変更が commit の対象外になっても、統合が黙って進む
+    - field: description
+      from: ""
+      to: executor が対象外のファイル（カタログ・schema・型のメニュー）を直しても、commit の対象から外れて統合に入らず、develop で検査が落ちてから気づく
+    - field: input
+      from: ""
+      to: '["2026-11-14 の kata-wave-1 で 3 回起きた。bes-index のカタログの依存、ifx-index の esil.schema.yaml、型のメニュー（sidebar-config.ts）の直しが統合に入らず、worktree は統合の後に片付けられて直しが消えた","型の文書を作るタスクでは、カタログ・schema・メニューも直す範囲に入る。commit の対象をそこまで広げるか、対象外の変更が残ったら統合を止めて知らせる必要がある。commit-scope の「unresolved target doc id」の警告とも合わせて確かめる"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_

@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_855ac6446f424c369d2968fd7c103eee
+  ts: "2026-11-13T22:37:53Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。完了条件を書いた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: sol-executor
+  previous_event_id: reg_56e93de8786a43c6ab1968ea5547f3eb

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_17698705bfe346fabf58eafefb8cdd30
+  ts: "2026-11-13T21:50:32Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイトの型のメニューを、型の文書から自動で作る
+    - field: description
+      from: ""
+      to: sidebar-config.ts に型の文書を手で足す決まりを、rulebook・recipe・sample・template の frontmatter や置き場所から自動で作る形に変え、足し忘れで develop のテストが落ちないようにする
+    - field: input
+      from: ""
+      to: '["2026-11-14 の kata-wave-1 で、初期整備が作った recipe・template を型のメニューに足し忘れ、tests/packages/docs-site/sidebar-kata.test.ts が develop で落ちて、後に続くタスクの親の検証がすべて止まった（cxd・ifx-index など 3 回）","段の説明に「メニューにも足す」と書いても守られなかった。executor が足した場合も、develop の直しと sidebar-config.ts でぶつかった"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs-site
