@@ -1,0 +1,5 @@
+鮮度確認で `--changed-only` が対象パスを出力したため、verdict は `grade-stale` です。`--dependency-changed` と `--incomplete` は対象パスを出力しませんでした。指定どおり review result は編集していません。確認できなかった範囲は、鮮度が最新でないための完了可否判断と、実装との対応記録の照合です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"鮮度確認の `--changed-only` が対象パスを出力し、grade は最新でないと判定。`--dependency-changed` と `--incomplete` は対象パスを出力しなかった。review result は編集していない。確認できなかった範囲: grade が最新でないため完了可否判断と実装対応記録の照合は未実施。","handoff":[],"validations":[{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/040-system-design/sysd-index.md --changed-only","status":"passed","summary":"対象パス `docs/ja/product/040-system-design/sysd-index.md` が出力され、評価結果は stale。"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/040-system-design/sysd-index.md --dependency-changed","status":"passed","summary":"対象パスの出力なし。"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/040-system-design/sysd-index.md --incomplete","status":"passed","summary":"対象パスの出力なし。"}]}
+</specdojo_executor_evidence>
