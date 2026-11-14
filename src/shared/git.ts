@@ -147,6 +147,8 @@ export function gitResult(
   repoRoot: string,
   args: string[],
   recoverFromTransientFailure?: TransientGitRecovery,
+  // 隔離済みの Git 環境へ足す変数（統合の commit の LEFTHOOK_EXCLUDE など）。
+  extraEnv?: Readonly<Record<string, string>>,
 ): ReturnType<typeof spawnSync> {
   const cwd = resolve(repoRoot);
   const run = (): ReturnType<typeof spawnSync> =>
@@ -155,7 +157,7 @@ export function gitResult(
       // `.git` が相対 gitdir の場合も、resume 中の diff を runner の cwd から切り離す。
       cwd,
       encoding: "utf8",
-      env: gitEnvironment(),
+      env: { ...gitEnvironment(), ...extraEnv },
       maxBuffer: GIT_OUTPUT_MAX_BUFFER,
       stdio: ["ignore", "pipe", "pipe"],
     });

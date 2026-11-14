@@ -379,7 +379,7 @@ describe("multi-repository task worktrees", () => {
 
     const taskDir = join(fixture.worktreeBase, TASK_DIR_NAME);
     expect(readFileSync(npmLog, "utf8")).toBe(
-      `${realpathSync(join(taskDir, "app1"))} ci --include=dev\n`,
+      `${realpathSync(join(taskDir, "app1"))} ci --include=dev --prefer-offline --no-audit --no-fund\n`,
     );
     expect(output).toContain(
       `Skipping worktree dependencies: no tracked package-lock.json in ${join(taskDir, "app2")}\n`,

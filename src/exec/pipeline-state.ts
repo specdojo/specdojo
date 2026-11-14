@@ -324,6 +324,29 @@ function resolveArtifactRef(worktreePath: string, ref: string): string | null {
   return path;
 }
 
+/**
+ * Validations recorded in the executor evidence of a run (PJR-T01P: the integration commit reads
+ * the parent-validation results). Returns an empty list when the state or evidence is unreadable.
+ */
+export function recordedRunValidations(
+  worktreePath: string,
+  statePath: string | undefined,
+): ExecEvidence["validations"] {
+  if (!statePath || !existsSync(statePath)) return [];
+  try {
+    const state = readPipelineState(statePath);
+    const ref = state.stages.executor.artifact_ref;
+    const evidencePath = ref ? resolveArtifactRef(worktreePath, ref) : null;
+    if (!evidencePath || !existsSync(evidencePath)) return [];
+    const evidence: unknown = JSON.parse(readFileSync(evidencePath, "utf8"));
+    if (!isExecutorEvidence(evidence, state.task_id, state.run_id)) return [];
+    return Array.isArray(evidence.validations) ? evidence.validations : [];
+  } catch {
+    // 読めない場合は hook を外さない（すべて流す）側へ倒す。
+    return [];
+  }
+}
+
 function isExecutorEvidence(value: unknown, taskId: string, runId: string): value is ExecEvidence {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const evidence = value as Partial<ExecEvidence>;

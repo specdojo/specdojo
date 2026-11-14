@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-14T03:31:40Z"
-  block_reason: "parent validation failed: test-unit"
   commit_type: perf
   commit_scope: exec
 ---
@@ -67,6 +66,7 @@ specdojo:
 - 統合の commit で hook を外す条件は、親の検証の `passed` だけにした。`not_applicable` で外すと、hook の glob が合う変更（例: `docs/ja/specdojo/templates/**`）でテストが一度も流れないまま統合されるため。
 - 統合先を取り込んだ後の再検証では、executor の変更以外も入るため変更の種類で選ばない。
 - reporter なしの result でも pipeline state の reporter の actor は割り当てた reporter を記録する。統合の段の再開が register の遷移の実行者としてその actor を使い、`runner` は名簿に無く再開を止めるため。runner が作ったことは result の「進め方」とログに残す。
+- `gitResult` の `env` は、`extraEnv` の有無で分けず常に `{ ...gitEnvironment(), ...extraEnv }` にした。三項演算では git 起動の隔離の静的検査が `gitEnvironment()` 由来と判定できず、`extraEnv` が undefined でも結果は同じため（再開時の指示、2026-11-15）。
 - `mechanical_result` の既定は `false` にした。既存の利用者の result の書き手を黙って変えないため。
 
 ### 5.3. 保護された設定の変更案

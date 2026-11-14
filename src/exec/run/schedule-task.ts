@@ -5,6 +5,7 @@ import {
   recordReporterFailureOutput,
   writeExecutorEvidence,
 } from "../evidence.js";
+import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
 import { limitEventMeta, type AgentLimitSignal } from "../limit.js";
 import {
   createPipelineState,
@@ -639,6 +640,11 @@ export async function runPreparedTask(
               productsIntegratedByCaller: true,
               productRootNewFiles,
               allowEditedPlan: prepared.pipelineResumeStage === "executor",
+              skipHooks: integrationCommitSkipHooks({
+                pipeline: execDefaults.pipeline,
+                worktreePath: prepared.worktree.path,
+                pipelineStatePath,
+              }),
             });
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);

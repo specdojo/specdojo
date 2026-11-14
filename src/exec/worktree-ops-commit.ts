@@ -37,6 +37,7 @@ import {
   runRecordPrefixes,
   taskRecordPrefixes,
 } from "./run-records.js";
+import { lefthookExcludeEnvironment } from "./commit-hook-skips.js";
 import { stripTerminalControlSequences } from "./shared.js";
 import { assertNoPendingProductChanges, productIntegrationTarget } from "./task-repos.js";
 import {
@@ -854,6 +855,9 @@ export function commitWorktreeChanges(params: {
   productsIntegratedByCaller?: boolean;
   productRootNewFiles?: readonly string[];
   allowEditedPlan?: boolean;
+  // 統合の commit で流し直さない hook のコマンド名（PJR-T01P）。親の検証で通った検査だけを
+  // 呼び出し側が渡す。手動の `exec worktree commit` は渡さず、hook をすべて流す。
+  skipHooks?: readonly string[];
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId, allowEditedPlan } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
@@ -936,7 +940,13 @@ export function commitWorktreeChanges(params: {
     "--",
     ...paths,
   ];
-  const commit = gitResult(worktree.path, commitArgs);
+  const hookEnvironment = lefthookExcludeEnvironment(params.skipHooks ?? []);
+  if (hookEnvironment) {
+    process.stdout.write(
+      `commit hooks skipped (covered by passed parent validations): ${(params.skipHooks ?? []).join(", ")}\n`,
+    );
+  }
+  const commit = gitResult(worktree.path, commitArgs, undefined, hookEnvironment);
   if (commit.status !== 0) {
     const output = [commit.stdout, commit.stderr]
       .filter((part): part is string => typeof part === "string" && part.length > 0)

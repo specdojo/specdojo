@@ -47,6 +47,26 @@ agent が親 runner・Git hook・CI・agent 指示の内容を変更できない
 
 agent起動時は親プロセスの`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を除去し、cwdから対象worktreeを再解決させる。runnerは各agent試行の前後でHEADとlocal configも比較し、agent自身のcommitまたは`core.bare`を含む設定変更を検知した場合は親検証・reporter・統合を行わずblockする。この境界は通常実行、in-place、trial、分割worktree commandのすべてへ適用する。
 
+### 3.1. 1 段の所要時間を減らす処理
+
+pipeline の 1 段（worktree の準備、executor、親の検証、reporter、統合）のうち、結果を変えずに省ける処理を次のように省く（PJR-T01P）。どれも設定が無ければ従来どおり動く。
+
+| 処理            | 省き方                                                                                                                                   | 省かない条件                                                                            |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| 親の検証        | `pipeline.parent_validations` の要素に `paths` を書いた検証は、executor が変えたファイルが合わなければ流さず `not_applicable` を記録する | `paths` が無い、変更一覧が無いか上限で切れた、統合先を取り込んだ後の再検証              |
+| 統合の commit   | `pipeline.commit_hook_skips` の hook を、`covered_by` の親の検証がすべて `passed` のときだけ `LEFTHOOK_EXCLUDE` で外す                   | 親の検証が `not_applicable`・失敗・未記録、手動の commit、プロダクトリポジトリの commit |
+| reporter        | `pipeline.mechanical_result` が `true` のとき、edit result を executor の報告と証跡から runner が作る                                    | review、完了でない結果、`final_message` が空、描画の失敗                                |
+| worktree の準備 | `npm ci` を `--prefer-offline --no-audit --no-fund` で流す                                                                               | なし（lock が同じなら入る依存は同じ）                                                   |
+
+統合の commit で hook を外してよいのは、親の検証が同じ worktree の同じ変更に対して同じ検査を流し、その結果が evidence に `source: runner`・`passed` として残っているからである。親の検証の後に変わるのは、reporter・runner が書く result・個票・event と、hook（`stage_fixed`）による整形だけで、型や振る舞いは変わらない。根拠の evidence は run の pipeline state の executor の `artifact_ref` から読み、読めない場合は hook を外さない。整形の hook はファイルを書き換えるため外さない。人が手で commit するときの hook は変えない。
+
+reporter なしで作る result の項目は次のとおりで、要約や判断が要る review の verdict、block の説明は従来どおり reporter が書く。pipeline state の reporter の actor には、register の遷移と再開で実行者として使うため割り当てた reporter を記録し、runner が書いたことは result の「進め方」とログに残す。
+
+- 実施内容: executor の `final_message` の各行。
+- 変更ファイル: evidence の変更一覧と git の行数（従来から runner が作る）。
+- 申し送り: executor の `handoff` と runner が導く検証の注記（従来から runner が作る）。
+- 進め方: runner が作ったことを示す固定の文。
+
 ## 4. 子設計一覧
 
 | 子設計                                                                    | 対象               | 固有責務                                |

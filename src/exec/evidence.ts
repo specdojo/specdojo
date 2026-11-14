@@ -14,7 +14,7 @@ import { gitOutput } from "./worktree.js";
 import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
 
 const MAX_LOG_BYTES = 64 * 1024;
-const MAX_CHANGE_FILES = 1_000;
+export const MAX_CHANGE_FILES = 1_000;
 const MAX_FINAL_MESSAGE_LENGTH = 4_000;
 const MAX_HANDOFF_ITEMS = 100;
 const MAX_HANDOFF_LENGTH = 4_000;

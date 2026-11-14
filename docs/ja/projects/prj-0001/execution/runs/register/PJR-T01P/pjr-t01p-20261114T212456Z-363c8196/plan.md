@@ -65,4 +65,9 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-15）
+
+- 親の検証の test-unit で、`tests/src/shared/git-environment-isolation.test.ts` の「TypeScript から git を起動する箇所はすべて gitEnvironment() を使う」が `src/shared/git.ts:155` で落ちた。`env: extraEnv ? { ...gitEnvironment(), ...extraEnv } : gitEnvironment()` の三項演算は静的検査が gitEnvironment() 由来と判定できない。`env: { ...gitEnvironment(), ...extraEnv }` のように常に gitEnvironment() を展開する形にする（`extraEnv` が undefined でも同じ結果になる）。
+- `npm run test:unit` を executor で流して、ほかに落ちるテストがないことを確かめてから報告する。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`

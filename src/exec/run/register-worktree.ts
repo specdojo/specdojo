@@ -9,6 +9,7 @@ import {
   resolveAgentMember,
   type AgentProvider,
 } from "../../shared/specdojo-config.js";
+import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
 import { buildInPlaceStem } from "../plans.js";
@@ -404,6 +405,11 @@ export async function finalizeRegisterWorktreeRun(params: {
           productsIntegratedByCaller: true,
           productRootNewFiles,
           allowEditedPlan: params.resumedExecutor === true,
+          skipHooks: integrationCommitSkipHooks({
+            pipeline: context.execDefaults.pipeline,
+            worktreePath: worktree.path,
+            pipelineStatePath: params.pipelineStatePath,
+          }),
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

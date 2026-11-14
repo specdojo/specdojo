@@ -399,6 +399,24 @@ describe("reporter structured output", () => {
     },
   );
 
+  it("accepts an executor not_run validation that the runner skipped by change type", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run typecheck", status: "not_run", summary: "delegated" },
+      {
+        id: "typecheck",
+        source: "runner",
+        command: "npm run typecheck",
+        status: "not_applicable",
+        summary: "skipped by change type",
+        reason: "skipped by change type",
+      },
+    ];
+    expect(
+      deriveReporterFacts(input, { mode: "edit", packageScripts: { typecheck: "tsc -b" } }),
+    ).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
   it("still blocks an edit-mode not_run validation that the runner did not run", () => {
     const input = evidence();
     input.validations = [

@@ -137,7 +137,8 @@ $defs:
             - $ref: "#/$defs/ParentValidationId"
             - type: object
               additionalProperties: false
-              required: [id, repo]
+              required: [id]
+              minProperties: 2
               properties:
                 id:
                   $ref: "#/$defs/ParentValidationId"
@@ -145,8 +146,48 @@ $defs:
                   type: string
                   pattern: "^[a-z0-9-]+$"
                   description: >
-                    Repository name: `project` for the project repository, or a product
-                    repository name from `projects.<id>.repos`.
+                    Repository name: `project` for the project repository (default), or a
+                    product repository name from `projects.<id>.repos`.
+                paths:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    minLength: 1
+                  description: >
+                    Glob patterns relative to the assigned repository (`**`, `*`, `?`, `{a,b}`).
+                    The runner runs the validation only when a file the executor changed matches
+                    one of them, and records `not_applicable` otherwise. Without `paths`, or when
+                    the change set is unknown or truncated, or when the integration targets were
+                    merged into the worktree, the validation always runs.
+      commit_hook_skips:
+        type: array
+        description: >
+          Git hook commands (lefthook command names) that the runner's integration commit skips
+          through `LEFTHOOK_EXCLUDE` when every parent validation in `covered_by` was recorded as
+          passed for the run. Manual commits are not affected.
+        items:
+          type: object
+          additionalProperties: false
+          required: [hook, covered_by]
+          properties:
+            hook:
+              type: string
+              pattern: "^[A-Za-z0-9_.-]+$"
+            covered_by:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                minLength: 1
+              description: Labels (`<id>` or `<repo>:<id>`) from `parent_validations`.
+      mechanical_result:
+        type: boolean
+        default: false
+        description: >
+          When true, the runner writes an edit result from executor evidence without invoking the
+          reporter agent if the outcome is complete and the executor supplied `final_message`.
+          Review results, blocked outcomes, and rendering failures still use the reporter.
       parent_validation_concurrency:
         type: integer
         minimum: 1

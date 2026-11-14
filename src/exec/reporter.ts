@@ -310,6 +310,15 @@ export function deriveReporterFacts(
   // 親検証の結果を正として満たされたものと扱う。executor の failed は runner の結果で
   // 打ち消さない（PJR-2GZE、PJR-7AW0）。
   for (const validation of evidence.validations) {
+    // runner が変更の種類で流さなかった検証（PJR-T01P）も、委譲先として済んだものと扱う。
+    if (validation.source === "runner" && validation.status === "not_applicable") {
+      addPassedCommand(
+        runnerPassedCommandsByRepo,
+        validation.repo ?? PARENT_VALIDATION_PROJECT_REPO,
+        normalizeValidationCommand(validation.command),
+      );
+      continue;
+    }
     if (validation.status !== "passed") continue;
     if (validation.source === "runner") {
       const repo = validation.repo ?? PARENT_VALIDATION_PROJECT_REPO;
