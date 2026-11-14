@@ -1,0 +1,7 @@
+対象文書の図直後にあった、矢印の向きを図の内容から言い換える説明を削りました。閲覧者の代表例であることと GitHub 接続が仮定であることは、判断に必要なため残しました。変更は [cnd-specdojo.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080/docs/ja/product/030-architecture/010-c4/cnd-specdojo.md:62) のみです。
+
+Prettier は適用済みで、`git diff --check` は成功しました。親 runner に設定された検証は runner に委ねます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"図直後の図をなぞる説明を削除し、閲覧者の代表例と GitHub 接続の仮定は維持しました。","handoff":[],"condense_records":[{"location":"図直後の説明（「矢印は主たる利用・依頼・参照の向きで」）","category":"figure-prose","action":"delete","reason":"矢印の向きと応答を含む旨は図から読み取れ、本文での言い換えは重複する。閲覧者の代表例と GitHub 接続が仮定である点は図だけでは判断できないため保持した。","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --write docs/ja/product/030-architecture/010-c4/cnd-specdojo.md","status":"passed","summary":"対象 Markdown を整形。変更なし。"},{"command":"git diff --check -- docs/ja/product/030-architecture/010-c4/cnd-specdojo.md","status":"passed","summary":"差分の whitespace 検査に成功。"},{"command":"parent runner: lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, test-integration, validate-schema, typecheck, test-unit","status":"not_run","summary":"親 runner に設定された検証のため、executor では実行していない。runner が実行する。"}]}
+</specdojo_executor_evidence>

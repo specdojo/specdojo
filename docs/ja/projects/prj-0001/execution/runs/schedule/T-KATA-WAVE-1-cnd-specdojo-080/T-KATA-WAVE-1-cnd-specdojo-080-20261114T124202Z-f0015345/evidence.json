@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-cnd-specdojo-080",
+  "run_id": "T-KATA-WAVE-1-cnd-specdojo-080-20261114T124202Z-f0015345",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-14T17:16:31.336Z",
+    "completed_at": "2026-11-14T17:17:22.132Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ".../result.md                                      | 26 ++++++++++++++--------\n 1 file changed, 17 insertions(+), 9 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat HEAD -- docs/ja/product/",
+      "status": "passed",
+      "summary": "対象文書を HEAD に戻し、差分がないことを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "not_applicable",
+      "summary": "対象の Markdown に差分がないため実行していない。",
+      "reason": "今回の作業で最終的に変更した md・ts・js・json・yaml ファイルがないため。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n… output omitted …\nction\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4759 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4759 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-k2M0pe/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-csr2S8/T-T-doc-010\nSkipping worktree dependencies: no tracked packag\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-080\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-14T17:23:46.388Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "「C4コンテナ図（Mermaid）」図直後の注記（「矢印は主たる利用・依頼・参照の向きで、応答を含む。」）",
+      "category": "figure-prose",
+      "action": "retain",
+      "reason": "cnd-rulebook.md は、矢印が依頼の方向か情報移動の方向かを注記し、応答を省略する場合も意味が通るようにすることを求めている。この注記は図から読み取れない読み方の規約である。閲覧者を代表として描いていることと、リモート接続経路が仮定であることも判断に必要なため残した。前回の試行での削除は元に戻した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「Container（コンテナ）」表の後の段落（「サイトの構築・配備を CLI が直接起動するか…」）",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "表にない未確定事項（構築・配備を担う主体）と、対象外の範囲（閲覧先から CLI を操作する経路）を示しており、インフラ設計の判断に必要なため残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「Data Store（データストア）」表の後の段落（「サイトの静的生成物は正本の派生物で…」）",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "概要の「正本と生成物を区別する」と重なって見えるが、「閲覧先の編集を正本へ反映する経路は定義しない」という制約を含むため残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "「コンテナ間・外部依存の検証対象」冒頭の一文（「以下は検証設計への入力であり…」）",
+      "category": "unneeded-background",
+      "action": "retain",
+      "reason": "検証対象が実施済みのテストや合格の保証ではないという前提を示す。QE が結合テストの対象を判断するときに必要なため残した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "cnd-specdojo",
+      "status": "unchanged",
+      "reason": "冗長さの候補をすべて確認したが、どれも判断に要る注記・制約・前提だった。図直後の矢印の注記は cnd-rulebook.md が求める内容のため、前回の試行での削除を元に戻した。削っても判断情報を失わない箇所がないため変更しない。"
+    }
+  ],
+  "final_message": "冗長さの候補を確認しましたが、削れる箇所はありませんでした。前回の試行で削除した図直後の矢印の注記は cnd-rulebook.md が求める内容のため HEAD の文に戻し、対象文書は最終的に変更していません。",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cnd-specdojo-080/T-KATA-WAVE-1-cnd-specdojo-080-20261114T124202Z-f0015345/executor.log",
+      "bytes": 4883,
+      "truncated": false
+    }
+  ]
+}

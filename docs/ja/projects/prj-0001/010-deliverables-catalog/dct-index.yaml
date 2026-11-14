@@ -7,8 +7,7 @@ rulebook: specdojo:dct-index-rulebook
 project_id: prj-0001
 size: large
 groups:
-  # 分類は文書構成ガイド（specdojo:docs-structure-guide）の構成図に合わせる。
-  # プロジェクトは要求・現状・移行・マネジメント、プロダクトは要件〜設計・品質保証・運用でまとめる。
+  # 文書構成ガイド（specdojo:docs-structure-guide）の構成図に従い、プロジェクト成果物は要求・現状・移行・マネジメント、プロダクト成果物は要件〜設計・品質保証・運用でまとめる。
   # 外部I/F仕様は構成図で業務仕様群の枠内に置かれるため、業務仕様群へ含める。
   - name: プロジェクト成果物
     groups:
