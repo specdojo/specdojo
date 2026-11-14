@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:53:02Z"
+  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-1Y1M
   commit_type: fix
@@ -40,14 +41,38 @@ PJR-1Y1M の修正
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                             | 担当         | 状態 | メモ                                             |
+| --- | ------------------------------------------------ | ------------ | ---- | ------------------------------------------------ |
+| 1   | commit 対象外の停止・記録を全 agent タスクへ適用 | sol-executor | done | commit 前後・統合前・撤去時・再開時に検査        |
+| 2   | 型の許可範囲と未解決 ID 警告を整理               | sol-executor | done | 許可範囲を維持し、周辺ファイルは変更案として報告 |
+| 3   | 回帰テストと利用ガイドを更新                     | sol-executor | done | 主要な検証は親 runner が実行                     |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容と判断
+
+- 登録簿由来だけに適用されていた停止ガードを `assertCommitScope` / `UncommittedChangesError` へ一般化した。agent の edit / review とも、対象外の変更が残れば commit・統合・通常の worktree 撤去を停止し、worktree を保持する。schedule の統合再開でも検査し、複数リポジトリ統合の事前確認でも停止する。
+- 対象パス・停止理由・次のアクションを stdout、`integrate.log`、result の申し送りに自動記録する。dry-run ではファイルへ書き込まない。`tmp/` や既知の生成物の除外、人間の schedule タスクでの選択方式は維持した。
+- `bootstrap` / `*-maintenance` の成果物カタログ・schema・型のメニューを一括許可する案は採用しない。他の成果物や親 runner の動作に影響するため、checkpoint 済みの `targets` から個別に解決できる場合だけ許可する。対象外なら executor は編集せず、変更理由・対象パス・提案差分・必要な検証を報告の `handoff` と個票（register タスクの場合）へ書き、対象の見直しまたは別タスクで反映する。
+- 未解決 ID の従来の警告は、doc-index / catalog による個別パス解決の失敗を表す一方、approach の型ディレクトリ許可は独立して適用されていた。警告を `no individual path; approach directory permissions still apply` に改め、未解決 ID でも型ファイルが commit される挙動と一致させた。
+
+### 5.2. 成果物と検証
+
+- `src/exec/worktree-ops-commit.ts`、統合・撤去・schedule / register runner、`protection-handoff.ts` と export を更新した。
+- `tests/src/exec/worktree-ops.integration.test.ts` に、対象外変更による commit / merge / 撤去の停止、result・ログ記録、確認後の再開、review / retrofit の停止、dry-run、bootstrap と全 4 種の maintenance の型許可と周辺ファイルの停止、追跡済み schema の編集・削除による停止を記録した。
+- 利用ガイドの停止条件・変更案の報告規約・未解決 ID の説明を更新した。Prettier、catalog 検証、履歴リンク検証、`git diff --check` は通過した。catalog は `tsx` CLI のソケット作成が sandbox で拒否されたため、`node --import tsx src/specdojo.ts catalog validate --project prj-0001` で同じ検証を実行した。変更していないカタログの re-export と未作成文書について警告が出たが、終了コードは 0。`typecheck`・`lint:ts`・`test:unit`・`test:integration`・Markdown 等の主要検証は親 runner に委ねる。検証の実測結果は executor evidence と親 runner の evidence を参照する。
+
+### 5.3. 申し送り
+
+- 未解決の設計判断・保護設定の変更提案はない。統合後は運用メモに従い、PJR-JSEY の対象に PJR-160D を加え、実 agent の start から review までを確認してから close する。
+
+### 5.4. CHANGELOG に書く事項
+
+- 不具合修正: executor が commit 対象外の変更を残した場合、schedule 由来のタスクでも統合と worktree 撤去を停止し、対象パスと次のアクションを result とログへ記録する。型の対象 ID を解決できない場合の警告を、approach によるディレクトリ許可と整合する説明に修正する。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-1y1m-commit-scope-excluded-changes-silent|元の課題 PJR-1Y1M]]
+- [[specdojo:exec-config-guide|exec 設定ガイド]]
+- [[specdojo:exec-worktree-guide|exec worktree ガイド]]
+- [[prj-0001:pm-orchestrator-playbook|prj-0001 のオーケストレーター運用メモ]]
