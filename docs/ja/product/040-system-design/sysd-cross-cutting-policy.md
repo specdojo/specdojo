@@ -138,7 +138,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 - **Scope（適用範囲）**: 完了判定の訂正。
 - **Enforcement（検証）**: actor type、遷移元、下流状態、理由の検証。
 - **Exception（例外）**: 通常の再試行はreopenではなくblock / resume経路を使う。
-- **References（参照）**: [[prj-0001:stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:register-operation-guide|登録簿運用ガイド]]。
+- **References（参照）**: [[prj-0001:stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:register-operation-guide|登録簿運用ガイド]]（`docs/ja/specdojo/guides/register-operation-guide.md`）。
 
 ### 3.8. scp-RET-001: 利用制限検出
 
@@ -151,20 +151,20 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 
 ### 3.9. scp-RET-002: retry / fallback / block
 
-- **Rule（MUST）**: 再試行には冪等性または途中状態の照合、有限の attempt・待機上限、適合候補への切替条件を要求する。quota exhausted は自動 retry しない。設定・条件が確認できない経路を自動化の受入済みとしない。
+- **Rule（MUST）**: provider や register の実行計画で解決される criticality に応じて、`on_non_critical` / `on_critical` の policy を選び、retry・fallback・block の条件と上限を確定する。正常時は `skip`、critical 時は候補順で `try_next` し、candidate が尽きたら `block` する。再試行には冪等性または途中状態の照合、有限の attempt・待機上限を要求し、quota exhausted は自動 retry しない。設定・条件が確認できない経路を自動化の受入済みとしない。
 - **Rationale（意図）**: 利用枠と参加者の待機負荷を制限し、不明な途中状態への重複実行を防ぐ。
 - **Scope（適用範囲）**: provider 障害後の retry / fallback / block。
-- **Enforcement（検証）**: 次表の入力別期待結果を V3 で確認する。許可された根拠には criticality 区分、signal 対応、attempt・backoff の値または設定キーの定義がないため、Q1 で実装と設定正本を照合するまで数値境界の合否は保留する。
+- **Enforcement（検証）**: 次表の入力別期待結果を V3 で確認する。criticality は `.specdojo/exec-defaults.yaml` の `on_non_critical` / `on_critical` を軸とし、signal 対応と attempt・backoff 上限値、候補順、`on_exhausted: block` までの判定は Q1 で設定正本と実装を照合するまで保留する。
 - **Exception（例外）**: 保護違反、内容競合、冪等性不明は自動再試行の例外許可で回避しない。
 - **References（参照）**: [[sysd-index|設計索引]] の設定正本・変更の入口、[[sysd-critical-flows|重要フロー]]。
 
-| 入力・前提                                           | 期待する判断・観測結果                                                  |
-| ---------------------------------------------------- | ----------------------------------------------------------------------- |
-| 汎用非ゼロ終了のみ、専用 signal なし                 | 利用制限と断定せず失敗記録を保持する                                    |
-| quota exhausted                                      | 自動 retry しない。fallback 可否は適合候補と Q1 の確定方針で判定する    |
-| 一時制限、冪等性・上限・適合候補を確認済み           | 正本の条件で retry / fallback。上限到達時の処置も同じ方針で一意に決める |
-| criticality・signal 対応、上限、または途中状態が不明 | 受入保留。ARC / DEV が Q1 を解消し、OPS が回復条件を確認する            |
-| 推測の再開時刻しかない                               | 自動再開せず人間の判断を待つ（RET-003）                                 |
+| 入力・前提                                           | 期待する判断・観測結果                                                                                                                         |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| 汎用非ゼロ終了のみ、専用 signal なし                 | 利用制限と断定せず失敗記録を保持する                                                                                                           |
+| quota exhausted                                      | 自動 retry しない。fallback 可否は適合候補と Q1 の確定方針で判定する                                                                           |
+| 一時制限、冪等性・上限・適合候補を確認済み           | 正本の条件で retry / fallback。上限到達時の処置も同じ方針で一意に決める                                                                        |
+| criticality・signal 対応、上限、または途中状態が不明 | 受入保留。ARC / DEV が Q1 で `.specdojo/exec-defaults.yaml` の `critical` / `on_non_critical` / retry 上限値を照合し、OPS が回復条件を確認する |
+| 推測の再開時刻しかない                               | 自動再開せず人間の判断を待つ（RET-003）                                                                                                        |
 
 ### 3.10. scp-RET-003: 延期と自動再開
 
@@ -206,8 +206,9 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 
 - **Rule（MUST）**:
   - agent・子プロセス・親検証・テストへ repository 固有の Git 環境を継承しない。
-  - commit と Git 設定変更は親 runner が担い、agent 起動前後の HEAD・共有 local config の変更を検知したら後続段階へ進めない。
-  - runner 自身の表示用 metadata 以外は検知から除外しない。fixture の identity はプロセス環境に限定する。
+  - commit と Git 設定変更は親 runner が担う。
+  - agent 起動前後の HEAD・共有 local config に検知された差分があれば後続段階へ進めない。runner 自身の表示用 metadata だけは除外する。
+  - fixture の identity はプロセス環境に限定し、local config へ書かない。
 - **Rationale（意図）**: 別 repository を操作するつもりの Git 呼出しが実 repository を変更する事故を防ぐ。
 - **Scope（適用範囲）**: 全 agent 起動経路、親検証、Vitest worker。shell / npm script の直接 Git 起動は TypeScript 静的検査の範囲外であり、呼出し境界で隔離する。
 - **Enforcement（検証）**: `gitEnvironment()` と共通 Vitest setup、Git 起動の静的検査、HEAD / config ガードの回帰を V1 で確認する。危険な環境の注入と agent の状態変更では停止し、runner 表示用 metadata だけの変更では停止しないことを判定する。
@@ -320,7 +321,7 @@ PJR / Schedule の実 ID が未発行なら発行済みと記さず、次の「�
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
 | 全規則                      | [[sysd-index\|設計索引]]                                                                                                                                                       | 実装・schema・設定・生成物・検査コマンドの所在を確認              |
 | EXE / SEL / CFG / RET / SEC | [[sysd-agent-settings\|agent 実行設計 hub]]、[[ifx-cmd-ai-provider-cli\|AI CLI 連携契約]]、[[opr-agent-cli-update\|外部 CLI 更新手順]]                                         | provider 別起動・認証・更新の詳細へ進む                           |
-| STA / GIT / IDM             | [[prj-0001:stsd-task-execution\|タスク状態遷移]]、[[cdfd-uc-register\|登録簿フロー]]、[[cdfd-uc-schedule\|Schedule フロー]]、[[specdojo:exec-worktree-guide\|Worktree ガイド]] | 現行の状態・統合契約へ進む。廃止 CDFD は使用しない                |
+| STA / GIT / IDM             | [[prj-0001:stsd-task-execution\|タスク状態遷移]]、[[cdfd-uc-register\|登録簿フロー]]、[[cdfd-uc-schedule\|Schedule フロー]]、[[specdojo:exec-worktree-guide\|Worktree ガイド]] | 現行の状態・統合契約へ進む                                        |
 | ERR / IDM / TIM / LOG / TRC | [[sysd-job-execution\|Job 設計]]、[[sysd-critical-flows\|重要フロー]]、[[specdojo:exec-operation-guide\|exec 運用]]、[[specdojo:routine-operation-guide\|Routine 運用]]        | 失敗・保存・再開経路の確認                                        |
 | NFR                         | `nfr-index`（未作成）、[[prj-0001:dct-non-functional-requirements\|非機能要件カタログ]]                                                                                        | Q1 / Q2 の上限・Q3 の運用目標を接続する                           |
 | OPD / OPR                   | `opd-index`、`opd-access-management`、`opr-index`、`opr-incident-response`（未作成）、[[prj-0001:dct-operations\|運用カタログ]]                                                | Q3 の通知・権限・一次対応を接続する。当面は上記の運用ガイドを使用 |
@@ -328,7 +329,7 @@ PJR / Schedule の実 ID が未発行なら発行済みと記さず、次の「�
 
 ### 5.2. 変更影響と再検証
 
-以下は将来の変更時の手順であり、本タスクでの実行済み証跡ではない。検証はリポジトリルートで行い、単体・統合各 script の該当ケースが全件成功し、規則詳細の期待結果を満たすことを要求する。
+Rule 変更時は、まず本文で Rule ID・Rationale・Scope・Enforcement を更新し、実装・schema・設定・生成物に影響がある場合は、関連導線表の「参照」列を実在する wikilink か未作成のバッククォート表記で揃える。以下は将来の変更時の手順であり、本タスクでの実行済み証跡ではない。検証はリポジトリルートで行い、単体・統合各 script の該当ケースが全件成功し、規則詳細の期待結果を満たすことを要求する。
 
 | 確認群 | 更新・追従する対象                                                                           | 検証コマンド・対象                                                                                                                                                                                                                                                  |
 | ------ | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -358,4 +359,4 @@ _TODO_: 次表は今回の参照範囲では確定できない事項である。
 - ARC / DEV は全規則の適用範囲と正本を照合し、未実装・不明を Q1〜Q4 または登録簿へ接続する。未確認を実装済みとしない。
 - QE は V1〜V5 の期待結果と検査の成功証跡を確認する。OPS は失敗検知から相関・秘匿化・一次対応・再開まで確認し、監視が未整備の範囲を明示する。
 - PM は未決事項の担当・期限・実 ID・依存先を確認し、必要な NFR / OPD / OPR の整備と受入が計画へ接続された状態を提示する。
-- 人間の PO は解消結果と残る制約を読み、承認・期限付き保留・差し戻しを選ぶ。期限付き留保には影響範囲・責任者・再確認期限の decision を要求する。公開と `ready` 昇格の最終説明責任は PO が負い、agent は `status: draft` を維持する。
+- 人間の PO は解消結果と残る制約を読み、承認・期限付き保留・差し戻しを選ぶ。期限付き留保には影響範囲・責任者・再確認期限の decision を要求する。公開と `ready` 昇格の最終説明責任は Role code `PO` が負い、agent による公開・昇格は行わない。
