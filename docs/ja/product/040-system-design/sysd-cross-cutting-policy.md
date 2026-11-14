@@ -138,7 +138,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 - **Scope（適用範囲）**: 完了判定の訂正。
 - **Enforcement（検証）**: actor type、遷移元、下流状態、理由の検証。
 - **Exception（例外）**: 通常の再試行はreopenではなくblock / resume経路を使う。
-- **References（参照）**: [[prj-0001:stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:register-operation-guide|登録簿運用ガイド]]（`docs/ja/specdojo/guides/register-operation-guide.md`）。
+- **References（参照）**: [[prj-0001:stsd-task-execution|状態遷移仕様（タスク実行）]]、[[specdojo:register-operation-guide|登録簿運用ガイド]]。
 
 ### 3.8. scp-RET-001: 利用制限検出
 
@@ -154,17 +154,17 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 - **Rule（MUST）**: provider や register の実行計画で解決される criticality に応じて、`on_non_critical` / `on_critical` の policy を選び、retry・fallback・block の条件と上限を確定する。正常時は `skip`、critical 時は候補順で `try_next` し、candidate が尽きたら `block` する。再試行には冪等性または途中状態の照合、有限の attempt・待機上限を要求し、quota exhausted は自動 retry しない。設定・条件が確認できない経路を自動化の受入済みとしない。
 - **Rationale（意図）**: 利用枠と参加者の待機負荷を制限し、不明な途中状態への重複実行を防ぐ。
 - **Scope（適用範囲）**: provider 障害後の retry / fallback / block。
-- **Enforcement（検証）**: 次表の入力別期待結果を V3 で確認する。criticality は `.specdojo/exec-defaults.yaml` の `on_non_critical` / `on_critical` を軸とし、signal 対応と attempt・backoff 上限値、候補順、`on_exhausted: block` までの判定は Q1 で設定正本と実装を照合するまで保留する。
+- **Enforcement（検証）**: 次表の入力別期待結果を V3 で確認する。signal 対応、attempt・backoff 上限値、候補順、`on_exhausted: block` までの判定は Q1 の照合まで保留する。
 - **Exception（例外）**: 保護違反、内容競合、冪等性不明は自動再試行の例外許可で回避しない。
 - **References（参照）**: [[sysd-index|設計索引]] の設定正本・変更の入口、[[sysd-critical-flows|重要フロー]]。
 
-| 入力・前提                                           | 期待する判断・観測結果                                                                                                                         |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 汎用非ゼロ終了のみ、専用 signal なし                 | 利用制限と断定せず失敗記録を保持する                                                                                                           |
-| quota exhausted                                      | 自動 retry しない。fallback 可否は適合候補と Q1 の確定方針で判定する                                                                           |
-| 一時制限、冪等性・上限・適合候補を確認済み           | 正本の条件で retry / fallback。上限到達時の処置も同じ方針で一意に決める                                                                        |
-| criticality・signal 対応、上限、または途中状態が不明 | 受入保留。ARC / DEV が Q1 で `.specdojo/exec-defaults.yaml` の `critical` / `on_non_critical` / retry 上限値を照合し、OPS が回復条件を確認する |
-| 推測の再開時刻しかない                               | 自動再開せず人間の判断を待つ（RET-003）                                                                                                        |
+| 入力・前提                                           | 期待する判断・観測結果                                                  |
+| ---------------------------------------------------- | ----------------------------------------------------------------------- |
+| 汎用非ゼロ終了のみ、専用 signal なし                 | 利用制限と断定せず失敗記録を保持する                                    |
+| quota exhausted                                      | 自動 retry しない。fallback 可否は適合候補と Q1 の確定方針で判定する    |
+| 一時制限、冪等性・上限・適合候補を確認済み           | 正本の条件で retry / fallback。上限到達時の処置も同じ方針で一意に決める |
+| criticality・signal 対応、上限、または途中状態が不明 | 受入保留。照合と回復条件の確認は Q1 で行う                              |
+| 推測の再開時刻しかない                               | 自動再開せず人間の判断を待つ（RET-003）                                 |
 
 ### 3.10. scp-RET-003: 延期と自動再開
 
@@ -217,7 +217,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 
 ### 3.15. scp-SEC-001: agent権限制約
 
-- **Rule（MUST NOT）**: 通常運用で確認回避、repository外の無制限書き込み、review agentの成果物編集、agentによる最終承認を許可しない。公開可否と留保の最終判断・説明責任は人間の PO が負う。
+- **Rule（MUST NOT）**: 通常運用で確認回避、repository外の無制限書き込み、review agentの成果物編集、agentによる最終承認を許可しない。
 - **Rationale（意図）**: 自動実行の影響範囲と人間の説明責任を維持する。
 - **Scope（適用範囲）**: agent定義、sandbox、approval policy、PR承認。
 - **Enforcement（検証）**: provider設定review、commit許可範囲、branch protection。
@@ -300,7 +300,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 
 ### 4.1. 例外の入口
 
-現時点で本書に承認済みの例外はない。新規例外には Rule ID、理由・影響範囲、期限、判断者、復帰条件、DEC 相当の PJR decision と関連する issue / change の参照を必須とする。緊急権限も人間の承認と監査証跡を必要とし、未登録の実装差分は適合とは扱わない。
+現時点で本書に承認済みの例外はない。新規例外には Rule ID、理由・影響範囲、期限、判断者、復帰条件、DEC 相当の PJR decision と関連する issue / change の参照を必須とする。緊急権限は scp-SEC-001 に従い、未登録の実装差分は適合とは扱わない。
 
 ### 4.2. 報告と追跡
 
@@ -311,7 +311,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 | 横断ルール・設定契約・保護境界の変更要求   | PJR change                                 | ARC が変更影響を示し、PM が計画へ接続、人間の PO が採否判断    |
 | 例外許可・留保・設計方針の確定             | PJR decision（DEC 相当）                   | 人間の PO が判断、ARC が本文と正本への反映、PM が期限を追跡    |
 
-PJR / Schedule の実 ID が未発行なら発行済みと記さず、次の「未決事項と公開前確認」から起票へ引き継ぐ。登録先は [[prj-0001:pjr-index|登録簿索引]]、操作は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照する。
+未起票の論点は「未決事項と公開前確認」から起票へ引き継ぐ。登録先は [[prj-0001:pjr-index|登録簿索引]]、操作は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照する。
 
 ## 5. 関連ドキュメント導線（SYSD/SYSD-CF/NFR/OPD/OPR/DEC）
 
@@ -352,7 +352,7 @@ _TODO_: 次表は今回の参照範囲では確定できない事項である。
 | Q1: RET-002 の criticality / signal / attempt / backoff / 上限到達時処置、`nfr-index`                  | ARC / DEV が照合案、OPS が費用・回復確認、人間の PO が採否     | retry / fallback の変更着手前・無人実行の受入前 | 数値境界の合否は判断不能。自動制御の受入を保留                                   | `.specdojo/exec-defaults.yaml` と設定正本の対応を確認し、キー・単位・回数の数え方・入力別動作と実在する回帰対象を特定。PM が issue / 必要なら change を起票し、decision と本書を接続 |
 | Q2: TIM-001 の経路別 timeout・終了猶予・子プロセス停止、`nfr-index`                                    | DEV / OPS が案、ARC が境界確認、人間の PO が留保判断           | 時間制御の実装着手前・対象経路の無人運転受入前  | timeout の設定変更と境界の合否を確定できない                                     | 各実行経路の設定キー・値・単位、打切りと保存の現在動作を照合。PM が issue と確認タスクを登録し、QE が境界・停止・回復ケースの証跡を確認                                              |
 | Q3: `opd-index`、`opd-access-management`、`opr-index`、`opr-incident-response`、`nfr-index` の観測目標 | OPS が設計、QE が受入確認、人間の PO が公開可否、PM が依存追跡 | 公開判断前、通知・削除・権限変更の着手前        | 確認間隔・通知先・閾値・保持期間が未確定。観測規則は定義したが運用の適合は未確認 | カタログ登録先は設計索引と同じ。PM が起票・Schedule 接続、OPS が相関の限界、失敗検知、一次対応、秘匿化・保持を具体化。PO が解消または期限付き留保を判断                              |
-| Q4: CFG-003 の項目別優先順・反映時点、全規則の実装状況                                                 | ARC / DEV が照合、QE が判定、PM が計画化、人間の PO が承認     | 各規則の変更着手前、全件は公開前                | 実装済み・未実装を未照合。設定項目の全階層を本書から一意に確定できない           | 設計索引の正本・検証経路で V1→V2→V3→V4 と V5 を確認し、実装済み／不足／非該当と証跡を記録。不足の作業 ID・依存・実行時機を Schedule / PJR に接続                                     |
+| Q4: CFG-003 の項目別優先順・反映時点、全規則の実装状況                                                 | ARC / DEV が照合、QE が判定、PM が計画化、人間の PO が承認     | 各規則の変更着手前、全件は公開前                | 実装済み・未実装を未照合。設定項目の全階層を本書から一意に確定できない           | 「適合確認の順序と時機」の手順で照合し、不足の作業 ID・依存・実行時機を Schedule / PJR に接続                                                                                        |
 
 ### 6.2. 公開・昇格の判断条件
 
