@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: ifd-specdojo-grade-criteria
+document: ifd-specdojo
+path: docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md
+graded_at: "2026-11-14T19:31:24.115Z"
+graded_by: luna-review-executor
+content_hash: dd601fdb1fa45c1303cbbfa3330d5a7a2ca1e11bf9135e14a1b08b7d18caf779
+summary:
+  satisfied: 2
+  unsatisfied: 3
+  total: 5
+criteria:
+  - id: DC-001
+    text: 実行環境・ネットワーク・コンポーネント構成が業務制約と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      The document describes a representative placement but does not show that its environments, network paths, and
+      component choices have been checked against business constraints.
+  - id: DC-002
+    text: インフラ方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: Provider, home Mac, GitHub, and publication choices remain open, and the human PO approval decision is pending.
+  - id: DC-003
+    text: インフラ設計・セキュリティゾーン設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: インフラテスト・障害テストの対象が識別できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: 運用構成・監視設定の参照として使えること
+    roles:
+      - OPS
+    viewpoint: vp-ops-operability
+    status: unsatisfied
+    reason: >-
+      Monitoring candidates and handoff roles are listed, but the operational configuration and monitoring reference is
+      not identified by a specific document or completed setting.
