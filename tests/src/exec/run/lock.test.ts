@@ -96,8 +96,13 @@ describe("exec run project lock", () => {
       });
       expect(handle).not.toBeNull();
       const before = (await stat(execRunLockPath(executionPath))).mtimeMs;
-      await new Promise((resolve) => setTimeout(resolve, 35));
-      const after = (await stat(execRunLockPath(executionPath))).mtimeMs;
+      // 負荷の高い並列実行では timer が遅れるため、固定の待ち時間ではなく更新を待つ（上限 3 秒）。
+      let after = before;
+      const deadline = Date.now() + 3000;
+      while (after <= before && Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        after = (await stat(execRunLockPath(executionPath))).mtimeMs;
+      }
       expect(after).toBeGreaterThan(before);
       releaseExecRunLock(handle!);
     });
