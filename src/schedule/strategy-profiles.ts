@@ -43,21 +43,44 @@ type StrategyProfileApproach = Exclude<
 const EXPERT_PIPELINE = { executor: "expert", reporter: "normal" } as const;
 const NORMAL_PIPELINE = { executor: "normal", reporter: "normal" } as const;
 
+// Shared authoring policy from the hand-maintained Kata strategies (T88P / kata-wave-1).
+const KATA_AUTHORING_POLICY =
+  "[[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]の章立てに合わせ、" +
+  "rulebook に完成例の章を置かず sample へ外出しする。Markdown の第2〜第4階層の見出しに階層ごとの連番を付け、" +
+  "記述ガイドには章ごとの判断基準と良い例・悪い例を書く。sample は " +
+  "[[specdojo:clis-sample|CLI仕様の完成例]]程度の厚さとし、YAML は対象形式に合わせて内容を充実させる。" +
+  "recipe と template の要否を判断し、rulebook frontmatter に対応する ID または not-needed を宣言して理由を result に残す。" +
+  "実装・schema・リファレンスの値・構文・構造の詳細を再掲せず、正本を参照する。";
+
+const MAINTENANCE_DETAILS = {
+  rulebook:
+    "代表成果物の実績から rulebook の規則・判断基準を見直す。後続の段で recipe・sample・template を同期する。",
+  recipe:
+    "改訂した rulebook に沿って recipe を同期する。問いと作成手順に責務を絞り、rulebook の規則を再定義しない。",
+  sample:
+    "改訂した rulebook に沿って sample を完成例として手入れする。共通サンプル文脈を用い、" +
+    "代表成果物を単純に複写せず、判断に要る場面・例外を拾う。",
+  template:
+    "改訂した rulebook に沿って template を同期する。骨組みに責務を絞り、" +
+    "必須の章・項目・表の列名を整合させ、説明や完成例を転載しない。",
+} as const;
+
 function maintenancePhase(
   kind: "rulebook" | "recipe" | "sample" | "template",
 ): StrategyPhaseDefinition {
   return {
     id: `${kind}-maintenance`,
     name: `${kind} の見直し`,
-    task_suffix: "040",
+    task_suffix: { rulebook: "040", recipe: "045", sample: "050", template: "060" }[kind],
     duration_days: 0.5,
     execution: "agent",
     mode: "edit",
     approach: `${kind}-maintenance` as Approach,
     pipeline: EXPERT_PIPELINE,
     description:
-      `完成済みの成果物の実績から ${kind} を見直す。実際に書かれた内容と ${kind} の記述が食い違う箇所を洗い出し、` +
-      `再現可能な規則として ${kind} 側へ反映する。成果物本体はこのフェーズで書き換えない。`,
+      MAINTENANCE_DETAILS[kind] +
+      "成果物本体はこの段で変更しない。実行時に対象が not-needed なら変更せず、その旨を result に記録して完了する。\n\n" +
+      KATA_AUTHORING_POLICY,
   };
 }
 
@@ -76,7 +99,9 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
       description:
         "実践の型の作成条件から要否を判断し、代表成果物と必要な rulebook / recipe / sample / template を" +
         "同じタスクで初期整備する。不要な3種は rulebook frontmatter へ not-needed と宣言し、必要な一式の構造・" +
-        "用語・粒度を整合させる。判断できない前提は推測せず result に残す。",
+        "用語・粒度を整合させる。代表が既存なら型との整合に必要な範囲だけ直し、業務判断は確定しない。" +
+        "判断できない前提は推測せず result に残す。\n\n" +
+        KATA_AUTHORING_POLICY,
     },
   ],
   "retrofit-pass": [
@@ -276,6 +301,10 @@ export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile>
     approach: "bootstrap",
     phase_sets: [
       "bootstrap-pass",
+      "rulebook-maintenance-pass",
+      "recipe-maintenance-pass",
+      "sample-maintenance-pass",
+      "template-maintenance-pass",
       "refine-pass",
       "condense-pass",
       "retrofit-review-pass",
@@ -329,7 +358,14 @@ export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile>
   },
   "rulebook-maintenance": {
     approach: "rulebook-maintenance",
-    phase_sets: ["rulebook-maintenance-pass", "review-pass", "finalize-pass"],
+    phase_sets: [
+      "rulebook-maintenance-pass",
+      "recipe-maintenance-pass",
+      "sample-maintenance-pass",
+      "template-maintenance-pass",
+      "review-pass",
+      "finalize-pass",
+    ],
     finalize_approach: "finalize",
   },
   "recipe-maintenance": {

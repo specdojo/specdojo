@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N2CP",
+  "run_id": "pjr-n2cp-20261114T114842Z-575c5b9e",
+  "updated_at": "2026-11-14T12:22:52.368Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T11:58:21.692Z",
+      "completed_at": "2026-11-14T12:06:52.503Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N2CP/pjr-n2cp-20261114T114842Z-575c5b9e/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-14T12:21:53.923Z",
+      "completed_at": "2026-11-14T12:22:52.368Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N2CP/pjr-n2cp-20261114T114842Z-575c5b9e/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N2CP/pjr-n2cp-20261114T114842Z-575c5b9e/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N2CP/pjr-n2cp-20261114T114842Z-575c5b9e/result.md"
+  }
+}
