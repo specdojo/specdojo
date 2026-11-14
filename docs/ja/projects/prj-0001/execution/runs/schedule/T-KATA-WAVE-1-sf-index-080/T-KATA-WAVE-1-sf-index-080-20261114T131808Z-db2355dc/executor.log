@@ -1,0 +1,5 @@
+機能構成表の直後にあった、人間の判断とシステムの責務を表の説明と重ねていた文を短縮しました。`P-01`〜`P-14` がすべて機能領域に属するという網羅性の情報は維持しています。Prettier と `git diff --check` は通過しました。Markdown lint は親 runner の検証対象です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"機能構成表直後の重複説明を短縮し、業務プロセス領域の網羅性を維持しました。","handoff":[],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/050-system-functions/sf-index.md","status":"passed","summary":"整形済み。変更はありません。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"}],"condense_records":[{"location":"sf-index.md §2 機能構成、表直後の段落","category":"repetition","action":"merge","reason":"表の「人間に残す判断」列が示す責務境界の説明を省き、P-01〜P-14 がすべて機能領域に属するという網羅性の判断を残した。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
