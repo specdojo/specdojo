@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T08:05:49Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-cxd-specdojo-070",
+  "by": "flash-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
