@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-sysd-critical-flows-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-090/T-KATA-WAVE-1-sysd-critical-flows-090-20261114T224747Z-d5b1d4be/plan.md
   started_at: "2026-11-14T22:47:49.805Z"
+  completed_at: "2026-11-14T23:10:21.795Z"
   agent: sonnet-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,22 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+`specdojo grade list --target deliverable --path docs/ja/product/040-system-design/sysd-critical-flows.md --changed-only` および `--dependency-changed` を実行した結果、評価対象パスが出力されたため、評価結果は最新ではない。一方、`--incomplete` は出力なしであり、評価パイプライン自体は完了している。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 鮮度確認において `docs/ja/product/040-system-design/sysd-critical-flows.md` が出力されたため、現在の評価結果は最新ではない（`grade-stale`）。
+- 評価結果が最新でないため、プランに基づき完了可否の判断は行わず、再評価を求める。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- 成果物を再 grade し、最新の評価結果を得た上で再度 review を実行すること。
+- 実装エビデンス（`src/exec/run/run.ts`、`src/exec/worktree.ts`、`src/register/register.ts`）と成果物の記述の一致判定および対応記録の確認を行うこと。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+評価結果の鮮度確認を実施したところ、評価対象パスが出力され、評価結果が最新ではないことが判明した。そのため、実装エビデンスとの照合などの詳細なレビュー工程に移行せず、`grade-stale` と判定した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: grade-stale
