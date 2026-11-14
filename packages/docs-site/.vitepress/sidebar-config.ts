@@ -285,7 +285,7 @@ const architectureRecipes = [
     recipe("コンテナ図", "cnd"),
     recipe("コンポーネント図", "cpd"),
   ]),
-  group("インフラ・技術選定", [recipe("技術スタック", "tsd")]),
+  group("インフラ・技術選定", [recipe("インフラ構成図", "ifd"), recipe("技術スタック", "tsd")]),
 ];
 
 const architectureTemplates = [
@@ -294,6 +294,7 @@ const architectureTemplates = [
     template("コンテナ図", "cnd"),
     template("コンポーネント図", "cpd"),
   ]),
+  group("インフラ・技術選定", [template("インフラ構成図", "ifd")]),
 ];
 
 const execRecipes = [recipe("humanタスクの確定", "exec-human-finalize")];
@@ -668,7 +669,10 @@ export const specdojoSidebarItems = [
       group("業務仕様", businessSpecificationRecipes),
       group("外部I/F仕様", externalIfRecipes),
       group("アーキテクチャ", architectureRecipes),
-      group("システム設計", [recipe("システム設計 全体構成", "sysd-index")]),
+      group("システム設計", [
+        recipe("システム設計 全体構成", "sysd-index"),
+        recipe("横断ルール", "sysd-cross-cutting-policy"),
+      ]),
       group("実行", execRecipes),
     ],
   },
@@ -704,7 +708,10 @@ export const specdojoSidebarItems = [
       group("業務仕様", businessSpecificationTemplates),
       group("外部I/F仕様", externalIfTemplates),
       group("アーキテクチャ", architectureTemplates),
-      group("システム設計", [template("システム設計 全体構成", "sysd-index")]),
+      group("システム設計", [
+        template("システム設計 全体構成", "sysd-index"),
+        template("横断ルール", "sysd-cross-cutting-policy"),
+      ]),
       group("運用", operationsTemplates),
     ],
   },

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4688e1c7ab89495ab23e92498eb0a697
+  ts: "2026-11-14T03:51:03Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型の整備 第 2 波（仕様と設計の残り・業務の受け入れ基準）
+    - field: description
+      from: ""
+      to: 設計までの型を仕上げる第 2 波。仕様の cdfd-mermaid・bds・sld・ifx-api・ifx-file、設計の cxd・cnd・cpd の mermaid 版、業務の受け入れ基準の bac の 9 種類
+    - field: input
+      from: ""
+      to: '["indie の方針（2026-11-14）: 設計までの型を先に仕上げる。非機能要件（`nfr-*`）とシステムの受け入れ基準（sac）は後回し。bac は wave-2 に含める","bds・sld・ifx-api・ifx-file はカタログに代表の宣言がないため、先にカタログに代表を足す。cxd・cnd・cpd の mermaid 版は wave-1 の型に includes で含まれる","schedule は、wave-1 の後に直す PJR-C8J8・160D・N2CP・E4R5・T01P が済んでから作る（strategy の生成に型の手入れの段が入り、review で型を grade するようになってから）"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: kata-wave-2
+    - field: domains
+      from: ""
+      to: '["business-model-bes","data-flow","user-interface-model","external-interface-specs","data-model-cdsd","architecture","business-acceptance-criteria"]'
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-APA2"]'
