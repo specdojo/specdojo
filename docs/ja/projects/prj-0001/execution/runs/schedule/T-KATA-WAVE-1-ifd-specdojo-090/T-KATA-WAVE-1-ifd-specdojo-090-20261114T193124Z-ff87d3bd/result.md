@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-ifd-specdojo-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-ifd-specdojo-090/T-KATA-WAVE-1-ifd-specdojo-090-20261114T193124Z-ff87d3bd/plan.md
   started_at: "2026-11-14T19:31:25.476Z"
+  completed_at: "2026-11-14T19:59:30.581Z"
   agent: luna-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,22 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+executor が `node --import tsx src/specdojo.ts grade list` を含む3つの鮮度確認コマンドを実行したが、終了コード0で出力がなかったため、評価結果の鮮度および確定状態を判定できなかった。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度が判定不能であり、`grade-unavailable` の条件に該当する。
+- 実装エビデンスとして指定された `.devcontainer/devcontainer.json` および `src/exec/exec.ts` について、成果物との対応記録が `docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifd-specdojo-090/T-KATA-WAVE-1-ifd-specdojo-090-20261114T193124Z-ff87d3bd/result.md` に残っておらず、実装照合が未充足である。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- 評価結果（grade）の鮮度および確定状態を正しく判定できる環境で再レビューを行うこと。
+- `.devcontainer/devcontainer.json` および `src/exec/exec.ts` の実装内容に基づき、成果物 `docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md` との整合性を照合し、その結果を `result.md` に記録すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+executor は `grade list` コマンドによる鮮度確認を試みたが、出力が得られず判定不能となった。また、実装エビデンスのパス（`.devcontainer/devcontainer.json`, `src/exec/exec.ts`）についての照合記録が `result.md` に存在せず、実装からの retrofit 確認が行われていないことを確認した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: grade-unavailable
