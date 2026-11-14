@@ -1,0 +1,12 @@
+外部システムI/F一覧（[ifx-index.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-ifx-index-070/docs/ja/product/020-external-interface-specs/ifx-index.yaml)）の磨き込みと整合性確認を実施しました。
+
+### 実施内容の要約
+- **冒頭メタ・コメントの補強**: rulebook の必須要件に従い、管理担当 Role（ARC）、承認・公開判断者（人間の PO）、公開対象および未合意スコープの整理（`_UNDECIDED_:`）を追記しました。
+- **Interface 1（AI provider CLI 連携）の詳細導線と合意整理**: 実在する詳細仕様 `[[prj-0001:ifx-cmd-ai-provider-cli|AI provider CLI 非対話起動のコマンド連携仕様]]` への導線と、未決定事項（タイムアウト・最大並列数等）の追跡先 `[[prj-0001:pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata|PJR-H90H]]`、各ロール（ARC, DEV, QE, PO）の確認事項を明記しました。
+- **Interface 2 & 3（Git / GitHub 連携）の `spec_ref: TBD` 追記**: 未作成の詳細仕様の仮称、論点、担当 Role、解消条件、結合テスト前の保留範囲をコメントに整理しました。
+- **末尾コメントの合意・計画引き継ぎの具体化**: 未登録の Git・GitHub 契約作成作業および認証・権限境界確認の PJR 登録依頼、ロール間の引き継ぎ方針を追跡可能な形式で整理しました。
+- **スキーマ検証・整形**: `npm run validate:schema:file` による esil スキーマ検証および Prettier 整形チェックに合格することを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"外部システムI/F一覧（ifx-index.yaml）の冒頭管理情報、詳細仕様・未決事項への導線、合意・計画への引き継ぎコメントを rulebook / recipe に沿って磨き込み、スキーマ検証と整形を完了しました。","handoff":["Git ローカル連携（worktree 等）および GitHub リモート連携（gh CLI 等）の詳細仕様が未着手（spec_ref: TBD）のため、外部結合テスト計画確定前に Schedule への作業登録と、PJR への課題登録（認証・権限境界確認待ち）を PM へ依頼すること。","AI provider CLI 連携のタイムアウト・最大並列数の未決事項は PJR-H90H で追跡中。人間の ARC が技術判断、PO が採否・公開条件を確認すること。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/esil.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-index.yaml","status":"passed","summary":"esil.schema.yaml に対するスキーマ検証に合格"},{"command":"npx prettier --check docs/ja/product/020-external-interface-specs/ifx-index.yaml","status":"passed","summary":"Prettier による構文・整形検証に合格"},{"command":"npm run lint:md","status":"not_applicable","summary":"Markdown ファイルの変更がないため非適用","reason":"changed *.md file condition is not met"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更がないため非適用","reason":"no history file changed"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の変更がないため非適用","reason":"deliverable changes do not reach docs/ja/projects/"}]}
+</specdojo_executor_evidence>
