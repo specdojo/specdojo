@@ -1,0 +1,15 @@
+`dct-index.yaml` の冗長さの整理が終わりました。変更は `groups` 先頭の YAML コメント 1 か所だけで、schema 検査と Prettier 検査はどちらも通っています。
+
+**変更した箇所**
+- 分類の根拠を説明するコメント 2 行を 1 行にまとめました。作業ツリーには前回の実行で残ったと思われる同じまとめ方の変更が既にありましたが、構成図の正本である文書構成ガイド（`specdojo:docs-structure-guide`）への参照が消えていました。まとめた形は残し、参照を戻しています。
+
+**変更せずに残した箇所**
+- **外部I/F仕様を業務仕様群に置く理由のコメント:** 複数の分類に当てはまりそうなドメインは判断理由を YAML コメントに残す、と rulebook が求めているため残しました。
+- **各ドメインの `overview`:** どれも「〜を管理する。」という同じ形の文ですが、ドメインごとに対象が違う 1 文の概要で、rulebook が必須としている項目です。繰り返しではないため残しました。
+
+**今回のタスク外で見つけた問題**
+- 計画ドメインの `overview`（「成果物カタログ、Timeline、Schedule の計画成果物を管理する。」）は個別の成果物を列挙しており、「個別成果物を列挙しない」という rulebook のルールに反している可能性があります。直すと内容が変わるため今回は触れておらず、`handoff` に記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dct-index.yaml の groups 先頭のコメント 2 行を 1 行にまとめ、前回の作業ツリー差分で消えていた文書構成ガイド（specdojo:docs-structure-guide）への参照を戻した。外部I/F仕様の配置理由のコメントと各ドメインの overview は判断情報または rulebook の必須項目のため残した。schema 検査と Prettier 検査は成功。","handoff":["計画ドメインの `overview`（「成果物カタログ、Timeline、Schedule の計画成果物を管理する。」）は個別成果物を列挙しており、dct-index-rulebook の「`overview` は個別成果物を列挙しない」に反する可能性がある。condense では内容を変えないため手を入れていない。edit または review で扱うか判断が必要。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct-index.schema.yaml --data docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml","status":"passed","summary":"valid"},{"command":"npx prettier --check docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml","status":"passed","summary":"All matched files use Prettier code style"}],"condense_records":[{"location":"groups 先頭の YAML コメント（分類の根拠、2 行）","category":"repetition","action":"merge","reason":"「構成図に合わせる」と「要求・現状・移行・マネジメント／要件〜設計・品質保証・運用でまとめる」の 2 行を 1 文にまとめた。正本の文書構成ガイド（specdojo:docs-structure-guide）への参照と分類の内訳は残しており、判断情報は失われていない。","cause":{"type":"document"}},{"location":"groups 先頭の YAML コメント（外部I/F仕様を業務仕様群へ含める理由）","category":"canonical-restatement","action":"retain","reason":"rulebook が、複数の分類に当てはまりそうなドメインの判断理由を YAML コメントに残すよう求めている。配置判断の根拠なので残した。","cause":{"type":"document"}},{"location":"各ドメインの overview（「〜を管理する。」の同じ形の文）","category":"repetition","action":"retain","reason":"文の形は同じだが、内容はドメインごとに違う関心領域の 1 文の概要で、rulebook の必須項目である。繰り返しには当たらないため残した。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

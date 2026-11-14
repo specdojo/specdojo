@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:dct-index
+path: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 96
+graded_at: "2026-11-14T19:30:05.532Z"
+graded_by: luna-review-executor
+content_hash: 00594c69bc3ca87473971c057cb064f930e3fcf4e2733b12e1e7297975ce2b66
+source_hashes:
+  catalog-entry: d4d26c4177bc1e1d881e39bbd5b2e7540d1a316ec766417b65bd3a52bafbd113
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: e1b1ac8e03711fdc6f6fe9146e78131470f82de72c4f27074163053cbee53419
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 94
+  implementation:
+    score: 100
+  quality:
+    score: 94
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 9
+    anchor: "groups:"
+    message: >-
+      The source declares the domains, but no generated index view or sidebar is present to verify that users can reach
+      every domain through both navigation surfaces.
+    message_ja: >-
+      The source declares the domains, but no generated index view or sidebar is present to verify that users can reach
+      every domain through both navigation surfaces.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 11
+    anchor: "# 外部I/F仕様は構成図で業務仕様群の枠内に置かれるため、業務仕様群へ含める。"
+    message: >-
+      The classification comment places external interface specifications inside the business specifications group, but
+      the document-structure guide lists them as a separate top-level product domain; align the placement or its cited
+      rationale with the guide.
+    message_ja: >-
+      The classification comment places external interface specifications inside the business specifications group, but
+      the document-structure guide lists them as a separate top-level product domain; align the placement or its cited
+      rationale with the guide.
+    cause:
+      type: kata
+      kind: rulebook
+      location: >-
+        docs-structure-guide, §9.1: product directory structure lists 020-external-interface-specs separately from
+        010-business-specs
+  - id: F003
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 60
+    anchor: "- domain: external-interface-specs"
+    message: >-
+      Place the external interface domain according to the document-structure guide so readers following the catalog’s
+      groups can find it in the documented top-level product structure.
+    message_ja: >-
+      Place the external interface domain according to the document-structure guide so readers following the catalog’s
+      groups can find it in the documented top-level product structure.
+    cause:
+      type: kata
+      kind: rulebook
+      location: >-
+        docs-structure-guide, §9.1: product directory structure lists 020-external-interface-specs separately from
+        010-business-specs
+done_criteria:
+  satisfied: 1
+  total: 2
+  unsatisfied:
+    DC-002:
+      - QE
+  detail_ref: prj-0001:dct-index-grade-criteria

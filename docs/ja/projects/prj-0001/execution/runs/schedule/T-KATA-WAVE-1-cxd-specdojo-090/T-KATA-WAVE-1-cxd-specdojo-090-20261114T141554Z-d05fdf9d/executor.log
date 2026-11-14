@@ -1,0 +1,35 @@
+cxd-specdojo の実装エビデンス（`src/specdojo.ts`、`package.json`）の対応記録を、先行タスクの result から探しています。見つかったのは他の成果物の result だけでした。ここまでの結果をまとめます。
+
+**レビュー結果（実行した確認のみ）**
+
+- **鮮度:** `grade list --target deliverable --path docs/ja/product/030-architecture/010-c4/cxd-specdojo.md` を `--changed-only` と `--dependency-changed` の両方で実行し、どちらも出力は空でした。評価結果は最新です。
+  - grade は `verdict` が `needs-work`、`score` が 95 です。
+  - finding は blocker 0 件、major 1 件（F005）、minor 4 件です。
+- **フェーズ要求との照合:** `docs/ja/product/030-architecture/010-c4/cxd-specdojo.md` は `draft` のままで、`ready` に昇格されていません。内容は次のとおりです。
+  - 概要と C4 図
+  - 要素・境界定義（Person、外部システム、`REL-01`〜`REL-05` の関係表）
+  - 技術前提と検証観点
+  - 未解決事項
+  - 完了条件 `DC-001`〜`DC-004` に対応する内容は存在します。その品質は grade が評価済みなので再評価していません。
+- **F005 の位置づけ:** 本文 69 行目の `_ASSUMPTION_` は、メモ/将来課題に解消先を示しています。人間の確認待ちの仮定として意図的に残されたものです。
+- **実装エビデンスの対応記録（未充足）:**
+  - `src/specdojo.ts` と `package.json` のどちらも、リポジトリ上に存在します。
+  - cxd-specdojo の先行 run は `-005`、`-040`〜`-080` に ID があります。`-050` の result を確認すると、`src/specdojo.ts` と `package.json` について「一致・乖離・確認不能・未確認」の判定を記した記録は見当たりませんでした。
+  - 他の run（`-005`、`-040`、`-045`、`-060`、`-070`、`-080`）は、本文全体の確認までは行っていません。
+  - `src/specdojo.ts` と `package.json` を含む result を grep すると、cxd-specdojo のものではなく、他成果物の result がヒットしました。
+  - 成果物側は `package.json` の依存宣言から provider CLI や GitHub 連携を直接裏づけていません。`package.json` で確認できたのは `commander` と orchestrator 起動用の scripts だけです。
+  - AI provider CLI と Git/GitHub の関係は、未作成の `ifx-cmd-git-cli` と `ifx-cmd-github-cli` に先送りしています。
+  - plan の進め方 2 により、記録のない 2 パスは未充足事項です。
+- **乖離と修正対象候補:** 乖離として記録されたものは確認できませんでした。実装から目的や将来方針を推測して書いた形跡も、finding にはありません。
+
+**推奨 verdict: `incomplete`**
+- 理由は、実装エビデンス 2 パスの対応と判定が実行記録にないことです。grade の良否とは関係ありません。
+- 改善指示は次の 2 点です。
+  - `src/specdojo.ts`（コマンド全体＝境界の外縁）と `package.json`（外部依存宣言）について、成果物の記述との対応と判定を実行記録に残します。
+  - 記録の際は、AI provider CLI と Git/GitHub の関係が実装から確認できるかを明示します。
+
+**確認できなかった範囲:** `src/specdojo.ts` と `package.json` の中身の突き合わせは行っていません。reporter 側で result を作る際の確認事項として残します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"評価結果は最新（--changed-only / --dependency-changed とも出力なし）。grade は verdict=needs-work, score=95, blocker 0 / major 1 / minor 4。成果物はフェーズ要求の構成を満たし、status は draft のまま。ただし実行記録に src/specdojo.ts と package.json の対応・判定が見つからず、cxd-specdojo の先行 run 全件の本文は確認していない。推奨 verdict は incomplete。改善指示は2パスの対応と判定を実行記録へ残すこと。確認できなかった範囲: 2パスの中身の突き合わせと、先行 run -005/-040/-045/-060/-070/-080 の result 全文の確認。","handoff":["推奨 verdict は incomplete。実装エビデンス src/specdojo.ts と package.json について、成果物記述との対応と判定（一致・乖離・確認不能・未確認）を実行記録へ追加すること","package.json は commander と orchestrator 起動 scripts のみ確認。provider CLI・GitHub 連携の依存宣言は確認できず、ifx-cmd-git-cli と ifx-cmd-github-cli の未作成が背景である可能性がある","F005 の _ASSUMPTION_（ローカル実行の仮定）は人間確認待ちの意図的な残置であり、解消先は成果物の「メモ / 将来課題」に記載済み","verdict 記録の直前に鮮度確認（grade list --changed-only / --dependency-changed）を再実行すること"],"validations":[{"command":"npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/030-architecture/010-c4/cxd-specdojo.md --changed-only","status":"passed","summary":"出力なし。評価結果は最新"},{"command":"npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/030-architecture/010-c4/cxd-specdojo.md --dependency-changed","status":"passed","summary":"出力なし。評価結果は最新"}]}
+</specdojo_executor_evidence>

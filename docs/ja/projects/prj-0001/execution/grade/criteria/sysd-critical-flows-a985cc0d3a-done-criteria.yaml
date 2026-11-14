@@ -2,12 +2,12 @@
 id: sysd-critical-flows-grade-criteria
 document: sysd-critical-flows
 path: docs/ja/product/040-system-design/sysd-critical-flows.md
-graded_at: "2026-10-20T16:30:10.182Z"
-graded_by: flash-high-executor
-content_hash: 4b6b566dcca2287d98b1d520831f6263c2f92873c1a9bfaf4becaf7b72ff10ae
+graded_at: "2026-11-14T14:53:23.522Z"
+graded_by: sonnet-review-executor
+content_hash: b5c89a25ff8b3f11574ca5e4e3e0efa81bfd4aa8aa12436047f2a74649aef42c
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 5
+  unsatisfied: 0
   total: 5
 criteria:
   - id: DC-001
@@ -15,41 +15,28 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-business-value
-    status: unsatisfied
-    reason: Selection rationale comparing other candidates and concrete business impacts when issues occur are not identified.
+    status: satisfied
   - id: DC-002
     text: 重要フローの内容を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: unsatisfied
-    reason: >-
-      Decision criteria, open items, business impacts, approvers, and conditions for finalizing reference values are
-      missing.
+    status: satisfied
   - id: DC-003
     text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: >-
-      System and service boundaries, synchronization boundaries, and exact failure recovery constraints are not
-      sufficiently defined.
+    status: satisfied
   - id: DC-004
     text: 重要フローのテストシナリオ設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: >-
-      Concrete test IDs, file paths, test commands, inputs, and expected outcomes are not provided for designing test
-      scenarios.
+    status: satisfied
   - id: DC-005
     text: フロー実装の共通理解として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: unsatisfied
-    reason: >-
-      Implementation target files, schema, configuration keys, concrete limits, and input/output constraints are not
-      uniquely traceable.
+    status: satisfied

@@ -28,6 +28,7 @@ import { gradeContentHash, readGradeResultForDocument } from "../../../src/grade
 import { renderGradePlan } from "../../../src/grade/plan.js";
 import { validateGradeResultForDocument } from "../../../src/grade/markdown.js";
 import { ensureReviewGrade, reviewGradeFreshness } from "../../../src/review/grade.js";
+import { releaseLock, tryAcquireLock } from "../../../src/shared/cross-process-lock.js";
 import {
   GRADE_RUN_DOCUMENT,
   GRADE_RUN_MARKERS,
@@ -64,6 +65,31 @@ afterEach(() => {
 });
 
 describe("native grade run", () => {
+  it("fails by default when busy, and waits for the same project lock when requested", async () => {
+    const lockPath = join(root, "execution/grade/generated/run.lock");
+    mkdirSync(join(root, "execution/grade/generated"), { recursive: true });
+    const lock = tryAcquireLock(lockPath, { actor: "other-grader" });
+    expect(lock).not.toBeNull();
+    try {
+      await expect(grade(options)).rejects.toThrow("grade run is busy");
+      const waiting = grade({ ...options, ifBusy: "wait", isolatePipelineState: true });
+      expect(executePlan).not.toHaveBeenCalled();
+      releaseLock(lock!);
+      await expect(waiting).resolves.toMatchObject({ documents: [{ status: "complete" }] });
+      expect(executePlan).toHaveBeenCalledTimes(1);
+      expect(existsSync(lockPath)).toBe(false);
+    } finally {
+      if (lock) releaseLock(lock);
+    }
+  });
+
+  it("rejects an unknown busy policy without starting an agent", async () => {
+    await expect(grade({ ...options, ifBusy: "skip" as "wait" })).rejects.toThrow(
+      "Invalid --if-busy",
+    );
+    expect(executePlan).not.toHaveBeenCalled();
+  });
+
   it.each(["top-level.yaml", "external.yml"])(
     "grades YAML %s and reuses its result in review",
     async (name) => {
