@@ -42,7 +42,7 @@ System Design Cross-cutting Policy Documentation Rules
 ## 4. 推奨 Frontmatter 項目
 
 - 共通の型・許容値は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] と成果物 Frontmatter schema を正とし、ここで再定義しない。
-- `type` は `architecture`、`rulebook` は本系統の完全 ID とする。設計索引へ所属する場合は `part_of` で接続する。
+- 成果物・完成例と template の生成物 Frontmatter では、`type` を本書の `deliverable_type` と同じ `architecture` に、`rulebook` を本書の完全 ID にする。template 自身の `type: template` と混同しない。設計索引へ所属する成果物は `part_of` で接続する。
 - `based_on` は実際に判断に使った依存範囲内の文書だけにする。プロジェクト共通文脈を機械的に転記しない。
 - `status` は agent が `ready` に変更しない。公開可否と昇格の判断責任は本文にも示す。
 
@@ -59,6 +59,7 @@ System Design Cross-cutting Policy Documentation Rules
 | 関連導線           | ○    | 設計、非機能、運用、テスト、判断記録への入口。Rule 変更から schema・生成物・互換性・移行・回帰対象への影響と担当                |
 | 未決事項・公開条件 | ○    | 未確定の対象 ID、判断者・期限・影響・次アクション、計画登録の状況。確認完了と人間による公開・昇格の条件                         |
 
+- 完成例にも上表の必須内容とルール詳細の六要素を適用する。架空の正本・検証コマンドは未同梱と明示し、検証計画を実行済み証跡として扱わない。
 - 共通エラー・冪等・時間上限と打切り・retry・診断ログと監査・トレーシング・秘密と権限・設定上書き・モジュール境界を必ず検討する。非該当は構成上の理由と代替手段、または代替不要の理由を示す。
 - HTTP API がなければ CLI 等のエラー契約を扱い、DB がなければファイル保存と途中状態の整合性を扱う。特定技術がないことを領域全体の対象外理由にしない。
 - retry は冪等前提、signal 分類、回数の数え方、attempt・backoff 上限、fallback・上限到達時の処置を正本の値または設定キーへ接続する。未定義なら受入を保留し、判断課題を明示する。
@@ -77,7 +78,7 @@ System Design Cross-cutting Policy Documentation Rules
 
 ### 6.2. ルール一覧
 
-推奨列は `Rule ID / Category / Summary / Level / Owner` とする。適合状況、依存、確認時機は別の対応表へ分けてもよい。作業の進捗を本文で二重管理しない。
+判断基準は、一覧・詳細・適合確認の Rule ID が相互に対応し、要約と必須度の組合せで要求・禁止が同じ意味になることである。推奨列は `Rule ID / Category / Summary / Level / Owner` とする。適合状況、依存、確認時機は別の対応表へ分けてもよい。作業の進捗を本文で二重管理しない。
 
 - 良い例: 「`scp-CFG-001`、不正設定で起動しない、MUST、DEV、実装未照合、起動前に V2 で確認」。
 - 悪い例: 「設定責務を分離する、MUST NOT」。必須度を組み合わせると意図と逆になり、進捗にも展開できない。
@@ -99,10 +100,11 @@ System Design Cross-cutting Policy Documentation Rules
 
 ### 6.5. 関連導線
 
-判断基準は、読み手が参照目的を理解して現行正本へ進め、変更時の追従先を選べることである。
+判断基準は、読み手が参照目的を理解して現行正本へ進め、変更時の追従先を選べることである。見出し・表・リンクでは参照先の文書名を基準に呼称を揃え、略号を使う場合は対応する文書名を示す。
 
 - 良い例: 「保存形式変更は DEV が schema と移行を同期し、旧形式・再実行の回帰を確認。運用索引は未作成のため OPS が整備後に接続する」。
 - 悪い例: 「provider 別設計、運用一式、旧フロー参照」。実在する ID・相対パスがなく特定できない。
+- 呼称の良い例: 「システム設計索引」「重要フロー」を表と参照ラベルで揃える。悪い例: 同じ参照先を表では「SYSD Critical Flows」、導線では説明なく「SYSD-CF」と呼び分ける。
 
 ### 6.6. 未決事項と公開条件
 
