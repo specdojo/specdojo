@@ -20,6 +20,10 @@ groups:
         overview: 成果物ドメインの分類と索引構造を定義
         path: dct-index.yaml
         rulebook: specdojo:dct-index-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog/build.ts
+            purpose: 成果物カタログの読込・検証と索引ビューの組み立て
         done_criteria:
           - text: 全ドメインが重複なく適切な分類へ配置されていること
             roles: [ARC]

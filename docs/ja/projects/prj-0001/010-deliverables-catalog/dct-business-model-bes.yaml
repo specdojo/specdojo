@@ -23,6 +23,10 @@ groups:
         overview: cdfd-overview.md の10プロセス領域の起点イベントを一覧で定義する
         path: bes-index.md
         rulebook: specdojo:bes-index-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: 業務イベントの起点となる利用者の操作を受け付けるコマンドの入口
         done_criteria:
           - text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
             roles: [BA]
