@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-sysd-critical-flows-080",
   "run_id": "T-KATA-WAVE-1-sysd-critical-flows-080-20261114T132714Z-6df7d9a8",
-  "updated_at": "2026-11-14T14:32:23.249Z",
+  "updated_at": "2026-11-14T14:33:10.086Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-080/T-KATA-WAVE-1-sysd-critical-flows-080-20261114T132714Z-6df7d9a8/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "luna-executor",
       "attempts": 1,
       "started_at": "2026-11-14T14:32:23.249Z",
-      "completed_at": null,
+      "completed_at": "2026-11-14T14:33:10.086Z",
       "artifact_ref": null
     }
   },
