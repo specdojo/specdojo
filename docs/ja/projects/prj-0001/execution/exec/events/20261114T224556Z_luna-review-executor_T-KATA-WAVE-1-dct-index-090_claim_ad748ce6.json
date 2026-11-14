@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T22:45:56Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-dct-index-090",
+  "by": "luna-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
