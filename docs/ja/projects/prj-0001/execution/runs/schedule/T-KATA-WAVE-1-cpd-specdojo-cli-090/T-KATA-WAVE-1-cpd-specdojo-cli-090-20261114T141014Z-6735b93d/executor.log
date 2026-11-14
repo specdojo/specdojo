@@ -1,0 +1,84 @@
+I'll start by understanding the task structure and reading the required files. Let me first read the common conventions templates as instructed.
+The bash tool has restrictions. Let me note which commands are allowed and continue reading the required files.
+The result.md already has content (status `blocked`, verdict `incomplete`). I need to understand the full context. Let me read the deliverable, rulebook, upstream, source evidence, and the grade sidecar. Note: as a pipeline executor for this review task, I must NOT write the result file — only run review checks and report via the evidence envelope.
+
+Let me set up a todo list and read the key files in parallel.
+Now let me read the rulebook, the sample it points to, and the implementation evidence `src/specdojo.ts`, plus check for recipe/template files. Let me also check what bash commands I can actually run.
+Now let me read the sample, recipe, template, the implementation evidence, and check what bash commands I can run. The earlier `ls` was denied, so let me figure out permitted commands.
+I have the source evidence. Let me check allowed bash commands and read the grade sidecar plus the cpd-specific sample/recipe/template. The cpd-rulebook points to `cpd-sample`, `cpd-recipe`, `cpd-template`.
+I now have the grade sidecar. The deliverable is clean in git (not modified since grading); only `result.md`/execution-runner files are pending. Let me verify freshness with the specdojo commands that are permitted, and read the cpd sample/recipe/template plus check for a prior execution record.
+The sandbox restricts `bash` severely. Only `git diff*/status*/log*/show*`, `npm run lint:md/fm`, `npm run validate:schema:file`, and `specdojo exec validate*` are allowed — `specdojo grade list` is NOT. A prior executor already wrote `result.md` (verdict `incomplete`) and then hit the result-write limit, leaving it with an unresolvable `_ASSUMPTION_`. As this executor stage I must not write `result.md` or change lifecycle; only report. Let me check for a prior execution record to complete the retrospective cross-check, and compute content hashes to confirm freshness.
+Good — the deliverable and source are NOT in the modified list, confirming they're unchanged since grading. Let me find any prior execution records (the edit task that produced this deliverable) to confirm the implementation correspondence was/could be recorded, and verify the content hash independently via git show + a script.
+The pipe to `grep` isn't allowed. Let me read the prior results directly — the most relevant ones are `-070` (the edit result that produced this deliverable, per the blocked result) and the current grade context. Let me read them.
+Now I have the key execution records. The `-070` (fully-guided edit) and `-080` (condense) results DO contain implementation correspondence judgments for `src/specdojo.ts`. Let me read all remaining prior results to fully assess §6.2 coverage, plus verify content hash freshness independently via git.
+Now let me read the remaining results and verify freshness by comparing the on-disk deliverable content hash (via git show + script) against the grade sidecar. Let me check the template and the catalog entry too.
+The template is in `docs/ja/specdojo/templates/`. Now I have the full picture of all prior execution records. Let me read the cpd-template, find the catalog entry for done_criteria, and verify content hash freshness independently.
+The `node` command isn't allowed. Let me verify freshness another way — compare the current file against the committed HEAD version, and locate the catalog entry for done_criteria.
+`git status --short <path args>` (with a path suffix) triggers the deny. Plain `git status --short` was allowed earlier and showed the deliverable/src/grade-sidecar are NOT modified. The last commit touching the deliverable is `-080`, which ran before grading (13:04Z < 14:10Z). Let me locate the catalog entry for done_criteria and confirm the current plan matches the input.
+The `git show > file` redirect triggered the deny. Let me compare HEAD vs working tree for the deliverable without redirection, and find the catalog file that carries done_criteria.
+The catalog is at `dct-architecture.yaml`. Let me read the cpd-specdojo-cli entry to confirm its done_criteria match the plan, and check the project config for how content_hash/freshness is computed.
+Confirmed: the catalog `cpd-specdojo-cli` entry matches plan §2/§5 (same `depends_on`, `overview`, `evidence_refs`, and the three done_criteria DC-001/DC-002/DC-003 → viewpoints `vp-arc-technical-constraints`/`vp-qe-verifiability`/`vp-dev-implementation-readiness`, all scored 100 in the grade). Let me finalize freshness by reading the committed HEAD deliverable and trying a permitted specdojo command.
+The HEAD-committed deliverable is byte-identical to the working tree version I read (same lines/content), which together with `git status --short` showing **no modification** for the deliverable, source, or grade sidecar confirms: the deliverable has not changed since the grade run (`2026-11-14T14:10:14Z`). Let me try a permitted freshness command to strengthen the record.
+The semicolon chaining triggers the deny. Let me run single allowed commands.
+Confirmed freshness: the last commit touching the deliverable is `-080` (Nov 14 22:04 JST = 13:04Z), which precedes the grade run `2026-11-14T14:10:14Z`, and `git status --short` shows no uncommitted change to the deliverable. The grade sidecar is therefore current. Let me do a final cross-check of a couple of findings' source anchors before synthesizing the report.
+All evidence is gathered and consistent. Let me update the todo list and confirm no scratch files were left in the worktree before finalizing.
+`git status --short` confirms no scratch files were created by me: the only changes are the existing `result.md` (from a prior run — I did not touch it) and untracked runner files (`evidence.json`, `executor.log`, `pipeline-state.json`). The deliverable, source, rulebook set, and grade sidecar are all unchanged. I have completed the multi-perspective review read-only. Let me finalize the report.
+# レビュー完了（読み取り専用・多観点照合）
+
+`T-KATA-WAVE-1-cpd-specdojo-cli-090`（mode=review, approach=retrofit）を評価結果を事実として受領して照合しました。成果物・型・result を変更せず、指摘と根拠を下記に提示します。
+
+## 1. 評価結果の確認（鮮度＝最新）
+- サイドカー `docs/ja/projects/prj-0001/execution/grade/results/cpd-specdojo-cli.yaml`：`verdict=needs-work`、`score=82`、`graded_at=2026-11-14T14:10:14.071Z`、`content_hash=f488fcb9...`、finding 17件（blocker 0 / major 4 / minor 12 / note 1）、`done_criteria satisfied 3/3`。
+- **鮮度＝最新**：成果物 `cpd-specdojo-cli.md` を最終に更新した commit は `-080`（13:04Z、grade より前）、かつ `git status --short` で成果物・`src/specdojo.ts`・grade サイドカーすべてに未コミット変更なし。計画 §4 も「現状最新」と明記 → **grade-stale / changed-during-review に非該当**（plan §6・共通 `E-01` 通り）。
+- **確認できなかった範囲**：sandbox が `specdojo grade list`・ハッシュ計算をブロックしたためサイドカー値を機械再検証できず（git の更新日序と clean 状態＝代替裏付け済み）。上位 `cnd-specdojo` 本文は plan の references になく、F010 で grade 自身も未確認（私は読めて整合）。`--dependency-changed` も機械実行不可。
+
+## 2. 判断根拠
+- **DC-001〜003 は完了**：グレードが viewpoint 全 100 で判定、`done_criteria satisfied:3/total:3`（サイドカー）。catalog `dct-architecture.yaml:80` の DC=plan §5 と一致。→ 品質は grade により確定済み（review は再評価しない）。
+- **plan §6 retrofit 4点**：①相関対応は **-070 result に記録あり**（一致1件／未確認2件を判定、`src/specdojo.ts:54-77` の個別登録・`main()` 内呼出なし・ソース配置不特定を裏付け済み。-080 condense の 2削除＝記述圧縮のみ、対応判定非影響）→ **充足**。②未充足（下）。③乖離なし・未確認2件の根拠は -070 に所在、未確認範囲明示 → **充足**。④実装から目的を推測した形跡なし（未確認は `メモ/将来課題`+`_ASSUMPTION_` へ適切処理）→ **充足**。
+
+## 3. 未充足事項・改善指示
+- **唯一の未充足事項**：plan §6.2 の「実行記録に実装エビデンス `src/specdojo.ts` との対応判定（一致/乖離/確認不能/未確認）を残すこと」が **本タスク（090 review）自身の result に記録されていない**＝先行 result `-070/-080` には判定が散在するが、090 の result には集約・引用がなく、plan が要求する「対応と判定を残す」を満たさない。
+- **改善指示（再計画用）**：(a) 090 の result「approach に応じた確認」へ `src/specdojo.ts` 各 register 関数（`register*Commands` / `main()` / `guardDistFreshness`）と成果物 §2・§3.2 の対応判定を集約引用する。
+- **grade finding F001–F017 は完了を妨げない**（DC と独立）。改善案を result へ記載：業務価値/上位目的の明示（F001,F007→`[[prj-0001:prj-overview]]` 具体節）、用語出典（F008→rulebook §2）、合意対象の明示（F009,line24）、決定者/判断タイミング/PJR 登録候補/報告先（F002,F004,F005,F006,line162/164/167、rulebook §6.5 推奨6列）、業務影響の具体化・変更波及（F003,F012,F016）、「内部構成と実装対応」の §4.1 参照圧縮（F011,line166）、`done_criteria` の追記/参照（F013,line162）、公開前確認=OPS・非公開情報範囲・PO 可否（F015,line24）。
+
+**verdict（推薦）＝ `incomplete`**：grade は最新かつ DC 充足、品質 finding を伴って完了可能だが、plan §6.2 の実行記録対応照合を **このタスク自身が result に残していない**ため完了条件未充足。
+
+## 4. 確認済み範囲（型一式・相互整合）
+- rulebook↔template↔sample：`cpd-rulebook`（§1全方針/§1.1分担6行/§5章要件/§6.1–6.7 記述ガイド＋良い悪い例）、`cpd-template`（_TODO_+推奨6列メモ表）、`cpd-sample`（駄菓子屋完成例・6列＋保守文）は **互いに整合**。rulebook frontmatter は `recipe/sample/template` を ID 宣言、rulebook にサンプル章なし → plan §1 を全て満たす。`cpd-mermaid-rulebook` は記法正本として `includes`。
+- 成果物 ↔ 上位 `cnd-specdojo`：§3.4 の REL-16/05, REL-18/07, REL-19/08 の具体化は本文読み込みで **互換確認**。
+- 実装 `src/specdojo.ts`（last commit 10/26、grade より前=安定）：6エンジンの個別登録＝一致、内部呼出/ソース配置=未確認と本文の `ASSUMPTION_`/§5 と一致。
+
+## 結論（executor 段階・result は変更せず）
+- **verdict = `incomplete`**（推薦）。完了を妨げる要因は「plan §6.2 の実行記録対応照合が 090 自身の result に未集約」のみ。品質 DC は grade で充足、grade finding 17 件は完了独立。
+- **sandbox 上の制約**：`specdojo grade list`・ハッシュ計算・result 書込（編集ツール）不可のため、鮮度は git の更新日序＋clean 状態、判定内容は `handoff` に残します。**result.md は reporter/run が埋める前提で未変更（plan §8 と整合）**。verdict が complete 以外でも result が記録可能なら正常終了（exit 0）とする規定に準拠。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "T-KATA-WAVE-1-cpd-specdojo-cli-090（mode=review, approach=retrofit）を多観点・読み取り専用で照合完了。gradeサイドカー(verdict=needs-work/score=82/finding 17件: blocker0・major4・minor12・note1 / done_criteria satisfied 3/3)を事実として受領し、鮮度＝最新を確認(成果物最終更新commit=-080 13:04Z<grade 14:10Z、git statusで成果物・src/specdojo.ts・サイドカーは未変更、--dependency-changedも機械実行不可だが計画§4が最新明示)。完了条件DC-001〜003はgrade viewpoint全100+sidecar satisfied=3/3で充足。plan §6 retrofitの4点:(1)実装対応は先行result -070に記録あり(src/specdojo.tsの6エンジン個別登録=一致,エンジン間呼出/ソース配置=未確認の2件を判定済み,-080 condenseは圧縮のみ)→充足,(3)乖離なし・根拠所在+未確認明示→充足,(4)実装から目的推測しない形跡なし(_ASSUMPTION_/メモへ適切処理)→充足。一方(2)plan §6.2『実行記録にsrc/specdojo.tsとの対応判定を残すこと』が本タスク自身(090)のresultに集約・引用されていないため完了条件未充足=唯一の未充足事項。grade finding 17件はDCと独立で完了を妨げない。verdict=incomplete(推薦)。改善指示:resultへ'approachに応じた確認'としてsrc/specdojo.ts各register関数(register*Commands/main()/guardDistFreshness)と成果物§2/§3.2の対応判定・未確認範囲を集約引用すること、加えてF001〜F017(業務価値/上位目的明示,用語出典,合意対象,判断者/タイミング/PJR候補/報告先,業務影響,変更波及,公開前確認=OPS+非公開情報範囲+PO可否)をrulebook§6.5推奨6列に沿い補強すること。sandbox制約:specdojo grade list・ハッシュ再計算・result書込は不可のため鮮度はgit更新日序+cleanで代替裏付け、判定内容はhandoffに残し、result.mdはreporter/runが充填する前提で未変更(executor段階として正常)。",
+  "handoff": [
+    "【verdict=incompleteを推薦】完了を妨げる要因はplan §6.2『実行記録にsrc/specdojo.tsとの対応判定を1行単位(一致/乖離/確認不能/未確認)を残すこと』が本タスク(090)自身のresultへ集約・引用されていない、の一点。DC-001〜003はgrade(satisfied 3/3,viewpoint全100)で充足。品質grade finding 17件は完了独立。",
+    "【未充足事項の改善指示】090のresult『approachに応じた確認』へsrc/specdojo.tsのregister*Commands/catalog,exec,deliverable,schedule,timeline,index,register,routine,job,watch,build,yaml-pages,dashboard,grade,agent,kata,devcontainer,init,orchestrator / main() / guardDistFreshness と成果物 cpd-specdojo-cli.md §2・§3.2 の対応判定(6エンジンの個別登録=一致、エンジン間呼出関係=未確認、ソース配置確定=未確認)と未確認範囲を集約引用。先行result T-KATA-WAVE-1-cpd-specdojo-cli-070-...d805ada6/result.md §3・T-KATA-WAVE-1-cpd-specdojo-cli-080-.../result.md §3 が対応判定の所在。",
+    "【grade finding 17件の改善案(完了を妨げない・再計画へ)】F001/F007: line18の概要に[[prj-0001:prj-overview]]の具体節へ分業の根拠を参照。F002(line164)/F003(line169)/F004(line164): §5メモ表に判断者=人間のPO/判断タイミング/PJR登録候補列を追加/参照、rulebook§6.5推奨6列へ整合。F005(line167): 参考接続可否をPJR登録候補とするかを明記。F006(line162)/F013(line162): 報告先=PM/PO・done_criteriaの追記/参照先を明記。F011(line166): '内部構成と実装対応'を§4.1参照へ圧縮。F012(line169)/F016(line162): 外部依頼/ランタイム仮定変更時の変更要波(詳細設計・データ設計・結合観測点)と運用手順(owner=ARC,再生成/再検証)を明記。F008: rulebook§2用語出典への参照。F009(line24): 合意対象=境界/責務/依存方向を明示。F015(line24): 公開前確認のowner=OPS・非公開/個人情報範囲・PO可否条件を明記。",
+    "【評価結果サイドカーは最新】docs/ja/projects/prj-0001/execution/grade/results/cpd-specdojo-cli.yaml, verdict=needs-work, score=82, graded_at=2026-11-14T14:10:14.071Z, content_hash=f488fcb9ace512d83a9216b82a31e98314d829bc0e2a8f1005d7236f9d05fac9, finding 17件(blocker0/major4/minor12/note1), done_criteria satisfied=3/total=3。sandboxはspecdojo grade list・ハッシュ計算をブロックするため、git status --short(成果物・src/specdojo.ts・サイドカーは未変更)+最終更新commit T-KATA-WAVE-1-cpd-specdojo-cli-080 13:04Z(<grade 14:10Z)で代替裏付け。specdojo grade list --target deliverable --path docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md --changed-only / --dependency-changed と --incomplete はsandboxで実行不可(reporter/run側で実施を推奨)。",
+    "【確認済み・型一式の相互整合】cpd-rulebook(§1全方針/§1.1分担6行/§5章要件/§6.1–6.7記述ガイド+良い悪い例)、cpd-template(_TODO_+推奨6列メモ表)、cpd-sample(駄菓子屋完成例・6列+保守文)は互いに整合。rulebook frontmatterはrecipe/sample/templateをID宣言、rulebook内にサンプル章なし(plan §1充足)。cpd-mermaid-rulebookはincludesで記法正本。上位cnd-specdojo本文はplanのreferencesにないがF010通り、私は読み込み整合確認済み(REL-16/05,REL-18/07,REL-19/08等の具体化)。実装src/specdojo.ts(last commit 2026-10-26, gradeより前=安定)の6エンジン個別登録は一致、エンジン間呼出関係とソース配置確定は未確認(本文§5 ASSUMPTION/メモと一致)。成果物cpd-specdojo-cli.mdの最終更新commitは-T-KATA-WAVE-1-cpd-specdojo-cli-080でgrade 14:10Zより前、git status --shortで未変更。"
+  ],
+  "validations": [
+    {
+      "command": "git status --short docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md src/specdojo.ts docs/ja/projects/prj-0001/execution/grade/results/cpd-specdojo-cli.yaml",
+      "status": "not_applicable",
+      "reason": "sandboxのbash制限でgitのpath引数を伴う形式は拒否される(plain 'git status --short'のみ許可)。代替: plain 'git status --short'により、成果物・src/specdojo.ts・gradeサイドカーに未コミット変更がないことを確認済み(変更なし)。grade-stale/changed-during-reviewに非該当の裏付けとして利用。"
+    },
+    {
+      "command": "specdojo grade list --target deliverable --path docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md --changed-only",
+      "status": "not_applicable",
+      "reason": "sandboxのbash許可リストにspecdojo grade系コマンドが含まれないため実行不可。サンドボックス内で鮮度を機械確認できないため、git status(clean) + git logの最終更新日(-080 13:04Z<grade 14:10Z)+ 計画§4の現状最新明示で代替裏付け。--dependency-changedも同様に実行不可。reporter/run側での実施を推奨。"
+    },
+    {
+      "command": "specdojo grade list --target deliverable --path docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md --incomplete",
+      "status": "not_applicable",
+      "reason": "sandboxのbash許可リストにspecdojo grade系コマンドが含まれないため実行不可。gradeサイドカーは読取可能かつ完全(verdict/score/finding_counts/findings/done_criteriaが記載、unavailableに非該当)なため、grade-unavailableに該当しないことを確認済み。"
+    }
+  ]
+}
+</specdojo_executor_evidence>
