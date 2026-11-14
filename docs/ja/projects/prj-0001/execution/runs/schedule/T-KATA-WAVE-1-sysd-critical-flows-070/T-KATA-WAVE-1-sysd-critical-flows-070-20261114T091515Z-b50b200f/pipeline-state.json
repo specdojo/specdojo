@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-sysd-critical-flows-070",
+  "run_id": "T-KATA-WAVE-1-sysd-critical-flows-070-20261114T091515Z-b50b200f",
+  "updated_at": "2026-11-14T11:32:00.997Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "luna-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T09:17:08.209Z",
+      "completed_at": "2026-11-14T09:18:02.495Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-070/T-KATA-WAVE-1-sysd-critical-flows-070-20261114T091515Z-b50b200f/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-14T11:28:33.527Z",
+      "completed_at": "2026-11-14T11:31:59.107Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-070/T-KATA-WAVE-1-sysd-critical-flows-070-20261114T091515Z-b50b200f/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "luna-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T11:32:00.997Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-070/T-KATA-WAVE-1-sysd-critical-flows-070-20261114T091515Z-b50b200f/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-critical-flows-070/T-KATA-WAVE-1-sysd-critical-flows-070-20261114T091515Z-b50b200f/result.md"
+  }
+}
