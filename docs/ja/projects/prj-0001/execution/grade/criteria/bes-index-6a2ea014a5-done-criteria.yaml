@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: bes-index-grade-criteria
+document: bes-index
+path: docs/ja/product/010-business-specs/030-business-model/bes-index.md
+graded_at: "2026-11-14T20:03:44.365Z"
+graded_by: luna-review-executor
+content_hash: a4c1e148dca01516e34b6eeeedb678d6c93b4063382eb1fa08ef33f051be9bd6
+summary:
+  satisfied: 0
+  unsatisfied: 4
+  total: 4
+criteria:
+  - id: DC-001
+    text: 主要な業務イベントが業務観点で網羅的に一覧化されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      The index lists events but does not provide review evidence confirming comprehensive coverage of the source
+      domains.
+  - id: DC-002
+    text: イベント一覧のスコープを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: The document requires human PO approval of the event-list scope, but no approval is recorded.
+  - id: DC-003
+    text: イベント駆動設計・メッセージング設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      Unverified fact-data mapping and unresolved issues mean the index is not yet confirmed as an event-driven design
+      input.
+  - id: DC-004
+    text: イベントベースのテスト設計への網羅性が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: unsatisfied
+    reason: No QE evidence confirming event-based test-design coverage is recorded.

@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:50:28Z"
-  block_reason: agent exited with non-zero code
+  block_reason: "parent validation failed: typecheck"
   commit_type: feat
   commit_scope: docs-site
 ---
