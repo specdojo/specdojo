@@ -360,6 +360,32 @@ pipeline:
 - 同じ `id` と `repo` の組の重複、`id`・`repo` 以外のキー、`repo` の無いオブジェクトは、agent 起動前の設定エラーになります。
 - 実行するコマンドは、どのリポジトリでも ID ごとの固定 argv です（例: `test-unit` は `npm run test:unit`）。リポジトリ別に command や npm script 名を指定する手段は設けません。プロダクトリポジトリの npm script 名が異なる場合は、プロダクト側の `package.json` に許可リストと同じ名前の script（`test:unit` など）を用意してください。用意できない検証は、そのリポジトリへ割り当てないでください。script が無いまま割り当てると、`npm run` が失敗して親検証は `failed` になります。
 
+要素に `paths` を書くと、変更の種類で検証を選べます（PJR-T01P）。親 runner は executor が変えたファイルを `paths` の glob（`**`・`*`・`?`・`{a,b}`、割り当てたリポジトリからの相対）と照らし、合うファイルが無ければ検証を流さず `not_applicable` として記録します。`not_applicable` は失敗として扱わず、executor が同じ検証を `not_run` と報告していても block しません。次の場合は `paths` があっても流します。
+
+- `paths` を書かない検証（迷う場合は書かずに、今までどおり毎回流します）。
+- 変更一覧が無い、または evidence の上限（1,000 件）で切れた場合。
+- reporter の再開の前に統合先を取り込んだ後の再検証。
+
+```yaml
+pipeline:
+  parent_validations:
+    - lint-md
+    - validate-schema # 文書だけの変更でも流す
+    - { id: typecheck, paths: ["{src,tests,tools}/**", "tsconfig*.json"] }
+    - { id: test-unit, paths: ["{src,tests,tools}/**", "docs/ja/specdojo/**", "vitest.config.*"] }
+```
+
+`pipeline.commit_hook_skips` は、runner の統合の commit で流し直さない Git hook（lefthook のコマンド名）を宣言します。`covered_by` に並べた親の検証がその run ですべて `passed` のときだけ、commit を `LEFTHOOK_EXCLUDE` 付きで実行します。`not_applicable` や失敗した検証は代わりにならないため、その場合は hook を流します。人が手で commit するときの hook は変わりません。
+
+```yaml
+pipeline:
+  commit_hook_skips:
+    - { hook: typecheck, covered_by: [typecheck] }
+    - { hook: test, covered_by: [test-unit, test-integration] }
+```
+
+`pipeline.mechanical_result` を `true` にすると、edit result を reporter の agent を起動せずに runner が作ります。対象は、結果が完了で executor が `final_message` を返した edit だけです。実施内容は `final_message` の各行で、進め方には runner が作ったことを書きます。review、block、描画の失敗は従来どおり reporter が書きます。既定は `false` です。
+
 `run.register_execution` は、`exec run --register` の既定の実行場所です。`worktree` または `in-place` を指定します。省略時は既存リポジトリとの互換性のため `in-place` です。CLI の `--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。
 
 `run.register_post_review` は、register の worktree 統合後に読み取り専用 review pipeline を実行し、todo / issue を verdict に応じて自動 close または `waiting` へ遷移するかを指定する boolean です。既定は `false` です。CLI の `--post-review` でもその run だけ有効にできます。review executor の既定は `claude-expert-review-executor` で、`--review-by` が優先されます。詳しい判定と、runner 自身を変更した項目を自動 close しない規則は [exec運用ガイド](exec-operation-guide.md) を参照してください。

@@ -29,6 +29,7 @@ import {
   parentValidationGateFor,
   parentValidationLabels,
   parentValidationRoots,
+  parentValidationSelectionForEvidence,
   recordedParentValidationLabel,
   replaceParentValidationResults,
   runParentValidationBatch,
@@ -36,6 +37,7 @@ import {
   type ParentValidationEntry,
   type ParentValidationInvoker,
   type ParentValidationRoots,
+  type ParentValidationSelection,
 } from "../parent-validation.js";
 import {
   getProjectExecutionPath,
@@ -313,6 +315,8 @@ export type ParentValidationRunOptions = {
   // Identifies the waiting item in gate logs (task / register ID). Defaults to the cwd name.
   label?: string;
   invoke?: ParentValidationInvoker;
+  // 変更の種類で選ぶ検証（`paths` あり）の判定に使う変更一覧。省略時はすべて流す（PJR-T01P）。
+  selection?: ParentValidationSelection;
 };
 
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
@@ -329,7 +333,7 @@ export async function runConfiguredParentValidationBatch(
   const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
   const batch = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
     process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-    return await runParentValidationBatch(entries, cwd, options.invoke);
+    return await runParentValidationBatch(entries, cwd, options.invoke, options.selection);
   });
   for (const validation of batch.validations) {
     process.stdout.write(
@@ -360,7 +364,10 @@ export async function appendParentValidationsToExecutorEvidence(params: {
   const parentValidationBatch = await runConfiguredParentValidationBatch(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
-    { label: params.evidence.task_id },
+    {
+      label: params.evidence.task_id,
+      selection: parentValidationSelectionForEvidence(params.evidence),
+    },
   );
   const evidenceWithValidations = replaceParentValidationResults(
     params.evidence,

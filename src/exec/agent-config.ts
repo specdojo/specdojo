@@ -18,6 +18,7 @@ import {
   resolveParentValidationDefinitions,
   type ParentValidationEntry,
 } from "./parent-validation.js";
+import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -124,6 +125,12 @@ export type ExecDefaultsConfig = {
     // A string runs in the project repository; `{ id, repo }` runs in the named repository.
     parent_validations?: ParentValidationEntry[];
     parent_validation_concurrency?: number;
+    // Hook commands the runner's integration commit skips once the covering parent validations
+    // passed (PJR-T01P). Manual commits keep every hook.
+    commit_hook_skips?: CommitHookSkip[];
+    // Write the edit result from executor evidence without the reporter agent when the facts are
+    // complete (PJR-T01P). Review results and blocked runs still use the reporter.
+    mechanical_result?: boolean;
   };
   rate_limit_detection?: RateLimitDetection;
   connection_error_detection?: ConnectionErrorDetection;
@@ -601,6 +608,16 @@ export function loadExecDefaultsConfig(
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
   resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
+  resolveCommitHookSkips(
+    defaults.pipeline?.commit_hook_skips,
+    defaults.pipeline?.parent_validations,
+  );
+  if (
+    defaults.pipeline?.mechanical_result !== undefined &&
+    typeof defaults.pipeline.mechanical_result !== "boolean"
+  ) {
+    throw new Error("pipeline.mechanical_result in exec-defaults must be a boolean");
+  }
   resolveRegisterExecution(defaults);
   resolvePinnedRateLimitPolicy(defaults);
   for (const provider of Object.keys(defaults.providers ?? {}) as AgentProvider[]) {

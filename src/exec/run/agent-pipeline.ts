@@ -13,6 +13,7 @@ import {
   failedParentValidationReason,
   hasRecordedParentValidations,
   parentValidationRoots,
+  parentValidationSelectionForEvidence,
   replaceParentValidationResults,
 } from "../parent-validation.js";
 import {
@@ -26,7 +27,9 @@ import {
   deriveReporterFacts,
   evidenceForReporter,
   runReporterWithFormatRetry,
+  type ReporterEvidence,
 } from "../reporter.js";
+import { mechanicalEditReporterOutput } from "../mechanical-result.js";
 import { renderReporterResult } from "../results.js";
 import { isRunRecordPath, recordStem, snapshotRunAttempt } from "../run-records.js";
 import { randomHex } from "../shared.js";
@@ -77,7 +80,11 @@ export async function refreshParentValidationsForReporterResume(params: {
   const parentValidationBatch = await runConfiguredParentValidationBatch(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
-    { label: params.evidence.task_id },
+    {
+      label: params.evidence.task_id,
+      // 統合先を取り込んだ後は executor の変更以外も入るため、変更の種類で選ばずすべて流す。
+      ...(force ? {} : { selection: parentValidationSelectionForEvidence(params.evidence) }),
+    },
   );
   const evidenceWithValidations = replaceParentValidationResults(
     params.evidence,
@@ -96,6 +103,28 @@ export async function refreshParentValidationsForReporterResume(params: {
     `  Refreshed executor evidence: ${relative(params.cwd, params.evidencePath).split(sep).join("/")}\n`,
   );
   return evidence;
+}
+
+// PJR-T01P: 決まった形の edit result は reporter を起動せずに runner が作る。作れない場合や
+// 描画に失敗した場合は undefined を返し、呼び出し側は従来どおり reporter を起動する。
+async function writeMechanicalResult(params: {
+  enabled: boolean;
+  mode: TaskMode;
+  resultPath: string;
+  evidence: ReporterEvidence;
+}): Promise<boolean> {
+  if (!params.enabled) return false;
+  const output = mechanicalEditReporterOutput(params.evidence, params.mode);
+  if (!output) return false;
+  try {
+    await renderReporterResult(params.resultPath, output, params.evidence);
+    return true;
+  } catch (error) {
+    process.stdout.write(
+      `  Mechanical result failed; running the reporter instead: ${error instanceof Error ? error.message : String(error)}\n`,
+    );
+    return false;
+  }
 }
 
 // register pipeline の reporter 段だけを実行する。executor 直後の通常経路と、executor が
@@ -136,6 +165,35 @@ export async function runReporterStage(params: {
     ...(params.registerPaths ? { registerPaths: params.registerPaths } : {}),
   });
   let state = params.state;
+
+  const mechanical = await writeMechanicalResult({
+    enabled: execDefaults.pipeline?.mechanical_result === true,
+    mode: params.mode ?? "edit",
+    resultPath: params.resultPath,
+    evidence: reporterEvidence,
+  });
+  if (mechanical) {
+    const completedAt = new Date().toISOString();
+    state = updatePipelineStage(
+      state,
+      "reporter",
+      {
+        status: "succeeded",
+        // register の遷移と再開は reporter の actor を実行者として使うため、割り当てた reporter を
+        // 記録する。runner が書いたことは result の「進め方」とログに残る。
+        actor: reporterCandidates[0]?.actor ?? null,
+        started_at: completedAt,
+        completed_at: completedAt,
+        artifact_ref: relative(cwd, params.resultPath).split(sep).join("/"),
+      },
+      completedAt,
+    );
+    writePipelineState(params.statePath, state);
+    process.stdout.write(
+      "  Reporter skipped: the runner wrote the result from executor evidence (pipeline.mechanical_result).\n",
+    );
+    return { exitCode: 0, runResult: "success", state };
+  }
 
   const reporterStartedAt = new Date().toISOString();
   state = updatePipelineStage(

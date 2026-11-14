@@ -137,7 +137,7 @@ describe("parent validation config", () => {
         "pipeline:\n  parent_validations:\n    - { id: test-unit }\n",
         "utf8",
       );
-      expect(() => loadExecDefaultsConfig(invalidPath)).toThrow(/\.repo must match/);
+      expect(() => loadExecDefaultsConfig(invalidPath)).toThrow(/must set repo or paths/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
