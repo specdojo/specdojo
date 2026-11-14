@@ -280,11 +280,21 @@ const externalIfRecipes = [
 ];
 
 const architectureRecipes = [
-  group("C4", [recipe("コンテキスト図", "cxd")]),
+  group("C4", [
+    recipe("コンテキスト図", "cxd"),
+    recipe("コンテナ図", "cnd"),
+    recipe("コンポーネント図", "cpd"),
+  ]),
   group("インフラ・技術選定", [recipe("技術スタック", "tsd")]),
 ];
 
-const architectureTemplates = [group("C4", [template("コンテキスト図", "cxd")])];
+const architectureTemplates = [
+  group("C4", [
+    template("コンテキスト図", "cxd"),
+    template("コンテナ図", "cnd"),
+    template("コンポーネント図", "cpd"),
+  ]),
+];
 
 const execRecipes = [recipe("humanタスクの確定", "exec-human-finalize")];
 
