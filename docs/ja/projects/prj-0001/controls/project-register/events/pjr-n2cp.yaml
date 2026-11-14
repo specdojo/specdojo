@@ -47,3 +47,32 @@
     - field: commit_scope
       from: ""
       to: schedule
+- v: 1
+  id: reg_baf0bcd76e6444ea9ff9b644b316815c
+  ts: "2026-11-14T11:55:49Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_32a05518048049e5b5ec1cd509a1b968
+- v: 1
+  id: reg_c8ca47163051494f8370efa8c191a8e2
+  ts: "2026-11-14T12:22:55Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_baf0bcd76e6444ea9ff9b644b316815c
