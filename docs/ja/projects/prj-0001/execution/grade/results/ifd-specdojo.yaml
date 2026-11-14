@@ -1,0 +1,422 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: ifd-specdojo
+path: docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 79
+graded_at: "2026-11-14T19:31:24.115Z"
+graded_by: luna-review-executor
+content_hash: dd601fdb1fa45c1303cbbfa3330d5a7a2ca1e11bf9135e14a1b08b7d18caf779
+source_hashes:
+  catalog-entry: 0a24a8827f51d006b10e55f9a1ee3c9caf2449ddec2ea5cd6e766a69ad238e0c
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cnd-specdojo: d73bbeec5ee3e18e4073da37349c1934555886d2f7f7003d6463015defa8f464
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: e1b1ac8e03711fdc6f6fe9146e78131470f82de72c4f27074163053cbee53419
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 81
+  planning:
+    score: 75
+  business:
+    score: 75
+  consistency:
+    score: 75
+  architecture:
+    score: 92
+  usability:
+    score: 88
+  implementation:
+    score: 75
+  quality:
+    score: 69
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 20
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 96
+    anchor: ""
+    message: >-
+      State the approval decision and the conditions PO must resolve before accepting this infrastructure policy; the
+      current table identifies pending choices but does not summarize the approval gate.
+    message_ja: >-
+      State the approval decision and the conditions PO must resolve before accepting this infrastructure policy; the
+      current table identifies pending choices but does not summarize the approval gate.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 20
+    anchor: repo("作業リポジトリ（仕様・判断・検証記録）")
+    message: >-
+      Identify the human PO approval step for publication scope and release readiness so the draft status and pending
+      publication decisions lead to a clear accountability point.
+    message_ja: >-
+      Identify the human PO approval step for publication scope and release readiness so the draft status and pending
+      publication decisions lead to a clear accountability point.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 122
+    anchor: ""
+    message: >-
+      Add a decision or review timing for the open placement and persistence checks so progress can be tracked against a
+      defined checkpoint.
+    message_ja: >-
+      Add a decision or review timing for the open placement and persistence checks so progress can be tracked against a
+      defined checkpoint.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 122
+    anchor: ""
+    message: >-
+      Identify which unresolved infrastructure risks should be registered or tracked in project control records,
+      including the owner and follow-up point.
+    message_ja: >-
+      Identify which unresolved infrastructure risks should be registered or tracked in project control records,
+      including the owner and follow-up point.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 122
+    anchor: ""
+    message: >-
+      Mark the open items that require project status or risk reporting and name the record or reporting destination for
+      their follow-up.
+    message_ja: >-
+      Mark the open items that require project status or risk reporting and name the record or reporting destination for
+      their follow-up.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 18
+    anchor: agent["AI 作業クライアント（AI provider CLI）"]
+    message: >-
+      Add an observable success condition for using this diagram as an input, such as the required boundary and
+      failure-test decisions that downstream design must be able to make.
+    message_ja: >-
+      Add an observable success condition for using this diagram as an input, such as the required boundary and
+      failure-test decisions that downstream design must be able to make.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 24
+    anchor: subgraph cloud["外部クラウド：provider 管理"]
+    message: >-
+      Record the business constraints checked against the proposed environments and paths, or state the specific
+      validation still required before declaring the placement aligned.
+    message_ja: >-
+      Record the business constraints checked against the proposed environments and paths, or state the specific
+      validation still required before declaring the placement aligned.
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 71
+    anchor: 上位関係の責務は [[cnd-specdojo|コンテナ図]] を正とする。以下は配置境界での情報と条件の差分である。
+    message: >-
+      Identify the role that confirms the proposed execution placement and its persistence and network assumptions, so
+      stakeholders know who validates the arrangement.
+    message_ja: >-
+      Identify the role that confirms the proposed execution placement and its persistence and network assumptions, so
+      stakeholders know who validates the arrangement.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 14
+    anchor: flowchart LR
+    message: >-
+      Update the system design index entry for ifd-specdojo from “未作成” to its current state; sysd-index.md still
+      describes this deliverable as not created.
+    message_ja: >-
+      Update the system design index entry for ifd-specdojo from “未作成” to its current state; sysd-index.md still
+      describes this deliverable as not created.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 65
+    anchor: >-
+      | 文書閲覧者のブラウザ                                    | 上位図の共有文書閲覧                           | 閲覧者。閲覧範囲の判断は
+      PO                      | 配信先へ接続する案。CLI の起動や正本への直接接続を要求しない                                     |
+    message: >-
+      Link each deferred connectivity and route-control assumption to a specific technical design record or tracked
+      follow-up, so security-zone designers can locate the contract that will resolve it.
+    message_ja: >-
+      Link each deferred connectivity and route-control assumption to a specific technical design record or tracked
+      follow-up, so security-zone designers can locate the contract that will resolve it.
+    cause:
+      type: document
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 65
+    anchor: >-
+      | 文書閲覧者のブラウザ                                    | 上位図の共有文書閲覧                           | 閲覧者。閲覧範囲の判断は
+      PO                      | 配信先へ接続する案。CLI の起動や正本への直接接続を要求しない                                     |
+    message: >-
+      Consolidate the host-side Tailscale routing explanation with the PATH-06 placement note in section 3; the same
+      logical-path caveat is described in both locations and can be retained once without losing a decision.
+    message_ja: >-
+      Consolidate the host-side Tailscale routing explanation with the PATH-06 placement note in section 3; the same
+      logical-path caveat is described in both locations and can be retained once without losing a decision.
+    cause:
+      type: document
+  - id: F012
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 20
+    anchor: repo("作業リポジトリ（仕様・判断・検証記録）")
+    message: >-
+      For implementation handoff, identify the specific technical configuration records that will define connection,
+      authentication, and deployment inputs; the general reference to future tasks does not locate all of those
+      contracts.
+    message_ja: >-
+      For implementation handoff, identify the specific technical configuration records that will define connection,
+      authentication, and deployment inputs; the general reference to future tasks does not locate all of those
+      contracts.
+    cause:
+      type: document
+  - id: F013
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 122
+    anchor: ""
+    message: >-
+      Name the affected configuration or implementation artifacts for placement changes, or link to the change-impact
+      record that will maintain those references.
+    message_ja: >-
+      Name the affected configuration or implementation artifacts for placement changes, or link to the change-impact
+      record that will maintain those references.
+    cause:
+      type: document
+  - id: F014
+    severity: minor
+    rule: vp-dev-testability
+    line: 108
+    anchor: >-
+      | ------------------------------------------ | -------------------------------------------------------------------
+      | -------------- | --------------------------------------------------------------------------------------------- |
+    message: >-
+      Identify the validation procedure or test artifact that will exercise these boundaries and record results; the
+      table defines observations but not how a tester executes or reports the checks.
+    message_ja: >-
+      Identify the validation procedure or test artifact that will exercise these boundaries and record results; the
+      table defines observations but not how a tester executes or reports the checks.
+    cause:
+      type: document
+  - id: F015
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 108
+    anchor: >-
+      | ------------------------------------------ | -------------------------------------------------------------------
+      | -------------- | --------------------------------------------------------------------------------------------- |
+    message: >-
+      Mark the catalog completion conditions that remain pending until business alignment, PO approval, and verification
+      evidence are available; the document currently distinguishes untested design input but does not map that status to
+      the conditions.
+    message_ja: >-
+      Mark the catalog completion conditions that remain pending until business alignment, PO approval, and verification
+      evidence are available; the document currently distinguishes untested design input but does not map that status to
+      the conditions.
+    cause:
+      type: document
+  - id: F016
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 108
+    anchor: >-
+      | ------------------------------------------ | -------------------------------------------------------------------
+      | -------------- | --------------------------------------------------------------------------------------------- |
+    message: >-
+      Define or reference the check procedure and evidence format for the stated pass/fail observations so different
+      reviewers can reproduce the boundary checks.
+    message_ja: >-
+      Define or reference the check procedure and evidence format for the stated pass/fail observations so different
+      reviewers can reproduce the boundary checks.
+    cause:
+      type: document
+  - id: F017
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 14
+    anchor: flowchart LR
+    message: >-
+      Correct the system design index’s “未作成” status for ifd-specdojo to avoid contradictory completeness information
+      across project documents.
+    message_ja: >-
+      Correct the system design index’s “未作成” status for ifd-specdojo to avoid contradictory completeness information
+      across project documents.
+    cause:
+      type: document
+  - id: F018
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 84
+    anchor: ""
+    message: >-
+      Use the same name for the parent container diagram as in the overview and catalog, so readers can follow the
+      reference without interpreting “上位関係” as a different artifact.
+    message_ja: >-
+      Use the same name for the parent container diagram as in the overview and catalog, so readers can follow the
+      reference without interpreting “上位関係” as a different artifact.
+    cause:
+      type: document
+  - id: F019
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 20
+    anchor: repo("作業リポジトリ（仕様・判断・検証記録）")
+    message: >-
+      State the release-readiness conditions that must be met before promoting this draft, including the required PO
+      decision and verification status.
+    message_ja: >-
+      State the release-readiness conditions that must be met before promoting this draft, including the required PO
+      decision and verification status.
+    cause:
+      type: document
+  - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 108
+    anchor: >-
+      | ------------------------------------------ | -------------------------------------------------------------------
+      | -------------- | --------------------------------------------------------------------------------------------- |
+    message: >-
+      Name the specific operations document or tracked follow-up that will own the monitoring and recovery details;
+      “運用文書” is not a uniquely traceable destination here.
+    message_ja: >-
+      Name the specific operations document or tracked follow-up that will own the monitoring and recovery details;
+      “運用文書” is not a uniquely traceable destination here.
+    cause:
+      type: document
+  - id: F021
+    severity: major
+    rule: vp-qe-config-validity
+    line: 11
+    anchor: >-
+      _ASSUMPTION_: CLI と外部 CLI を devcontainer で実行し、作業リポジトリと文書構築工程を同じ作業環境から利用する配置案である。ホスト直接実行は代替配置とし、図中の二重稼働を意味しない。ホーム
+      Mac のローカル推論、文書構築・配備の経路も未検証の案である。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 2
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-005:
+      - OPS
+  detail_ref: ifd-specdojo-grade-criteria
