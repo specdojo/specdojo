@@ -16,8 +16,8 @@
 # SpecDojo 親プロセスが固定許可リストから実行する。設定できるのは ID だけで、agent の
 # evidence や設定ファイルから任意の command / 引数を注入することはできない。
 pipeline:
-  # 2 本並べた run の片方が親の検証の順番を待たないよう、2 本まで同時に流す（16 コア、2026-11-14 indie の依頼）。
-  parent_validation_concurrency: 2
+  # 2 本にすると agent 4 本と重なって負荷で短い制限のテストが時間切れになったため、1 本ずつに戻す（2026-11-14 indie の依頼）。
+  parent_validation_concurrency: 1
   parent_validations:
     # lint は短時間で終わるため先に実行し、executor が残した ESLint・frontmatter・Markdown の
     # エラーを統合前に検出する（PJR-K1Z5）。
