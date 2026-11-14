@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-sysd-index-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-sysd-index-060/T-KATA-WAVE-1-sysd-index-060-20261114T022803Z-2c359861/plan.md
   started_at: "2026-11-14T02:28:07.961Z"
+  completed_at: "2026-11-14T02:40:42.121Z"
   agent: sol-executor
   execution: agent
   approach: template-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 改訂済み rulebook に合わせて `docs/ja/specdojo/templates/sysd-index-template.md` を同期し、記入欄を具体的に更新しました。
+- 既存の章構成、表の列名、および `draft` ステータスを維持し、執筆者が正本を参照して記述できるようガイドを整理しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/sysd-index-template.md`: rulebook の最新構成に基づき、必須章・表の列名・記入欄を同期し、記述ガイドを具体化しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- reporter 向け判断根拠: [[specdojo:template-authoring-standard|Template 記述標準]]、[[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:sysd-index-rulebook|SYSD Index 作成ルール]]、対応 recipe・sample、適用先 docs/ja/product/040-system-design/sysd-index.md、既存 grade サイドカー、PJR-2GD6 を確認。現行 rulebook を正として非該当理由・代替正本、検証場所・境界ケース、未作成文書の代替導線、未決事項の判断時機・解消条件・更新先を記入欄へ反映した。
+- reporter 向け要否判断: 正本の分類・変更経路を判断する recipe と、必須章・表・記入欄を揃える template は必要。rulebook の既存 ID 宣言を維持した。新規文書はなく、型メニューへの登録も既存のため sidebar の変更は不要。
+- 変更ファイルは docs/ja/specdojo/templates/sysd-index-template.md のみ。result と grade サイドカーは編集していない。指定された lint・schema 検査・型検査・テストは親 runner が実行する。
+- 適用外の検証: `npm run validate:schema:file`（変更ファイルは Markdown のみで、YAML ファイルの変更がない。）
+- 適用外の検証: `npm run validate:history-links`（履歴蓄積ファイルを変更していない。）
+- 適用外の検証: `npm run validate:catalog`（成果物の変更は docs/ja/specdojo/templates/ 内に限り、docs/ja/projects/ 配下を変更していない。）
+- 適用外の検証: `node tools/check-evidence-secrets.mjs --staged`（executor は検査対象となる execution 配下の実行記録を作成・変更していない。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+改訂済みの `rulebook` を正本として、対応する `template` の構造と必須項目を同期しました。具体的には、`docs/ja/specdojo/templates/sysd-index-template.md` において、章構成の整合性を確保し、記入欄に判断基準や参照先（正本）を明記することで、冗長性を排しつつ必要な情報を網羅する構成へと見直しました。また、`prettier` による整形を行い、静的検査を通過させています。
