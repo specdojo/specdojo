@@ -31,7 +31,7 @@ specdojo:
 
 - **親の検証を変更の種類で選ぶ**：executor の変更が文書だけ（`docs/`・Markdown・YAML の文書）のときは、統合テスト・型検査・TypeScript の lint など、コードに効く検査を流さない。どの変更でどの検査を流すかを `exec-defaults.yaml` の `pipeline.parent_validations` で宣言でき、迷う場合は今までどおり全部流す。文書だけの変更でも、型のメニュー・schema・カタログに効く検査（sidebar のテスト・`validate:schema`・`catalog validate`）は流す。
 - **統合の commit で検査を流し直さない**：runner の統合の commit で、親の検証で済んだ検査（lefthook の `test` など）を流し直さない。流し直さない理由と、親の検証が通った証跡の関係を設計に書く。人が手で commit するときの hook は変えない。
-- **reporter を速くする**：今のローカルの gemma（約 3.7 分）より速い reporter を選べるようにするか、決まった形の result は reporter なしで作れるようにする。どちらにするかは検討して理由を書く。
+- **reporter を速くする**：reporter には、これからもローカル LLM を使う（indie の方針、2026-11-14）。速いクラウドのモデルへの切り替えはしない。代わりに、決まった形の result（executor の報告と証跡から機械的に埋められる項目）は、runner が reporter なしで作る。reporter は、要約や判断が要る項目だけに使う。どの項目を runner が作り、どの項目を reporter に任せるかを設計に書き、reporter なしで作った result も result の schema と検査に通ることを確かめる。
 - **worktree の準備を速くする**：準備の中の `specdojo build` など、主の作業ツリーと同じ結果になる処理を使い回すか、要る段だけに絞る。
 - 文書だけの変更とコードの変更の両方で、1 段の時間を測り、変更の前後を個票の対応結果に書く。目安は、文書だけの変更で 1 段 10〜12 分。
 - 検査を減らしても、統合の後に develop の `npm run check` が通ることを確かめる（落とした検査で見逃しが出ないか）。
