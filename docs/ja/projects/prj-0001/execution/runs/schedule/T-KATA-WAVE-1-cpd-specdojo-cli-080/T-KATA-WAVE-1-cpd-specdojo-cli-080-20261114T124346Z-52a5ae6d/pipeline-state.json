@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-cpd-specdojo-cli-080",
   "run_id": "T-KATA-WAVE-1-cpd-specdojo-cli-080-20261114T124346Z-52a5ae6d",
-  "updated_at": "2026-11-14T13:04:11.295Z",
+  "updated_at": "2026-11-14T13:04:51.023Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cpd-specdojo-cli-080/T-KATA-WAVE-1-cpd-specdojo-cli-080-20261114T124346Z-52a5ae6d/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-14T13:04:11.295Z",
-      "completed_at": null,
+      "completed_at": "2026-11-14T13:04:51.023Z",
       "artifact_ref": null
     }
   },
