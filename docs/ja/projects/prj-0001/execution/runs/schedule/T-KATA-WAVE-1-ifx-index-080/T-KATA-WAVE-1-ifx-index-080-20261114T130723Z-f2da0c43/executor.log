@@ -1,0 +1,5 @@
+`ifx-index.yaml` の冗長な箇所を3件削りました。schema 検査は通っています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-index.yaml の冗長なコメント3箇所を削除した。意味と必須情報は維持している。","handoff":[],"condense_records":[{"location":"interfaces[0] コメント『詳細契約: [[prj-0001:ifx-cmd-ai-provider-cli|…]]。起動コマンド解決・…は同契約に委譲する』","category":"canonical-restatement","action":"delete","reason":"spec_ref と同じ契約を指す再掲。委譲の趣旨は冒頭コメントと error_handling の『詳細仕様を参照』にあり、判断に要る情報は失われない。","cause":{"type":"document"}},{"location":"interfaces[1] コメント末尾『PM への作業・課題の登録依頼は末尾にまとめる』","category":"repetition","action":"delete","reason":"ファイル末尾の PM 依頼コメントと同じ内容の繰り返し。依頼の内容は末尾に残している。","cause":{"type":"document"}},{"location":"interfaces[2] コメント末尾『PM への登録依頼は末尾にまとめる』","category":"repetition","action":"delete","reason":"ファイル末尾の PM 依頼コメントと同じ内容の繰り返し。依頼の内容は末尾に残している。","cause":{"type":"document"}}],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/esil.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-index.yaml","status":"passed","summary":"valid"}]}
+</specdojo_executor_evidence>
