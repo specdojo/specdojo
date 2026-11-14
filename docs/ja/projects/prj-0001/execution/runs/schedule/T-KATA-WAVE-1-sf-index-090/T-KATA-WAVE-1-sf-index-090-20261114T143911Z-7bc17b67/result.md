@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-sf-index-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-sf-index-090/T-KATA-WAVE-1-sf-index-090-20261114T143911Z-7bc17b67/plan.md
   started_at: "2026-11-14T14:39:17.468Z"
+  completed_at: "2026-11-14T18:39:06.273Z"
   agent: luna-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,24 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+`specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/050-system-functions/sf-index.md --changed-only` および `--dependency-changed`, `--incomplete` を実行し、対象パスの出力がないことを確認。評価結果サイドカーは `needs-work`（73点、blocker 0 / major 8 / minor 11）であり、鮮度は最新である。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果の鮮度は最新であることを確認した。
+- rulebook および sample の存在、ならびに recipe と template が `not-needed` であることが宣言されていることを確認した。
+- しかし、「実装エビデンス」として指定された `src/specdojo.ts` の CLI サブコマンド一覧と成果物 `docs/ja/product/010-business-specs/050-system-functions/sf-index.md` の機能行との対応判定（一致・乖離・確認不能・未確認）が先行実行記録に見当たらない。
+- retrofit のタスクとして必須である実装照合の記録が不足しているため、完了条件を満たしていないと判断した。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- 対象の先行 `edit` 実行記録を正しく特定し、`src/specdojo.ts` の実装内容と成果物の記述との対応判定（一致・乖離・確認不能・未確認）を明確に記録すること。
+- 実装との乖離が確認された場合は、修正対象（実装・文書・意思決定）とその根拠を明記すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+評価結果の鮮度確認および rulebook 等の構成確認を行った。次に、retrofit の要件である実装エビデンス `src/specdojo.ts` と成果物の照合記録を確認したが、対応判定を含む具体的な記録が見当たりませんでした。そのため、実装照合が未完了であると判定しました。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
