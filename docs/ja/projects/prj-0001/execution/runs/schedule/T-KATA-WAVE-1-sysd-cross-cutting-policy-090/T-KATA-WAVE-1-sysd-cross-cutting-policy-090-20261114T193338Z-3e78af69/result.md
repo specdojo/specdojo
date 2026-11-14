@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-sysd-cross-cutting-policy-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-090/T-KATA-WAVE-1-sysd-cross-cutting-policy-090-20261114T193338Z-3e78af69/plan.md
   started_at: "2026-11-14T19:33:39.327Z"
+  completed_at: "2026-11-14T19:52:51.446Z"
   agent: sonnet-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,23 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+評価結果は最新（`grade list` 3種とも出力なし）であり、`verdict`: `needs-work` / `score`: 93、finding は major 1件、minor 4件であることを確認した。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 実装エビデンスとして指定された `src/exec/exec.ts` と成果物記述との対応記録（一致・乖離・確認不能・未確認）が、成果物および `docs/ja/product/040-system-design/sysd-index.md` に見当たらず、先行 edit task 070 の result にも記録がなかった。
+- retrofit の approach に従い、実装（rate limit 検出、retry/fallback、`command_template` 解決、worktree ライフサイクル、append-only イベントと reopen の規則）と成果物の突き合わせ結果を記録する必要があるが、これが未充足である。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- `src/exec/exec.ts` 内の以下の各規則について、成果物記述との対応判定（一致・乖離・確認不能・未確認）を明記すること： - rate limit 検出 - retry/fallback 方針 - `command_template` 解決の共通規則 - worktree 分離のライフサイクル規則 - append-only イベント・reopen の遷移規則
+- 乖離がある場合は、修正対象候補（実装・文書・意思決定）とその根拠を記録すること。
+- grade finding `F005`（未解決の `_TODO_` / `_ASSUMPTION_` の残存）および `F004`（参照ラベルの表記ゆれ）などの品質改善を行うこと。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+実装エビデンス `src/exec/exec.ts` と成果物の対応記録を確認したが、実突合の結果が記録されていないことを確認した。先行 edit task 070 の result を確認したが、対応判定は見つからなかった。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
