@@ -1,0 +1,188 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cxd-specdojo
+path: docs/ja/product/030-architecture/010-c4/cxd-specdojo.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 95
+graded_at: "2026-11-14T14:15:54.074Z"
+graded_by: sonnet-review-executor
+content_hash: 847b9f2d7413e01d7ed02d3ed27afdf1c6fa2554a8535e0f23cfe5fb29bc2900
+source_hashes:
+  catalog-entry: 0765cc4e428f0a49e515cc8c97680687569b9b9d30ab6257058a9686e6cb2a57
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: e1b1ac8e03711fdc6f6fe9146e78131470f82de72c4f27074163053cbee53419
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 94
+  planning:
+    score: 83
+  business:
+    score: 100
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 3
+    anchor: "## 1. 概要"
+    message: >-
+      The overview does not list the concrete boundary decisions the PO is asked to approve, hold or return (for example
+      the Git/GitHub grouping and the local-execution assumption), so approval points must be inferred from the tables.
+    message_ja: >-
+      The overview does not list the concrete boundary decisions the PO is asked to approve, hold or return (for example
+      the Git/GitHub grouping and the local-execution assumption), so approval points must be inferred from the tables.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 107
+    anchor: "## 5. メモ / 将来課題"
+    message: >-
+      The open-items table gives owners and resolution conditions but no decision timing or ordering relative to the
+      downstream documents, which limits scheduling and progress tracking.
+    message_ja: >-
+      The open-items table gives owners and resolution conditions but no decision timing or ordering relative to the
+      downstream documents, which limits scheduling and progress tracking.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 107
+    anchor: "## 5. メモ / 将来課題"
+    message: >-
+      The open items are not mapped to PJR register candidates or a reporting destination, so it is unclear which items
+      should be tracked as issues, risks or change requests.
+    message_ja: >-
+      The open items are not mapped to PJR register candidates or a reporting destination, so it is unclear which items
+      should be tracked as issues, risks or change requests.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 107
+    anchor: "## 5. メモ / 将来課題"
+    message: >-
+      The document does not state the conditions or the human approver for promoting status from draft to ready, nor
+      which open items must be resolved before release.
+    message_ja: >-
+      The document does not state the conditions or the human approver for promoting status from draft to ready, nor
+      which open items must be resolved before release.
+    cause:
+      type: document
+  - id: F005
+    severity: major
+    rule: vp-qe-config-validity
+    line: 58
+    anchor: "_ASSUMPTION_: 初版は利用者の作業環境で CLI と外部ツールを動かし、Git 管理のファイルを共有・継承する構成として整理する。稼働配置や接続方式を確定したものではなく、確認先は「メモ / 将来課題」に示す。"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 4
+  total: 4
+  detail_ref: cxd-specdojo-grade-criteria
