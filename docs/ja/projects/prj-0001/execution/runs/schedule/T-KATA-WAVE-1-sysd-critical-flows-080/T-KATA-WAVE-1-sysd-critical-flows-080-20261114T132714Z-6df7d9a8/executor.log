@@ -1,0 +1,5 @@
+末尾の `done_criteria` の再列挙を削除しました。完了条件と承認条件は各節に残っています。意味の維持を確認し、`git diff --check` は通過しました。result は編集していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"末尾の要約による重複を削除し、既存の完了条件と承認条件を保持しました。","handoff":[],"validations":[{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはありません。"}],"condense_records":[{"location":"5.4 承認対象と公開前条件の末尾","category":"repetition","action":"delete","reason":"直前の表と各フロー節に記載済みの完了条件を再列挙していたため、重複する要約文を削除しました。実装・運用適合の未確認事項と CF-U の解消証跡への接続は保持しました。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
