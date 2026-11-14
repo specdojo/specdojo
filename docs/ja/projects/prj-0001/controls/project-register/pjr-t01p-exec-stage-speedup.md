@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-14T03:31:40Z"
-  block_reason: agent exited with non-zero code
+  block_reason: "parent validation failed: test-unit"
   commit_type: perf
   commit_scope: exec
 ---
