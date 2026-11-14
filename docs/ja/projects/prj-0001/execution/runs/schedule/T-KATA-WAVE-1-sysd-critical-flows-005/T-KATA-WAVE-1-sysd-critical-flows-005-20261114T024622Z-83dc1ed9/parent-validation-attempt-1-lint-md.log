@@ -1,0 +1,15 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/product/040-system-design/sysd-critical-flows.md:15 error MD025/single-title/single-h1 Multiple top-level headings in the same document [Context: "SpecDojo システム設計重要フロー"]
+docs/ja/specdojo/samples/sysd-critical-flows-sample.md:13 error MD025/single-title/single-h1 Multiple top-level headings in the same document [Context: "駄菓子屋きぬや 販売管理システム重要フロー"]
+docs/ja/specdojo/templates/sysd-critical-flows-template.md:18 error MD025/single-title/single-h1 Multiple top-level headings in the same document [Context: "_DELIVERABLE_NAME_"]
