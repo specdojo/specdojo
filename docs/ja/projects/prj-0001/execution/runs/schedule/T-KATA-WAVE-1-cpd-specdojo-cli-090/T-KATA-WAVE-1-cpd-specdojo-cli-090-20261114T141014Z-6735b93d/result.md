@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-cpd-specdojo-cli-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-cpd-specdojo-cli-090/T-KATA-WAVE-1-cpd-specdojo-cli-090-20261114T141014Z-6735b93d/plan.md
   started_at: "2026-11-14T14:10:17.195Z"
+  completed_at: "2026-11-14T18:22:06.287Z"
   agent: qwen-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,24 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+サンドボックス制約により `specdojo grade list` コマンドは実行不可。代替として `git status --short` (成果物・ `src/specdojo.ts` ・サイドカーに未変更) および `git log` による最終更新日の確認（成果物最終更新 commit `-080 13:04Z` &lt; grade 実行 `14:10Z`）により、評価結果が最新であることを確認済み。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- 評価結果サイドカー (`docs/ja/projects/prj-0001/execution/grade/results/cpd-specdojo-cli.yaml`) の `verdict` は `needs-work`、`score` は 82 であり、finding 17件（blocker 0 / major 4 / minor 12 / note 1）が記録されている。
+- 完了条件 DC-001〜003 は、grade の viewpoint 全項目 100 および sidecar `satisfied=3/3` により充足している。
+- retrofit の確認事項のうち、実装対応 (src/specdojo.ts) の照合結果は先行タスク (`T-KATA-WAVE-1-cpd-specdojo-cli-070` および `-080`) の result に記録されており、6エンジンの個別登録は一致、エンジン間呼出関係とソース配置確定は未確認（本文 §5 `ASSUMPTION`/メモに記載）であることが確認された。
+- しかし、plan §6.2 が求める「本タスク (090) の result への対応判定の集約・引用」が行われていないため、完了条件を完全に満たしていない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- result の `approach に応じた確認` セクションへ、`src/specdojo.ts` の各 register 関数（`register*Commands` 等）および `main()` / `guardDistFreshness` と成果物 `cpd-specdojo-cli.md` §2・§3.2 の対応判定（一致・未確認範囲）を集約引用すること。
+- grade finding F001〜F017 に基づき、以下の改善を行うこと： - 概要への分業根拠の参照追加 (`[[prj-0001:prj-overview]]`) (F001, F007) - §5 メモ表への判断者（人間のPO）、判断タイミング、`PJR` 登録候補列の追加および `rulebook` §6.5 準拠 (F002, F004) - 参考接続可否の `PJR` 登録候補明記 (F005) - 報告先（PM/PO）および `done_criteria` の追記・参照先の明記 (F006, F013) - 「内部構成と実装対応」項を §4.1 参照へ圧縮 (F011) - 外部依頼/ランタイム仮定変更時の変更波及範囲の明記および運用手順（owner=ARC）の追記 (F012, F016) - `rulebook` §2 用語出典への参照追加 (F008) - 合意対象（境界/責務/依存方向）の明示 (F009) - 公開前確認の owner=OPS、非公開/個人情報範囲、PO可否条件の明記 (F015)
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+実装エビデンス `src/specdojo.ts` と成果物の照合結果を、先行する execution run の result から確認した。6エンジンの個別登録については一致しているが、エンジン間呼出関係およびソース配置の確定に関しては未確認のままであり、これらは成果物内の `ASSUMPTION` またはメモとして適切に処理されていることを確認した。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
