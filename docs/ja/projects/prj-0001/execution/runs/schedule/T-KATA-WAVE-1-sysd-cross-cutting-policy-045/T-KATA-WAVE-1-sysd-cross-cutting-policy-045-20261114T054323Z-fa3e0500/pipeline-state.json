@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-045",
+  "run_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-045-20261114T054323Z-fa3e0500",
+  "updated_at": "2026-11-14T06:11:32.282Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T05:45:10.489Z",
+      "completed_at": "2026-11-14T05:49:48.377Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-045/T-KATA-WAVE-1-sysd-cross-cutting-policy-045-20261114T054323Z-fa3e0500/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-14T06:08:23.582Z",
+      "completed_at": "2026-11-14T06:11:30.310Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-045/T-KATA-WAVE-1-sysd-cross-cutting-policy-045-20261114T054323Z-fa3e0500/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T06:11:32.282Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-045/T-KATA-WAVE-1-sysd-cross-cutting-policy-045-20261114T054323Z-fa3e0500/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-045/T-KATA-WAVE-1-sysd-cross-cutting-policy-045-20261114T054323Z-fa3e0500/result.md"
+  }
+}
