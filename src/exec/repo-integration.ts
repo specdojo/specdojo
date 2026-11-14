@@ -6,6 +6,8 @@ import type { PipelineRepoIntegrationState } from "./pipeline-state.js";
 import { productIntegrationTarget } from "./task-repos.js";
 import {
   abortMerge,
+  assertCommitScope,
+  UncommittedChangesError,
   commitTargetPaths,
   isExecBranchMergedIntoCurrent,
   recordRootNewFilesHandoff,
@@ -434,6 +436,12 @@ export function projectMergeBlockers(params: {
   const { context, worktree } = params;
   const repoRoot = context.repoRoot;
   const block = (message: string): RepoIntegrationBlocker => ({ repo: PROJECT_REPO_NAME, message });
+  try {
+    assertCommitScope(context, worktree, params.taskId);
+  } catch (error) {
+    if (error instanceof UncommittedChangesError) return [block(error.message)];
+    throw error;
+  }
   if (isExecBranchMergedIntoCurrent({ context, worktree })) return [];
   const target = gitText(gitResult(repoRoot, ["branch", "--show-current"]).stdout).trim();
   if (!target) return [block("detached HEAD is not supported as the integration target")];

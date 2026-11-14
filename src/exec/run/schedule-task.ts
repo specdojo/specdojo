@@ -35,6 +35,7 @@ import { recordPathForRead, snapshotRunAttempt } from "../run-records.js";
 import { withProductRepoPrompt } from "../task-repos.js";
 import { type AgentStageRole } from "../types.js";
 import {
+  assertCommitScope,
   commitTargetPaths,
   commitWorktreeChanges,
   isExecBranchMergedIntoCurrent,
@@ -562,6 +563,10 @@ export async function runPreparedTask(
         resumeIntegration &&
         isExecBranchMergedIntoCurrent({ context, worktree: prepared.worktree });
       try {
+        assertCommitScope(context, prepared.worktree, prepared.task.id, {
+          scopeLogPath: integrateLogPath(pipelineStatePath),
+          allowEditedPlan: prepared.pipelineResumeStage === "executor",
+        });
         if (alreadyMerged) {
           const lifecyclePaths = new Set(
             [worktreeResultPath, pipelineStatePath]

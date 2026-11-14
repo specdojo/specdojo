@@ -29,7 +29,7 @@ import {
   type ProductWorktree,
 } from "./worktree.js";
 import {
-  assertRegisterCommitScope,
+  assertCommitScope,
   commitTargetPaths,
   currentBranch,
   repoRelative,
@@ -54,8 +54,7 @@ export function removeWorktree(params: {
     throw new Error("Run remove from the merge-target worktree, not the task worktree.");
   }
   const dirty = commitTargetPaths(context, worktree, taskId);
-  if (!params.force)
-    assertRegisterCommitScope(context, worktree, taskId, { dryRun: params.dryRun });
+  if (!params.force) assertCommitScope(context, worktree, taskId, { dryRun: params.dryRun });
   const merged =
     gitResult(context.repoRoot, ["merge-base", "--is-ancestor", worktree.branch, "HEAD"]).status ===
     0;

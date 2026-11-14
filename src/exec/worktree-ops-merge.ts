@@ -18,6 +18,7 @@ import {
   type ExecWorktree,
 } from "./worktree.js";
 import {
+  assertCommitScope,
   commitTargetPaths,
   currentBranch,
   repoRelative,
@@ -243,6 +244,7 @@ export function mergeWorktreeIntoCurrent(params: {
   failureLogPath?: string;
 }): void {
   const { context, worktree, taskId } = params;
+  assertCommitScope(context, worktree, taskId, { dryRun: params.dryRun });
   const targetBranch = currentBranch(context.repoRoot);
   if (targetBranch === worktree.branch) {
     throw new Error(`Merge must run from a branch other than ${worktree.branch}.`);

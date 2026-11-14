@@ -784,11 +784,12 @@ providers:
 | human / edit                                | 対象 task の result、result frontmatter の `targets` から解決した成果物パス   |
 | edit（maintenance / bootstrap 系 approach） | 上記に加え、実践の型ディレクトリ（rulebooks / recipes / samples / templates） |
 
-- 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力します（worktree 内には残るため、必要なら人間が確認して手動で取り込みます）。
+- agent の許可リスト外の変更が残っていれば、`commit-scope: integration blocked` と対象パスを出力し、commit・統合・通常の worktree 撤去を止めます。対象パスと次のアクションを result の申し送りと `integrate.log` に残し、worktree を保持します。再開時も同じ検査を適用します。human の schedule タスクは result による選択を維持します。
+- `bootstrap` と `*-maintenance` でも、成果物カタログ・schema・文書サイトの型のメニューを一括で許可しません。これらは他の成果物や親 runner の動作へ影響するため、明示された `targets` で解決できるファイルだけを commit 対象にします。対象外なら変更せず、変更理由・対象パス・提案差分・必要な検証を個票の対応結果（register タスクの場合）と executor 報告の `handoff` に書き、対象の見直しまたは別タスクで反映します。
 - 既存の除外リスト（`plan.md` や対象 run 以外の実行記録等）は許可リストの内側でも引き続き適用します。
 - agent の mode / approach / `targets` は worktree の **agent 起動前の HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent 前後の HEAD は runner が比較し、agent 自身の commit や checkout を検知した場合は統合前に block するため、許可リストの導出は改ざん耐性があります。
 - human は plan を持たないため、HEAD 側 result の `execution: human`、mode、approach、`targets` から許可リストを導出します。human には敵対 agent が存在しないため、plan を独立した改ざん耐性境界にする要件は適用しません。
-- `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は警告を出し、commit を許可しません。
+- `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は `unresolved target doc id (no individual path; approach directory permissions still apply)` を出力し、その id による個別パスの許可は追加しません。approach が許可する型のディレクトリ内のファイルは、id の解決と独立して commit 対象になります。ディレクトリの許可もないファイルの変更は、上記の停止ガードの対象です。
 - `retrofit` の `evidence_refs` は plan 本文へ読み取り専用の調査入力として展開されますが、`targets` や実践の型ディレクトリの許可には変換されません。実装エビデンスへの変更は commit 対象外です。
 - agent で HEAD に plan が無い場合、または human で HEAD に result が無い場合など、frontmatter から task 識別を復元できない場合のみ従来の除外リスト方式へフォールバックします。CLI 経由では正本となる plan / result を checkpoint するため、agent 側からこの分岐を誘発することはできません。
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。

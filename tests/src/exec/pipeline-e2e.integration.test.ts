@@ -76,8 +76,9 @@ appendFileSync(
 );
 
 if (behavior.role === "executor") {
+  mkdirSync("docs/test", { recursive: true });
   if (behavior.kind === "rate_limit") {
-    writeFileSync("pipeline-artifact.md", "# partial executor work\\n", "utf8");
+    writeFileSync("docs/test/doc.md", "# partial executor work\\n", "utf8");
     process.stderr.write("rate limit reached while editing the first target\\n");
     process.exit(1);
   }
@@ -94,7 +95,7 @@ if (behavior.role === "executor") {
     const priorWork = behavior.artifactPath ? readFileSync(behavior.artifactPath, "utf8") : "";
     writeFileSync("docs/test/doc.md", priorWork + "# completed after resume\\n", "utf8");
   } else {
-    const artifactPath = behavior.artifactPath ?? "pipeline-artifact.md";
+    const artifactPath = behavior.artifactPath ?? "docs/test/doc.md";
     mkdirSync(dirname(artifactPath), { recursive: true });
     writeFileSync(artifactPath, "# " + nickname + " / " + model + "\\n", "utf8");
     if (behavior.kind === "path_mismatch") {
@@ -110,7 +111,7 @@ if (behavior.role === "executor") {
         ...(behavior.kind === "incomplete"
           ? { completion_status: "incomplete", handoff: ["finish the remaining plan instructions"] }
           : {}),
-        final_message: (behavior.artifactPath ?? (resumed ? "docs/test/doc.md" : "pipeline-artifact.md")) + " を更新し、検証を実行した。",
+        final_message: (behavior.artifactPath ?? "docs/test/doc.md") + " を更新し、検証を実行した。",
         validations: [{ command: "npm test", status: "passed", summary: "全テストが成功した。" }],
         ...(resumed && target
           ? {
@@ -745,13 +746,13 @@ describe("executor / reporter pipeline E2E", () => {
     expect(invocations[0].prompt).toContain("test-integration (npm run test:integration)");
 
     // 成果物は executor が更新し、result は reporter の構造化出力から runner が描画する。
-    expect(readFileSync(join(target.repo, "pipeline-artifact.md"), "utf8")).toContain(
+    expect(readFileSync(join(target.repo, "docs/test/doc.md"), "utf8")).toContain(
       "local-gemma-executor",
     );
     const result = readResult(target, "T-TEST-doc-010");
     expect(result).toContain("status: complete");
     expect(result).toContain("成果物を更新し、検証を完了した。");
-    expect(result).toContain("`pipeline-artifact.md`: 文書を更新した。");
+    expect(result).toContain("`docs/test/doc.md`: 文書を更新した。");
     expect(result).not.toContain("_TODO_");
     expect(process.exitCode).toBeUndefined();
 
@@ -771,7 +772,7 @@ describe("executor / reporter pipeline E2E", () => {
       status: "succeeded",
       attempts: 1,
     });
-    expect(evidence.changes.map((change) => change.path)).toContain("pipeline-artifact.md");
+    expect(evidence.changes.map((change) => change.path)).toContain("docs/test/doc.md");
     expect(evidence.validations).toEqual([
       {
         source: "executor",
@@ -823,7 +824,7 @@ describe("executor / reporter pipeline E2E", () => {
     const result = readResult(target, "T-TEST-doc-010");
     const changedFiles = resultChangedFiles(result);
     expect(changedFiles.map(({ path }) => path)).toEqual([
-      "pipeline-artifact.md",
+      "docs/test/doc.md",
       "pipeline-secondary.md",
       "pipeline-tertiary.md",
     ]);
@@ -835,7 +836,7 @@ describe("executor / reporter pipeline E2E", () => {
     expect(result).toContain("status: complete");
     expect(changedFiles).toEqual([
       {
-        path: "pipeline-artifact.md",
+        path: "docs/test/doc.md",
         summary: "追加、+2 / -0 行",
       },
       { path: "pipeline-secondary.md", summary: "pipeline-secondary.md の説明。" },
@@ -852,7 +853,7 @@ describe("executor / reporter pipeline E2E", () => {
     const reporterPrompt = readInvocations(target.logPath)[1].prompt;
     // reporter へ渡すのは plan と上限つき evidence とスキーマだけで、生ログ本文は渡さない。
     expect(reporterPrompt).toContain("# Edit Plan: T-TEST-doc-010");
-    expect(reporterPrompt).toContain("pipeline-artifact.md を更新し、検証を実行した。");
+    expect(reporterPrompt).toContain("docs/test/doc.md を更新し、検証を実行した。");
     expect(reporterPrompt).not.toContain(RAW_LOG_MARKER);
 
     const runDir = evidenceRunDir(target, "T-TEST-doc-010");
@@ -1450,7 +1451,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const executors = invocations.filter((item) => item.role === "executor");
     expect(executors).toHaveLength(2);
     expect(executors[1].prompt).toContain("resumes an interrupted attempt");
-    expect(executors[1].prompt).toContain("`pipeline-artifact.md`");
+    expect(executors[1].prompt).toContain("`docs/test/doc.md`");
     expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(1);
     expect(readFileSync(join(fixture.repo, "docs", "test", "doc.md"), "utf8")).toContain(
       "completed after resume",
@@ -1539,6 +1540,51 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     // 同一秒に書かれるイベントはファイル名順が確定しないため、種別の集合で確認する。
     const eventTypes = readTaskEvents(fixture, "T-TEST-doc-010").map((event) => event.type);
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
+  });
+
+  it("blocks non-target changes after reporter resume and resumes only integration after review", async () => {
+    await startReporterBlock();
+    const current = fixture!;
+    const base = worktreeBase!;
+    const worktree = onlyWorktreePath(base);
+    const taskId = "T-TEST-doc-010";
+    const rootHead = git(current.repo, "rev-parse", "HEAD");
+    const strayPath = "docs/test/undeclared.schema.yaml";
+    writeFileSync(join(worktree, strayPath), "type: object\n", "utf8");
+    setBehavior(current.behaviorPath, {});
+    const resumeArgs = ["resume", "--project", "test", "--task", taskId, "--worktree-base", base];
+
+    await runExec(resumeArgs);
+
+    expect(process.exitCode).toBe(1);
+    expect(git(current.repo, "rev-parse", "HEAD")).toBe(rootHead);
+    expect(existsSync(join(worktree, strayPath))).toBe(true);
+    const result = readWorktreeResult(base, current, taskId);
+    expect(result).toContain("status: blocked");
+    expect(result).toContain("agent-commit-scope");
+    expect(result).toContain(strayPath);
+    const state = readWorktreePipelineState(base, current, taskId);
+    expect(state.stages.reporter.status).toBe("succeeded");
+    expect(state.stages.integrate.status).toBe("failed");
+    const runDir = evidenceRunDir(
+      { ...current, executionPath: join(worktree, "execution") },
+      taskId,
+    );
+    expect(readFileSync(join(runDir, "integrate.log"), "utf8")).toContain(strayPath);
+    const beforeResume = readInvocations(current.logPath);
+    expect(beforeResume.map((item) => item.role)).toEqual(["executor", "reporter", "reporter"]);
+
+    // After reviewing the excluded change, only the runner-owned integration is retried.
+    rmSync(join(worktree, strayPath));
+    await runExec(resumeArgs);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    expect(readInvocations(current.logPath)).toEqual(beforeResume);
+    expect(readResult(current, taskId)).toContain("status: complete");
+    expect(readFileSync(join(current.repo, "docs/test/doc.md"), "utf8")).toContain(
+      "local-gemma-executor",
+    );
+    expect(existsSync(worktree)).toBe(false);
   });
 
   it("aborts a hook-rejected merge commit and resumes only integration", async () => {

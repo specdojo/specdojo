@@ -29,7 +29,8 @@ const PROTECTION_SECTION_HEADING = new RegExp(
 const EVIDENCE_MAX_LINES = 200;
 const EVIDENCE_MAX_CHARS = 8000;
 
-export type AgentProtectionMechanism = "agent-config-write" | "agent-git-state-write";
+export type AgentProtectionMechanism =
+  "agent-config-write" | "agent-git-state-write" | "agent-commit-scope";
 
 export type AgentProtectionHandoff = {
   mechanism: AgentProtectionMechanism;
