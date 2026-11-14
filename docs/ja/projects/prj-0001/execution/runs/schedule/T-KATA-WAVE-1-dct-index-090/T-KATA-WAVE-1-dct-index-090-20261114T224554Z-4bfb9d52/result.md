@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-dct-index-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-dct-index-090/T-KATA-WAVE-1-dct-index-090-20261114T224554Z-4bfb9d52/plan.md
   started_at: "2026-11-14T22:45:56.532Z"
+  completed_at: "2026-11-14T23:26:49.341Z"
   agent: luna-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,23 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+鮮度確認において、`--changed-only` オプションを用いた実行時に成果物パスが出力されたため、評価結果が最新ではない（stale）と判定された。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- executor の `final_message` により、成果物の鮮度確認で変更が検知され、`grade-stale` となったことが記録されている。
+- 鮮度確認の結果、評価結果が最新でないため、完了可否の判断は保留される。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- 成果物を再評価（`specdojo grade`）し、最新の `verdict` および finding を得ること。
+- 再評価後、完了条件 `DC-002`（索引ビューとサイドバーからの全ドメイン到達性）の充足状況を確認すること。
+- finding `F002` および `F003` に基づき、外部インターフェースドメインの配置がドキュメント構造ガイドと整合しているか確認し、必要に応じて修正すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+実装エビデンスとして定義されていた `src/catalog/build.ts` と成果物の照合結果および判定（一致・乖離等）は実行記録に残っておらず、未確認の状態である。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: grade-stale
