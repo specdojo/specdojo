@@ -1,0 +1,81 @@
+I'll analyze this review task. This is a **review-only** task — I must NOT modify the deliverable, type set, or result file. Let me first understand the structure and gather evidence before rendering my multi-perspective review.
+
+Let me start by reading the key files in parallel.
+I have a clear picture now. This is the executor stage of a pipeline for a **review** task, but with a critical constraint: in executor stage I must NOT write the result file — that belongs to the reporter. Let me gather the remaining context before forming my judgment.
+
+Note: the `skill` tool isn't actually available as a runtime function here (only the bash/glob/grep/read/etc. tools are), so I'll proceed with direct file investigation.
+The `bash` tool is restricted to a small allowlist. I'll use the dedicated file tools instead for investigation. Let me check the result file, grade sidecar, and run directories via `read`.
+Critical finding: the grade sidecar `cnd-specdojo.yaml` does not exist (confirmed via read — the directory listing and the earlier failed `ls`). The result.md is still all placeholders. Let me confirm the grade results directory contents and re-read the rulebook standard to verify my judgment about the "malformed LEVEL" error.
+Confirmed two decisive facts:
+1. The grade results directory contains `specdojo.cnd-rulebook.yaml`, `specdojo.cnd-sample.yaml`, `specdojo.cnd-mermaid-rulebook.yaml` — the **type set sides**. But there is **no** `cnd-specdojo.yaml` (the deliverable sidecar).
+2. The runner's own grade run on the deliverable `cnd-specdojo.md` **failed** (exit 1, `$analysis: line 586: malformed LEVEL for id`).
+
+This maps exactly to the common convention: sidecar missing + runner grade failed → not latest → `grade-stale`. Let me cross-check the type-set content and verify the implementation evidence references actually exist.
+Now I understand the type-set state. The cnd type set (rulebook + sample + template) is **complete and well-formed** — all three referenced in the rulebook frontmatter exist, chapters follow the standard, numbered correctly, guidance has good/bad examples, and `cnd-sample.md` (~144 lines) matches the `clis-sample.md` thickness. The grade sidecar for those types exists, but the **deliverable sidecar `cnd-specdojo.yaml` is absent** while the runner's grade run on it failed with a shell-level error.
+
+Let me read the pipeline state and check for any prior edit-record of the retrofit correspondence (steps 2-3).
+Let me do a final consistency check: whether the catalog declares `evidence_refs` and a `result` for this task (relevant to abnormal-exit conditions), and confirm no prior edit-run recorded the evidence correspondence.
+The grep output is too broad (matching `evidence_refs:` keys everywhere). Let me read the architecture catalog entry for cnd-specdojo directly to confirm the `evidence_refs` declaration.
+I now have everything needed. Let me record my investigation findings and produce the review report envelope. I'll first lay out the multi-perspective review result content (in Japanese, for the reporter), then end with the machine-readable envelope.
+
+**Summary of investigation:**
+- Type set (rulebook+sample+template) is complete & well-formed; grade sidecars for them exist.
+- Deliverable `cnd-specdojo.md` exists (148 lines, well-structured) but its grade sidecar `cnd-specdojo.yaml` **does not exist**, and the runner's prior grade run on it **failed** (`exit 1: $analysis: line 586: malformed LEVEL for id`). → grade is stale/not-available for the deliverable.
+- Catalog declares `evidence_refs` for both paths, both files actually exist and are consistent with `cnd-specdojo.md` (CLI container ↔ `src/specdojo.ts` command domain; VitePress container ↔ `config.mts`; no contradiction). But **no prior execution record** (prior edits were 005/040/045/050/060/070/080; no -085) recorded the per-path consistency determination for this review task.
+- No sign of inferring business intent / future policy from implementation into the deliverable.
+
+Let me write the report handoff carrying the reviewer sidecar content for the reporter.
+I have completed the multi-perspective review analysis. Here is my review result report (for the reporter to transcribe into the review result), followed by the machine-readable executor evidence envelope.
+
+---
+
+# Review Result（reporter へ転記するための内容）
+
+## 1. 評価結果の確認
+
+- 評価対象: `docs/ja/product/030-architecture/010-c4/cnd-specdojo.md` / `--target deliverable`
+- 評価結果サイドカー `docs/ja/projects/prj-0001/execution/grade/results/cnd-specdojo.yaml`（`id` は `cnd-specdojo`、`:`→`.` 置換後）は **存在しない**（`grade/results/` ディレクトリの全列挙で確認。同系統の `specdojo.cnd-rulebook.yaml`・`specdojo.cnd-sample.yaml`・`specdojo.cnd-mermaid-rulebook.yaml`、上位の `cxd-specdojo.yaml` は存在）。
+- runner が本 review 前に実行した評価（run `review-prj-0001-T-KATA-WAVE-1-cnd-specdojo-090-a52be602b9-20261114T185530Z`）は **失敗**：`docs/ja/product/030-architecture/010-c4/cnd-specdojo.md: exit 1: … $analysis: line 586: malformed LEVEL for id`。出力行数 586 は成果物（148 行）の約 4 倍であり、grade の分析スクリプト自体のシェルエラーと推測される。
+- 鮮度確認コマンド `specdojo grade list --target deliverable --path docs/ja/product/030-architecture/010-c4/cnd-specdojo.md [--changed-only][--dependency-changed]` と `--incomplete` を sandbox から再実行するには bash 制限があるため実施できていない（詳細は「確認できなかった範囲」「approach に応じた確認」へ）。
+- 結果: 評価結果サイドカーが存在せず、runner の grade も失敗 → **評価結果が最新でない**。grade の `verdict` / `score` / finding 件数は**取得不可**。
+
+## 2. 判断根拠
+
+- 成果物 `cnd-specdojo.md`（148 行）は存在し、上位 `cxd-specdojo` を `based_on` に引き継ぎ、CLI・生成ドキュメントサイト（VitePress）・リポジトリ（データストア）・外部システム（AI provider CLI / Git / GitHub）の境界・関係・検証観点を網羅。構成は上位図の境界を損なわず、追加された閲覧経路を派生物として明示している。
+- 型一式: `specdojo:cnd-rulebook` が `recipe: specdojo:cnd-recipe`、`sample: specdojo:cnd-sample`、`template: specdojo:cnd-template` を宣言。これら 3 ファイルはすべて存在し、rulebook-authoring-standard の章構成（1 全体方針 / 2 位置づけと用語定義 / 3 ファイル命名・ID規則 / 4 推奨 Frontmatter / 5 本文要件 / 6 記述ガイド / 7 禁止事項）に従い、##〜### に連番が付与。完成例は sample へ外出し済み（rulebook 内に `サンプル` 章の埋め込みなし）。計 35 ファイルの grade 済み結果（`cxd-specdojo.yaml` 等）と照合いも可能。
+- catalog `dct-architecture.yaml` の cnd-specdojo エントリの `evidence_refs` は `src/specdojo.ts`・`packages/docs-site/.vitepress/config.mts` を宣言し、両パスは存在。記述上の一致・乖離判定（第 2 ステップ）の記録が本タスクの結果に無い（未充足）。
+
+## 3. 未充足事項・改善指示
+
+1. **grade 実行環境の修復**：`cnd-specdojo.md` に対する `$analysis: line 586: malformed LEVEL for id`。grade の分析スクリプト（line 586）のシェル/文法エラーを修正し、サイドカー `cnd-specdojo.yaml` を生成・更新する。
+2. **評価記録の補完**：1 の修復後、再評価を実施して `verdict` / `score` / finding を確定する。未確定間 `grade-stale` であるため、完了可否は判断保留。
+3. **対応記録の漏れ（retrofit step 2/3）**：`src/specdojo.ts`・`docs-site/.vitepress/config.mts` に対する逐経路の一致・乖離・未確認判定が result に存在しない。再実行時に、各パスの「一致」根拠（CLI コマンド領域＝`src/specdojo.ts` の下位 subcommand 登録群、VitePress コンテナ＝`config.mts` のビルド構成）と修正対象候補を記録する。
+
+## 4. approach に応じた確認（retrofit）
+
+- **実装エビデンス① `src/specdojo.ts`**（CLI コマンド領域）：ファイル実在。成果物の「SpecDojo CLI」コンテナの責務（型による成果物整備・計画/判断/検証記録管理・外部作業起動）と整合。`src/.../*.js` を登録するエントリポイントであり、下位 `cpd-specdojo-cli` へ委ねる構成と矛盾しない。乖離なし。**判定 = 一致（推定）**。
+- **実装エビデンス② `packages/docs-site/.vitepress/config.mts`**（VitePress ビルド構成）：ファイル実在。成果物の「生成ドキュメントサイト（VitePress）」コンテナ・`REL-04/06`・技術前提 4.1 と整合。`outDir = WORKSPACE_ROOT/.vitepress/dist`、`srcExclude` で実行記録を公開除外、`GITHUB_SOURCE` による GitHub 化と、成果物の「リポジトリ全体を無条件公開しない」「リモート共有は利用時・仮定」という記述と一致。乖離なし。**判定 = 一致（推定）**。
+- **未確認範囲**：
+  - grade の再実行（`--changed-only` / `--dependency-changed` / `--incomplete`）は bash 制限のため sandbox から実施出来ず。
+  - 2 経路の判定は、catalog 記述の照合で得たいわゆる「推定・確認」であり、本タスクの result では未記録。再実行時の確定判定として転記していただきたい。
+
+## 5. decision
+
+- verdict: **`grade-stale`**
+- 理由：評価結果サイドカーが存在せず（`cnd-specdojo.yaml` なし）、かつ runner の grade も失敗（exit 1, malformed LEVEL）。評価結果が最新でないため、完了可否は判断しない。成果物は存在し、型一式・実装一致性の観点では健全だが、retrofit の step 2/3（逐経路判定の記録）も未充足である。
+
+---
+**確認できなかった範囲**: `specdojo grade list --target deliverable ...` と `--incomplete` を sandbox 内から直接実行出来なかった。runner が提供した失敗出力を事実として採用し、サイドカー不在と組み合わせて `grade-stale` を確定した。
+
+Now outputting the mandatory machine-readable executor evidence envelope.
+I have completed the multi-perspective, review-only analysis. I read but did **not** modify `cnd-specdojo.md`, the type set (`specdojo:cnd-rulebook` / `specdojo:cnd-sample`), the upstream `cxd-specdojo`, the catalog entry, or the review result — per the executor-stage and review-only constraints. The full review result content (5 sections + scope-not-covered) is rendered above for the reporter to transcribe into `result.md`. No validator was run: for a review task reporting only checks I actually ran, and a fresh grade is out of scope by design; the parent runner executes the allowlisted validators after this stage.
+
+Key conclusions:
+- **verdict = `grade-stale`**: the grade sidecar for `cnd-specdojo.md` (`cnd-specdojo.yaml`) does not exist, and the runner's own grade run failed with a shell-level error (`$analysis: line 586: malformed LEVEL for id`). With no fresh evaluation, completion cannot be judged; this is recorded as a verdict, not an abnormal exit (the deliverable exists, both evidence paths exist, result is writable).
+- **Type set is healthy**: `cnd-rulebook` declares `recipe`/`sample`/`template`, all three exist and are graded; rulebook follows the authoring standard's chapter ordering with numbered headings, good/bad examples in the guidance, and the completed example is outsourced to the sample (no embedded sample chapter) — conforming to PJR-2GD6.
+- **Evidence correspondence**: `src/specdojo.ts` matches the "SpecDojo CLI" container (command domain; lower subcommands delegated to `cpd-specdojo-cli`); `packages/docs-site/.vitepress/config.mts` matches the VitePress container / `REL-04`/`REL-06` / §4.1 (outDir, exec-record exclusion, GitHub sharing). **No contradiction** between deliverable and implementation; I found no trace of inferring business intent or future policy from implementation into the doc.
+- **Open gaps to record on re-run**: per-path consistency determinations (一致/乖離) are not yet recorded in this review task's `result` (retrofit steps 2/3), and the grade environment must be repaired before re-evaluation.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"T-KATA-WAVE-1-cnd-specdojo-090 の多観点レビューを完了。評価結果サイドカー cnd-specdojo.yaml が存在せず、runner の grade も失敗（exit 1: $analysis: line 586: malformed LEVEL for id）したため、verdict=grade-stale。成果物 cnd-specdojo.md は存在し型一式（cnd-rulebook/cnd-sample/template）も整っており、実装エビデンス両パス（src/specdojo.ts、packages/docs-site/.vitepress/config.mts）は記述と一致。retrofit の逐経路判定が result に未記録の点と grade 環境修復・再評価を改善指示として report handoff に記録した。","handoff":["【section1 評価結果の確認】評価対象=docs/ja/product/030-architecture/010-c4/cnd-specdojo.md / --target deliverable。側方 cnd-specdojo.yaml は grade/results/ 列挙で不在（同系統 specdojo.cnd-rulebook.yaml/specdojo.cnd-sample.yaml/specdojo.cnd-mermaid-rulebook.yaml と上位 cxd-specdojo.yaml は存在）。runner の grade 実行は失敗（run review-prj-0001-T-KATA-WAVE-1-cnd-specdojo-090-a52be602b9-20261114T185530Z / exit 1: $analysis: line 586: malformed LEVEL for id。出力行 586 は成果物148行の約4倍で grade スクリプトのシェルエラーと推測）。grade の verdict/score/finding 件数は取得不可。鮮度判定=評価結果が最新でない。","【section2 判断根拠】cnd-specdojo.md(148行)は存在し、上位 cxd-specdojo を based_on に引き継ぎ、CLI・生成ドキュメントサイト(VitePress)・リポジトリ(データストア)・外部システム(AI provider CLI/Git/GitHub)の境界・関係・検証観点を網羅。型一式は cnd-rulebook が recipe/sample/template を宣言し3ファイルとも存在・格納済み、rulebook-authoring-standard の章構成・連番に準拠、完成例は sample へ外出し済み(rulebook にサンプル章なし、PJR-2GD6 遵守)。catalog dct-architecture.yaml は cnd-specdojo に evidence_refs(src/specdojo.ts と packages/docs-site/.vitepress/config.mts)を宣言。","【section3 未充足事項・改善指示】(1) grade 環境修復: cnd-specdojo.md の $analysis:line586:malformed LEVEL for id を直し、cnd-specdojo.yaml を生成。(2) 再評価で verdict/score/finding を確定。sidecar 無し=grade-stale とし完了可否は保留。(3) retrofit step2/3 の漏れ: 両実装パスの一致・乖離・未確認判定が result に未記録。再実行時に各パスの一致根拠と修正対象候補を記録する。","【section4 approach(retrofit)】実装エビデンス① src/specdojo.ts=CLI コンテナ責務(型による成果物整備/計画・判断・検証記録管理/外部作業起動)と整合。下位 subcommand は cpd-specdojo-cli へ委譲で矛盾なし→判定=一致(推定)。実装エビデンス② packages/docs-site/.vitepress/config.mts=生成ドキュメントサイト(VitePress)コンテナ・REL-04/06・§4.1 と整合(outDir=.vitepress/dist、srcExclude で実行記録を公開除外、GITHUB_SOURCE による GitHub 化。成果物の『リポジトリ全体を無条件公開しない』『リモート共有は利用時・仮定』と一致)→判定=乖離なし・一致(推定)。未確認範囲: specdojo grade list(--changed-only/--dependency-changed/--incomplete)は sandbox の bash 制限で直接実行不可。runner の失敗出力を事実として採用。","【section5 decision】verdict=grade-stale。評価結果sidecar不在かつ runner grade 失敗のため最新でなく、完了可否は判断しない。成果物は存在し型一式・実装一致性の観点は健全だが、retrofit の逐経路判定記録が未充足。異常終了ではなく正常終了(評価結果が最新でない/評価不能は異常終了理由にしない)。"],"validations":[]}
+</specdojo_executor_evidence>

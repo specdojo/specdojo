@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-cnd-specdojo-090",
+  "run_id": "T-KATA-WAVE-1-cnd-specdojo-090-20261114T192721Z-cd278017",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-14T19:35:22.639Z",
+    "completed_at": "2026-11-14T20:12:20.566Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n… output omitted …\nction\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-090/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4781 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4781 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-090\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cnd-specdojo-090\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-73kZCD/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Mg92Bh/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-AOqv12/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-KGYITZ/pjr-0001-topic.md\nWarni\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "T-KATA-WAVE-1-cnd-specdojo-090 の多観点レビューを完了。評価結果サイドカー cnd-specdojo.yaml が存在せず、runner の grade も失敗（exit 1: $analysis: line 586: malformed LEVEL for id）したため、verdict=grade-stale。成果物 cnd-specdojo.md は存在し型一式（cnd-rulebook/cnd-sample/template）も整っており、実装エビデンス両パス（src/specdojo.ts、packages/docs-site/.vitepress/config.mts）は記述と一致。retrofit の逐経路判定が result に未記録の点と grade 環境修復・再評価を改善指示として report handoff に記録した。",
+  "completion_status": "complete",
+  "handoff": [
+    "【section1 評価結果の確認】評価対象=docs/ja/product/030-architecture/010-c4/cnd-specdojo.md / --target deliverable。側方 cnd-specdojo.yaml は grade/results/ 列挙で不在（同系統 specdojo.cnd-rulebook.yaml/specdojo.cnd-sample.yaml/specdojo.cnd-mermaid-rulebook.yaml と上位 cxd-specdojo.yaml は存在）。runner の grade 実行は失敗（run review-prj-0001-T-KATA-WAVE-1-cnd-specdojo-090-a52be602b9-20261114T185530Z / exit 1: $analysis: line 586: malformed LEVEL for id。出力行 586 は成果物148行の約4倍で grade スクリプトのシェルエラーと推測）。grade の verdict/score/finding 件数は取得不可。鮮度判定=評価結果が最新でない。",
+    "【section2 判断根拠】cnd-specdojo.md(148行)は存在し、上位 cxd-specdojo を based_on に引き継ぎ、CLI・生成ドキュメントサイト(VitePress)・リポジトリ(データストア)・外部システム(AI provider CLI/Git/GitHub)の境界・関係・検証観点を網羅。型一式は cnd-rulebook が recipe/sample/template を宣言し3ファイルとも存在・格納済み、rulebook-authoring-standard の章構成・連番に準拠、完成例は sample へ外出し済み(rulebook にサンプル章なし、PJR-2GD6 遵守)。catalog dct-architecture.yaml は cnd-specdojo に evidence_refs(src/specdojo.ts と packages/docs-site/.vitepress/config.mts)を宣言。",
+    "【section3 未充足事項・改善指示】(1) grade 環境修復: cnd-specdojo.md の $analysis:line586:malformed LEVEL for id を直し、cnd-specdojo.yaml を生成。(2) 再評価で verdict/score/finding を確定。sidecar 無し=grade-stale とし完了可否は保留。(3) retrofit step2/3 の漏れ: 両実装パスの一致・乖離・未確認判定が result に未記録。再実行時に各パスの一致根拠と修正対象候補を記録する。",
+    "【section4 approach(retrofit)】実装エビデンス① src/specdojo.ts=CLI コンテナ責務(型による成果物整備/計画・判断・検証記録管理/外部作業起動)と整合。下位 subcommand は cpd-specdojo-cli へ委譲で矛盾なし→判定=一致(推定)。実装エビデンス② packages/docs-site/.vitepress/config.mts=生成ドキュメントサイト(VitePress)コンテナ・REL-04/06・§4.1 と整合(outDir=.vitepress/dist、srcExclude で実行記録を公開除外、GITHUB_SOURCE による GitHub 化。成果物の『リポジトリ全体を無条件公開しない』『リモート共有は利用時・仮定』と一致)→判定=乖離なし・一致(推定)。未確認範囲: specdojo grade list(--changed-only/--dependency-changed/--incomplete)は sandbox の bash 制限で直接実行不可。runner の失敗出力を事実として採用。",
+    "【section5 decision】verdict=grade-stale。評価結果sidecar不在かつ runner grade 失敗のため最新でなく、完了可否は判断しない。成果物は存在し型一式・実装一致性の観点は健全だが、retrofit の逐経路判定記録が未充足。異常終了ではなく正常終了(評価結果が最新でない/評価不能は異常終了理由にしない)。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cnd-specdojo-090/T-KATA-WAVE-1-cnd-specdojo-090-20261114T192721Z-cd278017/executor.log",
+      "bytes": 16478,
+      "truncated": false
+    }
+  ]
+}
