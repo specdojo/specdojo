@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:50:28Z"
-  block_reason: agent exited with non-zero code
   commit_type: feat
   commit_scope: docs-site
 ---

@@ -1,0 +1,232 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: bes-index
+path: docs/ja/product/010-business-specs/030-business-model/bes-index.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 87
+graded_at: "2026-11-14T20:03:44.365Z"
+graded_by: luna-review-executor
+content_hash: a4c1e148dca01516e34b6eeeedb678d6c93b4063382eb1fa08ef33f051be9bd6
+source_hashes:
+  catalog-entry: 724adc30a49c094f68dc8c625af2cac4bc195ccb0d8d2446def7f97d034b53e8
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-overview: 0aecdaca4ce0a56ed8f672e9882bce4023abc8d4b6ec7cb5645fc181ca6ede74
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: e1b1ac8e03711fdc6f6fe9146e78131470f82de72c4f27074163053cbee53419
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
+    score: 100
+  consistency:
+    score: 75
+  architecture:
+    score: 88
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 69
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 59
+    anchor: ""
+    message: Add a PM owner and a progress-check point for tracking the listed confirmations through closure.
+    message_ja: Add a PM owner and a progress-check point for tracking the listed confirmations through closure.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 14
+    anchor: >-
+      | `bes-project-launched` | PO が新しいプロジェクトを立ち上げた | `P-01` | PO が新しいプロジェクトを SpecDojo で進めると決めた。 | 立ち上げを決めた時点。 | PO |
+      対象のプロジェクトが SpecDojo の稼働構成にまだ登録されていない。 | プロジェクト名、立ち上げた PO、立ち上げ時点 |
+    message: >-
+      Record the CDFD revision or review evidence used to confirm the domain-to-event mapping, and identify the
+      corresponding BES references when they are available.
+    message_ja: >-
+      Record the CDFD revision or review evidence used to confirm the domain-to-event mapping, and identify the
+      corresponding BES references when they are available.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 18
+    anchor: >-
+      | `bes-catalog-scope-decided` | 何を成果物として管理するかの判断が確定した | `P-03` | 何を成果物として管理するかの判断が確定した。 |
+      判断が確定した時点。カタログへの記入時点ではない。 | BA（提案は全参加者） | 追加・変更・除外の対象となる成果物を特定できる。 | 対象の成果物、追加・変更・除外の区分、判断者、確定時点 |
+    message: Record the data-model or schema mapping review before treating the fact-data fields as confirmed design inputs.
+    message_ja: Record the data-model or schema mapping review before treating the fact-data fields as confirmed design inputs.
+    cause:
+      type: document
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 62
+    anchor: ""
+    message: >-
+      Add review evidence confirming the source-domain mapping, PO scope approval, and QE coverage check before marking
+      the declared completion conditions met.
+    message_ja: >-
+      Add review evidence confirming the source-domain mapping, PO scope approval, and QE coverage check before marking
+      the declared completion conditions met.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 64
+    anchor: ""
+    message: >-
+      Record the review evidence used to verify domain coverage and test-design coverage when the handoff condition is
+      evaluated.
+    message_ja: >-
+      Record the review evidence used to verify domain coverage and test-design coverage when the handoff condition is
+      evaluated.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 14
+    anchor: >-
+      | `bes-project-launched` | PO が新しいプロジェクトを立ち上げた | `P-01` | PO が新しいプロジェクトを SpecDojo で進めると決めた。 | 立ち上げを決めた時点。 | PO |
+      対象のプロジェクトが SpecDojo の稼働構成にまだ登録されていない。 | プロジェクト名、立ち上げた PO、立ち上げ時点 |
+    message: >-
+      Include a traceable reconciliation of the listed events to the CDFD domains so reviewers can verify that no
+      required domain or source event is omitted.
+    message_ja: >-
+      Include a traceable reconciliation of the listed events to the CDFD domains so reviewers can verify that no
+      required domain or source event is omitted.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-ops-operability
+    line: 64
+    anchor: ""
+    message: >-
+      Identify the ongoing owner and review trigger for updating the index when its source domains or related
+      specifications change.
+    message_ja: >-
+      Identify the ongoing owner and review trigger for updating the index when its source domains or related
+      specifications change.
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-qe-config-validity
+    line: 7
+    anchor: "_ASSUMPTION_: 事実データは、概念データフロー図の「データストア」と各領域の業務目的から、発生時点で観測できる業務上の情報を概念名で挙げた初版である。正本のデータモデル・schema との照合は行っていない。"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 0
+  total: 4
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+  detail_ref: bes-index-grade-criteria

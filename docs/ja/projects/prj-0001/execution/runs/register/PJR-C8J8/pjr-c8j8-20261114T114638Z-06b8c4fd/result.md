@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-C8J8
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-C8J8/pjr-c8j8-20261114T114638Z-06b8c4fd/plan.md
   started_at: "2026-11-14T11:46:39.963Z"
-  completed_at: "2026-11-14T12:03:09.294Z"
+  completed_at: "2026-11-14T21:02:57.415Z"
   agent: opus-executor
-  block_reason: "agent exited with non-zero code"
 ---
 
 # Edit Result
