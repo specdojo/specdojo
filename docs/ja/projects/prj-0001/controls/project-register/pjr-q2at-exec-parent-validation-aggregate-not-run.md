@@ -28,13 +28,20 @@ specdojo:
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- executor の evidence に、親 runner の検証 ID をまとめて書いた 1 行（例: `parent runner: lint-ts, lint-fm, …`）が `not_run` で含まれていても、親の検証がすべて通っていれば「executor validation failed or not run」で止めない。
+- まとめた行の判定は、行に挙がった検証 ID がすべて `pipeline.parent_validations` に含まれる場合に限る。設定にない検証や、親 runner の結果がない検証が混じる場合は、今どおり止める。
+- 1 件ずつ書いた `not_run` の行と、まとめた 1 行の両方を、回帰テストで確かめている。
+- 親の検証を evidence に書くときの決まり（書かない、または 1 件ずつ書く）を、exec plan の共通規約か executor の指示に明記し、まとめた行が生まれにくくしている。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節に書いている（PJR-EPQ3）。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` と親の検証が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                            | 担当 | 状態 | メモ |
+| --- | ----------------------------------------------- | ---- | ---- | ---- |
+| 1   | まとめた not_run 行を親の検証の結果で読み替える | DEV  | open | -    |
+| 2   | 回帰テストと共通規約の記述を足す                | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -42,4 +49,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-52EE（失敗の見張りと自動の立て直し）

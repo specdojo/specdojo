@@ -30,13 +30,21 @@ pipeline の失敗時は claim した actor に依らず blocked へ遷移させ
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- pipeline の段を、claim した agent と違う agent（fallback・`--executor-by`・`--reporter-by` で替えた agent）が進めて失敗したとき、runner がタスクを blocked にできる。タスクが doing のまま残らない。
+- block のイベントには、claim した actor と、実際に失敗した段の actor の両方を残す。
+- 人や別の run が claim しているタスクを runner が誤って blocked にしないよう、runner 自身が claim・再開した run に限る。
+- 再現の手順（claim 後に fallback した agent の段が失敗する）を回帰テストで確かめている。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節に書いている（PJR-EPQ3）。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` と親の検証が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                    | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | runner の run なら claim した actor に依らず block する | DEV  | open | -    |
+| 2   | block のイベントに両方の actor を残す                   | DEV  | open | -    |
+| 3   | 回帰テストを足す                                        | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -44,4 +52,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-52EE（失敗の見張りと自動の立て直し）
