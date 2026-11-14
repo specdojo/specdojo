@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-070",
   "run_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-070-20261114T092459Z-8a9ad142",
-  "updated_at": "2026-11-14T11:44:56.165Z",
+  "updated_at": "2026-11-14T11:45:15.495Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-070/T-KATA-WAVE-1-sysd-cross-cutting-policy-070-20261114T092459Z-8a9ad142/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "qwen-executor",
       "attempts": 1,
       "started_at": "2026-11-14T11:44:56.165Z",
-      "completed_at": null,
+      "completed_at": "2026-11-14T11:45:15.495Z",
       "artifact_ref": null
     }
   },
