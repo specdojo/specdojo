@@ -671,6 +671,7 @@ export const specdojoSidebarItems = [
       group("アーキテクチャ", architectureRecipes),
       group("システム設計", [
         recipe("システム設計 全体構成", "sysd-index"),
+        recipe("重要フロー", "sysd-critical-flows"),
         recipe("横断ルール", "sysd-cross-cutting-policy"),
       ]),
       group("実行", execRecipes),
@@ -710,6 +711,7 @@ export const specdojoSidebarItems = [
       group("アーキテクチャ", architectureTemplates),
       group("システム設計", [
         template("システム設計 全体構成", "sysd-index"),
+        template("重要フロー", "sysd-critical-flows"),
         template("横断ルール", "sysd-cross-cutting-policy"),
       ]),
       group("運用", operationsTemplates),
