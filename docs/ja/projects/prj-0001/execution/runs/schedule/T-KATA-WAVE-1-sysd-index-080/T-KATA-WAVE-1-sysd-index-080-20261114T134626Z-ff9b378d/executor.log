@@ -1,0 +1,11 @@
+システム設計索引（`docs/ja/product/040-system-design/sysd-index.md`）の冗長さの整理（condense）を実施しました。
+
+### 実施内容
+- **自動生成物一覧の重複記述の整理**:
+  `## 3. 自動生成物（生成コマンド/生成先/閲覧先）` の表前本文において「一括生成には `npm run docs:generate`（内部で `node --import tsx src/specdojo.ts build` を実行）を使用する。」と明記されているため、表内各行の「生成コマンド」列で反復されていた `（一括: npm run docs:generate）` を削除（`delete`）し、個別生成コマンドに整理しました。
+- **判断情報の保持確認**:
+  `## 2. SSOT 一覧（表形式）` 導入文と各行の非該当理由、および `## 5. 関連ドキュメント導線` と `## 6.1. 未決事項と後続作業への影響` の未作成文書記述について検討し、背景説明や判断・管理上の責務が異なり判断情報に寄与するため保持（`retain`）と判定しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sysd-index.md の自動生成物一覧における一括生成コマンドの重複記載を整理し、判断情報・前提条件を維持しました。","handoff":[],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No YAML files changed","reason":"*.yaml and *.yml files were not changed"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history files changed","reason":"History files under docs/ja/projects/**/controls/project-register/ were not changed"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"Deliverable changes do not reach docs/ja/projects/","reason":"Changed deliverable docs/ja/product/040-system-design/sysd-index.md is outside docs/ja/projects/"}],"condense_records":[{"location":"## 3. 自動生成物（生成コマンド/生成先/閲覧先） 表の生成コマンド列（行64-69）","category":"table-prose","action":"delete","reason":"表前の本文で「一括生成には npm run docs:generate を使用する」と明記されているため、表の各セルでの一括コマンドの重複記述（一括: npm run docs:generate）を削り個別生成コマンドに整理した。一括実行の情報は本文で維持されている。","cause":{"type":"document"}},{"location":"## 2. SSOT 一覧（表形式） 導入文（行41）と表内の非該当理由","category":"table-prose","action":"retain","reason":"導入文ではローカル CLI と Git 管理というシステム全体のアーキテクチャ前提を説明し、表の各行では領域固有の非該当理由と代替正本（CLI仕様、JSON Schema、移行処理等）を具体的に定義している。前提と各領域の判断情報を損なわないため保持した。","cause":{"type":"document"}},{"location":"## 6.1. 未決事項と後続作業への影響（行113-121）と ## 5. 関連ドキュメント導線（行94-105）の未作成文書記述","category":"repetition","action":"retain","reason":"第5章は導線一覧とその整備状態（未作成）を示し、第6.1章は未決事項としての影響範囲・担当・解消条件・次アクションを管理している。役割と判断目的が異なるため保持した。","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>
