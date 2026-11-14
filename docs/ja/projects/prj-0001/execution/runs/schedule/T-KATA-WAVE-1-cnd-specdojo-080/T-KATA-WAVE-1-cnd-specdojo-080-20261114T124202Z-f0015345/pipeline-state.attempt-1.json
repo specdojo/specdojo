@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-cnd-specdojo-080",
+  "run_id": "T-KATA-WAVE-1-cnd-specdojo-080-20261114T124202Z-f0015345",
+  "updated_at": "2026-11-14T16:42:49.306Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "luna-executor",
+      "attempts": 1,
+      "started_at": "2026-11-14T12:50:29.910Z",
+      "completed_at": "2026-11-14T12:52:25.446Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cnd-specdojo-080/T-KATA-WAVE-1-cnd-specdojo-080-20261114T124202Z-f0015345/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-14T16:40:39.097Z",
+      "completed_at": "2026-11-14T16:42:49.306Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cnd-specdojo-080/T-KATA-WAVE-1-cnd-specdojo-080-20261114T124202Z-f0015345/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cnd-specdojo-080/T-KATA-WAVE-1-cnd-specdojo-080-20261114T124202Z-f0015345/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cnd-specdojo-080/T-KATA-WAVE-1-cnd-specdojo-080-20261114T124202Z-f0015345/result.md"
+  }
+}
