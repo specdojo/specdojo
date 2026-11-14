@@ -288,6 +288,10 @@ describe("strategy generator", () => {
     expect(Object.keys(doc.phase_sets as object)).toEqual([
       "bootstrap-pass",
       "freeform-pass",
+      "rulebook-maintenance-pass",
+      "recipe-maintenance-pass",
+      "sample-maintenance-pass",
+      "template-maintenance-pass",
       "refine-pass",
       "condense-pass",
       "review-pass",
@@ -299,6 +303,208 @@ describe("strategy generator", () => {
     ]);
     expect(validateStrategySchema(doc, root)).toEqual([]);
   });
+
+  it.each(["bootstrap-kata-set", "improve-kata"] as const)(
+    "%s が wave-1 と同じ型の整備段・suffix・依存順を生成する",
+    (intent) => {
+      const strategy = load(
+        readFileSync(join(schedulePath, "sch-strategy-demo.yaml"), "utf8"),
+      ) as Record<string, unknown>;
+      strategy.approach_rules = [
+        intent === "bootstrap-kata-set"
+          ? {
+              local_ids: ["representative", "ordinary"],
+              intent,
+              bootstrap_scope: ["rulebook", "recipe", "sample", "template"],
+            }
+          : { local_ids: ["representative", "ordinary"], intent, kata_target: "rulebook" },
+      ];
+      write("schedule/sch-strategy-demo.yaml", dump(strategy));
+      const generated = generateStrategy({
+        repoRoot: root,
+        schedulePath,
+        catalogPath,
+        timelinePath,
+        rolesPath,
+        projectId: "prj-0001",
+        track: "demo",
+        defaultOwner: "DEV",
+        gateOwner: "PO",
+        milestoneOwner: "PO",
+      });
+      expect(generated.errors).toEqual([]);
+      expect(validateStrategySchema(generated.doc, root)).toEqual([]);
+      const wave = load(
+        readFileSync(
+          join(originalRoot, "docs/ja/projects/prj-0001/schedule/sch-strategy-kata-wave-1.yaml"),
+          "utf8",
+        ),
+      ) as {
+        default_phase_sets: Array<{ phase_set: string }>;
+        phase_sets: Record<string, Array<Record<string, unknown>>>;
+      };
+      const phaseSets = generated.doc!.phase_sets as typeof wave.phase_sets;
+      const maintenance = wave.default_phase_sets
+        .map((entry) => entry.phase_set)
+        .filter((name) => name.endsWith("-maintenance-pass"));
+      expect(maintenance).toHaveLength(4);
+      for (const name of maintenance) {
+        const { id, approach, task_suffix, execution, mode, agent_pipeline } =
+          wave.phase_sets[name][0];
+        expect(phaseSets[name][0]).toMatchObject({
+          id,
+          approach,
+          task_suffix,
+          execution,
+          mode,
+          agent_pipeline,
+        });
+      }
+      expect(generated.doc!.default_phase_sets).toEqual(
+        intent === "bootstrap-kata-set"
+          ? wave.default_phase_sets
+          : [...maintenance, "review-pass", "finalize-pass"].map((phase_set) => ({ phase_set })),
+      );
+      for (const name of [
+        ...(intent === "bootstrap-kata-set" ? ["bootstrap-pass"] : []),
+        ...maintenance,
+      ]) {
+        const description = phaseSets[name][0].description as string;
+        expect(description).toContain("[[specdojo:rulebook-authoring-standard|");
+        expect(description).toContain("[[specdojo:clis-sample|");
+        expect(description).toContain("良い例・悪い例");
+        expect(description).toContain("not-needed");
+        expect(description).toContain("正本を参照");
+      }
+      write("schedule/sch-strategy-demo.yaml", generated.content);
+      const built = buildScheduleTrack(join(schedulePath, "sch-strategy-demo.yaml"), root);
+      expect(built.errors).toEqual([]);
+      const tasks = built.tasks.filter((task) => task.local_id === "representative");
+      expect(tasks.map((task) => task.phase_set)).toEqual(
+        (generated.doc!.default_phase_sets as Array<{ phase_set: string }>).map(
+          (entry) => entry.phase_set,
+        ),
+      );
+      expect(new Set(tasks.map((task) => task.phase_suffix)).size).toBe(tasks.length);
+      for (let i = 1; i < tasks.length; i++) {
+        expect(tasks[i].depends_on).toContain(`T-DEMO-representative-${tasks[i - 1].phase_suffix}`);
+      }
+      expect(generated.doc!.phase_gates).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            after_phase_sets: [
+              ...(intent === "bootstrap-kata-set" ? ["bootstrap-pass"] : []),
+              ...maintenance,
+            ],
+          }),
+        ]),
+      );
+    },
+  );
+
+  it.each(["bootstrap", "rulebook-maintenance"] as const)(
+    "%s で同じ owner の成果物も not-needed の宣言ごとに段を分ける",
+    (approach) => {
+      const built = buildStrategyDocument({
+        projectId: "prj-0001",
+        track: "demo",
+        catalogs: [{ id: "prj-0001:dct-demo", path: "/catalog/dct-demo.yaml", domain: "demo" }],
+        deliverables: [
+          { local_id: "representative", catalog_id: "prj-0001:dct-demo", approach },
+          {
+            local_id: "ordinary",
+            catalog_id: "prj-0001:dct-demo",
+            approach,
+            not_needed_kata: ["recipe", "template"],
+          },
+        ],
+        dependsOn: new Map(),
+        owners: new Map([
+          ["representative", "DEV"],
+          ["ordinary", "DEV"],
+        ]),
+        gateOwner: "PO",
+        milestoneOwner: "PO",
+        bootstrapOrdering: true,
+        includeKinds: ["work"],
+        preserved: {
+          ownerByLocalId: new Map(),
+          approachRules:
+            approach === "bootstrap"
+              ? [
+                  {
+                    local_ids: ["representative"],
+                    intent: "bootstrap-kata-set",
+                    bootstrap_scope: ["rulebook", "recipe", "sample", "template"],
+                  },
+                  {
+                    local_ids: ["ordinary"],
+                    intent: "bootstrap-kata-set",
+                    bootstrap_scope: ["rulebook", "sample"],
+                  },
+                ]
+              : [
+                  {
+                    local_ids: ["representative", "ordinary"],
+                    intent: "improve-kata",
+                    kata_target: "rulebook",
+                  },
+                ],
+        },
+      });
+      expect(built.errors).toEqual([]);
+      expect(validateStrategySchema(built.doc, root)).toEqual([]);
+      write("schedule/sch-strategy-demo.yaml", dump(built.doc));
+      const schedule = buildScheduleTrack(join(schedulePath, "sch-strategy-demo.yaml"), root);
+      expect(schedule.errors).toEqual([]);
+      const phasesOf = (localId: string) =>
+        schedule.tasks.filter((task) => task.local_id === localId).map((task) => task.phase_set);
+      const full = phasesOf("representative");
+      expect(full).toContain("recipe-maintenance-pass");
+      expect(full).toContain("template-maintenance-pass");
+      expect(phasesOf("ordinary")).toEqual(
+        full.filter(
+          (name) => name !== "recipe-maintenance-pass" && name !== "template-maintenance-pass",
+        ),
+      );
+      expect(built.doc.owner_rules).toHaveLength(2);
+    },
+  );
+
+  it.each(["recipe", "sample", "template"] as const)(
+    "improve-kata の %s 直接指定は指定した型だけを見直す",
+    (kind) => {
+      const strategy = load(
+        readFileSync(join(schedulePath, "sch-strategy-demo.yaml"), "utf8"),
+      ) as Record<string, unknown>;
+      strategy.approach_rules = [
+        {
+          local_ids: ["representative", "ordinary"],
+          intent: "improve-kata",
+          kata_target: kind,
+        },
+      ];
+      write("schedule/sch-strategy-demo.yaml", dump(strategy));
+      const generated = generateStrategy({
+        repoRoot: root,
+        schedulePath,
+        catalogPath,
+        timelinePath,
+        rolesPath,
+        projectId: "prj-0001",
+        track: "demo",
+        defaultOwner: "DEV",
+        gateOwner: "PO",
+        milestoneOwner: "PO",
+      });
+      expect(generated.errors).toEqual([]);
+      expect(Object.keys(generated.doc!.phase_sets as object)).toEqual([
+        `${kind}-maintenance-pass`,
+        "review-pass",
+        "finalize-pass",
+      ]);
+    },
+  );
 
   it("既存 scope の local_ids を保ち、選択した成果物だけの strategy を再生成する", () => {
     const path = join(schedulePath, "sch-strategy-demo.yaml");

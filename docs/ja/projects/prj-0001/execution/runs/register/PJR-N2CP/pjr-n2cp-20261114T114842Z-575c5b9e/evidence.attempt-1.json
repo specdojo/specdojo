@@ -1,0 +1,209 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N2CP",
+  "run_id": "pjr-n2cp-20261114T114842Z-575c5b9e",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-14T11:58:21.692Z",
+    "completed_at": "2026-11-14T12:06:50.131Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-n2cp.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n2cp-strategy-kata-phases-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-document.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-profiles.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/strategy-generate.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n2cp-strategy-kata-phases-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-document.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-profiles.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/strategy-generate.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-n2cp-strategy-kata-phases-fix.md           |  38 ++++-\n docs/ja/specdojo/guides/ryu-guide.md               |   2 +-\n docs/ja/specdojo/guides/schedule-design-guide.md   |   1 +\n src/schedule/strategy-generate-document.ts         |  52 ++++--\n src/schedule/strategy-profiles.ts                  |  46 +++++-\n tests/src/schedule/strategy-generate.test.ts       | 183 +++++++++++++++++++++\n 6 files changed, 294 insertions(+), 28 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-n2cp-smoke.mjs",
+      "status": "passed",
+      "summary": "生成・schema・schedule 展開、wave-1 の段順と属性、4種の改善 target、不要な型の省略、一意な suffix と段間依存を確認。一時スクリプトと fixture は削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/schedule/strategy-profiles.ts src/schedule/strategy-generate-document.ts tests/src/schedule/strategy-generate.test.ts docs/ja/specdojo/guides/schedule-design-guide.md docs/ja/specdojo/guides/ryu-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-n2cp-strategy-kata-phases-fix.md",
+      "status": "passed",
+      "summary": "変更した6ファイルを整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ整合検査成功。既存の未作成文書・再エクスポート参照に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象の staged 実行記録0件、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "ファイル単位の YAML schema 検査は適用外。",
+      "reason": "executor は YAML／YML 成果物を変更していない。生成した strategy は smoke 検証内で schema 検証済み。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N2CP/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N2CP/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N2CP/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4737 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4737 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N2CP\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nv1/bdd.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N2CP/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N2CP/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N2CP\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-UTyaRo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ENEpq4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-U7d2yM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WVPe88/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nmust NOT have fewer than 1 items\",\n+ ]\n\n ❯ tests/src/schedule/strategy-generate.test.ts:433:55\n    431|       });\n    432|       expect(built.errors).toEqual([]);\n    433|       expect(validateStrategySchema(built.doc, root)).toEqual([]);\n       |                                                       ^\n    434|       write(\"schedule/sch-strategy-demo.yaml\", dump(built.doc));\n    435|       const schedule = buildScheduleTrack(join(schedulePath, \"sch-stra…\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯"
+    }
+  ],
+  "final_message": "型整備の段構成、共通説明、一意な suffix、要否宣言ごとの担当ルールを修正。回帰テスト・ガイド2冊・個票を更新し、executor の検証は成功した。",
+  "completion_status": "complete",
+  "handoff": [
+    "判断: 生成時に not-needed の型は見直し段を省略する。実行までに不要と判断された段は変更せず理由を result に残して完了する。明示 target／scope に不要な型を指定した場合の生成停止は維持する。",
+    "判断: improve-kata の `kata_target: rulebook` は、T88P と同じく rulebook → recipe → sample → template を同期してレビュー・確定する。他の型の直接指定は対象範囲を保つ。bootstrap は wave-1 と同じ全9段とした。prj-0001 固有のサイドバー更新指示は汎用 profile に含めない。",
+    "CHANGELOG に書く事項（不具合修正）: schedule strategy generate の bootstrap-kata-set と rulebook を改善する improve-kata に、rulebook・recipe・sample・template を順に同期する段を追加。not-needed の型は省略し、型の整備方針と一意なタスク suffix を生成する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N2CP/pjr-n2cp-20261114T114842Z-575c5b9e/executor.attempt-1.log",
+      "bytes": 3174,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N2CP/pjr-n2cp-20261114T114842Z-575c5b9e/parent-validation-attempt-1-test-unit.attempt-1.log",
+      "bytes": 9378,
+      "truncated": false
+    }
+  ]
+}
