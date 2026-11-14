@@ -111,6 +111,8 @@ rate_limit_policy:
 # 実際の出力で検証してから確定する。
 providers:
   claude:
+    # Claude の週の枠をリセットしたため、2026-11-17 1:00 まで opus を 2 本まで使う（indie の依頼）。
+    max_concurrency: 2
     # 役割の定義は .claude/agents/ の役割ごとの 1 ファイル（PJR-TSP6）を mode で選び、
     # モデルは実体の member の model を --model で渡す。permission は mode 別 settings で分離する。
     command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
