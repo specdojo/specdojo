@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-cpd-specdojo-cli-045
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-cpd-specdojo-cli-045/T-KATA-WAVE-1-cpd-specdojo-cli-045-20261114T002305Z-6f3c5073/plan.md
   started_at: "2026-11-14T00:23:09.758Z"
+  completed_at: "2026-11-14T00:37:08.107Z"
   agent: sol-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,24 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- CPD recipe の問い・作成手順・判断例を改訂し、C4 の型メニューを補完しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/cpd-recipe.md`: 上位の成功基準との接続、確認者と公開範囲、未決事項の担当・判断者・判断時点、変更影響の追跡を具体化する問いと手順を追加し、各章に良い例・悪い例を補いました。
+- `packages/docs-site/.vitepress/sidebar-config.ts`: CPD recipe および template を追加し、併せて CND recipe と template の登録漏れを修正しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- reporter 向け実施内容・変更ファイル: docs/ja/specdojo/recipes/cpd-recipe.md に、上位の成功基準との接続、確認者と公開範囲、未決事項の担当・判断者・判断時点、変更影響の追跡を具体化する問いと手順を追加した。各章に良い例・悪い例を補い、既存の責務分割・障害境界の問いを維持した。packages/docs-site/.vitepress/sidebar-config.ts に CPD recipe・template を追加し、同じ C4 メニューで残っていた CND recipe・template の登録漏れも補った。
+- reporter 向け判断根拠: recipe-authoring-standard、rulebook-authoring-standard、cpd-rulebook の「記述ガイド」、ryu-guide の「実践の型メンテナンスの進め方」、共通レビュー観点の `vp-arc-conciseness`・`vp-qe-kata-conformance` を確認した。cpd-specdojo-cli、cnd-specdojo、cpd-sample、cpd-template と照合し、論理分割と実装確認済み構成、正本と派生物、作業結果と人間の判断を区別する問いを維持・補強した。既存の grade 結果 specdojo.cpd-rulebook.yaml・specdojo.cpd-sample.yaml は改訂前の評価として補助参照し、今回の修正要件は現行 rulebook を正とした。plan に展開された finding はない。
+- reporter 向け要否判断: recipe は責務分割や依存・観測点を導く思考手順に必要、template は図・定義表・検証対象の記入骨組みに必要と判断し、cpd-rulebook の既存宣言 `specdojo:cpd-recipe`・`specdojo:cpd-template` を維持した。完成例は既存の `specdojo:cpd-sample` に外出し済みであり、新規作成は不要。PJR-2GD6 に沿い、値・構文・構造の詳細や規約一覧を recipe に再定義していない。result と grade サイドカーは編集していないため、判断根拠を result の「進め方と実践の型の適用」へ記録すること。
+- reporter 向け判断根拠: recipe-authoring-standard、rulebook-authoring-standard、cpd-rulebook の「記述ガイド」、ryu-guide の「実践の型メンテナンスの進め方」、共通レビュー観点の vp-arc-conciseness・vp-qe-kata-conformance を確認した。cpd-specdojo-cli、cnd-specdojo、cpd-sample、cpd-template と照合し、論理分割と実装確認済み構成、正本と派生物、作業結果と人間の判断を区別する問いを維持・補強した。既存の grade 結果 specdojo.cpd-rulebook.yaml・specdojo.cpd-sample.yaml は改訂前の評価として補助参照し、今回の修正要件は現行 rulebook を正とした。plan に展開された finding はない。
+- reporter 向け要否判断: recipe は責務分割や依存・観測点を導く思考手順に必要、template は図・定義表・検証対象の記入骨組みに必要と判断し、cpd-rulebook の既存宣言 specdojo:cpd-recipe・specdojo:cpd-template を維持した。完成例は既存の specdojo:cpd-sample に外出し済みであり、新規作成は不要。PJR-2GD6 に沿い、値・構文・構造の詳細や規約一覧を recipe に再定義していない。result と grade サイドカーは編集していないため、判断根拠を result の「進め方と実践の型の適用」へ記録すること。
+- 適用外の検証: `npm run validate:schema:file`（変更した YAML・YML ファイルがない。）
+- 適用外の検証: `npm run validate:history-links`（履歴蓄積ファイルを変更していない。）
+- 適用外の検証: `npm run validate:catalog`（executor の変更は docs/ja/specdojo と packages/docs-site 配下に限られ、docs/ja/projects 配下の成果物を変更していない。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+recipe-maintenance
