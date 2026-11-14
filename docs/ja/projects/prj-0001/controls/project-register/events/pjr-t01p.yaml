@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ac132a5aec6e4cd98ace9f68d54bda90
+  ts: "2026-11-14T03:31:42Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent の 1 段を速くする（親の検証の選び方・統合の commit・reporter・worktree の準備）
+    - field: description
+      from: ""
+      to: 1 段に 20〜30 分かかっている内訳を減らし、10〜12 分程度にする
+    - field: input
+      from: ""
+      to: '["2026-11-14 の kata-wave-1 の実績（cpd-specdojo-cli-050）: worktree の準備 1.7 分、executor 6.8 分、親の検証 5.2 分、reporter（ローカルの gemma）3.7 分、統合 0.25 分。統合の commit のときに lefthook がテスト全体を流し直すと 7.8 分かかり、負荷で時間切れになって統合が止まることもあった（sysd-cross-cutting-policy-005）","親の検証の順番待ちは、`parent_validation_concurrency` を 2 にして先に解消した（2026-11-14）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-14"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: perf
+    - field: commit_scope
+      from: ""
+      to: exec

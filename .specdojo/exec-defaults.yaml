@@ -16,6 +16,8 @@
 # SpecDojo 親プロセスが固定許可リストから実行する。設定できるのは ID だけで、agent の
 # evidence や設定ファイルから任意の command / 引数を注入することはできない。
 pipeline:
+  # 2 本並べた run の片方が親の検証の順番を待たないよう、2 本まで同時に流す（16 コア、2026-11-14 indie の依頼）。
+  parent_validation_concurrency: 2
   parent_validations:
     # lint は短時間で終わるため先に実行し、executor が残した ESLint・frontmatter・Markdown の
     # エラーを統合前に検出する（PJR-K1Z5）。
@@ -109,6 +111,8 @@ rate_limit_policy:
 # 実際の出力で検証してから確定する。
 providers:
   claude:
+    # Claude の週の枠をリセットしたため、2026-11-17 1:00 まで opus を 2 本まで使う（indie の依頼）。
+    max_concurrency: 2
     # 役割の定義は .claude/agents/ の役割ごとの 1 ファイル（PJR-TSP6）を mode で選び、
     # モデルは実体の member の model を --model で渡す。permission は mode 別 settings で分離する。
     command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
