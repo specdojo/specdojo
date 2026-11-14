@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gitEnvironment } from "../shared/git-environment.js";
@@ -136,6 +137,8 @@ export function reviewGradeArgs(opts: {
     "grade",
     "run",
     "--isolate-pipeline-state",
+    "--if-busy",
+    "wait",
     "--run-id",
     opts.runId,
     "--project",
@@ -199,12 +202,16 @@ export async function ensureReviewGrade(opts: {
     rootDir: opts.repoRoot,
   });
   const decision = decideReviewGradeAction({
-    freshness,
+    freshness:
+      freshness.state === "fresh" && freshness.result.target !== opts.target
+        ? { ...freshness, state: "stale" }
+        : freshness,
     dryRun: opts.dryRun,
   });
   if (!decision.run) return decision.outcome;
 
-  const runId = reviewGradeRunId(opts.taskId, opts.now ?? new Date());
+  const subjectKey = createHash("sha256").update(opts.subjectPath).digest("hex").slice(0, 10);
+  const runId = reviewGradeRunId(`${opts.taskId}-${subjectKey}`, opts.now ?? new Date());
   const args = reviewGradeArgs({
     runId,
     projectId: opts.projectId,

@@ -1,0 +1,16 @@
+`docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md` に、冗長な 2 箇所の修正を入れました。lint など allowlist の検査は親 runner が実行するため、ここでは走らせていません。
+
+修正した箇所は次の 2 つです。
+- **「4.1. 技術前提・制約」の最終項目:** 「上位図のローカル実行の仮定を維持し」と、実行結果の取得・保存を判断・承認から分ける文を削除し、「ランタイム・バージョン・物理配置は固定しない。」だけを残しました。ローカル実行の仮定は概要の `_ASSUMPTION_` と「メモ / 将来課題」にあります。承認や判断を行わない責務は、「3.2. コンポーネントと論理配置」の exec と register の行にあります。
+- **「3.4. 関係と詳細の正本」の導入文:** 「内部関係は概要の仮定に従う。」を削除しました。概要の `_ASSUMPTION_` の繰り返しです。
+
+意味の維持については、削った内容はどれも同じ文書内の別の箇所に残っていて、新しい内容は足していません。frontmatter の `status` は `draft` のままです。
+
+他の候補は、判断に要る情報を含むため `retain` にしました。
+- **図の下の補足文:** Git・GitHub・サイトの扱いの境界注記で、「3.3. ストアと外部依存」とは範囲が違います。
+- **「3.3. ストアと外部依存」と「4.2. コンポーネント間の検証対象」:** 失敗時の扱いが似ていますが、前者は利用条件、後者は観測点という別の役割です。
+- **「3.4. 関係と詳細の正本」の「同上」:** 参照先の正本を指す短縮で、再掲ではありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"冗長な2箇所を delete で整理し、他の候補は retain とした。意味と必須情報は維持。","handoff":[],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検査のため executor では実行しない"}],"condense_records":[{"location":"4.1. 技術前提・制約 最終項目","category":"repetition","action":"delete","reason":"ローカル実行の仮定は概要の ASSUMPTION とメモ表、判断・承認を行わない責務は exec/register の責務欄にあり、同じ内容の繰り返しのため削除。物理配置を固定しない制約は残した","cause":{"type":"document"}},{"location":"3.4. 関係と詳細の正本 導入文","category":"repetition","action":"delete","reason":"「内部関係は概要の仮定に従う」は概要の ASSUMPTION の繰り返し。未作成名の扱いの注記は残した","cause":{"type":"document"}},{"location":"2. 図直下の補足段落","category":"repetition","action":"retain","reason":"矢印の意味と上位図との境界注記で、他の箇所にない解釈上の必須情報","cause":{"type":"document"}},{"location":"3.3. ストアと外部依存 と 4.2. コンポーネント間の検証対象","category":"table-prose","action":"retain","reason":"前者は利用条件、後者は観測点という別の役割で、結合設計の入力として両方が必要","cause":{"type":"document"}}]}
+</specdojo_executor_evidence>

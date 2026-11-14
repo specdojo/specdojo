@@ -1,0 +1,36 @@
+レビューは終わりました。verdict は `incomplete` と判断しました。評価結果は最新です。ただし、実装エビデンス `src/exec/exec.ts` について、成果物の記述との対応(一致・乖離・確認不能・未確認)を記録した実行記録が見つかりませんでした。
+
+**評価結果の確認**
+- 次の 3 つのコマンドを `docs/ja/product/040-system-design/sysd-cross-cutting-policy.md` に対して実行しました。いずれも出力が空で終了コードは 0 でした。
+  - `specdojo grade list --target deliverable --changed-only`
+  - `specdojo grade list --target deliverable --dependency-changed`
+  - `specdojo grade list --target deliverable --incomplete`
+- 評価結果サイドカーは `docs/ja/projects/prj-0001/execution/grade/results/sysd-cross-cutting-policy.yaml` で、`verdict` は `needs-work`、`score` は 93 です。
+- finding は blocker 0 / major 1 / minor 4 / note 0 です。
+- この grade 結果は plan が示した事実として受け取り、再評価していません。
+- 最終的な verdict 記録の直前に、鮮度確認は再実行していません。`changed-during-review` の確認は未実施です。
+
+**判断根拠**
+- 成果物には `src/shared/git-environment.ts`、`src/exec/agent-git-state.ts`、`src/exec/agent-protected-config.ts`、`src/exec/worktree-ops.ts` への参照があります。
+- `src/exec/exec.ts` への参照は、成果物にも `sysd-index.md` にもありません。
+- 同じ型の先行 edit task `T-KATA-WAVE-1-sysd-cross-cutting-policy-070` の result を確認しました。`exec/exec.ts` の記述は見当たらず、対応判定(一致・乖離・確認不能・未確認)の記録もありません。
+- 先行 task の run には、005 の `integrate.log` に `src/exec/exec.ts` の言及がありました。ただし、これは対応記録ではありません。
+- 本 run の `result.md` は未記入の scaffold のままです。
+- 「進め方」の手順 2 により、記録のないパスは未充足事項になります。
+
+**未充足事項・改善指示**
+- 次の 3 点を、成果物の記述と対応づけて実行記録に残す必要があります。
+  - `src/exec/exec.ts` から到達する rate limit 検出
+  - retry/fallback 方針
+  - `command_template` 解決、worktree ライフサイクル、append-only イベントと reopen の規則
+- 乖離がある場合は、修正対象の候補(実装・文書・意思決定)と根拠を併記してください。調査できなかった範囲も明示してください。
+- grade の finding は、このタスクの完了を妨げる未充足事項とは扱っていません。F001〜F003 は Q1/Q2 の未決に由来します。F004 は参照ラベルの表記ゆれです。F005 は _TODO_ / _ASSUMPTION_ の残存で、major です。F005 は成果物側の改善として扱ってください。
+
+**確認できなかった範囲**
+- `src/exec/exec.ts` の中身と成果物の記述との実際の突き合わせは行っていません。plan の指示は、記録の有無を確認するところまでです。
+- 先行 edit task は 005、040、045、050、060、070、080 がありますが、result を確認したのは 070 のみです。他の task の result に対応記録がある可能性は残ります。
+- テスト系の検査(`npm run test:unit` など)は実行していません。親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review 実施。評価結果は最新(grade list 3種とも出力なし)で、grade は needs-work/93、finding は major1・minor4。成果物と sysd-index に src/exec/exec.ts への対応記録がなく、先行 edit task 070 の result にも対応判定が見つからない。このため推奨 verdict は incomplete。未充足事項: src/exec/exec.ts について、rate limit 検出、retry/fallback、command_template 解決、worktree ライフサイクル、append-only イベントと reopen の各規則と成果物記述との対応(一致・乖離・確認不能・未確認)の記録。乖離がある場合は修正対象候補と根拠も記録する。確認できなかった範囲: src/exec/exec.ts 本体と成果物の実突合は行っていない。先行 edit task のうち result を確認したのは 070 のみ。verdict 記録直前の鮮度再確認は未実施。テスト系検査は親 runner が実行する。","handoff":["推奨 verdict は incomplete。src/exec/exec.ts と成果物記述との対応記録(一致・乖離・確認不能・未確認)が実行記録にない。","grade の finding F001〜F003 は Q1/Q2 未決に由来、F004 は参照ラベル表記ゆれ、F005 は _TODO_/_ASSUMPTION_ 残存(major)。完了を妨げる未充足事項としては扱っていない。","先行 edit task 005/040/045/050/060/080 の result は未確認。対応記録がそこにある可能性は残る。"],"validations":[]}
+</specdojo_executor_evidence>

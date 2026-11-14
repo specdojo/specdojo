@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cxd-specdojo-grade-criteria
+document: cxd-specdojo
+path: docs/ja/product/030-architecture/010-c4/cxd-specdojo.md
+graded_at: "2026-11-14T14:15:54.074Z"
+graded_by: sonnet-review-executor
+content_hash: 847b9f2d7413e01d7ed02d3ed27afdf1c6fa2554a8535e0f23cfe5fb29bc2900
+summary:
+  satisfied: 4
+  unsatisfied: 0
+  total: 4
+criteria:
+  - id: DC-001
+    text: 対象システムと外部システム・ユーザーの関係が業務観点で正確に表現されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: システム境界とステークホルダーを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: アーキテクチャ全体構造の共通理解として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: システム境界・外部依存のテスト観点が識別できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

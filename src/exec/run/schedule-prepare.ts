@@ -2,6 +2,8 @@ import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { ensureReviewGrade, type ReviewGradeOutcome } from "../../review/grade.js";
+import { findDeliverableInfo } from "../plans-core.js";
+import { enforceKataReviewVerdict, scheduleKataReviewSubjects } from "../review-kata.js";
 import {
   type AgentProvider,
   type MemberRoster,
@@ -134,19 +136,42 @@ export async function gradeBeforeReviewPlan(params: {
   const subject = reviewGradeSubject(params.catalogPath ?? "", task);
   if (!subject) {
     process.stdout.write("  [grade] skipped: grade subject is not resolvable\n");
-    return { action: "not-run", detail: "評価対象のパスを解決できない" };
   }
-  process.stdout.write(`  [grade] checking ${subject.path} (--target ${subject.target})\n`);
-  const outcome = await ensureReviewGrade({
-    taskId: qualifyTaskId(projectId, task.id),
-    projectId,
-    subjectPath: subject.path,
-    target: subject.target,
-    repoRoot: params.repoRoot,
-    dryRun: params.dryRun,
-    by: params.by,
-    execDefaultsPath: params.execDefaultsPath,
-  });
+  if (subject)
+    process.stdout.write(`  [grade] checking ${subject.path} (--target ${subject.target})\n`);
+  const outcome: ReviewGradeOutcome = subject
+    ? await ensureReviewGrade({
+        taskId: qualifyTaskId(projectId, task.id),
+        projectId,
+        subjectPath: subject.path,
+        target: subject.target,
+        repoRoot: params.repoRoot,
+        dryRun: params.dryRun,
+        by: params.by,
+        execDefaultsPath: params.execDefaultsPath,
+      })
+    : { action: "not-run", detail: "評価対象のパスを解決できない" };
+  const deliverable =
+    task.local_id && params.catalogPath
+      ? findDeliverableInfo(params.catalogPath, task.local_id)
+      : null;
+  for (const kata of scheduleKataReviewSubjects(task, deliverable)) {
+    if (kata.path === subject?.path && subject?.target === "kata") continue;
+    process.stdout.write(`  [grade] checking ${kata.label}: ${kata.path} (--target kata)\n`);
+    const kataOutcome = await ensureReviewGrade({
+      taskId: qualifyTaskId(projectId, task.id),
+      projectId,
+      subjectPath: kata.path === "_MISSING_" ? "" : kata.path,
+      target: "kata",
+      repoRoot: params.repoRoot,
+      dryRun: params.dryRun,
+      by: params.by,
+      execDefaultsPath: params.execDefaultsPath,
+    });
+    if (kataOutcome.action === "failed" || kataOutcome.action === "not-run") {
+      process.stdout.write(`  [grade] ${kata.label}: ${kataOutcome.detail}\n`);
+    }
+  }
   const summary =
     outcome.action === "skipped"
       ? "skipped: content_hash matches the stored grade"
@@ -157,6 +182,26 @@ export async function gradeBeforeReviewPlan(params: {
           : `not run: ${outcome.detail}`;
   process.stdout.write(`  [grade] ${summary}\n`);
   return outcome;
+}
+
+export function enforceScheduleKataReview(params: {
+  task: ReadyTaskView;
+  catalogPath: string | undefined;
+  resultPath: string;
+  projectId: string | undefined;
+  rootDir: string;
+}): void {
+  if (params.task.mode !== "review" || !params.projectId) return;
+  const deliverable =
+    params.task.local_id && params.catalogPath
+      ? findDeliverableInfo(params.catalogPath, params.task.local_id)
+      : null;
+  enforceKataReviewVerdict(
+    params.resultPath,
+    scheduleKataReviewSubjects(params.task, deliverable),
+    params.projectId,
+    params.rootDir,
+  );
 }
 
 export async function prepareSingleTask(

@@ -370,6 +370,7 @@ phase や owner rule に書く `approach` は、タスクの目的と実践の�
 - `bootstrap` は `bootstrap_scope`（作成条件から必要と判断し、一式で初期整備する実践の型）と理由の記載が必要です。`not-needed` またはすべて利用可能な型を対象にできません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
 - intent の欠落・重複、必要な grade や追加パラメータの欠落、参照切れがある場合は暫定 approach を使わず生成を停止します。
 - 標準 profile は `bootstrap`、`retrofit`、`draft`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。`not-needed` の型に対応する maintenance は生成せず、成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
+- `bootstrap-kata-set` は初期整備の後、rulebook → recipe → sample → template の見直しを経て、磨き込み・冗長整理・実装照合レビュー・確定へ進みます。`improve-kata` の `kata_target: rulebook` も同じ順で型一式を同期してからレビュー・確定へ進みます。recipe / sample / template を直接指定した場合は、その型だけを見直します。生成時に `not-needed` の段は省略し、実行までに不要と判断された段は変更せず理由を result に残します。型の整備段には Rulebook 記述標準、完成例の厚さ、詳細の正本参照の方針も含めます。
 - owner は明示オプション、既存 strategy、既定 owner の順に解決します。DCT の `done_criteria.roles` はレビュー観点なので、主担当へ流用しません。
 - generator は書き込み前に `schedule build --dry-run` 相当を実行します。全 strategy の project ID、参照、schema、milestone ID に問題があれば既存ファイルを上書きしません。
 

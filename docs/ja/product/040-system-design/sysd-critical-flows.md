@@ -170,6 +170,7 @@ flowchart LR
 
 - **永続化点・再実行**: claim／終了 event、result、evidence、統合 commit。lock 内で最新状態を再読込し、重複 claim と provider 上限超過を防ぐ。全体枠・provider 枠・排他の実効条件は CF-U03 で照合する。
 - **grade 境界**: review 前の評価結果は主の作業ツリーで確定して plan／checkpoint へ含める。既存設計の `grade run --isolate-pipeline-state` による再試行状態の分離は維持し、適合確認を CF-U04 に含める。パス・構造の詳細は設計索引の Grade 正本へ委ねる。
+- **型の review**: task 自身の track の strategy から intent を引き、`improve-kata` / `bootstrap-kata-set` は代表成果物と対応する rulebook・宣言済みの型を grade する。型の最新 grade がすべて `pass` であることを追加完了条件とし、plan への提示に加えて runner が result の完了判定を制限する。grade は `--if-busy wait` で project 単位に直列化し、再試行状態は run 内に分離する。判定と対象範囲の詳細は [[specdojo:review-guide|レビューガイド]] を正本とする。
 - **失敗・再開**: runner が該当 task の block と理由を記録し、依存を再計算する。独立 task は継続できるが、クリティカルパス上の実行・利用制限・統合失敗では新規投入を止め、実行中 task の終了を待つ。PM が再計画し、OPS が保持環境を確認する。
 - **受入 AC-04**: PM／DEV が重複 claim の拒否、枠内実行、統合の直列化、終了後の依存再計算を確認できる。停止条件では新規投入が増えない。
 
@@ -284,6 +285,6 @@ CF-U は本書内の追跡 ID であり、採番済み PJR ではない。下表
 | scf-004  | PM／DEV／OPS／ARC が AC-04、V-04、CF-U01／03／04／05を照合          | PO が枠・停止範囲・人間の介入責任を承認               |
 | scf-005  | DEV／OPS／ARC が AC-05、V-05、CF-U01／03／04／05を照合              | PO がretry・延期・自動再開の許容範囲を承認            |
 
-`done_criteria` の境界・永続化点・再実行性・失敗時挙動は各フロー詳細、業務影響は一覧、承認入力は本表、テスト設計入力は AC／V、実装理解は図と正本の対応で確認する。実装・運用への適合を未確認のまま達成済みとは扱わず、CF-U の解消証跡へ接続する。
+実装・運用への適合を未確認のまま達成済みとは扱わず、CF-U の解消証跡へ接続する。
 
 公開／`ready` 昇格前に ARC が参照・構造、QE が検証結果、OPS が非公開情報の除外と運用導線、PM が PJR／Schedule の接続を確認する。PO は CF-U の解消または明示した留保範囲と影響を判断し、対象差分に対する人間の承認を残す。承認までは `draft` を維持する。

@@ -1,0 +1,89 @@
+失敗した2件のテスト入力を修正し、段分割・schema・依存関係の smoke 検証が通りました。全件 unit test は pipeline 指示に従い親 runner が実行します。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "型整備の段構成と回帰テストを確認し、失敗原因だった空の intent 宣言を修正。個票に判断理由と検証結果を記録した。",
+  "handoff": [
+    "判断: 生成時に not-needed と判明している型の見直し段は省略する。実行時に不要と判断された段は変更せず理由を result に記録する。明示 target／scope に不要な型を指定した場合の生成停止は維持する。",
+    "判断: rulebook を改善する improve-kata は rulebook → recipe → sample → template → レビュー → 確定とする。他の型の直接指定はその型だけを対象にする。bootstrap は wave-1 と同じ全9段とし、prj-0001 固有のサイドバー更新指示は汎用 profile に含めない。",
+    "再開時の修正: 前回失敗した2件は空の `approach_rules` による schema 違反だった。成果物ごとの intent と scope／target をテスト入力に補い、同じ担当でも要否宣言に応じて段構成を分ける仕様を維持した。修正後の smoke 検証は成功。全件 unit test と指定の lint・型検査は親 runner が実行する。",
+    "CHANGELOG に書く事項（不具合修正）: schedule strategy generate の bootstrap-kata-set と rulebook を改善する improve-kata に、rulebook・recipe・sample・template を順に同期する段を追加。not-needed の型は省略し、型の整備方針と一意なタスク suffix を生成する。"
+  ],
+  "validations": [
+    {
+      "command": "node --import tsx tmp/pjr-n2cp-resume-smoke.mjs",
+      "status": "passed",
+      "summary": "両 approach の schema・schedule 展開、要否別の段順、担当ルール分割、一意な suffix、段間依存を確認。一時スクリプトと fixture は削除済み。"
+    },
+    {
+      "command": "npx prettier --write src/schedule/strategy-profiles.ts src/schedule/strategy-generate-document.ts tests/src/schedule/strategy-generate.test.ts docs/ja/specdojo/guides/schedule-design-guide.md docs/ja/specdojo/guides/ryu-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-n2cp-strategy-kata-phases-fix.md",
+      "status": "passed",
+      "summary": "対象6ファイルを整形済み。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ整合検査成功。既存の未作成文書・再エクスポート参照に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象0ファイル、検出0件。"
+    },
+    {
+      "command": "git diff HEAD --check",
+      "status": "passed",
+      "summary": "累積差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "ファイル単位の YAML schema 検査は適用外。",
+      "reason": "executor は YAML／YML 成果物を変更していない。生成 strategy は smoke 検証内で schema 検証済み。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-n2cp-strategy-kata-phases-fix.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n2cp-strategy-kata-phases-fix.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/ryu-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/schedule-design-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/schedule-design-guide.md"
+    },
+    {
+      "target": "src/schedule/strategy-generate-document.ts",
+      "status": "changed",
+      "path": "src/schedule/strategy-generate-document.ts"
+    },
+    {
+      "target": "src/schedule/strategy-profiles.ts",
+      "status": "changed",
+      "path": "src/schedule/strategy-profiles.ts"
+    },
+    {
+      "target": "tests/src/schedule/strategy-generate.test.ts",
+      "status": "changed",
+      "path": "tests/src/schedule/strategy-generate.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

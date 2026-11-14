@@ -1,0 +1,407 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sf-index
+path: docs/ja/product/010-business-specs/050-system-functions/sf-index.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 73
+graded_at: "2026-11-14T14:39:10.365Z"
+graded_by: luna-review-executor
+content_hash: c38edef36b86e2f312eea7c44efdf2bdc1a0d7b9d9ce39419e9eb387a0f22742
+source_hashes:
+  catalog-entry: 7d0c85897daae7539ddd690314acff3d89f6c29253033cfd685580a2595192f4
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: e1b1ac8e03711fdc6f6fe9146e78131470f82de72c4f27074163053cbee53419
+categories:
+  purpose:
+    score: 88
+  operations:
+    score: 75
+  planning:
+    score: 67
+  business:
+    score: 67
+  consistency:
+    score: 50
+  architecture:
+    score: 88
+  usability:
+    score: 100
+  implementation:
+    score: 75
+  quality:
+    score: 56
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 8
+  minor: 11
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 71
+    anchor: ""
+    message: >-
+      The missing BPS dependencies leave the evidence for complete business-process coverage uncertain; resolve the
+      dependency scope or document why representative BPS coverage is sufficient before treating the mapping as
+      complete.
+    message_ja: >-
+      The missing BPS dependencies leave the evidence for complete business-process coverage uncertain; resolve the
+      dependency scope or document why representative BPS coverage is sufficient before treating the mapping as
+      complete.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 23
+    anchor: >-
+      | プロジェクト構成 | `SETUP` | `P-01`・`P-12`         | 導入時の構成・Kata・開発環境を配置し、承認済みの構成変更を反映して利用可能性を検査する |
+      導入条件と構成変更の承認           |
+    message: >-
+      State the intended publication audience and confirm whether the document contains personal or non-public
+      information so the PO can assess publication scope.
+    message_ja: >-
+      State the intended publication audience and confirm whether the document contains personal or non-public
+      information so the PO can assess publication scope.
+    cause:
+      type: document
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 70
+    anchor: ""
+    message: >-
+      Break the BPS and CLI mapping review into trackable work with an owner, completion condition, and decision timing
+      so PM can schedule and monitor it.
+    message_ja: >-
+      Break the BPS and CLI mapping review into trackable work with an owner, completion condition, and decision timing
+      so PM can schedule and monitor it.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 71
+    anchor: ""
+    message: >-
+      Record the dependency-gap resolution and its schedule or downstream-deliverable impact in a traceable project item
+      so affected work can be managed.
+    message_ja: >-
+      Record the dependency-gap resolution and its schedule or downstream-deliverable impact in a traceable project item
+      so affected work can be managed.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 68
+    anchor: ""
+    message: >-
+      Add the PJR and Schedule tracking references for the open mapping, dependency, and deprecation issues so progress
+      and decisions can be reported consistently.
+    message_ja: >-
+      Add the PJR and Schedule tracking references for the open mapping, dependency, and deprecation issues so progress
+      and decisions can be reported consistently.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 15
+    anchor: "- 承認: 人間の PO（indie）がシステム化のスコープを承認する。本書の確定は `status` の昇格と同じく人間の判断とする。"
+    message: >-
+      Name the principal user or operational problem and the expected result that would show the index is helping
+      address it.
+    message_ja: >-
+      Name the principal user or operational problem and the expected result that would show the index is helping
+      address it.
+    cause:
+      type: document
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 70
+    anchor: ""
+    message: >-
+      The provisional BPS mappings and missing catalog dependencies prevent BA from confirming that the function list
+      covers the agreed business scope; complete the source mapping or define and justify the representative-source
+      policy.
+    message_ja: >-
+      The provisional BPS mappings and missing catalog dependencies prevent BA from confirming that the function list
+      covers the agreed business scope; complete the source mapping or define and justify the representative-source
+      policy.
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 22
+    anchor: >-
+      | ---------------- | ------- | ---------------------- |
+      -------------------------------------------------------------------------------------- |
+      ---------------------------------- |
+    message: >-
+      Identify who maintains the index and where each role records its review or agreement, so readers can tell whether
+      stakeholder confirmation is complete.
+    message_ja: >-
+      Identify who maintains the index and where each role records its review or agreement, so readers can tell whether
+      stakeholder confirmation is complete.
+    cause:
+      type: document
+  - id: F009
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 71
+    anchor: ""
+    message: >-
+      Reconcile the listed function-to-BPS mappings with the catalog dependencies, or record the approved
+      representative-BPS rule and its rationale, because the current dependency gap makes coverage evidence
+      inconsistent.
+    message_ja: >-
+      Reconcile the listed function-to-BPS mappings with the catalog dependencies, or record the approved
+      representative-BPS rule and its rationale, because the current dependency gap makes coverage evidence
+      inconsistent.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 29
+    anchor: >-
+      | 文書の廃棄       | `DEPR`  | `P-13`                 | 非推奨化した文書を現行文書と区別できる場所へ移す                                      
+      | 非推奨化の判断                     |
+    message: >-
+      State or reference the technical assumptions and constraints that component design must preserve, or identify the
+      authoritative source where ARC can find them.
+    message_ja: >-
+      State or reference the technical assumptions and constraints that component design must preserve, or identify the
+      authoritative source where ARC can find them.
+    cause:
+      type: document
+  - id: F011
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 44
+    anchor: >-
+      | `SF-PLAN-02`  | スケジュール展開   | カタログ・スケジュール戦略・Kata grade から成果物ごとのタスクを Schedule に展開する               |
+      `bps-planning-schedule-event-update`                      | `schedule`                              |
+      一覧行で要約                               |
+    message: >-
+      For functions without individual specifications, identify the authoritative source for the inputs, outputs, and
+      constraints needed to establish implementation boundaries.
+    message_ja: >-
+      For functions without individual specifications, identify the authoritative source for the inputs, outputs, and
+      constraints needed to establish implementation boundaries.
+    cause:
+      type: document
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 63
+    anchor: >-
+      | `Q-02` | _TODO_: 成果物カタログ上の本書の `depends_on` に、`SF-PLAN-02`・`SF-ROUT-02`・`SF-EXEC-02`・`SF-ORCH-01` が参照する
+      `P-04`・`P-06`・`P-08`・`P-14` の BPS が含まれていない。網羅の根拠とする範囲が一覧と一致しない | BA / PM       | BA がカタログの `depends_on`
+      へ追加するか、領域代表の BPS だけを依存とする方針を明記するかを判断する |
+    message: >-
+      Add or reference a change-impact procedure that identifies which schemas, generated outputs, commands, and
+      operating procedures must be checked when a function boundary changes.
+    message_ja: >-
+      Add or reference a change-impact procedure that identifies which schemas, generated outputs, commands, and
+      operating procedures must be checked when a function boundary changes.
+    cause:
+      type: document
+  - id: F013
+    severity: minor
+    rule: vp-dev-testability
+    line: 11
+    anchor: >-
+      | 対象   | SpecDojo CLI のコマンド群と、runner が自動で行う処理（agent 起動、検証、記録、統合、派生生成）。業務プロセス領域 `P-01`〜`P-14`
+      のうち、システムが記録・検証・生成・起動を担う部分  |
+    message: >-
+      Specify or reference the check that verifies function IDs, business-process mappings, and CLI references,
+      including the expected pass condition.
+    message_ja: >-
+      Specify or reference the check that verifies function IDs, business-process mappings, and CLI references,
+      including the expected pass condition.
+    cause:
+      type: document
+  - id: F014
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 40
+    anchor: >-
+      | `SF-SETUP-01` | 初期セットアップ   | 導入条件を確定し、Kata の配置と稼働構成・開発コンテナ構成を初期化する                             |
+      `bps-init-required`                                       | `init`・`kata`・`devcontainer`          |
+      一覧行で要約                               |
+    message: >-
+      Provide evidence that every business-process area is mapped to the agreed scope and test targets, resolving the
+      dependency gap recorded in `Q-02` before claiming coverage.
+    message_ja: >-
+      Provide evidence that every business-process area is mapped to the agreed scope and test targets, resolving the
+      dependency gap recorded in `Q-02` before claiming coverage.
+    cause:
+      type: document
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 40
+    anchor: >-
+      | `SF-SETUP-01` | 初期セットアップ   | 導入条件を確定し、Kata の配置と稼働構成・開発コンテナ構成を初期化する                             |
+      `bps-init-required`                                       | `init`・`kata`・`devcontainer`          |
+      一覧行で要約                               |
+    message: >-
+      Define a review check that compares every business-process area and function ID to its source and test target,
+      with a recorded pass/fail result.
+    message_ja: >-
+      Define a review check that compares every business-process area and function ID to its source and test target,
+      with a recorded pass/fail result.
+    cause:
+      type: document
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 71
+    anchor: ""
+    message: >-
+      Resolve the missing BPS dependencies and provide a traceable check that the function list is covered by test
+      targets, so omissions can be detected.
+    message_ja: >-
+      Resolve the missing BPS dependencies and provide a traceable check that the function list is covered by test
+      targets, so omissions can be detected.
+    cause:
+      type: document
+  - id: F017
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 70
+    anchor: ""
+    message: >-
+      Define the publication audience and the checks the PO must complete before approving `ready`, including resolution
+      or explicit exclusion of the open mapping and dependency questions.
+    message_ja: >-
+      Define the publication audience and the checks the PO must complete before approving `ready`, including resolution
+      or explicit exclusion of the open mapping and dependency questions.
+    cause:
+      type: document
+  - id: F018
+    severity: minor
+    rule: vp-ops-operability
+    line: 64
+    anchor: >-
+      | `Q-03` | _ASSUMPTION_: `SF-DEPR-01` は `deliverable` の保管移動を非推奨化・保管の機能とみなしている。非推奨化の反映（文書の `status`
+      とカタログの更新）をシステムが担うかは `bps-deprecation-process` で確定する            | BA / ARC      | `bps-deprecation-process`
+      の作成時に、システムが担う範囲を照合する                                   |
+    message: >-
+      Identify the role responsible for routine maintenance and the procedure or destination for reporting broken
+      references and requesting updates.
+    message_ja: >-
+      Identify the role responsible for routine maintenance and the procedure or destination for reporting broken
+      references and requesting updates.
+    cause:
+      type: document
+  - id: F019
+    severity: major
+    rule: vp-qe-config-validity
+    line: 62
+    anchor: >-
+      | `Q-01` | _TODO_: 業務プロセス仕様列の BPS と CLI 仕様 `clis-index` の多くが未作成のため、対応は成果物カタログの定義に基づく暫定とする。BPS
+      が作成された時点で、各行の概要と処理ステップの対応を照合する                     | BA / PO       | BPS・`clis-index` の作成後に BA
+      が各行を照合し、差異があれば本書を更新する                           |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 2
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+  detail_ref: sf-index-grade-criteria

@@ -4,61 +4,61 @@ document: specdojo:cpd-sample
 path: docs/ja/specdojo/samples/cpd-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: fail
-score: 33
-graded_at: "2026-10-11T21:22:44.094Z"
-graded_by: agy-expert-executor
-content_hash: 170b64519576d48c190049467824306dcadbcc4266c4d08e447816f6b3feec57
+verdict: pass
+score: 78
+graded_at: "2026-11-14T17:47:15.847Z"
+graded_by: qwen-review-executor
+content_hash: 88fc72f71bc924ea276107e7ab9fe5953a1e42cf229b4e052d59d0a94373995d
 categories:
   purpose:
-    score: 25
-  operations:
-    score: 56
-  planning:
-    score: 25
-  business:
-    score: 25
-  architecture:
     score: 75
+  operations:
+    score: 81
+  planning:
+    score: 75
+  business:
+    score: 75
+  architecture:
+    score: 92
   usability:
-    score: 50
+    score: 75
   implementation:
-    score: 25
+    score: 75
   quality:
-    score: 17
+    score: 75
   consistency:
-    score: 0
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -66,35 +66,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 0
-    score: 0
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -102,201 +102,250 @@ viewpoints:
     level: 4
     score: 100
 finding_counts:
-  blocker: 5
-  major: 15
-  minor: 3
+  blocker: 0
+  major: 0
+  minor: 21
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
     rule: vp-po-purpose-alignment
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    line: 71
+    anchor: >-
+      会計処理と印字連携を分ける理由は、印字障害で保存済み販売をやり直さず、交代時に未印字だけを引き継げるようにするためである。明細確認は入力訂正を保存前に返すため会計から分離し、記録アクセスは商品参照・販売保存・発行状況保存の接点を集約する。販売可否の判断を共通の記録接点へ移さない。ソース配置は未確認で、DEV
+      の詳細設計へ引き継ぐ。
     message: >-
-      The document specifies the target system as '駄菓子屋の販売管理システム' but fails to define the container scope, component
-      objectives, or architectural boundaries needed to align with the project purpose.
+      Replace the abstract "店主代表 / 家族利用者代表" labels with concrete users/scenes (e.g., a specific shift handover scene) so
+      the purpose-to-utilization link matches recipe §4.3's good example.
     message_ja: >-
-      The document specifies the target system as '駄菓子屋の販売管理システム' but fails to define the container scope, component
-      objectives, or architectural boundaries needed to align with the project purpose.
+      Replace the abstract "店主代表 / 家族利用者代表" labels with concrete users/scenes (e.g., a specific shift handover scene) so
+      the purpose-to-utilization link matches recipe §4.3's good example.
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-po-decision-readiness
-    line: 27
+    line: 144
     anchor: ""
     message: >-
-      The document lacks decision items, accountable decision makers, impact scope, and actionable next steps required
-      for PO approval.
-    message_ja: ドキュメントには、POの承認に必要な意思決定事項、責任ある意思決定者、影響範囲、および実行可能な次のステップが不足しています。
+      For each unresolved item, also state the concrete impact scope (which downstream deliverable/Schedule is held)
+      when a 保留 decision is chosen, not only the destination PJR.
+    message_ja: >-
+      For each unresolved item, also state the concrete impact scope (which downstream deliverable/Schedule is held)
+      when a 保留 decision is chosen, not only the destination PJR.
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
-    line: 1
-    anchor: "# [C4コンポーネント図](../rulebooks/cpd-rulebook.md) サンプル"
-    message: Human PO approval responsibility and sign-off accountability are not explicitly stated.
-    message_ja: 人間によるPOの承認責任と、最終的な承認責任が明示されていません。
+    line: 150
+    anchor: ""
+    message: >-
+      Specify concrete non-public items OPS must screen (or list an exclusion checklist) so the publication gate is
+      auditable, not only the abstract statement that personal/secret data are excluded.
+    message_ja: >-
+      Specify concrete non-public items OPS must screen (or list an exclusion checklist) so the publication gate is
+      auditable, not only the abstract statement that personal/secret data are excluded.
   - id: F004
-    severity: major
+    severity: minor
     rule: vp-pm-plan-feasibility
-    line: 27
+    line: 148
     anchor: ""
     message: >-
-      The document lacks actionable work units, completion criteria, responsible Role codes, and milestones needed for
-      task breakdown and scheduling.
-    message_ja: ドキュメントには、タスクの分解とスケジューリングに必要な実行可能な作業単位、完了基準、責任あるRoleコード、およびマイルストーンが不足しています。
+      Add per-work-unit effort/time estimates (or a basis for the PM estimate) so the sequence is schedulable, since
+      date and durations are currently unspecified.
+    message_ja: >-
+      Add per-work-unit effort/time estimates (or a basis for the PM estimate) so the sequence is schedulable, since
+      date and durations are currently unspecified.
   - id: F005
-    severity: major
+    severity: minor
     rule: vp-pm-dependency-risk
-    line: 27
-    anchor: ""
-    message: Downstream deliverable dependencies, architectural risks, and schedule impacts are not identified.
-    message_ja: 下流の成果物への依存関係、アーキテクチャ上のリスク、およびスケジュールの影響が特定されていません。
+    line: 139
+    anchor: >-
+      保守・問い合わせの窓口は ARC とし、上位 CND、保存責務、印刷契約または実装の変更を契機に再照合する。例えば保存責務を変える場合、ARC が `REL-05`・`REL-06`・`REL-09` と図・定義表、DEV が
+      `kinuya-record-schema`・内部設計・実装、QE が保存失敗の結合観測点、OPS が回復手順を確認する。PM は更新要否と理由・担当を PJR に残し、後続作業の開始条件を Schedule
+      へ反映する。境界が変われば上位 CND も改訂し、変わらなければ更新不要の理由を記録する。OPS が Mermaid から SVG を再生成し、QE が変更箇所の再検査・描画を確認した後、人間の PO が再合意・公開を判断する。
+    message: >-
+      Explicitly list the depends_on/upstream-downstream deliverable links (e.g., to CND, integration test design, PJRs)
+      so downstream dependencies are traceable within the body.
+    message_ja: >-
+      Explicitly list the depends_on/upstream-downstream deliverable links (e.g., to CND, integration test design, PJRs)
+      so downstream dependencies are traceable within the body.
   - id: F006
-    severity: major
+    severity: minor
     rule: vp-pm-control-reporting
-    line: 27
+    line: 148
     anchor: ""
     message: >-
-      Items requiring escalation or transfer to project management records (PJR) are not separated and lack reporting
-      targets and responsible Role codes.
-    message_ja: エスカレーションまたはプロジェクト管理記録（PJR）への転記が必要な事項が分離されておらず、報告対象や責任あるRoleコードも不足しています。
+      Define the report cadence/format for the PM reporting so escalation is operational, since only the destination and
+      role are currently stated.
+    message_ja: >-
+      Define the report cadence/format for the PM reporting so escalation is operational, since only the destination and
+      role are currently stated.
   - id: F007
-    severity: major
+    severity: minor
     rule: vp-ba-business-value
-    line: 10
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    line: 20
+    anchor: ""
     message: >-
-      Business problems, target user personas, expected business value, and success criteria for the target system are
-      missing.
-    message_ja: ビジネス上の課題、ターゲットとなるユーザーペルソナ、期待されるビジネス価値、およびターゲットシステムの成功基準が欠落しています。
+      Explicitly state the problem's impact-if-unaddressed (業務への影響) in the body so the business-value chain is complete,
+      not only referenced upward.
+    message_ja: >-
+      Explicitly state the problem's impact-if-unaddressed (業務への影響) in the body so the business-value chain is complete,
+      not only referenced upward.
   - id: F008
-    severity: major
+    severity: minor
     rule: vp-ba-requirements-completeness
-    line: 4
-    anchor: ""
+    line: 16
+    anchor: flowchart LR
     message: >-
-      User-level requirements, acceptance criteria, system boundaries, and out-of-scope exclusions are completely
-      absent.
-    message_ja: ユーザーレベルの要件、受け入れ基準、システムの境界、およびスコープ外の除外事項が完全に欠落しています。
+      Add a brief terminology/term-definition subsection (or reference the rulebook's) so user-level requirement terms
+      are standardized.
+    message_ja: >-
+      Add a brief terminology/term-definition subsection (or reference the rulebook's) so user-level requirement terms
+      are standardized.
   - id: F009
-    severity: major
+    severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 14
-    anchor: ""
-    message: Concrete stakeholders, system users, reviewers, and agreement targets are not identified beyond abstract keywords.
-    message_ja: 具体的なステークホルダー、システムユーザー、レビュアー、および合意の対象が、抽象的なキーワード以外に特定されていません。
-  - id: F010
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 8
-    anchor: ""
+    line: 71
+    anchor: >-
+      会計処理と印字連携を分ける理由は、印字障害で保存済み販売をやり直さず、交代時に未印字だけを引き継げるようにするためである。明細確認は入力訂正を保存前に返すため会計から分離し、記録アクセスは商品参照・販売保存・発行状況保存の接点を集約する。販売可否の判断を共通の記録接点へ移さない。ソース配置は未確認で、DEV
+      の詳細設計へ引き継ぐ。
     message: >-
-      Technical constraints, architectural assumptions, database/runtime prerequisites, and external integration
-      constraints are not specified.
-    message_ja: 技術的な制約、アーキテクチャ上の前提条件、データベース/ランタイムの前提条件、および外部連携の制約が指定されていません。
+      Name concrete stakeholders/users (roles or personas) and their use scenes for 店主/家族利用者, rather than only abstract
+      representative labels.
+    message_ja: >-
+      Name concrete stakeholders/users (roles or personas) and their use scenes for 店主/家族利用者, rather than only abstract
+      representative labels.
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 115
+    anchor: >-
+      | `REL-02`〜`REL-04` | 未登録商品や訂正が必要な数量を入力する             |
+      訂正理由が返り、未確認明細が会計へ渡らないこと                                                                     |
+    message: >-
+      State the assumed runtime/deployment baseline briefly (or reference infra-design with a concrete value) so the
+      integration test has a reproducible basis.
+    message_ja: >-
+      State the assumed runtime/deployment baseline briefly (or reference infra-design with a concrete value) so the
+      integration test has a reproducible basis.
   - id: F011
     severity: minor
     rule: vp-arc-conciseness
-    line: 21
-    anchor: >-
-      | ------------ | ----------------------------------------------------------------------------------- |
-      ------------------------------------ |
+    line: 148
+    anchor: ""
     message: >-
-      The table in Section 4 redundantly duplicates text from Section 1 and Section 3 without providing distinct
-      architectural content.
-    message_ja: セクション4の表は、独自のアーキテクチャ内容を提供することなく、セクション1とセクション3のテキストを冗長に重複させています。
+      Consolidate the two trailing paragraphs (lines 148 and 150) into the §5 table rows to remove the duplicated
+      PM/PJR/publication description.
+    message_ja: >-
+      Consolidate the two trailing paragraphs (lines 148 and 150) into the §5 table rows to remove the duplicated
+      PM/PJR/publication description.
   - id: F012
-    severity: major
+    severity: minor
     rule: vp-dev-implementation-readiness
-    line: 8
+    line: 96
     anchor: ""
     message: >-
-      No component specifications, interfaces, data flows, inputs/outputs, schemas, or implementation constraints are
-      provided for developers.
-    message_ja: 開発者向けに、コンポーネントの仕様、インターフェース、データフロー、入出力、スキーマ、または実装の制約が提供されていません。
+      Provide at least one concrete input/output or completion example per relation (or a pointer to a finalized
+      contract stub) so developers can start implementation without another lookup.
+    message_ja: >-
+      Provide at least one concrete input/output or completion example per relation (or a pointer to a finalized
+      contract stub) so developers can start implementation without another lookup.
   - id: F013
-    severity: major
+    severity: minor
     rule: vp-dev-change-impact
-    line: 27
+    line: 143
     anchor: ""
     message: >-
-      The impact of component changes on existing deliverables, container models, schemas, and downstream implementation
-      is not identified.
-    message_ja: コンポーネントの変更が、既存の成果物、コンテナモデル、スキーマ、および下流の実装に与える影響が特定されていません。
+      Spell out the concrete existing-deliverable impact for each PJR (which diagram/relation/schema/regenerate step is
+      affected) so change scope is bounded.
+    message_ja: >-
+      Spell out the concrete existing-deliverable impact for each PJR (which diagram/relation/schema/regenerate step is
+      affected) so change scope is bounded.
   - id: F014
-    severity: major
+    severity: minor
     rule: vp-dev-testability
-    line: 8
-    anchor: ""
+    line: 135
+    anchor: >-
+      PM は「配置の照合 → 契約整備 → 結合検証 →
+      店舗試行・公開判断」の順で作業を割り当て、関係数と回復条件の未確定範囲から見積もる。日付は未設定であり、各判断時点を満たせない場合は後続開始を延期し、上表の担当・解消条件を進捗確認に使う。構成の採否、販売・保留・回復の条件、公開範囲の判断結果は
+      `kinuya:pjr-a005-sales-approval` に残す想定とする。
     message: >-
-      Validation procedures, linting/rendering commands for Mermaid syntax, expected test outputs, and target
-      verification files are omitted.
-    message_ja: 検証手順、Mermaid構文のリンティング/レンダリングコマンド、期待されるテスト出力、および対象の検証ファイルが省略されています。
+      Add a runnable sample-level verification command (e.g., mermaid lint/build) and its expected output so the
+      testability section is self-contained rather than only repository-referenced.
+    message_ja: >-
+      Add a runnable sample-level verification command (e.g., mermaid lint/build) and its expected output so the
+      testability section is self-contained rather than only repository-referenced.
   - id: F015
-    severity: major
+    severity: minor
     rule: vp-qe-verifiability
-    line: 14
+    line: 135
+    anchor: >-
+      PM は「配置の照合 → 契約整備 → 結合検証 →
+      店舗試行・公開判断」の順で作業を割り当て、関係数と回復条件の未確定範囲から見積もる。日付は未設定であり、各判断時点を満たせない場合は後続開始を延期し、上表の担当・解消条件を進捗確認に使う。構成の採否、販売・保留・回復の条件、公開範囲の判断結果は
+      `kinuya:pjr-a005-sales-approval` に残す想定とする。
+    message: >-
+      Make the rendering acceptance criteria numeric/threshold-based (e.g., zero label/border/endpoint defects) so
+      pass/fail is objectively judged.
+    message_ja: >-
+      Make the rendering acceptance criteria numeric/threshold-based (e.g., zero label/border/endpoint defects) so
+      pass/fail is objectively judged.
+  - id: F016
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 143
     anchor: ""
     message: >-
-      The document mentions verification viewpoints abstractly but provides no verifiable pass/fail criteria, concrete
-      conditions, or check procedures.
-    message_ja: ドキュメントでは検証の観点について抽象的に言及されていますが、検証可能な合否基準、具体的な条件、またはチェック手順が提供されていません。
-  - id: F016
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 4
-    anchor: ""
-    message: Frontmatter の type が 'project' となっているが、CPD ルールに従い 'architecture' とする必要がある。
-    message_ja: Frontmatter の type が 'project' となっているが、CPD ルールに従い 'architecture' とする必要がある。
+      Cross-check the not-yet-created PJRs and detail sources against an authoritative index before publication to
+      ensure no inconsistency.
+    message_ja: >-
+      Cross-check the not-yet-created PJRs and detail sources against an authoritative index before publication to
+      ensure no inconsistency.
   - id: F017
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 11
-    anchor: "- 参照: `../rulebooks/cpd-mermaid-rulebook.md`"
-    message: ルールブックで規定された必須章（概要、C4コンポーネント図、要素の説明、補足）がすべて欠落している。
-    message_ja: ルールブックで規定された必須章（概要、C4コンポーネント図、要素の説明、補足）がすべて欠落している。
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 145
+    anchor: ""
+    message: >-
+      Verify the hypothetical PJRs and detail sources resolve against the catalog/index so the Kata's cross-document
+      relations are not left dangling.
+    message_ja: >-
+      Verify the hypothetical PJRs and detail sources resolve against the catalog/index so the Kata's cross-document
+      relations are not left dangling.
   - id: F018
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [C4コンポーネント図](../rulebooks/cpd-rulebook.md) サンプル"
-    message: C4コンポーネント図 (Mermaid) の具体例が完全に欠落しており、サンプルとしての責務を果たしていない。
-    message_ja: C4コンポーネント図 (Mermaid) の具体例が完全に欠落しており、サンプルとしての責務を果たしていない。
-  - id: F019
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 9
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-    message: 参照している CPD ルールブックで規定された標準構成に従っておらず、文書構造に矛盾がある。
-    message_ja: 参照している CPD ルールブックで規定された標準構成に従っておらず、文書構造に矛盾がある。
-  - id: F020
-    severity: blocker
+    severity: minor
     rule: vp-ux-readability
-    line: 13
-    anchor: "## 3. 記述内容"
-    message: 具体的な記述例（図と説明）がなく、どのような内容をどのように記載すべきかが理解できない。
-    message_ja: 具体的な記述例（図と説明）がなく、どのような内容をどのように記載すべきかが理解できない。
-  - id: F021
+    line: 123
+    anchor: ""
+    message: >-
+      Add an entry note (one line) before the 4.2 verification table guiding first-time readers to its use, improving
+      readability of long tables.
+    message_ja: >-
+      Add an entry note (one line) before the 4.2 verification table guiding first-time readers to its use, improving
+      readability of long tables.
+  - id: F019
     severity: minor
     rule: vp-ux-language-consistency
-    line: 6
-    anchor: ""
-    message: Grammatical particles and phrasing are broken in Section 1 ('定義ための') and Section 3 ('など、と').
-    message_ja: Grammatical particles and phrasing are broken in Section 1 ('定義ための') and Section 3 ('など、と').
-  - id: F022
-    severity: major
+    line: 77
+    anchor: "| 販売画面（別コンテナ）           | 店番担当による入力と結果確認             | 直接の呼出元。応答欠落時に画面の未表示だけで販売未実施と判断できない           |"
+    message: Standardize the term "記録アクセス/保存" to one label throughout sections so user-facing terms are consistent.
+    message_ja: Standardize the term "記録アクセス/保存" to one label throughout sections so user-facing terms are consistent.
+  - id: F020
+    severity: minor
     rule: vp-ops-release-readiness
-    line: 27
+    line: 146
     anchor: ""
     message: >-
-      Criteria for transitioning from draft to ready, approval gates, and pre-release verification checklist are not
-      defined.
-    message_ja: ドラフトから準備完了への移行基準、承認ゲート、およびリリース前の検証チェックリストが定義されていません。
-  - id: F023
-    severity: major
+      Define a concrete release gate per PJR (e.g., which condition unblocks 公開) so the ready transition is
+      operationally checkable.
+    message_ja: >-
+      Define a concrete release gate per PJR (e.g., which condition unblocks 公開) so the ready transition is
+      operationally checkable.
+  - id: F021
+    severity: minor
     rule: vp-ops-operability
-    line: 8
+    line: 151
     anchor: ""
     message: >-
-      Operational procedures for diagram maintenance, regeneration steps, change management, and inquiry channels are
-      not provided.
-    message_ja: 図のメンテナンス、再生成の手順、変更管理、および問い合わせ窓口に関する運用手順が提供されていません。
+      Define the escalation contact and SLA/resilience response for diagram-maintenance failures so operability at
+      incident time is clear.
+    message_ja: >-
+      Define the escalation contact and SLA/resilience response for diagram-maintenance failures so operability at
+      incident time is clear.

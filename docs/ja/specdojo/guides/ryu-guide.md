@@ -332,7 +332,7 @@ register からの `draft`・`fully-guided`・`condense`・`recipe-guided`・`fr
 
 根拠の種別を一律に必須化せず、finding ごとに指摘の解消を判定できる資料を使います。成果物または review result がないことだけを理由に根拠不足とは判定しません。finding の message と判定根拠、対象の実践の型から辿れる関連文書、該当する執筆標準、利用可能な成果物・review result・対象領域の慣行を確認しても修正内容を確定できない場合に限り、根拠不足として見送ります。見送る場合は、確認した資料、判断できなかった理由、不足している根拠、次のアクションを result に記録します。
 
-実践の型メンテナンスは自動で差し込まれません。schedule で実行する場合は、`approach: rulebook-maintenance` のように対象を指定した phase / phase_set を `sch-strategy-<track>.yaml` に明示的に記述します（[Schedule設計ガイド](schedule-design-guide.md)）。
+`schedule strategy generate` は `bootstrap-kata-set` の初期整備後と、`improve-kata` の `kata_target: rulebook` に、rulebook → recipe → sample → template の見直し段を生成します。`not-needed` の型は省略します。他の型を直接指定した `improve-kata` はその型だけが対象です。手で strategy を組む場合は、`approach: rulebook-maintenance` のように対象を指定した phase / phase_set を記述します（[[specdojo:schedule-design-guide|Schedule設計ガイド]]）。
 
 ## 3. review への適用
 

@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sf-index-grade-criteria
+document: sf-index
+path: docs/ja/product/010-business-specs/050-system-functions/sf-index.md
+graded_at: "2026-11-14T14:39:10.365Z"
+graded_by: luna-review-executor
+content_hash: c38edef36b86e2f312eea7c44efdf2bdc1a0d7b9d9ce39419e9eb387a0f22742
+summary:
+  satisfied: 2
+  unsatisfied: 3
+  total: 5
+criteria:
+  - id: DC-001
+    text: 機能一覧が業務仕様と対応し、スコープが網羅されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      The document lists all process areas, but missing BPS dependencies and provisional mappings prevent confirmation
+      that the function list covers the agreed business scope.
+  - id: DC-002
+    text: システム化機能のスコープを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: >-
+      The human PO is named as approver, but the current `draft` document contains unresolved mappings and does not
+      provide evidence of an approved scope.
+  - id: DC-003
+    text: 機能分割・コンポーネント設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト対象機能の網羅性が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: unsatisfied
+    reason: >-
+      The index supports identifying test targets, but does not provide evidence that every listed function has been
+      checked against the test scope.
+  - id: DC-005
+    text: 実装スコープ・機能境界の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

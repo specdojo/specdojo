@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cpd-specdojo-cli-grade-criteria
+document: cpd-specdojo-cli
+path: docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md
+graded_at: "2026-11-14T14:10:14.071Z"
+graded_by: qwen-review-executor
+content_hash: f488fcb9ace512d83a9216b82a31e98314d829bc0e2a8f1005d7236f9d05fac9
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: コンポーネント構成と依存関係を設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+    reason: §4.1 で依存方向・外部 IF 制約(排他/原子性/再試行保証の不在、`ifx-cmd-git-cli` 未作成)を明記し、コンポーネント構成と依存関係を設計の入力として参照できる。
+  - id: DC-002
+    text: コンポーネント間インターフェースのテスト観点が識別できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+    reason: §4.2 が関数ごとに条件→観測結果を関係 ID で対応付け、rulebook §6.6 の検証コマンドへ委譲し、テスト観点として識別できる。
+  - id: DC-003
+    text: コンポーネント実装の配置・依存方向の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied
+    reason: §3.2/§3.4/§4 が責務・入出力・論理配置・依存方向を提供し、未確認の実装対応も L167 で DEV へ明示し、配置・依存方向の参照として使える。
