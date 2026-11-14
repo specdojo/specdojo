@@ -228,8 +228,8 @@ providers:
         on_exhausted: block
 
   antigravity:
-    # agy の片方のモデルが長い上限に当たったため、同時に走らせる agy の agent を 1 本にする（2026-11-13 indie の依頼）。
-    max_concurrency: 1
+    # argon が使えるようになったため 2 本まで使う。agy-opus はまだ長い上限のため priority を下げている（2026-11-14 indie の依頼）。
+    max_concurrency: 2
     # Antigravity CLI（agy）は --agent による定義ファイルの選択を持たず、codex と同じく
     # プロンプト（plan）だけで役割を与える。-p はプロンプトを引数に取り stdin を読まないため、
     # runner が stdin へ書く plan を "$(cat)" で引数に渡す（shell: true で実行される）。

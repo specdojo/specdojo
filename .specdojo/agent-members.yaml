@@ -903,7 +903,7 @@ members:
       でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
   - nickname: agy-opus-executor
     disabled: false
-    priority: 4
+    priority: 6
     display_name: Antigravity Claude Expert Executor
     email: null
     roles: []
@@ -930,7 +930,7 @@ members:
       は更新しない。
   - nickname: agy-opus-review-executor
     disabled: false
-    priority: 4
+    priority: 6
     display_name: Antigravity Claude Expert Review Executor
     email: null
     roles: []
