@@ -121,3 +121,16 @@
       from: "parent validation failed: typecheck"
       to: "-"
   previous_event_id: reg_cdc57783f48947b0a3721bc93509cd08
+- v: 1
+  id: reg_e3c983320c134d618b0277531a3bab1f
+  ts: "2026-11-14T22:02:06Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ad4a8a74615b4f7faed7abbb9e7c1a86
