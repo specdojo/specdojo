@@ -1,0 +1,386 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:ifx-index
+path: docs/ja/product/020-external-interface-specs/ifx-index.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 78
+graded_at: "2026-11-14T14:22:59.941Z"
+graded_by: luna-review-executor
+content_hash: 74f59b976f3ba4218ebb37ee8002e5651aa8cc1f2dc5084811ff95eaeb198495
+source_hashes:
+  catalog-entry: 7e8b922ade82a3075ee79ef608858d6a034b0d55266804e9776cd3607bdb9f3a
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: e1b1ac8e03711fdc6f6fe9146e78131470f82de72c4f27074163053cbee53419
+categories:
+  purpose:
+    score: 75
+  operations:
+    score: 88
+  planning:
+    score: 75
+  business:
+    score: 75
+  consistency:
+    score: 75
+  architecture:
+    score: 88
+  usability:
+    score: 88
+  implementation:
+    score: 75
+  quality:
+    score: 69
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 19
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 11
+    anchor: "# 人と AI Agent が同じ仕様・作業結果を引き継ぐための境界を整理する。"
+    message: >-
+      Add a reference to the project purpose or an outcome showing why these AI CLI, Git, and GitHub integrations are
+      needed; the current comments describe the boundary but not its connection to an approved project objective.
+    message_ja: >-
+      Add a reference to the project purpose or an outcome showing why these AI CLI, Git, and GitHub integrations are
+      needed; the current comments describe the boundary but not its connection to an approved project objective.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 66
+    anchor: "error_handling: >-"
+    message: >-
+      Link the pending Git and GitHub adoption and publication decisions to a decision record or a specific decision
+      milestone so the PO can track when each decision is due.
+    message_ja: >-
+      Link the pending Git and GitHub adoption and publication decisions to a decision record or a specific decision
+      milestone so the PO can track when each decision is due.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 66
+    anchor: "error_handling: >-"
+    message: >-
+      Identify or link the Schedule work items for the two contract tasks, including their owners and target dates, so
+      progress can be tracked and sequenced.
+    message_ja: >-
+      Identify or link the Schedule work items for the two contract tasks, including their owners and target dates, so
+      progress can be tracked and sequenced.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 66
+    anchor: "error_handling: >-"
+    message: >-
+      Replace the registration request with Schedule and PJR references once created, including the affected Git and
+      GitHub work and the authentication or permission risk.
+    message_ja: >-
+      Replace the registration request with Schedule and PJR references once created, including the affected Git and
+      GitHub work and the authentication or permission risk.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 66
+    anchor: "error_handling: >-"
+    message: >-
+      Add the actual Schedule and PJR record references after registration so the listed work, risk, and PO report can
+      be followed from this index.
+    message_ja: >-
+      Add the actual Schedule and PJR record references after registration so the listed work, risk, and PO report can
+      be followed from this index.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 26
+    anchor: "kind: コマンド"
+    message: >-
+      Add the business use case or outcome and an acceptance reference for each integration, especially what constitutes
+      successful work handoff, local history management, and remote sharing.
+    message_ja: >-
+      Add the business use case or outcome and an acceptance reference for each integration, especially what constitutes
+      successful work handoff, local history management, and remote sharing.
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 26
+    anchor: "kind: コマンド"
+    message: >-
+      Identify the business stakeholder or user who will confirm the use case and agreement scope for each interface, or
+      link to the relevant stakeholder definition.
+    message_ja: >-
+      Identify the business stakeholder or user who will confirm the use case and agreement scope for each interface, or
+      link to the relevant stakeholder definition.
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 50
+    anchor: 競合・権限不足・操作結果不明時は作業場所、既存の変更と履歴を照合する。
+    message: >-
+      Replace the Git and GitHub `TBD` references with the registered detail-specification IDs when available, and link
+      the corresponding catalog entries so downstream documents can resolve them.
+    message_ja: >-
+      Replace the Git and GitHub `TBD` references with the registered detail-specification IDs when available, and link
+      the corresponding catalog entries so downstream documents can resolve them.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 50
+    anchor: 競合・権限不足・操作結果不明時は作業場所、既存の変更と履歴を照合する。
+    message: >-
+      Provide the linked Git and GitHub detail contracts once created, covering the stated authentication, permission,
+      operation, and result-confirmation questions needed by external integration design.
+    message_ja: >-
+      Provide the linked Git and GitHub detail contracts once created, covering the stated authentication, permission,
+      operation, and result-confirmation questions needed by external integration design.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 70
+    anchor: "spec_ref: TBD"
+    message: >-
+      Replace the repeated statement that the PO decides adoption with a reference to the opening decision policy,
+      retaining only the change-specific handoff here.
+    message_ja: >-
+      Replace the repeated statement that the PO decides adoption with a reference to the opening decision policy,
+      retaining only the change-specific handoff here.
+    cause:
+      type: document
+  - id: F011
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 50
+    anchor: 競合・権限不足・操作結果不明時は作業場所、既存の変更と履歴を照合する。
+    message: >-
+      Link completed Git and GitHub contracts that define permitted operations, authentication and permission
+      boundaries, and success or indeterminate-result handling before treating these paths as implementation-ready.
+    message_ja: >-
+      Link completed Git and GitHub contracts that define permitted operations, authentication and permission
+      boundaries, and success or indeterminate-result handling before treating these paths as implementation-ready.
+    cause:
+      type: document
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 70
+    anchor: "spec_ref: TBD"
+    message: >-
+      Identify or reference the existing implementation and contract artifacts affected by changes to these interfaces
+      so DEV and QE can trace change impact.
+    message_ja: >-
+      Identify or reference the existing implementation and contract artifacts affected by changes to these interfaces
+      so DEV and QE can trace change impact.
+    cause:
+      type: document
+  - id: F013
+    severity: minor
+    rule: vp-dev-testability
+    line: 55
+    anchor: "# リモート通信を要する操作はこのローカル契約へ混ぜない。"
+    message: >-
+      Add or reference the schema and formatting validation commands for this YAML and the integration test procedures
+      and expected outcomes for Git and GitHub.
+    message_ja: >-
+      Add or reference the schema and formatting validation commands for this YAML and the integration test procedures
+      and expected outcomes for Git and GitHub.
+    cause:
+      type: document
+  - id: F014
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 50
+    anchor: 競合・権限不足・操作結果不明時は作業場所、既存の変更と履歴を照合する。
+    message: >-
+      Link the Git and GitHub detail specifications when available so the index can serve as a complete reference for
+      integration design and test scope.
+    message_ja: >-
+      Link the Git and GitHub detail specifications when available so the index can serve as a complete reference for
+      integration design and test scope.
+    cause:
+      type: document
+  - id: F015
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 50
+    anchor: 競合・権限不足・操作結果不明時は作業場所、既存の変更と履歴を照合する。
+    message: >-
+      Reference test cases with observable pass/fail outcomes for the Git and GitHub success, failure, permission, and
+      indeterminate-result paths.
+    message_ja: >-
+      Reference test cases with observable pass/fail outcomes for the Git and GitHub success, failure, permission, and
+      indeterminate-result paths.
+    cause:
+      type: document
+  - id: F016
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 50
+    anchor: 競合・権限不足・操作結果不明時は作業場所、既存の変更と履歴を照合する。
+    message: >-
+      Complete the Git and GitHub specification references and link the registered Schedule and PJR entries so
+      downstream traceability is not left as a future action.
+    message_ja: >-
+      Complete the Git and GitHub specification references and link the registered Schedule and PJR entries so
+      downstream traceability is not left as a future action.
+    cause:
+      type: document
+  - id: F017
+    severity: minor
+    rule: vp-ux-readability
+    line: 11
+    anchor: "# 人と AI Agent が同じ仕様・作業結果を引き継ぐための境界を整理する。"
+    message: >-
+      Add a concise project-purpose reference explaining why these integrations belong in this interface index, so
+      first-time readers can connect the scope to its intended outcome.
+    message_ja: >-
+      Add a concise project-purpose reference explaining why these integrations belong in this interface index, so
+      first-time readers can connect the scope to its intended outcome.
+    cause:
+      type: document
+  - id: F018
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 66
+    anchor: "error_handling: >-"
+    message: >-
+      Link the registered contract tasks and related risk records, and record the PO decision reference when available,
+      so release blockers can be tracked to closure.
+    message_ja: >-
+      Link the registered contract tasks and related risk records, and record the PO decision reference when available,
+      so release blockers can be tracked to closure.
+    cause:
+      type: document
+  - id: F019
+    severity: minor
+    rule: vp-ops-operability
+    line: 45
+    anchor: "kind: コマンド"
+    message: >-
+      Add or reference the operational support route and the completed Git and GitHub recovery procedures so operators
+      can resolve permission and remote-state failures.
+    message_ja: >-
+      Add or reference the operational support route and the completed Git and GitHub recovery procedures so operators
+      can resolve permission and remote-state failures.
+    cause:
+      type: document
+  - id: F020
+    severity: major
+    rule: vp-qe-config-validity
+    line: 10
+    anchor: "# _ASSUMPTION_: 初版の候補範囲は AI provider CLI と Git/GitHub のコマンド連携。"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: prj-0001:ifx-index-grade-criteria
