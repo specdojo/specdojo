@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 import { generateSidebar } from "vitepress-sidebar";
 import {
-  specdojoSidebarItems,
+  buildSpecdojoSidebarItems,
   PROJECTS_SEGMENT_TEXT,
   PROJECTS_FILE_TEXT,
   PROJECTS_FILE_MENU,
@@ -273,7 +273,8 @@ const specdojoItems = {
     text: "specdojo",
     link: "/ja/specdojo/",
     collapsed: false,
-    items: specdojoSidebarItems,
+    // 型のメニューは、package 側の型を重ねたステージングの型の文書から設定の読み込み時に組み立てる。
+    items: buildSpecdojoSidebarItems(path.join(SITE_CONTENT_ROOT, "ja", "specdojo")),
   },
 };
 
