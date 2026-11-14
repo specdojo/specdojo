@@ -2,12 +2,12 @@
 id: sysd-index-grade-criteria
 document: sysd-index
 path: docs/ja/product/040-system-design/sysd-index.md
-graded_at: "2026-10-22T16:14:24.304Z"
-graded_by: flash-high-executor
-content_hash: 00399c6c78e44d44f97f896a985436e31d9816d522d29ba385fcf2ab1162da9e
+graded_at: "2026-11-14T15:08:48.881Z"
+graded_by: sonnet-review-executor
+content_hash: 2f51b5005b850cbf1253640828169ae6090315a685fb416eb8633a80b010bab4
 summary:
-  satisfied: 2
-  unsatisfied: 2
+  satisfied: 4
+  unsatisfied: 0
   total: 4
 criteria:
   - id: DC-001
@@ -15,8 +15,7 @@ criteria:
     roles:
       - ARC
     viewpoint: vp-arc-document-structure
-    status: unsatisfied
-    reason: References or non-applicability statements for API definitions and DB schemas are missing.
+    status: satisfied
   - id: DC-002
     text: 設計のSSOT所在が確認できること
     roles:
@@ -34,5 +33,4 @@ criteria:
     roles:
       - OPS
     viewpoint: vp-ops-operability
-    status: unsatisfied
-    reason: References to operational and monitoring configuration SSOTs are missing.
+    status: satisfied
