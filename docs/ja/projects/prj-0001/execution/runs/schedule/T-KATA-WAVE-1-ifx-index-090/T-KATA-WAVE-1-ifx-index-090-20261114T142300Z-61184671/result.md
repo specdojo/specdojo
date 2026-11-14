@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-ifx-index-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-ifx-index-090/T-KATA-WAVE-1-ifx-index-090-20261114T142300Z-61184671/plan.md
   started_at: "2026-11-14T14:23:05.523Z"
+  completed_at: "2026-11-14T15:34:47.041Z"
   agent: luna-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,22 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+executor による以下のコマンド実行結果、対象パスの出力はなく、評価結果は最新である。 - `specdojo grade list --target deliverable --path docs/ja/product/020-external-interface-specs/ifx-index.yaml --changed-only` - `specdojo grade list --target deliverable --path docs/ja/product/020-external-interface-specs/ifx-index.yaml --dependency-changed` - `specdojo grade list --target deliverable --path docs/ja/product/020-external-interface-specs/ifx-index.yaml --incomplete`
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- grade の評価結果（`verdict`: `needs-work`, `score`: 78）は最新であり、事実に反しない。
+- retrofit のタスクとして必須である「実装エビデンス」との照合が不十分である。特に `src/exec/exec.ts` について、具体的な記述との対応判定（一致・乖離・確認不能・未確認）が記録されていない。
+- 先行する編集記録の内容も概括的であり、指定された実装パスごとの照合根拠が確認できないため、完了条件を満たしていない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- 実装エビデンスとして指定された `src/exec/exec.ts` の各処理箇所（AI provider CLI の起動コマンド解決・非対話実行、Git 操作等）について、成果物 `docs/ja/product/020-external-interface-specs/ifx-index.yaml` のどの記述と対応しているかを具体的に照合し、判定結果を記録すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+実装エビデンスとして `src/exec/exec.ts` が指定されていたが、executor-evidence 又は `final_message` によれば、当該パスについての具体的な照合記録が不足している。確認できなかった範囲は `src/exec/exec.ts` 全体およびそれと成果物との対応関係である。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
