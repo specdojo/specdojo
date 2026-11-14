@@ -23,6 +23,7 @@ export function registerGradeRunCommand(grade: Command, runtime?: GradeAgentRunt
     .option("--stages <count>", "Native pipeline stage count (1)", "1")
     .option("--work-dir <directory>", "Repository-relative run state directory")
     .option("--isolate-pipeline-state", "Keep retry state inside this run directory")
+    .option("--if-busy <policy>", "Project grade lock policy: fail or wait")
     .option("--reference <path>", "Comparison reference document")
     .option("--embed-documents", "Embed target and reference contents", false)
     .option("--max-stage-failures <count>", "Consecutive failure limit", requirePositiveInteger, 3)

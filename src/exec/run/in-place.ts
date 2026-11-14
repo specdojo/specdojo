@@ -83,7 +83,7 @@ import {
   runWithRetry,
 } from "./agent.js";
 import { pipelineRecoveryMeta, spawnBlock, spawnClaim, spawnComplete } from "./mode-shared.js";
-import { gradeBeforeReviewPlan } from "./schedule-prepare.js";
+import { enforceScheduleKataReview, gradeBeforeReviewPlan } from "./schedule-prepare.js";
 import {
   pinnedExecutor,
   pinnedReporter,
@@ -723,6 +723,9 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // normally. The agent's core duty is to fill the result while preserving its scaffold
   // frontmatter, so treat an incomplete or modified result as a block even on exit 0.
   let effectiveExit = exitCode;
+  if (exitCode === 0 && task && resultPath) {
+    enforceScheduleKataReview({ task, catalogPath, resultPath, projectId, rootDir: repoRoot });
+  }
   let blockReason: string | undefined = pipelineBlockReason;
   if (
     exitCode === 0 &&

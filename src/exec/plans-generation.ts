@@ -52,6 +52,7 @@ import {
   type ResolvedDeliverable,
 } from "./plans-core.js";
 import { kataCauseFindingsText } from "./plans-kata-findings.js";
+import { kataReviewSummary, scheduleKataReviewSubjects } from "./review-kata.js";
 import type { RoleDefinition } from "./role-types.js";
 import { isRunRecordPath, resultForPlan, taskRecordPaths } from "./run-records.js";
 import { expandTemplate } from "./shared.js";
@@ -308,7 +309,12 @@ function buildReviewPlanMarkdown(
     _GRADE_SUBJECT_PATH_: gradeSubjectPath,
     _GRADE_TARGET_: gradeTargetKind(task.approach),
     _GRADE_RESULT_PATH_: gradeResultRef(projectId, gradeSubjectPath),
-    _GRADE_SUMMARY_: reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),
+    _GRADE_SUMMARY_: [
+      reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),
+      kataReviewSummary(scheduleKataReviewSubjects(task, deliverable), projectId),
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
     _DONE_CRITERIA_ROWS_: reviewDoneCriteriaRows(applicableCriteria),
   };
   const hasBrief = Boolean(deliverable?.deliverable.brief?.trim());

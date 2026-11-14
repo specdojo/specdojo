@@ -167,6 +167,8 @@ describe("reviewGradeArgs", () => {
       "grade",
       "run",
       "--isolate-pipeline-state",
+      "--if-busy",
+      "wait",
       "--run-id",
       "review-T-1-20260928T000000Z",
       "--project",
@@ -235,6 +237,34 @@ describe("ensureReviewGrade", () => {
         expect.arrayContaining(["grade", "run", "--by", "grader-alias", "--path", "subject.md"]),
         root,
       );
+      await writeFile(
+        path.join(root, "other.md"),
+        "---\nspecdojo:\n  id: test:other\n---\n\n# Other\n",
+      );
+      const now = new Date("2026-11-14T00:00:00Z");
+      const first = await ensureReviewGrade({
+        taskId: "T-1",
+        projectId: "test",
+        subjectPath: "subject.md",
+        target: "kata",
+        repoRoot: root,
+        dryRun: false,
+        now,
+        invoke,
+      });
+      const second = await ensureReviewGrade({
+        taskId: "T-1",
+        projectId: "test",
+        subjectPath: "other.md",
+        target: "kata",
+        repoRoot: root,
+        dryRun: false,
+        now,
+        invoke,
+      });
+      expect(
+        first.action === "executed" && second.action === "executed" && first.runId !== second.runId,
+      ).toBe(true);
       invoke.mockResolvedValueOnce({ exitCode: 1, stderr: "agent failed\n" });
       expect(
         await ensureReviewGrade({

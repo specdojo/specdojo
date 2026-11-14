@@ -68,6 +68,7 @@ import {
 } from "./mode-shared.js";
 import {
   downgradeUnfilledResult,
+  enforceScheduleKataReview,
   readCompletionPreflight,
   type PreparedTask,
 } from "./schedule-prepare.js";
@@ -508,6 +509,15 @@ export async function runPreparedTask(
   }
 
   const finalize = async (): Promise<RunResult> => {
+    if (result === "success" && worktreeResultPath) {
+      enforceScheduleKataReview({
+        task: prepared.task,
+        catalogPath,
+        resultPath: worktreeResultPath,
+        projectId,
+        rootDir: prepared.worktree.path,
+      });
+    }
     const completedAt = new Date().toISOString();
     const context = {
       repoRoot,
