@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-160D",
+  "run_id": "pjr-160d-20261114T114840Z-7c3be232",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-14T11:55:38.779Z",
+    "completed_at": "2026-11-14T12:04:14.145Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-160d.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/protection-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/protection-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../pjr-160d-commit-scope-excluded-changes-fix.md  |  34 ++++-\n docs/ja/specdojo/guides/exec-config-guide.md       |   5 +-\n docs/ja/specdojo/guides/exec-worktree-guide.md     |   4 +-\n src/exec/protection-handoff.ts                     |   3 +-\n src/exec/repo-integration.ts                       |   8 +\n src/exec/run/register-worktree.ts                  |  20 +--\n src/exec/run/schedule-task.ts                      |   5 +\n src/exec/worktree-ops-commit.ts                    |  45 ++++--\n src/exec/worktree-ops-lifecycle.ts                 |   5 +-\n src/exec/worktree-ops-merge.ts                     |   2 +\n src/exec/worktree-ops.ts                           |   4 +-\n tests/src/exec/worktree-ops.integration.test.ts    | 170 ++++++++++++++++-----\n 12 files changed, 233 insertions(+), 72 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/exec/worktree-ops-commit.ts src/exec/worktree-ops.ts src/exec/worktree-ops-lifecycle.ts src/exec/worktree-ops-merge.ts src/exec/protection-handoff.ts src/exec/repo-integration.ts src/exec/run/register-worktree.ts src/exec/run/schedule-task.ts tests/src/exec/worktree-ops.integration.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-…",
+      "status": "passed",
+      "summary": "変更した全12ファイルの整形を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード0。tsx CLI のソケット作成制限を回避して同じ検証を実行。未変更カタログの re-export・未作成文書の警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証は終了コード0。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor による YAML 変更なし。",
+      "reason": "pjr-160d.yaml は作業開始時点から存在する runner の差分であり、executor は編集していない。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog build",
+      "status": "not_applicable",
+      "summary": "カタログ再生成は不要。",
+      "reason": "dct-*.yaml を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo register build",
+      "status": "not_applicable",
+      "summary": "登録簿再生成は不要。",
+      "reason": "pjr-index.md を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec refresh",
+      "status": "not_applicable",
+      "summary": "schedule 再生成は不要。",
+      "reason": "sch-*.yaml を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --join --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後、JSEY の対象更新と再開手続きを行い、実 agent で start から review まで確認する。実 agent の起動は sandbox 外で実施する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4737 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4737 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n revalidates a resolved parent-validation failure before resuming the reporter\nAssertionError: expected 1 to be +0 // Object.is equality\n\n- Expected\n+ Received\n\n- 0\n+ 1\n\n ❯ tests/src/exec/pipeline-e2e.integration.test.ts:1744:35\n    1742|     ]);\n    1743|\n    1744|     expect(process.exitCode ?? 0).toBe(0);\n       |                                   ^\n    1745|     expect(\n    1746|       readInvocations(fixture.logPath).filter((item) => item.role === …\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nv1/bdd.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-kSiOWr/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-kQUu1D/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8JAtCB/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-QqGFMI/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "commit scope の停止ガードを schedule を含む agent タスクへ一般化。統合・撤去・runner・申し送り記録、回帰テスト、利用ガイド、個票を更新した。整形・catalog・履歴リンク検証は通過し、主要検証は親 runner に委譲した。",
+  "completion_status": "complete",
+  "handoff": [
+    "判断: bootstrap / *-maintenance のカタログ・schema・型のメニューは一括許可しない。他成果物や親 runner への影響を避け、checkpoint 済み targets で個別に解決できる場合だけ許可する。対象外なら変更理由・対象パス・提案差分・必要な検証を報告する。未解決 ID の警告は個別パス解決の失敗を表し、approach の型ディレクトリ許可は独立して適用される説明へ修正した。",
+    "CHANGELOG 文案（不具合修正）: executor が commit 対象外の変更を残した場合、schedule 由来のタスクでも統合と worktree 撤去を停止し、対象パスと次のアクションを result とログへ記録する。型の対象 ID を解決できない場合の警告を、approach によるディレクトリ許可と整合する説明に修正する。",
+    "統合後は運用メモに従い、PJR-JSEY の対象に PJR-160D を加えて実 agent の start から review までを確認し、その後 close する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-160D/pjr-160d-20261114T114840Z-7c3be232/executor.attempt-1.log",
+      "bytes": 3892,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-160D/pjr-160d-20261114T114840Z-7c3be232/parent-validation-attempt-1-test-integration.attempt-1.log",
+      "bytes": 289472,
+      "truncated": false
+    }
+  ]
+}

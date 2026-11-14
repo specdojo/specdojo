@@ -47,7 +47,7 @@ import {
 } from "../task-repos.js";
 import {
   checkpointAndEnsureWorktree,
-  assertRegisterCommitScope,
+  assertCommitScope,
   commitTargetPaths,
   commitWorktreeChanges,
   discardStaleExecWorktree,
@@ -56,7 +56,7 @@ import {
   removeWorktree,
   taskTargetsAtHead,
   WorktreeRemovedBranchDeletionError,
-  UncommittedRegisterChangesError,
+  UncommittedChangesError,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
 import {
@@ -279,7 +279,7 @@ export async function finalizeRegisterWorktreeRun(params: {
     ) {
       const { baseCommit, outputCommit } = integratedRegisterCommitRange(repoRoot, worktree.branch);
       try {
-        assertRegisterCommitScope(wtContext, worktree, stem, { scopeLogPath });
+        assertCommitScope(wtContext, worktree, stem, { scopeLogPath });
         const lifecyclePaths = new Set(
           [worktreeResultPath, params.pipelineStatePath]
             .filter((path): path is string => !!path)
@@ -310,7 +310,7 @@ export async function finalizeRegisterWorktreeRun(params: {
         } else {
           const reason = sanitizeRegisterConclusion(
             `integrate cleanup failed: ${error instanceof Error ? error.message : String(error)}`,
-            error instanceof UncommittedRegisterChangesError ? 4000 : undefined,
+            error instanceof UncommittedChangesError ? 4000 : undefined,
           );
           const integrateFailedAt = new Date().toISOString();
           recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
@@ -325,7 +325,7 @@ export async function finalizeRegisterWorktreeRun(params: {
             transition: "review",
             commit: "incomplete",
             reason,
-            ...(error instanceof UncommittedRegisterChangesError
+            ...(error instanceof UncommittedChangesError
               ? { uncommittedFiles: error.files.length }
               : {}),
           };
@@ -379,7 +379,7 @@ export async function finalizeRegisterWorktreeRun(params: {
     try {
       const productNames = (worktree.repos ?? []).map((product) => product.name);
       try {
-        assertRegisterCommitScope(wtContext, worktree, stem, {
+        assertCommitScope(wtContext, worktree, stem, {
           scopeLogPath,
           allowEditedPlan: params.resumedExecutor === true,
         });
@@ -413,7 +413,7 @@ export async function finalizeRegisterWorktreeRun(params: {
           status: "failed",
           error: message,
         });
-        if (error instanceof UncommittedRegisterChangesError) throw error;
+        if (error instanceof UncommittedChangesError) throw error;
         throw new RepoIntegrationError({
           repo,
           cause: message,
@@ -522,7 +522,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       } else {
         const reason = sanitizeRegisterConclusion(
           `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
-          error instanceof UncommittedRegisterChangesError ? 4000 : undefined,
+          error instanceof UncommittedChangesError ? 4000 : undefined,
         );
         const integrateFailedAt = new Date().toISOString();
         recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
@@ -543,14 +543,14 @@ export async function finalizeRegisterWorktreeRun(params: {
             transition: "review",
             commit: "incomplete",
             reason,
-            ...(error instanceof UncommittedRegisterChangesError
+            ...(error instanceof UncommittedChangesError
               ? { uncommittedFiles: error.files.length }
               : {}),
           };
         }
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
         process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
-        const scopeError = error instanceof UncommittedRegisterChangesError;
+        const scopeError = error instanceof UncommittedChangesError;
         const summary = waitSummary(reason, scopeError ? 4000 : undefined);
         return {
           ...summary,

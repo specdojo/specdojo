@@ -214,9 +214,9 @@ commit 対象から除外する主なパス:
 
 対象 task の result は成果物変更と同じ commit に含めます。変更がない場合は commit を作成しません。
 
-上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は実践の型ディレクトリも）だけを commit し、許可リスト外の変更は `commit-scope:` 警告を出して worktree に残します。詳細は [exec設定ガイド](exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
+上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は実践の型ディレクトリも）だけを commit し、許可リスト外の変更が残っていれば `commit-scope: integration blocked` と対象パスを出力し、commit・統合・通常の worktree 撤去を止めます。対象パスと次のアクションは result の申し送りと `integrate.log` に残します。詳細は [[specdojo:exec-config-guide|exec 設定ガイド]] の `agent 権限とプロンプトインジェクション対策` を参照します。
 
-登録簿由来（`origin: register`）のタスクは許可リストを使わず、上表の除外だけを適用して作業ツリーの差分を commit します。HEAD に無い新規ファイルは、リポジトリ最上位、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）、HEAD で追跡済みの最上位ディレクトリ、対象 task の result と evidence、plan の `targets` から解決した成果物に置かれたものを commit します。`tmp/` 配下のファイルは常に commit 対象から除外します。それ以外の未追跡ディレクトリに置かれた新規ファイルは `commit-scope:` 警告を出して worktree に残し、pipeline 実行では run の `integrate.log` にも記録します。最上位に追加した新規ファイルを commit した場合は、統合ログと result の申し送りに「最上位に追加したファイル」として列挙します。既存ファイルの変更と削除、人間の作業（`execution: human`）は従来どおり commit します。`ready` への昇格検査は commit 対象のパスだけに適用するため、commit しない一時ファイルは統合を止めません。
+登録簿由来（`origin: register`）のタスクは許可リストを使わず、上表の除外だけを適用して作業ツリーの差分を commit します。HEAD に無い新規ファイルは、リポジトリ最上位、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）、HEAD で追跡済みの最上位ディレクトリ、対象 task の result と evidence、plan の `targets` から解決した成果物に置かれたものを commit します。`tmp/` 配下のファイルは常に commit 対象から除外します。それ以外の未追跡ディレクトリに置かれた新規ファイルは、上記の停止ガードの対象です。最上位に追加した新規ファイルを commit した場合は、統合ログと result の申し送りに「最上位に追加したファイル」として列挙します。既存ファイルの変更と削除、人間の作業（`execution: human`）は従来どおり commit します。`ready` への昇格検査は commit 対象のパスだけに適用するため、`tmp/` 配下の一時ファイルの `ready` は統合を止めません。
 
 ### 2.5. merge
 

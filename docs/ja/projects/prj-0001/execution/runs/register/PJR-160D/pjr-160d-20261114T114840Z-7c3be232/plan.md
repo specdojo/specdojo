@@ -64,4 +64,9 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-14）
+
+- 親の検証の test-integration で、`rechecks every plan target when an executor resumes after a rate limit`・`resumes the reporter from persisted evidence instead of rerunning the executor`・`aborts a hook-rejected merge commit and resumes only integration` が落ちた。最後の 2 件は時間切れではなく、この変更（commit の対象外の変更で統合を止める）が既存の再開・統合の流れを止めている可能性が高い。既存の振る舞いを壊さない形に直すか、意図した変更ならテストを直して理由を個票に書く。
+- 関連する統合テスト（`tests/src/exec/pipeline-e2e.integration.test.ts`・`worktree-ops.integration.test.ts` など）を executor で流せる範囲で流してから報告する。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`

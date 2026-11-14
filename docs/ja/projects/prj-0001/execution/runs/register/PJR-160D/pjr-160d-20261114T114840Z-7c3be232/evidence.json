@@ -1,0 +1,293 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-160D",
+  "run_id": "pjr-160d-20261114T114840Z-7c3be232",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-14T20:41:02.834Z",
+    "completed_at": "2026-11-14T20:47:04.975Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-160d.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/protection-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../controls/project-register/events/pjr-160d.yaml |  20 ++-\n .../pjr-160d-commit-scope-excluded-changes-fix.md  |   9 +-\n .../pjr-160d-20261114T114840Z-7c3be232/plan.md     |   5 +\n docs/ja/specdojo/guides/exec-config-guide.md       |   5 +-\n docs/ja/specdojo/guides/exec-worktree-guide.md     |   4 +-\n src/exec/protection-handoff.ts                     |   3 +-\n src/exec/repo-integration.ts                       |   8 +\n src/exec/run/register-worktree.ts                  |  20 +--\n src/exec/run/schedule-task.ts                      |   5 +\n src/exec/worktree-ops-commit.ts                    |  51 ++++--\n src/exec/worktree-ops-lifecycle.ts                 |   5 +-\n src/exec/worktree-ops-merge.ts                     |   2 +\n src/exec/worktree-ops.ts                           |   4 +-\n tests/src/exec/pipeline-e2e.integration.test.ts    |  66 +++++--\n tests/src/exec/worktree-ops.integration.test.ts    | 195 +++++++++++++++++----\n 15 files changed, 318 insertions(+), 84 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-worktree-guide.md src/exec/protection-handoff.ts src/exec/repo-integration.ts src/exec/run/register-worktree.ts src/exec/run/schedule-task.ts src/exec/worktree-ops-commit.ts src/exec/worktree-ops-lifecycle.ts src/exec/worktree-ops-merge.ts src/exec/worktree-ops.ts tests/src/exec/worktree-ops.…",
+      "status": "passed",
+      "summary": "成果物 13 ファイルを整形した。個票の最終追記後も再整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。既存の re-export と未作成文書への参照に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証が終了コード 0 で完了した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検査対象の staged ファイルは 0 件、検出 0 件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor が編集した YAML 成果物はない。",
+      "reason": "今回の executor 成果物は Markdown と TypeScript。開始時から存在する登録簿イベント YAML は runner 管理の変更であり、編集していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4781 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4781 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Z6CSEc/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Z6CSEc/worktrees/prj-0001-T-T-doc-010/app1\nSkipping worktree dependencies: no tracked package-loc\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nv1/bdd.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-160D\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-14T20:53:36.091Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-14T20:52:36.402Z.\nfall\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/protection-handoff.ts",
+      "status": "changed",
+      "path": "src/exec/protection-handoff.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/repo-integration.ts",
+      "status": "changed",
+      "path": "src/exec/repo-integration.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/schedule-task.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-task.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree-ops-commit.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-commit.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree-ops-merge.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-merge.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree-ops.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "対象外変更で統合を停止する仕様を維持し、再開 E2E の fixture と停止ログの保存先を修正しました。回帰テストを追加し、個票を更新しました。修正後の統合テストは親 runner の検証に委ねています。",
+  "completion_status": "complete",
+  "handoff": [
+    "前回失敗した再開 E2E 5 件では、fake executor が plan の対象外の pipeline-artifact.md を作っていた。成功系 fixture を宣言済みの docs/test/doc.md に揃え、既存の stage 再利用・試行数・commit 数の期待を維持した。対象外変更の停止と、確認後に統合だけを再開する回帰テストを追加した。",
+    "停止ログの既定パスを選択中の result と同じ run に修正した。task ID と run ID が異なる場合も、別 run のログを作って再開を妨げない。",
+    "bootstrap / maintenance の catalog・schema・型メニューの一括許可は採用しない。対象外の変更は、理由・対象パス・提案差分・必要な検証を個票と報告へ記載する。未解決 ID の警告は個別パス解決の失敗を示し、approach のディレクトリ許可とは独立する。",
+    "親検証との二重実行禁止に従い、統合テストの個別実行も行っていない。親 runner の test-integration で pipeline-e2e.integration.test.ts と worktree-ops.integration.test.ts を含む修正後の結果を確認する。統合後は PJR-JSEY で実 agent の start から review までを確認してから close する。",
+    "CHANGELOG 文案（不具合修正）: executor が commit 対象外の変更を残した場合、schedule 由来のタスクでも統合と worktree 撤去を停止し、対象パスと次のアクションを result とログへ記録する。型の対象 ID を解決できない場合の警告を、approach によるディレクトリ許可と整合する説明に修正する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-160D/pjr-160d-20261114T114840Z-7c3be232/executor.log",
+      "bytes": 5970,
+      "truncated": false
+    }
+  ]
+}

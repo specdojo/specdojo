@@ -3,7 +3,7 @@ export {
   ROOT_NEW_FILES_HANDOFF_LABEL,
   applyRootNewFilesHandoff,
   assertResultMarkdownlint,
-  assertRegisterCommitScope,
+  assertCommitScope,
   commitTargetPaths,
   commitWorktreeChanges,
   currentBranch,
@@ -21,7 +21,7 @@ export {
   taskTargetsAtHead,
   unstageCommitTargets,
   worktreeStatusPaths,
-  UncommittedRegisterChangesError,
+  UncommittedChangesError,
 } from "./worktree-ops-commit.js";
 export type { CommitScope, WorktreeOpsContext } from "./worktree-ops-commit.js";
 export {

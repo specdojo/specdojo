@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import {
   repoRelative,
   stageCommitTargets,
@@ -23,7 +23,10 @@ import {
   parsePlanTaskIdentity,
   targetReferenceDirsForApproach,
 } from "./plans.js";
-import { recordProtectedConfigBlockAcrossRepos } from "./protection-handoff.js";
+import {
+  recordProtectedConfigBlockAcrossRepos,
+  recordProtectionHandoff,
+} from "./protection-handoff.js";
 import { parseResultTaskIdentity } from "./results.js";
 import {
   isOtherRunRecord,
@@ -33,7 +36,6 @@ import {
   recordStem,
   runRecordPrefixes,
   taskRecordPrefixes,
-  taskRecordPaths,
 } from "./run-records.js";
 import { stripTerminalControlSequences } from "./shared.js";
 import { assertNoPendingProductChanges, productIntegrationTarget } from "./task-repos.js";
@@ -563,7 +565,7 @@ export function commitTargetPaths(
   return partitionCommitTargets(context, worktree, taskId, options).targets;
 }
 
-export class UncommittedRegisterChangesError extends Error {
+export class UncommittedChangesError extends Error {
   constructor(
     readonly files: readonly string[],
     logPath: string,
@@ -572,25 +574,29 @@ export class UncommittedRegisterChangesError extends Error {
     super(
       `uncommitted=${files.length}; log=${logPath}; files=${sample}${files.length > 3 ? ", …" : ""}`,
     );
-    this.name = "UncommittedRegisterChangesError";
+    this.name = "UncommittedChangesError";
   }
 }
 
-// Register integration must retain every non-target change for human review. In particular,
-// committing a deletion while dropping an untracked move destination loses the deliverable.
-export function assertRegisterCommitScope(
+// Agent integration must retain every non-target change for review, regardless of origin.
+// In particular, dropping an untracked move destination loses the deliverable.
+export function assertCommitScope(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
   taskId: string,
   options: { allowEditedPlan?: boolean; scopeLogPath?: string; dryRun?: boolean } = {},
 ): void {
-  if (!isRegisterOriginTask(context, worktree, taskId)) return;
+  // Human schedule tasks retain their explicit result-based selection behavior.
+  if (
+    isHumanWorktreeExecution(context, worktree, taskId) &&
+    !isRegisterOriginTask(context, worktree, taskId)
+  )
+    return;
   const { outOfScope } = partitionCommitTargets(context, worktree, taskId, options);
   if (outOfScope.length === 0) return;
-  const { executionRel } = taskPaths(context, taskId, worktree.path);
+  const { resultRel } = taskPaths(context, taskId, worktree.path);
   const logPath =
-    options.scopeLogPath ??
-    taskRecordPaths(resolve(worktree.path, executionRel), taskId).log("integrate.log");
+    options.scopeLogPath ?? join(dirname(resolve(worktree.path, resultRel)), "integrate.log");
   const warning =
     `commit-scope: integration blocked; ${outOfScope.length} non-target changes (worktree kept):\n` +
     `${outOfScope.map((path) => `  ${path}`).join("\n")}\n`;
@@ -598,8 +604,18 @@ export function assertRegisterCommitScope(
   if (!options.dryRun) {
     mkdirSync(resolve(logPath, ".."), { recursive: true });
     appendFileSync(logPath, warning, "utf8");
+    recordProtectionHandoff(resolve(worktree.path, resultRel), {
+      mechanism: "agent-commit-scope",
+      subjectLabel: "commit 対象外のパス",
+      subjects: outOfScope,
+      reason: warning.trim(),
+      evidenceLabel: "次のアクション",
+      evidenceLanguage: "text",
+      evidence:
+        "worktree を保持して統合を停止した。対象外の変更を確認し、必要な変更は targets の見直しまたは別タスクで取り込む。型のカタログ・schema・メニューなどの対象外ファイルは、変更理由と提案差分を報告してから executor を再開する。",
+    });
   }
-  throw new UncommittedRegisterChangesError(outOfScope, repoRelative(worktree.path, logPath));
+  throw new UncommittedChangesError(outOfScope, repoRelative(worktree.path, logPath));
 }
 
 // markdownlint-cli の終了コード。1 だけが記法違反を表し、それ以外は実行環境の問題である。
@@ -819,7 +835,7 @@ export function recordRootNewFilesHandoff(
 
 // Commit the task result and deliverable changes inside the worktree onto its exec branch.
 // The commit is limited to the mode-based allowlist (resolveCommitScope); out-of-scope
-// changes block register commits; other modes leave them uncommitted and report them. Excludes plans, events,
+// changes block agent commits. Excludes plans, events,
 // generated files, and other tasks' results (see isCommitTargetPath).
 export function commitWorktreeChanges(params: {
   context: WorktreeOpsContext;
@@ -842,11 +858,12 @@ export function commitWorktreeChanges(params: {
   const { context, worktree, taskId, allowEditedPlan } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
   if (!params.productsIntegratedByCaller) assertNoPendingProductChanges(worktree);
-  assertRegisterCommitScope(context, worktree, taskId, params);
+  assertCommitScope(context, worktree, taskId, params);
   let partition = partitionCommitTargets(context, worktree, taskId, { allowEditedPlan });
   const scopeWarnings = [
     ...partition.unresolvedTargets.map(
-      (target) => `commit-scope: unresolved target doc id (not committable): ${target}\n`,
+      (target) =>
+        `commit-scope: unresolved target doc id (no individual path; approach directory permissions still apply): ${target}\n`,
     ),
     ...(partition.outOfScope.length > 0
       ? [
@@ -941,6 +958,6 @@ export function commitWorktreeChanges(params: {
     undefined,
     params.failureLogPath,
   );
-  assertRegisterCommitScope(context, worktree, taskId, params);
+  assertCommitScope(context, worktree, taskId, params);
   return { targets: paths, committed: true };
 }

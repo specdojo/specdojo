@@ -20,6 +20,7 @@ import {
 } from "../../../src/exec/worktree.js";
 import {
   abortMerge,
+  assertCommitScope,
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
   deliverableStatus,
@@ -33,7 +34,7 @@ import {
   selectStageablePaths,
   worktreeStatusPaths,
   WorktreeRemovedBranchDeletionError,
-  UncommittedRegisterChangesError,
+  UncommittedChangesError,
   type WorktreeOpsContext,
 } from "../../../src/exec/worktree-ops.js";
 import {
@@ -1136,7 +1137,7 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("target\n");
   });
 
-  it("excludes plans, events, and generated files from the task commit", () => {
+  it("blocks edited plans while allowing regenerated files to remain outside commits", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
@@ -1150,6 +1151,10 @@ describe("exec worktree ops", () => {
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      UncommittedChangesError,
+    );
+    git(worktree.path, "restore", "--", taskRecordPaths("execution", taskId).plan);
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
     expect(committed.targets).toEqual(
       expect.arrayContaining(["docs/a.md", taskRecordPaths("execution", taskId).result]),
@@ -1159,7 +1164,7 @@ describe("exec worktree ops", () => {
 
     // Excluded files remain uncommitted in the worktree.
     const stillDirty = git(worktree.path, "status", "--porcelain");
-    expect(stillDirty).toContain(taskRecordPaths("execution", taskId).plan);
+    expect(stillDirty).not.toContain(taskRecordPaths("execution", taskId).plan);
     expect(stillDirty).toContain("execution/generated/");
   });
 
@@ -1336,7 +1341,7 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toContain("docs/d.yaml");
   });
 
-  it("commits only the result for a review task, leaving deliverable tampering uncommitted", () => {
+  it("blocks a review task that tampers with a deliverable", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-030";
     const worktree = prepare(fixture, taskId, taskId, planWithIdentity(taskId, { mode: "review" }));
@@ -1348,14 +1353,15 @@ describe("exec worktree ops", () => {
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-
-    expect(committed.committed).toBe(true);
-    expect(committed.targets).toEqual([taskRecordPaths("execution", taskId).result]);
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /uncommitted=1;.*docs\/tampered.md/,
+    );
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
     expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("docs/tampered.md");
   });
 
-  it("commits only the plan targets for an edit task and merges past out-of-scope residue", () => {
+  it("blocks edit commit, merge, and removal while retaining non-target changes and evidence", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
 
@@ -1381,18 +1387,36 @@ describe("exec worktree ops", () => {
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-
-    expect(committed.targets).toEqual(
-      expect.arrayContaining(["docs/a.md", taskRecordPaths("execution", taskId).result]),
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    const rootBefore = git(fixture.repo, "rev-parse", "HEAD");
+    const scopeLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
+      "integrate.log",
     );
-    expect(committed.targets).not.toContain("src/sneaky.ts");
+    expect(() =>
+      commitWorktreeChanges({ context: fixture.context, worktree, taskId, scopeLogPath }),
+    ).toThrow(/uncommitted=1;.*src\/sneaky.ts/);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(scopeLogPath, "utf8")).toContain("src/sneaky.ts");
+    expect(
+      readFileSync(taskRecordPaths(join(worktree.path, "execution"), taskId).result, "utf8"),
+    ).toContain("`src/sneaky.ts`");
+    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow(UncommittedChangesError);
+    expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
+      UncommittedChangesError,
+    );
+    expect(projectMergeBlockers({ context: fixture.context, worktree, taskId })).toEqual([
+      expect.objectContaining({ message: expect.stringContaining("src/sneaky.ts") }),
+    ]);
+    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(rootBefore);
+    expect(existsSync(worktree.path)).toBe(true);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
 
-    // The out-of-scope file stays in the worktree and must not block the merge.
+    // Explicitly reviewing and removing the stray change permits a later integration.
+    rmSync(join(worktree.path, "src", "sneaky.ts"));
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.targets).toContain("docs/a.md");
     mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("target deliverable\n");
-    expect(existsSync(join(fixture.repo, "src", "sneaky.ts"))).toBe(false);
-    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
   });
 
   it("commits only the result targets for an execution: human edit task", () => {
@@ -1442,9 +1466,68 @@ describe("exec worktree ops", () => {
     expect(committed.targets).not.toContain("src/unrelated.ts");
   });
 
-  it("allows reference-material directories for a bootstrap-approach edit task", () => {
+  it.each([
+    ["bootstrap", "rulebooks"],
+    ["rulebook-maintenance", "rulebooks"],
+    ["recipe-maintenance", "recipes"],
+    ["sample-maintenance", "samples"],
+    ["template-maintenance", "templates"],
+  ])(
+    "allows %s type files and explains unresolved IDs without widening ancillary scope",
+    (approach, dir) => {
+      const fixture = setupRepository();
+      const taskId = "T-T-doc-010";
+      const worktree = prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach,
+          targets: ["specdojo:new-type"],
+        }),
+      );
+      const typePath = `docs/ja/specdojo/${dir}/new-type.md`;
+      writeFile(join(worktree.path, typePath), "# new type\n");
+      const ancillary = [
+        "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml",
+        "docs/specdojo/schemas/v1/new-type.schema.yaml",
+        "packages/docs-site/sidebar-config.ts",
+      ];
+      for (const path of ancillary) writeFile(join(worktree.path, path), "proposed change\n");
+      expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+        UncommittedChangesError,
+      );
+      const resultPath = taskRecordPaths(join(worktree.path, "execution"), taskId).result;
+      for (const path of ancillary) expect(readFileSync(resultPath, "utf8")).toContain(path);
+      for (const path of ancillary) rmSync(join(worktree.path, path));
+      const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      const scopeLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
+        "integrate.log",
+      );
+      const committed = commitWorktreeChanges({
+        context: fixture.context,
+        worktree,
+        taskId,
+        scopeLogPath,
+      });
+      expect(committed.targets).toContain(typePath);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(
+        "no individual path; approach directory permissions still apply",
+      );
+      expect(stdout.mock.calls.map(([message]) => String(message)).join("")).toContain(
+        "unresolved target doc id (no individual path; approach directory permissions still apply): specdojo:new-type",
+      );
+    },
+  );
+
+  it.each(["modify", "delete"])("blocks %s of a tracked non-target file", (operation) => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
+    const path = "docs/specdojo/schemas/v1/existing.schema.yaml";
+    writeFile(join(fixture.repo, path), "type: object\n");
+    git(fixture.repo, "add", path);
+    git(fixture.repo, "commit", "-m", "add existing schema");
     const worktree = prepare(
       fixture,
       taskId,
@@ -1452,20 +1535,69 @@ describe("exec worktree ops", () => {
       planWithIdentity(taskId, {
         mode: "edit",
         approach: "bootstrap",
-        targets: ["prj-0001:doc-a"],
+        targets: ["specdojo:new-type"],
       }),
     );
-
-    writeFile(
-      join(worktree.path, "docs", "ja", "specdojo", "rulebooks", "new-rulebook.md"),
-      "# rulebook\n",
+    if (operation === "delete") rmSync(join(worktree.path, path));
+    else writeFile(join(worktree.path, path), "type: string\n");
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /uncommitted=1;.*existing.schema.yaml/,
     );
-    writeFile(join(worktree.path, "docs", "unrelated.md"), "not a target\n");
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("type: object\n");
+  });
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+  it("does not write block evidence during a dry run", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "review",
+      }),
+    );
+    const resultPath = taskRecordPaths(join(worktree.path, "execution"), taskId).result;
+    const before = readFileSync(resultPath, "utf8");
+    writeFile(join(worktree.path, "docs", "stray.md"), "stray\n");
+    expect(() => assertCommitScope(fixture.context, worktree, taskId, { dryRun: true })).toThrow(
+      UncommittedChangesError,
+    );
+    expect(readFileSync(resultPath, "utf8")).toBe(before);
+    expect(
+      existsSync(taskRecordPaths(join(worktree.path, "execution"), taskId).log("integrate.log")),
+    ).toBe(false);
+  });
 
-    expect(committed.targets).toContain("docs/ja/specdojo/rulebooks/new-rulebook.md");
-    expect(committed.targets).not.toContain("docs/unrelated.md");
+  it("keeps default block logs in the selected run when called with a task ID", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0137";
+    const stem = "pjr-0137-20261106T160500Z-aabbccdd";
+    const worktree = prepare(
+      fixture,
+      stem,
+      stem,
+      planWithIdentity(taskId, { mode: "review", origin: "register" }),
+      `---\nspecdojo:\n  task_id: ${taskId}\n---\n\n# Result\n`,
+    );
+    writeFile(join(worktree.path, "docs/stray.md"), "stray\n");
+
+    expect(() => assertCommitScope(fixture.context, worktree, taskId)).toThrow(
+      UncommittedChangesError,
+    );
+    const records = taskRecordPaths(join(worktree.path, "execution"), taskId, stem);
+    expect(readFileSync(records.log("integrate.log"), "utf8")).toContain("docs/stray.md");
+    expect(existsSync(taskRecordPaths(join(worktree.path, "execution"), taskId).directory)).toBe(
+      false,
+    );
+
+    rmSync(join(worktree.path, "docs/stray.md"));
+    expect(() => assertCommitScope(fixture.context, worktree, taskId)).not.toThrow();
+    expect(commitWorktreeChanges({ context: fixture.context, worktree, taskId }).targets).toContain(
+      `execution/runs/register/${taskId}/${stem}/integrate.log`,
+    );
   });
 
   it("keeps retrofit implementation evidence outside commit scope", () => {
@@ -1492,10 +1624,9 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "a.md"), "retrofit document update\n");
     writeFile(join(worktree.path, "src", "evidence.ts"), "// must remain read-only\n");
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-
-    expect(committed.targets).toContain("docs/a.md");
-    expect(committed.targets).not.toContain("src/evidence.ts");
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /uncommitted=1;.*src\/evidence.ts/,
+    );
   });
 
   it("fails a schedule-originated edit task whose plan declares no targets", () => {
@@ -1594,7 +1725,7 @@ describe("exec worktree ops", () => {
       const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
       expect(() =>
         commitWorktreeChanges({ context: fixture.context, worktree, taskId: stem, scopeLogPath }),
-      ).toThrow(UncommittedRegisterChangesError);
+      ).toThrow(UncommittedChangesError);
       expect(readFileSync(scopeLogPath, "utf8")).toContain(other);
       expect(readFileSync(scopeLogPath, "utf8")).toContain(otherTask);
       expect(stdout.mock.calls.map(([message]) => String(message)).join("")).toContain(other);
@@ -1651,7 +1782,7 @@ describe("exec worktree ops", () => {
     expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
     expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("?? scratch/patch.js");
     expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
-      UncommittedRegisterChangesError,
+      UncommittedChangesError,
     );
     expect(existsSync(worktree.path)).toBe(true);
     rmSync(join(worktree.path, "scratch"), { recursive: true });
