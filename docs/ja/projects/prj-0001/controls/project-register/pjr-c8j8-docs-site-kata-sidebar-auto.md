@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:50:28Z"
-  block_reason: "parent validation failed: typecheck"
   commit_type: feat
   commit_scope: docs-site
 ---
@@ -65,6 +64,7 @@ sidebar-config.ts に型の文書を手で足す決まりを、rulebook・recipe
 - `packages/docs-site/.vitepress/sidebar-config.ts` から型の手書きデータ（約 520 行）を外し、`specdojoSidebarItems` 定数を `buildSpecdojoSidebarItems(specdojoDir)` 関数に替えた。ガイド・リファレンス・考え方・標準と、プロジェクト・プロダクト用の定数は変えていない。
 - `packages/docs-site/.vitepress/config.mts` は、package 側の型を重ねたステージング（`.vitepress/kata-staging/docs/ja/specdojo`）を読んでメニューを組み立てる。文書サイトを入れた利用者のリポジトリ（PJR-PEJS）でも、同梱の型と利用者が足した型から同じ仕組みでメニューができる。
 - `tests/packages/docs-site/sidebar-kata.test.ts` は、自動で作ったメニューに対して、非推奨でないすべての型が出ること・非推奨の型が出ないこと・同じ型が二度出ないこと・リンク先が実在することを確かめる。あわせて、仮のディレクトリに型の文書を作り、組み立て規則（`deliverable_type` による分類、分類に当たらない型の置き場所、非推奨の除外、YAML の表示用ページへのリンク、`includes` の子、複数の sample、接頭辞・`attach` による置き場所）と frontmatter の読み取り・表示名の作り方を確かめるテストを足した。
+- 再開時（2026-11-15）に、親の検証の typecheck で落ちた TS2835 を直した。`sidebar-config.ts` と `sidebar-kata.ts` の相対 import に `.js` を付けた（`./sidebar-kata.js`・`./sidebar-kata-config.js`・`./sidebar-config.js`）。`npm run typecheck` と `npx vitest run tests/packages/docs-site`（9 ファイル・95 件）が通ることを確かめた。
 
 ### 5.2. 組み立ての規則
 
