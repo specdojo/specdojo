@@ -30,6 +30,13 @@ sidebar-config.ts に型の文書を手で足す決まりを、rulebook・recipe
 ## 3. 完了条件
 
 - `packages/docs-site/.vitepress/sidebar-config.ts` の型のメニュー（rulebook・recipe・sample・template）を、`docs/ja/specdojo/` の型の文書から自動で作る。表示名と並び順は、型の文書の frontmatter（題名・種類・分類）や置き場所から決め、手で並びを決めたい場合の上書きの方法も残す。
+- **作り方の方針**（orchestrator の案、indie が承認 2026-11-14）:
+  - 非推奨でない rulebook を起点にし、frontmatter の `recipe`・`sample`・`template`・`includes` から、4 種類のメニューの項目と子の項目を作る。`undecided`・`not-needed` の場合の扱いも決める。
+  - 分類は rulebook の `deliverable_type` で決める。`deliverable_type` と分類の名前・並び順の対応表、分類の中の並びと表示名の上書きだけを、小さな設定ファイル（例: `sidebar-kata.yaml`）に手で書く。表示名の既定は H1 から作る。
+  - **生成物を commit しない**：メニューは文書サイトが設定を読み込むとき（VitePress の config の読み込み）にその場で組み立て、Git に残さない。確かめやすさのために書き出す場合は、`generated/` と同じく `.gitignore` で管理外にする。Git で管理するのは対応表の設定ファイルだけで、既にある分類に型を足すだけなら触らない。
+  - 並べて流したタスクがそれぞれ型の文書を作っても、触るファイルが別々でぶつからないことを確かめる。
+  - 文書サイトを入れた利用者のリポジトリ（PJR-PEJS）でも、同じ仕組みで型のメニューができる。
+  - 今のメニューの表示名・分類・並びを、最初の設定ファイルに写し、見た目が変わらないようにする。
 - 非推奨（`deprecated`）の型はメニューに出さない。YAML の sample・template は、今と同じく生成された表示用ページへのリンクにする。
 - 新しい型の文書を作っただけで、メニューに出る。`tests/packages/docs-site/sidebar-kata.test.ts` は、自動で作ったメニューに対して、すべての型が出ること・リンク先が実在することを確かめる形に直す。
 - 今のメニューと比べて、出る項目と表示名が大きく変わらないことを確かめ、変わった点を個票の対応結果に書く。
