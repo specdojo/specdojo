@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_96c067ad95b24072b35057bec8971812
+  ts: "2026-11-14T22:51:46Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親の検証をまとめた not\_run の行で executor の検証を失敗と取り違えない
+    - field: description
+      from: ""
+      to: 親 runner の検証を 1 行にまとめた not\_run を親の検証の結果で読み替える
+    - field: input
+      from: ""
+      to: '["2026-11-15 の夜間に cnd-080 が、親の検証 9 件がすべて通ったのに「executor validation failed or not run」で止まった"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
