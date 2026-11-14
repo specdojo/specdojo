@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T09:03:46Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-sf-index-070",
+  "by": "sonnet-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}
