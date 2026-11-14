@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-N2CP",
   "run_id": "pjr-n2cp-20261114T114842Z-575c5b9e",
-  "updated_at": "2026-11-14T20:34:12.370Z",
+  "updated_at": "2026-11-14T20:39:09.651Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-N2CP/pjr-n2cp-20261114T114842Z-575c5b9e/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-14T20:34:12.370Z",
-      "completed_at": null,
+      "completed_at": "2026-11-14T20:39:09.651Z",
       "artifact_ref": null
     }
   },
