@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-1-sysd-index-060",
   "run_id": "T-KATA-WAVE-1-sysd-index-060-20261114T022803Z-2c359861",
-  "updated_at": "2026-11-14T02:40:45.105Z",
+  "updated_at": "2026-11-14T02:45:26.731Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-index-060/T-KATA-WAVE-1-sysd-index-060-20261114T022803Z-2c359861/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-14T02:40:45.105Z",
-      "completed_at": null,
+      "completed_at": "2026-11-14T02:45:26.731Z",
       "artifact_ref": null
     }
   },
