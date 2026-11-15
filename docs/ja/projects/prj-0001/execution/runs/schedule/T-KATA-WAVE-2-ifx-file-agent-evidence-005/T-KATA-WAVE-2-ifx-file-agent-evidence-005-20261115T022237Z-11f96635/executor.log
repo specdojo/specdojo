@@ -1,0 +1,28 @@
+タスク `T-KATA-WAVE-2-ifx-file-agent-evidence-005` における代表成果物および実践の型の初期整備・検証を完了しました。
+
+### 実施内容の概要
+
+1. **代表成果物（主対象）**:
+   - [`docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml)
+   - SpecDojo パイプライン実行における executor / runner 間の `evidence.json` および `pipeline-state.json` のファイル受け渡し仕様を定義しました。
+   - 配置場所、命名規則、JSON フォーマット、必須フィールド、書き手・読み手、連携タイミング、ローカルファイルシステム上でのアトミック更新、および異常発生時（欠落・構文不正・I/O 障害）の具体的な振る舞いを明確化しました。
+   - スキーマ modeline（`# specdojo-schema: none reason=no-ifx-file-schema`）を定義し、スキーマ検証・Frontmatter 照合をクリアしています。
+
+2. **実践の型（rulebook）**:
+   - [`docs/ja/specdojo/rulebooks/ifx-file-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/ja/specdojo/rulebooks/ifx-file-rulebook.md)
+   - `docs/ja/specdojo/standards/rulebook-authoring-standard.md` の標準章立て（1. 全体方針 〜 7. 禁止事項）に準拠し、完成例は sample へ外出ししました。
+   - 見出しの第2〜第4階層に連番を付与し、記述ガイドに章ごとの判断基準と良い例・悪い例を記載しました。
+   - Frontmatter において `target_format: yaml`、`sample: specdojo:ifx-file-sample`、`recipe: not-needed`、`template: not-needed` を宣言しました。
+
+3. **実践の型（sample）**:
+   - [`docs/ja/specdojo/samples/ifx-file-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/ja/specdojo/samples/ifx-file-sample.md)
+   - `docs/ja/specdojo/standards/sample-authoring-standard.md` の共通サンプル文脈（駄菓子屋きぬや）に準拠し、週次発注データ連携（CSV形式）と日次売上・在庫スナップショット連携（JSON形式）の2つの完成例を収録しました。
+   - 異常事象の分類、利用者の次の手・回復手順、入力・出力の要点を充実させ、`docs/ja/specdojo/samples/clis-sample.md` 相当の粒度と完成度を整備しました。
+
+4. **フォーマットおよび静的検証**:
+   - 対象ファイルの Prettier 整形および検証（`npx prettier --check`）に適合していることを確認しました。
+   - `validate:schema:file`（modeline 解決）が正常終了することを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"外部ファイル連携仕様（ifx-file-agent-evidence.yaml）および実践の型（ifx-file-rulebook.md, ifx-file-sample.md）の初期整備と検証を完了しました。","handoff":["recipe および template は、YAML 1 ファイルの外部ファイル連携仕様書であり、構造・必須項目・失敗時の扱いが rulebook と sample で十分に伝わるため、独立した手順書および雛形ファイルは不要と判断し not-needed と宣言しました。","ifx-file-agent-evidence.yaml は SpecDojo パイプライン実行における executor / runner 間の evidence.json および pipeline-state.json の連携契約を定義しています。実装正本は src/exec/evidence.ts および src/exec/pipeline-state.ts です。未確定の技術判断は ARC が行い、ready への昇格は PO が判断します。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/ifx-file-rulebook.md docs/ja/specdojo/samples/ifx-file-sample.md docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml","status":"passed","summary":"Prettier check passed for all modified targets"},{"command":"npm run validate:schema:file -- --modeline docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml","status":"passed","summary":"YAML modeline validation passed (schema: none)"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"No history files or plan/result files changed by executor"},{"command":"npm run validate:catalog","status":"not_applicable","reason":"Deliverable changes are outside docs/ja/projects/"}],"target_coverage":[{"target":"ifx-file-agent-evidence","status":"changed","path":"docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml"},{"target":"specdojo:ifx-file-rulebook","status":"changed","path":"docs/ja/specdojo/rulebooks/ifx-file-rulebook.md"},{"target":"specdojo:ifx-file-sample","status":"changed","path":"docs/ja/specdojo/samples/ifx-file-sample.md"}]}
+</specdojo_executor_evidence>

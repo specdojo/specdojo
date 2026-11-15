@@ -1,0 +1,30 @@
+# 代表成果物・実践の型の初期整備完了報告
+
+タスク `T-KATA-WAVE-2-ifx-file-agent-evidence-005` に基づき、代表成果物 `ifx-file-agent-evidence` の作成および実践の型（`specdojo:ifx-file-rulebook`、`specdojo:ifx-file-sample`）の改訂・初期整備を実施しました。
+
+## 実施内容の概要
+
+1. **成果物本体の新規作成**
+   - [ifx-file-agent-evidence.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml):
+     - executor の agent が書き runner が読む `evidence.json` と `pipeline-state.json` の受け渡し仕様を YAML で定義しました。
+     - 置き場所、命名、形式、必須項目、書き手と読み手、および異常系（ファイル欠落・破損・伝送障害）の扱いを規定しました。
+     - 実装コードおよび型定義の正本（`src/exec/evidence.ts`、`src/exec/pipeline-state.ts`、`src/shared/run-records.ts`）への参照を明記し、二重管理・過剰な再掲を排除しました。
+
+2. **実践の型の改訂・整備**
+   - [ifx-file-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/ja/specdojo/rulebooks/ifx-file-rulebook.md):
+     - `rulebook-authoring-standard.md` の標準章立て（1. 全体方針 〜 7. 禁止事項）に適合させました。
+     - 旧第6〜8章にあった完成例を外出しして削除し、sample を参照する構成に改訂しました。
+     - 第2〜第4階層の見出しに階層連番（末尾 `.` 付き）を付与しました。
+     - 記述ガイドに章ごとの判断基準と良い例・悪い例を追加しました。
+     - frontmatter に `target_format: yaml`、`recipe: not-needed`、`sample: specdojo:ifx-file-sample`、`template: not-needed` を明記しました。
+   - [ifx-file-sample.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-ifx-file-agent-evidence-005/docs/ja/specdojo/samples/ifx-file-sample.md):
+     - 共通サンプル文脈（駄菓子屋きぬや 販売管理システム構築）に準拠し、手本である `clis-sample.md` と同等の厚みと粒度で再作成しました。
+     - 週次発注（CSV形式）と日次売上・在庫スナップショット（JSON形式）の具体的な YAML 連携仕様、業務フロー、入出力要件、異常系ハンドリング、テスト観点、未解決事項を網羅しました。
+
+3. **型要否の判断**
+   - `recipe: not-needed`: 外部ファイル連携仕様（YAML）は定型的な構造定義・フィールド定義が主であり、rulebook と sample で品質担保が可能なため。
+   - `template: not-needed`: 連携対象フォーマット（CSV/TSV/JSON/XML）やトランスポートによりルート構造が大きく変動し、固定雛形がかえって制約となるため。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"代表成果物 ifx-file-agent-evidence.yaml の新規作成、および ifx-file-rulebook.md、ifx-file-sample.md の改訂・初期整備を完了しました。","handoff":["【実践の型要否判断】recipe: not-needed（YAML形式のファイル連携仕様は構造定義が定型化されており、rulebookとsampleで一意に品質担保が可能なため）、template: not-needed（連携形式やプロトコルによりルート構造が大きく変わり固定雛形がかえって制約となるため。sampleで代替可能）。","【手本にした同種ready文書】specdojo:clis-sample（sampleの構成、粒度、厚さ、異常系の利用者の次の手の記述方針）、ifx-cmd-ai-provider-cli（外部インターフェース仕様YAMLにおける正本参照と入出力契約・エラーハンドリングの構造）。","【成果物と型の整合】rulebookのdeliverable_type: api、sampleおよび成果物のtype: apiで整合。成果物ifx-file-agent-evidence.yamlは正本（src/exec/evidence.ts, src/exec/pipeline-state.ts, src/shared/run-records.ts）を参照し、ARCの責務である設計妥当性・失敗時の扱いと、BA・QEのDone criteriaを充足。"],"validations":[{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ 配下の変更を含まないため非適用","reason":"Deliverable changes do not touch docs/ja/projects/"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"history ファイルを変更していないため非適用","reason":"No history files under controls/project-register or exec/ were changed"}]}
+</specdojo_executor_evidence>

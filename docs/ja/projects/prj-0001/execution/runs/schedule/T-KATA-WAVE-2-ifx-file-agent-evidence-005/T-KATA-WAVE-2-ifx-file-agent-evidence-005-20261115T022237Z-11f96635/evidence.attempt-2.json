@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005",
+  "run_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005-20261115T022237Z-11f96635",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "failed",
+    "started_at": "2026-11-15T03:54:28.629Z",
+    "completed_at": "2026-11-15T03:54:39.469Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-file-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-file-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../plan.md                                        |   5 +\n .../result.md                                      |  19 +-\n docs/ja/specdojo/rulebooks/ifx-file-rulebook.md    | 390 ++++++++-------------\n docs/ja/specdojo/samples/ifx-file-sample.md        | 267 ++++++++++++--\n 4 files changed, 420 insertions(+), 261 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "You've hit your 5-hour limit · resets 1:30pm (Asia/Tokyo)",
+  "block_reason": "agent exited with non-zero code",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-005/T-KATA-WAVE-2-ifx-file-agent-evidence-005-20261115T022237Z-11f96635/executor.attempt-2.log",
+      "bytes": 58,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+# specdojo-schema: none reason=no-ifx-file-schema
+x-spec-meta:
+  id: prj-0001:ifx-file-agent-evidence
+  type: api
+  status: draft
+  title: 外部ファイル連携仕様（agent の evidence）
+  rulebook: specdojo:ifx-file-rulebook
+  based_on:
+    - prj-0001:ifx-index
+
+# _ASSUMPTION_: 本仕様は SpecDojo のタスク実行パイプライン（specdojo exec run / job）において、
+# executor agent が報告し runner が管理・検証・統合するための実行エビデンスおよび
+# パイプライン状態ファイルの受け渡し契約を定義する。
+# 実装コードおよび型定義の正本は src/exec/evidence.ts, src/exec/pipeline-state.ts, src/shared/run-records.ts とする。
+# 未確定の技術判断は人間の ARC が行い、ready への昇格は PO が判断する。
+
+files:
+  - name: evidence.json
+    naming_rule: evidence.json
+    location: docs/ja/projects/<project-id>/execution/runs/<origin>/<item-id>/<run-id>/evidence.json
+    description: >-
+      タスク実行における agent の変更内容、検証結果、最終メッセージ、および
+      runner による親検証結果・差分サマリー・ログ参照を記録する構造化エビデンスファイル。
+    writer: SpecDojo runner（agent の stdout に出力された <specdojo_executor_evidence> タグから抽出・正規化し、差分情報・親検証結果を結合して書き込む）
+    reader: SpecDojo runner（検証合否判定、統合判定、reporter へのプロンプト注入、result.md 反映）
+    format: JSON
+    encoding: UTF-8
+    schema_ref: src/exec/evidence.ts#ExecEvidence
+    required_fields:
+      - schema_version
+      - task_id
+      - run_id
+      - stage
+      - changes
+      - diff_summary
+      - validations
+      - final_message
+
+  - name: pipeline-state.json
+    naming_rule: pipeline-state.json
+    location: docs/ja/projects/<project-id>/execution/runs/<origin>/<item-id>/<run-id>/pipeline-state.json
+    description: >-
+      実行パイプラインの各段階（executor, reporter, integrate）の進行状態、担当 actor、
+      試行回数、開始/完了時刻、成果物参照、および再開（resume）に必要なコンテキストを管理する状態ファイル。
+    writer: SpecDojo runner（各パイプラインステージの開始・完了・失敗・再試行・統合遷移時にアトミック更新）
+    reader: SpecDojo runner（パイプライン進行制御、多リポジトリ統合の状態追跡、--resume 時の状態復元）
+    format: JSON
+    encoding: UTF-8
+    schema_ref: src/exec/pipeline-state.ts#PipelineState
+    required_fields:
+      - schema_version
+      - task_id
+      - run_id
+      - updated_at
+      - stages
+
+source: AI provider CLI（executor / reporter agent）および SpecDojo runner
+target: SpecDojo runner、後続パイプライン段、および結果報告（reporter）
+direction: bidirectional
+format: JSON
+timing: >-
+  タスク実行サイクルの各段遷移時（executor 完了直後、親検証完了時、reporter 起動前後、integrate 実行前後、および中断・再試行時）
+
+transport:
+  method: ローカルファイルシステム
+  endpoint: <executionPath>/runs/<origin>/<itemId>/<runId>/
+  frequency: タスク実行ごとに都度
+  atomic_write: 一時ファイル（.tmp）へ書き込み後に rename によるアトミック置換（renameSync）を実施
+
+schema:
+  json:
+    root_type: object
+    content_type: application/json
+    encoding: UTF-8
+  references:
+    evidence_spec: src/exec/evidence.ts
+    pipeline_state_spec: src/exec/pipeline-state.ts
+    path_resolution_spec: src/shared/run-records.ts
+
+error_handling:
+  missing:
+    evidence_json:
+      action: >-
+        executor 終了時に evidence.json が未生成またはタグ欠落の場合、構造化報告を空（completion_status は complete、
+        final_message は stdout 本文）としてフォールバックし、プロセスの終了コードおよび親検証の合否で完了を判定する。
+        reporter 実行時に evidence.json が欠落している場合は、前段未完了として reporter 実行を中断（blocked）する。
+    pipeline_state_json:
+      action: >-
+        初回実行時は runner が空のステージ構造で新規生成する。
+        --resume 時にファイルが欠落している場合は状態復元不能としてエラー停止し、--force-restart による再実行を案内する。
+
+  malformed:
+    evidence_json:
+      action: >-
+        JSON 解析エラー（不正構文、必須フィールド欠落、上限バイト数超過等）を検知した場合、
+        エビデンス解析失敗のログを出力した上で構造化報告を空として扱い、成果物の編集内容は作業ディレクトリに保持する。
+        解析失敗のみを理由とした自動再試行は行わず、親検証と利用者の確認に引き継ぐ。
+    pipeline_state_json:
+      action: >-
+        JSON 構文不正またはスキーマ不整合を検知した場合は、パイプラインの二重実行や誤った段階からの再開を防ぐため、
+        直ちに実行を failed / blocked として停止し、壊れたファイルを保持して利用者の調査・手動回復を促す。
+
+  transport_failure:
+    io_error:
+      action: >-
+        ディスク容量不足、書き込み権限不足、ファイルロック競合等の I/O エラーが発生した場合は、
+        標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。
