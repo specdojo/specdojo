@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:ifx-file-agent-evidence-grade-criteria
+document: prj-0001:ifx-file-agent-evidence
+path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
+graded_at: "2026-11-15T08:41:52.994Z"
+graded_by: luna-review-executor
+content_hash: cf7c96d05917e947ed52e6ae01c8caa8dea96cfeb9b9fa552ee648684407a8cc
+summary:
+  satisfied: 2
+  unsatisfied: 1
+  total: 3
+criteria:
+  - id: DC-001
+    text: 受け渡すファイルの置き場所・命名・形式・必須項目・書き手と読み手が記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: ファイル連携の方式と失敗時の扱いが設計として妥当であること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: 欠けた・壊れたファイルを扱うテストの設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: >-
+      The contract describes missing and malformed handling but provides no test design or explicit test cases for
+      verifying those behaviors.
