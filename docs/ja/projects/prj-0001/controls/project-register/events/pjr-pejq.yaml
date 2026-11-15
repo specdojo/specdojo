@@ -50,3 +50,16 @@
     - field: commit_scope
       from: ""
       to: cdsd
+- v: 1
+  id: reg_3f02f5b8bfd345c4a8796715ad23c5f9
+  ts: "2026-11-15T18:42:48Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_344f0cdd514847c5b0d6c36eaf550f57
