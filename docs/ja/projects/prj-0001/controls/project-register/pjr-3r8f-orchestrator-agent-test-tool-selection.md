@@ -43,22 +43,28 @@ PJR-V5AZ の対話ベースの Quick Start 改訂を背景とする。利用者�
 
 ## 2. 検討した選択肢
 
-以下は比較対象であり、優劣は調査後に記録する。必要な追加候補を調査し、採用案が複数ツールの併用になる場合も構成と理由を明示する。
+公式資料の確認に基づく暫定の比較を記録する（2026-11-15）。最小検証は未実施であり、各候補の「未確認」は検証で確かめる。
 
-| 選択肢 | 内容                        | 利点                               | 懸念                                          |
-| ------ | --------------------------- | ---------------------------------- | --------------------------------------------- |
-| A      | Promptfoo                   | _TODO_: 公式資料と検証に基づき記録 | _TODO_: 接続方法と運用上の制約を確認          |
-| B      | Inspect AI                  | _TODO_: 公式資料と検証に基づき記録 | _TODO_: 接続方法と運用上の制約を確認          |
-| C      | DeepEval                    | _TODO_: 公式資料と検証に基づき記録 | _TODO_: 接続方法と運用上の制約を確認          |
-| D      | Vitest を中心とする独自構成 | _TODO_: 既存資産との共存を評価     | _TODO_: 対話継続と agent 接続の実装負担を評価 |
+| 選択肢 | 内容                        | 利点                                                                                                                                           | 懸念                                                                                                                                                                                                   |
+| ------ | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A      | Promptfoo                   | Node で動き、設定は YAML。複数ターンの模擬利用者（`promptfoo:simulated-user`）、反復実行と合格率、モデルによる採点、JS の検査を書ける          | 模擬利用者は、相手が OpenAI 形式の会話を受け取る前提。CLI のオーケストレーターには、会話を続ける JS の custom provider を自作する。未確認: exec の script provider へ会話の履歴を渡せるか              |
+| B      | Inspect AI（Inspect SWE）   | Claude Code・Codex CLI を Docker の sandbox で動かして評価できる。実 agent の評価にいちばん強い                                                | Python と Docker が前提。agent bridge で agent のモデル通信を Inspect に回すため API キーの課金になり、契約中の CLI のログインで動かす運用と合わない可能性がある。既存の TypeScript・Vitest から離れる |
+| C      | DeepEval                    | Python。会話の模擬（ConversationSimulator）と会話向けの採点指標（TurnRelevancy・ConversationCompleteness など）がそろう                        | モデルによる採点が中心で、ファイル・Git の状態の検査は自分で書く。未確認: SaaS（Confident AI）へ送らない設定                                                                                           |
+| D      | Vitest を中心とする独自構成 | 既存の統合テスト（一時 Git リポジトリ、偽 agent の E2E）の仕組みをそのまま使える。個票・イベント・Git の状態の検査を既存の読み取り処理で書ける | 模擬利用者とモデルによる採点はない。利用者の発言を固定したシナリオになる。実 agent を呼ぶため時間と費用がかかり、結果も毎回同じにはならない                                                            |
+
+SpecDojo で重い観点は、承認の前に状態が変わっていないことと、実行の後の設定・個票・イベント・Git の状態の正しさである。どちらも実オーケストレーターを一時リポジトリで動かし、ファイルと Git を機械的に照らす検査で、モデルに指示文を渡して出力を採点する評価（A・C の主な用途）では確かめられない。対話の出来の採点はその次の層とする。
 
 ## 3. 決定内容
 
-_UNDECIDED_: 比較調査後に採用案を選定する。起票時点で採用するツールは決定していない。
+_UNDECIDED_: 最小検証の結果を見て決める。暫定のお勧めは次のとおり（2026-11-15、利用者がこの進め方を承認）。
+
+- 土台は D とする。Quick Start の代表的な対話を利用者の発言を固定したシナリオにし、実オーケストレーターを一時リポジトリで動かす。承認の発言の前に個票・イベント・Git が変わっていないこと、承認の後に期待どおりの個票・イベント・commit があることを機械的に確かめる。実 agent を使うため `npm test` とは分けた任意のテスト群とし、N 回流して合格率を記録する。
+- 対話の出来（確認の仕方、提案の分かりやすさ）を採点したくなった時点で A を足す。Node のため同じリポジトリに置ける。
+- B は実 agent の評価には強いが、Python・Docker・API 課金の運用が重いため採らない。C は状態の検査が弱いため採らない。
 
 ## 4. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- _TODO_: 最小検証の結果を受けて記載する。暫定の理由は「検討した選択肢」と「決定内容」のとおり。
 
 ## 5. 承認
 
@@ -78,7 +84,7 @@ _UNDECIDED_: 比較調査後に採用案を選定する。起票時点で採用�
 | ---------- | ---------------------------------------------------------------------------------- |
 | 影響範囲   | SpecDojo の対話型オーケストレーターの評価方法とテスト構成                          |
 | 必要な対応 | 比較調査、採用案と理由の選定、最小検証と導入方針の整理。導入・実装は後続作業とする |
-| 追跡先     | PJR-V5AZ。選定後の導入・実装項目は未起票                                           |
+| 追跡先     | PJR-V5AZ。最小検証は PJR-FNB7（D で Quick Start のシナリオを 1 本流す）            |
 
 ## 7. 関連ドキュメント
 
@@ -88,3 +94,8 @@ _UNDECIDED_: 比較調査後に採用案を選定する。起票時点で採用�
 - Promptfoo: Simulated User（<https://www.promptfoo.dev/docs/providers/simulated-user/>）
 - Inspect AI: Using Agents（<https://inspect.aisi.org.uk/agents.html>）
 - DeepEval: Multi-Turn Test Case（<https://deepeval.com/docs/evaluation-multiturn-test-cases>）
+- Promptfoo: Custom script provider（<https://promptfoo.dev/docs/providers/custom-script>）
+- Promptfoo: Chat conversations / threads（<https://promptfoo.dev/docs/configuration/chat>）
+- Inspect AI: Agent Bridge（<https://inspect.aisi.org.uk/agent-bridge.html>）
+- Inspect SWE: Claude Code（<https://meridianlabs-ai.github.io/inspect_swe/claude_code.html>）
+- DeepEval: Conversation Simulator（<https://www.deepeval.com/docs/conversation-simulator>）

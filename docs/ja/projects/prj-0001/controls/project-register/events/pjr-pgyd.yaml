@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f9b7cec9daee49b889387193dfc86ed4
+  ts: "2026-11-15T14:26:37Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: deferred
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: deferred
+    - field: title
+      from: ""
+      to: 統合専用 actor（GitHub App と Actions）で develop へ統合する仕組みを作る
+    - field: description
+      from: ""
+      to: PJR-11EX の C を実装する。複数人の運用に移る準備として着手する
+    - field: input
+      from: ""
+      to: '["PJR-11EX で、統合専用 actor を GitHub Actions 上の GitHub App とし、runner は exec・記帳の branch を push するだけにすると決めた（2026-11-15、利用者が承認）","作業: runner の統合を手元の merge から branch の push へ変える。Actions の workflow で層 3 の許可リストと必須の検査を確かめて develop へ --no-ff で merge する。App の権限を exec の merge と記帳だけに絞る。claim のイベントを先に develop へ入れ、push の競合を claim の失敗とみなす","着手の時期: 単独運用の間は今の方式のままとし、複数人の運用に移る準備として deferred から戻す（2026-11-15、利用者が推奨のとおり承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: derived_from
+      from: ""
+      to: '["PJR-11EX"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
