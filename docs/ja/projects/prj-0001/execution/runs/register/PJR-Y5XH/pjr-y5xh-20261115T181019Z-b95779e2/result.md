@@ -4,15 +4,17 @@ specdojo:
   type: exec-result
   task_id: PJR-Y5XH
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-Y5XH/pjr-y5xh-20261115T181019Z-b95779e2/plan.md
   started_at: "2026-11-15T18:10:42.348Z"
+  completed_at: "2026-11-15T18:23:03.671Z"
   agent: opus-executor
   approach: fully-guided
   targets:
     - prj-0001:pm-raci
+  block_reason: "executor reported incomplete: pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行で…"
 ---
 
 # Edit Result
