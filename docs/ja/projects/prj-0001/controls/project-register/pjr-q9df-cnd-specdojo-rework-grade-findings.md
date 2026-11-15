@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-q9df-cnd-specdojo-rework-grade-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T11:12:33Z"
+  completed_at: "2026-11-15T23:08:58Z"
+  conclusion: cnd-specdojo を手直しし、再 grade で pass（100 点・指摘 0 件）
   commit_type: docs
   commit_scope: cnd
   approach: fully-guided

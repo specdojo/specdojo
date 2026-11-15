@@ -76,3 +76,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_226c727a0d614704ae93c54d76aafb56
+- v: 1
+  id: reg_2b2f66e8f5794c1e921926b1c7dc97d7
+  ts: "2026-11-15T23:08:58Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: cnd-specdojo を手直しし、再 grade で pass（100 点・指摘 0 件）
+  previous_event_id: reg_7eaa8d26e0e14b5397efe3840fa68274
