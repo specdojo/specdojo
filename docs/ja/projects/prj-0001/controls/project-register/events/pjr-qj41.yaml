@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_11b784900a2c42b1b80452bbca6bbf7f
+  ts: "2026-11-15T09:31:55Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ifx-index の型を YAML から Markdown に変える
+    - field: description
+      from: ""
+      to: ifx-index の正本を Markdown にし、型一式と代表をそろえて移す
+    - field: input
+      from: ""
+      to: '["indie の依頼（2026-11-15）: ifx-index は YAML のためレビューがしにくい。Markdown に変換したい","対象は ifx-index の型一式（rulebook・recipe・sample・template）と、prj-0001 の代表 docs/ja/product/020-external-interface-specs/ifx-index.yaml"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
