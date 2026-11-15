@@ -35,27 +35,33 @@ DVNV と ED0K の組み合わせで pipeline-e2e の統合テストが落ち、d
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                                    |
+| ------------ | ------------------------------------------------------------------------------------------------------- |
+| スコープ     | schedule の `--resume-from executor` の再開前の同期（`src/exec/run/lifecycle-commands.ts`）と同期の関数 |
+| スケジュール | develop の test-integration が落ちる間、0.8.0 の phase 2 の run がすべて止まる                          |
+| コスト       | 小さい（同期の関数に exec branch 側を採るパスの指定を足す）                                             |
+| 品質         | 統合の段で止まった schedule タスクを executor から再開できない                                          |
+| 関係者       | DEV（runner の保守）                                                                                    |
 
 ## 4. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                                       |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | block の後の記帳 commit が統合先へ入れた run の記録と、exec branch 側の同じ記録が両側の追加として競合し、再開前の同期が衝突として止まる                                    |
+| 対応策   | 再開前の同期で、そのタスク自身の run の記録（`runs/schedule/<task>/` 配下）の競合は exec branch 側を採る                                                                   |
+| 依存事項 | [[prj-0001:pjr-dvnv-exec-commit-trailing-records]]、[[prj-0001:pjr-ed0k-exec-resume-executor-from-integrate]]                                                              |
+| 完了条件 | E2E の「resumes the executor after a failed integration, syncing the integration target」を含む `npm run test:integration` が通る。register の再開に同じ穴がないか確かめる |
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `syncWorktreeWithIntegrationTarget` に `oursPaths`、`syncTaskWorktreesWithIntegrationTargets` に `projectOursPaths` を足した。指定したパスの競合は exec branch（HEAD）の内容を採る。
+- `prepareExecutorResumeFromIntegration` は、exec branch と統合先の両方にあるタスク自身の run の記録（`branchOwnedRunRecordPaths`）を `projectOursPaths` に渡す。
+- exec branch 側を採る理由: 統合の merge も同じ記録を exec branch 側で解決しており、向きが揃う。worktree の未 commit の記録（block の result）は exec branch の HEAD を基に控えてあるため、取り込みの後もそのまま戻せる。取り込み後は統合先の側に差分が無いため、再開した executor が result を書き直しても後の統合の merge は競合しない。
+- register の再開: DVNV の記帳 commit は `runs/schedule/` 配下だけを選ぶ。register の plan・result・個票・イベントは bookkeeping のパスとして既に `projectTheirsPaths` で統合先の側を採っているため、同じ穴は無い。
+- 確認: 上記の E2E、`trailing-records.integration.test.ts`、`register-resume.integration.test.ts`、`task-repos.integration.test.ts`（exec branch 側を採る競合の解決を追加）を単独で実行して通った。全件の `npm run test:integration` は親 runner の検証で確かめる。
+- 再発防止: 記帳 commit が統合先へ入れる記録の範囲を変える場合は、再開前の同期と統合の merge の競合解決の両方を見直す。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-dvnv-exec-commit-trailing-records]]
+- [[prj-0001:pjr-ed0k-exec-resume-executor-from-integrate]]
