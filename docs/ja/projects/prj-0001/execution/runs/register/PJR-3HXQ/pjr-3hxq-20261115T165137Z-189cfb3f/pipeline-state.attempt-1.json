@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-3HXQ",
+  "run_id": "pjr-3hxq-20261115T165137Z-189cfb3f",
+  "updated_at": "2026-11-15T17:15:00.355Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T17:08:11.188Z",
+      "completed_at": "2026-11-15T17:15:00.355Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-3HXQ/pjr-3hxq-20261115T165137Z-189cfb3f/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma26-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-3HXQ/pjr-3hxq-20261115T165137Z-189cfb3f/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-3HXQ/pjr-3hxq-20261115T165137Z-189cfb3f/result.md"
+  }
+}

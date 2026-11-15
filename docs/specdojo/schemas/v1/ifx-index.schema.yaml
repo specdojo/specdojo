@@ -1,0 +1,142 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: External System Interface List Schema
+type: object
+additionalProperties: false
+
+required:
+  - id
+  - type
+  - title
+  - status
+  - rulebook
+  - interfaces
+
+$defs:
+  idRef:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-]*$"
+    description: "英小文字・数字・ハイフンのみ。先頭は英小文字または数字。"
+  idRefArray:
+    type: array
+    items:
+      $ref: "#/$defs/idRef"
+    uniqueItems: true
+  semver:
+    type: string
+    # SemVer 2.0.0（prerelease / build metadata も許容）
+    pattern: "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z-.]+)?(?:\\+[0-9A-Za-z-.]+)?$"
+
+properties:
+  id:
+    type: string
+    pattern: "^(?:[a-z][a-z0-9-]*:)?ifx-index(?:-[a-z0-9-]+)?$"
+    description: "一意なID（ifx-index または ifx-index-...）。プロジェクトの修飾（例: prj-0001:ifx-index）を付けてよい"
+  type:
+    type: string
+    const: "api"
+  title:
+    type: string
+    minLength: 1
+  status:
+    type: string
+    enum: ["draft", "ready", "deprecated"]
+  rulebook:
+    type: string
+    pattern: "^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$"
+    description: "準拠する rulebook の ID。該当がない場合は none。"
+  version:
+    $ref: "#/$defs/semver"
+  owners:
+    type: array
+    items:
+      type: string
+      pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+    uniqueItems: true
+
+  tags:
+    type: array
+    items:
+      type: string
+      minLength: 1
+    uniqueItems: true
+
+  part_of:
+    $ref: "#/$defs/idRefArray"
+    default: []
+  based_on:
+    $ref: "#/$defs/idRefArray"
+    default: []
+  implements:
+    $ref: "#/$defs/idRefArray"
+    default: []
+  tests:
+    $ref: "#/$defs/idRefArray"
+    default: []
+  supersedes:
+    $ref: "#/$defs/idRefArray"
+    default: []
+
+  interfaces:
+    type: array
+    default: []
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - source
+        - target
+        - direction
+        - kind
+        - format
+        - timing
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: "連携名"
+        source:
+          type: string
+          minLength: 1
+          description: "連携元（システム/コンテナ/コンポーネントなど）"
+        target:
+          type: string
+          minLength: 1
+          description: "連携先（外部システム名など）"
+        direction:
+          type: string
+          enum:
+            - source_to_target
+            - target_to_source
+            - bidirectional
+          description: "方向（source/targetに基づく）"
+        kind:
+          type: string
+          enum:
+            - API
+            - ファイル
+            - メッセージ
+            - コマンド
+          description: "連携の種別"
+        format:
+          type: string
+          enum:
+            - CSV
+            - JSON
+            - XML
+            - その他
+            - TBD
+          description: "データ形式（限定列挙）"
+        timing:
+          type: string
+          minLength: 1
+          description: "連携タイミング"
+        error_handling:
+          type: string
+          description: "エラー処理・備考"
+        spec_ref:
+          type: string
+          pattern: "^(?:[a-z][a-z0-9-]*:)?(?:ifx-api|ifx-file|ifx-msg|ifx-cmd)-[a-z0-9-]+$|^TBD$"
+          description: >-
+            詳細仕様ドキュメントの id（ifx-api-/ifx-file-/ifx-msg-/ifx-cmd-...）または TBD

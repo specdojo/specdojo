@@ -1,0 +1,16 @@
+4 つの template（`br-template.md`・`bes-template.md`・`bac-template.md`・`opr-template.md`）の `frontmatter_template` の id を `_PROJECT_ID_:_LOCAL_ID_` から `_LOCAL_ID_` に直しました。ただし、完了条件の一つである `grade run --target kata` による確認はまだ行っていないため、タスクは未完了です。
+
+- **生成される id:** prj-0001 の既存の文書（`br-task-selection-strategy`、`bes-task-ready-selected`、`bac-task-completion`、`opr-agent-cli-update`）と同じローカル id の形になります。先に直した sysd-index・sysd-cross-cutting-policy の template とも揃いました。
+- **template 自身の status:** 変えていません（br・bes は `ready`、bac・opr は `draft` のまま）。
+- **個票:** 作業内容の表と対応結果を更新しました。1 行目（template の修正）は `done`、2 行目（grade での確認）は `open` のままです。
+- **検証:** 変更した 5 ファイルに prettier をかけ、変更があったのは個票だけでした。`validate:history-links` の出力末尾は `valid` でしたが、終了コードは見ていません。lint・型チェック・テストは、このあと親 runner が実行します。
+
+迷った点は次のように決め、個票に理由も書きました。
+- `based_on: _BASED_ON_` は変えていません。完了条件が求めているのは id だけだからです。
+- template-authoring-standard の例 `_PROJECT_ID_:_LOCAL_ID_` も変えていません。プロジェクト管理文書の template では今も正しい書き方だからです。
+
+残っている作業は、4 つの型の `grade run --target kata` です。agent を起動して利用枠を使うため、この sandbox では実行していません。人が実行し、id の書き方の指摘が出ないことを確かめる必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"br・bes・bac・opr の template の `frontmatter_template` の id を `_LOCAL_ID_` に直し、個票の作業内容と対応結果を更新した。完了条件の一つ、4 つの型の `grade run --target kata` は agent を起動して利用枠を使うため実行しておらず、人による実行が残る。","handoff":["未完了: 4 つの型（br・bes・bac・opr）の `grade run --target kata` は agent を起動して利用枠を使うため、executor では実行していない。人が実行し、id の書き方の指摘が出ないことを確かめる。","決めたこと: `based_on: _BASED_ON_` は変えなかった。完了条件が求めているのは id だけのため。","決めたこと: template-authoring-standard の予約済みプレースホルダ表の例 `_PROJECT_ID_:_LOCAL_ID_` は変えなかった。プロジェクト管理文書の template では今も正しい書き方のため。"],"validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-8zx8-template-local-id-br-bes-bac-opr.md docs/ja/specdojo/templates/br-template.md docs/ja/specdojo/templates/bes-template.md docs/ja/specdojo/templates/bac-template.md docs/ja/specdojo/templates/opr-template.md","status":"passed","summary":"変更した 5 ファイルを整形した。template 4 件は変更なし、個票は表の列幅を揃えた"},{"command":"npm run validate:history-links","status":"passed","summary":"出力の末尾は valid（終了コードは確認していない）"},{"command":"specdojo grade run --target kata","status":"requires_human","summary":"br・bes・bac・opr の 4 つの型を grade し、id の書き方の指摘が出ないことを人が確かめる（agent を起動して利用枠を使う）"}]}
+</specdojo_executor_evidence>
