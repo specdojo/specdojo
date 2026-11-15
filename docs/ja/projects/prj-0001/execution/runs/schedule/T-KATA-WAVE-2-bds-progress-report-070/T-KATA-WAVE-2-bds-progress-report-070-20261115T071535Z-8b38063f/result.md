@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-2-bds-progress-report-070
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-2-bds-progress-report-070/T-KATA-WAVE-2-bds-progress-report-070-20261115T071535Z-8b38063f/plan.md
   started_at: "2026-11-15T07:15:38.005Z"
+  completed_at: "2026-11-15T08:23:09.194Z"
   agent: luna-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物 `bds-progress-report` について、`bds-rulebook` の必須章および内容要件、ならびに `done_criteria` を満たしていることを確認し、既存記述を尊重して変更なしと判断した。
+- 指示に基づき `npx prettier --write` を実行したが、差分は発生しなかった。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result の「進め方と実践の型の適用」に記録する内容: bds-rulebook と bds-sample を確認し、既存成果物が必須章と内容の要件を満たしているため変更不要と判断した。未作成の `bds-index` は既存のメモ・将来課題に記録済み。本文の 2 か所の `_ASSUMPTION_`（`rtn-weekly-report` が今 `enabled: false` であることと、記録が欠けたときに止める扱いの根拠）は、根拠が揃うまで論点として残す。
+- 確認した根拠: docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md、docs/ja/product/040-system-design/sysd-job-execution.md、docs/ja/projects/prj-0001/020-project-definition/prj-overview.md、docs/ja/specdojo/rulebooks/bds-rulebook.md、docs/ja/specdojo/samples/bds-sample.md、src/routine/storage.ts、src/routine/definition.ts。template は fully-guided の指示に従い参照していない。
+- result の「進め方と実践の型の適用」に記録する内容: bds-rulebook と bds-sample を確認し、既存成果物が必須章と内容の要件を満たしているため変更不要と判断した。未作成の `bds-index` は既存のメモ・将来課題に記録済み。本文の 2 か所の `_ASSUMPTION_`（`rtn-weekly-report` が今 `enabled: false` であることと、記録が欠けたときに止める扱いの根拠）は、根拠が揃うまで論点として残す。
+- 対象 `bds-progress-report` は未変更: bds-rulebook の必須章と内容の要件、および `done_criteria`（利用目的・読み手・表示項目・出力の時期の記述、範囲の承認、記録から確かめるテストへの活用）を既存の記述が満たしている。`depends_on`（sysd-job-execution）や実装エビデンスとの矛盾も見つからなかったため、fully-guided の既存記述尊重の方針に従い変更不要と判断した。prettier でも差分は出なかった。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+fully-guided

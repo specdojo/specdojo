@@ -154,4 +154,10 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-15）
+
+- 前回は evidence の validations に、親 runner が流す検証を 1 行にまとめた `not_run` を書き、runner が「executor validation failed or not run」と判定して止まった（PJR-Q2AT）。親 runner が流す検証は validations に書かない。
+- `npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md` を流し、結果を validations に `passed` または `failed` で書く。流せない場合は理由を書く。
+- 成果物の中身は、前回の変更をそのまま使う。追加で直す必要がなければ変えない。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
