@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: ARC
@@ -51,7 +51,18 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+実施内容（2026-11-16、ARC / executor）:
+
+- `SF-ROUT-02`（ジョブ実行）は意味を変えずに残し、`P-06`（ジョブ定義）に当たる定義の検証・表示を `SF-ROUT-03`（ジョブ定義管理、CLI `job`）として新たに採番した。判断: 機能 ID の意味を変えない規則（[[specdojo:sf-index-rulebook]]）を守るため、行を分けて新 ID にした。実行の入口は CLI コマンドリファレンスの `job` 節に従い `exec run --job` とし、`SF-ROUT-02` の CLI を `exec` に直した。ジョブの実行だけを扱う業務プロセス領域はないため、起動元の `P-05` へ対応付け、_ASSUMPTION_ として `Q-01` の照合に含めた。
+- 全機能 ID を業務プロセス領域・代表の BPS・テスト対象・検証手段（単体／統合）と照らす表（「業務領域・テスト対象との照合」）を足した。検証手段はテスト仕様を作るときの起点の区分で、既存テストの有無は示さない。
+- `Q-02` の「領域ごと」は機能領域ごとと解釈した（PO の決定文が、各行の BPS がすべて依存にあるとは限らないとしているため）。この解釈で照らすと、機能領域 `ORCH`（`P-14`）だけ代表の BPS が `depends_on` にない。成果物カタログの変更は本タスクの対象外のため、照合表で不一致と示し、`Q-02` に完了条件と判断時点（確定の前）を足した。
+- `SF-EXEC-01` に `P-11` の [[prj-0001:bps-task-completion]] を、`SF-DEPR-01` に保管の `bps-deprecation-storage` を参照先として足した（カタログの領域・概要と一致させるため）。
+- 読者に加えて保守担当（ARC）、確認の記録先、公開範囲、PO の承認前の確認を目的と対象範囲に足した。未決事項に影響する機能・判断時点・完了条件・追跡先の列を足した。PO の判断（2026-11-15）と留保の追跡先 PJR-AK5V は消さずに残した。`status` は `draft` のまま。
+
+残課題:
+
+- `ORCH` の代表の BPS をカタログの `depends_on` に加えるか対象外とするかを PO が決める（PJR は未起票。PM が起票する）。
+- 再 grade（`grade run --target deliverable`）は runner または人が実行する。BPS 本文との照合（`Q-01`・`Q-03`）は PJR-AK5V の留保として残る。
 
 ## 6. 関連ドキュメント
 

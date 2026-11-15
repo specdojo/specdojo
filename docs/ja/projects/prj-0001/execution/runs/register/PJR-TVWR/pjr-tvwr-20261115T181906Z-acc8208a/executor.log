@@ -1,0 +1,30 @@
+grade の指摘 24 件は、すべて対象文書（`prj-assumptions-constraints-dependencies.md`）に反映するか、未決の論点（_TODO_）として文書内に残しました。ただし、完了条件のひとつである `grade run --target deliverable` による grade のやり直しは実行していません。agent CLI と利用枠を使うため sandbox からは実行できず、人かオーケストレーターに実行をお願いする必要があります。
+
+**変更ファイル**
+- `docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-tvwr-prj-assumptions-constraints-dependencies-rework-grade-findings.md`（「対応結果」を記入）
+
+**主な修正**
+- **status を `draft` に戻しました。** major の指摘が 15 件あり、公開範囲を決定済みと書いていた誤りも直したためです。`ready` へ戻すかは人が 140 で判断します。
+- **ACD-C04 を新設しました。** 個人情報・秘密情報・非公開の組織情報を公開しない、という制約です。憲章はこの制約をスコープへ委譲していますが、スコープ側に定義がありませんでした。検知、公開保留、非公開化・削除・匿名化、再レビュー、`PO` の判断までの手順を書いています。
+- **ACD-D02 は「一部成立」に改めました。** ライセンス（MIT）は決定済みですが、初期公開範囲は未決で、その影響と次の対応を書いています。
+- **ACD-D03 は公開先と変更提案の受付方法に絞り、「成立済み」としました。** 「貢献導線」と「変更提案の受付方法」は同じものなので、ACD-D03 を正としてまとめています。
+- **ACD-C03 は廃止しました。** 憲章の「権限委譲」「本格実行開始の GO / Not GO 判断」と同じ内容だったためです。`PM` が承認証跡を確認する運用は章の冒頭に残し、ID は再利用しません。
+- **ACD-D01 に参照先と判定時期を足しました。** 参照先は成果物カタログ、成功基準と受入条件、品質管理計画です。
+- **ACD-A02 に、プロジェクト管理計画の代表試行の開始条件を足しました。** 条件を満たすまで保留する作業も書いています。
+- **「監視・変更管理」の章に記録と確認の分担を足しました。** 変化を課題・リスク・変更要求・決定記録のどれとして記録し、誰に報告するかを分けました。改訂・廃止のときに `ARC` と `QE` が何を確認するかも書いています。
+
+**未解決のまま残した点**
+- ACD-D04 が求める検証コマンドを定めた文書は、宣言された資料からは特定できず、推測で書かずに _TODO_ にしました。
+- 初期公開範囲の決定をどの登録簿項目で追跡するか（`PJR-0120` で続けるか、新しく登録するか）も _TODO_ です。
+- `PJR-0120`・`PJR-0121` の個票本文は参照範囲の外なので読んでいません。決定内容は grade の指摘と既存の記述に従っています。
+
+**検証結果**
+- `npm run validate:catalog` と `npm run validate:history-links` はどちらも通りました。
+- 変更した 2 ファイルは prettier の整形確認も通りました。
+- `npm run lint:md`・`npm run lint:fm` は、この後に親 runner が実行します。
+- `controls/project-register/events/pjr-tvwr.yaml` と `pipeline-state.json` にも変更がありますが、私は編集していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"grade の指摘 F001〜F024 を取り込み、前提・制約・依存関係を更新した。主な変更は、公開情報の制約 ACD-C04 の新設、ACD-D02/D03 の決定状態の是正と用語の統一、ACD-C03 の廃止、ACD-D01・ACD-A02 への参照追加、監視・変更管理への記録区分と ARC/QE の確認責任の追加。status は draft に戻し、個票の対応結果を記入した。grade のやり直しは sandbox では実行できないため人に申し送る。","handoff":["status: 本文を ready から draft に戻した。major の指摘が 15 件あり、公開範囲を決定済みと書いていた誤りも直したため、再 grade で確かめるまでは承認済みとして参照させない方がよいと判断した。ready へ戻すかは人が 140 で判断する。","grade run --target deliverable での grade のやり直しは agent CLI と利用枠を使うため executor の sandbox では実行していない。人またはオーケストレーターが実行し、結果を PJR-TVWR の対応結果に追記する。","ACD-D04（F012〜F014）: 検証コマンド、対象、期待結果、作業環境の変更時に再確認する範囲を定める正本は宣言された資料から特定できないため、_TODO_ を残した。ARC が正本を特定する（品質管理計画の検証方針を候補とする）。","ACD-D02: 初期公開範囲の決定を追跡する登録簿項目（PJR-0120 で続けるか新しく登録するか）が未定のため _TODO_ を残した。PM が決める。","ACD-C03 は憲章の「権限委譲」「本格実行開始の GO / Not GO 判断」と同じ内容のため廃止した。ID は再利用しない。PM が承認証跡を確認する責任は制約事項の章の冒頭に残した。","PJR-0120 と PJR-0121 の個票本文は宣言された参照範囲の外なので読んでいない。決定内容（MIT、GitHub + GitHub Pages、GitHub issue / pull request）は grade の指摘と既存の記述に従った。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（無関係な based_on の WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含めて違反なし"},{"command":"npx prettier --check","status":"passed","summary":"変更した 2 ファイルが整形済み"},{"command":"grade run --target deliverable","status":"requires_human","summary":"agent CLI と利用枠を使うため sandbox では実行できない。修正後の成果物を再 grade して、結果を個票の対応結果に書く"}]}
+</specdojo_executor_evidence>

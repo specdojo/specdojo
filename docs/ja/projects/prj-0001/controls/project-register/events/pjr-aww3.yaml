@@ -53,3 +53,32 @@
     - field: commit_scope
       from: ""
       to: kata
+- v: 1
+  id: reg_8e8e21c431b143879be226eee57c644c
+  ts: "2026-11-15T18:51:17Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_34cb59ca295b4a399059442c88dcda68
+- v: 1
+  id: reg_d94a5e0cfdfc41babde6a1fcfffc6925
+  ts: "2026-11-15T19:37:34Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_8e8e21c431b143879be226eee57c644c
