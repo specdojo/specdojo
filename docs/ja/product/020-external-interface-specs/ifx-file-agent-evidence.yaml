@@ -21,6 +21,9 @@ files:
     description: >-
       タスク実行における agent の変更内容、検証結果、最終メッセージ、および
       runner による親検証結果・差分サマリー・ログ参照を記録する構造化エビデンスファイル。
+      agent は evidence.json を直接書かず、最終応答の末尾に <specdojo_executor_evidence> タグで囲んだ JSON 報告
+      （final_message, completion_status, handoff, validations, target_coverage, condense_records）を出力する。
+      複数のタグがある場合は最後のものを採用する。
     writer: SpecDojo runner（agent の stdout に出力された <specdojo_executor_evidence> タグから抽出・正規化し、差分情報・親検証結果を結合して書き込む）
     reader: SpecDojo runner（検証合否判定、統合判定、reporter へのプロンプト注入、result.md 反映）
     format: JSON
@@ -65,7 +68,9 @@ transport:
   method: ローカルファイルシステム
   endpoint: <executionPath>/runs/<origin>/<itemId>/<runId>/
   frequency: タスク実行ごとに都度
-  atomic_write: 一時ファイル（.tmp）へ書き込み後に rename によるアトミック置換（renameSync）を実施
+  atomic_write: >-
+    pipeline-state.json と、runner が更新し直す evidence.json は一時ファイル（.tmp）へ書き込み後に rename によるアトミック置換（renameSync）を実施する。
+    executor 完了直後の evidence.json 初回書き込みは直接書き込みである。
 
 schema:
   json:
@@ -92,9 +97,14 @@ error_handling:
   malformed:
     evidence_json:
       action: >-
-        JSON 解析エラー（不正構文、必須フィールド欠落、上限バイト数超過等）を検知した場合、
-        エビデンス解析失敗のログを出力した上で構造化報告を空として扱い、成果物の編集内容は作業ディレクトリに保持する。
+        agent 報告タグ内の JSON 構文エラーを検知した場合は、構造化報告を空として扱い（final_message はタグ除去後の stdout 本文）、
+        成果物の編集内容は作業ディレクトリに保持する。
+        報告内の validations / target_coverage の要素のうち、必須項目欠落・status 値不正のものは個別に破棄し、件数・文字数の上限を超えた分は切り詰める。
+        condense_records が schema に適合しない場合は completion_status を incomplete として扱う。
         解析失敗のみを理由とした自動再試行は行わず、親検証と利用者の確認に引き継ぐ。
+        書き込み済みの evidence.json が読込時に JSON として解釈できない、または task_id / run_id / stage の整合検証に失敗した場合は、
+        再開判定において evidence なしとして扱う。
+      # _ASSUMPTION_: 読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、DEV が確認する。
     pipeline_state_json:
       action: >-
         JSON 構文不正またはスキーマ不整合を検知した場合は、パイプラインの二重実行や誤った段階からの再開を防ぐため、
