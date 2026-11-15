@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-2-bac-task-completion-045",
   "run_id": "T-KATA-WAVE-2-bac-task-completion-045-20261115T060035Z-63578e03",
-  "updated_at": "2026-11-15T06:14:56.540Z",
+  "updated_at": "2026-11-15T06:15:11.252Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-045/T-KATA-WAVE-2-bac-task-completion-045-20261115T060035Z-63578e03/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-15T06:14:56.540Z",
-      "completed_at": null,
+      "completed_at": "2026-11-15T06:15:11.252Z",
       "artifact_ref": null
     }
   },
