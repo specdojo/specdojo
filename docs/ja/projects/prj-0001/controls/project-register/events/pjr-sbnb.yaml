@@ -121,3 +121,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_57834214ebc540759e53bded741b18b8
+- v: 1
+  id: reg_060e6cf7d40f422ba6ac129f1d1298bf
+  ts: "2026-11-15T22:22:29Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: ifx-index の schema のファイル名を esil から ifx-index に改めた。大文字の略号 ESIL の残りは範囲外として残課題に記録
+  previous_event_id: reg_aada38d1aac24a0e88fdde2e31cab07a

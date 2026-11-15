@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-sbnb-ifx-index-schema-rename
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-15T09:33:55Z"
+  completed_at: "2026-11-15T22:22:29Z"
+  conclusion: ifx-index の schema のファイル名を esil から ifx-index に改めた。大文字の略号 ESIL の残りは範囲外として残課題に記録
   commit_type: refactor
   commit_scope: schema
 ---
