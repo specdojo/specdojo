@@ -41,10 +41,10 @@ ifx-file-agent-evidence を最新の grade の指摘で直す
 
 ## 4. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ |
-| --- | ----------------------------------- | ---- | ---- | ---- |
-| 1   | 最新の grade の指摘を取り込んで直す | ARC  | open | -    |
-| 2   | grade し直して結果を書く            | ARC  | open | -    |
+| No  | 作業                                | 担当 | 状態 | メモ                                                 |
+| --- | ----------------------------------- | ---- | ---- | ---------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す | ARC  | done | executor が実施（対応結果を参照）                    |
+| 2   | grade し直して結果を書く            | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 89 点） |
 
 ## 5. 対応結果
 
@@ -54,6 +54,8 @@ ifx-file-agent-evidence を最新の grade の指摘で直す
   - `pipeline-state.json` 破損時の停止（OD-02）: 再開用読込は破損時も「checkpoint なし」として返すため、仕様の「直ちに停止」と食い違う可能性がある。承認根拠がないため意図された仕様を残し、照合を留保とした。
 - 再 grade: executor の段では実行していない。`grade run --target deliverable` の実行と結果の記入は、この後の段に申し送る。
 - 残課題: OD-01・OD-02（PJR-TN43 で追跡する）。
+
+再 grade の結果（2026-11-16、orchestrator が実行）: needs-work 89 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `prj-0001.ifx-file-agent-evidence.yaml`。
 
 ## 6. 関連ドキュメント
 

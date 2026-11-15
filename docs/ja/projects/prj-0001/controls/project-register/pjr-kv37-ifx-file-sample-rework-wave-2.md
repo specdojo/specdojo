@@ -40,10 +40,10 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ |
-| --- | ----------------------------------- | ---- | ---- | ---- |
-| 1   | 最新の grade の指摘を取り込んで直す | ARC  | open | -    |
-| 2   | grade し直して結果を書く            | ARC  | open | -    |
+| No  | 作業                                | 担当 | 状態 | メモ                                                                    |
+| --- | ----------------------------------- | ---- | ---- | ----------------------------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す | ARC  | done | executor が実施（対応結果を参照）                                       |
+| 2   | grade し直して結果を書く            | ARC  | done | 2026-11-16 orchestrator が grade（ifx-file-sample は needs-work 83 点） |
 
 ## 5. 対応結果
 
@@ -57,6 +57,8 @@ specdojo:
   - ifx-index との関係（F011）: [[specdojo:ifx-index-sample]] は CLI 内部の取引記録を外部 I/F から除くと定めているので、`based_on` から外した。本契約へは CLI 仕様の入出力表から辿るという登録の境界を YAML コメントに書いた。
   - `current-tx.json` の `status` は `open` / `payment_requested` の 2 値とした。会計確定と取消の時点でファイルを削除する既存の記述に合わせた。
 - 残課題: `grade run --target kata` での再 grade は agent CLI の起動が要るため executor の sandbox では実行していない。runner または人間が再 grade し、結果をここに追記する。[[specdojo:clis-sample]] は今も 2 つのスキーマを「未同梱の架空参照名」としているので、表記をそろえるかは別の手直しで判断する。
+
+再 grade の結果（2026-11-16、orchestrator が実行）: ifx-file-sample は needs-work 83 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `specdojo.ifx-file-sample.yaml`。
 
 ## 6. 関連ドキュメント
 

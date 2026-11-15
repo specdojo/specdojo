@@ -40,15 +40,17 @@ Mermaid のまま残る図の枠を、overview・uc の template と同じ D2 �
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                               | 担当 | 状態 | メモ                              |
+| --- | ---------------------------------- | ---- | ---- | --------------------------------- |
+| 1   | cdfd-template の図の枠を D2 にする | BA   | done | executor が実施（対応結果を参照） |
 
 ## 5. 対応結果
 
 - [[specdojo:cdfd-template]] の「概念データフロー」の図の枠を、overview・uc の template と同じ classes 構成の D2 にした。全体概要の凡例が Mermaid を宣言した場合、記法を宣言しない場合、凡例がない場合は [[specdojo:cdfd-mermaid-rulebook]] に従う Mermaid へ置き換えるとコメントに書いた。
 - 図の直後の注記の _TODO_ を、共通凡例がある場合はその参照、ない場合は `specdojo:cdfd-mermaid-rulebook` の既定凡例に従うと分けて書けるようにした（grade の F001・F002）。
 - 残課題: [[specdojo:cdfd-rulebook]] の「プロセス領域」は各節を表だけにすると定めているが、template の各節には主要入力・主要出力・データストアの箇条書きが残っている。本タスクの範囲外のため、別の項目で直すかどうかを判断する。
+
+再 grade の結果（2026-11-16、orchestrator が実行）: cdfd-template は needs-work 94 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `specdojo.cdfd-template.yaml`。
 
 ## 6. 関連ドキュメント
 

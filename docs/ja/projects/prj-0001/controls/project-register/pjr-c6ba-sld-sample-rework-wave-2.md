@@ -39,10 +39,10 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ |
-| --- | ----------------------------------- | ---- | ---- | ---- |
-| 1   | 最新の grade の指摘を取り込んで直す | ARC  | open | -    |
-| 2   | grade し直して結果を書く            | ARC  | open | -    |
+| No  | 作業                                | 担当 | 状態 | メモ                                                               |
+| --- | ----------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | 最新の grade の指摘を取り込んで直す | ARC  | done | executor が実施（対応結果を参照）                                  |
+| 2   | grade し直して結果を書く            | ARC  | done | 2026-11-16 orchestrator が grade（sld-sample は needs-work 88 点） |
 
 ## 5. 対応結果
 
@@ -56,6 +56,8 @@ specdojo:
   - `data/summary/`・`tmp/`: CLIS に定義がないため `_ASSUMPTION_` の仮置きとした。再生成手順が整備されるまでは日次集計を削除しない。`receipts/` は CLIS に再出力の手段がないため、「再出力可能」という記述を取り下げた。
   - 商品の状態（F012）: STSD に合わせ、`sellable` は売場棚だけ、`return-pending` は検品不合格品だけとした。バックヤードの予備棚の行は削除した。売場から撤去した期限切れ・破損品は、STSD に対応する状態がないため撤去品保留箱（`_ASSUMPTION_`）に分け、STSD への状態追加を `change-request` に記録した。
 - 残課題: `grade run --target kata` による再 grade は executor の sandbox では実行できない。runner または人が実行し、sample が pass になったかをこの欄に追記する。
+
+再 grade の結果（2026-11-16、orchestrator が実行）: sld-sample は needs-work 88 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `specdojo.sld-sample.yaml`。
 
 ## 6. 関連ドキュメント
 

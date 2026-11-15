@@ -39,10 +39,10 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ |
-| --- | ----------------------------------- | ---- | ---- | ---- |
-| 1   | 最新の grade の指摘を取り込んで直す | UX   | done | -    |
-| 2   | grade し直して結果を書く            | UX   | open | -    |
+| No  | 作業                                | 担当 | 状態 | メモ                                                               |
+| --- | ----------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | 最新の grade の指摘を取り込んで直す | UX   | done | -                                                                  |
+| 2   | grade し直して結果を書く            | UX   | done | 2026-11-16 orchestrator が grade（bds-sample は needs-work 82 点） |
 
 ## 5. 対応結果
 
@@ -65,6 +65,8 @@ specdojo:
 残課題:
 
 - `grade run --target kata` での再 grade は実際の agent CLI を起動するため executor では実行していない。人間または runner が実行し、sample が pass になったかをここへ追記する。
+
+再 grade の結果（2026-11-16、orchestrator が実行）: bds-sample は needs-work 82 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `specdojo.bds-sample.yaml`。
 
 ## 6. 関連ドキュメント
 

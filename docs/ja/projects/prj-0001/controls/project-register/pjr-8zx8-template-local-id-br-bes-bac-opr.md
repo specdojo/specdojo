@@ -39,10 +39,10 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                         | 担当 | 状態 | メモ         |
-| --- | ---------------------------- | ---- | ---- | ------------ |
-| 1   | 4 つの template の id を直す | ARC  | done | -            |
-| 2   | 型を grade して確かめる      | ARC  | open | 人が実行する |
+| No  | 作業                         | 担当 | 状態 | メモ                                                                                   |
+| --- | ---------------------------- | ---- | ---- | -------------------------------------------------------------------------------------- |
+| 1   | 4 つの template の id を直す | ARC  | done | -                                                                                      |
+| 2   | 型を grade して確かめる      | ARC  | done | 2026-11-16 orchestrator が grade（br 98・bes 100・bac 100・opr 92 点で 4 つとも pass） |
 
 ## 5. 対応結果
 
@@ -51,6 +51,8 @@ specdojo:
 - 決めたこと: `based_on: _BASED_ON_` は今回の指摘（id の書き方）の対象外として変えなかった。理由は、完了条件が `id` だけを求めているためである。
 - 決めたこと: template-authoring-standard の予約済みプレースホルダ表の例 `_PROJECT_ID_:_LOCAL_ID_` は、プロジェクト管理文書の template では今も正しい書き方のため変えなかった。
 - 残課題: 4 つの型の `grade run --target kata` は agent を起動して利用枠を使うため、executor の sandbox では実行していない。人が実行し、id の書き方の指摘が出ないことを確かめる。
+
+再 grade の結果（2026-11-16、orchestrator が実行）: br 98・bes 100・bac 100・opr 92 点で 4 つとも pass。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `specdojo.br-template ほか 3 件.yaml`。
 
 ## 6. 関連ドキュメント
 
