@@ -134,7 +134,8 @@ function restoreOriginalWorktree(params: {
  * Merge `target` into the branch checked out at `cwd` (an exec worktree) with a merge commit.
  * Uncommitted changes (including untracked files) are stashed before the merge and restored
  * without restoring the old index. Conflicts on `theirsPaths` (repository-relative) take the
- * target side. Any other committed conflict aborts the merge. If restoring the stash conflicts,
+ * target side and conflicts on `oursPaths` keep the exec branch side. Any other committed conflict
+ * aborts the merge. If restoring the stash conflicts,
  * the merge commit is rolled back and the executor changes are restored on the original HEAD.
  */
 export function syncWorktreeWithIntegrationTarget(params: {
@@ -143,6 +144,7 @@ export function syncWorktreeWithIntegrationTarget(params: {
   target: string;
   message: string;
   theirsPaths?: readonly string[];
+  oursPaths?: readonly string[];
 }): IntegrationTargetSync {
   const { repo, cwd, target, message } = params;
   if (isAncestor(cwd, target, "HEAD")) return { repo, target, status: "up-to-date" };
@@ -171,13 +173,15 @@ export function syncWorktreeWithIntegrationTarget(params: {
   try {
     const conflicted = zeroSeparated(cwd, ["diff", "--name-only", "--diff-filter=U", "-z"]);
     const theirs = new Set(params.theirsPaths ?? []);
-    const unexpected = conflicted.filter((path) => !theirs.has(path));
+    const ours = new Set(params.oursPaths ?? []);
+    const unexpected = conflicted.filter((path) => !theirs.has(path) && !ours.has(path));
     if (unexpected.length > 0) {
       throw new Error(`${repo}: merge conflicts with ${target}: ${unexpected.join(", ")}`);
     }
     for (const path of conflicted) {
-      if (hasPathAt(cwd, target, path)) {
-        gitOutput(cwd, ["checkout", target, "--", path]);
+      const side = theirs.has(path) ? target : "HEAD";
+      if (hasPathAt(cwd, side, path)) {
+        gitOutput(cwd, ["checkout", side, "--", path]);
         gitOutput(cwd, ["add", "--", path]);
       } else {
         gitOutput(cwd, ["rm", "--quiet", "--force", "--", path]);
@@ -278,6 +282,8 @@ export function syncTaskWorktreesWithIntegrationTargets(params: {
   message: string;
   // project worktree からの相対パス。項目自身の記帳ファイルで、競合時は統合先の内容を採る。
   projectTheirsPaths?: readonly string[];
+  // project worktree からの相対パス。exec branch 側を最新とする記録で、競合時は exec branch の内容を採る。
+  projectOursPaths?: readonly string[];
   // PJR-6RN3: 前回の統合段で統合済み（merged / unchanged）と記録されたプロダクト名。
   integratedProducts?: ReadonlySet<string>;
 }): IntegrationTargetSync[] {
@@ -329,6 +335,7 @@ export function syncTaskWorktreesWithIntegrationTargets(params: {
       target: params.projectTarget,
       message: params.message,
       theirsPaths: params.projectTheirsPaths,
+      oursPaths: params.projectOursPaths,
     }),
   );
   return synced;
