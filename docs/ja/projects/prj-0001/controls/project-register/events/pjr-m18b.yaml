@@ -57,3 +57,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_b27bddd7722141eb973d317ab4fd6d02
+- v: 1
+  id: reg_2431cd072b6448d4ba37a21522d1645f
+  ts: "2026-11-15T14:05:00Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: validate-schema"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: validate-schema"
+  previous_event_id: reg_5d767e1fb4b845628e79eed195ff6bbf
