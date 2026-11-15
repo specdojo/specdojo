@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-w63q-bac-task-completion-design-reference
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-15T12:21:57Z"
+  completed_at: "2026-11-15T23:08:18Z"
+  conclusion: bac-task-completion を手直しし、再 grade で pass（100 点）
   commit_type: docs
   commit_scope: bac
   approach: fully-guided
