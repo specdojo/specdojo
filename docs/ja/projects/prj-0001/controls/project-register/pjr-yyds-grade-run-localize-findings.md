@@ -17,32 +17,39 @@ specdojo:
   commit_scope: grade
 ---
 
-# PJR-YYDS grade run でも finding の日本語の表示用の文を作る
+# PJR-YYDS grade の finding を最初から日本語で書かせる
 
 ## 1. 概要
 
-TypeScript 版の grade run は翻訳の段を持たず、表示用の message_ja が英語のまま入る
+grade の executor に finding の文と判定根拠を最初から日本語で書かせ、正本も日本語にする。英語で書かせてから翻訳する方式（PJR-27Y0）は、翻訳の段を持たない `grade run` では英語のまま残り、個票に英語の指摘が書かれる原因になった。
 
 ## 2. 入力
 
-- 2026-11-16、orchestrator が grade run --target deliverable / kata で再 grade した 20 件ほどの結果で、findings の `message_ja` が英語の正本のままだった。翻訳（grade translation-plan → agent run --by gemma26-translator → grade localize）は tools/grade/run-per-document.sh にだけ組み込まれており、grade run は行わない。個票に英語の指摘がそのまま書かれ、利用者から日本語にしてほしいと依頼があった
-- 作業: grade run が正本の結果を保存した後、run-per-document.sh と同じ翻訳の段（不合格の項目の 1 回の再試行と、失敗時に英語を表示用に残す扱いを含む）を流す。翻訳の agent は --translation-by で変えられるようにし、既定は gemma26-translator とする。翻訳が失敗しても grade そのものは失敗にしない
-- 完了条件: grade run の後の結果で、英語の finding に日本語の `message_ja` が付く。翻訳の agent が使えないときも grade の結果は保存され、警告が出る。command-reference の grade run の説明に翻訳の段が書かれている
+- 2026-11-16、orchestrator が `grade run --target deliverable / kata` で再 grade した 20 件ほどの結果で、findings の `message_ja` が英語の正本のままだった。翻訳（`grade translation-plan` → `agent run --by gemma26-translator` → `grade localize`）は `tools/grade/run-per-document.sh` にだけ組み込まれており、`grade run` は行わない。個票に英語の指摘がそのまま書かれた。
+- 利用者は、翻訳を足すのではなく、最初から日本語で記述するように変えることを選んだ（2026-11-16）。
+- 英語を正本にした理由（PJR-27Y0、2026-10-04）は、当時の一次評価のローカルのモデル（Ornith）が英語の方が判定が厳しく、中国語の字体が混ざらなかったため。いまの grade の executor は `sol-review-executor` などで、この前提は当てはまらない。
+- 前回の指摘の引き継ぎは正本の `message` の一致で行う（`src/grade/plan.ts` の手順 5、`src/grade/apply.ts`）。既存の結果には英語の正本が残っている。
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- grade の plan の指示（`src/grade/plan.ts`）が、判定根拠と新しい finding の `message` を日本語で書くよう求める。固有名詞・識別子・引用は原文を保ってよい。
+- 既存の英語の正本の finding が未解消のまま引き継がれる場合の扱いを決め、実装と文書に書く（例: 引き継ぎの照合は英語の原文で行い、再掲するときは日本語の `message_ja` を表示に使う、または日本語で書き直して新しい正本にする）。severity の引き継ぎが壊れないことを unit test で確かめる。
+- 日本語の正本では翻訳の段を流さない（`tools/grade/run-per-document.sh` と `grade run` の両方）。英語の finding が混じった場合だけ、既存の翻訳の段で表示用の `message_ja` を作る扱いを残すかを決めて記録する。
+- grade の文書（command-reference の grade、review-guide など）と PJR-27Y0 の方針の記述を新しい方針に合わせる。
+- `npm run check` と親の検証が通る。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                               | 担当 | 状態 | メモ |
+| --- | -------------------------------------------------- | ---- | ---- | ---- |
+| 1   | grade の plan の言語の指示を日本語に変える         | DEV  | open | -    |
+| 2   | 英語の既存の正本との引き継ぎの扱いを決めて実装する | DEV  | open | -    |
+| 3   | 翻訳の段の扱いを整理し、文書を更新する             | DEV  | open | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-27y0-grade-english-canonical-translation]]
