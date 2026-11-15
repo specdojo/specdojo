@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_105527e54fcb4c66bdda0de58614eb4a
+  ts: "2026-11-15T13:25:02Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo の CLI の表示とエラーを多言語化する（英語版 第 1 段）
+    - field: description
+      from: ""
+      to: CLI の表示とエラーを言語ごとのメッセージの表に分け、英語の表を用意する
+    - field: input
+      from: ""
+      to: '["PJR-BRCG の決定（indie が 2026-11-15）: コードの多言語化は、CLI の表示とエラーを言語ごとのメッセージの表に分けることから始める。agent への指示の文（plan の共通規約・exec-templates）の英語版は、英語で成果物を作りたい利用者が出た段階で足す","始める条件: 0.8.0（PJR-PMK6）を出した後"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: i18n-code
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-BRCG"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-PMK6"]'

@@ -115,7 +115,8 @@ specdojo:
 - 2026-11-15: 1.4 と 1.5 は推奨のとおり承認。A の 7 件を取り下げた。B・C の cdfd-uc-register（2 track）・clis-exec-commands・pm-roles・pm-plan・pm-organization を確定した。E の ifx-cmd-ai-provider-cli を留保付きで確定した（値は schema の都合で目印のまま置き、追跡先は close 済みの H90H から PJR-39AB・Y2X4 に付け替えた）。F と 1.5 の 7 件を差し戻し、手直しの todo を PJR-2C9W・PEJQ・W63Q・D948・JFRX・C6BA・3HXQ・KV37・6XWP として起票した。D の 4 件は grade し直し中。
 - 2026-11-15: 未 commit の実行記録は、ログの配置の変更が原因ではなく、runner が統合の後のイベントを 8 月から commit しておらず orchestrator が手で補っていた作業が引き継がれなかったためと分かった（PJR-DVNV に追記）。develop に commit されていない実行記録が 465 件たまっていたため、まとめて commit し、runner が統合の後の記録を commit する件を PJR-DVNV として起票した。
 - 2026-11-15: 6 のうち PJR-SJ3Q に回答した。実装の段の型は agent 向けのコーディング規約（言語別の instructions）の 1 種類だけにし、型の作成を PJR-981V として起票した。
-- 未決のまま: 6（問い・決定と PO の todo の残り 8 件）、8（成果のない worktree の削除）。D の 4 件は 2026-11-15 に grade し直したが完了条件を満たさず、差し戻して手直しの todo を PJR-Y5AC・Y5XH・TVWR・CPZH として起票した（本文は status: ready のまま）。
+- 2026-11-15: 6 のうち PJR-BRCG を決めた。日本語を正本とし、英語は更新をまとめて訳して追う。コードの多言語化（PJR-C0HH、0.8.0 の後）と文書・型の英語化（PJR-CYHR、設計までの型の確定の後）の 2 つの epic を起票した。
+- 未決のまま: 6（問い・決定と PO の todo の残り 7 件）、8（成果のない worktree の削除）。D の 4 件は 2026-11-15 に grade し直したが完了条件を満たさず、差し戻して手直しの todo を PJR-Y5AC・Y5XH・TVWR・CPZH として起票した（本文は status: ready のまま）。
 
 ## 4. 関連ドキュメント
 

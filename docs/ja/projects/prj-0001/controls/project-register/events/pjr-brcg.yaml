@@ -35,3 +35,22 @@
     - field: due
       from: ""
       to: "2026-12-31"
+- v: 1
+  id: reg_e0ae012f169c4b7f99e8163b6e3449b7
+  ts: "2026-11-15T13:25:27Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: 日本語を正本とし、英語は更新をまとめて訳して追う。コードの多言語化（PJR-C0HH、0.8.0 の後）と文書・型の英語化（PJR-CYHR、設計までの型の確定の後）の 2 つの epic で進める
+  previous_event_id: reg_53687a3f5ce84dc0a808fee6e507ea97
