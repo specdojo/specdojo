@@ -136,9 +136,7 @@ findings:
     message: >-
       Define how the rulebook’s date-and-sequence filename maps to the Job’s ISO-week-unique report identity so the PO
       can approve one consistent naming and update policy.
-    message_ja: >-
-      Define how the rulebook’s date-and-sequence filename maps to the Job’s ISO-week-unique report identity so the PO
-      can approve one consistent naming and update policy.
+    message_ja: ルールブックの日付と順序に基づくファイル名が、JobのISO週一意のレポート識別子にどのようにマッピングされるかを定義し、POが一貫した命名と更新ポリシーを承認できるようにする。
     cause:
       type: document
   - id: F002
@@ -149,9 +147,7 @@ findings:
     message: >-
       Identify the human PO as accountable for publication approval, while retaining PM responsibility for checking
       report content.
-    message_ja: >-
-      Identify the human PO as accountable for publication approval, while retaining PM responsibility for checking
-      report content.
+    message_ja: 公開の承認については人間であるPOを責任者とし、レポート内容の確認についてはPMの責任を維持することを明確にする。
     cause:
       type: document
   - id: F003
@@ -164,9 +160,7 @@ findings:
     message: >-
       Identify the reporting destination and which persistent issues should be transferred to the project register,
       including their tracking references.
-    message_ja: >-
-      Identify the reporting destination and which persistent issues should be transferred to the project register,
-      including their tracking references.
+    message_ja: レポートの出力先、および追跡リファレンスを含めて、プロジェクトレジスターに転送すべき永続的な問題を特定する。
     cause:
       type: document
   - id: F004
@@ -177,9 +171,7 @@ findings:
     message: >-
       Require a visible provisional status and actual data cutoff for reports created before the period end so readers
       can distinguish partial-period output from a completed weekly report.
-    message_ja: >-
-      Require a visible provisional status and actual data cutoff for reports created before the period end so readers
-      can distinguish partial-period output from a completed weekly report.
+    message_ja: 期間終了前に作成されたレポートについて、読者が期間中の部分的な出力と完了した週次レポートを区別できるように、表示可能な暫定ステータスと実際的なデータカットオフを必須とする。
     cause:
       type: document
   - id: F005
@@ -206,10 +198,7 @@ findings:
       Specify how a successful early Job Run can be intentionally executed again after the cutoff while preserving one
       report per period; the current runner skips completed Runs, so the stated update workflow cannot be implemented
       from these instructions alone.
-    message_ja: >-
-      Specify how a successful early Job Run can be intentionally executed again after the cutoff while preserving one
-      report per period; the current runner skips completed Runs, so the stated update workflow cannot be implemented
-      from these instructions alone.
+    message_ja: 1期間につき1つのレポートを維持しつつ、カットオフ後に成功した早期のJob Runを意図的に再実行する方法を指定する。現在のランナーは完了したRunをスキップするため、示された更新ワークフローはこの指示だけでは実装できない。
     cause:
       type: document
   - id: F007
@@ -224,9 +213,7 @@ findings:
     message: >-
       Add the successful-run regeneration gap to the impact inventory, identifying the Job identity and runner behavior
       that must change and how existing weekly report identities will be preserved.
-    message_ja: >-
-      Add the successful-run regeneration gap to the impact inventory, identifying the Job identity and runner behavior
-      that must change and how existing weekly report identities will be preserved.
+    message_ja: 成功したRunの再生成によるギャップを影響インベントリに追加し、変更が必要なJobの識別子とランナーの挙動、および既存の週次レポート識別子がどのように保持されるかを特定する。
     cause:
       type: document
   - id: F008
@@ -239,9 +226,7 @@ findings:
     message: >-
       Add or directly reference the applicable Markdown, Frontmatter, schema, and catalog validation commands, with
       expected success results and correction-and-rerun handling before finalization.
-    message_ja: >-
-      Add or directly reference the applicable Markdown, Frontmatter, schema, and catalog validation commands, with
-      expected success results and correction-and-rerun handling before finalization.
+    message_ja: 適用可能なMarkdown、Frontmatter、スキーマ、およびカタログの検証コマンドを、期待される成功結果および完了前の修正と再実行の処理とともに、追加または直接参照する。
     cause:
       type: document
   - id: F009
@@ -254,9 +239,7 @@ findings:
     message: >-
       Extend the next-period verification rule to check planned start or completion dates and reported deadlines against
       Schedule, including the rule for selecting tasks that belong to the next reporting period.
-    message_ja: >-
-      Extend the next-period verification rule to check planned start or completion dates and reported deadlines against
-      Schedule, including the rule for selecting tasks that belong to the next reporting period.
+    message_ja: 次期間の検証ルールを拡張し、計画された開始日または完了日、および報告された期限をScheduleと照合するようにする。これには、次の報告期間に属するタスクを選択するためのルールも含む。
     cause:
       type: document
   - id: F010
@@ -267,9 +250,7 @@ findings:
     message: >-
       Clarify that ongoing tasks and unresolved issues originating before the period remain eligible for the period-end
       snapshot and carryover sections, and that records before the period may be read to reconstruct those states.
-    message_ja: >-
-      Clarify that ongoing tasks and unresolved issues originating before the period remain eligible for the period-end
-      snapshot and carryover sections, and that records before the period may be read to reconstruct those states.
+    message_ja: 継続中のタスクや期間前に発生した未解決の問題は、引き続き期間終了時のスナップショットおよびキャリーオーバーのセクションの対象であり、それらの状態を再構成するために期間前のレコードを読み取ることができることを明確にする。
     cause:
       type: document
   - id: F011
@@ -300,9 +281,7 @@ findings:
     message: >-
       Add verified same-period regeneration after a successful early run as an activation prerequisite, or explicitly
       exclude early manual output until a supported replacement workflow is available.
-    message_ja: >-
-      Add verified same-period regeneration after a successful early run as an activation prerequisite, or explicitly
-      exclude early manual output until a supported replacement workflow is available.
+    message_ja: 成功した早期のRunの後に、検証済みの同一期間の再生成を有効化の前提条件として追加するか、サポートされる代替ワークフローが利用可能になるまで、早期の手動出力を明示的に除外する。
     cause:
       type: document
   - id: F013
@@ -317,9 +296,7 @@ findings:
     message: >-
       Define how operators identify and update the report for a given ISO week, including the filename mapping, before
       enabling scheduled operation.
-    message_ja: >-
-      Define how operators identify and update the report for a given ISO week, including the filename mapping, before
-      enabling scheduled operation.
+    message_ja: スケジュールされた操作を有効にする前に、ファイル名のマッピングを含め、オペレーターが特定のISO週のレポートをどのように特定し更新するかを定義する。
     cause:
       type: document
   - id: F014

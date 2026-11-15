@@ -132,9 +132,7 @@ findings:
     message: >-
       Identify the affected Schedule tasks and downstream gates, and assign PM responsibility for recording delay risks
       and replanning when pending quality decisions miss their required timing.
-    message_ja: >-
-      Identify the affected Schedule tasks and downstream gates, and assign PM responsibility for recording delay risks
-      and replanning when pending quality decisions miss their required timing.
+    message_ja: 影響を受けるScheduleタスクおよびダウンストリームのゲートを特定し、保留中の品質決定が必要なタイミングに間に合わない場合の遅延リスクの記録と計画の再作成について、PMの責任を割り当ててください。
     cause:
       type: document
   - id: F002
@@ -148,10 +146,7 @@ findings:
       Complete or reference the approved trial evidence format and post-release verification procedure before declaring
       DC-003 satisfied; the current table explicitly leaves these procedures undecided, so their required records and
       execution cannot yet be verified.
-    message_ja: >-
-      Complete or reference the approved trial evidence format and post-release verification procedure before declaring
-      DC-003 satisfied; the current table explicitly leaves these procedures undecided, so their required records and
-      execution cannot yet be verified.
+    message_ja: DC-003が満たされたと宣言する前に、承認されたトライアルエビデンスの形式およびリリース後の検証手順を完了させるか、参照してください。現在の表ではこれらの手順が未決定となっているため、必要な記録と実行をまだ検証できません。
     cause:
       type: document
   - id: F003
@@ -177,9 +172,8 @@ findings:
       observation periods; the current value-nonconformity row requires the representative-trial gate, which checks
       SC-01–SC-03 and AC-01 and therefore cannot establish recovery of post-release failures.
     message_ja: >-
-      Define re-evaluation conditions for failed SC-04–SC-06 using the post-release value gate and their applicable
-      observation periods; the current value-nonconformity row requires the representative-trial gate, which checks
-      SC-01–SC-03 and AC-01 and therefore cannot establish recovery of post-release failures.
+      post-release
+      valueゲートおよび該当する観察期間を使用して、不合格となったSC-04–SC-06の再評価条件を定義してください。現在の価値不適合の行はrepresentative-trialゲートを必要としていますが、これはSC-01–SC-03およびAC-01をチェックするものであるため、リリース後の失敗の回復を確立することができません。
     cause:
       type: document
   - id: F005
@@ -194,11 +188,7 @@ findings:
       evidence, its record location, and QE/PO re-evaluation at the affected SC-04–SC-06 checkpoint; returning every
       value failure to the representative-trial gate leaves the plan's later operating period without an applicable
       recovery workflow.
-    message_ja: >-
-      Extend the operational corrective workflow to post-release value failures by assigning preparation of corrective
-      evidence, its record location, and QE/PO re-evaluation at the affected SC-04–SC-06 checkpoint; returning every
-      value failure to the representative-trial gate leaves the plan's later operating period without an applicable
-      recovery workflow.
+    message_ja: 是正エビデンスの準備、その記録場所、および影響を受けるSC-04–SC-06のチェックポイントにおけるQE/POの再評価を割り当てることで、運用上の是正ワークフローをリリース後の価値の失敗まで拡張してください。すべての価値の失敗をrepresentative-trialゲートに戻すと、計画の後半の運用期間において適用可能な回復ワークフローがなくなります。
     cause:
       type: document
 done_criteria:

@@ -143,10 +143,9 @@ findings:
       state, plan, result, evidence, and task worktree. Assign the remaining SLD mapping update separately from
       genuinely pending dictionary and CDSD work so BA and ARC do not schedule duplicate registration.
     message_ja: >-
-      Update the planned-work row to remove registration work already completed in
-      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md: its section 2 already defines execution
-      state, plan, result, evidence, and task worktree. Assign the remaining SLD mapping update separately from
-      genuinely pending dictionary and CDSD work so BA and ARC do not schedule duplicate registration.
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md で既に完了している登録作業を削除するため、planned-work
+      の行を更新してください。同ファイルのセクション 2 では、すでに実行状態、計画、結果、エビデンス、およびタスクの worktree が定義されています。残りの SLD マッピングの更新を、実際に保留されている辞書および CDSD
+      の作業とは別に割り当て、BA と ARC が重複した登録をスケジュールしないようにしてください。
     cause:
       type: document
   - id: F002
@@ -165,11 +164,9 @@ findings:
       Definition. Map these records to cdsd-execution and distinguish other inventory categories that cdsd-planning does
       not currently define.
     message_ja: >-
-      Correct the CDSD attribution: this row assigns routine definitions and Job definitions to cdsd-planning.md, whose
-      section 2 defines only register entries and Schedule/milestones;
-      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md section 2 formally defines 定期処理定義 and Job
-      Definition. Map these records to cdsd-execution and distinguish other inventory categories that cdsd-planning does
-      not currently define.
+      CDSD の属性を修正してください。この行では、セクション 2 で登録エントリと Schedule/milestones のみを定義している cdsd-planning.md に、routine definitions と
+      Job definitions を割り当てています。docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md のセクション 2 では、正式に
+      定期処理定義 と Job Definition が定義されています。これらのレコードを cdsd-execution にマッピングし、cdsd-planning が現在定義していない他のインベントリ カテゴリと区別してください。
     cause:
       type: document
   - id: F003
@@ -189,11 +186,9 @@ findings:
       quality-evaluation results are absent from its ten-unit inventory. Use the current unit names and identify
       quality-result coverage separately instead of attributing it to an existing CDSD definition.
     message_ja: >-
-      Refresh the execution mapping and the related statements at lines 84, 87, and 105 against
-      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md sections 1.1 and 2: execution state, plan,
-      result, evidence, and task worktree are formal management units rather than additional candidates, while
-      quality-evaluation results are absent from its ten-unit inventory. Use the current unit names and identify
-      quality-result coverage separately instead of attributing it to an existing CDSD definition.
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md のセクション 1.1 および 2 に基づき、実行マッピングと 84、87、および 105
+      行目の関連する記述を更新してください。実行状態、計画、結果、エビデンス、およびタスクの worktree は、追加の候補ではなく正式な管理単位ですが、品質評価の結果はその 10
+      ユニットのインベントリには含まれていません。現在のユニット名を使用し、品質結果のカバー範囲を既存の CDSD 定義に帰属させるのではなく、別途特定してください。
     cause:
       type: document
 done_criteria:

@@ -134,9 +134,7 @@ findings:
     message: >-
       Break the BPS and CLI mapping review into trackable work with an owner, completion condition, and decision timing
       so PM can schedule and monitor it.
-    message_ja: >-
-      Break the BPS and CLI mapping review into trackable work with an owner, completion condition, and decision timing
-      so PM can schedule and monitor it.
+    message_ja: BPSとCLIのマッピングレビューを、PMがスケジュールを組み、監視できるように、担当者、完了条件、および決定のタイミングを含む追跡可能な作業に分割してください。
     cause:
       type: document
   - id: F002
@@ -153,9 +151,7 @@ findings:
     message: >-
       Record the dependency-gap resolution and its schedule or downstream-deliverable impact in a traceable project item
       so affected work can be managed.
-    message_ja: >-
-      Record the dependency-gap resolution and its schedule or downstream-deliverable impact in a traceable project item
-      so affected work can be managed.
+    message_ja: 依存関係のギャップの解決と、そのスケジュールまたは下流の成果物への影響を、追跡可能なプロジェクト項目に記録し、影響を受ける作業を管理できるようにしてください。
     cause:
       type: document
   - id: F003
@@ -172,9 +168,7 @@ findings:
     message: >-
       Add the PJR and Schedule tracking references for the open mapping, dependency, and deprecation issues so progress
       and decisions can be reported consistently.
-    message_ja: >-
-      Add the PJR and Schedule tracking references for the open mapping, dependency, and deprecation issues so progress
-      and decisions can be reported consistently.
+    message_ja: 進捗と決定を継続的に報告できるように、オープンなマッピング、依存関係、および廃止事項に対して、PJRとスケジュールの追跡リファレンスを追加してください。
     cause:
       type: document
   - id: F004
@@ -192,10 +186,7 @@ findings:
       The provisional BPS mappings and missing catalog dependencies prevent BA from confirming that the function list
       covers the agreed business scope; complete the source mapping or define and justify the representative-source
       policy.
-    message_ja: >-
-      The provisional BPS mappings and missing catalog dependencies prevent BA from confirming that the function list
-      covers the agreed business scope; complete the source mapping or define and justify the representative-source
-      policy.
+    message_ja: 暫定的なBPSマッピングと不足しているカタログの依存関係により、BAが、関数リストが合意されたビジネススコープを網羅していることを確認できなくなっています。ソースマッピングを完了するか、代表的なソースのポリシーを定義して正当化してください。
     cause:
       type: document
   - id: F005
@@ -212,12 +203,7 @@ findings:
       3.1–3.2, which place definition in P-05 and Job Run materialization and execution in the shared execution cycle;
       SF-ROUT-01 describes dispatch instead of definition handling, while SF-ROUT-02 assigns execution to P-05 on the
       assumption that no execution area exists.
-    message_ja: >-
-      Reconcile the P-05 assignment with `prj-0001:dct-business-model-bps`, which defines P-05 as producing a
-      periodic-execution definition, and `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md` sections
-      3.1–3.2, which place definition in P-05 and Job Run materialization and execution in the shared execution cycle;
-      SF-ROUT-01 describes dispatch instead of definition handling, while SF-ROUT-02 assigns execution to P-05 on the
-      assumption that no execution area exists.
+    message_ja: P-05の割り当てを、P-05を定期実行の定義を生成するものと定義している`prj-0001:dct-business-model-bps`、および、定義をP-05に、ジョブ実行の具体化と実行を共有実行サイクルに置いている`docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md`のセクション3.1–3.2と整合させてください。SF-ROUT-01は、定義の処理ではなくディスパッチを説明しており、一方でSF-ROUT-02は、実行領域が存在しないという仮定に基づいて、実行をP-05に割り当てています。
     cause:
       type: document
   - id: F006
@@ -234,11 +220,7 @@ findings:
       determination, conflict checking, PDCA request issuance, and execution-state tracking; the current row and its
       test target cover only provider launch and repository permissions, leaving those business responsibilities without
       an explicit function assignment or justified exclusion.
-    message_ja: >-
-      Reconcile SF-ORCH-01 with `prj-0001:dct-business-model-bps`, whose P-14 source covers operation-request
-      determination, conflict checking, PDCA request issuance, and execution-state tracking; the current row and its
-      test target cover only provider launch and repository permissions, leaving those business responsibilities without
-      an explicit function assignment or justified exclusion.
+    message_ja: SF-ORCH-01を、P-14のソースが操作リクエストの決定、競合チェック、PDCAリクエストの発行、および実行状態の追跡をカバーしている`prj-0001:dct-business-model-bps`と整合させてください。現在の行とそのテスト対象は、プロバイダーの起動とリポジトリの権限のみをカバーしており、これらのビジネス責任に対して明示的な関数割り当てや正当化された除外が行われていません。
     cause:
       type: document
   - id: F007
@@ -254,10 +236,7 @@ findings:
       Assign routine-definition validation and recording, plus automatic PDCA request issuance, conflict checking, and
       execution-state tracking, to explicit function boundaries or justify their exclusion; the current dispatch and
       provider-launch summaries do not let DEV determine the implementation scope of P-05 and P-14.
-    message_ja: >-
-      Assign routine-definition validation and recording, plus automatic PDCA request issuance, conflict checking, and
-      execution-state tracking, to explicit function boundaries or justify their exclusion; the current dispatch and
-      provider-launch summaries do not let DEV determine the implementation scope of P-05 and P-14.
+    message_ja: ルーチン定義の検証と記録、および自動的なPDCAリクエストの発行、競合チェック、実行状態の追跡を、明示的な関数の境界に割り当てるか、それらの除外を正当化してください。現在のディスパッチおよびプロバイダー起動のサマリーでは、DEVはP-05とP-14の実装スコープを判断できません。
     cause:
       type: document
   - id: F008
@@ -274,9 +253,7 @@ findings:
     message: >-
       Provide evidence that every business-process area is mapped to the agreed scope and test targets, resolving the
       dependency gap recorded in `Q-02` before claiming coverage.
-    message_ja: >-
-      Provide evidence that every business-process area is mapped to the agreed scope and test targets, resolving the
-      dependency gap recorded in `Q-02` before claiming coverage.
+    message_ja: すべてのビジネスプロセス領域が、合意されたスコープとテスト対象にマッピングされているという証拠を提供してください。その際、網羅性を主張する前に、`Q-02`に記録された依存関係のギャップを解決してください。
     cause:
       type: document
   - id: F009
@@ -293,9 +270,7 @@ findings:
     message: >-
       Resolve the missing BPS dependencies and provide a traceable check that the function list is covered by test
       targets, so omissions can be detected.
-    message_ja: >-
-      Resolve the missing BPS dependencies and provide a traceable check that the function list is covered by test
-      targets, so omissions can be detected.
+    message_ja: 不足しているBPSの依存関係を解決し、関数リストがテスト対象によって網羅されていることを追跡可能な方法で確認できるようにし、漏れを検出できるようにしてください。
     cause:
       type: document
   - id: F010

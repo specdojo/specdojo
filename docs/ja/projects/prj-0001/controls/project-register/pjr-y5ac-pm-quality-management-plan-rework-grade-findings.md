@@ -62,10 +62,10 @@ pm-quality-management-plan を最新の grade の指摘で直す
 - 判定は needs-work、93 点（前回は 75 点・指摘 19 件）。指摘は 5 件（major 4・minor 1）。
 - 完了条件の判定は 3 件中 2 件を満たす（未達: DC-003）。
 - major の指摘:
-  - F002（vp-qe-done-criteria）: Complete or reference the approved trial evidence format and post-release verification procedure before declaring DC-003 satisfied; the current table explicitly leaves these procedures undecided, so their required records and execution cannot yet be verified.
+  - F002（vp-qe-done-criteria）: DC-003が満たされたと宣言する前に、承認されたトライアルエビデンスの形式およびリリース後の検証手順を完了させるか、参照してください。現在の表ではこれらの手順が未決定となっているため、必要な記録と実行をまだ検証できません。
   - F003（vp-qe-verifiability）: 具体的な試行証跡の形式と公開後価値の確認手順が未決であり、誰が何をどの順序で確認すればレビューを通過できるかを再現可能に判定できない。
-  - F004（vp-qe-verifiability）: Define re-evaluation conditions for failed SC-04–SC-06 using the post-release value gate and their applicable observation periods; the current value-nonconformity row requires the representative-trial gate, which checks SC-01–SC-03 and AC-01 and therefore cannot establish recovery of post-release failures.
-  - F005（vp-ops-operability）: Extend the operational corrective workflow to post-release value failures by assigning preparation of corrective evidence, its record location, and QE/PO re-evaluation at the affected SC-04–SC-06 checkpoint; returning every value failure to the representative-trial gate leaves the plan's later operating period without an applicable recovery workflow.
+  - F004（vp-qe-verifiability）: post-release valueゲートおよび該当する観察期間を使用して、不合格となったSC-04–SC-06の再評価条件を定義してください。現在の価値不適合の行はrepresentative-trialゲートを必要としていますが、これはSC-01–SC-03およびAC-01をチェックするものであるため、リリース後の失敗の回復を確立することができません。
+  - F005（vp-ops-operability）: 是正エビデンスの準備、その記録場所、および影響を受けるSC-04–SC-06のチェックポイントにおけるQE/POの再評価を割り当てることで、運用上の是正ワークフローをリリース後の価値の失敗まで拡張してください。すべての価値の失敗をrepresentative-trialゲートに戻すと、計画の後半の運用期間において適用可能な回復ワークフローがなくなります。
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-quality-management-plan.yaml`。
 
 ## 6. 関連ドキュメント

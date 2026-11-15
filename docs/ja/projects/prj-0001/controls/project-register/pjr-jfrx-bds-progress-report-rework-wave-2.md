@@ -65,7 +65,7 @@ bds-progress-report を最新の grade の指摘で直す
 - 完了条件の判定は 3 件中 3 件を満たす（すべて満たす）。
 - major の指摘:
   - F005（vp-arc-cross-document-consistency）: Reconcile the promised post-cutoff update with src/job/job.ts:503 and src/exec/run/job.ts:896, which skip an already succeeded Run with the same period-based identity; document the required implementation change or a supported update mechanism.
-  - F006（vp-dev-implementation-readiness）: Specify how a successful early Job Run can be intentionally executed again after the cutoff while preserving one report per period; the current runner skips completed Runs, so the stated update workflow cannot be implemented from these instructions alone.
+  - F006（vp-dev-implementation-readiness）: 1期間につき1つのレポートを維持しつつ、カットオフ後に成功した早期のJob Runを意図的に再実行する方法を指定する。現在のランナーは完了したRunをスキップするため、示された更新ワークフローはこの指示だけでは実装できない。
   - F014（vp-ops-operability）: Provide a supported operator procedure for replacing a successfully generated early report after the cutoff; repeating exec run with the same period currently returns “Job Run already complete” without updating the report.
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml`。
 

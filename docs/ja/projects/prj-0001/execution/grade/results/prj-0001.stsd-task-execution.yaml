@@ -133,9 +133,7 @@ findings:
     message: >-
       Provide a link to the catalog's BA, PO, ARC, QE, and DEV confirmation responsibilities and identify who agrees the
       unresolved permission contract, without expanding the operational purpose paragraph into an approval procedure.
-    message_ja: >-
-      Provide a link to the catalog's BA, PO, ARC, QE, and DEV confirmation responsibilities and identify who agrees the
-      unresolved permission contract, without expanding the operational purpose paragraph into an approval procedure.
+    message_ja: カタログの BA、PO、ARC、QE、および DEV の確認責任へのリンクを提供し、未解決の権限契約に誰が合意するかを特定してください。ただし、運用の目的の段落を承認手順に拡張しないでください。
     cause:
       type: document
   - id: F002
@@ -215,10 +213,7 @@ findings:
       Link the draft's ready decision to resolution or explicit disposition of the actor-authority gap, reconciliation
       with the unavailable upstream dictionaries, and human approval and publication checks, so task completion cannot
       be mistaken for readiness of this specification.
-    message_ja: >-
-      Link the draft's ready decision to resolution or explicit disposition of the actor-authority gap, reconciliation
-      with the unavailable upstream dictionaries, and human approval and publication checks, so task completion cannot
-      be mistaken for readiness of this specification.
+    message_ja: ドラフトの準備完了の決定を、アクター権限のギャップの解決または明示的な処置、利用不可能なアップストリーム・ディクショナリとの調整、および人間の承認と公開チェックに関連付けてください。これにより、タスクの完了がこの仕様の準備完了と誤解されるのを防ぎます。
     cause:
       type: document
   - id: F007

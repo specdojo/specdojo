@@ -116,10 +116,7 @@ findings:
       Consolidate the audience-and-use instructions in the introduction and section 1: retain the process-group identity
       and overview reference in the introduction, and state approval, design, and verification uses once in the purpose
       section to avoid repeated purpose statements.
-    message_ja: >-
-      Consolidate the audience-and-use instructions in the introduction and section 1: retain the process-group identity
-      and overview reference in the introduction, and state approval, design, and verification uses once in the purpose
-      section to avoid repeated purpose statements.
+    message_ja: 導入部とセクション1における対象と用途の指示を統合する：導入部ではプロセスグループの識別と概要への参照を維持し、目的の記述が繰り返されるのを避けるために、目的セクションで承認、設計、検証の用途を一度だけ記述する。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
@@ -131,7 +128,6 @@ findings:
       into a one- to two-sentence purpose and one target line plus one exclusion line. Filling the current scaffold as
       instructed produces content expressly prohibited by the governing rulebook and fails its ready checklist.
     message_ja: >-
-      Align the scaffold with specdojo:cdfd-rulebook sections 1, 5, 6.1, 6.2, 6.8, and 7: remove the area-summary TODOs
-      and input/output/store bullets from every section 3.n, retain process tables there, and reshape sections 1 and 2
-      into a one- to two-sentence purpose and one target line plus one exclusion line. Filling the current scaffold as
-      instructed produces content expressly prohibited by the governing rulebook and fails its ready checklist.
+      スキャフォールドを specdojo:cdfd-rulebook のセクション 1, 5, 6.1, 6.2, 6.8, および 7 と一致させる：すべてのセクション 3.n から area-summary の TODO
+      と入出力・保存の箇条書きを削除し、そこにあるプロセス表を維持する。また、セクション 1 と 2
+      を、1〜2文の目的と1行の対象および1行の除外条件へと作り変える。指示通りに現在のスキャフォールドを埋めると、管理ルールブックで明示的に禁止されているコンテンツが生成され、準備完了チェックリストを満たせなくなる。

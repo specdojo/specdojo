@@ -157,10 +157,8 @@ findings:
       version and configuration, then distinguish its default process from constraints that actually apply to the
       proposed trial.
     message_ja: >-
-      Spec Kit is characterized as having a fixed workflow, and that constraint is reused in its comparison rationale,
-      although the linked official documentation describes customizable processes and workflows; identify the evaluated
-      version and configuration, then distinguish its default process from constraints that actually apply to the
-      proposed trial.
+      Spec Kit
+      は固定されたワークフローを持つと定義されており、その制約が比較の根拠で再利用されていますが、リンクされている公式ドキュメントではカスタマイズ可能なプロセスとワークフローについて説明されています。評価されたバージョンと構成を特定し、そのデフォルトプロセスと、提案されているトライアルに実際に適用される制約を区別してください。
     cause:
       type: document
   - id: F003
@@ -176,9 +174,9 @@ findings:
       applicable validation commands nor an authoritative procedure defining their targets and expected results; link
       the executable verification procedure so QE can consistently run the required checks.
     message_ja: >-
-      Sections 4.4–4.5 require zero validation errors after rulebook changes and tool removal but identify neither the
-      applicable validation commands nor an authoritative procedure defining their targets and expected results; link
-      the executable verification procedure so QE can consistently run the required checks.
+      セクション 4.4–4.5
+      では、ルールブックの変更とツールの削除後にバリデーションエラーをゼロにすることを求めていますが、適用されるバリデーションコマンドについても、その対象と期待される結果を定義する権威ある手順についても特定されていません。QE
+      が必要なチェックを一貫して実行できるように、実行可能な検証手順をリンクしてください。
     cause:
       type: document
   - id: F004
@@ -203,10 +201,8 @@ findings:
       authoritative reflection and place the BA intent check before that reflection so the work sequence can satisfy its
       own acceptance condition.
     message_ja: >-
-      WP-03 requires completion of reflection into the authoritative SpecDojo deliverables before WP-04 checks intent,
-      but line 228 requires all intent mismatches to be corrected before reflection; separate draft output from
-      authoritative reflection and place the BA intent check before that reflection so the work sequence can satisfy its
-      own acceptance condition.
+      WP-04 が意図をチェックする前に、WP-03 は権威ある SpecDojo の成果物への反映を完了させる必要がありますが、228
+      行目では、反映の前にすべての意図の不一致を修正することが求められています。ドラフトの出力と権威ある反映を分離し、作業シーケンスが自身の受け入れ条件を満たせるよう、BA の意図チェックをその反映の前に配置してください。
     cause:
       type: document
   - id: F006

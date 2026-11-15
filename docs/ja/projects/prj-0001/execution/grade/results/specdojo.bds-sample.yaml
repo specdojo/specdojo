@@ -120,10 +120,7 @@ findings:
       Specify whether PO must hold acceptance or explicitly approve a restricted scope while credit-sale and stockout
       boundaries remain unverified, and record the decision occasion, permitted use, and conditions for restoring full
       acceptance.
-    message_ja: >-
-      Specify whether PO must hold acceptance or explicitly approve a restricted scope while credit-sale and stockout
-      boundaries remain unverified, and record the decision occasion, permitted use, and conditions for restoring full
-      acceptance.
+    message_ja: 売掛金と在庫切れの境界が未確認の状態で、POが承諾を保持する必要があるか、あるいは制限された範囲を明示的に承認する必要があるかを指定し、その決定の機会、許可された用途、および完全な承諾を復元するための条件を記録してください。
   - id: F002
     severity: major
     rule: vp-ba-requirements-completeness
@@ -136,10 +133,7 @@ findings:
       Define the expected comparison and report status when a previous-week report is missing or unreadable after the
       initial reporting week; the current exception covers only first use, leaving users unable to distinguish an
       unavailable comparison from a genuine zero baseline.
-    message_ja: >-
-      Define the expected comparison and report status when a previous-week report is missing or unreadable after the
-      initial reporting week; the current exception covers only first use, leaving users unable to distinguish an
-      unavailable comparison from a genuine zero baseline.
+    message_ja: 最初の報告週の後に前週の報告が不足している、または読み取れない場合の、期待される比較および報告ステータスを定義してください。現在の例外は初回のみを対象としているため、ユーザーは利用不可能な比較と、真のゼロベースラインを区別することができません。
   - id: F003
     severity: major
     rule: vp-dev-implementation-readiness
@@ -185,10 +179,7 @@ findings:
       Replace the target-week containment check with exact equality to the requested Monday and Sunday dates in Japan
       time, including weeks with no sales or operating days; a wider incorrect range currently passes, and sales records
       cannot supply the expected dates for an empty week.
-    message_ja: >-
-      Replace the target-week containment check with exact equality to the requested Monday and Sunday dates in Japan
-      time, including weeks with no sales or operating days; a wider incorrect range currently passes, and sales records
-      cannot supply the expected dates for an empty week.
+    message_ja: 対象週の包含チェックを、売上や営業日がない週を含め、日本時間でのリクエストされた月曜日と日曜日の日付との完全な一致に置き換えてください。現在は、より広い誤った範囲が通過してしまっており、売上記録から空の週に対する期待される日付を提供することができません。
   - id: F006
     severity: major
     rule: vp-qe-omissions-consistency
@@ -200,10 +191,7 @@ findings:
       Reconcile the unconditional zero sales displayed for stockout-only products with the rule that a closing-count
       mismatch must not be treated as zero; when closing records show sales but sales records are missing, define an
       unavailable or incomplete value instead of asserting zero.
-    message_ja: >-
-      Reconcile the unconditional zero sales displayed for stockout-only products with the rule that a closing-count
-      mismatch must not be treated as zero; when closing records show sales but sales records are missing, define an
-      unavailable or incomplete value instead of asserting zero.
+    message_ja: 在庫切れのみの製品に対して表示される無条件の売上ゼロと、締めのカウントの不一致をゼロとして扱ってはならないというルールを整合させてください。締めの記録に売上が示されているが売上記録が不足している場合は、ゼロと断定するのではなく、利用不可または不完全な値を定義してください。
   - id: F007
     severity: major
     rule: vp-qe-omissions-consistency
@@ -215,7 +203,4 @@ findings:
       Restrict the 休業週 label to confirmed closure or define a distinct incomplete-closing status; this row labels every
       week without closing records as closed, while line 84 explicitly permits sales records on dates whose closing is
       missing.
-    message_ja: >-
-      Restrict the 休業週 label to confirmed closure or define a distinct incomplete-closing status; this row labels every
-      week without closing records as closed, while line 84 explicitly permits sales records on dates whose closing is
-      missing.
+    message_ja: 「休業週」のラベルを確認済みの閉店に限定するか、明確な不完全な締めステータスを定義してください。この行は締めの記録がないすべての週を閉店とラベル付けしていますが、84行目では、締めが欠落している日付の売上記録を明示的に許可しています。

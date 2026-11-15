@@ -59,7 +59,7 @@ specdojo:
 - 判定は needs-work、94 点（前回は 86 点・指摘 12 件）。指摘は 4 件（major 1・minor 3）。
 - 完了条件の判定は 4 件中 2 件を満たす（未達: DC-003・DC-004）。
 - major の指摘:
-  - F004（vp-qe-done-criteria）: Add review evidence confirming the source-domain mapping, PO scope approval, and QE coverage check before marking the declared completion conditions met.
+  - F004（vp-qe-done-criteria）: 宣言された完了条件が満たされたとマークする前に、ソースドメインのマッピング、PO のスコープ承認、および QE のカバレッジチェックを確認するレビューのエビデンスを追加してください。
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bes-index.yaml`。
 
 ## 6. 関連ドキュメント

@@ -115,9 +115,7 @@ findings:
     message: >-
       Add fields for the responsible Role code and destination management record or PJR item; the decision recipient and
       decision timing do not identify who must perform the formal handoff or where it must be tracked.
-    message_ja: >-
-      Add fields for the responsible Role code and destination management record or PJR item; the decision recipient and
-      decision timing do not identify who must perform the formal handoff or where it must be tracked.
+    message_ja: 責任ある Role コードと、転送先管理レコードまたは PJR アイテムのフィールドを追加してください。決定の受信者と決定のタイミングだけでは、正式なハンドオフを誰が行うべきか、またはどこで追跡すべきかを特定できません。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
@@ -127,5 +125,5 @@ findings:
       Extend the notes table with the responsible Role code and destination record or PJR reference required by BR
       rulebook section 6.6, so filling the prescribed skeleton captures the mandatory management handoff information.
     message_ja: >-
-      Extend the notes table with the responsible Role code and destination record or PJR reference required by BR
-      rulebook section 6.6, so filling the prescribed skeleton captures the mandatory management handoff information.
+      BR rulebook セクション 6.6 で要求されている責任ある Role コードと、転送先レコードまたは PJR 参照を使用して notes
+      テーブルを拡張してください。これにより、規定のスケルトンを埋めることで、必須の管理ハンドオフ情報を取得できます。

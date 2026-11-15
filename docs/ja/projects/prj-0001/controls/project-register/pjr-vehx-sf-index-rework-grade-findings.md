@@ -69,13 +69,13 @@ specdojo:
 - 判定は needs-work、80 点（前回は 75 点・指摘 18 件）。指摘は 10 件（major 8・minor 2）。
 - 完了条件の判定は 5 件中 1 件を満たす（未達: DC-001・DC-002・DC-004・DC-005）。
 - major の指摘:
-  - F001（vp-pm-plan-feasibility）: Break the BPS and CLI mapping review into trackable work with an owner, completion condition, and decision timing so PM can schedule and monitor it.
-  - F004（vp-ba-requirements-completeness）: The provisional BPS mappings and missing catalog dependencies prevent BA from confirming that the function list covers the agreed business scope; complete the source mapping or define and justify the representative-source policy.
-  - F005（vp-arc-cross-document-consistency）: Reconcile the P-05 assignment with `prj-0001:dct-business-model-bps`, which defines P-05 as producing a periodic-execution definition, and `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md` sections 3.1–3.2, which place definition in P-05 and Job Run materialization and execution in the shared execution cycle; SF-ROUT-01 describes dispatch instead of definition handling, while SF-ROUT-02 assigns execution to P-05 on the assumption that no execution area exists.
-  - F006（vp-arc-cross-document-consistency）: Reconcile SF-ORCH-01 with `prj-0001:dct-business-model-bps`, whose P-14 source covers operation-request determination, conflict checking, PDCA request issuance, and execution-state tracking; the current row and its test target cover only provider launch and repository permissions, leaving those business responsibilities without an explicit function assignment or justified exclusion.
-  - F007（vp-dev-implementation-readiness）: Assign routine-definition validation and recording, plus automatic PDCA request issuance, conflict checking, and execution-state tracking, to explicit function boundaries or justify their exclusion; the current dispatch and provider-launch summaries do not let DEV determine the implementation scope of P-05 and P-14.
-  - F008（vp-qe-done-criteria）: Provide evidence that every business-process area is mapped to the agreed scope and test targets, resolving the dependency gap recorded in `Q-02` before claiming coverage.
-  - F009（vp-qe-omissions-consistency）: Resolve the missing BPS dependencies and provide a traceable check that the function list is covered by test targets, so omissions can be detected.
+  - F001（vp-pm-plan-feasibility）: BPSとCLIのマッピングレビューを、PMがスケジュールを組み、監視できるように、担当者、完了条件、および決定のタイミングを含む追跡可能な作業に分割してください。
+  - F004（vp-ba-requirements-completeness）: 暫定的なBPSマッピングと不足しているカタログの依存関係により、BAが、関数リストが合意されたビジネススコープを網羅していることを確認できなくなっています。ソースマッピングを完了するか、代表的なソースのポリシーを定義して正当化してください。
+  - F005（vp-arc-cross-document-consistency）: P-05の割り当てを、P-05を定期実行の定義を生成するものと定義している`prj-0001:dct-business-model-bps`、および、定義をP-05に、ジョブ実行の具体化と実行を共有実行サイクルに置いている`docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md`のセクション3.1–3.2と整合させてください。SF-ROUT-01は、定義の処理ではなくディスパッチを説明しており、一方でSF-ROUT-02は、実行領域が存在しないという仮定に基づいて、実行をP-05に割り当てています。
+  - F006（vp-arc-cross-document-consistency）: SF-ORCH-01を、P-14のソースが操作リクエストの決定、競合チェック、PDCAリクエストの発行、および実行状態の追跡をカバーしている`prj-0001:dct-business-model-bps`と整合させてください。現在の行とそのテスト対象は、プロバイダーの起動とリポジトリの権限のみをカバーしており、これらのビジネス責任に対して明示的な関数割り当てや正当化された除外が行われていません。
+  - F007（vp-dev-implementation-readiness）: ルーチン定義の検証と記録、および自動的なPDCAリクエストの発行、競合チェック、実行状態の追跡を、明示的な関数の境界に割り当てるか、それらの除外を正当化してください。現在のディスパッチおよびプロバイダー起動のサマリーでは、DEVはP-05とP-14の実装スコープを判断できません。
+  - F008（vp-qe-done-criteria）: すべてのビジネスプロセス領域が、合意されたスコープとテスト対象にマッピングされているという証拠を提供してください。その際、網羅性を主張する前に、`Q-02`に記録された依存関係のギャップを解決してください。
+  - F009（vp-qe-omissions-consistency）: 不足しているBPSの依存関係を解決し、関数リストがテスト対象によって網羅されていることを追跡可能な方法で確認できるようにし、漏れを検出できるようにしてください。
   - F010（vp-qe-config-validity）: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/sf-index.yaml`。
 

@@ -194,9 +194,7 @@ findings:
     message: >-
       Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
       implementation location that defines it.
-    message_ja: >-
-      Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
-      implementation location that defines it.
+    message_ja: エビデンスの読み取りまたは整合性の失敗に対する通知動作を規定するか、それを定義している権威ある実装箇所を特定する。
     cause:
       type: document
   - id: F006
@@ -207,9 +205,7 @@ findings:
     message: >-
       Define the notification output and behavior for evidence read failures so implementation and recovery handling
       have a concrete contract.
-    message_ja: >-
-      Define the notification output and behavior for evidence read failures so implementation and recovery handling
-      have a concrete contract.
+    message_ja: エビデンスの読み取り失敗に対する通知の出力と動作を定義し、実装とリカバリーのハンドリングが具体的なコントラクトを持つようにする。
     cause:
       type: document
   - id: F007
@@ -220,9 +216,7 @@ findings:
     message: >-
       Identify the validation procedure and expected result for checking the YAML contract against the referenced types
       and failure behavior.
-    message_ja: >-
-      Identify the validation procedure and expected result for checking the YAML contract against the referenced types
-      and failure behavior.
+    message_ja: 参照されている型と失敗時の動作に対して、YAML コントラクトをチェックするための検証手順と期待される結果を特定する。
     cause:
       type: document
   - id: F008
@@ -233,9 +227,7 @@ findings:
     message: >-
       Provide a check procedure with pass/fail results for validating each file against its referenced type and required
       fields.
-    message_ja: >-
-      Provide a check procedure with pass/fail results for validating each file against its referenced type and required
-      fields.
+    message_ja: 各ファイルを、その参照されている型および必須フィールドと照らし合わせて検証するための、合格/不合格の結果を伴うチェック手順を提供する。
     cause:
       type: document
   - id: F009
@@ -259,7 +251,7 @@ findings:
     line: 115
     anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
     message: Define the user notification destination and recovery handoff for evidence read or consistency failures.
-    message_ja: Define the user notification destination and recovery handoff for evidence read or consistency failures.
+    message_ja: エビデンスの読み取りまたは整合性の失敗に対するユーザー通知の送信先とリカバリーのハンドオフを定義する。
     cause:
       type: document
 done_criteria:

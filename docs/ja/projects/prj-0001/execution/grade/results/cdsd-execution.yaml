@@ -135,10 +135,7 @@ findings:
       Identify the PJR record or explicitly unregistered PJR candidate for the seven missing dictionaries, with PM as
       the reporting recipient; the deliverable catalog dependency list identifies prerequisites but does not track issue
       status, disposition, or reporting.
-    message_ja: >-
-      Identify the PJR record or explicitly unregistered PJR candidate for the seven missing dictionaries, with PM as
-      the reporting recipient; the deliverable catalog dependency list identifies prerequisites but does not track issue
-      status, disposition, or reporting.
+    message_ja: 欠落している7つの辞書について、PMを報告先とするPJRレコードまたは明確に未登録のPJR候補を特定してください。納品物のカタログ依存関係リストは前提条件を特定するものであり、問題のステータス、処分、または報告は追跡しません。
     cause:
       type: document
   - id: F002
@@ -152,10 +149,8 @@ findings:
       state, plan/result, evidence, and task worktree as unregistered CDSD additions; reconcile those pending-addition
       statements with this document's completed inventory.
     message_ja: >-
-      The four formerly missing areas are now defined, but
-      docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md sections 4.1 and 5 still describe execution
-      state, plan/result, evidence, and task worktree as unregistered CDSD additions; reconcile those pending-addition
-      statements with this document's completed inventory.
+      以前欠落していた4つの領域は現在定義されていますが、docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md
+      のセクション4.1および5では、依然として実行状態、計画/結果、証拠、およびタスクのworktreeが未登録のCDSD追加分として記述されています。それらの追加保留事項を、このドキュメントの完了済みインベントリと照合してください。
     cause:
       type: document
   - id: F003
@@ -191,10 +186,8 @@ findings:
       these accepted layouts from genuinely missing records and specify how the stated three-record acceptance condition
       is checked.
     message_ja: >-
-      The former missing validation criteria are supplied, but src/exec/validate-records.ts also accepts legacy
-      plan/result pairs without evidence and migrated state/evidence runs with a sibling plan/result pair; distinguish
-      these accepted layouts from genuinely missing records and specify how the stated three-record acceptance condition
-      is checked.
+      以前欠落していた検証基準が提供されていますが、src/exec/validate-records.ts
+      は、証拠のないレガシーな計画/結果のペアや、兄弟の計画/結果ペアを持つ移行済みの状態/証拠の実行も受け入れます。これらの受け入れ可能なレイアウトを、実際に欠落しているレコードと区別し、述べられている3レコードの受け入れ条件がどのようにチェックされるかを明記してください。
     cause:
       type: document
   - id: F005
@@ -209,11 +202,7 @@ findings:
       corrective transition leaves the malformed file present, so validation and reconstruction still fail; distinguish
       valid-but-incorrect events from malformed files and define an approved recovery reference or an explicit
       unresolved recovery gate.
-    message_ja: >-
-      Reconcile this append-only recovery instruction with line 49's rejection of every malformed event: adding a
-      corrective transition leaves the malformed file present, so validation and reconstruction still fail; distinguish
-      valid-but-incorrect events from malformed files and define an approved recovery reference or an explicit
-      unresolved recovery gate.
+    message_ja: この追加専用のリカバリ指示を、すべての不正なイベントを拒否している49行目と照合してください。修正的なトランジションを追加しても不正なファイルは残ったままなので、検証と再構築は依然として失敗します。正しいが不適切なイベントと不正なファイルを区別し、承認されたリカバリの参照先、または明示的な未解決のリカバリゲートを定義してください。
     cause:
       type: document
   - id: F006

@@ -120,8 +120,8 @@ findings:
       Add completion or decision milestones for the regeneration task and the STSD change in line 103; responsible roles
       and interim handling are stated, but PM cannot determine when these tasks must finish or be reconsidered.
     message_ja: >-
-      Add completion or decision milestones for the regeneration task and the STSD change in line 103; responsible roles
-      and interim handling are stated, but PM cannot determine when these tasks must finish or be reconsidered.
+      再生成タスクと103行目の STSD の変更に対して、完了または決定のマイルストーンを追加してください。責任者と暫定的な取り扱いは記載されていますが、PM
+      はこれらのタスクをいつ完了させるべきか、あるいは再検討すべきかを判断できません。
   - id: F002
     severity: minor
     rule: vp-dev-implementation-readiness
@@ -135,9 +135,8 @@ findings:
       and removing the reconstruction promise; also identify kinuya-store-config-schema as an unshipped fictional
       reference and make configuration recreation conditional on supplying that contract.
     message_ja: >-
-      The former unnamed regeneration and receipt-reconstruction gaps are resolved by explicitly deferring regeneration
-      and removing the reconstruction promise; also identify kinuya-store-config-schema as an unshipped fictional
-      reference and make configuration recreation conditional on supplying that contract.
+      以前の名称のない再生成および受領再構築のギャップは、再生成を明示的に延期し、再構築の約束を削除することで解決されました。また、kinuya-store-config-schema
+      を未出荷の架空のリファレンスとして特定し、設定の再作成をそのコントラクトの提供を条件としてください。
   - id: F003
     severity: minor
     rule: vp-qe-verifiability
@@ -152,10 +151,7 @@ findings:
       The former conflicting retention expression is resolved; align the weekly disposal-confirmation day stated here
       with line 66, which instructs confirmation and disposal at daily closing, so reviewers can determine the required
       holding period.
-    message_ja: >-
-      The former conflicting retention expression is resolved; align the weekly disposal-confirmation day stated here
-      with line 66, which instructs confirmation and disposal at daily closing, so reviewers can determine the required
-      holding period.
+    message_ja: 以前の矛盾していた保持に関する表現は解決されました。ここに記載されている週次の廃棄確認日を、日次決算時に確認と廃棄を指示している66行目と一致させ、レビュワーが必要な保持期間を判断できるようにしてください。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
@@ -170,9 +166,8 @@ findings:
       not establish a source for paper-recorded credit sales, yet line 89 expects both cash and credit sales; define the
       complete source mapping or explicitly limit and hand off the summary scope.
     message_ja: >-
-      Reconcile daily-summary recovery with clis-sample's cash-only scope: data/sales/ is produced by that CLI and does
-      not establish a source for paper-recorded credit sales, yet line 89 expects both cash and credit sales; define the
-      complete source mapping or explicitly limit and hand off the summary scope.
+      日次サマリーの回収を clis-sample の現金のみのスコープと一致させてください：data/sales/ はその CLI
+      によって生成されるもので、紙に記録された掛売り販売のソースを確立するものではありませんが、89行目では現金と掛売り販売の両方を想定しています。完全なソースマッピングを定義するか、サマリーのスコープを明示的に制限して引き渡してください。
   - id: F005
     severity: major
     rule: vp-qe-kata-conformance
@@ -185,9 +180,8 @@ findings:
       development representative, the peer reviewer holds QE, and the family representative holds UX rather than OPS;
       correct the repeated recovery assignments or record an explicit organization change before relying on them.
     message_ja: >-
-      Align the member-to-role assignments with pm-members-sample and pm-organization-sample: BA belongs to the
-      development representative, the peer reviewer holds QE, and the family representative holds UX rather than OPS;
-      correct the repeated recovery assignments or record an explicit organization change before relying on them.
+      メンバーからロールへの割り当てを pm-members-sample および pm-organization-sample と一致させてください：BA は開発代表者に属し、ピアレビュワーは QE を、ファミリー代表は OPS
+      ではなく UX を担当しています。繰り返される回収の割り当てを修正するか、それらに頼る前に明示的な組織変更を記録してください。
   - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
@@ -202,10 +196,7 @@ findings:
       The electronic storage rows are now separated, but this row still combines non-disposable cash with disposable
       temporary memos; separate their storage-control classes so each row has a uniform lifetime and disposal decision
       as required by the rulebook.
-    message_ja: >-
-      The electronic storage rows are now separated, but this row still combines non-disposable cash with disposable
-      temporary memos; separate their storage-control classes so each row has a uniform lifetime and disposal decision
-      as required by the rulebook.
+    message_ja: 電子保存の行は分離されましたが、この行には依然として、廃棄不可能な現金と廃棄可能な一時的なメモが組み合わされています。ルールブックの要求に従い、各行の有効期間と廃棄の決定が統一されるよう、それぞれの保存管理クラスを分離してください。
   - id: F007
     severity: minor
     rule: vp-ux-language-consistency
@@ -218,10 +209,7 @@ findings:
       The former retention-label conflict is resolved; replace 販売後 here and in line 103 with wording that identifies
       removal from the sales floor before customer handover, because the box contains unsold expired or damaged stock
       rather than goods already sold.
-    message_ja: >-
-      The former retention-label conflict is resolved; replace 販売後 here and in line 103 with wording that identifies
-      removal from the sales floor before customer handover, because the box contains unsold expired or damaged stock
-      rather than goods already sold.
+    message_ja: 以前の保持ラベルの矛盾は解決されました。この箇所と103行目の「販売後」を、箱には販売済みの商品ではなく、未販売の期限切れまたは破損した在庫が含まれているため、顧客への引き渡し前に売り場から取り除くことを特定する表現に置き換えてください。
   - id: F008
     severity: major
     rule: vp-ops-operability
@@ -236,6 +224,5 @@ findings:
       from headquarters acceptance; using only accepted data/sales/ transactions can understate the day's sales and
       cannot reproduce the cash-plus-credit closing example in line 89.
     message_ja: >-
-      Include paper-recorded credit sales in the interim manual daily tally and distinguish their confirmation evidence
-      from headquarters acceptance; using only accepted data/sales/ transactions can understate the day's sales and
-      cannot reproduce the cash-plus-credit closing example in line 89.
+      暫定的な手書きの日次集計に紙に記録された掛売り販売を含め、その確認証跡を本部の受理と区別してください。受理された data/sales/
+      の取引のみを使用すると、その日の売上が過小評価される可能性があり、89行目の現金と掛売りを合わせた決算例を再現することができません。

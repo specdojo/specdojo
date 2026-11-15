@@ -60,7 +60,7 @@ specdojo:
 - 判定は needs-work、90 点（前回は 65 点・指摘 24 件）。指摘は 6 件（major 2・minor 4）。
 - 完了条件の判定は 3 件中 3 件を満たす（すべて満たす）。
 - major の指摘:
-  - F005（vp-qe-omissions-consistency）: Reconcile this append-only recovery instruction with line 49's rejection of every malformed event: adding a corrective transition leaves the malformed file present, so validation and reconstruction still fail; distinguish valid-but-incorrect events from malformed files and define an approved recovery reference or an explicit unresolved recovery gate.
+  - F005（vp-qe-omissions-consistency）: この追加専用のリカバリ指示を、すべての不正なイベントを拒否している49行目と照合してください。修正的なトランジションを追加しても不正なファイルは残ったままなので、検証と再構築は依然として失敗します。正しいが不適切なイベントと不正なファイルを区別し、承認されたリカバリの参照先、または明示的な未解決のリカバリゲートを定義してください。
   - F006（vp-ops-operability）: Replace the malformed-event recovery route with an approved procedure or explicit escalation-and-hold condition: src/exec/core.ts loadValidatedExecState rejects validation failures before state-changing commands can proceed, and src/exec/events.ts readAllEventFiles continues rejecting the original malformed file even after another event is appended.
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml`。
 
