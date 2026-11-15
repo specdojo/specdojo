@@ -50,3 +50,16 @@
     - field: commit_scope
       from: ""
       to: ifx-file
+- v: 1
+  id: reg_82ea5899870a427892f220ca578987f6
+  ts: "2026-11-15T17:16:41Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_36ef659d55ff4a23942274de3bf9dca1
