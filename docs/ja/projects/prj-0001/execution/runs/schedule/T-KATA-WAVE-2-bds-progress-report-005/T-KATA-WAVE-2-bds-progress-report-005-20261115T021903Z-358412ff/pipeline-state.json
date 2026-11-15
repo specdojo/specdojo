@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-2-bds-progress-report-005",
   "run_id": "T-KATA-WAVE-2-bds-progress-report-005-20261115T021903Z-358412ff",
-  "updated_at": "2026-11-15T04:23:04.813Z",
+  "updated_at": "2026-11-15T04:23:26.288Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-005/T-KATA-WAVE-2-bds-progress-report-005-20261115T021903Z-358412ff/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "indie",
       "attempts": 3,
       "started_at": "2026-11-15T04:23:04.813Z",
-      "completed_at": null,
+      "completed_at": "2026-11-15T04:23:26.288Z",
       "artifact_ref": null,
       "repos": {
         "project": {
