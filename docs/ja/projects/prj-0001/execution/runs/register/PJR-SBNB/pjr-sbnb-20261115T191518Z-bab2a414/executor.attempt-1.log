@@ -1,0 +1,23 @@
+schema を `docs/specdojo/schemas/v1/ifx-index.schema.yaml` に改名し、参照をそろえました。完了条件のうち一つだけ残っています。`.vscode/settings.json` が保護ファイルで編集できず、その中の `"esil",` が `grep -rn esil` に 1 件だけ一致します。最後の節に変更案を書きました。
+
+**変えた内容**
+- **新しい schema**: 正本を `ifx-index.schema.yaml` に移しました。`id` に許す形は `ifx-index` と `ifx-index-...`（プロジェクト修飾は可）だけです。古い略号を頭に付けた `id` はリポジトリ内で使われていなかったので、許す形から外しました。`$id` はもともと無く、ほかの schema にも無いので足していません。
+- **古いファイル**: シェルからの削除が許可されませんでした。そこで `esil.schema.yaml` は中身を `$ref: "ifx-index.schema.yaml"` と `deprecated: true` だけにし、非推奨の別名として残しました。ほかのプロジェクトの YAML が古い名前を指していても、同じ内容で検証されます。内容の複製はなく、本文に `esil` も含みません。
+- **参照**: sample・template・`prj-0001:ifx-index` の modeline と、rulebook・recipe に書かれた schema のパスを新しい名前にしました。テストには古い名前への参照がありませんでした。
+- **rulebook の追記**: 改名すると、ファイル名の一致で `ifx-index-rulebook` が `validate:schema:rulebook-enums` の対象になります。最初は不足があって失敗しました。ready の rulebook に `status`・`direction`・`kind`・`format` の値と選び方を書き足し、「列挙値は schema へ委譲」の一文を改めました。副題と用語表の略号 ESIL も取っています。ready の文書の本文を変えているので、確認してください。
+- **個票**: 作業内容、対応結果（決めた内容と理由・残課題）、「CHANGELOG に書く事項」を書きました。CHANGELOG.md 自体は変えていません。
+
+**確かめた結果**
+- 新しい schema で sample と `ifx-index.yaml` を検証し、どちらも通りました。
+- 古い別名でも sample が通ります。わざと誤った YAML（`tmp/` に置いたもの）は別名でも正しく弾かれました。
+- enum の網羅検査、Prettier、`npm run validate:history-links` はすべて通りました。
+- `npm run validate:schema`・`lint:md`・`lint:fm`・`test:unit` などはこのあと親の runner が実行します。
+
+**判断してほしいこと**
+- `.vscode/settings.json` の `cSpell.words` から `"esil",` の行を消す変更をお願いします。
+- ほかの rulebook・recipe（`ifx-api`・`ifx-msg`・`ifx-cmd`・`ifx-file`）と `dct-external-interface-specs.yaml` には大文字の ESIL が残っています。schema 名の範囲を超えるので触っていません。
+- 非推奨の別名は、移行期間が過ぎたら削除する予定です。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を追記した。保護ファイル .vscode/settings.json の cSpell 語 esil だけは executor から編集できず、grep の完了条件が残っている。","handoff":["保護ファイルへの変更案: `.vscode/settings.json` の `cSpell.words` から `\"esil\",` の行を削除する。これが済むまで、履歴を除く `grep -rn esil` はこの 1 件に一致する。","決定: シェルからの削除が許可されなかったため、古い `docs/specdojo/schemas/v1/esil.schema.yaml` は削除せず、`$ref: \"ifx-index.schema.yaml\"` と `deprecated: true` だけの非推奨の別名にした。ほかのプロジェクトの modeline を壊さず、内容の複製もない。移行期間が過ぎたら削除する。","決定: 改名で rulebook と schema がファイル名の stem で組になり、`validate:schema:rulebook-enums` の対象になった（改名直後は失敗した）。ready の rulebook `specdojo:ifx-index-rulebook` に `status`・`direction`・`kind`・`format` の値と選び方を追記し、「列挙値は schema へ委譲」の文を改めた。ready の文書の本文変更なので確認してほしい。","決定: `id` の pattern から古い略号の接頭辞の形式を除いた（リポジトリ内で未使用）。ほかのプロジェクトで使っていれば `ifx-index` 系へ改める必要がある。CHANGELOG に書く事項は個票の「CHANGELOG に書く事項」の節にある。","残課題: `ifx-api`・`ifx-msg`・`ifx-cmd`・`ifx-file` の rulebook・recipe と `dct-external-interface-specs.yaml` に大文字の略号 ESIL が残る。schema 名の範囲外なので、必要なら別の項目で扱う。"],"validations":[{"command":"npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-index.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml docs/ja/product/020-external-interface-specs/ifx-index.yaml","status":"passed","summary":"2 ファイルとも valid"},{"command":"npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/esil.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml","status":"passed","summary":"非推奨の別名でも valid。誤った tmp の YAML は別名でも invalid と判定された"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js rulebook-schema-enums","status":"passed","summary":"ifx-index-rulebook の enum 網羅が valid"},{"command":"npx prettier --check docs/specdojo/schemas/v1/ifx-index.schema.yaml docs/specdojo/schemas/v1/esil.schema.yaml docs/ja/specdojo/rulebooks/ifx-index-rulebook.md docs/ja/specdojo/recipes/ifx-index-recipe.md docs/ja/specdojo/samples/ifx-index-sample.yaml docs/ja/specdojo/templates/ifx-index-template.yaml docs/ja/product/020-external-interface-specs/ifx-index.yaml","status":"passed","summary":"rulebook と個票を --write で整形したあと、変更したファイルはすべて整形済み"},{"command":"npm run -s validate:history-links","status":"passed","summary":"終了コード 0、違反なし"}]}
+</specdojo_executor_evidence>

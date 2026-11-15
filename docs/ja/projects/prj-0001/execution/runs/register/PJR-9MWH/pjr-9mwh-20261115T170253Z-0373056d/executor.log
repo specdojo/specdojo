@@ -1,0 +1,31 @@
+schedule の executor 再開が止まる不具合を直しました。止まっていた E2E「resumes the executor after a failed integration, syncing the integration target」は修正後に通ります。全件の `npm run test:integration` はまだ流しておらず、親 runner の検証待ちです。
+
+**原因と直し方**
+- 再開前に develop を exec branch へ取り込むとき、そのタスク自身の run の記録（`runs/schedule/<task>/` 配下）の衝突は exec branch 側を採るようにしました。
+- `src/exec/repo-integration-sync.ts`: `syncWorktreeWithIntegrationTarget` に `oursPaths`、`syncTaskWorktreesWithIntegrationTargets` に `projectOursPaths` を追加しました。指定したパスで衝突が起きたら exec branch 側の内容を採ります。
+- `src/exec/run/lifecycle-commands.ts`: `prepareExecutorResumeFromIntegration` が、exec branch と統合先の両方にあるタスクの run の記録を集めて `projectOursPaths` に渡すようにしました。
+
+**exec branch 側を採った理由**
+- 後の統合の merge も、同じ記録を exec branch 側で解決しています。向きを揃えました。
+- worktree に残っている未 commit の block の result は、exec branch の先頭を基に控えてあります。取り込みの後もそのまま戻せます。
+- 取り込みの後は統合先の側に差分が残りません。再開した executor が result を書き直しても、後の統合の merge は衝突しません。
+
+**register の再開**
+同じ穴はありません。DVNV が develop へ commit するのは `runs/schedule/` 配下だけです。register の plan・result・個票・イベントは、もともと bookkeeping のパスとして `projectTheirsPaths` で統合先の側を採っています。
+
+**テストと個票**
+- `tests/src/exec/task-repos.integration.test.ts` に、exec branch 側を採る衝突の解決を確かめるテストを 1 件足しました。
+- 個票 `pjr-9mwh-schedule-executor-resume-trailing-record-conflict.md` の影響範囲・対応方針・対応結果・関連ドキュメントを記入しました。ステータス項目は変えていません。
+
+**検証**
+次のテストファイルを単独で実行し、すべて通りました。
+- `pipeline-e2e.integration.test.ts`
+- `trailing-records.integration.test.ts`（DVNV）
+- `register-resume.integration.test.ts`
+- `task-repos.integration.test.ts`
+
+`npm run validate:history-links` も通りました。prettier で整形済みです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"schedule の --resume-from executor の再開前の同期で、そのタスク自身の run の記録の衝突を exec branch 側で解くようにした（projectOursPaths / oursPaths を追加）。止まっていた E2E、DVNV の trailing-records、register-resume、task-repos の統合テストを単独で実行し、すべて通った。全件の npm run test:integration は親 runner の検証で確かめる。register の再開に同じ穴は無いことを確認し、個票の対応結果に記録した。","handoff":["schedule の executor 再開前の同期は、タスク自身の run の記録（`runs/schedule/<task>/` 配下）の衝突を exec branch 側で解く。統合の merge（`resolveConflictsWithBranchPaths`）と同じ向きである。","register の再開に同じ穴は無い。DVNV の記帳 commit は `runs/schedule/` 配下だけを選び、register の記録は既に `projectTheirsPaths` で統合先の側を採っている。","全件の `npm run test:integration` は親 runner の結果を正とする。executor では関係する 4 ファイルを単独で実行して通った。"],"validations":[{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/trailing-records.integration.test.ts tests/src/exec/register-resume.integration.test.ts","status":"passed","summary":"3 files, 49 tests passed (E2E 'resumes the executor after a failed integration, syncing the integration target' を含む)"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/exec/task-repos.integration.test.ts","status":"passed","summary":"49 tests passed（追加した exec branch 側を採る衝突解決のテストを含む）"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0、変更した個票を含め違反なし"},{"command":"npx prettier --write <changed files>","status":"passed","summary":"個票を整形。ts ファイルは変更なし"}]}
+</specdojo_executor_evidence>
