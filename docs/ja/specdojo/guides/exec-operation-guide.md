@@ -305,6 +305,17 @@ specdojo exec release \
 
 `--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](exec-worktree-guide.md) の `status` を使います。
 
+#### 2.2.1. 人が unblock するときの続行と引き取り
+
+`exec unblock` を人が実行しても、claim の持ち主は変わりません。claim の持ち主は `claim` イベントの actor で、`note` やほかの actor の `unblock` では移りません。人が障害を取り除いて agent の run を続けさせる場合と、人が自分で直して完了させる場合は、`--take-over` の有無で区別します。
+
+| 意図                                 | コマンド                                                      | claim の持ち主            | その後                                                                                  |
+| ------------------------------------ | ------------------------------------------------------------- | ------------------------- | --------------------------------------------------------------------------------------- |
+| agent の run を続けさせる            | `exec unblock --task <id> --by <human> --msg ...`             | 元の actor（agent）のまま | `exec resume --task <id>` が元の agent で再開し、runner の `complete` / `block` も通る  |
+| 人が引き取り、自分で直して完了させる | `exec unblock --task <id> --by <human> --msg ... --take-over` | unblock した人            | 人が `exec complete --task <id> --by <human>` で完了させる。agent の run は完了できない |
+
+`--take-over` は roster の `type: human` の actor だけが使えます。`--take-over` の `unblock` イベントは `take_over=true` を持ち、pipeline の再開情報（`pipeline_stage` など）を引き継ぎません。claim の持ち主を確かめるには `exec status --state doing` を使います。`by` 列と `--by` の絞り込みは claim の持ち主を表します。
+
 ### 2.3. 完了済みタスクをtodoに戻す
 
 完了条件を満たしていないのに `complete` した場合など、完了判定そのものを訂正するときは `exec reopen` を使います。単に追加作業が発生した場合は、完了履歴を訂正せず新しい schedule task として計画します。

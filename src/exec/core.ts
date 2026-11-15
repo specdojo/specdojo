@@ -102,6 +102,7 @@ export type ExecCommandOpts = {
   strategy?: string;
   dryRun?: boolean;
   force?: boolean;
+  takeOver?: boolean;
   resetWorktree?: boolean;
   allBlocked?: boolean;
 };
@@ -138,6 +139,14 @@ export function addForceOption(cmd: Command): Command {
   return cmd.option(
     "--force",
     "Human actor only: override the guard on a task held by another actor",
+    false,
+  );
+}
+
+export function addTakeOverOption(cmd: Command): Command {
+  return cmd.option(
+    "--take-over",
+    "Human actor only: become the claim owner instead of keeping the current owner (e.g. an agent run)",
     false,
   );
 }
@@ -500,6 +509,9 @@ export async function runLockedEventCommand(
       if (plannedOwner && claimOwner !== plannedOwner && resolvedOpts.allowOwnerMismatch) {
         event.meta.owner_override = true;
       }
+    }
+    if (action.type === "unblock" && resolvedOpts.takeOver) {
+      event.meta = { ...(event.meta ?? {}), take_over: true };
     }
     if (opts.dryRun) {
       process.stdout.write(`[dry-run] ${JSON.stringify(event, null, 2)}\n`);

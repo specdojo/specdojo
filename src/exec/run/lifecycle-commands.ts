@@ -12,6 +12,7 @@ import {
 import {
   acquireSchedulerLock,
   buildEvent,
+  claimOwnerOf,
   foldEventsToState,
   readAllEventFiles,
   releaseSchedulerLock,
@@ -548,7 +549,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
           blockedPipelineStage === "integrate") &&
         typeof taskState.meta?.pipeline_state_ref === "string";
       if (canResumeBlockedPipeline) {
-        const actor = taskState.last_by ?? opts.by ?? "exec-pipeline-resume";
+        const actor = claimOwnerOf(taskState) ?? opts.by ?? "exec-pipeline-resume";
         if (!dryRun) {
           const resumeMeta = {
             ...taskState.meta,
@@ -618,7 +619,8 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
             ? prepareScheduleIntegrationResume({
                 task,
                 taskState: snapshot.tasks[taskId],
-                actor: resolved.actor ?? snapshot.tasks[taskId]?.last_by ?? "exec-pipeline-resume",
+                actor:
+                  resolved.actor ?? claimOwnerOf(snapshot.tasks[taskId]) ?? "exec-pipeline-resume",
                 projectId,
                 repoRoot,
                 executionPath,
@@ -664,7 +666,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
               );
         if (typeof prepared !== "string") {
           const priorTaskState = initialTaskStates.get(taskId);
-          const previousActor = priorTaskState?.last_by;
+          const previousActor = claimOwnerOf(priorTaskState);
           const resumingExecutorStage =
             prepared.pipelineResumeStage !== "reporter" &&
             prepared.pipelineResumeStage !== "integrate";
@@ -712,6 +714,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
               ...snapshot.tasks[taskId],
               state: "doing",
               last_by: prepared.actor,
+              claimed_by: prepared.actor,
               last_type: "claim",
             };
           } else if (pendingExecutorUnblock) {
@@ -732,7 +735,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
           spawnBlock(
             projectId,
             taskId,
-            snapshot.tasks[taskId]?.last_by ?? "exec-limit-resume",
+            claimOwnerOf(snapshot.tasks[taskId]) ?? "exec-limit-resume",
             `resume setup error: ${message}`,
           );
         }

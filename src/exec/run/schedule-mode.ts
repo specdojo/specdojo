@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { basename, join } from "node:path";
 import { createProviderCapacityTracker, loadExecDefaultsConfig } from "../agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
-import { readAllEventFiles, foldEventsToState } from "../events.js";
+import { claimOwnerOf, readAllEventFiles, foldEventsToState } from "../events.js";
 import { buildScheduleIndex, findStaleGeneratedTracks } from "../schedule/schedule.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { scheduleTrackNames } from "../schedule/gantt-chart-scope.js";
@@ -340,10 +340,9 @@ export function resolveClaimingActor(
   byOverride: string | undefined,
 ): { actor: string | undefined; resumed: boolean } {
   if (byOverride) return { actor: byOverride, resumed: false };
-  if (taskState?.state !== "doing" || !taskState.last_by) {
-    return { actor: undefined, resumed: false };
-  }
-  const actor = taskState.last_by;
+  // The claim owner, not last_by: a human's plain unblock or note must not hand the run to them.
+  const actor = taskState?.state === "doing" ? claimOwnerOf(taskState) : undefined;
+  if (!actor) return { actor: undefined, resumed: false };
   process.stdout.write(`  Resuming with claiming actor: ${actor}\n`);
   return { actor, resumed: true };
 }

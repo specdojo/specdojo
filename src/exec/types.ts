@@ -70,6 +70,9 @@ export type CurrentState = {
   state: ExecState;
   last_ts?: string;
   last_by?: string;
+  // Actor holding the claim while the task is doing/blocked. Unlike last_by, a note or a plain
+  // unblock by another actor (e.g. a human) does not move it; only claim and take-over unblock do.
+  claimed_by?: string;
   last_type?: ExecEventType;
   last_msg?: string;
   refs?: Record<string, string>;
