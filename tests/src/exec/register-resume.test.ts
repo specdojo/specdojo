@@ -155,14 +155,60 @@ describe("selectScheduleExecutorResume", () => {
     },
   );
 
-  it("rejects integration even when an older incomplete report would select the executor", () => {
+  it.each(["failed", "running"] as const)(
+    "restarts the executor after a %s integration that integrated no repository",
+    (integrateStatus) => {
+      const state = makeState({ reporterStatus: "succeeded", integrateStatus });
+      const evidence = makeEvidence(state.run_id);
+      evidence.block_reason = "fix the excluded path";
+      expect(selectScheduleExecutorResume([makeCandidate({ state, evidence })])).toMatchObject({
+        kind: "resumable",
+        target: {
+          stage: "executor",
+          runId: state.run_id,
+          initialChanges: ["docs/sample.md"],
+          handoff: ["fix the excluded path"],
+        },
+      });
+    },
+  );
+
+  it("restarts the executor after an integration whose latest report was incomplete", () => {
     const state = makeState({ reporterStatus: "succeeded", integrateStatus: "failed" });
     const evidence = { ...makeEvidence(state.run_id), completion_status: "incomplete" as const };
     expect(
       selectScheduleExecutorResume([makeCandidate({ state, executorEvidence: evidence })]),
-    ).toMatchObject({
+    ).toMatchObject({ kind: "resumable", target: { stage: "executor" } });
+  });
+
+  it("rejects the executor after the integration succeeded", () => {
+    const state = makeState({ reporterStatus: "succeeded", integrateStatus: "succeeded" });
+    expect(selectScheduleExecutorResume([makeCandidate({ state })])).toEqual({
       kind: "not-resumable",
-      reason: expect.stringContaining("integrate stage"),
+      reason: `cannot resume the executor after the integration of run ${state.run_id} succeeded`,
+    });
+  });
+
+  it("rejects the executor when a repository was already integrated", () => {
+    const base = makeState({ reporterStatus: "succeeded", integrateStatus: "failed" });
+    const state: PipelineState = {
+      ...base,
+      stages: {
+        ...base.stages,
+        integrate: {
+          ...base.stages.integrate!,
+          repos: {
+            app: { status: "merged", commit: "abc123", merged_at: "2026-08-20T00:21:00Z" },
+            project: { status: "failed", commit: null, merged_at: null, error: "conflict" },
+          },
+        },
+      },
+    };
+    expect(selectScheduleExecutorResume([makeCandidate({ state })])).toEqual({
+      kind: "not-resumable",
+      reason:
+        `cannot resume the executor from the integrate stage of run ${state.run_id}: ` +
+        "already integrated repositories: app",
     });
   });
 

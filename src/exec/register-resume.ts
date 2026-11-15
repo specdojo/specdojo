@@ -1,7 +1,11 @@
 import { existsSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
-import { loadPipelineResumeCheckpoint, type PipelineState } from "./pipeline-state.js";
+import {
+  integratedRepoNames,
+  loadPipelineResumeCheckpoint,
+  type PipelineState,
+} from "./pipeline-state.js";
 import { recordStem, resumeStatePaths, runEvidencePath, taskRecordPaths } from "./run-records.js";
 
 // register 項目の executor/reporter pipeline を、途中で止まった段から再開するための run 特定と
@@ -13,9 +17,34 @@ import { recordStem, resumeStatePaths, runEvidencePath, taskRecordPaths } from "
 // 再実行する。executor が成功済みで reporter が未完了なら reporter 段から、reporter も成功して
 // 統合（commit → merge → worktree 撤去）だけが残っているなら integrate 段から再開する。
 // reporter 段から再開可能な run は、明示指定により既存成果を保持して executor へ戻せる。
+// schedule では、どのリポジトリも統合していない統合の段の run も executor へ戻せる。
 
 export type RegisterResumeStage = "executor" | "reporter" | "integrate";
 export type RegisterResumeFrom = "executor";
+
+type RegisterResumeSelectOptions = {
+  resumeFrom?: RegisterResumeFrom;
+  // Schedule only: let --resume-from executor return to the executor after an integration that
+  // stopped before any repository was integrated. Register keeps refusing this case.
+  allowFailedIntegration?: boolean;
+};
+
+// 統合の段が止まった run を executor へ戻せない理由を返す。統合が成功済み、または一部の
+// リポジトリを統合済みの run を戻すと、統合済みの成果と食い違うため止める。
+function integratedRunBlocker(state: PipelineState): string | undefined {
+  const integrate = state.stages.integrate;
+  if (integrate?.status === "succeeded") {
+    return `cannot resume the executor after the integration of run ${state.run_id} succeeded`;
+  }
+  const integrated = [...integratedRepoNames(state)].sort();
+  if (integrated.length > 0) {
+    return (
+      `cannot resume the executor from the integrate stage of run ${state.run_id}: ` +
+      `already integrated repositories: ${integrated.join(", ")}`
+    );
+  }
+  return undefined;
+}
 
 export type RegisterResumeCandidate = {
   runId: string;
@@ -124,7 +153,7 @@ export function loadRegisterResumeCandidates(input: {
 // 未コミット成果や result と食い違うため、最新 run が再開できない場合は理由を返して止める。
 export function selectResumableRegisterRun(
   candidates: readonly RegisterResumeCandidate[],
-  options: { resumeFrom?: RegisterResumeFrom } = {},
+  options: RegisterResumeSelectOptions = {},
 ): RegisterResumeLookup {
   if (candidates.length === 0) {
     return { kind: "not-resumable", reason: "no pipeline run state found in the worktree" };
@@ -242,9 +271,21 @@ export function selectResumableRegisterRun(
     latest.state.stages.reporter.status === "succeeded" ? "integrate" : "reporter";
   if (options.resumeFrom === "executor") {
     if (inferredStage !== "reporter") {
+      const blocker = options.allowFailedIntegration
+        ? integratedRunBlocker(latest.state)
+        : `cannot resume the executor from the ${inferredStage} stage of run ${latest.runId}`;
+      if (!blocker) {
+        const forcedChanges =
+          initialChanges.length > 0
+            ? initialChanges
+            : (latest.evidence.attempt_changes ?? latest.evidence.changes).map(
+                (change) => change.path,
+              );
+        return { kind: "resumable", target: executorTarget(latest, forcedChanges) };
+      }
       return {
         kind: "not-resumable",
-        reason: `cannot resume the executor from the ${inferredStage} stage of run ${latest.runId}`,
+        reason: blocker,
       };
     }
     const forcedChanges =
@@ -281,12 +322,17 @@ export function findResumableRegisterRun(input: {
   );
 }
 
-// Schedule の明示的な executor 再開は、成功済み executor から reporter へ進んだ run に限る。
-// run の選択・変更一覧・申し送りの復元は register と同じ規則を使う。
+// Schedule の明示的な executor 再開は、成功済み executor から reporter または統合の段へ進んだ run に
+// 限る。統合の段（commit・検査・merge）で止まった run も、どのリポジトリも統合していなければ
+// worktree の成果を保ったまま executor へ戻す（PJR-ED0K）。run の選択・変更一覧・申し送りの
+// 復元は register と同じ規則を使う。
 export function selectScheduleExecutorResume(
   candidates: readonly RegisterResumeCandidate[],
 ): RegisterResumeLookup {
-  const lookup = selectResumableRegisterRun(candidates, { resumeFrom: "executor" });
+  const lookup = selectResumableRegisterRun(candidates, {
+    resumeFrom: "executor",
+    allowFailedIntegration: true,
+  });
   if (lookup.kind !== "resumable") return lookup;
   const { state } = lookup.target;
   if (state.stages.executor.status !== "succeeded") {
@@ -304,12 +350,8 @@ export function selectScheduleExecutorResume(
       reason: `succeeded executor evidence is missing or invalid for run ${state.run_id}`,
     };
   }
-  if (state.stages.reporter.status === "succeeded" || (state.stages.integrate?.attempts ?? 0) > 0) {
-    return {
-      kind: "not-resumable",
-      reason: `cannot resume the executor from the integrate stage of run ${state.run_id}`,
-    };
-  }
+  const blocker = integratedRunBlocker(state);
+  if (blocker) return { kind: "not-resumable", reason: blocker };
   return lookup;
 }
 
