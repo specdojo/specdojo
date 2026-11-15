@@ -9,7 +9,7 @@ specdojo:
   origin: register
   plan_ref: runs/register/PJR-X05N/pjr-x05n-20261115T143259Z-70a6832b/plan.md
   started_at: "2026-11-15T14:33:05.643Z"
-  completed_at: "2026-11-15T16:28:14.998Z"
+  completed_at: "2026-11-15T16:36:16.453Z"
   agent: opus-executor
   block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
@@ -18,17 +18,17 @@ specdojo:
 
 ## 1. 実施内容
 
-- kata-wave-2 の review で型の自動 grade が実行されなかった原因は、`schedule_file`（schedule ディレクトリ相対）の探索ロジックの不備にありました。
-- 修正前は strategy をリポジトリルート基準で探していたため、`schedule` ディレクトリ内のファイルを正しく参照できず、型の評価対象が空になっていました。
-- `src/exec/review-kata.ts` を修正し、`projectId` からプロジェクト設定に基づく `schedule` ディレクトリのパスを取得するように変更しました。これにより、正しい場所から strategy を探せるようになりました。
-- また、呼び出し元に対して `projectId` を明示的に渡すよう変更し、型安全性を高めつつ、実際の配置と一致する回帰テストを追加しました。
+- kata-wave-2 の `review` において、型の自動 `grade` が実行されなかった原因を特定し、修正を行いました。
+- 原因は、`schedule_file`（`schedule` ディレクトリ相対）を探す際に、リポジトリのルートディレクトリを基準に探索していたため、設計上の `strategy` が見つからず、評価対象が空になっていたことでした。
+- 修正として、`projectId` を用いてプロジェクトの設定から `schedule` ディレクトリのパスを取得し、そこを基準に探索を行うよう `src/exec/review-kata.ts` を変更しました。また、呼び出し元から `projectId` を渡すようにインターフェースを修正しました。
+- あわせて、実際の配置に近い fixture と回帰テストを追加しました。
 
 ## 2. 変更ファイル
 
-- `src/exec/plans-generation.ts`: 呼び出し時に `projectId` を渡すように変更。
-- `src/exec/review-kata.ts`: `schedule_file` の探索方法を、リポジトリルート基準から `projectId` に基づく `schedule` ディレクトリ基準に変更。
-- `src/exec/run/schedule-prepare.ts`: 呼び出し時に `projectId` を渡すように変更。
-- `tests/src/exec/review-kata.test.ts`: 修正内容を検証するための、実際の配置に基づいた回帰テストを追加。
+- `src/exec/plans-generation.ts`: 呼び出し元の引数変更に対応。
+- `src/exec/review-kata.ts`: `schedule_file` の探索ロジックを、`projectId` を用いてプロジェクトの `schedule` ディレクトリを基準に探すよう変更。
+- `src/exec/run/schedule-prepare.ts`: 呼び出し元の引数変更に対応。
+- `tests/src/exec/review-kata.test.ts`: 実際のディレクトリ配置と同一の構成を持つ fixture および、`kata-wave-2` の挙動をカバーする回帰テストを追加。
 
 ## 3. 申し送り
 
@@ -39,4 +39,4 @@ specdojo:
 
 ## 4. 進め方
 
-まず、`schedule_file` の探索ロジックがリポジトリルートを基準にしているという問題点を特定しました。その後、`projectId` を利用してプロジェクトごとの `schedule` ディレクトリを動的に特定する手法へとロジックを刷新しました。コードの変更に伴い、呼び出し元への引数の追加を行い、型安全性を担保するとともに、実際のディレクトリ構造に合わせた回帰テストを追加して、問題が解消されていることを検証しました。
+まず、`kata-wave-2` の `review` における `grade` の欠如という事象から、`strategy` ファイルの探索ロジックを調査しました。`schedule_file` のパスがリポジトリルート基準で解決されていたことが原因であると突き止めたため、`projectId` を基点として正しい `schedule` ディレクトリを指すように `src/exec/review-kata.ts` を修正しました。変更の妥当性を検証するため、実際の配置を模した `fixture` と、`kata-wave-2` と同様の構成を検証する回帰テストを追加しました。
