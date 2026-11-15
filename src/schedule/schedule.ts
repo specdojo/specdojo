@@ -381,6 +381,7 @@ function registerScheduleStrategyCommands(sch: Command): void {
         schedulePath: context.schedulePath,
         track,
         content: result.content,
+        repoRoot: context.baseDir,
         force: !!opts.force,
         dryRun: !!opts.dryRun,
       });

@@ -1,8 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Command } from "commander";
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { dump, load } from "js-yaml";
 import {
   buildStrategyDocument,
@@ -644,6 +652,43 @@ describe("strategy generator", () => {
     expect(unchanged.skippedReason).toBe("unchanged");
   });
 
+  it("新規に書く strategy の先頭へ schema を解決できる modeline を付ける", () => {
+    rmSync(join(schedulePath, "sch-strategy-demo.yaml"));
+    const written = writeStrategyFile({
+      schedulePath,
+      track: "demo",
+      content: "kind: strategy\n",
+      force: false,
+      dryRun: false,
+      repoRoot: root,
+    });
+
+    expect(written.written).toBe(true);
+    expect(readFileSync(written.path, "utf8")).toBe(
+      "# yaml-language-server: $schema=../docs/specdojo/schemas/v1/sch-strategy.schema.yaml\nkind: strategy\n",
+    );
+  });
+
+  it("--force で書き直すときは既存の modeline を保つ", () => {
+    const path = join(schedulePath, "sch-strategy-demo.yaml");
+    const modeline = "# yaml-language-server: $schema=../custom/sch-strategy.schema.yaml";
+    writeFileSync(path, `${modeline}\nold: content\n`, "utf8");
+
+    const written = writeStrategyFile({
+      schedulePath,
+      track: "demo",
+      content: "new: content\n",
+      force: true,
+      dryRun: false,
+      repoRoot: root,
+    });
+
+    expect(written.written).toBe(true);
+    const content = readFileSync(path, "utf8");
+    expect(content).toBe(`${modeline}\nnew: content\n`);
+    expect(content.match(/yaml-language-server/g)).toHaveLength(1);
+  });
+
   it("cross-deliverable 判定が複数なら横断 pass を生成する", () => {
     const built = buildStrategyDocument({
       projectId: "prj-0001",
@@ -756,9 +801,17 @@ describe("strategy generator", () => {
     }
 
     expect(stdout.join("")).toContain("Updated:");
-    expect(readFileSync(join(schedulePath, "sch-strategy-demo.yaml"), "utf8")).toContain(
-      "kind: strategy",
+    const strategyPath = join(schedulePath, "sch-strategy-demo.yaml");
+    const content = readFileSync(strategyPath, "utf8");
+    expect(content).toContain("kind: strategy");
+    // validate:schema --modeline と同じく、先頭の modeline から schema を解決して検証する。
+    const schemaRef = /^# yaml-language-server: \$schema=(\S+)\n/.exec(content)?.[1];
+    expect(schemaRef).toBe("../docs/specdojo/schemas/v1/sch-strategy.schema.yaml");
+    expect(resolve(schedulePath, schemaRef ?? "")).toBe(
+      join(root, "docs/specdojo/schemas/v1/sch-strategy.schema.yaml"),
     );
+    expect(existsSync(resolve(schedulePath, schemaRef ?? ""))).toBe(true);
+    expect(validateStrategySchema(load(content), root)).toEqual([]);
     expect(process.exitCode).toBeUndefined();
   });
 });
