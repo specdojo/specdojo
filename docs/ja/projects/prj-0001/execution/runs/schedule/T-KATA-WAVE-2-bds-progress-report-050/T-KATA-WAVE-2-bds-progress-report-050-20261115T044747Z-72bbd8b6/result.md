@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-2-bds-progress-report-050
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-2-bds-progress-report-050/T-KATA-WAVE-2-bds-progress-report-050-20261115T044747Z-72bbd8b6/plan.md
   started_at: "2026-11-15T04:47:54.144Z"
+  completed_at: "2026-11-15T05:29:04.771Z"
   agent: opus-executor
   execution: agent
   approach: sample-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 改訂後の `bds-rulebook` および同梱サンプル（`bes-sample`・`cdsd-sample`）の構成に合わせて `docs/ja/specdojo/samples/bds-sample.md` を見直しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/bds-sample.md`: `based_on` の接続、作成・確認・承認の `Role` code、本文構成を正本に合わせ、端数・割合の扱いおよび未接続の業務イベントの影響に関する記述を追記しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- finding F001〜F024 は -005 で書き直す前の bds-sample（最小サンプル版）が対象で、現行版では解消済み。今回は rulebook・関連 sample との差分だけを直した（result の `進め方と実践の型の適用` に記録してください）
+- recipe と template は rulebook frontmatter の not-needed のまま。理由: 帳票仕様は Markdown 1 ファイルの記述規約で、rulebook の記述ガイドと sample で書けるため、作成手順書や雛形を別に用意する必要がない
+- 根拠の判断: 販売記録は specdojo:cdsd-sample の販売記録と specdojo:bes-sample（現金会計の確定）を `based_on` に接続した。つけ販売の確定と bes-stock-out-recorded は未同梱のまま、接続するまで受入対象外として「メモ / 将来課題」に担当（BA・QE）と解消条件を書いた
+- 補充候補を欠品 1 回以上にするか 2 回以上に絞るかは未決（`_UNDECIDED_`）のまま残した。店主代表（PO）が初回の報告を見て決める
+- 適用外の検証: `npm run validate:history-links`（変更したのは docs/ja/specdojo/samples/bds-sample.md だけで、履歴ファイル（plan・result・pjr 個票）を変更していない）
+- 適用外の検証: `npm run validate:catalog`（変更は docs/ja/projects/ の外（docs/ja/specdojo/samples/）だけ）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+改訂版 `bds-rulebook` および関連サンプルとの整合性を確保するため、`docs/ja/specdojo/samples/bds-sample.md` の構成・記述を更新しました。展開されていた finding F001〜F024 は旧版（最小サンプル版）に対する指摘であり、現行版では概ね解消されていたため、主に rulebook 準拠の構成整備と `based_on` 接続などの具体化に重点を置いて修正を行いました。
