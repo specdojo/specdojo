@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e4r5-kata-review-grade-kata-fix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:53:14Z"
+  completed_at: "2026-11-15T01:18:31Z"
+  conclusion: 型の schedule の review で型一式を自動 grade し、型の grade が pass になるまで完了を保つようにした。grade run --if-busy を追加
   derived_from:
     - PJR-ZZVE
   commit_type: fix

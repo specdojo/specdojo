@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2ba48bbcd528428399a6ebb05226e7c5
+- v: 1
+  id: reg_ea4be741fde44f6397b772453dcd2686
+  ts: "2026-11-15T01:18:31Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: 型の schedule の review で型一式を自動 grade し、型の grade が pass になるまで完了を保つようにした。grade run --if-busy を追加
+  previous_event_id: reg_b19e59cd14a54309af392dd2f0143957
