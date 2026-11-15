@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   registered_at: "2026-11-13T14:07:58Z"
+  completed_at: "2026-11-15T23:23:26Z"
+  conclusion: PJR-N2CP で修正済み（strategy generate が型の recipe・template の段を作る）。kata-wave-2 の schedule で段が自動で入ることを確かめた
 ---
 
 # PJR-J0VS strategy generate の improve-kata・bootstrap-kata-set が、recipe と template の手直しの段を作らない
