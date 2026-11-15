@@ -1,0 +1,27 @@
+grade の指摘 F001〜F010 をすべて `prj-comparison-of-alternatives.md` に反映し、個票の対応結果も書きました。チェックの結果は markdownlint・`npm run validate:catalog`・`npm run validate:history-links` すべて成功です。ただし、個票が求める再 grade（`grade run --target deliverable`）はまだ実行していません。agent CLI の起動が要るため、runner か人の実行が必要です。
+
+**変更した成果物（第1〜2章はそのまま、第3〜6章を手直し）**
+- **評価軸と評価基準:** 全軸の判定基準を High / Middle / Low の境界で書き直しました。D-02・D-03 の表には「統合する最低観点」と「主に対応する課題・制約」の列を足しています（F005・F010）。さらに「判定の根拠と集約規則」の節を新しく作りました（F008）。
+  - D-01 の総合評価は、重み5の3軸（効果・追跡性・AI 適合）の状況で決めます。
+  - D-02・D-03 では、正本にする案・試行する案・採らない案を分ける規則を定めました。
+  - 評価セルはどれも変えていません。新しい規則は既存の判定と食い違わないように作りました。
+- **比較結果と採択理由:**
+  - D-02 に方式ごとの評価根拠と再評価条件の表を足し、SDD-06 を採らない理由も書きました（F001）。
+  - 「技術的実現性と影響」の表に、後続作業の担当と確認方法・期待結果を足しました（F003・F006）。
+  - 「比較試行の計画と完了条件」の節を新しく作りました。WP-01〜WP-05 と、PO が継続か撤退かを決める判断点 DP-01 を置き、それぞれに担当 Role・前提・完了条件を付けています。継続利用か撤退かを判定する条件も定めました（F002・F009）。
+- **リスクとトレードオフ:** 各行に対象の決定 ID・案 ID と、担当・完了条件を付けました。採らない案や SDD-01・TSK-01 のトレードオフも追加しています（F007）。
+- **決定と見直し:** 管理事項を試行結果・リスク・課題・変更要求・未決事項の5種類に分け、記録先と担当を表にしました（F004）。重なっていた記録の指示はこの表にまとめました。
+
+**個票:** 対応結果に、実施内容、status の扱い、迷った点と決めた内容、残課題を書きました。
+
+**私が決めたこと（確定は 140 で人がお願いします）**
+- **status:** 成果物は `ready` のまま直しました。`draft` に戻すと人がもう一度昇格させる必要があり、変更はこの worktree の中だけで、統合前に 140 で確認されるためです。
+- **試行の作業時間の上限:** 根拠資料ではまだ決まっていないので、数値は書いていません。「費用・負荷の上限を決める」の結果に従い、上限が決まるまで試行を始めない条件にしました。
+- **試行を実施する担当:** `ARC` にしました（AI Agent が支援）。
+- **記録先:** 実在を確かめられるプロジェクト登録簿にまとめました。実在を確かめられない「技術検証結果」は外しています。
+
+`events/pjr-cpzh.yaml` と `pipeline-state.json` は runner の管理ファイルで、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Applied grade findings F001–F010 to prj-comparison-of-alternatives (sections 3–6: per-axis High/Middle/Low boundaries, axis-to-issue/minimum-viewpoint mapping for D-02/D-03, aggregation rules, D-02 rationale incl. SDD-06, follow-up owners and checks in 技術的実現性と影響, trial work packages with roles/prerequisites/thresholds, risk table with alternative IDs, management categories with record targets). Recorded response in the PJR-CPZH ticket. Re-grade not yet run.","handoff":["Re-grade not executed by executor: run `grade run --target deliverable` for prj-0001:prj-comparison-of-alternatives (requires agent CLI) and append the result to the PJR-CPZH ticket's 対応結果.","Status decision: kept `status: ready` while reworking (draft would require human re-promotion; changes are isolated in the task worktree and reviewed at 140). Final decision by a human at T-PROJECT-KATA-prj-comparison-of-alternatives-140.","Trial effort bound left unquantified: tied to the undecided ToDo 「費用・負荷の上限を決める」 in prj-issues-and-approach; trials do not start until it is decided.","Trial execution role assigned to `ARC` (AI Agent supports); intent check `BA`, verification `QE`, decision `PO` (DP-01).","Record target unified to プロジェクト登録簿 (pjr-index); removed unverifiable 「技術検証結果」. Existing evaluation cells were not changed; boundaries and aggregation rules were written to be consistent with them."],"validations":[{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md","status":"passed","summary":"0 issues (ticket file also 0 issues)"},{"command":"npx prettier --write docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md","status":"passed","summary":"formatted deliverable and ticket"},{"command":"npm run validate:catalog","status":"passed","summary":"exit 0; only pre-existing WARNs unrelated to this deliverable"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; PJR-CPZH ticket valid"},{"command":"grade run --target deliverable","status":"requires_human","summary":"Re-grade requires launching an agent CLI; run by runner or human and record result in ticket"}]}
+</specdojo_executor_evidence>

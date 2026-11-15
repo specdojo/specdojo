@@ -1,0 +1,22 @@
+`ifx-file-agent-evidence` の手直しが終わりました。15 件の指摘はすべて修正しました。ただし、実装で裏付けが取れなかった 2 点は、決め切らずに未決事項（OD-01・OD-02）として残しています。再 grade は executor の段では実行していません。`status` は `draft` のままです。
+
+**主な修正（`docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml`）**
+
+- **先頭の前提コメント（F015）**: 成果物カタログの `overview` と一致していたので確定とし、`_ASSUMPTION_` を外しました。PO が ready に上げる前に、未決事項が解消済みか留保として承認されたかを確認する、と書き添えています（F001・F013）。
+- **報告タグがないときの扱い（F005・F012）**: 本文は「`completion_status` を complete にする」でしたが、`src/exec/evidence.ts` では値を記録していません。実装に合わせて直しました。正規の complete 報告とは `completion_status: complete` が記録されているかどうかで区別します。成功とみなすのは、終了コード 0 で親検証がすべて合格（`not_run` を含まない）のときだけ、と明記しました。
+- **読み込み失敗時の通知（F002〜F004・F006・F007・F014）**: 読み込みの処理は通知を出さず、「checkpoint なし」を返すだけです。通知の文言と出力先は宣言範囲外の呼び出し側が持つため、決めずに OD-01 として残しました。
+- **変更の影響（F008）**: `schema.change_impact` を追加し、型定義や配置の解決を変えるときに本仕様の同時更新が要ることを書きました。
+- **テスト設計（F009〜F011、個票の完了条件）**: `verification` を追加しました。確認手順と合否の条件、TC-01〜TC-12 の観点と期待結果です。欠けた・壊れた evidence と pipeline-state、書き込み中断、I/O エラーを扱います。
+- **未決事項**: `open_decisions` に OD-01・OD-02 を、影響・担当・次のアクション付きで載せました。追跡先は PJR-TN43、期限は T-KATA-WAVE-2-ifx-file-agent-evidence-140 の判断時です。
+
+**仕様と実装が食い違う可能性（OD-02）**
+
+仕様では、`--resume` 時に pipeline-state.json が欠けていたり壊れていたりすれば、実行を止めることになっています。一方 `src/exec/pipeline-state.ts` の再開用の読み込みは、どちらの場合も「checkpoint なし」を返すだけです。呼び出し側で止めていなければ新規実行として進み、二重実行になるおそれがあります。この変更を承認した根拠が見当たらないため、仕様の記述はそのままにして照合を OD-02 にしました。
+
+個票（`pjr-6xwp-ifx-file-agent-evidence-rework-wave-2.md`）の対応結果に、実施内容・executor が決めたこと・残課題を書きました。
+
+**検証**: 変更した 2 ファイルの Prettier 整形の確認、`npm run validate:catalog`、`npm run validate:history-links` はすべて通りました（catalog は他の成果物の警告のみ）。lint・schema の検査は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-file-agent-evidence を grade の指摘 F001〜F015 で手直しした。前提コメントを確定し、報告タグ欠落時のフォールバックを実装に合わせて修正（completion_status を記録しない、正規 complete との区別、成功扱いの条件）。schema.change_impact、verification（TC-01〜TC-12）、open_decisions（OD-01・OD-02、追跡先 PJR-TN43）を追加した。status は draft のまま。個票の対応結果も記入した。","handoff":["`grade run --target deliverable` による再 grade は executor の段では実行していない。後の段で実行し、結果を PJR-6XWP の対応結果へ書く必要がある。","OD-01: evidence の読込・整合検証の失敗時に利用者へ出す通知の文言と出力先は、宣言された実装（`src/exec/evidence.ts`・`src/exec/pipeline-state.ts`）にはなく、呼び出し側 CLI が持つ。断定せず留保とした。追跡先は PJR-TN43、期限は T-KATA-WAVE-2-ifx-file-agent-evidence-140 の判断時。DEV が確認し、ARC が反映する。","OD-02: `loadPipelineResumeCheckpoint` は pipeline-state.json の欠落・構文不正・スキーマ不整合をいずれも null（checkpoint なし）として返す。仕様の『--resume 時はエラー停止』『破損時は直ちに停止』を保証しているのは呼び出し側であり、未照合。承認根拠がないため意図された仕様を残した。乖離があれば修正の登録簿項目を起票し、PO が判断する。","executor の判断: 報告タグ欠落時の `completion_status` について、本文の『complete』を実装どおり『記録しない（欠落は incomplete とみなさない）』へ直した。実装の現在動作であり、プロトコル（欠落は complete とみなす）とも一致するため反映した。","executor の判断: 留保の追跡先として新しい登録簿項目は起票せず、既存の PJR-TN43（利用者の判断待ち）とした。PO が別の項目での追跡を望む場合は起票が必要。","変更していないファイル: `events/pjr-6xwp.yaml` と `pipeline-state.json` は runner 側の変更であり、executor は編集していない。"],"validations":[{"command":"npx prettier --check docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-6xwp-ifx-file-agent-evidence-rework-wave-2.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:catalog","status":"passed","summary":"exit 0。他の成果物の based_on 未作成に関する WARN のみ"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。個票 pjr-6xwp を含めて違反なし"}]}
+</specdojo_executor_evidence>

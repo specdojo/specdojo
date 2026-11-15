@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: ARC
@@ -48,7 +48,12 @@ ifx-file-agent-evidence を最新の grade の指摘で直す
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: [[prj-0001:ifx-file-agent-evidence]] を grade の指摘（F001〜F015）で手直しした。先頭の前提コメントは成果物カタログの `overview` と一致するため確定させ、`_ASSUMPTION_` を外した。報告タグ欠落時のフォールバックは、実装（`src/exec/evidence.ts`）に合わせて「`completion_status` を記録しない」へ直し、正規の complete 報告との区別と成功扱いの条件を加えた。`schema.change_impact`、テスト設計（`verification`、TC-01〜TC-12）、未決事項（`open_decisions`、OD-01・OD-02）を追加した。`status` は `draft` のまま変えていない。
+- executor が決めたこと:
+  - 通知の文言・出力先（OD-01）: `evidence.ts`・`pipeline-state.ts` の読込処理は通知を出さず、「checkpoint なし」を返すだけである。通知は宣言された実装の範囲外の呼び出し側 CLI が持つため、断定せずに留保とした。追跡先は PJR-TN43、期限は T-KATA-WAVE-2-ifx-file-agent-evidence-140 の判断時とした。
+  - `pipeline-state.json` 破損時の停止（OD-02）: 再開用読込は破損時も「checkpoint なし」として返すため、仕様の「直ちに停止」と食い違う可能性がある。承認根拠がないため意図された仕様を残し、照合を留保とした。
+- 再 grade: executor の段では実行していない。`grade run --target deliverable` の実行と結果の記入は、この後の段に申し送る。
+- 残課題: OD-01・OD-02（PJR-TN43 で追跡する）。
 
 ## 6. 関連ドキュメント
 

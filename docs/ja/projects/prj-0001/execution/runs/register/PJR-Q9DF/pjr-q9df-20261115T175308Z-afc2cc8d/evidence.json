@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Q9DF",
+  "run_id": "pjr-q9df-20261115T175308Z-afc2cc8d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T17:55:27.337Z",
+    "completed_at": "2026-11-15T18:04:39.680Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q9df.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q9df-cnd-specdojo-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q9df-cnd-specdojo-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../030-architecture/010-c4/cnd-specdojo.md        | 95 ++++++++++++++--------\n .../pjr-q9df-cnd-specdojo-rework-grade-findings.md |  8 +-\n 2 files changed, 70 insertions(+), 33 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "OK: dct-index.yaml (only pre-existing based_on WARNs for unrelated docs)"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "No violations; the updated ticket file is valid"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js remark docs/ja/product/030-architecture/010-c4/cnd-specdojo.md --quiet --frail",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/lint-mermaid.mjs docs/ja/product/030-architecture/010-c4/cnd-specdojo.md",
+      "status": "passed",
+      "summary": "1 flowchart passed, 0 error, 0 unchecked"
+    },
+    {
+      "source": "executor",
+      "command": "grade run --target deliverable",
+      "status": "requires_human",
+      "summary": "Re-grade cnd-specdojo; it launches a real agent CLI and consumes quota"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5014 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5014 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q9DF/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q9DF/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q9DF\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-cmsClr/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-mzlLGL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-oXdEj4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-mKZYZh/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "Applied grade findings F001-F012 to cnd-specdojo: added the deployment baseline (what runs where and what is not deployed) and the approval scope, separating the scope submitted for approval from reservation A (site viewing auth/delivery, until operations design) and reservation B (REL-10, PJR-CJMN), each with permitted and held follow-up work. The 2026-11-15 human PO decisions are preserved. Also added normal-success and repository-failure verification expectations, BA/OPS confirmers, issue/risk/decision classification with PJR destinations and judgment timing, links to cpd-specdojo-cli, ifd-specdojo and ifx-cmd-ai-provider-cli, a schema reference for REL-05, and a maintenance handoff. Recorded the decisions in the ticket's response section. status stays draft.",
+  "completion_status": "complete",
+  "handoff": [
+    "`grade run --target deliverable` has not been re-run; it launches a real agent CLI and is outside the executor stage. Re-grade cnd-specdojo after this run (ticket completion condition).",
+    "The tracking PJR for reservation A (site viewing auth and delivery) could not be found in the declared inputs, so the document says 'PJR は未登録'. ARC should report it to PM for registration and then record the destination in the future-work table.",
+    "DC-002 is explicitly recorded as unmet until the human PO decides on the deployment baseline at T-KATA-WAVE-1 140.",
+    "The site build owner is written as current behavior from implementation evidence: VitePress build is not launched from a CLI command. Build environment and delivery destination remain under reservation A.",
+    "Repository failure recovery expectations (REL-05/REL-06) were not specified for lack of grounds; they are recorded as a risk in future work."
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-Q9DF/pjr-q9df-20261115T175308Z-afc2cc8d/executor.log",
+      "bytes": 5804,
+      "truncated": false
+    }
+  ]
+}

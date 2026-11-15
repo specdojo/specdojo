@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:27Z"
+  block_reason: "executor reported incomplete: pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行で…"
   commit_type: docs
   commit_scope: pm
   approach: fully-guided
