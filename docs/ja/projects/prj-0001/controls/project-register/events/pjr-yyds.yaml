@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: grade
+- v: 1
+  id: reg_9be29f52e2c04e3ca9e5445c5a0f8727
+  ts: "2026-11-15T22:59:41Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者の依頼で方針を変更（orchestrator が記帳）
+  changes:
+    - field: description
+      from: grade の executor に finding の文と判定根拠を最初から日本語で書かせ、正本も日本語にする。英語で書かせてから翻訳する方式（PJR-27Y0）は、翻訳の段を持たない `grade run` では英語のまま残り、個票に英語の指摘が書かれる原因になった。
+      to: 英語で書かせてから翻訳する方式をやめ、判定根拠と finding を日本語で書かせて正本にする
+  previous_event_id: reg_82d65e7f6ddf4c598e3bc93f92bb719b
