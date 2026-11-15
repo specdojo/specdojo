@@ -47,3 +47,19 @@
     - field: commit_scope
       from: ""
       to: schema
+- v: 1
+  id: reg_6eb8c6fca36c42d3a5e6a74fb4f85cc2
+  ts: "2026-11-15T09:39:32Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: input
+      from: '["indie の指摘（2026-11-15）: ifx-index の schema が docs/specdojo/schemas/v1/esil.schema.yaml で、改名前の略号（ESIL: 外部システム連携一覧）のまま","PJR-QJ41（ifx-index を Markdown にする）で YAML の正本がなくなる場合は、schema を残すかどうかもあわせて決める。そのため PJR-QJ41 の後に流す"]'
+      to: '["indie の指摘（2026-11-15）: ifx-index の schema が docs/specdojo/schemas/v1/esil.schema.yaml で、改名前の略号（ESIL: 外部システム連携一覧）のまま","ifx-index は YAML を正本のまま残すため（PJR-QJ41）、schema も残して名前を改める"]'
+    - field: depends_on
+      from: '["PJR-QJ41"]'
+      to: "-"
+  previous_event_id: reg_0198f6a60655498c8cc5cd730f98e993

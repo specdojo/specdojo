@@ -12,8 +12,6 @@ specdojo:
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-15T09:33:55Z"
-  depends_on:
-    - PJR-QJ41
   commit_type: refactor
   commit_scope: schema
 ---
@@ -27,7 +25,7 @@ esil.schema.yaml を ifx-index の名前へ改め、参照をそろえる。他�
 ## 2. 入力
 
 - indie の指摘（2026-11-15）: ifx-index の schema が docs/specdojo/schemas/v1/esil.schema.yaml で、改名前の略号（ESIL: 外部システム連携一覧）のまま
-- PJR-QJ41（ifx-index を Markdown にする）で YAML の正本がなくなる場合は、schema を残すかどうかもあわせて決める。そのため PJR-QJ41 の後に流す
+- ifx-index は YAML を正本のまま残すため（PJR-QJ41）、schema も残して名前を改める
 
 ## 3. 完了条件
 
