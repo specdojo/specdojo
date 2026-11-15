@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-11ex-multi-user-integration-actor
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-11-03T04:11:05Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-15T14:24:35Z"
+  conclusion: 統合専用 actor は GitHub Actions 上の GitHub App とし、runner は exec・記帳の branch を push するだけにする（C）
   derived_from:
     - PJR-PQG3
   commit_type: docs
