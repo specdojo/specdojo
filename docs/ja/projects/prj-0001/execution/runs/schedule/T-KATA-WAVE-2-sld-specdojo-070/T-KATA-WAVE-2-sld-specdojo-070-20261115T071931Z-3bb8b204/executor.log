@@ -1,0 +1,14 @@
+[sld-specdojo.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-070/docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md) の磨き込みと整合性確認を実施しました。
+
+### 実施内容
+
+1. **ルールブック禁止事項への適合（章参照の修正）**:
+   - [sld-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-070/docs/ja/specdojo/rulebooks/sld-rulebook.md) の禁止パターン（第7章188行目:「章参照を章番号のみで記述すること」）に基づき、本文中の「第2章」「第3章」「第4章」の単独表記を、章タイトルを明記した「第2章「保管場所一覧」」「第3章「削除・退避・復旧の判断基準」」「第4章「関連仕様・実装配置との対応と検証」（対応表）」へ修正しました。
+2. **wikilink 表記の整合性向上**:
+   - `### 1.1.` 内の `[[cdsd-execution|（プロジェクト実行）]]` を、正式な文書タイトルに合わせた `[[cdsd-execution|概念データストア定義（プロジェクト実行）]]` へ修正しました。
+3. **静的検査と整形**:
+   - Prettier によるフォーマット検査を実施し、適合を確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sld-specdojo.md の章番号単独参照の解消およびリンク表記の整合を行いました。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md","status":"passed","summary":"Prettier formatting check passed"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"変更ファイルに対象の yaml/yml が含まれないため"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"変更ファイルに登録簿個票や実行記録ファイルが含まれないため"},{"command":"npm run validate:catalog","status":"not_applicable","reason":"変更ファイルが docs/ja/projects/ 配下を含まないため"}]}
+</specdojo_executor_evidence>
