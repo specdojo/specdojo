@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-x05n-review-kata-grade-not-run
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T11:31:23Z"
+  completed_at: "2026-11-15T22:20:34Z"
+  conclusion: 0.8.0 の第 1 段で直した（review の段で型の自動の grade が流れない件）。親の検証をすべて通って統合済み
   derived_from:
     - PJR-E4R5
   commit_type: fix

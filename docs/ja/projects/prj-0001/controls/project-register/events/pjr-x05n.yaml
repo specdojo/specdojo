@@ -201,3 +201,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8b77246a40354d04ab1f2c0d6d6ebe90
+- v: 1
+  id: reg_a193eac17a2b4216a404c4be54685f86
+  ts: "2026-11-15T22:20:34Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（review の段で型の自動の grade が流れない件）。親の検証をすべて通って統合済み
+  previous_event_id: reg_a22c2608d19e417180ced92dfbe83695
