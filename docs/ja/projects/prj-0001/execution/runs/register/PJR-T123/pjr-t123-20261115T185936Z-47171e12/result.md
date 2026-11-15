@@ -4,31 +4,36 @@ specdojo:
   type: exec-result
   task_id: PJR-T123
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-T123/pjr-t123-20261115T185936Z-47171e12/plan.md
   started_at: "2026-11-15T19:00:16.799Z"
+  completed_at: "2026-11-15T19:44:08.027Z"
   agent: opus-executor
   approach: template-maintenance
   targets:
     - specdojo:cdfd-template
+  block_reason: "parent validation failed: test-integration"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- cdfd-template における概念データフローの図の枠を、`overview` や `uc` の template と同様に、`classes` 構成を用いた D2 形式に変更しました。
+- 図の記述における凡例の扱いについて、Mermaid を宣言する場合、記法の選択を省略する場合、および凡例がない場合の分岐ルールをコメントとして追加しました。
+- 図の直後に記述する注記の `_TODO_` について、共通凡例の有無によって書き分けられるよう、finding (`F001`, `F002`) に基づいて修正を行いました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/cdfd-template.md`: 概念データフローの図の枠を D2 に変更し、凡例に関する指示および図の直後の注記の `_TODO_` を、共通凡例の有無による条件分岐形式に更新しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- cdfd-rulebook の「プロセス領域」は各節を表だけにすると定めているが、cdfd-template の各節には主要入力・主要出力・データストアの箇条書きが残っている。本タスクの範囲外のため変更していない。別の項目で直すかどうかを判断する。
+- 個票の「完了条件」は `_TODO_` のまま残っている。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+既存の `cdfd-template` を、他の D2 を用いた template と整合性を取る形でメンテナンスしました。まず、図の定義部分を D2 形式に書き換え、次に `finding` (`F001`, `F002`) で指摘された、凡例の有無に応じた記述の分岐を `_TODO_` セクションに組み込みました。
