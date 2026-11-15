@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-sj3q-implementation-phase-kata
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: medium
   owner: PO
   registered_at: "2026-11-14T03:47:08Z"
+  completed_at: "2026-11-15T13:18:27Z"
+  conclusion: 実装の段の型は、agent 向けのコーディング規約（言語別の instructions）の 1 種類だけにする。実装の設計書は置かない。型の作成は PJR-981V
 ---
 
 # PJR-SJ3Q 実装の段に、どの文書の型（Kata）を置くか
@@ -27,30 +29,32 @@ specdojo:
 
 ## 3. 背景
 
-_TODO_: この確認が必要になった背景、前提、制約を記載する。
+型 108 種類を流れで整理したところ、実装の段にだけ型がなかった。prj-0001 では実装をほぼ agent が担い、agent は `.github/instructions/*.instructions.md`（Claude Code は `.claude/rules/*.md` の薄いラッパー経由）を読んで実装する。
 
 ## 4. 回答候補
 
-| 候補 | 内容   | 利点   | 懸念   |
-| ---- | ------ | ------ | ------ |
-| A    | _TODO_ | _TODO_ | _TODO_ |
+| 候補      | 内容                                                                | 利点                                                 | 懸念                                                             |
+| --------- | ------------------------------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------- |
+| A（採用） | agent 向けのコーディング規約（言語別の instructions）だけを型にする | agent が実際に読むものに絞れる。設計の段と重ならない | 人向けの実装の説明は残らない（設計の段の文書で補う）             |
+| B         | 実装の方針・コーディング規約・実装の設計の 3 種類を型にする         | 人が読む実装の記録が残る                             | 設計の段（cpd・sysd・tsd）と重なり、agent が読まない文書が増える |
 
 ## 5. 回答・結論
 
-_TODO_: 回答または採択した方針を記載する。未回答の場合は `-` とする。
+A を採用する。実装の段の型は「agent 向けのコーディング規約（言語別の instructions）」の 1 種類だけにする。正本は `.github/instructions/<言語>.instructions.md` とし、環境別（`.claude/rules`・`AGENTS.md` など）は薄いラッパーにする。中身は基本方針・モジュールと import・型・エラー処理・命名・テストと検証・禁止事項の最低限に絞る。実装の設計書は置かない（モジュールの分け方やコンポーネントの境界は設計の段で決める）。使う言語・ライブラリは技術スタックの定義（tsd）に任せる。型の作成は PJR-981V で行う。
 
 ## 6. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 回答者   | _TODO_ |
-| 回答日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                        |
+| -------- | --------------------------- |
+| 回答者   | indie（PO）                 |
+| 回答日   | 2026-11-15                  |
+| 承認方式 | commit                      |
+| 証跡     | `register close`（decided） |
 
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-981V（型の作成）
+- [[prj-0001:pjr-tn43-user-decisions-pending]]
