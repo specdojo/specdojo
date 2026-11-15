@@ -24,7 +24,7 @@ specdojo:
 | 1   | kata-wave-1 の残り 7 件の確定の推奨（bes-index・ifx-index・cxd・cnd・cpd・ifd・sf-index）                                       | 7    | 「kata-wave-1 の残り 7 件の推奨」の判断・留保と、「起票の候補（確定に伴うもの）」の 2 件でよいか |
 | 2   | kata-wave-1 の確定の実行（sysd-index・sysd-critical-flows・sysd-cross-cutting-policy・dct-index は準備済み。1 の 7 件も加わる） | 11   | `status: ready` にして 140 を閉じてよいか                                                        |
 | 3   | 道具の欠けの起票                                                                                                                | 4    | 「起票の候補（道具の欠け）」を起票してよいか                                                     |
-| 4   | review 待ちのうち人の担当の項目（PJR-B0B8・GQ14・V5AZ・Q8KP・SZGZ）                                                             | 5    | 中身の確認と close。0.8.0（PJR-PMK6）に含めるかの判断にもかかわる                                |
+| 4   | review 待ちのうち人の担当の項目（PJR-B0B8。GQ14・V5AZ・Q8KP・SZGZ は close 済み）                                               | 1    | 中身の確認と close。0.8.0（PJR-PMK6）に含めるかの判断にもかかわる                                |
 | 5   | 残りの 140（project-kata 7、data-flow-pdca 8、business-specs-kata-2 5、stsd-pilot 1）                                           | 21   | 確定するか。判断材料は orchestrator が作る                                                       |
 | 6   | 問い・決定と PO の todo（PJR-SJ3Q・BRCG・PMK6・3R8F・11EX・FQZ5・6JE3・MXQB）                                                   | 9    | 各項目の判断                                                                                     |
 | 7   | kata-wave-2 の 140（bac-task-completion・bds-progress-report・sld-specdojo・ifx-file-agent-evidence）                           | 4    | agent の段が終わった後に確定するか                                                               |
