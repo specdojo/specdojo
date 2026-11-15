@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-sld-specdojo-005",
+  "run_id": "T-KATA-WAVE-2-sld-specdojo-005-20261115T022048Z-76843b70",
+  "stage": {
+    "role": "executor",
+    "actor": "argon-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T02:24:34.822Z",
+    "completed_at": "2026-11-15T02:41:56.833Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/sld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sld-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": "docs/ja/specdojo/rulebooks/sld-rulebook.md | 209 +++++++++++++++++++++--------\n docs/ja/specdojo/samples/sld-sample.md     |  94 ++++++++++---\n 2 files changed, 227 insertions(+), 76 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/sld-rulebook.md docs/ja/specdojo/samples/sld-sample.md docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "passed",
+      "summary": ""
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "今回の変更対象は Markdown ファイルのみであり、YAML（`*.yaml` / `*.yml`）ファイルの変更を含まないため適用外。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "今回の変更対象は `docs/ja/product/` および `docs/ja/specdojo/` 配下であり、`docs/ja/projects/` 配下の成果物・カタログの変更を含まないため適用外。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "履歴蓄積ファイル（`pjr-*.md` や既存の `plan.md` / `result.md`）の変更を含まないため適用外。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4809 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4809 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-005\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-G47JN7/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-tG5dFx/T-T-doc-010\nSkipping worktree dependencies: no tracked packag\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-005\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-15T03:49:07.809Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-11-\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "`sld-specdojo` の新規作成および `specdojo:sld-rulebook`・`specdojo:sld-sample` の改訂を完了し、Prettier による整形を確認しました。すべての対象文書の `status` は `draft` を維持しています。",
+  "handoff": [
+    "【実践の型の要否判断（`kata-guide.md` 基準）】`rulebook`（`specdojo:sld-rulebook`）は保管場所の区分・標準6列・削除可否3区分・CDSD や実装配置との責務分離を規定するため「必要（既存を改訂）」と判断した。`sample`（`specdojo:sld-sample`）は rulebook を持つ Markdown 成果物として粒度・文体・表の書き方を示すため「必要（既存を作り直し）」と判断した。一方、`recipe` と `template` は同種のデータモデル領域の型（`specdojo:cdsd-rulebook`、`specdojo:cdt-rulebook`）と同様に、5章構成と標準6列・記述ガイド・サンプルで作成手順と骨格が十分に定まり、別文書に分けると二重管理になるため不要と判断し、`sld-rulebook.md` の frontmatter に `recipe: not-needed` および `template: not-needed` を宣言した。",
+    "【参考にした `status: ready` 文書】同カテゴリ（`deliverable_type: data`）で `status: ready` の `docs/ja/specdojo/rulebooks/cdt-rulebook.md`（`specdojo:cdt-rulebook`）および `docs/ja/specdojo/samples/cdt-sample.md`（`specdojo:cdt-sample`）、ならびに隣接仕様の `docs/ja/specdojo/rulebooks/cdsd-rulebook.md`・`docs/ja/specdojo/samples/cdsd-sample.md`・`docs/ja/specdojo/samples/clis-sample.md` を参照し、見出しの階層連番、記述ガイドの判断基準・良い例・悪い例、およびサンプルの具体度（約90〜120行）の水準を揃えた。",
+    "【既存文書の評価と改訂・既存 finding の解消】既存の `sld-rulebook.md` は旧 ID プレフィックス `sll-` や `type` の不一致、サンプル章の埋め込み、階層番号欠落があったため、`specdojo:rulebook-authoring-standard` に合わせて全面改訂し、完成例を `sld-sample.md` へ外出しした。既存の `sld-sample.md` はプレースホルダ的なメタ説明（「何か」「どこから来てどこへ行くか」等）のみであったため、共通サンプル文脈（駄菓子屋きぬやの販売・在庫・記録管理）で物理保管場所6区分と店舗タブレット内論理保管場所4区分を具体化した完成例へ作り直した。",
+    "【一般化と具体化の役割分担】`specdojo:sld-rulebook` には物理現物・紙帳票・ソフトウェアディレクトリのいずれにも適用できる5章構成・標準6列・削除可否3区分（`削除不可` / `条件付き削除可` / `削除可`）とロール別検証観点を一般化して定義した。`sld-specdojo.md` には SpecDojo 固有の保管場所（リポジトリ内の `docs/`・`controls/`・`execution/`・`generated/`・`.specdojo/doc-index.json`・`execution/exec/.locks/`・`archive/`、端末ローカルの `${XDG_STATE_HOME:-~/.local/state}/specdojo/<repo-hash>/routines/<routines-hash>/`、`<worktree_base>/<task-name>/`、`tmp/`）と実装モジュール（`src/shared/run-records.ts`、`src/routine/storage.ts`、`src/shared/local-state.ts`、`src/exec/worktree.ts`、`.gitignore`）の対応を記述した。",
+    "【4つの品質チェックオペレーションの確認結果】1) 章構成と責務の適合: `sld-rulebook.md` の必須5章（概要、保管場所一覧、削除・退避・復旧の判断基準、関連仕様・実装配置との対応と検証、確認事項と変更影響）と `sld-sample.md`・`sld-specdojo.md` の章構成が完全一致していることを確認。2) 用語・粒度・メタデータの一致: 標準6列（保管場所、置くもの、関連プロセス・操作、共有の有無、寿命・管理頻度、削除・処分の可否と条件）、`type: data`、`rulebook: specdojo:sld-rulebook`、階層連番（`## 1.`、`### 1.1.`）が3文書で統一されていることを確認。3) 一般化と具体化の境界: rulebook・sample に `prj-0001` 固有の判断が混入しておらず、`sld-specdojo.md` にプレースホルダが残っていないことを確認。4) 完了条件の充足: `sld-specdojo` の `done_criteria`（ARC: 実装配置との一致、BA: 置くもの・共有の有無・寿命・消してよいかの記述、OPS: 消してよい場所と残すべき場所の判断可能性）を満たしていることを確認。",
+    "【未決事項・今後の引き継ぎ（`_UNDECIDED_` / `_TODO_`）】`cdsd-execution` で未決とされている「監視結果・費用作業記録の物理保管先と保持期間」は推測で確定せず、`sld-specdojo.md` の第5章に `_UNDECIDED_`（追跡先候補 `prj-0001:pjr-monitoring-storage`）として記録した。また、`cdsd-planning`・`cdsd-execution`・`cdsd-sharing` で追加候補（`_TODO_`）とされているデータストア群（タスク実行状態、実行計画と実行結果、実行証跡、タスク実行 worktree、成果物本体、ドキュメントインデックス、プロジェクト構成定義、成果物カタログ）は実装配置が確定しているため `sld-specdojo.md` で保管場所を定義したうえで、CDSD 側の正式登録後の参照同期を `_TODO_`（追跡先候補 `prj-0001:pjr-cdsd-store-sync`）として第5章に記録した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-005/T-KATA-WAVE-2-sld-specdojo-005-20261115T022048Z-76843b70/executor.log",
+      "bytes": 8838,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-005/T-KATA-WAVE-2-sld-specdojo-005-20261115T022048Z-76843b70/parent-validation-attempt-1-validate-schema.log",
+      "bytes": 135856,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-005/T-KATA-WAVE-2-sld-specdojo-005-20261115T022048Z-76843b70/parent-validation-attempt-2-test-integration.log",
+      "bytes": 294535,
+      "truncated": false
+    }
+  ]
+}
