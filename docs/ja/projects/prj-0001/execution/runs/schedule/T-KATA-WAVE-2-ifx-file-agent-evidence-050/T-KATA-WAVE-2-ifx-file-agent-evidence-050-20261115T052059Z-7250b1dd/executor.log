@@ -1,0 +1,7 @@
+`docs/ja/specdojo/samples/ifx-file-sample.md` の MD012 エラーを直しました。ファイル末尾の改行が 1 つ多く、空行が 2 行続いていたので、余分な 1 つを削りました。表の最終行の後は改行 1 つで終わっています。
+
+orchestrator の追加指示どおり、ほかの内容は変えていません。修正後に executor で `npm run lint:md` を流し、エラーが出ないことを確かめました。前回の試行で入った sample の手入れ（F001〜F004 への対応）は、今回は手を付けずそのまま残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-file-sample.md 末尾の余分な改行を削って MD012 を直した。ほかの内容は変えていない。executor で npm run lint:md を流し、エラーなしを確認した。","handoff":[],"validations":[{"command":"npm run lint:md","status":"passed","summary":"orchestrator の再開時指示で executor でも実行した。エラーなし（親 runner の結果を正とする）"}],"target_coverage":[{"target":"specdojo:ifx-file-sample","status":"changed","path":"docs/ja/specdojo/samples/ifx-file-sample.md"},{"target":"ifx-file-agent-evidence","status":"unchanged","reason":"plan で、この段では成果物本体を変更しないと定められているため（sample-maintenance の根拠成果物として参照のみ）"}]}
+</specdojo_executor_evidence>
