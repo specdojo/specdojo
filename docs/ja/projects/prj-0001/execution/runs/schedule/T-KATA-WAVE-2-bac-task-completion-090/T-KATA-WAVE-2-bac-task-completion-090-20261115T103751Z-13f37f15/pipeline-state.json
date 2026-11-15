@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-bac-task-completion-090",
+  "run_id": "T-KATA-WAVE-2-bac-task-completion-090-20261115T103751Z-13f37f15",
+  "updated_at": "2026-11-15T11:18:30.105Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "qwen-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T10:49:21.279Z",
+      "completed_at": "2026-11-15T11:12:14.696Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-090/T-KATA-WAVE-2-bac-task-completion-090-20261115T103751Z-13f37f15/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-15T11:15:33.430Z",
+      "completed_at": "2026-11-15T11:18:26.445Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-090/T-KATA-WAVE-2-bac-task-completion-090-20261115T103751Z-13f37f15/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "qwen-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T11:18:30.105Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-090/T-KATA-WAVE-2-bac-task-completion-090-20261115T103751Z-13f37f15/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-090/T-KATA-WAVE-2-bac-task-completion-090-20261115T103751Z-13f37f15/result.md"
+  }
+}
