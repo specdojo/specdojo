@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-1gcd-exec-condense-records-missing-retry
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-14T22:52:38Z"
+  completed_at: "2026-11-15T22:21:13Z"
+  conclusion: 0.8.0 の第 1 段で直した（condense の記録の欠けを executor の段で差し戻す）。ED0K との衝突を orchestrator が解き、親の検証をすべて通って統合済み
   derived_from:
     - PJR-52EE
   commit_type: fix

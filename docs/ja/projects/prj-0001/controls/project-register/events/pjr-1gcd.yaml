@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cc983f68764c4c75aa1e1ad03b64ed54
+- v: 1
+  id: reg_be1117fdfa774dd28db821674ab931b3
+  ts: "2026-11-15T22:21:13Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（condense の記録の欠けを executor の段で差し戻す）。ED0K との衝突を orchestrator が解き、親の検証をすべて通って統合済み
+  previous_event_id: reg_4454dad1fde44745820d62485944194e
