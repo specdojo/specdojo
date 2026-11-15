@@ -45,9 +45,9 @@ groups:
         kind: work
         depends_on:
           - sysd-index
-          - cdfd-task-execution
-          - cdfd-register-lifecycle
-          - cdfd-multi-project
+          - cdfd-overview
+          - cdfd-uc-register
+          - cdfd-uc-schedule
         overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
         path: sysd-critical-flows.md
         rulebook: specdojo:sysd-critical-flows-rulebook

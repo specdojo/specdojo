@@ -11,7 +11,7 @@ scope:
     - id: prj-0001:dct-business-acceptance-criteria
       path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml
       local_ids:
-        - bac-task-execution
+        - bac-task-completion
     - id: prj-0001:dct-user-interface-model
       path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml
       local_ids:
@@ -28,7 +28,7 @@ scope:
     - work
 approach_rules:
   - local_ids:
-      - bac-task-execution
+      - bac-task-completion
       - bds-progress-report
       - sld-specdojo
       - ifx-file-agent-evidence
@@ -215,37 +215,32 @@ phase_sets:
 default_phase_sets:
   - phase_set: bootstrap-pass
   - phase_set: rulebook-maintenance-pass
-  - phase_set: recipe-maintenance-pass
   - phase_set: sample-maintenance-pass
-  - phase_set: template-maintenance-pass
   - phase_set: refine-pass
   - phase_set: condense-pass
   - phase_set: retrofit-review-pass
   - phase_set: finalize-pass
 owner_rules:
   - local_ids:
+      - ifx-file-agent-evidence
       - sld-specdojo
     owner: ARC
     phase_overrides:
       - phase: finalize
         approach: bootstrap-finalize
   - local_ids:
-      - ifx-file-agent-evidence
-    owner: ARC
+      - bac-task-completion
+    owner: BA
     phase_sets:
       - phase_set: bootstrap-pass
       - phase_set: rulebook-maintenance-pass
+      - phase_set: recipe-maintenance-pass
       - phase_set: sample-maintenance-pass
+      - phase_set: template-maintenance-pass
       - phase_set: refine-pass
       - phase_set: condense-pass
       - phase_set: retrofit-review-pass
       - phase_set: finalize-pass
-    phase_overrides:
-      - phase: finalize
-        approach: bootstrap-finalize
-  - local_ids:
-      - bac-task-execution
-    owner: BA
     phase_overrides:
       - phase: finalize
         approach: bootstrap-finalize
