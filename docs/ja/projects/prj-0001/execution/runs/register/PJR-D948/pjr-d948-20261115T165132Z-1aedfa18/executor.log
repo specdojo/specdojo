@@ -1,0 +1,28 @@
+bds の sample を、grade（`specdojo.bds-sample`、判定 needs-work）の指摘 F001〜F019 に合わせて直しました。rulebook は変えておらず、駄菓子屋の文脈もそのままです。完了条件にある `grade run --target kata` での再 grade は実際の agent CLI を起動するため実行しておらず、sample が pass になるかはまだ確認できていません。
+
+**sample の主な変更**（`docs/ja/specdojo/samples/bds-sample.md`）
+- **営業日の判定**: 販売記録だけでは休業日と記録漏れを区別できないため、既存の sample にある日次締め記録を営業日の根拠にしました。見出しの「記録日数」は「営業日数」に改めています（F009・F013）。
+- **例外の扱い**: 例外の表に、全休の週、締めの販売件数と販売記録が合わない日、締めのない日の販売、締め記録を読めないときの保留を加えました。
+- **対象期間と契機**: 対象期間を月曜 0 時〜日曜 24 時に固定し、日曜が休業の週にいつ作るかを定めました。前提にしていた `_ASSUMPTION_` は削除しました（F007）。
+- **明細の矛盾を解消**: 明細に載せるのは「販売か欠品がある商品」とし、販売が 0 で欠品だけの週も明細に載るようにしました。注記には欠品の記録の有無を加えました（F006・F010・F014・F015）。
+- **出力と問い合わせ**: 出力形式の前提、閲覧範囲（店内に限る・個人情報を含まない）、問い合わせ先を加えました（F002・F008）。
+- **メモ / 将来課題**: 表に分類と引き継ぎ先の列を加え、次の内容を書きました。
+  - 限定受入の判断（F001）
+  - 作業の順と担当（F003・F004）
+  - 索引 `bds-index` が未作成であること（F016）
+  - 変更したときの影響と手順（F011・F019）
+- **用語と確定条件**: 「同行レビュー担当」を QE に改め（F017）、末尾に確定と公開の条件・文書検査・承認者を書きました（F012・F018）。
+
+個票 `pjr-d948-bds-sample-rework-wave-2.md` の対応結果に、実施内容・迷った点・残課題を書き、作業 1 を done にしました。
+
+**検証**: 変更した 2 ファイルは prettier と markdownlint で問題なしでした。`npm run validate:catalog` は OK で、警告は既存の未作成文書についてのものだけです。`npm run validate:history-links` も違反はありません。`lint:md`・`lint:fm`・`validate:schema` などはこのあと親 runner が実行します。
+
+**迷って決めた点**（handoff にも記載）
+- 業務イベントが揃うまでは、販売数と営業日数だけを受入の対象とし、欠品回数と補充候補は参考表示にする案を、PO が決める事項として書きました。
+- 補充候補の基準が決まるまでは、欠品 1 回以上を候補とします。
+- 文書検査のコマンドは、rulebook が「利用リポジトリの設定から決める」としているため、「本リポジトリでは」と前置きした例示にとどめました。
+- 引き継ぎ先の PJR はまだないので、`specdojo:pjr-bds-sales-events`・`specdojo:pjr-restock-threshold` はバッククォートで仮置きしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bds-sample を grade の F001〜F019 に合わせて直した（営業日の根拠に日次締め記録を追加、例外と明細の規則の矛盾を解消、閲覧範囲・確定条件・未整備事項の分類と引き継ぎ先を追加）。rulebook は変えていない。個票の対応結果に実施内容・判断・残課題を記入した。再 grade は agent CLI を起動するため未実行。","handoff":["`grade run --target kata` で specdojo:bds-rulebook と specdojo:bds-sample を再 grade し、sample が pass になったかを PJR-D948 の対応結果に追記する（実際の agent CLI を起動するため executor では未実行）。","判断: 販売記録だけでは休業日と記録漏れを区別できないため、cdsd-sample に定義済みの日次締め記録を営業日の根拠にした。","判断: 業務イベント（つけ販売の確定・`bes-stock-out-recorded`）が揃うまでは、販売数と営業日数だけを受入の対象とし、欠品回数と補充候補は参考表示にする案を PO の判断事項として記載した。補充候補の基準が決まるまでは欠品 1 回以上を候補とする。","判断: rulebook が文書検査を『利用リポジトリの設定から決める』としているため、検査コマンドは『本リポジトリでは』と前置きした例示にとどめた。","引き継ぎ先の PJR（`specdojo:pjr-bds-sales-events`、`specdojo:pjr-restock-threshold`）は未登録のため、バッククォートで仮置きしている。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/bds-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-d948-bds-sample-rework-wave-2.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/bds-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-d948-bds-sample-rework-wave-2.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（警告は既存の未作成文書の based_on についてのもののみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし（個票を含めすべて valid）"},{"command":"grade run --target kata","status":"requires_human","summary":"実際の agent CLI を起動するため人間または runner が実行し、sample が pass になったかを確認する"}]}
+</specdojo_executor_evidence>
