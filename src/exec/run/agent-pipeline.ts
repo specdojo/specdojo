@@ -1,6 +1,7 @@
 import { relative, sep } from "node:path";
 import type { ExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import {
+  enforceExecutorReportContract,
   executorCompletionFailure,
   recordExecutorEvidence,
   recordParentValidationFailureOutput,
@@ -30,7 +31,7 @@ import {
   type ReporterEvidence,
 } from "../reporter.js";
 import { mechanicalEditReporterOutput } from "../mechanical-result.js";
-import { renderReporterResult } from "../results.js";
+import { readResultFrontmatterSnapshot, renderReporterResult } from "../results.js";
 import { isRunRecordPath, recordStem, snapshotRunAttempt } from "../run-records.js";
 import { randomHex } from "../shared.js";
 import { withProductRepoPrompt } from "../task-repos.js";
@@ -127,6 +128,9 @@ async function writeMechanicalResult(params: {
   }
 }
 
+const DEFAULT_EXECUTOR_RESUME_HINT =
+  "resume the executor stage with --resume-from executor (add --executor-by <nickname> to switch the executor agent)";
+
 // register pipeline の reporter 段だけを実行する。executor 直後の通常経路と、executor が
 // 成功したまま reporter だけが失敗した run の再開経路の双方から共有し、reporter 起動・
 // result 描画・pipeline-state 更新のみを担う（register の状態遷移と commit は呼び出し側）。
@@ -149,6 +153,8 @@ export async function runReporterStage(params: {
   /** reporter が返す出力の mode。省略時は edit（Job Run の review だけが review を渡す）。 */
   mode?: TaskMode;
   rateLimitOptions?: PinnedRateLimitRunOptions;
+  /** Recovery command recorded when the executor evidence breaks the approach contract. */
+  executorResumeHint?: string;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -156,6 +162,30 @@ export async function runReporterStage(params: {
   state: PipelineState;
 }> {
   const { repoRoot, cwd, schedulePath, executionPath, reporterCandidates, execDefaults } = params;
+  // PJR-1GCD: an envelope missing an approach-required field is an executor failure. Checking it
+  // here also covers reporter-only resumes of evidence recorded before this check existed.
+  const resultApproach = readResultFrontmatterSnapshot(params.resultPath).approach;
+  const contractFailure = enforceExecutorReportContract({
+    evidence: params.evidence,
+    evidencePath: params.evidencePath,
+    contract: {
+      ...(typeof resultApproach === "string" ? { approach: resultApproach } : {}),
+      mode: params.mode ?? "edit",
+    },
+    resumeHint: params.executorResumeHint ?? DEFAULT_EXECUTOR_RESUME_HINT,
+  });
+  if (contractFailure) {
+    const blockedAt = new Date().toISOString();
+    const state = updatePipelineStage(
+      params.state,
+      "executor",
+      { status: "blocked", completed_at: blockedAt },
+      blockedAt,
+    );
+    writePipelineState(params.statePath, state);
+    process.stdout.write(`  Executor report rejected before the reporter: ${contractFailure}\n`);
+    return { exitCode: 1, runResult: "failure", blockReason: contractFailure, state };
+  }
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
   const reporterEvidence = evidenceForReporter(params.evidence, {
     repoRoot,
@@ -338,6 +368,8 @@ export async function runAgentPipeline(params: {
   mode?: TaskMode;
   executorRateLimitOptions?: PinnedRateLimitRunOptions;
   reporterRateLimitOptions?: PinnedRateLimitRunOptions;
+  /** Recovery command recorded when the executor evidence breaks the approach contract. */
+  executorResumeHint?: string;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -527,6 +559,7 @@ export async function runAgentPipeline(params: {
     productWorktrees: params.productWorktrees,
     mode: params.mode,
     rateLimitOptions: params.reporterRateLimitOptions,
+    ...(params.executorResumeHint ? { executorResumeHint: params.executorResumeHint } : {}),
   });
 
   return {

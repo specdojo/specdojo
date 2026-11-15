@@ -579,13 +579,16 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
     const taskState = snapshot.tasks[opts.task];
     const blockedStage =
       taskState?.state === "blocked" ? taskState.meta?.pipeline_stage : undefined;
+    // A blocked executor stage is accepted here; selectScheduleExecutorResume admits it only when
+    // the runner rejected the executor report before the reporter (PJR-1GCD).
     if (
       taskState?.state !== "doing" &&
       blockedStage !== "reporter" &&
-      blockedStage !== "integrate"
+      blockedStage !== "integrate" &&
+      blockedStage !== "executor"
     ) {
       throw new Error(
-        "--resume-from executor requires a doing task or a blocked reporter or integrate stage.",
+        "--resume-from executor requires a doing task or a blocked reporter, integrate, or executor stage.",
       );
     }
     const worktreeTaskId = qualifyTaskId(projectId, opts.task);

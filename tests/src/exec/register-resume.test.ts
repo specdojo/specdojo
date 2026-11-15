@@ -173,6 +173,22 @@ describe("selectScheduleExecutorResume", () => {
     },
   );
 
+  it("restarts the executor when the runner rejected its report at the executor stage", () => {
+    const state = makeState({ executorStatus: "blocked", reporterStatus: "pending" });
+    const evidence = makeEvidence(state.run_id);
+    evidence.completion_status = "incomplete";
+    evidence.block_reason = "executor evidence lacks valid condense_records";
+
+    expect(selectScheduleExecutorResume([makeCandidate({ state, evidence })])).toMatchObject({
+      kind: "resumable",
+      target: {
+        stage: "executor",
+        runId: state.run_id,
+        handoff: ["executor evidence lacks valid condense_records"],
+      },
+    });
+  });
+
   it("restarts the executor after an integration whose latest report was incomplete", () => {
     const state = makeState({ reporterStatus: "succeeded", integrateStatus: "failed" });
     const evidence = { ...makeEvidence(state.run_id), completion_status: "incomplete" as const };

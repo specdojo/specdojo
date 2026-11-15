@@ -191,7 +191,7 @@ result の `specdojo.condense_records` は修正・保持の記録のリスト�
 | `reason`   | 意味を保った根拠、または残した理由                                                                                                                              |
 | `cause`    | `FindingCause`: `{"type":"document"}`、または `{"type":"kata","kind":"recipe","location":"根拠の箇所"}`。`kind` は rulebook / recipe / sample / template        |
 
-Kata が原因とするのは、宣言された Kata の箇所を示せる場合だけです。schema は `condense-records.schema.yaml` から共通の `finding-cause.schema.yaml` を参照します。pipeline executor は最終 evidence に `condense_records` を出し、runner が検証済みの同じリストを frontmatter と表へ転記します。reporter の要約によって省略・変更しません。通常の識別項目は scaffold と照合し、`condense_records` は記録用の可変項目として検証します。完了・block などの状態更新後も記録を保持します。
+Kata が原因とするのは、宣言された Kata の箇所を示せる場合だけです。schema は `condense-records.schema.yaml` から共通の `finding-cause.schema.yaml` を参照します。pipeline executor は最終 evidence に `condense_records` を出し、runner が検証済みの同じリストを frontmatter と表へ転記します。reporter の要約によって省略・変更しません。executor が `condense_records` を出さない、または形式が正しくない場合は、reporter を起動せず executor の段の失敗として止めます（[[specdojo:exec-config-guide]] の executor の報告の説明を参照）。通常の識別項目は scaffold と照合し、`condense_records` は記録用の可変項目として検証します。完了・block などの状態更新後も記録を保持します。
 
 Kata の手入れ plan は成果物ごとの最新の完了済み `condense` result から Kata が原因の記録を展開します。成果物が宣言する rulebook から辿れる対象 Kata と原因の種類が一致する記録に限り、grade 由来とは出どころを区別します。
 
