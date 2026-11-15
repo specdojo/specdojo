@@ -111,3 +111,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_abb347548757462e94b11b63762f299f
+- v: 1
+  id: reg_9c300698a0094bd3ac49f8402e4ba79d
+  ts: "2026-11-15T23:07:39Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: cdfd-sample の 2 図を D2 に書き直し、型の再 grade で pass（96 点）
+  previous_event_id: reg_c700360483204f849f1864f30b69b9ae

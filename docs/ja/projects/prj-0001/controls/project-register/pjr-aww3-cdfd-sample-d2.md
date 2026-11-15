@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-aww3-cdfd-sample-d2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-15T14:35:28Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-15T23:07:39Z"
+  conclusion: cdfd-sample の 2 図を D2 に書き直し、型の再 grade で pass（96 点）
   derived_from:
     - PJR-PMK6
   commit_type: docs
