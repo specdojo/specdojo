@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005",
   "run_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005-20261115T022237Z-11f96635",
-  "updated_at": "2026-11-15T04:20:38.943Z",
+  "updated_at": "2026-11-15T04:20:55.922Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-005/T-KATA-WAVE-2-ifx-file-agent-evidence-005-20261115T022237Z-11f96635/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-11-15T04:20:38.943Z",
-      "completed_at": null,
+      "completed_at": "2026-11-15T04:20:55.922Z",
       "artifact_ref": null
     }
   },
