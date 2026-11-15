@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-15T14:35:45Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-PMK6
   commit_type: docs
@@ -47,7 +46,9 @@ Mermaid のまま残る図の枠を、overview・uc の template と同じ D2 �
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:cdfd-template]] の「概念データフロー」の図の枠を、overview・uc の template と同じ classes 構成の D2 にした。全体概要の凡例が Mermaid を宣言した場合、記法を宣言しない場合、凡例がない場合は [[specdojo:cdfd-mermaid-rulebook]] に従う Mermaid へ置き換えるとコメントに書いた。
+- 図の直後の注記の _TODO_ を、共通凡例がある場合はその参照、ない場合は `specdojo:cdfd-mermaid-rulebook` の既定凡例に従うと分けて書けるようにした（grade の F001・F002）。
+- 残課題: [[specdojo:cdfd-rulebook]] の「プロセス領域」は各節を表だけにすると定めているが、template の各節には主要入力・主要出力・データストアの箇条書きが残っている。本タスクの範囲外のため、別の項目で直すかどうかを判断する。
 
 ## 6. 関連ドキュメント
 
