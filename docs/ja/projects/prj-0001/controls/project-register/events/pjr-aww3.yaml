@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_34cb59ca295b4a399059442c88dcda68
+  ts: "2026-11-15T14:35:32Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cdfd-sample の概念データフロー図を D2 に書き直す
+    - field: description
+      from: ""
+      to: Mermaid のまま残る 5.1・5.2 の 2 図を、全体概要で採用した D2 へ書き直す
+    - field: input
+      from: ""
+      to: '["cdfd-sample は cdfd-overview-sample（`based_on`）を詳細化する。全体概要は「凡例（本プロダクト共通）」で D2 を採用し、cdfd-rulebook は全体概要で選んだ記法に従うと定めるが、cdfd-sample の図は Mermaid のまま残っている（2026-11-15）","5.1 仕入計画と 5.2 入荷検品の 2 図を [[specdojo:cdfd-d2-rulebook]] に沿って D2 にする（direction: down、データストアの色は G 案）。ノード、エッジ、情報の流れと商品の流れの区別、プロセス ID は変えない。図の下の凡例の説明も D2 の表記に合わせる","cdfd-overview-sample・cdfd-uc-sample の D2 の書き方にそろえる。本文の表と章構成は変えない","0.8.0（PJR-PMK6）で型を極力最新にする方針に含める（2026-11-15、利用者が承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: approach
+      from: ""
+      to: sample-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:cdfd-sample"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-PMK6"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
