@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-m18b-review-grade-failure-blocks-completion
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T11:31:19Z"
+  completed_at: "2026-11-15T16:45:31Z"
+  conclusion: 0.8.0 の第 1 段で直した（review の段で grade が失敗したら、タスクを完了にしない）。親の検証をすべて通って統合済み
   commit_type: fix
   commit_scope: review
 ---

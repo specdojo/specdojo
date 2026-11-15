@@ -19,7 +19,7 @@
       to: grade の失敗や grade-stale の結論では review を完了させず、再試行するか blocked にする
     - field: input
       from: ""
-      to: "[\"2026-11-15、kata-wave-2 の bac-task-completion-090 と sld-specdojo-090 で、review の前の grade が出力の形式の誤り（CAUSE requires a preceding FINDING / malformed `DONE_CRITERIA` entry）で失敗した。review は grade-stale と判定したのに、タスクは done になり、成果物の grade がないまま 140 に進んだ\"]"
+      to: '["2026-11-15、kata-wave-2 の bac-task-completion-090 と sld-specdojo-090 で、review の前の grade が出力の形式の誤り（CAUSE requires a preceding FINDING / malformed `DONE_CRITERIA` entry）で失敗した。review は grade-stale と判定したのに、タスクは done になり、成果物の grade がないまま 140 に進んだ"]'
     - field: type
       from: ""
       to: todo
@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3ba280c4dec3418f9872c06791d4a660
+- v: 1
+  id: reg_de5f8604e46144eea1f1e0f17a120d8d
+  ts: "2026-11-15T16:45:31Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（review の段で grade が失敗したら、タスクを完了にしない）。親の検証をすべて通って統合済み
+  previous_event_id: reg_22f5d6ab46aa4dc09d8d746c9d97dc38
