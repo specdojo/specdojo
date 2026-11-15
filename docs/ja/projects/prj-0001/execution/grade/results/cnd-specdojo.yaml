@@ -1,0 +1,304 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cnd-specdojo
+path: docs/ja/product/030-architecture/010-c4/cnd-specdojo.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 82
+graded_at: "2026-11-15T02:42:06.152Z"
+graded_by: sol-review-executor
+content_hash: d73bbeec5ee3e18e4073da37349c1934555886d2f7f7003d6463015defa8f464
+source_hashes:
+  catalog-entry: c0caead0066c7ce9e876446f3c1d3c1eb74dfd69f1d877bdbc6831568fc5bfa3
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cxd-specdojo: 847b9f2d7413e01d7ed02d3ed27afdf1c6fa2554a8535e0f23cfe5fb29bc2900
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: bc8f1e0f0bffdbd01b7105ee254e128bbfd04aabcb57f540382cbf383660ed7d
+categories:
+  purpose:
+    score: 75
+  operations:
+    score: 94
+  planning:
+    score: 75
+  business:
+    score: 92
+  consistency:
+    score: 75
+  architecture:
+    score: 100
+  usability:
+    score: 94
+  implementation:
+    score: 88
+  quality:
+    score: 63
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 74
+    anchor: サイトの構築・配備を CLI が直接起動するか、別の実行基盤が担うかは未確定である。閲覧先から CLI を操作する経路は本図の対象外とする。
+    message: >-
+      Define the container and deployment baseline submitted for PO approval, identify which unresolved build and
+      delivery assumptions may be accepted, and state which downstream activities remain on hold; the current handoffs
+      do not establish an actionable approval scope.
+    message_ja: >-
+      Define the container and deployment baseline submitted for PO approval, identify which unresolved build and
+      delivery assumptions may be accepted, and state which downstream activities remain on hold; the current handoffs
+      do not establish an actionable approval scope.
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 132
+    anchor: >-
+      | 実行・配備の仮定   | CLI、サイト、`REL-04`・`REL-06`。上位図はローカル実行も仮定としている | ARC        | `cpd-specdojo-cli` と `ifd-specdojo`
+      の整備で CLI の実行単位、構築主体、配信先を具体化し、本図の仮定と照合する |
+    message: >-
+      Add a deadline or downstream entry condition for each unresolved topic, such as before deployment design or
+      integration acceptance; phrases referring only to future document preparation do not establish when PM must
+      schedule and verify closure.
+    message_ja: >-
+      Add a deadline or downstream entry condition for each unresolved topic, such as before deployment design or
+      integration acceptance; phrases referring only to future document preparation do not establish when PM must
+      schedule and verify closure.
+    cause:
+      type: document
+  - id: F003
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 130
+    anchor: >-
+      | 対象・論点         | 影響範囲                                                              | 担当ロール |
+      解消条件・引き継ぎ先                                                                                           |
+    message: >-
+      Classify the unresolved topics as issue, risk, or decision candidates, identify the reporting route to PM, and
+      reference their PJR destination records or explicitly pending registration; technical-document handoffs alone do
+      not support management tracking or distinguish an open proposal from a recorded decision.
+    message_ja: >-
+      Classify the unresolved topics as issue, risk, or decision candidates, identify the reporting route to PM, and
+      reference their PJR destination records or explicitly pending registration; technical-document handoffs alone do
+      not support management tracking or distinguish an open proposal from a recorded decision.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 121
+    anchor: >-
+      | 確認区分     | 対象関係・境界                 | 観測する結果                                                                    
+      | 主確認ロール |
+    message: >-
+      Identify who performs BA and user-representative confirmation of the CLI and document-viewing scenarios, and who
+      performs OPS confirmation of the build and delivery assumptions; the current technical verification assignments
+      leave these stakeholder agreements unassigned.
+    message_ja: >-
+      Identify who performs BA and user-representative confirmation of the CLI and document-viewing scenarios, and who
+      performs OPS confirmation of the build and delivery assumptions; the current technical verification assignments
+      leave these stakeholder agreements unassigned.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 102
+    anchor: >-
+      | `REL-05` | SpecDojo CLI → リポジトリ（仕様・判断・検証記録）                        | 仕様・記録の参照と更新             |
+      ローカルファイルの読み書き。詳細な配置・構造は再定義しない                          | [[cxd-specdojo\|上位コンテキスト図]] の中核責務、各記録の schema |
+    message: >-
+      Replace the generic reference to each record's schema with a resolvable schema index or specific contract
+      references covering REL-05, so developers can locate the authoritative repository input and output definitions
+      without guessing.
+    message_ja: >-
+      Replace the generic reference to each record's schema with a resolvable schema index or specific contract
+      references covering REL-05, so developers can locate the authoritative repository input and output definitions
+      without guessing.
+    cause:
+      type: document
+  - id: F006
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 132
+    anchor: >-
+      | 実行・配備の仮定   | CLI、サイト、`REL-04`・`REL-06`。上位図はローカル実行も仮定としている | ARC        | `cpd-specdojo-cli` と `ifd-specdojo`
+      の整備で CLI の実行単位、構築主体、配信先を具体化し、本図の仮定と照合する |
+    message: >-
+      Explicitly record DC-002 as outstanding and connect its closure to a reviewable deployment baseline and PO
+      disposition of the build and delivery assumptions; the current future-work entries do not demonstrate that the
+      catalog's configuration and deployment approval condition is met.
+    message_ja: >-
+      Explicitly record DC-002 as outstanding and connect its closure to a reviewable deployment baseline and PO
+      disposition of the build and delivery assumptions; the current future-work entries do not demonstrate that the
+      catalog's configuration and deployment approval condition is met.
+    cause:
+      type: document
+  - id: F007
+    severity: major
+    rule: vp-qe-verifiability
+    line: 124
+    anchor: "| AI 委譲      | `REL-07`                       | 外部 CLI 不在・拒否・応答欠落と、返された結果・途中変更を区別できるか            | QE / ARC     |"
+    message: >-
+      Define observable normal success outcomes for REL-07 and REL-08 through REL-10, including returned result and
+      evidence, local history effects, and remote reflection; failure-oriented questions alone do not establish
+      reproducible pass/fail expectations for these paths.
+    message_ja: >-
+      Define observable normal success outcomes for REL-07 and REL-08 through REL-10, including returned result and
+      evidence, local history effects, and remote reflection; failure-oriented questions alone do not establish
+      reproducible pass/fail expectations for these paths.
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 123
+    anchor: "| 正本と閲覧物 | `REL-05`、`REL-06`、`REL-04`   | 正本の変更と構築・配備後の閲覧内容を対応付け、構築失敗時の配信状態を識別できるか | QE / DEV     |"
+    message: >-
+      Add verification expectations for unreadable, unwritable, or interrupted repository access on REL-05 and REL-06,
+      distinguishing failed operations from already persisted changes and identifying unresolved recovery expectations;
+      the current checks cover build, AI, and Git failures but omit failure of the authoritative store itself.
+    message_ja: >-
+      Add verification expectations for unreadable, unwritable, or interrupted repository access on REL-05 and REL-06,
+      distinguishing failed operations from already persisted changes and identifying unresolved recovery expectations;
+      the current checks cover build, AI, and Git failures but omit failure of the authoritative store itself.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 132
+    anchor: >-
+      | 実行・配備の仮定   | CLI、サイト、`REL-04`・`REL-06`。上位図はローカル実行も仮定としている | ARC        | `cpd-specdojo-cli` と `ifd-specdojo`
+      の整備で CLI の実行単位、構築主体、配信先を具体化し、本図の仮定と照合する |
+    message: >-
+      Make the existing cpd-specdojo-cli and ifd-specdojo handoff references navigable links, including the
+      infrastructure references in the relationship table; readers following the deployment-design handoff currently
+      reach plain identifiers without a direct route to those documents.
+    message_ja: >-
+      Make the existing cpd-specdojo-cli and ifd-specdojo handoff references navigable links, including the
+      infrastructure references in the relationship table; readers following the deployment-design handoff currently
+      reach plain identifiers without a direct route to those documents.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 115
+    anchor: "- 文書生成や AI 作業の成功から成果物の承認を導かない。外部へ渡す情報と認証の管理は連携契約で確認し、本図に認証値や未確認の秘密情報非保持保証を置かない。"
+    message: >-
+      Reference the review and PO decision records, or explicitly state that they are pending, and identify the
+      outstanding checks before ready promotion and publication, including OPS comparison of approved and published
+      scopes.
+    message_ja: >-
+      Reference the review and PO decision records, or explicitly state that they are pending, and identify the
+      outstanding checks before ready promotion and publication, including OPS comparison of approved and published
+      scopes.
+    cause:
+      type: document
+  - id: F011
+    severity: major
+    rule: vp-qe-config-validity
+    line: 72
+    anchor: >-
+      | 生成ドキュメントサイト（VitePress） | 公開対象として選んだ文書を閲覧用に構成し、参加者へ提供する                     | _ASSUMPTION_:
+      文書を構築時に読み、静的生成物を配備する単位。構築環境と配信先は別途選ぶ。閲覧時に CLI の起動やリポジトリの直接参照を要しない構成案 |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 4
+  total: 5
+  unsatisfied:
+    DC-002:
+      - PO
+  detail_ref: cnd-specdojo-grade-criteria

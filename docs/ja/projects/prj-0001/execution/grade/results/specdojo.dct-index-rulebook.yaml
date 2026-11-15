@@ -5,13 +5,13 @@ path: docs/ja/specdojo/rulebooks/dct-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-10-31T20:24:31.585Z"
-graded_by: flash-high-executor
-content_hash: d5937be936588608ea846e6f5f09611764cbe5e5c78d45f9cd8d1c0ee80cfc43
+score: 99
+graded_at: "2026-11-15T02:31:48.262Z"
+graded_by: sol-review-executor
+content_hash: 00ccb121a024d498b997f672e123ec588737a2b13eb087e76a256a6432135407
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -98,6 +98,19 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 76
+    anchor: 対象プロジェクトと予定する成果物セットを確認してからメタ情報を記入する。`size` を変える場合は scaffold の対象範囲を見直す判断として扱い、変更理由を実行記録へ残す。
+    message: >-
+      Explain how to compare the deliverable sets selected by small, medium, and large, or reference the catalog
+      templates and their min_size rules; the current guidance asks readers to confirm the intended set without
+      identifying where its contents are defined.
+    message_ja: >-
+      Explain how to compare the deliverable sets selected by small, medium, and large, or reference the catalog
+      templates and their min_size rules; the current guidance asks readers to confirm the intended set without
+      identifying where its contents are defined.
