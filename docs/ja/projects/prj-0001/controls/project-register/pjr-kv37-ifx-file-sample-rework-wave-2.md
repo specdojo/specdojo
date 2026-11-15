@@ -12,7 +12,7 @@ specdojo:
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:22:20Z"
-  block_reason: "parent validation failed: test-integration"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
   commit_type: docs
   commit_scope: kata
   approach: sample-maintenance
