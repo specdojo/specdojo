@@ -19,7 +19,7 @@
       to: 親 runner の検証を 1 行にまとめた not\_run を親の検証の結果で読み替える
     - field: input
       from: ""
-      to: '["2026-11-15 の夜間に cnd-080 が、親の検証 9 件がすべて通ったのに「executor validation failed or not run」で止まった"]'
+      to: "[\"2026-11-15 の夜間に cnd-080 が、親の検証 9 件がすべて通ったのに「executor validation failed or not run」で止まった\"]"
     - field: type
       from: ""
       to: todo
@@ -89,3 +89,16 @@
       from: "parent validation failed: validate-schema"
       to: "-"
   previous_event_id: reg_5db1b7a86fd94876ac8bc05e2fc3f788
+- v: 1
+  id: reg_084eb91b9d5248e98306e6609818c36c
+  ts: "2026-11-15T15:42:58Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4df04db4fd1c440abd1f636937a861b4

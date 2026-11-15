@@ -435,6 +435,80 @@ describe("reporter structured output", () => {
     });
   });
 
+  describe("executor lines that delegate parent validations (PJR-Q2AT)", () => {
+    const runnerPassed = (id: string, command: string) =>
+      ({ id, source: "runner", command, status: "passed", summary: "exit 0" }) as const;
+    const runnerValidations = [
+      runnerPassed("lint-ts", "npm run lint:ts"),
+      runnerPassed("lint-md", "npm run lint:md"),
+      {
+        id: "typecheck",
+        source: "runner",
+        command: "npm run typecheck",
+        status: "not_applicable",
+        summary: "skipped by change type",
+        reason: "skipped by change type",
+      },
+    ] as const;
+
+    it("accepts per-command not_run lines that the runner passed", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run lint:ts", status: "not_run", summary: "parent" },
+        { source: "executor", command: "npm run lint:md", status: "not_run", summary: "parent" },
+        ...runnerValidations,
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it.each([
+      "parent runner: lint-ts, lint-md, typecheck",
+      "parent runner validations: lint-ts, lint-md",
+      "親 runner 指定検査（lint-ts, lint-md, typecheck）",
+    ])("accepts one not_run line listing parent validations that passed: %s", (command) => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command, status: "not_run", summary: "parent runner runs these" },
+        ...runnerValidations,
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it.each([
+      ["a validation not configured for the runner", "parent runner: lint-ts, lint-fm"],
+      ["an unknown label", "parent runner: lint-ts, spellcheck"],
+      ["a list that cannot be parsed", "parent runner: lint-ts, lint-md, …"],
+    ])("still blocks an aggregated line with %s", (_case, command) => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command, status: "not_run", summary: "parent runner runs these" },
+        ...runnerValidations,
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "blocked",
+        block_reason: `executor validation failed or not run: ${command}`,
+      });
+    });
+
+    it("still blocks an aggregated line when the runner recorded no results", () => {
+      const input = evidence();
+      const command = "parent runner: lint-ts, lint-md";
+      input.validations = [
+        { source: "executor", command, status: "not_run", summary: "parent runner runs these" },
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "blocked",
+        block_reason: `executor validation failed or not run: ${command}`,
+      });
+    });
+  });
+
   it("still rejects not_applicable for a non-parent validation with an existing script", () => {
     const input = evidence();
     input.validations = [

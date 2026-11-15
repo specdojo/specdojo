@@ -731,6 +731,52 @@ export function failedParentValidationReason(
   return `parent validation failed: ${failed.map(recordedParentValidationLabel).join(", ")}`;
 }
 
+// PJR-Q2AT: executor が親検証をまとめて 1 行（例: `parent runner: lint-ts, lint-fm`、
+// `親 runner 指定検査（lint-ts, lint-fm）`）に書いた場合に、末尾の区切り列を検証ラベルとして取り出す。
+const AGGREGATE_LABEL_PATTERN = "(?:[A-Za-z0-9][A-Za-z0-9_-]*:)?[a-z][a-z0-9-]*";
+const AGGREGATE_LINE_PATTERN = new RegExp(
+  `^(\\S.*?)(?:[:：(（\\[]|\\s)\\s*(${AGGREGATE_LABEL_PATTERN}(?:\\s*[,、]\\s*${AGGREGATE_LABEL_PATTERN})*)\\s*[)）\\]]?\\s*$`,
+  "u",
+);
+// コマンドそのもの（`npm run lint:md` など）をまとめた行と取り違えない。
+const COMMAND_PREFIX_PATTERN = /^(?:npm|npx|pnpm|yarn|node|tsx|specdojo)(?:\s|$)/u;
+
+function aggregatedParentValidationLabels(command: string): string[] | undefined {
+  const normalized = command.trim().replace(/\s+/gu, " ");
+  if (COMMAND_PREFIX_PATTERN.test(normalized)) return undefined;
+  const match = AGGREGATE_LINE_PATTERN.exec(normalized);
+  if (!match) return undefined;
+  return match[2].split(/\s*[,、]\s*/u).filter((label) => label.length > 0);
+}
+
+/**
+ * Whether an executor validation line that lists parent validation labels together
+ * (e.g. `parent runner: lint-ts, lint-fm`) is covered by the runner's own results.
+ * Every listed label must have a runner record (so it is configured in
+ * `pipeline.parent_validations`) that passed or was skipped by change type.
+ */
+export function isAggregatedParentValidationSatisfied(
+  command: string,
+  validations: readonly EvidenceValidation[],
+): boolean {
+  const labels = aggregatedParentValidationLabels(command);
+  if (!labels || labels.length === 0) return false;
+  const runnerStatuses = new Map<string, EvidenceValidation["status"][]>();
+  for (const validation of validations) {
+    if (validation.source !== "runner" || typeof validation.id !== "string") continue;
+    const label = recordedParentValidationLabel(validation);
+    runnerStatuses.set(label, [...(runnerStatuses.get(label) ?? []), validation.status]);
+  }
+  return labels.every((label) => {
+    const statuses = runnerStatuses.get(label);
+    return (
+      statuses !== undefined &&
+      statuses.length > 0 &&
+      statuses.every((status) => status === "passed" || status === "not_applicable")
+    );
+  });
+}
+
 /**
  * Replaces stale runner-owned validation results while preserving executor-owned evidence.
  * The caller must supply results produced from the fixed parent-validation allowlist.

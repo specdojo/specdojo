@@ -12,6 +12,7 @@ import { executorCompletionFailure, type ExecEvidence } from "./evidence.js";
 import {
   PARENT_VALIDATION_PROJECT_REPO,
   failedParentValidationReason,
+  isAggregatedParentValidationSatisfied,
 } from "./parent-validation.js";
 import {
   MAX_TEXT_LENGTH,
@@ -396,6 +397,13 @@ export function deriveReporterFacts(
     if (
       (validation.status === "not_run" || validation.status === "not_applicable") &&
       isPassedParentValidation(validation.command)
+    ) {
+      return false;
+    }
+    // 親検証をまとめて書いた 1 行は、挙がった検証がすべて親 runner で通っていれば満たす（PJR-Q2AT）。
+    if (
+      (validation.status === "not_run" || validation.status === "not_applicable") &&
+      isAggregatedParentValidationSatisfied(validation.command, evidence.validations)
     ) {
       return false;
     }
