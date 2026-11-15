@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-q2at-exec-parent-validation-aggregate-not-run
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-14T22:51:42Z"
+  completed_at: "2026-11-15T16:46:10Z"
+  conclusion: 0.8.0 の第 1 段で直した（親の検証をまとめた not_run の行で executor の検証を失敗と取り違えない）。親の検証をすべて通って統合済み
   commit_type: fix
   commit_scope: exec
 ---
