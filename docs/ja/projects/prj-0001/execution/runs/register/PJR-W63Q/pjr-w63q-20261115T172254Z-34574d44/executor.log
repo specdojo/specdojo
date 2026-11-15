@@ -1,0 +1,22 @@
+`bac-task-completion` の編集は終わりました。直した後の `grade run --target deliverable` による再評価はまだで、個票が求めるうちこの 1 件だけが残っています。`npm run validate:catalog` と `npm run validate:history-links` は通りました。`lint:md` などは、このあと親 runner が実行します。
+
+**成果物 `docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md`**
+- 「受入条件」の共通前提の後に、BAC-01〜09 の対応表を 1 つ足しました。各行は、実装・設計の文書・ARC の確認状況の 3 列です。
+  - 実装は `evidence_refs` の範囲に限りました（`src/grade/grade.ts`・`src/exec/run/run.ts`）。
+  - 設計の文書は、`stsd-task-execution`・`stsd-register-entry`・`stsd-deliverable`・`cdsd-execution` の該当する遷移やデータストアを参照しています。（F002・DC-003 への対応）
+- 実装で満たせることを確かめられたのは BAC-01 と BAC-05 だけです。ほかの 7 件は全部または一部が「確認待ち」です。
+  - 評価結果を扱う cdsd・stsd がないため、BAC-02〜04 と BAC-08 は「評価結果の設計の文書なし」と書きました。
+  - Kata の変化は内容ではなく評価日時で検出しています。そのため BAC-02 の C-01 と C-02 を区別できるかは確かめられていません。
+- 「メモ / 将来課題」にあった `_TODO_` 2 件（代表試行と費用・作業時間の上限）は本書では決められないため、期限付きの留保に改めて追跡先の列を足しました。設計の確認待ちの条件も留保として 1 行加えています。これで未決の目印はなくなりました。（F001・F003・F004 への対応）
+- `status` は `draft` のままです。
+
+**個票 `pjr-w63q-bac-task-completion-design-reference.md`**
+- 「対応結果」に、実施内容、決めたことと理由、残課題を書きました。
+
+**参照範囲について**
+- 個票の完了条件が cdsd・stsd への参照を求めていたため、plan で宣言されていない上記の設計の文書と、`evidence_refs` が再エクスポートする `src/grade/target-discovery.ts` などのモジュールも読み取り専用で読みました。
+- PJR-M18B の対応は `evidence_refs` の外の実装なので、確認済みとは扱わず「確認待ち」にしています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bac-task-completion に BAC-01〜09 ごとの実装（evidence_refs）・設計の文書（stsd-task-execution・stsd-register-entry・stsd-deliverable・cdsd-execution）・ARC の確認状況の対応表を追加。メモ / 将来課題の _TODO_ 2 件は期限付きの留保に改め、追跡先列と設計の確認待ちの留保行を追加した。個票の対応結果も記入。status は draft のまま。grade run --target deliverable による再評価はまだ行っていない。","handoff":["`grade run --target deliverable` による再評価はまだ行っていない。個票はこれを完了条件としているので、runner または orchestrator が実行し、結果を PJR-W63Q の対応結果に追記する。","決めたこと: 設計・実装の対応はシナリオごとの節に分散させず、受入条件の共通前提の後に 1 つの表にまとめた（同じ参照の繰り返しを避けるため）。","決めたこと: 実装の参照は `evidence_refs`（src/grade/grade.ts・src/exec/run/run.ts）の範囲に限った。PJR-M18B で対応済みの review 前の grade の鮮度の扱いは範囲外の実装なので、BAC-07 は「確認待ち」とした。","決めたこと: 評価結果を扱う cdsd・stsd がないので、BAC-01〜04・08 には「評価結果の設計の文書なし」と明記した。cdsd-execution の _TODO_（plan / result / evidence のデータストアの追加）とつながる論点である。","決めたこと: 代表試行と費用・作業時間の上限は本書では決められないので、期限付きの留保（業務受入の試行の前に解消する）とし、追跡先は 140 の確定時に PO が判断する PJR-TN43 の kata-wave-2 の行とした。留保の可否は PO が 140 で判断する。","次のアクション: 「確認待ち」の条件（BAC-02 の Kata 変化の検出、BAC-03・04・08、BAC-06・07・09 の一部）は、業務受入の試行の前に ARC が照合する。不足は BA が PM へ PJR 登録候補として渡し、登録したら bac-task-completion の「メモ / 将来課題」の追跡先に個票を追記する。","参照範囲: 個票の完了条件が cdsd・stsd への参照を求めるため、plan で宣言されていない設計の文書（stsd-task-execution・stsd-register-entry・stsd-deliverable・cdsd-execution）と、`evidence_refs` が再エクスポートするモジュール（src/grade/target-discovery.ts など）を読み取り専用で参照した。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"exit 0（既存の based_on 未検出の WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票 pjr-w63q を含めすべて valid"},{"command":"npx prettier --write docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md docs/ja/projects/prj-0001/controls/project-register/pjr-w63q-bac-task-completion-design-reference.md","status":"passed","summary":"変更ファイルを整形した"}]}
+</specdojo_executor_evidence>
