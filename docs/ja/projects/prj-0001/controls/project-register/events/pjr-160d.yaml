@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_12713b1612f14a1e94e8747f456dbaab
+- v: 1
+  id: reg_adf2e16f7953401e90f3c6cb155388b0
+  ts: "2026-11-15T01:19:20Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: commit 対象外の変更が残ると統合と撤去を止め、対象パスと次の操作を result とログに残すようにした
+  previous_event_id: reg_0e97438d57ea40c8bf277500f12fa4ae

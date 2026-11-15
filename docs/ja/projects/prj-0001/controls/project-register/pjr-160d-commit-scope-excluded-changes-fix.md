@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-160d-commit-scope-excluded-changes-fix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:53:02Z"
+  completed_at: "2026-11-15T01:19:20Z"
+  conclusion: commit 対象外の変更が残ると統合と撤去を止め、対象パスと次の操作を result とログに残すようにした
   derived_from:
     - PJR-1Y1M
   commit_type: fix
