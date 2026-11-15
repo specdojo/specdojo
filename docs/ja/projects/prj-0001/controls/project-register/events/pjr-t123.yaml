@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ca47bbfdae12485f81e7e0685fdb14ff
+  ts: "2026-11-15T14:35:49Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cdfd-template の図の枠を D2 にする
+    - field: description
+      from: ""
+      to: Mermaid のまま残る図の枠を、overview・uc の template と同じ D2 にそろえる
+    - field: input
+      from: ""
+      to: '["cdfd-overview-template・cdfd-uc-template は D2 の図の枠を持つが、cdfd-template は Mermaid の枠のまま残っている（2026-11-15）","図の枠を [[specdojo:cdfd-d2-rulebook]] と overview・uc の template にならって D2 にする。全体概要が Mermaid を宣言した場合の扱いは cdfd-rulebook の記法の選択の規定に合わせて書く","0.8.0（PJR-PMK6）で型を極力最新にする方針に含める（2026-11-15、利用者が承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: approach
+      from: ""
+      to: template-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:cdfd-template"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-PMK6"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
