@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-15T09:33:55Z"
-  block_reason: "executor reported incomplete: schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を…"
   commit_type: refactor
   commit_scope: schema
 ---
@@ -39,15 +38,36 @@ esil.schema.yaml を ifx-index の名前へ改め、参照をそろえる。他�
 
 ## 4. 作業内容
 
-| No  | 作業                                             | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------ | ---- | ---- | ---- |
-| 1   | schema のファイル名と $id を改める               | DEV  | open | -    |
-| 2   | 参照（modeline・型一式・設定・テスト）をそろえる | DEV  | open | -    |
-| 3   | 古い名前の互換と移し方を扱う                     | DEV  | open | -    |
+| No  | 作業                                             | 担当 | 状態 | メモ                             |
+| --- | ------------------------------------------------ | ---- | ---- | -------------------------------- |
+| 1   | schema のファイル名と $id を改める               | DEV  | done | `$id` は元から無い               |
+| 2   | 参照（modeline・型一式・設定・テスト）をそろえる | DEV  | done | `.vscode/settings.json` は変更案 |
+| 3   | 古い名前の互換と移し方を扱う                     | DEV  | done | 非推奨の別名を残した             |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- schema の正本を `docs/specdojo/schemas/v1/ifx-index.schema.yaml` へ移した。`id` の pattern から古い接頭辞の形式を除き、`ifx-index` と `ifx-index-...`（プロジェクト修飾可）だけを許す形にした。
+- 古いファイル名の schema は、`$ref: "ifx-index.schema.yaml"` と `deprecated: true` だけを持つ非推奨の別名にした。古い名前を指す modeline の YAML も、新しい schema と同じ内容で検証される。
+- modeline（sample・template・`prj-0001:ifx-index`）と、rulebook・recipe の schema パスを新しい名前にそろえた。
+- テストに古い名前への参照はなかった。各 schema に `$id` は無いので、追加していない（ほかの schema に合わせた）。
+
+### 5.2. 決めた内容と理由
+
+- 古いファイルは消さず、`$ref` だけの別名として残した。ほかのプロジェクトの YAML の modeline を壊さないためである。中身を複製しないので、二重管理にはならない。本文に古い略号は無いので、`grep -rn esil` に一致するのはファイル名だけになる。
+- 改名すると、rulebook と schema がファイル名の stem で組になり、`validate:schema:rulebook-enums` の対象に入る。enum 値の網羅を満たすため、ready の rulebook `specdojo:ifx-index-rulebook` で `status`・`direction`・`kind`・`format` の値と選び方を書き、「列挙値は schema へ委譲」の文を改めた。あわせて、rulebook の副題と用語表から略号 ESIL を除いた。
+- 古い接頭辞の `id`（`<略号>-...`）は、リポジトリ内で使われていない。そのため pattern から除いた。ほかのプロジェクトで使っている場合は、`ifx-index` に改める必要がある（CHANGELOG に書く事項を参照）。
+
+### 5.3. 残課題
+
+- `.vscode/settings.json` は保護対象で、executor が編集できない。変更案: `cSpell.words` から `"esil",` の行を削除する。ほかの rulebook・recipe（`ifx-api`・`ifx-msg`・`ifx-cmd`・`ifx-file`）と `dct-external-interface-specs.yaml` には、大文字の略号 ESIL が残る。schema 名の範囲を超えるため手を入れていない。必要なら別の項目で `ifx-index` へ言い換える。
+- 非推奨の別名は、移行期間が過ぎたら削除する。
+
+### 5.4. CHANGELOG に書く事項
+
+- Changed: 外部システムI/F一覧の schema を `docs/specdojo/schemas/v1/ifx-index.schema.yaml` に改名した。古い名前は非推奨の別名として残っており、今後削除する。移行するには、YAML 先頭の modeline を `# yaml-language-server: $schema=<相対パス>/ifx-index.schema.yaml` へ書き換え、`validate:schema:file --schema` の指定も新しい名前にする。
+- Changed: 外部システムI/F一覧の `id` に許す形を `ifx-index`・`ifx-index-...` に限った。古い略号を接頭辞にした `id` は検証で失敗する。`ifx-index` 系の `id` に改める。
 
 ## 6. 関連ドキュメント
 

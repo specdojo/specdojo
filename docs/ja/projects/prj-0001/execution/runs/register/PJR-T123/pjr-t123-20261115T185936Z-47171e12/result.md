@@ -4,30 +4,27 @@ specdojo:
   type: exec-result
   task_id: PJR-T123
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-T123/pjr-t123-20261115T185936Z-47171e12/plan.md
   started_at: "2026-11-15T19:00:16.799Z"
-  completed_at: "2026-11-15T19:44:08.027Z"
+  completed_at: "2026-11-15T20:53:12.024Z"
   agent: opus-executor
   approach: template-maintenance
   targets:
     - specdojo:cdfd-template
-  block_reason: "parent validation failed: test-integration"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- cdfd-template における概念データフローの図の枠を、`overview` や `uc` の template と同様に、`classes` 構成を用いた D2 形式に変更しました。
-- 図の記述における凡例の扱いについて、Mermaid を宣言する場合、記法の選択を省略する場合、および凡例がない場合の分岐ルールをコメントとして追加しました。
-- 図の直後に記述する注記の `_TODO_` について、共通凡例の有無によって書き分けられるよう、finding (`F001`, `F002`) に基づいて修正を行いました。
+- cdfd-template の概念データフローの図の枠を、overview・uc の template と同じ classes 構成の D2 にした。凡例が Mermaid を宣言した場合、記法を宣言しない場合、凡例がない場合は cdfd-mermaid-rulebook に従う Mermaid へ置き換える扱いをコメントに書いた。図の直後の注記の TODO を、共通凡例の有無で書き分けられるようにした（F001・F002 に対応）。
 
 ## 2. 変更ファイル
 
-- `docs/ja/specdojo/templates/cdfd-template.md`: 概念データフローの図の枠を D2 に変更し、凡例に関する指示および図の直後の注記の `_TODO_` を、共通凡例の有無による条件分岐形式に更新しました。
+- `docs/ja/specdojo/templates/cdfd-template.md`: 変更、+74 / -25 行
 
 ## 3. 申し送り
 
@@ -36,4 +33,4 @@ specdojo:
 
 ## 4. 進め方と実践の型の適用
 
-既存の `cdfd-template` を、他の D2 を用いた template と整合性を取る形でメンテナンスしました。まず、図の定義部分を D2 形式に書き換え、次に `finding` (`F001`, `F002`) で指摘された、凡例の有無に応じた記述の分岐を `_TODO_` セクションに組み込みました。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。

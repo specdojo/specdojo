@@ -1,0 +1,19 @@
+`cdfd-template` の「概念データフロー」の図の枠を、Mermaid から D2 に置き換えました。Prettier・markdownlint・履歴リンクの検査は通っています。lint・schema・test は、このあと runner が実行します。
+
+**変更したファイル**
+- `docs/ja/specdojo/templates/cdfd-template.md`
+  - 図の枠を overview・uc の template と同じ形の D2 にしました（`direction: down`、同じ classes の定義、`->` の線）。class は図の部品ごとの見た目の定義、`->` は情報の流れを表す矢印です。
+  - 図の直前にコメントを追加し、どちらの記法で描くかを書きました。全体概要の凡例が D2 を宣言していれば `specdojo:cdfd-d2-rulebook` に従います。凡例が Mermaid を宣言している場合、記法を宣言していない場合、凡例がない場合は、`specdojo:cdfd-mermaid-rulebook` に従う Mermaid へ描き直します。これは `cdfd-rulebook` の「概念データフロー」の規定に合わせたものです。
+  - 図の直後の注記の _TODO_ を、凡例がある場合とない場合で書き分けられるようにしました。凡例があればその章を参照し、なければ「`specdojo:cdfd-mermaid-rulebook` の既定凡例に従う」と書きます。線の書き方も D2 と Mermaid の両方を示しました。これで grade の指摘 F001・F002 に対応しています。
+  - `status: ready` はもともとの値で、変えていません。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-t123-cdfd-template-d2.md`
+  - 個票の「対応結果」に、実施内容と残課題を書きました。
+
+**残課題**
+`cdfd-rulebook` では「プロセス領域」の各節を表だけにすると定めていますが、template の各節には主要入力・主要出力・データストアの箇条書きが残っています。このタスクの範囲外なので触れていません。直すかどうかは別の項目で判断してください。
+
+個票の完了条件は _TODO_ のままです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-template の概念データフローの図の枠を、overview・uc の template と同じ classes 構成の D2 にした。凡例が Mermaid を宣言した場合、記法を宣言しない場合、凡例がない場合は cdfd-mermaid-rulebook に従う Mermaid へ置き換える扱いをコメントに書いた。図の直後の注記の TODO を、共通凡例の有無で書き分けられるようにした（F001・F002 に対応）。","handoff":["cdfd-rulebook の「プロセス領域」は各節を表だけにすると定めているが、cdfd-template の各節には主要入力・主要出力・データストアの箇条書きが残っている。本タスクの範囲外のため変更していない。別の項目で直すかどうかを判断する。","個票の「完了条件」は _TODO_ のまま残っている。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-t123-cdfd-template-d2.md docs/ja/specdojo/templates/cdfd-template.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-t123-cdfd-template-d2.md docs/ja/specdojo/templates/cdfd-template.md","status":"passed","summary":"no errors"},{"command":"npm run validate:history-links","status":"passed","summary":"pjr-t123 ticket and plan/result valid"}]}
+</specdojo_executor_evidence>

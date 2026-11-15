@@ -1,0 +1,15 @@
+PJR-8ZX8 の作業は終わりました。ただし完了条件のうち、4 つの型を `grade run --target kata` で確かめる作業は人の実行が残っています。agent を起動して利用枠を使うため、executor では実行していません。
+
+- **template の修正:** `br-template.md`・`bes-template.md`・`bac-template.md`・`opr-template.md` の `frontmatter_template` の `id` を `_PROJECT_ID_:_LOCAL_ID_` から `_LOCAL_ID_` に直しました。修正は前回の試行で済んでおり、今回は差分を確認しました。template 自身の `status` は変えていません（br・bes は `ready`、bac・opr は `draft`）。
+- **既存文書との整合:** 生成される id は、prj-0001 の既存の文書の id（`br-task-selection-strategy`・`bes-task-ready-selected`・`bac-task-completion`・`opr-agent-cli-update`）と同じローカル id の形になります。
+- **個票:** 作業内容と対応結果は前回の試行で書き込み済みで、今回の変更はありません。
+- **自分で実行した検査:** prettier の整形確認と `npm run validate:history-links` を実行し、どちらも通りました。`lint:md`・`lint:fm`・`test:unit` などは親 runner が実行します。
+
+決めたことは次の 2 点で、個票にも書いてあります。
+
+- `based_on: _BASED_ON_` は変えていません。完了条件が求めているのは `id` だけのためです。
+- template-authoring-standard の予約済みプレースホルダ表の例 `_PROJECT_ID_:_LOCAL_ID_` は変えていません。プロジェクト管理文書の template では今も正しい書き方のためです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"br・bes・bac・opr の template の `frontmatter_template` の `id` を `_LOCAL_ID_` に直し、個票の作業内容と対応結果を更新済み。4 つの型の `grade run --target kata` は agent を起動して利用枠を使うため、人の実行が残る。","handoff":["未完了（人が実行する）: 4 つの型（br・bes・bac・opr）を `grade run --target kata` で grade し、id の書き方の指摘が出ないことを確かめる。agent を起動して利用枠を使うため executor では実行していない。","決めたこと: `based_on: _BASED_ON_` は変えなかった。完了条件が求めているのは `id` だけのため。","決めたこと: template-authoring-standard の予約済みプレースホルダ表の例 `_PROJECT_ID_:_LOCAL_ID_` は変えなかった。プロジェクト管理文書の template では今も正しい書き方のため。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/templates/br-template.md docs/ja/specdojo/templates/bes-template.md docs/ja/specdojo/templates/bac-template.md docs/ja/specdojo/templates/opr-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-8zx8-template-local-id-br-bes-bac-opr.md","status":"passed","summary":"変更した 5 ファイルとも Prettier の整形どおり"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴ファイルのリンク記法に違反なし"},{"command":"specdojo grade run --target kata (br・bes・bac・opr)","status":"requires_human","summary":"agent を起動して利用枠を使うため、人が実行して id の書き方の指摘が出ないことを確かめる"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-8zx8-template-local-id-br-bes-bac-opr.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-8zx8-template-local-id-br-bes-bac-opr.md"},{"target":"docs/ja/specdojo/templates/bac-template.md","status":"changed","path":"docs/ja/specdojo/templates/bac-template.md"},{"target":"docs/ja/specdojo/templates/bes-template.md","status":"changed","path":"docs/ja/specdojo/templates/bes-template.md"},{"target":"docs/ja/specdojo/templates/br-template.md","status":"changed","path":"docs/ja/specdojo/templates/br-template.md"},{"target":"docs/ja/specdojo/templates/opr-template.md","status":"changed","path":"docs/ja/specdojo/templates/opr-template.md"}]}
+</specdojo_executor_evidence>

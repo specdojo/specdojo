@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-15T14:35:28Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-PMK6
   commit_type: docs
@@ -49,6 +48,8 @@ Mermaid のまま残る 5.1・5.2 の 2 図を、全体概要で採用した D2 
 ## 5. 対応結果
 
 _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+
+- 申し送り（executor）: 5.1・5.2 の D2 化に加え、plan に展開された grade の finding（F001〜F003）を解消するため、入力の「本文の表は変えない」の例外として表の文言を最小限変更した（`P-01-01` の業務目的、3.1 の導入文、4.1 商品台帳の利用、8.1 `E-02-02` の検出条件・停止範囲・扱い・再開条件）。表の列と章構成は変えていない。この例外を認めるかは利用者が確認する。
 
 ## 6. 関連ドキュメント
 

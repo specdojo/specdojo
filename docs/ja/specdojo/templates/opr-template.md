@@ -5,7 +5,7 @@ specdojo:
   status: draft
   frontmatter_template:
     specdojo:
-      id: _PROJECT_ID_:_LOCAL_ID_
+      id: _LOCAL_ID_
       type: operations
       status: draft
       rulebook: specdojo:opr-rulebook
