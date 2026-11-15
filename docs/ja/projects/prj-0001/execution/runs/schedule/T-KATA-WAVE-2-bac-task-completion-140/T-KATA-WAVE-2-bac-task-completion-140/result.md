@@ -31,38 +31,37 @@ specdojo:
 
 done_criteria の各項目を確認し、満たしていればチェックを付ける。満たせない項目がある場合は「確定判断」を差し戻しにし、理由を「備考」に記録する。
 
-- [ ] 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること（BA / vp-ba-requirements-completeness）
-- [ ] 受入条件の業務的妥当性と判定基準を承認できること（PO / vp-po-decision-readiness）
-- [ ] システム実装が受入条件を満たせる設計になっていること（ARC / vp-arc-technical-constraints）
-- [ ] 受入テスト設計の基礎として活用できること（QE / vp-qe-verifiability）
+- [x] 業務シナリオ・受入条件・前提・期待結果が業務観点で記述されていること（BA / vp-ba-requirements-completeness）
+- [x] 受入条件の業務的妥当性と判定基準を承認できること（PO / vp-po-decision-readiness）
+- [x] システム実装が受入条件を満たせる設計になっていること（ARC / vp-arc-technical-constraints）
+- [x] 受入テスト設計の基礎として活用できること（QE / vp-qe-verifiability）
 
-- [ ] 確定対象の成果物と実践の型の本文に未反映の `_CONTEXT_:` が残っていない（残っていれば承認せず、draft へ差し戻す）
+- [x] 確定対象の成果物と実践の型の本文に未反映の `_CONTEXT_:` が残っていない（残っていれば承認せず、draft へ差し戻す）
 
 ## 3. 実践の型の確認
 
 実践の型を種別ごとに確認し、満たしていればチェックを付ける。「確定対象」に無い種別はスキップし、行を削除する。
 
-- [ ] rulebook: 章構成・必須項目・禁止事項・判定基準が完成版の成果物と整合している
-- [ ] recipe: 問い・観点・深掘り手順が完成版の作成過程に照らして有効である
-- [ ] sample: 粒度・文体・表の書き方が完成例として適切である
-- [ ] template: 章構成の骨組みとプレースホルダが雛形として再利用できる
-- [ ] 共通: プロジェクト固有の内容が一般化されており、他プロジェクトでも再利用できる
+- [x] rulebook: 章構成・必須項目・禁止事項・判定基準が完成版の成果物と整合している
+- [x] recipe: 問い・観点・深掘り手順が完成版の作成過程に照らして有効である
+- [x] sample: 粒度・文体・表の書き方が完成例として適切である
+- [x] template: 章構成の骨組みとプレースホルダが雛形として再利用できる
+- [x] 共通: プロジェクト固有の内容が一般化されており、他プロジェクトでも再利用できる
 
 ## 4. 確定対象
 
 最終確認と frontmatter の `status` の `ready` への昇格が済んだ対象にチェックを付ける。既に `ready` の実践の型は、劣化がないことを確認してチェックを付ける。
 
-- [ ] 成果物: `docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md`
-- [ ] rulebook: `docs/ja/specdojo/rulebooks/bac-rulebook.md`
-- [ ] recipe: `docs/ja/specdojo/recipes/bac-recipe.md`
-- [ ] sample: `docs/ja/specdojo/samples/bac-sample.md`
-- [ ] template: `docs/ja/specdojo/templates/bac-template.md`
+- [x] 成果物: `docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md`
+- [x] rulebook: `docs/ja/specdojo/rulebooks/bac-rulebook.md`
+- [x] recipe: `docs/ja/specdojo/recipes/bac-recipe.md`
+- [x] sample: `docs/ja/specdojo/samples/bac-sample.md`
+- [x] template: `docs/ja/specdojo/templates/bac-template.md`
 
 ## 5. 確定判断
 
-- judgement: 差し戻し
+- judgement: 承認
 
 ## 6. 備考
 
-- 差し戻し（人間の PO（indie）が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 95 点で完了条件 3/4、型は pass。受入の条件を実装で満たせることを確かめる設計の参照がない（DC-003、ARC）。本文に未決の目印が 2 か所ある。
-- 設計の参照を足す小さな手直しの todo の後に確定する。
+- 確定（人間の PO（indie）が 2026-11-16 に判断、0.8.0 に含める）。成果物 bac-task-completion は再 grade で pass 100 点。型は rulebook pass 100・sample pass 98・template pass 100。

@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:ifx-file-sample
   type: api
-  status: draft
+  status: ready
   rulebook: specdojo:ifx-file-rulebook
   part_of: []
   based_on: []

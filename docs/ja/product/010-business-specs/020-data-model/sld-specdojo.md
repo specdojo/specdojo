@@ -2,7 +2,7 @@
 specdojo:
   id: sld-specdojo
   type: data
-  status: draft
+  status: ready
   rulebook: specdojo:sld-rulebook
   based_on:
     - cdsd-planning

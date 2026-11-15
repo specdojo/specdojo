@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sld-sample
   type: data
-  status: draft
+  status: ready
   rulebook: specdojo:sld-rulebook
   based_on:
     - specdojo:cdfd-overview-sample

@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:ifx-file-rulebook
   type: rulebook
   deliverable_type: api
-  status: draft
+  status: ready
   target_format: yaml
   recipe: not-needed
   sample: specdojo:ifx-file-sample

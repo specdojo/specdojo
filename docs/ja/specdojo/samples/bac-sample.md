@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:bac-sample
   type: requirement
-  status: draft
+  status: ready
   rulebook: specdojo:bac-rulebook
   based_on: []
 ---

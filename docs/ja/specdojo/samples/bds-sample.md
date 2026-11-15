@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:bds-sample
   type: ui
-  status: draft
+  status: ready
   rulebook: specdojo:bds-rulebook
   based_on:
     - specdojo:bes-sample

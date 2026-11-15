@@ -2,7 +2,7 @@
 specdojo:
   id: bac-task-completion
   type: requirement
-  status: draft
+  status: ready
   rulebook: specdojo:bac-rulebook
   based_on:
     - bps-deliverable-evaluation

@@ -2,7 +2,7 @@
 specdojo:
   id: bds-progress-report
   type: ui
-  status: draft
+  status: ready
   rulebook: specdojo:bds-rulebook
   based_on:
     - sysd-job-execution

@@ -2,7 +2,7 @@
 x-spec-meta:
   id: prj-0001:ifx-file-agent-evidence
   type: api
-  status: draft
+  status: ready
   title: 外部ファイル連携仕様（agent の evidence）
   rulebook: specdojo:ifx-file-rulebook
   based_on:

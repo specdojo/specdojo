@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:bac-rulebook
   type: rulebook
   deliverable_type: requirement
-  status: draft
+  status: ready
   target_format: markdown
   recipe: specdojo:bac-recipe
   sample: specdojo:bac-sample
