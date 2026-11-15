@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-bac-task-completion-045",
+  "run_id": "T-KATA-WAVE-2-bac-task-completion-045-20261115T060035Z-63578e03",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T06:03:10.170Z",
+    "completed_at": "2026-11-15T06:06:04.667Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/bac-recipe.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/recipes/bac-recipe.md | 55 ++++++++++++++++++----------------\n 1 file changed, 30 insertions(+), 25 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/recipes/bac-recipe.md",
+      "status": "passed",
+      "summary": "変更した recipe を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/recipes/bac-recipe.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーはなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "ファイル単位の YAML schema 検査は適用外。",
+      "reason": "変更は Markdown recipe のみで、YAML・YML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "executor の変更は docs/ja/specdojo/recipes/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票、既存 plan・result などの履歴蓄積ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4835 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4835 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bac-task-completion-045\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bac-task-completion-045/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bac-task-completion-045/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bac-task-completion-045\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-U80y2p/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yhw43G/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-xEddop/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8MdWYT/pjr-0001-topic.m\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "BAC recipe を改訂済み rulebook に同期し、価値とシナリオの対応、未決事項の追跡、改訂時の影響確認を補強しました。整形・差分検査は成功し、親 runner の検証へ引き継ぎます。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイルは docs/ja/specdojo/recipes/bac-recipe.md のみ。成果物本体・rulebook・sample・template・result・grade サイドカーは変更していない。reporter は以下の判断根拠を result の「進め方と実践の型の適用」へ記録すること。",
+    "根拠規範: recipe-authoring-standard.md、rulebook-authoring-standard.md、bac-rulebook.md、document-metadata-standard.md の改訂・廃止と影響追跡、pjr-rulebook.md の個票記述、kata-guide.md の型の要否、ryu-guide.md のメンテナンス手順、共通レビュー観点の vp-arc-conciseness を確認した。",
+    "実例は bac-task-completion.md、依存する bps-deliverable-evaluation.md・bps-task-completion.md・prj-success-criteria-and-acceptance-criteria.md、bac-sample.md・bac-template.md。先行タスク 005・040 の result も確認した。今回の plan に grade・condense finding はなく、recipe 自身の grade サイドカーもなかったため、反復指摘の解消とは主張しない。",
+    "改訂判断: rulebook の記述ガイドと上流変更への追従に合わせ、価値からシナリオを選ぶ問い、期待結果ごとの観測先、未決事項の影響・判断時点・PJR への引き継ぎ、旧参照の検索と後続テストへの影響確認を追加した。実例で有効だった正常・停止・再開の掘り下げと既存8章構成は維持した。規則一覧や実装・schema の詳細、完成例は再掲していない。",
+    "要否判断: シナリオ選択と例外の具体化には書き手による品質差があるため recipe は必要。共通の3章とシナリオ記入欄があるため template も必要。rulebook frontmatter の specdojo:bac-recipe・specdojo:bac-template 宣言は有効であり維持した。対象形式は Markdown で、YAML 成果物の充実化は非適用。",
+    "Markdown・Frontmatter・schema・型検査・テスト等の指定済み親検証は runner に委ね、sandbox 内では重複実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-045/T-KATA-WAVE-2-bac-task-completion-045-20261115T060035Z-63578e03/executor.log",
+      "bytes": 3538,
+      "truncated": false
+    }
+  ]
+}
