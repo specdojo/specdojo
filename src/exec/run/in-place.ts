@@ -82,7 +82,13 @@ import {
   resolveReporterAgentCandidates,
   runWithRetry,
 } from "./agent.js";
-import { pipelineRecoveryMeta, spawnBlock, spawnClaim, spawnComplete } from "./mode-shared.js";
+import {
+  pipelineRecoveryMeta,
+  spawnBlock,
+  spawnClaim,
+  spawnComplete,
+  stageActorMeta,
+} from "./mode-shared.js";
 import { enforceScheduleKataReview, gradeBeforeReviewPlan } from "./schedule-prepare.js";
 import { reviewTaskBlockReason } from "../review-completion.js";
 import type { ReviewGradeOutcome } from "../../review/grade.js";
@@ -479,6 +485,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let pipelineStateRef: string | undefined;
   let pipelineRunId: string | undefined;
   let pipelineFailureStage: AgentStageRole = "executor";
+  let failedStageActor = actor;
   if (task?.agent_pipeline) {
     const startedAt = new Date().toISOString();
     pipelineRunId = isRunRecordPath(planPath)
@@ -580,6 +587,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         evidencePath: recorded.evidencePath,
       });
     }
+    failedStageActor = outcome.actor ?? actor;
     if (outcome.result === "success") {
       pipelineFailureStage = "reporter";
       const reporterEvidence = evidenceForReporter(recorded.evidence, {
@@ -677,6 +685,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
           invocationOutputs: reporter.invocationOutputs,
         });
       }
+      failedStageActor = reporterActor ?? failedStageActor;
       const reporterCompletedAt = new Date().toISOString();
       pipelineState = updatePipelineStage(
         pipelineState,
@@ -778,6 +787,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         blockReason ?? "agent exited with non-zero code",
         {
           limit_deferred: "false",
+          ...stageActorMeta(actor, failedStageActor),
           ...(pipelineRunId
             ? pipelineRecoveryMeta({
                 stage: pipelineFailureStage,

@@ -70,7 +70,11 @@ import {
 
 export type PreparedTask = {
   task: ReadyTaskView;
+  // The actor that ran the latest agent stage. Fallback and stage overrides may replace it.
   actor: string;
+  // The actor that holds the claim this runner made or resumed. Lifecycle events (complete /
+  // block) use it so a stage run by another agent still passes the same-actor guard.
+  claimActor: string;
   agentCandidates: AgentRunCandidate[];
   plan: string;
   prompt: string;
@@ -402,6 +406,10 @@ export async function prepareSingleTask(
         )
       : undefined;
 
+  // A resumed claim stays with the actor that already holds it, even when a stage override
+  // selects another agent to run.
+  const claimActor = skipClaim ? (actorOverride ?? actor) : actor;
+
   if (pipelineResume?.executorTarget) {
     const { executorTarget, worktree } = pipelineResume;
     if (!worktree) throw new Error(`no exec worktree to resume executor for ${task.id}`);
@@ -421,6 +429,7 @@ export async function prepareSingleTask(
     return {
       task,
       actor,
+      claimActor,
       agentCandidates,
       plan: planPrompt,
       prompt: buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations),
@@ -512,6 +521,7 @@ export async function prepareSingleTask(
     return {
       task,
       actor,
+      claimActor,
       agentCandidates,
       plan: planPrompt,
       prompt,
@@ -637,6 +647,7 @@ export async function prepareSingleTask(
   return {
     task,
     actor,
+    claimActor,
     agentCandidates,
     plan: planPrompt,
     prompt,
