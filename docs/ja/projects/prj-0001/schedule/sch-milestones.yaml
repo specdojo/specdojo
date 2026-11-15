@@ -619,3 +619,51 @@ milestones:
     depends_on:
       - T-KATA-WAVE-1-dct-index-140
     owner: PO
+  - id: G-KATA-WAVE-2-first-pass
+    name: 初回パス完了
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-execution-060
+      - T-KATA-WAVE-2-bds-progress-report-060
+      - T-KATA-WAVE-2-sld-specdojo-060
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-050
+    owner: PO
+  - id: G-KATA-WAVE-2-refine-pass
+    name: 磨き込み完了
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-execution-070
+      - T-KATA-WAVE-2-bds-progress-report-070
+      - T-KATA-WAVE-2-sld-specdojo-070
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-070
+    owner: PO
+  - id: G-KATA-WAVE-2-review-pass
+    name: レビュー完了
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-execution-090
+      - T-KATA-WAVE-2-bds-progress-report-090
+      - T-KATA-WAVE-2-sld-specdojo-090
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-090
+    owner: PO
+  - id: M-KATA-WAVE-2-business-acceptance-criteria
+    name: ドメイン完了
+    artifact_name: 業務受入条件
+    depends_on:
+      - T-KATA-WAVE-2-bac-task-execution-140
+    owner: PO
+  - id: M-KATA-WAVE-2-user-interface-model
+    name: ドメイン完了
+    artifact_name: ユーザーインターフェースモデル
+    depends_on:
+      - T-KATA-WAVE-2-bds-progress-report-140
+    owner: PO
+  - id: M-KATA-WAVE-2-data-model
+    name: ドメイン完了
+    artifact_name: データモデル／概念データストア定義
+    depends_on:
+      - T-KATA-WAVE-2-sld-specdojo-140
+    owner: PO
+  - id: M-KATA-WAVE-2-external-interface-specs
+    name: ドメイン完了
+    artifact_name: 外部I/F仕様
+    depends_on:
+      - T-KATA-WAVE-2-ifx-file-agent-evidence-140
+    owner: PO

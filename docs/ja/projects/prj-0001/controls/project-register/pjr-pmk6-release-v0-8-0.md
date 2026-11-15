@@ -28,7 +28,8 @@ specdojo:
 ## 2. 入力
 
 - 範囲は 0.7.0 の後に close した項目と、PJR-RX14 の修正（PJR-0X0S）。代表の確定と cdt・bes・ifx-cmd の 2 回目、予定の epic、中程度の issue は次に回す（indie が 2026-11-11 に承認）
-- review で止まっている 7 件（PJR-AD33・B0B8・GQ14・Q8KP・RVTB・SZGZ・V5AZ）は、利用者の確認の結果で含めるかを決める
+- 範囲を広げる（indie が 2026-11-15 に承認）: 0.7.0 の後に close した項目は、リリースの作業を始める時点までに close したものをすべて含める。kata-wave-1 の型の整備と、その後の直し（PJR-E4R5・N2CP・160D・C8J8・T01P など）も対象とする
+- review で止まっている 7 件（PJR-AD33・B0B8・GQ14・Q8KP・RVTB・SZGZ・V5AZ）は、利用者の確認の結果で含めるかを決める。2026-11-15 時点で AD33・RVTB は close 済み、残る 5 件は review のまま
 - 手順は pm-orchestrator-playbook の「リリースの手順」に従う。push・PR の merge・タグ・npm の公開の承認は利用者が行う
 
 ## 3. 完了条件

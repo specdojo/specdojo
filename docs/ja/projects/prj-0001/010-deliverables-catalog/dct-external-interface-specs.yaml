@@ -75,3 +75,30 @@ groups:
           - text: プロセス起動・連携エラー処理実装の基礎として参照できること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness
+
+      - local_id: ifx-file-agent-evidence
+        name: 外部ファイル連携仕様（agent の evidence）
+        kind: work
+        depends_on:
+          - ifx-index
+        overview: executor の agent が書き runner が読む evidence.json と pipeline-state.json の受け渡しについて、置き場所・命名・形式・必須項目・書き手と読み手・失敗時の扱いを定義する
+        path: ifx-file-agent-evidence.yaml
+        rulebook: specdojo:ifx-file-rulebook
+        note: 外部ファイル連携の型（ifx-file）の代表（PJR-DD33、indie が 2026-11-15 に承認）。項目の型や制約は schema を正本として参照する
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/evidence.ts
+            purpose: evidence.json の読込・検証と runner の検証結果の追記
+          - kind: implementation
+            path: src/exec/pipeline-state.ts
+            purpose: pipeline-state.json の段ごとの状態の記録と再開の判定
+        done_criteria:
+          - text: 受け渡すファイルの置き場所・命名・形式・必須項目・書き手と読み手が記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: ファイル連携の方式と失敗時の扱いが設計として妥当であること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 欠けた・壊れたファイルを扱うテストの設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

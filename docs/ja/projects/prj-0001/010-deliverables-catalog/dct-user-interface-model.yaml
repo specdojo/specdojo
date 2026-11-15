@@ -78,3 +78,30 @@ groups:
           - text: 帳票テスト設計に活用できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
+
+      - local_id: bds-progress-report
+        name: 帳票仕様（週次進捗報告）
+        kind: work
+        depends_on:
+          - bds-index
+        overview: routine が週ごとに作る進捗報告（reporting/progress-reports/）の利用目的・読み手・表示項目・出力の時期と、元にする記録を定義する
+        path: bds-progress-report.md
+        rulebook: specdojo:bds-rulebook
+        note: 帳票の型（bds）の代表として 1 件だけ作る（PJR-DD33、indie が 2026-11-15 に承認）。bds-index の「個別帳票は作成しない」方針の例外とし、ほかの出力物は今までどおり bds-index から既存のガイドへ導く
+        evidence_refs:
+          - kind: implementation
+            path: src/routine/storage.ts
+            purpose: 進捗報告の出力先と routine の実行記録の保存の規則
+          - kind: implementation
+            path: src/routine/definition.ts
+            purpose: 進捗報告を作る routine の定義の読込・検証
+        done_criteria:
+          - text: 利用目的・読み手・表示項目・出力の時期が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 報告の範囲と業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 報告の内容を記録から確かめるテストの設計に活用できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability

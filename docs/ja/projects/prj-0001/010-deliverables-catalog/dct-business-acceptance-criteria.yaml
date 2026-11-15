@@ -78,6 +78,13 @@ groups:
         overview: タスクの選択・準備からEdit・Review・Finalize・判定統合までが業務として成立することを確認する
         path: bac-task-execution.md
         rulebook: specdojo:bac-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/run/run.ts
+            purpose: タスクの選択・準備から edit・review・統合までの実行の流れ
+          - kind: implementation
+            path: src/exec/pipeline-state.ts
+            purpose: executor・reporter の段の状態と再開の判定
         note: *bac-ac-note
         done_criteria: *bac-done-criteria
 
