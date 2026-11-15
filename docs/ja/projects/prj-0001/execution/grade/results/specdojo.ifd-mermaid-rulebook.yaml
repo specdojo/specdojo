@@ -4,11 +4,11 @@ document: specdojo:ifd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 93
-graded_at: "2026-10-31T20:44:39.360Z"
-graded_by: flash-high-executor
-content_hash: f2598042593ef3f271c0645819d775621ca8612a5828ca90658b3b40e6e5e2dd
+verdict: pass
+score: 98
+graded_at: "2026-11-15T02:07:23.782Z"
+graded_by: sol-review-executor
+content_hash: 9e0ee31af2483866a1e0288d353f301e4ee9e7e900d961ca667eca431dac7b55
 categories:
   purpose:
     score: 100
@@ -25,9 +25,9 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -72,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,28 +103,20 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# Mermaidを用いたインフラ構成図 作成ルール"
-    message: recipe が undecided であり、作成手順（問い）が定義されていない。
-    message_ja: recipe が undecided であり、作成手順（問い）が定義されていない。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# Mermaidを用いたインフラ構成図 作成ルール"
-    message: template が undecided であり、成果物の骨組みが定義されていない。
-    message_ja: template が undecided であり、成果物の骨組みが定義されていない。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# Mermaidを用いたインフラ構成図 作成ルール"
-    message: 参照するサンプル specdojo:ifd-sample が Mermaid 図を含まず、ルールブックと矛盾する「必須観点」を記述しているため、正しく適用されていない。
-    message_ja: 参照するサンプル specdojo:ifd-sample が Mermaid 図を含まず、ルールブックと矛盾する「必須観点」を記述しているため、正しく適用されていない。
+    rule: vp-dev-testability
+    line: 55
+    anchor: "### 5.1. Mermaid の表現規約"
+    message: >-
+      Add or reference a Mermaid verification procedure specifying the target diagrams, a syntax check such as the
+      repository's lint:mermaid command, and a rendered-preview check for readable labels and boundaries; the referenced
+      metadata validation guidance does not explain how to verify the diagram itself.
+    message_ja: >-
+      Add or reference a Mermaid verification procedure specifying the target diagrams, a syntax check such as the
+      repository's lint:mermaid command, and a rendered-preview check for readable labels and boundaries; the referenced
+      metadata validation guidance does not explain how to verify the diagram itself.
