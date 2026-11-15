@@ -10,10 +10,10 @@ specdojo:
   item_status: open
   priority: medium
   difficulty: medium
-  owner: ARC
+  owner: DEV
   registered_at: "2026-11-15T09:31:50Z"
-  commit_type: docs
-  commit_scope: kata
+  commit_type: feat
+  commit_scope: docs
 ---
 
 # PJR-QJ41 ifx-index の YAML から表形式の閲覧ページを生成する
