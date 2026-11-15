@@ -60,3 +60,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_c64900c7c3bf47339b86bbaaf798ad90
+- v: 1
+  id: reg_6d7a516ca9834600808af20f25012812
+  ts: "2026-11-15T23:36:44Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit `<rev>` と pre-push の入口 tools/check-run-record-l…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit `<rev>` と pre-push の入口 tools/check-run-record-l…"
+  previous_event_id: reg_b4a5ff6c158041d88db5cb60fcdf2baa
