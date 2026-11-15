@@ -63,3 +63,16 @@
       from: '["PJR-QJ41"]'
       to: "-"
   previous_event_id: reg_0198f6a60655498c8cc5cd730f98e993
+- v: 1
+  id: reg_e997895216d84cadaa21daaba2ef497b
+  ts: "2026-11-15T19:15:57Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6eb8c6fca36c42d3a5e6a74fb4f85cc2
