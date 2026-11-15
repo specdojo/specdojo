@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: UX
   registered_at: "2026-11-15T12:22:02Z"
+  block_reason: "parent validation failed: test-integration"
   commit_type: docs
   commit_scope: kata
   approach: sample-maintenance
