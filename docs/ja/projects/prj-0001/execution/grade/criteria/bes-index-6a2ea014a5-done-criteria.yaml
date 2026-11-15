@@ -2,9 +2,9 @@
 id: bes-index-grade-criteria
 document: bes-index
 path: docs/ja/product/010-business-specs/030-business-model/bes-index.md
-graded_at: "2026-11-15T11:05:16.861Z"
+graded_at: "2026-11-15T21:39:12.619Z"
 graded_by: sol-review-executor
-content_hash: f0e9fb82f840e4d44969fbd88dc4155a7ee6435d32681126c5fd46c1b3891418
+content_hash: 1dc7e50fd7b01c326c1315ebcf1fe55b71b5f230ac8ec06baf67f6d81f558cbe
 summary:
   satisfied: 2
   unsatisfied: 2
@@ -29,8 +29,8 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      The body explicitly withholds final design-input use and leaves fact-data correspondence with the authoritative
-      data model and schema unchecked.
+      Fact-data mapping to authoritative data models and schema is incomplete, and line 87 explicitly withholds those
+      fields from confirmed design inputs.
   - id: DC-004
     text: イベントベースのテスト設計への網羅性が確認できること
     roles:
@@ -38,5 +38,5 @@ criteria:
     viewpoint: vp-qe-omissions-consistency
     status: unsatisfied
     reason: >-
-      The body contains no recorded verification of event-based test-design coverage, including the provisional
-      refinement mappings and occurrence boundaries.
+      Coverage perspectives for the two uncreated individual BES remain deferred, and the document explicitly records QE
+      coverage confirmation as outstanding.

@@ -4,16 +4,16 @@ document: sld-specdojo
 path: docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 79
-graded_at: "2026-11-15T11:37:17.612Z"
+verdict: pass
+score: 98
+graded_at: "2026-11-15T21:27:25.632Z"
 graded_by: sol-review-executor
-content_hash: 59c2d5593c44f81b3b970a3eefe81ee3ef6629b487b992a047d381821566f91b
+content_hash: 4ad710f4e27d39db2eba911c82626d98b4738e32bf3455aca48254a904b66a4d
 source_hashes:
   catalog-entry: da0acf0ee3984d2dfc969fa8d9e6e52a99bf6a2e36478e10cf9cb625bfe4e1e3
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:cdsd-execution: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:cdsd-execution: 958e60eeb290139bf339886017af58d3719c4e96a457d89b4098ae857f7e17de
   dependency:cdsd-planning: 465645a27f2f91f437f68825eea853917093aa68ab32e62fc2c271fd80e8c020
   dependency:cdsd-sharing: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
@@ -23,21 +23,21 @@ categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 83
+    score: 92
   business:
-    score: 83
+    score: 100
   consistency:
-    score: 63
-  architecture:
-    score: 83
-  usability:
     score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 69
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -55,14 +55,14 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -70,17 +70,17 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -88,20 +88,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-user-flow:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -109,8 +109,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -118,332 +118,85 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
-  major: 8
-  minor: 7
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 100
+    line: 105
     anchor: >-
-      | 監視結果・費用作業記録の物理保管先と保持期間（未決事項）    | `_UNDECIDED_`: [[cdsd-execution\|概念データストア定義（プロジェクト実行）]]
-      で監視結果・費用作業記録の具体的な保管先と保持期間が未確定のため、本書では既存実装が存在する保管場所のみを確定記載している                                                                         
-      | BA・OPS・ARC が監視記録・費用記録の運用方式を決定した後、リポジトリ内（`reporting/`
-      等）または端末ローカルのどちらに置くかを確定し、本書の第2章「保管場所一覧」へ該当行を追加する                                       |
-      `prj-0001:pjr-monitoring-storage`  |
+      | CDSD 追加候補の正式登録と対応表の更新（計画済み作業）      | 追加候補（タスク実行状態、実行計画と実行結果、実行証跡（Evidence）、タスク実行
+      worktree、成果物本体、成果物索引、プロジェクト構成、成果物カタログ）は実装上の配置が確定しているため、本書で保管場所を定義済みである。CDSD 側の一覧への登録だけが未了であり、本書の未決事項ではない | 各 CDSD
+      の「概要」の予定どおり、BA が対応する業務データ辞書の作成時に CDSD の一覧へ追加する。ARC
+      は同じ改訂で本書の「概念データストア・実装配置との対応」の記述を正式名称へ更新する                                                                |
+      計画済み作業のため Schedule の業務データ辞書作成・CDSD 改訂で扱い、管理台帳へは起票しない（二重追跡を防ぐ）。該当タスクが Schedule にない場合は PM が Schedule
+      へ追加する                |
     message: >-
-      Specify a decision milestone for monitoring and cost-record storage, such as before reporting operations begin or
-      before the ready review; “after BA・OPS・ARC decide the operating method” describes a dependency but provides no
-      timing for the prerequisite decision.
+      Update the planned-work row to remove registration work already completed in
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md: its section 2 already defines execution
+      state, plan, result, evidence, and task worktree. Assign the remaining SLD mapping update separately from
+      genuinely pending dictionary and CDSD work so BA and ARC do not schedule duplicate registration.
     message_ja: >-
-      Specify a decision milestone for monitoring and cost-record storage, such as before reporting operations begin or
-      before the ready review; “after BA・OPS・ARC decide the operating method” describes a dependency but provides no
-      timing for the prerequisite decision.
+      Update the planned-work row to remove registration work already completed in
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md: its section 2 already defines execution
+      state, plan, result, evidence, and task worktree. Assign the remaining SLD mapping update separately from
+      genuinely pending dictionary and CDSD work so BA and ARC do not schedule duplicate registration.
     cause:
       type: document
   - id: F002
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 101
-    anchor: >-
-      | CDSD 未登録データストア群の正式登録と辞書接続（今後の整備） | `_TODO_`: タスク実行状態、実行計画と実行結果、実行証跡（Evidence）、タスク実行
-      worktree、成果物本体、ドキュメントインデックス、プロジェクト構成定義、成果物カタログは各 CDSD で追加候補（`_TODO_`）として記録されている。実装上の配置は確定しているため本書で保管場所を定義済み |
-      BA・ARC が各 CDSD
-      の改訂タスクで上記データストアを一覧へ昇格させた際、本書の第4章「関連仕様・実装配置との対応と検証」（対応表）の参照記述を正式名称へ更新する                                                          
-      | `prj-0001:pjr-cdsd-store-sync`     |
-    message: >-
-      Identify the Schedule task or planning destination for the already planned CDSD amendments, and distinguish it
-      from any separate PJR issue or decision; also label the proposed register-entry types and PM handoff
-      responsibility so the same amendment work is not tracked twice.
-    message_ja: >-
-      Identify the Schedule task or planning destination for the already planned CDSD amendments, and distinguish it
-      from any separate PJR issue or decision; also label the proposed register-entry types and PM handoff
-      responsibility so the same amendment work is not tracked twice.
-    cause:
-      type: document
-  - id: F003
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 11
-    anchor: >-
-      本書は SpecDojo が扱うリポジトリ内領域（`docs/`、`execution/`、`controls/`、派生ビュー
-      `generated/`、`.specdojo/`、`archive/`）、端末側の状態ディレクトリ（`${XDG_STATE_HOME:-~/.local/state}/specdojo/`）、タスク実行用
-      worktree、および一時ディレクトリを対象とする。
-    message: >-
-      Add storage-policy coverage for permanent .specdojo configuration, including specdojo.config.json,
-      exec-defaults.yaml, and agent-members.yaml; the inventory currently covers only doc-index.json there and leaves
-      the configuration files' contents, sharing, lifetime, and deletion conditions undefined despite including
-      .specdojo/ in scope.
-    message_ja: >-
-      Add storage-policy coverage for permanent .specdojo configuration, including specdojo.config.json,
-      exec-defaults.yaml, and agent-members.yaml; the inventory currently covers only doc-index.json there and leaves
-      the configuration files' contents, sharing, lifetime, and deletion conditions undefined despite including
-      .specdojo/ in scope.
-    cause:
-      type: document
-  - id: F004
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 41
-    anchor: >-
-      | タスク実行 worktree 領域（`<worktree_base>/<task-name>/` または
-      `<worktree_base>/<task-name>/{project,<repo>}/`）                       | タスク単位で分離された Git 作業ツリー（`exec/<task-name>`
-      ブランチ）、`npm ci` で展開された `node_modules/`、worktree 内で再生成された `generated/`・`.specdojo/doc-index.json` | `exec run`、`job
-      run`（開始時に作成、統合成功時に自動削除） | `作業ツリー自体は共有なし（端末ローカル）`。コミットは統合戦略に従い統合先ブランチへ反映される | タスク開始から統合完了まで（失敗・中断時の `--resume` 対象や
-      `branch-only` 時は残存） | `条件付き削除可`。実行中または未統合コミットを持つ worktree の直接削除は不可。統合完了後、または破棄合意後に実行中プロセスがないことを確認し `git worktree
-      remove` 等で削除する         |
-    message: >-
-      The worktree row says branch-only worktrees remain, whereas docs/ja/specdojo/guides/docs-structure-guide.md:567
-      says successful processing removes all worktrees and retains only branch-only branches; distinguish retained
-      branches from retained worktrees and update the corresponding cleanup guidance at line 67.
-    message_ja: >-
-      The worktree row says branch-only worktrees remain, whereas docs/ja/specdojo/guides/docs-structure-guide.md:567
-      says successful processing removes all worktrees and retains only branch-only branches; distinguish retained
-      branches from retained worktrees and update the corresponding cleanup guidance at line 67.
-    cause:
-      type: document
-  - id: F005
-    severity: minor
     rule: vp-arc-cross-document-consistency
     line: 80
     anchor: >-
-      | タスク・Job・品質評価の実行履歴領域（`execution/`）            | [[cdsd-execution\|プロジェクト実行]] の Job
-      実行履歴・品質評価結果・進捗報告・会議記録、および追加候補のタスク実行状態・実行計画と実行結果・実行証跡（Evidence）                                     |
-      `src/shared/run-records.ts`、`src/exec/`、`src/job/`、`src/grade/`                                                                                                      
-      |
-    message: >-
-      The mapping places progress reports and meeting minutes under cdsd-execution and execution/, whereas
-      docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md lists them as reporting records and this
-      document's line 28 places them under reporting/; map these records to cdsd-sharing and the reporting storage
-      category.
-    message_ja: >-
-      The mapping places progress reports and meeting minutes under cdsd-execution and execution/, whereas
-      docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md lists them as reporting records and this
-      document's line 28 places them under reporting/; map these records to cdsd-sharing and the reporting storage
-      category.
-    cause:
-      type: document
-  - id: F006
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 100
-    anchor: >-
-      | 監視結果・費用作業記録の物理保管先と保持期間（未決事項）    | `_UNDECIDED_`: [[cdsd-execution\|概念データストア定義（プロジェクト実行）]]
-      で監視結果・費用作業記録の具体的な保管先と保持期間が未確定のため、本書では既存実装が存在する保管場所のみを確定記載している                                                                         
-      | BA・OPS・ARC が監視記録・費用記録の運用方式を決定した後、リポジトリ内（`reporting/`
-      等）または端末ローカルのどちらに置くかを確定し、本書の第2章「保管場所一覧」へ該当行を追加する                                       |
-      `prj-0001:pjr-monitoring-storage`  |
-    message: >-
-      Attribute the unresolved monitoring and cost-record storage decisions to
-      docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md, which defines those records and discusses
-      unresolved storage policy; the cited cdsd-execution.md defines execution events, routines, and Jobs and contains
-      no corresponding monitoring or cost-record storage issue.
-    message_ja: >-
-      Attribute the unresolved monitoring and cost-record storage decisions to
-      docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md, which defines those records and discusses
-      unresolved storage policy; the cited cdsd-execution.md defines execution events, routines, and Jobs and contains
-      no corresponding monitoring or cost-record storage issue.
-    cause:
-      type: document
-  - id: F007
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 31
-    anchor: >-
-      |
-      派生生成ビュー・文書索引領域（`docs/**/generated/`、`.specdojo/doc-index.json`）                                                                                              
-      | カタログ・管理台帳・実行状況・Job・品質評価の Markdown 集計ビュー（各ディレクトリの `generated/` 配下）、YAML
-      表示ページ、文書索引キャッシュ（`.specdojo/doc-index.json`）                                                                                                                                                                                                                         
-      | `specdojo build`、`catalog build`、`register build`、`exec refresh`、`grade refresh`、`index build` |
-      `共有なし（.gitignore で除外・各環境で生成）`（`.gitkeep` のみ Git 追跡）    | ビルド実行時から次回再生成または worktree 破棄まで（正本変更時・環境準備時に再生成） |
-      `削除可`。すべて正本 YAML・Markdown から決定論的に生成される派生物であり、削除しても `specdojo build`（または各 `build` /
-      `refresh`）で完全に再生成できる             |
-    message: >-
-      Split regenerable views from grade runtime files: src/grade/run.ts:81 creates execution/grade/generated/run.lock
-      and lines 126–130 place run.json under execution/grade/generated/runs/＜run-id＞/; these are a live exclusion
-      mechanism and persisted resume state, not deterministic build outputs, so docs/**/generated/ cannot uniformly be
-      classified as freely deletable and fully recoverable through specdojo build.
-    message_ja: >-
-      Split regenerable views from grade runtime files: src/grade/run.ts:81 creates execution/grade/generated/run.lock
-      and lines 126–130 place run.json under execution/grade/generated/runs/＜run-id＞/; these are a live exclusion
-      mechanism and persisted resume state, not deterministic build outputs, so docs/**/generated/ cannot uniformly be
-      classified as freely deletable and fully recoverable through specdojo build.
-    cause:
-      type: kata
-      kind: rulebook
-      location: >-
-        docs/ja/specdojo/rulebooks/sld-rulebook.md, section 6.2, good example at file line 157 classifying
-        docs/**/generated/ as deletable and fully regenerable by specdojo build
-  - id: F008
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 57
-    anchor: >-
-      | `削除不可`       |
-      `docs/<lang>/product/`、`docs/<lang>/specdojo/`、`docs/specdojo/schemas/`、`docs/<lang>/projects/<id>/`
-      の定義・計画・`controls/`・`execution/`（`generated/` と `.locks/` を除く）、`archive/`、端末側の
-      `routine-state.json`・`routine-runs.jsonl` |
-      仕様・計画・台帳・実行証跡の正本（SSOT）または端末上の定期実行履歴である。削除すると監査証跡や未同期の定期処理状態が失われるため、日常運用で削除しない   |
-    message: >-
-      Replace the repeated location lists and retention explanations in the three classification rows at lines 57–59
-      with references to the section 2 inventory, retaining only additional category-level decision rules; the
-      duplicated paths and policies can be removed without losing operational conditions or recovery information.
-    message_ja: >-
-      Replace the repeated location lists and retention explanations in the three classification rows at lines 57–59
-      with references to the section 2 inventory, retaining only additional category-level decision rules; the
-      duplicated paths and policies can be removed without losing operational conditions or recovery information.
-    cause:
-      type: document
-  - id: F009
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 78
-    anchor: >-
-      | プロダクト仕様・実践の型・プロジェクト定義・計画領域           | [[cdsd-planning\|立上と計画]] のプロジェクト定義群・実践の型・スケジュール・定期処理定義・Job
-      定義、および追加候補の成果物カタログ・プロジェクト構成定義・成果物本体（[[cdsd-sharing\|活用と共有]]） |
+      | プロダクト仕様・実践の型・プロジェクト定義・計画・報告領域     | [[cdsd-planning\|立上と計画]] のプロジェクト定義群・実践の型・スケジュール・定期処理定義・Job
+      定義、[[cdsd-sharing\|活用と共有]] の進捗報告・議事録（`reporting/`）、および追加候補の成果物カタログ・成果物本体（[[cdsd-sharing\|活用と共有]]） |
       [[specdojo:docs-structure-guide\|ドキュメント構成ガイド]]、[[specdojo:directory-layout-reference\|ディレクトリレイアウトリファレンス]]、`.specdojo/specdojo.config.json`
       |
     message: >-
-      Define the handling constraints for .specdojo/specdojo.config.json and the execution and agent configuration files
-      in the storage inventory; listing configuration only as a source for other locations does not tell DEV what setup,
-      migration, or cleanup changes must preserve, back up, share, or restore.
+      Correct the CDSD attribution: this row assigns routine definitions and Job definitions to cdsd-planning.md, whose
+      section 2 defines only register entries and Schedule/milestones;
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md section 2 formally defines 定期処理定義 and Job
+      Definition. Map these records to cdsd-execution and distinguish other inventory categories that cdsd-planning does
+      not currently define.
     message_ja: >-
-      Define the handling constraints for .specdojo/specdojo.config.json and the execution and agent configuration files
-      in the storage inventory; listing configuration only as a source for other locations does not tell DEV what setup,
-      migration, or cleanup changes must preserve, back up, share, or restore.
+      Correct the CDSD attribution: this row assigns routine definitions and Job definitions to cdsd-planning.md, whose
+      section 2 defines only register entries and Schedule/milestones;
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md section 2 formally defines 定期処理定義 and Job
+      Definition. Map these records to cdsd-execution and distinguish other inventory categories that cdsd-planning does
+      not currently define.
     cause:
       type: document
-  - id: F010
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 11
-    anchor: >-
-      本書は SpecDojo が扱うリポジトリ内領域（`docs/`、`execution/`、`controls/`、派生ビュー
-      `generated/`、`.specdojo/`、`archive/`）、端末側の状態ディレクトリ（`${XDG_STATE_HOME:-~/.local/state}/specdojo/`）、タスク実行用
-      worktree、および一時ディレクトリを対象とする。
-    message: >-
-      DC-001 is not satisfied because permanent .specdojo configuration is included in scope but has no inventory entry
-      defining its contents, sharing, lifetime, and deletion policy; references to configuration as an implementation
-      source do not provide those four required elements.
-    message_ja: >-
-      DC-001 is not satisfied because permanent .specdojo configuration is included in scope but has no inventory entry
-      defining its contents, sharing, lifetime, and deletion policy; references to configuration as an implementation
-      source do not provide those four required elements.
-    cause:
-      type: document
-  - id: F011
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 31
-    anchor: >-
-      |
-      派生生成ビュー・文書索引領域（`docs/**/generated/`、`.specdojo/doc-index.json`）                                                                                              
-      | カタログ・管理台帳・実行状況・Job・品質評価の Markdown 集計ビュー（各ディレクトリの `generated/` 配下）、YAML
-      表示ページ、文書索引キャッシュ（`.specdojo/doc-index.json`）                                                                                                                                                                                                                         
-      | `specdojo build`、`catalog build`、`register build`、`exec refresh`、`grade refresh`、`index build` |
-      `共有なし（.gitignore で除外・各環境で生成）`（`.gitkeep` のみ Git 追跡）    | ビルド実行時から次回再生成または worktree 破棄まで（正本変更時・環境準備時に再生成） |
-      `削除可`。すべて正本 YAML・Markdown から決定論的に生成される派生物であり、削除しても `specdojo build`（または各 `build` /
-      `refresh`）で完全に再生成できる             |
-    message: >-
-      DC-002 and DC-003 are not satisfied because execution/grade/generated/ contains the active run.lock and persisted
-      run state implemented in src/grade/run.ts, while the inventory treats the entire generated subtree as freely
-      deletable and fully regenerable; document separate lifecycle and cleanup conditions for these runtime files.
-    message_ja: >-
-      DC-002 and DC-003 are not satisfied because execution/grade/generated/ contains the active run.lock and persisted
-      run state implemented in src/grade/run.ts, while the inventory treats the entire generated subtree as freely
-      deletable and fully regenerable; document separate lifecycle and cleanup conditions for these runtime files.
-    cause:
-      type: kata
-      kind: rulebook
-      location: >-
-        docs/ja/specdojo/rulebooks/sld-rulebook.md, section 6.2, good example at file line 157 asserting that
-        docs/**/generated/ can be deleted and fully regenerated
-  - id: F012
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 65
-    anchor: >-
-      | `generated/` の表示崩れや `.specdojo/doc-index.json` の索引不整合 | 対象の `generated/` 配下（`.gitkeep` を除く）または
-      `.specdojo/doc-index.json` を削除し、`specdojo build`（または `index build` / `catalog build` / `register build` / `exec
-      refresh`）を実行する                                                      | `generated/` 内の Markdown
-      を手編集して正本修正の代わりにしてはならない。再生成でエラーが出る場合は正本 YAML・Markdown を DEV・ARC が確認する                        |
-    message: >-
-      Apply the migration prerequisite from line 47 to the generated-directory cleanup procedure: line 65 currently
-      permits deleting generated contents except .gitkeep without excluding unmigrated
-      routines/generated/routine-state.json and routine-runs.jsonl; require destination-state verification before
-      deleting those legacy records so recovery does not destroy the only routine history.
-    message_ja: >-
-      Apply the migration prerequisite from line 47 to the generated-directory cleanup procedure: line 65 currently
-      permits deleting generated contents except .gitkeep without excluding unmigrated
-      routines/generated/routine-state.json and routine-runs.jsonl; require destination-state verification before
-      deleting those legacy records so recovery does not destroy the only routine history.
-    cause:
-      type: document
-  - id: F013
+  - id: F003
     severity: minor
-    rule: vp-ux-user-flow
-    line: 74
-    anchor: "`depends_on` の各概念データストア定義（CDSD）の管理単位（および各 CDSD の「確認事項と変更影響」で追加候補とされている管理単位）と、実装モジュール・設定ファイルの対応は次のとおりである。"
+    rule: vp-arc-cross-document-consistency
+    line: 83
+    anchor: >-
+      | タスク・Job・品質評価の実行履歴領域（`execution/`）            | [[cdsd-execution\|プロジェクト実行]] の Job
+      実行履歴・品質評価結果、および追加候補のタスク実行状態・実行計画と実行結果・実行証跡（Evidence）                                                                                                   
+      |
+      `src/shared/run-records.ts`、`src/exec/`、`src/job/`、`src/grade/`                                                                                                      
+      |
     message: >-
-      Replace the reference to each CDSD's “確認事項と変更影響” section with the actual source locations: cdsd-planning.md,
-      cdsd-execution.md, and cdsd-sharing.md place their datastore-addition TODOs in “概要” and have no section with the
-      cited title, so readers cannot follow the stated route to the supporting candidates.
+      Refresh the execution mapping and the related statements at lines 84, 87, and 105 against
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md sections 1.1 and 2: execution state, plan,
+      result, evidence, and task worktree are formal management units rather than additional candidates, while
+      quality-evaluation results are absent from its ten-unit inventory. Use the current unit names and identify
+      quality-result coverage separately instead of attributing it to an existing CDSD definition.
     message_ja: >-
-      Replace the reference to each CDSD's “確認事項と変更影響” section with the actual source locations: cdsd-planning.md,
-      cdsd-execution.md, and cdsd-sharing.md place their datastore-addition TODOs in “概要” and have no section with the
-      cited title, so readers cannot follow the stated route to the supporting candidates.
+      Refresh the execution mapping and the related statements at lines 84, 87, and 105 against
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md sections 1.1 and 2: execution state, plan,
+      result, evidence, and task worktree are formal management units rather than additional candidates, while
+      quality-evaluation results are absent from its ten-unit inventory. Use the current unit names and identify
+      quality-result coverage separately instead of attributing it to an existing CDSD definition.
     cause:
       type: document
-  - id: F014
-    severity: major
-    rule: vp-ops-operability
-    line: 65
-    anchor: >-
-      | `generated/` の表示崩れや `.specdojo/doc-index.json` の索引不整合 | 対象の `generated/` 配下（`.gitkeep` を除く）または
-      `.specdojo/doc-index.json` を削除し、`specdojo build`（または `index build` / `catalog build` / `register build` / `exec
-      refresh`）を実行する                                                      | `generated/` 内の Markdown
-      を手編集して正本修正の代わりにしてはならない。再生成でエラーが出る場合は正本 YAML・Markdown を DEV・ARC が確認する                        |
-    message: >-
-      Before deleting generated contents, require OPS to exclude an active execution/grade/generated/run.lock and
-      preserve needed execution/grade/generated/runs/＜run-id＞/ state and executor outputs; src/grade/run.ts uses these
-      during execution and resumption, so the current blanket cleanup can defeat serialization and lose operational
-      records that specdojo build cannot reconstruct.
-    message_ja: >-
-      Before deleting generated contents, require OPS to exclude an active execution/grade/generated/run.lock and
-      preserve needed execution/grade/generated/runs/＜run-id＞/ state and executor outputs; src/grade/run.ts uses these
-      during execution and resumption, so the current blanket cleanup can defeat serialization and lose operational
-      records that specdojo build cannot reconstruct.
-    cause:
-      type: kata
-      kind: rulebook
-      location: >-
-        docs/ja/specdojo/rulebooks/sld-rulebook.md, section 6.2, good example at file line 157 treating
-        docs/**/generated/ as a uniformly deletable and fully regenerable area
-  - id: F015
-    severity: major
-    rule: vp-qe-config-validity
-    line: 101
-    anchor: >-
-      | CDSD 未登録データストア群の正式登録と辞書接続（今後の整備） | `_TODO_`: タスク実行状態、実行計画と実行結果、実行証跡（Evidence）、タスク実行
-      worktree、成果物本体、ドキュメントインデックス、プロジェクト構成定義、成果物カタログは各 CDSD で追加候補（`_TODO_`）として記録されている。実装上の配置は確定しているため本書で保管場所を定義済み |
-      BA・ARC が各 CDSD
-      の改訂タスクで上記データストアを一覧へ昇格させた際、本書の第4章「関連仕様・実装配置との対応と検証」（対応表）の参照記述を正式名称へ更新する                                                          
-      | `prj-0001:pjr-cdsd-store-sync`     |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 0
+  satisfied: 3
   total: 3
-  unsatisfied:
-    DC-001:
-      - BA
-    DC-002:
-      - ARC
-    DC-003:
-      - OPS
   detail_ref: sld-specdojo-grade-criteria

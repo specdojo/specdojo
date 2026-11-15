@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: UX
   registered_at: "2026-11-15T12:22:02Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
   commit_type: docs
   commit_scope: kata
   approach: sample-maintenance
