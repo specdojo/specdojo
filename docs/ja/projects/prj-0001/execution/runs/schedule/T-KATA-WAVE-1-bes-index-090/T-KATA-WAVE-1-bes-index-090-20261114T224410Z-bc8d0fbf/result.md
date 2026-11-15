@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-1-bes-index-090
   mode: review
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-1-bes-index-090/T-KATA-WAVE-1-bes-index-090-20261114T224410Z-bc8d0fbf/plan.md
   started_at: "2026-11-14T22:44:11.671Z"
+  completed_at: "2026-11-15T01:16:08.950Z"
   agent: qwen-review-executor
   execution: agent
   approach: retrofit
@@ -19,20 +20,25 @@ specdojo:
 
 ## 1. 評価結果の確認
 
-_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
+git history による `bes-index.md` および `bes-index.yaml` の変更確認により、評価実行時からの変更がない（鮮度が最新である）ことを確認した。
 
 ## 2. 判断根拠
 
-_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
+- grade の結果、`verdict`: `needs-work`、`score`: 87 であり、major 2 件、minor 6 件の finding が存在する。
+- 完了条件（DC-001 〜 DC-004）について、grade サイドカーの判定に基づきすべて未充足であると判断される。
+- retrofit の確認において、実装エビデンスである `src/specdojo.ts` と成果物の記述との対応記録が一切存在せず、照合が行われていない。
+- 以上の点から、本タスクの範囲および完了条件を満たしていない。
 
 ## 3. 未充足事項・改善指示
 
-_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
+- grade で指摘された finding（F001 〜 F008）を解消すること。特に `vp-qe-done-criteria` (F004) および `vp-qe-config-validity` (F008) の major 指摘への対応が必要である。
+- 完了条件 DC-001 〜 DC-004 を充足させるための修正を行い、再評価を受けること。
+- `src/specdojo.ts` 等の実装エビデンスと成果物の整合性を確認し、その対応結果を記録すること。
 
 ## 4. approach に応じた確認
 
-_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
+実装エビデンス `src/specdojo.ts` の対応記録を確認したが、記録が存在せず未確認の状態である。
 
 ## 5. decision
 
-- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）
+- verdict: incomplete
