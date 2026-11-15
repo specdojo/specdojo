@@ -142,7 +142,7 @@ function executorEvidenceContract(
   const parentValidationCommands = parentValidationDisplayCommands(parentValidations);
   const parentValidationInstruction =
     parentValidationLabelList.length > 0
-      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
+      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. If you still list one, use one validation entry per command with its exact command; never combine several parent validations into one entry. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
   const coverage = {
     source: options.coverageSource ?? "none",

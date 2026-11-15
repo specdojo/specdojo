@@ -47,3 +47,48 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_3485ad33a9d4411f84d1b20fccff171a
+  ts: "2026-11-15T14:39:50Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f2d35c65f3be4639b0631f7b155cff61
+- v: 1
+  id: reg_d0ea2abd031149bfb045bc5ce665b375
+  ts: "2026-11-15T15:21:46Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3485ad33a9d4411f84d1b20fccff171a
+- v: 1
+  id: reg_25550087ab1346ac9ed95a23b3539abb
+  ts: "2026-11-15T16:48:04Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（人が unblock しても、agent の run が完了の確認で止まらないようにする）。親の検証をすべて通って統合済み
+  previous_event_id: reg_d0ea2abd031149bfb045bc5ce665b375

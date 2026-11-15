@@ -1,0 +1,30 @@
+両方の問題を直しました（設定ファイルの方は変更案として書きました）。ただし、揺らぎが本当に消えたかはまだ確かめていません。executor の sandbox では統合テストを流せないためで、確認はこの run の親の検証と、次に並べて流す run に委ねています。
+
+**揺らぎの原因と修正**（`tests/src/exec/pipeline-e2e.integration.test.ts`）
+- 一時ディレクトリは、もともとテストごとに `mkdtempSync` で作られていました。ほかのテストの片付けで消える作りではありません。
+- 実際には次の順で起きていました。
+  1. 負荷の下で 1 つの run が 30 秒を超え、テストが時間切れになる。
+  2. 時間切れになっても `runExec` は止まらずに裏で動き続け、その間に `afterEach` がそのテストの fixture を消す。
+  3. 続いていた run が次の agent を起動すると、消えた `fake-agent.mjs` を探して `Cannot find module` で落ちる。
+- 直したこと:
+  - 起動した run を記録しておき、両方の `describe` の `afterEach` が、すべての run が終わるのを待ってから片付けるようにしました。
+  - 両方の `describe` の制限時間を 180 秒にし、個別のテストに書かれていた `30_000` を外しました。設定ファイル全体の 30 秒はほかのテストにも効くため変えていません。
+
+**test-integration を流す条件**
+- 統合テストが中身まで使うのは `templates` と `exec-templates` です（一時リポジトリへ写して使います）。`defaults` と `schemas` も読みます。
+- sample と rulebook は、文書の ID を集めるときに frontmatter の `id` と `type` を読むだけです。ID の重複や frontmatter の不備は、index build・`lint:fm`・`test-unit` が先に見つけます。
+- そこで、sample・rulebook だけの変更では流さないと決めました。`.specdojo/exec-defaults.yaml` は保護されているため、変更案を個票に書きました。`paths` の `docs/ja/specdojo/**` を `docs/ja/specdojo/{templates,exec-templates,defaults,schemas}/**` に絞る案です。
+
+個票の対応結果には、原因・修正・変更案・CHANGELOG に書く事項・残課題を書きました。今回の変更はテストの作りだけで、利用者への影響はありません。
+
+**検証**
+- `npx prettier --check`、markdownlint、`validate:history-links` は通りました。
+- `typecheck`・`lint:ts`・`test:unit`・`lint:md`・`test:integration` は親の runner が流します。
+
+変更したファイル:
+- `tests/src/exec/pipeline-e2e.integration.test.ts`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-bj7e-integration-test-paths-and-e2e-flake.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pipeline-e2e が揺れる原因は、時間切れになった run が裏で続き、その間に afterEach が fixture を消していたことだった。起動した run の終わりを待ってから片付けるようにし、制限時間を 180 秒に延ばして直した。test-integration の paths は sample・rulebook などの型の文書を外す変更案を個票に書いた。揺らぎが消えたかは、親の検証と次の並走 run で確かめる。","handoff":["変更案（保護設定のため人が反映）: `.specdojo/exec-defaults.yaml` の test-integration の `paths` の `docs/ja/specdojo/**` を `docs/ja/specdojo/{templates,exec-templates,defaults,schemas}/**` に置き換える。rulebooks・samples・recipes・standards・guides・philosophy・references・index.md だけの変更では流さなくなる。理由: これらは `collectDocIndexEntries` で frontmatter の `id` と `type` を集めるときに読まれるだけで、ID の重複や frontmatter の不備は index build・`lint:fm`・`test-unit` が先に見つける。","決めたこと: 設定ファイル全体の `testTimeout`（30 秒）は変えず、pipeline-e2e の両方の `describe` だけを 180 秒にした。ほかの統合テストの時間切れの検知を弱めないためである。","並走 run の親の検証で、pipeline-e2e の時間切れと `Cannot find module` が再び起きないことを確かめる（executor の sandbox では統合テストを流せない）。","CHANGELOG: 今回は利用者への影響なし。paths の変更案を反映するときに、型の文書だけの変更では test-integration を流さないことを書く。"],"validations":[{"command":"npx prettier --check tests/src/exec/pipeline-e2e.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-bj7e-integration-test-paths-and-e2e-flake.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-bj7e-integration-test-paths-and-e2e-flake.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"no violations reported"}]}
+</specdojo_executor_evidence>

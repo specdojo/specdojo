@@ -320,6 +320,19 @@ export function writeEventFile(
   }
 }
 
+// The actor that owns the claim of a doing/blocked task. Snapshots built before claimed_by existed
+// (or hand-built ones) fall back to last_by.
+export function claimOwnerOf(state: CurrentState | undefined): string | undefined {
+  return state?.claimed_by ?? state?.last_by;
+}
+
+// `exec unblock --take-over` records take_over=true so the unblocking (human) actor becomes the claim
+// owner. A plain unblock keeps the existing owner so the agent run can resume and complete.
+export function isTakeOverEvent(event: ExecEventV1): boolean {
+  const value = event.meta?.take_over;
+  return value === true || value === "true";
+}
+
 export function foldEventsToState(
   events: { path: string; event: ExecEventV1 }[],
   schedule: ScheduleIndex,
@@ -336,6 +349,7 @@ export function foldEventsToState(
   for (const { event } of events) {
     if (!schedule.nodes.has(event.task_id)) continue;
     const cur = ensure(event.task_id);
+    const previousOwner = claimOwnerOf(cur);
     cur.last_ts = event.ts;
     cur.last_by = event.by;
     cur.last_type = event.type;
@@ -368,6 +382,14 @@ export function foldEventsToState(
       if (cur.state === "todo") cur.state = "cancelled";
       else if (cur.state === "doing" || cur.state === "blocked") cur.state = "todo";
       else cur.state = "cancelled";
+    }
+
+    if (cur.state === "doing" || cur.state === "blocked") {
+      const movesClaim =
+        event.type === "claim" || (event.type === "unblock" && isTakeOverEvent(event));
+      cur.claimed_by = movesClaim ? event.by : (previousOwner ?? event.by);
+    } else {
+      delete cur.claimed_by;
     }
   }
 
@@ -419,7 +441,7 @@ export function computeReadyIds(schedule: ScheduleIndex, snapshot: StateSnapshot
 
 export function findDoingTasksForActor(snapshot: StateSnapshot, actor: string): string[] {
   return Object.entries(snapshot.tasks)
-    .filter(([, st]) => st.state === "doing" && st.last_by === actor)
+    .filter(([, st]) => st.state === "doing" && claimOwnerOf(st) === actor)
     .map(([taskId]) => taskId)
     .sort();
 }
@@ -501,8 +523,8 @@ export function canCompleteTask(
   if (state === "cancelled") return { ok: false, reason: `task cancelled: ${taskId}` };
 
   if (state !== "doing") return { ok: false, reason: `task is not doing: ${taskId}` };
-  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
-    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 
   return { ok: true };
@@ -584,8 +606,8 @@ export function canBlockTask(
   if (state === "cancelled") return { ok: false, reason: `task cancelled: ${taskId}` };
 
   if (state !== "doing") return { ok: false, reason: `task is not doing: ${taskId}` };
-  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
-    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 
   return { ok: true };
@@ -595,6 +617,7 @@ export function canUnblockTask(
   schedule: ScheduleIndex,
   snapshot: StateSnapshot,
   taskId: string,
+  takeOver?: { requested: boolean; isHuman: boolean },
 ): { ok: boolean; reason?: string } {
   const node = schedule.nodes.get(taskId);
   if (!node) return { ok: false, reason: `task not found in schedule: ${taskId}` };
@@ -609,6 +632,10 @@ export function canUnblockTask(
   if (state === "cancelled") return { ok: false, reason: `task cancelled: ${taskId}` };
 
   if (state !== "blocked") return { ok: false, reason: `task is not blocked: ${taskId}` };
+  // Taking over moves the claim away from its owner, so it is limited to humans like --force.
+  if (takeOver?.requested && !takeOver.isHuman) {
+    return { ok: false, reason: `--take-over requires a human actor: ${taskId}` };
+  }
 
   return { ok: true };
 }
@@ -637,8 +664,8 @@ export function canReleaseTask(
   if (state !== "doing" && state !== "blocked") {
     return { ok: false, reason: `task is not doing or blocked: ${taskId}` };
   }
-  if (cur?.last_by !== actor && !canOverrideCrossActor(override)) {
-    return { ok: false, reason: crossActorReason(cur?.last_by) };
+  if (claimOwnerOf(cur) !== actor && !canOverrideCrossActor(override)) {
+    return { ok: false, reason: crossActorReason(claimOwnerOf(cur)) };
   }
 
   return { ok: true };

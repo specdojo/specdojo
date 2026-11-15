@@ -82,8 +82,16 @@ import {
   resolveReporterAgentCandidates,
   runWithRetry,
 } from "./agent.js";
-import { pipelineRecoveryMeta, spawnBlock, spawnClaim, spawnComplete } from "./mode-shared.js";
+import {
+  pipelineRecoveryMeta,
+  spawnBlock,
+  spawnClaim,
+  spawnComplete,
+  stageActorMeta,
+} from "./mode-shared.js";
 import { enforceScheduleKataReview, gradeBeforeReviewPlan } from "./schedule-prepare.js";
+import { reviewTaskBlockReason } from "../review-completion.js";
+import type { ReviewGradeOutcome } from "../../review/grade.js";
 import {
   pinnedExecutor,
   pinnedReporter,
@@ -390,8 +398,9 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   // Generate the plan on demand (skip for bring-your-own --plan).
   const generatedPlan = !opts.plan;
+  let reviewGradeOutcome: ReviewGradeOutcome | undefined;
   if (opts.task && task) {
-    const reviewGradeOutcome = await gradeBeforeReviewPlan({
+    reviewGradeOutcome = await gradeBeforeReviewPlan({
       task,
       projectId,
       catalogPath,
@@ -476,6 +485,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let pipelineStateRef: string | undefined;
   let pipelineRunId: string | undefined;
   let pipelineFailureStage: AgentStageRole = "executor";
+  let failedStageActor = actor;
   if (task?.agent_pipeline) {
     const startedAt = new Date().toISOString();
     pipelineRunId = isRunRecordPath(planPath)
@@ -577,6 +587,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         evidencePath: recorded.evidencePath,
       });
     }
+    failedStageActor = outcome.actor ?? actor;
     if (outcome.result === "success") {
       pipelineFailureStage = "reporter";
       const reporterEvidence = evidenceForReporter(recorded.evidence, {
@@ -674,6 +685,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
           invocationOutputs: reporter.invocationOutputs,
         });
       }
+      failedStageActor = reporterActor ?? failedStageActor;
       const reporterCompletedAt = new Date().toISOString();
       pipelineState = updatePipelineStage(
         pipelineState,
@@ -727,6 +739,19 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
     enforceScheduleKataReview({ task, catalogPath, resultPath, projectId, rootDir: repoRoot });
   }
   let blockReason: string | undefined = pipelineBlockReason;
+  const reviewBlockReason =
+    exitCode === 0 && task && resultPath
+      ? reviewTaskBlockReason({
+          mode: task.mode,
+          resultPath,
+          ...(reviewGradeOutcome ? { gradeOutcome: reviewGradeOutcome } : {}),
+        })
+      : undefined;
+  if (reviewBlockReason) {
+    effectiveExit = 1;
+    blockReason = reviewBlockReason;
+    process.stdout.write(`run blocked: ${label} (${reviewBlockReason})\n`);
+  }
   if (
     exitCode === 0 &&
     resultPath &&
@@ -762,6 +787,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         blockReason ?? "agent exited with non-zero code",
         {
           limit_deferred: "false",
+          ...stageActorMeta(actor, failedStageActor),
           ...(pipelineRunId
             ? pipelineRecoveryMeta({
                 stage: pipelineFailureStage,

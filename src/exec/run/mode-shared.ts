@@ -107,6 +107,15 @@ export function pipelineRecoveryMeta(input: {
   };
 }
 
+// The runner blocks a failed task as the actor holding its claim, because another agent may have
+// run the failed stage (fallback, --executor-by, --reporter-by). Record both actors on the event.
+export function stageActorMeta(
+  claimActor: string,
+  stageActor: string | undefined,
+): Record<string, string> {
+  return { claim_actor: claimActor, stage_actor: stageActor || claimActor };
+}
+
 export function spawnBlock(
   projectId: string | undefined,
   taskId: string,

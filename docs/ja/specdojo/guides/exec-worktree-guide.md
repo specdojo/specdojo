@@ -251,11 +251,13 @@ register 項目の統合で競合したのが項目自身の記帳ファイル�
 - 個票は exec branch 側を基準にし、統合先だけにあるイベントが変えた `type` / `priority` / `owner` / `due` をイベントから再構築します。同じフィールドを後から exec branch 側のイベントが変えている場合は、exec branch 側を残します。タイトル・説明（本文）、状態遷移に伴うフィールド、登録日時はイベントから元の値を復元できないため再構築しません。
 - plan・result・登録簿（`pjr-index.md`）は exec branch 側（再開後の最新の記帳）の内容で解決します。
 
+Schedule タスクの統合で、run の終わりの記帳 commit が先に統合先へ入れた plan・result・claim event と、exec branch 側の同じファイルが両側の追加として競合した場合も、その task の run の記録（`runs/schedule/<task-id>/` 配下）と checkpoint の複製に限って exec branch 側の内容で解決します（[Schedule実行運用ガイド](schedule-operation-guide.md) の「実行記録の記帳」を参照）。
+
 上記以外の競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名、最初のエラー行、Vitest の末尾にある `FAIL`・`Test Files`・`Tests` の集計行を記録します。executor/reporter pipeline では checkpoint と統合段の commit / merge が失敗したときの stdout / stderr 全文と abort 結果を秘匿処理し、同じ run の `integrate.log` に保存します。
 
 register 項目を `waiting` へ遷移したあとは、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge します。root の `wait` commit に保存済みの個票・イベント・plan・result は、worktree に残る同内容の未 commit 変更を解放してから merge し、これらの記帳パスの競合だけを `wait` commit 側で解決します。それ以外の競合は自動解決せずに同期 merge を中断します。これにより、再開時の merge-base を進めながら、別項目が統合先へ追加した成果を exec branch 側の削除として扱わないようにします。
 
-hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。親検証の失敗を成果物側で修正する必要がある register 項目は `--resume-from executor` を併用します。保護対象の設定変更を人が統合先へ適用した場合も、通常の `--resume` が統合先を exec branch と worktree へ取り込んでから executor を再開するため、worktree で手動 merge しません。
+hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。親検証の失敗を成果物側で修正する必要がある register 項目は `--resume-from executor` を併用します。統合段で止まった Schedule タスクの成果物を直す場合は `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor` を実行します。統合先を exec branch と worktree へ取り込んでから executor を再実行するため、worktree で `git merge` や `git merge --abort` を実行しません。保護対象の設定変更を人が統合先へ適用した場合も、通常の `--resume` が統合先を exec branch と worktree へ取り込んでから executor を再開するため、worktree で手動 merge しません。
 
 runner は `git merge --abort` の前に `git update-index -q --refresh` を実行します。同じ作業ツリーで動く routine などがファイルの stat だけを変えた場合でも、`not uptodate` で abort が失敗しないようにするためです。自動の `git merge --abort` 自体が失敗した場合は、runner が標準エラーへ手動復旧を案内します。案内された root worktree で状態と失敗原因を確認し、ロックファイルや Git プロセスなどの原因を解消してから次を実行してください。abort が完了するまでは commit や統合再開を行いません。
 
@@ -308,6 +310,8 @@ specdojo exec worktree prune --project <project-id>
 ## 3. complete / blockの記録
 
 分割コマンドは状態 event を更新しないため、成果物確認後に人が明示的に `complete` または `block` を実行します。
+
+人が書いたイベントは、書いた人が成果物と合わせて commit します。runner の記帳 commit（`exec run` / `exec resume` / `exec cycle` の終わり）が拾うのは、`by` が `.specdojo/agent-members.yaml` の agent のイベントだけです。
 
 ```bash
 specdojo exec complete \

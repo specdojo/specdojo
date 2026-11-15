@@ -73,3 +73,51 @@
       from: "-"
       to: "parent validation failed: validate-schema"
   previous_event_id: reg_73889579c8174602a1ffe28613bb0742
+- v: 1
+  id: reg_59a5a4c5341341a99d377d662e3aa394
+  ts: "2026-11-15T14:50:27Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: validate-schema"
+      to: "-"
+  previous_event_id: reg_8a0f77560425431a84ad2bfc0040d472
+- v: 1
+  id: reg_a76814f21a44418abd649c0a751853f8
+  ts: "2026-11-15T16:01:38Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_59a5a4c5341341a99d377d662e3aa394
+- v: 1
+  id: reg_496b4f4b0413443f8947c1260ab08b6f
+  ts: "2026-11-15T16:47:26Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（schedule strategy generate が schema の modeline を落とさないようにする）。親の検証をすべて通って統合済み
+  previous_event_id: reg_a76814f21a44418abd649c0a751853f8

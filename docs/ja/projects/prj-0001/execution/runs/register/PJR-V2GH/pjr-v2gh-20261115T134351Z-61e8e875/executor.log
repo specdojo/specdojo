@@ -1,0 +1,30 @@
+`schedule strategy generate` が書く strategy の先頭に、`# yaml-language-server: $schema=` の modeline が必ず付くようになりました。`--force` で書き直すときに既存の modeline があれば、その行をそのまま保ちます。追加したテストを含む schedule 配下のテスト 53 件は通っています。typecheck・lint・単体テスト全体などは、このあと親 runner が実行します。
+
+**変更したファイル**
+- `src/schedule/strategy-generate.ts`: `writeStrategyFile` で書き出す内容に modeline が無ければ付けます。既存ファイルの modeline を優先し、無ければ書き出し先から `sch-strategy.schema.yaml` への相対パスを作ります。新規作成・`--force`・`--dry-run` の diff・unchanged 判定は、すべて modeline を付けた後の内容で行います。
+- `src/schedule/schedule.ts`: CLI から `repoRoot: context.baseDir` を渡すようにしました。
+- `tests/src/schedule/strategy-generate.test.ts`: 回帰テストを追加しました。
+  - 新規に書くと modeline が付く。
+  - `--force` で書き直しても既存の modeline が保たれる。
+  - CLI で `--force` 付きで書いた strategy は、modeline から辿った schema が存在し、その schema の検証を通る。
+- 個票 `pjr-v2gh-strategy-generate-keep-modeline.md`: 作業内容を done にし、対応結果を書きました（実施内容・判断した点・CHANGELOG に書く事項・残課題）。
+
+**track の確認**
+`schedule build` が書く track と `sch-milestones.yaml` には、すでに modeline が付いていて、既存テストでも確かめられています。そのため track 側は変えていません。
+
+**判断した点**
+- modeline は `generateStrategy` ではなく `writeStrategyFile` で付けました。既存の modeline を保つには書き出し先の今の内容を読む必要があり、modeline 無しで書かれる経路もここでなくせるためです。`GenerateStrategyResult.content` は今までどおり本文だけを返します。
+- 既存の modeline が別の schema を指していても書き換えません。完了条件の「既存の modeline があれば保つ」に従いました。
+- 回帰テストでは `validate:schema` 本体（`validate:schema:yaml` の CLI）は起動していません。modeline から辿った schema が存在することと、`validateStrategySchema` の結果が空であることで代わりに確かめています。単体テストの範囲で決定的に動かすためです。
+
+**検証**
+- 変更した 4 ファイルの Prettier チェックは通りました（テストファイルは 1 回整形しています）。
+- 個票の markdownlint は 0 件でした。
+- `validate:history-links` は違反なしでした。
+- `npx vitest run tests/src/schedule/` は 53 件すべて通りました。
+
+`events/pjr-v2gh.yaml` と `pipeline-state.json` の差分は runner 側の変更で、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`schedule strategy generate` が書く strategy の先頭に `yaml-language-server` の modeline を必ず付けるようにし、`--force` で書き直すときは既存の modeline を保つようにした。track は既に modeline を付けていることを確認した。回帰テストを追加し、個票の対応結果を更新した。","handoff":["判断: modeline は `generateStrategy` ではなく `writeStrategyFile` で付けた。既存の modeline を保つには書き出し先の現在の内容が要り、modeline 無しで書かれる経路もここでなくせるため。`GenerateStrategyResult.content` は今までどおり本文だけを返す。","判断: 既存の modeline が別の schema を指していても書き換えずに保つ（完了条件「既存の modeline があれば保つ」に従った）。","確認: `schedule build` が書く track と `sch-milestones.yaml` は既に `withSchemaModeline` で modeline を付けており、`tests/src/schedule/command.test.ts` で確かめられているため変更していない。","判断: 回帰テストは `validate:schema:yaml` の CLI を子プロセスで起動せず、modeline から辿った schema が存在することと `validateStrategySchema` の結果が空であることで確かめた（単体テストで決定的に動かすため）。","CHANGELOG に書く事項: 修正: `schedule strategy generate` で書き出す `sch-strategy-<track>.yaml` の先頭に `# yaml-language-server: $schema=` の modeline を必ず付ける。`--force` で書き直すと modeline が消えて `validate:schema` が失敗する問題を直した。既存の modeline は保つ。"],"validations":[{"command":"npx vitest run tests/src/schedule/","status":"passed","summary":"3 files, 53 tests passed"},{"command":"npx prettier --check src/schedule/strategy-generate.ts src/schedule/schedule.ts tests/src/schedule/strategy-generate.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-v2gh-strategy-generate-keep-modeline.md","status":"passed","summary":"テストファイルを prettier --write で整形した後、すべて整形済み"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-v2gh-strategy-generate-keep-modeline.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし（すべて valid）"}]}
+</specdojo_executor_evidence>
