@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-070",
   "run_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-070-20261115T071728Z-aa21d18e",
-  "updated_at": "2026-11-15T07:49:45.491Z",
+  "updated_at": "2026-11-15T07:52:41.903Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-070/T-KATA-WAVE-2-ifx-file-agent-evidence-070-20261115T071728Z-aa21d18e/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-15T07:49:45.491Z",
-      "completed_at": null,
+      "completed_at": "2026-11-15T07:52:41.903Z",
       "artifact_ref": null
     }
   },
