@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-m495-exec-unblock-keeps-claim-owner
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T10:47:37Z"
+  completed_at: "2026-11-15T16:48:04Z"
+  conclusion: 0.8.0 の第 1 段で直した（人が unblock しても、agent の run が完了の確認で止まらないようにする）。親の検証をすべて通って統合済み
   derived_from:
     - PJR-T4G3
   commit_type: fix
