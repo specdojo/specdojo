@@ -79,3 +79,35 @@
       from: "-"
       to: "parent validation failed: test-integration"
   previous_event_id: reg_9ec2c6a6ea6a4e14bed64061644b35e3
+- v: 1
+  id: reg_3faeb23b82054e0b9400d815799e6691
+  ts: "2026-11-15T19:51:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_5e1ce8c0b95d44548c4dee771b623bd3
+- v: 1
+  id: reg_2e6c3b0d67e74ea5aaa4d0ebf7891a51
+  ts: "2026-11-15T20:06:44Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_3faeb23b82054e0b9400d815799e6691

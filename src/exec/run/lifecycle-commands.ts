@@ -72,6 +72,8 @@ import {
 } from "./schedule-prepare.js";
 import { runPreparedTask } from "./schedule-task.js";
 import { withTrailingRunRecords } from "./trailing-records.js";
+import { branchOwnedRunRecordPaths } from "../trailing-records.js";
+import { repoRelative } from "../../shared/git.js";
 import {
   buildTaskPhaseMap,
   configuredWorktreeBase,
@@ -425,6 +427,24 @@ function stoppedInIntegration(state: PipelineState): boolean {
   );
 }
 
+// task 自身の run の記録（repo 相対）。block の後の記帳 commit（PJR-DVNV）が統合先へ入れた
+// 作業コピーは、exec branch 側の同じ記録と両側の追加として競合する。再開の取り込みでは exec branch
+// 側を採る。統合の merge と同じ向きで、再開した executor はこの記録を引き継いで書き直し、後の統合も
+// 統合先の側に変更が無いため競合しない。
+function taskRunRecordPaths(params: {
+  repoRoot: string;
+  executionPath: string;
+  branches: readonly string[];
+  taskId: string;
+}): string[] {
+  const paths = params.branches.flatMap((branch) =>
+    branchOwnedRunRecordPaths({ ...params, branch }).map((path) =>
+      repoRelative(params.repoRoot, path),
+    ),
+  );
+  return [...new Set(paths)].sort();
+}
+
 // 統合の段で止まった task を executor へ戻す前の準備（PJR-ED0K）。worktree が merge の途中なら、
 // 解消に `git merge --abort` が要り stage 済みの成果を失うため、状態を変えずに止める。止まって
 // いなければ、統合先（project は root の現在ブランチ）の直しを exec branch へ取り込む。
@@ -467,10 +487,17 @@ export function prepareExecutorResumeFromIntegration(params: {
   process.stdout.write(`  Syncing integration targets before executor resume: ${taskId}\n`);
   let synced: IntegrationTargetSync[];
   try {
+    const projectTarget = currentBranch(repoRoot);
     synced = syncTaskWorktreesWithIntegrationTargets({
       worktree,
-      projectTarget: currentBranch(repoRoot),
+      projectTarget,
       message: `exec(${taskId}): merge integration target before executor resume`,
+      projectOursPaths: taskRunRecordPaths({
+        repoRoot,
+        executionPath: params.executionPath,
+        branches: [worktree.branch, projectTarget],
+        taskId,
+      }),
       integratedProducts: integratedRepoNames(params.state),
     });
   } catch (error) {
