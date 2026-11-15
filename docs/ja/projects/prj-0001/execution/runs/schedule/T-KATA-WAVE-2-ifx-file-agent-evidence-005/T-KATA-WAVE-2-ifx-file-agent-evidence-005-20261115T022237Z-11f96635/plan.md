@@ -153,4 +153,9 @@ owner として達成する狙い:
 - 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
+## 再開時の追加の指示（orchestrator、2026-11-15）
+
+- 親の検証の validate-schema で、`docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml` が「missing yaml-language-server $schema modeline」で落ちた。ifx-file 用の schema は `docs/specdojo/schemas/v1/` にないため、先頭行に `# specdojo-schema: none reason=no-ifx-file-schema` を置く（前例は `docs/ja/specdojo/samples/ifx-api-sample.yaml`）。ifx-file の sample や template を YAML で作った場合も同じにする。
+- ほかの内容は変えない。`npm run validate:schema` を executor で流して、通ることを確かめてから報告する。
+
 `共通規約 sha256:7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b` `docs/ja/projects/prj-0001/execution/conventions/7359b2d13ebba15c496a8ab5d932f1529d48aaf84a9e96b7fa4a00fa51c91a7b.txt`
