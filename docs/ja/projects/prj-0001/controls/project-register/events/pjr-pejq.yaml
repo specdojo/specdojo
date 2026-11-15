@@ -63,3 +63,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_344f0cdd514847c5b0d6c36eaf550f57
+- v: 1
+  id: reg_2701281ec9e5410e81dbcdcde13b51a7
+  ts: "2026-11-15T19:27:41Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3f02f5b8bfd345c4a8796715ad23c5f9
