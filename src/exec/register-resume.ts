@@ -322,8 +322,9 @@ export function findResumableRegisterRun(input: {
   );
 }
 
-// Schedule の明示的な executor 再開は、成功済み executor から reporter または統合の段へ進んだ run に
-// 限る。統合の段（commit・検査・merge）で止まった run も、どのリポジトリも統合していなければ
+// Schedule の明示的な executor 再開は、成功済み executor から reporter または統合の段へ進んだ run と、
+// executor の報告が approach の必須項目を欠いて executor の段で止めた run（PJR-1GCD）に限る。
+// 統合の段（commit・検査・merge）で止まった run も、どのリポジトリも統合していなければ
 // worktree の成果を保ったまま executor へ戻す（PJR-ED0K）。run の選択・変更一覧・申し送りの
 // 復元は register と同じ規則を使う。
 export function selectScheduleExecutorResume(
@@ -335,16 +336,19 @@ export function selectScheduleExecutorResume(
   });
   if (lookup.kind !== "resumable") return lookup;
   const { state } = lookup.target;
-  if (state.stages.executor.status !== "succeeded") {
+  const candidate = candidates.find(
+    (entry) => entry.runId === lookup.target.runId && entry.stateRef === lookup.target.stateRef,
+  );
+  const evidence = candidate?.executorEvidence ?? candidate?.evidence;
+  const rejectedReport =
+    state.stages.executor.status === "blocked" && evidence?.completion_status === "incomplete";
+  if (state.stages.executor.status !== "succeeded" && !rejectedReport) {
     return {
       kind: "not-resumable",
       reason: `--resume-from executor requires a succeeded executor stage for run ${state.run_id} (status: ${state.stages.executor.status})`,
     };
   }
-  const candidate = candidates.find(
-    (entry) => entry.runId === lookup.target.runId && entry.stateRef === lookup.target.stateRef,
-  );
-  if ((candidate?.executorEvidence ?? candidate?.evidence)?.stage.status !== "succeeded") {
+  if (evidence?.stage.status !== "succeeded") {
     return {
       kind: "not-resumable",
       reason: `succeeded executor evidence is missing or invalid for run ${state.run_id}`,

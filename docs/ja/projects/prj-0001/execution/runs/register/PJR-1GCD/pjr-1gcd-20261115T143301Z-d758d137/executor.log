@@ -1,0 +1,29 @@
+PJR-1GCD の修正は完了です。`condense` の edit で executor の報告に `condense_records` がない、または形式が正しくない場合、reporter の失敗ではなく executor の段の失敗として止まるようになりました。ファイルを絞った vitest（3 ファイル・69 件）と `npm run validate:history-links` は通っています。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` は親 runner が実行するので、ここでは実行していません。
+
+**変えた動き**
+- **検査の位置:** reporter を起動する直前に検査します。schedule の worktree 実行（`schedule-task.ts`）、in-place 実行（`in-place.ts`）、register と Job の pipeline（`agent-pipeline.ts` の `runReporterStage`）の 3 か所です。失敗すると executor の段を `blocked` にし、reporter は動かしません。
+- **記録:** evidence を `completion_status: incomplete` にし、理由と次の操作を `block_reason` に入れて保存します。この理由は result と block イベントにも残ります。
+- **次の操作の案内:**
+  - schedule: `specdojo exec resume --task <id> --resume-from executor`
+  - register: `specdojo exec run --register <id> --worktree --resume --resume-from executor`
+  - どちらにも「`--executor-by <nickname>` で agent を替えられる」と添えます。
+- **再開:** 再開は executor の段から始まり、前回の理由が申し送りとして executor に渡ります。今回の bes-index-080 のように、変更前に reporter の段で止まった run を reporter だけで再開した場合も、同じ evidence で reporter を流し直さず executor の段へ戻します。
+- **再開の前提を広げた点:** これまで schedule の `--resume-from executor` は、executor の段で止まったタスクを受け付けませんでした。案内どおり動くよう、「executor の段が `blocked` で、evidence が `incomplete`」の場合だけ受け付けるようにしました。保護機構による block など、従来拒否していた状態は変えていません。
+
+**判断した点**
+- **reporter の直前で検査する:** executor の終了直後ではなく reporter の直前に置きました。こうすると、reporter だけを再開する場合にも同じ検査が効きます。
+- **approach の取得元:** schedule と in-place は task の `approach`、`runReporterStage` は result の scaffold の `approach` から取ります。reporter が判定に使う情報とそろえるためです。
+- **evidence の `stage.status`:** 実際のプロセスの結果（`succeeded`）のまま残しました。未完了は `completion_status` で表すという既存の決まりに合わせています。
+- **ほかの approach:** 同じ関数に条件を足せば当てはめられます。ただ、いま executor の報告に追加の項目を求める approach は `condense` だけなので、ほかは足していません。
+
+**テストと文書**
+- 回帰テストとして `tests/src/exec/executor-report-contract.test.ts` を新しく作り、`tests/src/exec/register-resume.test.ts` に 1 件足しました。
+- `exec-config-guide`・`plan-result-lifecycle-guide`・`exec-operation-guide`・`command-reference` に今回の動きを反映しました。
+- 個票の対応結果に、実施内容・判断・ほかの approach の検討・CHANGELOG に書く事項を書きました。CHANGELOG.md は変えていません。
+
+**気になる点**
+- in-place 実行でも、案内は schedule の `exec resume` を指します。in-place の run を executor から再開できるかは確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"condense の edit で executor の報告に `condense_records` がない、または形式が正しくない場合、reporter の起動前に executor の段の失敗として止めるようにした。evidence を `completion_status: incomplete` とし、`block_reason` に再開の操作（`--resume-from executor`、`--executor-by`）を残す。reporter の段で止まった既存の run を reporter だけで再開しても executor の段へ戻す。schedule の `--resume-from executor` は、executor の段で止まり evidence が `incomplete` の run も受け付けるよう広げた。回帰テストと文書・個票を更新した。","handoff":["検査は reporter の起動直前に置いた（schedule-task.ts、in-place.ts、agent-pipeline.ts の `runReporterStage`）。reporter だけの再開にも同じ検査が効くため。","schedule の `--resume-from executor` の前提を、executor の段が `blocked` かつ evidence が `completion_status: incomplete` の run にも広げた（`lifecycle-commands.ts`、`selectScheduleExecutorResume`）。保護機構による block など、従来拒否していた状態は変えていない。","ほかの approach への当てはめ: `executorReportContractFailure` に条件を足せば当てはめられる。現時点で executor の報告に追加の必須項目を持つのは `condense` だけのため、ほかは足していない。","in-place 実行の block 理由の案内は schedule の `exec resume` を指す。in-place の run を executor の段から再開できるかは確かめていない。","CHANGELOG に書く事項は個票の対応結果の「CHANGELOG に書く事項」の節に書いた（CHANGELOG.md は変えていない）。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; changed ticket pjr-1gcd is valid"},{"command":"npx prettier --write (changed md/ts files)","status":"passed","summary":"formatted the changed src, tests, and docs files"}]}
+</specdojo_executor_evidence>

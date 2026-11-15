@@ -350,6 +350,59 @@ export function executorCompletionFailure(
   );
 }
 
+/** Approach-specific envelope fields the runner needs from the executor before the reporter. */
+export type ExecutorReportContract = {
+  approach?: string;
+  mode?: string;
+};
+
+/**
+ * Returns why the executor envelope lacks a field the approach requires, or undefined when the
+ * contract holds. Only `condense` currently requires an extra field (`condense_records`).
+ */
+export function executorReportContractFailure(
+  evidence: Pick<ExecEvidence, "condense_records">,
+  contract: ExecutorReportContract,
+): string | undefined {
+  if (contract.approach !== "condense" || (contract.mode ?? "edit") !== "edit") return undefined;
+  if (isCondenseRecords(evidence.condense_records)) return undefined;
+  return "executor evidence lacks valid condense_records required by approach condense (report [] when there are no candidates)";
+}
+
+/** Recovery command for a task whose executor stage must be redone in the kept worktree. */
+export function executorStageResumeHint(
+  target: { kind: "schedule"; taskId: string } | { kind: "register"; itemId: string },
+): string {
+  const command =
+    target.kind === "schedule"
+      ? `specdojo exec resume --task ${target.taskId} --resume-from executor`
+      : `specdojo exec run --register ${target.itemId} --worktree --resume --resume-from executor`;
+  return `${command} (add --executor-by <nickname> to switch the executor agent)`;
+}
+
+/**
+ * Checks the approach contract before the reporter stage. On failure the evidence is marked as an
+ * incomplete executor report and persisted, so resume selects the executor stage instead of
+ * re-running only the reporter on the same evidence.
+ */
+export function enforceExecutorReportContract(input: {
+  evidence: ExecEvidence;
+  evidencePath: string;
+  contract: ExecutorReportContract;
+  resumeHint: string;
+}): string | undefined {
+  const failure = executorReportContractFailure(input.evidence, input.contract);
+  if (!failure) return undefined;
+  const reason = boundedText(
+    `${failure}; next: ${input.resumeHint}`,
+    MAX_VALIDATION_SUMMARY_LENGTH,
+  );
+  input.evidence.completion_status = "incomplete";
+  input.evidence.block_reason = reason;
+  writeExecutorEvidence(input.evidencePath, input.evidence);
+  return reason;
+}
+
 function normalizedEvidencePath(value: string): string | null {
   const normalized = value.replaceAll("\\", "/").replace(/^\.\//u, "");
   if (

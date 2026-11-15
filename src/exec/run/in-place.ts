@@ -25,6 +25,8 @@ import {
   changedAgentProtectedConfigPaths,
 } from "../agent-protected-config.js";
 import {
+  enforceExecutorReportContract,
+  executorStageResumeHint,
   recordExecutorEvidence,
   recordReporterFailureOutput,
   writeExecutorEvidence,
@@ -588,7 +590,29 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       });
     }
     failedStageActor = outcome.actor ?? actor;
-    if (outcome.result === "success") {
+    // PJR-1GCD: a missing approach-required field is an executor failure, not a reporter failure.
+    const contractFailure =
+      outcome.result === "success"
+        ? enforceExecutorReportContract({
+            evidence: recorded.evidence,
+            evidencePath: recorded.evidencePath,
+            contract: { approach: task.approach, mode: task.mode ?? "edit" },
+            resumeHint: executorStageResumeHint({ kind: "schedule", taskId: task.id }),
+          })
+        : undefined;
+    if (contractFailure) {
+      const blockedAt = new Date().toISOString();
+      pipelineState = updatePipelineStage(
+        pipelineState,
+        "executor",
+        { status: "blocked", completed_at: blockedAt },
+        blockedAt,
+      );
+      writePipelineState(stateLocation.path, pipelineState);
+      process.stdout.write(`Executor report rejected before the reporter: ${contractFailure}\n`);
+      pipelineBlockReason = contractFailure;
+      exitCode = 1;
+    } else if (outcome.result === "success") {
       pipelineFailureStage = "reporter";
       const reporterEvidence = evidenceForReporter(recorded.evidence, {
         repoRoot,

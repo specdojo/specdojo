@@ -1,4 +1,5 @@
 import { readPlanFile } from "../../shared/plan-conventions.js";
+import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { isAuthoringApproach } from "../../kata/authoring.js";
@@ -852,6 +853,7 @@ export async function runSingleRegisterItemWorktree(
       planPrompt: prompt,
       resultPath: worktreeResultPathForPipeline,
       registerPaths: registerReporterManagedPaths(registerPaths),
+      executorResumeHint: executorStageResumeHint({ kind: "register", itemId: item.id }),
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,

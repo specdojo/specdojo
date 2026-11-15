@@ -1,6 +1,8 @@
 import { relative, resolve, sep } from "node:path";
 import { type ExecDefaultsConfig } from "../agent-config.js";
 import {
+  enforceExecutorReportContract,
+  executorStageResumeHint,
   recordExecutorEvidence,
   recordReporterFailureOutput,
   writeExecutorEvidence,
@@ -363,6 +365,39 @@ export async function runPreparedTask(
         evidence: executorEvidence,
         evidencePath: executorEvidencePath,
       });
+    }
+  }
+
+  // PJR-1GCD: a missing approach-required field (e.g. `condense_records`) is an executor failure.
+  // Checked before the reporter so fresh runs and reporter resumes both stop at the executor stage.
+  if (
+    prepared.pipelineRunId &&
+    result === "success" &&
+    !resumeIntegration &&
+    executorEvidence &&
+    executorEvidencePath
+  ) {
+    const contractFailure = enforceExecutorReportContract({
+      evidence: executorEvidence,
+      evidencePath: executorEvidencePath,
+      contract: { approach: prepared.task.approach, mode: prepared.task.mode ?? "edit" },
+      resumeHint: executorStageResumeHint({ kind: "schedule", taskId: prepared.task.id }),
+    });
+    if (contractFailure) {
+      result = "failure";
+      stderr = contractFailure;
+      pipelineBlockReason = contractFailure;
+      if (pipelineState && pipelineStatePath) {
+        const blockedAt = new Date().toISOString();
+        pipelineState = updatePipelineStage(
+          pipelineState,
+          "executor",
+          { status: "blocked", completed_at: blockedAt },
+          blockedAt,
+        );
+        writePipelineState(pipelineStatePath, pipelineState);
+      }
+      process.stdout.write(`  Executor report rejected before the reporter: ${contractFailure}\n`);
     }
   }
 

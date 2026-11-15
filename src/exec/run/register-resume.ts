@@ -1,4 +1,5 @@
 import { readPlanFile } from "../../shared/plan-conventions.js";
+import { executorStageResumeHint } from "../evidence.js";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { registerDependencyBlockReason } from "../../register/dependency.js";
@@ -507,6 +508,7 @@ export async function resumeSingleRegisterItemWorktree(
       planPrompt: prompt,
       resultPath: worktreeResultPath,
       registerPaths: registerReporterManagedPaths(registerPaths),
+      executorResumeHint: executorStageResumeHint({ kind: "register", itemId: item.id }),
       execDefaults: context.execDefaults,
       resumedExecutor: true,
       runId: target.runId,
@@ -590,6 +592,7 @@ export async function resumeSingleRegisterItemWorktree(
     planPrompt: prompt,
     resultPath: worktreeResultPath,
     registerPaths: registerReporterManagedPaths(registerPaths),
+    executorResumeHint: executorStageResumeHint({ kind: "register", itemId: item.id }),
     execDefaults: context.execDefaults,
     evidence,
     evidencePath: resolve(worktree.path, target.evidenceRef),
