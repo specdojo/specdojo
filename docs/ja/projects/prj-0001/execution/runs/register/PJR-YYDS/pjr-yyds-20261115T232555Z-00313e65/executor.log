@@ -1,0 +1,31 @@
+grade の finding は最初から日本語で書かせ、その日本語を正本にしました。変更した grade のテスト3ファイルは手元で通っています（112件）。`npm run check` 一式と親の検証は、このあと runner が流すため私は実行していません。
+
+**1. plan の指示（`src/grade/plan.ts`）**
+判定根拠、新しい finding の `message`、完了条件の不足内容を日本語で書くよう求める形にしました。固有名詞・識別子・引用は原文のままでよい、としています。「日本語の旧 finding を互換用の正本として扱う」という古い指示は削りました。
+
+**2. 英語の正本の引き継ぎ**
+「日本語で書き直して新しい正本にする」側を選びました。
+- plan の「前回の指摘」には、日本語訳（`message_ja`）があればそちらを示します。未解消なら示した文をそのまま再掲させ、英語で示された場合も訳させません。
+- `src/grade/core.ts` の `preserveStoredFindingSeverities` は、前回の正本 `message` と `message_ja` の両方で照合します。
+- これにより、日本語で再掲された指摘も severity を引き継ぎ、その日本語が新しい正本になります。英語の正本は再評価のたびに日本語へ置き換わっていきます。
+- `tests/src/grade/result.test.ts` に3件を追加しました。日本語で再掲しても英語で再掲しても severity と level の上限が引き継がれること、別の日本語の指摘は引き上げないことです。
+
+**3. 翻訳の段**
+- `tools/grade/run-per-document.sh` は、英語の finding が1件もなければ翻訳 agent も `grade localize` も起動しません。
+- 英語が混じったとき（日本語訳のない旧結果の英語がそのまま再掲された場合など）だけ、既存の翻訳の段で表示用の訳を作ります。この扱いは残すと決めました。
+- `grade run` には翻訳の段を足していません。必要なときは `translation-plan` / `localize` を手で使います。
+
+**4. 文書**
+次の4つを新しい方針に合わせました。
+- command-reference の grade
+- 文書メタデータ標準
+- routine 運用ガイド
+- `tsd-omlx-opencode.md`
+
+review-guide には英語の正本についての記述がなかったので変えていません。PJR-27Y0 の個票は完了済みの履歴なので書き換えず、その方針を述べていた上の文書側を直しました。個票 PJR-YYDS の作業内容と対応結果も更新しています。
+
+その他の検証: `prettier --check` と `npm run validate:history-links` は通りました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"grade executor plan が判定根拠と finding を日本語で書くよう変更し、英語の正本からの引き継ぎは message と message_ja の両方で照合して日本語を新しい正本にする方式で実装した。run-per-document.sh は英語 finding が無ければ翻訳の段を流さない。unit test と文書（command-reference、文書メタデータ標準、routine 運用ガイド、oMLX・opencode 設計書）と個票を更新した。","handoff":["英語の正本の引き継ぎは「日本語で書き直して新しい正本にする」側を採った。grade plan の前回の指摘は `message_ja` があればそれを示し、`preserveStoredFindingSeverities` は前回の `message` と `message_ja` の両方を照合キーにする。","英語 finding が混じった場合だけ既存の翻訳の段（`tools/grade/run-per-document.sh`）で表示用の `message_ja` を作る扱いを残した。`grade run` には翻訳の段を足していない。","PJR-27Y0 の個票は完了済みの履歴のため書き換えず、その方針を述べていた command-reference・文書メタデータ標準・routine 運用ガイド・oMLX・opencode 設計書を更新した。review-guide には該当の記述が無かった。"],"validations":[{"command":"npx vitest run tests/src/grade/result.test.ts tests/src/grade/grade.test.ts","status":"passed","summary":"80 tests passed"},{"command":"npx vitest run tests/tools/grade-per-document.test.ts","status":"passed","summary":"32 tests passed"},{"command":"npx prettier --check docs/ja/specdojo docs/ja/product/030-architecture tools/grade tests/src/grade tests/tools src/grade","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"all history files valid (ticket pjr-yyds updated)"}]}
+</specdojo_executor_evidence>
