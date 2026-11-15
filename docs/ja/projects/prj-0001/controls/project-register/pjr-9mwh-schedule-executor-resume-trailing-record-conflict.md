@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-9mwh-schedule-executor-resume-trailing-record-conflict
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T17:01:33Z"
   due_on: "2026-11-16"
+  completed_at: "2026-11-15T22:21:50Z"
+  conclusion: schedule の executor の再開で、タスク自身の run の記録の衝突を exec branch 側で解くようにした。develop の pipeline-e2e が 30 件すべて通ることを確かめた
   derived_from:
     - PJR-ED0K
     - PJR-DVNV
