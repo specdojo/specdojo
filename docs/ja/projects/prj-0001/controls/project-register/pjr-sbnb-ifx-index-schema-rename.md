@@ -31,13 +31,21 @@ esil.schema.yaml を ifx-index の名前へ改め、参照をそろえる。他�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- PJR-QJ41 の結果を見て、ifx-index の schema を残すかを決めている。YAML の正本がなくなり使う場面がなければ、schema は非推奨にして新しい名前を作らない判断もありうる。決めた内容と理由を対応結果に書いている。
+- 残す場合は、`docs/specdojo/schemas/v1/esil.schema.yaml` を ifx-index の名前（例: `ifx-index.schema.yaml`）へ改め、`$id`・modeline・rulebook・recipe・sample・template・`.vscode/settings.json`・テストの参照をそろえている。
+- ほかのプロジェクトの YAML が古い名前の schema を指していても検証が壊れないよう、古いファイルを非推奨の別名として残すか、移し方を書いている。
+- `grep -rn esil` で、履歴（個票・実行記録）以外に古い略号が残っていない。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。保護された設定の変更は、変更案を書く。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節に書いている（PJR-EPQ3）。
+- `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`npm run validate:catalog` と親の検証が通っている。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                        | 担当 | 状態 | メモ |
+| --- | ------------------------------------------- | ---- | ---- | ---- |
+| 1   | schema を残すかを PJR-QJ41 の結果から決める | DEV  | open | -    |
+| 2   | ファイル名と参照を改める（残す場合）        | DEV  | open | -    |
+| 3   | 古い名前の互換と移し方を扱う                | DEV  | open | -    |
 
 ## 5. 対応結果
 
@@ -45,4 +53,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:ifx-index-rulebook]]
+- [[prj-0001:ifx-index]]
