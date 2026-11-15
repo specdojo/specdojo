@@ -5,14 +5,14 @@ path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alterna
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 86
-graded_at: "2026-11-15T12:31:11.476Z"
+score: 91
+graded_at: "2026-11-15T21:58:22.206Z"
 graded_by: sol-review-executor
-content_hash: 266402ac08a10581bb2882e9794b3aa0708aaf46b04ec78032b646673915e355
+content_hash: 1432fb7c1c9c848c980f0d166a34f2c872110e53fba117cd2078d4b5cbc6cc04
 source_hashes:
   catalog-entry: 45f28b64a72bff5c4a2ac190021085a90b320b7cb95a5d42edbc611b85b96185
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   dependency:prj-issues-and-approach: ae90307d8224fab79e09ae1f1947389032e361f513b8ba0364776cf340937706
   dependency:prj-scope: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
@@ -20,45 +20,45 @@ source_hashes:
   schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 88
-  operations:
     score: 100
+  operations:
+    score: 94
   planning:
-    score: 67
+    score: 100
   business:
-    score: 83
+    score: 100
   consistency:
     score: 75
   architecture:
-    score: 100
+    score: 92
   usability:
     score: 100
   implementation:
     score: 100
   quality:
-    score: 69
+    score: 81
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
     level: 4
     score: 100
@@ -66,11 +66,11 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -87,14 +87,14 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -108,8 +108,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -121,142 +121,114 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
+  major: 1
   minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 161
+    rule: vp-arc-cross-document-consistency
+    line: 101
     anchor: >-
-      | SDD-06 | Low        | Low      | High               | Middle     | High           | High   | High   |
-      非採択         |
+      | リスク     | 4    | 現場との乖離、負荷転嫁、責任不明、公開不備の4事象すべてに統制手段がある / 1〜2事象に統制手段がない / 3事象以上、または責任不明を統制できない |
+      P-01〜P-03、ACD-C03    |
     message: >-
-      SDD-06 is rejected without an accompanying explanation or reconsideration condition; explain why its lower
-      suitability and traceability outweigh its lower dependency and learning costs, and identify what change would
-      justify reconsideration.
+      The evaluation tables cite ACD-C03 as an active constraint at lines 101, 118, and 129, but
+      docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md section 2 explicitly
+      retires ACD-C03 and delegates approval authority to the project charter; replace these references with the current
+      authoritative provisions so the evaluation rationale remains traceable.
     message_ja: >-
-      SDD-06 is rejected without an accompanying explanation or reconsideration condition; explain why its lower
-      suitability and traceability outweigh its lower dependency and learning costs, and identify what change would
-      justify reconsideration.
+      The evaluation tables cite ACD-C03 as an active constraint at lines 101, 118, and 129, but
+      docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md section 2 explicitly
+      retires ACD-C03 and delegates approval authority to the project charter; replace these references with the current
+      authoritative provisions so the evaluation rationale remains traceable.
     cause:
       type: document
   - id: F002
-    severity: major
-    rule: vp-pm-plan-feasibility
-    line: 167
-    anchor: 試行では同じ小規模な変更要求を処理し、成果物の重複と反映手順、要求から検証までの追跡漏れ、人間のレビューによる意図保持、ツールや Agent / IDE を外した場合の再開可能性を測定する。
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 69
+    anchor: >-
+      | SDD-02 | GitHub Spec Kit             | OSS・プラットフォーム提供型 | Spec → Plan → Tasks → Implement                        
+      | 明確な段階と複数 Agent 連携を持つ                              | 固定ワークフローと SpecDojo 成果物の対応付けが必要     |
     message: >-
-      The OpenSpec and Spec Kit trial and the mitigation actions in section 5 have no assigned execution roles, effort
-      or time bounds, or review timing; identify the work packages, responsible Role codes, prerequisites, and decision
-      points so PM can estimate, schedule, and track them.
+      Spec Kit is characterized as having a fixed workflow, and that constraint is reused in its comparison rationale,
+      although the linked official documentation describes customizable processes and workflows; identify the evaluated
+      version and configuration, then distinguish its default process from constraints that actually apply to the
+      proposed trial.
     message_ja: >-
-      The OpenSpec and Spec Kit trial and the mitigation actions in section 5 have no assigned execution roles, effort
-      or time bounds, or review timing; identify the work packages, responsible Role codes, prerequisites, and decision
-      points so PM can estimate, schedule, and track them.
+      Spec Kit is characterized as having a fixed workflow, and that constraint is reused in its comparison rationale,
+      although the linked official documentation describes customizable processes and workflows; identify the evaluated
+      version and configuration, then distinguish its default process from constraints that actually apply to the
+      proposed trial.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 194
-    anchor: "| D-03   | リポジトリと GitHub の責務を分離して運用可能       | Issue と正本の ID 対応、転記・クローズ条件が必要になる |"
+    rule: vp-dev-testability
+    line: 207
+    anchor: >-
+      | D-01   | 現行の文書体系、メタデータ、検証を拡張して実現可能 | 適用条件と必須ゲートを rulebook 等へ反映する。`PM` が反映作業を Schedule に登録し、`ARC`
+      が反映先を特定する                                | `QE` が反映後の rulebook 等の検証を実行し、エラー 0
+      件を確認する                                                                           |
     message: >-
-      Section 4.4 identifies rulebook changes, mapping records, deletion rules, and Issue-to-source correspondence, but
-      does not assign their follow-up or connect them to Schedule; specify PM's responsibility and the receiving
-      deliverables or tasks before dependent work starts.
+      Sections 4.4–4.5 require zero validation errors after rulebook changes and tool removal but identify neither the
+      applicable validation commands nor an authoritative procedure defining their targets and expected results; link
+      the executable verification procedure so QE can consistently run the required checks.
     message_ja: >-
-      Section 4.4 identifies rulebook changes, mapping records, deletion rules, and Issue-to-source correspondence, but
-      does not assign their follow-up or connect them to Schedule; specify PM's responsibility and the receiving
-      deliverables or tasks before dependent work starts.
+      Sections 4.4–4.5 require zero validation errors after rulebook changes and tool removal but identify neither the
+      applicable validation commands nor an authoritative procedure defining their targets and expected results; link
+      the executable verification procedure so QE can consistently run the required checks.
     cause:
       type: document
   - id: F004
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 213
-    anchor: "- 比較試行は入力・評価軸・完了条件を固定し、結果をプロジェクト登録簿または技術検証結果に記録する。"
-    message: >-
-      Sections 5–6 leave trial results, risks, issues, change requests, and pending decisions under generic recording
-      instructions; identify their management categories, receiving records, and responsible Role codes so PM can report
-      and track each item separately.
-    message_ja: >-
-      Sections 5–6 leave trial results, risks, issues, change requests, and pending decisions under generic recording
-      instructions; identify their management categories, receiving records, and responsible Role codes so PM can report
-      and track each item separately.
-    cause:
-      type: document
-  - id: F005
-    severity: major
-    rule: vp-ba-business-value
-    line: 109
-    anchor: "| 評価軸             | 判定基準                                                          |"
-    message: D-02とD-03の評価軸に「主に対応する課題・制約」の列がなく業務課題との対応が不明なため、各評価軸と根拠資料の課題・制約の対応を明記してください。
-    message_ja: D-02とD-03の評価軸に「主に対応する課題・制約」の列がなく業務課題との対応が不明なため、各評価軸と根拠資料の課題・制約の対応を明記してください。
-    cause:
-      type: document
-  - id: F006
-    severity: minor
-    rule: vp-dev-testability
-    line: 193
-    anchor: "| D-02   | 隔離した変更要求で既存成果物を変換せず試行可能     | 対応表、評価記録、試行生成物の削除規則が必要になる     |"
-    message: >-
-      The required mapping records, trial-output deletion rules, and Issue/source correspondence have no linked
-      validation procedure; specify the checks and expected results for preserved references, clean tool removal, and
-      consistent closure, or reference the follow-up verification artifact that defines them.
-    message_ja: >-
-      The required mapping records, trial-output deletion rules, and Issue/source correspondence have no linked
-      validation procedure; specify the checks and expected results for preserved references, clean tool removal, and
-      consistent closure, or reference the follow-up verification artifact that defines them.
-    cause:
-      type: document
-  - id: F007
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 198
-    anchor: >-
-      | 区分         | 内容                                                                           |
-      軽減策                                                               |
-    message: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
-    message_ja: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
-    cause:
-      type: document
-  - id: F008
     severity: major
     rule: vp-qe-verifiability
-    line: 132
-    anchor: >-
-      評価は `High` / `Middle` / `Low` とし、採択に有利なほど高くする。重みは D-01 の優先順位を示すが、機械的な合計だけで決定しない。D-02 と D-03
-      は、追跡可能な正本、人間の判断責任、可逆性を必須条件とする。
+    line: 142
+    anchor: "- 各セルは 「外部資料の位置づけ」の公式資料と前段文書に基づく机上評価であり、試行証拠ではない。主な High・Low の根拠は比較表直後の説明に記し、未確認事項は High としない。試行後は測定結果でセルを更新する。"
     message: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
     message_ja: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
     cause:
       type: document
-  - id: F009
+  - id: F005
     severity: minor
-    rule: vp-qe-verifiability
-    line: 167
-    anchor: 試行では同じ小規模な変更要求を処理し、成果物の重複と反映手順、要求から検証までの追跡漏れ、人間のレビューによる意図保持、ツールや Agent / IDE を外した場合の再開可能性を測定する。
-    message: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため,合否を判定できる数値または状態条件を追加してください。
-    message_ja: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため,合否を判定できる数値または状態条件を追加してください。
+    rule: vp-qe-omissions-consistency
+    line: 219
+    anchor: >-
+      | WP-03 | SDD-03・SDD-02 による同一変更要求の処理と正本への反映 | `ARC`（AI Agent が支援）      | WP-02                  | 両ツールで処理を終え、結果を
+      SpecDojo 成果物へ反映している           |
+    message: >-
+      WP-03 requires completion of reflection into the authoritative SpecDojo deliverables before WP-04 checks intent,
+      but line 228 requires all intent mismatches to be corrected before reflection; separate draft output from
+      authoritative reflection and place the BA intent check before that reflection so the work sequence can satisfy its
+      own acceptance condition.
+    message_ja: >-
+      WP-03 requires completion of reflection into the authoritative SpecDojo deliverables before WP-04 checks intent,
+      but line 228 requires all intent mismatches to be corrected before reflection; separate draft output from
+      authoritative reflection and place the BA intent check before that reflection so the work sequence can satisfy its
+      own acceptance condition.
     cause:
       type: document
-  - id: F010
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 107
-    anchor: "### 3.2. D-02 の評価軸"
-    message: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
-    message_ja: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
+  - id: F006
+    severity: minor
+    rule: vp-ops-operability
+    line: 245
+    anchor: >-
+      | リスク・SDD-02、SDD-03、TSK-02、TSK-05       | 外部ツールの更新・障害・終了によって運用を継続できなくなる                      |
+      標準形式での保存、エクスポート、復旧、離脱手順を採択条件にする。SDD は WP-05 の再開可能性、TSK-02 は 「技術的実現性と影響」の D-03 の照合で確認する |
+    message: >-
+      The mitigation for TSK-02 requires export, recovery, and exit procedures, but its referenced D-03 check only
+      compares closed Issues with source records; add a check showing that required discussion, decision rationale, and
+      correspondence remain available when GitHub is unavailable or removed, and assign responsibility for completing it
+      before supplementary operation begins.
+    message_ja: >-
+      The mitigation for TSK-02 requires export, recovery, and exit procedures, but its referenced D-03 check only
+      compares closed Issues with source records; add a check showing that required discussion, decision rationale, and
+      correspondence remain available when GitHub is unavailable or removed, and assign responsibility for completing it
+      before supplementary operation begins.
     cause:
       type: document
 done_criteria:
-  satisfied: 2
+  satisfied: 4
   total: 4
-  unsatisfied:
-    DC-001:
-      - BA
-    DC-004:
-      - PM
   detail_ref: prj-0001:prj-comparison-of-alternatives-grade-criteria

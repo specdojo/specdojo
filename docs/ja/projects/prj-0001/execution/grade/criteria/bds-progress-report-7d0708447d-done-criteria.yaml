@@ -2,12 +2,12 @@
 id: bds-progress-report-grade-criteria
 document: bds-progress-report
 path: docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md
-graded_at: "2026-11-15T10:47:05.060Z"
-graded_by: luna-review-executor
-content_hash: 792f5cdd39c82a5b84142aba3e3f6e61a60538c2a952b476d70785698f90f59a
+graded_at: "2026-11-15T21:43:29.110Z"
+graded_by: sol-review-executor
+content_hash: 08c5917cb6f4e15345dc9fd2e438ade406bef5264e01cb9147466aa4c72a7153
 summary:
-  satisfied: 2
-  unsatisfied: 1
+  satisfied: 3
+  unsatisfied: 0
   total: 3
 criteria:
   - id: DC-001
@@ -21,10 +21,7 @@ criteria:
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
-    status: unsatisfied
-    reason: >-
-      The PO cannot approve the report's complete scope and business validity until the reporting period's end boundary
-      is defined.
+    status: satisfied
   - id: DC-003
     text: 報告の内容を記録から確かめるテストの設計に活用できること
     roles:

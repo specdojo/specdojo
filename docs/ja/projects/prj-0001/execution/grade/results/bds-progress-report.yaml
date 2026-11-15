@@ -6,13 +6,13 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 85
-graded_at: "2026-11-15T10:47:05.060Z"
-graded_by: luna-review-executor
-content_hash: 792f5cdd39c82a5b84142aba3e3f6e61a60538c2a952b476d70785698f90f59a
+graded_at: "2026-11-15T21:43:29.110Z"
+graded_by: sol-review-executor
+content_hash: 08c5917cb6f4e15345dc9fd2e438ade406bef5264e01cb9147466aa4c72a7153
 source_hashes:
   catalog-entry: 6c7f49355beee88c31aeb06ea46b65674c20ceccd1478b52ae57cc2166f4b5e9
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   dependency:sysd-job-execution: b032bbd88614820abeba74cca5c46b0c07bfaeb8c1bf796880fa281bfbc3b143
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
@@ -21,21 +21,21 @@ categories:
   purpose:
     score: 88
   operations:
-    score: 88
-  planning:
     score: 75
+  planning:
+    score: 92
   business:
     score: 92
   consistency:
-    score: 88
+    score: 63
   architecture:
     score: 100
   usability:
     score: 94
   implementation:
-    score: 75
+    score: 63
   quality:
-    score: 69
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -44,14 +44,14 @@ viewpoints:
     level: 3
     score: 75
   vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
     level: 4
     score: 100
-  vp-pm-plan-feasibility:
-    level: 3
-    score: 75
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 3
     score: 75
@@ -65,8 +65,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -77,8 +77,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -86,8 +86,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -98,17 +98,17 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-user-flow:
-    level: 4
-    score: 100
-  vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -116,220 +116,226 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 15
+  major: 3
+  minor: 11
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-decision-readiness
-    line: 23
-    anchor: "- 再出力: 同じ週の再実行は同じ Job Run の再試行として扱い、別の報告を増やさない。手動では `exec run --job job-weekly-report` に期間を渡して作成できる。"
+    line: 93
+    anchor: >-
+      | ファイル名と期間       | 進捗報告の rulebook は日付と連番のファイル名、Job は ISO 週で一意な保存を求めており、運用者が ISO
+      週から報告を特定する対応が定まっていない                          |
+      本書の案は、日付に期間の終点の日付（当週金曜）を使い、同じ週の再出力は連番を増やさず同じファイルを更新するものとする。正本は進捗報告の rulebook とし、PM
+      が判断点までに案を採るかを決めて反映する。登録簿で追跡                         |
     message: >-
-      Resolve whether the reporting period ends at the Friday 17:00 trigger or at week end, and specify how the
-      resulting boundary affects the report’s scope before PO approval.
+      Define how the rulebook’s date-and-sequence filename maps to the Job’s ISO-week-unique report identity so the PO
+      can approve one consistent naming and update policy.
     message_ja: >-
-      Resolve whether the reporting period ends at the Friday 17:00 trigger or at week end, and specify how the
-      resulting boundary affects the report’s scope before PO approval.
+      Define how the rulebook’s date-and-sequence filename maps to the Job’s ISO-week-unique report identity so the PO
+      can approve one consistent naming and update policy.
     cause:
       type: document
   - id: F002
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 91
-    anchor: >-
-      | 期間の終点       | 金曜 17 時以降の記録の扱いが未決であり、完了事項の境界を判定できない                                           | PO が終点を決め、QE
-      が境界の期待結果を確かめるまで週末の記録の扱いを受入対象外とする      |
+    rule: vp-po-publication-accountability
+    line: 16
+    anchor: "- 個人の作業量の評価や、外部への公開報告には使わない。公開可否は人が判断する。"
     message: >-
-      Define how the rulebook’s date-and-sequence filename maps to the Job’s ISO-week-unique report identity so the PO
-      can approve one consistent naming and update policy.
+      Identify the human PO as accountable for publication approval, while retaining PM responsibility for checking
+      report content.
     message_ja: >-
-      Define how the rulebook’s date-and-sequence filename maps to the Job’s ISO-week-unique report identity so the PO
-      can approve one consistent naming and update policy.
+      Identify the human PO as accountable for publication approval, while retaining PM responsibility for checking
+      report content.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 91
+    rule: vp-pm-control-reporting
+    line: 87
     anchor: >-
-      | 期間の終点       | 金曜 17 時以降の記録の扱いが未決であり、完了事項の境界を判定できない                                           | PO が終点を決め、QE
-      が境界の期待結果を確かめるまで週末の記録の扱いを受入対象外とする      |
-    message: Add a target date or review point for the unresolved follow-up actions so the PM can schedule and track them.
-    message_ja: Add a target date or review point for the unresolved follow-up actions so the PM can schedule and track them.
+      本書の確定の判断点は、人が本書を確定する T-KATA-WAVE-2-bds-progress-report-140 とする。担当・解消条件に「登録簿で追跡」とある項目は、その判断点までに PM
+      が登録簿へ起票し、個票で担当と期日を追跡する。それ以外の項目は本書の改訂で解消する。
+    message: >-
+      Identify the reporting destination and which persistent issues should be transferred to the project register,
+      including their tracking references.
+    message_ja: >-
+      Identify the reporting destination and which persistent issues should be transferred to the project register,
+      including their tracking references.
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 91
-    anchor: >-
-      | 期間の終点       | 金曜 17 時以降の記録の扱いが未決であり、完了事項の境界を判定できない                                           | PO が終点を決め、QE
-      が境界の期待結果を確かめるまで週末の記録の扱いを受入対象外とする      |
+    rule: vp-ba-requirements-completeness
+    line: 81
+    anchor: "| 終点の前に手動で作成した           | 終点までの記録が揃っていないため、作成時点までの記録で作る           | PM が終点の後に同じ週を再出力し、報告を更新する           |"
     message: >-
-      State whether the listed open issues require PJR registration or affect scheduled work, so the PM can route and
-      track their project-level impact.
+      Require a visible provisional status and actual data cutoff for reports created before the period end so readers
+      can distinguish partial-period output from a completed weekly report.
     message_ja: >-
-      State whether the listed open issues require PJR registration or affect scheduled work, so the PM can route and
-      track their project-level impact.
+      Require a visible provisional status and actual data cutoff for reports created before the period end so readers
+      can distinguish partial-period output from a completed weekly report.
     cause:
       type: document
   - id: F005
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 91
-    anchor: >-
-      | 期間の終点       | 金曜 17 時以降の記録の扱いが未決であり、完了事項の境界を判定できない                                           | PO が終点を決め、QE
-      が境界の期待結果を確かめるまで週末の記録の扱いを受入対象外とする      |
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 81
+    anchor: "| 終点の前に手動で作成した           | 終点までの記録が揃っていないため、作成時点までの記録で作る           | PM が終点の後に同じ週を再出力し、報告を更新する           |"
     message: >-
-      Identify the reporting destination and which persistent issues should be transferred to the project register,
-      including their tracking references.
+      Reconcile the promised post-cutoff update with src/job/job.ts:503 and src/exec/run/job.ts:896, which skip an
+      already succeeded Run with the same period-based identity; document the required implementation change or a
+      supported update mechanism.
     message_ja: >-
-      Identify the reporting destination and which persistent issues should be transferred to the project register,
-      including their tracking references.
+      Reconcile the promised post-cutoff update with src/job/job.ts:503 and src/exec/run/job.ts:896, which skip an
+      already succeeded Run with the same period-based identity; document the required implementation change or a
+      supported update mechanism.
     cause:
       type: document
   - id: F006
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 23
-    anchor: "- 再出力: 同じ週の再実行は同じ Job Run の再試行として扱い、別の報告を増やさない。手動では `exec run --job job-weekly-report` に期間を渡して作成できる。"
-    message: Specify the reporting period’s end boundary so users can determine which records and work belong in the report.
-    message_ja: Specify the reporting period’s end boundary so users can determine which records and work belong in the report.
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 81
+    anchor: "| 終点の前に手動で作成した           | 終点までの記録が揃っていないため、作成時点までの記録で作る           | PM が終点の後に同じ週を再出力し、報告を更新する           |"
+    message: >-
+      Specify how a successful early Job Run can be intentionally executed again after the cutoff while preserving one
+      report per period; the current runner skips completed Runs, so the stated update workflow cannot be implemented
+      from these instructions alone.
+    message_ja: >-
+      Specify how a successful early Job Run can be intentionally executed again after the cutoff while preserving one
+      report per period; the current runner skips completed Runs, so the stated update workflow cannot be implemented
+      from these instructions alone.
     cause:
       type: document
   - id: F007
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 91
+    rule: vp-dev-change-impact
+    line: 97
     anchor: >-
-      | 期間の終点       | 金曜 17 時以降の記録の扱いが未決であり、完了事項の境界を判定できない                                           | PO が終点を決め、QE
-      が境界の期待結果を確かめるまで週末の記録の扱いを受入対象外とする      |
+      | 実装の参照             | カタログの実装参照のうち routine の保存規則は実行状態の保存先を扱い、報告の保存先は Job
+      の定義が持つ                                                                | DEV がカタログの実装参照を見直し、報告の保存先の参照を Job
+      の定義へ付け替えるかを判断する                                                                                                                                              
+      |
     message: >-
-      Confirm and link the authoritative Job and routine definitions for report storage and execution so implementers
-      can locate the complete inputs and behavior.
+      Add the successful-run regeneration gap to the impact inventory, identifying the Job identity and runner behavior
+      that must change and how existing weekly report identities will be preserved.
     message_ja: >-
-      Confirm and link the authoritative Job and routine definitions for report storage and execution so implementers
-      can locate the complete inputs and behavior.
+      Add the successful-run regeneration gap to the impact inventory, identifying the Job identity and runner behavior
+      that must change and how existing weekly report identities will be preserved.
     cause:
       type: document
   - id: F008
     severity: minor
-    rule: vp-dev-change-impact
-    line: 91
+    rule: vp-dev-testability
+    line: 87
     anchor: >-
-      | 期間の終点       | 金曜 17 時以降の記録の扱いが未決であり、完了事項の境界を判定できない                                           | PO が終点を決め、QE
-      が境界の期待結果を確かめるまで週末の記録の扱いを受入対象外とする      |
+      本書の確定の判断点は、人が本書を確定する T-KATA-WAVE-2-bds-progress-report-140 とする。担当・解消条件に「登録簿で追跡」とある項目は、その判断点までに PM
+      が登録簿へ起票し、個票で担当と期日を追跡する。それ以外の項目は本書の改訂で解消する。
     message: >-
-      Record the selected source of truth and affected definitions for the filename and integration-review issues so
-      implementers can assess the required changes.
+      Add or directly reference the applicable Markdown, Frontmatter, schema, and catalog validation commands, with
+      expected success results and correction-and-rerun handling before finalization.
     message_ja: >-
-      Record the selected source of truth and affected definitions for the filename and integration-review issues so
-      implementers can assess the required changes.
+      Add or directly reference the applicable Markdown, Frontmatter, schema, and catalog validation commands, with
+      expected success results and correction-and-rerun handling before finalization.
     cause:
       type: document
   - id: F009
     severity: minor
-    rule: vp-dev-testability
-    line: 23
-    anchor: "- 再出力: 同じ週の再実行は同じ Job Run の再試行として扱い、別の報告を増やさない。手動では `exec run --job job-weekly-report` に期間を渡して作成できる。"
-    message: Define the period-end rule and its expected inclusion behavior so QE can test records at the weekly boundary.
-    message_ja: Define the period-end rule and its expected inclusion behavior so QE can test records at the weekly boundary.
+    rule: vp-qe-verifiability
+    line: 62
+    anchor: >-
+      | 7   | 明細   | 次期予定         | 翌週に着手・完了を予定する作業、担当、期日               | Schedule の未完了タスク              | 未完了タスクの
+      ID・担当ロールと一致することを照合する                                  |
+    message: >-
+      Extend the next-period verification rule to check planned start or completion dates and reported deadlines against
+      Schedule, including the rule for selecting tasks that belong to the next reporting period.
+    message_ja: >-
+      Extend the next-period verification rule to check planned start or completion dates and reported deadlines against
+      Schedule, including the rule for selecting tasks that belong to the next reporting period.
     cause:
       type: document
   - id: F010
     severity: minor
-    rule: vp-qe-done-criteria
-    line: 23
-    anchor: "- 再出力: 同じ週の再実行は同じ Job Run の再試行として扱い、別の報告を増やさない。手動では `exec run --job job-weekly-report` に期間を渡して作成できる。"
-    message: Resolve the period-end boundary so the report scope can be approved against an unambiguous set of records.
-    message_ja: Resolve the period-end boundary so the report scope can be approved against an unambiguous set of records.
+    rule: vp-qe-omissions-consistency
+    line: 38
+    anchor: 対象は 1 project の、対象期間内の記録とする。他の project の記録、対象期間外に完了した作業は含めない。
+    message: >-
+      Clarify that ongoing tasks and unresolved issues originating before the period remain eligible for the period-end
+      snapshot and carryover sections, and that records before the period may be read to reconstruct those states.
+    message_ja: >-
+      Clarify that ongoing tasks and unresolved issues originating before the period remain eligible for the period-end
+      snapshot and carryover sections, and that records before the period may be read to reconstruct those states.
     cause:
       type: document
   - id: F011
     severity: minor
-    rule: vp-qe-verifiability
-    line: 23
-    anchor: "- 再出力: 同じ週の再実行は同じ Job Run の再試行として扱い、別の報告を増やさない。手動では `exec run --job job-weekly-report` に期間を渡して作成できる。"
+    rule: vp-ux-user-flow
+    line: 20
+    anchor: >-
+      - 契機: routine `rtn-weekly-report` が毎週金曜 17 時（`Asia/Tokyo`）に Job `job-weekly-report` を起動する。契機と入力の定義は project 設定の
+      `routines_path` 配下の `rtn-weekly-report.yaml` と `jobs_path` 配下の `job-weekly-report.yaml`、扱いの正本は
+      [[specdojo:routine-operation-guide|routine運用ガイド]] と [[prj-0001:sysd-job-execution|Job実行設計]] の「週報作成」とする。
     message: >-
-      Specify the period-end boundary and expected treatment of records after the Friday trigger to make boundary tests
-      decidable.
+      Replace prj-0001:sysd-job-execution with the authoritative document ID sysd-job-execution from
+      docs/ja/product/040-system-design/sysd-job-execution.md so readers can follow the execution-design reference.
     message_ja: >-
-      Specify the period-end boundary and expected treatment of records after the Friday trigger to make boundary tests
-      decidable.
+      Replace prj-0001:sysd-job-execution with the authoritative document ID sysd-job-execution from
+      docs/ja/product/040-system-design/sysd-job-execution.md so readers can follow the execution-design reference.
     cause:
       type: document
   - id: F012
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 23
-    anchor: "- 再出力: 同じ週の再実行は同じ Job Run の再試行として扱い、別の報告を増やさない。手動では `exec run --job job-weekly-report` に期間を渡して作成できる。"
+    rule: vp-ops-release-readiness
+    line: 92
+    anchor: >-
+      | 定期起動の有効化       | `rtn-weekly-report` は `enabled: false` であり、定期起動による報告の実績がない。取りこぼした週を 1 週ずつ作るには routine が
+      `missed_run: all` を指定する必要がある | PM
+      が有効化を判断する。「ファイル名と期間」「統合前の確認」の解消を有効化の前提とし、品質保証担当（QE）が初回報告で表示項目と期間の始点・終点を照合する。登録簿で追跡                                                                  
+      |
     message: >-
-      Reconcile the ISO-week period definition with the Friday trigger by defining the reporting cutoff and its
-      treatment of later records.
+      Add verified same-period regeneration after a successful early run as an activation prerequisite, or explicitly
+      exclude early manual output until a supported replacement workflow is available.
     message_ja: >-
-      Reconcile the ISO-week period definition with the Friday trigger by defining the reporting cutoff and its
-      treatment of later records.
+      Add verified same-period regeneration after a successful early run as an activation prerequisite, or explicitly
+      exclude early manual output until a supported replacement workflow is available.
     cause:
       type: document
   - id: F013
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 9
+    rule: vp-ops-operability
+    line: 93
     anchor: >-
-      | 読み手                       | 利用目的                                           |
-      帳票から判断すること                                   |
+      | ファイル名と期間       | 進捗報告の rulebook は日付と連番のファイル名、Job は ISO 週で一意な保存を求めており、運用者が ISO
+      週から報告を特定する対応が定まっていない                          |
+      本書の案は、日付に期間の終点の日付（当週金曜）を使い、同じ週の再出力は連番を増やさず同じファイルを更新するものとする。正本は進捗報告の rulebook とし、PM
+      が判断点までに案を採るかを決めて反映する。登録簿で追跡                         |
     message: >-
-      Expand or link the role abbreviations at first use so future contributors can identify the responsibilities
-      without relying on unstated role-code knowledge.
+      Define how operators identify and update the report for a given ISO week, including the filename mapping, before
+      enabling scheduled operation.
     message_ja: >-
-      Expand or link the role abbreviations at first use so future contributors can identify the responsibilities
-      without relying on unstated role-code knowledge.
+      Define how operators identify and update the report for a given ISO week, including the filename mapping, before
+      enabling scheduled operation.
     cause:
       type: document
   - id: F014
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 91
-    anchor: >-
-      | 期間の終点       | 金曜 17 時以降の記録の扱いが未決であり、完了事項の境界を判定できない                                           | PO が終点を決め、QE
-      が境界の期待結果を確かめるまで週末の記録の扱いを受入対象外とする      |
-    message: >-
-      Resolve the reporting boundary and filename policy, or explicitly make them release-blocking conditions with a
-      named approval point.
-    message_ja: >-
-      Resolve the reporting boundary and filename policy, or explicitly make them release-blocking conditions with a
-      named approval point.
-    cause:
-      type: document
-  - id: F015
-    severity: minor
-    rule: vp-ops-operability
-    line: 36
-    anchor: ""
-    message: >-
-      Define how operators identify and update the report for a given ISO week, including the filename mapping, before
-      enabling scheduled operation.
-    message_ja: >-
-      Define how operators identify and update the report for a given ISO week, including the filename mapping, before
-      enabling scheduled operation.
-    cause:
-      type: document
-  - id: F016
     severity: major
-    rule: vp-qe-config-validity
-    line: 26
-    anchor: "_ASSUMPTION_: 現在 `rtn-weekly-report` は `enabled: false` のサンプル定義であり、定期起動では報告が作られない。本書は有効化後の動作を記述する。"
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    rule: vp-ops-operability
+    line: 81
+    anchor: "| 終点の前に手動で作成した           | 終点までの記録が揃っていないため、作成時点までの記録で作る           | PM が終点の後に同じ週を再出力し、報告を更新する           |"
+    message: >-
+      Provide a supported operator procedure for replacing a successfully generated early report after the cutoff;
+      repeating exec run with the same period currently returns “Job Run already complete” without updating the report.
+    message_ja: >-
+      Provide a supported operator procedure for replacing a successfully generated early report after the cutoff;
+      repeating exec run with the same period currently returns “Job Run already complete” without updating the report.
+    cause:
+      type: document
 done_criteria:
-  satisfied: 2
+  satisfied: 3
   total: 3
-  unsatisfied:
-    DC-002:
-      - PO
   detail_ref: bds-progress-report-grade-criteria

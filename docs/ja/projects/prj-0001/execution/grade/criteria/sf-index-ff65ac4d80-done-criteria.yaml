@@ -2,12 +2,12 @@
 id: sf-index-grade-criteria
 document: sf-index
 path: docs/ja/product/010-business-specs/050-system-functions/sf-index.md
-graded_at: "2026-11-15T10:57:57.973Z"
+graded_at: "2026-11-15T21:48:04.434Z"
 graded_by: sol-review-executor
-content_hash: d3e11e3ae129ca29060cbca65bd8ca4c3de7743387ddcdbe83a09aea6d72beea
+content_hash: a8cf286a2090092b82d6178425c003ee4bf58532e38927faf933ec0804006558
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -17,33 +17,30 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Business correspondence remains provisional in Q-01, and the P-06 job-definition scope is not covered by the
-      execution-oriented SF-ROUT-02 row.
+      P-05 execution allocation and P-14 responsibility coverage remain inconsistent with business sources, and ORCH has
+      no representative dependency.
   - id: DC-002
     text: システム化機能のスコープを承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: >-
-      The undisclosed job-definition versus execution mismatch leaves part of the proposed system scope unresolved
-      beyond the reservations approved in Q-01–Q-03.
+    reason: Q-02 still requires a PO decision to add the ORCH representative or exclude its scope before finalization.
   - id: DC-003
     text: 機能分割・コンポーネント設計の入力として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: >-
-      The P-06 responsibility mismatch and unresolved deprecation boundary prevent establishing consistent
-      component-design boundaries for the full listed scope.
+    status: satisfied
   - id: DC-004
     text: テスト対象機能の網羅性が確認できること
     roles:
       - QE
     viewpoint: vp-qe-omissions-consistency
     status: unsatisfied
-    reason: The body provides no traceable comparison of all function IDs and business areas against test targets.
+    reason: >-
+      The test matrix covers the listed IDs but does not establish coverage of routine-definition handling and the full
+      system responsibilities of P-14.
   - id: DC-005
     text: 実装スコープ・機能境界の参照として使えること
     roles:
@@ -51,5 +48,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      SF-ROUT-02 identifies the wrong execution command boundary, and Q-03 leaves the status and catalog-update
-      responsibility undecided.
+      The P-05 execution assignment and launch-only P-14 summary leave implementation scope and business responsibility
+      boundaries unresolved.

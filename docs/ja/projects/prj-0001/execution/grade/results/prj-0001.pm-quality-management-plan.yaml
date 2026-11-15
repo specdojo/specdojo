@@ -5,68 +5,68 @@ path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-pla
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-11-15T12:21:02.637Z"
+score: 93
+graded_at: "2026-11-15T22:02:07.361Z"
 graded_by: sol-review-executor
-content_hash: 15c713519458f8ca00478dcf66254e5b45f84074c4c66f3397a40f5459671d01
+content_hash: acaaede0aa85bb8ee0a4c782d5fa8f97a9784ec6d2ad7a36f3562a5dd23e2eb0
 source_hashes:
   catalog-entry: fee83f6082c14fd6735d4ca25cc381de1420c0188e13615957dc2c8dba35e3bd
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   dependency:pm-plan: e260af762e401c50f009dba6629220aba1eb742df249e35cd2a6ed1691dab5aa
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
-    score: 81
+    score: 88
   planning:
-    score: 75
-  business:
     score: 92
+  business:
+    score: 100
   consistency:
-    score: 50
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 94
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 50
+    score: 69
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 3
     score: 75
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -80,35 +80,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
     level: 2
     score: 50
-  vp-qe-done-criteria:
-    level: 1
-    score: 25
   vp-qe-verifiability:
     level: 1
     score: 25
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-user-flow:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
   vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
     level: 2
     score: 50
-  vp-ops-operability:
-    level: 3
-    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -120,273 +120,91 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 9
-  minor: 10
+  major: 4
+  minor: 1
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 48
-    anchor: >-
-      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
-      が決定する。
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 78
+    anchor: 決定が必要な時期に間に合わない場合、`PM` は影響する Schedule のタスクと後続ゲートを特定して登録簿へ遅延リスクとして記録し、Schedule を再計画する。`PO` が縮小・延期・中止を判断する。
     message: >-
-      Identify which gates and activities remain on hold while trial evidence formats, spending and effort limits, or
-      post-release verification procedures are unresolved; state the evidence required for PO to approve their
-      resolution.
+      Identify the affected Schedule tasks and downstream gates, and assign PM responsibility for recording delay risks
+      and replanning when pending quality decisions miss their required timing.
     message_ja: >-
-      Identify which gates and activities remain on hold while trial evidence formats, spending and effort limits, or
-      post-release verification procedures are unresolved; state the evidence required for PO to approve their
-      resolution.
+      Identify the affected Schedule tasks and downstream gates, and assign PM responsibility for recording delay risks
+      and replanning when pending quality decisions miss their required timing.
     cause:
       type: document
   - id: F002
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 26
-    anchor: "| レビュー               | 主な観点                                             | 実施者           | 証跡                 |"
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 75
+    anchor: >-
+      | 試行証跡の形式と保存先 | `_UNDECIDED_:` `QE` が提案し、代表試行開始ゲートの判断前に人間の `PO` が決定する     | 代表試行の開始と、代表試行ゲートの判定               |
+      記録項目（「レビューと証跡」の証跡項目）を満たす記録様式 |
     message: >-
-      Map each review to its prerequisite gate and completion timing so PM can sequence evidence preparation, review,
-      correction, and approval without inferring their dependencies.
+      Complete or reference the approved trial evidence format and post-release verification procedure before declaring
+      DC-003 satisfied; the current table explicitly leaves these procedures undecided, so their required records and
+      execution cannot yet be verified.
     message_ja: >-
-      Map each review to its prerequisite gate and completion timing so PM can sequence evidence preparation, review,
-      correction, and approval without inferring their dependencies.
+      Complete or reference the approved trial evidence format and post-release verification procedure before declaring
+      DC-003 satisfied; the current table explicitly leaves these procedures undecided, so their required records and
+      execution cannot yet be verified.
     cause:
       type: document
   - id: F003
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 48
-    anchor: >-
-      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
-      が決定する。
-    message: >-
-      Identify the affected Schedule tasks and downstream gates, and assign PM responsibility for recording delay risks
-      and replanning when pending quality decisions miss their required timing.
-    message_ja: >-
-      Identify the affected Schedule tasks and downstream gates, and assign PM responsibility for recording delay risks
-      and replanning when pending quality decisions miss their required timing.
-    cause:
-      type: document
-  - id: F004
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 44
-    anchor: 重大な不適合はプロジェクト登録簿へ課題または変更要求として登録し、是正完了または期限付き例外の承認まで該当ゲートを通過させない。
-    message: >-
-      Specify who reports significant nonconformities to PM, who registers and updates them, and how future quality
-      risks, realized issues, changes to approved criteria, and approval decisions are recorded separately.
-    message_ja: >-
-      Specify who reports significant nonconformities to PM, who registers and updates them, and how future quality
-      risks, realized issues, changes to approved criteria, and approval decisions are recorded separately.
-    cause:
-      type: document
-  - id: F005
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 33
-    anchor: 証跡には、対象版、実施日、結果、未達 ID、利用者影響、費用・負荷への影響、是正内容、再判定結果を残す。生成物に不整合がある場合は生成元の正本を修正し、再生成する。
-    message: >-
-      Include the corrective-action owner and deadline in the required evidence fields, as required by AC-04 in
-      prj-0001:prj-success-criteria-and-acceptance-criteria, so users can identify who must resolve each failed
-      condition and by when.
-    message_ja: >-
-      Include the corrective-action owner and deadline in the required evidence fields, as required by AC-04 in
-      prj-0001:prj-success-criteria-and-acceptance-criteria, so users can identify who must resolve each failed
-      condition and by when.
-    cause:
-      type: document
-  - id: F006
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 17
-    anchor: >-
-      | 代表試行   | 課題と技術の接続、低コスト、継承     | SC-01〜SC-03 と AC-01 を満たす                                        |
-      当事者評価、試行成果、支出・作業時間、引き継ぎ結果 | 初期公開前             | `BA`, `PM`, `QE` / `PO` |
-    message: 品質ゲート各行は `PO` を承認者としているが、RACI は「成果物・品質ゲートの確認」の最終責任を `QE=A/R` としているため、ゲート承認責任をどちらかへ統一する必要がある。
-    message_ja: 品質ゲート各行は `PO` を承認者としているが、RACI は「成果物・品質ゲートの確認」の最終責任を `QE=A/R` としているため、ゲート承認責任をどちらかへ統一する必要がある。
-    cause:
-      type: document
-  - id: F007
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 48
-    anchor: >-
-      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
-      が決定する。
-    message: >-
-      Identify the management plan, RACI, Schedule strategy, and verification or evidence references that must be
-      checked when quality conditions change, with responsibility for updating each affected source.
-    message_ja: >-
-      Identify the management plan, RACI, Schedule strategy, and verification or evidence references that must be
-      checked when quality conditions change, with responsibility for updating each affected source.
-    cause:
-      type: document
-  - id: F008
-    severity: major
-    rule: vp-dev-testability
-    line: 18
-    anchor: >-
-      | 正本・技術 | 正本を追跡・検証・再現できる         | AC-02 を満たし、変更対象に必要な lint、schema、test、build が成功する |
-      検証結果、差分、費用・作業・判断記録               | 主要変更時、初期公開前 | `ARC`, `QE` / `PO`      |
-    message: >-
-      Reference the authoritative verification procedure that maps changed files to required lint, schema, test, build,
-      and generation commands, including expected results and failure handling; category names alone do not determine a
-      reproducible validation run.
-    message_ja: >-
-      Reference the authoritative verification procedure that maps changed files to required lint, schema, test, build,
-      and generation commands, including expected results and failure handling; category names alone do not determine a
-      reproducible validation run.
-    cause:
-      type: document
-  - id: F009
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 20
-    anchor: >-
-      | 公開後価値 | 実利用と社会活動への寄与を確認できる | SC-04〜SC-06 の時期・件数・評価基準を満たす                           |
-      活用事例、利用者評価、費用・負荷、運用状況         | 公開後6〜24か月        | `BA` / `PO`             |
-    message: 品質メトリクスについて時期の範囲と参照IDはあるが，指標ごとの算出方法・閾値・計測頻度が本文に定義されておらず、DC-003を充足できない。
-    message_ja: 品質メトリクスについて時期の範囲と参照IDはあるが，指標ごとの算出方法・閾値・計測頻度が本文に定義されておらず、DC-003を充足できない。
-    cause:
-      type: document
-  - id: F010
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 26
-    anchor: "| レビュー               | 主な観点                                             | 実施者           | 証跡                 |"
-    message: >-
-      DC-001 is not satisfied because review exit conditions, the handling of unresolved decision prerequisites, and the
-      conditions for approving exceptions are insufficiently specified for approval of the quality policy and process.
-    message_ja: >-
-      DC-001 is not satisfied because review exit conditions, the handling of unresolved decision prerequisites, and the
-      conditions for approving exceptions are insufficiently specified for approval of the quality policy and process.
-    cause:
-      type: document
-  - id: F011
     severity: major
     rule: vp-qe-verifiability
-    line: 48
+    line: 75
     anchor: >-
-      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
-      が決定する。
+      | 試行証跡の形式と保存先 | `_UNDECIDED_:` `QE` が提案し、代表試行開始ゲートの判断前に人間の `PO` が決定する     | 代表試行の開始と、代表試行ゲートの判定               |
+      記録項目（「レビューと証跡」の証跡項目）を満たす記録様式 |
     message: 具体的な試行証跡の形式と公開後価値の確認手順が未決であり、誰が何をどの順序で確認すればレビューを通過できるかを再現可能に判定できない。
     message_ja: 具体的な試行証跡の形式と公開後価値の確認手順が未決であり、誰が何をどの順序で確認すればレビューを通過できるかを再現可能に判定できない。
     cause:
       type: document
-  - id: F012
+  - id: F004
     severity: major
     rule: vp-qe-verifiability
-    line: 26
-    anchor: "| レビュー               | 主な観点                                             | 実施者           | 証跡                 |"
-    message: >-
-      Define the exit conditions for each review and, in section 4, the failed condition IDs, restart triggers, and
-      acceptance conditions for re-evaluation; review topics, evidence names, and responsible roles alone do not
-      establish pass/fail decisions.
-    message_ja: >-
-      Define the exit conditions for each review and, in section 4, the failed condition IDs, restart triggers, and
-      acceptance conditions for re-evaluation; review topics, evidence names, and responsible roles alone do not
-      establish pass/fail decisions.
-    cause:
-      type: document
-  - id: F013
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: 品質は、文書量や機械検証の成功ではなく、次の価値を安全かつ再現可能に実現できるかで判定する。
-    message: 品質方針に人間とAI Agentの確認・判断境界がなく、価値・例外・公開可否の最終判断をAgentへ委ねないという必須方針を本文から確認できない。
-    message_ja: 品質方針に人間とAI Agentの確認・判断境界がなく、価値・例外・公開可否の最終判断をAgentへ委ねないという必須方針を本文から確認できない。
-    cause:
-      type: document
-  - id: F014
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 48
+    line: 52
     anchor: >-
-      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
-      が決定する。
-    message: 未決事項が rulebook 指定の `_UNDECIDED_:` 形式で識別されていないため、未決論点を機械的・視覚的に追跡できる表記へ統一する必要がある。
-    message_ja: 未決事項が rulebook 指定の `_UNDECIDED_:` 形式で識別されていないため、未決論点を機械的・視覚的に追跡できる表記へ統一する必要がある。
-    cause:
-      type: document
-  - id: F015
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 11
-    anchor: >-
-      構造、参照、CLI、schema、公開適性の品質は、これらの価値を支える条件として扱う。詳細な合格基準は
-      [[prj-0001:prj-success-criteria-and-acceptance-criteria|成功基準と受入条件]] を正とする。
+      | 価値不適合（価値の不一致、上限超過、引き継ぎ不能） | 原因を確認し、範囲・成果物・手順を簡素化する | 是正後に未達の SC・AC を同じ測定方法で再確認し、代表試行ゲートを満たす | `QE` が照合、`PO`
+      が価値を判断       | プロジェクト登録簿の課題個票、変更要求個票       |
     message: >-
-      State the identifiable events that start and end this plan's application, including whether completion of the
-      post-release value gate ends the plan or transfers responsibility to a subsequent plan.
+      Define re-evaluation conditions for failed SC-04–SC-06 using the post-release value gate and their applicable
+      observation periods; the current value-nonconformity row requires the representative-trial gate, which checks
+      SC-01–SC-03 and AC-01 and therefore cannot establish recovery of post-release failures.
     message_ja: >-
-      State the identifiable events that start and end this plan's application, including whether completion of the
-      post-release value gate ends the plan or transfers responsibility to a subsequent plan.
+      Define re-evaluation conditions for failed SC-04–SC-06 using the post-release value gate and their applicable
+      observation periods; the current value-nonconformity row requires the representative-trial gate, which checks
+      SC-01–SC-03 and AC-01 and therefore cannot establish recovery of post-release failures.
     cause:
       type: document
-  - id: F016
+  - id: F005
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 26
-    anchor: "| レビュー               | 主な観点                                             | 実施者           | 証跡                 |"
-    message: >-
-      Supply the required review target, exit-condition, and record-location fields, and separate re-evaluation
-      conditions from re-evaluation responsibility in section 4; the current tables omit mandatory information specified
-      by the declared rulebook and template.
-    message_ja: >-
-      Supply the required review target, exit-condition, and record-location fields, and separate re-evaluation
-      conditions from re-evaluation responsibility in section 4; the current tables omit mandatory information specified
-      by the declared rulebook and template.
-    cause:
-      type: document
-  - id: F017
-    severity: minor
-    rule: vp-ux-user-flow
-    line: 44
-    anchor: 重大な不適合はプロジェクト登録簿へ課題または変更要求として登録し、是正完了または期限付き例外の承認まで該当ゲートを通過させない。
-    message: 「プロジェクト登録簿」や各種レビュー・検証結果の記録先が文書IDまたはパスで示されておらず、利用者が是正記録の格納先へ直接到達できない。
-    message_ja: 「プロジェクト登録簿」や各種レビュー・検証結果の記録先が文書IDまたはパスで示されておらず、利用者が是正記録の格納先へ直接到達できない。
-    cause:
-      type: document
-  - id: F018
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 44
-    anchor: 重大な不適合はプロジェクト登録簿へ課題または変更要求として登録し、是正完了または期限付き例外の承認まで該当ゲートを通過させない。
-    message: >-
-      Define which approved criteria permit a time-limited exception, who approves it, and the required reason, expiry,
-      affected condition IDs, and re-evaluation conditions; otherwise this sentence permits gate passage without an
-      auditable exception decision.
-    message_ja: >-
-      Define which approved criteria permit a time-limited exception, who approves it, and the required reason, expiry,
-      affected condition IDs, and re-evaluation conditions; otherwise this sentence permits gate passage without an
-      auditable exception decision.
-    cause:
-      type: document
-  - id: F019
-    severity: minor
     rule: vp-ops-operability
-    line: 48
+    line: 52
     anchor: >-
-      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
-      が決定する。
+      | 価値不適合（価値の不一致、上限超過、引き継ぎ不能） | 原因を確認し、範囲・成果物・手順を簡素化する | 是正後に未達の SC・AC を同じ測定方法で再確認し、代表試行ゲートを満たす | `QE` が照合、`PO`
+      が価値を判断       | プロジェクト登録簿の課題個票、変更要求個票       |
     message: >-
-      Assign responsibility for initiating and revising this plan, approving the revision, and completing related
-      updates before affected work resumes; also include changes in team responsibilities and recurring significant
-      nonconformities as review triggers.
+      Extend the operational corrective workflow to post-release value failures by assigning preparation of corrective
+      evidence, its record location, and QE/PO re-evaluation at the affected SC-04–SC-06 checkpoint; returning every
+      value failure to the representative-trial gate leaves the plan's later operating period without an applicable
+      recovery workflow.
     message_ja: >-
-      Assign responsibility for initiating and revising this plan, approving the revision, and completing related
-      updates before affected work resumes; also include changes in team responsibilities and recurring significant
-      nonconformities as review triggers.
+      Extend the operational corrective workflow to post-release value failures by assigning preparation of corrective
+      evidence, its record location, and QE/PO re-evaluation at the affected SC-04–SC-06 checkpoint; returning every
+      value failure to the representative-trial gate leaves the plan's later operating period without an applicable
+      recovery workflow.
     cause:
       type: document
 done_criteria:
-  satisfied: 1
+  satisfied: 2
   total: 3
   unsatisfied:
-    DC-001:
-      - PO
     DC-003:
       - QE
   detail_ref: prj-0001:pm-quality-management-plan-grade-criteria
