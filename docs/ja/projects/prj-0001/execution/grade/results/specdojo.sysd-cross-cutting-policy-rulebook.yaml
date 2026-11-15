@@ -4,16 +4,16 @@ document: specdojo:sysd-cross-cutting-policy-rulebook
 path: docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 94
-graded_at: "2026-10-09T21:16:43.227Z"
-graded_by: agy-expert-executor
-content_hash: 4393cdc85beae2558b8de9925b9780e20a2906b7596828dbaa89aa1d43892f96
+verdict: pass
+score: 98
+graded_at: "2026-11-15T02:19:05.814Z"
+graded_by: sol-review-executor
+content_hash: c8ba69ac79399471ca7e628b22885565b0f2619dbad428bce4213b3e03142d41
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,20 +81,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,21 +103,39 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# システム設計 / 横断ルール 作成ルール"
-    message: 参照サンプルが本文構成（標準テンプレ）および Frontmatter の type 定義と矛盾しており、作成例として機能していない。
-    message_ja: 参照サンプルが本文構成（標準テンプレ）および Frontmatter の type 定義と矛盾しており、作成例として機能していない。
+    line: 48
+    anchor: "| 関連導線           | ○    | 設計、非機能、運用、テスト、判断記録への入口。Rule 変更から schema・生成物・互換性・移行・回帰対象への影響と担当                |"
+    message: >-
+      The previous sample structure/type conflict is resolved; the remaining minor gap is that the rulebook does not
+      define the family-specific revision, replacement, and retirement responsibilities required by Rulebook Authoring
+      Standard. Add requirements identifying who updates the system-design index, affected policy references,
+      implementation, tests, and operational documents when a policy or Rule ID is replaced or retired, referring to
+      Document Metadata Standard for shared lifecycle mechanics.
+    message_ja: >-
+      The previous sample structure/type conflict is resolved; the remaining minor gap is that the rulebook does not
+      define the family-specific revision, replacement, and retirement responsibilities required by Rulebook Authoring
+      Standard. Add requirements identifying who updates the system-design index, affected policy references,
+      implementation, tests, and operational documents when a policy or Rule ID is replaced or retired, referring to
+      Document Metadata Standard for shared lifecycle mechanics.
   - id: F002
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 139
-    anchor: "- API契約の共通ルール（バージョニング、互換性、エラー形式）"
-    message: 関連ドキュメント導線の見出し名において、第5章の構成表（SDI/SYSD Critical Flows）と表記が不一致である。
-    message_ja: 関連ドキュメント導線の見出し名において、第5章の構成表（SDI/SYSD Critical Flows）と表記が不一致である。
+    rule: vp-ops-operability
+    line: 28
+    anchor: "- ルール ID は `scp-<カテゴリ>-<連番>` とし、同じ適用範囲内で一意かつ改訂後も追跡可能にする。"
+    message: >-
+      Traceability after revision is required, but no maintenance requirement explains how a replaced or retired Rule ID
+      points to its successor or how obsolete references are cleared. Require an accountable maintenance owner, an
+      explicit successor or retirement rationale, and confirmation that affected references and verification mappings
+      have been updated.
+    message_ja: >-
+      Traceability after revision is required, but no maintenance requirement explains how a replaced or retired Rule ID
+      points to its successor or how obsolete references are cleared. Require an accountable maintenance owner, an
+      explicit successor or retirement rationale, and confirmation that affected references and verification mappings
+      have been updated.
