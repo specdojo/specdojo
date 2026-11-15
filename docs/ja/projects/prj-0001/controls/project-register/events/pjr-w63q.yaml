@@ -50,3 +50,29 @@
     - field: commit_scope
       from: ""
       to: bac
+- v: 1
+  id: reg_a66854d4e59d483f8fc5fcdc6bb2901e
+  ts: "2026-11-15T17:23:16Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6381d506354d482b8ad63b35ea01d0aa
+- v: 1
+  id: reg_b7b8d78dd25445acb6b7cc7cd9566e9e
+  ts: "2026-11-15T18:08:09Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a66854d4e59d483f8fc5fcdc6bb2901e

@@ -1,0 +1,31 @@
+grade の指摘 12 件（F001〜F012）を `cnd-specdojo` に反映し終えました。ただし grade のやり直しはしていません。grade は agent CLI を起動する処理で executor の範囲外なので、grade のやり直しという完了条件はまだ満たしていません。
+
+**承認の基準として定めた内容（「配備の基準と承認範囲」を新設）**
+- **配備の方針:** 単位ごとに、動かす場所と配備しないものを書きました。
+  - CLI は作業環境で操作のたびに起動し、常駐サービスとしては配備しません。
+  - サイトは公開対象の文書だけから静的生成物を作り、リポジトリ全体と実行記録は配信しません。
+- **今承認を求める範囲:** コンテナとストアの分割、上の配備の方針、`REL-01`〜`03`・`05`・`07`〜`09` の経路です。完了条件 DC-002 は、人間の PO が T-KATA-WAVE-1 の 140 で判断するまで未充足と明記しました。
+- **留保 A:** 文書サイトの閲覧の認証と配信です（運用設計・非機能要件の整備まで）。
+- **留保 B:** `REL-10` のリモート共有経路と認証です（追跡先は PJR-CJMN）。
+- 留保の範囲ごとに、留保の間も進めてよい作業と保留する作業を書き分けました。
+
+**その他の主な修正**
+- 2026-11-15 の PO の判断は消していません。3 か所で同じだった留保の記述は承認範囲の表 1 か所にまとめました。
+- 検証対象の表に、各経路の正常時の結果、リポジトリが読み書きできないときの区別、BA と OPS の確認役を加えました。
+- 将来課題の表に、課題・リスク・決定候補の区分、追跡先の PJR、判断時点、PM への報告経路を加えました。改訂時の保守の手順も追記しました。
+- 関係表の参照先を、実在する文書へのリンクと schema の置き場所に置き換えました。
+
+**迷って決めた点（個票の対応結果にも記録済み）**
+- 留保 A の追跡先 PJR は参照できる資料で確認できなかったため、「未登録」と書きました。
+- VitePress の構築を CLI が起動しないことは、実装の現在の動作として書きました。構築環境と配信先の選定は留保 A に残しています。
+- リポジトリ障害時の回復は根拠がないため、期待値を決めずにリスクとして残しました。
+
+**検証:** `npm run validate:catalog` と `npm run validate:history-links` は通りました。対象文書単体の markdownlint・remark・Mermaid 構文の検査もエラーはありません。lint などの残りの検査は、このあと runner 側で実行されます。
+
+**変更したファイル**
+- `docs/ja/product/030-architecture/010-c4/cnd-specdojo.md`（`status` は `draft` のまま）
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-q9df-cnd-specdojo-rework-grade-findings.md`（個票の対応結果）
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Applied grade findings F001-F012 to cnd-specdojo: added the deployment baseline (what runs where and what is not deployed) and the approval scope, separating the scope submitted for approval from reservation A (site viewing auth/delivery, until operations design) and reservation B (REL-10, PJR-CJMN), each with permitted and held follow-up work. The 2026-11-15 human PO decisions are preserved. Also added normal-success and repository-failure verification expectations, BA/OPS confirmers, issue/risk/decision classification with PJR destinations and judgment timing, links to cpd-specdojo-cli, ifd-specdojo and ifx-cmd-ai-provider-cli, a schema reference for REL-05, and a maintenance handoff. Recorded the decisions in the ticket's response section. status stays draft.","handoff":["`grade run --target deliverable` has not been re-run; it launches a real agent CLI and is outside the executor stage. Re-grade cnd-specdojo after this run (ticket completion condition).","The tracking PJR for reservation A (site viewing auth and delivery) could not be found in the declared inputs, so the document says 'PJR は未登録'. ARC should report it to PM for registration and then record the destination in the future-work table.","DC-002 is explicitly recorded as unmet until the human PO decides on the deployment baseline at T-KATA-WAVE-1 140.","The site build owner is written as current behavior from implementation evidence: VitePress build is not launched from a CLI command. Build environment and delivery destination remain under reservation A.","Repository failure recovery expectations (REL-05/REL-06) were not specified for lack of grounds; they are recorded as a risk in future work."],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml (only pre-existing based_on WARNs for unrelated docs)"},{"command":"npm run validate:history-links","status":"passed","summary":"No violations; the updated ticket file is valid"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/product/030-architecture/010-c4/cnd-specdojo.md","status":"passed","summary":"exit 0"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js remark docs/ja/product/030-architecture/010-c4/cnd-specdojo.md --quiet --frail","status":"passed","summary":"exit 0"},{"command":"node tools/lint-mermaid.mjs docs/ja/product/030-architecture/010-c4/cnd-specdojo.md","status":"passed","summary":"1 flowchart passed, 0 error, 0 unchecked"},{"command":"grade run --target deliverable","status":"requires_human","summary":"Re-grade cnd-specdojo; it launches a real agent CLI and consumes quota"}]}
+</specdojo_executor_evidence>

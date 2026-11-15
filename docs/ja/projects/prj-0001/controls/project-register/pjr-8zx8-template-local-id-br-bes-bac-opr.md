@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: ARC
   registered_at: "2026-11-15T13:41:48Z"
+  block_reason: "executor reported incomplete: br・bes・bac・opr の template の `frontmatter_template` の id を `_LOCAL_ID_` に直し、個票の作業内容と対応結果を更新した。完了条件の一つ、4 つの型の `grade run --target kata` は agent を起動して利用枠を使うため実行しておらず、人による実行が…"
   commit_type: fix
   commit_scope: kata
 ---

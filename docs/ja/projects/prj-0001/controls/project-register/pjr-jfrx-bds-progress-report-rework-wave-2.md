@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: UX
@@ -48,7 +48,16 @@ bds-progress-report を最新の grade の指摘で直す
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: grade の指摘 F001〜F016 を取り込み、`bds-progress-report` の未決の目印（`_ASSUMPTION_` 2 件・`_UNDECIDED_` 2 件）を本文の決定または「メモ / 将来課題」の留保へ置き換えた。`status` は `draft` のまま据え置いた。
+- 決めたこと（executor の判断）:
+  - 期間の終わりの境界: 期間は前週金曜 17 時から当週金曜 17 時（`Asia/Tokyo`）とし、始点を含み終点を含まない。名前は起動予定時刻が属する ISO 週とする。理由は、作成時点で期間内の記録が揃い、金曜夜と土日の記録は翌週の報告へ入るため、各記録が 1 件の報告にだけ入り作成後の補いが要らないからである。報告期間の確かめ方・期間への割り当て・終点前の手動作成の例外を合わせて直した。
+  - ファイル名と期間: 日付に期間の終点の日付（当週金曜）を使い、再出力は連番を増やさず同じファイルを更新する案とした。正本は進捗報告の rulebook のため、採否は PM の判断として留保した。
+  - 統合前の確認: 報告は AI Agent の判断を含むため、Job の `task.review` で統合前 review を宣言する案とした（`sysd-job-execution` の「起動と実行フロー」の方針による）。要否は PM の判断として留保した。
+  - 「欠けるときの扱い」の停止は本書の要求として確定し、Job が失敗として記録するかの確認を留保へ移した。
+  - 「登録簿の状態変化」の章の配置は進捗報告の rulebook の責務として留保へ移した。
+  - Role code は初出で役割名を併記した。
+- 留保（判断点は T-KATA-WAVE-2-bds-progress-report-140）: 「定期起動の有効化」「ファイル名と期間」「統合前の確認」「記録欠落時の停止」「登録簿の状態変化の配置」は PM が判断点までに登録簿へ起票して追跡する（未起票）。
+- 再 grade: executor の段では `grade run --target deliverable` を実行していない（agent の起動を伴うため人が実行する）。結果は再 grade 後に追記する。
 
 ## 6. 関連ドキュメント
 
