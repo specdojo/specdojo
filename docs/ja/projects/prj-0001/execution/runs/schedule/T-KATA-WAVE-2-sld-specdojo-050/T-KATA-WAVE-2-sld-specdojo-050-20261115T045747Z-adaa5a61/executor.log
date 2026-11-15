@@ -1,0 +1,31 @@
+タスク `T-KATA-WAVE-2-sld-specdojo-050`（sample の見直し）の executor ステージにおける改訂および検証作業を完了しました。
+
+### 1. 実施内容の概要
+
+[sld-rulebook.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-050/docs/ja/specdojo/rulebooks/sld-rulebook.md) の最新規定および [sample-authoring-standard.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-050/docs/ja/specdojo/standards/sample-authoring-standard.md) に基づき、[sld-sample.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-050/docs/ja/specdojo/samples/sld-sample.md) を完成例として見直しました。
+
+- **隣接仕様との分担明確化（第1章）**:
+  - 第1.1節に隣接仕様（`cdsd-sample`、`stsd-sample`、`bdd-sample`、`clis-sample`）との SSOT 境界表を追加し、CDSD の管理単位・正本区分、STSD の状態遷移、BDD の項目定義、CLIS の入出力ファイルとの関係と責任分担を明示しました。
+- **CLI 仕様との用語・操作整合（第2章・第3章）**:
+  - タブレット内論理保管場所の関連操作および障害復旧手順における CLI コマンド記述を、[clis-sample.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-050/docs/ja/specdojo/samples/clis-sample.md) の正本規定（`sales start`、`sales add`、`sales total`、`sales complete`、`sales cancel`）と完全に一致させました。
+  - 売上記録ファイル名（`data/sales/TX-YYYYMMDD-NNNN.json`）およびレシート控えファイル名（`receipts/receipt-YYYYMMDD-NNNN.txt`）を具体化しました。
+- **ステータス定義との対応整合（第4章）**:
+  - [stsd-sample.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-050/docs/ja/specdojo/samples/stsd-sample.md)（商品のステータス定義）で定義されている状態名（`received`：入荷済み、`inspected`：検品済み、`sellable`：販売可能、`return-pending`：返品待ち）と現物保管場所の配置対応を明確化しました。
+- **4観点受入条件の表形式化（第4.2節）**:
+  - `sld-rulebook.md` の要求に合わせ、`[ARC・DEV]`、`[BA]`、`[OPS]`、`[QE]` の4観点における確認内容と合格条件を表形式で整理しました。
+
+### 2. 指摘事項（finding）の解消確認
+
+- **F001（冗長性解消）**: 旧構成にあった第3章と重複する表を全廃し、第3章は運用判断・シナリオ対処、第4章は仕様間整合と受入検証という固有責務に整理しました。
+- **F002・F003・F006（保管場所一覧の具体例と標準6列）**: 第2.1節（物理保管場所6行）および第2.2節（タブレット論理保管場所4行）において、標準6列（保管場所、置くもの、関連プロセス・操作、共有の有無、寿命・管理頻度、削除・処分の可否と条件）を満たす完成例を提示しました。
+- **F004（メタデータ準拠）**: `id: specdojo:sld-sample`、`type: data`、`rulebook: specdojo:sld-rulebook`、`status: draft` を設定し、メタデータ標準およびルールブックに準拠させました。
+- **F005（完成例としての責務）**: メタ説明を排除し、駄菓子屋きぬやの共通サンプル文脈に基づく完成成果物として記述しました。
+- **F007（名称整合）**: 文書タイトルを `# 保管場所一覧（駄菓子屋きぬやの販売・在庫・記録管理）` とし、「保管場所一覧」に統一しました。
+
+### 3. 検証結果
+
+- `npx prettier --check docs/ja/specdojo/samples/sld-sample.md` を実行し、整形ルールに適合していることを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sld-sample.md を改訂された sld-rulebook.md および関連サンプル（clis-sample, cdsd-sample, stsd-sample）と整合させ、完成例として見直しました。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/sld-sample.md","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml deliverable files were changed (only docs/ja/specdojo/samples/sld-sample.md was changed)"},{"command":"npm run validate:catalog","status":"not_applicable","reason":"Deliverable changes are outside docs/ja/projects/ (only docs/ja/specdojo/samples/sld-sample.md was changed)"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"No project register history file (pjr-*.md) or execution plan/result was changed"}]}
+</specdojo_executor_evidence>
