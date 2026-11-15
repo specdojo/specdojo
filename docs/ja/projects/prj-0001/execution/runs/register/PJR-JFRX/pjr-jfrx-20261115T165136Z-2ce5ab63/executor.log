@@ -1,0 +1,30 @@
+`bds-progress-report` を直しました。本文には未決の目印（`_TODO_`・`_ASSUMPTION_`・`_UNDECIDED_`）が残っていません。`status` は `draft` のままです。手元で実行した `npm run validate:catalog` と `npm run validate:history-links` は通りました（catalog は他の成果物の `based_on` 未作成の WARN だけです）。もう一つの完了条件である `grade run --target deliverable` での再 grade は agent の起動を伴うため実行しておらず、人が実行する必要があります。
+
+**変更したファイル**
+- `docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-jfrx-bds-progress-report-rework-wave-2.md`（「対応結果」に、決めた内容と理由・留保・再 grade 未実施を記入）
+
+**決めたこと（executor の判断）**
+- **期間の終わりの境界（F001・F006・F009〜F012）:** 期間は前週金曜 17 時から当週金曜 17 時まで（`Asia/Tokyo`）とし、始点を含み終点を含みません。ちょうど金曜 17 時の記録は翌週に入ります。期間の名前は起動予定時刻が属する ISO 週です。
+  - 理由: 作成時点で期間内の記録が揃い、各記録がどれか 1 件の報告にだけ入るため、作成後に補う必要がありません。
+  - 合わせて「報告期間」の確かめ方、期間への割り当てのルールを直し、例外表に「終点の前に手動で作成した」場合の行を足しました。
+- **役割名の併記（F013）:** PM・PO・BA・QE・ARC・DEV は初出で役割名を併記しました。
+- **定義ファイルの場所（F007）:** routine と Job の定義の場所を、project 設定の `routines_path` と `jobs_path` で示しました。
+- **未決の目印の片付け（F016 ほか）:**
+  - 「`enabled: false`」の `_ASSUMPTION_` は削除し、「メモ / 将来課題」の「定期起動の有効化」へ寄せました。
+  - 記録が欠けたときの停止は本書の要求として確定し、Job が失敗として記録するかの確認を留保に移しました。
+  - 「登録簿の状態変化」をどの章に置くかは、進捗報告の rulebook が決めることとして留保に移しました。
+- **「メモ / 将来課題」（F002〜F005・F008・F014・F015）:**
+  - 確定の判断点を T-KATA-WAVE-2-bds-progress-report-140 としました。
+  - ファイル名: 日付に当週金曜を使い、同じ週の再出力は連番を増やさず同じファイルを更新する案を示しました。
+  - 統合前の確認: 報告は AI Agent の判断を含むため、Job の `task.review` で統合前 review を宣言する案を示しました。
+  - 有効化の前提として、`missed_run: all` の指定と上の 2 件の解消を書きました。
+  - 「期間の終点」の行は、決めたので削除しました。
+
+**残っていること**
+- 5 件の留保（定期起動の有効化、ファイル名と期間、統合前の確認、記録欠落時の停止、登録簿の状態変化の配置）は、判断点までに PM が登録簿へ起票する前提です。登録簿の項目はまだ作っていません。
+- 期間の境界は executor が決めたものなので、PO の承認が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bds-progress-report を grade の指摘 F001〜F016 で手直しした。報告期間を前週金曜17時〜当週金曜17時（Asia/Tokyo、終点を含まない）に決め、表示項目・算出ルール・例外を合わせた。未決の目印は本文の決定か、判断点を 140 とする留保（登録簿で追跡）に置き換えた。status は draft のまま。個票の「対応結果」に、決めた内容と理由を記入した。","handoff":["期間の終わりの境界は executor が決めた: 期間は前週金曜 17 時から当週金曜 17 時（`Asia/Tokyo`）で、始点を含み終点を含まず、名前は起動予定時刻が属する ISO 週とする。理由は、作成時点で期間内の記録が揃い、各記録が 1 件の報告にだけ入り、作成後に補う必要がないため。PO が T-KATA-WAVE-2-bds-progress-report-140 でこの範囲を承認するかを判断する。","ファイル名と期間の案（日付に当週金曜を使い、再出力は連番を増やさず同じファイルを更新する）は、正本である進捗報告の rulebook への反映が要る。PM が 140 までに採否を決める。","統合前の確認の案（Job の `task.review` で統合前 review を宣言する）は `job-weekly-report.yaml` への反映が要る。ARC が経路を確認し、定期起動の有効化の前に PM が要否を決める。","「定期起動の有効化」「ファイル名と期間」「統合前の確認」「記録欠落時の停止」「登録簿の状態変化の配置」の 5 件は、PM が 140 までに登録簿へ起票して追跡する（未起票）。","個票の完了条件にある `grade run --target deliverable` での再 grade は、agent の起動を伴うため executor の段では実行していない。人が再 grade し、結果を個票の「対応結果」に追記する必要がある。","削除・統合の判断: 「期間の終点」の行は決めたため削除した。「出力の時期と契機」の `enabled: false` の `_ASSUMPTION_` は「定期起動の有効化」の行と重複するため、参照に置き換えた。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"exit 0（他の成果物の based_on 未作成の WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0（変更した個票を含め valid）"},{"command":"npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md","status":"passed","summary":"整形済み"},{"command":"grade run --target deliverable","status":"requires_human","summary":"agent を起動して再 grade し、結果を個票の「対応結果」に追記する"}]}
+</specdojo_executor_evidence>
