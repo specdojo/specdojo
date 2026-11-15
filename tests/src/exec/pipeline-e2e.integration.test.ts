@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
 import { recordPathForRead } from "../../../src/exec/run-records.js";
+import { TRAILING_RECORDS_COMMIT_SUBJECT } from "../../../src/exec/trailing-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import * as spawnSelfModule from "../../../src/shared/spawn-self.js";
 
@@ -187,9 +188,41 @@ function git(cwd: string, ...args: string[]): string {
   return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnvironment() }).trim();
 }
 
+// run の終わりの記帳 commit（PJR-DVNV）を除いた first-parent の commit。統合の merge commit や
+// wait の位置は、記帳 commit を飛ばして確かめる。
+function firstParentWithoutBookkeeping(cwd: string): string[] {
+  return git(cwd, "log", "--first-parent", "--format=%H%x09%s", "HEAD")
+    .split("\n")
+    .map((line) => line.split("\t"))
+    .filter(([, subject]) => subject !== TRAILING_RECORDS_COMMIT_SUBJECT)
+    .map(([sha]) => sha!);
+}
+
+function lastIntegrationCommit(cwd: string): string {
+  return firstParentWithoutBookkeeping(cwd)[0]!;
+}
+
+// runner が書いた実行記録（イベントと run の記録）が root に未 commit で残っていないこと。
+function uncommittedExecutionRecords(cwd: string): string[] {
+  return git(cwd, "status", "--porcelain", "--untracked-files=all")
+    .split("\n")
+    .map((line) => line.slice(3))
+    .filter((path) => /(^|\/)execution\/(exec\/events|runs)\//.test(path));
+}
+
 function clearProjectEnv(): void {
   for (const key of ENV_KEYS) delete process.env[key];
 }
+
+// 1 つの run は実 Git・worktree・tsx の子プロセスを順に起こすため、exec run の並行実行中に
+// 親検証として流すと設定既定の 30 秒を超えることがある（PJR-BJ7E）。
+const PIPELINE_TEST_TIMEOUT_MS = 180_000;
+const PIPELINE_TEST_OPTIONS = { timeout: PIPELINE_TEST_TIMEOUT_MS };
+
+// 時間切れになったテストの run は止まらずに裏で続く。その間に afterEach が fixture を消すと、
+// 続きの run が消えた fake-agent.mjs を起動して落ち、次のテストの cwd や出力にも干渉する。
+// 片付けの前に、起動済みの run がすべて終わるのを待つ。
+const inFlightRuns = new Set<Promise<void>>();
 
 async function runExec(args: string[]): Promise<void> {
   clearProjectEnv();
@@ -197,7 +230,19 @@ async function runExec(args: string[]): Promise<void> {
   const program = new Command();
   program.exitOverride();
   registerExecCommands(program);
-  await program.parseAsync(["node", "specdojo", "exec", ...args]);
+  const run = program.parseAsync(["node", "specdojo", "exec", ...args]).then(() => undefined);
+  inFlightRuns.add(run);
+  try {
+    await run;
+  } finally {
+    inFlightRuns.delete(run);
+  }
+}
+
+async function settleInFlightRuns(): Promise<void> {
+  while (inFlightRuns.size > 0) {
+    await Promise.allSettled([...inFlightRuns]);
+  }
 }
 
 type PipelineFixture = {
@@ -590,7 +635,13 @@ function evidenceRunDir(fixture: PipelineFixture, taskId: string): string {
   return join(taskDir, runs[0]);
 }
 
-type TaskEvent = { type: string; task_id: string; by: string; meta?: Record<string, unknown> };
+type TaskEvent = {
+  type: string;
+  task_id: string;
+  by: string;
+  msg?: string;
+  meta?: Record<string, unknown>;
+};
 
 function readTaskEvents(fixture: PipelineFixture, taskId: string): TaskEvent[] {
   const dir = join(fixture.executionPath, "exec", "events");
@@ -675,7 +726,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("executor / reporter pipeline E2E", () => {
+describe("executor / reporter pipeline E2E", PIPELINE_TEST_OPTIONS, () => {
   let fixture: PipelineFixture | undefined;
 
   function setup(): PipelineFixture {
@@ -686,7 +737,8 @@ describe("executor / reporter pipeline E2E", () => {
     return fixture;
   }
 
-  afterEach(() => {
+  afterEach(async () => {
+    await settleInFlightRuns();
     process.chdir(originalCwd);
     if (fixture) {
       rmSync(fixture.repo, { recursive: true, force: true });
@@ -694,7 +746,7 @@ describe("executor / reporter pipeline E2E", () => {
       rmSync(fixture.agentFixtureDir, { recursive: true, force: true });
     }
     fixture = undefined;
-  });
+  }, PIPELINE_TEST_TIMEOUT_MS);
 
   it("keeps the legacy single-agent flow unchanged for phases without agent_pipeline", async () => {
     const target = setup();
@@ -1046,12 +1098,13 @@ describe("executor / reporter pipeline E2E", () => {
 // worktree 経路の失敗と復旧。block イベントに残した stage checkpoint から reporter だけを
 // 再開し、executor を再実行しないことを確認する。claim / complete / block は runner が
 // specdojo CLI を再起動して記録するため、テストでは同じ CLI を実プロセスとして起動する。
-describe("executor / reporter pipeline resume E2E (worktree)", () => {
+describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPTIONS, () => {
   const specdojoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
   let fixture: PipelineFixture | undefined;
   let worktreeBase: string | undefined;
 
-  afterEach(() => {
+  afterEach(async () => {
+    await settleInFlightRuns();
     process.chdir(originalCwd);
     if (worktreeBase) rmSync(worktreeBase, { recursive: true, force: true });
     if (fixture) {
@@ -1061,7 +1114,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     }
     worktreeBase = undefined;
     fixture = undefined;
-  });
+  }, PIPELINE_TEST_TIMEOUT_MS);
 
   async function startReporterBlock(incomplete = false): Promise<void> {
     fixture = setupPipelineRepository();
@@ -1188,7 +1241,13 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
         priorWork + "# completed after resume\n",
       );
       expect(readFileSync(join(current.repo, planRef), "utf8")).toBe(editedPlan);
-      const commitLog = git(current.repo, "show", "--name-only", "--format=", "HEAD^2~1");
+      const commitLog = git(
+        current.repo,
+        "show",
+        "--name-only",
+        "--format=",
+        `${lastIntegrationCommit(current.repo)}^2~1`,
+      );
       expect(commitLog).toContain(planRef);
       expect(readResult(current, taskId)).toContain("status: complete");
       const state = JSON.parse(
@@ -1294,7 +1353,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
         "show",
         "--name-only",
         "--format=",
-        "HEAD^2~1",
+        `${lastIntegrationCommit(current.repo)}^2~1`,
       );
       expect(logWithoutEditedPlan).not.toContain(planRef);
 
@@ -1333,7 +1392,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
   );
 
   it.each([
-    "integrate",
+    "integrate-succeeded",
     "executor-failed",
     "non-pipeline",
     "missing-plan",
@@ -1350,10 +1409,18 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       const statePath = join(worktree, String(block.meta?.pipeline_state_ref));
       const state = JSON.parse(readFileSync(statePath, "utf8"));
       let reason: string;
-      if (scenario === "integrate") {
+      if (scenario === "integrate-succeeded") {
         state.stages.reporter.status = "succeeded";
+        state.stages.integrate = {
+          status: "succeeded",
+          actor: "local-gemma-executor",
+          attempts: 1,
+          started_at: state.updated_at,
+          completed_at: state.updated_at,
+          artifact_ref: null,
+        };
         writeFileSync(statePath, JSON.stringify(state), "utf8");
-        reason = "integrate stage";
+        reason = "integration of run";
       } else if (scenario === "executor-failed") {
         state.stages.executor.status = "failed";
         writeFileSync(statePath, JSON.stringify(state), "utf8");
@@ -1482,9 +1549,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       ],
     ]);
     process.chdir(fixture.repo);
-    const firstParentBefore = Number(
-      git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"),
-    );
+    const firstParentBefore = firstParentWithoutBookkeeping(fixture.repo).length;
 
     // 1回目: reporter がプロセス失敗し、executor evidence を残したまま blocked になる。
     setBehavior(fixture.behaviorPath, {
@@ -1502,9 +1567,10 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     ]);
 
     expect(process.exitCode).toBe(1);
-    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-      firstParentBefore,
-    );
+    expect(firstParentWithoutBookkeeping(fixture.repo)).toHaveLength(firstParentBefore);
+    // 失敗の後も、block のイベントと run の記録は記帳 commit に入り、root に残らない。
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(TRAILING_RECORDS_COMMIT_SUBJECT);
+    expect(uncommittedExecutionRecords(fixture.repo)).toEqual([]);
     const blockEvent = readTaskEvents(fixture, "T-TEST-doc-010").find(
       (event) => event.type === "block",
     );
@@ -1528,11 +1594,17 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
     expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(2);
     expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe("run\n");
-    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-      firstParentBefore + 1,
+    expect(firstParentWithoutBookkeeping(fixture.repo)).toHaveLength(firstParentBefore + 1);
+    const integration = lastIntegrationCommit(fixture.repo);
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s", integration)).toMatch(
+      /^exec\(T-TEST-doc-010\): /,
     );
-    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toMatch(/^exec\(T-TEST-doc-010\): /);
-    expect(git(fixture.repo, "rev-list", "--parents", "-1", "HEAD").split(" ")).toHaveLength(3);
+    expect(git(fixture.repo, "rev-list", "--parents", "-1", integration).split(" ")).toHaveLength(
+      3,
+    );
+    // 統合の後に書いた complete も記帳 commit に入る。
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(TRAILING_RECORDS_COMMIT_SUBJECT);
+    expect(uncommittedExecutionRecords(fixture.repo)).toEqual([]);
 
     const result = readResult(fixture, "T-TEST-doc-010");
     expect(result).toContain("status: complete");
@@ -1548,7 +1620,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const base = worktreeBase!;
     const worktree = onlyWorktreePath(base);
     const taskId = "T-TEST-doc-010";
-    const rootHead = git(current.repo, "rev-parse", "HEAD");
+    const rootHead = lastIntegrationCommit(current.repo);
     const strayPath = "docs/test/undeclared.schema.yaml";
     writeFileSync(join(worktree, strayPath), "type: object\n", "utf8");
     setBehavior(current.behaviorPath, {});
@@ -1557,7 +1629,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     await runExec(resumeArgs);
 
     expect(process.exitCode).toBe(1);
-    expect(git(current.repo, "rev-parse", "HEAD")).toBe(rootHead);
+    expect(lastIntegrationCommit(current.repo)).toBe(rootHead);
     expect(existsSync(join(worktree, strayPath))).toBe(true);
     const result = readWorktreeResult(base, current, taskId);
     expect(result).toContain("status: blocked");
@@ -1683,7 +1755,152 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "pipeline-state.json"), "utf8"),
     ) as { stages: Record<string, { status: string; attempts: number }> };
     expect(mergedState.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
-  }, 30_000);
+  });
+
+  // PJR-ED0K: 統合の段で止まった task を、成果と記録を保ったまま executor の段からやり直す。
+  // 再開の前に統合先（root の現在ブランチ）の直しを exec branch へ取り込む。
+  it("resumes the executor after a failed integration, syncing the integration target", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+    const taskId = "T-TEST-doc-010";
+    const rejectMarker = join(fixture.repo, ".git", "reject-integration-commit");
+    const hookPath = join(fixture.repo, ".git", "hooks", "commit-msg");
+    writeFileSync(rejectMarker, "reject\n", "utf8");
+    writeFileSync(
+      hookPath,
+      [
+        "#!/bin/sh",
+        `if [ -f '${rejectMarker}' ] && git rev-parse --verify --quiet MERGE_HEAD >/dev/null; then`,
+        "  echo 'typecheck failed: schedule merge rejected' >&2",
+        "  exit 1",
+        "fi",
+        "exit 0",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    chmodSync(hookPath, 0o755);
+
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      taskId,
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode).toBe(1);
+    const worktree = onlyWorktreePath(worktreeBase);
+    const block = readTaskEvents(fixture, taskId).find((event) => event.type === "block")!;
+    expect(block.meta).toMatchObject({ pipeline_stage: "integrate" });
+    expect(block.msg).toContain(`exec resume --task ${taskId} --resume-from executor`);
+    const blockedResult = readWorktreeResult(worktreeBase, fixture, taskId);
+    expect(blockedResult).toContain("status: blocked");
+    expect(blockedResult).toContain("--resume-from executor");
+    const runDir = dirname(join(worktree, String(block.meta?.pipeline_state_ref)));
+    const evidenceBefore = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8"));
+
+    // 統合の失敗の後に統合先で直した変更を、再開した executor が受け取れることを確かめる。
+    rmSync(rejectMarker);
+    const fixPath = "develop-fix.md";
+    writeFileSync(join(fixture.repo, fixPath), "# develop fix\n", "utf8");
+    git(fixture.repo, "add", "--", fixPath);
+    git(fixture.repo, "commit", "--no-verify", "-m", "fix on the integration target");
+    setBehavior(fixture.behaviorPath, {
+      "local-gemma-executor": {
+        role: "executor",
+        kind: "resume_ok",
+        artifactPath: "docs/test/doc.md",
+      },
+    });
+    vi.mocked(process.stdout.write).mockClear();
+
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      taskId,
+      "--resume-from",
+      "executor",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const output = vi.mocked(process.stdout.write).mock.calls.flat().join("");
+    expect(output).toContain("[sync] project: merged");
+    expect(readInvocations(fixture.logPath).map((item) => item.role)).toEqual([
+      "executor",
+      "reporter",
+      "executor",
+      "reporter",
+    ]);
+    const mergedDoc = readFileSync(join(fixture.repo, "docs/test/doc.md"), "utf8");
+    expect(mergedDoc).toContain("# local-gemma-executor / ");
+    expect(mergedDoc.endsWith("# completed after resume\n")).toBe(true);
+    expect(readFileSync(join(fixture.repo, fixPath), "utf8")).toBe("# develop fix\n");
+    expect(readResult(fixture, taskId)).toContain("status: complete");
+    const finalRunDir = evidenceRunDir(fixture, taskId);
+    // 前回の executor の記録は attempt として残る（log の参照だけが attempt 名へ付け替わる）。
+    const archivedEvidence = JSON.parse(
+      readFileSync(join(finalRunDir, "evidence.attempt-1.json"), "utf8"),
+    );
+    expect(archivedEvidence).toMatchObject({
+      run_id: evidenceBefore.run_id,
+      stage: evidenceBefore.stage,
+      changes: evidenceBefore.changes,
+      final_message: evidenceBefore.final_message,
+    });
+    const state = JSON.parse(readFileSync(join(finalRunDir, "pipeline-state.json"), "utf8"));
+    expect(state.stages.executor).toMatchObject({ status: "succeeded", attempts: 2 });
+    expect(state.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
+    expect(
+      readTaskEvents(fixture, taskId).find((event) => event.type === "unblock")?.meta,
+    ).toMatchObject({ pipeline_stage: "executor" });
+    expect(existsSync(worktree)).toBe(false);
+  });
+
+  it("refuses the executor resume while the worktree is in the middle of a merge", async () => {
+    await startReporterBlock();
+    const current = fixture!;
+    const taskId = "T-TEST-doc-010";
+    const worktree = onlyWorktreePath(worktreeBase!);
+    const block = readTaskEvents(current, taskId).find((event) => event.type === "block")!;
+    const statePath = join(worktree, String(block.meta?.pipeline_state_ref));
+    const state = JSON.parse(readFileSync(statePath, "utf8"));
+    state.stages.reporter.status = "succeeded";
+    writeFileSync(statePath, JSON.stringify(state), "utf8");
+    const gitDir = git(worktree, "rev-parse", "--absolute-git-dir");
+    writeFileSync(join(gitDir, "MERGE_HEAD"), git(worktree, "rev-parse", "HEAD") + "\n", "utf8");
+    const invocationsBefore = readInvocations(current.logPath);
+    const eventsBefore = readTaskEvents(current, taskId);
+    vi.mocked(process.stdout.write).mockClear();
+
+    await runExec(["resume", "--project", "test", "--task", taskId, "--resume-from", "executor"]);
+
+    expect(process.exitCode).toBe(1);
+    expect(readInvocations(current.logPath)).toEqual(invocationsBefore);
+    expect(readTaskEvents(current, taskId)).toEqual(eventsBefore);
+    expect(existsSync(join(gitDir, "MERGE_HEAD"))).toBe(true);
+    expect(vi.mocked(process.stdout.write).mock.calls.flat().join("")).toContain(
+      "a merge is in progress in project",
+    );
+  });
 
   it("skips commit and merge when resuming after the branch was already merged", async () => {
     fixture = setupPipelineRepository();
@@ -1722,7 +1939,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(
       readWorktreePipelineState(worktreeBase, fixture, "T-TEST-doc-010").stages.integrate,
     ).toMatchObject({ status: "failed", attempts: 1 });
-    const mergedHead = git(fixture.repo, "rev-parse", "HEAD");
+    const mergedHead = lastIntegrationCommit(fixture.repo);
     git(fixture.repo, "worktree", "unlock", worktreePath);
 
     await runExec([
@@ -1736,7 +1953,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     ]);
 
     expect(process.exitCode ?? 0).toBe(0);
-    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(mergedHead);
+    expect(lastIntegrationCommit(fixture.repo)).toBe(mergedHead);
     expect(existsSync(worktreePath)).toBe(false);
     const invocations = readInvocations(fixture.logPath);
     expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
@@ -1746,7 +1963,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
         .map((event) => event.type)
         .sort(),
     ).toEqual(["block", "claim", "complete", "unblock"]);
-  }, 30_000);
+  });
 
   it("revalidates a resolved parent-validation failure before resuming the reporter", async () => {
     fixture = setupPipelineRepository();

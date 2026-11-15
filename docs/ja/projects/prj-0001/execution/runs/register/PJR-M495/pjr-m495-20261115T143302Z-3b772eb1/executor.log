@@ -1,0 +1,33 @@
+人が `exec unblock` しても、claim の持ち主は agent のまま残るようにしました。agent の run は `exec resume` で再開でき、completion preflight の「task is being worked on by another actor」で止まりません。人が自分で直して完了させたいときは、新しく足した `exec unblock --take-over` を使います。exec のテスト（90 ファイル、1651 件）はすべて通りました。typecheck・lint・unit テストなどの正式な検証は、このあと親の runner が実行します。
+
+原因は、unblock をすると状態の `last_by`（最後に event を書いた actor）が unblock した人に替わり、完了の確認がこの `last_by` で持ち主を判定していたことです。
+
+- **持ち主を別に記録する:** `last_by` とは別に、claim の持ち主を表す `claimed_by` を状態に足しました（`src/exec/types.ts`、`src/exec/events.ts`）。
+  - `claim` のときに設定し、`note`・`block`・ほかの actor の `unblock` では変えません。
+  - タスクが `todo`・`done`・`cancelled` に移ると消します。
+  - 持ち主を求める処理は `claimOwnerOf()` にまとめました（`claimed_by` が無ければ `last_by` を使う）。
+- **持ち主で判定する箇所を揃える:** 次の判定を、`last_by` ではなく claim の持ち主で行うようにしました。
+  - `complete`・`block`・`release` の持ち主の確かめと completion preflight
+  - `exec resume` の actor の解決、executor の切り替え、利用制限からの再開
+  - 同時に作業中の actor の集計、`exec status` の `by` 列と `--by` の絞り込み
+- **`--take-over` を足す:** roster で human の actor だけが使えます。unblock の event に `take_over=true` を記録し、unblock した人が claim の持ち主になります（`src/exec/core.ts`、`src/exec/commands.ts`）。
+- **ガイド:** `exec-operation-guide.md` に「人が unblock するときの続行と引き取り」の節を足し、agent に続けさせる場合と人が引き取る場合の違いを表にしました。
+- **回帰テスト:** `tests/src/exec/unblock-claim-owner.test.ts` を足しました。人の unblock の後に、agent での再開・完了・再度の block が通ること、`--take-over` で人が完了できること、agent の `--take-over` は拒むことを確かめます。
+- **個票:** 作業内容の表を done にし、対応結果に実施内容・決めたこと・CHANGELOG に書く事項・残課題を書きました。CHANGELOG.md は変えていません。
+
+**ご判断いただきたい点:** 次の 2 つは利用者に見える変更です。
+- 人が unblock してそのまま `exec complete` する従来の手順は、今後 `--take-over` を付けるか `exec complete --force` を使わないと通りません。
+- `exec status` の `by` 列は、最後に event を書いた actor ではなく claim の持ち主を示すようになります。
+
+**そのほかに決めたこと:**
+- 完了条件の 2 案のうち、runner が再開のたびに claim を引き継ぐ案ではなく、持ち主を保つ案を採りました。引き継ぐ案では、人が引き取ったのか続けさせたいのかを runner が区別できず、人の claim を agent が奪うおそれがあるためです。
+- 過去の event も同じ規則で読み直すため、過去に人が unblock して作業中のタスクは、持ち主が agent に戻ります。すでに完了したタスクには影響しません。
+- 同じ秒の event を並べ替える処理は `last_by` のまま残しました。
+
+**PJR-T4G3 との関係:** PJR-T4G3 はまだ実装されていません。今回の変更でも、人の unblock の後に agent の段が失敗したときは block が通り、T4G3 の方針とは食い違いません。T4G3 を実装するときも `claimOwnerOf()` で claim した actor を記録できます。
+
+**検証:** `npx tsc -b` が通り、`npx vitest run tests/src/exec` で 1651 件が通りました。追加・変更した Markdown とテストは `prettier --check` が通り、`npm run validate:history-links` は違反を出しませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"人が exec unblock しても claim の持ち主（`claimed_by`）を agent のまま保つようにし、complete・block・release の確かめ、completion preflight、resume の actor 解決を持ち主で判定するようにした。人が引き取る場合に使う human 限定の `exec unblock --take-over` を足し、ガイドに続行と引き取りの区別を書いた。回帰テストを追加し、個票の対応結果を記入した。","handoff":["決めたこと: 完了条件の 2 案のうち、runner が再開のたびに claim を引き継ぐ案ではなく、claim の持ち主を保つ案を採った。引き継ぐ案では、人が引き取ったのか続けさせたいのかを runner が区別できず、人の claim を agent が奪うおそれがあるため。区別は `exec unblock --take-over`（roster の human のみ）で人が明示する。","決めたこと: `--take-over` なしの unblock を既定で続行とした。人が unblock してそのまま `exec complete` する従来の手順は、今後 `--take-over` を付けるか `exec complete --force` を使う必要がある。利用者に見える変更として、個票の「CHANGELOG に書く事項」に書いた。","決めたこと: 過去の event も同じ規則で読み直すため、過去に人が unblock して作業中のタスクは、claim の持ち主が agent に戻る。すでに完了したタスクには影響しない。","決めたこと: `exec status` の `by` 列と `--by` の絞り込みを claim の持ち主で表すようにした。同じ秒の event を並べ替える処理（`orderSameTimestampEventsByState`）は、既存の順序づけへの影響を避けるため `last_by` のまま残した。","PJR-T4G3 との整合: claim の持ち主を `claimed_by` で判定するので、人の unblock の後に agent の段が失敗したときも block が通る。PJR-T4G3 は未実装で、実装するときは `claimOwnerOf` で claim した actor を記録できる。","CHANGELOG に書く事項は、個票の対応結果の「CHANGELOG に書く事項」の節に書いた（CHANGELOG.md は変えていない）。"],"validations":[{"command":"npx tsc -b","status":"passed","summary":"型エラーなし（参考実行。正は親 runner の typecheck）"},{"command":"npx vitest run tests/src/exec","status":"passed","summary":"90 ファイル・1651 件すべて成功（参考実行。正は親 runner の test-unit / test-integration）"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-m495-exec-unblock-keeps-claim-owner.md docs/ja/specdojo/guides/exec-operation-guide.md tests/src/exec/unblock-claim-owner.test.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"違反の検出なし（変更した個票を含む）"}]}
+</specdojo_executor_evidence>

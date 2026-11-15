@@ -47,6 +47,8 @@ exec run --auto [--loop]
   -> 失敗: result を blocked に更新 / block / worktree を保持
 exec refresh
   -> 次の Ready タスクを更新
+run の終わり
+  -> runner が書いたイベントと run の記録を記帳の commit 1件にまとめる
 ```
 
 `--loop --parallel <n>` では、最初に最大 `n` 件を起動した後、1件の agent が終了するたびに root 側の統合処理を終えて `exec refresh` を実行し、空いた枠へ次の Ready タスクを投入します。他の実行中 task の完了を待たないため、長時間 task と短時間 task が混在しても短時間 task の枠を継続利用できます。`--loop` を指定しない場合は、開始時に選択した最大 `n` 件だけを実行して終了します。
@@ -74,7 +76,7 @@ specdojo exec run --project <project-id> --auto --track data-flow-uc-rewrite --p
 
 ### 1.2. auto実行中の注意点
 
-`--auto` と `--loop` は root の現在ブランチへ task ごとの merge commit を繰り返します（checkpoint commit は exec branch 側に置き、root には plan / result / claim event の複製が未commitのまま残ります）。同じ作業ツリーで並行して手作業を行う場合は、次の安全ガードに注意します。
+`--auto` と `--loop` は root の現在ブランチへ task ごとの merge commit を繰り返します（checkpoint commit は exec branch 側に置き、root には plan / result / claim event の複製が統合まで未commitのまま残ります。統合されずに残った複製は `実行記録の記帳` に従って run の終わりに commit します）。同じ作業ツリーで並行して手作業を行う場合は、次の安全ガードに注意します。
 
 | 状況                                                                        | 挙動                                              |
 | --------------------------------------------------------------------------- | ------------------------------------------------- |
@@ -97,6 +99,22 @@ auto 実行と並行して人が作業する場合は、別ブランチの workt
 ```bash
 git worktree add ../specdojo-edit -b <edit-branch>
 ```
+
+### 1.3. 実行記録の記帳
+
+統合の merge commit に入るのは、その時点までのイベント（claim）と run の記録だけです。統合の後に書く complete、失敗・延期の block、再開の unblock・release・claim、保持した worktree に対応する root の plan / result の複製は、merge commit に入りません。runner は `exec run`（Schedule の `--auto` と `--task --worktree`）、`exec resume`、`exec cycle` の終わりに、これらを `exec(run): record execution events and run records` という記帳の commit 1件にまとめます。成功・失敗・延期・再開のどれで終わっても、作業ツリーに実行記録を残しません。
+
+| 記帳の commit に入るもの        | 条件                                                                                      |
+| ------------------------------- | ----------------------------------------------------------------------------------------- |
+| `exec/events/*.json`            | `by` が `.specdojo/agent-members.yaml` の agent（runner が書いたイベント）                |
+| `runs/schedule/<task-id>/` 配下 | 上のイベントの task の plan・result・evidence・pipeline-state・ログ（退避した試行を含む） |
+| `plan-conventions/` 配下        | 上の run の記録を 1 件以上含む場合                                                        |
+
+- 対象は root の未 commit のファイルだけで、前の run で残った runner の記録も次の run の終わりに拾います。
+- 人が `exec claim`・`complete`・`block`・`release` などで書いたイベント（`by` が agent でないもの）と、human タスクの run の記録は、従来どおり記帳する人が commit します。
+- commit は統合と同じ scheduler lock で直列化し、index.lock の競合は再試行します。pre-commit hook（整形・markdownlint・実行記録の認証情報検査）は通常どおり実行し、result.md の記法違反で拒否された場合は result.md を外して再試行します。
+- それでも commit できない場合、run の終了コードは変えず、残ったファイルと次の操作を標準エラーに出力します。原因を直して commit するか、次の `exec run` / `exec resume` で記帳をやり直します。
+- 保持した worktree を後で統合するとき、記帳済みの plan / result と exec branch 側で更新した同じファイルが競合した場合は、その task の run の記録に限って exec branch 側（最新の記録）で解決します。
 
 ## 2. 手動実行
 

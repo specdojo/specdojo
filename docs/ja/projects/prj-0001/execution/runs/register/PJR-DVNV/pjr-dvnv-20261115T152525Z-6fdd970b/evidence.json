@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DVNV",
+  "run_id": "pjr-dvnv-20261115T152525Z-6fdd970b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T15:31:09.651Z",
+    "completed_at": "2026-11-15T15:54:38.417Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-dvnv.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-dvnv-exec-commit-trailing-records.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/trailing-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trailing-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/trailing-records.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-dvnv-exec-commit-trailing-records.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/trailing-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trailing-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/trailing-records.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../pjr-dvnv-exec-commit-trailing-records.md       | 35 ++++++++++--\n docs/ja/specdojo/guides/branch-workflow-guide.md   |  2 +-\n docs/ja/specdojo/guides/exec-worktree-guide.md     |  4 ++\n .../ja/specdojo/guides/schedule-operation-guide.md | 20 ++++++-\n src/exec/run/lifecycle-commands.ts                 |  9 ++-\n src/exec/run/register-command.ts                   |  9 ++-\n src/exec/run/schedule-task.ts                      | 12 ++++\n src/exec/worktree-command.ts                       | 11 ++++\n tests/src/exec/pipeline-e2e.integration.test.ts    | 66 ++++++++++++++++------\n 9 files changed, 139 insertions(+), 29 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更した個票を含め、全件 valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-dvnv-exec-commit-trailing-records.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/exec/trailing-records.ts src/exec/run/trailing-records.ts tests/src/exec/trailing-records.integration.test.ts tests/src/exec/pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-dvnv-exec-commit-trailing-records.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DVNV/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DVNV/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DVNV/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4999 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4999 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DVNV\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-kox8gA/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-ZrtEND/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DVNV/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DVNV/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DVNV\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-Mbqp0v/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Cxl1EW/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-X6cngT/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-2cwpaA/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "Schedule の exec run・exec resume・exec cycle の終わりに、runner が統合の後に書いたイベントと run の記録を記帳の commit 1 件にまとめるようにした。前の run の残りも拾い、記帳済みの記録との統合時の競合は exec branch 側で解決する。ガイド 3 本、回帰テスト、個票の対応結果を更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "判断: 人と runner のイベントは、`by` が `.specdojo/agent-members.yaml` の agent かどうかで区別した。人が `--by <agent>` で書いたイベントは runner の記帳に入る。",
+    "判断: run の記録は、選んだ runner のイベントの task の `runs/schedule/<task-id>/` 配下に限った。human タスク（`-140` など）の result を人の編集中に commit しないためである。",
+    "判断: 記帳の commit は hook を飛ばさない（`evidence-secret-scan` で実行記録の秘密情報を止めるため）。hook が result.md を拒否したら result.md を外して再試行し、それでも失敗したら stage を戻して、残ったファイルと次の操作を標準エラーに出す。run の終了コードは変えない。",
+    "判断: grade の評価結果（`grade/criteria`・`grade/results`）は記帳の対象外とした。人の grade 実行でも変わり、runner の記録と区別できないためである。register の run も対象外とした（merge commit と wait commit に記帳が同梱されており、2026-11-15 にたまった記録にも `runs/register/` が無かった）。",
+    "次の run の準備の commit で拾う仕組みは効いていなかった（準備の commit は exec branch にだけ置かれ、入るのはその task の plan・result・claim だけ）。記帳の commit が、root に残る runner の記録をその run の分に限らず全部拾うように直した。",
+    "利用者への影響: develop の first-parent に、run ごとに記帳の commit（`exec(run): record execution events and run records`）が 1 件加わる。`pipeline-e2e` で HEAD を統合の commit とみなしていた期待値は、記帳の commit を飛ばして確かめる形に改めた。",
+    "残課題: 統合の後に、`pm-orchestrator-playbook` などにある、orchestrator が実行記録を手で commit する運用を見直す。",
+    "残課題: 統合の後に実際の run で、develop の `git status` に実行記録が残らないことを確かめる。",
+    "CHANGELOG に書く事項は個票の「CHANGELOG に書く事項」の節に書いた（Changed: run の終わりの記帳 commit / Fixed: 失敗・延期の後に記帳した plan・result が再開後の統合で競合しても止まらない）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DVNV/pjr-dvnv-20261115T152525Z-6fdd970b/executor.log",
+      "bytes": 8710,
+      "truncated": false
+    }
+  ]
+}

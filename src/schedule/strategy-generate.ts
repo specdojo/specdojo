@@ -14,7 +14,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, join, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { dump, load as loadYaml } from "../shared/yaml.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
@@ -206,6 +206,36 @@ export type WriteStrategyResult = {
   diff: string[];
 };
 
+const YAML_SCHEMA_MODELINE_RE = /^#\s*yaml-language-server:\s+\$schema=\S+\s*$/;
+
+function findSchemaModeline(content: string): string | undefined {
+  for (const line of content.split(/\r?\n/)) {
+    if (line.trim() === "") continue;
+    if (!line.startsWith("#")) return undefined;
+    if (YAML_SCHEMA_MODELINE_RE.test(line)) return line;
+  }
+  return undefined;
+}
+
+// validate:schema は modeline から schema を解決するため、modeline の無い strategy は検証で失敗する。
+// 書き出す内容に modeline が無ければ、既存ファイルの modeline を保ち、無ければ schema への相対参照を作る。
+export function withStrategySchemaModeline(opts: {
+  path: string;
+  content: string;
+  current: string;
+  repoRoot?: string;
+}): string {
+  if (findSchemaModeline(opts.content)) return opts.content;
+  const existing = findSchemaModeline(opts.current);
+  if (existing) return `${existing}\n${opts.content}`;
+  const schemaPath = resolveSpecdojoPath(
+    SCH_STRATEGY_SCHEMA_PATH,
+    opts.repoRoot ? { repositoryRoot: opts.repoRoot } : {},
+  );
+  const schemaRef = relative(dirname(opts.path), schemaPath).split(sep).join("/");
+  return `# yaml-language-server: $schema=${schemaRef}\n${opts.content}`;
+}
+
 export function strategyPathFor(schedulePath: string, track: string): string {
   return join(schedulePath, `sch-strategy-${track}.yaml`);
 }
@@ -219,11 +249,18 @@ export function writeStrategyFile(opts: {
   content: string;
   force: boolean;
   dryRun: boolean;
+  repoRoot?: string;
 }): WriteStrategyResult {
   const path = strategyPathFor(opts.schedulePath, opts.track);
   const exists = existsSync(path);
   const current = exists ? readFileSync(path, "utf8") : "";
-  const diff = diffPlanText(current, opts.content);
+  const content = withStrategySchemaModeline({
+    path,
+    content: opts.content,
+    current,
+    ...(opts.repoRoot ? { repoRoot: opts.repoRoot } : {}),
+  });
+  const diff = diffPlanText(current, content);
 
   if (exists && diff.length === 0) {
     return { path, written: false, skippedReason: "unchanged", diff };
@@ -237,7 +274,7 @@ export function writeStrategyFile(opts: {
   mkdirSync(opts.schedulePath, { recursive: true });
   const temporaryPath = join(opts.schedulePath, `.sch-strategy-${opts.track}.${process.pid}.tmp`);
   try {
-    writeFileSync(temporaryPath, opts.content, "utf8");
+    writeFileSync(temporaryPath, content, "utf8");
     renameSync(temporaryPath, path);
   } finally {
     rmSync(temporaryPath, { force: true });

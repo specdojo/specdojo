@@ -72,6 +72,7 @@ import {
   taskPaths,
   worktreeStatusPaths,
 } from "./worktree-ops.js";
+import { branchOwnedRunRecordPaths } from "./trailing-records.js";
 import {
   findExecWorktree,
   gitEnvironment,
@@ -506,6 +507,16 @@ function merge(opts: MergeOpts): void {
     worktree,
     taskId: opts.task,
     releaseRootPaths,
+    // run の終わりの記帳 commit が先に入れた作業コピーとの競合は、exec branch 側で解決する。
+    resolveConflictsWithBranchPaths: [
+      ...releaseRootPaths,
+      ...branchOwnedRunRecordPaths({
+        repoRoot: context.repoRoot,
+        executionPath: context.executionPath,
+        branch: worktree.branch,
+        taskId: opts.task!,
+      }),
+    ],
     ffOnly: opts.ffOnly,
     dryRun: opts.dryRun,
   });

@@ -19,7 +19,7 @@
       to: 書き出す strategy の先頭に schema の modeline を必ず付ける
     - field: input
       from: ""
-      to: '["2026-11-15、kata-wave-2 の strategy を --force で書き出したとき、先頭の # yaml-language-server: $schema= の行が消え、develop の validate:schema が落ちて 005 の 3 件が止まった（PJR-TN43 の C）"]'
+      to: "[\"2026-11-15、kata-wave-2 の strategy を --force で書き出したとき、先頭の # yaml-language-server: $schema= の行が消え、develop の validate:schema が落ちて 005 の 3 件が止まった（PJR-TN43 の C）\"]"
     - field: type
       from: ""
       to: todo
@@ -73,3 +73,32 @@
       from: "-"
       to: "parent validation failed: validate-schema"
   previous_event_id: reg_73889579c8174602a1ffe28613bb0742
+- v: 1
+  id: reg_59a5a4c5341341a99d377d662e3aa394
+  ts: "2026-11-15T14:50:27Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: validate-schema"
+      to: "-"
+  previous_event_id: reg_8a0f77560425431a84ad2bfc0040d472
+- v: 1
+  id: reg_a76814f21a44418abd649c0a751853f8
+  ts: "2026-11-15T16:01:38Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_59a5a4c5341341a99d377d662e3aa394

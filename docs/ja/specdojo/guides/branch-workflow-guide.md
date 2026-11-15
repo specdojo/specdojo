@@ -158,7 +158,7 @@ git status --short
 
 自動実行では、SpecDojo が worktree の準備、agent 実行、commit、現在ブランチへの統合、状態更新を行います。
 
-worktree 実行の `prepare execution` / `apply task changes` と実行管理の記帳は exec ブランチに保持されます。成功時に project `develop` の first-parent へ追加されるのは `--no-ff` の merge commit 1件だけで、subject は Schedule タスクなら `exec(<task-id>): <task name>`、register 項目なら `exec(register <PJR-ID>): <title>` です。register 実行では `start → review` の遷移をこの merge commit に同梱し、失敗時は `start → waiting` の遷移、plan、result を `wait` commit 1件にまとめます（worktree は再開のため保持します）。再開後に成功した場合も merge commit 1件です。squash / rebase は使わず、既存履歴は書き換えません。
+worktree 実行の `prepare execution` / `apply task changes` と実行管理の記帳は exec ブランチに保持されます。成功時に project `develop` の first-parent へ追加されるのは `--no-ff` の merge commit 1件だけで、subject は Schedule タスクなら `exec(<task-id>): <task name>`、register 項目なら `exec(register <PJR-ID>): <title>` です。register 実行では `start → review` の遷移をこの merge commit に同梱し、失敗時は `start → waiting` の遷移、plan、result を `wait` commit 1件にまとめます（worktree は再開のため保持します）。再開後に成功した場合も merge commit 1件です。Schedule の run（`exec run` / `exec resume` / `exec cycle`）の終わりには、統合の後に runner が書いたイベントと run の記録をまとめた記帳の commit（`exec(run): record execution events and run records`）が run ごとに 1 件加わります（[Schedule実行運用ガイド](schedule-operation-guide.md) の「実行記録の記帳」）。squash / rebase は使わず、既存履歴は書き換えません。
 
 ```bash
 specdojo exec run \
