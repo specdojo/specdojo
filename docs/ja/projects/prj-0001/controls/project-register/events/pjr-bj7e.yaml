@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_78157255752f4b7d85d250ed33603d0b
+- v: 1
+  id: reg_35382c7b45fa4c468ec920211c360a78
+  ts: "2026-11-15T16:48:41Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（sample だけの変更で流れる test-integration と、負荷で揺れる pipeline-e2e のテストを見直す）。親の検証をすべて通って統合済み
+  previous_event_id: reg_14ef2a4eba684b18872af7280a3a3587
