@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ed0k-exec-resume-executor-from-integrate
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T10:47:32Z"
+  completed_at: "2026-11-15T16:49:18Z"
+  conclusion: 0.8.0 の第 1 段で直した（統合の段で止まった schedule のタスクを、executor の段からやり直せるようにする）。親の検証をすべて通って統合済み
   derived_from:
     - PJR-52EE
   commit_type: feat
