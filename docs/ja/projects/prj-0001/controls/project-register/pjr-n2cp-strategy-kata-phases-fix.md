@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-n2cp-strategy-kata-phases-fix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:53:08Z"
+  completed_at: "2026-11-15T01:18:56Z"
+  conclusion: strategy generate の bootstrap-kata-set と improve-kata に rulebook・recipe・sample・template を同期する段を足した
   derived_from:
     - PJR-J0VS
   commit_type: fix
