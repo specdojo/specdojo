@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-AWW3",
   "run_id": "pjr-aww3-20261115T185021Z-2b621424",
-  "updated_at": "2026-11-15T20:44:54.819Z",
+  "updated_at": "2026-11-15T20:45:18.102Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-AWW3/pjr-aww3-20261115T185021Z-2b621424/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 1,
       "started_at": "2026-11-15T20:44:54.819Z",
-      "completed_at": null,
+      "completed_at": "2026-11-15T20:45:18.102Z",
       "artifact_ref": null
     }
   },
