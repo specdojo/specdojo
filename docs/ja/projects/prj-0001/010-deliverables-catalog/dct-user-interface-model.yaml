@@ -84,6 +84,7 @@ groups:
         kind: work
         depends_on:
           - bds-index
+          - sysd-job-execution
         overview: routine が週ごとに作る進捗報告（reporting/progress-reports/）の利用目的・読み手・表示項目・出力の時期と、元にする記録を定義する
         path: bds-progress-report.md
         rulebook: specdojo:bds-rulebook
