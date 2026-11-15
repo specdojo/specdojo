@@ -30,7 +30,8 @@ const task: ReadyTaskView = {
   local_id: "overview",
   mode: "review",
   approach: "fully-guided",
-  schedule_file: "schedule/sch-track-kata.yaml",
+  // ready/cpm snapshots store schedule_file relative to the schedule directory (PJR-X05N).
+  schedule_file: "sch-track-kata.yaml",
   fifo_rank: 1,
   critical_first_rank: 1,
 };
@@ -56,7 +57,7 @@ function strategy(intent = "improve-kata"): void {
   );
 }
 function subjects() {
-  return scheduleKataReviewSubjects(task, findDeliverableInfo("catalog", "overview"));
+  return scheduleKataReviewSubjects(task, findDeliverableInfo("catalog", "overview"), "test");
 }
 function grade(path: string, verdict: GradeResult["verdict"] = "pass"): void {
   const result: GradeResult = {
@@ -156,14 +157,54 @@ describe("schedule kata review", () => {
     },
   );
 
+  it("resolves a bootstrap-kata-set strategy from the configured schedule directory, as in kata-wave-2", async () => {
+    const wave2Task: ReadyTaskView = {
+      ...task,
+      id: "T-KATA-WAVE-2-overview-090",
+      approach: "retrofit",
+      schedule_file: "sch-track-kata-wave-2.yaml",
+    };
+    write(
+      "schedule/sch-strategy-kata-wave-2.yaml",
+      dump({
+        track: "kata-wave-2",
+        approach_rules: [
+          {
+            local_ids: ["overview"],
+            intent: "bootstrap-kata-set",
+            bootstrap_scope: ["rulebook", "sample"],
+          },
+        ],
+      }),
+    );
+    const invoke = vi
+      .spyOn(reviewGrade, "ensureReviewGrade")
+      .mockResolvedValue({ action: "executed", runId: "test" });
+
+    await gradeBeforeReviewPlan({
+      task: wave2Task,
+      projectId: "test",
+      catalogPath: "catalog",
+      repoRoot: root,
+      dryRun: false,
+    });
+
+    expect(
+      invoke.mock.calls
+        .filter(([options]) => options.target === "kata")
+        .map(([options]) => options.subjectPath),
+    ).toEqual([rulebookPath, samplePath]);
+  });
+
   it("keeps ordinary reviews and other tracks out of the kata gate", () => {
     strategy("author-deliverable");
     expect(subjects()).toEqual([]);
     strategy();
     expect(
       scheduleKataReviewSubjects(
-        { ...task, schedule_file: "schedule/sch-track-other.yaml" },
+        { ...task, schedule_file: "sch-track-other.yaml" },
         findDeliverableInfo("catalog", "overview"),
+        "test",
       ),
     ).toEqual([]);
   });

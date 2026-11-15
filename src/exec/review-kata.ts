@@ -1,25 +1,45 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, dirname, join, relative } from "node:path";
+import { basename, dirname, isAbsolute, join, relative } from "node:path";
 import type { DeliverableInfo } from "../catalog/document-target.js";
 import { declaredKata, loadRulebookRefs, resolveKataRefs } from "../kata/kata.js";
 import { reviewGradeFreshness, renderReviewGradeSummary } from "../review/grade.js";
 import type { ReviewVerdict } from "../review/types.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { getProjectSchedulePath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
 import { load } from "../shared/yaml.js";
 import type { ReadyTaskView } from "./types.js";
 
 export type KataReviewSubject = { path: string; label: string };
 
+/**
+ * `schedule_file` in ready/cpm snapshots is relative to the project's schedule directory, not to
+ * the process cwd (PJR-X05N). Resolve it against the configured schedule path first and keep the
+ * cwd-relative and absolute forms for callers that already pass a resolvable path.
+ */
+function strategyDirectories(scheduleFile: string, projectId: string | undefined): string[] {
+  const directories: string[] = [];
+  if (!isAbsolute(scheduleFile) && projectId) {
+    const rootDir = specdojoRootDir();
+    const project = loadConfig(rootDir).config?.projects[projectId];
+    if (project)
+      directories.push(join(rootDir, getProjectSchedulePath(project), dirname(scheduleFile)));
+  }
+  directories.push(dirname(scheduleFile));
+  return directories;
+}
+
 /** Read the intent from the task's own track, even when the review approach is fully-guided. */
 export function scheduleKataReviewSubjects(
   task: Pick<ReadyTaskView, "id" | "local_id" | "schedule_file">,
   deliverable: DeliverableInfo | null,
+  projectId: string | undefined,
 ): KataReviewSubject[] {
   if (!task.local_id || !task.schedule_file) return [];
   const track = basename(task.schedule_file).match(/^sch-track-(.+)\.ya?ml$/)?.[1];
   if (!track || !task.id.startsWith(`T-${track.toUpperCase()}-`)) return [];
-  const strategyPath = ["yaml", "yml"]
-    .map((ext) => join(dirname(task.schedule_file), `sch-strategy-${track}.${ext}`))
+  const strategyPath = strategyDirectories(task.schedule_file, projectId)
+    .flatMap((directory) =>
+      ["yaml", "yml"].map((ext) => join(directory, `sch-strategy-${track}.${ext}`)),
+    )
     .find(existsSync);
   if (!strategyPath) return [];
   const strategy = load(readFileSync(strategyPath, "utf8")) as {

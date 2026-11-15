@@ -311,7 +311,7 @@ function buildReviewPlanMarkdown(
     _GRADE_RESULT_PATH_: gradeResultRef(projectId, gradeSubjectPath),
     _GRADE_SUMMARY_: [
       reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),
-      kataReviewSummary(scheduleKataReviewSubjects(task, deliverable), projectId),
+      kataReviewSummary(scheduleKataReviewSubjects(task, deliverable, projectId), projectId),
     ]
       .filter(Boolean)
       .join("\n\n"),

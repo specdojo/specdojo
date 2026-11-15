@@ -162,7 +162,7 @@ export async function gradeBeforeReviewPlan(params: {
     task.local_id && params.catalogPath
       ? findDeliverableInfo(params.catalogPath, task.local_id)
       : null;
-  for (const kata of scheduleKataReviewSubjects(task, deliverable)) {
+  for (const kata of scheduleKataReviewSubjects(task, deliverable, projectId)) {
     if (kata.path === subject?.path && subject?.target === "kata") continue;
     process.stdout.write(`  [grade] checking ${kata.label}: ${kata.path} (--target kata)\n`);
     const kataOutcome = await ensureReviewGrade({
@@ -205,7 +205,7 @@ export function enforceScheduleKataReview(params: {
       : null;
   enforceKataReviewVerdict(
     params.resultPath,
-    scheduleKataReviewSubjects(params.task, deliverable),
+    scheduleKataReviewSubjects(params.task, deliverable, params.projectId),
     params.projectId,
     params.rootDir,
   );
