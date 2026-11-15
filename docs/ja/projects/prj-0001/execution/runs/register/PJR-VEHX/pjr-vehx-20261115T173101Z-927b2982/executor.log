@@ -1,0 +1,30 @@
+`sf-index` を grade の指摘に沿って手直ししました。`npm run validate:catalog` と `npm run validate:history-links` は通っています。lint 類と親の検証は runner が実行します。完了条件の再 grade（`grade run --target deliverable`）は agent を起動するため、まだ実行していません。
+
+**`SF-ROUT-02` と P-06 のずれの修正**
+- `SF-ROUT-02`（ジョブ実行）は意味を変えずに残し、CLI を `exec` に直しました。実行の入口は `exec run --job` です。
+- P-06 に当たる定義の検証・表示は、新しい ID `SF-ROUT-03`（ジョブ定義管理、CLI `job`）にしました。採番済みの ID の意味は変えない、というルールに従ったためです。
+- ジョブの実行だけを扱う業務領域はないので、`SF-ROUT-02` は起動元の P-05 に対応付けました。この対応は仮定（`_ASSUMPTION_`）として、Q-01 の照合で確かめる扱いにしています。
+
+**テスト対象との対応表を追加**
+- 新しい節「業務領域・テスト対象との照合」で、全14機能 ID を業務領域・代表の BPS・テスト対象・検証手段（単体／統合）と照らしました。結果は「本書内の照合」と「BPS 本文との照合」の2列で記録しています。
+- 検証手段はテスト仕様を作るときの起点の区分で、既存のテストがあるかどうかは示していません。
+- 合格条件も本文に書きました。
+
+**Q-02 の照合で残った不一致**
+- PO の方針にある「領域ごとの代表」は、機能領域ごとと解釈しました。
+- そう照らすと、`ORCH`（P-14）だけ代表の BPS が成果物カタログの `depends_on` にありません。カタログはこのタスクの対象外なので、表に「不一致」と示し、Q-02 に完了条件と判断時点（確定の前）を足しました。この扱いを決める PJR はまだ起票されていません。
+
+**その他の追記**
+- `SF-EXEC-01` に `bps-task-completion`、`SF-DEPR-01` に `bps-deprecation-storage` を参照先として足しました。
+- 保守担当・確認の記録先・公開範囲（`_ASSUMPTION_`）・PO が承認前に確かめることを足しました。
+- コマンドリファレンス、PJR-2GD6、PJR-AK5V、作成ルールへのリンクを足しました。
+- 未決事項の表に、影響する機能・判断時点・完了条件・追跡先の列を足しました。
+- PO の判断と PJR-AK5V の留保は残し、`status` は `draft` のままです。
+
+**変更ファイル**
+- `docs/ja/product/010-business-specs/050-system-functions/sf-index.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-vehx-sf-index-rework-grade-findings.md`（個票の対応結果）
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sf-index を grade 指摘に沿って改訂した。SF-ROUT-02（ジョブ実行、CLI exec）と新設 SF-ROUT-03（ジョブ定義管理、CLI job、P-06）に境界を分け、全機能 ID と業務領域・代表 BPS・テスト対象・検証手段の照合表を追加した。目的と対象範囲（保守・公開範囲・承認前の確認）と未決事項（影響・判断時点・完了条件・追跡先）を補強した。PO の判断、PJR-AK5V の留保、status draft は維持した。個票の対応結果に判断と残課題を記入した。","handoff":["`SF-ROUT-02` の意味を変えないため、P-06（ジョブ定義）の機能は新しい ID `SF-ROUT-03`（CLI `job`）として採番した。ジョブ実行（`exec run --job`）は起動元の P-05 に対応付け、`_ASSUMPTION_` として Q-01（PJR-AK5V）の照合に含めた。","Q-02 の「領域ごとの代表 BPS」は機能領域ごとと解釈した。その結果、機能領域 `ORCH`（P-14）だけ代表の BPS が成果物カタログ `dct-system-functions` の `sf-index` の `depends_on` にない。`bps-routine-register-schedule-cycle` を加えるか対象外とするかを PO が決める必要がある。この判断の PJR は未起票のため、PM の起票が必要。","照合表の検証手段（単体／統合テスト）はテスト仕様を作るときの起点の区分で、既存テストの有無は確認していない。","`grade run --target deliverable` による再 grade は agent の起動と利用枠の消費を伴うため実行していない。runner または人が実行する。BPS 本文との照合（Q-01・Q-03）は PJR-AK5V の留保として未充足のまま残る。","F004 の Schedule 参照は、追跡先の Schedule タスク ID が宣言資料で確認できなかったため、確定タスク `T-KATA-WAVE-1-sf-index-140` と PJR-AK5V のみ記載した。","公開範囲（製品文書として文書サイトで公開する）は `_ASSUMPTION_` とした。PO が承認時に確定する。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK（既存の based_on 未作成 WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。変更した個票 pjr-vehx を含め違反なし"},{"command":"npx prettier --write docs/ja/product/010-business-specs/050-system-functions/sf-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-vehx-sf-index-rework-grade-findings.md","status":"passed","summary":"整形済み"},{"command":"grade run --target deliverable","status":"requires_human","summary":"agent を起動し利用枠を消費するため sandbox からは実行しない。改訂後の sf-index の再 grade が必要"}]}
+</specdojo_executor_evidence>
