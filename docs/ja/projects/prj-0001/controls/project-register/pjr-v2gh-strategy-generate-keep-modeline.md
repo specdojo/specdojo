@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-15T10:47:27Z"
-  block_reason: "parent validation failed: validate-schema"
   commit_type: fix
   commit_scope: schedule
 ---
@@ -40,13 +39,32 @@ specdojo:
 
 | No  | 作業                                    | 担当 | 状態 | メモ |
 | --- | --------------------------------------- | ---- | ---- | ---- |
-| 1   | strategy の書き出しに modeline を付ける | DEV  | open | -    |
-| 2   | track の書き出しを確かめる              | DEV  | open | -    |
-| 3   | 回帰テストを足す                        | DEV  | open | -    |
+| 1   | strategy の書き出しに modeline を付ける | DEV  | done | -    |
+| 2   | track の書き出しを確かめる              | DEV  | done | -    |
+| 3   | 回帰テストを足す                        | DEV  | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `src/schedule/strategy-generate.ts` の `writeStrategyFile` が、書き出す内容に modeline が無いとき先頭へ `# yaml-language-server: $schema=` を付けるようにした。既存ファイルに modeline があればその行を保ち、無ければ書き出し先から `sch-strategy.schema.yaml` への相対参照を作る。新規作成・`--force`・`--dry-run` の diff・unchanged 判定は、すべて modeline を付けた後の内容で行う。
+- `src/schedule/schedule.ts` の `schedule strategy generate` は、schema を解決する基点として `repoRoot` を渡す。
+- `schedule build` が書く track（`sch-track-<track>.yaml`）と `sch-milestones.yaml` は、すでに `withSchemaModeline` で modeline を付けていて、`tests/src/schedule/command.test.ts` で確かめられている。track 側は変えていない。
+- `tests/src/schedule/strategy-generate.test.ts` に回帰テストを足した。新規に書くときに modeline が付くこと、`--force` で既存の modeline が保たれること、CLI の `--force` で書いた strategy が modeline から解決した schema の検証を通ること、を確かめている。
+
+### 5.2. 判断した点
+
+- modeline は `generateStrategy` ではなく `writeStrategyFile` で付けた。理由: 既存の modeline を保つには書き出し先の現在の内容が要り、また modeline が無いまま書かれる経路をなくすため。`GenerateStrategyResult.content` は今までどおり modeline 無しの YAML 本文を返す。
+- 既存の modeline が別の schema を指している場合も、書き換えずに保つ。完了条件の「既存の modeline があれば保つ」に従った。
+- 回帰テストは `validate:schema:yaml` の CLI を子プロセスで起動せず、modeline から解決した schema が存在することと `validateStrategySchema` の結果が空であることを確かめる形にした。単体テストの範囲で決定的に動かすため。
+
+### 5.3. CHANGELOG に書く事項
+
+- 修正: `schedule strategy generate` で書き出す `sch-strategy-<track>.yaml` の先頭に、`# yaml-language-server: $schema=` の modeline を必ず付けるようにした。`--force` で書き直したとき modeline が消え、`validate:schema` が失敗する問題を直した。既存の modeline はそのまま保つ。
+
+### 5.4. 残課題
+
+- なし
 
 ## 6. 関連ドキュメント
 
