@@ -1,0 +1,26 @@
+`pm-raci.md` を、2026-11-15 の grade 指摘 F001〜F020 に沿って直しました。個票の対応結果も書きました。完了条件のうち、直した後の再 grade（`grade run --target deliverable`）だけは実行できていないため、今回の報告は `incomplete` にしています。
+
+**`pm-raci.md` の主な修正**
+- **Launch Track Strategy（F006・F010・F014・F018）:** 「Launch スケジュール戦略定義（`sch-strategy-launch`）」として独立した行にし、`ARC=R`・`PM=A` としました。grade の指摘にある Schedule の `owner=ARC` を正としています。Schedule のファイル自体は、plan で参照してよい文書に入っていないため読んでいません。
+- **「成果物作成」の行（F001・F008・F011・F012・F016）:** 「成果物作成フローの運営（着手順、割り当て、滞留）」に範囲を絞り、`PM=A/R` にしました。内容の承認と作成の主担当は、成果物別の表の各行に残すと注記しています。
+- **成果物カタログ（F002・F013・F015）:** `R` が2つあるため、作業ごとの主担当を注記しました。成果物の選定と `overview`・`done_criteria` の整理は `BA`、`depends_on`・rulebook・配置の定義は `ARC` です。
+- **対象外の範囲（F005）:** CLI・schema・生成・検証の実装と公開準備を、どの行で扱うかを適用方針に書きました。
+- **記録先と判断範囲（F004・F019）:** 進捗・課題・リスク・変更要求・決定の記録先と、品質ゲートの `A` の範囲を注記しました。受入・公開の判断は `PO` が行うことと区別しています。
+- **Schedule の照合（F007・F017・F020）:** `owner` の決め方を人と組織の定義標準の優先順に合わせ、照合先の正本、不一致を調べる担当と直す先、未決のときの登録簿への登録を書きました。
+- **見直し（F003・F009）:** 見直し条件に、影響範囲の特定・追従する正本の確認・未決の変更の登録の3手順を足しました。
+
+**私が決めた点（確定は人が 140 で行う前提）**
+- **`status`:** `ready` のまま直しました。修正は指摘箇所に限った加筆と行の分割です。`draft` に戻すと、140 で人が `ready` へ上げ直す手間が増えるためです。
+- **主担当と承認者の割り当て:** 成果物カタログの作業ごとの主担当と、戦略定義の `A=PM` は、組織定義の分担（計画・調整は `PM`、文書体系は `ARC`）から私が決めました。
+- **`DEV`・`UX` の扱い:** 旧「成果物作成」行でしか `R` を持っていなかったため、修正後はどの行でも `R` がありません。実装や体験の成果物を計画した時点で行を追加する、と本文に書いています。
+
+**検証**
+- 実行して通ったもの: `npm run validate:catalog`、`npm run validate:history-links`、Prettier による整形確認。
+- `npm run lint:md`・`npm run lint:fm` などの共通の検証は、私の後に親 runner が実行します。
+
+**残っていること**
+- `grade run --target deliverable` は agent CLI を起動するため、作業環境では実行していません。人かオーケストレーターが grade し直し、結果を個票の対応結果に追記してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件のうち再 grade（`grade run --target deliverable`）は agent CLI を使うため executor の sandbox では実行できず、人またはオーケストレーターに残している。","handoff":["`status` の扱い: `pm-raci` は `ready` のまま直した。修正は指摘箇所に限った加筆と行の分割であり、`ready` への昇格は人だけが行うため、`draft` に戻すと 140 で再昇格の手間が増える。確定は人が 140 で行う。","Launch Track Strategy を独立行「Launch スケジュール戦略定義（`sch-strategy-launch`）」に分け、`ARC=R`・`PM=A` とした。grade の指摘（F006・F014）にある `sch-track-planning` の `owner=ARC` を正とした。Schedule のファイルは plan で参照してよい文書に含まれないため、実際の値は確認していない。","成果物カタログの作業別の主担当（選定・`overview`・`done_criteria` は `BA`、`depends_on`・rulebook・配置は `ARC`）と、戦略定義の `A=PM` は、組織定義の責任領域から executor が決めた。","旧「成果物作成」行を「成果物作成フローの運営」に限定した結果、`DEV`・`UX` はどの行でも `R` を持たない。実装・体験の成果物を計画した時点で行を追加する旨を本文に書いた。","次のアクション: `grade run --target deliverable` で `prj-0001:pm-raci` を grade し直し、結果を個票 PJR-Y5XH の対応結果に追記する（agent CLI を使うため人またはオーケストレーターが実行する）。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"exit 0。今回の変更と無関係な既存の `based_on` 未作成の WARN のみ"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0。個票に Markdown リンクの違反なし"},{"command":"npx prettier --check docs/ja/projects/prj-0001/030-project-management/pm-raci.md docs/ja/projects/prj-0001/controls/project-register/pjr-y5xh-pm-raci-rework-grade-findings.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"specdojo grade run --target deliverable","status":"requires_human","summary":"直した後の再 grade。agent CLI を起動し利用枠を消費するため sandbox では実行していない。人またはオーケストレーターが実行し、結果を個票に追記する"}]}
+</specdojo_executor_evidence>

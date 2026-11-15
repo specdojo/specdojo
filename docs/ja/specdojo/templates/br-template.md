@@ -5,7 +5,7 @@ specdojo:
   status: ready
   frontmatter_template:
     specdojo:
-      id: _PROJECT_ID_:_LOCAL_ID_
+      id: _LOCAL_ID_
       type: rule
       status: draft
       rulebook: specdojo:br-rulebook
