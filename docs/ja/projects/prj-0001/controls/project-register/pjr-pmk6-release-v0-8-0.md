@@ -13,8 +13,28 @@ specdojo:
   owner: PO
   registered_at: "2026-11-11T11:58:00Z"
   depends_on:
-    - PJR-0X0S
-    - PJR-A7CR
+    - PJR-M18B
+    - PJR-X05N
+    - PJR-Q2AT
+    - PJR-1GCD
+    - PJR-T4G3
+    - PJR-M495
+    - PJR-ED0K
+    - PJR-V2GH
+    - PJR-BJ7E
+    - PJR-DVNV
+    - PJR-D948
+    - PJR-C6BA
+    - PJR-KV37
+    - PJR-JFRX
+    - PJR-3HXQ
+    - PJR-6XWP
+    - PJR-W63Q
+    - PJR-VEHX
+    - PJR-X1RW
+    - PJR-Q9DF
+    - PJR-8ZX8
+    - PJR-SBNB
   commit_type: chore
   commit_scope: release
 ---
@@ -27,9 +47,11 @@ specdojo:
 
 ## 2. 入力
 
-- 範囲は 0.7.0 の後に close した項目と、PJR-RX14 の修正（PJR-0X0S）。代表の確定と cdt・bes・ifx-cmd の 2 回目、予定の epic、中程度の issue は次に回す（indie が 2026-11-11 に承認）
-- 範囲を広げる（indie が 2026-11-15 に承認）: 0.7.0 の後に close した項目は、リリースの作業を始める時点までに close したものをすべて含める。kata-wave-1 の型の整備と、その後の直し（PJR-E4R5・N2CP・160D・C8J8・T01P など）も対象とする
-- review で止まっている 7 件（PJR-AD33・B0B8・GQ14・Q8KP・RVTB・SZGZ・V5AZ）は、利用者の確認の結果で含めるかを決める。2026-11-15 時点で AD33・RVTB は close 済み、残る 5 件は review のまま
+- 範囲（indie が 2026-11-15 に決定）: 型（docs/ja/specdojo の rulebook・recipe・sample・template）は極力最新を取り込み、足元の不具合は直してから出す。0.7.0 の後に close した項目は、リリースの作業を始める時点までに close したものをすべて含める
+- 足元の不具合（先に直す）: PJR-M18B・X05N（review の正しさ）、Q2AT・1GCD（止まる原因）、T4G3・M495・ED0K（立て直し）、V2GH・BJ7E・DVNV
+- 型を最新にする: wave-2 の sample の手直し（PJR-D948・C6BA・KV37）、型を確定するための成果物の手直し（wave-2 の JFRX・3HXQ・6XWP・W63Q、wave-1 の VEHX・X1RW・Q9DF）と 140 の確定、template の id の直し（PJR-8ZX8）、ifx-index の schema の名前の変更（PJR-SBNB）
+- 0.8.0 に入れないもの: project-kata の手直し（PJR-Y5AC・Y5XH・TVWR・CPZH）、stsd・cdsd の手直し（PJR-2C9W・PEJQ）、ifx-index の閲覧ページ（PJR-QJ41）。どれも配る型を変えない
+- review で止まっている項目（PJR-B0B8 など）は、リリースの時点で close 済みなら含める
 - 手順は pm-orchestrator-playbook の「リリースの手順」に従う。push・PR の merge・タグ・npm の公開の承認は利用者が行う
 
 ## 3. 完了条件
