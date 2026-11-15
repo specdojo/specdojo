@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-15T14:35:45Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-PMK6
   commit_type: docs
