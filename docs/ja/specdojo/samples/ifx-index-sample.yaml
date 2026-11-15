@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../../specdojo/schemas/v1/esil.schema.yaml
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-index.schema.yaml
 id: specdojo:ifx-index-sample
 type: api
 title: 駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧
