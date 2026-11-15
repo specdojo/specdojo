@@ -127,3 +127,16 @@
       from: "agent exited with non-zero code: parent validation failed: test-integration"
       to: "-"
   previous_event_id: reg_ec8d88f526a54c5583a9f333fa0d58e4
+- v: 1
+  id: reg_2d0aa10465bf4593a2ab19271a571d3c
+  ts: "2026-11-15T21:47:03Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8222b682255a4a3794ad61d862b7612f
