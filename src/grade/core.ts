@@ -44,9 +44,12 @@ export type GradePipelineState = {
 export type GradeFindingInput = {
   id?: string;
   severity: GradeSeverity;
-  /** Canonical executor wording. */
+  /** Canonical executor wording (Japanese since PJR-YYDS; older results may be English). */
   message: string;
-  /** Japanese display wording. It never participates in scoring or carry-over matching. */
+  /**
+   * Japanese display wording. It never participates in scoring. Carry-over also matches it so a
+   * Japanese restatement of an English canonical finding keeps the previous severity.
+   */
   message_ja?: string;
   cause?: FindingCause;
   line?: number;
@@ -185,10 +188,21 @@ export function preserveStoredFindingSeverities(
 ): GradeViewpointInput[] {
   const previousByMessage = new Map<string, GradeSeverity>();
   for (const finding of previous?.findings ?? []) {
-    const message = sanitizeCommentText(finding.message);
-    const stored = previousByMessage.get(message);
-    if (stored === undefined || SEVERITY_LEVEL_CAP[finding.severity] < SEVERITY_LEVEL_CAP[stored]) {
-      previousByMessage.set(message, finding.severity);
+    // 英語を正本にした旧結果では、grade plan が表示用の日本語を前回の指摘として示す。
+    // 正本と表示用の両方を照合し、日本語で再掲された指摘の severity も引き継ぐ。
+    const keys = new Set(
+      [finding.message, finding.message_ja]
+        .filter((message): message is string => typeof message === "string")
+        .map((message) => sanitizeCommentText(message)),
+    );
+    for (const message of keys) {
+      const stored = previousByMessage.get(message);
+      if (
+        stored === undefined ||
+        SEVERITY_LEVEL_CAP[finding.severity] < SEVERITY_LEVEL_CAP[stored]
+      ) {
+        previousByMessage.set(message, finding.severity);
+      }
     }
   }
   return viewpoints.map((viewpoint) => {

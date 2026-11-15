@@ -844,7 +844,7 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 | `grade run`              | 文書ごとに評価と反映を実行し、同じ run を再開する              |
 | `grade plan`             | 1文書ごとに executor / reporter の評価 plan を保存する         |
 | `grade apply`            | executor の申告を GradeSubmission へ機械変換して正本を反映する |
-| `grade translation-plan` | 正本の英語 finding から日本語表示用の翻訳 plan を作る          |
+| `grade translation-plan` | 英語の正本の finding から日本語表示用の翻訳 plan を作る        |
 | `grade localize`         | 訳文を件別検証し、合格した finding の `message_ja` を更新する  |
 | `grade validate`         | サイドカーの内容ハッシュと finding 件数を検証する              |
 | `grade result`           | 保存済み grade result を Markdown 文書のパスで表示する         |
@@ -879,7 +879,7 @@ specdojo grade validate --target kata --project prj-0001
 
 `--if-busy fail|wait` は同一 project の grade が実行中の場合の動作を指定します。省略時と `fail` は即時エラー、`wait` は既存 run の lock 解放を待って実行します。待機方針は同じ run ID の再開条件に含めません。Schedule の review 前の grade は `wait` を指定します。
 
-ネイティブ経路は `--stages 1` と機械 reporter を扱います。`--reference` と `--embed-documents` は plan に反映し、`--kind` は kata の `rulebook` / `recipe` / `sample` / `template` / `all`（既定）を選びます。失敗した文書と理由は run 記録に残し、終了コード 1 を返します。`--max-stage-failures`（既定 3）に達するまでは未完了段を再開できます。日本語 finding の表示用翻訳は `translation-plan` / `localize` で別途行います。開発用シェルの実験的な 3 段構成は CLI の対象外です。
+ネイティブ経路は `--stages 1` と機械 reporter を扱います。`--reference` と `--embed-documents` は plan に反映し、`--kind` は kata の `rulebook` / `recipe` / `sample` / `template` / `all`（既定）を選びます。失敗した文書と理由は run 記録に残し、終了コード 1 を返します。`--max-stage-failures`（既定 3）に達するまでは未完了段を再開できます。`grade run` は翻訳の段を持ちません。finding は日本語の正本で書かれるため通常は翻訳が要らず、旧結果の英語の正本が再掲された場合だけ、必要に応じて `translation-plan` / `localize` で表示用の `message_ja` を作ります。開発用シェルの実験的な 3 段構成は CLI の対象外です。
 
 宣言済み `project.repos` 配下の Markdown は、プロジェクトリポジトリから `../product/docs/document.md` のように指定できます。宣言外のリポジトリや symlink による範囲外への参照は拒否します。
 
@@ -918,11 +918,11 @@ specdojo grade validate --target kata --project prj-0001
 
 成果物の plan は、成果物カタログの `done_criteria` を `DC-001` から順に列挙し、条件文、担当 Role code、viewpoint を executor へ渡します。executor は各条件を `satisfied` / `unsatisfied` として score とは独立に申告し、`grade apply` はその判定と不足理由を `[DONE_CRITERIA]` ブロックからそのまま GradeSubmission の `done_criteria` へ変換します。`grade apply --target deliverable` は過不足を検証し、grade result サイドカーの要約と `<execution_path>/grade/criteria/` の詳細 YAML を同時に更新します。詳細は成果物ごとに1ファイルで、再評価では同じファイルを上書きします。
 
-再評価時は、grade result サイドカーの `findings[]` から `rule`、`severity`、`line`、`anchor`、正本の `message` を前回の指摘として plan へ含めます。表示用の `message_ja` は含めません。agent は各指摘が現在も未解消かを確認し、未解消なら前回の `message` を変更せず、前回と同等以上の severity で今回の finding に含めます。`grade apply` も同じ正本 `message` の finding を未解消と扱い、提出された severity が前回より軽ければ前回値へ戻し、対応する viewpoint level を severity 上限まで補正します。日本語 `message` だけの旧記録はその日本語を互換用の正本とし、英語への翻訳とは照合しません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に引き下げの根拠を含めます。前回の観点割り当てに判定を引きずられないよう各 viewpoint を現在の根拠から独立に評価し、前回指摘にない問題も検出します。前回の level、score、verdict や解消履歴は plan に引き継ぎません。適用結果は最新サイドカーへ上書きされ、成果物本文は変更しません。
+再評価時は、grade result サイドカーの `findings[]` から `rule`、`severity`、`line`、`anchor`、`message` を前回の指摘として plan へ含めます。`message` には表示用の `message_ja` があればそれを、なければ正本の `message` を示します。英語を正本にした旧記録は、日本語訳があれば日本語で示されます。agent は各指摘が現在も未解消かを確認し、未解消なら示された `message` を一字一句変えず（英語で示された場合も訳さず）、前回と同等以上の severity で今回の finding に含めます。`grade apply` は前回の正本 `message` と `message_ja` のどちらかに一致する finding を未解消と扱い、提出された severity が前回より軽ければ前回値へ戻し、対応する viewpoint level を severity 上限まで補正します。日本語で再掲された指摘はその日本語が新しい正本になり、英語の正本は再評価のたびに日本語へ移ります。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に引き下げの根拠を含めます。前回の観点割り当てに判定を引きずられないよう各 viewpoint を現在の根拠から独立に評価し、前回指摘にない問題も検出します。前回の level、score、verdict や解消履歴は plan に引き継ぎません。適用結果は最新サイドカーへ上書きされ、成果物本文は変更しません。
 
 パス参照の executor は判定前に、plan が示す評価対象、すべての参考資料、選定された良い実例をファイル読み取りツールで全文読み、実行ログに各パスの読み取り操作を残します。埋め込みを使う executor は、plan に埋め込まれた同じ範囲だけを読みます。参考資料は成果物間整合、良い実例は章ごとの具体性・根拠の密度・過不足を比較する材料であり、どちらも評価対象にはしません。実例の表現や欠点を機械的に転用せず、rubric と viewpoint を最終的な判定基準にします。必要な資料を読み取れない場合は、内容を推測せず異常終了します。grade plan の Frontmatter と「このタスクで行うこと / 対象項目 / 進め方 / 完了手順 / 異常終了の条件」の章構成は exec plan に準拠します。
 
-executor plan は JSON 契約を持ちません。各 viewpoint を `[VIEWPOINT <id>]` と `[END VIEWPOINT]` で囲み、`LEVEL: <0-4>` と、必要な `FINDING <severity> line=<line>: <message>` を申告します。新しい判定根拠と finding の `message` は英語で記述します。marker 間の根拠と検討過程は自由記述です。この軽量な申告形式により、JSON を安定して生成できない agent でも分析を完了できます。
+executor plan は JSON 契約を持ちません。各 viewpoint を `[VIEWPOINT <id>]` と `[END VIEWPOINT]` で囲み、`LEVEL: <0-4>` と、必要な `FINDING <severity> line=<line>: <message>` を申告します。判定根拠と新しい finding の `message` は日本語で記述し、固有名詞・識別子・引用は原文を保ってよいとします。marker 間の根拠と検討過程は自由記述です。この軽量な申告形式により、JSON を安定して生成できない agent でも分析を完了できます。
 
 `grade apply --analysis-from <executor-output>` を `--from` なしで実行すると、executor の最終応答の marker を解析して GradeSubmission を機械的に生成し、既存の GradeSubmission 検証を通してから反映します。LLM の reporter は起動しません。severity、line、message、done_criteria の status と reason は申告のまま写し、level だけは severity 上限を超える場合に下方向へ補正します。書き写しの誤りや JSON の構文破損は起こりません。`--submission-out <path>` を指定すると、生成した GradeSubmission をリポジトリ内のパスへ保存します（`--dry-run` では保存しません）。判定主体は executor なので、`--by <executor-nickname>` が `.specdojo/agent-members.yaml` に存在する nickname を検証してサイドカーの `graded_by` へ記録します。
 
@@ -1003,7 +1003,7 @@ tools/grade/run-per-document.sh --run-id 20260928-rubric-v2 --target deliverable
 
 reporter の既定はすべての段で `machine` です。`machine` の段は reporter agent を起動せず、`grade apply --analysis-from <executor-output> --submission-out <grade-submission.json>` で executor の marker を変換して反映します。finding の severity が許す level 上限を executor の申告が超えた場合は、機械変換が level を上限まで下げ、補正前後を grade result の `level_corrections` に記録します。`grade apply` が応答を拒否した場合は、拒否された応答を `executor-output.rejected.txt`、理由を `apply-rejection.log` として段のディレクトリへ残し、executor を1回だけ再実行して変換し直します。`--stage-<n>-reporter <nickname>` で agent の nickname を指定した段だけ、従来どおり LLM reporter を起動して `--from` の忠実性照合を行い、拒否時は reporter を1回だけ再実行します。LLM reporter は書き写しの精度を比較する用途に限ります。
 
-正本の grade result を保存した後、script は `grade translation-plan` で英語 finding の文だけからなる配列を作り、1件以上ある場合だけ既定の `gemma26-translator`（`--translation-by` で変更可）へ渡します。plan は、同じ件数・同じ順序の訳文だけの JSON 文字列配列を返し、元のインラインコードを一字一句変えず、元にないインラインコードやバッククォートを加えないよう求めます。インラインコード以外の英語の語句は、固有名詞・識別子を除いて日本語へ訳します。
+正本の grade result を保存した後、script は `grade translation-plan` で英語 finding の文だけからなる配列を作ります。finding は日本語の正本で書かれるため、英語 finding は旧結果から再掲された英語の正本などに限られます。0件なら翻訳の段（翻訳 agent と `grade localize`）を流しません。1件以上ある場合だけ既定の `gemma26-translator`（`--translation-by` で変更可）へ渡します。plan は、同じ件数・同じ順序の訳文だけの JSON 文字列配列を返し、元のインラインコードを一字一句変えず、元にないインラインコードやバッククォートを加えないよう求めます。インラインコード以外の英語の語句は、固有名詞・識別子を除いて日本語へ訳します。
 
 `grade localize` は件数が一致しなければ全項目を不合格とします。件数が一致する場合は、各要素が空でない文字列であること、平仮名または片仮名を含むこと、元の文と訳文のインラインコードの多重集合が一致することを検証し、合格項目だけを `message_ja` へ反映します。元のインラインコードが欠けた項目は `missing-inline-code`、元にないインラインコードが増えた項目は `extra-inline-code` で不合格にします。必須の `--rejections-out <path>` には、不合格項目の 0 始まりの `translation_index`、finding ID、理由を JSON で出力します。script はこの index ごとに `grade translation-plan --translation-index <index>` と `grade localize --translation-index <index>` を使って1回だけ再翻訳し、再び不合格なら正本の `message` を表示用にも保存します。翻訳 agent や JSON の失敗も同じフォールバックに入り、翻訳段階は viewpoint、level、severity、line、score、verdict を変更しません。
 
