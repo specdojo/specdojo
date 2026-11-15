@@ -4,38 +4,59 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-2-ifx-file-agent-evidence-080
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-080/T-KATA-WAVE-2-ifx-file-agent-evidence-080-20261115T082738Z-cad13d57/plan.md
   started_at: "2026-11-15T08:27:40.885Z"
+  completed_at: "2026-11-15T08:38:30.363Z"
   agent: sonnet-executor
   execution: agent
   approach: condense
   targets:
     - ifx-file-agent-evidence
-  condense_records: []
+  condense_records:
+    - location: top-level format / schema.json.encoding / 各 files の format・encoding
+      category: repetition
+      action: retain
+      reason: ifx-file-rulebook が要求する項目であり、ファイル単位と連携全体で宣言する構造のため、削ると必須情報が欠ける。
+      cause:
+        type: document
+    - location: files[].description の agent 報告タグ説明と error_handling.missing / malformed
+      category: canonical-restatement
+      action: retain
+      reason: description は書き手と受け渡し契約を、error_handling は欠落・破損時の挙動を定義しており、役割が異なる。後者は QE のテスト設計入力として必要。
+      cause:
+        type: document
+    - location: transport.atomic_write と schema.references
+      category: repetition
+      action: retain
+      reason: atomic_write は書き込み方式の例外（初回は直接書き込み）を含み、references は files[].schema_ref の索引として別の役割を持つ。判断に要る制約なので削らない。
+      cause:
+        type: document
 ---
 
 # Condense Result
 
 ## 1. 実施内容
 
-_TODO_: 冗長さの整理内容と、内容・決定・完了条件の意味および必須情報を維持した確認結果を書く。変更不要の場合は根拠を書く。
+- 対象文書を5つの観点（繰り返し、表と本文の二重説明、図をなぞる文、不要な背景、正本の再掲）で確認した結果、削除または参照置換を行うと `ifx-file-rulebook` の必須項目や、失敗時の判断材料となる重要な情報を失うと判断し、すべての候補を `retain` としました。したがって、文書への変更は行いませんでした。
 
 ## 2. 変更ファイル
 
-_TODO_: 対象文書と変更内容を書く。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続への申し送りを書く。なければ「なし」。
+- 適用外の検証: `npm run lint:md`（対象ファイルを変更していないため。親 runner が実行する。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `vp-arc-conciseness` と宣言済み Kata の適用、意味の維持の根拠を書く。
+対象文書の冗長さを洗い出し、削る（`delete`）・まとめる（`merge`）・参照に置き換える（`reference`）のいずれかで整理を試みました。ただし、判断に必要な背景・制約・例外・完了条件などの必須情報を維持するため、冗長に見えながらも役割が異なる記述については `retain` として保持し、結果として変更なしとしました。
 
 ## 5. 修正・保持の記録
 
-frontmatter の `condense_records` と 1 対 1 に対応する表を記入する。場所は修正前の見出し・行・引用、種類は 5 種類、直し方は `delete` / `merge` / `reference` / `retain`、理由は意味を保った根拠または保持の必要性、原因は `FindingCause`。Kata が原因なら種類と根拠の箇所も示す。候補がなければ表の代わりに「なし」と記入する。
-
-_TODO_: 場所・種類・直し方・残した理由／意味の維持・原因の表。
+| 場所（修正前） | 種類 | 直し方 | 残した理由／意味の維持 | 原因 |
+| --- | --- | --- | --- | --- |
+| `top-level format / schema.json.encoding / 各 files の format・encoding` | `repetition` | `retain` | `ifx-file-rulebook が要求する項目であり、ファイル単位と連携全体で宣言する構造のため、削ると必須情報が欠ける。` | `document` |
+| `files[].description の agent 報告タグ説明と error_handling.missing / malformed` | `canonical-restatement` | `retain` | `description は書き手と受け渡し契約を、error_handling は欠落・破損時の挙動を定義しており、役割が異なる。後者は QE のテスト設計入力として必要。` | `document` |
+| `transport.atomic_write と schema.references` | `repetition` | `retain` | `atomic_write は書き込み方式の例外（初回は直接書き込み）を含み、references は files[].schema_ref の索引として別の役割を持つ。判断に要る制約なので削らない。` | `document` |
