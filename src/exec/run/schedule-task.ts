@@ -35,6 +35,7 @@ import {
 } from "../results.js";
 import { recordPathForRead, snapshotRunAttempt } from "../run-records.js";
 import { withProductRepoPrompt } from "../task-repos.js";
+import { branchOwnedRunRecordPaths } from "../trailing-records.js";
 import { type AgentStageRole } from "../types.js";
 import {
   assertCommitScope,
@@ -711,6 +712,17 @@ export async function runPreparedTask(
                 taskId: prepared.task.id,
                 message: mergeMessage,
                 releaseRootPaths: prepared.checkpointPaths,
+                // 失敗・延期の後の記帳 commit が root の作業コピーを先に統合ブランチへ入れている
+                // 場合、同じ run の記録は両側の追加として競合する。exec branch 側を最新とする。
+                resolveConflictsWithBranchPaths: [
+                  ...(prepared.checkpointPaths ?? []),
+                  ...branchOwnedRunRecordPaths({
+                    repoRoot,
+                    executionPath,
+                    branch: prepared.worktree.branch,
+                    taskId: prepared.task.id,
+                  }),
+                ],
                 failureLogPath: integrateLogPath(pipelineStatePath),
               }),
             record: (repo, patch) => recordRepoIntegration(pipelineStatePath, repo, patch),
