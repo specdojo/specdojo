@@ -4,9 +4,9 @@ document: specdojo:sysd-index-rulebook
 path: docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 96
-graded_at: "2026-11-15T02:11:20.014Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-15T10:42:29.342Z"
 graded_by: sol-review-executor
 content_hash: 0255234299cfb11073f95f1e5d9c2ff77e1f1b4b4eff89e38348d01e099efd51
 categories:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,24 +100,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 29
-    anchor: "- ID は対象範囲で一意な `sysd-index` 系とする。名前空間・配置は [[specdojo:id-and-file-naming-standard|ID・ファイル命名標準]] に従う。"
-    message: >-
-      The incorporated ID naming standard explicitly identifies `sysd-index` as a product document using an unqualified
-      local ID, but the declared `sysd-index-template.md` sets `frontmatter_template.specdojo.id` to
-      `_PROJECT_ID_:_LOCAL_ID_`; `src/catalog/generate.ts` expands this unchanged into a project-qualified ID. Change
-      the template ID to `_LOCAL_ID_` so generated system design indexes follow the rulebook's naming authority and can
-      be referenced consistently as product documents.
-    message_ja: >-
-      The incorporated ID naming standard explicitly identifies `sysd-index` as a product document using an unqualified
-      local ID, but the declared `sysd-index-template.md` sets `frontmatter_template.specdojo.id` to
-      `_PROJECT_ID_:_LOCAL_ID_`; `src/catalog/generate.ts` expands this unchanged into a project-qualified ID. Change
-      the template ID to `_LOCAL_ID_` so generated system design indexes follow the rulebook's naming authority and can
-      be referenced consistently as product documents.
+findings: []

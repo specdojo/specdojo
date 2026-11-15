@@ -2,9 +2,9 @@
 id: cnd-specdojo-grade-criteria
 document: cnd-specdojo
 path: docs/ja/product/030-architecture/010-c4/cnd-specdojo.md
-graded_at: "2026-11-15T02:42:06.152Z"
+graded_at: "2026-11-15T10:40:59.426Z"
 graded_by: sol-review-executor
-content_hash: d73bbeec5ee3e18e4073da37349c1934555886d2f7f7003d6463015defa8f464
+content_hash: 84c7e3c0cab91b37791cc4475f61f6898444a8efce4753811fe3e18933b72933
 summary:
   satisfied: 4
   unsatisfied: 1
@@ -23,8 +23,8 @@ criteria:
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
     reason: >-
-      The body does not establish the deployment baseline and assumption disposition that PO can approve while build
-      ownership and delivery choices remain unresolved.
+      The body does not establish the complete container and deployment baseline for approval or the downstream
+      activities permitted and withheld under the accepted reservations.
   - id: DC-003
     text: インフラ設計・デプロイ構成の入力として参照できること
     roles:
