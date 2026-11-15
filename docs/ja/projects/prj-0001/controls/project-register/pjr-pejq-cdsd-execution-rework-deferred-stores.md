@@ -55,6 +55,15 @@ specdojo:
 - 決めた点 4: routine 実行状態の物理名は日本語の業務名へ置き換え、`physicalName` 列は足さなかった。
 - 残課題: 業務データ辞書 7 件（`bdd-exec-event` ほか）が未作成で、項目の業務的な意味はまだ確定していない。辞書ができたら BA・ARC が本書と照合する（本書の「確認事項と変更影響」で追跡）。`grade run --target deliverable` による grade のやり直しは agent CLI を起動するため、人が行い、結果をここへ書き足す。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、90 点（前回は 65 点・指摘 24 件）。指摘は 6 件（major 2・minor 4）。
+- 完了条件の判定は 3 件中 3 件を満たす（すべて満たす）。
+- major の指摘:
+  - F005（vp-qe-omissions-consistency）: Reconcile this append-only recovery instruction with line 49's rejection of every malformed event: adding a corrective transition leaves the malformed file present, so validation and reconstruction still fail; distinguish valid-but-incorrect events from malformed files and define an approved recovery reference or an explicit unresolved recovery gate.
+  - F006（vp-ops-operability）: Replace the malformed-event recovery route with an approved procedure or explicit escalation-and-hold condition: src/exec/core.ts loadValidatedExecState rejects validation failures before state-changing commands can proceed, and src/exec/events.ts readAllEventFiles continues rejecting the original malformed file even after another event is appended.
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]

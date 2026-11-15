@@ -59,6 +59,16 @@ bds-progress-report を最新の grade の指摘で直す
 - 留保（判断点は T-KATA-WAVE-2-bds-progress-report-140）: 「定期起動の有効化」「ファイル名と期間」「統合前の確認」「記録欠落時の停止」「登録簿の状態変化の配置」は PM が判断点までに登録簿へ起票して追跡する（未起票）。
 - 再 grade: executor の段では `grade run --target deliverable` を実行していない（agent の起動を伴うため人が実行する）。結果は再 grade 後に追記する。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、85 点（前回は 85 点・指摘 16 件）。指摘は 14 件（major 3・minor 11）。
+- 完了条件の判定は 3 件中 3 件を満たす（すべて満たす）。
+- major の指摘:
+  - F005（vp-arc-cross-document-consistency）: Reconcile the promised post-cutoff update with src/job/job.ts:503 and src/exec/run/job.ts:896, which skip an already succeeded Run with the same period-based identity; document the required implementation change or a supported update mechanism.
+  - F006（vp-dev-implementation-readiness）: Specify how a successful early Job Run can be intentionally executed again after the cutoff while preserving one report per period; the current runner skips completed Runs, so the stated update workflow cannot be implemented from these instructions alone.
+  - F014（vp-ops-operability）: Provide a supported operator procedure for replacing a successfully generated early report after the cutoff; repeating exec run with the same period currently returns “Job Run already complete” without updating the report.
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]

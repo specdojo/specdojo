@@ -59,6 +59,14 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
 - 再 grade: executor では `grade run --target deliverable` を実行していない（agent CLI の起動を要するため）。runner または人が実行し、結果をここへ追記する。
 - 残課題: 再 grade の実行と結果の記入、140 での status の確定。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、91 点（前回は 86 点・指摘 10 件）。指摘は 6 件（major 1・minor 5）。
+- 完了条件の判定は 4 件中 4 件を満たす（すべて満たす）。
+- major の指摘:
+  - F004（vp-qe-verifiability）: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]

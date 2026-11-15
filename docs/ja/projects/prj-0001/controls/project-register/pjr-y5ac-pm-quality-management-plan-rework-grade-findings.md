@@ -57,6 +57,17 @@ pm-quality-management-plan を最新の grade の指摘で直す
   - RACI の「成果物・品質ゲートの確認」が確認の責任だけを表し、ゲートの GO 判断は `PO` であることが RACI 側でも読めるかを確かめる。
   - 人が `grade run --target deliverable` で grade し直し、結果をここに追記する（executor の sandbox からは実行できないため未実施）。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、93 点（前回は 75 点・指摘 19 件）。指摘は 5 件（major 4・minor 1）。
+- 完了条件の判定は 3 件中 2 件を満たす（未達: DC-003）。
+- major の指摘:
+  - F002（vp-qe-done-criteria）: Complete or reference the approved trial evidence format and post-release verification procedure before declaring DC-003 satisfied; the current table explicitly leaves these procedures undecided, so their required records and execution cannot yet be verified.
+  - F003（vp-qe-verifiability）: 具体的な試行証跡の形式と公開後価値の確認手順が未決であり、誰が何をどの順序で確認すればレビューを通過できるかを再現可能に判定できない。
+  - F004（vp-qe-verifiability）: Define re-evaluation conditions for failed SC-04–SC-06 using the post-release value gate and their applicable observation periods; the current value-nonconformity row requires the representative-trial gate, which checks SC-01–SC-03 and AC-01 and therefore cannot establish recovery of post-release failures.
+  - F005（vp-ops-operability）: Extend the operational corrective workflow to post-release value failures by assigning preparation of corrective evidence, its record location, and QE/PO re-evaluation at the affected SC-04–SC-06 checkpoint; returning every value failure to the representative-trial gate leaves the plan's later operating period without an applicable recovery workflow.
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-quality-management-plan.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]

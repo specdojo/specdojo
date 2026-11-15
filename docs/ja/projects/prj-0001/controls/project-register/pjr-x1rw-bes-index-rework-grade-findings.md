@@ -54,6 +54,14 @@ specdojo:
 - 迷った点と決めた内容: 成果物カタログの概要が 10 領域と記す件は、PO が承認した 14 領域を正として本書に論点を残し、カタログは本タスクの対象外なので直していない。QE の確認と事実データとデータモデルの照合は executor が代わりに済ませたことにせず、論点として残した。`status` は `draft` のまま。
 - 残課題: `dct-business-model-bes.yaml` の `bes-index` の概要とコメントを 14 領域に直す。QE が「網羅の確認」を確かめる。`bes-task-ready-selected` の「上位の一覧は未作成」の記述と双方向の参照を直す。`grade run --target deliverable` での grade のやり直しは runner の段で行う。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、94 点（前回は 86 点・指摘 12 件）。指摘は 4 件（major 1・minor 3）。
+- 完了条件の判定は 4 件中 2 件を満たす（未達: DC-003・DC-004）。
+- major の指摘:
+  - F004（vp-qe-done-criteria）: Add review evidence confirming the source-domain mapping, PO scope approval, and QE coverage check before marking the declared completion conditions met.
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bes-index.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]

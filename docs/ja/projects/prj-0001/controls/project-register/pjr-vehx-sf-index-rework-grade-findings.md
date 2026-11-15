@@ -64,6 +64,21 @@ specdojo:
 - `ORCH` の代表の BPS をカタログの `depends_on` に加えるか対象外とするかを PO が決める（PJR は未起票。PM が起票する）。
 - 再 grade（`grade run --target deliverable`）は runner または人が実行する。BPS 本文との照合（`Q-01`・`Q-03`）は PJR-AK5V の留保として残る。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、80 点（前回は 75 点・指摘 18 件）。指摘は 10 件（major 8・minor 2）。
+- 完了条件の判定は 5 件中 1 件を満たす（未達: DC-001・DC-002・DC-004・DC-005）。
+- major の指摘:
+  - F001（vp-pm-plan-feasibility）: Break the BPS and CLI mapping review into trackable work with an owner, completion condition, and decision timing so PM can schedule and monitor it.
+  - F004（vp-ba-requirements-completeness）: The provisional BPS mappings and missing catalog dependencies prevent BA from confirming that the function list covers the agreed business scope; complete the source mapping or define and justify the representative-source policy.
+  - F005（vp-arc-cross-document-consistency）: Reconcile the P-05 assignment with `prj-0001:dct-business-model-bps`, which defines P-05 as producing a periodic-execution definition, and `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md` sections 3.1–3.2, which place definition in P-05 and Job Run materialization and execution in the shared execution cycle; SF-ROUT-01 describes dispatch instead of definition handling, while SF-ROUT-02 assigns execution to P-05 on the assumption that no execution area exists.
+  - F006（vp-arc-cross-document-consistency）: Reconcile SF-ORCH-01 with `prj-0001:dct-business-model-bps`, whose P-14 source covers operation-request determination, conflict checking, PDCA request issuance, and execution-state tracking; the current row and its test target cover only provider launch and repository permissions, leaving those business responsibilities without an explicit function assignment or justified exclusion.
+  - F007（vp-dev-implementation-readiness）: Assign routine-definition validation and recording, plus automatic PDCA request issuance, conflict checking, and execution-state tracking, to explicit function boundaries or justify their exclusion; the current dispatch and provider-launch summaries do not let DEV determine the implementation scope of P-05 and P-14.
+  - F008（vp-qe-done-criteria）: Provide evidence that every business-process area is mapped to the agreed scope and test targets, resolving the dependency gap recorded in `Q-02` before claiming coverage.
+  - F009（vp-qe-omissions-consistency）: Resolve the missing BPS dependencies and provide a traceable check that the function list is covered by test targets, so omissions can be detected.
+  - F010（vp-qe-config-validity）: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/sf-index.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]

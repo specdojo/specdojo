@@ -71,6 +71,14 @@ specdojo:
 - 直した後の `grade run --target deliverable` は executor の sandbox では実行していない。runner または orchestrator が grade し直し、結果をここに追記する。
 - 上流 `bdd-exec-state`・`bdd-exec-event` との照合（BA）と、権限の規則の承認（PO、140）は本文の留保のとおり。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、92 点（前回は 79 点・指摘 16 件）。指摘は 7 件（major 1・minor 6）。
+- 完了条件の判定は 5 件中 5 件を満たす（すべて満たす）。
+- major の指摘:
+  - F007（vp-qe-config-validity）: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.stsd-task-execution.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]

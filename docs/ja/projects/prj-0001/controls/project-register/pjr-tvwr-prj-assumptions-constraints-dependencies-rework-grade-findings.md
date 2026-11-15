@@ -59,6 +59,14 @@ prj-assumptions-constraints-dependencies を最新の grade の指摘で直す
   - 個票本文（`PJR-0120`・`PJR-0121`）は宣言された参照範囲の外なので読んでいない。決定内容は grade の指摘と既存の記述に従った。
 - 残課題: `grade run --target deliverable` での grade のやり直しは agent の sandbox では実行できない（agent CLI と利用枠を使う）ため、まだ実行していない。人またはオーケストレーターが実行し、結果をここに書く。
 
+再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable` で実行）:
+
+- 判定は needs-work、88 点（前回は 70 点・指摘 24 件）。指摘は 9 件（major 1・minor 8）。
+- 完了条件の判定は 4 件中 4 件を満たす（すべて満たす）。
+- major の指摘:
+  - F009（vp-qe-config-validity）: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+- 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-assumptions-constraints-dependencies.yaml`。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-tn43-user-decisions-pending]]
