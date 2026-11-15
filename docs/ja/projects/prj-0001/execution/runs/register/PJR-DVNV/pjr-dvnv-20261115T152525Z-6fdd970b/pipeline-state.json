@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-DVNV",
   "run_id": "pjr-dvnv-20261115T152525Z-6fdd970b",
-  "updated_at": "2026-11-15T16:16:30.131Z",
+  "updated_at": "2026-11-15T16:16:50.545Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DVNV/pjr-dvnv-20261115T152525Z-6fdd970b/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-15T16:16:30.131Z",
-      "completed_at": null,
+      "completed_at": "2026-11-15T16:16:50.545Z",
       "artifact_ref": null
     }
   },
