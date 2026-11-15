@@ -92,3 +92,16 @@
       from: "parent validation failed: validate-schema"
       to: "-"
   previous_event_id: reg_22ab15baa48648e09418b726cd3dc9da
+- v: 1
+  id: reg_706dada2b26c4328b4e46bd925d0f89b
+  ts: "2026-11-15T15:52:37Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ca258d4e8dda41289d4a21f53f7577be
