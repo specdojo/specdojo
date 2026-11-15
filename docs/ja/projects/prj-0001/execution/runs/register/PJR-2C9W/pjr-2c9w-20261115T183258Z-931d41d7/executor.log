@@ -1,0 +1,31 @@
+`stsd-task-execution` を手直ししました。権限と引き継ぎ、同じ時刻の記録の再生の順序を、PJR-M495・T4G3 で統合済みの実装に合わせて定めています。ただし、直した後の `grade run --target deliverable` は実行していないため、個票の完了条件はまだ一つ残っています。
+
+**対象成果物（`stsd-task-execution.md`）**
+- **担当アクターの定義:** 「状態の判定」で、担当アクターを claim の持ち主とし、最新の記録者とは分けました。
+  - `claim` の記録者が担当アクターになります。
+  - `note`・`link`・`estimate`・`block`（人による強制の中断を含む）と、引き取りを指定しない `unblock` では変わりません。
+  - 人が引き取りを指定した `unblock` のときだけ、記録者へ移ります。
+  - `todo`・`done`・`cancelled` になると担当アクターはなくなります。
+- **同じ時刻の再生の順序:** 種類の既定順 → 記録ファイルのパス順で並べ、そこから今の状態で成立する記録を先頭から順に選ぶ規則を、業務の言葉で書きました。
+- **操作権限:** `T-06`・`T-07`（`T-09`〜`T-12` も同じ）は、担当アクターとの照合で判定すると明記しました。
+  - 自動の実行では、runner は自分が着手・再開した実行に限り、段を進めた agent が違っても担当アクターとして完了・中断を記録します。中断の記録には両方のアクターを残します。
+  - `T-05`・`T-08` の補足もこれに合わせました。
+- **互換の扱い:** 過去のイベントにも同じ規則を当てます。担当アクターを持たない旧形式の集約状態は、最新の記録者で読みます。
+- **「今後の検討メモ」を復元:** 次の 2 件を、期限と追跡先のある留保として残しました。
+  - `_TODO_`: 上流の `bdd-exec-state`・`bdd-exec-event` が作られたら、BA が状態名・イベント名を照合する。
+  - `_UNDECIDED_`: この権限の規則を業務として承認するかは、PO が 140 で決める（追跡先は PJR-TN43）。
+- `status` は `draft` のままです。
+
+**個票（`pjr-2c9w-...md`）**
+- 対応結果に、実施内容・決めたこと・残課題を書きました。
+
+**本文に足さなかった指摘**
+- F011（検証手順への案内）と、F008・F015 のうち実装の関数への案内です。rulebook は STSD に検証手順の章を求めず、関数を業務の記述として載せることも禁じているためです。並びの規則そのものは本文に書きました。
+
+**検証**
+- `npm run validate:catalog` は OK でした（WARN は他の文書がまだ無いことによるもので、今回の変更とは関係ありません）。`npm run validate:history-links` は exit 0、変更した 2 ファイルの markdownlint は 0 件です。
+- `lint:md`・`lint:fm`・`validate:schema` などは親 runner が実行するので、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stsd-task-execution に、担当アクター（claim の持ち主）の決まり方・保たれ方・移り方、それに基づく操作権限、同じ時刻の記録の再生の順序を定めた（PJR-M495・T4G3 の実装に合わせた）。互換の扱いと「今後の検討メモ」（上流辞書との照合、PO による承認）も足した。個票の対応結果も書いた。status は draft のまま。直した後の grade はやり直していない。","handoff":["決めたこと: 権限は最新の記録者ではなく claim の持ち主（担当アクター）にあるとした。`note`・`link`・`estimate`・`block`、引き取りを指定しない `unblock` では担当アクターは変わらず、人が引き取りを指定した `unblock` だけで移る。根拠は PJR-M495・T4G3 で統合済みの現在の動作。","決めたこと: 同じ時刻の記録の選択の補助には、直前の記録者を使い続ける。PJR-M495 が、既存の順序づけへの影響を避けるために変えなかったため。","本文に足さなかった指摘: F011（検証手順への案内）と、F008・F015 のうち実装の関数への案内。rulebook は STSD に検証手順の章を求めず、関数を業務の記述として載せることも禁じているため。並びの規則は業務の言葉で本文に書いた。","次の作業: `grade run --target deliverable` で grade をやり直し、結果を PJR-2C9W の対応結果に追記する（executor では実行していない）。","留保: 上流の `bdd-exec-state`・`bdd-exec-event` との照合は、両辞書の作成時に BA が行う。権限の規則の業務承認は、PO が 140 で行う（追跡先は PJR-TN43）。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml. WARN は他の未作成文書の based_on によるもので、今回の変更とは関係ない"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を変更したため実行。exit 0"},{"command":"npx markdownlint-cli2 <changed md files>","status":"passed","summary":"変更した 2 ファイルで 0 issues"}]}
+</specdojo_executor_evidence>

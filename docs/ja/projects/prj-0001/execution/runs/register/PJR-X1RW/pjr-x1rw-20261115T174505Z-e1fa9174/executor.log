@@ -1,0 +1,24 @@
+`bes-index` の手直しは終わりました。ただし、カタログの完了条件をすべて満たしたとはまだ言えません。QE による確認とカタログ側の修正が残っており、どちらもこのタスクの範囲外なので論点として本文に残しています。grade のやり直しもまだです。`status` は `draft` のままです。
+
+**変更したファイル**
+- `docs/ja/product/010-business-specs/030-business-model/bes-index.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-x1rw-bes-index-rework-grade-findings.md`（個票の対応結果）
+
+**主な変更**
+- **「網羅の確認」章を新設**: 16 行それぞれについて、不成立の典型・境界として確かめる点・詳細化との対応の確かめ方・照合の結果を表にしました。照合に使った `cdfd-overview` の版（2026-11-03、`dbe099f29`）と結果も書いています。14 領域すべてに 1 行以上が対応し、概念データフロー図にない行はありません。イベント ID 16 件は形式違反・重複ともに 0 件です。照合は ARC の立場で行っており、QE の確認はまだです（F003, F009, F010）。
+- **仮置きの対応のテスト観点**: `bes-routine-due` と `P-14` の対応について、テストでどう確かめるかを書きました。
+- **発生時点と回数の違い**: `bes-task-execution-requested` は指示 1 回につき 1 回発生します。`bes-task-ready-selected` は対象の確定 1 件ごとに発生し、候補がなければ発生しません。この違いを「個別仕様への詳細化」に書き、互いを置き換えて数えないよう注記しました（F005）。
+- **留保の承認を 1 か所に集約**: 4 か所に繰り返していた人間の PO の承認（2026-11-15、追跡先 PJR-AK5V）を「未決事項と承認条件」の冒頭にまとめました。各論点には「留保」と記し、内容・担当・時期は残しています。PM による追跡と、確定の段の前に進捗を確かめる時点も足しました（F002, F007）。
+- **論点を 3 つ追加**: 「詳細化の対応」、「成果物カタログとの範囲の差」（カタログ側は 10 領域と記載）、「QE による網羅の確認」です（F004, F008）。
+- **結びの文を書き直し**: 済んだ承認と、残る前提（カタログとの範囲の差、QE の確認、人間の確定）に分けました（F001, F011）。
+- **担当と契機**: 一覧を更新する担当と契機を足しました（F012）。事実データはデータモデルと照合するまで設計の確定入力にしない、と明記しました（F006）。
+
+**検証**
+- `npm run validate:catalog`: 通過（既存の WARN のみ）
+- `npm run validate:history-links`: 通過
+- Prettier: 対象 2 ファイルを整形し、check 通過
+- `lint:md`・`lint:fm` などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bes-index に「網羅の確認」章（16 行ごとの不成立の典型・境界・詳細化の対応・照合の結果と、照合した CDFD の版）を足した。留保の承認を 1 か所に集約し、個別 BES との発生時点・回数の違い、カタログの範囲の差、QE 確認の論点を足し、結びの条件を書き直した。status は draft のまま。個票の対応結果も記入した。","handoff":["成果物カタログ `dct-business-model-bes.yaml` の `bes-index` の `overview` とコメントが 10 領域と記しており、PO が承認した 14 領域と食い違っている。カタログは本タスクの対象外のため直していない。BA がカタログを 14 領域に直す必要がある。","QE による「網羅の確認」の確認と、事実データとデータモデルの照合（PJR-AK5V）は、executor が代わりに済ませたことにせず、bes-index の「未決事項と承認条件」に論点として残した。","`bes-task-ready-selected` の本文には上位の一覧が「未作成」と書かれたままで、一覧からの双方向の参照も未設定。別タスクで ARC が直す必要がある。","迷った点: 新しい章の位置は rulebook の「検証と引き渡し」に沿って、詳細化の章と未決事項の章の間にした。PM による留保の追跡の担当は、rulebook の「追加・変更・廃止の管理」にある PM が PJR で追跡するという規定に基づいて書いた。","個票の完了条件にある `grade run --target deliverable` での grade のやり直しは、後続の runner の段で人が実行する必要がある。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK（既存の based_on 未作成の WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含め違反なし"},{"command":"npx prettier --check docs/ja/product/010-business-specs/030-business-model/bes-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-x1rw-bes-index-rework-grade-findings.md","status":"passed","summary":"整形後、全ファイルが Prettier のスタイルに適合"},{"command":"specdojo grade run --target deliverable","status":"requires_human","summary":"agent の利用枠を消費する grade のやり直しは sandbox 外で実行が必要"}]}
+</specdojo_executor_evidence>

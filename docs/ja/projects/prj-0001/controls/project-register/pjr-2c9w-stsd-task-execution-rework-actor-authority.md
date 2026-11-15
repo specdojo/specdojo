@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: ARC
@@ -51,7 +51,25 @@ specdojo:
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- [[prj-0001:stsd-task-execution]] の「状態の判定」に、担当アクター（claim の持ち主）を最新イベントの記録者と分けて定義した。`claim` で決まり、`note`・`link`・`estimate`・`block`・引き取りを指定しない `unblock` では変わらず、人間が引き取りを指定した `unblock` だけで移り、`todo`・`done`・`cancelled` でなくなる（PJR-M495 の `claimed_by`）。
+- 同じ時刻の記録の再生の順序を、種類の既定順、記録ファイルのパス順、状態から成立する記録の順の選択として定めた（実装の `readAllEventFiles`・`orderSameTimestampEventsByState`）。
+- 「状態遷移」の共通条件で、`T-06`・`T-07`（`T-09`〜`T-12` も同じ）の操作権限を担当アクターとの照合に定め、runner が段のアクターに依らず担当アクターとして完了・中断を記録し、中断に両方のアクターを残すことを書いた（PJR-T4G3）。`T-05`・`T-08` の補足を合わせた。
+- 互換の扱いに、過去のイベントにも同じ規則を当てること、担当アクターを持たない旧形式の集約状態は最新の記録者で読むことを足した。
+- 「今後の検討メモ」を復元し、上流辞書との照合（BA、辞書の作成時）と、権限の規則の業務承認（PO、140）を留保として残した。
+
+### 5.2. 決めたこと
+
+- 権限は最新の記録者ではなく claim の持ち主にあるとした。PJR-M495・T4G3 で統合済みの実装の現在動作であり、補足の記録や人の再開で権限が移る不具合を直した結果のため。
+- 同時刻の並びの選択の補助は直前の記録者のままとした。PJR-M495 が既存の順序づけへの影響を避けて変えなかったため。
+- grade の指摘のうち、検証手順の参照（F011）と実装関数への案内（F008・F015 の一部）は本文へ足さなかった。rulebook は STSD に検証手順の章を求めず、関数を業務の記述として載せることを禁じるため。並びの規則は業務の言葉で本文に書いた。
+- 成果物の `status` は `draft` のまま据え置いた。
+
+### 5.3. 残課題
+
+- 直した後の `grade run --target deliverable` は executor の sandbox では実行していない。runner または orchestrator が grade し直し、結果をここに追記する。
+- 上流 `bdd-exec-state`・`bdd-exec-event` との照合（BA）と、権限の規則の承認（PO、140）は本文の留保のとおり。
 
 ## 6. 関連ドキュメント
 
