@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   registered_at: "2026-11-13T14:08:00Z"
+  completed_at: "2026-11-15T23:24:06Z"
+  conclusion: 型の review の段で型一式を grade する処理（src/exec/review-kata.ts）があり、PJR-X05N で strategy の探し方を直して kata-wave-2 で流れるようにした
 ---
 
 # PJR-ZZVE 型の schedule の review の段が、型ではなく代表の文書を grade する

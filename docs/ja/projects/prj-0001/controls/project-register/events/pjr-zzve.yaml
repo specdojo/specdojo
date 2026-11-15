@@ -35,3 +35,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_03c8b57747174589971c9e700b95ee52
+  ts: "2026-11-15T23:24:06Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 型の review の段で型一式を grade する処理（src/exec/review-kata.ts）があり、PJR-X05N で strategy の探し方を直して kata-wave-2 で流れるようにした
+  previous_event_id: reg_19594e2d765d4c1a96657c3dc2ca1751
