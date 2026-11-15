@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JFRX",
+  "run_id": "pjr-jfrx-20261115T165136Z-2ce5ab63",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T17:03:03.121Z",
+    "completed_at": "2026-11-15T17:08:14.140Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jfrx.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jfrx-bds-progress-report-rework-wave-2.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jfrx-bds-progress-report-rework-wave-2.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../bds-progress-report.md                         | 65 +++++++++++-----------\n .../pjr-jfrx-bds-progress-report-rework-wave-2.md  | 11 +++-\n 2 files changed, 44 insertions(+), 32 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "exit 0（他の成果物の based_on 未作成の WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "exit 0（変更した個票を含め valid）"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "grade run --target deliverable",
+      "status": "requires_human",
+      "summary": "agent を起動して再 grade し、結果を個票の「対応結果」に追記する"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5003 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5003 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JFRX/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JFRX/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JFRX\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-eVNDs8/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-r4k3Vy/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-vwnoiB/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-mR5IjW/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "bds-progress-report を grade の指摘 F001〜F016 で手直しした。報告期間を前週金曜17時〜当週金曜17時（Asia/Tokyo、終点を含まない）に決め、表示項目・算出ルール・例外を合わせた。未決の目印は本文の決定か、判断点を 140 とする留保（登録簿で追跡）に置き換えた。status は draft のまま。個票の「対応結果」に、決めた内容と理由を記入した。",
+  "completion_status": "complete",
+  "handoff": [
+    "期間の終わりの境界は executor が決めた: 期間は前週金曜 17 時から当週金曜 17 時（`Asia/Tokyo`）で、始点を含み終点を含まず、名前は起動予定時刻が属する ISO 週とする。理由は、作成時点で期間内の記録が揃い、各記録が 1 件の報告にだけ入り、作成後に補う必要がないため。PO が T-KATA-WAVE-2-bds-progress-report-140 でこの範囲を承認するかを判断する。",
+    "ファイル名と期間の案（日付に当週金曜を使い、再出力は連番を増やさず同じファイルを更新する）は、正本である進捗報告の rulebook への反映が要る。PM が 140 までに採否を決める。",
+    "統合前の確認の案（Job の `task.review` で統合前 review を宣言する）は `job-weekly-report.yaml` への反映が要る。ARC が経路を確認し、定期起動の有効化の前に PM が要否を決める。",
+    "「定期起動の有効化」「ファイル名と期間」「統合前の確認」「記録欠落時の停止」「登録簿の状態変化の配置」の 5 件は、PM が 140 までに登録簿へ起票して追跡する（未起票）。",
+    "個票の完了条件にある `grade run --target deliverable` での再 grade は、agent の起動を伴うため executor の段では実行していない。人が再 grade し、結果を個票の「対応結果」に追記する必要がある。",
+    "削除・統合の判断: 「期間の終点」の行は決めたため削除した。「出力の時期と契機」の `enabled: false` の `_ASSUMPTION_` は「定期起動の有効化」の行と重複するため、参照に置き換えた。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JFRX/pjr-jfrx-20261115T165136Z-2ce5ab63/executor.log",
+      "bytes": 6268,
+      "truncated": false
+    }
+  ]
+}
