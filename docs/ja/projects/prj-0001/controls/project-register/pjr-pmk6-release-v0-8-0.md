@@ -52,6 +52,7 @@ specdojo:
 - 型を最新にする: wave-2 の sample の手直し（PJR-D948・C6BA・KV37）、型を確定するための成果物の手直し（wave-2 の JFRX・3HXQ・6XWP・W63Q、wave-1 の VEHX・X1RW・Q9DF）と 140 の確定、template の id の直し（PJR-8ZX8）、ifx-index の schema の名前の変更（PJR-SBNB）
 - 0.8.0 に入れないもの: project-kata の手直し（PJR-Y5AC・Y5XH・TVWR・CPZH）、stsd・cdsd の手直し（PJR-2C9W・PEJQ）、ifx-index の閲覧ページ（PJR-QJ41）。どれも配る型を変えない
 - review で止まっている項目（PJR-B0B8 など）は、リリースの時点で close 済みなら含める
+- 2026-11-16 の追加（利用者がリリースの夜までに入れた方がよい todo の選定と実行を orchestrator に依頼）: 道具の直し PJR-1ZQK（plan だけの run の記録と push の前の検査）・YYDS（grade の finding を最初から日本語で書かせる）・N6GK（作業内容の表を実績に合わせる）と、配る型の次の回 PJR-D948・C6BA・KV37・T123 を入れる。PJR-1Y1M は commit の許可リストの方針が未決のため入れない。成果物の手直しの次の回（VEHX・X1RW・JFRX・6XWP など）は配る型を変えないため 0.8.0 の後に回す
 - 手順は pm-orchestrator-playbook の「リリースの手順」に従う。push・PR の merge・タグ・npm の公開の承認は利用者が行う
 
 ## 3. 完了条件
