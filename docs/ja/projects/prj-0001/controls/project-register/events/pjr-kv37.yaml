@@ -50,3 +50,16 @@
     - field: commit_scope
       from: ""
       to: kata
+- v: 1
+  id: reg_7e4d74e4d04f4323b228ad4e2005f8b9
+  ts: "2026-11-15T16:56:45Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1ec5be370ba04178ad4ae874ebe7846f
