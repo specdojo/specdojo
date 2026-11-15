@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-v2gh-strategy-generate-keep-modeline
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-15T10:47:27Z"
+  completed_at: "2026-11-15T16:47:26Z"
+  conclusion: 0.8.0 の第 1 段で直した（schedule strategy generate が schema の modeline を落とさないようにする）。親の検証をすべて通って統合済み
   commit_type: fix
   commit_scope: schedule
 ---
