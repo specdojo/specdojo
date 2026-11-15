@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-y5xh-pm-raci-rework-grade-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:27Z"
+  completed_at: "2026-11-15T22:23:48Z"
+  conclusion: pm-raci を手直しし、再 grade で pass（95 点、前回は needs-work 71 点）
   commit_type: docs
   commit_scope: pm
   approach: fully-guided

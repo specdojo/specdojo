@@ -108,3 +108,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_45a956035915422da3e78fb4ba321d55
+- v: 1
+  id: reg_23dc38b7b81945eab1b0e3c4711318cc
+  ts: "2026-11-15T22:23:48Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: pm-raci を手直しし、再 grade で pass（95 点、前回は needs-work 71 点）
+  previous_event_id: reg_8f0a05c4bb174e62b088f66fefc3ebeb
