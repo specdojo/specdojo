@@ -1,0 +1,30 @@
+`bds-sample.md` を、2026-11-16 の再 grade で出た指摘 F001〜F007（major 6 件・minor 1 件）に沿って直しました。rulebook は変えておらず、駄菓子屋の文脈と frontmatter の `status` もそのままです。再 grade（`grade run --target kata`）はまだ流していないので、sample が pass になるかは分かっていません。
+
+変更したファイル:
+
+- `docs/ja/specdojo/samples/bds-sample.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-d948-bds-sample-rework-wave-2.md`（個票）
+
+指摘ごとの直し方:
+
+- **F001（受入の判断）**: 業務イベントの境界を確かめるまで全面受入はしない、と書きました。PO は確定の判断のときに「保留」か「限定受入」を選び、登録簿に記録します。限定受入で使えるのは販売数と営業日数だけで、欠品回数と補充候補は参考表示です。全面受入へ戻す条件も書きました。
+- **F002（前週の報告）**: 2 回目以降の週で前週の報告がない・読めないときは、前週比を「比較不可」と表示し、0 とはみなさないことにしました。例外の表にこの場合の行を足しました。
+- **F003（締めの版）**: 営業日は PO が確定した締めの版で数え、販売件数はその版が参照する日次販売集計と照合します。締め案しかない日は「締め未確定」とします。日ごとに使った版を示す表示項目「参照した締めの版」（No 10）を足しました。
+- **F004（再出力の影響）**: ある週を作り直したら、作成済みの翌週も作り直すことにしました。変更要求の行では、QE が翌週の前週比を確かめると書きました。
+- **F005（対象週の確かめ方）**: 出力を求めた週の月曜・日曜（日本時間）と一致するかで確かめる方法に変えました。販売のない週でも確かめられます。
+- **F006（販売数 0 の扱い）**: 販売件数が合わない日がある週は、販売数に「不完全」を付けます。販売記録がない商品は 0 ではなく「不明」と表示します。欠品だけの商品を販売数 0 で載せるのは、締めの販売件数がすべて 0 の週に限りました。
+- **F007（休業週の表示）**: 「休業週」は、締め案を含む締め記録も販売記録もない週だけにしました。確定した締めがない週は「締め未確定」として分けました。
+
+迷って決めたことは 3 点です。
+
+- **対象週の「元にする記録」**: 対象期間は記録からは決まらないので、「出力の契機（対象期間）」と書きました。表示項目の元にする記録は記録名で書くよう rulebook にあるため、再 grade で指摘される可能性があります。
+- **作り直す範囲**: ある週を作り直しても翌週の販売数は変わらないので、作り直すのは翌週の 1 件だけにしました。
+- **販売数が合わない週**: 数を消すと仕入れ判断の手がかりがなくなるので、記録にある分の合計に「不完全」を付けて残し、前週比は「比較不可」にしました。
+
+個票は、作業内容の No 3 を done にし、No 4（再 grade）は orchestrator が流すため open のまま残しました。対応結果に今回の作業内容、迷った点、残課題を追記してあります。
+
+検査: 2 ファイルとも Prettier と markdownlint で問題なく、`npm run validate:history-links` と `npm run validate:catalog` も通りました。`npm run validate:catalog` は `bds-index` などの参照先が見つからないという警告を出しましたが、今回の変更とは関係なく、終了コードは 0 です。`lint:md`・`lint:fm`・`validate:schema` は親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bds-sample を 2026-11-16 の再 grade の F001〜F007 で直し、個票の作業内容の表と対応結果を更新した。再 grade（No 4）は orchestrator が流すため open のまま残した。","handoff":["再 grade（`grade run --target kata`）は実際の agent CLI を起動するため executor では実行していない。orchestrator が流し、結果を個票 PJR-D948 の対応結果と作業内容 No 4 に書く。","迷った点と決めた内容: 対象週の『元にする記録』は記録から決まらないため『出力の契機（対象期間）』と書いた。表示項目の元にする記録は記録名で書くよう rulebook にあるため、再 grade で指摘されるかもしれない。","迷った点と決めた内容: 週 W を再出力したときは翌週の 1 件だけを再出力する。W+1 の販売数は変わらないため、2 週先からは作り直さない。","迷った点と決めた内容: 販売件数が合わない週は、記録にある分の販売数の合計に『不完全』を付けて残し、販売記録がない商品は『不明』、前週比は『比較不可』とした。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bds-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-d948-bds-sample-rework-wave-2.md","status":"passed","summary":"2 ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/bds-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-d948-bds-sample-rework-wave-2.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含めて違反なし（終了コード 0）"},{"command":"npm run validate:catalog","status":"passed","summary":"OK。既存の based_on の参照先が見つからない警告（bds-index・clis-index）のみで、今回の変更とは関係ない"}]}
+</specdojo_executor_evidence>
