@@ -67,6 +67,7 @@ import {
   repoRelativePath,
   spawnBlock,
   spawnComplete,
+  stageActorMeta,
 } from "./mode-shared.js";
 import {
   downgradeUnfilledResult,
@@ -510,6 +511,9 @@ export async function runPreparedTask(
     }
   }
 
+  const failedStageActor = (): string =>
+    pipelineFailureStage === "reporter" ? (reporterActor ?? prepared.actor) : prepared.actor;
+
   const finalize = async (): Promise<RunResult> => {
     if (result === "success" && worktreeResultPath) {
       enforceScheduleKataReview({
@@ -545,7 +549,7 @@ export async function runPreparedTask(
       const completionPreflight = readCompletionPreflight(
         schedulePath,
         prepared.task.id,
-        prepared.actor,
+        prepared.claimActor,
       );
       if (!completionPreflight.ok) {
         const reason = `completion preflight failed: ${completionPreflight.reason ?? "unknown reason"}`;
@@ -723,20 +727,17 @@ export async function runPreparedTask(
           }));
           if (worktreeResultPath)
             await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-          spawnBlock(
-            projectId,
-            prepared.task.id,
-            prepared.actor,
-            reason,
-            pipelineStateRef
+          spawnBlock(projectId, prepared.task.id, prepared.claimActor, reason, {
+            ...(pipelineStateRef
               ? pipelineRecoveryMeta({
                   stage: "integrate",
                   evidenceRef: executorEvidenceRef,
                   stateRef: pipelineStateRef,
                   runId: pipelineState?.run_id ?? prepared.pipelineRunId,
                 })
-              : { limit_deferred: "false" },
-          );
+              : { limit_deferred: "false" }),
+            ...stageActorMeta(prepared.claimActor, prepared.actor),
+          });
           process.stderr.write(`${reason}\n`);
           process.stdout.write(
             `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
@@ -744,7 +745,7 @@ export async function runPreparedTask(
           return "failure";
         }
       }
-      spawnComplete(projectId, prepared.task.id, prepared.actor);
+      spawnComplete(projectId, prepared.task.id, prepared.claimActor);
       process.stdout.write(`  Done: ${prepared.task.id}\n`);
     } else if (effectiveResult === "rate_limit") {
       // Keep the worktree for the due-time resume path; do not merge partial changes.
@@ -756,10 +757,11 @@ export async function runPreparedTask(
         : (pipelineBlockReason ?? "rate limit reached");
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+      const rateLimitActorMeta = stageActorMeta(prepared.claimActor, failedStageActor());
       spawnBlock(
         projectId,
         prepared.task.id,
-        prepared.actor,
+        prepared.claimActor,
         reason,
         activeLimit
           ? {
@@ -767,6 +769,7 @@ export async function runPreparedTask(
                 attempts: totalAttempts,
                 worktree: prepared.worktree.path,
               }),
+              ...rateLimitActorMeta,
               ...(prepared.pipelineRunId
                 ? pipelineRecoveryMeta({
                     stage: pipelineFailureStage,
@@ -778,6 +781,7 @@ export async function runPreparedTask(
             }
           : {
               limit_deferred: "false",
+              ...rateLimitActorMeta,
               ...(prepared.pipelineRunId
                 ? pipelineRecoveryMeta({
                     stage: pipelineFailureStage,
@@ -799,8 +803,9 @@ export async function runPreparedTask(
         : (pipelineBlockReason ?? extractBlockReason(stderr));
       if (worktreeResultPath)
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, blockReason);
-      spawnBlock(projectId, prepared.task.id, prepared.actor, blockReason, {
+      spawnBlock(projectId, prepared.task.id, prepared.claimActor, blockReason, {
         limit_deferred: "false",
+        ...stageActorMeta(prepared.claimActor, failedStageActor()),
         ...(prepared.pipelineRunId
           ? pipelineRecoveryMeta({
               stage: pipelineFailureStage,
@@ -858,7 +863,10 @@ export async function runPreparedTaskSafely(
         const completedAt = new Date().toISOString();
         if (prepared.resultPath)
           await updateResultStatus(prepared.resultPath, "blocked", completedAt);
-        spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`);
+        spawnBlock(projectId, prepared.task.id, prepared.claimActor, `runner error: ${message}`, {
+          limit_deferred: "false",
+          ...stageActorMeta(prepared.claimActor, prepared.actor),
+        });
       }
     };
     if (lifecycleLock) await lifecycleLock.runExclusive(block);

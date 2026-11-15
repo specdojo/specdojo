@@ -71,6 +71,7 @@ function prepared(task: ReadyTaskView): PreparedTask {
   return {
     task,
     actor: "test-agent",
+    claimActor: "test-agent",
     agentCandidates: [],
     plan: "plan.md",
     prompt: "test",

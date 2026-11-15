@@ -41,7 +41,13 @@ import { type CurrentState, type ReadyTaskView } from "../types.js";
 import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
 import { loadRosterForExecutionPath, pathInsideWorktree } from "./agent.js";
 import { collectExecLockUsage, execLocksDir, formatExecLockUsage } from "./lock.js";
-import { spawnBlock, spawnIndexBuild, spawnRefresh, spawnValidate } from "./mode-shared.js";
+import {
+  spawnBlock,
+  spawnIndexBuild,
+  spawnRefresh,
+  spawnValidate,
+  stageActorMeta,
+} from "./mode-shared.js";
 import {
   rebuildStaleGeneratedTracksForCycle,
   resolveClaimingActor,
@@ -384,6 +390,7 @@ export function prepareScheduleIntegrationResume(params: {
   return {
     task,
     actor,
+    claimActor: taskState?.last_by ?? actor,
     agentCandidates: [],
     plan: "",
     prompt: "",
@@ -714,9 +721,14 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
               last_by: prepared.actor,
               last_type: "claim",
             };
-          } else if (pendingExecutorUnblock) {
-            if (!dryRun) writeEventFile(schedulePath, pendingExecutorUnblock);
-            pendingExecutorUnblock = undefined;
+            prepared.claimActor = prepared.actor;
+          } else {
+            if (pendingExecutorUnblock) {
+              if (!dryRun) writeEventFile(schedulePath, pendingExecutorUnblock);
+              pendingExecutorUnblock = undefined;
+            }
+            // The claim stays with its holder when --by or a stage override runs another agent.
+            prepared.claimActor = snapshot.tasks[taskId]?.last_by ?? prepared.claimActor;
           }
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
           prepared.priorLimitAttempts =
@@ -766,7 +778,10 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
           const completedAt = new Date().toISOString();
           if (prepared.resultPath)
             await updateResultStatus(prepared.resultPath, "blocked", completedAt);
-          spawnBlock(projectId, prepared.task.id, prepared.actor, `runner error: ${message}`);
+          spawnBlock(projectId, prepared.task.id, prepared.claimActor, `runner error: ${message}`, {
+            limit_deferred: "false",
+            ...stageActorMeta(prepared.claimActor, prepared.actor),
+          });
         }
         process.exitCode = 1;
       } else if (result.value === "failure") {
