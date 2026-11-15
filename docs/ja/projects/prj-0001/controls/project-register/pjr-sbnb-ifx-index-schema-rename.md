@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-15T09:33:55Z"
+  block_reason: "executor reported incomplete: schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を…"
   commit_type: refactor
   commit_scope: schema
 ---
