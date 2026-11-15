@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_717ebb02c8eb456b958f047d9c1af8e3
+  ts: "2026-11-15T12:22:47Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-task-execution を grade の指摘で手直しする（担当者の権限と引き継ぎ、記録の再生の順序）
+    - field: description
+      from: ""
+      to: 最新の grade の指摘と M495・T4G3 の結果を取り込み、権限と引き継ぎ、再生の順序の規則を定める
+    - field: input
+      from: ""
+      to: '["T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140 と T-STSD-PILOT-stsd-task-execution-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 79 点で完了条件 0/5","主な指摘: 補足の記録や再開で actor が替わるときの権限、claim の持ち主と最新の記録者のどちらに権限があるか、同じ時刻の記録の再生の順序が定まっていない。PJR-M495・T4G3 の結果を取り込む"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-task-execution"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-M495","PJR-T4G3"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: stsd

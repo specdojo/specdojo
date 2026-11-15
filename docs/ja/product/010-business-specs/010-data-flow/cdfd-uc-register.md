@@ -2,7 +2,7 @@
 specdojo:
   id: cdfd-uc-register
   type: flow
-  status: draft
+  status: ready
   rulebook: specdojo:cdfd-uc-rulebook
   based_on:
     - cdfd-overview

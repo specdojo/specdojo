@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T12:18:11Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-140",
+  "by": "indie",
+  "msg": "finalize",
+  "meta": {
+    "claim_owner": "BA",
+    "planned_owner": "BA"
+  }
+}

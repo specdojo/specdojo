@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T15:31:13Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-1-dct-index-040",
+  "by": "sol-executor",
+  "msg": "orchestrator が記帳。親の検証の失敗を直す指示を plan に足し、executor から再開する"
+}

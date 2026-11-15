@@ -5,29 +5,29 @@ path: docs/ja/specdojo/samples/sld-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-10-20T20:19:21.604Z"
-graded_by: flash-high-executor
-content_hash: 414d6b2b95a809979d29973fe2f9c75769045bd2b46ab00265f7ad12942a5100
+score: 69
+graded_at: "2026-11-15T11:53:14.294Z"
+graded_by: sol-review-executor
+content_hash: c17b66767f0e570f2a22a8ad94f499ceb6ef9f121fbf502a834e8ebd9ce3820b
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 69
   planning:
-    score: 100
+    score: 75
   business:
-    score: 100
+    score: 83
   architecture:
     score: 100
   usability:
-    score: 58
+    score: 83
   implementation:
-    score: 100
+    score: 63
   quality:
-    score: 58
-  consistency:
     score: 50
+  consistency:
+    score: 25
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -42,17 +42,17 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -60,41 +60,41 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 2
     score: 50
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,58 +103,296 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 1
+  major: 13
+  minor: 5
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 20
-    anchor: "| 項目         | 値                                                            | 備考                                 |"
-    message: >-
-      The items in the Section 4 table redundantly duplicate the descriptions in Section 3 without providing additional
-      concrete guidance.
-    message_ja: Section 4の表にある項目は、追加の具体的なガイダンスを提供することなく、Section 3の記述を冗長に重複させています。
-  - id: F002
     severity: major
-    rule: vp-qe-verifiability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: ルールブックで必須とされる「保管場所一覧」の具体例が欠落しており、正しく記述できているか判定不能である。
-    message_ja: ルールブックで必須とされる「保管場所一覧」の具体例が欠落しており、正しく記述できているか判定不能である。
+    rule: vp-pm-dependency-risk
+    line: 85
+    anchor: >-
+      | タブレット内 `data/sales/` の外部バックアップ媒体と世代数（未決） | `_UNDECIDED_`: 日次締め後に SD カードまたは USB メモリへ退避する方針だが、媒体の保管場所と保持世代数が未確定 |
+      OPS・DEV が媒体候補とコピー手順を整理し、運用開始前に PO（店主代表）が保管場所（手提げ金庫または母屋金庫）と世代数を決定する                         |
+      `specdojo:pjr-sales-storage`   |
+    message: >-
+      Expand the dependency tracking beyond backup media: cdsd-sample leaves storage and regeneration procedures
+      unresolved, while clis-sample leaves reconciliation contracts incomplete; identify these dependencies, their
+      operational impact, responsible roles, and resolution timing before treating recovery procedures as available.
+    message_ja: >-
+      Expand the dependency tracking beyond backup media: cdsd-sample leaves storage and regeneration procedures
+      unresolved, while clis-sample leaves reconciliation contracts incomplete; identify these dependencies, their
+      operational impact, responsible roles, and resolution timing before treating recovery procedures as available.
+  - id: F002
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 83
+    anchor: >-
+      | 論点・区分                                                        |
+      現在の判断・影響                                                                                             |
+      担当・判断時期・次の行動                                                                                                                            
+      | 追跡先候補                     |
+    message: >-
+      Classify the tracking candidates as issue, risk, change-request, or decision as appropriate, and identify the PM
+      handoff; the current labels of unresolved matter and change impact do not establish which management record should
+      receive each item.
+    message_ja: >-
+      Classify the tracking candidates as issue, risk, change-request, or decision as appropriate, and identify the PM
+      handoff; the current labels of unresolved matter and change impact do not establish which management record should
+      receive each item.
   - id: F003
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: ルールブックに定義された標準列を持つ「保管場所一覧」表が欠落している。
-    message_ja: ルールブックに定義された標準列を持つ「保管場所一覧」表が欠落している。
+    rule: vp-ba-requirements-completeness
+    line: 20
+    anchor: "## 2. 保管場所一覧"
+    message: >-
+      Define storage requirements for purchasing and inventory records, or explicitly exclude and hand off those
+      records; the declared scope includes purchasing and inventory, and disposal procedures require updating these
+      records, but neither record has an identified storage location or retention and access policy.
+    message_ja: >-
+      Define storage requirements for purchasing and inventory records, or explicitly exclude and hand off those
+      records; the declared scope includes purchasing and inventory, and disposal procedures require updating these
+      records, but neither record has an identified storage location or retention and access policy.
   - id: F004
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) サンプル"
-    message: メタデータの id 形式および type (`project`) がルールブックの規定に準拠していない。
-    message_ja: メタデータの id 形式および type (`project`) がルールブックの規定に準拠していない。
+    rule: vp-dev-implementation-readiness
+    line: 57
+    anchor: >-
+      | 日次販売集計（`data/summary/`）を誤って削除した      | `data/sales/`
+      の売上記録が残っていることを確認し、対象日を指定して日次集計処理を再実行して復元する                             | OPS（家族利用者代表）、QE（同行レビュー担当）が一致を確認     |
+    message: >-
+      Identify an executable or explicitly pending regeneration procedure for daily summaries, including the source
+      selection and output destination, and provide the corresponding receipt reconstruction reference for line 40;
+      unnamed aggregation and re-output operations are insufficient inputs for implementing the promised recovery
+      behavior.
+    message_ja: >-
+      Identify an executable or explicitly pending regeneration procedure for daily summaries, including the source
+      selection and output destination, and provide the corresponding receipt reconstruction reference for line 40;
+      unnamed aggregation and re-output operations are insufficient inputs for implementing the promised recovery
+      behavior.
   - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 成果物の完成例ではなく、構成要素の説明に留まっており、sample としての責務を果たしていない。
-    message_ja: 成果物の完成例ではなく、構成要素の説明に留まっており、sample としての責務を果たしていない。
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 86
+    anchor: >-
+      | 紙の商品台帳・締め記録をタブレットへ完全移行する場合（変更影響）  | 店頭台帳保管棚の正本区分と `data/` 配下のファイル構成・バックアップ対象が変更になる                          | BA
+      が [[specdojo:cdsd-sample\|概念データストア定義（駄菓子屋きぬやの販売と締め）]] の正本区分を更新し、ARC・DEV が保存パス、OPS が退避手順を改訂する |
+      `specdojo:pjr-paper-to-tablet` |
+    message: >-
+      Extend the paper-to-tablet migration impact to summary regeneration, receipt reconstruction, and the acceptance
+      checks that depend on those processes; changing authoritative records and file layout requires reviewing these
+      consumers as well as backup procedures.
+    message_ja: >-
+      Extend the paper-to-tablet migration impact to summary regeneration, receipt reconstruction, and the acceptance
+      checks that depend on those processes; changing authoritative records and file layout requires reviewing these
+      consumers as well as backup procedures.
   - id: F006
-    severity: major
-    rule: vp-ux-readability
-    line: 18
-    anchor: "## 4. 最小記述例"
-    message: 具体的かつ完全な一覧表の例がないため、読者が作成方法を正しく理解できない。
-    message_ja: 具体的かつ完全な一覧表の例がないため、読者が作成方法を正しく理解できない。
+    severity: minor
+    rule: vp-dev-testability
+    line: 76
+    anchor: >-
+      | `[ARC・DEV]` 実装配置・CLI 仕様との一致 | `config/store-config.yaml`、`.session/current-tx.json`、`data/sales/`、`receipts/`
+      のパスおよび役割を [[specdojo:clis-sample\|駄菓子屋きぬや 販売管理 CLI 仕様]] と照合する  |
+      タブレット内領域のパス区分、入出力ファイル、終了時挙動に矛盾がなく、進行中セッションと確定正本が物理的に分離されていること |
+    message: >-
+      Add verification cases and expected outcomes for a missing configuration file, an interrupted transaction with an
+      unknown headquarters result, and regenerated summaries; the current path comparison does not test the failure
+      behavior asserted by the storage and recovery rules.
+    message_ja: >-
+      Add verification cases and expected outcomes for a missing configuration file, an interrupted transaction with an
+      unknown headquarters result, and regenerated summaries; the current path comparison does not test the failure
+      behavior asserted by the storage and recovery rules.
   - id: F007
     severity: major
+    rule: vp-qe-verifiability
+    line: 39
+    anchor: >-
+      | ローカル販売記録・日次集計領域（`data/sales/`・`data/summary/`） |
+      確定済みの売上記録・売上明細データ（`data/sales/TX-YYYYMMDD-NNNN.json`）、日次販売集計（`data/summary/`）  | `sales
+      complete`、日次締め集計処理                                          | 共有なし（店舗タブレット内正本・日次で外部メディアへ退避） |
+      売上記録は恒久保持（3年間）、日次集計は随時再生成可能       | `data/sales/` は `削除不可`（確定取引の正本）。`data/summary/` は `条件付き削除可`（削除しても
+      `data/sales/` から再生成可能） |
+    message: >-
+      Replace the conflicting retention expression "恒久保持（3年間）" with one unambiguous policy, including its start point,
+      archive conditions, and treatment after expiry; a reviewer cannot determine whether records older than three years
+      must remain indefinitely or leave local storage.
+    message_ja: >-
+      Replace the conflicting retention expression "恒久保持（3年間）" with one unambiguous policy, including its start point,
+      archive conditions, and treatment after expiry; a reviewer cannot determine whether records older than three years
+      must remain indefinitely or leave local storage.
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 31
+    anchor: >-
+      | 店頭台帳保管棚（施錠キャビネット） | 紙の商品台帳、顧客・つけ台帳、納品伝票綴り、日次締め記録・月次報告バインダー | つけ販売、日次締め、月次見直し       | 店舗内共有（店主代表・家族利用者代表のみ閲覧可） |
+      当年度＋過去3年間保管（年度末に旧年度分を母屋書庫へ退避） | `処分不可`。取引・未収金・税務の正本記録のため破棄しない。顧客情報を含むため来店客から見えない施錠棚に保管する         |
+    message: >-
+      Add standard-column entries for the mother-house archive and safe used as mandatory destinations in lines 30–31
+      and 48, including access, retention, and disposal conditions; moving records or cash out of the listed locations
+      currently ends their defined storage controls.
+    message_ja: >-
+      Add standard-column entries for the mother-house archive and safe used as mandatory destinations in lines 30–31
+      and 48, including access, retention, and disposal conditions; moving records or cash out of the listed locations
+      currently ends their defined storage controls.
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 20
+    anchor: "## 2. 保管場所一覧"
+    message: >-
+      Add locations and storage controls for purchasing and inventory records, or document their explicit handoff and
+      exclusion; these records are required by the declared scope and operational procedures but are absent from the
+      location inventory.
+    message_ja: >-
+      Add locations and storage controls for purchasing and inventory records, or document their explicit handoff and
+      exclusion; these records are required by the declared scope and operational procedures but are absent from the
+      location inventory.
+  - id: F010
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 37
+    anchor: >-
+      | 店舗設定ファイル領域（`config/store-config.yaml`）               |
+      店舗コード、消費税率端数処理設定、データ保存先パス設定                                                     | CLI
+      初期設定、全コマンド実行時の設定読込                                    | 共有なし（店舗タブレット固有・設定バックアップ対象）       |
+      店舗運用期間中（恒久保持・設定変更時のみ更新）              | `削除不可`。削除すると全 CLI コマンドが起動不能になる。変更時は旧ファイルを退避したうえで開発担当または店主代表が更新する     |
+    message: >-
+      Correct the claim that deleting config/store-config.yaml prevents every CLI command from starting; clis-sample
+      explicitly permits the relevant commands to continue with default settings when this file is absent, so the
+      storage example must distinguish missing configuration from invalid configuration.
+    message_ja: >-
+      Correct the claim that deleting config/store-config.yaml prevents every CLI command from starting; clis-sample
+      explicitly permits the relevant commands to continue with default settings when this file is absent, so the
+      storage example must distinguish missing configuration from invalid configuration.
+  - id: F011
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 39
+    anchor: >-
+      | ローカル販売記録・日次集計領域（`data/sales/`・`data/summary/`） |
+      確定済みの売上記録・売上明細データ（`data/sales/TX-YYYYMMDD-NNNN.json`）、日次販売集計（`data/summary/`）  | `sales
+      complete`、日次締め集計処理                                          | 共有なし（店舗タブレット内正本・日次で外部メディアへ退避） |
+      売上記録は恒久保持（3年間）、日次集計は随時再生成可能       | `data/sales/` は `削除不可`（確定取引の正本）。`data/summary/` は `条件付き削除可`（削除しても
+      `data/sales/` から再生成可能） |
+    message: >-
+      Reconcile the claimed authoritative sales storage and established summary path with the referenced specifications:
+      clis-sample describes data/sales/ as a local copy containing transmission results, while cdsd-sample excludes
+      unresolved transactions from authoritative sales records and leaves summary storage unresolved; define the
+      separation and label any additional storage assumptions.
+    message_ja: >-
+      Reconcile the claimed authoritative sales storage and established summary path with the referenced specifications:
+      clis-sample describes data/sales/ as a local copy containing transmission results, while cdsd-sample excludes
+      unresolved transactions from authoritative sales records and leaves summary storage unresolved; define the
+      separation and label any additional storage assumptions.
+  - id: F012
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 67
+    anchor: >-
+      | 検品場所、バックヤード、売場棚、返品保管箱             | [[specdojo:stsd-sample\|商品のステータス定義]]
+      の入荷済み（`received`：検品場所）・検品済み（`inspected`：検品場所）・販売可能（`sellable`：売場棚・バックヤード）・返品待ち（`return-pending`：返品保管箱）                                                                 
+      | 状態ごとの物理配置が明確に分離され、販売不可品（入荷受入待ち・返品待ち）が売場棚に混在しないこと                                        |
+    message: >-
+      Align the product-state mapping with stsd-sample or record a proposed change: stsd-sample requires sales-floor
+      placement for sellable and limits return-pending to rejected incoming goods, whereas this sample assigns sellable
+      to backyard stock and uses the return box for expired or damaged sales stock without explaining the state
+      boundary.
+    message_ja: >-
+      Align the product-state mapping with stsd-sample or record a proposed change: stsd-sample requires sales-floor
+      placement for sellable and limits return-pending to rejected incoming goods, whereas this sample assigns sellable
+      to backyard stock and uses the return box for expired or damaged sales stock without explaining the state
+      boundary.
+  - id: F013
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 39
+    anchor: >-
+      | ローカル販売記録・日次集計領域（`data/sales/`・`data/summary/`） |
+      確定済みの売上記録・売上明細データ（`data/sales/TX-YYYYMMDD-NNNN.json`）、日次販売集計（`data/summary/`）  | `sales
+      complete`、日次締め集計処理                                          | 共有なし（店舗タブレット内正本・日次で外部メディアへ退避） |
+      売上記録は恒久保持（3年間）、日次集計は随時再生成可能       | `data/sales/` は `削除不可`（確定取引の正本）。`data/summary/` は `条件付き削除可`（削除しても
+      `data/sales/` から再生成可能） |
+    message: >-
+      Split data/sales/ and data/summary/ into separate inventory rows, and likewise separate receipts/ from tmp/ in
+      line 40; the rulebook defines one row as a storage class with uniform lifetime and deletion decisions, but these
+      combined rows contain different policies.
+    message_ja: >-
+      Split data/sales/ and data/summary/ into separate inventory rows, and likewise separate receipts/ from tmp/ in
+      line 40; the rulebook defines one row as a storage class with uniform lifetime and deletion decisions, but these
+      combined rows contain different policies.
+  - id: F014
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 78
+    anchor: >-
+      | `[OPS]` 削除可否・復旧判断の実効性      |
+      第2章および第3章の判断基準を用い、日常運用（清掃・障害復旧・容量整理・返品）における判断をシミュレーションする                                                              
+      | 店主代表および店番担当が「消してよい場所」「残すべき場所」、削除前確認条件、削除後の復旧手順を迷わず判断できること         |
+    message: >-
+      Replace chapter-number-only references with the chapter titles; the rulebook explicitly prohibits references such
+      as 第2章 and 第3章 without titles because numbering changes can redirect the reader.
+    message_ja: >-
+      Replace chapter-number-only references with the chapter titles; the rulebook explicitly prohibits references such
+      as 第2章 and 第3章 without titles because numbering changes can redirect the reader.
+  - id: F015
+    severity: major
     rule: vp-ux-language-consistency
-    line: 1
-    anchor: "# [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) サンプル"
-    message: ルールブックの「保管場所一覧」と名称が不一致であり、読み手を混乱させる。
-    message_ja: ルールブックの「保管場所一覧」と名称が不一致であり、読み手を混乱させる。
+    line: 39
+    anchor: >-
+      | ローカル販売記録・日次集計領域（`data/sales/`・`data/summary/`） |
+      確定済みの売上記録・売上明細データ（`data/sales/TX-YYYYMMDD-NNNN.json`）、日次販売集計（`data/summary/`）  | `sales
+      complete`、日次締め集計処理                                          | 共有なし（店舗タブレット内正本・日次で外部メディアへ退避） |
+      売上記録は恒久保持（3年間）、日次集計は随時再生成可能       | `data/sales/` は `削除不可`（確定取引の正本）。`data/summary/` は `条件付き削除可`（削除しても
+      `data/sales/` から再生成可能） |
+    message: >-
+      Use a consistent retention label instead of combining "恒久保持" with "3年間"; these terms instruct readers to apply
+      incompatible retention periods to the same authoritative records.
+    message_ja: >-
+      Use a consistent retention label instead of combining "恒久保持" with "3年間"; these terms instruct readers to apply
+      incompatible retention periods to the same authoritative records.
+  - id: F016
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 88
+    anchor: >-
+      公開および `status: ready` への昇格前に、BA・ARC・DEV・OPS・QE が上記の受入条件を確認し、人間の PO（店主代表）が顧客情報の施錠保管と未決バックアップ方式の扱いを承認する。agent は
+      `status: draft` を維持する。
+    message: >-
+      Include unresolved transaction reconciliation and unestablished regeneration procedures in the publication and
+      operational-readiness decision, with explicit conditions for withholding the affected procedures; approving only
+      the backup uncertainty does not address the unresolved recovery dependencies declared by clis-sample and
+      cdsd-sample.
+    message_ja: >-
+      Include unresolved transaction reconciliation and unestablished regeneration procedures in the publication and
+      operational-readiness decision, with explicit conditions for withholding the affected procedures; approving only
+      the backup uncertainty does not address the unresolved recovery dependencies declared by clis-sample and
+      cdsd-sample.
+  - id: F017
+    severity: major
+    rule: vp-ops-operability
+    line: 56
+    anchor: >-
+      | 会計途中でタブレットが再起動し新規会計を始められない | 来店客との会計が継続中か確認する。やり直す場合は `sales cancel` を実行するか `.session/current-tx.json`
+      を削除する             | OPS（家族利用者代表）。解消しない場合は DEV（開発担当）へ連絡 |
+    message: >-
+      Require the PO and DEV to reconcile headquarters acceptance and local transaction state before permitting
+      cancellation or deletion after a restart; the current instruction allows resetting an unresolved transaction,
+      which can remove reconciliation evidence and lead to duplicate registration.
+    message_ja: >-
+      Require the PO and DEV to reconcile headquarters acceptance and local transaction state before permitting
+      cancellation or deletion after a restart; the current instruction allows resetting an unresolved transaction,
+      which can remove reconciliation evidence and lead to duplicate registration.
+  - id: F018
+    severity: major
+    rule: vp-ops-operability
+    line: 52
+    anchor: "### 3.2. 場面別の対処と復旧手順"
+    message: >-
+      Add a recovery route for accidental loss or corruption of config/store-config.yaml and data/sales/, identifying
+      the backup prerequisite, responsible roles, restore verification, and escalation when no usable backup exists;
+      declaring these locations non-deletable does not provide an operational response when they are lost.
+    message_ja: >-
+      Add a recovery route for accidental loss or corruption of config/store-config.yaml and data/sales/, identifying
+      the backup prerequisite, responsible roles, restore verification, and escalation when no usable backup exists;
+      declaring these locations non-deletable does not provide an operational response when they are lost.

@@ -5,9 +5,9 @@ path: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-10-22T16:32:44.124Z"
-graded_by: flash-high-executor
+score: 71
+graded_at: "2026-11-15T12:24:32.822Z"
+graded_by: sol-review-executor
 content_hash: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
 source_hashes:
   catalog-entry: 24f39ace23ca879a072ccd020e5c9a10396a5f749727c0a102a8b7f3089979e0
@@ -16,51 +16,51 @@ source_hashes:
   dependency:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 100
+    score: 75
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 67
   business:
-    score: 100
+    score: 92
   consistency:
-    score: 50
+    score: 38
   architecture:
-    score: 100
+    score: 92
   usability:
     score: 81
   implementation:
-    score: 100
+    score: 63
   quality:
-    score: 75
+    score: 63
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -68,8 +68,8 @@ viewpoints:
     level: 2
     score: 50
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -77,23 +77,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 3
     score: 75
@@ -104,11 +104,11 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -120,11 +120,84 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 3
+  major: 10
+  minor: 10
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 38
+    anchor: "| 成果物作成                         | C   | A   | R   | R   | R   | C   | R   | C   |"
+    message: >-
+      Define whether PM's A covers workflow coordination or content approval, and explicitly preserve each deliverable
+      row's content approver; the current creation-process row permits conflicting approval interpretations.
+    message_ja: >-
+      Define whether PM's A covers workflow coordination or content approval, and explicitly preserve each deliverable
+      row's content approver; the current creation-process row permits conflicting approval interpretations.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 28
+    anchor: "| 成果物カタログ                                                | C   | C   | A/R | R   | I   | C   | I   | I   |"
+    message: >-
+      Specify the work led by BA and ARC for the deliverable catalog and the work led by BA, ARC, DEV, and UX in line
+      38; without one lead Role code per work unit, task assignment and progress tracking remain ambiguous.
+    message_ja: >-
+      Specify the work led by BA and ARC for the deliverable catalog and the work led by BA, ARC, DEV, and UX in line
+      38; without one lead Role code per work unit, task assignment and progress tracking remain ambiguous.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 52
+    anchor: >-
+      採用 Role code、成果物区分、Schedule の owner、主要判断、参加者、兼務の継続可能性が変わった場合に見直す。特に、実装・体験・公開運用が増えた場合は `DEV`、`UX`、`OPS`
+      の専任化と責任分離を確認する。
+    message: >-
+      Add a review step identifying affected unfinished tasks, dependencies, and approval gates, with unresolved
+      responsibility changes referred to the project register before dependent work proceeds.
+    message_ja: >-
+      Add a review step identifying affected unfinished tasks, dependencies, and approval gates, with unresolved
+      responsibility changes referred to the project register before dependent work proceeds.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 37
+    anchor: "| 作業順序、進捗、課題・リスク管理   | C   | A/R | C   | C   | C   | C   | C   | C   |"
+    message: >-
+      Reference the project register or management plan and distinguish where PM records progress updates, existing
+      responsibility issues, future handover risks, change requests, and decisions, including the responsible Role and
+      next action.
+    message_ja: >-
+      Reference the project register or management plan and distinguish where PM records progress updates, existing
+      responsibility issues, future handover risks, change requests, and decisions, including the responsible Role and
+      next action.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: >-
+      初期公開と代表試行に必要な責任境界を示す。列は [[prj-0001:pm-roles|ロール定義]] の Role code を用い、各行の `A` は1ロールとする。AI Agent は `R` または `C`
+      の作業を支援できるが、`A` は担わない。
+    message: >-
+      State which initial-publication responsibilities are intentionally omitted and why, or identify their covering
+      rows, particularly for CLI/schema work and publication preparation; the broad scope and line 52's future-growth
+      wording otherwise leave coverage uncertain.
+    message_ja: >-
+      State which initial-publication responsibilities are intentionally omitted and why, or identify their covering
+      rows, particularly for CLI/schema work and publication preparation; the broad scope and line 52's future-growth
+      wording otherwise leave coverage uncertain.
+    cause:
+      type: document
+  - id: F006
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 24
@@ -135,7 +208,54 @@ findings:
     message_ja: >-
       「Launch Track Strategy」を `PM=A/R`、`ARC=C` としているが、Schedule の `sch-strategy-launch` は `owner=ARC` であり、44行目の「owner
       は主たる R と一致」方針に反するため、RACI または Schedule の正本を整合させる必要がある。
-  - id: F002
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 44
+    anchor: "- Schedule の `owner` は、成果物または作業を主導する `R` の Role code と一致させる。"
+    message: >-
+      Qualify the R-to-owner rule with explicit WBS-owner precedence and separate approval, review, and external-wait
+      tasks that may use the corresponding A or C; reference the standard's Schedule assignment rules.
+    message_ja: >-
+      Qualify the R-to-owner rule with explicit WBS-owner precedence and separate approval, review, and external-wait
+      tasks that may use the corresponding A or C; reference the standard's Schedule assignment rules.
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 38
+    anchor: "| 成果物作成                         | C   | A   | R   | R   | R   | C   | R   | C   |"
+    message: >-
+      Provide work-specific lead roles or an explicit mapping to the deliverable rows before using this process row to
+      assign implementation, configuration, or documentation tasks; four undifferentiated R roles do not provide an
+      executable assignment.
+    message_ja: >-
+      Provide work-specific lead roles or an explicit mapping to the deliverable rows before using this process row to
+      assign implementation, configuration, or documentation tasks; four undifferentiated R roles do not provide an
+      executable assignment.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 52
+    anchor: >-
+      採用 Role code、成果物区分、Schedule の owner、主要判断、参加者、兼務の継続可能性が変わった場合に見直す。特に、実装・体験・公開運用が増えた場合は `DEV`、`UX`、`OPS`
+      の専任化と責任分離を確認する。
+    message: >-
+      Identify the authoritative organization, role/member definitions, Schedule strategy or task sources, and
+      communication plan that PM must check after a responsibility change, and require follow-up owners for affected
+      updates.
+    message_ja: >-
+      Identify the authoritative organization, role/member definitions, Schedule strategy or task sources, and
+      communication plan that PM must check after a responsibility change, and require follow-up owners for affected
+      updates.
+    cause:
+      type: document
+  - id: F010
     severity: major
     rule: vp-qe-done-criteria
     line: 24
@@ -146,7 +266,24 @@ findings:
     message_ja: >-
       Schedule owner と異なる責任配置を含むため、成果物・プロセス別マトリクスを承認可能にするには `sch-strategy-launch` の `ARC` owner と本行の `PM=A/R`
       のどちらを正とするか確定して整合させる必要がある。
-  - id: F003
+    cause:
+      type: document
+  - id: F011
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 38
+    anchor: "| 成果物作成                         | C   | A   | R   | R   | R   | C   | R   | C   |"
+    message: >-
+      Although every matrix row contains exactly one A, PM's unrestricted creation-process A overlaps the
+      deliverable-specific A assignments; define the separate decision scopes before claiming that each deliverable has
+      one unambiguous Accountable.
+    message_ja: >-
+      Although every matrix row contains exactly one A, PM's unrestricted creation-process A overlaps the
+      deliverable-specific A assignments; define the separate decision scopes before claiming that each deliverable has
+      one unambiguous Accountable.
+    cause:
+      type: document
+  - id: F012
     severity: major
     rule: vp-qe-verifiability
     line: 38
@@ -157,7 +294,22 @@ findings:
     message_ja: >-
       「成果物作成」の `PM=A` が各成果物行の Accountable とどう異なるか、また `BA`・`ARC`・`DEV`・`UX` のどれが主たる R
       か判定できないため、作成プロセスの対象範囲と内容の最終判断との差、主担当の決定方法を明記する必要がある。
-  - id: F004
+    cause:
+      type: document
+  - id: F013
+    severity: major
+    rule: vp-qe-verifiability
+    line: 28
+    anchor: "| 成果物カタログ                                                | C   | C   | A/R | R   | I   | C   | I   | I   |"
+    message: >-
+      Define the catalog work led by BA and the catalog work led by ARC, with one lead Role code for each task type, so
+      an owner assignment can be judged correct or incorrect without inference.
+    message_ja: >-
+      Define the catalog work led by BA and the catalog work led by ARC, with one lead Role code for each task type, so
+      an owner assignment can be judged correct or incorrect without inference.
+    cause:
+      type: document
+  - id: F014
     severity: major
     rule: vp-qe-omissions-consistency
     line: 24
@@ -168,21 +320,40 @@ findings:
     message_ja: >-
       `sch-track-planning.yaml` の `sch-strategy-launch` は `owner=ARC` だが本行では `ARC=C` であり、Schedule owner と主たる R
       を矛盾させないという rulebook の必須制約を満たしていない。
-  - id: F005
+    cause:
+      type: document
+  - id: F015
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 28
+    anchor: "| 成果物カタログ                                                | C   | C   | A/R | R   | I   | C   | I   | I   |"
+    message: >-
+      Add work-specific lead-role and responsibility notes for both multiple-R rows at lines 28 and 38; the declared
+      rulebook sections 5 and 6.4 require these distinctions, but neither row supplies them.
+    message_ja: >-
+      Add work-specific lead-role and responsibility notes for both multiple-R rows at lines 28 and 38; the declared
+      rulebook sections 5 and 6.4 require these distinctions, but neither row supplies them.
+    cause:
+      type: document
+  - id: F016
     severity: minor
     rule: vp-ux-readability
     line: 38
     anchor: "| 成果物作成                         | C   | A   | R   | R   | R   | C   | R   | C   |"
     message: 「成果物作成」が各成果物別行と重複して見え、`PM=A` と成果物ごとの A の関係を読み分けにくいため、「作成フローの運営」など対象を限定する説明を加える必要がある。
     message_ja: 「成果物作成」が各成果物別行と重複して見え、`PM=A` と成果物ごとの A の関係を読み分けにくいため、「作成フローの運営」など対象を限定する説明を加える必要がある。
-  - id: F006
+    cause:
+      type: document
+  - id: F017
     severity: minor
     rule: vp-ux-user-flow
     line: 44
     anchor: "- Schedule の `owner` は、成果物または作業を主導する `R` の Role code と一致させる。"
     message: Schedule owner との照合を要求しているが参照対象の Schedule／strategy が特定されていないため、対応する正本の文書IDまたはリンクを示す必要がある。
     message_ja: Schedule owner との照合を要求しているが参照対象の Schedule／strategy が特定されていないため、対応する正本の文書IDまたはリンクを示す必要がある。
-  - id: F007
+    cause:
+      type: document
+  - id: F018
     severity: minor
     rule: vp-ux-language-consistency
     line: 24
@@ -193,6 +364,36 @@ findings:
     message_ja: >-
       「Launch Track Strategy」は成果物カタログの「Launch スケジュール戦略定義」と表記が異なり対象の照合を曖昧にするため、正式名称または `sch-strategy-launch` local_id
       に統一する必要がある。
+    cause:
+      type: document
+  - id: F019
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 39
+    anchor: "| 成果物・品質ゲートの確認           | C   | C   | C   | C   | C   | A/R | C   | I   |"
+    message: >-
+      Explain that QE's A covers the completeness and outcome of quality confirmation, distinguish it from PO's
+      acceptance and publication decisions, and reference the quality plan for handling unmet gates and exception
+      requests.
+    message_ja: >-
+      Explain that QE's A covers the completeness and outcome of quality confirmation, distinguish it from PO's
+      acceptance and publication decisions, and reference the quality plan for handling unmet gates and exception
+      requests.
+    cause:
+      type: document
+  - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 48
+    anchor: "- 生成される登録簿ビューや Schedule は直接編集せず、正本の登録簿または戦略・設定を更新する。"
+    message: >-
+      Define who investigates an assignment mismatch and how to choose between correcting RACI, a task-definition
+      source, or generation behavior; require unresolved cases to receive a register owner and decision timing.
+    message_ja: >-
+      Define who investigates an assignment mismatch and how to choose between correcting RACI, a task-definition
+      source, or generation behavior; require unresolved cases to receive a register owner and decision timing.
+    cause:
+      type: document
 done_criteria:
   satisfied: 2
   total: 4

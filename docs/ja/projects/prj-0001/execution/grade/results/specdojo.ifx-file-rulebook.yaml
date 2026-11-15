@@ -4,11 +4,11 @@ document: specdojo:ifx-file-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 90
-graded_at: "2026-11-01T20:32:35.003Z"
-graded_by: flash-high-executor
-content_hash: b66d295a5be6cfbcb0276f6e7a2797409d5e87e364b27ff021fd1c778ea34d7f
+verdict: pass
+score: 91
+graded_at: "2026-11-15T11:56:31.995Z"
+graded_by: sol-review-executor
+content_hash: 62f875108f284e098a9475bf5be682fa7cb7444bd6cf0dd84a9ea8cba81873a1
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
-    score: 25
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -72,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,32 +103,71 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 1
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 47
-    anchor: ""
-    message: 必須構造および主要項目の定義において、サンプルで使用されている source, target, timing キーが欠落している。
-    message_ja: 必須構造および主要項目の定義において、サンプルで使用されている source, target, timing キーが欠落している。
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 206
+    anchor: "```yaml"
+    message: >-
+      Shorten the good example to the writer/reader, canonical-schema reference, required-field, and recovery fragments
+      that demonstrate its stated decisions; the complete x-spec-meta, source/target, format, timing, and transport
+      boilerplate repeats definitions already supplied in sections 4 and 5 without adding a distinct judgment.
+    message_ja: >-
+      Shorten the good example to the writer/reader, canonical-schema reference, required-field, and recovery fragments
+      that demonstrate its stated decisions; the complete x-spec-meta, source/target, format, timing, and transport
+      boilerplate repeats definitions already supplied in sections 4 and 5 without adding a distinct judgment.
   - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 67
-    anchor: "- `CSV` / `TSV` / `JSON` / `XML`"
-    message: 主要項目の定義において、必須構造として挙げられている「file」キーの内部構造（name, naming_rule, description）に関する詳細定義が欠落している。
-    message_ja: 主要項目の定義において、必須構造として挙げられている「file」キーの内部構造（name, naming_rule, description）に関する詳細定義が欠落している。
+    severity: minor
+    rule: vp-dev-testability
+    line: 310
+    anchor: >-
+      1. **構文・メタ情報・整形の検証**: 作成・更新時は Prettier による整形確認、YAML 構文および先頭 modeline（`# specdojo-schema: none
+      reason=no-ifx-file-schema` または対象スキーマ指定）の確認、ならびに `x-spec-meta` の必須項目（`type: api`、`status: draft`、`rulebook:
+      specdojo:ifx-file-rulebook`）を検査します。
+    message: >-
+      Add runnable formatting and YAML-validation commands with target-path placeholders, expected exit codes, and
+      correction/retry instructions; explain how metadata declaration checking is invoked when the no-ifx-file-schema
+      modeline skips structural validation.
+    message_ja: >-
+      Add runnable formatting and YAML-validation commands with target-path placeholders, expected exit codes, and
+      correction/retry instructions; explain how metadata declaration checking is invoked when the no-ifx-file-schema
+      modeline skips structural validation.
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 53
-    anchor: "| type     | `api` 固定                                                 | ○    |"
+    line: 310
+    anchor: >-
+      1. **構文・メタ情報・整形の検証**: 作成・更新時は Prettier による整形確認、YAML 構文および先頭 modeline（`# specdojo-schema: none
+      reason=no-ifx-file-schema` または対象スキーマ指定）の確認、ならびに `x-spec-meta` の必須項目（`type: api`、`status: draft`、`rulebook:
+      specdojo:ifx-file-rulebook`）を検査します。
     message: >-
-      In section 3.1, x-spec-meta.type is specified as fixed to 'api', but all sample definitions in sections 6, 7, and
-      8 use 'type: file'.
+      The previous missing-key, file-structure, and api/file inconsistencies are resolved; the remaining minor issue is
+      that section 8.1 requires status: draft during creation and updates although section 4.2 permits ready and
+      deprecated. Restrict draft to initial authoring or define lifecycle-aware update checks consistent with
+      human-controlled status transitions.
     message_ja: >-
-      In section 3.1, x-spec-meta.type is specified as fixed to 'api', but all sample definitions in sections 6, 7, and
-      8 use 'type: file'.
+      The previous missing-key, file-structure, and api/file inconsistencies are resolved; the remaining minor issue is
+      that section 8.1 requires status: draft during creation and updates although section 4.2 permits ready and
+      deprecated. Restrict draft to initial authoring or define lifecycle-aware update checks consistent with
+      human-controlled status transitions.
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 105
+    anchor: >-
+      - 同梱の完成例（sample）は、業務背景・運用手順・異常系リカバリの解説を伴う Markdown 文書（Frontmatter の `type: api`、`rulebook:
+      specdojo:ifx-file-rulebook`）として構成し、その本文中に本章および第5章の必須構造を満たす YAML 定義を掲載します。
+    message: >-
+      This rulebook prescribes a Markdown companion sample for target_format: yaml, whereas document-metadata-standard
+      requires samples to use the deliverable format and rulebook-authoring-standard ties sample extensions to
+      target_format. Align the canonical sample format or document an authorized exception in the governing standards;
+      alternate-format resolver support does not reconcile the written requirements.
+    message_ja: >-
+      This rulebook prescribes a Markdown companion sample for target_format: yaml, whereas document-metadata-standard
+      requires samples to use the deliverable format and rulebook-authoring-standard ties sample extensions to
+      target_format. Align the canonical sample format or document an authorized exception in the governing standards;
+      alternate-format resolver support does not reconcile the written requirements.

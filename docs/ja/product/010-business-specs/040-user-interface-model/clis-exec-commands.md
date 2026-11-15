@@ -2,7 +2,7 @@
 specdojo:
   id: clis-exec-commands
   type: ui
-  status: draft
+  status: ready
   rulebook: specdojo:clis-rulebook
   based_on: []
 ---

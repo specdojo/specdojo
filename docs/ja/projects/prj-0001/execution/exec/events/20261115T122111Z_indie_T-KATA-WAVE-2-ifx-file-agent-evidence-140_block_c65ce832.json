@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T12:21:11Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-140",
+  "by": "indie",
+  "msg": "差し戻し: 完了条件が未充足のため、手直しの todo の後に確定に戻す（PJR-TN43）"
+}

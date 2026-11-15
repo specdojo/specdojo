@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T15:54:07Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-sf-index-090",
+  "by": "luna-review-executor",
+  "msg": "parent validation failed: test-integration, test-unit",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sf-index-090/T-KATA-WAVE-1-sf-index-090-20261114T143911Z-7bc17b67/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sf-index-090/T-KATA-WAVE-1-sf-index-090-20261114T143911Z-7bc17b67/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-sf-index-090-20261114T143911Z-7bc17b67"
+  }
+}

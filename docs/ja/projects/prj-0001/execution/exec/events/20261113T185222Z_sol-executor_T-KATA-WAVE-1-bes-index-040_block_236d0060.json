@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T18:52:22Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-bes-index-040",
+  "by": "sol-executor",
+  "msg": "parent validation failed: validate-schema, test-unit",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-040/T-KATA-WAVE-1-bes-index-040-20261113T183438Z-957ac888/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-040/T-KATA-WAVE-1-bes-index-040-20261113T183438Z-957ac888/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-bes-index-040-20261113T183438Z-957ac888"
+  }
+}

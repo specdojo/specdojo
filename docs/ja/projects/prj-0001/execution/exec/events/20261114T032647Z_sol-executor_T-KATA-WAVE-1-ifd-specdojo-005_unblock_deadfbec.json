@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T03:26:47Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-1-ifd-specdojo-005",
+  "by": "sol-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifd-specdojo-005/T-KATA-WAVE-1-ifd-specdojo-005-20261113T233859Z-14f27e70/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifd-specdojo-005/T-KATA-WAVE-1-ifd-specdojo-005-20261113T233859Z-14f27e70/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-ifd-specdojo-005-20261113T233859Z-14f27e70",
+    "pipeline_resume_claimed": "true"
+  }
+}

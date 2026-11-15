@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
 id: ifx-cmd-ai-provider-cli
 type: api
-status: draft
+status: ready
 title: AI provider CLI 非対話起動のコマンド連携仕様
 rulebook: specdojo:ifx-cmd-rulebook
 version: 1
@@ -10,7 +10,7 @@ based_on:
   - sysd-agent-settings
   - opr-agent-cli-update
 
-# _ASSUMPTION_: 未決事項の技術判断は人間の ARC、追跡・報告は PM に依頼する。
+# 未決事項の技術判断は人間の ARC、追跡・報告は PM が担う（人間の PO が 2026-11-15 に承認）。
 # ready 昇格前に、時間制約と schema の設定参照表現は解決するか、人間が延期理由・運用条件を承認する。
 # 判断・延期の記録先は
 # [[prj-0001:pjr-h90h-ifx-cmd-ai-provider-cli-refine-confirmed-kata|PJR-H90H]] の対応結果とする。
@@ -120,12 +120,13 @@ authentication:
 
 execution:
   working_directory: task worktree のルート（in-place 実行時は repository_root）
-  # 未決定の理由・現在動作・確認先は error_handling.timeout_action にまとめる。
+  # 値は schema の都合で未決の目印のまま置く。人間の PO が延期を承認した（2026-11-15。追跡先は
+  # PJR-39AB の Q2）。理由・現在動作は error_handling.timeout_action にまとめる。
   timeout_seconds: _UNDECIDED_
   network_required: true
-  # _UNDECIDED_: 並列数は固定せず、run.max_concurrent_runs と providers.<provider>.max_concurrency
-  # の適用範囲を exec設定ガイドで解決する。schema では設定参照や上限なしを表せないため、
-  # 人間の ARC に値表現の判断を依頼する。追跡先・昇格条件は先頭コメントを参照する。
+  # 並列数は固定せず、.specdojo/exec-defaults.yaml の run.max_concurrent_runs と
+  # providers.<provider>.max_concurrency を正本とする。schema では設定参照や上限なしを表せないため、
+  # 値は未決の目印のまま置く。人間の PO が延期を承認した（2026-11-15。追跡先は PJR-Y2X4 の CF-U03）。
   max_parallel: _UNDECIDED_
   idempotency:
     guaranteed: false
@@ -143,13 +144,14 @@ error_handling:
     # 全候補の短時間の利用制限で待機・再パスする（session limit / quota は除く）。
     # 上限は rate_limit_policy.on_critical.retry.max_attempts（初回パスを含む）を参照する。
     # 指名時の停止・待機・切替と接続失敗時の 1 回限りの fallback は exec設定ガイドを参照する。
-    # _UNDECIDED_: 設定依存の上限を schema で表せない。判断者・追跡先は max_parallel と同じ。
+    # 設定依存の上限を schema で表せないため、値は未決の目印のまま置く。人間の PO が延期を承認した
+    # （2026-11-15。追跡先は PJR-39AB の Q1）。
     max_attempts: _UNDECIDED_
     # 自動選択の再パス待機方式。待機時間・倍率は同じ起動設定の retry を参照する。
     backoff: exponential
   timeout_action: >-
-    _UNDECIDED_: 起動時間の上限を設けるか、また上限到達時に子プロセスを終了するか、
-    不完全出力をどう扱うかは未決定。現在は終了まで待ち続け、worktree を保持して実行枠や
+    起動時間の上限を設けるか、また上限到達時に子プロセスを終了するか、
+    不完全出力をどう扱うかは未決定。人間の PO が延期を承認した（2026-11-15。追跡先は PJR-39AB の Q2）。現在は終了まで待ち続け、worktree を保持して実行枠や
     適用対象の provider 枠を占有し続け得る。人間の ARC に時間制約と終了・出力処置の判断を依頼し、
     PM は枠占有を許容する運用条件と実行計画への影響を追跡する。昇格前に方針、または延期の承認と
     待機中の監視・停止判断の担当を記録する（追跡先は先頭コメント参照）。

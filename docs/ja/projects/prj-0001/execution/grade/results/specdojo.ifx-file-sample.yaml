@@ -5,27 +5,27 @@ path: docs/ja/specdojo/samples/ifx-file-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-10-12T10:08:15.247Z"
-graded_by: agy-expert-executor
-content_hash: 7162dd8e8cddd2125a0b40f636ddbaa4c7cebfde073ea62fb9ddae0732bcbd08
+score: 75
+graded_at: "2026-11-15T11:59:44.343Z"
+graded_by: sol-review-executor
+content_hash: f18e9d9b2f6eb5edeaaf742ca86ea458d7e7719db334721bcbd393fc924d91cd
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 88
   planning:
     score: 100
   business:
-    score: 100
+    score: 83
   architecture:
     score: 100
   usability:
-    score: 92
-  implementation:
     score: 100
+  implementation:
+    score: 63
   quality:
-    score: 67
+    score: 42
   consistency:
     score: 50
 viewpoints:
@@ -51,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -66,14 +66,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -81,11 +81,11 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,37 +103,167 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 1
+  major: 9
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-qe-verifiability
-    line: 21
-    anchor: >-
-      | ------------ | --------------------------------------------------------- | ------------------------------------
-      |
-    message: 最小記述例の表内の値が抽象的であり、検証可能な具体的な設定値として機能していない。
-    message_ja: 最小記述例の表内の値が抽象的であり、検証可能な具体的な設定値として機能していない。
+    rule: vp-ba-requirements-completeness
+    line: 108
+    anchor: "description: 発注数量（ボールまたは箱単位）"
+    message: >-
+      order_quantity is described as using either balls or boxes, but the contract defines neither a unit field nor a
+      referenced product-to-ordering-unit mapping. Specify how the unit is determined for each product_code so that a
+      quantity such as 5 cannot produce different order volumes for the sender and recipient.
+    message_ja: >-
+      order_quantity is described as using either balls or boxes, but the contract defines neither a unit field nor a
+      referenced product-to-ordering-unit mapping. Specify how the unit is determined for each product_code so that a
+      quantity such as 5 cannot produce different order volumes for the sender and recipient.
   - id: F002
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: ""
-    message: rulebook で定義されている必須構造（x-spec-meta, file, direction 等）が一切含まれておらず、仕様としての整合性が欠落している。
-    message_ja: rulebook で定義されている必須構造（x-spec-meta, file, direction 等）が一切含まれておらず、仕様としての整合性が欠落している。
+    rule: vp-dev-implementation-readiness
+    line: 47
+    anchor: "location: data/outbound/orders/orders_YYYYMMDD.csv（転送先: /inbound/orders/orders_YYYYMMDD.csv）"
+    message: >-
+      The unquoted location value contains a colon followed by a space in 転送先: /inbound/orders/, which causes YAML
+      parsing to fail with "Nested mappings are not allowed in compact mappings." Quote the scalar or move the
+      destination explanation into a separate field or comment so the example can be loaded.
+    message_ja: >-
+      The unquoted location value contains a colon followed by a space in 転送先: /inbound/orders/, which causes YAML
+      parsing to fail with "Nested mappings are not allowed in compact mappings." Quote the scalar or move the
+      destination explanation into a separate field or comment so the example can be loaded.
   - id: F003
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 2
-    anchor: ""
-    message: 成果物が YAML ファイルとして定義されているにもかかわらず、サンプルが Markdown の表形式で記述されており、完成例としての責務を果たしていない。
-    message_ja: 成果物が YAML ファイルとして定義されているにもかかわらず、サンプルが Markdown の表形式で記述されており、完成例としての責務を果たしていない。
+    rule: vp-dev-implementation-readiness
+    line: 165
+    anchor: "schema_ref: kinuya-session-schema#CurrentTransactionSession"
+    message: >-
+      The JSON contract delegates its structures to explicitly undelivered fictional schemas. required_fields supplies
+      names but not types, nested structures, or allowed states. Provide resolvable illustrative schema definitions so
+      developers can implement compatible readers and writers from the completed example.
+    message_ja: >-
+      The JSON contract delegates its structures to explicitly undelivered fictional schemas. required_fields supplies
+      names but not types, nested structures, or allowed states. Provide resolvable illustrative schema definitions so
+      developers can implement compatible readers and writers from the completed example.
   - id: F004
+    severity: major
+    rule: vp-dev-testability
+    line: 219
+    anchor: "session_schema: kinuya-session-schema"
+    message: >-
+      schema.references names undelivered fictional schemas, so readers cannot perform the rulebook's canonical-schema
+      checks or reproduce type-validation results. Supply accessible example schemas and identify the validation
+      procedure and expected valid/invalid outcomes for both JSON files.
+    message_ja: >-
+      schema.references names undelivered fictional schemas, so readers cannot perform the rulebook's canonical-schema
+      checks or reproduce type-validation results. Supply accessible example schemas and identify the validation
+      procedure and expected valid/invalid outcomes for both JSON files.
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 170
+    anchor: "- status"
+    message: >-
+      status, api_sync_status, and print_status are required, but their permitted values and valid combinations are
+      neither defined here nor available through the fictional schema references. Provide canonical state definitions
+      and acceptance cases so QE can distinguish valid, invalid, and unresolved transaction records.
+    message_ja: >-
+      status, api_sync_status, and print_status are required, but their permitted values and valid combinations are
+      neither defined here nor available through the fictional schema references. Provide canonical state definitions
+      and acceptance cases so QE can distinguish valid, invalid, and unresolved transaction records.
+  - id: F006
     severity: minor
-    rule: vp-ux-readability
-    line: 19
-    anchor: ""
-    message: 具体的な YAML 構造を示さず表形式で要点をまとめているため、実際の適用方法を直感的に理解しにくい。
-    message_ja: 具体的な YAML 構造を示さず表形式で要点をまとめているため、実際の適用方法を直感的に理解しにくい。
+    rule: vp-qe-verifiability
+    line: 121
+    anchor: 日曜 21:45 までに生成完了フラグが確認できない場合、店舗端末へ未生成警告を表示し、
+    message: >-
+      The missing-file rule depends on a generation-complete flag without defining its name, location, writer, or
+      success condition. Define that signal or explicitly use the atomically published final CSV as the completion
+      condition.
+    message_ja: >-
+      The missing-file rule depends on a generation-complete flag without defining its name, location, writer, or
+      success condition. Define that signal or explicitly use the atomically published final CSV as the completion
+      condition.
+  - id: F007
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 81
+    anchor: "pattern: \"^KINUYA-\\\\d{2}$\""
+    message: >-
+      The description requires the fixed store code KINUYA-01, while the pattern also accepts values such as KINUYA-99.
+      Express the fixed value as an enforceable constraint so the declared requirement and validation result agree.
+    message_ja: >-
+      The description requires the fixed store code KINUYA-01, while the pattern also accepts values such as KINUYA-99.
+      Express the fixed value as an enforceable constraint so the declared requirement and validation result agree.
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 261
+    anchor: >-
+      | 週次発注 CSV の未生成・転送失敗（`missing` / `transport_failure`） | 締め切り（日曜 22:00）前は再試行を待ち、超過時は自動送信を止めて手動へ切り替える | 店主代表（`PO`）が
+      Wi-Fi 通信状態を確認し、22:00 までに送信完了しない場合は控えをもとに問屋へ電話発注して二重発注を防ぐ  |
+    message: >-
+      This row combines missing generation with transfer failure and instructs users to wait until 22:00, whereas lines
+      121–122 require manual rerun or telephone fallback when generation is incomplete at 21:45. Separate the two
+      conditions and align their deadlines and permitted actions so operators receive one consistent recovery rule.
+    message_ja: >-
+      This row combines missing generation with transfer failure and instructs users to wait until 22:00, whereas lines
+      121–122 require manual rerun or telephone fallback when generation is incomplete at 21:45. Separate the two
+      conditions and align their deadlines and permitted actions so operators receive one consistent recovery rule.
+  - id: F009
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 47
+    anchor: "location: data/outbound/orders/orders_YYYYMMDD.csv（転送先: /inbound/orders/orders_YYYYMMDD.csv）"
+    message: >-
+      The first advertised YAML completion example is syntactically invalid because location contains an unquoted
+      colon-space sequence. Correct the scalar and verify that both fenced contracts parse independently, as required by
+      rulebook section 8.1.
+    message_ja: >-
+      The first advertised YAML completion example is syntactically invalid because location contains an unquoted
+      colon-space sequence. Correct the scalar and verify that both fenced contracts parse independently, as required by
+      rulebook section 8.1.
+  - id: F010
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 165
+    anchor: "schema_ref: kinuya-session-schema#CurrentTransactionSession"
+    message: >-
+      Rulebook sections 5.6, 6.2, and 8.1 require canonical schema paths and reference verification, but this completed
+      example substitutes explicitly undelivered fictional names. Include resolvable example schemas or provide complete
+      inline definitions rather than leaving the demonstrated reference contract incomplete.
+    message_ja: >-
+      Rulebook sections 5.6, 6.2, and 8.1 require canonical schema paths and reference verification, but this completed
+      example substitutes explicitly undelivered fictional names. Include resolvable example schemas or provide complete
+      inline definitions rather than leaving the demonstrated reference contract incomplete.
+  - id: F011
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 147
+    anchor: "- specdojo:ifx-index-sample"
+    message: >-
+      The cited ifx-index-sample explicitly excludes internal CLI transaction files and contains no spec_ref matching
+      this contract ID. Explain the alternative CLI-to-file-contract relationship and its registration boundary, or
+      align the index mapping with rulebook section 2.1.
+    message_ja: >-
+      The cited ifx-index-sample explicitly excludes internal CLI transaction files and contains no spec_ref matching
+      this contract ID. Explain the alternative CLI-to-file-contract relationship and its registration boundary, or
+      align the index mapping with rulebook section 2.1.
+  - id: F012
+    severity: major
+    rule: vp-ops-operability
+    line: 263
+    anchor: >-
+      | 取引状態の欠落・二重開始（`current_tx_json` の状態不整合）         | 未解決の会計がある間は新規取引を開始せず、既存取引の確定状態を先に確認する       | 店番担当が `sales
+      total` で既存明細を確認し、会計要求後なら店主代表が本部受付と `data/sales/` の控えを照合する           |
+    message: >-
+      The row groups missing current-tx.json with duplicate-start conditions and directs the operator to sales total,
+      but lines 227–228 require sales total to stop when that file is missing. Separate missing-state recovery from
+      existing-state inspection and identify the surviving evidence and PO/DEV reconciliation path to use before another
+      transaction is started.
+    message_ja: >-
+      The row groups missing current-tx.json with duplicate-start conditions and directs the operator to sales total,
+      but lines 227–228 require sales total to stop when that file is missing. Separate missing-state recovery from
+      existing-state inspection and identify the surviving evidence and PO/DEV reconciliation path to use before another
+      transaction is started.

@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T07:32:09Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-2-bds-progress-report-070",
+  "by": "luna-executor",
+  "msg": "executor validation failed or not run: npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md, 親 runner 指定検査（lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, test-integration, validate-schema, typecheck, test-unit）",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-070/T-KATA-WAVE-2-bds-progress-report-070-20261115T071535Z-8b38063f/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-070/T-KATA-WAVE-2-bds-progress-report-070-20261115T071535Z-8b38063f/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-2-bds-progress-report-070-20261115T071535Z-8b38063f"
+  }
+}

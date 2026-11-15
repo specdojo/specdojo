@@ -2,12 +2,12 @@
 id: prj-0001:pm-quality-management-plan-grade-criteria
 document: prj-0001:pm-quality-management-plan
 path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
-graded_at: "2026-10-15T16:32:44.426Z"
-graded_by: agy-expert-executor
+graded_at: "2026-11-15T12:21:02.637Z"
+graded_by: sol-review-executor
 content_hash: 15c713519458f8ca00478dcf66254e5b45f84074c4c66f3397a40f5459671d01
 summary:
-  satisfied: 2
-  unsatisfied: 1
+  satisfied: 1
+  unsatisfied: 2
   total: 3
 criteria:
   - id: DC-001
@@ -15,7 +15,10 @@ criteria:
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      Review exit conditions, holds for unresolved prerequisites, and exception approval conditions are insufficiently
+      specified for an informed approval decision.
   - id: DC-002
     text: 品質管理プロセスが全体計画と整合していること
     roles:
@@ -29,5 +32,5 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Quality metrics lack calculation methods, threshold values, and measurement frequency in the text, preventing
-      verifiable quality assessment.
+      Complete metric calculation and measurement procedures, executable verification references, review exit
+      conditions, and corrective re-evaluation procedures are missing or unresolved.

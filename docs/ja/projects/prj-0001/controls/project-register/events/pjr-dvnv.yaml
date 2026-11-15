@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_09bd805b42ba48838b64e1c7fac165bd
+  ts: "2026-11-15T12:27:25Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: runner が統合の後に書いたイベントと run の記録を commit する
+    - field: description
+      from: ""
+      to: 統合の後のイベントと試行の記録を、runner が自分で commit する（run の終わりに記帳の commit を足す、など）
+    - field: input
+      from: ""
+      to: '["2026-11-15、develop の作業ツリーに commit されていない実行記録が 465 件たまっていた。イベント 371 件（11/10〜11/15 の claim・complete・block・unblock・release など）と、失敗した試行や再開前の試行のログ 70 件","runner は統合の commit の時点のイベントだけを commit し、その後に書く complete や失敗時の block、試行のログを作業ツリーに残しているように見える。push すると、ほかの clone で実行状態が食い違う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec

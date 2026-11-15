@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T18:23:39Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-1-cxd-specdojo-090",
+  "by": "sonnet-review-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-090/T-KATA-WAVE-1-cxd-specdojo-090-20261114T141554Z-d05fdf9d/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cxd-specdojo-090/T-KATA-WAVE-1-cxd-specdojo-090-20261114T141554Z-d05fdf9d/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-cxd-specdojo-090-20261114T141554Z-d05fdf9d",
+    "pipeline_resume_claimed": "true"
+  }
+}

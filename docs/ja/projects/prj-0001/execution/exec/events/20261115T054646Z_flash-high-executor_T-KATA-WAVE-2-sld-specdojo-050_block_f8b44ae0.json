@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T05:46:46Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-2-sld-specdojo-050",
+  "by": "flash-high-executor",
+  "msg": "parent validation failed: test-integration",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-050/T-KATA-WAVE-2-sld-specdojo-050-20261115T045747Z-adaa5a61/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-050/T-KATA-WAVE-2-sld-specdojo-050-20261115T045747Z-adaa5a61/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-2-sld-specdojo-050-20261115T045747Z-adaa5a61"
+  }
+}

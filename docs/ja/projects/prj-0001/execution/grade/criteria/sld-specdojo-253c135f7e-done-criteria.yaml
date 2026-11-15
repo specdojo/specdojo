@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sld-specdojo-grade-criteria
+document: sld-specdojo
+path: docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md
+graded_at: "2026-11-15T11:37:17.612Z"
+graded_by: sol-review-executor
+content_hash: 59c2d5593c44f81b3b970a3eefe81ee3ef6629b487b992a047d381821566f91b
+summary:
+  satisfied: 0
+  unsatisfied: 3
+  total: 3
+criteria:
+  - id: DC-001
+    text: 保管場所ごとに置くもの・共有の有無・寿命・消してよいかが記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      Permanent .specdojo configuration is within scope but lacks per-location contents, sharing, lifetime, and deletion
+      policies.
+  - id: DC-002
+    text: 保管場所の区分が実装の配置と一致していること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      The blanket generated-directory category does not match grade implementation storage for live locks and persisted
+      run state.
+  - id: DC-003
+    text: 運用者が消してよい場所と残すべき場所を判断できること
+    roles:
+      - OPS
+    viewpoint: vp-ops-operability
+    status: unsatisfied
+    reason: >-
+      The cleanup guidance permits deletion of active grade runtime files and does not carry forward the migration
+      prerequisite for legacy routine records.
