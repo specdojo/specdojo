@@ -1,0 +1,50 @@
+PJR-DVNV の対応を終えました。Schedule の run の終わりに、runner が書いた実行記録を記帳の commit 1 件として develop に入れるようにしました。commit は親 runner に任せており、私はしていません。
+
+**原因**
+統合の merge commit に入るのは、その時点までのイベント（claim）と run の記録だけでした。次のものは、どの commit にも入らずに作業ツリーにたまっていました。
+- 統合の後に書く complete
+- 失敗・延期の block
+- 再開の unblock・release
+- worktree を残したときの root の plan・result の複製
+
+次の run の準備の commit で拾う仕組みも働いていませんでした。この commit は exec branch にだけ置かれ、その task の plan・result・claim しか入らないためです。
+
+**変更したこと**
+- **記帳の commit:** `exec run`（`--auto` と `--task --worktree`）、`exec resume`、`exec cycle` の終わりに作ります。成功・失敗・延期・再開のどれで終わっても作ります（`src/exec/trailing-records.ts`、`src/exec/run/trailing-records.ts`）。中に入るのは次の 3 つです。
+  - `by` が agent のイベント
+  - それらの task の `runs/schedule/<task-id>/` 配下
+  - `plan-conventions/` 配下
+- **前の run の残り:** 記帳は今回の run の分に限らず、root に残る runner の記録を全部拾います。前の run や異常終了で残ったものも、次の run の終わりに入ります。
+- **commit の失敗:** index.lock の競合は、既存の再試行（1.5 秒間隔で 10 回まで）に任せます。hook が result.md を拒否したら、result.md を外してもう一度試します。それでも失敗したら stage を戻し、残ったファイルと次の操作を標準エラーに出します。
+- **後の統合での競合:** 残した worktree を後で統合すると、記帳済みの plan・result が exec branch 側の同じファイルと競合します。その task の run の記録に限って、exec branch 側の内容で解決します。Schedule の統合と `exec worktree merge` の両方に入れました。
+- **ガイド:** `schedule-operation-guide` に「実行記録の記帳」の節を足しました。runner が記帳するものと、人が commit するもの（人が書いたイベントと human タスクの記録）の区別を書いています。`exec-worktree-guide` と `branch-workflow-guide` にも反映しました。
+- **テスト:**
+  - `trailing-records.integration.test.ts` を新しく書きました。
+  - `pipeline-e2e` には、失敗の後と再開の後に `git status` で実行記録が残らないことの確認を足しました。
+  - run の終わりの HEAD が統合の commit だという前提が崩れ、既存の 8 件が落ちました。これらは期待値を直しています。
+- **個票:** 対応結果、判断した点、「CHANGELOG に書く事項」を書きました。CHANGELOG.md は変えていません。
+
+**知っておいてほしいこと**
+- develop の first-parent に、run ごとに記帳の commit が 1 件増えます。これまでの「成功した task は merge commit 1 件だけ」から変わります。
+- 人と runner の区別は、イベントの `by` が agent かどうかで決めています。人が `--by <agent>` で書いたイベントは、runner の記帳に入ります。
+- hook は飛ばしていません。`evidence-secret-scan` が実行記録の秘密情報を止めるためです。
+- 記帳に失敗しても run の終了コードは変えず、警告だけを出します。統合はもう終わっており、記帳は次の run でやり直せるためです。
+- grade の評価結果（`grade/criteria`・`grade/results`）は記帳に入れていません。人の `grade` 実行でも変わるため、区別できないからです。
+- register の run は対象外です。記帳が merge commit と `wait` commit に同梱されており、11-15 にたまった記録にも `runs/register/` はありませんでした。
+
+**検証**
+- 自分で確かめた結果（報告の検証結果には含めていません）:
+  - integration テストは 33 ファイル・335 件がすべて通りました。
+  - `npx tsc -b` もエラーなしでした。
+- 報告に載せた検証:
+  - `npm run validate:history-links` は全件 valid でした。
+  - 変更ファイルへの markdownlint と Prettier も問題なしでした。
+- 親の検証（`typecheck`、`lint:ts`、`test:unit`、`lint:md` など）は、このあと runner が流します。
+
+**残っている作業**
+- `pm-orchestrator-playbook` などにある、orchestrator が実行記録を手で commit する運用は、統合の後に見直す必要があります。
+- 実際の run の後に、develop の `git status` で実行記録が残らないことを確かめてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Schedule の exec run・exec resume・exec cycle の終わりに、runner が統合の後に書いたイベントと run の記録を記帳の commit 1 件にまとめるようにした。前の run の残りも拾い、記帳済みの記録との統合時の競合は exec branch 側で解決する。ガイド 3 本、回帰テスト、個票の対応結果を更新した。","handoff":["判断: 人と runner のイベントは、`by` が `.specdojo/agent-members.yaml` の agent かどうかで区別した。人が `--by <agent>` で書いたイベントは runner の記帳に入る。","判断: run の記録は、選んだ runner のイベントの task の `runs/schedule/<task-id>/` 配下に限った。human タスク（`-140` など）の result を人の編集中に commit しないためである。","判断: 記帳の commit は hook を飛ばさない（`evidence-secret-scan` で実行記録の秘密情報を止めるため）。hook が result.md を拒否したら result.md を外して再試行し、それでも失敗したら stage を戻して、残ったファイルと次の操作を標準エラーに出す。run の終了コードは変えない。","判断: grade の評価結果（`grade/criteria`・`grade/results`）は記帳の対象外とした。人の grade 実行でも変わり、runner の記録と区別できないためである。register の run も対象外とした（merge commit と wait commit に記帳が同梱されており、2026-11-15 にたまった記録にも `runs/register/` が無かった）。","次の run の準備の commit で拾う仕組みは効いていなかった（準備の commit は exec branch にだけ置かれ、入るのはその task の plan・result・claim だけ）。記帳の commit が、root に残る runner の記録をその run の分に限らず全部拾うように直した。","利用者への影響: develop の first-parent に、run ごとに記帳の commit（`exec(run): record execution events and run records`）が 1 件加わる。`pipeline-e2e` で HEAD を統合の commit とみなしていた期待値は、記帳の commit を飛ばして確かめる形に改めた。","残課題: 統合の後に、`pm-orchestrator-playbook` などにある、orchestrator が実行記録を手で commit する運用を見直す。","残課題: 統合の後に実際の run で、develop の `git status` に実行記録が残らないことを確かめる。","CHANGELOG に書く事項は個票の「CHANGELOG に書く事項」の節に書いた（Changed: run の終わりの記帳 commit / Fixed: 失敗・延期の後に記帳した plan・result が再開後の統合で競合しても止まらない）。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め、全件 valid"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-dvnv-exec-commit-trailing-records.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check src/exec/trailing-records.ts src/exec/run/trailing-records.ts tests/src/exec/trailing-records.integration.test.ts tests/src/exec/pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/schedule-operation-guide.md docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-dvnv-exec-commit-trailing-records.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

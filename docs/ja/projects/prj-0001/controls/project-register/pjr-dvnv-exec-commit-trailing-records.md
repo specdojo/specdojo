@@ -42,13 +42,40 @@ specdojo:
 
 | No  | 作業                                            | 担当 | 状態 | メモ |
 | --- | ----------------------------------------------- | ---- | ---- | ---- |
-| 1   | 統合の後のイベントと試行の記録を commit する    | DEV  | open | -    |
-| 2   | 次の run の準備の commit での拾い上げを確かめる | DEV  | open | -    |
-| 3   | ガイドと回帰テストを足す                        | DEV  | open | -    |
+| 1   | 統合の後のイベントと試行の記録を commit する    | DEV  | done | -    |
+| 2   | 次の run の準備の commit での拾い上げを確かめる | DEV  | done | -    |
+| 3   | ガイドと回帰テストを足す                        | DEV  | done | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 記帳の commit を足した。`exec run`（Schedule の `--auto` と `--task --worktree`）・`exec resume`・`exec cycle` の終わりに、runner が `exec(run): record execution events and run records` を 1 件作る。成功・失敗・延期・再開のどれで終わっても作る（`src/exec/trailing-records.ts`、`src/exec/run/trailing-records.ts`）。中に入れるものは次の 3 つ。
+  - root に未 commit で残っているイベント（`exec/events/*.json`）のうち、`by` が `agent-members.yaml` の agent のもの。
+  - それらの task の `runs/schedule/<task-id>/` 配下（plan・result・evidence・pipeline-state・ログ、退避した試行）。
+  - `plan-conventions/` 配下。
+- 次の run の準備の commit で拾う仕組みは効いていなかった。準備の commit（`prepare execution`）は exec branch にだけ置かれ、入るのはその task の plan・result・claim だけである。直し方として、記帳の commit が今回の run の記録に限らず、root に残る runner の記録を全部拾うようにした。これで、前の run の残りや異常終了で残ったものも次の run の終わりに入る。
+- index.lock の競合は既存の `gitResult` が 1.5 秒間隔で 10 回まで再試行する。記帳は統合と同じ scheduler lock で直列化した。hook が result.md を拒否したら result.md を外してもう一度試す。それでも失敗したら、stage を戻したうえで、残ったファイルと次の操作を標準エラーに出す。
+- 保持した worktree を後で統合する経路も直した。記帳済みの plan・result と exec branch 側の同じファイルが両側の追加として競合する。そこで、その task の run の記録と checkpoint の複製に限って exec branch 側で解決する。Schedule の統合と `exec worktree merge` の両方で `resolveConflictsWithBranchPaths` に渡すようにした。
+- ガイドに書いた。`schedule-operation-guide` に「実行記録の記帳」の節を足し、runner が記帳するものと人が commit するもの（人が書いたイベント・human タスクの記録）の区別を書いた。`exec-worktree-guide` と `branch-workflow-guide` にも反映した。
+- 回帰テストを書いた。`tests/src/exec/trailing-records.integration.test.ts` は、選ぶ範囲・記帳の commit 1 件・hook に拒否された場合の報告・失敗の後に記帳してから統合する経路を確かめる。`pipeline-e2e` には、失敗の後と再開の後に `git status` で実行記録が残らないことを足した。HEAD を統合の commit とみなしていた期待値は、記帳の commit を飛ばして確かめる形に改めた。
+
+### 5.1. 判断した点
+
+- 人が書いたイベントは、`by` が agent かどうかで分けた。runner は claim・complete・block などを agent の名前で書き、人のコマンドは人の名前で書くためである。人が `--by <agent>` で書いたイベントは runner の記帳に入る。
+- run の記録は、選んだイベントの task の分に限った。human タスク（`-140` など）の result を人の編集中に commit しないためである。
+- hook は飛ばさない。`evidence-secret-scan` が実行記録の認証情報を止めるためである。
+- 記帳に失敗しても run の終了コードは変えない。成果物の統合はもう終わっており、記帳は次の run でやり直せるためである。
+- grade の評価結果（`grade/criteria`・`grade/results`）は記帳の対象に入れなかった。人の `grade` 実行でも変わるので、runner の記録と区別できないためである。
+- register の run は対象外とした。統合の merge commit と `wait` commit に記帳が同梱されており、2026-11-15 にたまった記録にも `runs/register/` は無かったためである。
+
+### 5.2. CHANGELOG に書く事項
+
+- Changed: Schedule の `exec run`・`exec resume`・`exec cycle` は、run の終わりに、統合の後に runner が書いたイベントと run の記録を記帳の commit（`exec(run): record execution events and run records`）1 件にまとめる。作業ツリーに実行記録が残らなくなり、develop の first-parent には run ごとに記帳の commit が 1 件加わる。
+- Fixed: 失敗・延期の後に記帳した plan・result が、再開後の統合で exec branch 側の同じファイルと競合しても統合が止まらない。
+
+### 5.3. 残課題
+
+- `pm-orchestrator-playbook` などにある、orchestrator が実行記録を手で commit する運用は、この変更の統合後に見直す。
+- 実際の run で develop の `git status` を確かめる作業は、統合後に runner かオーケストレーターが行う。
 
 ## 6. 関連ドキュメント
 

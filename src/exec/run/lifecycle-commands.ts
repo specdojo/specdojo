@@ -55,6 +55,7 @@ import {
   type PreparedTask,
 } from "./schedule-prepare.js";
 import { runPreparedTask } from "./schedule-task.js";
+import { withTrailingRunRecords } from "./trailing-records.js";
 import {
   buildTaskPhaseMap,
   configuredWorktreeBase,
@@ -310,7 +311,9 @@ export function registerCycleCommand(exec: Command): void {
 
   cmd.action(async (opts: RunOpts) => {
     try {
-      await withProjectExecRunLock(opts, "cycle", () => runCycleMode(opts));
+      await withProjectExecRunLock(opts, "cycle", () =>
+        withTrailingRunRecords(opts, "cycle", () => runCycleMode(opts)),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");
@@ -852,7 +855,9 @@ export function registerResumeCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
-      await withProjectExecRunLock(opts, "resume", () => runResumeMode(opts));
+      await withProjectExecRunLock(opts, "resume", () =>
+        withTrailingRunRecords(opts, "resume", () => runResumeMode(opts)),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");

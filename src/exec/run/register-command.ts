@@ -19,6 +19,7 @@ import {
   type ExecRunLockSharing,
   type RunOpts,
 } from "./shared.js";
+import { withTrailingRunRecords } from "./trailing-records.js";
 
 export function registerRunCommand(exec: Command): void {
   const rcmd = exec
@@ -434,11 +435,9 @@ export function registerRunCommand(exec: Command): void {
           }
           process.stdout.write("[run] refresh: ok\n");
 
-          if (isBatch) {
-            await runBatchMode(opts);
-          } else {
-            await runManualMode(opts);
-          }
+          await withTrailingRunRecords(opts, "run", () =>
+            isBatch ? runBatchMode(opts) : runManualMode(opts),
+          );
         },
         registerWorktreeLockSharing,
       );
