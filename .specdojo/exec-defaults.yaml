@@ -21,20 +21,42 @@ pipeline:
   parent_validations:
     # lint は短時間で終わるため先に実行し、executor が残した ESLint・frontmatter・Markdown の
     # エラーを統合前に検出する（PJR-K1Z5）。
-    - lint-ts # npm run lint:ts
+    # paths を書いた検証は、executor が変えたファイルに合うときだけ流す（PJR-T01P）。
+    - id: lint-ts # npm run lint:ts
+      paths: ["{src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}", "eslint.config.js"]
     - lint-fm # npm run lint:fm
     - lint-md # npm run lint:md
     # Mermaid の構文エラーは docs:build まで分からないため、統合前に検出する（PJR-B5TY）。
     - lint-mermaid # npm run lint:mermaid
     - lint-d2 # npm run lint:d2
-    - test-integration # npm run test:integration（shell を介さず固定 argv で実行）
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
     # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
+    - id: test-integration # npm run test:integration（shell を介さず固定 argv で実行）
+      paths:
+        - "{src,tests,tools,scripts,packages}/**"
+        - "docs/ja/specdojo/**"
+        - "docs/specdojo/**"
+        - "vitest.*"
+        - "tsconfig*.json"
     - validate-schema # npm run validate:schema
     # 型エラーは Vitest では検出できず、統合時の pre-commit hook まで持ち越されるため、
-    # test-unit の前に親検証として実行する（PJR-W66B）。
-    - typecheck # npm run typecheck
+    # test-unit の前に親検証として実行する（PJR-W66B）。docs-site の .vitepress も対象（PJR-C8J8）。
+    - id: typecheck # npm run typecheck
+      paths:
+        [
+          "{src,tests,scripts,tools}/**",
+          "packages/docs-lint/**",
+          "packages/docs-site/**",
+          "tsconfig*.json",
+        ]
+    # 型のメニューや catalog のテストが実際の文書を読むため、paths を書かず毎回流す。
     - test-unit # npm run test:unit
+  # 親の検証が passed のとき、統合の commit で同じ hook を流し直さない（PJR-T01P）。
+  commit_hook_skips:
+    - { hook: typecheck, covered_by: [typecheck] }
+    - { hook: test, covered_by: [test-unit, test-integration] }
+  # 決まった形の edit result は reporter の agent を起こさず runner が作る（PJR-T01P）。
+  mechanical_result: true
 
 # register 項目は失敗時の変更と再開用 checkpoint を隔離するため、既定で task worktree
 # を使う。短時間の軽微な作業を現在の作業ツリーで行う場合だけ --in-place を明示する。
