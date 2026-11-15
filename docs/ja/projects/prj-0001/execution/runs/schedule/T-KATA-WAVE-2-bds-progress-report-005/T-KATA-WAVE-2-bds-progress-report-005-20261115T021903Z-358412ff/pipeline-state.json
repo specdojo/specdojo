@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-bds-progress-report-005",
+  "run_id": "T-KATA-WAVE-2-bds-progress-report-005-20261115T021903Z-358412ff",
+  "updated_at": "2026-11-15T04:23:04.813Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T02:24:34.525Z",
+      "completed_at": "2026-11-15T02:31:54.532Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-005/T-KATA-WAVE-2-bds-progress-report-005-20261115T021903Z-358412ff/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-15T03:15:43.390Z",
+      "completed_at": "2026-11-15T03:19:08.380Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-005/T-KATA-WAVE-2-bds-progress-report-005-20261115T021903Z-358412ff/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "indie",
+      "attempts": 3,
+      "started_at": "2026-11-15T04:23:04.813Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: catalog-validate: ERROR: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bds-progress-report-005/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml: bds-progress-report: based_on 'sysd-job-execution' (prj-0001:sysd-job-execution) が depends_on の推移閉包に含まれていません（根拠ドキュメントは先行成果物である必要があります）"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-005/T-KATA-WAVE-2-bds-progress-report-005-20261115T021903Z-358412ff/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-005/T-KATA-WAVE-2-bds-progress-report-005-20261115T021903Z-358412ff/result.md"
+  }
+}
