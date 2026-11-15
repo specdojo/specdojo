@@ -78,7 +78,9 @@ specdojo:
 ## 3. フォローアップ
 
 - 利用者の判断が出たら、項目ごとに結果と日付をここに書く。
-- 2026-11-15: 1 は推奨のとおり承認。起票の A を PJR-AK5V、B を PJR-CJMN として起票し、7 件の本文に判断と留保を書いた。2 の確定の実行は未承認。
+- 2026-11-15: 1 は推奨のとおり承認。起票の A を PJR-AK5V、B を PJR-CJMN として起票し、7 件の本文に判断と留保を書いた。2 の確定の実行は 2026-11-15 に承認。完了条件を満たした cxd・cpd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy を確定し、残る 6 件は今の本文で grade し直してから確定か差し戻しを決める。
+- 2026-11-15: 3 は起票を承認。C を PJR-V2GH、D を PJR-ED0K、E を PJR-M495、F を PJR-BJ7E として起票した。
+- 2026-11-15: 6 件を grade し直した結果で、dct-index を確定、ifd-specdojo と ifx-index を留保付きで確定した。sf-index・bes-index・cnd-specdojo は差し戻し、手直しの todo を PJR-VEHX・X1RW・Q9DF として起票した（kata-wave-1 の確定は 11 件中 8 件）。
 
 ## 4. 関連ドキュメント
 

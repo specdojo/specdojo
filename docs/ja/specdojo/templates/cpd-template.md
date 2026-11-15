@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cpd-template
   type: template
-  status: draft
+  status: ready
   rulebook: specdojo:cpd-rulebook
   frontmatter_template:
     specdojo:

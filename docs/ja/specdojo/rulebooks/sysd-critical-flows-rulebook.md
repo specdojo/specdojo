@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:sysd-critical-flows-rulebook
   type: rulebook
   deliverable_type: architecture
-  status: draft
+  status: ready
   recipe: specdojo:sysd-critical-flows-recipe
   sample: specdojo:sysd-critical-flows-sample
   template: specdojo:sysd-critical-flows-template

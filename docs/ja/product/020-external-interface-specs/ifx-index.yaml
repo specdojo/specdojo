@@ -2,7 +2,7 @@
 id: prj-0001:ifx-index
 type: api
 title: SpecDojo 外部システムI/F一覧
-status: draft
+status: ready
 rulebook: specdojo:ifx-index-rulebook
 based_on: []
 supersedes: []

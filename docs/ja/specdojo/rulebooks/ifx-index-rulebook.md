@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:ifx-index-rulebook
   type: rulebook
   deliverable_type: api
-  status: draft
+  status: ready
   target_format: yaml
   recipe: specdojo:ifx-index-recipe
   sample: specdojo:ifx-index-sample

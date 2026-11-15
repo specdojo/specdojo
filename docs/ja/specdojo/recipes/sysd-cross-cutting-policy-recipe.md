@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sysd-cross-cutting-policy-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:sysd-cross-cutting-policy-rulebook
   sample: specdojo:sysd-cross-cutting-policy-sample
 ---

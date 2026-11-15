@@ -2,7 +2,7 @@
 # specdojo-schema: validate=false reason=template
 id: specdojo:ifx-index-template
 type: template
-status: draft
+status: ready
 title: 外部システムI/F一覧テンプレート
 rulebook: none
 metadata_template:

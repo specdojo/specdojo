@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sysd-critical-flows-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:sysd-critical-flows-rulebook
   sample: specdojo:sysd-critical-flows-sample
 ---

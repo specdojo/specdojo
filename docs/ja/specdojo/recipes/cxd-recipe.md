@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cxd-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:cxd-rulebook
   sample: specdojo:cxd-sample
 ---

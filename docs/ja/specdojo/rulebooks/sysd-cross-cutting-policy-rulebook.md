@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:sysd-cross-cutting-policy-rulebook
   type: rulebook
   deliverable_type: architecture
-  status: draft
+  status: ready
   recipe: specdojo:sysd-cross-cutting-policy-recipe
   sample: specdojo:sysd-cross-cutting-policy-sample
   template: specdojo:sysd-cross-cutting-policy-template

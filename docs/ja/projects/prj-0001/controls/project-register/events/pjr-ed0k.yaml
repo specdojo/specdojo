@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f371c1e182744f07b984b8e9964914e2
+  ts: "2026-11-15T10:47:35Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の段で止まった schedule のタスクを、executor の段からやり直せるようにする
+    - field: description
+      from: ""
+      to: 統合の段の失敗から、成果を保ったまま executor の段へ戻して再開する手段を用意する
+    - field: input
+      from: ""
+      to: '["2026-11-15、bds-progress-report-005 と ifx-file-agent-evidence-005 が統合の段で止まり、exec resume --resume-from executor が「cannot resume the executor from the integrate stage」で使えなかった。orchestrator が blob から記録を戻し、成果物を手で直して統合をやり直した（PJR-TN43 の D）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-52EE"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec

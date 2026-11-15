@@ -2,7 +2,7 @@
 id: specdojo:ifx-index-sample
 type: api
 title: 駄菓子屋きぬや 販売管理CLIの外部システムI/F一覧
-status: draft
+status: ready
 rulebook: specdojo:ifx-index-rulebook
 supersedes: []
 

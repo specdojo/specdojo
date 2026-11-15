@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:ifd-sample
   type: architecture
-  status: draft
+  status: ready
   owner: ARC
   rulebook: specdojo:ifd-mermaid-rulebook
   part_of: []

@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sysd-cross-cutting-policy-sample
   type: architecture
-  status: draft
+  status: ready
   rulebook: specdojo:sysd-cross-cutting-policy-rulebook
 ---
 

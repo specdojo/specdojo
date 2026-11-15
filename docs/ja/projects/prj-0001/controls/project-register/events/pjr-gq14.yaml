@@ -184,3 +184,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_01135f372de2456792a21f7483d75996
+- v: 1
+  id: reg_cc329e1bc2c846b1afa6ab4796e7acc0
+  ts: "2026-11-15T10:59:17Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: ユースケース別ガイドを、LP・Next.js・Unity の 3 ケースの対話フローで書き直した。review で、ケースの選び方の早見図から共通の運用・品質管理の枝を外し、章の番号での参照を題名に直した（indie が 2026-11-15 に確認）
+  previous_event_id: reg_84467d1990324331849868301e0f06c8

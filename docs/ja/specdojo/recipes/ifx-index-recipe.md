@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:ifx-index-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:ifx-index-rulebook
   sample: specdojo:ifx-index-sample
 ---

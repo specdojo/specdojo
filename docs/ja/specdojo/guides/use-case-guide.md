@@ -45,7 +45,6 @@ Use Case Guide
 - [LP を作る](#case-lp)
 - [Next.js の Web サービスを作る](#case-nextjs)
 - [Unity のゲームを作る](#case-unity)
-- [共通運用と品質管理を確認する](#common-operations)
 
 ```mermaid
 flowchart TD
@@ -53,18 +52,18 @@ flowchart TD
   Q -->|ランディングページ| C1["ケース1: ランディングページ（LP）<br/>静的サイト・訴求・問い合わせ"]
   Q -->|Webサービス・SaaS| C2["ケース2: Next.js Webサービス<br/>認証・API・DB連携フルスタック"]
   Q -->|ゲーム開発| C3["ケース3: Unityゲーム<br/>2D/3D・C#ロジック・ステート管理"]
-  Q -->|共通の運用・品質管理| C4["共通運用と品質管理<br/>レビュー・隔離実行・ルーチン"]
 
   C1 --> D1["1. 最初の相談と確認事項<br/>2. 成果物定義とカタログ<br/>3. register / schedule 進行<br/>4. プレビュー確認と運用"]
   C2 --> D2["1. 要件・技術スタック確認<br/>2. データモデル・API仕様<br/>3. 文書の schedule と実装 todo<br/>4. テスト検証と運用"]
   C3 --> D3["1. ゲームルール・役割分担<br/>2. システム・ステート設計<br/>3. C#スクリプト隔離実行<br/>4. Playモード確認と調整"]
-  C4 --> D4["・register（課題・判断・調査）<br/>・review（grade照合）と人の確定<br/>・worktree（安全な隔離実行）<br/>・routine（定期実行・日次巡回）"]
 
   classDef caseNode fill:#e7f5ff,stroke:#1971c2,color:#000;
   classDef detailNode fill:#f8f9fa,stroke:#adb5bd,color:#000;
-  class C1,C2,C3,C4 caseNode;
-  class D1,D2,D3,D4 detailNode;
+  class C1,C2,C3 caseNode;
+  class D1,D2,D3 detailNode;
 ```
+
+どのケースでも、計画外の課題・判断の管理（register）、レビューと人の確定、worktree による隔離実行、routine による定期実行を使います。これらは「[プロダクト開発に共通する運用と品質管理](#common-operations)」にまとめています。
 
 <a id="common-setup"></a>
 
@@ -211,7 +210,7 @@ LP 作成で推奨される成果物と作成順序は次のとおりです。
 
 - **手元での確認**: プロダクトで用意したプレビュー手順（`dev` script があれば `npm run dev`）で PC・スマートフォンの表示、フォームの入力検証・送信結果を確認します。公開は利用者が内容と公開先を確認してから行います。
 - **変更の管理**: コピー文言の変更やデザイン調整の要望が出た場合は、勝手にコードを直さず `register add --type todo` で起票して履歴を残します。
-- **運用の自動化**: デッドリンクの検査やライブラリのセキュリティ更新は、[[specdojo:routine-operation-guide|routine 運用ガイド]] に従って必要な検査ジョブと外部スケジューラを用意します。共通の変更管理・レビューは [第 5 章](#common-operations)を参照してください。
+- **運用の自動化**: デッドリンクの検査やライブラリのセキュリティ更新は、[[specdojo:routine-operation-guide|routine 運用ガイド]] に従って必要な検査ジョブと外部スケジューラを用意します。共通の変更管理・レビューは 「[プロダクト開発に共通する運用と品質管理](#common-operations)」を参照してください。
 
 ### 2.6. コマンドと設定差分（折りたたみ）
 
@@ -321,7 +320,7 @@ Next.js アプリケーションでは、フロントエンドとバックエン
 
 - **結合テストと検証**: 合意した開発 DB とテストデータを用意し、ログイン、データ作成、他ユーザーのデータへのアクセス拒否、ログアウトを確認します。E2E テストが準備済みなら実行し、利用者が受け入れと公開可否を判断します。
 - **セキュリティチェック**: 依存関係・静的解析・秘密情報の検査を候補に、公開先や契約条件に合う手段を選びます。CI やリポジトリ設定の変更案は利用者に提示し、承認された手段を準備します。
-- **不具合や改善のトリアージ**: 開発中に発生した不具合は `register add --type issue` で起票し、AI に原因調査と修正を行わせます。詳細は [[specdojo:register-operation-guide|登録簿運用ガイド]] と [第 5 章](#common-operations)を参照してください。
+- **不具合や改善のトリアージ**: 開発中に発生した不具合は `register add --type issue` で起票し、AI に原因調査と修正を行わせます。詳細は [[specdojo:register-operation-guide|登録簿運用ガイド]] と 「[プロダクト開発に共通する運用と品質管理](#common-operations)」を参照してください。
 
 ### 3.6. コマンドと設定差分（折りたたみ）
 
@@ -432,7 +431,7 @@ Unity 開発では、ロジックとエディタ設定が乖離しないよう�
 
 - **Unity エディタでの結合確認**: AI が作成した C# スクリプトを Prefab や GameObject にアタッチし、エディタの Play モードで操作感や当たり判定を確認します。
 - **単体テストの実行**: ロジック部分（ステート遷移やダメージ計算）は、Unity Test Framework と実行環境を準備した上で EditMode / PlayMode テストを実行します。人が Play モードで操作感・クリア条件を確認し、受け入れと配布可否を判断します。
-- **パラメータ調整とバグ報告**: ジャンプ力や移動速度の微調整は ScriptableObject 上で行います。挙動の不具合が見つかった場合は `register add --type issue` でログや期待値を添えて起票し、合意した範囲で修正と再確認を行います。共通の運用は [第 5 章](#common-operations)を参照してください。
+- **パラメータ調整とバグ報告**: ジャンプ力や移動速度の微調整は ScriptableObject 上で行います。挙動の不具合が見つかった場合は `register add --type issue` でログや期待値を添えて起票し、合意した範囲で修正と再確認を行います。共通の運用は 「[プロダクト開発に共通する運用と品質管理](#common-operations)」を参照してください。
 
 ### 4.6. コマンドと設定差分（折りたたみ）
 

@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sysd-index-sample
   type: architecture
-  status: draft
+  status: ready
   rulebook: specdojo:sysd-index-rulebook
 ---
 

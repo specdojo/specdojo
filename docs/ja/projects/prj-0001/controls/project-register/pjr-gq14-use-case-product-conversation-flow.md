@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gq14-use-case-product-conversation-flow
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-11-02T12:13:16Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-15T10:59:17Z"
+  conclusion: ユースケース別ガイドを、LP・Next.js・Unity の 3 ケースの対話フローで書き直した。review で、ケースの選び方の早見図から共通の運用・品質管理の枝を外し、章の番号での参照を題名に直した（indie が 2026-11-15 に確認）
   derived_from:
     - PJR-V5AZ
 ---

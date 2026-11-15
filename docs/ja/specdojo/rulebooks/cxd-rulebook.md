@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:cxd-rulebook
   type: rulebook
   deliverable_type: architecture
-  status: draft
+  status: ready
   target_format: markdown
   includes:
     - specdojo:cxd-mermaid-rulebook

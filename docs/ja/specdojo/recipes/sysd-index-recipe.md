@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sysd-index-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:sysd-index-rulebook
   sample: specdojo:sysd-index-sample
 ---

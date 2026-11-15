@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:dct-index-rulebook
   type: rulebook
   deliverable_type: project
-  status: draft
+  status: ready
   target_format: yaml
   recipe: not-needed
   sample: specdojo:dct-index-sample

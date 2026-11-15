@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cxd-sample
   type: architecture
-  status: draft
+  status: ready
   rulebook: specdojo:cxd-rulebook
   part_of: []
   based_on: []

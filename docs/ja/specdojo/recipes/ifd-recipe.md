@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:ifd-recipe
   type: recipe
-  status: draft
+  status: ready
   rulebook: specdojo:ifd-mermaid-rulebook
   sample: specdojo:ifd-sample
 ---

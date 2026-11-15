@@ -2,12 +2,12 @@
 id: prj-0001:dct-index-grade-criteria
 document: prj-0001:dct-index
 path: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml
-graded_at: "2026-11-14T19:30:05.532Z"
-graded_by: luna-review-executor
+graded_at: "2026-11-15T10:50:51.563Z"
+graded_by: sol-review-executor
 content_hash: 00594c69bc3ca87473971c057cb064f930e3fcf4e2733b12e1e7297975ce2b66
 summary:
-  satisfied: 1
-  unsatisfied: 1
+  satisfied: 2
+  unsatisfied: 0
   total: 2
 criteria:
   - id: DC-001
@@ -21,7 +21,4 @@ criteria:
     roles:
       - QE
     viewpoint: vp-qe-omissions-consistency
-    status: unsatisfied
-    reason: >-
-      A generated index view and sidebar are absent, so reachability of all domains from both surfaces cannot be
-      confirmed.
+    status: satisfied

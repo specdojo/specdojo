@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:sysd-index-rulebook
   type: rulebook
   deliverable_type: architecture
-  status: draft
+  status: ready
   target_format: markdown
   recipe: specdojo:sysd-index-recipe
   sample: specdojo:sysd-index-sample

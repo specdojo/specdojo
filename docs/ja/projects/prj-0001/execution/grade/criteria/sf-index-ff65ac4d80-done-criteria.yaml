@@ -2,12 +2,12 @@
 id: sf-index-grade-criteria
 document: sf-index
 path: docs/ja/product/010-business-specs/050-system-functions/sf-index.md
-graded_at: "2026-11-14T14:39:10.365Z"
-graded_by: luna-review-executor
-content_hash: c38edef36b86e2f312eea7c44efdf2bdc1a0d7b9d9ce39419e9eb387a0f22742
+graded_at: "2026-11-15T10:57:57.973Z"
+graded_by: sol-review-executor
+content_hash: d3e11e3ae129ca29060cbca65bd8ca4c3de7743387ddcdbe83a09aea6d72beea
 summary:
-  satisfied: 2
-  unsatisfied: 3
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      The document lists all process areas, but missing BPS dependencies and provisional mappings prevent confirmation
-      that the function list covers the agreed business scope.
+      Business correspondence remains provisional in Q-01, and the P-06 job-definition scope is not covered by the
+      execution-oriented SF-ROUT-02 row.
   - id: DC-002
     text: システム化機能のスコープを承認できること
     roles:
@@ -26,26 +26,30 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
     reason: >-
-      The human PO is named as approver, but the current `draft` document contains unresolved mappings and does not
-      provide evidence of an approved scope.
+      The undisclosed job-definition versus execution mismatch leaves part of the proposed system scope unresolved
+      beyond the reservations approved in Q-01–Q-03.
   - id: DC-003
     text: 機能分割・コンポーネント設計の入力として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      The P-06 responsibility mismatch and unresolved deprecation boundary prevent establishing consistent
+      component-design boundaries for the full listed scope.
   - id: DC-004
     text: テスト対象機能の網羅性が確認できること
     roles:
       - QE
     viewpoint: vp-qe-omissions-consistency
     status: unsatisfied
-    reason: >-
-      The index supports identifying test targets, but does not provide evidence that every listed function has been
-      checked against the test scope.
+    reason: The body provides no traceable comparison of all function IDs and business areas against test targets.
   - id: DC-005
     text: 実装スコープ・機能境界の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      SF-ROUT-02 identifies the wrong execution command boundary, and Q-03 leaves the status and catalog-update
+      responsibility undecided.

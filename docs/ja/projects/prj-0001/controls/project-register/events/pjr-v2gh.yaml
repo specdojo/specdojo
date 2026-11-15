@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_24d84e03a33f41b08291175ada6d7d72
+  ts: "2026-11-15T10:47:31Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schedule strategy generate が schema の modeline を落とさないようにする
+    - field: description
+      from: ""
+      to: 書き出す strategy の先頭に schema の modeline を必ず付ける
+    - field: input
+      from: ""
+      to: '["2026-11-15、kata-wave-2 の strategy を --force で書き出したとき、先頭の # yaml-language-server: $schema= の行が消え、develop の validate:schema が落ちて 005 の 3 件が止まった（PJR-TN43 の C）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: schedule

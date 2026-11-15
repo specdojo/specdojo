@@ -3,7 +3,7 @@ specdojo:
   id: specdojo:ifd-mermaid-rulebook
   type: rulebook
   deliverable_type: architecture
-  status: draft
+  status: ready
   target_format: markdown
   recipe: specdojo:ifd-recipe
   sample: specdojo:ifd-sample

@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f732edeba12e480ab80223bc6ada4111
+  ts: "2026-11-15T11:12:40Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cnd-specdojo を grade の指摘で手直しする（コンテナ構成と配備の方針の基準）
+    - field: description
+      from: ""
+      to: 最新の grade の指摘を取り込み、承認の基準となるコンテナ構成と配備の方針を本文で定める
+    - field: input
+      from: ""
+      to: '["kata-wave-1 の確定（T-KATA-WAVE-1-cnd-specdojo-140）で差し戻した（indie が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 82 点で完了条件 4/5","主な指摘: コンテナ構成と配備の方針の基準が本文で定まっておらず、PO が承認できない（DC-002）。留保した範囲（文書サイトの閲覧の認証と配信、REL-10 は PJR-CJMN）と、今承認する範囲を区別する"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["cnd-specdojo"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: cnd

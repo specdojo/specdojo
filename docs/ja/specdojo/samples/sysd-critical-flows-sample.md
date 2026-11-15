@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:sysd-critical-flows-sample
   type: architecture
-  status: draft
+  status: ready
   owner: ARC
   rulebook: specdojo:sysd-critical-flows-rulebook
   part_of: []

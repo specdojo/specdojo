@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:cpd-sample
   type: architecture
-  status: draft
+  status: ready
   owner: ARC
   rulebook: specdojo:cpd-rulebook
   part_of: []

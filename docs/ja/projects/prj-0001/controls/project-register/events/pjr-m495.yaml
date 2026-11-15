@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f2d35c65f3be4639b0631f7b155cff61
+  ts: "2026-11-15T10:47:42Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 人が unblock しても、agent の run が完了の確認で止まらないようにする
+    - field: description
+      from: ""
+      to: unblock を人が行っても、claim の持ち主（agent）を保つか、runner が引き継げるようにする
+    - field: input
+      from: ""
+      to: '["2026-11-15、bds-progress-report-005 を人（indie）が exec unblock したところ claim の持ち主が人に替わり、runner の再開が completion preflight の「task is being worked on by another actor: indie」で止まった（PJR-TN43 の E）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T4G3"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec

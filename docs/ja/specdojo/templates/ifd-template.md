@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:ifd-template
   type: template
-  status: draft
+  status: ready
   frontmatter_template:
     specdojo:
       id: _LOCAL_ID_

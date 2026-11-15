@@ -2,11 +2,11 @@
 specdojo:
   id: specdojo:sysd-cross-cutting-policy-template
   type: template
-  status: draft
+  status: ready
   rulebook: specdojo:sysd-cross-cutting-policy-rulebook
   frontmatter_template:
     specdojo:
-      id: _PROJECT_ID_:_LOCAL_ID_
+      id: _LOCAL_ID_
       type: architecture
       status: draft
       rulebook: specdojo:sysd-cross-cutting-policy-rulebook
