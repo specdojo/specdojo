@@ -1,0 +1,25 @@
+`pm-raci` は grade の指摘 F001〜F020 に沿って直し終えました。ただし個票の完了条件のうち、直した後の grade のやり直しはまだしていません。agent CLI を起動するので、この実行環境では動かせないためです。
+
+修正は前回の試行で済んでいました。今回は作業ツリーに残った差分と個票の対応結果を見直し、検証を流し直しました。
+
+- **Launch スケジュール戦略定義**: 独立した行に分け、`ARC=R`・`PM=A` にしました。grade の指摘にある Schedule の `owner=ARC` を正としています。Schedule のファイルは参照してよい文書に含まれないため、その値は自分では確認していません。
+- **旧「成果物作成」行**: 「成果物作成フローの運営（着手順、割り当て、滞留）」に範囲を絞りました。内容の承認と作成の主担当は、成果物別 RACI の各行に残しています。
+- **成果物カタログ**: 主担当を作業ごとに決めました。選定・`overview`・`done_criteria` は `BA`、`depends_on`・rulebook・配置は `ARC` です。
+- **minor の指摘への加筆**:
+  - 対象外とした範囲と、それを扱う行
+  - 記録先
+  - 品質ゲートの `A` の範囲
+  - Schedule の `owner` の決め方と照合先
+  - 不一致時の扱い
+  - 見直しの手順
+- **status**: `ready` のまま直しました。指摘箇所に限った修正で、`draft` に戻すと 140 で人が再昇格する手間が増えるためです。確定は人が 140 で行います。
+
+上の配置のうち、成果物カタログの主担当と、戦略定義の `A` を `PM` にした点は、組織定義の責任領域をもとに私が決めました。それに伴い、`DEV`・`UX` はどの行でも `R` を持たなくなりました。実装・体験の成果物を計画した時点で行を足す、と本文に書いてあります。
+
+対応結果は個票 PJR-Y5XH に書いてあります。`npm run validate:catalog` と `npm run validate:history-links` は通りました。catalog の検証は終了コード 0 で、出た警告は今回触っていない他の成果物カタログのものです。
+
+**次の作業（人またはオーケストレーター）**: `grade run --target deliverable` で `prj-0001:pm-raci` を grade し直し、結果を個票 PJR-Y5XH の対応結果に書き足してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-raci を grade の指摘 F001〜F020 に沿って直し、個票 PJR-Y5XH の対応結果に実施内容・status の扱い・判断理由を書いた。完了条件の再 grade（`grade run --target deliverable`）は agent CLI を起動するため requires_human として人に引き継ぐ。","handoff":["`status` の扱い: `pm-raci` は `ready` のまま直した。修正は指摘箇所に限った加筆と行の分割で、`ready` への昇格は人だけが行うため、`draft` に戻すと 140 で再昇格の手間が増える。確定は人が 140 で行う。","Launch スケジュール戦略定義（`sch-strategy-launch`）を独立した行に分け、`ARC=R`・`PM=A` とした。grade の指摘（F006・F014）にある Schedule の `owner=ARC` を正とした。Schedule のファイルは plan で参照してよい文書に含まれないため、実際の値は確認していない。","成果物カタログの作業別の主担当（選定・`overview`・`done_criteria` は `BA`、`depends_on`・rulebook・配置は `ARC`）と、戦略定義の `A=PM` は、組織定義の責任領域から executor が決めた。","旧「成果物作成」行を「成果物作成フローの運営」に絞った結果、`DEV`・`UX` はどの行でも `R` を持たない。実装・体験の成果物を計画した時点で行を足す旨を本文に書いた。","次のアクション: `grade run --target deliverable` で `prj-0001:pm-raci` を grade し直し、結果を個票 PJR-Y5XH の対応結果に書き足す（agent CLI を使うため人またはオーケストレーターが実行する）。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"終了コード 0。WARN は今回変更していない他の dct の based_on 未作成のみ"},{"command":"npm run validate:history-links","status":"passed","summary":"終了コード 0。変更した個票を含め違反なし"},{"command":"grade run --target deliverable","status":"requires_human","summary":"agent CLI を起動して pm-raci を再 grade し、結果を個票 PJR-Y5XH の対応結果に書き足す必要がある"}],"target_coverage":[{"target":"prj-0001:pm-raci","status":"changed","path":"docs/ja/projects/prj-0001/030-project-management/pm-raci.md"}]}
+</specdojo_executor_evidence>
