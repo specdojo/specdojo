@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-X1RW
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-X1RW/pjr-x1rw-20261115T174505Z-e1fa9174/plan.md
   started_at: "2026-11-15T17:45:18.158Z"
+  completed_at: "2026-11-15T18:29:43.450Z"
   agent: opus-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- bes-index に「網羅の確認」章（16 行ごとの不成立の典型・境界・詳細化の対応・照合の結果と、照合した CDFD の版）を足した。留保の承認を 1 か所に集約し、個別 BES との発生時点・回数の違い、カタログの範囲の差、QE 確認の論点を足し、結びの条件を書き直した。status は draft のまま。個票の対応結果も記入した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/030-business-model/bes-index.md`: 変更、+55 / -15 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 成果物カタログ `dct-business-model-bes.yaml` の `bes-index` の `overview` とコメントが 10 領域と記しており、PO が承認した 14 領域と食い違っている。カタログは本タスクの対象外のため直していない。BA がカタログを 14 領域に直す必要がある。
+- QE による「網羅の確認」の確認と、事実データとデータモデルの照合（PJR-AK5V）は、executor が代わりに済ませたことにせず、bes-index の「未決事項と承認条件」に論点として残した。
+- `bes-task-ready-selected` の本文には上位の一覧が「未作成」と書かれたままで、一覧からの双方向の参照も未設定。別タスクで ARC が直す必要がある。
+- 迷った点: 新しい章の位置は rulebook の「検証と引き渡し」に沿って、詳細化の章と未決事項の章の間にした。PM による留保の追跡の担当は、rulebook の「追加・変更・廃止の管理」にある PM が PJR で追跡するという規定に基づいて書いた。
+- 個票の完了条件にある `grade run --target deliverable` での grade のやり直しは、後続の runner の段で人が実行する必要がある。
+- 人の確認が必要: `specdojo grade run --target deliverable`（agent の利用枠を消費する grade のやり直しは sandbox 外で実行が必要）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
