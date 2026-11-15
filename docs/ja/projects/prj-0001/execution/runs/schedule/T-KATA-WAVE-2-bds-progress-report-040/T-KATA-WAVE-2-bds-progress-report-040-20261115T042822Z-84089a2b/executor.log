@@ -1,0 +1,19 @@
+`docs/ja/specdojo/rulebooks/bds-rulebook.md` を更新しました。変更はこのファイルだけで、成果物本体、sample、frontmatter には手を入れていません。prettier と markdownlint は通っています。
+
+19 件の finding のうち 16 件は、前回の段（`T-KATA-WAVE-2-bds-progress-report-005`）の改訂でもう解消していました。今回の finding は改訂前の版に付いたもので、行番号も現在の本文と合いません。
+
+**今回足した記述（残っていた 3 件）**
+
+- **F001（位置づけ章）:** 帳票仕様が業務仕様の `user-interface-model` に属すること、成果物としての位置づけは成果物リファレンスを正本とすることを書きました。あわせて、画面仕様（`uis`）との分担を示しました。利用者が操作・遷移する画面は画面仕様に、操作を伴わず受け取る出力物とその値の出所は帳票仕様に書き、片方から他方を参照します。
+- **F018（運用ルール章）:** 確定の前提を書きました。必須章がすべて埋まり、各表示項目に元にする記録と確かめ方があり、未決事項に担当と解消条件が付いていることです。BA が読み手と利用目的を、QE が確かめ方と例外時の期待結果を確認し、PO が `ready` にするかを判断します。
+- **F012（運用ルール章）:** 作成・改訂後は、利用リポジトリの設定から適用する文書検査を確かめて実行し、すべてエラーなく終わることを確かめると書きました。検査に通っても値の正しさの確認には代わらない点も添えています。コマンド名は書かず、`sf-rulebook` と同じく設定を正本にしました。
+
+**既に解消していた 16 件**
+
+- Frontmatter の指示と schema の食い違い（F008・F010・F014）、表の崩れ（F013・F017）、章ごとの必須・任意（F003・F016）、改版・廃止の運用（F011・F019）などは現在の版で解消しています。
+- `recipe` / `template` は前回の段で `not-needed` に決まっていました（F002）。
+- sample（`specdojo:bds-sample`）は本文要件の 9 章と同じ順に書かれています（F015）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bds-rulebook.md を更新しました。位置づけ章に成果物リファレンスへの参照と画面仕様（uis）との分担を、運用ルール章に確定の前提・確認する役割と文書検査の実行を足し、F001・F018・F012 を解消しました。F002〜F011・F013〜F017・F019 は前回の段（T-KATA-WAVE-2-bds-progress-report-005）の改訂でもう解消していたため維持しています。","handoff":["result の『進め方と実践の型の適用』へ記録: 今回の finding は前回の段より前の版に付いたもので行番号が一致しない。F003・F016（必須・任意の列）、F004（`based_on` と未作成の根拠の扱い）、F005（メモ / 将来課題の記述ガイドと登録簿への引き継ぎ）、F006（記録からの確かめ方の列）、F007（読み手と利用目的での作成・確認・承認の役割）、F008・F010・F014（Frontmatter は document-metadata-standard と deliverable schema を正本とし `type: ui` とする）、F009（用語定義は複数の解釈を防ぐ語に限る）、F011・F019（運用ルールで document-metadata-standard のライフサイクル規定を参照）、F013・F017（表と箇条書きの崩れの解消）は現在の版で解消済みのため維持した。","F002: `recipe` / `template` は前回の段で `not-needed` に決まっている。理由は、本文要件の表が必須・任意付きの章構成を示し、完成例の sample があり、作成手順が記述ガイドで足りること。","F015: `specdojo:bds-sample` は本文要件の 9 章（概要〜メモ / 将来課題）と同じ順に構成されており、適合を確認した。","F001・F012・F018 の改訂の根拠: rulebook-authoring-standard（本文要件・運用ルール）、deliverables-reference の uis・bds の行、uis-rulebook の位置づけ章、sf-rulebook の文書検査の記述。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/bds-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/bds-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは docs/ja/specdojo/rulebooks/bds-rulebook.md だけで、plan・result・個票などの履歴ファイルは変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更ファイルに *.yaml / *.yml が含まれない"}]}
+</specdojo_executor_evidence>
