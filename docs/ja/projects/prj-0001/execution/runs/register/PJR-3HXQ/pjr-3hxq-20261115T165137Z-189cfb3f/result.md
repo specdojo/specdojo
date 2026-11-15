@@ -4,15 +4,17 @@ specdojo:
   type: exec-result
   task_id: PJR-3HXQ
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-3HXQ/pjr-3hxq-20261115T165137Z-189cfb3f/plan.md
   started_at: "2026-11-15T17:03:31.139Z"
+  completed_at: "2026-11-15T17:15:00.362Z"
   agent: opus-executor
   approach: fully-guided
   targets:
     - sld-specdojo
+  block_reason: "executor reported incomplete: sld-specdojo に F001〜F015 を反映した（grade の実行状態と .specdojo 設定の行を追加、generated 削除手順と worktree の記述を訂正、対応表と未決事項を整理）。個票の対応結果も追記した。status は draft のまま。再 grade（grade run --target deli…"
 ---
 
 # Edit Result
