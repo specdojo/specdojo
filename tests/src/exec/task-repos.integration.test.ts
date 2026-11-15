@@ -1616,4 +1616,23 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
       "integration branch ticket\n",
     );
   });
+
+  it("keeps the exec branch content for conflicts on the task's own run records", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    commitOn(worktree.path, "result.md", "exec branch result\n");
+    commitOn(fixture.repo, "result.md", "trailing record result\n");
+    commitOn(fixture.repo, "fix.md", "integration fix\n");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+      projectOursPaths: ["result.md"],
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["merged"]);
+    expect(readFileSync(join(worktree.path, "result.md"), "utf8")).toBe("exec branch result\n");
+    expect(readFileSync(join(worktree.path, "fix.md"), "utf8")).toBe("integration fix\n");
+  });
 });

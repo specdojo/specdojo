@@ -1,0 +1,25 @@
+sld-specdojo の手直しは終わり、F001〜F015 の指摘はすべて本文に反映済みです。ただし、個票が求める再 grade（`grade run --target deliverable`）はまだ実行していません。agent の起動が必要なため、runner か人の実行に回します。
+
+今回は前回の試行で行った変更を読み直して確認し、新しく直した箇所はありません。
+
+**主な修正点**
+- **grade の実行状態**: `execution/grade/generated/` にある `run.lock` と `runs/<run-id>/` を、消してよい派生ビューの行から分けました。新しい行では `条件付き削除可` とし、「`specdojo build` では作り直せない」と明記しています。
+- **`generated/` の削除手順**: 次の2点を除外してから消すよう書き直しました。
+  - 稼働中の `grade run` と、再開予定の run
+  - 移行先がまだ確認できていない `routines/generated/`
+- **`.specdojo/` の設定**: `doc-index.json` 以外の追跡対象（`specdojo.config.json`、`exec-defaults.yaml`、`agent-members.yaml` など）を、Git で共有する `削除不可` の行として追加し、対応表にも足しました。
+- **その他**:
+  - worktree が残るか branch が残るかを書き分けました。
+  - 進捗報告・議事録の対応先を `cdsd-sharing` へ移しました。
+  - 3区分の表から保管場所の再掲を外しました。
+  - 追加候補の出どころは各 CDSD の「概要」に直しました。
+- **未決の目印**:
+  - CDSD 追加候補の `_TODO_` は、本書側では配置が決まっているので外しました。CDSD への登録は Schedule の計画済み作業として扱い、台帳には起票しません。
+  - 監視結果・費用作業記録の保管先は決められないため、`_UNDECIDED_` のまま期限付きの留保として残しました。
+- 成果物の `status` は `draft` のままです。個票の対応結果にも、ここまでの内容を書いています。
+
+**検証**: `npm run validate:catalog` は通りました（ほかの成果物について既存の WARN が出ていますが、今回の変更とは関係ありません）。`lint:md`・`lint:fm`・`validate:schema` はこのあと親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sld-specdojo へ F001〜F015 を反映済みであることを確認した（grade 実行時状態と .specdojo 設定の行の追加、generated 削除手順・worktree 記述の訂正、対応表・未決事項の整理）。status は draft のまま。個票の対応結果も記入済み。再 grade は agent 起動が必要なため requires_human とした。","handoff":["再 grade が未了: `grade run --target deliverable` で sld-specdojo を grade し直し、結果を PJR-3HXQ 個票の「対応結果」へ追記する（agent 起動が必要なため executor では実行していない）。","executor の判断: CDSD 追加候補の `_TODO_` は、本書側では配置が確定しているため未決ではないと判断して外した。CDSD 側への登録は Schedule の業務データ辞書作成・CDSD 改訂（計画済み作業）で扱い、二重追跡を避けるため管理台帳へは起票しない。該当タスクが Schedule にない場合は PM が追加する。","留保: 監視結果・費用作業記録の保管先と保持期間は `_UNDECIDED_` のまま残した。OPS・ARC が方式を比較し、PO が決める。期限は報告・監視の運用開始前で、ready 昇格の判断時点で未決なら PO が留保を続けるかどうかを判断する。追跡先は cdsd-sharing が指す `prj-0001:cdfd-reporting` の未決事項で、期限を過ぎたら PM が decision として起票する。この留保が残るため、F015 相当の指摘は再 grade でもこの範囲で残る見込み。","grade の `runs/<run-id>/` を削除してよい条件の一部（結果が grade/results/ へ反映済みであること）は、既存本文と src/grade/run.ts の配置から導いた。runs/ を自動で片付ける処理があるかは確認していない。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（無関係な成果物の based_on 未作成 WARN のみ）"},{"command":"grade run --target deliverable","status":"requires_human","summary":"agent CLI の起動と利用枠の消費が必要なため、runner または人が sld-specdojo を再 grade して個票の対応結果へ追記する"}],"target_coverage":[{"target":"sld-specdojo","status":"changed","path":"docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md"}]}
+</specdojo_executor_evidence>
