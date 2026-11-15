@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_82d65e7f6ddf4c598e3bc93f92bb719b
+  ts: "2026-11-15T22:56:51Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade run でも finding の日本語の表示用の文を作る
+    - field: description
+      from: ""
+      to: TypeScript 版の grade run は翻訳の段を持たず、表示用の message\_ja が英語のまま入る
+    - field: input
+      from: ""
+      to: '["2026-11-16、orchestrator が grade run --target deliverable / kata で再 grade した 20 件ほどの結果で、findings の `message_ja` が英語の正本のままだった。翻訳（grade translation-plan → agent run --by gemma26-translator → grade localize）は tools/grade/run-per-document.sh にだけ組み込まれており、grade run は行わない。個票に英語の指摘がそのまま書かれ、利用者から日本語にしてほしいと依頼があった","作業: grade run が正本の結果を保存した後、run-per-document.sh と同じ翻訳の段（不合格の項目の 1 回の再試行と、失敗時に英語を表示用に残す扱いを含む）を流す。翻訳の agent は --translation-by で変えられるようにし、既定は gemma26-translator とする。翻訳が失敗しても grade そのものは失敗にしない","完了条件: grade run の後の結果で、英語の finding に日本語の `message_ja` が付く。翻訳の agent が使えないときも grade の結果は保存され、警告が出る。command-reference の grade run の説明に翻訳の段が書かれている"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: grade
