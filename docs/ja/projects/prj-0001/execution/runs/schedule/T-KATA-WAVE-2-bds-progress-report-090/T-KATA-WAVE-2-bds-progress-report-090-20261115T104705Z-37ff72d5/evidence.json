@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-bds-progress-report-090",
+  "run_id": "T-KATA-WAVE-2-bds-progress-report-090-20261115T104705Z-37ff72d5",
+  "stage": {
+    "role": "executor",
+    "actor": "luna-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T10:49:21.395Z",
+    "completed_at": "2026-11-15T10:50:33.479Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4871 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4871 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nrulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bds-progress-report-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bds-progress-report-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-bds-progress-report-090\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-ywZBfa/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ZvGTLR/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-rdooom/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DRNQ1y/pjr-0001-topic.m\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "実装との照合は行いましたが、review result への記入はできません。この実行の executor stage 指示が result の更新を禁止しており、記入は後続 reporter の担当です。review result は未記入のままです。\n\n確認できた点と未充足事項：\n\n- `src/routine/storage.ts` は routine の実行状態・履歴の保存先と旧ファイルの移行を定義しています。進捗報告の保存先は定義していません。\n- `src/routine/definition.ts` は routine 定義を読み込み、storage のパスを組み立てます。Job の報告出力先や報告内容の生成・検証は確認できません。\n- 先行する `-080` の result は文書の重複記述を整理した記録で、上記2実装との対応・判定を記録していません。`-070` の result には参照した実装パスはありますが、個別の対応判定はありません。よって plan の必須条件「実装エビデンス各パスの対応記録」は未充足です。\n- 文書は金曜17時の起動とISO週全体を併記し、期間終点と命名対応を未決事項として残しています。grade の完了条件では DC-002 が未充足（2/3充足）です。評価結果は `needs-work`、85点、blocker 0 / major 1 / minor 15 / note 0。これらはgradeの判定として扱い、再評価していません。\n- 指定の鮮度確認3コマンドは出力なしでした。gradeサイドカーは存在し、鮮度確認で対象パスの出力はありませんでした。指定サイドカーの `content_hash` と成果物のハッシュ値を直接照合する検証はこの review では確認できていません。\n\nreview result に記録する判定案は `incomplete` です。実装対応記録の不足と DC-002 の未充足を reporter が result に記入し、次回は `src/routine/storage.ts` と `src/routine/definition.ts` のそれぞれについて、文書記述との一致・乖離・確認不能・未確認、修正対象候補、根拠を記録してください。\n\n{\"completion_status\":\"complete\",\"final_message\":\"実装照合を実施。実装ごとの対応判定記録が先行resultに存在せず、DC-002もgradeで未充足のため、review resultの判定案はincomplete。executor stage制約によりresultは更新せず、記入事項をhandoffでreporterへ引き継ぐ。\",\"handoff\":[\"review result の「評価結果の確認」に、gradeサイドカー docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml、実行した changed-only / dependency-changed / incomplete 鮮度確認と無出力、needs-work / 85点 / blocker 0・major 1・minor 15・note 0を記録する。CLIのcontent_hash直接照合は未実施である旨も記録する。\",\"「判断根拠」「未充足事項・改善指示」に verdict 案 incomplete を記録する。gradeで DC-002 未充足（2/3充足）であること、および先行resultに2実装の対応記録がないことが根拠。POは期間終点を判断し、命名方針も決める。\",\"「approach に応じた確認」に記録する: src/routine/storage.ts は routine状態・履歴の保存先と移行を定義し、報告の保存先は定義していない。src/routine/definition.ts はroutine定義を読み、storage pathsを構成するが、Jobの報告出力先や報告内容の生成・検証は確認できない。-080 result は重複記述整理のみ、-070 result は参照パスを挙げるものの、各パスの一致・乖離等の判定なし。Job定義ではreporting/progress-reports配下、routine定義はdisabledかつISO週を入力するため、保存先・命名の正本をJob側とする意思決定を確認する必要がある。\",\"executor stageの指示によりreview resultは編集していない。reporter stageで本handoffをresultへ記録する。\"],\"validations\":[{\"command\":\"node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md --changed-only\",\"status\":\"passed\",\"summary\":\"対象パスの出力なし。終了コード0。\"},{\"command\":\"node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md --dependency-changed\",\"status\":\"passed\",\"summary\":\"対象パスの出力なし。終了コード0。\"},{\"command\":\"node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md --incomplete\",\"status\":\"passed\",\"summary\":\"対象パスの出力なし。終了コード0。\"}]}\"}",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-090/T-KATA-WAVE-2-bds-progress-report-090-20261115T104705Z-37ff72d5/executor.log",
+      "bytes": 4736,
+      "truncated": false
+    }
+  ]
+}

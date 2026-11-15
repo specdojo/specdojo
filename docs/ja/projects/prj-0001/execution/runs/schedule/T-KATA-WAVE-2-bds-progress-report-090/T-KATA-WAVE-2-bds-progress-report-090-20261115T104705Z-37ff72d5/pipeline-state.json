@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-bds-progress-report-090",
+  "run_id": "T-KATA-WAVE-2-bds-progress-report-090-20261115T104705Z-37ff72d5",
+  "updated_at": "2026-11-15T11:03:14.116Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "luna-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T10:49:21.395Z",
+      "completed_at": "2026-11-15T10:50:34.875Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-090/T-KATA-WAVE-2-bds-progress-report-090-20261115T104705Z-37ff72d5/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-15T10:53:46.844Z",
+      "completed_at": "2026-11-15T11:03:06.043Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-090/T-KATA-WAVE-2-bds-progress-report-090-20261115T104705Z-37ff72d5/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "luna-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T11:03:14.116Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-090/T-KATA-WAVE-2-bds-progress-report-090-20261115T104705Z-37ff72d5/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-090/T-KATA-WAVE-2-bds-progress-report-090-20261115T104705Z-37ff72d5/result.md"
+  }
+}
