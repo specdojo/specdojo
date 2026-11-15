@@ -6,6 +6,7 @@ import {
   writeExecutorEvidence,
 } from "../evidence.js";
 import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
+import { reviewTaskBlockReason } from "../review-completion.js";
 import { limitEventMeta, type AgentLimitSignal } from "../limit.js";
 import {
   createPipelineState,
@@ -519,6 +520,17 @@ export async function runPreparedTask(
         projectId,
         rootDir: prepared.worktree.path,
       });
+      const reviewBlockReason = reviewTaskBlockReason({
+        mode: prepared.task.mode,
+        resultPath: worktreeResultPath,
+        ...(prepared.reviewGradeOutcome ? { gradeOutcome: prepared.reviewGradeOutcome } : {}),
+      });
+      if (reviewBlockReason) {
+        result = "failure";
+        pipelineBlockReason = reviewBlockReason;
+        stderr = reviewBlockReason;
+        process.stdout.write(`  Review not completed: ${reviewBlockReason}\n`);
+      }
     }
     const completedAt = new Date().toISOString();
     const context = {

@@ -19,7 +19,7 @@
       to: grade の失敗や grade-stale の結論では review を完了させず、再試行するか blocked にする
     - field: input
       from: ""
-      to: '["2026-11-15、kata-wave-2 の bac-task-completion-090 と sld-specdojo-090 で、review の前の grade が出力の形式の誤り（CAUSE requires a preceding FINDING / malformed `DONE_CRITERIA` entry）で失敗した。review は grade-stale と判定したのに、タスクは done になり、成果物の grade がないまま 140 に進んだ"]'
+      to: "[\"2026-11-15、kata-wave-2 の bac-task-completion-090 と sld-specdojo-090 で、review の前の grade が出力の形式の誤り（CAUSE requires a preceding FINDING / malformed `DONE_CRITERIA` entry）で失敗した。review は grade-stale と判定したのに、タスクは done になり、成果物の grade がないまま 140 に進んだ\"]"
     - field: type
       from: ""
       to: todo
@@ -89,3 +89,16 @@
       from: "parent validation failed: validate-schema"
       to: "-"
   previous_event_id: reg_2431cd072b6448d4ba37a21522d1645f
+- v: 1
+  id: reg_22f5d6ab46aa4dc09d8d746c9d97dc38
+  ts: "2026-11-15T15:32:29Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3ba280c4dec3418f9872c06791d4a660

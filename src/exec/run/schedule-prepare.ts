@@ -89,6 +89,8 @@ export type PreparedTask = {
   reporterCandidates?: AgentRunCandidate[];
   executorRateLimitOptions?: PinnedRateLimitRunOptions;
   reporterRateLimitOptions?: PinnedRateLimitRunOptions;
+  // Runner-side grade before the review plan; a failed grade blocks completion (PJR-M18B).
+  reviewGradeOutcome?: ReviewGradeOutcome;
 };
 
 export type PlanGenPaths = {
@@ -121,7 +123,8 @@ export function findClaimEventPath(
 
 // review フェーズの前段で runner が対象文書へ grade を実行する（PJR-KCMH、PJR-2ZVS 3.6）。
 // executor には実行させない。評価結果が最新（content_hash 一致）なら再実行しない。
-// grade の失敗は review を止めず、結果を plan に示して review の verdict に委ねる。
+// grade は失敗すると再試行する。それでも失敗した場合も review は止めず、結果を plan に示すが、
+// runner はそのタスクを done にせず blocked にする（PJR-M18B）。
 export async function gradeBeforeReviewPlan(params: {
   task: ReadyTaskView;
   projectId: string | undefined;
@@ -178,7 +181,7 @@ export async function gradeBeforeReviewPlan(params: {
       : outcome.action === "executed"
         ? `executed: run id ${outcome.runId}`
         : outcome.action === "failed"
-          ? `failed: run id ${outcome.runId}; ${outcome.detail}`
+          ? `failed after ${outcome.attempts} attempt(s): run id ${outcome.runId}; ${outcome.detail}`
           : `not run: ${outcome.detail}`;
   process.stdout.write(`  [grade] ${summary}\n`);
   return outcome;
@@ -519,6 +522,7 @@ export async function prepareSingleTask(
       reporterCandidates,
       executorRateLimitOptions,
       reporterRateLimitOptions,
+      ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
     };
   }
 
@@ -646,6 +650,7 @@ export async function prepareSingleTask(
     reporterCandidates,
     executorRateLimitOptions,
     reporterRateLimitOptions,
+    ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
   };
 }
 

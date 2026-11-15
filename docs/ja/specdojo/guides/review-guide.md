@@ -243,7 +243,7 @@ edit plan で観点別の自己レビューを行わないのは、各観点を�
 - Schedule の intent が `improve-kata` / `bootstrap-kata-set` の場合は、review の `approach` にかかわらず、代表成果物に加えて rulebook と宣言済みの sample・recipe・template も順に grade します。複数の sample はすべて対象です。sample が `not-needed` なら除外し、未宣言・`undecided` や `bootstrap_scope` の未解決参照は完了を保留します。型すべての最新 grade が `pass` であることを追加完了条件とし、`needs-work` / `fail` は `incomplete`、未評価・古い結果・参照未解決は `grade-stale`、読取不能は `grade-unavailable` にします。`complete-with-findings` による迂回はできません。runner も result の完了判定をこの条件で制限します。
 - 評価対象の `content_hash` が既存の評価結果サイドカーの `content_hash` と一致する場合は、grade を再実行せず既存の評価結果を使います。どちらの場合も評価は 1 回です。
 - grade は `grade run --path <対象文書>` で評価対象 1 件に絞って実行します。評価対象を解決できない場合と `--dry-run` の場合は実行しません。
-- grade が失敗しても review は止めません。実行の結果と評価結果の鮮度を review plan に示し、review が verdict（`grade-stale` / `grade-unavailable` など）として記録します。
+- grade が失敗した場合は、別の run ID で合計 3 回まで試します。それでも失敗した場合も review は止めず、実行の結果と評価結果の鮮度を review plan に示し、review が verdict（`grade-stale` / `grade-unavailable` など）として記録します。ただし runner はそのタスクを done にせず blocked にし、失敗の理由と次の操作を block の理由と result の `block_reason` に残します。
 - 自動 grade は `--if-busy wait` で同一 project の実行終了を待ち、`--isolate-pipeline-state` で再試行状態を run 内へ分離します。同じ秒に複数の型を評価しても run ID が衝突しないよう、対象パスの識別子を含めます。
 
 ### 3.3. review plan の生成
@@ -355,7 +355,7 @@ specdojo:
 | approach に応じた確認 | `approach` に応じて確認した内容                                       |
 | decision              | `verdict`（タスク完了可否の 6 値。値の一覧は次のとおり）              |
 
-`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` のいずれかです。`pm-review-viewpoints.yaml` の `verdict_definitions` も同じ 6 値を定義します。各値を選ぶ条件は共通規約の `review の判断手順` を正本とします。verdict が `complete` 以外でも、review result を記録できた場合は正常終了します。runner は verdict に応じて再評価または再計画へ進みます。
+`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` のいずれかです。`pm-review-viewpoints.yaml` の `verdict_definitions` も同じ 6 値を定義します。各値を選ぶ条件は共通規約の `review の判断手順` を正本とします。verdict が `complete` 以外でも、review result を記録できた場合は正常終了します。runner は verdict に応じて再評価または再計画へ進みます。schedule のタスクでは、`grade-stale` / `grade-unavailable` / `changed-during-review` の review を done にせず blocked にします。
 
 ### 3.8. grade の結果を review の入力にする規則
 

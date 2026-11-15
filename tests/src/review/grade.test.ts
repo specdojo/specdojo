@@ -9,6 +9,7 @@ import {
   classifyReviewGrade,
   decideReviewGradeAction,
   ensureReviewGrade,
+  REVIEW_GRADE_MAX_ATTEMPTS,
   renderReviewGradeSummary,
   reviewGradeArgs,
   reviewGradeRunId,
@@ -265,7 +266,10 @@ describe("ensureReviewGrade", () => {
       expect(
         first.action === "executed" && second.action === "executed" && first.runId !== second.runId,
       ).toBe(true);
-      invoke.mockResolvedValueOnce({ exitCode: 1, stderr: "agent failed\n" });
+      invoke
+        .mockResolvedValueOnce({ exitCode: 1, stderr: "agent failed\n" })
+        .mockResolvedValueOnce({ exitCode: 1, stderr: "agent failed\n" })
+        .mockResolvedValueOnce({ exitCode: 1, stderr: "agent failed\n" });
       expect(
         await ensureReviewGrade({
           taskId: "T-1",
@@ -276,8 +280,64 @@ describe("ensureReviewGrade", () => {
           dryRun: false,
           invoke,
         }),
-      ).toMatchObject({ action: "failed", detail: "subject.md: exit 1: agent failed" });
+      ).toMatchObject({
+        action: "failed",
+        detail: "subject.md: exit 1: agent failed",
+        attempts: REVIEW_GRADE_MAX_ATTEMPTS,
+      });
     } finally {
+      process.chdir(previous);
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("grade が失敗すると別の run id で再試行し、成功した試行の run id を返す", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "specdojo-review-retry-"));
+    const previous = process.cwd();
+    try {
+      await mkdir(path.join(root, ".specdojo"));
+      await writeFile(
+        path.join(root, ".specdojo/specdojo.config.json"),
+        JSON.stringify({
+          version: 1,
+          current_project: "test",
+          projects: { test: { execution_path: "execution" } },
+        }),
+      );
+      await writeFile(
+        path.join(root, "subject.md"),
+        "---\nspecdojo:\n  id: test:subject\n---\n\n# Subject\n",
+      );
+      process.chdir(root);
+      const stderr = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+      const invoke = vi
+        .fn()
+        .mockResolvedValueOnce({ exitCode: 1, stderr: "CAUSE requires a preceding FINDING\n" })
+        .mockResolvedValueOnce({ exitCode: 0, stderr: "" });
+
+      const outcome = await ensureReviewGrade({
+        taskId: "T-1",
+        projectId: "test",
+        subjectPath: "subject.md",
+        target: "deliverable",
+        repoRoot: root,
+        dryRun: false,
+        now: new Date("2026-11-15T00:00:00Z"),
+        invoke,
+      });
+
+      expect(invoke).toHaveBeenCalledTimes(2);
+      const runIds = invoke.mock.calls.map(([, args]) => {
+        const list = args as string[];
+        return list[list.indexOf("--run-id") + 1];
+      });
+      expect(runIds[1]).toBe(`${runIds[0]}-a2`);
+      expect(outcome).toEqual({ action: "executed", runId: runIds[1] });
+      expect(stderr).toHaveBeenCalledWith(
+        expect.stringContaining("[grade] attempt 1/3 failed; retrying"),
+      );
+    } finally {
+      vi.restoreAllMocks();
       process.chdir(previous);
       await rm(root, { recursive: true, force: true });
     }
@@ -346,11 +406,11 @@ describe("renderReviewGradeSummary", () => {
   it("content_hash が一致しない場合はその旨と変更前の評価であることを示す", () => {
     const actual = renderReviewGradeSummary(
       { state: "stale", sidecarPath: SIDECAR_PATH, result: gradeResult() },
-      { action: "failed", runId: "review-T-1", detail: "exit 1: agent limit" },
+      { action: "failed", runId: "review-T-1-a3", detail: "exit 1: agent limit", attempts: 3 },
     );
 
     expect(actual).toContain(
-      "- runner の grade 実行: 失敗した（run id: `review-T-1`; exit 1: agent limit）",
+      "- runner の grade 実行: 3 回試して失敗した（最後の run id: `review-T-1-a3`; exit 1: agent limit）。runner はこの review タスクを完了にせず blocked にする",
     );
     expect(actual).toContain(
       "- 鮮度: 最新でない（評価対象の `content_hash` が評価結果の `content_hash` と一致しない）",
