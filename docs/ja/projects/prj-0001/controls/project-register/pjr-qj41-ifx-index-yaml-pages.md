@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:pjr-qj41-ifx-index-yaml-to-markdown
+  id: prj-0001:pjr-qj41-ifx-index-yaml-pages
   type: project
   status: draft
   rulebook: specdojo:pjr-rulebook
@@ -16,16 +16,17 @@ specdojo:
   commit_scope: kata
 ---
 
-# PJR-QJ41 ifx-index の型を YAML から Markdown に変える
+# PJR-QJ41 ifx-index の YAML から表形式の閲覧ページを生成する
 
 ## 1. 概要
 
-ifx-index の正本を Markdown にし、型一式と代表をそろえて移す
+YAML を正本のまま、用語集と同じく yaml-pages で表形式の Markdown を生成し、レビューしやすくする
 
 ## 2. 入力
 
-- indie の依頼（2026-11-15）: ifx-index は YAML のためレビューがしにくい。Markdown に変換したい
-- 対象は ifx-index の型一式（rulebook・recipe・sample・template）と、prj-0001 の代表 docs/ja/product/020-external-interface-specs/ifx-index.yaml
+- indie の依頼（2026-11-15）: ifx-index は YAML のためレビューがしにくい
+- 方針（indie が 2026-11-15 に決定）: 用語集（`gl-*`）と同じく YAML を正本とし、Markdown は yaml-pages build で生成する。Markdown を正本にはしない
+- 生成物は `docs/**/generated/` に出し、Git には入れない（用語集と同じ）
 
 ## 3. 完了条件
 
