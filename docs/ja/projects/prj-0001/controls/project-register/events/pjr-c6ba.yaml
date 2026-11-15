@@ -111,3 +111,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration"
   previous_event_id: reg_db9b4c92d43c4de9913d52537154ae79
+- v: 1
+  id: reg_97868a75a4a642c2ba5eeb1d2f5daa9f
+  ts: "2026-11-15T21:12:54Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_2c5d2dda34d14c16890f749694d41214
+- v: 1
+  id: reg_c6a0a309e9c9439ba30750aa7327ca17
+  ts: "2026-11-15T21:40:38Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts"
+  previous_event_id: reg_97868a75a4a642c2ba5eeb1d2f5daa9f

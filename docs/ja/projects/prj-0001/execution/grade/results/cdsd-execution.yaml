@@ -5,70 +5,70 @@ path: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 65
-graded_at: "2026-11-10T16:20:57.215Z"
-graded_by: flash-high-executor
-content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
+score: 90
+graded_at: "2026-11-15T21:31:27.984Z"
+graded_by: sol-review-executor
+content_hash: 958e60eeb290139bf339886017af58d3719c4e96a457d89b4098ae857f7e17de
 source_hashes:
   catalog-entry: 1f5324a494c341786007f485e570d673dfd7aa2eae8ca70afb4a706f1f4c6096
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 50
+    score: 100
   operations:
-    score: 81
+    score: 88
   planning:
-    score: 75
+    score: 92
   business:
-    score: 67
+    score: 100
   consistency:
-    score: 38
-  architecture:
-    score: 83
-  usability:
-    score: 94
-  implementation:
     score: 63
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 50
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 3
     score: 75
   vp-ba-business-value:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
     level: 3
     score: 75
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -76,23 +76,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 3
     score: 75
-  vp-dev-testability:
-    level: 2
-    score: 50
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
     level: 2
     score: 50
-  vp-qe-omissions-consistency:
-    level: 1
-    score: 25
   vp-ux-readability:
     level: 4
     score: 100
@@ -100,14 +100,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -115,292 +115,127 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
-  major: 13
-  minor: 11
+  major: 2
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-purpose-alignment
-    line: 19
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 108
     anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
+      | 業務データ辞書7件が未作成（課題）                | 10単位の管理境界・正本区分・検証の基準は実装の現在の動作から定めた。項目の業務的な意味は辞書が整うまで確定せず、辞書と食い違えば辞書を正として本書を直す
+      | BA が `bdd-exec-event` ほか7件を作成し、ARC・DEV が本書と照合する。PM が辞書→本書の再確認の順に Schedule へ載せ、PO は本書の `ready` 化の前に範囲を判断する |
+      成果物カタログ `dct-data-model-cdsd.yaml` の依存                     |
     message: >-
-      成果物カタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml`
-      が対象とする実行状態、plan/result、evidence、worktree を追加するか、カタログ側のスコープを変更して目的と対象範囲を一致させる必要がある。
+      Identify the PJR record or explicitly unregistered PJR candidate for the seven missing dictionaries, with PM as
+      the reporting recipient; the deliverable catalog dependency list identifies prerequisites but does not track issue
+      status, disposition, or reporting.
     message_ja: >-
-      成果物カタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml`
-      が対象とする実行状態、plan/result、evidence、worktree を追加するか、カタログ側のスコープを変更して目的と対象範囲を一致させる必要がある。
+      Identify the PJR record or explicitly unregistered PJR candidate for the seven missing dictionaries, with PM as
+      the reporting recipient; the deliverable catalog dependency list identifies prerequisites but does not track issue
+      status, disposition, or reporting.
     cause:
       type: document
   - id: F002
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: 未収録の4領域について、追加の判断者、判断時期、既存設計への影響、次アクションを明記しないと承認または保留を判断できない。
-    message_ja: 未収録の4領域について、追加の判断者、判断時期、既存設計への影響、次アクションを明記しないと承認または保留を判断できない。
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 21
+    anchor: ""
+    message: >-
+      The four formerly missing areas are now defined, but
+      docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md sections 4.1 and 5 still describe execution
+      state, plan/result, evidence, and task worktree as unregistered CDSD additions; reconcile those pending-addition
+      statements with this document's completed inventory.
+    message_ja: >-
+      The four formerly missing areas are now defined, but
+      docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md sections 4.1 and 5 still describe execution
+      state, plan/result, evidence, and task worktree as unregistered CDSD additions; reconcile those pending-addition
+      statements with this document's completed inventory.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-po-publication-accountability
-    line: 25
+    rule: vp-dev-testability
+    line: 94
     anchor: >-
-      | 実行 event       | task 状態遷移の正本                   | タスク実行           |
-      報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
-    message: "`ready` 化または公開時の対象範囲、非公開情報確認、最終承認を担う人間の PO を明記する必要がある。"
-    message_ja: "`ready` 化または公開時の対象範囲、非公開情報確認、最終承認を担う人間の PO を明記する必要がある。"
+      | 実行 event、実行状態                  | `specdojo exec validate --schedule-only` で Schedule と実行 event
+      を検証する                                    | 終了コード 0 でエラーが0件。完了済みの task
+      が実行状態で完了として再構成される                                                            | QE が該当 event と task を特定し、task の
+      owner Role が訂正の遷移を追記する |
+    message: >-
+      The former missing validation procedures are supplied in section 4.2, but src/exec/schedule/schedule.ts
+      validateAll checks Schedule structure and event shape without reconstructing task state; add a separate procedure
+      and observable expected result for confirming that a completed task reconstructs as done.
+    message_ja: >-
+      The former missing validation procedures are supplied in section 4.2, but src/exec/schedule/schedule.ts
+      validateAll checks Schedule structure and event shape without reconstructing task state; add a separate procedure
+      and observable expected result for confirming that a completed task reconstructs as done.
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 19
+    rule: vp-qe-verifiability
+    line: 95
     anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: 未収録データストアの追加を、担当 Role code、依存順序、判断時期、完了条件を持つ作業単位として具体化する必要がある。
-    message_ja: 未収録データストアの追加を、担当 Role code、依存順序、判断時期、完了条件を持つ作業単位として具体化する必要がある。
+      | 実行 plan、実行 result、実行 evidence | `specdojo exec validate --records-only` で run
+      ごとの記録の配置を検証する                                       | 終了コード 0 で `OK: run record layout validation passed` が出る。各
+      run に plan・result・evidence の対がそろう（人の作業は result のみ） | OPS が欠けた記録の run を特定し、再開または記録の移し替えを行う             |
+    message: >-
+      The former missing validation criteria are supplied, but src/exec/validate-records.ts also accepts legacy
+      plan/result pairs without evidence and migrated state/evidence runs with a sibling plan/result pair; distinguish
+      these accepted layouts from genuinely missing records and specify how the stated three-record acceptance condition
+      is checked.
+    message_ja: >-
+      The former missing validation criteria are supplied, but src/exec/validate-records.ts also accepts legacy
+      plan/result pairs without evidence and migrated state/evidence runs with a sibling plan/result pair; distinguish
+      these accepted layouts from genuinely missing records and specify how the stated three-record acceptance condition
+      is checked.
     cause:
       type: document
   - id: F005
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 19
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 66
     anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
+      | 実行 event の形式違反で状態を再構成できない      | 該当 event を特定し、状態の判定を止めたまま検証する。event を消して状態を合わせない       | QE が検出し、task の owner
+      Role と PM が訂正の遷移を追記する。確認は「照合手順と受入条件」に従う |
     message: >-
-      「対応する業務データ辞書」をカタログ上の `bdd-exec-state`、`bdd-exec-plan-result`、`bdd-exec-evidence`、`bdd-worktree-branch`
-      と対応付け、Schedule または PJR で追跡する必要がある。
+      Reconcile this append-only recovery instruction with line 49's rejection of every malformed event: adding a
+      corrective transition leaves the malformed file present, so validation and reconstruction still fail; distinguish
+      valid-but-incorrect events from malformed files and define an approved recovery reference or an explicit
+      unresolved recovery gate.
     message_ja: >-
-      「対応する業務データ辞書」をカタログ上の `bdd-exec-state`、`bdd-exec-plan-result`、`bdd-exec-evidence`、`bdd-worktree-branch`
-      と対応付け、Schedule または PJR で追跡する必要がある。
+      Reconcile this append-only recovery instruction with line 49's rejection of every malformed event: adding a
+      corrective transition leaves the malformed file present, so validation and reconstruction still fail; distinguish
+      valid-but-incorrect events from malformed files and define an approved recovery reference or an explicit
+      unresolved recovery gate.
     cause:
       type: document
   - id: F006
-    severity: minor
-    rule: vp-pm-control-reporting
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: 未収録データストアの追加を PJR の課題または変更要求として転記する条件、報告先、担当 Role code を明記する必要がある。
-    message_ja: 未収録データストアの追加を PJR の課題または変更要求として転記する条件、報告先、担当 Role code を明記する必要がある。
-    cause:
-      type: document
-  - id: F007
-    severity: minor
-    rule: vp-ba-business-value
-    line: 25
-    anchor: >-
-      | 実行 event       | task 状態遷移の正本                   | タスク実行           |
-      報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
-    message: 実行記録の管理単位や正本区分が解決する業務課題、未整備時の影響、期待する確認結果を上位文書への参照または本文で補う必要がある。
-    message_ja: 実行記録の管理単位や正本区分が解決する業務課題、未整備時の影響、期待する確認結果を上位文書への参照または本文で補う必要がある。
-    cause:
-      type: document
-  - id: F008
     severity: major
-    rule: vp-ba-requirements-completeness
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: 実行状態、plan/result、evidence、worktree の役割、内容、更新タイミング、粒度、用途、正本区分を追加しない限り、成果物カタログが要求する対象範囲は完結しない。
-    message_ja: 実行状態、plan/result、evidence、worktree の役割、内容、更新タイミング、粒度、用途、正本区分を追加しない限り、成果物カタログが要求する対象範囲は完結しない。
-    cause:
-      type: document
-  - id: F009
-    severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 29
-    anchor: >-
-      | Job Run 履歴     | Job Run・attempt と checkpoint の正本 | 定期処理、タスク実行 | 完了済みの同一 Run は変更しない。checkpoint は成功した attempt
-      の許可された範囲だけ進める | 運用担当、実行担当 |
-    message: "`運用担当`、`実行担当`、`Job owner` を組織定義上の Role code に対応付け、定義変更の確認者と合意対象を明記する必要がある。"
-    message_ja: "`運用担当`、`実行担当`、`Job owner` を組織定義上の Role code に対応付け、定義変更の確認者と合意対象を明記する必要がある。"
-    cause:
-      type: document
-  - id: F010
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` の `cdsd-execution.overview` および
-      `depends_on` は実行状態、plan/result、evidence、worktree を対象とする一方、本文は追加予定として未収録なので、いずれかを修正して整合させる必要がある。
-    message_ja: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` の `cdsd-execution.overview` および
-      `depends_on` は実行状態、plan/result、evidence、worktree を対象とする一方、本文は追加予定として未収録なので、いずれかを修正して整合させる必要がある。
-    cause:
-      type: document
-  - id: F011
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: 実行状態、plan/result、evidence、worktree の正本・派生区分、生成元、更新制約、外部依存を定義しないと、実行系データストア全体の設計基礎として利用できない。
-    message_ja: 実行状態、plan/result、evidence、worktree の正本・派生区分、生成元、更新制約、外部依存を定義しないと、実行系データストア全体の設計基礎として利用できない。
-    cause:
-      type: document
-  - id: F012
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: "`src/exec.ts` が扱う実行状態、plan/result、evidence、worktree について、入力、出力、正本、更新制約、対象ファイルまたは保存単位を定義する必要がある。"
-    message_ja: "`src/exec.ts` が扱う実行状態、plan/result、evidence、worktree について、入力、出力、正本、更新制約、対象ファイルまたは保存単位を定義する必要がある。"
-    cause:
-      type: document
-  - id: F013
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 31
-    anchor: >-
-      Schedule・マイルストーンは [[prj-0001:cdsd-planning|概念データストア定義（プロジェクトの立上と計画）]]、実行 event から再生成する state・Ready・CPM・timeline は
-      [[prj-0001:cdsd-sharing|概念データストア定義（活用と共有）]] で扱う。
-    message: 各データストアの変更時に影響する `src/exec.ts`、`src/routine.ts`、`src/job.ts`、関連 schema、生成物またはコマンドを識別できる参照を追加する必要がある。
-    message_ja: 各データストアの変更時に影響する `src/exec.ts`、`src/routine.ts`、`src/job.ts`、関連 schema、生成物またはコマンドを識別できる参照を追加する必要がある。
-    cause:
-      type: document
-  - id: F014
-    severity: major
-    rule: vp-dev-testability
-    line: 28
-    anchor: >-
-      | Job Definition   | 反復実行単位の定義の正本              | 人間による定義変更   | Run
-      生成前の検証に合格した定義だけを使う                                                  | Job owner          |
-    message: Job Definition を含む各正本について、検証コマンド、対象ファイルまたは schema、期待結果、エラー時の停止・修正手順を明記する必要がある。
-    message_ja: Job Definition を含む各正本について、検証コマンド、対象ファイルまたは schema、期待結果、エラー時の停止・修正手順を明記する必要がある。
-    cause:
-      type: document
-  - id: F015
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: 成果物カタログで定義された実行状態などの対象データストアが未定義であり、完了条件を満たしていない箇所が残存している。
-    message_ja: 成果物カタログで定義された実行状態などの対象データストアが未定義であり、完了条件を満たしていない箇所が残存している。
-    cause:
-      type: document
-  - id: F016
-    severity: major
-    rule: vp-qe-verifiability
-    line: 28
-    anchor: >-
-      | Job Definition   | 反復実行単位の定義の正本              | 人間による定義変更   | Run
-      生成前の検証に合格した定義だけを使う                                                  | Job owner          |
-    message: Job Definition の合否条件、idempotency・checkpoint・precondition の必須項目と許容値、検証手順を pass/fail 判定可能な形で定義する必要がある。
-    message_ja: Job Definition の合否条件、idempotency・checkpoint・precondition の必須項目と許容値、検証手順を pass/fail 判定可能な形で定義する必要がある。
-    cause:
-      type: document
-  - id: F017
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: カタログで `cdsd-execution` の対象とされた4領域を「概念データストア一覧」と「正本区分と更新責務」の双方へ追加し、必須情報の欠落を解消する必要がある。
-    message_ja: カタログで `cdsd-execution` の対象とされた4領域を「概念データストア一覧」と「正本区分と更新責務」の双方へ追加し、必須情報の欠落を解消する必要がある。
-    cause:
-      type: document
-  - id: F018
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: >-
-      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
-      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    cause:
-      type: document
-  - id: F019
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    cause:
-      type: document
-  - id: F020
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 15
-    anchor: >-
-      | 実行 event       | タスク実行、定期処理、報告 | task の claim・complete・block・release・reopen 等の状態遷移、actor、理由、日時         |
-      イベント（状態変更時）                 | 状態遷移毎          | task 状態の再構成、進捗・滞留の監視根拠            |
-    message: >-
-      Contrary to Rulebook 2.4, physical names like last_scheduled_for are documented directly in the content column,
-      which requires adding a physicalName column or describing conceptual contents in Japanese.
-    message_ja: Rulebook 2.4に反して、last_scheduled_forのような物理的な名前がcontentカラムに直接記載されています。physicalNameカラムを追加するか、概念的な内容を日本語で記載する必要があります。
-    cause:
-      type: document
-  - id: F021
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 25
-    anchor: >-
-      | 実行 event       | task 状態遷移の正本                   | タスク実行           |
-      報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
-    message: "`実行 event`、`task`、`routine`、`Job Definition`、`Job Run` の正式名称と使い分けを用語定義で示すか、日本語の業務名称へ統一する必要がある。"
-    message_ja: "`実行 event`、`task`、`routine`、`Job Definition`、`Job Run` の正式名称と使い分けを用語定義で示すか、日本語の業務名称へ統一する必要がある。"
-    cause:
-      type: document
-  - id: F022
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: TODO 解消後の ready 条件、公開前に確認する項目、最終承認者を明記する必要がある。
-    message_ja: TODO 解消後の ready 条件、公開前に確認する項目、最終承認者を明記する必要がある。
-    cause:
-      type: document
-  - id: F023
-    severity: minor
     rule: vp-ops-operability
-    line: 29
+    line: 66
     anchor: >-
-      | Job Run 履歴     | Job Run・attempt と checkpoint の正本 | 定期処理、タスク実行 | 完了済みの同一 Run は変更しない。checkpoint は成功した attempt
-      の許可された範囲だけ進める | 運用担当、実行担当 |
-    message: 正本に不整合や更新失敗が発生した場合の問い合わせ先、変更申請先、訂正・復旧手順への参照を追加する必要がある。
-    message_ja: 正本に不整合や更新失敗が発生した場合の問い合わせ先、変更申請先、訂正・復旧手順への参照を追加する必要がある。
+      | 実行 event の形式違反で状態を再構成できない      | 該当 event を特定し、状態の判定を止めたまま検証する。event を消して状態を合わせない       | QE が検出し、task の owner
+      Role と PM が訂正の遷移を追記する。確認は「照合手順と受入条件」に従う |
+    message: >-
+      Replace the malformed-event recovery route with an approved procedure or explicit escalation-and-hold condition:
+      src/exec/core.ts loadValidatedExecState rejects validation failures before state-changing commands can proceed,
+      and src/exec/events.ts readAllEventFiles continues rejecting the original malformed file even after another event
+      is appended.
+    message_ja: >-
+      Replace the malformed-event recovery route with an approved procedure or explicit escalation-and-hold condition:
+      src/exec/core.ts loadValidatedExecState rejects validation failures before state-changing commands can proceed,
+      and src/exec/events.ts readAllEventFiles continues rejecting the original malformed file even after another event
+      is appended.
     cause:
       type: document
-  - id: F024
-    severity: major
-    rule: vp-qe-config-validity
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 0
+  satisfied: 3
   total: 3
-  unsatisfied:
-    DC-001:
-      - BA
-    DC-002:
-      - ARC
-    DC-003:
-      - QE
   detail_ref: cdsd-execution-grade-criteria

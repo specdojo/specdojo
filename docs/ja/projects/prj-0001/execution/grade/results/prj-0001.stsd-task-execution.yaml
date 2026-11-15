@@ -5,34 +5,34 @@ path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 79
-graded_at: "2026-11-13T04:57:50.469Z"
+score: 92
+graded_at: "2026-11-15T21:36:19.761Z"
 graded_by: sol-review-executor
-content_hash: be94d1a9dc4e8bc3eb7220466a50ccb06c2d8f26e362e2ace062dc5b97b924cc
+content_hash: e32caf5e6107f817a241ec931a753c823bbe7db857bed36d34c693e2524b2346
 source_hashes:
   catalog-entry: 6f978281717b7f669c03f5af62abfd90a7623b086827e659a227d201fb81f78c
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 1bd233283dc93b916e0783284633349b63610f498ea9d6bf3e9368e6020c854c
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
     score: 94
   planning:
-    score: 75
+    score: 100
   business:
-    score: 75
+    score: 92
   consistency:
-    score: 63
+    score: 100
   architecture:
     score: 92
   usability:
-    score: 94
+    score: 100
   implementation:
-    score: 63
+    score: 88
   quality:
     score: 75
 viewpoints:
@@ -40,32 +40,32 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 3
     score: 75
@@ -76,29 +76,29 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
-  vp-dev-change-impact:
     level: 3
     score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
-  vp-qe-omissions-consistency:
     level: 3
     score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-user-flow:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -115,274 +115,123 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 11
+  major: 1
+  minor: 6
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 113
+    anchor: >-
+      - _UNDECIDED_: 担当アクターを claim の持ち主とし、移すのは人間の引き取り指定に限る権限の規則（`T-05`〜`T-12`）の業務上の承認。PO が本書の確定（140）の判断で決め、追跡は
+      [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
     message: >-
-      Record the unresolved choice between claimant-based authority and latest-event-author authority, identify the
-      affected transitions and compatibility consequences, and assign a human decision owner and decision timing; PO
-      cannot approve the permission model while this business rule remains implicit.
+      Provide a link to the catalog's BA, PO, ARC, QE, and DEV confirmation responsibilities and identify who agrees the
+      unresolved permission contract, without expanding the operational purpose paragraph into an approval procedure.
     message_ja: >-
-      Record the unresolved choice between claimant-based authority and latest-event-author authority, identify the
-      affected transitions and compatibility consequences, and assign a human decision owner and decision timing; PO
-      cannot approve the permission model while this business rule remains implicit.
+      Provide a link to the catalog's BA, PO, ARC, QE, and DEV confirmation responsibilities and identify who agrees the
+      unresolved permission contract, without expanding the operational purpose paragraph into an approval procedure.
     cause:
       type: document
   - id: F002
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
+    rule: vp-arc-technical-constraints
+    line: 20
+    anchor: >-
+      - 同時刻（秒単位）のイベントは、まず種類の既定順（`claim` → `note` → `block`・`complete`・`estimate`・`link` → `unblock`・`reopen` →
+      `release`・`cancel`）、同順位は記録ファイルのパスの昇順で並べる。同じタスクの同時刻のイベントが複数ある場合は、その並びの先頭から、直前までの基本状態に対して遷移として成立する最初のイベントを順に選んで再生し、成立するものがなければ並びの先頭を採る。成立の判定では直前のイベントの記録者を補助に使い、担当アクターは使わない。
     message: >-
-      Add a linked follow-up identifying the responsible Role codes and decision timing for defining actor authority, so
-      the remaining specification work can be assigned and sequenced before implementation and acceptance testing.
+      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
+      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
+      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
     message_ja: >-
-      Add a linked follow-up identifying the responsible Role codes and decision timing for defining actor authority, so
-      the remaining specification work can be assigned and sequenced before implementation and acceptance testing.
+      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
+      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
+      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 17
-    anchor: "- 状態の正本: 状態変更イベントを追記するイベントログと、タスク依存関係を保持するスケジュール帳票。集約した現在状態はこれらからの派生情報とする。"
+    rule: vp-dev-implementation-readiness
+    line: 20
+    anchor: >-
+      - 同時刻（秒単位）のイベントは、まず種類の既定順（`claim` → `note` → `block`・`complete`・`estimate`・`link` → `unblock`・`reopen` →
+      `release`・`cancel`）、同順位は記録ファイルのパスの昇順で並べる。同じタスクの同時刻のイベントが複数ある場合は、その並びの先頭から、直前までの基本状態に対して遷移として成立する最初のイベントを順に選んで再生し、成立するものがなければ並びの先頭を採る。成立の判定では直前のイベントの記録者を補助に使い、担当アクターは使わない。
     message: >-
-      Identify prj-0001:bdd-exec-state and prj-0001:bdd-exec-event as unavailable upstream inputs and record the interim
-      evidence, reconciliation trigger, and impact on downstream implementation and test design.
+      The previous actor-authority implementation gap is resolved by the explicit ownership and transfer rules; link the
+      remaining same-timestamp candidate-selection contract in src/exec/events.ts, including competing-claim and
+      block/unblock/complete precedence, so DEV can reproduce replay behavior without inferring these exceptions.
     message_ja: >-
-      Identify prj-0001:bdd-exec-state and prj-0001:bdd-exec-event as unavailable upstream inputs and record the interim
-      evidence, reconciliation trigger, and impact on downstream implementation and test design.
+      The previous actor-authority implementation gap is resolved by the explicit ownership and transfer rules; link the
+      remaining same-timestamp candidate-selection contract in src/exec/events.ts, including competing-claim and
+      block/unblock/complete precedence, so DEV can reproduce replay behavior without inferring these exceptions.
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
+    rule: vp-dev-testability
+    line: 19
+    anchor: "- 対象タスクのイベント列を時刻の昇順に再生して得る基本状態を正とする。イベントがないタスクの基本状態は `todo` とする。不正な形式のイベントは黙って読み飛ばさずエラーとする。"
     message: >-
-      Link the actor-authority gap to a PJR record that distinguishes the observed implementation issue from the
-      business decision and any resulting change request, with responsible Role codes and the reporting destination.
+      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
+      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
+      checks for this document; readers currently have no linked verification procedure.
     message_ja: >-
-      Link the actor-authority gap to a PJR record that distinguishes the observed implementation issue from the
-      business decision and any resulting change request, with responsible Role codes and the reporting destination.
+      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
+      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
+      checks for this document; readers currently have no linked verification procedure.
     cause:
       type: document
   - id: F005
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 20
+    anchor: >-
+      - 同時刻（秒単位）のイベントは、まず種類の既定順（`claim` → `note` → `block`・`complete`・`estimate`・`link` → `unblock`・`reopen` →
+      `release`・`cancel`）、同順位は記録ファイルのパスの昇順で並べる。同じタスクの同時刻のイベントが複数ある場合は、その並びの先頭から、直前までの基本状態に対して遷移として成立する最初のイベントを順に選んで再生し、成立するものがなければ並びの先頭を採る。成立の判定では直前のイベントの記録者を補助に使い、担当アクターは使わない。
     message: >-
-      Define who qualifies as the assigned actor after claim, another actor's unblock, a human forced block, and
-      note/link/estimate events; the current permission conditions do not let users determine who may complete, block,
-      or release an existing task.
+      The previous actor-identity oracle gap is resolved by lines 24 and 44; add a canonical reference or expected-order
+      examples for competing same-second claims and block/unblock/complete events, because describing the previous
+      recorder only as an auxiliary input leaves these replay expectations underspecified.
     message_ja: >-
-      Define who qualifies as the assigned actor after claim, another actor's unblock, a human forced block, and
-      note/link/estimate events; the current permission conditions do not let users determine who may complete, block,
-      or release an existing task.
+      The previous actor-identity oracle gap is resolved by lines 24 and 44; add a canonical reference or expected-order
+      examples for competing same-second claims and block/unblock/complete events, because describing the previous
+      recorder only as an auxiliary input leaves these replay expectations underspecified.
     cause:
       type: document
   - id: F006
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 7
-    anchor: タスク実行の状態は、スケジュール帳票のタスクの段階（着手前・実行中・中断中・完了・中止）を管理する。人と AI Agent はこの状態を使い、次に着手できるタスクの選択、止まった作業の引き継ぎ、後続へ進めるかの判断を行う。
+    rule: vp-ops-release-readiness
+    line: 113
+    anchor: >-
+      - _UNDECIDED_: 担当アクターを claim の持ち主とし、移すのは人間の引き取り指定に限る権限の規則（`T-05`〜`T-12`）の業務上の承認。PO が本書の確定（140）の判断で決め、追跡は
+      [[prj-0001:pjr-tn43-user-decisions-pending]] とする。
     message: >-
-      Provide a link to the catalog's BA, PO, ARC, QE, and DEV confirmation responsibilities and identify who agrees the
-      unresolved permission contract, without expanding the operational purpose paragraph into an approval procedure.
+      Link the draft's ready decision to resolution or explicit disposition of the actor-authority gap, reconciliation
+      with the unavailable upstream dictionaries, and human approval and publication checks, so task completion cannot
+      be mistaken for readiness of this specification.
     message_ja: >-
-      Provide a link to the catalog's BA, PO, ARC, QE, and DEV confirmation responsibilities and identify who agrees the
-      unresolved permission contract, without expanding the operational purpose paragraph into an approval procedure.
+      Link the draft's ready decision to resolution or explicit disposition of the actor-authority gap, reconciliation
+      with the unavailable upstream dictionaries, and human approval and publication checks, so task completion cannot
+      be mistaken for readiness of this specification.
     cause:
       type: document
   - id: F007
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
-    message: >-
-      T-03 says the specified actor acquires work authority, and this paragraph grants subsequent operations to the
-      assigned actor, but src/exec/events.ts foldEventsToState overwrites last_by for every event, including
-      note/link/estimate, and canCompleteTask, canBlockTask, and canReleaseTask authorize against last_by. Consequently,
-      A claiming a task followed by B adding a note gives B those permissions; reconcile this behavior with the
-      documented actor contract.
-    message_ja: >-
-      T-03 says the specified actor acquires work authority, and this paragraph grants subsequent operations to the
-      assigned actor, but src/exec/events.ts foldEventsToState overwrites last_by for every event, including
-      note/link/estimate, and canCompleteTask, canBlockTask, and canReleaseTask authorize against last_by. Consequently,
-      A claiming a task followed by B adding a note gives B those permissions; reconcile this behavior with the
-      documented actor contract.
-    cause:
-      type: document
-  - id: F008
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 19
+    rule: vp-qe-config-validity
+    line: 112
     anchor: >-
-      - 対象タスクのイベント列を時刻の昇順に再生して得る基本状態を正とする。イベントがないタスクの基本状態は `todo`
-      とし、同時刻のイベントは状態遷移として成立する順に並べて再生する。不正な形式のイベントは黙って読み飛ばさずエラーとする。
-    message: >-
-      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
-      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
-      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
-    message_ja: >-
-      Identify the canonical same-timestamp replay-order contract or link to readAllEventFiles and
-      orderSameTimestampEventsByState in src/exec/events.ts; ordering events only by whether a transition is valid omits
-      the implementation's event-type priorities, path tie-break, and candidate-selection rules.
-    cause:
-      type: document
-  - id: F009
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
-    message: >-
-      Define how the assigned actor is established, retained, and transferred across claim, block, unblock, human
-      overrides, and non-state-changing events. The current text does not specify whether authority follows the claimant
-      or the latest event author, so DEV cannot implement the permission-dependent transitions consistently with both
-      this document and the current guards.
-    message_ja: >-
-      Define how the assigned actor is established, retained, and transferred across claim, block, unblock, human
-      overrides, and non-state-changing events. The current text does not specify whether authority follows the claimant
-      or the latest event author, so DEV cannot implement the permission-dependent transitions consistently with both
-      this document and the current guards.
-    cause:
-      type: document
-  - id: F010
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
-    message: >-
-      Expand the actor-related impact beyond T-05: enforcing assigned-actor authority also affects replay metadata and
-      the complete, block, and release guards in src/exec/events.ts. Identify T-04, T-06, T-07, T-08, T-16, and T-17 as
-      affected and record the compatibility implications for histories containing note/link/estimate events by another
-      actor.
-    message_ja: >-
-      Expand the actor-related impact beyond T-05: enforcing assigned-actor authority also affects replay metadata and
-      the complete, block, and release guards in src/exec/events.ts. Identify T-04, T-06, T-07, T-08, T-16, and T-17 as
-      affected and record the compatibility implications for histories containing note/link/estimate events by another
-      actor.
-    cause:
-      type: document
-  - id: F011
-    severity: minor
-    rule: vp-dev-testability
-    line: 19
-    anchor: >-
-      - 対象タスクのイベント列を時刻の昇順に再生して得る基本状態を正とする。イベントがないタスクの基本状態は `todo`
-      とし、同時刻のイベントは状態遷移として成立する順に並べて再生する。不正な形式のイベントは黙って読み飛ばさずエラーとする。
-    message: >-
-      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
-      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
-      checks for this document; readers currently have no linked verification procedure.
-    message_ja: >-
-      Add a verification reference identifying the relevant checks and expected outcomes, such as exec validate for
-      event records, tests/src/exec/events.test.ts for replay and guard behavior, and the Markdown/frontmatter/Mermaid
-      checks for this document; readers currently have no linked verification procedure.
-    cause:
-      type: document
-  - id: F012
-    severity: minor
-    rule: vp-qe-done-criteria
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
-    message: >-
-      Extend the unmet-condition record to include the undefined actor-authority contract across T-04, T-06, T-07, T-08,
-      T-16, and T-17, and identify its effect on DC-001, DC-003, and DC-005; the current T-05-only actor discussion does
-      not explain the full remaining acceptance gap.
-    message_ja: >-
-      Extend the unmet-condition record to include the undefined actor-authority contract across T-04, T-06, T-07, T-08,
-      T-16, and T-17, and identify its effect on DC-001, DC-003, and DC-005; the current T-05-only actor discussion does
-      not explain the full remaining acceptance gap.
-    cause:
-      type: document
-  - id: F013
-    severity: major
-    rule: vp-qe-verifiability
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
-    message: >-
-      Specify which recorded actor must be compared with the requesting actor and whether note/link/estimate may change
-      that identity. Without this rule, a claim by A followed by a note from B has no unambiguous document-defined
-      permission oracle for completion, blocking, or release.
-    message_ja: >-
-      Specify which recorded actor must be compared with the requesting actor and whether note/link/estimate may change
-      that identity. Without this rule, a claim by A followed by a note from B has no unambiguous document-defined
-      permission oracle for completion, blocking, or release.
-    cause:
-      type: document
-  - id: F014
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 42
-    anchor: "- `T-06`・`T-07` の操作権限は、担当アクターからの要求、または強制操作を明示した人間からの要求を指す。"
-    message: >-
-      Restore an unresolved-items memo for the actor-authority boundary and upstream-dictionary reconciliation,
-      including affected states or transition IDs, decision makers, and decision timing; omitting the memo does not
-      establish that these known gaps are resolved.
-    message_ja: >-
-      Restore an unresolved-items memo for the actor-authority boundary and upstream-dictionary reconciliation,
-      including affected states or transition IDs, decision makers, and decision timing; omitting the memo does not
-      establish that these known gaps are resolved.
-    cause:
-      type: document
-  - id: F015
-    severity: minor
-    rule: vp-ux-user-flow
-    line: 19
-    anchor: >-
-      - 対象タスクのイベント列を時刻の昇順に再生して得る基本状態を正とする。イベントがないタスクの基本状態は `todo`
-      とし、同時刻のイベントは状態遷移として成立する順に並べて再生する。不正な形式のイベントは黙って読み飛ばさずエラーとする。
-    message: >-
-      Replace the unlocated reference to the examined resume check with a link to the target's catalog evidence_refs or
-      the relevant src/exec/events.ts functions, and provide the same navigation for the claim and completion
-      observations; the referenced dictionaries are unavailable and cannot lead readers to this evidence.
-    message_ja: >-
-      Replace the unlocated reference to the examined resume check with a link to the target's catalog evidence_refs or
-      the relevant src/exec/events.ts functions, and provide the same navigation for the claim and completion
-      observations; the referenced dictionaries are unavailable and cannot lead readers to this evidence.
-    cause:
-      type: document
-  - id: F016
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 70
-    anchor: >-
-      | `T-06`  | 実行中   | 完了     | 完了報告   | 担当アクターが完了を報告する | `complete`。共通の操作権限を適用する。自動の実行では runner が executor
-      の成功・result の確認・親の検証と統合の成功の後にだけ記録し、失敗時は中断になる。完了イベントだけで成果物の受入承認まで保証しない |
-    message: >-
-      Link the draft's ready decision to resolution or explicit disposition of the actor-authority gap, reconciliation
-      with the unavailable upstream dictionaries, and human approval and publication checks, so task completion cannot
-      be mistaken for readiness of this specification.
-    message_ja: >-
-      Link the draft's ready decision to resolution or explicit disposition of the actor-authority gap, reconciliation
-      with the unavailable upstream dictionaries, and human approval and publication checks, so task completion cannot
-      be mistaken for readiness of this specification.
-    cause:
-      type: document
+      - _TODO_: 上流の `bdd-exec-state`・`bdd-exec-event`
+      が未作成のため、状態名・イベント名・担当アクターの項目は実装の現在動作（[[prj-0001:pjr-m495-exec-unblock-keeps-claim-owner]]、[[prj-0001:pjr-t4g3-exec-block-after-actor-switch]]）を暫定の根拠としている。影響は全状態と
+      `T-05`〜`T-12`。両辞書の作成時に BA が照合し、食い違いは ARC・DEV が本書または実装の変更として扱う。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 0
+  satisfied: 5
   total: 5
-  unsatisfied:
-    DC-001:
-      - BA
-    DC-002:
-      - PO
-    DC-003:
-      - ARC
-    DC-004:
-      - QE
-    DC-005:
-      - DEV
   detail_ref: prj-0001:stsd-task-execution-grade-criteria
