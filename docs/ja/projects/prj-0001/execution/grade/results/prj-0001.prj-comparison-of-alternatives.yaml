@@ -5,9 +5,9 @@ path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alterna
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 90
-graded_at: "2026-10-12T16:32:20.172Z"
-graded_by: agy-expert-executor
+score: 86
+graded_at: "2026-11-15T12:31:11.476Z"
+graded_by: sol-review-executor
 content_hash: 266402ac08a10581bb2882e9794b3aa0708aaf46b04ec78032b646673915e355
 source_hashes:
   catalog-entry: 45f28b64a72bff5c4a2ac190021085a90b320b7cb95a5d42edbc611b85b96185
@@ -17,14 +17,14 @@ source_hashes:
   dependency:prj-scope: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
-    score: 100
+    score: 67
   business:
     score: 83
   consistency:
@@ -36,26 +36,26 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 69
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 2
     score: 50
@@ -84,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-done-criteria:
     level: 2
     score: 50
@@ -121,18 +121,97 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 1
+  major: 5
+  minor: 5
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 161
+    anchor: >-
+      | SDD-06 | Low        | Low      | High               | Middle     | High           | High   | High   |
+      非採択         |
+    message: >-
+      SDD-06 is rejected without an accompanying explanation or reconsideration condition; explain why its lower
+      suitability and traceability outweigh its lower dependency and learning costs, and identify what change would
+      justify reconsideration.
+    message_ja: >-
+      SDD-06 is rejected without an accompanying explanation or reconsideration condition; explain why its lower
+      suitability and traceability outweigh its lower dependency and learning costs, and identify what change would
+      justify reconsideration.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 167
+    anchor: 試行では同じ小規模な変更要求を処理し、成果物の重複と反映手順、要求から検証までの追跡漏れ、人間のレビューによる意図保持、ツールや Agent / IDE を外した場合の再開可能性を測定する。
+    message: >-
+      The OpenSpec and Spec Kit trial and the mitigation actions in section 5 have no assigned execution roles, effort
+      or time bounds, or review timing; identify the work packages, responsible Role codes, prerequisites, and decision
+      points so PM can estimate, schedule, and track them.
+    message_ja: >-
+      The OpenSpec and Spec Kit trial and the mitigation actions in section 5 have no assigned execution roles, effort
+      or time bounds, or review timing; identify the work packages, responsible Role codes, prerequisites, and decision
+      points so PM can estimate, schedule, and track them.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 194
+    anchor: "| D-03   | リポジトリと GitHub の責務を分離して運用可能       | Issue と正本の ID 対応、転記・クローズ条件が必要になる |"
+    message: >-
+      Section 4.4 identifies rulebook changes, mapping records, deletion rules, and Issue-to-source correspondence, but
+      does not assign their follow-up or connect them to Schedule; specify PM's responsibility and the receiving
+      deliverables or tasks before dependent work starts.
+    message_ja: >-
+      Section 4.4 identifies rulebook changes, mapping records, deletion rules, and Issue-to-source correspondence, but
+      does not assign their follow-up or connect them to Schedule; specify PM's responsibility and the receiving
+      deliverables or tasks before dependent work starts.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 213
+    anchor: "- 比較試行は入力・評価軸・完了条件を固定し、結果をプロジェクト登録簿または技術検証結果に記録する。"
+    message: >-
+      Sections 5–6 leave trial results, risks, issues, change requests, and pending decisions under generic recording
+      instructions; identify their management categories, receiving records, and responsible Role codes so PM can report
+      and track each item separately.
+    message_ja: >-
+      Sections 5–6 leave trial results, risks, issues, change requests, and pending decisions under generic recording
+      instructions; identify their management categories, receiving records, and responsible Role codes so PM can report
+      and track each item separately.
+    cause:
+      type: document
+  - id: F005
     severity: major
     rule: vp-ba-business-value
     line: 109
     anchor: "| 評価軸             | 判定基準                                                          |"
     message: D-02とD-03の評価軸に「主に対応する課題・制約」の列がなく業務課題との対応が不明なため、各評価軸と根拠資料の課題・制約の対応を明記してください。
     message_ja: D-02とD-03の評価軸に「主に対応する課題・制約」の列がなく業務課題との対応が不明なため、各評価軸と根拠資料の課題・制約の対応を明記してください。
-  - id: F002
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-dev-testability
+    line: 193
+    anchor: "| D-02   | 隔離した変更要求で既存成果物を変換せず試行可能     | 対応表、評価記録、試行生成物の削除規則が必要になる     |"
+    message: >-
+      The required mapping records, trial-output deletion rules, and Issue/source correspondence have no linked
+      validation procedure; specify the checks and expected results for preserved references, clean tool removal, and
+      consistent closure, or reference the follow-up verification artifact that defines them.
+    message_ja: >-
+      The required mapping records, trial-output deletion rules, and Issue/source correspondence have no linked
+      validation procedure; specify the checks and expected results for preserved references, clean tool removal, and
+      consistent closure, or reference the follow-up verification artifact that defines them.
+    cause:
+      type: document
+  - id: F007
     severity: major
     rule: vp-qe-done-criteria
     line: 198
@@ -141,7 +220,9 @@ findings:
       軽減策                                                               |
     message: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
     message_ja: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
-  - id: F003
+    cause:
+      type: document
+  - id: F008
     severity: major
     rule: vp-qe-verifiability
     line: 132
@@ -150,20 +231,26 @@ findings:
       は、追跡可能な正本、人間の判断責任、可逆性を必須条件とする。
     message: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
     message_ja: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
-  - id: F004
+    cause:
+      type: document
+  - id: F009
     severity: minor
     rule: vp-qe-verifiability
     line: 167
     anchor: 試行では同じ小規模な変更要求を処理し、成果物の重複と反映手順、要求から検証までの追跡漏れ、人間のレビューによる意図保持、ツールや Agent / IDE を外した場合の再開可能性を測定する。
     message: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため,合否を判定できる数値または状態条件を追加してください。
     message_ja: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため,合否を判定できる数値または状態条件を追加してください。
-  - id: F005
+    cause:
+      type: document
+  - id: F010
     severity: major
     rule: vp-qe-omissions-consistency
     line: 107
     anchor: "### 3.2. D-02 の評価軸"
     message: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
     message_ja: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
+    cause:
+      type: document
 done_criteria:
   satisfied: 2
   total: 4

@@ -1,0 +1,52 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3c2a19803b4b497da51b9b8d4de22c5a
+  ts: "2026-11-15T12:32:24Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: pm-quality-management-plan を grade の指摘で手直しする（project-kata の 140 の差し戻し）
+    - field: description
+      from: ""
+      to: pm-quality-management-plan を最新の grade の指摘で直す
+    - field: input
+      from: ""
+      to: '["T-PROJECT-KATA-pm-quality-management-plan-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43 の 1.4 の D）。2026-11-15 の grade で完了条件を満たしていない","最新の grade の未充足の完了条件と major の指摘を取り込む。本文は status: ready のまま差し戻したため、直す間の status の扱いも決める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:pm-quality-management-plan"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: pm
