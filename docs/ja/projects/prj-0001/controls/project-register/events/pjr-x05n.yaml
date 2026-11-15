@@ -140,3 +140,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration"
   previous_event_id: reg_e2eaed1211034559ba80c2a88a810865
+- v: 1
+  id: reg_ce45fd96b26c42dc96747b4659b436a0
+  ts: "2026-11-15T16:37:28Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_dc985199baac4cabbcf30e5b0055e714
+- v: 1
+  id: reg_81509edfa69140a79e399888501fd7f5
+  ts: "2026-11-15T16:44:17Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_ce45fd96b26c42dc96747b4659b436a0
