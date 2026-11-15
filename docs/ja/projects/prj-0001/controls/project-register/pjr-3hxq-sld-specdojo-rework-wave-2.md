@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-3hxq-sld-specdojo-rework-wave-2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:22:16Z"
+  completed_at: "2026-11-15T22:23:08Z"
+  conclusion: sld-specdojo を手直しし、再 grade で pass（98 点）
   commit_type: docs
   commit_scope: sld
   approach: fully-guided

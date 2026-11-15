@@ -108,3 +108,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ee27da2099dc4c148b15e2aaeb68c558
+- v: 1
+  id: reg_7965a55618ed4112bc3b45f85b8435d4
+  ts: "2026-11-15T22:23:08Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: sld-specdojo を手直しし、再 grade で pass（98 点）
+  previous_event_id: reg_e9e6b05d16d74c8283e9fda0da044351
