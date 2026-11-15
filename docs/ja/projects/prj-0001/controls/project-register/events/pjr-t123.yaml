@@ -98,3 +98,16 @@
       from: "parent validation failed: test-integration"
       to: "-"
   previous_event_id: reg_7d558b5c7ed34a7ea96874d2169a1eb2
+- v: 1
+  id: reg_50165bf2d9f645299f7475ef9073aa20
+  ts: "2026-11-15T20:53:39Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b8d699e1a8a248f3b638615fde8d0a9e
