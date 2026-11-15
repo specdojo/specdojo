@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T11:31:23Z"
+  block_reason: "parent validation failed: validate-schema"
   derived_from:
     - PJR-E4R5
   commit_type: fix
