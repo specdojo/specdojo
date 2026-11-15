@@ -191,13 +191,35 @@ function clearProjectEnv(): void {
   for (const key of ENV_KEYS) delete process.env[key];
 }
 
+// 1 つの run は実 Git・worktree・tsx の子プロセスを順に起こすため、exec run の並行実行中に
+// 親検証として流すと設定既定の 30 秒を超えることがある（PJR-BJ7E）。
+const PIPELINE_TEST_TIMEOUT_MS = 180_000;
+const PIPELINE_TEST_OPTIONS = { timeout: PIPELINE_TEST_TIMEOUT_MS };
+
+// 時間切れになったテストの run は止まらずに裏で続く。その間に afterEach が fixture を消すと、
+// 続きの run が消えた fake-agent.mjs を起動して落ち、次のテストの cwd や出力にも干渉する。
+// 片付けの前に、起動済みの run がすべて終わるのを待つ。
+const inFlightRuns = new Set<Promise<void>>();
+
 async function runExec(args: string[]): Promise<void> {
   clearProjectEnv();
   process.exitCode = undefined;
   const program = new Command();
   program.exitOverride();
   registerExecCommands(program);
-  await program.parseAsync(["node", "specdojo", "exec", ...args]);
+  const run = program.parseAsync(["node", "specdojo", "exec", ...args]).then(() => undefined);
+  inFlightRuns.add(run);
+  try {
+    await run;
+  } finally {
+    inFlightRuns.delete(run);
+  }
+}
+
+async function settleInFlightRuns(): Promise<void> {
+  while (inFlightRuns.size > 0) {
+    await Promise.allSettled([...inFlightRuns]);
+  }
 }
 
 type PipelineFixture = {
@@ -675,7 +697,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("executor / reporter pipeline E2E", () => {
+describe("executor / reporter pipeline E2E", PIPELINE_TEST_OPTIONS, () => {
   let fixture: PipelineFixture | undefined;
 
   function setup(): PipelineFixture {
@@ -686,7 +708,8 @@ describe("executor / reporter pipeline E2E", () => {
     return fixture;
   }
 
-  afterEach(() => {
+  afterEach(async () => {
+    await settleInFlightRuns();
     process.chdir(originalCwd);
     if (fixture) {
       rmSync(fixture.repo, { recursive: true, force: true });
@@ -694,7 +717,7 @@ describe("executor / reporter pipeline E2E", () => {
       rmSync(fixture.agentFixtureDir, { recursive: true, force: true });
     }
     fixture = undefined;
-  });
+  }, PIPELINE_TEST_TIMEOUT_MS);
 
   it("keeps the legacy single-agent flow unchanged for phases without agent_pipeline", async () => {
     const target = setup();
@@ -1046,12 +1069,13 @@ describe("executor / reporter pipeline E2E", () => {
 // worktree 経路の失敗と復旧。block イベントに残した stage checkpoint から reporter だけを
 // 再開し、executor を再実行しないことを確認する。claim / complete / block は runner が
 // specdojo CLI を再起動して記録するため、テストでは同じ CLI を実プロセスとして起動する。
-describe("executor / reporter pipeline resume E2E (worktree)", () => {
+describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPTIONS, () => {
   const specdojoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
   let fixture: PipelineFixture | undefined;
   let worktreeBase: string | undefined;
 
-  afterEach(() => {
+  afterEach(async () => {
+    await settleInFlightRuns();
     process.chdir(originalCwd);
     if (worktreeBase) rmSync(worktreeBase, { recursive: true, force: true });
     if (fixture) {
@@ -1061,7 +1085,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     }
     worktreeBase = undefined;
     fixture = undefined;
-  });
+  }, PIPELINE_TEST_TIMEOUT_MS);
 
   async function startReporterBlock(incomplete = false): Promise<void> {
     fixture = setupPipelineRepository();
@@ -1683,7 +1707,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "pipeline-state.json"), "utf8"),
     ) as { stages: Record<string, { status: string; attempts: number }> };
     expect(mergedState.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
-  }, 30_000);
+  });
 
   it("skips commit and merge when resuming after the branch was already merged", async () => {
     fixture = setupPipelineRepository();
@@ -1746,7 +1770,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
         .map((event) => event.type)
         .sort(),
     ).toEqual(["block", "claim", "complete", "unblock"]);
-  }, 30_000);
+  });
 
   it("revalidates a resolved parent-validation failure before resuming the reporter", async () => {
     fixture = setupPipelineRepository();
