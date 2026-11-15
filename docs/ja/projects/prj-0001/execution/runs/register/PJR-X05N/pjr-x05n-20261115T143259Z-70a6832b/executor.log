@@ -1,0 +1,26 @@
+kata-wave-2 で型の自動 grade が流れなかった原因を突き止め、修正しました。原因は strategy ファイルのパス解決の誤りで、intent の条件の食い違いや失敗の握りつぶしではありません。修正前の実装には、エラーを出さずに何もしない経路がありました。対象のテストファイルは 10 件すべて通っています。`typecheck`・`lint:ts`・`test:unit`・`lint:md` などの検証は、これから親 runner が実行します。
+
+**原因**
+- `scheduleKataReviewSubjects`（`src/exec/review-kata.ts`）は、task の `schedule_file` が置かれたディレクトリで `sch-strategy-<track>.yaml` を探していました。
+- 実データの `schedule_file` は schedule ディレクトリからの相対パス（`sch-track-kata-wave-2.yaml`）なので、置き場所は `.` になります。その結果、リポジトリルートを探して strategy が見つからず、型の評価対象が空になっていました。
+- 対象が空のため、型の grade も、完了判定の制限も、plan の追加完了条件も出ず、エラーも出ませんでした。
+- kata-wave-2 の intent（`bootstrap-kata-set`）と task ID は、E4R5 の条件を満たしていました。E4R5 のテストは `schedule_file` を `schedule/sch-track-kata.yaml` としていて、リポジトリルートから見つかる形だったため、この誤りが見えませんでした。
+
+**修正**
+- プロジェクト設定の schedule ディレクトリ（`getProjectSchedulePath`）を基準に strategy を探すようにしました。
+- `scheduleKataReviewSubjects` の引数に `projectId` を足しました。渡し忘れを型検査で見つけられるよう、省略できない引数にしています。
+- 呼び出し元 3 か所（plan 生成、review 前の grade、verdict の制限）から `projectId` を渡すようにしました。変更したファイルは `src/exec/plans-generation.ts` と `src/exec/run/schedule-prepare.ts` です。
+- grade の失敗をどう扱うかは E4R5 の設計のままで、変えていません。
+
+**回帰テスト**（`tests/src/exec/review-kata.test.ts`）
+- fixture の `schedule_file` を実データと同じ形に変えたので、既存のケースもすべて実際のパス解決を通ります。
+- kata-wave-2 と同じ形（track `kata-wave-2`、`bootstrap-kata-set`、`retrofit`）で、review の前に rulebook と sample が `--target kata` で grade されることを確かめるケースを足しました。
+- 修正前の実装でこのケースが失敗することは、実際には確かめていません。確かめるコマンドが承認待ちで実行できなかったため、コードを読んだ上での判断です。
+
+個票の作業内容と対応結果（理由・判断・検証・CHANGELOG に書く事項）は更新しました。CHANGELOG.md は変えていません。`events/pjr-x05n.yaml` には作業前から差分がありましたが、触っていません。
+
+**残っている作業:** kata-wave-2 の型 4 組の grade は 2026-10 のままです。修正後の review か `grade run --target kata` で流し直してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"kata-wave-2 の review で型の自動 grade が流れなかった原因は、strategy の探し方だった。`schedule_file`（schedule ディレクトリ相対）の置き場所をリポジトリルートで探していたため strategy が見つからず、型の評価対象が空になっていた。プロジェクト設定の schedule ディレクトリを基準に探すよう `src/exec/review-kata.ts` を直し、呼び出し元 3 か所から `projectId` を渡すようにした。実際と同じ配置の fixture と kata-wave-2 と同じ形の回帰テストを足し、個票の対応結果を更新した。","handoff":["原因: `scheduleKataReviewSubjects` は `schedule_file` の置き場所を基準に strategy を探していた。ready / cpm の `schedule_file` は schedule ディレクトリ相対（例: `sch-track-kata-wave-2.yaml`）のため、リポジトリルートを探して見つからず、型の評価対象が空になった。intent・approach の条件や grade の失敗の握りつぶしが原因ではない。","判断: schedule のパスを呼び出し元ごとに引き回さず、`projectId` から設定（`getProjectSchedulePath`）を読んで探すようにした。plan 生成は schedule のパスを持たず、呼び出し元 3 か所はすべて `projectId` を持つため。引数は省略できないようにし、渡し忘れを型検査で見つけられるようにした。絶対パスと cwd 相対のパスも候補に残した。","次のアクション: kata-wave-2 の型 4 組（bac・bds・sld・ifx-file の rulebook・sample）の grade は 2026-10 のまま。修正後の review か `grade run --target kata` で流し直す必要がある。","CHANGELOG に書く事項: 不具合修正。型を整備する schedule（`bootstrap-kata-set`・`improve-kata`）の review で、型一式の自動 grade と完了判定の制限が働かなかった問題を直した（strategy ファイルを作業ディレクトリ基準で探していたため）。"],"validations":[{"command":"npx vitest run tests/src/exec/review-kata.test.ts","status":"passed","summary":"10 tests passed (kata-wave-2 と同じ形の回帰テストを含む)"},{"command":"npx prettier --check src/exec/review-kata.ts src/exec/plans-generation.ts src/exec/run/schedule-prepare.ts tests/src/exec/review-kata.test.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run -s validate:history-links","status":"passed","summary":"変更した個票を含め全件 valid"}]}
+</specdojo_executor_evidence>

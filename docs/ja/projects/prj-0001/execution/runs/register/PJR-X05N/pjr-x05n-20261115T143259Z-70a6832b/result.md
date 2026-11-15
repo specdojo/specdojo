@@ -4,31 +4,27 @@ specdojo:
   type: exec-result
   task_id: PJR-X05N
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-X05N/pjr-x05n-20261115T143259Z-70a6832b/plan.md
   started_at: "2026-11-15T14:33:05.643Z"
-  completed_at: "2026-11-15T16:44:14.301Z"
+  completed_at: "2026-11-15T22:05:52.158Z"
   agent: opus-executor
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- kata-wave-2 の review において、型の自動 grade が実行されなかった原因を特定し修正した。
-- 原因は、`schedule_file`（`schedule` ディレクトリ相対）の探索において、リポジトリルートを基準に検索していたため strategy が見つからず、型の評価対象が空になっていたことだった。
-- `src/exec/review-kata.ts` を修正し、`projectId` からプロジェクト設定の `schedule` ディレクトリを基準に探索を行うように変更した。また、呼び出し元 3 か所から `projectId` を明示的に渡すように変更し、型安全性を高めた。
-- 修正を検証するため、実際と同じ配置の fixture を用いた回帰テストを `tests/src/exec/review-kata.test.ts` に追加した。
+- kata-wave-2 の review で型の自動 grade が流れなかった原因は、strategy の探し方だった。`schedule_file`（schedule ディレクトリ相対）の置き場所をリポジトリルートで探していたため strategy が見つからず、型の評価対象が空になっていた。プロジェクト設定の schedule ディレクトリを基準に探すよう `src/exec/review-kata.ts` を直し、呼び出し元 3 か所から `projectId` を渡すようにした。実際と同じ配置の fixture と kata-wave-2 と同じ形の回帰テストを足し、個票の対応結果を更新した。
 
 ## 2. 変更ファイル
 
-- `src/exec/plans-generation.ts`: `src/exec/review-kata.ts` の変更に伴い、`projectId` を引き回すための変更。
-- `src/exec/review-kata.ts`: `schedule_file` の探索ロジックを、リポジトリルート基準からプロジェクトの `schedule` ディレクトリ基準に変更。また、引数に `projectId` を追加。
-- `src/exec/run/schedule-prepare.ts`: `src/exec/review-kata.ts` の変更に伴い、`projectId` を渡すための変更。
-- `tests/src/exec/review-kata.test.ts`: kata-wave-2 と同様のディレクトリ構成を持つ fixture を用いた、strategy 探索の回帰テストを追加。
+- `src/exec/plans-generation.ts`: 変更、+1 / -1 行
+- `src/exec/review-kata.ts`: 変更、+24 / -4 行
+- `src/exec/run/schedule-prepare.ts`: 変更、+2 / -2 行
+- `tests/src/exec/review-kata.test.ts`: 変更、+44 / -3 行
 
 ## 3. 申し送り
 
@@ -39,4 +35,4 @@ specdojo:
 
 ## 4. 進め方
 
-原因の調査として、`schedule_file` の探索ロジックを確認したところ、リポジトリルートを基準に strategy を探していることが判明した。これにより、`schedule` ディレクトリ内の相対パスで定義されている strategy が見つからず、評価対象が空になっていた。これを解消するため、`projectId` からプロジェクト固有の `schedule` パスを取得して探索するよう `src/exec/review-kata.ts` を修正した。また、修正が正しいことを保証するために、実際のディレクトリ構成を模した回帰テストを `tests/src/exec/review-kata.test.ts` に実装した。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
