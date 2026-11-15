@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-8ZX8
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-8ZX8/pjr-8zx8-20261115T190826Z-b38426f5/plan.md
   started_at: "2026-11-15T19:08:28.246Z"
+  completed_at: "2026-11-15T19:14:21.104Z"
   agent: opus-executor
+  block_reason: "executor reported incomplete: br・bes・bac・opr の template の `frontmatter_template` の id を `_LOCAL_ID_` に直し、個票の作業内容と対応結果を更新した。完了条件の一つ、4 つの型の `grade run --target kata` は agent を起動して利用枠を使うため実行しておらず、人による実行が…"
 ---
 
 # Edit Result

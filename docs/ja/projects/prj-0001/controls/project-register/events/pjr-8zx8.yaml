@@ -57,3 +57,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_78dd74543d5244dda3ff7c4653c805f5
+- v: 1
+  id: reg_b2c379609e3e4b169afd71dcd6e2fafe
+  ts: "2026-11-15T19:14:26Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: br・bes・bac・opr の template の `frontmatter_template` の id を `_LOCAL_ID_` に直し、個票の作業内容と対応結果を更新した。完了条件の一つ、4 つの型の `grade run --target kata` は agent を起動して利用枠を使うため実行しておらず、人による実行が…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: br・bes・bac・opr の template の `frontmatter_template` の id を `_LOCAL_ID_` に直し、個票の作業内容と対応結果を更新した。完了条件の一つ、4 つの型の `grade run --target kata` は agent を起動して利用枠を使うため実行しておらず、人による実行が…"
+  previous_event_id: reg_c8e93f3b6f624c2890209fdab57bed0a
