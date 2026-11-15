@@ -20,6 +20,7 @@ import {
   addLockOptions,
   addOwnerOptions,
   addProjectOptions,
+  addTakeOverOption,
   ensureActorCanClaimNext,
   findRosterMember,
   loadRosterForOpts,
@@ -47,6 +48,7 @@ import {
   canReleaseTask,
   canReopenTask,
   canUnblockTask,
+  claimOwnerOf,
   computeReadyIds,
   readAllEventFiles,
   releaseSchedulerLock,
@@ -132,7 +134,11 @@ export function registerExecCommands(program: Command): void {
     },
     unblock: {
       type: "unblock",
-      check: ({ schedule, snapshot }, taskId) => canUnblockTask(schedule, snapshot, taskId),
+      check: ({ schedule, snapshot }, taskId, actor, opts) =>
+        canUnblockTask(schedule, snapshot, taskId, {
+          requested: !!opts.takeOver,
+          isHuman: findRosterMember(loadRosterForOpts(opts), actor)?.type === "human",
+        }),
     },
     release: {
       type: "release",
@@ -168,6 +174,7 @@ export function registerExecCommands(program: Command): void {
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
     if (t === "complete" || t === "block" || t === "release") addForceOption(cmd);
+    if (t === "unblock") addTakeOverOption(cmd);
     if (t === "release") {
       cmd.option(
         "--reset-worktree",
@@ -708,7 +715,7 @@ export function registerExecCommands(program: Command): void {
 
       const entries = Object.entries(snapshot.tasks)
         .filter(([, cs]) => cs.state === filterState)
-        .filter(([, cs]) => !filterBy || cs.last_by === filterBy)
+        .filter(([, cs]) => !filterBy || claimOwnerOf(cs) === filterBy)
         .sort(([a], [b]) => a.localeCompare(b));
 
       if (entries.length === 0) {
@@ -724,7 +731,7 @@ export function registerExecCommands(program: Command): void {
       const rows = entries.map(([taskId, cs]) => ({
         taskId,
         name: schedule.nodes.get(taskId)?.name ?? "-",
-        by: cs.last_by ?? "-",
+        by: claimOwnerOf(cs) ?? "-",
         ts: cs.last_ts ?? "-",
       }));
 
