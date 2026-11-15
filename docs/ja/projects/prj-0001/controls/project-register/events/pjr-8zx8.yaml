@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_78dd74543d5244dda3ff7c4653c805f5
+  ts: "2026-11-15T13:41:49Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: br・bes・bac・opr の template の frontmatter の id を、プロダクト文書の書き方（\_LOCAL\_ID\_）に直す
+    - field: description
+      from: ""
+      to: 4 つの template の id を \_LOCAL\_ID\_ に直し、生成される文書の id がプロダクト文書の決まりに合うことを確かめる
+    - field: input
+      from: ""
+      to: '["2026-11-15、sysd-index の型の grade で、template の `frontmatter_template` の id が `_PROJECT_ID_:_LOCAL_ID_` のため、プロダクト文書の id（ローカル id）と食い違う指摘が出た。sysd-index と sysd-cross-cutting-policy は直した","同じ書き方が br-template・bes-template・bac-template・opr-template に残る。0.8.0（PJR-PMK6）に入れる"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: kata
