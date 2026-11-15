@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-t4g3-exec-block-after-actor-switch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-14T22:53:22Z"
+  completed_at: "2026-11-15T16:46:47Z"
+  conclusion: 0.8.0 の第 1 段で直した（claim した agent と別の agent の段で失敗しても blocked にする）。親の検証をすべて通って統合済み
   derived_from:
     - PJR-52EE
   commit_type: fix
