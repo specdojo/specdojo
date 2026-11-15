@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-bac-task-completion-005",
+  "run_id": "T-KATA-WAVE-2-bac-task-completion-005-20261115T042641Z-ed4dd7ad",
+  "updated_at": "2026-11-15T05:07:00.793Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T04:33:55.433Z",
+      "completed_at": "2026-11-15T04:45:08.365Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-005/T-KATA-WAVE-2-bac-task-completion-005-20261115T042641Z-ed4dd7ad/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-15T05:01:44.702Z",
+      "completed_at": "2026-11-15T05:06:26.751Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-005/T-KATA-WAVE-2-bac-task-completion-005-20261115T042641Z-ed4dd7ad/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T05:06:30.918Z",
+      "completed_at": "2026-11-15T05:07:00.793Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-005/T-KATA-WAVE-2-bac-task-completion-005-20261115T042641Z-ed4dd7ad/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bac-task-completion-005/T-KATA-WAVE-2-bac-task-completion-005-20261115T042641Z-ed4dd7ad/result.md"
+  }
+}
