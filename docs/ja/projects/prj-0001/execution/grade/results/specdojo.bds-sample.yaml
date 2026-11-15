@@ -5,27 +5,27 @@ path: docs/ja/specdojo/samples/bds-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 64
-graded_at: "2026-11-15T11:48:12.871Z"
+score: 82
+graded_at: "2026-11-15T22:23:21.799Z"
 graded_by: sol-review-executor
-content_hash: 27595d9d13c7c3692f4104b90f277181c91c6e2e69e7ab00450fd6f88062ad44
+content_hash: d1d14a4bafbe8c60f02c3ef3998c807765f55ee48fe6f5b5d5aa70db8cdea1be
 categories:
   purpose:
     score: 75
   operations:
-    score: 63
+    score: 100
   planning:
-    score: 50
+    score: 100
   business:
-    score: 75
-  architecture:
     score: 83
+  architecture:
+    score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 38
+    score: 50
   quality:
-    score: 58
+    score: 92
   consistency:
     score: 25
 viewpoints:
@@ -36,29 +36,29 @@ viewpoints:
     level: 2
     score: 50
   vp-po-publication-accountability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,35 +66,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 2
     score: 50
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,18 +103,19 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 17
-  minor: 2
+  major: 6
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-po-decision-readiness
-    line: 88
+    line: 95
     anchor: >-
-      | 根拠の業務イベント | 現金販売の確定は `based_on`
-      に接続済みだが、つけ販売の確定と欠品の記録（`bes-stock-out-recorded`）の業務イベントは未同梱で接続していない。未接続の間は、つけ販売の数え方と欠品回数の境界を受入対象外とする | BA
-      が業務イベントを作成した時点で `based_on` に接続し、QE が算出ルールとの整合を確かめる                                            |
+      | 根拠の業務イベント（決定待ち） | つけ販売の確定と欠品の記録（`bes-stock-out-recorded`）の業務イベントが未同梱で、`based_on`
+      に接続していない。つけ販売の数え方と欠品回数の境界を確かめられず、月次報告の帳票仕様とテストの設計もこの境界に依存する | PO
+      が本書の確定時に、受入を保留するか、販売数と営業日数に限った限定受入とするかを決める。限定受入の間、欠品回数と補充候補は参考表示とし、仕入れ数量の根拠にしない。BA が業務イベントを作って `based_on` に接続し、QE
+      が算出ルールとの境界の期待結果を確かめた後に、PO が全面受入へ戻すかを判断する | `specdojo:pjr-bds-sales-events`  |
     message: >-
       Specify whether PO must hold acceptance or explicitly approve a restricted scope while credit-sale and stockout
       boundaries remain unverified, and record the decision occasion, permitted use, and conditions for restoring full
@@ -125,194 +126,96 @@ findings:
       acceptance.
   - id: F002
     severity: major
-    rule: vp-po-publication-accountability
-    line: 33
-    anchor: "- 提供方法: 店主代表がタブレットの報告一覧から開く。印刷した PDF は仕入れノートに綴じる。"
-    message: draft から公開可能な状態へ移す条件として、公開対象、機密・個人情報の有無、確認事項、人間の承認者を明記する必要がある。
-    message_ja: draft から公開可能な状態へ移す条件として、公開対象、機密・個人情報の有無、確認事項、人間の承認者を明記する必要がある。
+    rule: vp-ba-requirements-completeness
+    line: 47
+    anchor: >-
+      | 前週の報告   | 前週からの販売数の増減を示す               |
+      前週の本報告                                                                                                                           
+      | 初回は増減を「前週なし」と表示する                                                               |
+    message: >-
+      Define the expected comparison and report status when a previous-week report is missing or unreadable after the
+      initial reporting week; the current exception covers only first use, leaving users unable to distinguish an
+      unavailable comparison from a genuine zero baseline.
+    message_ja: >-
+      Define the expected comparison and report status when a previous-week report is missing or unreadable after the
+      initial reporting week; the current exception covers only first use, leaving users unable to distinguish an
+      unavailable comparison from a genuine zero baseline.
   - id: F003
     severity: major
-    rule: vp-pm-plan-feasibility
-    line: 88
-    anchor: >-
-      | 根拠の業務イベント | 現金販売の確定は `based_on`
-      に接続済みだが、つけ販売の確定と欠品の記録（`bes-stock-out-recorded`）の業務イベントは未同梱で接続していない。未接続の間は、つけ販売の数え方と欠品回数の境界を受入対象外とする | BA
-      が業務イベントを作成した時点で `based_on` に接続し、QE が算出ルールとの整合を確かめる                                            |
-    message: 記載項目の名称だけでなく、仕様確定に必要な作業単位、依存関係、担当 Role code、完了条件、判断タイミングを具体化する必要がある。
-    message_ja: 記載項目の名称だけでなく、仕様確定に必要な作業単位、依存関係、担当 Role code、完了条件、判断タイミングを具体化する必要がある。
-  - id: F004
-    severity: major
-    rule: vp-pm-dependency-risk
-    line: 88
-    anchor: >-
-      | 根拠の業務イベント | 現金販売の確定は `based_on`
-      に接続済みだが、つけ販売の確定と欠品の記録（`bes-stock-out-recorded`）の業務イベントは未同梱で接続していない。未接続の間は、つけ販売の数え方と欠品回数の境界を受入対象外とする | BA
-      が業務イベントを作成した時点で `based_on` に接続し、QE が算出ルールとの整合を確かめる                                            |
-    message: 参照先が特定できない handbook への依存を解消し、based_on による根拠仕様、後続成果物、未決事項の影響と PJR 登録候補を明記する必要がある。
-    message_ja: 参照先が特定できない handbook への依存を解消し、based_on による根拠仕様、後続成果物、未決事項の影響と PJR 登録候補を明記する必要がある。
-  - id: F005
-    severity: major
-    rule: vp-pm-control-reporting
-    line: 84
-    anchor: "## 9. メモ / 将来課題"
-    message: 未解決事項を課題・リスク・変更要求・決定待ちに分類し、PJR 転記要否、報告先、担当 Role code、対応方針を示す必要がある。
-    message_ja: 未解決事項を課題・リスク・変更要求・決定待ちに分類し、PJR 転記要否、報告先、担当 Role code、対応方針を示す必要がある。
-  - id: F006
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 79
-    anchor: "| 期間内に販売記録が 1 件もない  | 報告を作り、明細なし・記録日数 0 と表示する            | 店主代表が休業か記録漏れかを確かめ、記録漏れなら開発担当へ知らせる   |"
-    message: >-
-      The former placeholder has been replaced by a concrete report, but a week with no sales and recorded stockouts
-      must still show the affected products, stockout counts, and replenishment flags; define this case instead of
-      unconditionally requiring no detail rows.
-    message_ja: >-
-      The former placeholder has been replaced by a concrete report, but a week with no sales and recorded stockouts
-      must still show the affected products, stockout counts, and replenishment flags; define this case instead of
-      unconditionally requiring no detail rows.
-  - id: F007
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 27
-    anchor: "_ASSUMPTION_: 閉店処理は日曜に必ず行う前提とする。日曜が休業日の週は、直前の営業日の閉店処理完了を期間の終点とする。"
-    message: >-
-      Define the automatic generation trigger when Sunday is closed and the expected period and output when the entire
-      week is closed; changing the period end to the preceding closing event does not specify how these weeks produce a
-      report.
-    message_ja: >-
-      Define the automatic generation trigger when Sunday is closed and the expected period and output when the entire
-      week is closed; changing the period end to the preceding closing event does not specify how these weeks produce a
-      report.
-  - id: F008
-    severity: major
-    rule: vp-arc-technical-constraints
+    rule: vp-dev-implementation-readiness
     line: 43
     anchor: >-
-      | 販売記録   | 商品別の販売数を数える       | [[specdojo:cdsd-sample\|概念データストア定義]] の販売記録。現金販売の確定は [[specdojo:bes-sample\|業務イベント:
-      店頭の現金会計の確定]] | 記録がない営業日は「記録なし」と注記し、販売数 0 と区別する      |
-    message: 実装詳細には踏み込まず、出力形式、文字コード等の業務上必要な制約、外部依存、準拠 schema と検証方法を明記する必要がある。
-    message_ja: 実装詳細には踏み込まず、出力形式、文字コード等の業務上必要な制約、外部依存、準拠 schema と検証方法を明記する必要がある。
-  - id: F009
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 53
-    anchor: >-
-      | 2   | 見出し | 記録日数       | 期間内で販売記録がある営業日の数                  | 販売記録           |
-      販売記録がある日付の数と一致することを照合する                       |
+      | 日次締め記録 | 営業日を特定し、その日の販売件数を照合する | [[specdojo:cdsd-sample\|概念データストア定義]]
+      の日次締め記録                                                                           |
+      締め記録がない日は休業日とする。締め記録そのものを読めない場合は営業日を推測せず、報告を保留する |
     message: >-
-      The former implementation placeholder is resolved, but identify the authoritative operating-day or closing record
-      needed to distinguish a closed day, a genuine zero-sales day, and missing sales records, and define the behavior
-      when that input is unavailable.
+      Specify which closing state, confirmation version, and referenced sales-summary baseline are used for each date;
+      specdojo:cdsd-sample distinguishes closing drafts and preserved confirmation versions, so record existence alone
+      does not determine a reproducible operating-day count or sales-count comparison.
     message_ja: >-
-      The former implementation placeholder is resolved, but identify the authoritative operating-day or closing record
-      needed to distinguish a closed day, a genuine zero-sales day, and missing sales records, and define the behavior
-      when that input is unavailable.
-  - id: F010
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 79
-    anchor: "| 期間内に販売記録が 1 件もない  | 報告を作り、明細なし・記録日数 0 と表示する            | 店主代表が休業か記録漏れかを確かめ、記録漏れなら開発担当へ知らせる   |"
-    message: >-
-      Define detail selection when sales are absent but stockout records exist; selecting products with sales or
-      stockouts at line 54 conflicts with suppressing every detail row here, so implementations cannot produce a
-      consistent result.
-    message_ja: >-
-      Define detail selection when sales are absent but stockout records exist; selecting products with sales or
-      stockouts at line 54 conflicts with suppressing every detail row here, so implementations cannot produce a
-      consistent result.
-  - id: F011
+      Specify which closing state, confirmation version, and referenced sales-summary baseline are used for each date;
+      specdojo:cdsd-sample distinguishes closing drafts and preserved confirmation versions, so record existence alone
+      does not determine a reproducible operating-day count or sales-count comparison.
+  - id: F004
     severity: major
     rule: vp-dev-change-impact
-    line: 25
-    anchor: "- 再出力: 同じ週を再出力した場合は、その週の報告を作り直し、別の報告を増やさない。"
-    message: based_on と関連成果物を特定し、帳票変更が schema、生成処理、出力形式、運用手順、既存利用者へ与える影響を明記する必要がある。
-    message_ja: based_on と関連成果物を特定し、帳票変更が schema、生成処理、出力形式、運用手順、既存利用者へ与える影響を明記する必要がある。
-  - id: F012
-    severity: major
-    rule: vp-dev-testability
-    line: 17
-    anchor: "- 仕様の確認: BA が読み手と利用目的を、QE が表示項目の確かめ方と例外時の表示を確かめる。"
-    message: 対象ファイルに対する lint、Frontmatter schema 検証、生成確認のコマンドと期待結果、エラー時の対応を示す必要がある。
-    message_ja: 対象ファイルに対する lint、Frontmatter schema 検証、生成確認のコマンドと期待結果、エラー時の対応を示す必要がある。
-  - id: F013
-    severity: major
+    line: 99
+    anchor: >-
+      | 本書の変更（変更要求）         |
+      表示項目・算出ルール・契機を変えると、定期処理、過去の週の再出力、仕入れノートに綴じた報告との比較に影響する                                                                                                     
+      | BA が差分を整理し、DEV が定期処理と再出力する週の範囲を、QE が再検証の範囲を示す。PO
+      が承認してから定期処理へ反映し、反映後に直近の週を再出力する                                                                                                                                                 
+      | 変更ごとに登録する               |
+    message: >-
+      Include successor reports in the impact analysis when a historical week is regenerated: replacing week W changes
+      the baseline for week W+1, so define whether affected comparisons are regenerated or retain an identifiable frozen
+      baseline, and require QE to verify that policy.
+    message_ja: >-
+      Include successor reports in the impact analysis when a historical week is regenerated: replacing week W changes
+      the baseline for week W+1, so define whether affected comparisons are regenerated or retain an identifiable frozen
+      baseline, and require QE to verify that policy.
+  - id: F005
+    severity: minor
     rule: vp-qe-verifiability
     line: 53
     anchor: >-
-      | 2   | 見出し | 記録日数       | 期間内で販売記録がある営業日の数                  | 販売記録           |
-      販売記録がある日付の数と一致することを照合する                       |
+      | 1   | 見出し | 対象週         | 対象期間の開始日と終了日（例: 2026-04-13〜04-19）                                              |
+      販売記録                                     | 期間内の最初と最後の営業日が範囲に含まれることを照合する                                 |
     message: >-
-      Identify an independent source for expected operating days and define pass/fail cases for a closed day, an open
-      day with zero sales, and an open day with missing records; counting dates found in sales records cannot verify
-      these distinctions.
+      Replace the target-week containment check with exact equality to the requested Monday and Sunday dates in Japan
+      time, including weeks with no sales or operating days; a wider incorrect range currently passes, and sales records
+      cannot supply the expected dates for an empty week.
     message_ja: >-
-      Identify an independent source for expected operating days and define pass/fail cases for a closed day, an open
-      day with zero sales, and an open day with missing records; counting dates found in sales records cannot verify
-      these distinctions.
-  - id: F014
+      Replace the target-week containment check with exact equality to the requested Monday and Sunday dates in Japan
+      time, including weeks with no sales or operating days; a wider incorrect range currently passes, and sales records
+      cannot supply the expected dates for an empty week.
+  - id: F006
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 79
-    anchor: "| 期間内に販売記録が 1 件もない  | 報告を作り、明細なし・記録日数 0 と表示する            | 店主代表が休業か記録漏れかを確かめ、記録漏れなら開発担当へ知らせる   |"
-    message: >-
-      Reconcile the no-sales exception with the requirement to list products having sales or stockouts; a stockout-only
-      week currently requires both stockout detail rows and no detail rows.
-    message_ja: >-
-      Reconcile the no-sales exception with the requirement to list products having sales or stockouts; a stockout-only
-      week currently requires both stockout detail rows and no detail rows.
-  - id: F015
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 60
-    anchor: "| 9   | 注記   | 記録の注意     | 記録なしの営業日、商品台帳にない商品              | 販売記録、商品台帳 | 「対象範囲と元にする記録」の欠けるときの扱いに該当する事項だけが載る |"
-    message: >-
-      Include the presence or absence of stockout records in the annotation definition and verification rule, or revise
-      the source-table requirement at line 44; the current exhaustive list permits only missing sales days and unknown
-      products.
-    message_ja: >-
-      Include the presence or absence of stockout records in the annotation definition and verification rule, or revise
-      the source-table requirement at line 44; the current exhaustive list permits only missing sales days and unknown
-      products.
-  - id: F016
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 84
-    anchor: "## 9. メモ / 将来課題"
-    message: >-
-      The previous structural and naming blockers are resolved; only a minor declaration remains: identify the upper
-      report index that owns shared conventions, or explicitly record that it has not been created, as required by the
-      rulebook's overall policy.
-    message_ja: >-
-      The previous structural and naming blockers are resolved; only a minor declaration remains: identify the upper
-      report index that owns shared conventions, or explicitly record that it has not been created, as required by the
-      rulebook's overall policy.
-  - id: F017
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 89
+    line: 81
     anchor: >-
-      | 補充候補の基準     |
-      補充候補の欠品回数の基準が未決であり、候補が多すぎる場合がある                                                                                                                                            
-      | 店主代表が初回の報告で基準を決め、同行レビュー担当が判定の例を確かめる                                                              |
+      | 期間内に販売記録が 1 件もない                    | 報告を作る。欠品の記録がある商品は販売数 0 として明細に載せ、販売も欠品もなければ「明細なし」と表示する |
+      店主代表が締め記録の販売件数と照合し、記録漏れなら DEV へ知らせる |
     message: >-
-      The previous type and reference-name problems are resolved; map 同行レビュー担当 to a defined Role code, such as QE if
-      intended, so the reviewer responsible for checking threshold examples is unambiguous.
+      Reconcile the unconditional zero sales displayed for stockout-only products with the rule that a closing-count
+      mismatch must not be treated as zero; when closing records show sales but sales records are missing, define an
+      unavailable or incomplete value instead of asserting zero.
     message_ja: >-
-      The previous type and reference-name problems are resolved; map 同行レビュー担当 to a defined Role code, such as QE if
-      intended, so the reviewer responsible for checking threshold examples is unambiguous.
-  - id: F018
+      Reconcile the unconditional zero sales displayed for stockout-only products with the rule that a closing-count
+      mismatch must not be treated as zero; when closing records show sales but sales records are missing, define an
+      unavailable or incomplete value instead of asserting zero.
+  - id: F007
     severity: major
-    rule: vp-ops-release-readiness
-    line: 84
-    anchor: "## 9. メモ / 将来課題"
-    message: ready 化に必要な必須章の充足条件、未解決事項の解消基準、公開対象、人間の承認者、公開前確認を明記する必要がある。
-    message_ja: ready 化に必要な必須章の充足条件、未解決事項の解消基準、公開対象、人間の承認者、公開前確認を明記する必要がある。
-  - id: F019
-    severity: major
-    rule: vp-ops-operability
+    rule: vp-qe-omissions-consistency
     line: 82
     anchor: >-
-      | 自動での作成が失敗した         | 報告を作らない                                         |
-      開発担当が原因を確かめ、解消後に同じ週を再出力する                   |
-    message: 帳票仕様の更新契機、変更管理先、再生成・再検証手順、問い合わせ導線、障害時対応、担当 Role code を記述する必要がある。
-    message_ja: 帳票仕様の更新契機、変更管理先、再生成・再検証手順、問い合わせ導線、障害時対応、担当 Role code を記述する必要がある。
+      | 期間内に日次締め記録が 1 件もない（全休の週）    | 報告を作り、見出しに「休業週」、営業日数 0 と表示する。明細は上の行と同じ規則で載せる                   |
+      店主代表が休業の予定と合うかを確かめる                            |
+    message: >-
+      Restrict the 休業週 label to confirmed closure or define a distinct incomplete-closing status; this row labels every
+      week without closing records as closed, while line 84 explicitly permits sales records on dates whose closing is
+      missing.
+    message_ja: >-
+      Restrict the 休業週 label to confirmed closure or define a distinct incomplete-closing status; this row labels every
+      week without closing records as closed, while line 84 explicitly permits sales records on dates whose closing is
+      missing.

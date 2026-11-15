@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/ifx-file-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-11-15T11:59:44.343Z"
+score: 83
+graded_at: "2026-11-15T22:29:19.548Z"
 graded_by: sol-review-executor
-content_hash: f18e9d9b2f6eb5edeaaf742ca86ea458d7e7719db334721bcbd393fc924d91cd
+content_hash: 6d73288140f501ab61955a394759067849fa4b472a9a5c2d5a0505d57a1ddb45
 categories:
   purpose:
     score: 100
@@ -19,13 +19,13 @@ categories:
   business:
     score: 83
   architecture:
-    score: 100
+    score: 83
   usability:
     score: 100
   implementation:
     score: 63
   quality:
-    score: 42
+    score: 83
   consistency:
     score: 50
 viewpoints:
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -72,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,167 +103,112 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 9
-  minor: 3
+  major: 7
+  minor: 0
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 108
-    anchor: "description: 発注数量（ボールまたは箱単位）"
+    line: 331
+    anchor: '"type": "object",'
     message: >-
-      order_quantity is described as using either balls or boxes, but the contract defines neither a unit field nor a
-      referenced product-to-ordering-unit mapping. Specify how the unit is determined for each product_code so that a
-      quantity such as 5 cannot produce different order volumes for the sender and recipient.
+      The sales-record schema contains only transaction identifiers, aggregate amounts, and statuses, and
+      additionalProperties: false rejects line_items. Because current-tx.json is deleted after settlement, the contract
+      leaves no retained itemized sales record despite promising sales details at lines 199–201. Define the retained
+      product, quantity, and price details, or reference another durable itemized record and its retention contract.
     message_ja: >-
-      order_quantity is described as using either balls or boxes, but the contract defines neither a unit field nor a
-      referenced product-to-ordering-unit mapping. Specify how the unit is determined for each product_code so that a
-      quantity such as 5 cannot produce different order volumes for the sender and recipient.
+      The sales-record schema contains only transaction identifiers, aggregate amounts, and statuses, and
+      additionalProperties: false rejects line_items. Because current-tx.json is deleted after settlement, the contract
+      leaves no retained itemized sales record despite promising sales details at lines 199–201. Define the retained
+      product, quantity, and price details, or reference another durable itemized record and its retention contract.
   - id: F002
     severity: major
-    rule: vp-dev-implementation-readiness
-    line: 47
-    anchor: "location: data/outbound/orders/orders_YYYYMMDD.csv（転送先: /inbound/orders/orders_YYYYMMDD.csv）"
+    rule: vp-arc-technical-constraints
+    line: 231
+    anchor: "atomic_write: 同一ディレクトリ内の一時ファイル（.tmp）へ書き込み・フラッシュ後に renameSync でアトミック置換を実施"
     message: >-
-      The unquoted location value contains a colon followed by a space in 転送先: /inbound/orders/, which causes YAML
-      parsing to fail with "Nested mappings are not allowed in compact mappings." Quote the scalar or move the
-      destination explanation into a separate field or comment so the example can be loaded.
+      Per-file atomic replacement does not define a crash-safe update sequence across current-tx.json, the sales record,
+      and the headquarters request. The state table describes payment_requested after sending, leaving a possible
+      interruption with an open session and an unresolved request. Specify which session and pending-evidence writes
+      must be durable before transmission, and how readers handle every intermediate file combination.
     message_ja: >-
-      The unquoted location value contains a colon followed by a space in 転送先: /inbound/orders/, which causes YAML
-      parsing to fail with "Nested mappings are not allowed in compact mappings." Quote the scalar or move the
-      destination explanation into a separate field or comment so the example can be loaded.
+      Per-file atomic replacement does not define a crash-safe update sequence across current-tx.json, the sales record,
+      and the headquarters request. The state table describes payment_requested after sending, leaving a possible
+      interruption with an open session and an unresolved request. Specify which session and pending-evidence writes
+      must be durable before transmission, and how readers handle every intermediate file combination.
   - id: F003
     severity: major
     rule: vp-dev-implementation-readiness
-    line: 165
-    anchor: "schema_ref: kinuya-session-schema#CurrentTransactionSession"
+    line: 331
+    anchor: '"type": "object",'
     message: >-
-      The JSON contract delegates its structures to explicitly undelivered fictional schemas. required_fields supplies
-      names but not types, nested structures, or allowed states. Provide resolvable illustrative schema definitions so
-      developers can implement compatible readers and writers from the completed example.
+      Implementing the sales-record schema as written prevents writers from persisting line_items and prevents readers
+      from accepting them. After session deletion, the promised itemized evidence is unavailable. Extend the canonical
+      illustrative schema with retained sales details, or define an explicit durable reference that compatible writers
+      and readers can implement.
     message_ja: >-
-      The JSON contract delegates its structures to explicitly undelivered fictional schemas. required_fields supplies
-      names but not types, nested structures, or allowed states. Provide resolvable illustrative schema definitions so
-      developers can implement compatible readers and writers from the completed example.
+      Implementing the sales-record schema as written prevents writers from persisting line_items and prevents readers
+      from accepting them. After session deletion, the promised itemized evidence is unavailable. Extend the canonical
+      illustrative schema with retained sales details, or define an explicit durable reference that compatible writers
+      and readers can implement.
   - id: F004
     severity: major
-    rule: vp-dev-testability
-    line: 219
-    anchor: "session_schema: kinuya-session-schema"
+    rule: vp-dev-implementation-readiness
+    line: 367
+    anchor: >-
+      | `status`          | `payment_requested`         | 会計要求を本部へ送った後で、控えの `api_sync_status` が `accepted`
+      になるまで保持する。取消は不可 |
     message: >-
-      schema.references names undelivered fictional schemas, so readers cannot perform the rulebook's canonical-schema
-      checks or reproduce type-validation results. Supply accessible example schemas and identify the validation
-      procedure and expected valid/invalid outcomes for both JSON files.
+      payment_requested is described as a state after headquarters transmission, while open permits additions and
+      cancellation. Define a durable pre-transmission transition and the required pending-record write order so an
+      interruption cannot expose a potentially submitted transaction as editable or cancellable. Specify the restart
+      behavior for failures between these writes and the external request.
     message_ja: >-
-      schema.references names undelivered fictional schemas, so readers cannot perform the rulebook's canonical-schema
-      checks or reproduce type-validation results. Supply accessible example schemas and identify the validation
-      procedure and expected valid/invalid outcomes for both JSON files.
+      payment_requested is described as a state after headquarters transmission, while open permits additions and
+      cancellation. Define a durable pre-transmission transition and the required pending-record write order so an
+      interruption cannot expose a potentially submitted transaction as editable or cancellable. Specify the restart
+      behavior for failures between these writes and the external request.
   - id: F005
     severity: major
-    rule: vp-qe-verifiability
-    line: 170
-    anchor: "- status"
-    message: >-
-      status, api_sync_status, and print_status are required, but their permitted values and valid combinations are
-      neither defined here nor available through the fictional schema references. Provide canonical state definitions
-      and acceptance cases so QE can distinguish valid, invalid, and unresolved transaction records.
-    message_ja: >-
-      status, api_sync_status, and print_status are required, but their permitted values and valid combinations are
-      neither defined here nor available through the fictional schema references. Provide canonical state definitions
-      and acceptance cases so QE can distinguish valid, invalid, and unresolved transaction records.
-  - id: F006
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 121
-    anchor: 日曜 21:45 までに生成完了フラグが確認できない場合、店舗端末へ未生成警告を表示し、
-    message: >-
-      The missing-file rule depends on a generation-complete flag without defining its name, location, writer, or
-      success condition. Define that signal or explicitly use the atomically published final CSV as the completion
-      condition.
-    message_ja: >-
-      The missing-file rule depends on a generation-complete flag without defining its name, location, writer, or
-      success condition. Define that signal or explicitly use the atomically published final CSV as the completion
-      condition.
-  - id: F007
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 81
-    anchor: "pattern: \"^KINUYA-\\\\d{2}$\""
-    message: >-
-      The description requires the fixed store code KINUYA-01, while the pattern also accepts values such as KINUYA-99.
-      Express the fixed value as an enforceable constraint so the declared requirement and validation result agree.
-    message_ja: >-
-      The description requires the fixed store code KINUYA-01, while the pattern also accepts values such as KINUYA-99.
-      Express the fixed value as an enforceable constraint so the declared requirement and validation result agree.
-  - id: F008
-    severity: major
     rule: vp-qe-omissions-consistency
-    line: 261
-    anchor: >-
-      | 週次発注 CSV の未生成・転送失敗（`missing` / `transport_failure`） | 締め切り（日曜 22:00）前は再試行を待ち、超過時は自動送信を止めて手動へ切り替える | 店主代表（`PO`）が
-      Wi-Fi 通信状態を確認し、22:00 までに送信完了しない場合は控えをもとに問屋へ電話発注して二重発注を防ぐ  |
+    line: 200
+    anchor: 会計確定要求時の販売実績明細、預かり金・釣銭、本部売上登録 API の受付結果、
     message: >-
-      This row combines missing generation with transfer failure and instructs users to wait until 22:00, whereas lines
-      121–122 require manual rerun or telephone fallback when generation is incomplete at 21:45. Separate the two
-      conditions and align their deadlines and permitted actions so operators receive one consistent recovery rule.
+      The sales-evidence description promises 販売実績明細, but its schema omits item details and explicitly rejects
+      additional properties. Session deletion then removes the only defined itemized source. Align the description,
+      schema, and deletion condition so the promised evidence can actually survive settlement.
     message_ja: >-
-      This row combines missing generation with transfer failure and instructs users to wait until 22:00, whereas lines
-      121–122 require manual rerun or telephone fallback when generation is incomplete at 21:45. Separate the two
-      conditions and align their deadlines and permitted actions so operators receive one consistent recovery rule.
-  - id: F009
+      The sales-evidence description promises 販売実績明細, but its schema omits item details and explicitly rejects
+      additional properties. Session deletion then removes the only defined itemized source. Align the description,
+      schema, and deletion condition so the promised evidence can actually survive settlement.
+  - id: F006
     severity: major
     rule: vp-qe-kata-conformance
-    line: 47
-    anchor: "location: data/outbound/orders/orders_YYYYMMDD.csv（転送先: /inbound/orders/orders_YYYYMMDD.csv）"
+    line: 231
+    anchor: "atomic_write: 同一ディレクトリ内の一時ファイル（.tmp）へ書き込み・フラッシュ後に renameSync でアトミック置換を実施"
     message: >-
-      The first advertised YAML completion example is syntactically invalid because location contains an unquoted
-      colon-space sequence. Correct the scalar and verify that both fenced contracts parse independently, as required by
-      rulebook section 8.1.
+      Rulebook section 6.3 requires safe reruns without duplicate processing or lost work, but the multi-file completion
+      example specifies atomic replacement only for individual files. Add the ordered publication and recovery rules for
+      session state, pending sales evidence, headquarters submission, and session deletion so the example demonstrates
+      that requirement across interrupted stages.
     message_ja: >-
-      The first advertised YAML completion example is syntactically invalid because location contains an unquoted
-      colon-space sequence. Correct the scalar and verify that both fenced contracts parse independently, as required by
-      rulebook section 8.1.
-  - id: F010
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 165
-    anchor: "schema_ref: kinuya-session-schema#CurrentTransactionSession"
-    message: >-
-      Rulebook sections 5.6, 6.2, and 8.1 require canonical schema paths and reference verification, but this completed
-      example substitutes explicitly undelivered fictional names. Include resolvable example schemas or provide complete
-      inline definitions rather than leaving the demonstrated reference contract incomplete.
-    message_ja: >-
-      Rulebook sections 5.6, 6.2, and 8.1 require canonical schema paths and reference verification, but this completed
-      example substitutes explicitly undelivered fictional names. Include resolvable example schemas or provide complete
-      inline definitions rather than leaving the demonstrated reference contract incomplete.
-  - id: F011
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 147
-    anchor: "- specdojo:ifx-index-sample"
-    message: >-
-      The cited ifx-index-sample explicitly excludes internal CLI transaction files and contains no spec_ref matching
-      this contract ID. Explain the alternative CLI-to-file-contract relationship and its registration boundary, or
-      align the index mapping with rulebook section 2.1.
-    message_ja: >-
-      The cited ifx-index-sample explicitly excludes internal CLI transaction files and contains no spec_ref matching
-      this contract ID. Explain the alternative CLI-to-file-contract relationship and its registration boundary, or
-      align the index mapping with rulebook section 2.1.
-  - id: F012
+      Rulebook section 6.3 requires safe reruns without duplicate processing or lost work, but the multi-file completion
+      example specifies atomic replacement only for individual files. Add the ordered publication and recovery rules for
+      session state, pending sales evidence, headquarters submission, and session deletion so the example demonstrates
+      that requirement across interrupted stages.
+  - id: F007
     severity: major
     rule: vp-ops-operability
-    line: 263
-    anchor: >-
-      | 取引状態の欠落・二重開始（`current_tx_json` の状態不整合）         | 未解決の会計がある間は新規取引を開始せず、既存取引の確定状態を先に確認する       | 店番担当が `sales
-      total` で既存明細を確認し、会計要求後なら店主代表が本部受付と `data/sales/` の控えを照合する           |
+    line: 148
+    anchor: 5 分間隔で最大 3 回再試行し、22:00 までに完了しない場合は自動再送を止めて店主代表へ電話発注を促す。
     message: >-
-      The row groups missing current-tx.json with duplicate-start conditions and directs the operator to sales total,
-      but lines 227–228 require sales total to stop when that file is missing. Separate missing-state recovery from
-      existing-state inspection and identify the surviving evidence and PO/DEV reconciliation path to use before another
-      transaction is started.
+      A transfer timeout can occur after the remote final CSV has already been published, so stopping local retries and
+      moving the local file to phoned/ does not prevent the supplier from processing both the CSV and a telephone order.
+      Distinguish confirmed non-delivery from an unknown delivery outcome, and require PO to reconcile supplier receipt
+      or cancellation before placing the replacement telephone order.
     message_ja: >-
-      The row groups missing current-tx.json with duplicate-start conditions and directs the operator to sales total,
-      but lines 227–228 require sales total to stop when that file is missing. Separate missing-state recovery from
-      existing-state inspection and identify the surviving evidence and PO/DEV reconciliation path to use before another
-      transaction is started.
+      A transfer timeout can occur after the remote final CSV has already been published, so stopping local retries and
+      moving the local file to phoned/ does not prevent the supplier from processing both the CSV and a telephone order.
+      Distinguish confirmed non-delivery from an unknown delivery outcome, and require PO to reconcile supplier receipt
+      or cancellation before placing the replacement telephone order.

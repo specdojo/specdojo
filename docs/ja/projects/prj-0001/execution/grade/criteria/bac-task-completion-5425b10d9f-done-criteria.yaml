@@ -2,9 +2,9 @@
 id: bac-task-completion-grade-criteria
 document: bac-task-completion
 path: docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md
-graded_at: "2026-11-15T11:31:40.088Z"
+graded_at: "2026-11-15T22:42:16.228Z"
 graded_by: sol-review-executor
-content_hash: 539ac736e4dd5dbe814cfc5709b1a6f2ed5f327e330ad65842a60b59c43e2d7d
+content_hash: c227ff44dc8d7b5b948a2f04879b3e0f4ef7af79a2921ee0a9816d8dcabe106e
 summary:
   satisfied: 3
   unsatisfied: 1
@@ -29,8 +29,9 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      The body provides no design reference or ARC confirmation establishing that the implementation can satisfy the
-      acceptance conditions.
+      The coverage table still identifies missing evaluation-result design definitions and pending ARC checks for
+      freshness, interruption, independence, replanning, and decision authority; complete and confirm that coverage
+      before treating implementation feasibility as established.
   - id: DC-004
     text: 受入テスト設計の基礎として活用できること
     roles:

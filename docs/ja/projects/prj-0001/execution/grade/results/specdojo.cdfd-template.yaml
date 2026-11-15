@@ -4,11 +4,11 @@ document: specdojo:cdfd-template
 path: docs/ja/specdojo/templates/cdfd-template.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 95
-graded_at: "2026-10-21T20:12:35.413Z"
-graded_by: flash-high-executor
-content_hash: ad63e3d3c3b43a7169287519d11519da189aaca7b3f13910dabbe0f4ef47c954
+verdict: needs-work
+score: 94
+graded_at: "2026-11-15T22:35:00.707Z"
+graded_by: sol-review-executor
+content_hash: 6e2b3ace13547657cfe721eda0a8fab4dbe9665e36ef98c87264f30debf52341
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 83
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,29 +103,35 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 2
+  major: 1
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 106
-    anchor: >-
-      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
-      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
-    message: 全体概要に「凡例（本プロダクト共通）」がない場合の記入方法がないため、`specdojo:cdfd-mermaid-rulebook` の既定凡例へ従う旨を選択できる指示を追加してください。
-    message_ja: 全体概要に「凡例（本プロダクト共通）」がない場合の記入方法がないため、`specdojo:cdfd-mermaid-rulebook` の既定凡例へ従う旨を選択できる指示を追加してください。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 106
-    anchor: >-
-      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
-      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+    rule: vp-arc-conciseness
+    line: 3
+    anchor: "_TODO_: 全体概要のどのプロセスグループと領域群を詳細化し、誰がグループ内部のフロー、領域間の受け渡し、主要例外、グループ外への委譲を合意・利用するかを 1〜3 文で記述する。"
     message: >-
-      rulebook 6.4 の凡例適用規則を生成物へ反映できるよう、全体概要に共通凡例がある場合の参照と、ない場合の `specdojo:cdfd-mermaid-rulebook` 適用を分岐して記入できる TODO
-      にしてください。
+      Consolidate the audience-and-use instructions in the introduction and section 1: retain the process-group identity
+      and overview reference in the introduction, and state approval, design, and verification uses once in the purpose
+      section to avoid repeated purpose statements.
     message_ja: >-
-      rulebook 6.4 の凡例適用規則を生成物へ反映できるよう、全体概要に共通凡例がある場合の参照と、ない場合の `specdojo:cdfd-mermaid-rulebook` 適用を分岐して記入できる TODO
-      にしてください。
+      Consolidate the audience-and-use instructions in the introduction and section 1: retain the process-group identity
+      and overview reference in the introduction, and state approval, design, and verification uses once in the purpose
+      section to avoid repeated purpose statements.
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 32
+    anchor: "_TODO_: 領域の役割と、領域内のプロセスがどう連携するかを 1〜3 文で要約する。"
+    message: >-
+      Align the scaffold with specdojo:cdfd-rulebook sections 1, 5, 6.1, 6.2, 6.8, and 7: remove the area-summary TODOs
+      and input/output/store bullets from every section 3.n, retain process tables there, and reshape sections 1 and 2
+      into a one- to two-sentence purpose and one target line plus one exclusion line. Filling the current scaffold as
+      instructed produces content expressly prohibited by the governing rulebook and fails its ready checklist.
+    message_ja: >-
+      Align the scaffold with specdojo:cdfd-rulebook sections 1, 5, 6.1, 6.2, 6.8, and 7: remove the area-summary TODOs
+      and input/output/store bullets from every section 3.n, retain process tables there, and reshape sections 1 and 2
+      into a one- to two-sentence purpose and one target line plus one exclusion line. Filling the current scaffold as
+      instructed produces content expressly prohibited by the governing rulebook and fails its ready checklist.

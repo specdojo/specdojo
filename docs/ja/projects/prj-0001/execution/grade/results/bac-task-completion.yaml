@@ -4,15 +4,15 @@ document: bac-task-completion
 path: docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 95
-graded_at: "2026-11-15T11:31:40.088Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-15T22:42:16.228Z"
 graded_by: sol-review-executor
-content_hash: 539ac736e4dd5dbe814cfc5709b1a6f2ed5f327e330ad65842a60b59c43e2d7d
+content_hash: c227ff44dc8d7b5b948a2f04879b3e0f4ef7af79a2921ee0a9816d8dcabe106e
 source_hashes:
   catalog-entry: c6a7f54c99c1c8bfc069b9b90d37ae6df085471bf0b75baa022061398d414f18
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   dependency:bps-deliverable-evaluation: 4e896f90131ef061ae0441a1d1d4ecf8ca0aac3020907a6b51d0c7751f2a8848
   dependency:bps-task-completion: 408df12594dbe143f29094f542a6da97cc855f9516cf73cbfa54e4b6114f4971
   dependency:prj-success-criteria-and-acceptance-criteria: 1f13815822bf1c827afc860617ef794e1c2a8cb4f76108a489582419a2393daf
@@ -31,13 +31,13 @@ categories:
   consistency:
     score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 100
   implementation:
     score: 100
   quality:
-    score: 81
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -52,11 +52,11 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 4
-    score: 100
-  vp-pm-control-reporting:
     level: 3
     score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -70,8 +70,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -88,8 +88,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -118,71 +118,32 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 3
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 235
+    rule: vp-pm-dependency-risk
+    line: 29
     anchor: >-
-      | 論点                                       |
-      受入への影響                                                                           | 判断依頼先                  |
-      解消時点・条件                                                                 |
+      | BAC-01      | `src/grade/grade.ts`（評価の実行と結果の確定。結果に `content_hash`・観点ごとの判定・`graded_by` が残る）   |
+      [[prj-0001:stsd-deliverable\|ステータス定義（成果物）]]（評価・完了で成果物の状態を変えない）                                                                                                                                 
+      | 評価結果の確定は確認済み。評価結果を保持する概念データストアは [[cdsd-execution\|概念データストア定義（プロジェクト実行）]] で未定義 |
     message: >-
-      The two pending preparation items identify decision-makers and timing but no PJR candidate, follow-up reference,
-      or reporting handoff; identify how PM will track each item through resolution before the trial.
+      BAC-01 identifies an undefined evaluation-result data store, but Section 3 limits design follow-up to BAC-02–04
+      and BAC-06–09; include the BAC-01 dependency in the reservation with its responsible role, resolution timing, and
+      tracking reference so it is not lost when DC-003 is reassessed.
     message_ja: >-
-      The two pending preparation items identify decision-makers and timing but no PJR candidate, follow-up reference,
-      or reporting handoff; identify how PM will track each item through resolution before the trial.
+      BAC-01 identifies an undefined evaluation-result data store, but Section 3 limits design follow-up to BAC-02–04
+      and BAC-06–09; include the BAC-01 dependency in the reservation with its responsible role, resolution timing, and
+      tracking reference so it is not lost when DC-003 is reassessed.
     cause:
       type: document
-  - id: F002
-    severity: minor
-    rule: vp-arc-technical-constraints
-    line: 23
-    anchor: >-
-      `content_hash` は評価対象の内容の一致確認に用いる。鮮度の条件は内容の一致だけでなく、依存先・Kata を含む評価コンテキストの変化が反映済みであることとする。評価単位・観点の正本は成果物評価 BPS
-      とし、grade の段階値や finding の保存構造は本書で定めない。
-    message: >-
-      The document states hash, context-freshness, and independence constraints but provides no design reference or ARC
-      confirmation showing that the implementation can satisfy them; add a concise design-coverage reference or
-      explicitly record the pending feasibility check with its owner and timing.
-    message_ja: >-
-      The document states hash, context-freshness, and independence constraints but provides no design reference or ARC
-      confirmation showing that the implementation can satisfy them; add a concise design-coverage reference or
-      explicitly record the pending feasibility check with its owner and timing.
-    cause:
-      type: document
-  - id: F003
-    severity: minor
-    rule: vp-qe-done-criteria
-    line: 233
-    anchor: "## 3. メモ / 将来課題"
-    message: >-
-      Section 3 records trial and cost preparation gaps but does not identify the unverified DC-003 design-feasibility
-      condition; record that outstanding condition and its ARC confirmation requirement so document completion is not
-      inferred from business-scenario coverage alone.
-    message_ja: >-
-      Section 3 records trial and cost preparation gaps but does not identify the unverified DC-003 design-feasibility
-      condition; record that outstanding condition and its ARC confirmation requirement so document completion is not
-      inferred from business-scenario coverage alone.
-    cause:
-      type: document
-  - id: F004
-    severity: major
-    rule: vp-qe-config-validity
-    line: 237
-    anchor: >-
-      | _TODO_: 代表試行の対象・参加者・実際の証跡 | 本書は受入条件であり試行済みの証明ではない。業務受入実施の前に対象を固定する必要がある | PO・BA、証跡の準備は QE・PM |
-      シナリオを実試行へ具体化する前に、代表課題、期待価値、試行成果と確認者を決める |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
   satisfied: 3
   total: 4

@@ -5,56 +5,56 @@ path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 85
-graded_at: "2026-11-15T08:41:52.994Z"
-graded_by: luna-review-executor
-content_hash: cf7c96d05917e947ed52e6ae01c8caa8dea96cfeb9b9fa552ee648684407a8cc
+score: 89
+graded_at: "2026-11-15T22:39:33.604Z"
+graded_by: sol-review-executor
+content_hash: 87089ef14b9ab00889a818614b4b3720398490c6349754e1d05535bcdcea3a07
 source_hashes:
   catalog-entry: 58ee3b496cc90d59a1b29b05facedd9368cc5bf92eaab11c7f868d3f60cf3e14
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:ifx-index: 74f59b976f3ba4218ebb37ee8002e5651aa8cc1f2dc5084811ff95eaeb198495
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:ifx-index: d235081f2eb0b16a1a9c5d70ca76e7a91a3aa5b0c8c326bab23d866b0eb27357
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 88
+    score: 94
   planning:
-    score: 75
+    score: 100
   business:
     score: 92
   consistency:
-    score: 88
+    score: 63
   architecture:
     score: 92
   usability:
     score: 100
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 69
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-business-value:
     level: 4
     score: 100
@@ -65,8 +65,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
     level: 3
     score: 75
@@ -80,14 +80,14 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -104,8 +104,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
     level: 3
     score: 75
@@ -116,191 +116,156 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
   major: 1
-  minor: 14
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 15
-    anchor: "# 未確定の技術判断は人間の ARC が行い、ready への昇格は PO が判断する。"
+    rule: vp-ba-requirements-completeness
+    line: 98
+    anchor: フォールバック時に成功扱いとなる条件は、終了コード 0 かつ親検証がすべて合格（not_run を含まない）であることに限る。
     message: >-
-      List the open technical decisions, their impact, and the next action needed before PO can decide whether to
-      promote this contract to ready.
+      Qualify fallback acceptance for approach-specific requirements: src/exec/evidence.ts executorReportContractFailure
+      rejects missing condense_records for condense/edit, so exit code 0 and passing parent checks alone do not permit
+      that handoff.
     message_ja: >-
-      List the open technical decisions, their impact, and the next action needed before PO can decide whether to
-      promote this contract to ready.
+      Qualify fallback acceptance for approach-specific requirements: src/exec/evidence.ts executorReportContractFailure
+      rejects missing condense_records for condense/edit, so exit code 0 and passing parent checks alone do not permit
+      that handoff.
     cause:
       type: document
   - id: F002
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 107
-    anchor: "# _ASSUMPTION_: 読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、DEV が確認する。"
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 114
+    anchor: 再開判定において evidence なしとして扱う（executor 段をやり直す）。
     message: >-
-      Assign an owner and review timing for confirming the user notification behavior that is explicitly left
-      unverified.
+      Reconcile the promised executor rerun and TC-06 with src/exec/register-resume.ts:263–268: when a succeeded
+      executor's evidence is missing or invalid, selectResumableRegisterRun returns not-resumable instead of selecting
+      an executor rerun; document the supported recovery route or explicitly track this implementation discrepancy.
     message_ja: >-
-      Assign an owner and review timing for confirming the user notification behavior that is explicitly left
-      unverified.
+      Reconcile the promised executor rerun and TC-06 with src/exec/register-resume.ts:263–268: when a succeeded
+      executor's evidence is missing or invalid, selectResumableRegisterRun returns not-resumable instead of selecting
+      an executor rerun; document the supported recovery route or explicitly track this implementation discrepancy.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 107
-    anchor: "# _ASSUMPTION_: 読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、DEV が確認する。"
+    rule: vp-arc-cross-document-consistency
+    line: 27
+    anchor: "writer: SpecDojo runner（agent の stdout に出力された <specdojo_executor_evidence> タグから抽出・正規化し、差分情報・親検証結果を結合して書き込む）"
     message: >-
-      Record the follow-up dependency and its schedule or project-register impact for confirming the notification
-      behavior.
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
     message_ja: >-
-      Record the follow-up dependency and its schedule or project-register impact for confirming the notification
-      behavior.
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-pm-control-reporting
-    line: 107
-    anchor: "# _ASSUMPTION_: 読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、DEV が確認する。"
-    message: Specify the reporting or tracking destination and follow-up owner for the unresolved notification behavior.
-    message_ja: Specify the reporting or tracking destination and follow-up owner for the unresolved notification behavior.
+    rule: vp-arc-cross-document-consistency
+    line: 128
+    anchor: 標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。
+    message: >-
+      Scope the unconditional I/O failure rule or record its implementation discrepancy: this contract promises
+      immediate exit code 1, while src/exec/run/mode-shared.ts recordIntegrateStage and recordRepoIntegration catch
+      pipeline-state update errors, emit warnings, and continue integration.
+    message_ja: >-
+      Scope the unconditional I/O failure rule or record its implementation discrepancy: this contract promises
+      immediate exit code 1, while src/exec/run/mode-shared.ts recordIntegrateStage and recordRepoIntegration catch
+      pipeline-state update errors, emit warnings, and continue integration.
     cause:
       type: document
   - id: F005
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 89
-    anchor: executor 終了時に evidence.json が未生成またはタグ欠落の場合、構造化報告を空（completion_status は complete、
+    rule: vp-arc-technical-constraints
+    line: 115
+    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
     message: >-
-      Define the acceptance condition for treating absent structured evidence as complete, including how that fallback
-      is distinguished from a valid complete report.
+      Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
+      implementation location that defines it.
     message_ja: >-
-      Define the acceptance condition for treating absent structured evidence as complete, including how that fallback
-      is distinguished from a valid complete report.
+      Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
+      implementation location that defines it.
     cause:
       type: document
   - id: F006
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 107
-    anchor: "# _ASSUMPTION_: 読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、DEV が確認する。"
+    rule: vp-dev-implementation-readiness
+    line: 115
+    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
     message: >-
-      Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
-      implementation location that defines it.
+      Define the notification output and behavior for evidence read failures so implementation and recovery handling
+      have a concrete contract.
     message_ja: >-
-      Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
-      implementation location that defines it.
+      Define the notification output and behavior for evidence read failures so implementation and recovery handling
+      have a concrete contract.
     cause:
       type: document
   - id: F007
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 107
-    anchor: "# _ASSUMPTION_: 読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、DEV が確認する。"
+    rule: vp-dev-testability
+    line: 132
+    anchor: QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
     message: >-
-      Define the notification output and behavior for evidence read failures so implementation and recovery handling
-      have a concrete contract.
+      Identify the validation procedure and expected result for checking the YAML contract against the referenced types
+      and failure behavior.
     message_ja: >-
-      Define the notification output and behavior for evidence read failures so implementation and recovery handling
-      have a concrete contract.
+      Identify the validation procedure and expected result for checking the YAML contract against the referenced types
+      and failure behavior.
     cause:
       type: document
   - id: F008
     severity: minor
-    rule: vp-dev-change-impact
-    line: 81
-    anchor: "evidence_spec: src/exec/evidence.ts"
+    rule: vp-qe-verifiability
+    line: 134
+    anchor: 正常系では、生成された各ファイルが schema_ref の型を満たし required_fields をすべて含むことを合格条件とする。
     message: >-
-      State how changes to the referenced types or path resolver affect this contract and which artifacts must be
-      updated together.
+      Provide a check procedure with pass/fail results for validating each file against its referenced type and required
+      fields.
     message_ja: >-
-      State how changes to the referenced types or path resolver affect this contract and which artifacts must be
-      updated together.
+      Provide a check procedure with pass/fail results for validating each file against its referenced type and required
+      fields.
     cause:
       type: document
   - id: F009
     severity: minor
-    rule: vp-dev-testability
-    line: 75
-    anchor: "schema:"
+    rule: vp-qe-omissions-consistency
+    line: 113
+    anchor: 書き込み済みの evidence.json が読込時に JSON として解釈できない、または task_id / run_id / stage の整合検証に失敗した場合は、
     message: >-
-      Identify the validation procedure and expected result for checking the YAML contract against the referenced types
-      and failure behavior.
+      Define the outcome and a verification case for persisted evidence with valid JSON and matching
+      task_id/run_id/stage but missing or mistyped required_fields such as changes, validations, or final_message; the
+      current malformed branches cover syntax and identity failures only.
     message_ja: >-
-      Identify the validation procedure and expected result for checking the YAML contract against the referenced types
-      and failure behavior.
+      Define the outcome and a verification case for persisted evidence with valid JSON and matching
+      task_id/run_id/stage but missing or mistyped required_fields such as changes, validations, or final_message; the
+      current malformed branches cover syntax and identity failures only.
     cause:
       type: document
   - id: F010
     severity: minor
-    rule: vp-qe-done-criteria
-    line: 85
-    anchor: "error_handling:"
-    message: Add or reference test cases and expected outcomes for missing and malformed evidence and pipeline-state files.
-    message_ja: Add or reference test cases and expected outcomes for missing and malformed evidence and pipeline-state files.
-    cause:
-      type: document
-  - id: F011
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 75
-    anchor: "schema:"
-    message: >-
-      Provide a check procedure with pass/fail results for validating each file against its referenced type and required
-      fields.
-    message_ja: >-
-      Provide a check procedure with pass/fail results for validating each file against its referenced type and required
-      fields.
-    cause:
-      type: document
-  - id: F012
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 89
-    anchor: executor 終了時に evidence.json が未生成またはタグ欠落の場合、構造化報告を空（completion_status は complete、
-    message: >-
-      Define a verifiable guard for the complete fallback so missing structured evidence cannot silently pass as a
-      successful handoff.
-    message_ja: >-
-      Define a verifiable guard for the complete fallback so missing structured evidence cannot silently pass as a
-      successful handoff.
-    cause:
-      type: document
-  - id: F013
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 15
-    anchor: "# 未確定の技術判断は人間の ARC が行い、ready への昇格は PO が判断する。"
-    message: List the open decisions and the conditions PO must review before promoting this contract to ready.
-    message_ja: List the open decisions and the conditions PO must review before promoting this contract to ready.
-    cause:
-      type: document
-  - id: F014
-    severity: minor
     rule: vp-ops-operability
-    line: 107
-    anchor: "# _ASSUMPTION_: 読込失敗時に利用者へ出す通知の文言・出力先は実装で確認できておらず、DEV が確認する。"
+    line: 115
+    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
     message: Define the user notification destination and recovery handoff for evidence read or consistency failures.
     message_ja: Define the user notification destination and recovery handoff for evidence read or consistency failures.
     cause:
       type: document
-  - id: F015
-    severity: major
-    rule: vp-qe-config-validity
-    line: 11
-    anchor: "# _ASSUMPTION_: 本仕様は SpecDojo のタスク実行パイプライン（specdojo exec run / job）において、"
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
   satisfied: 2
   total: 3
   unsatisfied:
-    DC-003:
-      - QE
+    DC-002:
+      - ARC
   detail_ref: prj-0001:ifx-file-agent-evidence-grade-criteria
