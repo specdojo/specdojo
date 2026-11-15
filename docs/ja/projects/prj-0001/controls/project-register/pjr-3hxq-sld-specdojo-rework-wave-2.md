@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:22:16Z"
-  block_reason: "executor reported incomplete: sld-specdojo に F001〜F015 を反映した（grade の実行状態と .specdojo 設定の行を追加、generated 削除手順と worktree の記述を訂正、対応表と未決事項を整理）。個票の対応結果も追記した。status は draft のまま。再 grade（grade run --target deli…"
   commit_type: docs
   commit_scope: sld
   approach: fully-guided
