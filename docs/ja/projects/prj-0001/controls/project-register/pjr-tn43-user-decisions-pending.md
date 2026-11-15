@@ -81,6 +81,11 @@ specdojo:
 - 2026-11-15: 1 は推奨のとおり承認。起票の A を PJR-AK5V、B を PJR-CJMN として起票し、7 件の本文に判断と留保を書いた。2 の確定の実行は 2026-11-15 に承認。完了条件を満たした cxd・cpd・sysd-index・sysd-critical-flows・sysd-cross-cutting-policy を確定し、残る 6 件は今の本文で grade し直してから確定か差し戻しを決める。
 - 2026-11-15: 3 は起票を承認。C を PJR-V2GH、D を PJR-ED0K、E を PJR-M495、F を PJR-BJ7E として起票した。
 - 2026-11-15: 6 件を grade し直した結果で、dct-index を確定、ifd-specdojo と ifx-index を留保付きで確定した。sf-index・bes-index・cnd-specdojo は差し戻し、手直しの todo を PJR-VEHX・X1RW・Q9DF として起票した（kata-wave-1 の確定は 11 件中 8 件）。
+- 2026-11-15: 4 は、PJR-GQ14・V5AZ・Q8KP・SZGZ を close した。GQ14 は、ケースの選び方の早見図から共通の運用・品質管理の枝を外し、章の番号での参照を題名に直してから close した。残りは PJR-B0B8 の 1 件。
+- 2026-11-15: ifx-index の扱いを決めた。YAML を正本のまま残し、用語集と同じく yaml-pages build で表形式のページを生成する（PJR-QJ41）。schema のファイル名を古い略号 `esil` から改める（PJR-SBNB、QJ41 とは独立）。
+- 2026-11-15: review の穴 2 件を起票した。grade が失敗しても review が完了する件を PJR-M18B、型を整備する schedule の review で型の grade が流れない件を PJR-X05N とした。
+- 2026-11-15: 7（kata-wave-2 の 140）は、bac-task-completion と sld-specdojo の成果物の grade と、4 つの型の grade を流し直し中。揃ってから判断材料を示す。
+- 未決のまま: 5（残りの 140 の 21 件）、6（問い・決定と PO の todo の 9 件）、8（成果のない worktree の削除）。
 
 ## 4. 関連ドキュメント
 
