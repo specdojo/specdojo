@@ -25,7 +25,7 @@ specdojo:
 ## 2. 入力
 
 - 2026-11-15、develop の作業ツリーに commit されていない実行記録が 465 件たまっていた。イベント 371 件（11/10〜11/15 の claim・complete・block・unblock・release など）と、失敗した試行や再開前の試行のログ 70 件
-- runner は統合の commit の時点のイベントだけを commit し、その後に書く complete や失敗時の block、試行のログを作業ツリーに残しているように見える。push すると、ほかの clone で実行状態が食い違う
+- 調べた結果: ログの配置の変更（2026-11-07、PJR-Z0XR）が原因ではない。runner の統合の commit に入るのはその時点までのイベント（claim）と run の記録で、統合の後に書く complete・失敗時の block は 8 月から一度も runner が commit していない。orchestrator が『実行イベントを記録する』commit（08-12・09-16・11-05・11-09 など）で手で補っていたが、playbook にも orchestrator の定義にも書かれておらず、引き継がれずにたまった
 
 ## 3. 完了条件
 
