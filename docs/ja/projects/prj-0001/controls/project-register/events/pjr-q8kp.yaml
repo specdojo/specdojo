@@ -77,3 +77,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4c61030d430b4929a548cb3a05c3232a
+- v: 1
+  id: reg_4c2b537ac7924f6a9911ad5ce7372636
+  ts: "2026-11-15T11:31:52Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: ホストから tmux へ入る script の本体を SpecDojo が配る bash の script とし、workspace の .specdojo/host/ へ書き出すようにした（indie が 2026-11-15 に確認）
+  previous_event_id: reg_555b78d6a3dc4bdfbf554df50e38bc14

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-q8kp-host-tmux-script-distribution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-31T13:13:44Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-15T11:31:52Z"
+  conclusion: ホストから tmux へ入る script の本体を SpecDojo が配る bash の script とし、workspace の .specdojo/host/ へ書き出すようにした（indie が 2026-11-15 に確認）
   derived_from:
     - PJR-P9ZC
     - PJR-CCXN

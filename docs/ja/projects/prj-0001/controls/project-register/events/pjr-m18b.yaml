@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b27bddd7722141eb973d317ab4fd6d02
+  ts: "2026-11-15T11:31:22Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: review の段で grade が失敗したら、タスクを完了にしない
+    - field: description
+      from: ""
+      to: grade の失敗や grade-stale の結論では review を完了させず、再試行するか blocked にする
+    - field: input
+      from: ""
+      to: '["2026-11-15、kata-wave-2 の bac-task-completion-090 と sld-specdojo-090 で、review の前の grade が出力の形式の誤り（CAUSE requires a preceding FINDING / malformed `DONE_CRITERIA` entry）で失敗した。review は grade-stale と判定したのに、タスクは done になり、成果物の grade がないまま 140 に進んだ"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: review

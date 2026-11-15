@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d615fe9bb60f4413becb1a612a7574d4
+  ts: "2026-11-15T11:31:27Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 型を整備する schedule の review で、型一式の grade が流れるようにする（E4R5 の効き目の確認）
+    - field: description
+      from: ""
+      to: E4R5 の自動の grade が kata-wave-2 で流れなかった理由を調べ、直す
+    - field: input
+      from: ""
+      to: '["2026-11-15、kata-wave-2 の 090（review）が 4 件とも完了したのに、型（bac・bds・sld・ifx-file の rulebook・sample）の grade は 2026-10 のままで、自動の grade が流れていなかった。PJR-E4R5 で、型を整備する schedule の review で型一式を自動 grade するようにしたはず"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-E4R5"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: review
