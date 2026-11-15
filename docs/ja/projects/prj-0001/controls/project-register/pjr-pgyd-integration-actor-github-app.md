@@ -33,18 +33,24 @@ PJR-11EX の C を実装する。複数人の運用に移る準備として着�
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 統合専用 actor の GitHub App があり、権限は exec の merge と register の記帳（層 3）に限られている。
+- runner は exec と記帳の branch を push するだけになり、GitHub Actions が層 3 の許可リストと必須の検査を確かめて develop へ `--no-ff` で merge する。
+- claim のイベントの push の競合を claim の失敗として扱い、2 人が同じ項目を流さない。
+- project `develop` の branch protection で、人の直接 push を拒否しても exec と記帳が止まらない。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                              | 担当 | 状態 | メモ |
+| --- | ----------------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | GitHub App の権限を設計して作る                                   | ARC  | open | -    |
+| 2   | runner の統合を branch の push に変え、Actions の workflow を作る | ARC  | open | -    |
+| 3   | claim の競合の検出を入れ、branch protection を有効にして確かめる  | ARC  | open | -    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-11ex-multi-user-integration-actor]]
+- [[specdojo:git-branching-standard]]

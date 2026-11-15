@@ -29,6 +29,7 @@ bds-progress-report を最新の grade の指摘で直す
 
 - T-KATA-WAVE-2-bds-progress-report-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43）
 - 最新の grade の未充足の完了条件と major の指摘を取り込み、本文の未決の目印を片付ける（決められないものは留保として追跡先をつなぐ）
+- 2026-11-16 の再 grade は needs-work だった（結果は対応結果と `docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml`）。利用者は、close せず同じ項目に次の回の完了条件を足し、0.8.0 のリリースの後に流し直すことを選んだ（2026-11-16）
 
 ## 3. 完了条件
 
@@ -38,13 +39,16 @@ bds-progress-report を最新の grade の指摘で直す
 - 報告の期間の終わりの境界（いつまでの記録を含めるか）を定め、PO が範囲を承認できる。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`npm run validate:catalog` と親の検証が通っている。
+- 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の後）: `docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade（`grade run --target deliverable`）は orchestrator が流すため、executor は理由をメモに書いてその行を open のまま残す。
 
 ## 4. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ                                                 |
-| --- | ----------------------------------- | ---- | ---- | ---------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す | UX   | done | executor が実施（対応結果を参照）                    |
-| 2   | grade し直して結果を書く            | UX   | done | 2026-11-16 orchestrator が grade（needs-work 85 点） |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | UX   | done | executor が実施（対応結果を参照）                    |
+| 2   | grade し直して結果を書く                               | UX   | done | 2026-11-16 orchestrator が grade（needs-work 85 点） |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | UX   | open | 0.8.0 の後に流す                                     |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | open | orchestrator が流す                                  |
 
 ## 5. 対応結果
 

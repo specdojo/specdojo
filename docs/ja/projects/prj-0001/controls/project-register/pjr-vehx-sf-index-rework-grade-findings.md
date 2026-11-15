@@ -29,6 +29,7 @@ specdojo:
 
 - kata-wave-1 の確定（T-KATA-WAVE-1-sf-index-140）で差し戻した（indie が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 75 点で完了条件 0/5
 - 主な指摘: SF-ROUT-02 が実行の行だが、対応する P-06 はジョブの定義の領域で境界がずれている。全機能 ID と業務領域をテスト対象と照らした記録がない。Q-01・Q-03 の留保（PJR-AK5V）は残す
+- 2026-11-16 の再 grade は needs-work だった（結果は対応結果と `docs/ja/projects/prj-0001/execution/grade/results/sf-index.yaml`）。利用者は、close せず同じ項目に次の回の完了条件を足し、0.8.0 のリリースの後に流し直すことを選んだ（2026-11-16）
 
 ## 3. 完了条件
 
@@ -40,14 +41,17 @@ specdojo:
 - 直した後に `grade run --target deliverable` で grade し直し、成果物カタログの完了条件をすべて満たす（留保の範囲だけが未充足として残る場合は、その理由を対応結果に書く）。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:catalog` と親の検証が通っている。
+- 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の後）: `docs/ja/projects/prj-0001/execution/grade/results/sf-index.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade（`grade run --target deliverable`）は orchestrator が流すため、executor は理由をメモに書いてその行を open のまま残す。
 
 ## 4. 作業内容
 
-| No  | 作業                                             | 担当 | 状態 | メモ                                                 |
-| --- | ------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込み、P-06 の境界を直す | ARC  | done | executor が実施（対応結果を参照）                    |
-| 2   | テスト対象との対応表を足す                       | ARC  | done | executor が実施（対応結果を参照）                    |
-| 3   | grade し直して結果を書く                         | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 80 点） |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込み、P-06 の境界を直す       | ARC  | done | executor が実施（対応結果を参照）                    |
+| 2   | テスト対象との対応表を足す                             | ARC  | done | executor が実施（対応結果を参照）                    |
+| 3   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 80 点） |
+| 4   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | open | 0.8.0 の後に流す                                     |
+| 5   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | orchestrator が流す                                  |
 
 ## 5. 対応結果
 
