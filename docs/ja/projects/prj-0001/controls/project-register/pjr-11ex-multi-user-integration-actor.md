@@ -51,23 +51,23 @@ git-branching-standard は、複数人・複数 actor の運用で、project `de
 
 ## 5. 回答・結論
 
-_UNDECIDED_: 複数人の運用に移る前に決める。暫定のお勧めは C（2026-11-15、orchestrator の提案）。
+C を採る（2026-11-15、利用者がお勧めのとおり承認）。
 
 - 統合専用 actor は「GitHub Actions 上で動く GitHub App」とし、bypass を持つのはこの App だけにする。作業者の手元には develop へ push できる資格を置かない。
 - runner は exec の成果を `exec/<project-id>-<task-id>` の branch として、記帳を記帳用の branch として push する。Actions はそれぞれの差分が層 3 の許可リスト（commit-target-allowlist と同じ考え方）に収まるかを検査し、通れば develop へ `--no-ff` で merge する。外れれば merge せず、層 2 の Pull Request へ回す。
 - 二重実行は、claim のイベントを先に develop へ入れる（push が競合したら claim 失敗とみなす）ことで、クローンをまたいだロックの代わりにする。共有ファイルは Actions 側で直列に merge し、生成物は merge の後に Actions が作り直す。
 - A は資格が閉じる点は良いが、対話で手元から流す SpecDojo の使い方と合わない。B は bypass の範囲を守れない。
 
-後続の作業（runner の push 方式、Actions の workflow、App の権限設計、claim の競合検出）は、この結論の承認後に別の項目で起票する。単独運用の間は今の方式のままでよい。
+後続の作業（runner の push 方式、Actions の workflow、App の権限設計、claim の競合検出）は、複数人の運用に移る準備として別の項目で起票する。単独運用の間は今の方式のままでよい。
 
 ## 6. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 回答者   | _TODO_ |
-| 回答日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                     |
+| -------- | ------------------------ |
+| 回答者   | indie（利用者）          |
+| 回答日   | 2026-11-15               |
+| 承認方式 | commit                   |
+| 証跡     | register close の commit |
 
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。
