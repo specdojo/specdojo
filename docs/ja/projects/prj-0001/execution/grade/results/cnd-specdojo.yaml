@@ -5,23 +5,23 @@ path: docs/ja/product/030-architecture/010-c4/cnd-specdojo.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 82
-graded_at: "2026-11-15T02:42:06.152Z"
+score: 83
+graded_at: "2026-11-15T10:40:59.426Z"
 graded_by: sol-review-executor
-content_hash: d73bbeec5ee3e18e4073da37349c1934555886d2f7f7003d6463015defa8f464
+content_hash: 84c7e3c0cab91b37791cc4475f61f6898444a8efce4753811fe3e18933b72933
 source_hashes:
   catalog-entry: c0caead0066c7ce9e876446f3c1d3c1eb74dfd69f1d877bdbc6831568fc5bfa3
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:cxd-specdojo: 847b9f2d7413e01d7ed02d3ed27afdf1c6fa2554a8535e0f23cfe5fb29bc2900
+  dependency:cxd-specdojo: 81a4bd013e6ebd2dc23755492479df1e4a609ffd632fa6475ddd9bcb8b328709
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: bc8f1e0f0bffdbd01b7105ee254e128bbfd04aabcb57f540382cbf383660ed7d
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
     score: 75
   operations:
-    score: 94
+    score: 88
   planning:
     score: 75
   business:
@@ -31,11 +31,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 94
+    score: 88
   implementation:
     score: 88
   quality:
-    score: 63
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -71,8 +71,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -107,8 +107,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -116,12 +116,12 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 5
+  major: 5
+  minor: 7
   note: 0
 findings:
   - id: F001
@@ -192,11 +192,30 @@ findings:
       type: document
   - id: F005
     severity: minor
+    rule: vp-arc-conciseness
+    line: 101
+    anchor: >-
+      | `REL-04` | プロジェクト運営・承認者 → 生成ドキュメントサイト（VitePress）           | 共有文書の閲覧                     | 人間の `PO`
+      が留保を承認した（2026-11-15。運用設計・非機能要件の整備まで）。ブラウザから閲覧する。公開範囲・到達先は未確定                     | `ifd-specdojo`
+      へ引き継ぐ                                        |
+    message: >-
+      Consolidate the identical PO reservation statement repeated at lines 72, 101, and 103 into one approval note
+      covering the site and REL-04/REL-06, retaining its date and closure milestone; each relationship row can then
+      retain only its distinct access and build conditions.
+    message_ja: >-
+      Consolidate the identical PO reservation statement repeated at lines 72, 101, and 103 into one approval note
+      covering the site and REL-04/REL-06, retaining its date and closure milestone; each relationship row can then
+      retain only its distinct access and build conditions.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
     rule: vp-dev-implementation-readiness
     line: 102
     anchor: >-
       | `REL-05` | SpecDojo CLI → リポジトリ（仕様・判断・検証記録）                        | 仕様・記録の参照と更新             |
-      ローカルファイルの読み書き。詳細な配置・構造は再定義しない                          | [[cxd-specdojo\|上位コンテキスト図]] の中核責務、各記録の schema |
+      ローカルファイルの読み書き。詳細な配置・構造は再定義しない                                                                                    
+      | [[cxd-specdojo\|上位コンテキスト図]] の中核責務、各記録の schema |
     message: >-
       Replace the generic reference to each record's schema with a resolvable schema index or specific contract
       references covering REL-05, so developers can locate the authoritative repository input and output definitions
@@ -207,7 +226,7 @@ findings:
       without guessing.
     cause:
       type: document
-  - id: F006
+  - id: F007
     severity: major
     rule: vp-qe-done-criteria
     line: 132
@@ -224,7 +243,7 @@ findings:
       catalog's configuration and deployment approval condition is met.
     cause:
       type: document
-  - id: F007
+  - id: F008
     severity: major
     rule: vp-qe-verifiability
     line: 124
@@ -239,7 +258,7 @@ findings:
       reproducible pass/fail expectations for these paths.
     cause:
       type: document
-  - id: F008
+  - id: F009
     severity: major
     rule: vp-qe-omissions-consistency
     line: 123
@@ -254,7 +273,7 @@ findings:
       the current checks cover build, AI, and Git failures but omit failure of the authoritative store itself.
     cause:
       type: document
-  - id: F009
+  - id: F010
     severity: minor
     rule: vp-ux-user-flow
     line: 132
@@ -271,7 +290,7 @@ findings:
       reach plain identifiers without a direct route to those documents.
     cause:
       type: document
-  - id: F010
+  - id: F011
     severity: minor
     rule: vp-ops-release-readiness
     line: 115
@@ -286,15 +305,23 @@ findings:
       scopes.
     cause:
       type: document
-  - id: F011
-    severity: major
-    rule: vp-qe-config-validity
-    line: 72
+  - id: F012
+    severity: minor
+    rule: vp-ops-operability
+    line: 135
     anchor: >-
-      | 生成ドキュメントサイト（VitePress） | 公開対象として選んだ文書を閲覧用に構成し、参加者へ提供する                     | _ASSUMPTION_:
-      文書を構築時に読み、静的生成物を配備する単位。構築環境と配信先は別途選ぶ。閲覧時に CLI の起動やリポジトリの直接参照を要しない構成案 |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+      | AI 作業の結果不明  | `REL-07`。途中変更と外部へ渡す情報の扱い                              | ARC / QE   |
+      上位図の外部コマンド連携仕様を具体化する際に、結果欠落と保持記録の期待値を定め、結合検証へ渡す                 |
+    message: >-
+      Add a concise maintenance handoff referencing the rulebook's revision procedure and identifying how ARC
+      coordinates updates to cxd-specdojo, cpd-specdojo-cli, and ifd-specdojo, how DEV/QE refresh affected contracts and
+      verification evidence, and where OPS obtains the approved revision for publication.
+    message_ja: >-
+      Add a concise maintenance handoff referencing the rulebook's revision procedure and identifying how ARC
+      coordinates updates to cxd-specdojo, cpd-specdojo-cli, and ifd-specdojo, how DEV/QE refresh affected contracts and
+      verification evidence, and where OPS obtains the approved revision for publication.
+    cause:
+      type: document
 done_criteria:
   satisfied: 4
   total: 5
