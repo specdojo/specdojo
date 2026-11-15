@@ -84,6 +84,8 @@ import {
 } from "./agent.js";
 import { pipelineRecoveryMeta, spawnBlock, spawnClaim, spawnComplete } from "./mode-shared.js";
 import { enforceScheduleKataReview, gradeBeforeReviewPlan } from "./schedule-prepare.js";
+import { reviewTaskBlockReason } from "../review-completion.js";
+import type { ReviewGradeOutcome } from "../../review/grade.js";
 import {
   pinnedExecutor,
   pinnedReporter,
@@ -390,8 +392,9 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   // Generate the plan on demand (skip for bring-your-own --plan).
   const generatedPlan = !opts.plan;
+  let reviewGradeOutcome: ReviewGradeOutcome | undefined;
   if (opts.task && task) {
-    const reviewGradeOutcome = await gradeBeforeReviewPlan({
+    reviewGradeOutcome = await gradeBeforeReviewPlan({
       task,
       projectId,
       catalogPath,
@@ -727,6 +730,19 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
     enforceScheduleKataReview({ task, catalogPath, resultPath, projectId, rootDir: repoRoot });
   }
   let blockReason: string | undefined = pipelineBlockReason;
+  const reviewBlockReason =
+    exitCode === 0 && task && resultPath
+      ? reviewTaskBlockReason({
+          mode: task.mode,
+          resultPath,
+          ...(reviewGradeOutcome ? { gradeOutcome: reviewGradeOutcome } : {}),
+        })
+      : undefined;
+  if (reviewBlockReason) {
+    effectiveExit = 1;
+    blockReason = reviewBlockReason;
+    process.stdout.write(`run blocked: ${label} (${reviewBlockReason})\n`);
+  }
   if (
     exitCode === 0 &&
     resultPath &&
