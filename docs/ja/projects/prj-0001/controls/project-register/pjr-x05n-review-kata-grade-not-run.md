@@ -12,7 +12,7 @@ specdojo:
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T11:31:23Z"
-  block_reason: "parent validation failed: validate-schema"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
   derived_from:
     - PJR-E4R5
   commit_type: fix
