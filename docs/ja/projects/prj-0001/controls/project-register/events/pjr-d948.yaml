@@ -50,3 +50,93 @@
     - field: commit_scope
       from: ""
       to: kata
+- v: 1
+  id: reg_9ec2c6a6ea6a4e14bed64061644b35e3
+  ts: "2026-11-15T16:51:52Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f83d8799e41448e5814e1f3701dfadeb
+- v: 1
+  id: reg_5e1ce8c0b95d44548c4dee771b623bd3
+  ts: "2026-11-15T17:19:57Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_9ec2c6a6ea6a4e14bed64061644b35e3
+- v: 1
+  id: reg_3faeb23b82054e0b9400d815799e6691
+  ts: "2026-11-15T19:51:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_5e1ce8c0b95d44548c4dee771b623bd3
+- v: 1
+  id: reg_2e6c3b0d67e74ea5aaa4d0ebf7891a51
+  ts: "2026-11-15T20:06:44Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_3faeb23b82054e0b9400d815799e6691
+- v: 1
+  id: reg_c63baf7347894948b3ce24f1c2f98bbc
+  ts: "2026-11-15T21:12:43Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_2e6c3b0d67e74ea5aaa4d0ebf7891a51
+- v: 1
+  id: reg_4967ec4123694a44abc31c34345f291c
+  ts: "2026-11-15T21:20:32Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c63baf7347894948b3ce24f1c2f98bbc

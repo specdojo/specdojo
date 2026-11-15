@@ -2,12 +2,12 @@
 id: prj-0001:stsd-task-execution-grade-criteria
 document: prj-0001:stsd-task-execution
 path: docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md
-graded_at: "2026-11-13T04:57:50.469Z"
+graded_at: "2026-11-15T21:36:19.761Z"
 graded_by: sol-review-executor
-content_hash: be94d1a9dc4e8bc3eb7220466a50ccb06c2d8f26e362e2ace062dc5b97b924cc
+content_hash: e32caf5e6107f817a241ec931a753c823bbe7db857bed36d34c693e2524b2346
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 5
+  unsatisfied: 0
   total: 5
 criteria:
   - id: DC-001
@@ -15,43 +15,28 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: unsatisfied
-    reason: >-
-      The assigned actor and authority changes across supplemental events and actor handover are not defined precisely
-      enough to establish the business conditions of all transitions.
+    status: satisfied
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
-    status: unsatisfied
-    reason: >-
-      The business validity of completion, blocking, and release cannot be approved unambiguously while claimant-based
-      and latest-event-author authority remain unreconciled.
+    status: satisfied
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: >-
-      The actor-authority contract and deterministic same-timestamp replay-order contract are incomplete as foundations
-      for transition implementation.
+    status: satisfied
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: >-
-      Permission-dependent transition tests lack a document-defined expected result for A claiming a task followed by B
-      recording supplemental information or resuming work.
+    status: satisfied
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: unsatisfied
-    reason: >-
-      State-management implementation lacks the rules for establishing, retaining, and transferring the actor identity
-      used by permission guards.
+    status: satisfied

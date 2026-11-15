@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bj7e-integration-test-paths-and-e2e-flake
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T10:47:44Z"
+  completed_at: "2026-11-15T16:48:41Z"
+  conclusion: 0.8.0 の第 1 段で直した（sample だけの変更で流れる test-integration と、負荷で揺れる pipeline-e2e のテストを見直す）。親の検証をすべて通って統合済み
   derived_from:
     - PJR-T01P
   commit_type: test

@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-3HXQ",
+  "run_id": "pjr-3hxq-20261115T165137Z-189cfb3f",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T17:08:11.188Z",
+    "completed_at": "2026-11-15T17:14:58.899Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-3hxq.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3hxq-sld-specdojo-rework-wave-2.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3hxq-sld-specdojo-rework-wave-2.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../020-data-model/sld-specdojo.md                 | 98 +++++++++++-----------\n .../pjr-3hxq-sld-specdojo-rework-wave-2.md         | 18 ++--\n 2 files changed, 64 insertions(+), 52 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "エラーなし（WARN は無関係な他カタログの evidence_refs / based_on のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "PJR-3HXQ 個票を含めすべて valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-3hxq-sld-specdojo-rework-wave-2.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-3hxq-sld-specdojo-rework-wave-2.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "grade run --target deliverable",
+      "status": "requires_human",
+      "summary": "agent の起動と利用枠の消費が必要なため、runner または人が実行して結果を個票へ追記する"
+    }
+  ],
+  "final_message": "sld-specdojo に F001〜F015 を反映した（grade の実行状態と .specdojo 設定の行を追加、generated 削除手順と worktree の記述を訂正、対応表と未決事項を整理）。個票の対応結果も追記した。status は draft のまま。再 grade（grade run --target deliverable）は agent 起動が必要なため未実行。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "再 grade が未了: `grade run --target deliverable` で sld-specdojo を grade し直し、結果を PJR-3HXQ 個票の対応結果へ追記する（agent 起動が必要なため executor では実行していない）。",
+    "executor の判断: CDSD 追加候補の `_TODO_` は、本書側では配置が確定済みのため未決ではないと判断して目印を外した。CDSD 側への登録は計画済み作業として Schedule の業務データ辞書作成・CDSD 改訂で扱い、二重追跡を避けるため管理台帳へは起票しない。該当タスクが Schedule にない場合は PM が追加する。",
+    "留保: 監視結果・費用作業記録の保管先と保持期間は `_UNDECIDED_` のまま残した。担当は OPS・ARC、決定は PO、期限は報告・監視の運用開始前（ready 昇格判断の時点で未決なら PO が留保の継続可否を判断する）。追跡先は cdsd-sharing が指す `prj-0001:cdfd-reporting` の未決事項。期限を過ぎたら PM が decision として起票する。cdfd-reporting は未作成のため wikilink にせずバッククォートで表記した。",
+    "存在しない追跡先候補 ID（`prj-0001:pjr-monitoring-storage` などの3件）は削除した。パス変更の行は、変更が発生したときに PM が change-request として起票する扱いにした。",
+    "grade の runs/<run-id>/ を削除してよい条件の一部（結果が grade/results/ へ反映済みであること）は、既存本文の記述と src/grade/run.ts の配置から導いたもの。runs/ を自動で片付ける処理があるかは確認していない。"
+  ],
+  "block_reason": "executor reported incomplete: sld-specdojo に F001〜F015 を反映した（grade の実行状態と .specdojo 設定の行を追加、generated 削除手順と worktree の記述を訂正、対応表と未決事項を整理）。個票の対応結果も追記した。status は draft のまま。再 grade（grade run --target deliverable）は agent 起動が必要なため未実行。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-3HXQ/pjr-3hxq-20261115T165137Z-189cfb3f/executor.attempt-1.log",
+      "bytes": 6897,
+      "truncated": false
+    }
+  ]
+}

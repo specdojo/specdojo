@@ -5,50 +5,50 @@ path: docs/ja/product/010-business-specs/030-business-model/bes-index.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 86
-graded_at: "2026-11-15T11:05:16.861Z"
+score: 94
+graded_at: "2026-11-15T21:39:12.619Z"
 graded_by: sol-review-executor
-content_hash: f0e9fb82f840e4d44969fbd88dc4155a7ee6435d32681126c5fd46c1b3891418
+content_hash: 1dc7e50fd7b01c326c1315ebcf1fe55b71b5f230ac8ec06baf67f6d81f558cbe
 source_hashes:
   catalog-entry: 20a6eeaef490660be85081e564dcf588a9c6eac756e00dc654bd54c8a6d9e49b
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
   dependency:cdfd-overview: 0aecdaca4ce0a56ed8f672e9882bce4023abc8d4b6ec7cb5645fc181ca6ede74
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
-    score: 88
+    score: 100
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   consistency:
-    score: 63
+    score: 88
   architecture:
     score: 88
   usability:
-    score: 94
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 81
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -65,14 +65,14 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 3
     score: 75
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -86,11 +86,11 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,11 +101,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -117,188 +117,66 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 10
+  major: 1
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-po-decision-readiness
-    line: 53
+    rule: vp-arc-cross-document-consistency
+    line: 90
     anchor: >-
-      本書をイベント駆動設計・テスト設計への確定入力として扱う条件は、上表の論点が解消または制限事項として承認され、人間の PO が一覧の範囲を承認していることである。現時点では満たしていないため `status: draft`
-      に据え置く。
+      | 成果物カタログとの範囲の差 | `dct-business-model-bes.yaml` の本書の概要は 10 領域と記しており、承認された 14 領域と一致しない | BA がカタログの記述を本書の範囲に合わせる |
+      確定の段（T-KATA-WAVE-1 の 140）の前。PM が登録簿で追跡する |
     message: >-
-      Identify the specific outstanding handoff condition, or revise the condition and its evaluation, because lines
-      48–51 record the decisions, reservation approvals, and scope approval that the closing sentence nevertheless
-      declares insufficient.
+      Reconcile the 14-domain scope with docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml,
+      whose bes-index overview still specifies ten process domains, and record the agreed scope.
     message_ja: >-
-      Identify the specific outstanding handoff condition, or revise the condition and its evaluation, because lines
-      48–51 record the decisions, reservation approvals, and scope approval that the closing sentence nevertheless
-      declares insufficient.
+      Reconcile the 14-domain scope with docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml,
+      whose bes-index overview still specifies ten process domains, and record the agreed scope.
     cause:
       type: document
   - id: F002
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 46
-    anchor: >-
-      | 論点                 |
-      現時点の扱い                                                                                                                                                                                                 
-      | 判断者・確認担当                     | 解消の時期と記録先                                                           |
-    message: Add a PM owner and a progress-check point for tracking the listed confirmations through closure.
-    message_ja: Add a PM owner and a progress-check point for tracking the listed confirmations through closure.
+    rule: vp-arc-cross-document-consistency
+    line: 43
+    anchor: "- 未作成の個別仕様は文書 ID だけを仮置きし、作成された時点で ARC が一覧と個別仕様の双方向の参照を設定する。"
+    message: >-
+      Complete the reciprocal connection to
+      docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md: this index links to the existing
+      BES in section 2, but that BES's introduction and section 1.1 still describe bes-index as uncreated and leave the
+      reverse reference unresolved.
+    message_ja: >-
+      Complete the reciprocal connection to
+      docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md: this index links to the existing
+      BES in section 2, but that BES's introduction and section 1.1 still describe bes-index as uncreated and leave the
+      reverse reference unresolved.
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 14
-    anchor: >-
-      | `bes-project-launched` | PO が新しいプロジェクトを立ち上げた | `P-01` | PO が新しいプロジェクトを SpecDojo で進めると決めた。 | 立ち上げを決めた時点。 | PO |
-      対象のプロジェクトが SpecDojo の稼働構成にまだ登録されていない。 | プロジェクト名、立ち上げた PO、立ち上げ時点 |
-    message: >-
-      Record the CDFD revision or review evidence used to confirm the domain-to-event mapping, and identify the
-      corresponding BES references when they are available.
-    message_ja: >-
-      Record the CDFD revision or review evidence used to confirm the domain-to-event mapping, and identify the
-      corresponding BES references when they are available.
-    cause:
-      type: document
-  - id: F004
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 3
-    anchor: >-
-      SpecDojo を用いたプロジェクト運営で、各プロセス領域を起動する業務上の出来事を一覧で定義する。対象は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「プロセス領域」に挙げた 14
-      領域の起点イベントであり、領域 ID・領域名・起点イベントの文言は同書を正本とする。
-    message: >-
-      Reconcile the 14-domain scope with docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml,
-      whose bes-index overview still specifies ten process domains, and record the agreed scope.
-    message_ja: >-
-      Reconcile the 14-domain scope with docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml,
-      whose bes-index overview still specifies ten process domains, and record the agreed scope.
-    cause:
-      type: document
-  - id: F005
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 37
-    anchor: >-
-      | `bes-task-execution-requested`  | [[prj-0001:bes-task-ready-selected\|業務イベント: 実行可能タスクの選択]] |
-      指示のうち、実行対象のタスクが確定した事実 | 単発・自動・並列で起点が一意にならず、一回の要求から複数の選択が生じる |
-    message: >-
-      Reconcile the claimed refinement with
-      docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md section 2: this index defines the
-      event at instruction issuance in line 24, whereas the individual BES explicitly defines target confirmation after
-      request receipt; distinguish these facts and their relationship so consumers do not treat their occurrence times
-      and counts as interchangeable.
-    message_ja: >-
-      Reconcile the claimed refinement with
-      docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md section 2: this index defines the
-      event at instruction issuance in line 24, whereas the individual BES explicitly defines target confirmation after
-      request receipt; distinguish these facts and their relationship so consumers do not treat their occurrence times
-      and counts as interchangeable.
-    cause:
-      type: document
-  - id: F006
-    severity: minor
     rule: vp-arc-technical-constraints
-    line: 50
+    line: 87
     anchor: >-
-      | 事実データの照合     | 人間の `PO` が留保を承認した（2026-11-15。追跡先は PJR-AK5V）。正本のデータモデル・schema
-      と未照合                                                                                                            |
-      ARC がデータモデルとの対応を確認する | イベント処理・メッセージング設計への引き渡し前                               |
+      | 事実データの照合 | 留保。正本のデータモデル・schema と未照合であり、照合までは事実データ列を設計の確定入力にしない | ARC がデータモデルとの対応を確認する |
+      イベント処理・メッセージング設計への引き渡し前。結果を本書に記録する |
     message: Record the data-model or schema mapping review before treating the fact-data fields as confirmed design inputs.
     message_ja: Record the data-model or schema mapping review before treating the fact-data fields as confirmed design inputs.
     cause:
       type: document
-  - id: F007
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 7
-    anchor: >-
-      事実データは、概念データフロー図の「データストア」と各領域の業務目的から、発生時点で観測できる業務上の情報を概念名で挙げた初版である。正本のデータモデル・schema との照合は行っていない。人間の `PO`
-      が留保を承認した（2026-11-15。追跡先は PJR-AK5V）。
-    message: >-
-      Consolidate the repeated PO reservation approval dated 2026-11-15 and PJR-AK5V reference from lines 7, 41, 49, and
-      50 into one shared approval record while retaining each reservation's substance, owner, and review timing.
-    message_ja: >-
-      Consolidate the repeated PO reservation approval dated 2026-11-15 and PJR-AK5V reference from lines 7, 41, 49, and
-      50 into one shared approval record while retaining each reservation's substance, owner, and review timing.
-    cause:
-      type: document
-  - id: F008
+  - id: F004
     severity: major
     rule: vp-qe-done-criteria
-    line: 53
+    line: 91
     anchor: >-
-      本書をイベント駆動設計・テスト設計への確定入力として扱う条件は、上表の論点が解消または制限事項として承認され、人間の PO が一覧の範囲を承認していることである。現時点では満たしていないため `status: draft`
-      に据え置く。
+      | QE による網羅の確認 | 「網羅の確認」は ARC の照合であり、QE の確認は済んでいない | QE がテスト設計の観点として使えるかを確認する | 確定の段（T-KATA-WAVE-1 の
+      140）の前。結果をそのレビュー結果に記録する |
     message: >-
       Add review evidence confirming the source-domain mapping, PO scope approval, and QE coverage check before marking
       the declared completion conditions met.
     message_ja: >-
       Add review evidence confirming the source-domain mapping, PO scope approval, and QE coverage check before marking
       the declared completion conditions met.
-    cause:
-      type: document
-  - id: F009
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 53
-    anchor: >-
-      本書をイベント駆動設計・テスト設計への確定入力として扱う条件は、上表の論点が解消または制限事項として承認され、人間の PO が一覧の範囲を承認していることである。現時点では満たしていないため `status: draft`
-      に据え置く。
-    message: >-
-      Record the review evidence used to verify domain coverage and test-design coverage when the handoff condition is
-      evaluated.
-    message_ja: >-
-      Record the review evidence used to verify domain coverage and test-design coverage when the handoff condition is
-      evaluated.
-    cause:
-      type: document
-  - id: F010
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 14
-    anchor: >-
-      | `bes-project-launched` | PO が新しいプロジェクトを立ち上げた | `P-01` | PO が新しいプロジェクトを SpecDojo で進めると決めた。 | 立ち上げを決めた時点。 | PO |
-      対象のプロジェクトが SpecDojo の稼働構成にまだ登録されていない。 | プロジェクト名、立ち上げた PO、立ち上げ時点 |
-    message: >-
-      Include a traceable reconciliation of the listed events to the CDFD domains so reviewers can verify that no
-      required domain or source event is omitted.
-    message_ja: >-
-      Include a traceable reconciliation of the listed events to the CDFD domains so reviewers can verify that no
-      required domain or source event is omitted.
-    cause:
-      type: document
-  - id: F011
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 53
-    anchor: >-
-      本書をイベント駆動設計・テスト設計への確定入力として扱う条件は、上表の論点が解消または制限事項として承認され、人間の PO が一覧の範囲を承認していることである。現時点では満たしていないため `status: draft`
-      に据え置く。
-    message: >-
-      State the remaining prerequisite and responsible reviewer for ready promotion or final-input release, reconciling
-      the closing hold with the approvals already recorded in section 3.
-    message_ja: >-
-      State the remaining prerequisite and responsible reviewer for ready promotion or final-input release, reconciling
-      the closing hold with the approvals already recorded in section 3.
-    cause:
-      type: document
-  - id: F012
-    severity: minor
-    rule: vp-ops-operability
-    line: 42
-    anchor: "- 未作成の個別仕様は文書 ID だけを仮置きし、作成された時点で ARC が一覧と個別仕様の双方向の参照を設定する。"
-    message: >-
-      Identify the ongoing owner and review trigger for updating the index when its source domains or related
-      specifications change.
-    message_ja: >-
-      Identify the ongoing owner and review trigger for updating the index when its source domains or related
-      specifications change.
     cause:
       type: document
 done_criteria:

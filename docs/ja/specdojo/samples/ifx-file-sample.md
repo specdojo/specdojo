@@ -14,7 +14,7 @@ specdojo:
 
 店主代表（`PO`）と家族利用者代表（`PO` 業務助言）が日々の店頭販売と在庫把握を行う「駄菓子屋きぬや」において、[[specdojo:ifx-file-rulebook|外部ファイル連携仕様作成ルール]] に従う 2 つの代表的なファイル受け渡し契約（**単一ファイル・インライン定義**および**複数ファイル・正本スキーマ参照**）を示す完成例である。外部取引先へ送付するバッチファイルと、店頭 CLI の実行段階間で授受・照合する状態・証跡ファイルの双方について、配置・命名・必須項目・書き手と読み手・失敗時の回復手順を検証可能な形で定義する。
 
-_ASSUMPTION_: [[specdojo:prj-overview-sample|プロジェクト概要]] および [[specdojo:ifx-index-sample|外部システムI/F一覧]] では、初期リリースの対象を店頭販売・在庫・つけ管理とし、仕入れ先とのシステム連携は初期スコープ外としている。本書では、外部取引先との単一ファイル契約（`file` と `schema.fields`）の完成例として次期拡張候補の「週次発注 CSV 連携」（第3.1節）を、初期スコープ内の複数ファイル協調契約（`files` と `schema_ref` / `required_fields`）の完成例として [[specdojo:clis-sample|販売管理 CLI 仕様]] の「取引状態・販売実績控え JSON 連携」（第3.2節）を示す。ロールと体制の正本は [[specdojo:pm-roles-sample|ロール定義]] および [[specdojo:pm-members-sample|メンバー定義]] とする。
+_ASSUMPTION_: [[specdojo:prj-overview-sample|プロジェクト概要]] および [[specdojo:ifx-index-sample|外部システムI/F一覧]] では、初期リリースの対象を店頭販売・在庫・つけ管理とし、仕入れ先とのシステム連携は初期スコープ外としている。本書では、外部取引先との単一ファイル契約（`file` と `schema.fields`）の完成例として次期拡張候補の「週次発注 CSV 連携」を、初期スコープ内の複数ファイル協調契約（`files` と `schema_ref` / `required_fields`）の完成例として [[specdojo:clis-sample|販売管理 CLI 仕様]] の「取引状態・販売実績控え JSON 連携」を示す。ロールと体制の正本は [[specdojo:pm-roles-sample|ロール定義]] および [[specdojo:pm-members-sample|メンバー定義]] とする。
 
 _UNDECIDED_: 本サンプルの仕様は学習用の完成例（`status: draft`）であり、実運用の採否、問屋側 SFTP 接続条件の確定、および `status: ready` への昇格は人間の店主代表（`PO`）が最終判断する。
 
@@ -54,7 +54,7 @@ x-spec-meta:
 file:
   name: orders.csv
   naming_rule: orders_YYYYMMDD.csv
-  location: data/outbound/orders/orders_YYYYMMDD.csv（転送先: /inbound/orders/orders_YYYYMMDD.csv）
+  location: data/outbound/orders/orders_YYYYMMDD.csv
   description: 駄菓子卸問屋（丸和商会）へ週次で送付する商品別発注データ
   writer: 店舗端末の発注バッチ処理（毎週日曜 21:30 に確定済み発注候補から生成）
   reader: 丸和商会 発注受付システム（週次バッチ取込および翌朝配送分の出荷引当処理）
@@ -71,7 +71,10 @@ transport:
   method: SFTP
   endpoint: sftp.maruwa-dagashi.example.com:/inbound/orders/
   frequency: 週次
-  atomic_write: 一時ファイル（orders_YYYYMMDD.csv.tmp）で転送完了後に orders_YYYYMMDD.csv へリネーム
+  atomic_write: >-
+    生成時は data/outbound/orders/ に orders_YYYYMMDD.csv.tmp を書き出してから orders_YYYYMMDD.csv へリネームして確定する。
+    転送時も同名の .tmp で送り、転送完了後に問屋側で orders_YYYYMMDD.csv へリネームする。
+    リネーム済みの確定ファイルの存在を生成完了とみなし、別の完了フラグは置かない。
 
 schema:
   csv:
@@ -84,11 +87,11 @@ schema:
   fields:
     - name: store_code
       type: string
-      description: 店舗コード（きぬやは固定値 KINUYA-01）
+      description: 店舗コード（きぬやは固定値 KINUYA-01。他の値は受け付けない）
       required: true
       example: "KINUYA-01"
       constraints:
-        pattern: "^KINUYA-\\d{2}$"
+        pattern: "^KINUYA-01$"
       mapping:
         csv:
           column: store_code
@@ -113,9 +116,22 @@ schema:
         csv:
           column: product_code
 
+    - name: order_unit
+      type: string
+      description: >-
+        発注単位。丸和商会の商品マスタで product_code ごとに登録された発注単位と一致させる
+        （BALL はボール、BOX は箱）。不一致の行は数量を換算せず malformed とする。
+      required: true
+      example: "BOX"
+      constraints:
+        enum: [BALL, BOX]
+      mapping:
+        csv:
+          column: order_unit
+
     - name: order_quantity
       type: integer
-      description: 発注数量（ボールまたは箱単位）
+      description: 発注数量（order_unit で示す単位の個数。例は箱 5 個）
       required: true
       example: 5
       constraints:
@@ -128,16 +144,19 @@ schema:
 error_handling:
   missing:
     action: >-
-      日曜 21:45 までに生成完了フラグが確認できない場合、店舗端末へ未生成警告を表示し、
-      店主代表（PO）による手動再実行または問屋への電話発注手順へ切り替える。
+      日曜 21:45 時点で確定ファイル orders_YYYYMMDD.csv（.tmp ではないもの）が存在しない場合、
+      店舗端末へ未生成警告を表示し、店主代表（PO）が発注バッチを 1 回だけ手動再実行する。
+      再実行後も 22:00 までに転送完了しない場合は自動送信を止め、問屋へ電話発注する。
   malformed:
     action: >-
-      必須列の欠落、文字コード不正、または constraints 違反を検知した場合は SFTP 送信を中止し、
+      必須列の欠落、文字コード不正、constraints 違反、または order_unit と商品マスタの発注単位の不一致を
+      検知した場合は SFTP 送信を中止し、
       対象ファイルを data/quarantine/ へ隔離して前回確定済み控えを保持したまま開発担当（DEV）へ通知する。
   transport_failure:
     action: >-
       SFTP 接続タイムアウトまたは転送失敗時は送信待ちキュー（data/outbound/orders/）に保持したまま
       5 分間隔で最大 3 回再試行し、22:00 までに完了しない場合は自動再送を止めて店主代表へ電話発注を促す。
+      電話発注へ切り替えた週の CSV は送信待ちキューから data/outbound/orders/phoned/ へ移し、後から自動送信しない。
 ```
 
 ### 3.2. 複数ファイル・正本参照の例（取引状態・販売実績控え JSON 連携）
@@ -154,11 +173,12 @@ x-spec-meta:
   rulebook: specdojo:ifx-file-rulebook
   based_on:
     - specdojo:clis-sample
-    - specdojo:ifx-index-sample
 
 # _ASSUMPTION_: [[specdojo:clis-sample|販売管理 CLI 仕様]] の各サブコマンド実行時に、
 # 進行中の取引状態と確定後の販売実績控え（エビデンス）をローカルで授受・照合する契約例。
-# 構造の正本は未同梱の架空参照名（kinuya-session-schema, kinuya-sales-record-schema）とし、
+# CLI 内部の取引記録は外部 I/F 一覧の登録対象外のため、ifx-index の spec_ref からは参照せず、
+# 販売管理 CLI 仕様の入出力表（kinuya-session-schema / kinuya-sales-record-schema）から本契約へ辿る。
+# 構造の正本は店舗アプリの schemas/ 配下の JSON Schema とし、その内容例を本書「参照する正本スキーマの例と検証」に示す。
 # 技術メンター（ARC）が正本分離と atomic_write 方式を管理し、PO が ready 昇格を判断する。
 
 files:
@@ -172,7 +192,7 @@ files:
     reader: 販売管理 CLI（各サブコマンド起動時の状態検証・再開判定）および店主代表・開発担当（障害時の状態照合）
     format: JSON
     encoding: UTF-8
-    schema_ref: kinuya-session-schema#CurrentTransactionSession
+    schema_ref: schemas/kinuya-session.schema.json
     required_fields:
       - schema_version
       - tx_id
@@ -193,7 +213,7 @@ files:
     reader: 販売管理 CLI（二重送信抑止・回復照合）、店主代表（PO）・開発担当（DEV）（通信失敗・印字未完了時の照合）
     format: JSON
     encoding: UTF-8
-    schema_ref: kinuya-sales-record-schema#SalesRecordEvidence
+    schema_ref: schemas/kinuya-sales-record.schema.json
     required_fields:
       - schema_version
       - tx_id
@@ -226,8 +246,8 @@ schema:
     content_type: application/json
     encoding: UTF-8
   references:
-    session_schema: kinuya-session-schema
-    sales_record_schema: kinuya-sales-record-schema
+    session_schema: schemas/kinuya-session.schema.json
+    sales_record_schema: schemas/kinuya-sales-record.schema.json
 
 error_handling:
   missing:
@@ -262,22 +282,135 @@ error_handling:
         確定済み売上の再登録を行わずに開発担当（DEV）の環境復旧へ引き継ぐ。
 ```
 
+### 3.3. 参照する正本スキーマの例と検証
+
+「複数ファイル・正本参照の例（取引状態・販売実績控え JSON 連携）」の `schema_ref` が指す正本の内容例を示す。項目の追加・型の変更はこの正本で行い、同節の YAML には `required_fields` だけを残す。どちらも JSON Schema 2020-12 で書き、`additionalProperties: false` で未定義の項目を拒否する。
+
+`schemas/kinuya-session.schema.json`（進行中の取引状態）:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kinuya-session-schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "tx_id",
+    "started_at",
+    "status",
+    "line_items",
+    "subtotal_yen",
+    "tax_yen",
+    "total_yen"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "tx_id": { "type": "string", "pattern": "^TX-\\d{8}-\\d{4}$" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["open", "payment_requested"] },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["product_code", "product_name", "unit_price_yen", "quantity"],
+        "properties": {
+          "product_code": { "type": "string", "maxLength": 14 },
+          "product_name": { "type": "string", "minLength": 1 },
+          "unit_price_yen": { "type": "integer", "minimum": 0 },
+          "quantity": { "type": "integer", "minimum": 1, "maximum": 99 }
+        }
+      }
+    },
+    "subtotal_yen": { "type": "integer", "minimum": 0 },
+    "tax_yen": { "type": "integer", "minimum": 0 },
+    "total_yen": { "type": "integer", "minimum": 0 }
+  },
+  "if": { "properties": { "status": { "const": "payment_requested" } } },
+  "then": { "properties": { "line_items": { "minItems": 1 } } }
+}
+```
+
+`schemas/kinuya-sales-record.schema.json`（販売実績控え）:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kinuya-sales-record-schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "tx_id",
+    "business_date",
+    "seq_no",
+    "total_yen",
+    "tendered_yen",
+    "change_yen",
+    "api_sync_status",
+    "print_status",
+    "recorded_at"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "tx_id": { "type": "string", "pattern": "^TX-\\d{8}-\\d{4}$" },
+    "business_date": { "type": "string", "format": "date" },
+    "seq_no": { "type": "integer", "minimum": 1, "maximum": 9999 },
+    "total_yen": { "type": "integer", "minimum": 0 },
+    "tendered_yen": { "type": "integer", "minimum": 0 },
+    "change_yen": { "type": "integer", "minimum": 0 },
+    "api_sync_status": { "enum": ["pending", "accepted", "rejected", "unknown"] },
+    "print_status": { "enum": ["not_requested", "printed", "failed", "unknown"] },
+    "recorded_at": { "type": "string", "format": "date-time" }
+  },
+  "if": { "properties": { "api_sync_status": { "not": { "const": "accepted" } } } },
+  "then": { "properties": { "print_status": { "const": "not_requested" } } }
+}
+```
+
+状態値の意味と組み合わせは次のとおり。`current-tx.json` は会計確定（本部受付と控え保存の確認後）または確定前の取消で削除するため、`status` は未解決の 2 値だけを持つ。印字は会計確定後に限るので、`api_sync_status` が `accepted` 以外なら `print_status` は `not_requested` に限る。`tendered_yen - total_yen = change_yen` の一致はスキーマで表せないため、読み手の CLI が追加で検査し、不一致は `malformed` とする。
+
+| 項目              | 値                          | 意味と扱い                                                                                        |
+| ----------------- | --------------------------- | ------------------------------------------------------------------------------------------------- |
+| `status`          | `open`                      | 明細追加中。`sales add` / `total` / `cancel` を受け付ける                                         |
+| `status`          | `payment_requested`         | 会計要求を本部へ送った後で、控えの `api_sync_status` が `accepted` になるまで保持する。取消は不可 |
+| `api_sync_status` | `pending`                   | 送信前に控えを保存した状態。送信結果を受け取る前の停止は `unknown` と同じく未解決とする           |
+| `api_sync_status` | `accepted`                  | 本部が受付を返した。会計確定済みで、再送しない                                                    |
+| `api_sync_status` | `rejected`                  | 本部が拒否を返した。未受付と確認済みで、原因を直した後だけ同じ取引を再送できる                    |
+| `api_sync_status` | `unknown`                   | 接続不能・時間切れで受付結果が不明。未登録と断定せず、本部受付の照会まで保留する                  |
+| `print_status`    | `not_requested` / `printed` | 印字前、または印字完了                                                                            |
+| `print_status`    | `failed` / `unknown`        | 印字未完了の警告。会計は維持し、保存済みレシートだけを再印刷する                                  |
+
+検証は JSON Schema 2020-12 に対応したバリデータ（`format` の検査を有効にする）で、`current-tx.json` を `kinuya-session-schema`、`TX-*.json` を `kinuya-sales-record-schema` に照らして行う。`QE` は次の受入ケースで期待結果を確認する。
+
+| ケース             | 対象と入力の要点                                                                                           | 期待結果                                                              |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| 正常（明細追加）   | `current-tx.json`、`status: open`、明細 1 件、`total_yen` が明細と税の合計                                 | スキーマ適合。`sales add` / `total` を継続できる                      |
+| 正常（会計確定）   | `TX-*.json`、`api_sync_status: accepted`、`print_status: printed`、釣銭が一致                              | スキーマ適合。`current-tx.json` は削除済み                            |
+| 不正（必須欠落）   | `current-tx.json` から `status` を除く                                                                     | スキーマ不適合。`malformed` として「取引記録破損（exit code 2）」     |
+| 不正（状態値）     | `current-tx.json`、`status: completed`                                                                     | スキーマ不適合（`enum` 違反）。`malformed` として扱う                 |
+| 不正（組み合わせ） | `TX-*.json`、`api_sync_status: unknown`、`print_status: printed`                                           | スキーマ不適合（`then` 違反）。`malformed` として退避し照合へ引き継ぐ |
+| 未解決             | `TX-*.json` が `api_sync_status: unknown`、`current-tx.json` が同じ `tx_id` で `status: payment_requested` | スキーマ適合だが未解決。新規取引を始めず、本部受付の照会を待つ        |
+
 ## 4. 異常時の判断と利用者の次の手
 
 YAML 内の `error_handling` に基づき、店頭での業務継続と二重処理防止のために利用者が行う判断と回復確認を次表に整理する。
 
-| 事象・区分                                                         | 業務継続・再実行の判断基準                                                       | 利用者（店主代表・家族利用者代表・開発担当）の次の手と回復確認                                                           |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 週次発注 CSV の未生成・転送失敗（`missing` / `transport_failure`） | 締め切り（日曜 22:00）前は再試行を待ち、超過時は自動送信を止めて手動へ切り替える | 店主代表（`PO`）が Wi-Fi 通信状態を確認し、22:00 までに送信完了しない場合は控えをもとに問屋へ電話発注して二重発注を防ぐ  |
-| 週次発注 CSV の形式不正（`malformed`）                             | 隔離された破損ファイルはそのまま送信せず、マスタ・数量の訂正後に再生成する       | 開発担当（`DEV`）が `data/quarantine/` のログから不正行を特定・修正し、同行レビュー担当（`QE`）と再生成結果を確認する    |
-| 取引状態の欠落・二重開始（`current_tx_json` の状態不整合）         | 未解決の会計がある間は新規取引を開始せず、既存取引の確定状態を先に確認する       | 店番担当が `sales total` で既存明細を確認し、会計要求後なら店主代表が本部受付と `data/sales/` の控えを照合する           |
-| 取引状態・販売控えの破損・保存失敗（`malformed` / `io_error`）     | ファイル削除や強制再実行を禁止し、本部受付の有無を照合してから回復手段を選ぶ     | 開発担当が容量・権限を復旧し、店主代表が本部受付済みか確認する。受付済みなら控えのみ回復し、未受付時のみ再登録を実施する |
+| 事象・区分                                                       | 業務継続・再実行の判断基準                                                                                     | 利用者（店主代表・家族利用者代表・開発担当）の次の手と回復確認                                                                                                                                                      |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 週次発注 CSV の未生成（`missing`）                               | 日曜 21:45 に確定ファイルがなければ、手動再実行を 1 回だけ行う。22:00 までに転送完了しなければ電話へ切り替える | 店主代表（`PO`）が未生成警告を見て発注バッチを再実行し、22:00 までに送信完了しない場合は確定済み発注候補の控えをもとに問屋へ電話発注する                                                                            |
+| 週次発注 CSV の転送失敗（`transport_failure`）                   | 自動再試行（5 分間隔・最大 3 回）の間は待つ。22:00 までに完了しなければ自動再送を止めて電話へ切り替える        | 店主代表が Wi-Fi 通信状態を確認し、電話発注した週の CSV が `data/outbound/orders/phoned/` へ移ったことを確かめて二重発注を防ぐ                                                                                      |
+| 週次発注 CSV の形式不正（`malformed`）                           | 隔離された破損ファイルはそのまま送信せず、マスタ・数量の訂正後に再生成する                                     | 開発担当（`DEV`）が `data/quarantine/` のログから不正行を特定・修正し、同行レビュー担当（`QE`）と再生成結果を確認する                                                                                               |
+| 取引状態の欠落（`current_tx_json` の `missing`、「取引未開始」） | 欠落前に進行中の取引がなかったと確かめてから `sales start` で新規取引を始める                                  | 店番担当は `sales total` を使わずに停止し、店主代表と開発担当（`DEV`）が `data/sales/` の当日控えを確認する。未解決の控え（`api_sync_status` が `pending` / `unknown`）があれば本部受付と照合してから新規取引へ進む |
+| 取引の二重開始（`current-tx.json` が既にある、「取引二重開始」） | 既存取引を解決するまで新規取引を開始しない                                                                     | 店番担当が `sales total` で既存明細を確認する。`status: open` なら同じ取引を続けるか取り消し、`payment_requested` なら店主代表が本部受付と `data/sales/` の控えを照合する                                           |
+| 取引状態・販売控えの破損・保存失敗（`malformed` / `io_error`）   | ファイル削除や強制再実行を禁止し、本部受付の有無を照合してから回復手段を選ぶ                                   | 開発担当が容量・権限を復旧し、店主代表が本部受付済みか確認する。受付済みなら控えのみ回復し、未受付時のみ再登録を実施する                                                                                            |
 
 ## 5. メモ / 将来課題
 
-| 項目                                 | 未整備事項と影響                                                                                                       | 担当・解消条件・引き継ぎ先                                                                                                                                                          |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 次期拡張（週次発注連携）の採否と契約 | 仕入れ先連携は初期スコープ外であり、問屋側の SFTP 接続条件と受領確認（ACK）仕様が未確定                                | 店主代表（`PO`）が次期フェーズでの着手可否を判断し、着手決定後に `BA` と `DEV` が問屋担当者と接続・ACK 仕様を合意して [[specdojo:ifx-index-sample\|外部システムI/F一覧]] へ追加する |
-| ローカル JSON スキーマ正本の整備     | 第3.2節で参照する `kinuya-session-schema` および `kinuya-sales-record-schema` は未同梱の架空参照名                     | 開発担当（`DEV`）が正本スキーマを作成して `ARC` と `atomic_write`・型整合を照合し、同行レビュー担当（`QE`）が `required_fields` と異常系テストを検証する                            |
-| 本部売上登録 API との回復照合接続    | `TX-YYYYMMDD-NNNN.json` の `api_sync_status` と照合する `ifx-api-kinuya-sales.yaml` の重複排除・受付照会仕様が未整備   | `ARC` と `DEV` が本部 API 契約で受付照会方式を確定し、`QE` が受付済み・未受付・結果不明の期待結果を確認するまで自動再送を行わず店頭保留運用を維持する                               |
-| Schedule・プロジェクト登録簿への接続 | 正本スキーマ整備、本部受付照合の確認、および次期発注連携の検討課題が学習用 Schedule・プロジェクト登録簿（PJR）に未登録 | `PM`（開発担当兼務）が外部結合テスト計画の確定前に Schedule へ作業を登録し、結果不明時の二重登録リスクと次期拡張判断を PJR へ起票して `PO` の承認判断へ接続する                     |
+| 項目                                 | 未整備事項と影響                                                                                                                       | 担当・解消条件・引き継ぎ先                                                                                                                                                          |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 次期拡張（週次発注連携）の採否と契約 | 仕入れ先連携は初期スコープ外であり、問屋側の SFTP 接続条件と受領確認（ACK）仕様が未確定                                                | 店主代表（`PO`）が次期フェーズでの着手可否を判断し、着手決定後に `BA` と `DEV` が問屋担当者と接続・ACK 仕様を合意して [[specdojo:ifx-index-sample\|外部システムI/F一覧]] へ追加する |
+| ローカル JSON スキーマ正本の配置     | 「参照する正本スキーマの例と検証」の 2 スキーマは内容例であり、店舗アプリの `schemas/` への配置と CLI 仕様の参照名との対応付けが未実施 | 開発担当（`DEV`）がその内容で正本を配置して `ARC` と `atomic_write`・型整合を照合し、同行レビュー担当（`QE`）が同節の受入ケースで検証する                                           |
+| 本部売上登録 API との回復照合接続    | `TX-YYYYMMDD-NNNN.json` の `api_sync_status` と照合する `ifx-api-kinuya-sales.yaml` の重複排除・受付照会仕様が未整備                   | `ARC` と `DEV` が本部 API 契約で受付照会方式を確定し、`QE` が受付済み・未受付・結果不明の期待結果を確認するまで自動再送を行わず店頭保留運用を維持する                               |
+| Schedule・プロジェクト登録簿への接続 | 正本スキーマ整備、本部受付照合の確認、および次期発注連携の検討課題が学習用 Schedule・プロジェクト登録簿（PJR）に未登録                 | `PM`（開発担当兼務）が外部結合テスト計画の確定前に Schedule へ作業を登録し、結果不明時の二重登録リスクと次期拡張判断を PJR へ起票して `PO` の承認判断へ接続する                     |

@@ -93,33 +93,82 @@ _TODO_: 「プロセス領域」の各表の行を一つのプロセスノード
 
 ### 5.1. _FLOW_SCOPE_NAME_（_AREA_ID_RANGE_）
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+<!-- 以下は D2 の例。記法は全体概要の「凡例（本プロダクト共通）」の宣言に従う。凡例が D2 を宣言した場合は specdojo:cdfd-d2-rulebook に従い、凡例が Mermaid を宣言した場合、記法を宣言しない場合、または凡例がない場合は、本図を specdojo:cdfd-mermaid-rulebook に従う Mermaid の flowchart へ置き換える。色・絵文字の割り当ては凡例があればそれに合わせる。対象グループで使わない雛形のノード・線・classes は削除し、物を渡す線には material_flow class、現物の保管先には physical_store class を使う。 -->
 
-  _EXTERNAL_NODE_ID_["_EXTERNAL_NAME_"]
-  _START_EVENT_NODE_ID_{{"_START_EVENT_"}}
-  _PROCESS_NODE_ID_("_PROCESS_NAME_<br>_PROCESS_ID_")
-  _MASTER_STORE_NODE_ID_[("_MASTER_STORE_NAME_")]
-  _TRANSACTION_STORE_NODE_ID_[("_TRANSACTION_STORE_NAME_")]
+```d2
+direction: down
 
-  _EXTERNAL_NODE_ID_ -->|"_EVENT_INPUT_LABEL_"| _START_EVENT_NODE_ID_
-  _START_EVENT_NODE_ID_ -->|"起動条件"| _PROCESS_NODE_ID_
-  _MASTER_STORE_NODE_ID_ -->|"_REFERENCE_LABEL_"| _PROCESS_NODE_ID_
-  _PROCESS_NODE_ID_ -->|"_OUTPUT_LABEL_"| _TRANSACTION_STORE_NODE_ID_
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  actor: {
+    shape: rectangle
+    style: {
+      fill: "#f5f7fa"
+      stroke: "#607d8b"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
 
-  class _PROCESS_NODE_ID_ process
-  class _START_EVENT_NODE_ID_ event
-  class _MASTER_STORE_NODE_ID_ storeMaster
-  class _TRANSACTION_STORE_NODE_ID_ storeTransaction
-  class _EXTERNAL_NODE_ID_ actor
+external: "_EXTERNAL_NAME_" { class: actor }
+start_event: "_START_EVENT_" { class: event }
+process: "_PROCESS_ID_ _PROCESS_NAME_" { class: process }
+master_store: "_MASTER_STORE_NAME_" { class: store_master }
+transaction_store: "_TRANSACTION_STORE_NAME_" { class: store_transaction }
+
+external -> start_event: "_EVENT_INPUT_LABEL_"
+start_event -> process: "起動条件"
+master_store -> process: "_REFERENCE_LABEL_"
+process -> transaction_store: "_OUTPUT_LABEL_"
 ```
 
-_TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>` のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+_TODO_: 凡例の適用元を書く。全体概要に「凡例（本プロダクト共通）」がある場合はその章を参照し、ない場合は「ノード形状・線種・色・絵文字は `specdojo:cdfd-mermaid-rulebook` の既定凡例に従う」と書く。続けて、使用した線種（D2 は `->`・`<-` と `material_flow` class、Mermaid は `-->` / `==>`）、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを 1〜2 文で書く。状態名をノードとして並べず、状態間の遷移を描かない。
 
 <!-- 図が一つで足りる場合は 5.1 の見出しを削除して図を直下へ置く。複数図に分ける場合は 5.2 以降として同じ「見出し＋図＋直後の注記」を繰り返す。 -->
 

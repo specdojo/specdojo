@@ -19,7 +19,7 @@
       to: 書き出す strategy の先頭に schema の modeline を必ず付ける
     - field: input
       from: ""
-      to: "[\"2026-11-15、kata-wave-2 の strategy を --force で書き出したとき、先頭の # yaml-language-server: $schema= の行が消え、develop の validate:schema が落ちて 005 の 3 件が止まった（PJR-TN43 の C）\"]"
+      to: '["2026-11-15、kata-wave-2 の strategy を --force で書き出したとき、先頭の # yaml-language-server: $schema= の行が消え、develop の validate:schema が落ちて 005 の 3 件が止まった（PJR-TN43 の C）"]'
     - field: type
       from: ""
       to: todo
@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_59a5a4c5341341a99d377d662e3aa394
+- v: 1
+  id: reg_496b4f4b0413443f8947c1260ab08b6f
+  ts: "2026-11-15T16:47:26Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（schedule strategy generate が schema の modeline を落とさないようにする）。親の検証をすべて通って統合済み
+  previous_event_id: reg_a76814f21a44418abd649c0a751853f8

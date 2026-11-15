@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-W63Q",
+  "run_id": "pjr-w63q-20261115T172254Z-34574d44",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T17:25:30.507Z",
+    "completed_at": "2026-11-15T17:31:22.701Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-w63q.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-w63q-bac-task-completion-design-reference.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-w63q-bac-task-completion-design-reference.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../bac-task-completion.md                         | 25 ++++++++++++++++++----\n ...jr-w63q-bac-task-completion-design-reference.md |  4 +++-\n 2 files changed, 24 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "exit 0（既存の based_on 未検出の WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更した個票 pjr-w63q を含めすべて valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md docs/ja/projects/prj-0001/controls/project-register/pjr-w63q-bac-task-completion-design-reference.md",
+      "status": "passed",
+      "summary": "変更ファイルを整形した"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5008 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5008 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W63Q/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W63Q/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W63Q\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-tJaOCm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UnPmYb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8KsRdF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-J6nbSN/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "bac-task-completion に BAC-01〜09 ごとの実装（evidence_refs）・設計の文書（stsd-task-execution・stsd-register-entry・stsd-deliverable・cdsd-execution）・ARC の確認状況の対応表を追加。メモ / 将来課題の _TODO_ 2 件は期限付きの留保に改め、追跡先列と設計の確認待ちの留保行を追加した。個票の対応結果も記入。status は draft のまま。grade run --target deliverable による再評価はまだ行っていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "`grade run --target deliverable` による再評価はまだ行っていない。個票はこれを完了条件としているので、runner または orchestrator が実行し、結果を PJR-W63Q の対応結果に追記する。",
+    "決めたこと: 設計・実装の対応はシナリオごとの節に分散させず、受入条件の共通前提の後に 1 つの表にまとめた（同じ参照の繰り返しを避けるため）。",
+    "決めたこと: 実装の参照は `evidence_refs`（src/grade/grade.ts・src/exec/run/run.ts）の範囲に限った。PJR-M18B で対応済みの review 前の grade の鮮度の扱いは範囲外の実装なので、BAC-07 は「確認待ち」とした。",
+    "決めたこと: 評価結果を扱う cdsd・stsd がないので、BAC-01〜04・08 には「評価結果の設計の文書なし」と明記した。cdsd-execution の _TODO_（plan / result / evidence のデータストアの追加）とつながる論点である。",
+    "決めたこと: 代表試行と費用・作業時間の上限は本書では決められないので、期限付きの留保（業務受入の試行の前に解消する）とし、追跡先は 140 の確定時に PO が判断する PJR-TN43 の kata-wave-2 の行とした。留保の可否は PO が 140 で判断する。",
+    "次のアクション: 「確認待ち」の条件（BAC-02 の Kata 変化の検出、BAC-03・04・08、BAC-06・07・09 の一部）は、業務受入の試行の前に ARC が照合する。不足は BA が PM へ PJR 登録候補として渡し、登録したら bac-task-completion の「メモ / 将来課題」の追跡先に個票を追記する。",
+    "参照範囲: 個票の完了条件が cdsd・stsd への参照を求めるため、plan で宣言されていない設計の文書（stsd-task-execution・stsd-register-entry・stsd-deliverable・cdsd-execution）と、`evidence_refs` が再エクスポートするモジュール（src/grade/target-discovery.ts など）を読み取り専用で参照した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-W63Q/pjr-w63q-20261115T172254Z-34574d44/executor.log",
+      "bytes": 5654,
+      "truncated": false
+    }
+  ]
+}

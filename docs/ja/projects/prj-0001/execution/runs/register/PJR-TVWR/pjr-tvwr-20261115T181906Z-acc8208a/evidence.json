@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TVWR",
+  "run_id": "pjr-tvwr-20261115T181906Z-acc8208a",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T18:23:02.752Z",
+    "completed_at": "2026-11-15T18:28:03.716Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tvwr.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tvwr-prj-assumptions-constraints-dependencies-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tvwr-prj-assumptions-constraints-dependencies-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../prj-assumptions-constraints-dependencies.md    | 41 ++++++++++++----------\n ...nstraints-dependencies-rework-grade-findings.md | 13 ++++++-\n 2 files changed, 34 insertions(+), 20 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "OK: dct-index.yaml（無関係な based_on の WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更した個票を含めて違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check",
+      "status": "passed",
+      "summary": "変更した 2 ファイルが整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "grade run --target deliverable",
+      "status": "requires_human",
+      "summary": "agent CLI と利用枠を使うため sandbox では実行できない。修正後の成果物を再 grade して、結果を個票の対応結果に書く"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5020 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5020 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TVWR/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TVWR/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TVWR\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-ddZomx/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-SqdMkF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jJazLo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yGbVqh/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "grade の指摘 F001〜F024 を取り込み、前提・制約・依存関係を更新した。主な変更は、公開情報の制約 ACD-C04 の新設、ACD-D02/D03 の決定状態の是正と用語の統一、ACD-C03 の廃止、ACD-D01・ACD-A02 への参照追加、監視・変更管理への記録区分と ARC/QE の確認責任の追加。status は draft に戻し、個票の対応結果を記入した。grade のやり直しは sandbox では実行できないため人に申し送る。",
+  "completion_status": "complete",
+  "handoff": [
+    "status: 本文を ready から draft に戻した。major の指摘が 15 件あり、公開範囲を決定済みと書いていた誤りも直したため、再 grade で確かめるまでは承認済みとして参照させない方がよいと判断した。ready へ戻すかは人が 140 で判断する。",
+    "grade run --target deliverable での grade のやり直しは agent CLI と利用枠を使うため executor の sandbox では実行していない。人またはオーケストレーターが実行し、結果を PJR-TVWR の対応結果に追記する。",
+    "ACD-D04（F012〜F014）: 検証コマンド、対象、期待結果、作業環境の変更時に再確認する範囲を定める正本は宣言された資料から特定できないため、_TODO_ を残した。ARC が正本を特定する（品質管理計画の検証方針を候補とする）。",
+    "ACD-D02: 初期公開範囲の決定を追跡する登録簿項目（PJR-0120 で続けるか新しく登録するか）が未定のため _TODO_ を残した。PM が決める。",
+    "ACD-C03 は憲章の「権限委譲」「本格実行開始の GO / Not GO 判断」と同じ内容のため廃止した。ID は再利用しない。PM が承認証跡を確認する責任は制約事項の章の冒頭に残した。",
+    "PJR-0120 と PJR-0121 の個票本文は宣言された参照範囲の外なので読んでいない。決定内容（MIT、GitHub + GitHub Pages、GitHub issue / pull request）は grade の指摘と既存の記述に従った。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TVWR/pjr-tvwr-20261115T181906Z-acc8208a/executor.log",
+      "bytes": 6421,
+      "truncated": false
+    }
+  ]
+}

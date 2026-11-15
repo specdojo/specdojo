@@ -19,7 +19,7 @@
       to: 親 runner の検証を 1 行にまとめた not\_run を親の検証の結果で読み替える
     - field: input
       from: ""
-      to: "[\"2026-11-15 の夜間に cnd-080 が、親の検証 9 件がすべて通ったのに「executor validation failed or not run」で止まった\"]"
+      to: '["2026-11-15 の夜間に cnd-080 が、親の検証 9 件がすべて通ったのに「executor validation failed or not run」で止まった"]'
     - field: type
       from: ""
       to: todo
@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4df04db4fd1c440abd1f636937a861b4
+- v: 1
+  id: reg_02e9ccba1819492c8197549fa7305f7b
+  ts: "2026-11-15T16:46:10Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（親の検証をまとめた not_run の行で executor の検証を失敗と取り違えない）。親の検証をすべて通って統合済み
+  previous_event_id: reg_084eb91b9d5248e98306e6609818c36c

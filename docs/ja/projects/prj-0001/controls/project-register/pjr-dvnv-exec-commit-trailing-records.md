@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-dvnv-exec-commit-trailing-records
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T12:27:24Z"
+  completed_at: "2026-11-15T16:49:55Z"
+  conclusion: 0.8.0 の第 1 段で直した（runner が統合の後に書いたイベントと run の記録を commit する）。親の検証をすべて通って統合済み
   commit_type: fix
   commit_scope: exec
 ---
