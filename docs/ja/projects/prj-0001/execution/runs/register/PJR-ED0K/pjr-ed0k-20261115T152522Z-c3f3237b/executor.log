@@ -1,0 +1,33 @@
+PJR-ED0K を実装しました。統合の段（commit・検査・merge）で止まった schedule のタスクも、`exec resume --task <id> --resume-from executor` で executor の段からやり直せます。「cannot resume the executor from the integrate stage」で断られることはなくなりました。
+
+確認状況: 単体テスト `tests/src/exec/register-resume.test.ts` は 46 件すべて通りました。e2e テストは `-t` で resume 関連を絞って実行し、追加・更新したものを含めて通過を確認しています。ファイル全体の `npm run test:integration` は実行していないので、親の runner の結果を正としてください。
+
+**動きの変化**
+- **再開を受け付ける条件:** 統合の段で `blocked` になった run も、どのリポジトリもまだ統合していなければ executor へ戻します。
+- **断る条件:**
+  - 統合が成功済みの run、一部のリポジトリを統合済みの run は、理由を付けて断ります。
+  - exec branch が merge 済みの run は断り、統合だけの再開を案内します。
+  - worktree が merge の途中の run は断ります。runner が `git merge --abort` を流すと stage 済みの変更が消えるので、状態を変えずにその場で止めます。
+- **develop の直しの取り込み:** executor を起動する前に、統合先（project は root の現在ブランチ）を exec branch と worktree へ取り込みます。既存の `syncTaskWorktreesWithIntegrationTargets` を使うので、orchestrator が worktree で手作業の merge をする必要はなくなります。
+- **成果と記録の保持:** 未 commit の変更は取り込みの前に控えて戻します。前回の state・evidence・ログは `*.attempt-N.*` として残ります。
+- **block の理由:** 失敗した操作のメッセージに、worktree の場所と次の操作 2 つ（`--resume-from executor` での直し、統合だけの再試行）を足します。同じ文を block イベントと result の両方に残します。
+- **register 側:** 挙動は変えていません。従来どおり統合の段からは断ります。
+
+**変更ファイル**
+- 実装: `src/exec/register-resume.ts`、`src/exec/run/lifecycle-commands.ts`、`src/exec/run/schedule-task.ts`
+- テスト: `tests/src/exec/register-resume.test.ts`、`tests/src/exec/pipeline-e2e.integration.test.ts`
+  - 統合の段から executor へ戻して最後まで通る場合を追加しました。develop の直しの取り込みと、前回の evidence が attempt として残ることも確かめています。
+  - merge の途中で断る場合を追加しました。
+  - 既存の「統合の段は断る」場合は「統合成功済みは断る」に置き換えました。
+- 文書: `docs/ja/specdojo/references/command-reference.md`、`docs/ja/specdojo/guides/exec-operation-guide.md`、`docs/ja/specdojo/guides/exec-worktree-guide.md`
+  - `exec-operation-guide.md` は表のセルが長くなったため、prettier の整形で表全体（10 行）の差分が出ています。
+- 個票: 作業内容を done にしました。対応結果に、実施内容・迷った点と決めたこと・CHANGELOG に書く事項・残課題を書きました。CHANGELOG.md は変えていません。
+
+**検証**
+- 自分で確認したもの: 変更ファイルの prettier 確認、個票の `npm run validate:history-links`（valid）。
+- 開発中の自己確認として、`tsc -b`・ESLint・vitest を直接実行しました（親が実行する npm script とは別扱い）。ESLint のエラーはありません。警告が 3 件ありますが、いずれも既存の長い関数（`runResumeMode`、`runPreparedTask` など）に対する `max-lines-per-function` です。
+- 親の runner に任せたもの: `typecheck`・`lint:ts`・`test:unit`・`lint:md`・`test:integration` など。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"統合の段（commit・検査・merge）で止まった schedule のタスクを、`exec resume --task <id> --resume-from executor` で executor の段からやり直せるようにした。どのリポジトリも統合していない run だけを executor へ戻し、統合成功済み・一部統合済み・merge 済みの run と、worktree が merge の途中の run は断る。起動前に統合先を exec branch と worktree へ取り込み、未 commit の変更と run の記録（attempt への退避）を保つ。統合の段の block 理由と result に、worktree の場所と次の操作を記録する。register の挙動は変えていない。回帰テストと文書を更新し、個票の対応結果を記入した。","handoff":["決めたこと: register の統合の段からの executor 再開には広げない（`selectResumableRegisterRun` は既定で従来どおり断り、schedule だけが `allowFailedIntegration` で許す）。必要なら別の登録簿項目で扱う。","決めたこと: 一部のリポジトリを統合済み（`stages.integrate.repos` が `merged`・`unchanged`・`branch-only`）の run、exec branch が merge 済みの run は executor へ戻さない。統合済みの成果との食い違いと二重統合を避けるため。","決めたこと: worktree が merge の途中なら runner は `git merge --abort` を行わずに止める。stage 済みの成果を失うため。","決めたこと: 統合先の取り込みは、統合の段から executor へ戻す場合だけに行う。reporter の段から戻す既存の再開と、`--resume-from` なしの統合だけの再開は変えていない。","CHANGELOG に書く事項は個票の対応結果「CHANGELOG に書く事項」の節に記載した（CHANGELOG.md は未変更）。","ESLint の `max-lines-per-function` の警告が `runResumeMode`（361 行）と `runPreparedTask`（714 行）に出ている。どちらも既存の長い関数で、本タスクでは分割していない。分割を検討する候補として扱う。","保護された設定の変更はない。"],"validations":[{"command":"npx prettier --check (changed .ts/.md files)","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links -- docs/ja/projects/prj-0001/controls/project-register/pjr-ed0k-exec-resume-executor-from-integrate.md","status":"passed","summary":"個票は valid"}]}
+</specdojo_executor_evidence>

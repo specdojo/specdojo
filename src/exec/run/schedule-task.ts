@@ -715,7 +715,11 @@ export async function runPreparedTask(
           // independent from branch housekeeping, but make the residue and recovery command clear.
           process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
         } else {
-          const reason = error instanceof Error ? error.message : String(error);
+          const reason = integrationBlockReason(
+            prepared.task.id,
+            error instanceof Error ? error.message : String(error),
+            prepared.worktree.path,
+          );
           const integrateFailedAt = new Date().toISOString();
           recordIntegrateStage(pipelineStatePath, integrateFailedAt, () => ({
             status: "failed",
@@ -819,6 +823,22 @@ export async function runPreparedTask(
   };
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+}
+
+// 統合の段の失敗の理由（検査の名前・commit の対象外のパス・merge の失敗など、失敗した操作の
+// メッセージ）に、worktree の成果を保ったまま続ける次の操作を足す。block の理由と result の
+// 両方へ同じ文を残す（PJR-ED0K）。
+export function integrationBlockReason(
+  taskId: string,
+  cause: string,
+  worktreePath: string,
+): string {
+  return (
+    `integration failed: ${cause.trim() || "unknown error"}; worktree kept: ${worktreePath}; ` +
+    `next: fix the artifacts with exec resume --task ${taskId} --resume-from executor ` +
+    `(syncs the integration target first), or retry only the integration with ` +
+    `exec resume --task ${taskId}`
+  );
 }
 
 export type PreparedTaskOutcome = {
