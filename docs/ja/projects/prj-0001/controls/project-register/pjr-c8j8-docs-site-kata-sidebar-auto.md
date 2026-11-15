@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-c8j8-docs-site-kata-sidebar-auto
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T21:50:28Z"
+  completed_at: "2026-11-15T01:19:43Z"
+  conclusion: docs-site の型のメニューを rulebook の frontmatter から自動で作るようにした。develop で sidebar の手修正が不要になった
   commit_type: feat
   commit_scope: docs-site
 ---

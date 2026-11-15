@@ -134,3 +134,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ad4a8a74615b4f7faed7abbb9e7c1a86
+- v: 1
+  id: reg_2a5d4f5be64b4e95a5131c18e0527e93
+  ts: "2026-11-15T01:19:43Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: docs-site の型のメニューを rulebook の frontmatter から自動で作るようにした。develop で sidebar の手修正が不要になった
+  previous_event_id: reg_e3c983320c134d618b0277531a3bab1f
