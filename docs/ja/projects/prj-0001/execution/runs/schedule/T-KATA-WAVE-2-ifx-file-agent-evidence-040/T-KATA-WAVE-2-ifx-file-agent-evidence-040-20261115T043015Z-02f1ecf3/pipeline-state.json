@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-040",
+  "run_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-040-20261115T043015Z-02f1ecf3",
+  "updated_at": "2026-11-15T05:17:21.762Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "argon-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T04:33:55.690Z",
+      "completed_at": "2026-11-15T04:50:00.402Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-040/T-KATA-WAVE-2-ifx-file-agent-evidence-040-20261115T043015Z-02f1ecf3/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-15T05:13:54.777Z",
+      "completed_at": "2026-11-15T05:17:15.255Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-040/T-KATA-WAVE-2-ifx-file-agent-evidence-040-20261115T043015Z-02f1ecf3/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "argon-executor",
+      "attempts": 1,
+      "started_at": "2026-11-15T05:17:21.762Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-040/T-KATA-WAVE-2-ifx-file-agent-evidence-040-20261115T043015Z-02f1ecf3/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-040/T-KATA-WAVE-2-ifx-file-agent-evidence-040-20261115T043015Z-02f1ecf3/result.md"
+  }
+}

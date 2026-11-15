@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-WAVE-2-ifx-file-agent-evidence-040
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-WAVE-2-ifx-file-agent-evidence-040/T-KATA-WAVE-2-ifx-file-agent-evidence-040-20261115T043015Z-02f1ecf3/plan.md
   started_at: "2026-11-15T04:30:29.158Z"
+  completed_at: "2026-11-15T05:17:15.258Z"
   agent: argon-executor
   execution: agent
   approach: rulebook-maintenance
@@ -20,16 +21,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- grade finding (F001, F002, F003) を解消し、代表成果物および執筆標準に基づき `docs/ja/specdojo/rulebooks/ifx-file-rulebook.md` を見直しました。
+- 必須構造（`source`, `target`, `timing` 等）の定義を追加し、`file` キーの内部構造を詳細化しました。
+- `x-spec-meta.type` を `api` 固定に統一し、`type: file` の使用を禁止事項として明記しました。
+- `rulebook-authoring-standard.md` に準拠した章立て（階層連番の付与）と Frontmatter への修正を行いました。
+- 代表成果物の実績に基づき、modeline の記述や `error_handling` の 3 区分などを規定に追加しました。
+- `recipe` および `template` については、本 rulebook と sample で内容が完結しているため `not-needed` と判断しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/ifx-file-rulebook.md`: grade finding の解消（必須項目の明記、`x-spec-meta.type` の統一）、執筆標準に従った章構成への変更、代表成果物の実績を反映した記述ガイドの充実、および Role ごとの管理責務の定義を行いました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 適用外の検証: `npm run validate:schema:file -- &lt;変更したYAMLファイル&gt;`（変更対象は Markdown ファイル（`docs/ja/specdojo/rulebooks/ifx-file-rulebook.md`）のみであり、YAML または YML ファイルの変更がないため。）
+- 適用外の検証: `npm run validate:catalog`（変更対象は `docs/ja/specdojo/rulebooks/ifx-file-rulebook.md` であり、`docs/ja/projects/` 配下の成果物変更がないため。）
+- 適用外の検証: `npm run validate:history-links`（プロジェクト登録簿（`pjr-*.md`）や実行記録（`plan.md` / `result.md`）の変更がないため。）
+- 適用外の検証: `npx tsx src/specdojo.ts catalog build`（成果物カタログ（`dct-*.yaml`）の変更がないため。）
+- 適用外の検証: `npx tsx src/specdojo.ts register build`（プロジェクト登録簿（`pjr-*.md`）の変更がないため。）
+- 適用外の検証: `npx tsx src/specdojo.ts exec refresh`（スケジュール定義（`sch-*.yaml`）の変更がないため。）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+rulebook-maintenance
