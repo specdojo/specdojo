@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-SBNB
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/plan.md
   started_at: "2026-11-15T19:15:19.342Z"
+  completed_at: "2026-11-15T19:25:03.737Z"
   agent: opus-executor
+  block_reason: "executor reported incomplete: schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を…"
 ---
 
 # Edit Result
