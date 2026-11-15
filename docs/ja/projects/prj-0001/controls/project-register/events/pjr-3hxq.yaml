@@ -50,3 +50,32 @@
     - field: commit_scope
       from: ""
       to: sld
+- v: 1
+  id: reg_fcb542f4f29045289e297e1b5a1eac6b
+  ts: "2026-11-15T17:04:05Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e8e70579ddac434b8022679c7b2cad18
+- v: 1
+  id: reg_0b62b53c663f447e944a38e0d25ca2cc
+  ts: "2026-11-15T17:15:05Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: sld-specdojo に F001〜F015 を反映した（grade の実行状態と .specdojo 設定の行を追加、generated 削除手順と worktree の記述を訂正、対応表と未決事項を整理）。個票の対応結果も追記した。status は draft のまま。再 grade（grade run --target deli…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: sld-specdojo に F001〜F015 を反映した（grade の実行状態と .specdojo 設定の行を追加、generated 削除手順と worktree の記述を訂正、対応表と未決事項を整理）。個票の対応結果も追記した。status は draft のまま。再 grade（grade run --target deli…"
+  previous_event_id: reg_fcb542f4f29045289e297e1b5a1eac6b
