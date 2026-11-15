@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8zx8-template-local-id-br-bes-bac-opr
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: ARC
   registered_at: "2026-11-15T13:41:48Z"
+  completed_at: "2026-11-15T22:24:26Z"
+  conclusion: br・bes・bac・opr の template の id を _LOCAL_ID_ に直し、型の再 grade で 4 つとも pass（98・100・100・92 点）
   commit_type: fix
   commit_scope: kata
 ---
