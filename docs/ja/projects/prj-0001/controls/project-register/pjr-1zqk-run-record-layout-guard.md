@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T22:40:41Z"
   due_on: "2026-11-20"
+  block_reason: "executor reported incomplete: 記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit `<rev>` と pre-push の入口 tools/check-run-record-l…"
   derived_from:
     - PJR-DVNV
   commit_type: fix
