@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5qj5-schema-validate-yaml-version-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:12Z"
+  completed_at: "2026-11-16T04:20:38Z"
+  conclusion: validate:schema:file と strategy の読み込み・テストの YAML の読み方をそろえ、strategy generate の task_suffix に引用符を付けるようにした
 ---
 
 # PJR-5QJ5 validate:schema:file と strategy のテストで、YAML の読み方が違う
