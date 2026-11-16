@@ -60,3 +60,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_cfb8e51b09aa4a329654f570e8749b59
+- v: 1
+  id: reg_d6435aea56a54f69ad412aceeda3480d
+  ts: "2026-11-16T23:29:33Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
+  previous_event_id: reg_7c575b4fd0f5417da13da7536b0e1fcd

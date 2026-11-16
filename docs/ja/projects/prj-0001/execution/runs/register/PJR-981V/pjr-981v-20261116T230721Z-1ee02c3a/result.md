@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-981V
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-981V/pjr-981v-20261116T230721Z-1ee02c3a/plan.md
   started_at: "2026-11-16T23:07:22.104Z"
+  completed_at: "2026-11-16T23:29:27.573Z"
   agent: opus-executor
+  block_reason: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
 ---
 
 # Edit Result
