@@ -242,13 +242,16 @@ specdojo routine run --project <project-id> --id rtn-daily-register-sweep
 specdojo routine run --project <project-id> --due --dry-run
 ```
 
-各 action は委譲先へ `--if-busy skip` を渡します。同じ project の `exec run` または `exec resume` が動作中なら待機せず、次のように記録して終了します。単一の routine 実行内では再試行せず、次回の cron tick に委ねます。
+各 action は委譲先へ `--if-busy skip` を渡します。同じ project の `exec run` または `exec resume` が動作中なら待機せず、次のように記録して終了します。単一の routine 実行内では再試行せず、次の `routine run --due` に委ねます。
 
 ```text
 [routine] skipped rtn-daily-register-sweep: job action skipped
+[routine] rtn-daily-register-sweep: busy skip 1/24, retried on the next routine run --due
 ```
 
-`routine-state.json` の `last_result` は、実行開始時に `running` が記録され、実行完了時に `success`、`partial`、`failure`、`skipped` のいずれかへ更新されます。実行中は前回の結果や理由を残さず、`routine list` の最終実行の欄には `(running)` と表示されます（例: `2026-10-15T21:00:03Z (running)`）。実行プロセスの異常終了などにより `running` の表示が残った場合でも、次回の due 判定は `last_run` の時刻（cron の場合は `last_scheduled_for`）に基づいて判定されるため、次回の実行機会には影響しません。`partial` は完了分の統合と失敗分の再試行待ちが混在する状態であり、`routine list` では `(partial)` と表示されます。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
+別の run の lock による skip（busy）は済んだ回として扱いません。cron の routine は `missed_run` が `latest` または `all`（省略時を含む）なら `last_scheduled_for` を進めず、空いた次の `routine run --due` でその回を流し直します。`latest` で新しい回が既に来ていれば新しい回だけを流します。`all` で同じ実行内に後の回が残っていても、busy の回より後は流さず次に回します。interval の routine は `busy_skip_count` が正の間、interval の経過を待たずに次の回で due になります。続いた busy skip が 24 回（毎時の `routine run --due` でおよそ 1 日）を超えたら、その回を済んだ回として扱い、`last_reason` と履歴の `reason` に上限到達を残します。`missed_run: skip` の cron、Job precondition の skip、失敗の回は従来どおり流し直しません。履歴の各行には skip の内訳を `skip_reason`（`busy` / `precondition`）で、流し直し待ちを `retry_pending: true` で残し、`routine status` で状態と直近の履歴を確認できます。
+
+`routine-state.json` の `last_result` は、実行開始時に `running` が記録され、実行完了時に `success`、`partial`、`failure`、`skipped` のいずれかへ更新されます。実行中は前回の結果や理由を残さず、`routine list` の最終実行の欄には `(running)` と表示されます（例: `2026-10-15T21:00:03Z (running)`）。実行プロセスの異常終了などにより `running` の表示が残った場合でも、次回の due 判定は `last_run` の時刻（cron の場合は `last_scheduled_for`）に基づいて判定されるため、次回の実行機会には影響しません。`partial` は完了分の統合と失敗分の再試行待ちが混在する状態であり、`routine list` では `(partial)` と表示されます。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。内訳は `routine-state.json` の `last_skip_reason` に残ります。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
 
 ### 2.1. devcontainerでのcron設定
 

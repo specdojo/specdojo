@@ -1108,12 +1108,13 @@ specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W3
 
 `routine` は `rtn-*.yaml` の定義に基づき、schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐せず、外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出します。
 
-| コマンド           | 用途                                           | 例                                              |
-| ------------------ | ---------------------------------------------- | ----------------------------------------------- |
-| `routine list`     | 定義・due 状態・最終実行を表示する             | `specdojo routine list --project prj-0001`      |
-| `routine validate` | `rtn-*.yaml` を検証する                        | `specdojo routine validate --project prj-0001`  |
-| `routine run`      | due な routine を実行し、`last_run` を記録する | `specdojo routine run --project prj-0001 --due` |
-| `routine where`    | routine 関連パスを表示する                     | `specdojo routine where --project prj-0001`     |
+| コマンド           | 用途                                                     | 例                                              |
+| ------------------ | -------------------------------------------------------- | ----------------------------------------------- |
+| `routine list`     | 定義・due 状態・最終実行を表示する                       | `specdojo routine list --project prj-0001`      |
+| `routine status`   | 状態・busy skip の流し直し待ち・直近の実行履歴を表示する | `specdojo routine status --project prj-0001`    |
+| `routine validate` | `rtn-*.yaml` を検証する                                  | `specdojo routine validate --project prj-0001`  |
+| `routine run`      | due な routine を実行し、`last_run` を記録する           | `specdojo routine run --project prj-0001 --due` |
+| `routine where`    | routine 関連パスを表示する                               | `specdojo routine where --project prj-0001`     |
 
 主要オプション:
 

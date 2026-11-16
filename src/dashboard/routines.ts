@@ -6,8 +6,7 @@ import { migrateRoutineStorage } from "../routine/storage.js";
 import {
   type RoutineDoc,
   cronMatches,
-  cronOccurrences,
-  isRoutineDue,
+  isRoutineEntryDue,
   routineActionKindLabel,
   type RoutineExecutionResult,
   type RoutineRunHistoryEntry,
@@ -34,6 +33,7 @@ export type DashboardRoutineStateEntry = {
   last_run?: string;
   last_result?: string;
   last_scheduled_for?: string;
+  busy_skip_count?: number;
 };
 
 // routine ファイル（rtn-*.yaml）を読み、端末側の状態ファイルと突き合わせて
@@ -261,6 +261,8 @@ function readRoutineStateEntries(statePath: string): Record<string, DashboardRou
             last_result: typeof entry.last_result === "string" ? entry.last_result : undefined,
             last_scheduled_for:
               typeof entry.last_scheduled_for === "string" ? entry.last_scheduled_for : undefined,
+            busy_skip_count:
+              typeof entry.busy_skip_count === "number" ? entry.busy_skip_count : undefined,
           };
         }
       }
@@ -322,12 +324,8 @@ export function computeRoutineDue(
 ): "due" | "-" | "disabled" {
   if (!enabled) return "disabled";
 
-  if (doc.trigger) {
-    const occurrences = cronOccurrences(doc, stateEntry?.last_scheduled_for, now);
-    return occurrences.length > 0 ? "due" : "-";
-  }
-  if (doc.interval) {
-    return isRoutineDue(doc, stateEntry?.last_run, now) ? "due" : "-";
+  if (doc.trigger || doc.interval) {
+    return isRoutineEntryDue(doc, stateEntry, now) ? "due" : "-";
   }
 
   return "-";
