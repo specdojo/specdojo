@@ -1,4 +1,5 @@
 import { listFilesRecursive, readYaml } from "./shared.js";
+import { isProficiency } from "../shared/agent-types.js";
 import type {
   AgentAssignment,
   AgentPipeline,
@@ -116,10 +117,6 @@ function isApproach(value: unknown): value is Approach {
     value === "finalize" ||
     value === "bootstrap-finalize"
   );
-}
-
-function isProficiency(value: unknown): value is Proficiency {
-  return value === "low" || value === "normal" || value === "high" || value === "expert";
 }
 
 function isExecution(value: unknown): value is "agent" | "human" {

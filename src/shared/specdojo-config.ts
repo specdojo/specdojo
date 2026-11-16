@@ -10,7 +10,7 @@ import { validateCommitMessageTemplate } from "./commit-message-template.js";
 import { dump, load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
-import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.js";
+import type { AgentStageRole, Proficiency, SchedulerStrategy, TaskMode } from "./agent-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
 import { runWorkspaceScaffold } from "./workspace-scaffold.js";
 import { runLefthookScaffold } from "./lefthook-scaffold.js";
@@ -191,7 +191,7 @@ export type ProjectMember = {
   persona?: string;
   focus?: string[];
   capabilities?: string[]; // agent only: tool access (e.g. web_search)
-  proficiency?: "low" | "normal" | "high" | "expert"; // agent only: quality tier
+  proficiency?: Proficiency; // agent only: quality tier
   priority?: number; // agent only: tiebreaker within same profile (lower = tried first)
   command?: string; // agent only: shell command executed by exec run
   mode?: AgentMode; // agent only: launch profile; report is reserved for stage_role: reporter

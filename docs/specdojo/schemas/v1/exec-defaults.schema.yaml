@@ -300,9 +300,16 @@ $defs:
       by_proficiency:
         type: object
         minProperties: 1
-        description: "Variables selected by the member's proficiency."
+        description: >
+          Variables selected by the member's proficiency. Frontier members require an explicit
+          frontier entry before launch; use an empty mapping when no extra variables are needed.
         propertyNames:
-          enum: ["low", "normal", "high", "expert"]
+          $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        properties:
+          frontier:
+            anyOf:
+              - $ref: "#/$defs/CommandVariableSet"
+              - const: {}
         additionalProperties:
           $ref: "#/$defs/CommandVariableSet"
       by_nickname:

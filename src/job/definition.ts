@@ -10,7 +10,12 @@ import {
   specdojoRootDir,
   type SpecDojoProjectConfig,
 } from "../shared/specdojo-config.js";
-import type { Proficiency, TaskMode } from "../shared/agent-types.js";
+import {
+  isProficiency,
+  PROFICIENCIES,
+  type Proficiency,
+  type TaskMode,
+} from "../shared/agent-types.js";
 
 export type JobInputType = "string" | "integer" | "boolean" | "list";
 
@@ -745,11 +750,8 @@ export function parseJobDefinition(
         errors.push("task.capabilities must be a non-empty string list");
       }
       const proficiency = value.task.proficiency;
-      if (
-        proficiency !== undefined &&
-        !["low", "normal", "high", "expert"].includes(String(proficiency))
-      ) {
-        errors.push("task.proficiency must be low|normal|high|expert");
+      if (proficiency !== undefined && !isProficiency(proficiency)) {
+        errors.push(`task.proficiency must be ${PROFICIENCIES.join("|")}`);
       }
       if ((mode === "edit" || mode === "review") && description && (targets || paths)) {
         task = {

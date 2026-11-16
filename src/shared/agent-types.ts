@@ -45,7 +45,14 @@ export const APPROACHES = [
 
 export type Approach = (typeof APPROACHES)[number];
 
-export type Proficiency = "low" | "normal" | "high" | "expert";
+// Frontier is above expert and requires an explicit tier request or a named agent.
+export const PROFICIENCIES = ["low", "normal", "high", "expert", "frontier"] as const;
+
+export type Proficiency = (typeof PROFICIENCIES)[number];
+
+export function isProficiency(value: unknown): value is Proficiency {
+  return PROFICIENCIES.some((proficiency) => proficiency === value);
+}
 
 export type AgentAssignment = {
   executor: string;

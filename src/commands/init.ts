@@ -512,7 +512,8 @@ function writeExecConfiguration(
         member.provider === provider &&
         member.stage_role === "executor" &&
         member.mode === "edit" &&
-        member.proficiency !== "expert",
+        member.proficiency !== "expert" &&
+        member.proficiency !== "frontier",
     );
     const expertExecutor = members.find(
       (member) =>
@@ -525,7 +526,8 @@ function writeExecConfiguration(
       (member) =>
         member.provider === provider &&
         member.stage_role === "reporter" &&
-        member.proficiency !== "expert",
+        member.proficiency !== "expert" &&
+        member.proficiency !== "frontier",
     );
     if (!executor || !reporter) {
       throw new Error(

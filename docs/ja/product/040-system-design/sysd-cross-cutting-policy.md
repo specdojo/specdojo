@@ -98,6 +98,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 ### 3.3. scp-SEL-001: member選択
 
 - **Rule（MUST）**: phaseの`mode`、`capabilities`、`proficiency`と、`.specdojo/agent-members.yaml`のmember属性を照合し、適合候補だけをpriority順に選択する。
+- **Rule（MUST）**: `expert` の上の段 `frontier` は、タスクまたは pipeline stage の `proficiency: frontier`、あるいは名前指定（CLI・routing・Schedule / Job の agent）によって明示要求された場合だけ選択する。習熟度未指定・通常候補がすべて busy・rate limit の自動 fallback では候補に含めない。
 - **Rationale（意図）**: scheduleへCLI名やモデル名を固定せず、要求と実行環境を分離する。
 - **Scope（適用範囲）**: `exec run --auto`と明示member指定。
 - **Enforcement（検証）**: 設定schema、候補解決テスト、適合候補なしの事前エラー。
@@ -110,6 +111,7 @@ SpecDojo の実装・運用に共通する制約と受入条件の正本であ�
 - **Rationale（意図）**: provider設定の重複とshell解釈による事故を防ぐ。
 - **Scope（適用範囲）**: 全providerの非対話起動。
 - **Enforcement（検証）**: 未解決placeholder、組み込み変数の再定義、template欠落を起動前にエラーとする。
+- **Rule（MUST）**: `frontier` member は、provider の `command_params.by_proficiency.frontier` がなければ名前と設定パスを示して起動前にエラーとする。member command も例外にせず、追加変数が不要な provider は空 mapping で対応を明示する。
 - **Exception（例外）**: `provider: custom`はmember commandで上書きできる。
 - **References（参照）**: [[sysd-agent-settings|agent 実行設計 hub]] の起動設定・プロバイダ別分冊。
 

@@ -276,14 +276,14 @@ phase_sets:
       proficiency: expert
 ```
 
-| フィールド     | 用途                                       |
-| -------------- | ------------------------------------------ |
-| `execution`    | `agent` または `human`。省略時は `agent`   |
-| `mode`         | `edit` または `review`。省略時は `edit`    |
-| `approach`     | plan テンプレートの進め方を選ぶ            |
-| `capabilities` | 必要なツールや能力を示す                   |
-| `proficiency`  | 必要な習熟度を示す                         |
-| `agent`        | executor / reporter を nickname で指名する |
+| フィールド     | 用途                                                                |
+| -------------- | ------------------------------------------------------------------- |
+| `execution`    | `agent` または `human`。省略時は `agent`                            |
+| `mode`         | `edit` または `review`。省略時は `edit`                             |
+| `approach`     | plan テンプレートの進め方を選ぶ                                     |
+| `capabilities` | 必要なツールや能力を示す                                            |
+| `proficiency`  | 必要な習熟度を示す。`frontier` は明示要求時だけ自動選択の候補になる |
+| `agent`        | executor / reporter を nickname で指名する                          |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
