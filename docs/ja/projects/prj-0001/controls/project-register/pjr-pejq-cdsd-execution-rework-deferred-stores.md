@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-pejq-cdsd-execution-rework-deferred-stores
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:21:53Z"
+  completed_at: "2026-11-16T16:06:22Z"
+  conclusion: cdsd-execution を grade の指摘で直し、再 grade で pass（95 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
   commit_type: docs
   commit_scope: cdsd
   approach: fully-guided
