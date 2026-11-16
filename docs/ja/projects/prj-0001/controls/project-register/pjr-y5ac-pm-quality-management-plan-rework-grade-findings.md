@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-y5ac-pm-quality-management-plan-rework-grade-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:23Z"
+  completed_at: "2026-11-16T17:07:25Z"
+  conclusion: pm-quality-management-plan を grade の指摘で 3 回直し、再 grade で pass（100 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
   commit_type: docs
   commit_scope: pm
   approach: fully-guided
