@@ -1,0 +1,28 @@
+`ifx-file-agent-evidence.yaml` を 2026-11-16 の再 grade の指摘 F001〜F010 に沿って直しました。major の F002 も含め全件を反映しています。ただし再 grade はまだ流しておらず、`register-resume.ts` と `mode-shared.ts` については自分で照合していません。この 2 ファイルは plan の参照範囲外なので、関わる箇所は grade の指摘文を根拠に書き、照合は留保（OD-03・OD-04）として追跡します。成果物の `status` は変えていません（最初から `ready` のままです）。
+
+**成果物の主な変更**
+- **F002（major）**: evidence が欠けている・壊れているときに「executor 段をやり直す」としていた記述を、実際の動きに直しました。
+  - 再開用の読込は例外を出さず、evidence を含まない checkpoint を返します。
+  - executor 段が成功済みなら、register の再開判定は再開不可で止まります。
+  - 回復手順として `--resume-from executor` で明示的に再開するコマンドを書き、TC-06 もこれに合わせました。
+- **F001**: 報告タグが無いときに成功扱いになる条件へ、approach が求める報告項目を足しました。condense では `condense_records` が無いと incomplete になり、reporter に進みません。TC-02 も追記しました。
+- **F003**: カタログの `overview` にある「agent が書き」は報告内容の書き手のことで、ファイルを書くのは runner だと説明に書き添えました。
+- **F004**: I/O エラーで即時停止する規定を executor・reporter 段までに絞りました。integrate 段で `pipeline-state.json` の更新に失敗しても、今の実装は警告を出して続行するため、この扱いを OD-04 として切り出しました。
+- **F005・F006・F010**: 再開不可で止まったとき、CLI は標準エラー出力に「ファイルのパス・失敗理由・回復コマンド」を出す、という意図した仕様を定めました。今の CLI と合っているかの確認は OD-01 に改めました。
+- **F007・F008**: ファイルごとの合否手順として `verification.file_checks` を追加しました。
+- **F009**: 必須項目（`changes`・`validations`・`final_message` など）が欠けている・型が違う場合も evidence なしとして扱う、と書き、TC-13 を追加しました。今の読込はこの欠落を検出しないため、照合を OD-03 に回しています。
+
+**個票の変更**
+`pjr-6xwp-ifx-file-agent-evidence-rework-wave-2.md` は、作業内容の 3 行目を done にし、4 行目（再 grade）は orchestrator が流すため open のままにしました。対応結果には、今回の対応内容と自分で決めた点を書きました。
+
+**検証**
+- `npx prettier --write`: 個票を整形しました（成果物は変化なし）。
+- `npm run validate:history-links`: 失敗はありませんでした。
+- `npm run validate:catalog`: `OK: dct-index.yaml`。対象外の `dct-user-interface-model.yaml` について既存の WARN が出ています。
+- lint・schema・test は親 runner の担当なので、ここでは流していません。
+
+`events/pjr-6xwp.yaml` と `pipeline-state.json` は runner が書いたもので、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-file-agent-evidence.yaml を 2026-11-16 の再 grade の指摘 F001〜F010 で手直しした（F002 major は再開不可の停止と executor 段からの明示的な再開へ修正、通知の契約・file_checks・TC-13・OD-03/OD-04 を追加）。個票の作業内容表と対応結果を更新し、再 grade の行は open のまま残した。status は変更していない。","handoff":["再 grade（`grade run --target deliverable`）は orchestrator が流す。個票の作業内容 4 行目は open のまま。","F002・F004 の実装事実（`src/exec/register-resume.ts`・`src/exec/run/mode-shared.ts`）は宣言範囲外のため grade の指摘文を根拠に反映した。照合は OD-03・OD-04（PJR-TN43 で追跡）。","通知の文言・出力先は意図された仕様として標準エラー出力にパス・失敗理由・回復コマンドを出すと定めた。現在の CLI との照合は OD-01。","読込の整合検証は `schema_version`・`task_id`・`run_id`・`stage` だけを見ており、`required_fields` の欠落を検知しない乖離を OD-03 に記録した。","成果物カタログ `dct-external-interface-specs.yaml` の overview「executor の agent が書き」は本タスク範囲外のため直していない。文言の見直しを別途検討すること。"],"validations":[{"command":"npx prettier --write docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-6xwp-ifx-file-agent-evidence-rework-wave-2.md","status":"passed","summary":"formatted; YAML unchanged, ticket reformatted"},{"command":"npm run validate:history-links","status":"passed","summary":"no violations"},{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml (pre-existing unrelated WARN only)"}]}
+</specdojo_executor_evidence>

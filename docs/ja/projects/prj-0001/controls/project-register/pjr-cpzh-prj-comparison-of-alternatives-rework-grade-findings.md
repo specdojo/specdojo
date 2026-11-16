@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:36Z"
+  block_reason: "parent validation failed: test-unit"
   commit_type: docs
   commit_scope: pm
   approach: fully-guided
@@ -41,12 +42,12 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
-| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                    |
-| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | open | 0.8.0 の後に流す                                     |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | open | orchestrator が流す                                  |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                                                 |
+| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------------------------------------------------ |
+| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                                                    |
+| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点）                                 |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | executor が F001〜F006 を取り込んだ（対応結果を参照）                                |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | open | `grade run` は agent CLI の起動を要し executor では流せないため、orchestrator が流す |
 
 ## 5. 対応結果
 
@@ -70,6 +71,22 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
 - major の指摘:
   - F004（vp-qe-verifiability）: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`。
+
+次の回の対応（2026-11-16 の再 grade の指摘 F001〜F006 を取り込む回）:
+
+- 実施内容: [[prj-0001:prj-comparison-of-alternatives|代替案比較]] を次のとおり直した。
+  - F004（major）: 「判定の根拠と集約規則」に、High・Middle・Low を順序尺度とし判定基準の何番目の条件に当たるかで決める規則、根拠表に記すセルの範囲、D-01 の重み5・4・3 が総合評価と採否へ与える役割を定めた。D-01 に案ごとの High・Low の根拠表を比較表の直後に追加し、D-02 の根拠表に必須条件の軸の根拠の列を加え、D-03 の説明文を同じ形の根拠表に置き換えた。既存の評価セルと判定は変えていない。
+  - F001: 廃止された ACD-C03 の参照 3 箇所を、ACD-A01 と憲章の「権限委譲」に置き換え、「前段文書から引き継ぐ条件」に憲章の「権限委譲」が承認事項の正本であることを記した。
+  - F002: Spec Kit の「固定ワークフロー」を「既定プロセス」に改め、カスタマイズの可否は机上で判定せず、試行する版と構成を WP-01 で固定して評価を更新することにした。
+  - F003: 検証手順の正本は前提・制約・依存関係の ACD-D04 で `ARC` が特定するとし、特定まで D-01・D-02 の「検証エラー 0 件」の確認と WP-02 を完了扱いにしないことにした。
+  - F005: WP-03 を反映案の作成（正本は変更しない）に改め、`BA` の意図確認（WP-04）の後に正本への反映（WP-05）を置いた。検証と評価記録は WP-06 に繰り下げ、参照を追従させた。
+  - F006: D-03 の確認に、Issue の受付開始前に `QE` が転記規則（議論の要点・判断根拠・ID 対応）を確認することと、GitHub を参照せず正本だけで経緯を確認できることを加えた。
+- status の扱い: 前の回と同じく `ready` のまま直した。理由は前の回と同じで、確定は人が 140 で行う。
+- 迷った点と決めた内容:
+  - 検証コマンドは宣言された根拠資料で特定できないため具体的なコマンドを書かず、正本を特定する作業（ACD-D04 の `ARC`）への依存として示した。
+  - Spec Kit の版と既定プロセスの詳細は外部資料の調査を要するため本タスクでは確認せず、WP-01 で固定する事項にした。
+  - D-01 の重み4の軸のうち、採否の区分を変えるのはリスクの Low だけとした。既存の判定（STR-01 は適応性が Low でも一部採択）と整合させるためである。
+- 再 grade: executor では実行していない（agent CLI の起動を要するため）。作業内容の No.4 は open のまま残し、orchestrator が `grade run --target deliverable` を流して結果を追記する。
 
 ## 6. 関連ドキュメント
 
