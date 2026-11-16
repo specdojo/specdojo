@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jfrx-bds-progress-report-rework-wave-2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: UX
   registered_at: "2026-11-15T12:22:06Z"
+  completed_at: "2026-11-16T14:55:22Z"
+  conclusion: bds-progress-report を grade の指摘で直し、再 grade で pass（99 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
   commit_type: docs
   commit_scope: bds
   approach: fully-guided
@@ -47,8 +49,8 @@ bds-progress-report を最新の grade の指摘で直す
 | --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
 | 1   | 最新の grade の指摘を取り込んで直す                    | UX   | done | executor が実施（対応結果を参照）                    |
 | 2   | grade し直して結果を書く                               | UX   | done | 2026-11-16 orchestrator が grade（needs-work 85 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | UX   | open | 0.8.0 の後に流す                                     |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | open | orchestrator が流す                                  |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | UX   | done | executor が実施（対応結果の「次の回」を参照）        |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | done | 2026-11-16 の 2 回目の再 grade で pass               |
 
 ## 5. 対応結果
 
@@ -72,6 +74,20 @@ bds-progress-report を最新の grade の指摘で直す
   - F006（vp-dev-implementation-readiness）: 1期間につき1つのレポートを維持しつつ、カットオフ後に成功した早期のJob Runを意図的に再実行する方法を指定する。現在のランナーは完了したRunをスキップするため、示された更新ワークフローはこの指示だけでは実装できない。
   - F014（vp-ops-operability）: Provide a supported operator procedure for replacing a successfully generated early report after the cutoff; repeating exec run with the same period currently returns “Job Run already complete” without updating the report.
 - 結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml`。
+
+次の回（2026-11-16 の再 grade の指摘 F001〜F014 の取り込み）:
+
+- 実施内容: major 3 件（F005・F006・F014）を優先し、minor 11 件も本文へ取り込んだ。`status` は変えていない。
+- 決めたこと（executor の判断）:
+  - 終点前の手動作成（F004・F005・F006・F012・F014）: `sysd-job-execution` は同じ `idempotency_key` の Run があれば新しい Run を作らず、再実行は失敗した Run の再試行に限る。終点の後に同じ週を作り直す手順は今の仕組みでは成り立たないため、手動作成を終点の後に限り、終点の前には作らないと決めた。暫定の表示は、暫定の報告を作らないため不要とした。例外の表から「同じ週を再出力する」「終点の前に手動で作成した」を、「成功した週を再実行した」「終点の前に作成しようとした」へ置き換えた。
+  - 成功した報告の作り直し（F007）: 作り直しの手段は実装の変更が要るため、「メモ / 将来課題」に DEV の判断として留保し、登録簿で追跡する。
+  - ファイル名（F001・F013）: `pr-<yyyy-mm-dd>-<nn>.md` の日付を期間の終点の日付（当週金曜）、連番を `01` に固定すると本書で決めた。進捗報告の rulebook へ書き足すかは PM の判断として留保した。
+  - 公開の承認（F002）: PM の内容確認の後に PO が承認する。
+  - 登録簿への移し替え（F003）: 持ち越しが 2 回続いて登録簿に項目のないリスク・課題は PM が起票し、報告に登録簿の ID を示す。留保の行には起票後に個票の ID を書き足す。
+  - 検証コマンド（F008）・次期予定の選び方（F009）・期間前の記録の扱い（F010）・Job実行設計への wikilink の ID（F011）を直した。
+- 再 grade: 作業内容の No 4 は open のまま残した。`grade run --target deliverable` は agent を起動するため orchestrator が流す。
+
+2 回目の再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: pass、99 点。指摘は 2 件（すべて minor）。完了条件は 3 件中 3 件を満たす。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml`。
 
 ## 6. 関連ドキュメント
 

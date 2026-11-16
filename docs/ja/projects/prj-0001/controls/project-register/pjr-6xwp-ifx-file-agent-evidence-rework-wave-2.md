@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6xwp-ifx-file-agent-evidence-rework-wave-2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:22:25Z"
+  completed_at: "2026-11-16T14:54:45Z"
+  conclusion: ifx-file-agent-evidence を grade の指摘で直し、再 grade で pass（95 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
   commit_type: docs
   commit_scope: ifx-file
   approach: fully-guided
@@ -43,12 +45,12 @@ ifx-file-agent-evidence を最新の grade の指摘で直す
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                  |
-| --- | ------------------------------------------------------ | ---- | ---- | ----------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                     |
-| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 89 点）  |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F010 を実施（対応結果を参照）       |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | 再 grade は orchestrator が流すため executor は未実施 |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                    |
+| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 89 点） |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F010 を実施（対応結果を参照）      |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | done | 2026-11-16 の 2 回目の再 grade で pass               |
 
 ## 5. 対応結果
 
@@ -71,6 +73,8 @@ ifx-file-agent-evidence を最新の grade の指摘で直す
   - カタログの `overview` の文言は本タスクの範囲外のため直さず、成果物側で書き手の区別を明記した。
 - 再 grade: orchestrator が流すため executor は実行していない（作業内容の 4 行目は open のまま）。
 - 残課題: OD-01〜OD-04（PJR-TN43 で追跡する）。
+
+2 回目の再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: pass、95 点。指摘は 6 件（すべて minor）。完了条件は 3 件中 3 件を満たす。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ifx-file-agent-evidence.yaml`。
 
 ## 6. 関連ドキュメント
 

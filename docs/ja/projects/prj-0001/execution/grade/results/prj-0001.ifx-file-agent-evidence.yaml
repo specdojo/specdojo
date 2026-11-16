@@ -4,11 +4,11 @@ document: prj-0001:ifx-file-agent-evidence
 path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 89
-graded_at: "2026-11-15T22:39:33.604Z"
+verdict: pass
+score: 95
+graded_at: "2026-11-16T14:53:01.683Z"
 graded_by: sol-review-executor
-content_hash: 87089ef14b9ab00889a818614b4b3720398490c6349754e1d05535bcdcea3a07
+content_hash: 0e045865168eb33f235026770b1b5f071c4bbc2ee91bb1b64a2676b2a81b71a9
 source_hashes:
   catalog-entry: 58ee3b496cc90d59a1b29b05facedd9368cc5bf92eaab11c7f868d3f60cf3e14
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -21,19 +21,19 @@ categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 88
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   consistency:
-    score: 63
+    score: 88
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
     score: 88
 viewpoints:
@@ -59,17 +59,17 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
-  vp-arc-technical-constraints:
     level: 3
     score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -77,8 +77,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -92,8 +92,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,8 +104,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 3
     score: 75
@@ -120,144 +120,85 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 9
+  major: 0
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 98
-    anchor: フォールバック時に成功扱いとなる条件は、終了コード 0 かつ親検証がすべて合格（not_run を含まない）であることに限る。
+    rule: vp-arc-cross-document-consistency
+    line: 27
+    anchor: 成果物カタログの overview の「agent が書き」は報告内容の書き手を指し、ファイルとしての書き手は runner である。
     message: >-
-      Qualify fallback acceptance for approach-specific requirements: src/exec/evidence.ts executorReportContractFailure
-      rejects missing condense_records for condense/edit, so exit code 0 and passing parent checks alone do not permit
-      that handoff.
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
     message_ja: >-
-      Qualify fallback acceptance for approach-specific requirements: src/exec/evidence.ts executorReportContractFailure
-      rejects missing condense_records for condense/edit, so exit code 0 and passing parent checks alone do not permit
-      that handoff.
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
     cause:
       type: document
   - id: F002
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 114
-    anchor: 再開判定において evidence なしとして扱う（executor 段をやり直す）。
-    message: >-
-      Reconcile the promised executor rerun and TC-06 with src/exec/register-resume.ts:263–268: when a succeeded
-      executor's evidence is missing or invalid, selectResumableRegisterRun returns not-resumable instead of selecting
-      an executor rerun; document the supported recovery route or explicitly track this implementation discrepancy.
-    message_ja: >-
-      Reconcile the promised executor rerun and TC-06 with src/exec/register-resume.ts:263–268: when a succeeded
-      executor's evidence is missing or invalid, selectResumableRegisterRun returns not-resumable instead of selecting
-      an executor rerun; document the supported recovery route or explicitly track this implementation discrepancy.
+    severity: minor
+    rule: vp-dev-testability
+    line: 153
+    anchor: "- changes・validations が配列、final_message が文字列である"
+    message: 参照されている型と失敗時の動作に対して、YAML コントラクトをチェックするための検証手順と期待される結果を特定する。
+    message_ja: 参照されている型と失敗時の動作に対して、YAML コントラクトをチェックするための検証手順と期待される結果を特定する。
     cause:
       type: document
   - id: F003
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 27
-    anchor: "writer: SpecDojo runner（agent の stdout に出力された <specdojo_executor_evidence> タグから抽出・正規化し、差分情報・親検証結果を結合して書き込む）"
+    rule: vp-dev-testability
+    line: 145
+    anchor: QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
     message: >-
-      Reconcile the writer descriptions with
-      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
-      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
-      direct agent writes.
+      procedure は配置済みファイルの読込・再開判定だけを指定しているため、stdout の報告解析を扱う TC-02～TC-05 と書込失敗を扱う TC-12 を実行できない。各ケースで呼び出す解析・生成・書込処理と、I/O
+      エラーを発生させる手順を指定する。
     message_ja: >-
-      Reconcile the writer descriptions with
-      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
-      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
-      direct agent writes.
+      procedure は配置済みファイルの読込・再開判定だけを指定しているため、stdout の報告解析を扱う TC-02～TC-05 と書込失敗を扱う TC-12 を実行できない。各ケースで呼び出す解析・生成・書込処理と、I/O
+      エラーを発生させる手順を指定する。
     cause:
       type: document
   - id: F004
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 128
-    anchor: 標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。
-    message: >-
-      Scope the unconditional I/O failure rule or record its implementation discrepancy: this contract promises
-      immediate exit code 1, while src/exec/run/mode-shared.ts recordIntegrateStage and recordRepoIntegration catch
-      pipeline-state update errors, emit warnings, and continue integration.
-    message_ja: >-
-      Scope the unconditional I/O failure rule or record its implementation discrepancy: this contract promises
-      immediate exit code 1, while src/exec/run/mode-shared.ts recordIntegrateStage and recordRepoIntegration catch
-      pipeline-state update errors, emit warnings, and continue integration.
+    rule: vp-qe-verifiability
+    line: 147
+    anchor: 正常系の各ファイルは file_checks の手順をすべて満たせば合格、1 つでも満たさなければ不合格とする。
+    message: 各ファイルを、その参照されている型および必須フィールドと照らし合わせて検証するための、合格/不合格の結果を伴うチェック手順を提供する。
+    message_ja: 各ファイルを、その参照されている型および必須フィールドと照らし合わせて検証するための、合格/不合格の結果を伴うチェック手順を提供する。
     cause:
       type: document
   - id: F005
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 115
-    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: "status: ready"
     message: >-
-      Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
-      implementation location that defines it.
-    message_ja: エビデンスの読み取りまたは整合性の失敗に対する通知動作を規定するか、それを定義している権威ある実装箇所を特定する。
+      status は ready だが、200～201行では OD-01～OD-04 が判断待ちで、ready 昇格前に必要とする解消または留保承認の結果が記録されていない。各 OD
+      の判断結果と承認記録への参照を示し、未承認なら現在のライフサイクル状態を判断待ちであることが分かる記載に整合させる。
+    message_ja: >-
+      status は ready だが、200～201行では OD-01～OD-04 が判断待ちで、ready 昇格前に必要とする解消または留保承認の結果が記録されていない。各 OD
+      の判断結果と承認記録への参照を示し、未承認なら現在のライフサイクル状態を判断待ちであることが分かる記載に整合させる。
     cause:
       type: document
   - id: F006
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 115
-    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
-    message: >-
-      Define the notification output and behavior for evidence read failures so implementation and recovery handling
-      have a concrete contract.
-    message_ja: エビデンスの読み取り失敗に対する通知の出力と動作を定義し、実装とリカバリーのハンドリングが具体的なコントラクトを持つようにする。
-    cause:
-      type: document
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 132
-    anchor: QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
-    message: >-
-      Identify the validation procedure and expected result for checking the YAML contract against the referenced types
-      and failure behavior.
-    message_ja: 参照されている型と失敗時の動作に対して、YAML コントラクトをチェックするための検証手順と期待される結果を特定する。
-    cause:
-      type: document
-  - id: F008
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 134
-    anchor: 正常系では、生成された各ファイルが schema_ref の型を満たし required_fields をすべて含むことを合格条件とする。
-    message: >-
-      Provide a check procedure with pass/fail results for validating each file against its referenced type and required
-      fields.
-    message_ja: 各ファイルを、その参照されている型および必須フィールドと照らし合わせて検証するための、合格/不合格の結果を伴うチェック手順を提供する。
-    cause:
-      type: document
-  - id: F009
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 113
-    anchor: 書き込み済みの evidence.json が読込時に JSON として解釈できない、または task_id / run_id / stage の整合検証に失敗した場合は、
-    message: >-
-      Define the outcome and a verification case for persisted evidence with valid JSON and matching
-      task_id/run_id/stage but missing or mistyped required_fields such as changes, validations, or final_message; the
-      current malformed branches cover syntax and identity failures only.
-    message_ja: >-
-      Define the outcome and a verification case for persisted evidence with valid JSON and matching
-      task_id/run_id/stage but missing or mistyped required_fields such as changes, validations, or final_message; the
-      current malformed branches cover syntax and identity failures only.
-    cause:
-      type: document
-  - id: F010
-    severity: minor
     rule: vp-ops-operability
-    line: 115
-    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
-    message: Define the user notification destination and recovery handoff for evidence read or consistency failures.
-    message_ja: エビデンスの読み取りまたは整合性の失敗に対するユーザー通知の送信先とリカバリーのハンドオフを定義する。
+    line: 139
+    anchor: ファイルロック競合等の I/O エラーが発生した場合は、標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。
+    message: >-
+      書込 I/O エラー時の停止後について、容量・権限等を復旧する担当、既存ファイルと残存 .tmp
+      の保持・確認方針、再開または再実行する段の選択手順を定義する。現在の記載だけでは、部分書込や状態更新失敗の後にどの記録を使って復旧するか判断できない。
+    message_ja: >-
+      書込 I/O エラー時の停止後について、容量・権限等を復旧する担当、既存ファイルと残存 .tmp
+      の保持・確認方針、再開または再実行する段の選択手順を定義する。現在の記載だけでは、部分書込や状態更新失敗の後にどの記録を使って復旧するか判断できない。
     cause:
       type: document
 done_criteria:
-  satisfied: 2
+  satisfied: 3
   total: 3
-  unsatisfied:
-    DC-002:
-      - ARC
   detail_ref: prj-0001:ifx-file-agent-evidence-grade-criteria
