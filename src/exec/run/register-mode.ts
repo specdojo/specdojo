@@ -39,6 +39,7 @@ import {
   configuredWorktreeBase,
   parseParallel,
   resolveExecDefaultsPath,
+  resolvePinnedRateLimitRunOptions,
   runCompletionDrivenWorkerPool,
   type AsyncLock,
   type RunOpts,
@@ -126,8 +127,8 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
         }
       : routed;
   };
-  // Validate the effective per-item selection before creating worktrees or changing register
-  // state. A route may supply the counterpart of one explicitly overridden stage.
+  // Validate every item's effective stages and recovery before creating any worktree or changing
+  // register state. CLI overrides can make a routed fallback identical to the primary agent.
   if (!opts.resume) {
     for (const pjrId of ids) {
       const itemOpts = optsForItem(pjrId);
@@ -138,6 +139,27 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
         throw new Error(
           "--register pipeline execution requires both --executor-by and --reporter-by, either explicitly or from the item's difficulty route.",
         );
+      }
+      if (itemOpts.executorBy || itemOpts.reporterBy) {
+        const agents = resolveRegisterPipelineCommand(roster, itemOpts, execDefaults);
+        if (itemOpts.executorBy) {
+          resolvePinnedRateLimitRunOptions(
+            itemOpts,
+            execDefaults,
+            roster,
+            "executor",
+            agents.executor,
+          );
+        }
+        if (itemOpts.reporterBy) {
+          resolvePinnedRateLimitRunOptions(
+            itemOpts,
+            execDefaults,
+            roster,
+            "reporter",
+            agents.reporterCandidates[0]!,
+          );
+        }
       }
     }
   }
