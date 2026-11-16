@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_28310f57597b4edda5c154a5a0f2a315
+  ts: "2026-11-16T22:27:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼で起票する（2026-11-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-comparison-of-alternatives を読みやすい構成に見直す
+    - field: description
+      from: ""
+      to: 結論を先に置き、判定の区分と根拠の表を絞って、3 回の手直しで膨らんだ代替案比較を読みやすくする
+    - field: input
+      from: ""
+      to: '["利用者が 2026-11-17 に、CPZH の対象の代替案比較は grade の結果以前に内容が分かりにくいと指摘した。grade の指摘への手直しとは目的が違うため、CPZH を close して別の todo で見直すことを選んだ（案 A）","3 回の手直しで本文は 27KB から 75KB に増えた。sample は 20KB である。grade の指摘に応えて表の列や規則を足し、削らなかったためである","orchestrator が示した改善案 7 点（結論の要約を冒頭に置く、判定の区分を 4 つに絞る、集約の規則を短くする、根拠の表を sample と同じ案ごとの形にする、採らない案のセルは判定しない、記録の担当の重複を除く、rulebook が許せば尺度を有利・中間・不利にする）を利用者が了承した","各決定の結論（D-01〜D-03 の採否）は変えない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:prj-comparison-of-alternatives"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-CPZH"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: pm
