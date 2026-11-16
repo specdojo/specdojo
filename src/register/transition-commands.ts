@@ -1,8 +1,10 @@
 import type { Command } from "commander";
+import { readFileSync } from "node:fs";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import { nowUtcTimestamp } from "./date.js";
 import { CELL_NONE, type PjrItem } from "./item.js";
 import type { RegisterCommandDependencies } from "./command-types.js";
+import { registerWorkTableIssueMessage, registerWorkTableIssues } from "./work-table.js";
 
 export function registerTransitionCommands(
   reg: Command,
@@ -41,6 +43,14 @@ export function registerTransitionCommands(
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
       assertTerminalOperationAllowed(item, "close");
+      if (view.ticketPath) {
+        const issues = registerWorkTableIssues(readFileSync(view.ticketPath, "utf8"));
+        if (issues.length > 0) {
+          throw new Error(
+            `Cannot close ${item.id}: ${registerWorkTableIssueMessage(item.id, issues)}`,
+          );
+        }
+      }
       assertRegisterItemCommitTargetsClean(context, view);
 
       const targetStatus =
