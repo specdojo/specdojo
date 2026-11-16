@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-kvwh-routine-busy-skip-not-retried
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:02Z"
+  completed_at: "2026-11-16T13:31:10Z"
+  conclusion: busy で skip した回を済んだ回として記録せず、次の回で流し直すようにした（上限 24 回）。routine status を足した
 ---
 
 # PJR-KVWH routine が busy で skip した回を、空いた次の回で流し直さない

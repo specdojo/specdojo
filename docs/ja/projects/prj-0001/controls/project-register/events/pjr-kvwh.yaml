@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fc5172ca834e43888b074f4ff402a6ac
+- v: 1
+  id: reg_709d53b136874cf4ad2dac7b19bea760
+  ts: "2026-11-16T13:31:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: busy で skip した回を済んだ回として記録せず、次の回で流し直すようにした（上限 24 回）。routine status を足した
+  previous_event_id: reg_11c0a209629e4177b3222f53231e2619
