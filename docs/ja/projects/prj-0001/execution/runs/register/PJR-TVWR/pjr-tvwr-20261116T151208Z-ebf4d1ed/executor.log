@@ -1,0 +1,24 @@
+grade の指摘 F001〜F009 を前提・制約・依存関係の本文に取り込みました。本文に残っていた `_TODO_` は 2 件とも消え、major の F009 は文書の上では解消済みです。ただし、まだ grade し直していないので、指摘が実際に消えたかは未確認です。
+
+**本文の変更**（`docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md`）
+- **ACD-D02**（F002・F003・F009）: ライセンス（MIT、`PJR-0120` で決定済み）と、まだ決まっていない初期公開範囲を分けて書きました。
+  - 憲章の「ハイレベルスコープ」「未決事項」はライセンスをまだ未決としていますが、この記載は `PJR-0120` の決定で置き換わったものとして扱います。憲章の追従更新は `PM` が登録簿で追跡します。
+  - 初期公開範囲は、決定済みの `PJR-0120` では続けず、`PM` が新しい登録簿項目を起票すると決めました。起票するのは、成果物カタログと成功基準の詳細化が終わり、`PO` に判断を求める前です。
+- **ACD-D04**（F001・F004〜F008）: 検証コマンド・対象・期待結果・失敗時の確認先・再確認範囲の正本を、品質管理計画の検証方針としました。
+  - `ARC` が確認する時期は二つです。作業環境の変更後に検証を伴う作業を再開する前と、ACD-D01 の受入判定の前です。
+  - 証跡はレビュー記録に残します。方針に必要な定義が欠けていれば、`ARC` が課題として登録簿に記録し、影響する作業を保留します。
+- `status` は `draft` のままです。
+
+**個票の変更**（`pjr-tvwr-…-rework-grade-findings.md`）
+- 作業内容の表の No 3 を done にしました。No 4（grade のやり直し）は sandbox では実行できないため open のまま残しています。
+- 「次の回」の対応内容と、迷った点の判断を対応結果に追記しました。
+
+**検証**: `npm run validate:catalog` と `npm run validate:history-links` は通りました（catalog は既存の WARN のみ）。lint などは親の runner が実行します。
+
+**確認してほしい点**
+- 品質管理計画は参照してよい範囲の外なので、本文は読んでいません。正本とした根拠は、憲章の「本格実行開始の GO / Not GO 判断」が品質の記録先を品質管理計画としていることです。必要な定義が本当にあるかは、`ARC` が確かめる必要があります。
+- 憲章は `status: ready` で今回の対象外なので、直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2026-11-16 の再 grade の指摘 F001〜F009 を前提・制約・依存関係（ACD-D02・ACD-D04）に取り込み、未解決の _TODO_ をすべて解消した。個票の作業内容の表（No 3 を done、No 4 は open）と対応結果を更新した。status は draft のまま据え置いた。","handoff":["再 grade（`grade run --target deliverable`）は agent CLI と利用枠を使うため sandbox では実行できない。orchestrator が実行して個票の対応結果に結果を書き、作業内容の No 4 を閉じる。","初期公開範囲を追跡する登録簿項目は、決定済みの `PJR-0120` で続けず新しく起票すると決めた（決定状態を追えるようにするため）。`PM` が、成果物カタログと成功基準の詳細化が終わり `PO` に判断を求める前に起票し、ACD-D02 に項目 ID を追記する。","prj-charter の「ハイレベルスコープ」「未決事項」は、ライセンス方針をまだ未決としている。`PJR-0120`（MIT で決定済み）に合わせる追従更新を、`PM` が別の登録簿項目で起票する（憲章は今回の対象外のため直していない）。","ACD-D04 では、検証の正本を品質管理計画の検証方針とした。憲章の GO / Not GO 判断が、品質の記録先を品質管理計画としているのが根拠である。品質管理計画は参照してよい範囲の外のため、本文は読んでいない。必要な定義があるかは `ARC` が確かめ、欠けていれば課題として登録簿に記録する。","status は draft のまま据え置いた。major の指摘を直した直後で、再 grade で確かめる前に ready にしない方がよいため。ready へ戻すかは人が 140 で判断する。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"全カタログ OK（既存の evidence_refs re-export WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"個票を含む履歴ファイルがすべて valid"},{"command":"npx prettier --write docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md","status":"passed","summary":"整形済み"}]}
+</specdojo_executor_evidence>

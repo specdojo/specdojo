@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-TVWR
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-TVWR/pjr-tvwr-20261116T151208Z-ebf4d1ed/plan.md
   started_at: "2026-11-16T15:12:18.918Z"
+  completed_at: "2026-11-16T15:18:11.349Z"
   agent: opus-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 2026-11-16 の再 grade の指摘 F001〜F009 を前提・制約・依存関係（ACD-D02・ACD-D04）に取り込み、未解決の `_TODO_` をすべて解消した。個票の作業内容の表（No 3 を done、No 4 は open）と対応結果を更新した。status は draft のまま据え置いた。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md`: 変更、+6 / -6 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 再 grade（`grade run --target deliverable`）は agent CLI と利用枠を使うため sandbox では実行できない。orchestrator が実行して個票の対応結果に結果を書き、作業内容の No 4 を閉じる。
+- 初期公開範囲を追跡する登録簿項目は、決定済みの `PJR-0120` で続けず新しく起票すると決めた（決定状態を追えるようにするため）。`PM` が、成果物カタログと成功基準の詳細化が終わり `PO` に判断を求める前に起票し、ACD-D02 に項目 ID を追記する。
+- prj-charter の「ハイレベルスコープ」「未決事項」は、ライセンス方針をまだ未決としている。`PJR-0120`（MIT で決定済み）に合わせる追従更新を、`PM` が別の登録簿項目で起票する（憲章は今回の対象外のため直していない）。
+- ACD-D04 では、検証の正本を品質管理計画の検証方針とした。憲章の GO / Not GO 判断が、品質の記録先を品質管理計画としているのが根拠である。品質管理計画は参照してよい範囲の外のため、本文は読んでいない。必要な定義があるかは `ARC` が確かめ、欠けていれば課題として登録簿に記録する。
+- status は draft のまま据え置いた。major の指摘を直した直後で、再 grade で確かめる前に ready にしない方がよいため。ready へ戻すかは人が 140 で判断する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
