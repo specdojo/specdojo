@@ -10,6 +10,11 @@ import { failedParentValidationReason } from "../parent-validation.js";
 import { integratedRepoNames } from "../pipeline-state.js";
 import { resolveProductBranches } from "../product-branches.js";
 import {
+  adoptForeignWaitRecords,
+  countForeignCommits,
+  findForeignWaitRecords,
+} from "../register-foreign-wait.js";
+import {
   findResumableRegisterRun,
   resolveRegisterResumeArtifacts,
   type RegisterResumeTarget,
@@ -342,6 +347,38 @@ export async function resumeSingleRegisterItemWorktree(
     );
   }
 
+  // PJR-97KE: job の worktree の中で止まった子の run は、wait の記録が job の branch にしかない。
+  // 本体から再開する場合は、register の遷移と agent の起動より前に、その記録を本体へ取り込む。
+  const foreignWait = findForeignWaitRecords({ repoRoot, worktree, itemId: item.id });
+  if (foreignWait) {
+    const adopt = (): string | null => {
+      try {
+        const count = countForeignCommits(repoRoot, foreignWait);
+        adoptForeignWaitRecords({
+          repoRoot,
+          schedulePath,
+          itemId: item.id,
+          records: foreignWait,
+        });
+        process.stdout.write(
+          `  [resume] merged the wait records of ${item.id} from ${foreignWait.target} ` +
+            `(${foreignWait.commit.slice(0, 12)}, ${count} commit(s) not yet in ${currentBranch(repoRoot)})\n`,
+        );
+        rebuildRootRegisterViews(projectId, item.id);
+        return null;
+      } catch (error) {
+        return (
+          `cannot bring the wait records of run ${target.runId} from ${foreignWait.target} ` +
+          `into the current branch: ${error instanceof Error ? error.message : String(error)}; ` +
+          `resolve it and resume again, resume inside the worktree of ${foreignWait.target}, ` +
+          `or discard the run with --force-restart (without --resume)`
+        );
+      }
+    };
+    const adoptFailure = lifecycleLock ? await lifecycleLock.runExclusive(adopt) : adopt();
+    if (adoptFailure) return refuse(adoptFailure);
+  }
+
   const artifacts = resolveRegisterResumeArtifacts({
     repoRoot,
     worktreePath: worktree.path,
@@ -349,11 +386,18 @@ export async function resumeSingleRegisterItemWorktree(
     taskId: item.id,
     state: target.state,
   });
-  if (!artifacts) return refuse(`cannot restore the plan/result of run ${target.runId}`);
+  if (!artifacts)
+    return refuse(
+      `cannot restore the plan/result of run ${target.runId}; ` +
+        `discard the run with --force-restart (without --resume)`,
+    );
 
   const worktreeResultPath = resolve(worktree.path, artifacts.resultRef);
   if (!existsSync(worktreeResultPath)) {
-    return refuse(`result not found in the worktree: ${artifacts.resultRef}`);
+    return refuse(
+      `result not found in the worktree: ${artifacts.resultRef}; ` +
+        `discard the run with --force-restart (without --resume)`,
+    );
   }
 
   // root 側の実行管理ファイル。plan / result は前回の wait commit で統合ブランチに入っている。
@@ -498,7 +542,11 @@ export async function resumeSingleRegisterItemWorktree(
   const promptPlanPath =
     target.stage === "executor" && existsSync(worktreePlanPath) ? worktreePlanPath : planPath;
   if (!existsSync(promptPlanPath))
-    return refuse(`plan not found for the resumed run: ${artifacts.planRef}`);
+    return refuse(
+      `plan not found for the resumed run: ${artifacts.planRef}; merge the branch that holds ` +
+        `the wait commit of run ${target.runId} into ${currentBranch(repoRoot)} and resume again, ` +
+        `or discard the run with --force-restart (without --resume)`,
+    );
   const prompt = expandPromptRefs(readPlanFile(promptPlanPath));
 
   if (target.stage === "executor") {
