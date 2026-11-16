@@ -1,0 +1,33 @@
+`stsd-task-execution` を、2026-11-16 の再 grade で出た 7 件の指摘に沿って直しました。本文から `_TODO_` と `_ASSUMPTION_` はなくなり、major の F007 はこれで解消する見込みです。再 grade はまだ流していないので、点数への効果は未確認です。`status` は `draft` のままです。
+
+**変更したファイル**
+
+- `docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md`
+  - **同時刻の再生順序（F002・F003・F005）**: 「状態の判定」の独立した項目にしました。次の内容を、`src/exec/events.ts` の実装を読んで業務の言葉で書いています。
+    - 種類の既定順と、記録ファイルのパスによる並べ方
+    - 状態ごとに成立するイベント
+    - 競合する着手（同じ秒に解放か中断もしたアクターの着手を先にし、自動の実行の再開に伴う着手は後にする）
+    - 実行中からの記録（直前の記録者の記録を先にし、`block`・`unblock` があれば `complete` はその後にする）
+    - 期待する順序の例 2 件。どちらも実装の規則に当てはめて結果を確かめました。
+
+    並べ方の正本は `src/exec/events.ts` としました。
+  - **今後の検討メモ（F007・F001・F006）**:
+    - 上流辞書の `_TODO_` は、食い違ったときにどちらを正とするかを決める `_UNDECIDED_` に改めました。BA が照合し、PO が決めます。期限は辞書を作るときか 140 で、追跡先は PJR-TN43 です。
+    - 権限の規則の承認では、PO が 140 で決める前に BA・QE・DEV が確認することを書きました。
+    - `ready` に上げられるのは、この 2 件が決まり 140 で人が承認した後だと明記しました。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-2c9w-stsd-task-execution-rework-actor-authority.md`
+  - 作業内容の 3 行目を done にしました。4 行目（grade し直し）は理由をメモに書き、open のままです。
+  - 対応結果に「5.4. 次の回の実施内容」を足し、決めた内容と理由を書きました。
+
+**検証**: `npm run validate:catalog` と `npm run validate:history-links` は通りました。lint などほかの検査は、親の runner が実行します。
+
+**確認してほしい点**
+
+- **F007 の扱い**: `_TODO_` を `_UNDECIDED_` に改めたのは、本文を統合済みの実装に合わせてあり、調べて埋められる不足はもう残っていないと判断したためです。残るのは「食い違ったときにどちらを正とするか」の決定だけです。目印を差し替えて機械の検査をかわしただけ、とも見えるので、この判断でよいか見てください。
+- **見送った指摘（F004）**: 検証手順やテストファイルへの参照は足していません。rulebook は STSD に検証の章を求めておらず、テストファイルはこのタスクで参照してよい資料に入っていないためです。
+- **関数名**: rulebook が関数の実行を業務の記述として載せることを禁じているので、正本はファイルのパスだけで示しました。grade が求めていた関数名は載せていません。
+- **事前の差分**: `events/pjr-2c9w.yaml` に差分がありますが、私は触っていません。runner 側の変更と思われます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stsd-task-execution を 2026-11-16 の再 grade の指摘に沿って直した。同時刻の再生順序を独立した項目にし、成立するイベント・競合する着手・実行中からの記録の優先と期待する順序の例を書いた（F002/F003/F005）。上流辞書の `_TODO_` は PJR-TN43 を追跡先とする期限付きの `_UNDECIDED_` に改めた（F007）。権限の承認に BA・QE・DEV の確認と `ready` に上げる条件を書いた（F001/F006）。個票の作業内容と対応結果も更新した。status は draft のまま。","handoff":["F007: 上流辞書（`bdd-exec-state`・`bdd-exec-event`）の `_TODO_` を `_UNDECIDED_` に改めた。本文は統合済みの実装（PJR-M495・T4G3）に合わせてあり、調べて埋められる不足は残っていないと判断したため。残る決定は、食い違ったときにどちらを正とするか（BA が照合、PO が決定、期限は辞書を作るときか 140、追跡は PJR-TN43）。","F002・F003・F005: 同時刻の並べ方は `src/exec/events.ts` のイベント記録の読み込みを正本とし、業務の言葉で書いた。rulebook が関数の実行を業務の記述として載せることを禁じるため、関数名は書いていない。","F004: 検証手順やテストファイルへの参照は足していない。rulebook は STSD に検証の章を求めておらず、テストファイルはこのタスクで参照してよい資料に入っていないため。","再 grade（`grade run --target deliverable`）は executor の sandbox では流していない。個票の作業内容の 4 行目は open のままで、orchestrator が流して結果を対応結果に書く。","`docs/ja/projects/prj-0001/controls/project-register/events/pjr-2c9w.yaml` の差分は executor が触ったものではない（runner 側の変更と思われる）。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（既存の based_on 未作成の WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め全件 valid"}]}
+</specdojo_executor_evidence>
