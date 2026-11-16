@@ -52,7 +52,7 @@ specdojo:
 | 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）      | UX   | done | 2026-11-16 executor が F001〜F004 を取り込んだ                                                          |
 | 6   | 直した後に grade し直して結果を書く（その次の回）          | UX   | done | 2026-11-16 10:2x orchestrator が型の grade（needs-work 90 点（前回 90 点）・指摘 4 件（すべて minor）） |
 | 7   | 10:21 の再 grade の minor の指摘を取り込んで直す（3 回目） | UX   | done | 2026-11-16 executor が F001〜F004 を取り込んだ（grade の記録では 4 件とも major）                       |
-| 8   | 直した後に grade し直して結果を書く（3 回目）              | UX   | open | 再 grade は agent CLI を起動するため orchestrator が流す                                                |
+| 8   | 直した後に grade し直して結果を書く（3 回目）              | UX   | done | 2026-11-16 10:38 orchestrator が型の grade（pass 99 点）                                                |
 
 ## 5. 対応結果
 
@@ -131,6 +131,8 @@ specdojo:
 
 - 翌週の扱い: 前回の締めの版と販売数を引き継いで前週比だけを直す案もあった。ただ、それでは「出力時点の最新の確認版を使う」規則に例外が生まれ、締め未確定の日を含む週では、引き継いだ値が記録と合わなくなる。そこで、続けて再出力する週も同じ規則で数え直し、販売数が変わる間は再出力を続けることにした。
 - 止める条件: 前週比と「比較不可」の判定は前週の販売数・印・販売件数の不一致の日だけで決まる。このため、それらが変わらなかった週で止めれば、それより後の週は影響を受けない。
+
+3 回目の再 grade の結果（2026-11-16 10:38、orchestrator が実行）: pass 99 点（前回 needs-work 90 点）・指摘 1 件（minor）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml`。
 
 ## 6. 関連ドキュメント
 
