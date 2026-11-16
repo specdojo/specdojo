@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-97ke-night-child-run-resume
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-11-13T14:08:07Z"
+  completed_at: "2026-11-16T13:32:03Z"
+  conclusion: 本体からの再開の前に job の branch から wait の記録を取り込むようにした。job の review より先に他の成果が入る点は利用者が受け入れ、回避の手順を運用メモに書いた
 ---
 
 # PJR-97KE 夜間の job の中で作られた子の run を、日中に --resume できない
