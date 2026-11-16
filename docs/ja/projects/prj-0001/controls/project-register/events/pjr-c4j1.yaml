@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7cb7e4feac5c436d8f9039a83fda60ce
+  ts: "2026-11-16T11:00:21Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 区分ごとの build を build --only にまとめる
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: input
+      from: ""
+      to: '["PJR-C5AF のまとめる候補: index・catalog・schedule・register・dashboard・yaml-pages の build を、利用者には build と build --only `<区分>` で見せる。個別のコマンドは内部用か非推奨の別名にする。hook や job が呼ぶ個別の build の入口を確かめてから進める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-C5AF"]'
+    - field: commit_type
+      from: ""
+      to: refactor
+    - field: commit_scope
+      from: ""
+      to: cli

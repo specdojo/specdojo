@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c3064114ee4e4892a5d3e9370002ae69
+  ts: "2026-11-16T11:00:19Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 場所を表示する where を 1 つのコマンドにまとめる
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: input
+      from: ""
+      to: '["PJR-C5AF のまとめる候補: exec・catalog・schedule・timeline・job・routine の where（6 つ）を、specdojo where `<種類>` か project の下の 1 つにまとめる。古いものは非推奨の別名として 1 版残す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-C5AF"]'
+    - field: commit_type
+      from: ""
+      to: refactor
+    - field: commit_scope
+      from: ""
+      to: cli

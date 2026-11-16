@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_85341586433140158a5fdccd2fabd411
+  ts: "2026-11-16T11:00:16Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 使われていない・移行用・非推奨のコマンドを非推奨にし、次の版で消す
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: input
+      from: ""
+      to: '["PJR-C5AF の消す候補: timeline where・build、exec note・link・estimate、exec migrate-records・grade migrate・register migrate・config migrate-members","次の版で help と実行時に非推奨の警告を出し、代わりの操作を示す。その次の版で消す。消す前に、利用者のリポジトリとガイドでの使われ方をもう一度確かめる"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-C5AF"]'
+    - field: commit_type
+      from: ""
+      to: refactor
+    - field: commit_scope
+      from: ""
+      to: cli
