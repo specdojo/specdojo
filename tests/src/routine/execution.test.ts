@@ -163,3 +163,99 @@ describe("routine execution persistence", () => {
     expect(existsSync(paths.lockPath)).toBe(false);
   });
 });
+
+async function runDue() {
+  process.exitCode = undefined;
+  const program = new Command();
+  registerRoutineCommands(program);
+  await program.parseAsync(["node", "specdojo", "routine", "run", "--project", "test", "--due"]);
+}
+
+function mockJobSpawns(outcomes: Array<{ status: number; stdout: string }>) {
+  const calls: string[][] = [];
+  vi.mocked(spawnSync).mockImplementation((command, args) => {
+    if (command === "git")
+      return { pid: 1, output: [], signal: null, status: 128, stdout: "", stderr: "" };
+    calls.push([...((args as readonly string[] | undefined) ?? [])]);
+    const outcome = outcomes[Math.min(calls.length - 1, outcomes.length - 1)];
+    return { pid: 1, output: [], signal: null, stderr: "", ...outcome };
+  });
+  return calls;
+}
+
+function readHistory(runsPath: string): Array<Record<string, unknown>> {
+  return readFileSync(runsPath, "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line) as Record<string, unknown>);
+}
+
+const busy = { status: 75, stdout: "[run] skipped: exec busy\n" };
+const noop = { status: 0, stdout: "[routine-job] noop state=noop\n" };
+
+describe("routine busy skip retry", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("re-runs the busy-skipped cron occurrence on the next --due when missed_run is latest", async () => {
+    const { repo, paths } = fixture("  kind: job\n  job: job-empty");
+    writeFileSync(
+      join(repo, "routines/rtn-test.yaml"),
+      "id: rtn-test\ntrigger:\n  cron: 0 9 * * *\n  timezone: UTC\npolicy:\n  missed_run: latest\naction:\n  kind: job\n  job: job-empty\n",
+    );
+    const calls = mockJobSpawns([busy, noop]);
+    vi.useFakeTimers({ now: new Date("2026-11-16T09:30:00Z"), toFake: ["Date"] });
+
+    await runDue();
+    vi.setSystemTime(new Date("2026-11-16T10:30:00Z"));
+    await runDue();
+    await runDue();
+
+    expect(calls).toHaveLength(2);
+    expect(calls.map((args) => args[args.indexOf("--scheduled-at") + 1])).toEqual([
+      "2026-11-16T09:00:00.000Z",
+      "2026-11-16T09:00:00.000Z",
+    ]);
+    expect(readHistory(paths.runsPath)).toMatchObject([
+      { result: "skipped", skip_reason: "busy", retry_pending: true },
+      { result: "success", scheduled_for: "2026-11-16T09:00:00.000Z" },
+    ]);
+    const state = JSON.parse(readFileSync(paths.statePath, "utf8"));
+    expect(state.routines["rtn-test"]).toMatchObject({
+      last_result: "success",
+      last_scheduled_for: "2026-11-16T09:00:00.000Z",
+    });
+    expect(state.routines["rtn-test"].busy_skip_count).toBeUndefined();
+    expect(process.exitCode).toBeUndefined();
+  });
+
+  it("makes a busy-skipped interval routine due on the next --due", async () => {
+    const { paths } = fixture("  kind: job\n  job: job-empty");
+    const calls = mockJobSpawns([busy, noop]);
+
+    await runDue();
+    await runDue();
+    await runDue();
+
+    expect(calls).toHaveLength(2);
+    expect(readHistory(paths.runsPath).map((entry) => entry.result)).toEqual([
+      "skipped",
+      "success",
+    ]);
+  });
+
+  it("does not re-run an occurrence skipped by the Job precondition", async () => {
+    const { paths } = fixture("  kind: job\n  job: job-empty");
+    const calls = mockJobSpawns([{ status: 75, stdout: "Job skipped: job-empty (no targets)\n" }]);
+
+    await runDue();
+    await runDue();
+
+    expect(calls).toHaveLength(1);
+    expect(readHistory(paths.runsPath)).toMatchObject([
+      { result: "skipped", skip_reason: "precondition" },
+    ]);
+    expect(readHistory(paths.runsPath)[0].retry_pending).toBeUndefined();
+  });
+});

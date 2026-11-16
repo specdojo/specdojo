@@ -64,3 +64,19 @@
       from: "-"
       to: "parent validation failed: lint-mermaid, test-integration"
   previous_event_id: reg_8f8954d9b9bb44ba99f583c83adaa8e3
+- v: 1
+  id: reg_fc5172ca834e43888b074f4ff402a6ac
+  ts: "2026-11-16T12:57:01Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-mermaid, test-integration"
+      to: "-"
+  previous_event_id: reg_4c9ff3e8e4a74024812d6ddf2dd6a193

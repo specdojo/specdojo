@@ -19,7 +19,7 @@ import {
 import {
   cronOccurrences,
   isRecord,
-  isRoutineDue,
+  isRoutineEntryDue,
   isRoutineYamlFile,
   isoWeek,
   loadRoutines,
@@ -33,6 +33,7 @@ import {
   type RoutineJobAction,
   type RoutinePaths,
   type RoutineRunHistoryEntry,
+  type RoutineSkipReason,
   type RoutineSpecdojoAction,
   type RoutineStateEntry,
   type RoutineStateFile,
@@ -41,11 +42,13 @@ import { selfRunArgs } from "../shared/spawn-self.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { migrateRoutineStorage } from "./storage.js";
 import { recordRoutineFailure } from "./failure.js";
+import { formatRoutineStatus, readRoutineHistoryLenient } from "./status.js";
 
 export {
   cronMatches,
   cronOccurrences,
   isRoutineDue,
+  isRoutineEntryDue,
   isoWeek,
   loadRoutines,
   parseCronExpression,
@@ -65,6 +68,7 @@ export type {
   RoutineJobAction,
   RoutinePaths,
   RoutineRunHistoryEntry,
+  RoutineSkipReason,
   RoutineSpecdojoAction,
   RoutineStateEntry,
   RoutineStateResult,
@@ -124,6 +128,61 @@ export function recordRoutineCompletion(
   if (!reason) delete next.last_reason;
   if (!actionResults) delete next.last_action_results;
   return next;
+}
+
+// busy skip の回を流し直す上限（同じ routine で続いた回数）。毎時の `routine run --due` で
+// おおよそ 1 日ぶん試し、超えたらその回を済んだ回として扱い、理由を last_reason と履歴に残す。
+export const ROUTINE_BUSY_RETRY_LIMIT = 24;
+
+export type RoutineSkipSettlement = {
+  entry: RoutineStateEntry;
+  skipReason?: RoutineSkipReason;
+  retryPending: boolean;
+};
+
+/**
+ * 完了を記録した state を、skip の内訳に合わせて確定する。別の run の lock による skip（busy）は
+ * 済んだ回として扱わず、cron は last_scheduled_for を開始前の値へ戻し、interval は
+ * busy_skip_count を正にして次の `routine run --due` で due にする。missed_run が skip の cron、
+ * Job の前提条件による skip、skipped 以外の結果は従来どおり済んだ回として扱う。
+ */
+export function settleRoutineSkip(
+  doc: RoutineDoc,
+  previous: RoutineStateEntry | undefined,
+  completed: RoutineStateEntry,
+  result: RoutineExecutionResult,
+  busySkipped: boolean,
+): RoutineSkipSettlement {
+  const entry: RoutineStateEntry = { ...completed };
+  delete entry.busy_skip_count;
+  delete entry.last_skip_reason;
+  if (result !== "skipped") return { entry, retryPending: false };
+
+  const skipReason: RoutineSkipReason = busySkipped ? "busy" : "precondition";
+  entry.last_skip_reason = skipReason;
+  if (!busySkipped || (doc.trigger && doc.policy?.missed_run === "skip")) {
+    return { entry, skipReason, retryPending: false };
+  }
+
+  const count = (previous?.busy_skip_count ?? 0) + 1;
+  if (count > ROUTINE_BUSY_RETRY_LIMIT) {
+    const note = `busy skip retry limit (${ROUTINE_BUSY_RETRY_LIMIT}) reached; occurrence not retried`;
+    entry.last_reason = entry.last_reason ? `${entry.last_reason}; ${note}` : note;
+    return { entry, skipReason, retryPending: false };
+  }
+
+  entry.busy_skip_count = count;
+  if (doc.trigger) {
+    if (previous?.last_scheduled_for) entry.last_scheduled_for = previous.last_scheduled_for;
+    else delete entry.last_scheduled_for;
+  }
+  return { entry, skipReason, retryPending: true };
+}
+
+// exec run / resume が別の run の lock で skip したときの出力（src/exec/run/shared.ts）。
+// Job の前提条件による skip も同じ終了コードを返すため、出力で区別する。
+export function isExecBusySkipOutput(output: string): boolean {
+  return /^\[[a-z-]+\] skipped: exec busy$/m.test(output);
 }
 
 export function appendRoutineRunHistory(runsPath: string, entry: RoutineRunHistoryEntry): void {
@@ -187,11 +246,17 @@ function ensureFreshDistForRoutineRun(): boolean {
 let lastRoutineSpawnReason: string | undefined;
 let lastRoutineSpawnRunId: string | undefined;
 let lastRoutineSpawnNoop = false;
+let lastRoutineSpawnBusy = false;
 
-function spawnSelf(args: string[]): RoutineExecutionResult {
+function resetRoutineSpawnMarkers(): void {
   lastRoutineSpawnReason = undefined;
   lastRoutineSpawnRunId = undefined;
   lastRoutineSpawnNoop = false;
+  lastRoutineSpawnBusy = false;
+}
+
+function spawnSelf(args: string[]): RoutineExecutionResult {
+  resetRoutineSpawnMarkers();
   const [exe, fullArgs] = selfRunArgs(args);
   const result = spawnSync(exe, fullArgs, {
     encoding: "utf8",
@@ -216,7 +281,10 @@ function spawnSelf(args: string[]): RoutineExecutionResult {
       .filter(Boolean)
       .at(-1);
   }
-  if (result.status === ROUTINE_BUSY_SKIP_EXIT_CODE) return "skipped";
+  if (result.status === ROUTINE_BUSY_SKIP_EXIT_CODE) {
+    lastRoutineSpawnBusy = isExecBusySkipOutput(output);
+    return "skipped";
+  }
   if (result.status === 0 && marker?.match(/\bstate=([^\s]+)/)?.[1] === "partial") {
     return "partial";
   }
@@ -312,9 +380,7 @@ function executeRoutineAction(
       ? buildSpecdojoActionArgs(action, projectId)
       : buildJobRunArgs(action, projectId, scheduledAt, doc.trigger?.timezone ?? "UTC");
   if (dryRun) {
-    lastRoutineSpawnReason = undefined;
-    lastRoutineSpawnRunId = undefined;
-    lastRoutineSpawnNoop = false;
+    resetRoutineSpawnMarkers();
     process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
     if (action.kind === "job") {
       try {
@@ -344,6 +410,8 @@ type RoutineRunResult = {
   actionResults?: RoutineActionResult[];
   jobRunIds: string[];
   reason?: string;
+  // いずれかの段が別の run の lock で skip した。
+  busySkipped: boolean;
 };
 
 function findJobRunId(
@@ -390,11 +458,10 @@ function executeRoutine(
   const multiple = Array.isArray(doc.action);
   const jobRunIds: string[] = [];
   const reasons: string[] = [];
+  let busySkipped = false;
   const actionResults = executeRoutineActions(actions, (action, index) => {
     if (multiple) process.stdout.write(`  action ${index}/${actions.length}: ${action.kind}\n`);
-    lastRoutineSpawnReason = undefined;
-    lastRoutineSpawnRunId = undefined;
-    lastRoutineSpawnNoop = false;
+    resetRoutineSpawnMarkers();
     let result: RoutineExecutionResult;
     try {
       result = executeRoutineAction(doc, action, projectId, dryRun, scheduledAt);
@@ -406,6 +473,7 @@ function executeRoutine(
       lastRoutineSpawnRunId ?? (dryRun ? undefined : findJobRunId(action, projectId, scheduledAt));
     if (runId) jobRunIds.push(runId);
     if (lastRoutineSpawnReason) reasons.push(lastRoutineSpawnReason);
+    if (result === "skipped" && lastRoutineSpawnBusy) busySkipped = true;
     if (multiple) process.stdout.write(`  action ${index}/${actions.length}: ${result}\n`);
     return result;
   });
@@ -419,6 +487,7 @@ function executeRoutine(
     ...(multiple ? { actionResults } : {}),
     jobRunIds: [...new Set(jobRunIds)],
     ...(reasons.length ? { reason: reasons.join("; ") } : {}),
+    busySkipped,
   };
 }
 
@@ -510,15 +579,9 @@ export function registerRoutineCommands(program: Command): void {
         kind: routineActionKindLabel(doc.action),
         lastRun: formatRoutineLastRun(state.routines[doc.id]),
         due:
-          doc.enabled === false
-            ? "-"
-            : doc.trigger
-              ? cronOccurrences(doc, state.routines[doc.id]?.last_scheduled_for, now).length > 0
-                ? "due"
-                : "-"
-              : isRoutineDue(doc, state.routines[doc.id]?.last_run, now)
-                ? "due"
-                : "-",
+          doc.enabled !== false && isRoutineEntryDue(doc, state.routines[doc.id], now)
+            ? "due"
+            : "-",
       }));
 
       const idWidth = Math.max(2, ...rows.map((row) => row.id.length));
@@ -530,6 +593,43 @@ export function registerRoutineCommands(program: Command): void {
         );
       }
       if (errors.length > 0) process.exitCode = 1;
+    } catch (error) {
+      printCommandError(error);
+    }
+  });
+
+  // --- status ---
+  const statusCmd = routine
+    .command("status")
+    .description("Show each routine's state, busy-skip retries, and recent runs");
+  addProjectOption(statusCmd);
+  statusCmd.option("--id <routineId>", "Show only this routine");
+  statusCmd.option("--limit <count>", "Number of recent runs to show per routine", "5");
+  statusCmd.action((opts) => {
+    try {
+      const limit = Number(opts.limit);
+      if (!Number.isSafeInteger(limit) || limit < 0) {
+        throw new Error(`--limit must be a non-negative integer (got "${String(opts.limit)}")`);
+      }
+      const paths = resolveRoutinePaths(opts);
+      const { routines, errors } = loadRoutines(paths.routinesPath);
+      for (const message of errors) {
+        process.stderr.write(`ERROR: ${message}\n`);
+      }
+      if (errors.length > 0) process.exitCode = 1;
+      const routineId = typeof opts.id === "string" ? opts.id.trim() : "";
+      const targets = routineId ? routines.filter((entry) => entry.doc.id === routineId) : routines;
+      if (routineId && targets.length === 0) {
+        throw new Error(`Routine not found: ${routineId} (in ${paths.routinesPath})`);
+      }
+      migrateRoutineStorage(paths.routinesPath);
+      const state = readRoutineState(paths.statePath);
+      const history = readRoutineHistoryLenient(paths.runsPath);
+      const now = new Date();
+      for (const { doc } of targets) {
+        const lines = formatRoutineStatus(doc, state.routines[doc.id], history, now, limit);
+        process.stdout.write(`${lines.join("\n")}\n`);
+      }
     } catch (error) {
       printCommandError(error);
     }
@@ -581,9 +681,7 @@ export function registerRoutineCommands(program: Command): void {
               (scheduledAt) => ({ entry, scheduledAt }),
             );
           }
-          return isRoutineDue(entry.doc, stateEntry?.last_run, now)
-            ? [{ entry, scheduledAt: now }]
-            : [];
+          return isRoutineEntryDue(entry.doc, stateEntry, now) ? [{ entry, scheduledAt: now }] : [];
         });
       }
 
@@ -604,8 +702,18 @@ export function registerRoutineCommands(program: Command): void {
       let failed = 0;
       let partial = 0;
       let skipped = 0;
+      // busy skip した routine の残りの回（missed_run: all）は、この実行では流さない。
+      // 後の回だけ進めると last_scheduled_for が skip した回を越え、その回が流し直されなくなる。
+      const busyRoutineIds = new Set<string>();
       for (const selectedRun of selected) {
         const { entry, scheduledAt } = selectedRun;
+        if (busyRoutineIds.has(entry.doc.id)) {
+          process.stdout.write(
+            `[routine] deferred ${entry.doc.id} ${scheduledAt.toISOString()}: earlier occurrence skipped as busy\n`,
+          );
+          continue;
+        }
+        const previousEntry = state.routines[entry.doc.id];
         const startedAt = nowUtcIsoSeconds();
         // 実行の試行自体を last_run として先に記録する。失敗した routine が次の
         // 発火まで再試行されない代わりに、失敗が高頻度で連続発火することを防ぐ。
@@ -627,6 +735,7 @@ export function registerRoutineCommands(program: Command): void {
             result: "failure",
             jobRunIds: [],
             reason: error instanceof Error ? error.message : String(error),
+            busySkipped: false,
           };
         }
         const { result } = execution;
@@ -638,13 +747,27 @@ export function registerRoutineCommands(program: Command): void {
         }
 
         if (!dryRun) {
-          state.routines[entry.doc.id] = recordRoutineCompletion(
-            state.routines[entry.doc.id],
+          const settlement = settleRoutineSkip(
+            entry.doc,
+            previousEntry,
+            recordRoutineCompletion(
+              state.routines[entry.doc.id],
+              result,
+              execution.reason,
+              execution.actionResults,
+            ),
             result,
-            execution.reason,
-            execution.actionResults,
+            execution.busySkipped,
           );
+          state.routines[entry.doc.id] = settlement.entry;
           writeRoutineState(paths, state);
+          if (settlement.retryPending) {
+            busyRoutineIds.add(entry.doc.id);
+            process.stdout.write(
+              `[routine] ${entry.doc.id}: busy skip ${settlement.entry.busy_skip_count}/${ROUTINE_BUSY_RETRY_LIMIT}, retried on the next routine run --due\n`,
+            );
+          }
+          const historyReason = settlement.entry.last_reason;
           const history: RoutineRunHistoryEntry = {
             version: 1,
             routine_id: entry.doc.id,
@@ -653,7 +776,9 @@ export function registerRoutineCommands(program: Command): void {
             completed_at: nowUtcIsoSeconds(),
             result,
             job_run_ids: execution.jobRunIds,
-            ...(execution.reason ? { reason: execution.reason } : {}),
+            ...(historyReason ? { reason: historyReason } : {}),
+            ...(settlement.skipReason ? { skip_reason: settlement.skipReason } : {}),
+            ...(settlement.retryPending ? { retry_pending: true } : {}),
           };
           appendRoutineRunHistory(paths.runsPath, history);
           recordRoutineFailure(specdojoRootDir(), paths.failuresPath, history);

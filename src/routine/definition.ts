@@ -76,7 +76,14 @@ export type RoutineStateEntry = {
   last_reason?: string;
   last_scheduled_for?: string;
   last_action_results?: RoutineActionResult[];
+  last_skip_reason?: RoutineSkipReason;
+  // 別の run が lock を持っていて skip した回が続いた数。正の値の間は、空いた次の
+  // `routine run --due` でその回を流し直す（cron は last_scheduled_for を進めない）。
+  busy_skip_count?: number;
 };
+
+// skipped の内訳。busy は別の run の lock による skip、precondition は Job の前提条件による skip。
+export type RoutineSkipReason = "busy" | "precondition";
 
 export type RoutineActionResult = {
   index: number;
@@ -93,6 +100,9 @@ export type RoutineRunHistoryEntry = {
   result: RoutineExecutionResult;
   job_run_ids: string[];
   reason?: string;
+  skip_reason?: RoutineSkipReason;
+  // busy skip の回を次の `routine run --due` で流し直すとき true。
+  retry_pending?: boolean;
 };
 
 export function routineActionKindLabel(action: RoutineActionList): string {
@@ -133,6 +143,18 @@ export function isRoutineDue(doc: RoutineDoc, lastRun: string | undefined, now: 
   const last = new Date(lastRun);
   if (Number.isNaN(last.getTime())) return true;
   return now.getTime() - last.getTime() >= parseIntervalMs(doc.interval);
+}
+
+// state 込みの due 判定。busy skip の流し直し待ち（busy_skip_count が正）の interval routine は
+// interval の経過を待たずに due とする。cron は last_scheduled_for を進めないことで流し直す。
+export function isRoutineEntryDue(
+  doc: RoutineDoc,
+  entry: { last_run?: string; last_scheduled_for?: string; busy_skip_count?: number } | undefined,
+  now: Date,
+): boolean {
+  if (doc.trigger) return cronOccurrences(doc, entry?.last_scheduled_for, now).length > 0;
+  if ((entry?.busy_skip_count ?? 0) > 0) return true;
+  return isRoutineDue(doc, entry?.last_run, now);
 }
 
 type CronField = Set<number>;
