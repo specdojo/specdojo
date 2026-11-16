@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { dump } from "js-yaml";
+import { dump } from "../../../src/shared/yaml.js";
 import { describe, expect, it } from "vitest";
 import { buildInitialStateFromStrategy } from "../../../src/exec/schedule/initial.js";
 import { buildScheduleIndex } from "../../../src/exec/schedule/index.js";

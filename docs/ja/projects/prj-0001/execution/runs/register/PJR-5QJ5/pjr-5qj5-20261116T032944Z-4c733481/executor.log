@@ -1,0 +1,30 @@
+PJR-5QJ5 は完了しました。引用符のない `task_suffix: 090` を、`validate:schema:file`・strategy のテスト・実装の読み込みのどれもが文字列 `"090"` として読むようになりました。影響のある単体テストは通っていますが、`npm run check` 全体と親の検証はまだ結果が出ていません。
+
+**原因**
+- `validate:schema:file`（`packages/docs-lint/src/yaml.ts`）と実装（`src/shared/yaml.ts` の `readYaml`）は、js-yaml 5 の YAML 1.1 互換の読み方を使っていて、`090` を `"090"` として読みます。
+- strategy のテストは `js-yaml` の `load` を直接読み込んでいたため、js-yaml 5 の既定の読み方になり、`090` を数値 `90` として読んでいました。
+
+**変更したファイル**
+- テスト 4 本と schema 検証の helper 1 本を、`src/shared/yaml.ts` の読み書きに切り替えました。
+  - `tests/docs/specdojo/schemas/sch-strategy-schema.test.ts`
+  - `tests/src/schedule/strategy-generate.test.ts`
+  - `tests/src/schedule/command.test.ts`
+  - `tests/src/schedule/build.test.ts`
+  - `tests/helpers/schema.ts`
+- 回帰テストを 2 つ足しました。
+  - `sch-strategy-schema.test.ts`: 3 通りの読み込み（docs-lint・テスト・`loadStrategyDocument`）がどれも `"090"` を返し、schema を通ることを確かめます。
+  - `strategy-generate.test.ts`: generate の出力の `task_suffix` がすべて `"NNN"` のように引用符付きになることを確かめます。
+- 個票の「対応結果」に、原因・対応・回帰テスト・申し送りを書きました。
+- `dumpStrategy` はもともと引用符を付けて書いていたので、本番コードは変えていません。
+
+**検証**
+- `tests/docs/specdojo/schemas` と `tests/src/schedule` の単体テスト: 8 ファイル、129 件すべて成功。
+- `tests/helpers/schema.ts` を使うテスト: 15 ファイル、400 件すべて成功。
+- prettier の整形確認、個票の markdownlint、`npm run validate:history-links`: いずれも問題なし。
+
+**申し送り**
+`tests/src/catalog/**` など、ほかのテストにも `js-yaml` の `load` を直接読み込むものが残っています。再発を防ぐには、テストでの直接 import を ESLint の `no-restricted-imports` で禁じる別の項目を起票するとよいです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"strategy のテストと schema 検証の helper の YAML の読み書きを src/shared/yaml.ts（YAML 1.1 互換 schema）に切り替え、validate:schema:file・テスト・実装の読み込みがそろうようにした。引用符のない task_suffix: 090 が 3 通りの読み込みでどれも \"090\" になり schema を通ること、strategy generate の出力の task_suffix が引用符付きになることを回帰テストで確かめる。個票の対応結果を更新した。","handoff":["`dumpStrategy` はもともと `task_suffix` を引用符付きで書いていたため、本番コードは変えていない。回帰テストで出力を確かめている。","`tests/src/catalog/**` など、ほかのテストにも `js-yaml` の `load` を直接読み込むものが残る。再発防止として、テストでの `js-yaml` の直接 import を ESLint の `no-restricted-imports` で禁じる別の項目の起票を提案する。","個票の完了条件にある `npm run check` 全体は executor では実行していない。親の検証（lint・typecheck・test-unit・test-integration など）の結果で確かめる。"],"validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/docs/specdojo/schemas tests/src/schedule","status":"passed","summary":"8 files / 129 tests passed"},{"command":"npx vitest run (tests/helpers/schema.ts を使う 15 ファイル)","status":"passed","summary":"15 files / 400 tests passed"},{"command":"npx prettier --check (変更した 6 ファイル)","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-5qj5-schema-validate-yaml-version-mismatch.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"all history files valid"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"no YAML changed","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>
