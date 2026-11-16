@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-15T14:35:45Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-16T00:53:06Z"
+  conclusion: cdfd-template の図の枠を D2 にし、型の再 grade で pass（100 点）
   derived_from:
     - PJR-PMK6
   commit_type: docs
