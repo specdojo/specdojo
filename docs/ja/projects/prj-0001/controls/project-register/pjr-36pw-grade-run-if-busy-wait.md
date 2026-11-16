@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: low
   registered_at: "2026-11-13T14:08:09Z"
+  completed_at: "2026-11-16T03:39:30Z"
+  conclusion: PJR-E4R5 の grade run --if-busy fail|wait で解消した
 ---
 
 # PJR-36PW grade run が busy のとき、待つ選択肢がない
