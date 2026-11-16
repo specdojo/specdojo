@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-1y1m-commit-scope-excluded-changes-silent
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   registered_at: "2026-11-13T21:50:32Z"
+  completed_at: "2026-11-16T13:30:17Z"
+  conclusion: PJR-160D の停止の仕組みを保ち、止めた理由に対象外のファイルをすべて残すようにした。kata-wave-1 の 3 つの形を回帰テストで再現した
 ---
 
 # PJR-1Y1M executor の変更が commit の対象外になっても、統合が黙って進む
