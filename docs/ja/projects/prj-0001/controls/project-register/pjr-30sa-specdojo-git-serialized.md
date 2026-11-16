@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-30sa-specdojo-git-serialized
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T03:13:37Z"
   due_on: null
+  completed_at: "2026-11-16T13:29:21Z"
+  conclusion: specdojo git を足し、git の書き込みを runner と同じロックに並べた。lefthook の警告とオーケストレーターの方針は承認のもと feature ブランチで反映した
   derived_from:
     - PJR-G90K
   commit_type: feat

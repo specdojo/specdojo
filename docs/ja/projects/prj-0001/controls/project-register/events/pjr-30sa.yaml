@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_802c1a092d234f6089afa25060156d2d
+- v: 1
+  id: reg_1f0d69cbb0014e7bb658d7b5225f6499
+  ts: "2026-11-16T13:29:21Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: specdojo git を足し、git の書き込みを runner と同じロックに並べた。lefthook の警告とオーケストレーターの方針は承認のもと feature ブランチで反映した
+  previous_event_id: reg_61fcea390da24099b047ea35afb8d5e4
