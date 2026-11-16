@@ -105,3 +105,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_280c9a904a5f4292ab8db6095992af52
+- v: 1
+  id: reg_a41b4781c92443e3a548ad430b0c62ae
+  ts: "2026-11-16T14:54:09Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の手直しの統合後に再 grade し、完了条件をすべて満たして pass になったことを grade の結果と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: stsd-task-execution を grade の指摘で直し、再 grade で pass（96 点、完了条件 5/5）になった。成果物の確定は人の 140 で行う
+  previous_event_id: reg_a3eb8322e9ed47c7bfc58b3715f6b82e

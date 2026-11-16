@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:22:46Z"
+  completed_at: "2026-11-16T14:54:09Z"
+  conclusion: stsd-task-execution を grade の指摘で直し、再 grade で pass（96 点、完了条件 5/5）になった。成果物の確定は人の 140 で行う
   depends_on:
     - PJR-M495
     - PJR-T4G3
