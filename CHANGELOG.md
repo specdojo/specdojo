@@ -4,10 +4,6 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
-### 修正
-
-- runner の統合・記帳の git 操作が、別のプロセスの `index.lock` を既定で 20 分まで待つようにしました。待ち時間は exec-defaults の `run.git_index_lock_wait_seconds` で変えられます。待っている間は 30 秒ごとに経過を出力し、lock が残っているのに git のプロセスが動いていない古い lock では上限を待たずに失敗します（PJR-964D）。
-
 ## [0.8.0] - 2026-11-16
 
 同梱パッケージは `@specdojo/docs-site` 0.5.0 と `@specdojo/docs-lint` 0.4.1 を同時に公開します。docs-site 0.5.0 は、対話のコードブロックの描画（`chat`・`chat tui`、PJR-GZ42）と、型の文書から作るメニュー（PJR-C8J8）を含みます。docs-lint 0.4.1 は、remark の無視対象の扱い（PJR-FTRC）と履歴リンクの検査の対象の更新（PJR-C4KF）を含みます。
@@ -41,6 +37,8 @@ SpecDojo の利用者に影響する変更を記録します。
 - GUI の色・文字・余白、部品、レイアウト、状態表示、アクセシビリティを定めるデザインシステム（DSS）の型と、駄菓子屋の販売管理 GUI の完成例を追加しました（PJR-JB6S）。
 
 - pre-push で、push する commit の実行記録の配置（CI の Check execution record layout と同じ `exec validate --records-only`）を検査するようにしました。`exec validate --records-only --commit <rev>` で任意の commit を検査できます（PJR-1ZQK）。
+
+- project を別のリポジトリへ移す手順と安全確認をまとめたガイドを追加しました（PJR-7RZ4）。
 
 ### 変更
 
@@ -101,6 +99,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 用語集の見出しをガイドと CLI で使う呼び名にそろえ、日本語の旧称を別名として残しました（PJR-EBN6）。オーケストレーターは、確認で直す点が出たとき同じ目的・同じファイルの手直しを新しく起票せず、元の todo に直す点を足して流し直します（PJR-BFW0）。CHANGELOG に書く決まりは、プロジェクトの運用メモに従います（PJR-KSGC）。
 
+- 用語集の型（gl）を確定した用語集の実績に合わせ、英語の表記・注記・領域の分け方・ID を変えない決まり・参照の範囲を定め、駄菓子屋の完成例を広げました（PJR-BNK5）。
+
 ### 不具合修正
 
 - `register --commit` が、実行中に別タスクの記録した block event などを stage・commit に巻き込む問題を修正しました。更新するパスだけを対象とし、失敗と中断時は自分の stage だけを解除します。worktree 統合では無関係な stage 済み変更も merge 前に検出し、対象パスと解除手順を表示します（PJR-HQVE）。
@@ -144,6 +144,16 @@ SpecDojo の利用者に影響する変更を記録します。
 - 夜間の register の実行で子の worktree が入れ子になり、Job の環境が子の統合テストへ漏れて review・merge を飛ばす問題と、朝報告が文書の検査で止まる問題を直しました（PJR-0X0S・A7CR・RX14・MJEH）。schedule の `--auto --parallel` の統合が index に残った記録のファイルで止まる問題を直しました（PJR-HQVE）。
 
 - `docs:build` が既定のメモリの上限で止まる問題を直しました（PJR-2SRR）。
+
+- runner の統合・記帳の git 操作が、別のプロセスの `index.lock` を既定で 20 分まで待つようにしました。待ち時間は exec-defaults の `run.git_index_lock_wait_seconds` で変えられます。待っている間は 30 秒ごとに経過を出力し、lock が残っているのに git のプロセスが動いていない古い lock では上限を待たずに失敗します（PJR-964D）。
+
+- schedule の review を再開するとき（reporter・executor からの再開）、runner が agent の前に grade を確かめ、最新の評価結果を exec branch に取り込むようにしました。統合の段から再開したときの完了の前の確認を、claim の持ち主で判定します（PJR-ZSRD）。
+
+- schedule の review の前に流す grade の再試行の状態を run ごとに分け、並べて流した review どうしが grade の共有ファイルを取り合って統合の前に止まる問題を直しました（PJR-X04G）。
+
+- `validate:schema:file`・strategy の読み込み・テストで YAML の読み方（YAML 1.1 互換）をそろえ、引用符のない `task_suffix: 090` を同じように読むようにしました（PJR-5QJ5）。
+
+- テストと検証が `/tmp` の直下に `init` の出力を残し、ほかのテストを落とす問題を直しました（PJR-2ZN4）。
 
 ## [0.7.0] - 2026-11-03
 
