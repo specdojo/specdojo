@@ -57,3 +57,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_8b423482f0b0465588ca57a342f12cb4
+- v: 1
+  id: reg_7b4f3b713a864ea2be1141bc67c689fe
+  ts: "2026-11-16T23:35:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-integration"
+  previous_event_id: reg_bdf648be167f4c2fb0fc5495b4d2c433

@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T13:17:54Z"
+  block_reason: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
   derived_from:
     - PJR-SJ3Q
   commit_type: docs
