@@ -48,3 +48,16 @@
       from: "-"
       to: medium
   previous_event_id: reg_5039fc066b6a413f9a5f5a5bb5e0efa7
+- v: 1
+  id: reg_ad2f0305a9d74165a30d3ee798d3a974
+  ts: "2026-11-16T03:33:06Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f93eaa1c58924ae78734bde8a643a227
