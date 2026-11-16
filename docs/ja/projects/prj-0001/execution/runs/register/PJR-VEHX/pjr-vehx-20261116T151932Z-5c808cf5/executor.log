@@ -1,0 +1,25 @@
+sf-index の手直しは終わりました。直したのは `P-05`・`P-06`・`P-14` の対応のずれと、未決事項の追跡方法です。再 grade（`grade run --target deliverable`）は orchestrator が流すため、実行していません。そのため、grade の指摘が解消したかは、まだ確認できていません。
+
+**sf-index の変更**
+- **`P-05`・`P-06`（F005）:** カタログの区分どおり、`P-05` を定期実行の定義、`P-06` をジョブの定義とし、それぞれ `SF-ROUT-01`（`routine`）と `SF-ROUT-03`（`job`）に割り当てました。ジョブの実行は `P-07` に属するとし、`SF-ROUT-02` の参照先を `bps-task-edit` に変えました。`SF-ROUT-02` は ID の意味を変えないため `ROUT` に残し、ずれは表の後に注記しました。
+- **`P-14`（F006・F007）:** 新しい機能 ID は作っていません。運転要求の確定、競合判定、PDCA 要求の発行、実行状態の追跡を、既存の 5 つの機能に割り当てました。`SF-ORCH-01` は、起動とリポジトリの限定だけを担うと明記しました。
+- **照合表（F004・F008・F009）:** `depends_on` は作成前に読む代表の BPS で、網羅の根拠は照合表と各行の BPS である、と書き足しました。業務プロセス領域の列にも `P-14` の割り当て先を加えました。
+- **未決事項（F001〜F003）:** `Q-01` の照合は表の行ごとに行い、PM が PJR と Schedule で管理すると明記しました。Schedule のタスク ID は、確かめられる資料がないため書いていません。`Q-02` には、起票は PM が行うことと、未解決の間は承認範囲から切り出すことを足しました。
+- **公開範囲（F010）:** `_ASSUMPTION_` を外し、PO が承認時に確定する、という記述にしました。
+
+PO の判断（2026-11-15）、留保の追跡先 PJR-AK5V、`status: draft` は変えていません。
+
+**個票の更新:** 作業内容の No.4 を done にし、No.5（再 grade）は open のまま残しました。2026-11-17 の対応結果と残課題を追記しています。
+
+**検証:** markdownlint、`npm run validate:catalog`、`npm run validate:history-links` は通りました。catalog では、未作成の `clis-index`・`bds-index` について WARN が出ています。`lint:fm` などの共通検査は親 runner が実行します。
+
+`pjr-vehx.yaml` のイベントファイルにも差分がありますが、私は編集していません。
+
+**未解決の点**
+- `P-14` の割り当ては、BPS が未作成のなかで私が判断したものです。`bps-routine-register-schedule-cycle` ができた時点で、BA に `Q-01` で照合してもらう必要があります。
+- `ORCH` の代表 BPS の扱いは未起票です。PM の起票と PO の判断が要ります。
+- 実装には `git` コマンドがありますが、一覧に対応する機能の行がありません。機能として扱うかどうかは、ARC が次の改訂で決める必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sf-index の P-05・P-06・P-14 の対応と未決事項の追跡方法を直し、個票の作業内容と対応結果を更新した。再 grade は orchestrator が流すため実行していない。status は draft のまま。","handoff":["F005: `P-05` を定期実行の定義、`P-06` をジョブの定義とし、`SF-ROUT-01`（`routine`）と `SF-ROUT-03`（`job`）に割り当てた。ジョブ定義に従う Run の実行は `P-07` に属するとして、`SF-ROUT-02` の参照先を `bps-task-edit` に改めた。`SF-ROUT-02` は機能 ID の意味を変えないため `ROUT` に残し、ずれは表の後に注記した。","F006・F007: `P-14` の処理を既存の機能に割り当てた（運転要求の確定は `SF-ROUT-01`、競合判定と PDCA 要求の発行は `SF-EXEC-01`・`SF-ROUT-02`、実行状態の追跡は `SF-REG-01`・`SF-VIEW-01`）。`SF-ORCH-01` は起動とリポジトリの限定だけを担う。理由: 実装の CLI で `P-14` 専用の処理は `orchestrator launch` だけのため。BPS が未作成なので、`Q-01` で BA が `bps-routine-register-schedule-cycle` と照合する必要がある。","`Q-02`: `ORCH` の代表 BPS の扱いは未起票。PM が PJR に起票し、カタログの `depends_on` へ加えるか対象外とするかを PO が決める必要がある。","`Q-01`: 照合表の行ごとの照合作業を、PM が PJR-AK5V と Schedule へ接続する必要がある。Schedule のタスク ID は宣言された資料で確かめられないため、本書には書いていない。","実装（`src/specdojo.ts`）に `git` コマンドがあるが、一覧に対応する機能の行がない。機能として扱うかは ARC が次の改訂で判断する。","個票の作業内容 No.5（再 grade）は open のまま。再 grade（`grade run --target deliverable`）は orchestrator が流す。","作業ツリーに `controls/project-register/events/pjr-vehx.yaml` の差分があるが、executor は編集していない。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/product/010-business-specs/050-system-functions/sf-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-vehx-sf-index-rework-grade-findings.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:catalog","status":"passed","summary":"exit 0。未作成の clis-index・bds-index の based_on について WARN のみ"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含めて exit 0"},{"command":"npx prettier --write","status":"passed","summary":"変更した 2 ファイルを整形した"}]}
+</specdojo_executor_evidence>
