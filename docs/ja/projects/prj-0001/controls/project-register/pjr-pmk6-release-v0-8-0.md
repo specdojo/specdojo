@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-pmk6-release-v0-8-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: PO
   registered_at: "2026-11-11T11:58:00Z"
+  completed_at: "2026-11-16T11:13:58Z"
+  conclusion: 0.8.0 を公開した（specdojo 0.8.0、@specdojo/docs-site 0.5.0、@specdojo/docs-lint 0.4.1）。npm の latest と、npm から入れた版の init・kata show・docs-site の build を確かめた
   depends_on:
     - PJR-M18B
     - PJR-X05N
