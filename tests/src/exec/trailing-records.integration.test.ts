@@ -6,6 +6,7 @@ import { taskRecordPaths } from "../../../src/exec/run-records.js";
 import {
   branchOwnedRunRecordPaths,
   commitTrailingRunRecords,
+  reportTrailingRunRecords,
   selectTrailingRunRecords,
   TRAILING_RECORDS_COMMIT_SUBJECT,
   type TrailingRecordsContext,
@@ -15,6 +16,7 @@ import {
   mergeWorktreeIntoCurrent,
   worktreeStatusPaths,
 } from "../../../src/exec/worktree-ops.js";
+import { validateRunRecordLayoutAtCommit } from "../../../src/exec/validate-records-commit.js";
 import { gitOutput } from "../../../src/exec/worktree.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
@@ -159,6 +161,68 @@ describe("commitTrailingRunRecords", () => {
     expect(git(fixture.repo, "log", "-1", "--format=%s")).toBe(TRAILING_RECORDS_COMMIT_SUBJECT);
     // 人が書いたイベントは記帳する人が commit するため、作業ツリーに残す。
     expect(dirtyRecords(fixture)).toEqual(relativePaths(fixture, [release]));
+  });
+
+  it("leaves a run stopped at setup uncommitted so the committed tree passes the layout check", () => {
+    const fixture = setupRepository();
+    const taskId = "T-B-doc-010";
+    const block = writeEvent(fixture, taskId, "block", RUNNER);
+    // setup で止まった run は plan だけを残す。
+    const stopped = taskRecordPaths(
+      fixture.context.executionPath,
+      taskId,
+      `${taskId}-20261115T000000Z-aaaa`,
+    );
+    writeFile(stopped.plan, `# Plan ${taskId}\n`);
+    const completed = writeRunRecords(fixture, taskId, `${taskId}-20261115T010000Z-bbbb`);
+    writeFile(completed.evidence, "{}\n");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    const stderr = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+    const report = commitTrailingRunRecords(fixture.context);
+    reportTrailingRunRecords(report, "test");
+
+    expect(report.committed).toEqual(
+      relativePaths(fixture, [block, completed.plan, completed.result, completed.evidence]),
+    );
+    expect(report.incompleteRuns).toEqual(relativePaths(fixture, [stopped.directory]));
+    expect(dirtyRecords(fixture)).toEqual(relativePaths(fixture, [stopped.plan]));
+    expect(stderr.mock.calls.join("")).toContain(relativePaths(fixture, [stopped.directory])[0]);
+    expect(
+      validateRunRecordLayoutAtCommit({
+        repoRoot: fixture.repo,
+        executionPath: fixture.context.executionPath,
+        commit: "HEAD",
+      }),
+    ).toEqual([]);
+  });
+
+  it("drops the whole run when result.md is rejected and HEAD has no result for it", () => {
+    const fixture = setupRepository();
+    const taskId = "T-B-doc-010";
+    const block = writeEvent(fixture, taskId, "block", RUNNER);
+    const records = writeRunRecords(fixture, taskId, `${taskId}-20261115T000000Z-aaaa`);
+    writeFile(records.evidence, "{}\n");
+    const hook = join(fixture.repo, ".git", "hooks", "pre-commit");
+    writeFile(
+      hook,
+      "#!/bin/sh\nif git diff --cached --name-only | grep -q 'result.md$'; then exit 1; fi\n",
+    );
+    chmodSync(hook, 0o755);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+    const report = commitTrailingRunRecords(fixture.context);
+
+    expect(report.error).toBeUndefined();
+    expect(report.committed).toEqual(relativePaths(fixture, [block]));
+    expect(report.incompleteRuns).toEqual(relativePaths(fixture, [records.directory]));
+    expect(
+      validateRunRecordLayoutAtCommit({
+        repoRoot: fixture.repo,
+        executionPath: fixture.context.executionPath,
+        commit: "HEAD",
+      }),
+    ).toEqual([]);
   });
 
   it("does nothing when no runner record is uncommitted", () => {

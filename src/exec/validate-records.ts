@@ -11,11 +11,71 @@ export type RecordLayoutIssue = {
   message: string;
 };
 
+function isRegularFile(path: string): boolean {
+  return existsSync(path) && lstatSync(path).isFile();
+}
+
+/**
+ * Required records missing from one run directory, as absolute paths. A path that is not an
+ * exact runs/<origin>/<item ID>/<run ID>/ directory has no requirement. `isFile` lets callers
+ * judge a state that is not the working tree, such as the files a commit will contain.
+ */
+export function missingRunRecords(
+  executionPath: string,
+  directory: string,
+  options: { isFile?: (path: string) => boolean; itemHasPair?: Map<string, boolean> } = {},
+): string[] {
+  const isFile = options.isFile ?? isRegularFile;
+  const itemHasPair = options.itemHasPair ?? new Map<string, boolean>();
+  const paths = runRecordLocation(executionPath, directory);
+  if (!paths) return [];
+  const exists = (path: string) => isFile(path) || existsSync(path);
+  // Before evidence existed, a plan/result pair was a complete run.
+  if (isFile(paths.plan) && isFile(paths.result) && !exists(paths.state) && !exists(paths.evidence))
+    return [];
+  // Migration consolidated shared plan/result pairs into another run of the same item.
+  if (
+    !exists(paths.plan) &&
+    !exists(paths.result) &&
+    isFile(paths.state) &&
+    isFile(paths.evidence) &&
+    hasSiblingPair(executionPath, directory, isFile, itemHasPair)
+  )
+    return [];
+  // Human work is explicitly result-only; absent or malformed metadata gets no exemption.
+  const human =
+    isRegularFile(paths.result) &&
+    readSpecdojoNamespace(readFileSync(paths.result, "utf8")).execution === "human";
+  return (human ? [paths.result] : [paths.plan, paths.result, paths.evidence]).filter(
+    (path) => !isFile(path),
+  );
+}
+
+function hasSiblingPair(
+  executionPath: string,
+  directory: string,
+  isFile: (path: string) => boolean,
+  itemHasPair: Map<string, boolean>,
+): boolean {
+  const item = dirname(directory);
+  const cached = itemHasPair.get(item);
+  if (cached !== undefined) return cached;
+  const found = readdirSync(item, { withFileTypes: true }).some((entry) => {
+    if (!entry.isDirectory() || entry.name === basename(directory)) return false;
+    const paths = runRecordLocation(executionPath, join(item, entry.name));
+    return paths !== undefined && isFile(paths.plan) && isFile(paths.result);
+  });
+  itemHasPair.set(item, found);
+  return found;
+}
+
 /** Read-only layout audit. Logs, evidence and checkpoint contents are never read. */
 export function validateRunRecordLayout(options: {
   executionPath: string;
   repoRoot: string;
   routinesPath?: string;
+  // "tracked": every file is known to be tracked (a materialized commit tree), so every lock is an error.
+  lockPolicy?: "git-check-ignore" | "tracked";
 }): RecordLayoutIssue[] {
   const { executionPath, repoRoot, routinesPath } = options;
   const issues: RecordLayoutIssue[] = [];
@@ -25,7 +85,6 @@ export function validateRunRecordLayout(options: {
   };
   const entries = (directory: string) =>
     readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
-  const isFile = (path: string) => existsSync(path) && lstatSync(path).isFile();
 
   function collectLocks(path: string): boolean {
     if (lstatSync(path).isDirectory()) {
@@ -38,49 +97,9 @@ export function validateRunRecordLayout(options: {
   }
 
   const itemHasPair = new Map<string, boolean>();
-  function hasSiblingPair(directory: string): boolean {
-    const item = dirname(directory);
-    if (!itemHasPair.has(item)) {
-      itemHasPair.set(
-        item,
-        entries(item).some((entry) => {
-          if (!entry.isDirectory() || entry.name === basename(directory)) return false;
-          const paths = runRecordLocation(executionPath, join(item, entry.name));
-          return paths !== undefined && isFile(paths.plan) && isFile(paths.result);
-        }),
-      );
-    }
-    return itemHasPair.get(item)!;
-  }
-
   function checkRun(directory: string): void {
-    const paths = runRecordLocation(executionPath, directory);
-    if (!paths) return;
-    // Before evidence existed, a plan/result pair was a complete run.
-    if (
-      isFile(paths.plan) &&
-      isFile(paths.result) &&
-      !existsSync(paths.state) &&
-      !existsSync(paths.evidence)
-    )
-      return;
-    // Migration consolidated shared plan/result pairs into another run of the same item.
-    if (
-      !existsSync(paths.plan) &&
-      !existsSync(paths.result) &&
-      isFile(paths.state) &&
-      isFile(paths.evidence) &&
-      hasSiblingPair(directory)
-    )
-      return;
-    // Human work is explicitly result-only; absent or malformed metadata gets no exemption.
-    const human =
-      isFile(paths.result) &&
-      readSpecdojoNamespace(readFileSync(paths.result, "utf8")).execution === "human";
-    for (const path of human ? [paths.result] : [paths.plan, paths.result, paths.evidence]) {
-      if (!isFile(path))
-        report(path, "missing", "required run record is missing or not a regular file");
-    }
+    for (const path of missingRunRecords(executionPath, directory, { itemHasPair }))
+      report(path, "missing", "required run record is missing or not a regular file");
   }
 
   const runs = resolve(runRecordsDirectory(executionPath));
@@ -135,7 +154,9 @@ export function validateRunRecordLayout(options: {
   const oldRoutineLocks = routinesPath && join(routinesPath, ".locks");
   if (oldRoutineLocks && existsSync(oldRoutineLocks)) collectLocks(oldRoutineLocks);
 
-  if (locks.size) {
+  if (locks.size && options.lockPolicy === "tracked") {
+    for (const path of locks) report(path, "lock-not-ignored", "runtime lock is tracked by Git");
+  } else if (locks.size) {
     const candidates = [...locks].sort();
     // Without --no-index, tracked locks are correctly rejected even if a rule now ignores them.
     const result = spawnSync("git", ["check-ignore", "-z", "--stdin"], {

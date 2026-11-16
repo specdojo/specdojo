@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-1ZQK",
+  "run_id": "pjr-1zqk-20261115T232554Z-2cb8c8db",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T23:28:02.482Z",
+    "completed_at": "2026-11-15T23:36:40.515Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-1zqk.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trailing-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/validate-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/trailing-records.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/validate-records-commit.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/validate-records-commit.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/tools/check-run-record-layout-push.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/check-run-record-layout-push.mjs",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trailing-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/validate-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/trailing-records.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/validate-records-commit.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/validate-records-commit.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/tools/check-run-record-layout-push.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/check-run-record-layout-push.mjs",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../pjr-1zqk-run-record-layout-guard.md            |  39 +++++++-\n .../specdojo/guides/plan-result-lifecycle-guide.md |   6 ++\n .../ja/specdojo/guides/schedule-operation-guide.md |   1 +\n docs/ja/specdojo/references/command-reference.md   |   2 +-\n src/exec/commands.ts                               |  25 +++--\n src/exec/trailing-records.ts                       |  81 ++++++++++++++-\n src/exec/validate-records.ts                       | 109 ++++++++++++---------\n .../src/exec/trailing-records.integration.test.ts  |  64 ++++++++++++\n 8 files changed, 266 insertions(+), 61 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票 pjr-1zqk を含め全件 valid（終了コード 0）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "src runtime imports are declared in dependencies or peerDependencies"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "OK: dct-index.yaml（based_on の既存 WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001 --records-only --commit 606535f7f / HEAD",
+      "status": "passed",
+      "summary": "plan だけの記録を含む 606535f7f では CI と同じ 2 件の missing で終了コード 1、HEAD では OK"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-run-record-layout-push.mjs --project prj-0001 < tmp/push-bad.txt / tmp/push-good.txt",
+      "status": "passed",
+      "summary": "誤った commit を含む push で終了コード 1、正しい commit で 0"
+    }
+  ],
+  "final_message": "記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit <rev> と pre-push の入口 tools/check-run-record-layout-push.mjs を足した。実際の commit 606535f7f（a9beaef99 の親）で CI と同じ missing により失敗し、HEAD で通ることを確かめた。lefthook.yml は保護対象で executor が編集できないため、pre-push への登録は人の作業として残る。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "`lefthook.yml` の `pre-push.commands` に `run-record-layout: { run: node tools/check-run-record-layout-push.mjs --project prj-0001, use_stdin: true }` を足す（保護対象のため人が行う）。lefthook で `use_stdin: true` のコマンドが 2 つあるとき、両方に標準入力が渡るかを確かめる。渡らない場合は `protect-main-push` と同じ入口にまとめる。",
+    "作業 1 の判断: 止まった理由を書いて result・evidence をそろえる案ではなく、そろわない run を記帳しない案にした。配置の規約（`plan-result-lifecycle-guide` の「配置の検査」）は記録がそろった revision を対象にすることを求めており、作り足すと同じ run を再開する経路と衝突するため。記帳から外れた run は作業ツリーに残り、標準エラーにディレクトリと次の操作が出る。",
+    "確かめていない点: register の run の `wait` commit に入る plan と result だけ（evidence なし）の記録が、配置の検査を通るか。pre-push の検査で気づける。",
+    "CHANGELOG に書く事項は個票の対応結果の「CHANGELOG に書く事項」の節に書いた（Added: `exec validate --records-only --commit <rev>`。Fixed: 記録のそろわない run を記帳しない）。"
+  ],
+  "block_reason": "executor reported incomplete: 記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit <rev> と pre-push の入口 tools/check-run-record-layout-push.mjs を足した。実際の commit 606535f7f（a9beaef99 の親）で CI と同じ missing により失敗し、HEAD で通ることを確かめた。lefthook.yml は保護対象で executor が編集できないため、pre-push への登録は人の作業として残る。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-1ZQK/pjr-1zqk-20261115T232554Z-2cb8c8db/executor.attempt-1.log",
+      "bytes": 6382,
+      "truncated": false
+    }
+  ]
+}

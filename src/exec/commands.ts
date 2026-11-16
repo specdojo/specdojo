@@ -92,6 +92,7 @@ import { registerExecTrialCommands } from "./trial.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
+import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
 
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
@@ -212,23 +213,35 @@ export function registerExecCommands(program: Command): void {
       .default(false)
       .conflicts("recordsOnly"),
   );
+  vcmd.option(
+    "--commit <rev>",
+    "With --records-only, check the run records in the tree of <rev> instead of the working tree",
+  );
   vcmd.action((opts) => {
     try {
       const { schedulePath, catalogPath, executionPath } = resolveProjectContext(opts);
       const { config } = loadConfig();
       const project = config?.projects[resolveProjectId(opts)];
       const routinesPath = project && getProjectRoutinesPath(project);
+      if (opts.commit !== undefined && !opts.recordsOnly)
+        throw new Error("--commit requires --records-only");
+      const layoutOptions = {
+        executionPath,
+        repoRoot: specdojoRootDir(),
+        ...(routinesPath ? { routinesPath: pathResolve(specdojoRootDir(), routinesPath) } : {}),
+      };
       const layoutIssues = opts.scheduleOnly
         ? []
-        : validateRunRecordLayout({
-            executionPath,
-            repoRoot: specdojoRootDir(),
-            ...(routinesPath ? { routinesPath: pathResolve(specdojoRootDir(), routinesPath) } : {}),
-          });
+        : typeof opts.commit === "string"
+          ? validateRunRecordLayoutAtCommit({ ...layoutOptions, commit: opts.commit })
+          : validateRunRecordLayout(layoutOptions);
       if (opts.recordsOnly) {
         for (const issue of layoutIssues)
           process.stdout.write(`ERROR: ${issue.path}: [${issue.reason}] ${issue.message}\n`);
-        if (!layoutIssues.length) process.stdout.write("OK: run record layout validation passed\n");
+        if (!layoutIssues.length)
+          process.stdout.write(
+            `OK: run record layout validation passed${typeof opts.commit === "string" ? ` (${opts.commit})` : ""}\n`,
+          );
         exitWithCode(layoutIssues.length === 0);
         return;
       }

@@ -111,6 +111,7 @@ git worktree add ../specdojo-edit -b <edit-branch>
 | `plan-conventions/` 配下        | 上の run の記録を 1 件以上含む場合                                                        |
 
 - 対象は root の未 commit のファイルだけで、前の run で残った runner の記録も次の run の終わりに拾います。
+- commit した後に `plan.md`・`result.md`・`evidence.json` がそろわない run（setup や executor の起動前に止まり plan だけを残した run など）は記帳せず、作業ツリーに残してディレクトリと次の操作を標準エラーに出力します。commit すると `exec validate --records-only` が欠落で失敗するためです。run を再開して記録をそろえるか、executor の起動前に止まった run ならディレクトリを消します。result.md を外して再試行するときも、HEAD に result.md がない run は丸ごと外します。
 - 人が `exec claim`・`complete`・`block`・`release` などで書いたイベント（`by` が agent でないもの）と、human タスクの run の記録は、従来どおり記帳する人が commit します。
 - commit は統合と同じ scheduler lock で直列化し、index.lock の競合は再試行します。pre-commit hook（整形・markdownlint・実行記録の認証情報検査）は通常どおり実行し、result.md の記法違反で拒否された場合は result.md を外して再試行します。
 - それでも commit できない場合、run の終了コードは変えず、残ったファイルと次の操作を標準エラーに出力します。原因を直して commit するか、次の `exec run` / `exec resume` で記帳をやり直します。

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T22:40:41Z"
   due_on: "2026-11-20"
-  block_reason: "parent validation failed: lint-md"
   derived_from:
     - PJR-DVNV
   commit_type: fix
@@ -67,7 +66,7 @@ setup で止まった run の plan だけの記録が develop に入り、CI の
 
 ### 5.2. 残課題
 
-- `lefthook.yml` の `pre-push` への登録は、統合の後に orchestrator が feature ブランチで入れる（保護対象）。lefthook の文書（https://lefthook.dev/configuration/use_stdin/ ）によると、`use_stdin: true` のコマンドが複数あると標準入力は 1 つにしか渡らない。そこで別のコマンドを足さず、既存の `protect-main` の `run` で標準入力を一度読み、両方の入口へ渡す。
+- `lefthook.yml` の `pre-push` への登録は、統合の後に orchestrator が feature ブランチで入れる（保護対象）。lefthook の文書（<https://lefthook.dev/configuration/use_stdin/>）によると、`use_stdin: true` のコマンドが複数あると標準入力は 1 つにしか渡らない。そこで別のコマンドを足さず、既存の `protect-main` の `run` で標準入力を一度読み、両方の入口へ渡す。
 
   ```yaml
   pre-push:
