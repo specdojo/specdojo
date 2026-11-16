@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:32Z"
+  completed_at: "2026-11-16T16:06:47Z"
+  conclusion: prj-assumptions-constraints-dependencies を grade の指摘で直し、再 grade で pass（98 点、完了条件 4/4）になった。成果物の確定は人の 140 で行う
   commit_type: docs
   commit_scope: pm
   approach: fully-guided
