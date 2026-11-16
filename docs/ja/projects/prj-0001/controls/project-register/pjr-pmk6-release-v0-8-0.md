@@ -67,12 +67,12 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                   | 担当                  | 状態 | メモ                 |
-| --- | ---------------------------------------------------------------------- | --------------------- | ---- | -------------------- |
-| 1   | CHANGELOG の事項を集め、版を確定し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | done | 4b6e47ed2・93449d3e0 |
-| 2   | 配布物を空のリポジトリで試す                                           | specdojo-orchestrator | done | 2026-11-16 10:52     |
-| 3   | PR・merge・タグ・公開の承認                                            | PO                    | open | -                    |
-| 4   | 公開後の確認                                                           | specdojo-orchestrator | open | -                    |
+| No  | 作業                                                                   | 担当                  | 状態 | メモ                                              |
+| --- | ---------------------------------------------------------------------- | --------------------- | ---- | ------------------------------------------------- |
+| 1   | CHANGELOG の事項を集め、版を確定し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | done | 4b6e47ed2・93449d3e0                              |
+| 2   | 配布物を空のリポジトリで試す                                           | specdojo-orchestrator | done | 2026-11-16 10:52                                  |
+| 3   | PR・merge・タグ・公開の承認                                            | PO                    | done | PR #29、タグ 3 つ、npm の公開の承認（2026-11-16） |
+| 4   | 公開後の確認                                                           | specdojo-orchestrator | done | 2026-11-16                                        |
 
 ## 5. 対応結果
 
@@ -88,7 +88,8 @@ specdojo:
 - 2026-11-16 昼の追加（利用者がリリースの夜までに todo を足すよう依頼）: 新しい直し 964D（index.lock の長い保持を待つ）・ZSRD（review の段の古い grade）・5QJ5（YAML の読み方）を流して close した。統合済みのまま review だった X04G・2ZN4・7RZ4・BNK5 を確かめて close し、ほかの項目で直っていた 36PW・50CF・Z4H8・5FTV を close、WQ80 を 30SA に引き継いで reject した。CHANGELOG の 0.8.0 の節に加え（7547c91d9）、`npm run check`（238 テストファイル、3,962 テスト）と pack の試験（空のリポジトリで init・register add・exec run --register が start から統合まで）をやり直して通った
 - この間に、run の最中に流した grade の進み具合のファイルが ZSRD・5QJ5 の commit に紛れ込み、再開の後に個票の対応結果が消えた。本文は executor の commit から戻し（8732bdcdd）、道具の直しを PJR-EWZG として起票した。codex（sol）の利用枠が 11/20 まで尽きたため、grade は opus-review-executor で流した
 
-残り: 利用者の確認（docs-site・docs-lint の版）、push・PR の merge・タグ・公開の承認、公開後の確認。
+- 公開: PR #29 を merge commit で main へ入れ、その commit に `v0.8.0`・`docs-site-v0.5.0`・`docs-lint-v0.4.1` を付けた（利用者が push）。Publish specdojo・@specdojo/docs-site・@specdojo/docs-lint to npm の workflow が成功し、利用者が npmjs.com で公開を承認した。版は利用者が推奨のとおり確認した
+- 公開後の確認: npm の `latest` は specdojo が 0.8.0、@specdojo/docs-site が 0.5.0、@specdojo/docs-lint が 0.4.1。npm から入れた版で `init --yes --provider claude --exec`、`kata show specdojo:clis-rulebook`、`specdojo-docs-lint`、`chat` のコードブロックを含む文書の `specdojo-docs-site build` が通った。GitHub Pages への配信の workflow は確認の時点で実行中だった
 
 ## 6. 関連ドキュメント
 
