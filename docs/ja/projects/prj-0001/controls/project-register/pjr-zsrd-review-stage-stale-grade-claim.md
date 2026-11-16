@@ -9,6 +9,7 @@ specdojo:
   item_type: issue
   item_status: open
   priority: medium
+  difficulty: medium
   registered_at: "2026-11-11T03:08:42Z"
   derived_from:
     - PJR-2GD6
