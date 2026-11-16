@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_35e4675fcebe49b3836847b5b5efc299
+  ts: "2026-11-16T13:06:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼で起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の後の worktree の片付けが登録簿のロックの中で走り、記帳と specdojo git を長く待たせる
+    - field: description
+      from: ""
+      to: runner が統合の後の git worktree remove を exec-lifecycle のロックの中で行うため、遅いファイルシステムでは片付けの間ずっと記帳と specdojo git が待たされる
+    - field: input
+      from: ""
+      to: '["2026-11-16、PJR-1Y1M の統合の後の git worktree remove に 23 分以上かかった。その間の CPU 時間は 4 秒で、ほとんどがディスクの待ちだった（共有フォルダの bind mount、PJR-TATP）","その間、specdojo git -- worktree add が exec-lifecycle のロックの空きを 25 分待った","removeWorktree は src/exec/run/register-worktree.ts の finalizeRegisterWorktreeRun の中で呼ばれ、lifecycleLock.runExclusive の中にある"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-30SA"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
