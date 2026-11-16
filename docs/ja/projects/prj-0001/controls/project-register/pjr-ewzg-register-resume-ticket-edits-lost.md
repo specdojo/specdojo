@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -51,7 +51,31 @@ specdojo:
 
 ## 5. 対応結果
 
--
+### 5.1. 原因
+
+- ZSRD の run では、exec branch に executor の対応結果を含む個票が commit 済みだった（`5c0f7c2dc`）。wait の commit は結果を外したやり直しでも失敗し、orchestrator が waiting の記録を手で commit した（`b241a7a32`）。exec branch へ wait の記録を取り込む同期（`syncExecBranchAfterWait`）は走らず、両側が共通祖先から個票を変えたままになった
+- 再開の前の同期（`syncTaskWorktreesWithIntegrationTargets`）は、個票を含む記帳のファイルを `projectTheirsPaths` に渡す。個票が競合すると統合先の版をそのまま採るため、executor の本文が消えた（`398b36318`）
+
+### 5.2. 実施内容
+
+- `src/exec/repo-integration-sync.ts`：同期に `resolvedPaths`（`projectResolvedPaths`）を足した。指定したパスが競合した場合は、exec branch と統合先の内容を resolver で組み合わせて解決する。どちらかの側が削除した場合は統合先を採る。resolver が例外を投げた場合は同期を取り消し、exec branch と未 commit の変更を元に戻す
+- `src/exec/run/register-state.ts`：`restorePreservedRegisterTicket` の処理から `overlayRegisterTicketLifecycle` を切り出した。本文は exec branch の版を保ち、frontmatter の状態の欄（登録簿の項目の欄と `block_reason`）だけを統合先の値に揃える
+- `src/exec/run/register-resume.ts`：`registerResumeConflictPaths` を足した。再開の前の同期では、個票を `projectTheirsPaths` から外して `overlayRegisterTicketLifecycle` で解決する。個票以外の記帳のファイル（イベントなど）はこれまでどおり統合先を採る
+- 回帰テスト：`tests/src/exec/task-repos.integration.test.ts` に、exec branch の個票に executor の本文があり、統合先には waiting の記録だけがある状態で同期する場合を足した。統合後も本文が残り、状態の欄が waiting になることを確かめる。`tests/src/exec/register-resume.test.ts` に `registerResumeConflictPaths` の単体テストを足した
+
+### 5.3. 判断した点
+
+- 対応策の二案のうち、再開の前の同期で個票の本文を保つ案を採った。wait の commit を結果なしでやり直した場合だけでなく、wait の commit 自体が失敗して記帳を手で commit した今回の経路も同じ箇所で防げるためである
+- 統合先の個票を解析できない場合は、統合先の版を採らずに同期を失敗させ、再開を拒否する。統合先の版を採ると本文が再び消えるためである。worktree で直してから再開し直す
+- イベントのファイル（`events/pjr-*.yaml`）は競合時に統合先を採る扱いを変えていない。exec branch の start・review のイベントが落ちうる点は PJR-9MWH の範囲として残す
+
+### 5.4. CHANGELOG に書く事項
+
+- Fixed: `exec run` の register の再開で、wait の commit を結果なしでやり直した後や記帳を手で commit した後でも、executor が個票に書いた対応結果が再開の前の同期で消えないようにした（PJR-EWZG）
+
+### 5.5. 保護された設定
+
+- 変更なし。変更の案もない
 
 ## 6. 関連ドキュメント
 

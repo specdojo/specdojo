@@ -1,4 +1,5 @@
-import { existsSync } from "node:fs";
+import { existsSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { productIntegrationTarget } from "./task-repos.js";
 import { abortMerge } from "./worktree-ops.js";
 import { gitOutput, gitResult, type ExecWorktree } from "./worktree.js";
@@ -12,6 +13,10 @@ import {
 } from "./repo-integration-git.js";
 
 export type IntegrationTargetSyncStatus = "merged" | "up-to-date" | "skipped";
+
+// Combines both sides of a conflicted file: the exec branch content and the integration target
+// content. Throwing aborts the sync and leaves the exec branch unchanged.
+export type IntegrationConflictResolver = (execContent: string, targetContent: string) => string;
 
 export type IntegrationTargetSync = {
   repo: string;
@@ -134,8 +139,9 @@ function restoreOriginalWorktree(params: {
  * Merge `target` into the branch checked out at `cwd` (an exec worktree) with a merge commit.
  * Uncommitted changes (including untracked files) are stashed before the merge and restored
  * without restoring the old index. Conflicts on `theirsPaths` (repository-relative) take the
- * target side and conflicts on `oursPaths` keep the exec branch side. Any other committed conflict
- * aborts the merge. If restoring the stash conflicts,
+ * target side and conflicts on `oursPaths` keep the exec branch side. Conflicts on `resolvedPaths`
+ * write the resolver's combination of both sides (when either side deleted the file, the target
+ * side is taken). Any other committed conflict aborts the merge. If restoring the stash conflicts,
  * the merge commit is rolled back and the executor changes are restored on the original HEAD.
  */
 export function syncWorktreeWithIntegrationTarget(params: {
@@ -145,6 +151,7 @@ export function syncWorktreeWithIntegrationTarget(params: {
   message: string;
   theirsPaths?: readonly string[];
   oursPaths?: readonly string[];
+  resolvedPaths?: ReadonlyMap<string, IntegrationConflictResolver>;
 }): IntegrationTargetSync {
   const { repo, cwd, target, message } = params;
   if (isAncestor(cwd, target, "HEAD")) return { repo, target, status: "up-to-date" };
@@ -174,12 +181,23 @@ export function syncWorktreeWithIntegrationTarget(params: {
     const conflicted = zeroSeparated(cwd, ["diff", "--name-only", "--diff-filter=U", "-z"]);
     const theirs = new Set(params.theirsPaths ?? []);
     const ours = new Set(params.oursPaths ?? []);
-    const unexpected = conflicted.filter((path) => !theirs.has(path) && !ours.has(path));
+    const resolvers = params.resolvedPaths ?? new Map<string, IntegrationConflictResolver>();
+    const unexpected = conflicted.filter(
+      (path) => !theirs.has(path) && !ours.has(path) && !resolvers.has(path),
+    );
     if (unexpected.length > 0) {
       throw new Error(`${repo}: merge conflicts with ${target}: ${unexpected.join(", ")}`);
     }
     for (const path of conflicted) {
-      const side = theirs.has(path) ? target : "HEAD";
+      const resolver = resolvers.get(path);
+      if (resolver && hasPathAt(cwd, "HEAD", path) && hasPathAt(cwd, target, path)) {
+        const execContent = gitOutput(cwd, ["show", `HEAD:${path}`]);
+        const targetContent = gitOutput(cwd, ["show", `${target}:${path}`]);
+        writeFileSync(resolve(cwd, path), resolver(execContent, targetContent), "utf8");
+        gitOutput(cwd, ["add", "--", path]);
+        continue;
+      }
+      const side = theirs.has(path) || resolver ? target : "HEAD";
       if (hasPathAt(cwd, side, path)) {
         gitOutput(cwd, ["checkout", side, "--", path]);
         gitOutput(cwd, ["add", "--", path]);
@@ -284,6 +302,8 @@ export function syncTaskWorktreesWithIntegrationTargets(params: {
   projectTheirsPaths?: readonly string[];
   // project worktree からの相対パス。exec branch 側を最新とする記録で、競合時は exec branch の内容を採る。
   projectOursPaths?: readonly string[];
+  // project worktree からの相対パス。競合時は exec branch と統合先の内容を resolver で組み合わせる。
+  projectResolvedPaths?: ReadonlyMap<string, IntegrationConflictResolver>;
   // PJR-6RN3: 前回の統合段で統合済み（merged / unchanged）と記録されたプロダクト名。
   integratedProducts?: ReadonlySet<string>;
 }): IntegrationTargetSync[] {
@@ -336,6 +356,7 @@ export function syncTaskWorktreesWithIntegrationTargets(params: {
       message: params.message,
       theirsPaths: params.projectTheirsPaths,
       oursPaths: params.projectOursPaths,
+      resolvedPaths: params.projectResolvedPaths,
     }),
   );
   return synced;

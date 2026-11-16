@@ -23,6 +23,7 @@ import {
 } from "../register.js";
 import {
   syncTaskWorktreesWithIntegrationTargets,
+  type IntegrationConflictResolver,
   type IntegrationTargetSync,
 } from "../repo-integration.js";
 import { readResultFrontmatterSnapshot } from "../results.js";
@@ -50,6 +51,7 @@ import {
 } from "./register-core.js";
 import {
   copyRepoPaths,
+  overlayRegisterTicketLifecycle,
   rebuildRootRegisterViews,
   registerBookkeepingPaths,
   registerTransitionPaths,
@@ -135,6 +137,31 @@ export function resolveRegisterResumeExecutor(
       actor: resolution.actor ?? nickname,
       provider: resolution.provider,
     },
+  };
+}
+
+// PJR-EWZG: 再開の前の同期で、項目自身の記帳ファイルの競合は統合先（waiting の記録）を採る。
+// ただし個票は、wait の commit が結果なしでやり直されたり失敗したりして統合先に executor の
+// 本文が無い場合も、exec branch の本文（executor が書いた対応結果など）を保ち、frontmatter の
+// 状態の欄だけを統合先に揃える。
+export function registerResumeConflictPaths(
+  repoRoot: string,
+  bookkeepingPaths: readonly string[],
+  ticketRelPath: string | null,
+): {
+  projectTheirsPaths: string[];
+  projectResolvedPaths: Map<string, IntegrationConflictResolver>;
+} {
+  const relPaths = bookkeepingPaths.map((path) => repoRelativePath(repoRoot, path));
+  const projectResolvedPaths = new Map<string, IntegrationConflictResolver>();
+  if (ticketRelPath) {
+    projectResolvedPaths.set(ticketRelPath, (execContent, targetContent) =>
+      overlayRegisterTicketLifecycle(execContent, targetContent, ticketRelPath),
+    );
+  }
+  return {
+    projectTheirsPaths: relPaths.filter((path) => path !== ticketRelPath),
+    projectResolvedPaths,
   };
 }
 
@@ -407,7 +434,11 @@ export async function resumeSingleRegisterItemWorktree(
         worktree,
         projectTarget,
         message: `exec(register ${item.id}): merge integration target before resume`,
-        projectTheirsPaths: bookkeepingPaths().map((path) => repoRelativePath(repoRoot, path)),
+        ...registerResumeConflictPaths(
+          repoRoot,
+          bookkeepingPaths(),
+          ticketPath ? repoRelativePath(repoRoot, ticketPath) : null,
+        ),
         integratedProducts: integratedRepoNames(target.state),
       });
     } catch (error) {

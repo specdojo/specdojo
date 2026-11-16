@@ -14,6 +14,7 @@ import {
   resolveRegisterResumeExecutor,
   resolveRegisterResumeReporter,
 } from "../../../src/exec/run/run.js";
+import { registerResumeConflictPaths } from "../../../src/exec/run/register-resume.js";
 import type { ExecEvidence } from "../../../src/exec/evidence.js";
 import { createPipelineState, type PipelineState } from "../../../src/exec/pipeline-state.js";
 import type { MemberRoster, ProjectMember } from "../../../src/shared/specdojo-config.js";
@@ -804,5 +805,71 @@ describe("resolveRegisterResumeExecutor", () => {
       kind: "command",
       candidate: { command: "run-exec-1", actor: "exec-1", provider: undefined },
     });
+  });
+});
+
+describe("registerResumeConflictPaths", () => {
+  const repoRoot = path.join(tmpdir(), "specdojo-resume-conflict-paths");
+  const ticketRel = "docs/ja/projects/test/controls/project-register/pjr-ab12-sample.md";
+  const eventRel = "docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml";
+
+  function ticket(status: string, blockReason: string | null, result: string): string {
+    return [
+      "---",
+      "specdojo:",
+      "  id: test:pjr-ab12-sample",
+      "  type: project",
+      "  status: draft",
+      "  item_type: issue",
+      `  item_status: ${status}`,
+      "  priority: medium",
+      "  owner: DEV",
+      '  registered_at: "2026-11-16T00:00:00Z"',
+      "  due_on: null",
+      ...(blockReason ? [`  block_reason: ${blockReason}`] : []),
+      "---",
+      "",
+      "# PJR-AB12 sample",
+      "",
+      "## 1. 対応結果",
+      "",
+      result,
+      "",
+    ].join("\n");
+  }
+
+  it("keeps the exec branch body with the target lifecycle for the ticket and takes the target for other bookkeeping", () => {
+    const actual = registerResumeConflictPaths(
+      repoRoot,
+      [path.join(repoRoot, ticketRel), path.join(repoRoot, eventRel)],
+      ticketRel,
+    );
+
+    expect(actual.projectTheirsPaths).toEqual([eventRel]);
+    const resolver = actual.projectResolvedPaths.get(ticketRel);
+    expect(resolver).toBeDefined();
+    const merged = resolver!(
+      ticket("review", null, "- 原因: executor が書いた本文"),
+      ticket("waiting", "integration failed", "-"),
+    );
+    expect(merged).toContain("- 原因: executor が書いた本文");
+    expect(merged).toContain("item_status: waiting");
+    expect(merged).toContain("block_reason: integration failed");
+    expect(merged).not.toContain("item_status: review");
+  });
+
+  it("throws when the target ticket cannot be parsed so that the sync keeps the exec branch", () => {
+    const actual = registerResumeConflictPaths(repoRoot, [], "docs/not-a-ticket.md");
+
+    expect(() => actual.projectResolvedPaths.get("docs/not-a-ticket.md")!("body", "body")).toThrow(
+      /could not parse register item: docs\/not-a-ticket\.md/,
+    );
+  });
+
+  it("keeps every bookkeeping path on the target side when the item has no ticket", () => {
+    const actual = registerResumeConflictPaths(repoRoot, [path.join(repoRoot, eventRel)], null);
+
+    expect(actual.projectTheirsPaths).toEqual([eventRel]);
+    expect(actual.projectResolvedPaths.size).toBe(0);
   });
 });
