@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-dgrz-proficiency-frontier-tier
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-16T13:05:31Z"
+  completed_at: "2026-11-16T14:06:22Z"
+  conclusion: proficiency に frontier を足し、自動の選択では明示して求めたときだけ選ぶようにした。by_proficiency.frontier がなければ起動の前に止める。このリポジトリの exec-defaults と名簿への反映は feature ブランチに用意し、利用者の承認を待つ
   commit_type: feat
   commit_scope: exec
 ---

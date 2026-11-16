@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6651c8fa66e040988cf0923c1d1c53fc
+- v: 1
+  id: reg_35c30c1b3c0d4c829815aad718a1cfc7
+  ts: "2026-11-16T14:06:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: proficiency に frontier を足し、自動の選択では明示して求めたときだけ選ぶようにした。by_proficiency.frontier がなければ起動の前に止める。このリポジトリの exec-defaults と名簿への反映は feature ブランチに用意し、利用者の承認を待つ
+  previous_event_id: reg_a5010eecd8e24c8881a3d37349df94a6
