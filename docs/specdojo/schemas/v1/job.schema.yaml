@@ -153,7 +153,7 @@ $defs:
           type: string
           minLength: 1
       proficiency:
-        enum: [low, normal, high, expert]
+        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
       review:
         $ref: "#/$defs/review"
   review:

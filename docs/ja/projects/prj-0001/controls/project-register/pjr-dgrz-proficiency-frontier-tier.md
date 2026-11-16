@@ -44,16 +44,44 @@ Astra・Fable のように通常は使わない最上位の agent を、自動�
 
 ## 4. 作業内容
 
-| No  | 作業                                             | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------ | ---- | ---- | ---- |
-| 1   | 段の追加と自動の選択の規則を設計する             | DEV  | open | -    |
-| 2   | 型・スキーマ・検査・雛形を直し、回帰テストを足す | DEV  | open | -    |
-| 3   | 文書を直し、exec-defaults の変更案を書く         | DEV  | open | -    |
+| No  | 作業                                             | 担当 | 状態 | メモ                                                                                         |
+| --- | ------------------------------------------------ | ---- | ---- | -------------------------------------------------------------------------------------------- |
+| 1   | 段の追加と自動の選択の規則を設計する             | DEV  | done | 共通の候補抽出で明示要求を必須にし、名前指定は従来の解決経路を使う                           |
+| 2   | 型・スキーマ・検査・雛形を直し、回帰テストを足す | DEV  | done | 共通の型・値検査、起動前検査、全標準 provider の雛形と選択・入力・スキーマの回帰テストを追加 |
+| 3   | 文書を直し、exec-defaults の変更案を書く         | DEV  | done | 設計規約と設定・Schedule・Job の説明を更新。保護設定の変更案は下記                           |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容・判断
+
+- `frontier` を `expert` より上の段として共通型・値検査に追加した。設定の member 型と strategy / Job の入力検査も共通定義を使う。proficiency を参照するスキーマは `exec-common.schema.yaml` の列挙を正本にそろえた。
+- 自動選択は共通の `selectCandidates` で `proficiency: frontier` の明示要求を必須にした。習熟度未指定、通常候補がすべて busy、rate limit の代替候補も同じ規則になる。CLI、routing、sch-strategy / Job の agent 指名は従来の名前解決経路で使用できる。init の routing 生成でも frontier を通常候補から除外する。
+- 起動コマンドの解決時に `providers.<provider>.command_params.by_proficiency.frontier` を検査し、未定義なら member 名と設定パスを示して失敗させる。member の `command` 上書きも例外にしない。名前指定でも設定不足を見逃さないため、この位置で検査する。
+- 追加変数が不要な provider は `frontier: {}` で対応を明示できるようにした。mode ごとの役割や member の model を上書きせず利用できるためである。空 mapping は frontier のみに許可し、他の段の変数表の制約は維持した。`templates/init-exec-defaults.yaml` に Codex の `{ effort: xhigh }`、他の標準 provider の `{}` を追加した。
+- 現行の `config init` は基本設定だけを作り、exec-defaults を生成しない。起動設定を生成する正規の入口 `specdojo init --exec` の雛形を更新し、init の回帰テストにも対応を追加した。
+- 名前指定（alias を含む）、難易度 routing、明示 fallback、通常候補がすべて busy の場合を含む自動選択の除外、明示要求時の能力・mode・role 制約、変数展開、設定不足の拒否、名簿・Job・strategy・スキーマ入力の回帰テストを追加した。テスト実行は親 runner の検証に委ねる。
+
+### 5.2. 保護設定の変更案・申し送り
+
+本リポジトリの `.specdojo/exec-defaults.yaml` は変更していない。統合後、利用者の承認を得て feature ブランチで `providers.codex.command_params.by_proficiency` に `frontier: { effort: xhigh }` を加える。Fable を追加する前には `providers.claude.command_params.by_proficiency` に `frontier: {}` も加える。Astra / Fable の名簿追加は入力どおり統合後の別作業とし、今回は行っていない。
+
+runner の変更を含むため、統合後の実 CLI による確認は運用メモに従って PJR-JSEY で行う。親 runner が型・lint・unit / integration・全体 schema 検証を実行する。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: 追加。文案: 「agent の習熟度に最上位の `frontier` を追加。名前指定または `proficiency: frontier` の明示要求時だけ使用でき、明示要求のない自動選択や rate limit の代替候補には含まれません。起動には provider の `by_proficiency.frontier` 設定が必要です。」
+
+### 5.4. 検証結果
+
+- 変更ファイルの Prettier 整形と `git diff --check` が成功した。
+- `npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data templates/init-exec-defaults.yaml` が成功した。
+- `node --import tsx tools/catalog-validate-if-configured.mjs` が成功した。既存カタログの再エクスポート参照・未作成成果物などの警告はあるが、エラーはない。
+- `npm run validate:history-links` が成功した。型・lint・unit / integration・全体 schema 検証は設定済みの親検証で実行する。
+- `node --import tsx src/specdojo.ts register build --project prj-0001` が成功し、登録簿の派生ビューを再生成した。
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-config-guide|exec 設定ガイド]]
+- [[specdojo:schedule-design-guide|Schedule 設計ガイド]]
+- [[specdojo:job-definition-standard|Job 定義標準]]
+- [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]]

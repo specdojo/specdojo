@@ -81,7 +81,7 @@ phase_sets:
 | `mode`           | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                                           |
 | `approach`       | 任意 | `fully-guided` / `condense` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
 | `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                                        |
-| `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                                            |
+| `proficiency`    | 任意 | 必要な品質水準。`low` / `normal` / `high` / `expert` / `frontier`。省略すると `frontier` を除く水準が候補                                                                                                         |
 | `agent`          | 任意 | `executor`（必須）と `reporter`（任意）の nickname。CLI の stage override に次いで優先                                                                                                                            |
 | `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                                     |
 
@@ -149,11 +149,13 @@ alias の連鎖は使用できますが、循環してはならず、終端は�
 
 pipeline 専用 agent には `stage_role: executor` または `stage_role: reporter` を指定します。`stage_role` を省略した既存 agent は従来の単一 agent フロー専用です。自動選択では、従来タスクから stage role 付き agent を除外し、pipeline stage から stage role 未指定 agent と異なる stage role の agent を除外します。これにより既存 agent 定義を変更せず、新しい pipeline agent を追加できます。
 
-`exec run --auto` は phase または pipeline stage の `capabilities` をすべて持つ agent を候補にします。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含めます。候補のソートキーは次の順に評価します。
+`exec run --auto` は phase または pipeline stage の `capabilities` をすべて持つ agent を候補にします。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は `frontier` を除く水準を候補に含めます。候補のソートキーは次の順に評価します。
 
 1. busy 状態（イベントログ上で `doing` のタスクを担当中の agent）を最後尾に置きます。`--parallel` 実行で同じ最上位 agent に集中して rate limit に陥るのを避けるためです。
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
+
+`frontier` は `expert` より上の最上位段です。自動選択では、タスクまたは pipeline stage が `proficiency: frontier` を明示した場合だけ候補にします。通常候補がすべて busy の場合や、rate limit で次候補へ切り替える場合も、この条件は変わりません。名前で指名する CLI、`routing`、sch-strategy / Job の `agent` では、タスクの習熟度要件にかかわらず使用できます。
 
 ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、register の worktree モードで実行する executor/reporter pipeline（`--parallel` / `--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
 
@@ -403,6 +405,9 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 
 - `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{model}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。`model` のない従来 member は、これまでどおり `command_params` の `model` を使用できます。グローバル既定は持ちません。
 - `command_params`: テンプレートの追加変数表。`by_mode.<mode>`、`by_proficiency.<proficiency>`、`by_nickname.<nickname>` に変数名と値の組を置きます。同じ変数は `by_nickname`、`by_proficiency`、`by_mode` の順で優先します。
+
+`frontier` member を起動する provider には、`command_params.by_proficiency.frontier` が必要です。未定義なら member 名と不足する設定パスを示して起動前に停止します。member の `command` 上書きでも同じ検査を行います。追加変数が不要なら `frontier: {}` と書けます。`specdojo init --exec` の雛形は、Codex に `{ effort: xhigh }`、ほかの標準 provider に `{}` を用意します。既存リポジトリでは、member の追加に先立ってこの設定を加えます。
+
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
 - `connection_error_detection`: provider API やローカル LLM へ接続できない場合の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
@@ -427,6 +432,7 @@ providers:
       by_proficiency: # model は実体の member の model を使い、effort だけを切り替える
         normal: { effort: medium }
         expert: { effort: high }
+        frontier: { effort: xhigh }
 
   antigravity:
     command_template: 'specdojo agent launch --provider antigravity --role {mode} -- --sandbox --model {model} -p "$(cat)"'
@@ -663,7 +669,7 @@ claude と codex は normal と expert の 2 段を持ちます（0.4.6 から�
 
 init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
 
-`gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。
+`gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように `proficiency: frontier` の実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。既存の起動設定には `providers.codex.command_params.by_proficiency.frontier: { effort: xhigh }` を追加します。
 
 ```yaml
 members:
@@ -677,7 +683,7 @@ members:
     mode: edit
     stage_role: executor
     capabilities: [web_search]
-    proficiency: expert
+    proficiency: frontier
     priority: 1
     persona: task-executor
     scheduler_strategy: critical-first

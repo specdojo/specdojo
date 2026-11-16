@@ -495,6 +495,9 @@ export function selectCandidates(
       // Temporarily disabled agents (e.g. to isolate one provider while testing rate limits)
       // are skipped during auto-selection.
       if (m.disabled === true) return false;
+      // Opt-in tier: never enter an automatic primary/fallback pool implicitly, even when
+      // every ordinary member is busy. Named selections resolve outside this function.
+      if (m.proficiency === "frontier" && proficiency !== "frontier") return false;
       const caps = m.capabilities ?? [];
       if (!required.every((c) => caps.includes(c))) return false;
       if (proficiency !== undefined && m.proficiency !== proficiency) return false;

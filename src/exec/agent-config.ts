@@ -230,6 +230,17 @@ export function resolveMemberCommand(
   config: ExecDefaultsConfig,
   member: CommandMemberAttributes,
 ): string | undefined {
+  // Require provider opt-in even for an explicit member command: otherwise a frontier
+  // member could silently inherit ordinary defaults or bypass the missing-tier error.
+  if (
+    member.proficiency === "frontier" &&
+    (!member.provider ||
+      !config.providers?.[member.provider]?.command_params?.by_proficiency?.frontier)
+  ) {
+    throw new Error(
+      `Cannot launch frontier member ${member.nickname}: configure providers.${member.provider ?? "<provider>"}.command_params.by_proficiency.frontier in exec-defaults.yaml (use {} if no extra variables are needed)`,
+    );
+  }
   const override = member.command?.trim();
   if (override) return override;
 

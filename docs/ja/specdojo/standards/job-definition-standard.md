@@ -27,6 +27,7 @@ Job Definition Standard
 - 判断（観測した結果の解釈、失敗の切り分け、次の行動の提案）が必要な command Job だけ、`task.analysis` で reporter agent と判断内容を指定する。
 - `edit` / `review` Job は従来どおり agent に作業を委譲し、`task.description` に判断内容を書く。
 - 委譲先の agent は nickname で指名する。`capabilities` / `proficiency` による間接指定は、指名が不要な場合に限る。
+- `task.proficiency` は `low` / `normal` / `high` / `expert` / `frontier` を受け付ける。最上位の `frontier` は、`task.agent` で指名するか `task.proficiency: frontier` を明示した場合だけ候補にする。provider の起動設定は [[specdojo:exec-config-guide|exec 設定ガイド]] に従う。
 - 同じ論理実行に対して同じ Run を作れるよう、Job が使う値は `inputs`、`job_id`、`scheduled_at`、前回成功 checkpoint に限定する。Run ID 確定後の task と checkpoint では `job_run_id` も参照できる。
 
 ### 2.1. 判断と手順の切り分け基準
