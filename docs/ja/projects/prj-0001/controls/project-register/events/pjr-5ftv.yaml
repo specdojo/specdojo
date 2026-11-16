@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-FTRC"]'
+- v: 1
+  id: reg_e597782f8b4647bda3e69a0bcbc3ec46
+  ts: "2026-11-16T03:42:35Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: PJR-2ZN4（テストと検証が /tmp の直下に init の出力を残さない）で解消した
+  previous_event_id: reg_03d6dd678beb44c493c5215799706803
