@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-ZSRD
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-ZSRD/pjr-zsrd-20261116T032943Z-fcb92236/plan.md
   started_at: "2026-11-16T03:31:20.363Z"
-  completed_at: "2026-11-16T04:01:46.456Z"
+  completed_at: "2026-11-16T04:11:20.837Z"
   agent: opus-executor
-  block_reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
 ---
 
 # Edit Result
