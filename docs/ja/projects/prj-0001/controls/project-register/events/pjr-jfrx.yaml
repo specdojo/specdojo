@@ -102,3 +102,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_004259432a4f4d6289e9ce68ae24aab5
+- v: 1
+  id: reg_a01fcaaf5f0340768c290d8e6c196f14
+  ts: "2026-11-16T14:55:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の手直しの統合後に再 grade し、完了条件をすべて満たして pass になったことを grade の結果と個票の対応結果で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: bds-progress-report を grade の指摘で直し、再 grade で pass（99 点、完了条件 3/3）になった。成果物の確定は人の 140 で行う
+  previous_event_id: reg_6c4416f9bc064987942526a2eb1a50ae
