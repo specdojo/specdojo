@@ -1,0 +1,14 @@
+PJR-V141 を直しました。executor の文を result の frontmatter へ書き写す前に、コードスパンの外にある山括弧の語をコードの書式（バッククォート）で包むようにしています。追加した回帰テストは、私が個別に流した範囲（3 ファイル 109 件）で通っています。typecheck・`test:unit`・lint-fm などの正式な検証はこのあと親の runner が実行するため、まだ結果は出ていません。
+
+- **原因:** condense の記録は、本文の表ではコードの書式にしていましたが、frontmatter へは加工せずに書き出していました。そのため `<provider>` がむき出しのまま入り、lint-fm で落ちていました。
+- **追加した関数:** `src/shared/text.ts` に `inlineCodeFrontmatterAnglePlaceholders` を足しました。本文用の既存の関数と違い、`<https://...>` も包みます。lint-fm は frontmatter ではこの形も拒否するためです。
+- **適用した箇所:** `src/exec/results.ts` の `renderReporterResult` と `serializeFrontmatter` で、condense の記録の `location`・`reason`・`cause.location` をこの関数に通しています。
+- **ほかの書き写し箇所:** 洗い出すと `block_reason`（executor の stderr の `blocked: <reason>` など）もあったので、同じ扱いにしました。
+- **決めたこと:** lint で検査して止める方式ではなく、書き写すときに包む方式にしました。止めると、executor の正しい記録が書式の問題だけで失われるためです。すでにコードの書式になっている語は変えないので、何度書き直しても値は変わりません。
+- **回帰テスト:** `tests/src/exec/condense.test.ts` に足しました。`providers.<provider>.command_template` を含む reason から生成した result と、山括弧を含む block 理由で更新した result に lint-fm と同じ検査をかけ、指摘が 0 件になることを確かめます。
+- **個票:** 影響範囲、対応方針、対応結果（CHANGELOG に書く区分 Fixed と行の文案を含む）、関連ドキュメントを埋め、`_TODO_` は残っていません。`CHANGELOG.md` と保護された設定は変えていません。
+- **差分に含まれる私以外の変更:** `events/pjr-v141.yaml` の差分は runner によるもので、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"result の frontmatter へ書き写す condense の記録（location・reason・cause.location）と block_reason の山括弧を、コードスパンの外にあればコードの書式で包むようにした（`inlineCodeFrontmatterAnglePlaceholders`）。回帰テストを足し、個票の対応結果を書いた。","handoff":["決めたこと: lint で検査して止めず、書き写すときにコードスパンの外の山括弧を包む方式にした。止めると executor の正しい記録が書式の問題だけで失われるため。frontmatter 用の関数は lint-fm に合わせて autolink（`<https://...>`）も包む。","executor の文を frontmatter へ書き写す箇所は `condense_records`（`renderReporterResult`・`serializeFrontmatter`）と `block_reason`（`serializeFrontmatter`）の 2 つで、両方に適用した。result の frontmatter のほかの項目は runner が決める値。","CHANGELOG に書く事項（個票にも記載）: 区分 Fixed。文案「condense の段の result の frontmatter に executor の記録の山括弧（例: `<provider>`）がそのまま入り、lint-fm で落ちていた不具合を直した。block 理由の山括弧も同様にコードの書式にする（PJR-V141）。」","保護された設定の変更は不要。"],"validations":[{"command":"npx vitest run tests/src/exec/condense.test.ts tests/src/exec/register-plan-escape.test.ts tests/src/exec/results.test.ts","status":"passed","summary":"3 files, 109 tests passed (including the new PJR-V141 regression test)"},{"command":"npx prettier --check src/shared/text.ts src/exec/shared.ts src/exec/results.ts tests/src/exec/condense.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-v141-condense-records-frontmatter-placeholder.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-v141-condense-records-frontmatter-placeholder.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"no violations reported"}]}
+</specdojo_executor_evidence>
