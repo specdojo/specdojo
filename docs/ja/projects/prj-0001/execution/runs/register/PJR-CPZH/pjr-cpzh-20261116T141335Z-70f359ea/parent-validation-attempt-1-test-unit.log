@@ -1,0 +1,181 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.8.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CPZH
+
+Updated ticket status → ready: /tmp/specdojo-ticket-XYkQcG/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-P47aW9/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-8fZZUP/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-boU8Mq/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-XPpe3e/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-A5Bw1P/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/exec/register-plan-escape.test.ts (36 tests | 1 failed) 34198ms
+     × approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる 33025ms
+grade run is busy for this project; waiting for the active run
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/samples/top-level.yaml actor=actual-grader
+graded: docs/ja/specdojo/samples/external.yml actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Written: .specdojo/host/devcontainer-tmux.sh
+[dry-run] would write: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Would move 1 agent member(s) from /tmp/specdojo-members-awVSHa/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-awVSHa/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-awVSHa/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-awVSHa/.specdojo/agent-members.yaml
+  [grade] checking docs/overview.md (--target deliverable)
+  [grade] checking rulebook: docs/ja/specdojo/rulebooks/test-rulebook.md (--target kata)
+  [grade] checking sample: specdojo:test-sample: docs/ja/specdojo/samples/test-sample.md (--target kata)
+  [grade] executed: run id test
+  [grade] checking docs/overview.md (--target deliverable)
+  [grade] checking rulebook: docs/ja/specdojo/rulebooks/test-rulebook.md (--target kata)
+  [grade] checking sample: specdojo:test-sample: docs/ja/specdojo/samples/test-sample.md (--target kata)
+  [grade] executed: run id test
+  [grade] checking docs/overview.md (--target deliverable)
+  [grade] checking rulebook: docs/ja/specdojo/rulebooks/test-rulebook.md (--target kata)
+  [grade] checking sample: specdojo:test-sample: docs/ja/specdojo/samples/test-sample.md (--target kata)
+  [grade] executed: run id test
+[night] approved queue (1/10): PJR-AB12
+  PJR-AB12  success  transition=review  commit=committed abc123
+[night] morning report: execution/reports/night-orchestrator/night-orchestrator-20261116T143138610Z.md
+result-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-11-16T14:32:49.483Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-11-16T14:31:49.856Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-11-16T14:31:50.146Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-sL2wu0/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-wXXIup/outputs/partial.txt
+
+ Test Files  1 failed | 209 passed (210)
+      Tests  1 failed | 3691 passed (3692)
+   Start at  23:29:28
+   Duration  161.61s (transform 7.67s, setup 5.39s, import 78.90s, tests 193.64s, environment 11ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN: timeline_path is deprecated. Use register epics and dashboard build.
+[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed
+[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる
+Error: Test timed out in 30000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/register-plan-escape.test.ts:525:3
+    523|   // generateRegisterPlan を 2 回呼ぶ。カタログ付きの 2 回目が約 1.5 秒かかり、単独で約 1.6 秒、
+    524|   // 変換キャッシュがない負荷時は 6.5 秒を観測した（PJR-SNHK）。既定の 5 秒に余裕がないため、この test に限って …
+    525|   it(
+       |   ^
+    526|     "approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる",
+    527|     { timeout: 30_000 },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

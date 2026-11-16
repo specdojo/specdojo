@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:36Z"
-  block_reason: "parent validation failed: test-unit"
   commit_type: docs
   commit_scope: pm
   approach: fully-guided
