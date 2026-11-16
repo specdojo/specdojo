@@ -244,6 +244,7 @@ edit plan で観点別の自己レビューを行わないのは、各観点を�
 - 評価対象の `content_hash` が既存の評価結果サイドカーの `content_hash` と一致する場合は、grade を再実行せず既存の評価結果を使います。どちらの場合も評価は 1 回です。
 - grade は `grade run --path <対象文書>` で評価対象 1 件に絞って実行します。評価対象を解決できない場合と `--dry-run` の場合は実行しません。
 - grade が失敗した場合は、別の run ID で合計 3 回まで試します。それでも失敗した場合も review は止めず、実行の結果と評価結果の鮮度を review plan に示し、review が verdict（`grade-stale` / `grade-unavailable` など）として記録します。ただし runner はそのタスクを done にせず blocked にし、失敗の理由と次の操作を block の理由と result の `block_reason` に残します。
+- schedule の review を再開するとき（reporter や executor からの再開）も、runner は review の agent より前に grade を確かめます。worktree の評価結果サイドカーが root の最新と違う場合は、exec branch へ取り込む commit を作ります。plan の評価結果の節は前回の実行の時点のままなので、再開の時点の評価結果を agent への指示に足します。取り込みがあった reporter からの再開では、古い grade で判定した executor の結果を使い回さず、executor から流し直します。
 - 自動 grade は `--if-busy wait` で同一 project の実行終了を待ち、`--isolate-pipeline-state` で再試行状態を run 内へ分離します。同じ秒に複数の型を評価しても run ID が衝突しないよう、対象パスの識別子を含めます。
 
 ### 3.3. review plan の生成

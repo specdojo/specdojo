@@ -1,9 +1,17 @@
 import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { ensureReviewGrade, type ReviewGradeOutcome } from "../../review/grade.js";
-import { findDeliverableInfo } from "../plans-core.js";
-import { enforceKataReviewVerdict, scheduleKataReviewSubjects } from "../review-kata.js";
+import {
+  ensureReviewGrade,
+  reviewGradeFreshness,
+  type ReviewGradeOutcome,
+} from "../../review/grade.js";
+import { findDeliverableInfo, reviewGradeSummaryText } from "../plans-core.js";
+import {
+  enforceKataReviewVerdict,
+  kataReviewSummary,
+  scheduleKataReviewSubjects,
+} from "../review-kata.js";
 import {
   type AgentProvider,
   type MemberRoster,
@@ -38,7 +46,11 @@ import {
   type StateSnapshot,
   type TaskMode,
 } from "../types.js";
-import { checkpointAndEnsureWorktree, discardStaleExecWorktree } from "../worktree-ops.js";
+import {
+  checkpointAndEnsureWorktree,
+  discardStaleExecWorktree,
+  refreshWorktreeCheckpoint,
+} from "../worktree-ops.js";
 import { findExecWorktree, worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
 import {
   buildExecutorPrompt,
@@ -95,6 +107,9 @@ export type PreparedTask = {
   reporterRateLimitOptions?: PinnedRateLimitRunOptions;
   // Runner-side grade before the review plan; a failed grade blocks completion (PJR-M18B).
   reviewGradeOutcome?: ReviewGradeOutcome;
+  // Grade sidecars refreshed into a resumed review worktree. Executor evidence from before the
+  // refresh judged an older grade, so the reporter must not reuse it (PJR-ZSRD).
+  reviewGradeRefreshed?: readonly string[];
 };
 
 export type PlanGenPaths = {
@@ -189,6 +204,81 @@ export async function gradeBeforeReviewPlan(params: {
           : `not run: ${outcome.detail}`;
   process.stdout.write(`  [grade] ${summary}\n`);
   return outcome;
+}
+
+// Root-side grade sidecars of the deliverable and kata subjects that the review judges.
+export function reviewGradeSidecarPaths(params: {
+  task: ReadyTaskView;
+  projectId: string;
+  catalogPath: string | undefined;
+  repoRoot: string;
+}): string[] {
+  const { task, projectId } = params;
+  const deliverable =
+    task.local_id && params.catalogPath
+      ? findDeliverableInfo(params.catalogPath, task.local_id)
+      : null;
+  const subjectPaths = [
+    reviewGradeSubject(params.catalogPath ?? "", task)?.path,
+    ...scheduleKataReviewSubjects(task, deliverable, projectId).map((kata) => kata.path),
+  ].filter((path): path is string => !!path && path !== "_MISSING_");
+  const sidecars = subjectPaths.flatMap((subjectPath) => {
+    const freshness = reviewGradeFreshness({ subjectPath, projectId, rootDir: params.repoRoot });
+    return "sidecarPath" in freshness && freshness.sidecarPath ? [freshness.sidecarPath] : [];
+  });
+  return [...new Set(sidecars)].sort();
+}
+
+/**
+ * A resumed review reuses the exec branch, which still holds the grade from its first checkpoint.
+ * Bring the grade the runner just checked into the branch so the review agent and the completion
+ * check judge the same grade as the runner (PJR-ZSRD). Returns the refreshed repo-relative paths.
+ */
+export function refreshReviewGradeCheckpoint(params: {
+  task: ReadyTaskView;
+  projectId: string | undefined;
+  catalogPath: string | undefined;
+  repoRoot: string;
+  worktree: ExecWorktree;
+  failureLogPath?: string;
+}): string[] {
+  const { task, projectId } = params;
+  if ((task.mode ?? "edit") !== "review" || !projectId) return [];
+  const refreshed = refreshWorktreeCheckpoint({
+    repoRoot: params.repoRoot,
+    worktreePath: params.worktree.path,
+    paths: reviewGradeSidecarPaths({ ...params, projectId }),
+    commitMessage: `exec(${task.id}): refresh grade before resumed review`,
+    failureLogPath: params.failureLogPath,
+  });
+  for (const path of refreshed) process.stdout.write(`  [grade] refreshed in worktree: ${path}\n`);
+  return refreshed;
+}
+
+// The stored plan keeps the grade summary of its first run. Tell the resumed review which grade
+// the runner checked now so it does not judge from the outdated section.
+export function resumedReviewGradeNote(
+  task: ReadyTaskView,
+  projectId: string,
+  catalogPath: string | undefined,
+  outcome: ReviewGradeOutcome | undefined,
+): string {
+  const subject = reviewGradeSubject(catalogPath ?? "", task);
+  const deliverable =
+    task.local_id && catalogPath ? findDeliverableInfo(catalogPath, task.local_id) : null;
+  const summary = [
+    subject ? reviewGradeSummaryText(projectId, subject.path, outcome) : "",
+    kataReviewSummary(scheduleKataReviewSubjects(task, deliverable, projectId), projectId),
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+  return [
+    "## 再開の前に runner が確認した評価結果",
+    "",
+    "runner は再開の前に grade を確認し、最新の評価結果サイドカーをこの worktree に取り込んだ。plan の `評価結果` の節は前回の実行の時点のものであり、判定にはこの節と評価結果サイドカーを使う。",
+    "",
+    summary,
+  ].join("\n");
 }
 
 export function enforceScheduleKataReview(params: {
@@ -410,11 +500,36 @@ export async function prepareSingleTask(
   // selects another agent to run.
   const claimActor = skipClaim ? (actorOverride ?? actor) : actor;
 
+  // The runner grades before any review agent starts, including an executor resume (PJR-ZSRD).
+  const reviewGradeOutcome = await gradeBeforeReviewPlan({
+    task,
+    projectId,
+    catalogPath: planGenPaths.catalogPath,
+    repoRoot,
+    dryRun,
+    by: agentCandidates[0]?.actor,
+    execDefaultsPath: resolveExecDefaultsPath(rateLimitOverrides, schedulePath),
+  });
+  const withResumedGradeNote = (text: string, refreshed: readonly string[]): string =>
+    refreshed.length > 0 && projectId
+      ? `${text.trimEnd()}\n\n${resumedReviewGradeNote(task, projectId, planGenPaths.catalogPath, reviewGradeOutcome)}\n`
+      : text;
+
   if (pipelineResume?.executorTarget) {
     const { executorTarget, worktree } = pipelineResume;
     if (!worktree) throw new Error(`no exec worktree to resume executor for ${task.id}`);
     const worktreeExecutionPath = pathInsideWorktree(repoRoot, worktree.path, executionPath);
-    const planPrompt = loadPrompt(worktreeExecutionPath, task.id);
+    const refreshed = dryRun
+      ? []
+      : refreshReviewGradeCheckpoint({
+          task,
+          projectId,
+          catalogPath: planGenPaths.catalogPath,
+          repoRoot,
+          worktree,
+        });
+    const storedPlan = loadPrompt(worktreeExecutionPath, task.id);
+    const planPrompt = storedPlan ? withResumedGradeNote(storedPlan, refreshed) : storedPlan;
     const resultPath = recordPathForRead(executionPath, "result", task.id);
     const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
     if (!planPrompt || !existsSync(resultPath) || !existsSync(worktreeResultPath)) {
@@ -450,18 +565,10 @@ export async function prepareSingleTask(
       reporterCandidates,
       executorRateLimitOptions,
       reporterRateLimitOptions,
+      ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
+      ...(refreshed.length > 0 ? { reviewGradeRefreshed: refreshed } : {}),
     };
   }
-
-  const reviewGradeOutcome = await gradeBeforeReviewPlan({
-    task,
-    projectId,
-    catalogPath: planGenPaths.catalogPath,
-    repoRoot,
-    dryRun,
-    by: agentCandidates[0]?.actor,
-    execDefaultsPath: resolveExecDefaultsPath(rateLimitOverrides, schedulePath),
-  });
 
   // Plans are generated on demand here; `exec refresh` does not manage them.
   if (!skipClaim || !findRunRecord(executionPath, "plan", task.id))
@@ -643,14 +750,25 @@ export async function prepareSingleTask(
   const setupAction = worktree.created ? "setup" : "reuse";
   process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`);
   reportProductWorktrees(worktree);
+  // A fresh claim checkpoints the current grade; a resume keeps the branch and needs a refresh.
+  const reviewGradeRefreshed = skipClaim
+    ? refreshReviewGradeCheckpoint({
+        task,
+        projectId,
+        catalogPath: planGenPaths.catalogPath,
+        repoRoot,
+        worktree,
+        failureLogPath: checkpointFailureLogPath,
+      })
+    : [];
 
   return {
     task,
     actor,
     claimActor,
     agentCandidates,
-    plan: planPrompt,
-    prompt,
+    plan: withResumedGradeNote(planPrompt, reviewGradeRefreshed),
+    prompt: withResumedGradeNote(prompt, reviewGradeRefreshed),
     worktree,
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
@@ -662,6 +780,7 @@ export async function prepareSingleTask(
     executorRateLimitOptions,
     reporterRateLimitOptions,
     ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
+    ...(reviewGradeRefreshed.length > 0 ? { reviewGradeRefreshed } : {}),
   };
 }
 

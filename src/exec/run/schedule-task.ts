@@ -179,7 +179,8 @@ export async function runPreparedTask(
       } else if (
         prepared.pipelineResumeStage === "reporter" &&
         checkpoint.evidence &&
-        checkpoint.state.stages.executor.artifact_ref
+        checkpoint.state.stages.executor.artifact_ref &&
+        !prepared.reviewGradeRefreshed?.length
       ) {
         executorEvidence = checkpoint.evidence;
         executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref;
@@ -197,7 +198,9 @@ export async function runPreparedTask(
         });
       } else if (prepared.pipelineResumeStage === "reporter") {
         process.stdout.write(
-          "  Persisted executor evidence is invalid; starting a new executor run.\n",
+          prepared.reviewGradeRefreshed?.length
+            ? "  Grade changed after the persisted review executor ran; starting a new executor run.\n"
+            : "  Persisted executor evidence is invalid; starting a new executor run.\n",
         );
         pipelineState = undefined;
         pipelineStatePath = undefined;

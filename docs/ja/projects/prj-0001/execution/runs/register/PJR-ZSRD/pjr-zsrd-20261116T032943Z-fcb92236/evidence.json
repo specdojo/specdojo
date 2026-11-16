@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZSRD",
+  "run_id": "pjr-zsrd-20261116T032943Z-fcb92236",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-16T03:32:57.193Z",
+    "completed_at": "2026-11-16T03:43:32.951Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zsrd.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zsrd-review-stage-stale-grade-claim.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/unblock-claim-owner.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zsrd-review-stage-stale-grade-claim.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/unblock-claim-owner.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": ".../pjr-zsrd-review-stage-stale-grade-claim.md     |  35 ++++-\n docs/ja/specdojo/guides/review-guide.md            |   1 +\n src/exec/run/lifecycle-commands.ts                 |   2 +-\n src/exec/run/schedule-prepare.ts                   | 153 ++++++++++++++++++---\n src/exec/run/schedule-task.ts                      |   7 +-\n src/exec/worktree-ops-lifecycle.ts                 | 127 ++++++++++-------\n src/exec/worktree-ops-merge.ts                     |   8 +-\n src/exec/worktree-ops.ts                           |   1 +\n tests/src/exec/unblock-claim-owner.test.ts         |  40 ++++++\n tests/src/exec/worktree-ops.integration.test.ts    |  40 ++++++\n 10 files changed, 345 insertions(+), 69 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check (changed files)",
+      "status": "passed",
+      "summary": "変更した ts・md ファイルがすべて Prettier の書式に合っている"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "変更した個票を含め、履歴ファイルに違反がない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "not_run",
+      "summary": "親の runner が実行する"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親の runner が実行する"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "not_run",
+      "summary": "親の runner が実行する（確かめのため tsc -p tsconfig.build.json --noEmit を実行し、エラーはなかった）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親の runner が実行する（確かめのため tests/src/exec の単体テスト 1422 件を実行し、すべて通った）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親の runner が実行する（確かめのため worktree-ops の grade の統合テスト 6 件を実行し、すべて通った）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZSRD/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZSRD/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZSRD/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5072 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5072 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZSRD\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZSRD/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZSRD/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZSRD\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-JQQXIw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Iccb5l/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Jmpb4v/pjr-0001-topic.\n… output omitted …\n it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "再開の経路で古い grade を使う原因を直した。再開のときは runner が agent の前に grade を流し、評価結果サイドカーを exec branch へ取り込む。取り込みがあった reporter からの再開では executor から流し直す。branch に取り込んだ grade と同じ root の grade では merge を止めない。統合の段からの再開は claim の持ち主で判定する。回帰テストと個票の対応結果も更新した。",
+  "completion_status": "complete",
+  "handoff": [
+    "判断: 2026-11-11 の grade-stale は、runner の grade（agent の前に実行）が rate limit で失敗したことによる。当時は PJR-M18B の前だった。古い grade を使う経路は再開の側に残っていた。worktree の評価結果サイドカーが最初の checkpoint のままだった。executor からの再開は grade を流していなかった。reporter からの再開は古い executor の結果を使い回していた。root の grade が新しいと merge の前の検査が止めていた。この 4 点を直した。",
+    "判断: 「別の actor が引き受けている」は PJR-T4G3（`claimActor`）と PJR-M495（`claimed_by`）で直っていた。残っていた統合の段からの再開（`last_by` を使っていた）だけを `claimOwnerOf` に替えた。",
+    "判断: grade が失敗しても review の agent を起動し、完了の段で blocked にする PJR-M18B の判断は変えていない。案 A（review の段をやめて grade を直接流す）は運用の決定なので、runner の振る舞いは変えていない。",
+    "残課題: grade の取り込みから reporter の再開の流し直しまでを `runPreparedTask` ごと通す統合テストはない。取り込みと merge は統合テストで確かめた。分岐の配線は型の検査とコードの確認で確かめた。",
+    "残課題: 代表の review の段を、agent を実際に動かして流す確認は人が行う（agent の起動と利用枠が要る）。",
+    "CHANGELOG に書く事項は、個票の対応結果の「CHANGELOG に書く事項」の節に書いた。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-ZSRD/pjr-zsrd-20261116T032943Z-fcb92236/executor.log",
+      "bytes": 7684,
+      "truncated": false
+    }
+  ]
+}

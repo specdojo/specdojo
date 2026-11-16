@@ -406,7 +406,7 @@ export function prepareScheduleIntegrationResume(params: {
   return {
     task,
     actor,
-    claimActor: taskState?.last_by ?? actor,
+    claimActor: claimOwnerOf(taskState) ?? actor,
     agentCandidates: [],
     plan: "",
     prompt: "",
