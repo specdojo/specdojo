@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8792e3047f5e4386b93d6dcf13629a68
+  ts: "2026-11-16T03:13:36Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の git 操作が index.lock の長い保持を待てるようにする
+    - field: description
+      from: ""
+      to: runner の統合の git 操作の index.lock の待ち時間を延ばし、hook の実行中の lock で失敗せずに待つ
+    - field: input
+      from: ""
+      to: '["2026-11-15、orchestrator の手の commit で lefthook の pre-commit の npm test が負荷の下で 17 分ほど index.lock を握り、runner の統合の git restore・merge が「Unable to create index.lock」で失敗した（sld-090 などが blocked）。PJR-G90K で入れた再試行は短い取り合いだけを吸収し、長い保持を越えられない","本命の直列化（PJR の specdojo git）が入るまでの手当てとして、待ち時間を延ばす。利用者が 2026-11-16 に起票を依頼した"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-G90K"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
