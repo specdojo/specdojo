@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TVWR",
+  "run_id": "pjr-tvwr-20261116T151208Z-ebf4d1ed",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-16T15:13:48.811Z",
+    "completed_at": "2026-11-16T15:15:39.354Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tvwr.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tvwr-prj-assumptions-constraints-dependencies-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tvwr-prj-assumptions-constraints-dependencies-rework-grade-findings.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../prj-assumptions-constraints-dependencies.md           | 12 ++++++------\n ...ions-constraints-dependencies-rework-grade-findings.md | 15 +++++++++++++--\n 2 files changed, 19 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "passed",
+      "summary": "全カタログ OK（既存の evidence_refs re-export WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "個票を含む履歴ファイルがすべて valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5123 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5123 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TVWR/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TVWR/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TVWR\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-XNeHc4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Wi2jGL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-1soNcn/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-kzEUtC/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "2026-11-16 の再 grade の指摘 F001〜F009 を前提・制約・依存関係（ACD-D02・ACD-D04）に取り込み、未解決の _TODO_ をすべて解消した。個票の作業内容の表（No 3 を done、No 4 は open）と対応結果を更新した。status は draft のまま据え置いた。",
+  "completion_status": "complete",
+  "handoff": [
+    "再 grade（`grade run --target deliverable`）は agent CLI と利用枠を使うため sandbox では実行できない。orchestrator が実行して個票の対応結果に結果を書き、作業内容の No 4 を閉じる。",
+    "初期公開範囲を追跡する登録簿項目は、決定済みの `PJR-0120` で続けず新しく起票すると決めた（決定状態を追えるようにするため）。`PM` が、成果物カタログと成功基準の詳細化が終わり `PO` に判断を求める前に起票し、ACD-D02 に項目 ID を追記する。",
+    "prj-charter の「ハイレベルスコープ」「未決事項」は、ライセンス方針をまだ未決としている。`PJR-0120`（MIT で決定済み）に合わせる追従更新を、`PM` が別の登録簿項目で起票する（憲章は今回の対象外のため直していない）。",
+    "ACD-D04 では、検証の正本を品質管理計画の検証方針とした。憲章の GO / Not GO 判断が、品質の記録先を品質管理計画としているのが根拠である。品質管理計画は参照してよい範囲の外のため、本文は読んでいない。必要な定義があるかは `ARC` が確かめ、欠けていれば課題として登録簿に記録する。",
+    "status は draft のまま据え置いた。major の指摘を直した直後で、再 grade で確かめる前に ready にしない方がよいため。ready へ戻すかは人が 140 で判断する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-TVWR/pjr-tvwr-20261116T151208Z-ebf4d1ed/executor.log",
+      "bytes": 5064,
+      "truncated": false
+    }
+  ]
+}
