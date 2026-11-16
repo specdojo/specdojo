@@ -1,0 +1,13 @@
+個票の「対応結果」の表に 1 行追記しました。
+
+- **追記した行:** `2026-11-16 22:17`、確認対象 `PJR-KVWH`、agent `sonnet-executor`。
+- **確認対象の根拠:** 対象一覧のうち統合コミットが最も新しいのは `PJR-KVWH` でした（`df0a28b5a`、2026-11-16 22:04 JST）。このコミットは worktree の HEAD に含まれています。
+- **`PJR-KVWH` の状態:** 実行時点で `review` です。完了条件の「`review` または `done`」を満たします。
+- **agent 名の推定:** agent 名の `sonnet-executor` は、過去の行の命名に合わせて私が推定した値です。pipeline state では確認していません。
+- **本文の更新:** 表の下の説明文は、今回の確認対象に合わせて書き換えました。
+- **変更範囲:** 変更したのは本個票だけです。
+- **検証:** lint などの検証は親 runner が実行します。executor 側では実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果に PJR-KVWH（最新の統合、df0a28b5a）の確認行を追記し、説明文を更新した。変更は本個票のみ。","handoff":["agent 名 sonnet-executor は過去の命名に合わせた推定。pipeline state 上の実体名と異なる場合は修正が必要。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため executor では実行していない"}]}
+</specdojo_executor_evidence>
