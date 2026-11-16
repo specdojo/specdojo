@@ -139,6 +139,9 @@ providers:
     # モデルは実体の member の model を --model で渡す。permission は mode 別 settings で分離する。
     command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
     command_params:
+      # frontier（PJR-DGRZ）は名前指定のときだけ使う。model と役割は member と mode から決まる。
+      by_proficiency:
+        frontier: {}
       by_mode:
         edit: { agent: claude-executor }
         review: { agent: claude-review-executor }
@@ -191,6 +194,7 @@ providers:
       by_proficiency:
         normal: { effort: medium }
         expert: { effort: high }
+        frontier: { effort: xhigh }
     # OpenAI: 429 / rate limit（API）に加え、ChatGPT プランの 5時間枠（session limit）
     # と週次上限（weekly / usage limit）がスタックする。
     rate_limit_detection:
