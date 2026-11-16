@@ -39,6 +39,9 @@ function hasConfiguredPath(
 
 export function renderLefthookConfig(config: SpecDojoConfig): string {
   const commands = [
+    "    git-lock-warning:",
+    "      run: node tools/specdojo-pre-commit.mjs git-lock-warning",
+    "",
     "    prettier:",
     '      glob: "*.{md,yaml,yml}"',
     "      run: node tools/specdojo-pre-commit.mjs prettier {staged_files}",
