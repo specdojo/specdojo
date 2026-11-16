@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-wq80-non-register-commit-run-ordering
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: rejected
   priority: low
   registered_at: "2026-11-08T14:03:44Z"
+  completed_at: "2026-11-16T03:43:52Z"
+  conclusion: PJR-30SA（git の書き込みを runner と同じロックで直列化する specdojo git）に引き継いだ
   derived_from:
     - PJR-HQVE
 ---
