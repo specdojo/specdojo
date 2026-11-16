@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-nht7-worktree-cleanup-outside-lifecycle-lock
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T13:06:20Z"
+  completed_at: "2026-11-16T14:05:29Z"
+  conclusion: 統合の後の worktree と branch の片付けを exec-lifecycle のロックの外へ出し、片付けの間は同じ項目の再実行と再開を worktree ごとのロックで止めるようにした。同じプロセスの中で片付けの間も止まる点は残る課題として記録した
   derived_from:
     - PJR-30SA
   commit_type: fix

@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5827806f768d4b06900f5d7aa48a4ab6
+- v: 1
+  id: reg_9967cb2c488a45e2be30de5e1fa05261
+  ts: "2026-11-16T14:05:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 統合の後の worktree と branch の片付けを exec-lifecycle のロックの外へ出し、片付けの間は同じ項目の再実行と再開を worktree ごとのロックで止めるようにした。同じプロセスの中で片付けの間も止まる点は残る課題として記録した
+  previous_event_id: reg_636386e688034679b9f1ad3113486d72
