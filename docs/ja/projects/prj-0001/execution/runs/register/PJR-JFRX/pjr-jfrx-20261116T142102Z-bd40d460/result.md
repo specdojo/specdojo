@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-JFRX
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-JFRX/pjr-jfrx-20261116T142102Z-bd40d460/plan.md
   started_at: "2026-11-16T14:21:23.444Z"
+  completed_at: "2026-11-16T14:36:40.072Z"
   agent: opus-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- Reworked bds-progress-report for re-grade findings F001-F014 (major F005/F006/F014 resolved by limiting manual creation to after the period end and deferring successful-run regeneration to a tracked DEV item); updated ticket work table and response section. Re-grade left open for orchestrator.
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md`: 変更、+29 / -24 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 決定（F005・F006・F014・F004・F012）: `sysd-job-execution` では同じ `idempotency_key` の Run があれば新しい Run を作らず、再実行は失敗した Run の再試行に限る。そのため手動作成は期間の終点の後に限り、終点の前には作らないと決めた。暫定の報告を作らないため、暫定であることを示す表示は不要とした。
+- 留保（F007）: 成功した報告を同じファイル名のまま作り直す手段（Job の冪等性キーまたは runner の再実行の扱いの変更）の要否を、DEV の判断として「メモ / 将来課題」の「成功した報告の作り直し」に追加した。登録簿で追跡し、判断点は T-KATA-WAVE-2-bds-progress-report-140。
+- 決定（F001・F013）: ファイル名は `pr-&lt;yyyy-mm-dd&gt;-&lt;nn&gt;.md` とし、日付は期間の終点の日付（当週金曜）、連番は `01` に固定する（例: 2026-W32 は `pr-2026-08-07-01.md`）。進捗報告の rulebook へ書き足すかは PM の判断として留保した。
+- 決定（F002・F003）: 報告の外部公開は PM の内容確認の後に PO が承認する。2 回続けて持ち越したリスク・課題で登録簿に項目がないものは PM が起票し、報告に登録簿の ID を示す。
+- 次のアクション: 個票の作業内容 No 4（再 grade）は open のまま残した。`grade run --target deliverable` は agent を起動するため orchestrator が流す。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
