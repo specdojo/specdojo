@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bnk5-gl-kata-refine-from-confirmed
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T13:11:51Z"
+  completed_at: "2026-11-16T03:45:50Z"
+  conclusion: 用語集の型（gl）を確定した用語集 6 件を手本に見直し、型の再 grade で rulebook pass 88 点・sample pass 93 点
   derived_from:
     - PJR-960C
     - PJR-6XQ4
