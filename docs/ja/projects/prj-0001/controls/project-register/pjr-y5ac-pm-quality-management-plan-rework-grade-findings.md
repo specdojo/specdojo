@@ -49,7 +49,7 @@ pm-quality-management-plan を最新の grade の指摘で直す
 | 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | 2026-11-17 executor が F001〜F005 を取り込んだ（対応結果を参照） |
 | 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | done | 2026-11-17 の 2 回目の再 grade で needs-work                     |
 | 5   | 2 回目の再 grade の指摘を取り込んで直す（3 回目）      | PM   | done | 2026-11-17 executor が F001〜F003 を取り込んだ（対応結果を参照） |
-| 6   | 直した後に grade し直して結果を書く（3 回目）          | PM   | open | orchestrator が流す                                              |
+| 6   | 直した後に grade し直して結果を書く（3 回目）          | PM   | done | 2026-11-17 の 3 回目の再 grade で pass                           |
 
 ## 5. 対応結果
 
@@ -101,6 +101,8 @@ pm-quality-management-plan を最新の grade の指摘で直す
   - 判定時期の変更は成功条件の承認済みの条件を変えるため、変更要求個票に登録する形にした。判定基準・測定方法は変えない。
   - SC-04 と SC-06 は累積の件数で判定するため、観測期間は公開から再観測の時期までの累積とした。SC-05 は利用前後の比較が要るため、期間を `PO` の決定とした。
   - 再観測でも未達のときは、`PO` が改善の継続・範囲の縮小・中止を判断する形にした。
+
+3 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: pass、100 点。指摘は 0 件。完了条件は 3 件中 3 件を満たす。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-quality-management-plan.yaml`。
 
 ## 6. 関連ドキュメント
 

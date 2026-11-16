@@ -2,12 +2,12 @@
 id: prj-0001:pm-quality-management-plan-grade-criteria
 document: prj-0001:pm-quality-management-plan
 path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
-graded_at: "2026-11-16T16:05:07.045Z"
+graded_at: "2026-11-16T17:06:23.764Z"
 graded_by: sol-review-executor
-content_hash: d0234d30682093c031c4e50814ad774c0a8d86170ab439ad6d23f03cbafcd27c
+content_hash: 84c463a64ee7d90077d6d61aa423e4734cb134d043778c4553d9e23074ebdb3a
 summary:
-  satisfied: 2
-  unsatisfied: 1
+  satisfied: 3
+  unsatisfied: 0
   total: 3
 criteria:
   - id: DC-001
@@ -27,5 +27,4 @@ criteria:
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: 公開後6・9・24か月の所定時点で未達になった場合に実施できる再検証時期・観測期間・承認手順が定義されていない。
+    status: satisfied

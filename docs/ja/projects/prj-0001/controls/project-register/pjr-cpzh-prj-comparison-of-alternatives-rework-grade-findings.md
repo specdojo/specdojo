@@ -42,14 +42,14 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                  |
-| --- | ------------------------------------------------------ | ---- | ---- | ----------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                     |
-| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点）  |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | executor が F001〜F006 を取り込んだ（対応結果を参照） |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | done | 2026-11-17 の 2 回目の再 grade で needs-work          |
-| 5   | 2 回目の再 grade の指摘を取り込んで直す（3 回目）      | PM   | done | executor が F001〜F004 を取り込んだ（対応結果を参照） |
-| 6   | 直した後に grade し直して結果を書く（3 回目）          | PM   | open | orchestrator が流す                                   |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                           |
+| --- | ------------------------------------------------------ | ---- | ---- | -------------------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                              |
+| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点）           |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | executor が F001〜F006 を取り込んだ（対応結果を参照）          |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | done | 2026-11-17 の 2 回目の再 grade で needs-work                   |
+| 5   | 2 回目の再 grade の指摘を取り込んで直す（3 回目）      | PM   | done | executor が F001〜F004 を取り込んだ（対応結果を参照）          |
+| 6   | 直した後に grade し直して結果を書く（3 回目）          | PM   | open | 2026-11-17 の 3 回目の再 grade で needs-work。利用者の判断待ち |
 
 ## 5. 対応結果
 
@@ -107,6 +107,8 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
   - TSK-02 の依存表現の根拠（Issue 間の依存と Projects で blocker と順序を表せる）と、SDD-04・SDD-05 の製品の性質（Specs の利用環境、機能群の個別利用）は、宣言された根拠資料に詳細がなく、2 回目の再 grade の指摘と公式資料の一般的な説明に基づく。executor は外部資料を確認していないため、WP-01 または再評価の条件の発生時に公式資料で確かめる。
   - SpecDojo 自体（SDD-01・TSK-01）の成熟度は、互換性・更新方針の公開資料を確認していないため未判定とし、`ARC` の確認作業とした。正本の採否は必須条件の軸で決まるため変わらない。
 - 再 grade: executor では実行していない（agent CLI の起動を要するため）。作業内容の No.6 は open のまま残し、orchestrator が `grade run --target deliverable` を流して結果を追記する。
+
+3 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: needs-work、95 点。指摘は 4 件（major 1・minor 3）。完了条件は 4 件中 4 件を満たす。major の F002 は 2 回目と同じ文面で、各セルの根拠が未解消とする。3 回目で未判定を分け、判定の根拠と集約規則の節と High の根拠の表を足したが、Middle・Low のセルの根拠を求めているとみられる。4 回目を流すか、カタログの完了条件を満たしたとして close するかを利用者が判断する。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`。
 
 ## 6. 関連ドキュメント
 
