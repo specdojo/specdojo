@@ -38,3 +38,22 @@
     - field: commit_scope
       from: ""
       to: references
+- v: 1
+  id: reg_dec921b49dd34337970b561141061c61
+  ts: "2026-11-16T11:01:29Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 2 段階（非推奨の警告から削除）で進め、分類の案に沿って分類ごとの todo（BSCK・JKQX・C4J1・R7BQ）と question（Y7FF）で残すかを確かめながら整理する
+  previous_event_id: reg_71443806cc45410ea92e072b99c3e183

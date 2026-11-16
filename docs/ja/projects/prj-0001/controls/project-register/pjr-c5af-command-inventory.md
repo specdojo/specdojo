@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-c5af-command-inventory
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: PO
   registered_at: "2026-11-16T10:59:36Z"
   due_on: null
+  completed_at: "2026-11-16T11:01:29Z"
+  conclusion: 2 段階（非推奨の警告から削除）で進め、分類の案に沿って分類ごとの todo（BSCK・JKQX・C4J1・R7BQ）と question（Y7FF）で残すかを確かめながら整理する
   commit_type: docs
   commit_scope: references
 ---
