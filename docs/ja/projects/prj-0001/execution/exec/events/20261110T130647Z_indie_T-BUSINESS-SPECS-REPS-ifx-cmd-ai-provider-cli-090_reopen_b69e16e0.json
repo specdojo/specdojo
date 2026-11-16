@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T13:06:47Z",
+  "type": "reopen",
+  "task_id": "T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-090",
+  "by": "indie",
+  "msg": "型一式の確定（business-specs-kata）の後に、確定した型で磨き込みから流し直す（indie が決定、orchestrator が記帳）"
+}

@@ -1,0 +1,13 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/execution/runs/schedule/stsd-register-entry/stsd-register-entry-20260928T151609Z-8813/plan.md:217 error MD012/no-multiple-blanks Multiple consecutive blank lines [Expected: 1; Actual: 2]

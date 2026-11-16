@@ -13,6 +13,7 @@ import {
   isRecord,
   levelCapForFindings,
   parseMarkdown,
+  parseGradeDocument,
   preserveStoredFindingSeverities,
   sanitizeCommentText,
   type GradeCriterionInput,
@@ -31,7 +32,7 @@ import { applicableDoneCriteria, deterministicResults, gradePlanFilename } from 
 import {
   gradeContentHash,
   gradeResultPathForDocument,
-  markdownDocumentId,
+  gradeDocumentId,
   readGradeResult,
   writeGradeResult,
   type GradeResult,
@@ -54,6 +55,7 @@ import {
 import type { ReviewViewpointsDoc } from "../review/types.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
+import { findingCause, isFindingCause } from "../shared/finding-cause.js";
 
 export function normalizeGradeExecutorLine(line: string): string {
   let normalized = line.replace(/^\s*(?:>\s*)*(?:[-*+]\s+)?/, "");
@@ -64,7 +66,7 @@ export function normalizeGradeExecutorLine(line: string): string {
   const wrappedLevel = normalized.match(/^\*\*(LEVEL:\s*[0-4])\*\*\s*$/);
   if (wrappedLevel) return wrappedLevel[1];
   normalized = normalized.replace(
-    /^\*\*(LEVEL|FINDING(?:\s+[a-z]+)?(?:\s+line=[0-9]+)?|DC-[0-9]{3,})(:?)\*\*(:?)/,
+    /^\*\*(LEVEL|CAUSE|FINDING(?:\s+[a-z]+)?(?:\s+line=[0-9]+)?|DC-[0-9]{3,})(:?)\*\*(:?)/,
     (_match, head: string, innerColon: string, outerColon: string) =>
       `${head}${innerColon}${outerColon}`,
   );
@@ -135,6 +137,17 @@ export function parseGradeExecutorAnalysis(raw: string): GradeExecutorAnalysis {
     }
     if (!current) continue;
 
+    const causeLine = line.match(/^CAUSE:\s*(.*)$/);
+    if (causeLine) {
+      const finding = current.findings.at(-1);
+      if (!finding || finding.cause !== undefined) {
+        throw new Error(`line ${lineIndex + 1}: CAUSE requires a preceding FINDING without cause`);
+      }
+      const cause: unknown = JSON.parse(causeLine[1]);
+      if (!isFindingCause(cause)) throw new Error(`line ${lineIndex + 1}: invalid finding cause`);
+      finding.cause = cause;
+      continue;
+    }
     const level = line.match(/^LEVEL:\s*([0-4])\s*$/);
     if (level) {
       if (current.level !== undefined) {
@@ -187,6 +200,7 @@ function findingFidelityKey(finding: GradeFindingInput): string {
     severity: finding.severity,
     line: finding.line ?? null,
     message: normalizeFindingMessageForFidelity(finding.message),
+    cause: finding.cause === undefined ? null : findingCause(finding),
   });
 }
 
@@ -220,6 +234,14 @@ function findingDifferenceMessage(
   reported: GradeFindingInput,
 ): string {
   const differences: string[] = [];
+  if (
+    JSON.stringify(declared.cause === undefined ? null : findingCause(declared)) !==
+    JSON.stringify(reported.cause === undefined ? null : findingCause(reported))
+  ) {
+    differences.push(
+      `cause executor=${JSON.stringify(declared.cause ?? null)} reporter=${JSON.stringify(reported.cause ?? null)}`,
+    );
+  }
   if (declared.severity !== reported.severity) {
     differences.push(`severity executor=${declared.severity} reporter=${reported.severity}`);
   }
@@ -551,7 +573,7 @@ export function validateGradeSubmission(
     const absoluteDocumentPath = resolve(specdojoRootDir(), document.path);
     const normalizedDocumentPath = repoRelativePath(absoluteDocumentPath);
     const metadata = existsSync(absoluteDocumentPath)
-      ? (parseMarkdown(readFileSync(absoluteDocumentPath, "utf8"), normalizedDocumentPath).data
+      ? (parseGradeDocument(readFileSync(absoluteDocumentPath, "utf8"), normalizedDocumentPath).data
           .specdojo as Record<string, unknown>)
       : {};
     const required = agentViewpoints(doc, target, metadata);
@@ -606,6 +628,16 @@ export function validateGradeSubmission(
             message: "severity and non-empty message are required",
           });
           continue;
+        }
+        if (
+          finding.cause !== undefined &&
+          (target !== "deliverable" || !isFindingCause(finding.cause))
+        ) {
+          issues.push({
+            path: `${resultPath}.findings[${findingIndex}].cause`,
+            message:
+              "cause must be document or kata with kind and location, and is accepted only for deliverable targets",
+          });
         }
         if (
           finding.message_ja !== undefined &&
@@ -748,14 +780,14 @@ export function applyGradeSubmission(opts: {
       throw new Error(`${rel}: criteriaDirectory is required to record done_criteria`);
     }
     if (opts.resultsDirectory) {
-      const documentId = markdownDocumentId(current, rel);
+      const documentId = gradeDocumentId(current, rel);
       const resultPath = gradeResultPathForDocument({
         documentPath: absolute,
         project: opts.project,
         resultsDirectory: opts.resultsDirectory,
       });
       const previous = readGradeResult(resultPath);
-      const document = parseMarkdown(current, rel);
+      const document = parseGradeDocument(current, rel);
       const agentResults = preserveStoredFindingSeverities(previous, input.viewpoints);
       const correctionByViewpoint = new Map(
         (input.level_corrections ?? []).map((correction) => [
@@ -807,6 +839,7 @@ export function applyGradeSubmission(opts: {
             anchor: bodyLines[Math.min(bodyLines.length, line) - 1]?.trim() ?? "",
             message: sanitizeCommentText(finding.message),
             message_ja: sanitizeCommentText(finding.message_ja ?? finding.message),
+            ...(finding.cause !== undefined ? { cause: finding.cause } : {}),
           };
         }),
       );

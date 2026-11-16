@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045",
+  "run_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045-20261109T231334Z-f23e0849",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-09T23:15:10.245Z",
+    "completed_at": "2026-11-09T23:21:34.013Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/ifx-cmd-recipe.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/recipes/ifx-cmd-recipe.md | 223 +++++++++++++++++------------\n 1 file changed, 133 insertions(+), 90 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/recipes/ifx-cmd-recipe.md",
+      "status": "passed",
+      "summary": "変更した Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/recipes/ifx-cmd-recipe.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ済み検査対象は0ファイル、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "executor の変更は Markdown recipe のみで、YAML／YML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は適用外。",
+      "reason": "executor の変更は docs/ja/specdojo/recipes/ 配下のみで、docs/ja/projects/ 配下を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "登録簿個票および既存 plan／result などの履歴ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max\n… output omitted …\nworktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4221 file(s), 139 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 7 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4221 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open \n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nge valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-umzxcI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-VkMq2f/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-BP5Z7s/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-m1IHua/pjr-\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "ifx-cmd-recipe.md の入力・判断順序・完了条件を具体化し、provider 一覧の重複防止と改訂 rulebook への整合を反映しました。整形・差分確認済みです。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter 向け: 変更ファイルは docs/ja/specdojo/recipes/ifx-cmd-recipe.md のみ。代表成果物、rulebook、sample、template、grade サイドカー、result は変更していない。result の実施内容・変更ファイル・進め方と実践の型の適用へ本報告を反映すること。",
+    "判断根拠: recipe-authoring-standard、rulebook-authoring-standard、ifx-cmd-rulebook、ifx-cmd.schema.yaml、exec-config-guide、ryu-guide の実践の型メンテナンス手順、共通規約、共通レビュー観点の vp-arc-conciseness／vp-qe-kata-conformance、PJR-2GD6 を確認。成果物 ifx-cmd-ai-provider-cli、既存の ifx-cmd-sample／ifx-cmd-template、condense result prj-0001:xer-t-business-specs-reps-ifx-cmd-ai-provider-cli-080-20261109t045935z-868c17fe を照合した。review result prj-0001:xrr-t-business-specs-reps-ifx-cmd-ai-provider-cli-090-20261109t061047z-93a0a084 は grade-unavailable のため、機能的整合の確証には用いていない。",
+    "condense 指摘の対応: cause.location の旧章番号は現行と異なるため、改訂前の実行目的と正本参照・良い例／悪い例を内容で照合した。改訂後のコマンドと正本参照、深掘り手順、対比例、レビュー観点に provider 一覧を設定の鍵へ委ねる判断を追加。実行ファイルの解決規則と認証対象の参照名は独立した判断情報として保持する。展開された finding の未解消・根拠不足による見送りはない。",
+    "rulebook を正とした修正: シェル利用を一律 false とする確認を改め、管理された設定と展開値の検証を確認する問いへ変更。混在 stdout の採用範囲、プロセス終了と業務完了、CLI の変更と runner の記録、自動分類できない失敗、冪等性を保証しない場合の再開条件、未決定制約の扱いを具体化した。引数表・カテゴリ一覧・構造詳細の再掲は参照と判断手順へ置換した。",
+    "recipe と template はともに必要と判断。recipe は境界・分岐・回復条件を導く問いと手順、template は YAML の開始時の骨組みを担うため、rulebook の既存宣言 specdojo:ifx-cmd-recipe／specdojo:ifx-cmd-template を維持した。rulebook の完成例は既に sample へ外出しされ、章別の判断基準・良い例・悪い例も存在するため変更不要。recipe の status は draft を維持。共通 lint・schema・型検査・テストは指定された親 runner の検証に委ねる。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-045-20261109T231334Z-f23e0849/executor.log",
+      "bytes": 4181,
+      "truncated": false
+    }
+  ]
+}

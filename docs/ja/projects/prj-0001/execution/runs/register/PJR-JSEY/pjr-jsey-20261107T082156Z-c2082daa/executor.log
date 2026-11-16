@@ -1,0 +1,10 @@
+個票の対応結果の表に、確認対象 PJR-G1W9 の行を 1 行追記しました。変更したのは個票だけで、親 runner の検証は未実行です。
+
+- **追記した行:** 日時は 2026-11-07 17:24 JST、確認対象は PJR-G1W9、agent は sonnet-executor です。
+- **確認対象の選び方:** `git log` で、対象一覧のうち最も新しく review になった項目を探しました。PJR-G1W9 の review は 17:19（コミット `1ed274159`）で、PJR-8YH0 の 17:00 より後です。
+- **本文の更新:** 表の下の説明文も、確認対象を PJR-KC0T から PJR-G1W9 に書き換えました。
+- **検証:** この個票に対する `npx prettier --check` は通りました。lint・typecheck・test などの親 runner の検証は、親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-G1W9 の行を追記し、本文の説明を更新した。変更したのはこの個票のみ。","handoff":["確認対象は、対象一覧のうち最も新しく review になった PJR-G1W9 とした（コミット `1ed274159`、2026-11-07 17:19 JST）。","個票の申し送りにある親 runner の 7 検証、reporter の result 記入、統合、`review` 遷移は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形に問題なし"},{"command":"npm run validate:history-links","status":"not_run","summary":"個票に Markdown リンクは追加していない。"}]}
+</specdojo_executor_evidence>

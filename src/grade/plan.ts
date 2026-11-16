@@ -3,12 +3,13 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { basename, extname, join } from "node:path";
 import { dump } from "../shared/yaml.js";
+import { isYamlDocument } from "../shared/document-metadata.js";
 import {
   GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT,
   agentViewpoints,
   gradedViewpoints,
   levelCapForFindings,
-  parseMarkdown,
+  parseGradeDocument,
   type GradeDoneCriterion,
   type GradeFindingInput,
   type GradeTarget,
@@ -46,12 +47,15 @@ export function deterministicResults(
         if (typeof specdojo[key] !== "string" || !String(specdojo[key]).trim()) {
           findings.push({
             severity: "major",
-            message: `Frontmatter の specdojo.${key} が未設定です。`,
+            message:
+              document.format === "yaml"
+                ? `YAML のメタ情報 ${key} が未設定です。`
+                : `Frontmatter の specdojo.${key} が未設定です。`,
             line: 1,
           });
         }
       }
-      if (!/^#\s+\S/m.test(document.body)) {
+      if (document.format !== "yaml" && !/^#\s+\S/m.test(document.body)) {
         findings.push({ severity: "major", message: "本文に H1 見出しがありません。", line: 1 });
       }
     }
@@ -149,7 +153,10 @@ function splitDocumentForEmbedding(content: string): { frontmatter?: string; bod
 
 function renderEmbeddedGradeDocument(path: string, roles: readonly string[]): string[] {
   const content = readFileSync(resolveSafeRepositoryPath(path, "embedded document"), "utf8");
-  const { frontmatter, body } = splitDocumentForEmbedding(content);
+  const yaml = isYamlDocument(path);
+  const { frontmatter, body } = yaml
+    ? { body: content.replace(/\r\n?/g, "\n").replace(/\n$/, "") }
+    : splitDocumentForEmbedding(content);
   const bodyLines = body === "" ? [] : body.split("\n");
   const numberedBody = bodyLines.map((line, index) => `${index + 1} | ${line}`).join("\n");
   const lines = [
@@ -166,7 +173,9 @@ function renderEmbeddedGradeDocument(path: string, roles: readonly string[]): st
   }
   const bodyFence = markdownFence(numberedBody);
   lines.push(
-    "本文（左端は `finding.line` と同じ、Frontmatter を除く1始まりの行番号）:",
+    yaml
+      ? "YAML 全文（左端は元ファイルの1始まりの行番号であり、`finding.line` に使う）:"
+      : "本文（左端は `finding.line` と同じ、Frontmatter を除く1始まりの行番号）:",
     "",
     `${bodyFence}text`,
     numberedBody,
@@ -223,7 +232,7 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
   const rubric = assertRubric(opts.viewpoints);
   const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.projectId);
   const rel = repoRelativePath(absolute);
-  const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
+  const document = parseGradeDocument(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
@@ -329,7 +338,9 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "",
     ...(embedding.embedded
       ? [
-          "1. plan の「埋め込み資料」にある評価対象の本文を全文読む。Frontmatter は行番号の対象外であり、本文左端の番号を finding の `line` に使う。",
+          document.format === "yaml"
+            ? "1. plan の「埋め込み資料」にある YAML 全文を読む。左端の元ファイル行番号を finding の `line` に使う。"
+            : "1. plan の「埋め込み資料」にある評価対象の本文を全文読む。Frontmatter は行番号の対象外であり、本文左端の番号を finding の `line` に使う。",
           "2. 埋め込まれた参考資料と良い実例がある場合はすべて読む。ファイル読み取りツールと検索ツールを使わず、plan に埋め込まれた資料だけで判定し、参考資料や良い実例を評価対象と混同しない。",
         ]
       : [
@@ -338,13 +349,20 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
         ]),
     "3. 良い実例がある場合は、章ごとの具体性、根拠の密度、過不足を評価対象と比較して記載水準を判定する。表現の類似や実例自体の欠点を評価理由にせず、rubric と viewpoint を最終的な判定基準にする。",
     "4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。",
-    "5. 判定根拠と新しい finding の message は英語で記述する。固有名詞・識別子・引用は原文を保ってよい。日本語だけの既存 finding は互換用の正本として扱い、未解消ならその message を翻訳せず原文のまま再掲する。",
-    "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
-    "7. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の canonical message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
+    "5. 判定根拠と新しい finding の message は日本語で記述する。固有名詞・識別子・引用は原文を保ってよい。",
+    document.format === "yaml"
+      ? "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、元の YAML ファイルの1始まりの行番号、具体的な修正理由を含める。コメント・メタ情報を含む YAML 全文を評価し、Markdown の見出しや Frontmatter を要求しない。level 4 は finding なしとする。"
+      : "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
+    ...(opts.target === "deliverable"
+      ? [
+          '各 finding の直後に `CAUSE: <JSON>` を1行で記す。原因は `{"type":"document"}`、または `{"type":"kata","kind":"rulebook|recipe|sample|template","location":"Kata 内の見出し・行・引用箇所"}` とする（kind は1種類を選ぶ）。冗長さに限らず全 viewpoint で原因を判断する。成果物が宣言した rulebook とそこから辿る Kata を根拠とし、Kata の問題箇所を実際に読んで location に示せる場合だけ kata とする。資料にない・箇所を示せない場合は document とする。原因は点数・判定・前の指摘の引き継ぎを変えない。',
+        ]
+      : ["Kata そのものの grade では原因を付けず、`CAUSE` 行を出力しない。"]),
+    "7. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら「前回の指摘」に示した message を一字一句変えずに今回の finding に含め（英語で示された場合も訳さずそのまま再掲する）、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
     "8. 前回の指摘の確認だけで終了せず、前回の指摘にない問題もすべての viewpoint で独立して検出する。",
     ...(doneCriteria.length > 0
       ? [
-          "9. 完了条件（done_criteria）を1件ずつ本文の根拠と照合し、`satisfied` / `unsatisfied` を判定する。viewpoint の level や総合 score とは独立した判定であり、level が高いことを理由に条件を満たしたとみなさない。`unsatisfied` には不足している内容を英語で1行に記す。",
+          "9. 完了条件（done_criteria）を1件ずつ本文の根拠と照合し、`satisfied` / `unsatisfied` を判定する。viewpoint の level や総合 score とは独立した判定であり、level が高いことを理由に条件を満たしたとみなさない。`unsatisfied` には不足している内容を日本語で1行に記す。",
         ]
       : []),
     "",
@@ -353,16 +371,18 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "grade result サイドカーに記録された前回の finding を示す。対象本文には評価コメントを書き込まない。",
     "",
     // 前回の id は今回の採番と混同させないため渡さない。事実（severity / rule / 位置 / message）だけを示す。
+    // 英語を正本にした旧結果は、表示用の日本語（message_ja）があればそれを示す。再掲された日本語は
+    // grade apply が message_ja とも照合して severity を引き継ぎ、新しい正本になる。
     ...(priorFindings.length > 0
       ? [
           "```json",
           JSON.stringify(
-            priorFindings.map(({ severity, rule, line, anchor, message }) => ({
+            priorFindings.map(({ severity, rule, line, anchor, message, message_ja }) => ({
               severity,
               rule,
               line,
               anchor,
-              message,
+              message: message_ja ?? message,
             })),
             null,
             2,
@@ -389,8 +409,8 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "## 4. 完了手順",
     "",
     "1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。",
-    "2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON、Markdown コードフェンス、GradeSubmission は出力しない。",
-    "3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は英語で1行に具体的に記す。message は正本としてそのまま記録される。finding がない場合は `FINDING` 行を記さない。",
+    "2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON は `CAUSE` 行の値だけに用い、Markdown コードフェンスや GradeSubmission は出力しない。",
+    "3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は日本語で1行に具体的に記す。message は正本としてそのまま記録される。finding がない場合は `FINDING` 行を記さない。",
     "4. すべての viewpoint marker、0-4 の level、level 3 以下の finding、severity と非空 message が揃っていることを確認する。",
     ...(doneCriteria.length > 0
       ? [
@@ -404,6 +424,7 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
       "LEVEL: <0-4>",
       "根拠を自由形式で記述する。",
       "FINDING <severity> line=<line>: level 3 以下の場合だけ、具体的な修正理由を1行で記述する。",
+      ...(opts.target === "deliverable" ? ['CAUSE: {"type":"document"}'] : []),
       "[END VIEWPOINT]",
       "",
     ]),
@@ -449,7 +470,7 @@ export function renderGradeReporterPlan(opts: {
   const rubric = assertRubric(opts.viewpoints);
   const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.projectId);
   const rel = repoRelativePath(absolute);
-  const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
+  const document = parseGradeDocument(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
@@ -497,7 +518,7 @@ export function renderGradeReporterPlan(opts: {
     "## 3. 進め方",
     "",
     "1. `<grade_executor_output>` の `[VIEWPOINT <id>]` ごとに `LEVEL` とすべての `FINDING` を読み取る。対象文書や参考資料は読まない。",
-    "2. level、severity、line、message を executor の申告どおりにコピーする。message の要約、言い換え、校正を行わない。",
+    "2. level、severity、line、message を executor の申告どおりにコピーする。`CAUSE: <JSON>` は直前の finding の `cause` に構造を保ってコピーし、省略時は cause を足さない。message の要約、言い換え、校正を行わない。",
     "3. executor が述べていない finding を追加せず、述べた finding を省略しない。finding の `id` は出力しない。",
     "4. finding の severity により viewpoint の level に上限がある（`blocker` は上限 0、`major` は上限 2、`minor` は上限 3）。executor の申告が上限を超えていても level は申告どおりにコピーし、補正は `grade apply` に委ねる。marker 欠落など、それ以外の GradeSubmission 契約違反は推測で補わず異常終了する。",
     ...(doneCriteria.length > 0

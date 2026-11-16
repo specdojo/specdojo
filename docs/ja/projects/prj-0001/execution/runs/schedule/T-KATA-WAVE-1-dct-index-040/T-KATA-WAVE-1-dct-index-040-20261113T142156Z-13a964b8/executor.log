@@ -1,0 +1,64 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "dct-index rulebook を改訂し、判断基準・良い例・悪い例を補強しました。schema・生成仕様の重複を参照へ整理し、整形と差分確認を通過しました。",
+  "handoff": [
+    "判断根拠として、docs/ja/specdojo/standards/rulebook-authoring-standard.md、docs/ja/specdojo/standards/document-metadata-standard.md、docs/ja/specdojo/guides/docs-structure-guide.md、docs/ja/specdojo/guides/ryu-guide.md のメンテナンス節、docs/ja/specdojo/defaults/pm-review-viewpoints.yaml の vp-arc-conciseness、docs/specdojo/schemas/v1/dct-index.schema.yaml、コマンドリファレンスの catalog / deliverable 節、PJR-2GD6・PJR-ZJZD・PJR-269Z を確認した。",
+    "根拠成果物の dct-index.yaml、既存 sample・template、T-KATA-WAVE-1-dct-index-005 の bootstrap result、dct-index-rulebook の grade result（2026-10-31、findings なし）を確認した。分類の正本、論理ドメイン単位の管理、サイドバー向けキー順は維持。schema の制約一覧と生成アルゴリズムの再掲を参照へ置換し、規模・分類・説明・変更時の確認に判断基準と良い例・悪い例を整備した。キー順の制約は packages/docs-site/.vitepress/config.mts でも確認した。",
+    "recipe は分類・規模の判断を rulebook の記述ガイドで扱えるため `not-needed` を維持。template は生成ビューの共通本文・一覧挿入スロットとして必要なため specdojo:dct-index-template を維持した。完成例は既存の specdojo:dct-index-sample に集約し、rulebook にサンプル章は設けていない。単独ドメインのサブグループは件数ではなく探索目的で判断するよう明確化し、成果物・sample と整合させた。",
+    "本フェーズでは rulebook のみ編集した。成果物本体と sample・recipe・template の編集は行っていない。新規文書がないためサイドバー追加は不要で、既存 rulebook・sample・template の掲載を確認済み。result は executor 指示に従い編集していないため、reporter は本報告の変更内容・根拠・要否判断を必須セクションへ記録すること。sample・recipe・template の整合確認は計画どおり後続フェーズで行う。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "passed",
+      "summary": "変更した rulebook を整形した。"
+    },
+    {
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "staged の対象記録は 0 ファイル、検出 0 件。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "executor が変更したファイルは Markdown rulebook のみで、YAML ファイルの変更はない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "executor の成果物変更は docs/ja/specdojo/ 配下のみで、docs/ja/projects/ 配下には及ばない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "executor は登録簿個票・既存 plan・result を変更していない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "prj-0001:dct-index",
+      "status": "unchanged",
+      "reason": "計画が成果物本体の変更を対象外としているため、現行の索引を rulebook 改訂の根拠として読み取り、維持した。"
+    },
+    {
+      "target": "specdojo:dct-index-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/dct-index-rulebook.md"
+    }
+  ]
+}
+</specdojo_executor_evidence>

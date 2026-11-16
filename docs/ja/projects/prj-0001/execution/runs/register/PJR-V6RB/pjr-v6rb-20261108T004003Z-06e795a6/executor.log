@@ -1,0 +1,36 @@
+PJR-V6RB「カタログに sf・uis・ifx の代表を 1 件ずつ足す」の対応を完了しました。
+
+### 実施内容
+
+1. **代表エントリの選定と命名規約の整合**:
+   - `sf-task-execution`:
+     - `<term>`: `task-execution`
+     - 理由: [[specdojo:id-and-file-naming-standard]] 4.7 に従い、タスクの実行機能を表す名詞句として選定。既存の総合テスト（`stc-task-execution`）、受入テスト（`atc-task-execution`）、業務受入条件（`bac-task-execution`）、概念クラス図（`ccd-task-execution`）、ステータス定義（`stsd-task-execution`）で確立されている標準語彙と統一しました。
+     - 実装根拠（`evidence_refs`）: `src/exec/run/agent-pipeline.ts`
+   - `uis-exec-commands`:
+     - `<term>`: `exec-commands`
+     - 理由: [[specdojo:id-and-file-naming-standard]] 4.7 に従い、`exec` サブコマンド配下の CLI コマンド群（run・plan・review・worktree 等）を画面に見立てた仕様を表す名詞句として選定しました。
+     - 実装根拠（`evidence_refs`）: `src/exec/commands.ts`
+   - `ifx-cmd-ai-provider-cli`:
+     - `<term>`: `ai-provider-cli`
+     - 理由: [[specdojo:ifx-cmd-rulebook]] 3 および [[specdojo:id-and-file-naming-standard]] 4.7 に従い、SpecDojo がプロセス起動する外部 CLI である「AI provider CLI」（Claude Code / Codex CLI / opencode 等）を表す名詞句として選定しました。
+     - 実装根拠（`evidence_refs`）: `src/exec/run/agent.ts`、`src/exec/agent-config.ts`
+
+2. **成果物カタログの更新**:
+   - [dct-system-functions.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V6RB/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml):
+     - `sf-index` の `note` を代表作成方針（[[prj-0001:pjr-2gd6-business-specs-reps]]）に合わせて更新。
+     - `sf-task-execution` エントリ（`rulebook`: `specdojo:sf-rulebook`、`kind: work`、`evidence_refs`: `src/exec/run/agent-pipeline.ts`、`done_criteria`: BA/PO/ARC/QE/DEV）を追加。
+   - [dct-user-interface-model.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V6RB/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml):
+     - `uis-index` の `note` を代表作成方針（[[prj-0001:pjr-2gd6-business-specs-reps]]）に合わせて更新。
+     - `uis-exec-commands` エントリ（`rulebook`: `specdojo:uis-rulebook`、`kind: work`、`evidence_refs`: `src/exec/commands.ts`、`done_criteria`: BA/PO/ARC/QE/UX）を追加。
+   - [dct-external-interface-specs.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V6RB/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml):
+     - `ifx-index` の `note` を代表作成方針（[[prj-0001:pjr-2gd6-business-specs-reps]]）に合わせて更新。
+     - `ifx-cmd-ai-provider-cli` エントリ（`rulebook`: `specdojo:ifx-cmd-rulebook`、`kind: work`、`evidence_refs`: `src/exec/run/agent.ts`・`src/exec/agent-config.ts`、`done_criteria`: BA/PO/ARC/QE/DEV）を追加。
+
+3. **個票の更新**:
+   - [pjr-v6rb-catalog-add-sf-uis-ifx-reps.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-V6RB/docs/ja/projects/prj-0001/controls/project-register/pjr-v6rb-catalog-add-sf-uis-ifx-reps.md):
+     - 作業内容および対応結果を更新し、選定した `local_id` の `<term>` と決定理由・実装根拠を記録。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"3つの成果物カタログに sf・uis・ifx の代表エントリを追加し、索引の note 更新およびカタログ・リンク検証を完了しました。","handoff":["sf-task-execution: <term> は task-execution。タスクの実行機能を表す名詞句として既存のテスト仕様（stc-task-execution / atc-task-execution）や受入条件（bac-task-execution）、データモデル（ccd-task-execution / stsd-task-execution）と統一。実装根拠は src/exec/run/agent-pipeline.ts。","uis-exec-commands: <term> は exec-commands。exec サブコマンド配下の CLI コマンド群（run・plan・review・worktree等）を画面に見立てた仕様を表す名詞句として選定。実装根拠は src/exec/commands.ts。","ifx-cmd-ai-provider-cli: <term> は ai-provider-cli。specdojo:ifx-cmd-rulebook 3 および命名標準に従い、SpecDojo がプロセス起動する外部 CLI である「AI provider CLI」（Claude Code / Codex CLI / opencode 等）を表す名詞句として選定。実装根拠は src/exec/run/agent.ts および src/exec/agent-config.ts。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"All project catalogs validated successfully"},{"command":"npm run validate:history-links","status":"passed","summary":"All ticket and history links validated successfully"}]}
+</specdojo_executor_evidence>

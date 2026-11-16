@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T16:16:42Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-cpd-specdojo-cli-090",
+  "by": "qwen-review-executor",
+  "msg": "executor reported incomplete: retrofit review を多観点で実施。評価結果サイドカー (verdict=needs-work/score=82/finding blocker0・major4・minor12・note1、done_criteria satisfied 3/total 3) を事実として受領し、 freshness を git status/log で裏付け（成果物は grade run 以降変更なし、grade-stale/changed-during-review に非該当）。だが plan §6 が要求する実行記録への実装エビデンス `src/specdojo.ts` 対応判定（一致・乖離・確認不能・未確認）が全論点で未充足（先行 result T-…-070 は部分、080/005 は未記載）ため verdict=incomplete。grade finding 17 件は完了条件(DC-001〜003) と独立し完了を妨げない。sandbox の bash 制限でファイル書き込み・実行コマンドが不可であり、result.md への直接転記ができず plan §8「result 更新不能」により異常終了（exit=1）。転記内容は本 final_message と handoff に残した。",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cpd-specdojo-cli-090/T-KATA-WAVE-1-cpd-specdojo-cli-090-20261114T141014Z-6735b93d/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-cpd-specdojo-cli-090/T-KATA-WAVE-1-cpd-specdojo-cli-090-20261114T141014Z-6735b93d/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-cpd-specdojo-cli-090-20261114T141014Z-6735b93d"
+  }
+}

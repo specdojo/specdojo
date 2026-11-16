@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-12T21:01:02Z",
+  "type": "claim",
+  "task_id": "T-PROJECT-KATA-pm-organization-040",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "PM"
+  }
+}

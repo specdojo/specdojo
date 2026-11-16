@@ -1,0 +1,10 @@
+個票 `pjr-jsey-exec-run-split-smoke.md` の「対応結果」の表に 1 行追記しました。変更したのはこのファイルだけです。
+
+- **追記した行:** `2026-11-07 08:22 | PJR-TA6W | sonnet-executor`
+- **確認対象の根拠:** 個票に挙がっている項目のうち、git ログ上で最後に統合されたのは PJR-TA6W です。review 遷移のコミット `39ac4f61d` は 2026-11-07 08:16 JST で、PJR-Z0XR・PJR-PZBP・直前の確認対象 PJR-H2V8 より後です。
+- **本文の更新:** 「今回の確認対象は…」の段落も、PJR-H2V8 から PJR-TA6W に書き換えました。
+- **検証:** `npx prettier --check` は通りました。lint・typecheck・test などの親検証は親 runner の担当なので、実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-TA6W の確認行（2026-11-07 08:22 JST、sonnet-executor）を追記し、確認対象の説明段落も更新した。個票以外は変更していない。","handoff":["親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。","確認対象は git ログ上で最後に統合された PJR-TA6W（review 遷移のコミット 39ac4f61d、2026-11-07 08:16 JST）と判断した。start の event の actor は後続段で確認する。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形に問題なし"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"履歴蓄積ファイルの個票を変更しているが、追記した行に Markdown リンクはなく、リンク記法の変更もない。"}]}
+</specdojo_executor_evidence>

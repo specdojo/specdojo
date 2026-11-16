@@ -1,10 +1,11 @@
 import { Command } from "commander";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import { registerExecCommands } from "../../../src/exec/commands.js";
+import { planConventionsFiles } from "../../../src/shared/plan-conventions.js";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const sourceRoot = process.cwd();
 const originalPackageRoot = process.env.SPECDOJO_PACKAGE_ROOT;
@@ -20,6 +21,14 @@ async function cli(...args: string[]): Promise<void> {
   registerExecCommands(program);
   await program.parseAsync(args, { from: "user" });
   expect(process.exitCode).not.toBe(1);
+  if (args[0] === "exec" && args[1] === "plan") {
+    const planPath = join(root, args[args.indexOf("--out") + 1]);
+    const versions = planConventionsFiles(readFileSync(planPath, "utf8"), dirname(planPath));
+    expect(versions).toHaveLength(1);
+    expect(dirname(versions[0])).toBe(
+      join(root, "docs/ja/projects/prj-test/execution/conventions"),
+    );
+  }
 }
 
 const registerDir = "docs/ja/projects/prj-test/register";
@@ -29,6 +38,10 @@ function ticket(): string {
 
 describe("catalog-less register add -> exec plan CLI", () => {
   beforeEach(() => {
+    // exec activates these paths for subsequent calls in the same process. Each
+    // fixture must start without the previous fixture's absolute overrides.
+    vi.stubEnv("SPECDOJO_SCHEDULE_PATH", undefined);
+    vi.stubEnv("SPECDOJO_EXECUTION_PATH", undefined);
     process.exitCode = undefined;
     root = mkdtempSync(join(tmpdir(), "specdojo-catalogless-cli-"));
     write(
@@ -62,6 +75,7 @@ describe("catalog-less register add -> exec plan CLI", () => {
   });
   afterEach(() => {
     process.chdir(sourceRoot);
+    vi.unstubAllEnvs();
     if (originalPackageRoot === undefined) delete process.env.SPECDOJO_PACKAGE_ROOT;
     else process.env.SPECDOJO_PACKAGE_ROOT = originalPackageRoot;
     process.exitCode = undefined;

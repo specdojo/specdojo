@@ -1,11 +1,13 @@
 import { basename, join, resolve } from "node:path";
 import {
   getProjectRoutinesPath,
+  getProjectExecutionPath,
   loadConfig,
   loadEnv,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
 import { listFilesRecursive, readYaml } from "../shared/fs.js";
+import { routineStoragePaths } from "./storage.js";
 
 // ================================
 // Types
@@ -57,6 +59,9 @@ export type RoutinePaths = {
   projectId: string;
   routinesPath: string;
   generatedPath: string;
+  stateDirectory: string;
+  lockPath: string;
+  failuresPath: string;
   statePath: string;
   runsPath: string;
 };
@@ -490,8 +495,8 @@ export function resolveRoutinePaths(opts: { project?: string }): RoutinePaths {
     projectId,
     routinesPath: absRoutinesPath,
     generatedPath,
-    statePath: join(generatedPath, "routine-state.json"),
-    runsPath: join(generatedPath, "routine-runs.jsonl"),
+    ...routineStoragePaths(absRoutinesPath, baseDir),
+    failuresPath: resolve(baseDir, getProjectExecutionPath(project), "routines", "failures"),
   };
 }
 

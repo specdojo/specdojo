@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-11T21:32:33Z",
+  "type": "claim",
+  "task_id": "T-GLOSSARY-gl-quality-090",
+  "by": "sol-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

@@ -10,7 +10,10 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { load } from "../../../src/shared/yaml.js";
+import { dump, load } from "../../../src/shared/yaml.js";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
 import { buildValidator } from "../../helpers/schema.js";
 import {
   buildYamlPages,
@@ -200,6 +203,179 @@ describe("renderYamlPage", () => {
     expect(page).toContain("**`cxd-_CONTEXT_`** の完了条件:");
     expect(page).toContain(YAML_PAGE_MARKER);
     expect(page).not.toContain("```yaml");
+  });
+
+  const glossarySources = [
+    "docs/ja/specdojo/samples/gl-sample.yaml",
+    ...["common", "execution", "planning", "quality", "register", "setup"].map(
+      (name) => `docs/ja/product/010-business-specs/060-glossary/gl-${name}.yaml`,
+    ),
+  ];
+
+  it.each(glossarySources)("renders every term and related link from %s", (path) => {
+    const content = readFileSync(path, "utf8");
+    const doc = load(content) as {
+      id: string;
+      locale: string;
+      status: string;
+      terms: { id: string; term: string; category?: string; relatedTerms?: string[] }[];
+    };
+    const validate = buildValidator("docs/specdojo/schemas/v1/gl.schema.yaml");
+    expect(validate(doc), JSON.stringify(validate.errors)).toBe(true);
+
+    const page = renderYamlPage(path, content);
+    const visible = page.split("<details>")[0];
+    expect(visible).toContain(`\`${path}\` から生成された表示用ページ`);
+    expect(visible).toContain(
+      `| ${doc.id} | ${doc.locale} | ${doc.status} | ${doc.terms.length} |`,
+    );
+    const categoryIds = new Set(
+      doc.terms.map((term) => term.category ?? "").filter((category) => category !== ""),
+    );
+    const members = doc.terms.filter((term) => !categoryIds.has(term.id));
+    const labels = [
+      ...(doc.terms.some((term) => categoryIds.has(term.id)) ? ["分類"] : []),
+      ...[...new Set(members.map((term) => term.category ?? "").filter(Boolean))].map(
+        (category) => {
+          const categoryTerm = doc.terms.find((term) => term.id === category);
+          return categoryTerm ? `[${categoryTerm.term}](#${category})（${category}）` : category;
+        },
+      ),
+      ...(members.some((term) => !term.category) ? ["その他"] : []),
+    ];
+    const headings = visible.split("\n").filter((line) => line.startsWith("## "));
+    expect(headings).toEqual([
+      ...labels.map((label, index) => `## ${index + 1}. ${label}`),
+      `## ${labels.length + 1}. YAML の正本`,
+    ]);
+    for (const term of doc.terms) {
+      expect(visible).toContain(`<a id="${term.id}">${term.term}</a>（\`${term.id}\`）`);
+      for (const related of term.relatedTerms ?? []) {
+        expect(visible).toContain(
+          `[${doc.terms.find((item) => item.id === related)?.term}](#${related})`,
+        );
+      }
+    }
+    // GFM として解釈しても、分類ごとに 5 列の表と全用語が残る。
+    const tables = unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .parse(visible)
+      .children.filter((node) => node.type === "table");
+    expect(tables).toHaveLength(labels.length + 1);
+    expect(tables[0].children).toHaveLength(2);
+    // 分類の表・分類ごとの表・その他の表を合わせると、どの用語もちょうど 1 行ずつ出る。
+    const rows = tables.slice(1).reduce((sum, table) => sum + table.children.length - 1, 0);
+    expect(rows).toBe(doc.terms.length);
+    tables.slice(1).forEach((table) => {
+      expect(table.children.every((row) => row.children.length === 5)).toBe(true);
+    });
+    expect(page).toContain(`<details>\n<summary>YAML の正本を表示</summary>`);
+    expect(page).not.toContain("<details open");
+    expect(page).toContain(`\`\`\`yaml\n${content}\`\`\`\n`);
+    expect(page.trimEnd()).toMatch(/<\/details>$/);
+  });
+
+  it("puts category terms in the first chapter and lists each term only once", () => {
+    const content = dump({
+      id: "gl-category",
+      type: "glossary",
+      rulebook: "none",
+      title: "分類の確認",
+      locale: "ja",
+      terms: [
+        { id: "tm-top", term: "最上位", definition: "分類を持たない" },
+        { id: "tm-store", term: "保管先", definition: "分類の用語", category: "tm-top" },
+        { id: "tm-item", term: "記録", definition: "保管先に属する", category: "tm-store" },
+        { id: "tm-loose", term: "単独", definition: "分類なし" },
+      ],
+    });
+    const page = renderYamlPage("docs/ja/gl-category.yaml", content);
+    const visible = page.split("<details>")[0];
+    expect(visible.match(/^## .+$/gm)).toEqual([
+      "## 1. 分類",
+      "## 2. [保管先](#tm-store)（tm-store）",
+      "## 3. その他",
+      "## 4. YAML の正本",
+    ]);
+    for (const id of ["tm-top", "tm-store", "tm-item", "tm-loose"]) {
+      expect(visible.split(`<a id="${id}">`)).toHaveLength(2);
+    }
+  });
+
+  it("keeps multiline text, pipes, aliases and supplements inside five cells", () => {
+    const content = dump({
+      id: "gl-edge",
+      type: "glossary",
+      rulebook: "none",
+      title: "境界の確認",
+      locale: "ja",
+      terms: [
+        {
+          id: "tm-first",
+          term: "最初",
+          category: "分類A",
+          englishName: "first | term",
+          aliases: ["別名\n一", "別名二"],
+          definition: "定義\r\nの続き | 区切り",
+          notes: "[[gl-other|別の用語集]]\n注記",
+          example: "```yaml\n例: 値\n```",
+          source: "https://example.com",
+          relatedTerms: ["tm-other"],
+        },
+        { id: "tm-other", term: "関連[用語]", definition: "分類なし" },
+        {
+          id: "tm-third",
+          term: "三番目",
+          definition: "既存の \\| と \\\\| を保つ",
+          category: "分類B",
+        },
+        { id: "tm-last", term: "最後", definition: "同じ分類に戻る", category: "分類A" },
+      ],
+    });
+    const page = renderYamlPage("docs/ja/gl-edge.yaml", content);
+    const visible = page.split("<details>")[0];
+    expect(visible.match(/^## .+$/gm)).toEqual([
+      "## 1. 分類A",
+      "## 2. 分類B",
+      "## 3. その他",
+      "## 4. YAML の正本",
+    ]);
+    expect(visible).toContain("英語名: first \\| term / 別名: 別名 一、別名二");
+    expect(visible).toContain("定義 の続き \\| 区切り");
+    expect(visible).toContain("既存の \\| と \\\\\\| を保つ");
+    expect(visible).toContain(
+      "注記: [[gl-other\\|別の用語集]] 注記 / 用例: ```yaml 例: 値 ``` / 出典: <https://example.com>",
+    );
+    expect(visible).toContain("[関連\\[用語\\]](#tm-other)");
+    expect(visible).toContain("| - | 分類なし | - | - |");
+    const tables = unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .parse(visible)
+      .children.filter((node) => node.type === "table");
+    expect(tables.map((table) => table.children.length)).toEqual([2, 3, 2, 2]);
+    expect(
+      tables.slice(1).every((table) => table.children.every((row) => row.children.length === 5)),
+    ).toBe(true);
+    expect(page).toContain(`\`\`\`\`yaml\n${content}\`\`\`\`\n`);
+  });
+
+  it("renders an empty glossary with a numbered source chapter", () => {
+    const page = renderYamlPage(
+      "docs/ja/gl-empty.yaml",
+      "id: gl-empty\ntype: glossary\nterms: []\n",
+    );
+    expect(page).toContain("| gl-empty | - | - | 0 |");
+    expect(page).toContain("## 1. YAML の正本");
+  });
+
+  it("keeps non-glossary YAML with terms in its original code block", () => {
+    const content = "id: example\ntype: project\nterms: []\n";
+    const page = renderYamlPage("docs/ja/example.yaml", content);
+    expect(page).toContain(`\`\`\`yaml\n${content}\`\`\`\n`);
+    expect(page).not.toContain("<details>");
+    expect(page).not.toContain("| 用語（ID） |");
   });
 });
 

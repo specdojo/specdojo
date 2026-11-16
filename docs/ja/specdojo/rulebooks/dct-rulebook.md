@@ -171,12 +171,13 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 計画成果物をカタログへ登録する場合も、生成方法ではなくライフサイクルで区別する。
 
-- 人または agent が判断して更新する `tml-index`、`dct-index`、`dct-plan-<domain>`、`sch-strategy-<track>`、`sch-defaults` は `work` とする。
+- 人または agent が判断して更新する `dct-index`、`dct-plan-<domain>`、`sch-strategy-<track>`、`sch-defaults` は `work` とする。
+- 全体計画は登録簿の epic を正本とし、順序は `depends_on`、範囲は `domains`、期間は着手・完了の記録と `due_on` で管理する。運用は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照する。非推奨の `tml-index` は新しいカタログへ登録せず、移行時に旧エントリと不要な依存を外す。
 - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、対応する `sch-strategy-<track>` を `depends_on` に宣言する。
 
 - 計画成果物を所有するトラック自身の `sch-strategy` は、自己生成の循環を避けるため `control` とするか、そのトラックの scope 外へ置く。
 - `dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は、カタログ定義との二重管理を避けるため登録しない。
-- トラック別の strategy、track は、Timeline で当該トラックが `catalog_status: primary` になった時点で具体的な `local_id` を追加し、未着手トラックの分を先行登録しない。
+- トラック別の strategy、track は、対象 epic の範囲にあるカタログを人間が確認し、`catalog-planning` の子 todo を完了させてから具体的な `local_id` を追加する。strategy 作成は対象 track を担う epic のもとで進め、未着手トラックの分を先行登録しない。
 
 ### 6.3. `depends_on`
 
@@ -198,7 +199,8 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - `evidence_refs` は成果物ごとの安定した調査入力であり、`approach: retrofit` の edit / review plan に「実装エビデンス」として展開される。
 - `depends_on` のような成果物間の根拠・実行順序を作らず、`based_on` のような文書 ID 参照にも使わない。
 - `path` は先頭スラッシュなしのリポジトリルート相対パスとし、絶対パス、`..`、`.`、バックスラッシュ、重複区切りを含めない。宣言先の存在と同一成果物内の重複を `catalog validate` で検証する。
-- `path` はコマンドの入口（例: `src/<command>.ts`）または責務単位のディレクトリを調査の起点として指定し、入口から到達する内部実装は import などをたどって確認する。rename・分割されやすい内部ヘルパーファイルを直接指定すると refactor のたびに参照が陳腐化するため、指定しない。
+- `path` は責務単位の調査範囲を指定し、状態遷移・判定・検証の本体を含むファイルが参照にあることを確認する。入口が re-export だけなら転送先をたどり、本体の参照を補う。re-export だけのファイルを根拠にしない。
+- `catalog validate` は JavaScript / TypeScript の re-export（型の re-export を含む）だけのファイルへの参照を警告する。警告は終了コードを変えず、存在しないパス・広すぎる範囲・重複のエラーは維持する。
 - ディレクトリを指定する場合は責務単位に限定し、`src`、`tools`、`docs`、リポジトリルートのような過度に広い範囲を指定しない。
 - `purpose` はファイル名の言い換えではなく、入出力、状態遷移、例外など、その参照から何を確認するかを記載する。
 - 実装エビデンスは読み取り専用であり、plan frontmatter の `targets`、worktree の変更許可範囲、commit 許可リストへ追加しない。
@@ -257,10 +259,10 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - 判定計画に書くのは、必要な成果物インスタンス・placeholder 値・採用しない候補・未確定事項・判定根拠・確度に限る。`groups`・`base_path`・`done_criteria` などのカタログ構造はテンプレートとジェネレーターの責務であり、判定計画へ複製しない。
 - `iteration_pattern` は `業務領域テンプレートの反復方針（_TERM_ の使い分け）` のパターンAを `pattern-a`、パターンBを `pattern-b` として記載する。`pattern-a` では placeholder ごとに値と根拠を `variables` へ書き、`local_id` は展開結果と一致させる。`pattern-b` では `variables` を使わず、処理単位ごとの固定 `local_id` を記載する。
 - 上流成果物から根拠を得られない placeholder・成果物の要否・名称・依存関係は確定させず、`open_questions` に理由と次のアクションを残す。根拠のない項目を推測で確定しない。
-- 入力は Timeline が示す着手対象ドメインの上流成果物とし、少なくとも 1 件の data-flow 成果物を根拠にする。data-flow が存在しないドメインでは明示的に入力文書を指定する。data-flow が複数あるドメインでは、対象ドメインに関係するものをすべて入力に含める。
+- 入力は epic の `domains` が示す対象ドメインの上流成果物とし、少なくとも 1 件の data-flow 成果物を根拠にする。data-flow が存在しないドメインでは明示的に入力文書を指定する。data-flow が複数あるドメインでは、対象ドメインに関係するものをすべて入力に含める。
 - 既に `dct-<domain>.yaml` があるドメインでは、既存カタログを基準線として入力に含め、既存 `local_id` を落とす場合は `exclusions` に理由を残す。
 - 既存の判定計画は無条件に上書きしない。再判定時は差分をレビューし、上書きは明示的な `--force` 操作で行う。
-- 判定計画の存在はカタログの `primary` 確定を意味しない。判定計画は draft 作成支援であり、`catalog_status` の更新は人間の確認を経て行う。
+- 判定計画は draft 作成支援であり、その存在だけでカタログの内容確認や `catalog-planning` の完了を代替しない。
 
 ### 6.13. 判定計画からの決定論的生成
 
@@ -268,7 +270,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - ジェネレーターは template の `min_size`、placeholder 展開、`part_of`、`domain`、`base_path`、group 構造を scaffold と共通の処理で適用する。物理分割された template は、同じ `domain` を持つ全ファイルをファイル名順に処理し、対応する `dct-<domain>-<part>.yaml` を生成する。
 - blocking な `open_questions`、未解決 placeholder、重複 `local_id`、存在しない `depends_on`、schema 違反が一件でもあれば、その domain のファイルを一件も書き込まない。
 - 既存カタログとの差分は `--dry-run` で確認する。既存ファイルは既定で保護し、内容が異なる場合の上書きには `--force` を必要とする。同一入力の再実行で内容が同じ場合は書き込まない。
-- 生成されたカタログの `status` は template に従い `draft` のままとする。生成成功を理由に Timeline の `catalog_status` を `primary` へ変更せず、人間の内容確認後に別途更新する。
+- 生成されたカタログの `status` は template に従い `draft` のままとする。生成成功だけで確定とせず、人間の内容確認を経て `catalog-planning` の完了を記録する。
 
 ### 6.14. `brief`・`overview`・`done_criteria` の使い分けと YAML アンカー
 
@@ -288,7 +290,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `depends_on` に `local_id` 以外（ファイルパス・URL）を混在させる  | 依存解決が機械的に行えなくなるため                       |
 | `evidence_refs.path` に絶対パス・親参照・存在しないパスを記載する | 再現可能で安全な調査範囲を確定できないため               |
 | `evidence_refs.path` にリポジトリ全体など広すぎる範囲を指定する   | 調査範囲と判断根拠を限定できないため                     |
-| `evidence_refs.path` に入口から到達できる内部ヘルパーを指定する   | refactor 時の rename・分割で参照が陳腐化しやすいため     |
+| `evidence_refs` の根拠を re-export だけのファイルで済ませる       | 状態遷移・判定・検証の本体が参照から漏れるため           |
 | `work` 成果物で `path` または `done_criteria` を省略する          | スケジュール展開とレビュー計画生成に必須のため           |
 | 実在しない実践の型 ID、またはカタログで `rulebook: none` を使う   | 未判断・未整備・不要・参照切れを機械的に区別できないため |
 | `dct-plan-<domain>.yaml` にカタログ構造や自由文の判断メモを書く   | ジェネレーターが機械的に扱えず責務境界が崩れるため       |

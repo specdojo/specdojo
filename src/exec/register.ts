@@ -1,10 +1,25 @@
-import { readRegisterInput, registerInputSection } from "../register/input.js";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { basename, dirname, extname, join, relative, resolve } from "node:path";
+import { collectDocIndexEntries } from "../docs/doc-index.js";
+import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import {
+  authoredKataPath,
+  authoringKind,
+  authoringStandardId,
+  authoringStandardPath,
+} from "../kata/authoring.js";
+import { loadRulebookRefs, resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import { validateRegisterApproachTargets } from "../register/approach.js";
+import {
+  resolveAuthoringSources,
+  type ResolvedAuthoringSource,
+} from "../register/authoring-sources.js";
 import {
   resolveRegisterDeliverableTarget,
   type RegisterDeliverableTarget,
 } from "../register/deliverable-target.js";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, extname, join, relative, resolve } from "node:path";
+import { readRegisterInput, registerInputSection } from "../register/input.js";
+import { isPlanningApproach } from "../register/planning.js";
 import {
   findRegisterItem,
   loadRegisterItems,
@@ -17,44 +32,30 @@ import {
   type PjrItem,
   type RegisterPaths,
 } from "../register/register.js";
+import { loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import { formatMarkdownFile } from "./format.js";
+import {
+  findDeliverableByPath,
+  findUniqueDeliverableForKataTarget,
+  resolveDeliverableByDocId,
+  type DeliverableInfo,
+} from "./plans-core.js";
+import { generateRegisterApproachPlan } from "./plans-generation.js";
+import { planningPlanFields } from "./plans-planning.js";
 import {
   execTemplatePath,
   injectCommonConventions,
   MISSING,
   registerGradeFindingsText,
 } from "./plans.js";
-import { generateRegisterApproachPlan } from "./plans-generation.js";
-import {
-  findUniqueDeliverableForKataTarget,
-  findDeliverableByPath,
-  resolveDeliverableByDocId,
-  type DeliverableInfo,
-} from "./plans-core.js";
-import { collectDocIndexEntries } from "../docs/doc-index.js";
-import { loadRulebookRefs, resolveKataRefs, type KataRefs } from "../kata/kata.js";
-import {
-  authoredKataPath,
-  authoringKind,
-  authoringStandardId,
-  authoringStandardPath,
-} from "../kata/authoring.js";
-import { validateRegisterApproachTargets } from "../register/approach.js";
-import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import { taskRecordPaths } from "./run-records.js";
 import {
   escapeMarkdownInline,
   expandTemplate,
   inlineCodeAnglePlaceholders,
   stripTerminalControlSequences,
 } from "./shared.js";
-import { formatMarkdownFile } from "./format.js";
-import { loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
-import {
-  resolveAuthoringSources,
-  type ResolvedAuthoringSource,
-} from "../register/authoring-sources.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
-import { isPlanningApproach } from "../register/planning.js";
-import { planningPlanFields } from "./plans-planning.js";
 
 // ---------------------------------------------------------------------------
 // Item category
@@ -184,6 +185,7 @@ export type RegisterItemSummary = {
   transition: RegisterItemTransition;
   commit: string;
   reason?: string;
+  uncommittedFiles?: number;
 };
 
 // 全ID処理後にID別の成否・状態遷移・commit結果・理由を一覧表示するための整形。
@@ -196,6 +198,7 @@ export function formatRegisterRunSummary(summaries: readonly RegisterItemSummary
       `transition=${summary.transition}`,
       `commit=${summary.commit}`,
     ];
+    if (summary.uncommittedFiles) parts.push(`uncommitted=${summary.uncommittedFiles}`);
     if (summary.reason) parts.push(`reason=${summary.reason}`);
     lines.push(parts.join("  "));
   }
@@ -335,15 +338,16 @@ export function ticketPathFromItem(item: PjrItem, projectRegisterPath: string): 
 // セル内の `|` と改行は表を壊すため置換し、読みやすさのため長さも制限する。
 const MAX_CONCLUSION_LENGTH = 200;
 
-export function sanitizeRegisterConclusion(reason: string): string {
+export function sanitizeRegisterConclusion(
+  reason: string,
+  maxLength = MAX_CONCLUSION_LENGTH,
+): string {
   const singleLine = stripTerminalControlSequences(reason)
     .replace(/\r?\n/g, " ")
     .replace(/\|/g, "/")
     .trim();
   const truncated =
-    singleLine.length <= MAX_CONCLUSION_LENGTH
-      ? singleLine
-      : `${singleLine.slice(0, MAX_CONCLUSION_LENGTH)}…`;
+    singleLine.length <= maxLength ? singleLine : `${singleLine.slice(0, maxLength)}…`;
   return inlineCodeAnglePlaceholders(truncated);
 }
 
@@ -691,10 +695,10 @@ export async function generateRegisterPlan(opts: {
   }
   const template = readFileSync(templatePath, "utf8");
 
-  const plansDir = join(opts.executionPath, "exec", "plans");
-  mkdirSync(plansDir, { recursive: true });
-  const planPath = opts.outPath ?? join(plansDir, `${opts.stem}-plan.md`);
-  const resultRef = `${repoRelativePath(opts.executionPath)}/exec/results/${opts.stem}-result.md`;
+  const records = taskRecordPaths(opts.executionPath, item.id, opts.stem, "register");
+  const planPath = opts.outPath ?? records.plan;
+  mkdirSync(dirname(planPath), { recursive: true });
+  const resultRef = repoRelativePath(records.result);
 
   const values: Record<string, string> = {
     _FRONTMATTER_: registerPlanFrontmatter(opts.projectId, opts.stem, item),
@@ -722,7 +726,10 @@ export async function generateRegisterPlan(opts: {
   // expandTemplate がまとめる（PJR-283N）。
   const body = expandTemplate(template, values);
   // register 項目は対象成果物の schema を特定できないため、schema 検査の項目は落とす。
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>());
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "edit", {
+    executionPath: opts.executionPath,
+    planPath,
+  });
 
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);

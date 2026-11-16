@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:dct-index-grade-criteria
+document: prj-0001:dct-index
+path: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml
+graded_at: "2026-11-15T10:50:51.563Z"
+graded_by: sol-review-executor
+content_hash: 00594c69bc3ca87473971c057cb064f930e3fcf4e2733b12e1e7297975ce2b66
+summary:
+  satisfied: 2
+  unsatisfied: 0
+  total: 2
+criteria:
+  - id: DC-001
+    text: 全ドメインが重複なく適切な分類へ配置されていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-document-structure
+    status: satisfied
+  - id: DC-002
+    text: 索引ビューとサイドバーから全ドメインへ到達できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied

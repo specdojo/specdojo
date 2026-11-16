@@ -21,6 +21,10 @@ groups:
         overview: システム設計のSSOT（OpenAPI・AsyncAPI・migrationファイル・agent実行構成等）への導線を1箇所に集約する
         path: sysd-index.md
         rulebook: specdojo:sysd-index-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo.ts
+            purpose: CLI の入口でコマンドを組み立て、設計の SSOT への導線の起点となる箇所
         note: PJR-ZP0Bで新設。Configurations種別にagent実行構成のSSOTを登録済み
         done_criteria:
           - text: 設計情報の参照先（API定義・DBスキーマ・設定スキーマ）へのリンクが揃っていること
@@ -41,12 +45,22 @@ groups:
         kind: work
         depends_on:
           - sysd-index
-          - cdfd-task-execution
-          - cdfd-register-lifecycle
-          - cdfd-multi-project
+          - cdfd-overview
+          - cdfd-uc-register
+          - cdfd-uc-schedule
         overview: 事故や仕様誤解の原因になりやすい重要フローのみを可視化する（最大5フロー）
         path: sysd-critical-flows.md
         rulebook: specdojo:sysd-critical-flows-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/run/run.ts
+            purpose: agent 並列処理・利用制限後の延期再開を含む exec run の流れ
+          - kind: implementation
+            path: src/exec/worktree.ts
+            purpose: worktree の作成と統合の流れ
+          - kind: implementation
+            path: src/register/register.ts
+            purpose: register の遷移と ID 衝突の復旧の流れ
         note: PJR-ZP0Bで要否を再評価し、PR承認、worktree統合、register ID衝突復旧、agent並列処理、利用制限後の延期再開の5件を重要フローとして採用した
         done_criteria:
           - text: 重要フローの選定理由と業務影響が確認できること

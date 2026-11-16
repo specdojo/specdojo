@@ -1,5 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
 import { findForbiddenLinks } from "../../../packages/docs-lint/src/history-links.js";
+
+const roots: string[] = [];
+afterEach(() => {
+  for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
+});
 
 describe("findForbiddenLinks", () => {
   it("flags an inline markdown link to a local path", () => {
@@ -75,5 +84,60 @@ describe("findForbiddenLinks", () => {
 
     expect(findings).toHaveLength(1);
     expect(findings[0].line).toBe(5);
+  });
+
+  it("exempts only a plan's final legacy conventions link with a matching hash", () => {
+    const hash = "a".repeat(64);
+    const link = `[共通規約 sha256:${hash}](../../../../conventions/${hash}.txt)`;
+    const options = { allowLegacyConventionsReference: true };
+    expect(findForbiddenLinks("# Plan\n\n" + link, options)).toEqual([]);
+    expect(findForbiddenLinks(link)).toHaveLength(1);
+    for (const content of [
+      link + "\n\nBody after reference.",
+      "Other text " + link,
+      link.replace(`${hash}.txt`, `${"b".repeat(64)}.txt`),
+      link.replace("../../../../conventions/", "../../../../other/"),
+      link.replace("共通規約 sha256:", "Other sha256:"),
+      link.replace("共通規約 sha256:", "**共通規約 sha256:**"),
+      link.replace("../../../../conventions/", "https://example.com/conventions/"),
+    ]) {
+      expect(findForbiddenLinks(content, options)).toHaveLength(1);
+    }
+    expect(findForbiddenLinks("[ordinary](./file.md)\n\n" + link, options)).toHaveLength(1);
+  });
+
+  it("checks new run plans and results by default, allowing the legacy link only in plans", () => {
+    const root = mkdtempSync(join(tmpdir(), "history-links-"));
+    roots.push(root);
+    const run = "docs/ja/projects/test/execution/runs/register/PJR-TEST/run-1";
+    const hash = "a".repeat(64);
+    const legacy = `[共通規約 sha256:${hash}](../../../../conventions/${hash}.txt)`;
+    const files = [
+      [`${run}/plan.md`, legacy],
+      [`${run}/result.md`, "# Result\n\nDone."],
+      ["docs/ja/projects/test/controls/project-register/pjr-index.md", "[ticket](pjr-test.md)"],
+    ];
+    for (const [path, content] of files) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), content);
+    }
+    const check = () =>
+      spawnSync(
+        process.execPath,
+        [resolve("packages/docs-lint/bin/specdojo-docs-lint.js"), "history-links"],
+        { cwd: root, encoding: "utf8" },
+      );
+    expect(check().status).toBe(0);
+    for (const kind of ["plan", "result"]) {
+      const path = join(root, run, `${kind}.md`);
+      const original = kind === "plan" ? legacy : "# Result\n\nDone.";
+      writeFileSync(path, `[ordinary](./file.md)\n\n${original}`);
+      const result = check();
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain(`${run}/${kind}.md:1:1`);
+      writeFileSync(path, original);
+    }
+    writeFileSync(join(root, run, "result.md"), legacy);
+    expect(check().status).toBe(1);
   });
 });

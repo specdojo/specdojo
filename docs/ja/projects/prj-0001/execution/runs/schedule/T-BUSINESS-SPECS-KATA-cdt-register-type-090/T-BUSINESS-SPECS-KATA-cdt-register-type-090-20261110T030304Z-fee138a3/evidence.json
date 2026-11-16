@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-cdt-register-type-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T06:34:57.690Z",
+    "completed_at": "2026-11-10T06:37:40.208Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                       | 21 +++++++++++++++------\n packages/docs-site/.vitepress/sidebar-config.ts     | 12 ++++++++++--\n 2 files changed, 25 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md --changed-only",
+      "status": "passed",
+      "summary": "初回・終了直前ともコマンドは終了コード0。両回とも対象パスを出力し、評価結果が最新でないことを検知。鮮度合格を意味しない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md --dependency-changed",
+      "status": "passed",
+      "summary": "初回・終了直前とも終了コード0、空出力。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md --incomplete",
+      "status": "passed",
+      "summary": "初回・終了直前とも終了コード0、空出力。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --exit-code -- docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md docs/ja/specdojo/rulebooks/cdt-rulebook.md docs/ja/specdojo/samples/cdt-sample.md",
+      "status": "passed",
+      "summary": "終了コード0、空出力。対象成果物と型2文書の累積差分なし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines\n… output omitted …\no-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4251 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4251 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritte\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-cdt-register-type-090\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-10T06:43:44.879Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallbac\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "prj-0001:cdt-register-type",
+      "status": "unchanged",
+      "reason": "読み取り専用の review plan に従い、成果物と型を編集していない。対象文書・関連する型・既存評価・先行記録を読み、鮮度確認により grade-stale と判断した。対象成果物の累積差分が空であることも確認済み。"
+    }
+  ],
+  "final_message": "review の確認を完了。判断は grade-stale。初回・終了直前とも鮮度確認で対象が出力されたため、タスクの完了可否は保留する。今回のファイル編集はない。確認できなかった範囲: 最新評価に基づく完了条件の充足と残存 finding の受入可否。result の記入は reporter に引き継ぐ。",
+  "completion_status": "complete",
+  "handoff": [
+    "評価結果の確認: validations の3コマンドを初回と判断直前に実行し、いずれも終了コード0。--changed-only は両回とも docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md を出力。--dependency-changed と --incomplete は両回とも空出力。E-01 に従い verdict は grade-stale。初回から最新でないため changed-during-review には該当しない。",
+    "サイドカーの記録値は verdict=pass、score=87、graded_at=2026-11-09T05:51:43.976Z、finding 件数は blocker 0 / major 0 / minor 14 / note 0、`done_criteria` は2/2。これらは既存評価の事実として記録し、最新評価として完了判断に使用しない。F001〜F014 を再評価・重複指摘していない。",
+    "判断根拠・approach に応じた確認: [[specdojo:cdt-rulebook|分類一覧 作成ルール]] は全体方針から禁止事項まで7章で、完成例のサンプル章を置かず、章別・方式別の判断基準と良い例・悪い例を持つ。[[specdojo:cdt-sample|商品区分]] は商品区分・取扱区分・棚札タグの3軸について、定義、優先順位、保留条件、変更時の扱い、動的分類の権限・命名・参照保持、境界事例を記載。両文書の見出しに階層連番がある。これは型の整備内容の確認であり、代表成果物の品質を再採点したものではない。",
+    "recipe・template の要否: rulebook frontmatter は `recipe: not-needed`、`template: not-needed`、`sample: specdojo:cdt-sample`。template の文書IDは宣言されていないため開く対象がない。本文要件が開始時の構成、記述ガイドが正本選定と固定・動的分類の判断を担うため、独立した手順・雛形を不要とする理由が先行040・050の実行記録にある。plan の recipe `_MISSING_` 表示は、実ファイル上の未判断・未整備とは区別して記録する。",
+    "先行実行記録: [[prj-0001:xer-t-business-specs-kata-cdt-register-type-040-20261109t235128z-7af4e6a0|rulebook 整備結果]] と [[prj-0001:xer-t-business-specs-kata-cdt-register-type-050-20261110t001110z-04ba6f4c|sample 整備結果]] および各 evidence を読んだ。両 evidence の runner 検証9件はすべて passed。今回実行した検証としては転記しない。[[prj-0001:cdt-register-type|分類一覧（登録項目の種別）]] と [[prj-0001:bdd-register-entry|業務データ辞書（登録項目個票）]]、[[prj-0001:prj-overview|プロジェクト概要]] も読んだ。宣言外の状態定義・実装・schema 本体を追加探索して整合性を再評価していない。",
+    "未充足事項・改善指示: runner は現在の成果物・Kata・評価コンテキストを反映して grade を更新し、鮮度確認後に review を再実行すること。reporter は既存 review result の『--changed-only が対象を出力したが最新として扱う』という記述と complete-with-findings の判断を今回の証拠で置き換え、必須5セクションを埋め、decision の verdict を grade-stale とすること。今回 result は直接編集していない。",
+    "対象外差分: 開始時から packages/docs-site/.vitepress/sidebar-config.ts に br・bes の recipe/template 導線追加が存在した。CDT の読み取り専用レビューとの対応根拠は確認できない。今回変更・差戻しは行っていないため、runner は統合対象に含める前に由来と扱いを確認すること。成果物・rulebook・sample の累積差分は空。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-cdt-register-type-090/T-BUSINESS-SPECS-KATA-cdt-register-type-090-20261110T030304Z-fee138a3/executor.log",
+      "bytes": 5716,
+      "truncated": false
+    }
+  ]
+}

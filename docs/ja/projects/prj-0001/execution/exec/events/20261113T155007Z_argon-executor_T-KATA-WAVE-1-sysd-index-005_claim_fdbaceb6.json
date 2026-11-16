@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T15:50:07Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-sysd-index-005",
+  "by": "argon-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9dedf11f481743a5a641f682180d5840
+  ts: "2026-11-08T02:15:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs:build が既定のメモリの上限で止まらないようにする
+    - field: description
+      from: ""
+      to: npm run docs:build が既定の heap では JavaScript heap out of memory で止まる。手元の検査と CI で同じ上限になるよう、docs:build の実行にメモリの上限を設定する
+    - field: input
+      from: ""
+      to: '["2026-11-08 の PJR-HMV6 の確認で、既定の heap の docs:build が FATAL ERROR: Ineffective mark-compacts near heap limit で止まり、`NODE_OPTIONS=--max-old-space-size=8192` では 665 秒で通った（環境のメモリは 15GB）。","CI の .github/workflows/deploy.yml は `NODE_OPTIONS:` --max-old-space-size=4096 を設定している。package.json の scripts には設定がない。","package.json は保護された設定のため、executor は変更案を個票の対応結果と報告の handoff に書き、反映は利用者の承認のもと feature ブランチで行う。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-HMV6"]'
+- v: 1
+  id: reg_31b8d83704ce45ec82c2cb88ce8590b5
+  ts: "2026-11-08T02:29:32Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9dedf11f481743a5a641f682180d5840
+- v: 1
+  id: reg_f78a4cd3e0a44d1db1f4f440baa2a2e5
+  ts: "2026-11-08T02:49:04Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_31b8d83704ce45ec82c2cb88ce8590b5
+- v: 1
+  id: reg_2c3c746d5dee4de2aa5758efc1b779d5
+  ts: "2026-11-08T04:52:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で案を作り、orchestrator が実測（既定・4GB は停止、8GB は通過）のうえ利用者の承認で feature ブランチから反映した。NODE_OPTIONS なしの docs:build が 650 秒で通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: package.json の docs:build と CI の deploy.yml のメモリの上限を 8GB にそろえ、NODE_OPTIONS なしの npm run docs:build が通るようにした
+  previous_event_id: reg_f78a4cd3e0a44d1db1f4f440baa2a2e5

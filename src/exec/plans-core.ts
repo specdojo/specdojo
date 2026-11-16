@@ -1,43 +1,44 @@
+import type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
 import {
   deliverableDocId,
   loadPlanCatalogDocs as loadCatalogDocs,
 } from "../catalog/document-target.js";
-import type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
+import { recordStem } from "./run-records.js";
 export {
   deliverableDocId,
-  resolveDeliverableByDocId,
   loadPlanCatalogDocs as loadCatalogDocs,
+  resolveDeliverableByDocId,
 } from "../catalog/document-target.js";
 export type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
-
-import { existsSync, readFileSync } from "node:fs";
-import { basename, join, relative, resolve } from "node:path";
-import { load } from "../shared/yaml.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "../kata/kata.js";
-import type { KataRefs } from "../kata/kata.js";
-import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
-import { isDctPlanFileName } from "../catalog/plan.js";
-import { readSpecdojoNamespace, buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
-import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
-import { MISSING } from "../shared/plan-templates.js";
 export {
-  MISSING,
   execTemplatePath,
   execTemplatesDir,
   injectCommonConventions,
   loadPlanTemplate,
+  MISSING,
 } from "../shared/plan-templates.js";
+
+import { existsSync, readFileSync } from "node:fs";
+import { basename, join, relative, resolve } from "node:path";
+import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
+import { isDctPlanFileName } from "../catalog/plan.js";
+import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "../catalog/types.js";
+import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
+import type { KataRefs } from "../kata/kata.js";
+import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "../kata/kata.js";
+import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
+import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
 import { resolveViewpointsDoc, viewpointAppliesToDocument } from "../review/plan.js";
+import type { ReviewViewpoint } from "../review/types.js";
+import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
+import { MISSING } from "../shared/plan-templates.js";
+import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { load } from "../shared/yaml.js";
+import { planGradeFindingText } from "./plans-grade-findings.js";
+import type { RoleDefinition, RolesDoc } from "./role-types.js";
 import { listFilesRecursive, nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./types.js";
-import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "../catalog/types.js";
-import type { ReviewViewpoint } from "../review/types.js";
-import type { RoleDefinition, RolesDoc } from "./role-types.js";
-import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
-import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
-import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
-import { planGradeFindingText } from "./plans-grade-findings.js";
 
 // Internal types
 // ---------------------------------------------------------------------------
@@ -74,10 +75,10 @@ export function buildInPlaceStem(
   return stem;
 }
 
-// Recover the shared stem from a plan path: `.../exec/plans/<stem>-plan.md` → `<stem>`.
+// Recover the shared stem from a plan path: `.../runs/<origin>/<item>/<stem>/plan.md` → `<stem>`.
 // Used when re-running `--plan <path>` so the tied result is overwritten in place.
 export function stemFromPlanPath(planPath: string): string {
-  return basename(planPath).replace(/-plan\.md$/, "");
+  return recordStem(planPath);
 }
 
 // ---------------------------------------------------------------------------
@@ -276,7 +277,11 @@ export function deliverableName(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.name ?? MISSING;
 }
 
-export function gradeFindingsText(projectId: string, targetPath: string): string {
+export function gradeFindingsText(
+  projectId: string,
+  targetPath: string,
+  includeCause = false,
+): string {
   if (!targetPath || targetPath === MISSING || !existsSync(join(specdojoRootDir(), targetPath))) {
     return "- なし";
   }
@@ -284,7 +289,7 @@ export function gradeFindingsText(projectId: string, targetPath: string): string
     const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
     if (!result || result.findings.length === 0) return "- なし";
     return result.findings
-      .map((finding) => `- ${finding.id} ${planGradeFindingText(finding)}`)
+      .map((finding) => `- ${finding.id} ${planGradeFindingText(finding, includeCause)}`)
       .join("\n");
   } catch {
     return "- なし";
@@ -367,7 +372,8 @@ export function kataRefState(refPath: string): "existing" | "missing" | "unresol
 }
 
 // 対象成果物の depends_on を、依存先 doc の [[id]] 参照の入れ子リストで提示する。
-// id は依存先の frontmatter、未作成なら配置規約から解決する。agent へ plan を渡すときに
+// id は依存先の frontmatter、未作成なら配置規約から解決する。markMissing の場合は
+// 未作成の依存をインラインコードで示す。agent へ plan を渡すときに
 // expandPromptRefs（src/exec/run/agent.ts, format:'path'）が
 // この [[id]] を doc-index 経由でリポジトリ相対パスへ展開し、agent が先行成果物を直接開ける。
 // テンプレート側はラベル直後にこの値を差し込むため、件数 0・成果物未解決時は先頭スペース付きの
@@ -376,13 +382,18 @@ export function deliverableDependsOn(
   deliverable: DeliverableInfo | null,
   projectId: string,
   catalogPath: string,
+  markMissing = false,
 ): string {
   if (!deliverable) return ` ${MISSING}`;
   const deps = deliverable.deliverable.depends_on ?? [];
   if (deps.length === 0) return " -";
   const lines = deps.map((dep) => {
     const info = findDeliverableInfo(catalogPath, dep);
-    return `  - [[${deliverableDocId(projectId, dep, info?.resolvedPath)}]]`;
+    const id = deliverableDocId(projectId, dep, info?.resolvedPath);
+    if (markMissing && (!info || !existsSync(resolve(specdojoRootDir(), info.resolvedPath)))) {
+      return `  - \`${id}\`（未作成）`;
+    }
+    return `  - [[${id}]]`;
   });
   return `\n${lines.join("\n")}`;
 }
@@ -412,6 +423,7 @@ export function deliverableBasedOn(deliverable: DeliverableInfo | null): string 
 }
 
 const PROJECT_CONTEXT_EXCLUDED_APPROACHES = new Set<Approach>([
+  "condense",
   "cross-deliverable-dedup",
   "rulebook-authoring",
   "recipe-authoring",

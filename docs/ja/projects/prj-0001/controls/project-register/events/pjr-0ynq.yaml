@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dc6e1e980aca4ef7a4113671ce67656f
+  ts: "2026-11-08T04:00:39Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 画面仕様（uis）の型を、コマンドリファレンスと同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: 画面仕様の型を手入れする。CLI のコマンド群を画面に見立てる uis で、引数・オプションの表は持たずコマンドリファレンスを参照し、利用目的・操作の流れ・表示・エラー表示の要点に絞る
+    - field: input
+      from: ""
+      to: '["uis も実装と同じことを書かない対象に加える（indie が推奨どおりと決定、2026-11-08）。","rulebook にあわせて uis-sample も揃える。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:uis-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_de8d298baca34aab99c10ad2c78f1b35
+  ts: "2026-11-08T04:07:48Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dc6e1e980aca4ef7a4113671ce67656f
+- v: 1
+  id: reg_e3ae246dea85417fb581af6cf2314b92
+  ts: "2026-11-08T04:33:19Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_de8d298baca34aab99c10ad2c78f1b35
+- v: 1
+  id: reg_db98186e15f147629342b109c15059e4
+  ts: "2026-11-08T06:47:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・個票の対応結果・親の検証を確かめた。完了条件は満たしており、分け方の変更は RMMM の決定から別の項目で行う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: uis-rulebook と uis-sample を、コマンドリファレンスを参照し利用目的・操作の流れ・表示・エラーと次の手に絞る形に手入れした。型の確定（PJR-RMMM）で CLI を clis に分けると決まったため、CLI の部分は clis の土台にする
+  previous_event_id: reg_e3ae246dea85417fb581af6cf2314b92

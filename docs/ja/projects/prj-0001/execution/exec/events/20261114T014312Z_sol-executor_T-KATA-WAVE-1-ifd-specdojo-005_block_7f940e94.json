@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T01:43:12Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-ifd-specdojo-005",
+  "by": "sol-executor",
+  "msg": "parent validation failed: test-unit",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifd-specdojo-005/T-KATA-WAVE-1-ifd-specdojo-005-20261113T233859Z-14f27e70/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifd-specdojo-005/T-KATA-WAVE-1-ifd-specdojo-005-20261113T233859Z-14f27e70/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-ifd-specdojo-005-20261113T233859Z-14f27e70"
+  }
+}

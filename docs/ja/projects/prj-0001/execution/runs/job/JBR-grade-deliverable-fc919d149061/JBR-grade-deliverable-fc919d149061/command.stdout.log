@@ -1,0 +1,39 @@
+
+> specdojo@0.7.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-fc919d149061 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-fc919d149061
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-fc919d149061/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-11-07T16:03:30Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	1	passed	121	pass	100	0	agy-expert-executor	machine	none		
+2026-11-07T16:07:08Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md	1	passed	216	pass	100	0	agy-expert-executor	machine	none		
+2026-11-07T16:09:43Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md	1	passed	153	pass	100	0	agy-expert-executor	machine	none		
+2026-11-07T16:12:35Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md	1	passed	170	pass	100	0	agy-expert-executor	machine	none		
+2026-11-07T16:16:26Z	docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md	1	passed	229	needs-work	65	24	agy-expert-executor	machine	none		
+2026-11-07T16:18:32Z	docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md	1	passed	124	needs-work	65	22	agy-expert-executor	machine	none		
+2026-11-07T16:21:36Z	docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md	1	passed	182	needs-work	59	27	agy-expert-executor	machine	none		
+2026-11-07T16:27:08Z	docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md	1	passed	330	needs-work	85	9	agy-expert-executor	machine	none		
+2026-11-07T16:31:00Z	docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md	1	passed	230	needs-work	94	6	agy-expert-executor	machine	none		
+2026-11-07T16:34:30Z	docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md	1	passed	208	needs-work	80	11	agy-expert-executor	machine	none		

@@ -20,6 +20,7 @@ import {
 } from "../../../src/exec/worktree.js";
 import {
   abortMerge,
+  assertCommitScope,
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
   deliverableStatus,
@@ -28,11 +29,13 @@ import {
   mergeWorktreeIntoCurrent,
   listOrphanedExecBranches,
   pruneOrphanedExecBranches,
+  refreshWorktreeCheckpoint,
   releaseRootWorkingCopies,
   removeWorktree,
   selectStageablePaths,
   worktreeStatusPaths,
   WorktreeRemovedBranchDeletionError,
+  UncommittedChangesError,
   type WorktreeOpsContext,
 } from "../../../src/exec/worktree-ops.js";
 import {
@@ -42,7 +45,21 @@ import {
   type RegisterEventV1,
 } from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
+import { taskRecordPaths } from "../../../src/exec/run-records.js";
 import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
+import { projectMergeBlockers } from "../../../src/exec/repo-integration.js";
+import { createPipelineState, writePipelineState } from "../../../src/exec/pipeline-state.js";
+import { ensureReviewGrade, type ReviewGradeInvoke } from "../../../src/review/grade.js";
+import { runGrade } from "../../../src/grade/run.js";
+import {
+  readGradePipelineState,
+  recordGradePipelineStage,
+} from "../../../src/grade/pipeline-state.js";
+import {
+  GRADE_RUN_DOCUMENT,
+  GRADE_RUN_MARKERS,
+  writeGradeRunFixture,
+} from "../../helpers/grade-run-fixture.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -73,8 +90,6 @@ function setupRepository(): Fixture {
   const executionPath = join(repo, "execution");
   mkdirSync(schedulePath, { recursive: true });
   mkdirSync(join(executionPath, "exec", "events"), { recursive: true });
-  mkdirSync(join(executionPath, "exec", "plans"), { recursive: true });
-  mkdirSync(join(executionPath, "exec", "results"), { recursive: true });
 
   writeFileSync(join(repo, "README.md"), "# test\n", "utf8");
   git(repo, "init");
@@ -162,8 +177,8 @@ function scaffoldTask(
   planContent?: string,
   resultContent?: string,
 ): { planPath: string; resultPath: string; claimEventPath: string } {
-  const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
-  const resultPath = join(fixture.executionPath, "exec", "results", `${taskId}-result.md`);
+  const planPath = taskRecordPaths(fixture.executionPath, taskId).plan;
+  const resultPath = taskRecordPaths(fixture.executionPath, taskId).result;
   const claimEventPath = join(
     fixture.executionPath,
     "exec",
@@ -229,8 +244,8 @@ function mergeIntoRoot(
     message: options.message,
     failureLogPath: options.failureLogPath,
     releaseRootPaths: [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
-      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
+      taskRecordPaths(fixture.executionPath, taskId).result,
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
       ...gradeCheckpointPaths(fixture.context),
     ],
@@ -281,7 +296,7 @@ describe("exec worktree ops", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const paths = scaffoldTask(fixture, taskId);
-    git(fixture.repo, "add", `execution/exec/plans/${taskId}-plan.md`);
+    git(fixture.repo, "add", taskRecordPaths("execution", taskId).plan);
 
     expect(() =>
       checkpointAndEnsureWorktree({
@@ -317,7 +332,9 @@ describe("exec worktree ops", () => {
         ].join("\n"),
       );
       chmodSync(hookPath, 0o755);
-      const failureLogPath = join(fixture.repo, "execution", "exec", "evidence", "checkpoint.log");
+      const failureLogPath = taskRecordPaths(join(fixture.repo, "execution"), taskId).log(
+        "checkpoint.log",
+      );
 
       expect(() => prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath)).toThrow(
         /Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s,
@@ -338,8 +355,8 @@ describe("exec worktree ops", () => {
       expect(worktreeStatusPaths(worktree!.path)).toEqual(
         expect.arrayContaining([
           `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
-          `execution/exec/plans/${taskId}-plan.md`,
-          `execution/exec/results/${taskId}-result.md`,
+          taskRecordPaths("execution", taskId).plan,
+          taskRecordPaths("execution", taskId).result,
         ]),
       );
       const failureLog = readFileSync(failureLogPath, "utf8");
@@ -439,6 +456,167 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
   });
 
+  it("refreshes a newer root grade into a resumed worktree and merges it (PJR-ZSRD)", () => {
+    const fixture = setupRepository();
+    const path = "execution/grade/results/doc.yaml";
+    writeFile(join(fixture.repo, path), "grade: checkpoint\n");
+    const worktree = prepare(fixture, "GRADE-REFRESH");
+    writeFile(join(fixture.repo, path), "grade: newer\n");
+
+    const refreshed = refreshWorktreeCheckpoint({
+      repoRoot: fixture.repo,
+      worktreePath: worktree.path,
+      paths: [join(fixture.repo, path), join(fixture.repo, "execution/grade/results/none.yaml")],
+      commitMessage: "exec(GRADE-REFRESH): refresh grade",
+    });
+
+    expect(refreshed).toEqual([path]);
+    expect(git(worktree.path, "show", `HEAD:${path}`)).toBe("grade: newer");
+    expect(worktreeStatusPaths(worktree.path)).toEqual([]);
+    mergeIntoRoot(fixture, worktree, "GRADE-REFRESH");
+    expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
+  });
+
+  it("does not commit when the resumed worktree already has the root grade", () => {
+    const fixture = setupRepository();
+    const path = "execution/grade/results/doc.yaml";
+    writeFile(join(fixture.repo, path), "grade: same\n");
+    const worktree = prepare(fixture, "GRADE-SAME");
+    const head = git(worktree.path, "rev-parse", "HEAD");
+
+    const refreshed = refreshWorktreeCheckpoint({
+      repoRoot: fixture.repo,
+      worktreePath: worktree.path,
+      paths: [join(fixture.repo, path)],
+      commitMessage: "exec(GRADE-SAME): refresh grade",
+    });
+
+    expect(refreshed).toEqual([]);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(head);
+  });
+
+  it("merges a parallel review while another review grade fails without changing shared retry state", async () => {
+    const fixture = setupRepository();
+    const previousCwd = process.cwd();
+    writeGradeRunFixture(fixture.repo);
+    writeFile(join(fixture.repo, ".gitignore"), "execution/grade/generated/\n");
+    const other = GRADE_RUN_DOCUMENT.replace("example", "other");
+    writeFile(
+      join(fixture.repo, other),
+      readFileSync(join(fixture.repo, GRADE_RUN_DOCUMENT), "utf8").replace(
+        "test:example",
+        "test:other",
+      ),
+    );
+    git(fixture.repo, "add", ".");
+    git(fixture.repo, "commit", "-m", "test: grade inputs");
+    process.chdir(fixture.repo);
+    try {
+      const subject = { target: "kata" as const, project: "test", path: other };
+      // This dirty state used to be captured by the successful review's checkpoint,
+      // then overwritten by the next review's grade failure before the first merged.
+      const shared = recordGradePipelineStage({
+        ...subject,
+        runId: "earlier-job",
+        stage: 1,
+        stageTotal: 1,
+        maxFailures: 3,
+        status: "failed",
+      });
+      const invoke: ReviewGradeInvoke = async (_command, args) => {
+        const value = (flag: string): string => args[args.indexOf(flag) + 1]!;
+        try {
+          await runGrade(
+            {
+              target: "kata",
+              project: value("--project"),
+              paths: [value("--path")],
+              runId: value("--run-id"),
+              isolatePipelineState: args.includes("--isolate-pipeline-state"),
+            },
+            {
+              resolveActor: () => "actual-grader",
+              executePlan: async () => ({
+                actor: "actual-grader",
+                command: "test",
+                execution: {
+                  result: value("--path") === other ? "failure" : "success",
+                  exitCode: value("--path") === other ? 1 : 0,
+                  stdout: GRADE_RUN_MARKERS,
+                  stderr: "",
+                },
+              }),
+            },
+          );
+          return { exitCode: 0, stderr: "" };
+        } catch (error) {
+          return { exitCode: 1, stderr: String(error) };
+        }
+      };
+      const reviewGrade = (taskId: string, subjectPath: string) =>
+        ensureReviewGrade({
+          taskId,
+          subjectPath,
+          target: "kata",
+          projectId: "test",
+          repoRoot: fixture.repo,
+          dryRun: false,
+          invoke,
+        });
+      expect(await reviewGrade("REVIEW-PASS", GRADE_RUN_DOCUMENT)).toMatchObject({
+        action: "executed",
+      });
+      const successful = prepare(
+        fixture,
+        "REVIEW-PASS",
+        "REVIEW-PASS",
+        planWithIdentity("REVIEW-PASS", { mode: "review" }),
+        humanResultWithIdentity("REVIEW-PASS", { mode: "review" }),
+      );
+      // The first review remains active while a second review is prepared and fails grade.
+      const failingReview = (async () => {
+        const outcome = await reviewGrade("REVIEW-FAIL", other);
+        expect(outcome).toMatchObject({
+          action: "failed",
+          detail: expect.stringContaining("agent actual-grader: failure"),
+        });
+        const worktree = prepare(
+          fixture,
+          "REVIEW-FAIL",
+          "REVIEW-FAIL",
+          planWithIdentity("REVIEW-FAIL", { mode: "review" }),
+          humanResultWithIdentity("REVIEW-FAIL", { mode: "review" }),
+        );
+        return { outcome, worktree };
+      })();
+      const successfulReview = (async () => {
+        await failingReview;
+        mergeIntoRoot(fixture, successful, "REVIEW-PASS");
+      })();
+      const [{ outcome, worktree: retained }] = await Promise.all([
+        failingReview,
+        successfulReview,
+      ]);
+      expect(readGradePipelineState(subject)).toEqual(shared);
+      expect(outcome.action).toBe("failed");
+      if (outcome.action !== "failed") throw new Error("Expected a failed grade");
+      expect(
+        readGradePipelineState({
+          ...subject,
+          directory: `execution/grade/generated/runs/${outcome.runId}/pipeline`,
+        }),
+      ).toMatchObject({ stage_failed: 1, consecutive_failures: 1 });
+      expect(existsSync(retained.path)).toBe(true);
+      expect(
+        isExecBranchMergedIntoCurrent({ context: fixture.context, worktree: successful }),
+      ).toBe(true);
+      expect(git(fixture.repo, "diff", "--name-only", "--", "execution/grade/pipeline")).toBe("");
+      expect(git(fixture.repo, "ls-files", "execution/grade/generated")).toBe("");
+    } finally {
+      process.chdir(previousCwd);
+    }
+  });
+
   it("keeps an unrelated root grade created after branching while merging the task", () => {
     const fixture = setupRepository();
     const worktree = prepare(fixture, "GRADE-UNRELATED");
@@ -461,22 +639,19 @@ describe("exec worktree ops", () => {
     // Agent edits a deliverable and updates its result inside the worktree.
     writeFile(join(worktree.path, "docs", "a.md"), "v1 from task 010\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
     expect(committed.committed).toBe(true);
     expect(committed.targets).toContain("docs/a.md");
-    expect(committed.targets).toContain(`execution/exec/results/${taskId}-result.md`);
+    expect(committed.targets).toContain(taskRecordPaths("execution", taskId).result);
 
     mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("v1 from task 010\n");
     expect(
-      readFileSync(
-        join(fixture.repo, "execution", "exec", "results", `${taskId}-result.md`),
-        "utf8",
-      ),
+      readFileSync(taskRecordPaths(join(fixture.repo, "execution"), taskId).result, "utf8"),
     ).toContain("status: complete");
   });
 
@@ -485,8 +660,8 @@ describe("exec worktree ops", () => {
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
     const releaseRootPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
-      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
+      taskRecordPaths(fixture.executionPath, taskId).result,
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
     ];
 
@@ -503,18 +678,72 @@ describe("exec worktree ops", () => {
     for (const path of releaseRootPaths) expect(existsSync(path)).toBe(true);
   });
 
+  it.each([false, true])(
+    "unrelated staged block event stops integration with recovery instructions (dry-run: %s)",
+    (dryRun) => {
+      const fixture = setupRepository();
+      const taskId = "T-T-doc-010";
+      const worktree = prepare(fixture, taskId);
+      const event = "execution/exec/events/other-task-block.json";
+      writeFile(join(fixture.repo, event), '{"type":"block"}\n');
+      git(fixture.repo, "add", event);
+      // Also preserve partially staged content, which must not enter the task's merge commit.
+      writeFile(join(fixture.repo, "README.md"), "staged\n");
+      git(fixture.repo, "add", "README.md");
+      writeFile(join(fixture.repo, "README.md"), "unstaged\n");
+      const index = git(fixture.repo, "diff", "--cached", "--binary");
+      const status = git(fixture.repo, "status", "--porcelain");
+      const head = git(fixture.repo, "rev-parse", "HEAD");
+      const releaseRootPaths = [
+        taskRecordPaths(fixture.executionPath, taskId).plan,
+        taskRecordPaths(fixture.executionPath, taskId).result,
+        join(fixture.executionPath, "exec/events", `20260613T000000Z_agent_${taskId}_claim.json`),
+      ];
+      const blockers = projectMergeBlockers({
+        context: fixture.context,
+        worktree,
+        taskId,
+        releasePaths: releaseRootPaths,
+      });
+      expect(
+        blockers.some(
+          ({ message }) =>
+            message.includes(event) && message.includes("git restore --staged -- <path>"),
+        ),
+      ).toBe(true);
+      expect(() =>
+        mergeWorktreeIntoCurrent({
+          context: fixture.context,
+          worktree,
+          taskId,
+          releaseRootPaths,
+          dryRun,
+        }),
+      ).toThrow(/Staged changes.*other-task-block\.json.*git restore --staged/);
+      expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(head);
+      expect(git(fixture.repo, "status", "--porcelain")).toBe(status);
+      expect(git(fixture.repo, "diff", "--cached", "--binary")).toBe(index);
+      expect(gitResult(fixture.repo, ["rev-parse", "--verify", "MERGE_HEAD"]).status).not.toBe(0);
+
+      git(fixture.repo, "restore", "--staged", "--", event, "README.md");
+      mergeIntoRoot(fixture, worktree, taskId);
+      expect(readFileSync(join(fixture.repo, event), "utf8")).toBe('{"type":"block"}\n');
+      expect(readFileSync(join(fixture.repo, "README.md"), "utf8")).toBe("unstaged\n");
+    },
+  );
+
   it("restores files already released when releasing a later path fails", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     prepare(fixture, taskId);
-    const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
-    const invalidDirectory = join(fixture.executionPath, "exec", "results");
+    const planPath = taskRecordPaths(fixture.executionPath, taskId).plan;
+    const invalidDirectory = taskRecordPaths(fixture.executionPath, taskId).directory;
     const planBefore = readFileSync(planPath, "utf8");
 
     expect(() =>
       releaseRootWorkingCopies(fixture.repo, [
-        `execution/exec/plans/${taskId}-plan.md`,
-        "execution/exec/results",
+        taskRecordPaths("execution", taskId).plan,
+        taskRecordPaths("execution", taskId).directory,
       ]),
     ).toThrow();
     expect(readFileSync(planPath, "utf8")).toBe(planBefore);
@@ -603,8 +832,8 @@ describe("exec worktree ops", () => {
     expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
     expect(git(fixture.repo, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
       `?? execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
-      `?? execution/exec/plans/${taskId}-plan.md`,
-      `?? execution/exec/results/${taskId}-result.md`,
+      `?? ${taskRecordPaths("execution", taskId).plan}`,
+      `?? ${taskRecordPaths("execution", taskId).result}`,
     ]);
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
   });
@@ -646,7 +875,9 @@ describe("exec worktree ops", () => {
       "utf8",
     );
     chmodSync(preMergeHookPath, 0o755);
-    const failureLogPath = join(worktree.path, "execution", "exec", "evidence", "integrate.log");
+    const failureLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
+      "integrate.log",
+    );
     writeFileSync(join(fixture.repo, ".git", "reject-merge"), "reject\n", "utf8");
 
     expect(() =>
@@ -675,10 +906,10 @@ describe("exec worktree ops", () => {
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
     const targetBranch = git(fixture.repo, "rev-parse", "--abbrev-ref", "HEAD");
-    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const resultRel = taskRecordPaths("execution", taskId).result;
     const eventRel = `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`;
     const bookkeepingPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
       join(fixture.repo, resultRel),
       join(fixture.repo, eventRel),
     ];
@@ -804,8 +1035,8 @@ describe("exec worktree ops", () => {
     // `prepare` leaves root-side replicas of the plan, result, and claim event. The production
     // integration releases them before merging, so the test passes them the same way.
     const rootReplicaPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
-      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
+      taskRecordPaths(fixture.executionPath, taskId).result,
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
     ];
 
@@ -889,9 +1120,9 @@ describe("exec worktree ops", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
-    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const resultRel = taskRecordPaths("execution", taskId).result;
     const bookkeepingPaths = [
-      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      taskRecordPaths(fixture.executionPath, taskId).plan,
       join(fixture.repo, resultRel),
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
     ];
@@ -946,33 +1177,34 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("target\n");
   });
 
-  it("excludes plans, events, and generated files from the task commit", () => {
+  it("blocks edited plans while allowing regenerated files to remain outside commits", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
     const worktree = prepare(fixture, taskId);
 
     // Simulate an agent that also touches a plan and a generated file (must not be committed).
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
-    writeFile(
-      join(worktree.path, "execution", "exec", "plans", `${taskId}-plan.md`),
-      "# Plan edited\n",
-    );
+    writeFile(taskRecordPaths(join(worktree.path, "execution"), taskId).plan, "# Plan edited\n");
     writeFile(join(worktree.path, "execution", "generated", "state.json"), "{}\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      UncommittedChangesError,
+    );
+    git(worktree.path, "restore", "--", taskRecordPaths("execution", taskId).plan);
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
     expect(committed.targets).toEqual(
-      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+      expect.arrayContaining(["docs/a.md", taskRecordPaths("execution", taskId).result]),
     );
-    expect(committed.targets).not.toContain(`execution/exec/plans/${taskId}-plan.md`);
+    expect(committed.targets).not.toContain(taskRecordPaths("execution", taskId).plan);
     expect(committed.targets).not.toContain("execution/generated/state.json");
 
     // Excluded files remain uncommitted in the worktree.
     const stillDirty = git(worktree.path, "status", "--porcelain");
-    expect(stillDirty).toContain(`execution/exec/plans/${taskId}-plan.md`);
+    expect(stillDirty).not.toContain(taskRecordPaths("execution", taskId).plan);
     expect(stillDirty).toContain("execution/generated/");
   });
 
@@ -1105,7 +1337,7 @@ describe("exec worktree ops", () => {
     // The reporter wrote an unwrapped `depends_on` next to `_TODO_`; this is what
     // `prettier --write` turns it into, and markdownlint MD049 rejects it (PJR-19HX).
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\n- depends*on を根拠とし、判断不能箇所があれば \\_TODO*/_ASSUMPTION_ を残す。\n`,
     );
 
@@ -1149,7 +1381,7 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toContain("docs/d.yaml");
   });
 
-  it("commits only the result for a review task, leaving deliverable tampering uncommitted", () => {
+  it("blocks a review task that tampers with a deliverable", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-030";
     const worktree = prepare(fixture, taskId, taskId, planWithIdentity(taskId, { mode: "review" }));
@@ -1157,18 +1389,19 @@ describe("exec worktree ops", () => {
     // A prompt-injected review agent tampers with a deliverable alongside its result.
     writeFile(join(worktree.path, "docs", "tampered.md"), "injected change\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-
-    expect(committed.committed).toBe(true);
-    expect(committed.targets).toEqual([`execution/exec/results/${taskId}-result.md`]);
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /uncommitted=1;.*docs\/tampered.md/,
+    );
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
     expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("docs/tampered.md");
   });
 
-  it("commits only the plan targets for an edit task and merges past out-of-scope residue", () => {
+  it("blocks edit commit, merge, and removal while retaining non-target changes and evidence", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
 
@@ -1190,22 +1423,40 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "a.md"), "target deliverable\n");
     writeFile(join(worktree.path, "src", "sneaky.ts"), "// injected\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       `# Result ${taskId}\n\nstatus: complete\n`,
     );
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-
-    expect(committed.targets).toEqual(
-      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    const rootBefore = git(fixture.repo, "rev-parse", "HEAD");
+    const scopeLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
+      "integrate.log",
     );
-    expect(committed.targets).not.toContain("src/sneaky.ts");
+    expect(() =>
+      commitWorktreeChanges({ context: fixture.context, worktree, taskId, scopeLogPath }),
+    ).toThrow(/uncommitted=1;.*src\/sneaky.ts/);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(scopeLogPath, "utf8")).toContain("src/sneaky.ts");
+    expect(
+      readFileSync(taskRecordPaths(join(worktree.path, "execution"), taskId).result, "utf8"),
+    ).toContain("`src/sneaky.ts`");
+    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow(UncommittedChangesError);
+    expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
+      UncommittedChangesError,
+    );
+    expect(projectMergeBlockers({ context: fixture.context, worktree, taskId })).toEqual([
+      expect.objectContaining({ message: expect.stringContaining("src/sneaky.ts") }),
+    ]);
+    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(rootBefore);
+    expect(existsSync(worktree.path)).toBe(true);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
 
-    // The out-of-scope file stays in the worktree and must not block the merge.
+    // Explicitly reviewing and removing the stray change permits a later integration.
+    rmSync(join(worktree.path, "src", "sneaky.ts"));
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.targets).toContain("docs/a.md");
     mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("target deliverable\n");
-    expect(existsSync(join(fixture.repo, "src", "sneaky.ts"))).toBe(false);
-    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
   });
 
   it("commits only the result targets for an execution: human edit task", () => {
@@ -1238,7 +1489,7 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "stale.md"), "stale plan target\n");
     writeFile(join(worktree.path, "src", "unrelated.ts"), "// unrelated\n");
     writeFile(
-      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      taskRecordPaths(join(worktree.path, "execution"), taskId).result,
       humanResultWithIdentity(taskId, {
         mode: "edit",
         approach: "finalize",
@@ -1249,15 +1500,74 @@ describe("exec worktree ops", () => {
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
     expect(committed.targets).toEqual(
-      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+      expect.arrayContaining(["docs/a.md", taskRecordPaths("execution", taskId).result]),
     );
     expect(committed.targets).not.toContain("docs/stale.md");
     expect(committed.targets).not.toContain("src/unrelated.ts");
   });
 
-  it("allows reference-material directories for a bootstrap-approach edit task", () => {
+  it.each([
+    ["bootstrap", "rulebooks"],
+    ["rulebook-maintenance", "rulebooks"],
+    ["recipe-maintenance", "recipes"],
+    ["sample-maintenance", "samples"],
+    ["template-maintenance", "templates"],
+  ])(
+    "allows %s type files and explains unresolved IDs without widening ancillary scope",
+    (approach, dir) => {
+      const fixture = setupRepository();
+      const taskId = "T-T-doc-010";
+      const worktree = prepare(
+        fixture,
+        taskId,
+        taskId,
+        planWithIdentity(taskId, {
+          mode: "edit",
+          approach,
+          targets: ["specdojo:new-type"],
+        }),
+      );
+      const typePath = `docs/ja/specdojo/${dir}/new-type.md`;
+      writeFile(join(worktree.path, typePath), "# new type\n");
+      const ancillary = [
+        "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml",
+        "docs/specdojo/schemas/v1/new-type.schema.yaml",
+        "packages/docs-site/sidebar-config.ts",
+      ];
+      for (const path of ancillary) writeFile(join(worktree.path, path), "proposed change\n");
+      expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+        UncommittedChangesError,
+      );
+      const resultPath = taskRecordPaths(join(worktree.path, "execution"), taskId).result;
+      for (const path of ancillary) expect(readFileSync(resultPath, "utf8")).toContain(path);
+      for (const path of ancillary) rmSync(join(worktree.path, path));
+      const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      const scopeLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
+        "integrate.log",
+      );
+      const committed = commitWorktreeChanges({
+        context: fixture.context,
+        worktree,
+        taskId,
+        scopeLogPath,
+      });
+      expect(committed.targets).toContain(typePath);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(
+        "no individual path; approach directory permissions still apply",
+      );
+      expect(stdout.mock.calls.map(([message]) => String(message)).join("")).toContain(
+        "unresolved target doc id (no individual path; approach directory permissions still apply): specdojo:new-type",
+      );
+    },
+  );
+
+  it.each(["modify", "delete"])("blocks %s of a tracked non-target file", (operation) => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
+    const path = "docs/specdojo/schemas/v1/existing.schema.yaml";
+    writeFile(join(fixture.repo, path), "type: object\n");
+    git(fixture.repo, "add", path);
+    git(fixture.repo, "commit", "-m", "add existing schema");
     const worktree = prepare(
       fixture,
       taskId,
@@ -1265,20 +1575,69 @@ describe("exec worktree ops", () => {
       planWithIdentity(taskId, {
         mode: "edit",
         approach: "bootstrap",
-        targets: ["prj-0001:doc-a"],
+        targets: ["specdojo:new-type"],
       }),
     );
-
-    writeFile(
-      join(worktree.path, "docs", "ja", "specdojo", "rulebooks", "new-rulebook.md"),
-      "# rulebook\n",
+    if (operation === "delete") rmSync(join(worktree.path, path));
+    else writeFile(join(worktree.path, path), "type: string\n");
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /uncommitted=1;.*existing.schema.yaml/,
     );
-    writeFile(join(worktree.path, "docs", "unrelated.md"), "not a target\n");
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("type: object\n");
+  });
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+  it("does not write block evidence during a dry run", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "review",
+      }),
+    );
+    const resultPath = taskRecordPaths(join(worktree.path, "execution"), taskId).result;
+    const before = readFileSync(resultPath, "utf8");
+    writeFile(join(worktree.path, "docs", "stray.md"), "stray\n");
+    expect(() => assertCommitScope(fixture.context, worktree, taskId, { dryRun: true })).toThrow(
+      UncommittedChangesError,
+    );
+    expect(readFileSync(resultPath, "utf8")).toBe(before);
+    expect(
+      existsSync(taskRecordPaths(join(worktree.path, "execution"), taskId).log("integrate.log")),
+    ).toBe(false);
+  });
 
-    expect(committed.targets).toContain("docs/ja/specdojo/rulebooks/new-rulebook.md");
-    expect(committed.targets).not.toContain("docs/unrelated.md");
+  it("keeps default block logs in the selected run when called with a task ID", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0137";
+    const stem = "pjr-0137-20261106T160500Z-aabbccdd";
+    const worktree = prepare(
+      fixture,
+      stem,
+      stem,
+      planWithIdentity(taskId, { mode: "review", origin: "register" }),
+      `---\nspecdojo:\n  task_id: ${taskId}\n---\n\n# Result\n`,
+    );
+    writeFile(join(worktree.path, "docs/stray.md"), "stray\n");
+
+    expect(() => assertCommitScope(fixture.context, worktree, taskId)).toThrow(
+      UncommittedChangesError,
+    );
+    const records = taskRecordPaths(join(worktree.path, "execution"), taskId, stem);
+    expect(readFileSync(records.log("integrate.log"), "utf8")).toContain("docs/stray.md");
+    expect(existsSync(taskRecordPaths(join(worktree.path, "execution"), taskId).directory)).toBe(
+      false,
+    );
+
+    rmSync(join(worktree.path, "docs/stray.md"));
+    expect(() => assertCommitScope(fixture.context, worktree, taskId)).not.toThrow();
+    expect(commitWorktreeChanges({ context: fixture.context, worktree, taskId }).targets).toContain(
+      `execution/runs/register/${taskId}/${stem}/integrate.log`,
+    );
   });
 
   it("keeps retrofit implementation evidence outside commit scope", () => {
@@ -1305,10 +1664,9 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "a.md"), "retrofit document update\n");
     writeFile(join(worktree.path, "src", "evidence.ts"), "// must remain read-only\n");
 
-    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-
-    expect(committed.targets).toContain("docs/a.md");
-    expect(committed.targets).not.toContain("src/evidence.ts");
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /uncommitted=1;.*src\/evidence.ts/,
+    );
   });
 
   it("fails a schedule-originated edit task whose plan declares no targets", () => {
@@ -1348,7 +1706,88 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toEqual(expect.arrayContaining(["docs/a.md", "src/unrelated.ts"]));
   });
 
-  it("leaves agent scratch files outside known deliverable directories uncommitted for a register task", () => {
+  it.each([
+    { withRefs: true, mode: "edit" as const },
+    { withRefs: false, mode: "edit" as const },
+    { withRefs: true, mode: "review" as const },
+  ])(
+    "commits the current run and its attempts ($mode, artifact refs=$withRefs)",
+    ({ withRefs, mode }) => {
+      const fixture = setupRepository();
+      const taskId = "PJR-0137";
+      const stem = "pjr-0137-20261106T160500Z-aabbccdd";
+      const worktree = prepare(
+        fixture,
+        stem,
+        stem,
+        planWithIdentity(taskId, { mode, origin: "register", targets: [] }),
+      );
+      const currentRecords = taskRecordPaths("execution", taskId, stem);
+      const resultRel = currentRecords.result;
+      const current = currentRecords.directory;
+      const other = `execution/runs/register/${taskId}/run-2/executor.log`;
+      const otherTask = "execution/runs/register/PJR-9999/run-1/executor.log";
+      const state = createPipelineState({
+        taskId,
+        runId: stem,
+        updatedAt: "2026-11-07T00:00:00Z",
+        ...(withRefs
+          ? {
+              artifacts: {
+                plan_ref: currentRecords.plan,
+                result_ref: resultRel,
+              },
+            }
+          : {}),
+      });
+      writePipelineState(join(worktree.path, current, "pipeline-state.json"), state);
+      writePipelineState(
+        join(worktree.path, `execution/runs/register/${taskId}/run-2/pipeline-state.json`),
+        createPipelineState({
+          taskId,
+          runId: "run-2",
+          updatedAt: "2026-11-08T00:00:00Z",
+          artifacts: { plan_ref: "other-plan.md", result_ref: "other-result.md" },
+        }),
+      );
+      const records = [
+        "evidence.json",
+        "executor.log",
+        "parent-validation-attempt-1-lint-ts.log",
+        "evidence.attempt-1.json",
+        "executor.attempt-1.log",
+        "pipeline-state.attempt-1.json",
+      ];
+      for (const name of records) writeFile(join(worktree.path, current, name), "record\n");
+      writeFile(join(worktree.path, other), "other run\n");
+      writeFile(join(worktree.path, otherTask), "other task\n");
+      const scopeLogPath = join(worktree.path, current, "integrate.log");
+      const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      expect(() =>
+        commitWorktreeChanges({ context: fixture.context, worktree, taskId: stem, scopeLogPath }),
+      ).toThrow(UncommittedChangesError);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(other);
+      expect(readFileSync(scopeLogPath, "utf8")).toContain(otherTask);
+      expect(stdout.mock.calls.map(([message]) => String(message)).join("")).toContain(other);
+      expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain(other);
+      // Another run's records must be reviewed before this run can be integrated.
+      rmSync(join(worktree.path, `execution/runs/register/${taskId}/run-2`), { recursive: true });
+      rmSync(join(worktree.path, "execution/runs/register/PJR-9999"), { recursive: true });
+      const committed = commitWorktreeChanges({
+        context: fixture.context,
+        worktree,
+        taskId: stem,
+        scopeLogPath,
+      });
+      const tracked = git(worktree.path, "ls-tree", "-r", "--name-only", "HEAD").split("\n");
+      for (const name of records) expect(tracked).toContain(`${current}/${name}`);
+      expect(tracked).toContain(`${current}/pipeline-state.json`);
+      expect(committed.targets).not.toContain(other);
+      expect(committed.targets).not.toContain(otherTask);
+    },
+  );
+
+  it("blocks register commits until non-target additions are reviewed", () => {
     const fixture = setupRepository();
     const taskId = "PJR-0142";
     writeFile(join(fixture.repo, "custom", "kept.md"), "# tracked custom dir\n");
@@ -1367,16 +1806,26 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "scratch", "patch.js"), "// scratch\n");
     // 一時ファイルが status: ready を含んでも、tmp/ 配下は commit 対象外なので ready 昇格とはみなさない。
     writeFile(join(worktree.path, "tmp", "test-schema.yaml"), "id: tmp\nstatus: ready\n");
-    const scopeLogPath = join(
-      worktree.path,
-      "execution",
-      "exec",
-      "evidence",
-      taskId,
-      "run-1",
+    const scopeLogPath = taskRecordPaths(join(worktree.path, "execution"), taskId).log(
       "integrate.log",
     );
 
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    expect(() =>
+      commitWorktreeChanges({
+        context: fixture.context,
+        worktree,
+        taskId,
+        scopeLogPath,
+      }),
+    ).toThrow(/uncommitted=1;.*scratch\/patch.js/);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("?? scratch/patch.js");
+    expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
+      UncommittedChangesError,
+    );
+    expect(existsSync(worktree.path)).toBe(true);
+    rmSync(join(worktree.path, "scratch"), { recursive: true });
     const committed = commitWorktreeChanges({
       context: fixture.context,
       worktree,
@@ -1388,13 +1837,13 @@ describe("exec worktree ops", () => {
     expect([...committed.targets].sort()).toEqual([
       "custom/added.md",
       "docs/a.md",
-      `execution/exec/evidence/${taskId}/run-1/integrate.log`,
+      taskRecordPaths("execution", taskId).log("integrate.log"),
       // 最上位に追加したファイルを result の申し送りへ記録するため、result も commit 対象になる。
-      `execution/exec/results/${taskId}-result.md`,
+      taskRecordPaths("execution", taskId).result,
       "modify.py",
     ]);
     const log = readFileSync(scopeLogPath, "utf8");
-    expect(log).toContain("commit-scope: skipped non-target changes (left in worktree):");
+    expect(log).toContain("commit-scope: integration blocked;");
     expect(log).toContain("  scratch/patch.js");
     expect(log).toContain("最上位に追加したファイル:");
     expect(log).toContain("  modify.py");
@@ -1405,7 +1854,6 @@ describe("exec worktree ops", () => {
       "test-schema.yaml",
     );
     expect(git(worktree.path, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
-      "?? scratch/patch.js",
       "?? tmp/test-schema.yaml",
     ]);
 
@@ -1445,7 +1893,7 @@ describe("exec worktree ops", () => {
     expect([...committed.targets].sort()).toEqual([
       "README.md",
       "ROOT-NOTE.md",
-      `execution/exec/results/${taskId}-result.md`,
+      taskRecordPaths("execution", taskId).result,
     ]);
   });
 

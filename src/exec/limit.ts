@@ -326,7 +326,7 @@ function deferredTask(
     attemptsText && /^\d+$/.test(attemptsText) ? Number.parseInt(attemptsText, 10) : 0;
   return {
     taskId,
-    actor: state.last_by ?? "",
+    actor: state.claimed_by ?? state.last_by ?? "",
     kind,
     resumeAt: resumeAt.toISOString(),
     attempts,

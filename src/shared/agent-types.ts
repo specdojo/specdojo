@@ -15,6 +15,7 @@ export type SchedulerStrategy = "critical-first" | "fifo";
 // bootstrap は成果物とその参考資料一式（rulebook/recipe/sample/template）を一貫した一組として
 // 同一タスクで作成・整備する進め方（初期立ち上げ専用）。
 // retrofit は宣言済みの実装エビデンスを現在動作の根拠として読み、成果物へ反映・新設する。
+// condense は 1 文書の冗長さを直し、修正・保持の記録と原因を result に残す。
 // cross-deliverable-dedup は明示した成果物群を横断して正本を選び、重複を要約と参照へ置換する。
 // finalize は human が成果物のみを最終確認して status を ready へ確定する進め方、
 // bootstrap-finalize は bootstrap と対になり、成果物と参考資料一式をまとめて確定する進め方。
@@ -22,6 +23,7 @@ export type SchedulerStrategy = "critical-first" | "fifo";
 export const APPROACHES = [
   "draft",
   "fully-guided",
+  "condense",
   "recipe-guided",
   "freeform",
   "bootstrap",

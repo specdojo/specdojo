@@ -1,0 +1,102 @@
+作業を始める前に、共通規約と宣言された参照資料を読み込みます。まず対象成果物・depends_on・実践の型・プロジェクトコンテキストを実際に確認します。
+共通規約の要点を理解しました。次に、宣言された実践の型（rulebook / recipe / sample）と depends_on とプロジェクトコンテキストを読み込みます。
+実践の型を把握しました。次に depends_on の先行・隣接成果物とプロジェクトコンテキスト（Why）を読み込みます。
+次に、プロジェクト受入条件 AC-01〜AC-04 とプロジェクト概要（Why）を読みます。
+宣言された `depends_on` と `based_on` の全資料・実践の型を読み込みました。次に検査設定（`package.json`、`.specdojo/specdojo.config.json`、hook）を確認します。
+specdojo.config.json が見つかりません。hook 設定と、catalog_path の有無を確認します。
+catalog validate の適用可否を確認するため、カタログ設定スクリプトと対象ディレクトリ構造を確認します。
+catalog_path の設定状況を調べます。specdojo.config.json が存在しないため、解決ロジックを確認します。
+catalog_path の設定状況を確認するため、config 解決ロジックを読みます。
+config 読み込みロジックと config ファイルの存在を確認します。
+config ファイルの実在を確認します。
+`.specdojo/specdojo.config.json` が存在しないことが確定しました。これにより本リポジトリでは `catalog_path` が未設定となり、`catalog validate` は `not_applicable` になります（runner が機械的に確定）。
+
+次に、宣言された実装エビデンス（読み取り専用）を確認し、BAC が実装の実態と食い違っていないかを確認します。同時に冗長さ判定の観点 `vp-arc-conciseness` と、レビュー観点を確認します。
+実装エビデンス `grade.ts` は entry point であり、目的（grade の確定）と整合します。`vp-arc-conciseness` は共通正本を継承するため、その定義を確認します。
+実践の型・depends_on・レビュー観点を読み込みました。次に、実装エビデンスとして宣言された `src/exec/run/run.ts`（完了条件との照合と完了記録）を実際に参照し、BAC の記述が「現在動作の事実」と食い違っていないかを確認します（rulebook 禁止項目への抵触有無のため）。
+実装エビデンスは entry point（barrel）で、目的（grade の確定、完了条件照合と完了記録の実行流れ）と整合します。BAC は業務受入観点として記述しており、実装の物理手順を再掲しておらず、rulebook 禁止項目への抵触はありません。
+
+ここで方針を整理し、タスク管理を始めます。
+
+分析結果:
+- rulebook / recipe / sample を実際に読込み、既存 BAC が必須要素（概要・受入条件・メモ）を満たし、禁止事項にも抵触していないことを確認済み。
+- `depends_on` と `based_on`、実行 Eビデンス、`vp-arc-conciseness` を照合。実装と食い違わず、未作成の `depends_on` もなし。
+- `_CONTEXT_:` の残記なし、展開された finding なし。
+- 既存 BAC は rulebook・recipe/sample の許容構成内（rulebook §6.1「上位の Why は要約と参照で引き継ぐ」に適合）。完成度・整合性・読みやすさを理由に書き換えない。
+
+したがって保守的に変更不要と判断できます。結果を記録するため、作業用に一時ファイルを作成します。
+対象ファイルに対する sandbox 安全な検査（Prettier check、markdownlint）を実行します。これらは親 runner の許可リスト外で、変更がない場合でも整形状態を検証できます。
+Prettier check はパスしました（ファイルは既に整形済み）。markdownlint は `node packages/...js` 形式が allowlist に無いため、`npm run lint:md` では通らず、許可されたコマンドで実行します。
+markdownlint の退出コードを確認します。
+Prettier check が通過済み（対象ファイルは既に整形規則に適合）、`npx markdownlint` は出力ゼロ（エラーなし、exit 0）でした。`node packages/docs-lint/...js` 形式は allowlist 外のため `not_applicable` とします。`.specdojo/specdojo.config.json` が存在しないため `catalog_path` は未設定、また本タスクは `src/` を編集していないため typecheck・lint-ts・test 系は全て対象外（runner の親検証へ委譲）です。
+
+検証完了としてタスクを更新し、成果物には変更不要と判断しました。根拠を記録するため手渡し用の一時ファイルを作成します（リポジトリ直下ではなく `tmp/` 配下）。
+検証が完了しました。成果物本体には修正が必要なく（変更不要）、判断根拠・変更ファイルなし・検査結果を記録するための一時ファイルを `tmp/` 配下に作成します（リポジトリ直下では作らない、`tmp/` は commit 対象外）。
+`tmp/` 配下への新規作成は edit deny のため拒否され、成果物の編集も不可です。これは想定通りで、`result.md` は後続の reporter 段が記入・転記し、手渡し事項は本応答の `handoff` で宣言します。
+
+検証を再確認のため、対象ファイルと `tmp/` の状況を確認します（編集・作成は行いません）。
+`git status` だけを分離して確認します（`ls` と `echo` の連結が allowlist 外だったため）。
+作業ディレクトリの未追跡は `pipeline-state.json`（runner 管理ファイル）のみで、対象成果物本体に変更はありません。git diff で念のため確認します。
+検証が完了しました。対象成果物本体（`bac-task-completion.md`）に変更はありません（git diff 出力なし）、未追跡は runner 管理の `pipeline-state.json` のみです。
+
+判断を確定します。
+- `rulebook` / `recipe` / `sample` を実際に読込み、既存 BAC が rulebook §5（概要／受入条件／メモ）の必須要素を満たし、§7 禁止事項に抵触していないことを確認済み。
+- `depends_on`（`bps-deliverable-evaluation`・`bps-task-completion`）と `based_on`（`prj-success-criteria-and-acceptance-criteria`）、実行エビデンス（`src/grade/grade.ts`・`src/exec/run/run.ts`）と矛盾がないことを確認済み。食い違いは未承認の乖離でもなく、無条件に実装へ合わせる必要はない。
+- `vp-arc-conciseness` に照らし冗長性はなし、`_CONTEXT_:` 残記なし、grade result より展開された finding なし。
+- したがって、保守的に磨き込む「不足・不整合の箇所」が存在せず、rulebook の許容範囲内（rulebook §6.1「上位の Why は要約と参照で引き継ぐ」に適合）のため、既存記述を基準として変更不要と判断しました。
+
+成果物本体への編集は不要、`result.md` と `tmp/` への書き込みは pipeline 制約（executor は result を作らず、reporter が転記 / `tmp/` が commit 外）により不可です。判断根拠を `handoff` で申し送ります。
+作業は完了しました。以下が最終回答です。
+
+---
+
+## 実施内容（BAC: bac-task-completion.md の磨き込み・整合性確認）
+
+### 対象成果物への編集：**なし（変更不要）**
+実行計画 §4「磨き込み」の対象 `docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md`（251 行、status: draft）を精査した結果、保守的磨き込みで加筆・修正・統合・削除が要らないと判断しました。git diff は対象ファイルに出力なしを確認済みです。
+
+### 参照した資料と判断根拠
+- **実行計画（exec plan）** / **rulebook `bac-rulebook.md`** / **recipe `bac-recipe.md`** / **sample `bac-sample.md`** / **併せて適用する rulebook** → `_MISSING_`（`not-needed`）のため読み込みなし。
+- **depends_on / based_on**：`bps-deliverable-evaluation`、`bps-task-completion`、`prj-success-criteria-and-acceptance-criteria` を実際読込み、各 BAC の根拠・前提・例外（E-01〜E-03）を検証。矛盾なし。
+- **プロジェクトコンテキスト `prj-overview.md`**：WHY を判断軸として参照。全文再掲せず、各 BAC がどの価値へ連動するか照合したのみ。
+- **実行エビデンス（読み取り専用）**：`src/grade/grade.ts`（grade・finding の確定の入口）、`src/exec/run/run.ts`（完了条件の照合と記録を含む実行の流れ）を確認。業務記述と食い違いは無く、実装に無条件に合わせる必要はない。
+- **冗長さの検証（`vp-arc-conciseness`）**：表と本文の二重説明・同じ主張の反復・正本の再掲がないことを確認。rulebook §5.1「共通前提は一度だけ」を満たし、各 BAC の期待結果は固有の観測点を持つため冗長と判定された箇所は無し。
+- **禁止事項**：物理テーブル・SQL・実装クラス・詳細 API・クリック手順の業務条件化、schema 構文の再掲、「問題ない」のみでの期待結果、根拠なき数値 / 権限 / 例外承認、業務仕様の全文複写 — いずれにも抵触しない。
+- **_CONTEXT_ の残記**：存在せず、draft へ差し戻す必要は無し。
+
+### 下流ロールへの入力適合（最低ラインのみ検証、作り込みなし）
+- `[PO]` `vp-po-decision-readiness`：各 BAC が判定根拠・停止範囲・再開条件を持ち、承認 / 保留 / 再計画の判断に利用可能。
+- `[ARC]` `vp-arc-technical-constraints`：技術的制約（評価コンテキスト変化、実行エビデンスとの整合）が読み取れ、設計が可能。
+- `[QE]` `vp-qe-verifiability`：前置き・操作・期待結果・判定方法が各シナリオに完備され、テスト設計の基礎として利用可能。
+
+### 実践の型の欠落について
+rulebook / recipe / sample はいずれも存在し、基準として十分機能していた。薄い箇所なし。
+
+### sandbox 実行分：静的検査
+| コマンド | 結果 |
+|---|---|
+| `npx prettier --check docs/.../bac-task-completion.md` | **passed**（「All matched files use Prettier code style!」） |
+| `npx markdownlint docs/.../bac-task-completion.md` | **passed**（出力なし、exit 0） |
+
+### 対象外（runner の親検証へ委譲、sandbox では実行しない）
+以下は親 runner が許可リストから実行するため、executor 側では `not_applicable` と記録します。
+- `lint:ts` / `typecheck` / `test-integration` / `test-unit`：src/・tests/・tsconfig*.json の変更なし。
+- `lint-fm` / `validate-schema` / `validate:catalog` / `index build`：.specdojo/specdojo.config.json が存在しないため `catalog_path` 未設定 = 対象外。runner 側で機械的に判定される。
+
+### 変更ファイル
+**なし。** 既存の BAC は rulebook §5 必須要素を満たし、§7 禁止事項に抵触せず、先行 `depends_on`・実行エビデンスとも矛盾しないため、保守的磨き込みでは追加の編集対象が確認されなかった。
+
+---
+
+**申し送り（reporter 段へ `result.md` への転記依頼）：**
+1. 上記判断根拠を `進め方と実践の型の適用` セクションへ転記すること。
+2. 成果物 `docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md` の `status: draft` を変更しない（`ready` への昇格は人が実行）。
+3. runner が `lint-ts` / `typecheck` / `test-integration` / `test-unit` / `validate-schema` / `lint-fm` / `lint-md` / `lint-mermaid` / `lint-d2` を親検証として実行し、evidence へ追記すること。
+
+```
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bac-task-completion.md の精査完了：rulebook §5 必須要素充足、§7 禁止事項に抵触せず、先行 depends_on・実行エビデンスとも矛盾なし。保守的磨き込みでの追加編集は不要と判定（既にある構成を基準として維持）。sandbox 実行分（prettier check、markdownlint）はともに passed。","handoff":["bac-task-completion.md の保守的磨き込みで加筆・修正・統合・削除が必要な箇所はなし（git diff 出力なしを確認済み）。判断根拠：rulebook §5 必須要素充足、禁止事項に抵触せず、depends_on と実行エビデンスとも矛盾しない。","参照した資料：exec plan / rulebook bac-rulebook.md / recipe bac-recipe.md / sample bac-sample.md / bps-deliverable-evaluation.md / bps-task-completion.md / prj-success-criteria-and-acceptance-criteria.md / prj-overview.md / src/grade/grade.ts / src/exec/run/run.ts / vp-arc-conciseness。","未参照資料：実行計画 §4 で宣言された範囲外のため、cdfd-overview・bps 一覧・catalog 他ドメイン等も独自に探索・参照していない。","下流ロールへの入力適合（最低ラインのみの検証）：[PO] vp-po-decision-readiness（判定根拠と停止条件が読み取れる）／ [ARC] vp-arc-technical-constraints（技術的制約が読み取れる）／ [QE] vp-qe-verifiability（判定方法が備えられている）。各ロールの詳細レビューは後続の review タスクへ委譲。","sandbox 実行分の検証結果：npx prettier --check docs/.../bac-task-completion.md は All matched files use Prettier code style を返す（passed）。npx markdownlint 同ファイルは出力なしで exit 0（passed）。","runner が親 runner として実行するべき sandbox 外検査：npm run lint:ts / npm run typecheck / npm run test:integration / npm run test:unit / npm run validate:schema / npm run lint:fm ／ npm run lint-md。sandbox では src/・tests/ の変更がないため not_applicable、runner 側で実行すること。",".specdojo/specdojo.config.json が存在しないため catalog_path 未設定で validate:catalog / catalog build は機械的に not_applicable。runner が親検証として処理する。","bac-task-completion.md の frontmatter status を draft のまま維持すること（ready への昇格は人が実行）。"]
+,"validations":
+[{"command":"npx prettier --check docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md","status":"passed","summary":"All matched files use Prettier code style!（対象ファイルの整形済みを確認）"},{"command":"npx markdownlint docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md","status":"passed","summary":""}]}
+</specdojo_executor_evidence>
+```

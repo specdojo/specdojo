@@ -97,6 +97,7 @@ function isApproach(value: unknown): value is Approach {
   return (
     value === "draft" ||
     value === "fully-guided" ||
+    value === "condense" ||
     value === "recipe-guided" ||
     value === "freeform" ||
     value === "bootstrap" ||

@@ -6,7 +6,6 @@ import {
   findResumableRegisterRun,
   loadRegisterResumeCandidates,
   resolveRegisterResumeArtifacts,
-  selectLatestRegisterResultStem,
   selectResumableRegisterRun,
   selectScheduleExecutorResume,
   type RegisterResumeCandidate,
@@ -71,7 +70,7 @@ function makeState(
         attempts: 1,
         artifact_ref:
           overrides.evidenceRef === undefined
-            ? `${EXECUTION_REL}/exec/evidence/${TASK_ID}/${runId}/evidence.json`
+            ? `${EXECUTION_REL}/runs/register/${TASK_ID}/${runId}/evidence.json`
                 .split(path.sep)
                 .join("/")
             : overrides.evidenceRef,
@@ -156,14 +155,76 @@ describe("selectScheduleExecutorResume", () => {
     },
   );
 
-  it("rejects integration even when an older incomplete report would select the executor", () => {
+  it.each(["failed", "running"] as const)(
+    "restarts the executor after a %s integration that integrated no repository",
+    (integrateStatus) => {
+      const state = makeState({ reporterStatus: "succeeded", integrateStatus });
+      const evidence = makeEvidence(state.run_id);
+      evidence.block_reason = "fix the excluded path";
+      expect(selectScheduleExecutorResume([makeCandidate({ state, evidence })])).toMatchObject({
+        kind: "resumable",
+        target: {
+          stage: "executor",
+          runId: state.run_id,
+          initialChanges: ["docs/sample.md"],
+          handoff: ["fix the excluded path"],
+        },
+      });
+    },
+  );
+
+  it("restarts the executor when the runner rejected its report at the executor stage", () => {
+    const state = makeState({ executorStatus: "blocked", reporterStatus: "pending" });
+    const evidence = makeEvidence(state.run_id);
+    evidence.completion_status = "incomplete";
+    evidence.block_reason = "executor evidence lacks valid condense_records";
+
+    expect(selectScheduleExecutorResume([makeCandidate({ state, evidence })])).toMatchObject({
+      kind: "resumable",
+      target: {
+        stage: "executor",
+        runId: state.run_id,
+        handoff: ["executor evidence lacks valid condense_records"],
+      },
+    });
+  });
+
+  it("restarts the executor after an integration whose latest report was incomplete", () => {
     const state = makeState({ reporterStatus: "succeeded", integrateStatus: "failed" });
     const evidence = { ...makeEvidence(state.run_id), completion_status: "incomplete" as const };
     expect(
       selectScheduleExecutorResume([makeCandidate({ state, executorEvidence: evidence })]),
-    ).toMatchObject({
+    ).toMatchObject({ kind: "resumable", target: { stage: "executor" } });
+  });
+
+  it("rejects the executor after the integration succeeded", () => {
+    const state = makeState({ reporterStatus: "succeeded", integrateStatus: "succeeded" });
+    expect(selectScheduleExecutorResume([makeCandidate({ state })])).toEqual({
       kind: "not-resumable",
-      reason: expect.stringContaining("integrate stage"),
+      reason: `cannot resume the executor after the integration of run ${state.run_id} succeeded`,
+    });
+  });
+
+  it("rejects the executor when a repository was already integrated", () => {
+    const base = makeState({ reporterStatus: "succeeded", integrateStatus: "failed" });
+    const state: PipelineState = {
+      ...base,
+      stages: {
+        ...base.stages,
+        integrate: {
+          ...base.stages.integrate!,
+          repos: {
+            app: { status: "merged", commit: "abc123", merged_at: "2026-08-20T00:21:00Z" },
+            project: { status: "failed", commit: null, merged_at: null, error: "conflict" },
+          },
+        },
+      },
+    };
+    expect(selectScheduleExecutorResume([makeCandidate({ state })])).toEqual({
+      kind: "not-resumable",
+      reason:
+        `cannot resume the executor from the integrate stage of run ${state.run_id}: ` +
+        "already integrated repositories: app",
     });
   });
 
@@ -298,7 +359,7 @@ describe("selectResumableRegisterRun", () => {
   });
 
   it("executor evidence 保存後に running のまま中断した run は reporter 再開対象にする", () => {
-    const evidenceRef = `${EXECUTION_REL}/exec/evidence/${TASK_ID}/run-interrupted/evidence.json`
+    const evidenceRef = `${EXECUTION_REL}/runs/register/${TASK_ID}/run-interrupted/evidence.json`
       .split(path.sep)
       .join("/");
     const candidate = makeCandidate({
@@ -321,7 +382,7 @@ describe("selectResumableRegisterRun", () => {
   });
 
   it("executor が rate_limited の run は evidence があっても executor 再開対象にする", () => {
-    const evidenceRef = `${EXECUTION_REL}/exec/evidence/${TASK_ID}/run-rate-limited/evidence.json`
+    const evidenceRef = `${EXECUTION_REL}/runs/register/${TASK_ID}/run-rate-limited/evidence.json`
       .split(path.sep)
       .join("/");
     const candidate = makeCandidate({
@@ -504,7 +565,7 @@ describe("loadRegisterResumeCandidates / findResumableRegisterRun", () => {
   });
 
   function writeRun(runId: string, state: PipelineState, evidence?: ExecEvidence): void {
-    const dir = path.join(root, EXECUTION_REL, "exec", "evidence", TASK_ID, runId);
+    const dir = path.join(root, EXECUTION_REL, "runs", "register", TASK_ID, runId);
     mkdirSync(dir, { recursive: true });
     writeFileSync(
       path.join(dir, "pipeline-state.json"),
@@ -586,28 +647,6 @@ describe("loadRegisterResumeCandidates / findResumableRegisterRun", () => {
   });
 });
 
-describe("selectLatestRegisterResultStem", () => {
-  it("同じ項目の result のうち最新のタイムスタンプの stem を返す", () => {
-    const actual = selectLatestRegisterResultStem(
-      [
-        "pjr-ab12-20260820T101010Z-0001-result.md",
-        "pjr-ab12-20260821T090000Z-abcd-result.md",
-        "pjr-cd34-20260822T090000Z-abcd-result.md",
-        "pjr-ab12-20260821T090000Z-abcd-plan.md",
-      ],
-      "PJR-AB12",
-    );
-
-    expect(actual).toBe("pjr-ab12-20260821T090000Z-abcd");
-  });
-
-  it("対象項目の result が無ければ null を返す", () => {
-    expect(
-      selectLatestRegisterResultStem(["pjr-cd34-20260821T090000Z-abcd-result.md"], "PJR-AB12"),
-    ).toBeNull();
-  });
-});
-
 describe("resolveRegisterResumeArtifacts", () => {
   let root = "";
 
@@ -645,24 +684,23 @@ describe("resolveRegisterResumeArtifacts", () => {
     });
   });
 
-  it("artifacts を持たない旧 run では worktree の result 一覧から復元する", () => {
-    const resultsDir = path.join(root, EXECUTION_REL, "exec", "results");
-    mkdirSync(resultsDir, { recursive: true });
-    writeFileSync(path.join(resultsDir, "pjr-ab12-20260820T080000Z-0001-result.md"), "", "utf8");
-    writeFileSync(path.join(resultsDir, "pjr-ab12-20260821T090000Z-abcd-result.md"), "", "utf8");
-
-    const actual = resolveRegisterResumeArtifacts({
-      repoRoot: root,
-      worktreePath: root,
-      executionPath: path.join(root, EXECUTION_REL),
-      taskId: TASK_ID,
-      state: makeState({}),
-    });
-
-    expect(actual).toEqual({
-      planRef: `${EXECUTION_REL.split(path.sep).join("/")}/exec/plans/pjr-ab12-20260821T090000Z-abcd-plan.md`,
-      resultRef: `${EXECUTION_REL.split(path.sep).join("/")}/exec/results/pjr-ab12-20260821T090000Z-abcd-result.md`,
-      stem: "pjr-ab12-20260821T090000Z-abcd",
+  it("artifacts の無い run は同じ run ディレクトリから復元する", () => {
+    const state = makeState({});
+    const runRef = `${EXECUTION_REL.split(path.sep).join("/")}/runs/register/${TASK_ID}/${state.run_id}`;
+    mkdirSync(path.join(root, runRef), { recursive: true });
+    writeFileSync(path.join(root, runRef, "result.md"), "", "utf8");
+    expect(
+      resolveRegisterResumeArtifacts({
+        repoRoot: root,
+        worktreePath: root,
+        executionPath: path.join(root, EXECUTION_REL),
+        taskId: TASK_ID,
+        state,
+      }),
+    ).toEqual({
+      planRef: `${runRef}/plan.md`,
+      resultRef: `${runRef}/result.md`,
+      stem: state.run_id,
     });
   });
 

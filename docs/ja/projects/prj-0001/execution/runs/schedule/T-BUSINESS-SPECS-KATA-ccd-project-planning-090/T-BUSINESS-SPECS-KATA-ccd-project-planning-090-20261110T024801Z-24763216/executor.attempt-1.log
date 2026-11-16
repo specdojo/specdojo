@@ -1,0 +1,547 @@
+Reading prompt from stdin...
+OpenAI Codex v0.167.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+model: gpt-6.1-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a1c3b2-e7af-7210-9069-64785dd4c8ed
+--------
+user
+---
+specdojo:
+  id: prj-0001:xrp-t-business-specs-kata-ccd-project-planning-090-20261110t024801z-24763216
+  type: exec-plan
+  rulebook: none
+  task_id: T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+  name: "完成版レビュー"
+  mode: review
+  status: ready
+  project_id: prj-0001
+  owner: ARC
+  approach: fully-guided
+  targets:
+    - prj-0001:ccd-project-planning
+---
+
+# Review Plan: T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+
+## 1. このフェーズで行うこと
+
+対応する rulebook・sample（ifx-cmd は recipe・template も）と代表成果物を読み、型一式の章構成・判断基準・例の充実度・相互整合をレビューする。代表成果物の `done_criteria` だけで完了としない。template は frontmatter の ID から明示的に開く。成果物・型は変更せず、指摘と根拠を review result に残す。
+docs/ja/specdojo/standards/rulebook-authoring-standard.md（docs/ja/specdojo/standards/rulebook-authoring-standard.md）の章立てに合わせ、rulebook にサンプルの章を置かず完成例を sample に外出しする。Markdown の ##〜#### の見出しに階層ごとの連番を付ける。記述ガイドには章ごとの判断の基準と良い例・悪い例を書く。sample は docs/ja/specdojo/samples/clis-sample.md（docs/ja/specdojo/samples/clis-sample.md）程度の厚さの完成例にする（YAML の sample は対象形式に合わせて内容を充実させる）。recipe と template の要否を決め、rulebook frontmatter に対応する ID または not-needed を宣言し、判断理由を result に残す。実装・schema・リファレンスと同じことを書かない方針（PJR-2GD6）を保ち、値・構文・構造の詳細は正本を参照する。
+
+## 2. 対象成果物
+
+- `name`: 概念クラス図（プロジェクトの立上と計画）
+- `depends_on`:
+  - [[bdd-project-config]]
+  - [[bdd-operations-config]]
+  - [[bdd-register-entry]]
+  - [[bdd-deliverables-catalog]]
+  - [[bdd-schedule-strategy]]
+  - [[bdd-schedule-track]]
+- `based_on`（対象成果物の frontmatter）: docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml
+- 個票の `入力`: なし
+- `overview`: プロジェクトの立上と計画に関わるエンティティ間の関係を図で定義する
+- `path`: `docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md`
+- `rulebook`: `docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md`（`_MISSING_` は `undecided`、`not-needed`、または未整備）
+- `result`: `docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/result.md`
+
+### プロジェクトコンテキスト
+
+以下は `depends_on` とは独立したプロジェクト共通の文脈であり、実行順序・成果物間の根拠関係を表さない。作業開始前に実際に読み、プロジェクトレベルの Why、用語、判断原則と成果物の内容を整合させる。
+
+- docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+
+プロジェクトレベルの Why は判断軸として参照し、全文を成果物へ再掲しない。対象成果物の責務に必要な結論・影響だけを反映する。
+
+## 3. 評価結果
+
+review は成果物を再評価しない。次の評価結果を事実として受け取り、共通規約の `review の判断手順` に従ってタスクの完了可否を判断する。
+
+- 評価対象: `docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md`
+- grade の対象種別（`--target`）: `deliverable`
+- 評価結果サイドカー: `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ccd-project-planning.yaml`（`_MISSING_` は評価対象が未作成、または評価対象の `id` を解決できないことを示す。この場合は評価結果が最新でないものとして扱う）
+
+runner が review の前に確認した評価結果を次に示す。これは grade が確定済みの事実であり、review で観点を評価し直したり、同じ finding を改めて指摘したりしない。
+
+- runner の grade 実行: 省略した（評価対象の `content_hash` が評価結果と一致したため、既存の評価結果を使う）
+- 鮮度: 最新（評価対象の `content_hash` が評価結果の `content_hash` と一致する）
+- `verdict`: `pass`
+- `score`: 98
+- `graded_at`: 2026-11-09T16:25:25.163Z（`graded_by`: flash-high-executor）
+- finding 件数: blocker 0 / major 0 / minor 1 / note 0
+
+grade が判定した観点（全観点）:
+
+| 観点 | level | score |
+| --- | --- | --- |
+| `vp-arc-conciseness` | 4 | 100 |
+| `vp-arc-cross-document-consistency` | 4 | 100 |
+| `vp-arc-document-structure` | 4 | 100 |
+| `vp-arc-single-responsibility` | 4 | 100 |
+| `vp-arc-technical-constraints` | 4 | 100 |
+| `vp-ba-business-value` | 4 | 100 |
+| `vp-ba-requirements-completeness` | 4 | 100 |
+| `vp-ba-stakeholder-clarity` | 4 | 100 |
+| `vp-dev-change-impact` | 4 | 100 |
+| `vp-dev-implementation-readiness` | 4 | 100 |
+| `vp-dev-testability` | 4 | 100 |
+| `vp-ops-agent-boundary` | 4 | 100 |
+| `vp-ops-operability` | 4 | 100 |
+| `vp-ops-release-readiness` | 4 | 100 |
+| `vp-pm-control-reporting` | 4 | 100 |
+| `vp-pm-dependency-risk` | 4 | 100 |
+| `vp-pm-plan-feasibility` | 4 | 100 |
+| `vp-po-decision-readiness` | 4 | 100 |
+| `vp-po-publication-accountability` | 4 | 100 |
+| `vp-po-purpose-alignment` | 4 | 100 |
+| `vp-qe-config-validity` | 4 | 100 |
+| `vp-qe-done-criteria` | 4 | 100 |
+| `vp-qe-omissions-consistency` | 3 | 75 |
+| `vp-qe-verifiability` | 4 | 100 |
+| `vp-ux-language-consistency` | 4 | 100 |
+| `vp-ux-readability` | 4 | 100 |
+| `vp-ux-user-flow` | 4 | 100 |
+
+finding:
+
+- `F001` [minor/`vp-qe-omissions-consistency`; line=1]: フロントマターに 'specdojo:ccd-mermaid-rulebook' セクション 4 で指定されている必須の 'depends_on' フィールドが不足しており、代わりに 'based_on' が使用されています。
+
+## 4. 完了条件
+
+成果物カタログの `done_criteria` を、このタスクの完了条件として照合する。観点ごとに成果物を評価し直すための表ではない。
+
+<!-- markdownlint-disable MD055 MD056 -->
+
+<!-- prettier-ignore-start -->
+| ID | ロール | `viewpoint_id` | 完了条件 |
+| --- | --- | --- | --- |
+| DC-001 | BA | vp-ba-requirements-completeness | エンティティ関係・属性が業務観点で正確に表現されていること |
+| DC-002 | PO | vp-po-purpose-alignment | スコープ範囲のエンティティを承認できること |
+| DC-003 | ARC | vp-arc-technical-constraints | データモデル・クラス設計の入力として参照できること |
+| DC-004 | QE | vp-qe-verifiability | テストデータ設計・整合性検証に活用できること |
+| DC-005 | DEV | vp-dev-implementation-readiness | ER図・実装モデルの基礎として参照できること |
+<!-- prettier-ignore-end -->
+
+<!-- markdownlint-enable MD055 MD056 -->
+
+## 5. 進め方
+
+fully-guided のタスクは、宣言された文書だけを参照し、rulebook / recipe / sample に沿って既存成果物を磨き込むことを求めた。下書きや調査による新しい値の選定は draft の役割である。磨き込みでは template を読み込まない。rulebook の必須要素・禁止事項、recipe の問い、sample の形式との整合は grade が評価済みである。review はこれらを照合し直さず、評価結果の finding として扱う。
+
+参照ファイル（rulebook frontmatter から解決。`_MISSING_` の項目は未宣言・未整備）:
+
+- rulebook: `docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md`
+- recipe: `_MISSING_`
+- sample: `docs/ja/specdojo/samples/ccd-sample.md`
+- 併せて適用する rulebook（記法など）: _MISSING_
+
+1. フェーズ説明と完了条件が求めた磨き込みが、対象成果物に行われたかを確認する。
+2. 実践の型の欠落（`_MISSING_`）や内容の薄さがある場合は、実行記録にその扱いが残っているかを確認する。実践の型そのものの整備が必要な場合は、改善指示に残す。
+3. finding が残っている場合は、このタスクの完了を妨げるかを判断する。rulebook の必須要素の欠落や禁止事項への抵触など、完了条件に直結する finding は完了を妨げる。
+
+確認に用いてよい文書は、宣言された文書だけに限る。具体的には、評価結果、対象成果物、本セクションの参照ファイル、`depends_on` 成果物、対象成果物の frontmatter の `based_on`、プロジェクトコンテキスト（`project_context`）、個票の `入力`、カタログの `brief`、実行記録である。`入力` と `brief` は値が無いときは載せない。これらに宣言されていない他のプロジェクト文書や外部の情報を独自に探索・参照しない。
+
+本タスクの実行に必要な fully-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として docs/ja/specdojo/guides/ryu-guide.md を参照する。
+
+## 6. 完了手順
+
+1. 共通規約の `review の判断手順` に従い、評価結果の鮮度を確認してから完了可否を判断する。
+2. result の各セクションを埋める。`評価結果の確認` には鮮度確認のコマンドと出力、grade の `verdict` / `score` / finding 件数を書く。`判断根拠` には照合した内容を、`未充足事項・改善指示` には未充足事項と改善指示を書く。`approach に応じた確認` には前章で確認した内容を、`decision` には `verdict` を書く。review result の記入はタスク完了に必須であり、未記入のまま終了しない（詳細は共通規約を参照）。
+3. 文書の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は本文で述べる。
+4. verdict が `complete` 以外でも、review result を記録できた場合は正常終了する（終了コード 0）。
+
+## 7. 異常終了の条件
+
+- 対象ファイル不明・依存未解決・result 更新不能など、review 自体を完了できない場合は異常終了する（終了コード 1）。評価結果が最新でない・評価不能であることは異常終了の理由にせず、verdict として記録する。
+- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; ref=<path>`）。
+- agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+作業を始める前に、共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xrp-common-conventions-template.md` を読み、その内容に従う。次の箇条書きは、そのうち守らないと失敗に直結する要点である。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定（`lefthook.yml` など）を読み、本共通規約の詳細にある検査表の適用条件で、実行する検査を決める。
+- 適用条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。適用される検査が 1 つもない場合も同じく、該当する検査ごとに `not_applicable` と理由を記録する。
+- `not_run` は、適用される検査を実行できたのに実行しなかった場合だけに使う。runner は `not_run` を検証失敗として扱い、タスクを先へ進めない。
+- `pipeline.parent_validations` に設定された検査は executor evidence の validations に含めなくてよい。executor が同じ検査を `not_run` または `not_applicable` として含めても、同じリポジトリで実行した親 runner の結果を正とする。
+
+### review の判断手順
+
+review plan に共通で適用する。review はタスクの成果を判定し、成果物の品質は判定しない。成果物の品質は grade が一度だけ評価する。review はその評価結果（grade・finding）を事実として受け取り、このタスクを完了してよいかを判断する（docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md）。
+
+- 成果物を再評価しない。観点ごとの pass / fail を付け直したり、評価結果の判定を自分の判断で置き換えたりしない。評価結果の内容に疑義がある場合は、疑義の内容と再評価が必要な理由を改善指示に記録する。
+- 評価結果の鮮度を最初に確認する（`E-01`）。plan の「評価結果」章に示す評価対象と `--target` を使い、`specdojo grade list --target <対象種別> --path <評価対象> --changed-only` を実行する。`--target deliverable` の場合は `--dependency-changed` でも同様に実行する。いずれかが評価対象のパスを出力した場合、または評価結果サイドカーが存在しない場合は、評価結果が最新でない。成果物を自分で評価して補わず、verdict を `grade-stale` とする。
+- 評価結果を確定できない場合（`E-02`）は、verdict を `grade-unavailable` とする。サイドカーを読み取れない場合と、`specdojo grade list --target <対象種別> --path <評価対象> --incomplete` が評価対象のパスを出力する場合（評価パイプラインが未完了）が該当する。
+- 評価結果が最新であれば、サイドカーの `verdict` / `score` / `finding_counts` / `findings`、および `done_criteria`（存在する場合）を読み取る。
+- 変更内容・この plan・実行記録・完了条件・最新の finding を照合し、このタスクの範囲と完了条件を満たすかを判断する（`S-02`）。完了条件の充足は、評価結果に判定がある場合はそれを事実として用いる。評価結果が扱わない事項を review で確かめる。対象は、フェーズ説明が求めた変更が行われたか、対象外の変更が混入していないか、実行記録の検証結果が成功しているかである。実行記録（先行する edit タスクの result）を特定できない場合は、確認できなかったことを判断根拠に記録する。
+- finding が残っていても、このタスクの範囲と完了条件を満たしていれば完了できる。その場合は finding を消去・再評価せず、完了を妨げない理由と必要な改善指示を記録する。
+- 判断の根拠は、評価結果・成果物・plan・実行記録を実際に読んで得た具体的な事実に限る。executor の最終メッセージや result の自己申告を、そのまま、または言い換えて根拠にしない。
+- verdict を記録する直前に鮮度の確認を再実行する。最初の確認の後に成果物が変更されて評価結果が最新でなくなった場合は、verdict を `changed-during-review` とする（review 中の成果物変更）。
+
+verdict は次の 6 値から 1 つを選ぶ。各値は docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md の検証・受入観点と一対一に対応する。
+
+| verdict                  | 受入観点                | 選ぶ条件                                                                          | 記録すること                                               |
+| ------------------------ | ----------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `complete`               | 完了可能                | 評価結果が最新で、plan と完了条件を満たし、完了を妨げる未充足事項がない           | 照合した根拠                                               |
+| `complete-with-findings` | 品質 finding を伴う完了 | 評価結果に finding があるが、このタスクの範囲と完了条件は満たしている             | finding が完了を妨げない理由と改善指示                     |
+| `incomplete`             | 品質良好だが未完了      | plan または完了条件に未充足事項がある（grade の良否は問わない）                   | 未充足事項と、再計画に使う改善指示                         |
+| `grade-stale`            | 評価結果が最新でない    | 評価結果がない、`content_hash` が一致しない、または評価コンテキストの変化が未反映 | 鮮度確認のコマンドと出力。完了可否は判断しない             |
+| `grade-unavailable`      | 評価不能                | 評価結果を読み取れない、または評価パイプラインが未完了で grade・finding が未確定  | 評価不能の理由と不足情報。完了は保留する                   |
+| `changed-during-review`  | review 中の成果物変更   | 最初の鮮度確認の後に成果物が変更され、評価結果が最新でなくなった                  | 変更を検知した確認の出力。verdict を確定せず再評価を求める |
+
+- verdict が `complete` 以外でも、review result を記録できた場合は正常終了する（終了コード 0）。runner は verdict に応じて再評価または再計画へ進む。
+- review result の章立ては `評価結果の確認`、`判断根拠`、`未充足事項・改善指示`、`approach に応じた確認`、`decision` である。`decision` の `verdict` は必ず上表の値で埋める。
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+Put unresolved decisions, proposed protected-configuration changes, and next actions in the
+report's optional `handoff` array (up to 100 non-empty strings, each at most 4000 characters).
+For register tasks, also record them in the ticket's response/results section. If a completion
+condition asks for a note in the result, write it in both places instead of editing the result.
+The runner preserves `handoff` in the edit result's handoff section after the reporter stage.
+Use an empty array when there are no handoff notes. Reports without this field remain valid.
+
+Report task completion in `completion_status`: use `complete` only when all work required by
+the plan is done. If you stop with unfinished work, use `incomplete`, summarize the reason in
+`final_message`, and list the remaining work in `handoff`. A zero exit code and passing parent
+validations do not override `incomplete`; the runner preserves the worktree for executor resume.
+Omitting this field is supported for legacy reports and implies `complete`.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+Do not create disposable or scratch files at the repository root; place them in `tmp/` within
+the worktree or outside the repository. Files under `tmp/` are excluded from commits.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run lint:mermaid, npm run lint:d2, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+For a review task, report only checks you actually ran in `validations`. Do not add optional
+checks you chose not to run as `not_run` or `not_applicable`. Describe them instead in
+`final_message` under "確認できなかった範囲" so the reporter can record that scope in the
+review result and reflect it in the verdict.
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when it can confirm the check applies:
+- `npm run <script>` / `npm test`: the script exists in package.json and any change-type
+  condition below is met. The placeholder `test` script that `npm init` writes
+  (`echo "Error: no test specified" && exit 1`) counts as absent.
+- `npx <package>`: the package is in package.json dependencies or devDependencies and any
+  change-type condition below is met.
+- `npm run validate:schema:file` requires a changed `*.yaml` or `*.yml` file; Prettier
+  requires a changed `*.md`, `*.ts`, `*.js`, `*.json`, `*.yaml`, or `*.yml` file;
+  markdownlint requires a changed `*.md` file; `npm run validate:history-links` requires a
+  changed history file (`docs/ja/projects/**/controls/project-register/pjr-*.md` excluding
+  `pjr-index.md`, or an existing `plan.md` / `result.md` under
+  `execution/runs/<origin>/<item>/<run>/` or legacy `exec/plans/**/*.md` /
+  `exec/results/**/*.md` that you changed yourself).
+- A command that targets a declared product repository (a `<repo>:<path>` argument or
+  `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
+- `specdojo catalog validate` / `npm run validate:catalog`: the run's target project (or
+  `--project <id>`) sets `catalog_path` and your deliverable changes reach `docs/ja/projects/`.
+  Runner-managed files under `exec/` (`plans/`, `results/`, `evidence/`, `events/`, `.locks/`)
+  do not count as your changes. A project without `catalog_path`, or changes
+  outside `docs/ja/projects/`, is a valid reason; state it in `reason`.
+
+Do not run or report `specdojo index build`. It writes `.specdojo/doc-index.json`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
+
+For a plan with approach `condense`, also include `condense_records` in this envelope
+as specified by the plan (an empty array if there are no candidates). The runner writes those
+validated executor facts to the result frontmatter and table; do not edit the result yourself.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"completion_status":"complete|incomplete","final_message":"concise outcome","handoff":[],"validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+共通規約と対象文書を読み、評価結果の鮮度を確認して完了可否を判断します。実行段階の指示に従い、成果物・型・result は変更せず、判断根拠を reporter 向けの evidence にまとめます。
+
+exec
+/bin/bash -lc "pwd && rg --files -g 'AGENTS.md' -g 'package.json' -g '*lefthook*' -g '.specdojo/specdojo.config.json' -g '*common-conventions-template.md' -g 'pm-orchestrator-playbook.md' -g 'result.md' docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090 docs/ja/specdojo/exec-templates docs/ja/projects/prj-0001/030-project-management .specdojo package.json lefthook.yml AGENTS.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+ succeeded in 0ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+AGENTS.md
+lefthook.yml
+package.json
+.specdojo/specdojo.config.json
+docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md
+docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/result.md
+docs/ja/specdojo/exec-templates/xp-common-conventions-template.md
+docs/ja/specdojo/exec-templates/xrp-common-conventions-template.md
+docs/ja/specdojo/exec-templates/xep-common-conventions-template.md
+
+exec
+/bin/bash -lc 'git status --short && cat docs/ja/specdojo/exec-templates/xp-common-conventions-template.md docs/ja/specdojo/exec-templates/xrp-common-conventions-template.md' in /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+ succeeded in 489ms:
+ M docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/result.md
+ M packages/docs-site/.vitepress/sidebar-config.ts
+?? docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/evidence.json
+?? docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/executor.log
+?? docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/parent-validation-attempt-1-test-unit.log
+?? docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/pipeline-state.json
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+要点（次の `plan-essentials` マーカーの間の箇条書き）は、plan の本文にもそのまま転記される。plan に転記するとき、`_SCHEMA_REF_` はタスクごとに解決した schema のパスに置き換わり、schema の無いタスクではその行が除かれる。
+
+<!-- plan-essentials:start -->
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定（`lefthook.yml` など）を読み、本共通規約の詳細にある検査表の適用条件で、実行する検査を決める。
+- 適用条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。適用される検査が 1 つもない場合も同じく、該当する検査ごとに `not_applicable` と理由を記録する。
+- `not_run` は、適用される検査を実行できたのに実行しなかった場合だけに使う。runner は `not_run` を検証失敗として扱い、タスクを先へ進めない。
+- `pipeline.parent_validations` に設定された検査は executor evidence の validations に含めなくてよい。executor が同じ検査を `not_run` または `not_applicable` として含めても、同じリポジトリで実行した親 runner の結果を正とする。
+
+<!-- plan-essentials:end -->
+
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result の変更ファイル欄には、変更したファイル（成果物・ソース・テストなど）ごとの実施内容を具体的に記入する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）または worktree の `tmp/` 配下に置き、終了前に削除する。使い捨てのファイルを最上位に作らない。`tmp/` 配下のファイルは commit の対象から除外される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。executor が親検証のコマンドを validations に含めた場合も、同じリポジトリで実行された親 runner の結果を正とし、executor の `not_run` / `not_applicable` は pipeline を失敗させない。
+- 適用条件の判定と `not_applicable` / `not_run` の使い分けは、要点に記した規則に従う。誤って `not_run` と記録しても、npm script・依存 package の不在、または SpecDojo サブコマンドの設定上の非適用を runner が機械的に確定できる場合は適用外として扱われるが、この救済を前提に記録を省略しない。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations に `not_applicable` として理由と次の確認事項を記録する。
+- `npm init` が `package.json` に入れる仮の `test` script（`echo "Error: no test specified" && exit 1` と、引用符の有無・種類や空白だけが違う変種）は、常に失敗する仮置きであり、`test` script がないものとみなす。`npm test` は実行せず、validations に `not_applicable` と、仮の script である旨を `reason` に記録する。runner も同じ判断で `not_applicable` を受け付ける。本物の test script がある場合は適用される。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、executor 自身が変更したファイルの種別で判断する。runner が生成・更新する実行管理ファイル（`exec/plans/`・`exec/results/`・`exec/evidence/`・`exec/events/`・`exec/.locks/`、および状態遷移で書き換わる `pjr-index.md`）は、executor の変更ファイルには含めない。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                                                           | 適用条件                                                                                                                                    | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                                                     | 対応するローカル依存が `package.json` にある                                                                                                | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                                                            | Prettier が `package.json` にある                                                                                                           | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                                                                   | `package.json` に `typecheck` script がある                                                                                                 | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*`                                     | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある（`npm init` の仮の `test` script は、ないものとみなす） | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下（runner が書く `exec/` 配下を除く）                                                                               | 対象 project に `catalog_path` が設定されている                                                                                             | `specdojo catalog validate`（または `npm run validate:catalog`）                                                                      |
+| 履歴蓄積ファイル（`pjr-*.md`（`pjr-index.md` を除く）、または executor 自身が変更した既存の `exec/plans/**/*.md`・`exec/results/**/*.md`） | `package.json` に `validate:history-links` script がある                                                                                    | `npm run validate:history-links`                                                                                                      |
+| `dct-*.yaml`                                                                                                                               | 対象 project に `catalog_path` が設定されている                                                                                             | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                                                             | 対象 project に `project_register_path` が設定されている                                                                                    | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                                                               | 対象 project に `schedule_path` が設定されている                                                                                            | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                                                               | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                                                                              | `specdojo index build`                                                                                                                |
+<!-- plan-essentials:start -->
+
+### review の判断手順
+
+review plan に共通で適用する。review はタスクの成果を判定し、成果物の品質は判定しない。成果物の品質は grade が一度だけ評価する。review はその評価結果（grade・finding）を事実として受け取り、このタスクを完了してよいかを判断する（[[bps-task-completion]]）。
+
+- 成果物を再評価しない。観点ごとの pass / fail を付け直したり、評価結果の判定を自分の判断で置き換えたりしない。評価結果の内容に疑義がある場合は、疑義の内容と再評価が必要な理由を改善指示に記録する。
+- 評価結果の鮮度を最初に確認する（`E-01`）。plan の「評価結果」章に示す評価対象と `--target` を使い、`specdojo grade list --target <対象種別> --path <評価対象> --changed-only` を実行する。`--target deliverable` の場合は `--dependency-changed` でも同様に実行する。いずれかが評価対象のパスを出力した場合、または評価結果サイドカーが存在しない場合は、評価結果が最新でない。成果物を自分で評価して補わず、verdict を `grade-stale` とする。
+- 評価結果を確定できない場合（`E-02`）は、verdict を `grade-unavailable` とする。サイドカーを読み取れない場合と、`specdojo grade list --target <対象種別> --path <評価対象> --incomplete` が評価対象のパスを出力する場合（評価パイプラインが未完了）が該当する。
+- 評価結果が最新であれば、サイドカーの `verdict` / `score` / `finding_counts` / `findings`、および `done_criteria`（存在する場合）を読み取る。
+- 変更内容・この plan・実行記録・完了条件・最新の finding を照合し、このタスクの範囲と完了条件を満たすかを判断する（`S-02`）。完了条件の充足は、評価結果に判定がある場合はそれを事実として用いる。評価結果が扱わない事項を review で確かめる。対象は、フェーズ説明が求めた変更が行われたか、対象外の変更が混入していないか、実行記録の検証結果が成功しているかである。実行記録（先行する edit タスクの result）を特定できない場合は、確認できなかったことを判断根拠に記録する。
+- finding が残っていても、このタスクの範囲と完了条件を満たしていれば完了できる。その場合は finding を消去・再評価せず、完了を妨げない理由と必要な改善指示を記録する。
+- 判断の根拠は、評価結果・成果物・plan・実行記録を実際に読んで得た具体的な事実に限る。executor の最終メッセージや result の自己申告を、そのまま、または言い換えて根拠にしない。
+- verdict を記録する直前に鮮度の確認を再実行する。最初の確認の後に成果物が変更されて評価結果が最新でなくなった場合は、verdict を `changed-during-review` とする（review 中の成果物変更）。
+
+verdict は次の 6 値から 1 つを選ぶ。各値は [[bps-task-completion]] の検証・受入観点と一対一に対応する。
+
+| verdict                  | 受入観点                | 選ぶ条件                                                                          | 記録すること                                               |
+| ------------------------ | ----------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `complete`               | 完了可能                | 評価結果が最新で、plan と完了条件を満たし、完了を妨げる未充足事項がない           | 照合した根拠                                               |
+| `complete-with-findings` | 品質 finding を伴う完了 | 評価結果に finding があるが、このタスクの範囲と完了条件は満たしている             | finding が完了を妨げない理由と改善指示                     |
+| `incomplete`             | 品質良好だが未完了      | plan または完了条件に未充足事項がある（grade の良否は問わない）                   | 未充足事項と、再計画に使う改善指示                         |
+| `grade-stale`            | 評価結果が最新でない    | 評価結果がない、`content_hash` が一致しない、または評価コンテキストの変化が未反映 | 鮮度確認のコマンドと出力。完了可否は判断しない             |
+| `grade-unavailable`      | 評価不能                | 評価結果を読み取れない、または評価パイプラインが未完了で grade・finding が未確定  | 評価不能の理由と不足情報。完了は保留する                   |
+| `changed-during-review`  | review 中の成果物変更   | 最初の鮮度確認の後に成果物が変更され、評価結果が最新でなくなった                  | 変更を検知した確認の出力。verdict を確定せず再評価を求める |
+
+- verdict が `complete` 以外でも、review result を記録できた場合は正常終了する（終了コード 0）。runner は verdict に応じて再評価または再計画へ進む。
+- review result の章立ては `評価結果の確認`、`判断根拠`、`未充足事項・改善指示`、`approach に応じた確認`、`decision` である。`decision` の `verdict` は必ず上表の値で埋める。
+
+<!-- plan-essentials:end -->
+
+exec
+/bin/bash -lc 'cat docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md docs/ja/specdojo/samples/ccd-sample.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/samples/clis-sample.md' in /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ccd-project-planning-090
+ succeeded in 0ms:
+---
+specdojo:
+  id: specdojo:ccd-mermaid-rulebook
+  type: rulebook
+  deliverable_type: data
+  status: draft
+  target_format: markdown
+  recipe: not-needed
+  sample: specdojo:ccd-sample
+  template: not-needed
+  based_on:
+    - specdojo:rulebook-authoring-standard
+---
+
+# Mermaid を用いた概念クラス図（CCD）作成ルール
+
+Conceptual Class Diagram (CCD) Rules using Mermaid
+
+業務分析・要求定義で用いる概念クラス図（CCD）の内容要件と判断基準を定義します。
+Mermaid の `classDiagram` で主キーと関連を表し、業務データ辞書（BDD）と照合できる概念モデルを作ります。
+
+## 1. 全体方針
+
+- BA・業務担当者が対象概念と関連の意味を合意し、ARC・DEV が設計の入力、QE が整合性検証の入力として使えることを必須とします。
+- クラスの属性は主キー（PK）のみとし、そのほかの属性は BDD に委ねます。型・可視性・メソッドなどの実装詳細は対象外です。
+- 図は関係種別・役割名・多重度を示し、本文はその業務上の根拠と成立条件を補います。線を文章でなぞるだけの説明は置きません。
+- 対象領域と、初期状態・確定後など図が扱う時点を定めます。同じ関係でも状態によって必要数が異なる場合は、適用条件を本文で区別します。
+
+## 2. 位置づけと用語定義
+
+### 2.1. 成果物としての位置づけ
+
+CCD は業務仕様のデータモデルを扱い、BDD はエンティティの属性の業務的意味を扱います。BDD の記述責務は [[specdojo:bdd-rulebook|業務データ辞書 作成ルール]] に従い、値・型・構造の詳細は BDD が参照する schema・型定義・リファレンスを正本とします。
+
+メタ情報とリンクの共通規約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、配置・命名の共通事項は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] を正本とし、本書では CCD 固有の判断だけを定めます。
+
+### 2.2. 用語定義
+
+| 用語                       | 定義                                                                                         |
+| -------------------------- | -------------------------------------------------------------------------------------------- |
+| エンティティ（概念クラス） | 業務上管理すべき独立した概念のまとまり。CCD ではクラスとして表現する                         |
+| 主キー（PK）               | エンティティの各インスタンスを一意に識別する属性。CCD に記載する唯一の属性                   |
+| 継承関係（is-a）           | 上位概念（汎化）と下位概念（特化）の階層関係。下位は上位の性質を引き継ぐ                     |
+| 親子関係（part-of）        | 業務上の所有・構造。子は親のまとまりに属して成立する。物理ファイルの削除連動とは別に判断する |
+| 参照関係（reference）      | 対象を別の管理単位として追跡し、所属の変更と対象の廃棄を分けて判断できる関係                 |
+| 役割名（関係名）           | 接続線が表す業務上の関係の意味（例: `構成する`、`参照する`、`種類`）                         |
+| 多重度                     | 関連するエンティティのインスタンス数の制約（例: `1`、`0..1`、`1..*`、`0..*`）                |
+
+## 3. ファイル命名・ID規則
+
+- ファイル名は `ccd-<term>.md` とし、`<term>` は対象業務領域を表す kebab-case とします（例: `ccd-project-planning.md`）。
+- プロジェクト成果物の文書 ID は `<project-id>:ccd-<term>` とし、同じ主題のファイル名と対応させます。
+- 配置は成果物カタログで宣言したパスに従います。カタログの分類は `kind: work`、成果物の種別は `data` とします。
+
+## 4. 推奨 Frontmatter 項目
+
+必須項目・許可キー・型はドキュメントメタ情報標準と `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` に従い、`specdojo:` 配下に記述します。
+
+- `type` は `data`、`rulebook` は `specdojo:ccd-mermaid-rulebook` とします。
+- `based_on` には、実際に読み直接の根拠とした作成済み辞書を記録します。カタログがある場合は `depends_on` の推移閉包内に限定し、未作成辞書や単なる参照候補を追加しません。直接の根拠がなければ省略できます。
+- 成果物の依存はカタログの `depends_on` に置き、CCD の Frontmatter には追加しません。`based_on` を依存一覧の代用にしません。
+
+## 5. 本文要件
+
+CCD 成果物（`ccd-<term>.md`）は以下の章構成を標準とします。
+
+| 章番号 | 章タイトル             | 必須     | 内容・受入条件                                                                                                                 |
+| ------ | ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 1      | 目的と適用範囲         | 必須     | 利用目的、対象領域・対象外、扱う時点を示す。領域の境界や規則は正本へ参照できること                                             |
+| 2      | 概念クラス図           | 必須     | Mermaid `classDiagram` に概念・主キー・関連を示す。継承したキーや抽象概念など、図だけでは誤解する点は短く補足すること          |
+| 3      | 関連定義と多重度の根拠 | 必須     | 図中の全関連を表で網羅し、両端の必要数、関係種別、役割名を業務上の理由から説明できること                                       |
+| 4      | 参照業務データ辞書     | 必須     | 全エンティティと辞書の対応、主キーの対応名・識別範囲を示す。未作成・未照合を区別すること                                       |
+| 5      | 未解決事項             | 条件付き | 未作成辞書・根拠不足・文書間矛盾がある場合は必須。影響、現在の扱い、解消責務・確認条件を示す。なければ省略または「なし」とする |
+
+各章の見出しは `## 1.` から連番とし、小節にも階層ごとの連番を付けます。
+
+## 6. 記述ガイド
+
+### 6.1. 目的と適用範囲
+
+| 判断の基準                     | 良い例                                                                 | 悪い例                                   |
+| ------------------------------ | ---------------------------------------------------------------------- | ---------------------------------------- |
+| 誰が何の判断に使うかを示す     | 「担当交代時に計画対象と作業責務を引き継ぐため、概念間の関係を定める」 | 「データを図にする」のみ                 |
+| 含める概念と対象外を区別する   | 「成果物定義を扱い、成果物本体と実行記録は対象外とする」               | 関連する保存ファイルをすべてクラスにする |
+| 多重度が成立する時点を特定する | 「立上げ途中の未展開状態を含む」                                       | 確定後の必須数を初期状態にも適用する     |
+
+### 6.2. 概念クラス図
+
+#### 6.2.1. クラスと主キー
+
+- クラス名は日本語の単数形とし、BDD の論理名と対応させます。抽象概念を置く場合は、共通化する識別・関連と、独立した保存対象かどうかを補足します。
+- 主キーの各属性行に `: PK` を付け、複合主キーは構成項目ごとに分けます。親からキーを継承する下位クラスは `class お菓子 {}` のように空の属性ブロックとし、継承元を本文または辞書対応表で示します。
+- 同じキー構成でも、役割と変更・参照の単位が異なれば別概念にできます。同じ名前の識別子でも一意性の範囲が異なれば、必要な文脈をキーに含めます。
+
+| 判断の基準                     | 良い例                                                       | 悪い例                                             |
+| ------------------------------ | ------------------------------------------------------------ | -------------------------------------------------- |
+| 業務上の識別単位を表す         | 明細に「売上ID」と「明細番号」をそれぞれ PK として記載       | 明細番号だけで全売上の明細を識別する               |
+| 実装構造から独立させる         | 計画要素をタスク・節目の識別と依存を共通化する概念として説明 | 共通の保存ファイルがないという理由だけで概念を除く |
+| 個々の属性の定義を辞書へ委ねる | 主キーだけを図示し、名称・単価の意味は BDD へ参照する        | 型・桁数・enum 一覧をクラス内に書く                |
+
+#### 6.2.2. 関係種別と役割名
+
+次の三種を使い分けます。全線に短い日本語の役割名を付け、親子・参照の両端には引用符付きの多重度を必須とします。継承には多重度を付けません。
+
+| 関係種別・記法     | 選ぶ基準                                 | 良い例                                   | 悪い例                                             |
+| ------------------ | ---------------------------------------- | ---------------------------------------- | -------------------------------------------------- |
+| 継承 `親 <\|-- 子` | 下位概念が上位概念の識別と性質を引き継ぐ | 商品からお菓子へ「種類」の関係を置く     | 所属するだけの明細を伝票の下位概念にする           |
+| 親子 `親 *-- 子`   | 子が親の業務上のまとまりに属して成立する | 伝票が明細を「構成する」                 | 同じファイルに保存するという理由だけで親子にする   |
+| 参照 `A --> B`     | 参照先を別の管理単位として追跡する       | 明細から商品を「対象商品」として参照する | 構成から参照を外すと参照先も廃棄されると決めつける |
+
+同じクラス間の複数の関連や自己関連は、役割名で意味を区別します。例えば登録項目の「起票元をたどる」と「先行項目の完了を必要とする」は別の関連です。「関連」「リンク」だけのラベルや、起票元から実行順序を推測する表現では区別できません。
+
+### 6.3. 関連定義と多重度の根拠
+
+関連表は次のカラムを持ちます。起点・先が同じ関連も、役割名ごとに一行を設けます。
+
+| カラム             | 記載する判断情報                                                         |
+| ------------------ | ------------------------------------------------------------------------ |
+| 関連（起点 - 先）  | 図のクラス名と向きを一致させる                                           |
+| 関係種別           | 継承・親子・参照の選択                                                   |
+| 多重度             | 起点側・先側の順で表示する。継承は「—」など数を定めない表記とする        |
+| 役割名             | 図のラベルと一致させ、同じクラス間の関連を識別する                       |
+| 業務上の理由・根拠 | 両端の最小・最大数が成立する理由、状態・例外、必要なら規則の正本への参照 |
+
+| 判断の基準                     | 良い例                                                                                          | 悪い例                                                       |
+| ------------------------------ | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| 両端の制約を説明できる         | 「明細は必ず一つの商品を指す。未販売の商品も同じ商品を扱う複数明細もあるため、明細側は0件以上」 | 「多対一だから」のみ                                         |
+| 状態による最小数の違いを示す   | 「伝票は一時保存時に明細0件を許す。確定時は1件以上を別途必須とする」                            | 理由なく `0..*` とする、または一時保存にも `1..*` を強制する |
+| 任意の対応を両方向から確認する | 「戦略作成後の未展開期間と、戦略を持たない既存トラックを許すため、両端を `0..1` とする」        | 「対応する戦略は一つ」で逆側の任意性を説明しない             |
+
+一意性の範囲、参照先の存在、循環の可否など、線だけでは示せない整合性条件はこの章に補います。先行依存の循環禁止など業務ごとの規則は正本を参照し、すべての自己関連を一律に禁止しません。
+
+### 6.4. 参照業務データ辞書
+
+- 対応表は「エンティティ」「主キーの対応」「参照先業務データ辞書」を持ちます。キーを継承する下位概念はまとめて記載できますが、図の全クラスを照合できることを必須とします。
+- キーの対応には BDD のフィールド名と、全体・project 内・親の内部など識別範囲を示します。図の日本語名と辞書の物理名が異なる場合に対応を省きません。
+- 作成済み辞書は project 修飾 ID のリンク、未作成辞書は予定 ID のコード表記と「未作成」で示します。未作成・未読の辞書を確認済みの根拠にはしません。
+
+| 判断の基準               | 良い例                                                          | 悪い例                                          |
+| ------------------------ | --------------------------------------------------------------- | ----------------------------------------------- |
+| 識別範囲を追跡できる     | 「成果物定義は project の識別子と `local_id` で識別する」       | `local_id` が全 project で一意と読み取れる記載  |
+| 未作成を未照合として扱う | 予定 I

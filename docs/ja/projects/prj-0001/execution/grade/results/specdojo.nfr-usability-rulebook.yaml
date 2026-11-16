@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 94
-graded_at: "2026-10-04T21:18:03.163Z"
-graded_by: agy-expert-executor
-content_hash: 2445b934f3e83cffd61db22ffe0e177291f05113149cc328d138bc50495ee9db
+score: 91
+graded_at: "2026-11-05T20:36:04.382Z"
+graded_by: flash-high-executor
+content_hash: bd98f52c466fa468621ba20f9658007a29da1344c06879243280718b427dd339
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 83
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -104,18 +104,32 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 43
+    anchor: "| 項目    | 説明                             | 必須 |"
+    message: >-
+      The recommended frontmatter table in Section 4.1 and sample in Section 8 lack the mandatory 'rulebook' field and
+      the 'specdojo:' namespace while defining an unnecessary 'title' field, conflicting with
+      document-metadata-standard.md and deliverable-frontmatter.schema.yaml.
+    message_ja: >-
+      セクション 4.1 の推奨される frontmatter テーブルおよびセクション 8 のサンプルには、必須の 'rulebook' フィールドと 'specdojo:' ネームスペースが不足している一方で、不要な
+      'title' フィールドが定義されており、document-metadata-standard.md および deliverable-frontmatter.schema.yaml と矛盾しています。
+  - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 7
     anchor: ""
     message: 指定サンプル `specdojo:nfr-usability-sample` が、第5節で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）に従っていない。
-  - id: F002
+    message_ja: 指定サンプル `specdojo:nfr-usability-sample` が、第5節で定義された必須の見出し構成（概要、適用範囲、要件一覧、検証方法、導線）に従っていない。
+  - id: F003
     severity: minor
     rule: vp-ux-readability
     line: 77
     anchor: 生成する本文の見出しは **## 2. 適用範囲・利用者前提**
     message: 第6節の各項目の記述ガイドが簡素であり、良質な要件を定義するための具体的な判断基準や書き方の指針が不足している。
+    message_ja: 第6節の各項目の記述ガイドが簡素であり、良質な要件を定義するための具体的な判断基準や書き方の指針が不足している。

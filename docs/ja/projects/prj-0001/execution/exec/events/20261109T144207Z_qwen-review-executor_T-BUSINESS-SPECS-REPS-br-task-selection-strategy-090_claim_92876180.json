@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T14:42:07Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090",
+  "by": "qwen-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

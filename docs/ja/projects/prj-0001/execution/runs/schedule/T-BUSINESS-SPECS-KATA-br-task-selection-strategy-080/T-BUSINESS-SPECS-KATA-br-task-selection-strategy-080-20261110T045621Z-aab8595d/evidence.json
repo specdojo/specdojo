@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080",
+  "run_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080-20261110T045621Z-aab8595d",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T06:09:27.632Z",
+    "completed_at": "2026-11-10T06:11:35.954Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../br-task-selection-strategy.md                  | 10 ++--\n .../result.md                                      | 59 ++++++++++++++++++----\n 2 files changed, 55 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+      "status": "passed",
+      "summary": "対象文書の整形を確認。追加の整形変更なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check -- docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。差分確認で規則・判定例・例外・未決事項・承認条件の維持も確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "hook 指定の検査は成功。staged 対象は0ファイル、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "変更対象は Markdown 文書のみで、変更した YAML ファイルがない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "成果物の変更は docs/ja/product/ 配下のみで、executor は docs/ja/projects/ 配下を変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "executor は履歴ファイル、plan、result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  \n… output omitted …\nees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4257 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4257 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlint\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080\n\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-11-10T06:17:42.065Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back t\n… output omitted …\n track domains and dependencies to register epics; use dashboard build.\nWARN: timeline_path is deprecated. Use register epics and dashboard build.\nproblem\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "1. 概要／前提「frontmatter の `based_on` は依存関係の宣言」",
+      "category": "canonical-restatement",
+      "action": "delete",
+      "reason": "メタ情報の説明は br-rulebook 4章にあり、対象の依存関係自体は frontmatter に残る。先行仕様が未作成である注意も維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "1. 概要／前提「適用場面と対象外の境界は同仕様の作成後に照合する」",
+      "category": "repetition",
+      "action": "reference",
+      "reason": "境界が仮置きである注意と U-01 への参照に集約。照合時点、依頼先、必要な根拠は6章の U-01 と承認条件に残る。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3.1.6. Ready 一覧の派生ビューを使う経路／未作成・破損時の説明",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "参照不能の説明と代替順位との区別を一文に統合。未作成・破損時は E-04 とし、E-02 へ切り替えない意味を維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3.2. 判定例／表の前の欠損・ID比較の具体例",
+      "category": "repetition",
+      "action": "reference",
+      "reason": "重複する具体例を U-05・U-06 への参照に置換。具体的な比較対象と下流への影響は6章に残し、判断後に期待結果を確定する条件も維持した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 出力／次の着手タスク行と直後の候補なしの説明",
+      "category": "table-prose",
+      "action": "merge",
+      "reason": "候補なしが E-03 の正常な対象なしであることを出力表へ集約。本文には E-01・E-04 の選択失敗との区別を残した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "4. 出力／表の後の E-02 と U-07 の説明",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "工程計算不能時の代替順位は3.1.4と例外表に、競合条件の優先順位が未決であることは5章末尾と U-07 に残るため、出力章での再掲を削除した。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "3.2. 判定例／例1〜9",
+      "category": "table-prose",
+      "action": "retain",
+      "reason": "規則から導く具体的な入力と期待結果は、QE のテスト設計と DEV の比較規則の確認に必要であり、説明文の単なる反復ではない。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "5. 例外 / 異常系／E-01〜E-04",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "判定規則と重なる条件も、継続可否・回復担当・利用者の次の行動を対応させるために必要。代替順位、正常な対象なし、選択失敗の区別を維持した。",
+      "cause": {
+        "type": "document"
+      }
+    }
+  ],
+  "final_message": "対象文書内の重複を参照・集約で整理し、判断規則、例外、未決事項、承認条件を維持した。整形・差分検査は通過。親 runner の検証は実行していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "recipe は境界・欠損・競合条件を具体化する作成手順として必要、template は必須6章と入力・判定例・例外・未決事項の記入構造として必要と判断した。rulebook frontmatter には既に specdojo:br-recipe と specdojo:br-template が宣言されており、既存宣言を維持する。Kata は編集していない。",
+    "既存の未決事項 U-01〜U-07 は判断依頼先・判断時点・下流への影響とともに保持した。該当範囲の実装・受入条件の確定には、本文に記載された先行仕様との照合と業務判断が必要。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-080-20261110T045621Z-aab8595d/executor.log",
+      "bytes": 5859,
+      "truncated": false
+    }
+  ]
+}

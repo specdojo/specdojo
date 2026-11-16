@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-03T09:09:10Z",
+  "type": "block",
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010",
+  "by": "opus-executor",
+  "msg": "executor validation failed or not run: npm run validate:history-links",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010/20261103T085218170Z-ceaa2757/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010/20261103T085218170Z-ceaa2757/pipeline-state.json",
+    "pipeline_run_id": "20261103T085218170Z-ceaa2757"
+  }
+}

@@ -1,0 +1,119 @@
+PJR-Z807「executor から再開したとき、直した plan が統合で元の plan に置き換わる」の対応および前回の親検証で失敗した箇所の修正を完了しました。
+
+### 実施内容
+
+1. **直した plan のコミット対象への追加**:
+   - [`src/exec/worktree-ops-commit.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts) の [`isCommitTargetPath`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts#L84-L102)、[`resolveCommitScope`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts#L292-L375)、[`partitionCommitTargets`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts#L475-L511)、[`commitTargetPaths`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts#L514-L521)、[`commitWorktreeChanges`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts#L597-L632) に `allowEditedPlan` オプションを追加し、該当タスク自身の `planRel` をコミット対象に含められるようにしました。また [`assertNoAgentReadyPromotion`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts#L136-L165) では成果物ではない `planRel` をスキップするようにしました。
+   - [`src/exec/run/schedule-task.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/run/schedule-task.ts) および [`src/exec/run/register-worktree.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/run/register-worktree.ts) の統合段で、executor から再開された run（`pipelineResumeStage === "executor"` / `resumedExecutor === true`）のときに `allowEditedPlan: true` を [`commitWorktreeChanges`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/worktree-ops-commit.ts#L597-L632) へ渡すようにしました。
+2. **登録簿 executor 再開での plan 読み込みと `plan_ref` の維持**:
+   - [`src/exec/run/register-resume.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/run/register-resume.ts) において、`target.stage === "executor"` の再開時に worktree 内の編集済み plan（`worktreePlanPath`）が存在すればそれを優先して読み込んでプロンプトを構築するようにし、[`runAgentPipeline`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/src/exec/run/agent-pipeline.ts#L276-L327) が `pipeline-state.json` の `plan_ref` を計算するための `planPath` には root 側のパスを渡すようにしました。
+3. **統合テストの修正・拡充**:
+   - [`tests/src/exec/pipeline-e2e.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/tests/src/exec/pipeline-e2e.integration.test.ts) において、worktree の plan を編集して `--resume-from executor` で再開したテストで統合後の root の plan が編集内容と一致し `HEAD^2~1` の成果物コミットに `planRef` が含まれること、および plan を編集せずに `--resume-from executor` で再開したテストで `HEAD^2~1` に `planRef` が含まれないことを検証するように修正しました。
+   - [`tests/src/exec/register-pipeline-e2e.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/tests/src/exec/register-pipeline-e2e.integration.test.ts) において、`pipeline-state.json` の `artifacts.plan_ref` から plan の相対パスを取得し、worktree の plan を編集して `--resume-from executor` で再開したときに統合後の root の plan とマージ差分（`HEAD^1..HEAD`）に編集済み plan が含まれ、編集しない再開ではマージ差分に plan が含まれないことを検証するように修正しました。
+4. **個票・運用ガイド・変更履歴の更新**:
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md)、[`docs/ja/specdojo/guides/exec-operation-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/docs/ja/specdojo/guides/exec-operation-guide.md)、[`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z807/CHANGELOG.md) を更新しました。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "PJR-Z807 の対応として、executor から再開した run（schedule の `exec resume --task <task-id> --resume-from executor` および登録簿の `exec run --register <PJR-ID> --resume --resume-from executor`）の統合時に worktree で編集した plan をコミット対象に含めるよう修正し、登録簿の executor 再開で worktree の編集済み plan を読み込むとともに `plan_ref` がリポジトリ相対パスを維持するようにした。あわせて実 worktree を用いた統合テスト、個票、運用ガイド、`CHANGELOG.md` を更新した。",
+  "handoff": [],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md docs/ja/specdojo/guides/exec-operation-guide.md src/exec/run/register-resume.ts src/exec/run/register-worktree.ts src/exec/run/schedule-task.ts src/exec/worktree-ops-commit.ts tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "passed",
+      "exit_code": 0,
+      "summary": "変更した Markdown および TypeScript ファイルを Prettier で整形した。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "exit_code": 0,
+      "summary": "履歴蓄積ファイル（個票 `pjr-z807-resume-edited-plan-lost.md`）のリンク整合性を確認した。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "exit_code": 0,
+      "summary": "`docs/ja/projects/prj-0001/` 配下の変更に伴い、`prj-0001` のカタログ整合性を確認した。"
+    },
+    {
+      "command": "specdojo catalog build",
+      "status": "not_applicable",
+      "reason": "`dct-*.yaml` を変更していないため適用外。"
+    },
+    {
+      "command": "specdojo register build",
+      "status": "not_applicable",
+      "reason": "`pjr-index.md` は状態遷移で管理され executor 自身では変更しないため適用外。"
+    },
+    {
+      "command": "specdojo exec refresh",
+      "status": "not_applicable",
+      "reason": "`sch-*.yaml` を変更していないため適用外。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "path": "CHANGELOG.md",
+      "status": "changed",
+      "reason": "`[Unreleased]` の不具合修正節に PJR-Z807 の修正内容を追記した。"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-z807.yaml",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-z807.yaml",
+      "status": "changed",
+      "reason": "runner による登録簿の状態遷移イベントが記録されている。"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z807-resume-edited-plan-lost.md",
+      "status": "changed",
+      "reason": "個票の対応方針・原因・解決内容・確認結果・再発防止策を記入した。"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "reason": "plan を編集して executor から再開する手順に、統合時に直した plan がコミットに含まれ履歴に残る旨を明記した。"
+    },
+    {
+      "target": "src/exec/run/register-resume.ts",
+      "path": "src/exec/run/register-resume.ts",
+      "status": "changed",
+      "reason": "登録簿の executor 再開時に worktree の編集済み plan を優先して読み込みつつ、`plan_ref` 用の `planPath` は root 側を維持するよう修正した。"
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "reason": "登録簿の executor 再開 run の統合時に `allowEditedPlan: true` を `commitWorktreeChanges` へ渡すようにした。"
+    },
+    {
+      "target": "src/exec/run/schedule-task.ts",
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "changed",
+      "reason": "schedule の executor 再開 run の統合時に `allowEditedPlan: true` を `commitWorktreeChanges` へ渡すようにした。"
+    },
+    {
+      "target": "src/exec/worktree-ops-commit.ts",
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "changed",
+      "reason": "`allowEditedPlan` 指定時に当該タスクの `planRel` をコミット対象として許可し、`assertNoAgentReadyPromotion` で `planRel` を除外するよう修正した。"
+    },
+    {
+      "target": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "reason": "schedule の `--resume-from executor` 統合テストで、編集済み plan が統合コミットおよび統合後の root に残ることと、未編集時は不要な plan コミットが入らないことを検証した。"
+    },
+    {
+      "target": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "reason": "登録簿の `--resume-from executor` 統合テストで、編集済み plan が統合後の root とマージ差分に残ることと、未編集時はマージ差分に含まれないことを検証した。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

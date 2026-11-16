@@ -1,0 +1,20 @@
+fallback などで claim した agent と別の agent が段を進めて失敗した場合でも、runner がタスクを blocked にできるよう直しました。新しい回帰テスト、関連テスト（`track-filter`・`resume`・`inplace`）、`tsc -b` は通っています。`npm run test:unit` などの指定検査は親 runner の結果待ちで、実 agent での再現は確かめていません。
+
+**原因**: runner は fallback や `--executor-by` で段を進めた agent の名前で `PreparedTask.actor` を上書きし、その名前で `exec block` していました。claim を持つのは最初の agent なので、同一 actor の検査で「task is being worked on by another actor」と弾かれ、タスクが doing のまま残っていました。
+
+**修正内容**:
+- `PreparedTask` に、claim を持つ actor を表す `claimActor` を足し、block はこの actor で出すようにしました。
+  - 新しく claim した場合はその actor、`exec resume` で再開した場合は claim を持つ actor（`last_by`）を使います。claim を取り直した場合は取り直した actor、統合段の再開では `last_by` です。
+- block イベントの meta に `claim_actor`（claim を持つ actor）と `stage_actor`（失敗した段の actor）を残します。対象は schedule のすべての block と、`--track-state` の in-place の block です。
+- 「runner 自身が claim・再開した run に限る」は、`--force` で検査を外さず、claim を持つ actor として block することで満たしました。途中で人や別の run が claim し直していれば、従来どおり block は拒否されます。
+- **依頼範囲外の変更が 1 点あります**: 完了前の検査と `exec complete` も `claimActor` に揃えました。原因が同じで、fallback した agent が成功してもタスクが doing のまま残るためです。
+
+**回帰テスト**: `tests/src/exec/run/block-after-actor-switch.test.ts` を追加しました。fallback した agent の段が失敗したとき、claim した actor で block され、meta に両方の actor が残ることを確かめます。既存の `track-filter.test.ts` は、テストデータに `claimActor` を足しただけです。
+
+**個票**: 作業表を done にし、対応結果（原因と修正、成果物と検証、判断と申し送り、CHANGELOG に書く事項）を書きました。`CHANGELOG.md` は変えていません。
+
+変更したのは `src/exec/run/` 配下の 5 ファイル、上記のテスト 2 本、個票です。作業ツリーにある `events/pjr-t4g3.yaml` と `pipeline-state.json` の変更は runner のもので、私は触っていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"claim した agent と別の agent が段を進めて失敗しても、runner が claim を持つ actor（新しい claimActor）で block するようにした。block イベントの meta に claim_actor と stage_actor を残す。完了前の検査と complete も同じ actor に揃えた。回帰テストを追加し、個票の作業内容と対応結果を更新した。","handoff":["判断: 「runner 自身が claim・再開した run に限る」は、`--force` で同一 actor の検査を外さず、runner が claim を持つ actor（`claimActor`）として block することで満たした。run 中に人や別の run が claim し直していれば、`last_by` が変わるため従来どおり block は拒否される。","判断: 完了条件が求めるのは block だけだが、完了前の検査（`readCompletionPreflight`）と `exec complete` も `claimActor` に揃えた。原因が同じで、fallback した agent が成功してもタスクが doing のまま残るため。","次のアクション: 実 agent の fallback を伴う夜間の再現は executor では行っていない。統合後に orchestrator が、doing のまま残った `dct-index-080` と `sysd-cross-cutting-policy-080` を `exec release` などで戻してから確かめる。","CHANGELOG に書く事項（Unreleased・不具合修正）: `exec run` で、claim した agent と別の agent（fallback・`--executor-by`・`--reporter-by`）が段を進めて失敗したとき、block が別の actor の作業として拒否され、タスクが doing のまま残る問題を修正した。fallback した agent が成功した場合に完了できない問題も直した。block イベントの meta に `claim_actor` と `stage_actor` を残す。"],"validations":[{"command":"npx vitest run tests/src/exec/run/block-after-actor-switch.test.ts tests/src/exec/run/track-filter.test.ts tests/src/exec/run/resume.test.ts tests/src/exec/run/inplace.test.ts","status":"passed","summary":"4 files, 37 tests passed（block-after-actor-switch の型修正後も 2 tests が通った）"},{"command":"npx tsc -b","status":"passed","summary":"型エラーなし"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-t4g3-exec-block-after-actor-switch.md src/exec/run tests/src/exec/run/block-after-actor-switch.test.ts","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"すべて valid（変更した個票を含む）"},{"command":"git diff --check","status":"passed","summary":"空白の問題なし"}]}
+</specdojo_executor_evidence>

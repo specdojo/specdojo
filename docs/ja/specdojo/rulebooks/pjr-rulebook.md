@@ -56,33 +56,37 @@ Project Register Documentation Rules
 
 個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
-| 項目              | 説明                                             | 必須        |
-| ----------------- | ------------------------------------------------ | ----------- |
-| `id`              | `<project-id>:pjr-XXXX-<topic>`                  | ○           |
-| `type`            | `project`                                        | ○           |
-| `status`          | 文書成熟度。`draft` / `ready` / `deprecated`     | ○           |
-| `rulebook`        | `specdojo:pjr-rulebook`                          | ○           |
-| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列        | ○           |
-| `item_type`       | 登録項目の分類                                   | ○           |
-| `track`           | epic が担う track。ほかの type では指定しない    | epic で必須 |
-| `item_status`     | 登録項目の処理状態                               | ○           |
-| `priority`        | 対応優先度                                       | ○           |
-| `difficulty`      | agent 振り分け用の作業難易度                     | 任意        |
-| `owner`           | 主担当者または役割                               | 任意        |
-| `registered_at`   | 起票日時                                         | 任意        |
-| `due_on`          | 対応期限または判断期限                           | 任意        |
-| `completed_at`    | 完了・却下・決定日時                             | 条件        |
-| `block_reason`    | `waiting` へ遷移した直近の理由                   | 任意        |
-| `conclusion`      | 終端時の結論要約                                 | 任意        |
-| `derived_from`    | 起票の元になった登録項目 ID の配列               | 任意        |
-| `depends_on`      | 実行前に完了しているべき先行の登録項目 ID の配列 | 任意        |
-| `approach`        | 対象を作成・修正するときの進め方                 | 任意        |
-| `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス | 任意        |
-| `target_rulebook` | 対象成果物の rulebook ID                         | 任意        |
-| `targets`         | 変更対象文書の doc id リスト                     | 任意        |
+| 項目              | 説明                                                              | 必須        |
+| ----------------- | ----------------------------------------------------------------- | ----------- |
+| `id`              | `<project-id>:pjr-XXXX-<topic>`                                   | ○           |
+| `type`            | `project`                                                         | ○           |
+| `status`          | 文書成熟度。`draft` / `ready` / `deprecated`                      | ○           |
+| `rulebook`        | `specdojo:pjr-rulebook`                                           | ○           |
+| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列                         | ○           |
+| `item_type`       | 登録項目の分類                                                    | ○           |
+| `track`           | epic が担う track。ほかの type では指定しない                     | epic で必須 |
+| `domains`         | epic が対象とする domain の文字列配列。ほかの type では指定しない | 任意        |
+| `item_status`     | 登録項目の処理状態                                                | ○           |
+| `priority`        | 対応優先度                                                        | ○           |
+| `difficulty`      | agent 振り分け用の作業難易度                                      | 任意        |
+| `owner`           | 主担当者または役割                                                | 任意        |
+| `registered_at`   | 起票日時                                                          | 任意        |
+| `due_on`          | 対応期限または判断期限                                            | 任意        |
+| `start_on`        | epic の予定開始日。ほかの type では指定しない                     | 任意        |
+| `completed_at`    | 完了・却下・決定日時                                              | 条件        |
+| `block_reason`    | `waiting` へ遷移した直近の理由                                    | 任意        |
+| `conclusion`      | 終端時の結論要約                                                  | 任意        |
+| `derived_from`    | 起票の元になった登録項目 ID の配列                                | 任意        |
+| `depends_on`      | 実行前に完了しているべき先行の登録項目 ID の配列                  | 任意        |
+| `approach`        | 対象を作成・修正するときの進め方                                  | 任意        |
+| `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス                  | 任意        |
+| `target_rulebook` | 対象成果物の rulebook ID                                          | 任意        |
+| `targets`         | 変更対象文書の doc id リスト                                      | 任意        |
 
-- `epic` は track ごとの大きな仕事を表し、自身は実行しない。`track` は英小文字・数字・ハイフンの識別子とし、先頭は英小文字または数字にする。`tml-index.yaml` がある場合、定義済みの track を指定する。ない場合も識別子を保持できる。
-- `register add --type epic --track <track>` で起票し、`register update --track <track>` で変更する。epic の `track` は削除できない。変更はイベントに残す。
+- `epic` は track ごとの全体計画の正本であり、自身は実行しない。`track` は英小文字・数字・ハイフンの識別子とし、先頭は英小文字または数字にする。同じ project 内の epic どうしで track を重複させない。旧 `tml-index.yaml` への登録は不要とする。
+- `register add --type epic --track <track> --domain <domain>` で起票し、`register update --track <track> --domain <domain>` で変更する。epic の `track` は削除できない。`--domain` は反復指定で一覧を置き換え、update の `--domain -` 単独で削除する。`domains` を省略した場合だけ互換用 timeline へ範囲の解決を委ね、空配列は対象なしの明示指定とする。変更はイベントに残す。
+- 全体計画の順序は epic 間の `depends_on`、範囲は `domains`、期間は `start_on`・着手・完了の記録と `due_on` から導く。開始日は `start_on`、epic 自身の最初の着手 event、先行 epic の最も遅い終了日の翌稼働日の順に使い、どれもなければ未定とする。子 todo の着手や起票日では補わない。`register build` は epic の依存循環と track の重複を拒否し、`start_on` が `due_on` より後なら警告する。この場合は期間を未定とする。epic のない track は全体計画へ出さない。生成は [[specdojo:register-operation-guide|登録簿運用ガイド]] に従う。
+- `register add` / `update` の `--start-on <YYYY-MM-DD>` で予定開始日を設定し、`--start-on -` で省略・削除する。ほかの type への指定と、実在しない日付や形式不正は記帳前に拒否し、変更は event に残す。
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority`、`difficulty` の値は schema の enum だけを使用する。`difficulty` は `hard` / `medium` / `easy` のいずれかとし、省略時は従来の agent 自動選択を使う。
 - `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。
@@ -95,7 +99,7 @@ Project Register Documentation Rules
 ### 3.1. 日時と日付の使い分け
 
 - 起票と終端は瞬間として記録し、`registered_at` / `completed_at` に UTC の RFC 3339・秒精度（`YYYY-MM-DDTHH:MM:SSZ`）で保存する。
-- 期限は瞬間ではなくプロジェクトタイムゾーン上の暦日であるため、`due_on` は `YYYY-MM-DD` のまま保持する。
+- 予定開始日と期限は瞬間ではなくプロジェクトタイムゾーン上の暦日であるため、`start_on` と `due_on` は `YYYY-MM-DD` のまま保持する。未定の `start_on` は省略する。
 - 一覧・派生ビューの「登録日」「完了日」は、保存した日時をプロジェクトの登録日タイムゾーンへ変換して導出する表示値であり、個票へ日付として重複保存しない。
 - 日時は register コマンドが記録する。手書きで日時を入力する場合も、タイムゾーンを含む値から UTC へ変換した値だけを保存する。
 
@@ -153,8 +157,9 @@ Project Register Documentation Rules
 - 関連ドキュメントには、判断根拠、変更対象、影響先、追跡先のうち該当する文書を記載する。
 - 実行中に問題や後続作業を見つけて別の登録項目を起票するときは、起票元を `derived_from` に必ず記録する。decision から todo を起票する場合も同じ関係を使い、decision 本文へ追跡先を重複記載しない。既存本文の追跡先は移行のために書き換えない。
 - 本項目の実施において確実に変更する対象文書が分かっている場合は、その文書 ID を Frontmatter の `targets` 配列へ宣言する。宣言した `targets` は agent 実行時の変更網羅検証（target coverage）に用いられる。未知の場合や対象を固定しない場合は宣言を省略する。
-- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。成果物の対象はカタログを優先して解決する。`cross-deliverable-dedup` はカタログを必須とする。それ以外の成果物の approach（`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`finalize`・`bootstrap-finalize`）は、カタログなしでも既存文書の索引と `specdojo.rulebook`、または個票の `target_path` と `target_rulebook` から解決できる。新規文書は両フィールドを必須とし、リポジトリ外のパスや別文書との衝突、既存文書と指定の不一致は認めない。カタログ設定済みで対象が未登録の場合も両フィールドがある場合だけ同じ解決を使う。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
+- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。成果物の対象はカタログを優先して解決する。`cross-deliverable-dedup` はカタログを必須とする。それ以外の成果物の approach（`fully-guided`・`condense`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`finalize`・`bootstrap-finalize`）は、カタログなしでも既存文書の索引と `specdojo.rulebook`、または個票の `target_path` と `target_rulebook` から解決できる。新規文書は両フィールドを必須とし、リポジトリ外のパスや別文書との衝突、既存文書と指定の不一致は認めない。カタログ設定済みで対象が未登録の場合も両フィールドがある場合だけ同じ解決を使う。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
 
+- `condense` は既存成果物 1 件の冗長さを直す edit とし、未作成の対象は認めない。
 - カタログなしの完了基準は個票の完了条件と rulebook とする。recipe・sample・template は rulebook frontmatter から辿り、`not-needed` のものを対象に含めない。`fully-guided` の必要な一式、`recipe-guided` の recipe が不足する場合は起票・更新を拒否する。
 - カタログなしの `bootstrap` は `target_path`、新しい `target_rulebook`、設定の `kata_authority` を必須とする。既存 rulebook を再利用しない。rulebook の名前部分から recipe・sample・template の ID を導出し、`docs/ja/specdojo/<kind>s/<kata_authority>/` に配置する候補を plan へ示す。成果物には新しい `specdojo.rulebook` を記録する。
 - `finalize`・`bootstrap-finalize` は既存成果物だけを対象にし、カタログなしでは個票の完了条件を確認チェック表にする。後者は成果物と frontmatter から辿る kata 一式を確定対象とする。

@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T13:01:34Z",
+  "type": "complete",
+  "task_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090",
+  "by": "indie",
+  "msg": "YAML の成果物のため grade を流せない（PJR-V05D、方式は PJR-JQSB で決定・PJR-CBV6 で実装）。この review は型一式の確定のときに人が確かめる扱いとして終える（indie が決定、orchestrator が記帳）"
+}

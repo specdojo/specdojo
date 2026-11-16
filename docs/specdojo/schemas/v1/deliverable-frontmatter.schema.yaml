@@ -86,6 +86,9 @@ properties:
               - $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
               - type: "null"
             description: "登録項目の対応期限または判断期限。未定は省略し、期限なしは null。"
+          start_on:
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/Date"
+            description: "epic の予定開始日。未定は省略する。type 制約は登録項目 schema が検証する。"
           completed_at:
             $ref: "./register-item-frontmatter.schema.yaml#/$defs/Timestamp"
             description: "登録項目を完了・決定・却下した日時（UTC の RFC 3339・秒精度）。"

@@ -1,0 +1,23 @@
+作業は終わりました。最終報告をまとめます。
+
+ifx-index の schema の改名は前回までに済んでいて、残っていたのは保護ファイル `.vscode/settings.json` の cSpell 語 `esil` の 1 件だけでした。今回この行を直接消そうとしましたが、executor からは編集できない保護ファイルとして拒否されました。個票の完了条件に「保護された設定の変更は、変更案を書く」とあり、変更案は個票の対応結果の「残課題」節に書いてあるので、完了として報告します。ただし、この行を消すまで `grep -rn esil`（履歴を除く）はこの 1 件に一致します。
+
+**この項目で変えたこと**
+- schema の正本を `docs/specdojo/schemas/v1/ifx-index.schema.yaml` に移しました。
+- 古い `esil.schema.yaml` は、新しい schema を参照するだけの非推奨の別名として残しました。ほかのプロジェクトで古い名前を指している YAML も、そのまま検証できます。
+- sample・template・`prj-0001:ifx-index` の modeline と、rulebook・recipe の schema パスを新しい名前にそろえました。
+- 個票の対応結果に、決めた内容・変更案・CHANGELOG に書く事項を書きました。
+
+**確認が必要なこと**
+- `.vscode/settings.json` の `cSpell.words` から `"esil",` の行を手で削除する必要があります。
+- 改名で rulebook が列挙値の網羅検査の対象になったため、ready の `ifx-index-rulebook` の本文に `status`・`direction`・`kind`・`format` の値を追記しました。ready の文書の本文を変えたので、内容を確認してください。
+- `id` に許す形から古い略号の接頭辞を除きました。リポジトリ内では使われていませんが、ほかのプロジェクトで使っていれば検証で失敗します。
+
+**検証**
+- 新しい schema で `prj-0001:ifx-index` と sample を検証し、どちらも valid でした。古い名前の別名を通した sample の検証も valid でした。
+- `npm run validate:history-links` と、変更した 8 ファイルの Prettier 検査も通りました。
+- lint や test など親 runner が実行する検査は、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-index の schema を ifx-index.schema.yaml に改名し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。残る .vscode/settings.json の cSpell 語 esil は保護ファイルのため編集が拒否された。完了条件どおり、変更案を個票と handoff に書いた。","handoff":["保護ファイルへの変更案: `.vscode/settings.json` の `cSpell.words` から `\"esil\",` の行を削除する。今回の再開でも Edit が sensitive file として拒否された。削除するまで、履歴を除く `grep -rn esil` はこの 1 件に一致する。","決定: 古い `docs/specdojo/schemas/v1/esil.schema.yaml` は削除しない。`$ref: \"ifx-index.schema.yaml\"` と `deprecated: true` だけの非推奨の別名にした。ほかのプロジェクトの modeline を壊さず、内容の複製もない。移行期間が過ぎたら削除する。","決定: 改名で rulebook と schema がファイル名の stem で組になり、`validate:schema:rulebook-enums` の対象に入った。そのため ready の rulebook `specdojo:ifx-index-rulebook` に `status`・`direction`・`kind`・`format` の値と選び方を追記した。ready の文書の本文変更なので確認してほしい。","決定: `id` の pattern から古い略号の接頭辞の形式を除いた（リポジトリ内で未使用）。ほかのプロジェクトで使っていれば `ifx-index` 系へ改める必要がある。CHANGELOG に書く事項は個票の「CHANGELOG に書く事項」の節にある。","残課題: `ifx-api`・`ifx-msg`・`ifx-cmd`・`ifx-file` の rulebook・recipe と `dct-external-interface-specs.yaml` に大文字の略号 ESIL が残る。schema 名の範囲外なので、必要なら別の項目で扱う。"],"validations":[{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-index.schema.yaml --data docs/ja/product/020-external-interface-specs/ifx-index.yaml","status":"passed","summary":"valid"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-index.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml","status":"passed","summary":"valid"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/esil.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml","status":"passed","summary":"非推奨の別名を通しても valid"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし"},{"command":"npx prettier --check (変更した 8 ファイル)","status":"passed","summary":"All matched files use Prettier code style"}],"target_coverage":[{"target":"docs/ja/product/020-external-interface-specs/ifx-index.yaml","status":"changed","path":"docs/ja/product/020-external-interface-specs/ifx-index.yaml"},{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-sbnb-ifx-index-schema-rename.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-sbnb-ifx-index-schema-rename.md"},{"target":"docs/ja/specdojo/recipes/ifx-index-recipe.md","status":"changed","path":"docs/ja/specdojo/recipes/ifx-index-recipe.md"},{"target":"docs/ja/specdojo/rulebooks/ifx-index-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/ifx-index-rulebook.md"},{"target":"docs/ja/specdojo/samples/ifx-index-sample.yaml","status":"changed","path":"docs/ja/specdojo/samples/ifx-index-sample.yaml"},{"target":"docs/ja/specdojo/templates/ifx-index-template.yaml","status":"changed","path":"docs/ja/specdojo/templates/ifx-index-template.yaml"},{"target":"docs/specdojo/schemas/v1/esil.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/esil.schema.yaml"},{"target":"docs/specdojo/schemas/v1/ifx-index.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/ifx-index.schema.yaml"}]}
+</specdojo_executor_evidence>

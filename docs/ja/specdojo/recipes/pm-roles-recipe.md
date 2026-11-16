@@ -18,7 +18,7 @@ Project Role Definition Writing Recipe
 - 最初に、組織定義から採用する責務語彙、最終判断の集約先、公開方針を確認する。
 - 次に、`pm-roles.yaml` に列挙する Role code を、Schedule の `owner` や RACI の列として使える粒度で整理する。
 - 最後に、member nickname、agent 名、個人名、兼務割り当てを混ぜず、プロジェクト固有メモだけを残す。
-- schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。
+- 準拠先と採用根拠をメタ項目へ接続し、対応 schema で出力を検証する。
 - 組織上必要な責任領域（Why）、採用する Role code（What）、プロジェクト固有の責務強調（How）を扱い、`based_on` と下流の Role code 参照で追跡する（Trace）。割り当てや一般責務は各正本へ委譲する。
 
 ## 2. 作成前に集める情報
@@ -36,13 +36,13 @@ Project Role Definition Writing Recipe
 
 ## 3. 全体の作成手順
 
-1. `id`、`type`、`status`、`version`、`project_id` を設定する。
-2. `based_on` に、ロール採用の根拠となる組織定義などの ID を記載する。
-3. `roles` に、プロジェクトで使用する Role code を標準順で列挙する。
-4. 各 Role に `code` と `name` を記載し、必要な場合だけ `project_note` を 1 行で添える。
-5. `project_note` から member nickname、agent 名、個人名、具体的な兼務割り当てを除く。
-6. schema にないキー、重複 Role code、標準外 Role code がないことを確認する。
-7. PO が承認できるよう、全 Role code の過不足、公開可否、下流文書への入力適合を確認する。
+1. 対象プロジェクトと一覧の名称・版を確認し、メタ項目へ反映する。成果物自身の `rulebook` も指定して準拠先を保持する。
+2. 採用判断の根拠となる組織定義を読み、カタログを使う場合は依存の範囲を確認して `based_on` へ接続する。
+3. 組織定義の採用集合を `roles` へ転記し、`code` と上位標準の正式な `name` を対応付ける。
+4. PO の判断に必要な固有の扱いだけを `project_note` に短く添える。
+5. 実行主体・兼務の説明はメンバー定義へ移し、下流参照と採用集合の差分を確認する。
+6. `docs/specdojo/schemas/v1/pm-roles.schema.yaml` で検証し、コードの重複・採用集合・正式名称は別途照合する。
+7. PO に、採用変更の理由、未決事項、下流への追従結果と公開判断に必要な材料を提示する。
 
 ## 4. 各要素の書き方
 
@@ -50,31 +50,29 @@ Project Role Definition Writing Recipe
 
 問い:
 
-- `id` は `<project-id>:pm-roles` 形式になっているか。
-- `project_id` は配置先プロジェクトと一致しているか。
-- `based_on` はロール採用の根拠を指しているか。
+- 対象プロジェクト、一覧の名称、現在の版をメタ項目から識別できるか。
+- `rulebook` は成果物の準拠先を示し、カタログ側だけの宣言で済ませていないか。
+- `based_on` は確認した採用根拠を指し、カタログ利用時は依存から辿れるか。
 
 書き方:
 
-- `type` は `project`、`version` は整数で記載する。
-- `status` は現時点の成果物状態を示す。
-- 根拠 ID は、内容を実際に確認した文書だけを記載する。
-- `rulebook` など schema が許可しないキーを追加しない。
+- 名称・版・プロジェクトの記入値を、配置先と採用判断の文書に照らして確かめる。
+- 準拠先を成果物自身に残し、schema 検証でメタ項目の漏れや入力誤りを見つける。
+- 採用理由の本文は組織定義を正本とし、ここでは根拠 ID で接続する。
 
 ### 4.2. `roles`
 
 問い:
 
-- Schedule の `owner` として必要な Role code が過不足なく入っているか。
+- 組織定義の採用集合を、専門支援だけの Role も含めて転記できているか。
 - 重複した Role code や表記ゆれはないか。
 - 専任 member がいない Role code でも、責務語彙として必要なら残せているか。
 
 書き方:
 
-- 標準順に `PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS` を並べる。
-- 独自 Role code は追加しない。
-- `roles` は責務語彙の一覧であり、実行主体の一覧ではないことを意識する。
-- 下流の `pm-members.yaml` や Schedule が参照する Role code を後から推測しなくてよいよう、採用する責務語彙を明示する。
+- 組織定義の採用行だけを抜き出し、上位標準の定義順で照合すると漏れを見つけやすい。
+- 専任者の不在と未採用を取り違えず、使用可能な `owner` の部分集合とも区別する。
+- 下流の Role 参照に差分があれば、採用判断か参照元のどちらを直すか決めてから転記を確定する。
 
 ### 4.3. `roles[].project_note`
 
@@ -103,14 +101,14 @@ Project Role Definition Writing Recipe
 
 ## 6. 良い例 / 悪い例
 
-| 観点                 | 良い例                                            | 悪い例                                 |
-| -------------------- | ------------------------------------------------- | -------------------------------------- |
-| Role code            | `code: PM`                                        | `code: project-manager-agent`          |
-| 実行主体との分離     | 実行主体の割り当ては `pm-members.yaml` で管理する | `PM は pm-agent が担当する`            |
-| プロジェクト固有メモ | 小規模運用では専任化せず、滞留時に見直す          | 必要に応じて対応する                   |
-| 公開可否             | 公開判断は PO に残す                              | agent が公開可否を判断する             |
-| 下流入力             | `roles[].code` を Schedule の `owner` に使う      | `owner` に member nickname を使う      |
-| schema 適合          | メタ項目は schema が許可するキーだけにする        | `rulebook: specdojo:pm-roles-rulebook` |
+| 観点                 | 良い例                                                     | 悪い例                            |
+| -------------------- | ---------------------------------------------------------- | --------------------------------- |
+| Role code            | `code: PM`                                                 | `code: project-manager-agent`     |
+| 実行主体との分離     | 実行主体の割り当ては `pm-members.yaml` で管理する          | `PM は pm-agent が担当する`       |
+| プロジェクト固有メモ | 小規模運用では専任化せず、滞留時に見直す                   | 必要に応じて対応する              |
+| 公開可否             | 公開判断は PO に残す                                       | agent が公開可否を判断する        |
+| 下流入力             | `roles[].code` を Schedule の `owner` に使う               | `owner` に member nickname を使う |
+| 準拠先               | 成果物自身に `rulebook: specdojo:pm-roles-rulebook` を残す | カタログにあるので成果物から省く  |
 
 ## 7. レビュー観点
 

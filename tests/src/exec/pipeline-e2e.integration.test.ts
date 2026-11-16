@@ -1,3 +1,4 @@
+import { Command } from "commander";
 import { execFileSync } from "node:child_process";
 import {
   chmodSync,
@@ -12,9 +13,10 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
+import { recordPathForRead } from "../../../src/exec/run-records.js";
+import { TRAILING_RECORDS_COMMIT_SUBJECT } from "../../../src/exec/trailing-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import * as spawnSelfModule from "../../../src/shared/spawn-self.js";
 
@@ -51,7 +53,7 @@ type AgentInvocation = {
 // 受け取り、behavior ファイルの指定に従って executor / reporter / 従来 agent として振る舞う。
 const FAKE_AGENT_SCRIPT = `
 import { execFileSync } from "node:child_process";
-import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, readdirSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 function arg(name) {
@@ -75,8 +77,9 @@ appendFileSync(
 );
 
 if (behavior.role === "executor") {
+  mkdirSync("docs/test", { recursive: true });
   if (behavior.kind === "rate_limit") {
-    writeFileSync("pipeline-artifact.md", "# partial executor work\\n", "utf8");
+    writeFileSync("docs/test/doc.md", "# partial executor work\\n", "utf8");
     process.stderr.write("rate limit reached while editing the first target\\n");
     process.exit(1);
   }
@@ -93,7 +96,7 @@ if (behavior.role === "executor") {
     const priorWork = behavior.artifactPath ? readFileSync(behavior.artifactPath, "utf8") : "";
     writeFileSync("docs/test/doc.md", priorWork + "# completed after resume\\n", "utf8");
   } else {
-    const artifactPath = behavior.artifactPath ?? "pipeline-artifact.md";
+    const artifactPath = behavior.artifactPath ?? "docs/test/doc.md";
     mkdirSync(dirname(artifactPath), { recursive: true });
     writeFileSync(artifactPath, "# " + nickname + " / " + model + "\\n", "utf8");
     if (behavior.kind === "path_mismatch") {
@@ -109,7 +112,7 @@ if (behavior.role === "executor") {
         ...(behavior.kind === "incomplete"
           ? { completion_status: "incomplete", handoff: ["finish the remaining plan instructions"] }
           : {}),
-        final_message: (behavior.artifactPath ?? (resumed ? "docs/test/doc.md" : "pipeline-artifact.md")) + " を更新し、検証を実行した。",
+        final_message: (behavior.artifactPath ?? "docs/test/doc.md") + " を更新し、検証を実行した。",
         validations: [{ command: "npm test", status: "passed", summary: "全テストが成功した。" }],
         ...(resumed && target
           ? {
@@ -168,9 +171,9 @@ if (behavior.role === "reporter") {
 writeFileSync("legacy-artifact.md", "# legacy\\n", "utf8");
 const resultPath = join(
   process.env.SPECDOJO_EXECUTION_PATH ?? "",
-  "exec",
-  "results",
-  behavior.task + "-result.md",
+  "runs", "schedule", behavior.task,
+  readdirSync(join(process.env.SPECDOJO_EXECUTION_PATH ?? "", "runs", "schedule", behavior.task)).sort().at(-1),
+  "result.md",
 );
 const current = readFileSync(resultPath, "utf8");
 writeFileSync(
@@ -185,9 +188,41 @@ function git(cwd: string, ...args: string[]): string {
   return execFileSync("git", args, { cwd, encoding: "utf8", env: gitEnvironment() }).trim();
 }
 
+// run の終わりの記帳 commit（PJR-DVNV）を除いた first-parent の commit。統合の merge commit や
+// wait の位置は、記帳 commit を飛ばして確かめる。
+function firstParentWithoutBookkeeping(cwd: string): string[] {
+  return git(cwd, "log", "--first-parent", "--format=%H%x09%s", "HEAD")
+    .split("\n")
+    .map((line) => line.split("\t"))
+    .filter(([, subject]) => subject !== TRAILING_RECORDS_COMMIT_SUBJECT)
+    .map(([sha]) => sha!);
+}
+
+function lastIntegrationCommit(cwd: string): string {
+  return firstParentWithoutBookkeeping(cwd)[0]!;
+}
+
+// runner が書いた実行記録（イベントと run の記録）が root に未 commit で残っていないこと。
+function uncommittedExecutionRecords(cwd: string): string[] {
+  return git(cwd, "status", "--porcelain", "--untracked-files=all")
+    .split("\n")
+    .map((line) => line.slice(3))
+    .filter((path) => /(^|\/)execution\/(exec\/events|runs)\//.test(path));
+}
+
 function clearProjectEnv(): void {
   for (const key of ENV_KEYS) delete process.env[key];
 }
+
+// 1 つの run は実 Git・worktree・tsx の子プロセスを順に起こすため、exec run の並行実行中に
+// 親検証として流すと設定既定の 30 秒を超えることがある（PJR-BJ7E）。
+const PIPELINE_TEST_TIMEOUT_MS = 180_000;
+const PIPELINE_TEST_OPTIONS = { timeout: PIPELINE_TEST_TIMEOUT_MS };
+
+// 時間切れになったテストの run は止まらずに裏で続く。その間に afterEach が fixture を消すと、
+// 続きの run が消えた fake-agent.mjs を起動して落ち、次のテストの cwd や出力にも干渉する。
+// 片付けの前に、起動済みの run がすべて終わるのを待つ。
+const inFlightRuns = new Set<Promise<void>>();
 
 async function runExec(args: string[]): Promise<void> {
   clearProjectEnv();
@@ -195,7 +230,19 @@ async function runExec(args: string[]): Promise<void> {
   const program = new Command();
   program.exitOverride();
   registerExecCommands(program);
-  await program.parseAsync(["node", "specdojo", "exec", ...args]);
+  const run = program.parseAsync(["node", "specdojo", "exec", ...args]).then(() => undefined);
+  inFlightRuns.add(run);
+  try {
+    await run;
+  } finally {
+    inFlightRuns.delete(run);
+  }
+}
+
+async function settleInFlightRuns(): Promise<void> {
+  while (inFlightRuns.size > 0) {
+    await Promise.allSettled([...inFlightRuns]);
+  }
 }
 
 type PipelineFixture = {
@@ -460,8 +507,9 @@ function writeTemplates(repo: string): void {
     ].join("\n"),
     "utf8",
   );
+  writeFileSync(join(templates, "xep-common-conventions-template.md"), "");
   writeFileSync(
-    join(templates, "xep-common-conventions-template.md"),
+    join(templates, "xp-common-conventions-template.md"),
     "## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n",
     "utf8",
   );
@@ -494,7 +542,7 @@ function setupPipelineRepository(): PipelineFixture {
   writeFileSync(
     join(repo, "parent-validation.mjs"),
     [
-      'import { appendFileSync, readFileSync } from "node:fs";',
+      'import { appendFileSync, readdirSync, readFileSync } from "node:fs";',
       `const logPath = ${JSON.stringify(parentValidationLogPath)};`,
       `const behaviorPath = ${JSON.stringify(parentValidationBehaviorPath)};`,
       'appendFileSync(logPath, "run\\n", "utf8");',
@@ -581,13 +629,19 @@ function readInvocations(logPath: string): AgentInvocation[] {
 }
 
 function evidenceRunDir(fixture: PipelineFixture, taskId: string): string {
-  const taskDir = join(fixture.executionPath, "exec", "evidence", taskId);
+  const taskDir = join(fixture.executionPath, "runs", "schedule", taskId);
   const runs = readdirSync(taskDir).sort();
   expect(runs).toHaveLength(1);
   return join(taskDir, runs[0]);
 }
 
-type TaskEvent = { type: string; task_id: string; by: string; meta?: Record<string, unknown> };
+type TaskEvent = {
+  type: string;
+  task_id: string;
+  by: string;
+  msg?: string;
+  meta?: Record<string, unknown>;
+};
 
 function readTaskEvents(fixture: PipelineFixture, taskId: string): TaskEvent[] {
   const dir = join(fixture.executionPath, "exec", "events");
@@ -599,10 +653,7 @@ function readTaskEvents(fixture: PipelineFixture, taskId: string): TaskEvent[] {
 }
 
 function readResult(fixture: PipelineFixture, taskId: string): string {
-  return readFileSync(
-    join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
-    "utf8",
-  );
+  return readFileSync(recordPathForRead(fixture.executionPath, "result", taskId), "utf8");
 }
 
 function resultChangedFiles(result: string): Array<{ path: string; summary: string }> {
@@ -630,13 +681,10 @@ function readWorktreeResult(
   }
   const executionRelativePath = relative(fixture.repo, fixture.executionPath);
   return readFileSync(
-    join(
-      worktreeBase,
-      entries[0]!.name,
-      executionRelativePath,
-      "exec",
-      "results",
-      `${taskId}-result.md`,
+    recordPathForRead(
+      join(worktreeBase, entries[0]!.name, executionRelativePath),
+      "result",
+      taskId,
     ),
     "utf8",
   );
@@ -659,7 +707,7 @@ function readWorktreePipelineState(
 ): { stages: Record<string, { status: string; attempts: number }> } {
   const worktreePath = onlyWorktreePath(worktreeBase);
   const executionRelativePath = relative(fixture.repo, fixture.executionPath);
-  const taskDir = join(worktreePath, executionRelativePath, "exec", "evidence", taskId);
+  const taskDir = join(worktreePath, executionRelativePath, "runs", "schedule", taskId);
   const runs = readdirSync(taskDir).sort();
   expect(runs).toHaveLength(1);
   return JSON.parse(readFileSync(join(taskDir, runs[0]!, "pipeline-state.json"), "utf8")) as {
@@ -678,7 +726,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("executor / reporter pipeline E2E", () => {
+describe("executor / reporter pipeline E2E", PIPELINE_TEST_OPTIONS, () => {
   let fixture: PipelineFixture | undefined;
 
   function setup(): PipelineFixture {
@@ -689,7 +737,8 @@ describe("executor / reporter pipeline E2E", () => {
     return fixture;
   }
 
-  afterEach(() => {
+  afterEach(async () => {
+    await settleInFlightRuns();
     process.chdir(originalCwd);
     if (fixture) {
       rmSync(fixture.repo, { recursive: true, force: true });
@@ -697,7 +746,7 @@ describe("executor / reporter pipeline E2E", () => {
       rmSync(fixture.agentFixtureDir, { recursive: true, force: true });
     }
     fixture = undefined;
-  });
+  }, PIPELINE_TEST_TIMEOUT_MS);
 
   it("keeps the legacy single-agent flow unchanged for phases without agent_pipeline", async () => {
     const target = setup();
@@ -734,18 +783,28 @@ describe("executor / reporter pipeline E2E", () => {
     expect(invocations[0].model).toBe("gemma3-12b");
     expect(invocations[1].model).toBe("gemma3-12b");
     expect(invocations[0].prompt).toContain("executor stage");
+    for (const invocation of invocations) {
+      expect(invocation.prompt).toContain("記法・リンク規約（共通）");
+      expect(invocation.prompt).not.toContain("共通規約 sha256:");
+    }
+    const savedPlan = readFileSync(
+      recordPathForRead(target.executionPath, "plan", "T-TEST-doc-010"),
+      "utf8",
+    );
+    expect(savedPlan).toContain("共通規約 sha256:");
+    expect(savedPlan).not.toContain("記法・リンク規約（共通）");
     // 親 runner が実行する検証は、ID と対応コマンドを添えて executor へ伝える。
     // executor 側で同じコマンドを実行させないため、prompt に含まれている必要がある。
     expect(invocations[0].prompt).toContain("test-integration (npm run test:integration)");
 
     // 成果物は executor が更新し、result は reporter の構造化出力から runner が描画する。
-    expect(readFileSync(join(target.repo, "pipeline-artifact.md"), "utf8")).toContain(
+    expect(readFileSync(join(target.repo, "docs/test/doc.md"), "utf8")).toContain(
       "local-gemma-executor",
     );
     const result = readResult(target, "T-TEST-doc-010");
     expect(result).toContain("status: complete");
     expect(result).toContain("成果物を更新し、検証を完了した。");
-    expect(result).toContain("`pipeline-artifact.md`: 文書を更新した。");
+    expect(result).toContain("`docs/test/doc.md`: 文書を更新した。");
     expect(result).not.toContain("_TODO_");
     expect(process.exitCode).toBeUndefined();
 
@@ -765,7 +824,7 @@ describe("executor / reporter pipeline E2E", () => {
       status: "succeeded",
       attempts: 1,
     });
-    expect(evidence.changes.map((change) => change.path)).toContain("pipeline-artifact.md");
+    expect(evidence.changes.map((change) => change.path)).toContain("docs/test/doc.md");
     expect(evidence.validations).toEqual([
       {
         source: "executor",
@@ -817,7 +876,7 @@ describe("executor / reporter pipeline E2E", () => {
     const result = readResult(target, "T-TEST-doc-010");
     const changedFiles = resultChangedFiles(result);
     expect(changedFiles.map(({ path }) => path)).toEqual([
-      "pipeline-artifact.md",
+      "docs/test/doc.md",
       "pipeline-secondary.md",
       "pipeline-tertiary.md",
     ]);
@@ -829,7 +888,7 @@ describe("executor / reporter pipeline E2E", () => {
     expect(result).toContain("status: complete");
     expect(changedFiles).toEqual([
       {
-        path: "pipeline-artifact.md",
+        path: "docs/test/doc.md",
         summary: "追加、+2 / -0 行",
       },
       { path: "pipeline-secondary.md", summary: "pipeline-secondary.md の説明。" },
@@ -846,7 +905,7 @@ describe("executor / reporter pipeline E2E", () => {
     const reporterPrompt = readInvocations(target.logPath)[1].prompt;
     // reporter へ渡すのは plan と上限つき evidence とスキーマだけで、生ログ本文は渡さない。
     expect(reporterPrompt).toContain("# Edit Plan: T-TEST-doc-010");
-    expect(reporterPrompt).toContain("pipeline-artifact.md を更新し、検証を実行した。");
+    expect(reporterPrompt).toContain("docs/test/doc.md を更新し、検証を実行した。");
     expect(reporterPrompt).not.toContain(RAW_LOG_MARKER);
 
     const runDir = evidenceRunDir(target, "T-TEST-doc-010");
@@ -1039,12 +1098,13 @@ describe("executor / reporter pipeline E2E", () => {
 // worktree 経路の失敗と復旧。block イベントに残した stage checkpoint から reporter だけを
 // 再開し、executor を再実行しないことを確認する。claim / complete / block は runner が
 // specdojo CLI を再起動して記録するため、テストでは同じ CLI を実プロセスとして起動する。
-describe("executor / reporter pipeline resume E2E (worktree)", () => {
+describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPTIONS, () => {
   const specdojoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
   let fixture: PipelineFixture | undefined;
   let worktreeBase: string | undefined;
 
-  afterEach(() => {
+  afterEach(async () => {
+    await settleInFlightRuns();
     process.chdir(originalCwd);
     if (worktreeBase) rmSync(worktreeBase, { recursive: true, force: true });
     if (fixture) {
@@ -1054,7 +1114,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     }
     worktreeBase = undefined;
     fixture = undefined;
-  });
+  }, PIPELINE_TEST_TIMEOUT_MS);
 
   async function startReporterBlock(incomplete = false): Promise<void> {
     fixture = setupPipelineRepository();
@@ -1114,10 +1174,15 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
           if (event.task_id === taskId && event.type === "block") rmSync(join(eventsDir, name));
         }
       }
-      const planRef = join("execution", "exec", "plans", `${taskId}-plan.md`);
+      const planRef = relative(
+        current.repo,
+        recordPathForRead(current.executionPath, "plan", taskId),
+      );
       const rootPlan = readFileSync(join(current.repo, planRef), "utf8");
-      const editedPlan =
-        rootPlan + "\nPreserve prior work and apply the RKHR additional instructions.\n";
+      const editedPlan = rootPlan.replace(
+        "`共通規約 sha256:",
+        "Preserve prior work and apply the RKHR additional instructions.\n\n`共通規約 sha256:",
+      );
       writeFileSync(join(worktree, planRef), editedPlan, "utf8");
       const artifactRef = join("docs", "test", "doc.md");
       const priorArtifact = readFileSync(join(worktree, artifactRef), "utf8");
@@ -1165,12 +1230,25 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       expect(invocations[2].prompt).toContain("RKHR additional instructions");
       expect(invocations[2].prompt).toContain("`docs/test/doc.md`");
       expect(invocations[3].prompt).toContain("RKHR additional instructions");
+      for (const invocation of invocations.slice(2)) {
+        expect(invocation.prompt).toContain("記法・リンク規約（共通）");
+        expect(invocation.prompt).not.toContain("共通規約 sha256:");
+      }
       if (scenario === "incomplete") {
         expect(invocations[2].prompt).toContain("finish the remaining plan instructions");
       }
       expect(readFileSync(join(current.repo, artifactRef), "utf8")).toBe(
         priorWork + "# completed after resume\n",
       );
+      expect(readFileSync(join(current.repo, planRef), "utf8")).toBe(editedPlan);
+      const commitLog = git(
+        current.repo,
+        "show",
+        "--name-only",
+        "--format=",
+        `${lastIntegrationCommit(current.repo)}^2~1`,
+      );
+      expect(commitLog).toContain(planRef);
       expect(readResult(current, taskId)).toContain("status: complete");
       const state = JSON.parse(
         readFileSync(join(evidenceRunDir(current, taskId), "pipeline-state.json"), "utf8"),
@@ -1193,8 +1271,128 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     },
   );
 
+  it.each(["blocked", "doing"] as const)(
+    "transfers the claim and completes when --resume-from executor switches to a different --executor-by (%s)",
+    async (scenario) => {
+      await startReporterBlock();
+      const current = fixture!;
+      const base = worktreeBase!;
+      const worktree = onlyWorktreePath(base);
+      const taskId = "T-TEST-doc-010";
+      const block = readTaskEvents(current, taskId).find((event) => event.type === "block")!;
+      const stateRef = String(block.meta?.pipeline_state_ref);
+      if (scenario === "doing") {
+        const eventsDir = join(current.executionPath, "exec", "events");
+        for (const name of readdirSync(eventsDir)) {
+          if (!name.endsWith(".json")) continue;
+          const event = JSON.parse(readFileSync(join(eventsDir, name), "utf8")) as TaskEvent;
+          if (event.task_id === taskId && event.type === "block") rmSync(join(eventsDir, name));
+        }
+      }
+      const artifactRef = join("docs", "test", "doc.md");
+      const priorArtifact = readFileSync(join(worktree, artifactRef), "utf8");
+      const priorWork = priorArtifact + "\nPreserve this manual change across executor switch.\n\n";
+      writeFileSync(join(worktree, artifactRef), priorWork, "utf8");
+      const eventsBefore = readTaskEvents(current, taskId);
+      const args = [
+        "resume",
+        "--project",
+        "test",
+        "--task",
+        taskId,
+        "--resume-from",
+        "executor",
+        "--executor-by",
+        "cloud-expert-executor",
+        "--worktree-base",
+        base,
+      ];
+      await runExec([...args, "--dry-run"]);
+      expect(process.exitCode ?? 0).toBe(0);
+      expect(readTaskEvents(current, taskId)).toEqual(eventsBefore);
+
+      setBehavior(current.behaviorPath, {
+        "cloud-expert-executor": {
+          role: "executor",
+          kind: "resume_ok",
+          artifactPath: "docs/test/doc.md",
+        },
+      });
+      await runExec(args);
+      expect(process.exitCode ?? 0).toBe(0);
+
+      const invocations = readInvocations(current.logPath);
+      expect(invocations.map((item) => item.nickname)).toEqual([
+        "local-gemma-executor",
+        "local-gemma-reporter",
+        "cloud-expert-executor",
+        "local-gemma-reporter",
+      ]);
+      expect(readFileSync(current.parentValidationLogPath, "utf8")).toBe("run\nrun\n");
+      expect(readFileSync(join(current.repo, artifactRef), "utf8")).toBe(
+        priorWork + "# completed after resume\n",
+      );
+      expect(readResult(current, taskId)).toContain("status: complete");
+      const state = JSON.parse(
+        readFileSync(join(evidenceRunDir(current, taskId), "pipeline-state.json"), "utf8"),
+      );
+      expect(state.stages.executor).toMatchObject({
+        status: "succeeded",
+        actor: "cloud-expert-executor",
+        attempts: 2,
+      });
+      expect(state.stages.reporter.status).toBe("succeeded");
+      expect(state.stages.integrate.status).toBe("succeeded");
+      expect(existsSync(worktree)).toBe(false);
+      const planRef = relative(
+        current.repo,
+        recordPathForRead(current.executionPath, "plan", taskId),
+      );
+      const logWithoutEditedPlan = git(
+        current.repo,
+        "show",
+        "--name-only",
+        "--format=",
+        `${lastIntegrationCommit(current.repo)}^2~1`,
+      );
+      expect(logWithoutEditedPlan).not.toContain(planRef);
+
+      const taskEvents = readTaskEvents(current, taskId);
+      expect(taskEvents.filter((event) => event.type === "unblock")).toHaveLength(0);
+      expect(taskEvents.filter((event) => event.type === "release")).toEqual([
+        expect.objectContaining({
+          type: "release",
+          task_id: taskId,
+          by: "local-gemma-executor",
+          meta: expect.objectContaining({
+            pipeline_resume_released: "true",
+            replaced_by: "cloud-expert-executor",
+          }),
+        }),
+      ]);
+      expect(
+        taskEvents.find((event) => event.type === "claim" && event.by === "cloud-expert-executor"),
+      ).toMatchObject({
+        type: "claim",
+        task_id: taskId,
+        by: "cloud-expert-executor",
+        meta: {
+          pipeline_stage: "executor",
+          pipeline_state_ref: stateRef,
+          pipeline_resume_claimed: "true",
+          previous_actor: "local-gemma-executor",
+        },
+      });
+      expect(taskEvents.find((event) => event.type === "complete")).toMatchObject({
+        type: "complete",
+        task_id: taskId,
+        by: "cloud-expert-executor",
+      });
+    },
+  );
+
   it.each([
-    "integrate",
+    "integrate-succeeded",
     "executor-failed",
     "non-pipeline",
     "missing-plan",
@@ -1211,10 +1409,18 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       const statePath = join(worktree, String(block.meta?.pipeline_state_ref));
       const state = JSON.parse(readFileSync(statePath, "utf8"));
       let reason: string;
-      if (scenario === "integrate") {
+      if (scenario === "integrate-succeeded") {
         state.stages.reporter.status = "succeeded";
+        state.stages.integrate = {
+          status: "succeeded",
+          actor: "local-gemma-executor",
+          attempts: 1,
+          started_at: state.updated_at,
+          completed_at: state.updated_at,
+          artifact_ref: null,
+        };
         writeFileSync(statePath, JSON.stringify(state), "utf8");
-        reason = "integrate stage";
+        reason = "integration of run";
       } else if (scenario === "executor-failed") {
         state.stages.executor.status = "failed";
         writeFileSync(statePath, JSON.stringify(state), "utf8");
@@ -1222,7 +1428,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       } else if (scenario === "non-pipeline") {
         reason = "agent_pipeline task";
       } else if (scenario === "missing-plan") {
-        rmSync(join(worktree, "execution", "exec", "plans", `${taskId}-plan.md`));
+        rmSync(recordPathForRead(join(worktree, "execution"), "plan", taskId));
         reason = "plan or result is missing";
       } else if (scenario === "missing-evidence") {
         rmSync(join(worktree, String(state.stages.executor.artifact_ref)));
@@ -1312,13 +1518,13 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const executors = invocations.filter((item) => item.role === "executor");
     expect(executors).toHaveLength(2);
     expect(executors[1].prompt).toContain("resumes an interrupted attempt");
-    expect(executors[1].prompt).toContain("`pipeline-artifact.md`");
+    expect(executors[1].prompt).toContain("`docs/test/doc.md`");
     expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(1);
     expect(readFileSync(join(fixture.repo, "docs", "test", "doc.md"), "utf8")).toContain(
       "completed after resume",
     );
 
-    const evidenceRoot = join(fixture.repo, "execution", "exec", "evidence", "T-TEST-doc-010");
+    const evidenceRoot = join(fixture.repo, "execution", "runs", "schedule", "T-TEST-doc-010");
     const latestRun = readdirSync(evidenceRoot).sort().at(-1)!;
     const evidence = JSON.parse(
       readFileSync(join(evidenceRoot, latestRun, "evidence.json"), "utf8"),
@@ -1343,9 +1549,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       ],
     ]);
     process.chdir(fixture.repo);
-    const firstParentBefore = Number(
-      git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"),
-    );
+    const firstParentBefore = firstParentWithoutBookkeeping(fixture.repo).length;
 
     // 1回目: reporter がプロセス失敗し、executor evidence を残したまま blocked になる。
     setBehavior(fixture.behaviorPath, {
@@ -1363,9 +1567,10 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     ]);
 
     expect(process.exitCode).toBe(1);
-    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-      firstParentBefore,
-    );
+    expect(firstParentWithoutBookkeeping(fixture.repo)).toHaveLength(firstParentBefore);
+    // 失敗の後も、block のイベントと run の記録は記帳 commit に入り、root に残らない。
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(TRAILING_RECORDS_COMMIT_SUBJECT);
+    expect(uncommittedExecutionRecords(fixture.repo)).toEqual([]);
     const blockEvent = readTaskEvents(fixture, "T-TEST-doc-010").find(
       (event) => event.type === "block",
     );
@@ -1389,11 +1594,17 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
     expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(2);
     expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe("run\n");
-    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-      firstParentBefore + 1,
+    expect(firstParentWithoutBookkeeping(fixture.repo)).toHaveLength(firstParentBefore + 1);
+    const integration = lastIntegrationCommit(fixture.repo);
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s", integration)).toMatch(
+      /^exec\(T-TEST-doc-010\): /,
     );
-    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toMatch(/^exec\(T-TEST-doc-010\): /);
-    expect(git(fixture.repo, "rev-list", "--parents", "-1", "HEAD").split(" ")).toHaveLength(3);
+    expect(git(fixture.repo, "rev-list", "--parents", "-1", integration).split(" ")).toHaveLength(
+      3,
+    );
+    // 統合の後に書いた complete も記帳 commit に入る。
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(TRAILING_RECORDS_COMMIT_SUBJECT);
+    expect(uncommittedExecutionRecords(fixture.repo)).toEqual([]);
 
     const result = readResult(fixture, "T-TEST-doc-010");
     expect(result).toContain("status: complete");
@@ -1401,6 +1612,51 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     // 同一秒に書かれるイベントはファイル名順が確定しないため、種別の集合で確認する。
     const eventTypes = readTaskEvents(fixture, "T-TEST-doc-010").map((event) => event.type);
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
+  });
+
+  it("blocks non-target changes after reporter resume and resumes only integration after review", async () => {
+    await startReporterBlock();
+    const current = fixture!;
+    const base = worktreeBase!;
+    const worktree = onlyWorktreePath(base);
+    const taskId = "T-TEST-doc-010";
+    const rootHead = lastIntegrationCommit(current.repo);
+    const strayPath = "docs/test/undeclared.schema.yaml";
+    writeFileSync(join(worktree, strayPath), "type: object\n", "utf8");
+    setBehavior(current.behaviorPath, {});
+    const resumeArgs = ["resume", "--project", "test", "--task", taskId, "--worktree-base", base];
+
+    await runExec(resumeArgs);
+
+    expect(process.exitCode).toBe(1);
+    expect(lastIntegrationCommit(current.repo)).toBe(rootHead);
+    expect(existsSync(join(worktree, strayPath))).toBe(true);
+    const result = readWorktreeResult(base, current, taskId);
+    expect(result).toContain("status: blocked");
+    expect(result).toContain("agent-commit-scope");
+    expect(result).toContain(strayPath);
+    const state = readWorktreePipelineState(base, current, taskId);
+    expect(state.stages.reporter.status).toBe("succeeded");
+    expect(state.stages.integrate.status).toBe("failed");
+    const runDir = evidenceRunDir(
+      { ...current, executionPath: join(worktree, "execution") },
+      taskId,
+    );
+    expect(readFileSync(join(runDir, "integrate.log"), "utf8")).toContain(strayPath);
+    const beforeResume = readInvocations(current.logPath);
+    expect(beforeResume.map((item) => item.role)).toEqual(["executor", "reporter", "reporter"]);
+
+    // After reviewing the excluded change, only the runner-owned integration is retried.
+    rmSync(join(worktree, strayPath));
+    await runExec(resumeArgs);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    expect(readInvocations(current.logPath)).toEqual(beforeResume);
+    expect(readResult(current, taskId)).toContain("status: complete");
+    expect(readFileSync(join(current.repo, "docs/test/doc.md"), "utf8")).toContain(
+      "local-gemma-executor",
+    );
+    expect(existsSync(worktree)).toBe(false);
   });
 
   it("aborts a hook-rejected merge commit and resumes only integration", async () => {
@@ -1468,11 +1724,11 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const worktreeRunDir = join(
       worktreePath,
       executionRelativePath,
-      "exec",
-      "evidence",
+      "runs",
+      "schedule",
       "T-TEST-doc-010",
       readdirSync(
-        join(worktreePath, executionRelativePath, "exec", "evidence", "T-TEST-doc-010"),
+        join(worktreePath, executionRelativePath, "runs", "schedule", "T-TEST-doc-010"),
       )[0]!,
     );
     const integrateLog = readFileSync(join(worktreeRunDir, "integrate.log"), "utf8");
@@ -1499,7 +1755,152 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "pipeline-state.json"), "utf8"),
     ) as { stages: Record<string, { status: string; attempts: number }> };
     expect(mergedState.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
-  }, 30_000);
+  });
+
+  // PJR-ED0K: 統合の段で止まった task を、成果と記録を保ったまま executor の段からやり直す。
+  // 再開の前に統合先（root の現在ブランチ）の直しを exec branch へ取り込む。
+  it("resumes the executor after a failed integration, syncing the integration target", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+    const taskId = "T-TEST-doc-010";
+    const rejectMarker = join(fixture.repo, ".git", "reject-integration-commit");
+    const hookPath = join(fixture.repo, ".git", "hooks", "commit-msg");
+    writeFileSync(rejectMarker, "reject\n", "utf8");
+    writeFileSync(
+      hookPath,
+      [
+        "#!/bin/sh",
+        `if [ -f '${rejectMarker}' ] && git rev-parse --verify --quiet MERGE_HEAD >/dev/null; then`,
+        "  echo 'typecheck failed: schedule merge rejected' >&2",
+        "  exit 1",
+        "fi",
+        "exit 0",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    chmodSync(hookPath, 0o755);
+
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      taskId,
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode).toBe(1);
+    const worktree = onlyWorktreePath(worktreeBase);
+    const block = readTaskEvents(fixture, taskId).find((event) => event.type === "block")!;
+    expect(block.meta).toMatchObject({ pipeline_stage: "integrate" });
+    expect(block.msg).toContain(`exec resume --task ${taskId} --resume-from executor`);
+    const blockedResult = readWorktreeResult(worktreeBase, fixture, taskId);
+    expect(blockedResult).toContain("status: blocked");
+    expect(blockedResult).toContain("--resume-from executor");
+    const runDir = dirname(join(worktree, String(block.meta?.pipeline_state_ref)));
+    const evidenceBefore = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8"));
+
+    // 統合の失敗の後に統合先で直した変更を、再開した executor が受け取れることを確かめる。
+    rmSync(rejectMarker);
+    const fixPath = "develop-fix.md";
+    writeFileSync(join(fixture.repo, fixPath), "# develop fix\n", "utf8");
+    git(fixture.repo, "add", "--", fixPath);
+    git(fixture.repo, "commit", "--no-verify", "-m", "fix on the integration target");
+    setBehavior(fixture.behaviorPath, {
+      "local-gemma-executor": {
+        role: "executor",
+        kind: "resume_ok",
+        artifactPath: "docs/test/doc.md",
+      },
+    });
+    vi.mocked(process.stdout.write).mockClear();
+
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      taskId,
+      "--resume-from",
+      "executor",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const output = vi.mocked(process.stdout.write).mock.calls.flat().join("");
+    expect(output).toContain("[sync] project: merged");
+    expect(readInvocations(fixture.logPath).map((item) => item.role)).toEqual([
+      "executor",
+      "reporter",
+      "executor",
+      "reporter",
+    ]);
+    const mergedDoc = readFileSync(join(fixture.repo, "docs/test/doc.md"), "utf8");
+    expect(mergedDoc).toContain("# local-gemma-executor / ");
+    expect(mergedDoc.endsWith("# completed after resume\n")).toBe(true);
+    expect(readFileSync(join(fixture.repo, fixPath), "utf8")).toBe("# develop fix\n");
+    expect(readResult(fixture, taskId)).toContain("status: complete");
+    const finalRunDir = evidenceRunDir(fixture, taskId);
+    // 前回の executor の記録は attempt として残る（log の参照だけが attempt 名へ付け替わる）。
+    const archivedEvidence = JSON.parse(
+      readFileSync(join(finalRunDir, "evidence.attempt-1.json"), "utf8"),
+    );
+    expect(archivedEvidence).toMatchObject({
+      run_id: evidenceBefore.run_id,
+      stage: evidenceBefore.stage,
+      changes: evidenceBefore.changes,
+      final_message: evidenceBefore.final_message,
+    });
+    const state = JSON.parse(readFileSync(join(finalRunDir, "pipeline-state.json"), "utf8"));
+    expect(state.stages.executor).toMatchObject({ status: "succeeded", attempts: 2 });
+    expect(state.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
+    expect(
+      readTaskEvents(fixture, taskId).find((event) => event.type === "unblock")?.meta,
+    ).toMatchObject({ pipeline_stage: "executor" });
+    expect(existsSync(worktree)).toBe(false);
+  });
+
+  it("refuses the executor resume while the worktree is in the middle of a merge", async () => {
+    await startReporterBlock();
+    const current = fixture!;
+    const taskId = "T-TEST-doc-010";
+    const worktree = onlyWorktreePath(worktreeBase!);
+    const block = readTaskEvents(current, taskId).find((event) => event.type === "block")!;
+    const statePath = join(worktree, String(block.meta?.pipeline_state_ref));
+    const state = JSON.parse(readFileSync(statePath, "utf8"));
+    state.stages.reporter.status = "succeeded";
+    writeFileSync(statePath, JSON.stringify(state), "utf8");
+    const gitDir = git(worktree, "rev-parse", "--absolute-git-dir");
+    writeFileSync(join(gitDir, "MERGE_HEAD"), git(worktree, "rev-parse", "HEAD") + "\n", "utf8");
+    const invocationsBefore = readInvocations(current.logPath);
+    const eventsBefore = readTaskEvents(current, taskId);
+    vi.mocked(process.stdout.write).mockClear();
+
+    await runExec(["resume", "--project", "test", "--task", taskId, "--resume-from", "executor"]);
+
+    expect(process.exitCode).toBe(1);
+    expect(readInvocations(current.logPath)).toEqual(invocationsBefore);
+    expect(readTaskEvents(current, taskId)).toEqual(eventsBefore);
+    expect(existsSync(join(gitDir, "MERGE_HEAD"))).toBe(true);
+    expect(vi.mocked(process.stdout.write).mock.calls.flat().join("")).toContain(
+      "a merge is in progress in project",
+    );
+  });
 
   it("skips commit and merge when resuming after the branch was already merged", async () => {
     fixture = setupPipelineRepository();
@@ -1538,7 +1939,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(
       readWorktreePipelineState(worktreeBase, fixture, "T-TEST-doc-010").stages.integrate,
     ).toMatchObject({ status: "failed", attempts: 1 });
-    const mergedHead = git(fixture.repo, "rev-parse", "HEAD");
+    const mergedHead = lastIntegrationCommit(fixture.repo);
     git(fixture.repo, "worktree", "unlock", worktreePath);
 
     await runExec([
@@ -1552,7 +1953,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     ]);
 
     expect(process.exitCode ?? 0).toBe(0);
-    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(mergedHead);
+    expect(lastIntegrationCommit(fixture.repo)).toBe(mergedHead);
     expect(existsSync(worktreePath)).toBe(false);
     const invocations = readInvocations(fixture.logPath);
     expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
@@ -1562,7 +1963,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
         .map((event) => event.type)
         .sort(),
     ).toEqual(["block", "claim", "complete", "unblock"]);
-  }, 30_000);
+  });
 
   it("revalidates a resolved parent-validation failure before resuming the reporter", async () => {
     fixture = setupPipelineRepository();

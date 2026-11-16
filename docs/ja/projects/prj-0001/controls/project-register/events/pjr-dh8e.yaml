@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_98d8603209bc448d8734effab611eaa2
+  ts: "2026-11-12T13:24:55Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-defaults の rate\_limit\_policy.on\_non\_critical が、今の振る舞いに使われていない
+    - field: description
+      from: ""
+      to: "schema は on\\_non\\_critical.action: skip を必須にしているが、runWithRetry はクリティカルパスの内外にかかわらず次の候補へ切り替えて再試行し、この項目を読まない"
+    - field: input
+      from: ""
+      to: '["2026-11-12 の用語集 gl-setup の review（grade needs-work 87）で、利用枠制限時の方針の説明が exec 設定ガイドと実装に食い違うと指摘された。調べると schema の `on_non_critical` が実装（src/exec/run/agent.ts の runWithRetry、src/exec/agent-config.ts の型）から読まれていなかった","用語集は今の振る舞いに合わせて直した。schema の項目を消すか意味を書き直すかは、既存の設定ファイルへの影響があるため 0.8.0 では扱わず、次の版の候補とする（indie が 2026-11-12 に承認）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-12"
+    - field: due
+      from: ""
+      to: _TODO_

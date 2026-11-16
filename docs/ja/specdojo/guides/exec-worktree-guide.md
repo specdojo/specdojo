@@ -82,6 +82,8 @@ specdojo exec complete \
 
 `exec worktree` は独自の JSON や状態ファイルを作りません。必要な情報は毎回既存情報から導出します。
 
+worktree の配置は `--worktree-base`、project 設定の `run.worktree_base`、既定値 `../worktrees` の順で決まります。設定値と既定値の相対パスは主の作業ツリーを基準に解決するため、Job worktree 内からの起動でも同じ配置になります。明示的な `--worktree-base` の相対パスは起動元の作業ツリーが基準で、絶対パスはそのまま使います。統合先は起動元のブランチです。
+
 | 情報                | 導出元                                                     |
 | ------------------- | ---------------------------------------------------------- |
 | worktree名 / branch | project 修飾 task ID から `<slug>` と `exec/<slug>` を導出 |
@@ -136,7 +138,7 @@ specdojo exec worktree prepare \
 
 root にある無関係な未commit変更は checkpoint commit に含めません。stage 済み変更はパスを警告へ表示して保持し、plan、result、claim event などの checkpoint 対象と重複する場合だけ停止します。checkpoint commit が hook などで失敗した場合は、checkpoint 対象だけを unstage し、無関係な stage 済み変更は変更しません。checkpoint は exec branch だけに置かれるため、統合先の first-parent に `prepare execution` commit は増えません。root 側の plan、result、claim event は未commitのまま残り、task が `doing` であることは統合先からも見えます。これらの root 側の複製は `worktree merge` が統合の直前に解放し（HEAD の状態へ戻し）、merge が exec branch の commit 済み内容を持ち込みます。merge が失敗した場合は複製を元に戻します。
 
-作成または再利用した task worktree では、tracked `package-lock.json` ごとに `npm ci --include=dev` を実行し、root と独立 package の `node_modules` を worktree 内へ実体として配置します。依存関係を元 worktree と共有しないため、agent の sandbox は task worktree 内だけへの書き込みで build、typecheck、依存更新を実行できます。
+作成または再利用した task worktree では、tracked `package-lock.json` ごとに `npm ci --include=dev --prefer-offline --no-audit --no-fund` を実行し、root と独立 package の `node_modules` を worktree 内へ実体として配置します。依存関係を元 worktree と共有しないため、agent の sandbox は task worktree 内だけへの書き込みで build、typecheck、依存更新を実行できます。lock から入る依存は主の作業ツリーと同じになるため、npm cache にある tarball を再検証せずに使い、準備に要らない audit と fund の問い合わせは省きます（PJR-T01P）。
 
 過去のバージョンが作成した `node_modules` シンボリックリンクを検出した場合は、リンク先へ変更を加えずリンクだけを削除してから `npm ci` で置き換えます。install に失敗した場合は agent を起動せず、調査できるよう task worktree を保持したままエラー終了します。依存取得に必要な registry と npm cache は、`exec run` を起動する環境から利用できる必要があります。
 
@@ -202,19 +204,19 @@ specdojo exec worktree commit \
 
 commit 対象から除外する主なパス:
 
-| 除外対象                         | 理由                                           |
-| -------------------------------- | ---------------------------------------------- |
-| `tmp/`                           | agent の作業用一時ファイルは commit に含めない |
-| `exec/plans/`                    | plan は実行入力であり agent の成果物ではない   |
-| 対象 task 以外の `exec/results/` | 他タスクの記録を混ぜない                       |
-| `exec/events/`                   | event は root 側の状態管理で扱う               |
-| `generated/`                     | 再生成物を task 成果物に混ぜない               |
+| 除外対象                          | 理由                                           |
+| --------------------------------- | ---------------------------------------------- |
+| `tmp/`                            | agent の作業用一時ファイルは commit に含めない |
+| `plan.md`                         | plan は実行入力であり agent の成果物ではない   |
+| 対象 run 以外の `execution/runs/` | 他タスク・他 run の記録を混ぜない              |
+| `exec/events/`                    | event は root 側の状態管理で扱う               |
+| `generated/`                      | 再生成物を task 成果物に混ぜない               |
 
 対象 task の result は成果物変更と同じ commit に含めます。変更がない場合は commit を作成しません。
 
-上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は実践の型ディレクトリも）だけを commit し、許可リスト外の変更は `commit-scope:` 警告を出して worktree に残します。詳細は [exec設定ガイド](exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
+上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は実践の型ディレクトリも）だけを commit し、許可リスト外の変更が残っていれば `commit-scope: integration blocked` と対象パスを出力し、commit・統合・通常の worktree 撤去を止めます。対象パスと次のアクションは result の申し送りと `integrate.log` に残します。詳細は [[specdojo:exec-config-guide|exec 設定ガイド]] の `agent 権限とプロンプトインジェクション対策` を参照します。
 
-登録簿由来（`origin: register`）のタスクは許可リストを使わず、上表の除外だけを適用して作業ツリーの差分を commit します。HEAD に無い新規ファイルは、リポジトリ最上位、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）、HEAD で追跡済みの最上位ディレクトリ、対象 task の result と evidence、plan の `targets` から解決した成果物に置かれたものを commit します。`tmp/` 配下のファイルは常に commit 対象から除外します。それ以外の未追跡ディレクトリに置かれた新規ファイルは `commit-scope:` 警告を出して worktree に残し、pipeline 実行では run の `integrate.log` にも記録します。最上位に追加した新規ファイルを commit した場合は、統合ログと result の申し送りに「最上位に追加したファイル」として列挙します。既存ファイルの変更と削除、人間の作業（`execution: human`）は従来どおり commit します。`ready` への昇格検査は commit 対象のパスだけに適用するため、commit しない一時ファイルは統合を止めません。
+登録簿由来（`origin: register`）のタスクは許可リストを使わず、上表の除外だけを適用して作業ツリーの差分を commit します。HEAD に無い新規ファイルは、リポジトリ最上位、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）、HEAD で追跡済みの最上位ディレクトリ、対象 task の result と evidence、plan の `targets` から解決した成果物に置かれたものを commit します。`tmp/` 配下のファイルは常に commit 対象から除外します。それ以外の未追跡ディレクトリに置かれた新規ファイルは、上記の停止ガードの対象です。最上位に追加した新規ファイルを commit した場合は、統合ログと result の申し送りに「最上位に追加したファイル」として列挙します。既存ファイルの変更と削除、人間の作業（`execution: human`）は従来どおり commit します。`ready` への昇格検査は commit 対象のパスだけに適用するため、`tmp/` 配下の一時ファイルの `ready` は統合を止めません。
 
 ### 2.5. merge
 
@@ -233,9 +235,12 @@ specdojo exec worktree merge \
 | exec branch 側に未統合 commit がある             | merge する差分が存在する        |
 | task worktree に commit 対象の未commit変更がない | result / 成果物を取りこぼさない |
 | 現在ブランチが exec branch ではない              | 自分自身へ merge しない         |
+| 統合先の index に stage 済み変更がない           | 別の操作の stage を保持する     |
 | 現在の未commit変更と merge 対象パスが重複しない  | 手作業の変更を壊さない          |
 
 `prepare` が root に残した plan、result、claim event の複製は、重複判定の前に解放します（exec branch の commit 済み内容が merge で入るため）。それ以外の未commit変更が merge 対象パスと重複する場合は停止します。
+
+stage 済み変更は merge 対象との重複にかかわらず、複製の解放前に対象パスと復旧手順を示して停止します。表示された worktree で commit するか、各パスに `git restore --staged -- <path>` を実行して本文を残してから再開します。複数リポジトリの統合も、いずれかの統合先に stage 済み変更があれば全体の事前検査で停止します。
 
 通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
 
@@ -246,11 +251,13 @@ register 項目の統合で競合したのが項目自身の記帳ファイル�
 - 個票は exec branch 側を基準にし、統合先だけにあるイベントが変えた `type` / `priority` / `owner` / `due` をイベントから再構築します。同じフィールドを後から exec branch 側のイベントが変えている場合は、exec branch 側を残します。タイトル・説明（本文）、状態遷移に伴うフィールド、登録日時はイベントから元の値を復元できないため再構築しません。
 - plan・result・登録簿（`pjr-index.md`）は exec branch 側（再開後の最新の記帳）の内容で解決します。
 
+Schedule タスクの統合で、run の終わりの記帳 commit が先に統合先へ入れた plan・result・claim event と、exec branch 側の同じファイルが両側の追加として競合した場合も、その task の run の記録（`runs/schedule/<task-id>/` 配下）と checkpoint の複製に限って exec branch 側の内容で解決します（[Schedule実行運用ガイド](schedule-operation-guide.md) の「実行記録の記帳」を参照）。
+
 上記以外の競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名、最初のエラー行、Vitest の末尾にある `FAIL`・`Test Files`・`Tests` の集計行を記録します。executor/reporter pipeline では checkpoint と統合段の commit / merge が失敗したときの stdout / stderr 全文と abort 結果を秘匿処理し、同じ run の `integrate.log` に保存します。
 
 register 項目を `waiting` へ遷移したあとは、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge します。root の `wait` commit に保存済みの個票・イベント・plan・result は、worktree に残る同内容の未 commit 変更を解放してから merge し、これらの記帳パスの競合だけを `wait` commit 側で解決します。それ以外の競合は自動解決せずに同期 merge を中断します。これにより、再開時の merge-base を進めながら、別項目が統合先へ追加した成果を exec branch 側の削除として扱わないようにします。
 
-hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。親検証の失敗を成果物側で修正する必要がある register 項目は `--resume-from executor` を併用します。保護対象の設定変更を人が統合先へ適用した場合も、通常の `--resume` が統合先を exec branch と worktree へ取り込んでから executor を再開するため、worktree で手動 merge しません。
+hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。親検証の失敗を成果物側で修正する必要がある register 項目は `--resume-from executor` を併用します。統合段で止まった Schedule タスクの成果物を直す場合は `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor` を実行します。統合先を exec branch と worktree へ取り込んでから executor を再実行するため、worktree で `git merge` や `git merge --abort` を実行しません。保護対象の設定変更を人が統合先へ適用した場合も、通常の `--resume` が統合先を exec branch と worktree へ取り込んでから executor を再開するため、worktree で手動 merge しません。
 
 runner は `git merge --abort` の前に `git update-index -q --refresh` を実行します。同じ作業ツリーで動く routine などがファイルの stat だけを変えた場合でも、`not uptodate` で abort が失敗しないようにするためです。自動の `git merge --abort` 自体が失敗した場合は、runner が標準エラーへ手動復旧を案内します。案内された root worktree で状態と失敗原因を確認し、ロックファイルや Git プロセスなどの原因を解消してから次を実行してください。abort が完了するまでは commit や統合再開を行いません。
 
@@ -303,6 +310,8 @@ specdojo exec worktree prune --project <project-id>
 ## 3. complete / blockの記録
 
 分割コマンドは状態 event を更新しないため、成果物確認後に人が明示的に `complete` または `block` を実行します。
+
+人が書いたイベントは、書いた人が成果物と合わせて commit します。runner の記帳 commit（`exec run` / `exec resume` / `exec cycle` の終わり）が拾うのは、`by` が `.specdojo/agent-members.yaml` の agent のイベントだけです。
 
 ```bash
 specdojo exec complete \

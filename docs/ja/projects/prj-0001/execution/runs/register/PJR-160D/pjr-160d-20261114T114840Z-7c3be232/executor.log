@@ -1,0 +1,113 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "対象外変更で統合を停止する仕様を維持し、再開 E2E の fixture と停止ログの保存先を修正しました。回帰テストを追加し、個票を更新しました。修正後の統合テストは親 runner の検証に委ねています。",
+  "handoff": [
+    "前回失敗した再開 E2E 5 件では、fake executor が plan の対象外の pipeline-artifact.md を作っていた。成功系 fixture を宣言済みの docs/test/doc.md に揃え、既存の stage 再利用・試行数・commit 数の期待を維持した。対象外変更の停止と、確認後に統合だけを再開する回帰テストを追加した。",
+    "停止ログの既定パスを選択中の result と同じ run に修正した。task ID と run ID が異なる場合も、別 run のログを作って再開を妨げない。",
+    "bootstrap / maintenance の catalog・schema・型メニューの一括許可は採用しない。対象外の変更は、理由・対象パス・提案差分・必要な検証を個票と報告へ記載する。未解決 ID の警告は個別パス解決の失敗を示し、approach のディレクトリ許可とは独立する。",
+    "親検証との二重実行禁止に従い、統合テストの個別実行も行っていない。親 runner の test-integration で pipeline-e2e.integration.test.ts と worktree-ops.integration.test.ts を含む修正後の結果を確認する。統合後は PJR-JSEY で実 agent の start から review までを確認してから close する。",
+    "CHANGELOG 文案（不具合修正）: executor が commit 対象外の変更を残した場合、schedule 由来のタスクでも統合と worktree 撤去を停止し、対象パスと次のアクションを result とログへ記録する。型の対象 ID を解決できない場合の警告を、approach によるディレクトリ許可と整合する説明に修正する。"
+  ],
+  "validations": [
+    {
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-worktree-guide.md src/exec/protection-handoff.ts src/exec/repo-integration.ts src/exec/run/register-worktree.ts src/exec/run/schedule-task.ts src/exec/worktree-ops-commit.ts src/exec/worktree-ops-lifecycle.ts src/exec/worktree-ops-merge.ts src/exec/worktree-ops.ts tests/src/exec/worktree-ops.integration.test.ts tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "passed",
+      "summary": "成果物 13 ファイルを整形した。個票の最終追記後も再整形済み。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。既存の re-export と未作成文書への参照に関する警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証が終了コード 0 で完了した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検査対象の staged ファイルは 0 件、検出 0 件。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor が編集した YAML 成果物はない。",
+      "reason": "今回の executor 成果物は Markdown と TypeScript。開始時から存在する登録簿イベント YAML は runner 管理の変更であり、編集していない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-160d-commit-scope-excluded-changes-fix.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md"
+    },
+    {
+      "target": "src/exec/protection-handoff.ts",
+      "status": "changed",
+      "path": "src/exec/protection-handoff.ts"
+    },
+    {
+      "target": "src/exec/repo-integration.ts",
+      "status": "changed",
+      "path": "src/exec/repo-integration.ts"
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts"
+    },
+    {
+      "target": "src/exec/run/schedule-task.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-task.ts"
+    },
+    {
+      "target": "src/exec/worktree-ops-commit.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-commit.ts"
+    },
+    {
+      "target": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-lifecycle.ts"
+    },
+    {
+      "target": "src/exec/worktree-ops-merge.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops-merge.ts"
+    },
+    {
+      "target": "src/exec/worktree-ops.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-ops.ts"
+    },
+    {
+      "target": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/worktree-ops.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T17:04:56Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-bes-index-005",
+  "by": "opus-executor",
+  "msg": "project: git commit failed: catalog-validate: ERROR: /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-bes-index-005/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-index: based_on 'cdfd-overview' (prj-0001:cdfd-overview) が depends_on の推移閉包に含まれていません（根拠ドキュメントは先行成果物である必要があります）; integrated repositories: none; not integrated: project",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-005/T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-bes-index-005-20261113T155150Z-4c2aa06a"
+  }
+}

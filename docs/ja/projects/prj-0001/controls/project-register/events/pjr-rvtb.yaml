@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_903fe986838d4b8e898dbcc8a190a6f3
+- v: 1
+  id: reg_a1e1bd1ea7e94b13bab8e292e96dee92
+  ts: "2026-11-11T12:06:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 試行の結果は PJR-SJQC で採用され、文書はその後の書き直しに引き継がれた。見た目の確認は採用後の文書で行うため、この項目は close する
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: 全体概要の CDFD の縦向きと入口のイベントを試し、PJR-SJQC の案 E で採用した。rulebook は PJR-VRVP で縦向きに直した
+  previous_event_id: reg_87e5c553756940fa9ca67ceef6d93dda

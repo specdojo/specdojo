@@ -1,0 +1,129 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_32a642a713f64177adc2607f1f36add4
+  ts: "2026-11-08T00:33:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 概念クラス図（ccd）の型を、実装と同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: 概念クラス図の型を手入れする。属性は主キーだけにし、そのほかの属性は bdd を参照する。図と本文は関連の意味・多重度・役割名に絞る
+    - field: input
+      from: ""
+      to: '["方針（indie が決定、2026-11-08）: 属性は主キーだけにし、そのほかの属性は bdd を参照する。図と本文は関連の意味・多重度・役割名に絞る。","rulebook にあわせて ccd-sample も揃える。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:ccd-mermaid-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-HMV6"]'
+- v: 1
+  id: reg_35e3b806c9384a92b6d61da2dc56bdb9
+  ts: "2026-11-08T02:06:57Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_32a642a713f64177adc2607f1f36add4
+- v: 1
+  id: reg_820d38b42a7a42ed8dc236dd0d680a5d
+  ts: "2026-11-08T02:22:48Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm"
+  previous_event_id: reg_35e3b806c9384a92b6d61da2dc56bdb9
+- v: 1
+  id: reg_63b81841ae1241cda521c1a857bc56f1
+  ts: "2026-11-08T03:35:50Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_820d38b42a7a42ed8dc236dd0d680a5d
+- v: 1
+  id: reg_0dfe00a55b3542ddb7b00f5b8126a1ee
+  ts: "2026-11-08T03:47:09Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_63b81841ae1241cda521c1a857bc56f1
+- v: 1
+  id: reg_9e1b9ace23b549509c4089471bbf00fb
+  ts: "2026-11-08T03:52:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。lint-fm の失敗と再開前の CHANGELOG の衝突を直して再開した。差分・個票の対応結果・親の検証を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: ccd-mermaid-rulebook を属性は主キーだけ・関連の意味と多重度とその業務上の根拠に絞る形に改め、ccd-sample を新しい規則の完成例にした
+  previous_event_id: reg_0dfe00a55b3542ddb7b00f5b8126a1ee

@@ -1,0 +1,136 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e024cf5e42344253b43d69d6fe118104
+  ts: "2026-11-03T23:08:14Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 文書サイトの対話の表示の改善を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイトで対話を吹き出しと TUI の見た目で表示する
+    - field: description
+      from: ""
+      to: docs-site に chat 言語のコードブロックを吹き出し（右に利用者、左にオーケストレーター）と TUI 風の見た目で描画する処理を足し、Quick Start ガイドの対話 7 か所を chat に変える
+    - field: input
+      from: ""
+      to: '["Quick Start ガイドの対話は 7 か所の text のコードブロックで、行頭の「あなた:」「オーケストレーター:」と字下げの続き行で書かれ、対話に見えない（2026-11-04）","利用者の判断: 案 A（コードブロックの言語を chat に変え、中身は今の書き方のまま、文書サイトで吹き出しに描画する。GitHub などでは今と同じコードブロックとして読める）を採り、同じ処理で chat tui の TUI 風の見た目（利用者は > の入力行、オーケストレーターは ● で始まる出力、暗い背景）も選べるようにする（2026-11-04）","docs-site の .vitepress/config.mts の markdown.config には、mermaid のコードブロックを HTML 生成時に差し替える処理があり、同じ仕組みで足せる（2026-11-04）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs-site
+- v: 1
+  id: reg_bd1ebfcf70f5456cb097e09f2b348aff
+  ts: "2026-11-03T23:09:11Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e024cf5e42344253b43d69d6fe118104
+- v: 1
+  id: reg_72f52c34589c481babf9c2907bf62295
+  ts: "2026-11-03T23:32:43Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: typecheck"
+  previous_event_id: reg_bd1ebfcf70f5456cb097e09f2b348aff
+- v: 1
+  id: reg_9cced962fa294040bdda5b4b3a77303b
+  ts: "2026-11-03T23:34:01Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: typecheck"
+      to: "-"
+  previous_event_id: reg_72f52c34589c481babf9c2907bf62295
+- v: 1
+  id: reg_56220cb1bec1430da567f44d2b757040
+  ts: "2026-11-03T23:48:48Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9cced962fa294040bdda5b4b3a77303b
+- v: 1
+  id: reg_34f873b4fc3d4f80ab9ca64b075f83cc
+  ts: "2026-11-04T10:21:32Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: テスト 13 件と文書サイトのビルドが通り、生成 HTML で 11 か所の吹き出しを確かめた。利用者が見た目を確認して承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: 文書サイトで chat のコードブロックを吹き出しと TUI の見た目で描画できるようにし、Quick Start ガイドの対話 11 か所を吹き出しにした
+  previous_event_id: reg_56220cb1bec1430da567f44d2b757040
+- v: 1
+  id: reg_ca786548b91e4ab8a7fbb955f8b5bdfc
+  ts: "2026-11-04T10:23:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: fields updated
+  changes:
+    - field: description
+      from: docs-site に chat 言語のコードブロックを吹き出し（右に利用者、左にオーケストレーター）と TUI 風の見た目で描画する処理を足し、Quick Start ガイドの対話 7 か所を chat に変える
+      to: docs-site に chat 言語のコードブロックを吹き出し（右に利用者、左にオーケストレーター）と TUI 風の見た目で描画する処理を足し、Quick Start ガイドの対話 11 か所を chat に変える
+  previous_event_id: reg_34f873b4fc3d4f80ab9ca64b075f83cc

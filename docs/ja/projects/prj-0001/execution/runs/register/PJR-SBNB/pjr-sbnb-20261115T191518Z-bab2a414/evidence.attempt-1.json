@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SBNB",
+  "run_id": "pjr-sbnb-20261115T191518Z-bab2a414",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T19:18:00.424Z",
+    "completed_at": "2026-11-15T19:25:01.925Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-sbnb.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sbnb-ifx-index-schema-rename.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/ifx-index-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/ifx-index-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/esil.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/ifx-index.schema.yaml",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sbnb-ifx-index-schema-rename.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/ifx-index-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/ifx-index-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/esil.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/ifx-index.schema.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../020-external-interface-specs/ifx-index.yaml    |   2 +-\n .../pjr-sbnb-ifx-index-schema-rename.md            |  33 ++++-\n docs/ja/specdojo/recipes/ifx-index-recipe.md       |   2 +-\n docs/ja/specdojo/rulebooks/ifx-index-rulebook.md   |  26 ++--\n docs/ja/specdojo/samples/ifx-index-sample.yaml     |   2 +-\n docs/ja/specdojo/templates/ifx-index-template.yaml |   2 +-\n docs/specdojo/schemas/v1/esil.schema.yaml          | 148 +--------------------\n 7 files changed, 51 insertions(+), 164 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/ifx-index.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "passed",
+      "summary": "2 ファイルとも valid"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/esil.schema.yaml --data docs/ja/specdojo/samples/ifx-index-sample.yaml",
+      "status": "passed",
+      "summary": "非推奨の別名でも valid。誤った tmp の YAML は別名でも invalid と判定された"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js rulebook-schema-enums",
+      "status": "passed",
+      "summary": "ifx-index-rulebook の enum 網羅が valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/specdojo/schemas/v1/ifx-index.schema.yaml docs/specdojo/schemas/v1/esil.schema.yaml docs/ja/specdojo/rulebooks/ifx-index-rulebook.md docs/ja/specdojo/recipes/ifx-index-recipe.md docs/ja/specdojo/samples/ifx-index-sample.yaml docs/ja/specdojo/templates/ifx-index-template.yaml docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+      "status": "passed",
+      "summary": "rulebook と個票を --write で整形したあと、変更したファイルはすべて整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "終了コード 0、違反なし"
+    }
+  ],
+  "final_message": "schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を追記した。保護ファイル .vscode/settings.json の cSpell 語 esil だけは executor から編集できず、grep の完了条件が残っている。",
+  "completion_status": "incomplete",
+  "handoff": [
+    "保護ファイルへの変更案: `.vscode/settings.json` の `cSpell.words` から `\"esil\",` の行を削除する。これが済むまで、履歴を除く `grep -rn esil` はこの 1 件に一致する。",
+    "決定: シェルからの削除が許可されなかったため、古い `docs/specdojo/schemas/v1/esil.schema.yaml` は削除せず、`$ref: \"ifx-index.schema.yaml\"` と `deprecated: true` だけの非推奨の別名にした。ほかのプロジェクトの modeline を壊さず、内容の複製もない。移行期間が過ぎたら削除する。",
+    "決定: 改名で rulebook と schema がファイル名の stem で組になり、`validate:schema:rulebook-enums` の対象になった（改名直後は失敗した）。ready の rulebook `specdojo:ifx-index-rulebook` に `status`・`direction`・`kind`・`format` の値と選び方を追記し、「列挙値は schema へ委譲」の文を改めた。ready の文書の本文変更なので確認してほしい。",
+    "決定: `id` の pattern から古い略号の接頭辞の形式を除いた（リポジトリ内で未使用）。ほかのプロジェクトで使っていれば `ifx-index` 系へ改める必要がある。CHANGELOG に書く事項は個票の「CHANGELOG に書く事項」の節にある。",
+    "残課題: `ifx-api`・`ifx-msg`・`ifx-cmd`・`ifx-file` の rulebook・recipe と `dct-external-interface-specs.yaml` に大文字の略号 ESIL が残る。schema 名の範囲外なので、必要なら別の項目で扱う。"
+  ],
+  "block_reason": "executor reported incomplete: schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を追記した。保護ファイル .vscode/settings.json の cSpell 語 esil だけは executor から編集できず、grep の完了条件が残っている。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-SBNB/pjr-sbnb-20261115T191518Z-bab2a414/executor.attempt-1.log",
+      "bytes": 6514,
+      "truncated": false
+    }
+  ]
+}

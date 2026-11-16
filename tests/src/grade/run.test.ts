@@ -24,7 +24,11 @@ import {
   readGradePipelineState,
   recordGradePipelineStage,
 } from "../../../src/grade/pipeline-state.js";
-import { readGradeResultForDocument } from "../../../src/grade/result.js";
+import { gradeContentHash, readGradeResultForDocument } from "../../../src/grade/result.js";
+import { renderGradePlan } from "../../../src/grade/plan.js";
+import { validateGradeResultForDocument } from "../../../src/grade/markdown.js";
+import { ensureReviewGrade, reviewGradeFreshness } from "../../../src/review/grade.js";
+import { releaseLock, tryAcquireLock } from "../../../src/shared/cross-process-lock.js";
 import {
   GRADE_RUN_DOCUMENT,
   GRADE_RUN_MARKERS,
@@ -61,6 +65,143 @@ afterEach(() => {
 });
 
 describe("native grade run", () => {
+  it("fails by default when busy, and waits for the same project lock when requested", async () => {
+    const lockPath = join(root, "execution/grade/generated/run.lock");
+    mkdirSync(join(root, "execution/grade/generated"), { recursive: true });
+    const lock = tryAcquireLock(lockPath, { actor: "other-grader" });
+    expect(lock).not.toBeNull();
+    try {
+      await expect(grade(options)).rejects.toThrow("grade run is busy");
+      const waiting = grade({ ...options, ifBusy: "wait", isolatePipelineState: true });
+      expect(executePlan).not.toHaveBeenCalled();
+      releaseLock(lock!);
+      await expect(waiting).resolves.toMatchObject({ documents: [{ status: "complete" }] });
+      expect(executePlan).toHaveBeenCalledTimes(1);
+      expect(existsSync(lockPath)).toBe(false);
+    } finally {
+      if (lock) releaseLock(lock);
+    }
+  });
+
+  it("rejects an unknown busy policy without starting an agent", async () => {
+    await expect(grade({ ...options, ifBusy: "skip" as "wait" })).rejects.toThrow(
+      "Invalid --if-busy",
+    );
+    expect(executePlan).not.toHaveBeenCalled();
+  });
+
+  it.each(["top-level.yaml", "external.yml"])(
+    "grades YAML %s and reuses its result in review",
+    async (name) => {
+      const path = `docs/ja/specdojo/samples/${name}`;
+      const content = name.endsWith(".yml")
+        ? "---\nopenapi: 3.1.0\nx-spec-meta:\n  id: test:yaml\n  type: api\n  status: draft\n  rulebook: none\npaths: {}\n"
+        : "# source\nid: test:yaml\ntype: data\nstatus: draft\nrulebook: none\nfields: []\n";
+      mkdirSync(join(root, "docs/ja/specdojo/samples"), { recursive: true });
+      writeFileSync(join(root, path), content);
+      const reviewInvoke = vi.fn().mockResolvedValue({ exitCode: 0, stderr: "" });
+      expect(
+        await ensureReviewGrade({
+          taskId: "REVIEW-YAML",
+          projectId: "test",
+          subjectPath: path,
+          target: "kata",
+          repoRoot: root,
+          dryRun: false,
+          invoke: reviewInvoke,
+        }),
+      ).toMatchObject({ action: "executed" });
+      expect(reviewInvoke).toHaveBeenCalledWith(
+        process.execPath,
+        expect.arrayContaining(["grade", "run", "--path", path]),
+        root,
+      );
+      expect(discoverGradeTargets({ target: "kata", project: "test" })).toContain(join(root, path));
+      const plan = renderGradePlan({
+        target: "kata",
+        projectId: "test",
+        path,
+        viewpoints: loadViewpoints("test"),
+        embedDocuments: true,
+      });
+      expect(plan).toContain(`1 | ${content.split("\n")[0]}`);
+      expect(plan).toContain("元の YAML ファイルの1始まりの行番号");
+      executePlan.mockResolvedValue({
+        actor: "actual-grader",
+        command: "test",
+        execution: {
+          result: "success",
+          exitCode: 0,
+          stdout:
+            "[VIEWPOINT vp-content]\nLEVEL: 3\nFINDING minor line=2: 内容を確認する。\n[END VIEWPOINT]\n",
+          stderr: "",
+        },
+      });
+      const result = await grade({ ...options, paths: [path], kind: "sample" });
+      expect(result.documents[0]?.status).toBe("complete");
+      const stored = readGradeResultForDocument({ documentPath: path, project: "test" });
+      expect(stored).toMatchObject({
+        document: "test:yaml",
+        content_hash: gradeContentHash(content),
+        findings: [{ line: 2, anchor: content.split("\n")[1] }],
+      });
+      expect(readFileSync(join(root, path), "utf8")).toBe(content);
+      expect(validateGradeResultForDocument({ path, target: "kata", project: "test" })).toEqual([]);
+      expect(
+        discoverGradeTargets({ target: "kata", project: "test", paths: [path], changedOnly: true }),
+      ).toEqual([]);
+      expect(
+        reviewGradeFreshness({ subjectPath: path, projectId: "test", rootDir: root }).state,
+      ).toBe("fresh");
+      const invoke = vi.fn();
+      expect(
+        await ensureReviewGrade({
+          taskId: "REVIEW-YAML",
+          projectId: "test",
+          subjectPath: path,
+          target: "kata",
+          repoRoot: root,
+          dryRun: false,
+          invoke,
+        }),
+      ).toEqual({ action: "skipped" });
+      expect(invoke).not.toHaveBeenCalled();
+      recordGradePipelineStage({
+        target: "kata",
+        project: "test",
+        path,
+        runId: "retry",
+        stage: 1,
+        stageTotal: 1,
+        maxFailures: 3,
+        status: "failed",
+      });
+      expect(readGradePipelineState({ target: "kata", project: "test", path })?.content_hash).toBe(
+        gradeContentHash(content),
+      );
+      writeFileSync(join(root, path), `${content}\n`);
+      expect(readGradePipelineState({ target: "kata", project: "test", path })).toBeUndefined();
+      expect(
+        reviewGradeFreshness({ subjectPath: path, projectId: "test", rootDir: root }).state,
+      ).toBe("stale");
+    },
+  );
+
+  it("skips YAML without metadata with a reason", () => {
+    const path = "docs/ja/specdojo/rulebooks/unrelated.yaml";
+    writeFileSync(join(root, path), "settings: {}\n");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(discoverGradeTargets({ target: "kata", project: "test", paths: [path] })).toEqual([]);
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining("YAML grade target requires metadata id"),
+      );
+      expect(warn).not.toHaveBeenCalledWith(expect.stringContaining("Markdown frontmatter"));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
   it("forwards CLI executor and exec-defaults options to the agent runtime", async () => {
     const resolveActor = vi.fn().mockReturnValue("actual-grader");
     const program = new Command();
@@ -76,6 +217,7 @@ describe("native grade run", () => {
       GRADE_RUN_DOCUMENT,
       "--run-id",
       "cli-options",
+      "--isolate-pipeline-state",
       "--by",
       "grader-alias",
       "--exec-defaults",
@@ -84,6 +226,7 @@ describe("native grade run", () => {
     expect(resolveActor).toHaveBeenCalledWith(
       expect.objectContaining({
         by: "grader-alias",
+        isolatePipelineState: true,
         execDefaultsPath: "custom-defaults.yaml",
       }),
     );
@@ -204,6 +347,61 @@ describe("native grade run", () => {
     expect(
       readGradePipelineState({ target: "kata", project: "test", path: GRADE_RUN_DOCUMENT }),
     ).toMatchObject({ stage_failed: 1 });
+  });
+
+  it("isolates retry limits and completion from shared and other run state", async () => {
+    const subject = { target: "kata" as const, project: "test", path: GRADE_RUN_DOCUMENT };
+    const shared = recordGradePipelineStage({
+      ...subject,
+      runId: "shared-failure",
+      stage: 1,
+      stageTotal: 1,
+      maxFailures: 1,
+      status: "failed",
+    });
+    const request = {
+      ...options,
+      isolatePipelineState: true,
+      workDir: "execution/grade/generated/custom-review",
+      maxStageFailures: 2,
+    };
+    const directory = `${request.workDir}/pipeline`;
+    executePlan.mockRejectedValueOnce(new Error("agent failed"));
+    await expect(grade(request)).rejects.toThrow(/agent failed/);
+    expect(readGradePipelineState({ ...subject, directory })).toMatchObject({
+      stage_failed: 1,
+      consecutive_failures: 1,
+    });
+    executePlan.mockResolvedValueOnce({
+      actor: "actual-grader",
+      command: "test",
+      execution: { result: "success", exitCode: 0, stdout: "invalid analysis", stderr: "" },
+    });
+    await expect(grade(request)).rejects.toThrow(/grade run incomplete/);
+    expect(readGradePipelineState({ ...subject, directory })).toMatchObject({
+      consecutive_failures: 2,
+    });
+    await expect(grade(request)).rejects.toThrow(/stage failure limit reached/);
+    expect(executePlan).toHaveBeenCalledTimes(2);
+    // A new review run starts independently, even for the same document.
+    await grade({ ...options, runId: "another-review", isolatePipelineState: true });
+    expect(readGradePipelineState(subject)).toEqual(shared);
+    expect(readGradePipelineState({ ...subject, directory })?.consecutive_failures).toBe(2);
+    expect(executePlan).toHaveBeenCalledTimes(3);
+  });
+
+  it("removes only its private failure state when an isolated run resumes successfully", async () => {
+    const request = { ...options, isolatePipelineState: true };
+    const subject = { target: "kata" as const, project: "test", path: GRADE_RUN_DOCUMENT };
+    const directory = `execution/grade/generated/runs/${request.runId}/pipeline`;
+    executePlan.mockRejectedValueOnce(new Error("interrupted"));
+    await expect(grade(request)).rejects.toThrow(/interrupted/);
+    expect(readGradePipelineState(subject)).toBeUndefined();
+    expect(readGradePipelineState({ ...subject, directory })?.stage_failed).toBe(1);
+    await grade(request);
+    expect(readGradePipelineState({ ...subject, directory })).toBeUndefined();
+    await grade(request);
+    expect(executePlan).toHaveBeenCalledTimes(2);
   });
 
   it("rejects work directories outside the repository", async () => {

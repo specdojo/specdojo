@@ -249,27 +249,27 @@ agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdか
 
 `blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
 
-| 状況                                                                             | コマンド                                         | 結果                                                               |
-| -------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------ |
-| 中断で `doing` のまま                                                            | `exec resume`                                    | 既存 worktree 上で継続                                             |
-| pipeline の reporter で `blocked`                                                | `exec resume --task <id>`                        | executor evidence から再開                                         |
-| reporter で `blocked`、または中断で `doing` の pipeline を executor からやり直す | `exec resume --task <id> --resume-from executor` | 既存 worktree と変更を引き継ぎ、executor → reporter → 統合を再実行 |
-| pipeline の統合段で `blocked`                                                    | `exec resume --task <id>`                        | agent を起動せず統合だけ再開                                       |
-| 障害を解消し同じ試行を続ける                                                     | `exec unblock`                                   | `blocked -> doing`                                                 |
-| 試行を破棄して最初からやり直す                                                   | `exec release`                                   | `blocked -> todo`                                                  |
-| 着手前のタスクを恒久的に中止する                                                 | `exec cancel`                                    | `todo -> cancelled`                                                |
+| 状況                                                                                    | コマンド                                         | 結果                                                               |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------ |
+| 中断で `doing` のまま                                                                   | `exec resume`                                    | 既存 worktree 上で継続                                             |
+| pipeline の reporter で `blocked`                                                       | `exec resume --task <id>`                        | executor evidence から再開                                         |
+| reporter・統合段で `blocked`、または中断で `doing` の pipeline を executor からやり直す | `exec resume --task <id> --resume-from executor` | 既存 worktree と変更を引き継ぎ、executor → reporter → 統合を再実行 |
+| pipeline の統合段で `blocked`                                                           | `exec resume --task <id>`                        | agent を起動せず統合だけ再開                                       |
+| 障害を解消し同じ試行を続ける                                                            | `exec unblock`                                   | `blocked -> doing`                                                 |
+| 試行を破棄して最初からやり直す                                                          | `exec release`                                   | `blocked -> todo`                                                  |
+| 着手前のタスクを恒久的に中止する                                                        | `exec cancel`                                    | `todo -> cancelled`                                                |
 
 `release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
 
-executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。executor 中断の block event は `pipeline_stage=executor`、reporter 失敗は `pipeline_stage=reporter`、統合失敗は `pipeline_stage=integrate` を持ち、いずれも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて未完了の段から再開し、完了済みの agent 段を重複実行しません。
+executor / reporter pipeline では、run ごとの `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。executor 中断の block event は `pipeline_stage=executor`、reporter 失敗は `pipeline_stage=reporter`、統合失敗は `pipeline_stage=integrate` を持ち、いずれも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて未完了の段から再開し、完了済みの agent 段を重複実行しません。
 
-成果物の不足を executor に直させる場合は `--resume-from executor` を付けます。対象は executor が `succeeded` で reporter が未完了の pipeline に限ります。既存 run の executor 試行回数を増やし、`blocked` からの再開は `unblock` イベントを記録します。統合段、executor 未成功、pipeline 以外、`executor` 以外の値は理由を表示して停止します。この指定には `--task` が必要で、`--due` とは併用できません。
+成果物の不足を executor に直させる場合は `--resume-from executor` を付けます。対象は executor が `succeeded` で、reporter が未完了または統合段（commit・検査・merge）で止まった pipeline と、approach の必須項目（`condense_records` など）を欠いた報告として runner が executor の段で止めた pipeline に限ります。既存 run の executor 試行回数を増やし、`blocked` からの再開は `unblock` イベントを記録します。統合段から戻す場合は、executor を起動する前に統合先（project は root の現在ブランチ）を exec branch と worktree へ取り込むため、統合先で直した不具合を worktree で `git merge` せずに受け取れます。未 commit の変更と run の記録は取り込みの前に控えて戻し、戻せない場合は取り込み前へ戻して停止します。統合段の block 理由と result には、失敗した操作のメッセージと、この再開と統合だけの再試行（`exec resume --task <id>`）の 2 つの次の操作を記録します。統合が成功済みの run、一部のリポジトリを統合済みの run、exec branch が merge 済みの run、worktree が merge の途中の run（中止すると stage 済みの変更を失うため）、executor 未成功、pipeline 以外、`executor` 以外の値は理由を表示して停止します。この指定には `--task` が必要で、`--due` とは併用できません。
 
 停止後に plan の指示を補う場合は、次の手順で再開します。
 
 1. `specdojo exec worktree status --project <project-id> --task <task-id>` で残っている worktree を確認する。
-2. その worktree の `<execution_path>/exec/plans/<task-id>-plan.md` を編集し、追加の指示と、変更の理由・再開までの経緯を result の申し送りへ残す指示を書く。
-3. `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor` を実行する。root で plan を生成し直さず、worktree にある編集済み plan を executor と reporter へ渡す。既存の成果物と未コミット変更も引き継ぐ。
+2. その worktree の `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/plan.md` を編集し、追加の指示と、変更の理由・再開までの経緯を result の申し送りへ残す指示を書く。
+3. `specdojo exec resume --project <project-id> --task <task-id> --resume-from executor`（登録簿の場合は `specdojo exec run --project <project-id> --register <id> --resume --resume-from executor`）を実行する。root で plan を生成し直さず、worktree にある編集済み plan を executor と reporter へ渡す。既存の成果物と未コミット変更も引き継ぎ、統合時には直した plan がコミットに含まれて元の plan で上書きされずに履歴に残る。
 4. 再開後の result で経緯と検証結果を確認する。pipeline の executor は result を直接編集せず、報告の `handoff` に経緯を記載し、reporter と runner が result へ反映する。
 
 stage agent を明示する場合は次のように指定します。片方を省略すると、その stage は要件と優先度から自動選択されます。
@@ -281,6 +281,8 @@ specdojo exec resume \
   --executor-by <executor-nickname> \
   --reporter-by <reporter-nickname>
 ```
+
+executor 段から再開するとき（`--resume-from executor` を付けた再開、または executor 段で止まったタスクの再開）に `--executor-by` で現在の claim の持ち主と異なる executor を指定すると、実行前に元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim を新しい executor へ移し、完了時の `complete` イベント（および中断時の `block` イベント）も新しい executor で記録します。`--executor-by` を省略した場合や同じ executor を指定した場合は既存の claim を維持します（`doing` はそのまま継続し、`blocked` は `unblock` イベントで `doing` に戻します）。reporter 段や統合段のみを再開する場合は既存の claim を維持します。
 
 ```bash
 specdojo exec release \
@@ -302,6 +304,17 @@ specdojo exec release \
 ```
 
 `--reset-worktree` は未commitの result や成果物変更を破棄します。内容を確認したい場合は、先に [exec worktree運用ガイド](exec-worktree-guide.md) の `status` を使います。
+
+#### 2.2.1. 人が unblock するときの続行と引き取り
+
+`exec unblock` を人が実行しても、claim の持ち主は変わりません。claim の持ち主は `claim` イベントの actor で、`note` やほかの actor の `unblock` では移りません。人が障害を取り除いて agent の run を続けさせる場合と、人が自分で直して完了させる場合は、`--take-over` の有無で区別します。
+
+| 意図                                 | コマンド                                                      | claim の持ち主            | その後                                                                                  |
+| ------------------------------------ | ------------------------------------------------------------- | ------------------------- | --------------------------------------------------------------------------------------- |
+| agent の run を続けさせる            | `exec unblock --task <id> --by <human> --msg ...`             | 元の actor（agent）のまま | `exec resume --task <id>` が元の agent で再開し、runner の `complete` / `block` も通る  |
+| 人が引き取り、自分で直して完了させる | `exec unblock --task <id> --by <human> --msg ... --take-over` | unblock した人            | 人が `exec complete --task <id> --by <human>` で完了させる。agent の run は完了できない |
+
+`--take-over` は roster の `type: human` の actor だけが使えます。`--take-over` の `unblock` イベントは `take_over=true` を持ち、pipeline の再開情報（`pipeline_stage` など）を引き継ぎません。claim の持ち主を確かめるには `exec status --state doing` を使います。`by` 列と `--by` の絞り込みは claim の持ち主を表します。
 
 ### 2.3. 完了済みタスクをtodoに戻す
 
@@ -328,7 +341,7 @@ specdojo exec refresh --project <project-id>
 
 後続 task も完了済みの場合は、依存グラフの下流から順に `reopen` します。後続 task が `doing` / `blocked` の場合は、先に同じ試行を完了させるか、`exec release` で `todo` に戻します。これにより、完了していない依存先を前提に後続 task が進行・完了している状態を防ぎます。
 
-`reopen` は plan、result、成果物、Git 履歴を削除・復元しません。完了済み plan は `exec/plans/done/` に残り、次の `exec plan` / `exec run` で新しい固定名 plan を生成します。再 claim 時は固定名 result を再利用し、新しい試行の状態と時刻に更新します。
+`reopen` は過去 run の plan・result、成果物、Git 履歴を変更・削除しません。完了済み plan は同じ run ディレクトリに残り、次の `exec plan` / `exec run` で新しい run を生成します。同じ run の続きは `exec resume` で再開します。
 
 ```bash
 specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "rerun"
@@ -392,11 +405,13 @@ specdojo exec run --project <project-id> --task <task-id> --worktree
 schedule に `agent_pipeline` を持たない plan（`exec plan --deliverable <localId> --mode review` で生成した review plan など）は、`exec run --plan` または `exec run --deliverable` に `--executor-by` / `--reporter-by` を足すと同じ 2 stage で実行します。片方だけ指定した場合、もう一方は `stage_role` による自動選択で決まります。reporter が scaffold 済みの result を記入するため、`--plan` では frontmatter に `task_id` を持つ plan が必要です。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 
 ```bash
-specdojo exec run --project <project-id> --plan <execution-path>/exec/plans/<stem>-plan.md \
+specdojo exec run --project <project-id> --plan <execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/plan.md \
   --executor-by <executor-nickname> --reporter-by <reporter-nickname>
 ```
 
-run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/` に残ります。停止位置と再開可否はここを見て判断します。
+新規 run の plan・result・evidence・ログ・state は `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/` に残ります。出どころは `register`・`schedule`・`job` です。停止位置と再開可否はここを見て判断します。
+
+旧配置の `<execution_path>/exec/evidence/<task-id>/<run-id>/` に checkpoint がある run は、`--resume`（`--resume-from executor` を含む）後も同じ run ID とディレクトリへ記録を続けます。executor を再実行すると、前回の state・evidence・ログを同じ場所の `*.attempt-N.*` に退避します。統合では result の配置にかかわらず現在の run の記録を commit します。commit 対象から外した別 run の記録は、ほかの許可外の変更とともに標準出力と `integrate.log` に一覧を表示します。
 
 | ファイル                                                              | 確認できること                                                                                 |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -406,7 +421,7 @@ run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/
 | `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行別の生出力（秘匿値は伏せ字化、各ストリーム 64KiB で切り詰め）      |
 | `integrate.log`                                                       | checkpoint・統合段の commit / merge 失敗の stdout / stderr 全文（秘匿値は伏せ字化）            |
 
-agent ログは人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan、runner 管理記録を除いた `evidence.json` の変更一覧、文章項目と対応づけ用パスだけの出力スキーマです。runner 管理記録は、解決済みの execution path 配下の evidence、project register とその派生ビュー、当該 result のパスを基準に除外します。ただし executor の試行中に runner 管理記録が実際に変わった場合、そのパスと状態は reporter 専用の `runner_context.runner_managed_attempt_changes` に含めます。reporter は、executor の最終メッセージがその変更に触れたのに `changed_files` にないという理由だけで確認を求めません。result の変更パスはこの除外後の `changes`、`outcome` と `block_reason` は executor の stage・終了コード・保護理由と検証結果から runner が機械生成します。executor または親 runner の検証に failed / `not_run` があれば blocked です。executor の `not_run` は、親 runner が同じコマンドを project で実行して成功していれば満たされたものとして扱います。また、対応する npm script がない、`npx` の package が未導入、または SpecDojo サブコマンドの設定上の適用条件を満たさないと runner が確定できる場合は適用外として block せず、result の申し送りへ「適用外の検証（runner の判定）」を残します。この判定は reporter 専用の `runner_context.mechanically_not_applicable` にも含め、reporter は同じ検証の実行を申し送りで求めません。`catalog validate` は対象 project の `catalog_path` で判定し、設定や対象 project を特定できない場合と適用条件が未定義のサブコマンドは救済しません。対象 project は `--project <id>`、run の対象 project、`current_project` の順に決めるため、別の project の `catalog_path` では判定しません。`<repo>:<path>` を引数に含むコマンドや `--prefix <repo>` 付きのコマンドは、そのプロダクトリポジトリの `package.json` で判定します。`npm run <name> -- <args>` と `npm run <name> <args>` も `<name>` の script が存在すれば適用外の申告を反証しますが、引数付きコマンドを親 runner が実行した引数なしコマンドと同一とはみなしません。`npm run check` のような合成コマンドは、構成する各コマンドが親 runner か executor の検証で通っていれば満たされたものとして扱います。理由付きの `not_applicable` は block せず result の申し送りへ残しますが、理由がない場合や、存在する npm script／依存 package を適用外とした場合は blocked です。ただし SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。executor の `requires_human` は sandbox 外で人が行う確認として block せず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」を機械的に追記します。reporter は実施内容、パスと対にした各変更の説明、申し送り、approach、review の判断根拠と改善指示だけを返します。runner はパスで説明を突き合わせ、順序は問いません。説明がない evidence のパスには差分参照を促す既定文を記録し、evidence にないパスの説明は捨てるため、件数の過不足で result の作成は失敗しません。機械管理項目を追加した出力は形式不正として拒否されます。失敗理由の要約だけでは原因が分からない場合は、記録済み `evidence.json` の `log_refs` から stdout / stderr を個別に確認します。ログは Git 管理対象の evidence ディレクトリにありますが、失敗中の worktree では未コミットのため、`--force-restart` などで破棄する前に確認します（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
+agent ログは人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan、runner 管理記録を除いた `evidence.json` の変更一覧、文章項目と対応づけ用パスだけの出力スキーマです。runner 管理記録は、解決済みの execution path 配下の evidence、project register とその派生ビュー、当該 result のパスを基準に除外します。ただし executor の試行中に runner 管理記録が実際に変わった場合、そのパスと状態は reporter 専用の `runner_context.runner_managed_attempt_changes` に含めます。reporter は、executor の最終メッセージがその変更に触れたのに `changed_files` にないという理由だけで確認を求めません。result の変更パスはこの除外後の `changes`、`outcome` と `block_reason` は executor の stage・終了コード・保護理由と検証結果から runner が機械生成します。executor または親 runner の検証に failed / `not_run` があれば blocked です。executor の `not_run` は、親 runner が同じコマンドを project で実行して成功していれば満たされたものとして扱います。また、対応する npm script がない、`npx` の package が未導入、変更ファイル種別を含む適用条件を満たさない、または SpecDojo サブコマンドの設定上の適用条件を満たさないと runner が確定できる場合は適用外として block せず、result の申し送りへ「適用外の検証（runner の判定）」を残します。この判定は reporter 専用の `runner_context.mechanically_not_applicable` にも含め、reporter は同じ検証の実行を申し送りで求めません。変更範囲の判定では、runner が生成・更新する `exec/` 配下（`plans/`・`results/`・`evidence/`・`events/`・`.locks/`）を executor の変更ファイルから除外します。`validate:history-links`（`specdojo-docs-lint history-links` を含む）は履歴蓄積ファイル（`pjr-*.md`（`pjr-index.md` を除く）、または executor 自身が変更した `execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md` や旧来の `exec/plans/**/*.md`・`exec/results/**/*.md`）の変更がある場合だけ適用対象とします。`catalog validate`（`npm run validate:catalog` および `tools/catalog-validate-if-configured.mjs` を含む）は対象 project の `catalog_path` と、runner 管理記録を除いた変更が `docs/ja/projects/` 配下に及ぶかで判定し、設定や対象 project を特定できない場合と適用条件が未定義のサブコマンドは救済しません。対象 project は `--project <id>`、run の対象 project、`current_project` の順に決めるため、別の project の `catalog_path` では判定しません。`<repo>:<path>` を引数に含むコマンドや `--prefix <repo>` 付きのコマンドは、そのプロダクトリポジトリの `package.json` で判定します。`npm run <name> -- <args>` と `npm run <name> <args>` も `<name>` の script が存在すれば適用外の申告を反証しますが、引数付きコマンドを親 runner が実行した引数なしコマンドと同一とはみなしません。`npm run check` のような合成コマンドは、構成する各コマンドが親 runner か executor の検証で通っていれば満たされたものとして扱います。理由付きの `not_applicable` は block せず result の申し送りへ残しますが、理由がない場合や、変更ファイル種別を含む適用条件を満たしたうえで存在する npm script／依存 package を適用外とした場合は blocked です。ただし SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。executor の `requires_human` は sandbox 外で人が行う確認として block せず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」を機械的に追記します。reporter は実施内容、パスと対にした各変更の説明、申し送り、approach、review の判断根拠と改善指示だけを返します。runner はパスで説明を突き合わせ、順序は問いません。説明がない evidence のパスには差分参照を促す既定文を記録し、evidence にないパスの説明は捨てるため、件数の過不足で result の作成は失敗しません。機械管理項目を追加した出力は形式不正として拒否されます。失敗理由の要約だけでは原因が分からない場合は、記録済み `evidence.json` の `log_refs` から stdout / stderr を個別に確認します。ログは Git 管理対象の evidence ディレクトリにありますが、失敗中の worktree では未コミットのため、`--force-restart` などで破棄する前に確認します（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
 
 stage 別の失敗と対応は次のとおりです。
 
@@ -525,6 +540,25 @@ register 由来の plan が `targets` を宣言していない場合、runner �
 reporter 段の再開の入力は、`pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。保存済みの親 runner 検証が失敗しているか不足していれば、Schedule 実行と同様に再実行して evidence を更新します。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
 
 統合段の再開は、executor と reporter が成功したまま commit・merge・worktree 撤去のいずれかが失敗した run が対象です。worktree は統合が完了したときにだけ撤去されるため、reporter 成功済みの worktree が残っていること自体が統合の未完了を意味します。この再開では agent を1つも起動せず、worktree に残っている成果物と記入済み result をそのまま統合します。前回の試行で merge まで完了していた場合は、取り込み済みの exec ブランチを再 merge せずに残りの手順（worktree 撤去と `register review`）だけを進めます。再開の開始時に項目は `in-progress` へ戻り、成功なら `review`、失敗なら `waiting` へ遷移するため、再試行の成否は登録簿の状態とイベントに残ります。統合段の進捗（開始と失敗）は `pipeline-state.json` の `integrate` にも記録します。
+
+register の統合で許可外の追加など commit 対象外の変更が見つかると、成果物の commit・merge を止め、項目を `waiting` にして worktree を保持します。`block_reason` に未 commit の件数・先頭3件のパス・worktree 内の `integrate.log` の場所、run の最後の要約に `uncommitted=<件数>` を表示します。ログには全対象パスが残ります。移動元の削除が許可内でも、移動先が許可外なら同じ扱いです。
+
+新しい最上位ディレクトリへの移動など必要な変更の場合は、ログと差分を確認し、利用者の承認後に保持した worktree で対象パスを明示して commit します。次は `docs/ja/product/trash/` から `archive/ja/product/trash/` への移動の例です。`<worktree-path>` は停止時に表示された場所に置き換えます。
+
+```bash
+git -C <worktree-path> status --short --untracked-files=all
+git -C <worktree-path> diff -- docs/ja/product/trash/
+# 移動先の内容と links.json も確認し、利用者の承認を得てから実行する
+git -C <worktree-path> add -A -- docs/ja/product/trash/ archive/ja/product/trash/
+git -C <worktree-path> diff --cached --stat
+git -C <worktree-path> commit -m "Archive documents approved by user"
+```
+
+その後、統合先の worktree から次を実行します。executor と reporter を再実行せず、手動 commit と残りの成果物を統合します。不要な一時ファイルだった場合は worktree 内で対象だけを除去してから同じコマンドで再開します。新しいディレクトリの自動許可や `--force-restart` による破棄は必要ありません。
+
+```bash
+specdojo exec run --project <project-id> --register <PJR-ID> --worktree --resume
+```
 
 `specdojo.config.json` の project に `repos` を宣言している場合、統合段は宣言順のプロダクトリポジトリ、最後にプロジェクトリポジトリの順で統合し、リポジトリ別の状態（`pending` / `merged` / `unchanged` / `failed`）を `pipeline-state.json` の `integrate.repos` に記録します。途中で失敗すると、統合済みのリポジトリはそのまま残し、項目を `waiting` へ戻して全リポジトリの worktree を保持します。統合段の再開では、統合先へ取り込み済みのプロダクトを merge し直さず、失敗したリポジトリから統合を続けます。統合の順序と部分状態の詳細は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの統合の失敗と再開」を参照してください。
 
@@ -666,6 +700,8 @@ specdojo:
 
 - **対象（`targets`）**: 成果物カタログ（DCT）に定義されている成果物の文書 ID（doc id）を指定します（例: `prj-0001:cxd-specdojo`、`specdojo:exec-config-guide`）。プロダクト成果物の場合は `local_id` の canonical 形式（`<project-id>:<local_id>`）も受け付けます。まだ文書ファイルが作成されていない成果物であっても、カタログに定義されていればカタログで解決され、起票・実行できます。
 - **進め方（`approach`）**: 成果物を作成・修正する進め方（`draft`（文脈を調べて下書き）、`fully-guided`（既存成果物の磨き込み）、`recipe-guided`、`freeform`、`bootstrap`、`retrofit`、`cross-deliverable-dedup` など）から目的に応じて選びます。
+
+`draft`・`fully-guided`・`recipe-guided` の edit plan は、カタログの `evidence_refs` を「実装エビデンスと未作成の依存」節へ展開します。列挙された実装は読み取り専用で、変更許可範囲と commit 対象には入りません。`evidence_refs` がない場合やカタログなしの場合も、それだけでは停止しません。未作成の `depends_on` はインラインコードと「未作成」で示し、内容を推測せず _TODO_ / _ASSUMPTION_ と次のアクションを残して進めます。資料が食い違うときの根拠の使い分けは [[specdojo:ryu-guide|実践の進め方ガイド]] を参照してください。
 
 #### 4.3.2. kata（実践の型）を対象にする場合
 

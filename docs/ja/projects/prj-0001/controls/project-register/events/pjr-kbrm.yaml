@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_48bd5bf3c5e44716b8c8958de633d838
+  ts: "2026-11-13T09:41:13Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロジェクトの型 7 種類の recipe と template を、改訂した rulebook に合わせる
+    - field: description
+      from: ""
+      to: PJR-960C で改訂した rulebook に、recipe と template を合わせ、grade で出た sample の指摘も直す
+    - field: input
+      from: ""
+      to: '["PJR-960C の schedule に recipe と template の手直しの段がなく（orchestrator の作りの誤り）、改訂後の grade（2026-11-13）で rulebook の指摘の多くが recipe・template との食い違いだった。indie が直すことを承認した"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-960C"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
+- v: 1
+  id: reg_e39bf01439324df3a884e25be7eb28f0
+  ts: "2026-11-13T09:42:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_48bd5bf3c5e44716b8c8958de633d838
+- v: 1
+  id: reg_62b93350580241dc84c3616f3c06d3f0
+  ts: "2026-11-13T10:12:06Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e39bf01439324df3a884e25be7eb28f0
+- v: 1
+  id: reg_0122699ec22746a7af6c7d67215ac0f7
+  ts: "2026-11-13T10:40:56Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_62b93350580241dc84c3616f3c06d3f0
+- v: 1
+  id: reg_6c4c8198548a4a5e8cf3af62d6dd8170
+  ts: "2026-11-13T10:53:37Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0122699ec22746a7af6c7d67215ac0f7
+- v: 1
+  id: reg_1c558493e5944a718fc22b2355cbb010
+  ts: "2026-11-13T11:03:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の実行の後、grade（kata-*-20261113c、pm-plan は 20261113e）で 7 種類の rulebook・sample がすべて pass になったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-13"
+    - field: conclusion
+      from: "-"
+      to: プロジェクトの型 7 種類の recipe と template を改訂した rulebook に合わせ、sample の指摘も直した。7 種類とも rulebook・sample が grade で pass
+  previous_event_id: reg_6c4c8198548a4a5e8cf3af62d6dd8170

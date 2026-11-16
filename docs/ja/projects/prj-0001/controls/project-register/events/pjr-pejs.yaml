@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b6cb5a91332a4a50a29cbf06b2a3aa61
+  ts: "2026-11-13T14:48:26Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。利用者からの要望を indie の依頼で起票。担当 DEV、期限 2026-11-30（indie の指定）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイトにトップのページと project のトップのページを用意する
+    - field: description
+      from: ""
+      to: "@specdojo/docs-site の dev と build で、サイトの土台と project のトップの index.md がないと 404 になる。ないときは docs-site がトップのページを用意する"
+    - field: input
+      from: ""
+      to: '["@specdojo/docs-site を導入した利用者からの要望（OpenFisca-Japan-specdojo、2026-11-11）。npm run docs:dev を流すと、/specdojo/ と /specdojo/ja/projects/prj-0001/ が 404 になった","サイトの土台（/`<base>`/）と project のトップ（/ja/projects/`<project-id>`/）に当たる index.md がないと、開いたときに 404 になる。上のナビゲーションの「ホーム」も 404 になる","SpecDojo の文書（/ja/specdojo/）と、project の登録簿の一覧（.../project-register/generated/pjr-index）は表示される"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: docs-site

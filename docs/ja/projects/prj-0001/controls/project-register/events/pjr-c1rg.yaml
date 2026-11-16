@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dbff09e17d6d40989c7025cb11a13410
+  ts: "2026-11-08T00:34:52Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: システム化機能（sf）の型を、実装と同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: システム化機能の型を手入れする。機能の目的と業務プロセスとの対応に絞り、操作の説明はコマンドリファレンスと各ガイドを参照する
+    - field: input
+      from: ""
+      to: '["方針（indie が決定、2026-11-08）: 機能の目的と業務プロセスとの対応に絞り、操作の説明はコマンドリファレンスと各ガイドを参照する。","rulebook にあわせて sf-sample も揃える。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:sf-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-HMV6"]'
+- v: 1
+  id: reg_edb2e938096e4d4d91e5bfff91466ba4
+  ts: "2026-11-08T02:46:56Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dbff09e17d6d40989c7025cb11a13410
+- v: 1
+  id: reg_2b230404ccc34f3fa95d74bab3dacbc7
+  ts: "2026-11-08T03:11:42Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_edb2e938096e4d4d91e5bfff91466ba4
+- v: 1
+  id: reg_4eccc90b230d4e73a0f2eeaf118b3b16
+  ts: "2026-11-08T03:53:16Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。executor が個票の対応結果を書かなかったため、orchestrator が result から書き写した。差分・親の検証を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: sf-rulebook を機能の目的と bps・uis との対応に絞り、操作手順は参照に留める形に改め、sf-sample を書き直した
+  previous_event_id: reg_2b230404ccc34f3fa95d74bab3dacbc7

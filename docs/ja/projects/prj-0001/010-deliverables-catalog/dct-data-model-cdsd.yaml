@@ -116,3 +116,35 @@ groups:
           - text: データ検証・整合性確認の対象が識別できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
+
+      - local_id: sld-specdojo
+        name: 保管場所一覧（SpecDojo）
+        kind: work
+        depends_on:
+          - cdsd-planning
+          - cdsd-execution
+          - cdsd-sharing
+        overview: SpecDojo が記録を置く場所（リポジトリ内の docs・execution・controls、端末側の状態ディレクトリ、worktree、一時ディレクトリ）ごとに、置くもの・Git で共有するか・寿命・消してよいかを一覧にする
+        path: sld-specdojo.md
+        rulebook: specdojo:sld-rulebook
+        note: 保管場所一覧の型（sld）の代表（PJR-DD33、indie が 2026-11-15 に承認）。データストアの業務的な意味は cdsd-* を正本とし、本書は置き場所の物理的な区分に絞る
+        evidence_refs:
+          - kind: implementation
+            path: src/shared/run-records.ts
+            purpose: 実行記録の run ごとの配置の決定
+          - kind: implementation
+            path: src/routine/storage.ts
+            purpose: 端末側の状態ディレクトリへの routine の状態・履歴・lock の配置
+          - kind: implementation
+            path: src/exec/worktree.ts
+            purpose: task worktree の命名・配置
+        done_criteria:
+          - text: 保管場所ごとに置くもの・共有の有無・寿命・消してよいかが記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 保管場所の区分が実装の配置と一致していること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 運用者が消してよい場所と残すべき場所を判断できること
+            roles: [OPS]
+            viewpoint: vp-ops-operability

@@ -36,7 +36,7 @@ import {
   type ExecRunBusyPolicy,
 } from "./lock.js";
 import { getActiveExecLocksDir, setActiveExecLocksDir } from "../slot-lock.js";
-import { readAllEventFiles, foldEventsToState } from "../events.js";
+import { claimOwnerOf, readAllEventFiles, foldEventsToState } from "../events.js";
 import {
   extractPhaseSuffix,
   normalizePhaseSetSelection,
@@ -540,7 +540,8 @@ export function collectBusyActors(schedulePath: string): Set<string> {
     const initTasks = buildInitialStateFromStrategy(schedulePath, sch);
     const snap = foldEventsToState(evts, sch, schedulePath, initTasks);
     for (const taskState of Object.values(snap.tasks ?? {})) {
-      if (taskState?.state === "doing" && taskState.last_by) busy.add(taskState.last_by);
+      const owner = taskState?.state === "doing" ? claimOwnerOf(taskState) : undefined;
+      if (owner) busy.add(owner);
     }
   } catch {
     // ignore; selection falls back to priority-only ordering

@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9402ba03c361425ca29dc235982c0f75
+  ts: "2026-11-08T00:03:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務ルールと業務プロセスの文書を、規範文書とガイドとどう分けるかを決める
+    - field: description
+      from: ""
+      to: 業務ルール（br）と業務プロセス（bps）は、実装の判定の処理に加えて、規範文書（pjr-rulebook など）と運用のガイド（review-guide・register-operation-guide など）とも内容が重なる。同じことを 2 か所に書かないよう、どちらを正とし、他方は何を書いて何を参照に寄せるかを決める
+    - field: input
+      from: ""
+      to: '["業務仕様の代表を種類ごとに 1 件作る方針で、実装と同じことを 2 回書く文書を調べた（2026-11-08）。cld・ifx-cmd・sf は bdd・ccd と同じく型の手入れで参照に寄せる（indie が決定）。","br・bps は規範文書・ガイドとの役割の分け方を先に決める。決まるまでは代表 1 件も今の型のまま作る（indie が決定）。","例: br-review-verdict は review-guide の verdict の説明と、br-branch-integration-direction はブランチ運用のガイドと重なる。"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'

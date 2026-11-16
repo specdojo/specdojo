@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 import { globFilesSync } from "./glob-files.js";
 import { findForbiddenLinks } from "./history-links.js";
 
@@ -10,6 +10,8 @@ import { findForbiddenLinks } from "./history-links.js";
 const DEFAULT_PATTERNS = [
   "docs/ja/projects/**/exec/plans/**/*.md",
   "docs/ja/projects/**/exec/results/**/*.md",
+  "docs/ja/projects/**/execution/runs/**/plan.md",
+  "docs/ja/projects/**/execution/runs/**/result.md",
   "docs/ja/projects/**/controls/project-register/pjr-*.md",
 ];
 const DEFAULT_IGNORE = ["**/pjr-index.md"];
@@ -51,7 +53,10 @@ function main(): void {
 
   for (const filePath of files) {
     const content = readFileSync(resolve(filePath), "utf8");
-    const findings = findForbiddenLinks(content);
+    const findings = findForbiddenLinks(content, {
+      allowLegacyConventionsReference:
+        basename(filePath) === "plan.md" || /\/exec\/plans\//.test(filePath),
+    });
 
     if (findings.length === 0) {
       console.log(`${filePath}: valid`);

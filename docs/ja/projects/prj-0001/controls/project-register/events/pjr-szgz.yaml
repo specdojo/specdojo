@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4c10a13bab4c43b8873d7f7eb3823a0c
+- v: 1
+  id: reg_8712a0318c25484caef95d6b36a55803
+  ts: "2026-11-15T11:34:00Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: devcontainer に specdojo-lp 用の VS Code 拡張機能を加えた（indie が 2026-11-15 に確認）
+  previous_event_id: reg_5fbb20850b894932a2deb2e7a3e1a1e9

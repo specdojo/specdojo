@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T10:18:36Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-2-bds-progress-report-080",
+  "by": "luna-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-080/T-KATA-WAVE-2-bds-progress-report-080-20261115T082600Z-1122a768/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-bds-progress-report-080/T-KATA-WAVE-2-bds-progress-report-080-20261115T082600Z-1122a768/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-2-bds-progress-report-080-20261115T082600Z-1122a768",
+    "pipeline_resume_claimed": "true"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-M7KD",
+  "run_id": "pjr-m7kd-20261108T020510Z-732e6671",
+  "updated_at": "2026-11-08T02:22:45.266Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-11-08T02:08:29.781Z",
+      "completed_at": "2026-11-08T02:15:53.534Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-M7KD/pjr-m7kd-20261108T020510Z-732e6671/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-08T02:21:38.203Z",
+      "completed_at": "2026-11-08T02:22:45.266Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-M7KD/pjr-m7kd-20261108T020510Z-732e6671/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-M7KD/pjr-m7kd-20261108T020510Z-732e6671/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-M7KD/pjr-m7kd-20261108T020510Z-732e6671/result.md"
+  }
+}

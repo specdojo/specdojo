@@ -1,0 +1,16 @@
+成果物『保管場所一覧（SpecDojo）』（`sld-specdojo.md`）の実績と `docs/ja/specdojo/standards/rulebook-authoring-standard.md` に基づき、`docs/ja/specdojo/rulebooks/sld-rulebook.md` の見直し・改訂を完了しました。
+
+### 実施内容の要約
+
+1. **Rulebook 記述標準（章構成・禁止事項）への完全準拠**:
+   - `docs/ja/specdojo/standards/rulebook-authoring-standard.md` の章立て（第1章〜第7章構成、完成例は sample へ外出し）に合わせ、標準章構成外であった `## 8. 運用ルール` を廃止しました。
+   - `## 8. 運用ルール` に記載されていた「ライフサイクル管理（`status: draft` からの PO 承認昇格、agent による昇格禁止）」および「実践の型（Kata）の構成方針（標準6列・5章構成の明確化による `recipe: not-needed` / `template: not-needed` 宣言の理由、改訂時の整合確認）」を、第1章「全体方針」の箇条書き項目へ統合・整理しました。
+   - 本文中に残存していた sample への wikilink（`[[specdojo:sld-sample|...]]`）2箇所を削除し、Frontmatter の `sample` 宣言を参照する形に改訂しました。また、第7章「禁止事項」に「本文への sample / recipe / template への wikilink やリンク章の設置」「章参照を章番号のみで記述すること」を追加しました。
+2. **Finding（F001〜F009）対応状況の維持・検証**:
+   - 保留事項・未決事項の扱い（第5章「確認事項と変更影響」、`_UNDECIDED_` / `_TODO_` の管理台帳追跡）、承認者 PO の明記（第1章・第1.1節・第5.4節）、依存・リスクの特定（第4章・第5.3節・第5.4節）、ステークホルダーと責務定義（第1.1節）、`type: data` への統一（第4章）、位置づけ節・Mermaid図（第2章）、サンプルのメタデータ・名称整合（第2章・第3章）が破綻なく維持されていることを確認しました。
+3. **静的検査と整形**:
+   - `npx prettier --write` および `npx prettier --check` を実行し、表組み・見出し番号の書式整合を確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sld-rulebook.md の標準章構成への整合（第8章の第1章への統合、本文中 sample wikilink の削除、禁止事項の強化）および静的検証を完了しました。","handoff":[],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/sld-rulebook.md","status":"passed","summary":"Prettier check passed with no formatting errors."},{"command":"npm run validate:schema:file","reason":"変更対象に YAML（*.yaml / *.yml）ファイルを含まないため適用外。","status":"not_applicable","summary":"Skipped (no yaml files changed)"},{"command":"npm run validate:catalog","reason":"変更対象が docs/ja/specdojo/ 配下のみであり、docs/ja/projects/ 配下の成果物やカタログ変更を含まないため適用外。","status":"not_applicable","summary":"Skipped (no project catalog changes)"},{"command":"npm run validate:history-links","reason":"履歴蓄積ファイル（pjr-*.md や既存の plan.md / result.md）の変更を含まないため適用外。","status":"not_applicable","summary":"Skipped (no history file changes)"}]}
+</specdojo_executor_evidence>

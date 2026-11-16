@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T10:57:34Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-070",
+  "by": "qwen-executor",
+  "msg": "parent validation failed: test-integration",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-070/T-KATA-WAVE-1-sysd-cross-cutting-policy-070-20261114T092459Z-8a9ad142/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-070/T-KATA-WAVE-1-sysd-cross-cutting-policy-070-20261114T092459Z-8a9ad142/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-070-20261114T092459Z-8a9ad142"
+  }
+}

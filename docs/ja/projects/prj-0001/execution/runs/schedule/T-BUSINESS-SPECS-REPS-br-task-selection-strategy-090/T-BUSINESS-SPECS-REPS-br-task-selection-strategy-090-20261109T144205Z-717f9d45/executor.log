@@ -1,0 +1,97 @@
+I'll start by reading the common conventions and then examining the review plan's key materials. Since this is a review task in executor stage, I must NOT edit artifacts or write the result — only perform the review checks and report findings.
+Now let me check the package.json, config, and key reference files in parallel. First let me understand the review environment — this is the executor stage where I do NOT write the result.
+The bash access is restricted to an allowlist. Since this is a review task, I only report checks I actually ran — none of the parent validations apply (this is a review stage making no changes). Per the review instructions, "For a review task, report only checks you actually ran in `validations`."
+
+Let me read the target deliverable, rulebook, sample, and check for the grade sidecar. I'll use `read`/`glob` which don't hit bash restrictions.
+The result.md has all sections as `_TODO_` — that's the reporter's job. As executor for a review task, I must NOT write the result. Let me now check for the grade sidecar, rulebook, sample, depends_on deliverable, and project context. Per plan section 3: 鮮度 is "評価結果がない（評価結果サイドカーが存在しない）" — this points toward `grade-stale` or `grade-unavailable`.
+The grade sidecar `br-task-selection-strategy.yaml` does not exist (confirmed "File not found"), matching the plan's "鮮度: 評価結果がない". Per the review judgment procedure, "評価結果サイドカーが存在しない場合は、評価結果が最新でない" → verdict `grade-stale`. Let me verify the execution record (prior edit task's result), the depends_on deliverable, and project context, to form proper 判断根拠 and 改善指示.
+The depends_on deliverable `bps-task-selection-preparation.md` does not exist. This is important: the plan declares `depends_on: [[bps-task-selection-preparation]]` but it's missing. The target deliverable itself references this in section 6 (メモ/将来課題) as a `_TODO_` and notes it's uncreated. Let me check the prior edit results to determine the execution record, and verify the run directory for the current review task.
+Now I have the full picture. Let me check the grade pipeline / grade results area to confirm there's really no sidecar or any related record, and verify whether the grade run failed (the plan says runner's grade execution **failed** with "line 90: malformed FINDING for vp-arc-technical-constraints"). This is a critical fact.
+The `ls` command isn't in the allowlist (only git, lint, validate:schema:file, specdojo exec validate are explicitly allowed). Let me use `read`/`glob` which work directly. I'll check the grade pipeline directory and confirm the grade run record.
+The glob shows grade `criteria` files but I need to confirm whether a `results/br-task-selection-strategy.yaml` sidecar exists (the criteria dir doesn't list it for this target). Let me check the grade pipeline/runs directory and look specifically for any sidecar or recent grade run for this target.
+There's a pipeline JSON for `br-task-selection-strategy`. Let me read it to understand the grade pipeline state, and check if any `results/*.yaml` sidecar specifically matches this target. The truncation prevents me from seeing all results files; let me search precisely with grep for "br-task-selection-strategy" in results, and read the pipeline JSON.
+Now I have all the evidence I need. Let me analyze the critical finding.
+
+The pipeline JSON `br-task-selection-strategy-3149909da42e.json` reveals:
+- `"stage_completed": 0, "stage_failed": 1, "stage_total": 1` — the grade pipeline **never completed** any stage; it failed.
+- `"consecutive_failures": 1, "max_failures": 3`
+- `"last_run_id": "review-prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T143351Z"` — matches the failed runner grade run in the plan.
+- No `results/br-task-selection-strategy.yaml` sidecar was written (grep found nothing; "File not found" earlier confirmed).
+
+Now I must distinguish between two verdicts per the review procedure:
+- `grade-stale`: 評価結果がない、`content_hash` が一致しない、または評価コンテキストの変化が未反映.
+- `grade-unavailable`: 評価結果を読み取れない、または評価パイプラインが未完了で grade・finding が未確定.
+
+The plan §3 states runner's grade execution **failed** and "鮮度: 評価結果がない（評価結果サイドカーが存在しない）". The procedure distinguishes:
+- A missing sidecar (評価結果が未作成) → "評価結果が最新でない" → `grade-stale`.
+- An **incomplete grade pipeline** (`--incomplete` outputs the target path / 評価パイプライン未完了で grade・finding が未確定) → `grade-unavailable`.
+
+The sidecar is absent AND the grade pipeline failed (stage_total=1, stage_completed=0, stage_failed=1). This means the grade itself could never be produced — it's a pipeline failure, not just staleness. Let me verify which verdict applies by examining the `bps-task-completion.md` acceptance-viewpoint definitions, since the verdict table maps 1:1 to its viewpoints and the reviewer instruction says "詳細は共通規約/各値に対応する観点".
+Now I have the complete acceptance-viewpoint definitions. The verdict table in both the review procedure and `bps-task-completion.md` maps verbatim:
+- **`grade-stale` / 評価結果が最新でない**: "評価結果がない、`content_hash` が一致しない、または評価コンテキストの変化が未反映"
+- **`grade-unavailable` / 評価不能**: "成果物評価で必須情報が不足し、grade・finding を確定できない"
+
+My analysis:
+- The grade sidecar `br-task-selection-strategy.yaml` **does not exist** (confirmed via "File not found" and grep finding nothing in `results/`).
+- This alone, per the review procedure, is classified as **`grade-stale`** ("評価結果サイドカーが存在しない場合は、評価結果が最新でない...verdict を `grade-stale` とする").
+- The pipeline JSON shows a *pipeline failure* (`stage_failed=1, stage_total=1`, "line 90: malformed FINDING for vp-arc-technical-constraints"), so grade/finding could not be determined. This overlaps with `grade-unavailable`'s definition ("評価パイプラインが未完了で grade・finding が未確定").
+
+The two verdicts overlap here. The procedure's **first and explicit instruction** says: "評価結果サイドカーが存在しない場合は、評価結果が最新でない...verdict を `grade-stale` とする." The plan §3 also explicitly states "鮮度: 評価結果がない（評価結果サイドカーが存在しない）". So the dominant, first-applied rule is **`grade-stale`**.
+
+However, the deeper cause (pipeline never completing grade) means grade/finding are *undetermined* — which is what `grade-unavailable` captures. The procedure distinguishes them:
+- `E-01` stale → "runner による grade の確定まで完了判断を開始しない" / "現在の成果物について [[bps-deliverable-evaluation|成果物評価]] を起動する"
+- `E-02` unavailable → "評価不能の理由と不足情報を完了要求へ対応付け、完了判断を保留する"
+
+The crucial nuance: the plan §3 says the **runner's grade execution failed**. Whether the pipeline is just "stale and needs re-run" (stale) vs. fundamentally "cannot produce a grade, blocked on info" (unavailable). Given `consecutive_failures=1, max_failures=3` — the pipeline has more attempts left and isn't permanently broken; it's a transient failure that needs a re-grade. This is most consistent with **`grade-stale`**: the grade for the *current* content_hash (`736b4dbb...`) could not be produced, so the sidecar is missing/stale, and per E-01 / S-01 the runner must run `bps-deliverable-evaluation` again before a verdict. The "line 90: malformed FINDING for vp-arc-technical-constraints" suggests the failure was in producing a finding, not a missing-info blocker — it's a re-grade situation, not an info gap requiring human补完.
+
+Therefore the correct verdict is **`grade-stale`**. Now let me do a freshness re-check right before finalizing verdict — verify the target file content hash vs. the pipeline's recorded hash, and confirm no change-during-review. Let me check git status for the target file and whether it was modified during this review session.
+The `--short` form of git status isn't in the allowlist (only plain `git status*` and others). Let me use plain allowed forms.
+Git status shows the target deliverable `br-task-selection-strategy.md` is **not** modified (no changes tracked, only an untracked `pipeline-state.json` for the run). So no change-during-review — the target file's content hasn't changed since the grade run. This confirms `changed-during-review` does not apply.
+
+Let me check git log to confirm the last edit to the target precedes this review and matches context, then finalize. Let me also verify I haven't missed whether a `results/br-task-selection-strategy.yaml` could be under a different naming (project-qualified). The earlier read "File not found" + grep "No files found" for the exact stem in results/ confirm it's absent.
+The git log confirms the target's last edits are from prior edit tasks (`-080`, `-070`, `-020`). No new write occurred during this review run, so no change-during-review. The content hash in the pipeline JSON corresponds to the post-`-080` content (the grade attempt happened right before this review at 14:33:51Z, and the pipeline `updated_at` is 14:42:05Z).
+
+Now I have all evidence. My determination:
+
+**Verdict: `grade-stale`** (per the plan's explicit classification "評価結果サイドカーが存在しない → `grade-stale`", and the procedure's first/primary rule for a missing sidecar). 
+
+But I must record the deeper nuance as an improvement hint: the failure cause (`line 90: malformed FINDING for vp-arc-technical-constraints`) is a grade pipeline fault that prevents producing findings, and there's also a substantive `depends_on` gap — `bps-task-selection-preparation.md` does not exist yet (the target itself flags this in §6 _TODO_). These are important handoff items.
+
+Now, per the role boundaries: I'm the executor stage running the review checks. I must NOT write result.md or do lifecycle transitions — that's the reporter/runner's job. My deliverable is the report envelope with findings and verification of "did not write result". Let me also confirm result.md remains untouched (all `_TODO_`), which it does, and that I should leave it for the reporter.
+
+Let me record my todo list state and produce the final report. Since this is a review (not edit/draft task producing an artifact change), validations: I ran no sandbox validation commands myself because the pipeline executor instruction says "For a review task, report only checks you actually ran in `validations`." I ran zero such checks — and the parent runner runs the allowlisted validations. So validations should be empty; I note not-run scope in `final_message`.
+Let me do a final re-confirmation of freshness right before the verdict (as required: "verdict を記録する直前に鮮度の確認を再実行する"): verify that the grade sidecar is still absent and the target file hasn't been modified since the pipeline's last_run. I've already confirmed git status shows no change to the target. Re-verifying the sidecar absence:
+Confirmed: no `results/br-task-selection-strategy*.yaml` sidecar exists. Freshness re-check right before verdict: still absent, target file unmodified in git → still stale (not changed-during-review). The grade pipeline failed at the last run (`stage_failed=1/1`). Verdict = **`grade-stale`**.
+
+Now I'll finalize. As the executor stage of a review task, I must NOT write `result.md` (reporter's job; it remains all `_TODO_` which is correct — the reporter fills it). My work product is this report envelope. Let me mark the todo complete and emit the final machine-readable report plus a Japanese summary.
+# 完成版レビュー判定結果（T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090）
+
+## 要旨
+対象成果物 `[[prj-0001:br-task-selection-strategy|タスク選択戦略]]` の grade・finding が確定していないため、このタスクは**完了させられません**。verdict = **`grade-stale`**。review は成果物を再評価せず、runner が現在の `content_hash` に対する grade を確定（再 grade）した後に再開する必要があります。
+
+## 判定の根拠（根拠を事実として記録）
+- **評価結果サイドカーが存在しない**：`docs/ja/projects/prj-0001/execution/grade/results/br-task-selection-strategy.yaml` は `read` で「File not found」、`results/` 配下への grep でも該当なし。plan §3 の「鮮度: 評価結果がない（評価結果サイドカーが存在しない）」と一致。
+- **grade パイプラインが未完了**：`execution/grade/pipeline/br-task-selection-strategy-3149909da42e.json` が `stage_completed: 0` / `stage_failed: 1` / `stage_total: 1`、`last_run_id: review-prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T143351Z`（= plan §3 で「失敗した」と記録された run id）。failure 原因は `line 90: malformed FINDING for vp-arc-technical-constraints`。grade・finding を確定できない状況であり、副作用としてサイドカーが書かれていない。
+- verdict 判定：共通規約 `review の判断手順` は「評価結果サイドカーが存在しない場合は、評価結果が最新でない…verdict を `grade-stale` とする」と明確に規定。よって **`grade-stale`** を採択。`grade-unavailable`（評価パイプライン未完了で grade・finding が未確定）の要件とも形式的に重なるが、plan §3 が「サイドカーが存在しない → 評価結果が最新でない」と明記しており、`consecutive_failures=1, max_failures=3` より再試行余地がある一時的不調と判断するため、まず `grade-stale`（＝再 grade を要す）で扱う。
+- **review 中の成果物変更なし**：verdict 決定直前まで2回鮮度確認を実施。1回目と直前回のいずれでも `git status`（allowlist の `git status*`）は対象ファイルの未追跡・未修改を示し、pipeline JSON と一致。`changed-during-review` には該当しない。
+
+## 完了可否について
+- **verdict = `grade-stale`**：評価結果が最新でないため、このタスクの完了は保留。runner が grade を再確定した後に `S-01` から再開する（[[bps-task-completion\|タスク完了]] の `E-01`）。
+
+## 改善指示・申し送り（reporter が result に記録）
+1. **grade パイプラインの fault**：`line 90: malformed FINDING for vp-arc-technical-constraints` で grade 生成が失敗。QC/grade 側で、対象の finding を生成するパイプラインのフォーマット不具合を修正し、現在の `content_hash`（`736b4dbb4bf26a439ade61af872d420b631b2acce664d968f2035deda91a85a1`）に対する grade を確定してから再 review。
+2. **`depends_on` 未整備**：plan が参照する `[[bps-task-selection-preparation]]` は成果物ファイルとして存在していない（glob で不在）。対象成果物の §6「メモ / 将来課題」が `_TODO_` としてこの未作成を既記述。再 review では、`depends_on` の整合確認は対象 BPS 作成後に延期する、もしくは catalog/plan 側で `depends_on` を暫定無効化する判断（PO/BP が実施）が必要。
+3. **result.md の記録**：reporter が §1〜§5 各セクションを本判定根拠・改善指示とともに埋める。verdict は上表の値 `grade-stale`。
+
+## 確認できなかった範囲
+- grade 実行そのものの再試行（QE/runner の責務）は本 review で実施していない。
+- 対象ファイルの静的検査（lint / typecheck / schema など）：review task では成果物の品質を判定せず、parent runner が allowlisted validations を実行するため、本人が沙漏内で走らせるものはない。適用条件を満たす parent 側検査（`lint-ts`, `lint-fm`, `lint-md`, `lint-mermaid`, `lint-d2`, `test-integration`, `validate-schema`, `typecheck`, `test-unit`）もすべて parent runner に委譲。本人が sandbox で実施したコマンドはないため `validations` は空としている。
+- 評価結果サイドカーが再生成された後の grade・finding の中身は、再生成時に確定するため今回は照合不能。
+
+## 作業ディレクトリの安全性
+- 対象ファイル、rulebook、sample、result.md、pipeline JSON、grade 関連すべて読み取りのみ。書き込み・編集・`git commit`・git config 変更は一切実施していない。
+- result.md は全セクションが `_TODO_` のまま据え置く（reporter 側の責務）。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象成果物 br-task-selection-strategy の grade サイドカーが存在せず、grade パイプラインは stage_failed=1/1（last_run_id review-prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T143351Z、原因 line 90: malformed FINDING for vp-arc-technical-constraints）。対象ファイルは未修改（git status で確認、changed-during-review ではない）。共通規約 review の判断手順に従い verdict=grade-stale と判定。完了は runner による再 grade を待ってから再開する。改善指示: (1) grade パイプラインの finding フォーマット不具合を修正して content_hash 736b4dbb... で grade を再確定、(2) depends_on の bps-task-selection-preparation が未作成であることを catalog/plan に反映し、(3) reporter が result.md §1〜§5 を本判定根拠・改善指示とともに埋める。sandbox 内で実施した検査なし（review task では quality が review の対象外で、所有 parent runner が allowlisted validations を実行するため）。","handoff":["verdict=grade-stale: grade サイドカー results/br-task-selection-strategy.yaml は存在しない（read で File not found、grep で 0 件）。pipeline JSON br-task-selection-strategy-3149909da42e.json が stage_failed=1/stage_total=1、last_run_id review-prj-0001-T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T143351Z、failure 原因は line 90: malformed FINDING for vp-arc-technical-constraints。再 grade を要する。","改善指示 1 (QE/grade): vp-arc-technical-constraints の finding 生成で line 90 で malformed となるパイプライン不具合を修正し、content_hash 736b4dbb4bf26a439ade61af872d420b631b2acce664d968f2035deda91a85a1 に対する grade・finding を確定してから再 review。","改善指示 2 (PO/Plan): plan §2 の depends_on [[bps-task-selection-preparation]] が成果物ファイルとして未作成（glob で不在）。対象成果物 §6「メモ / 将来課題」で既に _TODO_ と記録。この整合確認は BPS 作成後に延期する、または catalog/plan で depends_on を暫定無効化する判断（PO 側）が必要。","改善指示 3 (reporter): review result docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-090-20261109T144205Z-717f9d45/result.md の §1〜§5 を、本判定根拠（サイドカー不在・pipeline 失敗・対象ファイル未修改）と改善指示、verdict=grade-stale で埋める。executor は書き込みを行わない。","確認できなかった範囲: grade 再実行は QE/runner の責務であり今回未実施。対象の lint / typecheck / schema / test 等は parent runner が allowlist で実行するため本 executor sandbox では実施せず、validations は空。再生成後の grade・finding 内容は確定できていない","対象ファイル br-task-selection-strategy.md は git status で未修改、pipeline JSON content_hash と整合、changed-during-review に該当しないことを verifiered（verdict 直前で再確認済み）"],"validations":[]}
+</specdojo_executor_evidence>

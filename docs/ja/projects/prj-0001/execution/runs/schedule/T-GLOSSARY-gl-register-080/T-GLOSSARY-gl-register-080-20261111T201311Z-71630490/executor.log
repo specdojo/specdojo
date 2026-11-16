@@ -1,0 +1,112 @@
+用語集内の重複4件を整理しました。42用語の定義・参照・CLI 引数を維持し、整形・schema 検査は通過しています。result は編集していません。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "gl-register.yaml の重複4件を削除・統合。42用語の定義・別名・分類・関連参照・出典・CLI 引数と必須の制約・例外を維持し、整形・schema 検査を完了した。",
+  "handoff": [],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-register.yaml",
+      "status": "passed",
+      "summary": "対象 YAML の整形を確認。追加の整形差分なし。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/gl.schema.yaml --data docs/ja/product/010-business-specs/060-glossary/gl-register.yaml",
+      "status": "passed",
+      "summary": "対象 YAML は glossary schema に適合。"
+    },
+    {
+      "command": "node --input-type=module",
+      "status": "passed",
+      "summary": "標準入力の比較スクリプトで、42用語の定義・識別子・別名・分類・関連参照・出典・CLI 引数の維持と、変更が5用語の補足のみであることを確認。初回の子プロセス起動は EPERM となったため、比較元をシェルで取得して再実行し成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式の問題なし。成果物の変更は対象 YAML のみ。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "ステージ済み実行記録0件、検出0件。"
+    },
+    {
+      "command": "npx markdownlint docs/ja/product/010-business-specs/060-glossary/gl-register.yaml",
+      "status": "not_applicable",
+      "summary": "Markdown 検査は対象外。",
+      "reason": "変更した成果物は YAML のみで、Markdown ファイルの変更はない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は対象外。",
+      "reason": "成果物の変更は docs/ja/product/ 配下のみで、docs/ja/projects/ 配下の変更はない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は対象外。",
+      "reason": "履歴ファイル、plan、result を編集していない。"
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml 修正前47行、tm-register-todo の notes 後半",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "完了条件の反復を削除。既存の関連参照先 tm-register-done の定義に同じ条件があり、その補足が作業を適用対象としている。問い・判断との使い分けは維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml 修正前77行、tm-register-issue の notes",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "完了条件だけを繰り返す補足を削除。既存の関連参照先 tm-register-done の定義と課題への適用記述を維持している。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml 修正前100・117行、tm-register-note と tm-register-open の notes",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "記録における起票済みの説明を tm-register-open に集約し、対応漏れを意味しないという補足も移した。相互の関連参照、記録の継続更新・審査除外・別項目起票の条件は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml 修正前179行、tm-register-wait の notes",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "待機理由と結論を分ける説明の反復を削除。既存の関連参照先 tm-register-block-reason の定義に同じ区別があり、CLI 引数と再開条件の本文記録は維持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml 修正前70行、tm-register-risk の notes",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "通常の終了条件と似ているが、受容の判断でも追跡を終了できるというリスク固有の条件を含むため保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml 修正前84行、tm-register-change-request の notes",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "完了の一般定義に加えて採択した変更の反映を要求する固有の完了条件と、既存合意を変更する分類境界を含むため保持した。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml tm-register-deferred と tm-register-completed-at の notes",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "延期で完了日時を新たに付与しない説明は重なるが、状態の例外と日時項目の適用範囲をそれぞれ判断するため保持した。完了日時の状態別必須条件は既存の schema 参照を維持している。",
+      "cause": {"type": "document"}
+    },
+    {
+      "location": "docs/ja/product/010-business-specs/060-glossary/gl-register.yaml 修正前54行、tm-register-epic の notes",
+      "category": "canonical-restatement",
+      "action": "retain",
+      "reason": "トラックとの必須の関係やエピック専用項目は用語の適用範囲の判断に必要であり、schema の条件式の再掲ではないため保持した。実行対象からの除外、人間による完了判断、schema を正本とする参照も維持した。",
+      "cause": {"type": "document"}
+    }
+  ]
+}
+</specdojo_executor_evidence>

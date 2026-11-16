@@ -1,16 +1,22 @@
-import { registerDependencyBlockReason } from "../../register/dependency.js";
-import { gradeCheckpointPaths } from "../grade-checkpoint.js";
-import { existsSync, readFileSync } from "node:fs";
+import { readPlanFile } from "../../shared/plan-conventions.js";
+import { executorStageResumeHint } from "../evidence.js";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { qualifyTaskId, randomHex } from "../shared.js";
+import { isAuthoringApproach } from "../../kata/authoring.js";
+import { registerDependencyBlockReason } from "../../register/dependency.js";
+import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import {
   loadConfig,
   resolveAgentMember,
   type AgentProvider,
 } from "../../shared/specdojo-config.js";
+import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
+import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
+import { buildInPlaceStem } from "../plans.js";
 import { resolveProductBranches } from "../product-branches.js";
 import { registerProductMessage } from "../register-product-message.js";
-import { buildInPlaceStem } from "../plans.js";
+import { findResumableRegisterRun } from "../register-resume.js";
 import {
   generateRegisterPlan,
   requireRunnableRegisterItem,
@@ -19,37 +25,11 @@ import {
   ticketPathFromItem,
   type RegisterItemSummary,
 } from "../register.js";
-import { type PjrItem, type RegisterPaths } from "../../register/register.js";
-import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
-import {
-  findExecWorktree,
-  gitOutput,
-  type ExecWorktree,
-  type ProductWorktree,
-} from "../worktree.js";
-import {
-  configuredProductRepos,
-  integrationBranchOverrideRecord,
-  reserveProductBranches,
-  withProductRepoPrompt,
-} from "../task-repos.js";
-import {
-  checkpointAndEnsureWorktree,
-  commitTargetPaths,
-  commitWorktreeChanges,
-  discardStaleExecWorktree,
-  isExecBranchMergedIntoCurrent,
-  mergeWorktreeIntoCurrent,
-  removeWorktree,
-  taskTargetsAtHead,
-  WorktreeRemovedBranchDeletionError,
-  worktreeStatusPaths,
-} from "../worktree-ops.js";
 import {
   commitProductWorktrees,
   integrateTaskRepositories,
-  projectMergeBlockers,
   PROJECT_REPO_NAME,
+  projectMergeBlockers,
   RepoIntegrationError,
 } from "../repo-integration.js";
 import {
@@ -58,16 +38,36 @@ import {
   registerProjectMergeMessage,
   traceKey,
 } from "../repo-trace.js";
-import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
-import { findResumableRegisterRun } from "../register-resume.js";
-import { isAuthoringApproach } from "../../kata/authoring.js";
+import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
+import { recordPathForRead, recordRef, taskRecordPaths } from "../run-records.js";
+import { qualifyTaskId } from "../shared.js";
 import {
-  resolvePinnedRateLimitRunOptions,
-  rateLimitRecoveryReason,
-  type AsyncLock,
-  type RunOpts,
-  type RunResult,
-} from "./shared.js";
+  configuredProductRepos,
+  integrationBranchOverrideRecord,
+  reserveProductBranches,
+  withProductRepoPrompt,
+} from "../task-repos.js";
+import {
+  checkpointAndEnsureWorktree,
+  assertCommitScope,
+  commitTargetPaths,
+  commitWorktreeChanges,
+  discardStaleExecWorktree,
+  isExecBranchMergedIntoCurrent,
+  mergeWorktreeIntoCurrent,
+  removeWorktree,
+  taskTargetsAtHead,
+  WorktreeRemovedBranchDeletionError,
+  UncommittedChangesError,
+  worktreeStatusPaths,
+} from "../worktree-ops.js";
+import {
+  findExecWorktree,
+  gitOutput,
+  type ExecWorktree,
+  type ProductWorktree,
+} from "../worktree.js";
+import { runAgentPipeline } from "./agent-pipeline.js";
 import {
   agentEnvironment,
   expandPromptRefs,
@@ -76,8 +76,6 @@ import {
   reportProductWorktrees,
   runWithRetry,
 } from "./agent.js";
-import { runAgentPipeline } from "./agent-pipeline.js";
-import { downgradeUnfilledResult } from "./schedule-prepare.js";
 import {
   commitSubject,
   integrateLogPath,
@@ -86,21 +84,29 @@ import {
   repoRelativePath,
 } from "./mode-shared.js";
 import {
-  resolveRegisterCommand,
   isRegisterPipelineRequested,
+  registerReporterManagedPaths,
+  registerRunnerManagedPaths,
+  resolveRegisterCommand,
   resolveRegisterPipelineCommand,
   spawnRegisterTransition,
   type RegisterRunContext,
-  registerRunnerManagedPaths,
-  registerReporterManagedPaths,
 } from "./register-core.js";
+import { runRegisterPostReview } from "./register-post-review.js";
 import {
   commitRegisterState,
-  registerPathsInsideWorktree,
   rebuildRootRegisterViews,
+  registerPathsInsideWorktree,
   registerWaitSummary,
 } from "./register-state.js";
-import { runRegisterPostReview } from "./register-post-review.js";
+import { downgradeUnfilledResult } from "./schedule-prepare.js";
+import {
+  rateLimitRecoveryReason,
+  resolvePinnedRateLimitRunOptions,
+  type AsyncLock,
+  type RunOpts,
+  type RunResult,
+} from "./shared.js";
 
 // 全体再実行が既存 run の未統合成果を破棄しないための保護。既存 worktree に再開可能な run
 // （executor 成功済みで reporter か統合が未完了）が残っている場合だけ理由を返し、呼び出し側が
@@ -186,6 +192,9 @@ export async function finalizeRegisterWorktreeRun(params: {
   // 統合段の再試行。前回の attempt が merge 済みで後段だけ失敗した場合に備え、
   // 取り込み済みの exec ブランチを再 merge せず後続の手順を続ける。
   resumedIntegration?: boolean;
+  // executor 段から再開した run の場合に true。worktree 内で直した plan を
+  // commitWorktreeChanges でコミット対象に含める。
+  resumedExecutor?: boolean;
   // runner 自身が判定した失敗理由（統合再開前の親検証の失敗など）。agent の stderr から理由を
   // 抜き出さず、この文言を waiting の理由にする。
   runnerBlockReason?: string;
@@ -197,7 +206,7 @@ export async function finalizeRegisterWorktreeRun(params: {
   const worktreeTicketPath = ticketPath
     ? pathInsideWorktree(repoRoot, worktree.path, ticketPath)
     : null;
-  const waitSummary = (reason: string): RegisterItemSummary =>
+  const waitSummary = (reason: string, reasonMaxLength?: number): RegisterItemSummary =>
     registerWaitSummary({
       repoRoot,
       projectId,
@@ -205,6 +214,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       item,
       ticketPath,
       reason,
+      reasonMaxLength,
       actor,
       worktree,
       bookkeepingPaths: params.bookkeepingPaths,
@@ -224,7 +234,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       item,
       ticketPath,
       stem,
-      editPlanPath: resolve(context.executionPath, "exec", "plans", `${stem}-plan.md`),
+      editPlanPath: recordPathForRead(context.executionPath, "plan", stem),
       editResultPath: resolve(repoRoot, repoRelativePath(worktree.path, params.worktreeResultPath)),
       baseCommit,
       outputCommit,
@@ -246,6 +256,13 @@ export async function finalizeRegisterWorktreeRun(params: {
 
   const completedAt = new Date().toISOString();
   const worktreeResultPath = params.worktreeResultPath;
+  const scopeLogPath =
+    integrateLogPath(params.pipelineStatePath) ??
+    taskRecordPaths(
+      resolve(worktree.path, repoRelativePath(repoRoot, executionPath)),
+      item.id,
+      stem,
+    ).log("integrate.log");
   const { result: effectiveResult, unfilledBlock } = downgradeUnfilledResult(
     agentResult,
     worktreeResultPath,
@@ -264,6 +281,7 @@ export async function finalizeRegisterWorktreeRun(params: {
     ) {
       const { baseCommit, outputCommit } = integratedRegisterCommitRange(repoRoot, worktree.branch);
       try {
+        assertCommitScope(wtContext, worktree, stem, { scopeLogPath });
         const lifecyclePaths = new Set(
           [worktreeResultPath, params.pipelineStatePath]
             .filter((path): path is string => !!path)
@@ -294,6 +312,7 @@ export async function finalizeRegisterWorktreeRun(params: {
         } else {
           const reason = sanitizeRegisterConclusion(
             `integrate cleanup failed: ${error instanceof Error ? error.message : String(error)}`,
+            error instanceof UncommittedChangesError ? 4000 : undefined,
           );
           const integrateFailedAt = new Date().toISOString();
           recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
@@ -308,6 +327,9 @@ export async function finalizeRegisterWorktreeRun(params: {
             transition: "review",
             commit: "incomplete",
             reason,
+            ...(error instanceof UncommittedChangesError
+              ? { uncommittedFiles: error.files.length }
+              : {}),
           };
         }
       }
@@ -359,11 +381,15 @@ export async function finalizeRegisterWorktreeRun(params: {
     try {
       const productNames = (worktree.repos ?? []).map((product) => product.name);
       try {
+        assertCommitScope(wtContext, worktree, stem, {
+          scopeLogPath,
+          allowEditedPlan: params.resumedExecutor === true,
+        });
         const productOutcomes = commitProductWorktrees({
           worktree,
           message: (product) => productMessage(product, "commit"),
           targets: taskTargetsAtHead(wtContext, worktree, stem),
-          scopeLogPath: integrateLogPath(params.pipelineStatePath),
+          scopeLogPath,
           failureLogPath: integrateLogPath(params.pipelineStatePath),
           resultPath: worktreeResultPath,
         });
@@ -375,10 +401,16 @@ export async function finalizeRegisterWorktreeRun(params: {
           worktree,
           taskId: stem,
           message: subject,
-          scopeLogPath: integrateLogPath(params.pipelineStatePath),
+          scopeLogPath,
           failureLogPath: integrateLogPath(params.pipelineStatePath),
           productsIntegratedByCaller: true,
           productRootNewFiles,
+          allowEditedPlan: params.resumedExecutor === true,
+          skipHooks: integrationCommitSkipHooks({
+            pipeline: context.execDefaults.pipeline,
+            worktreePath: worktree.path,
+            pipelineStatePath: params.pipelineStatePath,
+          }),
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
@@ -388,6 +420,7 @@ export async function finalizeRegisterWorktreeRun(params: {
           status: "failed",
           error: message,
         });
+        if (error instanceof UncommittedChangesError) throw error;
         throw new RepoIntegrationError({
           repo,
           cause: message,
@@ -496,6 +529,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       } else {
         const reason = sanitizeRegisterConclusion(
           `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
+          error instanceof UncommittedChangesError ? 4000 : undefined,
         );
         const integrateFailedAt = new Date().toISOString();
         recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
@@ -516,12 +550,20 @@ export async function finalizeRegisterWorktreeRun(params: {
             transition: "review",
             commit: "incomplete",
             reason,
+            ...(error instanceof UncommittedChangesError
+              ? { uncommittedFiles: error.files.length }
+              : {}),
           };
         }
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
         process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
-        const summary = waitSummary(reason);
-        return { ...summary, commit: "incomplete" };
+        const scopeError = error instanceof UncommittedChangesError;
+        const summary = waitSummary(reason, scopeError ? 4000 : undefined);
+        return {
+          ...summary,
+          commit: "incomplete",
+          ...(scopeError ? { uncommittedFiles: error.files.length } : {}),
+        };
       }
     }
 
@@ -610,9 +652,7 @@ export async function runSingleRegisterItemWorktree(
   const resolvedProvider = provider ?? resolveAgentMember(context.roster, actor)?.provider;
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
-  const pipelineRunId = pipelineAgents
-    ? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`
-    : undefined;
+  const pipelineRunId = pipelineAgents ? stem : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
   // PJR-XRAB: --integration-branch は設定の integration_branch より優先する。
   const products = resolveProductBranches(
@@ -684,14 +724,14 @@ export async function runSingleRegisterItemWorktree(
       item,
       stem,
     });
-    const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+    const prompt = expandPromptRefs(readPlanFile(planPath));
     const { resultPath, supersededPaths } = await scaffoldResult({
       executionPath,
       taskId: item.id,
       mode: "edit",
       projectId,
       origin: "register",
-      planRef: `exec/plans/${stem}-plan.md`,
+      planRef: recordRef(executionPath, planPath),
       agent: actor,
       startedAt: new Date().toISOString(),
       stem,
@@ -813,6 +853,7 @@ export async function runSingleRegisterItemWorktree(
       planPrompt: prompt,
       resultPath: worktreeResultPathForPipeline,
       registerPaths: registerReporterManagedPaths(registerPaths),
+      executorResumeHint: executorStageResumeHint({ kind: "register", itemId: item.id }),
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,

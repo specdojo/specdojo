@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T07:05:01Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-KATA-bes-task-ready-selected-090",
+  "by": "sol-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

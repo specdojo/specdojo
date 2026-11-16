@@ -1,25 +1,26 @@
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { readPlanFile } from "../../../src/shared/plan-conventions.js";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { format } from "prettier";
 import { describe, expect, it } from "vitest";
-import { existsSync } from "node:fs";
+import type { CriteriaItem } from "../../../src/catalog/types.js";
 import {
   applicableReviewCriteria,
   buildInPlaceStem,
   deliverableDocId,
   execTemplatePath,
   finalizeResultSectionsForDeliverable,
+  generateSinglePlan,
   injectCommonConventions,
   MISSING,
-  generateSinglePlan,
   ownerRoleFields,
   parsePlanTaskIdentity,
-  targetDocIdsForDeliverable,
   stemFromPlanPath,
+  targetDocIdsForDeliverable,
 } from "../../../src/exec/plans.js";
-import type { CriteriaItem } from "../../../src/catalog/types.js";
 import type { RoleDefinition } from "../../../src/exec/role-types.js";
+import { recordPathForRead, taskRecordPaths } from "../../../src/exec/run-records.js";
 import type { ReviewViewpoint } from "../../../src/review/types.js";
 
 function roleMapOf(roles: RoleDefinition[]): Map<string, RoleDefinition> {
@@ -211,6 +212,7 @@ describe("parsePlanTaskIdentity", () => {
     "finalize",
     "bootstrap-finalize",
     "fully-guided",
+    "condense",
     "draft",
   ])("approach %s を frontmatter から復元する", (approach) => {
     const identity = parsePlanTaskIdentity(planWithApproach(approach));
@@ -405,9 +407,8 @@ describe("plan generation (edit done_criteria goals)", () => {
         },
       });
 
-      const editPlan = readFileSync(
-        join(executionPath, "exec/plans/T-TEST-overview-020-plan.md"),
-        "utf8",
+      const editPlan = readPlanFile(
+        recordPathForRead(executionPath, "plan", "T-TEST-overview-020"),
       );
       // Catalog base_path is root-anchored (/docs/test) but the emitted deliverable path
       // must be canonical repo-relative (no leading slash) so the agent resolves it from
@@ -431,7 +432,7 @@ describe("plan generation (edit done_criteria goals)", () => {
       // 共通規約は要点（リンク記法など）だけを本文に残し、詳細は参照パスで読ませる（PJR-2219）。
       expect(editPlan).toContain("`[[id|title]]` 形式");
       expect(editPlan).toContain(
-        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
       );
       // 検査の扱い（適用条件の判定・not_applicable と理由・not_run の限定）は要点として本文に残す（PJR-Z104）。
       expect(editPlan).toContain("hook 設定（`lefthook.yml` など）を読み");
@@ -460,20 +461,99 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan).toContain("- [[test:prj-overview]]");
       expect(editPlan).toContain("Why は判断軸として参照し、全文を成果物へ再掲しない");
 
-      const maintenancePlan = readFileSync(
-        join(executionPath, "exec/plans/T-TEST-overview-030-plan.md"),
-        "utf8",
+      const maintenancePlan = readPlanFile(
+        recordPathForRead(executionPath, "plan", "T-TEST-overview-030"),
       );
       expect(maintenancePlan).not.toContain("viewpoints_ref:");
       expect(maintenancePlan).not.toContain("全 role 観点による自己レビュー");
       // approach 違い（recipe-maintenance）の plan にも同じ参照と要点が注入される。
       expect(maintenancePlan).toContain("`[[id|title]]` 形式");
       expect(maintenancePlan).toContain(
-        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
       );
       expect(maintenancePlan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
       expect(maintenancePlan).not.toContain("### プロジェクトコンテキスト");
       expect(maintenancePlan).not.toContain("_PROJECT_CONTEXT_");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("plan generation (conciseness prevention)", () => {
+  const approaches = [
+    "draft",
+    "fully-guided",
+    "recipe-guided",
+    "retrofit",
+    "bootstrap",
+    "rulebook-maintenance",
+    "recipe-maintenance",
+    "sample-maintenance",
+    "template-maintenance",
+  ] as const;
+  const rules = [
+    "冗長さの判定は [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-arc-conciseness` を正本とする。",
+    "同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲は書かず、既存の記述は削る・まとめる・参照に置き換える。",
+    "判断に要る背景・制約・例外・完了条件は残し、長さだけでは削らない。",
+  ];
+
+  it.each(
+    approaches.flatMap((approach) => [
+      { approach, mode: "edit" as const },
+      { approach, mode: "review" as const },
+    ]),
+  )("$mode / $approach は edit 専用の予防規則の適用範囲を守る", async ({ approach, mode }) => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-conciseness-"));
+    const catalogPath = join(root, "catalog");
+    try {
+      mkdirSync(catalogPath);
+      writeFileSync(
+        join(catalogPath, "dct-test.yaml"),
+        [
+          "id: test:dct",
+          "type: project",
+          "status: draft",
+          "project_id: test",
+          "domain: test",
+          "base_path: /docs/test",
+          "groups:",
+          "  - deliverables:",
+          "      - local_id: overview",
+          "        name: Overview",
+          "        kind: work",
+          "        path: overview.md",
+          "        evidence_refs:",
+          "          - kind: implementation",
+          "            path: src/exec/plans.ts",
+          "            purpose: plan生成の現在動作",
+        ].join("\n"),
+      );
+      const path = await generateSinglePlan({
+        executionPath: join(root, "execution"),
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-overview-010",
+          local_id: "overview",
+          name: "予防規則の適用確認",
+          mode,
+          approach,
+          schedule_file: "",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+      const plan = readPlanFile(path);
+      for (const rule of rules) {
+        if (mode === "edit") {
+          expect(plan.split(rule)).toHaveLength(2);
+        } else {
+          expect(plan).not.toContain(rule);
+        }
+      }
+      expect(plan).not.toContain("成果物は、冗長な記述や内容の重複を避け");
+      expect(plan).not.toContain("plan-essentials:");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -542,7 +622,7 @@ describe("plan generation (rulebook includes)", () => {
           critical_first_rank: 0,
         },
       });
-      return readFileSync(join(executionPath, "exec/plans/T-TEST-overview-020-plan.md"), "utf8");
+      return readPlanFile(recordPathForRead(executionPath, "plan", "T-TEST-overview-020"));
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -624,51 +704,103 @@ describe("review plan templates", () => {
 });
 
 describe("injectCommonConventions", () => {
-  const fragmentPath = execTemplatePath("xep-common-conventions-template.md");
+  const commonPath = execTemplatePath("xp-common-conventions-template.md");
+  const editPath = execTemplatePath("xep-common-conventions-template.md");
+  const reviewPath = execTemplatePath("xrp-common-conventions-template.md");
+  const marked = (rules: string) =>
+    `<!-- plan-essentials:start -->\n\n${rules}\n\n<!-- plan-essentials:end -->`;
 
-  it("要点マーカーの間だけを参照パスとともに本文へ載せ、schema の行を解決する", () => {
-    const cache = new Map<string, string>([
-      [
-        fragmentPath,
-        [
-          "## 共通: 記法・成果物規約",
-          "",
-          "<!-- plan-essentials:start -->",
-          "",
-          "- essential rule",
-          "- schema `_SCHEMA_REF_` に従う",
-          "",
-          "<!-- plan-essentials:end -->",
-          "",
-          "- detail rule",
-          "",
-        ].join("\n"),
-      ],
-    ]);
+  it.each(["edit", "review"] as const)(
+    "%s は共通と mode 別の要点だけを両方の参照パスとともに載せる",
+    (mode) => {
+      const cache = new Map<string, string>([
+        [commonPath, `## 共通: 記法・成果物規約\n\n${marked("- shared rule")}\n\n- shared detail`],
+        [editPath, `${marked("- edit rule\n- schema `_SCHEMA_REF_` に従う")}\n\n- edit detail`],
+        [reviewPath, `${marked("### review の判断手順\n\n- review rule")}\n\n- review detail`],
+      ]);
+      const actual = injectCommonConventions("# Plan\n", "docs/schema.yaml", cache, mode);
 
-    const actual = injectCommonConventions("# Plan\n", "docs/schema.yaml", cache);
+      expect(actual).toContain("## 共通: 記法・成果物規約");
+      expect(actual).toContain(
+        "`docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`",
+      );
+      expect(actual).toContain(
+        `docs/ja/specdojo/exec-templates/x${mode === "edit" ? "e" : "r"}p-common-conventions-template.md`,
+      );
+      expect(actual).toContain("- shared rule");
+      expect(actual).toContain(`- ${mode} rule`);
+      expect(actual).not.toContain(`- ${mode === "edit" ? "review" : "edit"} rule`);
+      expect(actual).not.toContain("detail");
+      expect(actual).not.toContain("plan-essentials:");
+      expect(actual).not.toContain("_SCHEMA_REF_");
+      if (mode === "edit") {
+        expect(actual).toContain("- shared rule\n- edit rule\n- schema `docs/schema.yaml` に従う");
+      } else {
+        expect(actual).not.toContain("schema");
+      }
+    },
+  );
 
-    expect(actual).toContain("## 共通: 記法・成果物規約");
-    expect(actual).toContain(
-      "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+  it("実際の規約も mode を分離し、schema がない edit では YAML の要点を除く", () => {
+    const edit = injectCommonConventions("_COMMON_CONVENTIONS_", "docs/schema.yaml", new Map());
+    const noSchema = injectCommonConventions("_COMMON_CONVENTIONS_", MISSING, new Map());
+    const review = injectCommonConventions(
+      "_COMMON_CONVENTIONS_",
+      "docs/schema.yaml",
+      new Map(),
+      "review",
     );
-    expect(actual).toContain("- essential rule\n- schema `docs/schema.yaml` に従う");
-    expect(actual).not.toContain("detail rule");
-    expect(actual).not.toContain("plan-essentials:");
+    for (const plan of [edit, review]) {
+      expect(plan).toContain("`[[id|title]]` 形式");
+      expect(plan).toContain("result の必須セクション");
+      expect(plan).not.toContain("plan-essentials:");
+    }
+    expect(edit).toContain("対応 schema `docs/schema.yaml`");
+    expect(edit).not.toContain("### review の判断手順");
+    expect(review).toContain("### review の判断手順");
+    expect(review).not.toContain("YAML 成果物を編集した場合");
+    expect(review).not.toContain("xep-common-conventions-template.md");
+    expect(noSchema).not.toContain("_SCHEMA_REF_");
+    expect(noSchema).not.toContain("YAML 成果物を編集した場合");
   });
 
-  it("要点マーカーのない断片は従来どおり全文を載せる", () => {
-    const cache = new Map<string, string>([[fragmentPath, "## Common\n\n- detail rule\n"]]);
+  it("要点マーカーのない断片は全文を載せる", () => {
+    const cache = new Map<string, string>([
+      [commonPath, "## Common\n\n- shared detail\n"],
+      [editPath, "- edit detail\n"],
+    ]);
+    expect(injectCommonConventions("# Plan\n", MISSING, cache)).toBe(
+      "# Plan\n\n## Common\n\n- shared detail\n\n- edit detail\n",
+    );
+  });
 
-    const actual = injectCommonConventions("# Plan\n", MISSING, cache);
+  it("マーカーのある共通断片と全文の mode 別断片を組み合わせる", () => {
+    const cache = new Map<string, string>([
+      [commonPath, marked("- shared rule")],
+      [editPath, "- local edit rule\n"],
+    ]);
+    const actual = injectCommonConventions("_COMMON_CONVENTIONS_", MISSING, cache);
+    expect(actual).toContain("- shared rule\n- local edit rule");
+    expect(actual).toContain("xp-common-conventions-template.md");
+    expect(actual).toContain("xep-common-conventions-template.md");
+  });
 
-    expect(actual).toBe("# Plan\n\n## Common\n\n- detail rule\n");
+  it("全文の共通断片と要点のある mode 別断片では共通見出しを重複させない", () => {
+    const cache = new Map<string, string>([
+      [commonPath, "## Local common\n\n- shared rule\n"],
+      [editPath, marked("- edit rule")],
+    ]);
+    const actual = injectCommonConventions("_COMMON_CONVENTIONS_", MISSING, cache);
+    expect(actual.match(/## Local common/g)).toHaveLength(1);
+    expect(actual).toContain("- shared rule\n- edit rule");
+    expect(actual).toContain("xp-common-conventions-template.md");
+    expect(actual).toContain("xep-common-conventions-template.md");
   });
 });
 
-describe("review-only block of the common conventions", () => {
+describe("review conventions", () => {
   const conventions = readFileSync(
-    join("docs/ja/specdojo/exec-templates", "xep-common-conventions-template.md"),
+    join("docs/ja/specdojo/exec-templates", "xrp-common-conventions-template.md"),
     "utf8",
   );
 
@@ -833,9 +965,11 @@ describe("generateSinglePlan", () => {
       });
 
       // 条件付きの検査案内は詳細側にあり、plan はその詳細を参照させる（PJR-2219）。
-      const plan = readFileSync(outPath, "utf8");
-      const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
-      expect(plan).toContain(`共通の規約の詳細 \`${referencePath}\` を読み`);
+      const plan = readPlanFile(outPath);
+      const referencePath = "docs/ja/specdojo/exec-templates/xp-common-conventions-template.md";
+      expect(plan).toContain(
+        `共通の規約の詳細 \`${referencePath}\`、\`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md\` を読み`,
+      );
       const detail = readFileSync(referencePath, "utf8");
       expect(detail).toContain("対象 project に `catalog_path` が設定されている");
       expect(detail).toContain(
@@ -875,8 +1009,8 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      expect(outPath).toBe(join(plansDir, "T-TEST-overview-020-plan.md"));
-      const plan = readFileSync(outPath, "utf8");
+      expect(outPath).toMatch(/\/runs\/schedule\/T-TEST-overview-020\/[^/]+\/plan\.md$/);
+      const plan = readPlanFile(outPath);
       expect(plan).toContain("task_id: T-TEST-overview-020");
       expect(plan).toContain("rulebook: none");
       expect(plan).toContain("Business value is clear");
@@ -946,7 +1080,7 @@ describe("generateSinglePlan", () => {
             critical_first_rank: 0,
           },
         });
-        const plan = readFileSync(outPath, "utf8");
+        const plan = readPlanFile(outPath);
 
         expect(plan).toContain(`- \`kind\`: ${kind}`);
         expect(plan).toContain(`- \`path\`: \`docs/ja/specdojo/${suffix}\``);
@@ -968,7 +1102,7 @@ describe("generateSinglePlan", () => {
           critical_first_rank: 0,
         },
       });
-      const bootstrapPlan = readFileSync(bootstrapPath, "utf8");
+      const bootstrapPlan = readPlanFile(bootstrapPath);
 
       for (const [, kind, suffix] of cases) {
         expect(bootstrapPlan).toContain(
@@ -1003,7 +1137,7 @@ describe("generateSinglePlan", () => {
           critical_first_rank: 0,
         },
       });
-      const missingPlan = readFileSync(missingPath, "utf8");
+      const missingPlan = readPlanFile(missingPath);
       expect(missingPlan).toContain(
         "- `path`: `docs/ja/specdojo/rulebooks/not-created-rulebook.md`",
       );
@@ -1023,7 +1157,7 @@ describe("generateSinglePlan", () => {
           critical_first_rank: 0,
         },
       });
-      const unresolvedPlan = readFileSync(unresolvedPath, "utf8");
+      const unresolvedPlan = readPlanFile(unresolvedPath);
       expect(unresolvedPlan).toContain("- `path`: `_MISSING_`");
       expect(unresolvedPlan).toContain("- `state`: `unresolved`");
       expect(unresolvedPlan).toContain("命名規則から推測して作成せず異常終了する");
@@ -1056,7 +1190,7 @@ describe("generateSinglePlan", () => {
           },
         });
 
-        const plan = readFileSync(outPath, "utf8");
+        const plan = readPlanFile(outPath);
         expect(plan).toContain("approach: retrofit");
         expect(plan).toContain("## 3. 実装エビデンス");
         expect(plan).toContain("`src/exec/plans.ts`（implementation）: plan生成の現在動作");
@@ -1121,7 +1255,7 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       expect(plan).toContain("approach: cross-deliverable-dedup");
       expect(plan).toContain("targets:\n    - test:overview\n    - test:summary");
       expect(plan).toContain("document: [[test:overview]]");
@@ -1159,15 +1293,15 @@ describe("generateSinglePlan", () => {
       });
 
       // File name uses the stem; the fixed-name plan must not also be written.
-      expect(outPath).toBe(join(executionPath, "exec", "plans", `${stem}-plan.md`));
+      expect(outPath).toBe(taskRecordPaths(executionPath, "T-TEST-overview-020", stem).plan);
       expect(existsSync(join(executionPath, "exec", "plans", "T-TEST-overview-020-plan.md"))).toBe(
         false,
       );
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       // id is unique per stem; the embedded result ref shares the stem; task_id stays the task id.
       expect(plan).toContain(`id: test:xep-${stem}`);
-      expect(plan).toContain(`exec/results/${stem}-result.md`);
+      expect(plan).toContain(`runs/schedule/T-TEST-overview-020/${stem}/result.md`);
       expect(plan).toContain("task_id: T-TEST-overview-020");
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -1225,7 +1359,7 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       expect(plan).toContain("| --- | --- | --- | --- |\n| DC-001 |");
       expect(plan).not.toContain("| --- | --- | --- | --- |\n\n| DC-001 |");
       expect(plan).toContain("### プロジェクトコンテキスト");
@@ -1239,7 +1373,7 @@ describe("generateSinglePlan", () => {
       expect(plan).not.toContain("review-only:");
       // review plan も同じ参照と要点を載せ、詳細の本文は差し込まない（PJR-2219）。
       expect(plan).toContain(
-        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xp-common-conventions-template.md`、`docs/ja/specdojo/exec-templates/xrp-common-conventions-template.md` を読み",
       );
       expect(plan).toContain("`[[id|title]]` 形式");
       expect(plan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
@@ -1293,7 +1427,7 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      const plan = readFileSync(outPath, "utf8");
+      const plan = readPlanFile(outPath);
       // review は観点ごとに評価しないため、観点の check 文面は展開しない。適用条件は
       // document_kinds の宣言で判定し（PJR-AG7B）、該当する done_criteria を完了条件に残す。
       expect(plan).toContain("| vp-ba-business-value |");
@@ -1342,8 +1476,8 @@ describe("generateSinglePlan", () => {
         },
       });
 
-      expect(readFileSync(optOutPath, "utf8")).not.toContain("### プロジェクトコンテキスト");
-      expect(readFileSync(selfPath, "utf8")).not.toContain("### プロジェクトコンテキスト");
+      expect(readPlanFile(optOutPath)).not.toContain("### プロジェクトコンテキスト");
+      expect(readPlanFile(selfPath)).not.toContain("### プロジェクトコンテキスト");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

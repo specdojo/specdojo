@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-03T11:50:21Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

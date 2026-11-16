@@ -1,0 +1,24 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T04:26:35Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090",
+  "by": "sol-review-executor",
+  "msg": "quota_exhausted reached",
+  "meta": {
+    "limit_deferred": "false",
+    "limit_availability_state": "limited",
+    "limit_retryable": "false",
+    "limit_auto_resume": "false",
+    "limit_kind": "quota_exhausted",
+    "limit_provider": "codex",
+    "limit_observed_at": "2026-11-10T04:26:33.992Z",
+    "limit_raw_message": "ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/settings/usage to purchase more credits or try again at Nov 11th, 2026 9:02 PM.",
+    "limit_attempts": "1",
+    "limit_worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090-20261110T031008Z-9bde43d6/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090/T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090-20261110T031008Z-9bde43d6/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-KATA-ifx-cmd-ai-provider-cli-090-20261110T031008Z-9bde43d6"
+  }
+}

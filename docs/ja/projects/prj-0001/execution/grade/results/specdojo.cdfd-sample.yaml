@@ -5,15 +5,15 @@ path: docs/ja/specdojo/samples/cdfd-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-10-27T20:11:44.900Z"
-graded_by: flash-high-executor
-content_hash: d12fb642dc63d04bffcfe8389c001d70169869c6929a6a48149c580750628b0f
+score: 96
+graded_at: "2026-11-15T22:26:17.631Z"
+graded_by: sol-review-executor
+content_hash: 9da2e729ca1a9013ed722f5227a72e14ad1ef42095637b8fc82f8470f63a0167
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 100
+    score: 92
   implementation:
     score: 100
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,39 +104,84 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 221
-    anchor: ""
+    rule: vp-arc-conciseness
+    line: 27
+    anchor: "- **主要入力**: 在庫からの補充依頼、商品台帳の仕入先・発注単位"
     message: >-
-      `P-02-03` の完了条件は仕入記録と在庫記録の双方の確認を要求する一方, `E-02-02` は仕入記録の不一致しか扱わないため, 在庫記録の更新または読戻しを確認できない場合の停止範囲, 扱い,
-      再開条件を追加してください。
-    message_ja: >-
-      `P-02-03` の完了条件は仕入記録と在庫記録の双方の確認を要求する一方, `E-02-02` は仕入記録の不一致しか扱わないため, 在庫記録の更新または読戻しを確認できない場合の停止範囲, 扱い,
-      再開条件を追加してください。
+      Remove the area-level input, output, and datastore lists at lines 27–29 and 40–42; the diagrams and sections 4 and
+      6 already preserve these facts, so the lists add duplicate maintenance points without adding a decision or
+      constraint.
+    message_ja: 27–29行目と40–42行目にあるエリアレベルの入力、出力、およびdatastoreのリストを削除してください。図とセクション4および6にはすでにこれらの事実が保持されているため、リストは決定事項や制約を追加することなく、重複するメンテナンスポイントを追加してしまいます。
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 36
-    anchor: "### 3.2. 入荷検品（P-02）"
+    rule: vp-arc-conciseness
+    line: 241
+    anchor: >-
+      凡例は全体概要の「凡例（本プロダクト共通）」を参照する。`->`（戻りは `<-`）の通常線は情報、`material_flow` class
+      の太線は商品の流れを表す。仕入記録は仕入計画の図と同じデータストアである。仕入グループは仕入記録の確定と同じプロセスで受入品の入荷数量を在庫記録へ直接反映する。返品対象がなければ `P-02-05` は起動せず、受入品がなければ
+      `P-02-04` は起動しない。仕入記録の確定後、受入品があれば売場補充、返品対象があれば返品引渡しを行い、該当する条件付き経路をすべて完了することでグループが正常完了する。
     message: >-
-      本書の `P-01-01` は補充数量を発注単位に合わせる責務を仕入グループに置く一方, 横断の `cdfd-uc-sample` は `H-01` 成立前に在庫グループが発注単位に合う数量を確定すると定めているため,
-      発注単位への数量調整・検証の担当を一方へ統一してください。
-    message_ja: >-
-      本書の `P-01-01` は補充数量を発注単位に合わせる責務を仕入グループに置く一方, 横断の `cdfd-uc-sample` は `H-01` 成立前に在庫グループが発注単位に合う数量を確定すると定めているため,
-      発注単位への数量調整・検証の担当を一方へ統一してください。
+      Shorten the diagram note by removing the repeated inventory-update description and conditional-process
+      non-execution rules already stated in the process table and diagram; retain the legend reference, shared-store
+      explanation, and the distinct requirement to complete every applicable conditional branch.
+    message_ja: プロセス表と図ですでに述べられている、繰り返しのinventory-updateの説明およびconditional-processの非実行ルールを削除して、図の注釈を短縮してください。凡例の参照、shared-storeの説明、および適用可能なすべての条件分岐を完了させるという明確な要件は保持してください。
   - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 221
-    anchor: ""
+    line: 27
+    anchor: "- **主要入力**: 在庫からの補充依頼、商品台帳の仕入先・発注単位"
     message: >-
-      完成 sample の `P-02-03` は仕入記録と在庫記録を更新しますが, 更新失敗の例である `E-02-02` は仕入記録だけを対象としているため, 在庫記録を確認できない場合も同じ例外へ含めるか,
-      別の主要例外として例示してください。
-    message_ja: >-
-      完成 sample の `P-02-03` は仕入記録と在庫記録を更新しますが, 更新失敗の例である `E-02-02` は仕入記録だけを対象としているため, 在庫記録を確認できない場合も同じ例外へ含めるか,
-      別の主要例外として例示してください。
+      Sections 3.1 and 3.2 retain explanatory paragraphs and input/output/datastore lists, although cdfd-rulebook
+      sections 5, 6.2, and 7 require each area subsection to contain only its process table; update this completed
+      sample to demonstrate the current rulebook despite the older scaffold retained in the reference recipe and
+      template.
+    message_ja: セクション3.1と3.2には説明パラグラフと入力/出力/datastoreのリストが残っていますが、cdfd-rulebookのセクション5、6.2、および7では、各エリアのサブセクションにはプロセス表のみを含める必要があります。リファレンスレシピやテンプレートに残っている古い構成に関わらず、現在のルールブックを示すように、この完成済みサンプルを更新してください。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: "- 店主代表は、仕入計画と入荷検品の責任境界、必須・条件付きプロセスの起動条件、発注・受入に関する主要例外を承認する。"
+    message: >-
+      Reformat the purpose and scope to meet the current rulebook requirements of a one-to-two-sentence purpose and one
+      sentence each for included and excluded scope; consolidate the existing content and preserve the necessary
+      external references.
+    message_ja: 目的とスコープを、目的を1〜2文、含まれるスコープと除外されるスコープをそれぞれ1文とする現在のルールブックの要件に合わせて再構成してください。既存のコンテンツを整理し、必要な外部参照を保持してください。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 25
+    anchor: 在庫グループが発注単位に合わせて確定した補充依頼に商品台帳の仕入先を割り当て、店主代表が承認した発注内容を仕入先と後続の入荷検品へ引き渡す。
+    message: >-
+      The previous conflict with cdfd-uc-sample is resolved, but cdfd-overview-sample still assigns adjustment of
+      replenishment quantities to ordering units to purchasing area P-01, while this sample assigns it to inventory;
+      reconcile the claimed responsibility with the authoritative overview so the detailed sample does not silently move
+      an area responsibility.
+    message_ja: cdfd-uc-sampleとの以前の競合は解決されましたが、cdfd-overview-sampleでは補充量の調整をオーダーユニットから購買エリアP-01に割り当てているのに対し、このサンプルではそれをinventoryに割り当てています。詳細なサンプルがエリアの責任を密かに移動させないよう、主張されている責任権限を権威ある概要と一致させてください。
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 290
+    anchor: >-
+      | `cdfd-sales`            | 売場棚の商品を用いた店頭販売                         | 売場商品                               |
+      販売後の在庫が補充基準を下回り、在庫グループが補充を依頼した |
+    message: >-
+      The sales delegation passes only physical shelf goods, whereas cdfd-uc-sample requires purchasing to hand sales
+      the confirmed receipt quantities and acceptance results for reconciliation; identify the producing process and
+      represent this information handoff in the diagram, process outputs, and delegation row without expanding sales
+      internals.
+    message_ja: 販売の委譲は物理的な棚の物品のみを渡していますが、cdfd-uc-sampleでは、照合のために確定済みの受領量と受諾結果を購買から販売へ渡すことが求められています。生成プロセスを特定し、販売内部の情報を拡大することなく、この情報の受け渡しを図、プロセス出力、および委譲の行に表現してください。
+  - id: F007
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 27
+    anchor: "- **主要入力**: 在庫からの補充依頼、商品台帳の仕入先・発注単位"
+    message: >-
+      Before retaining this sample as ready, satisfy the rulebook’s completion checklist by making area subsections
+      table-only, consolidating purpose and scope, and reducing diagram notes to one or two sentences while preserving
+      exception and completion information.
+    message_ja: このサンプルを完成済みとして保持する前に、エリアのサブセクションをテーブルのみにすること、目的とスコープを整理すること、および例外情報と完了情報を保持しつつ図の注釈を1〜2文に減らすことにより、ルールブックの完了チェックリストを満たしてください。

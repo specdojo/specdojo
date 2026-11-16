@@ -1,0 +1,38 @@
+**判定: `complete-with-findings`**
+
+review の記入内容は次のとおりです。
+
+**評価結果の確認**
+- 鮮度確認は 3 回とも出力が空で、終了コードは 0 でした。評価結果は最新で、評価パイプラインも完了しています。
+  - `specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --changed-only`
+  - 同じコマンドに `--dependency-changed` を付けたもの
+  - 同じコマンドに `--incomplete` を付けたもの
+- サイドカー `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.ccd-project-planning.yaml` は存在します。
+- grade は `verdict` が `pass`、`score` が 98 です。finding は minor が 1 件(`F001`)です。
+
+**判断根拠**
+- 成果物は `[[prj-0001:ccd-project-planning]]` で、`status` は `draft` のままです。フェーズが求めた概念クラス図、関連の多重度の根拠、辞書対応表、未解決事項が揃っています。
+- done_criteria の DC-001 から DC-005 は、grade の該当観点がすべて level 4 です。それを事実として用いました。
+- `git status` では、今回の run の `pipeline-state.json` が未追跡で出ているだけです。成果物への対象外の変更は見当たりません。
+- 成果物の「未解決事項」に実装エビデンスごとの記録があります。
+  - `src/catalog/catalog.ts` は、project ごとのカタログ解決と、カタログ群の読込・検証の呼出しを確認済みです。
+  - `src/exec/exec.ts` は、コマンド登録の再公開のみで内部は確認できません。「確認不能」として明示され、一致や乖離とは判定していません。
+- 乖離と推測の扱いも記録されています。
+  - 乖離が疑われる箇所として、概念データストア定義が Schedule を「計画・状態遷移の正本」と記す点が挙がっています。修正対象候補は文書(BA・ARC)です。
+  - 実装から目的や業務判断を推測して書いた形跡は、finding にありません。
+
+**未充足事項・改善指示**
+- `F001`(minor)は、フロントマターに `depends_on` がなく `based_on` を使っている点です。完了を妨げません。理由は、done_criteria を満たしており、図の内容の正確性に影響しないためです。改善指示は、`ccd-mermaid-rulebook` に合わせて `depends_on` へ直すことです。実際に `depends_on` が必須かは、rulebook を直接確認していません。
+- 実装エビデンスの確認は部分的です。`src/exec/exec.ts` の実体の型定義と参照解決を調べる別タスクが必要です。これは成果物自身の「未解決事項」にも記載されています。
+
+**approach に応じた確認**
+- 実装エビデンス 2 パスとも、成果物に対応記録があります(上記)。
+- 今回のレビューでは `src/` の実装本体を読み直していません。確認できなかった範囲として記録します。
+- 業務データ辞書 5 件は未作成で、属性対応は未確認です。
+
+**decision**
+- `verdict` は `complete-with-findings` です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。鮮度確認(--changed-only / --dependency-changed / --incomplete)は全て出力なしで最新。grade pass/98、minor 1件(F001: フロントマターの depends_on 欠落・based_on 使用)は完了を妨げない。実装エビデンス2パスは成果物の未解決事項に対応記録あり(catalog.ts 部分確認、exec.ts 確認不能)。確認できなかった範囲: src 実装本体の再読、rulebook での depends_on 必須性の直接確認、未作成の業務データ辞書5件との属性照合。","handoff":["F001: フロントマターを ccd-mermaid-rulebook に合わせて depends_on へ修正する(BA)","src/exec/exec.ts の実体の型定義・参照解決を調査入力へ追加する別調査を手配する(PM)","概念データストア定義(cdsd-planning)の Schedule を「計画・状態遷移の正本」とする記述の責務確認(BA・ARC)"],"validations":[{"command":"npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --changed-only","status":"passed","summary":"出力なし(rc=0): 評価結果は最新"},{"command":"npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --dependency-changed","status":"passed","summary":"出力なし(rc=0): 依存変更なし"},{"command":"npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md --incomplete","status":"passed","summary":"出力なし(rc=0): 評価パイプライン完了"}]}
+</specdojo_executor_evidence>

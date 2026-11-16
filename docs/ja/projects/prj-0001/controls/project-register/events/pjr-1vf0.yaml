@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_63b6f5fe999542df8a507556db2cef29
+  ts: "2026-11-10T12:27:07Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ccd と ifx-cmd の型に、規則の検査を流すコマンドを書く
+    - field: description
+      from: ""
+      to: ccd-mermaid-rulebook と ifx-cmd-rulebook の grade（2026-11-10）が、規則にある Markdown・Frontmatter・Mermaid・YAML schema の検査をどのコマンドで流すかが書かれていないと指摘した。検査の手順とコマンドを書く
+    - field: input
+      from: ""
+      to: '["grade の run id kata-bsk-20261110 の minor の指摘から。軽い指摘は型を確定したうえで後で直す（indie が決定）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'
+- v: 1
+  id: reg_c1f87ee9150e40fdacbc5430a6af1c13
+  ts: "2026-11-11T14:59:03Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今夜 0:00 の夜間の実行で流す（indie が承認）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: sol-executor
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_63b6f5fe999542df8a507556db2cef29
+- v: 1
+  id: reg_700ff6fdd3914cbfb44c6caf20aa99ab
+  ts: "2026-11-11T15:20:11Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c1f87ee9150e40fdacbc5430a6af1c13
+- v: 1
+  id: reg_7cc0fbd5d5404ab7829f5668f06b88f6
+  ts: "2026-11-11T15:34:43Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_700ff6fdd3914cbfb44c6caf20aa99ab
+- v: 1
+  id: reg_f0e492a39346445daaaa8f058787d4d5
+  ts: "2026-11-11T15:37:58Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 登録項目の完了条件1について: `ccd-mermaid-rulebook` に `lint:md` / `lint:fm` / `lint:mermaid` のコマンド例と期待結果が記載されていることを確認しました。また、`ifx-cmd-rulebook` において `ifx-cmd.schema.…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-12"
+  previous_event_id: reg_7cc0fbd5d5404ab7829f5668f06b88f6

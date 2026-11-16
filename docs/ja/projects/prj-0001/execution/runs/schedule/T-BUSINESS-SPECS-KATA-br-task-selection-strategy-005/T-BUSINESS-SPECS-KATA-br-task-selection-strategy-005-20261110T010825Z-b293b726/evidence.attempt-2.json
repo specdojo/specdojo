@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005",
+  "run_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005-20261110T010825Z-b293b726",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-10T01:51:51.883Z",
+    "completed_at": "2026-11-10T01:54:29.352Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/br-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/br-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/br-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../br-task-selection-strategy.md                  | 118 +++++++--------\n .../plan.md                                        |   6 +\n .../result.md                                      |  30 +++-\n docs/ja/specdojo/rulebooks/br-rulebook.md          | 161 ++++++++-------------\n docs/ja/specdojo/samples/br-sample.md              |  80 ++++++++--\n 5 files changed, 218 insertions(+), 177 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md docs/ja/specdojo/rulebooks/br-rulebook.md docs/ja/specdojo/samples/br-sample.md docs/ja/specdojo/recipes/br-recipe.md docs/ja/specdojo/templates/br-template.md",
+      "status": "passed",
+      "summary": "対象5文書の整形が完了しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "検出0件。staged ファイルは0件のため、内容検査の対象はありませんでした。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外です。",
+      "reason": "executor の成果物変更は Markdown 5文書であり、変更した YAML ファイルがありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査の変更条件に該当しません。",
+      "reason": "executor の成果物変更は product と specdojo 配下だけです。projects 配下の既存差分は runner 管理の実行記録であり、今回編集していません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査の変更条件に該当しません。",
+      "reason": "executor は登録簿履歴および既存の plan・result を編集していません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  \n… output omitted …\nees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4243 file(s), 137 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 105 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4243 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlint\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005\n\n ❯ tests/packages/docs-site/sidebar-kata.test.ts (3 tests | 1 failed) 7ms\n     × covers all non-deprecated rulebooks, recipes, samples, and templates 4ms\nresult-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint\nUpdated ticket status → ready:\n… output omitted …\n\n+ Received\n\n- []\n+ [\n+   {\n+     \"expectedLink\": \"/ja/specdojo/recipes/br-recipe\",\n+     \"file\": \"br-recipe.md\",\n+     \"kind\": \"recipes\",\n+   },\n+   {\n+     \"expectedLink\": \"/ja/specdojo/templates/br-template\",\n+     \"file\": \"br-template.md\",\n+     \"kind\": \"templates\",\n+   },\n+ ]\n\n ❯ tests/packages/docs-site/sidebar-kata.test.ts:91:21\n     89|     }\n     90|\n     91|     expect(missing).toEqual([]);\n       |                     ^\n     92|   });\n     93|\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "br-task-selection-strategy",
+      "status": "changed",
+      "path": "docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md",
+      "reason": ""
+    },
+    {
+      "target": "specdojo:br-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md",
+      "reason": ""
+    },
+    {
+      "target": "specdojo:br-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/br-sample.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "前回の5文書を引き継ぎ、再開指示に沿って仮置きの理由を補正しました。整形・差分検査は通過し、業務判断6件は未決のまま引き継ぎます。",
+  "completion_status": "complete",
+  "handoff": [
+    "代表成果物は既存の業務境界と順位規則を維持しました。累積変更では `based_on`、条件付き入力、Ready 一覧の参照経路、未決事項の判断先・判断時点・下流影響・承認条件を追加しています。今回、依存仕様未作成による適用境界と既定戦略の経路差を `_ASSUMPTION_` として理由付きで明示しました。",
+    "rulebook は記述標準に沿った7章構成を維持し、各記述ガイドに判断基準・良い例・悪い例を備えています。完成例は sample、骨組みは template に分担し、実装・schema・リファレンスの詳細を再掲しない方針を維持しています。",
+    "sample は駄菓子屋きぬやの在庫不足判定を題材とする完成例です。通常・境界・欠損・予約超過・入力不備の競合を含む11例を維持し、代表成果物の機械的複写を避けています。",
+    "kata-guide の作成条件に照らし、境界・欠損・競合条件を掘り下げる recipe と、BR 系統で6章の骨組みを共有する template を必要と判断しています。前回追加した `docs/ja/specdojo/recipes/br-recipe.md` と `docs/ja/specdojo/templates/br-template.md` を引き継ぎました。rulebook の3種の宣言は実在する完全 ID であり、カタログの `rulebook: specdojo:br-rulebook` は適合するため維持しました。",
+    "前回の構造上の手本は ready の `specdojo:prj-overview-rulebook`・`specdojo:prj-overview-recipe`・`specdojo:prj-overview-template`、sample の粒度の手本は plan 指定の `specdojo:clis-sample` です。BR 成果物に同種 ready 文書はありません。外部情報を内容根拠とする追加はありません。",
+    "finding 対応は F001 の判断情報、F002 の依存宣言、F004 の重複擬似コード削除、F007 の派生ビュー入力・参照経路、F008 の承認条件を反映しています。依存仕様自体は未作成です。F003・F005・F006 の欠損時順位・照合方法・追加判定例、F009 の未決事項・仮説は未解消として残しました。再開指示に従い、業務判断待ちを理由に本タスクを未完了とはしていません。",
+    "残る判断は代表成果物の U-01〜U-06 です。U-01 は PM に先行 BPS の整備、PO に適用境界の判断を依頼します。U-02 は fifo の意味、U-03 は許容戦略の差、U-04 は既定戦略の経路差、U-05 は slack・ES の一部欠損、U-06 は ID 照合方法について PO の判断が必要です。ARC は比較規則と定義間整合、PM・Orchestrator は経路確認を支援し、判断後に影響する規則・期待順位を更新してください。",
+    "仕上げの4操作は前回の1巡を引き継ぎました。旧規定と重複擬似コードの削除、代替順位の参照への統合、判定規則・判定例と例外処理・回復行動の分離、代表成果物・sample・template の章構成整合を維持しています。今回も再現性を達成済みと読める表現を目的の表現へ補正し、未確認の仮説を確定事項と区別しました。",
+    "全5文書の `status: draft` を維持しています。executor は result・評価サイドカー・Git 状態を更新していません。reporter は上記の判断根拠と残る事項を result の「進め方と実践の型の適用」へ反映してください。指定の lint・schema・型検査・テストは親 runner、独立した多観点レビューは後続 task が担当します。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005-20261110T010825Z-b293b726/executor.attempt-2.log",
+      "bytes": 6182,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005-20261110T010825Z-b293b726/parent-validation-attempt-1-test-unit.attempt-2.log",
+      "bytes": 7148,
+      "truncated": false
+    }
+  ]
+}

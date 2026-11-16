@@ -1,0 +1,54 @@
+レビューを完了しました。判定は `incomplete` です。評価結果は最新ですが、DC-001〜003 が未充足です。成果物・実装・result は変更せず、記録内容を reporter に引き継ぎます。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "review の照合作業は完了。受入判定は incomplete。最新 grade は needs-work・87点、blocker 0 / major 5 / minor 3 / note 0。DC-001〜003 未充足、DC-004〜005 充足という確定済み評価を採用した。成果物・実装・result は未変更。確認できなかった範囲: CLI の実動作、外部基盤への接続、名簿合成・別名解決・起動変数展開の実行検証、参照先共通 schema の列挙値全件。回復処理は既存 finding の参照箇所を静的に確認した。",
+  "handoff": [
+    "評価結果の確認: [[prj-0001:xrp-t-glossary-gl-setup-090-20261111t220517z-0ca2e1f9]] が指定したサイドカーを読み取った。開始時と判定直前の grade list の --changed-only / --dependency-changed / --incomplete は、すべて終了コード0・標準出力なし。実行コマンドは validations 参照。成果物の SHA-256 は ff6cdd9f2c96db5568dfeb5696c952707f99bd631dde85e4c54f2df5b96651bb で、サイドカーの `content_hash` と一致。`graded_at` は 2026-11-11T22:05:17.858Z、`graded_by` は sol-review-executor。grade の `verdict` は needs-work、`score` は87、`finding_counts` は blocker 0 / major 5 / minor 3 / note 0。開始後の変更は検知されなかった。",
+    "判断根拠: [[gl-setup]]、review plan、[[prj-0001:xer-t-glossary-gl-setup-010-20261111t174145z-a57241d5]]、[[prj-0001:xer-t-glossary-gl-setup-070-20261111t185948z-1d57f527]]、[[prj-0001:xer-t-glossary-gl-setup-080-20261111t202654z-e0ab3108]]、[[gl-setup-grade-criteria]] を照合した。grade の確定済み判定は DC-001・002・003 が unsatisfied、DC-004・005 が satisfied。F006 が完了条件の未充足を明示しており、finding を伴う完了にはできない。品質の再採点や finding の新規発行は行っていない。",
+    "変更・検証記録の確認: Git の 4856ca511 は対象用語集の新設、2dbdacf18 は回復方針・再試行設定の notes 2か所の変更、60e0e1216 は notes 3か所の冗長記述削除だった。これらの変更は対象用語集と実行管理記録に限られている。先行3タスクの evidence.json を読み、各回の runner の9検証すべてが passed であることを確認した。対象 YAML の整形・個別 schema 検証も各回 passed。今回これらの親検証は重複実行していない。",
+    "approach に応じた確認: 初回 retrofit result の申し送りに、指定5パスすべての対応説明が存在する。単なる参照済みという自己申告を一致の根拠とはせず、現在の schema の該当定義、成果物の参照先、後続変更の差分を突き合わせた。パス別の判定語が独立した一覧になっていないため、reporter は以下の各対応と確認限界を review result に明示すること。",
+    "実装対応: docs/specdojo/schemas/v1/specdojo-config.schema.yaml は、ルートの agent 名簿参照・実践の型の名前空間・外部プロジェクト参照、および Project・Repo・Run を、[[gl-setup]] のリポジトリ共通設定・プロジェクト設定・プロダクトリポジトリ・外部プロジェクト参照・共通実行設定へ対応付ける記録がある。指定 schema の構造と対応記録は一致。初期導入 CLI の動作や schema で表現できないパス実在・名前衝突の検査は、この照合では確認不能。",
+    "実装対応: docs/specdojo/schemas/v1/agent-members.schema.yaml は AgentMember・AgentAlias を、[[gl-setup]] の agent メンバー・名簿・識別名・別名・実行基盤・モデル・推論強度・能力・習熟度・選択優先度へ対応付ける記録がある。属性と参照先の対応は一致。別名連鎖の実際の解決、記録する actor、単一 agent フローと pipeline の選択処理の実動作は未確認。",
+    "実装対応: docs/specdojo/schemas/v1/pm-members.schema.yaml は HumanMember と人間専用の members を、[[gl-setup]] の人間メンバー・人の名簿・識別名へ対応付ける記録がある。`type: human` と roles 必須の schema に一致する対応を確認。初回記録には [[specdojo:people-and-organization-definition-standard]] の agent 混在例・roles 任意表記との乖離が文書修正候補として残る。今回は当該標準全文の再照合を行っておらず、その乖離の解消は未確認。",
+    "実装対応: docs/specdojo/schemas/v1/pm-roles.schema.yaml は Role の code・name を、[[gl-setup]] のロールと名簿の roles との関係へ対応付ける記録がある。対応は一致。業務上の責務・判断権限や Schedule の owner の運用は、この schema 単独では確認不能であり、人と組織の定義標準・組織定義・RACI が根拠となる。",
+    "実装対応: docs/specdojo/schemas/v1/exec-defaults.schema.yaml は ProviderOverride・CommandParams・DifficultyRouting・AgentErrorDetection・RateLimitPolicy・RetryPolicy を、[[gl-setup]] の共通実行設定と基盤別設定・起動設定・検出・回復・再試行へ対応付ける記録がある。設定構造の対応は確認できるが、回復方針には既存 F001〜F008 の乖離・曖昧さが残る。初回 result にも critical/non-critical の schema とガイドの差、try_next 時の retry 必須が説明文のみであること、旧 pm-members の provider 参照の残留が記録されている。後続070は critical/non-critical の区別を追記し、080はその説明を保持しており、乖離を解消した記録はない。",
+    "未充足事項・改善指示: 既存 F001・002・003・005・006・008 に従い、schema の critical/non-critical 方針と現在の CLI の回復動作を区別し、意図された仕様の未決事項と修正対象候補を明記すること。候補は [[gl-setup]]・[[specdojo:exec-config-guide]]・docs/specdojo/schemas/v1/exec-defaults.schema.yaml・src/exec/run/agent.ts、および仕様の意思決定。既存 finding の根拠箇所では、ガイド第4章と runWithRetry は全タスクへの候補切替・再パスを説明している。BA が用語を整理し、ARC・DEV が技術的差分を確認し、変更要求の採否は [[prj-0001:pm-raci]] に従って人間の PO が判断する。用語集の受入は [[gl-setup-grade-criteria]] の PO・BA・ARC の条件に照らして行う。実装から業務意図を確定しない。",
+    "未充足事項・改善指示: F004・F007 に従い、`max_attempts` の単位が個別 agent 起動回数ではなく初回を含む候補一覧のパス数であることを明示する。初回記録に残る schema 説明の旧参照は文書修正候補、retry の条件付き必須性は schema・CLI 検証・仕様決定の照合候補として扱い、今回の review で修正しない。修正後に grade を再実行し、鮮度と DC-001〜003 を確認して review を再実施する。",
+    "decision: review result の `verdict` は incomplete。executor の `completion_status` が complete なのは、読み取り専用の review と reporter への根拠引き継ぎを完了したためであり、対象成果物の受入完了を意味しない。pipeline 指示により result は直接編集していないため、reporter が本報告を必須5セクションへ記入すること。"
+  ],
+  "validations": [
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml --changed-only",
+      "status": "passed",
+      "summary": "開始時・判定直前とも終了コード0、標準出力なし。成果物変更による評価の陳腐化なし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判定直前とも終了コード0、標準出力なし。依存変更による評価の陳腐化なし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml --incomplete",
+      "status": "passed",
+      "summary": "開始時・判定直前とも終了コード0、標準出力なし。評価パイプライン未完了の対象なし。"
+    },
+    {
+      "command": "sha256sum docs/ja/product/010-business-specs/060-glossary/gl-setup.yaml",
+      "status": "passed",
+      "summary": "判定直前の SHA-256 は ff6cdd9f2c96db5568dfeb5696c952707f99bd631dde85e4c54f2df5b96651bb。サイドカーの `content_hash` と一致。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "終了コード0、標準出力なし。executor による追跡対象ファイルの変更なし。"
+    },
+    {
+      "command": "git status --short",
+      "status": "passed",
+      "summary": "開始時・終了時とも runner 管理の未追跡 pipeline-state.json 1件のみ。成果物・実装・result の変更なし。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

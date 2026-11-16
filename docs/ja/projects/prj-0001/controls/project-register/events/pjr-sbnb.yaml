@@ -1,0 +1,142 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0198f6a60655498c8cc5cd730f98e993
+  ts: "2026-11-15T09:34:00Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ifx-index の schema のファイル名を古い略号 esil から ifx-index に改める
+    - field: description
+      from: ""
+      to: esil.schema.yaml を ifx-index の名前へ改め、参照をそろえる。他プロジェクト向けの互換も扱う
+    - field: input
+      from: ""
+      to: '["indie の指摘（2026-11-15）: ifx-index の schema が docs/specdojo/schemas/v1/esil.schema.yaml で、改名前の略号（ESIL: 外部システム連携一覧）のまま","PJR-QJ41（ifx-index を Markdown にする）で YAML の正本がなくなる場合は、schema を残すかどうかもあわせて決める。そのため PJR-QJ41 の後に流す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: depends_on
+      from: ""
+      to: '["PJR-QJ41"]'
+    - field: commit_type
+      from: ""
+      to: refactor
+    - field: commit_scope
+      from: ""
+      to: schema
+- v: 1
+  id: reg_6eb8c6fca36c42d3a5e6a74fb4f85cc2
+  ts: "2026-11-15T09:39:32Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: input
+      from: '["indie の指摘（2026-11-15）: ifx-index の schema が docs/specdojo/schemas/v1/esil.schema.yaml で、改名前の略号（ESIL: 外部システム連携一覧）のまま","PJR-QJ41（ifx-index を Markdown にする）で YAML の正本がなくなる場合は、schema を残すかどうかもあわせて決める。そのため PJR-QJ41 の後に流す"]'
+      to: '["indie の指摘（2026-11-15）: ifx-index の schema が docs/specdojo/schemas/v1/esil.schema.yaml で、改名前の略号（ESIL: 外部システム連携一覧）のまま","ifx-index は YAML を正本のまま残すため（PJR-QJ41）、schema も残して名前を改める"]'
+    - field: depends_on
+      from: '["PJR-QJ41"]'
+      to: "-"
+  previous_event_id: reg_0198f6a60655498c8cc5cd730f98e993
+- v: 1
+  id: reg_e997895216d84cadaa21daaba2ef497b
+  ts: "2026-11-15T19:15:57Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6eb8c6fca36c42d3a5e6a74fb4f85cc2
+- v: 1
+  id: reg_93e5f2a45ee24f21a3a33c98eea1e7eb
+  ts: "2026-11-15T19:25:08Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を…"
+  previous_event_id: reg_e997895216d84cadaa21daaba2ef497b
+- v: 1
+  id: reg_57834214ebc540759e53bded741b18b8
+  ts: "2026-11-15T20:37:36Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: schema の正本を ifx-index.schema.yaml へ移し、modeline・rulebook・recipe の参照をそろえた。古い esil.schema.yaml は $ref だけの非推奨の別名として残した。改名で enum 網羅検査の対象になったため、ready の ifx-index-rulebook に列挙値を…"
+      to: "-"
+  previous_event_id: reg_93e5f2a45ee24f21a3a33c98eea1e7eb
+- v: 1
+  id: reg_aada38d1aac24a0e88fdde2e31cab07a
+  ts: "2026-11-15T21:09:35Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_57834214ebc540759e53bded741b18b8
+- v: 1
+  id: reg_060e6cf7d40f422ba6ac129f1d1298bf
+  ts: "2026-11-15T22:22:29Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: ifx-index の schema のファイル名を esil から ifx-index に改めた。大文字の略号 ESIL の残りは範囲外として残課題に記録
+  previous_event_id: reg_aada38d1aac24a0e88fdde2e31cab07a

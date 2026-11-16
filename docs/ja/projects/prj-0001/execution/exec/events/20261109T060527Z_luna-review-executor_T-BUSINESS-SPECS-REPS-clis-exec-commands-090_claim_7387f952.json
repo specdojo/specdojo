@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T06:05:27Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-REPS-clis-exec-commands-090",
+  "by": "luna-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

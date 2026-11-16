@@ -1,0 +1,59 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "BDD rulebook の F001〜F007 に対応しました。検証の限界と手動照合、変更時の同期、draft 候補の enum 確認を明記し、章番号・記述例を整理しました。変更は rulebook のみです。",
+  "handoff": [
+    "判断根拠: Rulebook 記述標準、ドキュメントメタ情報標準、ドキュメント構成ガイド、ryu-guide のメンテナンス手順、共通レビュー観点の各 finding 対応 viewpoint、docs/specdojo/schemas/v1/bdd.schema.yaml、execution/grade/results/specdojo.bdd-rulebook.yaml、関連する検証実装を照合した。",
+    "source=grade の対応: F001 は導入と全体方針を整理。F002/F004 は本文要件に必須 modeline と出力ファイル基準の相対パスを明記。F003 は用語参照・型必須・列挙排他性・参照先/キー/値の手動照合を追加。F005 は本文の sample 対応記述を削除。F006 は draft 候補の対象別証跡を必須化。F007 は参照元のフィールド・キー・enum 変更と業務注釈の同期手順を追加した。",
+    "recipe: not-needed、template: not-needed を維持。定義形態の選択基準と検証手順は rulebook 内で完結し、YAML の骨格は schema と必須キー表で判断できるため、独立した recipe/template は不要と判断した。dct-data-model-bdd-template.yaml は成果物カタログ用であり、BDD 本体の template ではない。sample 宣言は維持。標準の経過措置と F005 は最小例の残置を許容するが、今回の計画がサンプル章を置かないよう明示しているため、同章を削除した。",
+    "成果物・review の根拠: bdd-register-entry.yaml、bdd-sample.yaml、成果物カタログ、BDD の -080 condense result と -090 review result、PJR-2GD6 を確認。代表成果物の schema 参照と業務注釈への集中は妥当であり、正本への参照方針を維持した。condense 記録の原因は document であり、Kata の規定を緩和する根拠とはしなかった。既存 review の独立 YAML に Markdown Frontmatter を求める指示はメタ情報標準と矛盾するため採用せず、ルートメタデータを使う規定を明確化した。",
+    "enum 候補証跡: 対象 docs/ja/specdojo/rulebooks/bdd-rulebook.md の SHA-256 は 7f1d8402e6af92bcc3441fd1e8006d55225d317760350834f687dde0410b08ea。schema docs/specdojo/schemas/v1/bdd.schema.yaml の SHA-256 は 64fd598630c9bce841ee7018b28b6912ae8e0f9d489b794481c5db41c5881cdc。確認者 codex-executor。/properties/status/enum の draft・ready・deprecated は「推奨 Frontmatter 項目」78 行、/properties/entities/items/properties/fields/items/properties/type/enum の integer・string・boolean・date・datetime・enum・money は「fields の構成」115 行に記載。全10値合格、欠落0。draft を維持して既存の直接照合関数で確認した。",
+    "後続 sample-maintenance: bdd-sample.yaml の参照先 src/types/transaction.ts と schemas/payment.schema.yaml は存在しない。実在する正本への参照、キー・enum・用語 ID の照合ができる完成例へ整備し、3つの定義形態の業務注釈と制約・単位・例値を充実させる。今回は計画どおり sample・成果物本体・result・grade サイドカーを編集していない。新規 recipe/template の作業提案はない。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "status": "passed",
+      "summary": "変更文書を整形した。"
+    },
+    {
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "status": "passed",
+      "summary": "整形差分なし。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "node --import tsx tmp/bdd-rulebook-candidate-check.mjs",
+      "status": "passed",
+      "summary": "draft 候補を直接照合し、enum 全10値の本文位置と欠落0を確認。一時スクリプトは削除済み。"
+    },
+    {
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象0ファイル、検出0件。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は適用外。",
+      "reason": "変更は Markdown rulebook のみで、YAML ファイルを変更していない。"
+    },
+    {
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検証は適用外。",
+      "reason": "変更が docs/ja/projects/ 配下に及ばない。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は適用外。",
+      "reason": "履歴蓄積ファイル、既存 plan/result を変更していない。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

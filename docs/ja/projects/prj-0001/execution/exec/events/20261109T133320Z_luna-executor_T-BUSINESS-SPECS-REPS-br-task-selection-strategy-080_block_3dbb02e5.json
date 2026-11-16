@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T13:33:20Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080",
+  "by": "luna-executor",
+  "msg": "executor validation failed or not run: parent runner validations: lint-ts, lint-fm, lint-md, lint-mermaid, lint-d2, test-integration, validate-schema, typecheck, test-unit",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080/T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-br-task-selection-strategy-080-20261109T035658Z-60d2e497"
+  }
+}

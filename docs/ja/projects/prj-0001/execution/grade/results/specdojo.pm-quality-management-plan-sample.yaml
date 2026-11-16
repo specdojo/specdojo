@@ -4,11 +4,11 @@ document: specdojo:pm-quality-management-plan-sample
 path: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 90
-graded_at: "2026-10-16T20:52:24.552Z"
-graded_by: agy-expert-executor
-content_hash: 5695a324894abd8b0c95fb6531010b1c2027b4e819a934174c178456ebdc2c0d
+verdict: pass
+score: 100
+graded_at: "2026-11-13T10:31:47.831Z"
+graded_by: sol-review-executor
+content_hash: 8ddb43e55cbd98719d3e8a257314e5fe2ba943f0094c1680cf8df6691b5effc3
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -87,8 +87,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -103,28 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 20
-    anchor: "| レビュー         | 主な観点                               | 実施者               | 証跡               |"
-    message: レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。
-    message_ja: レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    anchor: 品質は、文書が整っていることではなく、店主と家族が販売・在庫・つけの記録を正しく続けられ、追加負担を許容できることを中心に判定する。文書・実装・公開物の品質は、その価値を安全に実現するための条件として扱う。
-    message: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
-    message_ja: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
-  - id: F003
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 20
-    anchor: "| レビュー         | 主な観点                               | 実施者               | 証跡               |"
-    message: レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。
-    message_ja: レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。
+findings: []

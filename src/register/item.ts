@@ -28,11 +28,13 @@ export type PjrItem = {
   inputs?: string[];
   type: string;
   track?: string;
+  domains?: string[];
   priority: string;
   // executor / reporter pipeline の振り分けに使う作業難易度。未指定なら従来の自動選択。
   difficulty?: RegisterDifficulty;
   owner: string;
   registeredAt: string;
+  startOn?: string;
   due: string;
   completedAt: string;
   conclusion: string;
@@ -128,12 +130,14 @@ export const REMOVE_REGISTER_ITEM_FIELD = Symbol("remove-register-item-field");
 export type RegisterItemFieldUpdates = {
   item_type?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   track?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  domains?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   item_status?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   priority?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   difficulty?: RegisterDifficulty | typeof REMOVE_REGISTER_ITEM_FIELD;
   owner?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   registered_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  start_on?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   completed_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   block_reason?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
@@ -184,11 +188,13 @@ const SPECDOJO_KEY_ORDER = [
   "based_on",
   "item_type",
   "track",
+  "domains",
   "item_status",
   "priority",
   "difficulty",
   "owner",
   "registered_at",
+  "start_on",
   "due_on",
   "completed_at",
   "block_reason",
@@ -400,10 +406,12 @@ export function readRegisterItemContent(
     ...(inputs ? { inputs } : {}),
     type: asString(fields.item_type) ?? CELL_TODO,
     ...(asString(fields.track) ? { track: asString(fields.track) } : {}),
+    ...(Array.isArray(fields.domains) ? { domains: fields.domains as string[] } : {}),
     priority: asString(fields.priority) ?? "medium",
     ...(difficulty ? { difficulty } : {}),
     owner: asString(fields.owner) ?? CELL_TODO,
     registeredAt: asString(fields.registered_at) ?? CELL_TODO,
+    ...(asString(fields.start_on) ? { startOn: asString(fields.start_on) } : {}),
     due:
       fields.due_on === null
         ? CELL_NONE
@@ -556,6 +564,8 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
       ? null
       : inlineCodeAnglePlaceholders(item.conclusion.trim()),
     ...(item.track ? { track: item.track } : {}),
+    ...(item.startOn !== undefined ? { start_on: item.startOn } : {}),
+    ...(item.domains !== undefined ? { domains: item.domains } : {}),
     ...(item.approach ? { approach: item.approach } : {}),
     ...(item.targetPath ? { target_path: item.targetPath } : {}),
     ...(item.targetRulebook ? { target_rulebook: item.targetRulebook } : {}),

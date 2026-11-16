@@ -55,7 +55,8 @@ flowchart TD
   M -->|"必要な型が揃い信頼できる"| FG
   M -->|"recipe のみ使える"| RG["recipe-guided"]
   M -->|"実践の型に頼れない"| FF["freeform"]
-  FG --> RV["レビュー → finalize（人が確定）"]
+  FG --> CN["condense<br/>1 文書の冗長さを整理"] --> RV["レビュー → finalize（人が確定）"]
+  P -->|"1 文書の冗長さを整理"| CN
   RG --> W["雛形から開始 → 内容を記述 → レビュー"]
   FF --> W
   P -->|"実装先行の成果物を反映・新設"| RF["retrofit<br/>実装 → 成果物"]
@@ -66,7 +67,7 @@ flowchart TD
   P -->|"human が確定する"| FIN["finalize / bootstrap-finalize<br/>status を ready へ昇格"]
 ```
 
-`draft` は文脈で任された調査・下書きのための段であり、型の件数からは自動選択しません。整備状況で分岐するのは成果物の作成・更新（`fully-guided` / `recipe-guided` / `freeform`）だけです。`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` 系は目的別のフェーズであり、実践の型が何件そろっているかだけでは選びません。とくに `bootstrap` は「実践の型が1件でも欠ける」ことを理由に選ばず、`undecided` の型を含めてどの型が必要かを作成条件に照らして判断し、成果物と必要な型を一式で初期整備する場合に限って選びます。不要な recipe / sample / template は rulebook frontmatter へ `not-needed` と宣言し、作成対象へ含めません。基準にできる実践の型が無くても、初期整備の対象でなければ `freeform` です。
+`draft` は文脈で任された調査・下書きのための段であり、型の件数からは自動選択しません。整備状況で分岐するのは成果物の作成・更新（`fully-guided` / `recipe-guided` / `freeform`）だけです。`bootstrap` / `retrofit` / `condense` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` 系は目的別のフェーズであり、実践の型が何件そろっているかだけでは選びません。とくに `bootstrap` は「実践の型が1件でも欠ける」ことを理由に選ばず、`undecided` の型を含めてどの型が必要かを作成条件に照らして判断し、成果物と必要な型を一式で初期整備する場合に限って選びます。不要な recipe / sample / template は rulebook frontmatter へ `not-needed` と宣言し、作成対象へ含めません。基準にできる実践の型が無くても、初期整備の対象でなければ `freeform` です。
 
 ### 1.2. approach 一覧
 
@@ -74,7 +75,7 @@ flowchart TD
 
 #### 1.2.1. 成果物の作成・更新
 
-`draft` は下書き、`fully-guided` は磨き込みを担います。基本の流れは、雛形 → 人が文脈を記入 → `draft` → `fully-guided` → `finalize`（人）です。`recipe-guided` / `freeform` は実践の型をどこまで基準にするかを切り替えます。
+`draft` は下書き、`fully-guided` は磨き込みを担います。基本の流れは、雛形 → 人が文脈を記入 → `draft` → `fully-guided` → `condense` → review → `finalize`（人）です。`recipe-guided` / `freeform` は実践の型をどこまで基準にするかを切り替えます。
 
 `draft` を除く三つの流は、型との関係を表す守破離に対応します。「守」は型をそのまま守り、「破」は型を基準にしながら工夫し、「離」は型から離れて完了条件と根拠から組み立てます。守破離は品質の序列ではなく、タスクの目的と実践の型の整備状況に応じて進め方を選ぶための名前です。
 
@@ -99,7 +100,7 @@ flowchart LR
 | `approach`      | 流の名前 | 参照方針と進め方                                                                                                                                                                                                           | 対応テンプレート                                                                                                    |
 | --------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `draft`         | 下書き   | 文脈で任された範囲を調べて下書きする。型・依存成果物・`based_on`・`project_context`・個票の `入力`・カタログの `brief`・成果物内の文脈・出典つき外部情報を参照する。選定値を提案として示し、出典と選定理由を result に残す | `xep-draft-template.md`（edit）                                                                                     |
-| `fully-guided`  | 守       | 既存成果物の磨き込み専用。宣言された rulebook / recipe / sample、`depends_on`、`based_on`、`project_context`、個票の `入力`、カタログの `brief` だけを参照する。template は読み込まない                                    | [edit](../exec-templates/xep-fully-guided-template.md) / [review](../exec-templates/xrp-fully-guided-template.md)   |
+| `fully-guided`  | 守       | 既存成果物の磨き込み専用。宣言された rulebook / recipe / sample、`depends_on`、`based_on`、`project_context`、個票の `入力`、カタログの `brief` を参照する。edit では `evidence_refs` も読む。template は読み込まない      | [edit](../exec-templates/xep-fully-guided-template.md) / [review](../exec-templates/xrp-fully-guided-template.md)   |
 | `recipe-guided` | 破       | recipe が示す構成・問い・観点を主基準にする。rulebook / sample / template が存在しても、構造・文体の基準にはしない                                                                                                         | [edit](../exec-templates/xep-recipe-guided-template.md) / [review](../exec-templates/xrp-recipe-guided-template.md) |
 | `freeform`      | 離       | 実践の型に頼れないため、カタログの `done_criteria`、対応 schema、既存の類似成果物を根拠に構成と内容を決める。参照した根拠と未決事項を result に残す                                                                        | [edit](../exec-templates/xep-freeform-template.md) / [review](../exec-templates/xrp-freeform-template.md)           |
 
@@ -205,11 +206,12 @@ flowchart LR
   S --> DD --> C
 ```
 
-| `approach`                | 流の名前 | 参照方針と進め方                                                                                                                                                           | 対応テンプレート                                                                                                                        |
-| ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `bootstrap`               | 型起こし | 作成条件から型の要否を判断し、成果物と必要な rulebook / recipe / sample / template を同じタスクで初期作成する。不要な3種は rulebook frontmatter へ `not-needed` と宣言する | [edit](../exec-templates/xep-bootstrap-template.md)                                                                                     |
-| `retrofit`                | 見取り   | DCT の `evidence_refs` を読み、現在動作・意図された仕様・`done_criteria` を照合して、成果物の維持・部分反映・作り直し・新設を判断する                                      | [edit](../exec-templates/xep-retrofit-template.md) / [review](../exec-templates/xrp-retrofit-template.md)                               |
-| `cross-deliverable-dedup` | 型寄せ   | scope 内の成果物から正本を選び、他文書の重複を要約・参照へ置き換える。実践の型は変更せず、各成果物の必須情報と追跡性を維持する                                             | [edit](../exec-templates/xep-cross-deliverable-dedup-template.md) / [result](../exec-templates/xer-cross-deliverable-dedup-template.md) |
+| `approach`                | 流の名前     | 参照方針と進め方                                                                                                                                                                  | 対応テンプレート                                                                                                                        |
+| ------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `bootstrap`               | 型起こし     | 作成条件から型の要否を判断し、成果物と必要な rulebook / recipe / sample / template を同じタスクで初期作成する。不要な3種は rulebook frontmatter へ `not-needed` と宣言する        | [edit](../exec-templates/xep-bootstrap-template.md)                                                                                     |
+| `retrofit`                | 見取り       | DCT の `evidence_refs` を読み、現在動作・意図された仕様・`done_criteria` を照合して、成果物の維持・部分反映・作り直し・新設を判断する                                             | [edit](../exec-templates/xep-retrofit-template.md) / [review](../exec-templates/xrp-retrofit-template.md)                               |
+| `condense`                | 冗長さの整理 | 1 文書内の冗長さを削る・まとめる・参照に置き換える。意味と判断に要る情報を保ち、新しい内容を足さない。磨き込みの後・review の前に置き、修正・保持の箇所と原因を result に記録する | `xep-condense-template.md` / `xer-condense-template.md`                                                                                 |
+| `cross-deliverable-dedup` | 型寄せ       | scope 内の成果物から正本を選び、他文書の重複を要約・参照へ置き換える。実践の型は変更せず、各成果物の必須情報と追跡性を維持する                                                    | [edit](../exec-templates/xep-cross-deliverable-dedup-template.md) / [result](../exec-templates/xer-cross-deliverable-dedup-template.md) |
 
 `retrofit` では、実装を現在動作（AS-IS）の根拠、既存成果物・決定記録・プロジェクトコンテキストを意図された仕様の根拠、`done_criteria` を成果物が満たすべき目的として扱います。三者が一致すれば成果物へ反映し、実装が意図された仕様と異なる場合は実装へ無条件に合わせず、乖離と修正対象候補を result に記録します。実装から確認できない目的・業務判断・将来方針は推測しません。
 
@@ -287,17 +289,19 @@ flowchart LR
 
 `approach` にかかわらず適用する原則です。
 
-- 矛盾時の優先: `draft` / `fully-guided` は rulebook（規約）を優先し、template の章構成が食い違っても rulebook を正とします。`recipe-guided` は rulebook を参照範囲に含めないため recipe を優先します。
+- 書き方の矛盾時の優先: `draft` / `fully-guided` は rulebook（規約）を優先し、template の章構成が食い違っても rulebook を正とします。`recipe-guided` は rulebook を参照範囲に含めないため recipe を優先します。
 - 参照範囲: `fully-guided` は宣言された文書だけを参照します。対象成果物、rulebook / 併せて適用する rulebook / recipe / sample、`depends_on` 成果物、対象成果物 frontmatter の `based_on`、`project_context`、個票の `入力`、カタログの `brief` を含み、未宣言の文書や外部の情報は探索しません。`入力` と `brief` は未指定なら plan に載りません。`draft` はこれらに template・成果物内の文脈・任された調査に必要な出典つき外部情報を加えます。`recipe-guided` および未指定では、対象成果物に紐づく実践の型・`depends_on` 成果物・プロジェクトコンテキスト（→ [遂行の技活用ガイド](waza-guide.md)）に限定し、他のプロジェクト文書を独自に探索しません。`freeform` は類似実例やプロジェクト文脈を参照するため対象外です。
+- edit の実装の根拠: `draft` / `fully-guided` / `recipe-guided` は、plan に展開されたカタログの `evidence_refs` も読み取り専用で参照します。`recipe-guided` では個票の `入力` も参照します。実装は現在動作の事実、rulebook（`recipe-guided` では recipe）は書き方、`depends_on` と個票の `入力` は意図された仕様の根拠です。承認根拠のない乖離は意図された仕様を保持して result に記録し、実装から業務判断や将来方針を推測しません。実装の根拠は `targets`・変更許可範囲・commit 対象に含めません。`evidence_refs` 未指定やカタログなしだけでは異常終了しません。
+- edit の未作成の依存: 上記 3 approach の plan は、未作成の `depends_on` を wikilink ではなくインラインコードと「未作成」で示します。未作成だけでは止めず、内容を推測せず _TODO_ / _ASSUMPTION_ と不足する根拠・次のアクションを残します。review や `condense` など他 approach の参照方針は変わりません。
 - 既存記述の尊重: `fully-guided` / `recipe-guided` および未指定では既存記述を尊重し、`depends_on` の最新の決定と矛盾する箇所、および参照範囲に含む実践の型に適合しない箇所（rulebook を参照範囲に含む `fully-guided` / 未指定では、rulebook の必須要素の欠落・禁止事項への抵触・章構成の不適合）のみ最小限を修正し、不足は加筆・補強します。実践の型への適合は内容の全面書き換えではなく、既存記述を保持したままの章立ての移し替えと必須要素の補完として行います。あわせて、同一成果物内で重複している記述は正本を1箇所に定めて統合し、参照範囲に含む実践の型の必須要素にも `done_criteria` にも寄与しない記述は削除します（rulebook を参照範囲に含む `fully-guided` / 未指定では rulebook の必須要素が基準）。統合・削除は既存記述の尊重の例外であり、判断根拠を result に記録することで担保します。`freeform` は対象外です。上記のいずれにも該当しない場合（完成度・整合性・読みやすさの向上など）は、それだけを理由に修正しません。rulebook が複数の構成を許容している場合（例: 領域単位・グループ単位のいずれの粒度も認める場合）、他章との見た目の整合を理由により詳細な構成へ書き換えません。
-- 根拠のない具体化の禁止: `freeform` と `draft` の文脈で任された範囲を除き、ファイルパス・コマンド・設定値など実装や設定の実態を示す記述を新たに書き加える場合、参照範囲の文書（rulebook / recipe / `depends_on` 成果物・プロジェクトコンテキスト、`fully-guided` ではさらに `based_on`・個票の `入力`・カタログの `brief`、`retrofit` では `evidence_refs`）で裏付けが取れる場合に限ります。既存記述が曖昧・不完全でも、裏付けが無ければ完成度を上げる目的だけで断定的に具体化しません。`draft` では任された範囲に限って調べて値を決め、成果物に「提案」と示し、出典と選定理由を result に残します。任されていない範囲や裏付けの無い箇所は _TODO_ / _ASSUMPTION_ として論点を残します。品質上の根拠不足は grade が該当 viewpoint の level と finding で評価し、review はその評価を付け直しません。
+- 根拠のない具体化の禁止: `freeform` と `draft` の文脈で任された範囲を除き、ファイルパス・コマンド・設定値など実装や設定の実態を示す記述を新たに書き加える場合、参照範囲の文書（rulebook / recipe / `depends_on` 成果物・プロジェクトコンテキスト、`fully-guided` ではさらに `based_on`・個票の `入力`・カタログの `brief`、`retrofit` と上記 3 approach の edit では `evidence_refs`）で裏付けが取れる場合に限ります。既存記述が曖昧・不完全でも、裏付けが無ければ完成度を上げる目的だけで断定的に具体化しません。`draft` では任された範囲に限って調べて値を決め、成果物に「提案」と示し、出典と選定理由を result に残します。任されていない範囲や裏付けの無い箇所は _TODO_ / _ASSUMPTION_ として論点を残します。品質上の根拠不足は grade が該当 viewpoint の level と finding で評価し、review はその評価を付け直しません。
 - 判断根拠の記録: 参照した文書・しなかった文書とその理由を成果物または result に残します（特に `recipe-guided` / `freeform`）。後から実践の型を整備する材料になります。
 - 判定基準の優先: `done_criteria` と grade 結果が判定基準を示す場合はそれらを優先します。本原則は、判定基準だけでは読み取れない「どこまで参照に照らすか」を補います。
 - 前提・概要・判定基準の使い分け: カタログの `overview`（成果物の目的を1文で表す概要）、`brief`（成果物の外から継続して渡す技術スタックや制約などの前提）、`done_criteria`（成果物が満たすべき検証可能な完了条件）を明確に区別します。`brief` は schedule / register 両経路の plan に前提として展開され、未指定なら plan に載りません。複数の成果物で前提を共有する場合は YAML アンカー（`&anchor` / `*anchor`）を活用できます。前提を完了条件に混同せず、検証可能な基準だけを `done_criteria` に記載します。
 
 ### 1.4. 成果物カタログなしで進める
 
-register からの `draft`・`fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` は、カタログなしでも使えます。既存成果物は `--target <doc-id>` を文書索引で引き、frontmatter の `specdojo.rulebook` を起点に kata を辿ります。新規成果物は `register add`・`register update` の `--target-path` と `--target-rulebook` にパスと rulebook ID を明示します。個票へ保存する名前は `target_path` と `target_rulebook` です。既存文書と指定が矛盾した場合は停止します。
+register からの `draft`・`fully-guided`・`condense`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` は、カタログなしでも使えます。既存成果物は `--target <doc-id>` を文書索引で引き、frontmatter の `specdojo.rulebook` を起点に kata を辿ります。`condense` は既存成果物に限ります。新規成果物は `register add`・`register update` の `--target-path` と `--target-rulebook` にパスと rulebook ID を明示します。個票へ保存する名前は `target_path` と `target_rulebook` です。既存文書と指定が矛盾した場合は停止します。
 
 カタログの `done_criteria` はないため、個票の完了条件と rulebook を完了基準にします。`fully-guided` には `not-needed` を除く kata 一式、`recipe-guided` には recipe が必要で、不足すると起票時に停止します。`retrofit` では調べる実装のパスを個票に明記します。
 
@@ -313,6 +317,12 @@ register からの `draft`・`fully-guided`・`recipe-guided`・`freeform`・`re
 
 メンテナンスのタスクでは、対象の実践の型を「見直す対象」として扱い、複数の成果物・review result・対象領域の慣行を根拠に、次の観点で妥当性を見直します。対象の実践の型に finding がある場合は、finding の message と同じ viewpoint の判定根拠から指摘の根拠となる規範を特定し、紐づく rulebook / recipe / sample / template や執筆標準も必要な根拠として読みます。たとえば rulebook との構成不整合を指摘する finding では、成果物の有無にかかわらず rulebook を正として照合します。
 
+成果物の grade は、すべての観点の finding に原因 `cause` を付けます。原因は `document`、または Kata の種類と箇所を持つ `kata` です。Kata の箇所を根拠として示せない場合と、原因を持たない旧結果は `document` として扱います。Kata そのものの grade には原因を付けません。項目の形は [[specdojo:command-reference]] の grade の説明を参照してください。
+
+手入れの edit plan は、対象 Kata 自身の指摘に加え、「成果物から届いた Kata が原因の finding」節に、その Kata を rulebook 宣言から辿れる成果物の指摘を取り込みます。対象の種類と一致する原因だけを選び、現在の成果物全体のハッシュと一致する最新サイドカーから、成果物・行・観点・内容・Kata の箇所を1件ずつ載せます。`document` の指摘と、成果物が評価後に変わった古い指摘は取り込みません。`fully-guided` の磨き込み plan は、その成果物のすべての指摘を原因付きで載せます。Kata が原因でも成果物側の修正は必要です。
+
+同じ節には、宣言済みの Kata が原因の `condense` の記録も取り込みます。成果物ごとに最新の完了済み result を選び、空の記録で古い記録が復活しないようにします。出どころを `source=grade` / `source=condense` で区別し、condense は result ID と修正前の場所・種類・直し方・理由・Kata の箇所を示します。`document` の記録は取り込みません。記録形式は [[specdojo:plan-result-lifecycle-guide]] を参照してください。
+
 | `approach`             | 見直す対象 | 主な見直し観点                                                   |
 | ---------------------- | ---------- | ---------------------------------------------------------------- |
 | `rulebook-maintenance` | rulebook   | 章構成、必須項目、禁止事項、判定基準                             |
@@ -322,7 +332,7 @@ register からの `draft`・`fully-guided`・`recipe-guided`・`freeform`・`re
 
 根拠の種別を一律に必須化せず、finding ごとに指摘の解消を判定できる資料を使います。成果物または review result がないことだけを理由に根拠不足とは判定しません。finding の message と判定根拠、対象の実践の型から辿れる関連文書、該当する執筆標準、利用可能な成果物・review result・対象領域の慣行を確認しても修正内容を確定できない場合に限り、根拠不足として見送ります。見送る場合は、確認した資料、判断できなかった理由、不足している根拠、次のアクションを result に記録します。
 
-実践の型メンテナンスは自動で差し込まれません。schedule で実行する場合は、`approach: rulebook-maintenance` のように対象を指定した phase / phase_set を `sch-strategy-<track>.yaml` に明示的に記述します（[Schedule設計ガイド](schedule-design-guide.md)）。
+`schedule strategy generate` は `bootstrap-kata-set` の初期整備後と、`improve-kata` の `kata_target: rulebook` に、rulebook → recipe → sample → template の見直し段を生成します。`not-needed` の型は省略します。他の型を直接指定した `improve-kata` はその型だけが対象です。手で strategy を組む場合は、`approach: rulebook-maintenance` のように対象を指定した phase / phase_set を記述します（[[specdojo:schedule-design-guide|Schedule設計ガイド]]）。
 
 ## 3. review への適用
 

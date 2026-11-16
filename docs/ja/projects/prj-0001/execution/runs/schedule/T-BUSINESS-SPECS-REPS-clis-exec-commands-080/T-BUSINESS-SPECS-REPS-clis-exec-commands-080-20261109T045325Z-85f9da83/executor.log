@@ -1,0 +1,7 @@
+変更した文書は[CLI仕様（exec コマンド群）](docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md)です。操作の流れと重なっていた操作一覧の説明列を削り、操作分類・コマンド・正本リンクは残しました。
+
+```text
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"操作一覧の重複説明を削り、操作分類と正本参照を維持しました。","handoff":[],"condense_records":[{"location":"「4. 操作とコマンド参照」の操作一覧（修正前の利用目的・操作の意味列）","category":"repetition","action":"delete","reason":"操作の流れと重複する説明列を削除し、操作分類・対象コマンド・正本リファレンスを残したため、利用目的と参照先を保てる。","cause":{"type":"document"}}],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/040-user-interface-model/clis-exec-commands.md","status":"passed","summary":"対象文書を整形しました。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーはありません。"}]}
+</specdojo_executor_evidence>
+```

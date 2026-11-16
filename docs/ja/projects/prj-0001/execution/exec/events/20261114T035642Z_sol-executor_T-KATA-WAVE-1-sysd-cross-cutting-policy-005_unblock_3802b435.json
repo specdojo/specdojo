@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T03:56:42Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-005",
+  "by": "sol-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab",
+    "pipeline_resume_claimed": "true"
+  }
+}

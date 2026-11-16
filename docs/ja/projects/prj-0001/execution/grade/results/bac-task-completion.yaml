@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: bac-task-completion
+path: docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 100
+graded_at: "2026-11-15T22:42:16.228Z"
+graded_by: sol-review-executor
+content_hash: c227ff44dc8d7b5b948a2f04879b3e0f4ef7af79a2921ee0a9816d8dcabe106e
+source_hashes:
+  catalog-entry: c6a7f54c99c1c8bfc069b9b90d37ae6df085471bf0b75baa022061398d414f18
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:bps-deliverable-evaluation: 4e896f90131ef061ae0441a1d1d4ecf8ca0aac3020907a6b51d0c7751f2a8848
+  dependency:bps-task-completion: 408df12594dbe143f29094f542a6da97cc855f9516cf73cbfa54e4b6114f4971
+  dependency:prj-success-criteria-and-acceptance-criteria: 1f13815822bf1c827afc860617ef794e1c2a8cb4f76108a489582419a2393daf
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 92
+  business:
+    score: 100
+  consistency:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 29
+    anchor: >-
+      | BAC-01      | `src/grade/grade.ts`（評価の実行と結果の確定。結果に `content_hash`・観点ごとの判定・`graded_by` が残る）   |
+      [[prj-0001:stsd-deliverable\|ステータス定義（成果物）]]（評価・完了で成果物の状態を変えない）                                                                                                                                 
+      | 評価結果の確定は確認済み。評価結果を保持する概念データストアは [[cdsd-execution\|概念データストア定義（プロジェクト実行）]] で未定義 |
+    message: >-
+      BAC-01 identifies an undefined evaluation-result data store, but Section 3 limits design follow-up to BAC-02–04
+      and BAC-06–09; include the BAC-01 dependency in the reservation with its responsible role, resolution timing, and
+      tracking reference so it is not lost when DC-003 is reassessed.
+    message_ja: >-
+      BAC-01 identifies an undefined evaluation-result data store, but Section 3 limits design follow-up to BAC-02–04
+      and BAC-06–09; include the BAC-01 dependency in the reservation with its responsible role, resolution timing, and
+      tracking reference so it is not lost when DC-003 is reassessed.
+    cause:
+      type: document
+done_criteria:
+  satisfied: 3
+  total: 4
+  unsatisfied:
+    DC-003:
+      - ARC
+  detail_ref: bac-task-completion-grade-criteria

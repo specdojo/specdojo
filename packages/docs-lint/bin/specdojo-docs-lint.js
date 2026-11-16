@@ -63,6 +63,10 @@ if (command === "--help" || command === "-h") {
   };
   if (command === "markdownlint") {
     args.unshift("-r", path.join(packageRoot, "src", "markdownlint-rule-no-chinese-glyphs.cjs"));
+  } else if (command === "remark") {
+    if (!args.includes("--silently-ignore")) {
+      args.unshift("--silently-ignore");
+    }
   }
   process.exitCode = run(command, args, env);
 } else {

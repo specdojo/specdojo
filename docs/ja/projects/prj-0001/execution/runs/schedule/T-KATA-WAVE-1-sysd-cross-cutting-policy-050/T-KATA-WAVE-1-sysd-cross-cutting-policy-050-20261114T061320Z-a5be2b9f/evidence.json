@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-050",
+  "run_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-050-20261114T061320Z-a5be2b9f",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-14T06:15:09.045Z",
+    "completed_at": "2026-11-14T06:22:53.056Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../samples/sysd-cross-cutting-policy-sample.md    | 112 +++++++++++----------\n 1 file changed, 57 insertions(+), 55 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md",
+      "status": "passed",
+      "summary": "対象 Markdown の整形完了。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "対象0ファイル、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は非適用。",
+      "reason": "変更は Markdown sample のみで、YAML の変更がありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は非適用。",
+      "reason": "executor の変更は `docs/ja/specdojo/samples/` 内のみです。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は非適用。",
+      "reason": "登録簿・既存 plan・result の変更がありません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-cross-cutting-policy-050/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines\n… output omitted …\no-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-cross-cutting-policy-050/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-cross-cutting-policy-050/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4699 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 102 passed, 0 error, 0 未検査\n  graph: 4 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4699 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-cross-cutting-policy-050\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this d\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-as\n… output omitted …\n enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-cross-cutting-policy-050/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-cross-cutting-policy-050/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-cross-cutting-policy-050\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-U3X3lF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-vfw8nH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-p9VLbM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Xbbzls/pjr-0001-t\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "横断ルール sample を改訂しました。印刷の再試行条件、保存失敗後の回復、設定反映、未決事項と公開責任を具体化し、整形・差分検査を通過しました。親 runner の検証は実行待ちです。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイルは `docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md` のみ。result・grade サイドカー・成果物本体は更新していません。",
+    "reporter の「進め方と実践の型の適用」へ記録してください。一次根拠は横断ルールの rulebook / recipe / template、Sample 記述標準、Rulebook 記述標準、共通レビュー観点一覧、PJR-2GD6。成果物の設計索引・横断ルールは責務境界の確認に使い、完成例はプロジェクト概要・CLI・印刷連携の各 sample に合わせました。",
+    "F001/F007 は上位価値との接続、F003/F009 は関係者と人間の承認責務、F002/F004〜F006/F020/F021 は判断対象・依存順・期限・報告先・復帰と公開条件で対応を確認しました。F008/F010/F012〜F015 は具体規則、設定キーと単位、正本参照、検証入力と期待結果で確認しました。PJR-2GD6 と現行 rulebook に従い、値・構造・エラーペイロードの転載は行っていません。",
+    "F011 は主題列挙の重複表を追加せず、一覧・詳細・検証表の役割を維持しました。F016〜F018 は現行 template の6章構成と全9ルールの六要素を照合し、F019 は既存の `type: architecture` を維持しました。これは編集後の照合結果であり、grade の再評価結果ではありません。",
+    "印刷連携 sample を実読し、送信前ビジーだけに許される自動再試行と、時間切れ・結果不明時の手動確認を整合させました。架空の本部契約・運用値・検証 script は未同梱と明示し、Q-K1〜Q-K3 に担当・判断期限・受入への影響・次アクションを残しています。",
+    "recipe は失敗から制約を抽出する手順、template は6章と六要素の骨組みに必要と判断し、rulebook の既存 ID 宣言を維持しました。rulebook は既に標準章構成・章別判断基準と良否例を備え、完成例の章もありません。4種のサイドバーメニューも登録済みで、追加変更は不要です。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-050/T-KATA-WAVE-1-sysd-cross-cutting-policy-050-20261114T061320Z-a5be2b9f/executor.log",
+      "bytes": 3495,
+      "truncated": false
+    }
+  ]
+}

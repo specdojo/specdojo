@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T12:24:13Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-090",
+  "by": "qwen-review-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-090/T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T054720Z-90320b58/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-ccd-project-planning-090/T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T054720Z-90320b58/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-ccd-project-planning-090-20261109T054720Z-90320b58",
+    "pipeline_resume_claimed": "true"
+  }
+}

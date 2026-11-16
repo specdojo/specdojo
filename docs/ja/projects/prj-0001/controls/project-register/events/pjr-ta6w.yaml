@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_27fb9600bd294094838c3408679fa5bb
+  ts: "2026-11-06T17:26:34Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-Z0XR の統合後の実際の run で見つけた記録の欠落を起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 古い配置の run を新しい配置で再開すると、evidence とログが commit されない
+    - field: description
+      from: ""
+      to: PJR-Z0XR の統合後、古い配置で始まった PJR-PZBP を executor から再開すると、新しい配置に run のディレクトリができ、統合の commit には pipeline-state.json しか入らなかった。evidence.json・executor のログ・親の検証のログが消えた
+    - field: input
+      from: ""
+      to: '["2026-11-07 の PJR-PZBP の再開（commit 9a08a55c0）。最初の run は古い配置（exec/evidence/PJR-PZBP/20261106T160500718Z-12a595ba/、exec/plans・exec/results）に記録した。Z0XR の入った dist で --resume --resume-from executor を流すと、execution/runs/register/PJR-PZBP/20261106T165603146Z-2fcac83e/ に記録が書かれた（worktree で parent-validation-attempt-1-lint-ts.log を読めた）。続く --resume で統合すると、Git に入ったのは新しいディレクトリの pipeline-state.json だけで、ほかは worktree ごと消えた。run の要約は success だった（2026-11-07 orchestrator の確認）","Z0XR の個票は、再開を同じ run として扱い、前回の記録を同じディレクトリへ `*.attempt-N.*` として退避すると書くが、古い配置で始まった run では新しいディレクトリが別にできた（2026-11-07）","関連: PJR-BRN4（統合が許可外の追加を黙って落とす）。commit の許可リストが HEAD 側の plan（古い配置）から導かれ、新しいディレクトリのファイルが外れた可能性がある。原因は未確認（2026-11-07）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-07"
+    - field: derived_from
+      from: ""
+      to: '["PJR-Z0XR"]'
+- v: 1
+  id: reg_62268f4662f94871ab9fcfb8c42c6b71
+  ts: "2026-11-06T22:13:55Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_27fb9600bd294094838c3408679fa5bb
+- v: 1
+  id: reg_b60c0a57be6249d5a2f15056db785eb9
+  ts: "2026-11-06T22:30:15Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, test-integration"
+  previous_event_id: reg_62268f4662f94871ab9fcfb8c42c6b71
+- v: 1
+  id: reg_a727fc686f35457cb66bff2842ab0c54
+  ts: "2026-11-06T23:02:30Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm, test-integration"
+      to: "-"
+  previous_event_id: reg_b60c0a57be6249d5a2f15056db785eb9
+- v: 1
+  id: reg_37d94fe58b4a4df994f2f7aae13a9238
+  ts: "2026-11-06T23:16:27Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a727fc686f35457cb66bff2842ab0c54
+- v: 1
+  id: reg_851d5eece97e433f904d504d8a3477f0
+  ts: "2026-11-06T23:30:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が完了条件を差分・個票・result と照らし、JSEY で統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-07"
+    - field: conclusion
+      from: "-"
+      to: 今の run の記録を result の置き場所にかかわらず commit の対象にし、古い配置で始まった run の再開は元のディレクトリへ書き続けるようにした。外した run の記録は integrate.log に出す
+  previous_event_id: reg_37d94fe58b4a4df994f2f7aae13a9238

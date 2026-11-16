@@ -24,6 +24,7 @@ export type RegisterItemView = {
 export type RegisterAddFields = {
   type: string;
   track?: string;
+  domains?: string[];
   title: string;
   description: string;
   inputs?: string[];
@@ -32,6 +33,7 @@ export type RegisterAddFields = {
   status: string;
   owner: string;
   registeredAt: string;
+  startOn?: string;
   due: string;
   completedAt: string;
   conclusion: string;

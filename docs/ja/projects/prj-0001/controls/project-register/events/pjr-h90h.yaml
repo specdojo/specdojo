@@ -1,0 +1,200 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_facbd31b4251450f8ff43b30eb3fb2d3
+  ts: "2026-11-10T13:14:33Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 代表の ifx-cmd-ai-provider-cli を、確定した型で磨き込む
+    - field: description
+      from: ""
+      to: business-specs-kata で確定した型（specdojo:ifx-cmd-rulebook と sample）に合わせて、代表の ifx-cmd-ai-provider-cli を磨き込み、冗長さを整理する。review は schedule の review の段で流す
+    - field: input
+      from: ""
+      to: '["型一式の確定（2026-11-10、indie が決定）の後に、代表を磨き込みから流し直す。schedule の磨き込み・condense の段はゲートで bes・br・clis の段まで巻き戻すことになるため、register の todo で行う（orchestrator の判断、indie に報告）。","夜間の register の routine で流す（indie が承認）。review は T-BUSINESS-SPECS-REPS-ifx-cmd-ai-provider-cli-090 を reopen 済みで、6:00 の exec cycle で流す。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:ifx-cmd-ai-provider-cli"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6","PJR-T88P"]'
+- v: 1
+  id: reg_ca016053f8894c3fb1e22538563fe2e2
+  ts: "2026-11-10T13:18:08Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 代表の流し直しを今夜の夜間実行で行う（indie が決定、2026-11-10）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_facbd31b4251450f8ff43b30eb3fb2d3
+- v: 1
+  id: reg_ed82266cbe7649a9a82bdbfb9d8d9f29
+  ts: "2026-11-10T23:48:09Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ca016053f8894c3fb1e22538563fe2e2
+- v: 1
+  id: reg_1d516616083643deab2310a287c3ce70
+  ts: "2026-11-11T00:04:24Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ed82266cbe7649a9a82bdbfb9d8d9f29
+- v: 1
+  id: reg_7a05940ae8fc4460bf7459f5a0321754
+  ts: "2026-11-11T00:33:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（夜間の実行の後、日中に sol-executor で流した）で対応。差分が対象の文書だけで、lint が通ることを確かめた。型への合い方は、この後の review の段で確かめる
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: 代表の ifx-cmd-ai-provider-cli を、確定した型で磨き込み、冗長さを整理した
+  previous_event_id: reg_1d516616083643deab2310a287c3ce70
+- v: 1
+  id: reg_ef3560f64c0a470b8e4e28639b70740e
+  ts: "2026-11-11T11:56:41Z"
+  action: reopen
+  actor: indie
+  from_status: done
+  to_status: open
+  reason: orchestrator が記帳。grade（reps5-20261111）が needs-work 73。同じ項目に 2 回目の完了条件を足して再実行する（indie が承認）
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-11"
+      to: "-"
+  previous_event_id: reg_7a05940ae8fc4460bf7459f5a0321754
+- v: 1
+  id: reg_dca3aefee11a4f01816e91f1a9083816
+  ts: "2026-11-11T12:02:07Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ef3560f64c0a470b8e4e28639b70740e
+- v: 1
+  id: reg_02cf2b2720d14ad698685547613b6417
+  ts: "2026-11-11T12:08:47Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。"
+  previous_event_id: reg_dca3aefee11a4f01816e91f1a9083816
+- v: 1
+  id: reg_6f87cabd194940b4903b9a5aa3dacc3d
+  ts: "2026-11-11T12:45:04Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 認証不要構成への対応、リンク修正、未決事項の追跡先を反映し、実行した静的検査は成功。evidence JSON 解析失敗時の契約は宣言資料だけでは確定できず、未完了として個票に記録した。"
+      to: "-"
+  previous_event_id: reg_02cf2b2720d14ad698685547613b6417
+- v: 1
+  id: reg_f0f22e2ebafa40d8949673959f584bc9
+  ts: "2026-11-11T12:57:07Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6f87cabd194940b4903b9a5aa3dacc3d
+- v: 1
+  id: reg_67353e5e8d8a48da8af1326dd14ec197
+  ts: "2026-11-11T13:01:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回目の実行の後、grade（reps-r2-ifx-20261111）で needs-work 96。残る指摘は目印の解消だけで、確定の段で人が行う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: 代表の ifx-cmd-ai-provider-cli を、確定した型で磨き込み、冗長さを整理した
+      to: 代表の ifx-cmd-ai-provider-cli を確定した型で磨き込み、evidence の JSON が壊れたときの扱いと認証の要否を直した（grade 96、残りは目印のみ）
+  previous_event_id: reg_f0f22e2ebafa40d8949673959f584bc9

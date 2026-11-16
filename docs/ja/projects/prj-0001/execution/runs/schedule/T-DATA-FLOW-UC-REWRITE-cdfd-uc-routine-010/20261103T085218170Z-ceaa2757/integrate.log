@@ -1,0 +1,13 @@
+=== 2026-11-03T09:40:41.527Z git merge --no-ff -m exec(T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010): 系統別の詳細 CDFD の書き直し exec/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010 ===
+exit: 1
+--- stdout ---
+Auto-merging docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010-result.md
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-UC-REWRITE-cdfd-uc-routine-010-result.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr ---
+
+--- merge --abort ---
+exit: 0
+
+

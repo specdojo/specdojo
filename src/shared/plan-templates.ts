@@ -1,17 +1,15 @@
 import { existsSync, readFileSync } from "node:fs";
+import { isAbsolute, relative } from "node:path";
 import type { Approach, TaskMode } from "./agent-types.js";
-import {
-  resolveSpecdojoPath,
-  resolveSpecdojoPathIfExists,
-  specdojoReferencePath,
-} from "./template-resolution.js";
+import { storePlanConventions } from "./plan-conventions.js";
+import { specdojoPackageRootDir } from "./package-paths.js";
+import { specdojoRootDir } from "./specdojo-config.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
 export const MISSING = "_MISSING_";
 
-const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
+const COMMON_CONVENTIONS_TEMPLATE = "xp-common-conventions-template.md";
 const COMMON_CONVENTIONS_PLACEHOLDER = "_COMMON_CONVENTIONS_";
-const REVIEW_ONLY_START = "<!-- review-only:start -->";
-const REVIEW_ONLY_END = "<!-- review-only:end -->";
 const PLAN_ESSENTIALS_START = "<!-- plan-essentials:start -->";
 const PLAN_ESSENTIALS_END = "<!-- plan-essentials:end -->";
 const DEFAULT_CONVENTIONS_HEADING = "## 共通: 記法・成果物規約";
@@ -78,45 +76,57 @@ function extractMarkedBlock(text: string, start: string, end: string): string | 
     .trim();
 }
 
-function conventionsReferenceSentence(referencePath: string): string {
+function conventionsReferenceSentence(referencePaths: string[]): string {
+  const references = referencePaths.map((path) => `\`${path}\``).join("、");
   return (
-    `作業を始める前に、共通の規約の詳細 \`${referencePath}\` を読み、その内容に従う。` +
+    `作業を始める前に、共通の規約の詳細 ${references} を読み、その内容に従う。` +
     "次の箇条書きは、そのうち守らないと失敗に直結する要点である。"
   );
 }
 
-function selectReviewOnlyBlock(conventions: string, isReview: boolean): string {
-  const kept: string[] = [];
-  let inside = false;
-  for (const line of conventions.split("\n")) {
-    const marker = line.trim();
-    if (marker === REVIEW_ONLY_START) {
-      inside = true;
-      continue;
-    }
-    if (marker === REVIEW_ONLY_END) {
-      inside = false;
-      continue;
-    }
-    if (!inside || isReview) kept.push(line);
-  }
-  return kept
-    .join("\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trimEnd();
+// Snapshots must not depend on the checkout supplying bundled resources. Keep local
+// paths repository-relative and external bundled paths relative to the package root.
+function conventionsResourceReference(path: string): string {
+  if (!isAbsolute(path)) return path.replaceAll("\\", "/");
+  const local = relative(specdojoRootDir(), path).replaceAll("\\", "/");
+  return local.startsWith("../") || local === ".."
+    ? relative(specdojoPackageRootDir(), path).replaceAll("\\", "/")
+    : local;
 }
 
-function planConventionsText(fragment: string, referencePath: string, isReview: boolean): string {
-  const essentials = extractMarkedBlock(fragment, PLAN_ESSENTIALS_START, PLAN_ESSENTIALS_END);
-  if (essentials === null) return selectReviewOnlyBlock(fragment, isReview);
-  const heading =
-    fragment.split("\n").find((line) => line.startsWith("## ")) ?? DEFAULT_CONVENTIONS_HEADING;
-  const sections = [heading, conventionsReferenceSentence(referencePath), essentials];
-  if (isReview) {
-    const reviewOnly = extractMarkedBlock(fragment, REVIEW_ONLY_START, REVIEW_ONLY_END);
-    if (reviewOnly) sections.push(reviewOnly);
+function planConventionsText(fragmentPaths: string[], cache: Map<string, string>): string {
+  const fragments = fragmentPaths.map((path) => readTemplate(path, cache));
+  const essentials = fragments.map((fragment) =>
+    extractMarkedBlock(fragment, PLAN_ESSENTIALS_START, PLAN_ESSENTIALS_END),
+  );
+  // マーカーのないローカル断片は全文を載せる従来の契約を維持する。
+  if (essentials.every((block) => block === null)) {
+    return fragments
+      .map((fragment) => fragment.trim())
+      .filter(Boolean)
+      .join("\n\n");
   }
-  return sections.join("\n\n");
+  const heading =
+    fragments[0].split("\n").find((line) => line.startsWith("## ")) ?? DEFAULT_CONVENTIONS_HEADING;
+  const content = fragments
+    .map((fragment, index) => {
+      const essential = essentials[index];
+      if (essential !== null && essential !== undefined) return essential;
+      // 共通断片の見出しは上で案内とともに配置するため、全文との重複を避ける。
+      return (index === 0 ? fragment.replace(/^## .+$/m, "") : fragment).trim();
+    })
+    .filter(Boolean)
+    .reduce((previous, next) => {
+      const continuesList = previous.split("\n").at(-1)?.startsWith("- ") && next.startsWith("- ");
+      return previous ? `${previous}${continuesList ? "\n" : "\n\n"}${next}` : next;
+    }, "");
+  return [
+    heading,
+    conventionsReferenceSentence(fragmentPaths.map(conventionsResourceReference)),
+    content,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 }
 
 export function injectCommonConventions(
@@ -124,20 +134,22 @@ export function injectCommonConventions(
   schemaRef: string,
   cache: Map<string, string>,
   mode: TaskMode = "edit",
+  storage?: { executionPath: string; planPath: string },
 ): string {
-  const fragmentPath = execTemplatePath(COMMON_CONVENTIONS_TEMPLATE);
-  let conventions = planConventionsText(
-    readTemplate(fragmentPath, cache),
-    specdojoReferencePath(fragmentPath),
-    mode === "review",
-  );
+  const fragmentPaths = [
+    execTemplatePath(COMMON_CONVENTIONS_TEMPLATE),
+    execTemplatePath(`${templatePrefix(mode)}-common-conventions-template.md`),
+  ];
+  let conventions = planConventionsText(fragmentPaths, cache);
   conventions =
     schemaRef === MISSING
       ? conventions
           .split("\n")
           .filter((line) => !line.includes(SCHEMA_REF_PLACEHOLDER))
           .join("\n")
-      : conventions.split(SCHEMA_REF_PLACEHOLDER).join(schemaRef);
+      : conventions.split(SCHEMA_REF_PLACEHOLDER).join(conventionsResourceReference(schemaRef));
+  if (storage)
+    conventions = storePlanConventions(conventions, storage.executionPath, storage.planPath);
   if (body.includes(COMMON_CONVENTIONS_PLACEHOLDER)) {
     return body.split(COMMON_CONVENTIONS_PLACEHOLDER).join(conventions);
   }

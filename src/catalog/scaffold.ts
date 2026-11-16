@@ -299,7 +299,9 @@ export function runScaffold(opts: {
   for (const [f, templatePath] of [...templateFiles].sort(([a], [b]) => a.localeCompare(b))) {
     try {
       const raw = readFileSync(templatePath, "utf8");
-      loaded.push({ filename: f, path: templatePath, template: load(raw) as DctTemplateDoc });
+      const template = load(raw) as DctTemplateDoc;
+      if (template?.status === "deprecated") continue;
+      loaded.push({ filename: f, path: templatePath, template });
     } catch (err) {
       errors.push(`${templatePath}: ${err instanceof Error ? err.message : String(err)}`);
     }

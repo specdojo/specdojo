@@ -1,0 +1,42 @@
+`npm run docs:build` の実行完了を待機しています。
+`git status` の完了を待機しています。
+`npm run docs:build` の実行完了を待機しています。
+`find` の完了を待機しています。
+`git diff --stat` の完了を待機しています。
+PJR-GZ42「文書サイトで対話を吹き出しと TUI の見た目で表示する」の対応を完了しました。
+
+### 実施内容
+
+1. **`chat` コードブロック描画モジュールの実装 ([`chat.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/packages/docs-site/src/chat.ts))**:
+   - `renderChat(code, info)` および `isChatFence(info)` を実装しました。
+   - `info` に `tui` が指定された場合は TUI 表示（`specdojo-chat-tui`）、それ以外は吹き出し表示（`specdojo-chat-bubble`）として HTML を生成します。
+   - 行頭の空白（字下げ行）は直前の発言の続き行としてパースし、改行および字下げ（箇条書き等）を保持します。
+   - インラインコード（バッククォート `` ` ``）を `<code>` に変換し、山括弧等の HTML 特殊文字をエスケープします。
+   - 話者判定に基づき、アバター SVG アイコン（利用者／相手側）および TUI プロンプト記号（`>`／`●`）を出力します。
+
+2. **スタイルの追加 ([`custom.css`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/packages/docs-site/.vitepress/theme/custom.css))**:
+   - 吹き出し表示: 利用者（右寄せ・ブランド色背景）、相手側（左寄せ・カード背景）、角丸吹き出し、スマートフォン幅での折り返しに対応。
+   - TUI 表示: 暗い背景（`#18181b`）、等幅フォント、プロンプト色（利用者シアン、相手側グリーン）、ハイコントラストによるライト／ダーク両対応。
+
+3. **VitePress 設定の更新 ([`config.mts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/packages/docs-site/.vitepress/config.mts))**:
+   - markdown-it のフェンスハンドラで `isChatFence(info)` を判定し、`renderChat` を呼び出すよう差し替えました。`chat` 以外のコードブロックの表示・動作には影響を与えません。
+
+4. **Quick Start ガイドの更新 ([`quick-start-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/docs/ja/specdojo/guides/quick-start-guide.md))**:
+   - ガイド内の具体的対話コードブロックを `text` から `chat` に変更しました（対話本文は一切変更していません）。
+   - ※個票の前提には「7か所」と記載されていましたが、実際のガイド内には具体的対話ブロックが 11 箇所存在したため、一貫性を保つため 11 箇所すべてを更新しました。
+
+5. **Markdown 記述ルールの更新 ([`markdown.instructions.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/.github/instructions/markdown.instructions.md))**:
+   - `### 6.1. 対話コードブロック（chat）` を追加し、言語指定（`chat`, `chat tui`）、話者の書き方、字下げによる続き行、インラインコードの利用規則を明記しました。
+
+6. **CHANGELOG の更新 ([`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/CHANGELOG.md))**:
+   - `## [Unreleased]` の `### 追加機能` に docs-site の `chat` 描画機能追加を記録しました。
+
+7. **個票の更新 ([`pjr-gz42-docs-site-chat-render.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/docs/ja/projects/prj-0001/controls/project-register/pjr-gz42-docs-site-chat-render.md))**:
+   - 作業内容の状態を `done` に更新し、対応結果セクションに実施内容、話者名の判定ロジックと決定理由、検証結果を記載しました。
+
+8. **単体テストの作成 ([`chat.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GZ42/tests/packages/docs-site/chat.test.ts))**:
+   - 話者判定、字下げ続き行の保持、吹き出し描画、TUI 描画、インラインコード変換、HTML エスケープ、fence 判定、markdown-it との連携（他のコードブロックに影響を与えないこと）の計 9 件のテストを追加し、すべて通過することを確認しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs-site に chat 言語コードブロックの対話描画処理（吹き出しおよび chat tui による TUI 風表示）を実装し、Quick Start ガイドの対話コードブロック 11 箇所を chat に更新、記述ルールおよび CHANGELOG を追記しました。","handoff":["話し手の名前の決め方: `あなた`・`利用者`・`ユーザー`・`ユーザ`・`user`・`you`・`me`・`human`・`client`（大文字小文字問わず）を利用者側（右寄せ / `>`）、それ以外のすべての名前（`オーケストレーター` や独自エージェント名・ロール名等）を相手側・システム側（左寄せ / `●`）と判定する方式を採用しました。将来的に異なるエージェント名やロール名が現れた場合でも特別な設定なしに自然に相手側として描画できます。","Quick Start ガイドの対象箇所: 個票では『7か所』と記載されていましたが、実際の `docs/ja/specdojo/guides/quick-start-guide.md` 内には具体的対話見出しの対話ブロックが計 11 箇所存在したため、対話表現の一貫性を保つため 11 箇所すべてを `chat` に更新しました。","Markdown 記述ルール: `.github/instructions/markdown.instructions.md` は保護対象外パスであったため、executor 自身で直接 `chat` および `chat tui` の対話記法ルールを反映しました。","依存関係: docs-site に新規外部依存パッケージは追加せず、既存の標準機能・CSS のみで実装したため `package.json` の変更は発生していません。"],"validations":[{"command":"npm run docs:build","status":"passed","summary":"VitePress docs build succeeded with chat rendering"},{"command":"npm run validate:history-links","status":"passed","summary":"History links validation passed"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"Catalog validation passed for changed ticket"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No changed *.yaml or *.yml files"}]}
+</specdojo_executor_evidence>

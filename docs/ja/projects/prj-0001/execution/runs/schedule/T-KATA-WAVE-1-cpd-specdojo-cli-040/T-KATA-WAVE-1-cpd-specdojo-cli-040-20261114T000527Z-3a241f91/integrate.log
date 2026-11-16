@@ -1,0 +1,3 @@
+commit-scope: unresolved target doc id (not committable): specdojo:cpd-rulebook
+commit-scope: skipped non-target changes (left in worktree):
+  packages/docs-site/.vitepress/sidebar-config.ts

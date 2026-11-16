@@ -1,3 +1,4 @@
+import { readPlanFile } from "../../../src/shared/plan-conventions.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -210,7 +211,9 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       "utf8",
     );
     for (const filename of [
+      "xp-common-conventions-template.md",
       "xep-common-conventions-template.md",
+      "xrp-common-conventions-template.md",
       "xep-rulebook-maintenance-template.md",
     ]) {
       await writeFile(
@@ -267,7 +270,9 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       "utf8",
     );
     for (const filename of [
+      "xp-common-conventions-template.md",
       "xep-common-conventions-template.md",
+      "xrp-common-conventions-template.md",
       "xep-rulebook-authoring-template.md",
       "xep-recipe-authoring-template.md",
     ]) {
@@ -404,6 +409,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       "utf8",
     );
     for (const relativePath of [
+      "exec-templates/xp-common-conventions-template.md",
       "exec-templates/xep-common-conventions-template.md",
       "exec-templates/xep-fully-guided-template.md",
       "rulebooks/pjr-rulebook.md",
@@ -520,7 +526,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     "approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる",
     { timeout: 30_000 },
     async () => {
-      const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
+      const referencePath = "docs/ja/specdojo/exec-templates/xp-common-conventions-template.md";
       const plainOutPath = path.join(dir, "plan-plain.md");
       await generateRegisterPlan({
         executionPath: path.join(dir, "execution"),
@@ -542,8 +548,10 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       });
 
       for (const outPath of [plainOutPath, approachOutPath]) {
-        const content = await readFile(outPath, "utf8");
-        expect(content, outPath).toContain(`共通の規約の詳細 \`${referencePath}\` を読み`);
+        const content = readPlanFile(outPath);
+        expect(content, outPath).toContain(
+          `共通の規約の詳細 \`${referencePath}\`、\`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md\` を読み`,
+        );
         expect(content, outPath).toContain("`[[id|title]]` 形式");
         expect(content, outPath).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
         expect(content, outPath).not.toContain("| 変更したファイル");
@@ -711,7 +719,11 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       "utf8",
     );
     await writeFile(path.join(dir, "package.json"), '{"name":"customer"}\n', "utf8");
-    const filenames = ["xep-common-conventions-template.md"];
+    const filenames = [
+      "xp-common-conventions-template.md",
+      "xep-common-conventions-template.md",
+      "xrp-common-conventions-template.md",
+    ];
     for (const kind of KATA_KINDS) {
       filenames.push(`xep-${kind}-maintenance-template.md`, `xep-${kind}-authoring-template.md`);
       const kataDir = path.join(dir, "docs", "ja", "specdojo", `${kind}s`, "customer");

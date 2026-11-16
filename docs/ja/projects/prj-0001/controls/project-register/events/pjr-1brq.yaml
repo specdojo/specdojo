@@ -1,0 +1,116 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf0c503340f04c86994e0913c48d54fa
+  ts: "2026-11-03T23:51:24Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: editorial-review の決定のあとに行う実装を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: editorial-review approach を実装する
+    - field: description
+      from: ""
+      to: PJR-CYG0 で決めた仕様に沿って、冗長さを抜き出して原因を分ける review approach を追加し、指摘を磨き込みと Kata の手入れの段へ渡せるようにする
+    - field: input
+      from: ""
+      to: '["PJR-CYG0 の決定内容（名前、指摘の書式と原因の分類、渡し方、判定の基準）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CYG0"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-CYG0"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_821d16855128487487088e89826e38e1
+  ts: "2026-11-04T11:47:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: title
+      from: editorial-review approach を実装する
+      to: condense approach を実装する
+    - field: description
+      from: PJR-CYG0 で決めた仕様に沿って、冗長さを抜き出して原因を分ける review approach を追加し、指摘を磨き込みと Kata の手入れの段へ渡せるようにする
+      to: PJR-CYG0 の決定に沿って、1 文書の中の冗長さを直す edit の approach condense を足し、直した箇所と Kata が原因の指摘を result に記録し、標準の流れで磨き込みと review の間に置く
+    - field: input
+      from: '["PJR-CYG0 の決定内容（名前、指摘の書式と原因の分類、渡し方、判定の基準）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）"]'
+      to: '["PJR-CYG0 の決定内容（3 層のうち condense の段。名前、edit であること、位置、下限、記録の書式）を実装の正本とする。完了条件は決定のあとに書く（2026-11-04）","予防の規則と原因の振り分けは別の todo で実装する。condense の記録の書式は原因の振り分けの書式とそろえる（2026-11-04）"]'
+  previous_event_id: reg_bf0c503340f04c86994e0913c48d54fa
+- v: 1
+  id: reg_25075ae8538e4649a0c6ea19587433b1
+  ts: "2026-11-04T13:56:24Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_821d16855128487487088e89826e38e1
+- v: 1
+  id: reg_dc4fc44db4034475af4213c61b83e2fb
+  ts: "2026-11-04T14:27:11Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_25075ae8538e4649a0c6ea19587433b1
+- v: 1
+  id: reg_c7c5c5fe7acb495e9c38f2c2875ffb57
+  ts: "2026-11-04T22:48:13Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator の確認結果を利用者が承認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 完了条件を満たした
+  previous_event_id: reg_dc4fc44db4034475af4213c61b83e2fb

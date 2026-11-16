@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:clis-rulebook
+path: docs/ja/specdojo/rulebooks/clis-rulebook.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 97
+graded_at: "2026-11-13T06:17:59.868Z"
+graded_by: sol-review-executor
+content_hash: 821ce6aeb83216a2dbacfaf13924c1c5cb4ff00a7f848ba468f7825c4f9b3549
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 41
+    anchor: "| 外部コマンド連携仕様（ifx-cmd） | システムが外部コマンドを呼ぶ契約。利用者が自システムを操作する CLIS とは責務が異なる                       |"
+    message: >-
+      The ifx-cmd definition repeats the responsibility boundary already stated at line 11 without adding information;
+      retain that definition in one location and remove the duplicate so the same boundary does not require parallel
+      maintenance.
+    message_ja: >-
+      The ifx-cmd definition repeats the responsibility boundary already stated at line 11 without adding information;
+      retain that definition in one location and remove the duplicate so the same boundary does not require parallel
+      maintenance.
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 55
+    anchor: "- `type` は本 rulebook の `deliverable_type` に対応する `ui`、`rulebook` は `specdojo:clis-rulebook` とします。"
+    message: >-
+      CLIS is assigned type ui, but the cited document-metadata-standard defines ui as screen/report specifications and
+      places commands under api; reconcile the canonical definitions and explain the classification of user-facing CLI
+      operation specifications so authors can distinguish them from command integration contracts.
+    message_ja: >-
+      CLIS is assigned type ui, but the cited document-metadata-standard defines ui as screen/report specifications and
+      places commands under api; reconcile the canonical definitions and explain the classification of user-facing CLI
+      operation specifications so authors can distinguish them from command integration contracts.
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 167
+    anchor: "| 本文への sample・recipe・template のリンク章や wikilink の設置 | 対応関係は frontmatter で宣言する                        |"
+    message: >-
+      The prohibition on sample wikilinks is unqualified, while the declared clis-sample uses specdojo:ifx-cmd-sample as
+      its authoritative printing contract; clarify whether the prohibition concerns this Kata's companion links and
+      explicitly define how cross-Kata contract examples may be referenced so the rule and its completed example agree.
+    message_ja: >-
+      The prohibition on sample wikilinks is unqualified, while the declared clis-sample uses specdojo:ifx-cmd-sample as
+      its authoritative printing contract; clarify whether the prohibition concerns this Kata's companion links and
+      explicitly define how cross-Kata contract examples may be referenced so the rule and its completed example agree.

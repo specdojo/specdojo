@@ -1,0 +1,100 @@
+---
+specdojo:
+  id: prj-0001:pjr-v681-bes-task-ready-selected-refine-grade
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: review
+  priority: medium
+  difficulty: hard
+  owner: sol-executor
+  registered_at: "2026-11-11T11:57:32Z"
+  derived_from:
+    - PJR-2GD6
+    - PJR-T88P
+  commit_type: docs
+  commit_scope: register
+  approach: fully-guided
+  targets:
+    - prj-0001:bes-task-ready-selected
+---
+
+# PJR-V681 代表の bes-task-ready-selected を、grade の指摘で磨き込む
+
+## 1. 概要
+
+grade（reps5-20261111）needs-work 88 の指摘（並列の要求の対応付けの項目・範囲の前提・残った目印）を直す
+
+## 2. 入力
+
+- 代表の確定の段の材料で、bes は needs-work 88（major 3）だった。indie が 2026-11-11 に推奨の進め方（再実行）を承認した
+
+## 3. 完了条件
+
+- 代表の [[prj-0001:bes-task-ready-selected]] を、確定した型 [[specdojo:bes-rulebook]] と [[specdojo:bes-sample]] に合わせ、grade（run id `reps5-20261111`、needs-work 88）の指摘を直している。
+  - 並列の要求を実行の記録と対応付ける項目を決め、実行の記録の正本（schema・業務データ辞書）で確かめて書いている。正本にない場合は `_UNDECIDED_` のまま理由を書く。
+  - このイベントを使うタスクの流れの範囲を、業務の承認が要る前提として `_ASSUMPTION_` に明示している（承認は確定の段で人が行う。executor が承認済みとしない）。
+  - 残っている `_TODO_` を、確定した型の範囲で解消している。決められないものは `_UNDECIDED_` か `_ASSUMPTION_` にして理由を書く。
+  - そのほかの grade の指摘のうち、確定した型の範囲で直せるものを直し、直さないものは理由を個票の対応結果に書いている。
+- 冗長さを整理し、実装・schema・リファレンスと同じことを書かず正本を参照する方針（PJR-2GD6）を保っている。
+- 型と、ほかの成果物とカタログを変えていない。
+- grade で pass になっている（grade は統合の後に orchestrator が流す。grade を流せないことを理由に未完了としない）。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
+- CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
+- `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`specdojo catalog validate --project prj-0001` が通っている。
+- 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の後）: `docs/ja/projects/prj-0001/execution/grade/results/bes-task-ready-selected.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade は orchestrator が流す。
+
+## 4. 作業内容
+
+| No  | 作業                                                   | 担当         | 状態 | メモ                                                                       |
+| --- | ------------------------------------------------------ | ------------ | ---- | -------------------------------------------------------------------------- |
+| 1   | grade の指摘を読み、代表を直す                         | executor     | done | 宣言された根拠で修正し、未解消の指摘は 5.1 節に記録                        |
+| 2   | 検査を流し、決めた点と理由を対応結果に書く             | executor     | done | executor の検査は 5.3 節、親検証は runner の evidence に記録               |
+| 3   | 統合の後に grade を流し、pass を確かめる               | orchestrator | done | 2026-11-16 orchestrator が grade（needs-work 87 点、opus-review-executor） |
+| 4   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | sol-executor | open | 0.8.0 の後に流す                                                           |
+| 5   | 直した後に grade し直して結果を書く（次の回）          | sol-executor | open | orchestrator が流す                                                        |
+
+## 5. 対応結果
+
+### 5.1. 実施内容と grade 指摘への対応
+
+[[prj-0001:bes-task-ready-selected|業務イベント: 実行可能タスクの選択]] の 1.1 節と 5 章を修正した。五章の構成、対象確定ごとの発生単位、選択と着手宣言の区別を維持し、`status: draft` を据え置いた。
+
+| 指摘                   | 対応結果・未解消の理由                                                                                                                                                                                                         | 次のアクション                                                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F001                   | 未解消。人間の PO の氏名・Member ID を確認できる資料が参照範囲にない。indie の再実行承認は本イベントの業務承認者の識別根拠にはならない                                                                                         | PM が確定の段の業務レビュー前に人間の PO を特定し、識別と承認結果をレビュー結果に記録する                                                                                          |
+| F002・F004・F005・F007 | 未解消。相関の論理項目は「並列選択要求識別子」を維持。実行記録モデルと schema が参照範囲に宣言されていないため、正本の対応項目の有無を確認できず、`_UNDECIDED_` と理由を残した。正本に項目がないと確認したことにはしない       | ARC が `prj-0001:bdd-exec-event`・`prj-0001:bdd-exec-state` と対応 schema の所在・利用可否を確認し、参照範囲へ宣言して照合する。実行 ID で代用せず、確定入力への引き渡しを保留する |
+| F003・F008             | 業務上の観測規則を明確化。当該対象を含む確定時点の累計とし、確認できなければ省略する。A、次に B の確定で累計を観測できる場合は 1、2 とし、A の値を最終件数で更新しない。観測不能な同時確定の省略例も追加した                   | ARC が累計と省略条件の正本上の表現を相関項目と併せて照合し、QE が対応確定後に確認例をテスト設計へ用いる                                                                            |
+| F006                   | 適用範囲を `_ASSUMPTION_` に明示。状態定義で説明できる schedule 系を記述上の前提とし、3 系統が共用する実行サイクル全体への適用は人の業務承認を要する。承認取得は未了であり、executor は承認しない                              | BA が一覧と各系統の起点イベントを照合し、人間の PO が確定の段で適用範囲を判断する                                                                                                  |
+| F009・F010             | 未解消。依存の `bes-index` は plan で未作成とされており、対応行・カタログ整合・双方向接続を確認する本文がない。ID の仮置きと照合担当・時期を維持した                                                                           | 一覧作成後に ARC が `P-07` の起点・カタログ定義との整合と双方向リンクを確認し、業務仕様の完成判断前に PM へ報告する                                                                |
+| F011                   | 本文に未処理の `_TODO_` はなく、個票の対応結果の記入待ちは解消した。担当割当の未承認という意味を保持して一般の進め方案の記述へ整理した。業務範囲の `_ASSUMPTION_` は追加完了条件で必要なため残し、全目印の解消済みとは扱わない | 人間の PO が範囲・担当割当を判断する。承認前に目印だけを除去しない                                                                                                                 |
+
+### 5.2. 進め方と実践の型の適用
+
+- rulebook は必須の事実境界・相関・未決事項の条件と禁止事項の判断に、recipe は二件の選択と観測時点の整理に使用した。sample は業務範囲の前提の置き方のみ参照し、店舗の業務内容・値は転記していない。型に欠落はなく、既存の五章構成を維持した。template は fully-guided の指示に従い参照していない。
+- 根拠として、対象成果物、[[prj-0001:cdfd-overview|概念データフロー図（全体概要）]]、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]]、plan と個票の入力を確認した。[[prj-0001:prj-overview|プロジェクト概要]] の人間の判断責任と正本共有の原則を適用し、プロジェクトの Why は再掲していない。作業規約として orchestrator 運用メモと共通規約二文書、検査選定のため `package.json`・`.specdojo/specdojo.config.json`・`lefthook.yml` を確認した。
+- 相関項目について、完了条件は schema・業務データ辞書との照合を求める一方、参照方針は宣言外の文書・実装の探索を禁止している。実行記録モデルは対象の直接の `depends_on`・`based_on`・入力・実装エビデンスに含まれないため、状態定義から参照先 ID まで確認し、本文や schema の追加探索は行わなかった。対応項目の具体化を見送り、後続で参照範囲の追加と照合が必要なことを記録した。未宣言のプロセス仕様・名簿・カタログ・grade サイドカーも参照・変更していない。
+- 迷った点は、件数を要求終了時の最終件数ではなく各確定時点の累計として整理することと、観測不能時に省略することを選んだ。根拠は既存の「発生時点で観測可能な範囲」と rulebook の未来の結果を確定データにしない要件である。物理項目・採番・保存形式は定義していない。
+- 適用範囲の説明は冒頭と論点表から 1.1 節の前提へ統合した。件数の未決記述は表と確認例の観測規則へ置き換え、5.2 節には正本の表現との未照合事項を残した。記録・追跡の繰り返しは 1.1 節への参照にまとめた。いずれも意味を保持し、正本の複製と重複説明を減らす変更である。
+- 型、他の成果物、カタログ、`CHANGELOG.md`、result は編集していない。result の「進め方と実践の型の適用」への記録は、この節と executor 報告の `handoff` から reporter が転記する。対象成果物に `_CONTEXT_:` はなかった。
+
+### 5.3. 検証と引き継ぎ
+
+変更した二文書の Prettier 整形、`node --import tsx src/specdojo.ts catalog validate --project prj-0001`、`npm run validate:history-links`、`node --import tsx src/specdojo.ts register build --project prj-0001`、`git diff --check` が成功した。カタログ検証では他項目の未作成文書・再 export のみの実装参照への警告が出たが、終了コードは 0 だった。登録簿の生成は `npx tsx` が sandbox の IPC 制約（`EPERM`）で起動できず、共通規約の代替起動方法で成功した。生成物に追跡対象の差分はない。`npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` など指定された親検証は runner に委譲し、重複実行していない。
+
+統合後の grade 再実行と pass の確認は orchestrator の担当として残す。今回の編集は業務承認・正本照合・一覧との接続の完了を意味せず、各指摘の未解消理由と次のアクションは 5.1 節のとおりである。
+
+### 5.4. CHANGELOG に書く事項
+
+なし。代表の業務仕様の前提・観測規則と未解決理由の整理であり、CLI・schema・利用者向け機能は変更していない。
+
+再 grade の結果（2026-11-16、orchestrator）: needs-work 87 点（前回 needs-work 89 点）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bes-task-ready-selected.yaml`。
+
+## 6. 関連ドキュメント
+
+- [[prj-0001:bes-task-ready-selected]]
+- [[specdojo:bes-rulebook]]
+- [[prj-0001:pjr-2gd6-business-specs-reps]]

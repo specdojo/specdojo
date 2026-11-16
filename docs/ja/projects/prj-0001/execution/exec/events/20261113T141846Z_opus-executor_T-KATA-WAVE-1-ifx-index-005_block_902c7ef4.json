@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T14:18:46Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-ifx-index-005",
+  "by": "opus-executor",
+  "msg": "agent exited with non-zero code",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-005/T-KATA-WAVE-1-ifx-index-005-20261113T141515Z-326786bc/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-ifx-index-005/T-KATA-WAVE-1-ifx-index-005-20261113T141515Z-326786bc/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-ifx-index-005-20261113T141515Z-326786bc"
+  }
+}

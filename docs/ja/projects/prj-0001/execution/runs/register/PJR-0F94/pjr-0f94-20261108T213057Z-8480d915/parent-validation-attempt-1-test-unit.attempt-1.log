@@ -1,0 +1,547 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0F94
+
+result-markdownlint: result execution/runs/schedule/TASK/TASK/result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-11-08T22:05:23.961Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-11-08T22:04:24.322Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-11-08T22:04:24.652Z.
+fallback reporter complete
+Updated ticket status → ready: /tmp/specdojo-ticket-hPU7cr/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-bFPknp/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-etM9QZ/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-iQZKjv/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-W0VCNk/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-ObZ0Yb/pjr-0001-topic.md
+ ❯ tests/src/register/register.test.ts (68 tests | 1 failed) 813ms
+     × plan がインデックス行・個票リネーム・参照 targets の更新を含む 7ms
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+ ❯ tests/src/commands/init.test.ts (31 tests | 15 failed) 616ms
+     × creates minimal markdownlint settings without lefthook and preserves them on rerun 69ms
+     × scaffolds Slidev only when selected by CLI flags [] 35ms
+     × scaffolds Slidev only when selected by CLI flags [ '--slidev' ] 31ms
+     × scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(2) ] 7ms
+     × scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(2) ] 8ms
+     × scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(2) ] 12ms
+     × scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(3) ] 13ms
+     × scaffolds Slidev only when selected by CLI flags [ '--slidev', '--lefthook' ] 58ms
+     × creates lefthook files only when explicitly selected 46ms
+     × creates a non-interactive exec-ready configuration and resolves its agents 40ms
+     × includes only parent validations backed by package.json scripts 36ms
+     × uses only the selected providers in the protected rosters 34ms
+     × generates Antigravity members that carry a currently provided model 31ms
+     × passes --workspace-name to Dev Container scaffolding 33ms
+     × creates a deliverables catalog when --catalog is passed, and guides later addition when omitted 58ms
+before
+  
+  
+docs/selected.md
+Written: .specdojo/host/devcontainer-tmux.sh
+[dry-run] would write: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Wrote agent stdout: /tmp/specdojo-agent-command-0rOaFq/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-pcKZMj/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-rLiF1d/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-rLiF1d/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-rLiF1d/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-rLiF1d/.specdojo/agent-members.yaml
+ ❯ tests/src/shared/specdojo-config-command.test.ts (16 tests | 9 failed) 471ms
+     × creates a register-ready config in an empty directory and prints the next steps 23ms
+     × scaffolds provider files from the package through the config command 9ms
+     × scaffolds Slidev through config and keeps settings (lefthook: false) 47ms
+     × scaffolds Slidev through config and keeps settings (lefthook: true) 21ms
+     × scaffolds agent member snippets with the protected registry name and guidance 2ms
+     × creates a .gitignore excluding specdojo outputs with untrack guidance 22ms
+     × appends only missing lines to an existing .gitignore and is idempotent on rerun 41ms
+     × shows the planned lines without writing anything with --dry-run 23ms
+     × adds node_modules/ to an existing .gitignore that does not mention it 23ms
+
+ Test Files  3 failed | 190 passed (193)
+      Tests  25 failed | 3409 passed (3434)
+   Start at  07:03:48
+   Duration  71.99s (transform 3.51s, setup 751ms, import 38.68s, tests 79.49s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedrate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN: timeline_path is deprecated. Use register epics and dashboard build.
+Invalid workspace name: "". Use only ASCII letters, numbers, dot, underscore, and hyphen.
+Invalid workspace name: "". Use only ASCII letters, numbers, dot, underscore, and hyphen.
+Invalid workspace name: "". Use only ASCII letters, numbers, dot, underscore, and hyphen.
+Invalid workspace name: "". Use only ASCII letters, numbers, dot, underscore, and hyphen.
+problem
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 25 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > creates minimal markdownlint settings without lefthook and preserves them on rerun
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-init-markdownlint-fyILk4/.markdownlint.yaml'
+ ❯ tests/src/commands/init.test.ts:48:19
+     46|       expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(false);
+     47|       await runInit({ yes: true, provider: "none" });
+     48|       expect(load(readFileSync(join(repo, ".markdownlint.yaml"), "utf8…
+       |                   ^
+     49|         MD013: false,
+     50|         MD024: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > scaffolds Slidev only when selected by CLI flags []
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/src/commands/init.test.ts:120:60
+    118|         expect(existsSync(join(repo, ".markdownlintignore"))).toBe(fal…
+    119|       }
+    120|       expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(
+       |                                                            ^
+    121|         !expected && !flags.includes("--lefthook"),
+    122|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > scaffolds Slidev only when selected by CLI flags [ '--slidev' ]
+ FAIL  tests/src/commands/init.test.ts > specdojo init > scaffolds Slidev only when selected by CLI flags [ '--slidev', '--lefthook' ]
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/src/commands/init.test.ts:104:53
+    102|       await program.parseAsync(["init", "--yes", "--provider", "none",…
+    103|       expect(process.exitCode).toBeUndefined();
+    104|       expect(existsSync(join(repo, ".prettierrc"))).toBe(expected);
+       |                                                     ^
+    105|       const pkg = JSON.parse(readFileSync(join(repo, "package.json"), …
+    106|         devDependencies?: Record<string, string>;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(2) ]
+ FAIL  tests/src/commands/init.test.ts > specdojo init > scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(2) ]
+ FAIL  tests/src/commands/init.test.ts > specdojo init > scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(2) ]
+ FAIL  tests/src/commands/init.test.ts > specdojo init > scaffolds Slidev only when selected by CLI flags [ '--devcontainer', …(3) ]
+AssertionError: expected 1 to be undefined
+
+- Expected:
+undefined
+
++ Received:
+1
+
+ ❯ tests/src/commands/init.test.ts:103:32
+    101|       registerInitCommand(program);
+    102|       await program.parseAsync(["init", "--yes", "--provider", "none",…
+    103|       expect(process.exitCode).toBeUndefined();
+       |                                ^
+    104|       expect(existsSync(join(repo, ".prettierrc"))).toBe(expected);
+    105|       const pkg = JSON.parse(readFileSync(join(repo, "package.json"), …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > creates lefthook files only when explicitly selected
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/src/commands/init.test.ts:362:54
+    360|       await runInit({ yes: true, provider: "codex", lefthook: true });
+    361|
+    362|       expect(existsSync(join(repo, "lefthook.yml"))).toBe(true);
+       |                                                      ^
+    363|       expect(existsSync(join(repo, ".markdownlint.jsonc"))).toBe(false…
+    364|       expect(existsSync(join(repo, ".markdownlintrc"))).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > creates a non-interactive exec-ready configuration and resolves its agents
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-init-WS4KGd/.specdojo/specdojo.config.json'
+ ❯ tests/src/commands/init.test.ts:400:9
+    398|
+    399|       const config = JSON.parse(
+    400|         readFileSync(join(repo, ".specdojo/specdojo.config.json"), "ut…
+       |         ^
+    401|       ) as SpecDojoConfig;
+    402|       expect(config.projects["prj-1234"].members_path).toBe(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > includes only parent validations backed by package.json scripts
+AssertionError: expected undefined to deeply equal [ 'lint-ts', 'test-unit' ]
+
+- Expected:
+[
+  "lint-ts",
+  "test-unit",
+]
+
++ Received:
+undefined
+
+ ❯ tests/src/commands/init.test.ts:524:53
+    522|
+    523|       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/ex…
+    524|       expect(defaults.pipeline?.parent_validations).toEqual(["lint-ts"…
+       |                                                     ^
+    525|       expect(output.join("")).toContain("Included parent validation: l…
+    526|       expect(output.join("")).toContain(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > uses only the selected providers in the protected rosters
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-init-providers-CffKK9/.specdojo/agent-members.yaml'
+ ❯ tests/src/commands/init.test.ts:571:27
+    569|       await runInit({ yes: true, provider: "claude,opencode,copilot", …
+    570|
+    571|       const roster = load(readFileSync(join(repo, ".specdojo/agent-mem…
+       |                           ^
+    572|         members: Array<{ provider: string }>;
+    573|         aliases: Array<{ nickname: string; alias_of: string }>;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > generates Antigravity members that carry a currently provided model
+AssertionError: expected undefined to match object { nickname: 'flash-executor', …(1) }
+
+- Expected:
+{
+  "model": "gemini-3.8-flash-high",
+  "nickname": "flash-executor",
+}
+
++ Received:
+undefined
+
+ ❯ tests/src/commands/init.test.ts:659:24
+    657|       const roster = loadMemberRoster(repo, {});
+    658|       const executor = resolveAgentMember(roster, "agy-executor");
+    659|       expect(executor).toMatchObject({
+       |                        ^
+    660|         nickname: "flash-executor",
+    661|         model: "gemini-3.8-flash-high",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > passes --workspace-name to Dev Container scaffolding
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-init-devcontainer-0sG1Ng/.devcontainer/devcontainer.json'
+ ❯ tests/src/commands/init.test.ts:737:9
+    735|
+    736|       const devcontainer = JSON.parse(
+    737|         readFileSync(join(repo, ".devcontainer/devcontainer.json"), "u…
+       |         ^
+    738|       ) as {
+    739|         workspaceMount: string;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/25]⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > creates a deliverables catalog when --catalog is passed, and guides later addition when omitted
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-init-catalog-nG2kMC/.specdojo/specdojo.config.json'
+ ❯ tests/src/commands/init.test.ts:801:9
+    799|
+    800|       const config = JSON.parse(
+    801|         readFileSync(join(repoWithCatalog, ".specdojo/specdojo.config.…
+       |         ^
+    802|       ) as SpecDojoConfig;
+    803|       expect(config.projects["prj-1234"].catalog_path).toBe("010-deliv…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/25]⎯
+
+ FAIL  tests/src/register/register.test.ts > planRenumber / renumberPjrItem — 再採番の一括更新 > plan がインデックス行・個票リネーム・参照 targets の更新を含む
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ tests/src/register/register.test.ts:1209:34
+    1207|
+    1208|       const planWrite = plan.writes.find((w) => w.path === planPath);
+    1209|       expect(planWrite?.content).toContain("- prj-0001:pjr-0140-regist…
+       |                                  ^
+    1210|       const dependentWrite = plan.writes.find((w) => w.path === depend…
+    1211|       expect(dependentWrite?.content).toContain("  derived_from:\n    …
+ ❯ withTempRepo tests/src/register/register.test.ts:1162:7
+ ❯ tests/src/register/register.test.ts:1170:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config onboarding commands > creates a register-ready config in an empty directory and prints the next steps
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-config-init-rQcBNE/.specdojo/specdojo.config.json'
+ ❯ tests/src/shared/specdojo-config-command.test.ts:72:25
+     70|
+     71|       const configPath = join(repo, ".specdojo", "specdojo.config.json…
+     72|       expect(JSON.parse(readFileSync(configPath, "utf8"))).toEqual({
+       |                         ^
+     73|         version: 1,
+     74|         current_project: "prj-0001",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config onboarding commands > scaffolds provider files from the package through the config command
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/src/shared/specdojo-config-command.test.ts:119:81
+    117|       await runConfigCommand(["scaffold", "--provider", "codex"]);
+    118|
+    119|       expect(existsSync(join(repo, ".codex", "agents", "codex-executor…
+       |                                                                                 ^
+    120|       expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+    121|       expect(existsSync(join(repo, ".markdownlintignore"))).toBe(false…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config onboarding commands > scaffolds Slidev through config and keeps settings (lefthook: false)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/src/shared/specdojo-config-command.test.ts:155:55
+    153|
+    154|         await runConfigCommand(["scaffold", ...flags]);
+    155|         expect(existsSync(join(repo, ".prettierrc"))).toBe(true);
+       |                                                       ^
+    156|         expect(readFileSync(join(repo, "package.json"), "utf8")).toCon…
+    157|         expect(load(readFileSync(join(repo, ".markdownlint-cli2.yaml")…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config onboarding commands > scaffolds Slidev through config and keeps settings (lefthook: true)
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-config-slidev-OucchQ/.markdownlint.yaml'
+ ❯ tests/src/shared/specdojo-config-command.test.ts:143:30
+    141|           await runConfigCommand(["init"]);
+    142|           // Follow the documented YAML -> rc migration before enablin…
+    143|           const rules = load(readFileSync(join(repo, ".markdownlint.ya…
+       |                              ^
+    144|           writeFileSync(join(repo, ".markdownlintrc"), `${JSON.stringi…
+    145|           rmSync(join(repo, ".markdownlint.yaml"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config onboarding commands > scaffolds agent member snippets with the protected registry name and guidance
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/src/shared/specdojo-config-command.test.ts:191:92
+    189|       await runConfigCommand(["scaffold", "--provider", "copilot"]);
+    190|
+    191|       expect(existsSync(join(repo, ".specdojo", "copilot", "agent-memb…
+       |                                                                                            ^
+    192|         true,
+    193|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config init .gitignore > creates a .gitignore excluding specdojo outputs with untrack guidance
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-config-gitignore-xr8cvo/.gitignore'
+ ❯ tests/src/shared/specdojo-config-command.test.ts:259:14
+    257|       await runConfigCommand(["init"]);
+    258|
+    259|       expect(readFileSync(join(repo, ".gitignore"), "utf8")).toBe(
+       |              ^
+    260|         `${GITIGNORE_HEADER}\n${DEFAULT_GITIGNORE_PATTERNS.join("\n")}…
+    261|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config init .gitignore > appends only missing lines to an existing .gitignore and is idempotent on rerun
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/src/shared/specdojo-config-command.test.ts:283:84
+    281|       await runConfigCommand(["init"]);
+    282|
+    283|       expect(afterFirst.startsWith("node_modules/\n.specdojo/doc-index…
+       |                                                                                    ^
+    284|       expect(afterFirst.match(/\.specdojo\/doc-index\.json/g)).toHaveL…
+    285|       expect(readFileSync(join(repo, ".gitignore"), "utf8")).toBe(afte…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config init .gitignore > shows the planned lines without writing anything with --dry-run
+AssertionError: expected 'Kept existing markdownlint settings.\…' to contain '[dry-run] would write: .markdownlint.…'
+
+- Expected
++ Received
+
+- [dry-run] would write: .markdownlint.yaml
++ Kept existing markdownlint settings.
++ Already exists: /tmp/.specdojo/specdojo.config.json
++ .gitignore already excludes node_modules/ and specdojo outputs:/tmp/.gitignore
++   Skipped (already present): node_modules/
++   Skipped (already present): .specdojo/doc-index.json
++   Skipped (already present): docs/**/generated/*
++   Skipped (already present): !docs/**/generated/.gitkeep
++   Skipped (already present): docs/**/execution/exec/.locks/
++   Skipped (already present): /.vitepress/dist/
++   Skipped (already present): /.vitepress/cache/
++   Skipped (already present): /.vitepress/mermaid/
++   Skipped (already present): /.vitepress/d2/
++   Skipped (already present): /.vitepress/kata-staging/
++
+
+ ❯ tests/src/shared/specdojo-config-command.test.ts:313:31
+    311|       expect(existsSync(join(repo, ".specdojo", "specdojo.config.json"…
+    312|       expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(false);
+    313|       expect(output.join("")).toContain("[dry-run] would write: .markd…
+       |                               ^
+    314|       expect(output.join("")).toContain("Would add: node_modules/");
+    315|       expect(output.join("")).toContain("Would add: docs/**/generated/…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/25]⎯
+
+ FAIL  tests/src/shared/specdojo-config-command.test.ts > config init .gitignore > adds node_modules/ to an existing .gitignore that does not mention it
+AssertionError: expected 'dist/\n' to be 'dist/\n\n# 依存と specdojo の生成物（specdojo…' // Object.is equality
+
+- Expected
++ Received
+
+  dist/
+
+- # 依存と specdojo の生成物（specdojo config init が追記）
+- node_modules/
+- .specdojo/doc-index.json
+- docs/**/generated/*
+- !docs/**/generated/.gitkeep
+- docs/**/execution/exec/.locks/
+- /.vitepress/dist/
+- /.vitepress/cache/
+- /.vitepress/mermaid/
+- /.vitepress/d2/
+- /.vitepress/kata-staging/
+-
+
+ ❯ tests/src/shared/specdojo-config-command.test.ts:331:62
+    329|       await runConfigCommand(["init"]);
+    330|
+    331|       expect(readFileSync(join(repo, ".gitignore"), "utf8")).toBe(
+       |                                                              ^
+    332|         `dist/\n\n${GITIGNORE_HEADER}\n${DEFAULT_GITIGNORE_PATTERNS.jo…
+    333|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/25]⎯
+

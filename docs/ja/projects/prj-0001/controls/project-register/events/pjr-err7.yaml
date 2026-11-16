@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_52857732e43b414c8fe19ee1bc30bd3b
+  ts: "2026-11-12T13:40:25Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務仕様の型の残り（stsd・cdsd・cdfd-uc・clis・ifx-cmd）を標準の章立てと厚さに整える
+    - field: description
+      from: ""
+      to: 代表の文書がある業務仕様の型 5 種類を、代表を手本に rulebook と sample を磨き込み、grade で pass にする
+    - field: input
+      from: ""
+      to: '["indie の優先順の承認（2026-11-12）: 1. 業務仕様の型の残り → 2. 業務仕様の文書の残り → 3. プロジェクトの型 → 4. 非機能要件・アーキテクチャ。今晩は 1 を自動で流す","代表の文書がない型（bps・uis・dss・ifx-api・ifx-file・ifx-msg・各 index・cdfd-d2・cdfd-mermaid）は、2 の epic で代表を作ってから扱う。gl は用語集の確定（PJR-6XQ4・PJR-EBN6）と重なるため今回は外す"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: business-specs-kata-2
+    - field: domains
+      from: ""
+      to: '["data-model","data-flow","user-interface-model","external-interface-specs"]'
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-12"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'

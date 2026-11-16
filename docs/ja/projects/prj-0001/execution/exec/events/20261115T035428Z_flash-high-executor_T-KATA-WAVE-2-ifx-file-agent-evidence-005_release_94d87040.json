@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T03:54:28Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-005",
+  "by": "flash-high-executor",
+  "msg": "release claim to switch executor to opus-executor (--resume-from executor)",
+  "meta": {
+    "pipeline_resume_released": "true",
+    "replaced_by": "opus-executor"
+  }
+}

@@ -1,0 +1,53 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-jfwq-20260810t063957z-13a8
+  type: exec-result
+  task_id: PJR-JFWQ
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-JFWQ/pjr-jfwq-20260810T063957Z-13a8/plan.md
+  started_at: "2026-08-10T06:39:57.573Z"
+  completed_at: "2026-08-10T06:50:36.279Z"
+  agent: codex-expert-edit-agent
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- `sch-strategy` phase の任意 `agent_pipeline.stages` を schema 化し、`executor`、`reporter` の固定 2 stage と実行順、stage ごとの `capabilities` / `proficiency`、human phase との併用禁止を定義した。
+- `pm-members` の agent に任意の `stage_role`（`executor` / `reporter`）を追加し、`stage_role` 未指定の既存 agent を従来フロー専用、指定 agent を一致する pipeline stage 専用とする候補選択規則を実装した。strategy には nickname を保持しない。
+- 既存 strategy / roster の schema 互換性、pipeline の構造制約、member の値制約、従来フローと pipeline の候補分離を単体テストへ追加した。
+- `pm-members` rulebook、Schedule 設計ガイド、exec 設定ガイド、および PJR-JFWQ 個票の対応結果へ設計と後方互換性を反映した。個票と登録簿のステータスは変更していない。
+- 対象テスト 37 件、worktree 系を除く全テスト 993 件、schema 検証、typecheck、TypeScript lint、対象 Markdown lint、Prettier、catalog validate、register build、exec refresh、index buildが成功した。`npm test` 全体では 1,000 件が成功し、Node 子プロセスからの `git` 起動が sandbox の `EPERM` となる既存 worktree 系 16 件だけが環境要因で失敗した。
+
+## 2. 変更ファイル
+
+- `docs/specdojo/schemas/v1/sch-strategy.schema.yaml`
+- `docs/specdojo/schemas/v1/pm-members.schema.yaml`
+- `src/exec-types.ts`
+- `src/specdojo-config.ts`
+- `src/exec-run.ts`
+- `tests/docs/specdojo/schemas/sch-strategy-schema.test.ts`
+- `tests/docs/specdojo/schemas/pm-members-schema.test.ts`
+- `tests/src/exec-run.test.ts`
+- `docs/ja/specdojo/rulebooks/pm-members-rulebook.md`
+- `docs/ja/specdojo/guides/schedule-design-guide.md`
+- `docs/ja/specdojo/guides/exec-config-guide.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-jfwq-executor-reporter-pipeline-schema.md`
+- `docs/ja/projects/prj-0001/execution/exec/results/pjr-jfwq-20260810T063957Z-13a8-result.md`
+
+## 3. 申し送り
+
+- 本タスクは schema と候補選択境界までを対象とし、pipeline の stage 起動・evidence・result 生成・再開処理は実装していない。後続の PJR-JXV7 / PJR-RG7C / PJR-7MXJ は `agent_pipeline.stages[]` の要件を読み、`selectCandidates` へ対応する `stage_role` を渡して同じ選択規則を利用する。
+- 後続の PJR-NSXT では既存 agent を変更せず、新規 executor / reporter agent にだけ `stage_role` を指定する。これにより従来フローの自動選択候補へ混入しない。
+- `npm test` の worktree 系 16 件は、Node の `spawnSync("git", ...)` が出力と終了 status 0 を得た後に sandbox から `EPERM` を返す環境制約で実行できなかった。対象テストと、それら 4 test file を除く 993 件は成功している。
+- `npm run -s lint:md` は、`register build` が生成する gitignore 対象の `project-register/generated/*.md` に既存 PJR-0053 の `*CAPITAL_CASE*` が展開され、MD049 となるため全体実行だけ失敗した。今回変更した Markdown は個別の `markdownlint` ですべて成功している。
+
+## 4. 進め方と実践の型の適用
+
+- plan の `rulebook: none` に従い、個票の完了条件と既存実装を作業基準にした。`sch-strategy.schema.yaml`、`pm-members.schema.yaml`、`exec-strategy.ts`、`exec-run.ts`、`specdojo-config.ts` と既存テストから、phase 要件が ready task を経て member 候補選択へ渡る現在の動作を確認した。
+- `pm-members-rulebook.md` の更新には `upsert-rulebook` Skill を適用し、Rulebook 記述標準、rulebook 作業手順、類似する pm-roles / pm-organization / sch rulebook、pm-members recipe / sample を参照した。Skill が示す `docs-contents-guide.md` はリポジトリに存在しなかったため、成果物リファレンスのメンバー定義欄を目的・内容の代替根拠にした。
+- sample / template と実プロジェクトの agent 定義は、後続 PJR-NSXT が具体的な executor / reporter を追加する範囲であるため変更せず、今回は再利用可能な schema・選択規則・文書定義に限定した。

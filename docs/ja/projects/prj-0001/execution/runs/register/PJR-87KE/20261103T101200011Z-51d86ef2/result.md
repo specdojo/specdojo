@@ -1,0 +1,39 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-87ke-20261103t101200z-301c00fd
+  type: exec-result
+  task_id: PJR-87KE
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-87KE/20261103T101200011Z-51d86ef2/plan.md
+  started_at: "2026-11-03T10:12:00.472Z"
+  completed_at: "2026-11-03T10:25:49.204Z"
+  agent: sol-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- CDFD の Kata における図の分割基準、および絵文字の適用ルールを定義するための各種文書を更新しました。
+- 図の分割目安として、「一図の線が 15 本を超える場合」または「一ノードの入出力合計が 10 本以上の場合」を採用することを明記しました。
+- `docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md`、`docs/ja/specdojo/recipes/cdfd-uc-recipe.md`、`docs/ja/specdojo/samples/cdfd-uc-sample.md`、`docs/ja/specdojo/templates/cdfd-uc-template.md` の 4 ファイルを更新しました。
+- 個票 `PJR-87KE` を更新し、分割基準の決定事項を記録しました。
+
+## 2. 変更ファイル
+
+- `docs/ja/specdojo/recipes/cdfd-uc-recipe.md`: CDFD の Kata 用のレシピを更新し、図の分割基準や絵文字の適用ルールに関する指示を追記しました。
+- `docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md`: CDFD の Kata 用のルールブックを更新し、図の分割基準（線数およびノードの入出力数）を定式化しました。
+- `docs/ja/specdojo/samples/cdfd-uc-sample.md`: サンプル文書を更新し、新しい分割基準を反映した図を提供しました。
+- `docs/ja/specdojo/templates/cdfd-uc-template.md`: テンプレート文書を更新し、分割基準に関する指示を盛り込みました。
+
+## 3. 申し送り
+
+- 分割目安は一図の線が 15 本超、または一ノードの入出力が合計 10 本以上。約 30 本の図と約 15 本が集中するノードの双方を見直せる目安として採用し、理由を個票の対応結果に記録した。目安以内でも読みにくければ分割する。
+- catalog 検証は終了コード 0。変更対象外の未作成成果物について、`based_on` の検証対象文書が見つからない警告が出た。指定された親検証の最終結果は runner の evidence に従う。
+
+## 4. 進め方
+
+まず `docs/ja/specdojo/controls/project-register/pjr-87ke-cdfd-uc-kata-shared-areas.md` を読み、CDFD の Kata に共通の領域・例外の図の分け方・絵文字の決まりを定めるという目的を確認しました。次に、図の分割基準として「一図の線が 15 本超」および「一ノードの入出力が合計 10 本以上」という具体的な数値を設定し、これを `rulebook`、`recipe`、`sample`、`template` の各文書に反映しました。最後に、個票のステータス更新と実施内容の記録を行いました。

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-12T14:51:21Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-040",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

@@ -8,6 +8,7 @@ import { remark } from "remark";
 import remarkGfm from "remark-gfm";
 import type { Nodes } from "mdast";
 import { load } from "../../../src/shared/yaml.js";
+import type * as GradeResultModule from "../../../src/shared/grade-result.js";
 
 vi.mock("node:fs", async (importOriginal) => {
   const original = await importOriginal<Record<string, unknown>>();
@@ -24,7 +25,8 @@ vi.mock("../../../src/docs/doc-index.js", () => ({
 }));
 import * as docIndex from "../../../src/docs/doc-index.js";
 
-vi.mock("../../../src/shared/grade-result.js", () => ({
+vi.mock("../../../src/shared/grade-result.js", async (importOriginal) => ({
+  ...(await importOriginal<typeof GradeResultModule>()),
   gradeFindingDisplayMessage: vi.fn(
     (finding: { message: string; message_ja?: string }) => finding.message_ja ?? finding.message,
   ),

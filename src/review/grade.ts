@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gitEnvironment } from "../shared/git-environment.js";
@@ -27,7 +28,7 @@ export type ReviewGradeFreshness =
 export type ReviewGradeOutcome =
   | { action: "skipped" }
   | { action: "executed"; runId: string }
-  | { action: "failed"; runId: string; detail: string }
+  | { action: "failed"; runId: string; detail: string; attempts: number }
   | { action: "not-run"; detail: string };
 
 export type ReviewGradeAction = { run: true } | { run: false; outcome: ReviewGradeOutcome };
@@ -135,6 +136,9 @@ export function reviewGradeArgs(opts: {
   const args = [
     "grade",
     "run",
+    "--isolate-pipeline-state",
+    "--if-busy",
+    "wait",
     "--run-id",
     opts.runId,
     "--project",
@@ -175,10 +179,18 @@ function lastLine(text: string): string {
   return lines.at(-1) ?? "";
 }
 
+// grade の出力の形式の誤りなど一過性の失敗に備え、review の前の grade は合計この回数まで試す
+// （PJR-M18B）。各試行は別の run id を使い、失敗した試行の状態を引き継がない。
+export const REVIEW_GRADE_MAX_ATTEMPTS = 3;
+
+export function reviewGradeAttemptRunId(runId: string, attempt: number): string {
+  return attempt <= 1 ? runId : `${runId}-a${attempt}`;
+}
+
 /**
  * Runner-side grade before a review plan is generated. The executor never grades (PJR-2ZVS 3.6).
- * Failures are reported in the outcome instead of thrown so the review can still record
- * grade-stale / grade-unavailable as its verdict.
+ * A failed grade is retried up to maxAttempts times. Failures are reported in the outcome instead
+ * of thrown; the runner then blocks the review task instead of completing it (PJR-M18B).
  */
 export async function ensureReviewGrade(opts: {
   taskId: string;
@@ -191,6 +203,7 @@ export async function ensureReviewGrade(opts: {
   invoke?: ReviewGradeInvoke;
   by?: string;
   execDefaultsPath?: string;
+  maxAttempts?: number;
 }): Promise<ReviewGradeOutcome> {
   const freshness = reviewGradeFreshness({
     subjectPath: opts.subjectPath,
@@ -198,12 +211,40 @@ export async function ensureReviewGrade(opts: {
     rootDir: opts.repoRoot,
   });
   const decision = decideReviewGradeAction({
-    freshness,
+    freshness:
+      freshness.state === "fresh" && freshness.result.target !== opts.target
+        ? { ...freshness, state: "stale" }
+        : freshness,
     dryRun: opts.dryRun,
   });
   if (!decision.run) return decision.outcome;
 
-  const runId = reviewGradeRunId(opts.taskId, opts.now ?? new Date());
+  const subjectKey = createHash("sha256").update(opts.subjectPath).digest("hex").slice(0, 10);
+  const baseRunId = reviewGradeRunId(`${opts.taskId}-${subjectKey}`, opts.now ?? new Date());
+  const invoke = opts.invoke ?? defaultInvoke;
+  const maxAttempts = Math.max(1, Math.floor(opts.maxAttempts ?? REVIEW_GRADE_MAX_ATTEMPTS));
+  for (let attempt = 1; ; attempt += 1) {
+    const runId = reviewGradeAttemptRunId(baseRunId, attempt);
+    const detail = await invokeReviewGrade(opts, runId, invoke);
+    if (detail === undefined) return { action: "executed", runId };
+    if (attempt >= maxAttempts) return { action: "failed", runId, detail, attempts: attempt };
+    process.stderr.write(`[grade] attempt ${attempt}/${maxAttempts} failed; retrying: ${detail}\n`);
+  }
+}
+
+/** Run one grade attempt. Returns undefined on success, or the failure detail. */
+async function invokeReviewGrade(
+  opts: {
+    projectId: string;
+    subjectPath: string;
+    target: ReviewGradeTarget;
+    repoRoot: string;
+    by?: string;
+    execDefaultsPath?: string;
+  },
+  runId: string,
+  invoke: ReviewGradeInvoke,
+): Promise<string | undefined> {
   const args = reviewGradeArgs({
     runId,
     projectId: opts.projectId,
@@ -212,7 +253,6 @@ export async function ensureReviewGrade(opts: {
     by: opts.by,
     execDefaultsPath: opts.execDefaultsPath,
   });
-  const invoke = opts.invoke ?? defaultInvoke;
   try {
     // Resolve the entrypoint from this package, never from the consumer repository.
     const javascript = fileURLToPath(new URL("../specdojo.js", import.meta.url));
@@ -224,15 +264,11 @@ export async function ensureReviewGrade(opts: {
       [...entryArgs, ...args],
       opts.repoRoot,
     );
-    if (exitCode === 0) return { action: "executed", runId };
+    if (exitCode === 0) return undefined;
     const reason = lastLine(stderr);
-    return {
-      action: "failed",
-      runId,
-      detail: `${opts.subjectPath}: exit ${exitCode}${reason ? `: ${reason}` : ""}`,
-    };
+    return `${opts.subjectPath}: exit ${exitCode}${reason ? `: ${reason}` : ""}`;
   } catch (error) {
-    return { action: "failed", runId, detail: `${opts.subjectPath}: ${errorMessage(error)}` };
+    return `${opts.subjectPath}: ${errorMessage(error)}`;
   }
 }
 
@@ -244,7 +280,7 @@ function outcomeLine(outcome: ReviewGradeOutcome | undefined): string | undefine
     case "executed":
       return `- runner の grade 実行: 実行した（run id: \`${outcome.runId}\`）`;
     case "failed":
-      return `- runner の grade 実行: 失敗した（run id: \`${outcome.runId}\`; ${outcome.detail}）`;
+      return `- runner の grade 実行: ${outcome.attempts} 回試して失敗した（最後の run id: \`${outcome.runId}\`; ${outcome.detail}）。runner はこの review タスクを完了にせず blocked にする`;
     case "not-run":
       return `- runner の grade 実行: 実行していない（${outcome.detail}）`;
   }

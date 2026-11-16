@@ -36,22 +36,22 @@ Impact Analysis (Data) Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 対象ドキュメント ID は `imp-data` とする。
+- 対象ドキュメント ID は `<project-id>:imp-data` とする（例: `prj-0001:imp-data`）。
 - 対象ドキュメントの推奨ファイル名は `imp-data.md` とする。
 - `id` は [id-and-file-naming-standard.md](../standards/id-and-file-naming-standard.md) の規則に従い、英小文字・数字・ハイフンで構成する。
-- 関連する追補文書を分割する場合は `imp-data-<term>` 形式を用いる。
+- 関連する追補文書を分割する場合は `<project-id>:imp-data-<term>` 形式を用いる。
 
 ## 4. 推奨 Frontmatter 項目
 
 影響調査（データ）ドキュメントでは、[document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。
 
-| 項目     | 説明                                | 必須 |
-| -------- | ----------------------------------- | ---- |
-| id       | ドキュメント ID（例: `imp-data`）   | ○    |
-| type     | `project`                           | ○    |
-| status   | `draft` / `ready` / `deprecated`    | ○    |
-| rulebook | `specdojo:imp-data-rulebook` 固定   | ○    |
-| part_of  | 一覧/親ドキュメントへの所属 ID 配列 | 任意 |
+| 項目     | 説明                                           | 必須 |
+| -------- | ---------------------------------------------- | ---- |
+| id       | ドキュメント ID（例: `<project-id>:imp-data`） | ○    |
+| type     | `project`                                      | ○    |
+| status   | `draft` / `ready` / `deprecated`               | ○    |
+| rulebook | `specdojo:imp-data-rulebook` 固定              | ○    |
+| part_of  | 一覧/親ドキュメントへの所属 ID 配列            | 任意 |
 
 | based_on | 変更要求や根拠資料の ID 配列 | 任意 |
 | supersedes | 置き換え対象ドキュメント ID 配列 | 任意 |

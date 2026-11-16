@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-v5az-quick-start-conversation-flow
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-11-02T11:56:56Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-15T11:04:13Z"
+  conclusion: Quick Start ガイドを、初期設定から実運用までの対話を中心にした構成へ書き直した（indie が 2026-11-15 に確認）
 ---
 
 # PJR-V5AZ Quick Start ガイドを初期設定から実運用までの対話ベースに書き直す

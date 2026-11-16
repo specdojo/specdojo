@@ -1,0 +1,129 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d1674373ba004468bf356c9feec70ea1
+  ts: "2026-11-08T00:32:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務データ辞書（bdd）の型を、実装と同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: 業務データ辞書の型を手入れする。schema があるエンティティは schema を正として参照し、fields には schema から読めない業務上の意味だけを書く。schema のないエンティティは今の形か TypeScript の型の参照にする
+    - field: input
+      from: ""
+      to: '["方針（indie が決定、2026-11-08）: schema があるエンティティは schema を正として参照し、fields には schema から読めない業務上の意味だけを書く。schema のないエンティティは今の形か TypeScript の型の参照にする。","rulebook にあわせて bdd-sample も揃える。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:bdd-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-HMV6"]'
+- v: 1
+  id: reg_dcc6ac67373c48a0b22c0b4059ca2309
+  ts: "2026-11-08T02:05:19Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d1674373ba004468bf356c9feec70ea1
+- v: 1
+  id: reg_e28a012145d54806b565dcd59144fb6e
+  ts: "2026-11-08T02:28:35Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_dcc6ac67373c48a0b22c0b4059ca2309
+- v: 1
+  id: reg_db1c959c108c491fb8f48b80c4f6da66
+  ts: "2026-11-08T02:31:05Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_e28a012145d54806b565dcd59144fb6e
+- v: 1
+  id: reg_c1ad82a823e44ac3a9245abb2ca56da2
+  ts: "2026-11-08T02:42:02Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_db1c959c108c491fb8f48b80c4f6da66
+- v: 1
+  id: reg_59cc59954e984ca28275d0f677e83e40
+  ts: "2026-11-08T03:52:20Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。lint-md の失敗を plan の追加の指示で直して再開した。差分・個票の対応結果・親の検証・validate:schema を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: bdd-rulebook に schema_ref・type_ref による参照の規則と選び方の基準を書き、bdd.schema.yaml を後方互換のまま緩め、bdd-sample に 3 つの形の例を載せた
+  previous_event_id: reg_c1ad82a823e44ac3a9245abb2ca56da2

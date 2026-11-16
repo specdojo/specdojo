@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5e4ad02faddf4e93900881103774aaf5
+  ts: "2026-11-09T20:49:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 代表の sf-task-execution を、review の指摘（業務プロセスとの整合・確かめ方・実装との照合）に合わせて磨き込む
+    - field: description
+      from: ""
+      to: business-specs-reps の review で incomplete となった sf-task-execution を、指摘どおり業務プロセス仕様との整合、検証可能性の定義、実装（agent-pipeline.ts）との照合の記録を足して磨き込む
+    - field: input
+      from: ""
+      to: '["2026-11-09 の review（T-BUSINESS-SPECS-REPS-sf-task-execution-090）の判定は incomplete。grade は pass 87。`done_criteria` の DC-001（業務プロセス仕様との整合）と DC-004（検証可能性）が未充足、実装エビデンス src/exec/run/agent-pipeline.ts との対応表がない、と指摘された。","review の指摘を完了条件として磨き込みの段に戻し、その後に review をやり直す（indie が決定、案 A）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:sf-task-execution"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+- v: 1
+  id: reg_dcdb8795a2cd44f98bb384e7ed31819f
+  ts: "2026-11-09T21:17:18Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5e4ad02faddf4e93900881103774aaf5
+- v: 1
+  id: reg_b1599a0ef4804720b52c03a2fcb17e56
+  ts: "2026-11-09T21:33:12Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dcdb8795a2cd44f98bb384e7ed31819f
+- v: 1
+  id: reg_eec2c6a98fe44ce09550df5c30635367
+  ts: "2026-11-09T21:35:00Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。差分・照合の表が挙げる関数が実装に実在すること・lint:md・catalog validate を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-10"
+    - field: conclusion
+      from: "-"
+      to: sf-task-execution に業務プロセス仕様との対応、機能ごとの検証・受入観点、agent-pipeline.ts との照合の表を足して磨き込んだ
+  previous_event_id: reg_b1599a0ef4804720b52c03a2fcb17e56
+- v: 1
+  id: reg_bbdbba59ecbf4e319c257fda28bd383e
+  ts: "2026-11-09T22:05:12Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: review
+  reason: やり直した review が、本文の実装の名前と実装との照合の表を sf の型の規則違反と指摘したため、2 回目を流す（indie が案 A を決定）
+  changes:
+    - field: status
+      from: done
+      to: review
+    - field: completed
+      from: "2026-11-10"
+      to: "-"
+  previous_event_id: reg_eec2c6a98fe44ce09550df5c30635367
+- v: 1
+  id: reg_e26272f6fcae43e594537884ad4f614e
+  ts: "2026-11-09T22:06:22Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_bbdbba59ecbf4e319c257fda28bd383e
+- v: 1
+  id: reg_d999e8b2c5394afb8eeb9ce1b57019d5
+  ts: "2026-11-09T22:23:10Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e26272f6fcae43e594537884ad4f614e
+- v: 1
+  id: reg_2dd73d6fb1df411880c7a1f7c78dcb2a
+  ts: "2026-11-09T22:24:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor、2 回）で対応。本文に実装の関数名・型名が残っていないこと、照合の記録が個票にあること、lint:md を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-10"
+    - field: conclusion
+      from: sf-task-execution から実装詳細・照合表を除去して個票へ移送し、業務プロセス対応・検証観点を維持した上で sf-rulebook に適合させた
+      to: sf-task-execution に業務プロセス仕様との対応と検証・受入の観点を足し、2 回目で本文の実装の名前と照合の表を外して、照合の記録は個票の対応結果に移した
+  previous_event_id: reg_d999e8b2c5394afb8eeb9ce1b57019d5

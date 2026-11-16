@@ -34,11 +34,10 @@ Requirements Traceability (Requirements to Specs) Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 対象ドキュメント ID は `trc-requirements-to-specs` とする。
-
+- 対象ドキュメント ID は `<project-id>:trc-requirements-to-specs` とする（例: `prj-0001:trc-requirements-to-specs`）。
 - 推奨ファイル名は `trc-requirements-to-specs.md` とする。
 - 本 rulebook の ID は `specdojo:trc-requirements-to-specs-rulebook` とする。
-- 追加分割が必要な場合は `trc-requirements-to-specs-<term>` 形式を用いる。
+- 追加分割が必要な場合は `<project-id>:trc-requirements-to-specs-<term>` 形式を用いる。
 
 ## 4. 推奨 Frontmatter 項目
 
@@ -46,7 +45,7 @@ Requirements Traceability (Requirements to Specs) Rulebook
 
 | 項目       | 説明                                          | 必須 |
 | ---------- | --------------------------------------------- | ---- |
-| id         | `trc-requirements-to-specs`                   | ○    |
+| id         | `<project-id>:trc-requirements-to-specs`      | ○    |
 | type       | `project`                                     | ○    |
 | status     | `draft` / `ready` / `deprecated`              | ○    |
 | rulebook   | `specdojo:trc-requirements-to-specs-rulebook` | ○    |

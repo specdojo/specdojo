@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-11T03:09:28Z",
+  "type": "cancel",
+  "task_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-090",
+  "by": "indie",
+  "msg": "schedule の review の段をやめ、grade を直接流して確定の材料にする（PJR-ZSRD、indie が案 A を決定、orchestrator が記帳）"
+}

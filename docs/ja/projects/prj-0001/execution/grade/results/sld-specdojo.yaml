@@ -1,0 +1,197 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sld-specdojo
+path: docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 98
+graded_at: "2026-11-15T21:27:25.632Z"
+graded_by: sol-review-executor
+content_hash: 4ad710f4e27d39db2eba911c82626d98b4738e32bf3455aca48254a904b66a4d
+source_hashes:
+  catalog-entry: da0acf0ee3984d2dfc969fa8d9e6e52a99bf6a2e36478e10cf9cb625bfe4e1e3
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:cdsd-execution: 958e60eeb290139bf339886017af58d3719c4e96a457d89b4098ae857f7e17de
+  dependency:cdsd-planning: 465645a27f2f91f437f68825eea853917093aa68ab32e62fc2c271fd80e8c020
+  dependency:cdsd-sharing: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 92
+  business:
+    score: 100
+  consistency:
+    score: 88
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 105
+    anchor: >-
+      | CDSD 追加候補の正式登録と対応表の更新（計画済み作業）      | 追加候補（タスク実行状態、実行計画と実行結果、実行証跡（Evidence）、タスク実行
+      worktree、成果物本体、成果物索引、プロジェクト構成、成果物カタログ）は実装上の配置が確定しているため、本書で保管場所を定義済みである。CDSD 側の一覧への登録だけが未了であり、本書の未決事項ではない | 各 CDSD
+      の「概要」の予定どおり、BA が対応する業務データ辞書の作成時に CDSD の一覧へ追加する。ARC
+      は同じ改訂で本書の「概念データストア・実装配置との対応」の記述を正式名称へ更新する                                                                |
+      計画済み作業のため Schedule の業務データ辞書作成・CDSD 改訂で扱い、管理台帳へは起票しない（二重追跡を防ぐ）。該当タスクが Schedule にない場合は PM が Schedule
+      へ追加する                |
+    message: >-
+      Update the planned-work row to remove registration work already completed in
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md: its section 2 already defines execution
+      state, plan, result, evidence, and task worktree. Assign the remaining SLD mapping update separately from
+      genuinely pending dictionary and CDSD work so BA and ARC do not schedule duplicate registration.
+    message_ja: >-
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md で既に完了している登録作業を削除するため、planned-work
+      の行を更新してください。同ファイルのセクション 2 では、すでに実行状態、計画、結果、エビデンス、およびタスクの worktree が定義されています。残りの SLD マッピングの更新を、実際に保留されている辞書および CDSD
+      の作業とは別に割り当て、BA と ARC が重複した登録をスケジュールしないようにしてください。
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 80
+    anchor: >-
+      | プロダクト仕様・実践の型・プロジェクト定義・計画・報告領域     | [[cdsd-planning\|立上と計画]] のプロジェクト定義群・実践の型・スケジュール・定期処理定義・Job
+      定義、[[cdsd-sharing\|活用と共有]] の進捗報告・議事録（`reporting/`）、および追加候補の成果物カタログ・成果物本体（[[cdsd-sharing\|活用と共有]]） |
+      [[specdojo:docs-structure-guide\|ドキュメント構成ガイド]]、[[specdojo:directory-layout-reference\|ディレクトリレイアウトリファレンス]]、`.specdojo/specdojo.config.json`
+      |
+    message: >-
+      Correct the CDSD attribution: this row assigns routine definitions and Job definitions to cdsd-planning.md, whose
+      section 2 defines only register entries and Schedule/milestones;
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md section 2 formally defines 定期処理定義 and Job
+      Definition. Map these records to cdsd-execution and distinguish other inventory categories that cdsd-planning does
+      not currently define.
+    message_ja: >-
+      CDSD の属性を修正してください。この行では、セクション 2 で登録エントリと Schedule/milestones のみを定義している cdsd-planning.md に、routine definitions と
+      Job definitions を割り当てています。docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md のセクション 2 では、正式に
+      定期処理定義 と Job Definition が定義されています。これらのレコードを cdsd-execution にマッピングし、cdsd-planning が現在定義していない他のインベントリ カテゴリと区別してください。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 83
+    anchor: >-
+      | タスク・Job・品質評価の実行履歴領域（`execution/`）            | [[cdsd-execution\|プロジェクト実行]] の Job
+      実行履歴・品質評価結果、および追加候補のタスク実行状態・実行計画と実行結果・実行証跡（Evidence）                                                                                                   
+      |
+      `src/shared/run-records.ts`、`src/exec/`、`src/job/`、`src/grade/`                                                                                                      
+      |
+    message: >-
+      Refresh the execution mapping and the related statements at lines 84, 87, and 105 against
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md sections 1.1 and 2: execution state, plan,
+      result, evidence, and task worktree are formal management units rather than additional candidates, while
+      quality-evaluation results are absent from its ten-unit inventory. Use the current unit names and identify
+      quality-result coverage separately instead of attributing it to an existing CDSD definition.
+    message_ja: >-
+      docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md のセクション 1.1 および 2 に基づき、実行マッピングと 84、87、および 105
+      行目の関連する記述を更新してください。実行状態、計画、結果、エビデンス、およびタスクの worktree は、追加の候補ではなく正式な管理単位ですが、品質評価の結果はその 10
+      ユニットのインベントリには含まれていません。現在のユニット名を使用し、品質結果のカバー範囲を既存の CDSD 定義に帰属させるのではなく、別途特定してください。
+    cause:
+      type: document
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: sld-specdojo-grade-criteria

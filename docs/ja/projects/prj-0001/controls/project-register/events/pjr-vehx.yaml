@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c06f20c2f77f497a8c14ae71c8185f60
+  ts: "2026-11-15T11:12:11Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sf-index を grade の指摘で手直しする（P-06 の境界のずれとテスト対象との照合）
+    - field: description
+      from: ""
+      to: 最新の grade の指摘を取り込み、機能の境界とテスト対象との対応を直す
+    - field: input
+      from: ""
+      to: '["kata-wave-1 の確定（T-KATA-WAVE-1-sf-index-140）で差し戻した（indie が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 75 点で完了条件 0/5","主な指摘: SF-ROUT-02 が実行の行だが、対応する P-06 はジョブの定義の領域で境界がずれている。全機能 ID と業務領域をテスト対象と照らした記録がない。Q-01・Q-03 の留保（PJR-AK5V）は残す"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["sf-index"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: sf
+- v: 1
+  id: reg_4d35eee693fd48ec9ccab926e2b75c20
+  ts: "2026-11-15T17:31:50Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c06f20c2f77f497a8c14ae71c8185f60
+- v: 1
+  id: reg_ab35b87b37a944d4b0afebf1c304a158
+  ts: "2026-11-15T18:17:19Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4d35eee693fd48ec9ccab926e2b75c20

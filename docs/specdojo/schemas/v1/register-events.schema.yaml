@@ -66,10 +66,12 @@ $defs:
           - input
           - type
           - track
+          - domains
           - priority
           - difficulty
           - owner
           - registered
+          - start_on
           - due
           - completed
           - conclusion

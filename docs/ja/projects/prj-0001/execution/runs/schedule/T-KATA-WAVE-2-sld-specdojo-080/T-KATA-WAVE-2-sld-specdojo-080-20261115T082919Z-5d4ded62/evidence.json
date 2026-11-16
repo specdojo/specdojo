@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-WAVE-2-sld-specdojo-080",
+  "run_id": "T-KATA-WAVE-2-sld-specdojo-080-20261115T082919Z-5d4ded62",
+  "stage": {
+    "role": "executor",
+    "actor": "flash-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-15T08:31:03.359Z",
+    "completed_at": "2026-11-15T08:36:30.694Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../020-data-model/sld-specdojo.md                 | 30 +++++++++++-----------\n 1 file changed, 15 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md",
+      "status": "passed",
+      "summary": "Prettier successfully formatted sld-specdojo.md"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML schema validation not applicable",
+      "reason": "no changed *.yaml or *.yml files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "History links validation not applicable",
+      "reason": "no changed history files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "Catalog validation not applicable",
+      "reason": "changes outside docs/ja/projects/"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4854 file(s), 138 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 103 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4854 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,scripts,packages}/**, docs/ja/specdojo/**, docs/specdojo/**, vitest.*, tsconfig*.json)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-080/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-080/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-2-sld-specdojo-080\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-z8bwUC/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-FdzhUL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-77RcES/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-K4JP45/pjr-0001-topic.md\nWarni\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "condense_records": [
+    {
+      "location": "## 2. 保管場所一覧 > ### 2.1. リポジトリ内の保管場所 表1行目「共有の有無」列",
+      "category": "repetition",
+      "action": "delete",
+      "reason": "### 1.1. 対象範囲と隣接仕様との分担 で既に2リポジトリ構成と単一リポジトリ構成の共通論理パス表記が定義されており、表セル内での再掲「（2リポジトリ構成では product と project に分担して追跡）」は不要なため削除。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 2. 保管場所一覧 > ### 2.1. リポジトリ内の保管場所 表4行目「置くもの」「寿命・管理頻度」列",
+      "category": "repetition",
+      "action": "merge",
+      "reason": "同一セル内および列間で「同一 run 内への退避」の説明が重複していたため、「置くもの」はファイル種別（再試行退避ファイル）とし、「寿命・管理頻度」は保持期間と退避運用（恒久保持・再試行時は同一 run 内に退避）に集約して整理。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 2. 保管場所一覧 > ### 2.2. 端末ローカル・リポジトリ外の保管場所 直後の「補足（旧配置との互換性）:」",
+      "category": "table-prose",
+      "action": "merge",
+      "reason": "第2章表および第4章表と重複する実装モジュール名や移行ロジックの散文記述を削り、運用判断に必要な旧配置の削除可否（旧実行記録は削除不可、旧定期処理状態は移行後に整理可）に要約・整理。",
+      "cause": {
+        "type": "document"
+      }
+    },
+    {
+      "location": "## 4. 関連仕様・実装配置との対応と検証 > ### 4.1. 概念データストア・実装配置との対応 表「配置・共有を制御する実装・設定の正本」列",
+      "category": "canonical-restatement",
+      "action": "reference",
+      "reason": "rulebook 1章・5.3節および本書1.1節が定める「コード内部構造の再掲は行わない」方針に従い、内部関数名や個別除外パターンの転記をモジュール・設定ファイルへの参照表記に集約。",
+      "cause": {
+        "type": "kata",
+        "kind": "rulebook",
+        "location": "docs/ja/specdojo/rulebooks/sld-rulebook.md §1.25, §5.3.131"
+      }
+    },
+    {
+      "location": "## 3. 削除・退避・復旧の判断基準 > ### 3.1. 削除可否の3区分と運用者の判断基準 表",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "第2章一覧表の削除可否列と対象・理由が一部重なるが、運用者（OPS/DEV）が日常運用や障害復旧時に3区分で横断判断するための必須基準であり保持。",
+      "cause": {
+        "type": "kata",
+        "kind": "rulebook",
+        "location": "docs/ja/specdojo/rulebooks/sld-rulebook.md §5.2.122-126"
+      }
+    },
+    {
+      "location": "## 4. 関連仕様・実装配置との対応と検証 > ### 4.2. 検証手順と受入条件 表",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "第1章概要のロール責務と対応しているが、合格条件・確認手順を具体化した受入検証の完了条件であり保持。",
+      "cause": {
+        "type": "kata",
+        "kind": "rulebook",
+        "location": "docs/ja/specdojo/rulebooks/sld-rulebook.md §5.3.132-136"
+      }
+    },
+    {
+      "location": "## 5. 確認事項と変更影響 表",
+      "category": "repetition",
+      "action": "retain",
+      "reason": "上位 CDSD の未決事項および第4章4.1表の追加候補データストアと一部重複するが、判断時期・担当・追跡先 PJR を特定する必須管理情報のため保持。",
+      "cause": {
+        "type": "kata",
+        "kind": "rulebook",
+        "location": "docs/ja/specdojo/rulebooks/sld-rulebook.md §5.4.140-141"
+      }
+    }
+  ],
+  "final_message": "Successfully condensed sld-specdojo.md while preserving meaning, constraints, and criteria.",
+  "completion_status": "complete",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-2-sld-specdojo-080/T-KATA-WAVE-2-sld-specdojo-080-20261115T082919Z-5d4ded62/executor.log",
+      "bytes": 6642,
+      "truncated": false
+    }
+  ]
+}

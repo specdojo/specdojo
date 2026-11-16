@@ -1,0 +1,99 @@
+このタスクを実装し、レビューを完了する必要があります。まず、コンテキストを把握するために関連ファイルを読みます。
+Let me check the current state and understand the task structure. I'll read relevant files first.
+Now let me read the bps-task-completion, prj-overview, and check the grade sidecar situation:
+The grade result sidecar doesn't exist. This is a key finding. Let me check the execution records, plan, and run files to understand context:
+I see that the grade sidecar `bac-task-completion.yaml` does not exist (File not found). Now let me check the run directory and related source files:
+Now let me read the plan, result, and pipeline-state to understand what happened in this run:
+Now I have a clear picture. Let me check whether there's any prior execution record (edit task result) I can reference for this target deliverable, and verify the grade sidecar existence definitively:
+I have all the information I need. Let me analyze:
+
+1. **Grade sidecar status**: `bac-task-completion.yaml` does not exist (glob returned no results). The plan's "評価結果" section states: runner の grade 実行が失敗し、評価結果サイドカーが存在しない。
+2. **Per the review judgment procedure** (共通規約 `E-01`): When the evaluation result sidecar does not exist, the evaluation result is not current → verdict must be `grade-stale`.
+3. **This is NOT an exceptional termination condition**: The plan §8 explicitly says "評価結果が最新でない・評価不能であることは異常終了の理由にせず、verdict として記録する."
+
+The executor's job: record the review findings in a structured result via handoff. Since this is a pipeline executor stage (per instructions), I must NOT write to result.md directly; instead I put the review result content into handoff so the reporter/runner can record it.
+
+Let me also check: the grade execution failed with "CAUSE requires a preceding FINDING without cause" and the sidecar doesn't exist. This maps to `E-02` (grade unavailable - evaluation pipeline incomplete/unable) or `E-01` (no evaluation result present). The plan §4 says `_MISSING_` → "評価結果が最新でないものとして扱う", so verdict is `grade-stale`.
+
+Wait, looking more carefully: the plan says the sidecar doesn't exist. Per the review judgment procedure, "評価結果サイドカーが存在しない場合は、評価結果が最新でない" → verdict = `grade-stale`. But also, the grade execution *failed* (exit 1). The error "CAUSE requires a preceding FINDING without cause" suggests the analysis had a structural issue but didn't generate the sidecar. So this could be either `grade-stale` or `grade-unavailable`.
+
+Per the exact wording: "評価結果が存在しない場合は、評価結果が最新でないものとして扱う" → `grade-stale`. That's the clear mapping.
+
+Now I need to record the review outcome. Since I'm in the executor stage of a pipeline and instructed NOT to edit the result file directly, I'll put the structured review content into handoff. Actually wait — re-reading carefully: "Any plan instruction that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or runner stage". So the plan's "result の各セクションを埋める" instruction applies to the reporter, not me. I put the review findings into handoff so the reporter can record them.
+
+Let me check if there's any prior edit-task result for this target (execution history for `src/grade/grade.ts` and `src/exec/run/run.ts`):
+My analysis is now complete. Let me summarize the key facts for the review:
+
+**Key findings:**
+
+1. **Grade sidecar**: `docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml` does NOT exist (glob found nothing). The plan's §4 explicitly states "評価結果がない（評価結果サイドカーが存在しない）".
+
+2. **Grade execution failed**: runner reported exit 1 with error: `$analysis: line 10: CAUSE requires a preceding FINDING without cause`. This is a structural issue in the grade pipeline output, not yet resolved.
+
+3. **Per review judgment procedure `E-01`**: "評価結果サイドカーが存在しない場合は、評価結果が最新でないものとして扱う。成果物を自分で評価して補わず、verdict を `grade-stale` とする。"
+
+4. **Verdict = `grade-stale`**: The evaluation result is not available, so this task cannot be marked complete. The review itself is not blocked (it's a valid verdict per §8), but task completion is deferred.
+
+5. **Implementation evidence cross-reference**: The two paths (`src/grade/grade.ts`, `src/exec/run/run.ts`) are the evidence inputs — I verified both files exist and read them. No prior execution record for this review run exists yet (only the current run's plan/pipeline-state/result). The "retrofit" check requires confirming these implementation files correspond to the BAC deliverable's description; however, since grade is stale, the quality assessment cannot be used, so the implementation correspondence check remains limited but can still be done independently.
+
+6. **Regarding retrofit verification**: I did read both source files. `src/grade/grade.ts` is a command registration module for the grade subsystem (exports registration functions). `src/exec/run/run.ts` exports agent execution functions. Neither file contains business-logic implementation of the BAC-01~09 acceptance criteria's specific flows; they are infrastructure/CLI scaffolding. This observation does NOT constitute "implementing purposes into deliverables from code" (finding type 4), so it doesn't block completion. But since grade is stale, the quality aspect cannot be confirmed.
+
+Now let me write the result content through handoff (since I'm in executor stage and must not edit result.md directly):
+I now have all the information needed. The executor stage must not edit result.md directly; instead, I provide structured handoff content for the reporter to fill. Let me compile my review findings.
+
+Per the pipeline executor instructions: "Do not create or update the result file" and "Put unresolved decisions, proposed protected-configuration changes, and next actions in the report's optional `handoff` array". However, the plan explicitly requires result sections to be filled (plan §7). The resolution per the system prompt: "If a completion condition asks for a note in the result, write it in both places instead of editing the result." This means I write the review content into handoff so the reporter can put it into result.
+
+Now I'll produce my final response with the JSON envelope. The verdict is `grade-stale` because the grade sidecar doesn't exist and grade execution failed. This task's completion cannot be confirmed, but review itself completes (not an abnormal termination).
+My analysis is complete. Now I provide the structured review output in the `handoff` array for the reporter to record into result.md, and end with the machine-readable JSON envelope.
+
+---
+
+**Review 実行結果の集約（reporter へ渡すための handoff 内容）**
+
+## 1. 評価結果の確認
+
+- 評価結果サイドカーのパス: `docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml`
+- 存在確認: ファイルが存在しない（`glob` で 0 件、plan §4 の「評価結果がない（評価結果サイドカーが存在しない）」と一致）
+- runner が review 前に実行した grade 実行の記録（plan §4 より）: 失敗。run id `review-prj-0001-T-KATA-WAVE-2-bac-task-completion-090-5425b10d9f-20261115T102914Z`、`docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md: exit 1: docs/ja/product/050-business-acceptance-criteria/bac-task-completion.md: $analysis: line 10: CAUSE requires a preceding FINDING without cause`
+- 評価結果の `verdict` / `score` / finding 件数: 確定できない（サイドカー不在。grade実行が失敗）
+- 鮮度判定: 共通規約 `review の判断手順` E-01 に従い、サイドカーが存在しない場合「評価結果が最新でないものとして扱う」。verdict = **`grade-stale`**
+
+## 2. 判断根拠
+
+- plan §4 で、grade 実行が失敗し評価結果サイドカーが存在しないことが明記されている。
+- `bac-task-completion.yaml` の glob による存在確認は 0 件、plan の記述と一致。
+- 共通規約 E-01:「評価結果サイドカーが存在しない場合は、評価結果が最新でないものとして扱う。成果物を自分で評価して補わず、verdict を `grade-stale` とする。」
+- 完了条件 (DC-001〜DC-004) の充足判定は評価結果（grade・finding）を事実として用いる必要があるが、それが存在しないため照合できない。
+- plan §8:「評価結果が最新でないことは異常終了の理由にせず、verdict として記録する」
+
+## 3. 未充足事項・改善指示
+
+- **未充足事項**: 評価結果サイドカーが存在しないため、DC-001〜DC-004 の照合ができず完了可否を確定できない。grade実行が `$analysis: line 10: CAUSE requires a preceding FINDING without cause` エラーで失敗している。
+- **改善指示**:
+  - grade実行の失敗原因（analysis 出力の構造エラー）を調査・是正し、評価結果サイドカー `docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml` を生成すること。
+  - 評価結果が最新であることを確認してから、完了可否のレビュー再開を行うこと。
+
+## 4. approach に応じた確認（retrofit）
+
+- 実装エビデンス: `src/grade/grade.ts`、`src/exec/run/run.ts`、両ファイルが存在し、内容を把握。
+  - `src/grade/grade.ts`: grade サブコマンドの登録モジュール。業務ロジックそのものではなく、Commander コマンド登録のエクスポート。
+  - `src/exec/run/run.ts`: 実行エージェントの処理をエクスポート。完了条件との照合と完了記録を含む実行の流れの基盤。
+- 両方とも CLI 基盤・モジュール集であり、BAC-01〜09 の業務フローの実装その物ではない。
+- grade 結果が stale なため、品質観点の評価確認は今回できない。retrofit の「実装との照合」自体も完了判定への利用は保留。
+
+## 5. decision
+
+- verdict: **`grade-stale`**
+- 理由: 評価結果サイドカーが存在しない（E-01）。完了可否の判断を保留する。
+
+---
+
+## executor evidence の `validations` について
+
+この review タスクは成果物ファイルの変更を行わない（review は成果物の編集・検証ではなく判定のみ）。対象ファイルに変更がないため、静的検査・テスト等は不要。plan で指定された完了手順には executor が実行すべき sandbox-safe な検証コマンドが明示されていない。review の判断は plan §4 の runner 結果と副作用ファイルの存在確認（`glob`）に依存するだけであり、これらは agent 内で完了済み。親 runner の検証（lint-ts, test-unit etc.）は runner 側で実行済み/実行予定。
+
+---
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"review 結果を記録。verdict=grade-stale。評価結果サイドカー docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml が存在せず、runner の grade 実行が失敗（exit 1, analysis line 10 CAUSE requires a preceding FINDING without cause）。共通規約 E-01 に従い完了可否の判断を保留。handoff に result 本文 content を記録。","handoff":["【review result 本文 - 評価結果の確認】\n- 評価結果サイドカー: docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml\n- 存在確認: ファイルなし（glob 0 件）。plan §4 の「評価結果がない」一致。\n- runner grade 実行: run id `review-prj-0001-T-KATA-WAVE-2-bac-task-completion-090-5425b10d9f-20261115T102914Z` で exit 1: `$analysis: line 10: CAUSE requires a preceding FINDING without cause`。\n- grade verdict/score/finding 件数: 確定不可（サイドカー不在、grade実行失敗）。\n- 鮮度判定: 共通規約 E-01。サイドカー不存在 → 評価結果が最新でない。verdict=grade-stale。","【review result 本文 - 判断根拠】\n- plan §4 で grade 実行失敗、評価結果不存在を明記。\n- `bac-task-completion.yaml` は glob で 0 件、plan 記述と一致。\n- 共通規約 E-01: サイドカー不在 → verdict=grade-stale。成果物を自分で再評価しない。\n- DC-001〜DC-004 の充足判定に grade・finding が前提だが確定不可。\n- plan §8: 「評価結果が最新でないことは異常終了の理由にせず、verdict として記録する」に該当。review 自体は完了（非異常終了）。","【review result 本文 - 未充足事項・改善指示】\n未充足事項:\n- 評価結果サイドカー不存在のため DC-001〜DC-004 の照合ができず、完了可否を確定できない。\n- grade実行が `$analysis: line 10: CAUSE requires a preceding FINDING without cause` で失敗。\n改善指示:\n- grade実行の失敗原因（analysis 出力構造エラー）の調査と是正。評価結果サイドカー `docs/ja/projects/prj-0001/execution/grade/results/bac-task-completion.yaml` の生成。\n- 評価結果の freshness を確認した後、完了可否レビューを再開。","【review result 本文 - approach に応じた確認】\nretrofit 確認:\n- `src/grade/grade.ts`: 存在確認。グレード サブコマンドの登録モジュール（Commander ベース）。業務ロジックの実装ではなくコマンド登録。\n- `src/exec/run/run.ts`: 存在確認。実行エージェント処理エクスポート。完了条件と完了記録を含む実行フローの基盤モジュール。\n- 両ファイルとも CLI・モジュール集であり、BAC-01〜09 の業務フローの実装そのものではない。\n- grade 結果が stale なため、品質観点の確認は保留。実装との照合自体は完了したが完了判定への利用は保留。","【review result 本文 - decision】\n- verdict: grade-stale\n- 理由: 評価結果サイドカーが存在しない（共通規約 E-01）。完了可否判断を保留。"],"validations":[]}
+</specdojo_executor_evidence>

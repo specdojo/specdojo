@@ -41,3 +41,80 @@
     - field: derived_from
       from: ""
       to: '["PJR-RKHR"]'
+- v: 1
+  id: reg_0a1bd68f01104a11a83b3fb333605faf
+  ts: "2026-11-03T14:34:56Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_caeeb92bd3094b69bf861580626fa2f6
+- v: 1
+  id: reg_e8936fc7797a46ebbd8cd792bd946aa6
+  ts: "2026-11-03T15:09:19Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, typecheck"
+  previous_event_id: reg_0a1bd68f01104a11a83b3fb333605faf
+- v: 1
+  id: reg_f3af4423d6a14d1d88aba205216fd911
+  ts: "2026-11-03T15:42:20Z"
+  action: start
+  actor: argon-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration, typecheck"
+      to: "-"
+  previous_event_id: reg_e8936fc7797a46ebbd8cd792bd946aa6
+- v: 1
+  id: reg_f756a14928e34117887a19531a39f98c
+  ts: "2026-11-03T16:10:51Z"
+  action: review
+  actor: argon-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f3af4423d6a14d1d88aba205216fd911
+- v: 1
+  id: reg_29139184b2c54896ae0f48a5164d2319
+  ts: "2026-11-03T22:51:34Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: executor から再開したとき worktree で直した plan が統合の commit に残るようにし、schedule と register の両方を統合テストで確かめた
+  previous_event_id: reg_f756a14928e34117887a19531a39f98c

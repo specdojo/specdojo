@@ -2,12 +2,12 @@
 id: prj-0001:prj-assumptions-constraints-dependencies-grade-criteria
 document: prj-0001:prj-assumptions-constraints-dependencies
 path: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
-graded_at: "2026-10-12T16:24:15.945Z"
-graded_by: agy-expert-executor
-content_hash: 0955f4b530ac5676defacfcfed9eec94f04a2e13b294154bb940de1b371a87eb
+graded_at: "2026-11-15T21:54:29.211Z"
+graded_by: sol-review-executor
+content_hash: e827db8ff6d62b1a4f38fb72b7d0e99bb738b59d2fb32990fb5f8d7bd5a4b457
 summary:
-  satisfied: 1
-  unsatisfied: 3
+  satisfied: 4
+  unsatisfied: 0
   total: 4
 criteria:
   - id: DC-001
@@ -15,19 +15,13 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: unsatisfied
-    reason: >-
-      Operational constraints and deviations regarding exclusion of personal, confidential, and non-public information
-      cannot be identified from a business perspective.
+    status: satisfied
   - id: DC-002
     text: 重要な前提・制約を受け入れられる情報が含まれていること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: unsatisfied
-    reason: >-
-      Critical constraints regarding exclusion of confidential information lack monitoring and deviation procedures, and
-      publication scope decisions remain unconfirmed in decision records.
+    status: satisfied
   - id: DC-003
     text: 技術的制約・外部依存が識別できること
     roles:
@@ -39,7 +33,4 @@ criteria:
     roles:
       - PM
     viewpoint: vp-pm-dependency-risk
-    status: unsatisfied
-    reason: >-
-      Unresolved publication scope is treated as resolved in ACD-D02/ACD-D03, obscuring dependency risks to schedule and
-      release gates.
+    status: satisfied

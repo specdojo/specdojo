@@ -1,0 +1,171 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_28dacc2dfe77491c900d641f05c2fabe
+  ts: "2026-11-12T13:48:50Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie が推奨を承認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: テストと検証が /tmp の直下に init の出力を残さないようにする
+    - field: description
+      from: ""
+      to: どの処理が /tmp の直下に specdojo init の出力を残したかを確かめ、テストと agent の確認の手順を一時ディレクトリに閉じ込める
+    - field: input
+      from: ""
+      to: '["PJR-5FTV の修正。今晩の夜間に流す（indie が 2026-11-12 に承認）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-12"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-5FTV"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: test
+- v: 1
+  id: reg_f523959f21524253a3c22906594c1522
+  ts: "2026-11-12T13:50:32Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今晩の夜間の実行で流す（indie が承認）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_28dacc2dfe77491c900d641f05c2fabe
+- v: 1
+  id: reg_d0575a95a7224d158a8247ac30f4d4c1
+  ts: "2026-11-12T14:14:25Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f523959f21524253a3c22906594c1522
+- v: 1
+  id: reg_9c5d5a4f36a345238668b313f24503bb
+  ts: "2026-11-12T14:41:53Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_d0575a95a7224d158a8247ac30f4d4c1
+- v: 1
+  id: reg_136b569d9cd44ce9a4dc9cf2d70fbdeb
+  ts: "2026-11-13T05:14:22Z"
+  action: start
+  actor: flash-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_9c5d5a4f36a345238668b313f24503bb
+- v: 1
+  id: reg_f60403a6a5a849aca5f4050539409007
+  ts: "2026-11-13T05:26:31Z"
+  action: wait
+  actor: flash-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
+  previous_event_id: reg_136b569d9cd44ce9a4dc9cf2d70fbdeb
+- v: 1
+  id: reg_6d8cf9bf48b94d45b7f2dc5a9162190b
+  ts: "2026-11-13T06:09:38Z"
+  action: start
+  actor: flash-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-7rz4.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-7rz4-p…"
+      to: "-"
+  previous_event_id: reg_f60403a6a5a849aca5f4050539409007
+- v: 1
+  id: reg_80a06e4efd624f3aa8f5320b7d805307
+  ts: "2026-11-13T06:10:19Z"
+  action: review
+  actor: flash-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6d8cf9bf48b94d45b7f2dc5a9162190b
+- v: 1
+  id: reg_61921f2cd5284118a9b4b386cd241bd0
+  ts: "2026-11-16T03:37:39Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: テストと検証が /tmp の直下に init の出力を残さないようにした（2026-11-13 に統合済み、0.8.0 に含む）
+  previous_event_id: reg_80a06e4efd624f3aa8f5320b7d805307

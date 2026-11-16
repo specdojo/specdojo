@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0a5ae97356a14e6dbbfec55a49ea8a0c
+- v: 1
+  id: reg_05bda047ba814e08ab33db665f0b80c8
+  ts: "2026-11-11T12:07:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: PJR-SJQC の決定で横向きの前提が置き換わり、規則は縦向きの規則に引き継がれたため close する
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: P・D・C・A の左からの並び順の規則を足した。その後 PJR-SJQC・PJR-VRVP で図を縦向きにし、並び順の規則は上からの順に引き継いだ
+  previous_event_id: reg_6bc6f8f43925431b84308dd1a4c2841f

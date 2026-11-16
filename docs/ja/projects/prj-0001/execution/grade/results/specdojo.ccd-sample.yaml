@@ -4,11 +4,11 @@ document: specdojo:ccd-sample
 path: docs/ja/specdojo/samples/ccd-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 80
-graded_at: "2026-10-10T21:18:04.697Z"
-graded_by: agy-expert-executor
-content_hash: 90808f2bc0a26d89402e55d4fd4de7b5a66e22016645cfb620b7b5b0f3d980a0
+verdict: pass
+score: 95
+graded_at: "2026-11-10T08:34:39.408Z"
+graded_by: sol-review-executor
+content_hash: 6ed3a6a84aabb3e71e76d1a1f33bbf03a83cc92fe9d7630183edc5f301e09dd7
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 25
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,14 +78,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -103,35 +103,39 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 1
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: rulebook が定義する成果物の具体例（Mermaid 構文によるクラス図）が完全に欠落している。
-    message_ja: rulebook が定義する成果物の具体例（Mermaid 構文によるクラス図）が完全に欠落している。
+    line: 75
+    anchor: 作成済み辞書と照合したキーの対応を示す。「未定義」は既存辞書に該当する概念がない状態、「未作成」は参照予定の辞書自体がない状態を表す。
+    message: >-
+      The previously missing Mermaid diagram is now present, resolving the earlier major omission; however, this section
+      claims completed checks against specdojo:bdd-sample while the Frontmatter omits based_on. Record
+      specdojo:bdd-sample as a direct source as required by CCD rulebook section 4, while excluding the uncreated
+      customer dictionary.
+    message_ja: >-
+      The previously missing Mermaid diagram is now present, resolving the earlier major omission; however, this section
+      claims completed checks against specdojo:bdd-sample while the Frontmatter omits based_on. Record
+      specdojo:bdd-sample as a direct source as required by CCD rulebook section 4, while excluding the uncreated
+      customer dictionary.
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 24
-    anchor: "| 主な内容     | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など | 要点のみ記載                         |"
-    message: 概念クラス図のサンプルとして不適切な「必須観点（判定基準、責任者など）」が記述されており、成果物の責務と矛盾している。
-    message_ja: 概念クラス図のサンプルとして不適切な「必須観点（判定基準、責任者など）」が記述されており、成果物の責務と矛盾している。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 概念クラス図のサンプルでありながら、肝心の Mermaid CCD 記述例（図）が一切含まれておらず、完成例として機能していない。
-    message_ja: 概念クラス図のサンプルでありながら、肝心の Mermaid CCD 記述例（図）が一切含まれておらず、完成例として機能していない。
-  - id: F004
-    severity: major
-    rule: vp-ux-readability
-    line: 26
-    anchor: "## 5. 未解決事項"
-    message: 具体的な概念クラス図の記述が存在しないため、読者がどのような成果物を目指すべきか理解できない。
-    message_ja: 具体的な概念クラス図の記述が存在しないため、読者がどのような成果物を目指すべきか理解できない。
+    line: 79
+    anchor: >-
+      | 商品         | 商品ID → `product_id`。店舗で管理する商品の範囲で一意                                              |
+      [[specdojo:bdd-sample\|業務データ辞書（駄菓子屋の販売管理）]] の商品                                           |
+    message: >-
+      The earlier missing-diagram and unrelated-viewpoint problems are resolved; the remaining conformance issue is that
+      the sample demonstrates verified mappings to specdojo:bdd-sample without recording that existing dictionary in
+      Frontmatter based_on. Add that direct source so the completed example demonstrates the provenance convention
+      specified by CCD rulebook section 4.
+    message_ja: >-
+      The earlier missing-diagram and unrelated-viewpoint problems are resolved; the remaining conformance issue is that
+      the sample demonstrates verified mappings to specdojo:bdd-sample without recording that existing dictionary in
+      Frontmatter based_on. Add that direct source so the completed example demonstrates the provenance convention
+      specified by CCD rulebook section 4.

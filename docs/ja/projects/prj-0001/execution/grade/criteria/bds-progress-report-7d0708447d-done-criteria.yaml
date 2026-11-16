@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: bds-progress-report-grade-criteria
+document: bds-progress-report
+path: docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md
+graded_at: "2026-11-15T21:43:29.110Z"
+graded_by: sol-review-executor
+content_hash: 08c5917cb6f4e15345dc9fd2e438ade406bef5264e01cb9147466aa4c72a7153
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: 利用目的・読み手・表示項目・出力の時期が業務観点で記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 報告の範囲と業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: 報告の内容を記録から確かめるテストの設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

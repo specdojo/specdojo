@@ -1,11 +1,12 @@
+import { Command } from "commander";
 import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
-import { createPlanMarkdownlintFixture } from "../../helpers/plan-markdownlint.js";
+import { recordPathForRead } from "../../../src/exec/run-records.js";
 import * as spawnSelf from "../../../src/shared/spawn-self.js";
+import { createPlanMarkdownlintFixture } from "../../helpers/plan-markdownlint.js";
 
 const originalCwd = process.cwd();
 const envKeys = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
@@ -53,7 +54,7 @@ describe("scheduled plan Markdown validation", () => {
 
       expect(process.exitCode).toBe(1);
       expect(stdout.mock.calls.map(([text]) => String(text)).join("")).toMatch(
-        /Task T-TEST-doc-010[\s\S]*T-TEST-doc-010-plan\.md: \d+[^\n]*MD032/,
+        /Task T-TEST-doc-010[\s\S]*plan\.md: \d+[^\n]*MD032/,
       );
       expect(readFileSync(planPath, "utf8")).toBe("existing plan\n");
     },
@@ -66,10 +67,7 @@ describe("scheduled plan Markdown validation", () => {
     await runExec(["plan", "--project", "test", "--task", taskId]);
 
     expect(process.exitCode).toBe(0);
-    const plan = readFileSync(
-      join(repo, "execution", "exec", "plans", `${taskId}-plan.md`),
-      "utf8",
-    );
+    const plan = readFileSync(recordPathForRead(join(repo, "execution"), "plan", taskId), "utf8");
     expect(plan).toContain("Phase instructions.\n\n- First item");
   });
 
@@ -96,10 +94,8 @@ describe("scheduled plan Markdown validation", () => {
 
       expect(process.exitCode ?? 0).toBe(valid ? 0 : 1);
       const errors = stderr.mock.calls.map(([text]) => String(text)).join("");
-      if (!valid)
-        expect(errors).toMatch(/Task T-TEST-doc-010[\s\S]*T-TEST-doc-010-plan\.md: \d+[^\n]*MD032/);
-      const plans = join(repo, "execution", "exec", "plans");
-      expect(existsSync(join(plans, `${taskId}-plan.md`))).toBe(valid);
+      if (!valid) expect(errors).toMatch(/Task T-TEST-doc-010[\s\S]*plan\.md: \d+[^\n]*MD032/);
+      expect(existsSync(recordPathForRead(join(repo, "execution"), "plan", taskId))).toBe(valid);
       const events = join(repo, "execution", "exec", "events");
       expect(existsSync(events) ? readdirSync(events) : []).toEqual([]);
     },

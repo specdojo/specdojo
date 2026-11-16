@@ -1,0 +1,45 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "レビュー作業を完了。受入判定は `incomplete`。最新 grade は 88 点・needs-work、完了条件は 5 件中 1 件充足。成果物・型・result は変更していない。確認できなかった範囲: 宣言外の実行記録モデル・BPS・承認者情報との直接照合、未作成のイベント一覧との接続、実装・テスト設計への実利用。result の記入は reporter に引き継ぐ。",
+  "handoff": [
+    "「評価結果の確認」へ記録すること。指定された grade list の `--changed-only`、`--dependency-changed`、`--incomplete` を開始時と判定直前に各1回実行し、全6回が終了コード0・標準出力なし。サイドカーは読み取り可能。評価結果は最新・確定済みで、review 中の陳腐化は検出されなかった。grade は `verdict: needs-work`、`score: 88`、`graded_at: 2026-11-10T07:05:00.879Z`、blocker 0 / major 3 / minor 8 / note 0。各コマンドと出力は validations のとおり。",
+    "「判断根拠」へ記録すること。grade の `done_criteria` は satisfied 1 / total 5、未充足は DC-001（BA）、DC-002（PO）、DC-003（ARC）、DC-005（DEV）。この判定を事実として採用し、観点や finding を再評価していない。既存 F006 の適用範囲・業務承認と F007 の相関項目のモデル照合は、業務妥当性および実装参照に直結する。F011 の未承認の担当割当も残るため、完成版としての完了を認められず、`complete-with-findings` は選ばない。[[prj-0001:bes-task-ready-selected|業務イベント: 実行可能タスクの選択]] の「適用範囲と承認の未決事項」「データモデルとの未照合事項」には、これらの判断と照合が未了であることが実際に記載されている。",
+    "「判断根拠」の実施確認へ記録すること。先行 [[prj-0001:xer-t-business-specs-kata-bes-task-ready-selected-070-20261110t022110z-6c162adf|磨き込み実行記録]] と [[prj-0001:xer-t-business-specs-kata-bes-task-ready-selected-080-20261110t043653z-c73b028d|凝縮実行記録]]、対応する evidence、コミット dcd6b60d5 / 88512bae5 の実差分を確認した。参照範囲外を未作成と断定する記述の修正、発生時点で観測可能な件数に限る条件の追加、相関情報と未決事項の重複整理を確認した。両実行の runner による9種類の検証はすべて passed。検証成功は業務承認や未充足 DC の解消を意味しない。",
+    "変更範囲について、先行070の result/evidence は sidebar-config.ts を変更ファイルとして挙げるが、対応する確定コミット dcd6b60d5 にはその差分がない。確定差分では対象 BES と実行管理ファイルのみを確認した。005の確定差分では BES・rulebook・sample の更新と recipe・template の追加、080では BES と実行管理ファイルの変更を確認した。今回の executor による追跡ファイルの変更はなく、開始時から存在した runner 管理の未追跡 pipeline-state.json のみが残る。",
+    "「未充足事項・改善指示」へ既存 finding の対応として記録すること。F001・F006・F011: PM が人間の PO と確認担当を特定して割当を合意し、BA・ARC が必要な一覧・起点イベント仕様・自動選択プロセスを次の plan の依存に明示する。その後、3系統への適用範囲と選択・claim の業務境界を照合し、人間の PO の判断・承認を本文と review result に記録する。未承認の進め方案を承認済みと扱わず、`status: draft` を維持する。",
+    "「未充足事項・改善指示」へ記録すること。F002〜F005・F007・F008: ARC が実行記録モデルの所在・利用可否を確認し、次の plan に明示したうえで並列要求の相関項目との対応を照合する。BA は要求・対象・実行の単位、確定件数の観測時点と利用可能になる時点を整理する。同一要求で2件を選ぶ場合の各イベントの期待件数、値を省略する条件も確定し、人間の PO の合意後に QE と DEV へ渡す。物理項目や構造を BES に複製せず、正本への対応として示す。F009・F010: `prj-0001:bes-index` が作成された後、P-07 の起点・一覧の対応行・カタログ定義を照合して双方向リンクを設定する。修正後は grade を更新して再レビューする。",
+    "「approach に応じた確認」へ記録すること。[[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:bes-rulebook|業務イベント仕様 作成ルール]]、[[specdojo:bes-recipe|業務イベント仕様 作成レシピ]]、[[specdojo:bes-sample|業務イベント: 店頭の現金会計の確定]]、[[specdojo:clis-sample|販売管理 CLI 仕様例]] を実読した。フェーズ説明の明示指定に従い、rulebook frontmatter の `template: specdojo:bes-template` から [[specdojo:bes-template|業務イベント仕様テンプレート]] を明示的に開いた。先行 fully-guided の磨き込みで template が未読だったことを違反とは扱わない。宣言外のプロジェクト文書・実装・外部情報は独自参照していない。",
+    "型一式の確認事実と要否判断を記録すること。rulebook は標準に沿う七章構成で、完成例のサンプル章を持たず、導入と五章ごとの判断基準・良い例・悪い例を備える。型の見出しには階層ごとの連番があり、template の五章と主体・事実データの表、sample の五章が対応する。sample は二つの起点主体、七つの発生判定場面、八つの事実データ項目、三つの取引対応例を持ち、完成例として具体化されている。recipe は境界・観測時点・相関を段階的に決める支援に必要、template は五章と表の骨組みを再利用するため必要。frontmatter の両完全 ID 宣言を維持する判断が妥当で、未宣言・未整備ではない。追加の記法 rulebook は、BES 自体に図等の独自記法がないため不要。PJR-2GD6 の方針に沿い、意味要件・骨組み・完成例を分担し、値・構文・構造は正本へ委ねている。",
+    "型に関する改善候補として、sample は一括・並列要求を明示的に対象外とするため、同一要求の複数イベントと件数観測を示す完成例はない。代表成果物の相関モデルが確定した後、複数要求・部分確定・観測時点を説明する完成例の追加要否を maintenance で判断する。既存 sample は単一取引の完成例として成立しており、この候補を新しい品質 finding や今回の独立した完了阻害理由として追加しない。",
+    "プロジェクト文脈として [[prj-0001:prj-overview|プロジェクト概要]] を実読し、人と AI が同じ正本で判断を引き継ぐこと、主要判断・公開可否は人間が担うことを判断軸とした。[[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の P-07 と [[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] の schedule 系の範囲も実読した。参照範囲外のモデルや承認情報を推測して補うことはしなかった。「decision」には `verdict: incomplete` を記録する。レビューの実施自体は完了しているため、この executor の `completion_status` は complete。reporter が result の必須五セクションを埋め、runner が再計画へ進めること。"
+  ],
+  "validations": [
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。対象内容の変更による陳腐化なし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。評価コンテキストの未反映なし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・判定直前の2回とも終了コード0、標準出力なし。評価パイプライン未完了の対象なし。"
+    },
+    {
+      "command": "git diff --exit-code",
+      "status": "passed",
+      "summary": "終了コード0、出力なし。追跡ファイルの未ステージ変更なし。"
+    },
+    {
+      "command": "git diff --cached --exit-code",
+      "status": "passed",
+      "summary": "終了コード0、出力なし。ステージ済み変更なし。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

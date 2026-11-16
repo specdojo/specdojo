@@ -6,6 +6,8 @@ import type { PipelineRepoIntegrationState } from "./pipeline-state.js";
 import { productIntegrationTarget } from "./task-repos.js";
 import {
   abortMerge,
+  assertCommitScope,
+  UncommittedChangesError,
   commitTargetPaths,
   isExecBranchMergedIntoCurrent,
   recordRootNewFilesHandoff,
@@ -28,6 +30,7 @@ import {
   type ProductWorktree,
 } from "./worktree.js";
 import { resolveRepoQualifiedRef } from "../shared/specdojo-config.js";
+import { stagedMergeBlocker } from "../shared/git.js";
 import {
   PROJECT_REPO_NAME,
   branchExists,
@@ -401,6 +404,8 @@ export function productMergeBlockers(product: ProductWorktree): RepoIntegrationB
   }
   const checkout = checkoutOfBranch(product.repoRoot, target);
   if (checkout) {
+    const stagedBlocker = stagedMergeBlocker(checkout);
+    if (stagedBlocker) blockers.push(block(stagedBlocker));
     if (mergeInProgress(checkout)) {
       blockers.push(block(`a merge is in progress in ${checkout}`));
     } else {
@@ -431,6 +436,12 @@ export function projectMergeBlockers(params: {
   const { context, worktree } = params;
   const repoRoot = context.repoRoot;
   const block = (message: string): RepoIntegrationBlocker => ({ repo: PROJECT_REPO_NAME, message });
+  try {
+    assertCommitScope(context, worktree, params.taskId);
+  } catch (error) {
+    if (error instanceof UncommittedChangesError) return [block(error.message)];
+    throw error;
+  }
   if (isExecBranchMergedIntoCurrent({ context, worktree })) return [];
   const target = gitText(gitResult(repoRoot, ["branch", "--show-current"]).stdout).trim();
   if (!target) return [block("detached HEAD is not supported as the integration target")];
@@ -440,6 +451,8 @@ export function projectMergeBlockers(params: {
   if (mergeInProgress(repoRoot)) return [block(`a merge is in progress in ${repoRoot}`)];
 
   const blockers: RepoIntegrationBlocker[] = [];
+  const stagedBlocker = stagedMergeBlocker(repoRoot);
+  if (stagedBlocker) blockers.push(block(stagedBlocker));
   const uncommitted = commitTargetPaths(context, worktree, params.taskId);
   if (uncommitted.length > 0) {
     blockers.push(block(`uncommitted commit-target changes: ${uncommitted.join(", ")}`));
@@ -484,6 +497,10 @@ export function mergeProductIntoTarget(params: {
   const { product, message } = params;
   const target = productIntegrationTarget(product);
   const checkout = checkoutOfBranch(product.repoRoot, target);
+  if (checkout) {
+    const stagedBlocker = stagedMergeBlocker(checkout);
+    if (stagedBlocker) throw new Error(stagedBlocker);
+  }
   const header = `=== ${new Date().toISOString()} ${product.name}: merge ${product.branch} into ${target} ===`;
   if (product.integrationStrategy === "ff") {
     const parent = gitOutput(product.repoRoot, ["rev-parse", `refs/heads/${target}`]).trim();

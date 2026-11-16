@@ -1,0 +1,37 @@
+タスク `T-KATA-WAVE-1-cxd-specdojo-080`（アプローチ: `condense`、対象: [cxd-specdojo.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-080/docs/ja/product/030-architecture/010-c4/cxd-specdojo.md)）の冗長さの整理および精査を実施しました。
+
+---
+
+### 1. 冗長さの整理と精査結果
+
+正本である `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` の `vp-arc-conciseness` および `docs/ja/specdojo/rulebooks/cxd-rulebook.md` に基づき、対象文書 [cxd-specdojo.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-cxd-specdojo-080/docs/ja/product/030-architecture/010-c4/cxd-specdojo.md) の全節・全記述について 5 つのカテゴリ（`repetition`、`table-prose`、`figure-prose`、`unneeded-background`、`canonical-restatement`）の観点から候補の洗い出しと検証を行いました。
+
+検証の結果、以下のとおり洗い出した候補はすべて判断・合意・制約・検証観点に固有の役割を持ち、不要な冗長記述ではないことを確認しました。
+
+1. **第 1 章の対象者表と第 3.2 節の Person 表 (`repetition`)**:
+   - 第 1 章の表はドキュメント読者（ステークホルダー）ごとの確認観点を示し、第 3.2 節の表はシステム利用アクターとしての利用目的と境界上の接点・確認責務を定義しており、対象読者とモデル要素で目的が異なるため保持（`retain`）。
+2. **人間責任と AI 実行・承認分離の記述 (`repetition`)**:
+   - 第 1 章の基本分界（L16）、第 3.1 節の境界外委譲先（L67）、第 4.1 節の `draft` から `ready` への昇格自動化禁止という技術制約（L105）、第 4.2 節の検証観点（L114）は、それぞれ全体原則・システム境界・技術制約・下流検証設計への伝達という固有の役割を持つため保持（`retain`）。
+3. **Mermaid 図直後の補足注記 (`figure-prose`)**:
+   - 第 2 章 L56 の記述は図の矢印を文章でなぞる重複ではなく、矢印の向きの意味（主たる利用方向、応答の省略）および複合ノード（Git / GitHub）の意図を補足する図の読解に必要な注記（Rulebook 6.2 準拠）であるため保持（`retain`）。
+4. **ローカル実行の仮定と将来課題 (`repetition`)**:
+   - 第 3.1 節の `_ASSUMPTION_`（L69）は現時点の境界定義の前提を宣言し、第 5 章のメモ/将来課題（L122）は下位図（`cnd`/`cpd`/`ifd`）整備時に実行境界を照合・更新する引き継ぎ先・解消条件として管理されており、役割が分担されているため保持（`retain`）。
+5. **同一端末実行時の境界外扱いと保証の限定 (`unneeded-background`)**:
+   - 第 3.3 節 L88 は不要な背景ではなく、同一端末実行時でも責務を境界外に置くアーキテクチャ境界判断の根拠、および異常時保証を連携契約へ委ねる責任分界の限定を明記する必須制約であるため保持（`retain`）。
+6. **関係表における正本参照 (`canonical-restatement`)**:
+   - 第 3.4 節ではコマンド構文や電文詳細を本文に転載せず、概要の要点のみを示して既存の正本仕様（`specdojo:command-reference`、`clis-exec-commands`、`ifx-cmd-ai-provider-cli` 等）へのリンク参照に委譲しているため、適切な参照関係として保持（`retain`）。
+
+### 2. 成果物および下流適合性への影響
+
+- **成果物変更**: 不要（現状の記述が過不足なく簡潔であり、変更箇所なし）。
+- **意味・必須情報の維持**: 判断に要る背景、制約、例外、完了条件はすべて完全に維持されています。
+- **下流ロールの入力適合性**:
+  - `BA`: 対象システムと外部システム・ユーザーの関係が業務観点で正確に維持されています。
+  - `PO`: システム境界とステークホルダーの責任範囲を承認できる情報が維持されています。
+  - `QE`: システム境界・外部依存のテスト観点が識別できる状態が維持されています。
+
+---
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象文書 cxd-specdojo.md の精査を実施し、不要な冗長記述はなく必須情報・判断・制約・検証観点が過不足なく維持されていることを確認しました（成果物の変更不要）。","handoff":[],"condense_records":[{"location":"## 1. 概要 (L18-23) と ## 3.2. Person（人・ロール） (L73-77)","category":"repetition","action":"retain","reason":"1章の表は文書読者（ステークホルダー）ごとの確認観点を示し、3.2節の表はシステム利用アクター（Person）としての利用目的と境界上の確認責務を定義しており、対象読者とモデル要素で目的・役割が異なるため保持する。","cause":{"type":"kata","kind":"rulebook","location":"1.1 / 6.3.2"}},{"location":"## 1. 概要 (L16)、## 3.1. 対象システムとシステム境界 (L67)、## 4.1. 技術前提・制約 (L105)、## 4.2. システム境界・外部依存の検証観点 (L114)","category":"repetition","action":"retain","reason":"概要における人間責任とシステム責任の基本分界、境界定義における委譲先、draft/ready昇格自動化禁止という技術制約、下流検証設計へ渡す確認観点として、各節で固有の判断・合意の役割を担っており判断情報を損なわないため保持する。","cause":{"type":"kata","kind":"rulebook","location":"6.1 / 6.3.1 / 6.4"}},{"location":"## 2. C4コンテキスト図（Mermaid） (L56)","category":"figure-prose","action":"retain","reason":"図の矢印関係を文章でなぞる記述ではなく、矢印の向きの意味（主たる利用方向、応答の省略）および複合ノード（Git / GitHub）の意図を補足する図の読解に必要な注記（Rulebook 6.2 準拠）であるため保持する。","cause":{"type":"kata","kind":"rulebook","location":"6.2"}},{"location":"## 3.1. 対象システムとシステム境界 (L69) と ## 5. メモ / 将来課題 (L122)","category":"repetition","action":"retain","reason":"3.1節のASSUMPTIONでは境界定義の前提となるローカル実行仮定を明示し、5章では下位C4図・インフラ図整備時に実行境界を照合して仮定を更新する将来課題・引き継ぎ先として管理しており、仮定の宣言と課題管理で役割が分担されているため保持する。","cause":{"type":"kata","kind":"rulebook","location":"6.3.1 / 6.5"}},{"location":"## 3.3. External Software System（外部システム） (L88)","category":"unneeded-background","action":"retain","reason":"目的に不要な背景ではなく、同一端末実行時でも責務を境界外に置くアーキテクチャ境界判断の根拠、および異常時保証を連携契約へ委ねる責任分界の限定を明記する必須情報であるため保持する。","cause":{"type":"kata","kind":"rulebook","location":"6.3.3"}},{"location":"## 3.4. Relationship（関係・連携契約） (L92-98)","category":"canonical-restatement","action":"retain","reason":"CLI構文やコマンド引数・外部IF電文の詳細を再掲せず、概要の要点のみを示して既存の正本（CLIコマンドリファレンス、実行制御コマンド群CLI仕様、外部コマンド連携仕様等）への参照に留めているため、適切な参照関係として保持する。","cause":{"type":"kata","kind":"rulebook","location":"6.3.5 / 7"}}],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","reason":"*.yaml または *.yml ファイルの変更がないため"},{"command":"npm run validate:history-links","status":"not_applicable","reason":"履歴管理ファイル（pjr-*.md または実行記録）の変更がないため"},{"command":"npm run validate:catalog","status":"not_applicable","reason":"docs/ja/projects/ 配下の成果物変更がないため"}]}
+</specdojo_executor_evidence>

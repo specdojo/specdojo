@@ -5,6 +5,8 @@ import { unified } from "unified";
 import { viewpointAppliesToDocument } from "../review/plan.js";
 import type { ReviewViewpoint, ReviewViewpointsDoc } from "../review/types.js";
 import { gradeContentHash, type GradeResult } from "./result.js";
+import type { FindingCause } from "../shared/finding-cause.js";
+import { isYamlDocument, readYamlMetadata } from "../shared/document-metadata.js";
 
 export type GradeTarget = "kata" | "deliverable";
 export const GRADE_TARGETS: readonly GradeTarget[] = ["kata", "deliverable"];
@@ -42,10 +44,14 @@ export type GradePipelineState = {
 export type GradeFindingInput = {
   id?: string;
   severity: GradeSeverity;
-  /** Canonical executor wording. */
+  /** Canonical executor wording (Japanese since PJR-YYDS; older results may be English). */
   message: string;
-  /** Japanese display wording. It never participates in scoring or carry-over matching. */
+  /**
+   * Japanese display wording. It never participates in scoring. Carry-over also matches it so a
+   * Japanese restatement of an English canonical finding keeps the previous severity.
+   */
   message_ja?: string;
+  cause?: FindingCause;
   line?: number;
 };
 
@@ -122,6 +128,7 @@ export type GradeValidationIssue = { path: string; message: string };
 export type MarkdownDocument = {
   data: Record<string, unknown>;
   body: string;
+  format?: "yaml";
 };
 
 export const FINDING_RE =
@@ -181,10 +188,21 @@ export function preserveStoredFindingSeverities(
 ): GradeViewpointInput[] {
   const previousByMessage = new Map<string, GradeSeverity>();
   for (const finding of previous?.findings ?? []) {
-    const message = sanitizeCommentText(finding.message);
-    const stored = previousByMessage.get(message);
-    if (stored === undefined || SEVERITY_LEVEL_CAP[finding.severity] < SEVERITY_LEVEL_CAP[stored]) {
-      previousByMessage.set(message, finding.severity);
+    // 英語を正本にした旧結果では、grade plan が表示用の日本語を前回の指摘として示す。
+    // 正本と表示用の両方を照合し、日本語で再掲された指摘の severity も引き継ぐ。
+    const keys = new Set(
+      [finding.message, finding.message_ja]
+        .filter((message): message is string => typeof message === "string")
+        .map((message) => sanitizeCommentText(message)),
+    );
+    for (const message of keys) {
+      const stored = previousByMessage.get(message);
+      if (
+        stored === undefined ||
+        SEVERITY_LEVEL_CAP[finding.severity] < SEVERITY_LEVEL_CAP[stored]
+      ) {
+        previousByMessage.set(message, finding.severity);
+      }
     }
   }
   return viewpoints.map((viewpoint) => {
@@ -244,6 +262,11 @@ export function parseMarkdown(content: string, path: string): MarkdownDocument {
     throw new Error(`${path}: frontmatter must contain a specdojo mapping`);
   }
   return { data: parsed, body: (match[2] ?? "").replace(/^(?:\r?\n)+/, "") };
+}
+
+export function parseGradeDocument(content: string, path: string): MarkdownDocument {
+  if (!isYamlDocument(path)) return parseMarkdown(content, path);
+  return { data: { specdojo: readYamlMetadata(content, path) }, body: content, format: "yaml" };
 }
 
 function serializeGrade(grade: Record<string, unknown>): string {
@@ -351,7 +374,7 @@ function stableContentHash(document: MarkdownDocument): string {
 // pipeline 状態は成果物そのもののハッシュで識別する。grade apply は成果物を変更しないため、
 // grade / finding や空行を除外する正規化は不要である。
 export function pipelineContentHash(document: MarkdownDocument): string {
-  return stableContentHash(document);
+  return document.format === "yaml" ? gradeContentHash(document.body) : stableContentHash(document);
 }
 
 export function sanitizeCommentText(value: string): string {

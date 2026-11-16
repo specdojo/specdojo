@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 typecheck
+> tsc -b --noEmit
+
+tests/src/exec/worktree-ops.integration.test.ts(533,9): error TS2552: Cannot find name 'resultWithIdentity'. Did you mean 'humanResultWithIdentity'?
+tests/src/exec/worktree-ops.integration.test.ts(547,11): error TS2552: Cannot find name 'resultWithIdentity'. Did you mean 'humanResultWithIdentity'?
+
+
+--- stderr ---

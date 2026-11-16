@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T16:29:23Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-1-dct-index-080",
+  "by": "agy-sonnet-executor",
+  "msg": "release claim to switch executor to opus-executor",
+  "meta": {
+    "pipeline_resume_released": "true",
+    "replaced_by": "opus-executor"
+  }
+}

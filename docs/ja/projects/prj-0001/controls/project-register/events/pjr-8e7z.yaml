@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b34884c3584c4adfb391be11c2afbbc6
+  ts: "2026-11-10T12:26:31Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務仕様の型に、文書の改訂と廃止のときに関係する文書を追って直す決まりを足す
+    - field: description
+      from: ""
+      to: bes・br・bdd の型の grade（2026-11-10）が、supersedes の使い方、deprecated への移行、参照元の bps・bel・実装・テストへの影響の追い方、担当の Role がないと指摘した。型ごとではなく共通の決まりとして決め、各型に反映する
+    - field: input
+      from: ""
+      to: '["grade の run id kata-bsk-20261110 の minor の指摘（bes-rulebook・br-rulebook・bdd-rulebook）から。軽い指摘は型を確定したうえで後で直す（indie が決定）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T88P"]'
+- v: 1
+  id: reg_662e3a90c6644d4a986f2fe28307f66e
+  ts: "2026-11-11T15:00:19Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳。今夜 0:00 の夜間の実行で流す（indie が承認）
+  changes:
+    - field: owner
+      from: _TODO_
+      to: sol-executor
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_b34884c3584c4adfb391be11c2afbbc6
+- v: 1
+  id: reg_59bef03a69f342abb7c1209b9108f57f
+  ts: "2026-11-11T15:47:07Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_662e3a90c6644d4a986f2fe28307f66e
+- v: 1
+  id: reg_f09962654bea4bd39d7d3651882c875b
+  ts: "2026-11-11T16:08:52Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_59bef03a69f342abb7c1209b9108f57f
+- v: 1
+  id: reg_d6bf2bd8fc2844629be7a529d814d1ef
+  ts: "2026-11-11T16:11:19Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 登録項目の完了条件 1〜6 を、統合差分 `6a8d64bb..15ef5a73` と照らし合わせて確認した。以下の内容が網羅されていることを確認した：document-metadata-standard 6.3 に基づく共通の決まり、rulebook-authoring-standard の準拠要件、…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-12"
+  previous_event_id: reg_f09962654bea4bd39d7d3651882c875b

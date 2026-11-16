@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-05T15:20:28Z",
+  "type": "claim",
+  "task_id": "T-STSD-PILOT-stsd-routine-run-090",
+  "by": "sol-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cxd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-10-31T20:21:50.944Z"
-graded_by: flash-high-executor
-content_hash: 06fb3d25a696e916b242a28a5b1d699090fd70742d95484f78fc9a001086f64e
+score: 97
+graded_at: "2026-11-15T01:59:48.669Z"
+graded_by: sol-review-executor
+content_hash: ad608851dd177ecfec5a80f5c8bfc30ccf950a7aca3d9db42ac759dbee79b34f
 categories:
   purpose:
     score: 100
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -72,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,34 +104,35 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 244
-    anchor: "```plaintext"
-    message: サンプル節において Mermaid コードブロックの直後に同一内容の plaintext ブロックが重複して記載されており冗長である。
-    message_ja: サンプル節において Mermaid コードブロックの直後に同一内容の plaintext ブロックが重複して記載されており冗長である。
+    line: 12
+    anchor: >-
+      - 内部コンテナ分割は C4 コンテナ図（`cnd`）、内部コンポーネント構造は C4
+      コンポーネント図（`cpd`）、実行環境・ネットワーク配置はインフラ構成図（`ifd`）、採用技術一覧は技術スタック一覧（`tsd-index`）、外部連携や操作の詳細は外部インターフェース仕様（`ifx-*`）や CLI
+      仕様（`clis`）・画面仕様（`uis`）を正本とし、CXD には境界判断に必要な要点と参照先だけを残します。
+    message: >-
+      The opening policy bullet repeats the document-by-document delegation mapping already provided in “正本の選び方と参照の境界”;
+      replace this enumeration with a reference to that section, retaining the boundary-summary principle and preserving
+      all mapping details in the table.
+    message_ja: >-
+      The opening policy bullet repeats the document-by-document delegation mapping already provided in “正本の選び方と参照の境界”;
+      replace this enumeration with a reference to that section, retaining the boundary-summary principle and preserving
+      all mapping details in the table.
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# C4コンテキスト図 ドキュメント作成ルール"
-    message: "Frontmatter に `target_format: markdown` が不足している。"
-    message_ja: "Frontmatter に `target_format: markdown` が不足している。"
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    anchor: "# C4コンテキスト図 ドキュメント作成ルール"
-    message: 他の rulebook と同様に、設計フローにおける本書の位置づけを定義する「位置づけ」節を設けるべきである。
-    message_ja: 他の rulebook と同様に、設計フローにおける本書の位置づけを定義する「位置づけ」節を設けるべきである。
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    anchor: "# C4コンテキスト図 ドキュメント作成ルール"
-    message: 参照しているサンプル `specdojo:cxd-sample` が具体的な成果物の例ではなくメタ記述となっており、実装リファレンスとして不十分である。
-    message_ja: 参照しているサンプル `specdojo:cxd-sample` が具体的な成果物の例ではなくメタ記述となっており、実装リファレンスとして不十分である。
+    rule: vp-dev-testability
+    line: 159
+    anchor: "## 8. 運用ルール"
+    message: >-
+      Add a validation instruction or a direct reference for checking CXD Mermaid syntax after edits, including a
+      supported command such as `npm run lint:mermaid — ＜document-path＞` and the requirement for no syntax errors or
+      unchecked diagrams; the current guidance covers diagram content but provides no Mermaid validation procedure.
+    message_ja: >-
+      Add a validation instruction or a direct reference for checking CXD Mermaid syntax after edits, including a
+      supported command such as `npm run lint:mermaid — ＜document-path＞` and the requirement for no syntax errors or
+      unchecked diagrams; the current guidance covers diagram content but provides no Mermaid validation procedure.

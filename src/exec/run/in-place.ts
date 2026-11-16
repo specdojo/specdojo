@@ -1,63 +1,36 @@
+import { readPlanFile } from "../../shared/plan-conventions.js";
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
+import { relative, resolve, sep } from "node:path";
+import { extractLocalId } from "../../schedule/phase-sets.js";
+import {
+  resolveAgentMember,
+  specdojoRootDir,
+  type AgentProvider,
+  type MemberRoster,
+} from "../../shared/specdojo-config.js";
 import {
   loadExecDefaultsConfig,
   resolveMemberCommand,
   type ExecDefaultsConfig,
 } from "../agent-config.js";
-import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
-import { randomHex } from "../shared.js";
 import {
-  specdojoRootDir,
-  resolveAgentMember,
-  type AgentProvider,
-  type MemberRoster,
-} from "../../shared/specdojo-config.js";
-import { type AgentPipeline, type ReadyTaskView } from "../types.js";
-import { type AgentStageRole } from "../types.js";
-import { extractLocalId } from "../../schedule/phase-sets.js";
-import {
-  archivePlan,
-  buildInPlaceStem,
-  generateDeliverablePlan,
-  generateSinglePlan,
-  parsePlanTaskIdentity,
-  resolveDeliverableTarget,
-  finalizeResultSectionsForDeliverable,
-  targetDocIdsForScheduledTask,
-  stemFromPlanPath,
-} from "../plans.js";
-import { buildTaskView } from "../task-view.js";
-import {
-  isResultUnfilled,
-  readResultFrontmatterSnapshot,
-  renderReporterResult,
-  scaffoldResult,
-  updateResultStatus,
-} from "../results.js";
-import { gitEnvironment } from "../worktree.js";
+  agentGitStateViolation,
+  captureAgentGitStateSnapshot,
+  changedAgentGitStateFields,
+} from "../agent-git-state.js";
 import {
   agentProtectedConfigViolation,
   captureAgentProtectedConfigSnapshot,
   changedAgentProtectedConfigPaths,
 } from "../agent-protected-config.js";
 import {
-  agentGitStateViolation,
-  captureAgentGitStateSnapshot,
-  changedAgentGitStateFields,
-} from "../agent-git-state.js";
-import { recordGitStateBlock, recordProtectedConfigBlock } from "../protection-handoff.js";
-import {
+  enforceExecutorReportContract,
+  executorStageResumeHint,
   recordExecutorEvidence,
   recordReporterFailureOutput,
   writeExecutorEvidence,
 } from "../evidence.js";
-import {
-  deriveReporterFacts,
-  evidenceForReporter,
-  runReporterWithFormatRetry,
-} from "../reporter.js";
 import {
   createPipelineState,
   pipelineStateLocation,
@@ -65,14 +38,41 @@ import {
   writePipelineState,
 } from "../pipeline-state.js";
 import {
-  pinnedExecutor,
-  pinnedReporter,
-  resolvePinnedRateLimitRunOptions,
-  resolveExecDefaultsPath,
-  selectCandidates,
-  type RateLimitRecoveryEvent,
-  type RunOpts,
-} from "./shared.js";
+  archivePlan,
+  buildInPlaceStem,
+  finalizeResultSectionsForDeliverable,
+  generateDeliverablePlan,
+  generateSinglePlan,
+  parsePlanTaskIdentity,
+  resolveDeliverableTarget,
+  stemFromPlanPath,
+  targetDocIdsForScheduledTask,
+} from "../plans.js";
+import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
+import { recordGitStateBlock, recordProtectedConfigBlock } from "../protection-handoff.js";
+import {
+  deriveReporterFacts,
+  evidenceForReporter,
+  runReporterWithFormatRetry,
+} from "../reporter.js";
+import {
+  isResultUnfilled,
+  readResultFrontmatterSnapshot,
+  renderReporterResult,
+  scaffoldResult,
+  updateResultStatus,
+} from "../results.js";
+import { isRunRecordPath, recordRef, recordStem, taskRecordPaths } from "../run-records.js";
+import { randomHex } from "../shared.js";
+import {
+  configuredProductCheckouts,
+  productRepoEnvironment,
+  withAgentExtraRoots,
+  withoutInheritedRepoEnvironment,
+} from "../task-repos.js";
+import { buildTaskView } from "../task-view.js";
+import { type AgentPipeline, type AgentStageRole, type ReadyTaskView } from "../types.js";
+import { gitEnvironment } from "../worktree.js";
 import {
   appendParentValidationsToExecutorEvidence,
   buildExecutorPrompt,
@@ -84,14 +84,25 @@ import {
   resolveReporterAgentCandidates,
   runWithRetry,
 } from "./agent.js";
-import { gradeBeforeReviewPlan } from "./schedule-prepare.js";
-import { pipelineRecoveryMeta, spawnBlock, spawnClaim, spawnComplete } from "./mode-shared.js";
 import {
-  configuredProductCheckouts,
-  productRepoEnvironment,
-  withoutInheritedRepoEnvironment,
-  withAgentExtraRoots,
-} from "../task-repos.js";
+  pipelineRecoveryMeta,
+  spawnBlock,
+  spawnClaim,
+  spawnComplete,
+  stageActorMeta,
+} from "./mode-shared.js";
+import { enforceScheduleKataReview, gradeBeforeReviewPlan } from "./schedule-prepare.js";
+import { reviewTaskBlockReason } from "../review-completion.js";
+import type { ReviewGradeOutcome } from "../../review/grade.js";
+import {
+  pinnedExecutor,
+  pinnedReporter,
+  resolveExecDefaultsPath,
+  resolvePinnedRateLimitRunOptions,
+  selectCandidates,
+  type RateLimitRecoveryEvent,
+  type RunOpts,
+} from "./shared.js";
 
 // Resolve the agent command and the actor for an in-place run, ignoring task state. Unlike the
 // worktree flow, this never requires the task to be claimable. The actor is derived the same way
@@ -286,19 +297,11 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
     executionPath,
   );
 
-  // --track-state controls whether this run records claim/complete events; it no longer affects
-  // file naming. Task-identity runs (--task) always use the fixed `<task-id>` stem (shared with
-  // claim / run --track-state), so an in-place result can be adopted by claim/complete without
-  // renaming; re-runs overwrite the same plan/result and git history is the audit trail. Only
-  // --deliverable / ad-hoc runs (no task identity) use a unique stem to avoid id collisions.
+  // State tracking and artifact identity are independent: each new execution gets its own run.
   const trackState = !!opts.trackState;
-
-  const plansDir = join(executionPath, "exec", "plans");
   let planPath: string;
   let slug: string | undefined;
-  // Shared plan/result stem. For --task it is the fixed task id; for bring-your-own --plan it is
-  // recovered from the plan filename so re-running the same plan overwrites the tied result; for
-  // --deliverable it is unique per run (`<slug>-<UTC>-<rand>`).
+  // The run id is recovered from a supplied managed plan or minted for a new execution.
   let stem: string | undefined;
   let task: ReadyTaskView | null = null;
   // null target = bring-your-own --plan (not generated, not archived).
@@ -336,13 +339,13 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
     const taskId = opts.task.trim();
     task = buildTaskView(schedulePath, executionPath, taskId);
     slug = taskId;
-    stem = taskId;
-    planPath = join(plansDir, `${stem}-plan.md`);
+    stem = buildInPlaceStem(taskId);
+    planPath = taskRecordPaths(executionPath, taskId, stem).plan;
   } else {
     target = resolveDeliverableTarget(catalogPath ?? "", (opts.deliverable as string).trim());
     slug = target.slug;
     stem = buildInPlaceStem(slug);
-    planPath = join(plansDir, `${stem}-plan.md`);
+    planPath = taskRecordPaths(executionPath, slug, stem).plan;
     task = {
       id: slug,
       local_id: target.localId,
@@ -397,8 +400,9 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   // Generate the plan on demand (skip for bring-your-own --plan).
   const generatedPlan = !opts.plan;
+  let reviewGradeOutcome: ReviewGradeOutcome | undefined;
   if (opts.task && task) {
-    const reviewGradeOutcome = await gradeBeforeReviewPlan({
+    reviewGradeOutcome = await gradeBeforeReviewPlan({
       task,
       projectId,
       catalogPath,
@@ -413,6 +417,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       viewpointsPath,
       projectContext,
       task,
+      outPath: planPath,
       ...(stem ? { stem } : {}),
       ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
     });
@@ -425,11 +430,12 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       viewpointsPath,
       projectContext,
       target,
+      outPath: planPath,
       ...(stem ? { stem } : {}),
     });
   }
 
-  const planPrompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const planPrompt = expandPromptRefs(readPlanFile(planPath));
   const prompt = task?.agent_pipeline
     ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
     : planPrompt;
@@ -462,7 +468,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         taskId: slug,
         mode: task.mode ?? "edit",
         projectId: projectId || planProjectId,
-        planRef: `exec/plans/${stem ?? slug}-plan.md`,
+        planRef: recordRef(executionPath, planPath),
         agent: actor,
         startedAt: new Date().toISOString(),
         ...(stem ? { stem } : {}),
@@ -481,9 +487,12 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let pipelineStateRef: string | undefined;
   let pipelineRunId: string | undefined;
   let pipelineFailureStage: AgentStageRole = "executor";
+  let failedStageActor = actor;
   if (task?.agent_pipeline) {
     const startedAt = new Date().toISOString();
-    pipelineRunId = `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
+    pipelineRunId = isRunRecordPath(planPath)
+      ? recordStem(planPath)
+      : `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
     const stateLocation = pipelineStateLocation({
       repoRoot,
       worktreePath: repoRoot,
@@ -580,7 +589,30 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         evidencePath: recorded.evidencePath,
       });
     }
-    if (outcome.result === "success") {
+    failedStageActor = outcome.actor ?? actor;
+    // PJR-1GCD: a missing approach-required field is an executor failure, not a reporter failure.
+    const contractFailure =
+      outcome.result === "success"
+        ? enforceExecutorReportContract({
+            evidence: recorded.evidence,
+            evidencePath: recorded.evidencePath,
+            contract: { approach: task.approach, mode: task.mode ?? "edit" },
+            resumeHint: executorStageResumeHint({ kind: "schedule", taskId: task.id }),
+          })
+        : undefined;
+    if (contractFailure) {
+      const blockedAt = new Date().toISOString();
+      pipelineState = updatePipelineStage(
+        pipelineState,
+        "executor",
+        { status: "blocked", completed_at: blockedAt },
+        blockedAt,
+      );
+      writePipelineState(stateLocation.path, pipelineState);
+      process.stdout.write(`Executor report rejected before the reporter: ${contractFailure}\n`);
+      pipelineBlockReason = contractFailure;
+      exitCode = 1;
+    } else if (outcome.result === "success") {
       pipelineFailureStage = "reporter";
       const reporterEvidence = evidenceForReporter(recorded.evidence, {
         repoRoot,
@@ -677,6 +709,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
           invocationOutputs: reporter.invocationOutputs,
         });
       }
+      failedStageActor = reporterActor ?? failedStageActor;
       const reporterCompletedAt = new Date().toISOString();
       pipelineState = updatePipelineStage(
         pipelineState,
@@ -726,7 +759,23 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // normally. The agent's core duty is to fill the result while preserving its scaffold
   // frontmatter, so treat an incomplete or modified result as a block even on exit 0.
   let effectiveExit = exitCode;
+  if (exitCode === 0 && task && resultPath) {
+    enforceScheduleKataReview({ task, catalogPath, resultPath, projectId, rootDir: repoRoot });
+  }
   let blockReason: string | undefined = pipelineBlockReason;
+  const reviewBlockReason =
+    exitCode === 0 && task && resultPath
+      ? reviewTaskBlockReason({
+          mode: task.mode,
+          resultPath,
+          ...(reviewGradeOutcome ? { gradeOutcome: reviewGradeOutcome } : {}),
+        })
+      : undefined;
+  if (reviewBlockReason) {
+    effectiveExit = 1;
+    blockReason = reviewBlockReason;
+    process.stdout.write(`run blocked: ${label} (${reviewBlockReason})\n`);
+  }
   if (
     exitCode === 0 &&
     resultPath &&
@@ -762,6 +811,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         blockReason ?? "agent exited with non-zero code",
         {
           limit_deferred: "false",
+          ...stageActorMeta(actor, failedStageActor),
           ...(pipelineRunId
             ? pipelineRecoveryMeta({
                 stage: pipelineFailureStage,

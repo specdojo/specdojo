@@ -1,0 +1,5 @@
+commit-scope: unresolved target doc id (not committable): specdojo:ifx-index-rulebook
+commit-scope: unresolved target doc id (not committable): specdojo:ifx-index-sample
+commit-scope: skipped non-target changes (left in worktree):
+  docs/specdojo/schemas/v1/esil.schema.yaml
+  packages/docs-site/.vitepress/sidebar-config.ts

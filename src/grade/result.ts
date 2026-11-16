@@ -14,6 +14,7 @@ import {
   SEVERITIES,
   gradeContentHash,
   markdownDocumentId,
+  gradeDocumentId,
   resolveGradeResultsDirectory,
   gradeResultFileName,
   gradeResultPath,
@@ -38,6 +39,7 @@ export {
   SEVERITIES,
   gradeContentHash,
   markdownDocumentId,
+  gradeDocumentId,
   resolveGradeResultsDirectory,
   gradeResultFileName,
   gradeResultPath,
@@ -240,7 +242,7 @@ export function validateGradeResult(
   const errors: string[] = [];
   let documentId: string | undefined;
   try {
-    documentId = markdownDocumentId(documentContent, documentPath);
+    documentId = gradeDocumentId(documentContent, documentPath);
   } catch (error) {
     errors.push(error instanceof Error ? error.message : String(error));
   }

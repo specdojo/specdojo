@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T03:20:55Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070",
+  "by": "luna-executor",
+  "msg": "resume executor from persisted pipeline state (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070-20261108T225651Z-ae7abd56/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070-20261108T225651Z-ae7abd56/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-070-20261108T225651Z-ae7abd56",
+    "pipeline_resume_claimed": "true"
+  }
+}

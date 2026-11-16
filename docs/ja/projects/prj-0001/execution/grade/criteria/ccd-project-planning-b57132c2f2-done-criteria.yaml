@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:ccd-project-planning-grade-criteria
+document: prj-0001:ccd-project-planning
+path: docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md
+graded_at: "2026-11-11T03:24:06.362Z"
+graded_by: sol-review-executor
+content_hash: ca3f2276be7f2eef98ea031e4a78d30ef4385f4cdd144c49b1e282cfe3ce1714
+summary:
+  satisfied: 4
+  unsatisfied: 1
+  total: 5
+criteria:
+  - id: DC-001
+    text: エンティティ関係・属性が業務観点で正確に表現されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: >-
+      Business accuracy is not fully established because key correspondence, identification scopes, and relationships
+      against five planned dictionaries remain explicitly unverified at lines 110 and 127.
+  - id: DC-002
+    text: スコープ範囲のエンティティを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: データモデル・クラス設計の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テストデータ設計・整合性検証に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: ER図・実装モデルの基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

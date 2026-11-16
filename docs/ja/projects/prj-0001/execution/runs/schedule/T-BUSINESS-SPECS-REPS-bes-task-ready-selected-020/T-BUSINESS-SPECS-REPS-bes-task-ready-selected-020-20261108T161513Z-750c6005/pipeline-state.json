@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020",
+  "run_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005",
+  "updated_at": "2026-11-08T22:22:45.862Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-08T16:16:47.384Z",
+      "completed_at": "2026-11-08T16:18:59.579Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-08T16:23:49.943Z",
+      "completed_at": "2026-11-08T16:26:56.326Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 4,
+      "started_at": "2026-11-08T22:22:26.885Z",
+      "completed_at": "2026-11-08T22:22:45.862Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: catalog-validate: ERROR: /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-task-ready-selected: based_on 'prj-0001:stsd-task-execution' (prj-0001:stsd-task-execution) が depends_on の推移閉包に含まれていません（根拠ドキュメントは先行成果物である必要があります）"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/result.md"
+  }
+}

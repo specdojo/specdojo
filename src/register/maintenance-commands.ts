@@ -11,7 +11,7 @@ import { validateRegisterItemDocs } from "./item.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import type { BuildScope, RegisterCommandDependencies } from "./command-types.js";
 import { validateRegisterDependencyDocs } from "./dependency.js";
-import { validateRegisterEpicDocs } from "./epic.js";
+import { registerEpicDateWarnings, validateRegisterEpicDocs } from "./epic.js";
 import { validateDerivedFromDocs } from "./derivation.js";
 
 export function registerMaintenanceCommands(
@@ -154,6 +154,9 @@ export function registerMaintenanceCommands(
         );
       }
 
+      for (const warning of registerEpicDateWarnings(paths)) {
+        process.stderr.write(`Warning: ${warning}\n`);
+      }
       const views = generateDerivedViewFiles(paths, scope);
 
       if (opts.dryRun) {

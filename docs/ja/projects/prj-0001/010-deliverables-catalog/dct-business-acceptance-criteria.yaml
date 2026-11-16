@@ -78,7 +78,34 @@ groups:
         overview: タスクの選択・準備からEdit・Review・Finalize・判定統合までが業務として成立することを確認する
         path: bac-task-execution.md
         rulebook: specdojo:bac-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/run/run.ts
+            purpose: タスクの選択・準備から edit・review・統合までの実行の流れ
+          - kind: implementation
+            path: src/exec/pipeline-state.ts
+            purpose: executor・reporter の段の状態と再開の判定
         note: *bac-ac-note
+        done_criteria: *bac-done-criteria
+
+      - local_id: bac-task-completion
+        name: 業務受入条件（タスクの評価と完了）
+        kind: work
+        depends_on:
+          - bps-deliverable-evaluation
+          - bps-task-completion
+          - prj-success-criteria-and-acceptance-criteria
+        overview: 成果物の評価（grade・finding の確定）から、完了条件との照合と完了の記録までが業務として成立することを確認する
+        path: bac-task-completion.md
+        rulebook: specdojo:bac-rulebook
+        note: 業務受入条件の型（bac）の代表（PJR-DD33、indie が 2026-11-15 に承認）。タスク実行の 10 領域のうち、BPS が作成済みの評価と完了の部分だけを先に扱う。選択・準備・edit・検証の部分は bac-task-execution で、BPS が揃ってから作る。根拠は AC-01
+        evidence_refs:
+          - kind: implementation
+            path: src/grade/grade.ts
+            purpose: 成果物の評価（grade）と finding の確定
+          - kind: implementation
+            path: src/exec/run/run.ts
+            purpose: 完了条件との照合と完了の記録を含む実行の流れ
         done_criteria: *bac-done-criteria
 
       - local_id: bac-routine

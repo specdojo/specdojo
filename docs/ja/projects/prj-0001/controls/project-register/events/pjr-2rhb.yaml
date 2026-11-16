@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0d0bb0a728c242d8874e01a1290b34a9
+  ts: "2026-11-12T23:15:03Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳。indie の依頼で取り急ぎ起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 用語集の確定に合わせて、用語集の外の文書と型の表記をそろえる
+    - field: description
+      from: ""
+      to: 用語集の確定のレビューで決めた表記（job run など）と気づいた点を、用語集の外の文書・型・コードのメッセージへまとめて反映する
+    - field: input
+      from: ""
+      to: '["用語集の確定のレビュー（2026-11-13）で、用語集の外にも直す点が出てきた。用語集の外の直しは、まとめて 1 回で行う（indie の依頼）。項目は indie が後から追記する","1. 「Job Run」を「job run」に統一する。用語集の見出しは直した。設計書（sysd-job-execution など）・状態定義（stsd-job-run）・ガイド・コードのメッセージなど、用語集の外でおよそ 29 ファイルが「Job Run」を使っている。文書の題名（「Job実行設計」など）の扱いも含めて決める","2. 英語名と英語の用語は小文字で書き、SpecDojo の概念の名前として大文字で定着しているもの（Kata など）と固有名詞（SpecDojo など）だけを例外にする、という決まりを用語集の型（gl-rulebook）に足す。gl を PJR-960C に足すときに、rulebook の見直しの段で入れてもよい"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: sol-executor
+    - field: registered
+      from: ""
+      to: "2026-11-13"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6XQ4"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: glossary

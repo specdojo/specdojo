@@ -9,6 +9,7 @@ import {
 import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "../register/events.js";
 import { displayIdFromTicketFilename } from "../register/item.js";
 import { isGradeCheckpointPath } from "./grade-checkpoint.js";
+import { stagedMergeBlocker } from "../shared/git.js";
 import {
   appendGitFailureLog,
   gitOutput,
@@ -17,6 +18,7 @@ import {
   type ExecWorktree,
 } from "./worktree.js";
 import {
+  assertCommitScope,
   commitTargetPaths,
   currentBranch,
   repoRelative,
@@ -242,6 +244,7 @@ export function mergeWorktreeIntoCurrent(params: {
   failureLogPath?: string;
 }): void {
   const { context, worktree, taskId } = params;
+  assertCommitScope(context, worktree, taskId, { dryRun: params.dryRun });
   const targetBranch = currentBranch(context.repoRoot);
   if (targetBranch === worktree.branch) {
     throw new Error(`Merge must run from a branch other than ${worktree.branch}.`);
@@ -260,6 +263,10 @@ export function mergeWorktreeIntoCurrent(params: {
         lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
         lockStaleMs: DEFAULT_LOCK_STALE_MS,
       });
+    }
+    const stagedBlocker = stagedMergeBlocker(context.repoRoot);
+    if (stagedBlocker) throw new Error(stagedBlocker);
+    if (!params.dryRun) {
       // Canonical grades may have been refreshed in the root after branching. Release only
       // the checkpoint copies; refuse to discard a newer root-side evaluation.
       const gradePaths = releasePaths.filter((path) =>
@@ -297,7 +304,13 @@ export function mergeWorktreeIntoCurrent(params: {
             const expected = gitResult(context.repoRoot, ["show", `${checkpoint}:${path}`]);
             const absolute = resolve(context.repoRoot, path);
             const current = existsSync(absolute) ? readFileSync(absolute, "utf8") : undefined;
-            if ((expected.status === 0 ? expected.stdout : undefined) !== current) {
+            // A resumed review may have refreshed the grade onto the branch (PJR-ZSRD). The root
+            // copy equal to the branch tip loses nothing when released.
+            const merged = gitResult(context.repoRoot, ["show", `${worktree.branch}:${path}`]);
+            if (
+              (expected.status === 0 ? expected.stdout : undefined) !== current &&
+              (merged.status === 0 ? merged.stdout : undefined) !== current
+            ) {
               throw new Error(
                 `Grade sidecar changed after checkpoint; reconcile before merge: ${path}`,
               );

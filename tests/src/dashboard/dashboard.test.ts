@@ -3,9 +3,11 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
+  aggregateActionRequired,
   buildDashboardMarkdown,
   buildDailyRoutineRows,
   buildExecRecordsMarkdown,
+  buildRegisterCandidates,
   collectExecRecords,
   collapseFrequentRoutineRows,
   formatZonedDateTime,
@@ -28,6 +30,7 @@ import {
 import type { ScheduleCalendar } from "../../../src/exec/types.js";
 import type { TimelineIndex, TimelineTrackPlan } from "../../../src/dashboard/timeline-build.js";
 import type { RoutineDoc } from "../../../src/routine/routine.js";
+import type { RegisterItemView } from "../../../src/register/register.js";
 
 // 平日のみ稼働・休日なしのカレンダー。addWorkingDaysToDate / countWorkingDaysBetween は
 // work_hours_per_day に依存しない（isWorkingDateUtc は曜日・休日のみ判定）ため値は任意。
@@ -249,7 +252,7 @@ describe("buildTimelineGanttSvg", () => {
     const schedule: TimelineTrackSchedule[] = [makeRow({ track: "alpha" })];
     const svg = buildTimelineGanttSvg(schedule, undefined);
     expect(svg).toContain('role="img"');
-    expect(svg).toContain("planned_start_date");
+    expect(svg).toContain("開始日を確定できる項目がありません");
     // 背景 rect は存在するが、工程バーと開始点マーカーは描画されない。
     expect(svg).not.toContain('rx="3"');
     expect(svg).not.toContain("<polygon");
@@ -295,52 +298,58 @@ describe("collectExecRecords", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-exec-records-"));
 
     try {
-      const plans = join(root, "plans");
-      const results = join(root, "results");
-      mkdirSync(plans, { recursive: true });
-      mkdirSync(results, { recursive: true });
+      const execPath = join(root, "exec");
+      const run = (task: string, stem: string, file: string) => {
+        const directory = join(root, "runs", "schedule", task, stem);
+        mkdirSync(directory, { recursive: true });
+        return join(directory, file);
+      };
       writeFileSync(
-        join(plans, "t-old-plan.md"),
+        run("T-OLD", "t-old", "plan.md"),
         "---\nspecdojo:\n  task_id: T-OLD\n  mode: edit\n---\n\n# Plan\n",
         "utf8",
       );
       writeFileSync(
-        join(results, "t-old-result.md"),
+        run("T-OLD", "t-old", "result.md"),
         '---\nspecdojo:\n  task_id: T-OLD\n  mode: edit\n  status: complete\n  started_at: "2026-01-01T00:00:00Z"\n---\n\n# Result\n',
         "utf8",
       );
       writeFileSync(
-        join(results, "t-new-result.md"),
+        run("T-NEW", "t-new", "result.md"),
         '---\nspecdojo:\n  task_id: T-NEW\n  mode: review\n  status: doing\n  started_at: "2026-02-01T00:00:00Z"\n---\n\n# Result\n',
         "utf8",
       );
       writeFileSync(
-        join(plans, "t-plan-only-plan.md"),
+        run("T-PLAN", "t-plan-only", "plan.md"),
         "---\nspecdojo:\n  task_id: T-PLAN\n---\n\n# Plan\n",
         "utf8",
       );
 
-      const rows = collectExecRecords(root);
+      const rows = collectExecRecords(execPath);
 
       expect(rows).toEqual([
         {
-          stem: "t-new",
+          stem: "runs/schedule/T-NEW/t-new",
           taskId: "T-NEW",
           mode: "review",
           status: "doing",
           startedAt: "2026-02-01T00:00:00Z",
-          resultFile: "t-new-result.md",
+          resultFile: "../runs/schedule/T-NEW/t-new/result.md",
         },
         {
-          stem: "t-old",
+          stem: "runs/schedule/T-OLD/t-old",
           taskId: "T-OLD",
           mode: "edit",
           status: "complete",
           startedAt: "2026-01-01T00:00:00Z",
-          planFile: "t-old-plan.md",
-          resultFile: "t-old-result.md",
+          planFile: "../runs/schedule/T-OLD/t-old/plan.md",
+          resultFile: "../runs/schedule/T-OLD/t-old/result.md",
         },
-        { stem: "t-plan-only", taskId: "T-PLAN", planFile: "t-plan-only-plan.md" },
+        {
+          stem: "runs/schedule/T-PLAN/t-plan-only",
+          taskId: "T-PLAN",
+          planFile: "../runs/schedule/T-PLAN/t-plan-only/plan.md",
+        },
       ]);
     } finally {
       rmSync(root, { recursive: true, force: true });
@@ -361,13 +370,20 @@ describe("collectExecRecords", () => {
 describe("buildExecRecordsMarkdown", () => {
   it("plan と result へ generated からの相対リンクを張る", () => {
     const markdown = buildExecRecordsMarkdown("prj-test", [
-      { stem: "t-a", taskId: "T-A", planFile: "t-a-plan.md", resultFile: "t-a-result.md" },
-      { stem: "t-b", taskId: "T-B", planFile: "t-b-plan.md" },
+      {
+        stem: "t-a",
+        taskId: "T-A",
+        planFile: "../runs/schedule/T-A/t-a/plan.md",
+        resultFile: "../runs/schedule/T-A/t-a/result.md",
+      },
+      { stem: "t-b", taskId: "T-B", planFile: "../runs/schedule/T-B/t-b/plan.md" },
     ]);
 
-    expect(markdown).toContain("[plan](../exec/plans/t-a-plan.md)");
-    expect(markdown).toContain("[result](../exec/results/t-a-result.md)");
-    expect(markdown).toContain("| - | `T-B` | - | - | [plan](../exec/plans/t-b-plan.md) | - |");
+    expect(markdown).toContain("[plan](../runs/schedule/T-A/t-a/plan.md)");
+    expect(markdown).toContain("[result](../runs/schedule/T-A/t-a/result.md)");
+    expect(markdown).toContain(
+      "| - | `T-B` | - | - | [plan](../runs/schedule/T-B/t-b/plan.md) | - |",
+    );
     expect(markdown.endsWith("\n")).toBe(false);
   });
 });
@@ -582,7 +598,7 @@ describe("daily briefing", () => {
 // ---- dashboardOutputFiles ----------------------------------------------------
 
 describe("dashboardOutputFiles", () => {
-  it("dashboard.md・実行記録一覧・Gantt SVG の 3 件を返す", () => {
+  it("dashboard.md・実行記録一覧・Gantt SVG・カタログ検出の 4 件を返す", () => {
     const paths: DashboardPaths = {
       projectId: "prj-0001",
       projectPath: "docs/ja/projects/prj-0001",
@@ -590,7 +606,7 @@ describe("dashboardOutputFiles", () => {
       executionGeneratedPath: "docs/ja/projects/prj-0001/execution/generated",
     };
     const files = dashboardOutputFiles(paths);
-    expect(files).toHaveLength(3);
+    expect(files).toHaveLength(4);
     expect(files.some((f) => f.endsWith("dashboard.md"))).toBe(true);
     expect(files.some((f) => f.endsWith("exec-records.md"))).toBe(true);
     expect(files.some((f) => f.endsWith("dashboard-timeline-gantt.svg"))).toBe(true);
@@ -623,5 +639,417 @@ describe("computeRoutineDue", () => {
     expect(computeRoutineDue(cronRoutine, undefined, false, new Date("2026-01-05T00:02:30Z"))).toBe(
       "disabled",
     );
+  });
+});
+
+// ---- Action-first dashboard layout (PJR-0F94) --------------------------------
+
+describe("PJR-0F94 action-first dashboard layout", () => {
+  it("章の順序が指示どおり（人の対応、おすすめ、実行中epic、終わったepic、routine、Grade、全体集計、実行記録）である", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-dashboard-layout-"));
+
+    try {
+      const markdown = buildDashboardMarkdown({
+        projectId: "prj-test",
+        projectPath: join(root, "project"),
+        timelinePath: join(root, "project", "timeline"),
+        executionGeneratedPath: join(root, "project", "execution", "generated"),
+      });
+
+      const sectionHeaders = [
+        "## 1. 人の対応が要るもの",
+        "## 2. おすすめの登録項目",
+        "## 3. 実行中の epic",
+        "## 4. 終わった epic",
+        "## 5. routine",
+        "## 6. Grade",
+        "## 7. 全体の集計",
+        "## 8. 実行記録",
+      ];
+
+      let lastIndex = -1;
+      for (const header of sectionHeaders) {
+        const index = markdown.indexOf(header);
+        expect(index, `見出し「${header}」が存在する`).toBeGreaterThan(-1);
+        expect(index, `見出し「${header}」が前章より後にある`).toBeGreaterThan(lastIndex);
+        lastIndex = index;
+      }
+
+      // 空リポジトリでは各章に「- ありません」が出ること
+      expect(markdown).toContain("## 1. 人の対応が要るもの\n\n- ありません");
+      expect(markdown).toContain("## 2. おすすめの登録項目\n\n- ありません");
+      expect(markdown).toContain("## 3. 実行中の epic\n\n- ありません");
+      expect(markdown).toContain("## 4. 終わった epic\n\n- ありません");
+      expect(markdown).toContain("## 5. routine\n\n- ありません");
+      expect(markdown).toContain("## 6. Grade\n\n- ありません");
+      expect(markdown).toContain("## 7. 全体の集計\n\n- ありません");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("おすすめから先行の項目がそろわないものと deferred が外れ、done な依存を持つものと依存なしは残る", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-rec-test-"));
+
+    try {
+      const regDir = join(root, "controls", "project-register");
+      mkdirSync(regDir, { recursive: true });
+
+      const writeTicket = (id: string, fm: Record<string, unknown>) => {
+        const fmLines = Object.entries(fm).map(([k, v]) => {
+          if (Array.isArray(v)) {
+            return `  ${k}:\n${v.map((item) => `    - ${item}`).join("\n")}`;
+          }
+          return `  ${k}: ${JSON.stringify(v)}`;
+        });
+        const content = `---\nspecdojo:\n  id: prj-test:${id.toLowerCase()}\n${fmLines.join("\n")}\n---\n\n# ${id} Title\n\nDesc\n`;
+        writeFileSync(join(regDir, `${id.toLowerCase()}-topic.md`), content, "utf8");
+      };
+
+      // 依存先となる項目
+      writeTicket("PJR-D001", { item_status: "done", item_type: "todo", priority: "medium" });
+      writeTicket("PJR-D002", { item_status: "open", item_type: "todo", priority: "medium" });
+
+      // おすすめ候補テスト項目
+      // 1. 依存なし open todo -> 残る
+      writeTicket("PJR-0001", { item_status: "open", item_type: "todo", priority: "high" });
+      // 2. 完了した D001 に依存する open todo -> 残る
+      writeTicket("PJR-0002", {
+        item_status: "open",
+        item_type: "todo",
+        priority: "medium",
+        depends_on: ["PJR-D001"],
+      });
+      // 3. 未完了の D002 に依存する open todo -> 外れる
+      writeTicket("PJR-0003", {
+        item_status: "open",
+        item_type: "todo",
+        priority: "medium",
+        depends_on: ["PJR-D002"],
+      });
+      // 4. deferred の todo -> 外れる
+      writeTicket("PJR-0004", { item_status: "deferred", item_type: "todo", priority: "high" });
+      // 5. rejected の todo -> 外れる
+      writeTicket("PJR-0005", { item_status: "rejected", item_type: "todo", priority: "high" });
+      // 6. done の todo -> 外れる
+      writeTicket("PJR-0006", { item_status: "done", item_type: "todo", priority: "high" });
+
+      const candidates = buildRegisterCandidates({
+        projectId: "prj-test",
+        projectRegisterPath: regDir,
+        pjrIndexPath: join(regDir, "pjr-index.md"),
+        generatedPath: join(regDir, "generated"),
+        controlsGeneratedPath: join(regDir, "generated"),
+        registerDateTimeZone: "UTC",
+      });
+
+      const candidateIds = candidates.map((c) => c.id);
+      expect(candidateIds).toContain("PJR-0001");
+      expect(candidateIds).toContain("PJR-0002");
+      expect(candidateIds).not.toContain("PJR-0003");
+      expect(candidateIds).not.toContain("PJR-0004");
+      expect(candidateIds).not.toContain("PJR-0005");
+      expect(candidateIds).not.toContain("PJR-0006");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("人の対応が要るものに review と人の判断待ち（decision / question）、waiting、human schedule が抽出される", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-action-req-test-"));
+
+    try {
+      const regDir = join(root, "controls", "project-register");
+      const genDir = join(root, "execution", "generated");
+      mkdirSync(regDir, { recursive: true });
+      mkdirSync(genDir, { recursive: true });
+
+      const paths: DashboardPaths = {
+        projectId: "prj-test",
+        projectPath: root,
+        timelinePath: join(root, "timeline"),
+        executionGeneratedPath: genDir,
+        registerPath: regDir,
+        schedulePath: join(root, "schedule"),
+      };
+
+      // 1. ready.json に human タスクを作成
+      writeFileSync(
+        join(genDir, "ready.json"),
+        JSON.stringify({
+          schedule_path: "",
+          execution_path: "",
+          generated_dir: "",
+          ready_count: 1,
+          default_strategy: "critical-first",
+          strategies: {
+            "critical-first": { next_task_id: "T-HUMAN-01", ordered_task_ids: ["T-HUMAN-01"] },
+            fifo: { next_task_id: "T-HUMAN-01", ordered_task_ids: ["T-HUMAN-01"] },
+          },
+          tasks: [
+            {
+              id: "T-HUMAN-01",
+              name: "人手確定作業",
+              execution: "human",
+              fifo_rank: 1,
+              critical_first_rank: 1,
+              schedule_file: "sch.yaml",
+            },
+          ],
+        }),
+        "utf8",
+      );
+
+      const dummyView = (
+        id: string,
+        status: string,
+        type: string,
+        title: string,
+      ): RegisterItemView => ({
+        id,
+        item: {
+          id,
+          status,
+          type,
+          title,
+          description: "",
+          owner: "-",
+          registeredAt: "-",
+          due: "-",
+          completedAt: "-",
+          conclusion: "-",
+          ticket: `${id.toLowerCase()}.md`,
+          priority: "medium",
+        },
+        ticketPath: join(regDir, `${id.toLowerCase()}.md`),
+        source: "ticket",
+      });
+
+      const views: RegisterItemView[] = [
+        dummyView("PJR-REV1", "review", "todo", "レビュー待ち項目"),
+        dummyView("PJR-DEC1", "open", "decision", "方針決定待ち"),
+        dummyView("PJR-QUE1", "open", "question", "要件確認待ち"),
+        dummyView("PJR-WAI1", "waiting", "todo", "解除待ち項目"),
+        dummyView("PJR-IGN1", "open", "todo", "通常 open 項目"),
+      ];
+
+      const rows = aggregateActionRequired(paths, views, new Map());
+
+      expect(rows.map((r) => [r.kind, r.id, r.nextAction])).toEqual([
+        ["review", "PJR-REV1", "close の確認待ち"],
+        ["decision", "PJR-DEC1", "意思決定を行い状態を更新"],
+        ["question", "PJR-QUE1", "回答・判断を行い状態を更新"],
+        ["waiting", "PJR-WAI1", "待機理由の解消"],
+        ["human", "T-HUMAN-01", "人手確定作業を実施"],
+      ]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("完了した子項目や終わった epic、routine 定義、Grade 全体表、全体集計が ::: details で折りたたまれる", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-collapse-test-"));
+
+    try {
+      const regDir = join(root, "controls", "project-register");
+      const genDir = join(root, "execution", "generated");
+      const gradeDir = join(root, "execution", "grade", "results");
+      const routinesDir = join(root, "routines");
+      mkdirSync(regDir, { recursive: true });
+      mkdirSync(genDir, { recursive: true });
+      mkdirSync(gradeDir, { recursive: true });
+      mkdirSync(routinesDir, { recursive: true });
+
+      const paths: DashboardPaths = {
+        projectId: "prj-test",
+        projectPath: root,
+        timelinePath: join(root, "timeline"),
+        executionGeneratedPath: genDir,
+        registerPath: regDir,
+        gradeResultsPath: gradeDir,
+        routinesPath: routinesDir,
+      };
+
+      // 終わった epic と実行中の epic の個票
+      writeFileSync(
+        join(regDir, "pjr-00e1-ep01.md"),
+        "---\nspecdojo:\n  id: prj-test:pjr-00e1\n  item_status: done\n  item_type: epic\n  track: trk1\n---\n\n# PJR-00E1 完了したEpic\n",
+        "utf8",
+      );
+      writeFileSync(
+        join(regDir, "pjr-00e2-ep02.md"),
+        "---\nspecdojo:\n  id: prj-test:pjr-00e2\n  item_status: open\n  item_type: epic\n  track: trk2\n---\n\n# PJR-00E2 実行中のEpic\n",
+        "utf8",
+      );
+      // 実行中 epic の完了した子項目
+      writeFileSync(
+        join(regDir, "pjr-00c1-ch01.md"),
+        "---\nspecdojo:\n  id: prj-test:pjr-00c1\n  item_status: done\n  item_type: todo\n  derived_from:\n    - PJR-00E2\n---\n\n# PJR-00C1 完了子項目\n",
+        "utf8",
+      );
+
+      // routine 定義
+      writeFileSync(
+        join(routinesDir, "rtn-test.yaml"),
+        "id: rtn-test\nname: テストルーチン\nenabled: true\ntrigger:\n  cron: '0 0 * * *'\n",
+        "utf8",
+      );
+
+      // Grade 結果
+      writeFileSync(
+        join(gradeDir, "res1.yaml"),
+        [
+          "version: 1",
+          "document: prj-test:doc-a",
+          "path: docs/doc-a.md",
+          "target: deliverable",
+          "rubric: grade-rubric-v1",
+          "verdict: pass",
+          "score: 95",
+          'graded_at: "2026-09-20T00:00:00.000Z"',
+          "graded_by: executor",
+          `content_hash: "${"0".repeat(64)}"`,
+          "categories:",
+          "  quality:",
+          "    score: 95",
+          "viewpoints:",
+          "  vp-test:",
+          "    level: 4",
+          "    score: 95",
+          "finding_counts:",
+          "  blocker: 0",
+          "  major: 0",
+          "  minor: 0",
+          "  note: 0",
+          "findings: []",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      // Schedule state
+      writeFileSync(
+        join(genDir, "state.json"),
+        JSON.stringify({
+          schedule_path: "",
+          tasks: { "T-1": { state: "done" } },
+        }),
+        "utf8",
+      );
+
+      const markdown = buildDashboardMarkdown(paths);
+
+      // 1. 完了した子項目の折りたたみ
+      expect(markdown).toContain("::: details 完了した子項目（1件）");
+      // 2. 終わった epic の折りたたみ
+      expect(markdown).toContain("::: details 終わった epic の一覧（1件）");
+      // 3. routine 定義一覧の折りたたみ
+      expect(markdown).toContain("::: details routine 定義一覧（1件）");
+      // 4. Grade 全体の表の折りたたみ
+      expect(markdown).toContain("::: details 全体の表（1件）");
+      // 5. 全体の集計の折りたたみ
+      expect(markdown).toContain("::: details 全体の集計");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("実行中の epic と終わった epic に開始日・終了日・稼働日数が表示される", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-epic-dates-test-"));
+
+    try {
+      const regDir = join(root, "controls", "project-register");
+      mkdirSync(regDir, { recursive: true });
+
+      const paths: DashboardPaths = {
+        projectId: "prj-test",
+        projectPath: root,
+        timelinePath: join(root, "timeline"),
+        executionGeneratedPath: join(root, "execution", "generated"),
+        registerPath: regDir,
+      };
+
+      // 1. 完了した epic（開始日・終了日・稼働日数が計算できるもの）
+      writeFileSync(
+        join(regDir, "pjr-00e1-done.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: prj-test:pjr-00e1",
+          "  item_status: done",
+          "  item_type: epic",
+          "  track: trk1",
+          '  start_on: "2026-01-05"',
+          '  completed_at: "2026-01-09T00:00:00Z"',
+          "---",
+          "",
+          "# PJR-00E1 完了Epic",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      // 2. 実行中の epic（開始日のみで期限なし）
+      writeFileSync(
+        join(regDir, "pjr-00e2-open.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: prj-test:pjr-00e2",
+          "  item_status: in-progress",
+          "  item_type: epic",
+          "  track: trk2",
+          '  start_on: "2026-01-12"',
+          "---",
+          "",
+          "# PJR-00E2 実行中Epic",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      // 3. 実行中の epic（開始日・終了日がそろっているもの）
+      writeFileSync(
+        join(regDir, "pjr-00e3-open.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: prj-test:pjr-00e3",
+          "  item_status: open",
+          "  item_type: epic",
+          "  track: trk3",
+          '  start_on: "2026-01-12"',
+          '  due_on: "2026-01-16"',
+          "---",
+          "",
+          "# PJR-00E3 期限あり実行中Epic",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const markdown = buildDashboardMarkdown(paths);
+
+      // 終わった epic の表ヘッダーと行
+      expect(markdown).toContain("| id | title | track | 開始日 | 終了日 | 稼働日数 |");
+      expect(markdown).toContain(
+        "| [PJR-00E1](../../controls/project-register/pjr-00e1-done.md) | 完了Epic | `trk1` | 2026-01-05 | 2026-01-09 | 5 |",
+      );
+
+      // 実行中の epic
+      // 期限なし: 開始日はあり、終了日は未定、稼働日数は -
+      expect(markdown).toContain(
+        "### [PJR-00E2](../../controls/project-register/pjr-00e2-open.md) 実行中Epic",
+      );
+      expect(markdown).toContain("- 開始日: 2026-01-12\n- 終了日: 未定\n- 稼働日数: -");
+
+      // 期限あり: 開始日・終了日・稼働日数がそろう
+      expect(markdown).toContain(
+        "### [PJR-00E3](../../controls/project-register/pjr-00e3-open.md) 期限あり実行中Epic",
+      );
+      expect(markdown).toContain("- 開始日: 2026-01-12\n- 終了日: 2026-01-16\n- 稼働日数: 5");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

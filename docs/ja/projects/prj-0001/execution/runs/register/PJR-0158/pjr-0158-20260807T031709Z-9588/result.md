@@ -1,0 +1,50 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-0158-20260807t031709z-9588
+  type: exec-result
+  task_id: PJR-0158
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-0158/pjr-0158-20260807T031709Z-9588/plan.md
+  started_at: "2026-08-07T03:17:09.450Z"
+  completed_at: "2026-08-07T03:30:41.532Z"
+  agent: codex-expert-edit-agent
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+`exec run` と `exec resume` を project 単位で排他する `exec-run.lock` を実装した。ロック所有者は専用の heartbeat プロセスで更新時刻を維持するため、runner 本体が同期的な validate / refresh / Git 操作中でも長時間 run を stale と誤判定しない。正常系は `finally` で解放し、異常終了後は stale lock を rename してから奪取する。所有トークンが一致する場合だけ解放するため、旧所有者が新しい lock を削除しない。
+
+`exec run` / `exec resume` に `--if-busy <skip|wait|fail>` を追加し、手動既定を `fail` とした。routine の `register`、`exec-auto`、`exec-resume` は `--if-busy skip` を渡し、busy 時は `[routine] skipped <id>: exec busy` を出力する。`routine-state.json` の `last_result` に `skipped` を追加し、`routine list` で failure と区別して表示し、skip を失敗終了へ加算しないようにした。routine 内では待機・再試行せず、次回 cron tick に委ねる。
+
+[[specdojo:exec-operation-guide]]、[[specdojo:exec-config-guide]]、[[specdojo:routine-operation-guide]] に排他範囲、busy 方針、heartbeat / stale 回復、routine の skip 運用を反映した。
+
+## 2. 変更ファイル
+
+- `src/exec-run-lock.ts`
+- `src/exec-run.ts`
+- `src/routine.ts`
+- `tests/src/exec-run-lock.test.ts`
+- `tests/src/exec-run-lock-command.test.ts`
+- `tests/src/exec-run.test.ts`
+- `tests/src/routine.test.ts`
+- `docs/ja/specdojo/guides/exec-operation-guide.md`
+- `docs/ja/specdojo/guides/exec-config-guide.md`
+- `docs/ja/specdojo/guides/routine-operation-guide.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-0158-exec-run-project-lock.md`
+- `docs/ja/projects/prj-0001/execution/exec/results/pjr-0158-20260807T031709Z-9588-result.md`
+
+## 3. 申し送り
+
+- 対象テストは `npx vitest run --configLoader runner tests/src/exec-run-lock.test.ts tests/src/exec-run-lock-command.test.ts tests/src/routine.test.ts tests/src/exec-run.test.ts` で 52 件すべて成功した。
+- `npm run build`、対象 TypeScript の ESLint、`tsc --noEmit`、対象 Markdown の Prettier / markdownlint は成功した。
+- 全体 Vitest は 828 件中 805 件が成功した。23 件は sandbox 内の子プロセス制約による `spawnSync git EPERM`（21件）と、同じ制約下で既存 in-place fake agent の stdin が空になる既存テスト（2件）で失敗した。ロック wrapper を一時的に外して再実行しても後者2件が同様に失敗することを診断済みで、本変更に起因しない。通常権限の CI で全体 test を再確認すること。
+- 登録簿の行および個票 frontmatter のステータスは変更していない。
+
+## 4. 実践の型の活用
+
+plan に `rulebook: none` とあり専用の実践の型は指定されていないため、個票の完了条件と既存実装を基準に freeform で進めた。`src/exec-events.ts` の `scheduler.lock` から atomic な lock directory と owner metadata の考え方を参照しつつ、run 全体を覆う別レイヤとして `src/exec-run-lock.ts` を新設した。既存 scheduler lock は短時間の状態遷移を守る用途なので変更せず、長時間 run には同期処理中も止まらない別プロセス heartbeat と所有トークンを追加した。routine は既存の action argument builder、状態ファイル、list 表示へ最小差分で反映した。参照範囲で矛盾や未反映の乖離はない。

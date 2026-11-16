@@ -1,0 +1,297 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sf-index
+path: docs/ja/product/010-business-specs/050-system-functions/sf-index.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 80
+graded_at: "2026-11-15T21:48:04.434Z"
+graded_by: sol-review-executor
+content_hash: a8cf286a2090092b82d6178425c003ee4bf58532e38927faf933ec0804006558
+source_hashes:
+  catalog-entry: 7d0c85897daae7539ddd690314acff3d89f6c29253033cfd685580a2595192f4
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 67
+  business:
+    score: 83
+  consistency:
+    score: 38
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 75
+  quality:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 8
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 94
+    anchor: >-
+      | `Q-01` | 人間の `PO` が留保を承認した（2026-11-15）。業務プロセス仕様列の BPS と CLI 仕様 `clis-index`
+      の多くが未作成のため、対応は成果物カタログの定義に基づく暫定とする。BPS
+      が作成された時点で、各行の概要と処理ステップの対応を照合する                                                                                                                                               
+      | 全機能       | BA / PO       | 各 BPS・`clis-index` の作成時                  | BA が各行を照合し、差異があれば本書を更新する。照合表の「BPS
+      本文との照合」が全行で一致または改訂済みになれば完了とする。留保の間、PO は照合を承認範囲から切り出して扱う |
+      [[prj-0001:pjr-ak5v-bps-mapping-check-after-bps\|PJR-AK5V]]                                |
+    message: >-
+      Break the BPS and CLI mapping review into trackable work with an owner, completion condition, and decision timing
+      so PM can schedule and monitor it.
+    message_ja: BPSとCLIのマッピングレビューを、PMがスケジュールを組み、監視できるように、担当者、完了条件、および決定のタイミングを含む追跡可能な作業に分割してください。
+    cause:
+      type: document
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 95
+    anchor: >-
+      | `Q-02` | 成果物カタログ上の本書の `depends_on` に、`SF-PLAN-02`・`SF-ROUT-03`・`SF-EXEC-02`・`SF-ORCH-01` が参照する
+      `P-04`・`P-06`・`P-08`・`P-14` の BPS が含まれていない。人間の `PO` が方針を決めた（2026-11-15）: カタログの `depends_on` には、領域ごとに代表の BPS
+      だけを置く。一覧の各行が参照する BPS がすべて依存にあるとは限らない。機能領域 `ORCH` には代表の BPS が依存にない | `SF-ORCH-01` | BA / PM       |
+      本書の確定（`T-KATA-WAVE-1-sf-index-140`）の前 | 代表の選び方の照合は `Q-01` と合わせて行う。`ORCH` の代表の BPS をカタログの `depends_on`
+      へ加えるか、対象外とするかを PO が決め、照合表の不一致を解消すれば完了とする   | [[prj-0001:pjr-ak5v-bps-mapping-check-after-bps\|PJR-AK5V]]（`ORCH`
+      の代表の扱いは未起票） |
+    message: >-
+      Record the dependency-gap resolution and its schedule or downstream-deliverable impact in a traceable project item
+      so affected work can be managed.
+    message_ja: 依存関係のギャップの解決と、そのスケジュールまたは下流の成果物への影響を、追跡可能なプロジェクト項目に記録し、影響を受ける作業を管理できるようにしてください。
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 94
+    anchor: >-
+      | `Q-01` | 人間の `PO` が留保を承認した（2026-11-15）。業務プロセス仕様列の BPS と CLI 仕様 `clis-index`
+      の多くが未作成のため、対応は成果物カタログの定義に基づく暫定とする。BPS
+      が作成された時点で、各行の概要と処理ステップの対応を照合する                                                                                                                                               
+      | 全機能       | BA / PO       | 各 BPS・`clis-index` の作成時                  | BA が各行を照合し、差異があれば本書を更新する。照合表の「BPS
+      本文との照合」が全行で一致または改訂済みになれば完了とする。留保の間、PO は照合を承認範囲から切り出して扱う |
+      [[prj-0001:pjr-ak5v-bps-mapping-check-after-bps\|PJR-AK5V]]                                |
+    message: >-
+      Add the PJR and Schedule tracking references for the open mapping, dependency, and deprecation issues so progress
+      and decisions can be reported consistently.
+    message_ja: 進捗と決定を継続的に報告できるように、オープンなマッピング、依存関係、および廃止事項に対して、PJRとスケジュールの追跡リファレンスを追加してください。
+    cause:
+      type: document
+  - id: F004
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 95
+    anchor: >-
+      | `Q-02` | 成果物カタログ上の本書の `depends_on` に、`SF-PLAN-02`・`SF-ROUT-03`・`SF-EXEC-02`・`SF-ORCH-01` が参照する
+      `P-04`・`P-06`・`P-08`・`P-14` の BPS が含まれていない。人間の `PO` が方針を決めた（2026-11-15）: カタログの `depends_on` には、領域ごとに代表の BPS
+      だけを置く。一覧の各行が参照する BPS がすべて依存にあるとは限らない。機能領域 `ORCH` には代表の BPS が依存にない | `SF-ORCH-01` | BA / PM       |
+      本書の確定（`T-KATA-WAVE-1-sf-index-140`）の前 | 代表の選び方の照合は `Q-01` と合わせて行う。`ORCH` の代表の BPS をカタログの `depends_on`
+      へ加えるか、対象外とするかを PO が決め、照合表の不一致を解消すれば完了とする   | [[prj-0001:pjr-ak5v-bps-mapping-check-after-bps\|PJR-AK5V]]（`ORCH`
+      の代表の扱いは未起票） |
+    message: >-
+      The provisional BPS mappings and missing catalog dependencies prevent BA from confirming that the function list
+      covers the agreed business scope; complete the source mapping or define and justify the representative-source
+      policy.
+    message_ja: 暫定的なBPSマッピングと不足しているカタログの依存関係により、BAが、関数リストが合意されたビジネススコープを網羅していることを確認できなくなっています。ソースマッピングを完了するか、代表的なソースのポリシーを定義して正当化してください。
+    cause:
+      type: document
+  - id: F005
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 59
+    anchor: >-
+      - `P-06` はジョブ定義を作る領域で、定義の検証・表示は `SF-ROUT-03`（`job`）が担う。ジョブの実行は `exec run --job` を入口とし、`SF-ROUT-02`
+      が担う。`SF-ROUT-02` の意味を変えないため、定義の機能は新しい ID で採番した。_ASSUMPTION_: ジョブの実行だけを扱う業務プロセス領域はないため、起動元の `P-05` へ対応付ける。BPS の作成時に
+      `Q-01` で照合する。
+    message: >-
+      Reconcile the P-05 assignment with `prj-0001:dct-business-model-bps`, which defines P-05 as producing a
+      periodic-execution definition, and `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md` sections
+      3.1–3.2, which place definition in P-05 and Job Run materialization and execution in the shared execution cycle;
+      SF-ROUT-01 describes dispatch instead of definition handling, while SF-ROUT-02 assigns execution to P-05 on the
+      assumption that no execution area exists.
+    message_ja: P-05の割り当てを、P-05を定期実行の定義を生成するものと定義している`prj-0001:dct-business-model-bps`、および、定義をP-05に、ジョブ実行の具体化と実行を共有実行サイクルに置いている`docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md`のセクション3.1–3.2と整合させてください。SF-ROUT-01は、定義の処理ではなくディスパッチを説明しており、一方でSF-ROUT-02は、実行領域が存在しないという仮定に基づいて、実行をP-05に割り当てています。
+    cause:
+      type: document
+  - id: F006
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 57
+    anchor: >-
+      | `SF-ORCH-01`  | 運転調整           | 対話型オーケストレーターを provider CLI
+      で起動し、プロジェクトが宣言したリポジトリだけを許可する                               |
+      `bps-routine-register-schedule-cycle`                                                                   |
+      `orchestrator`                          | 一覧行で要約                               |
+    message: >-
+      Reconcile SF-ORCH-01 with `prj-0001:dct-business-model-bps`, whose P-14 source covers operation-request
+      determination, conflict checking, PDCA request issuance, and execution-state tracking; the current row and its
+      test target cover only provider launch and repository permissions, leaving those business responsibilities without
+      an explicit function assignment or justified exclusion.
+    message_ja: SF-ORCH-01を、P-14のソースが操作リクエストの決定、競合チェック、PDCAリクエストの発行、および実行状態の追跡をカバーしている`prj-0001:dct-business-model-bps`と整合させてください。現在の行とそのテスト対象は、プロバイダーの起動とリポジトリの権限のみをカバーしており、これらのビジネス責任に対して明示的な関数割り当てや正当化された除外が行われていません。
+    cause:
+      type: document
+  - id: F007
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 57
+    anchor: >-
+      | `SF-ORCH-01`  | 運転調整           | 対話型オーケストレーターを provider CLI
+      で起動し、プロジェクトが宣言したリポジトリだけを許可する                               |
+      `bps-routine-register-schedule-cycle`                                                                   |
+      `orchestrator`                          | 一覧行で要約                               |
+    message: >-
+      Assign routine-definition validation and recording, plus automatic PDCA request issuance, conflict checking, and
+      execution-state tracking, to explicit function boundaries or justify their exclusion; the current dispatch and
+      provider-launch summaries do not let DEV determine the implementation scope of P-05 and P-14.
+    message_ja: ルーチン定義の検証と記録、および自動的なPDCAリクエストの発行、競合チェック、実行状態の追跡を、明示的な関数の境界に割り当てるか、それらの除外を正当化してください。現在のディスパッチおよびプロバイダー起動のサマリーでは、DEVはP-05とP-14の実装スコープを判断できません。
+    cause:
+      type: document
+  - id: F008
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 95
+    anchor: >-
+      | `Q-02` | 成果物カタログ上の本書の `depends_on` に、`SF-PLAN-02`・`SF-ROUT-03`・`SF-EXEC-02`・`SF-ORCH-01` が参照する
+      `P-04`・`P-06`・`P-08`・`P-14` の BPS が含まれていない。人間の `PO` が方針を決めた（2026-11-15）: カタログの `depends_on` には、領域ごとに代表の BPS
+      だけを置く。一覧の各行が参照する BPS がすべて依存にあるとは限らない。機能領域 `ORCH` には代表の BPS が依存にない | `SF-ORCH-01` | BA / PM       |
+      本書の確定（`T-KATA-WAVE-1-sf-index-140`）の前 | 代表の選び方の照合は `Q-01` と合わせて行う。`ORCH` の代表の BPS をカタログの `depends_on`
+      へ加えるか、対象外とするかを PO が決め、照合表の不一致を解消すれば完了とする   | [[prj-0001:pjr-ak5v-bps-mapping-check-after-bps\|PJR-AK5V]]（`ORCH`
+      の代表の扱いは未起票） |
+    message: >-
+      Provide evidence that every business-process area is mapped to the agreed scope and test targets, resolving the
+      dependency gap recorded in `Q-02` before claiming coverage.
+    message_ja: すべてのビジネスプロセス領域が、合意されたスコープとテスト対象にマッピングされているという証拠を提供してください。その際、網羅性を主張する前に、`Q-02`に記録された依存関係のギャップを解決してください。
+    cause:
+      type: document
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 95
+    anchor: >-
+      | `Q-02` | 成果物カタログ上の本書の `depends_on` に、`SF-PLAN-02`・`SF-ROUT-03`・`SF-EXEC-02`・`SF-ORCH-01` が参照する
+      `P-04`・`P-06`・`P-08`・`P-14` の BPS が含まれていない。人間の `PO` が方針を決めた（2026-11-15）: カタログの `depends_on` には、領域ごとに代表の BPS
+      だけを置く。一覧の各行が参照する BPS がすべて依存にあるとは限らない。機能領域 `ORCH` には代表の BPS が依存にない | `SF-ORCH-01` | BA / PM       |
+      本書の確定（`T-KATA-WAVE-1-sf-index-140`）の前 | 代表の選び方の照合は `Q-01` と合わせて行う。`ORCH` の代表の BPS をカタログの `depends_on`
+      へ加えるか、対象外とするかを PO が決め、照合表の不一致を解消すれば完了とする   | [[prj-0001:pjr-ak5v-bps-mapping-check-after-bps\|PJR-AK5V]]（`ORCH`
+      の代表の扱いは未起票） |
+    message: >-
+      Resolve the missing BPS dependencies and provide a traceable check that the function list is covered by test
+      targets, so omissions can be detected.
+    message_ja: 不足しているBPSの依存関係を解決し、関数リストがテスト対象によって網羅されていることを追跡可能な方法で確認できるようにし、漏れを検出できるようにしてください。
+    cause:
+      type: document
+  - id: F010
+    severity: major
+    rule: vp-qe-config-validity
+    line: 16
+    anchor: >-
+      - 公開範囲: 本文は機能名、コマンド名、文書 ID だけで構成し、個人情報、認証情報、非公開の接続先を含めない。_ASSUMPTION_: SpecDojo の製品文書として文書サイトで公開する。公開する相手と範囲は PO
+      が承認時に確定する。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: sf-index-grade-criteria

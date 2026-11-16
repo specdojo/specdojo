@@ -3,6 +3,23 @@ const path = require("node:path");
 const { createRequire } = require("node:module");
 const { globSync } = require("tinyglobby");
 const { load, YAML11_SCHEMA, DEFAULT_SCHEMA } = require("js-yaml");
+// Resolve the shared asset from the source checkout or the installed SpecDojo package.
+const yamlMetadataPath = path.resolve(__dirname, "../../../docs/specdojo/lib/yaml-metadata.cjs");
+function loadYamlMetadataReader() {
+  if (fs.existsSync(yamlMetadataPath)) return require(yamlMetadataPath);
+  try {
+    return require("specdojo/docs/specdojo/lib/yaml-metadata.cjs");
+  } catch (error) {
+    if (error.code !== "MODULE_NOT_FOUND") throw error;
+    // Preserve standalone docs-lint and compatibility with older SpecDojo releases.
+    return (value) => {
+      const isRecord = (item) => item !== null && typeof item === "object" && !Array.isArray(item);
+      if (!isRecord(value)) return undefined;
+      return isRecord(value["x-spec-meta"]) ? value["x-spec-meta"] : value;
+    };
+  }
+}
+const yamlMetadata = loadYamlMetadataReader();
 
 function readMetadata(filePath) {
   const source = fs.readFileSync(filePath, "utf8");
@@ -81,7 +98,7 @@ function createDeliverableTypeChecker(workspaceRoot) {
     const isRecord = (value) =>
       value !== null && typeof value === "object" && !Array.isArray(value);
     const isExternal = isYaml && isRecord(metadata?.["x-spec-meta"]);
-    if (isExternal) metadata = metadata["x-spec-meta"];
+    if (isYaml) metadata = yamlMetadata(metadata);
     // These documents may link to an artifact's rulebook, but have their own schemas/types.
     if (
       !isYaml &&

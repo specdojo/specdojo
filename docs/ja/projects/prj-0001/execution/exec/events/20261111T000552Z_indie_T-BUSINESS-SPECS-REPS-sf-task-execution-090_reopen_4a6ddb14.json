@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-11T00:05:52Z",
+  "type": "reopen",
+  "task_id": "T-BUSINESS-SPECS-REPS-sf-task-execution-090",
+  "by": "indie",
+  "msg": "確定した型での磨き込み（register の todo）の後に review をやり直す（indie が決定、orchestrator が記帳）"
+}

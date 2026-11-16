@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-PROJECT-KATA-pm-quality-management-plan-050",
+  "run_id": "T-PROJECT-KATA-pm-quality-management-plan-050-20261112T225410Z-f116832d",
+  "updated_at": "2026-11-12T23:12:11.175Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-12T22:57:26.972Z",
+      "completed_at": "2026-11-12T23:01:42.713Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-quality-management-plan-050/T-PROJECT-KATA-pm-quality-management-plan-050-20261112T225410Z-f116832d/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-12T23:08:28.963Z",
+      "completed_at": "2026-11-12T23:11:48.779Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-quality-management-plan-050/T-PROJECT-KATA-pm-quality-management-plan-050-20261112T225410Z-f116832d/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-12T23:11:51.056Z",
+      "completed_at": "2026-11-12T23:12:11.175Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-quality-management-plan-050/T-PROJECT-KATA-pm-quality-management-plan-050-20261112T225410Z-f116832d/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-quality-management-plan-050/T-PROJECT-KATA-pm-quality-management-plan-050-20261112T225410Z-f116832d/result.md"
+  }
+}

@@ -1,0 +1,25 @@
+[run] setup error for T-STSD-PILOT-stsd-task-execution-140: Task T-STSD-PILOT-stsd-task-execution-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-action-140: Task T-DATA-FLOW-PDCA-cdfd-action-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-check-140: Task T-DATA-FLOW-PDCA-cdfd-check-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-do-140: Task T-DATA-FLOW-PDCA-cdfd-do-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-onboarding-140: Task T-DATA-FLOW-PDCA-cdfd-onboarding-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-orchestrator-140: Task T-DATA-FLOW-PDCA-cdfd-orchestrator-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-plan-140: Task T-DATA-FLOW-PDCA-cdfd-plan-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-uc-deliverable-140: Task T-DATA-FLOW-PDCA-cdfd-uc-deliverable-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-DATA-FLOW-PDCA-cdfd-uc-register-140: Task T-DATA-FLOW-PDCA-cdfd-uc-register-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-KATA-WAVE-1-bes-index-090: Task T-KATA-WAVE-1-bes-index-090 uses approach: retrofit but the target deliverable has no evidence_refs.
+[run] setup error for T-KATA-WAVE-1-dct-index-090: Task T-KATA-WAVE-1-dct-index-090 uses approach: retrofit but the target deliverable has no evidence_refs.
+[run] setup error for T-KATA-WAVE-1-sysd-critical-flows-090: Task T-KATA-WAVE-1-sysd-critical-flows-090 uses approach: retrofit but the target deliverable has no evidence_refs.
+[run] setup error for T-KATA-WAVE-1-sysd-index-090: Task T-KATA-WAVE-1-sysd-index-090 uses approach: retrofit but the target deliverable has no evidence_refs.
+[run] setup error for T-PROJECT-KATA-pm-organization-140: Task T-PROJECT-KATA-pm-organization-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-PROJECT-KATA-pm-plan-140: Task T-PROJECT-KATA-pm-plan-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-PROJECT-KATA-pm-quality-management-plan-140: Task T-PROJECT-KATA-pm-quality-management-plan-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-PROJECT-KATA-pm-raci-140: Task T-PROJECT-KATA-pm-raci-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-PROJECT-KATA-pm-roles-140: Task T-PROJECT-KATA-pm-roles-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140: Task T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-PROJECT-KATA-prj-comparison-of-alternatives-140: Task T-PROJECT-KATA-prj-comparison-of-alternatives-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-140: Task T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-BUSINESS-SPECS-KATA-2-cdsd-execution-140: Task T-BUSINESS-SPECS-KATA-2-cdsd-execution-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-BUSINESS-SPECS-KATA-2-clis-exec-commands-140: Task T-BUSINESS-SPECS-KATA-2-clis-exec-commands-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-140: Task T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-140 has execution: human; claim it to create and use its result instead of a plan.
+[run] setup error for T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140: Task T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140 has execution: human; claim it to create and use its result instead of a plan.

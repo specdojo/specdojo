@@ -1,0 +1,5 @@
+対象成果物の未決事項を、未決の理由と確認に必要な成果物が分かる形に整えました。`status: draft` は維持しています。Prettier と `git diff --check` は通過しました。result は executor の担当外のため更新していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"対象成果物の未決事項を根拠不足の理由・必要な依存とともに明記した。","handoff":["自動選択と着手宣言の業務上の時点境界は未決定。`bps-task-selection-preparation` を依存に宣言して確認する。","schedule・register・routine 系イベントの対象範囲と統合方針は未決定。`bes-index` と関連する起点イベント仕様を依存に宣言して照合する。","並列選択の要求識別情報を既存項目で表せるか未確認。実行記録の個別データモデル成果物を依存に宣言して照合する。","`bes-index` が未作成のため、`P-07` の一覧行から本書へのリンクは未設定。作成時に対応を確認して追加する。"],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md","status":"passed","summary":"対象 Markdown を整形。変更なし。"},{"command":"git diff --check -- docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md","status":"passed","summary":"対象成果物の差分に空白エラーなし。"}],"target_coverage":[{"target":"bes-task-ready-selected","status":"changed","path":"docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md"}]}
+</specdojo_executor_evidence>

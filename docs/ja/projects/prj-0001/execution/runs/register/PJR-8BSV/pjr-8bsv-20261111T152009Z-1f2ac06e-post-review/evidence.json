@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-8BSV-post-review",
+  "run_id": "pjr-8bsv-20261111T152009Z-1f2ac06e-post-review",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-11T15:44:10.393Z",
+    "completed_at": "2026-11-11T15:46:02.855Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-night-approved-register-a8a4379f38e2.json",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat f8e9c7c40e652939045e9d0965284ed631d207ce..db91dd6af356bf64e2444587a45026fc2cbfe3fe",
+      "status": "passed",
+      "summary": "13 ファイル。内訳は成果物 6 件、個票、イベントログ、runner の run ファイル"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-status f8e9c7c40e652939045e9d0965284ed631d207ce..db91dd6af356bf64e2444587a45026fc2cbfe3fe",
+      "status": "passed",
+      "summary": "対象外の変更は無い"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:schema:rulebook-enums",
+      "status": "passed",
+      "summary": "exit 0。ただし draft の ifx-cmd-rulebook は検査対象外"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx -e '<lintRulebookSchemaEnums を ifx-cmd-rulebook.md と ifx-cmd.schema.yaml に適用>'",
+      "status": "passed",
+      "summary": "統合後は欠けた enum 値 0 件、統合前は 11 件"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/samples/bes-sample.md docs/ja/specdojo/samples/sf-sample.md docs/ja/specdojo/samples/cdt-sample.md docs/ja/specdojo/samples/ccd-sample.md docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md",
+      "status": "passed",
+      "summary": "5 ファイルで 0 件"
+    }
+  ],
+  "final_message": "判定は `complete-with-findings`。完了条件 1〜7 はすべて差分で満たされ、対象外の変更は無い。最初に確かめてほしい点: 統合前の個票の完了条件は `_TODO_` だけで、edit executor が条件 1〜7 を自分で書き、個票の完了条件の節に直接入れた。edit plan は仮説の記録先を対応結果と `handoff` としており、夜間 autopilot は人が書いた完了条件だけを承認していたが、executor はこのことを `handoff` に書いていない。close の前に人がこの条件を承認する必要がある。検証: executor と runner の検証はすべて passed。ただし `validate:schema:rulebook-enums` は `status: ready` の rulebook しか見ないため、draft の `ifx-cmd-rulebook.md` は対象外で、executor の通過済みという報告はこの rulebook の根拠にならない。そこで `lintRulebookSchemaEnums` を直接呼び、統合後は欠けた enum 値 0 件、統合前は 11 件だったことを確かめた。変更した Markdown 5 件は markdownlint で 0 件、wikilink の参照先（`clis-sample`、`br-sample`、`bdd-sample`）はすべて実在する。軽い指摘: 概要にある bdd への変更は無い（`bdd-sample` の grade は minor 0 件で、残った指摘は無いと判断）、edit result の申し送りに同じ項目が二重に載っている、「変更ファイル」に個票とイベントログが無い、`sf-sample` の `Q-01` で `sf-index` がインラインコードで囲まれていない。確認できなかった範囲: `yaml-pages build` で生成されるページの同期（生成物は git 管理外）、統合後の commit での `npm run docs:build`（実行していない）。",
+  "completion_status": "complete",
+  "handoff": [
+    "個票 PJR-8BSV の完了条件 1〜7 は、人ではなく edit executor が書いたもの（統合前は `_TODO_` だけだった）。close の前に、人がこの完了条件を承認するか直すかを決める。",
+    "`validate:schema:rulebook-enums` は draft の rulebook を検査しない。`ifx-cmd-rulebook.md` を `ready` に上げるときは、同じ検査を流し直して欠けた enum 値が 0 件であることを確かめる（この review で検査関数を直接呼んだ結果は 0 件）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-8BSV/pjr-8bsv-20261111T152009Z-1f2ac06e-post-review/executor.log",
+      "bytes": 8629,
+      "truncated": false
+    }
+  ]
+}

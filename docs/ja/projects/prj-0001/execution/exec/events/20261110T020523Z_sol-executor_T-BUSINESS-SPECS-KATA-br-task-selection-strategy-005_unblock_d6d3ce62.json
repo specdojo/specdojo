@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-10T02:05:23Z",
+  "type": "unblock",
+  "task_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005",
+  "by": "sol-executor",
+  "msg": "resume executor from persisted pipeline state (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005-20261110T010825Z-b293b726/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005/T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005-20261110T010825Z-b293b726/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-KATA-br-task-selection-strategy-005-20261110T010825Z-b293b726",
+    "pipeline_resume_claimed": "true"
+  }
+}

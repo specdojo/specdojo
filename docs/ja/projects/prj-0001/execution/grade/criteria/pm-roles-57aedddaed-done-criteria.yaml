@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:pm-roles-grade-criteria
+document: prj-0001:pm-roles
+path: docs/ja/projects/prj-0001/030-project-management/pm-roles.yaml
+graded_at: "2026-11-13T02:05:03.524Z"
+graded_by: sol-review-executor
+content_hash: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: 全ロールコードとプロジェクト固有メモを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-002
+    text: Role code が schema 構造に沿って定義され、owner 語彙として機能すること
+    roles:
+      - ARC
+    viewpoint: vp-arc-document-structure
+    status: satisfied
+  - id: DC-003
+    text: 必要な全ロール（PM/BA/ARC/DEV/QE/UX/OPS）が過不足・重複なく定義されていること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied

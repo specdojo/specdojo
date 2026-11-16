@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-ad1b159cc38d-review",
+  "run_id": "20261102T164012326Z-cbcd205b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-02T16:40:12.326Z",
+    "completed_at": "2026-11-02T16:41:37.180Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat / --name-status acd3a07a5df41e6a86f01db49a9049aeeca83905..8222692ceb1014ef62fdd027bab947e84392b600",
+      "status": "passed",
+      "summary": "27ファイルはすべて Run の出力（evidence 4、plan、result、Run JSON、done_criteria 10、評価結果 10）"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo grade list --target deliverable --project prj-0001 --changed-only",
+      "status": "passed",
+      "summary": "対象10件は出力に含まれない（verdict 直前の再確認でも0件）"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo grade list --target deliverable --project prj-0001 --dependency-changed",
+      "status": "passed",
+      "summary": "対象10件は出力に含まれない（verdict 直前の再確認でも0件）"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo grade list --target deliverable --project prj-0001 --incomplete",
+      "status": "passed",
+      "summary": "出力なし（未完了なし）"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo grade state --target deliverable --project prj-0001 --exhausted",
+      "status": "passed",
+      "summary": "出力なし（`retry_exhausted` なし）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-ad1b159cc38d/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-func\n… output omitted …\nworkspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-ad1b159cc38d/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-ad1b159cc38d/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1147). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 3694 file(s), 184 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 8 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 156 passed, 0 error, 0 未検査\n  graph: 2 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 11 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 3694 file(s), 17 diagram(s), 17 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-ad1b159cc38d\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.6.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-ad1b159cc38d/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-ad1b159cc38d/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.6.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.6.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-ad1b159cc38d\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 768\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m105 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 52\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/results.test.ts \u001b[\n… output omitted …\nsch-common.schema.yaml#/$defs/Date\"\nunknown format \"date\" ignored in schema at path \"./sch-common.schema.yaml#/$defs/Date\"\nunknown format \"date\" ignored in schema at path \"./sch-common.schema.yaml#/$defs/Date\"\n\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。Run JBR-grade-deliverable-ad1b159cc38d は succeeded（exit 0、stderr 空、selected=10 processed=10 incomplete=0 exhausted=0）。results.tsv の10行はすべて passed で、failed・rate limit（exit 75）・`retry_exhausted` はない。差分 acd3a07..8222692 は27ファイルで、Run の evidence・plan・result・Run JSON と、選ばれた10文書の done_criteria・評価結果だけから成る（対象外の変更なし）。鮮度確認（grade list の `--changed-only`・`--dependency-changed`・`--incomplete`、grade state の `--exhausted`）では対象10件が出力されず、verdict 直前の再確認でも0件だった。スコアの変化: cdfd-uc-routine は 98 から 94（major F001 の `_TODO_` 残存が加わり major は2件）、cdsd-sharing は done_criteria の充足が0から1。pass 5件（cdfd-overview・cdfd-uc-register・cdfd-uc-schedule が100、bps-deliverable-evaluation が96 で minor 3件）、needs-work 5件（cdsd・stsd のデータモデル文書、59〜67）と cdfd-uc-routine（94）。差は文書の種類に沿っており、評価設定の問題とは断定できない。未充足の done_criteria と担当ロール: cdsd-execution 3/3（BA・ARC・QE）、cdsd-planning 3/3（BA・ARC・QE）、cdsd-sharing 2/3（BA・ARC）、stsd-register-entry 5/5（BA・PO・ARC・QE・DEV）、stsd-routine-run 5/5（BA・PO・ARC・QE・DEV）。確認できなかった範囲: logs/grade 配下の results.tsv 本体は読んでいない（stdout の写しで判断）。実行ログの executor=agy-expert-executor と評価結果の `graded_by`=flash-high-executor の不一致の原因は未確認。評価内容の妥当性は確かめていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "Job Run result の「実施内容」は未充足 done_criteria の担当者を「各文書のオーナー」と書いているが、実際は項目ごとのロール（BA・PO・ARC・QE・DEV）。統合は妨げないため修正は任意。",
+    "needs-work の5件（cdsd-execution・cdsd-planning・cdsd-sharing・stsd-register-entry・stsd-routine-run）と cdfd-uc-routine の F001（382行目の `_TODO_`、stsd-job-run・stsd-task-execution が未作成）は、担当ロールでの改善を別タスクとして起票すること。",
+    "実行ログの executor=agy-expert-executor と評価結果の `graded_by`=flash-high-executor が食い違っている（stsd-routine-run の done_criteria でも agy-expert-executor から flash-high-executor に変わった）。エージェント名の割り当てによるものかを確認すること。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-deliverable-ad1b159cc38d/20261102T164012326Z-cbcd205b/executor.log",
+      "bytes": 8796,
+      "truncated": false
+    }
+  ]
+}

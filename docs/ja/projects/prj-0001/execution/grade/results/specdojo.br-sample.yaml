@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/br-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 92
-graded_at: "2026-10-10T21:16:37.838Z"
-graded_by: agy-expert-executor
-content_hash: 6246af0aae384875db28479a52603dfdb726613079070601990a655e52c7c275
+score: 100
+graded_at: "2026-11-10T08:32:59.326Z"
+graded_by: sol-review-executor
+content_hash: 4555e89a36d6fbe15c5dcec0ba86f2c44f695155296e7c9eca4d774c957e80b3
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,17 +78,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,36 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 4
-    anchor: ""
-    message: >-
-      The mandatory `title` property is missing in the Frontmatter. Please add it to conform to the rulebook
-      requirements.
-    message_ja: Frontmatterに必須の `title` プロパティが不足しています。ルールブックの要件に従って追加してください。
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 10
-    anchor: ""
-    message: 概要の「販売可能な在庫」は後続で定義する「有効在庫」と同じ概念か判別しにくいため、「有効在庫」に統一するか両者の関係を明記してください。
-    message_ja: 概要の「販売可能な在庫」は後続で定義する「有効在庫」と同じ概念か判別しにくいため、「有効在庫」に統一するか両者の関係を明記してください。
-  - id: F003
-    severity: minor
-    rule: vp-ux-readability
-    line: 10
-    anchor: ""
-    message: 概要の「販売可能な在庫」と規則の「有効在庫」の表記を統一し、読者が同一の判定対象として直ちに追跡できるようにしてください。
-    message_ja: 概要の「販売可能な在庫」と規則の「有効在庫」の表記を統一し、読者が同一の判定対象として直ちに追跡できるようにしてください。
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 10
-    anchor: ""
-    message: 同一の算出対象を指す「販売可能な在庫」と「有効在庫」の表記を一つに統一してください。
-    message_ja: 同一の算出対象を指す「販売可能な在庫」と「有効在庫」の表記を一つに統一してください。
+findings: []

@@ -1,18 +1,21 @@
-import { createHash } from "node:crypto";
+import type { Command } from "commander";
 import { spawn, spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import type { Command } from "commander";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
+import { recordRef, taskRecordPaths } from "../shared/run-records.js";
 import { listFilesRecursive, writeJson } from "../shared/fs.js";
 import { gitEnvironment } from "../shared/git.js";
 import { formatMarkdownFile } from "../shared/markdown-format.js";
 import { execTemplatePath, injectCommonConventions, MISSING } from "../shared/plan-templates.js";
+import { selfRunCommand } from "../shared/spawn-self.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { expandTemplate } from "../shared/text.js";
 import {
+  getPath,
   isJobAgentTask,
   isJobCommandTask,
-  getPath,
   loadAllJobs,
   loadJobDefinition,
   loadJobRunRecord,
@@ -32,8 +35,7 @@ import {
   type JobTaskDefinition,
   type MaterializedJobRun,
 } from "./definition.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { selfRunCommand } from "../shared/spawn-self.js";
+import { jobNoopDirectory, localJobNoopPath } from "./noop.js";
 
 export {
   isJobAgentTask,
@@ -77,8 +79,10 @@ export function jobCheckpoint(paths: JobPaths, jobId: string): Record<string, un
 
 export function deriveJobState(paths: JobPaths): JobStateFile {
   const state: JobStateFile = { version: 1, jobs: {} };
-  if (!existsSync(paths.runsPath)) return state;
-  for (const filePath of listFilesRecursive(paths.runsPath)
+  for (const filePath of [
+    ...listFilesRecursive(paths.runsPath),
+    ...listFilesRecursive(jobNoopDirectory(paths.executionPath)),
+  ]
     .filter((path) => path.endsWith(".json"))
     .sort()) {
     try {
@@ -310,7 +314,7 @@ export async function generateJobPlan(
 ): Promise<string> {
   const templatePath = execTemplatePath("xep-job-template.md");
   if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
-  const planPath = join(paths.executionPath, "exec", "plans", `${record.run_id}-plan.md`);
+  const planPath = taskRecordPaths(paths.executionPath, record.run_id, record.run_id, "job").plan;
   mkdirSync(resolve(planPath, ".."), { recursive: true });
   const commandTask = isJobCommandTask(record.task) ? record.task : undefined;
   const values: Record<string, string> = {
@@ -345,11 +349,14 @@ export async function generateJobPlan(
     _JOB_TARGETS_: record.task.targets?.map((target) => `- [[${target}]]`).join("\n") ?? "- -",
     _JOB_PATHS_: record.task.paths?.map((path) => `- \`${path}\``).join("\n") ?? "- -",
     _RESULT_REF_: repoRelative(
-      join(paths.executionPath, "exec", "results", `${record.run_id}-result.md`),
+      taskRecordPaths(paths.executionPath, record.run_id, record.run_id, "job").result,
     ),
   };
   const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>());
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "edit", {
+    executionPath: paths.executionPath,
+    planPath,
+  });
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);
   return planPath;
@@ -383,12 +390,11 @@ export async function generateJobReviewPlan(
 ): Promise<{ planPath: string; resultPath: string }> {
   const templatePath = execTemplatePath("xrp-job-template.md");
   if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
-  const planPath = join(paths.executionPath, "exec", "plans", `${record.run_id}-review-plan.md`);
-  const resultPath = join(
+  const { plan: planPath, result: resultPath } = taskRecordPaths(
     paths.executionPath,
-    "exec",
-    "results",
-    `${record.run_id}-review-result.md`,
+    record.run_id,
+    `${record.run_id}-review`,
+    "job",
   );
   mkdirSync(resolve(planPath, ".."), { recursive: true });
   const values: Record<string, string> = {
@@ -408,7 +414,10 @@ export async function generateJobReviewPlan(
     _RUN_RESULT_REF_: repoRelative(join(paths.executionPath, record.result_ref)),
   };
   const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
-  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "review");
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "review", {
+    executionPath: paths.executionPath,
+    planPath,
+  });
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);
   return { planPath, resultPath };
@@ -483,10 +492,11 @@ export async function materializeJobRun(opts: {
     task.description = renderJobTemplate(task.description, context);
   }
   const now = new Date().toISOString();
-  const existingRun = existsSync(runPath);
+  const localNoop = localJobNoopPath(paths.executionPath, runId);
+  const existingRun = existsSync(localNoop) || existsSync(runPath);
   let record: JobRunRecord;
   if (existingRun) {
-    record = loadJobRunRecord(runPath);
+    record = loadJobRunRecord(existsSync(localNoop) ? localNoop : runPath);
     if (record.idempotency_key !== idempotencyKey || record.job_id !== definition.id) {
       throw new Error(`Job Run identity collision: ${runId}`);
     }
@@ -514,11 +524,28 @@ export async function materializeJobRun(opts: {
       inputs,
       task,
       checkpoint_before: checkpoint,
-      plan_ref: `exec/plans/${runId}-plan.md`,
-      result_ref: `exec/results/${runId}-result.md`,
+      plan_ref: recordRef(
+        paths.executionPath,
+        taskRecordPaths(paths.executionPath, runId, runId, "job").plan,
+      ),
+      result_ref: recordRef(
+        paths.executionPath,
+        taskRecordPaths(paths.executionPath, runId, runId, "job").result,
+      ),
       attempts: [],
     };
   }
+  record = {
+    ...record,
+    plan_ref: recordRef(
+      paths.executionPath,
+      taskRecordPaths(paths.executionPath, runId, runId, "job").plan,
+    ),
+    result_ref: recordRef(
+      paths.executionPath,
+      taskRecordPaths(paths.executionPath, runId, runId, "job").result,
+    ),
+  };
   if (!existingRun && !opts.dryRun && isJobCommandTask(task) && task.precondition) {
     const precondition = await executeJobPrecondition(task.precondition, specdojoRootDir());
     if (precondition.skipped) {

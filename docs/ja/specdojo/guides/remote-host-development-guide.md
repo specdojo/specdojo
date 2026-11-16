@@ -82,6 +82,8 @@ npx specdojo devcontainer scaffold --provider claude,codex --editor emacs
 
 生成される `.devcontainer/emacs/init.el` は、`~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけコピーされます。空の `~/.emacs.d` があればその中の `init.el` へ、なければ `~/.config/emacs/init.el` へ配置し、配置先を出力します。初回作成前の既定値は生成されたテンプレートで変更でき、作成後は出力されたコピー先を編集します。dotfiles が設定を配置していれば上書きされません。
 
+tmux を含める構成（`--tmux`、または preset に `recommended` 以上を指定）では、マウス操作（`set -g mouse on`）、クリップボード（`set -g set-clipboard on`）、256 色（`set -g default-terminal "tmux-256color"` と `set -as terminal-overrides ',*:Tc'`）を設定した `.devcontainer/tmux.conf` を生成します。コンテナ作成時に `post-create.sh` がこのファイルを `~/.tmux.conf` へシンボリックリンク（`ln -sfn`）します。利用者が既に独自の `~/.tmux.conf`（シンボリックリンクでない通常ファイル）を持っている場合は上書きせず、既存の設定を保護します。また、tmux を含めない構成では `tmux.conf` もリンク処理も生成されません。
+
 scaffold は、常時稼働ホストへの接続と tmux セッションの維持に使えるサンプルを `.devcontainer/remote-host/` に生成します。
 
 - `specdojo-tmux.sh.sample`: 常時稼働ホストの `~/bin/specdojo-tmux.sh` などへコピーし、実行権限（`chmod +x`）を付与して使います。workspace のパスを渡して、SpecDojo が配布する本体スクリプト（`.specdojo/host/devcontainer-tmux.sh`）を呼び出す数行のラッパーです。本体スクリプトは `npx specdojo devcontainer host-script` で workspace へ書き出せます。

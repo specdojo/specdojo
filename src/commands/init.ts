@@ -1,6 +1,7 @@
 import { createInterface } from "node:readline/promises";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { tmpdir } from "node:os";
+import { dirname, join, relative, resolve } from "node:path";
 import type { Command } from "commander";
 import { dump, load } from "../shared/yaml.js";
 import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
@@ -724,6 +725,9 @@ export async function runInit(
   deps?: { prompter?: InitPrompter },
 ): Promise<void> {
   const repoRoot = specdojoRootDir();
+  if (resolve(repoRoot) === resolve(tmpdir())) {
+    throw new Error("Refusing to initialize specdojo directly under temporary directory root.");
+  }
   const packageRoot = specdojoPackageRootDir();
   const interactive = !options.yes && !!process.stdin.isTTY && !process.env.CI;
   const prompter =

@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T21:18:39Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020",
+  "by": "opus-executor",
+  "msg": "project: git commit failed: catalog-validate: ERROR: /workspaces/specdojo-workspace/worktrees/prj-0001-T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-task-ready-selected: based_on 'cdfd-overview' (prj-0001:cdfd-overview) が depends_on の推移閉包に含まれていません（根拠ドキュメントは先行成果物である必要があります）; integrated repositories: none; not integrated: project",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020/T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020-20261108T161513Z-750c6005"
+  }
+}

@@ -36,24 +36,24 @@ Impact Analysis (Operations) Rulebook
 
 ## 3. ファイル命名・ID規則
 
-- 対象ドキュメント ID は `imp-operations` とする。
+- 対象ドキュメント ID は `<project-id>:imp-operations` とする（例: `prj-0001:imp-operations`）。
 - 対象ドキュメントの推奨ファイル名は `imp-operations.md` とする。
 - `id` は [id-and-file-naming-standard.md](../standards/id-and-file-naming-standard.md) の規則に従い、英小文字・数字・ハイフンで構成する。
-- 関連する追補文書を分割する場合は `imp-operations-<term>` 形式を用いる。
+- 関連する追補文書を分割する場合は `<project-id>:imp-operations-<term>` 形式を用いる。
 
 ## 4. 推奨 Frontmatter 項目
 
 影響調査（運用）ドキュメントでは、[document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。
 
-| 項目       | 説明                                    | 必須 |
-| ---------- | --------------------------------------- | ---- |
-| id         | ドキュメント ID（例: `imp-operations`） | ○    |
-| type       | `project`                               | ○    |
-| status     | `draft` / `ready` / `deprecated`        | ○    |
-| rulebook   | `specdojo:imp-operations-rulebook` 固定 | ○    |
-| part_of    | 一覧/親ドキュメントへの所属 ID 配列     | 任意 |
-| based_on   | 変更要求や根拠資料の ID 配列            | 任意 |
-| supersedes | 置き換え対象ドキュメント ID 配列        | 任意 |
+| 項目       | 説明                                                 | 必須 |
+| ---------- | ---------------------------------------------------- | ---- |
+| id         | ドキュメント ID（例: `<project-id>:imp-operations`） | ○    |
+| type       | `project`                                            | ○    |
+| status     | `draft` / `ready` / `deprecated`                     | ○    |
+| rulebook   | `specdojo:imp-operations-rulebook` 固定              | ○    |
+| part_of    | 一覧/親ドキュメントへの所属 ID 配列                  | 任意 |
+| based_on   | 変更要求や根拠資料の ID 配列                         | 任意 |
+| supersedes | 置き換え対象ドキュメント ID 配列                     | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

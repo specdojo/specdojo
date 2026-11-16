@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T05:41:48Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-sysd-critical-flows-040",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

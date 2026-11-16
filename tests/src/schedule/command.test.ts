@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import { dump, load } from "js-yaml";
+import { dump, load } from "../../../src/shared/yaml.js";
 import { describe, expect, it } from "vitest";
 import {
   collectProjectMilestones,

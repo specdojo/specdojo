@@ -5,6 +5,7 @@ import {
   isRecord,
   legacyInlineContentHash,
   parseMarkdown,
+  parseGradeDocument,
   preservePreviousFindingSeverities,
   serializeMarkdown,
   withoutFindingComments,
@@ -82,9 +83,9 @@ export function scoreDocument(
 // 引数にはパスと ID のどちらも渡せる。パスの場合は Frontmatter の id を読み取る。
 export function resolveGradeReferenceId(pathOrId: string, project?: string): string {
   const trimmed = pathOrId.trim();
-  if (!trimmed.endsWith(".md")) return trimmed;
+  if (!/\.(md|ya?ml)$/i.test(trimmed)) return trimmed;
   const absolute = resolveSafeMarkdownPath(trimmed, specdojoRootDir(), project);
-  const document = parseMarkdown(readFileSync(absolute, "utf8"), repoRelativePath(absolute));
+  const document = parseGradeDocument(readFileSync(absolute, "utf8"), repoRelativePath(absolute));
   const metadata = document.data.specdojo;
   if (!isRecord(metadata) || typeof metadata.id !== "string" || metadata.id.length === 0) {
     throw new Error(`${repoRelativePath(absolute)}: reference document has no specdojo.id`);

@@ -1,9 +1,10 @@
+import { Command } from "commander";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
+import { recordPathForRead } from "../../../src/exec/run-records.js";
 
 const originalCwd = process.cwd();
 const ENV_KEYS = [
@@ -87,7 +88,7 @@ function setupProject(): { repo: string; taskId: string; resultPath: string } {
   return {
     repo,
     taskId,
-    resultPath: join(executionPath, "exec", "results", `${taskId}-result.md`),
+    resultPath: recordPathForRead(executionPath, "result", taskId),
   };
 }
 

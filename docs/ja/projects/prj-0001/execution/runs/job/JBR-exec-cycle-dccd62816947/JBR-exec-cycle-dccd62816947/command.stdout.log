@@ -1,0 +1,59 @@
+[cycle] step 1/5: resume due deferred-limit tasks
+[resume] no due deferred-limit tasks — exit
+[cycle] step 2/5: rebuild doc index
+Built index: 4676 entries → .specdojo/doc-index.json
+[cycle] step 4/5: validate + refresh schedule state
+OK: validation passed
+stats: events=1493, event_files=1493, schedule_ids=679, schedule_files=14
+
+Warnings:
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T160005Z_qwen-executor_T-PLANNING-dct-index-010_claim_fe8a.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T160015Z_qwen-executor_T-PLANNING-dct-index-010_release_c27f.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T210004Z_qwen-executor_T-PLANNING-dct-index-010_claim_9888.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T210011Z_qwen-executor_T-PLANNING-dct-index-010_release_8885.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+OK: validation passed
+stats: events=1493, event_files=1493, schedule_ids=679, schedule_files=14
+
+Warnings:
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T160005Z_qwen-executor_T-PLANNING-dct-index-010_claim_fe8a.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T160015Z_qwen-executor_T-PLANNING-dct-index-010_release_c27f.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T210004Z_qwen-executor_T-PLANNING-dct-index-010_claim_9888.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+- /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/exec/events/20260822T210011Z_qwen-executor_T-PLANNING-dct-index-010_release_8885.json: task_id T-PLANNING-dct-index-010 not found in current sch-*.yaml; the historical event will be ignored when building state
+
+Generated: /workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/execution/generated
+[cycle] step 5/5: run Ready tasks (--auto)
+Task: T-STSD-PILOT-stsd-task-execution-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-action-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-check-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-do-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-onboarding-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-orchestrator-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-plan-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-uc-deliverable-140 — 完成版確定  [edit]
+Task: T-DATA-FLOW-PDCA-cdfd-uc-register-140 — 完成版確定  [edit]
+Task: T-KATA-WAVE-1-bes-index-090 — 完成版レビュー（実装照合）  [review]
+  [grade] checking docs/ja/product/010-business-specs/030-business-model/bes-index.md (--target deliverable)
+  [grade] skipped: content_hash matches the stored grade
+Task: T-KATA-WAVE-1-dct-index-090 — 完成版レビュー（実装照合）  [review]
+  [grade] checking docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml (--target deliverable)
+  [grade] skipped: content_hash matches the stored grade
+Task: T-KATA-WAVE-1-sysd-critical-flows-090 — 完成版レビュー（実装照合）  [review]
+  [grade] checking docs/ja/product/040-system-design/sysd-critical-flows.md (--target deliverable)
+  [grade] skipped: content_hash matches the stored grade
+Task: T-KATA-WAVE-1-sysd-index-090 — 完成版レビュー（実装照合）  [review]
+  [grade] checking docs/ja/product/040-system-design/sysd-index.md (--target deliverable)
+  [grade] skipped: content_hash matches the stored grade
+Task: T-PROJECT-KATA-pm-organization-140 — 完成版確定  [edit]
+Task: T-PROJECT-KATA-pm-plan-140 — 完成版確定  [edit]
+Task: T-PROJECT-KATA-pm-quality-management-plan-140 — 完成版確定  [edit]
+Task: T-PROJECT-KATA-pm-raci-140 — 完成版確定  [edit]
+Task: T-PROJECT-KATA-pm-roles-140 — 完成版確定  [edit]
+Task: T-PROJECT-KATA-prj-assumptions-constraints-dependencies-140 — 完成版確定  [edit]
+Task: T-PROJECT-KATA-prj-comparison-of-alternatives-140 — 完成版確定  [edit]
+Task: T-BUSINESS-SPECS-KATA-2-cdfd-uc-register-140 — 完成版確定  [edit]
+Task: T-BUSINESS-SPECS-KATA-2-cdsd-execution-140 — 完成版確定  [edit]
+Task: T-BUSINESS-SPECS-KATA-2-clis-exec-commands-140 — 完成版確定  [edit]
+Task: T-BUSINESS-SPECS-KATA-2-ifx-cmd-ai-provider-cli-140 — 完成版確定  [edit]
+Task: T-BUSINESS-SPECS-KATA-2-stsd-task-execution-140 — 完成版確定  [edit]
+[run] no executable tasks — exit
+[cycle] summary: resume=success, index=success, refresh=success, auto=failure

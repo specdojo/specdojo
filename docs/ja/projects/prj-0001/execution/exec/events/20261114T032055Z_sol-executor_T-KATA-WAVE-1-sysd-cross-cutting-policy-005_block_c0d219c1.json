@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T03:20:55Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-005",
+  "by": "sol-executor",
+  "msg": "project: git commit failed: test: error: unknown option '--reserve'; FAIL  |integration| tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > restarts a doing reporter run at executor using the edited worktree plan and existing changes; Test Files  1 failed | 226 passed (227); Tests  1 failed | 3811 passed (3812); integrated repositories: none; not integrated: project",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-cross-cutting-policy-005/T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-sysd-cross-cutting-policy-005-20261114T024759Z-bb17cdab"
+  }
+}

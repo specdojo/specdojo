@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-rvtb-cdfd-overview-vertical-trial
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-01T08:50:42Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-11T12:06:58Z"
+  conclusion: 全体概要の CDFD の縦向きと入口のイベントを試し、PJR-SJQC の案 E で採用した。rulebook は PJR-VRVP で縦向きに直した
   derived_from:
     - PJR-T1D1
 ---

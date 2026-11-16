@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6cd080be93a640cb9ec159d2318e61ce
+  ts: "2026-11-08T14:34:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ダッシュボードを、人の対応とおすすめと実行中の epic を先に見せる構成に直す
+    - field: description
+      from: ""
+      to: dashboard build が作るダッシュボードを、人の対応が要るもの・おすすめの登録項目（リンク付き）・実行中の epic を先に出し、終わった epic・routine の定義・Grade の表・全体の集計を折りたたむ構成に直す
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-08）: 見たいものが表示されておらず使っていない。最初はおすすめの register をリンク付きで、schedule は今実行中の epic を表示し、epic ごとに完了したものは折りたたみ、Grade も折りたたむ。","orchestrator の案を indie が推奨どおりと決定（2026-11-08）: 先頭に「人の対応が要るもの」を足す。おすすめは先行の項目がそろったものだけにし deferred を外す。実行中の epic は段ごとの数と次に流せるタスク 3 件まで。","今の問題: 集計が先でおすすめは 6 番目、ID がコードの書式でリンクがない、review と人の判断待ちが出ない、進捗率がプロジェクト全体の 1 つだけ、終わった epic も並ぶ、routine の定義が全部出る、Grade が 327 行、登録簿の件数は判断に使わない。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_71234e101b44455eb8bb87307748ce09
+  ts: "2026-11-08T14:36:30Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6cd080be93a640cb9ec159d2318e61ce
+- v: 1
+  id: reg_b6843093702143d594e97eb739a2edb4
+  ts: "2026-11-08T15:54:06Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_71234e101b44455eb8bb87307748ce09
+- v: 1
+  id: reg_778519b1de2b4f6fb2403bc225bf8d65
+  ts: "2026-11-08T15:55:21Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_b6843093702143d594e97eb739a2edb4
+- v: 1
+  id: reg_89db78156f344d5f87155866fdae5aea
+  ts: "2026-11-08T16:11:26Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_778519b1de2b4f6fb2403bc225bf8d65
+- v: 1
+  id: reg_b062c7a53ea7417e9a0aaa30cc4cd8c1
+  ts: "2026-11-08T21:31:03Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_89db78156f344d5f87155866fdae5aea
+- v: 1
+  id: reg_85c46a3a1ac84c07b73bfb14d508bdcc
+  ts: "2026-11-08T22:05:51Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_b062c7a53ea7417e9a0aaa30cc4cd8c1
+- v: 1
+  id: reg_8e193f05a64d48409889d80b3d6b654b
+  ts: "2026-11-08T22:24:21Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_85c46a3a1ac84c07b73bfb14d508bdcc
+- v: 1
+  id: reg_5dfdbdd8b7884ac4871a93133e0fe1c9
+  ts: "2026-11-08T22:53:31Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8e193f05a64d48409889d80b3d6b654b
+- v: 1
+  id: reg_aaa5a2efc38645f5a222d1eedf8f6df5
+  ts: "2026-11-08T22:56:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor、2 回）で対応。2 回目で epic の開始日・終了日・稼働日数と日付のテストを戻し、空のリポジトリの確かめを一時ディレクトリの中に限った。生成した dashboard.md の章立て・lint:md・/tmp の直下に出力がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-09"
+    - field: conclusion
+      from: "-"
+      to: ダッシュボードを、人の対応が要るもの・おすすめ（リンク付き、先行の項目がそろったものだけ）・実行中の epic（段ごとの進み具合と次のタスク、開始日・終了日）を先に出し、終わった epic・routine の定義・Grade の表・全体の集計を折りたたむ構成にした
+  previous_event_id: reg_5dfdbdd8b7884ac4871a93133e0fe1c9

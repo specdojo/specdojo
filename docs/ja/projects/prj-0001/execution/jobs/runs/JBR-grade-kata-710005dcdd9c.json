@@ -48,22 +48,22 @@
     }
   },
   "checkpoint_before": {},
-  "plan_ref": "exec/plans/JBR-grade-kata-710005dcdd9c-plan.md",
-  "result_ref": "exec/results/JBR-grade-kata-710005dcdd9c-result.md",
+  "plan_ref": "runs/job/JBR-grade-kata-710005dcdd9c/attempt-1/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-710005dcdd9c/attempt-1/result.md",
   "attempts": [
     {
       "attempt": 1,
       "started_at": "2026-10-31T20:01:03.439Z",
       "status": "succeeded",
       "completed_at": "2026-10-31T20:47:42.490Z",
-      "result_ref": "exec/results/JBR-grade-kata-710005dcdd9c-result.md",
-      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-710005dcdd9c/attempt-1/evidence.json",
+      "result_ref": "runs/job/JBR-grade-kata-710005dcdd9c/attempt-1/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-710005dcdd9c/attempt-1/evidence.json",
       "exit_code": 0
     }
   ],
   "review": {
-    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/JBR-grade-kata-710005dcdd9c-review-plan.md",
-    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-710005dcdd9c-review-result.md",
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-710005dcdd9c/20261031T204750310Z-46f86bda/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-710005dcdd9c/20261031T204750310Z-46f86bda/result.md",
     "branch": "exec/prj-0001-JBR-grade-kata-710005dcdd9c",
     "verdict": "complete-with-findings",
     "reviewed_at": "2026-10-31T20:53:58.874Z"

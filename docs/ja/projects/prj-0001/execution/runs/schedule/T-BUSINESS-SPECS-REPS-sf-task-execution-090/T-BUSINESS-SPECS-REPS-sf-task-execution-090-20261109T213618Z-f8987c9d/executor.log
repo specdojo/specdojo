@@ -1,0 +1,39 @@
+実装エビデンス `src/exec/run/agent-pipeline.ts` との照合記録は、成果物の 7.2 に残っています。評価結果は最新で、判定は `complete-with-findings` が妥当と判断しました。
+
+**鮮度確認**(コマンドの出力はいずれも空)
+- `specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md --changed-only`
+- 同じコマンドの `--dependency-changed` 版
+- 同じコマンドの `--incomplete` 版
+- 評価結果サイドカー `docs/ja/projects/prj-0001/execution/grade/results/sf-task-execution.yaml` は存在します。
+- 3 つの出力が空なので、評価結果は最新で、評価パイプラインも完了しています。
+
+**grade の結果**
+- `verdict` は `needs-work`、`score` は 89 です。
+- finding は blocker 0 / major 1 / minor 7 / note 0 です。
+
+**照合内容**
+- 7.2 の表に、4.2(早期停止)、4.5(前試行スナップショット退避)、4.1/4.4(worktree 隔離と Git 統合)などの仕様項目と実装の処理との対応があります。
+- 各行には区分(一致・乖離・仕様先行)と照合内容が付いています。
+- 4.1/4.4 は `agent-pipeline.ts` の外にある runner の責務として、「一致」と判定されています。
+- 実装エビデンスは 1 パス(`src/exec/run/agent-pipeline.ts`)で、7.2 に記録があります。
+
+**finding が完了を妨げない理由**
+- `F007`(major)は、実装の識別子や内部構造を本文に書いていることが sf-rulebook で禁止されている、という指摘です。これは品質面の指摘で、実装との対応が記録されているかを見る review の範囲外です。
+- `F001`〜`F003` と `F006` は、`P-07` と BPS の対応が未確定であること、およびリソース受入値が未決であることです。業務プロセス仕様側の作成を待つ事項で、今回の retrofit の範囲を超えます。
+- `F004`・`F005` は、7.2 を別の記録へ移すか、参照に置き換える指摘です。
+- `F008` は、本文のコマンドオプション表記(`--resume` など)をコマンドリファレンスへの参照に置き換える指摘です。
+- 以上は改善指示として残します。
+
+**改善指示**
+- `ProviderConcurrencyGate`、`ExecEvidence`、`PipelineState` と実装関数名を本文から除く(`F007`)。
+- 7.2 を review またはトレーサビリティの記録へ移す(`F004`、`F005`)。
+- BPS が作成された時点で `P-07` の対応を確定し、リソース受入値を決める。
+
+**確認できなかった範囲**
+- 7.2 の各行が実装と実際に合っているかは、`agent-pipeline.ts` を読んで検証していません。
+- 成果物の品質の再評価は、review の方針に従って行っていません。
+- 先行する edit タスクの result は特定していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 推奨: complete-with-findings。評価結果は最新（--changed-only/--dependency-changed/--incomplete いずれも出力なし、サイドカー存在）。grade needs-work/89、finding blocker0/major1/minor7。sf-task-execution.md 7.2 に agent-pipeline.ts との照合表（一致/乖離/仕様先行）があり、実装エビデンス1件の対応記録を確認。F007(major, 実装名・内部構造の本文記載はsf-rulebook禁止)、F004/F005(7.2の移設)、F001-3/F006(P-07/BPS対応・リソース受入値未確定)、F008(--resume表記)は改善指示として残す。確認できなかった範囲: 7.2の各行が実装と実際に一致しているかのコード精査、先行edit resultの特定、成果物品質の再評価（review方針により非実施）。","handoff":["F007 実装クラス/関数/内部構造名と本文内照合(7.2)をsf本文から除去し、review/traceability記録へ移す","P-07とBPSの対応確定、リソース受入値の決定","F008 --resume等のコマンド固有表記をcommand-reference参照へ置換"],"validations":[{"command":"npx specdojo grade list --target deliverable --path docs/ja/product/010-business-specs/050-system-functions/sf-task-execution.md --changed-only / --dependency-changed / --incomplete","status":"passed","summary":"3つとも出力なし。評価結果は最新かつ完了済み"}]}
+</specdojo_executor_evidence>

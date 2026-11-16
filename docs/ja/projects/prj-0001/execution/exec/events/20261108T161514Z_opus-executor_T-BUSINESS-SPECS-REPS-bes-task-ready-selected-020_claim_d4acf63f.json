@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-08T16:15:14Z",
+  "type": "claim",
+  "task_id": "T-BUSINESS-SPECS-REPS-bes-task-ready-selected-020",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

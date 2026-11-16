@@ -1,0 +1,37 @@
+修正しました。いちばんの原因は「review の agent が grade より先に動く」ことではありませんでした。review を再開するときに、古い grade が使われ続けることでした。新しく claim した run では、grade は今も agent より前に流れています。2026-11-11 の cdt の 090 では、grade の実行が rate limit で失敗し、review は grade-stale と判定しました。当時は、grade が失敗した review を止める仕組み（PJR-M18B）がまだありませんでした。私が実行した検査は通っています。ただし、`runPreparedTask` を最後まで通す統合テストはありません。代表の review を本物の agent で流す確認も、まだ誰も実行していません。
+
+**原因**
+- 再開は前回の exec branch をそのまま使います。そのため、root で grade を流し直しても、worktree の grade 結果のファイルは最初の checkpoint のままでした。
+- executor からの再開は、grade を確かめずに agent を起動していました。reporter からの再開は、古い grade で判定した executor の結果を使い回していました（bdd・ifx-cmd の 090）。
+- root の grade が checkpoint より新しいと、merge の前の検査が「Grade sidecar changed after checkpoint」で統合を止めていました。
+- 「別の actor が引き受けている」は、当時の完了の前の検査が、最後に動いた段の actor で判定していたためです。この点は 11-16 の PJR-T4G3・M495 で直っていました。残っていたのは統合の段からの再開だけで、ここはまだ `last_by` で判定していました。
+
+**変更**
+- `src/exec/run/schedule-prepare.ts`:
+  - executor からの再開でも、grade を agent より前に流します。
+  - 再開のときは、root と違う grade 結果のファイルを exec branch に commit して取り込みます。
+  - 取り込んだ場合は、再開の時点の評価結果を plan と prompt に足します。保存されている plan は変えません。
+  - 取り込んだパスは `reviewGradeRefreshed` に残します。
+- `src/exec/run/schedule-task.ts`: reporter からの再開で取り込みがあった場合は、executor から流し直します。
+- `src/exec/worktree-ops-lifecycle.ts`: checkpoint の commit を切り出しました。既存の worktree へ差分だけを commit して取り込む `refreshWorktreeCheckpoint` を足しました。
+- `src/exec/worktree-ops-merge.ts`: root の grade が branch の先端と同じなら merge を通します。root にしかない新しい grade は、これまでどおり止めます。
+- `src/exec/run/lifecycle-commands.ts`: 統合の段からの再開で、claim の持ち主（`claimOwnerOf`）で判定するようにしました。
+- `docs/ja/specdojo/guides/review-guide.md` に、再開のときの扱いを足しました。個票の対応結果には、原因・実施内容・判断した点・残課題・CHANGELOG に書く事項を書きました。
+
+**回帰テスト**
+- `tests/src/exec/worktree-ops.integration.test.ts`: root の新しい grade を再開の worktree に取り込み、merge できること。同じ内容なら commit しないこと。
+- `tests/src/exec/unblock-claim-owner.test.ts`: reopen の後に claim し直した review が、claim の持ち主で完了の前の検査を通ること。fallback の actor では通らないこと。人が unblock しても持ち主が変わらないこと。
+
+**検証**
+- Prettier（変更したファイル）と `npm run validate:history-links` は通りました。
+- 確認のため、`tests/src/exec` の単体テスト（1422 件）と、grade に関する統合テスト 6 件を流し、すべて通りました。
+- 親の検証は runner が実行します。
+
+**判断した点**
+- 案 A（review の段をやめて grade を直接流す）は運用の決定なので、runner の動きは変えていません。
+- grade が失敗したら完了の段で blocked にする判断（PJR-M18B）も変えていません。
+- 再開のときに取り込むのは grade 結果のファイルだけです。claim の後に root の評価対象そのものが変わった場合は grade-stale になるので、reopen して流し直します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"再開の経路で古い grade を使う原因を直した。再開のときは runner が agent の前に grade を流し、評価結果サイドカーを exec branch へ取り込む。取り込みがあった reporter からの再開では executor から流し直す。branch に取り込んだ grade と同じ root の grade では merge を止めない。統合の段からの再開は claim の持ち主で判定する。回帰テストと個票の対応結果も更新した。","handoff":["判断: 2026-11-11 の grade-stale は、runner の grade（agent の前に実行）が rate limit で失敗したことによる。当時は PJR-M18B の前だった。古い grade を使う経路は再開の側に残っていた。worktree の評価結果サイドカーが最初の checkpoint のままだった。executor からの再開は grade を流していなかった。reporter からの再開は古い executor の結果を使い回していた。root の grade が新しいと merge の前の検査が止めていた。この 4 点を直した。","判断: 「別の actor が引き受けている」は PJR-T4G3（`claimActor`）と PJR-M495（`claimed_by`）で直っていた。残っていた統合の段からの再開（`last_by` を使っていた）だけを `claimOwnerOf` に替えた。","判断: grade が失敗しても review の agent を起動し、完了の段で blocked にする PJR-M18B の判断は変えていない。案 A（review の段をやめて grade を直接流す）は運用の決定なので、runner の振る舞いは変えていない。","残課題: grade の取り込みから reporter の再開の流し直しまでを `runPreparedTask` ごと通す統合テストはない。取り込みと merge は統合テストで確かめた。分岐の配線は型の検査とコードの確認で確かめた。","残課題: 代表の review の段を、agent を実際に動かして流す確認は人が行う（agent の起動と利用枠が要る）。","CHANGELOG に書く事項は、個票の対応結果の「CHANGELOG に書く事項」の節に書いた。"],"validations":[{"command":"npx prettier --check (changed files)","status":"passed","summary":"変更した ts・md ファイルがすべて Prettier の書式に合っている"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め、履歴ファイルに違反がない"},{"command":"npm run lint:ts","status":"not_run","summary":"親の runner が実行する"},{"command":"npm run lint:md","status":"not_run","summary":"親の runner が実行する"},{"command":"npm run typecheck","status":"not_run","summary":"親の runner が実行する（確かめのため tsc -p tsconfig.build.json --noEmit を実行し、エラーはなかった）"},{"command":"npm run test:unit","status":"not_run","summary":"親の runner が実行する（確かめのため tests/src/exec の単体テスト 1422 件を実行し、すべて通った）"},{"command":"npm run test:integration","status":"not_run","summary":"親の runner が実行する（確かめのため worktree-ops の grade の統合テスト 6 件を実行し、すべて通った）"}]}
+</specdojo_executor_evidence>

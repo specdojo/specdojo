@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6381d506354d482b8ad63b35ea01d0aa
+  ts: "2026-11-15T12:21:59Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: bac-task-completion に、受入の条件を満たす設計の参照を足す
+    - field: description
+      from: ""
+      to: evidence\_refs の実装と設計の文書を参照に足し、未決の目印を片付ける
+    - field: input
+      from: ""
+      to: '["T-KATA-WAVE-2-bac-task-completion-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43）。grade は needs-work 95 点で完了条件 3/4、型は pass","主な指摘: 受入の条件を実装で満たせることを確かめる設計の参照がない（DC-003、ARC）。本文に未決の目印が 2 か所ある"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["bac-task-completion"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: bac
+- v: 1
+  id: reg_a66854d4e59d483f8fc5fcdc6bb2901e
+  ts: "2026-11-15T17:23:16Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6381d506354d482b8ad63b35ea01d0aa
+- v: 1
+  id: reg_b7b8d78dd25445acb6b7cc7cd9566e9e
+  ts: "2026-11-15T18:08:09Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a66854d4e59d483f8fc5fcdc6bb2901e
+- v: 1
+  id: reg_eff72bafbf834b5abe9f3f71b26de734
+  ts: "2026-11-15T23:08:18Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: bac-task-completion を手直しし、再 grade で pass（100 点）
+  previous_event_id: reg_b7b8d78dd25445acb6b7cc7cd9566e9e

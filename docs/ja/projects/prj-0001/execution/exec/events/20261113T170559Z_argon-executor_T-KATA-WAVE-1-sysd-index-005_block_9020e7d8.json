@@ -1,0 +1,26 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T17:05:59Z",
+  "type": "block",
+  "task_id": "T-KATA-WAVE-1-sysd-index-005",
+  "by": "argon-executor",
+  "msg": "rate_limit reached; resume_at=2026-11-17T02:24:58.261Z",
+  "meta": {
+    "limit_deferred": "true",
+    "limit_availability_state": "limited",
+    "limit_retryable": "true",
+    "limit_auto_resume": "true",
+    "limit_kind": "rate_limit",
+    "limit_provider": "antigravity",
+    "limit_observed_at": "2026-11-13T17:05:57.261Z",
+    "limit_raw_message": "AGY_ERROR: {\"short_error\":\"RESOURCE_EXHAUSTED (code 429): Individual quota reached. Please upgrade your subscription to increase your limits. Resets in 81h19m1s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"error_code\":429,\"code_kind\":\"http\",\"retryable\":true,\"error_id\":\"469d59c7-3b14-4635-a489-d1e11ff0aeca-1\"}",
+    "limit_attempts": "1",
+    "limit_worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-index-005",
+    "limit_resume_at": "2026-11-17T02:24:58.261Z",
+    "limit_resume_source": "provider_reset",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-index-005/T-KATA-WAVE-1-sysd-index-005-20261113T155005Z-a1e424cc/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sysd-index-005/T-KATA-WAVE-1-sysd-index-005-20261113T155005Z-a1e424cc/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-sysd-index-005-20261113T155005Z-a1e424cc"
+  }
+}

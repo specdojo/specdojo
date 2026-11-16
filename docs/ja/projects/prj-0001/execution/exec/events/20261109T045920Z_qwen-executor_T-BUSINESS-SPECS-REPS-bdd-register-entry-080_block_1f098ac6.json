@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "ts": "2026-11-09T04:59:20Z",
+  "type": "block",
+  "task_id": "T-BUSINESS-SPECS-REPS-bdd-register-entry-080",
+  "by": "qwen-executor",
+  "msg": "reporter result rendering failed: condense requires valid executor condense_records (use [] when no candidates)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bdd-register-entry-080/T-BUSINESS-SPECS-REPS-bdd-register-entry-080-20261109T034216Z-0fc1b7de/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-REPS-bdd-register-entry-080/T-BUSINESS-SPECS-REPS-bdd-register-entry-080-20261109T034216Z-0fc1b7de/pipeline-state.json",
+    "pipeline_run_id": "T-BUSINESS-SPECS-REPS-bdd-register-entry-080-20261109T034216Z-0fc1b7de"
+  }
+}

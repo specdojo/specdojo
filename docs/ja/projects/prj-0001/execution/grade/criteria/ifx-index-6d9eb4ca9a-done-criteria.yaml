@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:ifx-index-grade-criteria
+document: prj-0001:ifx-index
+path: docs/ja/product/020-external-interface-specs/ifx-index.yaml
+graded_at: "2026-11-15T11:01:51.152Z"
+graded_by: sol-review-executor
+content_hash: 902b4024d752812cc0405a5b11ddc12eec30ffae0a2ff6fd6be8303ea5e65d36
+summary:
+  satisfied: 4
+  unsatisfied: 1
+  total: 5
+criteria:
+  - id: DC-001
+    text: 外部連携の一覧・連携方式・タイミングが業務観点で整理されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 外部連携のスコープと方式を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: 外部システム連携設計（プロトコル・認証・エラー処理）の入力として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      Git and GitHub protocol and authentication contracts remain TBD, so the complete design inputs cannot yet be
+      retrieved from this index.
+  - id: DC-004
+    text: 外部結合テストの対象が識別できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: 外部I/F実装スコープの参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

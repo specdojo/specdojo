@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T00:23:09Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-cpd-specdojo-cli-045",
+  "by": "sol-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

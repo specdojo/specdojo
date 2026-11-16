@@ -1,0 +1,97 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4167f8a836ac4d1b9d2196c221b43a07
+  ts: "2026-11-04T23:37:38Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: stsd-task-execution を現行の実装をもとに下書きする
+    - field: description
+      from: ""
+      to: stsd の試行（3APD）の段 2。代表の 1 件 stsd-task-execution を、現行の実装（src/exec のイベントと状態の導出）をもとに draft で下書きする
+    - field: input
+      from: ""
+      to: '["業務仕様は現行の実装をもとに記述する（2026-11-04 利用者の方針）","カタログの根拠は src/exec/events.ts（イベント列から状態を再構成し、依存の充足から ready を導く）と src/exec/types.ts（ExecState・ExecEventType）。状態は todo / ready / doing / blocked / done / cancelled（PJR-FMYK）","`based_on` の bdd-exec-state・bdd-exec-event はまだない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-05"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: draft
+    - field: targets
+      from: ""
+      to: '["prj-0001:stsd-task-execution"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-3APD"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-FMYK"]'
+- v: 1
+  id: reg_8299ba7be97c4f9bb324d47ba368ca15
+  ts: "2026-11-04T23:40:01Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4167f8a836ac4d1b9d2196c221b43a07
+- v: 1
+  id: reg_fa69262e08a94ff9ac3c214992976e8b
+  ts: "2026-11-04T23:51:47Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8299ba7be97c4f9bb324d47ba368ca15
+- v: 1
+  id: reg_aca685dc3f8341db971a5af60f68d32b
+  ts: "2026-11-04T23:54:07Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: draft の段として内容を実装で確かめた。残る 1 点は後続の項目の入力に渡した（利用者の委任による自動の進行）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-05"
+    - field: conclusion
+      from: "-"
+      to: 実装をもとに下書きした。実装にない終了の遷移 2 件は磨き込み（PJR-Q9AW）へ引き継ぐ
+  previous_event_id: reg_fa69262e08a94ff9ac3c214992976e8b

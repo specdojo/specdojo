@@ -1,0 +1,13 @@
+個票 `pjr-1zqk-run-record-layout-guard.md` の 69 行目にあった URL がそのまま書かれていて、lint-md（MD034）で落ちていました。これを `<https://lefthook.dev/configuration/use_stdin/>` の autolink に直しました。直した後、個票に markdownlint をかけてエラーはありませんでした。`npm run validate:history-links` も通っています。`npm run lint:md` 全体は親 runner が流します。
+
+ほかの作業は前回までに済んでいます。
+- plan だけを残した run は記帳の commit から外します。
+- `exec validate --records-only --commit <rev>` を足しました。
+- pre-push の入口として `tools/check-run-record-layout-push.mjs` を足しました。
+- テストとガイドを足し、直しました。
+
+`lefthook.yml` の `pre-push` への登録は保護対象のため、指示どおり作業内容の行を open のまま残し、orchestrator の作業に回しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票 69 行目の URL（MD034）を autolink に直した。markdownlint と validate:history-links は通った。ほかの作業は前回までに済んでいる。lefthook の pre-push への登録は保護対象のため orchestrator に回した。","handoff":["`lefthook.yml` の `pre-push` への登録は保護対象のため executor ではしていない。統合の後に orchestrator が feature ブランチで入れる。`use_stdin: true` のコマンドが複数あると標準入力は 1 つにしか渡らない（https://lefthook.dev/configuration/use_stdin/ ）。そのため別のコマンドは足さず、既存の `protect-main` の `run` を `input=\"$(cat)\"; printf '%s\\n' \"$input\" | node tools/protect-main-push.mjs && printf '%s\\n' \"$input\" | node tools/check-run-record-layout-push.mjs --project prj-0001` に変え、`use_stdin: true` は残す。","register の run の `wait` commit に evidence がない場合、配置の検査を通るかはまだ確かめていない。pre-push の検査で気づける。"],"validations":[{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md","status":"passed","summary":"直した個票で MD034 を含めエラーなし"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴の文書に Markdown リンクの違反なし"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-1zqk-run-record-layout-guard.md"}]}
+</specdojo_executor_evidence>

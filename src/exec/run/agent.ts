@@ -29,6 +29,7 @@ import {
   parentValidationGateFor,
   parentValidationLabels,
   parentValidationRoots,
+  parentValidationSelectionForEvidence,
   recordedParentValidationLabel,
   replaceParentValidationResults,
   runParentValidationBatch,
@@ -36,6 +37,7 @@ import {
   type ParentValidationEntry,
   type ParentValidationInvoker,
   type ParentValidationRoots,
+  type ParentValidationSelection,
 } from "../parent-validation.js";
 import {
   getProjectExecutionPath,
@@ -140,7 +142,7 @@ function executorEvidenceContract(
   const parentValidationCommands = parentValidationDisplayCommands(parentValidations);
   const parentValidationInstruction =
     parentValidationLabelList.length > 0
-      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
+      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. If you still list one, use one validation entry per command with its exact command; never combine several parent validations into one entry. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
   const coverage = {
     source: options.coverageSource ?? "none",
@@ -248,16 +250,26 @@ blocking completion, but rejects the claim when it can confirm the check applies
   change-type condition below is met.
 - \`npm run validate:schema:file\` requires a changed \`*.yaml\` or \`*.yml\` file; Prettier
   requires a changed \`*.md\`, \`*.ts\`, \`*.js\`, \`*.json\`, \`*.yaml\`, or \`*.yml\` file;
-  markdownlint requires a changed \`*.md\` file.
+  markdownlint requires a changed \`*.md\` file; \`npm run validate:history-links\` requires a
+  changed history file (\`docs/ja/projects/**/controls/project-register/pjr-*.md\` excluding
+  \`pjr-index.md\`, or an existing \`plan.md\` / \`result.md\` under
+  \`execution/runs/<origin>/<item>/<run>/\` or legacy \`exec/plans/**/*.md\` /
+  \`exec/results/**/*.md\` that you changed yourself).
 - A command that targets a declared product repository (a \`<repo>:<path>\` argument or
   \`--prefix <repo>\`) is judged by that repository's package.json, not the project repository's.
-- \`specdojo catalog validate\`: the run's target project (or \`--project <id>\`) sets \`catalog_path\`
-  and your changes reach \`docs/ja/projects/\`. A project without \`catalog_path\`, or changes
+- \`specdojo catalog validate\` / \`npm run validate:catalog\`: the run's target project (or
+  \`--project <id>\`) sets \`catalog_path\` and your deliverable changes reach \`docs/ja/projects/\`.
+  Runner-managed files under \`exec/\` (\`plans/\`, \`results/\`, \`evidence/\`, \`events/\`, \`.locks/\`)
+  do not count as your changes. A project without \`catalog_path\`, or changes
   outside \`docs/ja/projects/\`, is a valid reason; state it in \`reason\`.
 
 Do not run or report \`specdojo index build\`. It writes \`.specdojo/doc-index.json\`, which the
 agent may not write, and the runner regenerates the index while preparing the worktree and before
 integration.
+
+For a plan with approach \`condense\`, also include \`condense_records\` in this envelope
+as specified by the plan (an empty array if there are no candidates). The runner writes those
+validated executor facts to the result frontmatter and table; do not edit the result yourself.
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
@@ -303,6 +315,8 @@ export type ParentValidationRunOptions = {
   // Identifies the waiting item in gate logs (task / register ID). Defaults to the cwd name.
   label?: string;
   invoke?: ParentValidationInvoker;
+  // 変更の種類で選ぶ検証（`paths` あり）の判定に使う変更一覧。省略時はすべて流す（PJR-T01P）。
+  selection?: ParentValidationSelection;
 };
 
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
@@ -319,7 +333,7 @@ export async function runConfiguredParentValidationBatch(
   const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
   const batch = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
     process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-    return await runParentValidationBatch(entries, cwd, options.invoke);
+    return await runParentValidationBatch(entries, cwd, options.invoke, options.selection);
   });
   for (const validation of batch.validations) {
     process.stdout.write(
@@ -350,7 +364,10 @@ export async function appendParentValidationsToExecutorEvidence(params: {
   const parentValidationBatch = await runConfiguredParentValidationBatch(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
-    { label: params.evidence.task_id },
+    {
+      label: params.evidence.task_id,
+      selection: parentValidationSelectionForEvidence(params.evidence),
+    },
   );
   const evidenceWithValidations = replaceParentValidationResults(
     params.evidence,

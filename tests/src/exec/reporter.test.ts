@@ -399,6 +399,24 @@ describe("reporter structured output", () => {
     },
   );
 
+  it("accepts an executor not_run validation that the runner skipped by change type", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run typecheck", status: "not_run", summary: "delegated" },
+      {
+        id: "typecheck",
+        source: "runner",
+        command: "npm run typecheck",
+        status: "not_applicable",
+        summary: "skipped by change type",
+        reason: "skipped by change type",
+      },
+    ];
+    expect(
+      deriveReporterFacts(input, { mode: "edit", packageScripts: { typecheck: "tsc -b" } }),
+    ).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
   it("still blocks an edit-mode not_run validation that the runner did not run", () => {
     const input = evidence();
     input.validations = [
@@ -414,6 +432,80 @@ describe("reporter structured output", () => {
     expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
       outcome: "blocked",
       block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  describe("executor lines that delegate parent validations (PJR-Q2AT)", () => {
+    const runnerPassed = (id: string, command: string) =>
+      ({ id, source: "runner", command, status: "passed", summary: "exit 0" }) as const;
+    const runnerValidations = [
+      runnerPassed("lint-ts", "npm run lint:ts"),
+      runnerPassed("lint-md", "npm run lint:md"),
+      {
+        id: "typecheck",
+        source: "runner",
+        command: "npm run typecheck",
+        status: "not_applicable",
+        summary: "skipped by change type",
+        reason: "skipped by change type",
+      },
+    ] as const;
+
+    it("accepts per-command not_run lines that the runner passed", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run lint:ts", status: "not_run", summary: "parent" },
+        { source: "executor", command: "npm run lint:md", status: "not_run", summary: "parent" },
+        ...runnerValidations,
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it.each([
+      "parent runner: lint-ts, lint-md, typecheck",
+      "parent runner validations: lint-ts, lint-md",
+      "親 runner 指定検査（lint-ts, lint-md, typecheck）",
+    ])("accepts one not_run line listing parent validations that passed: %s", (command) => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command, status: "not_run", summary: "parent runner runs these" },
+        ...runnerValidations,
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it.each([
+      ["a validation not configured for the runner", "parent runner: lint-ts, lint-fm"],
+      ["an unknown label", "parent runner: lint-ts, spellcheck"],
+      ["a list that cannot be parsed", "parent runner: lint-ts, lint-md, …"],
+    ])("still blocks an aggregated line with %s", (_case, command) => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command, status: "not_run", summary: "parent runner runs these" },
+        ...runnerValidations,
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "blocked",
+        block_reason: `executor validation failed or not run: ${command}`,
+      });
+    });
+
+    it("still blocks an aggregated line when the runner recorded no results", () => {
+      const input = evidence();
+      const command = "parent runner: lint-ts, lint-md";
+      input.validations = [
+        { source: "executor", command, status: "not_run", summary: "parent runner runs these" },
+      ];
+      expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+        outcome: "blocked",
+        block_reason: `executor validation failed or not run: ${command}`,
+      });
     });
   });
 
@@ -842,6 +934,142 @@ describe("reporter structured output", () => {
         }),
       ).toMatchObject({ outcome: "complete", block_reason: "" });
     });
+
+    it.each([
+      ["npm run validate:history-links", "not_applicable"],
+      ["npm run validate:history-links", "not_run"],
+      ["node packages/docs-lint/bin/specdojo-docs-lint.js history-links", "not_applicable"],
+      ["npx specdojo-docs-lint history-links", "not_applicable"],
+      ["npm run validate:catalog", "not_applicable"],
+      ["npm run validate:catalog", "not_run"],
+      ["node --import tsx tools/catalog-validate-if-configured.mjs", "not_applicable"],
+    ] as const)(
+      "does not block %s reported as %s when only product docs and runner-written plan/result changed",
+      (command, status) => {
+        const input = evidence();
+        input.changes = [
+          {
+            path: "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md",
+            status: "M",
+          },
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/plans/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020-plan.md",
+            status: "??",
+          },
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020-result.md",
+            status: "M",
+          },
+        ];
+        input.attempt_changes = [
+          {
+            path: "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md",
+            status: "M",
+          },
+        ];
+        input.validations = [
+          {
+            source: "executor",
+            command,
+            status,
+            summary: "プロダクトの文書のみ変更のため適用外",
+            ...(status === "not_applicable"
+              ? { reason: "変更がプロダクトの文書のみで対象外であるため" }
+              : {}),
+          },
+        ];
+
+        expect(
+          deriveReporterFacts(input, {
+            packageScripts: {
+              "validate:history-links":
+                "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+              "validate:catalog": "tsx src/specdojo.ts catalog validate",
+            },
+            packageDependencies: new Set(["specdojo", "@specdojo/docs-lint"]),
+            specdojoConfig: catalogConfig,
+          }),
+        ).toMatchObject({ outcome: "complete", block_reason: "" });
+      },
+    );
+
+    it.each([
+      {
+        command: "npm run validate:history-links",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/controls/project-register/pjr-merv-validation-applicability-mismatch.md",
+            status: "M",
+          },
+        ],
+      },
+      {
+        command: "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/controls/project-register/pjr-merv-validation-applicability-mismatch.md",
+            status: "M",
+          },
+        ],
+      },
+      {
+        command: "npm run validate:history-links",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/results/old-result.md",
+            status: "M",
+          },
+        ],
+        attemptChanges: [
+          {
+            path: "docs/ja/projects/prj-0001/execution/exec/results/old-result.md",
+            status: "M",
+          },
+        ],
+      },
+      {
+        command: "npm run validate:catalog",
+        changes: [
+          {
+            path: "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+            status: "M",
+          },
+        ],
+      },
+    ])(
+      "still blocks $command reported as not_applicable when the executor changed history or catalog files",
+      ({ command, changes, attemptChanges }) => {
+        const input = evidence();
+        input.changes = changes;
+        if (attemptChanges) {
+          input.attempt_changes = attemptChanges;
+        }
+        input.validations = [
+          {
+            source: "executor",
+            command,
+            status: "not_applicable",
+            summary: "適用外として誤申告",
+            reason: "対象ファイルを変更していない",
+          },
+        ];
+
+        expect(
+          deriveReporterFacts(input, {
+            packageScripts: {
+              "validate:history-links":
+                "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+              "validate:catalog": "tsx src/specdojo.ts catalog validate",
+            },
+            packageDependencies: new Set(["specdojo", "@specdojo/docs-lint"]),
+            specdojoConfig: catalogConfig,
+          }),
+        ).toMatchObject({
+          outcome: "blocked",
+          block_reason: `executor validation failed or not run: ${command}`,
+        });
+      },
+    );
   });
 
   describe("index build owned by the runner", () => {

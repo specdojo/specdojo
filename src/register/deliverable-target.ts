@@ -14,6 +14,7 @@ import { load } from "../shared/yaml.js";
 export const CATALOG_LESS_APPROACHES: readonly string[] = [
   "draft",
   "fully-guided",
+  "condense",
   "recipe-guided",
   "freeform",
   "retrofit",
@@ -112,6 +113,12 @@ export function resolveRegisterDeliverableTarget(
         opts.targetId,
         opts.repoRoot,
       );
+      if (
+        opts.approach === "condense" &&
+        !existsSync(resolve(opts.repoRoot, resolved.info.resolvedPath))
+      ) {
+        throw new Error(`Approach "condense" requires an existing deliverable: ${opts.targetId}`);
+      }
       return { info: resolved.info, catalogless: false };
     } catch (error) {
       if (
@@ -151,7 +158,12 @@ export function resolveRegisterDeliverableTarget(
   }
   if (!rulebook)
     throw new Error(`Target ${opts.targetId} requires --target-rulebook or specdojo.rulebook`);
-  if ((opts.approach === "finalize" || opts.approach === "bootstrap-finalize") && !existing) {
+  if (
+    (opts.approach === "condense" ||
+      opts.approach === "finalize" ||
+      opts.approach === "bootstrap-finalize") &&
+    !existing
+  ) {
     throw new Error(
       `Approach "${opts.approach}" requires an existing deliverable: ${opts.targetId}`,
     );

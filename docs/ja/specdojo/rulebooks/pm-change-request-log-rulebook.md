@@ -29,18 +29,18 @@ Change Request Log Documentation Rules
 
 ## 3. ファイル命名・ID規則
 
-- `id` は `pm-change-request-log` を使用する。
+- `id` は `<project-id>:pm-change-request-log` を使用する。
 - ファイル名は `pm-change-request-log-変更要求ログ.md` など、プロジェクト内で一意にする。
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目       | 説明                             | 必須 |
-| ---------- | -------------------------------- | ---- |
-| id         | `pm-change-request-log`          | ○    |
-| type       | `project` 固定                   | ○    |
-| status     | `draft` / `ready` / `deprecated` | ○    |
-| based_on   | 根拠仕様ID（配列）               | 任意 |
-| supersedes | 置換関係ID（配列）               | 任意 |
+| 項目       | 説明                                 | 必須 |
+| ---------- | ------------------------------------ | ---- |
+| id         | `<project-id>:pm-change-request-log` | ○    |
+| type       | `project` 固定                       | ○    |
+| status     | `draft` / `ready` / `deprecated`     | ○    |
+| based_on   | 根拠仕様ID（配列）                   | 任意 |
+| supersedes | 置換関係ID（配列）                   | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

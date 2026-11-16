@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2ddc925a7e904ffcaabcb85f432e2304
+  ts: "2026-11-15T12:22:07Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: bds-progress-report を grade の指摘で手直しする（kata-wave-2 の 2 回目）
+    - field: description
+      from: ""
+      to: bds-progress-report を最新の grade の指摘で直す
+    - field: input
+      from: ""
+      to: '["T-KATA-WAVE-2-bds-progress-report-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43）","最新の grade の未充足の完了条件と major の指摘を取り込み、本文の未決の目印を片付ける（決められないものは留保として追跡先をつなぐ）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: UX
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["bds-progress-report"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: bds
+- v: 1
+  id: reg_fb4bf09c786847eb85b46c17bcc053a9
+  ts: "2026-11-15T16:59:41Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2ddc925a7e904ffcaabcb85f432e2304
+- v: 1
+  id: reg_c2f6462f9a5e48bf9c478212116ec247
+  ts: "2026-11-15T17:28:30Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fb4bf09c786847eb85b46c17bcc053a9

@@ -1,0 +1,30 @@
+`cdfd-uc-routine` の書き直しは完了しています。この再開では編集は不要でした。前回の試行で書き直した `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md` を、Kata と `cdfd-overview` に照らして確認しました。
+
+**確認できたこと**
+
+- **frontmatter:** `based_on` は `cdfd-overview` だけで、`status` は `draft` のままです。
+- **非推奨文書への参照なし:** 非推奨の CDFD（`cdfd-plan` など）は frontmatter にも本文にもありません。
+- **参照先:** 本文が参照する `stsd-routine-run`・`sysd-job-execution`・`cdfd-uc-register`・`cdfd-uc-schedule` は、どれも非推奨ではありません。
+- **目的と適用範囲:** 目的は系統の存在理由を 1 文で書き、読み手の役割は含みません。適用範囲は対象と対象外を 1 行ずつで書いています。
+- **プロセス領域:** 区分と名称は `cdfd-overview` と同じです（routine 系 `P-05`〜`P-06`、実行サイクル `P-07`・`P-08`・`P-11`）。表の列は Kata に従っています。
+- **入口のイベント:** 文言は `cdfd-overview` の表と同じです。
+- **章と図の構成:** 「引き渡し」「例外時の戻り先」の章はなく、引き渡し条件のイベント（`H-xx`）や Orchestrator（`P-14`）も図にありません。「例外時の戻り」は任意の図として置いています。
+- **D2:** 図はすべて `direction: down` です。凡例は `cdfd-overview` を参照して再掲していません。
+- **grade の指摘 F001・F002:** 原因の `_TODO_`（`stsd-job-run` と `stsd-task-execution` が未作成）の行は未決事項から消えています。この 2 文書を待つ旨は、適用範囲の「対象外」に未作成の参照として残しています。
+- **完了の狙い（下流ロール向け）:** 本文の表で読み取れます。
+  - QE 向け: busy・利用制限・重複実行の防止は `P-07` の行にあります。取りこぼしの判定と、次回判定の記録の扱いも本文で示しています。
+  - PO 向け: 自動で判断してよい範囲と、人が停止・再開する境界も `P-07` の行に書いています。
+
+**検査**
+
+- `npx prettier --check` は通りました。
+- `npm run lint:md` や `npm run lint:d2` などは、親の runner が実行します。
+
+**未決事項（本文に `_UNDECIDED_` として残しています）**
+
+- 中断した試行の復旧と、停止期間をどこまで補うかを人が判断する条件。
+- 定期実行全体の重複起動にスキップの方針を当てるかどうか。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-uc-routine の書き直しは完了。前回試行の編集内容が Kata（cdfd-uc-rulebook / cdfd-d2-rulebook）と cdfd-overview に整合していることを確認し、今回の追加編集は不要だった。grade の指摘 F001・F002 の原因だった `_TODO_` の行は削除済み。","handoff":["未決事項として `_UNDECIDED_` が 2 件残っている（中断した試行の復旧と停止期間の補完範囲を人が判断する条件、定期実行全体の重複起動にスキップの方針を当てるか）。決定者は PM・OPS・ARC・QE。","`stsd-job-run` と `stsd-task-execution` は未作成のため、適用範囲の「対象外」に ID をインラインコードで仮置きしている。整備されたら wikilink に置き換える。"],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md","status":"passed","summary":"All matched files use Prettier code style"}],"target_coverage":[{"target":"cdfd-uc-routine","status":"changed","path":"docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-routine.md"}]}
+</specdojo_executor_evidence>

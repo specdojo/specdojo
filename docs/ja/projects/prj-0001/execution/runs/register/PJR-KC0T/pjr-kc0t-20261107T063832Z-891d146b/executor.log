@@ -1,0 +1,96 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "旧配置を確認するテストの範囲を構成図に限定し、修正理由と再検証結果を個票へ記載しました。通常の validate は終了コード 0。単体テスト全体は指定どおり親 runner に委ねます。",
+  "handoff": [
+    "ガイドでは旧配置の説明が必要なため、run-records.test.ts の exec/plans/・exec/results/ の否定確認を content から block に限定しました。controls/reviews/・assessments/generated/ は content のままです。個票にも理由を記載済みです。親 runner で npm run test:unit を再実行してください。",
+    "指定の npx specdojo 起動は前回 sandbox 外の npm キャッシュ作成で失敗したため、ホスト側で再確認してください。今回のソース直接起動では通常検査が終了コード 0・ERROR 0 件・WARN 27 件、--records-only が終了コード 1・ERROR 27 件・WARN 0 件でした。",
+    "統合後は運用メモに従い、PJR-JSEY で実 CLI の動作を確認してから close してください。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-kc0t-validate-missing-records-warn.md docs/ja/specdojo/guides/plan-result-lifecycle-guide.md docs/ja/specdojo/references/command-reference.md src/exec/commands.ts src/exec/validate-records.ts tests/src/exec/validate-records.test.ts tests/src/exec/run-records.test.ts",
+      "status": "passed",
+      "summary": "全対象を整形済み。個票の追記後も再整形済み。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検査成功。既存の re-export・未作成文書に関する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード 0、ERROR 0 件、WARN 27 件。配置違反・lock エラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec validate --project prj-0001 --records-only",
+      "status": "passed",
+      "summary": "期待どおり終了コード 1、ERROR 27 件、WARN 0 件。残る欠落をエラーとして報告。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は適用外。",
+      "reason": "executor の成果物変更は Markdown と TypeScript のみ。既存のイベント YAML 差分は runner 管理。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-kc0t-validate-missing-records-warn.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kc0t-validate-missing-records-warn.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "src/exec/commands.ts",
+      "status": "changed",
+      "path": "src/exec/commands.ts"
+    },
+    {
+      "target": "src/exec/validate-records.ts",
+      "status": "changed",
+      "path": "src/exec/validate-records.ts"
+    },
+    {
+      "target": "tests/src/exec/validate-records.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/validate-records.test.ts"
+    },
+    {
+      "target": "tests/src/exec/run-records.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run-records.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

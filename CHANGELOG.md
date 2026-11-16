@@ -4,6 +4,157 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-11-16
+
+同梱パッケージは `@specdojo/docs-site` 0.5.0 と `@specdojo/docs-lint` 0.4.1 を同時に公開します。docs-site 0.5.0 は、対話のコードブロックの描画（`chat`・`chat tui`、PJR-GZ42）と、型の文書から作るメニュー（PJR-C8J8）を含みます。docs-lint 0.4.1 は、remark の無視対象の扱い（PJR-FTRC）と履歴リンクの検査の対象の更新（PJR-C4KF）を含みます。
+
+### 追加機能
+
+- epic の予定開始日 `start_on` と `register add` / `update --start-on` を追加しました。全体計画の開始日は予定開始日、epic 自身の着手記録、先行 epic の終了日の翌稼働日の順に使います。予定開始日が期限を超えると `register build` が警告し、期間を未定として表示します（PJR-74QP）。
+
+- `catalog validate` が、JavaScript / TypeScript の re-export だけのファイルを指す `evidence_refs` を警告するようになりました。警告で終了コードは変わりません。`catalog-planning` に状態遷移・判定・検証の本体の参照を確認する手順を追加しました（PJR-ABBM）。
+
+- 1 文書の冗長さを直す edit approach `condense` を追加しました。修正・保持の箇所と原因を result のリストと表に記録し、Kata が原因の記録を手入れの plan へ渡します。新規生成する標準フローでは磨き込みと review の間に `condense-pass`（080、normal）を置きます。register からカタログなしでも既存成果物を指定できます（PJR-1BRQ）。
+
+- すべての edit plan に、5種類の冗長な記述を避け、削る・まとめる・参照に置き換える規則を載せました。判断に要る背景・制約・例外・完了条件は残し、長さだけでは削りません。判定の正本である `vp-arc-conciseness` の種類と下限の言葉もそろえました。コピー済みの `xep-common-conventions-template.md` と `pm-review-viewpoints.yaml` がある場合は同期してください（PJR-0MR5）。
+
+- grade の指摘に任意の原因 `cause`（文書または種類・箇所を示した Kata）を追加しました。Kata の手入れ plan は、宣言された Kata が原因の成果物の指摘を最新の評価から取り込みます。`fully-guided` の磨き込み plan はすべての指摘に原因を添え、原因のない旧結果も文書の指摘として扱います（PJR-SJBV）。
+
+- docs-site に `chat` 言語コードブロックの対話描画機能（吹き出し表示および `chat tui` による TUI 風表示）を追加しました。`あなた:` で始まる利用者の発言を右側、`オーケストレーター:` などの相手側の発言を左側にアイコン付きで配置し、続き行の字下げやインラインコードを保持して表示します。`chat tui` では等幅フォント・暗い背景・プロンプト記号（利用者 `>`, 相手側 `●`）で描画します。あわせて Quick Start ガイドの対話コードブロックを `chat` に更新しました（PJR-GZ42）。
+
+- devcontainer の構成で tmux を含める場合（`--tmux`、または preset が `recommended` 以上、`init --devcontainer` を含む）に、`.devcontainer/tmux.conf` を生成し、生成する `post-create.sh` で `~/.tmux.conf` へリンク（`ln -sfn`）するようにしました。マウス操作・クリップボード・256 色の設定を含み、利用者が既に独自の `~/.tmux.conf`（通常ファイル）を持っている場合は上書きしません。tmux を含めない構成では `tmux.conf` もリンク処理も生成しません（PJR-8TDX）。
+
+- `exec unblock --take-over` を追加しました。人だけが使え、unblock した人が claim の持ち主になります。人が引き取って自分で `exec complete` するときに使います（PJR-M495）。
+
+- `exec resume --task <id> --resume-from executor` が、統合の段（commit・検査・merge）で止まった schedule のタスクも受け付けるようになりました。executor を起動する前に統合先を exec branch と worktree へ取り込み、成果と run の記録を保ったまま executor → reporter → 統合をやり直します。統合が成功済み・一部統合済み・merge 済みの run と、worktree が merge の途中の run は断ります（PJR-ED0K）。
+
+- `grade list|plan|run|apply|result` が YAML の成果物と sample に対応しました。最上位または `x-spec-meta` のメタ情報を読み、元の YAML の内容ハッシュと行番号で評価結果をサイドカーに保存します（PJR-CBV6）。
+
+- `grade run --if-busy fail|wait` で、同じ project の grade の終了を待つかを選べるようになりました（PJR-E4R5）。
+
+- CLI 仕様（clis）の型を新設しました。コマンドリファレンスを参照して、操作の流れ、出力と生成ファイルの要点、終了コード、エラー表示と利用者の次の手、入力情報・出力情報（ファイル、標準入力、環境変数、対話、API 連携、外部コマンドの起動）を書きます。`specdojo:clis-rulebook`・`specdojo:clis-sample`（PJR-VMXK・6AQF・1K77・1D1X）。
+
+- GUI の色・文字・余白、部品、レイアウト、状態表示、アクセシビリティを定めるデザインシステム（DSS）の型と、駄菓子屋の販売管理 GUI の完成例を追加しました（PJR-JB6S）。
+
+- pre-push で、push する commit の実行記録の配置（CI の Check execution record layout と同じ `exec validate --records-only`）を検査するようにしました。`exec validate --records-only --commit <rev>` で任意の commit を検査できます（PJR-1ZQK）。
+
+- project を別のリポジトリへ移す手順と安全確認をまとめたガイドを追加しました（PJR-7RZ4）。
+
+### 変更
+
+- 外部コマンド連携仕様（ifx-cmd）の型を手入れし、引数・オプションの表は持たずに正本（コマンドリファレンス、exec-defaults.yaml の command_template と exec-config-guide.md、外部公式ドキュメント等）を参照（`command.reference`）し、仕様書には入出力の約束（渡すもの・受け取るもの・終了コードの意味・作るファイル・副作用・失敗の扱い）に絞って記述する規則に変更しました。あわせて `ifx-cmd.schema.yaml`、`ifx-cmd-recipe`、`ifx-cmd-sample`、`ifx-cmd-template` を新規則に合わせ、`files`・`side_effects` プロパティや終了カテゴリ `rate_limit` を追加しつつ、従来の引数定義を含む既存文書の後方互換性を維持しています（PJR-4N3R）。
+
+- システム化機能（sf）の型を手入れし、個別機能仕様（`sf-<term>`）は機能の目的と業務プロセス仕様（BPS）・画面仕様（UIS）との対応に絞り、コマンドの使い方やオプション、操作手順はコマンドリファレンスや各種ガイドを参照する規則に変更しました。あわせて `sf-rulebook` と `sf-sample` を新規則に対応させ、`rulebook-authoring-standard` に準拠した標準章構成（目的と概要、業務プロセス・画面との対応、入出力と前提条件、処理要件、非機能制約、操作手順・コマンド参照、検証・受入観点、未決事項）へ揃えました。なお、全体構成を扱う `sf-index` の型および schema は変更していません（PJR-C1RG）。
+
+- 業務データ辞書（BDD）の型を手入れし、スキーマがあるエンティティは正本スキーマを参照（`schema_ref`）して `fields` にはスキーマから読めない業務上の意味のみを記載し、型や制約の重複を排除する規則に変更しました。スキーマのないエンティティは、開発フェーズや正本の所在に応じてスタンドアロン定義（今の形）または TypeScript の型参照（`type_ref`）を選択する選定基準を明記しました。あわせて `bdd.schema.yaml` と `bdd-sample` を新規則に対応させ、既存のスタンドアロン記述との後方互換性を維持しています（PJR-MECY）。
+
+- 分類一覧（CDT）の型を手入れし、schema の enum や TypeScript の union 型を正本として参照（`schema_ref` / `type_ref`）し、分類一覧には値そのものの機械的な列挙を繰り返さず、値ごとの業務上の意味と使い分け・選定基準に絞って記述する規則に変更しました。実装に型定義が存在しない業務上の分類（人が判断する区分など）は、スタンドアロン形式で値の一覧と成立条件を記述する選定基準を明記しました。あわせて `cdt-rulebook` を Rulebook 記述標準に準拠させ、`cdt-sample` を新規則に適合させました（PJR-7FXC）。
+
+- 概念クラス図（CCD）の型 `specdojo:ccd-mermaid-rulebook` と `specdojo:ccd-sample` を手入れしました。クラス属性は主キーのみとし、そのほかの属性は業務データ辞書（bdd）を参照する規則へ変更しました。Mermaid 図と本文は関係の意味（役割名）・多重度・関係の種類に絞り、関連ごとに多重度の業務上の根拠を記述する形式に統一しました（PJR-M7KD）。
+
+- 分類一覧（Classification List）の略号を cld から cdt（code table）に変え、新しい型 `specdojo:cdt-rulebook`・`specdojo:cdt-sample`・`specdojo:dct-data-model-cdt-template` を追加しました。旧 ID（`cld-rulebook`、`cld-sample`、`dct-data-model-cld-template`）は非推奨とし、移行の案内のみを残しています。prj-0001 のカタログ `dct-data-model-cld.yaml` を `dct-data-model-cdt.yaml` へ更新し、成果物の略号を `cdt-*` に揃えました（PJR-HMV6）。
+
+- `exec validate` に実行記録の配置、plan・result・evidence の欠落、Git に無視されていない lock の検査を追加しました。`--records-only` は配置のみ、`--schedule-only` は schedule・event のみを検査します。`exec run`・`exec cycle` の事前検証は後者を使い、生成途中や中断中の記録があっても実行・再開できます。2 ガイドの構成図を配置モジュールと照合するテストを強化し、派生ビューと lock の配置説明を現行実装にそろえました（PJR-JT5J）。
+
+- 旧配置の実行記録を `git mv` で run ごとのディレクトリへ移す `exec migrate-records`（`--dry-run` 対応）を追加しました。参照パスを更新し、通常の読み取りを `execution/runs/` に統一しました。完了した plan は同じ run に保持します。移行には Git index に書き込める環境と、対象 run の worktree の撤去が必要です（PJR-9BY9）。
+
+- 保存する exec plan の共通規約を SHA-256 の版への参照にし、規約本体は `execution/conventions/` に版ごとに一度だけ保存するようにしました。agent・reporter への prompt では従来の全文を復元します。再開と `exec run --plan` に対応し、旧 plan もそのまま読めます。参照先の欠落やハッシュの不一致は、原因を示して停止します（PJR-BVS9）。
+
+- 新しい実行の plan・result・evidence・ログを `execution/runs/<出どころ>/<項目 ID>/<run ID>/` にまとめ、配置の決定と旧記録の探索を共通モジュールに集約しました。register・schedule・job と再開処理に適用し、既存の `exec/plans`・`exec/results`・`exec/evidence` は移動せず読み取ります（PJR-Z0XR）。
+
+- routine の状態・履歴・lock を端末側の状態ディレクトリへ移し、旧 `generated/` の状態を初回利用時に引き継ぎます。dashboard も同じ記録を参照します。Job Run のない失敗だけを Git に残し、成功・skip や成果物を変更しなかった Job の実行記録は commit しません（PJR-PZBP）。
+
+- prj-0001 の廃止済みプロダクト文書22件を `docs/` 外の `archive/ja/product/trash/` へ移し、文書サイトと doc index の対象から外しました。既存の wikilink はサイトから archive のソースへ解決します。週報の出力先を `reporting/progress-reports/` にそろえ、初回保存時に作成されることと、週報 routine が無効なサンプルであることをガイドに明記しました（PJR-XD12）。
+
+- tml の Kata と Timeline 設計ガイドを非推奨にし、ガイドとリファレンスを epic による全体計画へ更新しました。prj-0001 の 3 件の epic に `domains` を記録し、旧 `tml-index` をカタログから外しました。旧ファイルは互換用に保持します（PJR-JM29）。
+
+- 全体計画を epic から生成するようにしました。`register add --type epic --track <track> --domain <domain>`（`--domain` は繰り返し可）で対象 domain を記録し、epic の `depends_on`、着手・完了履歴、`due_on` を使って `dashboard build` がガントと未作成カタログを `execution/generated/` へ出力します。strategy の範囲は既存 scope、epic の domains、旧 timeline の順で解決します。`tml-index.yaml`・`timeline build`・`timeline_path` は非推奨となり、互換読み込みと警告を残しています。移行時は track ごとに epic を一つ作り、domain と epic 間の依存・期限を移してください。期限のない epic の終了日は未定と表示します。strategy-planning の起票には対象 track を担う epic が必要です（PJR-PE19）。
+
+- opr の template で H1 直下の概要の段落をなくし、「1. 概要」の章の中へ一本化しました。bps は導入文と概要の役割が分かれているため現状を維持します（PJR-9CVE）。
+
+- grade の executor に、判定の根拠と finding を最初から日本語で書かせるようにしました。英語の既存の finding は英語・日本語の両方で照合して引き継ぎ、日本語を新しい正本にします。英語の finding が残った場合だけ翻訳の段を流します（PJR-YYDS。PJR-27Y0 の英語を正本にする方式を改めました）。
+
+- Schedule の `exec run`・`exec resume`・`exec cycle` は、run の終わりに、統合の後に runner が書いたイベントと run の記録を記帳の commit 1 件にまとめるようになりました。作業ツリーに実行記録が残らず、develop には run ごとに記帳の commit が 1 件加わります。記帳の commit は、plan・result・evidence がそろわない run を外して知らせます（PJR-DVNV・1ZQK）。
+
+- `exec status` の `by` 列と `--by` の絞り込みは、最後に event を書いた actor ではなく claim の持ち主を表すようになりました。人が `exec unblock` しても claim の持ち主は変わりません（PJR-M495）。
+
+- exec plan の共通規約に、個票の作業内容の表の各行の状態とメモを実績に合わせる指示を足しました。executor が実行できない行は理由をメモに書いて open のまま残します（PJR-N6GK）。親の検証を evidence に書く場合は、検査ごとに 1 行ずつ書くよう求めます（PJR-Q2AT）。
+
+- `schedule strategy generate` の `bootstrap-kata-set` と `improve-kata` が、rulebook・recipe・sample・template を順に同期する段を作るようになりました。型を整備する schedule の review は、代表の成果物に加えて型一式を自動で grade し、型の最新の grade がすべて pass になるまで完了を保留します（PJR-N2CP・E4R5・X05N）。
+
+- 外部システムI/F一覧の schema を `docs/specdojo/schemas/v1/ifx-index.schema.yaml` に改名しました。古い名前は非推奨の別名として残り、今後削除します。YAML 先頭の modeline と `validate:schema:file --schema` の指定を新しい名前に書き換えてください。あわせて、一覧の `id` に許す形を `ifx-index`・`ifx-index-...` に限りました（PJR-SBNB）。
+
+- `@specdojo/docs-site`：ルール・レシピ・サンプル・テンプレートのメニューを、`docs/ja/specdojo/` の型の文書（rulebook の frontmatter の `recipe`・`sample`・`template`・`includes` と `deliverable_type`）から自動で作るようにしました。利用者のリポジトリで足した型も同じ仕組みでメニューに出ます。サンプルの「運用」のグループ分けをなくし、個別の sample を各項目の下に並べます（PJR-C8J8）。
+
+- `@specdojo/docs-lint`：`specdojo-docs-lint remark` が `--silently-ignore` を自動で付け、`.remarkignore` の無視対象をエラーにせずに飛ばすようになりました（PJR-FTRC）。`validate:history-links` の対象に、現行の実行記録の配置（`execution/runs/<origin>/<item>/<run>/` の `plan.md`・`result.md`）を含めました（PJR-C4KF）。
+
+- 型（Kata）を手入れしました。
+  - 画面仕様（uis）を GUI の画面仕様だけの規則にし、標準の章構成、章別の判断基準、入力境界・会計結果の確認・回復操作を含む GUI 販売登録画面の完成例を整えました（PJR-X3T8・0YNQ・VZT1）。
+  - 状態遷移（stsd）の型を、目的・状態の判定・状態遷移の章立てにし、遷移 ID、分割した図の初期点・終了点、表示名（状態名と値）の決まりを足しました。
+  - 概念データフロー（cdfd）の詳細の sample と template を、全体概要で採用した D2 にそろえました（PJR-AWW3・T123）。ユースケース別 CDFD に共通の領域・例外の図の分け方と絵文字の決まりを足しました（PJR-87KE）。
+  - 業務仕様の型（BES・BR・BDD）とドキュメントメタ情報標準に、改訂・置き換え（`supersedes`）・廃止（`deprecated`）のときの波及の追い方を足しました（PJR-8E7Z）。ifx-cmd・bes・sf・cdt・ccd の記述の不整合を直しました（PJR-8BSV）。
+  - プロジェクトの型 7 種類の recipe・template を rulebook に合わせ、プロジェクト文書向けの rulebook の成果物 ID の規則をドキュメント ID 標準に合わせました（PJR-KBRM・80F5）。
+  - br・bes・bac・opr の template の `frontmatter_template` の `id` を `_LOCAL_ID_` にしました（PJR-8ZX8）。
+  - 受入基準（bac）、データモデル（sld）、画面の作業の流れ（bds）、外部ファイル連携（ifx-file）、成果物カタログの索引（dct-index）、システム設計（sysd）、コンテキスト図（cxd）、コンポーネント配置（cpd）、外部 I/F 定義（ifd）・外部システム I/F 一覧（ifx-index）の型を確定しました。bds・sld・ifx-file の sample と cdfd の sample・template は、0.8.0 の前の手直しで grade が pass になりました（PJR-D948・C6BA・KV37・AWW3・T123）。
+
+- 用語集の見出しをガイドと CLI で使う呼び名にそろえ、日本語の旧称を別名として残しました（PJR-EBN6）。オーケストレーターは、確認で直す点が出たとき同じ目的・同じファイルの手直しを新しく起票せず、元の todo に直す点を足して流し直します（PJR-BFW0）。CHANGELOG に書く決まりは、プロジェクトの運用メモに従います（PJR-KSGC）。
+
+- 用語集の型（gl）を確定した用語集の実績に合わせ、英語の表記・注記・領域の分け方・ID を変えない決まり・参照の範囲を定め、駄菓子屋の完成例を広げました（PJR-BNK5）。
+
+### 不具合修正
+
+- `register --commit` が、実行中に別タスクの記録した block event などを stage・commit に巻き込む問題を修正しました。更新するパスだけを対象とし、失敗と中断時は自分の stage だけを解除します。worktree 統合では無関係な stage 済み変更も merge 前に検出し、対象パスと解除手順を表示します（PJR-HQVE）。
+
+- 保存する plan の共通規約への参照を、ハッシュとルート相対パスのインラインコードに変更しました。末尾の参照だけを復元し、本文の記法例による誤検出を防ぎます。旧形式も読み取り、`validate:history-links` は新配置の plan・result も検査します。旧形式の末尾の規約リンクだけは互換用に許容します（PJR-G1W9）。
+
+- executor から同じ run を再開するとき、前回のログを `*.attempt-N.*` へ移すようにしました。成功した再開に前回の親検証の失敗ログが元の名前で残る問題を修正し、退避した evidence の参照先も更新します。reporter から再開するときは、引き継ぐ evidence が参照する executor のログを元の名前で保持します（PJR-8YH0）。
+
+- `exec validate` が evidence 導入前の run、移行で plan・result を別 run に集約した先行試行、旧配置の記録を欠落・配置違反として扱う問題を修正しました。残る一部だけの記録は通常は警告、`--records-only` ではエラーにします。grade の生成物と空の lock のディレクトリも検査から除外します。検査のための `exec migrate-records` は不要ですが、旧記録の通常の探索には移行が必要です（PJR-KC0T）。
+
+- register の worktree 統合で許可外の追加などが残ると、commit・merge を止めて項目を `waiting` にし、worktree を保持するようにしました。移動元の削除だけが統合されることを防ぎ、停止理由にログの場所と代表パス、最後の要約に未 commit の件数を表示します。承認後に対象を手動 commit して `--resume` する手順を運用ガイドへ追加しました（PJR-BRN4）。
+
+- 旧配置で開始した run を再開すると evidence・ログが別のディレクトリに書かれ、統合時に失われる問題を修正しました。再開後も元の run ID と保存先を維持し、result の配置にかかわらず同じ run の記録と退避した試行を commit 対象に含めます。除外した別 run の記録は標準出力と `integrate.log` に表示します（PJR-TA6W）。
+
+- 実行記録の保存前の伏せ字を AWS・Google・Slack・GitHub fine-grained token・Anthropic・JWT・秘密鍵 PEM・URL の認証情報へ広げました。依存なしで実行できる `node tools/check-evidence-secrets.mjs` を追加し、指定ファイル、ステージ上の実行記録（`--staged`）、追跡中の実行記録（`--tracked`）を値を表示せず検査できます。hook / CI への登録は承認後に反映する設定案として記録しました（PJR-FMA4）。
+
+- `draft`・`fully-guided`・`recipe-guided` の edit plan に、カタログの `evidence_refs` を読み取り専用の実装の根拠として展開するようにしました。未指定・カタログなしでも停止せず、未作成の `depends_on` は「未作成」と示し、内容を仮置きして進めます。実装・書き方・意図の根拠の使い分けも明記しました（PJR-H2V8）。
+
+- `exec resume --task <task-id> --resume-from executor` および `exec run --register <PJR-ID> --resume --resume-from executor` で worktree の plan を編集してから再開したとき、統合時に直した plan が破棄されて元の plan で上書きされる問題を修正しました。executor から再開した run の統合では worktree の直した plan をコミット対象に含め、統合の commit に履歴として残るようにしました。あわせて登録簿の executor 再開で worktree 内の編集済み plan を読み込むようにしました（PJR-Z807）。
+
+- schedule の `exec resume` で executor 段から再開するとき（`--resume-from executor` を含む）に `--executor-by` で元の claim の持ち主と別の agent を指定すると、claim が元の agent のまま残って統合前の完了確認（completion preflight）で止まる問題を修正しました。元の actor の `release` イベントと新しい executor の `claim` イベントを記録して claim を新しい executor へ移し、`complete` イベントも新しい executor で記録するようにしました。あわせて同一秒内に記録された `release` と再 `claim` のイベント順序を状態遷移に沿って解決するようにしました（PJR-FYN5）。
+
+- プロダクトの文書（`docs/ja/product/` など）だけを変更したタスクで、executor が `npm run validate:history-links` や `npm run validate:catalog`（`specdojo catalog validate` を含む）を `not_applicable`（または `not_run`）と報告したときに、runner が書く `exec/plans/`・`exec/results/` などの実行管理ファイルを理由に `blocked` になっていた問題を修正しました。検査の適用範囲の判定では runner が書く `exec/` 配下の記録を除外し、`validate:history-links` は履歴蓄積ファイル（`pjr-*.md`（`pjr-index.md` を除く）、または executor 自身が変更した既存の `exec/plans/**/*.md`・`exec/results/**/*.md`）の変更がある場合だけ、`validate:catalog` は `docs/ja/projects/` 配下の成果物・カタログの変更がある場合だけ求めるようにしました。executor 自身が履歴蓄積ファイルやカタログ・プロジェクト文書を変更した場合は従来どおり検査を求めます（PJR-MERV）。
+
+- schedule の review で、review の前の grade が失敗したとき、合計 3 回まで再試行するようにしました。それでも失敗した場合と、verdict が `grade-stale`・`grade-unavailable`・`changed-during-review` の場合は、タスクを done にせず blocked にして理由と次の操作を残します（PJR-M18B）。
+
+- pipeline の executor が親の検証を 1 行にまとめて `not_run` と報告したとき、親の検証がすべて通っていても止まっていた問題を直しました（PJR-Q2AT）。
+
+- claim した agent と別の agent（fallback・`--executor-by`・`--reporter-by`）が段を進めて失敗したとき、block が拒否されてタスクが doing のまま残る問題を直しました。block イベントの meta に `claim_actor` と `stage_actor` を残します（PJR-T4G3）。
+
+- 人が `exec unblock` した後、agent の run を `exec resume` で再開すると、完了の確認が「task is being worked on by another actor」で止まる問題を直しました（PJR-M495）。
+
+- `condense` の pipeline で executor が `condense_records` を出さないか形式が正しくない場合、reporter ではなく executor の段の失敗として止め、再開の操作を残すようにしました。schedule の `--resume-from executor` はこの状態のタスクも受け付けます（PJR-1GCD）。
+
+- schedule の executor の再開で、統合先に commit 済みのそのタスク自身の run の記録と worktree 側の記録が衝突して止まる問題を直しました（PJR-9MWH）。失敗・延期の後に記帳した plan・result が、再開後の統合で exec branch 側と競合しても止まりません（PJR-DVNV）。
+
+- executor が commit の対象外の変更を残した場合、schedule のタスクでも統合と worktree の片付けを止め、対象のパスと次の操作を result とログに残すようにしました（PJR-160D）。検査の対象外の判断が runner と executor で食い違う問題を直しました（PJR-MERV）。
+
+- `schedule strategy generate` が `--force` で書き直すと、先頭の `# yaml-language-server: $schema=` の modeline が消える問題を直しました（PJR-V2GH）。
+
+- 夜間の register の実行で子の worktree が入れ子になり、Job の環境が子の統合テストへ漏れて review・merge を飛ばす問題と、朝報告が文書の検査で止まる問題を直しました（PJR-0X0S・A7CR・RX14・MJEH）。schedule の `--auto --parallel` の統合が index に残った記録のファイルで止まる問題を直しました（PJR-HQVE）。
+
+- `docs:build` が既定のメモリの上限で止まる問題を直しました（PJR-2SRR）。
+
+- runner の統合・記帳の git 操作が、別のプロセスの `index.lock` を既定で 20 分まで待つようにしました。待ち時間は exec-defaults の `run.git_index_lock_wait_seconds` で変えられます。待っている間は 30 秒ごとに経過を出力し、lock が残っているのに git のプロセスが動いていない古い lock では上限を待たずに失敗します（PJR-964D）。
+
+- schedule の review を再開するとき（reporter・executor からの再開）、runner が agent の前に grade を確かめ、最新の評価結果を exec branch に取り込むようにしました。統合の段から再開したときの完了の前の確認を、claim の持ち主で判定します（PJR-ZSRD）。
+
+- schedule の review の前に流す grade の再試行の状態を run ごとに分け、並べて流した review どうしが grade の共有ファイルを取り合って統合の前に止まる問題を直しました（PJR-X04G）。
+
+- `validate:schema:file`・strategy の読み込み・テストで YAML の読み方（YAML 1.1 互換）をそろえ、引用符のない `task_suffix: 090` を同じように読むようにしました（PJR-5QJ5）。
+
+- テストと検証が `/tmp` の直下に `init` の出力を残し、ほかのテストを落とす問題を直しました（PJR-2ZN4）。
+
 ## [0.7.0] - 2026-11-03
 
 同梱パッケージは `@specdojo/docs-site` 0.4.0 を同時に公開します。docs-site 0.4.0 は、D2 コードブロックの SVG 生成と配信（`specdojo-docs-site d2`、PJR-6NEM）と、サイドメニューへの Kata（rulebook・recipe・sample・template）の掲載（PJR-PQG3）を含みます。`@specdojo/docs-lint` は変更がないため 0.4.0 のままです。
@@ -23,6 +174,8 @@ SpecDojo の利用者に影響する変更を記録します。
 - `devcontainer host-script` コマンドを追加しました。常時稼働ホストから devcontainer 内の tmux セッションへ入るためのスクリプト本体（`devcontainer-tmux.sh`）を workspace の `.specdojo/host/` へ書き出します。ホスト側のスクリプト（`specdojo-tmux.sh`）は workspace のパスを渡して本体を呼び出す数行のみとなり、稼働中または停止中のコンテナへの接続ではホスト側に Node.js が不要になります。コンテナ未作成時のみ `devcontainer up` を動かし、`SPECDOJO_NODE_BIN` による PATH 上書きやログインシェル経由の起動に対応します。対応 OS は macOS、Linux、Windows の WSL2 です（PJR-Q8KP）。
 
 ### 変更
+
+- exec plan の規約を edit / review 共通（`xp-common-conventions-template.md`）、edit 専用（`xep-common-conventions-template.md`）、review 専用（`xrp-common-conventions-template.md`）に分けました。生成時は共通と mode に対応する規約を組み合わせます。規則の文言は変えず、review の詳細から編集専用の指示を除きました。コピー済みの規約がある場合は3ファイルを同期してください（PJR-Y431）。
 
 - 概念データフロー図の Kata を見直しました。全体概要（`cdfd-overview`）の rulebook・recipe・sample・template は、目的を全体像として書き、プロセス領域の区分を代表ノードとする図（区分の位置をそろえる、線のない区分を置かない、調整役の指示の図を分ける、区分の間の実行要求の線を認める、業務の言葉の題）を定め、sample と template の図を D2 の縦の流れにしました（PJR-6QTK・PJR-BC45）。ユースケース別（`cdfd-uc`）の Kata は、「引き渡し」と「例外時の戻り先」の章をなくして渡す情報を図の線で表し、図から調整役を外し、イベントを 1 ノード 1 出来事の短い文にし、deprecated の文書を参照しないことを定め、sample と template の図を D2 の縦の流れにしました（PJR-PRYZ）。eject している場合は、差分を確かめて取り込んでください。
 

@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readPlanFile } from "../shared/plan-conventions.js";
+import { copyFileSync, existsSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import type { Command } from "commander";
 import {
@@ -321,7 +322,7 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
   if (!projectId) throw new Error("exec trial run requires a project id.");
   const planPath = resolve(opts.plan);
   if (!existsSync(planPath)) throw new Error(`Plan not found: ${planPath}`);
-  const planContent = readFileSync(planPath, "utf8");
+  const planContent = readPlanFile(planPath);
   const identity = parsePlanTaskIdentity(planContent);
   if (!identity)
     throw new Error("Trial plan must have SpecDojo task_id/mode/project_id frontmatter.");

@@ -5,11 +5,14 @@ import { describe, expect, it, vi } from "vitest";
 import {
   failedParentValidationReason,
   hasRecordedParentValidations,
+  isParentValidationSkipped,
+  matchesParentValidationPaths,
   ParentValidationGate,
   parentValidationDisplayCommands,
   parentValidationGateFor,
   parentValidationLabels,
   parentValidationRoots,
+  parentValidationSelectionForEvidence,
   replaceParentValidationResults,
   resolveParentValidationAssignments,
   resolveParentValidationConcurrency,
@@ -385,7 +388,7 @@ describe("parent validation repository assignment", () => {
 
   it("rejects malformed entries, unknown IDs and duplicate (id, repo) pairs", () => {
     expect(() => resolveParentValidationAssignments([{ id: "test-unit" }])).toThrow(
-      /pipeline\.parent_validations\[0\] in exec-defaults\.repo must match/,
+      /pipeline\.parent_validations\[0\] in exec-defaults must set repo or paths/,
     );
     expect(() => resolveParentValidationAssignments([{ id: "test-unit", repo: "App1" }])).toThrow(
       /\.repo must match/,
@@ -394,7 +397,7 @@ describe("parent validation repository assignment", () => {
       resolveParentValidationAssignments([{ id: "test-unit", repo: "app1", command: "rm -rf /" }]),
     ).toThrow(/unknown key\(s\) "command"/);
     expect(() => resolveParentValidationAssignments([42])).toThrow(
-      /must be a validation id or \{ id, repo \}/,
+      /must be a validation id or \{ id, repo\?, paths\? \}/,
     );
     expect(() =>
       resolveParentValidationAssignments([{ id: "npm-run-arbitrary", repo: "app1" }]),
@@ -619,5 +622,89 @@ describe("parent validation concurrency", () => {
     expect(parentValidationGateFor(execDefaults)).toBe(gate);
     expect(gate.limit).toBe(2);
     expect(parentValidationGateFor({})).not.toBe(gate);
+  });
+});
+
+describe("parent validation selection by change type", () => {
+  const entries = [
+    "validate-schema",
+    { id: "typecheck", paths: ["{src,tests}/**", "tsconfig*.json"] },
+    { id: "test-unit", paths: ["src/**", "docs/ja/specdojo/templates/**"] },
+  ];
+  const recordingInvoker = (calls: string[]): ParentValidationInvoker => {
+    return async (definition) => {
+      calls.push(definition.id);
+      return { exitCode: 0, stdout: "", stderr: "" };
+    };
+  };
+
+  it("matches lefthook-style globs", () => {
+    expect(matchesParentValidationPaths("src/exec/a.ts", ["src/**"])).toBe(true);
+    expect(matchesParentValidationPaths("tsconfig.build.json", ["tsconfig*.json"])).toBe(true);
+    expect(matchesParentValidationPaths("tests/x.test.ts", ["{src,tests}/**"])).toBe(true);
+    expect(matchesParentValidationPaths("docs/a.md", ["src/**", "*.ts"])).toBe(false);
+    expect(matchesParentValidationPaths("docs/a/b.md", ["docs/**/*.md"])).toBe(true);
+  });
+
+  it("records not_applicable for validations whose paths match no changed file", async () => {
+    const calls: string[] = [];
+    const validations = await runParentValidations(entries, "/repo", recordingInvoker(calls), {
+      changedPaths: ["docs/ja/projects/prj-0001/a.md"],
+    });
+
+    expect(calls).toEqual(["validate-schema"]);
+    expect(validations.map(({ id, status }) => ({ id, status }))).toEqual([
+      { id: "validate-schema", status: "passed" },
+      { id: "typecheck", status: "not_applicable" },
+      { id: "test-unit", status: "not_applicable" },
+    ]);
+    expect(validations[1].reason).toMatch(/skipped by change type/);
+    expect(failedParentValidationReason(validations)).toBeUndefined();
+    expect(hasRecordedParentValidations(validations, entries)).toBe(true);
+  });
+
+  it("runs a validation when either side of a rename matches its paths", async () => {
+    const calls: string[] = [];
+    await runParentValidations(entries, "/repo", recordingInvoker(calls), {
+      changedPaths: ["docs/old.md -> docs/ja/specdojo/templates/new.md"],
+    });
+
+    expect(calls).toEqual(["validate-schema", "test-unit"]);
+  });
+
+  it("runs every validation when the change set is unknown or truncated", async () => {
+    const calls: string[] = [];
+    await runParentValidations(entries, "/repo", recordingInvoker(calls));
+
+    expect(calls).toEqual(["validate-schema", "typecheck", "test-unit"]);
+    const many = Array.from({ length: 1_000 }, (_, index) => ({
+      path: `docs/${index}.md`,
+      status: "M",
+    }));
+    expect(parentValidationSelectionForEvidence({ changes: many })).toEqual({});
+  });
+
+  it("matches product repository changes against the assigned repository only", () => {
+    const [assignment] = resolveParentValidationAssignments([
+      { id: "test-unit", repo: "app1", paths: ["src/**"] },
+    ]);
+    const productRepos = ["app1", "app2"];
+
+    expect(
+      isParentValidationSkipped(
+        assignment,
+        { changedPaths: ["src/a.ts", "app2:src/b.ts"] },
+        productRepos,
+      ),
+    ).toBe(true);
+    expect(
+      isParentValidationSkipped(assignment, { changedPaths: ["app1:src/a.ts"] }, productRepos),
+    ).toBe(false);
+  });
+
+  it("rejects empty paths", () => {
+    expect(() => resolveParentValidationAssignments([{ id: "test-unit", paths: [] }])).toThrow(
+      /\.paths must be a non-empty array/,
+    );
   });
 });

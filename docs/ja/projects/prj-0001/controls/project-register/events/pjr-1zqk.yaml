@@ -1,0 +1,158 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c64900c7c3bf47339b86bbaaf798ad90
+  ts: "2026-11-15T22:40:43Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan だけの run の記録を commit せず、記録の配置の検査を push の前に流す
+    - field: description
+      from: ""
+      to: setup で止まった run の plan だけの記録が develop に入り、CI の Check execution record layout が落ちた
+    - field: input
+      from: ""
+      to: '["2026-11-16、push した develop（54b7722）で CI の Check execution record layout が落ちた。原因は c9792389a（orchestrator がたまっていた実行記録をまとめて commit したもの）に、setup で止まった run（T-KATA-WAVE-2-bac-task-execution-005 の 0169b6b4）の plan.md だけが入っていたこと。evidence.json と result.md がないため exec validate --records-only が missing を出す。a9beaef99 でこの plan.md を git から外して直した","PJR-DVNV で runner は統合の後の記録も自動で commit するようになった。setup や executor の起動前に止まった run が plan だけを残すと、同じ形の記録が runner の commit で develop に入り、CI を落とすおそれがある","作業: (1) runner が plan だけの run を残さない、または止まった理由を含めて記録をそろえる（どちらにするかは exec の記録の配置の規約と合わせて決める）。(2) lefthook の pre-push などで exec validate --project prj-0001 --records-only を流し、CI より先に気づけるようにする。ローカルにしかない空の run のディレクトリで誤検出しないことも確かめる","完了条件: setup で止まる run を再現するテストで、commit される記録が配置の検査を通る。push の前の検査が、配置の誤りを含む commit で失敗し、正しい commit では通る"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: due
+      from: ""
+      to: "2026-11-20"
+    - field: derived_from
+      from: ""
+      to: '["PJR-DVNV"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_b4a5ff6c158041d88db5cb60fcdf2baa
+  ts: "2026-11-15T23:26:03Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c64900c7c3bf47339b86bbaaf798ad90
+- v: 1
+  id: reg_6d7a516ca9834600808af20f25012812
+  ts: "2026-11-15T23:36:44Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit `<rev>` と pre-push の入口 tools/check-run-record-l…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit `<rev>` と pre-push の入口 tools/check-run-record-l…"
+  previous_event_id: reg_b4a5ff6c158041d88db5cb60fcdf2baa
+- v: 1
+  id: reg_b4ca2b30fd9e4900b12361e67cf28696
+  ts: "2026-11-16T00:37:46Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit `<rev>` と pre-push の入口 tools/check-run-record-l…"
+      to: "-"
+  previous_event_id: reg_6d7a516ca9834600808af20f25012812
+- v: 1
+  id: reg_680011d02a9c470e8cd84434019a6056
+  ts: "2026-11-16T00:47:38Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_b4ca2b30fd9e4900b12361e67cf28696
+- v: 1
+  id: reg_6e0ff2029b974ba9a5becde6d573169b
+  ts: "2026-11-16T00:48:15Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_680011d02a9c470e8cd84434019a6056
+- v: 1
+  id: reg_547badbd139b469dbec40f6383228998
+  ts: "2026-11-16T01:19:52Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6e0ff2029b974ba9a5becde6d573169b
+- v: 1
+  id: reg_7bd603ab3a4c4dc6809da96dc83e8028
+  ts: "2026-11-16T01:22:45Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 記帳の commit は plan・result・evidence がそろわない run を外すようにし、pre-push で実行記録の配置を検査するようにした（lefthook への登録は orchestrator が 39db11e72 で実施）
+  previous_event_id: reg_547badbd139b469dbec40f6383228998

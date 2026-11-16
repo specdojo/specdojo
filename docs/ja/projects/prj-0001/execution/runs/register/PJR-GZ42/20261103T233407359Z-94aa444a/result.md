@@ -1,0 +1,46 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-gz42-20261103t230909z-f841c2b8
+  type: exec-result
+  task_id: PJR-GZ42
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-GZ42/20261103T233407359Z-94aa444a/plan.md
+  started_at: "2026-11-03T23:09:09.689Z"
+  completed_at: "2026-11-03T23:44:46.468Z"
+  agent: flash-high-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- docs-site において、`chat` 言語のコードブロックを吹き出し形式および TUI 風の見た目で描画する機能を実装しました。
+- Quick Start ガイド内の対話箇所（計 11 か所）のコードブロック言語を `text` から `chat` に変更し、新しい描画処理を適用しました。
+- 型エラーの修正、改行保持の改善、および Vue 式の文字列表示の補強を行いました。
+
+## 2. 変更ファイル
+
+- `.github/instructions/markdown.instructions.md`: Markdown インストラクションの更新。
+- `CHANGELOG.md`: 変更履歴の更新。
+- `docs/ja/specdojo/guides/quick-start-guide.md`: Quick Start ガイド内の対話コードブロックの言語を `chat` に変更。
+- `packages/docs-site/.vitepress/config.mts`: `chat` コードブロックのレンダリング設定を追加。
+- `packages/docs-site/.vitepress/theme/custom.css`: 吹き出しおよび TUI 風の見た目を実現するためのスタイル定義を追加。
+- `packages/docs-site/src/chat.ts`: `chat` コードブロックのレンダリングロジックを実装。
+- `tests/packages/docs-site/chat.test.ts`: `chat` レンダリングに関するテストコードの追加。
+
+## 3. 申し送り
+
+- ホスト環境で `npm run docs:build` を実行してください。executor では禁止された索引更新を避けて文書サイト部分をビルドしましたが、D2 起動が sandbox に `spawnSync d2 EPERM` で拒否されました。
+- Chromium も sandbox に起動を拒否されました。ホスト環境で吹き出しと TUI をライト／ダーク・スマートフォン幅で確認してください。
+- Quick Start の対話は実際には11か所あり、本文を維持して全箇所を変更しました。話者は一般的な利用者表記を利用者側、それ以外を相手側として扱います。理由と検証結果は個票に記録済みです。
+- 適用外の検証: `npm run validate:schema:file`（既存のイベント YAML 差分は runner による状態遷移であり、今回の編集対象ではない。）
+- 人の確認が必要: `npm --prefix packages/docs-site run docs:build`（実行を試みたが D2 起動が sandbox に EPERM で拒否された。ホスト環境で再検証が必要。）
+- 人の確認が必要: `npm run docs:build`（禁止された索引更新を含むため、フルビルドはホスト環境で実行する。）
+- 人の確認が必要: `node --input-type=module -e 'import puppeteer from "./packages/docs-site/node_modules/puppeteer/lib/puppeteer/puppeteer.js"; const browser = await puppeteer.launch({headless: true, args: ["--no-sandbox"]}); await browser.close(); console.log("Chromium launch passed")'`（Chromium 起動が Operation not permitted で拒否された。配色・狭い画面での表示確認をホスト環境へ申し送る。）
+
+## 4. 進め方
+
+まず、`chat` 言語のコードブロックを処理するための `packages/docs-site/src/chat.ts` を作成し、`packages/docs-site/.vitepress/config.mts` にその設定を組み込みました。次に、吹き出しと TUI スタイルを適用するために `packages/docs-site/.vitepress/theme/custom.css` を更新しました。最後に、`docs/ja/specdojo/guides/quick-start-guide.md` 内の対話箇所をすべて `chat` コードブロックへと変更しました。実装にあたっては、型安全性の確保と、Markdown 内の Vue 式が意図せず評価されることへの対策（文字列としての表示保持）を行っています。

@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_174a08eda95e423285ab186eb3d5a945
+  ts: "2026-11-15T04:06:06Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 横断ルールの数値の境界と実装状況を照合する（sysd-cross-cutting-policy の Q1・Q2・Q4）
+    - field: description
+      from: ""
+      to: exec-defaults と実装を照合し、規則ごとに実装済み・未実装・不明を判定する
+    - field: input
+      from: ""
+      to: '["sysd-cross-cutting-policy を確定するとき、本文の Q1・Q2・Q4 を期限付きの留保とした（indie が 2026-11-15 に承認）。Q3 は非機能要件・運用設計の整備に回す","Q1: RET-002 の criticality・signal・attempt・backoff・上限到達時の処置。Q2: TIM-001 の経路別 timeout・終了猶予・子プロセス停止。Q4: CFG-003 の項目別の優先順と反映時点、全規則の実装状況"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_

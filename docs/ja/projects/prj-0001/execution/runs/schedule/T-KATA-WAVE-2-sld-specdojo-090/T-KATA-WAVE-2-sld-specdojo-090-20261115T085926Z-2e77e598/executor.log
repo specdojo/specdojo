@@ -1,0 +1,23 @@
+レビューの結論は `grade-stale` です。評価結果が最新ではないため、完了可否は判断していません。
+
+**評価結果の確認**
+- 評価結果サイドカー `docs/ja/projects/prj-0001/execution/grade/results/sld-specdojo.yaml` が存在しません。
+- 次のコマンドを実行すると、評価対象のパスが出力されました。
+  - コマンド: `grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md --changed-only`
+  - 出力: `docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md`
+- runner の grade 実行は失敗していました。原因は `$analysis: line 143: malformed DONE_CRITERIA entry` で、`sld-specdojo.md` の評価時のエラーです。
+- 上記の理由で、grade の `verdict`、`score`、finding 件数は読み取れていません。
+- 成果物は自分で評価し直していません。
+
+**実装エビデンスの確認**
+- `src/shared/run-records.ts`、`src/routine/storage.ts`、`src/exec/worktree.ts` の3ファイルは存在します。
+- 各パスについて、成果物の記述との対応(一致・乖離・確認不能・未確認)を読み込んでの照合はしていません。評価結果が最新でないため、これらはすべて未確認範囲です。
+- 先行する edit タスクの result も特定できていません。
+
+**改善指示**
+- `sld-specdojo.md` の 143 行付近にある、grade が読めない `DONE_CRITERIA` 形式の記述を直してください。grade の詳細は未確認で、143 行目が `sld-specdojo.md` 側のどの記述かも確認していません。
+- そのうえで grade を再実行し、サイドカーを生成してから review をやり直してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict=grade-stale。評価結果サイドカー sld-specdojo.yaml が存在せず、grade list --changed-only が評価対象パスを出力した。runner の grade 実行は DONE_CRITERIA の malformed エントリ(143行付近)で失敗している。実装エビデンス3ファイルの存在は確認したが、記述との対応照合は未実施。確認できなかった範囲: grade の verdict/score/finding、各 evidence_refs と成果物記述の一致判定、先行 edit result。","handoff":["grade の失敗原因(sld-specdojo.md 143行付近の DONE_CRITERIA malformed)を解消して grade を再実行し、サイドカー生成後に review を再実行する"],"validations":[{"command":"npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/sld-specdojo.md --changed-only","status":"passed","summary":"評価対象パスを出力したため評価結果は最新でない(grade-stale)"}]}
+</specdojo_executor_evidence>

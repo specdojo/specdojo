@@ -1,0 +1,36 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "レビュー実施は完了。review verdict は `incomplete`。最新 grade は `pass`・97点ですが、DC-004 が未充足です。成果物・実装・result は変更していません。確認できなかった範囲：委譲先の個別 CLI 引数・処理分岐、タスク状態遷移と記録構造、ゲートの定義・生成条件、routine・job・grade の詳細動作。これらは先行記録にも確認限界として残っています。表示文書の再生成・再評価は実施していません。",
+  "handoff": [
+    "reporter は review result の必須5章を記入すること。decision の `verdict` は `incomplete`。本報告の `completion_status` はレビュー作業の完了を表し、対象タスクの受入完了を意味しない。",
+    "評価結果の確認：`docs/ja/projects/prj-0001/execution/grade/results/gl-common.yaml` を読み取り、`verdict`: pass、`score`: 97、`finding_counts`: blocker 0 / major 0 / minor 2 / note 0、`graded_at`: 2026-11-11T20:42:10.067Z を確認した。validations に示す3コマンドは開始時と判定直前に各1回実行し、すべて終了コード0・出力空。評価対象・依存の変更や評価パイプライン未完了は検出されなかった。",
+    "判断根拠：[[gl-common|用語集（共通）]]、[[prj-0001:xer-t-glossary-gl-common-010-20261111t162018z-53883e45|retrofit 実行記録]]、[[prj-0001:xer-t-glossary-gl-common-070-20261111t175822z-47704551|磨き込み実行記録]]、[[prj-0001:xer-t-glossary-gl-common-080-20261111t192405z-c86f51b7|冗長さ整理実行記録]] を照合した。コミット 67d2ebdda・f737ea44f・3aa93fd55 の実差分で、6語追加、Schedule の英語名訂正、schema 参照追加、定義・分類修正、6定義の重複削除を確認した。変更は対象 YAML と実行管理ファイルのみ。3実行の evidence.json にある親検証9件は各回すべて passed。これらは過去の検証記録の確認であり、今回の再実行ではない。",
+    "未充足事項・改善指示：grade の完了条件判定は5件中4件充足で、DC-004 のみ unsatisfied。既存 F001・F002 が示す表示文書の旧英語名と6語欠落について、後続 edit で表示文書を再生成し、正本との一致を確認して証跡を残し、grade・review を再実行すること。既存 finding は再評価・重複起票しない。DC-001・002・003・005 は grade の satisfied をそのまま採用する。DC-004 が未充足のため `complete-with-findings` にはできない。",
+    "approach に応じた確認：先行 retrofit 記録には宣言された4パスすべての対応と確認限界がある。`src/specdojo.ts` は各コマンド登録をモジュールへ委譲しており、登録構成は一致、個別コマンド名・引数・処理分岐は同ファイルから確認不能。`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` は `status` と `item_status` の区別、epic と track、終端状態と完了日時、approach と対象・参照元の関係が用語集の要約・参照と一致。`docs/specdojo/schemas/v1/exec-common.schema.yaml` は TaskOrigin と TaskMode が `tm-task` の説明と一致する一方、状態一覧と event・trial・evidence の構造は確認不能。`docs/specdojo/schemas/v1/sch-common.schema.yaml` は track・担当・期間・依存・段の識別情報・マイルストーンと対応し、Task に実行状態がない点も一致。ゲート定義・生成条件は未確認。4パスの対応記録欠落はない。",
+    "既存乖離の引継ぎ：[[specdojo:schedule-design-guide|Schedule設計ガイド]] の責務分担表は Schedule がタスク実行状態を持つと記述し、[[cdfd-overview|概念データフロー図（全体概要）]]、[[prj-0001:pjr-bb92-cdfd-overview-propagation|Schedule の責務に関する決定記録]]、指定 schema と食い違う。先行記録には修正対象候補が文書であることと根拠が記録済み。後続でガイド修正を検討すること。目的・業務判断・将来方針を実装から推測したことを示す finding はない。今回、保護設定の変更やライフサイクル操作は不要だった。"
+  ],
+  "validations": [
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-common.yaml --changed-only",
+      "status": "passed",
+      "summary": "開始時・判定直前とも終了コード0、出力空。評価対象の変更を検出せず。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-common.yaml --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・判定直前とも終了コード0、出力空。評価コンテキストの変更を検出せず。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/060-glossary/gl-common.yaml --incomplete",
+      "status": "passed",
+      "summary": "開始時・判定直前とも終了コード0、出力空。評価パイプライン未完了を検出せず。"
+    },
+    {
+      "command": "git diff --check && git status --short",
+      "status": "passed",
+      "summary": "終了コード0。差分エラーなし。開始時と同じ runner 管理の未追跡 pipeline-state.json のみで、executor による変更なし。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

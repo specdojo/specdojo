@@ -50,15 +50,15 @@ grade と review は判定する対象が異なります。2 つは重複する�
 
 review では次を入力として扱います。確認に用いる文書は review plan に記載されたものに限ります。
 
-| 入力           | 正本ファイル                   | 役割                                                                           |
-| -------------- | ------------------------------ | ------------------------------------------------------------------------------ |
-| 評価結果       | grade result サイドカー        | grade の verdict・score・観点ごとの level・finding。review plan にも提示される |
-| review plan    | `exec/plans/<task-id>-plan.md` | 対象成果物、評価結果、完了条件、進め方を固定する                               |
-| 実行記録       | 先行する edit タスクの result  | 何を変更し、どの検証を実行したか                                               |
-| 対象成果物     | -                              | 変更内容を確かめる対象の Markdown / YAML / JSON など                           |
-| 成果物カタログ | `dct-*.yaml`                   | 成果物、依存関係、`done_criteria`（text / roles / viewpoint）を定義する        |
-| 関連成果物     | -                              | `depends_on` 成果物とプロジェクトコンテキスト                                  |
-| 登録簿         | `generated/pjr-index.md`       | 未解決事項、課題、リスク、変更要求、決定の転記先                               |
+| 入力           | 正本ファイル                                         | 役割                                                                           |
+| -------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
+| 評価結果       | grade result サイドカー                              | grade の verdict・score・観点ごとの level・finding。review plan にも提示される |
+| review plan    | `execution/runs/schedule/<task-id>/<run-id>/plan.md` | 対象成果物、評価結果、完了条件、進め方を固定する                               |
+| 実行記録       | 先行する edit タスクの result                        | 何を変更し、どの検証を実行したか                                               |
+| 対象成果物     | -                                                    | 変更内容を確かめる対象の Markdown / YAML / JSON など                           |
+| 成果物カタログ | `dct-*.yaml`                                         | 成果物、依存関係、`done_criteria`（text / roles / viewpoint）を定義する        |
+| 関連成果物     | -                                                    | `depends_on` 成果物とプロジェクトコンテキスト                                  |
+| 登録簿         | `generated/pjr-index.md`                             | 未解決事項、課題、リスク、変更要求、決定の転記先                               |
 
 ### 1.3. grade・機械検証・review の分担
 
@@ -207,11 +207,11 @@ edit タスク（成果物を作る・直す）
   ↓
 grade（成果物を評価する。評価結果が最新なら再実行しない）
   ↓
-exec plan / exec run → review plan（exec/plans/<task-id>-plan.md。評価結果を提示する）
+exec plan / exec run → review plan（execution/runs/schedule/<task-id>/<run-id>/plan.md。評価結果を提示する）
   ↓
 human / agent review（タスクの完了可否を判断する）
   ↓
-review result（exec/results/<task-id>-result.md）
+review result（execution/runs/schedule/<task-id>/<run-id>/result.md）
   ↓
 完了 / 再評価 / 再計画
 ```
@@ -240,9 +240,12 @@ edit plan で観点別の自己レビューを行わないのは、各観点を�
 この自動 grade は同じ npm package の `grade run` を使います。開発用スクリプトの配置は不要です。選択した review agent の実体名と起動設定を引き継ぎ、対象 1 件の plan 生成・評価・サイドカー反映を実行します。成果物の grade には project の `catalog_path` が必要です。単独の実行や部品ごとの手順は [[specdojo:command-reference|CLI コマンドリファレンス]] を参照してください。
 
 - 評価対象は成果物です。`approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、見直した実践の型そのものが評価対象になります（`--target kata`）。
+- Schedule の intent が `improve-kata` / `bootstrap-kata-set` の場合は、review の `approach` にかかわらず、代表成果物に加えて rulebook と宣言済みの sample・recipe・template も順に grade します。複数の sample はすべて対象です。sample が `not-needed` なら除外し、未宣言・`undecided` や `bootstrap_scope` の未解決参照は完了を保留します。型すべての最新 grade が `pass` であることを追加完了条件とし、`needs-work` / `fail` は `incomplete`、未評価・古い結果・参照未解決は `grade-stale`、読取不能は `grade-unavailable` にします。`complete-with-findings` による迂回はできません。runner も result の完了判定をこの条件で制限します。
 - 評価対象の `content_hash` が既存の評価結果サイドカーの `content_hash` と一致する場合は、grade を再実行せず既存の評価結果を使います。どちらの場合も評価は 1 回です。
 - grade は `grade run --path <対象文書>` で評価対象 1 件に絞って実行します。評価対象を解決できない場合と `--dry-run` の場合は実行しません。
-- grade が失敗しても review は止めません。実行の結果と評価結果の鮮度を review plan に示し、review が verdict（`grade-stale` / `grade-unavailable` など）として記録します。
+- grade が失敗した場合は、別の run ID で合計 3 回まで試します。それでも失敗した場合も review は止めず、実行の結果と評価結果の鮮度を review plan に示し、review が verdict（`grade-stale` / `grade-unavailable` など）として記録します。ただし runner はそのタスクを done にせず blocked にし、失敗の理由と次の操作を block の理由と result の `block_reason` に残します。
+- schedule の review を再開するとき（reporter や executor からの再開）も、runner は review の agent より前に grade を確かめます。worktree の評価結果サイドカーが root の最新と違う場合は、exec branch へ取り込む commit を作ります。plan の評価結果の節は前回の実行の時点のままなので、再開の時点の評価結果を agent への指示に足します。取り込みがあった reporter からの再開では、古い grade で判定した executor の結果を使い回さず、executor から流し直します。
+- 自動 grade は `--if-busy wait` で同一 project の実行終了を待ち、`--isolate-pipeline-state` で再試行状態を run 内へ分離します。同じ秒に複数の型を評価しても run ID が衝突しないよう、対象パスの識別子を含めます。
 
 ### 3.3. review plan の生成
 
@@ -266,12 +269,12 @@ review plan の `評価結果` 章には、評価結果を確定済みの事実�
 
 ### 3.4. review plan の配置
 
-review plan は `<execution_path>/exec/plans/<task-id>-plan.md` に生成します。`<execution_path>` はプロジェクトの実行ディレクトリ（例: `execution`）を指します。
+review plan は `<execution_path>/runs/schedule/<task-id>/<run-id>/plan.md` に生成します（register の post-review では `runs/register/<項目 ID>/<run ID>/plan.md`）。`<execution_path>` はプロジェクトの実行ディレクトリ（例: `execution`）を指します。
 
 例
 
 ```text
-exec/plans/T-LAUNCH-prj-overview-030-plan.md
+execution/runs/schedule/T-LAUNCH-prj-overview-030/<run-id>/plan.md
 ```
 
 ### 3.5. review plan の構成
@@ -306,13 +309,13 @@ specdojo:
 
 ### 3.6. review execution
 
-人または agent は review plan に従って review します。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入します。
+人または agent は review plan に従って review します。`<execution_path>/runs/schedule/<task-id>/<run-id>/result.md`（register の post-review では `runs/register/<項目 ID>/<run ID>/result.md`）は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入します。
 
 agent に review を実行させる場合は、`exec run --plan` で executor と reporter を指定して 2 段で実行します。
 
 ```bash
 # review を 2 段で実行する
-npx specdojo exec run --project <project-id> --plan <execution_path>/exec/plans/<task-id>-plan.md \
+npx specdojo exec run --project <project-id> --plan <execution_path>/runs/schedule/<task-id>/<run-id>/plan.md \
   --executor-by <executor-nickname> --reporter-by <reporter-nickname>
 ```
 
@@ -329,7 +332,7 @@ review で `approach` に応じて何を確かめるかは、plan の `進め方
 
 ### 3.7. review result の構成
 
-review result は `<execution_path>/exec/results/<task-id>-result.md` に生成・更新します。
+review result は `<execution_path>/runs/schedule/<task-id>/<run-id>/result.md`（register の post-review では `runs/register/<項目 ID>/<run ID>/result.md`）に生成・更新します。
 
 ```yaml
 specdojo:
@@ -339,7 +342,7 @@ specdojo:
   mode: review
   status: in_progress | complete | blocked
   project_id: <project_id>
-  plan_ref: exec/plans/<task-id>-plan.md
+  plan_ref: runs/schedule/<task-id>/<run-id>/plan.md
   started_at: <ISO8601>
   completed_at: <ISO8601>
   agent: <member nickname>
@@ -353,7 +356,7 @@ specdojo:
 | approach に応じた確認 | `approach` に応じて確認した内容                                       |
 | decision              | `verdict`（タスク完了可否の 6 値。値の一覧は次のとおり）              |
 
-`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` のいずれかです。`pm-review-viewpoints.yaml` の `verdict_definitions` も同じ 6 値を定義します。各値を選ぶ条件は共通規約の `review の判断手順` を正本とします。verdict が `complete` 以外でも、review result を記録できた場合は正常終了します。runner は verdict に応じて再評価または再計画へ進みます。
+`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` のいずれかです。`pm-review-viewpoints.yaml` の `verdict_definitions` も同じ 6 値を定義します。各値を選ぶ条件は共通規約の `review の判断手順` を正本とします。verdict が `complete` 以外でも、review result を記録できた場合は正常終了します。runner は verdict に応じて再評価または再計画へ進みます。schedule のタスクでは、`grade-stale` / `grade-unavailable` / `changed-during-review` の review を done にせず blocked にします。
 
 ### 3.8. grade の結果を review の入力にする規則
 

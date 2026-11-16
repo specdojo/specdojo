@@ -2,54 +2,90 @@
 id: specdojo:gl-sample
 type: glossary
 rulebook: specdojo:gl-rulebook
-title: "用語集: 在庫・調達"
+title: 用語集（駄菓子屋きぬやの販売・在庫・つけ管理）
 locale: ja
 status: draft
 
+# 単一店舗の販売・在庫・つけ管理を扱う。外部システムとの連携と本格会計は対象外。
 terms:
   - id: tm-reorder-point
     term: 発注点
+    englishName: reorder point
     aliases: [発注基準点]
     definition: 在庫数量がこの値を下回ったときに、発注候補とみなす基準数量。
-    notes: 商品ごとに設定。定番商品でのみ利用する。
+    notes: 定番商品だけに設定し、発注候補に挙がった後の発注数量と発注先は店主が判断する。
     category: tm-inventory
-    relatedTerms: [tm-safety-stock]
-    source: https://example.com
+    relatedTerms: [tm-standard-product, tm-safety-stock]
     status: official
     example: "発注点を下回ったため、追加発注を行う。"
 
   - id: tm-standard-product
     term: 定番商品
-    aliases: [レギュラー商品, 人気商品, 定番]
-    definition: 常に棚に置いておきたい、よく売れる商品。
-    notes: 発注点・最低在庫数などを設定する対象。
+    englishName: regular product
+    aliases: [レギュラー商品, 定番]
+    definition: 店主が継続して棚に置くと決め、在庫を補充しながら販売する商品。
+    notes: 一時的によく売れるだけの人気商品や、期間限定の商品とは区別する。
     category: tm-inventory
+    relatedTerms: [tm-reorder-point]
 
   - id: tm-accounts-receivable
     term: つけ
-    aliases: [ツケ]
+    englishName: sale on credit
+    aliases: [ツケ, 掛け売り]
     definition: 顧客が代金を後払いにする販売形態。
-    notes: 顧客単位で残高と限度額を管理する。
+    notes: 店主が認めた常連客だけが利用する。店頭では現金による販売と区別して記録する。
     category: tm-sales
+    relatedTerms: [tm-sales-credit-balance, tm-sales-credit-limit]
+    example: 今日の買い物をつけにして、次回来店時に支払う。
 
-  - id: tm-grandma
-    term: おばあちゃん
-    definition: 駄菓子屋の店主。システムの主な利用者。
-    notes: IT に詳しくない前提で画面を設計する。
+  - id: tm-sales-credit-balance
+    term: つけ残高
+    englishName: outstanding credit balance
+    definition: 顧客ごとに集計した、つけによる販売代金のうち未払いの金額。
+    notes: 顧客から受け取った支払いを差し引く。現金で支払い済みの販売代金は含めない。
+    category: tm-sales
+    relatedTerms: [tm-accounts-receivable, tm-sales-credit-limit]
+    example: つけ残高を確認して、今回支払う金額を伝える。
+
+  - id: tm-sales-credit-limit
+    term: つけ限度額
+    englishName: credit limit
+    aliases: [つけ上限額]
+    definition: 店主が顧客ごとに認める、未払いのつけ残高の上限金額。
+    notes: 新たな買い物で限度額を超える場合は、現金での支払いを案内する。
+    category: tm-sales
+    relatedTerms: [tm-accounts-receivable, tm-sales-credit-balance]
+
+  - id: tm-shop-owner
+    term: 店主代表
+    englishName: shop owner representative
+    aliases: [店主]
+    definition: 店舗の業務要件と運用方針を決め、最終判断を担う店舗側の代表者。
+    notes: 主なシステム利用者でもある。家族が店番をする場合も、つけを認める顧客や定番商品の選定は店主代表が決める。
     category: tm-actor
 
   - id: tm-inventory
     term: 在庫
-    definition: 管理対象の物品。
+    englishName: inventory
+    definition: 店舗が販売するために保有している商品の数量。
+    notes: 店頭と保管場所の数量を合わせて把握する。廃棄した商品は含めない。
 
   - id: tm-safety-stock
     term: 安全在庫
+    englishName: safety stock
     definition: 需要変動に備えて保持する最小限の在庫量。
+    notes: 発注を検討する基準の発注点とは区別する。
+    category: tm-inventory
+    relatedTerms: [tm-reorder-point]
 
   - id: tm-sales
     term: 販売
+    englishName: sales
     definition: 商品を顧客に提供し、代金を受け取ること。
+    notes: 代金をその場で受け取る場合と、つけとして後から受け取る場合がある。
 
   - id: tm-actor
     term: アクター
+    englishName: actor
     definition: システムの利用者または外部システム。
+    notes: この店舗の初期リリースでは、人が販売・在庫・つけの記録と確認を行う。外部システムとの連携は扱わない。

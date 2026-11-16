@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:ifx-file-agent-evidence-grade-criteria
+document: prj-0001:ifx-file-agent-evidence
+path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
+graded_at: "2026-11-15T22:39:33.604Z"
+graded_by: sol-review-executor
+content_hash: 87089ef14b9ab00889a818614b4b3720398490c6349754e1d05535bcdcea3a07
+summary:
+  satisfied: 2
+  unsatisfied: 1
+  total: 3
+criteria:
+  - id: DC-001
+    text: 受け渡すファイルの置き場所・命名・形式・必須項目・書き手と読み手が記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: ファイル連携の方式と失敗時の扱いが設計として妥当であること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: >-
+      OD-02 leaves caller enforcement of safe stopping on missing or corrupt resume state unconfirmed, so the declared
+      failure design is not yet established across the authoritative implementation boundary.
+  - id: DC-003
+    text: 欠けた・壊れたファイルを扱うテストの設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

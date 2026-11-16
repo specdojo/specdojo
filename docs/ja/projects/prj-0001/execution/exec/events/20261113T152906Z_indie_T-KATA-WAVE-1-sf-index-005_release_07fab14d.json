@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T15:29:06Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-1-sf-index-005",
+  "by": "indie",
+  "msg": "orchestrator が記帳。上限か Claude の割り当てで止まったため取り消し、別の agent で最初から流し直す"
+}

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-15T08:42:32Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-2-ifx-file-agent-evidence-090",
+  "by": "luna-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "ARC"
+  }
+}

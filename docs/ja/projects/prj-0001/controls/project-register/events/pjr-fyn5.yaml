@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf37a5fe8a854b16a91eeea776177cdc
+  ts: "2026-11-03T12:53:47Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: data-flow-uc-rewrite の実行で見つかった不具合を起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor から再開して executor を替えると統合の前に止まる
+    - field: description
+      from: ""
+      to: exec resume --resume-from executor --executor-by で別の agent に替えても claim が元の agent のまま残り、完了の前の確認で「別の actor が作業中」として止まる
+    - field: input
+      from: ""
+      to: '["2026-11-03 に T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-020 を opus-executor の claim のまま exec resume --resume-from executor --executor-by sol-executor で再開したところ、executor・親の検証・reporter は通ったが、「completion preflight failed: task is being worked on by another actor: opus-executor」で統合の前に止まった","その後、--executor-by なしの exec resume --task で再開すると、claim の持ち主の opus-executor で executor から流し直して完了した（2026-11-03）","直し方の案: executor を替えて再開するときは claim を新しい agent へ移す（release と claim の event を残す）、または完了の確認で再開時に指定した executor を許す。PJR-RKHR で入れた --resume-from executor の動きに関わる（2026-11-03）"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-03"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-GQN3"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_c99207756ebc453eb59c8e7f8438e447
+  ts: "2026-11-03T13:01:38Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 同じ runner の段に触れるため PJR-MERV の後に流す
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-MERV"]'
+  previous_event_id: reg_bf37a5fe8a854b16a91eeea776177cdc
+- v: 1
+  id: reg_510fe59b52c94f09afa7ff4cf54b0fb7
+  ts: "2026-11-03T13:02:11Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 先行の指定は done まで実行を止めるため外し、夜間の列の順番で PJR-MERV の後に流す
+  changes:
+    - field: depends_on
+      from: '["PJR-MERV"]'
+      to: "-"
+  previous_event_id: reg_c99207756ebc453eb59c8e7f8438e447
+- v: 1
+  id: reg_e39788e7f0a543e5a5dee98c9cb44e5a
+  ts: "2026-11-03T13:43:29Z"
+  action: start
+  actor: argon-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_510fe59b52c94f09afa7ff4cf54b0fb7
+- v: 1
+  id: reg_c4185d4b301d4130a664a7595dd107af
+  ts: "2026-11-03T14:33:46Z"
+  action: review
+  actor: argon-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e39788e7f0a543e5a5dee98c9cb44e5a
+- v: 1
+  id: reg_d07ff68267144ab6a050914943c86ae7
+  ts: "2026-11-03T22:51:10Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が close を承認した。差分・テスト・動作確認で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: executor を替えて再開すると claim を新しい agent へ移し（release と claim の event を残す）、統合まで通るようにした。PJR-Z807 の再開で実地に確かめた
+  previous_event_id: reg_c4185d4b301d4130a664a7595dd107af

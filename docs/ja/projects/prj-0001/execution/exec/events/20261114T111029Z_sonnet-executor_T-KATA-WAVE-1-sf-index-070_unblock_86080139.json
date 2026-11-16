@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T11:10:29Z",
+  "type": "unblock",
+  "task_id": "T-KATA-WAVE-1-sf-index-070",
+  "by": "sonnet-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sf-index-070/T-KATA-WAVE-1-sf-index-070-20261114T090344Z-10c27fb7/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-sf-index-070/T-KATA-WAVE-1-sf-index-070-20261114T090344Z-10c27fb7/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-sf-index-070-20261114T090344Z-10c27fb7",
+    "pipeline_resume_claimed": "true"
+  }
+}

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d3d46bec01524eb2a7ea7032bb0bd69f
+  ts: "2026-11-15T13:25:08Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo の文書と型を英語化する（英語版 第 2 段）
+    - field: description
+      from: ""
+      to: 入り口の文書から順に英語化し、型は設計までの型が確定してから訳す
+    - field: input
+      from: ""
+      to: '["PJR-BRCG の決定（indie が 2026-11-15）: 文書も型も日本語を正本にし、英語は rtn-translate-updated-docs で更新された文書を訳して追う。訳には元の文書の版（hash）を記録し、古くなった訳を見つけられるようにする。訳語の正本は用語集の englishName","訳す順番: 入り口（README・LP、Quick Start、ユースケース別ガイド、コマンドリファレンス）を先にし、型（rulebook・recipe・sample・template）は後","始める条件: 設計までの型（kata-wave-1・2 と、その差し戻しの手直し）が確定した後"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: i18n-docs
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-BRCG"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-DD33"]'

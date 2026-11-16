@@ -1,0 +1,29 @@
+`cdt-register-type.md` を新規に作成しました。成果物がまだ無かったため、判断は「新設」です。対象パスにだけ書き込み、frontmatter の `status` は `draft` のままです。
+
+**現在の実装の動き**
+- `src/register/register.ts` は、登録項目の分類の許容値 `VALID_TYPES` を `./item.js` から読み込み、そのまま外へ公開しています。
+- 中身は `src/register/item.ts` にあり、todo・epic・question・risk・issue・change-request・decision・note の 8 値です。
+- 起票・更新時の検証（`src/register/core.ts` の `validateFields`）は、この 8 値以外を拒否します。
+- 調査のため、エビデンスに列挙されていない `item.ts`・`core.ts`・`views.ts` も読みました。この 3 ファイルは編集していません。
+
+**仕様との照合**
+- 実装の 8 値は、スキーマ `ItemType`、業務データ辞書の `item_type` の値と説明、ステータス定義の分類別の終わり方・終了承認者と一致しています。値の食い違いは見つかりませんでした。
+
+**作成した内容**
+rulebook の章立て（概要／分類定義／値の業務的意味と使い分け／関連仕様との関係）に従っています。
+- 正本の参照先はスキーマ `ItemType` とし、CLI の検証値 `VALID_TYPES` を併記しました。
+- 8 値それぞれに、何を追跡するか、似た分類との境目、どう終えるかを書きました。
+- 分類を選ぶ順序（5 段階）を加えました。
+- 関連仕様の章には、辞書・状態定義との対応、分類ごとの一覧画面への振り分け、分類から決まる既定の commit 種別を書きました。
+
+**検証**
+- Prettier で整形し、markdownlint は 0 件でした。
+- `lint:md` などの残りの検査は、このあと runner が実行します。
+
+**引き継ぎ事項**
+- 分類から一覧画面への振り分けと既定の commit 種別は、`views.ts`・`item.ts` の現在の動きだけを根拠にしています。承認済みの仕様で裏付けられておらず、残すかどうかはレビューで判断が必要です。
+- ステータス定義には「業務データ辞書は未作成」という古い記述（M-04）が残っています。辞書はすでにあるため、別タスクでの更新候補です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"新設: docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md を作成。実装の VALID_TYPES（src/register/register.ts が item.ts から re-export）、スキーマ ItemType、bdd-register-entry の `item_type` の 8 値は一致し、乖離なし。各値の業務上の意味・使い分け・終端と、分類の選択順序を記述した。","handoff":["根拠の範囲: エビデンスは `src/register/register.ts` だけだが、そこが re-export している `VALID_TYPES` の定義が `src/register/item.ts` にあるため、`item.ts`・`core.ts`（`validateFields` による type 検証）・`views.ts`（分類別の派生ビュー）も読んだ。いずれも未編集で、`evidence_refs` に含まれていない未確認範囲として記録する。","実装だけを根拠にした記述: 関連仕様の章にある『分類から派生ビューへの振り分け』（`views.ts`）と『既定の commit 種別マッピング』（`item.ts` の `DEFAULT_ITEM_TYPE_COMMIT_TYPE_MAP`）は現在の動作のみを根拠としており、承認済み仕様での裏付けを確認していない。成果物に残すかどうかはレビューでの判断を要する。","後続の更新候補: `stsd-register-entry` の M-04 には `bdd-register-entry` が未作成と書かれているが、辞書はすでに存在する。stsd の更新は別タスクとして扱う。","実装と仕様の値の乖離はない（todo/epic/question/risk/issue/change-request/decision/note が実装・schema・BDD で一致）。"],"validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md","status":"passed","summary":"新規ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/product/010-business-specs/020-data-model/cdt-register-type.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"変更は docs/ja/projects/ 外","reason":"変更ファイルは docs/ja/product/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していないため適用外"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"plan/result/個票などの履歴蓄積ファイルを変更していないため適用外"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更ファイルは Markdown のみで、*.yaml / *.yml を変更していないため適用外"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,15 @@
+プロジェクト登録簿項目 **PJR-8J47**「カタログの uis の 2 件を clis に付け替える」の executor 担当作業を完了しました。
+
+### 実施内容
+
+1. **ユーザーインターフェースモデルカタログの付け替え**:
+   - [`dct-user-interface-model.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8J47/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml) の `uis-index`・`uis-exec-commands` を `clis-index`・`clis-exec-commands` へ付け替えました。
+   - `path`、`rulebook`（`clis-exec-commands` に [`specdojo:clis-rulebook`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8J47/docs/ja/specdojo/rulebooks/clis-rulebook.md) を指定、`clis-index` は専用 rulebook 未整備のため未宣言として note に記録）、`overview`、`done_criteria`、`note`、`depends_on` を確定した `clis` の型に合わせました。引数・オプションや画面・遷移に関する記述を外し、正本参照・入出力情報の要点・利用者の次の手を定義する形に改めました。
+2. **関連カタログの参照更新**:
+   - [`dct-system-functions.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8J47/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml) の `sf-index` において、`depends_on` の `uis-index` を `clis-index` へ更新し、`overview` の「画面仕様（uis-index配下のCLIコマンド群）」を「CLI仕様（clis-index配下のCLIコマンド群）」へ更新しました。
+3. **個票の更新**:
+   - 個票 [`pjr-8j47-catalog-uis-to-clis.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8J47/docs/ja/projects/prj-0001/controls/project-register/pjr-8j47-catalog-uis-to-clis.md) の作業内容テーブルおよび対応結果セクション（実施内容、検証結果、CHANGELOG に書く事項、残課題・申し送り、関連ドキュメント）を更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"カタログの uis-index・uis-exec-commands を clis-index・clis-exec-commands へ付け替え、確定した clis の型に合わせた定義更新と関連カタログ参照の修正を完了しました。","handoff":["clis-index の専用 rulebook（clis-index-rulebook）は未整備のため未宣言としています。将来の必要性に応じて kata 新設を検討してください。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"All project catalogs validated successfully"},{"command":"npm run validate:history-links","status":"passed","summary":"All ticket and history links validated successfully"}]}
+</specdojo_executor_evidence>

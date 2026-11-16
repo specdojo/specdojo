@@ -1,0 +1,263 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:ifx-file-agent-evidence
+path: docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 89
+graded_at: "2026-11-15T22:39:33.604Z"
+graded_by: sol-review-executor
+content_hash: 87089ef14b9ab00889a818614b4b3720398490c6349754e1d05535bcdcea3a07
+source_hashes:
+  catalog-entry: 58ee3b496cc90d59a1b29b05facedd9368cc5bf92eaab11c7f868d3f60cf3e14
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:ifx-index: d235081f2eb0b16a1a9c5d70ca76e7a91a3aa5b0c8c326bab23d866b0eb27357
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
+    score: 92
+  consistency:
+    score: 63
+  architecture:
+    score: 92
+  usability:
+    score: 100
+  implementation:
+    score: 88
+  quality:
+    score: 88
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 9
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 98
+    anchor: フォールバック時に成功扱いとなる条件は、終了コード 0 かつ親検証がすべて合格（not_run を含まない）であることに限る。
+    message: >-
+      Qualify fallback acceptance for approach-specific requirements: src/exec/evidence.ts executorReportContractFailure
+      rejects missing condense_records for condense/edit, so exit code 0 and passing parent checks alone do not permit
+      that handoff.
+    message_ja: >-
+      Qualify fallback acceptance for approach-specific requirements: src/exec/evidence.ts executorReportContractFailure
+      rejects missing condense_records for condense/edit, so exit code 0 and passing parent checks alone do not permit
+      that handoff.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 114
+    anchor: 再開判定において evidence なしとして扱う（executor 段をやり直す）。
+    message: >-
+      Reconcile the promised executor rerun and TC-06 with src/exec/register-resume.ts:263–268: when a succeeded
+      executor's evidence is missing or invalid, selectResumableRegisterRun returns not-resumable instead of selecting
+      an executor rerun; document the supported recovery route or explicitly track this implementation discrepancy.
+    message_ja: >-
+      Reconcile the promised executor rerun and TC-06 with src/exec/register-resume.ts:263–268: when a succeeded
+      executor's evidence is missing or invalid, selectResumableRegisterRun returns not-resumable instead of selecting
+      an executor rerun; document the supported recovery route or explicitly track this implementation discrepancy.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 27
+    anchor: "writer: SpecDojo runner（agent の stdout に出力された <specdojo_executor_evidence> タグから抽出・正規化し、差分情報・親検証結果を結合して書き込む）"
+    message: >-
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
+    message_ja: >-
+      Reconcile the writer descriptions with
+      docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml:84, which says the executor
+      agent writes the exchanged files, while this contract assigns file writing to the runner and explicitly prohibits
+      direct agent writes.
+    cause:
+      type: document
+  - id: F004
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 128
+    anchor: 標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。
+    message: >-
+      Scope the unconditional I/O failure rule or record its implementation discrepancy: this contract promises
+      immediate exit code 1, while src/exec/run/mode-shared.ts recordIntegrateStage and recordRepoIntegration catch
+      pipeline-state update errors, emit warnings, and continue integration.
+    message_ja: >-
+      Scope the unconditional I/O failure rule or record its implementation discrepancy: this contract promises
+      immediate exit code 1, while src/exec/run/mode-shared.ts recordIntegrateStage and recordRepoIntegration catch
+      pipeline-state update errors, emit warnings, and continue integration.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 115
+    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
+    message: >-
+      Specify the notification behavior for evidence read or consistency failures, or identify the authoritative
+      implementation location that defines it.
+    message_ja: エビデンスの読み取りまたは整合性の失敗に対する通知動作を規定するか、それを定義している権威ある実装箇所を特定する。
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 115
+    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
+    message: >-
+      Define the notification output and behavior for evidence read failures so implementation and recovery handling
+      have a concrete contract.
+    message_ja: エビデンスの読み取り失敗に対する通知の出力と動作を定義し、実装とリカバリーのハンドリングが具体的なコントラクトを持つようにする。
+    cause:
+      type: document
+  - id: F007
+    severity: minor
+    rule: vp-dev-testability
+    line: 132
+    anchor: QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
+    message: >-
+      Identify the validation procedure and expected result for checking the YAML contract against the referenced types
+      and failure behavior.
+    message_ja: 参照されている型と失敗時の動作に対して、YAML コントラクトをチェックするための検証手順と期待される結果を特定する。
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 134
+    anchor: 正常系では、生成された各ファイルが schema_ref の型を満たし required_fields をすべて含むことを合格条件とする。
+    message: >-
+      Provide a check procedure with pass/fail results for validating each file against its referenced type and required
+      fields.
+    message_ja: 各ファイルを、その参照されている型および必須フィールドと照らし合わせて検証するための、合格/不合格の結果を伴うチェック手順を提供する。
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 113
+    anchor: 書き込み済みの evidence.json が読込時に JSON として解釈できない、または task_id / run_id / stage の整合検証に失敗した場合は、
+    message: >-
+      Define the outcome and a verification case for persisted evidence with valid JSON and matching
+      task_id/run_id/stage but missing or mistyped required_fields such as changes, validations, or final_message; the
+      current malformed branches cover syntax and identity failures only.
+    message_ja: >-
+      Define the outcome and a verification case for persisted evidence with valid JSON and matching
+      task_id/run_id/stage but missing or mistyped required_fields such as changes, validations, or final_message; the
+      current malformed branches cover syntax and identity failures only.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-ops-operability
+    line: 115
+    anchor: この読込・整合検証の段では利用者への通知を出さない。通知の文言・出力先は呼び出し側の CLI が持ち、
+    message: Define the user notification destination and recovery handoff for evidence read or consistency failures.
+    message_ja: エビデンスの読み取りまたは整合性の失敗に対するユーザー通知の送信先とリカバリーのハンドオフを定義する。
+    cause:
+      type: document
+done_criteria:
+  satisfied: 2
+  total: 3
+  unsatisfied:
+    DC-002:
+      - ARC
+  detail_ref: prj-0001:ifx-file-agent-evidence-grade-criteria

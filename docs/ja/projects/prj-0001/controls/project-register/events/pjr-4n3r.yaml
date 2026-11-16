@@ -1,0 +1,129 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_102dc4d9329446e7a7a0cc64142451ea
+  ts: "2026-11-08T00:35:13Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 外部 I/F（コマンド）（ifx-cmd）の型を、実装と同じことを書かない形に手入れする
+    - field: description
+      from: ""
+      to: 外部 I/F（コマンド）の型を手入れする。引数・オプションの表は持たずコマンドリファレンスを参照し、入出力の約束（終了コード・作るファイル・副作用）に絞る
+    - field: input
+      from: ""
+      to: '["方針（indie が決定、2026-11-08）: 引数・オプションの表は持たずコマンドリファレンスを参照し、入出力の約束（終了コード・作るファイル・副作用）に絞る。","rulebook にあわせて ifx-cmd-recipe・ifx-cmd-sample・ifx-cmd-template も揃える。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-08"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: rulebook-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:ifx-cmd-rulebook"]'
+    - field: derived_from
+      from: ""
+      to: '["PJR-2GD6"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-HMV6"]'
+- v: 1
+  id: reg_323eaac9a46e4464889aed9a376797b3
+  ts: "2026-11-08T03:04:39Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_102dc4d9329446e7a7a0cc64142451ea
+- v: 1
+  id: reg_182e991308a648ac9c9bac7d7e489afc
+  ts: "2026-11-08T03:33:22Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
+  previous_event_id: reg_323eaac9a46e4464889aed9a376797b3
+- v: 1
+  id: reg_62b5c95d46ca418db482f8b4e9e921a3
+  ts: "2026-11-08T03:49:34Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
+      to: "-"
+  previous_event_id: reg_182e991308a648ac9c9bac7d7e489afc
+- v: 1
+  id: reg_19f2ebfdcc76477eb3ec1c64dadc49e6
+  ts: "2026-11-08T03:50:04Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_62b5c95d46ca418db482f8b4e9e921a3
+- v: 1
+  id: reg_d767f931ebab437b8a56f9c94c57f03b
+  ts: "2026-11-08T03:53:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（flash-high-executor）で対応。統合の CHANGELOG の衝突を運用メモの手順で解いて再開した。差分・個票の対応結果・親の検証・validate:schema を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-08"
+    - field: conclusion
+      from: "-"
+      to: ifx-cmd-rulebook を引数の表を持たず正本を参照し、入出力の約束に絞る形に改め、recipe・sample・template・ifx-cmd.schema.yaml を合わせた
+  previous_event_id: reg_19f2ebfdcc76477eb3ec1c64dadc49e6

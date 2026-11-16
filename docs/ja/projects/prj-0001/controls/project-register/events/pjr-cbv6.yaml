@@ -1,0 +1,133 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_65661e869d6d4348a11ef66fa694d232
+  ts: "2026-11-10T12:42:27Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade で YAML の成果物を評価できるようにする
+    - field: description
+      from: ""
+      to: PJR-JQSB の決定どおり、grade が YAML の成果物のメタ情報を validate:schema と同じ読み方（最上位か x-spec-meta）で読み、YAML の本文を評価し、結果をサイドカーに残せるようにする
+    - field: input
+      from: ""
+      to: '["PJR-JQSB（indie が決定、2026-11-10）: 案 A。ハッシュは YAML のファイルの内容から取り、指摘の行番号は元の YAML の行を指す。Markdown の扱いは変えない。","対象の例: docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml（最上位の id など）、docs/ja/product/020-external-interface-specs/ifx-cmd-ai-provider-cli.yaml、YAML の kata の sample（bdd-sample.yaml・ifx-cmd-sample.yaml）。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-10"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-JQSB","PJR-V05D"]'
+- v: 1
+  id: reg_947f237786484386bdeb89990c822d05
+  ts: "2026-11-10T12:59:49Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 完了条件と変更範囲を承認し、夜間の実行に加える（indie が決定、2026-11-10）
+  changes:
+    - field: autopilot
+      from: "-"
+      to: approved
+  previous_event_id: reg_65661e869d6d4348a11ef66fa694d232
+- v: 1
+  id: reg_b46cc5b3561f4ebaa2e2d67bf6f142a7
+  ts: "2026-11-10T22:46:41Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_947f237786484386bdeb89990c822d05
+- v: 1
+  id: reg_d1893838cfd04ccf94e153b141216ac3
+  ts: "2026-11-10T23:12:14Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_b46cc5b3561f4ebaa2e2d67bf6f142a7
+- v: 1
+  id: reg_6ce0c262817e4d9d93f8738ed2371697
+  ts: "2026-11-11T00:07:33Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_d1893838cfd04ccf94e153b141216ac3
+- v: 1
+  id: reg_4021581ddcdb41449d162d528554f240
+  ts: "2026-11-11T00:27:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6ce0c262817e4d9d93f8738ed2371697
+- v: 1
+  id: reg_fa62dcd5124d4cd3bee26127852215a7
+  ts: "2026-11-11T01:00:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（sol-executor、親の検証の失敗を plan の追加の指示で直して再開）で対応。親の検証・JSEY の run・YAML の 4 件の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-11"
+    - field: conclusion
+      from: "-"
+      to: grade が YAML の成果物と kata を、validate:schema と同じ読み方のメタ情報で評価できるようにした。bdd-register-entry.yaml（pass 99）・ifx-cmd-ai-provider-cli.yaml（needs-work 79）・bdd-sample.yaml（pass 100）・ifx-cmd-sample.yaml（pass 98）に grade を流して結果ができた
+  previous_event_id: reg_4021581ddcdb41449d162d528554f240

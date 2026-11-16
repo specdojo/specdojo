@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task_id": "T-STSD-PILOT-stsd-register-entry-070",
+  "run_id": "20261105T125158985Z-8c59e41b",
+  "updated_at": "2026-11-05T13:45:25.626Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 2,
+      "started_at": "2026-11-05T13:30:07.204Z",
+      "completed_at": "2026-11-05T13:38:06.251Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-STSD-PILOT-stsd-register-entry-070/20261105T125158985Z-8c59e41b/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-11-05T13:43:38.638Z",
+      "completed_at": "2026-11-05T13:45:15.037Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-STSD-PILOT-stsd-register-entry-070/20261105T125158985Z-8c59e41b/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-05T13:45:16.138Z",
+      "completed_at": "2026-11-05T13:45:25.626Z",
+      "artifact_ref": null
+    }
+  }
+}

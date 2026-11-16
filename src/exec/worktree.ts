@@ -88,7 +88,14 @@ export function resolveWorktreeBase(
   configured: string | undefined,
 ): string {
   const value = override?.trim() || configured?.trim() || "../worktrees";
-  return isAbsolute(value) ? resolve(value) : resolve(repoRoot, value);
+  if (isAbsolute(value)) return resolve(value);
+  // An explicit CLI override remains relative to the invoking checkout. Persistent
+  // configuration and the default use the main checkout, also from a Job worktree.
+  if (override?.trim()) return resolve(repoRoot, value);
+  const listed = gitResult(repoRoot, ["worktree", "list", "--porcelain"]);
+  const mainPath =
+    listed.status === 0 ? String(listed.stdout ?? "").match(/^worktree (.+)$/m)?.[1] : undefined;
+  return resolve(mainPath ?? repoRoot, value);
 }
 
 export function listRegisteredWorktrees(repoRoot: string): RegisteredWorktree[] {
@@ -164,9 +171,19 @@ function trackedPackageLockDirs(worktreePath: string): string[] {
 
 export type NpmCiRunner = (packageDir: string) => void;
 
+export const NPM_CI_ARGS: readonly string[] = [
+  "ci",
+  "--include=dev",
+  "--prefer-offline",
+  "--no-audit",
+  "--no-fund",
+];
+
 function runNpmCi(packageDir: string): void {
   const command = process.platform === "win32" ? "npm.cmd" : "npm";
-  const result = spawnSync(command, ["ci", "--include=dev"], {
+  // PJR-T01P: lock から入れる依存は主の作業ツリーと同じになるため、cache にある tarball を
+  // 再検証せずに使い（--prefer-offline）、準備に要らない audit と fund の問い合わせを省く。
+  const result = spawnSync(command, NPM_CI_ARGS, {
     cwd: packageDir,
     env: { ...gitEnvironment(), CI: "true", LEFTHOOK: "0" },
     stdio: "inherit",

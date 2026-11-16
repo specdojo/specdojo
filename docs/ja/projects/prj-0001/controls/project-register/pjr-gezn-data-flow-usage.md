@@ -8,11 +8,16 @@ specdojo:
     - prj-0001:pjr-index
   item_type: epic
   track: data-flow-usage
-  item_status: open
+  domains:
+    - data-flow
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-11-01T10:23:16Z"
+  start_on: "2026-11-01"
   due_on: "2026-11-30"
+  completed_at: "2026-11-03T12:52:43Z"
+  conclusion: 概念データフローを、全体概要（7 区分の 3 つの図）と系統別の詳細 3 文書（register・schedule・routine）に再編し、旧 7 文書を非推奨にした。Kata（全体概要・ユースケース別）も合わせて見直した
   derived_from:
     - PJR-SJQC
 ---
@@ -30,7 +35,7 @@ PJR-SJQC の決定に沿って、cdfd-overview を共通・基盤と 3 系統の
 
 ## 3. 範囲（track と domain）
 
-_TODO_: Frontmatter の `track` が担う範囲と対象 domain、対象外の境界を記載する。
+track `data-flow-usage` は、domain `data-flow` の全体概要（cdfd-overview）と系統別の詳細 3 文書（cdfd-uc-register・cdfd-uc-schedule・cdfd-uc-routine）への再編、および旧 7 文書の非推奨化と関連 Kata の見直しを担う。ほかの domain は対象外とする。
 
 ## 4. 完了の判断の基準
 

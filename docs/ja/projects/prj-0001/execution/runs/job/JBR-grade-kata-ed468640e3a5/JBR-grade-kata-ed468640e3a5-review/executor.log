@@ -1,0 +1,48 @@
+レビュー結果は `complete-with-findings` です。Run は `succeeded` で15件すべて完了しており、そのまま統合できます。finding は3件の文書が `needs-work` と判定されたことで、Run の完了は妨げません。私はファイルを何も変更していません。
+
+**出力範囲**
+- 差分は22ファイルで、すべてこの Job Run の出力です。内訳は、grade 評価結果サイドカーの更新・新規15件（新規は `cdt-rulebook` と `clis-rulebook` の2件）、Run JSON、Run 記録ディレクトリ内の6件（`command.stdout.log`・`command.stderr.log`・`evidence.json`・`pipeline-state.json`・`plan.md`・`result.md`）です。
+- 対象外の変更はありません。
+
+**記録の整合**
+- Run JSON、`evidence.json`、`pipeline-state.json` の終了状態は一致しています。Run JSON は `state: succeeded`、attempt 1 は `exit_code` 0 です。`evidence.json` は `exit_code` 0、`job-command` は passed です。`pipeline-state.json` の executor と reporter はどちらも succeeded です。
+- `evidence.json` の `changes` は16件です。これは差分22件からランナーが管理する Run 記録6件を除いた数と同じです。
+- stderr は空です。stdout の最終行は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` です。
+- Job Run の result の記述（15件完了、failed も `retry_exhausted` もなし、`needs-work` 3件、score 78〜100）は、`results.tsv` の内容と食い違いがありません。
+
+**Job 固有の確認**
+- 終了コード75（rate limit）や中断で残った段はなく、再開も不要です。
+- `failed` の段はありません。15件すべてが stage 1 で `passed` です。
+- Run が `partial` の場合の確認は、Run が `succeeded` なので該当しません。
+- `retry_exhausted` はありません。`grade state --exhausted` の出力も空でした。
+- verdict は `pass` が12件、`needs-work` が3件です。score の分布は次のとおりです。
+
+| score | 件数 |
+| --- | --- |
+| 100 | 5 |
+| 93〜99 | 7 |
+| 92 | 1 |
+| 88 | 1 |
+| 78 | 1 |
+
+  評価設定の見直しを要するほどの偏りは見当たりません。
+
+**評価結果の鮮度と照合**
+- 15件のサイドカーの verdict と score は、`results.tsv` とすべて一致しました。
+- `grade list --changed-only` と `--dependency-changed` の出力に、対象15件は1件も含まれていませんでした。`--incomplete` の出力は空でした。評価結果は最新で、評価パイプラインも完了しています。
+
+**finding（改善指示）**
+- `needs-work` の3件は、文書側の改善候補として扱うべきものです。
+  - `imp-data-rulebook`: score 78、finding 11件
+  - `pm-communication-plan-recipe`: score 88、finding 4件
+  - `pm-plan-recipe`: score 92、finding 3件
+- 判定と score は、ジョブ目的である「実行結果に異常がないか」とは別の、文書品質の評価です。Run の完了を妨げないため、別のタスクで改善することを勧めます。
+- `pm-members-recipe` は `pass`（score 97）ですが finding が9件あり、件数が多めです。
+
+**確認できなかった範囲**
+- 個々の finding の中身は、手順上 review で再評価しないため読んでいません。
+- `--rubric-outdated` と `--ungraded` の一覧は、承認が必要だったため実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。差分 3d641e95..a965e3ee の22ファイルは grade サイドカー15件（M13・A2）、Run JSON、Run 記録ディレクトリ内の6件で、すべて当該 Job Run の出力であり対象外変更はない。Run JSON `state: succeeded`（attempt 1 `exit_code` 0）、`evidence.json`（`exit_code` 0、`job-command` passed、`changes` 16件＝Run 記録6件を除く差分）、`pipeline-state.json`（executor・reporter とも succeeded）、stdout（selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0、stderr 空）、Job Run result の記述は相互に整合する。`results.tsv` は15件すべて stage 1 passed で、rate limit・中断による未完了の段、failed、`retry_exhausted` はなく、partial の確認は該当しない。`grade state --exhausted` の出力も空。verdict は pass 12件・needs-work 3件。score は 100 が5件、93〜99 が7件、92・88・78 が各1件で、評価設定の見直しを要する偏りはない。15件のサイドカーの verdict・score は `results.tsv` と一致した。`grade list --changed-only` と `--dependency-changed` の出力に対象15件は含まれず（0件）、`--incomplete` の出力は空で、評価結果は最新かつ確定している。finding は needs-work の3件で、`imp-data-rulebook`（78、finding 11件）、`pm-communication-plan-recipe`（88、finding 4件）、`pm-plan-recipe`（92、finding 3件）。これは文書品質の評価で、Run の完了は妨げないため、別タスクでの改善を勧める。`pm-members-recipe` は pass（97）だが finding が9件と多め。確認できなかった範囲: 個々の finding の中身は review で再評価しないため読んでいない。`--rubric-outdated` と `--ungraded` の一覧は承認が必要だったため実行していない。","handoff":["needs-work と判定された `imp-data-rulebook`（score 78、finding 11件）、`pm-communication-plan-recipe`（score 88、finding 4件）、`pm-plan-recipe`（score 92、finding 3件）について、別タスクで改善するか判断してください。","`pm-members-recipe` は verdict pass（score 97）ですが finding が9件あり、改善候補として確認してください。"],"validations":[{"command":"git diff --stat 3d641e95bdc1f02ba6dbe74160a83e16ea88c762..a965e3ee0c6157d043643f17f57fbbc548bbe604; git diff --name-status 3d641e95bdc1f02ba6dbe74160a83e16ea88c762..a965e3ee0c6157d043643f17f57fbbc548bbe604","status":"passed","summary":"22ファイルすべてが当該 Job Run の出力（grade サイドカー15件、Run JSON、Run 記録ディレクトリ内の6件）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only | grep -cE '<対象15件>'","status":"passed","summary":"対象15件の該当は0件で、評価結果は最新"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed | grep -cE '<対象15件>'","status":"passed","summary":"対象15件の該当は0件"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なしで、評価パイプラインは完了"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なしで、retry_exhausted はない"},{"command":"grep -HE '^(verdict|score):' <grade サイドカー15件>","status":"passed","summary":"15件の verdict・score は results.tsv とすべて一致"}]}
+</specdojo_executor_evidence>

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-10-05T21:13:24.712Z"
-graded_by: agy-expert-executor
-content_hash: f816cef26ab691548cb25692742af7f12ecccd0b26c0f9c44b3eacb407573e7b
+graded_at: "2026-11-07T20:34:02.171Z"
+graded_by: flash-high-executor
+content_hash: 4d8c01705ab5ccbc764f902ac7e187eca023c3027e89886bdc31c463a49979e0
 categories:
   purpose:
     score: 100
@@ -113,9 +113,11 @@ findings:
     line: 1
     anchor: "# コミュニケーション計画 作成ルール"
     message: 「位置づけ」という見出しがあるが、他成果物から見た本文書の役割や依存関係などの位置づけに関する記述が不足している。
+    message_ja: 「位置づけ」という見出しがあるが、他成果物から見た本文書の役割や依存関係などの位置づけに関する記述が不足している。
   - id: F002
     severity: minor
     rule: vp-ux-readability
     line: 1
     anchor: "# コミュニケーション計画 作成ルール"
     message: 見出しに「位置づけ」が含まれているが、具体的な位置づけの説明がないため、利用者が文書の役割を把握しにくい。
+    message_ja: 見出しに「位置づけ」が含まれているが、具体的な位置づけの説明がないため、利用者が文書の役割を把握しにくい。

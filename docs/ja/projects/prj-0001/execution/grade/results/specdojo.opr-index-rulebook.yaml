@@ -5,17 +5,17 @@ path: docs/ja/specdojo/rulebooks/opr-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 83
-graded_at: "2026-10-05T21:05:03.161Z"
-graded_by: agy-expert-executor
-content_hash: e8852014a5822ed8cce209cbdb1cb2b4a26358e1de6ee7d6d09750816c3262f9
+score: 79
+graded_at: "2026-11-07T20:16:12.703Z"
+graded_by: flash-high-executor
+content_hash: 77c4d8d7514636cb4ed352ae2f0f33e5f65545c2eead0f76501bf56da3ee07b4
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 88
   planning:
-    score: 100
+    score: 92
   business:
     score: 92
   architecture:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 58
+    score: 50
   consistency:
     score: 75
 viewpoints:
@@ -33,14 +33,14 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -87,11 +87,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -101,54 +101,111 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 4
-  minor: 4
+  minor: 9
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 運用手順 全体構成 作成ルール"
+    message: >-
+      While the document status is 'draft' and related assets (recipe, template) are undecided, it does not specify
+      pending decisions, review points, or criteria required for the PO to approve and transition it to ready.
+    message_ja: >-
+      ドキュメントのステータスが 'draft' であり、関連するアセット（recipe, template）が決まっていない間、POがそれを承認して 'ready'
+      に移行するために必要な未決定事項、レビューポイント、または基準については明記されていません。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 36
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: >-
+      The rulebook lists 12 required chapters but lacks guidance on authoring sequence, section dependencies, and
+      explicit completion conditions for planning authoring tasks.
+    message_ja: ルールブックには12の必須チャプターがリストされていますが、執筆の順序、セクション間の依存関係、および執筆タスクの計画における明示的な完了条件に関するガイダンスが不足しています。
+  - id: F003
     severity: minor
     rule: vp-ba-requirements-completeness
     line: 36
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: システムによってはバッチ処理（7章）や独自のアカウント管理（9章）が存在しない場合もあるため、全12章を一律に必須とすると適用先で無駄な記述を強いる可能性がある。
-  - id: F002
+    message_ja: システムによってはバッチ処理（7章）や独自のアカウント管理（9章）が存在しない場合もあるため、全12章を一律に必須とすると適用先で無駄な記述を強いる可能性がある。
+  - id: F004
+    severity: minor
+    rule: vp-dev-testability
+    line: 55
+    anchor: "## 6. 記述ガイド"
+    message: >-
+      The rulebook does not provide validation commands or procedures (such as schema validation or lint checks) to
+      verify that the generated opr-index document conforms to the required rules.
+    message_ja: >-
+      The rulebook does not provide validation commands or procedures (such as schema validation or lint checks) to
+      verify that the generated opr-index document conforms to the required rules.
+  - id: F005
     severity: major
     rule: vp-qe-verifiability
     line: 36
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 本文構成表に「内容（要点）」や「記述基準」の列がなく、各章で具体的に何を記述すべきかの判定条件が不明確である。
-  - id: F003
+    message_ja: 本文構成表に「内容（要点）」や「記述基準」の列がなく、各章で具体的に何を記述すべきかの判定条件が不明確である。
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 32
     anchor: "| `rulebook`   | `specdojo:opr-index-rulebook`    | 任意 |"
     message: 推奨 Frontmatter 項目において `rulebook` の指定が「任意」となっているが、文書のルール準拠を機械的に判定するために必須とすることが望ましい。
-  - id: F004
+    message_ja: 推奨 Frontmatter 項目において `rulebook` の指定が「任意」となっているが、文書のルール準拠を機械的に判定するために必須とすることが望ましい。
+  - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用手順 全体構成 作成ルール"
     message: "`recipe` および `template` が `undecided` のままであり、作成支援資産が不足している。"
-  - id: F005
+    message_ja: "`recipe` および `template` が `undecided` のままであり、作成支援資産が不足している。"
+  - id: F008
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 運用手順 全体構成 作成ルール"
     message: 対応サンプル `specdojo:opr-index-sample` が本ルールブックに従っておらず、Frontmatter の `rulebook` 指定が誤っている（`opd-rulebook` になっている）。
-  - id: F006
+    message_ja: 対応サンプル `specdojo:opr-index-sample` が本ルールブックに従っておらず、Frontmatter の `rulebook` 指定が誤っている（`opd-rulebook` になっている）。
+  - id: F009
     severity: major
     rule: vp-qe-kata-conformance
     line: 36
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 本ルールブックで 12 章すべてを必須（○）としているが、対応サンプルでは 4 章分しか実装されておらず、整合していない。
-  - id: F007
+    message_ja: 本ルールブックで 12 章すべてを必須（○）としているが、対応サンプルでは 4 章分しか実装されておらず、整合していない。
+  - id: F010
     severity: major
     rule: vp-ux-readability
     line: 36
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 本文構成表に記述要点がなく、章タイトルから内容を推測させる形式となっており、作成者の判断に依存する。
-  - id: F008
+    message_ja: 本文構成表に記述要点がなく、章タイトルから内容を推測させる形式となっており、作成者の判断に依存する。
+  - id: F011
     severity: minor
     rule: vp-ux-readability
     line: 55
     anchor: "## 6. 記述ガイド"
     message: 12 章という広範な構成を要求していながら、記述ガイドが一部の章（障害対応、バッチ等）に限定されており、他の必須章に対するガイダンスが不足している。
+    message_ja: 12 章という広範な構成を要求していながら、記述ガイドが一部の章（障害対応、バッチ等）に限定されており、他の必須章に対するガイダンスが不足している。
+  - id: F012
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順 全体構成 作成ルール"
+    message: >-
+      The rulebook is marked as 'draft' in the frontmatter, but it does not specify the ready conditions or release
+      prerequisites required to transition it to 'ready'.
+    message_ja: ルールブックのフロントマターでは 'draft' とマークされていますが、'ready' に移行するために必要な ready 条件やリリース前の要件については明記されていません。
+  - id: F013
+    severity: minor
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# 運用手順 全体構成 作成ルール"
+    message: >-
+      The rulebook does not describe how this rulebook itself should be maintained, updated, or who to contact for
+      questions and rule exemptions.
+    message_ja: ルールブックには、このルールブック自体をどのように維持・更新すべきか、または質問やルールの例外について誰に連絡すべきかが記載されていません。

@@ -1,0 +1,27 @@
+PJR-VMXK（CLI仕様 `clis` の型を新しく作る）の作業を完了しました。
+
+### 実施内容
+
+1. **新しい実践の型の作成**:
+   - [`clis-rulebook.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/specdojo/rulebooks/clis-rulebook.md)（`specdojo:clis-rulebook`）:
+     - システム自身の CLI コマンド群を利用者視点での仕様として記述するルールを策定しました。
+     - 外部 CLI を呼び出す約束である [`ifx-cmd`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md) と明確に区別し、引数・オプションの詳細な構文表は持たずコマンドリファレンスを参照する原則を規定しました。
+     - 利用目的、操作の流れ（どのコマンドからどのコマンドへ進むか）、出力と生成ファイルの要点、終了コードとエラー表示・利用者の次の手に絞って記述する章構成を整備しました。
+     - GUI 固有の章（画面表示項目・画面遷移・レイアウト等）を排除しました。
+     - [`rulebook-authoring-standard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/specdojo/standards/rulebook-authoring-standard.md) の章立てに従いサンプルの章は置かず、frontmatter で `sample: specdojo:clis-sample`、`recipe: not-needed`、`template: not-needed` を宣言しました。
+   - [`clis-sample.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/specdojo/samples/clis-sample.md)（`specdojo:clis-sample`）:
+     - 駄菓子屋きぬやの販売管理システムの CLI コマンド群（`sales start`, `sales add`, `sales total`, `sales complete`, `sales cancel`）を題材にした完成例を作成しました。
+     - Mermaid による操作フロー、コマンドリファレンス参照、標準出力・生成ファイル要点、終了コード体系（0〜3）、代表的なエラー表示と利用者の次の手を網羅しました。
+
+2. **種類一覧を持つ文書・設定への反映**:
+   - [`id-and-file-naming-standard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/specdojo/standards/id-and-file-naming-standard.md): 14.2 節の表に `clis-`（CLI仕様）を追加しました。
+   - [`deliverables-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/specdojo/references/deliverables-reference.md): 2.1.4 ユーザーインターフェースモデルに `[CLI仕様](../rulebooks/clis-rulebook.md)` を追加しました。
+   - [`sidebar-config.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/packages/docs-site/.vitepress/sidebar-config.ts): インターフェースモデル配下に `rulebook("CLI仕様", "clis")` および `sample("CLI仕様", "clis")` を追加しました。
+   - [`pm-review-viewpoints.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/specdojo/defaults/pm-review-viewpoints.yaml): `vp-po-business-goal-alignment` および `vp-arc-single-responsibility` の `confirmed_default` に `specdojo:clis-rulebook` を追加しました。
+
+3. **登録簿個票の更新**:
+   - [`pjr-vmxk-clis-kata-bootstrap.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VMXK/docs/ja/projects/prj-0001/controls/project-register/pjr-vmxk-clis-kata-bootstrap.md) の作業内容・対応結果を更新し、executor 判断理由（recipe/template の要否、本文章立て、生成ファイル・終了コード要件の独立化）、CHANGELOG 文案、残課題を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"CLI仕様（clis）の型（specdojo:clis-rulebook、specdojo:clis-sample）を新規作成し、命名標準・成果物リファレンス・サイドバー・レビュー観点設定へ反映しました。","handoff":["CLI仕様（clis）の型新設に伴う決定事項: recipe および template はコマンド群の業務目的に応じてフローや出力の構造が大きく異なり定型化の必要性が低いため、Frontmatter で recipe: not-needed、template: not-needed と判断した。PJR-PJYJ で人が要否を最終判断する。","保護された設定（.specdojo/、package.json、.agents/ など）における種類一覧の変更対象は存在せず、変更提案なし。","CHANGELOG に書く事項: [追加] CLI 仕様（clis）の型を新設し、コマンドリファレンスを参照して操作の流れ・出力と生成ファイル要点・終了コード・エラー表示と利用者の次の手を記述する rulebook と sample を追加（specdojo:clis-rulebook, specdojo:clis-sample）","後続タスクへの申し送り: uis の型および prj-0001 のカタログは本タスクの制約に従い変更していない。後続タスク（PJR-PJYJ）にて uis からの CLI 記述の分離確認および必要な場合のカタログ反映・実成果物への適用を判断する。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"Project register history link validation succeeded"},{"command":"npm run validate:catalog","status":"passed","summary":"Catalog validation passed for prj-0001"}]}
+</specdojo_executor_evidence>

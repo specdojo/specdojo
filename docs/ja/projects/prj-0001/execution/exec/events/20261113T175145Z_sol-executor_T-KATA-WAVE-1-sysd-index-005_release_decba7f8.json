@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-11-13T17:51:45Z",
+  "type": "release",
+  "task_id": "T-KATA-WAVE-1-sysd-index-005",
+  "by": "sol-executor",
+  "msg": "rollback: checkpoint failed"
+}

@@ -1,0 +1,160 @@
+移行内容を確認し、前回失敗の原因だった導入ブロックと非推奨 Kata のサイドバー掲載を修正しました。dashboard は epic 3 件のみ表示し、旧 track 20 件が非表示になることを確認済みです。文書サイトのビルドはホスト側での確認が必要です。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "epic ベースへの文書・Kata・prj-0001 の移行を確認し、前回の導入ブロック欠落と非推奨 Kata のサイドバー混入を修正した。dashboard・カタログ・schema・履歴リンクの検査は成功。親検証の再実行は runner に委ねる。",
+  "handoff": [
+    "`npm run docs:build` をホスト側で実行して確認すること。フルビルドは executor が更新禁止の `.specdojo/doc-index.json` を生成する。前回の代替実行 `npm --prefix packages/docs-site run docs:build` も Chromium の sandbox 起動制限で停止した。理由と次の対応は個票の対応結果にも記録済み。"
+  ],
+  "validations": [
+    {
+      "command": "git diff --name-only -z -- '*.md' '*.yaml' '*.ts' ':!**/events/**' ':!**/execution/**' | xargs -0 npx prettier --write",
+      "status": "passed",
+      "summary": "変更した Markdown・YAML・サイドバー TypeScript を整形済み。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿ビュー生成成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog build --project prj-0001",
+      "status": "passed",
+      "summary": "カタログビュー生成成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts dashboard build --project prj-0001",
+      "status": "passed",
+      "summary": "生成成功。表と SVG に epic 3 件が存在し、epic のない旧 track 20 件が非表示であることを生成後の assertion でも確認。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts yaml-pages build",
+      "status": "passed",
+      "summary": "YAML 表示ページ生成成功。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検査成功。既存の未作成文書と re-export 参照についての警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査成功。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/tml-index.schema.yaml --data docs/ja/specdojo/samples/tml-sample.yaml --data docs/ja/projects/prj-0001/timeline/tml-index.yaml",
+      "status": "passed",
+      "summary": "変更した timeline YAML 2 件が schema に適合。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/dct.schema.yaml --data docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml",
+      "status": "passed",
+      "summary": "変更したカタログが schema に適合。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "保護された索引の生成と、前回確認済みの Chromium 起動制限によりホスト側での実行が必要。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-3apd-stsd-pilot.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3apd-stsd-pilot.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-gezn-data-flow-usage.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gezn-data-flow-usage.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-gqn3-data-flow-uc-rewrite.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gqn3-data-flow-uc-rewrite.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-jm29-epic-based-plan-docs.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jm29-epic-based-plan-docs.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/timeline/tml-index.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/timeline/tml-index.yaml"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md"
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/dct-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/dct-rulebook.md"
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md"
+    },
+    {
+      "target": "docs/ja/specdojo/rulebooks/tml-rulebook.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/tml-rulebook.md"
+    },
+    {
+      "target": "docs/ja/specdojo/samples/tml-sample.yaml",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/tml-sample.yaml"
+    },
+    {
+      "target": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

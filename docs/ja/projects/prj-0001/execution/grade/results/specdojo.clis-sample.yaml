@@ -1,0 +1,185 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:clis-sample
+path: docs/ja/specdojo/samples/clis-sample.md
+target: kata
+rubric: grade-rubric-v2
+verdict: pass
+score: 93
+graded_at: "2026-11-13T06:22:40.797Z"
+graded_by: sol-review-executor
+content_hash: 99d0afdc738f394954e422d2b4f88c3691d16fa4cfc192f01fa911a43a3a9b0d
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
+    score: 92
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 88
+  quality:
+    score: 92
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 68
+    anchor: >-
+      | `sales start`・`add`・`complete`・`cancel` | 作る／変えるファイル | `.session/current-tx.json`           |
+      取引の開始・明細追加を保存し、会計完了または確定前の取消で終了する。会計が未解決なら保持する | `kinuya-session-schema`                                   |
+    message: >-
+      Specify the user-visible outcome when saving the transaction session fails during sales start, sales add, or sales
+      cancel, including whether the operation took effect and what must be checked before retrying; the current recovery
+      row covers only sales and receipt files.
+    message_ja: >-
+      Specify the user-visible outcome when saving the transaction session fails during sales start, sales add, or sales
+      cancel, including whether the operation took effect and what must be checked before retrying; the current recovery
+      row covers only sales and receipt files.
+  - id: F002
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 68
+    anchor: >-
+      | `sales start`・`add`・`complete`・`cancel` | 作る／変えるファイル | `.session/current-tx.json`           |
+      取引の開始・明細追加を保存し、会計完了または確定前の取消で終了する。会計が未解決なら保持する | `kinuya-session-schema`                                   |
+    message: >-
+      Define the required persisted state and success-notification behavior when a session update fails, or explicitly
+      defer these decisions with an owner and acceptance gate; implementations currently lack a clear completion
+      condition for failed start, add, and cancel updates.
+    message_ja: >-
+      Define the required persisted state and success-notification behavior when a session update fails, or explicitly
+      defer these decisions with an owner and acceptance gate; implementations currently lack a clear completion
+      condition for failed start, add, and cancel updates.
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 108
+    anchor: >-
+      | 売上・レシートファイル保存失敗       | `4`                   | 対象パス、取引番号、保存できた範囲、受付状態                         |
+      開発担当が容量・権限を復旧し、店主代表が本部受付と保持記録を照合する。確定済み売上は再登録せず、記録・控えの回復後に結果を確認する                                                        
+      |
+    message: >-
+      Extend the persistence-error coverage to .session/current-tx.json: start, add, complete, and cancel modify it, but
+      the specific save-failure row names only sales and receipt files, leaving session-write failures without matching
+      retained-state and recovery expectations.
+    message_ja: >-
+      Extend the persistence-error coverage to .session/current-tx.json: start, add, complete, and cancel modify it, but
+      the specific save-failure row names only sales and receipt files, leaving session-write failures without matching
+      retained-state and recovery expectations.
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 15
+    anchor: >-
+      日々の販売記録を継続する目的は [[specdojo:prj-overview-sample|プロジェクト概要]]
+      の「まず記録する」方針に対応する。対象は単一店舗・現金販売の開始、明細追加、金額確認、会計確定、確定前の取消とする。確定後の返品・訂正は店主代表の照合手順へ引き渡し、つけ販売、キャッシュレス決済、仕入れ、在庫調整は対象外とする。
+    message: >-
+      Replace the body wikilinks to specdojo:prj-overview-sample and specdojo:ifx-cmd-sample with a reference
+      representation permitted by Section 7 of clis-rulebook, preserving the purpose and contract traceability; the
+      current rulebook explicitly prohibits body wikilinks to sample documents.
+    message_ja: >-
+      Replace the body wikilinks to specdojo:prj-overview-sample and specdojo:ifx-cmd-sample with a reference
+      representation permitted by Section 7 of clis-rulebook, preserving the purpose and contract traceability; the
+      current rulebook explicitly prohibits body wikilinks to sample documents.
+  - id: F005
+    severity: minor
+    rule: vp-ops-operability
+    line: 68
+    anchor: >-
+      | `sales start`・`add`・`complete`・`cancel` | 作る／変えるファイル | `.session/current-tx.json`           |
+      取引の開始・明細追加を保存し、会計完了または確定前の取消で終了する。会計が未解決なら保持する | `kinuya-session-schema`                                   |
+    message: >-
+      Add recovery guidance for a failed session creation, update, or cancellation, identifying the responsible person,
+      the saved state to inspect, and the condition for resuming the same transaction; generic storage-fault escalation
+      does not establish whether an item addition or cancellation was retained.
+    message_ja: >-
+      Add recovery guidance for a failed session creation, update, or cancellation, identifying the responsible person,
+      the saved state to inspect, and the condition for resuming the same transaction; generic storage-fault escalation
+      does not establish whether an item addition or cancellation was retained.

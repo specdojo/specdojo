@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_14a831b43f0f46519ac07f03e8d7586e
+  ts: "2026-11-15T12:32:37Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-comparison-of-alternatives を grade の指摘で手直しする（project-kata の 140 の差し戻し）
+    - field: description
+      from: ""
+      to: prj-comparison-of-alternatives を最新の grade の指摘で直す
+    - field: input
+      from: ""
+      to: '["T-PROJECT-KATA-prj-comparison-of-alternatives-140 で差し戻し（indie が 2026-11-15 に判断、PJR-TN43 の 1.4 の D）。2026-11-15 の grade で完了条件を満たしていない","最新の grade の未充足の完了条件と major の指摘を取り込む。本文は status: ready のまま差し戻したため、直す間の status の扱いも決める"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: fully-guided
+    - field: targets
+      from: ""
+      to: '["prj-0001:prj-comparison-of-alternatives"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: pm
+- v: 1
+  id: reg_ea6d1e28d20948a2b88a8a7c53928aa5
+  ts: "2026-11-15T18:25:30Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_14a831b43f0f46519ac07f03e8d7586e
+- v: 1
+  id: reg_98606fd31fb340fcbe6982960b566f42
+  ts: "2026-11-15T19:06:44Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ea6d1e28d20948a2b88a8a7c53928aa5

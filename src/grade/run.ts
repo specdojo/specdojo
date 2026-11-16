@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "
 import { dirname, join, resolve } from "node:path";
 import type { GradeAgentRuntime } from "../shared/agent-plan.js";
 import { getProjectExecutionPath, specdojoRootDir } from "../shared/specdojo-config.js";
-import { tryAcquireLock, releaseLock } from "../shared/cross-process-lock.js";
+import { delay, LOCK_POLL_MS, tryAcquireLock, releaseLock } from "../shared/cross-process-lock.js";
 import { applyGradeSubmission, buildGradeSubmissionFromAnalysis } from "./apply.js";
 import { type GradeTarget, type GradeTargetFilters } from "./core.js";
 import { readGradePipelineState, recordGradePipelineStage } from "./pipeline-state.js";
@@ -28,6 +28,8 @@ export type GradeRunOptions = GradeTargetFilters & {
   runId: string;
   by?: string;
   workDir?: string;
+  isolatePipelineState?: boolean;
+  ifBusy?: "fail" | "wait";
   reference?: string;
   embedDocuments?: boolean;
   maxStageFailures?: number;
@@ -70,6 +72,8 @@ export async function runGrade(
   opts: GradeRunOptions,
   runtime: GradeAgentRuntime,
 ): Promise<{ documents: DocumentRun[] }> {
+  if (opts.ifBusy !== undefined && opts.ifBusy !== "fail" && opts.ifBusy !== "wait")
+    throw new Error("Invalid --if-busy; expected fail or wait");
   // Serialize all runs for a project: different run ids still write the same canonical sidecars.
   if (opts.dryRun) return runGradeUnlocked(opts, runtime);
   const { project } = resolveProject(opts.project);
@@ -78,7 +82,15 @@ export async function runGrade(
     "grade lock",
   );
   mkdirSync(dirname(lockPath), { recursive: true });
-  const lock = tryAcquireLock(lockPath, { actor: opts.by ?? "grade", label: opts.runId });
+  const owner = { actor: opts.by ?? "grade", label: opts.runId };
+  let lock = tryAcquireLock(lockPath, owner);
+  if (!lock && opts.ifBusy === "wait") {
+    process.stdout.write("grade run is busy for this project; waiting for the active run\n");
+    while (!lock) {
+      await delay(LOCK_POLL_MS);
+      lock = tryAcquireLock(lockPath, owner);
+    }
+  }
   if (!lock)
     throw new Error("grade run is busy for this project; retry after the active run finishes");
   try {
@@ -116,8 +128,13 @@ async function runGradeUnlocked(
     "--work-dir",
   );
   const statePath = join(directory, "run.json");
+  // Review preparation runs in the integration worktree. Its failures must never mutate
+  // shared retry state that another task may already have included in its checkpoint.
+  const pipelineStateDirectory = opts.isolatePipelineState
+    ? join(directory, "pipeline")
+    : undefined;
   const requestOptions = Object.fromEntries(
-    Object.entries(opts).filter(([key]) => key !== "dryRun"),
+    Object.entries(opts).filter(([key]) => key !== "dryRun" && key !== "ifBusy"),
   );
   const request = digest({ ...requestOptions, project: projectId });
   let state: RunState;
@@ -229,6 +246,7 @@ async function runGradeUnlocked(
   for (const [index, document] of state.documents.entries()) {
     if (document.status === "complete") {
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -242,6 +260,7 @@ async function runGradeUnlocked(
       continue;
     }
     const prior = readGradePipelineState({
+      directory: pipelineStateDirectory,
       target: opts.target,
       project: projectId,
       path: document.path,
@@ -253,6 +272,7 @@ async function runGradeUnlocked(
     // The native runner has one stage. Old experimental three-stage retries cannot be reused.
     if (prior && prior.stage_total !== 1)
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -345,6 +365,7 @@ async function runGradeUnlocked(
       document.resultHash = digest(result);
       writeState(statePath, state);
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,
@@ -360,6 +381,7 @@ async function runGradeUnlocked(
       document.error = error instanceof Error ? error.message : String(error);
       writeState(statePath, state);
       recordGradePipelineStage({
+        directory: pipelineStateDirectory,
         target: opts.target,
         project: projectId,
         path: document.path,

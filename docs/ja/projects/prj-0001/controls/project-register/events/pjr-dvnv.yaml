@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_09bd805b42ba48838b64e1c7fac165bd
+  ts: "2026-11-15T12:27:25Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: runner が統合の後に書いたイベントと run の記録を commit する
+    - field: description
+      from: ""
+      to: 統合の後のイベントと試行の記録を、runner が自分で commit する（run の終わりに記帳の commit を足す、など）
+    - field: input
+      from: ""
+      to: '["2026-11-15、develop の作業ツリーに commit されていない実行記録が 465 件たまっていた。イベント 371 件（11/10〜11/15 の claim・complete・block・unblock・release など）と、失敗した試行や再開前の試行のログ 70 件","runner は統合の commit の時点のイベントだけを commit し、その後に書く complete や失敗時の block、試行のログを作業ツリーに残しているように見える。push すると、ほかの clone で実行状態が食い違う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_62790b70b5bc44e09663a4a3c4b0c4c4
+  ts: "2026-11-15T12:31:10Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: input
+      from: '["2026-11-15、develop の作業ツリーに commit されていない実行記録が 465 件たまっていた。イベント 371 件（11/10〜11/15 の claim・complete・block・unblock・release など）と、失敗した試行や再開前の試行のログ 70 件","runner は統合の commit の時点のイベントだけを commit し、その後に書く complete や失敗時の block、試行のログを作業ツリーに残しているように見える。push すると、ほかの clone で実行状態が食い違う"]'
+      to: '["2026-11-15、develop の作業ツリーに commit されていない実行記録が 465 件たまっていた。イベント 371 件（11/10〜11/15 の claim・complete・block・unblock・release など）と、失敗した試行や再開前の試行のログ 70 件","調べた結果: ログの配置の変更（2026-11-07、PJR-Z0XR）が原因ではない。runner の統合の commit に入るのはその時点までのイベント（claim）と run の記録で、統合の後に書く complete・失敗時の block は 8 月から一度も runner が commit していない。orchestrator が『実行イベントを記録する』commit（08-12・09-16・11-05・11-09 など）で手で補っていたが、playbook にも orchestrator の定義にも書かれておらず、引き継がれずにたまった"]'
+  previous_event_id: reg_09bd805b42ba48838b64e1c7fac165bd
+- v: 1
+  id: reg_52c18687b60c48ff84445645ab5d7926
+  ts: "2026-11-15T15:28:27Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_62790b70b5bc44e09663a4a3c4b0c4c4
+- v: 1
+  id: reg_a601a18b92e74730b0935bbcb2b606cd
+  ts: "2026-11-15T16:16:49Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_52c18687b60c48ff84445645ab5d7926
+- v: 1
+  id: reg_b3775175e6be4c3ba18f1f3ea35ed8dc
+  ts: "2026-11-15T16:49:55Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（runner が統合の後に書いたイベントと run の記録を commit する）。親の検証をすべて通って統合済み
+  previous_event_id: reg_a601a18b92e74730b0935bbcb2b606cd

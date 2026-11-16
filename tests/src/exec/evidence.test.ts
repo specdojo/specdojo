@@ -2,9 +2,6 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { load } from "js-yaml";
-import Ajv2020Module from "ajv/dist/2020.js";
-import addFormatsModule from "ajv-formats";
 import { describe, expect, it } from "vitest";
 import {
   buildExecutorEvidence,
@@ -14,8 +11,7 @@ import {
   validateResumedTargetCoverage,
 } from "../../../src/exec/evidence.js";
 
-const Ajv2020 = Ajv2020Module.default;
-const addFormats = addFormatsModule.default;
+import { buildValidator } from "../../helpers/schema.js";
 
 describe("executor evidence", () => {
   it.each([undefined, "complete", "incomplete", null, "invalid"])(
@@ -193,7 +189,7 @@ describe("executor evidence", () => {
       stderr: "",
       changes: [{ path: "docs/a.md", status: "M" }],
       diffStat: "docs/a.md | 1 +",
-      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+      logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-resumed/executor.log",
     });
 
     expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], evidence)).toEqual({
@@ -229,7 +225,7 @@ describe("executor evidence", () => {
       stderr: "",
       changes: [{ path: "docs/a.md", status: "M" }],
       diffStat: "docs/a.md | 1 +",
-      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+      logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-resumed/executor.log",
     }).evidence;
 
     expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], base)).toEqual({
@@ -277,7 +273,7 @@ describe("executor evidence", () => {
       attemptChanges: [{ path: "artifact.md", status: "M" }],
       diffStat: " artifact.md | 2 +-",
       logRefPath:
-        "docs/execution/exec/evidence/T-TEST-doc-010/20260810T070334Z-aabbccdd/executor.log",
+        "docs/execution/runs/schedule/T-TEST-doc-010/20260810T070334Z-aabbccdd/executor.log",
       parentValidations: [
         {
           id: "test-integration",
@@ -310,7 +306,7 @@ describe("executor evidence", () => {
         summary: "exit 0: 66 tests passed",
       },
     ]);
-    expect(evidence.log_refs[0].path).toContain("/exec/evidence/T-TEST-doc-010/");
+    expect(evidence.log_refs[0].path).toContain("/runs/schedule/T-TEST-doc-010/");
     expect(JSON.stringify(evidence)).not.toContain("do-not-store");
     expect(logExcerpt).not.toContain("do-not-store");
 
@@ -325,10 +321,7 @@ describe("executor evidence", () => {
       "v1",
       "exec-evidence.schema.yaml",
     );
-    const schema = load(readFileSync(schemaPath, "utf8")) as Record<string, unknown>;
-    const ajv = new Ajv2020({ allErrors: true, strict: false });
-    addFormats(ajv);
-    const validate = ajv.compile(schema);
+    const validate = buildValidator(schemaPath);
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
     const { handoff: _handoff, ...legacy } = evidence;
     expect(validate(legacy), JSON.stringify(validate.errors)).toBe(true);
@@ -370,7 +363,7 @@ describe("executor evidence", () => {
       stderr: "blocked: agent-config-write: protected configuration changes detected",
       changes: [],
       diffStat: "",
-      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-protected/executor.log",
+      logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-protected/executor.log",
     });
 
     expect(evidence.block_reason).toBe(
@@ -408,7 +401,7 @@ describe("executor evidence", () => {
       stderr: "",
       changes,
       diffStat: "large change",
-      logRefPath: "docs/execution/exec/evidence/T-TEST-doc-010/run-1/executor.log",
+      logRefPath: "docs/execution/runs/schedule/T-TEST-doc-010/run-1/executor.log",
     });
 
     expect(evidence.changes).toHaveLength(1_000);
@@ -421,7 +414,7 @@ describe("executor evidence", () => {
   it("persists failed reporter stdout and stderr as redacted bounded evidence refs", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-reporter-evidence-"));
     try {
-      const evidenceDir = join(root, "execution", "exec", "evidence", "T-TEST-doc-010", "run-1");
+      const evidenceDir = join(root, "execution", "runs", "schedule", "T-TEST-doc-010", "run-1");
       mkdirSync(evidenceDir, { recursive: true });
       const evidencePath = join(evidenceDir, "evidence.json");
       const { evidence } = buildExecutorEvidence({
@@ -437,7 +430,7 @@ describe("executor evidence", () => {
         stderr: "",
         changes: [],
         diffStat: "",
-        logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-1/executor.log",
+        logRefPath: "execution/runs/schedule/T-TEST-doc-010/run-1/executor.log",
       });
 
       const updated = recordReporterFailureOutput({

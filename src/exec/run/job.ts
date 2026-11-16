@@ -1,25 +1,7 @@
+import { readPlanFile } from "../../shared/plan-conventions.js";
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
-import { selfRunArgs } from "../../shared/spawn-self.js";
-import {
-  loadExecDefaultsConfig,
-  resolveMemberCommand,
-  type ExecDefaultsConfig,
-} from "../agent-config.js";
-import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
-import { specdojoRootDir, type MemberRoster } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView } from "../types.js";
-import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./lock.js";
-import {
-  isResultUnfilled,
-  readResultFrontmatterSnapshot,
-  renderReporterResult,
-  scaffoldResult,
-  stripLeadingListMarker,
-  updateResultStatus,
-} from "../results.js";
-import { formatMarkdownFile } from "../format.js";
 import {
   completeJobRun,
   executeJobCommand,
@@ -36,14 +18,33 @@ import {
   type JobReviewAgentNomination,
   type JobRunRecord,
 } from "../../job/job.js";
+import { selfRunArgs } from "../../shared/spawn-self.js";
+import { specdojoRootDir, type MemberRoster } from "../../shared/specdojo-config.js";
 import {
-  ensureExecWorktree,
-  formatGitResultFailure,
-  gitOutput,
-  gitResult,
-  resolveWorktreeBase,
-  summarizeGitHookFailure,
-} from "../worktree.js";
+  loadExecDefaultsConfig,
+  resolveMemberCommand,
+  type ExecDefaultsConfig,
+} from "../agent-config.js";
+import { recordCommandEvidence } from "../evidence.js";
+import { formatMarkdownFile } from "../format.js";
+import {
+  createPipelineState,
+  pipelineStateLocation,
+  updatePipelineStage,
+  writePipelineState,
+} from "../pipeline-state.js";
+import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
+import { evidenceForReporter } from "../reporter.js";
+import {
+  isResultUnfilled,
+  readResultFrontmatterSnapshot,
+  renderReporterResult,
+  scaffoldResult,
+  stripLeadingListMarker,
+  updateResultStatus,
+} from "../results.js";
+import { taskRecordPrefixes } from "../run-records.js";
+import { type ReadyTaskView } from "../types.js";
 import {
   mergeWorktreeIntoCurrent,
   removeWorktree,
@@ -51,14 +52,24 @@ import {
   stageCommitTargets,
   worktreeStatusPaths,
 } from "../worktree-ops.js";
-import { recordCommandEvidence } from "../evidence.js";
-import { evidenceForReporter } from "../reporter.js";
 import {
-  createPipelineState,
-  pipelineStateLocation,
-  updatePipelineStage,
-  writePipelineState,
-} from "../pipeline-state.js";
+  ensureExecWorktree,
+  formatGitResultFailure,
+  gitEnvironment,
+  gitOutput,
+  gitResult,
+  resolveWorktreeBase,
+  summarizeGitHookFailure,
+} from "../worktree.js";
+import { runAgentPipeline, runReporterStage } from "./agent-pipeline.js";
+import {
+  executorRequirements,
+  expandPromptRefs,
+  loadRosterForExecutionPath,
+  resolveReporterAgentCandidates,
+} from "./agent.js";
+import { resolveInPlaceCommand, spawnAgentInPlace } from "./in-place.js";
+import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./lock.js";
 import {
   configuredWorktreeBase,
   resolveAgentOverride,
@@ -67,14 +78,7 @@ import {
   type AgentRunCandidate,
   type RunOpts,
 } from "./shared.js";
-import {
-  executorRequirements,
-  expandPromptRefs,
-  loadRosterForExecutionPath,
-  resolveReporterAgentCandidates,
-} from "./agent.js";
-import { runAgentPipeline, runReporterStage } from "./agent-pipeline.js";
-import { resolveInPlaceCommand, spawnAgentInPlace } from "./in-place.js";
+import { localJobNoopPath, snapshotJobOutput } from "../../job/noop.js";
 
 export type JobPipelineAgentResolver = (
   roster: MemberRoster | null,
@@ -162,7 +166,7 @@ async function runCommandJobMode(params: {
     startedAt: new Date().toISOString(),
     ...(record.task.targets ? { targets: record.task.targets } : {}),
   });
-  const evidenceRunId = `attempt-${record.attempts.length}`;
+  const evidenceRunId = record.run_id;
   process.stdout.write(`Running Job Run ${record.run_id} command in place.\n`);
   const commandOutcome = await executeJobCommand(record.task.command, repoRoot);
   const commandPartial =
@@ -245,13 +249,13 @@ async function runCommandJobMode(params: {
       process.stdout.write(`Job Run complete: ${record.run_id}\n`);
     } else if (commandPartial) {
       process.stdout.write(`Job Run partial: ${record.run_id}\n`);
-      if (record.trigger === "routine") {
-        process.stdout.write(`[routine-job] complete run_id=${record.run_id} state=partial\n`);
-      }
     } else {
       process.stdout.write(`Job Run failed: ${record.run_id}\n`);
       process.exitCode = commandOutcome.exitCode || 1;
     }
+    process.stdout.write(
+      `[routine-job] complete run_id=${record.run_id} state=${commandSucceeded ? "succeeded" : commandPartial ? "partial" : "failed"}\n`,
+    );
     return;
   }
 
@@ -292,7 +296,7 @@ async function runCommandJobMode(params: {
     schedulePath,
     executionPath,
     reporterCandidates: [analysisCandidate],
-    planPrompt: expandPromptRefs(readFileSync(planPath, "utf8")),
+    planPrompt: expandPromptRefs(readPlanFile(planPath)),
     resultPath,
     execDefaults,
     evidence: recorded.evidence,
@@ -317,13 +321,13 @@ async function runCommandJobMode(params: {
   });
   if (reporterOutcome.exitCode === 0) {
     process.stdout.write(`Job Run ${commandPartial ? "partial" : "complete"}: ${record.run_id}\n`);
-    if (commandPartial && record.trigger === "routine") {
-      process.stdout.write(`[routine-job] complete run_id=${record.run_id} state=partial\n`);
-    }
   } else {
     process.stdout.write(`Job Run failed: ${record.run_id}\n`);
     process.exitCode = 1;
   }
+  process.stdout.write(
+    `[routine-job] complete run_id=${record.run_id} state=${reporterOutcome.exitCode === 0 ? (commandPartial ? "partial" : "succeeded") : "failed"}\n`,
+  );
 }
 
 const ACCEPTED_JOB_REVIEW_VERDICTS = new Set(["complete", "complete-with-findings"]);
@@ -560,6 +564,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     process.stdout.write(
       `Job Run already complete: ${preview.record.run_id} (${preview.record.state})\n`,
     );
+    if (preview.record.state === "noop") process.stdout.write(`[routine-job] noop state=noop\n`);
     if (trigger === "routine" && preview.record.state === "partial") {
       process.stdout.write(
         `[routine-job] complete run_id=${preview.record.run_id} state=partial\n`,
@@ -623,7 +628,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   const child = spawnSync(executable, fullArgs, {
     cwd: worktree.path,
     env: {
-      ...process.env,
+      ...gitEnvironment(),
       [ROUTINE_EXEC_ENV]: trigger === "routine" ? "1" : "0",
       [JOB_REVIEW_WORKTREE_CHILD_ENV]: "1",
     },
@@ -645,10 +650,23 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   const worktreeExecutionPath = resolve(worktree.path, executionRel);
   const worktreeJobPaths = resolveJobPaths(projectId);
   const runPath = resolve(worktree.path, relative(repoRoot, preview.runPath));
+  if (child.status === 0 && existsSync(localJobNoopPath(executionPath, preview.record.run_id))) {
+    removeWorktree({
+      context: { repoRoot, schedulePath, executionPath },
+      worktree,
+      taskId: `${preview.record.run_id}-review`,
+      deleteBranch: true,
+    });
+    process.stdout.write(`[routine-job] noop state=noop\n`);
+    return;
+  }
   if (!existsSync(runPath)) {
     throw new Error(`Job Run record was not created in worktree: ${preview.record.run_id}`);
   }
   let record = loadJobRunRecord(runPath);
+  // The child may fail before printing a completion marker. Its worktree still owns
+  // the diagnostic Run record even if commit or review subsequently fails.
+  process.stdout.write(`[routine-job] recorded run_id=${record.run_id} state=${record.state}\n`);
   const outputPaths = worktreeStatusPaths(worktree.path);
   const outputCommit = commitJobPaths(
     worktree.path,
@@ -713,7 +731,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
       executor: agents.executor,
       reporterCandidates: agents.reporterCandidates,
       planPath,
-      planPrompt: expandPromptRefs(readFileSync(planPath, "utf8")),
+      planPrompt: expandPromptRefs(readPlanFile(planPath)),
       resultPath,
       execDefaults,
       mode: "review",
@@ -752,7 +770,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   }
 
   const allowedReviewPrefixes = [
-    `${relative(worktree.path, worktreeExecutionPath).split(sep).join("/")}/exec/evidence/${reviewTaskId}/`,
+    ...taskRecordPrefixes(relative(worktree.path, worktreeExecutionPath), reviewTaskId),
   ];
   const allowedReviewFiles = new Set([
     relative(worktree.path, planPath).split(sep).join("/"),
@@ -828,13 +846,13 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   );
 }
 
-export async function runJobMode(
+async function runJobModeUnchecked(
   opts: RunOpts,
   resolvePipelineAgents: JobPipelineAgentResolver,
+  isWorktreeChild: boolean,
 ): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
-  const isWorktreeChild = process.env[JOB_REVIEW_WORKTREE_CHILD_ENV] === "1";
   if (!isWorktreeChild) {
     // A Job's task.review declaration takes precedence over the caller: it routes the Run
     // through the reviewed integration path even without --worktree (routine action.commit).
@@ -877,6 +895,7 @@ export async function runJobMode(
   }
   if (materialized.duplicateComplete) {
     process.stdout.write(`Job Run already complete: ${record.run_id} (${record.state})\n`);
+    if (record.state === "noop") process.stdout.write(`[routine-job] noop state=noop\n`);
     if (trigger === "routine" && record.state === "partial") {
       process.stdout.write(`[routine-job] complete run_id=${record.run_id} state=partial\n`);
     }
@@ -962,7 +981,7 @@ export async function runJobMode(
     ...(record.task.targets ? { targets: record.task.targets } : {}),
   });
   const resultScaffold = readResultFrontmatterSnapshot(resultPath);
-  const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+  const prompt = expandPromptRefs(readPlanFile(planPath));
   const repoRoot = specdojoRootDir();
   let exitCode: number;
   let reason: string | undefined;
@@ -1013,5 +1032,58 @@ export async function runJobMode(
   } else {
     process.stdout.write(`Job Run failed: ${record.run_id}\n`);
     process.exitCode = effectiveExit || 1;
+  }
+  process.stdout.write(
+    `[routine-job] complete run_id=${record.run_id} state=${effectiveExit === 0 ? "succeeded" : "failed"}\n`,
+  );
+}
+
+export async function runJobMode(
+  opts: RunOpts,
+  resolvePipelineAgents: JobPipelineAgentResolver,
+): Promise<void> {
+  const isWorktreeChild = process.env[JOB_REVIEW_WORKTREE_CHILD_ENV] === "1";
+  // This marker routes only this Job's re-entry. Preconditions, commands, agents and
+  // their tests must choose their own worktree/review mode rather than inherit it.
+  delete process.env[JOB_REVIEW_WORKTREE_CHILD_ENV];
+  const paths = resolveProjectPaths({ project: opts.project });
+  activateResolvedProjectPaths(paths);
+  const projectId = paths.projectId ?? opts.project;
+  const definition = loadJobDefinition(resolveJobPaths(projectId), String(opts.job).trim());
+  if (
+    opts.dryRun ||
+    jobRunUsesReviewedIntegration(definition, {
+      worktree: opts.worktree,
+      isWorktreeChild,
+    }) ||
+    // In-place command Jobs also support projects without a Git repository. There is
+    // nothing to commit there, and no reliable Git diff for suppressing Run records.
+    gitResult(specdojoRootDir(), ["rev-parse", "--is-inside-work-tree"]).status !== 0
+  ) {
+    await runJobModeUnchecked(opts, resolvePipelineAgents, isWorktreeChild);
+    return;
+  }
+  const preview = await materializeJobRun({
+    projectId,
+    jobId: String(opts.job).trim(),
+    inputs: opts.input,
+    scheduledAt: opts.scheduledAt,
+    dryRun: true,
+  });
+  if (preview.duplicateComplete) {
+    await runJobModeUnchecked(opts, resolvePipelineAgents, isWorktreeChild);
+    return;
+  }
+  const snapshot = snapshotJobOutput(specdojoRootDir(), paths.executionPath, preview.record);
+  await runJobModeUnchecked(
+    { ...opts, scheduledAt: preview.record.scheduled_at },
+    resolvePipelineAgents,
+    isWorktreeChild,
+  );
+  if (!existsSync(preview.runPath)) return;
+  const record = loadJobRunRecord(preview.runPath);
+  if (record.state === "succeeded" && !snapshot.hasChanges()) {
+    snapshot.discard(completeJobRun({ projectId, runPath: preview.runPath, status: "noop" }));
+    process.stdout.write(`[routine-job] noop state=noop\n`);
   }
 }

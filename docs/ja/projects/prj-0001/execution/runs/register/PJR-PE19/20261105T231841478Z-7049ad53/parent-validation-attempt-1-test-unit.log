@@ -1,0 +1,208 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.7.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PE19
+
+Updated ticket status → ready: /tmp/specdojo-ticket-6667Vf/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-UsEWHv/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-4NJgI3/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-EcUA7S/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-L8F7gC/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-MYSWhX/pjr-0001-topic.md
+ ❯ tests/src/register/commands.test.ts (77 tests | 1 failed) 6657ms
+     × timeline にない track も作成でき、重複 track と削除を拒否する 45ms
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+Written: .specdojo/host/devcontainer-tmux.sh
+[dry-run] would write: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Written: .specdojo/host/devcontainer-tmux.sh
+Would move 1 agent member(s) from /tmp/specdojo-members-JhzIV0/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-JhzIV0/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-JhzIV0/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-JhzIV0/.specdojo/agent-members.yaml
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Rate limit detected for pinned agent pinned. Waiting until 2026-11-05T23:39:53.618Z before resuming the same stage.
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-11-05T23:38:53.947Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-11-05T23:38:54.220Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-foV7TR/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-OxabQ5/outputs/partial.txt
+
+ Test Files  1 failed | 180 passed (181)
+      Tests  1 failed | 3233 passed (3234)
+   Start at  08:37:58
+   Duration  68.69s (transform 3.82s, setup 737ms, import 36.16s, tests 77.95s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN: timeline_path is deprecated. Use register epics and dashboard build.
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+WARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > timeline にない track も作成でき、重複 track と削除を拒否する
+AssertionError: expected '---\nspecdojo:\n  id: prj-0001:pjr-ab…' to contain '  - c'
+
+- Expected
++ Received
+
+-   - c
++ ---
++ specdojo:
++   id: prj-0001:pjr-ab12-epic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - prj-0001:pjr-index
++   item_type: epic
++   track: new
++   domains:
++     - a
++     - b
++   item_status: open
++   priority: medium
++   registered_at: "2026-11-05T23:38:00Z"
++ ---
++
++ # PJR-AB12 x
++
++ ## 1. 概要
++
++ _TODO_: track で達成する目的と着手の理由を記載する。
++
++ ## 2. 範囲（track と domain）
++
++ _TODO_: Frontmatter の `track` が担う範囲と対象 domain、対象外の境界を記載する。
++
++ ## 3. 完了の判断の基準
++
++ - _TODO_: 子項目と schedule を確認して、人が完了を判断できる基準を記載する。
++
++ ## 4. 子項目
++
++ 子 todo は `register add --type todo --from <epic-id>` で起票する。現在の一覧と状態は `register build` が生成する epic 別ビューで確認する。
++
++ ## 5. 対応結果
++
++ _TODO_: 完了を判断した根拠と残課題を記載する。未完了の場合は `-` とする。
++
++ ## 6. 関連ドキュメント
++
++ - _TODO_: 根拠・影響先・追跡先を文書 ID で記載する。
++
+
+ ❯ tests/src/register/commands.test.ts:522:48
+    520|       expect(readFileSync(ticketPath, "utf8")).toContain("domains:");
+    521|       await runRegister(["update", "--id", "PJR-AB12", "--domain", "c"…
+    522|       expect(readFileSync(ticketPath, "utf8")).toContain("  - c");
+       |                                                ^
+    523|       expect(readFileSync(ticketPath, "utf8")).not.toContain("  - a");
+    524|       expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toCo…
+ ❯ tests/src/register/commands.test.ts:275:7
+ ❯ tests/src/register/commands.test.ts:498:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

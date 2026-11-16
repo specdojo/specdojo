@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "T-BUSINESS-SPECS-KATA-ccd-project-planning-090",
+  "run_id": "T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216",
+  "updated_at": "2026-11-10T04:24:52.156Z",
+  "stages": {
+    "executor": {
+      "status": "rate_limited",
+      "actor": "sol-review-executor",
+      "attempts": 1,
+      "started_at": "2026-11-10T04:24:04.039Z",
+      "completed_at": "2026-11-10T04:24:52.156Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-BUSINESS-SPECS-KATA-ccd-project-planning-090/T-BUSINESS-SPECS-KATA-ccd-project-planning-090-20261110T024801Z-24763216/result.md"
+  }
+}

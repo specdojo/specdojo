@@ -22,7 +22,11 @@ groups:
       - local_id: pm-plan # small+
         name: プロジェクト管理計画
         kind: work
-        depends_on: []
+        depends_on:
+          - prj-overview
+          - prj-scope
+          - prj-success-criteria-and-acceptance-criteria
+          - pm-organization
         overview: プロジェクト全体の管理方針・プロセスを定義
         path: pm-plan.md
         rulebook: specdojo:pm-plan-rulebook

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-szgz-devcontainer-lp-extensions
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T06:13:25Z"
   due_on: "2026-10-31"
+  completed_at: "2026-11-15T11:34:00Z"
+  conclusion: devcontainer に specdojo-lp 用の VS Code 拡張機能を加えた（indie が 2026-11-15 に確認）
 ---
 
 # PJR-SZGZ devcontainer に specdojo-lp 用の VS Code 拡張機能を加える

@@ -1,0 +1,349 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cpd-specdojo-cli
+path: docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 82
+graded_at: "2026-11-14T14:10:14.071Z"
+graded_by: qwen-review-executor
+content_hash: f488fcb9ace512d83a9216b82a31e98314d829bc0e2a8f1005d7236f9d05fac9
+source_hashes:
+  catalog-entry: 56145bebc49ede90196fb677ced97642e02cbf3fb13a9e4fce15f5ccfeefc389
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cnd-specdojo: d73bbeec5ee3e18e4073da37349c1934555886d2f7f7003d6463015defa8f464
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: e1b1ac8e03711fdc6f6fe9146e78131470f82de72c4f27074163053cbee53419
+categories:
+  purpose:
+    score: 63
+  operations:
+    score: 88
+  planning:
+    score: 67
+  business:
+    score: 67
+  consistency:
+    score: 75
+  architecture:
+    score: 100
+  usability:
+    score: 94
+  implementation:
+    score: 88
+  quality:
+    score: 81
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 12
+  note: 1
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 18
+    anchor: リポジトリ[("リポジトリ<br>（仕様・判断・検証記録）")]
+    message: >-
+      state which business need or expected value in prj-0001 overview this component split serves, by pointing to the
+      specific upstream section, so the split's necessity is traceable to a concrete value.
+    message_ja: >-
+      state which business need or expected value in prj-0001 overview this component split serves, by pointing to the
+      specific upstream section, so the split's necessity is traceable to a concrete value.
+    cause:
+      type: document
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 164
+    anchor: ""
+    message: >-
+      add the decider (human PO), decision timing, and whether each item is a PJR registration candidate, so PO can
+      choose approve/hold/return.
+    message_ja: >-
+      add the decider (human PO), decision timing, and whether each item is a PJR registration candidate, so PO can
+      choose approve/hold/return.
+    cause:
+      type: document
+  - id: F003
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 169
+    anchor: ""
+    message: >-
+      state the impact of the external-reconciliation issue on downstream work start conditions, so the decision has a
+      concrete downstream effect.
+    message_ja: >-
+      state the impact of the external-reconciliation issue on downstream work start conditions, so the decision has a
+      concrete downstream effect.
+    cause:
+      type: document
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 164
+    anchor: ""
+    message: >-
+      add a decision-timing/limit row and a PJR registration-candidate flag per item, so the topics can be scheduled and
+      estimated.
+    message_ja: >-
+      add a decision-timing/limit row and a PJR registration-candidate flag per item, so the topics can be scheduled and
+      estimated.
+    cause:
+      type: document
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 167
+    anchor: ""
+    message: >-
+      state whether the reference-connection issue is a PJR registration candidate, so the dependency can be tracked in
+      the common lifecycle.
+    message_ja: >-
+      state whether the reference-connection issue is a PJR registration candidate, so the dependency can be tracked in
+      the common lifecycle.
+    cause:
+      type: document
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 162
+    anchor: ""
+    message: >-
+      add the reporting destination (PM/PO) and PJR transfer decision per item, so control items are separable for
+      reporting.
+    message_ja: >-
+      add the reporting destination (PM/PO) and PJR transfer decision per item, so control items are separable for
+      reporting.
+    cause:
+      type: document
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 18
+    anchor: リポジトリ[("リポジトリ<br>（仕様・判断・検証記録）")]
+    message: >-
+      map each engine split to the specific stakeholder, business problem, and expected value (or upstream success
+      criterion) it serves, so business value is explicit.
+    message_ja: >-
+      map each engine split to the specific stakeholder, business problem, and expected value (or upstream success
+      criterion) it serves, so business value is explicit.
+    cause:
+      type: document
+  - id: F008
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 18
+    anchor: リポジトリ[("リポジトリ<br>（仕様・判断・検証記録）")]
+    message: >-
+      reference the term-definition source (rulebook §2) or add a brief glossary pointer, so term usage is verifiable
+      within the document.
+    message_ja: >-
+      reference the term-definition source (rulebook §2) or add a brief glossary pointer, so term usage is verifiable
+      within the document.
+    cause:
+      type: document
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 24
+    anchor: カタログ("catalog エンジン")
+    message: >-
+      state the explicit agreement target (boundaries, responsibilities, dependency direction), so stakeholders can
+      agree on a defined object.
+    message_ja: >-
+      state the explicit agreement target (boundaries, responsibilities, dependency direction), so stakeholders can
+      agree on a defined object.
+    cause:
+      type: document
+  - id: F010
+    severity: note
+    rule: vp-arc-cross-document-consistency
+    line: 135
+    anchor: ""
+    message: >-
+      the upstream cnd-specdojo is referenced but its body was not provided in this review's references, so
+      cross-document consistency of REL-05/REL-07/REL-08 mapping could not be verified; provide the upstream body to
+      confirm.
+    message_ja: >-
+      the upstream cnd-specdojo is referenced but its body was not provided in this review's references, so
+      cross-document consistency of REL-05/REL-07/REL-08 mapping could not be verified; provide the upstream body to
+      confirm.
+    cause:
+      type: document
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 166
+    anchor: ""
+    message: >-
+      the "内部構成と実装対応" item partly overlaps §4.1; consolidate by referencing §4.1 instead of restating, without losing
+      the judgment-relevant basis.
+    message_ja: >-
+      the "内部構成と実装対応" item partly overlaps §4.1; consolidate by referencing §4.1 instead of restating, without losing
+      the judgment-relevant basis.
+    cause:
+      type: document
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 169
+    anchor: ""
+    message: >-
+      state which downstream deliverables (detail design, data design, integration observation points) are affected when
+      the external-reconciliation or runtime assumptions change, so change impact is traceable.
+    message_ja: >-
+      state which downstream deliverables (detail design, data design, integration observation points) are affected when
+      the external-reconciliation or runtime assumptions change, so change impact is traceable.
+    cause:
+      type: document
+  - id: F013
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 162
+    anchor: ""
+    message: >-
+      list the catalog done_criteria or reference where they are tracked, so unmet conditions are explicit for
+      completion judgment.
+    message_ja: >-
+      list the catalog done_criteria or reference where they are tracked, so unmet conditions are explicit for
+      completion judgment.
+    cause:
+      type: document
+  - id: F014
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 164
+    anchor: ""
+    message: >-
+      add the "decision timing" and "approval impact / handover destination" columns (or reference them) per item,
+      matching the rulebook §6.5 recommended fields.
+    message_ja: >-
+      add the "decision timing" and "approval impact / handover destination" columns (or reference them) per item,
+      matching the rulebook §6.5 recommended fields.
+    cause:
+      type: document
+  - id: F015
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 24
+    anchor: カタログ("catalog エンジン")
+    message: >-
+      state the pre-publication check owner (OPS), the non-public/personal information scope, and the conditions for PO
+      to approve/hold/return publication, so release readiness is explicit.
+    message_ja: >-
+      state the pre-publication check owner (OPS), the non-public/personal information scope, and the conditions for PO
+      to approve/hold/return publication, so release readiness is explicit.
+    cause:
+      type: document
+  - id: F016
+    severity: minor
+    rule: vp-ops-operability
+    line: 162
+    anchor: ""
+    message: >-
+      add the operations inquiry route (owner ARC) and regeneration/change-management procedure, so ongoing operation
+      and change management are actionable.
+    message_ja: >-
+      add the operations inquiry route (owner ARC) and regeneration/change-management procedure, so ongoing operation
+      and change management are actionable.
+    cause:
+      type: document
+  - id: F017
+    severity: major
+    rule: vp-qe-config-validity
+    line: 7
+    anchor: >-
+      _ASSUMPTION_: 本書の内部構成は、上位図のローカル CLI を一つの実行単位として保つ初版の論理分割案である。CLI の入口が catalog・schedule・exec・register・routine・index
+      の各コマンド群を個別に登録していることは実装で確認したが、エンジン間の実際の呼出関係とソース配置は確認できていないため、以下の内部依存を実装確認済みとは扱わない。照合先と担当は「メモ / 将来課題」に示す。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: cpd-specdojo-cli-grade-criteria

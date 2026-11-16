@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-14T17:05:38Z",
+  "type": "claim",
+  "task_id": "T-KATA-WAVE-1-bes-index-080",
+  "by": "opus-executor",
+  "msg": "claim task as resumed executor opus-executor (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-WAVE-1-bes-index-080/T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-WAVE-1-bes-index-080-20261114T124016Z-9c0b2cd5",
+    "pipeline_resume_claimed": "true",
+    "previous_actor": "qwen-executor"
+  }
+}

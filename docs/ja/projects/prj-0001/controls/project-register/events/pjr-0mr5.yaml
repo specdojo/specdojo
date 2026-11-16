@@ -1,0 +1,110 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1d2c1112dc4246c1a7b1ad703ed2a830
+  ts: "2026-11-04T11:47:48Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 書かないことの規則を edit plan へ載せて冗長さを予防する
+    - field: description
+      from: ""
+      to: PJR-CYG0 の決定に沿って、繰り返し・表と本文の二重の説明・図をなぞる文・目的に要らない背景・正本の再掲を書かない規則を edit plan の共通の規約の断片に定め、vp-arc-conciseness の材料に種類の一覧を書き足す
+    - field: input
+      from: ""
+      to: '["PJR-CYG0 の決定内容（予防の層）を実装の正本とする。規則の正本は grade の観点 vp-arc-conciseness とし、2 か所に基準を持たない（2026-11-04）","今は recipe-guided の edit plan に一般的な 1 行があるだけで、draft・fully-guided・retrofit・bootstrap の edit plan には冗長さを避ける指示がない（2026-11-04）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-04"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CYG0"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-CYG0"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_e80e97f7c0104b97b38d5576f35011f5
+  ts: "2026-11-04T12:12:07Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: '["PJR-CYG0"]'
+      to: '["PJR-CYG0","PJR-Y431"]'
+  previous_event_id: reg_1d2c1112dc4246c1a7b1ad703ed2a830
+- v: 1
+  id: reg_ca25b540703e4c4598b1d9599c97def1
+  ts: "2026-11-04T13:24:24Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e80e97f7c0104b97b38d5576f35011f5
+- v: 1
+  id: reg_23580590b0e544c39e48b6d9ac463e0b
+  ts: "2026-11-04T13:41:14Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ca25b540703e4c4598b1d9599c97def1
+- v: 1
+  id: reg_0e76e44e2e4e436baf2e11d8de734691
+  ts: "2026-11-04T13:55:46Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果で確かめ、統合後の exec run（PJR-JSEY）で plan に規則が入ることを確かめた。利用者が承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-04"
+    - field: conclusion
+      from: "-"
+      to: 書かないことの規則（5 つの種類、3 つの直し方、下限）を edit だけの共通の規約の要点に定め、vp-arc-conciseness の言葉にそろえた
+  previous_event_id: reg_23580590b0e544c39e48b6d9ac463e0b

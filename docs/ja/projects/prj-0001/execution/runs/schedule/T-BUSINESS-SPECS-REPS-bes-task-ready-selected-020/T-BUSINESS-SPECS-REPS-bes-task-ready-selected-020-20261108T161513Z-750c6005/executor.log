@@ -1,0 +1,24 @@
+`docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md` を新規作成しました。業務イベント「実行可能タスクの選択」の草案で、`status` は `draft` のままです。Prettier と markdownlint はこのファイルで通っています。それ以外の検査は親 runner が実行します。
+
+**前提:**
+- 依存先の `bes-index` はまだ存在しないため、参照できていません。
+- plan は「基準なし（freeform）」ですが、カタログは `specdojo:bes-rulebook` を指定しているので、rulebook が求める 5 項目の構成に合わせました。
+
+**草案の要点:**
+- **何が起きたか:** 着手可能なタスク 1 件が、今回の実行の対象として確定した出来事と定義しました。着手宣言（`claim`）、担当の解決、作業開始は含みません。候補を表示するだけで確定しない場合は、このイベントにあたりません。
+- **いつ:** 依存を選択時点で再判定し、順位を付けて対象が確定した時点です。複数件を一度に選ぶときや、前回の実行後に選び直すときは、確定するたびに 1 回ずつ発生します。
+- **誰が／何が:** 起点を「単発（指名）・自動（次の 1 件）・並列（上限件数までまとめて）」の 3 つに分け、要求する主体と確定する主体を表にしました。起点は、誰が要求したかではなく要求の形で決めます。順位の付け方は、未作成の `br-task-selection-strategy` に任せています。
+- **発生条件:** 着手可能であること、指定範囲内であること、起点ごとの成立・不成立（候補 0 件、実行能力不足で見送り）を書きました。選択後の準備に失敗しても、選択の事実は取り消しません。
+- **事実データ:** 対象タスク ID、トラック、owner ロール、起点区分、要求者、確定時刻、選択戦略と順位、並列時の件数と上限です。
+
+**根拠にした文書:** 着手可能（`ready`）の定義（`stsd-task-execution`）、起点イベント「実行指示された」（`cdfd-overview`・`cdfd-uc-schedule`）、BES・BPS・BR カタログの責務分担、類似成果物 `bps-task-completion`、選択処理の実装（`src/exec/schedule/ready.ts` など）です。実装は、選択経路が 3 つあることの確認にだけ使いました。
+
+**決めきれなかった論点**（本文に _TODO_ / _ASSUMPTION_ として残しています）:
+1. `bes-index` が未作成なので、一覧からこの文書へのリンクができていません。
+2. 自動選択では選択と着手宣言が続けて行われるため、2 つを同じ時点とみなすかは決めていません。
+3. 対象は schedule 系のタスクに限ると仮定しました。register 系・routine 系の選択も同じイベントにまとめるかは未定です。
+4. 並列選択で「同じ要求で選ばれた」ことを示す情報を、実行記録の既存項目で表せるかは確認していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"業務イベント仕様 bes-task-ready-selected.md の草案を新規作成した（status は draft のまま）。bes-rulebook の 5 項目構成で、起点区分（単発・自動・並列）、確定時点、発生条件、事実データを定義した。未決の論点は本文に _TODO_ / _ASSUMPTION_ として残した。","handoff":["依存先の `bes-index` が未作成のため参照できていない。作成時に `P-07` の起点イベント行から `bes-task-ready-selected` へリンクする必要がある（本文 _TODO_）。","自動選択では選択と着手宣言（`claim`）が同じ排他区間で続けて行われる。2 つを業務上同じ時点とみなすかは未決で、refine（070）で `bps-task-selection-preparation` と照合して決める。","対象を schedule 系のタスクに限るという _ASSUMPTION_ を置いた。register 系・routine 系の選択も同じイベントにまとめるかは `bes-index` 作成時に決める。","並列選択で「同じ要求で選ばれた」ことを示す情報を、実行記録の既存項目で表せるかは未確認。データモデルの磨き込みで照合する。","参照先の `br-task-selection-strategy`・`bps-task-selection-preparation`・`bps-parallel-required` は未作成のため、wikilink ではなくインラインコードで仮置きした。","plan の approach は freeform だが、カタログが `specdojo:bes-rulebook` を指定しているので、その 5 項目構成に合わせた。根拠にした文書は `cdfd-overview`、`cdfd-uc-schedule`、`prj-0001:stsd-task-execution`、`dct-business-model-bes` / `bps` / `br` のカタログ、類似成果物 `bps-task-completion`、`prj-overview`。実装（`src/exec/schedule/ready.ts`、`src/exec/run/schedule-mode.ts`、`src/exec/commands.ts`）は、選択経路が単発・自動・並列の 3 つあることの確認にだけ使った。Web 検索は使っていない。対象ファイルは新規作成のため、破棄した既存記述はない。"],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md","status":"passed","summary":"All matched files use Prettier code style（--write で表の列揃えを整えた後）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md","status":"passed","summary":"エラーなし"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/product 配下の成果物だけで、pjr 個票や plan.md / result.md などの履歴ファイルは変更していない"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"カタログ検査の適用条件を満たさない","reason":"変更は docs/ja/product/ 配下だけで docs/ja/projects/ には及んでいない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>

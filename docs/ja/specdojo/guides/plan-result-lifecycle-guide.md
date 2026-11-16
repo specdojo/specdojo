@@ -42,61 +42,87 @@ plan / result の frontmatter には `targets`（対象文書の doc id リス�
 
 ### 1.2. 配置
 
-| 種別          | 配置                                |
-| ------------- | ----------------------------------- |
-| plan          | `<execution_path>/exec/plans/`      |
-| 完了後の plan | `<execution_path>/exec/plans/done/` |
-| result        | `<execution_path>/exec/results/`    |
+1 回の実行を `execution/runs/<出どころ>/<項目 ID>/<run ID>/` にまとめます。配置の決め方は `src/shared/run-records.ts` を正本とします。
 
-result は完了記録であり、review などから参照されるため `done/` へ移動しません。
+```text
+execution/
+  runs/<出どころ>/<項目 ID>/<run ID>/
+    plan.md
+    result.md
+    evidence.json
+    pipeline-state.json
+    executor.log
+    reporter.log
+```
+
+ログは実行した段に応じて保存し、親検証・統合のログも同じディレクトリに置きます。human の実行は result のみです。完了しても保存先は変わりません。共通規約の版は `execution/conventions/`、成果物ごとの評価結果は `execution/grade/results/`、job の状態管理 JSON は `execution/jobs/runs/` に残します。
+
+### 1.3. 配置の検査
+
+`exec validate` は schedule・event とともに実行記録の配置を検査し、欠けた記録を `WARN:` で知らせます。欠落だけなら終了コードは 0 です。CI などで配置だけを検査し、欠落もエラーにする場合は次を使います。
+
+```bash
+specdojo exec validate --project <project-id> --records-only
+```
+
+次の過去の世代の記録は、通常の検査でも `--records-only` でもエラー・警告にしません。
+
+- evidence 導入前: `plan.md` と `result.md` がそろい、`pipeline-state.json` と `evidence.json` がない run。
+- 移行で plan・result を集約した先行試行: `pipeline-state.json` と `evidence.json` があり、plan・result が両方なく、同じ出どころ・項目の別 run に plan・result の対がある run。
+- 旧配置: `execution/exec/plans/`・`results/`・`evidence/` 配下。evidence や対になる記録がなくても検査対象から外します。
+
+このほか `execution: human` を明記した result は単独で正常とします。それ以外で `plan.md`・`result.md`・`evidence.json` が欠けた run は、通常は警告、`--records-only` では `ERROR:` と終了コード 1 で報告します。生成直後の plan 単独や中断中の run も含みます。ログと checkpoint は実行段に応じた任意の記録で、退避した試行も同じ run に保持できます。
+
+run の外の plan・result・evidence・checkpoint・ログ、不正な出どころや深さは、上の例外を除き両モードでエラーにします。`exec/events/`・`exec/trials/`、規約の版、`grade/results/`・`grade/generated/`、job の状態、生成物、routine の失敗記録は独立した形式として検査から除きます。runtime lock は `git check-ignore` で確認し、追跡済みや無視されていない lock、Git で確認できない場合は両モードで終了コード 1 を返します。旧 `routines/.locks/` も設定された routine のディレクトリで検査しますが、ファイルのない lock のディレクトリは対象外です。
+
+検査は記録を書き換えず、欠けたファイルも生成しません。CI で `--records-only` を使う場合は、実行が終了して記録がそろった revision を対象にしてください。
+
+作業ツリーには中断中の run や空のディレクトリが残ることがあるため、push する前の確認は commit の tree を対象にします。`--commit <rev>` を付けると、`<rev>` の tree を一時ディレクトリへ書き出して同じ検査を流し、未 commit の記録は対象にしません。pre-push hook（`tools/check-run-record-layout-push.mjs`）は push する各 ref の先端 commit をこの形で検査し、CI の Check execution record layout と同じ欠落を push の前に止めます。
+
+```bash
+specdojo exec validate --project <project-id> --records-only --commit <rev>
+```
+
+`exec run` と `exec cycle` の事前検証は `exec validate --schedule-only` で schedule・event だけを調べます。生成途中や中断中の run と、取得中の runtime lock があっても、実行・再開を妨げません。`--schedule-only` と `--records-only` は併用できません。
 
 ## 2. 命名規則
 
-task identity の有無によるファイル名の決め方と、対象成果物の解決方法を示します。
+### 2.1. 出どころと項目 ID
 
-### 2.1. task identityありの命名
+| 出どころ   | 項目 ID                    |
+| ---------- | -------------------------- |
+| `register` | 登録項目 ID（`PJR-XXXX`）  |
+| `schedule` | タスク ID（`T-...`）       |
+| `job`      | job の実行 ID（`JBR-...`） |
 
-`--task <task-id>` を使う場合、plan と result は task ID を使った固定名になります。
+review は元の項目の下の別 run とします。plan と result の文書 ID は frontmatter の `specdojo.id` を正本とし、ファイルの移動で変更しません。
 
-```text
-exec/plans/<task-id>-plan.md
-exec/results/<task-id>-result.md
+### 2.2. run ID
+
+新しい plan の生成では `<slug>-<UTC>-<rand>` のユニークな run ID を採番します。`<rand>` は4バイト（16進8桁）で、同一プロセス内で重複した場合は連番を加えます。job の attempt など、呼び出し側が run ID を指定する場合も同じ配置モジュールを通します。
+
+plan と result のファイル名はそれぞれ `plan.md` と `result.md` です。同じ task の新しい実行は別 run に保存します。同一 run の再開では保存先を維持し、executor をやり直す前の state・evidence・ログを `*.attempt-N.*` に退避します。
+
+state と evidence は元も残し、ログは退避先へ移します。退避した evidence の `log_refs` も退避先を指します。引き継ぐ evidence が参照するログは元の名前でも保持します。reporter からの再開では executor の試行を退避せず、evidence とログをそのまま使います。
+
+### 2.3. 既存記録の移行
+
+`exec migrate-records` は検査を通すためには不要です。旧配置の記録を CLI の通常の探索で使う場合に移行します。移さない場合の制約は次のとおりです。
+
+- `exec run --register ... --resume` と schedule の executor 再開は、`runs/` 内の checkpoint を候補にするため旧 `exec/evidence/` の run を発見しません。schedule の通常実行・統合再開も、plan・result の通常の探索では旧配置を参照しません。保存済みイベントや checkpoint の明示的なパス参照を読む経路はありますが、旧配置を自動探索する互換機能ではありません。
+- `dashboard build` の実行記録一覧と plan・result 件数には、旧配置の記録が含まれません。`exec archive` や task ID からの plan・result の取得も `runs/` のみを探索します。
+- `register build` は個票とイベントから派生ビューを作り、旧記録の探索やリンクの移行はしません。個票にある既存リンクは元ファイルが残れば利用できますが、検査の成功によって補完・更新されることはありません。
+
+移行対象の run を完了または破棄し、対応する worktree を撤去してから、Git index に書き込める環境で移行します。プロセスを止めただけで worktree が残っている場合は、`--dry-run` でも項目 ID・worktree のパス・ブランチを示して処理前に停止します。進行中の run の移行と再開は対象外です。
+
+```bash
+specdojo exec migrate-records --project <project-id> --dry-run
+specdojo exec migrate-records --project <project-id>
 ```
 
-対象:
+コマンドは移動先と参照の更新対象、対になる plan または result が欠けた記録を表示します。移動には `git mv` を使い、ログ本文と文書 ID を保持してパスの欄と旧形式の共通規約への相対参照を更新します。ルート相対パスの新形式は移動しても変更しません。移動先の衝突・追跡されていない移動元は処理前に拒否します。移行済みの状態で再実行すると移動は 0 件です。
 
-| 操作                     | 命名                 |
-| ------------------------ | -------------------- |
-| `exec plan --task`       | 固定名 plan          |
-| `exec run --task`        | 固定名 plan / result |
-| `exec claim`             | 固定名 result        |
-| `exec run --track-state` | 固定名 plan / result |
-| `exec run --worktree`    | 固定名 plan / result |
-
-同じ task の再生成や再実行では同じファイルを上書きします。過去内容は Git 履歴、完了の事実は event と commit 履歴で追跡します。
-
-### 2.2. task identityなしの命名
-
-`--deliverable <local_id>` や ad-hoc 実行では、task ID がないためユニーク名を使います。
-
-```text
-exec/plans/<stem>-plan.md
-exec/results/<stem>-result.md
-```
-
-`<stem>` は plan と result の連結キーです。同じ plan から実行する result は同じ `<stem>` を使います。
-
-### 2.3. stemの決定順序
-
-`<stem>` は次の優先順位で決まります。
-
-1. `--out <path>` または `--plan <path>` を指定した場合は、そのファイル名から導出します。
-2. `--task <task-id>` がある場合は、`<stem> = <task-id>` とします。
-3. task identity がない場合は、`<slug>-<UTC>-<rand>` のユニーク名を採番します。
-
-`<rand>` は4バイト（16進8桁）です。同じプロセス内で slug・UTC秒・乱数がすべて重複した場合は、`<rand>-1`、`<rand>-2` のように連番を加えます。plan path から stem を読む処理は stem 全体を連結キーとして扱うため、従来の16進4桁の名前と連番付きの名前をどちらも読み取れます。
-
-これにより、task 実行は固定名で扱い、schedule 非依存の実行は実行ごとの証跡を残せます。
+checkpoint に同じ plan / result を参照する試行が複数ある場合、対は最新の checkpoint の run に置き、先行試行の evidence とログはそれぞれの run に残します。対応が特定できない記録は元の stem を run ID とし、欠けた記録を捏造しません。比較実験の `exec/trials/` は独立した保存形式のため移行対象から外します。通常の読み取りは `runs/` のみを対象にします。
 
 ### 2.4. deliverable指定の解決
 
@@ -141,15 +167,39 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 | `mode: review`        | `xrp-template.md`            |
 | `approach` が指定済み | `xep-<approach>-template.md` |
 
+共通規約は `xp-common-conventions-template.md`（edit / review 共通）と、`mode` に対応する `xep-common-conventions-template.md`（edit 専用）または `xrp-common-conventions-template.md`（review 専用）を組み合わせます。接頭辞の `x` は exec、`p` は plan、`e` / `r` は edit / review を表します。各ファイルの `plan-essentials` マーカー間を plan の `_COMMON_CONVENTIONS_` 位置へ順に展開し、規約の詳細を読む案内には両ファイルのパスを載せます。マーカーのないローカル断片は全文を展開します。grade の plan はこれらの規約を使いません。
+
+保存する plan では、末尾に展開済みの共通規約を `` `共通規約 sha256:<内容のハッシュ>` `<リポジトリルートからのパス>` `` の形で記録します。パスは `docs/ja/projects/<project-id>/execution/conventions/<SHA-256>.txt` などで、Markdown リンクにはしません。規約本体は `<execution_path>/conventions/<SHA-256>.txt` に版ごとに一度だけ保存し、整形で内容が変わらないようプレーンテキストで保持します。版は mode・schema の解決後の本文（末尾の改行を含む）から計算します。規約本文の資源への参照はリポジトリ相対とし、別 checkout の同梱資源は package 内の相対パスにするため、端末の絶対パスで版が変わりません。agent と reporter へ渡す前に保存した版を復元するため、テンプレートの更新後や再開時も当時の規約が届きます。`exec run --plan` と `agent run --plan` も同じ読み取りを使います。参照先が欠けている場合やハッシュが一致しない場合は、版とパスを示すエラーで停止します。規約を埋め込んだ既存 plan と、末尾に `[共通規約 sha256:<内容のハッシュ>](<plan からの相対パス>)` を持つ旧形式もそのまま読めます。復元するのは末尾の独立した段落の参照だけで、個票から転記した本文やコードブロックの例は読み取りません。plan に指示を追記するときは、この参照より前に置いてください。別 checkout で使うときは規約ファイルも同じルート相対パスに引き継ぎます。旧形式の plan を移す場合は、plan からの相対参照を維持してください。
+
 `execution: human` のタスクに `exec plan` を実行するとエラーになります。human の確定手順は [Human Finalize 実行レシピ](../recipes/exec-human-finalize-recipe.md)、共通規約は [Human Finalize 実行標準](../standards/exec-human-finalize-standard.md)を正本とし、human result から参照します。
 
-`approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-retrofit-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
+`approach` が指定されていれば `xep-fully-guided-template.md`、`xep-condense-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-retrofit-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 
 register のカタログなしの成果物 plan は、個票の `target_path`・`target_rulebook` または既存文書の索引と frontmatter から対象を解決します。カタログの `done_criteria` がないことを明記し、個票の完了条件と rulebook を使います。`bootstrap` は未作成 kata の ID・パスと参照宣言の指示、`finalize`・`bootstrap-finalize` は既存成果物の確認チェック表と確定対象を plan に載せます。実 agent は `status: ready` への昇格を行いません。対象と起票の条件は [[specdojo:command-reference]] を参照してください。
 
 `approach: retrofit` では、対象成果物の DCT エントリに宣言された `evidence_refs` を edit / review plan の「実装エビデンス」へ展開します。カタログ経由で `evidence_refs` がない場合は plan 生成をエラーにします。カタログなしでは実装の調査パスを個票に明記して調査入力とします。実装エビデンスは調査入力であり、frontmatter の `targets` には追加しません。実行者は実際に参照したパス、抽出した現在動作、成果物との一致・乖離、未確認範囲を result に記録します。
 
+`draft`・`fully-guided`・`recipe-guided` の edit plan にも `evidence_refs` を読み取り専用で展開します。未指定・カタログなしでは「なし」と示し、生成を拒否しません。これらの plan の `depends_on` は、既存文書を wikilink、未作成文書をインラインコードと「未作成」で表示します。未作成の依存の内容は推測せず _TODO_ / _ASSUMPTION_ として残し、存在しないことだけを理由に実行を止めません。`condense` など他 approach と review の plan は従来のままです。
+
 実践の型の扱いは [実践の進め方ガイド](ryu-guide.md) を参照します。
+
+### condense の記録
+
+`condense` は既存の 1 文書を対象とする edit で、標準フローでは磨き込みの後・review の前に置きます。plan は `xep-condense-template.md`、result は `xer-condense-template.md` を使います。判定基準は [[specdojo:pm-review-viewpoints]] の `vp-arc-conciseness` とし、判断に要る背景・制約・例外・完了条件と意味を維持します。
+
+result の `specdojo.condense_records` は修正・保持の記録のリストです。候補がなければ `[]` とし、変更不要の理由を本文へ書きます。各要素は次の 5 項目を持ち、本文の「修正・保持の記録」の表と 1 対 1 に対応します。
+
+| 項目       | 内容                                                                                                                                                            |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `location` | 修正前の成果物の見出し・行・引用                                                                                                                                |
+| `category` | `repetition`（繰り返し）、`table-prose`（表と本文）、`figure-prose`（図をなぞる文）、`unneeded-background`（不要な背景）、`canonical-restatement`（正本の再掲） |
+| `action`   | `delete`（削る）、`merge`（まとめる）、`reference`（参照）、`retain`（残す）                                                                                    |
+| `reason`   | 意味を保った根拠、または残した理由                                                                                                                              |
+| `cause`    | `FindingCause`: `{"type":"document"}`、または `{"type":"kata","kind":"recipe","location":"根拠の箇所"}`。`kind` は rulebook / recipe / sample / template        |
+
+Kata が原因とするのは、宣言された Kata の箇所を示せる場合だけです。schema は `condense-records.schema.yaml` から共通の `finding-cause.schema.yaml` を参照します。pipeline executor は最終 evidence に `condense_records` を出し、runner が検証済みの同じリストを frontmatter と表へ転記します。reporter の要約によって省略・変更しません。executor が `condense_records` を出さない、または形式が正しくない場合は、reporter を起動せず executor の段の失敗として止めます（[[specdojo:exec-config-guide]] の executor の報告の説明を参照）。通常の識別項目は scaffold と照合し、`condense_records` は記録用の可変項目として検証します。完了・block などの状態更新後も記録を保持します。
+
+Kata の手入れ plan は成果物ごとの最新の完了済み `condense` result から Kata が原因の記録を展開します。成果物が宣言する rulebook から辿れる対象 Kata と原因の種類が一致する記録に限り、grade 由来とは出どころを区別します。
 
 ### 3.3. resultテンプレート
 
@@ -172,7 +222,7 @@ result の `status` は、個々の実行試行がどの状態にあるかを表
 | `blocked`     | 障害や未充足条件によって停止した試行                  | 理由を解消して再開または再実行する       |
 | `superseded`  | 後続の新しい run に置き換えられ、破棄された先行の試行 | なし。履歴として保持し、再開対象にしない |
 
-runner は一意名の新しい result を scaffold するとき、同じ `task_id` を持つ先行 result のうち `in_progress` または `blocked` のものを `superseded` へ更新します。`completed_at` には後続 run の開始時刻を記録し、先行 result の `block_reason` は除去します。`complete` の result は完了記録として変更しません。固定名 result の再利用や、同じ run を続ける `exec resume` は新しい result を作らないため、この遷移の対象外です。
+runner は一意名の新しい result を scaffold するとき、同じ `task_id` を持つ先行 result のうち `in_progress` または `blocked` のものを `superseded` へ更新します。`completed_at` には後続 run の開始時刻を記録し、先行 result の `block_reason` は除去します。`complete` の result は完了記録として変更しません。同じ run を続ける `exec resume` は新しい result を作らないため、この遷移の対象外です。
 
 `exec status` が表示・集計する Schedule の `doing` / `blocked` などは event log から導出するタスク状態であり、result の status とは別です。このため、履歴上の `superseded` result が実行中件数や対応待ちの blocked 件数へ加算されることはありません。
 
@@ -190,30 +240,17 @@ worktree を再利用する `exec resume` では、再開直前の worktree resu
 
 ### 4.1. アーカイブ
 
-完了後の plan は `exec/plans/done/` へ移動できます。
+`exec archive` は完了した plan を同じ run ディレクトリに保持します。`exec complete`、`exec run --track-state` の成功時、`--archive-on-success` でも保存先は変わりません。
 
 ```bash
 specdojo exec archive --project <project-id> --task <task-id>
 ```
 
-| ケース                          | アーカイブ                        |
-| ------------------------------- | --------------------------------- |
-| `exec complete`                 | 対象 plan を自動移動する          |
-| `exec run --track-state` 成功時 | 対象 plan を自動移動する          |
-| 軽量実行（状態追跡なし）        | `exec archive` で明示的に移動する |
-| `exec run --archive-on-success` | 成功時に移動する                  |
-
-固定名 plan を `done/` へ移動する場合は、UTC タイムスタンプと4バイトの乱数を付けます。同じ名前が既にある場合は、既存ファイルを上書きせず末尾に連番を加えます。
-
-```text
-exec/plans/done/<slug>-<UTC>-<rand>[-<sequence>]-plan.md
-```
-
-不要な plan は `done/` へ移動せず削除してもかまいません。plan は catalog と schedule から再生成でき、result が記録として残るためです。
+不要な plan は `--delete` で削除できます。result は実行記録として残ります。
 
 ### 4.2. 再実行
 
-完了済み task を軽くやり直す場合は、固定名 plan / result を再生成してカレントリポジトリで実行します。
+完了済み task をやり直す場合は、新しい run の plan / result を生成してカレントリポジトリで実行します。
 
 ```bash
 specdojo exec run --project <project-id> --task <task-id>
@@ -229,4 +266,4 @@ specdojo exec run --project <project-id> --task <task-id>
 specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "rerun done"
 ```
 
-`reopen` は完了済み plan を `done/` から戻さず、固定名 result の内容も変更しません。次の `exec plan` / `exec run` で新しい固定名 plan を生成し、再 claim 時に既存 result の `status` を `in_progress`、`started_at` と `agent` を新しい試行の値へ更新し、`completed_at` と `block_reason` を除去します。result 本文は前回の記録を引き継ぎ、過去の完了状態は Git 履歴と `complete` / `reopen` event で追跡します。
+`reopen` は過去 run の plan / result を変更しません。次の `exec plan` / `exec run` は新しい run を作り、過去の完了状態は保存した記録と `complete` / `reopen` event で追跡します。同じ run の続きは `exec resume` で再開します。

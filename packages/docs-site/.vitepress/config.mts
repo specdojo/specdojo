@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 import { generateSidebar } from "vitepress-sidebar";
 import {
-  specdojoSidebarItems,
+  buildSpecdojoSidebarItems,
   PROJECTS_SEGMENT_TEXT,
   PROJECTS_FILE_TEXT,
   PROJECTS_FILE_MENU,
@@ -13,6 +13,7 @@ import {
 import type { SidebarItem } from "./sidebar-config";
 import { mermaidSvgId } from "../src/gen-mermaid-svg";
 import { d2SvgId } from "../src/gen-d2-svg";
+import { isChatFence, renderChat } from "../src/chat.js";
 import { d2SvgAutoGenerate } from "./d2-auto-generate";
 import {
   STAGED_PACKAGE_DEAD_LINK_PATTERNS,
@@ -23,6 +24,7 @@ import { scanLocaleSidebar } from "./locale-sidebar";
 import { mermaidAssets } from "./mermaid-assets";
 import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
 import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
+import { loadArchiveLinks, resolveArchiveWikilink } from "./archive-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
@@ -67,6 +69,7 @@ function loadDocIndex(workspaceRoot: string): Record<string, string> {
   }
 }
 const docIndex = loadDocIndex(WORKSPACE_ROOT);
+const archiveLinks = loadArchiveLinks(WORKSPACE_ROOT);
 
 // doc-index エントリから行番号サフィックスを除去する（例: "docs/ja/foo.yaml:42" → "docs/ja/foo.yaml"）
 function stripEntryLineSuffix(entry: string): string {
@@ -270,7 +273,8 @@ const specdojoItems = {
     text: "specdojo",
     link: "/ja/specdojo/",
     collapsed: false,
-    items: specdojoSidebarItems,
+    // 型のメニューは、package 側の型を重ねたステージングの型の文書から設定の読み込み時に組み立てる。
+    items: buildSpecdojoSidebarItems(path.join(SITE_CONTENT_ROOT, "ja", "specdojo")),
   },
 };
 
@@ -1045,6 +1049,10 @@ export default defineConfig({
               </p>\n`;
         }
 
+        if (isChatFence(info)) {
+          return renderChat(token.content, info);
+        }
+
         // それ以外のコードブロックはデフォルトの描画
         return defaultFence
           ? defaultFence(tokens, idx, options, env, self)
@@ -1068,12 +1076,14 @@ export default defineConfig({
 
         if (!silent) {
           const entry = docIndex[id];
-          const execRecordLink = resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
-          if (execRecordLink) {
+          const sourceLink =
+            resolveArchiveWikilink(inner, archiveLinks, GITHUB_SOURCE) ??
+            resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
+          if (sourceLink) {
             let token = state.push("link_open", "a", 1);
-            token.attrSet("href", execRecordLink.href);
+            token.attrSet("href", sourceLink.href);
             token = state.push("text", "", 0);
-            token.content = execRecordLink.displayText;
+            token.content = sourceLink.displayText;
             state.push("link_close", "a", -1);
           } else if (entry) {
             const entryPath = stripEntryLineSuffix(entry);

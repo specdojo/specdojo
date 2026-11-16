@@ -75,15 +75,15 @@ phase_sets:
       mode: review
 ```
 
-| フィールド       | 必須 | 説明                                                                                                                                                                                                 |
-| ---------------- | ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `execution`      | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                             |
-| `mode`           | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                              |
-| `approach`       | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
-| `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                           |
-| `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                               |
-| `agent`          | 任意 | `executor`（必須）と `reporter`（任意）の nickname。CLI の stage override に次いで優先                                                                                                               |
-| `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                        |
+| フィールド       | 必須 | 説明                                                                                                                                                                                                              |
+| ---------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `execution`      | 任意 | `agent` または `human`。省略時は `agent`                                                                                                                                                                          |
+| `mode`           | 任意 | `edit` または `review`。省略時は `edit`                                                                                                                                                                           |
+| `approach`       | 任意 | `fully-guided` / `condense` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
+| `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                                        |
+| `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                                            |
+| `agent`          | 任意 | `executor`（必須）と `reporter`（任意）の nickname。CLI の stage override に次いで優先                                                                                                                            |
+| `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                                     |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。
 
@@ -206,6 +206,7 @@ pipeline:
 
 run:
   max_concurrent_runs: 4 # 省略時も 4（最初の run と --join の run の合計）
+  git_index_lock_wait_seconds: 1200 # 省略時も 1200（index.lock の解放を待つ秒数）
 
 rate_limit_detection:
   exit_codes: []
@@ -360,11 +361,39 @@ pipeline:
 - 同じ `id` と `repo` の組の重複、`id`・`repo` 以外のキー、`repo` の無いオブジェクトは、agent 起動前の設定エラーになります。
 - 実行するコマンドは、どのリポジトリでも ID ごとの固定 argv です（例: `test-unit` は `npm run test:unit`）。リポジトリ別に command や npm script 名を指定する手段は設けません。プロダクトリポジトリの npm script 名が異なる場合は、プロダクト側の `package.json` に許可リストと同じ名前の script（`test:unit` など）を用意してください。用意できない検証は、そのリポジトリへ割り当てないでください。script が無いまま割り当てると、`npm run` が失敗して親検証は `failed` になります。
 
+要素に `paths` を書くと、変更の種類で検証を選べます（PJR-T01P）。親 runner は executor が変えたファイルを `paths` の glob（`**`・`*`・`?`・`{a,b}`、割り当てたリポジトリからの相対）と照らし、合うファイルが無ければ検証を流さず `not_applicable` として記録します。`not_applicable` は失敗として扱わず、executor が同じ検証を `not_run` と報告していても block しません。次の場合は `paths` があっても流します。
+
+- `paths` を書かない検証（迷う場合は書かずに、今までどおり毎回流します）。
+- 変更一覧が無い、または evidence の上限（1,000 件）で切れた場合。
+- reporter の再開の前に統合先を取り込んだ後の再検証。
+
+```yaml
+pipeline:
+  parent_validations:
+    - lint-md
+    - validate-schema # 文書だけの変更でも流す
+    - { id: typecheck, paths: ["{src,tests,tools}/**", "tsconfig*.json"] }
+    - { id: test-unit, paths: ["{src,tests,tools}/**", "docs/ja/specdojo/**", "vitest.config.*"] }
+```
+
+`pipeline.commit_hook_skips` は、runner の統合の commit で流し直さない Git hook（lefthook のコマンド名）を宣言します。`covered_by` に並べた親の検証がその run ですべて `passed` のときだけ、commit を `LEFTHOOK_EXCLUDE` 付きで実行します。`not_applicable` や失敗した検証は代わりにならないため、その場合は hook を流します。人が手で commit するときの hook は変わりません。
+
+```yaml
+pipeline:
+  commit_hook_skips:
+    - { hook: typecheck, covered_by: [typecheck] }
+    - { hook: test, covered_by: [test-unit, test-integration] }
+```
+
+`pipeline.mechanical_result` を `true` にすると、edit result を reporter の agent を起動せずに runner が作ります。対象は、結果が完了で executor が `final_message` を返した edit だけです。実施内容は `final_message` の各行で、進め方には runner が作ったことを書きます。review、block、描画の失敗は従来どおり reporter が書きます。既定は `false` です。
+
 `run.register_execution` は、`exec run --register` の既定の実行場所です。`worktree` または `in-place` を指定します。省略時は既存リポジトリとの互換性のため `in-place` です。CLI の `--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。
 
 `run.register_post_review` は、register の worktree 統合後に読み取り専用 review pipeline を実行し、todo / issue を verdict に応じて自動 close または `waiting` へ遷移するかを指定する boolean です。既定は `false` です。CLI の `--post-review` でもその run だけ有効にできます。review executor の既定は `claude-expert-review-executor` で、`--review-by` が優先されます。詳しい判定と、runner 自身を変更した項目を自動 close しない規則は [exec運用ガイド](exec-operation-guide.md) を参照してください。
 
 `run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、register の worktree 実行へ `--join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
+
+`run.git_index_lock_wait_seconds` は、runner の統合・記帳などの git 操作が、別のプロセス（手の commit の pre-commit hook など）が握る `index.lock` の解放を待つ秒数です。0 以上の整数だけを指定でき、省略時は `1200`（20 分）です。不正な値は設定の読み込みでエラーになります。最初の 10 回は 1.5 秒間隔、その後は 5 秒間隔でやり直し、待っている間は 30 秒ごとに `warning: waiting for index.lock to be released (elapsed <経過> / limit <上限>, lock: <パス>, ...)` を出力します。上限を越えると、lock のパスと原因の候補（hook の実行中、または異常終了した git が残した古い lock）を添えて失敗します。最初の 10 回の後、lock のファイルが残っているのに git のプロセスが 1 つも動いていない場合は古い lock とみなし、上限を待たずに `index.lock looks stale` で失敗します。この判定は Linux の `/proc` で行い、読めない環境では上限まで待ちます。runner は lock のファイルを消しません。git のプロセスが動いていないことを確かめてから、人が消してください（PJR-964D）。
 
 `pipeline.parent_validation_concurrency` は、1 つの `exec run` プロセスの中で親検証を同時に実行できる項目数の上限です。正の整数だけを指定でき、省略時は `1` です。`--parallel` で複数項目を並行実行しても、親検証は項目単位で 1 本ずつ直列に実行されます。vitest は検証ごとに複数の worker を起動するため、検証が重なるとコンテナの負荷で成果物と無関係なタイムアウトが起きます。これを防ぐための既定値です（PJR-3HHW）。制限の対象は親検証だけで、executor と reporter は `--parallel` のとおり並行に動きます。空きを待つ項目は `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` をログへ出力し、枠を得たときに `Parent validation slot acquired: <項目>` を出力します。
 
@@ -539,7 +568,7 @@ specdojo exec run --project <project-id> --task <task-id> \
 
 ### 6.3. evidence とログの引き渡し方針
 
-executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/exec/evidence/<task-id>/<run-id>/` です。
+executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/runs/<出どころ>/<項目 ID>/<run ID>/` です。
 
 | ファイル                                                              | 内容                                                                                                    |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
@@ -554,15 +583,16 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 - reporter へ渡すのは、plan と `evidence.json` の内容と出力 JSON Schema だけです。ログ本文・生 diff は渡しません。
 - ログは `evidence.json` の `log_refs` に参照（パス・バイト数・切り詰めの有無）としてだけ現れます。ログ本文を読むのは人です。
 - 保存前に上限を適用します。`executor.log` は全体で 64KiB、失敗した reporter のログは stdout / stderr の各ファイルを 64KiB とします。失敗した親検証は stdout / stderr をそれぞれ 1MiB まで取得し、両方を 1 つのログへ保存します。1MiB を超えたストリームは先頭と末尾を残して中間を省略します。最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。超過分を切り詰めた事実は `log_refs.truncated` に残します。
-- 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と executor / reporter のログに適用します。
+- 保存前に秘匿値を伏せ字化します。対象は `Bearer`、OpenAI・Anthropic・GitHub（fine-grained を含む）・AWS・Google・Slack のキーやトークン、JWT、秘密鍵の PEM ブロック全体、URL の認証情報、`api_key` / `access_token` / `password` などの名前付きの値です。evidence と executor / reporter のログに適用します。
 - reporter が非ゼロ終了または形式エラーで失敗した場合、同じ reporter stage 内の各形式試行を `reporter-attempt-<n>.stdout.log` と `reporter-attempt-<n>.stderr.log` に保存します。同じ run を resume して再度失敗した場合は、直近の失敗内容でこれらのファイルと `log_refs` を置き換えます。
 - 親検証は失敗時だけ出力を保存し、成功時は要約だけを記録します。失敗ログは `parent-validation-output` として `log_refs` から参照します。同じ run の resume や統合段の再検証では attempt 番号を増やして新しいログを追加し、以前の失敗ログを上書きしません。親検証の要約は 1,000 文字以内で先頭と末尾を残すため、末尾に出る失敗ケース名と件数を evidence から確認できます。
 - evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
 - executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`・省略可能な `completion_status`・`handoff`）を出します。`validations[].status` は `passed` / `failed` / `not_run` / `not_applicable` / `requires_human` のいずれかです。`not_applicable` はリポジトリが検査の適用条件を満たさない場合に使い、`reason` へ理由を必ず記録します。`requires_human` は、実 agent CLI の起動、利用枠や課金を伴う操作、認証情報やホスト側の操作など、agent の sandbox から実行できない確認だけに使います。実行できるが省略した検証には使わず、`not_run` として記録します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
 - `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）、`lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）、`lint-mermaid`（`npm run lint:mermaid`）、`lint-d2`（`npm run lint:d2`）、`build`（`npm run build`）、`format-check`（`npm run format:check`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
 - executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、executor evidence の validations にも含めなくてよいものとします。親 runner の結果は `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。executor が同じ検査を `not_run` または `not_applicable` として含めた場合も、同じリポジトリで実行された親 runner の結果を正とします。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行せず、executor の重複報告で run を止めません。
-- result の `changed_files` のパスは evidence の `changes` から、execution の evidence、project register とその派生ビュー、当該 result という runner 管理記録を除いて runner が機械生成します。除外後の変更一覧だけを reporter へ渡し、edit の変更説明は evidence のパスと対にして受け取ります。runner はパスで突き合わせるため、説明の順序は問いません。説明が不足したパスには Git の変更メタデータ（追加・変更・削除・名前の変更、行数）を記録し、変更ファイルが多い場合（50 件超）はディレクトリごとに集約して記録します。evidence にないパスの説明は捨てます。`outcome` と `block_reason` は stage の状態・終了コード・保護機構が保存した理由・executor / 親 runner の検証から機械生成します。reporter の JSON Schema は文章項目と対応づけ用のパスだけを受け付け、いずれかの検証が failed または `not_run` なら、reporter の文章にかかわらず機械判定は blocked です。ただし、executor が `not_run` または `not_applicable` と記録したコマンドを、親 runner が同じリポジトリで同じコマンドとして実行し成功していれば、親 runner の結果を正として executor の報告を無視します。さらに、`npm run <name>` に対応する script がない、`npx <package>` の package が `dependencies` / `devDependencies` にない、検査の対象となる種類の変更ファイルがない、または SpecDojo サブコマンドの設定上の適用条件を満たさないことを runner が機械的に確定できる場合、その `not_run` は block せず、edit result の申し送りへ「適用外の検証（runner の判定）」として追記します。変更ファイル種別で判定する対応は共通規約の検査表を正本とし、`validate:schema:file` は `*.yaml` / `*.yml`、Prettier は `*.md` / `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`、markdownlint は `*.md` の変更がある場合だけ適用対象とします。rename は変更前後の両方を見て、プロダクトリポジトリのコマンドはそのリポジトリの変更だけで判定します。`typecheck` など、この対応に含まれない検査の判定は変更しません。SpecDojo の起動形は `specdojo <subcommand>`、`npx specdojo <subcommand>`、ソース／配布済み CLI の直接起動を認識し、`catalog validate` は対象 project の `catalog_path` で判定します。対象 project は、コマンドの `--project <id>`、run の対象 project（runner が execution path に一致する project を設定から特定したもの）、`current_project` の順に決めます。別の project が `catalog_path` を持っていても、run の対象 project に `catalog_path` がなければ適用外です。対象 project に `catalog_path` があっても、executor の変更（runner 管理記録を除き、rename は変更前後の両方を見ます）が `docs/ja/projects/` 配下に及ばない run では、plan の共通規約の検証表と同じく適用外とし、executor の `not_applicable` も受理します。変更が及ぶ run では従来どおり適用対象です。また、`<repo>:<path>` を引数に含むコマンド、`--prefix <repo>` 付きのコマンド、または `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` を含むコマンドは、対象 project が `repos` で宣言したそのプロダクトリポジトリの `package.json` で script と依存を判定します（`--prefix` はリポジトリ名か設定の `path` と一致するものを対象にします）。設定が読めない、対象 project を特定できない、または適用条件を未定義のサブコマンドは機械的な救済をせず、通常の `not_run` として扱います。executor の failed は親 runner の成功や適用外判定で打ち消しません。`npm run check` のように npm script を `&&` でつないだだけの合成コマンドを executor が `not_run` とした場合は、対象リポジトリの `package.json` の script を展開し、構成する各コマンドが同じリポジトリの親検証か executor 自身の検証で通っていれば満たされたものとして扱います。`npm test` は、`npm run test:unit` と `npm run test:integration` の両方が通っていれば満たされたものとします。構成するコマンドの script の中身と同じコマンドを executor が直接実行して通した場合も満たします（`tsx` の起動の書き方の違いはそろえて比べます）。任意のシェルを含む script は展開しません。理由付きの `not_applicable` は block の理由にせず、runner が edit result の申し送りへ「適用外の検証: `<コマンド>`（<理由>）」として機械的に追記します。ただし、理由がない場合、変更ファイル種別を含む適用条件を満たした `npm run <name>` の script が存在する場合、または同条件を満たした `npx <package>` の package が `dependencies` / `devDependencies` に存在する場合は誤申告として blocked にします。SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。適用条件が未定義なら理由付きの agent の申告に従います。`specdojo index build`（`npx specdojo index build`・`node --import tsx src/specdojo.ts index build` などの起動形を含みます）は runner が担う検証です。出力先の `.specdojo/doc-index.json` は agent が書き込めず、index は worktree の準備と統合の前に runner が再生成するため、executor への指示では実行も記録もしないよう伝えます。executor が `not_run` / `not_applicable` と記録しても block の理由にせず、`not_run` の場合は edit result の申し送りへ「runner が担う検証: `<コマンド>`（<理由>）」として追記します。runner の再生成が失敗した場合は worktree の準備で run が止まるか、runner の検証の失敗として block するため、満たしたものとは扱いません。executor の failed は救済せず、ほかの SpecDojo サブコマンドの `not_run` の扱いも変えません。executor の `requires_human` は block の理由にせず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記します。項目は review へ進み、人が確認してから close します。
+- result の `changed_files` のパスは evidence の `changes` から、execution の evidence、project register とその派生ビュー、当該 result という runner 管理記録を除いて runner が機械生成します。除外後の変更一覧だけを reporter へ渡し、edit の変更説明は evidence のパスと対にして受け取ります。runner はパスで突き合わせるため、説明の順序は問いません。説明が不足したパスには Git の変更メタデータ（追加・変更・削除・名前の変更、行数）を記録し、変更ファイルが多い場合（50 件超）はディレクトリごとに集約して記録します。evidence にないパスの説明は捨てます。`outcome` と `block_reason` は stage の状態・終了コード・保護機構が保存した理由・executor / 親 runner の検証から機械生成します。reporter の JSON Schema は文章項目と対応づけ用のパスだけを受け付け、いずれかの検証が failed または `not_run` なら、reporter の文章にかかわらず機械判定は blocked です。ただし、executor が `not_run` または `not_applicable` と記録したコマンドを、親 runner が同じリポジトリで同じコマンドとして実行し成功していれば、親 runner の結果を正として executor の報告を無視します。さらに、`npm run <name>` に対応する script がない、`npx <package>` の package が `dependencies` / `devDependencies` にない、検査の対象となる種類の変更ファイルがない、または SpecDojo サブコマンドの設定上の適用条件を満たさないことを runner が機械的に確定できる場合、その `not_run` は block せず、edit result の申し送りへ「適用外の検証（runner の判定）」として追記します。変更ファイル種別で判定する対応は共通規約の検査表を正本とし、`validate:schema:file` は `*.yaml` / `*.yml`、Prettier は `*.md` / `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`、markdownlint は `*.md`、`validate:history-links`（`specdojo-docs-lint history-links` を含む）は履歴蓄積ファイル（`pjr-*.md`（`pjr-index.md` を除く）、または executor 自身が変更した `execution/runs/<origin>/<item>/<run>/` 配下の `plan.md`・`result.md` や旧来の `exec/plans/**/*.md`・`exec/results/**/*.md`）の変更がある場合だけ適用対象とします。変更範囲の判定では、runner が生成・更新する `exec/` 配下（`plans/`・`results/`・`evidence/`・`events/`・`.locks/`）を executor の変更ファイルから除外し、rename は変更前後の両方を見て、プロダクトリポジトリのコマンドはそのリポジトリの変更だけで判定します。`typecheck` など、この対応に含まれない検査の判定は変更しません。SpecDojo の起動形は `specdojo <subcommand>`、`npx specdojo <subcommand>`、ソース／配布済み CLI の直接起動を認識し、`catalog validate`（`npm run validate:catalog` および `tools/catalog-validate-if-configured.mjs` を含む）は対象 project の `catalog_path` で判定します。対象 project は、コマンドの `--project <id>`、run の対象 project（runner が execution path に一致する project を設定から特定したもの）、`current_project` の順に決めます。別の project が `catalog_path` を持っていても、run の対象 project に `catalog_path` がなければ適用外です。対象 project に `catalog_path` があっても、executor の変更（runner が書く `exec/` 配下などの runner 管理記録を除き、rename は変更前後の両方を見ます）が `docs/ja/projects/` 配下に及ばない run では、plan の共通規約の検証表と同じく適用外とし、executor の `not_applicable` も受理します。変更が及ぶ run では従来どおり適用対象です。また、`<repo>:<path>` を引数に含むコマンド、`--prefix <repo>` 付きのコマンド、または `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` を含むコマンドは、対象 project が `repos` で宣言したそのプロダクトリポジトリの `package.json` で script と依存を判定します（`--prefix` はリポジトリ名か設定の `path` と一致するものを対象にします）。設定が読めない、対象 project を特定できない、または適用条件を未定義のサブコマンドは機械的な救済をせず、通常の `not_run` として扱います。executor の failed は親 runner の成功や適用外判定で打ち消しません。`npm run check` のように npm script を `&&` でつないだだけの合成コマンドを executor が `not_run` とした場合は、対象リポジトリの `package.json` の script を展開し、構成する各コマンドが同じリポジトリの親検証か executor 自身の検証で通っていれば満たされたものとして扱います。`npm test` は、`npm run test:unit` と `npm run test:integration` の両方が通っていれば満たされたものとします。構成するコマンドの script の中身と同じコマンドを executor が直接実行して通した場合も満たします（`tsx` の起動の書き方の違いはそろえて比べます）。任意のシェルを含む script は展開しません。理由付きの `not_applicable` は block の理由にせず、runner が edit result の申し送りへ「適用外の検証: `<コマンド>`（<理由>）」として機械的に追記します。ただし、理由がない場合、変更ファイル種別を含む適用条件を満たした `npm run <name>` の script が存在する場合、または同条件を満たした `npx <package>` の package が `dependencies` / `devDependencies` に存在する場合は誤申告として blocked にします。SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。適用条件が未定義なら理由付きの agent の申告に従います。`specdojo index build`（`npx specdojo index build`・`node --import tsx src/specdojo.ts index build` などの起動形を含みます）は runner が担う検証です。出力先の `.specdojo/doc-index.json` は agent が書き込めず、index は worktree の準備と統合の前に runner が再生成するため、executor への指示では実行も記録もしないよう伝えます。executor が `not_run` / `not_applicable` と記録しても block の理由にせず、`not_run` の場合は edit result の申し送りへ「runner が担う検証: `<コマンド>`（<理由>）」として追記します。runner の再生成が失敗した場合は worktree の準備で run が止まるか、runner の検証の失敗として block するため、満たしたものとは扱いません。executor の failed は救済せず、ほかの SpecDojo サブコマンドの `not_run` の扱いも変えません。executor の `requires_human` は block の理由にせず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記します。項目は review へ進み、人が確認してから close します。
 - `completion_status` は作業の完了状態を示す省略可能な欄で、値は `complete` / `incomplete` です。欄のない既存の報告は `complete` として扱います。値が指定されていてこの 2 値に合わない場合は、安全側に倒して `incomplete` として保存します。executor は計画の作業を終えられなかった場合、`incomplete` とし、理由を `final_message`、残作業を `handoff` に書きます。終了コード 0 や親検証の成功では未完了の申告を上書きしません。`exec run --register` は親検証・reporter を起動する前に停止し、項目を `waiting` にして、秘匿処理・文字数制限を適用した `final_message` の要旨を `block_reason` に記録します。worktree 実行では変更と evidence を残し、統合しません。pipeline の executor は `blocked`、evidence の `stage.status` と `exit_code` は実際のプロセス結果のままとします。`--resume --resume-from executor`（または `--resume`）で再開でき、前回の理由と `handoff`、途中の変更を executor に引き継ぎます。完了を申告し直し、必要な検証を通過してから review・統合へ進みます。
+- approach が報告に求める項目は、runner が reporter の起動前に検査します。現在の対象は `condense` の edit が求める `condense_records` で、欠けている、または形式が正しくない場合は reporter の失敗にせず executor の段の失敗とします。evidence を `completion_status: incomplete` とし、理由と再開の操作（schedule は `exec resume --task <id> --resume-from executor`、register は `exec run --register <id> --worktree --resume --resume-from executor`、agent を替える場合は `--executor-by`）を `block_reason` と result に残します。pipeline の executor は `blocked` です。再開は executor の段から始まり、reporter だけを同じ evidence で流し直しません。この検査より前に記録され、reporter の段で止まった run も、reporter の再開時に同じ検査で executor の段へ戻します。
 - `handoff` は executor が申し送る判断の理由、保護された設定の変更案、次のアクションなどの文字列配列です。先頭 100 件、各 4,000 文字までを秘匿処理して evidence に保存し、空文字列や文字列以外の要素は除外します。省略した既存の報告・evidence も有効です。reporter にはこの欄も渡し、edit result の「申し送り」には runner が reporter の補足と合わせて機械的に転記します。同一の文字列は重複させず、reporter が省略しても executor の記録は残します。register の完了条件が result への記録を求める場合、pipeline の executor は個票の対応結果と報告の `handoff` の両方に書きます。close の前には個票の対応結果と result の両方を確認します。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
 - reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。`{ id, repo }` を使う場合は、ID とリポジトリの組が一致することを求めます。再実行時も同じ割り当てで、各リポジトリの worktree を `cwd` にします。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。過去の親検証ログは置換せず、新しい失敗ログだけを追加します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
@@ -685,7 +715,7 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 | git 操作の分離             | `git add` / `commit` / `merge` は specdojo CLI が親プロセスで行い、agent には git 権限を与えない |
 | Git 環境・状態ガード       | repository 固有環境を除去し、agent 前後の HEAD・local config 変更を検知して block する           |
 | ready 昇格の human-only 化 | 成果物 `status` の `ready` への昇格を commit 時に検出し、agent 実行では block する               |
-| commit 対象の除外          | `exec/plans/` `exec/events/` `generated/` 他タスクの `exec/results/` は commit しない            |
+| commit 対象の除外          | `plan.md`、対象 run 以外の `execution/runs/`、`exec/events/`、`generated/` は commit しない      |
 | merge の重複ガード         | root 側の未 commit 変更と merge 対象パスが重複する場合は merge しない                            |
 
 ### 8.2. provider 別の権限設定
@@ -784,11 +814,12 @@ providers:
 | human / edit                                | 対象 task の result、result frontmatter の `targets` から解決した成果物パス   |
 | edit（maintenance / bootstrap 系 approach） | 上記に加え、実践の型ディレクトリ（rulebooks / recipes / samples / templates） |
 
-- 許可リスト外の変更は commit 対象に含めず、検出時は `commit-scope:` 警告として対象パスを出力します（worktree 内には残るため、必要なら人間が確認して手動で取り込みます）。
-- 既存の除外リスト（`exec/plans/` 等）は許可リストの内側でも引き続き適用します。
+- agent の許可リスト外の変更が残っていれば、`commit-scope: integration blocked` と対象パスを出力し、commit・統合・通常の worktree 撤去を止めます。対象パスと次のアクションを result の申し送りと `integrate.log` に残し、worktree を保持します。再開時も同じ検査を適用します。human の schedule タスクは result による選択を維持します。
+- `bootstrap` と `*-maintenance` でも、成果物カタログ・schema・文書サイトの型のメニューを一括で許可しません。これらは他の成果物や親 runner の動作へ影響するため、明示された `targets` で解決できるファイルだけを commit 対象にします。対象外なら変更せず、変更理由・対象パス・提案差分・必要な検証を個票の対応結果（register タスクの場合）と executor 報告の `handoff` に書き、対象の見直しまたは別タスクで反映します。
+- 既存の除外リスト（`plan.md` や対象 run 以外の実行記録等）は許可リストの内側でも引き続き適用します。
 - agent の mode / approach / `targets` は worktree の **agent 起動前の HEAD 側** plan（CLI が checkpoint commit した版）から読みます。agent 前後の HEAD は runner が比較し、agent 自身の commit や checkout を検知した場合は統合前に block するため、許可リストの導出は改ざん耐性があります。
 - human は plan を持たないため、HEAD 側 result の `execution: human`、mode、approach、`targets` から許可リストを導出します。human には敵対 agent が存在しないため、plan を独立した改ざん耐性境界にする要件は適用しません。
-- `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は警告を出し、commit を許可しません。
+- `targets` の doc id は HEAD 側 doc-index でパスへ解決し、未登録の場合（未作成の新規成果物）は catalog（`dct-*.yaml`）が宣言するパスへフォールバックします。どちらでも解決できない id は `unresolved target doc id (no individual path; approach directory permissions still apply)` を出力し、その id による個別パスの許可は追加しません。approach が許可する型のディレクトリ内のファイルは、id の解決と独立して commit 対象になります。ディレクトリの許可もないファイルの変更は、上記の停止ガードの対象です。
 - `retrofit` の `evidence_refs` は plan 本文へ読み取り専用の調査入力として展開されますが、`targets` や実践の型ディレクトリの許可には変換されません。実装エビデンスへの変更は commit 対象外です。
 - agent で HEAD に plan が無い場合、または human で HEAD に result が無い場合など、frontmatter から task 識別を復元できない場合のみ従来の除外リスト方式へフォールバックします。CLI 経由では正本となる plan / result を checkpoint するため、agent 側からこの分岐を誘発することはできません。
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。

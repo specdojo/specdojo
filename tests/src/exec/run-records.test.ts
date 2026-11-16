@@ -1,0 +1,343 @@
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
+import { collectExecRecords } from "../../../src/dashboard/exec-records.js";
+import { pipelineStateLocation } from "../../../src/exec/pipeline-state.js";
+import { generateSinglePlan } from "../../../src/exec/plans.js";
+import { scaffoldResult } from "../../../src/exec/results.js";
+import { taskPaths } from "../../../src/exec/worktree-ops-commit.js";
+import {
+  findRunRecord,
+  listRunRecords,
+  recordIdentity,
+  recordRef,
+  resumeStatePaths,
+  runRecordPaths,
+  snapshotRunAttempt,
+  taskEvidencePaths,
+  taskRecordPaths,
+} from "../../../src/exec/run-records.js";
+
+const roots: string[] = [];
+function fixture(): string {
+  const root = mkdtempSync(join(tmpdir(), "specdojo-run-records-"));
+  roots.push(root);
+  return root;
+}
+function write(path: string, content: string): void {
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, content);
+}
+afterEach(() => {
+  for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
+});
+
+describe("run record layout", () => {
+  it.each([
+    ["register", "PJR-AB12"],
+    ["schedule", "T-TEST-doc-010"],
+    ["job", "JBR-example-123"],
+  ] as const)("groups %s records under the item and run", (origin, item) => {
+    const records = runRecordPaths("execution", origin, item, "run-1");
+    const directory = join("execution", "runs", origin, item, "run-1");
+    expect(records).toMatchObject({
+      directory,
+      plan: join(directory, "plan.md"),
+      result: join(directory, "result.md"),
+      evidence: join(directory, "evidence.json"),
+      state: join(directory, "pipeline-state.json"),
+    });
+    expect(records.log("executor.log")).toBe(join(directory, "executor.log"));
+  });
+
+  it("keeps review runs under the original register item or job execution", () => {
+    expect(recordIdentity("PJR-AB12-post-review")).toEqual({
+      origin: "register",
+      itemId: "PJR-AB12",
+    });
+    expect(recordIdentity("JBR-example-123-review")).toEqual({
+      origin: "job",
+      itemId: "JBR-example-123",
+    });
+    expect(
+      taskRecordPaths("execution", "PJR-AB12-post-review", "run-1-post-review").directory,
+    ).toBe(join("execution", "runs", "register", "PJR-AB12", "run-1-post-review"));
+  });
+
+  it("preserves long run identities and rejects traversal segments", () => {
+    const run = `${"task-".repeat(20)}-20261107T010203Z-aabbccdd`;
+    expect(runRecordPaths("execution", "schedule", "T-TEST", run).directory.endsWith(run)).toBe(
+      true,
+    );
+    expect(() => runRecordPaths("execution", "schedule", "..", "run")).toThrow();
+    expect(() => runRecordPaths("execution", "schedule", "task", "..")).toThrow();
+  });
+
+  it.each(["plan-result-lifecycle-guide", "docs-structure-guide"])(
+    "keeps the full %s layout tree aligned with the path module",
+    (guide) => {
+      const content = readFileSync(`docs/ja/specdojo/guides/${guide}.md`, "utf8");
+      const block = content.match(/```text\n(execution\/\n[\s\S]*?)\n```/)?.[1];
+      expect(block).toBeDefined();
+      // Resolve indentation, so a correctly named file under the wrong parent also fails.
+      const parents: { indent: number; path: string }[] = [];
+      const tree = block!.split("\n").map((line) => {
+        const indent = line.length - line.trimStart().length;
+        while (parents.length && parents.at(-1)!.indent >= indent) parents.pop();
+        const path = `${parents.at(-1)?.path ?? ""}${line.trim()}`;
+        if (line.endsWith("/")) parents.push({ indent, path });
+        return path;
+      });
+      for (const origin of ["register", "schedule", "job"] as const) {
+        const records = runRecordPaths("execution", origin, "PJR-TEST", "run-1");
+        const normalize = (path: string) =>
+          path
+            .replaceAll("\\", "/")
+            .replace(`/${origin}/`, "/<出どころ>/")
+            .replace("PJR-TEST", "<項目 ID>")
+            .replace("run-1", "<run ID>");
+        expect(tree.filter((path) => path.startsWith("execution/runs/"))).toEqual([
+          `${normalize(records.directory)}/`,
+          ...[
+            records.plan,
+            records.result,
+            records.evidence,
+            records.state,
+            records.log("executor.log"),
+            records.log("reporter.log"),
+          ].map(normalize),
+        ]);
+        expect(content).toContain(`\`${origin}\``);
+      }
+      expect(block).not.toContain("exec/plans/");
+      expect(block).not.toContain("exec/results/");
+      expect(content).not.toContain("controls/reviews/");
+      expect(content).not.toContain("assessments/generated/");
+    },
+  );
+
+  it("reads run directories and ignores the retired layout", () => {
+    const execution = fixture();
+    const legacy = join(execution, "exec", "plans", "T-TEST-plan.md");
+    write(legacy, "---\nspecdojo:\n  task_id: T-TEST\n---\nlegacy\n");
+    expect(findRunRecord(execution, "plan", "T-TEST")).toBeUndefined();
+    const next = taskRecordPaths(execution, "T-TEST", "run-1");
+    write(next.plan, "---\nspecdojo:\n  task_id: T-TEST\n---\nnew\n");
+    expect(findRunRecord(execution, "plan", "T-TEST")).toBe(next.plan);
+    expect(findRunRecord(execution, "plan", "run-1")).toBe(next.plan);
+    expect(listRunRecords(execution, "plan")).toEqual([next.plan]);
+    expect(readFileSync(legacy, "utf8")).toContain("legacy");
+  });
+
+  it("finds resume state only in the run directory, preserving long task ids", () => {
+    const execution = fixture();
+    const taskId = `T-${"long-".repeat(20)}`;
+    write(join(execution, "exec/evidence", taskId.slice(0, 80), "old/pipeline-state.json"), "{}");
+    expect(resumeStatePaths(execution, taskId)).toEqual([]);
+    const state = taskRecordPaths(execution, taskId, "run-1").state;
+    write(state, "{}");
+    expect(resumeStatePaths(execution, taskId)).toEqual([state]);
+    expect(taskEvidencePaths(execution, taskId, "run-1").state).toBe(state);
+    expect(
+      pipelineStateLocation({
+        repoRoot: execution,
+        worktreePath: execution,
+        executionPath: execution,
+        taskId,
+        runId: "run-1",
+      }).path,
+    ).toBe(state);
+  });
+
+  it("resolves commit records from the worktree after root copies have been released", () => {
+    const repoRoot = fixture();
+    const worktree = join(repoRoot, "worktree");
+    const records = taskRecordPaths(join(worktree, "execution"), "T-TEST", "run-1");
+    for (const path of [records.plan, records.result])
+      write(path, "---\nspecdojo:\n  task_id: T-TEST\n---\n");
+    expect(
+      taskPaths(
+        { repoRoot, executionPath: join(repoRoot, "execution"), schedulePath: "" },
+        "T-TEST",
+        worktree,
+      ),
+    ).toMatchObject({
+      planRel: "execution/runs/schedule/T-TEST/run-1/plan.md",
+      resultRel: "execution/runs/schedule/T-TEST/run-1/result.md",
+    });
+  });
+
+  it("writes a generated plan and its result together while preserving document ids", async () => {
+    const executionPath = fixture();
+    const task = {
+      id: "T-TEST",
+      mode: "edit" as const,
+      schedule_file: "",
+      fifo_rank: 0,
+      critical_first_rank: 0,
+    };
+    const planPath = await generateSinglePlan({
+      executionPath,
+      projectId: "test",
+      catalogPath: "",
+      task,
+    });
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: task.id,
+      mode: "edit",
+      projectId: "test",
+      planRef: recordRef(executionPath, planPath),
+      agent: "test-agent",
+      startedAt: "2026-11-07T00:00:00Z",
+    });
+    expect(dirname(resultPath)).toBe(dirname(planPath));
+    expect(readFileSync(planPath, "utf8")).toContain("id: test:xep-t-test");
+    expect(readFileSync(resultPath, "utf8")).toContain("id: test:xer-t-test");
+    expect(existsSync(join(executionPath, "exec"))).toBe(false);
+    const nextPlan = await generateSinglePlan({
+      executionPath,
+      projectId: "test",
+      catalogPath: "",
+      task,
+    });
+    expect(nextPlan).not.toBe(planPath);
+    expect(findRunRecord(executionPath, "plan", task.id)).toBe(nextPlan);
+  });
+
+  it("projects state paths into a worktree without changing the relative layout", () => {
+    const root = fixture();
+    const worktree = join(root, "worktree");
+    const state = pipelineStateLocation({
+      repoRoot: root,
+      worktreePath: worktree,
+      executionPath: join(root, "execution"),
+      taskId: "PJR-AB12",
+      runId: "run-1",
+    });
+    expect(state.path).toBe(
+      taskRecordPaths(join(worktree, "execution"), "PJR-AB12", "run-1").state,
+    );
+    expect(state.ref).toBe("execution/runs/register/PJR-AB12/run-1/pipeline-state.json");
+  });
+
+  it("keeps previous executor checkpoint evidence when resuming a run", () => {
+    const records = taskRecordPaths(fixture(), "PJR-AB12", "run-1");
+    write(records.state, "old state");
+    write(records.evidence, "old evidence");
+    write(records.log("executor.log"), "old log");
+    snapshotRunAttempt(records.state);
+    write(records.evidence, "next evidence");
+    snapshotRunAttempt(records.state);
+    expect(readFileSync(join(records.directory, "evidence.attempt-1.json"), "utf8")).toBe(
+      "old evidence",
+    );
+    expect(readFileSync(join(records.directory, "evidence.attempt-2.json"), "utf8")).toBe(
+      "next evidence",
+    );
+    expect(readFileSync(records.state, "utf8")).toBe("old state");
+    expect(readFileSync(records.evidence, "utf8")).toBe("next evidence");
+    expect(readFileSync(join(records.directory, "pipeline-state.attempt-2.json"), "utf8")).toBe(
+      "old state",
+    );
+    expect(readFileSync(records.log("executor.attempt-1.log"), "utf8")).toBe("old log");
+    expect(existsSync(records.log("executor.log"))).toBe(false);
+    expect(existsSync(records.log("executor.attempt-2.log"))).toBe(false);
+    expect(existsSync(records.log("executor.attempt-1.attempt-2.log"))).toBe(false);
+  });
+
+  it("moves stale failure logs and rewrites archived evidence without changing older refs", () => {
+    const records = taskRecordPaths(fixture(), "PJR-AB12", "run-1");
+    const failureLog = "parent-validation-attempt-1-test-integration.log";
+    const refs = [
+      {
+        kind: "agent-output-excerpt",
+        path: records.log("executor.log"),
+        bytes: 7,
+        truncated: false,
+      },
+      {
+        kind: "parent-validation-output",
+        path: records.log(failureLog),
+        bytes: 12,
+        truncated: false,
+      },
+      {
+        kind: "agent-output-excerpt",
+        path: records.log("executor.attempt-1.log"),
+        bytes: 5,
+        truncated: false,
+      },
+    ];
+    write(records.state, "old state");
+    write(join(records.directory, "pipeline-state.attempt-1.json"), "earlier state");
+    write(records.log("executor.attempt-1.log"), "older");
+    write(records.log("executor.log"), "current");
+    write(records.log(failureLog), "exit code: 1");
+    const evidence = { log_refs: refs, validations: [{ status: "failed" }] };
+    write(records.evidence, JSON.stringify(evidence));
+
+    snapshotRunAttempt(records.state);
+
+    expect(JSON.parse(readFileSync(records.evidence, "utf8"))).toEqual(evidence);
+    // A successful executor restart writes new evidence and no parent failure output.
+    write(records.evidence, JSON.stringify({ log_refs: [], validations: [{ status: "passed" }] }));
+    expect(existsSync(records.log(failureLog))).toBe(false);
+    expect(existsSync(records.log("executor.log"))).toBe(false);
+    expect(readFileSync(records.log(failureLog.replace(".log", ".attempt-2.log")), "utf8")).toBe(
+      "exit code: 1",
+    );
+    const archived = JSON.parse(
+      readFileSync(join(records.directory, "evidence.attempt-2.json"), "utf8"),
+    );
+    expect(archived.log_refs).toEqual([
+      { ...refs[0], path: records.log("executor.attempt-2.log") },
+      { ...refs[1], path: records.log(failureLog.replace(".log", ".attempt-2.log")) },
+      refs[2],
+    ]);
+    for (const ref of archived.log_refs) expect(existsSync(ref.path)).toBe(true);
+    expect(readFileSync(records.log("executor.attempt-1.log"), "utf8")).toBe("older");
+  });
+
+  it("keeps logs referenced by retained evidence at their original paths", () => {
+    const records = taskRecordPaths(fixture(), "PJR-AB12", "run-1");
+    const retainedEvidence = {
+      log_refs: [
+        {
+          kind: "agent-output-excerpt",
+          path: records.log("executor.log"),
+          bytes: 7,
+          truncated: false,
+        },
+      ],
+    };
+    write(records.state, "old state");
+    write(records.evidence, JSON.stringify(retainedEvidence));
+    write(records.log("executor.log"), "current");
+    write(records.log("reporter-attempt-1.stderr.log"), "reporter failed");
+
+    snapshotRunAttempt(records.state, retainedEvidence.log_refs);
+
+    expect(JSON.parse(readFileSync(records.evidence, "utf8"))).toEqual(retainedEvidence);
+    expect(readFileSync(retainedEvidence.log_refs[0].path, "utf8")).toBe("current");
+    expect(readFileSync(records.log("executor.attempt-1.log"), "utf8")).toBe("current");
+    expect(existsSync(records.log("reporter-attempt-1.stderr.log"))).toBe(false);
+    const archived = JSON.parse(
+      readFileSync(join(records.directory, "evidence.attempt-1.json"), "utf8"),
+    );
+    expect(archived.log_refs).toEqual([
+      { ...retainedEvidence.log_refs[0], path: records.log("executor.attempt-1.log") },
+    ]);
+  });
+
+  it("keeps dashboard rows distinct when tasks share the same run id", () => {
+    const execution = fixture();
+    for (const id of ["PJR-AB12", "PJR-CD34"])
+      write(
+        taskRecordPaths(execution, id, "run-1").plan,
+        `---\nspecdojo:\n  task_id: ${id}\n---\n`,
+      );
+    expect(collectExecRecords(join(execution, "exec"))).toHaveLength(2);
+  });
+});

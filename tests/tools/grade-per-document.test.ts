@@ -699,7 +699,7 @@ describe("grade per-document pipeline", () => {
     expect(invocations).toContainEqual(expect.stringMatching(/^grade localize /));
   });
 
-  it("does not start the display translator when there are no translatable findings", () => {
+  it("skips the translation stage when every canonical finding is Japanese", () => {
     const fixture = makeFixture();
 
     const result = runPipeline(fixture, {}, ["--stages", "1"]);
@@ -710,7 +710,7 @@ describe("grade per-document pipeline", () => {
     expect(agentRuns).toHaveLength(1);
     expect(agentRuns[0]).toContain("--by codex-expert-executor");
     expect(invocations).toContainEqual(expect.stringMatching(/^grade translation-plan /));
-    expect(invocations).toContainEqual(expect.stringMatching(/^grade localize /));
+    expect(invocations).not.toContainEqual(expect.stringMatching(/^grade localize /));
   });
 
   it("retries only rejected translations one at a time", () => {

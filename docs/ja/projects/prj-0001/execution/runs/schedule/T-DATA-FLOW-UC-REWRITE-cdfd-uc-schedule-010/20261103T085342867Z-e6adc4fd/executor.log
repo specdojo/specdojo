@@ -1,0 +1,26 @@
+改訂版の Kata（[`cdfd-uc-rulebook`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010/docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md) および [`cdfd-d2-rulebook`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010/docs/ja/specdojo/rulebooks/cdfd-d2-rulebook.md)）と [`cdfd-overview`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md) に基づき、対象成果物 [`docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-UC-REWRITE-cdfd-uc-schedule-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md) の内容を精査・検証しました。
+
+### 確認結果の要約
+
+1. **目的・適用範囲**:
+   - 業務の目的を 1 文で簡潔に記述し、読み手（BA・QE 等）の作業目的に言及しない形式に整理されています。
+   - 適用範囲は対象・対象外をそれぞれ 1 行（1 文）で定義し、共通原則や状態定義は全体概要・STSD へ委ねています。
+
+2. **プロセス領域**:
+   - `cdfd-overview` の 7 区分と同一の体系（`schedule 系` および `実行サイクル（実行・評価・完了）`）で節および表を構成しています。
+   - 各表は Kata 規定の列（順序、プロセスグループ・区分、プロセス領域、PDCA、横断上の役割、参照先）に適合しています。
+
+3. **データストア**:
+   - `cdfd-overview` と同じ名称・区分（マスタ・構成データ、トランザクションデータ）で対象ケースで使用する正本のみを抽出し、読み書き主体を識別しています。
+
+4. **概念データフロー図**:
+   - D2 の `direction: down` を採用し、スタイルは `classes` で大分類ごとに定義しています。
+   - 「引き渡し」章や引き渡しイベント（H-xx）を排除し、情報・成果物の流れはエッジラベルで表現しています。
+   - Orchestrator（P-14）は詳細図に配置せず、全体概要の指示図へ委ねています。
+   - 起点イベントの文言は `cdfd-overview` のプロセス領域表と厳密に一致させています。
+   - 業務上重要な戻り経路は「5.4. 例外時の戻り」として先行領域への戻し・再提示の流れを定義しています。
+   - 凡例は `cdfd-overview` を参照し再掲を避けています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-uc-schedule has been verified and conforms to the revised Kata and cdfd-overview.","handoff":[],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","summary":"Skipped schema validation for individual files","reason":"No yaml files changed"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"Skipped catalog validation","reason":"Changes are outside docs/ja/projects/"}],"target_coverage":[{"target":"cdfd-uc-schedule","status":"changed","path":"docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-schedule.md"}]}
+</specdojo_executor_evidence>

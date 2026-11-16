@@ -859,4 +859,62 @@ describe("readAllEventFiles", () => {
       restoreEnv();
     }
   });
+
+  it("orders release before the replacement claim when switching executors within the same second", () => {
+    const { dir, projectPath } = setupEventsRepo();
+    try {
+      const schedule = makeSchedule([{ id: "T-001" }]);
+      writeEventFile(
+        projectPath,
+        makeEvent({
+          ts: "2026-11-03T13:43:20Z",
+          type: "claim",
+          task_id: "T-001",
+          by: "opus-executor",
+          msg: "initial claim",
+        }),
+      );
+      writeEventFile(
+        projectPath,
+        makeEvent({
+          ts: "2026-11-03T13:43:27Z",
+          type: "release",
+          task_id: "T-001",
+          by: "opus-executor",
+          msg: "release claim to switch executor to sol-executor (--resume-from executor)",
+          meta: { pipeline_resume_released: "true", replaced_by: "sol-executor" },
+        }),
+      );
+      writeEventFile(
+        projectPath,
+        makeEvent({
+          ts: "2026-11-03T13:43:27Z",
+          type: "claim",
+          task_id: "T-001",
+          by: "sol-executor",
+          msg: "claim task as resumed executor sol-executor (--resume-from executor)",
+          meta: { pipeline_resume_claimed: "true", previous_actor: "opus-executor" },
+        }),
+      );
+
+      const events = readAllEventFiles(projectPath);
+      expect(events.map((item) => `${item.event.type}:${item.event.by}`)).toEqual([
+        "claim:opus-executor",
+        "release:opus-executor",
+        "claim:sol-executor",
+      ]);
+
+      const snapshot = foldEventsToState(events, schedule, projectPath);
+      expect(snapshot.tasks["T-001"]).toMatchObject({
+        state: "doing",
+        last_by: "sol-executor",
+        last_type: "claim",
+      });
+      expect(canCompleteTask(schedule, snapshot, "T-001", "sol-executor").ok).toBe(true);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(dir, { recursive: true, force: true });
+      restoreEnv();
+    }
+  });
 });

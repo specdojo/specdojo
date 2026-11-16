@@ -16,40 +16,24 @@ specdojo:
 
 # 概念データフロー図（プロセスグループ別）: _GROUP_NAME_
 
-_TODO_: 全体概要のどのプロセスグループと領域群を詳細化し、誰がグループ内部のフロー、領域間の受け渡し、主要例外、グループ外への委譲を合意・利用するかを 1〜3 文で記述する。
+_TODO_: 全体概要（`cdfd-overview`）のどのプロセスグループ（_AREA_ID_RANGE_）を詳細化した文書かを一文で示す。
 
 ## 1. 目的
 
-_TODO_: 対象者ごとに、この CDFD から承認、後続設計、品質確認に利用する結果を記述する。
-
-- _ROLE_ は、_TODO_: 対象グループの業務境界、起動条件、主要例外を承認する。
-- _ROLE_ は、_TODO_: 領域間の受け渡しとプロセス入出力を後続成果物へ利用する。
-- _ROLE_ は、_TODO_: 領域・プロセス・状態遷移参照・委譲の重複や欠落を確認する。
+_TODO_: 誰が、対象グループの内部フロー、領域間の受け渡し、主要例外、グループ外への委譲を承認・後続設計・確認のどれに使うかを 1〜2 文で書く。
 
 ## 2. 適用範囲
 
-- 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。
-- 対象期間: _TODO_: 適用する業務期間を書く。期間を限定しない場合は「期間を限定せず、現行の正本として適用する」のように明記する。
-- 対象業務: _TODO_: どのイベントから、どの出力がそろうまでを対象とするかを書く。
-- 組織境界: _TODO_: グループ内部の担当と外部主体を書く。
-- システム境界: _TODO_: 概念上の参照・記録範囲と、対象外の操作・保存方式を書く。
-- 対象外: _TODO_: 補助操作、実装詳細、他グループの責務、ユースケース別 CDFD が扱う横断順序を、`cdfd-_OTHER_GROUP_` または `cdfd-uc-_TOPIC_` のような委譲先とともに書く。
-- 状態遷移: _TODO_: 状態名・成立条件・遷移元・遷移先・イベント・条件を定める STSD の文書 ID を示し、本書は状態を変えるプロセスと起動条件だけを扱うことを書く。
-- 責任分担: _TODO_: 人間と AI Agent の責任分担を本文で再定義せず、対応する文書への参照を書く。
+- **対象**: _GROUP_NAME_ グループ（_AREA_ID_RANGE_）の _START_EVENT_ から _END_EVENT_ まで、_TODO_: 対象期間と組織・システム境界を 1 行で書く。
+- **対象外**: _TODO_: 補助操作・実装詳細、他グループの責務（`cdfd-_OTHER_GROUP_`）、横断ユースケース（`cdfd-uc-_TOPIC_`）、状態定義・遷移を委ねる STSD を 1 行で示し、人間と AI Agent の責任分担などの共通原則は全体概要を参照する。
 
 ## 3. プロセス領域
 
-_GROUP_NAME_ グループは全体概要の _AREA_COUNT_ 領域を引き継ぐ。領域 ID、名称、業務目的、主な担当、起点イベントは全体概要を正本とし、本章では領域内部の入出力とプロセスを定める。
+_GROUP_NAME_ グループは全体概要の _AREA_COUNT_ 領域を引き継ぐ。領域 ID、名称、業務目的、主な担当、起点イベントは全体概要、受け渡しは概念データフローを正本とし、本章では領域ごとのプロセスを定める。
 
-<!-- 対象グループに属する領域ごとに 3.n の節を繰り返す。 -->
+<!-- 対象グループに属する領域ごとに 3.n の節を繰り返す。各節にはプロセスの表だけを置き、領域の要約文や主要入力・主要出力・データストアの箇条書きは置かない。 -->
 
 ### 3.1. _AREA_NAME_（_AREA_ID_）
-
-_TODO_: 領域の役割と、領域内のプロセスがどう連携するかを 1〜3 文で要約する。
-
-- **主要入力**: _TODO_: 外部主体、他領域、データストアから受け取る主要な情報・物を名詞で列挙する。
-- **主要出力**: _TODO_: 外部主体、他領域、データストアへ渡す主要な情報・物を名詞で列挙する。
-- **データストア**: _TODO_: 「データストア」と同じ名称で、参照・更新するデータストアを列挙する。
 
 | プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 完了条件               | 必須性        |
 | -------------- | -------------- | ------------------ | ------------ | ----------------- | ---------------------- | ------------- |
@@ -57,17 +41,11 @@ _TODO_: 領域の役割と、領域内のプロセスがどう連携するかを
 
 ### 3.2. _AREA_NAME_（_AREA_ID_）
 
-_TODO_
-
-- **主要入力**: _TODO_
-- **主要出力**: _TODO_
-- **データストア**: _TODO_
-
 | プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 完了条件               | 必須性        |
 | -------------- | -------------- | ------------------ | ------------ | ----------------- | ---------------------- | ------------- |
 | `_PROCESS_ID_` | _PROCESS_NAME_ | _BUSINESS_PURPOSE_ | _OWNER_ROLE_ | _START_CONDITION_ | _COMPLETION_CONDITION_ | _REQUIREMENT_ |
 
-<!-- プロセス ID は所属領域 ID に二桁の枝番を付けた P-01-01 形式にする。各領域に一つ以上のプロセスを置き、全プロセスを一行ずつ追加する。完了条件は主要出力または正本の確定から yes / no で判定できる事実を書く。必須性は必須／条件付き／選択から選び、条件付き・選択では非起動時の正常な扱いも同じセルに書く。単一領域グループでは 3.2 の節を削除し、3.1 にグループの全領域を記載する。 -->
+<!-- プロセス ID は所属領域 ID に二桁の枝番を付けた P-01-01 形式にする。各領域に一つ以上のプロセスを置き、全プロセスを一行ずつ追加する。完了条件は主要出力または正本の確定から yes / no で判定できる事実を書く。必須性は必須／条件付き／選択から選び、条件付き・選択では非起動時の正常な扱いも同じセルに書く。単一領域グループでは 3.2 の節を削除する。 -->
 
 ## 4. データストア
 
@@ -93,33 +71,82 @@ _TODO_: 「プロセス領域」の各表の行を一つのプロセスノード
 
 ### 5.1. _FLOW_SCOPE_NAME_（_AREA_ID_RANGE_）
 
-```mermaid
-flowchart LR
-  classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
-  classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
-  classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
-  classDef storeTransaction fill:#e8f5e9,stroke:#43a047,color:#000
-  classDef actor fill:#f5f7fa,stroke:#607d8b,color:#000
+<!-- 以下は D2 の例。記法は全体概要の「凡例（本プロダクト共通）」の宣言に従う。凡例が D2 を宣言した場合は specdojo:cdfd-d2-rulebook に従い、凡例が Mermaid を宣言した場合、記法を宣言しない場合、または凡例がない場合は、本図を specdojo:cdfd-mermaid-rulebook に従う Mermaid の flowchart へ置き換える。色・絵文字の割り当ては凡例があればそれに合わせる。対象グループで使わない雛形のノード・線・classes は削除し、物を渡す線には material_flow class、現物の保管先には physical_store class を使う。 -->
 
-  _EXTERNAL_NODE_ID_["_EXTERNAL_NAME_"]
-  _START_EVENT_NODE_ID_{{"_START_EVENT_"}}
-  _PROCESS_NODE_ID_("_PROCESS_NAME_<br>_PROCESS_ID_")
-  _MASTER_STORE_NODE_ID_[("_MASTER_STORE_NAME_")]
-  _TRANSACTION_STORE_NODE_ID_[("_TRANSACTION_STORE_NAME_")]
+```d2
+direction: down
 
-  _EXTERNAL_NODE_ID_ -->|"_EVENT_INPUT_LABEL_"| _START_EVENT_NODE_ID_
-  _START_EVENT_NODE_ID_ -->|"起動条件"| _PROCESS_NODE_ID_
-  _MASTER_STORE_NODE_ID_ -->|"_REFERENCE_LABEL_"| _PROCESS_NODE_ID_
-  _PROCESS_NODE_ID_ -->|"_OUTPUT_LABEL_"| _TRANSACTION_STORE_NODE_ID_
+classes: {
+  process: {
+    shape: rectangle
+    style: {
+      border-radius: 8
+      fill: "#e3f2fd"
+      stroke: "#1e88e5"
+      font-color: "#000000"
+    }
+  }
+  event: {
+    shape: hexagon
+    style: {
+      fill: "#fff3e0"
+      stroke: "#fb8c00"
+      font-color: "#000000"
+    }
+  }
+  store_master: {
+    shape: cylinder
+    style: {
+      fill: "#e8f5e9"
+      stroke: "#43a047"
+      font-color: "#000000"
+    }
+  }
+  store_transaction: {
+    shape: cylinder
+    style: {
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  physical_store: {
+    shape: rectangle
+    style: {
+      border-radius: 20
+      fill: "#c8e6c9"
+      stroke: "#2e7d32"
+      font-color: "#000000"
+    }
+  }
+  actor: {
+    shape: rectangle
+    style: {
+      fill: "#f5f7fa"
+      stroke: "#607d8b"
+      font-color: "#000000"
+    }
+  }
+  material_flow: {
+    style: {
+      stroke-width: 3
+    }
+  }
+}
 
-  class _PROCESS_NODE_ID_ process
-  class _START_EVENT_NODE_ID_ event
-  class _MASTER_STORE_NODE_ID_ storeMaster
-  class _TRANSACTION_STORE_NODE_ID_ storeTransaction
-  class _EXTERNAL_NODE_ID_ actor
+external: "_EXTERNAL_NAME_" { class: actor }
+start_event: "_START_EVENT_" { class: event }
+process: "_PROCESS_ID_ _PROCESS_NAME_" { class: process }
+master_store: "_MASTER_STORE_NAME_" { class: store_master }
+transaction_store: "_TRANSACTION_STORE_NAME_" { class: store_transaction }
+
+external -> start_event: "_EVENT_INPUT_LABEL_"
+start_event -> process: "起動条件"
+master_store -> process: "_REFERENCE_LABEL_"
+process -> transaction_store: "_OUTPUT_LABEL_"
 ```
 
-_TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>` のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+_TODO_: 凡例の適用元を書く。全体概要に「凡例（本プロダクト共通）」がある場合はその章を参照し、ない場合は「ノード形状・線種・色・絵文字は `specdojo:cdfd-mermaid-rulebook` の既定凡例に従う」と書く。続けて、使用した線種（D2 は `->`・`<-` と `material_flow` class、Mermaid は `-->` / `==>`）、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを 1〜2 文で書く。状態名をノードとして並べず、状態間の遷移を描かない。
 
 <!-- 図が一つで足りる場合は 5.1 の見出しを削除して図を直下へ置く。複数図に分ける場合は 5.2 以降として同じ「見出し＋図＋直後の注記」を繰り返す。 -->
 

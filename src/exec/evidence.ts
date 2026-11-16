@@ -1,12 +1,20 @@
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
-import { gitOutput } from "./worktree.js";
-import type { AgentStageRole } from "./types.js";
+import {
+  runLogPath,
+  runnerRecordPrefixes,
+  taskEvidencePaths,
+  taskRecordPaths,
+} from "./run-records.js";
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
+import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
+import type { AgentStageRole } from "./types.js";
+import { gitOutput } from "./worktree.js";
+
+import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
 
 const MAX_LOG_BYTES = 64 * 1024;
-const MAX_CHANGE_FILES = 1_000;
+export const MAX_CHANGE_FILES = 1_000;
 const MAX_FINAL_MESSAGE_LENGTH = 4_000;
 const MAX_HANDOFF_ITEMS = 100;
 const MAX_HANDOFF_LENGTH = 4_000;
@@ -64,6 +72,7 @@ export type ExecEvidence = {
   completion_status?: "complete" | "incomplete";
   /** Executor notes preserved mechanically in the edit result handoff. Optional for legacy evidence. */
   handoff?: string[];
+  condense_records?: CondenseRecord[];
   /** Runner-derived reason for process failure, protection, or incomplete work. */
   block_reason?: string;
   command?: {
@@ -170,6 +179,7 @@ type ExecutorReport = {
   final_message?: unknown;
   completion_status?: unknown;
   handoff?: unknown;
+  condense_records?: unknown;
   validations?: unknown;
   target_coverage?: unknown;
 };
@@ -222,6 +232,7 @@ export function parseExecutorReport(stdout: string): {
   handoff: string[];
   validations: EvidenceValidation[];
   targetCoverage: EvidenceTargetCoverage[];
+  condenseRecords?: CondenseRecord[];
 } {
   const matches = [...stdout.matchAll(REPORT_PATTERN)];
   const raw = matches.at(-1)?.[1];
@@ -285,6 +296,24 @@ export function parseExecutorReport(stdout: string): {
     }
   }
 
+  const invalidCondense =
+    report.condense_records !== undefined && !isCondenseRecords(report.condense_records);
+  if (invalidCondense) {
+    report.completion_status = "incomplete";
+    report.final_message =
+      "Invalid condense_records; supply records matching condense-records.schema.yaml";
+  }
+  const condenseRecords = isCondenseRecords(report.condense_records)
+    ? report.condense_records.map((record) => ({
+        ...record,
+        location: boundedText(record.location, 4000),
+        reason: boundedText(record.reason, 4000),
+        cause:
+          record.cause.type === "kata"
+            ? { ...record.cause, location: boundedText(record.cause.location, 4000) }
+            : record.cause,
+      }))
+    : undefined;
   const fallback = stdout.replace(REPORT_PATTERN, "").trim();
   const handoff = Array.isArray(report.handoff)
     ? report.handoff
@@ -305,6 +334,7 @@ export function parseExecutorReport(stdout: string): {
     handoff,
     validations,
     targetCoverage,
+    ...(condenseRecords ? { condenseRecords } : {}),
   };
 }
 
@@ -318,6 +348,59 @@ export function executorCompletionFailure(
     detail ? `executor reported incomplete: ${detail}` : "executor reported incomplete",
     MAX_VALIDATION_SUMMARY_LENGTH,
   );
+}
+
+/** Approach-specific envelope fields the runner needs from the executor before the reporter. */
+export type ExecutorReportContract = {
+  approach?: string;
+  mode?: string;
+};
+
+/**
+ * Returns why the executor envelope lacks a field the approach requires, or undefined when the
+ * contract holds. Only `condense` currently requires an extra field (`condense_records`).
+ */
+export function executorReportContractFailure(
+  evidence: Pick<ExecEvidence, "condense_records">,
+  contract: ExecutorReportContract,
+): string | undefined {
+  if (contract.approach !== "condense" || (contract.mode ?? "edit") !== "edit") return undefined;
+  if (isCondenseRecords(evidence.condense_records)) return undefined;
+  return "executor evidence lacks valid condense_records required by approach condense (report [] when there are no candidates)";
+}
+
+/** Recovery command for a task whose executor stage must be redone in the kept worktree. */
+export function executorStageResumeHint(
+  target: { kind: "schedule"; taskId: string } | { kind: "register"; itemId: string },
+): string {
+  const command =
+    target.kind === "schedule"
+      ? `specdojo exec resume --task ${target.taskId} --resume-from executor`
+      : `specdojo exec run --register ${target.itemId} --worktree --resume --resume-from executor`;
+  return `${command} (add --executor-by <nickname> to switch the executor agent)`;
+}
+
+/**
+ * Checks the approach contract before the reporter stage. On failure the evidence is marked as an
+ * incomplete executor report and persisted, so resume selects the executor stage instead of
+ * re-running only the reporter on the same evidence.
+ */
+export function enforceExecutorReportContract(input: {
+  evidence: ExecEvidence;
+  evidencePath: string;
+  contract: ExecutorReportContract;
+  resumeHint: string;
+}): string | undefined {
+  const failure = executorReportContractFailure(input.evidence, input.contract);
+  if (!failure) return undefined;
+  const reason = boundedText(
+    `${failure}; next: ${input.resumeHint}`,
+    MAX_VALIDATION_SUMMARY_LENGTH,
+  );
+  input.evidence.completion_status = "incomplete";
+  input.evidence.block_reason = reason;
+  writeExecutorEvidence(input.evidencePath, input.evidence);
+  return reason;
 }
 
 function normalizedEvidencePath(value: string): string | null {
@@ -554,6 +637,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
         summary: truncate(redactSensitiveText(input.diffStat.trim()), MAX_DIFF_SUMMARY_LENGTH),
       },
       validations,
+      ...(report.condenseRecords ? { condense_records: report.condenseRecords } : {}),
       ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       ...(input.rateLimitEvents?.length ? { rate_limit_events: input.rateLimitEvents } : {}),
       final_message: report.finalMessage,
@@ -587,10 +671,8 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
 } {
   const executionRel = repoRelative(input.repoRoot, input.executionPath);
   const runnerManagedPrefixes = [
-    `${executionRel}/exec/plans/`,
-    `${executionRel}/exec/results/`,
+    ...runnerRecordPrefixes(executionRel),
     `${executionRel}/exec/events/`,
-    `${executionRel}/exec/evidence/`,
     `${executionRel}/generated/`,
   ];
   const productWorktrees = input.productWorktrees ?? [];
@@ -619,16 +701,13 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     .join("\n");
 
   const executionInWorktree = join(input.worktreePath, executionRel);
-  const evidenceDir = join(
+  const { directory: evidenceDir, evidence: evidencePath } = taskEvidencePaths(
     executionInWorktree,
-    "exec",
-    "evidence",
-    safeSlug(input.taskId),
-    safeSlug(input.runId),
+    input.taskId,
+    input.runId,
   );
   ensureDir(evidenceDir);
-  const logPath = join(evidenceDir, "executor.log");
-  const evidencePath = join(evidenceDir, "evidence.json");
+  const logPath = runLogPath(evidencePath, "executor.log");
   const { evidence, logExcerpt } = buildExecutorEvidence({
     taskId: input.taskId,
     runId: input.runId,
@@ -659,10 +738,8 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
 } {
   const executionRel = repoRelative(input.repoRoot, input.executionPath);
   const runnerManagedPrefixes = [
-    `${executionRel}/exec/plans/`,
-    `${executionRel}/exec/results/`,
+    ...runnerRecordPrefixes(executionRel),
     `${executionRel}/exec/events/`,
-    `${executionRel}/exec/evidence/`,
     `${executionRel}/generated/`,
   ];
   const changes = parseStatusPaths(input.worktreePath)
@@ -673,18 +750,19 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
       status: boundedText(change.status, 40),
     }));
   const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
-  const evidenceDir = join(
-    input.worktreePath,
-    executionRel,
-    "exec",
-    "evidence",
-    safeSlug(input.taskId),
-    safeSlug(input.runId),
-  );
+  const evidenceDir = taskRecordPaths(
+    join(input.worktreePath, executionRel),
+    input.taskId,
+    input.runId,
+  ).directory;
   ensureDir(evidenceDir);
-  const stdoutPath = join(evidenceDir, "command.stdout.log");
-  const stderrPath = join(evidenceDir, "command.stderr.log");
-  const evidencePath = join(evidenceDir, "evidence.json");
+  const evidencePath = taskRecordPaths(
+    join(input.worktreePath, executionRel),
+    input.taskId,
+    input.runId,
+  ).evidence;
+  const stdoutPath = runLogPath(evidencePath, "command.stdout.log");
+  const stderrPath = runLogPath(evidencePath, "command.stderr.log");
   const boundedStdout = boundedLog(input.stdout);
   const boundedStderr = boundedLog(input.stderr);
   writeFileSync(stdoutPath, boundedStdout.content, "utf8");
@@ -791,8 +869,8 @@ export function recordParentValidationFailureOutput(
   const refs: ExecEvidence["log_refs"] = [];
 
   for (const output of input.failureOutputs) {
-    const logPath = join(
-      evidenceDir,
+    const logPath = runLogPath(
+      input.evidencePath,
       `parent-validation-attempt-${attempt}-${safeSlug(output.label)}.log`,
     );
     const content = redactSensitiveText(
@@ -842,7 +920,7 @@ export function recordReporterFailureOutput(input: RecordReporterFailureOutputIn
   input.invocationOutputs.forEach((output, index) => {
     const attempt = index + 1;
     for (const stream of ["stdout", "stderr"] as const) {
-      const logPath = join(evidenceDir, `reporter-attempt-${attempt}.${stream}.log`);
+      const logPath = runLogPath(input.evidencePath, `reporter-attempt-${attempt}.${stream}.log`);
       const boundedOutput = boundedLog(output[stream]);
       writeFileSync(logPath, boundedOutput.content, "utf8");
       reporterRefs.push({

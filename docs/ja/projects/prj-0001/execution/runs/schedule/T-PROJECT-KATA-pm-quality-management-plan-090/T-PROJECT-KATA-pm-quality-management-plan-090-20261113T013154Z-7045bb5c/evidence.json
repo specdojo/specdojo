@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "task_id": "T-PROJECT-KATA-pm-quality-management-plan-090",
+  "run_id": "T-PROJECT-KATA-pm-quality-management-plan-090-20261113T013154Z-7045bb5c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-13T01:34:07.185Z",
+    "completed_at": "2026-11-13T01:36:26.490Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md --changed-only",
+      "status": "passed",
+      "summary": "開始時・終了直前の2回とも exit 0。出力は docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md。鮮度不成立を検出。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md --dependency-changed",
+      "status": "passed",
+      "summary": "開始時・終了直前の2回とも exit 0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md --incomplete",
+      "status": "passed",
+      "summary": "開始時・終了直前の2回とも exit 0、出力なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "exit 0、出力なし。今回のファイル編集なし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-quality-management-plan-090/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lin\n… output omitted …\nrkspace/worktrees/prj-0001-T-PROJECT-KATA-pm-quality-management-plan-090/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-quality-management-plan-090/src/shared/specdojo-config.ts\n  1227:1  warning  File has too many lines (1152). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 4514 file(s), 136 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 104 passed, 0 error, 0 未検査\n  graph: 3 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 4514 file(s), 33 diagram(s), 33 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-quality-management-plan-090\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.7.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nm coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-quality-management-plan-090/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-quality-management-plan-090/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.7.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.7.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-T-PROJECT-KATA-pm-quality-management-plan-090\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 896\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m116 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 55\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/plans.t\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "レビュー確認を完了。判定は `grade-stale`。開始時・終了直前とも鮮度検査が対象パスを返したため、タスクの完了可否は保留する。成果物・型・result は変更していない。確認できなかった範囲: 最新 grade に基づく完了条件・finding の扱い、template 本文との整合、代表成果物の磨き込みを示す先行 edit 記録。result の記入は reporter が行う。",
+  "completion_status": "complete",
+  "handoff": [
+    "評価結果の確認: plan 指定の評価結果サイドカーを読み取った。既存値は `verdict: needs-work`、`score: 88`、`graded_at: 2026-10-15T16:32:44.426Z`、finding は blocker 0 / major 3 / minor 3 / note 0。`done_criteria` は satisfied 2 / total 3、未充足は DC-003。ただし今回の鮮度確認が不成立のため、これらは既存評価の記録として扱い、現在の完了判定には使用しない。",
+    "判断根拠・decision: [[prj-0001:xrp-t-project-kata-pm-quality-management-plan-090-20261113t013154z-7045bb5c|完成版レビュー計画]] の共通規約 E-01 に従い `verdict: grade-stale` とする。開始時と終了直前の `--changed-only` はともに対象成果物パスを出力し、`--dependency-changed` と `--incomplete` はともに出力なし。全コマンド exit 0。開始時から鮮度不成立であり、`changed-during-review` には該当しない。plan の最新という記載との差異は実測結果を記録し、原因を推測で断定しない。",
+    "approach に応じた確認: [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:pm-quality-management-plan-rulebook|品質管理計画 作成ルール]]、[[specdojo:pm-quality-management-plan-recipe|品質管理計画 作成レシピ]]、[[specdojo:pm-quality-management-plan-sample|品質管理計画の完成例]]、[[specdojo:clis-sample|CLI仕様の完成例]]、[[prj-0001:pm-quality-management-plan|品質管理計画]]、[[prj-0001:pm-plan|プロジェクト管理計画]]、[[prj-0001:prj-overview|プロジェクト概要]] を読んだ。rulebook は標準の7章構成でサンプル章を置かず、記述ガイドの5節に判断基準と良い例・悪い例がある。rulebook・recipe・sample の本文見出しは階層番号付き。sample は5章に適用期間、3ゲート、3対象のレビュー出口条件・証跡・記録先、4区分の是正・再判定、追従責任、3論点の未決時保留を記載する。これはフェーズの整備内容の確認であり、成果物の観点別再評価ではない。",
+    "型の要否と正本方針: rulebook frontmatter は recipe・sample・template の完全 ID を宣言済み。recipe は価値・条件・証跡からゲートを組み立てる判断支援に必要、template は見出し・表・記入欄の共通骨組みに必要と判断する。template のファイル所在は確認したが、fully-guided の指示に従って本文は読んでいない。rulebook はメタ情報の値・構文を標準と schema へ委譲し、メトリクスの算出方法・閾値・頻度は条件の正本参照とする。sample も数値・測定方法を再定義しない方針を明記しており、plan 指定の PJR-2GD6 の重複回避方針に対応している。",
+    "先行記録の確認: [[prj-0001:xer-t-project-kata-pm-quality-management-plan-040-20261112t223148z-a7342916|rulebook 整備結果]] と [[prj-0001:xer-t-project-kata-pm-quality-management-plan-050-20261112t225410z-f116832d|sample 整備結果]] を読んだ。両 run の evidence の変更一覧はそれぞれ rulebook 1件、sample 1件で、各9件の runner 検証はすべて passed。今回の Git 差分はなく、開始時から存在する未追跡の pipeline-state.json だけを確認した。代表成果物の磨き込みを示す先行 edit 記録は特定できなかった。先行 result の自己申告だけで finding 解消とは扱わない。",
+    "未充足事項・改善指示: runner は対象成果物を現在の評価コンテキストで再評価し、最新サイドカーを確定してから review を再実行すること。既存 F001〜F006 は消去・再採点・重複起票しない。F002 の本文へのメトリクス詳細定義要求は、現行 rulebook の正本参照方式と整合するか再評価時に確認すること。値の本文複製を即時の改善指示とはしない。",
+    "型一式の後続確認: 先行040 result は recipe の問い形式化、見直し・未決事項の支援追加、template の列分離等を申し送り、050 result も template 追従を申し送っている。実際に読んだ recipe の「各章の書き方」は4節で、見直し条件・未決事項の節はない。これらの申し送りの実施有無を後続整備で確認すること。template の現状不整合や型一式の完了を本 review では断定しない。追加適用 rulebook の `_MISSING_` についても、主 rulebook が存在する事実と区別し、必要な記法規約の有無を次回計画で整理すること。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-PROJECT-KATA-pm-quality-management-plan-090/T-PROJECT-KATA-pm-quality-management-plan-090-20261113T013154Z-7045bb5c/executor.log",
+      "bytes": 6286,
+      "truncated": false
+    }
+  ]
+}

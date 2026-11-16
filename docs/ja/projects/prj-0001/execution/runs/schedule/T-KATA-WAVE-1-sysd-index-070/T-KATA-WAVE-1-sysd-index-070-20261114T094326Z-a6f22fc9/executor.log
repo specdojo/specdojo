@@ -1,0 +1,14 @@
+[sysd-index.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-WAVE-1-sysd-index-070/docs/ja/product/040-system-design/sysd-index.md) の磨き込みと整合性確認を実施しました。
+
+### 主な改訂内容
+
+1. **実在成果物と未作成成果物の導線整合（F019）**:
+   - C4 アーキテクチャ図について、作成済みである `[[cxd-specdojo|C4コンテキスト図]]`、`[[cnd-specdojo|C4コンテナ図]]`、`[[cpd-specdojo-cli|C4コンポーネント図]]` を実在する wikilink へ更新しました。未作成であるインフラ構成図（`` `ifd-specdojo` ``）のみコード表記と未作成明記を残しました。
+2. **業務データフロー（CDFD）の Plan・Do 導線補強（F003, F007, F020）**:
+   - 廃止済み文書（`cdfd-task-execution`、`cdfd-register-lifecycle`）への依存を排除し、現行の全体概要（`cdfd-overview`）およびユースケース別フローへの導線に加え、未作成である個別仕様（`` `cdfd-plan` ``、`` `cdfd-do` ``）への参照と代替参照方針を明記しました。
+3. **未決事項および公開前確認条件の整合（F001, F021）**:
+   - 未決事項一覧および公開前の PO 最終承認条件において、C4 図の整備状況の反映と個別 Plan・Do CDFD 等の留保範囲を最新化しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"sysd-index.md の磨き込みと C4/CDFD 導線整合を完了しました","handoff":["インフラ構成図（ifd-specdojo）、外部I/Fカタログ（ifx-index）、運用設計・手順（opd-*/opr-*）、非機能要件（nfr-index）、および個別 Plan・Do CDFD（cdfd-plan/cdfd-do）の作成タスクへの申し送り","隣接システム設計文書（sysd-critical-flows、sysd-cross-cutting-policy）に残る旧 CDFD ID 参照の更新タスクへの申し送り","API・DB の非該当範囲の承認、監視・通知方針の確定、および成果物 sysd-index の status: ready 昇格可否に関する人間 PO への承認引き継ぎ"],"validations":[{"command":"npm run validate:schema:file","status":"not_applicable","summary":"スキップ","reason":"変更ファイルは Markdown（sysd-index.md）のみであり YAML ファイルの変更を含まないため"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"スキップ","reason":"登録簿個票や実行記録などの履歴ファイルの変更を含まないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"スキップ","reason":"変更ファイルが docs/ja/product 配下に閉じ、docs/ja/projects 配下の変更を含まないため"}]}
+</specdojo_executor_evidence>

@@ -10,11 +10,9 @@ specdojo:
 
 # 運用手順: 外部エージェントCLI更新
 
-Claude Code、Codex、OpenCode、GitHub Copilot CLIをdevcontainer内で更新し、バージョンと永続化範囲を検証する手順である。`opr-index` の個別手順として、更新作業と証跡を具体化する。
-
 ## 1. 概要（agent-cli-update）
 
-外部エージェントCLIの実行中プロセスを保護しながら、実行中コンテナの一時更新またはコンテナ再作成後も維持する更新を行う。
+Claude Code、Codex、OpenCode、GitHub Copilot CLIをdevcontainer内で更新し、バージョンと永続化範囲を検証する手順である。外部エージェントCLIの実行中プロセスを保護しながら、実行中コンテナの一時更新またはコンテナ再作成後も維持する更新を行う。`opr-index` の個別手順として、更新作業と証跡を具体化する。
 
 ## 2. 手順適用範囲・前提
 
@@ -73,7 +71,7 @@ Claude Code、Codex、OpenCode、GitHub Copilot CLIをdevcontainer内で更新�
    copilot version
    ```
 
-CodexとOpenCodeは`.devcontainer/post-create.sh`のnpm global installに合わせてnpmで更新する。この更新は実行中コンテナだけに反映される。
+CodexとOpenCodeは`.devcontainer/post-create.sh`のnpm global installに合わせてnpmで更新する。
 
 ### 8.2. コンテナ再作成後も維持する更新
 

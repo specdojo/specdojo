@@ -1,0 +1,36 @@
+作業を終えました。代表成果物の新規作成、rulebook の書き直し、sample の作り直しを済ませています。こちらで実行した検査は Prettier による整形だけで、`lint:md`・`lint:fm` などは後段の runner が実行します。
+
+**変更したファイル**
+
+- `docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md`（新規）
+  - 週次進捗報告の帳票仕様です。読み手（PM・PO・各担当）、出力の時期（`rtn-weekly-report` が毎週金曜 17 時に起動し、ISO 週単位で作る）、保存先と形式、元にする記録を書きました。
+  - 表示項目の表には「元にする記録」と「記録からの確かめ方」を列として持たせ、QE がテスト設計に使えるようにしています。
+  - 本文の章立ては `specdojo:pr-rulebook` を正本として参照し、再掲していません。
+- `docs/ja/specdojo/rulebooks/bds-rulebook.md`（書き直し）
+  - 章立てを Rulebook 記述標準に合わせ、完成例の章は削除して sample に移しました。
+  - 記述ガイドには章ごとの判断基準と良い例・悪い例を置きました。
+  - ファイル名規則を `bds-<kebab-case>.md` に直しました。旧規則（番号＋日本語名）はカタログの `bds-progress-report.md` と食い違っていました。
+  - frontmatter に `target_format: markdown`、`recipe: not-needed`、`template: not-needed`、`based_on` を追加しました。
+- `docs/ja/specdojo/samples/bds-sample.md`（作り直し）
+  - 駄菓子屋の「週次販売・欠品報告」を題材にした完成例で、CLI 仕様の完成例と同程度の厚さです。人物名は使わず役割名で書いています。
+
+成果物カタログは変更していません。rulebook はすでに宣言済みでした。
+
+**recipe と template を不要とした理由**
+
+- recipe: 判断基準と良い例・悪い例を rulebook の記述ガイドに置いたため、品質差を埋める手順書を別に持つ根拠がまだありません。手本にした CLI 仕様の型も不要としています。
+- template: 章立ては rulebook の本文要件の表で示せます。また帳票ごとに媒体（文書・PDF・CSV）や表示項目が大きく変わるため、固定の雛形はかえって制約になると判断しました。今回の作業範囲が rulebook と sample に限られていることとも合っています。
+
+**未解決の事項**（成果物の「メモ / 将来課題」に `_UNDECIDED_` / `_ASSUMPTION_` として残しています）
+
+- 上位の索引 `bds-index` がまだ存在しないため、`part_of` を接続していません。
+- `rtn-weekly-report` は `enabled: false` のため、定期起動で報告が作られた実績がありません。
+- 金曜 17 時の起動時点では週末が終わっていないため、報告期間をどこで締めるかが決まっていません。
+- 進捗報告の rulebook は日付と連番のファイル名、Job は ISO 週で一意な保存を求めており、命名の対応が決まっていません。
+- 「登録簿の状態変化」を進捗報告のどの章に置くかが決まっていません。
+- `job-weekly-report` は統合前のレビューを宣言しておらず、報告がリポジトリへ入るまでの確認経路を確かめていません。
+- カタログの実装参照 `src/routine/storage.ts` は routine の実行状態の保存先を扱うもので、報告の保存先は Job の定義が持っています。参照の見直しが必要かもしれません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Created bds-progress-report (weekly progress report BDS), rewrote specdojo:bds-rulebook to the rulebook authoring standard (sample chapter moved out, numbered headings, per-chapter criteria with good/bad examples, recipe/template declared not-needed, target_format and based_on added), and rebuilt specdojo:bds-sample as a full worked example in the common sample context. Catalog unchanged (rulebook already declared). Unresolved decisions are kept as _UNDECIDED_/_ASSUMPTION_ in the deliverable and listed in handoff.","handoff":["recipe: not-needed. The rulebook's writing guide has per-chapter criteria with good/bad examples, and there are no repeated review findings to justify a separate recipe yet; this matches the precedent of the specdojo:clis-rulebook kata. Revisit if review findings repeat.","template: not-needed. Chapter structure is shown in the rulebook's body-requirements table, and medium (document/PDF/CSV) and display items vary per report, so a fixed skeleton would constrain. This is consistent with bootstrap_scope [rulebook, sample].","`bds-index` (the `depends_on` target) does not exist yet. `part_of` is not connected and this is recorded in the deliverable's notes section. BA should connect it once the index is created.","Undecided (PO): whether the report period ends at the Friday 17:00 trigger or extends to Sunday and is backfilled next week.","Undecided (PM): naming. pr-rulebook uses `pr-<yyyy-mm-dd>-<nn>`, while `job-weekly-report` requires one file per ISO week; the mapping is not defined.","Undecided: which pr-rulebook chapter holds 'register state changes'.","Unverified: `job-weekly-report` declares no `task.review`, so the review/integration path for the report is unconfirmed (ARC to check against the routine operation guide).","Catalog evidence_ref `src/routine/storage.ts` covers routine state storage, not the report output path (which is defined by the Job definition); DEV may revisit the evidence_refs.","`rtn-weekly-report` is `enabled: false`, so there are no actual reports yet; QE should check display items and period on the first real report."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/bds-rulebook.md docs/ja/specdojo/samples/bds-sample.md docs/ja/product/010-business-specs/040-user-interface-model/bds-progress-report.md","status":"passed","summary":"Formatted all 3 changed Markdown files without errors"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history files changed","reason":"No plan/result/register ticket files were changed by the executor"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"No catalog or project deliverable changes","reason":"Changes are under docs/ja/product and docs/ja/specdojo only; nothing under docs/ja/projects was changed"}]}
+</specdojo_executor_evidence>

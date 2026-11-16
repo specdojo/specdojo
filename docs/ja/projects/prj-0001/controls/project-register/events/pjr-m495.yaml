@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f2d35c65f3be4639b0631f7b155cff61
+  ts: "2026-11-15T10:47:42Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 人が unblock しても、agent の run が完了の確認で止まらないようにする
+    - field: description
+      from: ""
+      to: unblock を人が行っても、claim の持ち主（agent）を保つか、runner が引き継げるようにする
+    - field: input
+      from: ""
+      to: '["2026-11-15、bds-progress-report-005 を人（indie）が exec unblock したところ claim の持ち主が人に替わり、runner の再開が completion preflight の「task is being worked on by another actor: indie」で止まった（PJR-TN43 の E）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-15"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T4G3"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: exec
+- v: 1
+  id: reg_3485ad33a9d4411f84d1b20fccff171a
+  ts: "2026-11-15T14:39:50Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f2d35c65f3be4639b0631f7b155cff61
+- v: 1
+  id: reg_d0ea2abd031149bfb045bc5ce665b375
+  ts: "2026-11-15T15:21:46Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3485ad33a9d4411f84d1b20fccff171a
+- v: 1
+  id: reg_25550087ab1346ac9ed95a23b3539abb
+  ts: "2026-11-15T16:48:04Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 0.8.0 の第 1 段で直した（人が unblock しても、agent の run が完了の確認で止まらないようにする）。親の検証をすべて通って統合済み
+  previous_event_id: reg_d0ea2abd031149bfb045bc5ce665b375

@@ -104,6 +104,7 @@ specdojo:
 - 用語はファイル内で統一し、`index` / `overview` などの命名ゆれを持ち込まない。
 - 用語定義を置く場合は、本文構成の見出し名や記述ガイドを単に言い換えて重複させない。重複になる場合は用語定義を省略する。
 - `推奨 Frontmatter 項目` の記述は [document-metadata-standard.md](document-metadata-standard.md) に従う。
+- 成果物の改訂・廃止、置き換え（`supersedes`）、非推奨化（`deprecated`）、および参照元（一覧・プロセス・データ・実装・テスト）への影響追跡と担当 Role code の記載要件は、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] の「文書の改訂・廃止とライフサイクル変更管理」に従う。各 rulebook は自系統の成果物における具体的な追従対象と役割分担を定義する。
 - `ファイル命名・ID規則` は [docs-structure-guide.md](../guides/docs-structure-guide.md) に従う。
 - `target_format` がある場合は、本文ルール・記述例を対象フォーマットに合わせる。未記載の場合は markdown を対象とみなす（`Frontmatter 規約` 参照）。
 - `target_format: yaml` / `json` の場合は、Frontmatter と同等の先頭メタ項目、ルートキー、必須キー、型制約を実装可能な粒度で定義する。

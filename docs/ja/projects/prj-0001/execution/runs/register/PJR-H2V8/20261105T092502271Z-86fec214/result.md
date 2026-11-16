@@ -1,0 +1,45 @@
+---
+specdojo:
+  id: prj-0001:xer-pjr-h2v8-20261105t092502z-a0ce6a02
+  type: exec-result
+  task_id: PJR-H2V8
+  mode: edit
+  status: complete
+  project_id: prj-0001
+  origin: register
+  plan_ref: runs/register/PJR-H2V8/20261105T092502271Z-86fec214/plan.md
+  started_at: "2026-11-05T09:25:02.603Z"
+  completed_at: "2026-11-05T09:39:39.323Z"
+  agent: sol-executor
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- 3 approach の各種 plan テンプレートに、カタログの `evidence_refs` を読み取り専用の実装の根拠として載せるための変更を追加しました。
+- また、未作成の依存関係（`depends_on`）がある場合に、それらを「未作成」と明示して異常終了の理由から除外する方針を plan に組み込みました。
+- これらの変更に伴い、各種ガイド、CHANGELOG、および回帰テスト用のファイルを更新しました。
+
+## 2. 変更ファイル
+
+- `CHANGELOG.md`: タスクの実施に伴う履歴の追加。
+- `docs/ja/specdojo/exec-templates/xep-draft-template.md`: draft 形式の plan テンプレートへの実装根拠および未作成依存の扱いに関する変更を適用。
+- `docs/ja/specdojo/exec-templates/xep-fully-guided-template.md`: fully-guided 形式の plan テンプレートへの実装根拠および未作成依存の扱いに関する変更を適用。
+- `docs/ja/specdojo/exec-templates/xep-recipe-guided-template.md`: recipe-guided 形式の plan テンプレートへの実装根拠および未作成依存の扱いに関する変更を適用。
+- `docs/ja/specdojo/guides/exec-operation-guide.md`: 実行オペレーションガイドの更新。
+- `docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`: plan と result のライフサイクルに関するガイドの更新。
+- `docs/ja/specdojo/guides/ryu-guide.md`: ryu ガイドの更新。
+- `src/exec/plans-core.ts`: plan 生成のコアロジックにおける実装根拠の扱いに関する変更。
+- `src/exec/plans-generation.ts`: plan 生成ロジックにおける実装根拠の組み込みに関する変更。
+- `tests/src/exec/plan-implementation-evidence.test.ts`: 実装の根拠が正しく載ることを検証するためのテストコード。
+
+## 3. 申し送り
+
+- 親 runner の型検査・lint・schema・単体／統合テストの結果を正とし、reporter／runner が result に反映してください。
+- 統合後は運用メモに従い、PJR-JSEY で今回の exec 変更の動作を確認してください。個票の対応結果にも記録済みです。
+- 適用外の検証: `npm run validate:schema:file`（executor が変更した YAML 成果物がないため。）
+
+## 4. 進め方
+
+3 approach の edit plan に読み取り専用の実装エビデンスと未作成依存の仮置き方針を追加しました。回帰テスト、ガイド、CHANGELOG、個票を更新し、sandbox 内の適用検査は成功しました。単体テスト等は親 runner が実行します。

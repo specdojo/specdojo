@@ -6,6 +6,7 @@ import type { Command } from "commander";
 import { resolveProjectPaths } from "../exec/project.js";
 import { loadRegisterItems, resolveRegisterPaths, type PjrItem } from "../register/register.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { gitEnvironment } from "../shared/git-environment.js";
 
 export type NightRunOutcome = {
   id: string;
@@ -104,8 +105,9 @@ export function renderNightReport(options: {
   return `---
 specdojo:
   id: ${options.projectId}:night-orchestrator-report-${stamp}
-  type: report
+  type: project
   status: draft
+  rulebook: none
 ---
 
 # 夜間 orchestrator 朝報告 ${options.startedAt.slice(0, 10)}
@@ -114,13 +116,13 @@ specdojo:
 - 完了: \`${options.completedAt}\`
 - 停止理由: ${safeCell(options.stopReason)}
 
-## 集計
+## 1. 集計
 
 - close: ${list(closed)}
 - \`waiting\`: ${list(waiting)}
 - 新しい承認待ち: ${list(approvals)}
 
-## 実行結果
+## 2. 実行結果
 
 | 項目 | 結果 | 遷移 | 理由 |
 | ---- | ---- | ---- | ---- |
@@ -142,7 +144,7 @@ async function runCaptured(command: string, args: string[]): Promise<CapturedRes
   return await new Promise((resolveRun, reject) => {
     const child = spawn(command, args, {
       cwd: specdojoRootDir(),
-      env: process.env,
+      env: gitEnvironment(),
       stdio: "pipe",
     }) as ChildProcessWithoutNullStreams;
     let stdout = "";

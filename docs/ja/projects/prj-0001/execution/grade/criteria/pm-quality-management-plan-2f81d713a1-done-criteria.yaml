@@ -2,9 +2,9 @@
 id: prj-0001:pm-quality-management-plan-grade-criteria
 document: prj-0001:pm-quality-management-plan
 path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
-graded_at: "2026-10-15T16:32:44.426Z"
-graded_by: agy-expert-executor
-content_hash: 15c713519458f8ca00478dcf66254e5b45f84074c4c66f3397a40f5459671d01
+graded_at: "2026-11-15T22:02:07.361Z"
+graded_by: sol-review-executor
+content_hash: acaaede0aa85bb8ee0a4c782d5fa8f97a9784ec6d2ad7a36f3562a5dd23e2eb0
 summary:
   satisfied: 2
   unsatisfied: 1
@@ -29,5 +29,5 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Quality metrics lack calculation methods, threshold values, and measurement frequency in the text, preventing
-      verifiable quality assessment.
+      The trial evidence format and post-release verification procedure remain undecided, and failed SC-04–SC-06 lack
+      applicable re-evaluation conditions.

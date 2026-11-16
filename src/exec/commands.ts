@@ -1,65 +1,16 @@
-import { type Command } from "commander";
+import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
 import { validateCatalogLocalIds, validateRulebookKata } from "../catalog/build.js";
-import {
-  acquireSchedulerLock,
-  canBlockTask,
-  canCancelTask,
-  canClaimTask,
-  canCompleteTask,
-  canReleaseTask,
-  canReopenTask,
-  canUnblockTask,
-  computeReadyIds,
-  readAllEventFiles,
-  releaseSchedulerLock,
-  schedulerLockPath,
-  writeEventFile,
-} from "./events.js";
-import { eventsDirForProject, generatedDirForProject } from "./project.js";
+import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
+import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
 import {
   assertValidActor,
   getProjectViewpointsPath,
+  getProjectRoutinesPath,
   loadConfig,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
-import {
-  buildScheduleIndex,
-  computeCpm,
-  exitWithCode,
-  printValidateResult,
-  selectNextTask,
-  validateAll,
-  writeCpmFiles,
-  writeGeneratedCore,
-  writeScheduleHashAndDiff,
-} from "./schedule/schedule.js";
-import { readReadySnapshot } from "./schedule/ready.js";
-import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
-import { displayWidth, nowUtcIsoSeconds, padEndDisplay, requireNonEmpty } from "./shared.js";
-import {
-  archivePlan,
-  buildInPlaceStem,
-  generateDeliverablePlan,
-  generateSinglePlan,
-  resolveDeliverableTarget,
-  stemFromPlanPath,
-} from "./plans.js";
-import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
-import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./register.js";
-import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
-import {
-  registerCycleCommand,
-  registerResumeCommand,
-  registerRunCommand,
-  registerSlotsCommand,
-} from "./run/run.js";
-import { buildTaskView } from "./task-view.js";
-import { registerExecWorktreeCommands } from "./worktree-command.js";
-import { registerExecTrialCommands } from "./trial.js";
-import { registerExecHandoffCommands } from "./handoff.js";
-import { resolveOwnerForLocalId } from "./strategy.js";
 import {
   DEFAULT_EVENT_MESSAGES,
   KNOWN_OWNER_LABELS,
@@ -69,6 +20,7 @@ import {
   addLockOptions,
   addOwnerOptions,
   addProjectOptions,
+  addTakeOverOption,
   ensureActorCanClaimNext,
   findRosterMember,
   loadRosterForOpts,
@@ -87,10 +39,65 @@ import {
   scaffoldClaimResult,
   type LockedEventAction,
 } from "./core.js";
+import {
+  acquireSchedulerLock,
+  canBlockTask,
+  canCancelTask,
+  canClaimTask,
+  canCompleteTask,
+  canReleaseTask,
+  canReopenTask,
+  canUnblockTask,
+  claimOwnerOf,
+  computeReadyIds,
+  readAllEventFiles,
+  releaseSchedulerLock,
+  schedulerLockPath,
+  writeEventFile,
+} from "./events.js";
+import { registerExecHandoffCommands } from "./handoff.js";
+import { registerRecordMigrationCommand } from "./migrate-records.js";
+import {
+  archivePlan,
+  buildInPlaceStem,
+  generateDeliverablePlan,
+  generateSinglePlan,
+  resolveDeliverableTarget,
+  stemFromPlanPath,
+} from "./plans.js";
+import { eventsDirForProject, generatedDirForProject } from "./project.js";
+import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./register.js";
+import {
+  registerCycleCommand,
+  registerResumeCommand,
+  registerRunCommand,
+  registerSlotsCommand,
+} from "./run/run.js";
+import { readReadySnapshot } from "./schedule/ready.js";
+import {
+  buildScheduleIndex,
+  computeCpm,
+  exitWithCode,
+  printValidateResult,
+  selectNextTask,
+  validateAll,
+  writeCpmFiles,
+  writeGeneratedCore,
+  writeScheduleHashAndDiff,
+} from "./schedule/schedule.js";
+import { displayWidth, nowUtcIsoSeconds, padEndDisplay, requireNonEmpty } from "./shared.js";
+import { resolveOwnerForLocalId } from "./strategy.js";
+import { buildTaskView } from "./task-view.js";
+import { registerExecTrialCommands } from "./trial.js";
+import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
+import { registerExecWorktreeCommands } from "./worktree-command.js";
+import { validateRunRecordLayout } from "./validate-records.js";
+import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
 
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
   registerExecHandoffCommands(exec);
+  registerRecordMigrationCommand(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
@@ -128,7 +135,11 @@ export function registerExecCommands(program: Command): void {
     },
     unblock: {
       type: "unblock",
-      check: ({ schedule, snapshot }, taskId) => canUnblockTask(schedule, snapshot, taskId),
+      check: ({ schedule, snapshot }, taskId, actor, opts) =>
+        canUnblockTask(schedule, snapshot, taskId, {
+          requested: !!opts.takeOver,
+          isHuman: findRosterMember(loadRosterForOpts(opts), actor)?.type === "human",
+        }),
     },
     release: {
       type: "release",
@@ -164,6 +175,7 @@ export function registerExecCommands(program: Command): void {
     if (t in lockedActions) addLockOptions(cmd);
     if (t === "claim") addOwnerOptions(cmd);
     if (t === "complete" || t === "block" || t === "release") addForceOption(cmd);
+    if (t === "unblock") addTakeOverOption(cmd);
     if (t === "release") {
       cmd.option(
         "--reset-worktree",
@@ -191,13 +203,59 @@ export function registerExecCommands(program: Command): void {
     }
   }
 
-  const vcmd = exec.command("validate").description("Validate schedule + events");
+  const vcmd = exec
+    .command("validate")
+    .description("Validate schedule, events and run record layout");
   addProjectOptions(vcmd);
+  vcmd.option("--records-only", "Check only run record layout and runtime lock exclusion", false);
+  vcmd.addOption(
+    new Option("--schedule-only", "Check only schedule and events (used before running tasks)")
+      .default(false)
+      .conflicts("recordsOnly"),
+  );
+  vcmd.option(
+    "--commit <rev>",
+    "With --records-only, check the run records in the tree of <rev> instead of the working tree",
+  );
   vcmd.action((opts) => {
     try {
-      const { schedulePath, catalogPath } = resolveProjectContext(opts);
+      const { schedulePath, catalogPath, executionPath } = resolveProjectContext(opts);
+      const { config } = loadConfig();
+      const project = config?.projects[resolveProjectId(opts)];
+      const routinesPath = project && getProjectRoutinesPath(project);
+      if (opts.commit !== undefined && !opts.recordsOnly)
+        throw new Error("--commit requires --records-only");
+      const layoutOptions = {
+        executionPath,
+        repoRoot: specdojoRootDir(),
+        ...(routinesPath ? { routinesPath: pathResolve(specdojoRootDir(), routinesPath) } : {}),
+      };
+      const layoutIssues = opts.scheduleOnly
+        ? []
+        : typeof opts.commit === "string"
+          ? validateRunRecordLayoutAtCommit({ ...layoutOptions, commit: opts.commit })
+          : validateRunRecordLayout(layoutOptions);
+      if (opts.recordsOnly) {
+        for (const issue of layoutIssues)
+          process.stdout.write(`ERROR: ${issue.path}: [${issue.reason}] ${issue.message}\n`);
+        if (!layoutIssues.length)
+          process.stdout.write(
+            `OK: run record layout validation passed${typeof opts.commit === "string" ? ` (${opts.commit})` : ""}\n`,
+          );
+        exitWithCode(layoutIssues.length === 0);
+        return;
+      }
       const res = validateAll(schedulePath);
+      for (const issue of layoutIssues) {
+        const message = `${issue.path}: [${issue.reason}] ${issue.message}`;
+        if (issue.reason !== "missing") res.errors.push(message);
+      }
+      res.ok = res.errors.length === 0;
       printValidateResult(res);
+      for (const issue of layoutIssues) {
+        if (issue.reason === "missing")
+          process.stdout.write(`WARN:  ${issue.path}: [${issue.reason}] ${issue.message}\n`);
+      }
       // Scheduled tasks resolve their deliverable by bare local_id, so warn when a
       // local_id is not unique project-wide across the catalogs.
       if (catalogPath && existsSync(catalogPath)) {
@@ -353,7 +411,7 @@ export function registerExecCommands(program: Command): void {
 
   const archiveCmd = exec
     .command("archive")
-    .description("Archive a completed plan to exec/plans/done/ (or delete it)");
+    .description("Keep a completed run plan in its run directory, or delete it");
   addProjectOptions(archiveCmd);
   archiveCmd.option("--task <taskId>", "Scheduled task ID whose plan to archive");
   archiveCmd.option(
@@ -361,7 +419,7 @@ export function registerExecCommands(program: Command): void {
     "Catalog deliverable local_id (unique project-wide)",
   );
   archiveCmd.option("--plan <path>", "Plan file to archive (for unique-named in-place plans)");
-  archiveCmd.option("--delete", "Delete the plan instead of moving it to done/", false);
+  archiveCmd.option("--delete", "Delete the plan instead of retaining it", false);
   archiveCmd.action((opts) => {
     try {
       const { executionPath, catalogPath } = resolveProjectContext(opts);
@@ -371,8 +429,6 @@ export function registerExecCommands(program: Command): void {
       if ([hasTask, hasDeliverable, hasPlan].filter(Boolean).length !== 1) {
         throw new Error("Specify exactly one of --task, --deliverable, or --plan.");
       }
-      // `archivePlan` rebuilds `<slug>-plan.md`; for --plan the stem recovered from the filename
-      // is that slug, so a unique-named in-place plan archives to done/ like a fixed-name one.
       const slug = hasPlan
         ? stemFromPlanPath((opts.plan as string).trim())
         : hasTask
@@ -672,7 +728,7 @@ export function registerExecCommands(program: Command): void {
 
       const entries = Object.entries(snapshot.tasks)
         .filter(([, cs]) => cs.state === filterState)
-        .filter(([, cs]) => !filterBy || cs.last_by === filterBy)
+        .filter(([, cs]) => !filterBy || claimOwnerOf(cs) === filterBy)
         .sort(([a], [b]) => a.localeCompare(b));
 
       if (entries.length === 0) {
@@ -688,7 +744,7 @@ export function registerExecCommands(program: Command): void {
       const rows = entries.map(([taskId, cs]) => ({
         taskId,
         name: schedule.nodes.get(taskId)?.name ?? "-",
-        by: cs.last_by ?? "-",
+        by: claimOwnerOf(cs) ?? "-",
         ts: cs.last_ts ?? "-",
       }));
 

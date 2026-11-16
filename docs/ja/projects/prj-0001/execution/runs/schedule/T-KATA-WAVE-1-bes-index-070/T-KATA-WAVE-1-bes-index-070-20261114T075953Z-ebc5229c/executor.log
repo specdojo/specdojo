@@ -1,0 +1,61 @@
+このタスクを理解しました。executor として、対象成果物 `bes-index.md` を磨き込み、検証だけを行います。まず計画に従って、宣言された参照資料を読み込みます。
+まず宣言された参照資料を読みます。common conventions と対象の規則書・サンプル、依存の CDFD、プロジェクト文脈を並行して読みます。
+次に、宣言された rulebook / sample と共通規約を読み込みます。
+宣言された参照資料（rulebook, sample, `depends_on` の `cdfd-overview.md`, プロジェクト文脈 `prj-overview.md`）を読み込みました。次に、対象成果物の整合性を検証します。特に領域 ID・領域名・起点イベントの文言が正本 `cdfd-overview.md` と一致するかを確認します。
+整合性を突合するために、対象文書の `起点領域` 列と `cdfd-overview.md` の領域 ID を機械的に突き合わせます。
+bash での処理系は制約があるようです。grep ツールで突合を進めます。
+突合結果を確認します。重要なのは、`cdfd-overview.md` が **§1/§2 では「7 つの区分」** と述べる一方、**§3 では P-01〜P-14 の 14 領域を 7 グループに整理**している点です。対象 `bes-index.md` は「14 領域の起点イベント」と述べており、これは §3 の領域 ID・領域名・起点イベント文言そのものへの対応です（§3 で全 14 領域に 16 行が割り当てられており、網羅も成立）。
+
+各起点事件文言の突き合わせ:
+- `P-01`「PO が新しいプロジェクトを立ち上げた」= 対象 row ✓
+- `P-12`「稼働構成の変更要求が発生した」= 対象 row ✓
+- `P-02`「未整理事項（タスク・問題・課題・メモなど）が発見された、意思決定した」（2行→`bes-register-item-found` + `bes-decision-made`）✓
+- `P-03/04/05/06/07/08/09/10/11/13/14` すべて一致 ✓
+
+領域 ID・領域名・起点イベント文言は正本と整合しています。次に、対象文書内の wikilink の存在状況を確認します（`[[...]]` の参照先が実在するか、prettier で壊れないか）。
+bash のパイプ系は `*` 拒否のため不可のようです。ファイル存在確認は glob で行います。また、rulebook が参照する上位規範（`document-metadata-standard`, `docs-structure-guide`, `vp-arc-conciseness`）と検査設定を確認します。
+重要な発見: `cdfd-overview.md` §1/§2 は「**7 つの区分**の」と断言していますが、対象成果物と本 plan の `overview` は「**10 プロセス領域**」としています。これは潜在的な不整合です。正本の実際の領域数を機械的に確定します（bash パイプは制約されるため grep ツールで各領域 ID を網羅して確認）。
+正本 `cdfd-overview.md` §3 は実際に **14 の領域（P-01〜P-14、7 グループ）** を定義しています。対象成果物は「14 領域」で正本の §3 と正確に一致しており、16 行がすべて 14 領域を網羅しています。一方、§1/§2 の「7 つの区分」はグループ数への言及です。
+
+次に、本 plan の `overview`（「10プロセス領域」）と既存記述との食い違い、および rulebook が参照する上位規範を確認します。
+共通規約テンプレートと frontmatter schema、メタ情報標準を確認して、検査方針と `bes-index.md` の frontmatter 適合を確定します。
+検証方針が明確になりました。`bes-index.md` は `docs/ja/specdojo/exec-templates/`・`templates/` のいずれでもないため、sandbox で実行するのは **prettier + markdownlint** のみです（lint:md/fm/test 等は親 runner が実行）。frontmatter は変更しないため schema 検査は不要。
+
+まず現行の整形状態を確認し、内容の最終突合を行います。
+既存の `bes-index.md` は prettier と markdownlint の両方でクリーンです。内容・整合性の突合結果を確定するため、成果物カタログ（evidence_refs/owner_rules/brief）の有無を確認します。
+成果物カタログに重要な矛盾が見つかりました。`dct-business-model-bes.yaml` の `bes-index` エントリを確認します。
+重大な矛盾を特定しました。catalog の `bes-index` エントリ (`dct-business-model-bes.yaml` L23) は「**10プロセス領域**」、本 plan の `overview` も 10 としています。一方、宣言された `depends_on` の正本 `cdfd-overview.md` §3「プロセス領域」には実際には **P-01〜P-14 の 14 領域**が定義されており、既存の `bes-index.md` は「14 領域」を正確に正しく網羅しています。
+
+これは catalog 側の数値（10）と実在する正本・既存記述（14）の食い違いです。修正の方向性（「14」を維持するか「10」に合わせて減らすか）は、catalog・cdfd-overview のどちらが正かという判断を伴い、executor 側で勝手に断定できません（§4.2 の原則：rulebook 不適合でもなければ、完成度向上だけを理由に既存記述を書き換えない／全面書き換えしない）。よって「10 vs 14」の不一致は handoff として申し送り、既存記述を保守的に維持します。
+
+これ以外に rulebook 必須要素・禁止事項への抵触や、rulebook に起因する不適合・重複は無く、「完了の狙い」「下流入力適合」を満たしています。したがって `bes-index.md` 本体への変更はせず、判断根拠を残して完了します。
+
+todo を更新し、検証結果を確定します。
+統合検証を確定するため、prettier と markdownlint の最終チェックを実行します。
+検証が完了しました。
+
+## 実施内容のまとめ
+
+**結論**: 既存の `bes-index.md` は、rulebook（`specdojo:bes-index-rulebook`）の必須要素・禁止事項・章構成を満たし、宣言された `depends_on` の正本 `cdfd-overview.md` §3「プロセス領域」と整合している。磨き込みで削除・修正が必要な箇所は無く、保守的維持で完了の狙い・下流入力適合を満たします。よって**本体への変更はなし**。
+
+### 検証のポイント
+- **frontmatter / 列構成**（`vp-arc-document-structure`）: `id: bes-index`, `type: requirement`, `status: draft`, `rulebook`, `based_on: [cdfd-overview]`、本文 8 列が rulebook §4・§5.1 の順どおり完全一致。
+- **網羅と文言の正本整合**: cdfd-overview §3 の 14 領域（P-01〜P-14）すべての起点イベントが 16 行に 1:1 割当済み。`P-02`・`P-14` の「、」区切りの 2 出来事は別行、他は「または」同一行＋発生条件区分。イベント ID は `^bes-[a-z0-9][a-z0-9-]*$` に全件適合・重複なし。
+- **禁止事項目**: 物理名/SQL/手順の混入なし、未作成個別仕様 `bes-routine-due`・`bes-derived-content-requested` はバッククォートで仮置き、既存の `[[prj-0001:bes-task-ready-selected\|…]]`・`[[prj-0001:cdfd-overview\|…]]` とも実在文書で一致。
+- **完了の狙い**: owner(ARC「イベント駆動設計の入力として参照できる」)・下流 BA/PO/QE が満たされる。
+
+### 申し送る要整合点（本体改変を要すため判断が要る）
+- catalog の `bes-index` エントリ (`dct-business-model-bes.yaml:21-23`) と、本 plan の `overview` は「**10プロセス領域**」と述べる一方、実在の `cdfd-overview.md` §3 と既存 `bes-index.md` は「**14 領域**」。どちらが正かは catalog 整備側の判断を要し、executor 側で断定できないため現状維持。
+
+### 検証結果
+- `npx prettier --check`: クリーン / `npx markdownlint`: エラーなし（いずれも適用）。
+- lint:ts / lint-fm / lint-mermaid / lint-d2 / test-integration / validate-schema / typecheck / test-unit は親 runner が実行するため未実行。
+
+todo を完了にします。
+実施を完了しました。executor として `bes-index.md` を研磨・検証し、成果物は保守的維持で `done_criteria` を満たしたため本体改変なしです。未決の要整合点（catalog の「10」対既存/本文の「14」、正本 cdfd-overview 内の「7つ/14」食い違い）は本体改変を要するため手を入れず、handoff に申し送ります。結果の報告は reporter / runner が `result.md` へ転記します。
+
+実行した検査: `npx prettier --check`・`npx markdownlint`（対象 .md、共に適用・passed）。lint-ts / lint-fm / lint-mermaid / lint-d2 / test-integration / validate-schema / typecheck / test-unit は親 runner 実行のため未実行。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"bes-index.md は rulebook(specdojo:bes-index-rulebook)の必須要素・禁止事項・章構成を満たし、宣言された depends_on の cdfd-overview.md §3「プロセス領域」と整合(14領域 P-01〜P-14を 16行で網羅、イベントIDは ^bes-[a-z0-9][a-z0-9-]*$ に全件適合・重複なし)。完了の狙い(owner=ARCイベント駆動設計入力、下流 BA/PO/QE)を満たすため本体改変なしで保守的維持。prettier・markdownlint クリーン。catalog の「10プロセス領域」対既存記述・正本の「14领域」および cdfd-overview 内の「7つの/14領域」食い違いはどちらが正かを要する判断のため改変せず handoff に申し送る。","handoff":["要整合(本体改変可否の判断が必要、executor は断定せず現状維持): catalog `dct-business-model-bes.yaml:23` の `bes-index.overview` と本 plan(`T-KATA-WAVE-1-bes-index-070`)の `overview` は「cdfd-overview.md の10プロセス領域の起点イベントを一覧」と述べる一方、宣言された depends_on `cdfd-overview.md` §3「プロセス領域」テーブルには実際 P-01〜P-14 の 14 領域が定義され、既存の `bes-index.md` L14 も『14 領域』で本文・網羅が 14 に整合。10 と 14 のどちらが正かは catalog／cdfd-overview 整備側(cdfd-overview-rulebook／catalog owner)の判断を要するため、rulebook §4.2「完成度向上だけを理由に既存記述を書き換えない／全面書き換えしない」に従い executor 側では現状維持。次アクション: cdfd-overview §3 と catalog のいずれかへ整合させ、`10プロセス領域`の表記を正本側にそろえる。","要整合(本体改変可否の判断が必要): 上位 cdfd-overview.md 内で §1(L17)/§2 で『7 つの区分のプロセス領域』と記述されている一方、§3 は P-01〜P-14 の 14 領域を 7 グループ(プロジェクト構成 register schedule routine 実行サイクル 文書の廃棄 Orchestrator)として列挙。既存 `bes-index.md` L14 は cdfd §3 と整合する『14 領域』を採用。cdfd 内の 7と14の食い違いは cdfd-overview の整備タスクでの解決対象であり、本タスクの参照範囲外なので変更不要だが、上流側の不一致として記録する。","情報提供: 本文 `bes-index.md` は `status: draft` を維持し(昇格は人間の PO)、§3「未決事項と承認条件」に『立ち上げと開始の境界(_UNDECIDED_)』『主体の確認 _ASSUMPTION_』『事実データの照合 _ASSUMPTION_(正本データモデル・schema と未照合)』『一覧の 14 領域だけを対象とするスコープ承認』を記載済み。これらは rulebook §1・§6.9 の『推定と確定を分け、人間 PO が承認まで draft を維持する』要請に沿った既存記述であり変更不要。後続 review / cdfd-overview 統合時のみ要確認。","情報提供: `docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md` L15 と catalog は、この文書を `bes-index`(未作成)の個別仕様として位置付けているが、実物の `bes-index.md` は既に存在(作成済)。同側の『未作成』記述は cdfd-overview 整備や catalog 更新時の手直しが残る可能性。本タスクでは `bes-task-ready-selected.md`・catalog を変更不要とし、この差異のみ報告する。"],"validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/030-business-model/bes-index.md","status":"passed","summary":"All matched files use Prettier code style!（対象 .md、prettier が package.json に存在し適用）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/030-business-model/bes-index.md","status":"passed","summary":"エラー 0 件（markdownlint が導入され .md を変更可能な対象のため適用。実ファイルは本体改変なしだが pre/post でクリーンを確認）"},{"command":"npm run lint:ts","status":"not_run","reason":"親 runner の parent validations に設定。executor は実行せず runner 結果を正とする"},{"command":"npm run lint:fm","status":"not_run","reason":"親 runner の parent validations に設定。frontmatter を変更していないが、runner が固定許可リストで実行する"},{"command":"npm run lint:mermaid","status":"not_run","reason":"親 runner の parent validations に設定。対象文書に mermaid ブロックは無いが runner 実行を待つ"},{"command":"npm run lint:d2","status":"not_run","reason":"親 runner の parent validations に設定。対象 .md には d2 ブロックなし、runner 実行を待つ"},{"command":"npm run test:integration","status":"not_run","reason":"親 runner の parent validations(test-integration)に設定。runner 結果を正とする"},{"command":"npm run validate:schema","status":"not_run","reason":"親 runner の parent validations(validate-schema)に設定。成果物 frontmatter を変更していないため別途不要、runner が実行する"},{"command":"npm run typecheck","status":"not_run","reason":"親 runner の parent validations(typecheck)に設定。TypeScript 源を変更していないため runner が実行する"},{"command":"npm run test:unit","status":"not_run","reason":"親 runner の parent validations(test-unit)に設定。src/tests を変更していないため runner が実行する"}]}
+</specdojo_executor_evidence>

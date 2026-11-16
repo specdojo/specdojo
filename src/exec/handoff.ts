@@ -1,26 +1,24 @@
-import { spawnSync } from "node:child_process";
-import {
-  existsSync,
-  lstatSync,
-  mkdtempSync,
-  readFileSync,
-  readdirSync,
-  rmSync,
-  unlinkSync,
-  writeFileSync,
-} from "node:fs";
-import { tmpdir } from "node:os";
-import { createInterface } from "node:readline/promises";
-import { join, posix, resolve } from "node:path";
 import type { Command } from "commander";
+import { spawnSync } from "node:child_process";
+import { lstatSync, mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join, posix, resolve } from "node:path";
+import { createInterface } from "node:readline/promises";
+import { parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { isAgentProtectedConfigPath } from "./agent-protected-config.js";
 import { PROTECTION_HANDOFF_MARKER } from "./protection-handoff.js";
 import { normalizePjrId, resolveRegisterRunTarget } from "./register.js";
 import { refsTrailer, withCommitTrailers } from "./repo-trace.js";
-import { configuredProductReposForProject } from "./task-repos.js";
-import { parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
+import { listRunRecords } from "./run-records.js";
 import { qualifyTaskId } from "./shared.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { configuredProductReposForProject } from "./task-repos.js";
+import {
+  stabilizeCommitTargets,
+  stageCommitTargets,
+  unstageCommitTargets,
+  worktreeStatusPaths,
+} from "./worktree-ops.js";
 import {
   findExecWorktree,
   formatGitResultFailure,
@@ -28,12 +26,6 @@ import {
   gitOutput,
   gitResult,
 } from "./worktree.js";
-import {
-  stageCommitTargets,
-  stabilizeCommitTargets,
-  unstageCommitTargets,
-  worktreeStatusPaths,
-} from "./worktree-ops.js";
 
 type HandoffApplyOptions = {
   project?: string;
@@ -95,12 +87,8 @@ export function extractProtectedConfigHandoff(content: string): ProtectedConfigH
 }
 
 function latestResultForTask(executionPath: string, taskId: string): string {
-  const resultsDir = join(executionPath, "exec", "results");
-  if (!existsSync(resultsDir)) throw new Error(`Result directory not found: ${resultsDir}`);
-  const candidates = readdirSync(resultsDir)
-    .filter((name) => name.endsWith("-result.md"))
-    .flatMap((name) => {
-      const path = join(resultsDir, name);
+  const candidates = listRunRecords(executionPath, "result")
+    .flatMap((path) => {
       const data = parseSpecdojoDocument(readFileSync(path, "utf8")).data;
       if (data.task_id !== taskId) return [];
       return [{ path, startedAt: typeof data.started_at === "string" ? data.started_at : "" }];

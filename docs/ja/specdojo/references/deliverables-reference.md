@@ -225,7 +225,7 @@ flowchart
 | [業務データ辞書 / 概念データストア定義](../rulebooks/cdsd-rulebook.md) | Conceptual Data Store Definition | `cdsd-<term>` | 概念データストア（情報の保管場所）を一覧で定義する | データストア名、対応プロセス、内容、更新タイミング、粒度、主な用途 など |
 | [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) | Storage Location Definition | `sld-<term>` | 業務対象となる物の物理的な保管場所を一覧で定義する | 保管場所名、保管対象、内容・目的、関連プロセス、管理頻度 など |
 | [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) | Status Definition | `stsd-<term>` | 業務上のエンティティが取り得る状態と状態間の遷移を一文書で定義する | 対象、状態名、通称、意味、成立条件、管理場所、状態遷移図、イベント、遷移条件など |
-| [業務データ辞書 / 分類定義](../rulebooks/cld-rulebook.md) | Classification Definition | `cld-<term>` | 業務上の分類（カテゴリ、種別、区分など）を一覧で定義する | 分類定義名、種別、分類名、説明など |
+| [業務データ辞書 / 分類一覧](../rulebooks/cdt-rulebook.md) | Code Table | `cdt-<term>` | 業務上の分類（カテゴリ、種別、区分など）を一覧で定義する | 分類定義名、種別、分類名、説明など |
 | [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md) | Conceptual Class Diagram | `ccd-<term>` | 業務上のエンティティ関係を図で定義する | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など |
 
 #### 2.1.3. 業務モデル
@@ -244,6 +244,7 @@ flowchart
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
 | [画面仕様](../rulebooks/uis-rulebook.md) | UI Specification | `uis-<term>` | 業務ユーザー視点の画面の利用目的や表示項目、操作を定義する | 画面概要、利用目的、表示項目、操作、遷移、エラー表示 など |
+| [CLI仕様](../rulebooks/clis-rulebook.md) | CLI Specification | `clis-<term>` | 利用者視点での CLI コマンド群の利用目的や操作の流れ、出力・エラーを定義する | 概要、利用目的、操作の流れ、操作とコマンド参照、出力・生成ファイルの要点、終了コードとエラー表示・利用者の次の手 など |
 | [帳票仕様](../rulebooks/bds-rulebook.md) | Business Document Specification | `bds-<term>` | 業務ユーザー視点の帳票の利用目的や表示項目を定義する | 帳票概要、利用目的、表示項目、出力タイミング など |
 
 #### 2.1.5. システム化機能
@@ -251,8 +252,8 @@ flowchart
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) | System Functions Index | `sf-index` | システムで実現する機能の全体構成と一覧を定義する | 機能ID、機能名、概要、関連プロセス、関連仕様ID など |
-| [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) | System Function | `sf-<term>` | 個別のシステム化機能の概要・関連仕様を定義する | 機能概要、関連プロセス、関連画面、関連IF、関連ルール など |
+| [システム化機能一覧 / 全体構成](../rulebooks/sf-index-rulebook.md) | System Functions Index | `sf-index` | システムで実現する機能の全体構成と一覧を定義する | 機能ID、機能名、概要、関連プロセス、関連仕様ID など |
+| [システム化機能（個別）](../rulebooks/sf-rulebook.md) | System Function | `sf-<term>` | 個別のシステム化機能の目的、業務プロセス・画面との対応、処理要件を定義する | 機能目的・概要、業務プロセス・画面との対応、入出力・前提条件、処理要件、非機能制約、操作手順・コマンド参照、検証観点 |
 
 #### 2.1.6. 用語集
 
@@ -272,7 +273,7 @@ flowchart
 | [外部API仕様](../rulebooks/ifx-api-rulebook.md) | External API Specification | `ifx-api-<term>.yaml` | 外部システムとのAPI連携をOpenAPI形式(YAML)で定義する | エンドポイント、HTTPメソッド、リクエスト／レスポンス、ステータスコード |
 | [外部ファイル連携仕様](../rulebooks/ifx-file-rulebook.md) | External File Exchange Specification | `ifx-file-<term>.yaml` | 外部システムとのファイル連携をYAMLで定義する | ファイル形式、伝送方法、スケジュール、ファイル項目一覧 |
 | [外部メッセージ仕様](../rulebooks/ifx-msg-rulebook.md) | External Message Specification | `ifx-msg-<term>.yaml` | 他システムとのイベント／キューのメッセージ連携をAsyncAPI + CloudEvents(YAML)で定義する | チャネル名、メッセージ構造、エンドポイント、プロトコル |
-| [外部コマンド連携仕様](../rulebooks/ifx-cmd-rulebook.md) | External Command Interface Specification | `ifx-cmd-<term>.yaml` | 外部CLIコマンドの起動契約をYAMLで定義する | コマンド名、引数、stdin／stdout／stderr、終了コード、認証注入方式、エラー処理 |
+| [外部コマンド連携仕様](../rulebooks/ifx-cmd-rulebook.md) | External Command Interface Specification | `ifx-cmd-<term>.yaml` | 外部CLIコマンドの起動契約をYAMLで定義する | コマンド名、正本参照、入出力ストリーム、入出力ファイル、副作用、終了コード、エラー処理 |
 
 ### 2.3. アーキテクチャ
 
@@ -301,6 +302,7 @@ flowchart
 - **System Design Index**：設計のSSOT（OpenAPI / AsyncAPI / migration / job定義 / config schema 等）への導線
 - **System Design Critical Flows**：事故や仕様誤解の原因になりやすい“重要フロー”だけを少数（最大5件）定義
 - **System Design Cross-cutting Policy**：エラー・冪等・リトライ・監査・トレーシング等の横断ルール（実装の共通前提）
+- **Design System Specification**：画面をまたぐ GUI のデザインの決まり。既存のトークンや部品の正本は参照する
 
 #### 2.4.1. ドキュメント一覧と概要（最小構成）
 
@@ -310,6 +312,9 @@ flowchart
 | 全体構成（リンク集） | System Design Index | `sysd-index` | システム設計のSSOTへの導線を1箇所に集約し、設計情報を迷子にしない | 内部API定義（OpenAPI等）/イベント定義（AsyncAPI等）/DBスキーマ（migration等）/バッチ定義（workflow/cron等）/設定スキーマ（config schema等）/コード配置規約（モジュール境界） |
 | 重要フロー | System Design Critical Flows | `sysd-critical-flows` | “読まないと事故る”フローだけを可視化し、実装・テスト・運用の共通理解を作る | 最大5フロー（冪等/補償/非同期/順序/整合性/外部I/F障害など）について、境界・永続化点・再実行性・失敗時挙動を図または箇条書きで定義 |
 | 横断ルール | System Design Cross-cutting Policy | `sysd-cross-cutting-policy` | 実装全体に影響する共通ルールをSSOT化し、各所の実装ブレを防ぐ | エラー形式/例外分類、タイムアウト・リトライ、冪等キー、トランザクション境界、ログ/監査ログ、トレーシング、セキュリティ（認証・認可の実装原則）、バージョニング、設定の上書き階層 |
+| [[specdojo:dss-rulebook\|デザインシステム]] | Design System Specification | `dss-<term>`（既定: `dss-common`） | GUI の見た目と操作時の表現を揃え、操作性目標を満たす設計の決まりを定める | デザイントークン、部品の使い方、レイアウトの型、状態表示、アクセシビリティ、正本への参照、検証方法 |
+
+DSS の成果物は `docs/ja/product/040-system-design/` へ置きます。画面ごとの目的・項目・操作・遷移は UIS、測れる操作性目標は NFR が持ちます。ワイヤーフレームは文書として保守せず、UIS と DSS から試作を作ってプロダクトのリポジトリに置きます。
 
 > 補足：従来の「実装データフロー図／実装クラス図／DB論理・物理／実装画面仕様／内部I/F／バッチ設計／設定一覧」は、
 > **“SSOTをコード（定義ファイル）に寄せる”** 方針により、個別ドキュメントとしては作りません。

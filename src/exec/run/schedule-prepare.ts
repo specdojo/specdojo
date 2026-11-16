@@ -1,42 +1,67 @@
+import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.js";
-import { canCompleteTask, readAllEventFiles, foldEventsToState } from "../events.js";
-import { buildScheduleIndex } from "../schedule/schedule.js";
-import { buildInitialStateFromStrategy } from "../schedule/initial.js";
-import { qualifyTaskId, randomHex } from "../shared.js";
+import {
+  ensureReviewGrade,
+  reviewGradeFreshness,
+  type ReviewGradeOutcome,
+} from "../../review/grade.js";
+import { findDeliverableInfo, reviewGradeSummaryText } from "../plans-core.js";
+import {
+  enforceKataReviewVerdict,
+  kataReviewSummary,
+  scheduleKataReviewSubjects,
+} from "../review-kata.js";
 import {
   type AgentProvider,
   type MemberRoster,
   type ProjectMember,
 } from "../../shared/specdojo-config.js";
-import { type ReadyTaskView } from "../types.js";
-import {
-  type AgentStageRole,
-  type ScheduleIndex,
-  type StateSnapshot,
-  type TaskMode,
-} from "../types.js";
-import {
-  generateSinglePlan,
-  finalizeResultSectionsForDeliverable,
-  targetDocIdsForScheduledTask,
-  reviewGradeSubject,
-} from "../plans.js";
-import { ensureReviewGrade } from "../../review/grade.js";
+import { resolveMemberCommand, type ExecDefaultsConfig } from "../agent-config.js";
+import { canCompleteTask, foldEventsToState, readAllEventFiles } from "../events.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
-import { type ReviewGradeOutcome } from "../../review/grade.js";
+import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
+import {
+  finalizeResultSectionsForDeliverable,
+  generateSinglePlan,
+  reviewGradeSubject,
+  targetDocIdsForScheduledTask,
+} from "../plans.js";
+import type { RegisterResumeTarget } from "../register-resume.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "../results.js";
-import { worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
+import { findRunRecord, recordPathForRead, recordRef, recordStem } from "../run-records.js";
+import { buildInitialStateFromStrategy } from "../schedule/initial.js";
+import { buildScheduleIndex } from "../schedule/schedule.js";
+import { qualifyTaskId } from "../shared.js";
 import {
   configuredProductRepos,
   plannedProjectWorktreePath,
   preflightProductBranches,
   productBranchForTask,
 } from "../task-repos.js";
-import { checkpointAndEnsureWorktree, discardStaleExecWorktree } from "../worktree-ops.js";
-import { pipelineStateLocation, type PipelineStageRole } from "../pipeline-state.js";
-import type { RegisterResumeTarget } from "../register-resume.js";
+import {
+  type AgentStageRole,
+  type ReadyTaskView,
+  type ScheduleIndex,
+  type StateSnapshot,
+  type TaskMode,
+} from "../types.js";
+import {
+  checkpointAndEnsureWorktree,
+  discardStaleExecWorktree,
+  refreshWorktreeCheckpoint,
+} from "../worktree-ops.js";
+import { findExecWorktree, worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
+import {
+  buildExecutorPrompt,
+  executorRequirements,
+  loadPrompt,
+  pathInsideWorktree,
+  reportProductWorktrees,
+  reporterRequirements,
+  resolveReporterAgentCandidates,
+} from "./agent.js";
+import { integrateLogPath, spawnClaim, spawnRelease } from "./mode-shared.js";
 import {
   collectBusyActors,
   pinnedExecutor,
@@ -48,26 +73,20 @@ import {
   selectCandidates,
   type AgentRunCandidate,
   type ModeAgentOverrides,
-  type ResolvedRequirements,
-  type RunResult,
-  type RunOpts,
   type PinnedRateLimitRunOptions,
+  type ResolvedRequirements,
+  type RunOpts,
+  type RunResult,
   type StageAgentOverrides,
 } from "./shared.js";
-import {
-  buildExecutorPrompt,
-  executorRequirements,
-  loadPrompt,
-  pathInsideWorktree,
-  reportProductWorktrees,
-  reporterRequirements,
-  resolveReporterAgentCandidates,
-} from "./agent.js";
-import { integrateLogPath, spawnClaim, spawnRelease } from "./mode-shared.js";
 
 export type PreparedTask = {
   task: ReadyTaskView;
+  // The actor that ran the latest agent stage. Fallback and stage overrides may replace it.
   actor: string;
+  // The actor that holds the claim this runner made or resumed. Lifecycle events (complete /
+  // block) use it so a stage run by another agent still passes the same-actor guard.
+  claimActor: string;
   agentCandidates: AgentRunCandidate[];
   plan: string;
   prompt: string;
@@ -86,6 +105,11 @@ export type PreparedTask = {
   reporterCandidates?: AgentRunCandidate[];
   executorRateLimitOptions?: PinnedRateLimitRunOptions;
   reporterRateLimitOptions?: PinnedRateLimitRunOptions;
+  // Runner-side grade before the review plan; a failed grade blocks completion (PJR-M18B).
+  reviewGradeOutcome?: ReviewGradeOutcome;
+  // Grade sidecars refreshed into a resumed review worktree. Executor evidence from before the
+  // refresh judged an older grade, so the reporter must not reuse it (PJR-ZSRD).
+  reviewGradeRefreshed?: readonly string[];
 };
 
 export type PlanGenPaths = {
@@ -95,16 +119,31 @@ export type PlanGenPaths = {
   projectContext?: string[];
 };
 
-export function findClaimEventPath(schedulePath: string, taskId: string): string | null {
+export function findClaimEventPath(
+  schedulePath: string,
+  taskId: string,
+  worktreeRef?: { repoRoot: string; worktreePath: string },
+): string | null {
   const claims = readAllEventFiles(schedulePath).filter(
     (item) => item.event.task_id === taskId && item.event.type === "claim",
   );
+  if (worktreeRef && existsSync(worktreeRef.worktreePath)) {
+    for (let i = claims.length - 1; i >= 0; i -= 1) {
+      const candidate = claims[i]!.path;
+      if (
+        existsSync(pathInsideWorktree(worktreeRef.repoRoot, worktreeRef.worktreePath, candidate))
+      ) {
+        return candidate;
+      }
+    }
+  }
   return claims[claims.length - 1]?.path ?? null;
 }
 
 // review フェーズの前段で runner が対象文書へ grade を実行する（PJR-KCMH、PJR-2ZVS 3.6）。
 // executor には実行させない。評価結果が最新（content_hash 一致）なら再実行しない。
-// grade の失敗は review を止めず、結果を plan に示して review の verdict に委ねる。
+// grade は失敗すると再試行する。それでも失敗した場合も review は止めず、結果を plan に示すが、
+// runner はそのタスクを done にせず blocked にする（PJR-M18B）。
 export async function gradeBeforeReviewPlan(params: {
   task: ReadyTaskView;
   projectId: string | undefined;
@@ -119,29 +158,147 @@ export async function gradeBeforeReviewPlan(params: {
   const subject = reviewGradeSubject(params.catalogPath ?? "", task);
   if (!subject) {
     process.stdout.write("  [grade] skipped: grade subject is not resolvable\n");
-    return { action: "not-run", detail: "評価対象のパスを解決できない" };
   }
-  process.stdout.write(`  [grade] checking ${subject.path} (--target ${subject.target})\n`);
-  const outcome = await ensureReviewGrade({
-    taskId: qualifyTaskId(projectId, task.id),
-    projectId,
-    subjectPath: subject.path,
-    target: subject.target,
-    repoRoot: params.repoRoot,
-    dryRun: params.dryRun,
-    by: params.by,
-    execDefaultsPath: params.execDefaultsPath,
-  });
+  if (subject)
+    process.stdout.write(`  [grade] checking ${subject.path} (--target ${subject.target})\n`);
+  const outcome: ReviewGradeOutcome = subject
+    ? await ensureReviewGrade({
+        taskId: qualifyTaskId(projectId, task.id),
+        projectId,
+        subjectPath: subject.path,
+        target: subject.target,
+        repoRoot: params.repoRoot,
+        dryRun: params.dryRun,
+        by: params.by,
+        execDefaultsPath: params.execDefaultsPath,
+      })
+    : { action: "not-run", detail: "評価対象のパスを解決できない" };
+  const deliverable =
+    task.local_id && params.catalogPath
+      ? findDeliverableInfo(params.catalogPath, task.local_id)
+      : null;
+  for (const kata of scheduleKataReviewSubjects(task, deliverable, projectId)) {
+    if (kata.path === subject?.path && subject?.target === "kata") continue;
+    process.stdout.write(`  [grade] checking ${kata.label}: ${kata.path} (--target kata)\n`);
+    const kataOutcome = await ensureReviewGrade({
+      taskId: qualifyTaskId(projectId, task.id),
+      projectId,
+      subjectPath: kata.path === "_MISSING_" ? "" : kata.path,
+      target: "kata",
+      repoRoot: params.repoRoot,
+      dryRun: params.dryRun,
+      by: params.by,
+      execDefaultsPath: params.execDefaultsPath,
+    });
+    if (kataOutcome.action === "failed" || kataOutcome.action === "not-run") {
+      process.stdout.write(`  [grade] ${kata.label}: ${kataOutcome.detail}\n`);
+    }
+  }
   const summary =
     outcome.action === "skipped"
       ? "skipped: content_hash matches the stored grade"
       : outcome.action === "executed"
         ? `executed: run id ${outcome.runId}`
         : outcome.action === "failed"
-          ? `failed: run id ${outcome.runId}; ${outcome.detail}`
+          ? `failed after ${outcome.attempts} attempt(s): run id ${outcome.runId}; ${outcome.detail}`
           : `not run: ${outcome.detail}`;
   process.stdout.write(`  [grade] ${summary}\n`);
   return outcome;
+}
+
+// Root-side grade sidecars of the deliverable and kata subjects that the review judges.
+export function reviewGradeSidecarPaths(params: {
+  task: ReadyTaskView;
+  projectId: string;
+  catalogPath: string | undefined;
+  repoRoot: string;
+}): string[] {
+  const { task, projectId } = params;
+  const deliverable =
+    task.local_id && params.catalogPath
+      ? findDeliverableInfo(params.catalogPath, task.local_id)
+      : null;
+  const subjectPaths = [
+    reviewGradeSubject(params.catalogPath ?? "", task)?.path,
+    ...scheduleKataReviewSubjects(task, deliverable, projectId).map((kata) => kata.path),
+  ].filter((path): path is string => !!path && path !== "_MISSING_");
+  const sidecars = subjectPaths.flatMap((subjectPath) => {
+    const freshness = reviewGradeFreshness({ subjectPath, projectId, rootDir: params.repoRoot });
+    return "sidecarPath" in freshness && freshness.sidecarPath ? [freshness.sidecarPath] : [];
+  });
+  return [...new Set(sidecars)].sort();
+}
+
+/**
+ * A resumed review reuses the exec branch, which still holds the grade from its first checkpoint.
+ * Bring the grade the runner just checked into the branch so the review agent and the completion
+ * check judge the same grade as the runner (PJR-ZSRD). Returns the refreshed repo-relative paths.
+ */
+export function refreshReviewGradeCheckpoint(params: {
+  task: ReadyTaskView;
+  projectId: string | undefined;
+  catalogPath: string | undefined;
+  repoRoot: string;
+  worktree: ExecWorktree;
+  failureLogPath?: string;
+}): string[] {
+  const { task, projectId } = params;
+  if ((task.mode ?? "edit") !== "review" || !projectId) return [];
+  const refreshed = refreshWorktreeCheckpoint({
+    repoRoot: params.repoRoot,
+    worktreePath: params.worktree.path,
+    paths: reviewGradeSidecarPaths({ ...params, projectId }),
+    commitMessage: `exec(${task.id}): refresh grade before resumed review`,
+    failureLogPath: params.failureLogPath,
+  });
+  for (const path of refreshed) process.stdout.write(`  [grade] refreshed in worktree: ${path}\n`);
+  return refreshed;
+}
+
+// The stored plan keeps the grade summary of its first run. Tell the resumed review which grade
+// the runner checked now so it does not judge from the outdated section.
+export function resumedReviewGradeNote(
+  task: ReadyTaskView,
+  projectId: string,
+  catalogPath: string | undefined,
+  outcome: ReviewGradeOutcome | undefined,
+): string {
+  const subject = reviewGradeSubject(catalogPath ?? "", task);
+  const deliverable =
+    task.local_id && catalogPath ? findDeliverableInfo(catalogPath, task.local_id) : null;
+  const summary = [
+    subject ? reviewGradeSummaryText(projectId, subject.path, outcome) : "",
+    kataReviewSummary(scheduleKataReviewSubjects(task, deliverable, projectId), projectId),
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+  return [
+    "## 再開の前に runner が確認した評価結果",
+    "",
+    "runner は再開の前に grade を確認し、最新の評価結果サイドカーをこの worktree に取り込んだ。plan の `評価結果` の節は前回の実行の時点のものであり、判定にはこの節と評価結果サイドカーを使う。",
+    "",
+    summary,
+  ].join("\n");
+}
+
+export function enforceScheduleKataReview(params: {
+  task: ReadyTaskView;
+  catalogPath: string | undefined;
+  resultPath: string;
+  projectId: string | undefined;
+  rootDir: string;
+}): void {
+  if (params.task.mode !== "review" || !params.projectId) return;
+  const deliverable =
+    params.task.local_id && params.catalogPath
+      ? findDeliverableInfo(params.catalogPath, params.task.local_id)
+      : null;
+  enforceKataReviewVerdict(
+    params.resultPath,
+    scheduleKataReviewSubjects(params.task, deliverable, params.projectId),
+    params.projectId,
+    params.rootDir,
+  );
 }
 
 export async function prepareSingleTask(
@@ -211,7 +368,11 @@ export async function prepareSingleTask(
         ]
       : [];
   let actor = actorOverride ?? "auto-agent";
-  if (overrideResolution.kind === "command" && overrideResolution.actor && !skipClaim) {
+  if (
+    overrideResolution.kind === "command" &&
+    overrideResolution.actor &&
+    (!skipClaim || (Boolean(stageAgentOverrides.executor) && pipelineResume?.stage !== "reporter"))
+  ) {
     actor = overrideResolution.actor;
   }
 
@@ -335,45 +496,11 @@ export async function prepareSingleTask(
         )
       : undefined;
 
-  if (pipelineResume?.executorTarget) {
-    const { executorTarget, worktree } = pipelineResume;
-    if (!worktree) throw new Error(`no exec worktree to resume executor for ${task.id}`);
-    const worktreeExecutionPath = pathInsideWorktree(repoRoot, worktree.path, executionPath);
-    const planPrompt = loadPrompt(worktreeExecutionPath, task.id);
-    const resultPath = join(executionPath, "exec", "results", `${task.id}-result.md`);
-    const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
-    if (!planPrompt || !existsSync(resultPath) || !existsSync(worktreeResultPath)) {
-      throw new Error(`plan or result is missing for executor resume: ${task.id}`);
-    }
-    const claimEventPath = findClaimEventPath(schedulePath, task.id);
-    if (!claimEventPath) throw new Error(`claim event is missing for executor resume: ${task.id}`);
-    reportProductWorktrees(worktree);
-    return {
-      task,
-      actor,
-      agentCandidates,
-      plan: planPrompt,
-      prompt: buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations),
-      worktree,
-      resultPath,
-      resultScaffold: readResultFrontmatterSnapshot(resultPath),
-      checkpointPaths: [
-        join(executionPath, "exec", "plans", `${task.id}-plan.md`),
-        resultPath,
-        claimEventPath,
-        ...gradeCheckpointPaths({ repoRoot, executionPath }),
-      ],
-      pipelineRunId: executorTarget.runId,
-      pipelineResumeStage: "executor",
-      pipelineStateRef: executorTarget.stateRef,
-      initialChangeTargets: executorTarget.initialChanges,
-      resumeHandoff: executorTarget.handoff,
-      reporterCandidates,
-      executorRateLimitOptions,
-      reporterRateLimitOptions,
-    };
-  }
+  // A resumed claim stays with the actor that already holds it, even when a stage override
+  // selects another agent to run.
+  const claimActor = skipClaim ? (actorOverride ?? actor) : actor;
 
+  // The runner grades before any review agent starts, including an executor resume (PJR-ZSRD).
   const reviewGradeOutcome = await gradeBeforeReviewPlan({
     task,
     projectId,
@@ -383,18 +510,78 @@ export async function prepareSingleTask(
     by: agentCandidates[0]?.actor,
     execDefaultsPath: resolveExecDefaultsPath(rateLimitOverrides, schedulePath),
   });
+  const withResumedGradeNote = (text: string, refreshed: readonly string[]): string =>
+    refreshed.length > 0 && projectId
+      ? `${text.trimEnd()}\n\n${resumedReviewGradeNote(task, projectId, planGenPaths.catalogPath, reviewGradeOutcome)}\n`
+      : text;
+
+  if (pipelineResume?.executorTarget) {
+    const { executorTarget, worktree } = pipelineResume;
+    if (!worktree) throw new Error(`no exec worktree to resume executor for ${task.id}`);
+    const worktreeExecutionPath = pathInsideWorktree(repoRoot, worktree.path, executionPath);
+    const refreshed = dryRun
+      ? []
+      : refreshReviewGradeCheckpoint({
+          task,
+          projectId,
+          catalogPath: planGenPaths.catalogPath,
+          repoRoot,
+          worktree,
+        });
+    const storedPlan = loadPrompt(worktreeExecutionPath, task.id);
+    const planPrompt = storedPlan ? withResumedGradeNote(storedPlan, refreshed) : storedPlan;
+    const resultPath = recordPathForRead(executionPath, "result", task.id);
+    const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
+    if (!planPrompt || !existsSync(resultPath) || !existsSync(worktreeResultPath)) {
+      throw new Error(`plan or result is missing for executor resume: ${task.id}`);
+    }
+    const claimEventPath = findClaimEventPath(schedulePath, task.id, {
+      repoRoot,
+      worktreePath: worktree.path,
+    });
+    if (!claimEventPath) throw new Error(`claim event is missing for executor resume: ${task.id}`);
+    reportProductWorktrees(worktree);
+    return {
+      task,
+      actor,
+      claimActor,
+      agentCandidates,
+      plan: planPrompt,
+      prompt: buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations),
+      worktree,
+      resultPath,
+      resultScaffold: readResultFrontmatterSnapshot(resultPath),
+      checkpointPaths: withPlanConventionsFiles([
+        recordPathForRead(executionPath, "plan", task.id),
+        resultPath,
+        claimEventPath,
+        ...gradeCheckpointPaths({ repoRoot, executionPath }),
+      ]),
+      pipelineRunId: executorTarget.runId,
+      pipelineResumeStage: "executor",
+      pipelineStateRef: executorTarget.stateRef,
+      initialChangeTargets: executorTarget.initialChanges,
+      resumeHandoff: executorTarget.handoff,
+      reporterCandidates,
+      executorRateLimitOptions,
+      reporterRateLimitOptions,
+      ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
+      ...(refreshed.length > 0 ? { reviewGradeRefreshed: refreshed } : {}),
+    };
+  }
 
   // Plans are generated on demand here; `exec refresh` does not manage them.
-  await generateSinglePlan({
-    executionPath,
-    projectId: projectId ?? "",
-    catalogPath: planGenPaths.catalogPath ?? "",
-    rolesPath: planGenPaths.rolesPath,
-    viewpointsPath: planGenPaths.viewpointsPath,
-    projectContext: planGenPaths.projectContext,
-    task,
-    ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
-  });
+  if (!skipClaim || !findRunRecord(executionPath, "plan", task.id))
+    await generateSinglePlan({
+      executionPath,
+      projectId: projectId ?? "",
+      catalogPath: planGenPaths.catalogPath ?? "",
+      rolesPath: planGenPaths.rolesPath,
+      viewpointsPath: planGenPaths.viewpointsPath,
+      projectContext: planGenPaths.projectContext,
+      task,
+      ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
+    });
 
   const planPrompt = loadPrompt(executionPath, task.id);
   if (!planPrompt) {
@@ -405,7 +592,7 @@ export async function prepareSingleTask(
     ? buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations)
     : planPrompt;
   const pipelineRunId = task.agent_pipeline
-    ? `${new Date().toISOString().replace(/[-:.]/g, "").replace("Z", "Z")}-${randomHex(4)}`
+    ? recordStem(recordPathForRead(executionPath, "plan", task.id))
     : undefined;
 
   const worktreeTaskId = qualifyTaskId(projectId, task.id);
@@ -441,6 +628,7 @@ export async function prepareSingleTask(
     return {
       task,
       actor,
+      claimActor,
       agentCandidates,
       plan: planPrompt,
       prompt,
@@ -451,6 +639,7 @@ export async function prepareSingleTask(
       reporterCandidates,
       executorRateLimitOptions,
       reporterRateLimitOptions,
+      ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
     };
   }
 
@@ -464,7 +653,7 @@ export async function prepareSingleTask(
     }
   }
 
-  const planRef = `exec/plans/${task.id}-plan.md`;
+  const planRef = recordRef(executionPath, recordPathForRead(executionPath, "plan", task.id));
   const startedAt = new Date().toISOString();
   const finalizeSections =
     task.approach === "finalize" || task.approach === "bootstrap-finalize"
@@ -495,7 +684,12 @@ export async function prepareSingleTask(
   // Keep the execution checkpoint visible at root, but commit it only on the exec branch. The
   // successful merge later brings plan/result/claim and deliverables to root in one first-parent
   // commit (see runPreparedTask).
-  const claimEventPath = findClaimEventPath(schedulePath, task.id);
+  const existingWorktree = skipClaim ? findExecWorktree(repoRoot, worktreeTaskId) : null;
+  const claimEventPath = findClaimEventPath(
+    schedulePath,
+    task.id,
+    existingWorktree ? { repoRoot, worktreePath: existingWorktree.path } : undefined,
+  );
   if (!claimEventPath) {
     process.stdout.write(`  Claim event not found for ${task.id}\n`);
     return "failure";
@@ -515,12 +709,12 @@ export async function prepareSingleTask(
     }
   }
 
-  const checkpointPaths = [
-    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+  const checkpointPaths = withPlanConventionsFiles([
+    recordPathForRead(executionPath, "plan", task.id),
     resultPath,
     claimEventPath,
     ...gradeCheckpointPaths({ repoRoot, executionPath }),
-  ];
+  ]);
   const checkpointFailureLogPath = pipelineRunId
     ? integrateLogPath(
         pipelineStateLocation({
@@ -556,13 +750,25 @@ export async function prepareSingleTask(
   const setupAction = worktree.created ? "setup" : "reuse";
   process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`);
   reportProductWorktrees(worktree);
+  // A fresh claim checkpoints the current grade; a resume keeps the branch and needs a refresh.
+  const reviewGradeRefreshed = skipClaim
+    ? refreshReviewGradeCheckpoint({
+        task,
+        projectId,
+        catalogPath: planGenPaths.catalogPath,
+        repoRoot,
+        worktree,
+        failureLogPath: checkpointFailureLogPath,
+      })
+    : [];
 
   return {
     task,
     actor,
+    claimActor,
     agentCandidates,
-    plan: planPrompt,
-    prompt,
+    plan: withResumedGradeNote(planPrompt, reviewGradeRefreshed),
+    prompt: withResumedGradeNote(prompt, reviewGradeRefreshed),
     worktree,
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
@@ -573,6 +779,8 @@ export async function prepareSingleTask(
     reporterCandidates,
     executorRateLimitOptions,
     reporterRateLimitOptions,
+    ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
+    ...(reviewGradeRefreshed.length > 0 ? { reviewGradeRefreshed } : {}),
   };
 }
 

@@ -44,3 +44,22 @@
     - field: commit_scope
       from: ""
       to: standards
+- v: 1
+  id: reg_89650656a22e4608bdd76ada331d441d
+  ts: "2026-11-15T14:24:35Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-15"
+    - field: conclusion
+      from: "-"
+      to: 統合専用 actor は GitHub Actions 上の GitHub App とし、runner は exec・記帳の branch を push するだけにする（C）
+  previous_event_id: reg_590ca6b6100647d7b9828b2f5ed012b6
