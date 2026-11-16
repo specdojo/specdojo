@@ -48,7 +48,7 @@ bds-progress-report を最新の grade の指摘で直す
 | 1   | 最新の grade の指摘を取り込んで直す                    | UX   | done | executor が実施（対応結果を参照）                    |
 | 2   | grade し直して結果を書く                               | UX   | done | 2026-11-16 orchestrator が grade（needs-work 85 点） |
 | 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | UX   | done | executor が実施（対応結果の「次の回」を参照）        |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | open | grade は agent を起動するため orchestrator が流す    |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | done | 2026-11-16 の 2 回目の再 grade で pass               |
 
 ## 5. 対応結果
 
@@ -84,6 +84,8 @@ bds-progress-report を最新の grade の指摘で直す
   - 登録簿への移し替え（F003）: 持ち越しが 2 回続いて登録簿に項目のないリスク・課題は PM が起票し、報告に登録簿の ID を示す。留保の行には起票後に個票の ID を書き足す。
   - 検証コマンド（F008）・次期予定の選び方（F009）・期間前の記録の扱い（F010）・Job実行設計への wikilink の ID（F011）を直した。
 - 再 grade: 作業内容の No 4 は open のまま残した。`grade run --target deliverable` は agent を起動するため orchestrator が流す。
+
+2 回目の再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: pass、99 点。指摘は 2 件（すべて minor）。完了条件は 3 件中 3 件を満たす。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bds-progress-report.yaml`。
 
 ## 6. 関連ドキュメント
 

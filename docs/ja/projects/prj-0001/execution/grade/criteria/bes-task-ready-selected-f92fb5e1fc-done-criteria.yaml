@@ -2,12 +2,12 @@
 id: bes-task-ready-selected-grade-criteria
 document: bes-task-ready-selected
 path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md
-graded_at: "2026-11-16T03:45:01.177Z"
-graded_by: opus-review-executor
-content_hash: 0b9b80923a69480c7e80d96ab82353abb4abe940ff58e4230a48ec699a1f6af0
+graded_at: "2026-11-16T14:45:50.644Z"
+graded_by: sol-review-executor
+content_hash: 108fbd59672a7fbf7e7cce523344e17fe30c1d64c5b8b972ef01fc23d20e804a
 summary:
-  satisfied: 1
-  unsatisfied: 4
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -15,32 +15,33 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: 自動選択と着手宣言の発生境界、および対象系統への適用条件が未確定で、業務上正確な発生条件・タイミングとして確定できない。
   - id: DC-002
     text: イベント仕様の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 適用範囲（schedule 系に限る前提）と、選択と claim の境界が未承認・未確定で、承認する人間の PO も特定されていないため、業務的な妥当性を承認できる状態になっていない。
+    reason: 適用範囲と自動選択の境界の業務判断が未了で、承認する人間の PO も特定されていない。
   - id: DC-003
     text: イベント処理実装・メッセージ設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 並列選択要求識別子が実行記録モデル（bdd-exec-event）と照合されておらず、メッセージ設計の基礎として確定していない。
+    reason: 並列選択要求識別子と累計件数・省略条件を実行記録モデルと schema で表せるか未照合である。
   - id: DC-004
     text: イベントテスト設計への活用が確認できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 確認例はあるが、相関項目と正本の対応が確定するまでテスト設計へ引き継げないと本書自身が記している。
+    reason: 確認例はあるが、相関項目の正本対応確定後に行う QE のテスト設計への引き継ぎと活用確認が未了である。
   - id: DC-005
     text: イベントハンドラ・パブリッシャー実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 相関項目と、自動選択と claim の境界が決まっておらず、ハンドラ・パブリッシャー実装の確定した参照として使えない。
+    reason: 自動選択の発行境界と並列要求の相関項目が未確定で、ハンドラ・パブリッシャー実装への確定入力にできない。

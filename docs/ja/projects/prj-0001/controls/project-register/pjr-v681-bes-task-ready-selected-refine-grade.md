@@ -55,7 +55,7 @@ grade（reps5-20261111）needs-work 88 の指摘（並列の要求の対応付�
 | 2   | 検査を流し、決めた点と理由を対応結果に書く   | executor     | done | 今回の検査は「検証と引き継ぎ」、親検証は runner の evidence に記録                          |
 | 3   | 初回の統合後に grade を流す                  | orchestrator | done | 2026-11-16 に needs-work 87 点。pass は未達                                                 |
 | 4   | 2026-11-16 の再 grade の指摘を取り込んで直す | sol-executor | done | 一覧との接続・章参照を修正。未解消の指摘と未達条件は「実施内容と grade 指摘への対応」に記録 |
-| 5   | 今回の統合後に grade し直し、pass を確認する | orchestrator | open | 再評価・pass 確認は未実施。executor の編集完了と区別する                                    |
+| 5   | 今回の統合後に grade し直し、pass を確認する | orchestrator | open | 2026-11-16 の 2 回目の再 grade で needs-work。人の判断待ち                                  |
 
 ## 5. 対応結果
 
@@ -92,6 +92,8 @@ grade（reps5-20261111）needs-work 88 の指摘（並列の要求の対応付�
 ### 5.4. CHANGELOG に書く事項
 
 なし。代表の業務仕様と既存一覧の対応・未解決理由の整理であり、CLI・schema・利用者向け機能は変更していない。
+
+2 回目の再 grade の結果（2026-11-16、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: needs-work、87 点。指摘は 11 件（major 6・minor 5）。完了条件は 5 件中 0 件。major は自動選択の発生時点（対象確定か着手宣言か）の PO の判断、適用範囲の業務承認、並列選択要求の相関項目と実行記録モデルとの照合、範囲の `_ASSUMPTION_` で、どれも人の判断か上流の辞書を待つ。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bes-task-ready-selected.yaml`。
 
 ## 6. 関連ドキュメント
 
