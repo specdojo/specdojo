@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-T123
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-T123/pjr-t123-20261116T000129Z-cdbc0103/plan.md
   started_at: "2026-11-16T00:01:52.826Z"
+  completed_at: "2026-11-16T00:35:15.433Z"
   agent: opus-executor
   approach: template-maintenance
   targets:
@@ -19,16 +20,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- cdfd-template の grade 指摘 2 件（F002 major・F001 minor）を cdfd-rulebook に合わせて反映した。プロセス領域の各節は表だけにし、要約の `_TODO_` と主要入力・主要出力・データストアの箇条書きを消した。導入部は対象グループを示す一文だけにし、目的は 1〜2 文に一本化し、適用範囲は対象・対象外の 1 行ずつにした。個票は作業内容の 2 行目を done にして対応結果を書き足し、再 grade の 3 行目は理由をメモに書いて open のまま残した。指摘の解消は orchestrator の再 grade でまだ確かめていない。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/templates/cdfd-template.md`: 変更、+7 / -29 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 再 grade（`grade run --target kata`）で F001・F002 が解消したかを確かめる（orchestrator が実施）。個票の作業内容の 3 行目は open のまま。
+- `cdfd-sample` は、プロセス領域の各節に主要入力・主要出力・データストアの箇条書きが残っていて cdfd-rulebook の規定に合っていない。本タスクの範囲外のため、別の項目で直すかどうかを判断する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
