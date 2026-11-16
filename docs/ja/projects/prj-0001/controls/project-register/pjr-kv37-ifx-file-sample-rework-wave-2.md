@@ -46,8 +46,8 @@ specdojo:
 | --- | ------------------------------------------------------ | ---- | ---- | ----------------------------------------------------------------------- |
 | 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                                       |
 | 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（ifx-file-sample は needs-work 83 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | open | 0.8.0 の後に流す                                                        |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | orchestrator が流す                                                     |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F007 を取り込んだ（対応結果の 2 回目を参照）          |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | agent CLI の起動が要り executor では流せないため orchestrator が流す    |
 
 ## 5. 対応結果
 
@@ -63,6 +63,19 @@ specdojo:
 - 残課題: `grade run --target kata` での再 grade は agent CLI の起動が要るため executor の sandbox では実行していない。runner または人間が再 grade し、結果をここに追記する。[[specdojo:clis-sample]] は今も 2 つのスキーマを「未同梱の架空参照名」としているので、表記をそろえるかは別の手直しで判断する。
 
 再 grade の結果（2026-11-16、orchestrator が実行）: ifx-file-sample は needs-work 83 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `specdojo.ifx-file-sample.yaml`。
+
+2 回目の対応（2026-11-16 の再 grade の F001〜F007、executor が実施）:
+
+- 実施内容: [[specdojo:ifx-file-sample]] を直した。rulebook は変えていない。
+  - 販売実績控え（F001・F003・F005）: `kinuya-sales-record-schema` と `required_fields` に `line_items`・`subtotal_yen`・`tax_yen` を足し、`description` に「`current-tx.json` の削除後も明細の正本として残し、会計確定後に削除・上書きしない」を書いた。受入ケースに「不正（控えの明細）」を足した。
+  - 会計確定の書き込み順序（F002・F004・F006）: `transport.atomic_write` に fsync と (1) 控えを `pending` で保存 → (2) `status: payment_requested` → (3) 本部へ送信 → (4) 印字 → (5) `current-tx.json` 削除の順を書き、新設の「会計確定の書き込み順序と再開判定」に途中で止まったファイルの組み合わせごとの扱いを表で示した。`payment_requested` の意味は「送信前に書く」に改めた。
+  - 週次発注 CSV（F007）: 未着の確定と届いたか不明を分け、不明のときは PO が問屋へ受領有無を確かめ、未受領か取消済みのときだけ電話発注するようにした。受領済みの CSV は `data/outbound/orders/sent/` へ移す。異常時の表の未生成・転送失敗の行もそろえた。
+- 迷った点と決めた内容:
+  - 書き込み順序は「控え → 状態 → 送信」とした。`status` が `open` なら未送信と判定でき、送信済みの可能性がある取引を取消・追加できる状態に見せないため。
+  - `open` と `pending` の控えが残った場合は、未送信が確定しているので控えを作り直すか削除して進めるとした。
+  - `payment_requested` からの取消は従来どおり不可とし、`rejected` は原因を直して同じ `tx_id` で再送するとした。取消を許すと、状態ファイルがなく `rejected` の控えだけが残る組み合わせが生まれるため。
+  - 受領確認の手段は、ACK 方式が未確定（`_UNDECIDED_`）のため、SFTP の一覧取得と問屋への電話確認にした。
+- 残課題: `grade run --target kata` の再 grade は agent CLI の起動が要るため executor では流していない。orchestrator が流して結果をここに追記する。
 
 ## 6. 関連ドキュメント
 

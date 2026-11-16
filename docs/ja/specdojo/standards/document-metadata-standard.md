@@ -315,9 +315,9 @@ Markdown 文書の最新の継続品質評価は、プロジェクトの `<execu
 
 `findings[].line` は Markdown では Frontmatter を除く本文、YAML ではコメント・メタ情報を含む元ファイル全体での指摘行（1始まり）、`anchor` は評価時点の該当行の引用です。`message` は executor が出力した原文を正本として保存し、前回 finding の一致にも使います。`message_ja` は表示専用で、判定、score、severity、引き継ぎに使いません。旧サイドカーのように `message_ja` がない場合は `message` を表示します。本文編集で行番号がずれた場合は `anchor` を照合に使います。`grade validate` はサイドカーの文書 ID・対象・件数・内容ハッシュを成果物と突き合わせます。
 
-再評価で正本の `message` が同じ finding が残る場合は未解消として扱い、severity を前回より引き下げません。`message_ja` の一致は使いません。日本語の `message` だけを持つ旧サイドカーはその日本語を互換用の正本として扱うため、英語へ翻訳した別文とは一致しません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に severity を引き下げる根拠を含めます。
+再評価で前回の正本の `message` または `message_ja` と同じ finding が残る場合は未解消として扱い、severity を前回より引き下げません。grade plan は前回の指摘を `message_ja`（なければ `message`）で示すため、英語を正本にした旧サイドカーの指摘は日本語で再掲され、その日本語が新しい正本になります。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に severity を引き下げる根拠を含めます。
 
-executor は新しい判定根拠と finding を英語で出力します。機械変換後に `gemma26-translator` が英語 finding だけを日本語へ翻訳し、`message_ja` に保存します。モデルへ渡すのは英語文だけの配列であり、対応する index はコード側で管理します。`grade translation-plan` は元のインラインコードをそのまま残し、新しいインラインコードやバッククォートを加えず、固有名詞・識別子以外の英語の語句を日本語へ訳すよう求めます。`grade localize` は件数が一致するとき、各訳文が空でないこと、仮名を含むこと、元の文と訳文のインラインコードの多重集合が一致することを検証し、合格した項目だけを採用します。不合格項目は1件ずつ1回だけ再翻訳し、再び不合格なら `message_ja` に正本の `message` を保存します。件数が一致しない場合は全項目を不合格とします。executor が日本語で出力した finding は翻訳対象から外し、その原文を `message` と `message_ja` の両方に保存します。
+executor は判定根拠と新しい finding を日本語で出力し、その原文を `message` と `message_ja` の両方に保存します（PJR-YYDS、2026-11-16。それまでは英語を正本にしていました）。英語の finding は、日本語訳のない旧サイドカーの英語の正本が原文のまま再掲された場合などに限られます。`tools/grade/run-per-document.sh` は、英語 finding が残る場合だけ機械変換後に `gemma26-translator` で日本語へ翻訳し、`message_ja` に保存します。`grade run` は翻訳しません。モデルへ渡すのは英語文だけの配列であり、対応する index はコード側で管理します。`grade translation-plan` は元のインラインコードをそのまま残し、新しいインラインコードやバッククォートを加えず、固有名詞・識別子以外の英語の語句を日本語へ訳すよう求めます。`grade localize` は件数が一致するとき、各訳文が空でないこと、仮名を含むこと、元の文と訳文のインラインコードの多重集合が一致することを検証し、合格した項目だけを採用します。不合格項目は1件ずつ1回だけ再翻訳し、再び不合格なら `message_ja` に正本の `message` を保存します。件数が一致しない場合は全項目を不合格とします。
 
 機械変換では、finding の severity が許す level 上限を超えた viewpoint だけを上限まで下げます。level を上げる補正や、viewpoint・severity・line の変更は行いません。補正した場合は `level_corrections` に viewpoint、`original_level`、`corrected_level` を保存します。
 

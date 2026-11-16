@@ -1556,8 +1556,8 @@ LEVEL: 4
             rule: "vp-qe-kata-conformance",
             line: 11,
             anchor: "本文です。",
-            message: "必須の禁止事項が欠落している。",
-            message_ja: "表示用の日本語。",
+            message: "Required prohibitions are missing.",
+            message_ja: "必須の禁止事項が欠落している。",
           },
         ],
       }),
@@ -1587,14 +1587,19 @@ LEVEL: 4
     expect(previousSection).not.toContain("score");
     expect(previousSection).not.toContain("verdict");
     expect(previousSection).not.toContain("message_ja");
-    expect(plan).toContain("未解消なら前回の canonical message を変更せず今回の finding に含め");
+    expect(previousSection).not.toContain("Required prohibitions are missing.");
+    expect(plan).toContain(
+      "未解消なら「前回の指摘」に示した message を一字一句変えずに今回の finding に含め",
+    );
     expect(plan).toContain("severity は前回と同等以上を指定する");
     expect(plan).toContain(
       "severity を引き下げる場合は、その根拠を新しい finding の message に含める",
     );
     expect(plan).toContain("各 viewpoint は現在の根拠から独立に評価する");
     expect(plan).toContain("前回の指摘にない問題もすべての viewpoint で独立して検出する");
-    expect(plan).toContain("判定根拠と新しい finding の message は英語で記述する");
+    expect(plan).toContain("判定根拠と新しい finding の message は日本語で記述する");
+    expect(plan).not.toContain("英語で記述する");
+    expect(plan).toContain("message は日本語で1行に具体的に記す");
   });
 });
 

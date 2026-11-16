@@ -2,6 +2,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, expect, it } from "vitest";
+import { preserveStoredFindingSeverities } from "../../../src/grade/core.js";
 import {
   applyGradeFindingTranslations,
   gradeContentHash,
@@ -339,5 +340,67 @@ describe("grade result sidecar", () => {
     expect(retryFailed.accepted).toBe(false);
     expect(retryFailed.result.findings[0].message_ja).toBe("Run `npm test`.");
     expect(retryFailed.result.findings[1].message_ja).toBe("文書を追加してください。");
+  });
+});
+
+describe("preserveStoredFindingSeverities with English canonical results", () => {
+  function englishCanonical(): GradeResult {
+    const stored = result();
+    stored.finding_counts.major = 1;
+    stored.findings = [
+      {
+        id: "F001",
+        severity: "major",
+        rule: "vp-qe-verifiability",
+        line: 3,
+        anchor: "# Example",
+        message: "Acceptance criteria are not measurable.",
+        message_ja: "受け入れ基準が測定できない。",
+      },
+    ];
+    return stored;
+  }
+
+  it("keeps the previous severity when the Japanese display message is restated", () => {
+    const [viewpoint] = preserveStoredFindingSeverities(englishCanonical(), [
+      {
+        id: "vp-qe-verifiability",
+        level: 3,
+        findings: [{ severity: "minor", message: "受け入れ基準が測定できない。", line: 3 }],
+      },
+    ]);
+
+    expect(viewpoint.findings).toEqual([
+      { severity: "major", message: "受け入れ基準が測定できない。", line: 3 },
+    ]);
+    expect(viewpoint.level).toBe(2);
+  });
+
+  it("keeps the previous severity when the English canonical message is restated", () => {
+    const [viewpoint] = preserveStoredFindingSeverities(englishCanonical(), [
+      {
+        id: "vp-qe-verifiability",
+        level: 4,
+        findings: [
+          { severity: "note", message: "Acceptance criteria are not measurable.", line: 3 },
+        ],
+      },
+    ]);
+
+    expect(viewpoint.findings?.[0]?.severity).toBe("major");
+    expect(viewpoint.level).toBe(2);
+  });
+
+  it("does not raise the severity of a different Japanese finding", () => {
+    const [viewpoint] = preserveStoredFindingSeverities(englishCanonical(), [
+      {
+        id: "vp-qe-verifiability",
+        level: 3,
+        findings: [{ severity: "minor", message: "受け入れ基準の例示が一部不足している。" }],
+      },
+    ]);
+
+    expect(viewpoint.findings?.[0]?.severity).toBe("minor");
+    expect(viewpoint.level).toBe(3);
   });
 });

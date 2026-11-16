@@ -140,3 +140,29 @@
       from: in-progress
       to: review
   previous_event_id: reg_c63baf7347894948b3ce24f1c2f98bbc
+- v: 1
+  id: reg_688480d822214b5e92c9de25b5af2d2f
+  ts: "2026-11-15T23:32:44Z"
+  action: start
+  actor: opus-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_4967ec4123694a44abc31c34345f291c
+- v: 1
+  id: reg_6a09bd9a109442328d0ecdbb557beb29
+  ts: "2026-11-15T23:59:48Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_688480d822214b5e92c9de25b5af2d2f

@@ -1,0 +1,30 @@
+今回の指摘 2 件を `cdfd-template` に反映しました。編集したのはテンプレートと個票の 2 ファイルです。指摘の解消は、orchestrator が流す再 grade でまだ確かめていません。
+
+D2 の図の枠と Mermaid を宣言した場合の扱いは前の回ですでに入っていたので、今回は 2026-11-16 の再 grade の指摘だけを直しました。
+
+**`docs/ja/specdojo/templates/cdfd-template.md`**
+- **F002（major）**:
+  - 「プロセス領域」の各節（3.1・3.2）から、領域の要約の `_TODO_` と主要入力・主要出力・データストアの箇条書きを消し、プロセスの表だけにしました。
+  - 章の冒頭の文は「受け渡しは概念データフローが正本」という書き方に改め、各節に箇条書きを置かないことを注記に書きました。
+  - 「単一領域グループでは 3.1 に全領域を書く」という指示は、各領域を一つの節にする規定と食い違うため、「3.2 の節を削除する」だけにしました。
+- **F002・F001（minor）**:
+  - 導入部は、全体概要のどのグループを詳細化した文書かを示す一文だけにしました。
+  - 誰が何に使うかは「目的」の 1〜2 文に一本化しました。
+  - 「適用範囲」は「対象」と「対象外」の 1 行ずつにしました。STSD への参照と、責任分担を全体概要に任せる旨は「対象外」の行にまとめています。
+- 前の回の個票で残課題としていた箇条書きの件も、これで片付きました。
+
+**個票 `pjr-t123-cdfd-template-d2.md`**
+- 作業内容の 2 行目を done にし、対応結果に今回の修正内容を書き足しました。
+- 3 行目（再 grade）は orchestrator が流すため、理由をメモに書いて open のまま残しています。
+
+**検査**
+- `npx prettier --write`: 2 ファイルとも整形できました。
+- `npx markdownlint-cli2`: 0 issues でした。
+- `npm run validate:history-links`: すべて valid でした。
+- `lint:md`・`lint:d2` などは親 runner が実行するため、ここでは流していません。
+
+サンプルの `cdfd-sample` には、プロセス領域の各節にまだ箇条書きが残っていて、rulebook に合っていません。今回の範囲外なので手を付けておらず、別の項目で直すかどうかは判断が必要です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cdfd-template の grade 指摘 2 件（F002 major・F001 minor）を cdfd-rulebook に合わせて反映した。プロセス領域の各節は表だけにし、要約の `_TODO_` と主要入力・主要出力・データストアの箇条書きを消した。導入部は対象グループを示す一文だけにし、目的は 1〜2 文に一本化し、適用範囲は対象・対象外の 1 行ずつにした。個票は作業内容の 2 行目を done にして対応結果を書き足し、再 grade の 3 行目は理由をメモに書いて open のまま残した。指摘の解消は orchestrator の再 grade でまだ確かめていない。","handoff":["再 grade（`grade run --target kata`）で F001・F002 が解消したかを確かめる（orchestrator が実施）。個票の作業内容の 3 行目は open のまま。","`cdfd-sample` は、プロセス領域の各節に主要入力・主要出力・データストアの箇条書きが残っていて cdfd-rulebook の規定に合っていない。本タスクの範囲外のため、別の項目で直すかどうかを判断する。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/templates/cdfd-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-t123-cdfd-template-d2.md","status":"passed","summary":"2 ファイルとも整形できた"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/templates/cdfd-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-t123-cdfd-template-d2.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め、すべて valid"}]}
+</specdojo_executor_evidence>

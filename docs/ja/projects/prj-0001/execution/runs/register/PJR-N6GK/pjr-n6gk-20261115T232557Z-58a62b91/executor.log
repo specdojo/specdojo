@@ -1,0 +1,34 @@
+PJR-N6GK は完了です。作業内容の表に理由のない `done` 以外の行や未記入の `_TODO_` が残っている個票は、完了にならなくなりました。ユニットテストは足しましたが、私の側では実行していません。テスト・typecheck・lint は親 runner の検証に任せています。
+
+**検査の動き**（新規の `src/register/work-table.ts`）
+- 問題として止めるのは、状態が `done` 以外でメモが空・`-`・`_TODO_` の行と、どの列にでも `_TODO_` が残る行です。
+- 状態が `open` のままでも、メモに理由があれば通ります。
+- インラインコードで書いた `_TODO_` は、記法の説明として扱い検査しません。この個票自身の作業 2 の文に `` `_TODO_` `` があり、最初の実装ではこれに引っかかったため直しました。
+- 作業内容の表や「状態」の列がない個票は検査しません。テンプレートでこの表を持つのは todo だけです。
+
+**検査を入れた場所**
+- `register close`（`src/register/transition-commands.ts`）: 問題があれば個票を書き換えずに止め、行ごとの理由を出します。手で close する場合もここで止まります。
+- post-review（`src/exec/run/register-post-review.ts`）: verdict が complete でも close せず waiting にし、同じ理由を残します。
+- 登録簿を対象にする edit plan のテンプレート（`xep-register-template.md`）の進め方 4 に、表の各行の状態とメモを実績に合わせる指示を足しました。終えた行は `done` にし、grade の起動など executor が実行できない行は理由をメモに書いて `open` のまま残します。
+
+**テスト**
+- 新規 `tests/src/register/work-table.test.ts`
+- `tests/src/register/commands.test.ts`: close が止まる場合と通る場合
+- `tests/src/exec/register-post-review.test.ts`: waiting になる場合
+
+既存の close テストの個票には作業内容の表がないので、影響はないと見ています。
+
+**個票**: 作業内容の 2 行を `done` にし、メモに実施内容を書きました。対応結果も記入済みです。この個票は新しい検査を通ります。
+
+**判断した点**
+- 個票の「plan の共通の約束」は、全 plan 共通の規約（`xp-common-conventions-template.md`）ではなく、登録簿の項目を対象にする plan のテンプレートの方と解釈しました。共通の規約に入れると、登録簿以外のすべての plan に要らない指示が増えるためです。この解釈は個票に `_ASSUMPTION_` として記録しています。
+- 個票は reporter と close 前のどちらで検査してもよいとしていたので、close 前の 2 か所に入れ、reporter には入れていません。
+
+**私が実行した検査**
+- `npx prettier --write`（変更したファイル）と個票の `--check`: 成功
+- `npm run validate:history-links`: 成功
+- `npx specdojo catalog validate --project prj-0001`: OK（既存の WARN のみ）
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"作業内容の表の検査（理由のない done 以外の行と _TODO_ の行を検出）を src/register/work-table.ts に追加し、register close（止めて理由を出す）と post-review（close せず waiting）に組み込んだ。register edit plan テンプレートに表を実績に合わせる指示を足し、テストと個票の作業内容・対応結果を更新した。","handoff":["_ASSUMPTION_: 「plan の共通の約束」は全 plan 共通の `xp-common-conventions-template.md` ではなく、register の項目を対象にする plan の本文 `xep-register-template.md`（進め方 4）と解釈した。全 plan への展開が必要なら別途判断が要る。","reporter での検査は入れず、close の前（手動の `register close` と post-review）の検査で完了を止める方式にした。","インラインコード内の `_TODO_` は記法の説明として検査対象外とした（この個票自身の作業 2 の記述が該当）。"],"validations":[{"command":"npx prettier --write src/register/work-table.ts src/register/transition-commands.ts src/exec/run/register-post-review.ts tests/src/register/work-table.test.ts tests/src/register/commands.test.ts tests/src/exec/register-post-review.test.ts docs/ja/specdojo/exec-templates/xep-register-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-n6gk-register-work-table-sync.md","status":"passed","summary":"整形済み（個票は --check でも合格）"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし"},{"command":"npx specdojo catalog validate --project prj-0001","status":"passed","summary":"OK: dct-index.yaml（既存の based_on WARN のみ）"}]}
+</specdojo_executor_evidence>

@@ -57,3 +57,29 @@
       from: grade の executor に finding の文と判定根拠を最初から日本語で書かせ、正本も日本語にする。英語で書かせてから翻訳する方式（PJR-27Y0）は、翻訳の段を持たない `grade run` では英語のまま残り、個票に英語の指摘が書かれる原因になった。
       to: 英語で書かせてから翻訳する方式をやめ、判定根拠と finding を日本語で書かせて正本にする
   previous_event_id: reg_82d65e7f6ddf4c598e3bc93f92bb719b
+- v: 1
+  id: reg_e18e137008c84736926bebf242817f15
+  ts: "2026-11-15T23:28:16Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9be29f52e2c04e3ca9e5445c5a0f8727
+- v: 1
+  id: reg_74d85e7b48eb46f391ec3d7703ea1bb3
+  ts: "2026-11-15T23:48:58Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e18e137008c84736926bebf242817f15
