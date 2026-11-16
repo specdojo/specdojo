@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-D948
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-D948/pjr-d948-20261116T012554Z-cba4ee70/plan.md
   started_at: "2026-11-16T01:26:03.383Z"
+  completed_at: "2026-11-16T01:34:37.736Z"
   agent: opus-executor
   approach: sample-maintenance
   targets:
@@ -19,16 +20,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- bds-sample の再出力の規則を直し、grade（10:21）の major の指摘 F001〜F004 を取り込んだ。作り直した週の販売数・印・件数が合わない日が変わる間は次の週も作り直し、変わらない週か作成済みの最新の週で止め、DEV が前週比を照合したら復旧完了とした。締めの版と変更要求の行もこれに合わせた。個票の作業内容の No 7 を done にし、対応結果に決めた点を書いた。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/bds-sample.md`: 変更、+9 / -9 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- `grade run --target kata` での再 grade（rulebook と bds-sample）は agent CLI を起動するため executor では流していない。orchestrator が流し、結果を個票の対応結果に書き、作業内容の No 8 を更新する。
+- 個票の完了条件では 10:21 の指摘を「minor 4 件」としているが、grade の結果ファイル（`graded_at` 2026-11-16T01:21:33Z）では 4 件とも major。結果ファイルを正として取り込んだ。
+- 決めた内容: 翌週の報告を作り直すとき、前回の締めの版と販売数は引き継がず、同じ規則で数え直す。引き継ぐと「その時点で最新の確定した版を使う」規則に例外ができ、締めが確定していない日を含む週で値が記録と合わなくなるため。作り直しは、販売数（印を含む）と件数が合わない日が前と変わらない週か、作成済みの最新の週で止める。前週比はこれらだけで決まるため。
+- 人の確認が必要: `grade run --target kata`（agent CLI を起動して利用枠を使うため、orchestrator が流して sample が pass になるかを確かめる）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
