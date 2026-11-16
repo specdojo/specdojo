@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-HQVE"]'
+- v: 1
+  id: reg_5ff93cd95b374e0fa69215d4ee9161eb
+  ts: "2026-11-16T03:43:52Z"
+  action: reject
+  actor: indie
+  from_status: open
+  to_status: rejected
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: PJR-30SA（git の書き込みを runner と同じロックで直列化する specdojo git）に引き継いだ
+  previous_event_id: reg_4af26d0ac6154aaa993a4b8a3758c374

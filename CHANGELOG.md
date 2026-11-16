@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+### 修正
+
+- runner の統合・記帳の git 操作が、別のプロセスの `index.lock` を既定で 20 分まで待つようにしました。待ち時間は exec-defaults の `run.git_index_lock_wait_seconds` で変えられます。待っている間は 30 秒ごとに経過を出力し、lock が残っているのに git のプロセスが動いていない古い lock では上限を待たずに失敗します（PJR-964D）。
+
 ## [0.8.0] - 2026-11-16
 
 同梱パッケージは `@specdojo/docs-site` 0.5.0 と `@specdojo/docs-lint` 0.4.1 を同時に公開します。docs-site 0.5.0 は、対話のコードブロックの描画（`chat`・`chat tui`、PJR-GZ42）と、型の文書から作るメニュー（PJR-C8J8）を含みます。docs-lint 0.4.1 は、remark の無視対象の扱い（PJR-FTRC）と履歴リンクの検査の対象の更新（PJR-C4KF）を含みます。

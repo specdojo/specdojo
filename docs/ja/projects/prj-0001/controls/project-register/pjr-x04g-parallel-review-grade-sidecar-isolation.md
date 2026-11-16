@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-x04g-parallel-review-grade-sidecar-isolation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-12T13:48:52Z"
+  completed_at: "2026-11-16T03:35:04Z"
+  conclusion: 並べて流す review の段が grade の共有ファイルを取り合う問題を直した（2026-11-13 に統合済み、0.8.0 に含む）
   derived_from:
     - PJR-Z4H8
   autopilot: approved

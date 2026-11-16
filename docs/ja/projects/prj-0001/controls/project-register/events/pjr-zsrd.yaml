@@ -65,15 +65,18 @@
       to: in-progress
   previous_event_id: reg_f87ed6b5cbcb4728af245926f0e54fae
 - v: 1
-  id: reg_a8808ea1b45b42269e7a84d046baf0bb
-  ts: "2026-11-16T04:02:06Z"
-  action: review
+  id: reg_0ee4a4ebf5f044118426a5ffee2f9d99
+  ts: "2026-11-16T04:02:24Z"
+  action: wait
   actor: opus-executor
   from_status: in-progress
-  to_status: review
-  reason: ready for review
+  to_status: waiting
+  reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
   changes:
     - field: status
       from: in-progress
-      to: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
   previous_event_id: reg_01dd964eed3244cbb336b57c763c1ec9

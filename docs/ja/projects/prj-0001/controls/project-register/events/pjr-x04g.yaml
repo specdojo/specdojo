@@ -118,3 +118,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_470c45ddf49a4a4985dbee3aa4811233
+- v: 1
+  id: reg_0460049a32ff462fb5932d41465640c6
+  ts: "2026-11-16T03:35:04Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 並べて流す review の段が grade の共有ファイルを取り合う問題を直した（2026-11-13 に統合済み、0.8.0 に含む）
+  previous_event_id: reg_576488dea9814ca4a2d024a062b619e5

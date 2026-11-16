@@ -51,3 +51,22 @@
       from: '["2026-11-09、business-specs-reps の review の段で、ccd-project-planning-090 の grade（opencode の agent）がコマンドの実行を権限で拒まれて失敗し、grade/pipeline/ccd-project-planning-b57132c2f259.json が書き換わった。clis・sf・ifx-cmd の review の 3 件が統合の前にこのファイルの変更を検出して止まった。","orchestrator がそのファイルを commit した版に戻し、3 件を 1 件ずつ再開した（indie が承認）。ccd の review の grade の agent の権限の問題は未解決。"]'
       to: '["2026-11-09、business-specs-reps の review の段で、ccd-project-planning-090 の grade（opencode の qwen-review-executor）が、指摘の原因の値が決まった値でない（invalid finding cause）として失敗し、grade/pipeline/ccd-project-planning-b57132c2f259.json が書き換わった。clis・sf・ifx-cmd の review の 3 件が統合の前にこのファイルの変更を検出して止まった。","grade の agent がコマンドの実行を拒まれたログもあったが、review の agent を読むだけに絞る設定どおりの動きで、失敗の原因ではなかった（orchestrator が最初に権限が原因と見たのは誤り）。","orchestrator がそのファイルを commit した版に戻し、3 件を 1 件ずつ再開して通った。ccd の review は grade の agent を sonnet-review-executor に替えて通った（indie が承認）。"]'
   previous_event_id: reg_812a1a2976f84c479c6cf64aaa9d3d3c
+- v: 1
+  id: reg_c69f519d7b5e4ab399598e7c9cede943
+  ts: "2026-11-16T03:41:38Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: PJR-X04G（並べて流す review の段の grade の共有ファイルの取り合い）で解消した
+  previous_event_id: reg_6e01a7271e5d4a68a72ceedaaf3eb55d

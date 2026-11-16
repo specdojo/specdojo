@@ -2,12 +2,12 @@
 id: bes-task-ready-selected-grade-criteria
 document: bes-task-ready-selected
 path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md
-graded_at: "2026-11-11T12:50:22.773Z"
-graded_by: sol-review-executor
+graded_at: "2026-11-16T03:45:01.177Z"
+graded_by: opus-review-executor
 content_hash: 0b9b80923a69480c7e80d96ab82353abb4abe940ff58e4230a48ec699a1f6af0
 summary:
-  satisfied: 2
-  unsatisfied: 3
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -22,30 +22,25 @@ criteria:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: >-
-      The provisional applicability and automatic-selection boundary still require human PO judgment before business
-      validity can be approved.
+    reason: 適用範囲（schedule 系に限る前提）と、選択と claim の境界が未承認・未確定で、承認する人間の PO も特定されていないため、業務的な妥当性を承認できる状態になっていない。
   - id: DC-003
     text: イベント処理実装・メッセージ設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: >-
-      The parallel-request correlation requirement has not been verified against the execution-record model and
-      corresponding schema.
+    reason: 並列選択要求識別子が実行記録モデル（bdd-exec-event）と照合されておらず、メッセージ設計の基礎として確定していない。
   - id: DC-004
     text: イベントテスト設計への活用が確認できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: 確認例はあるが、相関項目と正本の対応が確定するまでテスト設計へ引き継げないと本書自身が記している。
   - id: DC-005
     text: イベントハンドラ・パブリッシャー実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: >-
-      The unresolved model-backed correlation field prevents using the parallel event payload as finalized handler and
-      publisher implementation input.
+    reason: 相関項目と、自動選択と claim の境界が決まっておらず、ハンドラ・パブリッシャー実装の確定した参照として使えない。

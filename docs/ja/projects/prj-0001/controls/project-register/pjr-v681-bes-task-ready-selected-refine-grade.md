@@ -45,14 +45,17 @@ grade（reps5-20261111）needs-work 88 の指摘（並列の要求の対応付�
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節（番号付きの見出し）に、区分と行の文案で書いている（PJR-EPQ3）。影響がなければ「なし」と書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`specdojo catalog validate --project prj-0001` が通っている。
+- 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の後）: `docs/ja/projects/prj-0001/execution/grade/results/bes-task-ready-selected.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade は orchestrator が流す。
 
 ## 4. 作業内容
 
-| No  | 作業                                       | 担当         | 状態 | メモ                                                         |
-| --- | ------------------------------------------ | ------------ | ---- | ------------------------------------------------------------ |
-| 1   | grade の指摘を読み、代表を直す             | executor     | done | 宣言された根拠で修正し、未解消の指摘は 5.1 節に記録          |
-| 2   | 検査を流し、決めた点と理由を対応結果に書く | executor     | done | executor の検査は 5.3 節、親検証は runner の evidence に記録 |
-| 3   | 統合の後に grade を流し、pass を確かめる   | orchestrator | open | -                                                            |
+| No  | 作業                                                   | 担当         | 状態 | メモ                                                                       |
+| --- | ------------------------------------------------------ | ------------ | ---- | -------------------------------------------------------------------------- |
+| 1   | grade の指摘を読み、代表を直す                         | executor     | done | 宣言された根拠で修正し、未解消の指摘は 5.1 節に記録                        |
+| 2   | 検査を流し、決めた点と理由を対応結果に書く             | executor     | done | executor の検査は 5.3 節、親検証は runner の evidence に記録               |
+| 3   | 統合の後に grade を流し、pass を確かめる               | orchestrator | done | 2026-11-16 orchestrator が grade（needs-work 87 点、opus-review-executor） |
+| 4   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | sol-executor | open | 0.8.0 の後に流す                                                           |
+| 5   | 直した後に grade し直して結果を書く（次の回）          | sol-executor | open | orchestrator が流す                                                        |
 
 ## 5. 対応結果
 
@@ -87,6 +90,8 @@ grade（reps5-20261111）needs-work 88 の指摘（並列の要求の対応付�
 ### 5.4. CHANGELOG に書く事項
 
 なし。代表の業務仕様の前提・観測規則と未解決理由の整理であり、CLI・schema・利用者向け機能は変更していない。
+
+再 grade の結果（2026-11-16、orchestrator）: needs-work 87 点（前回 needs-work 89 点）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/bes-task-ready-selected.yaml`。
 
 ## 6. 関連ドキュメント
 

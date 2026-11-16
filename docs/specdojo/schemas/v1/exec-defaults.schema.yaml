@@ -224,6 +224,15 @@ $defs:
           Maximum number of `exec run` processes that may run at the same time for one project,
           counting the primary run and every `exec run --register --worktree --join` run
           (default 4). 1 disables `--join`.
+      git_index_lock_wait_seconds:
+        type: integer
+        minimum: 0
+        default: 1200
+        description: >
+          Seconds the runner's Git operations (integration and trailing-record commits) wait for
+          another process, such as a manual commit's pre-commit hook, to release index.lock before
+          failing (default 1200). After the first short retries, the wait stops early when the
+          lock file remains but no git process is running (a stale lock); the lock is never removed.
 
   ProviderOverride:
     type: object

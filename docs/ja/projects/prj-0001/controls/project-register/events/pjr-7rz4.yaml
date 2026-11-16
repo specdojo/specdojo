@@ -163,3 +163,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_69a19d5830954ad587236ce73c6892ba
+- v: 1
+  id: reg_b40730f1ecd849218dcc64ad776f80c6
+  ts: "2026-11-16T03:38:23Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: project を別リポジトリへ移す手順のガイドを書いた（2026-11-13 に統合済み、0.8.0 に含む）
+  previous_event_id: reg_1fbdb7b399b14f448e7cd0fa748657c4

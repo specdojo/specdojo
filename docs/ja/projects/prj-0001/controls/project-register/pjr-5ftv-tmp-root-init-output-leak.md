@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   registered_at: "2026-11-08T15:50:44Z"
+  completed_at: "2026-11-16T03:42:34Z"
+  conclusion: PJR-2ZN4（テストと検証が /tmp の直下に init の出力を残さない）で解消した
   derived_from:
     - PJR-FTRC
 ---
