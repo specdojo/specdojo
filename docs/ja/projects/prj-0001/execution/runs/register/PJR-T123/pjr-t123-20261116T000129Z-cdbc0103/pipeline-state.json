@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-T123",
   "run_id": "pjr-t123-20261116T000129Z-cdbc0103",
-  "updated_at": "2026-11-16T00:35:15.441Z",
+  "updated_at": "2026-11-16T00:35:36.424Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-T123/pjr-t123-20261116T000129Z-cdbc0103/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-16T00:35:15.441Z",
-      "completed_at": null,
+      "completed_at": "2026-11-16T00:35:36.424Z",
       "artifact_ref": null
     }
   },
