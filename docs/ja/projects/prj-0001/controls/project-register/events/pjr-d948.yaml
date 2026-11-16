@@ -218,3 +218,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_feafb6fa465643a994aebc78679c79d7
+- v: 1
+  id: reg_93fa3c92b54a42c08ab24da6e10abcbf
+  ts: "2026-11-16T01:39:55Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: bds-sample を 3 回手直しし、型の再 grade で pass（99 点）
+  previous_event_id: reg_7c27b96ef1ff475f83f326f8b989e055

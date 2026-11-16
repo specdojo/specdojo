@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-d948-bds-sample-rework-wave-2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: UX
   registered_at: "2026-11-15T12:22:02Z"
+  completed_at: "2026-11-16T01:39:55Z"
+  conclusion: bds-sample を 3 回手直しし、型の再 grade で pass（99 点）
   commit_type: docs
   commit_scope: kata
   approach: sample-maintenance
