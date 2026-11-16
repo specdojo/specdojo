@@ -5,6 +5,7 @@ export {
   escapeMarkdownInline,
   expandTemplate,
   inlineCodeAnglePlaceholders,
+  inlineCodeFrontmatterAnglePlaceholders,
   padEndDisplay,
   redactSensitiveText,
   stripTerminalControlSequences,

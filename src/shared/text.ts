@@ -92,7 +92,17 @@ function replaceOutsideMarkdownCodeSpans(
 export function inlineCodeAnglePlaceholders(text: string): string {
   // HTTP(S) autolink は Markdown として既に安全な山括弧記法なので、プレースホルダとして
   // code span 化しない。register の表セルで bare URL を囲んだ後も autolink を保持する。
-  const placeholder = /[A-Za-z0-9._-]*(?:<(?!https?:\/\/)[^<>\r\n]+>[A-Za-z0-9._-]*)+/g;
+  return wrapAngleTokens(text, /[A-Za-z0-9._-]*(?:<(?!https?:\/\/)[^<>\r\n]+>[A-Za-z0-9._-]*)+/g);
+}
+
+// frontmatter の文字列値へ書き写す executor 由来の文（condense の記録・block 理由など）向け。
+// lint-fm は frontmatter のコードスパン外の山括弧を autolink や実在 HTML 名も含めて拒否する
+// ため（PJR-V141）、本文用と異なり `<https://...>` も code span 化する。
+export function inlineCodeFrontmatterAnglePlaceholders(text: string): string {
+  return wrapAngleTokens(text, /[A-Za-z0-9._-]*(?:<[^<>\r\n]+>[A-Za-z0-9._-]*)+/g);
+}
+
+function wrapAngleTokens(text: string, placeholder: RegExp): string {
   const wrapToken = (token: string): string => {
     const trailing = token.match(/\.+$/)?.[0] ?? "";
     const body = trailing ? token.slice(0, -trailing.length) : token;
