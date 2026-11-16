@@ -19,6 +19,7 @@ import {
   type ParentValidationEntry,
 } from "./parent-validation.js";
 import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
+import { configureIndexLockWait, DEFAULT_INDEX_LOCK_WAIT_MS } from "../shared/git.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -120,6 +121,8 @@ export type ExecDefaultsConfig = {
     // Maximum number of `exec run` processes that may run at once for one project, counting the
     // primary run and every `--join` run (default 4). 1 disables `--join`.
     max_concurrent_runs?: number;
+    // Seconds the runner's Git operations wait for index.lock to be released (default 1200).
+    git_index_lock_wait_seconds?: number;
   };
   pipeline?: {
     // A string runs in the project repository; `{ id, repo }` runs in the named repository.
@@ -394,6 +397,21 @@ export function resolveRegisterPostReview(config: ExecDefaultsConfig): boolean {
   return raw;
 }
 
+export const DEFAULT_GIT_INDEX_LOCK_WAIT_SECONDS = DEFAULT_INDEX_LOCK_WAIT_MS / 1000;
+
+// How long the runner's Git operations wait for another process to release index.lock. Invalid
+// values are rejected so a typo cannot turn the wait off or make it unbounded.
+export function resolveGitIndexLockWaitSeconds(config: ExecDefaultsConfig): number {
+  const raw = config.run?.git_index_lock_wait_seconds;
+  if (raw === undefined) return DEFAULT_GIT_INDEX_LOCK_WAIT_SECONDS;
+  if (typeof raw !== "number" || !Number.isInteger(raw) || raw < 0) {
+    throw new Error(
+      `run.git_index_lock_wait_seconds in exec-defaults must be a non-negative integer: ${String(raw)}`,
+    );
+  }
+  return raw;
+}
+
 // Resolve how many `exec run` processes may run at once for one project. Invalid values fall back
 // to the default so a typo cannot silently disable the busy guard.
 export function resolveMaxConcurrentRuns(config: ExecDefaultsConfig): number {
@@ -619,6 +637,9 @@ export function loadExecDefaultsConfig(
     throw new Error("pipeline.mechanical_result in exec-defaults must be a boolean");
   }
   resolveRegisterExecution(defaults);
+  // 統合・記帳の git 操作は src/shared/git.ts の gitResult を通るため、読み込んだ設定を
+  // この process の index.lock の待ち時間として反映する（PJR-964D）。
+  configureIndexLockWait(resolveGitIndexLockWaitSeconds(defaults) * 1000);
   resolvePinnedRateLimitPolicy(defaults);
   for (const provider of Object.keys(defaults.providers ?? {}) as AgentProvider[]) {
     if (defaults.providers?.[provider]?.rate_limit_policy) {

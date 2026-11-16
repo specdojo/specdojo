@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   createProviderCapacityTracker,
+  DEFAULT_GIT_INDEX_LOCK_WAIT_SECONDS,
   DEFAULT_REGISTER_EXECUTION,
   DEFAULT_MAX_CONCURRENT_RUNS,
   loadExecDefaultsConfig,
@@ -11,6 +12,7 @@ import {
   providerSlotPoolPath,
   resolveConnectionErrorDetection,
   resolveMaxConcurrency,
+  resolveGitIndexLockWaitSeconds,
   resolveMaxConcurrentRuns,
   resolvePinnedRateLimitPolicy,
   resolveRegisterExecution,
@@ -707,6 +709,26 @@ describe("resolveMaxConcurrentRuns", () => {
     );
     expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 1 } })).toBe(1);
     expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 6 } })).toBe(6);
+  });
+});
+
+describe("resolveGitIndexLockWaitSeconds", () => {
+  it("未指定では 20 分、0 以上の整数はそのまま使う", () => {
+    expect(resolveGitIndexLockWaitSeconds({})).toBe(DEFAULT_GIT_INDEX_LOCK_WAIT_SECONDS);
+    expect(DEFAULT_GIT_INDEX_LOCK_WAIT_SECONDS).toBe(1200);
+    expect(resolveGitIndexLockWaitSeconds({ run: { git_index_lock_wait_seconds: 0 } })).toBe(0);
+    expect(resolveGitIndexLockWaitSeconds({ run: { git_index_lock_wait_seconds: 300 } })).toBe(300);
+  });
+
+  it("負の数・小数・数値以外を設定エラーにする", () => {
+    for (const value of [-1, 2.5, "600"]) {
+      const config = {
+        run: { git_index_lock_wait_seconds: value },
+      } as unknown as ExecDefaultsConfig;
+      expect(() => resolveGitIndexLockWaitSeconds(config)).toThrow(
+        /run\.git_index_lock_wait_seconds in exec-defaults must be a non-negative integer/,
+      );
+    }
   });
 });
 
