@@ -1588,6 +1588,59 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("type: object\n");
   });
 
+  it.each([
+    {
+      path: "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-bes-index.yaml",
+      before: "deliverables:\n  - local_id: bes-index\n    depends_on: []\n",
+      after: "deliverables:\n  - local_id: bes-index\n    depends_on: [esil-index]\n",
+    },
+    {
+      path: "docs/specdojo/schemas/v1/esil.schema.yaml",
+      before: "type: object\nadditionalProperties: false\n",
+      after: "type: object\nadditionalProperties: true\n",
+    },
+    {
+      path: "packages/docs-site/sidebar-config.ts",
+      before: "export const types = [];\n",
+      after: 'export const types = ["esil-index"];\n',
+    },
+  ])("preserves the kata-wave-1 excluded edit to $path", ({ path, before, after }) => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    writeFile(join(fixture.repo, path), before);
+    git(fixture.repo, "add", path);
+    git(fixture.repo, "commit", "-m", "add kata-wave-1 ancillary file");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "edit",
+        approach: "bootstrap",
+        targets: ["specdojo:new-type"],
+      }),
+    );
+    writeFile(join(worktree.path, "docs/ja/specdojo/templates/new-type.md"), "# New type\n");
+    writeFile(join(worktree.path, path), after);
+    const worktreeHead = git(worktree.path, "rev-parse", "HEAD");
+    const rootHead = git(fixture.repo, "rev-parse", "HEAD");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      `files=${path}`,
+    );
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(worktreeHead);
+    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow(UncommittedChangesError);
+    expect(() => removeWorktree({ context: fixture.context, worktree, taskId })).toThrow(
+      UncommittedChangesError,
+    );
+    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(rootHead);
+    expect(readFileSync(join(worktree.path, path), "utf8")).toBe(after);
+    expect(readFileSync(join(fixture.repo, path), "utf8")).toBe(before);
+    const records = taskRecordPaths(join(worktree.path, "execution"), taskId);
+    expect(readFileSync(records.result, "utf8")).toContain(path);
+    expect(readFileSync(records.log("integrate.log"), "utf8")).toContain(path);
+  });
+
   it("does not write block evidence during a dry run", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
