@@ -29,6 +29,7 @@ import {
   mergeWorktreeIntoCurrent,
   listOrphanedExecBranches,
   pruneOrphanedExecBranches,
+  refreshWorktreeCheckpoint,
   releaseRootWorkingCopies,
   removeWorktree,
   selectStageablePaths,
@@ -453,6 +454,45 @@ describe("exec worktree ops", () => {
       /Grade sidecar changed after checkpoint/,
     );
     expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
+  });
+
+  it("refreshes a newer root grade into a resumed worktree and merges it (PJR-ZSRD)", () => {
+    const fixture = setupRepository();
+    const path = "execution/grade/results/doc.yaml";
+    writeFile(join(fixture.repo, path), "grade: checkpoint\n");
+    const worktree = prepare(fixture, "GRADE-REFRESH");
+    writeFile(join(fixture.repo, path), "grade: newer\n");
+
+    const refreshed = refreshWorktreeCheckpoint({
+      repoRoot: fixture.repo,
+      worktreePath: worktree.path,
+      paths: [join(fixture.repo, path), join(fixture.repo, "execution/grade/results/none.yaml")],
+      commitMessage: "exec(GRADE-REFRESH): refresh grade",
+    });
+
+    expect(refreshed).toEqual([path]);
+    expect(git(worktree.path, "show", `HEAD:${path}`)).toBe("grade: newer");
+    expect(worktreeStatusPaths(worktree.path)).toEqual([]);
+    mergeIntoRoot(fixture, worktree, "GRADE-REFRESH");
+    expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
+  });
+
+  it("does not commit when the resumed worktree already has the root grade", () => {
+    const fixture = setupRepository();
+    const path = "execution/grade/results/doc.yaml";
+    writeFile(join(fixture.repo, path), "grade: same\n");
+    const worktree = prepare(fixture, "GRADE-SAME");
+    const head = git(worktree.path, "rev-parse", "HEAD");
+
+    const refreshed = refreshWorktreeCheckpoint({
+      repoRoot: fixture.repo,
+      worktreePath: worktree.path,
+      paths: [join(fixture.repo, path)],
+      commitMessage: "exec(GRADE-SAME): refresh grade",
+    });
+
+    expect(refreshed).toEqual([]);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(head);
   });
 
   it("merges a parallel review while another review grade fails without changing shared retry state", async () => {

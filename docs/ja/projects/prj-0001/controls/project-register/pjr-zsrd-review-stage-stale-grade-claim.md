@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   registered_at: "2026-11-11T03:08:42Z"
-  block_reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
   derived_from:
     - PJR-2GD6
 ---

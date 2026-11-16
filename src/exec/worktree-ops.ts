@@ -37,6 +37,7 @@ export {
   discardStaleExecWorktree,
   listOrphanedExecBranches,
   pruneOrphanedExecBranches,
+  refreshWorktreeCheckpoint,
   removeWorktree,
 } from "./worktree-ops-lifecycle.js";
 export type { OrphanedExecBranch } from "./worktree-ops-lifecycle.js";

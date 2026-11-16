@@ -214,3 +214,43 @@ describe("unblock --take-over", () => {
     );
   });
 });
+
+// PJR-ZSRD: a review reopened by a human and run again must pass the completion preflight with
+// the agent that claimed it, even when a fallback or human unblock changed the latest actor.
+describe("review reopened and run again", () => {
+  const REVIEWER = "sol-review-executor";
+  const FALLBACK = "luna-review-executor";
+  const reopenedEvents = [
+    event(1, "claim", REVIEWER),
+    event(2, "complete", REVIEWER),
+    event(3, "reopen", HUMAN),
+    event(4, "claim", REVIEWER),
+  ];
+
+  it("passes the completion preflight for the agent that claimed the reopened review", () => {
+    const schedule = makeSchedule("T-001");
+    const snapshot = foldEventsToState(reopenedEvents, schedule, "/dummy");
+
+    expect(claimOwnerOf(snapshot.tasks["T-001"])).toBe(REVIEWER);
+    expect(checkCompletionBeforeIntegration(schedule, snapshot, "T-001", REVIEWER)).toEqual({
+      ok: true,
+    });
+    expect(checkCompletionBeforeIntegration(schedule, snapshot, "T-001", FALLBACK).ok).toBe(false);
+  });
+
+  it("keeps the reopened claim owner after a block and a human unblock", () => {
+    const schedule = makeSchedule("T-001");
+    const snapshot = foldEventsToState(
+      [...reopenedEvents, event(5, "block", REVIEWER, pipelineMeta), event(6, "unblock", HUMAN)],
+      schedule,
+      "/dummy",
+    );
+    const owner = claimOwnerOf(snapshot.tasks["T-001"]);
+
+    expect(snapshot.tasks["T-001"]).toMatchObject({ last_by: HUMAN, claimed_by: REVIEWER });
+    expect(owner).toBe(REVIEWER);
+    expect(checkCompletionBeforeIntegration(schedule, snapshot, "T-001", REVIEWER)).toEqual({
+      ok: true,
+    });
+  });
+});

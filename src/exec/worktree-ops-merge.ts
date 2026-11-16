@@ -304,7 +304,13 @@ export function mergeWorktreeIntoCurrent(params: {
             const expected = gitResult(context.repoRoot, ["show", `${checkpoint}:${path}`]);
             const absolute = resolve(context.repoRoot, path);
             const current = existsSync(absolute) ? readFileSync(absolute, "utf8") : undefined;
-            if ((expected.status === 0 ? expected.stdout : undefined) !== current) {
+            // A resumed review may have refreshed the grade onto the branch (PJR-ZSRD). The root
+            // copy equal to the branch tip loses nothing when released.
+            const merged = gitResult(context.repoRoot, ["show", `${worktree.branch}:${path}`]);
+            if (
+              (expected.status === 0 ? expected.stdout : undefined) !== current &&
+              (merged.status === 0 ? merged.stdout : undefined) !== current
+            ) {
               throw new Error(
                 `Grade sidecar changed after checkpoint; reconcile before merge: ${path}`,
               );
