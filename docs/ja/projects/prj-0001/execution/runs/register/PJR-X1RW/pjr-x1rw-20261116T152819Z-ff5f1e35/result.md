@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-X1RW
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-X1RW/pjr-x1rw-20261116T152819Z-ff5f1e35/plan.md
   started_at: "2026-11-16T15:28:29.668Z"
+  completed_at: "2026-11-16T15:34:40.693Z"
   agent: opus-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- In bes-index, F004/DC-004 is addressed by writing the list-side test coverage viewpoints for the two uncreated individual BES (`bes-derived-content-requested` and `bes-cycle-arrived`/`bes-routine-due`), but the QE coverage check is still outstanding. For F002, confirmed and recorded that `bes-task-ready-selected` already references back, so the bidirectional reference is set. F001 (catalog fix, out of scope) and F003 (data-model mapping not possible within declared references) remain as tracked issues. Updated the ticket's work table and response section. Re-grade was not run; it is left to the orchestrator.
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/030-business-model/bes-index.md`: 変更、+5 / -4 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F001: `dct-business-model-bes.yaml` still describes `bes-index` as covering ten process domains (comment on lines 12-13 and the `overview`); it should be aligned to the 14 domains the PO approved. The catalog is outside this task's targets, so it was not edited. A separate register item for BA is needed.
+- F003 / DC-003: the fact-data mapping to the data model or schema was not done because no data model is in the declared references. It stays as the PJR-AK5V reservation, for ARC to check before handing over to the event processing and messaging design.
+- F004 / DC-004: the executor did not perform the QE coverage check on behalf of QE. QE needs to review the coverage check section of bes-index before the confirmation step (T-KATA-WAVE-1 140) and record the result in that review result.
+- F002: the current text of `bes-task-ready-selected` already references bes-index and the matching row, so the bidirectional reference is set (checked 2026-11-17). Only the record in the detailing section of bes-index was added.
+- Ticket work table row No 4 (re-grade) is left open because the orchestrator runs `grade run --target deliverable`. DC-003 and DC-004 are expected to remain unmet until the reservations and the QE check are resolved.
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
