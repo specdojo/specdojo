@@ -43,12 +43,12 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                                |
-| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                                   |
-| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 90 点）                |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | 2026-11-17 executor が F001〜F006 を取り込んだ                      |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | agent CLI を起動するため orchestrator が流す。executor は実行しない |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                    |
+| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 90 点） |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | 2026-11-17 executor が F001〜F006 を取り込んだ       |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | done | 2026-11-17 の 2 回目の再 grade で pass               |
 
 ## 5. 対応結果
 
@@ -79,6 +79,8 @@ specdojo:
 - 決めた点 1: 形式違反の event ファイルの復旧は実装にも承認済みの手順にもないため、手順を作らず、保留とエスカレーションの条件として書いた。期限は本書の `ready` 化の判断まで。
 - 決めた点 2: 辞書 7 件と形式違反の復旧手順の PJR は executor が起票せず、未登録の候補として PM の起票へ渡した（本タスクの範囲外の項目を作らないため）。
 - 残課題: 再 grade（`grade run --target deliverable`）は orchestrator が流す（作業内容の No 4 を open のまま残した）。[[prj-0001:sld-specdojo]] の追加候補の記述の更新は同書の担当へ申し送る。
+
+2 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: pass、95 点。指摘は 4 件（すべて minor）。完了条件は 3 件中 3 件を満たす。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml`。
 
 ## 6. 関連ドキュメント
 

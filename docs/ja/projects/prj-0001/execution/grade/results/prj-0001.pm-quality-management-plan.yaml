@@ -5,10 +5,10 @@ path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-pla
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 93
-graded_at: "2026-11-15T22:02:07.361Z"
+score: 94
+graded_at: "2026-11-16T16:05:07.045Z"
 graded_by: sol-review-executor
-content_hash: acaaede0aa85bb8ee0a4c782d5fa8f97a9784ec6d2ad7a36f3562a5dd23e2eb0
+content_hash: d0234d30682093c031c4e50814ad774c0a8d86170ab439ad6d23f03cbafcd27c
 source_hashes:
   catalog-entry: fee83f6082c14fd6735d4ca25cc381de1420c0188e13615957dc2c8dba35e3bd
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -23,7 +23,7 @@ categories:
   operations:
     score: 88
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   consistency:
@@ -35,7 +35,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 69
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -50,8 +50,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-dependency-risk:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-control-reporting:
     level: 4
     score: 100
@@ -89,8 +89,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 4
     score: 100
@@ -120,75 +120,45 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 1
+  major: 3
+  minor: 0
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-pm-dependency-risk
-    line: 78
-    anchor: 決定が必要な時期に間に合わない場合、`PM` は影響する Schedule のタスクと後続ゲートを特定して登録簿へ遅延リスクとして記録し、Schedule を再計画する。`PO` が縮小・延期・中止を判断する。
-    message: >-
-      Identify the affected Schedule tasks and downstream gates, and assign PM responsibility for recording delay risks
-      and replanning when pending quality decisions miss their required timing.
-    message_ja: 影響を受けるScheduleタスクおよびダウンストリームのゲートを特定し、保留中の品質決定が必要なタイミングに間に合わない場合の遅延リスクの記録と計画の再作成について、PMの責任を割り当ててください。
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 56
+    anchor: >-
+      | 公開後の価値不適合（SC-04〜SC-06 の未達）                      | `BA` が原因と是正の証跡を整え、`PM` が改善策を Schedule に置く | 未達の SC
+      を同じ測定方法で、成功条件の判定時期内の次の観測時点に再確認し、公開後価値ゲートを満たす | `QE` が照合、`PO` が継続を判断       | プロジェクト登録簿の課題個票、変更要求個票、公開後価値記録 |
+    message: 証跡様式と確認順序の未定義は解消していますが、公開後の再検証を「成功条件の判定時期内の次の観測時点」に限定しているため、公開後6・9・24か月の所定時点で未達になった場合の再検証時期を確定できません。DC-003の充足には、当初判定の未達を保持したうえで、期限後の再検証時期と承認手順を定義する必要があります。
+    message_ja: 証跡様式と確認順序の未定義は解消していますが、公開後の再検証を「成功条件の判定時期内の次の観測時点」に限定しているため、公開後6・9・24か月の所定時点で未達になった場合の再検証時期を確定できません。DC-003の充足には、当初判定の未達を保持したうえで、期限後の再検証時期と承認手順を定義する必要があります。
     cause:
       type: document
   - id: F002
     severity: major
-    rule: vp-qe-done-criteria
-    line: 75
+    rule: vp-qe-verifiability
+    line: 56
     anchor: >-
-      | 試行証跡の形式と保存先 | `_UNDECIDED_:` `QE` が提案し、代表試行開始ゲートの判断前に人間の `PO` が決定する     | 代表試行の開始と、代表試行ゲートの判定               |
-      記録項目（「レビューと証跡」の証跡項目）を満たす記録様式 |
+      | 公開後の価値不適合（SC-04〜SC-06 の未達）                      | `BA` が原因と是正の証跡を整え、`PM` が改善策を Schedule に置く | 未達の SC
+      を同じ測定方法で、成功条件の判定時期内の次の観測時点に再確認し、公開後価値ゲートを満たす | `QE` が照合、`PO` が継続を判断       | プロジェクト登録簿の課題個票、変更要求個票、公開後価値記録 |
     message: >-
-      Complete or reference the approved trial evidence format and post-release verification procedure before declaring
-      DC-003 satisfied; the current table explicitly leaves these procedures undecided, so their required records and
-      execution cannot yet be verified.
-    message_ja: DC-003が満たされたと宣言する前に、承認されたトライアルエビデンスの形式およびリリース後の検証手順を完了させるか、参照してください。現在の表ではこれらの手順が未決定となっているため、必要な記録と実行をまだ検証できません。
+      参照先 prj-0001:prj-success-criteria-and-acceptance-criteria の SC-04・SC-05・SC-06
+      は公開後6・9・24か月を判定時期としており、各時点で未達が確定すると「判定時期内の次の観測時点」は存在しません。当初期限での未達と改善後の再評価を区別し、条件ごとの再観測時期・必要な観測期間・再合格条件を定義してください。
+    message_ja: >-
+      参照先 prj-0001:prj-success-criteria-and-acceptance-criteria の SC-04・SC-05・SC-06
+      は公開後6・9・24か月を判定時期としており、各時点で未達が確定すると「判定時期内の次の観測時点」は存在しません。当初期限での未達と改善後の再評価を区別し、条件ごとの再観測時期・必要な観測期間・再合格条件を定義してください。
     cause:
       type: document
   - id: F003
     severity: major
-    rule: vp-qe-verifiability
-    line: 75
-    anchor: >-
-      | 試行証跡の形式と保存先 | `_UNDECIDED_:` `QE` が提案し、代表試行開始ゲートの判断前に人間の `PO` が決定する     | 代表試行の開始と、代表試行ゲートの判定               |
-      記録項目（「レビューと証跡」の証跡項目）を満たす記録様式 |
-    message: 具体的な試行証跡の形式と公開後価値の確認手順が未決であり、誰が何をどの順序で確認すればレビューを通過できるかを再現可能に判定できない。
-    message_ja: 具体的な試行証跡の形式と公開後価値の確認手順が未決であり、誰が何をどの順序で確認すればレビューを通過できるかを再現可能に判定できない。
-    cause:
-      type: document
-  - id: F004
-    severity: major
-    rule: vp-qe-verifiability
-    line: 52
-    anchor: >-
-      | 価値不適合（価値の不一致、上限超過、引き継ぎ不能） | 原因を確認し、範囲・成果物・手順を簡素化する | 是正後に未達の SC・AC を同じ測定方法で再確認し、代表試行ゲートを満たす | `QE` が照合、`PO`
-      が価値を判断       | プロジェクト登録簿の課題個票、変更要求個票       |
-    message: >-
-      Define re-evaluation conditions for failed SC-04–SC-06 using the post-release value gate and their applicable
-      observation periods; the current value-nonconformity row requires the representative-trial gate, which checks
-      SC-01–SC-03 and AC-01 and therefore cannot establish recovery of post-release failures.
-    message_ja: >-
-      post-release
-      valueゲートおよび該当する観察期間を使用して、不合格となったSC-04–SC-06の再評価条件を定義してください。現在の価値不適合の行はrepresentative-trialゲートを必要としていますが、これはSC-01–SC-03およびAC-01をチェックするものであるため、リリース後の失敗の回復を確立することができません。
-    cause:
-      type: document
-  - id: F005
-    severity: major
     rule: vp-ops-operability
-    line: 52
+    line: 56
     anchor: >-
-      | 価値不適合（価値の不一致、上限超過、引き継ぎ不能） | 原因を確認し、範囲・成果物・手順を簡素化する | 是正後に未達の SC・AC を同じ測定方法で再確認し、代表試行ゲートを満たす | `QE` が照合、`PO`
-      が価値を判断       | プロジェクト登録簿の課題個票、変更要求個票       |
-    message: >-
-      Extend the operational corrective workflow to post-release value failures by assigning preparation of corrective
-      evidence, its record location, and QE/PO re-evaluation at the affected SC-04–SC-06 checkpoint; returning every
-      value failure to the representative-trial gate leaves the plan's later operating period without an applicable
-      recovery workflow.
-    message_ja: 是正エビデンスの準備、その記録場所、および影響を受けるSC-04–SC-06のチェックポイントにおけるQE/POの再評価を割り当てることで、運用上の是正ワークフローをリリース後の価値の失敗まで拡張してください。すべての価値の失敗をrepresentative-trialゲートに戻すと、計画の後半の運用期間において適用可能な回復ワークフローがなくなります。
+      | 公開後の価値不適合（SC-04〜SC-06 の未達）                      | `BA` が原因と是正の証跡を整え、`PM` が改善策を Schedule に置く | 未達の SC
+      を同じ測定方法で、成功条件の判定時期内の次の観測時点に再確認し、公開後価値ゲートを満たす | `QE` が照合、`PO` が継続を判断       | プロジェクト登録簿の課題個票、変更要求個票、公開後価値記録 |
+    message: 公開後の是正担当と記録先は定義されましたが、所定の判定時期を過ぎると「判定時期内」の再確認を実施できず、是正を完了できません。PMが再観測日と必要期間を計画し、時期変更をPOの判断へ接続して、BAの証跡更新、QEの再確認、POの継続判断まで進める期限後の運用手順を追加してください。
+    message_ja: 公開後の是正担当と記録先は定義されましたが、所定の判定時期を過ぎると「判定時期内」の再確認を実施できず、是正を完了できません。PMが再観測日と必要期間を計画し、時期変更をPOの判断へ接続して、BAの証跡更新、QEの再確認、POの継続判断まで進める期限後の運用手順を追加してください。
     cause:
       type: document
 done_criteria:

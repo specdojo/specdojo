@@ -2,9 +2,9 @@
 id: sf-index-grade-criteria
 document: sf-index
 path: docs/ja/product/010-business-specs/050-system-functions/sf-index.md
-graded_at: "2026-11-15T21:48:04.434Z"
+graded_at: "2026-11-16T15:55:11.797Z"
 graded_by: sol-review-executor
-content_hash: a8cf286a2090092b82d6178425c003ee4bf58532e38927faf933ec0804006558
+content_hash: 375696620d87ab6e175e8ced5d8cf51a07b6266bd69a6670d91b6c0f5d8c2316
 summary:
   satisfied: 1
   unsatisfied: 4
@@ -16,16 +16,14 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: >-
-      P-05 execution allocation and P-14 responsibility coverage remain inconsistent with business sources, and ORCH has
-      no representative dependency.
+    reason: ORCH の代表 BPS が未決で、各行の業務仕様との対応も未照合のため、合意した業務スコープの網羅性を確認できない。
   - id: DC-002
     text: システム化機能のスコープを承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: Q-02 still requires a PO decision to add the ORCH representative or exclude its scope before finalization.
+    reason: Q-02 が本書の確定保留条件として残り、システム化機能全体のスコープを承認できる状態にない。
   - id: DC-003
     text: 機能分割・コンポーネント設計の入力として参照できること
     roles:
@@ -38,15 +36,11 @@ criteria:
       - QE
     viewpoint: vp-qe-omissions-consistency
     status: unsatisfied
-    reason: >-
-      The test matrix covers the listed IDs but does not establish coverage of routine-definition handling and the full
-      system responsibilities of P-14.
+    reason: 全機能のテスト対象は列挙されているが、ORCH の根拠仕様の不一致と実行状態の記録責務の食い違いが残り、業務仕様に対応する網羅性を確認できない。
   - id: DC-005
     text: 実装スコープ・機能境界の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: >-
-      The P-05 execution assignment and launch-only P-14 summary leave implementation scope and business responsibility
-      boundaries unresolved.
+    reason: P-14 の実行状態記録が登録簿機能へ割り当てられ、タスク・Job Run の記録機能との実装境界が確定していない。

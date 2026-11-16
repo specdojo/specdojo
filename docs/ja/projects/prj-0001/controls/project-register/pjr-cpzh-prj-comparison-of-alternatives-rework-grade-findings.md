@@ -41,12 +41,12 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                                                 |
-| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------------------------------------------------ |
-| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                                                    |
-| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点）                                 |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | executor が F001〜F006 を取り込んだ（対応結果を参照）                                |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | open | `grade run` は agent CLI の起動を要し executor では流せないため、orchestrator が流す |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                  |
+| --- | ------------------------------------------------------ | ---- | ---- | ----------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                     |
+| 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 91 点）  |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | executor が F001〜F006 を取り込んだ（対応結果を参照） |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | open | 2026-11-17 の 2 回目の再 grade で needs-work          |
 
 ## 5. 対応結果
 
@@ -86,6 +86,8 @@ prj-comparison-of-alternatives を最新の grade の指摘で直す
   - Spec Kit の版と既定プロセスの詳細は外部資料の調査を要するため本タスクでは確認せず、WP-01 で固定する事項にした。
   - D-01 の重み4の軸のうち、採否の区分を変えるのはリスクの Low だけとした。既存の判定（STR-01 は適応性が Low でも一部採択）と整合させるためである。
 - 再 grade: executor では実行していない（agent CLI の起動を要するため）。作業内容の No.4 は open のまま残し、orchestrator が `grade run --target deliverable` を流して結果を追記する。
+
+2 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: needs-work、93 点。指摘は 4 件（major 1・minor 3）。完了条件は 4 件中 4 件を満たす。major の F003 は、判定境界と集約規則は足されたが各セルの根拠が未解消で、未確認を Middle とする規則を改め、確認済みの中間評価と未判定を分けて根拠を記録するよう求める。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`。
 
 ## 6. 関連ドキュメント
 

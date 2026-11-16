@@ -4,11 +4,11 @@ document: prj-0001:prj-assumptions-constraints-dependencies
 path: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
 target: deliverable
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 88
-graded_at: "2026-11-15T21:54:29.211Z"
+verdict: pass
+score: 98
+graded_at: "2026-11-16T15:58:01.767Z"
 graded_by: sol-review-executor
-content_hash: e827db8ff6d62b1a4f38fb72b7d0e99bb738b59d2fb32990fb5f8d7bd5a4b457
+content_hash: c537095bb36474c02dfb7dc2e21216bd7256a58b804e8152d1036f7696a38db0
 source_hashes:
   catalog-entry: 98cdc09ec79cb9c685ad1aeac8789632ad3e1e106ce70a1c736c0bc44117f643
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -24,19 +24,19 @@ categories:
   operations:
     score: 100
   planning:
-    score: 83
+    score: 92
   business:
     score: 100
   consistency:
-    score: 75
+    score: 88
   architecture:
     score: 100
   usability:
     score: 100
   implementation:
-    score: 75
+    score: 100
   quality:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -48,8 +48,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 3
     score: 75
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -78,20 +78,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-done-criteria:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -117,49 +117,25 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-config-validity:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 8
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 35
-    anchor: >-
-      | ACD-D04 | 文書、変更履歴、レビュー証跡を管理できるリポジトリと作業環境                                         |
-      成果物間の参照、変更追跡、レビュー証跡の保存、公開準備を継続するため。                                                                  | `ARC`
-      がリポジトリへの参照・更新、変更履歴の記録、必要な検証コマンドの実行を継続して行える。_TODO_:
-      検証コマンド、対象、期待結果、失敗時の確認先と、作業環境の変更時に再確認する範囲（schema、生成物、CLI、互換性）を定める正本を `ARC`
-      が特定し、参照を追加する（[[prj-0001:pm-quality-management-plan\|品質管理計画]]
-      の検証方針を候補とする）。                                                                     |
-      リポジトリへアクセスできない、変更履歴を保持できない、または作業環境を継続利用できない。 | `ARC`  |
-      復旧または代替環境への移行を計画し、証跡を保持できるまで影響する作業と公開判断を保留する。                                                                     
-      |
-    message: >-
-      The previous ACD-D01 planning gap is resolved by the catalog, acceptance, and quality-plan references; however,
-      ACD-D04 assigns ARC the task of selecting the validation authority without a deadline or prerequisite event, so
-      specify when that task must finish before environment-dependent work proceeds.
-    message_ja: >-
-      The previous ACD-D01 planning gap is resolved by the catalog, acceptance, and quality-plan references; however,
-      ACD-D04 assigns ARC the task of selecting the validation authority without a deadline or prerequisite event, so
-      specify when that task must finish before environment-dependent work proceeds.
-    cause:
-      type: document
-  - id: F002
     severity: minor
     rule: vp-pm-dependency-risk
     line: 33
     anchor: >-
       | ACD-D02 | `PO` による初期公開範囲とライセンスの決定（[[prj-0001:pjr-index\|プロジェクト登録簿]] `PJR-0120`）   |
       初期公開の対象と、第三者が利用・改善・再利用できる条件を確定するため。初期公開範囲が未決の間は ACD-D01 の対象と公開計画を確定できない。 | 一部成立。ライセンスは MIT として `PJR-0120`
-      で決定済み。初期公開範囲は憲章の「未決事項」に残り未成立で、`PO` が成果物カタログと成功基準の詳細化後に判断し、決定記録が参照できた時点で成立とする。_TODO_:
-      初期公開範囲の決定を追跡する登録簿項目（`PJR-0120` で継続するか新規登録するか）を `PM`
-      が決める。                                                                                                            |
-      採用ライセンスまたは初期公開範囲の決定・変更。                                           | `PO`   | 初期公開範囲が決まるまで外部公開判断と ACD-D01
+      で決定済みで、憲章の「ハイレベルスコープ」「未決事項」に残るライセンス方針の未決記載は同決定で置き換わったものとして扱う。憲章の追従更新は `PM` が登録簿で追跡する。初期公開範囲は未成立で、決定済みの `PJR-0120`
+      とは分けて `PM` が新しい登録簿項目を起票し、起票後に本項目へ項目 ID を追記する。起票は成果物カタログと成功基準の詳細化が終わり `PO` に判断を求める前に行い、`PO`
+      の決定記録が参照できた時点で成立とする。                                                                                                                                 
+      | 採用ライセンスまたは初期公開範囲の決定・変更。                                           | `PO`   | 初期公開範囲が決まるまで外部公開判断と ACD-D01
       の対象確定を保留し、`PM` が判断材料をそろえて `PO` に判断を求める。決定後は ACD-D01 と公開準備の計画へ反映する。 |
     message: >-
       The previous false closure of publication scope and the missing representative-trial gate are resolved; however,
@@ -171,144 +147,22 @@ findings:
       PJR item and the timing for PM to establish that tracking.
     cause:
       type: document
-  - id: F003
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 33
-    anchor: >-
-      | ACD-D02 | `PO` による初期公開範囲とライセンスの決定（[[prj-0001:pjr-index\|プロジェクト登録簿]] `PJR-0120`）   |
-      初期公開の対象と、第三者が利用・改善・再利用できる条件を確定するため。初期公開範囲が未決の間は ACD-D01 の対象と公開計画を確定できない。 | 一部成立。ライセンスは MIT として `PJR-0120`
-      で決定済み。初期公開範囲は憲章の「未決事項」に残り未成立で、`PO` が成果物カタログと成功基準の詳細化後に判断し、決定記録が参照できた時点で成立とする。_TODO_:
-      初期公開範囲の決定を追跡する登録簿項目（`PJR-0120` で継続するか新規登録するか）を `PM`
-      が決める。                                                                                                            |
-      採用ライセンスまたは初期公開範囲の決定・変更。                                           | `PO`   | 初期公開範囲が決まるまで外部公開判断と ACD-D01
-      の対象確定を保留し、`PM` が判断材料をそろえて `PO` に判断を求める。決定後は ACD-D01 と公開準備の計画へ反映する。 |
-    message: >-
-      The previous publication-scope contradiction is resolved; however, ACD-D02 declares MIT decided under PJR-0120
-      while prj-0001:prj-charter §§3 and 9 still list license policy as unresolved, so identify that earlier charter
-      entry as superseded and track its update to keep the decision state consistent.
-    message_ja: >-
-      The previous publication-scope contradiction is resolved; however, ACD-D02 declares MIT decided under PJR-0120
-      while prj-0001:prj-charter §§3 and 9 still list license policy as unresolved, so identify that earlier charter
-      entry as superseded and track its update to keep the decision state consistent.
-    cause:
-      type: document
-  - id: F004
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 35
-    anchor: >-
-      | ACD-D04 | 文書、変更履歴、レビュー証跡を管理できるリポジトリと作業環境                                         |
-      成果物間の参照、変更追跡、レビュー証跡の保存、公開準備を継続するため。                                                                  | `ARC`
-      がリポジトリへの参照・更新、変更履歴の記録、必要な検証コマンドの実行を継続して行える。_TODO_:
-      検証コマンド、対象、期待結果、失敗時の確認先と、作業環境の変更時に再確認する範囲（schema、生成物、CLI、互換性）を定める正本を `ARC`
-      が特定し、参照を追加する（[[prj-0001:pm-quality-management-plan\|品質管理計画]]
-      の検証方針を候補とする）。                                                                     |
-      リポジトリへアクセスできない、変更履歴を保持できない、または作業環境を継続利用できない。 | `ARC`  |
-      復旧または代替環境への移行を計画し、証跡を保持できるまで影響する作業と公開判断を保留する。                                                                     
-      |
-    message: ACD-D04 は「必要な検証コマンド」の実行を成立条件にする一方、対象ファイル、環境要件, コマンドを定義する正本への参照がなく、実装・設定作業の入力を特定できないため委譲先を示す必要がある。
-    message_ja: ACD-D04 は「必要な検証コマンド」の実行を成立条件にする一方、対象ファイル、環境要件, コマンドを定義する正本への参照がなく、実装・設定作業の入力を特定できないため委譲先を示す必要がある。
-    cause:
-      type: document
-  - id: F005
-    severity: minor
-    rule: vp-dev-change-impact
-    line: 35
-    anchor: >-
-      | ACD-D04 | 文書、変更履歴、レビュー証跡を管理できるリポジトリと作業環境                                         |
-      成果物間の参照、変更追跡、レビュー証跡の保存、公開準備を継続するため。                                                                  | `ARC`
-      がリポジトリへの参照・更新、変更履歴の記録、必要な検証コマンドの実行を継続して行える。_TODO_:
-      検証コマンド、対象、期待結果、失敗時の確認先と、作業環境の変更時に再確認する範囲（schema、生成物、CLI、互換性）を定める正本を `ARC`
-      が特定し、参照を追加する（[[prj-0001:pm-quality-management-plan\|品質管理計画]]
-      の検証方針を候補とする）。                                                                     |
-      リポジトリへアクセスできない、変更履歴を保持できない、または作業環境を継続利用できない。 | `ARC`  |
-      復旧または代替環境への移行を計画し、証跡を保持できるまで影響する作業と公開判断を保留する。                                                                     
-      |
-    message: リポジトリまたは作業環境の変更時に、schema、生成物、CLI、検証コマンド、互換性のどれを再確認するか、またはそれを定義する技術成果物への参照がないため影響範囲を追跡できるようにする必要がある。
-    message_ja: リポジトリまたは作業環境の変更時に、schema、生成物、CLI、検証コマンド、互換性のどれを再確認するか、またはそれを定義する技術成果物への参照がないため影響範囲を追跡できるようにする必要がある。
-    cause:
-      type: document
-  - id: F006
-    severity: minor
-    rule: vp-dev-testability
-    line: 35
-    anchor: >-
-      | ACD-D04 | 文書、変更履歴、レビュー証跡を管理できるリポジトリと作業環境                                         |
-      成果物間の参照、変更追跡、レビュー証跡の保存、公開準備を継続するため。                                                                  | `ARC`
-      がリポジトリへの参照・更新、変更履歴の記録、必要な検証コマンドの実行を継続して行える。_TODO_:
-      検証コマンド、対象、期待結果、失敗時の確認先と、作業環境の変更時に再確認する範囲（schema、生成物、CLI、互換性）を定める正本を `ARC`
-      が特定し、参照を追加する（[[prj-0001:pm-quality-management-plan\|品質管理計画]]
-      の検証方針を候補とする）。                                                                     |
-      リポジトリへアクセスできない、変更履歴を保持できない、または作業環境を継続利用できない。 | `ARC`  |
-      復旧または代替環境への移行を計画し、証跡を保持できるまで影響する作業と公開判断を保留する。                                                                     
-      |
-    message: ACD-D04 の「必要な検証コマンド」についてコマンド名、対象、期待結果、失敗時の確認先が示されていないため、検証手順の正本を参照する必要がある。
-    message_ja: ACD-D04 の「必要な検証コマンド」についてコマンド名、対象、期待結果、失敗時の確認先が示されていないため、検証手順の正本を参照する必要がある。
-    cause:
-      type: document
-  - id: F007
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 35
-    anchor: >-
-      | ACD-D04 | 文書、変更履歴、レビュー証跡を管理できるリポジトリと作業環境                                         |
-      成果物間の参照、変更追跡、レビュー証跡の保存、公開準備を継続するため。                                                                  | `ARC`
-      がリポジトリへの参照・更新、変更履歴の記録、必要な検証コマンドの実行を継続して行える。_TODO_:
-      検証コマンド、対象、期待結果、失敗時の確認先と、作業環境の変更時に再確認する範囲（schema、生成物、CLI、互換性）を定める正本を `ARC`
-      が特定し、参照を追加する（[[prj-0001:pm-quality-management-plan\|品質管理計画]]
-      の検証方針を候補とする）。                                                                     |
-      リポジトリへアクセスできない、変更履歴を保持できない、または作業環境を継続利用できない。 | `ARC`  |
-      復旧または代替環境への移行を計画し、証跡を保持できるまで影響する作業と公開判断を保留する。                                                                     
-      |
-    message: >-
-      The previous ACD-D01 acceptance-evidence gap is resolved; however, ACD-D04 still leaves its authoritative checks,
-      expected results, and failure procedure to future selection, so adopt a specific procedure and require its
-      evidence before judging this dependency satisfied.
-    message_ja: >-
-      The previous ACD-D01 acceptance-evidence gap is resolved; however, ACD-D04 still leaves its authoritative checks,
-      expected results, and failure procedure to future selection, so adopt a specific procedure and require its
-      evidence before judging this dependency satisfied.
-    cause:
-      type: document
-  - id: F008
+  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 35
-    anchor: >-
-      | ACD-D04 | 文書、変更履歴、レビュー証跡を管理できるリポジトリと作業環境                                         |
-      成果物間の参照、変更追跡、レビュー証跡の保存、公開準備を継続するため。                                                                  | `ARC`
-      がリポジトリへの参照・更新、変更履歴の記録、必要な検証コマンドの実行を継続して行える。_TODO_:
-      検証コマンド、対象、期待結果、失敗時の確認先と、作業環境の変更時に再確認する範囲（schema、生成物、CLI、互換性）を定める正本を `ARC`
-      が特定し、参照を追加する（[[prj-0001:pm-quality-management-plan\|品質管理計画]]
-      の検証方針を候補とする）。                                                                     |
-      リポジトリへアクセスできない、変更履歴を保持できない、または作業環境を継続利用できない。 | `ARC`  |
-      復旧または代替環境への移行を計画し、証跡を保持できるまで影響する作業と公開判断を保留する。                                                                     
-      |
-    message: >-
-      ACD-D04 does not state when ARC must confirm continued repository and validation capability or where that
-      confirmation is recorded; add the confirmation event and evidence destination so dependency monitoring can follow
-      the declared rulebook §6.3.
-    message_ja: >-
-      ACD-D04 does not state when ARC must confirm continued repository and validation capability or where that
-      confirmation is recorded; add the confirmation event and evidence destination so dependency monitoring can follow
-      the declared rulebook §6.3.
-    cause:
-      type: document
-  - id: F009
-    severity: major
-    rule: vp-qe-config-validity
     line: 33
     anchor: >-
       | ACD-D02 | `PO` による初期公開範囲とライセンスの決定（[[prj-0001:pjr-index\|プロジェクト登録簿]] `PJR-0120`）   |
       初期公開の対象と、第三者が利用・改善・再利用できる条件を確定するため。初期公開範囲が未決の間は ACD-D01 の対象と公開計画を確定できない。 | 一部成立。ライセンスは MIT として `PJR-0120`
-      で決定済み。初期公開範囲は憲章の「未決事項」に残り未成立で、`PO` が成果物カタログと成功基準の詳細化後に判断し、決定記録が参照できた時点で成立とする。_TODO_:
-      初期公開範囲の決定を追跡する登録簿項目（`PJR-0120` で継続するか新規登録するか）を `PM`
-      が決める。                                                                                                            |
-      採用ライセンスまたは初期公開範囲の決定・変更。                                           | `PO`   | 初期公開範囲が決まるまで外部公開判断と ACD-D01
+      で決定済みで、憲章の「ハイレベルスコープ」「未決事項」に残るライセンス方針の未決記載は同決定で置き換わったものとして扱う。憲章の追従更新は `PM` が登録簿で追跡する。初期公開範囲は未成立で、決定済みの `PJR-0120`
+      とは分けて `PM` が新しい登録簿項目を起票し、起票後に本項目へ項目 ID を追記する。起票は成果物カタログと成功基準の詳細化が終わり `PO` に判断を求める前に行い、`PO`
+      の決定記録が参照できた時点で成立とする。                                                                                                                                 
+      | 採用ライセンスまたは初期公開範囲の決定・変更。                                           | `PO`   | 初期公開範囲が決まるまで外部公開判断と ACD-D01
       の対象確定を保留し、`PM` が判断材料をそろえて `PO` に判断を求める。決定後は ACD-D01 と公開準備の計画へ反映する。 |
-    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
-    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message: ACD-D02 は初期公開範囲を未成立としているが、追跡先は「新しい登録簿項目を起票する」という予定だけで項目 ID がないため、未決部分を追跡する PJR 項目を特定して参照を追加する必要がある。
+    message_ja: ACD-D02 は初期公開範囲を未成立としているが、追跡先は「新しい登録簿項目を起票する」という予定だけで項目 ID がないため、未決部分を追跡する PJR 項目を特定して参照を追加する必要がある。
+    cause:
+      type: document
 done_criteria:
   satisfied: 4
   total: 4

@@ -46,7 +46,7 @@ prj-assumptions-constraints-dependencies を最新の grade の指摘で直す
 | 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                    |
 | 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 88 点） |
 | 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | 2026-11-17 executor が実施（対応結果を参照）         |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | open | agent の sandbox では実行できず orchestrator が流す  |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | done | 2026-11-17 の 2 回目の再 grade で pass               |
 
 ## 5. 対応結果
 
@@ -81,6 +81,8 @@ prj-assumptions-constraints-dependencies を最新の grade の指摘で直す
   - 憲章の追従更新: 憲章は本タスクの対象外のため直していない。ライセンス方針を決定済みに改める更新は `PM` が別の項目で起票する。
   - status: 本文の `draft` はそのまま据え置いた。major の指摘を直したばかりで、再 grade で確かめる前に `ready` にしない方がよいため。`ready` に戻すかは人が 140 で判断する。
 - 再 grade（`grade run --target deliverable`）は agent の sandbox では実行できない（agent CLI と利用枠を使う）ため、作業内容の No 4 は open のまま orchestrator に申し送る。
+
+2 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: pass、98 点。指摘は 2 件（すべて minor）。完了条件は 4 件中 4 件を満たす。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-assumptions-constraints-dependencies.yaml`。
 
 ## 6. 関連ドキュメント
 

@@ -45,13 +45,13 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                      |
-| --- | ------------------------------------------------------ | ---- | ---- | --------------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込み、P-06 の境界を直す       | ARC  | done | executor が実施（対応結果を参照）                         |
-| 2   | テスト対象との対応表を足す                             | ARC  | done | executor が実施（対応結果を参照）                         |
-| 3   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 80 点）      |
-| 4   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | 2026-11-17 executor が実施（対応結果を参照）              |
-| 5   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | 再 grade は orchestrator が流すため executor は実行しない |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込み、P-06 の境界を直す       | ARC  | done | executor が実施（対応結果を参照）                    |
+| 2   | テスト対象との対応表を足す                             | ARC  | done | executor が実施（対応結果を参照）                    |
+| 3   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 80 点） |
+| 4   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | 2026-11-17 executor が実施（対応結果を参照）         |
+| 5   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | 2026-11-17 の 2 回目の再 grade で needs-work         |
 
 ## 5. 対応結果
 
@@ -98,6 +98,8 @@ specdojo:
 - PM が `Q-01` の行ごとの照合作業を PJR-AK5V と Schedule へ接続する。
 - 実装に `git` コマンドがあるが一覧の行に対応がない。機能として扱うかを ARC が次の改訂で判断する。
 - 再 grade（`grade run --target deliverable`）は orchestrator が流す。
+
+2 回目の再 grade の結果（2026-11-17、orchestrator が `grade run --target deliverable --by sol-review-executor` で実行）: needs-work、85 点。指摘は 8 件（major 6・minor 2）。完了条件は 5 件中 1 件。major の多くは BPS との対応付けの未了（BPS は未作成、PJR-AK5V）と、P-14 の状態遷移記録の SF-REG-01 と SF-EXEC-01・SF-ROUT-02 の境界。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/sf-index.yaml`。
 
 ## 6. 関連ドキュメント
 

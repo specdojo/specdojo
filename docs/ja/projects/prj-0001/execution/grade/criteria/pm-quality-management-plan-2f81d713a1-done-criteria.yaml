@@ -2,9 +2,9 @@
 id: prj-0001:pm-quality-management-plan-grade-criteria
 document: prj-0001:pm-quality-management-plan
 path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
-graded_at: "2026-11-15T22:02:07.361Z"
+graded_at: "2026-11-16T16:05:07.045Z"
 graded_by: sol-review-executor
-content_hash: acaaede0aa85bb8ee0a4c782d5fa8f97a9784ec6d2ad7a36f3562a5dd23e2eb0
+content_hash: d0234d30682093c031c4e50814ad774c0a8d86170ab439ad6d23f03cbafcd27c
 summary:
   satisfied: 2
   unsatisfied: 1
@@ -28,6 +28,4 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: >-
-      The trial evidence format and post-release verification procedure remain undecided, and failed SC-04–SC-06 lack
-      applicable re-evaluation conditions.
+    reason: 公開後6・9・24か月の所定時点で未達になった場合に実施できる再検証時期・観測期間・承認手順が定義されていない。

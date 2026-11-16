@@ -5,10 +5,10 @@ path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alterna
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-11-15T21:58:22.206Z"
+score: 93
+graded_at: "2026-11-16T16:02:07.714Z"
 graded_by: sol-review-executor
-content_hash: 1432fb7c1c9c848c980f0d166a34f2c872110e53fba117cd2078d4b5cbc6cc04
+content_hash: 70fec0455f9240e0ae7764e1367529224db520f5b2539c5f2df108c75c9ebd97
 source_hashes:
   catalog-entry: 45f28b64a72bff5c4a2ac190021085a90b320b7cb95a5d42edbc611b85b96185
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -22,7 +22,7 @@ categories:
   purpose:
     score: 100
   operations:
-    score: 94
+    score: 100
   planning:
     score: 100
   business:
@@ -36,7 +36,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 81
+    score: 88
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -84,8 +84,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-done-criteria:
     level: 4
     score: 100
@@ -108,8 +108,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -122,106 +122,70 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 5
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 101
+    line: 226
     anchor: >-
-      | リスク     | 4    | 現場との乖離、負荷転嫁、責任不明、公開不備の4事象すべてに統制手段がある / 1〜2事象に統制手段がない / 3事象以上、または責任不明を統制できない |
-      P-01〜P-03、ACD-C03    |
+      検証手順（実行する検証、対象、期待結果）の正本は、前提・制約・依存関係の ACD-D04 で `ARC` が特定する（品質管理計画の検証方針が候補）。正本が特定されるまで、D-01・D-02 の「検証エラー 0 件」の確認と
+      WP-02 を完了扱いにしない。
     message: >-
-      The evaluation tables cite ACD-C03 as an active constraint at lines 101, 118, and 129, but
-      docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md section 2 explicitly
-      retires ACD-C03 and delegates approval authority to the project charter; replace these references with the current
-      authoritative provisions so the evaluation rationale remains traceable.
+      本文は検証手順の正本を ARC
+      が今後特定し、品質管理計画を「候補」としていますが、docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+      の ACD-D04 は既に prj-0001:pm-quality-management-plan
+      の検証方針を正本に指定しています。「正本未特定」と「正本指定済み」の不整合を解消し、確定済みの参照先と、その手順の充足・実行確認を分けて記述してください。
     message_ja: >-
-      The evaluation tables cite ACD-C03 as an active constraint at lines 101, 118, and 129, but
-      docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md section 2 explicitly
-      retires ACD-C03 and delegates approval authority to the project charter; replace these references with the current
-      authoritative provisions so the evaluation rationale remains traceable.
+      本文は検証手順の正本を ARC
+      が今後特定し、品質管理計画を「候補」としていますが、docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+      の ACD-D04 は既に prj-0001:pm-quality-management-plan
+      の検証方針を正本に指定しています。「正本未特定」と「正本指定済み」の不整合を解消し、確定済みの参照先と、その手順の充足・実行確認を分けて記述してください。
     cause:
       type: document
   - id: F002
     severity: minor
     rule: vp-arc-technical-constraints
-    line: 69
+    line: 192
     anchor: >-
-      | SDD-02 | GitHub Spec Kit             | OSS・プラットフォーム提供型 | Spec → Plan → Tasks → Implement                        
-      | 明確な段階と複数 Agent 連携を持つ                              | 固定ワークフローと SpecDojo 成果物の対応付けが必要     |
+      | SDD-04 | 成果物適合は Middle。IDE 内で仕様をレビューでき人間の統制は High。IDE 外での取り扱いに一部変換を要し可逆性は
+      Middle                                    | IDE への依存で中立性が Low となり、特定製品へ過度に固定されない条件に反するため非採択                      |
+      IDE 統合が必須になった場合                                                   |
     message: >-
-      Spec Kit is characterized as having a fixed workflow, and that constraint is reused in its comparison rationale,
-      although the linked official documentation describes customizable processes and workflows; identify the evaluated
-      version and configuration, then distinguish its default process from constraints that actually apply to the
-      proposed trial.
+      SDD-04 の「IDE 外での取り扱いに一部変換を要する」と、193行の SDD-05 の「体系の置換を要する」は、評価対象の版・構成や必要となる変換・置換対象が示されていません。Kiro 公式資料は CLI 等での
+      Specs 利用と Markdown ファイルを、BMAD 公式資料は機能群の個別利用を説明しているため、製品一般の制約と、本試行で選ぶ構成に生じる負荷を区別して評価根拠を補ってください。
     message_ja: >-
-      Spec Kit
-      は固定されたワークフローを持つと定義されており、その制約が比較の根拠で再利用されていますが、リンクされている公式ドキュメントではカスタマイズ可能なプロセスとワークフローについて説明されています。評価されたバージョンと構成を特定し、そのデフォルトプロセスと、提案されているトライアルに実際に適用される制約を区別してください。
+      SDD-04 の「IDE 外での取り扱いに一部変換を要する」と、193行の SDD-05 の「体系の置換を要する」は、評価対象の版・構成や必要となる変換・置換対象が示されていません。Kiro 公式資料は CLI 等での
+      Specs 利用と Markdown ファイルを、BMAD 公式資料は機能群の個別利用を説明しているため、製品一般の制約と、本試行で選ぶ構成に生じる負荷を区別して評価根拠を補ってください。
     cause:
       type: document
   - id: F003
-    severity: minor
-    rule: vp-dev-testability
-    line: 207
-    anchor: >-
-      | D-01   | 現行の文書体系、メタデータ、検証を拡張して実現可能 | 適用条件と必須ゲートを rulebook 等へ反映する。`PM` が反映作業を Schedule に登録し、`ARC`
-      が反映先を特定する                                | `QE` が反映後の rulebook 等の検証を実行し、エラー 0
-      件を確認する                                                                           |
-    message: >-
-      Sections 4.4–4.5 require zero validation errors after rulebook changes and tool removal but identify neither the
-      applicable validation commands nor an authoritative procedure defining their targets and expected results; link
-      the executable verification procedure so QE can consistently run the required checks.
-    message_ja: >-
-      セクション 4.4–4.5
-      では、ルールブックの変更とツールの削除後にバリデーションエラーをゼロにすることを求めていますが、適用されるバリデーションコマンドについても、その対象と期待される結果を定義する権威ある手順についても特定されていません。QE
-      が必要なチェックを一貫して実行できるように、実行可能な検証手順をリンクしてください。
-    cause:
-      type: document
-  - id: F004
     severity: major
     rule: vp-qe-verifiability
     line: 142
-    anchor: "- 各セルは 「外部資料の位置づけ」の公式資料と前段文書に基づく机上評価であり、試行証拠ではない。主な High・Low の根拠は比較表直後の説明に記し、未確認事項は High としない。試行後は測定結果でセルを更新する。"
-    message: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
-    message_ja: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
+    anchor: >-
+      - 尺度: High・Middle・Low は順序尺度で、数値に換算しない。各セルは評価軸の表の判定基準のうち、最初の条件を満たせば High、2番目の条件に当たれば Middle、3番目の条件に当たれば Low
+      とする。条件を確認できない、または High の条件を一部しか確認できない場合は Middle とし、未確認事項を High としない。
+    message: >-
+      High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。判定境界と集約規則は今回追加されていますが、各セルの根拠については未解消です。未確認を
+      Middle とする規則を改め、確認済みの中間評価と未判定を分離し、根拠資料の該当箇所または観察結果と確認作業を記録して、未判定の採否への扱いも定めてください。
+    message_ja: >-
+      High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。判定境界と集約規則は今回追加されていますが、各セルの根拠については未解消です。未確認を
+      Middle とする規則を改め、確認済みの中間評価と未判定を分離し、根拠資料の該当箇所または観察結果と確認作業を記録して、未判定の採否への扱いも定めてください。
     cause:
       type: document
-  - id: F005
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 219
-    anchor: >-
-      | WP-03 | SDD-03・SDD-02 による同一変更要求の処理と正本への反映 | `ARC`（AI Agent が支援）      | WP-02                  | 両ツールで処理を終え、結果を
-      SpecDojo 成果物へ反映している           |
+    line: 201
+    anchor: "| TSK-02 | Middle | Middle   | Middle     | High       | High     | High     | Middle     | High   | 段階採用       |"
     message: >-
-      WP-03 requires completion of reflection into the authoritative SpecDojo deliverables before WP-04 checks intent,
-      but line 228 requires all intent mismatches to be corrected before reflection; separate draft output from
-      authoritative reflection and place the BA intent check before that reflection so the work sequence can satisfy its
-      own acceptance condition.
+      TSK-02 の運用負荷を High としていますが、134行の High は同期等の追加作業を要しない状態であり、224行では Issue ごとの正本への転記とクローズ後の照合を必要としています。この追加管理作業を評価に含めて
+      Middle 等へ見直すか、High の条件を満たす仕組みと根拠を示し、採否理由も整合させてください。
     message_ja: >-
-      WP-04 が意図をチェックする前に、WP-03 は権威ある SpecDojo の成果物への反映を完了させる必要がありますが、228
-      行目では、反映の前にすべての意図の不一致を修正することが求められています。ドラフトの出力と権威ある反映を分離し、作業シーケンスが自身の受け入れ条件を満たせるよう、BA の意図チェックをその反映の前に配置してください。
-    cause:
-      type: document
-  - id: F006
-    severity: minor
-    rule: vp-ops-operability
-    line: 245
-    anchor: >-
-      | リスク・SDD-02、SDD-03、TSK-02、TSK-05       | 外部ツールの更新・障害・終了によって運用を継続できなくなる                      |
-      標準形式での保存、エクスポート、復旧、離脱手順を採択条件にする。SDD は WP-05 の再開可能性、TSK-02 は 「技術的実現性と影響」の D-03 の照合で確認する |
-    message: >-
-      The mitigation for TSK-02 requires export, recovery, and exit procedures, but its referenced D-03 check only
-      compares closed Issues with source records; add a check showing that required discussion, decision rationale, and
-      correspondence remain available when GitHub is unavailable or removed, and assign responsibility for completing it
-      before supplementary operation begins.
-    message_ja: >-
-      The mitigation for TSK-02 requires export, recovery, and exit procedures, but its referenced D-03 check only
-      compares closed Issues with source records; add a check showing that required discussion, decision rationale, and
-      correspondence remain available when GitHub is unavailable or removed, and assign responsibility for completing it
-      before supplementary operation begins.
+      TSK-02 の運用負荷を High としていますが、134行の High は同期等の追加作業を要しない状態であり、224行では Issue ごとの正本への転記とクローズ後の照合を必要としています。この追加管理作業を評価に含めて
+      Middle 等へ見直すか、High の条件を満たす仕組みと根拠を示し、採否理由も整合させてください。
     cause:
       type: document
 done_criteria:
