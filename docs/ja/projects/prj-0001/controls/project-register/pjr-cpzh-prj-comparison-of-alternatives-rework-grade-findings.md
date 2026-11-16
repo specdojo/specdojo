@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-cpzh-prj-comparison-of-alternatives-rework-grade-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: PM
   registered_at: "2026-11-15T12:32:36Z"
+  completed_at: "2026-11-16T22:26:29Z"
+  conclusion: 3 回の手直しでカタログの完了条件 4 件をすべて満たした（95 点）。残る F002 は受け入れ、読みやすさの見直しは別の todo で行う
   commit_type: docs
   commit_scope: pm
   approach: fully-guided

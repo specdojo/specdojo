@@ -160,3 +160,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_69a76669f79540a08beabdcf22277f19
+- v: 1
+  id: reg_c83e4501eeca4a0fa466ef0c6f55c359
+  ts: "2026-11-16T22:26:29Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が 4 回目を流さずに close すると判断した（2026-11-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 3 回の手直しでカタログの完了条件 4 件をすべて満たした（95 点）。残る F002 は受け入れ、読みやすさの見直しは別の todo で行う
+  previous_event_id: reg_8f089fbf02124b40862ff3212e49c371
