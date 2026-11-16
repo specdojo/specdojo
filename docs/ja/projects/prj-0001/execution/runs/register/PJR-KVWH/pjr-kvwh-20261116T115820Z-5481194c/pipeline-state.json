@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-KVWH",
   "run_id": "pjr-kvwh-20261116T115820Z-5481194c",
-  "updated_at": "2026-11-16T13:03:50.711Z",
+  "updated_at": "2026-11-16T13:04:13.084Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-KVWH/pjr-kvwh-20261116T115820Z-5481194c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
       "attempts": 1,
       "started_at": "2026-11-16T13:03:50.711Z",
-      "completed_at": null,
+      "completed_at": "2026-11-16T13:04:13.084Z",
       "artifact_ref": null
     }
   },

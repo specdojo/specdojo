@@ -80,3 +80,16 @@
       from: "parent validation failed: lint-mermaid, test-integration"
       to: "-"
   previous_event_id: reg_4c9ff3e8e4a74024812d6ddf2dd6a193
+- v: 1
+  id: reg_11c0a209629e4177b3222f53231e2619
+  ts: "2026-11-16T13:04:12Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fc5172ca834e43888b074f4ff402a6ac
