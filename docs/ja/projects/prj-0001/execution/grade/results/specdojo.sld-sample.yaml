@@ -4,28 +4,28 @@ document: specdojo:sld-sample
 path: docs/ja/specdojo/samples/sld-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 88
-graded_at: "2026-11-15T22:33:06.454Z"
+verdict: pass
+score: 98
+graded_at: "2026-11-16T00:48:09.385Z"
 graded_by: sol-review-executor
-content_hash: 868bc57559aba3305de28759d7bacf83699648e2f87382e3a5eae144d371dbba
+content_hash: d7646932f36400f2261f539f9aba0cd8e6bb5b468dfa4dd5a1f3256a257fdd54
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 94
   planning:
-    score: 92
+    score: 100
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -39,8 +39,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -75,26 +75,26 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,126 +103,35 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 5
+  major: 0
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 100
+    rule: vp-qe-kata-conformance
+    line: 26
     anchor: >-
-      | 日次集計の保存先と再生成手順が未整備             | 課題（`issue`）              | `data/summary/`
-      は仮置きで、再生成手順がないため削除後に自動で戻せない                                                                                     |
-      OPS・DEV が `specdojo:cop-sales-reconciliation` を整備し、QE が再集計の受入条件を確認する。整備までは手動再集計で扱う              |
-      `specdojo:pjr-sales-storage`              |
-    message: >-
-      Add completion or decision milestones for the regeneration task and the STSD change in line 103; responsible roles
-      and interim handling are stated, but PM cannot determine when these tasks must finish or be reconsidered.
-    message_ja: >-
-      再生成タスクと103行目の STSD の変更に対して、完了または決定のマイルストーンを追加してください。責任者と暫定的な取り扱いは記載されていますが、PM
-      はこれらのタスクをいつ完了させるべきか、あるいは再検討すべきかを判断できません。
+      | 検品場所（店舗奥の荷受台）                                                                  |
+      入荷済み・検品済み（配置・分離前）の商品、納品伝票、納品時の外箱                                           | 入荷受入、入荷検品                       |
+      店舗内共有（荷受担当と店番担当が確認）                                       | 入荷当日の検品・配置完了まで（原則当日中）                         |
+      `条件付き処分可`。商品は破棄しない。検品結果を仕入ノートへ記録し、商品を売場棚または返品保管箱へ移した後に外箱を解体処分し、納品伝票を店頭台帳保管棚へ移す |
+    message: 前回の集計元とメンバー割り当ての重大な不整合、および現金と仮メモの混在は解消していますが、検品場所には破棄しない商品、保管棚へ移す納品伝票、解体処分する外箱が同じ管理行に残っています。ルールブックが求める共有範囲・寿命・削除可否の判断単位に従い、同じ検品場所内でも商品・伝票・外箱の管理区分を分けてください。個別の扱い自体は記載されているため、残る問題は区分の軽微な不整合です。
+    message_ja: 前回の集計元とメンバー割り当ての重大な不整合、および現金と仮メモの混在は解消していますが、検品場所には破棄しない商品、保管棚へ移す納品伝票、解体処分する外箱が同じ管理行に残っています。ルールブックが求める共有範囲・寿命・削除可否の判断単位に従い、同じ検品場所内でも商品・伝票・外箱の管理区分を分けてください。個別の扱い自体は記載されているため、残る問題は区分の軽微な不整合です。
   - id: F002
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 64
-    anchor: >-
-      | `config/store-config.yaml` が消失・破損した                | 会計を止める。DEV が外部退避媒体の最新世代を復元し、PO が店舗・税計算・本部接続の条件を確認する。CLI
-      が「店舗設定不正」なしで起動し、表示条件が PO の確認値と一致すれば再開する。退避がなければ DEV が `kinuya-store-config-schema` に従い再作成し、PO の確認まで再開しない | OPS →
-      DEV（復元）・PO（条件確認）                           |
-    message: >-
-      The former unnamed regeneration and receipt-reconstruction gaps are resolved by explicitly deferring regeneration
-      and removing the reconstruction promise; also identify kinuya-store-config-schema as an unshipped fictional
-      reference and make configuration recreation conditional on supplying that contract.
-    message_ja: >-
-      以前の名称のない再生成および受領再構築のギャップは、再生成を明示的に延期し、再構築の約束を削除することで解決されました。また、kinuya-store-config-schema
-      を未出荷の架空のリファレンスとして特定し、設定の再作成をそのコントラクトの提供を条件としてください。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 29
-    anchor: >-
-      | 撤去品保留箱（バックヤード下段・黄ラベル）                                                  | `_ASSUMPTION_`: 売場から撤去した期限切れ・破損品。STSD
-      に対応する状態がない                                | 開店前の賞味期限確認、廃棄確定           |
-      店舗内共有（売場・返品保管箱と分離）                                         |
-      週次の廃棄確定日まで                                               |
-      `条件付き処分可`。店主代表が廃棄を確定し、廃棄数を当日の日次締め記録の在庫差異欄へ記入した後に廃棄する                                                     |
-    message: >-
-      The former conflicting retention expression is resolved; align the weekly disposal-confirmation day stated here
-      with line 66, which instructs confirmation and disposal at daily closing, so reviewers can determine the required
-      holding period.
-    message_ja: 以前の矛盾していた保持に関する表現は解決されました。ここに記載されている週次の廃棄確認日を、日次決算時に確認と廃棄を指示している66行目と一致させ、レビュワーが必要な保持期間を判断できるようにしてください。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 63
-    anchor: >-
-      | `data/summary/` を誤って削除した                           | 再生成手順の整備後は、対象日・基準時点を指定して受付済みの `data/sales/` から
-      `data/summary/`
-      へ出力し直す。整備前は対象日の受付済み取引（結果不明は除く）を手動集計し、日次締め記録の参照値と照合する                                                                     
-      | OPS が再集計、QE が一致を確認。不一致なら PO が締めを再判断 |
-    message: >-
-      Reconcile daily-summary recovery with clis-sample's cash-only scope: data/sales/ is produced by that CLI and does
-      not establish a source for paper-recorded credit sales, yet line 89 expects both cash and credit sales; define the
-      complete source mapping or explicitly limit and hand off the summary scope.
-    message_ja: >-
-      日次サマリーの回収を clis-sample の現金のみのスコープと一致させてください：data/sales/ はその CLI
-      によって生成されるもので、紙に記録された掛売り販売のソースを確立するものではありませんが、89行目では現金と掛売り販売の両方を想定しています。完全なソースマッピングを定義するか、サマリーのスコープを明示的に制限して引き渡してください。
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 7
-    anchor: >-
-      BA（同行レビュー担当）と OPS（家族利用者代表・店舗運営アドバイザー）が日常の保管・清掃・処分の境界を整理し、ARC（技術メンター）・DEV（開発担当）が概念データストアおよび CLI
-      の保存パスと整合させる。QE（同行レビュー担当）が検証手順と受入条件を確認し、PM が未決事項を管理台帳へつなぎ、店主代表が PO として保管方針と公開可否を最終判断する。
-    message: >-
-      Align the member-to-role assignments with pm-members-sample and pm-organization-sample: BA belongs to the
-      development representative, the peer reviewer holds QE, and the family representative holds UX rather than OPS;
-      correct the repeated recovery assignments or record an explicit organization change before relying on them.
-    message_ja: >-
-      メンバーからロールへの割り当てを pm-members-sample および pm-organization-sample と一致させてください：BA は開発代表者に属し、ピアレビュワーは QE を、ファミリー代表は OPS
-      ではなく UX を担当しています。繰り返される回収の割り当てを修正するか、それらに頼る前に明示的な組織変更を記録してください。
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 30
-    anchor: >-
-      | レジ釣銭準備箱・手提げ金庫                                                                  |
-      釣銭準備金、当日の現金売上、仮領収メモ                                                                     |
-      開店準備、店頭販売、日次締め             | 店舗内共有（営業中は店番担当、閉店後は施錠）                                 |
-      営業開始から日次締め確定まで（毎日閉店時に精算）                   |
-      `処分不可`。日次締めで店主代表が現金実査と販売額の一致を確認した後、売上金を母屋金庫へ移す。破棄できるのは締めに転記済みの仮メモだけ                       |
-    message: >-
-      The electronic storage rows are now separated, but this row still combines non-disposable cash with disposable
-      temporary memos; separate their storage-control classes so each row has a uniform lifetime and disposal decision
-      as required by the rulebook.
-    message_ja: 電子保存の行は分離されましたが、この行には依然として、廃棄不可能な現金と廃棄可能な一時的なメモが組み合わされています。ルールブックの要求に従い、各行の有効期間と廃棄の決定が統一されるよう、それぞれの保存管理クラスを分離してください。
-  - id: F007
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 76
-    anchor: >-
-      | 撤去品保留箱                                                        | STSD
-      に対応状態なし（変更要求候補）                                                                                                                                                                                                  
-      | 販売後の期限切れ・破損品を返品待ち（`return-pending`）と混同しないこと                                      |
-    message: >-
-      The former retention-label conflict is resolved; replace 販売後 here and in line 103 with wording that identifies
-      removal from the sales floor before customer handover, because the box contains unsold expired or damaged stock
-      rather than goods already sold.
-    message_ja: 以前の保持ラベルの矛盾は解決されました。この箇所と103行目の「販売後」を、箱には販売済みの商品ではなく、未販売の期限切れまたは破損した在庫が含まれているため、顧客への引き渡し前に売り場から取り除くことを特定する表現に置き換えてください。
-  - id: F008
-    severity: major
     rule: vp-ops-operability
-    line: 63
+    line: 42
     anchor: >-
-      | `data/summary/` を誤って削除した                           | 再生成手順の整備後は、対象日・基準時点を指定して受付済みの `data/sales/` から
-      `data/summary/`
-      へ出力し直す。整備前は対象日の受付済み取引（結果不明は除く）を手動集計し、日次締め記録の参照値と照合する                                                                     
-      | OPS が再集計、QE が一致を確認。不一致なら PO が締めを再判断 |
+      | 取引セッション（`.session/current-tx.json`）         |
+      進行中の取引の明細と確定状態                                                                                                                      
+      | `sales start`、`add`、`total`、`complete`、`cancel` | 共有なし（端末ローカルの実行中状態）                             |
+      取引開始から会計完了・確定前取消まで。会計が未解決なら CLI が保持する                | `条件付き削除可`。会計完了・確定前取消で CLI
+      が終了させる場合に限る。手動削除はしない（残存時は「場面別の対処と復旧手順」）                                                                          
+      |
     message: >-
-      Include paper-recorded credit sales in the interim manual daily tally and distinguish their confirmation evidence
-      from headquarters acceptance; using only accepted data/sales/ transactions can understate the day's sales and
-      cannot reproduce the cash-plus-credit closing example in line 89.
+      前回のつけ販売の集計漏れと確認証跡の混同は64行目で解消していますが、取引セッションの消失・破損時の対処を「場面別の対処と復旧手順」に追加してください。CLISではセッション欠落時の sales start
+      が新規取引を作成するため、未解決会計の有無をPO・DEVが照合するまで新規開始や強制初期化を止める条件と再開条件を明示する必要があります。受付結果不明時の保留・連絡方針は既にあるため、その適用場面を補う軽微な課題です。
     message_ja: >-
-      暫定的な手書きの日次集計に紙に記録された掛売り販売を含め、その確認証跡を本部の受理と区別してください。受理された data/sales/
-      の取引のみを使用すると、その日の売上が過小評価される可能性があり、89行目の現金と掛売りを合わせた決算例を再現することができません。
+      前回のつけ販売の集計漏れと確認証跡の混同は64行目で解消していますが、取引セッションの消失・破損時の対処を「場面別の対処と復旧手順」に追加してください。CLISではセッション欠落時の sales start
+      が新規取引を作成するため、未解決会計の有無をPO・DEVが照合するまで新規開始や強制初期化を止める条件と再開条件を明示する必要があります。受付結果不明時の保留・連絡方針は既にあるため、その適用場面を補う軽微な課題です。

@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e1a641a1ab094e7888f914895ee09cea
+- v: 1
+  id: reg_e7b536d7e0be4e0c99d8b9accb11e96d
+  ts: "2026-11-16T00:51:57Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: exec plan の共通の約束に作業内容の表を実績に合わせる指示を足し、open の行が残れば完了にしない検査を入れた。2026-11-16 の型の手直し 4 件で executor が表を更新していることを確かめた
+  previous_event_id: reg_8e8bc1f456ae4fa680da820e16908215

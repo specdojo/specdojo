@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-15T14:35:45Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-16T00:53:06Z"
+  conclusion: cdfd-template の図の枠を D2 にし、型の再 grade で pass（100 点）
   derived_from:
     - PJR-PMK6
   commit_type: docs
@@ -44,11 +46,11 @@ Mermaid のまま残る図の枠を、overview・uc の template と同じ D2 �
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                      |
-| --- | ------------------------------------------------------ | ---- | ---- | --------------------------------------------------------- |
-| 1   | cdfd-template の図の枠を D2 にする                     | BA   | done | executor が実施（対応結果を参照）                         |
-| 2   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | BA   | done | executor が実施（対応結果を参照）                         |
-| 3   | 直した後に grade し直して結果を書く（次の回）          | BA   | open | 再 grade は orchestrator が流すため executor は実施しない |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                                         |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------------------------------- |
+| 1   | cdfd-template の図の枠を D2 にする                     | BA   | done | executor が実施（対応結果を参照）                                            |
+| 2   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | BA   | done | executor が実施（対応結果を参照）                                            |
+| 3   | 直した後に grade し直して結果を書く（次の回）          | BA   | done | 2026-11-16 orchestrator が型の grade（pass 100 点（前回 needs-work 94 点）） |
 
 ## 5. 対応結果
 
@@ -63,6 +65,8 @@ Mermaid のまま残る図の枠を、overview・uc の template と同じ D2 �
 - F002（major）: 「プロセス領域」の各節から領域の要約の _TODO_ と主要入力・主要出力・データストアの箇条書きを削り、表だけにした。章の冒頭は受け渡しの正本を概念データフローとする書き方にし、単一領域グループで 3.1 に全領域を書くという指示を、各領域を一つの節とする規定に合わせて節の削除だけにした。前の回の残課題もこれで解消した。
 - F002（major）・F001（minor）: 導入部は全体概要のどのグループを詳細化するかの一文だけにし、利用者と用途は「目的」の 1〜2 文に一本化した。「適用範囲」は対象と対象外の 1 行ずつにし、状態遷移の STSD と責任分担の全体概要参照は対象外の行へまとめた。
 - 再 grade（`grade run --target kata`）は orchestrator が流すため、作業内容の 3 行目は open のまま残した。
+
+次の回の再 grade の結果（2026-11-16 09:50、orchestrator が `grade run --target kata` で実行）: pass 100 点（前回 needs-work 94 点）。指摘は日本語で記録された（PJR-YYDS の後）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-template.yaml`。
 
 ## 6. 関連ドキュメント
 

@@ -137,3 +137,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fd8833158fda401a8f4cd224eb932325
+- v: 1
+  id: reg_065e27a7514e4ace9759b64e2c410998
+  ts: "2026-11-16T00:53:06Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: cdfd-template の図の枠を D2 にし、型の再 grade で pass（100 点）
+  previous_event_id: reg_5aee1673ec0a4f3e8b6f98f8e886a75c

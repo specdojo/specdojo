@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-n6gk-register-work-table-sync
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T22:55:46Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-16T00:51:57Z"
+  conclusion: exec plan の共通の約束に作業内容の表を実績に合わせる指示を足し、open の行が残れば完了にしない検査を入れた。2026-11-16 の型の手直し 4 件で executor が表を更新していることを確かめた
   commit_type: fix
   commit_scope: exec
 ---
