@@ -53,6 +53,7 @@ import {
 } from "../worktree-ops.js";
 import { gitOutput } from "../worktree.js";
 import { refreshParentValidationsForReporterResume } from "./agent-pipeline.js";
+import { DeferredCleanup, runWithDeferredCleanup } from "./deferred-cleanup.js";
 import {
   agentEnvironment,
   appendParentValidationsToExecutorEvidence,
@@ -554,7 +555,7 @@ export async function runPreparedTask(
   const failedStageActor = (): string =>
     pipelineFailureStage === "reporter" ? (reporterActor ?? prepared.actor) : prepared.actor;
 
-  const finalize = async (): Promise<RunResult> => {
+  const finalize = async (): Promise<RunResult | DeferredCleanup<RunResult>> => {
     if (result === "success" && worktreeResultPath) {
       enforceScheduleKataReview({
         task: prepared.task,
@@ -611,6 +612,37 @@ export async function runPreparedTask(
         return "failure";
       }
 
+      // 統合の段の失敗を block として記帳する。merge の前の失敗と、merge の後の撤去の失敗で共通。
+      const blockIntegration = async (error: unknown): Promise<RunResult> => {
+        const reason = integrationBlockReason(
+          prepared.task.id,
+          error instanceof Error ? error.message : String(error),
+          prepared.worktree.path,
+        );
+        const integrateFailedAt = new Date().toISOString();
+        recordIntegrateStage(pipelineStatePath, integrateFailedAt, () => ({
+          status: "failed",
+          completed_at: integrateFailedAt,
+        }));
+        if (worktreeResultPath)
+          await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+        spawnBlock(projectId, prepared.task.id, prepared.claimActor, reason, {
+          ...(pipelineStateRef
+            ? pipelineRecoveryMeta({
+                stage: "integrate",
+                evidenceRef: executorEvidenceRef,
+                stateRef: pipelineStateRef,
+                runId: pipelineState?.run_id ?? prepared.pipelineRunId,
+              })
+            : { limit_deferred: "false" }),
+          ...stageActorMeta(prepared.claimActor, prepared.actor),
+        });
+        process.stderr.write(`${reason}\n`);
+        process.stdout.write(
+          `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+        );
+        return "failure";
+      };
       // A previous attempt may have merged successfully and failed only while removing the
       // worktree. In that case the branch is already contained in HEAD: do not create another
       // commit or merge. Discard only runner-owned lifecycle diffs left by the failure handler,
@@ -768,51 +800,32 @@ export async function runPreparedTask(
             lockPath: schedulePath,
           });
         }
-
-        removeWorktree({
-          context,
-          worktree: prepared.worktree,
-          taskId: prepared.task.id,
-          deleteBranch: true,
-        });
       } catch (error) {
-        if (error instanceof WorktreeRemovedBranchDeletionError) {
-          // The task changes are already merged and the worktree is gone. Keep task completion
-          // independent from branch housekeeping, but make the residue and recovery command clear.
-          process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
-        } else {
-          const reason = integrationBlockReason(
-            prepared.task.id,
-            error instanceof Error ? error.message : String(error),
-            prepared.worktree.path,
-          );
-          const integrateFailedAt = new Date().toISOString();
-          recordIntegrateStage(pipelineStatePath, integrateFailedAt, () => ({
-            status: "failed",
-            completed_at: integrateFailedAt,
-          }));
-          if (worktreeResultPath)
-            await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-          spawnBlock(projectId, prepared.task.id, prepared.claimActor, reason, {
-            ...(pipelineStateRef
-              ? pipelineRecoveryMeta({
-                  stage: "integrate",
-                  evidenceRef: executorEvidenceRef,
-                  stateRef: pipelineStateRef,
-                  runId: pipelineState?.run_id ?? prepared.pipelineRunId,
-                })
-              : { limit_deferred: "false" }),
-            ...stageActorMeta(prepared.claimActor, prepared.actor),
-          });
-          process.stderr.write(`${reason}\n`);
-          process.stdout.write(
-            `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
-          );
-          return "failure";
-        }
+        return blockIntegration(error);
       }
-      spawnComplete(projectId, prepared.task.id, prepared.claimActor);
-      process.stdout.write(`  Done: ${prepared.task.id}\n`);
+      // PJR-NHT7: 撤去はロックの外で行い、完了の記帳はロックを取り直して行う。
+      return new DeferredCleanup<RunResult>(
+        () =>
+          removeWorktree({
+            context,
+            worktree: prepared.worktree,
+            taskId: prepared.task.id,
+            deleteBranch: true,
+          }),
+        async (outcome) => {
+          if (!outcome.ok) {
+            if (!(outcome.error instanceof WorktreeRemovedBranchDeletionError)) {
+              return blockIntegration(outcome.error);
+            }
+            // The task changes are already merged and the worktree is gone. Keep task completion
+            // independent from branch housekeeping, but make the residue and recovery command clear.
+            process.stderr.write(`Warning: ${outcome.error.message}; run exec worktree prune.\n`);
+          }
+          spawnComplete(projectId, prepared.task.id, prepared.claimActor);
+          process.stdout.write(`  Done: ${prepared.task.id}\n`);
+          return "success";
+        },
+      );
     } else if (effectiveResult === "rate_limit") {
       // Keep the worktree for the due-time resume path; do not merge partial changes.
       const activeLimit = pipelineFailureStage === "reporter" ? reporterLimit : limit;
@@ -889,7 +902,7 @@ export async function runPreparedTask(
     return effectiveResult;
   };
 
-  return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+  return runWithDeferredCleanup(lifecycleLock, finalize);
 }
 
 // 統合の段の失敗の理由（検査の名前・commit の対象外のパス・merge の失敗など、失敗した操作の

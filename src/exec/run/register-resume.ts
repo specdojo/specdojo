@@ -63,6 +63,10 @@ import {
 } from "./register-state.js";
 import { finalizeRegisterWorktreeRun } from "./register-worktree.js";
 import {
+  isWorktreeCleanupInProgress,
+  worktreeCleanupInProgressReason,
+} from "../worktree-cleanup-lock.js";
+import {
   rateLimitRecoveryReason,
   resolveAgentOverride,
   resolvePinnedRateLimitRunOptions,
@@ -235,27 +239,25 @@ export async function resumeRegisterIntegration(params: {
   // reporter が記入済みの result をそのまま使う。agent は起動しないため、成果は success 扱いで
   // 統合だけを実行する（result が未記入なら finalize 側の downgrade が blocked に落とす）。
   const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
-  const finalize = async (): Promise<RegisterItemSummary> =>
-    finalizeRegisterWorktreeRun({
-      context: params.context,
-      opts: params.opts,
-      registerPaths: params.registerPaths,
-      item,
-      ticketPath: params.ticketPath,
-      worktree,
-      stem: params.stem,
-      worktreeResultPath,
-      resultScaffold,
-      agentResult: validationFailure ? "failure" : "success",
-      stderr: validationFailure ?? "",
-      ...(validationFailure ? { runnerBlockReason: validationFailure } : {}),
-      actor,
-      bookkeepingPaths: params.bookkeepingPaths(),
-      pipelineStatePath: target.statePath,
-      resumedIntegration: true,
-    });
-
-  return params.lifecycleLock ? params.lifecycleLock.runExclusive(finalize) : finalize();
+  return finalizeRegisterWorktreeRun({
+    context: params.context,
+    opts: params.opts,
+    registerPaths: params.registerPaths,
+    item,
+    ticketPath: params.ticketPath,
+    worktree,
+    stem: params.stem,
+    worktreeResultPath,
+    resultScaffold,
+    agentResult: validationFailure ? "failure" : "success",
+    stderr: validationFailure ?? "",
+    ...(validationFailure ? { runnerBlockReason: validationFailure } : {}),
+    actor,
+    bookkeepingPaths: params.bookkeepingPaths,
+    pipelineStatePath: target.statePath,
+    resumedIntegration: true,
+    lifecycleLock: params.lifecycleLock,
+  });
 }
 
 // register 項目1件の再開。途中で止まった run を、既存 worktree と evidence を保持したまま
@@ -303,6 +305,10 @@ export async function resumeSingleRegisterItemWorktree(
   const foundWorktree = findExecWorktree(repoRoot, worktreeTaskId);
   if (!foundWorktree) {
     return refuse(`no exec worktree to resume for ${item.id}; run the item again instead`);
+  }
+  // 前の統合の後の撤去がロックの外で進んでいる間は、同じ worktree を再開しない（PJR-NHT7）。
+  if (isWorktreeCleanupInProgress(executionPath, worktreeTaskId)) {
+    return refuse(worktreeCleanupInProgressReason(worktreeTaskId));
   }
   const lookup = findResumableRegisterRun({
     repoRoot,
@@ -612,27 +618,26 @@ export async function resumeSingleRegisterItemWorktree(
       ),
     });
 
-    const finalize = async (): Promise<RegisterItemSummary> =>
-      finalizeRegisterWorktreeRun({
-        context,
-        opts,
-        registerPaths,
-        item,
-        ticketPath,
-        worktree,
-        stem: artifacts.stem,
-        worktreeResultPath,
-        resultScaffold,
-        agentResult: outcome.runResult,
-        stderr: outcome.blockReason ?? "",
-        runnerBlockReason: outcome.blockReason,
-        actor: executor.candidate.actor,
-        bookkeepingPaths: bookkeepingPaths(),
-        pipelineStatePath: resolve(worktree.path, outcome.stateRef),
-        transitionReason: rateLimitRecoveryReason(outcome.rateLimitEvents) || undefined,
-        resumedExecutor: true,
-      });
-    return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+    return finalizeRegisterWorktreeRun({
+      context,
+      opts,
+      registerPaths,
+      item,
+      ticketPath,
+      worktree,
+      stem: artifacts.stem,
+      worktreeResultPath,
+      resultScaffold,
+      agentResult: outcome.runResult,
+      stderr: outcome.blockReason ?? "",
+      runnerBlockReason: outcome.blockReason,
+      actor: executor.candidate.actor,
+      bookkeepingPaths,
+      pipelineStatePath: resolve(worktree.path, outcome.stateRef),
+      transitionReason: rateLimitRecoveryReason(outcome.rateLimitEvents) || undefined,
+      resumedExecutor: true,
+      lifecycleLock,
+    });
   }
 
   const reporter = resolveRegisterResumeReporter(
@@ -688,25 +693,23 @@ export async function resumeSingleRegisterItemWorktree(
     productWorktrees: worktree.repos,
   });
 
-  const finalize = async (): Promise<RegisterItemSummary> =>
-    finalizeRegisterWorktreeRun({
-      context,
-      opts,
-      registerPaths,
-      item,
-      ticketPath,
-      worktree,
-      stem: artifacts.stem,
-      worktreeResultPath,
-      resultScaffold,
-      agentResult: outcome.runResult,
-      stderr: outcome.blockReason ?? "",
-      actor: reporter.candidate.actor,
-      bookkeepingPaths: bookkeepingPaths(),
-      pipelineStatePath: target.statePath,
-      transitionReason:
-        rateLimitRecoveryReason(outcome.state.stages.reporter.rate_limit_events ?? []) || undefined,
-    });
-
-  return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+  return finalizeRegisterWorktreeRun({
+    context,
+    opts,
+    registerPaths,
+    item,
+    ticketPath,
+    worktree,
+    stem: artifacts.stem,
+    worktreeResultPath,
+    resultScaffold,
+    agentResult: outcome.runResult,
+    stderr: outcome.blockReason ?? "",
+    actor: reporter.candidate.actor,
+    bookkeepingPaths,
+    pipelineStatePath: target.statePath,
+    transitionReason:
+      rateLimitRecoveryReason(outcome.state.stages.reporter.rate_limit_events ?? []) || undefined,
+    lifecycleLock,
+  });
 }
