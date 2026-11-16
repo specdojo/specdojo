@@ -38,6 +38,7 @@ pm-quality-management-plan を最新の grade の指摘で直す
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:catalog` と親の検証が通っている。
 - 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の後）: `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-quality-management-plan.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade（`grade run --target deliverable`）は orchestrator が流すため、executor は理由をメモに書いてその行を open のまま残す。
+- 3 回目の実行（2026-11-17、2 回目の再 grade の指摘を取り込む回）: `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-quality-management-plan.yaml` の major のうち、F001〜F003 を直す。公開後 6・9・24 か月の判定時期に未達が確定したとき、当初の未達を保ったまま、条件ごとの再観測の時期・必要な観測期間・再合格条件と、期限後の是正の手順（PM の計画、PO の判断、BA の証跡の更新、QE の再確認）を定める。PO が決めるべき値は推測で埋めず、期限付きの留保として追跡先をつなぐ。作業内容の表を実績に合わせる。再 grade は orchestrator が流すため、executor はその行を open のまま残す。
 
 ## 4. 作業内容
 
@@ -46,7 +47,9 @@ pm-quality-management-plan を最新の grade の指摘で直す
 | 1   | 最新の grade の指摘を取り込んで直す                    | PM   | done | executor が実施（対応結果を参照）                                |
 | 2   | grade し直して結果を書く                               | PM   | done | 2026-11-16 orchestrator が grade（needs-work 93 点）             |
 | 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | PM   | done | 2026-11-17 executor が F001〜F005 を取り込んだ（対応結果を参照） |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | open | 2026-11-17 の 2 回目の再 grade で needs-work                     |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | PM   | done | 2026-11-17 の 2 回目の再 grade で needs-work                     |
+| 5   | 2 回目の再 grade の指摘を取り込んで直す（3 回目）      | PM   | open | -                                                                |
+| 6   | 直した後に grade し直して結果を書く（3 回目）          | PM   | open | orchestrator が流す                                              |
 
 ## 5. 対応結果
 
