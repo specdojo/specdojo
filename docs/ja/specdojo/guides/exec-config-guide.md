@@ -325,6 +325,8 @@ routing:
 
 `exec run --register` は個票に `difficulty` があり、対応する表がある場合だけこの指定を使います。個票に難易度がない場合、または対応する表がない場合は、`stage_role` と `priority` による従来の自動選択へ戻ります。CLI の `--executor-by`・`--reporter-by`・`--on-rate-limit`・fallback 指定は、指定した項目だけ表より優先します。`on_rate_limit: wait` でも fallback は接続不能時の切替先として使用されます。
 
+通常実行（`--force-restart` を含む）では、全選択項目の振り分けを解決し、指名した executor・reporter の fallback を start の記帳・plan/result の生成・worktree の作成前に検査します。CLI の段別指定が振り分けの fallback と同じ agent になる場合も設定エラーとして終了コード 1 で停止します。別の fallback を明示するか、段の agent 指定を変更して再実行します。
+
 上の `qwen-executor` を使う `easy` の例は、変更範囲が docs・src・tests の内側で完結し、それらの外を変更しない作業に限る運用を前提にしています。難易度は優先度ではなく、必要な推論・判断と安全な変更範囲から決めます。
 
 `specdojo init --exec` は、選択した provider の member に合わせて 3 段階の表を生成します。provider を複数選んだ場合は、後続 provider の executor / reporter を fallback の例にも使います。

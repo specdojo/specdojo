@@ -20,6 +20,7 @@ import { registerExecCommands } from "../../../src/exec/exec.js";
 import { reserveProductBranch } from "../../../src/exec/product-branch-records.js";
 import { listRunRecords } from "../../../src/exec/run-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
+import { readRegisterEventsFromContent } from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import type { SpecDojoRepoConfig } from "../../../src/shared/specdojo-config.js";
@@ -743,6 +744,121 @@ afterEach(() => {
 });
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
+  it.each([
+    ["--worktree", "executor", false],
+    ["--in-place", "executor", false],
+    ["--worktree", "reporter", false],
+    ["--in-place", "reporter", false],
+    ["--worktree", "executor", true],
+    ["--in-place", "executor", true],
+  ] as const)(
+    "rejects %s with a routed fallback matching the pinned %s before any run artifacts (later item: %s)",
+    { timeout: 120_000 },
+    async (executionMode, stage, laterItem) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const ticketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        writeFileSync(
+          ticketPath,
+          buildTicket("PJR-AB12").replace(
+            "  priority: medium",
+            "  priority: medium\n  difficulty: medium",
+          ),
+        );
+        if (laterItem) {
+          writeFileSync(
+            join(root, REGISTER_REL, "pjr-cd34-topic.md"),
+            buildTicket("PJR-CD34").replace(
+              "  priority: medium",
+              "  priority: medium\n  difficulty: medium",
+            ),
+          );
+        }
+        const defaultsPath = join(root, ".specdojo/exec-defaults.yaml");
+        writeFileSync(
+          defaultsPath,
+          readFileSync(defaultsPath, "utf8") +
+            "routing:\n  medium:\n    executor_by: exec-2\n    reporter_by: report-1\n" +
+            "    on_rate_limit: fallback\n    fallback_executor_by: exec-1\n" +
+            (stage === "reporter" ? "    fallback_reporter_by: report-1\n" : ""),
+        );
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "configure routed fallbacks");
+        const initialHead = git(root, "rev-parse", "HEAD");
+        const initialTicket = readFileSync(ticketPath, "utf8");
+        const initialWorktrees = git(root, "worktree", "list", "--porcelain");
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          laterItem ? "PJR-AB12,PJR-CD34" : "PJR-AB12",
+          "--executor-by",
+          laterItem
+            ? "PJR-AB12=exec-2,PJR-CD34=exec-1"
+            : stage === "executor"
+              ? "exec-1"
+              : "exec-2",
+          "--reporter-by",
+          "report-1",
+          executionMode,
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode, output.join("")).toBe(1);
+        expect(output.join("")).toContain(
+          `Fallback ${stage} must differ from the pinned agent: ${stage === "executor" ? "exec-1" : "report-1"}`,
+        );
+        expect(readFileSync(ticketPath, "utf8")).toBe(initialTicket);
+        expect(existsSync(join(root, REGISTER_REL, "events/pjr-ab12.yaml"))).toBe(false);
+        expect(existsSync(join(root, REGISTER_REL, "events/pjr-cd34.yaml"))).toBe(false);
+        expect(listRunRecords(join(root, EXECUTION_REL), "plan")).toEqual([]);
+        expect(listRunRecords(join(root, EXECUTION_REL), "result")).toEqual([]);
+        expect(git(root, "worktree", "list", "--porcelain")).toBe(initialWorktrees);
+        expect(readdirSync(worktreeBase)).toEqual([]);
+        expect(git(root, "rev-parse", "HEAD")).toBe(initialHead);
+        expect(git(root, "status", "--porcelain")).toBe("");
+
+        if (executionMode === "--worktree" && stage === "executor" && !laterItem) {
+          // After fixing the selection, a force restart must record the agent that actually runs.
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--executor-by",
+            "exec-2",
+            "--reporter-by",
+            "report-1",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+            "--force-restart",
+          ]);
+          expect(process.exitCode ?? 0, output.join("")).toBe(0);
+          const eventPath = join(root, REGISTER_REL, "events/pjr-ab12.yaml");
+          const events = readRegisterEventsFromContent(readFileSync(eventPath, "utf8"), eventPath);
+          expect(
+            events.filter((event) => event.action === "start").map((event) => event.actor),
+          ).toEqual(["exec-2"]);
+          expect(events.find((event) => event.action === "review")?.actor).toBe("exec-2");
+          expect(readRootResult(root)).toContain("status: complete");
+        }
+      });
+    },
+  );
+
   it(
     "integrates child run records into the invoking Job branch without nesting worktrees",
     { timeout: 120_000 },
