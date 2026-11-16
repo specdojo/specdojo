@@ -5,19 +5,20 @@ path: docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selec
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-11-11T12:50:22.773Z"
-graded_by: sol-review-executor
+score: 87
+graded_at: "2026-11-16T03:45:01.177Z"
+graded_by: opus-review-executor
 content_hash: 0b9b80923a69480c7e80d96ab82353abb4abe940ff58e4230a48ec699a1f6af0
 source_hashes:
   catalog-entry: 2584b0d3c9b1e33a54da977a6307eb41c36383ad364e84e7da2a67f44b950134
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
-  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  deliverable:pm-raci: 2c88dff750f6ba825018a44d00dc148f996dbed108c921f5ece9dc352bff0f1b
+  dependency:bes-index: 1dc7e50fd7b01c326c1315ebcf1fe55b71b5f230ac8ec06baf67f6d81f558cbe
   dependency:cdfd-overview: 0aecdaca4ce0a56ed8f672e9882bce4023abc8d4b6ec7cb5645fc181ca6ede74
-  dependency:stsd-task-execution: be94d1a9dc4e8bc3eb7220466a50ccb06c2d8f26e362e2ace062dc5b97b924cc
+  dependency:stsd-task-execution: e32caf5e6107f817a241ec931a753c823bbe7db857bed36d34c693e2524b2346
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
-  schedule: 04012afc4200d6818182c8456f8de807ea5bbe3f4471aa1ad474356633280281
+  schedule: 0dfcda0848e7a3c34e36da9dfb892ca2b6a3186f870750012492f1beee3ccc56
 categories:
   purpose:
     score: 100
@@ -28,7 +29,7 @@ categories:
   business:
     score: 92
   consistency:
-    score: 88
+    score: 75
   architecture:
     score: 92
   usability:
@@ -66,8 +67,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 3
     score: 75
@@ -121,8 +122,8 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 6
+  major: 4
+  minor: 8
   note: 0
 findings:
   - id: F001
@@ -156,6 +157,24 @@ findings:
       type: document
   - id: F003
     severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 3
+    anchor: >-
+      着手可能なタスクが、1 回の実行の対象として選ばれたという出来事を定義する。上位の業務イベント一覧（`bes-index` /
+      `prj-0001:bes-index`、未作成）において、[[prj-0001:cdfd-overview|概念データフロー図（全体概要）]]
+      のタスク実行（`P-07`）の起点イベント「実行指示された」のうち、実行対象の確定を詳細化する個別仕様（`bes-task-ready-selected`）である。対象範囲と業務承認の前提は 1.1 節に示す。
+    message: >-
+      `bes-index`（docs/ja/product/010-business-specs/030-business-model/bes-index.md）は既に作成済みで、48 行目で本書へリンクし、52・74 行目で
+      `bes-task-execution-requested` の一部を詳細化したものと位置づけている。それなのに本書は「未作成」と書き、一覧の対応イベント ID を示していない。一覧への wikilink と
+      `bes-task-execution-requested` との対応に更新すべきである。
+    message_ja: >-
+      `bes-index`（docs/ja/product/010-business-specs/030-business-model/bes-index.md）は既に作成済みで、48 行目で本書へリンクし、52・74 行目で
+      `bes-task-execution-requested` の一部を詳細化したものと位置づけている。それなのに本書は「未作成」と書き、一覧の対応イベント ID を示していない。一覧への wikilink と
+      `bes-task-execution-requested` との対応に更新すべきである。
+    cause:
+      type: document
+  - id: F004
+    severity: minor
     rule: vp-arc-technical-constraints
     line: 90
     anchor: >-
@@ -171,7 +190,7 @@ findings:
       represented consistently.
     cause:
       type: document
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 90
@@ -188,7 +207,7 @@ findings:
       specification as an implementation reference.
     cause:
       type: document
-  - id: F005
+  - id: F006
     severity: major
     rule: vp-qe-done-criteria
     line: 23
@@ -205,7 +224,7 @@ findings:
       specification is complete.
     cause:
       type: document
-  - id: F006
+  - id: F007
     severity: major
     rule: vp-qe-done-criteria
     line: 90
@@ -222,39 +241,63 @@ findings:
       support implementation and test design.
     cause:
       type: document
-  - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 24
-    anchor: >-
-      | 一覧との接続 | _UNDECIDED_: 依存の
-      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                            | 一覧が作成された時点で ARC
-      が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する |
-    message: >-
-      Add the event-index link when the index is created and verify this event’s catalog entry against the
-      specification.
-    message_ja: >-
-      Add the event-index link when the index is created and verify this event’s catalog entry against the
-      specification.
-    cause:
-      type: document
   - id: F008
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 24
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 17
     anchor: >-
-      | 一覧との接続 | _UNDECIDED_: 依存の
-      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                            | 一覧が作成された時点で ARC
-      が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する |
-    message: >-
-      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
-      connected.
-    message_ja: >-
-      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
-      connected.
+      _ASSUMPTION_: 本書は、[[prj-0001:stsd-task-execution|ステータス定義（タスク実行）]] で発生条件を説明できる schedule
+      系（スケジュール帳票のタスク）の対象確定に適用する前提で記述する。3 系統が共用する実行サイクル全体への適用は、人間の PO による確定の段での業務承認を要する。register 系・routine
+      系は適用未判定とし、本書の条件をそのまま適用しない。恒久的な対象外ともせず、executor による承認済みの判断にはしない。
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     cause:
       type: document
   - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 24
+    anchor: >-
+      | 一覧との接続 | _UNDECIDED_: 依存の
+      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                            | 一覧が作成された時点で ARC
+      が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する |
+    message: >-
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
+    message_ja: >-
+      Add the event-index link when the index is created and verify this event’s catalog entry against the
+      specification.
+    cause:
+      type: document
+  - id: F010
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 24
+    anchor: >-
+      | 一覧との接続 | _UNDECIDED_: 依存の
+      `bes-index`（`prj-0001:bes-index`）が未作成であり、対応行・成果物カタログ定義との整合・双方向リンクは未確認                            | 一覧が作成された時点で ARC
+      が `P-07` の「実行指示された」および成果物カタログの本イベント定義との整合を確認し、一覧と本書の双方向リンクを設定して、業務仕様の完成判断前に PM へ報告する |
+    message: >-
+      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
+      connected.
+    message_ja: >-
+      Complete and verify the BEL event link when the index is available so the event catalog and specification remain
+      connected.
+    cause:
+      type: document
+  - id: F011
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: >-
+      着手可能なタスクが、1 回の実行の対象として選ばれたという出来事を定義する。上位の業務イベント一覧（`bes-index` /
+      `prj-0001:bes-index`、未作成）において、[[prj-0001:cdfd-overview|概念データフロー図（全体概要）]]
+      のタスク実行（`P-07`）の起点イベント「実行指示された」のうち、実行対象の確定を詳細化する個別仕様（`bes-task-ready-selected`）である。対象範囲と業務承認の前提は 1.1 節に示す。
+    message: 「1.1 節に示す」（本文 3 行目）と「1.1 節に従う」（本文 92 行目）は章を番号だけで参照しており、Markdown 規約の禁止事項に当たる。「適用範囲と承認の未決事項」のように章タイトルで参照すべきである。
+    message_ja: 「1.1 節に示す」（本文 3 行目）と「1.1 節に従う」（本文 92 行目）は章を番号だけで参照しており、Markdown 規約の禁止事項に当たる。「適用範囲と承認の未決事項」のように章タイトルで参照すべきである。
+    cause:
+      type: document
+  - id: F012
     severity: major
     rule: vp-qe-config-validity
     line: 17
@@ -264,14 +307,20 @@ findings:
       系は適用未判定とし、本書の条件をそのまま適用しない。恒久的な対象外ともせず、executor による承認済みの判断にはしない。
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+level_corrections:
+  - viewpoint: vp-qe-done-criteria
+    original_level: 2
+    corrected_level: 1
 done_criteria:
-  satisfied: 2
+  satisfied: 1
   total: 5
   unsatisfied:
     DC-002:
       - PO
     DC-003:
       - ARC
+    DC-004:
+      - QE
     DC-005:
       - DEV
   detail_ref: bes-task-ready-selected-grade-criteria

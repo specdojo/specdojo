@@ -5,9 +5,9 @@ path: docs/ja/specdojo/rulebooks/gl-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 90
-graded_at: "2026-11-13T13:54:22.536Z"
-graded_by: sol-review-executor
+score: 88
+graded_at: "2026-11-16T03:41:46.993Z"
+graded_by: opus-review-executor
 content_hash: dae2d5f874ef055cbcd57b57802aa427b134826aa753e5e28ca99cc659b170c3
 categories:
   purpose:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 88
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 9
+  minor: 10
   note: 0
 findings:
   - id: F001
@@ -199,6 +199,19 @@ findings:
       line 32 requires term IDs to be unique across project glossaries.
   - id: F008
     severity: minor
+    rule: vp-qe-kata-conformance
+    line: 31
+    anchor: "- 用語 ID は `^tm-[a-z0-9-]+$` に従う。新規採番では `tm-<領域>-<概念>` とし、共通用語には `common` など共有範囲を示す接頭辞を使う。"
+    message: >-
+      新規採番は `tm-＜領域＞-＜概念＞` とする規則に対して、完成例 gl-sample の
+      `tm-reorder-point`・`tm-standard-product`・`tm-inventory`・`tm-shop-owner` などには領域の接頭辞がなく、既存 ID
+      維持の例外に当たる根拠もないため、sample の ID を規則に合わせるか、分類用の用語や既存 ID の扱いを rulebook に明記して整合させる。
+    message_ja: >-
+      新規採番は `tm-＜領域＞-＜概念＞` とする規則に対して、完成例 gl-sample の
+      `tm-reorder-point`・`tm-standard-product`・`tm-inventory`・`tm-shop-owner` などには領域の接頭辞がなく、既存 ID
+      維持の例外に当たる根拠もないため、sample の ID を規則に合わせるか、分類用の用語や既存 ID の扱いを rulebook に明記して整合させる。
+  - id: F009
+    severity: minor
     rule: vp-ops-release-readiness
     line: 47
     anchor: "`status` は schema 上は省略可能だが、共通メタ情報の規約に従って記載する。`ready` への昇格は人間が行う。"
@@ -210,7 +223,7 @@ findings:
       Define the ready gate for a glossary, including successful structural and reference checks, review of business
       definitions, disposition of unresolved labels and candidate terms, and human PO confirmation; the status
       enumeration alone does not establish release prerequisites.
-  - id: F009
+  - id: F010
     severity: minor
     rule: vp-ops-operability
     line: 131
