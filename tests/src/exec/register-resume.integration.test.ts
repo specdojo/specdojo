@@ -635,6 +635,71 @@ describe("exec run --register --worktree --resume", () => {
     },
   );
 
+  // PJR-97KE: 夜間の job は job の worktree の中から子の run を起動する。子の run が止まると wait の
+  // 記録は job の branch にしか入らない。日中に本体から再開し、統合まで通ること、後で job の branch を
+  // 本体へ統合しても衝突しないことを確かめる。
+  it(
+    "resumes from the main checkout a run stopped inside a job worktree without conflicting with the later job merge",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const jobBranch = "exec/test-JBR-night-fixture";
+        const jobPath = join(worktreeBase, "job");
+        git(root, "worktree", "add", "-b", jobBranch, jobPath);
+
+        process.chdir(jobPath);
+        await runWithFailingReporter(markerPath, worktreeBase);
+        expect(process.exitCode).toBe(1);
+        expect(readFileSync(join(jobPath, TICKET_REL), "utf8")).toContain("item_status: waiting");
+        // The job commits its own output after the child run, as runJobWorktreeMode does.
+        writeFileSync(join(jobPath, "docs/job-output.md"), "# job output\n", "utf8");
+        git(jobPath, "add", "docs/job-output.md");
+        git(jobPath, "commit", "-m", "chore(routine): job output");
+
+        process.chdir(root);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: open");
+        expect(worktreePathFor(root)).not.toBeNull();
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        stdout.length = 0;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(stdout.join("")).toContain(`merged the wait records of PJR-CD34 from ${jobBranch}`);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
+        // Only the job commit holding the wait records is brought in, not the later job output.
+        expect(existsSync(join(root, "docs/job-output.md"))).toBe(false);
+        expect(worktreePathFor(root)).toBeNull();
+        const resultFiles = listRunRecords(join(root, EXECUTION_REL), "result");
+        expect(resultFiles).toHaveLength(1);
+        expect(readFileSync(resultFiles[0], "utf8")).toContain("status: complete");
+
+        // The later integration of the job branch shares the wait commit and does not conflict.
+        git(root, "merge", "--no-ff", "-m", "chore(routine): merge job", jobBranch);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(existsSync(join(root, "docs/job-output.md"))).toBe(true);
+        expect(git(root, "status", "--porcelain", "--", PROJECT_BASE)).toBe("");
+      });
+    },
+  );
+
   it.each([false, true])(
     "refuses migrating a retained run worktree without changing records (dry-run=%s)",
     { timeout: 180_000 },

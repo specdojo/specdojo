@@ -183,6 +183,8 @@ specdojo routine run --project <project-id> --due
 
 Job worktree 内で `orchestrator night` が起動する register run は、子の worktree を主の作業ツリーと同じ配置規則で作る。設定の `run.worktree_base` と既定値の相対パスは `git worktree list --porcelain` の先頭にある主の作業ツリーを基準とし、CLI の明示的な `--worktree-base` は起動元を基準とする。子の成果物・plan・result・実行記録は起動元の Job ブランチへ統合され、その後 Job 全体の review・統合で上位の統合先へ入る。
 
+子の run が wait・block で止まると、wait の commit は Job ブランチにだけ入る。主の作業ツリーから `exec run --register <id> --resume` で再開すると、runner は exec ブランチ上の最新の `exec(register <id>): merge <target> after wait` の第2親（wait の記録を含む Job ブランチの commit）が HEAD に含まれないことを確かめ、その commit を `exec(register <id>): merge <target> records before resume` として主の作業ツリーの branch へ取り込んでから、通常の再開と統合を行う。記録を複製せず履歴として取り込むため、後で Job ブランチを統合しても同じ commit を共有して衝突しない。取り込むのはその commit までで、wait より後の Job の出力は含まない。取り込めない場合は再開を拒否し、Job の worktree の中での再開や `--force-restart` を次の手として示す。
+
 Git の repository 固有環境変数の除去は `src/shared/git-environment.ts` の `gitEnvironment()` に集約し、Job の再起動と夜間の子 run にも適用する。Job を worktree 内で再起動する印 `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD` は Job の入口で消費し、command・agent・子 run の親検証には渡さない。これにより子が起動する別の Job も自身の `task.review` と起動オプションで統合経路を選ぶ。project 実行 lock の継承 token は保持する。
 
 routineから起動する場合は、routineのactionにJobを指定する。
