@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-30SA",
   "run_id": "pjr-30sa-20261116T112318Z-04e75f0f",
-  "updated_at": "2026-11-16T11:55:46.774Z",
+  "updated_at": "2026-11-16T11:56:07.969Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-30SA/pjr-30sa-20261116T112318Z-04e75f0f/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-16T11:55:46.774Z",
-      "completed_at": null,
+      "completed_at": "2026-11-16T11:56:07.969Z",
       "artifact_ref": null
     }
   },
