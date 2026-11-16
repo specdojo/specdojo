@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kv37-ifx-file-sample-rework-wave-2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T12:22:20Z"
+  completed_at: "2026-11-16T01:25:21Z"
+  conclusion: ifx-file-sample を手直しし、型の再 grade で pass（100 点）
   commit_type: docs
   commit_scope: kata
   approach: sample-maintenance
@@ -43,14 +45,14 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                                              |
-| --- | ------------------------------------------------------ | ---- | ---- | --------------------------------------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                                                 |
-| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（ifx-file-sample は needs-work 83 点）           |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F007 を取り込んだ（対応結果の 2 回目を参照）                    |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | done | 2026-11-16 orchestrator が型の grade（needs-work 81 点（前回 83 点）・指摘 7 件） |
-| 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）  | ARC  | done | executor が F001〜F007 を取り込んだ（対応結果の 3 回目を参照）                    |
-| 6   | 直した後に grade し直して結果を書く（その次の回）      | ARC  | open | orchestrator が流す                                                               |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                                               |
+| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                                                  |
+| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（ifx-file-sample は needs-work 83 点）            |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F007 を取り込んだ（対応結果の 2 回目を参照）                     |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | done | 2026-11-16 orchestrator が型の grade（needs-work 81 点（前回 83 点）・指摘 7 件）  |
+| 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）  | ARC  | done | executor が F001〜F007 を取り込んだ（対応結果の 3 回目を参照）                     |
+| 6   | 直した後に grade し直して結果を書く（その次の回）      | ARC  | done | 2026-11-16 10:2x orchestrator が型の grade（pass 100 点（前回 81 点）・指摘 0 件） |
 
 ## 5. 対応結果
 
@@ -93,6 +95,8 @@ specdojo:
   - `rejected` の終了コードは [[specdojo:clis-sample]] の「売上登録失敗」（`3`）に合わせた。
   - `sales start` が未解決の控えで停止するときの区分は、本部受付の照合が要る点が同じなので「売上登録結果不明（exit code 3）」とした。
 - 残課題: 再 grade（`grade run --target kata`）は agent CLI の起動が要るため executor では流していない。orchestrator が流して結果をここに追記する（作業内容の 6 は open のまま）。
+
+その次の回の再 grade の結果（2026-11-16 10:2x、orchestrator が実行）: pass 100 点（前回 81 点）・指摘 0 件。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-file-sample.yaml`。
 
 ## 6. 関連ドキュメント
 

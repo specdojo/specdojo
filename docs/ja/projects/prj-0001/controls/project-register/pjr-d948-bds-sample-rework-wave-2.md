@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-d948-bds-sample-rework-wave-2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: UX
   registered_at: "2026-11-15T12:22:02Z"
+  completed_at: "2026-11-16T01:39:55Z"
+  conclusion: bds-sample を 3 回手直しし、型の再 grade で pass（99 点）
   commit_type: docs
   commit_scope: kata
   approach: sample-maintenance
@@ -39,17 +41,20 @@ specdojo:
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`npm run validate:catalog` と親の検証が通っている。
 - 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の前に流す）: `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade（`grade run --target kata`）は orchestrator が流すため、executor は理由をメモに書いてその行を open のまま残す。
 - その次の回（2026-11-16 午後、0.8.0 の前）: `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml` の 09:50 の指摘をすべて取り込んで直し、作業内容の表を実績に合わせる。再 grade は orchestrator が流す。
+- 3 回目の回（2026-11-16 昼、0.8.0 の前）: `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml` の 10:21 の minor の指摘 4 件を取り込んで直し、作業内容の表を実績に合わせる。再 grade は orchestrator が流す。
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                                              |
-| --- | ------------------------------------------------------ | ---- | ---- | --------------------------------------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | UX   | done | -                                                                                 |
-| 2   | grade し直して結果を書く                               | UX   | done | 2026-11-16 orchestrator が grade（bds-sample は needs-work 82 点）                |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | UX   | done | 2026-11-16 executor が F001〜F007 を取り込んだ                                    |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | done | 2026-11-16 orchestrator が型の grade（needs-work 90 点（前回 82 点）・指摘 4 件） |
-| 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）  | UX   | done | 2026-11-16 executor が F001〜F004 を取り込んだ                                    |
-| 6   | 直した後に grade し直して結果を書く（その次の回）      | UX   | open | 再 grade は orchestrator が流すため executor は実行していない                     |
+| No  | 作業                                                       | 担当 | 状態 | メモ                                                                                                    |
+| --- | ---------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                        | UX   | done | -                                                                                                       |
+| 2   | grade し直して結果を書く                                   | UX   | done | 2026-11-16 orchestrator が grade（bds-sample は needs-work 82 点）                                      |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回）     | UX   | done | 2026-11-16 executor が F001〜F007 を取り込んだ                                                          |
+| 4   | 直した後に grade し直して結果を書く（次の回）              | UX   | done | 2026-11-16 orchestrator が型の grade（needs-work 90 点（前回 82 点）・指摘 4 件）                       |
+| 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）      | UX   | done | 2026-11-16 executor が F001〜F004 を取り込んだ                                                          |
+| 6   | 直した後に grade し直して結果を書く（その次の回）          | UX   | done | 2026-11-16 10:2x orchestrator が型の grade（needs-work 90 点（前回 90 点）・指摘 4 件（すべて minor）） |
+| 7   | 10:21 の再 grade の minor の指摘を取り込んで直す（3 回目） | UX   | done | 2026-11-16 executor が F001〜F004 を取り込んだ（grade の記録では 4 件とも major）                       |
+| 8   | 直した後に grade し直して結果を書く（3 回目）              | UX   | done | 2026-11-16 10:38 orchestrator が型の grade（pass 99 点）                                                |
 
 ## 5. 対応結果
 
@@ -114,6 +119,22 @@ specdojo:
 残課題（その次の回）:
 
 - `grade run --target kata` での再 grade は orchestrator が流す。作業内容の No 6 は open のまま残した。
+
+その次の回の再 grade の結果（2026-11-16 10:2x、orchestrator が実行）: needs-work 90 点（前回 90 点）・指摘 4 件（すべて minor）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml`。
+
+3 回目の実施内容（2026-11-16、executor）:
+
+- 10:21 の grade（`graded_at` は 2026-11-16T01:21:33Z）の F001〜F004 を取り込んだ。grade の結果ファイルでは 4 件とも major で、完了条件の「minor」と食い違うが、結果ファイルを正とした。rulebook は変えていない。駄菓子屋の文脈は保った。
+- F003・F004: 「出力の時期と契機」の再出力で、「翌週の販売数は変わらないため 2 週先からは作り直さない」を削った。作り直した週の販売数（印を含む）か販売件数の不一致の日が変わったときは次の週を再出力し、その週も変わったらさらに続ける。作り直す前と変わらなかった週か、作成済みの最新の週で止め、DEV が各週の前週比を照合したら復旧完了とした。
+- F001: 「締めの版」に、前週比のために続けて再出力する週も同じ規則で数え直し、前回の販売数を引き継がないと加えた。
+- F002: メモ / 将来課題の変更要求の行で、影響を「再出力した週より後の週の前週比」に広げ、再検証の範囲を、変わらなかった週か最新の週まで順に再出力した各週の前週比とした。
+
+3 回目で迷った点と決めた内容:
+
+- 翌週の扱い: 前回の締めの版と販売数を引き継いで前週比だけを直す案もあった。ただ、それでは「出力時点の最新の確認版を使う」規則に例外が生まれ、締め未確定の日を含む週では、引き継いだ値が記録と合わなくなる。そこで、続けて再出力する週も同じ規則で数え直し、販売数が変わる間は再出力を続けることにした。
+- 止める条件: 前週比と「比較不可」の判定は前週の販売数・印・販売件数の不一致の日だけで決まる。このため、それらが変わらなかった週で止めれば、それより後の週は影響を受けない。
+
+3 回目の再 grade の結果（2026-11-16 10:38、orchestrator が実行）: pass 99 点（前回 needs-work 90 点）・指摘 1 件（minor）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml`。
 
 ## 6. 関連ドキュメント
 

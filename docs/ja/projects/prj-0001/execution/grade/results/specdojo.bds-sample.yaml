@@ -4,11 +4,11 @@ document: specdojo:bds-sample
 path: docs/ja/specdojo/samples/bds-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 90
-graded_at: "2026-11-16T00:41:22.206Z"
+verdict: pass
+score: 99
+graded_at: "2026-11-16T01:38:50.693Z"
 graded_by: sol-review-executor
-content_hash: 8dbe5163429cb026b09a11cd9b2fa29a98ccc004ae56044f66ebd7018d192a6b
+content_hash: 977729ed517969c87dbdae484e9e1cb6558766f54050d5da75efc5f4c0507f90
 categories:
   purpose:
     score: 100
@@ -17,17 +17,17 @@ categories:
   planning:
     score: 100
   business:
-    score: 92
+    score: 100
   architecture:
     score: 100
   usability:
-    score: 100
-  implementation:
-    score: 75
-  quality:
     score: 92
+  implementation:
+    score: 100
+  quality:
+    score: 100
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -51,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -60,14 +60,14 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -75,11 +75,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -103,37 +103,23 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 2
+  major: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 64
-    anchor: 並び順は販売数の多い順とし、同数の場合は商品名の五十音順とする。
-    message: 販売数が「不明」の商品を、数値の販売数を持つ商品の前後どちらに並べるかを定義してください。「不完全」を付けた数値の扱いも明示すると、例外時を含めて利用者が同じ順序で明細を確認できます。
-    message_ja: 販売数が「不明」の商品を、数値の販売数を持つ商品の前後どちらに並べるかを定義してください。「不完全」を付けた数値の扱いも明示すると、例外時を含めて利用者が同じ順序で明細を確認できます。
-  - id: F002
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 70
+    rule: vp-arc-conciseness
+    line: 104
     anchor: >-
-      - 締めの版: 各日について、出力時点で PO
-      が確定した最新の確認版を使う。販売件数の照合は、その版が参照する日次販売集計の販売件数と行う。日ごとに使った版を「参照した締めの版」に載せ、同じ版から再出力すれば同じ値になるようにする。
-    message: 締めの確認版を固定して再現する際、商品別数量をどの基準時点・訂正状態の販売明細から集計するかを定義してください。現状は販売件数だけを固定した日次販売集計と照合し、数量は販売記録から合計するため、件数を変えない数量訂正があると同じ確認版でも販売数が変わり、「同じ版から再出力すれば同じ値になる」という条件を満たせません。
-    message_ja: 締めの確認版を固定して再現する際、商品別数量をどの基準時点・訂正状態の販売明細から集計するかを定義してください。現状は販売件数だけを固定した日次販売集計と照合し、数量は販売記録から合計するため、件数を変えない数量訂正があると同じ確認版でも販売数が変わり、「同じ版から再出力すれば同じ値になる」という条件を満たせません。
-  - id: F003
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 64
-    anchor: 並び順は販売数の多い順とし、同数の場合は商品名の五十音順とする。
-    message: 数値の販売数、「不完全」を付けた販売数、「不明」が混在する明細について、期待する並び順を判定できる条件を追加してください。現在の「販売数の多い順」だけでは「不明」の位置が決まらず、実装ごとに異なる順序でも合否を判定できません。
-    message_ja: 数値の販売数、「不完全」を付けた販売数、「不明」が混在する明細について、期待する並び順を判定できる条件を追加してください。現在の「販売数の多い順」だけでは「不明」の位置が決まらず、実装ごとに異なる順序でも合否を判定できません。
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 73
-    anchor: "- 前週比: 前週の報告に載っていない商品は前週の販売数を 0 として計算する。初回は「前週なし」とする。前週の報告がない・読めない場合と、今週か前週の販売数が「不完全」「不明」の場合は「比較不可」とし、差を出さない。"
-    message: 前週に販売件数の不一致がある場合は、前週の明細にない商品を販売数0とみなさず、「比較不可」とする条件を定義してください。例えば前週の商品Bの販売記録が丸ごと欠落し、欠品記録もなければBの明細は作られず、「不完全」「不明」の印も付きません。その翌週にBが売れると、現行規則では欠落した前週販売を0として増減を表示してしまいます。
-    message_ja: 前週に販売件数の不一致がある場合は、前週の明細にない商品を販売数0とみなさず、「比較不可」とする条件を定義してください。例えば前週の商品Bの販売記録が丸ごと欠落し、欠品記録もなければBの明細は作られず、「不完全」「不明」の印も付きません。その翌週にBが売れると、現行規則では欠落した前週販売を0として増減を表示してしまいます。
+      | 本書の変更（変更要求）         |
+      表示項目・算出ルール・契機を変えると、定期処理、過去の週の再出力、再出力した週より後の週の前週比、仕入れノートに綴じた報告との比較に影響する                                                                     
+      | BA が差分を整理し、DEV が定期処理と再出力する週の範囲を、QE が再検証の範囲を示す。PO
+      が承認してから定期処理へ反映し、反映後に直近の週を再出力する。過去の週を再出力するときは「出力の時期と契機」に従い、販売数が変わった週の次の週を順に再出力し、作り直す前と変わらなかった週か作成済みの最新の週まで続ける。QE
+      は再出力した各週の前週比が、前週の報告の販売数との差と一致することを確かめる | 変更ごとに登録する               |
+    message: >-
+      「出力の時期と契機」に従うと記した後で、翌週から順に再出力する手順と停止条件を本文26行から再掲しています。この部分は同節への参照にまとめ、変更影響、BA・DEV・QE・PO
+      の担当、承認順序、再検証条件を残してください。判断情報を失わず、再出力規則の二重管理を減らせます。
+    message_ja: >-
+      「出力の時期と契機」に従うと記した後で、翌週から順に再出力する手順と停止条件を本文26行から再掲しています。この部分は同節への参照にまとめ、変更影響、BA・DEV・QE・PO
+      の担当、承認順序、再検証条件を残してください。判断情報を失わず、再出力規則の二重管理を減らせます。

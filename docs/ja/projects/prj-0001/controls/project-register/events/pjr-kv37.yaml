@@ -192,3 +192,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6f968a74479e473eab2d9063234049d3
+- v: 1
+  id: reg_d1640464b3ac448886ca644c70c06fcf
+  ts: "2026-11-16T01:25:21Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: ifx-file-sample を手直しし、型の再 grade で pass（100 点）
+  previous_event_id: reg_59000388d2884cef8d3f6a50d15a2e66
