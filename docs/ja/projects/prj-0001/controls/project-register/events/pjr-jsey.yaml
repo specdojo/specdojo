@@ -4736,3 +4736,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d3b7328630344603b2663b4b4eb1a9a6
+- v: 1
+  id: reg_df26e2bad1d94a7abad7105e170099f9
+  ts: "2026-11-16T14:07:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: V141・EWZG・30SA・1Y1M・KVWH・97KE の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
+      to: NHT7・DGRZ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。片付けはロックの外で行われた
+  previous_event_id: reg_8366173a8c314595b3b67d9addb0951d
