@@ -14,6 +14,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
   - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
   - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
+  - 書き込みを伴う git 操作（commit・merge・add・restore など）は `npx specdojo git --project <project-id> -- <git の引数>` で流し、runner の統合と同じロックに並べる。register の記帳は、これまでどおり `register ... --commit` を使う。
 - commit 先のブランチは変更の種類で決める。作業を始める前に現在ブランチを確認し、想定と違う場合は切り替えを提案してから進める。
   - register の記帳（起票・状態遷移・生成物の再構築）は、対象 project の `develop` へ直接 commit してよい。個票とイベントが項目ごとに分かれ、ID も乱数で採番されるため、並行しても衝突しない。
   - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。`git push` と PR 作成は行わず、コマンドを提示して利用者へ引き渡す。
