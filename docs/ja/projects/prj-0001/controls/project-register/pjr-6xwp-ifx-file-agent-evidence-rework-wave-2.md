@@ -43,12 +43,12 @@ ifx-file-agent-evidence を最新の grade の指摘で直す
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                 |
-| --- | ------------------------------------------------------ | ---- | ---- | ---------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                    |
-| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 89 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | open | 0.8.0 の後に流す                                     |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | orchestrator が流す                                  |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                  |
+| --- | ------------------------------------------------------ | ---- | ---- | ----------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                     |
+| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（needs-work 89 点）  |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F010 を実施（対応結果を参照）       |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | 再 grade は orchestrator が流すため executor は未実施 |
 
 ## 5. 対応結果
 
@@ -60,6 +60,17 @@ ifx-file-agent-evidence を最新の grade の指摘で直す
 - 残課題: OD-01・OD-02（PJR-TN43 で追跡する）。
 
 再 grade の結果（2026-11-16、orchestrator が実行）: needs-work 89 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `prj-0001.ifx-file-agent-evidence.yaml`。
+
+次の回の対応（2026-11-16 の再 grade の指摘 F001〜F010、executor が実施）:
+
+- 実施内容: F002（major）は、evidence の欠落・不正時に「executor 段をやり直す」とした記述を、再開用読込が evidence を含まない checkpoint を返し、成功済みの executor 段では register の再開判定が再開不可で停止する動作へ直した。回復経路（`--resume-from executor` による明示的な再開）を書き、照合を OD-03 で追跡する。F001 は成功扱いの条件に approach の報告項目（condense の `condense_records`）を加えた。F003 は `writer` の説明に、カタログの「agent が書き」は報告内容の書き手を指すと書き添えた。F004 は I/O エラーの即時停止を executor・reporter 段までに限り、integrate 段の続行を OD-04 で追跡する。F005・F006・F010 は再開不可で停止したときの通知（標準エラー出力にパス・失敗理由・回復コマンド）を契約として定め、OD-01 を照合の項目へ改めた。F007・F008 は `verification.file_checks` にファイルごとの合否の手順を加えた。F009 は必須項目の欠落・型不正を evidence なしとして扱う意図を書き、TC-13 を加えた。`status` は変えていない。
+- executor が決めたこと:
+  - 通知の文言・出力先: 宣言された実装の範囲に通知の実装がないため、意図された仕様として標準エラー出力の内容を定め、現在の CLI との照合を OD-01 に残した。
+  - 必須項目の検証範囲: 現在の読込は `schema_version`・`task_id`・`run_id`・`stage` だけを検証する。rulebook の `required_fields` は読み手が検証する項目であるため、意図された仕様を保ち、乖離を OD-03 に残した。
+  - F002・F004 の実装事実（`register-resume.ts`・`mode-shared.ts`）は宣言された実装の範囲外のため、grade の指摘の記述を根拠に反映し、照合を OD-03・OD-04 に残した。
+  - カタログの `overview` の文言は本タスクの範囲外のため直さず、成果物側で書き手の区別を明記した。
+- 再 grade: orchestrator が流すため executor は実行していない（作業内容の 4 行目は open のまま）。
+- 残課題: OD-01〜OD-04（PJR-TN43 で追跡する）。
 
 ## 6. 関連ドキュメント
 
