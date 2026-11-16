@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   registered_at: "2026-11-09T13:39:23Z"
+  completed_at: "2026-11-16T03:41:38Z"
+  conclusion: PJR-X04G（並べて流す review の段の grade の共有ファイルの取り合い）で解消した
   derived_from:
     - PJR-2GD6
 ---
