@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/ifx-file-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 83
-graded_at: "2026-11-15T22:29:19.548Z"
+score: 81
+graded_at: "2026-11-16T00:45:00.173Z"
 graded_by: sol-review-executor
-content_hash: 6d73288140f501ab61955a394759067849fa4b472a9a5c2d5a0505d57a1ddb45
+content_hash: e9f9725be6f7a0ffb78ac617e677bf9be67450da5c59a7ce45a8a7c9c8c28161
 categories:
   purpose:
     score: 100
@@ -17,7 +17,7 @@ categories:
   planning:
     score: 100
   business:
-    score: 83
+    score: 100
   architecture:
     score: 83
   usability:
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 83
   consistency:
-    score: 50
+    score: 25
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -51,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -109,99 +109,73 @@ finding_counts:
 findings:
   - id: F001
     severity: major
-    rule: vp-ba-requirements-completeness
-    line: 331
-    anchor: '"type": "object",'
+    rule: vp-arc-technical-constraints
+    line: 249
+    anchor: (5) current-tx.json を削除する。
     message: >-
-      The sales-record schema contains only transaction identifiers, aggregate amounts, and statuses, and
-      additionalProperties: false rejects line_items. Because current-tx.json is deleted after settlement, the contract
-      leaves no retained itemized sales record despite promising sales details at lines 199–201. Define the retained
-      product, quantity, and price details, or reference another durable itemized record and its retention contract.
+      atomic_write の手順(3)は accepted・rejected・unknown のいずれも保存する一方、手順(5)は current-tx.json
+      を無条件に削除する記述になっている。rejected・unknown では削除せず停止する分岐を明示し、accepted の控えが永続化された場合だけ削除へ進む契約にする必要がある。
     message_ja: >-
-      The sales-record schema contains only transaction identifiers, aggregate amounts, and statuses, and
-      additionalProperties: false rejects line_items. Because current-tx.json is deleted after settlement, the contract
-      leaves no retained itemized sales record despite promising sales details at lines 199–201. Define the retained
-      product, quantity, and price details, or reference another durable itemized record and its retention contract.
+      atomic_write の手順(3)は accepted・rejected・unknown のいずれも保存する一方、手順(5)は current-tx.json
+      を無条件に削除する記述になっている。rejected・unknown では削除せず停止する分岐を明示し、accepted の控えが永続化された場合だけ削除へ進む契約にする必要がある。
   - id: F002
     severity: major
-    rule: vp-arc-technical-constraints
-    line: 231
-    anchor: "atomic_write: 同一ディレクトリ内の一時ファイル（.tmp）へ書き込み・フラッシュ後に renameSync でアトミック置換を実施"
+    rule: vp-dev-implementation-readiness
+    line: 249
+    anchor: (5) current-tx.json を削除する。
     message: >-
-      Per-file atomic replacement does not define a crash-safe update sequence across current-tx.json, the sales record,
-      and the headquarters request. The state table describes payment_requested after sending, leaving a possible
-      interruption with an open session and an unresolved request. Specify which session and pending-evidence writes
-      must be durable before transmission, and how readers handle every intermediate file combination.
+      sales complete の正規手順では、本部受付結果が rejected・unknown の場合にも手順(5)のセッション削除へ進める。これらの結果では控えとセッションを保持して停止し、accepted
+      の永続化確認後だけ削除する分岐を実装契約に明記する必要がある。
     message_ja: >-
-      Per-file atomic replacement does not define a crash-safe update sequence across current-tx.json, the sales record,
-      and the headquarters request. The state table describes payment_requested after sending, leaving a possible
-      interruption with an open session and an unresolved request. Specify which session and pending-evidence writes
-      must be durable before transmission, and how readers handle every intermediate file combination.
+      sales complete の正規手順では、本部受付結果が rejected・unknown の場合にも手順(5)のセッション削除へ進める。これらの結果では控えとセッションを保持して停止し、accepted
+      の永続化確認後だけ削除する分岐を実装契約に明記する必要がある。
   - id: F003
     severity: major
     rule: vp-dev-implementation-readiness
-    line: 331
-    anchor: '"type": "object",'
+    line: 266
+    anchor: sales start 実行時に存在しない場合は新規取引として生成する。
     message: >-
-      Implementing the sales-record schema as written prevents writers from persisting line_items and prevents readers
-      from accepting them. After session deletion, the promised itemized evidence is unavailable. Extend the canonical
-      illustrative schema with retained sales details, or define an explicit durable reference that compatible writers
-      and readers can implement.
+      current-tx.json がない場合に sales start
+      が直ちに新規生成する記述は、本文442行の「未解決の控えがあれば新規取引を始めない」という回復条件と両立しない。新規生成前に未解決の控えを検査し、pending・unknown・rejected
+      があれば生成せず照合へ引き継ぐ条件を YAML に追加する必要がある。
     message_ja: >-
-      Implementing the sales-record schema as written prevents writers from persisting line_items and prevents readers
-      from accepting them. After session deletion, the promised itemized evidence is unavailable. Extend the canonical
-      illustrative schema with retained sales details, or define an explicit durable reference that compatible writers
-      and readers can implement.
+      current-tx.json がない場合に sales start
+      が直ちに新規生成する記述は、本文442行の「未解決の控えがあれば新規取引を始めない」という回復条件と両立しない。新規生成前に未解決の控えを検査し、pending・unknown・rejected
+      があれば生成せず照合へ引き継ぐ条件を YAML に追加する必要がある。
   - id: F004
     severity: major
-    rule: vp-dev-implementation-readiness
-    line: 367
-    anchor: >-
-      | `status`          | `payment_requested`         | 会計要求を本部へ送った後で、控えの `api_sync_status` が `accepted`
-      になるまで保持する。取消は不可 |
+    rule: vp-qe-omissions-consistency
+    line: 249
+    anchor: (5) current-tx.json を削除する。
     message: >-
-      payment_requested is described as a state after headquarters transmission, while open permits additions and
-      cancellation. Define a durable pre-transmission transition and the required pending-record write order so an
-      interruption cannot expose a potentially submitted transaction as editable or cancellable. Specify the restart
-      behavior for failures between these writes and the external request.
+      書き込み順序の手順(5)には受付結果による条件がなく、rejected・unknown でもセッション削除へ進む記述になっているが、本文435–437行はセッションを保持した照会・再送を前提としている。削除可能な状態を
+      accepted に限定し、両方の記述を一致させる必要がある。
     message_ja: >-
-      payment_requested is described as a state after headquarters transmission, while open permits additions and
-      cancellation. Define a durable pre-transmission transition and the required pending-record write order so an
-      interruption cannot expose a potentially submitted transaction as editable or cancellable. Specify the restart
-      behavior for failures between these writes and the external request.
+      書き込み順序の手順(5)には受付結果による条件がなく、rejected・unknown でもセッション削除へ進む記述になっているが、本文435–437行はセッションを保持した照会・再送を前提としている。削除可能な状態を
+      accepted に限定し、両方の記述を一致させる必要がある。
   - id: F005
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 200
-    anchor: 会計確定要求時の販売実績明細、預かり金・釣銭、本部売上登録 API の受付結果、
+    line: 266
+    anchor: sales start 実行時に存在しない場合は新規取引として生成する。
     message: >-
-      The sales-evidence description promises 販売実績明細, but its schema omits item details and explicitly rejects
-      additional properties. Session deletion then removes the only defined itemized source. Align the description,
-      schema, and deletion condition so the promised evidence can actually survive settlement.
+      missing.current_tx_json はセッション欠落時の sales start
+      を無条件の新規生成としているが、本文442行と453行は未解決の控えがある場合の新規開始を禁止している。控えの検査と照合完了を新規生成の前提として、YAML と回復手順を一致させる必要がある。
     message_ja: >-
-      The sales-evidence description promises 販売実績明細, but its schema omits item details and explicitly rejects
-      additional properties. Session deletion then removes the only defined itemized source. Align the description,
-      schema, and deletion condition so the promised evidence can actually survive settlement.
+      missing.current_tx_json はセッション欠落時の sales start
+      を無条件の新規生成としているが、本文442行と453行は未解決の控えがある場合の新規開始を禁止している。控えの検査と照合完了を新規生成の前提として、YAML と回復手順を一致させる必要がある。
   - id: F006
     severity: major
     rule: vp-qe-kata-conformance
-    line: 231
-    anchor: "atomic_write: 同一ディレクトリ内の一時ファイル（.tmp）へ書き込み・フラッシュ後に renameSync でアトミック置換を実施"
-    message: >-
-      Rulebook section 6.3 requires safe reruns without duplicate processing or lost work, but the multi-file completion
-      example specifies atomic replacement only for individual files. Add the ordered publication and recovery rules for
-      session state, pending sales evidence, headquarters submission, and session deletion so the example demonstrates
-      that requirement across interrupted stages.
-    message_ja: >-
-      Rulebook section 6.3 requires safe reruns without duplicate processing or lost work, but the multi-file completion
-      example specifies atomic replacement only for individual files. Add the ordered publication and recovery rules for
-      session state, pending sales evidence, headquarters submission, and session deletion so the example demonstrates
-      that requirement across interrupted stages.
+    line: 150
+    anchor: 未着の確定は、接続またはログインが送信開始前に失敗した場合と、一覧を取得でき確定名のファイルがない場合に限る。
+    message: 問屋側の一覧に確定ファイルがないことだけで未着を確定しているが、受信システムが取込後にファイルを移動・削除する場合は受領済みでも同じ状態になる。確定ファイルの保持期間・移動禁止を受信側契約として定めるか、持続的な受領記録で照合できるまで不明として扱い、再送と電話発注の重複を防ぐ必要がある。
+    message_ja: 問屋側の一覧に確定ファイルがないことだけで未着を確定しているが、受信システムが取込後にファイルを移動・削除する場合は受領済みでも同じ状態になる。確定ファイルの保持期間・移動禁止を受信側契約として定めるか、持続的な受領記録で照合できるまで不明として扱い、再送と電話発注の重複を防ぐ必要がある。
   - id: F007
     severity: major
     rule: vp-ops-operability
-    line: 148
-    anchor: 5 分間隔で最大 3 回再試行し、22:00 までに完了しない場合は自動再送を止めて店主代表へ電話発注を促す。
+    line: 150
+    anchor: 未着の確定は、接続またはログインが送信開始前に失敗した場合と、一覧を取得でき確定名のファイルがない場合に限る。
     message: >-
       A transfer timeout can occur after the remote final CSV has already been published, so stopping local retries and
       moving the local file to phoned/ does not prevent the supplier from processing both the CSV and a telephone order.

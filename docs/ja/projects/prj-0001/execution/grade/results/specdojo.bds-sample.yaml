@@ -5,36 +5,36 @@ path: docs/ja/specdojo/samples/bds-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 82
-graded_at: "2026-11-15T22:23:21.799Z"
+score: 90
+graded_at: "2026-11-16T00:41:22.206Z"
 graded_by: sol-review-executor
-content_hash: d1d14a4bafbe8c60f02c3ef3998c807765f55ee48fe6f5b5d5aa70db8cdea1be
+content_hash: 8dbe5163429cb026b09a11cd9b2fa29a98ccc004ae56044f66ebd7018d192a6b
 categories:
   purpose:
-    score: 75
+    score: 100
   operations:
     score: 100
   planning:
     score: 100
   business:
-    score: 83
+    score: 92
   architecture:
     score: 100
   usability:
     score: 100
   implementation:
-    score: 50
+    score: 75
   quality:
     score: 92
   consistency:
-    score: 25
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -51,8 +51,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 2
     score: 50
   vp-dev-change-impact:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-dev-testability:
     level: 4
     score: 100
@@ -78,8 +78,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -103,104 +103,37 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 1
+  major: 2
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-po-decision-readiness
-    line: 95
-    anchor: >-
-      | 根拠の業務イベント（決定待ち） | つけ販売の確定と欠品の記録（`bes-stock-out-recorded`）の業務イベントが未同梱で、`based_on`
-      に接続していない。つけ販売の数え方と欠品回数の境界を確かめられず、月次報告の帳票仕様とテストの設計もこの境界に依存する | PO
-      が本書の確定時に、受入を保留するか、販売数と営業日数に限った限定受入とするかを決める。限定受入の間、欠品回数と補充候補は参考表示とし、仕入れ数量の根拠にしない。BA が業務イベントを作って `based_on` に接続し、QE
-      が算出ルールとの境界の期待結果を確かめた後に、PO が全面受入へ戻すかを判断する | `specdojo:pjr-bds-sales-events`  |
-    message: >-
-      Specify whether PO must hold acceptance or explicitly approve a restricted scope while credit-sale and stockout
-      boundaries remain unverified, and record the decision occasion, permitted use, and conditions for restoring full
-      acceptance.
-    message_ja: 売掛金と在庫切れの境界が未確認の状態で、POが承諾を保持する必要があるか、あるいは制限された範囲を明示的に承認する必要があるかを指定し、その決定の機会、許可された用途、および完全な承諾を復元するための条件を記録してください。
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 64
+    anchor: 並び順は販売数の多い順とし、同数の場合は商品名の五十音順とする。
+    message: 販売数が「不明」の商品を、数値の販売数を持つ商品の前後どちらに並べるかを定義してください。「不完全」を付けた数値の扱いも明示すると、例外時を含めて利用者が同じ順序で明細を確認できます。
+    message_ja: 販売数が「不明」の商品を、数値の販売数を持つ商品の前後どちらに並べるかを定義してください。「不完全」を付けた数値の扱いも明示すると、例外時を含めて利用者が同じ順序で明細を確認できます。
   - id: F002
     severity: major
-    rule: vp-ba-requirements-completeness
-    line: 47
-    anchor: >-
-      | 前週の報告   | 前週からの販売数の増減を示す               |
-      前週の本報告                                                                                                                           
-      | 初回は増減を「前週なし」と表示する                                                               |
-    message: >-
-      Define the expected comparison and report status when a previous-week report is missing or unreadable after the
-      initial reporting week; the current exception covers only first use, leaving users unable to distinguish an
-      unavailable comparison from a genuine zero baseline.
-    message_ja: 最初の報告週の後に前週の報告が不足している、または読み取れない場合の、期待される比較および報告ステータスを定義してください。現在の例外は初回のみを対象としているため、ユーザーは利用不可能な比較と、真のゼロベースラインを区別することができません。
-  - id: F003
-    severity: major
     rule: vp-dev-implementation-readiness
-    line: 43
+    line: 70
     anchor: >-
-      | 日次締め記録 | 営業日を特定し、その日の販売件数を照合する | [[specdojo:cdsd-sample\|概念データストア定義]]
-      の日次締め記録                                                                           |
-      締め記録がない日は休業日とする。締め記録そのものを読めない場合は営業日を推測せず、報告を保留する |
-    message: >-
-      Specify which closing state, confirmation version, and referenced sales-summary baseline are used for each date;
-      specdojo:cdsd-sample distinguishes closing drafts and preserved confirmation versions, so record existence alone
-      does not determine a reproducible operating-day count or sales-count comparison.
-    message_ja: >-
-      Specify which closing state, confirmation version, and referenced sales-summary baseline are used for each date;
-      specdojo:cdsd-sample distinguishes closing drafts and preserved confirmation versions, so record existence alone
-      does not determine a reproducible operating-day count or sales-count comparison.
-  - id: F004
-    severity: major
-    rule: vp-dev-change-impact
-    line: 99
-    anchor: >-
-      | 本書の変更（変更要求）         |
-      表示項目・算出ルール・契機を変えると、定期処理、過去の週の再出力、仕入れノートに綴じた報告との比較に影響する                                                                                                     
-      | BA が差分を整理し、DEV が定期処理と再出力する週の範囲を、QE が再検証の範囲を示す。PO
-      が承認してから定期処理へ反映し、反映後に直近の週を再出力する                                                                                                                                                 
-      | 変更ごとに登録する               |
-    message: >-
-      Include successor reports in the impact analysis when a historical week is regenerated: replacing week W changes
-      the baseline for week W+1, so define whether affected comparisons are regenerated or retain an identifiable frozen
-      baseline, and require QE to verify that policy.
-    message_ja: >-
-      Include successor reports in the impact analysis when a historical week is regenerated: replacing week W changes
-      the baseline for week W+1, so define whether affected comparisons are regenerated or retain an identifiable frozen
-      baseline, and require QE to verify that policy.
-  - id: F005
+      - 締めの版: 各日について、出力時点で PO
+      が確定した最新の確認版を使う。販売件数の照合は、その版が参照する日次販売集計の販売件数と行う。日ごとに使った版を「参照した締めの版」に載せ、同じ版から再出力すれば同じ値になるようにする。
+    message: 締めの確認版を固定して再現する際、商品別数量をどの基準時点・訂正状態の販売明細から集計するかを定義してください。現状は販売件数だけを固定した日次販売集計と照合し、数量は販売記録から合計するため、件数を変えない数量訂正があると同じ確認版でも販売数が変わり、「同じ版から再出力すれば同じ値になる」という条件を満たせません。
+    message_ja: 締めの確認版を固定して再現する際、商品別数量をどの基準時点・訂正状態の販売明細から集計するかを定義してください。現状は販売件数だけを固定した日次販売集計と照合し、数量は販売記録から合計するため、件数を変えない数量訂正があると同じ確認版でも販売数が変わり、「同じ版から再出力すれば同じ値になる」という条件を満たせません。
+  - id: F003
     severity: minor
     rule: vp-qe-verifiability
-    line: 53
-    anchor: >-
-      | 1   | 見出し | 対象週         | 対象期間の開始日と終了日（例: 2026-04-13〜04-19）                                              |
-      販売記録                                     | 期間内の最初と最後の営業日が範囲に含まれることを照合する                                 |
-    message: >-
-      Replace the target-week containment check with exact equality to the requested Monday and Sunday dates in Japan
-      time, including weeks with no sales or operating days; a wider incorrect range currently passes, and sales records
-      cannot supply the expected dates for an empty week.
-    message_ja: 対象週の包含チェックを、売上や営業日がない週を含め、日本時間でのリクエストされた月曜日と日曜日の日付との完全な一致に置き換えてください。現在は、より広い誤った範囲が通過してしまっており、売上記録から空の週に対する期待される日付を提供することができません。
-  - id: F006
+    line: 64
+    anchor: 並び順は販売数の多い順とし、同数の場合は商品名の五十音順とする。
+    message: 数値の販売数、「不完全」を付けた販売数、「不明」が混在する明細について、期待する並び順を判定できる条件を追加してください。現在の「販売数の多い順」だけでは「不明」の位置が決まらず、実装ごとに異なる順序でも合否を判定できません。
+    message_ja: 数値の販売数、「不完全」を付けた販売数、「不明」が混在する明細について、期待する並び順を判定できる条件を追加してください。現在の「販売数の多い順」だけでは「不明」の位置が決まらず、実装ごとに異なる順序でも合否を判定できません。
+  - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 81
-    anchor: >-
-      | 期間内に販売記録が 1 件もない                    | 報告を作る。欠品の記録がある商品は販売数 0 として明細に載せ、販売も欠品もなければ「明細なし」と表示する |
-      店主代表が締め記録の販売件数と照合し、記録漏れなら DEV へ知らせる |
-    message: >-
-      Reconcile the unconditional zero sales displayed for stockout-only products with the rule that a closing-count
-      mismatch must not be treated as zero; when closing records show sales but sales records are missing, define an
-      unavailable or incomplete value instead of asserting zero.
-    message_ja: 在庫切れのみの製品に対して表示される無条件の売上ゼロと、締めのカウントの不一致をゼロとして扱ってはならないというルールを整合させてください。締めの記録に売上が示されているが売上記録が不足している場合は、ゼロと断定するのではなく、利用不可または不完全な値を定義してください。
-  - id: F007
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 82
-    anchor: >-
-      | 期間内に日次締め記録が 1 件もない（全休の週）    | 報告を作り、見出しに「休業週」、営業日数 0 と表示する。明細は上の行と同じ規則で載せる                   |
-      店主代表が休業の予定と合うかを確かめる                            |
-    message: >-
-      Restrict the 休業週 label to confirmed closure or define a distinct incomplete-closing status; this row labels every
-      week without closing records as closed, while line 84 explicitly permits sales records on dates whose closing is
-      missing.
-    message_ja: 「休業週」のラベルを確認済みの閉店に限定するか、明確な不完全な締めステータスを定義してください。この行は締めの記録がないすべての週を閉店とラベル付けしていますが、84行目では、締めが欠落している日付の売上記録を明示的に許可しています。
+    line: 73
+    anchor: "- 前週比: 前週の報告に載っていない商品は前週の販売数を 0 として計算する。初回は「前週なし」とする。前週の報告がない・読めない場合と、今週か前週の販売数が「不完全」「不明」の場合は「比較不可」とし、差を出さない。"
+    message: 前週に販売件数の不一致がある場合は、前週の明細にない商品を販売数0とみなさず、「比較不可」とする条件を定義してください。例えば前週の商品Bの販売記録が丸ごと欠落し、欠品記録もなければBの明細は作られず、「不完全」「不明」の印も付きません。その翌週にBが売れると、現行規則では欠落した前週販売を0として増減を表示してしまいます。
+    message_ja: 前週に販売件数の不一致がある場合は、前週の明細にない商品を販売数0とみなさず、「比較不可」とする条件を定義してください。例えば前週の商品Bの販売記録が丸ごと欠落し、欠品記録もなければBの明細は作られず、「不完全」「不明」の印も付きません。その翌週にBが売れると、現行規則では欠落した前週販売を0として増減を表示してしまいます。

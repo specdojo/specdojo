@@ -52,6 +52,11 @@ setup で止まった run の plan だけの記録が develop に入り、CI の
 
 plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを記録する。pipeline では個票の対応結果と報告の `handoff` に書き、result を直接書ける実行形式では result に書く。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
 
+## 再開の指示（orchestrator、2026-11-16）
+
+- `lefthook.yml` の `pre-push` への登録は保護対象のため、統合の後に orchestrator が feature ブランチで入れる。executor はこの作業を自分の完了条件から外し、個票の作業内容の該当の行を「orchestrator が lefthook に登録する（保護対象）」とメモして open のまま残し、ほかの作業が済んでいれば `completion_status` を `complete` にする。
+- 登録の内容（`use_stdin` の扱いを含む）は `handoff` に残す。
+
 ## 4. 完了手順
 
 1. 「進め方」に従って対応を完了する。
