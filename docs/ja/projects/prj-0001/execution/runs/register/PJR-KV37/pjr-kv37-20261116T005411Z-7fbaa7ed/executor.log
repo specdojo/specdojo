@@ -1,0 +1,27 @@
+09:50 の grade で出た major の指摘 7 件（F001〜F007）を、`docs/ja/specdojo/samples/ifx-file-sample.md` にすべて反映しました。rulebook は変えていません。再 grade は agent CLI の起動が必要なので実行しておらず、個票の作業内容の 6 は open のまま残しています。
+
+**sample の修正**
+
+- **会計確定の書き込み順序（F001・F002・F004）:** 本部の受付結果が `rejected` か `unknown` のときは、終了コード 3 で止めて状態ファイル（`current-tx.json`）と控えの両方を残すようにしました。印字と状態ファイルの削除には進みません。削除するのは、控えが `accepted` として保存されたのを確かめたときだけです。
+- **状態ファイルがないときの `sales start`（F003・F005）:** 新しい取引を作る前に `data/sales/` の控えを調べ、`pending` / `unknown` / `rejected` が 1 件でもあれば作らずに終了コード 3 で止め、照合へ引き継ぐようにしました。異常時の表の「取引状態の欠落」の行もこれに合わせました。
+- **週次発注 CSV の転送失敗（F006・F007）:** 問屋は取り込んだ後にファイルを移動・削除することがあるので、問屋側の一覧に確定ファイルがないことは「届いていない」根拠にしないことにしました。代わりに、ファイルを確定名へ切り替える rename の要求を出したかどうかで分けます。
+  - 要求を出す前に失敗した場合は「未着の確定」とし、自動で再試行します。
+  - 要求を出した後に応答がない場合は「不明」とし、自動再送を止めます。店主代表（`PO`）が問屋に受領したか、または取消に応じたかを確かめてから電話発注します。
+  - 前提として、問屋は確定名のファイルだけを取り込むことを `reader` に書きました。異常時の表の転送失敗の行もそろえました。
+
+**迷って決めた点**
+
+- **F006 の直し方:** 「問屋に確定ファイルの保持と移動禁止を求める」案もありましたが、問屋側の条件は未確定で店からは決められません。そこで問屋の保持には頼らず、rename の要求の前後で分ける方を選びました。
+- **`rejected` のときの表示:** CLI 仕様の sample（`clis-sample`）の「売上登録失敗（終了コード 3）」に合わせました。
+- **`sales start` が止まるときの表示:** 本部との照合が必要な点が同じなので、「売上登録結果不明（終了コード 3）」にしました。
+
+**確認結果**
+
+- sample 内の 2 つの YAML ブロックは、どちらもエラーなく YAML として読めました。
+- prettier、markdownlint（sample と個票）、`npm run validate:history-links`、`npm run validate:catalog` は通りました。`validate:catalog` には、この変更と関係のない既存の WARN が 2 件出ています。
+
+個票 `pjr-kv37-ifx-file-sample-rework-wave-2.md` は、対応結果に「3 回目の対応」を足し、作業内容の 5 を done にしました。`pjr-kv37.yaml`（events）と `pipeline-state.json` は runner 側が作った変更で、私は触れていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"09:50 の grade の F001〜F007 を ifx-file-sample に反映した。rejected と unknown のときは状態ファイルと控えを残して止め、削除は accepted の控えを保存した後だけにした。sales start は新しい取引を作る前に未解決の控えを調べる。週次発注 CSV は一覧ではなく rename の要求の前後で未着と不明を分ける。個票の対応結果に 3 回目を追記し、作業内容の 5 を done にした。rulebook は変えていない。","handoff":["F006 は、問屋に確定ファイルの保持を求めるのではなく、rename の要求の前後で未着の確定と不明を分けることにした。問屋側の契約が未確定（`_UNDECIDED_`）で、店からは決められないため。","rejected のときの表示は clis-sample の「売上登録失敗（exit code 3）」に合わせた。sales start が未解決の控えで止まるときは、本部受付との照合が必要な点が同じなので「売上登録結果不明（exit code 3）」とした。","再 grade（`grade run --target kata`）は agent CLI の起動が要るため executor では流していない。orchestrator が流して個票の対応結果に追記し、作業内容の 6 を閉じる。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/ifx-file-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-kv37-ifx-file-sample-rework-wave-2.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/ifx-file-sample.md","status":"passed","summary":"0 issues"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-kv37-ifx-file-sample-rework-wave-2.md","status":"passed","summary":"0 issues"},{"command":"node -e (yaml.parseDocument で sample 内の YAML ブロックを解析)","status":"passed","summary":"2 つの YAML ブロックともエラーなし"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0"},{"command":"npm run validate:catalog","status":"passed","summary":"exit 0（変更と関係のない既存の WARN が 2 件）"},{"command":"grade run --target kata","status":"requires_human","summary":"agent CLI の起動と使用量の消費が要るため、orchestrator が流す"}]}
+</specdojo_executor_evidence>

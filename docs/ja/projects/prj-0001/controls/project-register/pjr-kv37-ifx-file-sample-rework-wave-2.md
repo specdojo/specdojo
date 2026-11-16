@@ -49,7 +49,7 @@ specdojo:
 | 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（ifx-file-sample は needs-work 83 点）           |
 | 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F007 を取り込んだ（対応結果の 2 回目を参照）                    |
 | 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | done | 2026-11-16 orchestrator が型の grade（needs-work 81 点（前回 83 点）・指摘 7 件） |
-| 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）  | ARC  | open | 0.8.0 の前に流す                                                                  |
+| 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）  | ARC  | done | executor が F001〜F007 を取り込んだ（対応結果の 3 回目を参照）                    |
 | 6   | 直した後に grade し直して結果を書く（その次の回）      | ARC  | open | orchestrator が流す                                                               |
 
 ## 5. 対応結果
@@ -81,6 +81,18 @@ specdojo:
 - 残課題: `grade run --target kata` の再 grade は agent CLI の起動が要るため executor では流していない。orchestrator が流して結果をここに追記する。
 
 次の回の再 grade の結果（2026-11-16 09:50、orchestrator が `grade run --target kata` で実行）: needs-work 81 点（前回 83 点）・指摘 7 件。指摘は日本語で記録された（PJR-YYDS の後）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-file-sample.yaml`。
+
+3 回目の対応（09:50 の再 grade の F001〜F007、executor が実施）:
+
+- 実施内容: [[specdojo:ifx-file-sample]] を直した。rulebook は変えていない。
+  - 会計確定の書き込み順序（F001・F002・F004）: `atomic_write` の (3) に、`rejected` は「売上登録失敗（exit code 3）」、`unknown` は「売上登録結果不明（exit code 3）」で停止し、`current-tx.json` と控えを保持して (4)・(5) へ進まない分岐を足した。(5) の削除は控えが `accepted` で永続化されている場合だけとした。
+  - 取引状態の欠落（F003・F005）: `missing.current_tx_json` の `sales start` を、生成前に `data/sales/` の控えを検査し、`pending` / `unknown` / `rejected` があれば生成せず exit code 3 で照合へ引き継ぐ条件にした。異常時の表の「取引状態の欠落」の行もそろえた。
+  - 週次発注 CSV（F006・F007）: 一覧に確定名がないことを未着の根拠にしないようにした。問屋は確定名だけを取り込む契約を `reader` に書き、確定名は rename でだけ現れるので、rename 要求前の失敗を未着の確定、rename 要求後に応答がない場合を不明とした。不明では自動再送を止め、PO が問屋の受領有無か取消を確かめてから電話発注する。異常時の表の転送失敗の行もそろえた。
+- 迷った点と決めた内容:
+  - F006 は「確定ファイルの保持・移動禁止を受信側に課す」か「不明として扱う」かの二択だった。問屋側の契約は `_UNDECIDED_` で店側から課せないため、受信側の保持には頼らず、rename 要求の前後で未着の確定と不明を分ける方を選んだ。
+  - `rejected` の終了コードは [[specdojo:clis-sample]] の「売上登録失敗」（`3`）に合わせた。
+  - `sales start` が未解決の控えで停止するときの区分は、本部受付の照合が要る点が同じなので「売上登録結果不明（exit code 3）」とした。
+- 残課題: 再 grade（`grade run --target kata`）は agent CLI の起動が要るため executor では流していない。orchestrator が流して結果をここに追記する（作業内容の 6 は open のまま）。
 
 ## 6. 関連ドキュメント
 
