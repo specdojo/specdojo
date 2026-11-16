@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-C6BA",
   "run_id": "pjr-c6ba-20261115T233744Z-31505e55",
-  "updated_at": "2026-11-16T00:19:05.605Z",
+  "updated_at": "2026-11-16T00:19:53.262Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-C6BA/pjr-c6ba-20261115T233744Z-31505e55/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-16T00:19:05.605Z",
-      "completed_at": null,
+      "completed_at": "2026-11-16T00:19:53.262Z",
       "artifact_ref": null
     }
   },
