@@ -93,3 +93,16 @@
       from: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
       to: "-"
   previous_event_id: reg_04d4d8ac42f149f88196b9b0b2258264
+- v: 1
+  id: reg_55ca44216597427084a3ae804f722c56
+  ts: "2026-11-16T04:18:14Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5928f0b92e254eef9ee239fdbfddc656
