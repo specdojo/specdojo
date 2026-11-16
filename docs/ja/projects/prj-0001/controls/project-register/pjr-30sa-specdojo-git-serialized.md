@@ -38,7 +38,10 @@ orchestrator や人の commit・merge も exec-lifecycle のロックの下で�
 - ロックを握ったまま落ちたプロセスのロックは、時間がたてば取り直せる。
 - run の最中に、ロックを取らない手の git commit を pre-commit hook で警告する。
 - pm-orchestrator-playbook とオーケストレーターの定義に、orchestrator の commit・merge は `specdojo git` を通すことを書く。
-- `npm run check` と親の検証が通る。
+- 保護された設定（`lefthook.yml`・`.agents/`・`.claude/`・`.codex/`・`package.json`・`.specdojo/` など）は変えない。変更が要る場合（pre-commit hook の追加、オーケストレーターの定義の追記、依存の追加など）は、変更案を個票の対応結果に書き、報告の `handoff` にも書く。反映は利用者の承認のもと feature ブランチで行う。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
+- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。影響がなければ「なし」と書く（PJR-EPQ3）。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` と親の検証が通る。
 
 ## 4. 作業内容
 
