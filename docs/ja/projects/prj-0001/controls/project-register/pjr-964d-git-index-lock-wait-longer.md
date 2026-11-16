@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-964d-git-index-lock-wait-longer
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T03:13:34Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-16T04:19:51Z"
+  conclusion: 統合の git 操作の index.lock の再試行を時間上限方式にし、既定 20 分（exec-defaults の run.git_index_lock_wait_seconds）まで待つようにした。待機中は 30 秒ごとに告知し、持ち主のいない古い lock は待ち続けない
   derived_from:
     - PJR-G90K
   commit_type: fix
