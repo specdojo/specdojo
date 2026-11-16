@@ -4,30 +4,30 @@ document: specdojo:ifx-file-sample
 path: docs/ja/specdojo/samples/ifx-file-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 81
-graded_at: "2026-11-16T00:45:00.173Z"
+verdict: pass
+score: 100
+graded_at: "2026-11-16T01:24:10.110Z"
 graded_by: sol-review-executor
-content_hash: e9f9725be6f7a0ffb78ac617e677bf9be67450da5c59a7ce45a8a7c9c8c28161
+content_hash: e7ee4c81df954e29ac1d350980fafc1fcd00b934358ab80203982bdd5927c863
 categories:
   purpose:
     score: 100
   operations:
-    score: 88
+    score: 100
   planning:
     score: 100
   business:
     score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
     score: 100
   implementation:
-    score: 63
+    score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
-    score: 25
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,86 +103,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 249
-    anchor: (5) current-tx.json を削除する。
-    message: >-
-      atomic_write の手順(3)は accepted・rejected・unknown のいずれも保存する一方、手順(5)は current-tx.json
-      を無条件に削除する記述になっている。rejected・unknown では削除せず停止する分岐を明示し、accepted の控えが永続化された場合だけ削除へ進む契約にする必要がある。
-    message_ja: >-
-      atomic_write の手順(3)は accepted・rejected・unknown のいずれも保存する一方、手順(5)は current-tx.json
-      を無条件に削除する記述になっている。rejected・unknown では削除せず停止する分岐を明示し、accepted の控えが永続化された場合だけ削除へ進む契約にする必要がある。
-  - id: F002
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 249
-    anchor: (5) current-tx.json を削除する。
-    message: >-
-      sales complete の正規手順では、本部受付結果が rejected・unknown の場合にも手順(5)のセッション削除へ進める。これらの結果では控えとセッションを保持して停止し、accepted
-      の永続化確認後だけ削除する分岐を実装契約に明記する必要がある。
-    message_ja: >-
-      sales complete の正規手順では、本部受付結果が rejected・unknown の場合にも手順(5)のセッション削除へ進める。これらの結果では控えとセッションを保持して停止し、accepted
-      の永続化確認後だけ削除する分岐を実装契約に明記する必要がある。
-  - id: F003
-    severity: major
-    rule: vp-dev-implementation-readiness
-    line: 266
-    anchor: sales start 実行時に存在しない場合は新規取引として生成する。
-    message: >-
-      current-tx.json がない場合に sales start
-      が直ちに新規生成する記述は、本文442行の「未解決の控えがあれば新規取引を始めない」という回復条件と両立しない。新規生成前に未解決の控えを検査し、pending・unknown・rejected
-      があれば生成せず照合へ引き継ぐ条件を YAML に追加する必要がある。
-    message_ja: >-
-      current-tx.json がない場合に sales start
-      が直ちに新規生成する記述は、本文442行の「未解決の控えがあれば新規取引を始めない」という回復条件と両立しない。新規生成前に未解決の控えを検査し、pending・unknown・rejected
-      があれば生成せず照合へ引き継ぐ条件を YAML に追加する必要がある。
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 249
-    anchor: (5) current-tx.json を削除する。
-    message: >-
-      書き込み順序の手順(5)には受付結果による条件がなく、rejected・unknown でもセッション削除へ進む記述になっているが、本文435–437行はセッションを保持した照会・再送を前提としている。削除可能な状態を
-      accepted に限定し、両方の記述を一致させる必要がある。
-    message_ja: >-
-      書き込み順序の手順(5)には受付結果による条件がなく、rejected・unknown でもセッション削除へ進む記述になっているが、本文435–437行はセッションを保持した照会・再送を前提としている。削除可能な状態を
-      accepted に限定し、両方の記述を一致させる必要がある。
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 266
-    anchor: sales start 実行時に存在しない場合は新規取引として生成する。
-    message: >-
-      missing.current_tx_json はセッション欠落時の sales start
-      を無条件の新規生成としているが、本文442行と453行は未解決の控えがある場合の新規開始を禁止している。控えの検査と照合完了を新規生成の前提として、YAML と回復手順を一致させる必要がある。
-    message_ja: >-
-      missing.current_tx_json はセッション欠落時の sales start
-      を無条件の新規生成としているが、本文442行と453行は未解決の控えがある場合の新規開始を禁止している。控えの検査と照合完了を新規生成の前提として、YAML と回復手順を一致させる必要がある。
-  - id: F006
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 150
-    anchor: 未着の確定は、接続またはログインが送信開始前に失敗した場合と、一覧を取得でき確定名のファイルがない場合に限る。
-    message: 問屋側の一覧に確定ファイルがないことだけで未着を確定しているが、受信システムが取込後にファイルを移動・削除する場合は受領済みでも同じ状態になる。確定ファイルの保持期間・移動禁止を受信側契約として定めるか、持続的な受領記録で照合できるまで不明として扱い、再送と電話発注の重複を防ぐ必要がある。
-    message_ja: 問屋側の一覧に確定ファイルがないことだけで未着を確定しているが、受信システムが取込後にファイルを移動・削除する場合は受領済みでも同じ状態になる。確定ファイルの保持期間・移動禁止を受信側契約として定めるか、持続的な受領記録で照合できるまで不明として扱い、再送と電話発注の重複を防ぐ必要がある。
-  - id: F007
-    severity: major
-    rule: vp-ops-operability
-    line: 150
-    anchor: 未着の確定は、接続またはログインが送信開始前に失敗した場合と、一覧を取得でき確定名のファイルがない場合に限る。
-    message: >-
-      A transfer timeout can occur after the remote final CSV has already been published, so stopping local retries and
-      moving the local file to phoned/ does not prevent the supplier from processing both the CSV and a telephone order.
-      Distinguish confirmed non-delivery from an unknown delivery outcome, and require PO to reconcile supplier receipt
-      or cancellation before placing the replacement telephone order.
-    message_ja: >-
-      A transfer timeout can occur after the remote final CSV has already been published, so stopping local retries and
-      moving the local file to phoned/ does not prevent the supplier from processing both the CSV and a telephone order.
-      Distinguish confirmed non-delivery from an unknown delivery outcome, and require PO to reconcile supplier receipt
-      or cancellation before placing the replacement telephone order.
+findings: []
