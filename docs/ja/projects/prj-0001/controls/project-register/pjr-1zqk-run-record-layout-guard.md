@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T22:40:41Z"
   due_on: "2026-11-20"
-  block_reason: "parent validation failed: lint-md"
   derived_from:
     - PJR-DVNV
   commit_type: fix
@@ -39,10 +38,10 @@ setup で止まった run の plan だけの記録が develop に入り、CI の
 
 ## 4. 作業内容
 
-| No  | 作業                                                                                                                                                                                     | 担当 | 状態 | メモ                                                                                      |
-| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------------- |
-| 1   | runner が plan だけの run を残さない、または止まった理由を含めて記録をそろえる（どちらにするかは exec の記録の配置の規約と合わせて決める）                                               | DEV  | done | -                                                                                         |
-| 2   | lefthook の pre-push などで exec validate --project prj-0001 --records-only を流し、CI より先に気づけるようにする。ローカルにしかない空の run のディレクトリで誤検出しないことも確かめる | DEV  | open | `lefthook.yml` は保護対象で executor が編集できない。入口と検査は実装済み。登録は申し送り |
+| No  | 作業                                                                                                                                                                                     | 担当 | 状態 | メモ                                                                  |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------------- |
+| 1   | runner が plan だけの run を残さない、または止まった理由を含めて記録をそろえる（どちらにするかは exec の記録の配置の規約と合わせて決める）                                               | DEV  | done | -                                                                     |
+| 2   | lefthook の pre-push などで exec validate --project prj-0001 --records-only を流し、CI より先に気づけるようにする。ローカルにしかない空の run のディレクトリで誤検出しないことも確かめる | DEV  | open | orchestrator が lefthook に登録する（保護対象）。入口と検査は実装済み |
 
 ## 5. 対応結果
 
@@ -67,12 +66,14 @@ setup で止まった run の plan だけの記録が develop に入り、CI の
 
 ### 5.2. 残課題
 
-- `lefthook.yml` の `pre-push` に次を足す（保護対象のため人が行う）。lefthook で `use_stdin: true` のコマンドが 2 つあるとき、両方に標準入力が渡るかを確かめる。渡らない場合は `protect-main-push` と同じ入口にまとめる。
+- `lefthook.yml` の `pre-push` への登録は、統合の後に orchestrator が feature ブランチで入れる（保護対象）。lefthook の文書（<https://lefthook.dev/configuration/use_stdin/>）によると、`use_stdin: true` のコマンドが複数あると標準入力は 1 つにしか渡らない。そこで別のコマンドを足さず、既存の `protect-main` の `run` で標準入力を一度読み、両方の入口へ渡す。
 
   ```yaml
-  run-record-layout:
-    run: node tools/check-run-record-layout-push.mjs --project prj-0001
-    use_stdin: true
+  pre-push:
+    commands:
+      protect-main:
+        run: input="$(cat)"; printf '%s\n' "$input" | node tools/protect-main-push.mjs && printf '%s\n' "$input" | node tools/check-run-record-layout-push.mjs --project prj-0001
+        use_stdin: true
   ```
 
 - register の run の `wait` commit にも plan と result が入る。evidence がない場合に配置の検査を通るか（plan・result がそろう世代の例外にあたるか）は確かめていない。pre-push の検査で気づける。

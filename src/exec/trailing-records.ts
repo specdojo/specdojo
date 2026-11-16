@@ -1,5 +1,5 @@
 import { lstatSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import {
   gitOutput,
   gitResult,
@@ -15,8 +15,10 @@ import {
   planConventionsDirectory,
   recordIdentity,
   runItemDirectory,
+  runRecordLocation,
   runRecordsDirectory,
 } from "./run-records.js";
+import { missingRunRecords } from "./validate-records.js";
 import { normalizeResultWhitespace, stabilizeCommitTargets } from "./worktree-ops-commit.js";
 
 // runner は Schedule タスクの complete・block・release などのイベントを統合の commit の後に書き、
@@ -41,11 +43,14 @@ export type TrailingRecordsSelection = {
   events: string[];
   runRecords: string[];
   paths: string[];
+  // 必須の記録（plan・result・evidence）がそろわないため記帳しない run のディレクトリ。
+  incompleteRuns: string[];
 };
 
 export type TrailingRecordsReport = {
   committed: string[];
   remaining: string[];
+  incompleteRuns?: string[];
   commit?: string;
   error?: string;
 };
@@ -109,17 +114,59 @@ export function selectTrailingRunRecords(
       ),
     ),
   );
-  const runRecords = files.filter(
+  const candidates = files.filter(
     (path) =>
       path.startsWith(schedulePrefix) && itemPrefixes.some((prefix) => path.startsWith(prefix)),
   );
+  const { kept: runRecords, incompleteRuns } = dropIncompleteRuns(context, candidates);
   const conventions =
     runRecords.length > 0 ? files.filter((path) => path.startsWith(conventionsPrefix)) : [];
   return {
     events,
     runRecords,
     paths: [...events, ...runRecords, ...conventions].sort(),
+    incompleteRuns,
   };
+}
+
+// setup や executor の起動前に止まった run は plan だけを残す。これを commit すると、commit 先の
+// `exec validate --records-only`（CI と pre-push）が missing で落ちる（PJR-1ZQK）。配置の規約は
+// 「記録がそろった revision を対象にする」ため、commit 後の状態で必須の記録が欠ける run は記帳せず、
+// 作業ツリーに残して報告する。`isPresent` を省くと作業ツリーの通常ファイルで判定する。
+function dropIncompleteRuns(
+  context: TrailingRecordsContext,
+  paths: readonly string[],
+  isPresent?: (path: string) => boolean,
+): { kept: string[]; incompleteRuns: string[] } {
+  const { repoRoot, executionPath } = context;
+  const runOf = (path: string) => {
+    const directory = dirname(resolve(repoRoot, path));
+    return runRecordLocation(executionPath, directory) ? directory : undefined;
+  };
+  const incomplete = new Set<string>();
+  const checked = new Set<string>();
+  for (const path of paths) {
+    const directory = runOf(path);
+    if (!directory || checked.has(directory)) continue;
+    checked.add(directory);
+    const missing = missingRunRecords(
+      executionPath,
+      directory,
+      isPresent ? { isFile: (absolute) => isPresent(repoRelative(repoRoot, absolute)) } : {},
+    );
+    if (missing.length > 0) incomplete.add(directory);
+  }
+  return {
+    kept: paths.filter((path) => {
+      const directory = runOf(path);
+      return !directory || !incomplete.has(directory);
+    }),
+    incompleteRuns: [...incomplete].map((directory) => repoRelative(repoRoot, directory)).sort(),
+  };
+}
+
+function isTrackedAtHead(repoRoot: string, path: string): boolean {
+  return gitResult(repoRoot, ["cat-file", "-e", `HEAD:${path}`]).status === 0;
 }
 
 function remainingOf(repoRoot: string, paths: readonly string[]): string[] {
@@ -162,14 +209,18 @@ export function commitTrailingRunRecords(
   const message = context.message ?? TRAILING_RECORDS_COMMIT_SUBJECT;
   let lockDir = "";
   let selected: string[] = [];
+  let incompleteRuns: string[] = [];
   try {
     lockDir = acquireSchedulerLock(context.schedulePath, {
       actor: "exec-trailing-records",
       lockTimeoutMs: SCHEDULER_LOCK_TIMEOUT_MS,
       lockStaleMs: SCHEDULER_LOCK_STALE_MS,
     });
-    selected = selectTrailingRunRecords(context).paths;
-    if (selected.length === 0) return { committed: [], remaining: [] };
+    const selection = selectTrailingRunRecords(context);
+    selected = selection.paths;
+    incompleteRuns = selection.incompleteRuns;
+    const withIncomplete = incompleteRuns.length > 0 ? { incompleteRuns } : {};
+    if (selected.length === 0) return { committed: [], remaining: [], ...withIncomplete };
     const results = selected.filter((path) => path.endsWith("/result.md"));
     for (const path of results) normalizeResultWhitespace(resolve(repoRoot, path));
     try {
@@ -178,10 +229,19 @@ export function commitTrailingRunRecords(
         committed: selected,
         remaining: remainingOf(repoRoot, selected),
         commit: headCommit(repoRoot),
+        ...withIncomplete,
       };
     } catch (error) {
       if (results.length === 0) throw error;
-      const withoutResults = selected.filter((path) => !results.includes(path));
+      // result.md を外した run は、HEAD に result がなければ記録がそろわないので、その run ごと外す。
+      const withoutResultSet = new Set(selected.filter((path) => !results.includes(path)));
+      const retry = dropIncompleteRuns(
+        context,
+        [...withoutResultSet],
+        (path) => withoutResultSet.has(path) || isTrackedAtHead(repoRoot, path),
+      );
+      const withoutResults = retry.kept;
+      incompleteRuns = [...new Set([...incompleteRuns, ...retry.incompleteRuns])].sort();
       process.stderr.write(
         `warning: execution-record commit failed with result.md included; retrying without them: ` +
           `${error instanceof Error ? error.message : String(error)}\n`,
@@ -192,6 +252,7 @@ export function commitTrailingRunRecords(
         committed: withoutResults,
         remaining: remainingOf(repoRoot, selected),
         commit: headCommit(repoRoot),
+        ...(incompleteRuns.length > 0 ? { incompleteRuns } : {}),
       };
     }
   } catch (error) {
@@ -200,6 +261,7 @@ export function commitTrailingRunRecords(
       committed: [],
       remaining,
       error: error instanceof Error ? error.message : String(error),
+      ...(incompleteRuns.length > 0 ? { incompleteRuns } : {}),
     };
   } finally {
     if (lockDir) releaseSchedulerLock(lockDir);
@@ -215,6 +277,15 @@ export function reportTrailingRunRecords(report: TrailingRecordsReport, label: s
   }
   if (report.error) {
     process.stderr.write(`warning: could not commit execution records: ${report.error}\n`);
+  }
+  if (report.incompleteRuns && report.incompleteRuns.length > 0) {
+    process.stderr.write(
+      `warning: ${report.incompleteRuns.length} run(s) lack plan.md, result.md or evidence.json ` +
+        `and were left uncommitted so that exec validate --records-only keeps passing:\n` +
+        report.incompleteRuns.map((path) => `  ${path}/\n`).join("") +
+        `  next: resume the run to complete its records, or remove the directory ` +
+        `if the run stopped before the executor started\n`,
+    );
   }
   if (report.remaining.length > 0) {
     process.stderr.write(

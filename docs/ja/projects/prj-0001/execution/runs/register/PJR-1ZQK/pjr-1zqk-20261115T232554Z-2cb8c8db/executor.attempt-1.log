@@ -1,0 +1,32 @@
+plan だけの run は develop に入らなくなり、push の前の検査も動く状態にしました。ただし pre-push hook への登録だけはまだです。`lefthook.yml` が保護対象で私には編集できないため、その 1 行は人の作業になります。そのため完了状態は `incomplete` にしています。
+
+**作業 1（plan だけの run を commit しない）**
+- 方針は「止まった理由を書いて記録をそろえる」ではなく「そろわない run は commit しない」にしました。配置の規約が「記録がそろった revision を対象にする」ことを求めており、runner が result や evidence を作り足すと、同じ run を再開する経路と衝突するためです。
+- run の終わりの記帳の commit では、`plan.md`・`result.md`・`evidence.json` がそろわない run のディレクトリを外します。外した run は作業ツリーに残り、ディレクトリ名と次の操作（再開するか、executor の起動前に止まった run なら消す）を標準エラーに出します。
+- hook に result.md を拒否されて外して再試行するとき、HEAD に result.md がない run は丸ごと外します。
+- 判定は配置の検査と同じものを使います（`validate-records.ts` から `missingRunRecords` として切り出しました）。
+
+**作業 2（push の前の検査）**
+- 作業ツリーではなく commit の tree を見る `exec validate --records-only --commit <rev>` を足しました。ローカルにしかない中断中の run や空のディレクトリでは失敗しません。
+- pre-push の入口 `tools/check-run-record-layout-push.mjs` を足しました。push する各 ref の先端 commit を検査し、1 件でも落ちたら push を止めます。Node 標準だけで動き、`tsx` が未インストールなら通知して検査を飛ばします。
+
+**確かめたこと**
+- 今回の事故の commit（`a9beaef99` の親 `606535f7f`）を検査すると、CI と同じ 2 件の missing で終了コード 1 になりました。HEAD は通りました。pre-push の入口に実際の push の入力を渡しても、それぞれ 1 と 0 を返しました。
+- 足したテスト（単体 2 件と統合 2 件のファイル）は通りました。setup で止まった run が記帳から外れ、commit 後の HEAD が配置の検査を通ることも確かめています。型の検査、`check:src-imports`、`validate:catalog`、`validate:history-links` も通りました。
+- `npm run check` の残りの検査（lint・typecheck・テスト全件）は親 runner が実行します。
+
+ガイド 2 本（`plan-result-lifecycle-guide`・`schedule-operation-guide`）と command reference、個票の作業内容・対応結果・CHANGELOG に書く事項も更新しました。
+
+**残っていること**
+- `lefthook.yml` の `pre-push` に下の設定を足す必要があります。lefthook で `use_stdin: true` のコマンドが 2 つあるとき、両方に標準入力が渡るかは未確認です。渡らない場合は `protect-main-push` と同じ入口にまとめてください。
+- register の run の `wait` commit に plan と result だけ（evidence なし）が入る場合、配置の検査を通るかは確かめていません。
+
+```yaml
+run-record-layout:
+  run: node tools/check-run-record-layout-push.mjs --project prj-0001
+  use_stdin: true
+```
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"記帳の commit は、plan.md・result.md・evidence.json がそろわない run を外すようになった（作業ツリーに残し、標準エラーで知らせる）。exec validate --records-only --commit <rev> と pre-push の入口 tools/check-run-record-layout-push.mjs を足した。実際の commit 606535f7f（a9beaef99 の親）で CI と同じ missing により失敗し、HEAD で通ることを確かめた。lefthook.yml は保護対象で executor が編集できないため、pre-push への登録は人の作業として残る。","handoff":["`lefthook.yml` の `pre-push.commands` に `run-record-layout: { run: node tools/check-run-record-layout-push.mjs --project prj-0001, use_stdin: true }` を足す（保護対象のため人が行う）。lefthook で `use_stdin: true` のコマンドが 2 つあるとき、両方に標準入力が渡るかを確かめる。渡らない場合は `protect-main-push` と同じ入口にまとめる。","作業 1 の判断: 止まった理由を書いて result・evidence をそろえる案ではなく、そろわない run を記帳しない案にした。配置の規約（`plan-result-lifecycle-guide` の「配置の検査」）は記録がそろった revision を対象にすることを求めており、作り足すと同じ run を再開する経路と衝突するため。記帳から外れた run は作業ツリーに残り、標準エラーにディレクトリと次の操作が出る。","確かめていない点: register の run の `wait` commit に入る plan と result だけ（evidence なし）の記録が、配置の検査を通るか。pre-push の検査で気づける。","CHANGELOG に書く事項は個票の対応結果の「CHANGELOG に書く事項」の節に書いた（Added: `exec validate --records-only --commit <rev>`。Fixed: 記録のそろわない run を記帳しない）。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"個票 pjr-1zqk を含め全件 valid（終了コード 0）"},{"command":"npm run check:src-imports","status":"passed","summary":"src runtime imports are declared in dependencies or peerDependencies"},{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（based_on の既存 WARN のみ）"},{"command":"node --import tsx src/specdojo.ts exec validate --project prj-0001 --records-only --commit 606535f7f / HEAD","status":"passed","summary":"plan だけの記録を含む 606535f7f では CI と同じ 2 件の missing で終了コード 1、HEAD では OK"},{"command":"node tools/check-run-record-layout-push.mjs --project prj-0001 < tmp/push-bad.txt / tmp/push-good.txt","status":"passed","summary":"誤った commit を含む push で終了コード 1、正しい commit で 0"}]}
+</specdojo_executor_evidence>

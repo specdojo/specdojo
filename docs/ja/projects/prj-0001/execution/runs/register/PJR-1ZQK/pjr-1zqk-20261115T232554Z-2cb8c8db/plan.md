@@ -56,6 +56,7 @@ plan に展開された finding は、message と同じ viewpoint ID の判定�
 
 - `lefthook.yml` の `pre-push` への登録は保護対象のため、統合の後に orchestrator が feature ブランチで入れる。executor はこの作業を自分の完了条件から外し、個票の作業内容の該当の行を「orchestrator が lefthook に登録する（保護対象）」とメモして open のまま残し、ほかの作業が済んでいれば `completion_status` を `complete` にする。
 - 登録の内容（`use_stdin` の扱いを含む）は `handoff` に残す。
+- 2 回目の再開（2026-11-16 09:48）: 親の検証の lint-md が、個票 `pjr-1zqk-run-record-layout-guard.md` の 69 行目の bare URL（MD034）で落ちた。URL は `<https://...>` の autolink にする（履歴の文書の記法の規則に従う）。直した後に `npm run lint:md` を流して確かめる。
 
 ## 4. 完了手順
 

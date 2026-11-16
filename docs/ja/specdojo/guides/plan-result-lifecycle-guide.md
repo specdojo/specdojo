@@ -77,6 +77,12 @@ run の外の plan・result・evidence・checkpoint・ログ、不正な出ど�
 
 検査は記録を書き換えず、欠けたファイルも生成しません。CI で `--records-only` を使う場合は、実行が終了して記録がそろった revision を対象にしてください。
 
+作業ツリーには中断中の run や空のディレクトリが残ることがあるため、push する前の確認は commit の tree を対象にします。`--commit <rev>` を付けると、`<rev>` の tree を一時ディレクトリへ書き出して同じ検査を流し、未 commit の記録は対象にしません。pre-push hook（`tools/check-run-record-layout-push.mjs`）は push する各 ref の先端 commit をこの形で検査し、CI の Check execution record layout と同じ欠落を push の前に止めます。
+
+```bash
+specdojo exec validate --project <project-id> --records-only --commit <rev>
+```
+
 `exec run` と `exec cycle` の事前検証は `exec validate --schedule-only` で schedule・event だけを調べます。生成途中や中断中の run と、取得中の runtime lock があっても、実行・再開を妨げません。`--schedule-only` と `--records-only` は併用できません。
 
 ## 2. 命名規則
