@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-NHT7",
   "run_id": "pjr-nht7-20261116T130851Z-f364d500",
-  "updated_at": "2026-11-16T13:32:56.445Z",
+  "updated_at": "2026-11-16T13:34:37.562Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NHT7/pjr-nht7-20261116T130851Z-f364d500/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-16T13:32:56.445Z",
-      "completed_at": null,
+      "completed_at": "2026-11-16T13:34:37.562Z",
       "artifact_ref": null
     }
   },
