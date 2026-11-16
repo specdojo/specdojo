@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-2C9W
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-2C9W/pjr-2c9w-20261116T135145Z-ab537c28/plan.md
   started_at: "2026-11-16T13:53:27.502Z"
+  completed_at: "2026-11-16T14:08:15.081Z"
   agent: opus-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- stsd-task-execution を 2026-11-16 の再 grade の指摘に沿って直した。同時刻の再生順序を独立した項目にし、成立するイベント・競合する着手・実行中からの記録の優先と期待する順序の例を書いた（F002/F003/F005）。上流辞書の `_TODO_` は PJR-TN43 を追跡先とする期限付きの `_UNDECIDED_` に改めた（F007）。権限の承認に BA・QE・DEV の確認と `ready` に上げる条件を書いた（F001/F006）。個票の作業内容と対応結果も更新した。status は draft のまま。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md`: 変更、+11 / -4 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- F007: 上流辞書（`bdd-exec-state`・`bdd-exec-event`）の `_TODO_` を `_UNDECIDED_` に改めた。本文は統合済みの実装（PJR-M495・T4G3）に合わせてあり、調べて埋められる不足は残っていないと判断したため。残る決定は、食い違ったときにどちらを正とするか（BA が照合、PO が決定、期限は辞書を作るときか 140、追跡は PJR-TN43）。
+- F002・F003・F005: 同時刻の並べ方は `src/exec/events.ts` のイベント記録の読み込みを正本とし、業務の言葉で書いた。rulebook が関数の実行を業務の記述として載せることを禁じるため、関数名は書いていない。
+- F004: 検証手順やテストファイルへの参照は足していない。rulebook は STSD に検証の章を求めておらず、テストファイルはこのタスクで参照してよい資料に入っていないため。
+- 再 grade（`grade run --target deliverable`）は executor の sandbox では流していない。個票の作業内容の 4 行目は open のままで、orchestrator が流して結果を対応結果に書く。
+- `docs/ja/projects/prj-0001/controls/project-register/events/pjr-2c9w.yaml` の差分は executor が触ったものではない（runner 側の変更と思われる）。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
