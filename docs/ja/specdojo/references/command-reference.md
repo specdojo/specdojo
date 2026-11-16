@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / orchestrator / grade / index / watch / build / routine）
+- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / orchestrator / grade / index / watch / build / routine / git）
 
 **ここで引けるもの**
 
@@ -1302,7 +1302,24 @@ npx specdojo devcontainer host-script
 - コンテナ内の作業ディレクトリはマウント情報から、実行ユーザーは `devcontainer.json` の `remoteUser` から求めます。求められないときは原因を stderr に出力して終了します。
 - スクリプトは実行権限（`0o755`）付きで書き出され、同じ版で複数回実行しても内容は変わりません。
 
-## 17. 関連ガイド
+## 17. git
+
+`specdojo git [--project <id>] -- <Git の引数>` は、commit・merge・add・rm・restore・checkout などを runner・register と同じ project の `exec-lifecycle` ロックで直列化します。競合時は取得まで待ち、Git の hook が終了してから解放します。標準入出力と終了コードは Git から引き継ぎます。
+
+```bash
+specdojo git --project prj-0001 -- add docs/
+specdojo git --project prj-0001 -- commit -m "docs: update guide"
+specdojo git --project prj-0001 -- merge feature/prj-0001/update-guide
+specdojo git -- status --short
+```
+
+`status`・`log`・`diff`・`show` などの読み取りはロックも project 設定も不要です。index の任意更新を避けるため `GIT_OPTIONAL_LOCKS=0` を渡します。alias・未知のサブコマンド、`--output` によるファイル出力、`-c` / `--config-env` を伴う呼び出しは書き込みとして扱います。追加依存はなく、既存の heartbeat 付きロックを使います。所有プロセスが落ちた場合、heartbeat が止まってから30秒で後続が取り直せます。
+
+書き込みには対象 worktree の `.specdojo/specdojo.config.json` が必要です。project の選択順は `--project` → `SPECDOJO_PROJECT` → `current_project` → `projects` の先頭です。Git の `-C`・`--git-dir`・`--work-tree` はロックの対象解決にも反映します。bare repository と未知の Git グローバルオプションは実行前に拒否します。`.env` はロードせず、Git のリポジトリ固有環境変数は既存の隔離規約に従って除きます。
+
+`specdojo git --project <id> --warn-unlocked` は pre-commit 用の警告チェックです。選択 project の primary / join run が実行中で、Git に渡された token が有効な lifecycle ロックと一致しない場合に警告します。commit は止めません。runner と `specdojo git` は保持中の token を Git 子プロセスへ渡すため警告対象になりません。新規の lefthook scaffold はこのチェックを含みます。既存リポジトリでは pre-commit への追加が必要です。生の Git コマンドや別 project のロックとは直列化されません。
+
+## 18. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |

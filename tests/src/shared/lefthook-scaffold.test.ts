@@ -38,10 +38,11 @@ afterEach(() => {
 });
 
 describe("lefthook scaffold", () => {
-  it("generates the four staged-file checks when register and catalog are configured", () => {
+  it("generates the lock warning and staged-file checks when register and catalog are configured", () => {
     const content = renderLefthookConfig(configWithCatalog);
 
     expect(content).toContain('glob: "*.{md,yaml,yml}"');
+    expect(content).toContain("specdojo-pre-commit.mjs git-lock-warning");
     expect(content).toContain("specdojo-pre-commit.mjs prettier {staged_files}");
     expect(content).toContain("specdojo-pre-commit.mjs markdownlint {staged_files}");
     expect(content).toContain("specdojo-pre-commit.mjs register-build");

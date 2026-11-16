@@ -1,0 +1,277 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-30SA",
+  "run_id": "pjr-30sa-20261116T112318Z-04e75f0f",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-16T11:25:20.921Z",
+    "completed_at": "2026-11-16T11:37:39.769Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-30sa.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-30sa-specdojo-git-serialized.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/cross-process-lock.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/git-environment.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/lefthook-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/lefthook/tools/specdojo-pre-commit.mjs",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/lefthook-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/git.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/git.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/git.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-30sa-specdojo-git-serialized.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/cross-process-lock.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/git-environment.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/lefthook-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/lefthook/tools/specdojo-pre-commit.mjs",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/lefthook-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/git.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/git.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/git.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../pm-orchestrator-playbook.md                    |  2 +-\n .../pjr-30sa-specdojo-git-serialized.md            | 47 +++++++++++++++++++---\n docs/ja/specdojo/references/command-reference.md   | 21 +++++++++-\n src/shared/cross-process-lock.ts                   | 12 +++++-\n src/shared/git-environment.ts                      |  4 +-\n src/shared/lefthook-scaffold.ts                    |  3 ++\n src/specdojo.ts                                    |  2 +\n templates/lefthook/tools/specdojo-pre-commit.mjs   |  8 ++++\n tests/src/shared/lefthook-scaffold.test.ts         |  3 +-\n 9 files changed, 90 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "本体のビルド成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts git --help",
+      "status": "passed",
+      "summary": "CLI の登録とオプション表示を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts git -- status --short",
+      "status": "passed",
+      "summary": "読み取り操作が正常終了。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証成功。既存文書の未作成・re-export 参照などの警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿ビューの生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/commands/git.ts src/shared/cross-process-lock.ts src/shared/git-environment.ts src/shared/lefthook-scaffold.ts src/specdojo.ts templates/lefthook/tools/specdojo-pre-commit.mjs tests/src/commands/git.test.ts tests/src/commands/git.integration.test.ts tests/src/shared/lefthook-scaffold.test.ts docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md docs/ja/projects/prj-0001/controls/project-register/pjr-30sa-specdojo-git-serialized.md docs/ja/specdojo…",
+      "status": "passed",
+      "summary": "変更した全12ファイルの整形を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --check templates/lefthook/tools/specdojo-pre-commit.mjs",
+      "status": "passed",
+      "summary": "配布 hook スクリプトの構文検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外。",
+      "reason": "executor 自身が変更した YAML / YML ファイルはない。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後、運用メモ6.1節の対象追加・reopen 後に実行する。実 agent の起動と利用枠の消費を伴うため executor sandbox では実行しない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SA/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SA/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SA/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n✖ 42 problems (0 errors, 42 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5085 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5085 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SA\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SA/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SA/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SA\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-6kSiWg/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-X5bgWf/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-aWVcb1/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-LNs6Cn/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "specdojo git、共通ロックの継承、pre-commit 警告と scaffold、単体・結合テストを追加しました。playbook・リファレンス・個票を更新し、保護設定の反映案を記録しました。指定されたテスト・静的検査は親 runner が実行します。result は編集していません。",
+  "completion_status": "complete",
+  "handoff": [
+    "保護設定案: lefthook.yml の pre-commit.commands に git-lock-warning を追加し、run を `node --import tsx src/specdojo.ts git --project prj-0001 --warn-unlocked` とする。既存設定は変更していないため、利用者の承認後に feature ブランチで反映する。",
+    "保護設定案: .agents/specdojo-orchestrator.agent.md に「orchestrator の commit・merge・add・rm・restore・checkout など、書き込みを伴う Git 操作は `specdojo git --project <id> -- <Git の引数>` を通す。既存の承認・ブランチ方針を守り、register の記帳は引き続き register ... --commit を使う」と追記する。承認後に npm run orchestrator:sync と npm run lint:orchestrator-sync で全ラッパー・配布テンプレートへ同期する。",
+    "設計判断: 読み取りの許可リストを採用し、alias・未知のサブコマンド、--output、-c / --config-env は書き込みとして扱う。誤った場所での排他を避けるため、未知の Git グローバルオプションと bare repository への書き込みは拒否する。既存の heartbeat 付きロックで異常終了後の回収ができるため依存追加は不要。同じ worktree・project の runner と直列化する。個票5.1節にも記録済み。",
+    "統合後は運用メモ6.1節に従って PJR-JSEY で確認する。保護設定の反映後、run 中の直接 commit は警告し、specdojo git と runner の commit は警告しないことを確認する。",
+    "CHANGELOG 文案（追加）: `specdojo git -- <Git の引数>` で Git の書き込みを runner と同じ lifecycle ロックに並べ、hook の実行中も排他する。読み取りはロックを待たず、lefthook scaffold は run 中のロックなし commit を警告する。個票5.4節にも記録済み。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-30SA/pjr-30sa-20261116T112318Z-04e75f0f/executor.log",
+      "bytes": 4655,
+      "truncated": false
+    }
+  ]
+}

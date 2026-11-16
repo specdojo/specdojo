@@ -1,3 +1,5 @@
+import { gitLockEnvironment } from "./cross-process-lock.js";
+
 export const GIT_LOCAL_ENV_VARS = [
   "GIT_ALTERNATE_OBJECT_DIRECTORIES",
   "GIT_COMMON_DIR",
@@ -18,7 +20,7 @@ export function removeGitLocalEnvironment(environment: NodeJS.ProcessEnv): void 
 }
 
 export function gitEnvironment(): NodeJS.ProcessEnv {
-  const environment = { ...process.env };
+  const environment = { ...process.env, ...gitLockEnvironment() };
   removeGitLocalEnvironment(environment);
   return environment;
 }

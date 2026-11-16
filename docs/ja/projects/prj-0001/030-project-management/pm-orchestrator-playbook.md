@@ -93,7 +93,7 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 - 待機が自分自身を数える: `while pgrep -f "register PJR-XXXX"` のような待機は、待機のコマンドの文字列にも同じ語が含まれるため、自分自身に一致して終わらない。結果の行の有無か、プロセスの番号（`kill -0 <pid>`）で待つ。
 - commit メッセージの本文は 1 行 100 文字以内（commitlint の `body-max-line-length`）。長い文は折り返す。
 - 個票の Markdown: 素の URL は MD034 で止まるため `<https://...>` と書く。説明や結論にアスタリスクを 2 つ書くと、0.4.1 までの一覧の生成では MD037 で止まった（PJR-6SQH で修正済み）。
-- `.git/index.lock` が残っているあいだは commit できない。runner の統合と重なるときは、消えるのを待ってから commit する。
+- orchestrator の commit・merge・add・checkout などは `npx specdojo git --project prj-0001 -- <Git の引数>` で実行し、runner の統合と同じ `exec-lifecycle` ロックに並べる。例: `npx specdojo git --project prj-0001 -- commit -m "docs: update playbook"`。`status`・`log`・`diff` はロックを待たない。ロックなしの commit を検知する pre-commit 警告の設定案は [[prj-0001:pjr-30sa-specdojo-git-serialized|PJR-30SA]] にある。
 - 別の作業ツリー（`../specdojo-prj-0002`）の中で `npx specdojo` を打つと、その作業ツリー自身の `dist/` が動く（このリポジトリはパッケージ `specdojo` 自身のため）。古いブランチでは古い CLI が動くので、本体の `dist/specdojo.js` を直接使うか、その作業ツリーで build する。
 - 保護された設定（`.specdojo/`・`package.json`・`.agents/`・`.claude/`・`.codex/`・`.opencode/`・`CLAUDE.md`・`AGENTS.md`・`lefthook.yml` など）は agent が書けない。変更が要る登録簿項目は、executor に変更案を個票の対応結果と報告の `handoff` に書かせ（result へ直接書ける実行形態だけ result にも）、オーケストレーターが利用者の承認を得て feature ブランチで反映する（PJR-SAZC・PJR-EPQ3）。
 
