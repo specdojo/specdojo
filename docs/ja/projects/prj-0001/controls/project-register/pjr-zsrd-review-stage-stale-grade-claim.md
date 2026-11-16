@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-zsrd-review-stage-stale-grade-claim
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-11T03:08:42Z"
+  completed_at: "2026-11-16T04:20:15Z"
+  conclusion: review の段で、古い grade の流し直しを review の agent の起動より前に済ませ、reopen の後の流し直しが引き受けの重なりで止まらないようにした
   derived_from:
     - PJR-2GD6
 ---
