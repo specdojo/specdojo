@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_187136d1abb74612806cb04416f60717
+  ts: "2026-11-16T22:28:30Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼で起票する（2026-11-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の指摘への手直しで、完了条件の外の指摘まで直し、文書が膨らんで読みにくくなる
+    - field: description
+      from: ""
+      to: 完了条件を満たした後も完了条件の外の観点の major を直し続け、表の列や規則が増えて文書が読みにくくなる。手直しの止め方と大きさ・読みやすさの確かめ方を決める
+    - field: input
+      from: ""
+      to: '["PJR-CPZH（代替案比較）は 3 回の手直しで本文が 27KB から 75KB に増えた（sample は 20KB）。2 回目の時点でカタログの完了条件 4 件をすべて満たしていたが、完了条件の外の観点（vp-qe-verifiability）の major が同じ趣旨で残り、それに応えるため各セルの根拠の表や集約の規則を足し続けた","利用者は 2026-11-17 に、grade の結果以前に内容が分かりにくいと指摘し、運用の問題として起票することを依頼した。担当は BA、期限は 2026-11-30","同じ手直しの流れで直した他の文書（PJR-Y5AC など）でも同じことが起きているかは、まだ確かめていない"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-CPZH"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: pm
