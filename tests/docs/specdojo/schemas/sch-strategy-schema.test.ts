@@ -1,11 +1,15 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { load } from "js-yaml";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import Ajv2020Module from "ajv/dist/2020.js";
 import addFormatsModule from "ajv-formats";
 import type { ValidateFunction } from "ajv";
 import { describe, expect, it } from "vitest";
+import { load as loadForSchemaFile } from "../../../../packages/docs-lint/src/yaml.js";
+import { loadStrategyDocument } from "../../../../src/schedule/strategy-generate.js";
+import { load } from "../../../../src/shared/yaml.js";
 
 const Ajv2020 = Ajv2020Module.default;
 const addFormats = addFormatsModule.default;
@@ -126,6 +130,38 @@ describe("sch-strategy.schema.yaml agent_pipeline", () => {
     };
 
     expect(validate(strategy)).toBe(false);
+  });
+});
+
+describe("sch-strategy.schema.yaml unquoted task_suffix", () => {
+  const validate = compileStrategySchema();
+  const unquotedPhase = "phase_sets:\n  first:\n    - task_suffix: 090\n";
+
+  function taskSuffixOf(doc: unknown): unknown {
+    return (doc as StrategyFixture).phase_sets.first?.[0]?.task_suffix;
+  }
+
+  it("validate:schema:file・テスト・実装の読み込みが 090 を同じ文字列として読む", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-strategy-yaml-"));
+    try {
+      const strategyPath = join(dir, "sch-strategy-test.yaml");
+      writeFileSync(strategyPath, unquotedPhase, "utf8");
+
+      const forSchemaFile = taskSuffixOf(loadForSchemaFile(unquotedPhase));
+      const forTest = taskSuffixOf(load(unquotedPhase));
+      const forImplementation = taskSuffixOf(loadStrategyDocument(strategyPath));
+
+      expect([forSchemaFile, forTest, forImplementation]).toEqual(["090", "090", "090"]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("引用符のない 090 を持つ strategy を schema で受け入れる", () => {
+    const strategy = loadStrategyFixture();
+    firstPhase(strategy).task_suffix = taskSuffixOf(load(unquotedPhase));
+
+    expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
   });
 });
 

@@ -11,7 +11,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
-import { dump, load } from "js-yaml";
+import { dump, load } from "../../../src/shared/yaml.js";
 import {
   buildStrategyDocument,
   generateStrategy,
@@ -264,6 +264,30 @@ describe("strategy generator", () => {
     expect(generated.doc!.phase_gates).toEqual(
       expect.arrayContaining([expect.objectContaining({ after_phase_sets: ["guided-pass"] })]),
     );
+  });
+
+  it("生成した strategy の task_suffix を引用符付きの文字列で書く", () => {
+    const generated = generateStrategy({
+      repoRoot: root,
+      schedulePath,
+      catalogPath,
+      timelinePath,
+      rolesPath,
+      projectId: "prj-0001",
+      track: "demo",
+      defaultOwner: "DEV",
+      gateOwner: "PO",
+      milestoneOwner: "PO",
+    });
+
+    expect(generated.errors).toEqual([]);
+    const suffixLines = generated.content
+      .split("\n")
+      .filter((line) => /^\s*(- )?task_suffix:/.test(line));
+    expect(suffixLines.length).toBeGreaterThan(0);
+    for (const line of suffixLines) {
+      expect(line).toMatch(/task_suffix: "[0-9]{3}"$/);
+    }
   });
 
   it("DCT・Timeline・intent・grade から混在 profile、owner、gate、依存を生成する", () => {
