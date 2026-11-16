@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:12Z"
+  block_reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
 ---
 
 # PJR-5QJ5 validate:schema:file と strategy のテストで、YAML の読み方が違う
