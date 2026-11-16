@@ -45,8 +45,8 @@ specdojo:
 | --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------------------------------ |
 | 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                                  |
 | 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（sld-sample は needs-work 88 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | open | 0.8.0 の後に流す                                                   |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | orchestrator が流す                                                |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F008 を反映（0.8.0 の前に前倒し）                |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | 再 grade は executor の sandbox で流せないため orchestrator が流す |
 
 ## 5. 対応結果
 
@@ -62,6 +62,18 @@ specdojo:
 - 残課題: `grade run --target kata` による再 grade は executor の sandbox では実行できない。runner または人が実行し、sample が pass になったかをこの欄に追記する。
 
 再 grade の結果（2026-11-16、orchestrator が実行）: sld-sample は needs-work 88 点。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/` の `specdojo.sld-sample.yaml`。
+
+次の回（2026-11-16、0.8.0 の前に前倒し）:
+
+- 実施内容: 再 grade の指摘 F001〜F008（major 3 件・minor 5 件）をすべて sample に反映した。rulebook は変えていない。共通サンプル文脈（駄菓子屋きぬや）を保った。
+- executor が決めた点と理由:
+  - ロールの割り当て（F005・major）: [[specdojo:pm-members-sample]] に合わせ、BA・PM・DEV は開発担当、QE は同行レビュー担当、ARC は技術メンター、PO・OPS は店主代表、家族利用者代表は UX とした。組織変更は記録せず、sample 側を名簿に合わせた。店番の現場操作の担当欄は Role ではなく「店番担当」と書いた。`based_on` に `pm-members-sample` を足した。
+  - 日次集計の集計元（F004・F008・major）: CLIS は現金販売だけを扱うため、`data/sales/` は現金販売の控えと明記した。つけ販売は販売ノートの販売明細欄（紙）を集計元とし、集計元の対応を `data/summary/` の行・復旧手順・対応表・検証手順に揃えた。手動集計の照合証跡は日次締め記録の確認結果欄に書き、本部の受付結果と分けた。集計範囲を現金だけに絞る案は、CDSD の照合例（現金108円・つけ216円）を再現できないため採らなかった。
+  - 設定の再作成（F002）: `kinuya-store-config-schema` を CLIS の未同梱の架空参照名と明記し、提供されている場合に限り再作成する条件にした。
+  - 撤去品保留箱（F003・F007）: 寿命を「撤去した当日の日次締めまで」として復旧手順と揃えた。「販売後」は「来店客へ渡す前に売場から撤去した未販売の」品に言い換えた。
+  - 仮領収メモ（F006）: 現金とは処分の判断が違うため、「仮メモ挟み（レジ横）」の行に分けた。
+  - 期限（F001）: 再生成手順は店頭試用の開始前までに整備する（未整備なら PM が期限を見直して PO へ諮る）。STSD の変更は在庫管理の設計着手前に PO が承認する。
+- 残課題: `grade run --target kata` による再 grade は orchestrator が流す（作業内容の表の No 4 は open のまま）。
 
 ## 6. 関連ドキュメント
 

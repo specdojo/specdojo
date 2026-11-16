@@ -1,0 +1,19 @@
+2026-11-16 の再 grade で出た指摘 F001〜F008（major 3 件・minor 5 件）を、すべて `sld-sample.md` に反映しました。rulebook は変えておらず、駄菓子屋きぬやの共通サンプル文脈もそのままです。sample が pass になるかは、orchestrator がこのあと流す再 grade（`grade run --target kata`）を待つ必要があります。
+
+**major の指摘への対応**
+- **F005（ロールの割り当て）**: sample の記述をメンバー定義（`pm-members-sample`）に合わせました。PM・BA・DEV は開発担当、QE は同行レビュー担当、ARC は技術メンター、PO・OPS は店主代表、家族利用者代表は UX です。名簿側の組織変更としては扱っていません。店番の現場操作の担当欄は、Role ではなく「店番担当」と書いています。frontmatter の `based_on` に `pm-members-sample` を足しました。
+- **F004・F008（日次集計の集計元）**: CLI 仕様は現金販売しか扱わないため、`data/sales/` を「現金販売の控え」と明記しました。つけ販売は紙の販売ノート（販売明細欄）を集計元とし、保管場所一覧・復旧手順・対応表・検証手順の記述を揃えました。手動で集計したときの照合の記録は日次締め記録の確認結果欄に書き、本部の受付結果とは分けて残します。集計を現金だけに絞る案は、CDSD の照合例（現金 108 円＋つけ 216 円）を再現できなくなるので採りませんでした。
+
+**minor の指摘への対応**
+- **F001**: 期限を足しました。再生成手順は店頭試用の開始前までに整備し、まだなら PM が期限を見直して PO に諮ります。STSD の変更は、在庫管理の設計に着手する前に PO が承認します。
+- **F002**: `kinuya-store-config-schema` が CLI 仕様の中だけにある架空の参照名だと明記しました。設定ファイルの再作成は、この schema が提供されている場合に限ります。
+- **F003・F007**: 撤去品保留箱の寿命を「撤去した当日の日次締めまで」とし、復旧手順の記述と揃えました。「販売後」は「来店客へ渡す前に売場から撤去した未販売の」品と言い換えました。
+- **F006**: 仮領収メモは現金と処分の判断が違うため、「仮メモ挟み（レジ横）」という行を新しく分けました。
+
+個票 `pjr-c6ba-sld-sample-rework-wave-2.md` も更新しました。作業内容の表は No 3 を done にし、No 4（再 grade）は orchestrator が流すので理由を書いたうえで open のままです。対応結果には、上の判断とその理由を書いています。
+
+検査は、2 ファイルの prettier 整形、`npm run validate:catalog`（エラーなし。今回の変更と関係ない警告のみ）、`npm run validate:history-links`（違反なし）が通りました。lint や schema などの残りの検査は、親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2026-11-16 の再 grade の指摘 F001〜F008（major 3 件・minor 5 件）をすべて sld-sample.md に反映した。rulebook は変えていない。個票の作業内容の表は No 3 を done、No 4（再 grade）は orchestrator が流すため open のまま残し、対応結果に判断とその理由を書いた。","handoff":["sample が pass になったかは未確認。再 grade（grade run --target kata）は executor の sandbox で流せないため、orchestrator が流して個票の対応結果に結果を追記し、作業内容の表の No 4 を閉じる。","F005: 組織変更として記録せず、sample 側をメンバー定義（pm-members-sample）に合わせた。PM・BA・DEV は開発担当、QE は同行レビュー担当、ARC は技術メンター、PO・OPS は店主代表、家族利用者代表は UX。店番の現場操作の担当欄は Role ではなく「店番担当」と書いた。frontmatter の `based_on` に pm-members-sample を足した。","F004・F008: 日次集計の集計元は、現金販売が受付済みの data/sales/、つけ販売が紙の販売ノートの販売明細欄。手動集計の照合の記録は日次締め記録の確認結果欄に書き、本部の受付結果と分けて残す。集計を現金だけに絞る案は CDSD の照合例（現金 108 円＋つけ 216 円）を再現できなくなるため採らなかった。","F001: 再生成手順は店頭試用の開始前までに整備し、まだなら PM が期限を見直して PO に諮る。STSD の変更は在庫管理の設計に着手する前に PO が承認する。この 2 つの期限は executor が決めた。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/sld-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-c6ba-sld-sample-rework-wave-2.md","status":"passed","summary":"変更した 2 ファイルを整形した"},{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml。今回の変更と関係ない based_on の警告のみ"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし（個票を含めすべて valid）"}]}
+</specdojo_executor_evidence>
