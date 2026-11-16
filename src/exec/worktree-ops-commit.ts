@@ -571,10 +571,8 @@ export class UncommittedChangesError extends Error {
     readonly files: readonly string[],
     logPath: string,
   ) {
-    const sample = files.slice(0, 3).join(", ");
-    super(
-      `uncommitted=${files.length}; log=${logPath}; files=${sample}${files.length > 3 ? ", …" : ""}`,
-    );
+    // This message becomes the result's block_reason; retain every excluded path.
+    super(`uncommitted=${files.length}; log=${logPath}; files=${files.join(", ")}`);
     this.name = "UncommittedChangesError";
   }
 }

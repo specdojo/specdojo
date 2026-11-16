@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
 import { recordPathForRead } from "../../../src/exec/run-records.js";
+import { readSpecdojoFields } from "../../../src/register/item.js";
 import { TRAILING_RECORDS_COMMIT_SUBJECT } from "../../../src/exec/trailing-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import * as spawnSelfModule from "../../../src/shared/spawn-self.js";
@@ -1621,8 +1622,16 @@ describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPT
     const worktree = onlyWorktreePath(base);
     const taskId = "T-TEST-doc-010";
     const rootHead = lastIntegrationCommit(current.repo);
-    const strayPath = "docs/test/undeclared.schema.yaml";
-    writeFileSync(join(worktree, strayPath), "type: object\n", "utf8");
+    const strayPaths = [
+      "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-bes-index.yaml",
+      "docs/specdojo/schemas/v1/esil.schema.yaml",
+      "packages/docs-site/sidebar-config.ts",
+      "docs/test/undeclared.schema.yaml",
+    ];
+    for (const path of strayPaths) {
+      mkdirSync(dirname(join(worktree, path)), { recursive: true });
+      writeFileSync(join(worktree, path), "excluded change\n", "utf8");
+    }
     setBehavior(current.behaviorPath, {});
     const resumeArgs = ["resume", "--project", "test", "--task", taskId, "--worktree-base", base];
 
@@ -1630,11 +1639,16 @@ describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPT
 
     expect(process.exitCode).toBe(1);
     expect(lastIntegrationCommit(current.repo)).toBe(rootHead);
-    expect(existsSync(join(worktree, strayPath))).toBe(true);
     const result = readWorktreeResult(base, current, taskId);
     expect(result).toContain("status: blocked");
     expect(result).toContain("agent-commit-scope");
-    expect(result).toContain(strayPath);
+    const blockReason = readSpecdojoFields(result).block_reason;
+    expect(blockReason).toContain("uncommitted=4");
+    for (const path of strayPaths) {
+      expect(readFileSync(join(worktree, path), "utf8")).toBe("excluded change\n");
+      expect(blockReason).toContain(path);
+      expect(existsSync(join(current.repo, path))).toBe(false);
+    }
     const state = readWorktreePipelineState(base, current, taskId);
     expect(state.stages.reporter.status).toBe("succeeded");
     expect(state.stages.integrate.status).toBe("failed");
@@ -1642,12 +1656,13 @@ describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPT
       { ...current, executionPath: join(worktree, "execution") },
       taskId,
     );
-    expect(readFileSync(join(runDir, "integrate.log"), "utf8")).toContain(strayPath);
+    const integrateLog = readFileSync(join(runDir, "integrate.log"), "utf8");
+    for (const path of strayPaths) expect(integrateLog).toContain(path);
     const beforeResume = readInvocations(current.logPath);
     expect(beforeResume.map((item) => item.role)).toEqual(["executor", "reporter", "reporter"]);
 
     // After reviewing the excluded change, only the runner-owned integration is retried.
-    rmSync(join(worktree, strayPath));
+    for (const path of strayPaths) rmSync(join(worktree, path));
     await runExec(resumeArgs);
 
     expect(process.exitCode ?? 0).toBe(0);
