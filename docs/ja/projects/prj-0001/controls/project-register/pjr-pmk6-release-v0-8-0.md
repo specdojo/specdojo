@@ -85,6 +85,9 @@ specdojo:
 - 試験のリポジトリを `~/.claude/` の下に作ると、claude の agent の書き込みが拒否されて止まった（設定の場所として守られるため）。`/workspaces` の下で作り直して通った。製品の不具合ではない
 - release の feature を develop へ merge した（93449d3e0）。PR の本文は orchestrator が用意した
 
+- 2026-11-16 昼の追加（利用者がリリースの夜までに todo を足すよう依頼）: 新しい直し 964D（index.lock の長い保持を待つ）・ZSRD（review の段の古い grade）・5QJ5（YAML の読み方）を流して close した。統合済みのまま review だった X04G・2ZN4・7RZ4・BNK5 を確かめて close し、ほかの項目で直っていた 36PW・50CF・Z4H8・5FTV を close、WQ80 を 30SA に引き継いで reject した。CHANGELOG の 0.8.0 の節に加え（7547c91d9）、`npm run check`（238 テストファイル、3,962 テスト）と pack の試験（空のリポジトリで init・register add・exec run --register が start から統合まで）をやり直して通った
+- この間に、run の最中に流した grade の進み具合のファイルが ZSRD・5QJ5 の commit に紛れ込み、再開の後に個票の対応結果が消えた。本文は executor の commit から戻し（8732bdcdd）、道具の直しを PJR-EWZG として起票した。codex（sol）の利用枠が 11/20 まで尽きたため、grade は opus-review-executor で流した
+
 残り: 利用者の確認（docs-site・docs-lint の版）、push・PR の merge・タグ・公開の承認、公開後の確認。
 
 ## 6. 関連ドキュメント
