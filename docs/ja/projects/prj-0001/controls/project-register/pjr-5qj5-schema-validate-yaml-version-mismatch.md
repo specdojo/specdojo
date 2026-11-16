@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: waiting
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:12Z"
+  block_reason: "integrate failed: Grade sidecar changed after checkpoint; reconcile before merge: docs/ja/projects/prj-0001/execution/grade/pipeline/gl-sample-ce5ff98c5873.json"
 ---
 
 # PJR-5QJ5 validate:schema:file と strategy のテストで、YAML の読み方が違う
@@ -44,10 +45,7 @@ task_suffix の 090（引用符なし）を validate:schema:file は文字列と
 
 ## 5. 対応結果
 
-- 原因: `validate:schema:file`（`packages/docs-lint/src/yaml.ts`）と実装（`src/shared/yaml.ts` 経由の `readYaml`）は js-yaml 5 の `YAML11_SCHEMA` で読み、引用符のない `090` を文字列 `"090"` とする。strategy のテストは `js-yaml` の `load` を直接 import しており、js-yaml 5 の既定（core schema）で数値 `90` として読んでいた。
-- 対応: strategy を読むテスト（`tests/docs/specdojo/schemas/sch-strategy-schema.test.ts`、`tests/src/schedule/strategy-generate.test.ts`、`tests/src/schedule/command.test.ts`、`tests/src/schedule/build.test.ts`）と schema 検証の helper（`tests/helpers/schema.ts`）の YAML の読み書きを `src/shared/yaml.ts` に切り替えた。
-- 回帰テスト: 引用符のない `task_suffix: 090` を docs-lint の読み込み・テストの読み込み・`loadStrategyDocument` がいずれも `"090"` と読み、schema を通ることを `sch-strategy-schema.test.ts` で確かめる。`schedule strategy generate` の出力の `task_suffix` がすべて `"NNN"` の形で引用符付きになることを `strategy-generate.test.ts` で確かめる（`dumpStrategy` はすでに引用符を付けていたため、実装は変えていない）。
-- 申し送り: ほかのテストにも `js-yaml` の `load` を直接 import するものが残る（`tests/src/catalog/**` など）。再発を防ぐには、テストでの `js-yaml` の直接 import を ESLint の `no-restricted-imports` で禁じる別の項目を起票するとよい。
+-
 
 ## 6. 関連ドキュメント
 

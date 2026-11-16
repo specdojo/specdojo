@@ -111,3 +111,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e74b924f440940689dce6eb25b7a1a84
+- v: 1
+  id: reg_b95c627c23ea4a1f9a1c53331b37febd
+  ts: "2026-11-16T03:45:50Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: 用語集の型（gl）を確定した用語集 6 件を手本に見直し、型の再 grade で rulebook pass 88 点・sample pass 93 点
+  previous_event_id: reg_20fb5d80c87d4418ab83bd3c3c4a004c

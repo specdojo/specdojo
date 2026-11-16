@@ -4,11 +4,11 @@ document: specdojo:gl-sample
 path: docs/ja/specdojo/samples/gl-sample.yaml
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 84
-graded_at: "2026-11-13T13:41:48.709Z"
-graded_by: sol-review-executor
-content_hash: 3bb3ed7e9b6fa10cd35156d47cefb02a3fb6685915f08d67aa634baf05bcb7a0
+verdict: pass
+score: 93
+graded_at: "2026-11-16T03:42:51.322Z"
+graded_by: opus-review-executor
+content_hash: 74dd149a72fd5dbadb91c24a1ce73385c913b49772a0c73a92cfca8ead4af31b
 categories:
   purpose:
     score: 100
@@ -17,15 +17,15 @@ categories:
   planning:
     score: 100
   business:
-    score: 75
+    score: 88
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -48,8 +48,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -72,20 +72,20 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -100,79 +100,49 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 2
+  major: 0
+  minor: 4
   note: 0
 findings:
   - id: F001
-    severity: major
+    severity: minor
     rule: vp-ba-requirements-completeness
-    line: 24
-    anchor: "definition: 常に棚に置いておきたい、よく売れる商品。"
+    line: 36
+    anchor: "notes: 店主が認めた常連客だけが利用する。店頭では現金による販売と区別して記録する。"
     message: >-
-      Define 定番商品 using an explicit business designation or inclusion rule rather than the subjective phrases
-      常に棚に置いておきたい and よく売れる; line 14 makes this classification determine which products use a reorder point.
+      つけの利用条件を決める「常連客」と、つけ残高・つけ限度額の単位となる「顧客」が用語として定義されていないため、顧客（および常連客との関係）を tm-actor
+      分類などで定義し、つけを利用できる対象者の境界を用語集内で確認できるようにする。
     message_ja: >-
-      Define 定番商品 using an explicit business designation or inclusion rule rather than the subjective phrases
-      常に棚に置いておきたい and よく売れる; line 14 makes this classification determine which products use a reorder point.
+      つけの利用条件を決める「常連客」と、つけ残高・つけ限度額の単位となる「顧客」が用語として定義されていないため、顧客（および常連客との関係）を tm-actor
+      分類などで定義し、つけを利用できる対象者の境界を用語集内で確認できるようにする。
   - id: F002
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 43
-    anchor: "definition: 管理対象の物品。"
-    message: >-
-      Clarify which goods 在庫 covers in this shop and how their stock quantity relates to 発注点; 管理対象の物品 alone does not
-      distinguish saleable stock from other managed property.
-    message_ja: >-
-      Clarify which goods 在庫 covers in this shop and how their stock quantity relates to 発注点; 管理対象の物品 alone does not
-      distinguish saleable stock from other managed property.
+    rule: vp-qe-omissions-consistency
+    line: 19
+    anchor: "status: official"
+    message: "用語の status: official が発注点だけに付いており、ほかの9語は採用状態が不明に読めるため、全用語で status を揃えるか、発注点だけに付ける理由がなければ削除して採用状態の表現を一貫させる。"
+    message_ja: "用語の status: official が発注点だけに付いており、ほかの9語は採用状態が不明に読めるため、全用語で status を揃えるか、発注点だけに付ける理由がなければ削除して採用状態の表現を一貫させる。"
   - id: F003
-    severity: major
-    rule: vp-qe-verifiability
-    line: 24
-    anchor: "definition: 常に棚に置いておきたい、よく売れる商品。"
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 11
+    anchor: "- id: tm-reorder-point"
     message: >-
-      Specify how a reviewer determines whether a product is 定番商品, including whether designation or sales performance
-      controls membership, so the 定番商品-only condition in line 14 can be checked consistently.
+      rulebook の ID規約は新規採番を tm-＜領域＞-＜概念＞ とするが、tm-reorder-point・tm-standard-product・tm-safety-stock・tm-shop-owner
+      は領域接頭辞を持たず tm-sales-credit-* と混在しているため、新規採番として規約どおりの ID に揃えるか、既存確定 ID
+      として維持していることを冒頭コメント等で示し、完成例から規約の適用が読み取れるようにする。
     message_ja: >-
-      Specify how a reviewer determines whether a product is 定番商品, including whether designation or sales performance
-      controls membership, so the 定番商品-only condition in line 14 can be checked consistently.
+      rulebook の ID規約は新規採番を tm-＜領域＞-＜概念＞ とするが、tm-reorder-point・tm-standard-product・tm-safety-stock・tm-shop-owner
+      は領域接頭辞を持たず tm-sales-credit-* と混在しているため、新規採番として規約どおりの ID に揃えるか、既存確定 ID
+      として維持していることを冒頭コメント等で示し、完成例から規約の適用が読み取れるようにする。
   - id: F004
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 17
-    anchor: "source: https://example.com"
-    message: >-
-      Replace https://example.com with a specific supporting reference, remove the optional source field, or explicitly
-      mark it as illustrative; the current value does not identify evidence for the definition marked official on line
-      18.
-    message_ja: >-
-      Replace https://example.com with a specific supporting reference, remove the optional source field, or explicitly
-      mark it as illustrative; the current value does not identify evidence for the definition marked official on line
-      18.
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 36
-    anchor: "term: おばあちゃん"
-    message: >-
-      Replace おばあちゃん with a role-based term such as 店主代表 and align tm-grandma with that role; sample-authoring-standard
-      sections 3.6, 6, and 8 require role-based identification and prohibit personal nicknames in samples. Check
-      dependent references and regenerate the display page after changing the identifier.
-    message_ja: >-
-      Replace おばあちゃん with a role-based term such as 店主代表 and align tm-grandma with that role; sample-authoring-standard
-      sections 3.6, 6, and 8 require role-based identification and prohibit personal nicknames in samples. Check
-      dependent references and regenerate the display page after changing the identifier.
-  - id: F006
-    severity: major
     rule: vp-ux-language-consistency
-    line: 23
-    anchor: "aliases: [レギュラー商品, 人気商品, 定番]"
+    line: 16
+    anchor: "notes: 定番商品だけに設定し、発注候補に挙がった後の発注数量と発注先は店主が判断する。"
     message: >-
-      Remove 人気商品 from the aliases of 定番商品 unless their equivalence is explicitly established; a popular seasonal
-      product can fall outside a permanent stocking designation, and treating the terms as interchangeable changes the
-      population eligible for reorder-point settings.
+      正式な用語は店主代表（line 60）で店主は別名だが、line 16・26・36・54 の定義・注記は店主、line 64 は店主代表と書き分けているため、他用語の定義・注記では正式な用語の店主代表に統一するか、term
+      を店主にして店主代表を別名に回し、表記を一貫させる。
     message_ja: >-
-      Remove 人気商品 from the aliases of 定番商品 unless their equivalence is explicitly established; a popular seasonal
-      product can fall outside a permanent stocking designation, and treating the terms as interchangeable changes the
-      population eligible for reorder-point settings.
+      正式な用語は店主代表（line 60）で店主は別名だが、line 16・26・36・54 の定義・注記は店主、line 64 は店主代表と書き分けているため、他用語の定義・注記では正式な用語の店主代表に統一するか、term
+      を店主にして店主代表を別名に回し、表記を一貫させる。

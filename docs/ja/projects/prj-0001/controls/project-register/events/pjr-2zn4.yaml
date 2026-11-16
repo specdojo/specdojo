@@ -150,3 +150,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6d8cf9bf48b94d45b7f2dc5a9162190b
+- v: 1
+  id: reg_61921f2cd5284118a9b4b386cd241bd0
+  ts: "2026-11-16T03:37:39Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: テストと検証が /tmp の直下に init の出力を残さないようにした（2026-11-13 に統合済み、0.8.0 に含む）
+  previous_event_id: reg_80a06e4efd624f3aa8f5320b7d805307

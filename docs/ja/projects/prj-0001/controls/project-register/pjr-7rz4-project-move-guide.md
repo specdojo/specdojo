@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-7rz4-project-move-guide
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-03T05:01:37Z"
   due_on: "2026-12-31"
+  completed_at: "2026-11-16T03:38:23Z"
+  conclusion: project を別リポジトリへ移す手順のガイドを書いた（2026-11-13 に統合済み、0.8.0 に含む）
   derived_from:
     - PJR-8HCB
   autopilot: approved

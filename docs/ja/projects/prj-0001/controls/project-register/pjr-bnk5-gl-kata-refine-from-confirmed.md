@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bnk5-gl-kata-refine-from-confirmed
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T13:11:51Z"
+  completed_at: "2026-11-16T03:45:50Z"
+  conclusion: 用語集の型（gl）を確定した用語集 6 件を手本に見直し、型の再 grade で rulebook pass 88 点・sample pass 93 点
   derived_from:
     - PJR-960C
     - PJR-6XQ4
@@ -53,10 +55,10 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                        | 担当         | 状態 | メモ                               |
-| --- | --------------------------- | ------------ | ---- | ---------------------------------- |
-| 1   | rulebook と sample を見直す | executor     | done | 対応結果に改訂内容と判断根拠を記録 |
-| 2   | 統合の後に型の grade を流す | orchestrator | open | -                                  |
+| No  | 作業                        | 担当         | 状態 | メモ                                                                                                 |
+| --- | --------------------------- | ------------ | ---- | ---------------------------------------------------------------------------------------------------- |
+| 1   | rulebook と sample を見直す | executor     | done | 対応結果に改訂内容と判断根拠を記録                                                                   |
+| 2   | 統合の後に型の grade を流す | orchestrator | done | 2026-11-16 orchestrator が型の grade（rulebook pass 88 点・sample pass 93 点、opus-review-executor） |
 
 ## 5. 対応結果
 
@@ -92,6 +94,8 @@ specdojo:
 
 - 区分: 変更
 - 行の文案: 用語集の型（gl）を確定済みの実績に合わせ、英語表記・注記・領域分割・ID 維持・参照範囲の規則を明確にし、駄菓子屋の完成例を拡充した。
+
+型の再 grade の結果（2026-11-16、orchestrator）: gl-rulebook は pass 88 点、gl-sample は pass 93 点。codex の利用枠が尽きていたため opus-review-executor で流した。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.gl-rulebook.yaml` と `docs/ja/projects/prj-0001/execution/grade/results/specdojo.gl-sample.yaml`。
 
 ## 6. 関連ドキュメント
 

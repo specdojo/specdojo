@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-2zn4-tmp-root-init-output-isolation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-12T13:48:46Z"
+  completed_at: "2026-11-16T03:37:39Z"
+  conclusion: テストと検証が /tmp の直下に init の出力を残さないようにした（2026-11-13 に統合済み、0.8.0 に含む）
   derived_from:
     - PJR-5FTV
   autopilot: approved

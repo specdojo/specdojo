@@ -7,9 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   registered_at: "2026-11-13T14:08:05Z"
+  completed_at: "2026-11-16T03:40:24Z"
+  conclusion: PJR-ED0K（executor の再開の前に統合先を取り込む）と PJR-9MWH（自分の run の記録の衝突を解く）、register の再開の前の同期で解消した
 ---
 
 # PJR-50CF exec resume が worktree を統合先の新しい commit に同期しない
