@@ -4675,3 +4675,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1e93d3d0396e4b938979242df0c62b7f
+- v: 1
+  id: reg_fb5bde90ab7c4e13a0bed26d28b184bc
+  ts: "2026-11-16T13:37:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: CBV6 の統合後の dist で、claude-executor の exec run --register が start から review・統合まで通った
+      to: V141・EWZG・30SA・1Y1M・KVWH・97KE の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_528914a4d2df4522a96c8491035fa961
