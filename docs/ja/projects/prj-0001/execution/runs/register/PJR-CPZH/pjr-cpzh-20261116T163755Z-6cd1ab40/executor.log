@@ -1,0 +1,31 @@
+grade で指摘された F001〜F004 を代替案比較の本文に取り込み、個票の作業内容 No.5 を done にしました。再 grade（No.6）は orchestrator が流すため、open のまま残しています。`validate:catalog`、`validate:history-links`、`prettier --check` は通りました。`lint:md`・`lint:fm` などは親 runner が実行します。
+
+**変更ファイル**
+- `docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-cpzh-prj-comparison-of-alternatives-rework-grade-findings.md`（作業内容 No.5 を done にし、3 回目の対応結果を追記）
+
+**主な変更**
+- **F003（major、各セルの根拠）**:
+  - 確認できないセルを Middle にする規則をやめ、「未判定」という区分を設けました。対象は、根拠資料で確認できないセルと、使う版・構成で判定が変わるセルです。
+  - 根拠資料、確認作業、未判定のセルを採否でどう扱うかを定めました。
+  - D-01〜D-03 の根拠表を判定ごとの列に分け、全セルの理由を軸名付きで書きました。未判定のセルには、判定できない理由と必要な確認作業を付けています。
+- **F002**: SDD-04 では、中立性の Low を「Specs の実行が Kiro 製品を前提とする」という構成によらない制約として書き、可逆性は版と構成で変わるため未判定にしました。SDD-05 では、構成によらない制約を SpecDojo との責務の重複とし、導入・移行負荷などは未判定にしました。
+- **F004**: TSK-02 の運用負荷を Middle に下げました。Issue ごとの正本への転記とクローズ後の照合が必要なためです。
+- **F001**: 検証手順は、ACD-D04 が正本とする品質管理計画の検証方針に従う書き方に改めました。手順が揃っているかの確認と、検証を実行した確認は分けて書いています。
+
+**判断が必要な点**（個票の対応結果にも書きました）
+- **status**: `ready` のまま直しました。これまでの回と同じ判断で、確定は人が 140 で行います。
+- **採否規則の追加**: SDD-05 を未判定にすると、従来の規則では試行対象になってしまいます。そこで次の規則を足しました。それぞれの判定（採択・試行・非採択・保留）は変わっていません。
+  - 正本以外の案は、正本が High でない軸を High で補う場合だけ採用する。
+  - 成熟度は補う軸に数えない。
+  - D-02 では比較対照の案を一つ比較試行にできる。
+- **指摘外のセル変更**: TSK-03・TSK-04 の外部協働を High から Middle に下げました。外部参加者は招待を経て参加する形で、High の根拠を書けないためです。採否は変わりません。
+- **自分で確かめていない記述**: 次の 3 点は、宣言された資料に詳しい記載がなく、grade の指摘と一般的な製品知識をもとに書きました。外部資料は読んでいないため、WP-01 か再評価の時点で公式資料での確認が必要です。
+  - TSK-02 の依存表現の根拠
+  - SDD-04 の Specs を使える環境
+  - SDD-05 で機能群を個別に使えること
+- **WP-01 の追加作業**: SDD-02・SDD-03 の成熟度は、WP-01 で版を固定してから判定する作業として加えました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"grade の指摘 F001〜F004 を代替案比較に取り込み、個票の作業内容 No.5 を done、No.6（再 grade）を open のまま残した。根拠表は全セルの理由を記し、確認できないセルを未判定に分けた。","handoff":["再 grade（`grade run --target deliverable`）は agent CLI の起動を要するため executor では実行していない。orchestrator が流し、個票の作業内容 No.6 と対応結果に結果を追記する。","status は前の回と同じく `ready` のまま直した。確定は人が 140 で行う。","D-02・D-03 の採否規則に次を足した: 正本以外の案は正本が High でない軸を High で補う場合に試行・段階採用する、成熟度は補う軸に含めない、D-02 では優先試行案の比較対照を一つ比較試行にできる。SDD-05 の導入・移行負荷を未判定にすると、従来の規則では試行対象になるためである。既存の判定はすべて変えていない。","TSK-03・TSK-04 の外部協働を High から Middle に改めた（招待を経て参加する方式で、High の根拠を記せないため）。採否は変わらない。人の確認を求める。","TSK-02 の依存表現の根拠、SDD-04 の Specs の利用環境、SDD-05 の機能群の個別利用は、宣言された根拠資料に詳細がなく、grade の指摘と一般的な製品知識に基づく。外部資料は確認していないため、WP-01 または再評価の条件の発生時に公式資料で確かめる。","SDD-01〜SDD-05 と TSK-01 の成熟度、SDD-04 の可逆性、SDD-05 の中立性・人間の統制・導入・移行負荷・可逆性、TSK-04 の運用負荷、TSK-05 の外部協働を未判定にした。SDD-02・SDD-03 の成熟度は WP-01 で版を固定して判定する作業として加えた。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml（既存の based_on 未検出の WARN のみ）"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め違反なし"},{"command":"npx prettier --check <changed md files>","status":"passed","summary":"変更した 2 ファイルが Prettier の書式に合っている"}]}
+</specdojo_executor_evidence>
