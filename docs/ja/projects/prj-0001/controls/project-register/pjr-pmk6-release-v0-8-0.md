@@ -67,16 +67,25 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                   | 担当                  | 状態 | メモ |
-| --- | ---------------------------------------------------------------------- | --------------------- | ---- | ---- |
-| 1   | CHANGELOG の事項を集め、版を確定し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | open | -    |
-| 2   | 配布物を空のリポジトリで試す                                           | specdojo-orchestrator | open | -    |
-| 3   | PR・merge・タグ・公開の承認                                            | PO                    | open | -    |
-| 4   | 公開後の確認                                                           | specdojo-orchestrator | open | -    |
+| No  | 作業                                                                   | 担当                  | 状態 | メモ                 |
+| --- | ---------------------------------------------------------------------- | --------------------- | ---- | -------------------- |
+| 1   | CHANGELOG の事項を集め、版を確定し、`npm ci` と `npm run check` を流す | specdojo-orchestrator | done | 4b6e47ed2・93449d3e0 |
+| 2   | 配布物を空のリポジトリで試す                                           | specdojo-orchestrator | done | 2026-11-16 10:52     |
+| 3   | PR・merge・タグ・公開の承認                                            | PO                    | open | -                    |
+| 4   | 公開後の確認                                                           | specdojo-orchestrator | open | -                    |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+実施内容（2026-11-16、orchestrator）:
+
+- 範囲: 足元の不具合（M18B・X05N・Q2AT・1GCD・T4G3・M495・ED0K・V2GH・BJ7E・DVNV）、夜間に見つけた 9MWH、型を最新にする手直しと kata-wave-2 の 140 の確定に加え、利用者の依頼で 2026-11-16 に 1ZQK・YYDS・N6GK と配る型の次の回（D948・C6BA・KV37・T123）を足した。どれも close 済み。D948・C6BA・KV37・T123・AWW3 の型は再 grade で pass になった
+- 版: 本体 `0.8.0`、`@specdojo/docs-site` `0.5.0`（対話の描画とメニューの自動生成）、`@specdojo/docs-lint` `0.4.1`（remark の無視対象と履歴リンクの検査の対象）。docs-site・docs-lint の版は orchestrator の提案で、利用者の確認を PR の前に得る
+- CHANGELOG: `[Unreleased]` の既存の行と、0.7.0 の後に close した項目の「CHANGELOG に書く事項」（38 件）と、注記がない利用者向けの直し（YYDS・9MWH・N6GK・MERV・HQVE など）から `[0.8.0] - 2026-11-16` の節を作った（4b6e47ed2）
+- 検証: ルートと 3 package の `npm ci` が成功し、リリースのブランチで `npm run check` が成功した（238 テストファイル、3,945 テスト）。3 つの tarball を空の Git リポジトリへ入れ、`init --yes --provider claude --exec`・`register add --commit`・`exec run --register`（claude の executor・reporter で start から review、統合まで）・`kata show`（clis・dss の rulebook、bds の sample）・docs-site の build と `chat` のコードブロックの描画を確かめた
+- 試験のリポジトリを `~/.claude/` の下に作ると、claude の agent の書き込みが拒否されて止まった（設定の場所として守られるため）。`/workspaces` の下で作り直して通った。製品の不具合ではない
+- release の feature を develop へ merge した（93449d3e0）。PR の本文は orchestrator が用意した
+
+残り: 利用者の確認（docs-site・docs-lint の版）、push・PR の merge・タグ・公開の承認、公開後の確認。
 
 ## 6. 関連ドキュメント
 
