@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-Y5AC
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-Y5AC/pjr-y5ac-20261116T165236Z-c5510692/plan.md
   started_at: "2026-11-16T16:52:45.729Z"
+  completed_at: "2026-11-16T16:58:30.156Z"
   agent: opus-executor
   approach: fully-guided
   targets:
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- F001〜F003 に対応し、公開後の SC-04〜SC-06 が未達と確定した場合の再観測の時期・観測期間・再合格条件と、期限後の是正手順（PM→PO→BA→QE→PO）を品質管理計画に加えた。PO が決める値は未決表で期限付きの留保とした。個票の作業内容 No.5 を done にし、対応結果を追記した。再 grade（No.6）は orchestrator が流すため open のまま。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md`: 変更、+28 / -11 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 再観測の時期と SC-05 の観測期間は PO が決める値のため、数値を書かず「未決事項と保留」に `_UNDECIDED_:` として載せた。期限は公開後価値ゲートの判断前、追跡先は変更要求個票と決定個票。
+- 判定時期の変更は承認済みの成功条件の変更にあたるため、変更要求個票に登録する形にした。判定基準と測定方法は変えていない。
+- SC-04 と SC-06 の観測期間は公開から再観測の時期までの累積、SC-05 は利用前後の比較期間を PO の決定とした。
+- status は `ready` のまま直した（章構成と frontmatter を変えない補強のため）。確定は人が 140 で行う。
+- 再 grade（`grade run --target deliverable`）は orchestrator が流す。個票の作業内容 No.6 は open のまま残した。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
