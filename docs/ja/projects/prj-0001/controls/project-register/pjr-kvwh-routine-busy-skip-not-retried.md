@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:02Z"
+  block_reason: "parent validation failed: lint-mermaid, test-integration"
 ---
 
 # PJR-KVWH routine が busy で skip した回を、空いた次の回で流し直さない

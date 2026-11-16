@@ -35,3 +35,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_8f8954d9b9bb44ba99f583c83adaa8e3
+  ts: "2026-11-16T12:00:11Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f5941366186d4d49845f6e5cca3c4f15
+- v: 1
+  id: reg_4c9ff3e8e4a74024812d6ddf2dd6a193
+  ts: "2026-11-16T12:45:48Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-mermaid, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-mermaid, test-integration"
+  previous_event_id: reg_8f8954d9b9bb44ba99f583c83adaa8e3
