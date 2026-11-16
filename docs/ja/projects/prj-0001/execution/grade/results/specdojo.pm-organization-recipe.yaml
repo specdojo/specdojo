@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 98
-graded_at: "2026-11-08T20:10:53.891Z"
+graded_at: "2026-11-16T20:28:34.320Z"
 graded_by: flash-high-executor
-content_hash: a08d130f0866c92d25a512ecf23ce8ab433cd52ad2d01dc1b945d771f2a14061
+content_hash: a13a4a6dd49eab568fa5cfbd8ca29d4a46d6e14c970a1c39ccee5fdd396d8b95
 categories:
   purpose:
     score: 100
@@ -111,6 +111,6 @@ findings:
     severity: minor
     rule: vp-qe-kata-conformance
     line: 33
-    anchor: "## 4. 各章の書き方"
+    anchor: ""
     message: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。
     message_ja: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。
