@@ -121,3 +121,16 @@
       from: "parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_62ffb5d509ae4e599c4de3c8c48a3b87
+- v: 1
+  id: reg_50329ee515574067add72b980e94df76
+  ts: "2026-11-16T15:03:16Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d8cc7b2342f249609a02c053b279404e

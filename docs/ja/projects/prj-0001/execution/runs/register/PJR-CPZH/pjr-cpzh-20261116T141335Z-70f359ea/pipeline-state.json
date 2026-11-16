@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-CPZH",
   "run_id": "pjr-cpzh-20261116T141335Z-70f359ea",
-  "updated_at": "2026-11-16T15:02:55.035Z",
+  "updated_at": "2026-11-16T15:03:17.000Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-CPZH/pjr-cpzh-20261116T141335Z-70f359ea/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-reporter",
       "attempts": 1,
       "started_at": "2026-11-16T15:02:55.035Z",
-      "completed_at": null,
+      "completed_at": "2026-11-16T15:03:17.000Z",
       "artifact_ref": null
     }
   },
