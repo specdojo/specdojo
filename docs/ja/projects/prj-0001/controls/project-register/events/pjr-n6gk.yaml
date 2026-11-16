@@ -44,3 +44,29 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_e1a641a1ab094e7888f914895ee09cea
+  ts: "2026-11-15T23:30:23Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6f905c0ff8dc434e97762a8d8cbcf069
+- v: 1
+  id: reg_8e8bc1f456ae4fa680da820e16908215
+  ts: "2026-11-16T00:11:27Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e1a641a1ab094e7888f914895ee09cea

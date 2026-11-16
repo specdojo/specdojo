@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -36,14 +36,19 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                                                                                                                                                                                  | 担当 | 状態 | メモ |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | exec plan の共通の約束（register の項目を対象にする plan）に、作業内容の表の各行の状態とメモを実績に合わせることを足す。executor が実行できない行（grade の起動など）は、その理由をメモに書き、状態を open のまま残す | DEV  | open | -    |
-| 2   | reporter、または register の post-review・close の前の検査で、作業内容の表に open・`_TODO_` の行が残っていれば完了にせず、理由を示す                                                                                  | DEV  | open | -    |
+| No  | 作業                                                                                                                                                                                                                  | 担当 | 状態 | メモ                                      |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------- |
+| 1   | exec plan の共通の約束（register の項目を対象にする plan）に、作業内容の表の各行の状態とメモを実績に合わせることを足す。executor が実行できない行（grade の起動など）は、その理由をメモに書き、状態を open のまま残す | DEV  | done | `xep-register-template.md` の進め方に追記 |
+| 2   | reporter、または register の post-review・close の前の検査で、作業内容の表に open・`_TODO_` の行が残っていれば完了にせず、理由を示す                                                                                  | DEV  | done | `register close` と post-review で検査    |
 
 ## 5. 対応結果
 
--
+- `src/register/work-table.ts` を追加した。作業内容の表で、状態が `done` でないのにメモに理由がない行と、`_TODO_` の残る行を問題として返す。表や状態の列がない個票は対象外とする。
+- `register close` は問題のある個票を書き換えずに止め、行ごとの理由を出す。post-review は verdict が complete でも close せず waiting にし、同じ理由を残す。
+- register の edit plan（`xep-register-template.md` の進め方）に、表の各行の状態とメモを実績に合わせ、実行できない行は理由をメモに書いて `open` で残す指示を足した。
+- テストは `tests/src/register/work-table.test.ts`・`tests/src/register/commands.test.ts`・`tests/src/exec/register-post-review.test.ts` に追加した。`npm run check` の各検査は親の検証に委ねた。
+- _ASSUMPTION_: 「plan の共通の約束」は全 plan 共通の `xp-common-conventions-template.md` ではなく、register の項目を対象にする plan の本文（`xep-register-template.md`）と解釈した。全 plan に載せると register 以外の plan に不要な指示が増えるため。
+- reporter での検査は入れていない。close の前の検査（手動の close と post-review の両方）で足りると判断した。
 
 ## 6. 関連ドキュメント
 

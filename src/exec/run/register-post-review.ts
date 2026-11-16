@@ -3,6 +3,10 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { buildSpecdojoFrontmatter } from "../../docs/frontmatter-namespace.js";
 import type { PjrItem, RegisterPaths } from "../../register/register.js";
+import {
+  registerWorkTableIssueMessage,
+  registerWorkTableIssues,
+} from "../../register/work-table.js";
 import { formatMarkdownFile } from "../../shared/markdown-format.js";
 import type { MemberRoster, ProjectMember } from "../../shared/specdojo-config.js";
 import { expandTemplate } from "../../shared/text.js";
@@ -47,8 +51,9 @@ export function registerPostReviewDisposition(params: {
   itemType: string;
   verdict: string | undefined;
   runnerImplementationChanged?: boolean;
+  workTableIssue?: string;
 }): RegisterPostReviewDisposition {
-  const { itemType, verdict, runnerImplementationChanged = false } = params;
+  const { itemType, verdict, runnerImplementationChanged = false, workTableIssue } = params;
   if (verdict === "incomplete" || !verdict) {
     return {
       transition: "waiting",
@@ -62,6 +67,10 @@ export function registerPostReviewDisposition(params: {
       outcome: "failure",
       explanation: `review verdict is not accepted: ${verdict}`,
     };
+  }
+  // 作業内容の表が実績に合っていなければ、review が通っても完了にしない。
+  if (workTableIssue) {
+    return { transition: "waiting", outcome: "failure", explanation: workTableIssue };
   }
   if (!AUTO_CLOSE_REGISTER_TYPES.has(itemType)) {
     return {
@@ -498,10 +507,16 @@ export async function runRegisterPostReview(params: {
     context.repoRoot,
     changedPathsBetween(context.repoRoot, params.baseCommit, params.outputCommit),
   );
+  const workTableIssues = existsSync(params.ticketPath)
+    ? registerWorkTableIssues(readFileSync(params.ticketPath, "utf8"))
+    : [];
   const disposition = registerPostReviewDisposition({
     itemType: item.type,
     verdict,
     runnerImplementationChanged,
+    ...(workTableIssues.length > 0
+      ? { workTableIssue: registerWorkTableIssueMessage(item.id, workTableIssues) }
+      : {}),
   });
   const rationale = sanitizeRegisterConclusion(
     `post-run review verdict ${verdict}: ${reviewRationale(generated.resultPath)}; ${disposition.explanation}`,

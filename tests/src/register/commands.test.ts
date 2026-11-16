@@ -1654,6 +1654,62 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     },
   );
 
+  it("close は作業内容の表に理由のない open の行が残る個票を書き換えず終了コード 1 で拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      const original = [
+        buildTicket("PJR-AB12", ["item_status: in-progress", "priority: high"]),
+        "## 3. 作業内容",
+        "",
+        "| No  | 作業 | 担当 | 状態 | メモ |",
+        "| --- | ---- | ---- | ---- | ---- |",
+        "| 1   | 実装 | DEV  | done | -    |",
+        "| 2   | 文書 | DEV  | open | -    |",
+        "",
+      ].join("\n");
+      writeFileSync(ticketPath, original, "utf8");
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister(["close", "--id", "PJR-AB12"]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        'Cannot close PJR-AB12: the 作業内容 table of PJR-AB12 does not match the work done: row 2 is "open" without a reason in メモ',
+      );
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+      expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+    });
+  });
+
+  it("close は作業内容の表の行がすべて done か理由つきで残された個票を終端できる", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        [
+          buildTicket("PJR-AB12", ["item_status: in-progress", "priority: high"]),
+          "## 3. 作業内容",
+          "",
+          "| No  | 作業       | 担当 | 状態 | メモ                         |",
+          "| --- | ---------- | ---- | ---- | ---------------------------- |",
+          "| 1   | 実装       | DEV  | done | -                            |",
+          "| 2   | grade 起動 | DEV  | open | executor から起動できないため |",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["close", "--id", "PJR-AB12"]);
+
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(ticketPath, "utf8")).toContain("  item_status: done");
+    });
+  });
+
   it("update は note の内容を従来どおり更新できる", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
