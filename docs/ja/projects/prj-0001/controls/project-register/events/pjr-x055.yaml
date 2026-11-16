@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4cbf2dc104c94211b102b8c13f231f86
+  ts: "2026-11-16T03:22:46Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo を枯れたと判断する目安を満たす
+    - field: description
+      from: ""
+      to: 夜間の無人実行、別リポジトリでの通し、手作業のコマンド化、対話の試験の安定を目安に、成熟度を追う
+    - field: input
+      from: ""
+      to: '["2026-11-16、0.8.0 の準備で一晩に 30 件ほどの項目を並列で流し、登録簿に履歴を残しながら進められた。一方で、SpecDojo 自身の機能の組み合わせの不具合（DVNV と ED0K、rulebook の ready と schema の検査、grade の翻訳の段、plan だけの run の記録など）に何度も当たり、orchestrator が 5 回ほど手を入れた","利用者は「不具合は直せばいいので、枯れれば使えるか」と尋ね、orchestrator が示した目安を記録することを選んだ（2026-11-16）。直しても残る性質（仕組みが大きく小さな作業には重い）は目安の対象にしない"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: commit_type
+      from: ""
+      to: chore
+    - field: commit_scope
+      from: ""
+      to: release

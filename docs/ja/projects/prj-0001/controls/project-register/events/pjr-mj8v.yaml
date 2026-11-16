@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8b423482f0b0465588ca57a342f12cb4
+  ts: "2026-11-16T03:22:49Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: orchestrator が記帳
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 同じ範囲を触る項目を並べて流さず、順番に流す
+    - field: description
+      from: ""
+      to: 並列の run で、同じファイルや同じ範囲を変えそうな項目を同時に流さず、先の項目の統合の後に流す
+    - field: input
+      from: ""
+      to: '["2026-11-15〜16、PJR-1GCD と PJR-ED0K が同じ develop から分かれて src/exec/run/lifecycle-commands.ts・in-place.ts・register-resume.ts などの同じ関数を書き換えた。ED0K が先に統合されたため、1GCD は再開の前の同期でコードの衝突になり、orchestrator が手で両方の規則を合わせて解いた","merge を直列化しても（PJR-30SA）、同じ起点から同じ範囲を変えた 2 件目の衝突は防げない。防ぐには、流す前に範囲が重なる項目を順番にするか、衝突を executor に解かせる必要がある。まず前者を入れ、後者は起きたときの手当てとして別に扱う（2026-11-16、利用者が起票を依頼）"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-16"
+    - field: derived_from
+      from: ""
+      to: '["PJR-1GCD"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
