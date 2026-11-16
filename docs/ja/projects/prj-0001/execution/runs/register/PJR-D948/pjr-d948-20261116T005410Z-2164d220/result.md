@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-D948
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-D948/pjr-d948-20261116T005410Z-2164d220/plan.md
   started_at: "2026-11-16T00:54:32.851Z"
+  completed_at: "2026-11-16T01:05:43.601Z"
   agent: opus-executor
   approach: sample-maintenance
   targets:
@@ -19,16 +20,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- bds-sample に 09:50 の grade の F001〜F004 を取り込み（数量を確認版の販売集合と基準時点で固定、前週の不一致時の比較不可、不明・不完全の並び順）、個票の作業内容 No 5 を done、対応結果を追記した。再 grade の No 6 は orchestrator 待ちで open。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/samples/bds-sample.md`: 変更、+19 / -18 行
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- `grade run --target kata` での bds-sample の再 grade は orchestrator が流す。個票 PJR-D948 の作業内容 No 6 は open のまま。
+- 決定: 確定した確認版がある日の販売数は、その版が参照する日次販売集計の販売集合（売上 ID の集合）の明細を、集計の基準時点の状態で合計する（cdsd-sample の日次販売集計の定義を流用し、新しい記録を発明しない）。
+- 決定: 締めの確定後の訂正・追加は新しい確認版の確定まで反映せず、記録の注意に「締め後の訂正あり」と載せて再出力を促す（cdsd-sample の締め確定後の訂正の扱いに合わせた）。
+- 決定: 「不完全」はその数値で並べ、「不明」は数値を持つ商品の後に五十音順で並べる。
+- 決定: 前週の報告に販売件数の不一致の日があるときは、前週の明細にない商品も「比較不可」とする。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+reporter を使わず、runner が executor の報告（`final_message`・`handoff`）と証跡から機械的に作成した（`pipeline.mechanical_result`）。
