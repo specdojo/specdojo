@@ -73,8 +73,8 @@ transport:
   frequency: 週次
   atomic_write: >-
     生成時は data/outbound/orders/ に orders_YYYYMMDD.csv.tmp を書き出してから orders_YYYYMMDD.csv へリネームして確定する。
-    転送時も同名の .tmp で送り、転送完了後に問屋側で orders_YYYYMMDD.csv へリネームする。
-    リネーム済みの確定ファイルの存在を生成完了とみなし、別の完了フラグは置かない。
+    転送時は店舗端末が同名の .tmp を送り、送信完了後に SFTP の rename で問屋側の orders_YYYYMMDD.csv へ置き換える。
+    リネーム済みの確定ファイルの存在を生成完了・転送完了とみなし、別の完了フラグは置かない。
 
 schema:
   csv:
@@ -146,7 +146,7 @@ error_handling:
     action: >-
       日曜 21:45 時点で確定ファイル orders_YYYYMMDD.csv（.tmp ではないもの）が存在しない場合、
       店舗端末へ未生成警告を表示し、店主代表（PO）が発注バッチを 1 回だけ手動再実行する。
-      再実行後も 22:00 までに転送完了しない場合は自動送信を止め、問屋へ電話発注する。
+      再実行後も 22:00 までに転送完了しない場合は自動送信を止め、transport_failure の 22:00 以降の手順に従う。
   malformed:
     action: >-
       必須列の欠落、文字コード不正、constraints 違反、または order_unit と商品マスタの発注単位の不一致を
@@ -155,8 +155,15 @@ error_handling:
   transport_failure:
     action: >-
       SFTP 接続タイムアウトまたは転送失敗時は送信待ちキュー（data/outbound/orders/）に保持したまま
-      5 分間隔で最大 3 回再試行し、22:00 までに完了しない場合は自動再送を止めて店主代表へ電話発注を促す。
-      電話発注へ切り替えた週の CSV は送信待ちキューから data/outbound/orders/phoned/ へ移し、後から自動送信しない。
+      5 分間隔で最大 3 回再試行する。各再試行の前に問屋側 /inbound/orders/ の一覧を取得し、
+      確定名の orders_YYYYMMDD.csv があれば届いたとみなして再送しない。
+      未着の確定は、接続またはログインが送信開始前に失敗した場合と、一覧を取得でき確定名のファイルがない場合に限る。
+      送信開始後や rename 要求後の時間切れで一覧も取得できない場合は、届いたかどうかを「不明」とする。
+      22:00 までに完了しない場合は自動再送を止める。未着が確定していれば店主代表（PO）が電話発注し、
+      CSV を data/outbound/orders/phoned/ へ移して後から自動送信しない。
+      不明の場合は電話発注の前に、PO が問屋へ CSV の受領有無を電話で確認する。受領済みなら電話発注せず CSV を
+      data/outbound/orders/sent/ へ移す。未受領、または問屋が受領した CSV の取消に応じた場合だけ電話発注し、
+      CSV を phoned/ へ移す。
 ```
 
 ### 3.2. 複数ファイル・正本参照の例（取引状態・販売実績控え JSON 連携）
@@ -188,7 +195,7 @@ files:
     description: >-
       進行中の現金販売取引の明細・金額集計・会計要求状態を保持し、
       コマンド間での状態引き継ぎ、二重開始防止、および中断時の再開判定に用いる状態ファイル。
-    writer: 販売管理 CLI（sales start で新規生成、sales add / complete でアトミック更新、完了または確定前 cancel で終了）
+    writer: 販売管理 CLI（sales start で新規生成、sales add / complete でアトミック更新、会計確定または open での cancel で削除）
     reader: 販売管理 CLI（各サブコマンド起動時の状態検証・再開判定）および店主代表・開発担当（障害時の状態照合）
     format: JSON
     encoding: UTF-8
@@ -207,9 +214,10 @@ files:
     naming_rule: TX-<YYYYMMDD>-<NNNN>.json
     location: <store-data-dir>/data/sales/TX-<YYYYMMDD>-<NNNN>.json
     description: >-
-      会計確定要求時の販売実績明細、預かり金・釣銭、本部売上登録 API の受付結果、
-      およびレシート印字状態を記録する証跡（エビデンス）ファイル。
-    writer: 販売管理 CLI（sales complete の会計要求・本部受付応答受領・receipt-print 実行後にアトミック更新）
+      会計確定要求時の販売実績明細（商品・単価・数量）と金額集計、預かり金・釣銭、本部売上登録 API の受付結果、
+      およびレシート印字状態を記録する証跡（エビデンス）ファイル。current-tx.json の削除後も明細の正本として残し、
+      販売管理 CLI は会計確定後に削除・上書きしない（受付結果と印字状態の更新を除く）。
+    writer: 販売管理 CLI（sales complete の送信前に pending で新規生成し、本部受付応答受領・receipt-print 実行後にアトミック更新）
     reader: 販売管理 CLI（二重送信抑止・回復照合）、店主代表（PO）・開発担当（DEV）（通信失敗・印字未完了時の照合）
     format: JSON
     encoding: UTF-8
@@ -219,6 +227,9 @@ files:
       - tx_id
       - business_date
       - seq_no
+      - line_items
+      - subtotal_yen
+      - tax_yen
       - total_yen
       - tendered_yen
       - change_yen
@@ -238,7 +249,16 @@ transport:
   method: ローカルファイルシステム
   endpoint: <store-data-dir>/（.session/ および data/sales/）
   frequency: 取引操作ごとに都度
-  atomic_write: 同一ディレクトリ内の一時ファイル（.tmp）へ書き込み・フラッシュ後に renameSync でアトミック置換を実施
+  atomic_write: >-
+    各ファイルは同一ディレクトリ内の一時ファイル（.tmp）へ書き込んで fsync し、renameSync で置換した後に
+    ディレクトリも fsync する。sales complete は次の順に書き、前の段の永続化を確かめてから次へ進む。
+    (1) current-tx.json の明細と金額を写した TX-*.json を api_sync_status pending で書く。
+    (2) current-tx.json の status を payment_requested にする。
+    (3) 本部売上登録 API へ送り、応答で TX-*.json の api_sync_status を accepted / rejected / unknown にする。
+    (4) accepted の後だけ receipt-print を実行し、TX-*.json の print_status を更新する。
+    (5) current-tx.json を削除する。
+    本部へ送るのは (2) の後に限るので、status が open なら未送信と判定できる。
+    途中で止まったファイルの組み合わせの扱いは本書「会計確定の書き込み順序と再開判定」に従う。
 
 schema:
   json:
@@ -345,6 +365,9 @@ error_handling:
     "tx_id",
     "business_date",
     "seq_no",
+    "line_items",
+    "subtotal_yen",
+    "tax_yen",
     "total_yen",
     "tendered_yen",
     "change_yen",
@@ -357,6 +380,23 @@ error_handling:
     "tx_id": { "type": "string", "pattern": "^TX-\\d{8}-\\d{4}$" },
     "business_date": { "type": "string", "format": "date" },
     "seq_no": { "type": "integer", "minimum": 1, "maximum": 9999 },
+    "line_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["product_code", "product_name", "unit_price_yen", "quantity"],
+        "properties": {
+          "product_code": { "type": "string", "maxLength": 14 },
+          "product_name": { "type": "string", "minLength": 1 },
+          "unit_price_yen": { "type": "integer", "minimum": 0 },
+          "quantity": { "type": "integer", "minimum": 1, "maximum": 99 }
+        }
+      }
+    },
+    "subtotal_yen": { "type": "integer", "minimum": 0 },
+    "tax_yen": { "type": "integer", "minimum": 0 },
     "total_yen": { "type": "integer", "minimum": 0 },
     "tendered_yen": { "type": "integer", "minimum": 0 },
     "change_yen": { "type": "integer", "minimum": 0 },
@@ -369,42 +409,60 @@ error_handling:
 }
 ```
 
-状態値の意味と組み合わせは次のとおり。`current-tx.json` は会計確定（本部受付と控え保存の確認後）または確定前の取消で削除するため、`status` は未解決の 2 値だけを持つ。印字は会計確定後に限るので、`api_sync_status` が `accepted` 以外なら `print_status` は `not_requested` に限る。`tendered_yen - total_yen = change_yen` の一致はスキーマで表せないため、読み手の CLI が追加で検査し、不一致は `malformed` とする。
+状態値の意味と組み合わせは次のとおり。`current-tx.json` は会計確定（本部受付と控え保存の確認後）または `open` での取消で削除するため、`status` は未解決の 2 値だけを持つ。明細は送信前に控えの `line_items` へ写すので、`current-tx.json` の削除後も控えから品目・単価・数量を確認できる。印字は会計確定後に限るので、`api_sync_status` が `accepted` 以外なら `print_status` は `not_requested` に限る。`tendered_yen - total_yen = change_yen` の一致はスキーマで表せないため、読み手の CLI が追加で検査し、不一致は `malformed` とする。
 
-| 項目              | 値                          | 意味と扱い                                                                                        |
-| ----------------- | --------------------------- | ------------------------------------------------------------------------------------------------- |
-| `status`          | `open`                      | 明細追加中。`sales add` / `total` / `cancel` を受け付ける                                         |
-| `status`          | `payment_requested`         | 会計要求を本部へ送った後で、控えの `api_sync_status` が `accepted` になるまで保持する。取消は不可 |
-| `api_sync_status` | `pending`                   | 送信前に控えを保存した状態。送信結果を受け取る前の停止は `unknown` と同じく未解決とする           |
-| `api_sync_status` | `accepted`                  | 本部が受付を返した。会計確定済みで、再送しない                                                    |
-| `api_sync_status` | `rejected`                  | 本部が拒否を返した。未受付と確認済みで、原因を直した後だけ同じ取引を再送できる                    |
-| `api_sync_status` | `unknown`                   | 接続不能・時間切れで受付結果が不明。未登録と断定せず、本部受付の照会まで保留する                  |
-| `print_status`    | `not_requested` / `printed` | 印字前、または印字完了                                                                            |
-| `print_status`    | `failed` / `unknown`        | 印字未完了の警告。会計は維持し、保存済みレシートだけを再印刷する                                  |
+| 項目              | 値                          | 意味と扱い                                                                              |
+| ----------------- | --------------------------- | --------------------------------------------------------------------------------------- |
+| `status`          | `open`                      | 明細追加中。`sales add` / `total` / `cancel` を受け付ける                               |
+| `status`          | `payment_requested`         | 控えを `pending` で保存した後、本部へ送る前に書く。送信済みの可能性があるため取消は不可 |
+| `api_sync_status` | `pending`                   | 送信前に控えを保存した状態。送信済みかどうかは `current-tx.json` の `status` で判定する |
+| `api_sync_status` | `accepted`                  | 本部が受付を返した。会計確定済みで、再送しない                                          |
+| `api_sync_status` | `rejected`                  | 本部が拒否を返した。未受付と確認済みで、原因を直した後だけ同じ取引を再送できる          |
+| `api_sync_status` | `unknown`                   | 接続不能・時間切れで受付結果が不明。未登録と断定せず、本部受付の照会まで保留する        |
+| `print_status`    | `not_requested` / `printed` | 印字前、または印字完了                                                                  |
+| `print_status`    | `failed` / `unknown`        | 印字未完了の警告。会計は維持し、保存済みレシートだけを再印刷する                        |
 
 検証は JSON Schema 2020-12 に対応したバリデータ（`format` の検査を有効にする）で、`current-tx.json` を `kinuya-session-schema`、`TX-*.json` を `kinuya-sales-record-schema` に照らして行う。`QE` は次の受入ケースで期待結果を確認する。
 
 | ケース             | 対象と入力の要点                                                                                           | 期待結果                                                              |
 | ------------------ | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | 正常（明細追加）   | `current-tx.json`、`status: open`、明細 1 件、`total_yen` が明細と税の合計                                 | スキーマ適合。`sales add` / `total` を継続できる                      |
-| 正常（会計確定）   | `TX-*.json`、`api_sync_status: accepted`、`print_status: printed`、釣銭が一致                              | スキーマ適合。`current-tx.json` は削除済み                            |
+| 正常（会計確定）   | `TX-*.json`、明細 1 件、`api_sync_status: accepted`、`print_status: printed`、釣銭が一致                   | スキーマ適合。`current-tx.json` は削除済みで、明細は控えに残る        |
+| 不正（控えの明細） | `TX-*.json` から `line_items` を除く                                                                       | スキーマ不適合。`malformed` として退避し照合へ引き継ぐ                |
 | 不正（必須欠落）   | `current-tx.json` から `status` を除く                                                                     | スキーマ不適合。`malformed` として「取引記録破損（exit code 2）」     |
 | 不正（状態値）     | `current-tx.json`、`status: completed`                                                                     | スキーマ不適合（`enum` 違反）。`malformed` として扱う                 |
 | 不正（組み合わせ） | `TX-*.json`、`api_sync_status: unknown`、`print_status: printed`                                           | スキーマ不適合（`then` 違反）。`malformed` として退避し照合へ引き継ぐ |
 | 未解決             | `TX-*.json` が `api_sync_status: unknown`、`current-tx.json` が同じ `tx_id` で `status: payment_requested` | スキーマ適合だが未解決。新規取引を始めず、本部受付の照会を待つ        |
 
+### 3.4. 会計確定の書き込み順序と再開判定
+
+`sales complete` の途中で止まった後、次に起動した CLI は `current-tx.json` と同じ `tx_id` の控えの組み合わせで次のように判定する。書き込み順序は「複数ファイル・正本参照の例（取引状態・販売実績控え JSON 連携）」の `atomic_write` を正とする。
+
+| `current-tx.json` の `status` | 控えの状態                                  | 判定と CLI の扱い                                                                                                                  |
+| ----------------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `open`                        | なし                                        | 明細追加中。通常どおり受け付ける                                                                                                   |
+| `open`                        | `pending`                                   | 送信前に停止した（未送信が確定）。`sales complete` は控えを作り直して続ける。`sales add` / `cancel` は先に控えを削除してから進める |
+| `payment_requested`           | `pending`                                   | 送信したかどうか不明。控えを `unknown` にして「売上登録結果不明（exit code 3）」で停止し、本部受付の照会を待つ                     |
+| `payment_requested`           | `unknown`                                   | 本部受付の照会を待つ。照会の結果で `accepted` または `rejected` にする                                                             |
+| `payment_requested`           | `rejected`                                  | 未受付が確定。原因を直した後だけ同じ `tx_id` で再送する                                                                            |
+| `payment_requested`           | `accepted`（`print_status: not_requested`） | 印字したかどうか不明。`print_status` を `unknown` にして警告し、`current-tx.json` を削除する。再印刷は保存済みレシートだけで行う   |
+| `payment_requested`           | `accepted`（`not_requested` 以外）          | 削除の前に停止した。`current-tx.json` を削除して会計確定とする                                                                     |
+| `payment_requested`           | なし                                        | 書き込み順序と矛盾する。`missing` の `sales_record_json` に従い exit code 3 で停止する                                             |
+| なし                          | `accepted`                                  | 会計確定済み。新規取引を受け付ける                                                                                                 |
+| なし                          | `pending` / `unknown` / `rejected`          | 書き込み順序と矛盾する。「取引状態の欠落」の扱いに従い、本部受付と照合するまで新規取引を始めない                                   |
+
 ## 4. 異常時の判断と利用者の次の手
 
 YAML 内の `error_handling` に基づき、店頭での業務継続と二重処理防止のために利用者が行う判断と回復確認を次表に整理する。
 
-| 事象・区分                                                       | 業務継続・再実行の判断基準                                                                                     | 利用者（店主代表・家族利用者代表・開発担当）の次の手と回復確認                                                                                                                                                      |
-| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 週次発注 CSV の未生成（`missing`）                               | 日曜 21:45 に確定ファイルがなければ、手動再実行を 1 回だけ行う。22:00 までに転送完了しなければ電話へ切り替える | 店主代表（`PO`）が未生成警告を見て発注バッチを再実行し、22:00 までに送信完了しない場合は確定済み発注候補の控えをもとに問屋へ電話発注する                                                                            |
-| 週次発注 CSV の転送失敗（`transport_failure`）                   | 自動再試行（5 分間隔・最大 3 回）の間は待つ。22:00 までに完了しなければ自動再送を止めて電話へ切り替える        | 店主代表が Wi-Fi 通信状態を確認し、電話発注した週の CSV が `data/outbound/orders/phoned/` へ移ったことを確かめて二重発注を防ぐ                                                                                      |
-| 週次発注 CSV の形式不正（`malformed`）                           | 隔離された破損ファイルはそのまま送信せず、マスタ・数量の訂正後に再生成する                                     | 開発担当（`DEV`）が `data/quarantine/` のログから不正行を特定・修正し、同行レビュー担当（`QE`）と再生成結果を確認する                                                                                               |
-| 取引状態の欠落（`current_tx_json` の `missing`、「取引未開始」） | 欠落前に進行中の取引がなかったと確かめてから `sales start` で新規取引を始める                                  | 店番担当は `sales total` を使わずに停止し、店主代表と開発担当（`DEV`）が `data/sales/` の当日控えを確認する。未解決の控え（`api_sync_status` が `pending` / `unknown`）があれば本部受付と照合してから新規取引へ進む |
-| 取引の二重開始（`current-tx.json` が既にある、「取引二重開始」） | 既存取引を解決するまで新規取引を開始しない                                                                     | 店番担当が `sales total` で既存明細を確認する。`status: open` なら同じ取引を続けるか取り消し、`payment_requested` なら店主代表が本部受付と `data/sales/` の控えを照合する                                           |
-| 取引状態・販売控えの破損・保存失敗（`malformed` / `io_error`）   | ファイル削除や強制再実行を禁止し、本部受付の有無を照合してから回復手段を選ぶ                                   | 開発担当が容量・権限を復旧し、店主代表が本部受付済みか確認する。受付済みなら控えのみ回復し、未受付時のみ再登録を実施する                                                                                            |
+| 事象・区分                                                       | 業務継続・再実行の判断基準                                                                                             | 利用者（店主代表・家族利用者代表・開発担当）の次の手と回復確認                                                                                                                                                                   |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 週次発注 CSV の未生成（`missing`）                               | 日曜 21:45 に確定ファイルがなければ、手動再実行を 1 回だけ行う。22:00 までに転送完了しなければ転送失敗と同じ判断に移る | 店主代表（`PO`）が未生成警告を見て発注バッチを再実行し、22:00 までに送信完了しない場合は転送失敗の行に従い、確定済み発注候補の控えをもとに電話発注する                                                                           |
+| 週次発注 CSV の転送失敗（`transport_failure`）                   | 自動再試行（5 分間隔・最大 3 回）の間は待つ。22:00 までに完了しなければ、未着の確定と不明を分けて判断する              | 店主代表が Wi-Fi 通信状態を確認する。未着が確定なら電話発注する。不明なら問屋へ受領有無を確かめ、未受領か取消済みのときだけ電話発注して CSV を `phoned/` へ移し、受領済みなら `sent/` へ移す                                     |
+| 週次発注 CSV の形式不正（`malformed`）                           | 隔離された破損ファイルはそのまま送信せず、マスタ・数量の訂正後に再生成する                                             | 開発担当（`DEV`）が `data/quarantine/` のログから不正行を特定・修正し、同行レビュー担当（`QE`）と再生成結果を確認する                                                                                                            |
+| 取引状態の欠落（`current_tx_json` の `missing`、「取引未開始」） | 欠落前に進行中の取引がなかったと確かめてから `sales start` で新規取引を始める                                          | 店番担当は `sales total` を使わずに停止し、店主代表と開発担当（`DEV`）が `data/sales/` の当日控えを確認する。未解決の控え（`api_sync_status` が `pending` / `unknown` / `rejected`）があれば本部受付と照合してから新規取引へ進む |
+| 取引の二重開始（`current-tx.json` が既にある、「取引二重開始」） | 既存取引を解決するまで新規取引を開始しない                                                                             | 店番担当が `sales total` で既存明細を確認する。`status: open` なら同じ取引を続けるか取り消し、`payment_requested` なら店主代表が本部受付と `data/sales/` の控えを照合する                                                        |
+| 取引状態・販売控えの破損・保存失敗（`malformed` / `io_error`）   | ファイル削除や強制再実行を禁止し、本部受付の有無を照合してから回復手段を選ぶ                                           | 開発担当が容量・権限を復旧し、店主代表が本部受付済みか確認する。受付済みなら控えのみ回復し、未受付時のみ再登録を実施する                                                                                                         |
 
 ## 5. メモ / 将来課題
 

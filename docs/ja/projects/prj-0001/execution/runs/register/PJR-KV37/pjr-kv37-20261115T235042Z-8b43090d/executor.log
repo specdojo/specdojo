@@ -1,0 +1,29 @@
+`ifx-file-sample.md` を、2026-11-16 の再 grade の major 指摘 F001〜F007 に沿って直しました。rulebook は変えていません。sample 内の YAML 2 ブロックと JSON 2 ブロックは、すべてエラーなく読めます。再 grade（`grade run --target kata`）は agent CLI の起動が必要なので流しておらず、F001〜F007 が実際に解消したかはまだ確かめられていません。
+
+**sample の変更点**
+- **販売実績の控え（F001・F003・F005）:** 控えの正本スキーマ `kinuya-sales-record-schema` と `required_fields` に、品目・単価・数量の明細（`line_items`）と小計・税額（`subtotal_yen`・`tax_yen`）を足しました。説明には「取引状態ファイル（`current-tx.json`）を消した後も明細の正本として残し、会計確定後は削除・上書きしない」と書きました。受入ケースに「不正（控えの明細）」を追加しています。
+- **会計確定の書き込み順序（F002・F004・F006）:** `atomic_write` に fsync と次の 5 段の順序を書きました。
+  1. 控えを `pending` で保存
+  2. 状態を `payment_requested` にする
+  3. 本部へ送信
+  4. レシート印字
+  5. 状態ファイルを削除
+
+  新しい節「会計確定の書き込み順序と再開判定」では、途中で止まったときのファイルの組み合わせごとに CLI の扱いを表で示しました。`payment_requested` の意味は「送信前に書く」に改めています。
+- **週次発注 CSV（F007）:** 「届いていないと確定」と「届いたか不明」を分けました。不明のときは店主代表が問屋へ受領の有無を確かめ、未受領か取消済みのときだけ電話発注します。受領済みの CSV は `sent/` へ移します。異常時の表の「未生成」「転送失敗」の行もこれに合わせました。
+
+**迷って決めた点**（個票の対応結果と handoff にも書きました）
+- 書き込みは「控え → 状態 → 送信」の順にしました。状態が `open` なら未送信だと判断でき、送信済みかもしれない取引を取消・追加できてしまうことがないためです。
+- `payment_requested` からの取消は従来どおり不可とし、本部に拒否された取引は原因を直して同じ取引番号で再送します。取消を許すと、状態ファイルがなく拒否の控えだけが残る組み合わせが生まれるためです。
+- 問屋側の受領確認方式（ACK）は未確定なので、受領の確認は SFTP の一覧取得と問屋への電話にしました。
+
+**個票の更新**
+- 作業内容の表の 3 行目を done にしました。
+- 4 行目（再 grade）は orchestrator が流すため、理由をメモに書いて open のまま残しています。
+- 対応結果に 2 回目の内容を追記しました。
+
+`npm run validate:catalog` と `npm run validate:history-links` はエラーなく通りました（catalog は今回の変更と関係のない既存の WARN が 2 件出ます）。markdownlint を sample のディレクトリから直接実行したときは行長エラーが出ましたが、リポジトリの設定を読み込まない実行だったためで、正式な `npm run lint:md` は親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-file-sample.md を 2026-11-16 の再 grade の major 指摘 F001〜F007 に沿って直した（販売実績控えスキーマへの明細追加、会計確定の書き込み順序と再開判定の追加、発注 CSV の未着確定と結果不明の区別）。rulebook は変えていない。YAML・JSON の各ブロックはエラーなく読める。個票の作業内容の表と対応結果も更新した。再 grade は orchestrator に引き継ぐ。","handoff":["再 grade（`grade run --target kata`）は agent CLI の起動が要るため executor では流していない。orchestrator が流し、結果を PJR-KV37 の対応結果に追記して作業内容の表の 4 行目を閉じる。","決めた点: 会計確定は「控え（`pending`）→ `status: payment_requested` → 本部へ送信 → 印字 → `current-tx.json` 削除」の順に書く。`status` が `open` なら未送信と判定できるため。","決めた点: `payment_requested` からの取消は不可のままとし、`rejected` は原因を直して同じ `tx_id` で再送する。取消を許すと、状態ファイルがなく `rejected` の控えだけが残る組み合わせが生まれるため。","決めた点: 発注 CSV の受領確認は ACK が未確定のため、SFTP の一覧取得と問屋への電話確認にした。結果が不明のときは、未受領か取消済みを確かめてから電話発注する。","別の手直しで判断する: `specdojo:clis-sample` は 2 つのスキーマを今も未同梱の架空参照名としている（前回からの申し送り）。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml。今回の変更と関係のない既存の based_on の WARN が 2 件"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含めて違反なし"},{"command":"node yaml/JSON parse of sample code blocks","status":"passed","summary":"YAML 2 ブロックと JSON 2 ブロックがエラーなく読める"},{"command":"grade run --target kata","status":"requires_human","summary":"agent CLI の起動が必要なため、orchestrator が再 grade して sample が pass か確認する"}]}
+</specdojo_executor_evidence>
