@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-v141-condense-records-frontmatter-placeholder
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   registered_at: "2026-11-09T13:38:48Z"
+  completed_at: "2026-11-16T13:27:18Z"
+  conclusion: executor の文を result の frontmatter へ書き写すときに山括弧の語をコードの書式で包むようにした（condense の記録と block_reason）
   derived_from:
     - PJR-2GD6
 ---

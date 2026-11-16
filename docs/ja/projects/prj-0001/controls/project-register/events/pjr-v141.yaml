@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2c55d67559ba42f78d3673f6f0a76cbd
+- v: 1
+  id: reg_729d53aae63f40d481dd698a12b77b4b
+  ts: "2026-11-16T13:27:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票の対応結果・result で確かめ、統合後の PJR-JSEY（2026-11-16、sonnet-executor）で runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-16"
+    - field: conclusion
+      from: "-"
+      to: executor の文を result の frontmatter へ書き写すときに山括弧の語をコードの書式で包むようにした（condense の記録と block_reason）
+  previous_event_id: reg_167bf3cb912040059695c520a1cf329f
