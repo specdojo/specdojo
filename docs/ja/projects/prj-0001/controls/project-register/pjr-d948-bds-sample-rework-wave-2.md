@@ -38,15 +38,18 @@ specdojo:
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema`・`npm run validate:catalog` と親の検証が通っている。
 - 次の回（2026-11-16 の再 grade の指摘を取り込む回、0.8.0 の前に流す）: `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml` の未解消の指摘（major を優先）と未達の完了条件を取り込んで直し、作業内容の表を実績に合わせる。再 grade（`grade run --target kata`）は orchestrator が流すため、executor は理由をメモに書いてその行を open のまま残す。
+- その次の回（2026-11-16 午後、0.8.0 の前）: `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml` の 09:50 の指摘をすべて取り込んで直し、作業内容の表を実績に合わせる。再 grade は orchestrator が流す。
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                                                      |
-| --- | ------------------------------------------------------ | ---- | ---- | ----------------------------------------------------------------------------------------- |
-| 1   | 最新の grade の指摘を取り込んで直す                    | UX   | done | -                                                                                         |
-| 2   | grade し直して結果を書く                               | UX   | done | 2026-11-16 orchestrator が grade（bds-sample は needs-work 82 点）                        |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | UX   | done | 2026-11-16 executor が F001〜F007 を取り込んだ                                            |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | open | 再 grade は実際の agent CLI を起動するため orchestrator が流す。executor は実行していない |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                                              |
+| --- | ------------------------------------------------------ | ---- | ---- | --------------------------------------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | UX   | done | -                                                                                 |
+| 2   | grade し直して結果を書く                               | UX   | done | 2026-11-16 orchestrator が grade（bds-sample は needs-work 82 点）                |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | UX   | done | 2026-11-16 executor が F001〜F007 を取り込んだ                                    |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | UX   | done | 2026-11-16 orchestrator が型の grade（needs-work 90 点（前回 82 点）・指摘 4 件） |
+| 5   | 09:50 の再 grade の指摘を取り込んで直す（その次の回）  | UX   | open | 0.8.0 の前に流す                                                                  |
+| 6   | 直した後に grade し直して結果を書く（その次の回）      | UX   | open | orchestrator が流す                                                               |
 
 ## 5. 対応結果
 
@@ -92,6 +95,8 @@ specdojo:
 残課題（次の回）:
 
 - `grade run --target kata` での再 grade は orchestrator が流す。作業内容の No 4 は open のまま残した。
+
+次の回の再 grade の結果（2026-11-16 09:50、orchestrator が `grade run --target kata` で実行）: needs-work 90 点（前回 82 点）・指摘 4 件。指摘は日本語で記録された（PJR-YYDS の後）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml`。
 
 ## 6. 関連ドキュメント
 

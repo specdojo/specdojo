@@ -41,12 +41,12 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                                               |
-| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------------------------------ |
-| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                                  |
-| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（sld-sample は needs-work 88 点） |
-| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F008 を反映（0.8.0 の前に前倒し）                |
-| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | open | 再 grade は executor の sandbox で流せないため orchestrator が流す |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                                        |
+| --- | ------------------------------------------------------ | ---- | ---- | --------------------------------------------------------------------------- |
+| 1   | 最新の grade の指摘を取り込んで直す                    | ARC  | done | executor が実施（対応結果を参照）                                           |
+| 2   | grade し直して結果を書く                               | ARC  | done | 2026-11-16 orchestrator が grade（sld-sample は needs-work 88 点）          |
+| 3   | 2026-11-16 の再 grade の指摘を取り込んで直す（次の回） | ARC  | done | executor が F001〜F008 を反映（0.8.0 の前に前倒し）                         |
+| 4   | 直した後に grade し直して結果を書く（次の回）          | ARC  | done | 2026-11-16 orchestrator が型の grade（pass 98 点（前回 needs-work 88 点）） |
 
 ## 5. 対応結果
 
@@ -74,6 +74,8 @@ specdojo:
   - 仮領収メモ（F006）: 現金とは処分の判断が違うため、「仮メモ挟み（レジ横）」の行に分けた。
   - 期限（F001）: 再生成手順は店頭試用の開始前までに整備する（未整備なら PM が期限を見直して PO へ諮る）。STSD の変更は在庫管理の設計着手前に PO が承認する。
 - 残課題: `grade run --target kata` による再 grade は orchestrator が流す（作業内容の表の No 4 は open のまま）。
+
+次の回の再 grade の結果（2026-11-16 09:50、orchestrator が `grade run --target kata` で実行）: pass 98 点（前回 needs-work 88 点）。指摘は日本語で記録された（PJR-YYDS の後）。結果の正本は `docs/ja/projects/prj-0001/execution/grade/results/specdojo.sld-sample.yaml`。
 
 ## 6. 関連ドキュメント
 
