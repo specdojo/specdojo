@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ewzg-register-resume-ticket-edits-lost
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T04:22:47Z"
   due_on: null
+  completed_at: "2026-11-16T13:28:32Z"
+  conclusion: 再開の前の同期で、個票の本文は exec branch の側を保ち、状態の欄だけを統合先にそろえるようにした
   derived_from:
     - PJR-ZSRD
   commit_type: fix
