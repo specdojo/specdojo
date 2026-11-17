@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-cdsd-planning-040",
   "run_id": "T-KATA-SLIM-cdsd-planning-040-20261117T190622Z-a3d43c28",
-  "updated_at": "2026-11-17T19:33:47.050Z",
+  "updated_at": "2026-11-17T19:34:13.551Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-cdsd-planning-040/T-KATA-SLIM-cdsd-planning-040-20261117T190622Z-a3d43c28/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-17T19:33:47.050Z",
-      "completed_at": null,
+      "completed_at": "2026-11-17T19:34:13.551Z",
       "artifact_ref": null
     }
   },
