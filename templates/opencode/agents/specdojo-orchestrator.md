@@ -162,6 +162,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 | 進捗の俯瞰                 | `dashboard`  | `dashboard build`                                                         |
 | 品質評価                   | `grade`      | `grade list` / `plan` / `apply`                                           |
 | ドキュメントIDインデックス | `index`      | `index build`                                                             |
+| 保存先の確認               | `where`      | `where <kind> --project <project-id>`                                     |
 | 全生成物の一括更新         | `build`      | `build`                                                                   |
 
 正確なオプションは実行前に `npx specdojo <command> --help` で確認する。詳細は `docs/ja/specdojo/references/command-reference.md`、設定キーは `docs/ja/specdojo/references/specdojo-config-reference.md` を参照する。
