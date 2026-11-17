@@ -10,7 +10,9 @@ specdojo:
   item_status: done
   priority: medium
   difficulty: medium
+  owner: BA
   registered_at: "2026-11-16T22:27:26Z"
+  due_on: "2026-11-30"
   completed_at: "2026-11-17T03:28:58Z"
   conclusion: 冒頭に結論の要約と 5 区分の凡例を置き、根拠の表を案ごとの 1 行にして 29,903 バイトに縮めた。結論は変えていない
   derived_from:
