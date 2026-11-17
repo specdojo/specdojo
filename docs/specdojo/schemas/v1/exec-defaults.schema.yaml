@@ -420,17 +420,22 @@ $defs:
         additionalProperties: false
         required:
           - action
-        description: "Behavior for non-critical tasks (cpm.slack > 0)."
+        description: >
+          Compatibility-only field, still required by this schema. Ignored at runtime:
+          automatic agent selection uses on_critical.retry for all tasks, regardless of
+          critical-path membership. Keep action: skip in existing configurations.
         properties:
           action:
             const: "skip"
-            description: "Record a block event and move to the next task."
+            description: "Compatibility value only; does not skip tasks at runtime."
       on_critical:
         type: object
         additionalProperties: false
         required:
           - action
-        description: "Behavior for critical-path tasks (cpm.slack == 0)."
+        description: >
+          Retry policy used by automatic agent selection for all tasks, regardless of
+          critical-path membership. The on_critical name is retained for compatibility.
         properties:
           action:
             type: string

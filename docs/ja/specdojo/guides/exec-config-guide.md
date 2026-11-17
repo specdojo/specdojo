@@ -169,6 +169,8 @@ phase の by-name agent や `--executor-by` / `--reporter-by` で指名した ag
 
 自動選択で rate limit を検知したら、まず待機なしで次の優先順 agent に切り替えて再実行します（次候補は別アカウント/プロバイダ想定）。全候補が rate limit の場合のみ `rate_limit_policy.on_critical.retry` の wait+backoff で再パスを行い、`max_attempts` 回（初回パスを 1 回目として数える）まで繰り返します。phase の `agent` で指名した場合は候補がその1件に固定されるため、別 agent へは切り替えません。この再試行は critical / non-critical を問わず全タスクに適用します。
 
+`rate_limit_policy.on_non_critical.action: skip` は既存 schema との互換用の必須項目で、実行時には参照しません。設定しても非クリティカルタスクをスキップしません。既存の設定ではこの項目を残してください。provider 別の `rate_limit_policy` にも同じ扱いを適用します。
+
 ```mermaid
 flowchart LR
   T["ready task\nmode / capabilities / proficiency"]
