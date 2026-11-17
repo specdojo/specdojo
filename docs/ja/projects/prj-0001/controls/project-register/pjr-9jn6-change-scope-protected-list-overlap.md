@@ -9,7 +9,9 @@ specdojo:
   item_type: issue
   item_status: open
   priority: medium
+  owner: DEV
   registered_at: "2026-11-17T12:54:58Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-MJ8V
   commit_type: fix
