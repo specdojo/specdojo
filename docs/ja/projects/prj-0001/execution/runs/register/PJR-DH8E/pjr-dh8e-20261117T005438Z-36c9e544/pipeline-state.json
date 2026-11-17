@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-DH8E",
   "run_id": "pjr-dh8e-20261117T005438Z-36c9e544",
-  "updated_at": "2026-11-17T01:13:12.431Z",
+  "updated_at": "2026-11-17T01:13:33.830Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-DH8E/pjr-dh8e-20261117T005438Z-36c9e544/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-17T01:13:12.431Z",
-      "completed_at": null,
+      "completed_at": "2026-11-17T01:13:33.830Z",
       "artifact_ref": null
     }
   },
