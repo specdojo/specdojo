@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-981V",
+  "run_id": "pjr-981v-20261116T230721Z-1ee02c3a",
+  "updated_at": "2026-11-16T23:29:27.561Z",
+  "stages": {
+    "executor": {
+      "status": "blocked",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-16T23:09:38.923Z",
+      "completed_at": "2026-11-16T23:29:27.561Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-981V/pjr-981v-20261116T230721Z-1ee02c3a/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "sonnet-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-981V/pjr-981v-20261116T230721Z-1ee02c3a/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-981V/pjr-981v-20261116T230721Z-1ee02c3a/result.md"
+  }
+}

@@ -1,0 +1,30 @@
+ビルドはまだ実行中です（`tail` が出力をバッファしています）。完了の通知を待ちます。
+
+コーディング規約の型（接頭辞 `cdr`）の rulebook・sample・template を作りました。ただし完了条件の `grade run --target kata` は実行していないので、`completion_status` は `incomplete` にしています。この sandbox では agent CLI を起動できないため、runner か人による実行が必要です。
+
+**作成・変更したファイル**
+- `docs/ja/specdojo/rulebooks/cdr-rulebook.md`（新規）: frontmatter で `sample`・`template` を宣言し、recipe は `not-needed` としました。本文には次を書いています。
+  - 正本の置き場所は `.github/instructions/<言語>.instructions.md`、成果物の id は `<言語>-instructions`。
+  - 成果物カタログでは、グループの `base_path` を `/.github/instructions` にして正本だけを登録し、ラッパーは載せない。
+  - 環境別ラッパーの作り方（Claude Code の `.claude/rules/<言語>.md` での `@` 読み込み、`AGENTS.md` の参照節、`GEMINI.md`）と、ラッパーの適用範囲を正本の `applyTo` と同じにする規則。
+  - 本文は必須の 7 章に絞る。言語・ライブラリの選定は `tsd`、モジュールの分け方は設計の段に任せる。
+  - ほかの言語・枠組み（Next.js、Unity の C#）への当てはめ方。
+- `docs/ja/specdojo/samples/cdr-sample.md`（新規）: 駄菓子屋きぬやの TypeScript・Next.js を題材にしました。技術スタック一覧の sample に載っている技術だけを使っています。
+- `docs/ja/specdojo/templates/cdr-template.md`（新規）: `frontmatter_template` に `applyTo: _APPLY_TO_` を置きました。生成物ではトップレベルに `applyTo`、その下に `specdojo:` が並ぶことを展開して確認済みです。
+- `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`: `vp-ba-business-value` の除外対象と、`vp-arc-single-responsibility` の既定どおり適用する一覧に `specdojo:cdr-rulebook` を追加しました。
+- `docs/ja/specdojo/references/deliverables-reference.md`: 「実装」の節を追加し、後ろの節番号を 1 つずつ繰り下げました。
+- 個票: 作業内容の 1・2 を `done` にし、3（grade）は理由を書いて `open` のまま残しました。対応結果に、決めた点と理由、残課題を書いています。
+
+**検証**
+- `npm run validate:history-links`、Prettier の整形確認、観点の分類漏れの検査（`npx tsx src/docs/viewpoint-document-kinds-check.ts`）は通りました。
+- `npm run docs:build` は最後まで実行できていません。ページのレンダリング中に子プロセスが SIGKILL で終了しました。lefthook の設定にも書かれている既知のメモリ不足と思われます。終了コード 0 はパイプの末尾（`tail`）のもので、ビルドが成功したわけではありません。
+- 親の runner が実行する検査（`lint:md`・`lint:fm`・`validate:schema` など）は実行していません。
+
+**残っていること**
+1. `grade run --target kata` で型を grade し、pass を確認する。
+2. 既存の `.github/instructions/typescript.instructions.md` の `applyTo` と、ラッパー `.claude/rules/typescript.md` の `paths` がずれています。既存の正本には `specdojo:` の frontmatter もありません。対象外のため直しておらず、別の登録簿項目で扱うことを提案します。
+3. `npm run docs:build` を、メモリの足りる環境（CI など）で確認する。
+
+<specdojo_executor_evidence>
+{"completion_status":"incomplete","final_message":"コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。","handoff":["`grade run --target kata` で `specdojo:cdr-rulebook`・`specdojo:cdr-sample`・`specdojo:cdr-template` を grade し、pass を確認する（個票の作業内容 3 は `open` のまま）。","executor が決めた点: 接頭辞は `cdr`（Coding Rules）。成果物の id は `.` が使えないため `<言語>-instructions`。`deliverable_type` は `tsd` と同じ系統の `architecture`。recipe は入力が `tsd` とリポジトリ設定だけで問いで集める情報がないため `not-needed`。正本の frontmatter はトップレベルに `applyTo`、`specdojo:` 配下に SpecDojo の項目を置き、template では `frontmatter_template` に `applyTo: _APPLY_TO_` を置いて展開する。カタログはグループの `base_path` を `/.github/instructions` にして正本だけを登録し、ラッパーは載せない。`vp-ba-business-value` は除外、`vp-arc-single-responsibility` は既定どおり適用する一覧に入れた。","既存の `.github/instructions/typescript.instructions.md` の `applyTo`（`{src,tools,tests,scripts}/**/*.ts`）とラッパー `.claude/rules/typescript.md` の `paths`（`{src,tools}/**/*.ts`）がずれており、新しい rulebook の規則に合わない。既存の正本には `specdojo:` の frontmatter もない。対象外のため変更しておらず、別の登録簿項目での対応を提案する。","`npm run docs:build` はページのレンダリング中に子プロセスが SIGKILL（メモリ不足と思われる）で終了した。メモリの足りる環境（CI など）で確認する。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含め、すべての履歴ファイルが valid"},{"command":"npx prettier --check docs/ja/specdojo/rulebooks/cdr-rulebook.md docs/ja/specdojo/samples/cdr-sample.md docs/ja/specdojo/templates/cdr-template.md docs/ja/specdojo/references/deliverables-reference.md docs/ja/specdojo/defaults/pm-review-viewpoints.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-981v-kata-coding-rules-instructions.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx tsx src/docs/viewpoint-document-kinds-check.ts","status":"passed","summary":"document_kinds decisions cover all 112 rulebooks"},{"command":"npm run docs:build","status":"requires_human","summary":"building client + server bundles は通ったが、rendering pages の途中で子プロセスが SIGKILL（メモリ不足と思われる）で終了した。メモリの足りる環境か CI で確認が必要"},{"command":"specdojo grade run --target kata","status":"requires_human","summary":"agent CLI の起動と利用枠の消費が必要なため、sandbox では実行できない。runner または人が実行し pass を確認する"}]}
+</specdojo_executor_evidence>
