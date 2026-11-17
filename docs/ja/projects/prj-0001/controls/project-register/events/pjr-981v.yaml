@@ -131,3 +131,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b494aef413a743c0a95fb3aef2aad3e5
+- v: 1
+  id: reg_5c9f52cc18e7407d87279d7f4568fe66
+  ts: "2026-11-17T04:48:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が統合後に型の grade を 2 回流し、2 回目で major がないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: agent 向けのコーディング規約の型（cdr の rulebook・sample・template）を作り、型の grade で rulebook と sample が pass になった
+  previous_event_id: reg_6d467a91186d4620b1fd4a3179d33909

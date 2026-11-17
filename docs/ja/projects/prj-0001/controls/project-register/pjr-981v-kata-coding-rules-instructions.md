@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-981v-kata-coding-rules-instructions
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T13:17:54Z"
+  completed_at: "2026-11-17T04:48:24Z"
+  conclusion: agent 向けのコーディング規約の型（cdr の rulebook・sample・template）を作り、型の grade で rulebook と sample が pass になった
   derived_from:
     - PJR-SJ3Q
   commit_type: docs
