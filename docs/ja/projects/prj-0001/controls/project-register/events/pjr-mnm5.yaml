@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e1c24daa15ad4b358084c04600c91cc7
+  ts: "2026-11-17T14:12:53Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 業務仕様までの型から文書の運用の記述を外し、簡潔にする
+    - field: description
+      from: ""
+      to: sld の試行（PJR-8S4T）の一覧で、プロジェクト定義・プロジェクト管理・業務仕様の 18 種類の型の rulebook と sample から運用の記述と同じ判断の言い直しを外す。schedule の track kata-slim で進める
+    - field: input
+      from: ""
+      to: '["利用者が 2026-11-17 に、業務仕様までの sample の記述の精度を今晩中に上げたいとして、todo ではなく schedule で進めることを選んだ。担当は BA、期限は 2026-11-30","PJR-8S4T の試行で、sld-sample は空白を除いた文字数で約 60%、sld-rulebook は約 71% になり、結論は変えなかった。広げるときの「外す記述・残す記述・参照の形」の一覧は 8S4T の対応結果にある","uis はカタログに代表の成果物がないため、この track に含めていない。代表にする画面を利用者が決めた後に足す"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: kata-slim
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-0T83","PJR-8S4T"]'
+    - field: commit_type
+      from: ""
+      to: docs
+    - field: commit_scope
+      from: ""
+      to: kata
