@@ -20,7 +20,9 @@ import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 export function registerGradeInspectionCommands(grade: Command): void {
   addSelection(
-    grade.command("validate").description("Validate stored grade hashes and finding counts"),
+    grade
+      .command("validate", { hidden: true })
+      .description("Validate stored grade hashes and finding counts"),
   ).action((options) => {
     try {
       const target = requireTarget(options.target);
@@ -51,7 +53,7 @@ export function registerGradeInspectionCommands(grade: Command): void {
   });
 
   grade
-    .command("result")
+    .command("result", { hidden: true })
     .description("Print the stored grade result sidecar for one document as JSON")
     .requiredOption("--path <path>", "Markdown or YAML document whose grade result is read")
     .option("--project <projectId>", "Project id in specdojo.config.json")
@@ -67,7 +69,7 @@ export function registerGradeInspectionCommands(grade: Command): void {
     });
 
   grade
-    .command("state")
+    .command("state", { hidden: true })
     .description("Read or update persistent per-document grade pipeline state")
     .requiredOption("--target <target>", "kata or deliverable")
     .option("--project <projectId>", "Project id in specdojo.config.json")

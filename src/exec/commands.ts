@@ -461,7 +461,7 @@ export function registerExecCommands(program: Command): void {
   });
 
   const scmd = exec
-    .command("scheduler")
+    .command("scheduler", { hidden: true })
     .description("Auto-claim next task safely (with project-level lock).");
   addProjectOptions(scmd);
   scmd.requiredOption("--by <actor>", "Actor (agent name)");

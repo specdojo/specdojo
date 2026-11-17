@@ -13,7 +13,7 @@ Routine Operation Guide
 
 routineは、既存の未完了Schedule/Register項目を探索するほか、再利用可能なJob Definitionから期間・revisionごとのJob Runを生成できます。週報や変更文書の翻訳は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
-継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。文書の選択、各文書の executor 実行、executor の marker を GradeSubmission へ機械変換する `grade apply --path --analysis-from` の逐次処理は `tools/grade/run-per-document.sh` が持ちます。このスクリプトと、このスクリプトを前提とする定期 Job は SpecDojo 本体リポジトリの開発用であり、スクリプトは npm package に含まれません。定期 Job は `--stages 1` で codex 単段を選びます。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。Job の `task.command` は選択条件ごとの `grade list` の和集合を Run ごとに固定し、各文書の executor 実行と marker の機械変換・反映を `grade run` に任せます（PJR-R7BQ）。`grade run` は単段で評価します。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
 
 v0.3.0 の公開物における grade は試験的な機能です。利用者は `grade list` / `plan` / `apply` / `validate` / `result` などの部品を利用できますが、定期実行や通しの pipeline は自分で組み合わせます。成果物の grade には project の `catalog_path` が必要です。1 文書の最小手順は [CLI コマンドリファレンス](../references/command-reference.md#81-npm-package-で-1-文書を評価する)を参照してください。
 
@@ -164,9 +164,9 @@ Job Definition を持たないため、Job Run と evidence は作られませ�
 
 ### 1.2. grade の単段評価
 
-Kata と成果物の定期評価は、SpecDojo 本体リポジトリ内で executor の単段により実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の marker から機械的に生成します。executor は判定根拠と finding を日本語で書き、その文が正本になります。正本の grade result を保存した後、旧結果から再掲された英語の正本など英語 finding が1件以上ある場合だけ `gemma26-translator` が日本語へ翻訳し、表示用の `message_ja` を更新します。0件なら翻訳の段を流しません。モデルには英語文だけの配列を渡し、件数、各訳文の仮名、元の文と訳文のインラインコードの多重集合の一致をコードで検証します。元にないインラインコードが増えた項目も不合格とし、不合格項目だけを1件ずつ1回再翻訳します。それでも不合格なら正本の英語を表示に使います。翻訳は判定値を変えません。`job-grade-kata` と `job-grade-deliverable` は本体リポジトリにだけある `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
+Kata と成果物の定期評価は、SpecDojo 本体リポジトリ内で executor の単段により実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の marker から機械的に生成します。executor は判定根拠と finding を日本語で書き、その文が正本になります。正本の grade result を保存した後、旧結果から再掲された英語の正本など英語 finding が1件以上ある場合だけ `gemma26-translator` が日本語へ翻訳し、表示用の `message_ja` を更新します。0件なら翻訳の段を流しません。モデルには英語文だけの配列を渡し、件数、各訳文の仮名、元の文と訳文のインラインコードの多重集合の一致をコードで検証します。元にないインラインコードが増えた項目も不合格とし、不合格項目だけを1件ずつ1回再翻訳します。それでも不合格なら正本の英語を表示に使います。翻訳は判定値を変えません。`job-grade-kata` と `job-grade-deliverable` は `grade run` を起動し、条件付きの後続段は持ちません。`job-grade-kata` は `--reference-per-kind` で各文書を同じ種別の `prj-overview` 文書と比較します。`grade run` は翻訳の段を持たないため、上記の英語 finding の翻訳は定期 Job では流れません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
 
-成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
+成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は `grade run --target deliverable` を実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
 `rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日5時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 

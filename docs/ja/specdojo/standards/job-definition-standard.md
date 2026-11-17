@@ -139,7 +139,7 @@ Job Definition Standard
 
 ## 5. 記述例
 
-次の grade Job は SpecDojo 本体リポジトリを保守するための例です。`tools/grade/run-per-document.sh` は本体リポジトリの開発用で npm package には含まれません。v0.3.0 の公開物における grade は試験的で、利用者は `grade list` / `plan` / `apply` / `validate` / `result` などの部品を組み合わせます。成果物の grade には project の `catalog_path` が必要です。
+次の grade Job は `grade run` で変更済みの Kata を評価する例です。成果物の grade には project の `catalog_path` が必要です。
 
 ```yaml
 task:
@@ -149,12 +149,11 @@ task:
     command: "{{specdojo}} grade list --target kata --changed-only --project {{project_id}}"
     skip_when: empty-output
   command: |
-    tools/grade/run-per-document.sh --run-id {{job_run_id}}
-    cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
+    {{specdojo}} grade run --run-id {{job_run_id}} --target kata --changed-only --project {{project_id}}
   analysis:
     agent: claude-reporter
     description: |
-      command evidence と results.tsv から未完了の段の有無、失敗の切り分け、
+      command evidence と grade run の出力から未完了の文書の有無、失敗の切り分け、
       閾値の見直し要否を判断して報告する。
   paths:
     - docs/ja/specdojo/rulebooks
