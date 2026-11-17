@@ -107,6 +107,7 @@ import {
   registerWaitSummary,
 } from "./register-state.js";
 import { downgradeUnfilledResult } from "./schedule-prepare.js";
+import { appendScopeWaitNotes } from "./change-scope.js";
 import {
   rateLimitRecoveryReason,
   resolvePinnedRateLimitRunOptions,
@@ -376,6 +377,7 @@ async function integrateRegisterWorktreeRun(
       params.resumedIntegration &&
       isExecBranchMergedIntoCurrent({ context: wtContext, worktree })
     ) {
+      await params.opts.onScopeIntegrated?.();
       const worktreeTaskId = qualifyTaskId(projectId, item.id);
       if (isWorktreeCleanupInProgress(executionPath, worktreeTaskId)) {
         return blockedInReview(
@@ -588,6 +590,7 @@ async function integrateRegisterWorktreeRun(
       // first-parent entry and a resume would create a third. Keep review intact and let
       // integration resume perform cleanup only.
       if (isExecBranchMergedIntoCurrent({ context: wtContext, worktree })) {
+        await params.opts.onScopeIntegrated?.();
         rebuildRootRegisterViews(projectId, item.id);
         return blockedInReview(error, "integrate failed");
       }
@@ -611,6 +614,7 @@ async function integrateRegisterWorktreeRun(
       };
     }
 
+    await params.opts.onScopeIntegrated?.();
     // post-review の差分範囲は、撤去を待つ間に別項目の commit が積まれても変わらないよう、
     // merge の直後の HEAD で固定する。
     return deferCleanup(baseCommit, gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim());
@@ -768,6 +772,7 @@ export async function runSingleRegisterItemWorktree(
       item,
       stem,
     });
+    appendScopeWaitNotes(planPath, opts.changeScopeWaits);
     const prompt = expandPromptRefs(readPlanFile(planPath));
     const { resultPath, supersededPaths } = await scaffoldResult({
       executionPath,

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-16T03:22:47Z"
   due_on: null
-  block_reason: "parent validation failed: lint-ts, test-integration"
   derived_from:
     - PJR-1GCD
   commit_type: feat
@@ -41,15 +40,32 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                      | 担当 | 状態 | メモ |
-| --- | --------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 範囲の推定の仕方を設計する（対象の宣言、approach の既定） | DEV  | open | -    |
-| 2   | 並列の run の並べ方に、範囲の重なりによる順番待ちを入れる | DEV  | open | -    |
-| 3   | 記録・出力と文書を更新し、回帰テストを足す                | DEV  | open | -    |
+| No  | 作業                                                      | 担当 | 状態 | メモ                                                                                                                     |
+| --- | --------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------------ |
+| 1   | 範囲の推定の仕方を設計する（対象の宣言、approach の既定） | DEV  | done | 明示対象・本文のパス・approach の範囲を合成。不明範囲は CLI で parallel / serialize を選択する                           |
+| 2   | 並列の run の並べ方に、範囲の重なりによる順番待ちを入れる | DEV  | done | worktree 作成前の予約を register の並列・join と schedule の自動選択に追加。統合時に解放し、未統合の失敗は後続を停止する |
+| 3   | 記録・出力と文書を更新し、回帰テストを足す                | DEV  | done | 待機出力・plan の記録・予約の履歴、推定／失敗／別プロセス／同一関数の E2E を追加。親 runner 担当の検査は後段で実施する   |
 
 ## 5. 対応結果
 
--
+### 5.1. 実施内容
+
+- `src/exec/run/change-scope.ts` に、パス正規化・対象解決・包含関係の判定・プロセスをまたぐ予約を実装した。推定と不明範囲の方針は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」を正本とする。
+- register は lifecycle lock の外で範囲を待ち、統合後の HEAD から worktree を作る。schedule は重なる候補を未準備のまま保留し、先行項目の統合後に選び直す。予約の解放は統合成功で行い、撤去や post-review の失敗と分けた。
+- 待機の日時・項目・相手・重複範囲を出力と予約履歴へ残し、新規生成の plan にも追記する。失敗・heartbeat 停止で未統合の予約を見つけた場合は、先行項目の再開を促して後続を停止する。
+- テストは範囲の正規化・宣言と approach の解決、不明範囲の方針、失敗の保持と再開、schedule の準備順、別プロセス間の予約、同一関数を変更する ED0K / 1GCD 形の実 Git E2E を追加した。実 Git E2E は、二件目が一件目の変更を読めることと、両方の変更が衝突せず統合されることを検査する。
+- 再開時に前回の親検証エラーを調べ、型 import の規約違反、待機記録の追記で plan 末尾の共通規約参照を展開できなくなる不具合、本文の「executor/reporter」をパスと誤認する不具合を修正した。共通規約スナップショットを推定から除外し、新旧の参照形式の展開・checkpoint と、準備失敗時の予約保持を回帰テストへ追加した。
+
+### 5.2. 検証と申し送り
+
+- 再開した executor で Prettier、`check:src-imports`、catalog 検証、履歴リンク検査、登録簿の派生ビュー生成、CLI help の起動確認を実施した。catalog 検証には既存の re-export 参照・未作成文書の警告があるが、終了コードは 0。型検査・Markdown 検査・回帰テストを含む親検証は二重実行せず、修正後の成否を後段の evidence で確認する。
+- 完了条件の `npm run check` は、pipeline の二重実行禁止に従い、型検査・lint・schema・unit / integration test を親 runner に委ね、残りの catalog・履歴リンク・runtime import 検査を executor で実施する。親 runner の検査結果を合わせて完了を判定する。result の記入は reporter / runner が行う。
+- runner の統合後は [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] に従い PJR-JSEY の実 agent CLI による動作確認へ本項目を含める。実 agent の利用枠を消費するため executor では起動しない。
+- 推定できない部分の既定は互換性のため並列許可とした。宣言にない変更まで競合を防ぐ保証はなく、不明な項目も待たせる列では `--unknown-scope serialize` を指定する。
+
+### 5.3. CHANGELOG に書く事項
+
+- 追加: register の並列・join 実行と schedule の自動実行で、変更範囲が重なる項目を先行項目の統合後まで待機させる。不明な変更範囲は `--unknown-scope parallel|serialize` で扱いを選べる。
 
 ## 6. 関連ドキュメント
 

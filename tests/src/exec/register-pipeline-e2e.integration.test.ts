@@ -1252,6 +1252,84 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   );
 
   it(
+    "serializes ED0K/1GCD changes to the same function before branching, through integration",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockReturnValue(true);
+        const source = "docs/shared-run.ts";
+        writeFileSync(join(root, source), "export function resume() { return []; }\n");
+        for (const id of ["PJR-ED0K", "PJR-1GCD"]) {
+          writeFileSync(
+            join(root, REGISTER_REL, `${id.toLowerCase()}-pipeline-test.md`),
+            buildTicket(id).replace(
+              "- ダミーの完了条件。",
+              `- \`${source}\` の resume 関数を変更する。`,
+            ),
+          );
+        }
+        writeFileSync(
+          join(root, "fake-agent.mjs"),
+          FAKE_PIPELINE_AGENT_SCRIPT.replace(
+            'if (role === "executor") {',
+            `if (role === "executor") {
+            const source = ${JSON.stringify(source)};
+            const current = readFileSync(source, "utf8");
+            const before = nickname === "exec-1" ? "return [];" : 'return ["ED0K"];';
+            const after = nickname === "exec-1" ? 'return ["ED0K"];' : 'return ["ED0K", "1GCD"];';
+            if (!current.includes(before)) throw new Error("second executor did not inherit integrated ED0K");
+            writeFileSync(source, current.replace(before, after));`,
+          ),
+        );
+        await runConfig(["init"]);
+        const trackedIgnored = git(root, "ls-files", "-ci", "--exclude-standard")
+          .split("\n")
+          .filter(Boolean);
+        git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "prepare overlapping function edits");
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-ED0K",
+          "PJR-1GCD",
+          "--executor-by",
+          "PJR-ED0K=exec-1,PJR-1GCD=exec-2",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--parallel",
+          "2",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, source), "utf8")).toContain('return ["ED0K", "1GCD"];');
+        expect(git(root, "diff", "--name-only", "--diff-filter=U")).toBe("");
+        expect(output.join("")).toMatch(/\[scope\] waiting: PJR-1GCD — PJR-ED0K:.*shared-run\.ts/);
+        const plan = listRunRecords(join(root, EXECUTION_REL), "plan").find((path) =>
+          path.includes("PJR-1GCD"),
+        );
+        expect(readFileSync(plan!, "utf8")).toContain("変更範囲による実行待ち");
+        expect(readFileSync(plan!, "utf8")).toContain("PJR-ED0K");
+        for (const id of ["PJR-ED0K", "PJR-1GCD"])
+          expect(
+            readFileSync(join(root, REGISTER_REL, `${id.toLowerCase()}-pipeline-test.md`), "utf8"),
+          ).toContain("item_status: review");
+      });
+    },
+  );
+
+  it(
     "runs two register items in parallel with different per-item executors",
     { timeout: 120_000 },
     async () => {
