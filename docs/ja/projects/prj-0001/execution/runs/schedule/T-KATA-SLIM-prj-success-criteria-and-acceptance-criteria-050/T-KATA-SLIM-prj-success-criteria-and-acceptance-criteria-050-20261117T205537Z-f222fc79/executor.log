@@ -1,0 +1,33 @@
+sample の手直しは完了しました。ただし大きさは目標の 7 割に届かず、約 76% で止めています。編集したのは `docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md` だけで、成果物本体・rulebook・recipe・template は変えていません。
+
+**大きさ（空白を除いた文字数）**
+
+| 数え方 | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| 表の区切り行を除く（sld の試行と同じ数え方） | 2,421 字 | 1,840 字 | 76.0% |
+| 区切り行を含む | 3,217 字 | 2,433 字 | 75.6% |
+| バイト数 | 8,408 B | 6,152 B | — |
+
+7 割に届かなかったのは、外す予定だった役割の段落、承認と agent の段落、文書品質の検査の行が、この sample には最初からなかったためです。残りは業務価値、判定基準、測定方法、確認者・承認者、未決事項の論点で、rulebook の必須項目か、変えてはいけない結論です。これ以上削ると結論が欠けるので、ここで止めました。
+
+**変えた点**
+
+- **未決事項の表**: 管理台帳の列（「解決期限 / 判断タイミング」「責任者」）を外し、「論点・判定への影響・当面の扱い」の 3 列にしました。判断の時期は「当面の扱い」の文に残しています。
+- **同じ判断の言い直し**:
+  - 「重大な行き詰まりがない」は AC-03 だけに残し、SC-01 の判定基準からは外しました。
+  - 判定手順にあった確認者・承認者や必須条件の繰り返しは、各表や章タイトルを指す形にしました。
+- **適用範囲の章**: 費用低減の段落を「対象外」に 1 語でまとめ、「完成例である」という説明文を外しました。
+- **確認者の表記**: 「両代表」（店主代表と家族利用者代表）を 1 回だけ定義し、表のセルを短くしました。
+- **表のセル**: 要点だけに縮め、判定手順は 4 行の短い手順にしました。
+
+**結論の扱い**
+
+判断の基準、数値（90%、10 分、50%、20%、2 週間・6 か月・12 か月）、必須条件（SC-01 と AC-01〜AC-04）、例外、未決事項の論点は変えていません。ただし、未決事項から外した責任者（店主代表、開発担当）と、受入確認記録の項目にあった「担当」は、sample から消えています。
+
+**検証**
+
+prettier で表を整えました。lint などの検査は親 runner が実行するので、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"The prj-success-criteria-and-acceptance-criteria sample was trimmed. The unresolved-items table lost its management-ledger columns (deadline/timing, owner) and now has the columns: issue, impact on judgement, current handling. Repeated statements of the same judgement were removed and table cells were shortened. Non-whitespace characters, excluding table separator rows, went from 2,421 to 1,840 (76.0%), which misses the 70% target. Conclusions (criteria, thresholds, timings, required conditions, exceptions, undecided issues) are unchanged. Only the sample was edited.","handoff":["Size: non-whitespace characters excluding table separator rows went from 2,421 to 1,840 (76.0%). Including separator rows: 3,217 to 2,433 (75.6%). Bytes: 8,408 to 6,152. The 70% target was not reached because the role paragraph, approval/agent paragraph and document-quality rows that the plan says to remove were never in this sample. Most of the remaining text is required by the rulebook or is a conclusion that must not change.","Removed: the unresolved-items columns '解決期限 / 判断タイミング' and '責任者' (owners 店主代表 and 開発担当 no longer appear in the sample). Decision timing now lives in the '当面の扱い' text. Also removed the 'this is a completed example' sentence, the separate cost-reduction paragraph (cost reduction is now listed as out of scope), and the '担当' item in the corrective-action step.","De-duplication: the 'no serious dead-end' judgement now lives only in AC-03, and SC-01 checks only task completion. The judgement procedure refers to the confirmer/approver columns and section titles instead of repeating them. '両代表' is defined once in '判定対象と適用範囲' and used in the table cells.","Proposed template change (not applied because the template is out of scope for this task): in docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md, the '例外条件と未解決事項' instruction says '決定期限と担当を記述する' and its table has the columns '解決期限 / 判断タイミング' and '責任者'. Change these to the columns '論点' / '判定への影響' / '当面の扱い', matching the rulebook ('論点、判定への影響、保留条件、当面の扱い').","Proposed recipe change (not applied): docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md asks for a decision time and owner on undecided items (lines 47, 127 and 152). It also lists lint as a measurement method (lines 33 and 136). Under the slim policy, align it with the rulebook: impact and current handling only, and no document-quality checks."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md","status":"passed","summary":"Formatted the edited sample's tables"},{"command":"npm run lint:md","status":"not_run","summary":"Parent runner runs this check"},{"command":"npm run lint:fm","status":"not_run","summary":"Parent runner runs this check"}]}
+</specdojo_executor_evidence>
