@@ -17,7 +17,13 @@ import {
   type runAgentPlan,
   resolveGradingPlanActor as resolveGradeRunActor,
 } from "../../../src/exec/agent-plan.js";
-import { runGrade, type GradeRunOptions } from "../../../src/grade/run.js";
+import {
+  GRADE_RUN_PARTIAL_EXIT_CODE,
+  GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+  GradeRunIncompleteError,
+  runGrade,
+  type GradeRunOptions,
+} from "../../../src/grade/run.js";
 import { discoverGradeTargets } from "../../../src/grade/target-discovery.js";
 import { loadViewpoints, resolveSafeMarkdownPath } from "../../../src/grade/targets.js";
 import {
@@ -324,6 +330,71 @@ describe("native grade run", () => {
     expect(
       readGradePipelineState({ target: "kata", project: "test", path: GRADE_RUN_DOCUMENT }),
     ).toBeUndefined();
+  });
+
+  it("ends a run with completed and failed documents as partial (exit code 2)", async () => {
+    const other = GRADE_RUN_DOCUMENT.replace("example", "other");
+    writeFileSync(
+      other,
+      readFileSync(GRADE_RUN_DOCUMENT, "utf8").replace("test:example", "test:other"),
+    );
+    executePlan.mockResolvedValueOnce({
+      actor: "actual-grader",
+      command: "test",
+      execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+    });
+    executePlan.mockRejectedValueOnce(new Error("interrupted"));
+    const failure = await grade({ ...options, paths: [GRADE_RUN_DOCUMENT, other] }).catch(
+      (error: unknown) => error,
+    );
+    expect(failure).toBeInstanceOf(GradeRunIncompleteError);
+    expect(failure).toMatchObject({
+      exitCode: GRADE_RUN_PARTIAL_EXIT_CODE,
+      message: expect.stringMatching(/completed=1 failed=1/),
+    });
+  });
+
+  it("ends a run without any completed document with exit code 1", async () => {
+    executePlan.mockRejectedValueOnce(new Error("interrupted"));
+    await expect(grade(options)).rejects.toMatchObject({ exitCode: 1 });
+  });
+
+  it("stops at a rate limit with exit code 75 and resumes the same run id", async () => {
+    executePlan.mockResolvedValueOnce({
+      actor: "actual-grader",
+      command: "test",
+      execution: { result: "rate_limit", exitCode: 1, stdout: "", stderr: "limit" },
+    });
+    await expect(grade(options)).rejects.toMatchObject({
+      exitCode: GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+      message: expect.stringMatching(/rate limit[\s\S]*grade run remaining: /),
+    });
+    expect(
+      readGradePipelineState({ target: "kata", project: "test", path: GRADE_RUN_DOCUMENT }),
+    ).toBeUndefined();
+    await grade(options);
+    expect(executePlan).toHaveBeenCalledTimes(2);
+    expect(
+      readGradeResultForDocument({ documentPath: GRADE_RUN_DOCUMENT, project: "test" }),
+    ).toMatchObject({ graded_by: "actual-grader" });
+  });
+
+  it("compares each Kata document with the same-kind prj-overview document", async () => {
+    const reference = "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md";
+    writeFileSync(
+      reference,
+      readFileSync(GRADE_RUN_DOCUMENT, "utf8").replace("test:example", "test:prj-overview"),
+    );
+    await grade({ ...options, referencePerKind: true });
+    const planPath = executePlan.mock.calls[0]?.[0].planPath;
+    expect(planPath).toBeDefined();
+    expect(readFileSync(planPath!, "utf8")).toContain("prj-overview-rulebook.md");
+    await expect(
+      grade({ ...options, runId: "both", referencePerKind: true, reference }),
+    ).rejects.toThrow(/either --reference or --reference-per-kind/);
+    await expect(
+      grade({ ...options, runId: "deliverable", target: "deliverable", referencePerKind: true }),
+    ).rejects.toThrow(/only valid for kata/);
   });
 
   it("rejects context changes and run-id reuse with different options", async () => {

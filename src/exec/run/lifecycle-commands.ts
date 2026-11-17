@@ -126,7 +126,7 @@ export function formatExecSlotsReport(
 
 export function registerSlotsCommand(exec: Command): void {
   const cmd = exec
-    .command("slots")
+    .command("slots", { hidden: true })
     .description(
       "Show the limits and current usage of the slots shared by concurrent exec runs of a project",
     );

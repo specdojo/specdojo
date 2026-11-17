@@ -17,10 +17,12 @@ export {
 } from "../exec/agent-plan.js";
 
 export function registerAgentCommands(program: Command): void {
-  const agent = program.command("agent").description("Run a plan with a specific agent");
+  const agent = program
+    .command("agent", { hidden: true })
+    .description("Run a plan with a specific agent");
 
   agent
-    .command("launch")
+    .command("launch", { hidden: true })
     .description("Launch agy with role-specific session permissions and runner-declared roots")
     .requiredOption("--provider <name>", "Provider CLI (antigravity)")
     .requiredOption("--role <role>", "Pipeline role (edit|review|report)")
@@ -52,7 +54,7 @@ export function registerAgentCommands(program: Command): void {
     });
 
   agent
-    .command("run")
+    .command("run", { hidden: true })
     .description("Feed a plan to one agent and capture its stdout")
     .requiredOption("--plan <path>", "Plan file passed to the agent on stdin")
     .requiredOption("--by <nickname>", "Agent nickname defined in agent-members.yaml")

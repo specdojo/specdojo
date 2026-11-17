@@ -59,7 +59,7 @@ export function renderGradeFindingTranslationPlan(
 export function registerGradeApplyCommands(grade: Command): void {
   addSelection(
     grade
-      .command("apply")
+      .command("apply", { hidden: true })
       .description(
         "Convert executor markers (or validate reporter JSON), calculate scores, and update documents",
       ),
@@ -221,7 +221,7 @@ export function registerGradeApplyCommands(grade: Command): void {
 
   addSelection(
     grade
-      .command("translation-plan")
+      .command("translation-plan", { hidden: true })
       .description("Create a Japanese translation request for the latest canonical findings"),
   )
     .requiredOption("--out <path>", "Write the translation plan to this repository path")
@@ -279,7 +279,7 @@ export function registerGradeApplyCommands(grade: Command): void {
 
   addSelection(
     grade
-      .command("localize")
+      .command("localize", { hidden: true })
       .description("Attach Japanese display messages to the latest canonical grade findings"),
   )
     .requiredOption("--from <path>", "JSON string array returned by the translation agent")

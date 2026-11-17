@@ -628,32 +628,37 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `exec` は schedule に基づいたタスクの実行、状態追跡、plan/result 生成、worktree 隔離実行を扱います。
 
-| コマンド         | 用途                                                                                                                                             | 例                                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `where exec`     | execution 関連パスを表示する                                                                                                                     | `specdojo where exec --project prj-0001`                                                                |
-| `exec validate`  | schedule・event・実行記録の配置と lock の Git 除外を検証する（`--records-only` は配置のみ、`--schedule-only` は schedule・event のみ。併用不可） | `specdojo exec validate --project prj-0001`                                                             |
-| `exec refresh`   | state、Ready、CPM、gantt-chart を再計算する                                                                                                      | `specdojo exec refresh --project prj-0001`                                                              |
-| `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）                                                                                    | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
-| `exec claim`     | タスクを `doing` にする                                                                                                                          | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
-| `exec complete`  | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                                                                             | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
-| `exec reopen`    | 誤って完了したタスクを `done` から `todo` に戻す                                                                                                 | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
-| `exec block`     | タスクを `blocked` にする                                                                                                                        | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
-| `exec unblock`   | `blocked` を `doing` に戻す                                                                                                                      | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
-| `exec release`   | `doing` / `blocked` を `todo` に戻す                                                                                                             | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
-| `exec cancel`    | `todo` を `cancelled` にする                                                                                                                     | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
-| `exec note`      | メモイベントを残す                                                                                                                               | `specdojo exec note --project prj-0001 --task <task-id> --by agent-1 --msg "memo"`                      |
-| `exec link`      | 外部参照イベントを残す                                                                                                                           | `specdojo exec link --project prj-0001 --task <task-id> --by agent-1 --ref pr=https://example.com/pr/1` |
-| `exec estimate`  | 見積もりイベントを残す                                                                                                                           | `specdojo exec estimate --project prj-0001 --task <task-id> --by agent-1 --meta duration_days=1`        |
-| `exec run`       | plan を生成してエージェントを実行する                                                                                                            | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
-| `exec handoff`   | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                             | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
-| `exec resume`    | `doing`、または due な利用制限延期 task を既存 worktree で再開する                                                                               | `specdojo exec resume --project prj-0001 --due`                                                         |
-| `exec cycle`     | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                    | `specdojo exec cycle --project prj-0001 --loop`                                                         |
-| `exec slots`     | 同じ project の exec run が共有する枠（`--join`・provider・親検証など）の上限と使用数を表示する                                                  | `specdojo exec slots --project prj-0001`                                                                |
-| `exec trial`     | 同一planを複数agentで隔離試行し、比較・評価・採否を管理する                                                                                      | `specdojo exec trial run --project prj-0001 --plan <path> --agent agent-a agent-b`                      |
-| `exec status`    | 実行状態を表示する                                                                                                                               | `specdojo exec status --project prj-0001 --state blocked`                                               |
-| `exec scaffold`  | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                             | `specdojo exec scaffold --project prj-0001`                                                             |
-| `exec plan`      | plan だけを生成する                                                                                                                              | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
-| `exec archive`   | 完了済み plan を同じ run に保持する                                                                                                              | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
+| コマンド        | 用途                                                                                                                                             | 例                                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `where exec`    | execution 関連パスを表示する                                                                                                                     | `specdojo where exec --project prj-0001`                                                                |
+| `exec validate` | schedule・event・実行記録の配置と lock の Git 除外を検証する（`--records-only` は配置のみ、`--schedule-only` は schedule・event のみ。併用不可） | `specdojo exec validate --project prj-0001`                                                             |
+| `exec refresh`  | state、Ready、CPM、gantt-chart を再計算する                                                                                                      | `specdojo exec refresh --project prj-0001`                                                              |
+| `exec claim`    | タスクを `doing` にする                                                                                                                          | `specdojo exec claim --project prj-0001 --task <task-id> --by agent-1`                                  |
+| `exec complete` | タスクを `done` にする（actor の `doing` が1件なら `--task` 省略可）                                                                             | `specdojo exec complete --project prj-0001 --by agent-1`                                                |
+| `exec reopen`   | 誤って完了したタスクを `done` から `todo` に戻す                                                                                                 | `specdojo exec reopen --project prj-0001 --task <task-id> --by indie --msg "completion criteria unmet"` |
+| `exec block`    | タスクを `blocked` にする                                                                                                                        | `specdojo exec block --project prj-0001 --task <task-id> --by agent-1 --msg "waiting"`                  |
+| `exec unblock`  | `blocked` を `doing` に戻す                                                                                                                      | `specdojo exec unblock --project prj-0001 --task <task-id> --by agent-1 --msg "resume"`                 |
+| `exec release`  | `doing` / `blocked` を `todo` に戻す                                                                                                             | `specdojo exec release --project prj-0001 --task <task-id> --by agent-1`                                |
+| `exec cancel`   | `todo` を `cancelled` にする                                                                                                                     | `specdojo exec cancel --project prj-0001 --task <task-id> --by agent-1 --msg "scope removed"`           |
+| `exec note`     | メモイベントを残す                                                                                                                               | `specdojo exec note --project prj-0001 --task <task-id> --by agent-1 --msg "memo"`                      |
+| `exec link`     | 外部参照イベントを残す                                                                                                                           | `specdojo exec link --project prj-0001 --task <task-id> --by agent-1 --ref pr=https://example.com/pr/1` |
+| `exec estimate` | 見積もりイベントを残す                                                                                                                           | `specdojo exec estimate --project prj-0001 --task <task-id> --by agent-1 --meta duration_days=1`        |
+| `exec run`      | plan を生成してエージェントを実行する                                                                                                            | `specdojo exec run --project prj-0001 --task <task-id>`                                                 |
+| `exec handoff`  | block された保護設定の提案差分を確認し、統合先へ適用して commit する                                                                             | `specdojo exec handoff apply --project prj-0001 --register PJR-0012`                                    |
+| `exec resume`   | `doing`、または due な利用制限延期 task を既存 worktree で再開する                                                                               | `specdojo exec resume --project prj-0001 --due`                                                         |
+| `exec cycle`    | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                    | `specdojo exec cycle --project prj-0001 --loop`                                                         |
+| `exec status`   | 実行状態を表示する                                                                                                                               | `specdojo exec status --project prj-0001 --state blocked`                                               |
+| `exec scaffold` | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                             | `specdojo exec scaffold --project prj-0001`                                                             |
+| `exec plan`     | plan だけを生成する                                                                                                                              | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
+| `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                              | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
+
+次のコマンドは runner・job・orchestrator が部品として呼ぶ内部用のコマンドです。help の一覧には表示しませんが、呼び出しは従来どおり動きます。
+
+| コマンド         | 用途                                                                                            | 例                                                                                 |
+| ---------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）                                   | `specdojo exec scheduler --project prj-0001 --by agent-1`                          |
+| `exec slots`     | 同じ project の exec run が共有する枠（`--join`・provider・親検証など）の上限と使用数を表示する | `specdojo exec slots --project prj-0001`                                           |
+| `exec trial`     | 同一planを複数agentで隔離試行し、比較・評価・採否を管理する                                     | `specdojo exec trial run --project prj-0001 --plan <path> --agent agent-a agent-b` |
 
 `exec validate` は、一部だけの run 記録を通常は `WARN:` で報告し、欠落だけなら終了コード 0 を返します。`--records-only` は同じ欠落を `ERROR:` と終了コード 1 にします。両モードとも、plan・result がそろい state・evidence のない evidence 導入前の run、state・evidence のみがあり同じ出どころ・項目の別 run に plan・result の対がある移行後の先行試行、旧 `exec/plans/`・`results/`・`evidence/` の記録はエラー・警告にしません。`execution/grade/generated/` と空の lock のディレクトリも配置の検査から外します。これら以外の配置違反、Git に無視されない lock、Git 確認失敗は通常時もエラーです。`--schedule-only` は従来どおり schedule・event だけを検査します。`--records-only --commit <rev>` は作業ツリーではなく `<rev>` の tree の記録を検査し、未 commit の run や空のディレクトリを対象にしません（pre-push の検査で使います）。
 
@@ -851,17 +856,25 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `grade run` は npm package から利用でき、`list` と同じ対象選択、文書ごとの plan 生成、agent 実行、marker の機械変換と `apply` を単段で実行します。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。`viewpoints_path` 未設定時は同梱の `specdojo:pm-review-viewpoints` を使います。
 
+| コマンド        | 用途                                                  |
+| --------------- | ----------------------------------------------------- |
+| `grade list`    | 選択した文書のパスを1行1件で出力し、plan は保存しない |
+| `grade run`     | 文書ごとに評価と反映を実行し、同じ run を再開する     |
+| `grade migrate` | インライン grade / finding をサイドカーへ一括移行する |
+
+`grade run` は、完了した文書と失敗した文書が混在すると終了コード 2、完了した文書がなく失敗した場合は 1 で終わります。agent が rate limit を返した場合は、その文書を未完了のまま残して直ちに終了コード 75 で止まり、同じ `--run-id` の再実行で再開します。`--target kata --reference-per-kind` は、各文書を同じ種別の `prj-overview-<種別>` 文書と比較します（`--reference` とは併用できません）。定期の job（`job-grade-kata`・`job-grade-deliverable`）はこの経路で評価します。
+
+次のコマンドは `grade run`・runner・job・orchestrator が部品として呼ぶ内部用のコマンドです。help の一覧には表示しませんが、呼び出しは従来どおり動きます。
+
 | コマンド                 | 用途                                                           |
 | ------------------------ | -------------------------------------------------------------- |
-| `grade list`             | 選択した文書のパスを1行1件で出力し、plan は保存しない          |
-| `grade run`              | 文書ごとに評価と反映を実行し、同じ run を再開する              |
 | `grade plan`             | 1文書ごとに executor / reporter の評価 plan を保存する         |
 | `grade apply`            | executor の申告を GradeSubmission へ機械変換して正本を反映する |
 | `grade translation-plan` | 英語の正本の finding から日本語表示用の翻訳 plan を作る        |
 | `grade localize`         | 訳文を件別検証し、合格した finding の `message_ja` を更新する  |
 | `grade validate`         | サイドカーの内容ハッシュと finding 件数を検証する              |
 | `grade result`           | 保存済み grade result を Markdown 文書のパスで表示する         |
-| `grade migrate`          | インライン grade / finding をサイドカーへ一括移行する          |
+| `grade state`            | 文書ごとの pipeline state を表示・記録する（`--exhausted`）    |
 
 ```bash
 specdojo grade run --target kata --kind rulebook --run-id quality-check --dry-run
@@ -962,7 +975,7 @@ finding の任意項目 `cause` は原因を表します。成果物の grade pl
 
 ### 8.1. npm package で 1 文書を評価する
 
-npm package の部品だけで 1 文書を評価する最小手順は、plan の生成、executor agent の実行、marker の反映です。先に `.specdojo/agent-members.yaml` と agent の実行設定を用意してください。`grade plan` の出力に表示された executor plan のパスを `<executor-plan.md>` に指定し、同じ executor nickname を `agent run` と `grade apply` の `--by` に渡します。
+通常は `grade run --path <document.md>` で評価します。この節は、内部用のコマンドを部品として組み合わせる場合の手順です。部品だけで 1 文書を評価する最小手順は、plan の生成、executor agent の実行、marker の反映です。先に `.specdojo/agent-members.yaml` と agent の実行設定を用意してください。`grade plan` の出力に表示された executor plan のパスを `<executor-plan.md>` に指定し、同じ executor nickname を `agent run` と `grade apply` の `--by` に渡します。
 
 ```bash
 # 1. 1 文書だけを対象に executor plan を生成する
@@ -1012,7 +1025,7 @@ tools/grade/run-per-document.sh --run-id 20260928-rubric-v2 --target deliverable
   --stages 1 --rubric-outdated --limit 10
 ```
 
-`--stages 1` では stage 1 の既定を `codex-expert-executor` / 機械変換（`machine`）/ リファレンスなしとし、stage 2・3は実行しません。定期実行する `job-grade-kata` と `job-grade-deliverable` はこの構成を指定します。
+`--stages 1` では stage 1 の既定を `codex-expert-executor` / 機械変換（`machine`）/ リファレンスなしとし、stage 2・3は実行しません。定期実行する `job-grade-kata` と `job-grade-deliverable` はこのスクリプトではなく `grade run` を使います（PJR-R7BQ）。
 
 reporter の既定はすべての段で `machine` です。`machine` の段は reporter agent を起動せず、`grade apply --analysis-from <executor-output> --submission-out <grade-submission.json>` で executor の marker を変換して反映します。finding の severity が許す level 上限を executor の申告が超えた場合は、機械変換が level を上限まで下げ、補正前後を grade result の `level_corrections` に記録します。`grade apply` が応答を拒否した場合は、拒否された応答を `executor-output.rejected.txt`、理由を `apply-rejection.log` として段のディレクトリへ残し、executor を1回だけ再実行して変換し直します。`--stage-<n>-reporter <nickname>` で agent の nickname を指定した段だけ、従来どおり LLM reporter を起動して `--from` の忠実性照合を行い、拒否時は reporter を1回だけ再実行します。LLM reporter は書き写しの精度を比較する用途に限ります。
 
@@ -1180,6 +1193,8 @@ schedule / register / job / routine の使い分けの基準は [exec運用ガ�
 ## 14. agent
 
 `agent` は、保存済みの plan を指定した1つの agent へ渡し、その標準出力を取得します。agent の選択は `.specdojo/agent-members.yaml` の nickname で一意に決まるため、実行のたびに担当が変わりません。決定論的な手順を shell script や CLI 側に置き、agent には判断だけを委ねるための最小の部品です。
+
+`agent` とその `run`・`launch` は、`grade run`・runner・exec-defaults の command template が部品として呼ぶ内部用のコマンドです。help の一覧には表示しませんが、呼び出しは従来どおり動きます。
 
 | コマンド       | 用途                                                                    |
 | -------------- | ----------------------------------------------------------------------- |

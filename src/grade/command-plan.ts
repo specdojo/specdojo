@@ -43,7 +43,7 @@ export function registerGradePlanCommands(grade: Command): void {
 
   addSelection(
     grade
-      .command("plan")
+      .command("plan", { hidden: true })
       .description("Write reusable executor and reporter plans per selected document"),
   )
     .option("--out <directory>", "Write plans below this repository-relative directory")
