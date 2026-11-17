@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   registered_at: "2026-11-17T05:12:32Z"
@@ -44,15 +44,32 @@ PJR-9BY9 で execution/runs/ へ移した plan・result が srcExclude とリン
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------ | ---- | ---- | ---- |
-| 1   | 除外とリンクの付け替えを run 単位の場所に合わせる      | 未定 | open | -    |
-| 2   | 単体テストを足す                                       | 未定 | open | -    |
-| 3   | 統合の後に docs:build を流して確かめる（orchestrator） | 未定 | open | -    |
+| No  | 作業                                                   | 担当         | 状態 | メモ                                                                                                  |
+| --- | ------------------------------------------------------ | ------------ | ---- | ----------------------------------------------------------------------------------------------------- |
+| 1   | 除外とリンクの付け替えを run 単位の場所に合わせる      | executor     | done | ページ走査・サイドバー・検索・Markdown / wikilink / frontmatter の参照を新旧配置に対応                |
+| 2   | 単体テストを足す                                       | executor     | done | 新旧配置の判定・走査除外と register / schedule / job のリンクを追加。実行は設定済みの親 runner が担当 |
+| 3   | 統合の後に docs:build を流して確かめる（orchestrator） | orchestrator | open | 個票の完了条件により sandbox では実行せず、統合後に既定 8GB での成功・所要時間・dead link 件数を確認  |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容と判断
+
+- `packages/docs-site/.vitepress/exec-record-paths.ts` に新旧配置の判定と除外 glob を集約し、`config.mts` の `srcExclude`・サイドバー・検索と `exec-record-links.ts` から利用する。run の `plan.md`・`result.md` をページにせず、Markdown・wikilink・frontmatter の doc id 参照を GitHub のファイル表示へ向ける。入口となる生成一覧は引き続きサイトへ残す。
+- 除外範囲は [[specdojo:plan-result-lifecycle-guide|plan / result ライフサイクルガイド]] と `src/shared/run-records.ts` の配置に従い、`runs/<origin>/<item>/<run>/plan.md`・`result.md` に限定した。同じ配下の別の Markdown や job 状態管理の `execution/jobs/runs/` を一括で除外しない。旧配置と event の既存の扱いも維持する。
+- `tests/packages/docs-site/exec-record-links.test.ts` と `exec-record-paths.test.ts` に、新旧配置・3 種の origin・相対 / ルート相対リンク・query / fragment・行番号付き wikilink・Windows 区切り・非対象パス・glob による実際の走査除外を確認するテストを用意した。パッケージ README にも対象配置を明記した。
+- 保護された設定の変更は不要。`CHANGELOG.md`・登録簿の一覧・個票のステータス・result は変更していない。
+
+### 5.2. 検証と残作業
+
+- 変更ファイルを Prettier で整形した。
+- `node --import tsx tools/catalog-validate-if-configured.mjs`・`npm run validate:history-links`・`node --import tsx src/specdojo.ts register build` は終了コード 0。カタログ検証には対象外の既存文書の未作成・再 export 参照などの警告がある。
+- 型検査・単体 / 結合テスト・lint・schema 検証は、`.specdojo/exec-defaults.yaml` の `pipeline.parent_validations` に設定済みのため、executor で重複実行せず親 runner に委ねる。
+- `npm run docs:build` は個票の完了条件に従って executor では実行しない。orchestrator が統合後に既定ヒープ 8GB で流し、終了コード・所要時間・dead link 件数と、run の plan / result が HTML 出力へ含まれないことを確認する。OOM 解消の実測はこの確認まで未確定である。
+
+### 5.3. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: 文書サイトのビルド対象から run 単位の plan・result を除外し、実行記録一覧などのリンクを GitHub の正本へ向ける。配置移行後にビルドの対象ページが増え、メモリ不足になる原因を修正。
 
 ## 6. 関連ドキュメント
 

@@ -63,8 +63,10 @@ Mermaid 図の生成に失敗した場合、`dev` は起動時・文書の追加
 走査中に Markdown が削除された場合は、従来どおり警告して飛ばします。
 
 サイドバーは URL の範囲ごとに分かれ、`/ja/specdojo/` では SpecDojo 文書、
-`/ja/projects/<project-id>/` では対象 project の文書だけを表示します。exec の plan / result は
-ページとしてビルドせず、`exec-records.md` などからのリンクを GitHub 上の正本へ置き換えます。
+`/ja/projects/<project-id>/` では対象 project の文書だけを表示します。
+`execution/runs/<origin>/<item>/<run>/` の `plan.md`・`result.md` と、旧配置の
+`execution/exec/plans/`・`execution/exec/results/` はページとしてビルドせず、
+`exec-records.md` などからのリンクを GitHub 上の正本へ置き換えます。
 event などの実行記録はページとして残しますが、サイドバーには列挙しません。project の dashboard
 から `exec-records.md` を経由して参照できます。
 
