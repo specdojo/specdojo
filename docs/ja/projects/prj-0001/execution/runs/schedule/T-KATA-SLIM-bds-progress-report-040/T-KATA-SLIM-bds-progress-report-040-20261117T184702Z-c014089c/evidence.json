@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-bds-progress-report-040",
+  "run_id": "T-KATA-SLIM-bds-progress-report-040-20261117T184702Z-c014089c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-17T18:49:49.570Z",
+    "completed_at": "2026-11-17T18:54:21.632Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/bds-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/bds-rulebook.md | 81 +++++++++++-------------------\n 1 file changed, 30 insertions(+), 51 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/bds-rulebook.md",
+      "status": "passed",
+      "summary": "対象rulebookを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/bds-rulebook.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/check-evidence-secrets.mjs --staged",
+      "status": "passed",
+      "summary": "hook検査は正常終了。対象は0ファイル、検出0件。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別YAML schema検証は対象外。",
+      "reason": "変更した成果物はMarkdown rulebookのみで、YAMLの変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は対象外。",
+      "reason": "成果物の変更は `docs/ja/specdojo/rulebooks/` 内のみで、`docs/ja/projects/` 配下の変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は対象外。",
+      "reason": "登録簿個票、既存plan、resultなどの履歴ファイルを編集していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5248 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5248 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-bds-progress-report-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devc\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\ners-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-bds-progress-report-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-bds-progress-report-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-bds-progress-report-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 723ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.tes\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "BDS rulebook の共通運用を正本参照へ集約し、F001・F002を解消しました。空白除外文字数は77.66%に縮小しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "実施内容・変更ファイル: `docs/ja/specdojo/rulebooks/bds-rulebook.md` のみ編集。役割表、承認・改訂・文書検査の手順、管理台帳の担当列、重複する用語表と共通禁止事項を削除。全体方針に「共通の運用」を1項目置き、メンバー定義とドキュメントメタ情報標準を参照した。帳票固有の判断基準、標準列、対比例、業務の受入手順と合格条件を維持した。result は executor の指示に従い未編集。",
+    "大きさ: 改行を含む空白を除いた全文字数は6,899字→5,358字（77.66%）。SLD試行と同様に表の区切り行も除いた場合は6,331字→5,022字（79.32%）。どちらも8割以下。",
+    "進め方と実践の型の適用: [[specdojo:rulebook-authoring-standard|Rulebook記述標準]]、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の `vp-arc-conciseness`・`vp-qe-omissions-consistency`、[[specdojo:ryu-guide|進め方ガイド]]、[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|SLD試行]] と改訂済みSLD rulebookを根拠にした。BDS sample、週次進捗報告、Job実行設計、BDS rulebookと成果物のgrade結果、PJR-JFRXの対応結果も照合した。成果物側の既存指摘は文書起因であり、今回の編集対象には広げていない。condense由来の指摘はplanにない。",
+    "finding対応: F001は用語表を削除して解消。指摘の語句の一部は現行表にないため、anchorと現行本文を照合し、本文要件・記述ガイドで判断できる5語を削除した。F002は下書きで出所・確かめ方の未確定を明記できること、受入確認までに解消すること、照合一致と未確定なしを合格条件とすることを明示し、無条件の禁止を修正して解消した。",
+    "構造の判断: 成果物に求める9章の名称・順序・必須区分、表示項目の標準6列、各章の記述ガイドを維持。rulebook第2章だけを「位置づけと用語定義」から「位置づけ」へ変更した。用語表の削除に伴う名称調整で、記述標準とSLD試行に従う。役割表の1.1節を削除し、第8章「運用ルール」は帳票の業務受入手順を残すため維持した。Frontmatterは変更していない。",
+    "共通正本への変更案: メタ情報標準の「成果物の値制約」と「文書の改訂・廃止とライフサイクル変更管理」で、外した状態・承認・改訂廃止・未決事項の引き継ぎを賄えるため追記不要。Rulebook記述標準の「各rulebookは具体的な追従対象と役割分担を定義する」は、今回の方針に合わせ「型固有の追従対象を定義し、役割分担は共通規約と適用先のメンバー定義を参照する」へ調整する案を申し送る。標準自体は変更していない。",
+    "sampleへの変更案: [[specdojo:bds-sample|BDS完成例]] の「読み手と利用目的」にある仕様の確認担当の段落と、「メモ / 将来課題」の管理分類・担当・追跡先列、登録簿への転記段落、末尾の文書検査・確定承認の段落を同じ方針で整理する。業務上の作成・例外対応、未決事項の影響、限定受入の条件は残す。構造の正本は今回改訂したrulebookとする。sampleは対象外のため未編集。recipe・templateはともに `not-needed` で変更なし。",
+    "検証: Prettierと差分検査が成功。読み取り専用の比較でFrontmatter、成果物章名・必須区分、標準列の維持と文字数目標を確認した。親runner所有のlint・schema・型検査・テストは重複実行していない。既存の未追跡 `pipeline-state.json` は変更していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-bds-progress-report-040/T-KATA-SLIM-bds-progress-report-040-20261117T184702Z-c014089c/executor.log",
+      "bytes": 5394,
+      "truncated": false
+    }
+  ]
+}
