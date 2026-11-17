@@ -1,0 +1,32 @@
+文字数は 7 割の目安に届きませんでした（91%）が、sample 本体の作業は終わっています。`docs/ja/specdojo/samples/prj-charter-sample.md` を直し、手元で実行した `npm run docs:build` は通りました。変えたのはこのファイルだけです。
+
+**文字数（空白と表の区切り行を除く）:** 3,095 字 → 2,813 字。この sample には、外す対象の運用の記述がもともとほとんどありませんでした。一方で finding の対応で、各文書への wikilink（約 620 字）、合格条件の列、AI Agent の支援範囲、ライセンス方針の確定、秘密情報の禁止を足しています。rulebook と finding が求める内容を残したままでは、これ以上は削れないと判断しました。
+
+**外した記述:**
+- 未決事項の表の「期限」「担当」の列。「論点・影響・当面の扱い」の 3 列にしました。
+- 「初回承認日」の行。認可条件の行と承認の表に同じ内容があるためです。
+- 承認の章の「本書はドラフト」の段落（F011）。
+- 概要・登録簿を再掲する文と、前提・制約の章の前置き文。
+- スコープの「対象」行のうち 2 行を 1 行にまとめました。
+
+**finding への対応:** F001〜F011 はすべて直しました。
+- F001: GO / Not GO の表に「合格条件」の列を足しました。
+- F002: 未決事項の当面の扱いに「詳細計画の承認前」「GO / Not GO の前」などの期限条件を書きました。
+- F003・F007: スコープに AI Agent の支援範囲を足しました（草案・整理・検証の支援。承認と最終判断は人間）。
+- F004: 店主代表に留保する判断にライセンス方針の確定を足しました。
+- F005: 公開文書の禁止に秘密情報と非公開組織情報を足しました。
+- F006・F009: 参照先をすべて `[[specdojo:…-sample|…]]` の wikilink にしました。
+- F008・F010: 初期ステークホルダーを登録簿 sample と同じにしました。
+
+**結論を変えた点（理由を result に書く必要があります）:**
+- 開発担当の Role code を `PM` から `DEV` に、家族利用者を `BA` から `-` に変えました。権限委譲の表と GO / Not GO の体制の行も合わせています。
+- 常連客と仕入れ先を外し、技術メンターを足しました。
+- 未決事項に期限条件を足し、初回承認日の行を外しました。
+
+**変えていない別文書:** recipe（`prj-charter-recipe.md`）は「PM へ委譲する」を前提に書かれており、直した sample と食い違います。この段では直していないので、直すかどうかは別途の判断になります。template に運用の記述はありませんでした。
+
+result はこの段では書いていません。上の内容は handoff に入れてあり、reporter が result に移します。lint などの検査は親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"prj-charter-sample を直した（3,095 字→2,813 字、91%）。未決事項の表の期限・担当の列、重複した初回承認日の行、ドラフトの段落、再掲の文を外し、F001〜F011 を直した。7 割の目安には届かない。finding 対応で足した wikilink と合格条件などの分が削った分を上回るため。","handoff":["大きさ（空白と表の区切り行 `| --- |` を除いた文字数）: 3,095 字から 2,813 字（91%）。7 割の目安に届かない理由: この sample には役割の段落、承認と agent の段落、文書品質の検証の行がもともとなかった。一方で finding の対応で、wikilink（`[[id|表示名]]`）約 618 字、GO / Not GO の合格条件の列、AI Agent の支援範囲、ライセンス、秘密情報・非公開組織情報を足した。","外した記述: 未決事項の表の管理台帳の列（期限・担当）を外し「論点・影響・当面の扱い」にした。初回承認日の行は「認可対象」の認可条件の行と「承認」の表の言い直しのため外した。「承認」の章の「本書はドラフト…」の段落を外した（F011。認可条件の行が同じ判断を持つ）。目的の章の概要の再掲の文、初期ステークホルダーの章の登録簿への参照の文、前提・制約の章の前置き文を外した。スコープの対象の行を 3 行から 2 行（業務と AI Agent）にまとめた。","finding への対応: F001 は GO / Not GO の表に合格条件の列を足した。F002 は未決事項の当面の扱いに「詳細計画の承認前」「GO / Not GO の前」の期限条件を書いた。F003・F007 はスコープに AI Agent の支援範囲（草案作成・整理・検証の支援、承認と最終判断は人間）を足し、詳細化先を組織定義にした。F004 は留保する判断にライセンス方針の確定を足した。F005 は公開文書の禁止に秘密情報・非公開組織情報を足した。F006・F009 は参照先を `[[specdojo:...-sample|...]]` の wikilink にした（overview、stakeholder-register、success-criteria、scope、pm-organization、dct-index、assumptions、pm-plan、pm-raci、pm-quality-management-plan）。F008・F010 は初期ステークホルダーを登録簿 sample に合わせた（`STH-SHOP-OWNER`/`PO`、`STH-DEVELOPER`/`DEV`、`STH-TECH-MENTOR`/-、`STH-FAMILY-USER`/-）。F011 はドラフトの段落を外し、認可条件を「未承認として扱う」と書いた。","結論の変更と理由: 開発担当の Role code を `PM` から `DEV` に、家族利用者を `BA` から `-` に変え、常連客・仕入れ先を外して技術メンターを足した（F008・F010。直接根拠の登録簿 sample に合わせるため）。権限委譲の実行責任者も 開発担当（`DEV`）に合わせた。GO / Not GO の体制の観点は「PO・PM・BA の責任範囲」から「各作業の責任者が 1 人に決まり、承認の決裁者が店主代表」に変えた（F001）。未決事項に期限条件を足し、初回承認日の行を外した。認可対象、認可しない範囲、予算枠の扱い（確定まで外部支出なし）、未決の論点（費用上限、リリース目標日、オフライン時の扱い）は変えていない。","変更案（この段では対象外）: recipe（`docs/ja/specdojo/recipes/prj-charter-recipe.md`）は「PM などへ委譲する権限」「PM に委譲してよい判断」と、開発担当を PM とする前提で書かれている。直した sample（`DEV`）と食い違うため、実行責任者の Role code はメンバー定義に従う書き方に寄せる案を出す。template（`docs/ja/specdojo/templates/prj-charter-template.md`）には役割の段落、承認と agent の段落、文書品質の行はない。未決事項の列が期限・担当になっていれば、論点・影響・当面の扱いへ寄せる案。","executor は `npm run docs:build` を実行し、ビルドの完了（build complete）を確かめた。lint:md などの検査は親の runner に任せた。"],"validations":[{"command":"npm run docs:build","status":"passed","summary":"build complete in 305.07s。wikilink を含む全ページを描画した"},{"command":"npx prettier --write docs/ja/specdojo/samples/prj-charter-sample.md","status":"passed","summary":"表を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は docs/ja/specdojo/samples/prj-charter-sample.md だけで、plan・result・個票を含まない"}]}
+</specdojo_executor_evidence>
