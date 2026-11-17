@@ -47,11 +47,11 @@ rulebook・sample・template を初期整備し、正本と環境別のラッパ
 
 ## 4. 作業内容
 
-| No  | 作業                                            | 担当 | 状態 | メモ                                                                                                      |
-| --- | ----------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------------------------------- |
-| 1   | rulebook を作る（正本とラッパーの作り方を含む） | ARC  | done | `cdr-rulebook` を作成し、観点の `document_kinds` と成果物リファレンスへ登録した                           |
-| 2   | sample・template を作る                         | ARC  | done | `cdr-sample`（TypeScript・Next.js）と `cdr-template` を作成した                                           |
-| 3   | 型を grade する                                 | ARC  | open | 完了条件どおり executor は grade を実行しない。`grade run --target kata` は orchestrator が統合の後に流す |
+| No  | 作業                                            | 担当 | 状態 | メモ                                                                                      |
+| --- | ----------------------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------------- |
+| 1   | rulebook を作る（正本とラッパーの作り方を含む） | ARC  | done | `cdr-rulebook` を作成し、観点の `document_kinds` と成果物リファレンスへ登録した           |
+| 2   | sample・template を作る                         | ARC  | done | `cdr-sample`（TypeScript・Next.js）と `cdr-template` を作成した                           |
+| 3   | 型を grade する                                 | ARC  | done | orchestrator が統合の後に流した。2 回目の後、rulebook は pass（95）、sample は pass（97） |
 
 ## 5. 対応結果
 
@@ -90,6 +90,7 @@ executor が決めた点と理由:
 
 - `grade run --target kata` による grade（作業内容の 3）は、完了条件どおり orchestrator が統合の後に流し、2 回目の修正で pass になるかを確認する。
 - prj-0001 の既存の `.github/instructions/typescript.instructions.md` は `applyTo` が `{src,tools,tests,scripts}/**/*.ts`、ラッパーの `.claude/rules/typescript.md` は `paths` が `{src,tools}/**/*.ts` で、rulebook の「適用範囲を同じ glob にする」規則とずれている。また既存の正本には `specdojo:` の frontmatter がない。本タスクの対象外のため変更せず、型に合わせる対応を別の登録簿項目で扱うことを提案する。
+- 型の grade の結果（2026-11-17、orchestrator、`sol-review-executor`）: 1 回目（run `grade-981v-20261117`）は rulebook が needs-work（78、major は F003・F009）、sample が pass（89）、template が pass（95）。2 回目の手直しの後（run `grade-981v-20261117b`）は rulebook が pass（95）、sample が pass（97）で、major はない。残る minor は 6 件（ready にするときの確認条件、置き換え時の旧ラッパーの扱い、禁止事項と sample の記載水準、template の型の章の省略条件など）で、PJR-0T83 の方針に従い、この項目では追わない。
 
 ## 6. 関連ドキュメント
 

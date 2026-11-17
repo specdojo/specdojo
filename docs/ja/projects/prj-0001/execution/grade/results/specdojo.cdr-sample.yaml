@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/cdr-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 89
-graded_at: "2026-11-17T03:22:12.643Z"
+score: 97
+graded_at: "2026-11-17T04:47:02.888Z"
 graded_by: sol-review-executor
-content_hash: d4825f59c7616a84f6ba490b6dd4a8abd96096533cf286b5342b5b1d31636fc9
+content_hash: 86d0f5af1856182d03d32cf375a2babf3a7aabcf594f8094d815c39cc21544a0
 categories:
   purpose:
     score: 100
@@ -19,15 +19,15 @@ categories:
   business:
     score: 100
   architecture:
-    score: 92
+    score: 100
   usability:
     score: 92
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -54,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -66,17 +66,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -101,20 +101,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 7
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 16
-    anchor: "- `app/` から業務処理を呼ぶ場合は `src/` の公開関数を経由し、`src/` から `app/` を import しない。この向きは ESLint の `no-restricted-imports` で検査する。"
-    message: import 制約を検査する ESLint の規則名はあるが、設定の正本となるファイルへの参照がないため、適用対象や例外を確認できない。設定ファイル名を示し、型の import の検査も同じ正本から追えるようにする。
-    message_ja: import 制約を検査する ESLint の規則名はあるが、設定の正本となるファイルへの参照がないため、適用対象や例外を確認できない。設定ファイル名を示し、型の import の検査も同じ正本から追えるようにする。
-  - id: F002
-    severity: minor
     rule: vp-arc-conciseness
-    line: 64
+    line: 63
     anchor: "| 金額を浮動小数点で計算する                           | 端数の誤差でつけ残高が合わなくなるため     |"
     message: >-
       禁止事項表の金額計算、クライアントからの DB import、未検証の
@@ -122,52 +115,27 @@ findings:
     message_ja: >-
       禁止事項表の金額計算、クライアントからの DB import、未検証の
       as、顧客情報のログ出力は、それぞれ本文10・17・24・39行目の規則と重複している。理由を本文側へ統合するなどして各規則の記載箇所を一つにし、禁止事項表には重複しない事項を残す。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: >-
+      - `app/` から業務処理を呼ぶ場合は `src/` の公開関数を経由し、`src/` から `app/` を import しない。この向きは `eslint.config.mjs` の
+      `no-restricted-imports` で検査する。
+    message: >-
+      import の依存方向を eslint.config.mjs の no-restricted-imports で検査すると明記しながら、その規則内容も本文に再掲している。cdr-rulebook
+      6.1節に従い、機械で強制する内容は設定ファイル名と規則名への参照に集約する。
+    message_ja: >-
+      import の依存方向を eslint.config.mjs の no-restricted-imports で検査すると明記しながら、その規則内容も本文に再掲している。cdr-rulebook
+      6.1節に従い、機械で強制する内容は設定ファイル名と規則名への参照に集約する。
   - id: F003
     severity: minor
-    rule: vp-dev-change-impact
-    line: 55
-    anchor: >-
-      | `npm run test:unit`        | Vitest の単体テスト（売上・つけ残高） | `src/` を変更したとき                   |
-      失敗したテストの期待値ではなく実装を直す       |
-    message: 単体テスト失敗時に期待値の変更を一律に禁じているため、承認済みの仕様変更で期待結果が変わる場合にも旧仕様へ実装を戻す指示になる。実装不具合と仕様変更に伴う期待値更新を区別し、後者は変更根拠を確認して更新する条件を示す。
-    message_ja: 単体テスト失敗時に期待値の変更を一律に禁じているため、承認済みの仕様変更で期待結果が変わる場合にも旧仕様へ実装を戻す指示になる。実装不具合と仕様変更に伴う期待値更新を区別し、後者は変更根拠を確認して更新する条件を示す。
-  - id: F004
-    severity: minor
-    rule: vp-dev-testability
-    line: 56
-    anchor: >-
-      | `npm run test:integration` | DB を使う統合テスト                   | DB 接続やマイグレーションを変更したとき | agent では実行せず、CI
-      の結果を確認する        |
-    message: 統合テストの「失敗時」欄は実行場所と結果確認の指示に留まり、CI が失敗した場合の対応を示していない。失敗内容を確認して修正・再検証することや、対応できない場合の報告を記載する。
-    message_ja: 統合テストの「失敗時」欄は実行場所と結果確認の指示に留まり、CI が失敗した場合の対応を示していない。失敗内容を確認して修正・再検証することや、対応できない場合の報告を記載する。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 15
-    anchor: "- `src/` 内の import は `@/` の別名を使い、`../../` のような 3 階層以上の相対 import を書かない。"
-    message: "`../../` は親へ2階層上がる表記であり、「3階層以上」の例と一致しない。禁止する深さに合わせて例を `../../../` にするか、説明を「2階層以上」に直す。"
-    message_ja: "`../../` は親へ2階層上がる表記であり、「3階層以上」の例と一致しない。禁止する深さに合わせて例を `../../../` にするか、説明を「2階層以上」に直す。"
-  - id: F006
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 3
-    anchor: >-
-      駄菓子屋きぬや販売管理システム（Next.js 14・TypeScript 5）の `app/`・`src/`・`tests/` 配下の TypeScript
-      を実装・更新するときの規則です。言語・ライブラリ・版は技術スタック一覧に従い、本書では書き方と検証だけを定めます。
+    line: 17
+    anchor: "- サーバー専用の処理（Prisma による DB 接続、つけ残高の更新）は `src/server/` に置く。"
     message: >-
-      導入文に Next.js 14・TypeScript 5 の版を再掲しており、版は技術スタック定義を参照して本文には書かないという cdr-rulebook の方針・禁止事項に反している。版の記載を外し、based_on
-      の技術スタック一覧へ参照を集約する。
+      サーバー専用処理を src/server/ に配置する判断と、37行目の API ルート境界で Sentry へ送る方針について、設計上の正本への参照がない。cdr-rulebook が配置・境界・横断ルールの正本とする
+      cpd・sysd-* への参照を示し、本書では選定済みの設計に従う実装・検証方法として記述する。
     message_ja: >-
-      導入文に Next.js 14・TypeScript 5 の版を再掲しており、版は技術スタック定義を参照して本文には書かないという cdr-rulebook の方針・禁止事項に反している。版の記載を外し、based_on
-      の技術スタック一覧へ参照を集約する。
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 18
-    anchor: "- 型だけを import する場合は `import type` を使う（ESLint の `consistent-type-imports` で検査する）。"
-    message: >-
-      ESLint で検査すると明記した `import type` の規則を本文にも再掲しており、機械で強制する細則は設定ファイル名と規則名で参照するという cdr-rulebook
-      6.1節に従っていない。本文は設定の正本と該当規則への参照に置き換える。
-    message_ja: >-
-      ESLint で検査すると明記した `import type` の規則を本文にも再掲しており、機械で強制する細則は設定ファイル名と規則名で参照するという cdr-rulebook
-      6.1節に従っていない。本文は設定の正本と該当規則への参照に置き換える。
+      サーバー専用処理を src/server/ に配置する判断と、37行目の API ルート境界で Sentry へ送る方針について、設計上の正本への参照がない。cdr-rulebook が配置・境界・横断ルールの正本とする
+      cpd・sysd-* への参照を示し、本書では選定済みの設計に従う実装・検証方法として記述する。

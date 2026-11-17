@@ -4,30 +4,30 @@ document: specdojo:cdr-rulebook
 path: docs/ja/specdojo/rulebooks/cdr-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 78
-graded_at: "2026-11-17T03:19:17.584Z"
+verdict: pass
+score: 95
+graded_at: "2026-11-17T04:45:00.475Z"
 graded_by: sol-review-executor
-content_hash: f4ea0a3ac0ba401b8504fb92fa66d514165677993e33a255a45638c64317db56
+content_hash: f0ca8d6b72a15656c46f0f03cd4abc538834e12fdf8426dfef5ab107d068c338
 categories:
   purpose:
     score: 88
   operations:
-    score: 88
+    score: 100
   planning:
-    score: 92
+    score: 83
   business:
     score: 100
   architecture:
-    score: 83
+    score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
-    score: 75
+    score: 88
   quality:
-    score: 75
+    score: 92
   consistency:
-    score: 50
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -45,8 +45,8 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-requirements-completeness:
     level: 4
     score: 100
@@ -54,29 +54,29 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 3
     score: 75
   vp-dev-testability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -84,14 +84,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-operability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -100,24 +100,26 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 11
+  major: 0
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-decision-readiness
-    line: 45
+    line: 47
     anchor: >-
-      | `specdojo.status`     | ○        | `draft` / `ready` /
-      `deprecated`                                                 |
+      `.github/` は文書サイトと `lint:fm` の対象外のため、Frontmatter の検査は成果物カタログの登録と grade で行う。`status` を `ready`
+      にするのは、テストと検証の章のコマンドが実行でき、使う環境のラッパーで正本の読み込みを確かめた後とする。
     message: status の値は定義されていますが、規約を ready にする際に確認する条件がありません。上位設計・設定との一致、検証コマンドの実行可能性、ラッパーの追従、未決事項の処置を承認前の確認条件として定めてください。
     message_ja: status の値は定義されていますが、規約を ready にする際に確認する条件がありません。上位設計・設定との一致、検証コマンドの実行可能性、ラッパーの追従、未決事項の処置を承認前の確認条件として定めてください。
   - id: F002
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 48
-    anchor: "| `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列                                           |"
+    line: 45
+    anchor: >-
+      | `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列。旧正本は `deprecated` にし、同じ変更でラッパーと `AGENTS.md` の参照を新しい正本へ付け替える
+      |
     message: >-
       supersedes の記入要件だけでは、旧規約を参照する成果物カタログや各環境のラッパーの移行漏れを把握できません。置き換え・廃止時に追跡する参照元、移行完了条件、PM
       が管理する未完了タスクを、この系統の具体的な依存として定めてください。
@@ -125,121 +127,50 @@ findings:
       supersedes の記入要件だけでは、旧規約を参照する成果物カタログや各環境のラッパーの移行漏れを把握できません。置き換え・廃止時に追跡する参照元、移行完了条件、PM
       が管理する未完了タスクを、この系統の具体的な依存として定めてください。
   - id: F003
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 46
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 45
     anchor: >-
-      | `specdojo.rulebook`   | 推奨     |
-      `specdojo:cdr-rulebook`                                                          |
+      | `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列。旧正本は `deprecated` にし、同じ変更でラッパーと `AGENTS.md` の参照を新しい正本へ付け替える
+      |
     message: >-
-      specdojo.rulebook を「推奨」としていますが、参照するドキュメントメタ情報標準の「成果物の必須項目」と deliverable-frontmatter.schema.yaml
-      は必須としています。省略可能と誤読されるため「必須」に変更し、値を specdojo:cdr-rulebook と明示してください。
+      規約の置き換えで生じる未決事項・読み込み不具合・移行未完了について、課題、リスク、変更要求、決定事項の記録先と担当 Role code がありません。メタ情報標準のライフサイクル変更管理を参照し、この系統で PJR
+      へ引き継ぐ事項と担当を定めてください。
     message_ja: >-
-      specdojo.rulebook を「推奨」としていますが、参照するドキュメントメタ情報標準の「成果物の必須項目」と deliverable-frontmatter.schema.yaml
-      は必須としています。省略可能と誤読されるため「必須」に変更し、値を specdojo:cdr-rulebook と明示してください。
+      規約の置き換えで生じる未決事項・読み込み不具合・移行未完了について、課題、リスク、変更要求、決定事項の記録先と担当 Role code がありません。メタ情報標準のライフサイクル変更管理を参照し、この系統で PJR
+      へ引き継ぐ事項と担当を定めてください。
   - id: F004
     severity: minor
-    rule: vp-arc-conciseness
-    line: 25
-    anchor: "- **正本**: agent 向けコーディング規約の本文を持つ唯一のファイル。GitHub Copilot はこのファイルを `applyTo` に従って直接読む。"
-    message: 「正本」「ラッパー」の定義は直前の位置づけ表と役割説明が重複しています。Copilot が applyTo に従って直接読むという追加情報を表へ統合し、直後の二つの定義をまとめると、判断情報を保ったまま重複を減らせます。
-    message_ja: 「正本」「ラッパー」の定義は直前の位置づけ表と役割説明が重複しています。Copilot が applyTo に従って直接読むという追加情報を表へ統合し、直後の二つの定義をまとめると、判断情報を保ったまま重複を減らせます。
+    rule: vp-dev-change-impact
+    line: 45
+    anchor: >-
+      | `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列。旧正本は `deprecated` にし、同じ変更でラッパーと `AGENTS.md` の参照を新しい正本へ付け替える
+      |
+    message: >-
+      規約の置き換え時に、旧 instructions ファイルの適用範囲と旧ラッパーをどう更新するかが定義されていません。supersedes や deprecated
+      の記録に加え、旧規約の読み込みを終了し、新規約への参照を有効にする変更対象と手順を明示してください。
+    message_ja: >-
+      規約の置き換え時に、旧 instructions ファイルの適用範囲と旧ラッパーをどう更新するかが定義されていません。supersedes や deprecated
+      の記録に加え、旧規約の読み込みを終了し、新規約への参照を有効にする変更対象と手順を明示してください。
   - id: F005
     severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 31
-    anchor: >-
-      - 1 ファイルは 1 つの適用範囲（`applyTo` の glob）に対応させる。同じ言語でもテストコードなど適用するファイルが異なり規則も異なる場合は、`typescript` と `vitest`
-      のように分ける。適用範囲が同じなら分けない。
+    rule: vp-qe-kata-conformance
+    line: 62
+    anchor: "| 禁止事項            | ○        | 破ると被害の大きい書き方と理由を表で書く。表に書いた禁止は本文の章で繰り返さない                                   |"
     message: >-
-      TypeScript と Vitest のように適用範囲を分ける方針と、tests
-      配下で両規約が重なる参照例がありますが、重複適用時の規則の整合条件がありません。共通規則と追加規則の関係、および競合する規則を残さない確認条件を定めてください。
+      禁止事項で本文の規則を言い換えて並べないと要求していますが、参照する cdr-sample は金額、DB
+      接続、型の強制、ログの規則を禁止事項へ再掲しています。また、本文142行で禁止する技術の版を導入文に記載しています。規範と宣言済み完成例を照合し、利用者が一貫した記載水準を判断できるよう整合させてください。
     message_ja: >-
-      TypeScript と Vitest のように適用範囲を分ける方針と、tests
-      配下で両規約が重なる参照例がありますが、重複適用時の規則の整合条件がありません。共通規則と追加規則の関係、および競合する規則を残さない確認条件を定めてください。
+      禁止事項で本文の規則を言い換えて並べないと要求していますが、参照する cdr-sample は金額、DB
+      接続、型の強制、ログの規則を禁止事項へ再掲しています。また、本文142行で禁止する技術の版を導入文に記載しています。規範と宣言済み完成例を照合し、利用者が一貫した記載水準を判断できるよう整合させてください。
   - id: F006
     severity: minor
-    rule: vp-dev-change-impact
-    line: 48
-    anchor: "| `specdojo.supersedes` | 条件付き | 既存の規約を置き換える場合の旧 ID 配列                                           |"
-    message: >-
-      規約の置き換え時に、旧 instructions ファイルの適用範囲と旧ラッパーをどう更新するかが定義されていません。supersedes や deprecated
-      の記録に加え、旧規約の読み込みを終了し、新規約への参照を有効にする変更対象と手順を明示してください。
-    message_ja: >-
-      規約の置き換え時に、旧 instructions ファイルの適用範囲と旧ラッパーをどう更新するかが定義されていません。supersedes や deprecated
-      の記録に加え、旧規約の読み込みを終了し、新規約への参照を有効にする変更対象と手順を明示してください。
-  - id: F007
-    severity: minor
-    rule: vp-dev-testability
-    line: 99
-    anchor: >-
-      | Claude Code    | `.claude/rules/<言語>.md`      | 本文に `@../../.github/instructions/<言語>.instructions.md` を 1 行書く |
-      Frontmatter の `paths` |
-    message: ラッパーの作成方法はありますが、作成・変更後に参照先が解決され、対象ファイルで正本が読み込まれることを確認する手順と期待結果がありません。使用する環境ごとの読み込み確認と、対象外ファイルへの適用確認を検証項目に追加してください。
-    message_ja: ラッパーの作成方法はありますが、作成・変更後に参照先が解決され、対象ファイルで正本が読み込まれることを確認する手順と期待結果がありません。使用する環境ごとの読み込み確認と、対象外ファイルへの適用確認を検証項目に追加してください。
-  - id: F008
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 67
-    anchor: "- `型` を省く場合は、省いた理由を導入文か基本方針に 1 行で書く。"
-    message: 本文要件では静的型のある言語で「型」を必須としていますが、この行は理由を書けば言語を問わず省略できるようにも読めます。省略を許す言語・条件を限定し、静的型のある言語の必須条件との関係を明記してください。
-    message_ja: 本文要件では静的型のある言語で「型」を必須としていますが、この行は理由を書けば言語を問わず省略できるようにも読めます。省略を許す言語・条件を限定し、静的型のある言語の必須条件との関係を明記してください。
-  - id: F009
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 46
-    anchor: >-
-      | `specdojo.rulebook`   | 推奨     |
-      `specdojo:cdr-rulebook`                                                          |
-    message: >-
-      specdojo.rulebook を省略した成果物は、この表の「推奨」には反しませんが、参照先の共通標準と成果物 Frontmatter
-      スキーマには適合しません。文書内の合否判定を統一するため、この項目を必須として扱ってください。
-    message_ja: >-
-      specdojo.rulebook を省略した成果物は、この表の「推奨」には反しませんが、参照先の共通標準と成果物 Frontmatter
-      スキーマには適合しません。文書内の合否判定を統一するため、この項目を必須として扱ってください。
-  - id: F010
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 65
-    anchor: "| 禁止事項            | ○        | 禁止する書き方と理由を表で書く。本文の規則と同じ内容を言い換えて並べない                                           |"
+    line: 64
+    anchor: "- `型` を省けるのは、動的型の言語で型ヒントも使わない場合に限る。省く場合は、その理由を導入文か基本方針に 1 行で書く。"
     message: >-
-      禁止事項で本文の規則を言い換えて並べないと要求していますが、参照する cdr-sample は金額、DB
-      接続、型の強制、ログの規則を禁止事項へ再掲しています。また、本文142行で禁止する技術の版を導入文に記載しています。規範と宣言済み完成例を照合し、利用者が一貫した記載水準を判断できるよう整合させてください。
+      型章の省略を「動的型の言語で型ヒントも使わない場合」に限定していますが、宣言された cdr-template
+      のコメントは動的型なら理由を書いて削除できる案内のままです。テンプレートの省略条件も本行に合わせ、型ヒントを使う場合は章を残すことを明示してください。
     message_ja: >-
-      禁止事項で本文の規則を言い換えて並べないと要求していますが、参照する cdr-sample は金額、DB
-      接続、型の強制、ログの規則を禁止事項へ再掲しています。また、本文142行で禁止する技術の版を導入文に記載しています。規範と宣言済み完成例を照合し、利用者が一貫した記載水準を判断できるよう整合させてください。
-  - id: F011
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 135
-    anchor: >-
-      - 枠組みが言語の上に規則を足す場合（Next.js の上の TypeScript
-      など）は、言語の正本に枠組み固有の章を足すか、適用範囲が異なれば枠組みの正本（`nextjs.instructions.md`）を分ける。言語の正本の規則を枠組みの正本へ複製しない。
-    message: >-
-      「枠組みが言語の上に規則を足す場合」の例が「Next.js の上の TypeScript」となっており、説明する関係と逆です。「TypeScript の上の
-      Next.js」など、言語に枠組みの規則を追加する関係が伝わる表現へ修正してください。
-    message_ja: >-
-      「枠組みが言語の上に規則を足す場合」の例が「Next.js の上の TypeScript」となっており、説明する関係と逆です。「TypeScript の上の
-      Next.js」など、言語に枠組みの規則を追加する関係が伝わる表現へ修正してください。
-  - id: F012
-    severity: minor
-    rule: vp-ops-release-readiness
-    line: 50
-    anchor: "`.github/` は文書サイトと `lint:fm` の対象外のため、Frontmatter の検査は成果物カタログの登録と grade で行う。"
-    message: >-
-      Frontmatter の確認手段は示されていますが、適用開始前に正本・ラッパー・検証コマンドが揃い、利用環境で読み込みを確認できていることを求める条件がありません。規約を ready
-      にする際の適用準備の確認項目を追加してください。
-    message_ja: >-
-      Frontmatter の確認手段は示されていますが、適用開始前に正本・ラッパー・検証コマンドが揃い、利用環境で読み込みを確認できていることを求める条件がありません。規約を ready
-      にする際の適用準備の確認項目を追加してください。
-  - id: F013
-    severity: minor
-    rule: vp-ops-operability
-    line: 94
-    anchor: ラッパーには、適用範囲の宣言と正本への参照だけを書く。規則を追加・変更するときは正本だけを直す。
-    message: >-
-      規則を正本だけで変更する方針はありますが、設定・コマンドとの整合確認、ラッパー追従、再検証を担う Role code がありません。Rulebook 記述標準が求める系統固有の役割分担として、DEV・ARC・QE
-      などの更新・確認責務を明記してください。
-    message_ja: >-
-      規則を正本だけで変更する方針はありますが、設定・コマンドとの整合確認、ラッパー追従、再検証を担う Role code がありません。Rulebook 記述標準が求める系統固有の役割分担として、DEV・ARC・QE
-      などの更新・確認責務を明記してください。
+      型章の省略を「動的型の言語で型ヒントも使わない場合」に限定していますが、宣言された cdr-template
+      のコメントは動的型なら理由を書いて削除できる案内のままです。テンプレートの省略条件も本行に合わせ、型ヒントを使う場合は章を残すことを明示してください。
