@@ -33,21 +33,21 @@ Jobは新しいagent実行エンジンを持たない。`edit` / `review` Jobと
 - 課題、リスク、判断、計画外対応の台帳管理。registerで扱う。
 - 起動時刻そのものの管理。routineまたは外部CIが扱う。
 - Job内での常駐監視。CLIは1回のRunを処理して終了する。
-- 決定論的な手順の実装。scriptまたはCLIで扱い、Jobは`task.command`から入口だけを呼ぶ。
+- 決定論的な個々の処理の実装。scriptまたはCLIで扱い、Jobは`task.command`または`task.steps`から入口を呼ぶ。
 
 ### 1.1. 責務境界
 
-Jobは「runnerが直接実行するコマンド」と「agentへ委譲する判断」を分離する。`task.description`へ決定論的な手順を自然言語で書くと、agentが手順を解釈し、実行の有無や引数の正しさがagent依存になる。手順はscriptまたはCLIへ実装して`task.command`から入口を1つ呼び、結果の判断が必要な場合だけ`task.analysis`を指定する。判定可能な規約は`job-definition-standard`をSSOTとする。
+Jobは「runnerが直接実行するコマンド」と「agentへ委譲する判断」を分離する。`task.description`へ決定論的な手順を自然言語で書くと、agentが手順を解釈し、実行の有無や引数の正しさがagent依存になる。個々の処理はscriptまたはCLIへ実装し、`task.command`で1つの入口、`task.steps`で複数の入口を順に呼ぶ。結果の判断が必要な場合だけ`task.analysis`を指定する。判定可能な規約は`job-definition-standard`をSSOTとする。
 
-| 関心事                    | 担当                               |
-| ------------------------- | ---------------------------------- |
-| 起動時刻・実行枠          | routine / 外部スケジューラ         |
-| runnerが実行する入口      | Job Definition `task.command`      |
-| Run生成前の対象有無判定   | Job Definition `task.precondition` |
-| agentへ委譲する判断の定義 | Job Definition `task.analysis`     |
-| 決定論的な手順と繰り返し  | script / CLI                       |
-| コマンド実行・evidence    | exec runner                        |
-| agent実行・result・commit | exec実行基盤                       |
+| 関心事                    | 担当                                         |
+| ------------------------- | -------------------------------------------- |
+| 起動時刻・実行枠          | routine / 外部スケジューラ                   |
+| runnerが実行する入口      | Job Definition `task.command` / `task.steps` |
+| Run生成前の対象有無判定   | Job Definition `task.precondition`           |
+| agentへ委譲する判断の定義 | Job Definition `task.analysis`               |
+| 決定論的な手順と繰り返し  | script / CLI                                 |
+| コマンド実行・evidence    | exec runner                                  |
+| agent実行・result・commit | exec実行基盤                                 |
 
 ## 2. 概念モデル
 
@@ -149,11 +149,19 @@ task:
       reporter: claude-reporter
 ```
 
-決定論的な処理は`task.mode: command`とし、入力を展開する`task.command`を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob Runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コード0は`succeeded`、`task.partial_exit_code`に明示した非0は`partial`、それ以外の非0は`failed`とする。`partial`は完了分と失敗分が混在し、reviewで統合可否を判断できる場合だけ使う。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、`succeeded`または`partial`のcommand evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
+決定論的な処理は`task.mode: command`とし、入力を展開する`task.command`または`task.steps`の一方を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob Runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コード0は`succeeded`、`task.partial_exit_code`に明示した非0は`partial`、それ以外の非0は`failed`とする。`partial`は完了分と失敗分が混在し、reviewで統合可否を判断できる場合だけ使う。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、`succeeded`または`partial`のcommand evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
 
 テンプレート式で参照できる値は、`job_id`、`project_id`、現在のrunnerと同じCLI entryを表す`specdojo`、検証済み`inputs`、トリガーが渡した`scheduled_at`、読み取り専用の前回成功checkpointに限定する。Job Run IDの確定後に解決するtaskとcheckpointでは、これらに加えて`job_run_id`を参照できる。`run.idempotency_key`から`job_run_id`を参照すると循環するため許可しない。任意コード実行や環境変数の無制限な展開は許可しない。入力の`enum`はscalar値またはlistの各要素へ、integerの`minimum` / `maximum`は値域へ適用し、既定値と実行時入力を同じ規則で検証する。入れ子条件は検証可能なflat入力へ分解する。
 
 ## 4. 起動と実行フロー
+
+### 4.1. 順次実行 Job
+
+command Job の `task.steps` は、既存の Job の入力・冪等キー・attempt・routine 起動を再利用する。新しい文書種別や agent 機能に依存するキューは追加しない。Job 層は定義検証と凍結だけを担い、順序制御・project lock・command evidence は exec runner が担うため、`src/job` から `src/exec` を参照しない。
+
+runner は一意な Run の guard を取得し、project 実行 lock を有限時間待ってから各 command を await する。段の停止・続行は定義で決め、終了コードと必要に応じた状態ファイル判定から段を成功・失敗・延期に分類する。失敗または延期を含む attempt は Run も `failed` に確定する。lock 待ち上限超過は全段を延期として記録し、checkpoint を進めない。段の時刻・理由・evidence 参照を attempt ごとに保持する。詳細な値制約は [[specdojo:job-definition-standard|Job 定義標準]]、運用例は [[specdojo:job-sequence-guide|順次実行 Job の例]] を正本とする。
+
+### 4.2. 共通の起動フロー
 
 CLI境界は次のとおりとする。
 

@@ -1086,6 +1086,8 @@ specdojo exec worktree prune --project prj-0001
 
 ## 12. job
 
+複数の exec・grade・検査を順次実行するには、command Job の `task.command` の代わりに `task.steps` を指定し、同じ `exec run --job` で起動します。各段に `on_failure: stop|continue`（既定 stop）と任意の状態ファイル判定 `completion` を指定できます。`task.lock_wait_seconds`（既定 3600 秒）は project lock の待機上限で、この Job の外側の `--if-busy` より優先します。段の結果は Run JSON の `attempts[].steps` に残り、失敗を含めば終了コード 1、延期だけなら 75、全段成功なら 0 です。retry は同じ実行枠の新 attempt で先頭から実行します。書式は [[specdojo:job-definition-standard|Job 定義標準]]、定義と cron 起動は [[specdojo:job-sequence-guide|順次実行 Job の例]] を参照してください。
+
 `job`は再利用可能な`job-*.yaml`と、その定義からmaterializeされたJob Runを扱います。実行自体は`exec run --job`を使います。
 
 | コマンド       | 用途                                       | 例                                         |

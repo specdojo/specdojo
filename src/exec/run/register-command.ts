@@ -5,7 +5,7 @@ import { resolveProjectPaths } from "../project.js";
 import { isRegisterFailureMode } from "../register.js";
 import { configuredProductRepos } from "../task-repos.js";
 import { runInPlaceMode } from "./in-place.js";
-import { runJobMode } from "./job.js";
+import { runJobWithProjectLock } from "./job-lock.js";
 import { spawnRefresh, spawnValidate } from "./mode-shared.js";
 import { resolveRegisterPipelineCommand } from "./register-core.js";
 import { runRegisterMode } from "./register-mode.js";
@@ -402,6 +402,10 @@ export function registerRunCommand(exec: Command): void {
 
       // register worktree 実行だけが共有資源をプロセス横断で統制するため、後から --join する
       // run を受け入れる。それ以外の run は従来どおり project 全体を排他する。
+      if (hasJob) {
+        await runJobWithProjectLock(opts, resolveRegisterPipelineCommand);
+        return;
+      }
       const registerWorktreeLockSharing: ExecRunLockSharing =
         hasRegister && opts.worktree ? { shareable: true, join: !!opts.join } : EXCLUSIVE_EXEC_RUN;
       await withProjectExecRunLock(
@@ -412,11 +416,6 @@ export function registerRunCommand(exec: Command): void {
           // via register transitions (start → review / waiting) instead of exec events.
           if (hasRegister) {
             await runRegisterMode(opts);
-            return;
-          }
-
-          if (hasJob) {
-            await runJobMode(opts, resolveRegisterPipelineCommand);
             return;
           }
 

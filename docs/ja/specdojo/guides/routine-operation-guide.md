@@ -32,6 +32,8 @@ v0.3.0 の公開物における grade は試験的な機能です。利用者は
 
 ## 1. routineの定義
 
+resume → auto → register → grade → build のように前段の完了を待つ流れは、command Job の `task.steps` に定義し、routine からその Job を1回呼びます。各段の失敗方針・状態判定・有限の lock 待機は runner が処理するため、agent の会話再開機能を必要としません。設定例と cron 起動は [[specdojo:job-sequence-guide|順次実行 Job の例]] を参照してください。
+
 `routine` は `rtn-*.yaml` の定義に基づき、Schedule の依存グラフとは独立にタスクを定期実行します。CLI は常駐しません。外部スケジューラ（cron / CI の scheduled workflow）から `routine run --due` を冪等に呼び出す前提です。
 
 定義は `.specdojo/specdojo.config.json` の `routines_path` 配下に `rtn-<slug>.yaml` として置き、`id` はファイル名と一致させます。
