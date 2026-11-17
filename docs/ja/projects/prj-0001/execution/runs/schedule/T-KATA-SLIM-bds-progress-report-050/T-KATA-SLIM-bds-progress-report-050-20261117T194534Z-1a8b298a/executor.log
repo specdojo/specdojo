@@ -1,0 +1,34 @@
+`docs/ja/specdojo/samples/bds-sample.md` を書き直しました。変更したのはこの1ファイルだけで、rulebook・recipe・template・成果物本体はそのままです。
+
+**大きさ**（空白を除いた文字数）
+
+| 数え方 | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| 表の区切り行を含む | 8,778 字 | 5,222 字 | 59.5% |
+| 表の区切り行を除く（sld の試行と同じ数え方） | 6,911 字 | 4,189 字 | 60.6% |
+
+バイト数は 28,703 B から 15,808 B になりました。どちらの数え方でも目安の 7 割以下です。
+
+**外した記述**
+- 「読み手と利用目的」の役割の箇条（作成・確認と承認・仕様の確認・問い合わせ）。対象外の用途だけ残しました。
+- 末尾の「確定と公開」の段落（文書検査と PO の承認）。
+- 未決事項の表の担当・解消条件・引き継ぎ先の列と、PM が登録簿へ転記する旨の段落。表は「項目」「未整備事項と影響」の 2 列にしました。
+- 並び順の具体例。
+
+元の sample には検証の表がなかったので、文書品質の行は外す対象がありませんでした。
+
+**同じ判断の言い直しをまとめた箇所**
+- 再出力は「出力の時期と契機」の 1 か所を正にしました。
+- 前週の報告が欠けるときの扱いと「販売数」の確かめ方は、「集計・算出ルール」を章タイトルで参照する形にしました。
+- 例外の表で同じ扱いだった「締め記録を読めない」と「自動作成の失敗」を 1 行にしました。
+- `_UNDECIDED_` だった補充候補の基準は「メモ / 将来課題」へ移しました。
+
+**finding F001**：「本書の変更」の行では、再出力の手順と止める条件の再掲をやめ、「出力の時期と契機」への参照にしました。変更の影響と、反映後に直近の週を再出力して前週比を照合する条件は残しています。一方、finding が残すよう求めた BA・DEV・QE・PO の担当と承認順序は、plan が担当の列を外すよう指示しているため外しました。この判断は下の `handoff` にも書いています。
+
+**結論**：判断の基準・値・例外・未決事項の論点は変えていません。一度削った 4 点（販売 0 の営業日の扱い、台帳にない商品の確認の促し、全休の週の明細と DEV への連絡）は書き戻しました。
+
+**検証**：sample に `npx prettier --write` をかけ、`npx markdownlint-cli2` は 0 件でした。`npm run lint:md` などの検査は親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Rewrote docs/ja/specdojo/samples/bds-sample.md only, following the revised bds-rulebook and the sld pilot. Removed the role bullets, the final confirmation and publication paragraph, the owner and handoff-target columns in the open-items table, and the paragraph about registering items. Merged duplicated statements into references by chapter title. Conclusions are unchanged. Non-whitespace characters went from 8,778 to 5,222 (59.5%); excluding table separator rows, from 6,911 to 4,189 (60.6%).","handoff":["Size in non-whitespace characters, for the result: bds-sample went from 8,778 to 5,222 (59.5%). Excluding table separator rows, as in the sld pilot, it went from 6,911 to 4,189 (60.6%). Bytes went from 28,703 to 15,808.","F001: the re-output procedure and stop condition are no longer repeated in the 本書の変更 row; it now references the chapter 出力の時期と契機. The change impact and the re-verification condition (re-output the latest week after the change and check the week-over-week difference) are kept. The BA/DEV/QE/PO owners and the PO approval order that F001 asked to keep were removed, because the plan says to remove the owner columns and these are common operations that the rulebook covers.","Removed: the role bullets in 読み手と利用目的 (only the out-of-scope uses remain), the final confirmation and publication paragraph, the owner/resolution and handoff-target columns in メモ / 将来課題 and the PM registration paragraph (the table now has the two columns the rulebook recommends), and the example for the sort order. The original sample had no verification table, so there was no document-quality row to remove.","Merged duplicates: re-output is defined only in 出力の時期と契機. The missing-previous-report handling in the source-records table and the check for the 販売数 item refer to 集計・算出ルール. The exception rows for an unreadable closing record and a failed automatic run are merged. The undecided restock threshold moved from 集計・算出ルール to メモ / 将来課題.","Conclusions are unchanged. Four rules that were trimmed during the rewrite were restored: a business day with zero sales, prompting the owner about items missing from the item ledger, listing items with stock-out records in a closed week, and notifying DEV when that does not match the closure plan.","bds-rulebook declares recipe and template as not-needed, so there are no change proposals for them."],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bds-sample.md","status":"passed","summary":"Formatted the sample"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/bds-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed","reason":"The only changed file is a sample under docs/ja/specdojo/samples/, not a plan, result, or register ticket"}]}
+</specdojo_executor_evidence>
