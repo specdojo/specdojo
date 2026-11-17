@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/bds-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 95
-graded_at: "2026-11-15T11:44:21.668Z"
+score: 97
+graded_at: "2026-11-17T21:39:11.995Z"
 graded_by: sol-review-executor
-content_hash: 180e8dc94c17f18f8dfe968a4e4c96badb450fe4d18f8e48e3a788bbb277c9ab
+content_hash: 879576bbaa5f3de32a087d77067f129306bda435bc4287cfb1292063ef567413
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
-    score: 75
+    score: 100
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -78,11 +78,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 4
     score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -109,21 +109,27 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 45
-    anchor: "| 対象範囲     | 元にする記録のうち帳票に含める範囲。期間、対象組織・プロジェクト、状態、除外条件で示す |"
-    message: 用語定義の「表示項目」「抽出条件」「集計/算出」「出力形式」は本文構成の見出しと記述ガイドの言い換えにとどまり、削除しても判断情報を失わない重複になっている。
-    message_ja: 用語定義の「表示項目」「抽出条件」「集計/算出」「出力形式」は本文構成の見出しと記述ガイドの言い換えにとどまり、削除しても判断情報を失わない重複になっている。
+    rule: vp-dev-change-impact
+    line: 14
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: >-
+      変更管理を共通標準へ委譲していますが、表示項目・算出規則・出力契機の変更時に確認する帳票生成処理、定期実行設定、過去帳票の再出力、他帳票の比較値への影響が列挙されていません。BDS
+      固有の追従対象と、再生成・互換性の扱いを確認する要件を補ってください。
+    message_ja: >-
+      変更管理を共通標準へ委譲していますが、表示項目・算出規則・出力契機の変更時に確認する帳票生成処理、定期実行設定、過去帳票の再出力、他帳票の比較値への影響が列挙されていません。BDS
+      固有の追従対象と、再生成・互換性の扱いを確認する要件を補ってください。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 167
-    anchor: "| 元にする記録や確かめ方のない表示項目                           | 値の正しさを判定できない                       |"
+    rule: vp-qe-kata-conformance
+    line: 14
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
     message: >-
-      The general policy permits an item whose verification method is explicitly marked unresolved, but this prohibition
-      rejects every item without a verification method. Clarify that such items are permitted during drafting and must
-      be resolved before ready, so authors can apply both rules consistently.
+      Rulebook 記述標準の「記述ガイド」は、各 rulebook に自系統の具体的な追従対象と役割分担の定義を求めています。本書は共通標準と適用先のメンバー定義への参照にとどまるため、BDS の変更時に
+      BA・ARC・DEV・QE・PM が何を確認・更新するかを補ってください。
     message_ja: >-
-      The general policy permits an item whose verification method is explicitly marked unresolved, but this prohibition
-      rejects every item without a verification method. Clarify that such items are permitted during drafting and must
-      be resolved before ready, so authors can apply both rules consistently.
+      Rulebook 記述標準の「記述ガイド」は、各 rulebook に自系統の具体的な追従対象と役割分担の定義を求めています。本書は共通標準と適用先のメンバー定義への参照にとどまるため、BDS の変更時に
+      BA・ARC・DEV・QE・PM が何を確認・更新するかを補ってください。

@@ -5,23 +5,23 @@ path: docs/ja/specdojo/samples/bds-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 99
-graded_at: "2026-11-16T01:38:50.693Z"
+score: 100
+graded_at: "2026-11-17T22:21:50.612Z"
 graded_by: sol-review-executor
-content_hash: 977729ed517969c87dbdae484e9e1cb6558766f54050d5da75efc5f4c0507f90
+content_hash: f066d2263f6ea193d9c9bf7b05bf6134b96da0da27773b7b006ed8f8e3bb7137
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
@@ -45,8 +45,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -109,17 +109,14 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 104
+    rule: vp-pm-control-reporting
+    line: 89
     anchor: >-
-      | 本書の変更（変更要求）         |
-      表示項目・算出ルール・契機を変えると、定期処理、過去の週の再出力、再出力した週より後の週の前週比、仕入れノートに綴じた報告との比較に影響する                                                                     
-      | BA が差分を整理し、DEV が定期処理と再出力する週の範囲を、QE が再検証の範囲を示す。PO
-      が承認してから定期処理へ反映し、反映後に直近の週を再出力する。過去の週を再出力するときは「出力の時期と契機」に従い、販売数が変わった週の次の週を順に再出力し、作り直す前と変わらなかった週か作成済みの最新の週まで続ける。QE
-      は再出力した各週の前週比が、前週の報告の販売数との差と一致することを確かめる | 変更ごとに登録する               |
+      | 根拠の業務イベント | つけ販売の確定と欠品の記録（`bes-stock-out-recorded`）が未同梱で `based_on`
+      に接続していない。境界を確かめるまで全面受入はせず、限定受入では欠品回数と補充候補を参考表示とし、仕入れ数量の根拠にしない |
     message: >-
-      「出力の時期と契機」に従うと記した後で、翌週から順に再出力する手順と停止条件を本文26行から再掲しています。この部分は同節への参照にまとめ、変更影響、BA・DEV・QE・PO
-      の担当、承認順序、再検証条件を残してください。判断情報を失わず、再出力規則の二重管理を減らせます。
+      未同梱の業務イベントや補充候補の未決事項について、引継ぎを担う Role code と PJR
+      等の転送先が示されていません。共通運用で参照するドキュメントメタ情報標準の引継ぎ規則に沿い、課題・決定などの区分と担当・転送先を明記し、未整備事項の対応を追跡できるようにしてください。
     message_ja: >-
-      「出力の時期と契機」に従うと記した後で、翌週から順に再出力する手順と停止条件を本文26行から再掲しています。この部分は同節への参照にまとめ、変更影響、BA・DEV・QE・PO
-      の担当、承認順序、再検証条件を残してください。判断情報を失わず、再出力規則の二重管理を減らせます。
+      未同梱の業務イベントや補充候補の未決事項について、引継ぎを担う Role code と PJR
+      等の転送先が示されていません。共通運用で参照するドキュメントメタ情報標準の引継ぎ規則に沿い、課題・決定などの区分と担当・転送先を明記し、未整備事項の対応を追跡できるようにしてください。

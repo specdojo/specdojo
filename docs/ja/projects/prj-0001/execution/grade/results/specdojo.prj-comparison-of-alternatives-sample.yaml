@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-11-13T10:39:46.280Z"
+score: 100
+graded_at: "2026-11-17T22:50:06.713Z"
 graded_by: sol-review-executor
-content_hash: 91b9d7a67e4106df12ec150e078c4e21caff2898dc6c1db346bc1ecaa6b59e2d
+content_hash: b84155462ffb96cd9b17537145f7641888f66232dc1ff0f79b037eab64f82a15
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -75,14 +75,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,38 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 69
-    anchor: >-
-      | ALT-02 | Middle | 未判定 | 未判定 | Middle | Low      | Middle     | Middle             | Low          | 主方式の条件未達   |
-      非採択   |
-    message: >-
-      ALT-02 is rated Low for operability/maintainability, but line 78 establishes only that the successor could not
-      repair a formula unaided. This does not establish the defined Low condition that an owner/procedure cannot be
-      provided. Add evidence about unavailable support/procedures or revise the rating to the supported category.
-    message_ja: >-
-      ALT-02 is rated Low for operability/maintainability, but line 78 establishes only that the successor could not
-      repair a formula unaided. This does not establish the defined Low condition that an owner/procedure cannot be
-      provided. Add evidence about unavailable support/procedures or revise the rating to the supported category.
-  - id: F002
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 78
-    anchor: >-
-      | ALT-02 | 記録統一と残高検索の2能力を提供。セル操作で1タスクを完了できず、数式の修正も後任単独では完了できなかった                                           |
-      入力・保守手順を変え、両利用者と後任が同じ課題を完了できた場合         |
-    message: >-
-      The previously missing risk and technical-feasibility axes are now present. The remaining issue is minor because
-      ALT-02's rejection is independently supported by business-fit Low: its failed unaided formula repair does not
-      demonstrate the stated operability/maintainability Low condition. Add evidence that an owner/procedure cannot be
-      provided or align the rating with the documented evidence, as required by rulebook sections 6.4–6.5.
-    message_ja: >-
-      The previously missing risk and technical-feasibility axes are now present. The remaining issue is minor because
-      ALT-02's rejection is independently supported by business-fit Low: its failed unaided formula repair does not
-      demonstrate the stated operability/maintainability Low condition. Add evidence that an owner/procedure cannot be
-      provided or align the rating with the documented evidence, as required by rulebook sections 6.4–6.5.
+findings: []

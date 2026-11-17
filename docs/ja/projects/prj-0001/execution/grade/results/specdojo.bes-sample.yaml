@@ -4,30 +4,30 @@ document: specdojo:bes-sample
 path: docs/ja/specdojo/samples/bes-sample.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 95
-graded_at: "2026-11-10T08:31:24.647Z"
+verdict: needs-work
+score: 83
+graded_at: "2026-11-17T22:26:27.563Z"
 graded_by: sol-review-executor
-content_hash: 89e4b3310000a41c6d51b431b2cb8485735bf385366513cb3ea0f2d354b0e11b
+content_hash: 3b2a17ca63f5af37472d23327d1230491bd623525daa69b0ee54e6bd9871661d
 categories:
   purpose:
     score: 88
   operations:
-    score: 94
+    score: 81
   planning:
-    score: 92
+    score: 83
   business:
-    score: 100
+    score: 75
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 100
+    score: 75
   quality:
-    score: 92
+    score: 67
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -36,26 +36,26 @@ viewpoints:
     level: 3
     score: 75
   vp-po-publication-accountability:
-    level: 4
-    score: 100
-  vp-pm-plan-feasibility:
-    level: 4
-    score: 100
-  vp-pm-dependency-risk:
     level: 3
     score: 75
-  vp-pm-control-reporting:
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
     level: 4
     score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -75,17 +75,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
     level: 4
     score: 100
-  vp-qe-kata-conformance:
-    level: 3
-    score: 75
-  vp-ux-readability:
-    level: 3
-    score: 75
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -103,80 +103,98 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 5
+  major: 4
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-decision-readiness
-    line: 7
-    anchor: >-
-      業務イベント一覧に対応付けるイベント名は「店頭の現金会計が確定した」、個別仕様 ID は `bes-cash-sale-confirmed` とする。上位一覧の文書 ID は `bes-index`
-      として仮置きする。本書は完成記述の例であり、実案件での承認済み仕様を示すものではない。
-    message: >-
-      The provisional `bes-index` reference has no explicit confirmation action, responsible role, or decision timing;
-      identify who will confirm the parent event and whether that confirmation is required before the approval described
-      in line 17.
-    message_ja: >-
-      The provisional `bes-index` reference has no explicit confirmation action, responsible role, or decision timing;
-      identify who will confirm the parent event and whether that confirmation is required before the approval described
-      in line 17.
+    line: 52
+    anchor: "_UNDECIDED_: 仮置き ID の文書は未作成で、状態値と項目名を正本と照合できていない。当面は本書の条件と場面の表で判定し、正本が定まったら条件 1 と「事実データ」の項目を見直す。"
+    message: 状態定義・データモデルとの未照合について、確認担当、判断する人間の PO、判断時期、判断結果の記録先を記載し、未照合のまま利用できる範囲を承認できるようにする。
+    message_ja: 状態定義・データモデルとの未照合について、確認担当、判断する人間の PO、判断時期、判断結果の記録先を記載し、未照合のまま利用できる範囲を承認できるようにする。
   - id: F002
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 48
-    anchor: 金額計算と端数処理は販売金額の業務ルール、確定後の控え・在庫反映は販売プロセスで扱う。本書ではそのロジックや手順を展開しない。
-    message: >-
-      The sales amount rules, sales process, and sales-record data model are named only by description, while the state
-      definition underlying “not yet confirmed” is unidentified; provide document identifiers or explicitly provisional
-      identifiers so dependency checks and change-impact reviews can locate the intended sources.
-    message_ja: >-
-      The sales amount rules, sales process, and sales-record data model are named only by description, while the state
-      definition underlying “not yet confirmed” is unidentified; provide document identifiers or explicitly provisional
-      identifiers so dependency checks and change-impact reviews can locate the intended sources.
+    rule: vp-po-publication-accountability
+    line: 11
+    anchor: 一つの取引について、店番担当が購入明細・請求金額・現金の受領を確認し、会計を確定した。
+    message: 会計を確定する店番担当とは別に、本仕様の業務定義と公開可否を承認する人間の PO を明示し、承認結果を記録する場所を示す。
+    message_ja: 会計を確定する店番担当とは別に、本仕様の業務定義と公開可否を承認する人間の PO を明示し、承認結果を記録する場所を示す。
   - id: F003
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 7
-    anchor: >-
-      業務イベント一覧に対応付けるイベント名は「店頭の現金会計が確定した」、個別仕様 ID は `bes-cash-sale-confirmed` とする。上位一覧の文書 ID は `bes-index`
-      として仮置きする。本書は完成記述の例であり、実案件での承認済み仕様を示すものではない。
-    message: >-
-      The previous absence of a concrete five-part BES instance is resolved, so the remaining issue is minor:
-      bes-rulebook §3 requires a confirmation owner and timing when an upstream list identifier is provisional; add that
-      follow-up for `bes-index` to demonstrate the required handling of unresolved references.
-    message_ja: >-
-      The previous absence of a concrete five-part BES instance is resolved, so the remaining issue is minor:
-      bes-rulebook §3 requires a confirmation owner and timing when an upstream list identifier is provisional; add that
-      follow-up for `bes-index` to demonstrate the required handling of unresolved references.
+    rule: vp-pm-plan-feasibility
+    line: 52
+    anchor: "_UNDECIDED_: 仮置き ID の文書は未作成で、状態値と項目名を正本と照合できていない。当面は本書の条件と場面の表で判定し、正本が定まったら条件 1 と「事実データ」の項目を見直す。"
+    message: 正本の準備・照合・条件とデータ項目の見直しについて担当 Role code と判断タイミングを付け、後続設計への引き渡し前に終える作業を識別できるようにする。
+    message_ja: 正本の準備・照合・条件とデータ項目の見直しについて担当 Role code と判断タイミングを付け、後続設計への引き渡し前に終える作業を識別できるようにする。
   - id: F004
     severity: minor
-    rule: vp-ux-readability
-    line: 64
-    anchor: 項目名は業務上の論理名とする。型、値の形式、構造、保存形式は販売記録のデータモデル・schema で定義し、本書では重複定義しない。
-    message: >-
-      The previous major readability issue is resolved by concrete event definitions and examples; the remaining minor
-      navigation issue is that “sales-record data model/schema” and the delegated sources in line 48 have no identifier
-      or link. Identify available sources, or label provisional identifiers explicitly, so readers know which document
-      to consult next.
-    message_ja: >-
-      The previous major readability issue is resolved by concrete event definitions and examples; the remaining minor
-      navigation issue is that “sales-record data model/schema” and the delegated sources in line 48 have no identifier
-      or link. Identify available sources, or label provisional identifiers explicitly, so readers know which document
-      to consult next.
+    rule: vp-pm-control-reporting
+    line: 52
+    anchor: "_UNDECIDED_: 仮置き ID の文書は未作成で、状態値と項目名を正本と照合できていない。当面は本書の条件と場面の表で判定し、正本が定まったら条件 1 と「事実データ」の項目を見直す。"
+    message: 未作成の依存文書と未照合事項を、適用先の課題管理簿または PJR 登録項目へ引き継ぐ担当 Role code と転送先レコードを示す。転送先が未作成なら仮置きであることを明記する。
+    message_ja: 未作成の依存文書と未照合事項を、適用先の課題管理簿または PJR 登録項目へ引き継ぐ担当 Role code と転送先レコードを示す。転送先が未作成なら仮置きであることを明記する。
   - id: F005
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 47
+    anchor: "| 確定の記録が成立したか分からないまま停止 | 発生しない             | 受領だけから発生済みと推定しない |"
+    message: 確定記録の成立が不明な状態では「発生しない」と断定できないため、「発生有無は未判定」と区別する。販売プロセスで記録を照合し、成立済みなら一回、未成立なら未発生と判断する境界を示す。
+    message_ja: 確定記録の成立が不明な状態では「発生しない」と断定できないため、「発生有無は未判定」と区別する。販売プロセスで記録を照合し、成立済みなら一回、未成立なら未発生と判断する境界を示す。
+  - id: F006
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 52
+    anchor: "_UNDECIDED_: 仮置き ID の文書は未作成で、状態値と項目名を正本と照合できていない。当面は本書の条件と場面の表で判定し、正本が定まったら条件 1 と「事実データ」の項目を見直す。"
+    message: 店番担当の業務確認、状態定義・データモデルの照合、最終的な業務合意をそれぞれ誰が担うかを、役割名または Role code で明示する。
+    message_ja: 店番担当の業務確認、状態定義・データモデルの照合、最終的な業務合意をそれぞれ誰が担うかを、役割名または Role code で明示する。
+  - id: F007
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 47
+    anchor: "| 確定の記録が成立したか分からないまま停止 | 発生しない             | 受領だけから発生済みと推定しない |"
+    message: 停止時に確定結果を確認できないことを未発生の根拠にしない。照合までは結果不明として扱い、既存の確定記録を確認してから発生回数を決めるという実装上の制約を示す。
+    message_ja: 停止時に確定結果を確認できないことを未発生の根拠にしない。照合までは結果不明として扱い、既存の確定記録を確認してから発生回数を決めるという実装上の制約を示す。
+  - id: F008
+    severity: major
+    rule: vp-qe-verifiability
+    line: 47
+    anchor: "| 確定の記録が成立したか分からないまま停止 | 発生しない             | 受領だけから発生済みと推定しない |"
+    message: 確定結果が不明な場面を、記録照合前の「未判定」、照合で成立を確認した「一回」、未成立を確認した「未発生」に分け、同じ証拠から同じ期待結果を判定できる確認例にする。
+    message_ja: 確定結果が不明な場面を、記録照合前の「未判定」、照合で成立を確認した「一回」、未成立を確認した「未発生」に分け、同じ証拠から同じ期待結果を判定できる確認例にする。
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 52
+    anchor: "_UNDECIDED_: 仮置き ID の文書は未作成で、状態値と項目名を正本と照合できていない。当面は本書の条件と場面の表で判定し、正本が定まったら条件 1 と「事実データ」の項目を見直す。"
+    message: 未決事項の記述に、確認担当、決定者、判断時期、記録先を補い、依存文書が未作成のまま残った場合にも確認責任が途切れないようにする。
+    message_ja: 未決事項の記述に、確認担当、決定者、判断時期、記録先を補い、依存文書が未作成のまま残った場合にも確認責任が途切れないようにする。
+  - id: F010
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 40
+    anchor: 金額計算と端数処理は [[specdojo:br-sample|販売金額計算の業務ルールサンプル]]、確定後の控え・在庫反映と事実の照合・復旧は販売プロセス（仮置き ID `bps-sales-order-flow`）へ委ねる。
+    message: "`specdojo:br-sample` は在庫不足判定の仕様で、販売金額計算と端数処理を定義していない。該当する業務ルールへ参照を修正し、未作成なら販売金額ルールの仮置き ID と未確認である旨を明記する。"
+    message_ja: "`specdojo:br-sample` は在庫不足判定の仕様で、販売金額計算と端数処理を定義していない。該当する業務ルールへ参照を修正し、未作成なら販売金額ルールの仮置き ID と未確認である旨を明記する。"
+  - id: F011
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 11
+    anchor: 一つの取引について、店番担当が購入明細・請求金額・現金の受領を確認し、会計を確定した。
+    message: bes-template の第1章で求める、人間による業務定義・公開可否の承認者、判断時期、承認条件、記録先を完成例に補い、未確認の役割割当は仮定として示す。
+    message_ja: bes-template の第1章で求める、人間による業務定義・公開可否の承認者、判断時期、承認条件、記録先を完成例に補い、未確認の役割割当は仮定として示す。
+  - id: F012
     severity: minor
     rule: vp-ops-release-readiness
-    line: 17
-    anchor: >-
-      定義を利用できると判断する基準は、「発生条件」の各場面から発生有無と回数を決められ、「事実データ」から同じ取引の明細と金額を対応付けられることである。実案件では、業務定義と公開可否の承認を人間の PO
-      である店主代表が担い、開発担当が条件・データの対応を説明する。承認時期はイベント処理とテスト設計へ引き渡す前とし、承認結果は対象案件のレビュー結果に記録する。
-    message: >-
-      The approval criteria now cover occurrence judgments and data association, but do not state how the provisional
-      upstream reference is handled; specify whether reference confirmation must precede handoff or whether a
-      human-approved limitation must be recorded before release.
-    message_ja: >-
-      The approval criteria now cover occurrence judgments and data association, but do not state how the provisional
-      upstream reference is handled; specify whether reference confirmation must precede handoff or whether a
-      human-approved limitation must be recorded before release.
+    line: 52
+    anchor: "_UNDECIDED_: 仮置き ID の文書は未作成で、状態値と項目名を正本と照合できていない。当面は本書の条件と場面の表で判定し、正本が定まったら条件 1 と「事実データ」の項目を見直す。"
+    message: 未作成・未照合の依存文書が残る場合に、後続のイベント処理・テスト設計へ引き渡せる範囲と保留する範囲を示し、人間の PO が確認する時期と承認結果の記録先を明記する。
+    message_ja: 未作成・未照合の依存文書が残る場合に、後続のイベント処理・テスト設計へ引き渡せる範囲と保留する範囲を示し、人間の PO が確認する時期と承認結果の記録先を明記する。
+  - id: F013
+    severity: minor
+    rule: vp-ops-operability
+    line: 52
+    anchor: "_UNDECIDED_: 仮置き ID の文書は未作成で、状態値と項目名を正本と照合できていない。当面は本書の条件と場面の表で判定し、正本が定まったら条件 1 と「事実データ」の項目を見直す。"
+    message: 仮置き文書の作成・確定を受けて本書の再照合と更新を行う担当 Role code、および追跡する課題レコードを示し、依存解消後の更新漏れを防ぐ。
+    message_ja: 仮置き文書の作成・確定を受けて本書の再照合と更新を行う担当 Role code、および追跡する課題レコードを示し、依存解消後の更新漏れを防ぐ。

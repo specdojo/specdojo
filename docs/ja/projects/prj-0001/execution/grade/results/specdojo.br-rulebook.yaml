@@ -4,11 +4,11 @@ document: specdojo:br-rulebook
 path: docs/ja/specdojo/rulebooks/br-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: pass
-score: 100
-graded_at: "2026-11-12T20:17:50.366Z"
-graded_by: flash-high-executor
-content_hash: 5b83a2ab2118624b47df3559980f627d96c6672377e34cccee859934453f093a
+verdict: needs-work
+score: 96
+graded_at: "2026-11-17T21:47:57.842Z"
+graded_by: sol-review-executor
+content_hash: b4329af58a928370b190564463b8f7321946e1f5ecdd938ca16ca5333cb6ebd5
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,7 +103,23 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 0
+  major: 1
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 23
+    anchor: "- 成果物の ID はプロジェクト内で一意にし、文書参照では `<project-id>:br-<subject>` のように project 修飾する。"
+    message: BR全般についてIDの一意性をプロジェクト内とし、参照にproject修飾を要求していますが、成果物リファレンスではBRはプロダクト文書であり、id-and-file-naming-standardはプロダクト文書にUnit内で一意なローカルIDと修飾なしの参照を要求しています。プロダクト文書とプロジェクト文書のID規則を区別し、プロダクトBRを誤った名前空間で作成・参照させない記述へ修正してください。
+    message_ja: BR全般についてIDの一意性をプロジェクト内とし、参照にproject修飾を要求していますが、成果物リファレンスではBRはプロダクト文書であり、id-and-file-naming-standardはプロダクト文書にUnit内で一意なローカルIDと修飾なしの参照を要求しています。プロダクト文書とプロジェクト文書のID規則を区別し、プロダクトBRを誤った名前空間で作成・参照させない記述へ修正してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、成果物の業務の検証に含めない。
+    message: 改訂・廃止を共通標準への参照だけで扱っており、rulebook-authoring-standardが要求する自系統の具体的な追従対象と役割分担がありません。呼出元BPS、入力の概念データ定義、実装、受入条件・判定例について、BR変更時に何を確認するかとBA・DEV・QE等の分担を簡潔に補ってください。
+    message_ja: 改訂・廃止を共通標準への参照だけで扱っており、rulebook-authoring-standardが要求する自系統の具体的な追従対象と役割分担がありません。呼出元BPS、入力の概念データ定義、実装、受入条件・判定例について、BR変更時に何を確認するかとBA・DEV・QE等の分担を簡潔に補ってください。
