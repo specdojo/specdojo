@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-jkqx-unify-where-commands
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T11:00:17Z"
   due_on: null
+  completed_at: "2026-11-17T12:13:31Z"
+  conclusion: 6 つの where を specdojo where `<kind>` にまとめ、旧入口は 1 版の非推奨の別名にした。オーケストレーターの定義と opencode の許可は承認のもと反映した
   derived_from:
     - PJR-C5AF
   commit_type: refactor

@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ff51e75cb90f4e02bef667c6ecc616db
+- v: 1
+  id: reg_e8bde224855d4eaca752b5ae6bc28a97
+  ts: "2026-11-17T12:13:31Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が新旧の入口の出力と警告を確かめ、保護設定の反映と全ラッパーの同期を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 6 つの where を specdojo where `<kind>` にまとめ、旧入口は 1 版の非推奨の別名にした。オーケストレーターの定義と opencode の許可は承認のもと反映した
+  previous_event_id: reg_51614dd5d6ff4a8ca5ecd1b4387f31db
