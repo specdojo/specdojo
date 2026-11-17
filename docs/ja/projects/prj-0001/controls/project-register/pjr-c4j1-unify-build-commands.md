@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-c4j1-unify-build-commands
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-16T11:00:20Z"
   due_on: null
+  completed_at: "2026-11-17T04:48:47Z"
+  conclusion: 区分ごとの生成を build --only にまとめ、個別の build は内部互換用として一覧から外した
   derived_from:
     - PJR-C5AF
   commit_type: refactor
