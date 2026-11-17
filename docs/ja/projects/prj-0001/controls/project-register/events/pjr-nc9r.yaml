@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2310e4ae36ed4bb488ece193458fe968
+  ts: "2026-11-17T23:07:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: git で管理しないローカル用の設定（specdojo.local.config.json）で、環境ごとのリポジトリを上書きできるようにする
+    - field: description
+      from: ""
+      to: specdojo.config.json は git の管理下のため、ローカルで足したいリポジトリやパスを書けない。.specdojo/specdojo.local.config.json で許可したキーだけを上書きでき、worktree の子のプロセスにも本体側の設定が効くようにする
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-18）: .specdojo/specdojo.config.json は git で管理されるため、ローカルで追加したいリポジトリが反映されない。git で管理しない config で上書きでき、worktree を作るときにも効くようにしたい","orchestrator の調べ（2026-11-18）: .gitignore には .claude/settings.local.json・CLAUDE.local.md の前例がある。repos は exec が変えてよいリポジトリの宣言で、commit の許可範囲と変更範囲の予約もここから決まる。worktree の build は worktree を cwd にして .specdojo/specdojo.config.json を辿る（src/exec/worktree.ts）","利用者の決定（2026-11-18、orchestrator の推奨の案）: ファイルは .specdojo/specdojo.local.config.json。上書きできるキーは許可リストで決め、最初は共有の設定で宣言した repos[].path の差し替えとローカルのリポジトリの追加。worktree へはコピーせず、親が本体の作業ツリーのローカル設定を読み、子のプロセスには環境変数でそのパスを渡す。ローカル設定は保護された設定に含める。config init で .gitignore に足し、config show・where でローカル由来の値を示し、run の記録にローカルで上書きした項目を書く。ローカルで宣言したリポジトリを orchestrator の「宣言したリポジトリ」に含めるかを決め、orchestrator の定義の変更案を書く"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
