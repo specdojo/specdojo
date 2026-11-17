@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-WYTX"]'
+- v: 1
+  id: reg_a1fe5ffec837412a96e9dff59d997a0c
+  ts: "2026-11-17T23:31:17Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-7M9J"]'
+  previous_event_id: reg_40e491b2fc5b4785ba233df37c2e401d

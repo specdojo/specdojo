@@ -15,6 +15,8 @@ specdojo:
   due_on: "2026-11-30"
   derived_from:
     - PJR-WYTX
+  depends_on:
+    - PJR-7M9J
 ---
 
 # PJR-SV9G prj-charter の template から文書の運用の記述を外す試行をし、template の一覧を作る
