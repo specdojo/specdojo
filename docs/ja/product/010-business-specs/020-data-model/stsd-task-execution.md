@@ -39,6 +39,7 @@ specdojo:
   - 成立するイベント: `note`・`link`・`estimate` は常に成立する。`todo` では `claim`・`cancel`、`doing` では `block`・`complete`・`release`・`cancel`、`blocked` では `unblock`・`release`・`cancel`、`done` では `reopen` が成立する。
   - 競合する着手: 同じ秒に `claim` が複数ある場合、同じ秒に `release` か `block` も記録したアクターの `claim` を、そうでないアクターの `claim` より先に採る。自動の実行の再開に伴う `claim` は、通常の `claim` より後に採る。
   - 実行中からの記録: 直前の記録者が同じ秒に `block`・`complete`・`release`・`cancel` のいずれかを記録していれば、別のアクターの同種の記録より先に採る。同じ秒に直前の記録者の `block` と `unblock` があり `reopen` がない場合、`complete` は `block`・`unblock` の後に採る。
+  - pipeline の再開: `pipeline_stage` と `pipeline_state_ref` が一致する `block`・`unblock` が同じ秒にある場合、その `block` を再開されない別の停止より先に採る。中断中に `unblock` が複数ある場合は、直前の `block` と両項目が一致するものを先に採る。両項目のないイベントは従来の順序に従う。
   - 例: 同じアクターが同じ秒に `claim`・`block`・`unblock`・`complete` を記録した場合は、パスの順によらずこの順に再生し、基本状態は `done` になる。アクター A が同じ秒に `claim`・`release` を、アクター B が `claim` を記録した場合は、A の `claim`・`release`、B の `claim` の順に再生し、担当アクターは B になる。
 - 互換の扱い: 以下の図表は現在発行する状態変更を扱う。過去の実行中・中断中からの `cancel` は、中止ではなく基本状態を `todo` に戻す記録として再生し、依存を再判定する。現在この操作は `release` で記録する。担当アクターの規則は過去のイベントにも同じく適用し、過去に別のアクターが記録した `note` や引き取りを指定しない `unblock` があっても、担当アクターは `claim` の記録者のままとする。担当アクターを保持しない旧形式の集約状態は、最新イベントの記録者を担当アクターとして読む。
 
