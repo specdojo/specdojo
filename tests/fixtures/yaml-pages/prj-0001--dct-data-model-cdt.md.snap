@@ -1,0 +1,243 @@
+---
+specdojo:
+  id: prj-0001:dct-data-model-cdt
+  type: project
+  status: draft
+  rulebook: specdojo:dct-rulebook
+---
+
+# 成果物カタログ（データモデル／分類一覧）
+
+> このページは `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdt.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. カタログの設定
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| プロジェクト | prj-0001 |
+| ドメイン | data-model |
+| 基準パス | /docs/ja/product/010-business-specs/020-data-model |
+
+## 2. 分類一覧
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 配置先（親からの相対パス） | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 成果物 ID | 名称 | 種別 | 根拠 | 概要 |
+| --- | --- | --- | --- | --- |
+| cdt-register-type | 分類一覧（登録項目の種別） | work | bdd-register-entry | 登録項目の種別（type）が取り得る issue・decision・todo・question・risk・change-request・note・epic の分類を一覧で定義する |
+| cdt-deliverable-kind | 分類一覧（成果物の種別） | work | bdd-deliverable / bdd-deliverables-catalog | 成果物の種別（kind）が取り得る work／control／generated の分類を一覧で定義する |
+| cdt-exec-mode | 分類一覧（実行のmode・execution） | work | bdd-schedule-track | 実行のmode（edit / review）・execution（agent / human）区分を一覧で定義する |
+| cdt-routine-action-kind | 分類一覧（定期処理のaction kind） | work | bdd-routine-definition | 定期処理のaction kind（register / exec-auto / exec-resume / exec-cycle / job）分類を一覧で定義する |
+| cdt-role | 分類一覧（ロールコード） | work | bdd-operations-config | プロジェクトで用いるロールコード（PO / PM / BA / ARC / DEV / QE / UX / OPS）の分類を一覧で定義する |
+
+**`cdt-register-type`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdt-register-type.md |
+| 準拠ルール | specdojo:cdt-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 分類名・説明が業務観点で正確に定義されていること | BA | vp-ba-requirements-completeness |
+| 分類実装（マスタデータ・コード値）の基礎として参照できること | DEV | vp-dev-implementation-readiness |
+
+**`cdt-deliverable-kind`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdt-deliverable-kind.md |
+| 準拠ルール | specdojo:cdt-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 分類名・説明が業務観点で正確に定義されていること | BA | vp-ba-requirements-completeness |
+| 分類実装（マスタデータ・コード値）の基礎として参照できること | DEV | vp-dev-implementation-readiness |
+
+**`cdt-exec-mode`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdt-exec-mode.md |
+| 準拠ルール | specdojo:cdt-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 分類名・説明が業務観点で正確に定義されていること | BA | vp-ba-requirements-completeness |
+| 分類実装（マスタデータ・コード値）の基礎として参照できること | DEV | vp-dev-implementation-readiness |
+
+**`cdt-routine-action-kind`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdt-routine-action-kind.md |
+| 準拠ルール | specdojo:cdt-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 分類名・説明が業務観点で正確に定義されていること | BA | vp-ba-requirements-completeness |
+| 分類実装（マスタデータ・コード値）の基礎として参照できること | DEV | vp-dev-implementation-readiness |
+
+**`cdt-role`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | cdt-role.md |
+| 準拠ルール | specdojo:cdt-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 分類名・説明が業務観点で正確に定義されていること | BA | vp-ba-requirements-completeness |
+| 分類実装（マスタデータ・コード値）の基礎として参照できること | DEV | vp-dev-implementation-readiness |
+
+## 3. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/dct.schema.yaml
+id: prj-0001:dct-data-model-cdt
+type: project
+status: draft
+title: 成果物カタログ（データモデル／分類一覧）
+rulebook: specdojo:dct-rulebook
+project_id: prj-0001
+domain: data-model
+base_path: /docs/ja/product/010-business-specs/020-data-model
+
+# data-model ドメインの物理分割ファイル（cdt 部分）。domain キーは分割前と同じ data-model を保つ。
+# cdt-rulebook.md は「1対象エンティティ（分類軸） = 1ファイル」を想定するため、分類を持つ
+# 属性・エンティティごとに local_id を列挙する。
+
+groups:
+  - name: 分類一覧
+    deliverables:
+      - local_id: cdt-register-type
+        name: 分類一覧（登録項目の種別）
+        kind: work
+        depends_on:
+          - bdd-register-entry
+        overview: 登録項目の種別（type）が取り得る issue・decision・todo・question・risk・change-request・note・epic の分類を一覧で定義する
+        path: cdt-register-type.md
+        rulebook: specdojo:cdt-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register/register.ts
+            purpose: register コマンド入口から到達する登録項目のtype（issue/decision/todo/question/risk/change-request/note/epic等）の許容値定義
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cdt-deliverable-kind
+        name: 分類一覧（成果物の種別）
+        kind: work
+        depends_on:
+          - bdd-deliverable
+          - bdd-deliverables-catalog
+        overview: 成果物の種別（kind）が取り得る work／control／generated の分類を一覧で定義する
+        path: cdt-deliverable-kind.md
+        rulebook: specdojo:cdt-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/catalog/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物kind（work/control/generated）の型定義
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cdt-exec-mode
+        name: 分類一覧（実行のmode・execution）
+        kind: work
+        depends_on:
+          - bdd-schedule-track
+        overview: 実行のmode（edit / review）・execution（agent / human）区分を一覧で定義する
+        path: cdt-exec-mode.md
+        rulebook: specdojo:cdt-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/exec.ts
+            purpose: exec コマンド入口から到達するmode（edit/review）・execution（agent/human）の型定義
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cdt-routine-action-kind
+        name: 分類一覧（定期処理のaction kind）
+        kind: work
+        depends_on:
+          - bdd-routine-definition
+        overview: 定期処理のaction kind（register / exec-auto / exec-resume / exec-cycle / job）分類を一覧で定義する
+        path: cdt-routine-action-kind.md
+        rulebook: specdojo:cdt-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine/routine.ts
+            purpose: action.kind（register/exec-auto/exec-resume/exec-cycle/job）の許容値定義
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+      - local_id: cdt-role
+        name: 分類一覧（ロールコード）
+        kind: work
+        depends_on:
+          - bdd-operations-config
+        overview: プロジェクトで用いるロールコード（PO / PM / BA / ARC / DEV / QE / UX / OPS）の分類を一覧で定義する
+        path: cdt-role.md
+        rulebook: specdojo:cdt-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec/exec.ts
+            purpose: exec コマンド入口から到達するロールコード（PO/PM/BA/ARC/DEV/QE/UX/OPS）の型定義
+        done_criteria:
+          - text: 分類名・説明が業務観点で正確に定義されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 分類実装（マスタデータ・コード値）の基礎として参照できること
+            roles: [DEV]
+            viewpoint: vp-dev-implementation-readiness
+```
+
+</details>

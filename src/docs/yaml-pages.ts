@@ -3,6 +3,7 @@ import { dirname, join, posix } from "node:path";
 import { dump, load } from "../shared/yaml.js";
 import { collectDocIndexEntries } from "./doc-index.js";
 import { isDctTemplateCatalog, renderCatalogTemplateBody } from "../shared/catalog-render.js";
+import { renderTypedYamlTable } from "./yaml-tables.js";
 
 // YAML は VitePress のページにならないため、doc-index に載っている YAML ごとに
 // 同階層の generated/<name>.md へ表示用ページを生成する。
@@ -447,13 +448,13 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
 
   const body = content.endsWith("\n") ? content : `${content}\n`;
 
-  // 用語集と ifx-index は表で本文を描き、YAML の正本を折りたたんで添える。
+  // 対応する文書系列は表で本文を描き、YAML の正本を折りたたんで添える。
   const tableBody =
     isRecord(parsed) && parsed.type === "glossary" && Array.isArray(parsed.terms)
       ? renderGlossaryBody(parsed, parsed.terms.filter(isRecord))
       : isIfxIndex(yamlRelPath, parsed)
         ? renderIfxIndexBody(parsed, parsed.interfaces.filter(isRecord), content)
-        : undefined;
+        : renderTypedYamlTable(yamlRelPath, parsed);
   if (tableBody !== undefined) {
     return [
       ...header,

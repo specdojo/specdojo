@@ -1,0 +1,80 @@
+---
+specdojo:
+  id: specdojo:pm-roles-sample
+  type: project
+  status: ready
+  rulebook: specdojo:pm-roles-rulebook
+---
+
+# ロール定義: 駄菓子屋きぬや 販売管理システム
+
+> このページは `docs/ja/specdojo/samples/pm-roles-sample.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. 採用ロール
+
+<!-- prettier-ignore -->
+| ロールコード | 名称 | プロジェクトでの責務・補足 |
+| --- | --- | --- |
+| PO | Project Owner | 店頭運用を大きく変えない範囲で販売・在庫・つけの記録を優先し、人間が範囲・費用・参加時間の上限、受入、公開・継続を最終判断する。 |
+| PM | Project Manager | 店頭試用までの作業順序と参加負荷を週次で確認する。兼務による期限超過は課題化し、分担変更と追従タスクを整理して、上限変更は PO に判断を求める。 |
+| BA | Business Analyst | 店主以外の家族も同じ手順で販売・在庫・つけを確認できるよう、利用者確認を主導し、操作説明への UX の助言を受入条件へ反映する。 |
+| ARC | Architect | タブレット1台の構成・データ管理方針を専門支援として検討し、DEV が主導する設計へ助言する。初期は独立タスクの主責任を持たない。 |
+| DEV | Developer | 販売・在庫・つけの実装・データ設計と技術的な是正を主導し、店頭試用で見つかった記録漏れや残高誤りの修正結果を QE の再確認へ渡す。 |
+| QE | Quality Engineer | 人気商品の欠品、つけの記録漏れ・残高誤り、家族の店番時の操作を実装作業と分けて確認し、試験結果と未解消事項を PO の受入判断へ渡す。 |
+| UX | UX / Documentation Designer | 店主・家族向けの画面文言と操作説明を専門支援として検討し、BA が主導する利用者確認へ助言する。独立タスク化は組織定義の見直し後とする。 |
+| OPS | Operations / Release Manager | 導入・障害時対応・引き継ぎを専門支援として準備し、PM が主導するリリース準備へ取り込む。初期は独立した Schedule タスクの主責任を持たず、公開・継続の最終判断は人間の PO に残す。 |
+
+## 2. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/pm-roles.schema.yaml
+id: specdojo:pm-roles-sample
+type: project
+status: ready
+title: "ロール定義: 駄菓子屋きぬや 販売管理システム"
+rulebook: specdojo:pm-roles-rulebook
+based_on:
+  - specdojo:people-and-organization-definition-standard
+  - specdojo:pm-organization-sample
+version: 1
+project_id: prj-0001
+
+# 単一店舗・タブレット1台での初期リリースと店頭試用に用いる、採用済み8ロールの一覧。
+# 採用判断・Schedule の owner 使用可否・見直し条件の正本: [[specdojo:pm-organization-sample|組織定義]]。
+# 人間の実行主体と兼務: [[specdojo:pm-members-sample|メンバー定義]]。agent は利用先の .specdojo/agent-members.yaml で管理する。
+# 成果物・主要判断の責任分担: [[specdojo:pm-raci-sample|RACI]]。共通責務は based_on の上位標準を参照する。
+
+roles:
+  - code: PO
+    name: Project Owner
+    project_note: 店頭運用を大きく変えない範囲で販売・在庫・つけの記録を優先し、人間が範囲・費用・参加時間の上限、受入、公開・継続を最終判断する。
+  - code: PM
+    name: Project Manager
+    project_note: 店頭試用までの作業順序と参加負荷を週次で確認する。兼務による期限超過は課題化し、分担変更と追従タスクを整理して、上限変更は PO に判断を求める。
+  - code: BA
+    name: Business Analyst
+    project_note: 店主以外の家族も同じ手順で販売・在庫・つけを確認できるよう、利用者確認を主導し、操作説明への UX の助言を受入条件へ反映する。
+  - code: ARC
+    name: Architect
+    project_note: タブレット1台の構成・データ管理方針を専門支援として検討し、DEV が主導する設計へ助言する。初期は独立タスクの主責任を持たない。
+  - code: DEV
+    name: Developer
+    project_note: 販売・在庫・つけの実装・データ設計と技術的な是正を主導し、店頭試用で見つかった記録漏れや残高誤りの修正結果を QE の再確認へ渡す。
+  - code: QE
+    name: Quality Engineer
+    project_note: 人気商品の欠品、つけの記録漏れ・残高誤り、家族の店番時の操作を実装作業と分けて確認し、試験結果と未解消事項を PO の受入判断へ渡す。
+  - code: UX
+    name: UX / Documentation Designer
+    project_note: 店主・家族向けの画面文言と操作説明を専門支援として検討し、BA が主導する利用者確認へ助言する。独立タスク化は組織定義の見直し後とする。
+  - code: OPS
+    name: Operations / Release Manager
+    project_note: 導入・障害時対応・引き継ぎを専門支援として準備し、PM が主導するリリース準備へ取り込む。初期は独立した Schedule タスクの主責任を持たず、公開・継続の最終判断は人間の PO に残す。
+```
+
+</details>

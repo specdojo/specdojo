@@ -1,0 +1,68 @@
+---
+specdojo:
+  id: prj-0001:pm-review-viewpoints
+  type: project
+  status: draft
+  rulebook: none
+---
+
+# レビュー観点一覧
+
+> このページは `docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. 共通定義の継承
+
+共通定義: [[specdojo:pm-review-viewpoints]]。以下の表はこの YAML が宣言する差分です。同じ ID・ロールは上書きし、新しい値は追加します。空の表は差分なしを表します。
+
+## 2. レビュー観点
+
+<!-- prettier-ignore -->
+| ID | ロール | 分類 | 観点 | 確認内容 | 根拠 | 重大度 | 評価方法 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+## 3. ロール別観点
+
+<!-- prettier-ignore -->
+| ロール | 観点 ID |
+| --- | --- |
+
+## 4. 無効化する共通定義
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `viewpoints` | - |
+| `role_viewpoint_sets` | - |
+
+## 5. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/pm-review-viewpoints.schema.yaml
+id: prj-0001:pm-review-viewpoints
+type: project
+status: draft
+title: レビュー観点一覧
+rulebook: none
+based_on:
+  - prj-0001:pm-roles
+  - prj-0001:pm-quality-management-plan
+version: 1
+project_id: prj-0001
+extends: specdojo:pm-review-viewpoints
+
+# 共通正本に対するプロジェクト差分。同名 ID / role は全体上書き、新しい値は追加となる。
+# 現在の prj-0001 固有差分はない。共通観点の無効化が必要な場合だけ disabled へ ID を列挙する。
+viewpoints: []
+role_viewpoint_sets: []
+disabled:
+  viewpoints: []
+  role_viewpoint_sets: []
+```
+
+</details>
