@@ -1,4 +1,5 @@
 import { relative, resolve, sep } from "node:path";
+import { ChangeScopeGate } from "./change-scope.js";
 import { type ExecDefaultsConfig } from "../agent-config.js";
 import {
   enforceExecutorReportContract,
@@ -801,8 +802,14 @@ export async function runPreparedTask(
           });
         }
       } catch (error) {
+        if (isExecBranchMergedIntoCurrent({ context, worktree: prepared.worktree })) {
+          await prepared.onScopeIntegrated?.();
+          await new ChangeScopeGate(executionPath).clearIntegrated(prepared.task.id);
+        }
         return blockIntegration(error);
       }
+      await prepared.onScopeIntegrated?.();
+      await new ChangeScopeGate(executionPath).clearIntegrated(prepared.task.id);
       // PJR-NHT7: 撤去はロックの外で行い、完了の記帳はロックを取り直して行う。
       return new DeferredCleanup<RunResult>(
         () =>

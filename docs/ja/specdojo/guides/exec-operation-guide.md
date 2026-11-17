@@ -138,12 +138,13 @@ specdojo exec run --project <project-id> --register PJR-00QV --worktree --join
 | agent の同時実行数                        | provider の `max_concurrency` をプロセスを跨いで数える                                                 | `exec/.locks/provider-<provider>/` |
 | root での状態遷移・生成物の再生成・統合段 | start 遷移・checkpoint・develop への merge・wait commit・派生ビューの再生成を 1 つずつ実行する         | `exec/.locks/exec-lifecycle/`      |
 | 親 runner の検証（`parent_validations`）  | `pipeline.parent_validation_concurrency` をプロセスを跨いで数える                                      | `exec/.locks/parent-validation/`   |
+| 変更範囲が重なる項目                      | worktree 作成前に範囲を予約し、先行項目の統合後に次の項目を準備する                                    | `exec/.locks/change-scopes/`       |
 | 同じ項目の二重実行                        | 従来どおり register の start 遷移が防ぐ。遷移は上記の直列化の中で行うため、2 つの run が同時に通らない | -                                  |
 
 - 同時に動かせる run の数は `exec-defaults.yaml` の `run.max_concurrent_runs`（既定 4。最初の run を含む）で決まります。`1` にすると `--join` を無効にできます。
 - 合流の枠が埋まっている場合は `--if-busy` に従います。routine から `--if-busy skip` で起動した場合は、従来どおり skip として記録されます。
 - `--auto`、`--task`、`exec cycle`、`exec resume` など register の worktree 実行以外の run は、合流中の run が残っている間は busy として扱われます。
-- 各 run は自分の項目の結果だけを持ち、一方が失敗しても、もう一方の run と worktree には影響しません。
+- 各 run は自分の項目の結果を持ちます。先行項目が未統合で失敗した場合、変更範囲が重なる後続項目は起動せず、先行項目の再開を促します。
 - 枠の待ちは run のログに `Waiting for <provider> slot held by another exec run`、`Waiting for the register lifecycle lock held by another exec run`、`Waiting for parent validation slot held by another exec run` として出力されます。
 
 上限と現在の使用枠は `exec slots` で確認できます。ロックは取得しないため、実行中にいつでも実行できます。
@@ -163,6 +164,29 @@ provider opencode: 1/1
   slot-1: provider:opencode PJR-00QV executor (pid 5678, since 2026-09-28T10:05:10Z)
 parent validations: 0/1
 ```
+
+#### 1.4.2. 変更範囲が重なる項目の順番待ち
+
+register の worktree 実行（同じ run の `--parallel` と別 run の `--join`）および schedule の `--auto` は、対象範囲を worktree 作成前に予約します。同じファイル、または一方のディレクトリが他方のパスを含む項目は、先行項目の統合後の HEAD から準備します。agent の終了や commit だけでは予約を解放しません。重ならない項目は並列に進めます。
+
+範囲は次の和集合で求めます。
+
+| 入力                                               | 推定する範囲                                                                                                                                                                                                                                                                                                    |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 個票・既存 plan の `targets`、個票の `target_path` | doc ID を文書索引、未作成の成果物はカタログからパスへ解決する。`target_path` は作成前でも使う                                                                                                                                                                                                                   |
+| 個票・既存 plan の本文                             | バッククォート内のファイル・ディレクトリと、本文に書かれた `src/exec/run.ts` のような相対パス。個票は対応結果・関連ドキュメント以降を除く。plan は対象・入力・完了条件・作業内容など項目固有の節と finding だけを使い、共通の進め方・完了手順・異常終了条件・規約は除く。項目固有の実行記録パスも除外する       |
+| schedule の成果物                                  | `local_id` / `target_local_ids` と approach から導出する plan の対象文書                                                                                                                                                                                                                                        |
+| approach の既定                                    | 通常は対象成果物。bootstrap・bootstrap-finalize・authoring・maintenance は変更を許可する kata のディレクトリも含む。authoring の `targets` は先頭の出力だけを使い、後続の参考資料は含めない。catalog-planning は共有索引を含むカタログディレクトリ、strategy-planning は対象 track の strategy / track ファイル |
+
+ディレクトリは `src/exec/` のように書きます。`app:src/main.ts` は宣言済み product repo を表し、無修飾のパスは project repo として区別します。`./` と `..` を正規化し、行番号・`#関数名` はファイル単位へ広げます。glob は最初のワイルドカードより前のディレクトリ全体を予約します。本文の参照パスも安全側に含めるため、読み取り専用の資料が共通して待機する場合があります。宣言にない変更や別名パスまで静的に予測するものではありません。
+
+`generated/` 配下と project repo で Git が無視するパス（派生一覧など）は、明示対象も含めて除外します。Git の判定に失敗した場合は `generated/` 以外の候補を残します。生成 plan の「登録簿（`pjr-index.md`）の行は変更しない」のような共通文だけで、無関係な項目が順番待ちになることはありません。
+
+範囲が空、または対象 doc ID の一部を解決できない場合は不明として扱います。`--unknown-scope parallel`（既定）は推定できた範囲だけで重複を判断し、不明部分は従来どおり並列を許可します。`--unknown-scope serialize` は、不明な項目を他の項目と直列化します。たとえば `exec run --auto --parallel 2 --unknown-scope serialize` で指定します。`--if-busy` は project / join 枠の待機方針であり、この範囲待ちとは別です。dry-run は範囲を予約しません。
+
+待機時は `[scope] waiting: <項目> — <先行項目>: <重複範囲>` を出力し、`execution_path/exec/.locks/change-scopes/waits.jsonl` に日時・両項目・理由を追記します。起動できた項目は生成 plan の「変更範囲による実行待ち」にも記録し、統合して残します。schedule の非 loop 実行は従来どおり最大 `--parallel` 件を実行し、重複する項目の準備を前の統合後へ遅らせます。
+
+統合前に失敗した予約と heartbeat が止まった予約は、未統合の障害として後続をエラーにし、無期限に待ち続けません。表示された先行項目を再開・再実行し、統合してから後続を流します。保持した worktree の衝突解消は既存の再開手順に従います。統合後の撤去・post-review の失敗は予約の解放を妨げません。
 
 ### 1.5. 実行eventの保存粒度
 

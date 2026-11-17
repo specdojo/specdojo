@@ -44,13 +44,24 @@ describe("renderYamlPage", () => {
     "pm-roles-sample.yaml": "project",
     "tml-sample.yaml": "project",
   };
+  const untypedSamples = ["job-sequence.yaml"];
 
   it("covers every bundled YAML sample", () => {
     expect(
       readdirSync("docs/ja/specdojo/samples")
         .filter((name) => /\.ya?ml$/.test(name))
         .sort(),
-    ).toEqual(Object.keys(sampleTypes).sort());
+    ).toEqual([...Object.keys(sampleTypes), ...untypedSamples].sort());
+  });
+
+  it.each(untypedSamples)("renders untyped sample %s without artifact frontmatter", (name) => {
+    const path = `docs/ja/specdojo/samples/${name}`;
+    const content = readFileSync(path, "utf8");
+    const page = renderYamlPage(path, content);
+    expect(page.startsWith(`# ${name}\n`)).toBe(true);
+    expect(page).not.toContain("specdojo:\n");
+    expect(page).toContain(YAML_PAGE_MARKER);
+    expect(page).toContain(`\`\`\`yaml\n${content}\`\`\``);
   });
 
   it.each(Object.entries(sampleTypes))(
@@ -368,6 +379,113 @@ describe("renderYamlPage", () => {
     );
     expect(page).toContain("| gl-empty | - | - | 0 |");
     expect(page).toContain("## 1. YAML の正本");
+  });
+
+  const ifxIndexSources = [
+    "docs/ja/specdojo/samples/ifx-index-sample.yaml",
+    "docs/ja/product/020-external-interface-specs/ifx-index.yaml",
+  ];
+
+  it.each(ifxIndexSources)("renders every interface of %s as table rows", (path) => {
+    const content = readFileSync(path, "utf8");
+    const doc = load(content) as {
+      id: string;
+      status: string;
+      interfaces: { name: string; target: string; spec_ref?: string }[];
+    };
+    const validate = buildValidator("docs/specdojo/schemas/v1/ifx-index.schema.yaml");
+    expect(validate(doc), JSON.stringify(validate.errors)).toBe(true);
+
+    const page = renderYamlPage(path, content);
+    const visible = page.split("<details>")[0];
+    const tbd = doc.interfaces.filter((item) => item.spec_ref === "TBD").length;
+    expect(visible).toContain(`| ${doc.id} | ${doc.status} | ${doc.interfaces.length} | ${tbd} |`);
+    expect(visible.match(/^## .+$/gm)).toEqual([
+      "## 1. 連携の一覧",
+      "## 2. 連携ごとの詳細",
+      "## 3. 一覧全体の注記",
+      "## 4. YAML の正本",
+    ]);
+    const tables = unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .parse(visible)
+      .children.filter((node) => node.type === "table");
+    // 要約・連携の一覧・連携ごとの表。連携の一覧は 8 列で、連携ごとに 1 行ある。
+    expect(tables).toHaveLength(2 + doc.interfaces.length);
+    expect(tables[1].children).toHaveLength(doc.interfaces.length + 1);
+    expect(tables[1].children.every((row) => row.children.length === 8)).toBe(true);
+    doc.interfaces.forEach((item, index) => {
+      const anchor = `ifx-${index + 1}`;
+      expect(visible).toContain(`| ${index + 1} | [${item.name}](#${anchor}) | ${item.target} |`);
+      expect(visible).toContain(`<a id="${anchor}">${item.name}</a>`);
+      expect(visible).toContain(`### 2.${index + 1}. ${item.name}\n`);
+      expect(visible).toContain(
+        item.spec_ref === "TBD"
+          ? "| 詳細仕様 | 未整備（TBD） |"
+          : `| 詳細仕様 | [[${item.spec_ref}]] |`,
+      );
+    });
+    expect(page).toContain(`\`\`\`yaml\n${content}\`\`\`\n`);
+    expect(page.trimEnd()).toMatch(/<\/details>$/);
+  });
+
+  it("assigns ifx-index comments to their interface and labels unresolved notes", () => {
+    const content = [
+      "# yaml-language-server: $schema=../schema.yaml",
+      "id: prj-0001:ifx-index",
+      "type: api",
+      "title: I/F 一覧",
+      "status: draft",
+      "rulebook: specdojo:ifx-index-rulebook",
+      "# 対象範囲の注記",
+      "interfaces:",
+      "  # 一つ目の目的",
+      "  - name: 一つ目 | 照会",
+      "    source: 端末",
+      "    target: 本部",
+      "    direction: source_to_target",
+      "    kind: API",
+      "    format: JSON",
+      "    timing: 追加時",
+      "    spec_ref: ifx-api-first",
+      "    # _UNDECIDED_: 認証方式が未決",
+      "    # 続きの行",
+      "  - name: 二つ目",
+      "    source: 端末",
+      "    target: 印字機",
+      "    direction: target_to_source",
+      "    kind: コマンド",
+      "    format: TBD",
+      "    timing: 確定時",
+      "    spec_ref: TBD",
+      "# 末尾の注記",
+      "",
+    ].join("\n");
+
+    const page = renderYamlPage("docs/ja/product/ifx-index.yaml", content);
+    const visible = page.split("<details>")[0];
+
+    expect(visible).toContain(
+      "| 1 | [一つ目 \\| 照会](#ifx-1) | 本部 | 連携元 → 連携先 | API | JSON | [[prj-0001:ifx-api-first]] | [2 件](#ifx-1) `_UNDECIDED_` |",
+    );
+    expect(visible).toContain(
+      "| 2 | [二つ目](#ifx-2) | 印字機 | 連携先 → 連携元 | コマンド | TBD | 未整備（TBD） | - |",
+    );
+    const firstSection = visible.split("### 2.1.")[1].split("### 2.2.")[0];
+    expect(firstSection).toContain("注記（YAML のコメント）:\n\n一つ目の目的\n\n");
+    expect(firstSection).toContain("_UNDECIDED_: 認証方式が未決\n続きの行\n");
+    expect(visible.split("## 3. 一覧全体の注記")[1]).toBe(
+      "\n\n対象範囲の注記\n\n末尾の注記\n\n## 4. YAML の正本\n\n",
+    );
+    expect(visible).not.toContain("yaml-language-server");
+  });
+
+  it("keeps the ifx-index template in its original code block", () => {
+    const path = "docs/ja/specdojo/templates/ifx-index-template.yaml";
+    const page = renderYamlPage(path, readFileSync(path, "utf8"));
+    expect(page).not.toContain("## 1. 連携の一覧");
+    expect(page).not.toContain("<details>");
   });
 
   it("keeps non-glossary YAML with terms in its original code block", () => {

@@ -1,4 +1,5 @@
 import { registerDependencyBlockReason } from "../../register/dependency.js";
+import { existsSync, readFileSync } from "node:fs";
 import { loadRegisterItems, resolveRegisterPaths } from "../../register/register.js";
 import { specdojoRootDir } from "../../shared/specdojo-config.js";
 import { loadExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
@@ -13,15 +14,23 @@ import {
   requireRunnableRegisterItem,
   resolveRegisterRunTarget,
   selectRegisterItems,
+  ticketPathFromItem,
   type RegisterFailureMode,
   type RegisterItemSummary,
 } from "../register.js";
-import { taskRecordPaths } from "../run-records.js";
+import { findRunRecord, taskRecordPaths } from "../run-records.js";
 import { qualifyTaskId } from "../shared.js";
 import { CrossProcessMutex } from "../slot-lock.js";
 import { findExecWorktree, resolveWorktreeBase } from "../worktree.js";
 import { loadRosterForExecutionPath } from "./agent.js";
 import { execLifecyclePoolPath, execLocksDir } from "./lock.js";
+import {
+  ChangeScopeGate,
+  inferChangeScope,
+  parseUnknownScopePolicy,
+  scopePlanMetadata,
+  type ChangeScopeLease,
+} from "./change-scope.js";
 import {
   applyRegisterDifficultyRouting,
   isRegisterPipelineRequested,
@@ -284,10 +293,59 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
   const summaries: RegisterItemSummary[] = [];
   // 再開は既存 worktree の reporter 段だけを実行する。それ以外の経路（plan 生成・executor 実行）
   // は通らないため、通常実行と同じ並列・直列の枠だけを共有する。
-  const runItem = (pjrId: string, lifecycleLock?: AsyncLock): Promise<RegisterItemSummary> =>
-    opts.resume
-      ? resumeSingleRegisterItemWorktree(context, optsForItem(pjrId), pjrId, lifecycleLock)
-      : runSingleRegisterItemWorktree(context, optsForItem(pjrId), pjrId, lifecycleLock);
+  const scopeGate = new ChangeScopeGate(executionPath, parseUnknownScopePolicy(opts.unknownScope));
+  const runItem = async (
+    pjrId: string,
+    lifecycleLock?: AsyncLock,
+  ): Promise<RegisterItemSummary> => {
+    const { item, registerPaths: paths } = resolveRegisterRunTarget(projectId, pjrId);
+    const ticket = ticketPathFromItem(item, paths.projectRegisterPath);
+    const planPath = findRunRecord(executionPath, "plan", pjrId);
+    const plan = planPath && existsSync(planPath) ? readFileSync(planPath, "utf8") : "";
+    const metadata = scopePlanMetadata(plan);
+    const scope = inferChangeScope({
+      targets: [...new Set([...(item.targets ?? []), ...(metadata.targets ?? [])])],
+      approach: item.approach ?? metadata.approach,
+      targetPath: item.targetPath,
+      text: [ticket && existsSync(ticket) ? readFileSync(ticket, "utf8") : "", plan],
+      projectId,
+      repoRoot,
+      catalogPath: context.catalogPath,
+      schedulePath,
+    });
+    let lease: ChangeScopeLease | undefined;
+    let integrated = false;
+    try {
+      // Wait outside the lifecycle lock: its holder must be able to integrate and release us.
+      lease = await scopeGate.acquire(pjrId, scope);
+      const itemOpts = {
+        ...optsForItem(pjrId),
+        changeScopeWaits: lease.waits,
+        onScopeIntegrated: async () => {
+          integrated = true;
+          await lease?.finish(true);
+        },
+      };
+      const summary = opts.resume
+        ? await resumeSingleRegisterItemWorktree(context, itemOpts, pjrId, lifecycleLock)
+        : await runSingleRegisterItemWorktree(context, itemOpts, pjrId, lifecycleLock);
+      integrated ||= summary.outcome === "success";
+      return summary;
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      process.stderr.write(`${reason}\n`);
+      return {
+        id: pjrId,
+        title: item.title,
+        outcome: "failure",
+        transition: "none",
+        commit: "off",
+        reason,
+      };
+    } finally {
+      await lease?.finish(integrated);
+    }
+  };
 
   // worktree 実行の root 側の手順（start 遷移・checkpoint・merge・wait commit・派生ビューの
   // 再生成）は、同じ project の別プロセス（--join run）とも重ならないよう、ロックディレクトリの

@@ -44,3 +44,87 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_bdf648be167f4c2fb0fc5495b4d2c433
+  ts: "2026-11-16T23:02:02Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8b423482f0b0465588ca57a342f12cb4
+- v: 1
+  id: reg_7b4f3b713a864ea2be1141bc67c689fe
+  ts: "2026-11-16T23:35:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-integration"
+  previous_event_id: reg_bdf648be167f4c2fb0fc5495b4d2c433
+- v: 1
+  id: reg_4363c86bcb2c46ccad9e82f682300019
+  ts: "2026-11-17T00:12:32Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-integration"
+      to: "-"
+  previous_event_id: reg_7b4f3b713a864ea2be1141bc67c689fe
+- v: 1
+  id: reg_4bd42d7aafb54f598243a61536b10ded
+  ts: "2026-11-17T00:30:27Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4363c86bcb2c46ccad9e82f682300019
+- v: 1
+  id: reg_c4645695ad424fe3988870c6d81a5a37
+  ts: "2026-11-17T02:11:32Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_4bd42d7aafb54f598243a61536b10ded
+- v: 1
+  id: reg_aced4344729f45098507af7663f235e6
+  ts: "2026-11-17T02:37:04Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c4645695ad424fe3988870c6d81a5a37

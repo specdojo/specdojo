@@ -1,4 +1,5 @@
 import { withPlanConventionsFiles } from "../../shared/plan-conventions.js";
+import { appendScopeWaitNotes } from "./change-scope.js";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import {
@@ -81,6 +82,7 @@ import {
 } from "./shared.js";
 
 export type PreparedTask = {
+  onScopeIntegrated?: () => Promise<void>;
   task: ReadyTaskView;
   // The actor that ran the latest agent stage. Fallback and stage overrides may replace it.
   actor: string;
@@ -328,7 +330,12 @@ export async function prepareSingleTask(
   },
   rateLimitOverrides: Pick<
     RunOpts,
-    "onRateLimit" | "fallbackExecutorBy" | "fallbackReporterBy" | "execDefaults" | "agentConfig"
+    | "onRateLimit"
+    | "fallbackExecutorBy"
+    | "fallbackReporterBy"
+    | "execDefaults"
+    | "agentConfig"
+    | "changeScopeWaits"
   > = {},
 ): Promise<PreparedTask | RunResult | "deferred"> {
   const mode = task.mode ?? "edit";
@@ -583,6 +590,11 @@ export async function prepareSingleTask(
       ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
     });
 
+  if (!dryRun)
+    appendScopeWaitNotes(
+      recordPathForRead(executionPath, "plan", task.id),
+      rateLimitOverrides.changeScopeWaits,
+    );
   const planPrompt = loadPrompt(executionPath, task.id);
   if (!planPrompt) {
     process.stdout.write(`  Plan not found for ${task.id}.\n`);

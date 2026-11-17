@@ -37,7 +37,7 @@ rulebook・sample・template を初期整備し、正本と環境別のラッパ
 - 中身は最低限に絞る: 基本方針・モジュールと import・型・エラー処理・命名・テストと検証のコマンド・禁止事項。手本は prj-0001 の `typescript.instructions.md`・`vitest.instructions.md`。
 - 実装の方針（使う言語・ライブラリ）は技術スタックの定義（tsd）と設計の段の文書に任せ、この型では扱わないことを書いている。
 - sample は共通サンプル文脈（駄菓子屋）の言語で 1 つ作り、ほかの言語・枠組み（Next.js、Unity の C# など）でも同じ型から作れる。
-- 型を `grade run --target kata` で grade し、pass である。
+- 型の grade（`grade run --target kata`）は orchestrator が統合の後に流す。executor は grade を実行せず、作業内容の「型を grade する」の行を open のまま残し、理由をメモに書く。grade を流せないことを未完了の理由にしない（2026-11-17、1 回目の実行が grade を流せず止まったため改めた）。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` と親の検証が通っている。
 

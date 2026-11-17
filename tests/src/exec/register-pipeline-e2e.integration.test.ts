@@ -1252,7 +1252,85 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   );
 
   it(
-    "runs two register items in parallel with different per-item executors",
+    "serializes ED0K/1GCD changes to the same function before branching, through integration",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockReturnValue(true);
+        const source = "docs/shared-run.ts";
+        writeFileSync(join(root, source), "export function resume() { return []; }\n");
+        for (const id of ["PJR-ED0K", "PJR-1GCD"]) {
+          writeFileSync(
+            join(root, REGISTER_REL, `${id.toLowerCase()}-pipeline-test.md`),
+            buildTicket(id).replace(
+              "- ダミーの完了条件。",
+              `- \`${source}\` の resume 関数を変更する。`,
+            ),
+          );
+        }
+        writeFileSync(
+          join(root, "fake-agent.mjs"),
+          FAKE_PIPELINE_AGENT_SCRIPT.replace(
+            'if (role === "executor") {',
+            `if (role === "executor") {
+            const source = ${JSON.stringify(source)};
+            const current = readFileSync(source, "utf8");
+            const before = nickname === "exec-1" ? "return [];" : 'return ["ED0K"];';
+            const after = nickname === "exec-1" ? 'return ["ED0K"];' : 'return ["ED0K", "1GCD"];';
+            if (!current.includes(before)) throw new Error("second executor did not inherit integrated ED0K");
+            writeFileSync(source, current.replace(before, after));`,
+          ),
+        );
+        await runConfig(["init"]);
+        const trackedIgnored = git(root, "ls-files", "-ci", "--exclude-standard")
+          .split("\n")
+          .filter(Boolean);
+        git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "prepare overlapping function edits");
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-ED0K",
+          "PJR-1GCD",
+          "--executor-by",
+          "PJR-ED0K=exec-1,PJR-1GCD=exec-2",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--parallel",
+          "2",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, source), "utf8")).toContain('return ["ED0K", "1GCD"];');
+        expect(git(root, "diff", "--name-only", "--diff-filter=U")).toBe("");
+        expect(output.join("")).toMatch(/\[scope\] waiting: PJR-1GCD — PJR-ED0K:.*shared-run\.ts/);
+        const plan = listRunRecords(join(root, EXECUTION_REL), "plan").find((path) =>
+          path.includes("PJR-1GCD"),
+        );
+        expect(readFileSync(plan!, "utf8")).toContain("変更範囲による実行待ち");
+        expect(readFileSync(plan!, "utf8")).toContain("PJR-ED0K");
+        for (const id of ["PJR-ED0K", "PJR-1GCD"])
+          expect(
+            readFileSync(join(root, REGISTER_REL, `${id.toLowerCase()}-pipeline-test.md`), "utf8"),
+          ).toContain("item_status: review");
+      });
+    },
+  );
+
+  it(
+    "runs independent register items with existing generated plans in parallel",
     { timeout: 120_000 },
     async () => {
       await withRepo(async ({ root, worktreeBase }) => {
@@ -1261,7 +1339,11 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           buildTicket("PJR-CD34"),
           "utf8",
         );
-        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
         // 並行に走る 2 項目がどちらも登録簿の生成物を作り直すため、生成物を git で管理
         // していると統合で add/add の衝突になる。利用者と同じく config init で .gitignore
@@ -1272,6 +1354,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           .filter((line) => line.length > 0);
         expect(trackedIgnored).toContain(`${REGISTER_REL}/generated/pjr-index.md`);
         git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        // Both existing plans contain the shared prohibition mentioning pjr-index.md. It must
+        // not become a shared scope and serialize otherwise independent register items.
+        for (const id of ["PJR-AB12", "PJR-CD34"])
+          await runExec(["plan", "--project", "test", "--register", id]);
         git(root, "add", "-A");
         git(root, "commit", "-m", "add second register item");
 
@@ -1303,7 +1389,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             "item_status: review",
           );
           const evidenceDir = join(root, EXECUTION_REL, "runs", "register", id);
-          const runDirs = readdirSync(evidenceDir);
+          const runDirs = readdirSync(evidenceDir).filter((run) =>
+            existsSync(join(evidenceDir, run, "pipeline-state.json")),
+          );
           expect(runDirs).toHaveLength(1);
           const state = JSON.parse(
             readFileSync(join(evidenceDir, runDirs[0], "pipeline-state.json"), "utf8"),
@@ -1311,6 +1399,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           expect(state.stages.executor.actor).toBe(expectedExecutor);
           expect(state.stages.reporter.actor).toBe("report-1");
         }
+        expect(output.join("")).not.toContain("[scope] waiting:");
         expect(process.exitCode ?? 0).toBe(0);
       });
     },

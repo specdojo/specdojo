@@ -169,6 +169,7 @@ flowchart LR
 ```
 
 - **永続化点・再実行**: claim／終了 event、result、evidence、統合 commit。lock 内で最新状態を再読込し、重複 claim と provider 上限超過を防ぐ。全体枠・provider 枠・排他の実効条件は CF-U03 で照合する。
+- **変更範囲の排他**: register の並列・合流実行と schedule の自動選択は、worktree 作成前に範囲の照合と予約を原子的に行い、先行項目の統合後に重なる項目を準備する。予約は agent 終了では解放せず、未統合の失敗では後続を停止する。推定規則・不明範囲の選択・待機記録の正本は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」とする。
 - **grade 境界**: review 前の評価結果は主の作業ツリーで確定して plan／checkpoint へ含める。既存設計の `grade run --isolate-pipeline-state` による再試行状態の分離は維持し、適合確認を CF-U04 に含める。パス・構造の詳細は設計索引の Grade 正本へ委ねる。
 - **型の review**: task 自身の track の strategy から intent を引き、`improve-kata` / `bootstrap-kata-set` は代表成果物と対応する rulebook・宣言済みの型を grade する。型の最新 grade がすべて `pass` であることを追加完了条件とし、plan への提示に加えて runner が result の完了判定を制限する。grade は `--if-busy wait` で project 単位に直列化し、再試行状態は run 内に分離する。判定と対象範囲の詳細は [[specdojo:review-guide|レビューガイド]] を正本とする。
 - **失敗・再開**: runner が該当 task の block と理由を記録し、依存を再計算する。独立 task は継続できるが、クリティカルパス上の実行・利用制限・統合失敗では新規投入を止め、実行中 task の終了を待つ。PM が再計画し、OPS が保持環境を確認する。

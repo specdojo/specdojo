@@ -7,6 +7,7 @@ import {
   executeJobCommand,
   generateJobReviewPlan,
   isJobCommandTask,
+  jobCommandText,
   jobRunUsesReviewedIntegration,
   loadJobDefinition,
   loadJobRunRecord,
@@ -79,6 +80,7 @@ import {
   type RunOpts,
 } from "./shared.js";
 import { localJobNoopPath, snapshotJobOutput } from "../../job/noop.js";
+import { executeJobSequence } from "./job-sequence.js";
 
 export type JobPipelineAgentResolver = (
   roster: MemberRoster | null,
@@ -114,9 +116,10 @@ async function runCommandJobMode(params: {
     resolveExecDefaultsPath(opts, schedulePath),
     executionPath,
   );
-  const analysisNickname = record.task.analysis
-    ? opts.reporterBy?.trim() || record.task.analysis.agent
-    : undefined;
+  const analysisNickname =
+    record.task.analysis && !opts.sequenceDeferredReason
+      ? opts.reporterBy?.trim() || record.task.analysis.agent
+      : undefined;
   const analysisResolution = analysisNickname
     ? resolveAgentOverride("edit", analysisNickname, {}, roster, execDefaults, "reporter")
     : undefined;
@@ -141,7 +144,9 @@ async function runCommandJobMode(params: {
         `[dry-run] precondition skip_when: ${record.task.precondition.skip_when}\n`,
       );
     }
-    process.stdout.write(`[dry-run] command:\n${record.task.command}\n`);
+    process.stdout.write(`[dry-run] command:\n${jobCommandText(record.task)}\n`);
+    if (record.task.steps)
+      process.stdout.write(`[dry-run] sequence:\n${JSON.stringify(record.task.steps, null, 2)}\n`);
     if (analysisCandidate) {
       process.stdout.write(
         `[dry-run] agent: ${analysisCandidate.actor ?? ""} (analysis reporter)\n`,
@@ -168,7 +173,17 @@ async function runCommandJobMode(params: {
   });
   const evidenceRunId = record.run_id;
   process.stdout.write(`Running Job Run ${record.run_id} command in place.\n`);
-  const commandOutcome = await executeJobCommand(record.task.command, repoRoot);
+  const commandOutcome = record.task.steps
+    ? await executeJobSequence({
+        task: record.task,
+        runId: record.run_id,
+        attempt: record.attempts.length,
+        runPath,
+        cwd: repoRoot,
+        executionPath,
+        deferredReason: opts.sequenceDeferredReason,
+      })
+    : await executeJobCommand(record.task.command!, repoRoot);
   const commandPartial =
     !commandOutcome.error &&
     record.task.partial_exit_code !== undefined &&
@@ -180,7 +195,7 @@ async function runCommandJobMode(params: {
     taskId: record.run_id,
     runId: evidenceRunId,
     actor: "specdojo-runner",
-    command: record.task.command,
+    command: jobCommandText(record.task),
     shell: process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : "/bin/sh -eu",
     startedAt: commandOutcome.startedAt,
     completedAt: commandOutcome.completedAt,
@@ -206,9 +221,11 @@ async function runCommandJobMode(params: {
     });
     const reason = commandAccepted
       ? undefined
-      : commandOutcome.error
-        ? `command spawn failed: ${commandOutcome.error}`
-        : `command exited with code ${commandOutcome.exitCode ?? "unknown"}`;
+      : commandOutcome.reason
+        ? commandOutcome.reason
+        : commandOutcome.error
+          ? `command spawn failed: ${commandOutcome.error}`
+          : `command exited with code ${commandOutcome.exitCode ?? "unknown"}`;
     await renderReporterResult(
       resultPath,
       {
@@ -853,7 +870,7 @@ async function runJobModeUnchecked(
 ): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
-  if (!isWorktreeChild) {
+  if (!isWorktreeChild && !opts.sequenceDeferredReason) {
     // A Job's task.review declaration takes precedence over the caller: it routes the Run
     // through the reviewed integration path even without --worktree (routine action.commit).
     const reviewProjectId =
@@ -884,6 +901,7 @@ async function runJobModeUnchecked(
     scheduledAt: opts.scheduledAt,
     trigger,
     dryRun: !!opts.dryRun,
+    skipPrecondition: !!opts.sequenceDeferredReason,
   });
   const { definition, record, runPath, planPath } = materialized;
   if (materialized.preconditionSkipped) {
@@ -903,15 +921,25 @@ async function runJobModeUnchecked(
   }
 
   if (isJobCommandTask(record.task)) {
-    await runCommandJobMode({
-      opts,
-      record,
-      runPath,
-      planPath,
-      projectId,
-      schedulePath,
-      executionPath,
-    });
+    try {
+      await runCommandJobMode({
+        opts,
+        record,
+        runPath,
+        planPath,
+        projectId,
+        schedulePath,
+        executionPath,
+      });
+    } catch (error) {
+      completeJobRun({
+        projectId,
+        runPath,
+        status: "failed",
+        reason: error instanceof Error ? error.message : String(error),
+      });
+      throw error;
+    }
     return;
   }
 
@@ -1052,6 +1080,7 @@ export async function runJobMode(
   const definition = loadJobDefinition(resolveJobPaths(projectId), String(opts.job).trim());
   if (
     opts.dryRun ||
+    opts.sequenceDeferredReason ||
     jobRunUsesReviewedIntegration(definition, {
       worktree: opts.worktree,
       isWorktreeChild,
