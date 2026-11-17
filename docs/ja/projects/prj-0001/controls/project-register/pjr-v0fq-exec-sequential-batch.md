@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T14:08:14Z"
-  block_reason: "parent validation failed: lint-ts, test-integration"
+  block_reason: "parent validation failed: lint-fm, test-unit"
   commit_type: feat
   commit_scope: exec
 ---

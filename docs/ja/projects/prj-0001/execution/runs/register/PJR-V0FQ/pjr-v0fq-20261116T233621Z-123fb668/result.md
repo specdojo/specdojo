@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-V0FQ
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-V0FQ/pjr-v0fq-20261116T233621Z-123fb668/plan.md
   started_at: "2026-11-16T23:36:22.035Z"
-  completed_at: "2026-11-17T00:09:12.990Z"
+  completed_at: "2026-11-17T01:17:18.739Z"
   agent: sol-executor
-  block_reason: "parent validation failed: lint-ts, test-integration"
 ---
 
 # Edit Result
