@@ -38,6 +38,9 @@ specdojo:
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - CHANGELOG.md は変えず、利用者に影響する変更を個票の対応結果の「CHANGELOG に書く事項」の節に書いている（PJR-EPQ3）。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run lint:md` と親の検証が通っている。
+- 2 回目の実行（2026-11-17）: 1 回目は既存の command Job に `task.steps` を足す方式で作ったが、次の 2 点で親の検証が通らず、統合先（PJR-MJ8V の `src/exec/run/shared.ts` の変更）との同期もできなかったため、最新の develop から作り直す。
+  - `src/job` から `src/exec` を import して `no-restricted-imports` に反した（`job` は `exec` を import しない）。共通の処理が要る場合は `src/shared` に置くか、`exec` 側から `job` を呼ぶ向きにする。
+  - 失敗した段のある run の記録の `state` が `failed` にならず `running` のまま残った（`tests/src/exec/job-sequence.integration.test.ts`）。段の失敗・停止で run の状態を確定させる。
 
 ## 4. 作業内容
 
