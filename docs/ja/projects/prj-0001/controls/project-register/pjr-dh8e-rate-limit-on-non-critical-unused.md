@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-dh8e-rate-limit-on-non-critical-unused
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   registered_at: "2026-11-12T13:24:54Z"
+  completed_at: "2026-11-17T12:14:49Z"
+  conclusion: on_non_critical を互換用の未使用項目と schema・型・設定例・ガイドに明記した。受理形式と実行挙動は変えず、廃止は次の版で検討する
 ---
 
 # PJR-DH8E exec-defaults の `rate_limit_policy.on_non_critical` が、今の振る舞いに使われていない
