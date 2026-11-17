@@ -102,6 +102,7 @@ phase_sets:
         章名と必須・条件付きの区分は、既存の成果物との対応を保つため原則として変えない。変える場合は理由を result に書く。
         大きさは、空白を除いた文字数で今の 8 割以下を目安にし、前後の文字数を result に書く。成果物本体は変更しない。
         共通の正本に足りない記述があれば、rulebook ではなく変更案として result に書く。
+        この段で直すのは rulebook だけとする。recipe・template・sample は commit の対象外のため変えず、合わせて直すべき点があれば変更案として result に書く。
       agent:
         executor: sol-executor
   sample-slim-pass:
@@ -127,7 +128,7 @@ phase_sets:
         表のセルは要点にし、手順は場面別の表へ寄せる。
         結論（判断の基準、値、例外、未決事項の論点）は変えない。変えた場合は理由を result に書く。
         大きさは、空白を除いた文字数で今の 7 割以下を目安にし、前後の文字数を result に書く。成果物本体は変更しない。
-        template が同じ運用の記述を持っていれば、同じ方針で直す。
+        この段で直すのは sample だけとする。recipe・template・rulebook は commit の対象外のため変えず、template などに同じ運用の記述があれば変更案として result に書く。
       agent:
         executor: opus-executor
 default_phase_sets:
