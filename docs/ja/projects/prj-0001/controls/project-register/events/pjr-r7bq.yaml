@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: grade
+- v: 1
+  id: reg_f359408540de41219abd0ef9eebbb68a
+  ts: "2026-11-17T04:16:03Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e6cff9d50cf7449481a8f6475f9a2d33
