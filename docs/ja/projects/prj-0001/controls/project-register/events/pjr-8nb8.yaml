@@ -92,3 +92,35 @@
       from: "-"
       to: "parent validation failed: test-integration"
   previous_event_id: reg_f1ac4cb8a4bd4b428afab010e1103fa4
+- v: 1
+  id: reg_db9c86fdc66549c280859a61cb22f9b4
+  ts: "2026-11-17T13:02:25Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_2c4e869374de47d58d4498e39e08f6c4
+- v: 1
+  id: reg_61a7899208c94298915949a888a2ff48
+  ts: "2026-11-17T13:11:41Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration"
+  previous_event_id: reg_db9c86fdc66549c280859a61cb22f9b4
