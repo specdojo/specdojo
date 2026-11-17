@@ -44,3 +44,29 @@
     - field: commit_scope
       from: ""
       to: cli
+- v: 1
+  id: reg_ff51e75cb90f4e02bef667c6ecc616db
+  ts: "2026-11-17T03:57:15Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c3064114ee4e4892a5d3e9370002ae69
+- v: 1
+  id: reg_51614dd5d6ff4a8ca5ecd1b4387f31db
+  ts: "2026-11-17T04:14:48Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ff51e75cb90f4e02bef667c6ecc616db

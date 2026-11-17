@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / orchestrator / grade / index / watch / build / routine / git）
+- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / orchestrator / grade / index / watch / build / where / routine / git）
 
 **ここで引けるもの**
 
@@ -36,6 +36,17 @@ CLI Command Reference
 | `--scope <scope>` | watch の対象範囲を絞る                             | `watch`                                    |
 
 project の解決順序と設定は [遂行の技活用ガイド](../guides/waza-guide.md) を参照します。
+
+### 1.1. 保存先の確認（where）
+
+`specdojo where <種類> --project <id>` で、設定から解決した保存先を表示します。種類は `exec`・`catalog`・`schedule`・`timeline`・`job`・`routine` の6つです。表示内容と project の解決は各種類の従来の処理を使い、定義や生成物は書き換えません。`schedule` は strategy / track のファイル一覧、`routine` は定義ファイル一覧も表示します。
+
+```bash
+specdojo where exec --project prj-0001
+specdojo where routine --project prj-0001
+```
+
+旧 `exec where`・`catalog where`・`schedule where`・`timeline where`・`job where`・`routine where` は、導入する版の1版だけ非推奨の別名として残します。標準出力と終了コードは新コマンドと同じで、標準エラーへ移行先と削除予定の警告を出します。旧入口は通常のヘルプ一覧には表示しません。
 
 ## 2. init / config / project
 
@@ -286,7 +297,7 @@ specdojo config scaffold --workspace --force
 | コマンド               | 用途                                     | 例                                                 |
 | ---------------------- | ---------------------------------------- | -------------------------------------------------- |
 | `catalog scaffold`     | テンプレートから `dct-*.yaml` を生成する | `specdojo catalog scaffold --project prj-0001`     |
-| `catalog where`        | catalog 関連パスを表示する               | `specdojo catalog where --project prj-0001`        |
+| `where catalog`        | catalog 関連パスを表示する               | `specdojo where catalog --project prj-0001`        |
 | `catalog validate`     | `dct-*.yaml` を検証する                  | `specdojo catalog validate --project prj-0001`     |
 | `build --only catalog` | `generated/dct-*.md` を生成する          | `specdojo build --only catalog --project prj-0001` |
 
@@ -407,7 +418,7 @@ npm run validate:schema:file -- \
 | コマンド                | 用途                                    | 例                                                                         |
 | ----------------------- | --------------------------------------- | -------------------------------------------------------------------------- |
 | `build --only schedule` | strategy から track schedule を生成する | `specdojo build --only schedule --project prj-0001 --track launch --force` |
-| `schedule where`        | schedule 関連パスを表示する             | `specdojo schedule where --project prj-0001`                               |
+| `where schedule`        | schedule 関連パスを表示する             | `specdojo where schedule --project prj-0001`                               |
 
 主要オプション:
 
@@ -465,7 +476,7 @@ specdojo schedule strategy generate \
 | ------------------------ | ------------------------------------------------ | ---------------------------------------------------- |
 | `build --only dashboard` | epic に基づく全体計画を含む dashboard を生成する | `specdojo build --only dashboard --project prj-0001` |
 | `timeline build`         | 警告付きで旧形式の計画を生成する                 | `specdojo timeline build --project prj-0001`         |
-| `timeline where`         | 互換用 timeline の関連パスを表示する             | `specdojo timeline where --project prj-0001`         |
+| `where timeline`         | 互換用 timeline の関連パスを表示する             | `specdojo where timeline --project prj-0001`         |
 
 旧 `timeline build` は `--dry-run` で書き込まずに検証できます。epic の順序と範囲を反映しつつ、既存の strategy と `timeline_path`（既定 `timeline`）の `tml-index.yaml` を互換用に読み、`timeline/generated/` に `timeline-order.md`・`catalog-scaffold.md`・`timeline.json` を出力します。track 重複、依存の未定義参照・循環、`order` との矛盾はエラーです。`catalog-planning` の todo から作成状況を導出し、手書きの状態との不一致は警告します。epic のない project の dashboard は旧 timeline 表示を維持します。
 
@@ -619,7 +630,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 | コマンド         | 用途                                                                                                                                             | 例                                                                                                      |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| `exec where`     | execution 関連パスを表示する                                                                                                                     | `specdojo exec where --project prj-0001`                                                                |
+| `where exec`     | execution 関連パスを表示する                                                                                                                     | `specdojo where exec --project prj-0001`                                                                |
 | `exec validate`  | schedule・event・実行記録の配置と lock の Git 除外を検証する（`--records-only` は配置のみ、`--schedule-only` は schedule・event のみ。併用不可） | `specdojo exec validate --project prj-0001`                                                             |
 | `exec refresh`   | state、Ready、CPM、gantt-chart を再計算する                                                                                                      | `specdojo exec refresh --project prj-0001`                                                              |
 | `exec scheduler` | 次のタスクを自動選択して claim する（`--dry-run` で選択のみ）                                                                                    | `specdojo exec scheduler --project prj-0001 --by agent-1`                                               |
@@ -1116,7 +1127,7 @@ watch の `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指
 | -------------- | ------------------------------------------ | ------------------------------------------ |
 | `job list`     | Job Definitionと最終Runを表示する          | `specdojo job list --project prj-0001`     |
 | `job validate` | `job-*.yaml`を検証する                     | `specdojo job validate --project prj-0001` |
-| `job where`    | Job Definition・Run・stateのパスを表示する | `specdojo job where --project prj-0001`    |
+| `where job`    | Job Definition・Run・stateのパスを表示する | `specdojo where job --project prj-0001`    |
 
 `exec run --job`の`--input <key=value...>`はJob入力を指定し、`--scheduled-at`はroutineやCIが論理実行枠を渡す場合に使います。入力定義の `enum` は string / integer / boolean の値、または list の各要素を制限し、integer の `minimum` / `maximum` は値域を制限します。command template では `{{project_id}}` で解決済みプロジェクトIDを、`{{specdojo}}` で現在のrunnerと同じCLI entryを、`{{job_run_id}}` で確定済みJob Run IDを参照できます。`job_run_id`は`run.idempotency_key`では参照できません。同じidempotency keyの完了済みRunは再実行せず、失敗済みRunは同じRun IDの次attemptとして実行します。Job Runは現在in-place実行に対応し、`--worktree`との併用は未対応です。
 
@@ -1139,7 +1150,7 @@ specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W3
 | `routine status`   | 状態・busy skip の流し直し待ち・直近の実行履歴を表示する | `specdojo routine status --project prj-0001`    |
 | `routine validate` | `rtn-*.yaml` を検証する                                  | `specdojo routine validate --project prj-0001`  |
 | `routine run`      | due な routine を実行し、`last_run` を記録する           | `specdojo routine run --project prj-0001 --due` |
-| `routine where`    | routine 関連パスを表示する                               | `specdojo routine where --project prj-0001`     |
+| `where routine`    | routine 関連パスを表示する                               | `specdojo where routine --project prj-0001`     |
 
 主要オプション:
 
@@ -1151,7 +1162,7 @@ specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W3
 
 `action` は単一オブジェクト、または先頭から順に実行する1件以上の配列を受け付けます。単一オブジェクトの `action.kind`、配列の各要素の `kind` は `job` または `specdojo` を受け付けます。`job` は実行内容と入力検証を参照先の Job Definition に委ね、`exec run --job` 経由で実行ロックに従います。`specdojo` は `args` に書いた specdojo サブコマンド（例: `[dashboard, build]`）へ `--project` を付けて直接起動し、実行ロックを取りません（agent を呼ばない読み取り・派生生成専用。`exec` と `--project` は `args` に書けません）。`register` / `exec-auto` / `exec-resume` / `exec-cycle` の旧 kind は廃止済みです。定義ファイルの配置、`interval`または`trigger.cron`の書式、複数 action の失敗方針、due判定は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
 
-各 routine の実行完了時には、端末側の `routine-state.json` の最新状態とは別に、同じ保存先の `routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID（`specdojo` action・無変更の Job では空）を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。保存先は `$XDG_STATE_HOME/specdojo/`（未設定時は `~/.local/state/specdojo/`）以下で、`routine where` から確認できます。旧 `generated/` のファイルは初回利用時にコピーし、新しい状態を優先します。Job Run のない失敗だけを `<execution-path>/routines/failures/` に保存して commit し、成功・skip は Git に残しません。成功した Job が何も変更しなかった場合も Run 記録を commit せず、端末側の `noop` 記録で冪等性と checkpoint を保ちます。
+各 routine の実行完了時には、端末側の `routine-state.json` の最新状態とは別に、同じ保存先の `routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID（`specdojo` action・無変更の Job では空）を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。保存先は `$XDG_STATE_HOME/specdojo/`（未設定時は `~/.local/state/specdojo/`）以下で、`where routine` から確認できます。旧 `generated/` のファイルは初回利用時にコピーし、新しい状態を優先します。Job Run のない失敗だけを `<execution-path>/routines/failures/` に保存して commit し、成功・skip は Git に残しません。成功した Job が何も変更しなかった場合も Run 記録を commit せず、端末側の `noop` 記録で冪等性と checkpoint を保ちます。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）

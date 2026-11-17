@@ -1,3 +1,4 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { type Command, Option } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
@@ -93,6 +94,20 @@ import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
 import { validateRunRecordLayoutAtCommit } from "./validate-records-commit.js";
+
+export function printExecPaths(opts: { project?: string }): void {
+  try {
+    const resolvedPaths = resolveProjectContext(opts);
+    process.stdout.write(`schedule-path: ${resolvedPaths.schedulePath}\n`);
+    process.stdout.write(`execution-path: ${resolvedPaths.executionPath}\n`);
+    const projectPath = resolvedPaths.schedulePath;
+    process.stdout.write(`exec/events : ${eventsDirForProject(projectPath)}\n`);
+    process.stdout.write(`generated   : ${generatedDirForProject(projectPath)}\n`);
+    process.stdout.write(`scheduler-lock: ${schedulerLockPath(projectPath)}\n`);
+  } catch (error) {
+    printCommandError(error, false);
+  }
+}
 
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
@@ -773,19 +788,5 @@ export function registerExecCommands(program: Command): void {
     }
   });
 
-  const wcmd = exec.command("where").description("Print resolved paths");
-  addProjectOptions(wcmd);
-  wcmd.action((opts) => {
-    try {
-      const resolvedPaths = resolveProjectContext(opts);
-      process.stdout.write(`schedule-path: ${resolvedPaths.schedulePath}\n`);
-      process.stdout.write(`execution-path: ${resolvedPaths.executionPath}\n`);
-      const projectPath = resolvedPaths.schedulePath;
-      process.stdout.write(`exec/events : ${eventsDirForProject(projectPath)}\n`);
-      process.stdout.write(`generated   : ${generatedDirForProject(projectPath)}\n`);
-      process.stdout.write(`scheduler-lock: ${schedulerLockPath(projectPath)}\n`);
-    } catch (error) {
-      printCommandError(error, false);
-    }
-  });
+  registerDeprecatedWhereAlias(exec, printExecPaths);
 }

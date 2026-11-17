@@ -41,6 +41,8 @@ SpecDojo は道場のメタファーとして、`specdojo` CLI のコマンド�
 | 定期実行定義               | `rtn-*.yaml`               | `routine`      |
 | ドキュメントIDインデックス | `.specdojo/doc-index.json` | `index`        |
 
+保存先を確認するときは `specdojo where <種類> --project <id>` を使います。種類は `exec`・`catalog`・`schedule`・`timeline`・`job`・`routine` です。たとえば `specdojo where exec --project prj-0001` で実行記録の保存先を確認できます。旧 `<種類> where` は1版の移行期間後に削除するため、新しい構文へ置き換えてください。
+
 ### 1.1. 技の名前
 
 主要な CLI 機能には、Spec道（仕様道）の道場で使う技の名前を付けています。

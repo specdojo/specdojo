@@ -202,7 +202,7 @@ Job Definition は script を `if` の条件として起動し、終了コード
 
 実行履歴は同じ保存先の `routine-runs.jsonl` へ1実行1行で追記します。各行は `routine_id`、`scheduled_for`、`started_at`、`completed_at`、`result`、`job_run_ids` を持ち、`docs/specdojo/schemas/v1/routine-run.schema.yaml` に従います。最新状態は due 判定、追記履歴は dashboard の日別実績表示に使います。
 
-保存先は `$XDG_STATE_HOME/specdojo/<repository-key>/routines/<path-key>/`、環境変数が未設定または相対パスなら `~/.local/state/specdojo/` 以下です。repository key は Git 共通ディレクトリの実パス（Git がなければリポジトリの実パス）、path key はリポジトリからの routine 定義の相対パスの SHA-256 です。linked worktree 間で共有し、別リポジトリ・別 routine ツリーを分離します。`routine where` で実際のパスを確認できます。初回の `routine list`・通常実行・dashboard 集計時に旧 `generated/` の状態と履歴をコピーし、新しいファイルがあれば上書きしません。旧ファイルは復旧用に残しますが以後は参照しません。移行前に旧版の routine プロセスを停止してください。別端末へ状態を引き継ぐ場合はこの保存先を別途コピーします。
+保存先は `$XDG_STATE_HOME/specdojo/<repository-key>/routines/<path-key>/`、環境変数が未設定または相対パスなら `~/.local/state/specdojo/` 以下です。repository key は Git 共通ディレクトリの実パス（Git がなければリポジトリの実パス）、path key はリポジトリからの routine 定義の相対パスの SHA-256 です。linked worktree 間で共有し、別リポジトリ・別 routine ツリーを分離します。`where routine` で実際のパスを確認できます。初回の `routine list`・通常実行・dashboard 集計時に旧 `generated/` の状態と履歴をコピーし、新しいファイルがあれば上書きしません。旧ファイルは復旧用に残しますが以後は参照しません。移行前に旧版の routine プロセスを停止してください。別端末へ状態を引き継ぐ場合はこの保存先を別途コピーします。
 
 routine 自身が Git に残すのは、結果が `failure` かつ関連 Job Run ID が空の実行だけです。`<execution-path>/routines/failures/<routine-id>/<UUID>.json` に履歴と同じ項目と `run_id` を書き、理由を伏せ字処理したうえで、そのファイルだけを commit します。Job Run があればその記録を診断に使います。成功・skip・無変更の履歴は端末側にだけ保存し、dashboard も同じ状態・履歴を参照します。lock は文書ツリー外にあり、`.gitignore` の追加設定は不要です。
 

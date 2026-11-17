@@ -1,3 +1,4 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import type { Command } from "commander";
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -714,25 +715,23 @@ export function jobRunRelativePath(runPath: string): string {
   return repoRelative(runPath);
 }
 
+export function printJobPaths(opts: { project?: string }): void {
+  try {
+    const paths = resolveJobPaths(opts.project);
+    process.stdout.write(`project: ${paths.projectId}\n`);
+    process.stdout.write(`jobs:    ${paths.jobsPath}\n`);
+    process.stdout.write(`runs:    ${paths.runsPath}\n`);
+    process.stdout.write(`state:   ${paths.statePath}\n`);
+  } catch (error) {
+    process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    process.exitCode = 1;
+  }
+}
+
 export function registerJobCommands(program: Command): void {
   const command = program.command("job").description("Reusable Job Definition and Run helpers");
 
-  command
-    .command("where")
-    .description("Print resolved Job paths")
-    .option("--project <projectId>", "Project id")
-    .action((opts: { project?: string }) => {
-      try {
-        const paths = resolveJobPaths(opts.project);
-        process.stdout.write(`project: ${paths.projectId}\n`);
-        process.stdout.write(`jobs:    ${paths.jobsPath}\n`);
-        process.stdout.write(`runs:    ${paths.runsPath}\n`);
-        process.stdout.write(`state:   ${paths.statePath}\n`);
-      } catch (error) {
-        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
-        process.exitCode = 1;
-      }
-    });
+  registerDeprecatedWhereAlias(command, printJobPaths);
 
   command
     .command("validate")

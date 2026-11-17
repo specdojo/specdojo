@@ -24,7 +24,7 @@ specdojo:
 
 ## 3. 操作の流れ
 
-1. **対象と前提を確認する**: `exec where` で対象 project の保存先、`exec status` で実行中・停止中の schedule task を確認する。`exec validate` で schedule・event・実行記録の不整合を確認し、`exec refresh` で Ready と進捗表示を更新する。
+1. **対象と前提を確認する**: `where exec` で対象 project の保存先、`exec status` で実行中・停止中の schedule task を確認する。`exec validate` で schedule・event・実行記録の不整合を確認し、`exec refresh` で Ready と進捗表示を更新する。
 2. **指示を準備する**: 内容を先に確認する場合は `exec plan` で plan を生成する。schedule task、カタログの成果物、登録簿項目から対象を一つ選ぶ。plan 生成だけでは着手や完了を記録しない。
 3. **作業の出どころに応じて実行する**:
    - 登録簿項目は `exec run --register` で実行する。開始で `in-progress`、成功で `review`、失敗で `waiting` となる。項目の完了判断は登録簿で行う。統合後レビューによる自動 close を選ぶ場合は、その判定条件も確認する。
@@ -40,11 +40,11 @@ specdojo:
 
 ## 4. 操作とコマンド参照
 
-構文・引数・オプションの正本は [[specdojo:command-reference|CLIコマンドリファレンス]] の「exec」「exec worktree」とする。
+構文・引数・オプションの正本は [[specdojo:command-reference|CLIコマンドリファレンス]] の「共通オプション」の保存先の確認と「exec」「exec worktree」とする。
 
 | 操作                     | 対象コマンド                                    | 正本リファレンス                                                          |
 | ------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------- |
-| 保存先・状況確認         | `exec where` / `exec status`                    | [[specdojo:command-reference#7-exec\|exec]]                               |
+| 保存先・状況確認         | `where exec` / `exec status`                    | [[specdojo:command-reference#7-exec\|exec]]                               |
 | 検証・再計算             | `exec validate` / `exec refresh`                | [[specdojo:command-reference#7-exec\|exec]]                               |
 | plan の準備・保管        | `exec plan` / `exec archive`                    | [[specdojo:command-reference#7-exec\|exec]]                               |
 | 作業の選択・着手         | `exec scheduler` / `exec claim`                 | [[specdojo:command-reference#7-exec\|exec]]                               |
