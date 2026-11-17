@@ -1,0 +1,28 @@
+sample の書き直しは終わりました。ただし、計画が目安にした「文字数を今の 7 割以下にする」は満たせず、逆に増えています。指摘（finding）を直すには記述を足す必要があったためです。
+
+**文字数（空白を除く）**
+- 変更前は 1340 字、変更後は 2718 字です。
+- 表の罫線や埋め草を除くと、変更前 1022 字、変更後 1867 字で、約 1.8 倍です。
+
+**増えた理由**
+- 計画が外すように挙げた記述（役割の段落、承認と agent の段落、検証の表の文書品質の行、未決事項の管理列と登録の段落、共通の運用の参照文）は、この sample に元々ありませんでした。削る対象がなかったということです。
+- 指摘の多くは記述の追加を求めていました。開発担当と技術メンターの機会の行、AI Agent の責任範囲、Agent 入力の禁止、記録先の具体名などです。
+- 冗長さの判定基準（`vp-arc-conciseness`）は、判断に要る記述を長さだけで削らないとしています。そのため追加は必要な範囲に絞りました。
+- この増加を受け入れるかどうかは、判断をお願いします。
+
+**直した内容**（変更したのは `docs/ja/specdojo/samples/pm-communication-plan-sample.md` だけです）
+- **方針と適用範囲**: 「各正本」を管理計画とステークホルダー登録簿へのリンクに置き換えました。AI Agent は整理と草案を手伝うだけで、合意・承認・公開は判断しないと書きました（F004・F007・F012）。
+- **コミュニケーション機会**: 対象をすべて登録簿の ID（`STH-*`）と Role code で書きました。開発担当のイテレーション末の確認と、技術メンターの週次相談の行を足しました。「重大変更時」は、管理計画の判断ゲート「重大変更・再開」を参照する形にしました（F001・F002・F008・F009・F013・F014）。
+- **エスカレーション**: 「重大な懸念」を判定できる条件に分けました。支出・作業時間の上限超過（管理計画の M-03・M-04）、受入条件の未達、検証できない Agent 出力、個人情報の漏れ、基準の変更の 5 つです。品質と個人情報の行は、`QE` と `PM` の分担を分けて書きました（F001・F010）。
+- **情報管理と公開**: 箇条書きを「情報区分・取扱い・記録先」の表に変えました。記録先は課題ログ・リスク登録簿・変更要求ログへのリンクで示し、顧客情報を AI Agent の入力にも含めないと明記しました（F003・F005）。
+- **見直し条件と未決事項**: 営業時間外の緊急連絡手段を `_UNDECIDED_:` の形に直しました。決定時期・判断者と、決まるまでの影響（停止連絡の伝達先が定まらない）を書きました（F006・F011）。
+- **結論は変えていません**: 非同期を基本にすること、最終判断は `PO` であること、未決の論点はそのままです。
+
+**確認と残り**
+- 整形（`npx prettier --write`）は成功しました。markdownlint などの検査は、このあと runner が実行します。
+- 運用の記述で、template・recipe・rulebook への変更案はありません。
+- 根拠とした規範と各指摘への対応は、result の「進め方と実践の型の適用」に記録してください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-communication-plan-sample を改訂し、F001〜F014 に対応した。登録簿の ID、開発担当と技術メンターの機会の行、Agent の責任範囲、判定できるエスカレーション条件、情報区分の表、_UNDECIDED_ の形式を反映した。結論は変えていない。plan が挙げた運用の記述は元々なかった。finding への対応で、空白を除いた文字数は 1340 字から 2718 字に増えた（表の罫線を除くと 1022 字から 1867 字）。","handoff":["文字数の目安（7 割以下）は満たしていない。plan が外す対象に挙げた運用の記述（役割の段落、承認と agent の段落、検証の表の文書品質の行、未決事項の管理列と登録の段落、共通の運用の参照文）は、改訂前の sample に存在しなかった。major の finding（F001・F002・F003・F007・F008）への対応で記述を足す必要があり、vp-arc-conciseness に従って判断に要る記述は長さだけで削らなかった。この増加を受け入れるかどうかは人間の判断を求める。","template・recipe・rulebook の運用の記述について変更案はない。template の方針の章の TODO（人間と AI Agent の境界）は、今回の sample に反映済み。","result の『進め方と実践の型の適用』に、根拠とした規範と finding ごとの対応を記録すること。根拠は pm-communication-plan-rulebook、pm-communication-plan-template、prj-stakeholder-register-sample、pm-plan-sample、pm-raci-sample。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/pm-communication-plan-sample.md","status":"passed","summary":"sample の表を整形した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは docs/ja/specdojo/samples 配下の sample だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>
