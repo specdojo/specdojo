@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-17T12:22:09Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: lint-ts, test-unit"
   commit_type: feat
   commit_scope: exec
 ---

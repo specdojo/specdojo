@@ -60,3 +60,32 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_94c4e5d947d94824b6157b586c796680
+- v: 1
+  id: reg_fd5b5f2037c244109da5a68cb48e26ec
+  ts: "2026-11-17T13:41:09Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3786d6a617cd416099c8d0d0a0cc3da3
+- v: 1
+  id: reg_47f0ba97ed5747989a7873e71af6be0e
+  ts: "2026-11-17T14:09:21Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-unit"
+  previous_event_id: reg_fd5b5f2037c244109da5a68cb48e26ec
