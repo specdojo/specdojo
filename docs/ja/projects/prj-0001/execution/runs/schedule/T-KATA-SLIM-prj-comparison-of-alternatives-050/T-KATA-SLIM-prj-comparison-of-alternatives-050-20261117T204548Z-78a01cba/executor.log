@@ -1,0 +1,32 @@
+Sample を書き直しました。空白を除いた文字数は 6,351 字から 4,559 字（71.8%）で、目安の 7 割をわずかに上回っています。判断の基準・評価値・判定・未決事項の論点は変えていません。
+
+**外した記述**
+- 冒頭で `PO`・`PM` の役割を説明する文と、「決定と見直し」章の役割の段落（BA・ARC・DEV・QE・PM）。
+- `PM` が `kinuya-schedule` へ作業を置く段落と、`PJR-KN01` へつなぐ記述。
+- 見直しの表にあった管理区分（課題・リスク・変更要求）、記録先の台帳、`PM` が登録する旨の列と段落。
+- 比較試行の章にあった `DEV`・`QE` の役割分担と、`kinuya-acceptance-record` の記述。
+
+**同じ判断の言い直しをまとめた箇所**
+- 採否の要約は「決定と見直し」章の 1 か所に寄せ、理由は「比較結果と採択理由」を章タイトルで参照する形にしました。
+- 移行・撤退が未検証であることは「技術的実現性と影響」の表だけに書き、採否理由の表からは外しました。
+- ALT-01 の「効果を再評価する」条件は採否理由の表にだけ残し、リスク表からは外しました。
+- 外部候補の確認は比較目的の章だけに書き、技術的実現性の表では繰り返しません。
+
+**変えた点**
+- 結論ではありませんが、記録先が変わりました。これまで課題ログ・リスク登録簿・変更要求ログに分けていたものを、rulebook の位置づけ図にある「決定記録」1 つに寄せています。台帳の区分と担当を外す指示に従った結果です。
+- 外部候補の公式ヘルプへのリンクは Markdown リンクのまま短くしました。URL をそのまま書くと markdownlint（MD034）で失敗するためです。
+
+**finding（F001・F002）**
+Sample では、ALT-02 の運用・保守性はすでに「未判定」で、理由（手順と支援が有効か未確認）も書いてあります。言い回しを短くして残したので、sample 側では解消済みです。指摘を受けた成果物本体は、この段の対象外なので変えていません。
+
+**template への変更案**
+template の「決定と見直し」章に運用の記述が残っています。この段では変更していません。
+- 「AI Agent は比較分析の支援に留める」
+- 「各管理記録へ分け、担当 Role と転送先、後続成果物・Schedule の追従責任を記述する」
+
+**検証**
+Prettier の書式確認と markdownlint はどちらも通りました。recipe・rulebook・成果物本体は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md` を改訂した。役割の段落、PM の登録とスケジュールの段落、見直しの表の管理区分・担当・記録先の台帳、比較試行の役割分担を外し、採否の要約・移行の未検証・再評価の条件の言い直しをまとめた。空白を除いた文字数（表の区切り行を除く）は 6,351 字から 4,559 字（71.8%）。区切り行を含めると 7,994 字から 5,828 字、バイト数は 20,126 B から 14,603 B。判断の基準・評価値・判定・未決事項の論点は変えていない。F001・F002 は、sample の ALT-02 の運用・保守性がすでに『未判定』で理由も書いてあるため、sample 側では解消済み。成果物本体は変えていない。","handoff":["結論ではないが記録先を変えた: 見直しの記録先を、課題ログ・リスク登録簿・変更要求ログ（PM が登録）から、rulebook の位置づけ図にある『決定記録』1 つに寄せた。管理台帳の区分・担当・追跡先の列と登録の段落を外す plan の指示に従った。判断の基準・評価値・判定・再評価の契機は変えていない。","外した運用の記述: 冒頭で PO・PM の役割を説明する文、決定と見直しの役割の段落（BA・ARC・DEV・QE・PM）、`kinuya-schedule` と `PJR-KN01` の段落、比較試行の DEV・QE の分担と `kinuya-acceptance-record`、ALT-01 トレードオフで PO が判断する旨。リスク表の担当（`BA`・`DEV`・`QE`・`PM`）は、rulebook の記述ガイドが軽減策に担当を求めるため残した。","template への変更案（この段では変えていない）: `docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md` の『決定と見直し』章の箇条のうち、『AI Agent は比較分析の支援に留める』と『リスク・課題・変更要求・未決を各管理記録へ分け、担当 Role と転送先、後続成果物・Schedule の追従責任を記述する』は運用の記述。前者は『最終判断者を記述する』に、後者は『判断理由・影響範囲・移行と撤退の方法の記録先を記述する』に縮める案。","F001・F002 の扱い: どちらも成果物本体の ALT-02 の運用・保守性 `Low` への指摘。sample ではすでに『未判定』とし、理由（手順と支援の有効性が未確認）を書いてあるため、言い回しを短くして残した。成果物本体はこの段の対象外のため変えていない。","外部候補の公式ヘルプへのリンクは Markdown リンクのまま短くした（Google のクエリパラメータを削除）。URL をそのまま書くと markdownlint の MD034 で失敗するため。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更は `docs/ja/specdojo/samples/` 配下の sample だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>
