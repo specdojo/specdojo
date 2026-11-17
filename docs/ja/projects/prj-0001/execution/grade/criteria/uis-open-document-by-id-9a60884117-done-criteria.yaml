@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: uis-open-document-by-id-grade-criteria
+document: uis-open-document-by-id
+path: docs/ja/product/010-business-specs/040-user-interface-model/uis-open-document-by-id.md
+graded_at: "2026-11-17T23:07:59.746Z"
+graded_by: sol-review-executor
+content_hash: a1b23e9ee708f21484ca73195317bf762108dfe4b8dbac5751d61e84c5fda33b
+summary:
+  satisfied: 2
+  unsatisfied: 2
+  total: 4
+criteria:
+  - id: DC-001
+    text: 入力欄・警告・文書を開く結果と、利用者の次の手が業務観点で記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 実装（specdojo.openById）の表示文言・分岐と食い違いがないこと
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: 索引ファイル不在時の警告条件が読み込み済み索引の継続利用を区別せず、文書を開けない場合も一律に警告とする記述が実装の分岐と一致しない。
+  - id: DC-003
+    text: 入力と警告の条件から受入テストを設計できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 読み込み済み索引を削除した場合の警告有無が7章と8章で異なり、同じ操作系列の期待結果を一意に定められない。
+  - id: DC-004
+    text: 利用者が迷わず操作できる表現・構成になっていること
+    roles:
+      - UX
+    viewpoint: vp-ux-readability
+    status: satisfied

@@ -5,17 +5,17 @@ path: docs/ja/specdojo/samples/sf-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-10T08:38:44.403Z"
+score: 93
+graded_at: "2026-11-17T22:58:26.662Z"
 graded_by: sol-review-executor
-content_hash: df1789376bda12e8b199e1c9bfbebfd728213ab12f536a21a6e4cf9ae53ac90d
+content_hash: 7576e1a48502ad80a0f9a6e1e11608000770c030ef1250ca1aaf807a22f01f4c
 categories:
   purpose:
     score: 100
   operations:
     score: 100
   planning:
-    score: 100
+    score: 83
   business:
     score: 100
   architecture:
@@ -23,9 +23,9 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 75
   quality:
-    score: 92
+    score: 83
   consistency:
     score: 100
 viewpoints:
@@ -39,14 +39,14 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 4
     score: 100
@@ -66,14 +66,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -104,23 +104,65 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 18
+    rule: vp-pm-plan-feasibility
+    line: 117
     anchor: >-
-      業務境界は [[specdojo:cdfd-overview-sample|概念データフロー図（全体概要）]] の店頭販売 `P-03` と在庫確認 `P-05` に対応する。詳細 BPS
-      `bps-sales-order-flow` は未作成のため、次表は領域単位の対応とし、処理ステップ ID の照合は未決事項 `Q-01` で追跡する。
+      | `Q-01` `_UNDECIDED_`: `sf-index` の対応、BPS の詳細対応、税計算、取引状態、在庫・印刷・記録先の連携契約が未整備 |
+      設計境界・税額・再送時の一意性を保証できない。確定までは未照合部分を確定した設計入力に使わず、確定後に「業務プロセス・画面との対応」と `FR-03` を照合する |
+    message: Q-01・Q-02には解消を担当するRole codeと判断時期がなく、契約整備・実端末測定・代替運用の合意を誰がいつ進めるか計画できません。各論点の担当と「設計着手前」「統合受入前」などの判断時期を明記してください。
+    message_ja: Q-01・Q-02には解消を担当するRole codeと判断時期がなく、契約整備・実端末測定・代替運用の合意を誰がいつ進めるか計画できません。各論点の担当と「設計着手前」「統合受入前」などの判断時期を明記してください。
+  - id: F002
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 115
+    anchor: >-
+      | 論点                                                                                                            |
+      影響と当面の扱い                                                                                                                                         
+      |
     message: >-
-      The previous function-list format and metadata-type blockers are resolved under the current individual-function
-      rulebook; the remaining minor gap is that the sample never identifies its parent sf-index or its corresponding
-      function entry. Add the parent reference and mapping, or explicitly track the pending mapping with an owner and
-      decision timing, so readers can trace this specification to the authoritative function list.
+      Q-01・Q-02は文書内の未決事項に留まり、契約整備の課題、営業停止・二重転記のリスク、受入値・代替運用の決定をどの管理記録へ引き継ぐか不明です。転記先の種別または参照先と報告担当Role
+      codeを対応付け、進捗と判断結果を追跡できるようにしてください。
     message_ja: >-
-      The previous function-list format and metadata-type blockers are resolved under the current individual-function
-      rulebook; the remaining minor gap is that the sample never identifies its parent sf-index or its corresponding
-      function entry. Add the parent reference and mapping, or explicitly track the pending mapping with an owner and
-      decision timing, so readers can trace this specification to the authoritative function list.
+      Q-01・Q-02は文書内の未決事項に留まり、契約整備の課題、営業停止・二重転記のリスク、受入値・代替運用の決定をどの管理記録へ引き継ぐか不明です。転記先の種別または参照先と報告担当Role
+      codeを対応付け、進捗と判断結果を追跡できるようにしてください。
+  - id: F003
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 44
+    anchor: >-
+      | 入力 | 在庫反映結果、保存済みの販売と処理結果 | 在庫確認機能・販売記録 / 確定・再開判定 | 確定要求時と結果照合時に必須           |
+      `sf-inventory`、`ifx-api-store-sales`                 | `FR-03`          |
+    message: 「在庫反映結果、保存済みの販売と処理結果」を「確定要求時」に必須としているため、保存済み結果のない初回確定にも要求されると読めます。初回・再送・結果照合ごとの必須性と、未記録・未反映の場合の扱いを分けてください。
+    message_ja: 「在庫反映結果、保存済みの販売と処理結果」を「確定要求時」に必須としているため、保存済み結果のない初回確定にも要求されると読めます。初回・再送・結果照合ごとの必須性と、未記録・未反映の場合の扱いを分けてください。
+  - id: F004
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 117
+    anchor: >-
+      | `Q-01` `_UNDECIDED_`: `sf-index` の対応、BPS の詳細対応、税計算、取引状態、在庫・印刷・記録先の連携契約が未整備 |
+      設計境界・税額・再送時の一意性を保証できない。確定までは未照合部分を確定した設計入力に使わず、確定後に「業務プロセス・画面との対応」と `FR-03` を照合する |
+    message: Q-01の確定後の照合先は第2章とFR-03だけですが、税計算はFR-02と金額の検証条件にも影響します。またQ-02の代替運用は回復手順にも影響します。論点ごとに更新・再確認する要件、受入観点、連携仕様・運用手順を対応付けてください。
+    message_ja: Q-01の確定後の照合先は第2章とFR-03だけですが、税計算はFR-02と金額の検証条件にも影響します。またQ-02の代替運用は回復手順にも影響します。論点ごとに更新・再確認する要件、受入観点、連携仕様・運用手順を対応付けてください。
+  - id: F005
+    severity: minor
+    rule: vp-dev-testability
+    line: 105
+    anchor: >-
+      | `V-02`  | `FR-02`・`FR-03` | 請求額108円の明細に、預かり金107円・108円・200円を与える                      |
+      107円は確定不可、108円は釣銭0円、200円は釣銭92円。完了時は売上記録と在庫反映を確認できる                      | 結合試験、金額表示・記録照合       | QE・BA       |
+    message: V-02は請求額108円を前提に預かり金と釣銭を検証しており、FR-02の税額・請求額の算出自体を確認できません。Q-01で税計算を確定する際に、税区分と端数処理の正常・境界条件、観測する税額・請求額、正本との照合方法を検証表へ追加することを明記してください。
+    message_ja: V-02は請求額108円を前提に預かり金と釣銭を検証しており、FR-02の税額・請求額の算出自体を確認できません。Q-01で税計算を確定する際に、税区分と端数処理の正常・境界条件、観測する税額・請求額、正本との照合方法を検証表へ追加することを明記してください。
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 42
+    anchor: >-
+      | 入力 | 販売単価、税区分、販売可能な在庫数量   | 商品台帳・在庫確認機能 / 会計確認       | 会計前に確認できること                 |
+      業務データ辞書、`br-tax-calculation`、`sf-inventory`  | `FR-01`・`FR-02` |
+    message: 販売単価の正本として業務データ辞書を参照する一方、販売登録画面は税込単価、業務データ辞書の販売単価は税抜価格を定義しており、本書では表示・計算・保存に使う価格の対応を特定できません。Q-01の税計算・連携契約の論点にこの差を明記し、確定時に価格の対応とFR-02・FR-03への適用を照合してください。
+    message_ja: 販売単価の正本として業務データ辞書を参照する一方、販売登録画面は税込単価、業務データ辞書の販売単価は税抜価格を定義しており、本書では表示・計算・保存に使う価格の対応を特定できません。Q-01の税計算・連携契約の論点にこの差を明記し、確定時に価格の対応とFR-02・FR-03への適用を照合してください。

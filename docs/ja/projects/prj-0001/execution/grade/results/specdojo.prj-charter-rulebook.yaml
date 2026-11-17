@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 90
-graded_at: "2026-11-12T20:34:35.105Z"
-graded_by: flash-high-executor
-content_hash: 03c46781aa8ad0da019f8465c76fe7bd994279800806b3145a6aefff7629f58a
+score: 93
+graded_at: "2026-11-17T22:07:34.833Z"
+graded_by: sol-review-executor
+content_hash: 981a89f78a336dbc96570bac9ec4d0472b2286ca443edf9f9374ba99cee634cc
 categories:
   purpose:
     score: 100
@@ -21,9 +21,9 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 75
+    score: 92
   implementation:
-    score: 100
+    score: 88
   quality:
     score: 92
   consistency:
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -84,11 +84,11 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -104,63 +104,48 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 7
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 120
-    anchor: "- 認可しない範囲を明記し、憲章承認と本格実行開始を混同しない。"
-    message: H1直下に立ち上げ認可・権限委譲・本格実行開始を承認しない旨を書く規則は直後の6.1共通ルールでより具体的に再掲されているため、本行を削除または6.1への参照へ置き換えてください。
-    message_ja: H1直下に立ち上げ認可・権限委譲・本格実行開始を承認しない旨を書く規則は直後の6.1共通ルールでより具体的に再掲されているため、本行を削除または6.1への参照へ置き換えてください。
+    line: 67
+    anchor: プロジェクト憲章は次の順序で構成する。
+    message: >-
+      template を骨組みの正本とする Rulebook 記述標準に対し、第5章は「次の順序」と番号列で template
+      の見出し順を再掲しています。順序指定と番号列を除き、各章の目的・必須／任意・内容要件だけを残して、構成順序の二重管理を解消してください。
+    message_ja: >-
+      template を骨組みの正本とする Rulebook 記述標準に対し、第5章は「次の順序」と番号列で template
+      の見出し順を再掲しています。順序指定と番号列を除き、各章の目的・必須／任意・内容要件だけを残して、構成順序の二重管理を解消してください。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 114
-    anchor: ""
+    rule: vp-dev-change-impact
+    line: 15
+    anchor: >-
+      - **共通の運用**: 役割の割り当て（スポンサーと PO の対応を含む）は適用先のメンバー定義に従い、本文では認可権限を持つ役割を「承認責任者」と呼ぶ。`status`・承認・改訂と廃止・未決事項の引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従う。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めない。
     message: >-
-      全体方針と権限委譲の定義では「PO またはスポンサー」を判断主体としている一方、本行、recipe、成果物カタログの完了条件は PO のみを主体としているため、スポンサーが PO Role code
-      を兼ねる必要があるのかを明記して責任定義を統一してください。
+      改訂・廃止を共通標準へ委譲していますが、憲章の認可範囲・予算枠・委譲権限を変更した際の具体的な追従対象と担当 Role code
+      が未定義です。スコープ、組織定義、管理計画、成果物カタログなどの再確認対象と、影響分析・更新・承認の担当を対応付けてください。
     message_ja: >-
-      全体方針と権限委譲の定義では「PO またはスポンサー」を判断主体としている一方、本行、recipe、成果物カタログの完了条件は PO のみを主体としているため、スポンサーが PO Role code
-      を兼ねる必要があるのかを明記して責任定義を統一してください。
+      改訂・廃止を共通標準へ委譲していますが、憲章の認可範囲・予算枠・委譲権限を変更した際の具体的な追従対象と担当 Role code
+      が未定義です。スコープ、組織定義、管理計画、成果物カタログなどの再確認対象と、影響分析・更新・承認の担当を対応付けてください。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 215
-    anchor: "| 認可対象または認可しない範囲を記載しない             | PO が承認範囲を判断できないため              |"
-    message: >-
-      frontmatterのstatusを文書状態の正本としつつ認可状態との関係を定義しておらず、sampleがstatus:
-      readyのまま本文で「ドラフト」と表現しているため、statusは文書成熟度、承認履歴は認可状態という独立した状態軸であることを明記してください。
-    message_ja: >-
-      frontmatterのstatusを文書状態の正本としつつ認可状態との関係を定義しておらず、sampleがstatus:
-      readyのまま本文で「ドラフト」と表現しているため、statusは文書成熟度、承認履歴は認可状態という独立した状態軸であることを明記してください。
+    line: 92
+    anchor: "- 本格実行や公開まで認可する場合は、計画、体制、予算枠、品質条件が確認済みであることを明記する。"
+    message: 本行では条件付きで本格実行や公開まで認可できる一方、「共通」では冒頭文に本格実行開始・外部公開を承認しない旨を必ず書くよう要求しています。例外を認める場合は冒頭文と禁止事項の適用条件をそろえ、同じ憲章で認可と非認可を併記させない規則にしてください。
+    message_ja: 本行では条件付きで本格実行や公開まで認可できる一方、「共通」では冒頭文に本格実行開始・外部公開を承認しない旨を必ず書くよう要求しています。例外を認める場合は冒頭文と禁止事項の適用条件をそろえ、同じ憲章で認可と非認可を併記させない規則にしてください。
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
     line: 129
-    anchor: "- 承認に条件が付く場合は、`認可条件` を補足として 1 行追加してよい。ただし、承認章の代替にはせず、承認日・承認者・証跡リンクの管理は別途必要とする。"
-    message: 作成済み参照先をwikilinkへ更新する規則に対し、完成例のsampleでは実在する参照先が相対MarkdownリンクまたはバッククォートIDのままなので、完成例が規則どおりの参照形式を示すよう整合させてください。
-    message_ja: 作成済み参照先をwikilinkへ更新する規則に対し、完成例のsampleでは実在する参照先が相対MarkdownリンクまたはバッククォートIDのままなので、完成例が規則どおりの参照形式を示すよう整合させてください。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 170
-    anchor: "### 6.5. 初期ステークホルダー"
-    message: AI Agentの支援範囲を含める規則がsampleとtemplateのハイレベルスコープに反映されていないため、適用条件を明記するか、該当する記入欄と完成例を追加してください。
-    message_ja: AI Agentの支援範囲を含める規則がsampleとtemplateのハイレベルスコープに反映されていないため、適用条件を明記するか、該当する記入欄と完成例を追加してください。
-  - id: F006
-    severity: minor
-    rule: vp-ux-readability
-    line: 120
-    anchor: "- 認可しない範囲を明記し、憲章承認と本格実行開始を混同しない。"
-    message: 冒頭文の必須内容は直後の6.1で文数を含めて具体化されているため、本行を統合し、読者が同じ規則を二度確認しなくてよい構成にしてください。
-    message_ja: 冒頭文の必須内容は直後の6.1で文数を含めて具体化されているため、本行を統合し、読者が同じ規則を二度確認しなくてよい構成にしてください。
-  - id: F007
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 133
-    anchor: "| 項目            | 内容 |"
-    message: 「PO またはスポンサー」を選択可能とする前段に対して本行以降は「人間のPO」だけを最終判断主体としているため、スポンサーをPO Role codeへ対応付けるのか、承認責任者という共通語へ統一するのかを明示してください。
-    message_ja: 「PO またはスポンサー」を選択可能とする前段に対して本行以降は「人間のPO」だけを最終判断主体としているため、スポンサーをPO Role codeへ対応付けるのか、承認責任者という共通語へ統一するのかを明示してください。
+    anchor: "- 観点ごとに確認内容、合格条件、判断結果の記録先を示す。目的整合は概要、体制は組織定義、品質は品質管理計画と照合し、予算枠と公開範囲の条件も確認する。未達条件が残れば開始判断を保留する。"
+    message: >-
+      観点ごとの合格条件を必須としていますが、対応 template の GO / Not GO 表は「判断観点・確認内容・記録先」のみで、合格条件の記入欄や記入指示がありません。template
+      に合格条件の欄または明示的な記入指示を追加し、展開した骨組みから必須条件が抜けないよう整合させてください。
+    message_ja: >-
+      観点ごとの合格条件を必須としていますが、対応 template の GO / Not GO 表は「判断観点・確認内容・記録先」のみで、合格条件の記入欄や記入指示がありません。template
+      に合格条件の欄または明示的な記入指示を追加し、展開した骨組みから必須条件が抜けないよう整合させてください。

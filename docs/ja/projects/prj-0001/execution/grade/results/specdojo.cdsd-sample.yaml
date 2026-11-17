@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/cdsd-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-11-13T06:10:19.209Z"
+score: 100
+graded_at: "2026-11-17T22:31:34.985Z"
 graded_by: sol-review-executor
-content_hash: ca513c598454ca4b7eac63f36e60eed7fb74e4e5780a30f43be5fd27ece4daf5
+content_hash: ee84bc2004330329f55c64fd76ab3262c768ec8269217eebc59a056ec3baddbf
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,25 +104,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 64
-    anchor: >-
-      | 販売記録       | [[specdojo:bdd-sample\|販売管理の辞書]] の売上記録・売上明細、[[specdojo:ccd-sample\|概念クラス図]] |
-      売上と明細の所属・粒度、商品参照、つけ販売時の購入者。会計確定までの操作は [[specdojo:clis-sample\|販売管理 CLI 仕様]] を参照する |
-    message: >-
-      The completed six-column inventory and concrete responsibility and verification examples resolve the previous
-      blocker; the remaining issue is that this row refers all pre-confirmation sales operations to
-      specdojo:clis-sample, although that CLI explicitly excludes credit sales while this store covers both cash and
-      credit sales. Qualify the CLI reference as cash-only and identify credit-sale confirmation as pending in
-      specdojo:cdfd-sales.
-    message_ja: >-
-      The completed six-column inventory and concrete responsibility and verification examples resolve the previous
-      blocker; the remaining issue is that this row refers all pre-confirmation sales operations to
-      specdojo:clis-sample, although that CLI explicitly excludes credit sales while this store covers both cash and
-      credit sales. Qualify the CLI reference as cash-only and identify credit-sale confirmation as pending in
-      specdojo:cdfd-sales.
+findings: []

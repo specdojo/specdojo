@@ -5,10 +5,10 @@ path: docs/ja/specdojo/samples/pm-raci-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-13T10:28:07.179Z"
+score: 98
+graded_at: "2026-11-17T22:43:35.389Z"
 graded_by: sol-review-executor
-content_hash: 4db7c4eb145a0fcb275c8379d64dbd8db9a59db4266f397061b0d53655a0cef0
+content_hash: a49ea52112355bd50fe8191ad56fde5f2916d2156c62c5baaa578843f6673134
 categories:
   purpose:
     score: 100
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 15
+    anchor: "| プロジェクト概要・スコープ・成功基準   | A   | C   | R   | C   | C   |"
+    message: 成果物別RACIの統合行が成果物名だけで記載され、rulebook第3節が求める成果物IDとの対応を直接確認できません。各行に対象成果物IDまたはIDへのリンクを併記し、統合された各成果物から責任行を一意に辿れるようにしてください。
+    message_ja: 成果物別RACIの統合行が成果物名だけで記載され、rulebook第3節が求める成果物IDとの対応を直接確認できません。各行に対象成果物IDまたはIDへのリンクを併記し、統合された各成果物から責任行を一意に辿れるようにしてください。

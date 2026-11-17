@@ -5,17 +5,17 @@ path: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-13T10:31:47.831Z"
+score: 97
+graded_at: "2026-11-17T22:41:31.131Z"
 graded_by: sol-review-executor
-content_hash: 8ddb43e55cbd98719d3e8a257314e5fe2ba943f0094c1680cf8df6691b5effc3
+content_hash: 0326a622e574ef39081cb3fec5bb7a41889161c3a7f9a14d322e529572dba6e7
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   architecture:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -33,14 +33,14 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +104,29 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 59
+    anchor: "| `_UNDECIDED_:` オフライン時の運用・受入範囲（成功条件の未解決事項） | 当該経路の実運用と、その未決を残した店頭試用開始                                          |"
+    message: オフライン時の運用・受入範囲について、判断材料を整理するRole codeとPOへの提示時点を補ってください。参照先の成功条件にも材料準備の担当がなく、保留解除に必要な検討を誰に依頼するかが不明です。
+    message_ja: オフライン時の運用・受入範囲について、判断材料を整理するRole codeとPOへの提示時点を補ってください。参照先の成功条件にも材料準備の担当がなく、保留解除に必要な検討を誰に依頼するかが不明です。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 59
+    anchor: "| `_UNDECIDED_:` オフライン時の運用・受入範囲（成功条件の未解決事項） | 当該経路の実運用と、その未決を残した店頭試用開始                                          |"
+    message: オフライン方針の検討を、運用案・追加受入条件案の準備作業として担当Role codeと完了条件に結び付けてください。現状は試用開始を止める条件だけが示され、未決解消の作業をScheduleへ割り当てる際に補完が必要です。
+    message_ja: オフライン方針の検討を、運用案・追加受入条件案の準備作業として担当Role codeと完了条件に結び付けてください。現状は試用開始を止める条件だけが示され、未決解消の作業をScheduleへ割り当てる際に補完が必要です。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 56
+    anchor: >-
+      | 論点                                                                |
+      影響・未決中に保留する判定                                                                |
+    message: 未決事項表をtemplateの「論点」「正本と判断材料の担当」「決定時期・判断者」「未決中に保留する判定・作業」に合わせてください。現状の2列では担当・判断時期・判断者の記入例が欠け、recipeが求める未決解消までの責任と時点を示す完成例になっていません。
+    message_ja: 未決事項表をtemplateの「論点」「正本と判断材料の担当」「決定時期・判断者」「未決中に保留する判定・作業」に合わせてください。現状の2列では担当・判断時期・判断者の記入例が欠け、recipeが求める未決解消までの責任と時点を示す完成例になっていません。

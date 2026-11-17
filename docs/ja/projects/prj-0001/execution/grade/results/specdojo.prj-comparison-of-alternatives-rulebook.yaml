@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-13T10:36:55.878Z"
+score: 97
+graded_at: "2026-11-17T22:09:47.090Z"
 graded_by: sol-review-executor
-content_hash: 39b25641a63e56aa6dbc2e1c9112bfa8c05aa0144d2dc5598e1957edea7d9189
+content_hash: 6bf669e9409d446d81516d93eef1b9b45a2950114603999e215dc22c7e3c59a6
 categories:
   purpose:
     score: 100
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -23,9 +23,9 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -93,8 +93,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-operability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -104,6 +104,37 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 111
+    anchor: "- 方針変更の理由、評価結果、影響範囲、移行・撤退方法を記録先から辿れるようにします。未決の比較条件には論点と採否・後続作業への影響を示します。"
+    message: 方針変更の影響を記録する要求に加え、採択案の変更時に後続設計、外部連携・データ移行の設定、受入・運用手順のどれを追従確認するかを記述してください。比較時の影響評価は定義されていますが、既存成果物や設定の更新漏れを防ぐ確認対象が明確ではありません。
+    message_ja: 方針変更の影響を記録する要求に加え、採択案の変更時に後続設計、外部連携・データ移行の設定、受入・運用手順のどれを追従確認するかを記述してください。比較時の影響評価は定義されていますが、既存成果物や設定の更新漏れを防ぐ確認対象が明確ではありません。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 12
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]
+      に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入条件に含めません。
+    message: >-
+      Rulebook 記述標準は、共通の変更管理規則への参照に加えて、各系統の具体的な追従対象と役割分担を定義するよう求めています。代替案比較の変更に伴う後続成果物・Schedule の更新対象と責任 Role
+      を補い、template「決定と見直し」の追従責任欄を埋める基準を rulebook 側にも定めてください。
+    message_ja: >-
+      Rulebook 記述標準は、共通の変更管理規則への参照に加えて、各系統の具体的な追従対象と役割分担を定義するよう求めています。代替案比較の変更に伴う後続成果物・Schedule の更新対象と責任 Role
+      を補い、template「決定と見直し」の追従責任欄を埋める基準を rulebook 側にも定めてください。
+  - id: F003
+    severity: minor
+    rule: vp-ops-operability
+    line: 110
+    anchor: "- 採択・試行・保留は決定 ID ごとに要約し、最終判断者を示します。再評価トリガーは期間・測定値・制約や依存の変化で定め、特定製品の自動採用条件にしません。"
+    message: >-
+      再評価後に比較結果・決定記録を更新する担当と、後続作業・Schedule
+      への反映完了を確認する担当を、この系統の責務として明示してください。再評価の契機と記録先は定義されていますが、比較の更新から計画の追従までを誰が完了させるかは共通規則からの補完が必要です。
+    message_ja: >-
+      再評価後に比較結果・決定記録を更新する担当と、後続作業・Schedule
+      への反映完了を確認する担当を、この系統の責務として明示してください。再評価の契機と記録先は定義されていますが、比較の更新から計画の追従までを誰が完了させるかは共通規則からの補完が必要です。

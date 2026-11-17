@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/bes-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-11-12T20:15:57.391Z"
-graded_by: flash-high-executor
-content_hash: a5f65305af457f47927038793d3b2ac1209d38b77428bd59a8561eaac6bd0442
+score: 96
+graded_at: "2026-11-17T21:43:23.837Z"
+graded_by: sol-review-executor
+content_hash: b9abf110c57ee49c07be629ee56aa3bd63e0fd03728c0ae90e605d69459041b7
 categories:
   purpose:
-    score: 100
+    score: 88
   operations:
-    score: 100
+    score: 94
   planning:
     score: 100
   business:
@@ -23,9 +23,9 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 100
+    score: 88
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -33,8 +33,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -69,8 +69,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -90,8 +90,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-operability:
     level: 4
     score: 100
@@ -104,6 +104,42 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 4
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 45
+    anchor: >-
+      | 未決事項と承認条件         | 未決事項がある場合に必須             |
+      関連する章に論点と利用への影響を置き、当面の扱いと、確定時に見直す境界・条件・データを示す                                           |
+    message: 未決事項の必須情報に決定者、確認担当、判断時期、判断結果の記録先を加えてください。共通標準への参照はあるものの、初版作成時の論点ごとの判断経路が定まらず、PO が保留後の解決を追跡しにくいためです。
+    message_ja: 未決事項の必須情報に決定者、確認担当、判断時期、判断結果の記録先を加えてください。共通標準への参照はあるものの、初版作成時の論点ごとの判断経路が定まらず、PO が保留後の解決を追跡しにくいためです。
+  - id: F002
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: >-
+      - **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status` の昇格と承認、改訂と廃止、未決事項の登録簿への引き継ぎは
+      [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認に含めません。
+    message: 共通標準への参照に加え、BESの境界・発生回数・観測時点・相関情報を変更した際の追従確認先を示してください。例えばBELの対応行、BPSのトリガー、データモデルとschema、イベント発行・購読処理、受入条件との対応を示すと、記述標準が求める系統固有の影響追跡を実施できます。
+    message_ja: 共通標準への参照に加え、BESの境界・発生回数・観測時点・相関情報を変更した際の追従確認先を示してください。例えばBELの対応行、BPSのトリガー、データモデルとschema、イベント発行・購読処理、受入条件との対応を示すと、記述標準が求める系統固有の影響追跡を実施できます。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 45
+    anchor: >-
+      | 未決事項と承認条件         | 未決事項がある場合に必須             |
+      関連する章に論点と利用への影響を置き、当面の扱いと、確定時に見直す境界・条件・データを示す                                           |
+    message: recipeとtemplateが要求する承認者・判断時期・記録先、および未決事項の決定者・確認担当をrulebookの本文要件へ対応付けてください。現在は未決事項がある場合だけ「未決事項と承認条件」を必須とするため、各ファイルを入口にしたときに要求される意味情報が揃いません。
+    message_ja: recipeとtemplateが要求する承認者・判断時期・記録先、および未決事項の決定者・確認担当をrulebookの本文要件へ対応付けてください。現在は未決事項がある場合だけ「未決事項と承認条件」を必須とするため、各ファイルを入口にしたときに要求される意味情報が揃いません。
+  - id: F004
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 45
+    anchor: >-
+      | 未決事項と承認条件         | 未決事項がある場合に必須             |
+      関連する章に論点と利用への影響を置き、当面の扱いと、確定時に見直す境界・条件・データを示す                                           |
+    message: 承認条件を未決事項がある場合だけの要件とせず、すべてのBESで利用基準の確認結果と人間のPOによる承認条件を示すよう定めてください。未決事項が残る場合は、その影響を踏まえて承認できる範囲または保留する範囲も明示すると、ready化・公開前の確認事項を判断できます。
+    message_ja: 承認条件を未決事項がある場合だけの要件とせず、すべてのBESで利用基準の確認結果と人間のPOによる承認条件を示すよう定めてください。未決事項が残る場合は、その影響を踏まえて承認できる範囲または保留する範囲も明示すると、ready化・公開前の確認事項を判断できます。
