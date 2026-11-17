@@ -156,6 +156,176 @@ function renderGlossaryBody(
   return lines.join("\n");
 }
 
+// ifx-index は未決事項・留保・確認者をコメントに書く（specdojo:ifx-index-rulebook）。
+// 表示ページで辿れるよう、連続するコメント行を 1 段落として連携ごと・一覧全体に振り分ける。
+interface IfxIndexComments {
+  document: string[][];
+  interfaces: string[][][];
+}
+
+const IFX_MODELINE_RE = /^#\s*(?:yaml-language-server:|specdojo-schema:)/;
+
+function collectIfxIndexComments(content: string): IfxIndexComments {
+  const result: IfxIndexComments = { document: [], interfaces: [] };
+  let inInterfaces = false;
+  let itemIndent = -1;
+  let pending: string[][] = [];
+  let group: string[] | undefined;
+  let groupTarget: string[][] = result.document;
+  let previousWasComment = false;
+
+  for (const line of content.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    const indent = line.length - line.trimStart().length;
+    if (trimmed.startsWith("#")) {
+      if (IFX_MODELINE_RE.test(trimmed)) continue;
+      // 連携の内側（ダッシュより深い字下げ）は今の連携、ダッシュと同じ字下げは次の連携、
+      // 行頭のコメントは一覧全体の注記とする。
+      const current = result.interfaces.at(-1);
+      const target =
+        !inInterfaces || indent === 0
+          ? result.document
+          : current !== undefined && indent > itemIndent
+            ? current
+            : pending;
+      if (!previousWasComment || target !== groupTarget) {
+        group = [];
+        target.push(group);
+        groupTarget = target;
+      }
+      group?.push(trimmed.replace(/^#\s?/, ""));
+      previousWasComment = true;
+      continue;
+    }
+    previousWasComment = false;
+    if (trimmed === "") continue;
+    if (indent === 0) {
+      result.document.push(...pending);
+      pending = [];
+      inInterfaces = /^interfaces:\s*$/.test(line);
+      continue;
+    }
+    if (inInterfaces && trimmed.startsWith("- ") && (itemIndent === -1 || indent === itemIndent)) {
+      itemIndent = indent;
+      result.interfaces.push(pending);
+      pending = [];
+    }
+  }
+  result.document.push(...pending);
+  return result;
+}
+
+const IFX_DIRECTION_LABELS: Record<string, string> = {
+  source_to_target: "連携元 → 連携先",
+  target_to_source: "連携先 → 連携元",
+  bidirectional: "双方向",
+};
+
+const IFX_LABEL_RE = /_(?:TODO|UNDECIDED|ASSUMPTION)_/g;
+
+function ifxSpecRefCell(specRef: string, docId: string): string {
+  if (specRef === "") return "未記入";
+  if (specRef === "TBD") return "未整備（TBD）";
+  // 成果物の wikilink は project 修飾 ID で解決するため、修飾のない参照には一覧の修飾を補う。
+  const prefix = docId.includes(":") ? `${docId.slice(0, docId.indexOf(":"))}:` : "";
+  return `[[${specRef.includes(":") ? specRef : `${prefix}${specRef}`}]]`;
+}
+
+function renderIfxIndexBody(
+  doc: Record<string, unknown>,
+  interfaces: Record<string, unknown>[],
+  content: string,
+): string {
+  const comments = collectIfxIndexComments(content);
+  const docId = glossaryText(doc.id);
+  const tbdCount = interfaces.filter((item) => glossaryText(item.spec_ref) === "TBD").length;
+  const paragraphs = (groups: string[][]): string[] =>
+    groups.flatMap((lines) => [lines.join("\n"), ""]);
+
+  const lines = [
+    "<!-- prettier-ignore -->",
+    "| ID | 状態 | 連携の数 | 詳細仕様が未整備（TBD） |",
+    "| --- | --- | --- | --- |",
+    `| ${[docId, glossaryText(doc.status)].map((value) => glossaryCell(value) || "-").join(" | ")} | ${interfaces.length} | ${tbdCount} |`,
+    "",
+    "## 1. 連携の一覧",
+    "",
+    "<!-- prettier-ignore -->",
+    "| No | 連携名 | 連携先 | 向き | 種別 | 形式 | 詳細仕様 | 注記 |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- |",
+  ];
+  interfaces.forEach((item, index) => {
+    const notes = comments.interfaces[index] ?? [];
+    const labels = [...new Set(notes.flat().join("\n").match(IFX_LABEL_RE) ?? [])];
+    const noteCell =
+      notes.length === 0
+        ? "-"
+        : [
+            `[${notes.length} 件](#ifx-${index + 1})`,
+            ...labels.map((label) => `\`${label}\``),
+          ].join(" ");
+    const direction = glossaryText(item.direction);
+    const cells = [
+      String(index + 1),
+      `[${glossaryText(item.name).replace(/[[\]\\]/g, "\\$&")}](#ifx-${index + 1})`,
+      glossaryText(item.target),
+      IFX_DIRECTION_LABELS[direction] ?? direction,
+      glossaryText(item.kind),
+      glossaryText(item.format),
+      ifxSpecRefCell(glossaryText(item.spec_ref), docId),
+      noteCell,
+    ];
+    lines.push(`| ${cells.map((cell) => glossaryCell(cell) || "-").join(" | ")} |`);
+  });
+
+  lines.push("", "## 2. 連携ごとの詳細", "");
+  interfaces.forEach((item, index) => {
+    const name = glossaryText(item.name);
+    const direction = glossaryText(item.direction);
+    const rows: [string, string][] = [
+      ["連携名", `<a id="ifx-${index + 1}">${escapeAnchorText(name)}</a>`],
+      ["連携元", glossaryText(item.source)],
+      ["連携先", glossaryText(item.target)],
+      ["向き", IFX_DIRECTION_LABELS[direction] ?? direction],
+      ["種別", glossaryText(item.kind)],
+      ["形式", glossaryText(item.format)],
+      ["タイミング", glossaryText(item.timing)],
+      ["異常時の扱い", glossaryText(item.error_handling)],
+      ["詳細仕様", ifxSpecRefCell(glossaryText(item.spec_ref), docId)],
+    ];
+    lines.push(
+      `### 2.${index + 1}. ${glossaryCell(name) || "-"}`,
+      "",
+      "<!-- prettier-ignore -->",
+      "| 項目 | 内容 |",
+      "| --- | --- |",
+      ...rows.map(([label, value]) => `| ${label} | ${glossaryCell(value) || "-"} |`),
+      "",
+    );
+    const notes = comments.interfaces[index] ?? [];
+    if (notes.length > 0) lines.push("注記（YAML のコメント）:", "", ...paragraphs(notes));
+  });
+
+  let chapter = 2;
+  if (comments.document.length > 0) {
+    lines.push(`## ${++chapter}. 一覧全体の注記`, "", ...paragraphs(comments.document));
+  }
+  lines.push(`## ${++chapter}. YAML の正本`, "");
+  return lines.join("\n");
+}
+
+function isIfxIndex(
+  yamlRelPath: string,
+  parsed: unknown,
+): parsed is Record<string, unknown> & { interfaces: unknown[] } {
+  return (
+    /^ifx-index(?:-[a-z0-9-]+)?\.ya?ml$/.test(posix.basename(yamlRelPath)) &&
+    isRecord(parsed) &&
+    parsed.type === "api" &&
+    Array.isArray(parsed.interfaces)
+  );
+}
+
 // doc-index の "path:42" 形式から行番号サフィックスを除去する。
 function stripLineSuffix(entry: string): string {
   const colonIndex = entry.lastIndexOf(":");
@@ -277,8 +447,14 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
 
   const body = content.endsWith("\n") ? content : `${content}\n`;
 
-  if (isRecord(parsed) && parsed.type === "glossary" && Array.isArray(parsed.terms)) {
-    const terms = parsed.terms.filter(isRecord);
+  // 用語集と ifx-index は表で本文を描き、YAML の正本を折りたたんで添える。
+  const tableBody =
+    isRecord(parsed) && parsed.type === "glossary" && Array.isArray(parsed.terms)
+      ? renderGlossaryBody(parsed, parsed.terms.filter(isRecord))
+      : isIfxIndex(yamlRelPath, parsed)
+        ? renderIfxIndexBody(parsed, parsed.interfaces.filter(isRecord), content)
+        : undefined;
+  if (tableBody !== undefined) {
     return [
       ...header,
       `# ${heading}`,
@@ -287,7 +463,7 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
       "",
       YAML_PAGE_MARKER,
       "",
-      renderGlossaryBody(parsed, terms),
+      tableBody,
       "<details>",
       "<summary>YAML の正本を表示</summary>",
       "",
