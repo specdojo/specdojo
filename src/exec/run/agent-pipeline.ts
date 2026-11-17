@@ -1,4 +1,4 @@
-import { relative, sep } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import type { ExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import {
   enforceExecutorReportContract,
@@ -83,6 +83,7 @@ export async function refreshParentValidationsForReporterResume(params: {
     parentValidationRoots(params.cwd, params.productWorktrees),
     {
       label: params.evidence.task_id,
+      metricsPath: join(dirname(params.evidencePath), "parent-validation-metrics.jsonl"),
       // 統合先を取り込んだ後は executor の変更以外も入るため、変更の種類で選ばずすべて流す。
       ...(force ? {} : { selection: parentValidationSelectionForEvidence(params.evidence) }),
     },
@@ -257,6 +258,7 @@ export async function runReporterStage(params: {
           env,
           params.resultPath,
           params.rateLimitOptions,
+          "reporter",
         );
         reporterAttempts += reporterOutcome.attempts;
         reporterActor = reporterOutcome.actor ?? reporterActor;

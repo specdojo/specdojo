@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { trackExecutor } from "./validation-metrics.js";
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
@@ -377,11 +378,13 @@ export function spawnAgent(
   prompt: string,
   cwd: string,
   env: NodeJS.ProcessEnv,
+  stageRole: "executor" | "reporter" = "executor",
 ): Promise<SpawnOutcome> {
   return new Promise((resolveOutcome) => {
     const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
     const gitStateBefore = captureAgentGitStateSnapshot(cwd);
     const child = spawn(command, { cwd, env, shell: true, stdio: ["pipe", "pipe", "pipe"] });
+    const stopTracking = stageRole === "executor" ? trackExecutor(child.pid, cwd) : () => undefined;
     let stdout = "";
     let stderr = "";
     let settled = false;
@@ -399,6 +402,7 @@ export function spawnAgent(
     const finish = (outcome: SpawnOutcome): void => {
       if (settled) return;
       settled = true;
+      stopTracking();
       const protectedChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
       if (protectedChanges.length > 0) {
         outcome.stderr += `${agentProtectedConfigViolation(protectedChanges)}\n`;

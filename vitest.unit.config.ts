@@ -3,6 +3,9 @@ import { TEST_GIT_ENVIRONMENT, TEST_GIT_SETUP_FILE } from "./tests/helpers/git-e
 
 export default defineConfig({
   test: {
+    ...(process.env.SPECDOJO_PARENT_VALIDATION_METRICS === "1"
+      ? { reporters: ["default", "./tests/helpers/parent-validation-reporter.ts"] }
+      : {}),
     environment: "node",
     env: TEST_GIT_ENVIRONMENT,
     setupFiles: [TEST_GIT_SETUP_FILE],

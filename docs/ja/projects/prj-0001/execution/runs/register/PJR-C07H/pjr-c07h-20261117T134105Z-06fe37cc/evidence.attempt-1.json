@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-C07H",
+  "run_id": "pjr-c07h-20261117T134105Z-06fe37cc",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-17T13:42:44.701Z",
+    "completed_at": "2026-11-17T13:54:09.484Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-c07h.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-c07h-parent-validation-load-metrics.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "vitest.integration.config.ts",
+      "status": "M"
+    },
+    {
+      "path": "vitest.unit.config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/validation-metrics.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/helpers/parent-validation-reporter.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/validation-metrics.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-c07h-parent-validation-load-metrics.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "vitest.integration.config.ts",
+      "status": "M"
+    },
+    {
+      "path": "vitest.unit.config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/validation-metrics.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/helpers/parent-validation-reporter.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/validation-metrics.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 15,
+    "summary": ".../pjr-c07h-parent-validation-load-metrics.md     | 30 ++++++++---\n docs/ja/specdojo/guides/exec-operation-guide.md    | 16 ++++++\n src/exec/parent-validation.ts                      | 63 ++++++++++++++++++++--\n src/exec/run/agent-pipeline.ts                     |  4 +-\n src/exec/run/agent.ts                              | 21 ++++++--\n src/exec/run/in-place.ts                           |  4 ++\n src/exec/run/schedule-task.ts                      |  1 +\n src/exec/trial-commands.ts                         |  7 +++\n src/exec/trial-core.ts                             |  4 ++\n vitest.integration.config.ts                       |  3 ++\n vitest.unit.config.ts                              |  3 ++\n 11 files changed, 141 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/exec/{parent-validation,validation-metrics,trial-core,trial-commands}.ts src/exec/run/{agent,agent-pipeline,in-place,schedule-task}.ts tests/helpers/parent-validation-reporter.ts tests/src/exec/validation-metrics.test.ts vitest.{unit,integration}.config.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-c07h-parent-validation-load-metrics.md",
+      "status": "passed",
+      "summary": "変更した全14ファイルの整形を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-c07h-parent-validation-load-metrics.md",
+      "status": "passed",
+      "summary": "変更した Markdown 2件の検査に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。変更対象外のカタログに参照先などの警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor による YAML 変更なし。",
+      "reason": "executor が変更した成果物に *.yaml / *.yml がないため。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec smoke --project prj-0001 --register PJR-JSEY --targets PJR-C07H --executor-by claude-executor --reporter-by gemma26-reporter",
+      "status": "requires_human",
+      "summary": "統合後の本体で実施する。実 agent の起動と利用枠の消費、runner の Git 操作が必要。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.8.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H/src/catalog/catalog.ts\n  542:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\nhas too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H/src/shared/specdojo-config.ts\n  1232:1  warning  File has too many lines (1167). Maximum allowed is 1000  max-lines\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H/tests/src/exec/validation-metrics.test.ts\n  25:48  error  `import()` type annotations are forbidden  @typescript-eslint/consistent-type-imports\n\n✖ 42 problems (1 error, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5195 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5195 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Cod\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C07H\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-fCFGKg/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-wKR1jU/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8bcUe3/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-CXpmmq/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n_files\": [\n    \"tests/hanging.test.ts\",\n  ],\n  \"id\": \"test-unit\",\n  \"timeout_ms\": 600000,\n}\n\n+ Received:\nundefined\n\n ❯ tests/src/exec/validation-metrics.test.ts:197:21\n    195|     const rows = records(path);\n    196|     const timeout = rows.find((row) => row.event === \"validation-timeo…\n    197|     expect(timeout).toMatchObject({\n       |                     ^\n    198|       id: \"test-unit\",\n    199|       active_test_files: [\"tests/hanging.test.ts\"],\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    }
+  ],
+  "final_message": "親検証の計測を実装した。変更対象は src/exec/parent-validation.ts、新規 validation-metrics.ts、run 配下の実行・再開経路、trial 実行経路、Vitest 設定と通知 reporter・回帰テスト、exec 運用ガイド、PJR-C07H 個票。整形・文書検査は成功し、型検査・単体／統合テストは親 runner に委ねる。result は編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "計測は run ごとの parent-validation-metrics.jsonl に追記する。待ち時間は同一プロセス内と共有ロックで分ける。負荷は境界時点のみ採取し、取得・保存に失敗しても検証を続ける。",
+    "run/executor 数は同じ project と、この版の runner が起動したプロセスが対象。共有ロックがない場合は自プロセスだけを数える。メモリは /proc/meminfo の値で、cgroup 上限ではない。テスト開始通知がない環境では実行中ファイルは未特定となる。",
+    "統合後に本体を build し、PJR-JSEY の runner 動作確認を行う。その後、実運用の並行 run の計測記録を確認する。原因分析・対策・PJR-52EE の再開判断は記録がたまってから別項目で行う。",
+    "CHANGELOG 文案（追加）: 親検証の待ち時間・実行時間、同時実行中の run/executor 数、Linux の負荷、時間切れ時の実行中テストファイルを run ごとの計測ログへ保存する。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-C07H/pjr-c07h-20261117T134105Z-06fe37cc/executor.attempt-1.log",
+      "bytes": 3743,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-C07H/pjr-c07h-20261117T134105Z-06fe37cc/parent-validation-attempt-1-lint-ts.attempt-1.log",
+      "bytes": 8407,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-C07H/pjr-c07h-20261117T134105Z-06fe37cc/parent-validation-attempt-1-test-unit.attempt-1.log",
+      "bytes": 9697,
+      "truncated": false
+    }
+  ]
+}
