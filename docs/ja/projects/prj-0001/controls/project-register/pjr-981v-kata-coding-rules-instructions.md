@@ -70,9 +70,25 @@ executor が決めた点と理由:
 - 成果物カタログには、グループの `base_path` を `/.github/instructions` にして正本を登録し、ラッパーは載せない。
 - `vp-ba-business-value` は、規約が業務価値ではなく実装の書き方を扱うため除外した。`vp-arc-single-responsibility` は既定（適用する）のままとした。
 
+2 回目の実行（grade run `grade-981v-20261117` の指摘への対応）:
+
+- F003・F009: Frontmatter の表で `specdojo.rulebook` を必須（○）にし、値 `specdojo:cdr-rulebook` を残した。
+- F010: rulebook の禁止事項の要件を「破ると被害の大きい書き方と理由を表で書く。表に書いた禁止は本文の章で繰り返さない」に改め、sample の本文から表と重なる禁止（小数の金額、クライアントからの DB 接続の import、`as` の強制、ログへの個人情報、`@ts-ignore`）を外した。sample の導入文から版（Next.js 14・TypeScript 5）を外した（sample の F006 も同じ指摘）。
+- F011: 「言語の規則に枠組みの規則を足す場合（TypeScript に Next.js の規則を足すなど）」に言い換えた。
+- 直した minor（既存の行の言い換え・追記で済むもの）:
+  - F004: 「正本」「ラッパー」の定義の箇条を削り、Copilot が `applyTo` で直接読むことを位置づけの表へ統合した。
+  - F005: 適用範囲の分け方の行に、範囲が重なる場合は狭い方の正本に追加の規則だけを書き、広い方と矛盾させないことを足した。
+  - F002・F006: `specdojo.supersedes` の行に、旧正本を `deprecated` にし同じ変更でラッパーと `AGENTS.md` の参照を付け替えることを足した。
+  - F001・F012: Frontmatter の節の既存の段落に、`ready` にする条件（検証コマンドが実行でき、ラッパーで正本の読み込みを確かめた後）を 1 文で足した。
+  - F007: ラッパーの規則の箇条に、環境ごとに対象のファイルで正本が読み込まれ、対象外では読み込まれないことを確かめる 1 行を足した。
+  - F008: `型` を省けるのは動的型の言語で型ヒントも使わない場合に限ると明記した。
+  - F013: ラッパーの節の導入文に、DEV が正本を直し ARC が設定・コマンドとの整合とラッパーの追従を確かめる分担を書いた。
+- sample・template（どちらも pass）の minor も、1 行の修正で済むものを直した: template のエラー処理に「例外の握りつぶしの禁止」欄を追加、sample の相対 import の例を「2 階層以上」に修正、ESLint の規則の参照に設定ファイル名を付けて `import type` の再掲をやめた、単体テストの失敗時に仕様変更で期待値を直す条件を足した、統合テストの失敗時に CI の失敗を直せない場合の報告を足した。
+- 直さなかった点: なし。章や確認項目の表を新設せず、すべて既存の行・段落の言い換えと追記で対応した（PJR-0T83）。
+
 残課題:
 
-- `grade run --target kata` による grade（作業内容の 3）は、完了条件どおり orchestrator が統合の後に流し、pass を確認する。
+- `grade run --target kata` による grade（作業内容の 3）は、完了条件どおり orchestrator が統合の後に流し、2 回目の修正で pass になるかを確認する。
 - prj-0001 の既存の `.github/instructions/typescript.instructions.md` は `applyTo` が `{src,tools,tests,scripts}/**/*.ts`、ラッパーの `.claude/rules/typescript.md` は `paths` が `{src,tools}/**/*.ts` で、rulebook の「適用範囲を同じ glob にする」規則とずれている。また既存の正本には `specdojo:` の frontmatter がない。本タスクの対象外のため変更せず、型に合わせる対応を別の登録簿項目で扱うことを提案する。
 
 ## 6. 関連ドキュメント

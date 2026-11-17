@@ -1,0 +1,29 @@
+2 回目の grade（run `grade-981v-20261117`）の指摘への対応を終えました。major の F003・F009 と、個票が名指しした F010・F011 を直しました。残りの minor もすべて既存の行の言い換えか短い追記で直し、章や表は増やしていません。Prettier・markdownlint・`validate:history-links` は通りました。型の grade は完了条件どおり実行していません。
+
+**`cdr-rulebook`**
+- **F003・F009:** Frontmatter の表で `specdojo.rulebook` を「推奨」から必須（○）に変えました。値は `specdojo:cdr-rulebook` のままです。
+- **F010:** 禁止事項の章の要件を「破ると被害の大きい書き方と理由を表で書く。表に書いた禁止は本文の章で繰り返さない」に改めました。
+- **F011:** 「TypeScript に Next.js の規則を足すなど」と、言語に枠組みの規則を足す関係が伝わる言い方にしました。
+- **minor:**
+  - F004: 「正本」「ラッパー」の定義の箇条を削り、位置づけの表にまとめました。
+  - F005: 適用範囲が重なる場合の書き分けを足しました。
+  - F002・F006: `supersedes` で規約を置き換えるときの付け替え手順を足しました。
+  - F001・F012: `ready` にする条件を足しました。
+  - F007: ラッパーの読み込みを確かめる行を足しました。
+  - F008: `型` の章を省ける条件を絞りました。
+  - F013: DEV と ARC の分担を書きました。
+
+**`cdr-sample`**
+- F010 に合わせて、本文から禁止事項の表と重なる禁止を外し、導入文から版を外しました。
+- 1 行で直せる minor も直しました。相対 import の例の階層、ESLint 設定ファイル名の追加、単体テストと統合テストの失敗時の対応です。
+
+**`cdr-template`**
+- エラー処理の章に「例外の握りつぶしの禁止」の記入欄を足しました。
+
+**個票**
+- 対応結果に、2 回目の対応内容と、各指摘を直すと決めた理由を書きました。
+- 作業内容の「型を grade する」の行は、理由を添えて `open` のまま残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"2 回目の grade（grade-981v-20261117）の指摘に対応した。cdr-rulebook は F003・F009（`specdojo.rulebook` を必須に変更）、F010、F011 と minor の全件を、既存の行の言い換え・追記で直した。cdr-sample と cdr-template の minor も直し、個票の対応結果に決めた内容と理由を書いた。","handoff":["型の grade（`grade run --target kata`）は完了条件どおり executor では実行していない。orchestrator が統合の後に流し、2 回目の修正で cdr-rulebook が pass になるかを確かめる。個票の作業内容の 3 は open のまま残している。","rulebook の minor（F001・F002・F004〜F008・F012・F013）はすべて直すと決めた。章や確認項目の表は足さず、既存の行・段落の言い換えと 1 文の追記で対応した（PJR-0T83）。","F010 は、rulebook の要件を「表に書いた禁止は本文の章で繰り返さない」に改めて対応した。sample の本文から表と重なる禁止を外し、導入文から版を外した。","既存の課題として、prj-0001 の `.github/instructions/typescript.instructions.md` の `applyTo` と `.claude/rules/typescript.md` の `paths` の範囲がずれている。また正本に `specdojo:` の frontmatter がない。この型に合わせる対応は別の登録簿項目で扱うことを提案する。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"個票を含む履歴ファイルの検査で違反なし"},{"command":"npx prettier --check docs/ja/specdojo/rulebooks/cdr-rulebook.md docs/ja/specdojo/samples/cdr-sample.md docs/ja/specdojo/templates/cdr-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-981v-kata-coding-rules-instructions.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/cdr-rulebook.md docs/ja/specdojo/samples/cdr-sample.md docs/ja/specdojo/templates/cdr-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-981v-kata-coding-rules-instructions.md","status":"passed","summary":"0 issues in 4 files"}]}
+</specdojo_executor_evidence>
