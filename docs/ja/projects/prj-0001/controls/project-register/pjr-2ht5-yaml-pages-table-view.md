@@ -87,7 +87,14 @@ specdojo:
 - `npm --prefix packages/docs-site run docs:build` は Mermaid 135 図の生成で停止した。単独起動でも Chromium が `sandbox_host_linux.cc` の `Operation not permitted` で終了することを確認した。親環境で `npm run docs:build` を実行し、全体ビルドを確認する必要がある。sandbox では index の書き込みも禁止されるため、同コマンドの前処理は実行していない。
 - 新たな保護設定の変更案や未決の設計判断はない。
 
-### 5.4. CHANGELOG に書く事項
+### 5.4. orchestrator の確認（2026-11-18）
+
+- 統合の後に本体の作業ツリーで `specdojo build` を流し、`pm-roles` の表示ページに採用ロールの表と、折りたたんだ YAML の正本が出ることを確かめた。
+- `npm run docs:build` は、利用者の `vitepress dev` が `.vitepress/kata-staging` を使っている間は `ENOTEMPTY` で設定の読み込みの段に止まり、全体のビルドを確かめられなかった。executor が対象 24 ページを VitePress の Markdown の処理と Vue の compiler で描けることは確かめている。
+- 利用者の確かめ方: 開いている文書サイトで、業務データ辞書（`bdd-register-entry`）・ロール定義（`pm-roles`）・メンバー定義（`pm-members`）の表示ページに表と「YAML の正本を表示」の折りたたみが出ることを見る。dev サーバーを止めた後に `npm run docs:build` が通ることを確かめる。
+- 確かめるまで review のまま残す。
+
+### 5.5. CHANGELOG に書く事項
 
 - 区分: 変更。文案: YAML を正本とする業務データ辞書・ロール／メンバー定義・レビュー観点・外部コマンド／ファイル連携仕様・旧トラック順序計画・成果物カタログ・マイルストーンの表示ページを表形式にし、YAML 原文を折りたたんで表示するようにした。
 
