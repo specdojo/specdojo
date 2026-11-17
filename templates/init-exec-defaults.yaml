@@ -39,8 +39,10 @@ rate_limit_policy:
   pinned:
     action: stop
     max_wait_seconds: 28800
+  # 既存 schema との互換用の必須項目。実行時は参照せず、skip は行わない。
   on_non_critical:
     action: skip
+  # 自動選択の全タスクに共通の再試行設定。
   on_critical:
     action: try_next
     retry:

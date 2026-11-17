@@ -50,6 +50,8 @@ export type RateLimitPolicy = {
   // Used only when the provider output has no explicit reset time or retry-after. Omitted kinds
   // stay blocked without an estimated resume time.
   cooldown_seconds?: Partial<Record<AgentLimitKind, number>>;
+  // Compatibility-only field, still required by the schema. Ignored at runtime;
+  // automatic selection uses on_critical.retry for both critical and non-critical tasks.
   on_non_critical: {
     action: "skip";
   };
