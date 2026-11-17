@@ -1,0 +1,33 @@
+PJR-3MTS の 3 つの作業はすべて終わり、個票の作業内容 1〜3 を `done` にしました。4 の grade は完了条件どおり executor では実行せず、`open` のまま残しています。
+
+**変更したファイル**
+- `docs/ja/product/010-business-specs/040-user-interface-model/uis-open-document-by-id.md`（新規）: 画面仕様です。入力欄の案内文と入力例、取り消し（Esc か空のまま確定）、2 種の警告とその次の手、索引の行番号つきの項目をその行で開く処理を、`specdojo.openById` の実装の文言と分岐に合わせて書きました。照合は完全一致で、名前空間のない ID を読み替えません（wikilink とは扱いが違います）。実装にない次の 2 点は `_UNDECIDED_` で残しました。
+  - 索引にある ID のファイルがないとき、拡張は独自の表示を出さず、VS Code のコマンド失敗の表示に任せている。
+  - 索引のファイルを消しても、読み込み済みの索引を使い続ける。
+- `docs/ja/specdojo/rulebooks/uis-rulebook.md`: 役割の表、`status` と承認の指定、メタ情報の例を外し、「共通の運用」の 1 項目でドキュメントメタ情報標準を参照する形にしました。同じ判断は 1 か所に書く方針（入力の条件は「バリデーション」、回復は「エラー表示と利用者の次の手」を正とする）を、全体方針と禁止事項に足しました。
+- `docs/ja/specdojo/samples/uis-sample.md`: 承認と公開前確認の節、管理台帳の列、言い直しを外しました。表示値、操作可否、遷移、入力の境界、エラーごとの表示と回復の結論は変えていません。
+- 個票 `pjr-3mts-uis-open-document-by-id.md`: 作業内容の表と対応結果（実施内容、前後の大きさ、迷った点、CHANGELOG の文案、残課題）を書きました。
+
+**大きさ**（空白と表の区切り行を除いた文字数）
+
+| 文書 | 前 | 後 | 比 | 目安 |
+| --- | --- | --- | --- | --- |
+| uis-rulebook | 6,025 字 | 4,472 字 | 74% | 8 割以下 |
+| uis-sample | 8,493 字 | 5,945 字 | 70% | 7 割以下 |
+
+sample は目安の上限ちょうどです。
+
+**決めた点**（詳細は個票の「迷った点と決めた内容」）
+- **ファイル名の規則を変えました。** rulebook は `uis-<番号>-<短い日本語名>.md` を求めていましたが、カタログの path と ID の規則に合わないため、`uis-<term>.md` に改めました。ほかに `uis-` の成果物はなく、影響はこの 1 件だけです。
+- rulebook の対象に「エディタ拡張の入力欄」を足しました。
+- 文書 ID は、同じディレクトリの文書に合わせて名前空間なしにしました。
+
+**検証**
+- `npm run validate:catalog` は終了コード 0 でした（エラー 0、今回の成果物への警告なし）。
+- `npm run validate:history-links` は終了コード 0 でした。
+- `npx prettier --write` で変更した 4 ファイルを整形しました。
+- `lint:md`・`lint:fm` などの検査は、親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"uis-open-document-by-id を specdojo.openById の文言と分岐に合わせて新規作成し、uis-rulebook（6,025→4,472 字、74%）と uis-sample（8,493→5,945 字、70%）から共通の運用の記述と同じ判断の言い直しを外した。個票の作業内容 1〜3 を done、4（grade）は open のまま残し、対応結果を記入した。","handoff":["統合の後に orchestrator が型（uis）と成果物（uis-open-document-by-id）を grade し、結果を個票に書く（作業内容の 4、executor は未実行）。","決めた点: uis-rulebook のファイル名の規則を `uis-<番号>-<短い日本語名>.md` から `uis-<term>.md` に改め、カタログの path（`uis-open-document-by-id.md`）と ID の規則にそろえた。ほかに uis の成果物はなく、影響はこの 1 件だけ。","決めた点: uis-rulebook の対象に「エディタ拡張の入力欄」を足した（利用者が選んだ案 A によるため）。文書 ID は、同じディレクトリの bds・clis に合わせて名前空間なしの `uis-open-document-by-id` にした。","画面仕様の `_UNDECIDED_` が 2 点ある: (1) 索引にある ID のファイルがないとき、拡張は独自の表示を出さず VS Code のコマンド失敗の表示に任せている。(2) 索引のファイルを消しても読み込み済みの索引を使い続ける（読み直すのは作成と変更のときだけ）。完了条件の外のため実装は変えず、記録だけにした。","CHANGELOG の文案（追加 1 行・変更 1 行）は個票の対応結果の「CHANGELOG に書く事項」の節にある。保護された設定の変更は不要だった。"],"validations":[{"command":"npm run validate:catalog","status":"passed","summary":"終了コード 0。エラー 0、uis-open-document-by-id への警告なし（ほかの成果物の based_on の WARN は既存のもの）"},{"command":"npm run validate:history-links","status":"passed","summary":"終了コード 0。変更した個票 pjr-3mts を含めて違反なし"},{"command":"npx prettier --write docs/ja/specdojo/samples/uis-sample.md docs/ja/specdojo/rulebooks/uis-rulebook.md docs/ja/product/010-business-specs/040-user-interface-model/uis-open-document-by-id.md docs/ja/projects/prj-0001/controls/project-register/pjr-3mts-uis-open-document-by-id.md","status":"passed","summary":"変更した 4 ファイルを整形した"}]}
+</specdojo_executor_evidence>
