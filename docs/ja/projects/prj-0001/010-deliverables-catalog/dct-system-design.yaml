@@ -253,3 +253,45 @@ groups:
             path: src/routine/routine.ts
             purpose: action.kind＝jobによるJob Run起動の委譲規則
         done_criteria: *sysd-term-done-criteria
+  - name: デザインシステム（`dss-<term>`）
+    deliverables:
+      - local_id: dss-docs-site
+        name: デザインシステム（文書サイト）
+        kind: work
+        overview: 文書サイト（VitePress）の独自テーマで、画面をまたいで揃える色・余白・部品（frontmatter の表・grade の要約・サイドバーの開閉）とレイアウトの型を定義する
+        path: dss-docs-site.md
+        rulebook: specdojo:dss-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: packages/docs-site/.vitepress/theme
+            purpose: 独自テーマの CSS（custom.css）と Vue 部品（FrontmatterTable・GradeSummary・SidebarToggle）
+        done_criteria:
+          - text: 部品とレイアウトの型が文書サイトの実装（custom.css と Vue 部品）と食い違わないこと
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 部品の見た目と操作の表現が利用者に分かりやすい形で定義されていること
+            roles: [UX]
+            viewpoint: vp-ux-readability
+          - text: 部品ごとの表示の条件から表示の確認を設計できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+  - name: コーディング規約（agent 向け instructions）
+    deliverables:
+      - local_id: typescript-instructions
+        name: コーディング規約（TypeScript）
+        kind: work
+        overview: 実装の段で agent が読む TypeScript のコーディング規約の正本と、環境別の薄いラッパーへの対応を定義する
+        path: /.github/instructions/typescript.instructions.md
+        rulebook: specdojo:cdr-rulebook
+        note: 既存の instructions を cdr の型の代表とする。正本の書き換えは agent の実装の規約を変えるため、型の見直しの段では本体を変えない
+        evidence_refs:
+          - kind: implementation
+            path: eslint.config.js
+            purpose: 規約のうち ESLint で検査している規則（no-explicit-any・consistent-type-imports・no-restricted-imports など）
+        done_criteria:
+          - text: 規約が実装（tsconfig・ESLint の設定）と食い違わないこと
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 規約の各項目から検査や確認の方法が読み取れること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
