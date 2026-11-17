@@ -1330,7 +1330,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   );
 
   it(
-    "runs two register items in parallel with different per-item executors",
+    "runs independent register items with existing generated plans in parallel",
     { timeout: 120_000 },
     async () => {
       await withRepo(async ({ root, worktreeBase }) => {
@@ -1339,7 +1339,11 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           buildTicket("PJR-CD34"),
           "utf8",
         );
-        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
         // 並行に走る 2 項目がどちらも登録簿の生成物を作り直すため、生成物を git で管理
         // していると統合で add/add の衝突になる。利用者と同じく config init で .gitignore
@@ -1350,6 +1354,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           .filter((line) => line.length > 0);
         expect(trackedIgnored).toContain(`${REGISTER_REL}/generated/pjr-index.md`);
         git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        // Both existing plans contain the shared prohibition mentioning pjr-index.md. It must
+        // not become a shared scope and serialize otherwise independent register items.
+        for (const id of ["PJR-AB12", "PJR-CD34"])
+          await runExec(["plan", "--project", "test", "--register", id]);
         git(root, "add", "-A");
         git(root, "commit", "-m", "add second register item");
 
@@ -1381,7 +1389,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             "item_status: review",
           );
           const evidenceDir = join(root, EXECUTION_REL, "runs", "register", id);
-          const runDirs = readdirSync(evidenceDir);
+          const runDirs = readdirSync(evidenceDir).filter((run) =>
+            existsSync(join(evidenceDir, run, "pipeline-state.json")),
+          );
           expect(runDirs).toHaveLength(1);
           const state = JSON.parse(
             readFileSync(join(evidenceDir, runDirs[0], "pipeline-state.json"), "utf8"),
@@ -1389,6 +1399,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           expect(state.stages.executor.actor).toBe(expectedExecutor);
           expect(state.stages.reporter.actor).toBe("report-1");
         }
+        expect(output.join("")).not.toContain("[scope] waiting:");
         expect(process.exitCode ?? 0).toBe(0);
       });
     },
