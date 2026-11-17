@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_90023e1acfe54cebb2f81ec2985c38a3
+  ts: "2026-11-17T23:21:11Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-charter の recipe から文書の運用の記述を外す試行をし、recipe の一覧を作る
+    - field: description
+      from: ""
+      to: recipe には簡潔にする手本がないため、rulebook と sample を見直し済みの prj-charter で試行し、外す記述・残す記述・参照の形の一覧を作る
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-18）: recipe は schedule に入れる前に prj-charter で試行する。手本は PJR-8S4T の rulebook と sample の一覧"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-DJZD"]'
