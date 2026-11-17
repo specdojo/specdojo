@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-7we7-comparison-of-alternatives-readability
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-11-16T22:27:26Z"
+  completed_at: "2026-11-17T03:28:58Z"
+  conclusion: 冒頭に結論の要約と 5 区分の凡例を置き、根拠の表を案ごとの 1 行にして 29,903 バイトに縮めた。結論は変えていない
   derived_from:
     - PJR-CPZH
   commit_type: docs

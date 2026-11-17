@@ -79,3 +79,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_015844c5dad24328b4ceb303e9d29b4a
+- v: 1
+  id: reg_ecf4b67542e94bd2bbb8b790eda32131
+  ts: "2026-11-17T03:28:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が再 grade で DC 4 件の satisfied と大きさを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 冒頭に結論の要約と 5 区分の凡例を置き、根拠の表を案ごとの 1 行にして 29,903 バイトに縮めた。結論は変えていない
+  previous_event_id: reg_9c18d14644fb4ee694cd2106f9ef92d8
