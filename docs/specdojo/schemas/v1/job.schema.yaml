@@ -180,7 +180,18 @@ $defs:
   commandTask:
     type: object
     additionalProperties: false
-    required: [mode, command]
+    required: [mode]
+    oneOf:
+      - required: [command]
+        not:
+          anyOf:
+            - required: [steps]
+            - required: [lock_wait_seconds]
+      - required: [steps]
+        not:
+          anyOf:
+            - required: [command]
+            - required: [partial_exit_code]
     properties:
       mode:
         const: command
@@ -190,6 +201,14 @@ $defs:
       command:
         type: string
         minLength: 1
+      steps:
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/commandStep"
+      lock_wait_seconds:
+        type: integer
+        minimum: 0
       partial_exit_code:
         description: >
           Optional non-zero exit code that records a reviewable partial Job Run. Other non-zero
@@ -228,3 +247,45 @@ $defs:
         $ref: "#/$defs/pathScope"
       review:
         $ref: "#/$defs/review"
+  commandStep:
+    type: object
+    additionalProperties: false
+    required: [id, command]
+    properties:
+      id:
+        type: string
+        pattern: "^[a-z][a-z0-9-]*$"
+      command:
+        type: string
+        minLength: 1
+      on_failure:
+        enum: [stop, continue]
+      timeout_seconds:
+        type: integer
+        minimum: 1
+        maximum: 2147483
+      completion:
+        type: object
+        additionalProperties: false
+        required: [path, field, succeeded]
+        properties:
+          path:
+            type: string
+            minLength: 1
+          field:
+            type: string
+            minLength: 1
+          succeeded:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1
+          deferred:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items:
+              type: string
+              minLength: 1

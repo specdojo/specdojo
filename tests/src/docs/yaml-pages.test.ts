@@ -44,13 +44,24 @@ describe("renderYamlPage", () => {
     "pm-roles-sample.yaml": "project",
     "tml-sample.yaml": "project",
   };
+  const untypedSamples = ["job-sequence.yaml"];
 
   it("covers every bundled YAML sample", () => {
     expect(
       readdirSync("docs/ja/specdojo/samples")
         .filter((name) => /\.ya?ml$/.test(name))
         .sort(),
-    ).toEqual(Object.keys(sampleTypes).sort());
+    ).toEqual([...Object.keys(sampleTypes), ...untypedSamples].sort());
+  });
+
+  it.each(untypedSamples)("renders untyped sample %s without artifact frontmatter", (name) => {
+    const path = `docs/ja/specdojo/samples/${name}`;
+    const content = readFileSync(path, "utf8");
+    const page = renderYamlPage(path, content);
+    expect(page.startsWith(`# ${name}\n`)).toBe(true);
+    expect(page).not.toContain("specdojo:\n");
+    expect(page).toContain(YAML_PAGE_MARKER);
+    expect(page).toContain(`\`\`\`yaml\n${content}\`\`\``);
   });
 
   it.each(Object.entries(sampleTypes))(

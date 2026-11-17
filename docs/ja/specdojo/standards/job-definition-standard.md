@@ -20,7 +20,7 @@ Job Definition Standard
 
 ## 2. 基本方針
 
-- 決定論的な手順（分岐条件が事前に確定し、実行結果が入力から一意に決まる手順）は script または CLI へ実装し、`mode: command` の `task.command` からその入口を呼ぶ。
+- 決定論的な手順は script または CLI へ実装し、`mode: command` の `task.command` から入口を呼ぶ。複数の入口を順に実行する場合は `task.steps` を使う。
 - `task.command` は materialize 時に入力を展開して Run へ凍結し、runner が agent の sandbox 外で直接実行する。
 - 対象選択を伴う command Job は任意の `task.precondition` で選択を先に評価できる。skip 条件を満たした場合は Job Run と付随成果物を作らない。
 - command Job が同じプロジェクトの `specdojo exec` を子プロセスとして呼ぶ場合、runner が保持する project 実行 lock の token を子へ継承する。子は owner token の一致を検証した場合だけ再取得を省略し、Job 全体の排他範囲を維持する。
@@ -32,11 +32,11 @@ Job Definition Standard
 
 ### 2.1. 判断と手順の切り分け基準
 
-次の表で「手順」に該当する記述は `task.description` へ書かず、script または CLI へ移す。
+次の表で「手順」に該当する記述は `task.description` へ書かず、`task.steps` または script / CLI へ移す。
 
 | 区分 | 判定基準                                                   | 記述場所                                              | 例                                               |
 | ---- | ---------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------ |
-| 手順 | 実行前に条件と順序が確定し、結果が入力から一意に決まる     | script / CLI と `task.command`                        | 対象文書の列挙、段の順序制御、1件ごとの CLI 実行 |
+| 手順 | 実行前に条件と順序が確定し、結果が入力から一意に決まる     | `task.steps` または script / CLI と `task.command`    | 対象文書の列挙、段の順序制御、1件ごとの CLI 実行 |
 | 手順 | 同じ操作を対象ごとに繰り返す                               | script / CLI と `task.command`                        | 全件ループ、対象0件時の分岐                      |
 | 判断 | 観測した結果を解釈し、複数の説明のどれが妥当かを選ぶ       | `task.analysis.description` または `task.description` | 失敗が rate limit か agent の失敗かの切り分け    |
 | 判断 | 事実から次の行動（再開・見直し・エスカレーション）を決める | `task.analysis.description` または `task.description` | 閾値の見直し要否、再開可否の判断                 |
@@ -78,7 +78,7 @@ Job Definition Standard
 ### 3.4. 責務境界と粒度
 
 - 1つの Job は1つの委譲単位に対応させる。同じ処理を条件違いで繰り返すために Job を分割してはならない。条件差は `inputs` で表す。
-- 実行順序を Job の分割で表現してはならない。順序は script または CLI が持ち、routine の `action` 配列は独立した委譲単位の並びにだけ使う。
+- 実行順序を Job の分割で表現してはならない。順序は `task.steps` または script / CLI が持ち、routine の `action` 配列は独立した委譲単位の並びにだけ使う。
 - Job は起動時刻を持たない。時刻条件は routine または外部スケジューラが持つ。
 - Job は agent 実行エンジンを持たない。plan 生成、agent 選択、result、worktree、commit は `exec` 実行基盤へ委ねる。
 
@@ -102,6 +102,20 @@ Job Definition Standard
 - `job_run_id` は `idempotency_key` から導出されるため、`run.idempotency_key` では参照できない。
 - 同じ `scheduled_at` を明示した手動・routine 起動は同じ実行枠として重複排除する。`scheduled_at` を省略した手動起動は起動ごとに新しい実行枠とする。
 
+### 3.7. command Job の順次実行
+
+`task.command` の代わりに非空の `task.steps` を指定すると、runner は各段のプロセス終了を待ってから次を実行する。両方の併記、agent mode での使用、`task.partial_exit_code` との併用は認めない。各段の `id` は Job 内で一意な小文字 slug、`command` は非空とし、入力 template を materialize 時に解決して Run へ凍結する。
+
+- 各段の `on_failure` は自身の失敗・延期後の `stop`（既定）または `continue`。続行しても既に発生した失敗を成功へ読み替えない。
+- 段は終了コード 0 で成功、75 で延期、それ以外（signal・起動不能を含む）で失敗とする。未実行の後続段も理由付きの `deferred` として `attempts[].steps` に保存する。全段が成功した場合だけ Run は `succeeded`、失敗・延期があれば `failed`。CLI は失敗を含めば 1、延期だけなら 75 を返す。
+- 終了コードだけでは完了を表せないコマンドには `completion` を必ず指定する。`path` は repository 内の相対パス（JSON、YAML、Markdown frontmatter）、`field` はドット区切りのキー、`succeeded` は成功状態の非空リスト、任意の `deferred` は延期状態のリスト。終了コード 0 に加え、そのフィールドが成功状態に一致する場合だけ成功とする。ファイル欠落・不正、キー欠落、未指定の状態は失敗とする。CLI が最新状態を生成する必要があれば、同じ段の command の最後で refresh する。ログの文言から完了を判定しない。
+- sequence は project 実行 lock を排他的に取得するまで待つ。`task.lock_wait_seconds` は待機上限の秒数（非負整数、既定 3600、0 は即時判定）。この Job の外側の `--if-busy` より定義を優先する。上限超過では precondition・段・analysis を実行せず、全段を延期として記録する。
+- lock は全段の終了まで保持し、同一 project の子 exec は検証済み token を継承する。先行プロセスのログや `pgrep` は監視しない。同じ論理 Run の同時起動は別の guard で拒否し、待機中の記録を上書きしない。
+- 各段の任意の `timeout_seconds`（1〜2147483 の整数）は lock 待機を含む command 全体の上限。超過は延期とし、POSIX では command のプロセス群を停止してから後続へ進む。grade 独自の lock を待つ場合は `grade run --if-busy wait` と併用する。
+- 各段の状態を直ちに保存し、実行済み段には終了コード・時刻・command evidence 参照を残す。同じ実行枠の retry は新しい attempt として全段を先頭から実行する。段のコマンドには冪等な操作、既存の resume、grade の再開機能を使う。
+
+例と routine / cron の接続は [[specdojo:job-sequence-guide|順次実行 Job の例]] を参照する。
+
 ## 4. 値制約・判定基準
 
 | 項目                     | 必須 | 判定基準                                                                        |
@@ -109,7 +123,8 @@ Job Definition Standard
 | `id`                     | ○    | `job-<slug>` 形式で、ファイル名の拡張子を除いた部分と一致する                   |
 | `task.mode`              | ○    | `edit` / `review` / `command`                                                   |
 | `task.description`       | 条件 | `edit` / `review` で必須。決定論的手順の列挙を含まない                          |
-| `task.command`           | 条件 | `command` で必須。入力展開後も非空                                              |
+| `task.command`           | 条件 | `command` で `task.steps` といずれか一方が必須。入力展開後も非空                |
+| `task.steps`             | 条件 | `command` の順次実行。第3.7節に従う                                             |
 | `task.partial_exit_code` | 任意 | `command` だけで使用する1〜255の終了コード。明示した値だけを`partial`とする     |
 | `task.precondition`      | 任意 | `command` と `empty-output` または 0〜255 の終了コードを指定                    |
 | `task.analysis`          | 任意 | command 結果の判断が必要な場合だけ agent と description を指定                  |
