@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-11-13T14:48:23Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: typecheck"
   commit_type: feat
   commit_scope: docs-site
 ---
@@ -64,7 +63,7 @@ specdojo:
 ### 5.2. 検証結果
 
 - 追加した単体テスト（`tests/packages/docs-site/default-index-pages.test.ts`）を含む `tests/packages/docs-site/` の 100 件が通った。`index.md` の有無、リンク対象の絞り込み、dev 中の削除からの復元、`base_path` 未設定と `docs/` 外の project を確かめている。
-- docs-site の `tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit` が通った。
+- docs-site の `tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit` が通った。ルートの `tsc -b --noEmit` は `kata-staging.ts` の相対 import に拡張子が無く失敗したため、`./default-index-pages.js` に直して通した。
 - 残課題: 空のリポジトリへ `npm pack` の配布物を入れ、`docs:dev` と `docs:build` でトップ（`/<base>/`）と project のトップ（`/ja/projects/<project-id>/`）が 404 にならないことを、利用側の `index.md` がある場合とない場合の両方で人が確かめる。executor の sandbox では build の起動が承認されなかった。手順の下書きは worktree の `tmp/pejs-build-check.sh`（`SPECDOJO_PACKAGE_ROOT` でリポジトリを package として指す簡易版。`npm pack` の配布物での確認は別途必要）。
 - 「プロジェクト」のナビゲーションは引き続き `prj-0001` の `prj-overview` を固定で開く。project の ID や構成が違う利用リポジトリでは 404 になり得るため、必要なら別の登録項目で扱う。
 

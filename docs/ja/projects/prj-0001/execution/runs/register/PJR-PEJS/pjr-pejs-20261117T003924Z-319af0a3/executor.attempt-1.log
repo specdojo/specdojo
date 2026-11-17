@@ -1,0 +1,24 @@
+サイトのトップと project のトップのページを、`index.md` がないときに docs-site が用意するようにしました。単体テストは通りましたが、実際の `docs:build` / `docs:dev` で 404 にならないかはまだ確かめていません。sandbox で build の起動が承認されなかったためです。この確認は人の作業として残しています。
+
+**変更内容**
+- **トップのページを用意**: `packages/docs-site/.vitepress/default-index-pages.ts` を追加しました。`.vitepress/kata-staging` を作った直後に、利用リポジトリにないページだけを書き込みます。
+  - サイトのトップ（`docs/index.md`）には、SpecDojo の文書と project ごとのトップへのリンクを置きます。
+  - project のトップ（`/ja/projects/<project-id>/`）には、登録簿の一覧・派生ビュー・管理ログのうち、生成済みのものだけをリンクします。存在しないページへのリンクは build の dead link 検査で失敗するためです。
+  - 利用リポジトリに `index.md` があるときはそちらを使い、上書きしません。
+- **dev 中の削除**: `kata-staging.ts` から生成を呼ぶようにしました。dev 中に利用側の `index.md` を消すと、用意したページに戻ります。
+- **「ホーム」**: `docs/ja/index.md` がないときは、上のナビゲーションの「ホーム」と言語メニューが `/`（サイトのトップ）を開きます。SpecDojo 自身のリポジトリには `docs/ja/index.md` があるので、これまでどおり `/ja/` を開きます。
+- **CLI には組み込まず**: 理由は、docs-site が任意導入のパッケージであることと、毎回生成すれば設定や生成物の変化に自動で追従することです。個票の対応結果に書きました。
+- テスト `tests/packages/docs-site/default-index-pages.test.ts` を追加し、`packages/docs-site/README.md` を追記しました。個票には作業内容の表、対応結果、「CHANGELOG に書く事項」、関連ドキュメントを書きました。`CHANGELOG.md` は変えていません。
+
+**確認したこと**
+- `tests/packages/docs-site/` の 100 件が通りました。
+- docs-site の `tsc` と、変更した Markdown の markdownlint は問題ありませんでした。
+
+**残っていること**
+- 空のリポジトリに `npm pack` の配布物を入れ、`docs:dev` と `docs:build` で 404 にならないかの確認が必要です。利用側の `index.md` がある場合とない場合の両方です。個票の作業内容 No4 は `open` のままにしています。
+  - `tmp/pejs-build-check.sh` に下書きを置きました。ただし配布物ではなく、`SPECDOJO_PACKAGE_ROOT` でこのリポジトリを指す簡易版で、`npm pack` での確認は別に必要です。
+- 上のナビゲーションの「プロジェクト」は、今も `prj-0001` の `prj-overview` を固定で開きます。project の ID や構成が違う利用リポジトリでは 404 になり得ますが、このタスクの範囲外なので直していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"docs-site のステージングで、利用リポジトリに index.md がないときにサイトのトップと project のトップのページを用意するようにした。利用側の index.md があれば上書きしない。docs/ja/index.md がないときは「ホーム」がサイトのトップを開く。単体テストを追加し、README と個票（対応結果・CHANGELOG に書く事項）を更新した。npm pack の配布物を使った dev・build での 404 確認は sandbox で実行できず、人に引き継ぐ。","handoff":["人による確認: 空のリポジトリに npm pack の配布物（specdojo と @specdojo/docs-site）を入れ、`docs:dev` と `docs:build` で /<base>/ と /ja/projects/<project-id>/ が 404 にならないことを、利用側の index.md がある場合とない場合の両方で確かめる。executor の sandbox では build の起動が承認されなかった。下書きは worktree の `tmp/pejs-build-check.sh`（SPECDOJO_PACKAGE_ROOT でリポジトリを指す簡易版）。個票の作業内容 No4 は open のまま。","CLI（`config scaffold`）に組み込まず、`.vitepress/kata-staging` に毎回生成する方式にした。理由は個票の対応結果に記載した。","範囲外の残課題: 上のナビゲーションの「プロジェクト」は prj-0001 の prj-overview を固定で開くため、project の ID や構成が違う利用リポジトリでは 404 になり得る。必要なら別の登録項目で扱う。","CHANGELOG に書く事項は個票の対応結果の「CHANGELOG に書く事項」の節に記載した（CHANGELOG.md は未変更）。"],"validations":[{"command":"npx vitest run tests/packages/docs-site/","status":"passed","summary":"10 files / 100 tests passed（追加した default-index-pages.test.ts を含む）"},{"command":"npx tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit","status":"passed","summary":"docs-site の型エラーなし"},{"command":"npx prettier --write packages/docs-site/.vitepress/default-index-pages.ts packages/docs-site/.vitepress/kata-staging.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/default-index-pages.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-pejs-docs-site-default-index-pages.md packages/docs-site/README.md","status":"passed","summary":"変更ファイルを整形した"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-pejs-docs-site-default-index-pages.md packages/docs-site/README.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含む履歴ファイルに違反なし"},{"command":"specdojo-docs-site build（空の workspace に npm pack の配布物を入れ、index.md の有無の両方で dev・build する）","status":"requires_human","summary":"sandbox で build の起動が承認されず実行できない。/<base>/ と /ja/projects/<project-id>/ が 404 にならないことを人が確かめる"}]}
+</specdojo_executor_evidence>

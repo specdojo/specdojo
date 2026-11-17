@@ -281,6 +281,10 @@ const specdojoItems = {
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
 const base = "/specdojo/";
 
+// 日本語トップ（docs/ja/index.md）が無い利用リポジトリでは、「ホーム」と言語メニューを
+// ステージングに必ずあるサイトのトップへ向け、404 にしない。
+const jaHomeLink = existsSync(path.join(SITE_CONTENT_ROOT, "ja", "index.md")) ? "/ja/" : "/";
+
 /**
  * 追加したいロケールはここに足すだけでOK
  * - locale: URL と docs/<locale>/ のディレクトリ名に使う
@@ -919,10 +923,10 @@ export default defineConfig({
       label: "日本語",
       lang: "ja",
       // 言語メニューで押したときのリンク先（日本語トップ）
-      link: "/ja/",
+      link: jaHomeLink,
       themeConfig: {
         nav: [
-          { text: "ホーム", link: "/ja/" },
+          { text: "ホーム", link: jaHomeLink },
           { text: "SpecDojo", link: "/ja/specdojo/guides/specdojo-overview-guide" },
           {
             text: "プロジェクト",
