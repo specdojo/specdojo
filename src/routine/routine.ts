@@ -1,3 +1,4 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -510,29 +511,28 @@ export function formatRoutineLastRun(entry: RoutineStateEntry | undefined): stri
   return entry.last_result ? `${entry.last_run} (${entry.last_result})` : entry.last_run;
 }
 
+export function printRoutinePaths(opts: { project?: string }): void {
+  try {
+    const paths = resolveRoutinePaths(opts);
+    process.stdout.write(`project:  ${paths.projectId}\n`);
+    process.stdout.write(`routines: ${paths.routinesPath}\n`);
+    process.stdout.write(`state:    ${paths.statePath}\n`);
+    process.stdout.write(`runs:     ${paths.runsPath}\n`);
+    const files = listFilesRecursive(paths.routinesPath).filter(isRoutineYamlFile).sort();
+    for (const filePath of files) {
+      process.stdout.write(`  ${filePath}\n`);
+    }
+  } catch (error) {
+    printCommandError(error);
+  }
+}
+
 export function registerRoutineCommands(program: Command): void {
   const routine = program
     .command("routine")
     .description("Periodic task execution from rtn-*.yaml definitions");
 
-  // --- where ---
-  const whereCmd = routine.command("where").description("Print resolved routine paths and files");
-  addProjectOption(whereCmd);
-  whereCmd.action((opts) => {
-    try {
-      const paths = resolveRoutinePaths(opts);
-      process.stdout.write(`project:  ${paths.projectId}\n`);
-      process.stdout.write(`routines: ${paths.routinesPath}\n`);
-      process.stdout.write(`state:    ${paths.statePath}\n`);
-      process.stdout.write(`runs:     ${paths.runsPath}\n`);
-      const files = listFilesRecursive(paths.routinesPath).filter(isRoutineYamlFile).sort();
-      for (const filePath of files) {
-        process.stdout.write(`  ${filePath}\n`);
-      }
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
+  registerDeprecatedWhereAlias(routine, printRoutinePaths);
 
   // --- validate ---
   const validateCmd = routine.command("validate").description("Validate rtn-*.yaml definitions");

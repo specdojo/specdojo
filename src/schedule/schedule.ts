@@ -1,3 +1,4 @@
+import { registerDeprecatedWhereAlias } from "../shared/where-alias.js";
 import { type Command } from "commander";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { existsSync, readdirSync, writeFileSync } from "node:fs";
@@ -412,45 +413,44 @@ function registerScheduleStrategyCommands(sch: Command): void {
   });
 }
 
+export function printSchedulePaths(opts: { project?: string }): void {
+  try {
+    const { schedulePath } = resolveSchedulePath(opts);
+    process.stdout.write(`schedule-path: ${schedulePath}\n`);
+
+    if (!existsSync(schedulePath)) {
+      process.stdout.write(`(path does not exist)\n`);
+      return;
+    }
+
+    const files = readdirSync(schedulePath)
+      .filter((f) => /^sch-.+\.yaml$/.test(f))
+      .sort();
+    const strategyFiles = files.filter((f) => f.startsWith("sch-strategy-"));
+    const trackFiles = files.filter((f) => f.startsWith("sch-track-"));
+
+    process.stdout.write(`strategy-files:\n`);
+    if (strategyFiles.length === 0) {
+      process.stdout.write(`  (none)\n`);
+    } else {
+      for (const f of strategyFiles) process.stdout.write(`  - ${f}\n`);
+    }
+
+    process.stdout.write(`track-files:\n`);
+    if (trackFiles.length === 0) {
+      process.stdout.write(`  (none)\n`);
+    } else {
+      for (const f of trackFiles) process.stdout.write(`  - ${f}\n`);
+    }
+  } catch (error) {
+    printCommandError(error);
+  }
+}
+
 export function registerScheduleCommands(program: Command): void {
   const sch = program.command("schedule").description("Schedule build commands");
 
-  // --- where ---
-  const wcmd = sch.command("where").description("Print resolved schedule paths and file list");
-  addProjectOption(wcmd);
-  wcmd.action((opts) => {
-    try {
-      const { schedulePath } = resolveSchedulePath(opts);
-      process.stdout.write(`schedule-path: ${schedulePath}\n`);
-
-      if (!existsSync(schedulePath)) {
-        process.stdout.write(`(path does not exist)\n`);
-        return;
-      }
-
-      const files = readdirSync(schedulePath)
-        .filter((f) => /^sch-.+\.yaml$/.test(f))
-        .sort();
-      const strategyFiles = files.filter((f) => f.startsWith("sch-strategy-"));
-      const trackFiles = files.filter((f) => f.startsWith("sch-track-"));
-
-      process.stdout.write(`strategy-files:\n`);
-      if (strategyFiles.length === 0) {
-        process.stdout.write(`  (none)\n`);
-      } else {
-        for (const f of strategyFiles) process.stdout.write(`  - ${f}\n`);
-      }
-
-      process.stdout.write(`track-files:\n`);
-      if (trackFiles.length === 0) {
-        process.stdout.write(`  (none)\n`);
-      } else {
-        for (const f of trackFiles) process.stdout.write(`  - ${f}\n`);
-      }
-    } catch (error) {
-      printCommandError(error);
-    }
-  });
+  registerDeprecatedWhereAlias(sch, printSchedulePaths);
 
   const bcmd = sch
     .command("build", { hidden: true })

@@ -25,7 +25,7 @@ permission:
     "specdojo help*": allow
     "specdojo project list*": allow
     "specdojo exec status*": allow
-    "specdojo exec where*": allow
+    "specdojo where *": allow
     "specdojo exec validate*": allow
     "specdojo * --help*": allow
     "specdojo * --dry-run*": allow

@@ -82,7 +82,7 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 
 - **Claude Code / GitHub Copilot**: 状態変更コマンドはハーネスの承認フローを通す。破壊的操作と `git push` は本文で禁止する。
 - **Codex**: `approval_policy = "on-request"` とし、状態変更コマンドの実行時に承認を求める。`sandbox_mode = "workspace-write"` でリポジトリ外への書き込みを避ける。
-- **OpenCode**: `permission.bash` を許可リスト方式とし、読み取り系 `specdojo`（`--help` / `project list` / `exec status` / `exec where` / `exec validate` / `* --help` / `* --dry-run`）は `allow`、その他の `specdojo *` は `ask` とする。`.env` / `secrets/` の読み取りは `deny` する。
+- **OpenCode**: `permission.bash` を許可リスト方式とし、読み取り系 `specdojo`（`--help` / `project list` / `exec status` / `where exec` / `exec validate` / `* --help` / `* --dry-run`）は `allow`、その他の `specdojo *` は `ask` とする。`.env` / `secrets/` の読み取りは `deny` する。
 
 共通の禁止事項は次のとおりとする。
 
