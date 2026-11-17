@@ -21,6 +21,10 @@ import {
 let root: string;
 let leases: ChangeScopeLease[];
 const known = (path: string) => ({ paths: [`project:${path}`], unknown: false });
+const registerTemplate = readFileSync(
+  join(__dirname, "../../../../docs/ja/specdojo/exec-templates/xep-register-template.md"),
+  "utf8",
+);
 const remember = (lease: ChangeScopeLease) => {
   leases.push(lease);
   return lease;
@@ -38,6 +42,84 @@ afterEach(async () => {
 });
 
 describe("change scope inference", () => {
+  it("reads item inputs but not generated register plan procedures and conventions", () => {
+    const scope = inferChangeScope({
+      projectId: "test",
+      repoRoot: root,
+      text: registerTemplate
+        .replace("_PJR_DESCRIPTION_", "`src/exec/run.ts#resume` を変更する。")
+        .replace("_REGISTER_INPUT_", "## 個票の入力（前提）\n\n`src/input.ts`")
+        .replace("_GRADE_FINDINGS_", "- `src/finding.ts` を修正する。")
+        .replace("_COMMON_CONVENTIONS_", "## 共通: 規約\n\n`package.json` を読む。"),
+    });
+    expect(scope).toEqual({
+      paths: ["project:src/exec/run.ts", "project:src/finding.ts", "project:src/input.ts"],
+      unknown: false,
+    });
+    expect(inferChangeScope({ projectId: "test", repoRoot: root, text: registerTemplate })).toEqual(
+      { paths: [], unknown: true },
+    );
+  });
+
+  it("keeps later additional conditions and ignores headings inside fenced examples", () => {
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        text: [
+          "# Edit Plan: task",
+          "## 1. 対象成果物",
+          "```md",
+          "## 共通: this is an example, not a section boundary",
+          "```",
+          "`docs/output.md`",
+          "## 2. 進め方",
+          "`src/common-procedure.ts` を読む。",
+          "### grade result から展開された finding",
+          "`src/finding.ts` を修正する。",
+          "### 2.1. 判断根拠の記録",
+          "`src/common-record.ts` を読む。",
+          "## 3. 完了手順",
+          "`pjr-index.md` の状態は変更しない。",
+          "## 個票の追加完了条件",
+          "`src/additional.ts` を変更する。",
+        ].join("\n"),
+      }),
+    ).toEqual({
+      paths: ["project:docs/output.md", "project:src/additional.ts", "project:src/finding.ts"],
+      unknown: false,
+    });
+  });
+
+  it("excludes normalized generated paths from explicit targets and item prose", () => {
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        targets: ["docs/./generated/index.md", "app:generated/view.md"],
+        targetPath: "docs/generated/new.md",
+        text: "`docs/other/../generated/list.md` と `src/real.ts` を変更する。",
+      }),
+    ).toEqual(known("src/real.ts"));
+  });
+
+  it("runs independent register items sharing only template instructions concurrently", async () => {
+    const infer = (path: string) =>
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        text: registerTemplate.replace("_PJR_DESCRIPTION_", `\`${path}\` を変更する。`),
+      });
+    const firstScope = infer("src/catalog.ts");
+    const secondScope = infer("src/exec.ts");
+    expect(scopeOverlap(firstScope, secondScope)).toBeUndefined();
+    const gate = new ChangeScopeGate(root);
+    remember(await gate.acquire("PJR-V0FQ", firstScope));
+    const second = await gate.tryAcquire("PJR-981V", secondScope);
+    expect(second).not.toBeNull();
+    expect(remember(second!).waits).toEqual([]);
+  });
+
   it("does not treat prose alternatives or per-item bookkeeping as implementation paths", () => {
     expect(
       inferChangeScope({

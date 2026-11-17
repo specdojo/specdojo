@@ -9,7 +9,7 @@ import {
 import type { RateLimitRecoveryEvent } from "./run/shared.js";
 import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
 import type { AgentStageRole } from "./types.js";
-import { gitOutput } from "./worktree.js";
+import { gitOutput, gitResult } from "./worktree.js";
 
 import { isCondenseRecords, type CondenseRecord } from "../shared/condense-records.js";
 
@@ -742,14 +742,19 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
     `${executionRel}/exec/events/`,
     `${executionRel}/generated/`,
   ];
-  const changes = parseStatusPaths(input.worktreePath)
+  const inGit = gitResult(input.worktreePath, ["rev-parse", "--is-inside-work-tree"]).status === 0;
+  const changes = (inGit ? parseStatusPaths(input.worktreePath) : [])
     .filter((change) => runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)))
     .slice(0, MAX_CHANGE_FILES)
     .map((change) => ({
       path: boundedText(change.path, 1_000),
       status: boundedText(change.status, 40),
     }));
-  const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
+  const hasHead =
+    inGit && gitResult(input.worktreePath, ["rev-parse", "--verify", "HEAD"]).status === 0;
+  const diffStat = inGit
+    ? gitOutput(input.worktreePath, ["diff", "--stat", ...(hasHead ? ["HEAD"] : []), "--"])
+    : "";
   const evidenceDir = taskRecordPaths(
     join(input.worktreePath, executionRel),
     input.taskId,

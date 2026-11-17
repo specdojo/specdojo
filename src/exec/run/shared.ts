@@ -96,6 +96,9 @@ export type RunOpts = {
   input?: string | string[];
   scheduledAt?: string;
   jobTrigger?: string;
+  /** Internal sequence options; not user CLI flags. */
+  lockWaitMs?: number;
+  sequenceDeferredReason?: string;
   registerCommit?: boolean;
   postReview?: boolean;
   onFailure?: string;
@@ -707,6 +710,7 @@ export async function withProjectExecRunLock(
   const handle = await acquireExecRunLock(resolvedPaths.executionPath, {
     actor: opts.by ?? `exec-${commandLabel}`,
     ifBusy: policy,
+    waitTimeoutMs: opts.lockWaitMs,
     shareable: sharing.shareable || sharing.join,
     ...(sharing.join ? { join: { limit: joinLimit } } : {}),
     onWait: () =>

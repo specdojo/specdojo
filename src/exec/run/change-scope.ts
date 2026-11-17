@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { spawnSync } from "node:child_process";
 import {
   appendFileSync,
   existsSync,
@@ -10,10 +11,13 @@ import {
   writeFileSync,
 } from "node:fs";
 import { isAbsolute, join, posix, relative } from "node:path";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
 import { collectDocIndexEntries } from "../../docs/doc-index.js";
 import { authoredKataPath, authoringKind, isAuthoringApproach } from "../../kata/authoring.js";
 import type { Approach } from "../../shared/agent-types.js";
 import { readSpecdojoNamespace } from "../../docs/frontmatter-namespace.js";
+import { gitEnvironment } from "../../shared/git-environment.js";
 import { resolveDeliverableByDocId, targetReferenceDirsForApproach } from "../plans-core.js";
 import {
   delay,
@@ -55,6 +59,54 @@ export function normalizeScopePath(value: string): string | undefined {
   return `${repo}:${path}`;
 }
 
+// Generated plans mix task inputs with shared operating instructions. Read only task-specific
+// sections, including findings nested under the otherwise shared procedure section. Parse real
+// headings so headings in fenced examples cannot change which sections are selected.
+function scopeInputText(text: string): string {
+  const isPlan = readSpecdojoNamespace(text).type === "exec-plan" || /^# .*Plan:/m.test(text);
+  const body = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
+  const headings = unified()
+    .use(remarkParse)
+    .parse(body)
+    .children.filter((node) => node.type === "heading");
+  const parts: string[] = [];
+  let include = true;
+  let start = 0;
+  let currentSection = "";
+  for (const heading of headings) {
+    const offset = heading.position!.start.offset!;
+    if (include) parts.push(body.slice(start, offset));
+    const title = body
+      .slice(offset, heading.position!.end.offset!)
+      .replace(/^#+\s+(?:\d+(?:\.\d+)*\.\s*)?/, "")
+      .trim();
+    if (heading.depth === 2) {
+      if (/^(?:対応結果|関連ドキュメント|共通|変更範囲による実行待ち)/.test(title)) {
+        include = false;
+        break;
+      }
+      include =
+        !isPlan ||
+        /^(?:この.*行うこと|対象|個票の(?:入力|追加完了条件)|概要|入力|完了条件|完了の狙い|作業内容|制約|根拠となる成果物と編集対象|新しく作る実践の型)/.test(
+          title,
+        );
+    } else if (isPlan && heading.depth === 3) {
+      // Findings are item-specific even when embedded in common instructions.
+      if (
+        /^(?:grade result から展開された finding|成果物から届いた Kata が原因の finding)$/.test(
+          title,
+        )
+      )
+        include = true;
+      else if (/^進め方$/.test(currentSection)) include = false;
+    }
+    if (heading.depth === 2) currentSection = title;
+    start = offset;
+  }
+  if (include) parts.push(body.slice(start));
+  return parts.join("\n");
+}
+
 export function inferChangeScope(params: {
   targets?: readonly string[];
   targetPath?: string;
@@ -70,8 +122,11 @@ export function inferChangeScope(params: {
   let unresolved = false;
   const add = (path: string) => {
     const normalized = normalizeScopePath(path);
-    if (normalized) paths.add(normalized);
-    else unresolved = true;
+    if (!normalized) {
+      unresolved = true;
+      return;
+    }
+    if (!/(?:^|\/)generated(?:\/|$)/.test(normalized.split(":")[1]!)) paths.add(normalized);
   };
   const configPath = (path: string) => (isAbsolute(path) ? relative(params.repoRoot, path) : path);
   let index = params.documentPaths;
@@ -132,19 +187,9 @@ export function inferChangeScope(params: {
   }
   if (params.targetPath) add(params.targetPath);
   for (const path of targetReferenceDirsForApproach(params.approach)) add(path);
-  // Exclude frontmatter and historical response/related-document sections. These are references,
-  // not current task declarations. Backticks support root files; prose supports src/foo.ts.
+  // Backticks support root files; prose supports src/foo.ts.
   const texts = typeof params.text === "string" ? [params.text] : (params.text ?? []);
-  const body = texts
-    .map(
-      (text) =>
-        text
-          .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
-          .split(
-            /^##\s+(?:\d+\.\s*)?(?:対応結果|関連ドキュメント|共通|変更範囲による実行待ち)/m,
-          )[0]!,
-    )
-    .join("\n");
+  const body = texts.map(scopeInputText).join("\n");
   const addTextPath = (path: string) => {
     // Per-item bookkeeping is already serialized by lifecycle and same-item locks. Its presence
     // in a generated plan must not make an otherwise unknown implementation scope look known.
@@ -177,6 +222,23 @@ export function inferChangeScope(params: {
         existsSync(join(params.repoRoot, normalized.slice("project:".length))))
     )
       addTextPath(value);
+  }
+  // Ignore derived views even when their layout predates generated/. Keep candidates if Git
+  // cannot verify ignore rules (for example, a project not yet initialized as a repository).
+  const candidates = [...paths]
+    .filter((path) => path.startsWith("project:"))
+    .map((path) => path.slice("project:".length));
+  if (candidates.length) {
+    const ignored = spawnSync("git", ["check-ignore", "-z", "--stdin"], {
+      cwd: params.repoRoot,
+      env: gitEnvironment(),
+      input: `${candidates.join("\0")}\0`,
+      encoding: "utf8",
+      timeout: 10_000,
+    });
+    if (!ignored.error && (ignored.status === 0 || ignored.status === 1))
+      for (const path of ignored.stdout.split("\0").filter(Boolean))
+        paths.delete(`project:${path}`);
   }
   return { paths: [...paths].sort(), unknown: unresolved || paths.size === 0 };
 }
