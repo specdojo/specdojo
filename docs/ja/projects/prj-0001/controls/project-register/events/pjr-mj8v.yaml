@@ -128,3 +128,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c4645695ad424fe3988870c6d81a5a37
+- v: 1
+  id: reg_f1a820977c2845abb11b078e5e0c0166
+  ts: "2026-11-17T03:12:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が 2 回目の差分と回帰テスト、JSEY での統合後の動作と予約の解放を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 変更範囲の重なる項目を先行の統合まで待たせ、共通手順の文による誤った重なりを除いた
+  previous_event_id: reg_aced4344729f45098507af7663f235e6

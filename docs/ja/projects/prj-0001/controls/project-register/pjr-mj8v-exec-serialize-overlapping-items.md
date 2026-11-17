@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-mj8v-exec-serialize-overlapping-items
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-16T03:22:47Z"
   due_on: null
+  completed_at: "2026-11-17T03:12:50Z"
+  conclusion: 変更範囲の重なる項目を先行の統合まで待たせ、共通手順の文による誤った重なりを除いた
   derived_from:
     - PJR-1GCD
   commit_type: feat
