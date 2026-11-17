@@ -59,6 +59,29 @@ groups:
           - text: 開発者・運用者が操作しやすい表現・構成になっていること
             roles: [UX]
             viewpoint: vp-ux-readability
+      - local_id: uis-open-document-by-id
+        name: 画面仕様（VS Code の ID で文書を開く入力）
+        kind: work
+        overview: "VS Code 拡張のコマンド「SpecDojo: Open Document by ID」で、利用者が文書 ID を入力して対応する文書を開くまでの表示項目、操作、遷移、入力の検証、警告の表示と利用者の次の手を定義する"
+        path: uis-open-document-by-id.md
+        rulebook: specdojo:uis-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: packages/vscode-specdojo/src/extension.ts
+            purpose: specdojo.openById コマンドの入力欄・索引の読み込み・警告表示・文書を開く処理
+        done_criteria:
+          - text: 入力欄・警告・文書を開く結果と、利用者の次の手が業務観点で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 実装（specdojo.openById）の表示文言・分岐と食い違いがないこと
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 入力と警告の条件から受入テストを設計できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 利用者が迷わず操作できる表現・構成になっていること
+            roles: [UX]
+            viewpoint: vp-ux-readability
       - local_id: bds-index
         name: 帳票仕様（全体構成）
         kind: work
