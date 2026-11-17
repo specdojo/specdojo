@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0898b8b9ec0d4def91dbc2dbd08de0c0
+  ts: "2026-11-17T12:21:36Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: runner の変更の統合後の動作確認（JSEY の手順）を specdojo のコマンドにする
+    - field: description
+      from: ""
+      to: 確認用の項目の対象一覧への追記・開き直し・exec run・actor の確認を、orchestrator の手作業から 1 つのコマンドへ移す
+    - field: input
+      from: ""
+      to: '["運用メモの「JSEY（runner の動作確認）」の手順（対象一覧への ID の追記と commit、register reopen、claude-executor での exec run --register、start から review までと actor の実体名の確認、close）を、orchestrator が毎回手で流している。2026-11-17 も 2 回流した","利用者が 2026-11-17 に、npm script にするか specdojo のコマンドに足す案を出し、specdojo のコマンドにする形で起票を依頼した","orchestrator のスクリプトや手作業は specdojo のコマンドへ移す方針である"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-JSEY"]'
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
