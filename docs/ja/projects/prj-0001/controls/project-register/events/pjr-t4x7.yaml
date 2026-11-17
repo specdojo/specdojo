@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ca037368cf37449b81cd5b0969ff53a5
+  ts: "2026-11-17T05:12:35Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: run 単位の plan と result を文書サイトの対象から外し、docs:build のメモリ不足を直す
+    - field: description
+      from: ""
+      to: PJR-9BY9 で execution/runs/ へ移した plan・result が srcExclude とリンクの付け替えから外れ、docs:build が 8GB のヒープで止まる
+    - field: input
+      from: ""
+      to: '["2026-11-17 に orchestrator が npm run docs:build を流すと、約 19 分後にページの描画（rendering pages）で JavaScript heap out of memory になり SIGABRT で止まった。PJR-G85C の close 時は約 113 秒で通っていた","packages/docs-site/.vitepress/config.mts の srcExclude は `docs/**/execution/exec/plans/**` と `docs/**/execution/exec/results/**` だけを外す。exec-record-links.ts の `EXEC_RECORD_PATH` も execution/exec/(plans|results)/ だけに一致する","docs 配下の execution/runs/ には plan.md・result.md が 3,323 件あり、途中までの dist には execution/runs/ の HTML が 1,826 件出ていた"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-9BY9","PJR-G85C"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: docs-site
