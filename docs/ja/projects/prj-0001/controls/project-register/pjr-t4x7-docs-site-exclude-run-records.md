@@ -46,11 +46,11 @@ PJR-9BY9 で execution/runs/ へ移した plan・result が srcExclude とリン
 
 ## 4. 作業内容
 
-| No  | 作業                                                   | 担当         | 状態 | メモ                                                                                                  |
-| --- | ------------------------------------------------------ | ------------ | ---- | ----------------------------------------------------------------------------------------------------- |
-| 1   | 除外とリンクの付け替えを run 単位の場所に合わせる      | executor     | done | ページ走査・サイドバー・検索・Markdown / wikilink / frontmatter の参照を新旧配置に対応                |
-| 2   | 単体テストを足す                                       | executor     | done | 新旧配置の判定・走査除外と register / schedule / job のリンクを追加。実行は設定済みの親 runner が担当 |
-| 3   | 統合の後に docs:build を流して確かめる（orchestrator） | orchestrator | open | 個票の完了条件により sandbox では実行せず、統合後に既定 8GB での成功・所要時間・dead link 件数を確認  |
+| No  | 作業                                                   | 担当         | 状態 | メモ                                                                                                                           |
+| --- | ------------------------------------------------------ | ------------ | ---- | ------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | 除外とリンクの付け替えを run 単位の場所に合わせる      | executor     | done | ページ走査・サイドバー・検索・Markdown / wikilink / frontmatter の参照を新旧配置に対応                                         |
+| 2   | 単体テストを足す                                       | executor     | done | 新旧配置の判定・走査除外と register / schedule / job のリンクを追加。実行は設定済みの親 runner が担当                          |
+| 3   | 統合の後に docs:build を流して確かめる（orchestrator） | orchestrator | done | 既定の 8GB で 284 秒（VitePress の build は 240 秒）。2,378 ページ、run 単位の plan・result のページは 0 件、dead link は 0 件 |
 
 ## 5. 対応結果
 
@@ -72,6 +72,7 @@ PJR-9BY9 で execution/runs/ へ移した plan・result が srcExclude とリン
 
 - 区分: 不具合修正
 - 文案: 文書サイトのビルド対象から run 単位の plan・result を除外し、実行記録一覧などのリンクを GitHub の正本へ向ける。配置移行後にビルドの対象ページが増え、メモリ不足になる原因を修正。
+- 統合後の確認（2026-11-17、orchestrator）: `npm run docs:build` が `package.json` の既定のヒープ（8GB）で通った。全体で 284 秒、そのうち VitePress の build は 240 秒。出力した HTML は 2,378 件で、`execution/runs/` 配下のページは 0 件、dead link の検出は 0 件だった。修正前は約 19 分後にページの描画でメモリ不足になっていた。
 
 ## 6. 関連ドキュメント
 
