@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0abf3052c06b41b798a42f4aeec47eb0
+  ts: "2026-11-17T23:19:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 残りの rulebook と recipe から文書の運用の記述を外し、簡潔にする
+    - field: description
+      from: ""
+      to: kata-slim で業務仕様までの型が簡潔になったため、残りの rulebook（カタログに代表がある 79 件と記法の 6 件）と recipe 34 件を同じ一覧で簡潔にする
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-18）: sample の手直しで記述がだいぶ簡潔になった。他の全ての rulebook と recipe も見直したい。epic を起票して schedule で実行したい","利用者の決定（2026-11-18、orchestrator の推奨の案）: カタログに代表がない 21 件のうち、記法の rulebook 6 件（cdfd-mermaid・cdfd-d2・cnd-mermaid・cpd-mermaid・cxd-mermaid・stsd-mermaid）は親の型の段で一緒に直す。非推奨の cld・cstd・tml は対象外。cdr・dct・dss・trc-requirements-to-specs・trc-requirements-to-tests・dmd・cop・otp の 8 件は orchestrator がカタログに代表を足す。ifx-api・ifx-msg・dec は事実がないため代表を作らず子の todo で sample だけを相手に簡潔にする。dec と ntp は扱いを決める decision を起票し、ntp は決まるまで対象外","利用者の決定（2026-11-18）: recipe は手本がないため、先に prj-charter の recipe で試行して一覧を作ってから schedule に入れる。schedule の track は kata-slim-2"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: kata-slim-2
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
