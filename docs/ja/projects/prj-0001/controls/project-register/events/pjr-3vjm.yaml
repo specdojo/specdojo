@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bcfd4fc6f3cc487cb6e44c8dd6192d45
+  ts: "2026-11-17T23:22:36Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 決定記録（dec）の型を非推奨にするか決める
+    - field: description
+      from: ""
+      to: prj-0001 の決定は登録簿の decision で管理しており dec 文書がない。登録簿の decision と役割が重なる dec の型を非推奨にするかを決める
+    - field: input
+      from: ""
+      to: '["orchestrator の調べ（2026-11-18）: dec-rulebook と dec-sample はあるが、リポジトリに `dec-<NNNN>` の文書はない。決定は pjr の decision と pm-decision-log（生成）で管理している"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-DJZD"]'
