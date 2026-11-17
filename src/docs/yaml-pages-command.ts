@@ -10,11 +10,13 @@ function printCommandError(error: unknown): void {
 }
 
 export function registerYamlPagesCommands(program: Command): void {
-  const cmd = program.command("yaml-pages").description("YAML display page commands");
+  const cmd = program
+    .command("yaml-pages", { hidden: true })
+    .description("YAML display page commands");
 
   cmd
-    .command("build")
-    .description("Generate generated/<name>.md display pages for indexed YAML files")
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only yaml-pages")
     .option("--root <path>", "Root directory to scan", "docs")
     .action((opts) => {
       try {

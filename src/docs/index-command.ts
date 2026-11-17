@@ -21,8 +21,8 @@ export function registerIndexCommands(program: Command): void {
   const idx = program.command("index").description("Document ID index commands");
 
   idx
-    .command("build")
-    .description("Scan docs and build .specdojo/doc-index.json")
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only index")
     .option("--root <path>", "Root directory to scan", "docs")
     .option("--output <path>", "Output path", ".specdojo/doc-index.json")
     .action((opts) => {

@@ -5,6 +5,11 @@ import { registerDeliverableCommands } from "../../src/deliverable/deliverable.j
 import { registerExecCommands } from "../../src/exec/exec.js";
 import { registerGradeCommand } from "../../src/grade/grade.js";
 import { registerConfigCommands } from "../../src/shared/specdojo-config.js";
+import { registerScheduleCommands } from "../../src/schedule/schedule.js";
+import { registerRegisterCommands } from "../../src/register/register.js";
+import { registerIndexCommands } from "../../src/docs/index-command.js";
+import { registerYamlPagesCommands } from "../../src/docs/yaml-pages-command.js";
+import { registerDashboardCommands } from "../../src/dashboard/dashboard.js";
 
 function subcommandNames(program: Command, name: string): string[] {
   return (
@@ -15,6 +20,34 @@ function subcommandNames(program: Command, name: string): string[] {
 }
 
 describe("CLI generation verb taxonomy", () => {
+  it("retains all six build entries for automation while hiding them from command lists", () => {
+    const program = new Command();
+    registerCatalogCommands(program);
+    registerScheduleCommands(program);
+    registerRegisterCommands(program);
+    registerIndexCommands(program);
+    registerYamlPagesCommands(program);
+    registerDashboardCommands(program);
+
+    for (const name of ["catalog", "schedule", "register", "index", "yaml-pages", "dashboard"]) {
+      const group = program.commands.find((command) => command.name() === name)!;
+      const build = group.commands.find((command) => command.name() === "build");
+      expect(build?.description()).toBe(`Internal compatibility entry for build --only ${name}`);
+      expect(
+        group
+          .createHelp()
+          .visibleCommands(group)
+          .map((command) => command.name()),
+      ).not.toContain("build");
+    }
+    const visible = program
+      .createHelp()
+      .visibleCommands(program)
+      .map((command) => command.name());
+    expect(visible).not.toContain("yaml-pages");
+    expect(visible).not.toContain("dashboard");
+  });
+
   it("offers provider setup under config while retaining the exec compatibility entry", () => {
     const program = new Command();
     registerConfigCommands(program);

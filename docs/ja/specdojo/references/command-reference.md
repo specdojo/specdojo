@@ -32,7 +32,8 @@ CLI Command Reference
 | `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド、`orchestrator`   |
 | `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / build / run / worktree / kata   |
 | `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / schedule build / release / kata |
-| `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                          |
+| `--only <区分>`   | build の対象区分を絞る                             | `build`                                    |
+| `--scope <scope>` | watch の対象範囲を絞る                             | `watch`                                    |
 
 project の解決順序と設定は [遂行の技活用ガイド](../guides/waza-guide.md) を参照します。
 
@@ -282,12 +283,12 @@ specdojo config scaffold --workspace --force
 
 `catalog` は成果物カタログ（`dct-*.yaml`）を扱います。
 
-| コマンド           | 用途                                     | 例                                             |
-| ------------------ | ---------------------------------------- | ---------------------------------------------- |
-| `catalog scaffold` | テンプレートから `dct-*.yaml` を生成する | `specdojo catalog scaffold --project prj-0001` |
-| `catalog where`    | catalog 関連パスを表示する               | `specdojo catalog where --project prj-0001`    |
-| `catalog validate` | `dct-*.yaml` を検証する                  | `specdojo catalog validate --project prj-0001` |
-| `catalog build`    | `generated/dct-*.md` を生成する          | `specdojo catalog build --project prj-0001`    |
+| コマンド               | 用途                                     | 例                                                 |
+| ---------------------- | ---------------------------------------- | -------------------------------------------------- |
+| `catalog scaffold`     | テンプレートから `dct-*.yaml` を生成する | `specdojo catalog scaffold --project prj-0001`     |
+| `catalog where`        | catalog 関連パスを表示する               | `specdojo catalog where --project prj-0001`        |
+| `catalog validate`     | `dct-*.yaml` を検証する                  | `specdojo catalog validate --project prj-0001`     |
+| `build --only catalog` | `generated/dct-*.md` を生成する          | `specdojo build --only catalog --project prj-0001` |
 
 `deliverable` はカタログが指す、人が編集する成果物ファイル本体を扱います。
 
@@ -403,10 +404,10 @@ npm run validate:schema:file -- \
 
 `schedule` は `sch-strategy-<track>.yaml` から `sch-track-<track>.yaml` を生成します。
 
-| コマンド         | 用途                                    | 例                                                                  |
-| ---------------- | --------------------------------------- | ------------------------------------------------------------------- |
-| `schedule build` | strategy から track schedule を生成する | `specdojo schedule build --project prj-0001 --track launch --force` |
-| `schedule where` | schedule 関連パスを表示する             | `specdojo schedule where --project prj-0001`                        |
+| コマンド                | 用途                                    | 例                                                                         |
+| ----------------------- | --------------------------------------- | -------------------------------------------------------------------------- |
+| `build --only schedule` | strategy から track schedule を生成する | `specdojo build --only schedule --project prj-0001 --track launch --force` |
+| `schedule where`        | schedule 関連パスを表示する             | `specdojo schedule where --project prj-0001`                               |
 
 主要オプション:
 
@@ -460,11 +461,11 @@ specdojo schedule strategy generate \
 
 `tml-index.yaml`・`timeline build`・`timeline_path` は非推奨です。全体計画は epic で管理し、`dashboard build` で `execution/generated/` に表とガント、未作成カタログを生成します。epic のない track は全体計画に出しません。期間と範囲の扱いは [[specdojo:register-operation-guide|登録簿運用ガイド]]、移行手順は [[specdojo:timeline-design-guide|Timeline からの移行ガイド]] を参照してください。
 
-| コマンド          | 用途                                             | 例                                            |
-| ----------------- | ------------------------------------------------ | --------------------------------------------- |
-| `dashboard build` | epic に基づく全体計画を含む dashboard を生成する | `specdojo dashboard build --project prj-0001` |
-| `timeline build`  | 警告付きで旧形式の計画を生成する                 | `specdojo timeline build --project prj-0001`  |
-| `timeline where`  | 互換用 timeline の関連パスを表示する             | `specdojo timeline where --project prj-0001`  |
+| コマンド                 | 用途                                             | 例                                                   |
+| ------------------------ | ------------------------------------------------ | ---------------------------------------------------- |
+| `build --only dashboard` | epic に基づく全体計画を含む dashboard を生成する | `specdojo build --only dashboard --project prj-0001` |
+| `timeline build`         | 警告付きで旧形式の計画を生成する                 | `specdojo timeline build --project prj-0001`         |
+| `timeline where`         | 互換用 timeline の関連パスを表示する             | `specdojo timeline where --project prj-0001`         |
 
 旧 `timeline build` は `--dry-run` で書き込まずに検証できます。epic の順序と範囲を反映しつつ、既存の strategy と `timeline_path`（既定 `timeline`）の `tml-index.yaml` を互換用に読み、`timeline/generated/` に `timeline-order.md`・`catalog-scaffold.md`・`timeline.json` を出力します。track 重複、依存の未定義参照・循環、`order` との矛盾はエラーです。`catalog-planning` の todo から作成状況を導出し、手書きの状態との不一致は警告します。epic のない project の dashboard は旧 timeline 表示を維持します。
 
@@ -472,22 +473,22 @@ specdojo schedule strategy generate \
 
 `register` は個票を正本とするプロジェクト登録簿と、その生成ビューを扱います。
 
-| コマンド            | 用途                                           | 例                                                                          |
-| ------------------- | ---------------------------------------------- | --------------------------------------------------------------------------- |
-| `register scaffold` | 登録簿ディレクトリと生成ビューを初期化する     | `specdojo register scaffold --project prj-0001`                             |
-| `register add`      | issue / todo / question などの項目を追加する   | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
-| `register build`    | 個票から登録項目一覧と派生ビューを生成する     | `specdojo register build --project prj-0001`                                |
-| `register update`   | 登録項目を更新する                             | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
-| `register start`    | 項目を対応中へ変更する                         | `specdojo register start --project prj-0001 --id PJR-001`                   |
-| `register wait`     | 項目を待ち状態へ変更する                       | `specdojo register wait --project prj-0001 --id PJR-001`                    |
-| `register review`   | 項目をレビュー状態へ変更する                   | `specdojo register review --project prj-0001 --id PJR-001`                  |
-| `register close`    | 項目を完了にし、個票を `ready` へ昇格する      | `specdojo register close --project prj-0001 --id PJR-001`                   |
-| `register reject`   | 項目を却下にし、個票を `deprecated` にする     | `specdojo register reject --project prj-0001 --id PJR-001`                  |
-| `register defer`    | 項目を延期にする                               | `specdojo register defer --project prj-0001 --id PJR-001`                   |
-| `register reopen`   | 終了済み項目を再オープンする                   | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
-| `register renumber` | 重複・衝突した PJR-ID を未使用の ID へ移す     | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
-| `register history`  | 追記型 event と旧 Git 履歴から変更を再構成する | `specdojo register history --project prj-0001 --since 2026-08-01`           |
-| `register migrate`  | 旧形式の登録簿データを現行形式へ移行する       | `specdojo register migrate --project prj-0001 --dry-run`                    |
+| コマンド                | 用途                                           | 例                                                                          |
+| ----------------------- | ---------------------------------------------- | --------------------------------------------------------------------------- |
+| `register scaffold`     | 登録簿ディレクトリと生成ビューを初期化する     | `specdojo register scaffold --project prj-0001`                             |
+| `register add`          | issue / todo / question などの項目を追加する   | `specdojo register add --project prj-0001 --type issue --title "確認事項"`  |
+| `build --only register` | 個票から登録項目一覧と派生ビューを生成する     | `specdojo build --only register --project prj-0001`                         |
+| `register update`       | 登録項目を更新する                             | `specdojo register update --project prj-0001 --id PJR-001 --owner PM`       |
+| `register start`        | 項目を対応中へ変更する                         | `specdojo register start --project prj-0001 --id PJR-001`                   |
+| `register wait`         | 項目を待ち状態へ変更する                       | `specdojo register wait --project prj-0001 --id PJR-001`                    |
+| `register review`       | 項目をレビュー状態へ変更する                   | `specdojo register review --project prj-0001 --id PJR-001`                  |
+| `register close`        | 項目を完了にし、個票を `ready` へ昇格する      | `specdojo register close --project prj-0001 --id PJR-001`                   |
+| `register reject`       | 項目を却下にし、個票を `deprecated` にする     | `specdojo register reject --project prj-0001 --id PJR-001`                  |
+| `register defer`        | 項目を延期にする                               | `specdojo register defer --project prj-0001 --id PJR-001`                   |
+| `register reopen`       | 終了済み項目を再オープンする                   | `specdojo register reopen --project prj-0001 --id PJR-001`                  |
+| `register renumber`     | 重複・衝突した PJR-ID を未使用の ID へ移す     | `specdojo register renumber --project prj-0001 --id PJR-0137 --to PJR-0140` |
+| `register history`      | 追記型 event と旧 Git 履歴から変更を再構成する | `specdojo register history --project prj-0001 --since 2026-08-01`           |
+| `register migrate`      | 旧形式の登録簿データを現行形式へ移行する       | `specdojo register migrate --project prj-0001 --dry-run`                    |
 
 `register add` は ID を省略すると自動採番し、現在の project では現在の作業ツリーに type 別の個票を作成します。別 project を `--project` で指定して `--commit` を付けると、対象 project の統合ブランチを開いている worktree、または CLI が作る一時 worktree で起票・再生成・commit を完了します。ID は乱数部分を持ち、曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットによる 4 桁（例: `PJR-4B7K`）です。個票 Frontmatter が分類、処理状態、優先度、担当、日付、結論の正本であり、`register build` は個票から一覧と派生ビューを生成します。`register` 系コマンドはすべて、成功時の通常出力を標準出力へ、エラーメッセージを標準エラー出力へ書きます。
 
@@ -1065,24 +1066,45 @@ specdojo exec worktree prune --project prj-0001
 
 `index` は frontmatter の `id` とファイルパスのインデックスを扱います。
 
-| コマンド        | 用途                                              | 例                                                     |
-| --------------- | ------------------------------------------------- | ------------------------------------------------------ |
-| `index build`   | `.specdojo/doc-index.json` を生成する             | `specdojo index build`                                 |
-| `index lookup`  | ID からパスを返す                                 | `specdojo index lookup specdojo:prj-overview-rulebook` |
-| `index replace` | `[[id]]` を Markdown リンクまたは path に展開する | `specdojo index replace --format path <plan-path>`     |
+| コマンド             | 用途                                              | 例                                                     |
+| -------------------- | ------------------------------------------------- | ------------------------------------------------------ |
+| `build --only index` | `.specdojo/doc-index.json` を生成する             | `specdojo build --only index`                          |
+| `index lookup`       | ID からパスを返す                                 | `specdojo index lookup specdojo:prj-overview-rulebook` |
+| `index replace`      | `[[id]]` を Markdown リンクまたは path に展開する | `specdojo index replace --format path <plan-path>`     |
 
 `exec run` は agent に plan を渡す直前に `index replace --format path --missing keep` 相当の処理を行います。
 
 ## 11. watch / build
 
-| コマンド | 用途                                        | 例                                               |
-| -------- | ------------------------------------------- | ------------------------------------------------ |
-| `watch`  | ファイル変更を監視して対象 build を実行する | `specdojo watch --project prj-0001 --scope exec` |
-| `build`  | 全生成物または指定 scope を一括再生成する   | `specdojo build --project prj-0001 --scope all`  |
+| コマンド              | 用途                                        | 例                                                 |
+| --------------------- | ------------------------------------------- | -------------------------------------------------- |
+| `watch`               | ファイル変更を監視して対象 build を実行する | `specdojo watch --project prj-0001 --scope exec`   |
+| `build`               | 設定に応じた生成物を順に再生成する          | `specdojo build --project prj-0001`                |
+| `build --only <区分>` | 指定した区分だけを生成する                  | `specdojo build --only catalog --project prj-0001` |
 
-`dashboard build --project <id>` は `execution/generated/dashboard.md`、全体計画ガントチャート SVG、未作成カタログを再生成します。ダッシュボードは人の対応が要るもの（review、判断待ち、waiting、human タスク）、おすすめの登録項目（先行項目充足済み上位 10 件）、実行中の epic（開始日・終了日・稼働日数、段ごとの進捗と次に流せるタスク）を先頭に表示し、終わった epic（開始日・終了日・稼働日数一覧）、routine 定義一覧、Grade 全体表、全体の集計（Schedule 進捗・登録簿集計・ガントチャート）を `::: details` で折りたたみ表示します。各項目には文書サイトで開ける相対リンクを付与し、項目がない章は「ありません」を表示します。
+`build` は `exec refresh` → catalog → register → yaml-pages → dashboard → index の順に、設定された段を実行します。`--project` を省略した場合、register は登録簿を持つ全 project を対象にします。`--only` で選んだ区分では、その段だけを実行し、前提となる生成物を自動生成しません。失敗すると後続の段を止め、終了コード 1 を返します。
 
-`--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
+| `--only` の区分 | 生成内容                                     | 固有オプション                                                                       |
+| --------------- | -------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `catalog`       | カタログの Markdown ビュー                   | なし                                                                                 |
+| `schedule`      | strategy から track YAML と milestone を生成 | `--track <track>`（必須）、`--force`（既存 track の上書き）                          |
+| `register`      | 登録簿の一覧・派生ビュー                     | `--register-scope register\|controls\|all`（既定 `all`）                             |
+| `dashboard`     | dashboard・全体計画ガント・未作成カタログ    | なし                                                                                 |
+| `yaml-pages`    | YAML の表示ページ                            | `--root <path>`（既定 `docs`）                                                       |
+| `index`         | 文書 ID インデックス                         | `--root <path>`（既定 `docs`）、`--output <path>`（既定 `.specdojo/doc-index.json`） |
+| `exec`          | `exec refresh` による実行状態の再計算        | なし                                                                                 |
+
+schedule は track の明示と上書きの判断が必要なため、一括 `build` に含めません。`specdojo build --only schedule --project prj-0001 --track launch --force` で生成し、実行状態も更新する場合は続けて `exec refresh` を実行します。
+
+`--dry-run` は全区分で子コマンドの実行予定だけを表示し、ファイルを書き込みません。固有オプションは対応する `--only` と組み合わせます。旧 `build --scope <区分>` と `--scope all` は内部互換用として受け付けます。`--only` と `--scope` は併用できません。
+
+`build --only dashboard --project <id>` は `execution/generated/dashboard.md`、全体計画ガントチャート SVG、未作成カタログを再生成します。ダッシュボードは人の対応が要るもの（review、判断待ち、waiting、human タスク）、おすすめの登録項目（先行項目充足済み上位 10 件）、実行中の epic（開始日・終了日・稼働日数、段ごとの進捗と次に流せるタスク）を先頭に表示し、終わった epic（開始日・終了日・稼働日数一覧）、routine 定義一覧、Grade 全体表、全体の集計（Schedule 進捗・登録簿集計・ガントチャート）を `::: details` で折りたたみ表示します。各項目には文書サイトで開ける相対リンクを付与し、項目がない章は「ありません」を表示します。
+
+watch の `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
+
+### 11.1. 内部互換用の build 入口
+
+`index build`・`catalog build`・`schedule build`・`register build`・`dashboard build`・`yaml-pages build` は、hook・job・routine・watch・runner と既存スクリプト用に引数・動作を維持します。ヘルプのコマンド一覧には表示せず、利用者は `build --only <区分>` を使います。内部入口の `--help` は引き続き表示できます。`register build --scope <scope>` は `build --only register --register-scope <scope>` に対応します。内部入口の `--dry-run` は従来どおりで、root の `build --dry-run` の実行予定表示とは異なります。
 
 ## 12. job
 

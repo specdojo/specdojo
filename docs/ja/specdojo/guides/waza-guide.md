@@ -58,14 +58,16 @@ SpecDojo は道場のメタファーとして、`specdojo` CLI のコマンド�
 
 生成や実行を伴うコマンドは、出力の性質と副作用に応じて次の動詞を使います。
 
-| 動詞       | 用途                                                         | 再実行と上書きの原則                                         | 代表例                                     |
-| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------ |
-| `scaffold` | 人が編集する正本や設定の初期雛形を作る                       | 既存ファイルを既定で保護し、上書きは `--force` で明示する    | `catalog scaffold`、`deliverable scaffold` |
-| `build`    | 正本から再現可能な派生物を組み立てる                         | 同じ入力から繰り返し生成でき、派生物の置換を許容する         | `catalog build`、`schedule build`、`build` |
-| `refresh`  | イベントやScheduleから変化する実行状態スナップショットを更新 | 実行履歴や正本を変更せず、現在状態を安全に再計算する         | `exec refresh`                             |
-| `run`      | タスク、routine、agentなどの処理を実際に実行する             | 状態遷移、外部プロセス起動、成果物編集などの副作用を許容する | `exec run`、`routine run`                  |
+| 動詞       | 用途                                                         | 再実行と上書きの原則                                         | 代表例                                                   |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------------------------------------------------- |
+| `scaffold` | 人が編集する正本や設定の初期雛形を作る                       | 既存ファイルを既定で保護し、上書きは `--force` で明示する    | `catalog scaffold`、`deliverable scaffold`               |
+| `build`    | 正本から再現可能な派生物を組み立てる                         | 同じ入力から繰り返し生成でき、派生物の置換を許容する         | `build`、`build --only catalog`、`build --only schedule` |
+| `refresh`  | イベントやScheduleから変化する実行状態スナップショットを更新 | 実行履歴や正本を変更せず、現在状態を安全に再計算する         | `exec refresh`                                           |
+| `run`      | タスク、routine、agentなどの処理を実際に実行する             | 状態遷移、外部プロセス起動、成果物編集などの副作用を許容する | `exec run`、`routine run`                                |
 
 `scaffold` と `build` の違いは、生成後のファイルを人が正本として編集するか、入力から再生成できる派生物かです。`refresh` は build 可能な一般成果物ではなく、イベントを反映して時点ごとに変わる実行状態に限定します。`run` はファイル生成そのものではなく、処理の遂行を表します。
+
+区分を絞る場合は `build --only <区分>` を使います。対応する区分・オプションと内部互換用の旧入口は [[specdojo:command-reference|CLIコマンドリファレンス]] の「watch / build」を参照してください。
 
 ## 2. 標準ディレクトリ構成
 
@@ -188,10 +190,10 @@ specdojo catalog validate --project prj-0001
 
 # 3.1 カタログが指す成果物ファイル本体を一括生成する
 specdojo deliverable scaffold --project prj-0001
-specdojo catalog build --project prj-0001
+specdojo build --only catalog --project prj-0001
 
 # 4. sch-strategy-launch.yaml を用意し、track schedule を生成する
-specdojo schedule build --project prj-0001 --track launch --force
+specdojo build --only schedule --project prj-0001 --track launch --force
 
 # 5. 実行状態、Ready、CPMを生成する
 specdojo exec refresh --project prj-0001

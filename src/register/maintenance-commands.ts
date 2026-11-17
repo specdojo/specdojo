@@ -111,8 +111,8 @@ export function registerMaintenanceCommands(
 
   // --- build ---
   const buildCmd = reg
-    .command("build")
-    .description("Generate the register list and derived views from register item files");
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only register");
   addProjectOption(buildCmd);
   buildCmd.option("--scope <scope>", "Generation scope: register | controls | all", "all");
   buildCmd.option("--dry-run", "Print generated content without writing", false);

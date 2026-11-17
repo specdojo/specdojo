@@ -453,8 +453,8 @@ export function registerScheduleCommands(program: Command): void {
   });
 
   const bcmd = sch
-    .command("build")
-    .description("Build sch-track-<track>.yaml from sch-strategy-<track>.yaml and catalogs");
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only schedule");
   addProjectOption(bcmd);
   bcmd.requiredOption("--track <track>", "Track name (e.g. launch)");
   bcmd.option("--force", "Overwrite existing sch-track-<track>.yaml", false);
