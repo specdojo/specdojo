@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-17T15:20:33Z",
+  "type": "unblock",
+  "task_id": "T-KATA-SLIM-bps-init-required-040",
+  "by": "sol-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-bps-init-required-040/T-KATA-SLIM-bps-init-required-040-20261117T145429Z-31cc7734/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-bps-init-required-040/T-KATA-SLIM-bps-init-required-040-20261117T145429Z-31cc7734/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-bps-init-required-040-20261117T145429Z-31cc7734",
+    "claim_actor": "sol-executor",
+    "stage_actor": "sol-executor",
+    "pipeline_resume_claimed": "true"
+  }
+}
