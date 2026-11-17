@@ -134,3 +134,16 @@
       from: "parent validation failed: lint-fm, test-unit"
       to: "-"
   previous_event_id: reg_2cee085b89344c398bcc2c434e081799
+- v: 1
+  id: reg_a144db9ab87a4e8190546eaab4a39fb8
+  ts: "2026-11-17T02:09:58Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_55a5be90a57d4646aeae8aeb409de6d4
