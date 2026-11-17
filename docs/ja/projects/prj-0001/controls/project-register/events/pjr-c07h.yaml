@@ -44,3 +44,19 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_3786d6a617cd416099c8d0d0a0cc3da3
+  ts: "2026-11-17T12:23:17Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-11-30"
+  previous_event_id: reg_94c4e5d947d94824b6157b586c796680
