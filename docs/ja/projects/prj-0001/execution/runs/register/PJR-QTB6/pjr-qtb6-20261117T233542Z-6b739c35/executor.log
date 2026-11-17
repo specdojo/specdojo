@@ -1,0 +1,32 @@
+古い駄菓子屋の sample を型ごとに今の sample と見比べました。今の sample にない具体例があったのは移行の 3 文書だけで、それを移行計画の sample（`mip-index-sample`）へ反映しました。`docs/ja/index.md` の 2 行を外し、git の履歴から消す件は手順と影響の調べまでで止めています。`npm run docs:build` と `npm run validate:history-links` は通りました。lint などの検査は親の runner が後で実行します。
+
+**変更したファイル**
+- `docs/ja/specdojo/samples/mip-index-sample.md`: 雛形のままで rulebook の 9 章を満たしていなかったため、9 章の構成で書き直しました。古い sample の次の具体例を入れています。
+  - 1 週間の並行記録（ノートとシステムの両方に記録）
+  - 切替日の前日の最終棚卸
+  - 当日午前の取り込みと動作確認、午後からの本番利用
+  - 移行対象（現在庫、常連客、つけ残高）
+
+  切替日は共通サンプル文脈に合わせて `_UNDECIDED_`、午前に作業する理由は `_ASSUMPTION_` にしました。`status` は `draft` のままです。
+- `docs/ja/index.md`: 表から `sample-gcs-projects/` と `sample-gcs-product/` の 2 行を外しました。ほかに `sample-gcs` を参照する文書はありません。
+- 個票 `pjr-qtb6-legacy-gcs-samples.md`: 作業内容の表と対応結果を書きました。対応結果には型ごとの反映の判断表、迷った点、履歴削除の手順と影響、CHANGELOG の文案があります。No.5（`local/` への複製と `git rm`）は orchestrator が行うため `open` のままです。
+
+**反映しなかったものと理由**
+- **業務仕様の図と一覧**（概念データフロー図・概念クラス図・状態遷移図・データストア・保管場所）: 今の sample のほうが詳しく、結論も違います。
+- **実装系**（クラス図・API・DB など）: 古い sample は Web API と DB の構成で、今の CLI とローカル保存の構成と違います。また、標準が sample に書かない実装詳細にあたります。
+- **テストと README**: 一般の小売例か、中身のない雛形でした。
+- **アクセス制御と監視**: 反映先の `opd-*` の sample が駄菓子屋ではない一般例なので、1 行足すと題材が混ざります。
+- **物語のあらすじ**: あらすじ自身が `sample-authoring-standard` を正本と書いています。
+
+**git の履歴から消す件（実施するかは `_UNDECIDED_`）**
+- 手順は `git filter-repo` で 6 つのパスを消し、強制 push する案を個票に書きました。6 つは今の 3 つと改名前の `docs/sample-gcs-*` 3 つです。`git filter-repo` は今の環境には入っていません。
+- 書き換わる commit は約 11,540 件で、全体（11,703 件）のほぼすべての hash が変わります。
+- 40 桁の commit hash を書いた記録は約 444 ファイルあります（登録簿のイベント 260、`execution/runs` 170、ほか）。書き換え後は、どの hash も指す commit がなくなります。
+- worktree 18 件とすべての clone を作り直すことになり、ブランチ 71 件とタグ 28 件も書き換わります。
+- `40bee99f4` より前に別の名前で同じ中身があったかは、権限がなく確かめられていません。
+
+docs のビルドで、このタスクの `events/pjr-qtb6.yaml` に未 stage の変更が出ています。中身は見ておらず、ビルドが書いたのか runner が書いたのかは確かめていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Compared the old sample-gcs-product (74 files) and sample-gcs-story (13 files) with the current specdojo samples type by type. Only the three migration documents had useful concrete examples missing from the current samples, so mip-index-sample was rewritten into the rulebook's 9-section structure with them. Removed the two sample-gcs rows from the docs/ja/index.md table. Wrote the per-type decision table, the procedure and impact of removing the paths from git history (left as `_UNDECIDED_`), and CHANGELOG draft lines in the ticket. Did not move or delete docs/ja/sample-gcs-* and did not rewrite or push history.","handoff":["Work item No.5 (copy docs/ja/sample-gcs-product, sample-gcs-projects and sample-gcs-story to local/ and git rm them) stays open: after integration the orchestrator does it with the user's approval.","_UNDECIDED_: whether to remove the paths from git history. Procedure (draft): finish all worktrees and stashes, keep a mirror clone as backup, install git filter-repo (not installed now), run git filter-repo --invert-paths for 6 paths (the 3 current ones plus the pre-rename docs/sample-gcs-product-docs, docs/sample-gcs-project-docs, docs/sample-gcs-story), force-push all branches and tags, ask GitHub support to purge cached refs, and recreate every clone and worktree. Impact: about 11,540 of 11,703 commits get new hashes (from 40bee99f4, 2026-01-02). Files with 40-char hashes: 260 register events, 6 tickets, 170 execution/runs, 7 execution/exec, 1 execution/reports, plus tests/src/exec/repo-trace.test.ts and docs-structure-guide.md. 18 worktrees, 71 branches and 28 tags are affected. Also decide whether to keep the old-to-new hash map (.git/filter-repo/commit-map).","Not verified: whether the same content existed under another directory name before 40bee99f4 (the executor could not read the older tree). The orchestrator should check before rewriting history.","Decision: opd-access-control-sample and opd-monitoring-sample were not updated because they are generic, not in the shared Kinuya sample context, and adding one Kinuya row would mix subjects. Proposed follow-up item: rewrite both in the shared sample context.","Decision: mip-index-sample was rewritten to the 9-section rulebook structure instead of appending bullets. The sibling migration samples (dmd-index-sample, mtp-sample, cop-index-sample, otp-index-sample) are still minimal placeholders; decide whether to make them Kinuya-specific to match.","CHANGELOG draft (not applied): Changed - mip-index-sample rewritten to the 9-section rulebook structure with the Kinuya parallel-recording, final stocktake and cutover timeline examples. Removed - old Kinuya sample rows (sample-gcs-projects/, sample-gcs-product/) removed from the docs/ja/index.md table.","Unstaged change in docs/ja/projects/prj-0001/controls/project-register/events/pjr-qtb6.yaml after the docs build; the executor did not inspect it or check whether the build or the runner wrote it."],"validations":[{"command":"npm run docs:build","status":"passed","summary":"build complete in 200.71s (only language-fallback and chunk-size warnings)"},{"command":"npm run validate:history-links","status":"passed","summary":"No violations; the changed ticket pjr-qtb6-legacy-gcs-samples.md is valid"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-qtb6-legacy-gcs-samples.md docs/ja/specdojo/samples/mip-index-sample.md docs/ja/index.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

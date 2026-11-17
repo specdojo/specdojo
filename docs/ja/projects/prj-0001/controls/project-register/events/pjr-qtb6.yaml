@@ -38,3 +38,29 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_efd057d9d70d4d85b8a50efc6f7a7869
+  ts: "2026-11-17T23:35:47Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1d2ace59b0e447daa3917a1801ea5d3a
+- v: 1
+  id: reg_f97f692d4c2d4c6c9f899ec3d2c1900a
+  ts: "2026-11-17T23:55:41Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_efd057d9d70d4d85b8a50efc6f7a7869
