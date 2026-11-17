@@ -41,3 +41,32 @@
     - field: commit_scope
       from: ""
       to: docs-site
+- v: 1
+  id: reg_14b66cdb1ee94611b0c679586e5b4187
+  ts: "2026-11-17T00:39:31Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b6cb5a91332a4a50a29cbf06b2a3aa61
+- v: 1
+  id: reg_f908ec3ecea44f5a99a417f94f9e341b
+  ts: "2026-11-17T00:52:59Z"
+  action: wait
+  actor: opus-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: typecheck"
+  previous_event_id: reg_14b66cdb1ee94611b0c679586e5b4187
