@@ -4797,3 +4797,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2e38d690d3df4198871c7271cba44838
+- v: 1
+  id: reg_6de60060a26249e4b2614c2f140e6972
+  ts: "2026-11-17T03:11:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が個票・イベント・予約の解放を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: NHT7・DGRZ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。片付けはロックの外で行われた
+      to: A61W・MJ8V・V0FQ・DH8E の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。変更範囲の予約も統合で解放された
+  previous_event_id: reg_21246b203597408f8acd910488bd872c
