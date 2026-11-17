@@ -18,7 +18,7 @@ import { authoredKataPath, authoringKind, isAuthoringApproach } from "../../kata
 import type { Approach } from "../../shared/agent-types.js";
 import { readSpecdojoNamespace } from "../../docs/frontmatter-namespace.js";
 import { gitEnvironment } from "../../shared/git-environment.js";
-import { resolveDeliverableByDocId, targetReferenceDirsForApproach } from "../plans-core.js";
+import { resolveDeliverableByDocId } from "../plans-core.js";
 import {
   delay,
   isLiveLock,
@@ -160,6 +160,7 @@ export function inferChangeScope(params: {
   const targets = isAuthoringApproach(params.approach)
     ? params.targets?.slice(0, 1)
     : params.targets;
+  // Commit permissions cover whole kata directories; reserve only the resolved task targets.
   for (const target of targets ?? []) {
     if (
       params.approach === "catalog-planning" &&
@@ -213,7 +214,6 @@ export function inferChangeScope(params: {
     }
   }
   if (params.targetPath) add(params.targetPath);
-  for (const path of targetReferenceDirsForApproach(params.approach)) add(path);
   // Backticks support root files; prose supports src/foo.ts.
   const texts = typeof params.text === "string" ? [params.text] : (params.text ?? []);
   const body = texts.map((text) => scopeChangeText(scopeInputText(text))).join("\n");
