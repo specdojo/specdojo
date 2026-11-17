@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-prj-assumptions-constraints-dependencies-050",
+  "run_id": "T-KATA-SLIM-prj-assumptions-constraints-dependencies-050-20261117T183728Z-8914345c",
+  "updated_at": "2026-11-17T19:04:41.109Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-17T18:40:19.221Z",
+      "completed_at": "2026-11-17T18:41:41.181Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050-20261117T183728Z-8914345c/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-17T19:04:29.865Z",
+      "completed_at": "2026-11-17T19:04:38.235Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050-20261117T183728Z-8914345c/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-17T19:04:41.109Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050-20261117T183728Z-8914345c/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050/T-KATA-SLIM-prj-assumptions-constraints-dependencies-050-20261117T183728Z-8914345c/result.md"
+  }
+}
