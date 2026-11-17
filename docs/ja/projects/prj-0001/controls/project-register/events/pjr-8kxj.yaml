@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_65035ef83d9745d8b2259a28d90ac0c0
+  ts: "2026-11-17T22:57:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run の統合の後に、src が変わったら dist を自動で作り直す
+    - field: description
+      from: ""
+      to: src を変える項目の統合の後に dist が古くなり次の run が止まるため、exec-defaults の pipeline に統合後の処理（post\_integration）を許可リストの ID で指定できるようにし、build-dist を流す
+    - field: input
+      from: ""
+      to: '["利用者の提案（2026-11-18）: dist を自動で作り直す処理は postprocess 等で指定する","orchestrator の調べ（2026-11-18）: `parent_validations` は固定 ID の許可リストと paths で、executor の後・統合の前に親が流す。dist が src より古いことは src/shared/dist-freshness.ts が検出して run を止めるだけで、orchestrator が統合のたびに npm run build を手で挟んでいる","利用者の決定（2026-11-18）: `pipeline.post_integration` に ID（最初は build-dist = npm run build）と paths を書き、統合した変更が paths に当たるときだけ、親が exec のロックを持ったまま流す。失敗しても統合は戻さず、失敗を記録して次の run は dist-freshness の判定で止める。exec-defaults.yaml と package.json は保護された設定のため、反映は変更案として個票に書き、利用者の承認のもと feature ブランチで行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
