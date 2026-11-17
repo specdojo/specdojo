@@ -35,6 +35,9 @@ grade と exec の内部用のコマンドを利用者の一覧から外す。ru
 - 定期の job が `tools/grade/run-per-document.sh` ではなく `grade run` で grade する。
 - 対象の内部用のコマンドが help の一覧に出ない。runner・job・orchestrator からの呼び出しは変わらず動く。
 - リファレンスで、内部用のコマンドを利用者向けの説明から分けて書く。
+- 保護された設定（`lefthook.yml`・`.agents/`・`.claude/`・`.codex/`・`package.json`・`.specdojo/` など）は変えない。変更が要る場合は、変更案を個票の対応結果に書き、報告の `handoff` にも書く。反映は利用者の承認のもと feature ブランチで行う。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
+- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。影響がなければ「なし」と書く（PJR-EPQ3）。
 - `npm run check` と親の検証が通る。
 
 ## 4. 作業内容

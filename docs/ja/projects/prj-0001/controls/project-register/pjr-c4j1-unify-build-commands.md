@@ -34,6 +34,9 @@ specdojo:
 - 利用者は `build` と `build --only <区分>` で、区分ごとの生成を流せる。
 - hook・job・runner が呼ぶ個別の build の入口が壊れない。
 - 個別の build コマンドは内部用か非推奨の別名になり、リファレンスに書かれている。
+- 保護された設定（`lefthook.yml`・`.agents/`・`.claude/`・`.codex/`・`package.json`・`.specdojo/` など）は変えない。変更が要る場合は、変更案を個票の対応結果に書き、報告の `handoff` にも書く。反映は利用者の承認のもと feature ブランチで行う。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
+- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。影響がなければ「なし」と書く（PJR-EPQ3）。
 - `npm run check` と親の検証が通る。
 
 ## 4. 作業内容
