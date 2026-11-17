@@ -279,7 +279,7 @@ describe("change scope inference", () => {
     ).toEqual(known("docs/new.md"));
   });
 
-  it("uses approach reference directories and authoring output without its sources", () => {
+  it("reserves authoring output without its sources or the whole kata directory", () => {
     const authoring = inferChangeScope({
       projectId: "test",
       repoRoot: root,
@@ -287,25 +287,104 @@ describe("change scope inference", () => {
       approach: "template-authoring",
       documentPaths: {},
     });
-    expect(authoring.paths).toContain("project:docs/ja/specdojo/templates/new-template.md");
-    expect(authoring.unknown).toBe(false);
-    const bootstrap = inferChangeScope({
+    expect(authoring).toEqual(known("docs/ja/specdojo/templates/new-template.md"));
+    const other = inferChangeScope({
       projectId: "test",
       repoRoot: root,
-      targets: ["test:design"],
-      approach: "bootstrap",
-      documentPaths: { "test:design": "docs/design.md" },
+      targets: ["specdojo:other-template", "test:source"],
+      approach: "template-authoring",
+      documentPaths: {},
     });
-    expect(bootstrap.paths).toContain("project:docs/ja/specdojo/rulebooks");
-    expect(bootstrap.paths).toContain("project:docs/ja/specdojo/templates");
+    expect(scopeOverlap(authoring, other)).toBeUndefined();
+  });
+
+  it.each(["bootstrap", "bootstrap-finalize"] as const)(
+    "reserves resolved kata files for %s without adding directory-wide scope",
+    (approach) => {
+      expect(
+        inferChangeScope({
+          projectId: "test",
+          repoRoot: root,
+          targets: ["test:design", "specdojo:design-rulebook"],
+          approach,
+          documentPaths: {
+            "test:design": "docs/design.md",
+            "specdojo:design-rulebook": "docs/ja/specdojo/rulebooks/design-rulebook.md",
+          },
+        }),
+      ).toEqual({
+        paths: ["project:docs/design.md", "project:docs/ja/specdojo/rulebooks/design-rulebook.md"],
+        unknown: false,
+      });
+    },
+  );
+
+  it.each([
+    ["rulebook-maintenance", "rulebooks", "rulebook"],
+    ["recipe-maintenance", "recipes", "recipe"],
+    ["sample-maintenance", "samples", "sample"],
+    ["template-maintenance", "templates", "template"],
+  ] as const)(
+    "allows independent %s targets even after failure, but waits for the same kata file",
+    async (approach, directory, kind) => {
+      const path = (name: string) => `docs/ja/specdojo/${directory}/${name}-${kind}.md`;
+      const infer = (name: string) =>
+        inferChangeScope({
+          projectId: "test",
+          repoRoot: root,
+          targets: [`specdojo:${name}-${kind}`],
+          approach,
+          documentPaths: { [`specdojo:${name}-${kind}`]: path(name) },
+        });
+      const firstScope = infer("first");
+      const secondScope = infer("second");
+      expect(firstScope).toEqual(known(path("first")));
+      expect(secondScope).toEqual(known(path("second")));
+      expect(scopeOverlap(firstScope, secondScope)).toBeUndefined();
+      const gate = new ChangeScopeGate(root);
+      const first = remember(await gate.acquire("T-FIRST", firstScope));
+      const second = await gate.tryAcquire("T-SECOND", secondScope);
+      expect(second).not.toBeNull();
+      expect(remember(second!).waits).toEqual([]);
+      const sameFile = inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        targetPath: path("first"),
+        approach,
+      });
+      expect(scopeOverlap(firstScope, sameFile)).toBe(
+        `project:${path("first")} <> project:${path("first")}`,
+      );
+      expect(await gate.tryAcquire("T-SAME", sameFile)).toBeNull();
+      await first.finish(true);
+      const same = remember(await gate.acquire("T-SAME", sameFile));
+      expect(same.waits).toMatchObject([{ blocker: "T-FIRST" }]);
+      await same.finish(false);
+      await second!.finish(true);
+      const afterFailure = await gate.tryAcquire("T-INDEPENDENT", secondScope);
+      expect(afterFailure).not.toBeNull();
+      expect(remember(afterFailure!).waits).toEqual([]);
+    },
+  );
+
+  it("keeps explicitly declared kata directories and unresolved target uncertainty", () => {
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        targets: ["docs/ja/specdojo/rulebooks/"],
+        approach: "rulebook-maintenance",
+      }),
+    ).toEqual(known("docs/ja/specdojo/rulebooks"));
     expect(
       inferChangeScope({
         projectId: "test",
         repoRoot: root,
         targets: ["test:missing"],
+        approach: "rulebook-maintenance",
         documentPaths: {},
-      }).unknown,
-    ).toBe(true);
+      }),
+    ).toEqual({ paths: [], unknown: true });
   });
 
   it("reserves the shared catalog index and distinguishes independent strategy tracks", () => {
