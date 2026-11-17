@@ -11,8 +11,55 @@ const source: GitHubSource = {
 };
 
 const currentPage = "docs/ja/projects/prj-0001/execution/generated/exec-records.md";
+const runCases = ["register", "schedule", "job"].flatMap((origin) =>
+  ["plan", "result"].map((kind) => ({ origin, kind })),
+);
 
 describe("exec record links", () => {
+  it.each(runCases)(
+    "rewrites a $origin run $kind link from the records index",
+    ({ origin, kind }) => {
+      const recordPath = `runs/${origin}/ITEM/run-id/${kind}.md`;
+      const expected = `${source.repositoryUrl}/blob/main/docs/ja/projects/prj-0001/execution/${recordPath}`;
+      expect(
+        rewriteExecRecordMarkdownHref(`../${recordPath}?raw=1#details`, currentPage, source),
+      ).toBe(`${expected}?raw=1#details`);
+      expect(
+        rewriteExecRecordMarkdownHref(
+          `/ja/projects/prj-0001/execution/${recordPath}`,
+          currentPage.replace(/^docs\//, ""),
+          source,
+        ),
+      ).toBe(expected);
+    },
+  );
+
+  it.each(runCases)("resolves a $origin run $kind wikilink", ({ origin, kind }) => {
+    const recordPath = `docs/ja/projects/prj-0001/execution/runs/${origin}/ITEM/run-id/${kind}.md`;
+    expect(
+      resolveExecRecordWikilink(
+        "prj-0001:record|実行記録",
+        { "prj-0001:record": `./${recordPath.replace(/\//g, "\\")}:2` },
+        source,
+      ),
+    ).toEqual({
+      displayText: "実行記録",
+      href: `${source.repositoryUrl}/blob/main/${recordPath}`,
+    });
+  });
+
+  it.each([
+    "../runs/register/ITEM/run-id/notes.md",
+    "../runs/register/ITEM/run-id/plan.attempt-1.md",
+    "../runs/register/ITEM/plan.md",
+    "../runs/register/ITEM/run-id/nested/result.md",
+    "../jobs/runs/register/ITEM/run-id/result.md",
+    "#details",
+    "https://example.com/execution/runs/register/ITEM/run-id/plan.md",
+  ])("preserves non-record or external Markdown link %s", (href) => {
+    expect(rewriteExecRecordMarkdownHref(href, currentPage, source)).toBe(href);
+  });
+
   it("replaces a relative plan link with the GitHub file view", () => {
     expect(
       rewriteExecRecordMarkdownHref(

@@ -1,4 +1,5 @@
 import { posix as path } from "node:path";
+import { isExecPlanLink, isExecResultLink } from "./exec-record-paths.js";
 
 export type GitHubSource = {
   repositoryUrl: string;
@@ -10,8 +11,6 @@ type WikilinkTarget = {
   href: string;
 };
 
-const EXEC_RECORD_PATH = /(^|\/)execution\/exec\/(?:plans|results)\/[^/]+\.md$/;
-
 function stripEntryLineSuffix(entry: string): string {
   const colonIndex = entry.lastIndexOf(":");
   const hasLine = colonIndex > 0 && /^\d+$/.test(entry.slice(colonIndex + 1));
@@ -19,7 +18,10 @@ function stripEntryLineSuffix(entry: string): string {
 }
 
 function isExecPlanOrResultPath(repositoryPath: string): boolean {
-  return EXEC_RECORD_PATH.test(repositoryPath);
+  return (
+    repositoryPath.endsWith(".md") &&
+    (isExecPlanLink(repositoryPath) || isExecResultLink(repositoryPath))
+  );
 }
 
 function githubBlobUrl(repositoryPath: string, source: GitHubSource): string {
