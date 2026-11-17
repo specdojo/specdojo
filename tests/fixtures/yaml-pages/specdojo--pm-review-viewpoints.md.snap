@@ -1,0 +1,1035 @@
+---
+specdojo:
+  id: specdojo:pm-review-viewpoints
+  type: standard
+  status: draft
+  rulebook: none
+---
+
+# 共通レビュー観点一覧
+
+> このページは `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. 分類
+
+<!-- prettier-ignore -->
+| ID | 名称 |
+| --- | --- |
+| purpose | 目的・判断 |
+| planning | 計画・管理 |
+| business | 業務・利用者価値 |
+| architecture | 構造・技術整合 |
+| implementation | 実装・設定可能性 |
+| quality | 品質・検証可能性 |
+| usability | 読みやすさ・利用体験 |
+| operations | 公開・運用 |
+| consistency | 成果物間整合 |
+
+## 2. 確認対象の分類
+
+<!-- prettier-ignore -->
+| ID | 名称 | 説明 | 適用先 |
+| --- | --- | --- | --- |
+| stakeholder | ステークホルダー | 利用者、意思決定者、確認者、運用者、影響を受ける関係者が識別されているか。 | requirements / specification / design / operations |
+| `business_goal` | 業務目的・価値 | 業務目的、課題、期待効果、成功条件との対応が説明できるか。 | requirements / specification |
+| `scope_boundary` | 対象範囲・対象外 | 対象範囲、対象外、前提、制約、依存関係が判断できるか。 | requirements / specification / design |
+| `use_case` | 利用シーン | 主要な利用シーン、利用者行動、期待結果が具体化されているか。 | requirements / specification |
+| `business_event` | 業務イベント | 業務上の開始条件、完了条件、発生イベント、トリガーが識別されているか。 | requirements / specification |
+| `exception_case` | 例外・異常系 | 例外ケース、異常系、境界条件、失敗時の扱いが確認できるか。 | requirements / specification / design / testing |
+| permission | 権限・責務 | 実行者、承認者、責任分界、権限チェック、agent と人間の境界が明確か。 | requirements / specification / design / operations |
+| `state_transition` | 状態遷移 | 状態、遷移条件、禁止遷移、終了状態が矛盾なく定義されているか。 | specification / design / testing |
+| data | 入出力・データ | 入力、出力、データ項目、保持、更新、削除、整合性の扱いが確認できるか。 | requirements / specification / design / operations |
+| integration | 外部連携 | 外部システム、API、ファイル、通知、手動連携などの依存が識別されているか。 | requirements / specification / design / operations |
+| `non_functional` | 非機能要求 | 性能、可用性、セキュリティ、保守性、拡張性、互換性などの品質要求が確認できるか。 | requirements / specification / design / operations |
+| operations | 運用・保守 | 継続運用、変更管理、問い合わせ、障害時対応、再生成、公開後の保守が考慮されているか。 | requirements / specification / operations |
+| auditability | 監査・証跡 | 判断、承認、変更、実行結果を追跡できる証跡が残るか。 | requirements / specification / design / operations |
+| acceptance | 受入条件・検証可能性 | pass / fail を判断できる受入条件、完了条件、検証手順があるか。 | requirements / specification / testing |
+| traceability | トレーサビリティ | 上位目的から要求、要件、仕様、設計、テスト、運用までの対応を追跡できるか。 | requirements / specification / design / testing / operations |
+
+## 3. 重大度
+
+<!-- prettier-ignore -->
+| ID | 意味・扱い |
+| --- | --- |
+| blocker | 完了判断、公開判断、後続作業を止める不備。 |
+| major | `done_criteria` 未充足、文書間矛盾、責任分担の不整合など重要な不備。 |
+| minor | 意味や判断を大きく変えない補足不足、表記ゆれ、軽微な修正。 |
+| note | 改善提案、将来検討、補足コメント。 |
+
+## 4. 判定
+
+<!-- prettier-ignore -->
+| ID | 意味・次の対応 |
+| --- | --- |
+| complete | 最新の grade・finding があり、変更内容が plan と完了条件を満たし、完了を妨げる未充足事項がない。完了の決定と完了記録へ進める。 |
+| complete-with-findings | 最新の評価結果に finding があるが、今回のタスク範囲と完了条件は満たしている。finding が完了を妨げない理由と、必要な改善指示を記録して完了へ進める。 |
+| incomplete | plan または完了条件に未充足事項がある。完了記録を作らず、未充足事項と改善指示を含む再計画要求を引き渡す。 |
+| grade-stale | 評価結果がない、現在の成果物と `content_hash` が一致しない、または評価コンテキストの変化が未反映である。review は再評価せず、grade の確定後に再開する。 |
+| grade-unavailable | 成果物評価が評価不能で grade・finding を確定できない。完了を推測せず保留し、評価不能の理由・不足情報・補完担当・再開条件を記録する。 |
+| changed-during-review | review 開始後に成果物が変更され、固定した評価結果の `content_hash` と一致しなくなった。verdict と完了記録を確定せず、変更後の grade の確定を待って再開する。 |
+
+## 5. レビュー観点
+
+<!-- prettier-ignore -->
+| ID | ロール | 分類 | 観点 | 確認内容 | 根拠 | 重大度 | 評価方法 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| vp-po-purpose-alignment | PO | purpose | 目的・スコープとの整合 | 成果物の主要な定義・判断が、プロジェクト目的、スコープ、優先順位、公開方針と矛盾せず、成果物固有の目的または上位文書への参照から必要性を説明できるか。対応する目的・成果のない手段を目的として扱っていないか。 | プロジェクト概要の目的・必要性・期待効果、成果物固有の目的、対象範囲、対象外、主要な定義・判断と上位根拠との対応、判断理由、関連成果物への参照。 | major | referential |
+| vp-po-decision-readiness | PO | purpose | 承認判断に必要な情報 | PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。 | 判断対象、判断者、未決事項、前提、影響、次アクション。 | major | discretionary |
+| vp-po-publication-accountability | PO | operations | 公開可否と説明責任 | 公開してよい情報だけで構成され、最終判断と説明責任を人間の PO が担う前提になっているか。 | status、公開対象、個人情報・非公開情報の有無、承認責任の記述。 | blocker | referential |
+| vp-pm-plan-feasibility | PM | planning | 計画化可能性 | 成果物の内容がタスク化、順序付け、所要時間見積もり、進捗確認に使える粒度になっているか。 | 依存関係、作業単位、完了条件、担当 Role code、期限または判断タイミング。 | major | discretionary |
+| vp-pm-dependency-risk | PM | planning | 依存関係・リスク・課題化 | 後続成果物、Schedule、PJR に影響する依存、リスク、課題、変更要求が識別されているか。 | `depends_on`、関連文書、未決事項、PJR 登録候補、スケジュール影響。 | major | referential |
+| vp-pm-control-reporting | PM | planning | 管理・報告への接続 | 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項が分離されているか。 | PJR 転記候補、報告先、対応方針、担当 Role code。 | minor | referential |
+| vp-ba-business-value | BA | business | 業務価値との対応 | 主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるかを説明でき、主要な成果・方針がその目的に対応しているか。 | 対象者、業務課題、放置時の影響、期待価値・効果、成功基準、判断理由、主要な成果・方針との対応、上位文書への参照。 | major | discretionary |
+| vp-ba-requirements-completeness | BA | business | 要件・受入条件の充足 | 要件、受入条件、対象範囲、対象外が利用者視点で確認できる粒度になっているか。 | 要件、受入条件、対象範囲、除外範囲、用語定義。 | major | discretionary |
+| vp-ba-stakeholder-clarity | BA | business | 関係者・利用場面の明確性 | 関係者、利用場面、確認者、合意対象が読み取れるか。 | stakeholder、利用者、店番・運用者、確認者、合意事項。 | minor | discretionary |
+| vp-arc-document-structure | ARC | architecture | 文書構造・配置・命名 | frontmatter、ID、ファイル名、配置、見出し、リンクがプロジェクトの文書体系と整合しているか。 | id、path、rulebook、`based_on`、見出し、相対リンク、成果物カタログ。 | major | deterministic |
+| vp-arc-cross-document-consistency | ARC | consistency | 成果物間整合 | 成果物について、成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物と矛盾していないか。不整合の finding は突き合わせ先の文書 ID またはパスと、双方の相反する記述を特定する。rulebook、recipe、sample、template の内部・相互・適用先との整合は vp-qe-kata-conformance で判定し、この観点では扱わない。 | `local_id`、`depends_on`、owner、roles、RACI、関連文書、生成元、finding ごとの突き合わせ先の文書 ID またはパスと双方の該当箇所。 | major | referential |
+| vp-arc-technical-constraints | ARC | architecture | 技術前提・制約の明確性 | 技術的な前提、制約、外部依存、構成判断が必要な範囲で明示されているか。 | 技術制約、外部依存、schema、validate 手順、構成方針。 | major | discretionary |
+| vp-arc-conciseness | ARC | usability | 冗長性・簡潔性 | 各節が固有の判断または手順に寄与し、同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲がないか。判断に要る背景・制約・例外・完了条件が残されていれば下限を満たしているとする。長さだけでは fail にせず、削る・まとめる・参照に置き換えることで判断情報を失わない箇所を具体的に特定できる場合のみ minor とする。 | 同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲（正本への参照で置き換えられるもの）。判断に要る背景・制約・例外・完了条件を残したまま、長さだけを根拠にせず、削る・まとめる・参照に置き換えることで判断情報を失わない箇所。 | minor | referential |
+| vp-arc-single-responsibility | ARC | architecture | 文書責務の単一性 | 文書の中心主題と責務境界が一つに定まり、各章がその責務に直接寄与しているか。独立して参照・更新できる主題が複数あり、対象読者・利用時点が異なる、または別々の sample・recipe・template に対応する場合は分割を検討する。分量や対応する実践の型の数だけでは不備としない。同一主張の反復や正本の過剰な再掲は vp-arc-conciseness で判定し、この観点では扱わない。 | 文書の目的、章ごとの主題と相互依存、章が参照・更新される単位、対象読者、利用時点、対応する sample・recipe・template、分割後も独立して成立する境界候補。分割が必要な finding には境界候補と参照・カタログへの影響を記録する。 | major | referential |
+| vp-dev-implementation-readiness | DEV | implementation | 実装・設定作業への接続 | 実装、設定、変更作業に必要な入力、制約、完了条件が読み取れるか。 | 設定項目、schema、入力、出力、制約、作業対象ファイル。 | major | discretionary |
+| vp-dev-change-impact | DEV | implementation | 技術的変更影響 | 変更が既存成果物、schema、生成処理、コマンド、運用手順へ与える影響が識別されているか。 | 影響範囲、関連コード、schema、生成物、コマンド、互換性。 | major | referential |
+| vp-dev-testability | DEV | quality | 技術検証可能性 | 実装・設定変更後に確認すべき lint、schema、build、生成コマンドが分かるか。 | 検証コマンド、期待結果、対象ファイル、エラー時対応。 | minor | referential |
+| vp-qe-done-criteria | QE | quality | `done_criteria` 充足 | 成果物カタログの `done_criteria` を満たしているか、未充足条件が明示されているか。 | `done_criteria`、レビュー結果、未解決指摘、判定根拠。 | major | referential |
+| vp-qe-verifiability | QE | quality | 検証可能性 | 成功基準、受入条件、品質基準、設定値が pass / fail を判定できる表現になっているか。 | 判定条件、数値、状態、必須項目、チェック手順。 | major | referential |
+| vp-qe-omissions-consistency | QE | consistency | 抜け漏れ・矛盾 | 必須章、必須キー、参照、責務、禁止事項に抜け漏れや矛盾がないか。 | rulebook、schema、関連文書、禁止事項、レビュー履歴。 | major | referential |
+| vp-qe-config-validity | QE | quality | 設定値の妥当性 | 設定値・必須キー・参照が schema と整合し、妥当な値で過不足なく定義されているか。 | schema、必須キー、設定値、デフォルト値、validate 結果。 | major | deterministic |
+| vp-qe-kata-conformance | QE | quality | 実践の型としての適合性 | rulebook、recipe、sample、template が種別ごとの責務を守り、Kata 内部、Kata 相互、および参照する組織定義や生成物を含む適用先との関係が矛盾なく定義されているか。Kata に関するこれらの整合はこの観点で判定し、vp-arc-cross-document-consistency では扱わない。 | authoring standard、rulebook の型宣言、recipe の問い、sample の完成例、template の骨組み、相互参照、組織定義や生成物を含む適用先との対応。 | major | referential |
+| vp-ux-readability | UX | usability | 読みやすさ・理解しやすさ | 初見の読者が、成果物固有の目的または上位文書への参照、名称、メタデータから、なぜ扱うか、役割、利用先、対象、主要な判断、次に見る文書を理解できるか。主旨または主要な判断点を読み取れない箇所を特定できる場合は major とする。同一主張の反復や正本の過剰な再掲など冗長性の判定は vp-arc-conciseness で行い、この観点では扱わない。 | 導入文、目的・理由、主要な成果・方針との対応、上位文書への参照、見出し、表、用語、関連ドキュメント、補足説明、段落・箇条書きの長さと論点数、保持すべき背景・判断理由・例外・制約・`done_criteria`。 | minor | referential |
+| vp-ux-user-flow | UX | usability | 利用者導線 | 利用者や将来貢献者が迷わず必要情報へ到達できる構成になっているか。目次から必要な章を見つけられるか、関連成果物への参照が適切な位置にあるか、前提から結論への説明順序が守られているかのいずれかの基準に照らして判定し、情報を見失う箇所を具体的に特定できる場合のみ不備とする。 | 目次、関連リンク、手順、参照先、サンプル、説明順序。 | minor | referential |
+| vp-ux-language-consistency | UX | usability | 用語・表現の一貫性 | 用語、Role code、成果物名、状態、ラベルが読み手を混乱させない形で統一されているか。 | 用語定義、表記ゆれ、Role code、`local_id`、status、ラベル。 | minor | referential |
+| vp-ops-release-readiness | OPS | operations | リリース・公開準備 | 公開、配布、ready 化、リリース判断に必要な前提や未解決事項が明示されているか。 | status、ready 条件、公開対象、未解決指摘、承認者、公開前確認。 | major | discretionary |
+| vp-ops-operability | OPS | operations | 運用しやすさ | 継続更新、再生成、変更管理、問い合わせ対応、障害時対応に必要な情報が読み取れるか。 | 運用手順、再生成手順、変更管理、問い合わせ導線、担当 Role code。 | minor | discretionary |
+| vp-ops-agent-boundary | OPS | operations | agent 委任境界 | agent に最終承認、公開可否判断、説明責任を委ねる記述になっていないか。 | owner、reviewer、approver、`agent_mode`、manual gate、承認責任。 | blocker | referential |
+
+## 6. ロール別観点
+
+<!-- prettier-ignore -->
+| ロール | 観点 ID |
+| --- | --- |
+| PO | vp-po-purpose-alignment / vp-po-decision-readiness / vp-po-publication-accountability |
+| PM | vp-pm-plan-feasibility / vp-pm-dependency-risk / vp-pm-control-reporting |
+| BA | vp-ba-business-value / vp-ba-requirements-completeness / vp-ba-stakeholder-clarity |
+| ARC | vp-arc-document-structure / vp-arc-cross-document-consistency / vp-arc-technical-constraints / vp-arc-conciseness / vp-arc-single-responsibility |
+| DEV | vp-dev-implementation-readiness / vp-dev-change-impact / vp-dev-testability |
+| QE | vp-qe-done-criteria / vp-qe-verifiability / vp-qe-omissions-consistency / vp-qe-config-validity / vp-qe-kata-conformance |
+| UX | vp-ux-readability / vp-ux-user-flow / vp-ux-language-consistency |
+| OPS | vp-ops-release-readiness / vp-ops-operability / vp-ops-agent-boundary |
+
+## 7. 観点の適用条件
+
+<!-- prettier-ignore -->
+| 観点 ID | 確認対象 | 評価対象 | 比較元 | 文書種別の条件 |
+| --- | --- | --- | --- | --- |
+| vp-po-purpose-alignment | `business_goal` / `scope_boundary` / traceability | - | - | - |
+| vp-po-decision-readiness | stakeholder / permission / auditability | - | - | - |
+| vp-po-publication-accountability | permission / operations / auditability | - | - | - |
+| vp-ba-business-value | `business_goal` / traceability | - | - | `exclude`: specdojo:bdd-rulebook / specdojo:cdr-rulebook / specdojo:dct-index-rulebook / specdojo:dct-rulebook / specdojo:gl-rulebook / specdojo:ifx-api-rulebook / specdojo:ifx-cmd-rulebook / specdojo:ifx-index-rulebook / specdojo:ifx-msg-rulebook / specdojo:pm-members-rulebook / specdojo:pm-roles-rulebook / specdojo:sch-rulebook / specdojo:tml-rulebook / `unclassified`: include / `confirmed_default`: specdojo:atc-index-rulebook / specdojo:atc-rulebook / specdojo:bac-rulebook / specdojo:bds-rulebook / specdojo:bes-index-rulebook / specdojo:bes-rulebook / specdojo:bps-rulebook / specdojo:br-rulebook / specdojo:ccd-mermaid-rulebook / specdojo:cdfd-d2-rulebook / specdojo:cdfd-mermaid-rulebook / specdojo:cdfd-overview-rulebook / specdojo:cdfd-rulebook / specdojo:cdfd-uc-rulebook / specdojo:cdsd-rulebook / specdojo:cdt-rulebook / specdojo:cld-rulebook / specdojo:clis-rulebook / specdojo:cnd-mermaid-rulebook / specdojo:cnd-rulebook / specdojo:cop-index-rulebook / specdojo:cop-rulebook / specdojo:cpd-mermaid-rulebook / specdojo:cpd-rulebook / specdojo:cstd-rulebook / specdojo:cxd-mermaid-rulebook / specdojo:cxd-rulebook / specdojo:dec-rulebook / specdojo:dmd-index-rulebook / specdojo:dmd-rulebook / specdojo:dss-rulebook / specdojo:etc-index-rulebook / specdojo:etc-rulebook / specdojo:ifd-mermaid-rulebook / specdojo:ifx-file-rulebook / specdojo:imp-business-rulebook / specdojo:imp-data-rulebook / specdojo:imp-interface-rulebook / specdojo:imp-operations-rulebook / specdojo:imp-test-rulebook / specdojo:itc-index-rulebook / specdojo:itc-rulebook / specdojo:mip-index-rulebook / specdojo:mm-rulebook / specdojo:mtp-rulebook / specdojo:nfr-availability-rulebook / specdojo:nfr-index-rulebook / specdojo:nfr-integrity-rulebook / specdojo:nfr-maintainability-rulebook / specdojo:nfr-operations-rulebook / specdojo:nfr-performance-rulebook / specdojo:nfr-reliability-rulebook / specdojo:nfr-security-safety-rulebook / specdojo:nfr-usability-rulebook / specdojo:ntp-rulebook / specdojo:opd-index-rulebook / specdojo:opd-rulebook / specdojo:opr-index-rulebook / specdojo:opr-rulebook / specdojo:otp-index-rulebook / specdojo:otp-rulebook / specdojo:pjr-rulebook / specdojo:pm-change-request-log-rulebook / specdojo:pm-communication-plan-rulebook / specdojo:pm-issue-log-rulebook / specdojo:pm-organization-rulebook / specdojo:pm-plan-rulebook / specdojo:pm-quality-management-plan-rulebook / specdojo:pm-raci-rulebook / specdojo:pm-risk-register-rulebook / specdojo:pr-rulebook / specdojo:prj-assumptions-constraints-dependencies-rulebook / specdojo:prj-charter-rulebook / specdojo:prj-comparison-of-alternatives-rulebook / specdojo:prj-issues-and-approach-rulebook / specdojo:prj-overview-rulebook / specdojo:prj-scope-rulebook / specdojo:prj-stakeholder-register-rulebook / specdojo:prj-success-criteria-and-acceptance-criteria-rulebook / specdojo:sac-rulebook / specdojo:sf-index-rulebook / specdojo:sf-rulebook / specdojo:sld-rulebook / specdojo:stc-index-rulebook / specdojo:stc-rulebook / specdojo:stsd-mermaid-rulebook / specdojo:stsd-rulebook / specdojo:sysd-critical-flows-rulebook / specdojo:sysd-cross-cutting-policy-rulebook / specdojo:sysd-index-rulebook / specdojo:sysd-rulebook / specdojo:trc-requirements-to-specs-rulebook / specdojo:trc-requirements-to-tests-rulebook / specdojo:tsd-index-rulebook / specdojo:tsd-rulebook / specdojo:tsp-index-rulebook / specdojo:uis-rulebook / specdojo:utc-index-rulebook / specdojo:utc-rulebook |
+| vp-ba-requirements-completeness | stakeholder / `scope_boundary` / `use_case` / `business_event` / `exception_case` / `non_functional` / operations / acceptance / traceability | - | - | - |
+| vp-ba-stakeholder-clarity | stakeholder / `use_case` / permission | - | - | - |
+| vp-arc-cross-document-consistency | permission / traceability / auditability | deliverable | catalog-entry / dependencies / schedule / members / roles / deliverable:pm-raci / deliverable:pm-organization | - |
+| vp-arc-technical-constraints | `scope_boundary` / data / integration / `non_functional` | - | - | - |
+| vp-arc-single-responsibility | - | - | - | `exclude`: specdojo:atc-index-rulebook / specdojo:bes-index-rulebook / specdojo:cdfd-overview-rulebook / specdojo:cop-index-rulebook / specdojo:dct-index-rulebook / specdojo:dmd-index-rulebook / specdojo:etc-index-rulebook / specdojo:ifx-index-rulebook / specdojo:itc-index-rulebook / specdojo:mip-index-rulebook / specdojo:nfr-index-rulebook / specdojo:opd-index-rulebook / specdojo:opr-index-rulebook / specdojo:otp-index-rulebook / specdojo:prj-overview-rulebook / specdojo:sf-index-rulebook / specdojo:stc-index-rulebook / specdojo:sysd-index-rulebook / specdojo:tsd-index-rulebook / specdojo:tsp-index-rulebook / specdojo:utc-index-rulebook / `unclassified`: include / `confirmed_default`: specdojo:atc-rulebook / specdojo:bac-rulebook / specdojo:bdd-rulebook / specdojo:bds-rulebook / specdojo:bes-rulebook / specdojo:bps-rulebook / specdojo:br-rulebook / specdojo:ccd-mermaid-rulebook / specdojo:cdfd-d2-rulebook / specdojo:cdfd-mermaid-rulebook / specdojo:cdfd-rulebook / specdojo:cdfd-uc-rulebook / specdojo:cdr-rulebook / specdojo:cdsd-rulebook / specdojo:cdt-rulebook / specdojo:cld-rulebook / specdojo:clis-rulebook / specdojo:cnd-mermaid-rulebook / specdojo:cnd-rulebook / specdojo:cop-rulebook / specdojo:cpd-mermaid-rulebook / specdojo:cpd-rulebook / specdojo:cstd-rulebook / specdojo:cxd-mermaid-rulebook / specdojo:cxd-rulebook / specdojo:dct-rulebook / specdojo:dec-rulebook / specdojo:dmd-rulebook / specdojo:dss-rulebook / specdojo:etc-rulebook / specdojo:gl-rulebook / specdojo:ifd-mermaid-rulebook / specdojo:ifx-api-rulebook / specdojo:ifx-cmd-rulebook / specdojo:ifx-file-rulebook / specdojo:ifx-msg-rulebook / specdojo:imp-business-rulebook / specdojo:imp-data-rulebook / specdojo:imp-interface-rulebook / specdojo:imp-operations-rulebook / specdojo:imp-test-rulebook / specdojo:itc-rulebook / specdojo:mm-rulebook / specdojo:mtp-rulebook / specdojo:nfr-availability-rulebook / specdojo:nfr-integrity-rulebook / specdojo:nfr-maintainability-rulebook / specdojo:nfr-operations-rulebook / specdojo:nfr-performance-rulebook / specdojo:nfr-reliability-rulebook / specdojo:nfr-security-safety-rulebook / specdojo:nfr-usability-rulebook / specdojo:ntp-rulebook / specdojo:opd-rulebook / specdojo:opr-rulebook / specdojo:otp-rulebook / specdojo:pjr-rulebook / specdojo:pm-change-request-log-rulebook / specdojo:pm-communication-plan-rulebook / specdojo:pm-issue-log-rulebook / specdojo:pm-members-rulebook / specdojo:pm-organization-rulebook / specdojo:pm-plan-rulebook / specdojo:pm-quality-management-plan-rulebook / specdojo:pm-raci-rulebook / specdojo:pm-risk-register-rulebook / specdojo:pm-roles-rulebook / specdojo:pr-rulebook / specdojo:prj-assumptions-constraints-dependencies-rulebook / specdojo:prj-charter-rulebook / specdojo:prj-comparison-of-alternatives-rulebook / specdojo:prj-issues-and-approach-rulebook / specdojo:prj-scope-rulebook / specdojo:prj-stakeholder-register-rulebook / specdojo:prj-success-criteria-and-acceptance-criteria-rulebook / specdojo:sac-rulebook / specdojo:sch-rulebook / specdojo:sf-rulebook / specdojo:sld-rulebook / specdojo:stc-rulebook / specdojo:stsd-mermaid-rulebook / specdojo:stsd-rulebook / specdojo:sysd-critical-flows-rulebook / specdojo:sysd-cross-cutting-policy-rulebook / specdojo:sysd-rulebook / specdojo:tml-rulebook / specdojo:trc-requirements-to-specs-rulebook / specdojo:trc-requirements-to-tests-rulebook / specdojo:tsd-rulebook / specdojo:uis-rulebook / specdojo:utc-rulebook |
+| vp-dev-implementation-readiness | data / integration / permission / acceptance | - | - | - |
+| vp-dev-change-impact | `scope_boundary` / data / integration / operations / traceability | - | - | - |
+| vp-qe-done-criteria | acceptance / traceability | deliverable | catalog-entry | - |
+| vp-qe-verifiability | `exception_case` / `state_transition` / `non_functional` / acceptance | - | - | - |
+| vp-qe-config-validity | - | deliverable | - | - |
+| vp-qe-kata-conformance | acceptance / traceability | kata | - | - |
+| vp-ux-readability | - | - | - | `unclassified`: include |
+| vp-ux-user-flow | - | deliverable | - | - |
+| vp-ops-release-readiness | permission / operations / auditability / acceptance | - | - | - |
+| vp-ops-operability | operations / integration / auditability / `non_functional` | - | - | - |
+| vp-ops-agent-boundary | permission / auditability | - | - | - |
+
+## 8. 採点基準
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `id` | grade-rubric-v2 |
+| `pass_score` | 75 |
+| `levels` | `level`: 0 / `name`: 不成立 / `description`: blocker があり、その観点で文書が機能していない。 / `review_verdict`: incomplete / `level`: 1 / `name`: 不十分 / `description`: major が複数、または観点の目的をほぼ果たしていない。 / `review_verdict`: incomplete / `level`: 2 / `name`: 要改善 / `description`: major があり、誤用・誤読を招く箇所がある。 / `review_verdict`: incomplete / `level`: 3 / `name`: 軽微な課題 / `description`: minor のみで、実務上はそのまま利用できる。 / `review_verdict`: complete-with-findings / `level`: 4 / `name`: 良好 / `description`: 指摘なし、または note のみである。 / `review_verdict`: complete |
+| `weights` | `kata`: `quality`: 25 / `usability`: 18 / `architecture`: 14 / `consistency`: 13 / `purpose`: 8 / `implementation`: 6 / `operations`: 6 / `planning`: 5 / `business`: 5 / `deliverable`: `quality`: 20 / `consistency`: 16 / `usability`: 16 / `architecture`: 13 / `purpose`: 8 / `business`: 8 / `implementation`: 7 / `planning`: 6 / `operations`: 6 |
+
+## 9. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/pm-review-viewpoints.schema.yaml
+# SpecDojo 共通レビュー観点の正本。プロジェクトは extends と差分だけを宣言する。
+id: specdojo:pm-review-viewpoints
+type: standard
+status: draft
+title: 共通レビュー観点一覧
+rulebook: none
+
+# レビュー観点一覧。
+# Role code の語彙は pm-roles.yaml を参照する。
+# レビュー運用方針は review-guide.md を参照する。
+# 成果物ごとの完了条件は成果物カタログの done_criteria を正とする。
+
+categories:
+  - id: purpose
+    name: 目的・判断
+  - id: planning
+    name: 計画・管理
+  - id: business
+    name: 業務・利用者価値
+  - id: architecture
+    name: 構造・技術整合
+  - id: implementation
+    name: 実装・設定可能性
+  - id: quality
+    name: 品質・検証可能性
+  - id: usability
+    name: 読みやすさ・利用体験
+  - id: operations
+    name: 公開・運用
+  - id: consistency
+    name: 成果物間整合
+
+coverage_types:
+  - id: stakeholder
+    name: ステークホルダー
+    description: 利用者、意思決定者、確認者、運用者、影響を受ける関係者が識別されているか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: business_goal
+    name: 業務目的・価値
+    description: 業務目的、課題、期待効果、成功条件との対応が説明できるか。
+    applies_to:
+      - requirements
+      - specification
+  - id: scope_boundary
+    name: 対象範囲・対象外
+    description: 対象範囲、対象外、前提、制約、依存関係が判断できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+  - id: use_case
+    name: 利用シーン
+    description: 主要な利用シーン、利用者行動、期待結果が具体化されているか。
+    applies_to:
+      - requirements
+      - specification
+  - id: business_event
+    name: 業務イベント
+    description: 業務上の開始条件、完了条件、発生イベント、トリガーが識別されているか。
+    applies_to:
+      - requirements
+      - specification
+  - id: exception_case
+    name: 例外・異常系
+    description: 例外ケース、異常系、境界条件、失敗時の扱いが確認できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - testing
+  - id: permission
+    name: 権限・責務
+    description: 実行者、承認者、責任分界、権限チェック、agent と人間の境界が明確か。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: state_transition
+    name: 状態遷移
+    description: 状態、遷移条件、禁止遷移、終了状態が矛盾なく定義されているか。
+    applies_to:
+      - specification
+      - design
+      - testing
+  - id: data
+    name: 入出力・データ
+    description: 入力、出力、データ項目、保持、更新、削除、整合性の扱いが確認できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: integration
+    name: 外部連携
+    description: 外部システム、API、ファイル、通知、手動連携などの依存が識別されているか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: non_functional
+    name: 非機能要求
+    description: 性能、可用性、セキュリティ、保守性、拡張性、互換性などの品質要求が確認できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: operations
+    name: 運用・保守
+    description: 継続運用、変更管理、問い合わせ、障害時対応、再生成、公開後の保守が考慮されているか。
+    applies_to:
+      - requirements
+      - specification
+      - operations
+  - id: auditability
+    name: 監査・証跡
+    description: 判断、承認、変更、実行結果を追跡できる証跡が残るか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - operations
+  - id: acceptance
+    name: 受入条件・検証可能性
+    description: pass / fail を判断できる受入条件、完了条件、検証手順があるか。
+    applies_to:
+      - requirements
+      - specification
+      - testing
+  - id: traceability
+    name: トレーサビリティ
+    description: 上位目的から要求、要件、仕様、設計、テスト、運用までの対応を追跡できるか。
+    applies_to:
+      - requirements
+      - specification
+      - design
+      - testing
+      - operations
+
+severity_levels:
+  - id: blocker
+    description: 完了判断、公開判断、後続作業を止める不備。
+  - id: major
+    description: done_criteria 未充足、文書間矛盾、責任分担の不整合など重要な不備。
+  - id: minor
+    description: 意味や判断を大きく変えない補足不足、表記ゆれ、軽微な修正。
+  - id: note
+    description: 改善提案、将来検討、補足コメント。
+
+# review がタスクの完了可否を表す唯一の語彙。review result の verdict と同じ値を使い、
+# bps-task-completion の検証・受入観点 6 区分と一対一に対応する（PJR-XTAN）。
+# 旧値の pass / conditional_pass / changes_requested / blocked と、xrr-template.md の旧
+# decision.recommendation（approve / revise / reject）は読み込み時に移行先を示して拒否する。
+# revise は incomplete へ移す。grade の文書 verdict（pass / needs-work / fail）は成果物の品質を
+# 判定する別の語彙であり、ここへは統一しない。
+verdict_definitions:
+  - id: complete
+    description: 最新の grade・finding があり、変更内容が plan と完了条件を満たし、完了を妨げる未充足事項がない。完了の決定と完了記録へ進める。
+  - id: complete-with-findings
+    description: 最新の評価結果に finding があるが、今回のタスク範囲と完了条件は満たしている。finding が完了を妨げない理由と、必要な改善指示を記録して完了へ進める。
+  - id: incomplete
+    description: plan または完了条件に未充足事項がある。完了記録を作らず、未充足事項と改善指示を含む再計画要求を引き渡す。
+  - id: grade-stale
+    description: 評価結果がない、現在の成果物と content_hash が一致しない、または評価コンテキストの変化が未反映である。review は再評価せず、grade の確定後に再開する。
+  - id: grade-unavailable
+    description: 成果物評価が評価不能で grade・finding を確定できない。完了を推測せず保留し、評価不能の理由・不足情報・補完担当・再開条件を記録する。
+  - id: changed-during-review
+    description: review 開始後に成果物が変更され、固定した評価結果の content_hash と一致しなくなった。verdict と完了記録を確定せず、変更後の grade の確定を待って再開する。
+
+# grade と review が共有する離散ルーブリック。review_verdict は grade の level を review の入力に
+# する規則であり、review が完了可否の判断を始める起点の verdict を示す（review-guide.md の
+# 「grade の結果を review の入力にする規則」）。grade の level からは品質しか分からないため、写像先は
+# complete / complete-with-findings / incomplete の 3 値に限る。鮮度・評価不能・review 中の変更は
+# level から決まらないため写像しない。
+# v2 で全観点を grade の対象にし、weights を 9 category へ広げた（PJR-K351）。
+# v1 の score とは母集団の category が異なるため比較できない。id を改めて区別する。
+# pass_score は level 3（軽微な課題・実務上そのまま利用できる）の score 75 に合わせる。
+# major がない限り各観点の level は 3 以上であるため、75 は「全 category が level 3 以上」の
+# 下限と一致し、category の数や重みを変えても意味が変わらない。v1 の 70 は category 数に
+# 依存しない根拠を持たなかったため改める。
+grade_rubric:
+  id: grade-rubric-v2
+  pass_score: 75
+  levels:
+    - level: 0
+      name: 不成立
+      description: blocker があり、その観点で文書が機能していない。
+      review_verdict: incomplete
+    - level: 1
+      name: 不十分
+      description: major が複数、または観点の目的をほぼ果たしていない。
+      review_verdict: incomplete
+    - level: 2
+      name: 要改善
+      description: major があり、誤用・誤読を招く箇所がある。
+      review_verdict: incomplete
+    - level: 3
+      name: 軽微な課題
+      description: minor のみで、実務上はそのまま利用できる。
+      review_verdict: complete-with-findings
+    - level: 4
+      name: 良好
+      description: 指摘なし、または note のみである。
+      review_verdict: complete
+  # 重みは合計 100。文書に適用される観点がない category は、その文書の加重平均から外す。
+  # v1 の 4 category の相対比を保ったまま縮め、空いた分を新たに加わる 5 category へ配る。
+  weights:
+    # kata（rulebook / template など実践の型）は、成果物を作る土台としての構造・検証可能性・
+    # 使いやすさが主である。v1 の 4 category を 70 に縮め、残り 30 を配る。型が何のために
+    # あるか（purpose）と、型どおりに作れるか（implementation）を厚くし、運用上の責任分界
+    # （operations）を続ける。計画（planning）と業務価値（business）は個別の成果物で
+    # 問われるため最も薄くする。
+    kata:
+      quality: 25
+      usability: 18
+      architecture: 14
+      consistency: 13
+      purpose: 8
+      implementation: 6
+      operations: 6
+      planning: 5
+      business: 5
+    # 成果物は、目的・業務価値・実装可能性がプロジェクト固有に問われる。v1 の 4 category を
+    # 65 に縮め、kata より多い 35 を配る。目的（purpose）と業務価値（business）を最も厚く
+    # し、実装可能性（implementation）、計画（planning）、公開・運用（operations）の順に置く。
+    deliverable:
+      quality: 20
+      consistency: 16
+      usability: 16
+      architecture: 13
+      purpose: 8
+      business: 8
+      implementation: 7
+      planning: 6
+      operations: 6
+
+viewpoints:
+  - id: vp-po-purpose-alignment
+    role: PO
+    category: purpose
+    title: 目的・スコープとの整合
+    check: 成果物の主要な定義・判断が、プロジェクト目的、スコープ、優先順位、公開方針と矛盾せず、成果物固有の目的または上位文書への参照から必要性を説明できるか。対応する目的・成果のない手段を目的として扱っていないか。
+    evidence: プロジェクト概要の目的・必要性・期待効果、成果物固有の目的、対象範囲、対象外、主要な定義・判断と上位根拠との対応、判断理由、関連成果物への参照。
+    # project-level Why との整合と、根拠のない主要判断・手段の検出を担う。
+    # 対象者・業務課題・期待価値の内容は vp-ba-business-value、読み手への伝わり方は
+    # vp-ux-readability の責務とし、同じ指摘を複数観点で重複させない。
+    # 構造・設定中心の成果物は参照・命名・下流利用の整合で判定し、業務上の Why の詳細な再掲を要求しない。
+    coverage_types:
+      - business_goal
+      - scope_boundary
+      - traceability
+    default_severity: major
+    evaluation: referential
+  - id: vp-po-decision-readiness
+    role: PO
+    category: purpose
+    title: 承認判断に必要な情報
+    check: PO が承認、保留、差し戻しを判断するための論点、未決事項、影響範囲が明示されているか。
+    evidence: 判断対象、判断者、未決事項、前提、影響、次アクション。
+    coverage_types:
+      - stakeholder
+      - permission
+      - auditability
+    default_severity: major
+    evaluation: discretionary
+  - id: vp-po-publication-accountability
+    role: PO
+    category: operations
+    title: 公開可否と説明責任
+    check: 公開してよい情報だけで構成され、最終判断と説明責任を人間の PO が担う前提になっているか。
+    evidence: status、公開対象、個人情報・非公開情報の有無、承認責任の記述。
+    coverage_types:
+      - permission
+      - operations
+      - auditability
+    default_severity: blocker
+    evaluation: referential
+  - id: vp-pm-plan-feasibility
+    role: PM
+    category: planning
+    title: 計画化可能性
+    check: 成果物の内容がタスク化、順序付け、所要時間見積もり、進捗確認に使える粒度になっているか。
+    evidence: 依存関係、作業単位、完了条件、担当 Role code、期限または判断タイミング。
+    default_severity: major
+    evaluation: discretionary
+  - id: vp-pm-dependency-risk
+    role: PM
+    category: planning
+    title: 依存関係・リスク・課題化
+    check: 後続成果物、Schedule、PJR に影響する依存、リスク、課題、変更要求が識別されているか。
+    evidence: depends_on、関連文書、未決事項、PJR 登録候補、スケジュール影響。
+    default_severity: major
+    evaluation: referential
+  - id: vp-pm-control-reporting
+    role: PM
+    category: planning
+    title: 管理・報告への接続
+    check: 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項が分離されているか。
+    evidence: PJR 転記候補、報告先、対応方針、担当 Role code。
+    default_severity: minor
+    evaluation: referential
+  - id: vp-ba-business-value
+    role: BA
+    category: business
+    title: 業務価値との対応
+    check: 主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるかを説明でき、主要な成果・方針がその目的に対応しているか。
+    evidence: 対象者、業務課題、放置時の影響、期待価値・効果、成功基準、判断理由、主要な成果・方針との対応、上位文書への参照。
+    # 業務上の Why の充足と主要な What / How との対応を確認し、対象者・課題・期待価値の不足、
+    # 上位目的との矛盾、対応先のない成果・方針を finding として説明できる範囲に絞る。
+    # 利用者像・利用シーン・業務イベントの列挙は、それぞれ vp-ba-stakeholder-clarity /
+    # vp-ba-requirements-completeness の責務とし、概要・憲章などへの過剰な詳細流入を避ける。
+    coverage_types:
+      - business_goal
+      - traceability
+    default_severity: major
+    evaluation: discretionary
+    document_kinds:
+      exclude:
+        - specdojo:bdd-rulebook
+        - specdojo:cdr-rulebook
+        - specdojo:dct-index-rulebook
+        - specdojo:dct-rulebook
+        - specdojo:gl-rulebook
+        - specdojo:ifx-api-rulebook
+        - specdojo:ifx-cmd-rulebook
+        - specdojo:ifx-index-rulebook
+        - specdojo:ifx-msg-rulebook
+        - specdojo:pm-members-rulebook
+        - specdojo:pm-roles-rulebook
+        - specdojo:sch-rulebook
+        - specdojo:tml-rulebook
+      unclassified: include
+      # 既定（適用する）のままと判断した rulebook。判断漏れの検証（PJR-VJP8）用の記録で、
+      # 適用判定には影響しない。rulebook を追加したら exclude かここのどちらかへ載せる。
+      confirmed_default:
+        - specdojo:atc-index-rulebook
+        - specdojo:atc-rulebook
+        - specdojo:bac-rulebook
+        - specdojo:bds-rulebook
+        - specdojo:bes-index-rulebook
+        - specdojo:bes-rulebook
+        - specdojo:bps-rulebook
+        - specdojo:br-rulebook
+        - specdojo:ccd-mermaid-rulebook
+        - specdojo:cdfd-d2-rulebook
+        - specdojo:cdfd-mermaid-rulebook
+        - specdojo:cdfd-overview-rulebook
+        - specdojo:cdfd-rulebook
+        - specdojo:cdfd-uc-rulebook
+        - specdojo:cdsd-rulebook
+        - specdojo:cdt-rulebook
+        - specdojo:cld-rulebook
+        - specdojo:clis-rulebook
+        - specdojo:cnd-mermaid-rulebook
+        - specdojo:cnd-rulebook
+        - specdojo:cop-index-rulebook
+        - specdojo:cop-rulebook
+        - specdojo:cpd-mermaid-rulebook
+        - specdojo:cpd-rulebook
+        - specdojo:cstd-rulebook
+        - specdojo:cxd-mermaid-rulebook
+        - specdojo:cxd-rulebook
+        - specdojo:dec-rulebook
+        - specdojo:dmd-index-rulebook
+        - specdojo:dmd-rulebook
+        - specdojo:dss-rulebook
+        - specdojo:etc-index-rulebook
+        - specdojo:etc-rulebook
+        - specdojo:ifd-mermaid-rulebook
+        - specdojo:ifx-file-rulebook
+        - specdojo:imp-business-rulebook
+        - specdojo:imp-data-rulebook
+        - specdojo:imp-interface-rulebook
+        - specdojo:imp-operations-rulebook
+        - specdojo:imp-test-rulebook
+        - specdojo:itc-index-rulebook
+        - specdojo:itc-rulebook
+        - specdojo:mip-index-rulebook
+        - specdojo:mm-rulebook
+        - specdojo:mtp-rulebook
+        - specdojo:nfr-availability-rulebook
+        - specdojo:nfr-index-rulebook
+        - specdojo:nfr-integrity-rulebook
+        - specdojo:nfr-maintainability-rulebook
+        - specdojo:nfr-operations-rulebook
+        - specdojo:nfr-performance-rulebook
+        - specdojo:nfr-reliability-rulebook
+        - specdojo:nfr-security-safety-rulebook
+        - specdojo:nfr-usability-rulebook
+        - specdojo:ntp-rulebook
+        - specdojo:opd-index-rulebook
+        - specdojo:opd-rulebook
+        - specdojo:opr-index-rulebook
+        - specdojo:opr-rulebook
+        - specdojo:otp-index-rulebook
+        - specdojo:otp-rulebook
+        - specdojo:pjr-rulebook
+        - specdojo:pm-change-request-log-rulebook
+        - specdojo:pm-communication-plan-rulebook
+        - specdojo:pm-issue-log-rulebook
+        - specdojo:pm-organization-rulebook
+        - specdojo:pm-plan-rulebook
+        - specdojo:pm-quality-management-plan-rulebook
+        - specdojo:pm-raci-rulebook
+        - specdojo:pm-risk-register-rulebook
+        - specdojo:pr-rulebook
+        - specdojo:prj-assumptions-constraints-dependencies-rulebook
+        - specdojo:prj-charter-rulebook
+        - specdojo:prj-comparison-of-alternatives-rulebook
+        - specdojo:prj-issues-and-approach-rulebook
+        - specdojo:prj-overview-rulebook
+        - specdojo:prj-scope-rulebook
+        - specdojo:prj-stakeholder-register-rulebook
+        - specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+        - specdojo:sac-rulebook
+        - specdojo:sf-index-rulebook
+        - specdojo:sf-rulebook
+        - specdojo:sld-rulebook
+        - specdojo:stc-index-rulebook
+        - specdojo:stc-rulebook
+        - specdojo:stsd-mermaid-rulebook
+        - specdojo:stsd-rulebook
+        - specdojo:sysd-critical-flows-rulebook
+        - specdojo:sysd-cross-cutting-policy-rulebook
+        - specdojo:sysd-index-rulebook
+        - specdojo:sysd-rulebook
+        - specdojo:trc-requirements-to-specs-rulebook
+        - specdojo:trc-requirements-to-tests-rulebook
+        - specdojo:tsd-index-rulebook
+        - specdojo:tsd-rulebook
+        - specdojo:tsp-index-rulebook
+        - specdojo:uis-rulebook
+        - specdojo:utc-index-rulebook
+        - specdojo:utc-rulebook
+  - id: vp-ba-requirements-completeness
+    role: BA
+    category: business
+    title: 要件・受入条件の充足
+    check: 要件、受入条件、対象範囲、対象外が利用者視点で確認できる粒度になっているか。
+    evidence: 要件、受入条件、対象範囲、除外範囲、用語定義。
+    coverage_types:
+      - stakeholder
+      - scope_boundary
+      - use_case
+      - business_event
+      - exception_case
+      - non_functional
+      - operations
+      - acceptance
+      - traceability
+    default_severity: major
+    evaluation: discretionary
+  - id: vp-ba-stakeholder-clarity
+    role: BA
+    category: business
+    title: 関係者・利用場面の明確性
+    check: 関係者、利用場面、確認者、合意対象が読み取れるか。
+    evidence: stakeholder、利用者、店番・運用者、確認者、合意事項。
+    coverage_types:
+      - stakeholder
+      - use_case
+      - permission
+    default_severity: minor
+    evaluation: discretionary
+  - id: vp-arc-document-structure
+    role: ARC
+    category: architecture
+    title: 文書構造・配置・命名
+    check: frontmatter、ID、ファイル名、配置、見出し、リンクがプロジェクトの文書体系と整合しているか。
+    evidence: id、path、rulebook、based_on、見出し、相対リンク、成果物カタログ。
+    default_severity: major
+    evaluation: deterministic
+  - id: vp-arc-cross-document-consistency
+    role: ARC
+    category: consistency
+    title: 成果物間整合
+    check: >-
+      成果物について、成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物と矛盾していないか。不整合の finding は突き合わせ先の文書 ID またはパスと、双方の相反する記述を特定する。rulebook、recipe、sample、template の内部・相互・適用先との整合は vp-qe-kata-conformance で判定し、この観点では扱わない。
+    evidence: >-
+      local_id、depends_on、owner、roles、RACI、関連文書、生成元、finding ごとの突き合わせ先の文書 ID またはパスと双方の該当箇所。
+    coverage_types:
+      - permission
+      - traceability
+      - auditability
+    default_severity: major
+    evaluation: referential
+    grade_targets: [deliverable]
+    # 突き合わせ先の変更を grade list --changed-only の再評価契機にする（PJR-Z47X）。
+    # 生成物は生成元（カタログ・メンバー定義など）の変更として検出する。
+    comparison_sources:
+      - catalog-entry
+      - dependencies
+      - schedule
+      - members
+      - roles
+      - deliverable:pm-raci
+      - deliverable:pm-organization
+  - id: vp-arc-technical-constraints
+    role: ARC
+    category: architecture
+    title: 技術前提・制約の明確性
+    check: 技術的な前提、制約、外部依存、構成判断が必要な範囲で明示されているか。
+    evidence: 技術制約、外部依存、schema、validate 手順、構成方針。
+    coverage_types:
+      - scope_boundary
+      - data
+      - integration
+      - non_functional
+    default_severity: major
+    evaluation: discretionary
+  - id: vp-arc-conciseness
+    role: ARC
+    category: usability
+    title: 冗長性・簡潔性
+    check: >-
+      各節が固有の判断または手順に寄与し、同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲がないか。判断に要る背景・制約・例外・完了条件が残されていれば下限を満たしているとする。長さだけでは fail にせず、削る・まとめる・参照に置き換えることで判断情報を失わない箇所を具体的に特定できる場合のみ minor とする。
+    evidence: >-
+      同じ主張の繰り返し、表と本文の二重の説明、図をなぞる文、目的に要らない背景、正本の再掲（正本への参照で置き換えられるもの）。判断に要る背景・制約・例外・完了条件を残したまま、長さだけを根拠にせず、削る・まとめる・参照に置き換えることで判断情報を失わない箇所。
+    default_severity: minor
+    evaluation: referential
+  - id: vp-arc-single-responsibility
+    role: ARC
+    category: architecture
+    title: 文書責務の単一性
+    check: >-
+      文書の中心主題と責務境界が一つに定まり、各章がその責務に直接寄与しているか。独立して参照・更新できる主題が複数あり、対象読者・利用時点が異なる、または別々の sample・recipe・template に対応する場合は分割を検討する。分量や対応する実践の型の数だけでは不備としない。同一主張の反復や正本の過剰な再掲は vp-arc-conciseness で判定し、この観点では扱わない。
+    evidence: >-
+      文書の目的、章ごとの主題と相互依存、章が参照・更新される単位、対象読者、利用時点、対応する sample・recipe・template、分割後も独立して成立する境界候補。分割が必要な finding には境界候補と参照・カタログへの影響を記録する。
+    default_severity: major
+    evaluation: referential
+    document_kinds:
+      exclude:
+        - specdojo:atc-index-rulebook
+        - specdojo:bes-index-rulebook
+        - specdojo:cdfd-overview-rulebook
+        - specdojo:cop-index-rulebook
+        - specdojo:dct-index-rulebook
+        - specdojo:dmd-index-rulebook
+        - specdojo:etc-index-rulebook
+        - specdojo:ifx-index-rulebook
+        - specdojo:itc-index-rulebook
+        - specdojo:mip-index-rulebook
+        - specdojo:nfr-index-rulebook
+        - specdojo:opd-index-rulebook
+        - specdojo:opr-index-rulebook
+        - specdojo:otp-index-rulebook
+        - specdojo:prj-overview-rulebook
+        - specdojo:sf-index-rulebook
+        - specdojo:stc-index-rulebook
+        - specdojo:sysd-index-rulebook
+        - specdojo:tsd-index-rulebook
+        - specdojo:tsp-index-rulebook
+        - specdojo:utc-index-rulebook
+      unclassified: include
+      # 既定（適用する）のままと判断した rulebook。判断漏れの検証（PJR-VJP8）用の記録で、
+      # 適用判定には影響しない。rulebook を追加したら exclude かここのどちらかへ載せる。
+      confirmed_default:
+        - specdojo:atc-rulebook
+        - specdojo:bac-rulebook
+        - specdojo:bdd-rulebook
+        - specdojo:bds-rulebook
+        - specdojo:bes-rulebook
+        - specdojo:bps-rulebook
+        - specdojo:br-rulebook
+        - specdojo:ccd-mermaid-rulebook
+        - specdojo:cdfd-d2-rulebook
+        - specdojo:cdfd-mermaid-rulebook
+        - specdojo:cdfd-rulebook
+        - specdojo:cdfd-uc-rulebook
+        - specdojo:cdr-rulebook
+        - specdojo:cdsd-rulebook
+        - specdojo:cdt-rulebook
+        - specdojo:cld-rulebook
+        - specdojo:clis-rulebook
+        - specdojo:cnd-mermaid-rulebook
+        - specdojo:cnd-rulebook
+        - specdojo:cop-rulebook
+        - specdojo:cpd-mermaid-rulebook
+        - specdojo:cpd-rulebook
+        - specdojo:cstd-rulebook
+        - specdojo:cxd-mermaid-rulebook
+        - specdojo:cxd-rulebook
+        - specdojo:dct-rulebook
+        - specdojo:dec-rulebook
+        - specdojo:dmd-rulebook
+        - specdojo:dss-rulebook
+        - specdojo:etc-rulebook
+        - specdojo:gl-rulebook
+        - specdojo:ifd-mermaid-rulebook
+        - specdojo:ifx-api-rulebook
+        - specdojo:ifx-cmd-rulebook
+        - specdojo:ifx-file-rulebook
+        - specdojo:ifx-msg-rulebook
+        - specdojo:imp-business-rulebook
+        - specdojo:imp-data-rulebook
+        - specdojo:imp-interface-rulebook
+        - specdojo:imp-operations-rulebook
+        - specdojo:imp-test-rulebook
+        - specdojo:itc-rulebook
+        - specdojo:mm-rulebook
+        - specdojo:mtp-rulebook
+        - specdojo:nfr-availability-rulebook
+        - specdojo:nfr-integrity-rulebook
+        - specdojo:nfr-maintainability-rulebook
+        - specdojo:nfr-operations-rulebook
+        - specdojo:nfr-performance-rulebook
+        - specdojo:nfr-reliability-rulebook
+        - specdojo:nfr-security-safety-rulebook
+        - specdojo:nfr-usability-rulebook
+        - specdojo:ntp-rulebook
+        - specdojo:opd-rulebook
+        - specdojo:opr-rulebook
+        - specdojo:otp-rulebook
+        - specdojo:pjr-rulebook
+        - specdojo:pm-change-request-log-rulebook
+        - specdojo:pm-communication-plan-rulebook
+        - specdojo:pm-issue-log-rulebook
+        - specdojo:pm-members-rulebook
+        - specdojo:pm-organization-rulebook
+        - specdojo:pm-plan-rulebook
+        - specdojo:pm-quality-management-plan-rulebook
+        - specdojo:pm-raci-rulebook
+        - specdojo:pm-risk-register-rulebook
+        - specdojo:pm-roles-rulebook
+        - specdojo:pr-rulebook
+        - specdojo:prj-assumptions-constraints-dependencies-rulebook
+        - specdojo:prj-charter-rulebook
+        - specdojo:prj-comparison-of-alternatives-rulebook
+        - specdojo:prj-issues-and-approach-rulebook
+        - specdojo:prj-scope-rulebook
+        - specdojo:prj-stakeholder-register-rulebook
+        - specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+        - specdojo:sac-rulebook
+        - specdojo:sch-rulebook
+        - specdojo:sf-rulebook
+        - specdojo:sld-rulebook
+        - specdojo:stc-rulebook
+        - specdojo:stsd-mermaid-rulebook
+        - specdojo:stsd-rulebook
+        - specdojo:sysd-critical-flows-rulebook
+        - specdojo:sysd-cross-cutting-policy-rulebook
+        - specdojo:sysd-rulebook
+        - specdojo:tml-rulebook
+        - specdojo:trc-requirements-to-specs-rulebook
+        - specdojo:trc-requirements-to-tests-rulebook
+        - specdojo:tsd-rulebook
+        - specdojo:uis-rulebook
+        - specdojo:utc-rulebook
+  - id: vp-dev-implementation-readiness
+    role: DEV
+    category: implementation
+    title: 実装・設定作業への接続
+    check: 実装、設定、変更作業に必要な入力、制約、完了条件が読み取れるか。
+    evidence: 設定項目、schema、入力、出力、制約、作業対象ファイル。
+    coverage_types:
+      - data
+      - integration
+      - permission
+      - acceptance
+    default_severity: major
+    evaluation: discretionary
+  - id: vp-dev-change-impact
+    role: DEV
+    category: implementation
+    title: 技術的変更影響
+    check: 変更が既存成果物、schema、生成処理、コマンド、運用手順へ与える影響が識別されているか。
+    evidence: 影響範囲、関連コード、schema、生成物、コマンド、互換性。
+    coverage_types:
+      - scope_boundary
+      - data
+      - integration
+      - operations
+      - traceability
+    default_severity: major
+    evaluation: referential
+  - id: vp-dev-testability
+    role: DEV
+    category: quality
+    title: 技術検証可能性
+    check: 実装・設定変更後に確認すべき lint、schema、build、生成コマンドが分かるか。
+    evidence: 検証コマンド、期待結果、対象ファイル、エラー時対応。
+    default_severity: minor
+    evaluation: referential
+  - id: vp-qe-done-criteria
+    role: QE
+    category: quality
+    title: done_criteria 充足
+    check: 成果物カタログの done_criteria を満たしているか、未充足条件が明示されているか。
+    evidence: done_criteria、レビュー結果、未解決指摘、判定根拠。
+    coverage_types:
+      - acceptance
+      - traceability
+    default_severity: major
+    evaluation: referential
+    grade_targets: [deliverable]
+    comparison_sources:
+      - catalog-entry
+  - id: vp-qe-verifiability
+    role: QE
+    category: quality
+    title: 検証可能性
+    check: 成功基準、受入条件、品質基準、設定値が pass / fail を判定できる表現になっているか。
+    evidence: 判定条件、数値、状態、必須項目、チェック手順。
+    coverage_types:
+      - exception_case
+      - state_transition
+      - non_functional
+      - acceptance
+    default_severity: major
+    evaluation: referential
+  - id: vp-qe-omissions-consistency
+    role: QE
+    category: consistency
+    title: 抜け漏れ・矛盾
+    check: 必須章、必須キー、参照、責務、禁止事項に抜け漏れや矛盾がないか。
+    evidence: rulebook、schema、関連文書、禁止事項、レビュー履歴。
+    # 構造・整合の抜け漏れを見る観点であり、特定の業務 coverage 次元の網羅は要求しない。
+    # 必須要素の充足は check / evidence と各成果物の rulebook・schema で判定し、
+    # 構造系成果物（pm-roles / pm-members / pm-raci など）への無関係な詳細流入を避ける。
+    default_severity: major
+    evaluation: referential
+  - id: vp-qe-config-validity
+    role: QE
+    category: quality
+    title: 設定値の妥当性
+    check: 設定値・必須キー・参照が schema と整合し、妥当な値で過不足なく定義されているか。
+    evidence: schema、必須キー、設定値、デフォルト値、validate 結果。
+    # 設定 YAML（スケジュール定義・デフォルト等）向けの軽量観点。挙動仕様向けの
+    # coverage（exception_case / state_transition / non_functional）を要求せず、
+    # 設定値の妥当性と schema 整合に絞る。
+    default_severity: major
+    evaluation: deterministic
+    grade_targets: [deliverable]
+  - id: vp-qe-kata-conformance
+    role: QE
+    category: quality
+    title: 実践の型としての適合性
+    check: >-
+      rulebook、recipe、sample、template が種別ごとの責務を守り、Kata 内部、Kata 相互、および参照する組織定義や生成物を含む適用先との関係が矛盾なく定義されているか。Kata に関するこれらの整合はこの観点で判定し、vp-arc-cross-document-consistency では扱わない。
+    evidence: >-
+      authoring standard、rulebook の型宣言、recipe の問い、sample の完成例、template の骨組み、相互参照、組織定義や生成物を含む適用先との対応。
+    coverage_types:
+      - acceptance
+      - traceability
+    default_severity: major
+    evaluation: referential
+    grade_targets: [kata]
+  - id: vp-ux-readability
+    role: UX
+    category: usability
+    title: 読みやすさ・理解しやすさ
+    check: >-
+      初見の読者が、成果物固有の目的または上位文書への参照、名称、メタデータから、なぜ扱うか、役割、利用先、対象、主要な判断、次に見る文書を理解できるか。主旨または主要な判断点を読み取れない箇所を特定できる場合は major とする。同一主張の反復や正本の過剰な再掲など冗長性の判定は vp-arc-conciseness で行い、この観点では扱わない。
+    evidence: >-
+      導入文、目的・理由、主要な成果・方針との対応、上位文書への参照、見出し、表、用語、関連ドキュメント、補足説明、段落・箇条書きの長さと論点数、保持すべき背景・判断理由・例外・制約・done_criteria。
+    # Why の内容の妥当性は PO / BA に委ね、ここでは必要性と主要な判断の関係を読み手が
+    # 識別できるか、および手段だけが目的に見える表現になっていないかを判定する。
+    default_severity: minor
+    evaluation: referential
+    document_kinds:
+      unclassified: include
+  - id: vp-ux-user-flow
+    role: UX
+    category: usability
+    title: 利用者導線
+    check: >-
+      利用者や将来貢献者が迷わず必要情報へ到達できる構成になっているか。目次から必要な章を見つけられるか、関連成果物への参照が適切な位置にあるか、前提から結論への説明順序が守られているかのいずれかの基準に照らして判定し、情報を見失う箇所を具体的に特定できる場合のみ不備とする。
+    evidence: 目次、関連リンク、手順、参照先、サンプル、説明順序。
+    default_severity: minor
+    evaluation: referential
+    grade_targets: [deliverable]
+  - id: vp-ux-language-consistency
+    role: UX
+    category: usability
+    title: 用語・表現の一貫性
+    check: 用語、Role code、成果物名、状態、ラベルが読み手を混乱させない形で統一されているか。
+    evidence: 用語定義、表記ゆれ、Role code、local_id、status、ラベル。
+    default_severity: minor
+    evaluation: referential
+  - id: vp-ops-release-readiness
+    role: OPS
+    category: operations
+    title: リリース・公開準備
+    check: 公開、配布、ready 化、リリース判断に必要な前提や未解決事項が明示されているか。
+    evidence: status、ready 条件、公開対象、未解決指摘、承認者、公開前確認。
+    coverage_types:
+      - permission
+      - operations
+      - auditability
+      - acceptance
+    default_severity: major
+    evaluation: discretionary
+  - id: vp-ops-operability
+    role: OPS
+    category: operations
+    title: 運用しやすさ
+    check: 継続更新、再生成、変更管理、問い合わせ対応、障害時対応に必要な情報が読み取れるか。
+    evidence: 運用手順、再生成手順、変更管理、問い合わせ導線、担当 Role code。
+    coverage_types:
+      - operations
+      - integration
+      - auditability
+      - non_functional
+    default_severity: minor
+    evaluation: discretionary
+  - id: vp-ops-agent-boundary
+    role: OPS
+    category: operations
+    title: agent 委任境界
+    check: agent に最終承認、公開可否判断、説明責任を委ねる記述になっていないか。
+    evidence: owner、reviewer、approver、agent_mode、manual gate、承認責任。
+    coverage_types:
+      - permission
+      - auditability
+    default_severity: blocker
+    evaluation: referential
+
+role_viewpoint_sets:
+  - role: PO
+    viewpoints:
+      - vp-po-purpose-alignment
+      - vp-po-decision-readiness
+      - vp-po-publication-accountability
+  - role: PM
+    viewpoints:
+      - vp-pm-plan-feasibility
+      - vp-pm-dependency-risk
+      - vp-pm-control-reporting
+  - role: BA
+    viewpoints:
+      - vp-ba-business-value
+      - vp-ba-requirements-completeness
+      - vp-ba-stakeholder-clarity
+  - role: ARC
+    viewpoints:
+      - vp-arc-document-structure
+      - vp-arc-cross-document-consistency
+      - vp-arc-technical-constraints
+      - vp-arc-conciseness
+      - vp-arc-single-responsibility
+  - role: DEV
+    viewpoints:
+      - vp-dev-implementation-readiness
+      - vp-dev-change-impact
+      - vp-dev-testability
+  - role: QE
+    viewpoints:
+      - vp-qe-done-criteria
+      - vp-qe-verifiability
+      - vp-qe-omissions-consistency
+      - vp-qe-config-validity
+      - vp-qe-kata-conformance
+  - role: UX
+    viewpoints:
+      - vp-ux-readability
+      - vp-ux-user-flow
+      - vp-ux-language-consistency
+  - role: OPS
+    viewpoints:
+      - vp-ops-release-readiness
+      - vp-ops-operability
+      - vp-ops-agent-boundary
+```
+
+</details>

@@ -1,0 +1,225 @@
+---
+specdojo:
+  id: specdojo:dct-sample
+  type: project
+  status: draft
+  rulebook: specdojo:dct-rulebook
+---
+
+# 成果物カタログ（プロジェクト定義）
+
+> このページは `docs/ja/specdojo/samples/dct-sample.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. カタログの設定
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| プロジェクト | prj-0001 |
+| ドメイン | project-definition |
+| 基準パス | /docs/ja/projects/prj-0001/020-project-definition |
+
+## 2. 成果物
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 配置先（親からの相対パス） | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 成果物 ID | 名称 | 種別 | 根拠 | 概要 |
+| --- | --- | --- | --- | --- |
+| prj-overview | プロジェクト概要 | work | - | 駄菓子屋きぬや販売管理システムの目的・背景・ゴールを定義する |
+| prj-scope | スコープ定義 | work | prj-overview | 対象業務と対象外業務を明確化し、合意境界を固定する |
+| prj-issues-and-approach | 課題と方針 | work | prj-scope | 初期課題と対応方針を整理し、計画立案の前提を明示する |
+| prj-glossary | 用語集 | control | prj-overview | 業務用語と略語の定義を統一し、文書間の解釈差を防ぐ |
+| prj-definition-summary | 定義サマリー | generated | prj-overview / prj-scope | 定義系成果物の要点を参照用に集約した派生文書を提供する |
+
+**`prj-overview`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | prj-overview.md |
+| 準拠ルール | specdojo:prj-overview-rulebook |
+| 作成指示 | - 駄菓子屋の既存店舗業務を止めない段階的な移行を前提とする - POS 端末および在庫管理端末はタブレット Web アプリケーションとする  |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること | BA | vp-ba-business-value |
+| プロジェクトの目的・スコープを承認できる情報が含まれていること | PO | vp-po-purpose-alignment |
+| 技術的前提・制約を読み取れる情報が含まれていること | ARC | vp-arc-technical-constraints |
+| 成功判定の輪郭が確認できること | QE | vp-qe-verifiability |
+
+**`prj-scope`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | prj-scope.md |
+| 準拠ルール | specdojo:prj-scope-rulebook |
+| 作成指示 | - 駄菓子屋の既存店舗業務を止めない段階的な移行を前提とする - POS 端末および在庫管理端末はタブレット Web アプリケーションとする  |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 業務スコープ・除外範囲・利用者影響が業務観点で確認できること | BA | vp-ba-requirements-completeness |
+| 対象範囲・対象外を承認できること | PO | vp-po-purpose-alignment |
+| テスト対象・対象外の境界が判断できること | QE | vp-qe-verifiability |
+
+**`prj-issues-and-approach`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | prj-issues-and-approach.md |
+| 準拠ルール | specdojo:prj-issues-and-approach-rulebook |
+| 作成指示 | - |
+| 注記 | - |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+| 業務課題と解決アプローチが業務観点で対応していること | BA | vp-ba-business-value |
+| 主要課題と方針を計画立案の前提として確認できること | PM | vp-pm-plan-feasibility |
+| 解決アプローチが検証可能な形で記述されていること | QE | vp-qe-verifiability |
+
+**`prj-glossary`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | prj-glossary.md |
+| 準拠ルール | - |
+| 作成指示 | - |
+| 注記 | 統制文書のためスケジュール展開対象外。work ではないため `done_criteria` は持たない |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+
+**`prj-definition-summary`**
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| パス | prj-definition-summary.md |
+| 準拠ルール | - |
+| 作成指示 | - |
+| 注記 | 派生・自動生成成果物のためスケジュール展開対象外 |
+
+<!-- prettier-ignore -->
+| 完了条件 | 確認ロール | 観点 ID |
+| --- | --- | --- |
+
+## 3. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/dct.schema.yaml
+# dct-sample.yaml
+# 成果物カタログ（ドメイン別）の完成例。
+# 駄菓子屋きぬや販売管理システム構築プロジェクトのプロジェクト定義ドメインを題材とする。
+# 構造・必須キー・型制約は docs/specdojo/schemas/v1/dct.schema.yaml に従う。
+# work / control / generated の3種別と、done_criteria、および brief（YAML アンカー共有）の記述例を示す。
+id: specdojo:dct-sample
+type: project
+status: draft
+title: 成果物カタログ（プロジェクト定義）
+rulebook: specdojo:dct-rulebook
+part_of:
+  - prj-0001:dct-index
+project_id: prj-0001
+domain: project-definition
+base_path: /docs/ja/projects/prj-0001/020-project-definition
+groups:
+  - deliverables:
+      - local_id: prj-overview
+        name: プロジェクト概要
+        kind: work
+        depends_on: []
+        overview: 駄菓子屋きぬや販売管理システムの目的・背景・ゴールを定義する
+        brief: &project_baseline_brief |
+          - 駄菓子屋の既存店舗業務を止めない段階的な移行を前提とする
+          - POS 端末および在庫管理端末はタブレット Web アプリケーションとする
+        path: prj-overview.md
+        rulebook: specdojo:prj-overview-rulebook
+        done_criteria:
+          - text: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: プロジェクトの目的・スコープを承認できる情報が含まれていること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: 技術的前提・制約を読み取れる情報が含まれていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 成功判定の輪郭が確認できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: prj-scope
+        name: スコープ定義
+        kind: work
+        depends_on:
+          - prj-overview
+        overview: 対象業務と対象外業務を明確化し、合意境界を固定する
+        brief: *project_baseline_brief
+        path: prj-scope.md
+        rulebook: specdojo:prj-scope-rulebook
+        done_criteria:
+          - text: 業務スコープ・除外範囲・利用者影響が業務観点で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 対象範囲・対象外を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
+          - text: テスト対象・対象外の境界が判断できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: prj-issues-and-approach
+        name: 課題と方針
+        kind: work
+        depends_on:
+          - prj-scope
+        overview: 初期課題と対応方針を整理し、計画立案の前提を明示する
+        path: prj-issues-and-approach.md
+        rulebook: specdojo:prj-issues-and-approach-rulebook
+        done_criteria:
+          - text: 業務課題と解決アプローチが業務観点で対応していること
+            roles: [BA]
+            viewpoint: vp-ba-business-value
+          - text: 主要課題と方針を計画立案の前提として確認できること
+            roles: [PM]
+            viewpoint: vp-pm-plan-feasibility
+          - text: 解決アプローチが検証可能な形で記述されていること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: prj-glossary
+        name: 用語集
+        kind: control
+        depends_on:
+          - prj-overview
+        overview: 業務用語と略語の定義を統一し、文書間の解釈差を防ぐ
+        path: prj-glossary.md
+        note: 統制文書のためスケジュール展開対象外。work ではないため done_criteria は持たない
+      - local_id: prj-definition-summary
+        name: 定義サマリー
+        kind: generated
+        depends_on:
+          - prj-overview
+          - prj-scope
+        overview: 定義系成果物の要点を参照用に集約した派生文書を提供する
+        path: prj-definition-summary.md
+        note: 派生・自動生成成果物のためスケジュール展開対象外
+```
+
+</details>

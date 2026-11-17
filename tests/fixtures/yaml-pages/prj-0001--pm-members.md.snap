@@ -1,0 +1,98 @@
+---
+specdojo:
+  id: prj-0001:pm-members
+  type: project
+  status: ready
+  rulebook: specdojo:pm-members-rulebook
+---
+
+# メンバー名簿
+
+> このページは `docs/ja/projects/prj-0001/030-project-management/pm-members.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. メンバー
+
+<!-- prettier-ignore -->
+| 実行主体 ID | 表示名 | ロール | 種別 | 担当領域 | 補足 |
+| --- | --- | --- | --- | --- | --- |
+| indie | Indie Hacker | PO / PM / BA / ARC / DEV / QE / UX / OPS | human | purpose / scope / priority / publication / accountability | 個人開発における人間の最終判断主体。全責務を兼務する。公開文書では個人名と連絡先を記載しない。 |
+
+## 2. 運用ルール
+
+<!-- prettier-ignore -->
+| ルール |
+| --- |
+| Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。 |
+| specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。 |
+| members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。 |
+| 汎用 agent の roles は空配列とし、実行時のタスク owner または plan で対象 Role を補う。 |
+| agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。 |
+| 起動コマンドは .specdojo/exec-defaults.yaml の providers.&lt;provider&gt;.`command_template` から解決し、member の command はテンプレートを持たない構成に限って上書きとして使う。 |
+| command を上書きする場合も、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。 |
+| 公開文書には個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しない。 |
+| type: agent のメンバーは全員 `stage_role`（executor / reporter）を持つ。単体で edit/review を完結する legacy 構成は使わない。 |
+
+## 3. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/pm-members.schema.yaml
+id: prj-0001:pm-members
+type: project
+status: ready
+title: メンバー名簿
+rulebook: specdojo:pm-members-rulebook
+based_on:
+  - specdojo:people-and-organization-definition-standard
+  - prj-0001:pm-organization
+  - prj-0001:pm-roles
+version: 1
+project_id: prj-0001
+# Member は、実際に作業する人間または agent を表す。
+# roles には対応する Role code のリストを指定する。兼務の場合は複数記載する。
+# タスク側の owner には pm-roles.yaml に存在する Role code を使う。
+# agent の定義は .specdojo/agent-members.yaml にある（PJR-2T63）。
+
+members:
+  - nickname: indie
+    display_name: Indie Hacker
+    email: null
+    roles:
+      - PO
+      - PM
+      - BA
+      - ARC
+      - DEV
+      - QE
+      - UX
+      - OPS
+    type: human
+    persona: final-decision-maker
+    focus:
+      - purpose
+      - scope
+      - priority
+      - publication
+      - accountability
+    scheduler_strategy: critical-first
+    note: 個人開発における人間の最終判断主体。全責務を兼務する。公開文書では個人名と連絡先を記載しない。
+rules:
+  - Schedule の owner には pm-roles.yaml に記載された Role code を使用し、member nickname は書かない。
+  - specdojo exec --by には members[].nickname を指定し、実行ログ記録後の nickname は変更しない。
+  - members[].roles は member が対応できる Role code を表し、Schedule の owner の代替として使わない。
+  - 汎用 agent の roles は空配列とし、実行時のタスク owner または plan で対象 Role を補う。
+  - agent は草案作成、レビュー支援、整合性確認、機械的更新を支援するが、最終承認、公開可否判断、説明責任は人間の PO が担う。
+  - >-
+    起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決し、member の
+    command はテンプレートを持たない構成に限って上書きとして使う。
+  - command を上書きする場合も、認証情報、秘密鍵、トークン、個人環境に閉じたパスを記載しない。
+  - 公開文書には個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しない。
+  - "type: agent のメンバーは全員 stage_role（executor / reporter）を持つ。単体で edit/review を完結する legacy 構成は使わない。"
+```
+
+</details>

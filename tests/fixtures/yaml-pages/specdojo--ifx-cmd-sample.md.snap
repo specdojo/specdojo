@@ -1,0 +1,245 @@
+---
+specdojo:
+  id: specdojo:ifx-cmd-sample
+  type: api
+  status: ready
+  rulebook: specdojo:ifx-cmd-rulebook
+---
+
+# 駄菓子屋きぬや レシート印刷コマンド連携仕様サンプル
+
+> このページは `docs/ja/specdojo/samples/ifx-cmd-sample.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. コマンド
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 実行ファイル | receipt-print |
+| サブコマンド | - |
+| 目的 | [[specdojo:clis-sample\|販売管理 CLI 仕様サンプル]] の会計完了時に、 確定済みレシートを店舗プリンタで印刷し、呼び出し元が印字結果を判定できる状態にする。 売上登録や会計確定の再実行はこの連携に含めない。 印字失敗時も会計を取り消さず、販売 CLI は警告を表示して未印字の控えを保持する。 |
+| 仕様の参照先 | `receipt-print-reference` v1 の「ファイル印刷」を起動方法の正本とする。 入力パスの渡し方、結果 JSON と診断の構造、送信前失敗の識別条件は同リファレンス、 印字内容は `kinuya-receipt-format-schema` を参照する。 |
+| バージョン制約 | &gt;=1.0.0 &lt;2.0.0 |
+| シェル経由 | false |
+
+## 2. 標準入出力
+
+<!-- prettier-ignore -->
+| ストリーム | モード | 形式 | 文字コード | 契約 |
+| --- | --- | --- | --- | --- |
+| stdin | none | none | - | 入力はファイルで渡す。呼び出し元は stdin を閉じ、対話入力を要求しない。 |
+| stdout | - | json | UTF-8 | 起動ごとに結果 JSON を 1 件返す。呼び出し元は対象取引と印字完了を照合する。 進捗は混在させず、結果の詳細構造は `receipt-print-reference` の「結果」を参照する。 exit 0 でも報告が欠落・不正・対象不一致なら印字完了扱いにしない。 |
+| stderr | - | text | UTF-8 | 進捗、警告、失敗診断。送信前失敗の機械判定は `receipt-print-reference` の「診断」に従う。 可変の説明文や stderr が空であることを成功の根拠にしない。 |
+
+## 3. 入力ファイル
+
+<!-- prettier-ignore -->
+| パス | 形式 | 文字コード | 契約 |
+| --- | --- | --- | --- |
+| receipts/receipt-YYYYMMDD-NNNN.txt | text | UTF-8 | 呼び出し元の販売 CLI（[[specdojo:clis-sample\|販売管理 CLI 仕様サンプル]]）が会計確定時に作成する印字用テキスト。 パスは店舗データディレクトリを基準とし、可変部の日付 `YYYYMMDD`（会計確定日・8桁）と連番 `NNNN`（当日取引連番・4桁）は確定済み取引情報から解決する。 印字テキストの内容仕様は `kinuya-receipt-format-schema` を参照する。印刷 CLI は読み取りのみを行い、変更・削除は行わない。 |
+
+## 4. 出力ファイル
+
+<!-- prettier-ignore -->
+| パス | 形式 | 文字コード | 契約 |
+| --- | --- | --- | --- |
+
+## 5. 終了コード
+
+<!-- prettier-ignore -->
+| コード | 意味・判定条件 | 分類 | 再試行可否 |
+| --- | --- | --- | --- |
+| 0 | プリンタが印字完了を通知し、CLI が正常終了した。 呼び出し元は stdout の対象取引と完了状態も確認して印字済みにする。 会計全体の完了判定は販売 CLI が行う。 | success | false |
+| 2 | 入力ファイルがない、読めない、または印字形式に適合しない。プリンタへは送信していない。 開発担当が入力生成とファイル権限を修正してから再実行する | `input_error` | false |
+| 5 | ローカルのプリンタデバイスへのアクセス権がない。権限を直すまで再試行しない | `authorization_error` | false |
+| 1 | exit 1 かつ送信前にプリンタが一時的なビジー状態であると診断で確認できた場合。 exit 1 の分類ではこの条件を先に評価し、一致する場合に限り自動再試行する | `transient_failure` | true |
+| 1 | 上記の送信前失敗と識別できない汎用失敗。送信開始後の用紙切れ・切断、 診断欠落、および未定義の非ゼロ終了もこの扱いとする。 印字の有無を断定せず、自動再試行を止めて店頭利用者の確認へ進む | `permanent_failure` | false |
+
+## 6. 認証
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `method` | none |
+| `injection` | `mechanism`: none / `names`: none |
+| `secret_source` | USB 直結のため認証情報は不要で、秘密値の供給元・注入対象はない。 OS のデバイス権限は開発担当が管理し、認可失敗は exit 5 として扱う。 |
+| `log_policy` | 起動引数と標準入力に秘密値を含めず、環境変数の値とレシート本文をログへ記録しない。 呼び出し元は stdout・stderr の診断を保存する前に秘密値をマスクし、 取引識別子と印字結果だけを実行記録へ残す。 |
+
+## 7. 実行制御
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `working_directory` | 店舗データディレクトリ（販売 CLI と共通。入力パスはこの配下に限定する） |
+| `timeout_seconds` | 30 |
+| `network_required` | false |
+| `max_parallel` | 1 |
+| `idempotency` | `guaranteed`: false / `condition`: 同じ取引を再実行しても CLI・プリンタによる重複排除はなく、二重印字になり得る。 印字結果が不明なときは店頭利用者が紙面とプリンタ状態を確認してから手動再印刷する。 再印刷は保存済みレシートだけを使い、会計や売上送信を再実行しない。 |
+
+## 8. 異常時の扱い
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `retry` | `on_categories`: `transient_failure` / `max_attempts`: 3 / `backoff`: exponential |
+| `timeout_action` | 呼び出し元は 30 秒で子プロセスとその子孫を終了し、不完全な stdout を結果として採用しない。 送信済みデータの印字は停止できたとみなさず、自動再試行せずに印字結果不明として通知する。 保存済みレシートを保持し、店頭利用者による紙面・プリンタ状態の確認後に手動再印刷する。 |
+| `malformed_output_action` | JSON の欠落・解析失敗・対象不一致・完了状態の矛盾は印字結果不明として扱う。 自動再試行せず、既存のレシートとマスク済み診断を保持して店頭利用者へ確認を依頼する。 |
+| `authentication_failure_action` | 認証は不要。認証要求が現れた場合は想定外の実行環境として自動再試行を止め、 開発担当へ実行ファイルと接続方式の確認を依頼する。OS 権限不足は認可失敗として同担当へ依頼する。 |
+
+## 9. 副作用
+
+<!-- prettier-ignore -->
+| 内容 |
+| --- |
+| プリンタへ印字データを送り、用紙を消費する。途中失敗でも紙面の一部が印字される場合がある / 売上・在庫・つけ残高および入力レシートは変更しない。外部サービスの利用枠・課金は発生しない |
+
+## 10. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/ifx-cmd.schema.yaml
+id: specdojo:ifx-cmd-sample
+type: api
+status: ready
+title: 駄菓子屋きぬや レシート印刷コマンド連携仕様サンプル
+rulebook: specdojo:ifx-cmd-rulebook
+version: 1
+based_on:
+  - specdojo:clis-sample
+
+# _ASSUMPTION_: receipt-print は学習用の架空 CLI。本例では USB 直結・同期印字とし、
+# 1 回の起動上限を 30 秒、同時起動を店舗端末全体で 1 件とする。
+# 未同梱のリファレンスと印字形式の識別子は参照名だけを示し、実在するリンクにしない。
+
+command:
+  executable: receipt-print
+  purpose: >-
+    [[specdojo:clis-sample|販売管理 CLI 仕様サンプル]] の会計完了時に、
+    確定済みレシートを店舗プリンタで印刷し、呼び出し元が印字結果を判定できる状態にする。
+    売上登録や会計確定の再実行はこの連携に含めない。
+    印字失敗時も会計を取り消さず、販売 CLI は警告を表示して未印字の控えを保持する。
+  reference: >-
+    `receipt-print-reference` v1 の「ファイル印刷」を起動方法の正本とする。
+    入力パスの渡し方、結果 JSON と診断の構造、送信前失敗の識別条件は同リファレンス、
+    印字内容は `kinuya-receipt-format-schema` を参照する。
+  version_constraint: ">=1.0.0 <2.0.0"
+  shell: false
+
+streams:
+  stdin:
+    mode: none
+    format: none
+    description: 入力はファイルで渡す。呼び出し元は stdin を閉じ、対話入力を要求しない。
+  stdout:
+    format: json
+    encoding: UTF-8
+    description: >-
+      起動ごとに結果 JSON を 1 件返す。呼び出し元は対象取引と印字完了を照合する。
+      進捗は混在させず、結果の詳細構造は `receipt-print-reference` の「結果」を参照する。
+      exit 0 でも報告が欠落・不正・対象不一致なら印字完了扱いにしない。
+  stderr:
+    format: text
+    encoding: UTF-8
+    description: >-
+      進捗、警告、失敗診断。送信前失敗の機械判定は `receipt-print-reference` の「診断」に従う。
+      可変の説明文や stderr が空であることを成功の根拠にしない。
+
+files:
+  inputs:
+    - path: receipts/receipt-YYYYMMDD-NNNN.txt
+      format: text
+      encoding: UTF-8
+      description: >-
+        呼び出し元の販売 CLI（[[specdojo:clis-sample|販売管理 CLI 仕様サンプル]]）が会計確定時に作成する印字用テキスト。
+        パスは店舗データディレクトリを基準とし、可変部の日付 `YYYYMMDD`（会計確定日・8桁）と連番 `NNNN`（当日取引連番・4桁）は確定済み取引情報から解決する。
+        印字テキストの内容仕様は `kinuya-receipt-format-schema` を参照する。印刷 CLI は読み取りのみを行い、変更・削除は行わない。
+  # 印刷 CLI はファイルを作らない。電子控え、未印字状態、実行ログの保存は呼び出し元の責務。
+  outputs: []
+
+side_effects:
+  - プリンタへ印字データを送り、用紙を消費する。途中失敗でも紙面の一部が印字される場合がある
+  - 売上・在庫・つけ残高および入力レシートは変更しない。外部サービスの利用枠・課金は発生しない
+
+exit_codes:
+  - code: 0
+    meaning: >-
+      プリンタが印字完了を通知し、CLI が正常終了した。
+      呼び出し元は stdout の対象取引と完了状態も確認して印字済みにする。
+      会計全体の完了判定は販売 CLI が行う。
+    category: success
+    retryable: false
+  - code: 2
+    meaning: >-
+      入力ファイルがない、読めない、または印字形式に適合しない。プリンタへは送信していない。
+      開発担当が入力生成とファイル権限を修正してから再実行する
+    category: input_error
+    retryable: false
+  - code: 5
+    meaning: ローカルのプリンタデバイスへのアクセス権がない。権限を直すまで再試行しない
+    category: authorization_error
+    retryable: false
+  - code: 1
+    meaning: >-
+      exit 1 かつ送信前にプリンタが一時的なビジー状態であると診断で確認できた場合。
+      exit 1 の分類ではこの条件を先に評価し、一致する場合に限り自動再試行する
+    category: transient_failure
+    retryable: true
+  - code: 1
+    meaning: >-
+      上記の送信前失敗と識別できない汎用失敗。送信開始後の用紙切れ・切断、
+      診断欠落、および未定義の非ゼロ終了もこの扱いとする。
+      印字の有無を断定せず、自動再試行を止めて店頭利用者の確認へ進む
+    category: permanent_failure
+    retryable: false
+
+authentication:
+  method: none
+  injection:
+    mechanism: none
+    names:
+      - none
+  secret_source: >-
+    USB 直結のため認証情報は不要で、秘密値の供給元・注入対象はない。
+    OS のデバイス権限は開発担当が管理し、認可失敗は exit 5 として扱う。
+  log_policy: >-
+    起動引数と標準入力に秘密値を含めず、環境変数の値とレシート本文をログへ記録しない。
+    呼び出し元は stdout・stderr の診断を保存する前に秘密値をマスクし、
+    取引識別子と印字結果だけを実行記録へ残す。
+
+execution:
+  working_directory: 店舗データディレクトリ（販売 CLI と共通。入力パスはこの配下に限定する）
+  timeout_seconds: 30
+  network_required: false
+  max_parallel: 1
+  idempotency:
+    guaranteed: false
+    condition: >-
+      同じ取引を再実行しても CLI・プリンタによる重複排除はなく、二重印字になり得る。
+      印字結果が不明なときは店頭利用者が紙面とプリンタ状態を確認してから手動再印刷する。
+      再印刷は保存済みレシートだけを使い、会計や売上送信を再実行しない。
+
+error_handling:
+  retry:
+    on_categories:
+      - transient_failure
+    # 初回起動を含む最大 3 回、待機は 1 秒・2 秒。上限後は自動起動を止め、利用者へ通知する。
+    max_attempts: 3
+    backoff: exponential
+  timeout_action: >-
+    呼び出し元は 30 秒で子プロセスとその子孫を終了し、不完全な stdout を結果として採用しない。
+    送信済みデータの印字は停止できたとみなさず、自動再試行せずに印字結果不明として通知する。
+    保存済みレシートを保持し、店頭利用者による紙面・プリンタ状態の確認後に手動再印刷する。
+  malformed_output_action: >-
+    JSON の欠落・解析失敗・対象不一致・完了状態の矛盾は印字結果不明として扱う。
+    自動再試行せず、既存のレシートとマスク済み診断を保持して店頭利用者へ確認を依頼する。
+  authentication_failure_action: >-
+    認証は不要。認証要求が現れた場合は想定外の実行環境として自動再試行を止め、
+    開発担当へ実行ファイルと接続方式の確認を依頼する。OS 権限不足は認可失敗として同担当へ依頼する。
+```
+
+</details>

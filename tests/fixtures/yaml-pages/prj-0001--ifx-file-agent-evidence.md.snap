@@ -1,0 +1,349 @@
+---
+specdojo:
+  id: prj-0001:ifx-file-agent-evidence
+  type: api
+  status: ready
+  rulebook: specdojo:ifx-file-rulebook
+---
+
+# 外部ファイル連携仕様（agent の evidence）
+
+> このページは `docs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。
+
+<!-- specdojo:generated-by=yaml-pages -->
+
+## 1. 連携の概要
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 連携元 | AI provider CLI（executor / reporter agent）および SpecDojo runner |
+| 連携先 | SpecDojo runner、後続パイプライン段、および結果報告（reporter） |
+| 向き | bidirectional |
+| 形式 | JSON |
+| タイミング | タスク実行サイクルの各段遷移時（executor 完了直後、親検証完了時、reporter 起動前後、integrate 実行前後、および中断・再試行時） |
+
+## 2. 受け渡すファイル
+
+<!-- prettier-ignore -->
+| 名称 | 配置 | 説明 | 書き手 | 読み手 | 形式 |
+| --- | --- | --- | --- | --- | --- |
+| evidence.json | docs/ja/projects/&lt;project-id&gt;/execution/runs/&lt;origin&gt;/&lt;item-id&gt;/&lt;run-id&gt;/evidence.json | タスク実行における agent の変更内容、検証結果、最終メッセージ、および runner による親検証結果・差分サマリー・ログ参照を記録する構造化エビデンスファイル。 agent は evidence.json を直接書かず、最終応答の末尾に &lt;`specdojo_executor_evidence`&gt; タグで囲んだ JSON 報告 （`final_message`, `completion_status`, handoff, validations, `target_coverage`, `condense_records`）を出力する。 複数のタグがある場合は最後のものを採用する。 成果物カタログの overview の「agent が書き」は報告内容の書き手を指し、ファイルとしての書き手は runner である。 | SpecDojo runner（agent の stdout に出力された &lt;`specdojo_executor_evidence`&gt; タグから抽出・正規化し、差分情報・親検証結果を結合して書き込む） | SpecDojo runner（検証合否判定、統合判定、reporter へのプロンプト注入、result.md 反映） | JSON |
+| pipeline-state.json | docs/ja/projects/&lt;project-id&gt;/execution/runs/&lt;origin&gt;/&lt;item-id&gt;/&lt;run-id&gt;/pipeline-state.json | 実行パイプラインの各段階（executor, reporter, integrate）の進行状態、担当 actor、 試行回数、開始/完了時刻、成果物参照、および再開（resume）に必要なコンテキストを管理する状態ファイル。 | SpecDojo runner（各パイプラインステージの開始・完了・失敗・再試行・統合遷移時にアトミック更新） | SpecDojo runner（パイプライン進行制御、多リポジトリ統合の状態追跡、--resume 時の状態復元） | JSON |
+
+## 3. ファイル契約: `evidence.json`
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 命名規則 | evidence.json |
+| 文字コード | UTF-8 |
+| 正本の型 | src/exec/evidence.ts#ExecEvidence |
+| 必須項目 | `schema_version` / `task_id` / `run_id` / stage / changes / `diff_summary` / validations / `final_message` |
+
+## 4. ファイル契約: `pipeline-state.json`
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 命名規則 | pipeline-state.json |
+| 文字コード | UTF-8 |
+| 正本の型 | src/exec/pipeline-state.ts#PipelineState |
+| 必須項目 | `schema_version` / `task_id` / `run_id` / `updated_at` / stages |
+
+## 5. 配送・書き込み
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `method` | ローカルファイルシステム |
+| `endpoint` | &lt;executionPath&gt;/runs/&lt;origin&gt;/&lt;itemId&gt;/&lt;runId&gt;/ |
+| `frequency` | タスク実行ごとに都度 |
+| `atomic_write` | pipeline-state.json と、runner が更新し直す evidence.json は一時ファイル（.tmp）へ書き込み後に rename によるアトミック置換（renameSync）を実施する。 executor 完了直後の evidence.json 初回書き込みは直接書き込みである。 |
+
+## 6. データ契約
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `json` | `root_type`: object / `content_type`: application/json / `encoding`: UTF-8 |
+| `references` | `evidence_spec`: src/exec/evidence.ts / `pipeline_state_spec`: src/exec/pipeline-state.ts / `path_resolution_spec`: src/shared/run-records.ts |
+| `change_impact` | ExecEvidence・PipelineState の型や必須項目、または run-records の配置解決を変更する場合、DEV は同じ変更で 本仕様の files[].`required_fields`・location・`error_handling` と verification の該当ケースを更新し、 ARC が本仕様と正本の一致を確認する。正本だけの変更で本仕様と食い違った状態を残さない。 |
+
+## 7. 異常時の扱い
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| `missing` | `evidence_json`: `action`: executor の stdout に &lt;`specdojo_executor_evidence`&gt; タグが無い場合、構造化報告を空としてフォールバックし （`completion_status` は記録せず、`final_message` はタグ除去後の stdout 本文、executor 由来の validations は空）、 プロセスの終了コードおよび親検証の合否で完了を判定する。 `completion_status` の欠落は incomplete とみなさないため、正規の complete 報告とは evidence.json に `completion_status`: complete が記録されているかどうかで区別する。 フォールバック時に成功扱いとなる条件は、終了コード 0 かつ親検証がすべて合格（`not_run` を含まない）であり、 かつ approach が要求する報告項目を満たすことに限る。approach が condense（mode が edit）の場合は有効な `condense_records` が必須で、 欠けていれば runner は reporter 段の前に `completion_status` を incomplete、`block_reason` に理由と executor 段からの再開コマンドを 記録して evidence.json を更新し、reporter へ進めない。 reporter 実行時に evidence.json が欠落している場合は、前段未完了として reporter 実行を中断（blocked）する。 / `pipeline_state_json`: `action`: 初回実行時は runner が空のステージ構造で新規生成する。 --resume 時にファイルが欠落している場合は状態復元不能としてエラー停止し、--force-restart による再実行を案内する。 |
+| `malformed` | `evidence_json`: `action`: agent 報告タグ内の JSON 構文エラーを検知した場合は、構造化報告を空として扱い（`final_message` はタグ除去後の stdout 本文）、 成果物の編集内容は作業ディレクトリに保持する。 報告内の validations / `target_coverage` の要素のうち、必須項目欠落・status 値不正のものは個別に破棄し、件数・文字数の上限を超えた分は切り詰める。 `condense_records` が schema に適合しない場合は `completion_status` を incomplete として扱う。 解析失敗のみを理由とした自動再試行は行わず、親検証と利用者の確認に引き継ぐ。 書き込み済みの evidence.json が読込時に JSON として解釈できない、`task_id` / `run_id` / stage の整合検証に失敗した、 または `required_fields` のいずれかが欠落・型不正の場合は、再開用読込は例外を投げず、evidence を含まない checkpoint を返す。 executor 段は自動ではやり直さない。register の再開判定は、成功済みの executor 段の evidence が欠落・不正のとき 再開不可として停止する。回復は利用者が executor 段から明示的に再開する （specdojo exec run --register &lt;item-id&gt; --worktree --resume --resume-from executor、 schedule のタスクは specdojo exec resume --task &lt;task-id&gt; --resume-from executor）。 現在の読込の整合検証は `schema_version`・`task_id`・`run_id`・stage だけを見ており、changes・validations・`final_message` 等の 欠落・型不正は検知しない。この乖離と、停止後の回復経路が実装で保証されているかは `open_decisions` の OD-03 で追跡する。 利用者への通知は、再開不可で停止する呼び出し側 CLI が標準エラー出力に、対象 evidence.json のパス、失敗理由 （構文不正・整合不一致・必須項目欠落の別）、上記の回復コマンドを出すことを契約とする。読込・整合検証の段自体は通知を出さない。 現在の CLI の出力との照合は `open_decisions` の OD-01 で追跡する。 / `pipeline_state_json`: `action`: JSON 構文不正またはスキーマ不整合を検知した場合は、パイプラインの二重実行や誤った段階からの再開を防ぐため、 直ちに実行を failed / blocked として停止し、壊れたファイルを保持して利用者の調査・手動回復を促す。 なお src/exec/pipeline-state.ts の再開用読込は、欠落・構文不正・スキーマ不整合のいずれも「checkpoint なし」として返す。 停止を保証する箇所は呼び出し側であり、実装との照合は `open_decisions` の OD-02 で追跡する。 |
+| `transport_failure` | `io_error`: `action`: executor・reporter 段までの evidence.json・pipeline-state.json の書き込みで、ディスク容量不足、書き込み権限不足、 ファイルロック競合等の I/O エラーが発生した場合は、標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。 integrate 段の pipeline-state.json 更新（統合段・リポジトリ統合の状態記録）の失敗は、現在の実装では警告を出して統合を続けるため この規定の対象外とし、扱いの確定は `open_decisions` の OD-04 で追跡する。 |
+
+## 8. 検証方法
+
+<!-- prettier-ignore -->
+| 項目 | 内容 |
+| --- | --- |
+| 手順 | QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。 期待結果と一致すれば合格、一致しないか例外で中断すれば不合格とする。 正常系の各ファイルは `file_checks` の手順をすべて満たせば合格、1 つでも満たさなければ不合格とする。 |
+| ファイルごとの確認 | `evidence_json`: JSON として解釈でき、ルートが object である / `required_fields` がすべて存在し、`schema_version` が 1 である / `task_id`・`run_id` が同じ run の pipeline-state.json と一致し、stage.role が executor である / changes・validations が配列、`final_message` が文字列である / `pipeline_state_json`: JSON として解釈でき、ルートが object である / `required_fields` がすべて存在し、`schema_ref` の型の検証関数（isPipelineState）が真を返す / `task_id` が対象タスクと一致する |
+
+## 9. 検証ケース
+
+<!-- prettier-ignore -->
+| ケース ID | 観点 | 期待結果 |
+| --- | --- | --- |
+| TC-01 | evidence.json の正常系（正規の complete 報告） | evidence.json に `completion_status` complete と `required_fields` がすべて記録され、再開判定で executor 段を再利用する |
+| TC-02 | executor 報告タグの欠落 | `completion_status` が記録されず、`final_message` は stdout 本文、executor 由来の validations は空となる。終了コード 0 かつ親検証がすべて合格のときだけ成功扱いになる。approach が condense の場合は `condense_records` の欠落で incomplete となり reporter へ進まない |
+| TC-03 | executor 報告タグ内の JSON 構文エラー | TC-02 と同じフォールバックになり、作業ディレクトリの成果物変更は保持され、自動再試行しない |
+| TC-04 | 報告内の validations・`target_coverage` の要素不正と上限超過 | 必須項目欠落・status 値不正の要素だけが破棄され、上限超過分は切り詰められ、他の要素は残る |
+| TC-05 | `condense_records` の schema 不適合 | `completion_status` が incomplete となり、終了コード 0 でもタスクは完了扱いにならない |
+| TC-06 | 書き込み済み evidence.json の構文不正、または `task_id`・`run_id`・stage の不一致 | 再開用読込は evidence を含まない checkpoint を返し、例外終了しない。成功済みの executor 段なら register の再開判定は再開不可で停止し、標準エラー出力にパス・失敗理由・executor 段からの再開コマンドを出す（OD-01・OD-03 の照合対象） |
+| TC-07 | reporter 実行時の evidence.json 欠落 | reporter を起動せず blocked として中断する |
+| TC-08 | pipeline-state.json の初回欠落 | 空のステージ構造で新規生成される |
+| TC-09 | --resume 時の pipeline-state.json 欠落 | 状態復元不能としてエラー停止し、--force-restart による再実行を案内する（OD-02 の照合対象） |
+| TC-10 | pipeline-state.json の構文不正・スキーマ不整合 | 実行を failed または blocked として停止し、壊れたファイルを削除・上書きせず保持する（OD-02 の照合対象） |
+| TC-11 | pipeline-state.json または runner の evidence.json 更新の書き込み中断（.tmp だけが残る状態） | 読み手は置換前の完全なファイルだけを読み、不完全な JSON を参照しない（初回の直接書き込みの中断は TC-06 で扱う） |
+| TC-12 | 書き込み時の I/O エラー（権限不足など） | 標準エラー出力に blocked 理由を出力し、exit code 1 で停止する（integrate 段の pipeline-state.json 更新は OD-04 の照合対象で、本ケースに含めない） |
+| TC-13 | 書き込み済み evidence.json が JSON として正しく `task_id`・`run_id`・stage も一致するが、changes・validations・`final_message` のいずれかが欠落・型不正 | TC-06 と同じく evidence を含まない checkpoint として扱われる（現在の実装は検知しないため OD-03 の照合対象） |
+
+## 10. 未決事項
+
+<!-- prettier-ignore -->
+| ID | 論点 | 影響 | 担当 | 次の対応 |
+| --- | --- | --- | --- | --- |
+| OD-01 | evidence 読込・整合検証の失敗で再開不可となったときの通知（標準エラー出力にパス・失敗理由・回復コマンド）が現在の CLI の出力と一致するか | 一致しなければ、利用者が停止理由と回復手順を把握できず、TC-06 の期待結果が実装と食い違う | DEV が呼び出し側 CLI の現在動作を TC-06 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する | 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する |
+| OD-02 | --resume 時の pipeline-state.json 欠落・破損で停止する箇所と、実装が停止を保証しているか | 再開用読込は欠落・破損を「checkpoint なし」として返すため、呼び出し側で停止しなければ新規実行として進み、二重実行の危険がある | DEV が呼び出し側の現在動作を TC-09・TC-10 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する | 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する |
+| OD-03 | evidence の読込で `required_fields` の欠落・型不正を検知しない乖離と、成功済み executor 段の evidence 欠落・不正時の回復経路 | 必須項目が欠けた evidence が再開に使われ得る。再開不可で停止した後に executor 段からの再開が保証されなければ、利用者が回復できない | DEV が TC-06・TC-13 で現在動作を確認し、ARC が読込の検証範囲を仕様と実装のどちらに合わせるかを提案する | 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する |
+| OD-04 | integrate 段の pipeline-state.json 更新失敗を警告で続行する現在動作を、契約として認めるか即時停止へ直すか | 続行を認めると統合後の状態記録が欠け、再開時の統合状態の追跡が不正確になり得る | ARC が続行の妥当性を判断し、DEV が必要な修正量を見積もる | PO が続行を承認すれば `error_handling`.`transport_failure` へ反映し、否なら修正の登録簿項目を起票する |
+
+## 11. YAML の正本
+
+<details>
+<summary>YAML の正本を表示</summary>
+
+<!-- prettier-ignore -->
+```yaml
+# specdojo-schema: none reason=no-ifx-file-schema
+x-spec-meta:
+  id: prj-0001:ifx-file-agent-evidence
+  type: api
+  status: ready
+  title: 外部ファイル連携仕様（agent の evidence）
+  rulebook: specdojo:ifx-file-rulebook
+  based_on:
+    - prj-0001:ifx-index
+
+# 本仕様は SpecDojo のタスク実行パイプライン（specdojo exec run / job）において、
+# executor agent が報告し runner が管理・検証・統合するための実行エビデンスおよび
+# パイプライン状態ファイルの受け渡し契約を定義する。
+# 実装コードおよび型定義の正本は src/exec/evidence.ts, src/exec/pipeline-state.ts, src/shared/run-records.ts とする。
+# 未確定の技術判断は人間の ARC が行い、ready への昇格は PO が open_decisions の解消または留保の承認を確認して判断する。
+
+files:
+  - name: evidence.json
+    naming_rule: evidence.json
+    location: docs/ja/projects/<project-id>/execution/runs/<origin>/<item-id>/<run-id>/evidence.json
+    description: >-
+      タスク実行における agent の変更内容、検証結果、最終メッセージ、および
+      runner による親検証結果・差分サマリー・ログ参照を記録する構造化エビデンスファイル。
+      agent は evidence.json を直接書かず、最終応答の末尾に <specdojo_executor_evidence> タグで囲んだ JSON 報告
+      （final_message, completion_status, handoff, validations, target_coverage, condense_records）を出力する。
+      複数のタグがある場合は最後のものを採用する。
+      成果物カタログの overview の「agent が書き」は報告内容の書き手を指し、ファイルとしての書き手は runner である。
+    writer: SpecDojo runner（agent の stdout に出力された <specdojo_executor_evidence> タグから抽出・正規化し、差分情報・親検証結果を結合して書き込む）
+    reader: SpecDojo runner（検証合否判定、統合判定、reporter へのプロンプト注入、result.md 反映）
+    format: JSON
+    encoding: UTF-8
+    schema_ref: src/exec/evidence.ts#ExecEvidence
+    required_fields:
+      - schema_version
+      - task_id
+      - run_id
+      - stage
+      - changes
+      - diff_summary
+      - validations
+      - final_message
+
+  - name: pipeline-state.json
+    naming_rule: pipeline-state.json
+    location: docs/ja/projects/<project-id>/execution/runs/<origin>/<item-id>/<run-id>/pipeline-state.json
+    description: >-
+      実行パイプラインの各段階（executor, reporter, integrate）の進行状態、担当 actor、
+      試行回数、開始/完了時刻、成果物参照、および再開（resume）に必要なコンテキストを管理する状態ファイル。
+    writer: SpecDojo runner（各パイプラインステージの開始・完了・失敗・再試行・統合遷移時にアトミック更新）
+    reader: SpecDojo runner（パイプライン進行制御、多リポジトリ統合の状態追跡、--resume 時の状態復元）
+    format: JSON
+    encoding: UTF-8
+    schema_ref: src/exec/pipeline-state.ts#PipelineState
+    required_fields:
+      - schema_version
+      - task_id
+      - run_id
+      - updated_at
+      - stages
+
+source: AI provider CLI（executor / reporter agent）および SpecDojo runner
+target: SpecDojo runner、後続パイプライン段、および結果報告（reporter）
+direction: bidirectional
+format: JSON
+timing: >-
+  タスク実行サイクルの各段遷移時（executor 完了直後、親検証完了時、reporter 起動前後、integrate 実行前後、および中断・再試行時）
+
+transport:
+  method: ローカルファイルシステム
+  endpoint: <executionPath>/runs/<origin>/<itemId>/<runId>/
+  frequency: タスク実行ごとに都度
+  atomic_write: >-
+    pipeline-state.json と、runner が更新し直す evidence.json は一時ファイル（.tmp）へ書き込み後に rename によるアトミック置換（renameSync）を実施する。
+    executor 完了直後の evidence.json 初回書き込みは直接書き込みである。
+
+schema:
+  json:
+    root_type: object
+    content_type: application/json
+    encoding: UTF-8
+  references:
+    evidence_spec: src/exec/evidence.ts
+    pipeline_state_spec: src/exec/pipeline-state.ts
+    path_resolution_spec: src/shared/run-records.ts
+  change_impact: >-
+    ExecEvidence・PipelineState の型や必須項目、または run-records の配置解決を変更する場合、DEV は同じ変更で
+    本仕様の files[].required_fields・location・error_handling と verification の該当ケースを更新し、
+    ARC が本仕様と正本の一致を確認する。正本だけの変更で本仕様と食い違った状態を残さない。
+
+error_handling:
+  missing:
+    evidence_json:
+      action: >-
+        executor の stdout に <specdojo_executor_evidence> タグが無い場合、構造化報告を空としてフォールバックし
+        （completion_status は記録せず、final_message はタグ除去後の stdout 本文、executor 由来の validations は空）、
+        プロセスの終了コードおよび親検証の合否で完了を判定する。
+        completion_status の欠落は incomplete とみなさないため、正規の complete 報告とは
+        evidence.json に completion_status: complete が記録されているかどうかで区別する。
+        フォールバック時に成功扱いとなる条件は、終了コード 0 かつ親検証がすべて合格（not_run を含まない）であり、
+        かつ approach が要求する報告項目を満たすことに限る。approach が condense（mode が edit）の場合は有効な condense_records が必須で、
+        欠けていれば runner は reporter 段の前に completion_status を incomplete、block_reason に理由と executor 段からの再開コマンドを
+        記録して evidence.json を更新し、reporter へ進めない。
+        reporter 実行時に evidence.json が欠落している場合は、前段未完了として reporter 実行を中断（blocked）する。
+    pipeline_state_json:
+      action: >-
+        初回実行時は runner が空のステージ構造で新規生成する。
+        --resume 時にファイルが欠落している場合は状態復元不能としてエラー停止し、--force-restart による再実行を案内する。
+
+  malformed:
+    evidence_json:
+      action: >-
+        agent 報告タグ内の JSON 構文エラーを検知した場合は、構造化報告を空として扱い（final_message はタグ除去後の stdout 本文）、
+        成果物の編集内容は作業ディレクトリに保持する。
+        報告内の validations / target_coverage の要素のうち、必須項目欠落・status 値不正のものは個別に破棄し、件数・文字数の上限を超えた分は切り詰める。
+        condense_records が schema に適合しない場合は completion_status を incomplete として扱う。
+        解析失敗のみを理由とした自動再試行は行わず、親検証と利用者の確認に引き継ぐ。
+        書き込み済みの evidence.json が読込時に JSON として解釈できない、task_id / run_id / stage の整合検証に失敗した、
+        または required_fields のいずれかが欠落・型不正の場合は、再開用読込は例外を投げず、evidence を含まない checkpoint を返す。
+        executor 段は自動ではやり直さない。register の再開判定は、成功済みの executor 段の evidence が欠落・不正のとき
+        再開不可として停止する。回復は利用者が executor 段から明示的に再開する
+        （specdojo exec run --register <item-id> --worktree --resume --resume-from executor、
+        schedule のタスクは specdojo exec resume --task <task-id> --resume-from executor）。
+        現在の読込の整合検証は schema_version・task_id・run_id・stage だけを見ており、changes・validations・final_message 等の
+        欠落・型不正は検知しない。この乖離と、停止後の回復経路が実装で保証されているかは open_decisions の OD-03 で追跡する。
+        利用者への通知は、再開不可で停止する呼び出し側 CLI が標準エラー出力に、対象 evidence.json のパス、失敗理由
+        （構文不正・整合不一致・必須項目欠落の別）、上記の回復コマンドを出すことを契約とする。読込・整合検証の段自体は通知を出さない。
+        現在の CLI の出力との照合は open_decisions の OD-01 で追跡する。
+    pipeline_state_json:
+      action: >-
+        JSON 構文不正またはスキーマ不整合を検知した場合は、パイプラインの二重実行や誤った段階からの再開を防ぐため、
+        直ちに実行を failed / blocked として停止し、壊れたファイルを保持して利用者の調査・手動回復を促す。
+        なお src/exec/pipeline-state.ts の再開用読込は、欠落・構文不正・スキーマ不整合のいずれも「checkpoint なし」として返す。
+        停止を保証する箇所は呼び出し側であり、実装との照合は open_decisions の OD-02 で追跡する。
+
+  transport_failure:
+    io_error:
+      action: >-
+        executor・reporter 段までの evidence.json・pipeline-state.json の書き込みで、ディスク容量不足、書き込み権限不足、
+        ファイルロック競合等の I/O エラーが発生した場合は、標準エラー出力に blocked 理由を出力してパイプラインを即時異常停止（exit code 1）させる。
+        integrate 段の pipeline-state.json 更新（統合段・リポジトリ統合の状態記録）の失敗は、現在の実装では警告を出して統合を続けるため
+        この規定の対象外とし、扱いの確定は open_decisions の OD-04 で追跡する。
+
+verification:
+  procedure: >-
+    QE は各ケースの入力ファイルを一時ディレクトリの run 配置（location）に置き、正本の読込・再開判定を実行して期待結果と照合する。
+    期待結果と一致すれば合格、一致しないか例外で中断すれば不合格とする。
+    正常系の各ファイルは file_checks の手順をすべて満たせば合格、1 つでも満たさなければ不合格とする。
+  file_checks:
+    evidence_json:
+      - JSON として解釈でき、ルートが object である
+      - required_fields がすべて存在し、schema_version が 1 である
+      - task_id・run_id が同じ run の pipeline-state.json と一致し、stage.role が executor である
+      - changes・validations が配列、final_message が文字列である
+    pipeline_state_json:
+      - JSON として解釈でき、ルートが object である
+      - required_fields がすべて存在し、schema_ref の型の検証関数（isPipelineState）が真を返す
+      - task_id が対象タスクと一致する
+  cases:
+    - id: TC-01
+      viewpoint: evidence.json の正常系（正規の complete 報告）
+      expected: evidence.json に completion_status complete と required_fields がすべて記録され、再開判定で executor 段を再利用する
+    - id: TC-02
+      viewpoint: executor 報告タグの欠落
+      expected: completion_status が記録されず、final_message は stdout 本文、executor 由来の validations は空となる。終了コード 0 かつ親検証がすべて合格のときだけ成功扱いになる。approach が condense の場合は condense_records の欠落で incomplete となり reporter へ進まない
+    - id: TC-03
+      viewpoint: executor 報告タグ内の JSON 構文エラー
+      expected: TC-02 と同じフォールバックになり、作業ディレクトリの成果物変更は保持され、自動再試行しない
+    - id: TC-04
+      viewpoint: 報告内の validations・target_coverage の要素不正と上限超過
+      expected: 必須項目欠落・status 値不正の要素だけが破棄され、上限超過分は切り詰められ、他の要素は残る
+    - id: TC-05
+      viewpoint: condense_records の schema 不適合
+      expected: completion_status が incomplete となり、終了コード 0 でもタスクは完了扱いにならない
+    - id: TC-06
+      viewpoint: 書き込み済み evidence.json の構文不正、または task_id・run_id・stage の不一致
+      expected: 再開用読込は evidence を含まない checkpoint を返し、例外終了しない。成功済みの executor 段なら register の再開判定は再開不可で停止し、標準エラー出力にパス・失敗理由・executor 段からの再開コマンドを出す（OD-01・OD-03 の照合対象）
+    - id: TC-07
+      viewpoint: reporter 実行時の evidence.json 欠落
+      expected: reporter を起動せず blocked として中断する
+    - id: TC-08
+      viewpoint: pipeline-state.json の初回欠落
+      expected: 空のステージ構造で新規生成される
+    - id: TC-09
+      viewpoint: --resume 時の pipeline-state.json 欠落
+      expected: 状態復元不能としてエラー停止し、--force-restart による再実行を案内する（OD-02 の照合対象）
+    - id: TC-10
+      viewpoint: pipeline-state.json の構文不正・スキーマ不整合
+      expected: 実行を failed または blocked として停止し、壊れたファイルを削除・上書きせず保持する（OD-02 の照合対象）
+    - id: TC-11
+      viewpoint: pipeline-state.json または runner の evidence.json 更新の書き込み中断（.tmp だけが残る状態）
+      expected: 読み手は置換前の完全なファイルだけを読み、不完全な JSON を参照しない（初回の直接書き込みの中断は TC-06 で扱う）
+    - id: TC-12
+      viewpoint: 書き込み時の I/O エラー（権限不足など）
+      expected: 標準エラー出力に blocked 理由を出力し、exit code 1 で停止する（integrate 段の pipeline-state.json 更新は OD-04 の照合対象で、本ケースに含めない）
+    - id: TC-13
+      viewpoint: 書き込み済み evidence.json が JSON として正しく task_id・run_id・stage も一致するが、changes・validations・final_message のいずれかが欠落・型不正
+      expected: TC-06 と同じく evidence を含まない checkpoint として扱われる（現在の実装は検知しないため OD-03 の照合対象）
+
+open_decisions:
+  # 追跡先は PJR-TN43（利用者の判断待ち）。期限は T-KATA-WAVE-2-ifx-file-agent-evidence-140 の判断時。
+  # PO は ready への昇格前に、各項目が解消済みか、留保として承認されたかを確認する。
+  - id: OD-01
+    topic: evidence 読込・整合検証の失敗で再開不可となったときの通知（標準エラー出力にパス・失敗理由・回復コマンド）が現在の CLI の出力と一致するか
+    impact: 一致しなければ、利用者が停止理由と回復手順を把握できず、TC-06 の期待結果が実装と食い違う
+    owner: DEV が呼び出し側 CLI の現在動作を TC-06 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する
+    next_action: 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する
+  - id: OD-02
+    topic: --resume 時の pipeline-state.json 欠落・破損で停止する箇所と、実装が停止を保証しているか
+    impact: 再開用読込は欠落・破損を「checkpoint なし」として返すため、呼び出し側で停止しなければ新規実行として進み、二重実行の危険がある
+    owner: DEV が呼び出し側の現在動作を TC-09・TC-10 で確認し、ARC が仕様と実装のどちらに合わせるかを提案する
+    next_action: 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する
+  - id: OD-03
+    topic: evidence の読込で required_fields の欠落・型不正を検知しない乖離と、成功済み executor 段の evidence 欠落・不正時の回復経路
+    impact: 必須項目が欠けた evidence が再開に使われ得る。再開不可で停止した後に executor 段からの再開が保証されなければ、利用者が回復できない
+    owner: DEV が TC-06・TC-13 で現在動作を確認し、ARC が読込の検証範囲を仕様と実装のどちらに合わせるかを提案する
+    next_action: 乖離があれば修正の登録簿項目を起票し、PO が採否を判断する
+  - id: OD-04
+    topic: integrate 段の pipeline-state.json 更新失敗を警告で続行する現在動作を、契約として認めるか即時停止へ直すか
+    impact: 続行を認めると統合後の状態記録が欠け、再開時の統合状態の追跡が不正確になり得る
+    owner: ARC が続行の妥当性を判断し、DEV が必要な修正量を見積もる
+    next_action: PO が続行を承認すれば error_handling.transport_failure へ反映し、否なら修正の登録簿項目を起票する
+```
+
+</details>
