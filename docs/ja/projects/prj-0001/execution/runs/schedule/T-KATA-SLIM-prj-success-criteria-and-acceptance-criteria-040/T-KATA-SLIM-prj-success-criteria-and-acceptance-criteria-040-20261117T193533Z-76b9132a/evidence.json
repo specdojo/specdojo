@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040",
+  "run_id": "T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040-20261117T193533Z-76b9132a",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-17T19:38:27.739Z",
+    "completed_at": "2026-11-17T19:43:00.314Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "...ss-criteria-and-acceptance-criteria-rulebook.md | 109 +++++----------------\n 1 file changed, 25 insertions(+), 84 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md",
+      "status": "passed",
+      "summary": "対象 Markdown の整形が成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検証は適用外です。",
+      "reason": "変更は Markdown rulebook のみで、変更した YAML ファイルがありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検証は適用外です。",
+      "reason": "変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下の成果物を変更していません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検証は適用外です。",
+      "reason": "登録簿の個票および既存 plan・result を変更していません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5258 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5258 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nspecdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 826ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "対象 rulebook を更新し、共通運用を正本への参照に集約しました。F001・F002 を修正し、空白除外文字数を4,590字から3,501字（76.27%）に削減しました。整形・差分検査は成功。lint 等は親 runner が実施します。",
+  "completion_status": "complete",
+  "handoff": [
+    "変更ファイルは docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md のみ。成果物本体・recipe・template・sample・grade サイドカー・result は編集していません。result の記入は reporter に委ねます。",
+    "判断根拠: [[specdojo:rulebook-authoring-standard|Rulebook 記述標準]]、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|sld 試行記録]]、[[specdojo:sld-rulebook|SLD 作成ルール]]、対象系統の recipe・template・sample、プロジェクトの成功基準・スコープ、execution/grade/results/ 配下の対応評価結果を確認しました。成功基準の時間区分、費用・作業負荷の測定、成功基準7列・受入条件8列、業務の判定手順と型固有の禁止事項を維持しました。",
+    "F001（source=grade）: 評価サイドカーの行83・「推奨ルール」と照合し、表の分離・業務価値との対応を「記述ガイド」に統合しました。Frontmatter 節にはメタ情報だけを残しました。F002（source=grade）: 行90・「本文構成（標準テンプレ）」と照合し、番号付き章構成表を削除して、骨組みは宣言済み template を正本としました。各章の目的・必須／任意・受入条件は「本文要件」に残しました。両 finding は該当 viewpoint の判定根拠に照らして解消を確認しました。condense 由来の finding はありません。",
+    "章名変更の理由: 用語表が本文要件・列の意味の言い直しだったため「位置づけと用語定義」を「位置づけ」に変更。F002 と記述標準に従い「本文構成（標準テンプレ）」を「本文要件」に変更しました。配置・ID・ファイル名は同章内の箇条書きに集約し、Frontmatter と本文要件の不要な小見出しも整理しました。成果物側の章名と必須4章・任意1章の区分は維持しました。文字数は全文の空白・改行を除外して4,590→3,501字（76.27%）。表の区切り行も除外すると4,128→3,273字（79.29%）です。",
+    "共通の正本への追記は不要と判断しました。status・承認・改訂廃止・未決事項の引き継ぎはメタ情報標準で、削除した agent の最終判断禁止・非公開情報の禁止は人・組織定義標準の「Agent 委任方針」「整合性ルール」で確認しました。成果物評価で指摘された合否基準や未確定事項の影響の不足は、成果物側で具体化すべき事項と判断し、再現可能な判定条件と未決事項の影響の要件を維持・明確化しました。",
+    "後続変更案: recipe の「作成前に集める情報」「深掘り手順」から lint を業務の測定方法とする記述を外す。recipe の未決事項の担当・決定時期・agent 承認禁止の再掲、template の未決事項の期限・責任者列と人間の承認者指定、sample の未決事項の期限・責任者列を共通運用へ寄せ、論点・判定への影響・当面の扱いを示す形にする。業務の確認者・承認者列と受入可否の判定手順は維持する。今回これらは変更対象外のため未編集です。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040/T-KATA-SLIM-prj-success-criteria-and-acceptance-criteria-040-20261117T193533Z-76b9132a/executor.log",
+      "bytes": 4768,
+      "truncated": false
+    }
+  ]
+}
