@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-clis-exec-commands-050",
+  "run_id": "T-KATA-SLIM-clis-exec-commands-050-20261117T201458Z-1f08092c",
+  "updated_at": "2026-11-17T20:43:32.773Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-17T20:17:47.866Z",
+      "completed_at": "2026-11-17T20:20:39.285Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-clis-exec-commands-050/T-KATA-SLIM-clis-exec-commands-050-20261117T201458Z-1f08092c/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-17T20:43:08.115Z",
+      "completed_at": "2026-11-17T20:43:21.352Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-clis-exec-commands-050/T-KATA-SLIM-clis-exec-commands-050-20261117T201458Z-1f08092c/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-17T20:43:32.773Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-clis-exec-commands-050/T-KATA-SLIM-clis-exec-commands-050-20261117T201458Z-1f08092c/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-clis-exec-commands-050/T-KATA-SLIM-clis-exec-commands-050-20261117T201458Z-1f08092c/result.md"
+  }
+}
