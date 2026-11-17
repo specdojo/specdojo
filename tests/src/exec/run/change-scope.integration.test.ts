@@ -1,13 +1,43 @@
-import { spawn, type ChildProcess } from "node:child_process";
+import { execFileSync, spawn, type ChildProcess } from "node:child_process";
 import { once } from "node:events";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
-import { ChangeScopeGate, type ChangeScopeLease } from "../../../../src/exec/run/change-scope.js";
+import {
+  ChangeScopeGate,
+  inferChangeScope,
+  type ChangeScopeLease,
+} from "../../../../src/exec/run/change-scope.js";
+import { gitEnvironment } from "../../../../src/shared/git-environment.js";
 
 describe("change scope across joined run processes", () => {
+  it("excludes gitignored derived lists outside generated directories", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-scope-ignored-"));
+    try {
+      execFileSync("git", ["init", "--quiet", root], { env: gitEnvironment() });
+      writeFileSync(join(root, ".gitignore"), "derived-list.md\n");
+      expect(
+        inferChangeScope({
+          projectId: "test",
+          repoRoot: root,
+          targets: ["derived-list.md", "src/new.ts"],
+          text: "`derived-list.md` を再生成する。",
+        }),
+      ).toEqual({ paths: ["project:src/new.ts"], unknown: false });
+      expect(
+        inferChangeScope({
+          projectId: "test",
+          repoRoot: root,
+          targets: ["derived-list.md"],
+        }),
+      ).toEqual({ paths: [], unknown: true });
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it(
     "atomically reserves overlapping scope across processes and waits for integration",
     { timeout: 30_000 },
