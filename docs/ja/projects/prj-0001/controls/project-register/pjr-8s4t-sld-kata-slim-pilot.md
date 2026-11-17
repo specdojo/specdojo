@@ -54,9 +54,9 @@ specdojo:
 | 1   | sld-rulebook の運用の記述を共通の正本への参照にし、章の求め方を見直す        | BA           | done | 役割の表・確定とライフサイクル・公開承認・文書品質の検査を外し、全体方針の「共通の運用」で正本を参照した |
 | 2   | sld-sample（と recipe・template）を直す                                      | BA           | done | sample を 9,885 字から 5,928 字へ。recipe・template は `not-needed`、カタログ template に運用の記述なし  |
 | 3   | 広げるときの「外す記述・残す記述・参照の形」の一覧を書く                     | BA           | done | 対応結果の「他の型へ広げるときの一覧」                                                                   |
-| 4   | 統合の後に型を grade し、前後の結果を書く（orchestrator）                    | orchestrator | open | executor は grade を実行しない（完了条件）。統合後に orchestrator が `grade run --target kata` を流す    |
+| 4   | 統合の後に型を grade し、前後の結果を書く（orchestrator）                    | orchestrator | done | 2026-11-18 に grade した。結果は対応結果の「grade の結果」                                               |
 | 5   | 読みやすさを確かめる（利用者）                                               | 利用者       | open | 利用者の確認待ち。executor は行えない                                                                    |
-| 6   | 結果を見て、他の rulebook と sample へ広げる todo を起票する（orchestrator） | orchestrator | open | grade と利用者の確認の後に orchestrator が起票する                                                       |
+| 6   | 結果を見て、他の rulebook と sample へ広げる todo を起票する（orchestrator） | orchestrator | done | [[prj-0001:pjr-mnm5-kata-slim\|PJR-MNM5]] の kata-slim の schedule で 18 の型へ広げた                    |
 
 ## 5. 対応結果
 
@@ -124,11 +124,24 @@ specdojo:
 - 共通の正本へは何も足さなかった（ドキュメントメタ情報標準で賄えるため）。
 - 保護された設定の変更は不要だった。
 
-### 5.7. CHANGELOG に書く事項
+### 5.7. grade の結果
+
+2026-11-18 に orchestrator が `grade run --target kata`（run-id `grade-kata-slim-20261118`、`sol-review-executor`）で流した。
+
+| 文書         | 判定       | 点数 | major | minor |
+| ------------ | ---------- | ---- | ----- | ----- |
+| sld-rulebook | needs-work | 96   | 1     | 1     |
+| sld-sample   | pass       | 96   | 0     | 3     |
+
+- major（F001・`vp-qe-kata-conformance`）: 保管場所の「良い例」が `docs/**/generated/` 全体を `削除可`・`specdojo build` で再生成可能としているが、実装はこの配下に grade の実行ロックと再開用の状態（`src/grade/run.ts`）や、routine の旧状態の移行元（`src/routine/storage.ts`）を置く。例を再生成できる派生物に限り、実行状態と未移行のデータを除く条件を書く必要がある。
+- minor（F002）: 削除・退避・復旧の良い例が、削除の条件を保管場所の一覧ではなく例の中に直接書いており、「削除条件は保管場所一覧を参照する」の規則と食い違う。
+- 完了の判断の基準（major がないこと）を満たさないため review のまま残す。利用者の方針（2026-11-17）により、grade の指摘は記録だけにして直さない。直すかは利用者が決める。
+
+### 5.8. CHANGELOG に書く事項
 
 - 区分: 変更。文案: 保管場所一覧（sld）の rulebook と sample から、役割・承認・文書品質の検査など共通の運用の記述を外し、ドキュメントメタ情報標準への参照にしました。削除の条件は保管場所一覧の表を正とし、隣接仕様との対応を 1 つの表にまとめ、sample を約 4 割小さくしました（PJR-8S4T）。
 
-### 5.8. 残課題
+### 5.9. 残課題
 
 - 統合の後に orchestrator が `grade run --target kata` を流し、前後の score と finding を本個票に書く（作業内容の 4）。
 - 利用者が読みやすさを確かめる（作業内容の 5）。確認が済むまで review のままにする。

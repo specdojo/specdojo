@@ -44,12 +44,12 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                            | 担当         | 状態 | メモ                                                                                   |
-| --- | ----------------------------------------------- | ------------ | ---- | -------------------------------------------------------------------------------------- |
-| 1   | 代表の画面仕様（uis-open-document-by-id）を書く | BA           | done | `specdojo.openById` の文言と分岐に合わせて書いた。未決の 2 点は `_UNDECIDED_`          |
-| 2   | uis-rulebook から運用の記述を外す               | BA           | done | 6,025 字から 4,472 字（74%）                                                           |
-| 3   | uis-sample から運用の記述と言い直しを外す       | BA           | done | 8,493 字から 5,945 字（70%）                                                           |
-| 4   | 統合の後に型と成果物を grade し、結果を書く     | orchestrator | open | executor は grade を実行しない（完了条件）。統合の後に orchestrator が型と成果物を流す |
+| No  | 作業                                            | 担当         | 状態 | メモ                                                                          |
+| --- | ----------------------------------------------- | ------------ | ---- | ----------------------------------------------------------------------------- |
+| 1   | 代表の画面仕様（uis-open-document-by-id）を書く | BA           | done | `specdojo.openById` の文言と分岐に合わせて書いた。未決の 2 点は `_UNDECIDED_` |
+| 2   | uis-rulebook から運用の記述を外す               | BA           | done | 6,025 字から 4,472 字（74%）                                                  |
+| 3   | uis-sample から運用の記述と言い直しを外す       | BA           | done | 8,493 字から 5,945 字（70%）                                                  |
+| 4   | 統合の後に型と成果物を grade し、結果を書く     | orchestrator | done | 2026-11-18 に grade した。結果は対応結果の「grade の結果」                    |
 
 ## 5. 対応結果
 
@@ -85,9 +85,20 @@ specdojo:
 - 区分: 追加。文案: VS Code 拡張の「SpecDojo: Open Document by ID」の画面仕様（uis-open-document-by-id）を追加しました（PJR-3MTS）。
 - 区分: 変更。文案: 画面仕様（uis）の rulebook と sample から、役割・承認・公開前確認など共通の運用の記述を外し、ドキュメントメタ情報標準への参照にしました。入力の条件はバリデーション、回復はエラーの表を正とし、sample を約 3 割小さくしました。ファイル名の規則を `uis-<term>.md` に改めました（PJR-3MTS）。
 
-### 5.5. 残課題
+### 5.5. grade の結果
 
-- 統合の後に orchestrator が型（uis）と成果物（uis-open-document-by-id）を grade し、結果を本個票に書く（作業内容の 4）。
+2026-11-18 に orchestrator が型（run-id `grade-kata-slim-20261118`）と成果物（run-id `grade-uis-open-document-by-id-20261118`）を `sol-review-executor` で grade した。
+
+| 文書                    | 判定 | 点数 | major |
+| ----------------------- | ---- | ---- | ----- |
+| uis-rulebook            | pass | 97   | 0     |
+| uis-sample              | pass | 91   | 0     |
+| uis-open-document-by-id | pass | 93   | 0     |
+
+minor の指摘は grade の結果に記録した。利用者の方針（2026-11-17）により直さない。
+
+### 5.6. 残課題
+
 - 完了条件の外の気づき（記録のみ）: `specdojo.openById` は索引にあるファイルが開けないときの扱いを持たず、索引のファイルの削除でも読み直さない。直すかは画面仕様の `_UNDECIDED_` が決まってから判断する。
 
 ## 6. 関連ドキュメント

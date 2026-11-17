@@ -46,8 +46,24 @@ _TODO_: Frontmatter の `track` が担う範囲と対象 domain、対象外の�
 
 ## 6. 対応結果
 
-_TODO_: 完了を判断した根拠と残課題を記載する。未完了の場合は `-` とする。
+未完了（close は利用者の判断）。2026-11-18 時点の経過を記録する。
+
+- schedule `kata-slim` の 36 段（rulebook 18・sample 18）がすべて done になった（2026-11-17 23:39〜2026-11-18 06:05、3 件ずつ並行）。途中の停止の原因（rulebook の段が recipe と template も変えた、参考の kata ディレクトリが変更範囲と読まれた）は、戦略の指示と [[prj-0001:pjr-9jn6-change-scope-protected-list-overlap|PJR-9JN6]] の 2 回目で直した。
+- 子の [[prj-0001:pjr-3mts-uis-open-document-by-id|PJR-3MTS]] で uis の型と代表の画面仕様を書いた。
+- 型の grade（run-id `grade-kata-slim-20261118`、`sol-review-executor`）: 19 の型の rulebook と sample と uis の 40 件のうち、pass が 35 件、needs-work が 5 件。
+
+| 文書                                                | 判定       | 点数 | major |
+| --------------------------------------------------- | ---------- | ---- | ----- |
+| bes-sample                                          | needs-work | 83   | 4     |
+| prj-charter-sample                                  | needs-work | 85   | 4     |
+| prj-success-criteria-and-acceptance-criteria-sample | needs-work | 85   | 3     |
+| sld-rulebook                                        | needs-work | 96   | 1     |
+| br-rulebook                                         | needs-work | 96   | 1     |
+
+- 利用者の方針（2026-11-17）により、grade の指摘は記録だけにして直さない。直すかは利用者が決める。指摘の本文は各文書の grade の結果（`execution/grade/results/`）にある。
+- 残りの型は [[prj-0001:pjr-djzd-kata-slim-rulebook-recipe|PJR-DJZD]] と [[prj-0001:pjr-wytx-kata-slim-sample-template|PJR-WYTX]] で広げる。
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を文書 ID で記載する。
+- [[prj-0001:pjr-8s4t-sld-kata-slim-pilot]]
+- [[prj-0001:sch-strategy-kata-slim]]
