@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-17T12:21:33Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-integration"
   derived_from:
     - PJR-JSEY
   commit_type: feat
@@ -67,6 +66,7 @@ specdojo:
 - close オプションは設けない。smoke の成功だけでは対象項目の他の完了条件を判断できないため、成功後は人が JSEY と対象の完了条件を確認して既存の `register close --commit` を使う。
 - `--dry-run` は入力と対象一覧を読み取り検証し、書き込み・commit・agent 起動なしで手順を出す。失敗は段と理由を標準エラーへ出し、終了コード 1 で停止する。途中まで作成した commit は残す。
 - 単体テストは対象一覧の追記・重複・曖昧さ、過去 event の誤認防止、順序・中断・actor 不一致を扱う。結合テストは既存の模擬 agent と実 Git の fixture を再利用し、reopen から統合と review、alias 解決、dry-run、未 commit 変更の保護、入力不備、executor 失敗時の停止を扱う。単体・結合テストと型・lint の検査は親 runner が実行する。
+- 前回の親の結合テストで、確認用 fixture の文書 ID とファイル名の不一致により 2 件が対象追記の段で失敗した。fixture の ID をファイル名に合わせ、正常系の失敗時には標準エラーも assertion に表示するよう修正した。再実行は親 runner に委ねる。
 - 保護された設定と `CHANGELOG.md` は変更していない。設定変更案はない。
 - executor では build、変更ファイルの Prettier 整形、履歴リンク検証、カタログ検証、register build、JSEY と既存対象 PJR-R7BQ を使った dry-run が成功した。dry-run で `claude-executor` が実体 `sonnet-executor` に解決された。カタログ検証には、変更していない文書の参照に関する警告が残る。
 

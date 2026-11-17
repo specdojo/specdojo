@@ -90,6 +90,7 @@ import { displayWidth, nowUtcIsoSeconds, padEndDisplay, requireNonEmpty } from "
 import { resolveOwnerForLocalId } from "./strategy.js";
 import { buildTaskView } from "./task-view.js";
 import { registerExecTrialCommands } from "./trial.js";
+import { registerExecSmokeCommand } from "./smoke.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
@@ -113,6 +114,7 @@ export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
   registerExecHandoffCommands(exec);
   registerRecordMigrationCommand(exec);
+  registerExecSmokeCommand(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
