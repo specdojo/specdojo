@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_23d45b3c866f4ee8b119b6c6f1e5ca26
+  ts: "2026-11-17T23:23:29Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 移行テスト計画（ntp）とリハーサル計画（mtp）の型を 1 つにまとめるか決める
+    - field: description
+      from: ""
+      to: ntp-rulebook（移行テスト計画（リハーサル計画））と、カタログの mtp-index が使う mtp-rulebook（リハーサル計画）は題材が同じで、型が二重になっている疑いがある
+    - field: input
+      from: ""
+      to: '["orchestrator の調べ（2026-11-18）: ntp-rulebook の題は「移行テスト計画（リハーサル計画）作成ルール」。カタログの dct-migration-planning の mtp-index は mtp-rulebook を使い、概要は「切替前に成果物カタログ・Schedule・登録簿が実運用に耐えるかを検証するリハーサル計画」。ntp は決まるまで kata-slim-2 の対象外"]'
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-DJZD"]'
