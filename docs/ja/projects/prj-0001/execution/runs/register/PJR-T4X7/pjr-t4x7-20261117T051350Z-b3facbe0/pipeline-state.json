@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-T4X7",
   "run_id": "pjr-t4x7-20261117T051350Z-b3facbe0",
-  "updated_at": "2026-11-17T05:26:55.224Z",
+  "updated_at": "2026-11-17T05:27:16.825Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-T4X7/pjr-t4x7-20261117T051350Z-b3facbe0/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-17T05:26:55.224Z",
-      "completed_at": null,
+      "completed_at": "2026-11-17T05:27:16.825Z",
       "artifact_ref": null
     }
   },
