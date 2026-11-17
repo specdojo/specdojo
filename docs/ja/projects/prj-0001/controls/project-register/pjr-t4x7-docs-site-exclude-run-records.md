@@ -10,7 +10,9 @@ specdojo:
   item_status: review
   priority: high
   difficulty: medium
+  owner: DEV
   registered_at: "2026-11-17T05:12:32Z"
+  due_on: "2026-11-30"
   derived_from:
     - PJR-9BY9
     - PJR-G85C
