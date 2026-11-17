@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5e24f9c7fde94d0689e909676fc9092f
+  ts: "2026-11-17T23:20:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 全ての sample と template から文書の運用の記述と言い直しを外し、簡潔にする
+    - field: description
+      from: ""
+      to: PJR-DJZD で直した rulebook に合わせ、残りの sample と全ての template を kata-slim と同じ一覧で簡潔にする
+    - field: input
+      from: ""
+      to: '["利用者の要望（2026-11-18）: rulebook と recipe の見直しの後、全ての sample と template も見直す epic を起票して schedule で実行したい","利用者の決定（2026-11-18、orchestrator の推奨の案）: PJR-DJZD の後に流す。template は手本がないため、先に prj-charter の template で試行して一覧を作ってから schedule に入れる。対象の型の線引きは PJR-DJZD と同じ。schedule の track は kata-slim-3"]'
+    - field: type
+      from: ""
+      to: epic
+    - field: track
+      from: ""
+      to: kata-slim-3
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: depends_on
+      from: ""
+      to: '["PJR-DJZD"]'
