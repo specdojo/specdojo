@@ -44,3 +44,16 @@
     - field: commit_scope
       from: ""
       to: cli
+- v: 1
+  id: reg_ff51e75cb90f4e02bef667c6ecc616db
+  ts: "2026-11-17T03:57:15Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c3064114ee4e4892a5d3e9370002ae69
