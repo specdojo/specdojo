@@ -57,3 +57,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_7cb7e4feac5c436d8f9039a83fda60ce
+- v: 1
+  id: reg_758c18f34a764d7f8cb3a9f2ffc88b90
+  ts: "2026-11-17T03:46:09Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-11-17T03:38:46.471Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_49e84f0da03a44adb616693fd207b9a8
