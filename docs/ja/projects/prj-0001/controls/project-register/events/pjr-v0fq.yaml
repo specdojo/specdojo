@@ -147,3 +147,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_55a5be90a57d4646aeae8aeb409de6d4
+- v: 1
+  id: reg_c94a1427779a4c1d823615c1d5538093
+  ts: "2026-11-17T03:13:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が job から exec を import していないこと、親の検証の通過、JSEY での統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: command Job の task.steps で exec・grade・検査を順に流せる。段の失敗・延期で run を failed に確定し、lock の待機に上限を持つ
+  previous_event_id: reg_a144db9ab87a4e8190546eaab4a39fb8

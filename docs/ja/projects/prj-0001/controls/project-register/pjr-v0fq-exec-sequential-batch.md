@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-v0fq-exec-sequential-batch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-13T14:08:14Z"
+  completed_at: "2026-11-17T03:13:28Z"
+  conclusion: command Job の task.steps で exec・grade・検査を順に流せる。段の失敗・延期で run を failed に確定し、lock の待機に上限を持つ
   commit_type: feat
   commit_scope: exec
 ---
