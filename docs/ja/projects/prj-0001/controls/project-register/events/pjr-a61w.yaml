@@ -83,3 +83,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_88ff14d7dff7439b8bf536bab35b6881
+- v: 1
+  id: reg_e786a3b96dd6463788344721890cc865
+  ts: "2026-11-17T03:12:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が C4J1 で実際に流して止まり方を確かめ、JSEY で統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 代わりの executor が振り分けと重なる指定は start の前に終了コード 1 で止まり、個票・worktree・HEAD を変えない
+  previous_event_id: reg_2a673605c4204802be56d6c1ae2599df

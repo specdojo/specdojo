@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-a61w-fallback-same-as-pinned-aborts-after-start
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-10-31T21:59:04Z"
+  completed_at: "2026-11-17T03:12:12Z"
+  conclusion: 代わりの executor が振り分けと重なる指定は start の前に終了コード 1 で止まり、個票・worktree・HEAD を変えない
   commit_type: fix
   commit_scope: exec
 ---
