@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-15T13:17:54Z"
-  block_reason: "executor reported incomplete: コーディング規約の型（`cdr`）の rulebook・sample・template を作り、観点定義と成果物リファレンスに登録し、個票の対応結果を書いた。完了条件の `grade run --target kata` は sandbox で agent CLI を起動できないため未実施。"
   derived_from:
     - PJR-SJ3Q
   commit_type: docs
@@ -43,11 +42,11 @@ rulebook・sample・template を初期整備し、正本と環境別のラッパ
 
 ## 4. 作業内容
 
-| No  | 作業                                            | 担当 | 状態 | メモ                                                                                                          |
-| --- | ----------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------- |
-| 1   | rulebook を作る（正本とラッパーの作り方を含む） | ARC  | done | `cdr-rulebook` を作成し、観点の `document_kinds` と成果物リファレンスへ登録した                               |
-| 2   | sample・template を作る                         | ARC  | done | `cdr-sample`（TypeScript・Next.js）と `cdr-template` を作成した                                               |
-| 3   | 型を grade する                                 | ARC  | open | executor の sandbox では agent CLI を起動できないため、`grade run --target kata` は runner または人が実行する |
+| No  | 作業                                            | 担当 | 状態 | メモ                                                                                                      |
+| --- | ----------------------------------------------- | ---- | ---- | --------------------------------------------------------------------------------------------------------- |
+| 1   | rulebook を作る（正本とラッパーの作り方を含む） | ARC  | done | `cdr-rulebook` を作成し、観点の `document_kinds` と成果物リファレンスへ登録した                           |
+| 2   | sample・template を作る                         | ARC  | done | `cdr-sample`（TypeScript・Next.js）と `cdr-template` を作成した                                           |
+| 3   | 型を grade する                                 | ARC  | open | 完了条件どおり executor は grade を実行しない。`grade run --target kata` は orchestrator が統合の後に流す |
 
 ## 5. 対応結果
 
@@ -68,7 +67,7 @@ executor が決めた点と理由:
 
 残課題:
 
-- `grade run --target kata` による grade（作業内容の 3）は、executor の sandbox では agent CLI を起動できないため未実施。runner または人が実行し、pass を確認する。
+- `grade run --target kata` による grade（作業内容の 3）は、完了条件どおり orchestrator が統合の後に流し、pass を確認する。
 - prj-0001 の既存の `.github/instructions/typescript.instructions.md` は `applyTo` が `{src,tools,tests,scripts}/**/*.ts`、ラッパーの `.claude/rules/typescript.md` は `paths` が `{src,tools}/**/*.ts` で、rulebook の「適用範囲を同じ glob にする」規則とずれている。また既存の正本には `specdojo:` の frontmatter がない。本タスクの対象外のため変更せず、型に合わせる対応を別の登録簿項目で扱うことを提案する。
 
 ## 6. 関連ドキュメント
