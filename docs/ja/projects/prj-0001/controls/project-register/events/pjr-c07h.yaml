@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_94c4e5d947d94824b6157b586c796680
+  ts: "2026-11-17T12:22:11Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親の検証の時間切れの原因を調べるため、検証の実行時の負荷と待ち時間を記録する
+    - field: description
+      from: ""
+      to: 並べて流した run の親の検証が時間切れになる原因を特定するため、各検証の開始・終了時刻、検証の順番待ち、同時に動く run、CPU・メモリ・I/O の負荷を記録に残す
+    - field: input
+      from: ""
+      to: '["2026-11-16〜17 に、並べて流した run の親の検証（統合テストなど）が時間切れで止まることがあった。親の検証は `parent_validation_concurrency:` 1 で 1 件ずつ流れ、各検証の上限は 10 分である","orchestrator の調べ（2026-11-17）: 止まった時間帯に動いていたのは opus・sol・sonnet の agent だけで、opencode のローカル LLM（Mac の Ollama）は使われておらず、job も動いていなかった。原因の候補は、親の検証の直列化の外で executor が流すテスト、メモリの圧迫（container は 15GB・swap 4GB のうち 2.9GB 使用）、共有フォルダの I/O の遅さ（PJR-TATP）である","利用者が 2026-11-17 に、対策の前に原因を明確にするよう指示し、計測の todo の起票を依頼した。自動の再開（PJR-52EE）は原因が分かるまで保留している"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-11-17"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: commit_type
+      from: ""
+      to: feat
+    - field: commit_scope
+      from: ""
+      to: exec
