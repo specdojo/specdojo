@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f359408540de41219abd0ef9eebbb68a
+- v: 1
+  id: reg_c9d6585e6e584efcb7efb4cb329a438f
+  ts: "2026-11-17T04:49:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が help の表示、job validate、grade の job の dry-run、JSEY での統合後の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: 定期の grade の job を grade run へ移し、grade・agent・exec の内部用のコマンドを help の一覧から外した
+  previous_event_id: reg_effc4c019b3f4a31a9ffb661d33d6bd3

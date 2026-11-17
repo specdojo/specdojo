@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-r7bq-hide-internal-commands
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-16T11:00:22Z"
   due_on: null
+  completed_at: "2026-11-17T04:49:12Z"
+  conclusion: 定期の grade の job を grade run へ移し、grade・agent・exec の内部用のコマンドを help の一覧から外した
   derived_from:
     - PJR-C5AF
   commit_type: refactor
