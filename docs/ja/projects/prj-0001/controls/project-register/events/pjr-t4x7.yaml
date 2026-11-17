@@ -89,3 +89,22 @@
       from: _TODO_
       to: "2026-11-30"
   previous_event_id: reg_7422a632644e420587d1b94ab5874ece
+- v: 1
+  id: reg_9ba540ae8d074f1ba5fd4349d9d6a719
+  ts: "2026-11-17T12:24:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が統合後に docs:build を流し、run 単位のページが 0 件、dead link が 0 件であることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: "-"
+      to: run 単位の plan・result を文書サイトの対象とリンクの付け替えに含め、docs:build が既定の 8GB で 284 秒で通るようにした
+  previous_event_id: reg_e948325d56404a92844bd73ff88f329b
