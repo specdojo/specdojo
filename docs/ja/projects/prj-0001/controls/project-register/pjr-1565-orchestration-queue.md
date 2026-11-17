@@ -13,6 +13,8 @@ specdojo:
   owner: ARC
   registered_at: "2026-11-17T22:58:15Z"
   due_on: "2026-11-30"
+  depends_on:
+    - PJR-8KXJ
 ---
 
 # PJR-1565 grade・register の実行・build を混ぜた順番の予約を、specdojo の機能で流す

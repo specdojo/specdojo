@@ -38,3 +38,16 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_6619ffded995409cbf1a0e59f7ec2b39
+  ts: "2026-11-17T22:59:52Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-8KXJ"]'
+  previous_event_id: reg_028ead770aa144a3af1fbc106d366f52
