@@ -102,3 +102,19 @@
       from: "parent validation failed: lint-ts, test-integration"
       to: "-"
   previous_event_id: reg_5c4d207cafd848fabcee871af162c557
+- v: 1
+  id: reg_2cee085b89344c398bcc2c434e081799
+  ts: "2026-11-17T01:55:29Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, test-unit"
+  previous_event_id: reg_179f5e378d954ba9b238e14e6f1c10d3
