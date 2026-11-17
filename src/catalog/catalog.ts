@@ -409,7 +409,9 @@ export function registerCatalogCommands(program: Command): void {
     }
   });
 
-  const bcmd = cat.command("build").description("Generate dct-*.md from dct-*.yaml");
+  const bcmd = cat
+    .command("build", { hidden: true })
+    .description("Internal compatibility entry for build --only catalog");
   addProjectOption(bcmd);
   bcmd.action((opts) => {
     try {

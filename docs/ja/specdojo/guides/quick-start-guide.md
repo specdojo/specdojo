@@ -675,7 +675,7 @@ npx specdojo catalog validate --project prj-0001
 npx specdojo deliverable scaffold --project prj-0001
 
 # カタログの Markdown 派生ビューをビルド
-npx specdojo catalog build --project prj-0001
+npx specdojo build --only catalog --project prj-0001
 ```
 
 </details>
@@ -735,7 +735,7 @@ npx specdojo schedule strategy generate \
 ```chat
 あなた: スケジュールを生成して、今すぐ着手できるタスクを確認したいです。
 
-オーケストレーター: track launch の内容と出力先（`schedule_path` の既定は docs/ja/projects/prj-0001/schedule）を確認しました。schedule build と exec refresh を実行してよろしいですか？
+オーケストレーター: track launch の内容と出力先（`schedule_path` の既定は docs/ja/projects/prj-0001/schedule）を確認しました。build --only schedule と exec refresh を実行してよろしいですか？
 
 あなた: はい、実行してください。
 
@@ -755,7 +755,7 @@ npx specdojo schedule strategy generate \
 
 ```bash
 # スケジュールのビルド
-npx specdojo schedule build --project prj-0001 --track launch --force
+npx specdojo build --only schedule --project prj-0001 --track launch --force
 
 # Ready タスクと CPM の更新
 npx specdojo exec refresh --project prj-0001
