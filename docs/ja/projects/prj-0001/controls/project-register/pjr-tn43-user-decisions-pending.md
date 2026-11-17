@@ -120,6 +120,13 @@ specdojo:
 - 2026-11-15: 6 のうち PJR-3R8F に暫定の比較とお勧めを書いた（D：Vitest を中心とする独自構成を土台にし、対話の出来の採点が要るときに Promptfoo を足す）。決めるのは最小検証の後とし、検証を PJR-FNB7 として起票した。
 - 2026-11-15: 6 のうち PJR-11EX に回答した。GitHub Actions 上の GitHub App を統合専用 actor とし、runner は branch を push するだけにする（C）。実装は複数人の運用に移る準備として別に起票する。
 - 未決のまま: 6（問い・決定と PO の todo の残り。3R8F は FNB7 の結果待ち）、8（成果のない worktree の削除）。D の 4 件は 2026-11-15 に grade し直したが完了条件を満たさず、差し戻して手直しの todo を PJR-Y5AC・Y5XH・TVWR・CPZH として起票した（本文は status: ready のまま）。
+- 2026-11-17: frontier（Astra・Fable）の branch を取り込み、失敗した夜間の grade の job の結果を捨てた。代替案比較の手直し PJR-CPZH は 4 回目を流さずに close し、読みやすさの作り直しを PJR-7WE7（BA、11/30）として起票した。7WE7 は再 grade で完了条件 4 件を満たし、75KB から 30KB にして close した。手直しで文書が膨らむ運用の問題を PJR-0T83（BA、11/30）として起票し、影響範囲と対応方針を書いた。
+- 2026-11-17: runner の変更の統合後の確認（JSEY）を通し、PJR-A61W・MJ8V・V0FQ・C4J1・R7BQ・981V を close した。PJR-JKQX は保護設定の変更案（オーケストレーターのコマンド地図、opencode の許可）を承認のもと feature ブランチで反映して close した。PJR-DH8E は仮説の完了条件を利用者が承認して close した。
+- 2026-11-17: docs:build がメモリ不足で止まる回帰（run 単位の plan・result が文書サイトの対象から外れていた）を PJR-T4X7（DEV、11/30）として起票し、修正後の docs:build が 284 秒で通ることを確かめて close した。
+- 2026-11-17: JSEY の手順のコマンド化を PJR-8NB8、親の検証の時間切れの計測を PJR-C07H、変更範囲の誤った重なり（完了条件の「変えない」一覧を変更範囲と推定する）を PJR-9JN6、時々落ちる reporter の再開のテストを PJR-ZK3T として起票した（いずれも DEV、11/30）。8NB8・9JN6 は統合済みで、統合後の確認は未実施。
+- 2026-11-17: 業務仕様までの sample の冗長さを調べ、原因は rulebook と grade の観点が運用の記述（役割・承認・検証）を各文書に求めることと分かった。進め方は sld 1 件で試してから広げる案（C から B）とし、PJR-8S4T（BA、11/30）で sld-sample を 60%、sld-rulebook を 71% にした。読みやすさの確認は orchestrator に委ねられ、内容を確かめた（型の grade の後に close）。grade で冗長さを点数にする案は c（機械の指標と観点の強化）とし、PJR-2Q0G（DEV、11/30、8S4T の後）として起票した。
+- 2026-11-17: 残りの型は todo ではなく schedule で進めることにし、track kata-slim（18 種類・36 タスク）と epic PJR-MNM5（BA、11/30）を作った。uis の代表は VS Code の「Open Document by ID」の入力の画面（A）とし、カタログに足して PJR-3MTS（BA、11/30）として起票した。kata-slim と 3MTS は 2026-11-17 の夜に流し、型の grade まで続ける。
+- 未決のまま（2026-11-17 時点）: PJR-QJ41 の close（生成ページは docs:build で確認済み）、PJR-PEJS の空のリポジトリでの確認、PJR-39AB・Y2X4 の完了条件、PJR-BSCK（次の版で消す段を含む）。kata-slim の型の grade で出た major の扱いは朝に判断する。
 
 ## 4. 関連ドキュメント
 
