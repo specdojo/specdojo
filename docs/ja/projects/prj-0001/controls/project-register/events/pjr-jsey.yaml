@@ -4858,3 +4858,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_623d2216c23c42779b533fdee543daec
+- v: 1
+  id: reg_2333b139691745368481ef770a3d62db
+  ts: "2026-11-17T04:48:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が個票とイベントを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-17"
+    - field: conclusion
+      from: A61W・MJ8V・V0FQ・DH8E の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。変更範囲の予約も統合で解放された
+      to: C4J1・JKQX・R7BQ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_ae47df9c09de4440bff6edfcafadd9e4
