@@ -180,7 +180,7 @@ register の worktree 実行（同じ run の `--parallel` と別 run の `--joi
 
 ディレクトリは `src/exec/` のように書きます。`app:src/main.ts` は宣言済み product repo を表し、無修飾のパスは project repo として区別します。`./` と `..` を正規化し、行番号・`#関数名` はファイル単位へ広げます。glob は最初のワイルドカードより前のディレクトリ全体を予約します。本文の参照パスも安全側に含めるため、読み取り専用の資料が共通して待機する場合があります。宣言にない変更や別名パスまで静的に予測するものではありません。
 
-`generated/` 配下と project repo で Git が無視するパス（派生一覧など）は、明示対象も含めて除外します。Git の判定に失敗した場合は `generated/` 以外の候補を残します。生成 plan の「登録簿（`pjr-index.md`）の行は変更しない」のような共通文だけで、無関係な項目が順番待ちになることはありません。
+`generated/` 配下と project repo で Git が無視するパス（派生一覧など）は、明示対象も含めて除外します。Git の判定に失敗した場合は `generated/` 以外の候補を残します。生成 plan の共通文に加え、項目固有の本文でも「保護された設定は変えない」「`CHANGELOG.md` は変えず」のように変更しないと明示した節のパスは除外します。同じ文の別の節や別の条件に書かれた変更対象と、明示した `targets` / `target_path` は残します。
 
 範囲が空、または対象 doc ID の一部を解決できない場合は不明として扱います。`--unknown-scope parallel`（既定）は推定できた範囲だけで重複を判断し、不明部分は従来どおり並列を許可します。`--unknown-scope serialize` は、不明な項目を他の項目と直列化します。たとえば `exec run --auto --parallel 2 --unknown-scope serialize` で指定します。`--if-busy` は project / join 枠の待機方針であり、この範囲待ちとは別です。dry-run は範囲を予約しません。
 

@@ -42,6 +42,10 @@ afterEach(async () => {
 });
 
 describe("change scope inference", () => {
+  const unchangedConditions =
+    "保護された設定（lefthook.yml・.agents/・.claude/・.codex/・package.json・.specdojo/ など）は変えない。" +
+    "`CHANGELOG.md` は変えず、個票の対応結果に文案を書く（PJR-EPQ3）。";
+
   it("reads item inputs but not generated register plan procedures and conventions", () => {
     const scope = inferChangeScope({
       projectId: "test",
@@ -118,6 +122,106 @@ describe("change scope inference", () => {
     const second = await gate.tryAcquire("PJR-981V", secondScope);
     expect(second).not.toBeNull();
     expect(remember(second!).waits).toEqual([]);
+  });
+
+  it.each(["ticket", "plan"])(
+    "allows independent items sharing unchanged settings in a %s, even after a failure",
+    async (format) => {
+      const infer = (path: string) => {
+        const conditions = `\`${path}\` を修正する。${unchangedConditions}`;
+        const text =
+          format === "ticket"
+            ? `## 4. 対応方針\n\n| 項目 | 内容 |\n| --- | --- |\n| 完了条件 | ${conditions} |`
+            : registerTemplate.replace("_REGISTER_INPUT_", `## 完了条件\n\n- ${conditions}`);
+        return inferChangeScope({ projectId: "test", repoRoot: root, text });
+      };
+      const firstScope = infer("src/exec/smoke.ts");
+      const secondScope = infer("src/exec/parent-validation.ts");
+      expect(firstScope).toEqual(known("src/exec/smoke.ts"));
+      expect(secondScope).toEqual(known("src/exec/parent-validation.ts"));
+      expect(scopeOverlap(firstScope, secondScope)).toBeUndefined();
+      const gate = new ChangeScopeGate(root);
+      const first = remember(await gate.acquire("PJR-8NB8", firstScope));
+      const second = await gate.tryAcquire("PJR-C07H", secondScope);
+      expect(second).not.toBeNull();
+      expect(remember(second!).waits).toEqual([]);
+      await second!.finish(true);
+      await first.finish(false);
+      const afterFailure = await gate.tryAcquire("PJR-9JN6", secondScope);
+      expect(afterFailure).not.toBeNull();
+      expect(remember(afterFailure!).waits).toEqual([]);
+    },
+  );
+
+  it.each([
+    "変えない",
+    "変えず",
+    "変更しない",
+    "変更しません",
+    "変更せず",
+    "編集しない",
+    "更新しないこと",
+    "触らない",
+  ])("excludes backticked settings explicitly marked %s", (predicate) => {
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        text: `## 完了条件\n\n保護された設定（\`lefthook.yml\`、\`.agents/\`、\`.claude/\`、\`.codex/\`、\`package.json\`、\`.specdojo/\`）は${predicate}。`,
+      }),
+    ).toEqual({ paths: [], unknown: true });
+  });
+
+  it.each([
+    "`src/real.ts` を修正する。`CHANGELOG.md` は変更しない。",
+    "`CHANGELOG.md` は変えず、`src/real.ts` を修正する。",
+    "`CHANGELOG.md` は変更しないが、`src/real.ts` を修正する。",
+    "`src/real.ts` を修正し、`CHANGELOG.md` は変更しない。",
+    "`src/real.ts` を修正するが、`CHANGELOG.md` は変更しない。",
+    "src/real.ts を修正する。`CHANGELOG.md` は変えない（PJR-EPQ3）。",
+    "`package.json`、`.agents/` は変更しない。`src/real.ts` を修正する。",
+    "`CHANGELOG.md` は変えない。\n`src/real.ts` を修正する。",
+    "| 制約 | `CHANGELOG.md` は変更しない | 対象 | `src/real.ts` を修正する |",
+    "`src/real.ts` は変えない。別の条件では `src/real.ts` を修正する。",
+  ])("preserves positive paths beside negative clauses: %s", (text) => {
+    expect(inferChangeScope({ projectId: "test", repoRoot: root, text })).toEqual(
+      known("src/real.ts"),
+    );
+  });
+
+  it("keeps explicit targets and positive protected paths despite negative prose", () => {
+    expect(
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        targets: [".agents/worker.md"],
+        targetPath: "CHANGELOG.md",
+        text: `${unchangedConditions}\n\`package.json\` を変更する。`,
+      }),
+    ).toEqual({
+      paths: ["project:.agents/worker.md", "project:CHANGELOG.md", "project:package.json"],
+      unknown: false,
+    });
+  });
+
+  it("still waits for integration when inferred function references overlap", async () => {
+    const infer = (reference: string) =>
+      inferChangeScope({
+        projectId: "test",
+        repoRoot: root,
+        text: `## 完了条件\n\n\`${reference}\` を修正する。${unchangedConditions}`,
+      });
+    const firstScope = infer("src/exec/run/lifecycle-commands.ts#resume");
+    const secondScope = infer("src/exec/run/lifecycle-commands.ts:42:3");
+    expect(scopeOverlap(firstScope, secondScope)).toBe(
+      "project:src/exec/run/lifecycle-commands.ts <> project:src/exec/run/lifecycle-commands.ts",
+    );
+    const gate = new ChangeScopeGate(root);
+    const first = remember(await gate.acquire("PJR-ED0K", firstScope));
+    expect(await gate.tryAcquire("PJR-1GCD", secondScope)).toBeNull();
+    await first.finish(true);
+    const second = remember(await gate.acquire("PJR-1GCD", secondScope));
+    expect(second.waits).toMatchObject([{ blocker: "PJR-ED0K" }]);
   });
 
   it("does not treat prose alternatives or per-item bookkeeping as implementation paths", () => {
