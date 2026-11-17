@@ -73,6 +73,7 @@ import {
 import { buildTaskView } from "../task-view.js";
 import { type AgentPipeline, type AgentStageRole, type ReadyTaskView } from "../types.js";
 import { gitEnvironment } from "../worktree.js";
+import { trackExecutor } from "../validation-metrics.js";
 import {
   appendParentValidationsToExecutorEvidence,
   buildExecutorPrompt,
@@ -242,12 +243,14 @@ export async function spawnAgentInPlace(
     },
   );
   // executeAgent と同じ理由で、stdin を読まないコマンドの EPIPE は無視する。
+  const stopTracking = trackExecutor(child.pid, cwd);
   child.stdin.on("error", () => undefined);
   child.stdin.end(prompt);
   const exitCode = await new Promise<number>((resolveExit) => {
     child.once("error", () => resolveExit(1));
     child.once("close", (code) => resolveExit(code ?? 1));
   });
+  stopTracking();
   const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
   if (protectedConfigChanges.length > 0) {
     const reason = agentProtectedConfigViolation(protectedConfigChanges);
@@ -661,6 +664,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
                   reporterCandidates![0],
                 )
               : undefined,
+            "reporter",
           );
           reporterAttempts += reporterOutcome.attempts;
           reporterActor = reporterOutcome.actor ?? reporterActor;

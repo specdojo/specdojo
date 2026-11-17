@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-17T12:22:09Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: lint-ts, test-unit"
   commit_type: feat
   commit_scope: exec
 ---
@@ -59,6 +58,8 @@ specdojo:
 - 通常の pipeline、in-place、reporter/統合からの再開では evidence と同じディレクトリに保存し、trial は比較記録の trial ディレクトリに保存する。バッチ ID と検証 ID・repo で記録を対応付ける。既存 evidence の構造と検証判定は変えていない。
 - Vitest の既定 reporter に通知用 reporter を追加し、親検証時だけテストファイルの開始・終了を通知する。時間切れでは終了要求より先に実行中ファイルと直近の出力を保存する。順序・同時数・10 分の上限・合否は維持した。
 - 回帰テストに、負荷取得の欠落、executor の開始・終了と reporter 除外、ローカル/共有枠の待機、再開時の追記、repo の区別、時間切れ時のファイル保持、書き込み不能時の続行を追加した。親検証のテスト・型・lint は executor では重複実行せず runner に委ねる。
+- 再開時に、テストの型参照を型専用 import へ修正した。疑似タイマーは進めた呼び出し元の非同期コンテキストで動くため、計測コンテキスト内で時計を進めるように直し、時間切れの記録が終了要求より先に保存されることも検査する。
+- 再開後の Prettier 整形、履歴リンク、カタログ検証、登録簿の派生ビュー生成、差分の空白検査は通過した。カタログ検証には対象外の既存参照に関する警告が残る。修正後の型・lint・テストの合否は親 runner が確認する。
 - [[specdojo:exec-operation-guide|exec運用ガイド]] に記録の見方を追加した。
 
 ### 5.2. 判断と申し送り

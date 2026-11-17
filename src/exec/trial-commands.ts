@@ -115,6 +115,12 @@ async function runOneTrial(params: {
       worktree.path,
       {
         label: `${params.record.task_id} (${trial.trial_id})`,
+        metricsPath: join(
+          comparisonDir(params.executionPath, params.record.comparison_id),
+          "trials",
+          trial.trial_id,
+          "parent-validation-metrics.jsonl",
+        ),
       },
     );
     parentValidations = parentValidationBatch.validations;
@@ -198,6 +204,7 @@ async function runOneTrial(params: {
             params.schedulePath,
             params.executionPath,
           ),
+          "reporter",
         );
         const result =
           reporterOutcome.exitCode === 0

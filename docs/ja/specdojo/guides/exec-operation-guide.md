@@ -147,6 +147,22 @@ specdojo exec run --project <project-id> --register PJR-00QV --worktree --join
 - 各 run は自分の項目の結果を持ちます。先行項目が未統合で失敗した場合、変更範囲が重なる後続項目は起動せず、先行項目の再開を促します。
 - 枠の待ちは run のログに `Waiting for <provider> slot held by another exec run`、`Waiting for the register lifecycle lock held by another exec run`、`Waiting for parent validation slot held by another exec run` として出力されます。
 
+親検証の時間切れを調べるときは、run の `evidence.json` と同じディレクトリの `parent-validation-metrics.jsonl` を確認します。trial では `exec/trials/<comparison-id>/trials/<trial-id>/` に保存します。再開時も追記するため、`batch_id` と検証の `id`・`repo` で絞って読みます。
+
+| 記録                                  | 読み方                                                                                                                                                                                                                                 |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `gate-queued` / `gate-acquired`       | 枠の要求・取得時刻。`local_wait_ms` は同一プロセス内、`shared_wait_ms` は共有ロックの取得にかかった時間。各検証の `gate_wait_ms` はバッチ全体の待ち時間で、検証ごとの待ちの合計ではありません                                          |
+| `validation-start` / `validation-end` | `at` は UTC の記録時刻、`started_at` は開始時刻、`duration_ms` は単調時計で測った実行時間。`status`・`exit_code`・`timed_out` で終了状態を確認します                                                                                   |
+| `validation-timeout`                  | 上限に達した時点で終了要求より先に保存します。`active_test_files` は開始通知があり終了通知のないテストファイル、`output_tail` は直近 16 Ki 文字の標準出力です。詳細な出力は従来の失敗ログも参照します                                  |
+| `load`                                | Linux の CPU・memory・I/O の PSI（`pressure`）、`loadavg`、`/proc/meminfo` 由来のメモリ・swap 使用量（bytes）。PSI の `avg10` などは待ちの割合、`total` は累積待ち時間（マイクロ秒）です。開始・終了・時間切れの差分で確認します       |
+| `activity`                            | `scope: project-locks` は同じ project の primary / join run の数と PID、および実行中 executor の子 PID・worktree 名。reporter と終了済み executor は数えません。共有ロックのない実行は `scope: process` として自プロセスだけを数えます |
+
+このリポジトリの Vitest 設定は、親検証が渡す `SPECDOJO_PARENT_VALIDATION_METRICS=1` のときだけファイル開始・終了通知を出します。他リポジトリの検証でこの通知がない場合、`active_test_files` は空で、実行ファイルは未特定です。直近の出力が示す完了済みファイルを実行中と解釈しないでください。テストの初期化前の停止も通知がない場合があります。
+
+負荷はホストの `/proc` が見せる値で、cgroup の上限とは一致しない場合があります。run 数は heartbeat が有効な枠のスナップショットです。executor 数はこの版の runner が起動したプロセスを対象とし、別 project、旧版の runner、手動起動のテストは含みません。executor の記録は `exec/.locks/metrics-executors/` に置き、終了時に除去し、異常終了で残っても PID が生存しなければ数えません。
+
+取得できない負荷項目は省略し、計測先への書き込み失敗も検証の合否には影響させません。計測は待ちの要求・取得と検証の開始・終了・時間切れ時だけ行い、継続的なプロセス走査や I/O ベンチマークは行いません。記録は原因の切り分けに使い、同時数や時間上限を自動変更しません。
+
 上限と現在の使用枠は `exec slots` で確認できます。ロックは取得しないため、実行中にいつでも実行できます。
 
 ```bash

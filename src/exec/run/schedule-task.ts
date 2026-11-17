@@ -458,6 +458,7 @@ export async function runPreparedTask(
             ),
             worktreeResultPath,
             prepared.reporterRateLimitOptions,
+            "reporter",
           );
           reporterAttempts += outcome.attempts;
           reporterActor = outcome.actor ?? reporterActor;
