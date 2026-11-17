@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-DJZD"]'
+- v: 1
+  id: reg_c227a3fb93d7414a83b5bac4c7e7746d
+  ts: "2026-11-17T23:56:17Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_90023e1acfe54cebb2f81ec2985c38a3
