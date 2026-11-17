@@ -127,6 +127,73 @@ afterEach(() => {
 });
 
 describe("exec run --auto --track", () => {
+  it("prepares overlapping schedule targets only after the first integration", async () => {
+    const one = { ...first, local_id: "shared" };
+    const two = { ...second, local_id: "shared" };
+    mkdirSync(join(repo, "docs"));
+    writeFileSync(
+      join(repo, "docs/shared.md"),
+      "---\nspecdojo:\n  id: test:shared\n  type: architecture\n  status: draft\n---\n\n# Shared\n",
+    );
+    writeReady([one, two]);
+    const calls: string[] = [];
+    vi.mocked(prepareSingleTask).mockImplementation(async (task) => {
+      calls.push(`prepare:${task.id}`);
+      return prepared(task);
+    });
+    vi.mocked(runPreparedTaskSafely).mockImplementation(async (p) => {
+      calls.push(`integrate:${p.task.id}`);
+      return { prepared: p, result: "success" };
+    });
+    await runBatchMode({
+      project: "test",
+      track: selectedTrack,
+      parallel: "2",
+    });
+    expect(calls).toEqual([
+      `prepare:${one.id}`,
+      `integrate:${one.id}`,
+      `prepare:${two.id}`,
+      `integrate:${two.id}`,
+    ]);
+    expect(vi.mocked(prepareSingleTask).mock.calls[1]?.[19]?.changeScopeWaits).toMatchObject([
+      { item: two.id, blocker: one.id },
+    ]);
+    expect(output.join("")).toContain(`[scope] waiting: ${two.id}`);
+    expect(process.exitCode).toBeUndefined();
+  });
+
+  it("does not prepare an overlapping schedule target after integration failure", async () => {
+    writeReady([first, second]);
+    vi.mocked(runPreparedTaskSafely).mockImplementation(async (p) => ({
+      prepared: p,
+      result: "failure",
+    }));
+    await runBatchMode({
+      project: "test",
+      track: selectedTrack,
+      parallel: "2",
+      unknownScope: "serialize",
+    });
+    expect(vi.mocked(prepareSingleTask).mock.calls.map(([task]) => task.id)).toEqual([first.id]);
+    expect(process.exitCode).toBe(1);
+  });
+
+  it("retains the scope barrier when schedule preparation fails", async () => {
+    writeReady([first, second]);
+    vi.mocked(prepareSingleTask).mockResolvedValue("failure");
+    await runBatchMode({
+      project: "test",
+      track: selectedTrack,
+      parallel: "2",
+      unknownScope: "serialize",
+    });
+    expect(vi.mocked(prepareSingleTask).mock.calls.map(([task]) => task.id)).toEqual([first.id]);
+    expect(runPreparedTaskSafely).not.toHaveBeenCalled();
+    expect(output.join("")).toContain(`[scope] waiting: ${second.id}`);
+    expect(process.exitCode).toBe(1);
+  });
+
   it.each([
     { dryRun: true, parallel: "3", strategy: "critical-first", expected: [first, second] },
     { dryRun: false, parallel: "3", strategy: "critical-first", expected: [first, second] },

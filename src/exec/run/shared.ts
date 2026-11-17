@@ -45,6 +45,7 @@ import {
 } from "../../schedule/phase-sets.js";
 import type { AgentStageRole, Proficiency } from "../types.js";
 import type { ReadyTaskView } from "../types.js";
+import type { ScopeWait } from "./change-scope.js";
 
 type StrategyPhase = {
   id: string;
@@ -119,6 +120,10 @@ export type RunOpts = {
   due?: boolean;
   ifBusy?: string;
   join?: boolean;
+  unknownScope?: string;
+  /** Runner facts appended to the generated plan before its checkpoint. */
+  changeScopeWaits?: ScopeWait[];
+  onScopeIntegrated?: () => Promise<void>;
   /** Repeatable `<repo>=<branch>` product integration target overrides. */
   integrationBranch?: string[];
   /** Repeatable product work branch overrides. */

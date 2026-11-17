@@ -36,7 +36,7 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 ```
 
 - 列は 2 本までにする（codex の列と agy の列など）。親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）は run をまたいで 1 件ずつ流れるため、列を増やしても速くならず、待ちと負荷が増える。
-- 新方（PJR-EPQ3）では項目は `CHANGELOG.md` を変えないため、列の組み方のうえでの衝突は起きない。同じファイルを触る項目は従来どおり同じ列に順に並べる。LP の `GetStarted.astro` を触る 3 件を並べて流したときは、順に流すことで衝突を避けた。
+- 新方（PJR-EPQ3）では項目ごとに `CHANGELOG.md` を変えない。実装の範囲が重なる項目は runner が先行項目の統合まで待たせる。個票の入力・完了条件に対象の相対パスを書き、推定できない項目も直列化したい列には `--unknown-scope serialize` を付ける。推定と再開の規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」に従う。
 - 旧方の行（未公開の版の節へ直接書いた `CHANGELOG.md`）が残っている間は、その項目は新方と混ぜて並べる場合、まだ `CHANGELOG.md` を書くため衝突の可能性が残る。リリースまでに旧方の行を集めて `## [Unreleased]` へまとめた後（第 9 節）に列を組むのが安全である。
 - 統合の commit のときにも検査が走る。並行の検証と重なると、`tests/src/exec/pipeline-e2e.integration.test.ts` などの E2E が時間切れで落ちることがある。落ちた場合は、負荷が下がってから `--resume` で統合からやり直す。
 - 列の終わりを待って次を流す待機を書くときは、相手のプロセスを `pgrep -f` のパターンで探さない（`落とし穴` を参照）。実行のログや出力ファイルに結果の行が出たことで判定するか、プロセスの番号で待つ。

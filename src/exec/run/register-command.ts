@@ -20,6 +20,7 @@ import {
   type RunOpts,
 } from "./shared.js";
 import { withTrailingRunRecords } from "./trailing-records.js";
+import { parseUnknownScopePolicy } from "./change-scope.js";
 
 export function registerRunCommand(exec: Command): void {
   const rcmd = exec
@@ -114,6 +115,10 @@ export function registerRunCommand(exec: Command): void {
     (value: string, previous: string[] = []) => [...previous, value],
   );
   rcmd.option("--parallel <n>", "Number of worktree instances to run in parallel", "1");
+  rcmd.option(
+    "--unknown-scope <policy>",
+    "Items with an unknown change scope: parallel|serialize (default: parallel)",
+  );
   rcmd.option("--worktree-base <path>", "Override worktree base directory");
   rcmd.option(
     "--strategy <s>",
@@ -175,6 +180,7 @@ export function registerRunCommand(exec: Command): void {
 
   rcmd.action(async (opts: RunOpts) => {
     try {
+      parseUnknownScopePolicy(opts.unknownScope);
       const isAuto = !!opts.auto;
       const hasTask = !!opts.task;
       const hasDeliverable = !!opts.deliverable;

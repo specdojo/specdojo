@@ -1,0 +1,142 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "重複範囲を統合まで待たせる実装を確認し、前回失敗の原因と準備失敗時の予約解放を修正しました。回帰テストと個票を更新し、executor 担当の検査は成功しました。親検証は runner に委ねます。",
+  "handoff": [
+    "前回の lint-ts の型 import 違反と、integration test の失敗につながる共通規約参照の展開不良・本文パスの誤認を修正した。型検査・lint・schema・unit / integration test は指定どおり二重実行せず、親 runner の再検証結果で判定する。",
+    "統合後は個票の対応結果と運用メモに従い、PJR-JSEY の実 agent CLI 動作確認に本項目を含める。利用枠を消費するため executor では実施していない。",
+    "CHANGELOG 文案（追加）: register の並列・join 実行と schedule の自動実行で、変更範囲が重なる項目を先行項目の統合後まで待機させる。不明な変更範囲は `--unknown-scope parallel|serialize` で扱いを選べる。",
+    "不明範囲の既定は互換性のため parallel。宣言にない変更も含めて保守的に直列化する列では `--unknown-scope serialize` を指定する。result の記入は reporter / runner が行う。"
+  ],
+  "validations": [
+    {
+      "command": "git diff --name-only -- '*.md' '*.ts' | xargs npx prettier --check src/exec/run/change-scope.ts tests/src/exec/run/change-scope.test.ts tests/src/exec/run/change-scope.integration.test.ts",
+      "status": "passed",
+      "summary": "変更した Markdown・TypeScript と新規3ファイルの整形を確認。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言を確認。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード0。既存の re-export 参照・未作成文書の警告あり。"
+    },
+    {
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査が成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成が成功。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec run --help",
+      "status": "passed",
+      "summary": "CLI の起動と --unknown-scope の表示を確認。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "executor が変更した YAML 成果物はない。",
+      "reason": "既存差分の register event は runner 管理の状態遷移記録であり、今回の executor は編集していない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-mj8v-exec-serialize-overlapping-items.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mj8v-exec-serialize-overlapping-items.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "src/exec/run/register-command.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-command.ts"
+    },
+    {
+      "target": "src/exec/run/register-mode.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-mode.ts"
+    },
+    {
+      "target": "src/exec/run/register-worktree.ts",
+      "status": "changed",
+      "path": "src/exec/run/register-worktree.ts"
+    },
+    {
+      "target": "src/exec/run/schedule-mode.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-mode.ts"
+    },
+    {
+      "target": "src/exec/run/schedule-prepare.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-prepare.ts"
+    },
+    {
+      "target": "src/exec/run/schedule-task.ts",
+      "status": "changed",
+      "path": "src/exec/run/schedule-task.ts"
+    },
+    {
+      "target": "src/exec/run/shared.ts",
+      "status": "changed",
+      "path": "src/exec/run/shared.ts"
+    },
+    {
+      "target": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/run/track-filter.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/track-filter.test.ts"
+    },
+    {
+      "target": "src/exec/run/change-scope.ts",
+      "status": "changed",
+      "path": "src/exec/run/change-scope.ts"
+    },
+    {
+      "target": "tests/src/exec/run/change-scope.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/change-scope.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/run/change-scope.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/run/change-scope.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>
