@@ -102,9 +102,35 @@ function advanceTaskState(state: SimpleTaskState, event: ExecEventV1): SimpleTas
   return state;
 }
 
+function resumesPipelineBlock(block: ExecEventV1, unblock: ExecEventV1): boolean {
+  return (
+    block.type === "block" &&
+    unblock.type === "unblock" &&
+    typeof block.meta?.pipeline_stage === "string" &&
+    typeof block.meta?.pipeline_state_ref === "string" &&
+    block.meta.pipeline_stage === unblock.meta?.pipeline_stage &&
+    block.meta.pipeline_state_ref === unblock.meta?.pipeline_state_ref
+  );
+}
+
+type EventOrderState = {
+  state: SimpleTaskState;
+  lastBy?: string;
+  lastBlock?: ExecEventV1;
+};
+
+function advanceEventOrderState(cur: EventOrderState, event: ExecEventV1): EventOrderState {
+  return {
+    state: advanceTaskState(cur.state, event),
+    lastBy: event.by,
+    lastBlock: event.type === "block" ? event : cur.lastBlock,
+  };
+}
+
 function isTransitionValidForState(
   state: SimpleTaskState,
   lastBy: string | undefined,
+  lastBlock: ExecEventV1 | undefined,
   candidate: ExecEventV1,
   remaining: readonly { path: string; event: ExecEventV1 }[],
 ): boolean {
@@ -141,6 +167,16 @@ function isTransitionValidForState(
     if (type !== "block" && type !== "complete" && type !== "release" && type !== "cancel") {
       return false;
     }
+    // A resume identifies the block it follows. Prefer that block over a later failure in
+    // the same second, regardless of the random suffix in either block's filename.
+    if (type === "block") {
+      const resumedBlocks = remaining.filter((item) =>
+        remaining.some((other) => resumesPipelineBlock(item.event, other.event)),
+      );
+      if (resumedBlocks.length > 0 && !resumedBlocks.some((item) => item.event === candidate)) {
+        return false;
+      }
+    }
     if (
       lastBy &&
       candidate.by !== lastBy &&
@@ -166,6 +202,14 @@ function isTransitionValidForState(
     return true;
   }
   if (state === "blocked") {
+    if (
+      type === "unblock" &&
+      lastBlock &&
+      !resumesPipelineBlock(lastBlock, candidate) &&
+      remaining.some((item) => resumesPipelineBlock(lastBlock, item.event))
+    ) {
+      return false;
+    }
     return type === "unblock" || type === "release" || type === "cancel";
   }
   if (state === "done") {
@@ -175,7 +219,7 @@ function isTransitionValidForState(
 }
 
 function orderSameTimestampEventsByState(items: { path: string; event: ExecEventV1 }[]): void {
-  const taskStates = new Map<string, { state: SimpleTaskState; lastBy?: string }>();
+  const taskStates = new Map<string, EventOrderState>();
   for (let start = 0; start < items.length;) {
     const ts = items[start]!.event.ts;
     let end = start + 1;
@@ -184,10 +228,7 @@ function orderSameTimestampEventsByState(items: { path: string; event: ExecEvent
     if (end - start === 1) {
       const { event } = items[start]!;
       const cur = taskStates.get(event.task_id) ?? { state: "todo" as SimpleTaskState };
-      taskStates.set(event.task_id, {
-        state: advanceTaskState(cur.state, event),
-        lastBy: event.by,
-      });
+      taskStates.set(event.task_id, advanceEventOrderState(cur, event));
       start = end;
       continue;
     }
@@ -204,23 +245,23 @@ function orderSameTimestampEventsByState(items: { path: string; event: ExecEvent
       let cur = taskStates.get(taskId) ?? { state: "todo" as SimpleTaskState };
       if (indices.length === 1) {
         const { event } = items[indices[0]!]!;
-        taskStates.set(taskId, {
-          state: advanceTaskState(cur.state, event),
-          lastBy: event.by,
-        });
+        taskStates.set(taskId, advanceEventOrderState(cur, event));
         continue;
       }
       const remaining = indices.map((idx) => items[idx]!);
       for (const targetIdx of indices) {
         const validIdx = remaining.findIndex((candidate) =>
-          isTransitionValidForState(cur.state, cur.lastBy, candidate.event, remaining),
+          isTransitionValidForState(
+            cur.state,
+            cur.lastBy,
+            cur.lastBlock,
+            candidate.event,
+            remaining,
+          ),
         );
         const [chosen] = remaining.splice(validIdx >= 0 ? validIdx : 0, 1);
         items[targetIdx] = chosen!;
-        cur = {
-          state: advanceTaskState(cur.state, chosen!.event),
-          lastBy: chosen!.event.by,
-        };
+        cur = advanceEventOrderState(cur, chosen!.event);
       }
       taskStates.set(taskId, cur);
     }

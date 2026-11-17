@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-11-17T13:24:01Z"
@@ -51,7 +51,34 @@ tests/src/exec/pipeline-e2e.integration.test.ts の reporter の再開のテス�
 
 ## 5. 対応結果
 
--
+### 5.1. 原因と再現条件
+
+`exec` イベントの時刻は秒単位であり、同種・同時刻・同一 actor のイベントはファイル名の乱数部分で順序が決まっていた。reporter の失敗による `block`、reporter 再開の `unblock`、対象外変更による統合失敗の `block` が同じ秒に入り、統合の `block` のパスが先に並ぶと、再生順序が「統合停止 → reporter 再開 → reporter 停止」になった。最終状態の `pipeline_stage` が `reporter` に戻るため、次の再開で成功済み reporter を余分に呼んでいた。agent の選択や fallback の問題ではない。
+
+PJR-8NB8 の保存ログでは、余分な呼び出しは最後の統合再開後の呼び出し一覧の比較で発生していた。同秒のイベントと逆順のパスを固定した再現用スクリプトでも、修正前は最終段階が `reporter` となり、`integrate` を期待する検査が失敗した。
+
+### 5.2. 作業内容と検証
+
+| 作業                             | 状態 | 実績・メモ                                                                                                                                                                                                                                |
+| -------------------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因の特定・再現                 | done | 秒単位のイベント再生と乱数順の組み合わせで再現した。                                                                                                                                                                                      |
+| runner の修正                    | done | `src/exec/events.ts` で、`pipeline_stage` と `pipeline_state_ref` が一致する停止・再開を対応づける。再開対象の停止を先に再生し、複数の再開は直前の停止に対応するものを優先する。                                                          |
+| 回帰テスト・仕様                 | done | `events.test.ts` に両方のパス順と停止・再開・完了の6条件を追加。対象 E2E に最初の呼び出し数と統合停止が最後に再生されることの検査を追加。[[prj-0001:stsd-task-execution\|状態遷移仕様（タスク実行）]] に再生順序を反映した。              |
+| 決定的な再現条件での確認         | done | 修正後に再現用スクリプトの6条件を20回ずつ実行し、120件すべて成功した。対象 E2E 自体の20回実行とは別の確認である。一時スクリプトは確認後に削除済み。                                                                                       |
+| sandbox 内の成果物検査           | done | Prettier、変更文書の markdownlint、`register build`、catalog 検証、`npm run validate:history-links`、`git diff --check` が成功。catalog は既存の参照に対する警告のみ。`tsx` CLI は IPC の `EPERM` のため `node --import tsx` で実行した。 |
+| 対象 E2E の20回連続実行          | open | executor 指示で親検証 `test-integration` の対象限定版も sandbox 内では実行禁止。ホスト側で対象テストを20回続けて実行し、すべて成功したことを result に追記する必要がある。                                                                |
+| 同じファイルの全テスト・共通検査 | open | `test-integration`、`typecheck`、`lint-ts`、`test-unit`、`lint-md` などは親 runner が実行する。executor の重複実行は禁止されているため、親検証の結果を result に反映して完了条件と照合する。                                              |
+
+### 5.3. 判断・申し送り
+
+- 実際の run にも同じ再生順序の問題が起こるため、待機時間や期待呼び出し数を変えず、イベントを読む runner 側を修正した。既存イベントを変更せず、既存のメタデータから停止と再開を対応づける。両項目を持たないイベントの順序は従来どおりとした。
+- 保護された設定の変更は不要。登録簿の一覧・個票のステータス・result・`CHANGELOG.md` は編集しない。
+- ホスト側の20回確認は、`npm run test:integration -- tests/src/exec/pipeline-e2e.integration.test.ts -t 'blocks non-target changes after reporter resume and resumes only integration after review'` を途中の失敗を無視せず20回続けて実行する。ファイル内のほかのテストは親 runner の全件検証で確認する。
+- runner の修正を含むため、統合後は [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] の JSEY 確認もホスト側で実施する。
+
+### 5.4. CHANGELOG に書く事項
+
+- 不具合修正: reporter の停止・再開と統合の停止が同じ秒に記録されたとき、イベントの並び順によって統合再開時に reporter を余分に実行する問題を修正。
 
 ## 6. 関連ドキュメント
 

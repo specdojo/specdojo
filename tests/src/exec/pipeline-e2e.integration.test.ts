@@ -15,6 +15,7 @@ import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
+import { readAllEventFiles } from "../../../src/exec/events.js";
 import { recordPathForRead } from "../../../src/exec/run-records.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { TRAILING_RECORDS_COMMIT_SUBJECT } from "../../../src/exec/trailing-records.js";
@@ -1618,6 +1619,10 @@ describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPT
   it("blocks non-target changes after reporter resume and resumes only integration after review", async () => {
     await startReporterBlock();
     const current = fixture!;
+    expect(readInvocations(current.logPath).map((item) => item.role)).toEqual([
+      "executor",
+      "reporter",
+    ]);
     const base = worktreeBase!;
     const worktree = onlyWorktreePath(base);
     const taskId = "T-TEST-doc-010";
@@ -1660,6 +1665,11 @@ describe("executor / reporter pipeline resume E2E (worktree)", PIPELINE_TEST_OPT
     for (const path of strayPaths) expect(integrateLog).toContain(path);
     const beforeResume = readInvocations(current.logPath);
     expect(beforeResume.map((item) => item.role)).toEqual(["executor", "reporter", "reporter"]);
+    // Same-second block events must keep the integration failure as the latest stop.
+    expect(readAllEventFiles(join(current.repo, "schedule")).at(-1)?.event).toMatchObject({
+      type: "block",
+      meta: { pipeline_stage: "integrate" },
+    });
 
     // After reviewing the excluded change, only the runner-owned integration is retried.
     for (const path of strayPaths) rmSync(join(worktree, path));
