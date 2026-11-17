@@ -57,3 +57,32 @@
       from: _TODO_
       to: sol-executor
   previous_event_id: reg_56e93de8786a43c6ab1968ea5547f3eb
+- v: 1
+  id: reg_b4527898b86f433eb84c2b08f37452a1
+  ts: "2026-11-16T23:36:25Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_855ac6446f424c369d2968fd7c103eee
+- v: 1
+  id: reg_5c4d207cafd848fabcee871af162c557
+  ts: "2026-11-17T00:09:17Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-integration"
+  previous_event_id: reg_b4527898b86f433eb84c2b08f37452a1
