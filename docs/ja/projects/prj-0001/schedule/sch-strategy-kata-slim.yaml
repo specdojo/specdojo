@@ -1,0 +1,156 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-kata-slim
+type: project
+status: draft
+title: スケジュール戦略（業務仕様までの型から文書の運用の記述を外す）
+rulebook: specdojo:sch-rulebook
+track: kata-slim
+scope:
+  catalogs:
+    - id: prj-0001:dct-project-definition
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml
+      local_ids:
+        - prj-charter
+        - prj-success-criteria-and-acceptance-criteria
+        - prj-assumptions-constraints-dependencies
+        - prj-comparison-of-alternatives
+    - id: prj-0001:dct-project-management
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml
+      local_ids:
+        - pm-plan
+        - pm-quality-management-plan
+        - pm-organization
+        - pm-raci
+        - pm-communication-plan
+    - id: prj-0001:dct-business-model-bes
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml
+      local_ids:
+        - bes-index
+        - bes-task-ready-selected
+    - id: prj-0001:dct-business-model-bps
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml
+      local_ids:
+        - bps-init-required
+    - id: prj-0001:dct-business-model-br
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml
+      local_ids:
+        - br-task-selection-strategy
+    - id: prj-0001:dct-data-model-cdsd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml
+      local_ids:
+        - cdsd-planning
+    - id: prj-0001:dct-system-functions
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml
+      local_ids:
+        - sf-index
+        - sf-task-execution
+    - id: prj-0001:dct-user-interface-model
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml
+      local_ids:
+        - clis-exec-commands
+        - bds-progress-report
+  include_kinds:
+    - work
+approach_rules:
+  - local_ids:
+      - prj-charter
+      - prj-success-criteria-and-acceptance-criteria
+      - prj-assumptions-constraints-dependencies
+      - prj-comparison-of-alternatives
+      - pm-plan
+      - pm-quality-management-plan
+      - pm-organization
+      - pm-raci
+      - pm-communication-plan
+      - bes-index
+      - bes-task-ready-selected
+      - bps-init-required
+      - br-task-selection-strategy
+      - cdsd-planning
+      - sf-index
+      - sf-task-execution
+      - clis-exec-commands
+      - bds-progress-report
+    intent: improve-kata
+    kata_target: rulebook
+phase_sets:
+  rulebook-slim-pass:
+    - id: rulebook-maintenance
+      name: rulebook から運用の記述を外す
+      execution: agent
+      mode: edit
+      approach: rulebook-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "040"
+      duration_days: 0.25
+      description: >
+        対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。
+        手本は sld の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、
+        改訂済みの [[specdojo:sld-rulebook|sld-rulebook]] である。
+        外す記述: 役割の表と役割の段落、status の draft 維持・ready 昇格・PO の承認・agent の禁止・公開の承認条件・改訂と廃止の手順、
+        文書品質の検査（prettier・lint・見出し・wikilink）を業務の検証や受入条件に入れること、未決事項の表の管理台帳の区分・担当・判断時期・追跡先の列と台帳への登録の段落、
+        本文要件の言い直しだけの用語の表、共通規約と同じ禁止事項。
+        残す記述: その型固有の判断基準と区分、標準の列と章の受入条件、良い例・悪い例、型固有の禁止事項、業務の受入確認の手順と合格条件、未決事項の論点と影響。
+        参照の形: 全体方針に「共通の運用」を 1 項目だけ置き、役割は適用先のメンバー定義、status・承認・改訂と廃止・未決事項の引き継ぎは
+        [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を参照する。
+        章名と必須・条件付きの区分は、既存の成果物との対応を保つため原則として変えない。変える場合は理由を result に書く。
+        大きさは、空白を除いた文字数で今の 8 割以下を目安にし、前後の文字数を result に書く。成果物本体は変更しない。
+        共通の正本に足りない記述があれば、rulebook ではなく変更案として result に書く。
+      agent:
+        executor: sol-executor
+  sample-slim-pass:
+    - id: sample-maintenance
+      name: sample から運用の記述と言い直しを外す
+      execution: agent
+      mode: edit
+      approach: sample-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "050"
+      duration_days: 0.25
+      description: >
+        直した rulebook に沿い、対応する sample から文書の運用の記述と同じ判断の言い直しを外す。
+        手本は sld の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]]）と、改訂済みの [[specdojo:sld-sample|sld-sample]] である。
+        外す記述: 役割の段落、末尾の承認と agent の段落、検証の表の文書品質の行、未決事項の表の管理台帳の区分・担当・追跡先の列と登録の段落。
+        sample には共通の運用の参照文も書かない（rulebook が担う）。
+        同じ判断は 1 か所の表を正とし、ほかの章は章タイトルで参照する。隣接仕様との分担と対応は 1 つの表にまとめ、概要では再掲しない。
+        表のセルは要点にし、手順は場面別の表へ寄せる。
+        結論（判断の基準、値、例外、未決事項の論点）は変えない。変えた場合は理由を result に書く。
+        大きさは、空白を除いた文字数で今の 7 割以下を目安にし、前後の文字数を result に書く。成果物本体は変更しない。
+        template が同じ運用の記述を持っていれば、同じ方針で直す。
+      agent:
+        executor: opus-executor
+default_phase_sets:
+  - phase_set: rulebook-slim-pass
+  - phase_set: sample-slim-pass
+owner_rules:
+  - local_ids:
+      - prj-charter
+      - prj-success-criteria-and-acceptance-criteria
+      - prj-assumptions-constraints-dependencies
+      - prj-comparison-of-alternatives
+      - pm-plan
+      - pm-quality-management-plan
+      - pm-organization
+      - pm-raci
+      - pm-communication-plan
+      - bes-index
+      - bes-task-ready-selected
+      - bps-init-required
+      - br-task-selection-strategy
+      - cdsd-planning
+      - sf-index
+      - sf-task-execution
+      - clis-exec-commands
+      - bds-progress-report
+    owner: BA
