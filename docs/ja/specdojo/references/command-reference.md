@@ -848,6 +848,41 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して `.specdojo/agent-members.yaml` を更新します。
 
+### 7.2. 統合後の runner 動作確認
+
+`exec smoke` は、統合済み項目の確認を、project 固有の動作確認用個票で一括実行します。
+
+```bash
+specdojo exec smoke --project prj-0001 --register PJR-JSEY \
+  --targets PJR-8NB8 --executor-by claude-executor --reporter-by gemma26-reporter
+```
+
+| オプション                 | 内容                                                                |
+| -------------------------- | ------------------------------------------------------------------- |
+| `--project <id>`           | 対象 project。省略時は register と同じ解決規則                      |
+| `--register <id>`          | 確認用個票の ID（必須。project ごとに指定）                         |
+| `--targets <ids>`          | 確認対象の項目 ID（必須。カンマ区切り。review / done の個票が必要） |
+| `--executor-by <nickname>` | executor（必須。alias 指定可）                                      |
+| `--reporter-by <nickname>` | reporter（必須。alias 指定可）                                      |
+| `--by <actor>`             | 対象追記・reopen の actor。既定 `specdojo-orchestrator`             |
+| `--worktree-base <path>`   | exec run へ渡す worktree の基準ディレクトリ                         |
+| `--dry-run`                | 入力を検証して手順を表示。書き込み・commit・agent 起動は行わない    |
+
+確認用個票の本文に、次のような対象一覧を 1 か所用意してください。空の一覧も使えます。既存の JSEY の `（PJR-XXXX・PJR-YYYY）のうち` という書式にも対応します。
+
+```markdown
+<!-- specdojo:smoke-targets -->
+
+PJR-XXXX・PJR-YYYY
+<!-- /specdojo:smoke-targets -->
+```
+
+実行順は対象 ID の追記と commit、確認用個票の reopen と commit、`exec run --register --worktree`、今回追加された start / review event と最終状態の確認です。対象追記・commit は既存の register lifecycle ロック内で行い、同一 project の smoke は直列化します。既存 ID は重複追記しません。確認用個票は edit タスクで done / open / review のいずれかを要求し、open / review では reopen を省略します。既存の未 commit 変更が個票・event にある場合は、上書きせず停止します。
+
+成功時は終了コード 0 と、対象 ID・実体 actor・start / review event ID を表示します。actor は alias の解決先となる executor nickname と両 event で一致する必要があります。レートリミットは `stop` を指定して実行します。失敗時は終了コード 1 と `[smoke:preflight|targets|reopen|run|verify]`、理由を出力し、それ以降の段を実行しません。途中の記帳 commit は残ります。waiting / in-progress になった確認用個票は、run の記録を調べ、通常の `exec run --resume` などで解決してから再実行してください。
+
+close は人が各項目の完了条件を確認して `register close --commit` で行います。runner 本体を変更した場合は、統合後に build し直し、新しいプロセスで smoke を実行してください。
+
 ## 8. grade
 
 `grade` は kata（rulebook / recipe / sample / template）または成果物を、review と同じ共通 viewpoint・category rubric で継続評価します。agent に直接ファイル探索やスコア計算をさせず、plan 生成と反映を分離します。

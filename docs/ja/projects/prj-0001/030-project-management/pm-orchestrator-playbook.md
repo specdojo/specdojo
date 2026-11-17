@@ -76,10 +76,16 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 
 runner・register・exec のコードを変えた項目は、統合の後に PJR-JSEY を 1 回流して確かめてから close する。
 
-1. JSEY の個票の対象の一覧（「…・PJR-XXXX）のうち」で終わる箇所）に、確かめる項目の ID を足して commit する。
-2. `register reopen --id PJR-JSEY --by specdojo-orchestrator --reason "<対象> の統合後の動作確認" --commit` で開き直す。
-3. `claude-executor` で流す。start から review まで通り、event の actor に実体名（sonnet-executor など）が記録されることを確かめる。
-4. JSEY と対象の項目を close する。runner に関わる項目が続くときは、まとめて 1 回で確かめてよい。
+統合後に本体で `npm run build` を実行し、新しいプロセスで次を流す。先に `--dry-run` を付けると、書き込みや agent 起動をせず手順を確認できる。
+
+```bash
+npx specdojo exec smoke --project prj-0001 --register PJR-JSEY \
+  --targets PJR-8NB8 --executor-by claude-executor --reporter-by gemma26-reporter
+```
+
+コマンドは対象一覧への重複しない ID 追記と commit、done の JSEY の reopen と commit、`exec run --register --worktree`、今回の start → review と実体 actor の照合を順に行う。対象は実行時点で review または done を要求する。複数項目は `--targets PJR-XXXX,PJR-YYYY` でまとめて確かめる。
+
+成功後に JSEY と対象の項目の完了条件を確認し、既存の `register close --commit` で close する。失敗時は出力の `[smoke:<段>]` と run の記録を調べる。waiting / in-progress の JSEY は先に既存の再開手順で解決する。オプションと他 project の確認用個票の書式は [[specdojo:command-reference|コマンドリファレンス]] の「統合後の runner 動作確認」を参照する。
 
 docs だけの項目や、runner の通らないコード（kata、docs-site など）の項目では JSEY は要らない。
 

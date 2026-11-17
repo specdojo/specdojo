@@ -20,7 +20,11 @@ import { registerExecCommands } from "../../../src/exec/exec.js";
 import { reserveProductBranch } from "../../../src/exec/product-branch-records.js";
 import { listRunRecords } from "../../../src/exec/run-records.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
-import { readRegisterEventsFromContent } from "../../../src/register/events.js";
+import {
+  buildRegisterEvent,
+  readRegisterEventsFromContent,
+  serializeRegisterEvents,
+} from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import type { SpecDojoRepoConfig } from "../../../src/shared/specdojo-config.js";
@@ -741,6 +745,202 @@ afterEach(() => {
   }
   process.exitCode = undefined;
   vi.restoreAllMocks();
+});
+
+function prepareSmokeFixture(root: string): void {
+  const smoke = buildTicket("PJR-AB12")
+    .replace("id: test:pjr-ab12-topic", "id: test:pjr-ab12-pipeline-test")
+    .replace("item_status: open", 'item_status: done\n  completed_at: "2026-11-16T00:00:00Z"')
+    .replace(
+      "- ダミーの完了条件。",
+      "<!-- specdojo:smoke-targets -->\n<!-- /specdojo:smoke-targets -->",
+    )
+    .replace("| ARC | open |", "| ARC | done |");
+  const target = buildTicket("PJR-CD34").replace("item_status: open", "item_status: review");
+  mkdirSync(join(root, REGISTER_REL, "events"), { recursive: true });
+  for (const [filename, content, id] of [
+    ["pjr-ab12-pipeline-test.md", smoke, "pjr-ab12"],
+    ["pjr-cd34-topic.md", target, "pjr-cd34"],
+  ]) {
+    writeFileSync(join(root, REGISTER_REL, filename), content);
+    const event = buildRegisterEvent({
+      afterContent: content,
+      filename,
+      timeZone: "UTC",
+      action: "add",
+      actor: "SpecDojo",
+      reason: "smoke fixture",
+    });
+    writeFileSync(
+      join(root, REGISTER_REL, "events", `${id}.yaml`),
+      serializeRegisterEvents([event!]),
+    );
+  }
+  const agentsPath = join(root, ".specdojo/agent-members.yaml");
+  writeFileSync(
+    agentsPath,
+    readFileSync(agentsPath, "utf8") +
+      "aliases:\n  - nickname: smoke-alias\n    alias_of: exec-1\n",
+  );
+  git(root, "add", "-A");
+  git(root, "commit", "-m", "prepare smoke fixture");
+}
+
+function smokeArgs(worktreeBase: string): string[] {
+  return [
+    "smoke",
+    "--project",
+    "test",
+    "--register",
+    "PJR-AB12",
+    "--targets",
+    "PJR-CD34",
+    "--executor-by",
+    "smoke-alias",
+    "--reporter-by",
+    "report-1",
+    "--worktree-base",
+    worktreeBase,
+  ];
+}
+
+describe("exec smoke integration", () => {
+  it(
+    "records targets, reopens, runs and integrates with the alias resolved to concrete event actors",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        prepareSmokeFixture(root);
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec(smokeArgs(worktreeBase));
+        expect(process.exitCode ?? 0, output.join("")).toBe(0);
+        const events = readRegisterEventsFromContent(
+          readFileSync(join(root, REGISTER_REL, "events/pjr-ab12.yaml"), "utf8"),
+          "smoke",
+        );
+        expect(events.map((event) => event.action)).toEqual(["add", "reopen", "start", "review"]);
+        expect(events.slice(-2).map((event) => event.actor)).toEqual(["exec-1", "exec-1"]);
+        const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
+        expect(ticket).toContain("PJR-CD34");
+        expect(readSpecdojoFields(ticket).item_status).toBe("review");
+        expect(output.join("")).toContain("Smoke passed:");
+        expect(git(root, "status", "--porcelain")).toBe("");
+        expect(git(root, "log", "--format=%s")).toContain("smoke-targets");
+      });
+    },
+  );
+
+  it("prints every dry-run step without writes, commits, worktrees or agent launches", async () => {
+    await withRepo(async ({ root, worktreeBase }) => {
+      prepareSmokeFixture(root);
+      const before = git(root, "rev-parse", "HEAD");
+      const worktrees = git(root, "worktree", "list", "--porcelain");
+      const output: string[] = [];
+      vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+      await runExec([...smokeArgs(worktreeBase), "--dry-run"]);
+      expect(process.exitCode ?? 0).toBe(0);
+      expect(output.join("")).toContain("[smoke:verify]");
+      expect(output.join("")).toContain("concrete actor exec-1");
+      expect(git(root, "rev-parse", "HEAD")).toBe(before);
+      expect(git(root, "status", "--porcelain")).toBe("");
+      expect(git(root, "worktree", "list", "--porcelain")).toBe(worktrees);
+      expect(readdirSync(worktreeBase)).toEqual([]);
+    });
+  });
+
+  it("stops at target recording and preserves preexisting ticket edits", async () => {
+    await withRepo(async ({ root, worktreeBase }) => {
+      prepareSmokeFixture(root);
+      const path = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+      const dirty = readFileSync(path, "utf8") + "\nUser edit\n";
+      writeFileSync(path, dirty);
+      const head = git(root, "rev-parse", "HEAD");
+      const output: string[] = [];
+      vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+      await runExec(smokeArgs(worktreeBase));
+      expect(process.exitCode).toBe(1);
+      expect(output.join("")).toContain("[smoke:targets] failed:");
+      expect(readFileSync(path, "utf8")).toBe(dirty);
+      expect(git(root, "rev-parse", "HEAD")).toBe(head);
+      expect(readdirSync(worktreeBase)).toEqual([]);
+    });
+  });
+
+  it.each(["target-open", "missing-executor", "missing-list"])(
+    "rejects %s before any lifecycle writes",
+    async (failure) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        prepareSmokeFixture(root);
+        const args = smokeArgs(worktreeBase);
+        if (failure === "target-open") {
+          const path = join(root, REGISTER_REL, "pjr-cd34-topic.md");
+          writeFileSync(
+            path,
+            readFileSync(path, "utf8").replace("item_status: review", "item_status: open"),
+          );
+        } else if (failure === "missing-executor") {
+          args[args.indexOf("smoke-alias")] = "unknown-executor";
+        } else {
+          const path = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+          writeFileSync(
+            path,
+            readFileSync(path, "utf8").replace("<!-- specdojo:smoke-targets -->", ""),
+          );
+        }
+        const head = git(root, "rev-parse", "HEAD");
+        const status = git(root, "status", "--porcelain");
+        const output: string[] = [];
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec(args);
+        expect(process.exitCode).toBe(1);
+        expect(output.join("")).toContain("[smoke:preflight] failed:");
+        expect(git(root, "rev-parse", "HEAD")).toBe(head);
+        expect(git(root, "status", "--porcelain")).toBe(status);
+        expect(readdirSync(worktreeBase)).toEqual([]);
+      });
+    },
+  );
+
+  it(
+    "stops after a failed executor and does not treat older events as a success",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        prepareSmokeFixture(root);
+        const output: string[] = [];
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        const args = smokeArgs(worktreeBase);
+        args[args.indexOf("smoke-alias")] = "exec-rate-limit";
+        await runExec(args);
+        expect(process.exitCode).toBe(1);
+        expect(output.join("")).toContain("[smoke:run] failed:");
+        const ticket = readSpecdojoFields(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        );
+        expect(ticket.item_status).toBe("waiting");
+      });
+    },
+  );
 });
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {

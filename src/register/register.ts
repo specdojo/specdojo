@@ -402,11 +402,12 @@ async function commitRegisterMutation(
   }
 }
 
-async function runRegisterMutationInCurrentWorktree(
+// Throws on failure so composite commands can stop before the next lifecycle step.
+export async function runRegisterMutationInCurrentWorktree(
   command: string,
   opts: RegisterMutationOptions,
   mutate: (context: RegisterMutationContext) => RegisterMutationResult,
-  requireCleanRegister: boolean,
+  requireCleanRegister = false,
 ): Promise<void> {
   const paths = resolveRegisterPaths(opts);
   if (!opts.commit || opts.dryRun) {
