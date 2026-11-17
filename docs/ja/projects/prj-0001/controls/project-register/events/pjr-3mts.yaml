@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_358caaa5ef984a22aaf09b7af2e1a1e7
+- v: 1
+  id: reg_74b5f788d1fd4423a68e15bc8b607efa
+  ts: "2026-11-17T23:28:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分・個票の対応結果・実装（specdojo.openById）の文言と、型と成果物の grade を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: uis の代表の画面仕様（uis-open-document-by-id）を実装の文言と分岐に合わせて書き、uis-rulebook を 74%・uis-sample を 70% に簡潔にした。grade は 3 件とも pass で major なし
+  previous_event_id: reg_eb00878b9b3046938b238ed095048ae6

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-3mts-uis-open-document-by-id
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: BA
   registered_at: "2026-11-17T14:21:19Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-17T23:28:50Z"
+  conclusion: uis の代表の画面仕様（uis-open-document-by-id）を実装の文言と分岐に合わせて書き、uis-rulebook を 74%・uis-sample を 70% に簡潔にした。grade は 3 件とも pass で major なし
   derived_from:
     - PJR-MNM5
   commit_type: docs
