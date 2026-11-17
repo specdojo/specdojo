@@ -9,6 +9,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import * as path from "node:path";
+import { writeDefaultIndexPages } from "./default-index-pages.js";
 
 // package 参照中（eject していない）の kata は利用リポジトリの docs/ 配下に存在しない。
 // VitePress の srcDir は 1 つしか指定できないため、ビルド前に利用側 docs と package 側文書を
@@ -156,6 +157,8 @@ export function stageBundledKata(workspaceRoot: string): KataStagingResult {
     }
   }
 
+  const defaultPages = writeDefaultIndexPages(workspaceRoot, stagingRoot);
+
   // 利用リポジトリの .gitignore を書き換えずに Git 管理対象から外す。
   writeFileSync(
     path.join(stagingRoot, ".gitignore"),
@@ -168,9 +171,14 @@ export function stageBundledKata(workspaceRoot: string): KataStagingResult {
     if (withinDocs === "" || withinDocs.startsWith("..") || path.isAbsolute(withinDocs)) return;
     const destination = path.join(stagingRoot, relativePath);
     const source = existsSync(file) ? file : bundledFiles.get(relativePath);
+    const defaultPage = defaultPages.get(relativePath);
     if (source) {
       mkdirSync(path.dirname(destination), { recursive: true });
       copyFileSync(source, destination);
+    } else if (defaultPage !== undefined) {
+      // 利用側の index.md を消したときは、起動時に用意した入口のページへ戻す。
+      mkdirSync(path.dirname(destination), { recursive: true });
+      writeFileSync(destination, defaultPage, "utf8");
     } else {
       rmSync(destination, { force: true });
     }
