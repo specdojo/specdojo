@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-11-17T12:54:58Z"
@@ -52,7 +52,21 @@ specdojo:
 
 ## 5. 対応結果
 
--
+### 5.1. 実施内容と判断
+
+- `src/exec/run/change-scope.ts` で、項目固有の本文から「変えない」「変更しない」「変えず」などで終わる節を除いてパスを推定する。句点・改行・表のセルで区切り、読点では述語の後だけ区切ることで、設定の列挙と同じ文の変更対象を区別した。
+- ファイル名による一律除外はしない。同じパスを別の条件で変更すると書いた場合や、明示した `targets` / `target_path` は範囲に残す。候補がなくなった場合は既存の不明範囲の扱いを使う。保護された設定の変更案はない。
+- `tests/src/exec/run/change-scope.test.ts` に、保護設定と CHANGELOG の禁止文を共有する独立項目の並行実行・先行失敗後の起動、否定表現の違い、同じ文の肯定対象、明示対象の保持、同じ関数を変更する項目の統合待ちの回帰テストを追加した。既存の ED0K・1GCD 型のテストは維持した。
+- [[specdojo:exec-operation-guide|exec運用ガイド]] に、否定された本文の節を除外する規則と、明示対象を残す規則を追記した。
+
+### 5.2. 検証と申し送り
+
+- executor の Prettier 整形、履歴リンク検査、カタログ検査、登録簿の生成検査は成功した。カタログ検査では今回未変更のカタログに re-export 参照・未作成文書の警告が出たが、終了コードは 0 だった。型検査・TypeScript/Markdown 等の lint・schema 検査・ユニット／統合テストは指定された親 runner の検証に委ね、重複実行していない。
+- 統合後は [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] に従い、PJR-JSEY の実 agent CLI による動作確認の対象に PJR-9JN6 を含める。実 agent の利用枠を消費するため executor では起動せず、人の確認へ申し送る。
+
+### 5.3. CHANGELOG に書く事項
+
+- 不具合修正: 並列の exec run で、完了条件の「保護された設定は変えない」「CHANGELOG.md は変えず」という文を変更範囲に含め、無関係な項目を順番待ちや未統合エラーにする誤判定を修正。
 
 ## 6. 関連ドキュメント
 

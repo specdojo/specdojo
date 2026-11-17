@@ -107,6 +107,33 @@ function scopeInputText(text: string): string {
   return parts.join("\n");
 }
 
+// Exclude only prose clauses that explicitly say not to edit their paths. Do not blacklist
+// protected filenames: a positive mention elsewhere or an explicit target must still reserve
+// them. Keep inline code intact so punctuation in paths cannot split a clause.
+function scopeChangeText(text: string): string {
+  const unchanged =
+    /(?:変え(?:ない|ず)|(?:変更|編集|更新|修正)(?:し(?:ない|ません|なく)|せず)|触ら(?:ない|ず))(?:こと)?(?:が)?(?:\s*[（(][^（）()]*[）)])?\s*$/;
+  const continuedAction = /(?:変更|編集|更新|修正|追加|削除)(?:し|して|する|します)(?:が)?\s*$/;
+  const parts: string[] = [];
+  let clause = "";
+  const flush = () => {
+    if (!unchanged.test(clause)) parts.push(clause);
+    clause = "";
+  };
+  for (const [token] of text.matchAll(/`[^`\n]+`|[。;；\n|、,]|[^`。;；\n|、,]+|`/g)) {
+    if (/^[。;；\n|]$/.test(token)) {
+      flush();
+    } else if (/^[、,]$/.test(token) && (unchanged.test(clause) || continuedAction.test(clause))) {
+      // Split after a predicate, but keep comma-separated path lists with their predicate.
+      flush();
+    } else {
+      clause += token;
+    }
+  }
+  flush();
+  return parts.join("\n");
+}
+
 export function inferChangeScope(params: {
   targets?: readonly string[];
   targetPath?: string;
@@ -189,7 +216,7 @@ export function inferChangeScope(params: {
   for (const path of targetReferenceDirsForApproach(params.approach)) add(path);
   // Backticks support root files; prose supports src/foo.ts.
   const texts = typeof params.text === "string" ? [params.text] : (params.text ?? []);
-  const body = texts.map(scopeInputText).join("\n");
+  const body = texts.map((text) => scopeChangeText(scopeInputText(text))).join("\n");
   const addTextPath = (path: string) => {
     // Per-item bookkeeping is already serialized by lifecycle and same-item locks. Its presence
     // in a generated plan must not make an otherwise unknown implementation scope look known.
