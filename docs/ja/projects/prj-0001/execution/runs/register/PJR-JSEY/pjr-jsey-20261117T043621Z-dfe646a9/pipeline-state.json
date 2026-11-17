@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-JSEY",
   "run_id": "pjr-jsey-20261117T043621Z-dfe646a9",
-  "updated_at": "2026-11-17T04:40:38.566Z",
+  "updated_at": "2026-11-17T04:41:02.231Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-JSEY/pjr-jsey-20261117T043621Z-dfe646a9/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-11-17T04:40:38.566Z",
-      "completed_at": null,
+      "completed_at": "2026-11-17T04:41:02.231Z",
       "artifact_ref": null
     }
   },
