@@ -4755,3 +4755,19 @@
       from: V141・EWZG・30SA・1Y1M・KVWH・97KE の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された
       to: NHT7・DGRZ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。片付けはロックの外で行われた
   previous_event_id: reg_8366173a8c314595b3b67d9addb0951d
+- v: 1
+  id: reg_f5f86969f8e949edb40326484c232588
+  ts: "2026-11-17T03:02:41Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: A61W・MJ8V・V0FQ・DH8E の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-11-16"
+      to: "-"
+  previous_event_id: reg_df26e2bad1d94a7abad7105e170099f9

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-11-16T14:07:15Z"
   conclusion: NHT7・DGRZ の統合後に sonnet-executor で start から review まで通り、actor に実体名が記録された。片付けはロックの外で行われた
   autopilot: approved
 ---
