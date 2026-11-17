@@ -37,6 +37,11 @@ rulebook・sample・template を初期整備し、正本と環境別のラッパ
 - 実装の方針（使う言語・ライブラリ）は技術スタックの定義（tsd）と設計の段の文書に任せ、この型では扱わないことを書いている。
 - sample は共通サンプル文脈（駄菓子屋）の言語で 1 つ作り、ほかの言語・枠組み（Next.js、Unity の C# など）でも同じ型から作れる。
 - 型の grade（`grade run --target kata`）は orchestrator が統合の後に流す。executor は grade を実行せず、作業内容の「型を grade する」の行を open のまま残し、理由をメモに書く。grade を流せないことを未完了の理由にしない（2026-11-17、1 回目の実行が grade を流せず止まったため改めた）。
+- 2 回目の実行（2026-11-17）: orchestrator の型の grade（run `grade-981v-20261117`）で、rulebook が needs-work（score 78）、sample と template は pass だった。次を直す。
+  - F003・F009（major）: Frontmatter の表で `specdojo.rulebook` を「推奨」としているのを「必須」にし、値を `specdojo:cdr-rulebook` と明示する。ドキュメントメタ情報標準と `deliverable-frontmatter.schema.yaml` に合わせる。
+  - F010: rulebook の禁止事項の方針と `cdr-sample` の禁止事項・導入文の書き方を合わせる。F011: 「Next.js の上の TypeScript」を、言語に枠組みの規則を足す関係が伝わる表現にする。
+  - ほかの minor（F001・F002・F004〜F008・F012・F013）は、直すかどうかを executor が決め、理由を個票の対応結果に書く。章や確認項目を足して文書を大きくするより、既存の記載の言い換え・統合で済むものを優先する（PJR-0T83）。
+  - 型の grade は今回も orchestrator が統合の後に流す。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書いている。pipeline では報告の `handoff` にも書く。
 - `npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` と親の検証が通っている。
 
