@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-br-task-selection-strategy-050",
   "run_id": "T-KATA-SLIM-br-task-selection-strategy-050-20261117T195513Z-7f3d6737",
-  "updated_at": "2026-11-17T20:22:48.930Z",
+  "updated_at": "2026-11-17T20:23:15.279Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-br-task-selection-strategy-050/T-KATA-SLIM-br-task-selection-strategy-050-20261117T195513Z-7f3d6737/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-17T20:22:48.930Z",
-      "completed_at": null,
+      "completed_at": "2026-11-17T20:23:15.279Z",
       "artifact_ref": null
     }
   },
