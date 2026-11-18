@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-sysd-agent-settings-040",
+  "run_id": "T-KATA-SLIM-2-sysd-agent-settings-040-20261118T075225Z-b6f63a7f",
+  "updated_at": "2026-11-18T08:21:43.422Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T07:55:18.033Z",
+      "completed_at": "2026-11-18T08:00:26.890Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-sysd-agent-settings-040/T-KATA-SLIM-2-sysd-agent-settings-040-20261118T075225Z-b6f63a7f/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T08:21:26.689Z",
+      "completed_at": "2026-11-18T08:21:36.483Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-sysd-agent-settings-040/T-KATA-SLIM-2-sysd-agent-settings-040-20261118T075225Z-b6f63a7f/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T08:21:43.422Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-sysd-agent-settings-040/T-KATA-SLIM-2-sysd-agent-settings-040-20261118T075225Z-b6f63a7f/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-sysd-agent-settings-040/T-KATA-SLIM-2-sysd-agent-settings-040-20261118T075225Z-b6f63a7f/result.md"
+  }
+}
