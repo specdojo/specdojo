@@ -1,0 +1,27 @@
+`nfr-performance-rulebook` から各文書に共通の運用の記述を外し、共通の正本を参照する形にしました。変更したのはこの rulebook だけで、成果物本体・sample・recipe・template には手を入れていません。prettier と markdownlint はどちらも問題ありませんでした。`npm run lint:md` などは実行しておらず、この後 runner が実行します。
+
+大きさは空白と表の区切り行を除いて 3,401 字 → 2,719 字（79.9%）で、目安の 8 割以下に収まりました。
+
+**外したもの・置き換えたもの**
+- 全体方針に「共通の運用」を 1 項目だけ足しました。役割はメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準（`[[specdojo:document-metadata-standard]]`）を参照します。文書の整形・lint は性能の検証に含めない、と 1 文で書きました。
+- Frontmatter の章で `title` と `status` の値を並べた表を外し、正本（メタ情報標準と schema）への参照と型固有の値だけにしました。相対パスの Markdown リンクは wikilink とパス表記に変えています。
+- 用語の表を外したため、第 2 章の名前を「位置づけ」に変えました（rulebook 側の章名で、成果物の章には影響しません）。RPS とピーク時の説明は「適用範囲・負荷条件」の記述ガイドへ移しました。
+- サンプル章は rulebook の執筆標準で削除が禁じられているため残し、最小例に縮めました。Frontmatter の例は古い形式で `title` を含んでいたので、`specdojo:` 配下の形式に直しています。
+
+**残したもの**
+性能固有の判断基準、本文の見出し 1〜5 の名前と必須の区分、型固有の禁止事項 3 行はそのままです。
+
+**finding への対応**
+- F001・F002（未決事項の項目がない）: 本文構成に条件付きの章「6. 未決事項」を足し、記述ガイドに論点と影響の書き方と良い例・悪い例を書きました。課題管理への転記は共通の運用の参照で扱います。既存の見出し 1〜5 の名前と区分は変えていません。
+- F004（`ready` にする条件がない）: 昇格の条件は共通の運用の参照に任せました。性能の業務上の合格条件は、「測定・検証方法」で要件 ID ごとに書くよう求めています。
+- F003（sample が本文構成に従っていない）: sample はこの段で直せないため、未解消です。
+
+**未対応（引き継ぎ）**
+- sample を直す必要があります。見出しを本文構成の 1〜6 に揃えること、題材を共通サンプル文脈（駄菓子屋）に統一すること、H1 の Markdown リンクと本文の `../rulebooks/` 参照を外すこと、の 3 点です。
+- sample が整ったら、rulebook のサンプル章は外出しの対象にできます。
+- recipe・template は `undecided` のままで、要否の判断は後続に回します。
+- 共通の正本に足す記述はありません。メタ情報標準の「成果物の値制約」と「文書の改訂・廃止とライフサイクル変更管理」で外した記述を賄えます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-performance-rulebook から共通の運用の記述（Frontmatter 表の `title`・`status` の値、用語の表、相対パスの Markdown リンク）を外し、全体方針に「共通の運用」を 1 項目置いてドキュメントメタ情報標準を参照する形にした。F001・F002 には条件付きの章「未決事項」を足して対応した。サンプル章は最小例に縮め、Frontmatter の例を `specdojo:` 配下の形式に直した。空白と表の区切り行を除く文字数は 3,401 字から 2,719 字（79.9%）。既存の章 1〜5 の名前と必須の区分は変えていない。F003 は sample の修正がこの段の対象外のため未解消。","handoff":["文字数（空白・改行と表の区切り行を除く）: 改訂前 3,401 字、改訂後 2,719 字（79.9%）。","章の変更: rulebook 第 2 章を「位置づけと用語定義（必要に応じて）」から「位置づけ」に変え、用語の表を外した（RPS とピーク時の説明は記述ガイド「適用範囲・負荷条件」へ移した）。本文構成には条件付きの章 6「未決事項」を足した（F001・F002 への対応。空の章を作らせないため条件付き）。既存の章 1〜5 の名前と必須の区分は変えていない。","サンプル章: rulebook-authoring-standard が個別の改訂での削除を禁じているため残し、形式の輪郭を示す最小例（性能要件一覧と測定・検証方法の各 2 行）に縮めた。旧形式の Frontmatter の例（トップレベルの `title`）は `specdojo:` 配下の形式に直した。","F003 は未解消（変更案）: nfr-performance-sample の見出しを本文構成の 1〜6 に揃え、題材を共通サンプル文脈（駄菓子屋）に統一し、H1 の Markdown リンクと本文の `../rulebooks/` 参照を外す。sample が整ったら rulebook のサンプル章は外出しの対象にできる。","F004: `ready` への昇格条件は共通の運用（ドキュメントメタ情報標準）の参照で扱う。業務上の合格条件は「測定・検証方法」で要件 ID ごとに求めるよう記述ガイドに書いた。","共通の正本への追記は不要と判断した（ドキュメントメタ情報標準の「成果物の値制約」と「文書の改訂・廃止とライフサイクル変更管理」で賄える）。recipe・template は `undecided` のままで変えておらず、要否の判断は後続に回す。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md だけで、plan・result・個票を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更した *.yaml / *.yml ファイルがない"}]}
+</specdojo_executor_evidence>
