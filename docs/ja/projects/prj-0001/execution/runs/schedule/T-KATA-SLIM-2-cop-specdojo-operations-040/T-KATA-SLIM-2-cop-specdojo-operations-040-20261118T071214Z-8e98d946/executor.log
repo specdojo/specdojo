@@ -1,0 +1,42 @@
+`cop-rulebook` から運用の記述を外し、共通の正本を参照する形に直しました。大きさは 5,985 字から 3,325 字（55.6%）で、目安の 8 割以下に収まっています。変更したのは `docs/ja/specdojo/rulebooks/cop-rulebook.md` だけで、成果物本体・sample・recipe・template には触れていません。
+
+**外した記述**
+- 全体方針の「運用方針」の段落と、Frontmatter の項目表。
+- 埋め込みサンプルの大部分（Frontmatter の例と当日タイムライン・判定ポイントの抜粋だけを残しました）。
+- 共通規約と重なる禁止事項（関連ドキュメントの省略など）。
+
+**残した記述**
+- 10 章の必須構成と章名。既存の成果物との対応を保つため変えていません。
+- 各章の標準の列と受入条件、型固有の禁止事項。
+- 良い例・悪い例。
+
+**参照の形**
+- 全体方針に「共通の運用」を 1 項目だけ置き、役割はメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照する形にしました。
+- 構成は、先に同じ直し方をした `cop-index-rulebook` に揃えています。
+
+**rulebook 自身の章名の変更**
+rulebook 自身の第 5 章を「本文構成（標準テンプレ）」から「本文要件」に変えました。rulebook 作成標準の章名に合わせるためです。成果物の見出しは変わりません。
+
+**finding への対応**
+- 直した（F006・F007・F011）: Frontmatter を `specdojo:` 配下に移し、`title` を外して `rulebook` を必須にしました。
+- 型固有の内容として直した:
+  - F001: 未決の論点を `_UNDECIDED_` で書く。
+  - F002: 内部限定の連絡先は「担当者/連絡系統」の章だけに書き、周知に混ぜない。
+  - F003: 実施者はメンバー定義の役割で書く。
+  - F004: 他チームの作業や後続予定への依存を実施条件に書く。
+  - F010: 判定条件は照合対象・閾値・証跡で書く。これは禁止事項にも 1 行足しました。
+- 共通の運用として参照に置き換えた（F005・F008・F013・F014）: 登録簿への引き継ぎ、`ready` の条件、改訂と変更の影響は、ドキュメントメタ情報標準で扱います。
+- 対象外とした（F009）: 文書の lint・検証はリポジトリの検証で扱う方針のため、rulebook には入れていません。
+- 未解消（F012）: `cop-sample` が 10 章の構成に沿っていない問題は、この段で sample を変えられないため残っています。
+
+**検証**
+- `npx prettier --write` で整形は通りました。
+- lint などの検査は、終了後に親の runner が実行します。
+
+**result の記録で注意する点**
+- ここで判定点を挙げた `cop-specdojo-operations` は、指定のパスに存在しません。前後で比べる成果物はありません。
+- 共通の正本に足すべき記述はありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`cop-rulebook` から運用の記述（運用方針の段落・Frontmatter の項目表・大きな埋め込みサンプル・共通規約と同じ禁止事項）を外し、全体方針の「共通の運用」でドキュメントメタ情報標準を参照する形にした。Frontmatter は `specdojo:` 名前空間・`rulebook` 必須・`title` なしへ直した（F006/F007/F011）。型固有の finding（F001/F002/F003/F004/F010）は本文要件と記述ガイドに反映した。字数は空白と表の区切り行を除いて 5,985 字から 3,325 字（55.6%）。","handoff":["変更ファイル: docs/ja/specdojo/rulebooks/cop-rulebook.md のみ。成果物本体・sample・recipe・template は変更していない。","大きさ（空白と表の区切り行を除く文字数）: 前 5,985 字、後 3,325 字（55.6%）。","rulebook 自身の第 5 章を「本文構成（標準テンプレ）」から「本文要件」に改名した。理由は rulebook-authoring-standard の標準章名に合わせ、同じ段で直した `cop-index-rulebook` と揃えるため。成果物の 10 章の章名と必須の区分（全章必須）は変えていない。","finding の扱い: F006/F007/F011 は Frontmatter を `specdojo.type: operations`・`specdojo.rulebook: specdojo:cop-rulebook`・`title` なしへ直して解消した。F001 は概要に `_UNDECIDED_` の論点と影響、F002 は内部限定の連絡先を「担当者/連絡系統」に閉じる判断基準と禁止事項、F003 は実施者をメンバー定義の役割で書く要件、F004 は実施条件に他チーム・後続予定への依存、F010 は判定条件を照合対象・閾値・証跡で書く要件と禁止事項を足して対応した。F005（登録簿への転記）・F008（変更時の追従）・F013（`ready` の条件）・F014（改訂・更新責任）は共通の運用として、ドキュメントメタ情報標準の「文書の改訂・廃止とライフサイクル変更管理」と「成果物の値制約」への参照に置き換えた。F009（lint・検証コマンド）は、文書品質の検査を業務の受入条件に入れない方針により rulebook に入れなかった。","F012 は未解消: `specdojo:cop-sample` は「目的と適用範囲」など独自の 5 章で、本 rulebook の 10 章の構成に沿っていない。変更案: cop-sample を駄菓子屋の販売管理システムの切替を例に、10 章（概要（`<term>`）〜関連ドキュメント）と各表の標準の列で作り直す。判定条件は照合対象・閾値で書き、共通の運用の参照文は書かない。作り直した後に、rulebook の「サンプル（最小・整合版）」の章（経過措置）を外すかを判断する。","rulebook の「サンプル」の章は、rulebook-authoring-standard の「個別の改訂で先行して削除しない」に従い、Frontmatter の例と当日タイムライン・判定ポイントの最小例だけを残した。","根拠: pjr-8s4t の「他の型へ広げるときの一覧」、sld-rulebook と cop-index-rulebook（改訂済み）、rulebook-authoring-standard、document-metadata-standard、deliverable-frontmatter.schema.yaml。plan の根拠成果物 `docs/ja/projects/prj-0001/060-migration-planning/cop-specdojo-operations.md` は存在せず、成果物との照合はできなかった。","共通の正本への追記は不要と判断した（ドキュメントメタ情報標準で外した記述を賄える）。保護された設定の変更は不要。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/cop-rulebook.md","status":"passed","summary":"整形が成功した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは rulebook だけで、plan・result・pjr の個票は変更していないため"}]}
+</specdojo_executor_evidence>
