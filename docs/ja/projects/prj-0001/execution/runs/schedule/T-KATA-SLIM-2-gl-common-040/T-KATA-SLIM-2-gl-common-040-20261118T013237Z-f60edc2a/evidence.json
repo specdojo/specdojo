@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-gl-common-040",
+  "run_id": "T-KATA-SLIM-2-gl-common-040-20261118T013237Z-f60edc2a",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T02:53:11.335Z",
+    "completed_at": "2026-11-18T03:01:09.371Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                      |   4 +-\n docs/ja/specdojo/rulebooks/gl-rulebook.md          | 112 ++++++++++-----------\n 2 files changed, 54 insertions(+), 62 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "passed",
+      "summary": "対象rulebookを整形。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "passed",
+      "summary": "整形済みであることを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "文字数が変更前の8割以下、全見出し・17項目の必須/任意・frontmatterの維持、共通運用1項目、includes対象なしを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別YAML schema検査は適用外。",
+      "reason": "executorが変更したのはMarkdown rulebookのみで、YAML/YML成果物の変更はない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "カタログ検査は適用外。",
+      "reason": "executorによる変更はdocs/ja/specdojo/rulebooks/配下のみ。docs/ja/projects/配下の既存差分は再開前のrunner管理ファイルであり、今回は編集していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は適用外。",
+      "reason": "executorはPJR個票や既存plan/resultなどの履歴蓄積ファイルを変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5319 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5319 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-gl-common-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/job-worktree.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: \n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-gl-common-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-gl-common-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-gl-common-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 1024ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "gl-common",
+      "status": "unchanged",
+      "reason": "計画はgl-commonを根拠として紐づくrulebookのみを編集し、成果物本体は変更しないと指定しているため。"
+    },
+    {
+      "target": "specdojo:gl-rulebook",
+      "status": "changed",
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "gl-rulebook の共通運用を参照へ集約。用語固有の判断・例・受入条件を維持し、分量を79.82%へ縮減した。",
+  "completion_status": "complete",
+  "handoff": [
+    "reporter 向け実施内容・変更ファイル: 編集したのは docs/ja/specdojo/rulebooks/gl-rulebook.md のみ。役割・承認・改廃・未決事項の引き継ぎを全体方針の「共通の運用」1項目へ集約した。章名、メタ情報6項目・用語11項目の必須/任意、frontmatter は変更なし。includes による記法 rulebook はない。gl-common、sample、recipe、template、grade サイドカー、既存 result は編集していない。",
+    "大きさ: ファイル全体から空白・改行を除いた文字数は5,016字→4,004字、79.82%（20.18%削減）。sld試行と同様に表の区切り行も除く測定では4,877字→3,865字、79.25%。result に前後の文字数と測定方法を記録する。",
+    "進め方と実践の型の適用に記録する根拠: [[specdojo:rulebook-authoring-standard|Rulebook記述標準]]、[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、[[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] の各finding該当観点、[[specdojo:ryu-guide|進め方ガイド]]、[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|sld試行]]、[[specdojo:sld-rulebook|SLD作成ルール]] を確認。適用実態は [[gl-common|用語集（共通）]]、[[gl-planning|用語集（計画）]]、[[specdojo:gl-sample|用語集の完成例]]、[[prj-0001:dct-glossary|用語集カタログ]] と照合した。gl schema、参照検査実装、[[prj-0001:pjr-cf15-glossary-term-reference-check|用語参照検査の対応記録]] も確認した。",
+    "findingへの対応: source=grade は execution/grade/results/specdojo.gl-rulebook.yaml のF001〜F010を本文anchorと照合した。F001は候補語を業務の利用者・確認者と用例・根拠で照合し、未合意時の論点・影響を残す条件を追加。F004は必須項目の二重説明を削除。F006はschema・参照検査のコマンド、modeline、成功条件とBDD・BR参照を検査しない限界を明記。F007は翻訳を概念重複禁止の例外とし、別IDの言語接尾辞と原語への参照を定義。gl-common-080のcondense resultも確認したが、記録のcauseはdocumentでありKata原因の追加記録はない。",
+    "F002・F003・F005・F009・F010の扱い: 今回の計画の削除方針を優先し、Role code別の責務、承認・ready昇格、登録簿転送、改廃の共通手順は再掲せず正本参照とした。gl固有の追従対象としてBDD・BR、画面・CLI、実装、テスト・受入条件、生成表示ページを残し、YAMLからの再生成と一致確認を明記した。各findingのRole codeや共通手順の直接追記要求まで解消したとは扱わず、この方針と次の共通標準変更案をresultへ記録する。",
+    "共通正本の変更案（今回は未編集）: rulebook-authoring-standard の「各rulebookは具体的な追従対象と役割分担を定義する」を、追従対象は各型、役割割り当ては適用先メンバー定義、共通責務はdocument-metadata-standard参照とする形へ整合させる。document-metadata-standardでは、改廃時に限られている未決事項の引き継ぎを初回作成・通常更新にも適用すること、ready判断で構造・参照検査、業務内容、未確定ラベル・候補事項の処置、人間の確認をどう扱うかを共通条件として明記する案を次の標準見直しで検討する。",
+    "F008は未解消として申し送り: gl-sample の接頭辞のないIDに既存確定・参照済みの例外を適用できる根拠は確認できないため、rulebookの新規採番規則は維持した。sampleは今回の編集対象外。次のsample見直しでtm-reorder-point→tm-inventory-reorder-point、tm-standard-product→tm-common-standard-product、tm-safety-stock→tm-inventory-safety-stock、tm-accounts-receivable→tm-sales-accounts-receivable等の採番案を検討し、分類用語・店主のIDを含めcategory・relatedTermsと外部参照も一括照合する。確定・参照済みの証拠があるIDは維持を優先する。",
+    "親runnerが指定済みのlint・schema・型検査・単体/統合テストを実行するため、executorでは重複実行していない。CHANGELOG文案: 用語集のrulebookから共通運用の記述を外して正本参照へ集約し、候補語の判断、翻訳ID、参照検査の範囲を明確にしました。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-gl-common-040/T-KATA-SLIM-2-gl-common-040-20261118T013237Z-f60edc2a/executor.log",
+      "bytes": 6665,
+      "truncated": false
+    }
+  ]
+}
