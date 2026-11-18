@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-ifx-index-040",
+  "run_id": "T-KATA-SLIM-2-ifx-index-040-20261118T081316Z-aa0079d7",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T08:16:18.218Z",
+    "completed_at": "2026-11-18T08:20:13.249Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md | 83 +++++++++---------------\n 1 file changed, 30 insertions(+), 53 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "passed",
+      "summary": "変更した rulebook の整形検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "個別 YAML schema 検査は対象外。",
+      "reason": "変更は Markdown rulebook のみで、YAML ファイルを変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:catalog",
+      "status": "not_applicable",
+      "summary": "成果物カタログ検査は対象外。",
+      "reason": "executor の変更は docs/ja/specdojo/rulebooks/ 配下のみで、docs/ja/projects/ 配下の成果物変更がない。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴リンク検査は対象外。",
+      "reason": "登録簿個票および既存の plan/result を変更していない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5391 file(s), 130 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 95 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5391 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-ifx-index-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-ifx-index-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-ifx-index-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-ifx-index-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 861ms\n[parent-validation:test-file] {\"event\":\"end\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "ifx-index rulebook の共通運用を正本への参照に整理しました。型固有の判断基準と必須領域を維持し、空白除外で7,388字から5,432字（73.52%）へ縮小しました。整形・差分検査は成功しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "result 記載用: 変更ファイルは docs/ja/specdojo/rulebooks/ifx-index-rulebook.md のみ。全体方針に「共通の運用」を1項目追加し、役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準へ集約。役割分担・台帳登録手順・共通禁止事項を削り、業務の受入確認から整形検査を外した。成果物本体・recipe・template・sample・result・grade サイドカーは変更していない。",
+    "判断根拠: sld-rulebook、PJR-8S4T「他の型へ広げるときの一覧」、rulebook-authoring-standard、document-metadata-standard、`vp-arc-conciseness`、対象 YAML と対応 schema、宣言された recipe・template・sample、対象 rulebook と成果物の grade result を確認。連携単位・方向・方式・形式・発生条件・異常時判断、IF ごとの確認者と合意対象、未決論点と影響、表示ページの固有要件を維持した。",
+    "result 記載用: 空白（改行を含む）を除く全文文字数は7,388字→5,432字、比率73.52%。参考として表の区切り行も除く場合は6,682字→5,127字、76.73%。本文要件の7領域と必須区分、frontmatter は維持。第2章のみ「位置づけと用語定義」から「位置づけ」へ改名した。本文要件の言い直しとなる用語表を削り、境界の定義と文書間の位置づけを短い段落にまとめたため。その他の章名は維持。`draft`・`ready`・`deprecated` の値列挙は、rulebook 記述標準の schema enum 網羅要件に従い残した。frontmatter の `includes` はなく、同時に編集する記法 rulebook はない。",
+    "共通正本への変更案（未実施）: document-metadata-standard は `ready` 昇格の主体と改訂・廃止の承認を定めているが、一般の文書公開可否の判断者・公開対象・公開範囲の記録要件は明記していない。公開判断と文書成熟度を区別し、適用先の責任者と承認記録に接続する共通規定を追加する案を result に残す。また未決事項の登録簿への引き継ぎ規定は改訂・廃止に限定されているため、初回作成時にも適用する案を記録する。",
+    "関連する型への変更案（未実施）: ifx-index-recipe の作成手順・メタ情報・引き継ぎ・検証・レビュー観点、template の冒頭と各 IF のコメント、sample の役割・PO 承認・末尾の Schedule/PJR 登録手順を、改訂 rulebook に合わせて整理する。IF 固有の確認者・合意対象、論点・影響・保留条件は残す。矛盾する共通運用の要求は本タスクの指示と改訂 rulebook を正とした。親 runner 担当の lint・schema・test・typecheck は重複実行していない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-index-040/T-KATA-SLIM-2-ifx-index-040-20261118T081316Z-aa0079d7/executor.log",
+      "bytes": 4217,
+      "truncated": false
+    }
+  ]
+}
