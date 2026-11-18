@@ -1,0 +1,38 @@
+`nfr-index-rulebook` を改訂しました。共通の運用の記述を外して正本への参照に置き換え、大きさは目安の 8 割以下に収めています。finding F002 は rulebook 内で直しました。F001 と F003 は sample 側の問題で、sample はこの段では変更できないため、変更案として申し送ります。
+
+**変更ファイル**: `docs/ja/specdojo/rulebooks/nfr-index-rulebook.md` だけです。成果物本体、sample、recipe、template は変えていません。対象の成果物 `docs/ja/product/060-non-functional-requirements/nfr-index.md` はまだ作られていませんでした。
+
+**外した記述**
+- 用語の表（2.2）。位置づけの言い直しのため、章名を「位置づけと用語定義」から「位置づけ」に変えました。
+- 推奨 Frontmatter の表。`title` 行が markdown 規約に反し、ほかの行は正本の再掲だったため、型固有の値だけを箇条書きで残しました。
+- 文書 ID の自己言及、`supersedes` の一般説明、本文構成の補足と記述ガイドの重複。
+- 記述ガイド「変更の入口」の完了条件にあった「リンク有効」。文書品質の検査にあたるため、業務の完了条件（重複なく移す、検証導線を付け替える）に置き換えました。
+
+**足した・残した記述**
+- 全体方針に「共通の運用」を 1 項目置き、役割はメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照する形にしました。
+- 型固有の判断（8 カテゴリ固定、分冊が正本、導線がなければ `（なし）`）と禁止事項 4 行は残しました。
+- 本文要件の表に「受入条件」列を足し、カテゴリ一覧の良い例・悪い例を足しました。
+- 章名と必須の区分は変えていません。
+
+**サンプル章（F002 への対応）**
+- 最小例を `specdojo:` 名前空間の frontmatter に直し、欠けていた見出し「4. 変更の入口」「5. 関連ドキュメント導線」を加えて、5 章すべてを含む形にしました。
+- 表の行は 2 行に絞り、「8カテゴリすべてを記載する」と注記しています。
+- 分冊の参照先は、誤っていた `docs/ja/specdojo/nfr-*.md` をファイル名だけの表記に改めました。
+
+**大きさ**（sld の試行と同じく、空白と表の区切り行を除いて数えた）
+
+| 文書 | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| `nfr-index-rulebook`（区切り行を除く） | 3,609 字 | 2,865 字 | 79.4% |
+| 同（区切り行を含む） | 4,021 字 | 3,202 字 | 79.6% |
+
+**検証**: Prettier と markdownlint は通りました。そのほかの lint・schema・テストは、この後の親 runner の実行結果を正とします。
+
+**申し送り**
+- `nfr-index-sample` は rulebook の 5 章構成に沿っておらず、見出しと H1 に Markdown リンクもあります。5 章構成の完成例へ書き直す必要があります（F001・F003）。書き直し後は、rulebook のサンプル章を外出しする候補になります。
+- recipe と template は `undecided` のため、合わせて直すものはありません。
+- 共通の正本へ足す記述はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-index-rulebook から共通の運用の記述（用語の表、title を含む Frontmatter の表、正本の再掲、文書品質の完了条件）を外し、全体方針に「共通の運用」を 1 項目置いた。本文要件に受入条件の列、記述ガイドに良い例・悪い例を足した。サンプル章は specdojo 名前空間に直し、5 章すべてを含む最小例にした（F002 を解消）。章名と必須の区分は変えていない。空白と表の区切り行を除いた文字数は 3,609 字から 2,865 字（79.4%）、区切り行を含めると 4,021 字から 3,202 字（79.6%）。F001 と F003 は sample 側の問題のため、変更案として申し送る。","handoff":["F001・F003（未解消、sample 側の問題）: `nfr-index-sample` は rulebook の 5 章構成（概要〜関連ドキュメント導線）に沿っておらず、H1 と表に Markdown リンクがある。この段では sample を変更できないため、5 章構成の完成例へ書き直すことを変更案とする。書き直し後は、rulebook のサンプル章を外出しする候補になる。","F002（解消）: rulebook のサンプル章を、見出し 1〜5 をすべて含む最小例にした。分冊の参照先は、誤っていた `docs/ja/specdojo/nfr-*.md` をファイル名だけの表記に改めた。","章名の変更: 第 2 章を「位置づけと用語定義」から「位置づけ」に変えた。用語の表が位置づけの言い直しで、rulebook 作成標準の用語定義の省略条件に当たるため。成果物側の章名と必須の区分は変えていない。","大きさ: 空白と表の区切り行を除いて 3,609 字から 2,865 字（79.4%）、区切り行を含めて 4,021 字から 3,202 字（79.6%）。","recipe と template は `undecided` で変更対象がない。共通の正本（ドキュメントメタ情報標準）へ足す記述もない。対象の成果物 `nfr-index.md` はまだ作られていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/nfr-index-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-index-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更は rulebook だけで、plan・result・個票を変更していないため"}]}
+</specdojo_executor_evidence>
