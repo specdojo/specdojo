@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-bac-init-060",
   "run_id": "T-KATA-SLIM-2-bac-init-060-20261118T161548Z-152fdaeb",
-  "updated_at": "2026-11-18T16:43:33.376Z",
+  "updated_at": "2026-11-18T16:43:58.334Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-bac-init-060/T-KATA-SLIM-2-bac-init-060-20261118T161548Z-152fdaeb/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T16:43:33.376Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T16:43:58.334Z",
       "artifact_ref": null
     }
   },
