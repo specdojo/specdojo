@@ -30,13 +30,22 @@ npm audit の high 15 件を解消する。配る依存（tinyglobby・fdir・pi
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 配る依存（`npm audit --omit=dev` の対象）の high と moderate を解消する直し方を決める。依存ごとに、上げる版と、上げられない場合に `overrides` を使うかを、個票の対応結果に表で書く。
+- 開発用の high（12 件）について、依存ごとに「上げる」「`overrides`」「外す（使っていないツール）」「上流待ち（理由と追跡先）」のどれにするかを、個票の対応結果に表で書く。今より古い版へ下げる直し方（`npm audit fix --force` が示す `vitest@3.1.4`・`markdownlint-cli@0.33.0` など）は使わない。
+- `package.json`・`package-lock.json` は保護された設定のため executor は変えない。変更案（`dependencies`・`devDependencies`・`overrides` の差分）を個票の対応結果に書き、報告の `handoff` にも書く。反映は利用者の承認のもと orchestrator が feature ブランチで行う。
+- npm registry へつながらず調べられない依存がある場合は、そのことと調べられなかった範囲を個票の対応結果に書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
+- 反映の後に、orchestrator が次を確かめる。`npm audit --omit=dev` の high と moderate が 0。全体の high が上流待ちとして記録したものだけ。`npm run check`・`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration`・`npm run docs:build` が通る。
+- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                      | 担当         | 状態 | メモ                       |
+| --- | --------------------------------------------------------- | ------------ | ---- | -------------------------- |
+| 1   | 配る依存の high・moderate の直し方を調べて表に書く        | ARC          | open | `npm audit --omit=dev`     |
+| 2   | 開発用の high の直し方を依存ごとに決めて表に書く          | ARC          | open | 古い版へ下げる案は使わない |
+| 3   | `package.json`・`package-lock.json` の変更案を書く        | ARC          | open | 対応結果と `handoff`       |
+| 4   | 変更案を feature ブランチで反映し、audit と検証を確かめる | orchestrator | open | 利用者の承認の後           |
 
 ## 5. 対応結果
 
@@ -44,4 +53,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-p318-security-automation|PJR-P318]]

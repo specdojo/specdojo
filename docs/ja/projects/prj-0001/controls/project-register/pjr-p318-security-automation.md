@@ -34,13 +34,25 @@ Dependabot（週 1 回の依存の更新と脆弱性の修正の PR）、CI の 
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `.github/dependabot.yml` を作る。npm の依存は週 1 回更新し、開発用の依存はまとめて 1 本の PR にする。脆弱性の修正（security updates）は随時 PR になるようにする。GitHub Actions の版も週 1 回更新する。
+- 配る依存の audit を CI に入れる。PR と publish（`publish-specdojo.yml`）の前に `npm audit --omit=dev --audit-level=high` を流し、該当があれば止める。開発用の audit は結果を報告するだけで止めない。上流が直すまで止まる場合の、期限付きの例外の手順を書く。
+- CodeQL（`javascript-typescript`）を PR ごとと週 1 回で流す workflow を入れる。
+- secret scanning・push protection と、npm publish の provenance の設定の手順を書く。GitHub の設定は利用者が行う。
+- workflow と Dependabot の設定が保護された設定に当たる場合は、executor は変えず、案を個票の対応結果に書き、報告の `handoff` にも書く。反映は利用者の承認のもと feature ブランチで行う。
+- specdojo の routine で週 1 回 audit を見て登録簿へ起票する案が、今の routine で実現できるかを調べ、結論を個票の対応結果に書く。できない場合に要る機能は、起票の案として書く。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
+- 設定の書き方を関係する文書（運用・リリースの手順など）へ反映する。
+- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。
+- `npm run lint:md` と親の検証が通る。
 
 ## 4. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ                  |
+| --- | ---------------------------------------------- | ---- | ---- | --------------------- |
+| 1   | Dependabot の設定を書く                        | ARC  | open | npm と GitHub Actions |
+| 2   | CI に配る依存の audit の関門を入れる           | ARC  | open | PR と publish の前    |
+| 3   | CodeQL の workflow を入れる                    | ARC  | open | PR ごとと週 1 回      |
+| 4   | GitHub の設定の手順と routine の案の調べを書く | ARC  | open | 設定は利用者が行う    |
 
 ## 5. 対応結果
 
@@ -48,4 +60,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-5ctm-npm-audit-high|PJR-5CTM]]
