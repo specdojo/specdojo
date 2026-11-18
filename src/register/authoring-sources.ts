@@ -1,6 +1,5 @@
-import { existsSync, realpathSync, statSync } from "node:fs";
+import { existsSync, globSync, realpathSync, statSync, type Dirent } from "node:fs";
 import { extname, isAbsolute, posix, relative, resolve, sep } from "node:path";
-import { globSync } from "tinyglobby";
 import { collectDocIndexEntries } from "../docs/doc-index.js";
 import {
   getProjectRepos,
@@ -50,6 +49,25 @@ function assertInsideRoot(root: string, path: string, ref: string): void {
   }
 }
 
+const IGNORED_SOURCE_DIRECTORIES = new Set([".git", "node_modules"]);
+
+function isExcludedSourceEntry(entry: Dirent): boolean {
+  if (entry.isSymbolicLink()) return true;
+  return entry.isDirectory() && IGNORED_SOURCE_DIRECTORIES.has(entry.name);
+}
+
+/**
+ * Lists regular files matching the patterns as slash-separated paths relative to `cwd`.
+ * node:fs globSync skips dot entries unless a pattern names them; symbolic links found while
+ * walking, `.git`, and `node_modules` are excluded.
+ */
+function globSourceFiles(patterns: readonly string[], cwd: string): string[] {
+  const root = resolve(cwd);
+  return globSync(patterns, { cwd: root, withFileTypes: true, exclude: isExcludedSourceEntry })
+    .filter((entry) => entry.isFile())
+    .map((entry) => relative(root, resolve(entry.parentPath, entry.name)).replaceAll("\\", "/"));
+}
+
 function expandPath(root: string, rawPath: string, ref: string): string[] {
   if (!existsSync(root) || !statSync(root).isDirectory()) {
     throw new Error(`Repository root for authoring source does not exist: ${ref}`);
@@ -60,24 +78,14 @@ function expandPath(root: string, rawPath: string, ref: string): string[] {
   if (existsSync(exact)) {
     assertInsideRoot(root, exact, ref);
     if (statSync(exact).isDirectory()) {
-      paths = globSync("**/*", {
-        cwd: exact,
-        onlyFiles: true,
-        dot: false,
-        followSymbolicLinks: false,
-        ignore: ["**/.git/**", "**/node_modules/**"],
-      }).map((entry) => posix.join(normalized, entry.replaceAll("\\", "/")));
+      paths = globSourceFiles(["**/*"], exact).map((entry) => posix.join(normalized, entry));
     } else {
       paths = [normalized];
     }
   } else {
-    paths = globSync(normalized, {
-      cwd: root,
-      onlyFiles: true,
-      dot: false,
-      followSymbolicLinks: false,
-      ignore: ["**/.git/**", "**/node_modules/**"],
-    }).map((entry) => entry.replaceAll("\\", "/"));
+    // A pattern that does not end with "*" also matches the files below a matching directory.
+    const patterns = normalized.endsWith("*") ? [normalized] : [normalized, `${normalized}/**`];
+    paths = globSourceFiles(patterns, root);
   }
   const sorted = [...new Set(paths)].sort();
   if (sorted.length === 0) {

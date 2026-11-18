@@ -3,7 +3,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { Worker } from "node:worker_threads";
-import { globSync } from "tinyglobby";
+import { globMarkdownFiles } from "./glob-markdown-files.mjs";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkFrontmatter from "remark-frontmatter";
@@ -92,12 +92,7 @@ export async function lintMermaid(
   let files;
   try {
     const matches = patterns.map((pattern) => {
-      const found = globSync(pattern, {
-        cwd,
-        onlyFiles: true,
-        expandDirectories: false,
-        ignore: ["**/node_modules/**", "**/.git/**", "**/secrets/**"],
-      }).filter((file) => /\.mdx?$/u.test(file));
+      const found = globMarkdownFiles(pattern, cwd);
       if (found.length === 0) throw new Error(`No Markdown files matched: ${pattern}`);
       return found;
     });

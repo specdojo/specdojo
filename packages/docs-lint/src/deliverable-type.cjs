@@ -1,7 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { createRequire } = require("node:module");
-const { globSync } = require("tinyglobby");
 const { load, YAML11_SCHEMA, DEFAULT_SCHEMA } = require("js-yaml");
 // Resolve the shared asset from the source checkout or the installed SpecDojo package.
 const yamlMetadataPath = path.resolve(__dirname, "../../../docs/specdojo/lib/yaml-metadata.cjs");
@@ -33,14 +32,16 @@ function readMetadata(filePath) {
   }
 }
 
+// Lists rulebook files as sorted absolute `/`-separated paths. node:fs globSync skips dot entries
+// unless the pattern names them and `**` does not descend into symbolic links to directories;
+// symbolic links to files are kept.
 function rulebooksIn(root, pattern) {
-  return globSync(pattern, {
-    cwd: root,
-    absolute: true,
-    onlyFiles: true,
-    expandDirectories: false,
-    ignore: ["**/generated/**"],
-  });
+  const files = fs
+    .globSync(pattern, { cwd: root, withFileTypes: true, exclude: ["**/generated/**"] })
+    .map((entry) => path.resolve(entry.parentPath, entry.name))
+    .filter((filePath) => fs.statSync(filePath, { throwIfNoEntry: false })?.isFile() === true)
+    .map((filePath) => filePath.replaceAll("\\", "/"));
+  return [...new Set(files)].sort((left, right) => left.localeCompare(right));
 }
 
 function buildRulebookIndex(workspaceRoot) {

@@ -4,7 +4,7 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { load } from "js-yaml";
 import { lint } from "markdownlint/sync";
-import { globSync } from "tinyglobby";
+import { globFilesSync } from "../../../packages/docs-lint/src/glob-files.js";
 import { buildValidator, formatErrors } from "../../helpers/schema.js";
 import { specdojoRootDir } from "../../../src/shared/specdojo-config.js";
 import { flattenTemplateFrontmatter } from "../../../src/docs/template-frontmatter.js";
@@ -78,10 +78,7 @@ const PJR_SUBSTITUTIONS: Array<[string, string]> = [
   ["_PROJECT_ID_", "prj-test-0001"],
 ];
 
-const PJR_FILES = globSync("docs/ja/specdojo/templates/pjr-*-template.md", {
-  expandDirectories: false,
-  onlyFiles: true,
-}).sort();
+const PJR_FILES = globFilesSync("docs/ja/specdojo/templates/pjr-*-template.md");
 
 const DEFAULT_ADD_FIELDS: RegisterAddFields = {
   type: "todo",
