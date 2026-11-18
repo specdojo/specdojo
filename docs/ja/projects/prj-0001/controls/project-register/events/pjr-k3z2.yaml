@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d72243a349694fb49919a48a687b58f6
+- v: 1
+  id: reg_a036b0224b194fbdb529d3df0667d09b
+  ts: "2026-11-18T00:26:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分（direction LR の削除と rulebook の節の追加だけで図の中身は不変）と個票の描画の確認の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: ccd-mermaid-rulebook に向きの決まり（既定は上→下、LR は理由を本文に書くときだけ）を足し、ccd-sample と ccd-project-planning の図を上→下にした。docs:build で描け、交差は跨ぎの印のある 1 か所だけ
+  previous_event_id: reg_f9086ce7e39442218b8b9a1bb9f417f4

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-k3z2-ccd-direction-tb
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-17T22:52:02Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-18T00:26:45Z"
+  conclusion: ccd-mermaid-rulebook に向きの決まり（既定は上→下、LR は理由を本文に書くときだけ）を足し、ccd-sample と ccd-project-planning の図を上→下にした。docs:build で描け、交差は跨ぎの印のある 1 か所だけ
 ---
 
 # PJR-K3Z2 概念クラス図（ccd）の向きを上から下にそろえる
