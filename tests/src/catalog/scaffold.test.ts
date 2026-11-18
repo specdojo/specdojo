@@ -11,7 +11,7 @@ import {
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { load } from "js-yaml";
-import { globSync } from "tinyglobby";
+import { globFilesSync } from "../../../packages/docs-lint/src/glob-files.js";
 import { runScaffold, scaffoldDoc } from "../../../src/catalog/scaffold.js";
 import type { DctTemplateDoc } from "../../../src/catalog/types.js";
 import { buildValidator, formatErrors } from "../../helpers/schema.js";
@@ -299,10 +299,7 @@ describe("scaffoldDoc — サイズフィルタリング", () => {
 });
 
 describe("catalog scaffold — dct テンプレートスキーマ適合検証", () => {
-  const files = globSync("docs/ja/specdojo/templates/dct-*-template.yaml", {
-    expandDirectories: false,
-    onlyFiles: true,
-  }).sort();
+  const files = globFilesSync("docs/ja/specdojo/templates/dct-*-template.yaml");
 
   it.each(files)("%s を scaffold した出力が dct スキーマに適合する", (filePath) => {
     const validator = buildValidator("docs/specdojo/schemas/v1/dct.schema.yaml");
@@ -313,10 +310,7 @@ describe("catalog scaffold — dct テンプレートスキーマ適合検証", 
 });
 
 describe("catalog scaffold — dct テンプレートファイル直接検証", () => {
-  const files = globSync("docs/ja/specdojo/templates/dct-*-template.yaml", {
-    expandDirectories: false,
-    onlyFiles: true,
-  }).sort();
+  const files = globFilesSync("docs/ja/specdojo/templates/dct-*-template.yaml");
 
   it.each(files)("%s が dct スキーマに適合する（type: template として直接検証）", (filePath) => {
     const validator = buildValidator("docs/specdojo/schemas/v1/dct.schema.yaml");

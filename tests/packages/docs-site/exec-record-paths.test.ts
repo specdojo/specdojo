@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { globSync } from "tinyglobby";
+import { globFilesSync } from "../../../packages/docs-lint/src/glob-files.js";
 import { describe, expect, it } from "vitest";
 import {
   EXEC_RECORD_SRC_EXCLUDE,
@@ -56,7 +56,7 @@ describe("exec record paths", () => {
         writeFileSync(filePath, "# Page\n");
       }
       expect(
-        globSync("docs/**/*.md", { cwd: root, ignore: EXEC_RECORD_SRC_EXCLUDE }).sort(),
+        globFilesSync("docs/**/*.md", { cwd: root, ignore: EXEC_RECORD_SRC_EXCLUDE }).sort(),
       ).toEqual(pages.map((path) => `${execution}/${path}`).sort());
     } finally {
       rmSync(root, { recursive: true, force: true });

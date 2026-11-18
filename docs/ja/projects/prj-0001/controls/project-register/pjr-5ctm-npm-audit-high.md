@@ -57,18 +57,18 @@ npm audit の high 15 件を解消する。配る依存（tinyglobby・fdir・pi
 | 2   | 開発用の high の直し方を依存ごとに決めて表に書く                              | ARC          | done  | 開発用 high 12 件の直し方を決定（古い版へ下げる案は不採用） |
 | 3   | `package.json`・`package-lock.json` の変更案を書く                            | ARC          | done  | 対応結果および `handoff` に変更案を記録                     |
 | 4   | 変更案を feature ブランチで反映し、audit と検証を確かめる                     | orchestrator | doing | 利用者の承認後に orchestrator が feature ブランチで実施     |
-| 5   | `tinyglobby` を `node:fs` の `globSync` へ移し、テストを足す（2 回目）        | ARC          | open  | 本体と `packages/docs-lint`                                 |
+| 5   | `tinyglobby` を `node:fs` の `globSync` へ移し、テストを足す（2 回目）        | ARC          | done  | 3 か所と `tools`・`tests` の利用を移し、単体テストを追加    |
 | 6   | `tinyglobby` を外す `package.json` の差分を反映し、audit を確かめる（2 回目） | orchestrator | open  | 利用者の承認の後                                            |
 
 ## 5. 対応結果
 
-### 5.1 実施内容
+### 5.1. 実施内容
 
 npm audit で報告された high 15 件および moderate 1 件（配る依存に含まれる `fast-uri`）について、npm registry の最新版とセキュリティアドバイザリ（GitHub Advisory Database）を調査し、依存ごとの直し方を決定した。古い版へ下げる案（`npm audit fix --force` の提案）は採用せず、上げる・`overrides`・外す・上流待ちのいずれかに分類した。
 
 なお、npm registry への接続は正常に行われ、すべての対象依存について最新情報と依存関係を調査完了した（調べられなかった範囲はない）。
 
-### 5.2 配る依存（`npm audit --omit=dev` 対象）の直し方
+### 5.2. 配る依存（`npm audit --omit=dev` 対象）の直し方
 
 配る依存（`dependencies` およびその推移的依存）にある 4 件の対処方針は下表の通り。
 
@@ -79,7 +79,7 @@ npm audit で報告された high 15 件および moderate 1 件（配る依存�
 | `fdir`         | 6.5.0    | high     | 外す（`tinyglobby` に連動） / 上流待ち | `tinyglobby` が推移的に引く依存。`tinyglobby` を外すことで配る依存から解消される。残す場合は推移的依存 `picomatch` の上流待ち。                                                                                                                                     |
 | `picomatch`    | 4.0.7    | high     | 外す（`tinyglobby` に連動） / 上流待ち | ReDoS 脆弱性（GHSA-fc5q-39xc-vjpf、<=4.0.7 が対象）。現在公式パッチ版が未リリースのため上流待ちだが、`tinyglobby` を配る依存から外すことで配る依存からは完全に解消される。                                                                                          |
 
-### 5.3 開発用依存の high（12 件）の直し方
+### 5.3. 開発用依存の high（12 件）の直し方
 
 開発用依存（`devDependencies` およびその推移的依存）にある 12 件の high 脆弱性の対処方針は下表の通り。
 
@@ -98,7 +98,7 @@ npm audit で報告された high 15 件および moderate 1 件（配る依存�
 | `anymatch`                             | 3.1.3    | 上流待ち                               | `picomatch@2.3.2`（<=4.0.7）起因。追跡先: GHSA-fc5q-39xc-vjpf（micromatch/picomatch）。                                                                                                                                                                                                                                      |
 | `readdirp`                             | 3.6.0    | 上流待ち                               | `picomatch@2.3.2`（<=4.0.7）起因。追跡先: GHSA-fc5q-39xc-vjpf（micromatch/picomatch）。                                                                                                                                                                                                                                      |
 
-### 5.4 迷った点・executor の判断
+### 5.4. 迷った点・executor の判断
 
 1. **`picomatch` の未修正脆弱性と配る依存の扱い**:
    `picomatch`（<=4.0.7）の ReDoS（GHSA-fc5q-39xc-vjpf）は npm registry 全体にパッチ版（>4.0.7）が未リリースであり、上流待ちの状態である。そのため、配る依存に `tinyglobby` が含まれる限り、`npm audit --omit=dev` の high を 0 にすることができない。
@@ -107,7 +107,7 @@ npm audit で報告された high 15 件および moderate 1 件（配る依存�
 2. **`ajv-cli` の扱い**:
    `ajv-cli` は最新版（5.0.0）でも脆弱性のある `fast-json-patch@2.2.1` に依存している。リポジトリ内のコードおよびスクリプトを精査したところ、スキーマ検証は `packages/docs-lint` の内部実装へ移行済みであり、`ajv-cli` は未使用ツールとなっていた。そのため「外す（使っていないツール）」として判定した。
 
-### 5.5 `package.json`・`package-lock.json` の変更案
+### 5.5. `package.json`・`package-lock.json` の変更案
 
 利用者の承認のもと、orchestrator が feature ブランチで反映するための `package.json` 差分案は以下の通り。
 
@@ -135,7 +135,7 @@ npm audit で報告された high 15 件および moderate 1 件（配る依存�
 - `npm audit --omit=dev` は **high 0 / moderate 0 / low 0（脆弱性 0 件）** を達成した。
 - 全体の `npm audit` の残存 high は 12 件となり、すべて公式パッチ未リリースの `picomatch`（GHSA-fc5q-39xc-vjpf）に起因する上流待ちのみに絞り込まれることを確認した。
 
-### 5.6 反映後の確認事項（orchestrator 向け）
+### 5.6. 反映後の確認事項（orchestrator 向け）
 
 orchestrator が feature ブランチで上記変更案および `src/register/authoring-sources.ts` の移行（推奨案の場合）を反映した後、以下を確認する。
 
@@ -149,11 +149,68 @@ orchestrator が feature ブランチで上記変更案および `src/register/a
    - `npm run test:integration`
    - `npm run docs:build`
 
-### 5.7 CHANGELOG に書く事項
+### 5.7. 2 回目の実施内容（`tinyglobby` から `node:fs` の `globSync` へ）
 
-- **区分**: `Security`
-- **行の文案**:
-  - `配る依存から tinyglobby を除外して Node.js 組み込みの globSync へ移行し、fast-uri・source-map-js・vite などの推移的依存の脆弱性を解消（PJR-5CTM）`
+`tinyglobby` の `globSync` を、次のとおり `node:fs` の `globSync`（`withFileTypes: true`）へ置き換えた。`package.json` と lock は変えていない。
+
+| 置き換えた箇所                                                                                 | 保った結果                                                                                                                                                                                                                                                                                                           |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/register/authoring-sources.ts`（`globSourceFiles`）                                       | 通常ファイルだけを返す。ドットで始まる名前は、パターンが明示しない限り含めない。たどる途中のシンボリックリンクと `.git`・`node_modules` を `exclude` 関数で除く。`*` で終わらないパターンは `<pattern>/**` も足し、旧 `expandDirectories` の既定と同じくディレクトリの中も返す。`/` 区切りで並べ替える。             |
+| `packages/docs-lint/src/glob-files.ts`（`globFilesSync`）                                      | 通常ファイルとファイルへのシンボリックリンクを返す。ディレクトリを展開しない。ドットの扱いは上と同じ。`ignore` は `exclude` のパターンへ渡す。`absolute` を保つ。`/` 区切りで重複を除いて並べ替える。オプションの型は `tinyglobby` の `GlobOptions` から `GlobFilesOptions`（`cwd`・`absolute`・`ignore`）へ替えた。 |
+| `packages/docs-lint/src/deliverable-type.cjs`（`rulebooksIn`）                                 | `**/generated/**` を除き、ファイル（リンク先がファイルのものを含む）を `/` 区切りの絶対パスで返す。旧版は走査順だったが、並べ替えて順序を固定した。                                                                                                                                                                  |
+| `tools/lint-mermaid.mjs`・`tools/lint-d2.mjs`（新しい `tools/glob-markdown-files.mjs` を共用） | `node_modules`・`.git`・`secrets` を除き、`.md`・`.mdx` のファイルを返す。                                                                                                                                                                                                                                           |
+| `tests` の 4 ファイル（`exec-record-paths`・`scaffold`・`doc-index`・`register`）              | `tinyglobby` の直接 import を `globFilesSync` に替えた。                                                                                                                                                                                                                                                             |
+
+追加・更新した単体テスト:
+
+- `tests/src/register/authoring-sources.test.ts`（新規）: ディレクトリ展開でファイルだけ・ドット・`.git`・`node_modules` を除くこと、シンボリックリンクをたどらないこと、ブレース展開、`*` で終わらない glob のディレクトリ展開、ドットを明示した glob、一致なしの拒否。
+- `tests/packages/docs-lint/glob-files.test.ts`: ドットの明示、ディレクトリを展開しないこと、ファイルへのリンクを返すこと、ディレクトリへのリンクの中へ入らないこと、`absolute`。
+- `tests/packages/docs-lint/deliverable-type.test.ts`: rulebook の索引が `generated`・ドット・ディレクトリを除き、ファイルへのリンクを含み、並べ替えた順になること。
+
+置き換えの前後の比較: 旧 `tinyglobby` の呼び出しと新しい実装を、ドットファイル・`.git`・`node_modules`・ファイルとディレクトリへのシンボリックリンク・`.md` という名前のディレクトリを含む一時ディレクトリと、このリポジトリ自体（`**/*.md` の 5514 件、`docs/**/*.{yaml,yml}` の 1705 件など）で比べ、「2 回目に executor が決めた点」の 1 点目を除いて同じ結果になった（比較スクリプトは `tmp/` に置き、commit しない）。
+
+### 5.8. 2 回目に executor が決めた点
+
+1. `docs-lint` の `**` は、ディレクトリへのシンボリックリンクの中へ入らなくなる。旧 `globFilesSync`・`rulebooksIn` は `tinyglobby` の既定（`followSymbolicLinks: true`）で中へ入っていた。`node:fs` の `globSync` は中へ入らない。自前で走査を書くより、完了条件の「シンボリックリンクをたどらない」に合わせるほうを選んだ。リポジトリにはシンボリックリンクがないため、検査の結果は変わらない。ファイルへのシンボリックリンクは今までどおり返す。テストでこの振る舞いを固定した。
+2. 完了条件が挙げる 3 か所のほかに、`tools/lint-mermaid.mjs`・`tools/lint-d2.mjs` と `tests` の 4 ファイルも移した。ルートの `dependencies` から `tinyglobby` を外すと、これらは開発用依存が推移的に入れる版へ偶然頼ることになるため。
+3. `tinyglobby` は `vitest`・`typescript-eslint`・`markdownlint-cli` などが推移的に引き続き入れるため、全体の `npm audit` に残る `picomatch` 起因の high は上流待ちのまま変わらない。
+
+### 5.9. 2 回目の `package.json` の変更案
+
+ルート `package.json`:
+
+```diff
+   "dependencies": {
+     ...
+     "remark-parse": "^11.0.0",
+-    "tinyglobby": "^0.2.17",
+     "unified": "^11.0.5"
+   },
+```
+
+`packages/docs-lint/package.json`:
+
+```diff
+   "engines": {
+-    "node": ">=22.13"
++    "node": ">=22.17"
+   },
+   "dependencies": {
+     ...
+     "remark-stringify": "^11.0.0",
+-    "tinyglobby": "^0.2.17",
+     "tsx": "^4.22.4",
+```
+
+反映の後に `npm install` で lock を更新し、`npm audit --omit=dev` の high と moderate が 0 であることを orchestrator が確かめる。
+
+あわせて検討を勧める点: `packages/docs-lint/package.json` の `dependencies` は `markdownlint-cli` が `^0.49.1` のままで、配った docs-lint を入れた利用者の環境に `markdown-it` の ReDoS（GHSA-gfr2-rv44-r23c）が残る。ルートと同じく `^0.50.0` へ上げることを勧める。ルートの `npm audit` は docs-lint の依存を見ないため、完了条件の確認では検出されない。
+
+### 5.10. CHANGELOG に書く事項
+
+区分は `変更`。行の文案:
+
+- `SpecDojo と @specdojo/docs-lint のファイル検索を tinyglobby から Node.js 組み込みの fs.globSync へ移し、tinyglobby を依存から外しました。これにより、配る依存の npm audit の high（tinyglobby・fdir・picomatch）と moderate（fast-uri）がなくなりました。動作に必要な Node.js は 22.17 以上です（@specdojo/docs-lint は 22.13 から引き上げ）。docs-lint の ** による検索は、ディレクトリへのシンボリックリンクの中へ入らなくなりました（PJR-5CTM）。`
 
 ## 6. 関連ドキュメント
 
