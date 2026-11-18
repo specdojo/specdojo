@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-qtb6-legacy-gcs-samples
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: BA
   registered_at: "2026-11-17T22:47:12Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-18T11:17:10Z"
+  conclusion: mip-index-sample へ反映し、index.md の 2 行を外し、旧 sample を local/legacy-samples/ へ移して git rm した。履歴は消さない
 ---
 
 # PJR-QTB6 古い駄菓子屋の sample（sample-gcs-*）の中身を specdojo の sample へ反映し、local/ へ移す

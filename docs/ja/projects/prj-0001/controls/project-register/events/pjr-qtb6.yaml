@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_efd057d9d70d4d85b8a50efc6f7a7869
+- v: 1
+  id: reg_94a6a2ccf609411d80b9e2e1919fc9bd
+  ts: "2026-11-18T11:17:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を確かめた（docs:build と lint:md が通り、lint:md の唯一のエラーは git 管理外の local/ のメモ）。履歴を消さないのは利用者の決定（2026-11-18）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: mip-index-sample へ反映し、index.md の 2 行を外し、旧 sample を local/legacy-samples/ へ移して git rm した。履歴は消さない
+  previous_event_id: reg_f97f692d4c2d4c6c9f899ec3d2c1900a
