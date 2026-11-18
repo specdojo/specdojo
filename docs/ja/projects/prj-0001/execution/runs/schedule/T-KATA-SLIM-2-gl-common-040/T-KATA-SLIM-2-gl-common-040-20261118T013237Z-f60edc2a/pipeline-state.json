@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-gl-common-040",
   "run_id": "T-KATA-SLIM-2-gl-common-040-20261118T013237Z-f60edc2a",
-  "updated_at": "2026-11-18T03:19:58.163Z",
+  "updated_at": "2026-11-18T03:20:14.688Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-gl-common-040/T-KATA-SLIM-2-gl-common-040-20261118T013237Z-f60edc2a/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-18T03:19:58.163Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T03:20:14.688Z",
       "artifact_ref": null
     }
   },
