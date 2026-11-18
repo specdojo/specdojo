@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060",
   "run_id": "T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060-20261118T203130Z-cd60bf96",
-  "updated_at": "2026-11-18T21:08:27.272Z",
+  "updated_at": "2026-11-18T21:08:56.491Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-060-20261118T203130Z-cd60bf96/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T21:08:27.272Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T21:08:56.491Z",
       "artifact_ref": null
     }
   },
