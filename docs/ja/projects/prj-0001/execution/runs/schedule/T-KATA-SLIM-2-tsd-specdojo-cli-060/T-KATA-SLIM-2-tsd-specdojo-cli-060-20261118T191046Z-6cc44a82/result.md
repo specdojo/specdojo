@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-tsd-specdojo-cli-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-tsd-specdojo-cli-060/T-KATA-SLIM-2-tsd-specdojo-cli-060-20261118T191046Z-6cc44a82/plan.md
   started_at: "2026-11-18T19:10:55.772Z"
+  completed_at: "2026-11-18T19:40:49.194Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- recipe から文書共通の運用記述、`rulebook` と重複する判断基準の言い直し、未決事項管理台帳の列定義、および冗長な確認事項を削除し、スリム化しました。
+- finding F001 に基づき、章番号のみによる参照（「例: 第 4 章で」）を章タイトルによる指定（「「採用技術・設定」に」）へ修正しました。
+- 空白および表の区切り行を除いた文字数を 9,178 字から 4,537 字（約 49.4%）に削減しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/tsd-recipe.md`: 共通の運用記述、`rulebook` と重複する判断基準、管理台帳の列定義、冗長な確認項目を削除し、章番号参照を章タイトル参照に修正しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 大きさ: 空白を除き、表の区切り行（`| --- |`）を除いた文字数で、前 9,178 字、後 4,537 字、比 49.4%（PJR-7M9J と同じ測り方）。
+- F001（章番号での参照「例: 第 4 章で」）は「「採用技術・設定」に」へ直して解消した。集める情報の表にあった「第 N 章」の書き方も、置き場所の列ごと外した。
+- rulebook・sample・template の変更案はない。tsd-rulebook は table の列を正本として持つため、recipe から外しても作成に支障はないと判断した。
+- 適用外の検証: `npm run validate:history-links`（変更は docs/ja/specdojo/recipes/tsd-recipe.md だけで、plan・result・個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+recipe-maintenance
