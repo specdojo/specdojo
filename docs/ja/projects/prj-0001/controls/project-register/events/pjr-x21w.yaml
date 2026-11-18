@@ -44,3 +44,22 @@
     - field: commit_scope
       from: ""
       to: exec
+- v: 1
+  id: reg_2562ff7d366b492ab12b69fc848e77e1
+  ts: "2026-11-18T22:17:34Z"
+  action: reject
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: rejected
+  reason: 利用者と規則を確認し、目的が track の優先から strategy の正本の徹底へ変わったため reject して新しく起票する
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: strategy を正本とし track を直接編集しない規則（sch-rulebook）に照らすと、runner が strategy の段の指定で claim したのは設計どおりの動きだった。原因は track を直接編集したことで、残る問題（直接の編集を検出しないこと、経路ごとの解決の順の違い、設計ガイドの抜け）は PJR-YGZF へ引き継ぐ
+  previous_event_id: reg_7299809b7c9944ff920fb8d7329da922

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-x21w-ready-overrides-track-agent
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: rejected
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-18T22:10:09Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-18T22:17:34Z"
+  conclusion: strategy を正本とし track を直接編集しない規則（sch-rulebook）に照らすと、runner が strategy の段の指定で claim したのは設計どおりの動きだった。原因は track を直接編集したことで、残る問題（直接の編集を検出しないこと、経路ごとの解決の順の違い、設計ガイドの抜け）は PJR-YGZF へ引き継ぐ
   commit_type: fix
   commit_scope: exec
 ---
