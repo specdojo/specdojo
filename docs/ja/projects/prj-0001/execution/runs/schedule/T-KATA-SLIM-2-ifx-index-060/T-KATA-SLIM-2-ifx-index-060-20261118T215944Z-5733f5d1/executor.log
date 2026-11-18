@@ -1,0 +1,36 @@
+`docs/ja/specdojo/recipes/ifx-index-recipe.md` を書き直しました。変更したのはこのファイルだけで、Recipe 記述標準の 8 章の構成はそのまま保っています。
+
+文字数は、空白と表の区切り行を除いて 4,353 字から 3,006 字（69.1%）になり、7 割以下の目安に収まりました。
+
+**外した記述**
+- **どの成果物にも共通する運用の記述**: PO の採否・公開の判断、一覧の管理担当と承認者、schema・整形検査を手順に入れること（旧手順 7 と旧 4.8 節「検証と引き渡し」）。
+- **未決事項の管理台帳の列**: 担当 Role、判断時点、期限、依存作業、Schedule・PJR への登録依頼。
+- **rulebook と同じ判断の言い直し**:
+  - `_TODO_`・`_UNDECIDED_`・`_ASSUMPTION_` の使い分け
+  - schema の場所の指定
+  - `direction` の読み方の規則
+- **recipe 内の同じ確認の繰り返し**:
+  - 「合意と判断」「計画と管理」のレビュー観点
+  - 「検証記録と引き継ぎ内容が一致」の仕上げチェック
+  - 方式変更の手順をなぞった深掘り手順
+
+**残した・足した記述**
+- 「作成前に集める情報」に「取り出し元・聞く相手」の列を足しました。
+- 手順を書く順番とその理由（対象範囲を最初に、`source` と `target` を方向より先に、`id`・`title` を最後に）を書きました。
+- 各節の問いを 2 つずつにし、聞き方のコツとつまずきやすい点を足しました。例:「自分たちのコードが何を起動するか」を聞く、文書 ID があるだけで対応を確かめずに `spec_ref` へ入れやすい。
+- 深掘り手順は、対応のない主張を探す順序にしました。
+- 良い例と悪い例は、各節にあったものを表の 1 か所にまとめました。
+- 上位の背景、引数・数値、計画の期日は「写さず参照に置き換える」とコツに書きました。
+
+**判断した点**
+- 冒頭コメントに管理担当と承認者を書く旨は、共通の運用として外しました。
+- 「PO」の語は使っていません。
+- rulebook の「6.8. 検証と引き渡しの判定」の内容は、受入の判定を扱っているので recipe では言い直していません。
+
+rulebook・sample・template に合わせて直すべき点は見当たらず、変更案はありません。
+
+検証は `npx prettier --check` で整形済みを確認しました。markdownlint も個別に流し、エラーは 0 件でした。`npm run lint:md` など親 runner が担う検査は実行していません。履歴ファイルは変えていないので `npm run validate:history-links` は対象外です。文字数を測るスクリプトは `tmp/count.mjs` に置いています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-index-recipe.md から共通の運用の記述（PO の採否・公開判断、管理担当と承認者、schema・整形検査を手順と検証節に入れること）、未決事項の管理台帳の列、rulebook と同じ判断の言い直し、recipe 内の同じ確認の繰り返しを外した。書く順番の理由、取り出し元と聞く相手、各節 2 つの問いとコツ、対応のない主張を探す深掘りの順序、1 か所にまとめた良い例と悪い例を残した。8 章構成は保った。空白と表の区切り行を除く文字数は 4,353 字から 3,006 字（69.1%）。rulebook・sample・template は変えておらず、変更案もない。","handoff":["大きさ: 空白（改行を含む）と表の区切り行を除いた文字数で 4,353 字から 3,006 字（69.1%）。測り方は PJR-7M9J と同じ。","迷った点: 冒頭コメントに一覧の管理担当と承認・公開判断者を書く旨は共通の運用とみなして外した。rulebook の「検証と引き渡しの判定」は受入の判定を扱うため recipe では言い直していない。","rulebook・sample・template に合わせて直すべき点は見当たらず、変更案はない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/ifx-index-recipe.md","status":"passed","summary":"整形済みを確認した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan・result・個票）を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象外","reason":"YAML ファイルを変更していない"}]}
+</specdojo_executor_evidence>
