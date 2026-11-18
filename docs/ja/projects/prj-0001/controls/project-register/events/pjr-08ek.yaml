@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_41abccd5482947719d9dfddff2f53ea9
+  ts: "2026-11-18T12:17:04Z"
+  action: add
+  actor: indie
+  from_status: null
+  to_status: open
+  reason: opencode でプロダクトリポジトリを編集しようとして権限エラーになったため起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec で opencode の executor がプロダクトリポジトリの worktree を編集できない
+    - field: description
+      from: ""
+      to: exec の opencode 起動にだけプロダクトの worktree の許可が渡らず、external\_directory の deny で編集がすべて拒まれる
+    - field: input
+      from: ""
+      to: '["repos を宣言した project で、プロダクトのファイルの変更を求める項目を opencode-executor で exec run --register --worktree に流すと、プロダクトの worktree への Edit がすべて permission `external_directory` の deny で拒まれた","環境: specdojo 0.7.0、opencode 1.19.5、Linux（devcontainer）","起票案は利用者が作成した tmp/specdojo-issue-1-opencode-extra-roots.md"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
