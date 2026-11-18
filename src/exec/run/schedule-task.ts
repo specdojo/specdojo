@@ -9,6 +9,7 @@ import {
   writeExecutorEvidence,
 } from "../evidence.js";
 import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
+import { integratedCommitRange, runPostIntegration } from "../post-integration.js";
 import { reviewTaskBlockReason } from "../review-completion.js";
 import { limitEventMeta, type AgentLimitSignal } from "../limit.js";
 import {
@@ -36,7 +37,12 @@ import {
   renderReporterResult,
   updateResultStatus,
 } from "../results.js";
-import { recordPathForRead, snapshotRunAttempt } from "../run-records.js";
+import {
+  recordPathForRead,
+  runLogPath,
+  snapshotRunAttempt,
+  taskRecordPaths,
+} from "../run-records.js";
 import { withProductRepoPrompt } from "../task-repos.js";
 import { branchOwnedRunRecordPaths } from "../trailing-records.js";
 import { type AgentStageRole } from "../types.js";
@@ -689,6 +695,16 @@ export async function runPreparedTask(
           process.stdout.write(
             `  [integrate] already merged: ${prepared.worktree.branch} (skipping commit and merge)\n`,
           );
+          await runPostIntegration({
+            entries: execDefaults.pipeline?.post_integration,
+            repoRoot,
+            ...integratedCommitRange(repoRoot, prepared.worktree.branch),
+            logPath: runLogPath(
+              prepared.resultPath ??
+                taskRecordPaths(executionPath, prepared.task.id, prepared.pipelineRunId).result,
+              "post-integration.log",
+            ),
+          });
         } else {
           // Record completion and integration start before the first commit. The succeeded state
           // is committed on the project exec branch before its merge, so successful runs retain a
@@ -751,6 +767,7 @@ export async function runPreparedTask(
             });
           }
 
+          const baseCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
           integrateTaskRepositories({
             worktree: prepared.worktree,
             mergeMessage,
@@ -800,6 +817,17 @@ export async function runPreparedTask(
             record: (repo, patch) => recordRepoIntegration(pipelineStatePath, repo, patch),
             failureLogPath: integrateLogPath(pipelineStatePath),
             lockPath: schedulePath,
+          });
+          await runPostIntegration({
+            entries: execDefaults.pipeline?.post_integration,
+            repoRoot,
+            baseCommit,
+            outputCommit: gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim(),
+            logPath: runLogPath(
+              prepared.resultPath ??
+                taskRecordPaths(executionPath, prepared.task.id, prepared.pipelineRunId).result,
+              "post-integration.log",
+            ),
           });
         }
       } catch (error) {

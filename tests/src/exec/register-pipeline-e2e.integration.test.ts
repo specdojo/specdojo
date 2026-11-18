@@ -944,6 +944,75 @@ describe("exec smoke integration", () => {
 });
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
+  it.each(["passed", "failed", "skipped"] as const)(
+    "records post-integration %s in the root run after merge and preserves review",
+    { timeout: 120_000 },
+    async (status) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const defaultsPath = join(root, ".specdojo/exec-defaults.yaml");
+        writeFileSync(
+          defaultsPath,
+          readFileSync(defaultsPath, "utf8").replace(
+            "pipeline:\n",
+            `pipeline:\n  post_integration:\n    - id: build-dist\n      paths: ["${status === "skipped" ? "src/**" : "docs/**"}"]\n`,
+          ),
+        );
+        writeFileSync(
+          join(root, "package.json"),
+          JSON.stringify({
+            scripts: {
+              "test:integration": 'node -e "process.exit(0)"',
+              build: `node -e "process.exit(${status === "failed" ? 1 : 0})"`,
+            },
+          }),
+        );
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "configure post integration");
+        const baseCommit = git(root, "rev-parse", "HEAD");
+        const output: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          output.push(String(chunk));
+          return true;
+        });
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+        ]);
+        expect(process.exitCode ?? 0, output.join("")).toBe(0);
+        const resultPath = listRunRecords(join(root, EXECUTION_REL), "result")[0];
+        const record = JSON.parse(
+          readFileSync(join(resultPath, "..", "post-integration.log"), "utf8"),
+        );
+        expect(record).toMatchObject({
+          status,
+          base_commit: baseCommit,
+          output_commit: git(root, "rev-parse", "HEAD"),
+        });
+        expect(git(root, "rev-parse", `${record.output_commit}^1`)).toBe(baseCommit);
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        expect(execWorktreePath(root)).toBeNull();
+        expect(output.join("")).toContain(`[post-integration] build-dist: ${status}`);
+        if (status === "failed") expect(output.join("")).toContain("integration kept");
+      });
+    },
+  );
+
   it.each([
     ["--worktree", "executor", false],
     ["--in-place", "executor", false],

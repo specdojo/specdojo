@@ -7,20 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T22:57:37Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: lint-ts; rate limit fallback: sol-executor -> opus-executor at 2026-11-18T00:36:06.643Z"
 ---
 
 # PJR-8KXJ exec run の統合の後に、src が変わったら dist を自動で作り直す
 
 ## 1. 概要
 
-src を変える項目の統合の後に dist が古くなり次の run が止まるため、exec-defaults の pipeline に統合後の処理（post_integration）を許可リストの ID で指定できるようにし、build-dist を流す。
+src を変える項目の統合の後に dist が古くなり次の run が止まるため、exec-defaults の pipeline に統合後の処理（`post_integration`）を許可リストの ID で指定できるようにし、build-dist を流す。
 
 ## 2. 入力
 
