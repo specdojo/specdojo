@@ -9,6 +9,7 @@ import {
   gitOutput,
   gitResult,
 } from "../shared/git.js";
+import { localConfigEnvironment } from "../shared/local-config.js";
 
 export {
   appendGitFailureLog,
@@ -246,6 +247,16 @@ export function formatWorktreeBuildFailure(worktreePath: string, detail: string)
 
 export type WorktreeCommand = { command: string; args: string[] };
 
+/** Environment of `specdojo build` in a worktree, including the main tree's local config. */
+export function worktreeBuildEnvironment(worktreePath: string): NodeJS.ProcessEnv {
+  return {
+    ...gitEnvironment(),
+    ...localConfigEnvironment(worktreePath),
+    CI: "true",
+    LEFTHOOK: "0",
+  };
+}
+
 // build は worktree 内で完結させる。依存と同じく、worktree の checkout にある CLI を使うため、
 // 実行元プロセスの entry（テストランナー等）へは依存しない。SpecDojo 自身のリポジトリでは
 // src の entry を worktree の tsx で、CLI を依存として使うリポジトリでは
@@ -270,7 +281,8 @@ export function resolveWorktreeBuildCommand(worktreePath: string): WorktreeComma
 }
 
 // worktree を cwd にして build を実行する。child は cwd から .specdojo/specdojo.config.json を
-// 辿るため、生成先は worktree 側になる。
+// 辿るため、生成先は worktree 側になる。ローカル設定は worktree へ複製せず、主の作業ツリーの
+// ファイルのパスを環境変数で渡す（PJR-NC9R）。
 function runWorktreeBuild(worktreePath: string): void {
   const resolved = resolveWorktreeBuildCommand(worktreePath);
   if (!resolved) {
@@ -282,7 +294,7 @@ function runWorktreeBuild(worktreePath: string): void {
   process.stdout.write("Generating worktree artifacts: specdojo build\n");
   const result = spawnSync(resolved.command, resolved.args, {
     cwd: worktreePath,
-    env: { ...gitEnvironment(), CI: "true", LEFTHOOK: "0" },
+    env: worktreeBuildEnvironment(worktreePath),
     stdio: "inherit",
   });
   if (result.error) {

@@ -7,13 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T23:07:38Z"
   due_on: "2026-11-30"
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-NC9R git で管理しないローカル用の設定（specdojo.local.config.json）で、環境ごとのリポジトリを上書きできるようにする
@@ -64,7 +63,7 @@ specdojo.config.json は git の管理下のため、ローカルで足したい
 - `specdojo config show [--project <id>]` を追加した。設定とローカル設定のパス、上書きした項目、project ごとの `repos` を出力し、各リポジトリに `shared`・`local; shared: <path>`・`local; added` を付ける。`where exec` はローカル設定があるときだけ `local-config:` と `local-override:` の行を足す。ローカル設定が無い場合の出力は変えていない。
 - `exec run` の executor evidence に `local_config_overrides`（`project`・`repo`・`kind`・`path`・`shared_path`）を記録する。runner が主の作業ツリーで読んだ設定から作る。`exec-evidence.schema.yaml` にこのキーを足した。
 - `config init` の既定の除外（`DEFAULT_GITIGNORE_PATTERNS`）と、このリポジトリの `.gitignore` に `.specdojo/specdojo.local.config.json` を足した。`.gitignore` は保護された設定に含まれないため、直接変えた。
-- テスト: 単体テストは `tests/src/shared/local-config.test.ts`（読み込み、上書き、エラー、worktree での解決、環境変数での受け渡し、`config show`、evidence の schema、gitignore の既定）と `tests/src/exec/agent-protected-config.test.ts`（executor が gitignore 済みのローカル設定を書くと保護の違反になる）に足した。統合テストは `tests/src/shared/local-config.integration.test.ts` に足した。実 Git の linked worktree で CLI の子のプロセスを起動し、主の作業ツリーのローカル設定が効くこと、worktree の中のファイルが読まれないことを確かめる。テストの共通 setup（`tests/setup/git-environment.ts`）で `SPECDOJO_LOCAL_CONFIG` を除き、runner の値が fixture に入らないようにした。
+- テスト: 単体テストは `tests/src/shared/local-config.test.ts`（読み込み、上書き、エラー、worktree での解決、環境変数での受け渡し、`config show`、evidence の schema、gitignore の既定）と `tests/src/exec/agent-protected-config.test.ts`（executor が gitignore 済みのローカル設定を書くと保護の違反になる）に足した。統合テストは `tests/src/shared/local-config.integration.test.ts` に足した。実 Git の linked worktree で CLI の子のプロセスを起動し、主の作業ツリーのローカル設定が効くこと、worktree の中のファイルが読まれないことを確かめる。テストの共通 setup（`tests/setup/git-environment.ts`）で `SPECDOJO_LOCAL_CONFIG` を除き、runner の値が fixture に入らないようにした。`config` のサブコマンドの一覧を固定する `tests/src/cli-verb-taxonomy.test.ts` に `show` を足した。
 - 文書: [[specdojo:specdojo-config-reference]] に「ローカル設定」の章を、[[specdojo:command-reference]] に `config show`・`where exec` の表示と `config init` の除外を足した。
 
 ### 5.2. 決めた内容と理由

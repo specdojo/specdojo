@@ -1,0 +1,334 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-NC9R",
+  "run_id": "pjr-nc9r-20261118T021656Z-a027875d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T02:40:14.308Z",
+    "completed_at": "2026-11-18T02:41:37.997Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".gitignore",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-nc9r.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nc9r-local-config-override.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-protected-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-gitignore.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/setup/git-environment.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-protected-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/local-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/local-config.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/local-config.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nc9r-local-config-override.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 21,
+    "summary": ".gitignore                                         |  3 +\n .../controls/project-register/events/pjr-nc9r.yaml | 18 +++++-\n .../pjr-nc9r-local-config-override.md              |  5 +-\n docs/ja/specdojo/references/command-reference.md   |  7 ++-\n .../references/specdojo-config-reference.md        | 39 ++++++++++++-\n docs/specdojo/schemas/v1/exec-evidence.schema.yaml | 35 ++++++++++++\n src/exec/agent-protected-config.ts                 |  2 +\n src/exec/commands.ts                               |  7 +++\n src/exec/evidence.ts                               | 10 ++++\n src/exec/run/agent.ts                              |  2 +\n src/exec/trial-core.ts                             |  2 +\n src/exec/worktree-command.ts                       |  2 +\n src/exec/worktree.ts                               | 16 +++++-\n src/shared/specdojo-config.ts                      | 65 +++++++++++++++-------\n src/shared/specdojo-gitignore.ts                   |  1 +\n tests/setup/git-environment.ts                     |  3 +\n tests/src/cli-verb-taxonomy.test.ts                |  7 ++-\n tests/src/exec/agent-protected-config.test.ts      | 23 ++++++++\n 18 files changed, 217 insertions(+), 30 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/cli-verb-taxonomy.test.ts tests/src/shared/local-config.test.ts tests/src/exec/agent-protected-config.test.ts",
+      "status": "passed",
+      "summary": "3 ファイル・70 件が通った（前回の失敗箇所を含む）"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-nc9r-local-config-override.md tests/src/cli-verb-taxonomy.test.ts",
+      "status": "passed",
+      "summary": "整形の差分なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "全ファイルが valid で、違反なし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R/src/catalog/catalog.ts\n  542:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R/src/dashboard/dashboard.ts\n  1149:1  warning  File has too many lines (1067). Maximum allow\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R/src/schedule/strategy-generate-document.ts\n  87:8  warning  Function 'buildStrategyDocument' has too many lines (289). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R/src/shared/specdojo-config.ts\n  1236:1  warning  File has too many lines (1190). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (0 errors, 41 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5345 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5345 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/where.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/commit-msg-merge.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/commands/build.integration.test.ts\"}\n[parent-val\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NC9R\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/tools/grade-per-document.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/catalogless-target.test.ts\"}\n ✓ tests/tools/grade-per-document.test.ts (32 tests) 8095ms\n     ✓ runs all three stages for one document and skips it on resume  473ms\n\n… output omitted …\n/invalid.md\n\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\n[grade] attempt 1/3 failed; retrying: subject.md: exit 1: agent failed\n[grade] attempt 2/3 failed; retrying: subject.md: exit 1: agent failed\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": ".gitignore",
+      "status": "changed",
+      "path": ".gitignore",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-nc9r-local-config-override.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nc9r-local-config-override.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/agent-protected-config.ts",
+      "status": "changed",
+      "path": "src/exec/agent-protected-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/commands.ts",
+      "status": "changed",
+      "path": "src/exec/commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/evidence.ts",
+      "status": "changed",
+      "path": "src/exec/evidence.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/agent.ts",
+      "status": "changed",
+      "path": "src/exec/run/agent.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/trial-core.ts",
+      "status": "changed",
+      "path": "src/exec/trial-core.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree-command.ts",
+      "status": "changed",
+      "path": "src/exec/worktree-command.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/worktree.ts",
+      "status": "changed",
+      "path": "src/exec/worktree.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-gitignore.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-gitignore.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/setup/git-environment.ts",
+      "status": "changed",
+      "path": "tests/setup/git-environment.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/agent-protected-config.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/agent-protected-config.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/local-config.ts",
+      "status": "changed",
+      "path": "src/shared/local-config.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/local-config.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/local-config.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/local-config.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/local-config.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "changed",
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "前回の test-unit の失敗（`config` のサブコマンド一覧に `show` が増えたこと）に合わせて tests/src/cli-verb-taxonomy.test.ts の期待値を直し、関係する単体テストが通ることを確かめた。ほかの完了条件は前回の試行で満たしていることを確かめ、個票の実施内容にテストの修正を足した。",
+  "completion_status": "complete",
+  "handoff": [
+    "ローカルで宣言したリポジトリは、orchestrator の定義の「`repos` で宣言されたプロダクトリポジトリ」に含めると決めた。理由は個票の「決めた内容と理由」に書いた。`.agents/specdojo-orchestrator.agent.md`（保護された設定）は変えていない。利用者の承認のもと feature ブランチで、各環境のラッパーにも同じ変更を反映する。変更案: 「`specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。」",
+    "保護の一覧（`src/exec/agent-protected-config.ts`）には完全一致の項目を足していない。ローカル設定は既存の `.specdojo/` の範囲で保護されることをテストで固定した。完全一致の一覧に足すと、保護された `.specdojo/claude/settings.edit.json` の deny 一覧と一致させるテストが失敗するため。",
+    "`CHANGELOG.md` は変えていない。区分（Added）と行の文案は、個票の「CHANGELOG に書く事項」の節に書いた。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NC9R/pjr-nc9r-20261118T021656Z-a027875d/executor.log",
+      "bytes": 5693,
+      "truncated": false
+    }
+  ]
+}

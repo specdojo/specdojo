@@ -39,7 +39,7 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 
 ### 1.1. 保存先の確認（where）
 
-`specdojo where <種類> --project <id>` で、設定から解決した保存先を表示します。種類は `exec`・`catalog`・`schedule`・`timeline`・`job`・`routine` の6つです。表示内容と project の解決は各種類の従来の処理を使い、定義や生成物は書き換えません。`schedule` は strategy / track のファイル一覧、`routine` は定義ファイル一覧も表示します。
+`specdojo where <種類> --project <id>` で、設定から解決した保存先を表示します。種類は `exec`・`catalog`・`schedule`・`timeline`・`job`・`routine` の6つです。表示内容と project の解決は各種類の従来の処理を使い、定義や生成物は書き換えません。`schedule` は strategy / track のファイル一覧、`routine` は定義ファイル一覧も表示します。ローカル設定がある場合、`exec` はそのパス（`local-config:`）とローカルで上書きした項目（`local-override:`）も表示します。
 
 ```bash
 specdojo where exec --project prj-0001
@@ -54,6 +54,7 @@ specdojo where routine --project prj-0001
 | ------------------------ | ------------------------------------------------------------------- | ------------------------------------------- |
 | `init`                   | project から agent 実行までを質問式で初期設定する                   | `specdojo init`                             |
 | `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する             | `specdojo config init`                      |
+| `config show`            | 有効な `repos` と、ローカル設定に由来する値を表示する               | `specdojo config show --project prj-0001`   |
 | `config migrate-members` | agent 定義を保護設定へ移す                                          | `specdojo config migrate-members --dry-run` |
 | `config scaffold`        | provider、VS Code ワークスペース、Git hook、Slidev を個別に配置する | `specdojo config scaffold --slidev`         |
 | `project list`           | 登録済み project を表示する                                         | `specdojo project list`                     |
@@ -104,7 +105,7 @@ ID だけを `pipeline.parent_validations` へ設定し、該当する script �
 `config init` は、register 単体で始められる `prj-0001` の最小設定を作成し、設定確認、任意の
 provider 設定、登録簿作成の順に次のコマンドを案内します。`run.worktree_base` は実行した
 リポジトリのディレクトリ名から `../<リポジトリ名>-worktrees` として設定します。あわせて、依存の
-`node_modules/` と生成物（`generated/` 配下、`.specdojo/doc-index.json`、exec の実行ロック）を除外する行を
+`node_modules/`、生成物（`generated/` 配下、`.specdojo/doc-index.json`、exec の実行ロック）、ローカル設定（`.specdojo/specdojo.local.config.json`）を除外する行を
 `.gitignore` へ追記します。既存の行は変更せず、足りない行だけを追記するため、何度実行しても結果は
 変わりません。`node_modules`、`/node_modules`、`**/node_modules` など同じ意味の行が既にある場合、
 `node_modules/` は追記しません。設定ファイルが既にある場合も `.gitignore` の確認だけは行います。
@@ -112,6 +113,8 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 `git rm -r --cached` で外す手順を案内します。`config init --dry-run` は設定と `.gitignore` を
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
+
+`config show` は、`specdojo.config.json` とローカル設定 `.specdojo/specdojo.local.config.json` のパス、ローカルで上書きした項目、project ごとの `repos` を表示します。各リポジトリには `shared`（共有の設定）、`local; shared: <path>`（パスの差し替え）、`local; added`（ローカルで追加）のいずれかを付けます。`--project <id>` で対象を絞れます。ローカル設定の許可キーと優先順位は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] の「ローカル設定」を参照してください。
 
 通常の `init` と `config init` は、markdownlint の設定がなければリポジトリ直下に
 `.markdownlint.yaml` を作成します。SpecDojo の文書規約に合わせて MD013（行長）、MD024（見出しの重複）、

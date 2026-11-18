@@ -50,6 +50,7 @@ import {
 import { buildInitialStateFromStrategy } from "./schedule/initial.js";
 import { buildScheduleIndex } from "./schedule/schedule.js";
 import { qualifyTaskId } from "./shared.js";
+import { localConfigEnvironment } from "../shared/local-config.js";
 import {
   configuredProductRepos,
   missingProductWorktrees,
@@ -436,6 +437,7 @@ async function agent(opts: AgentOpts): Promise<void> {
     cwd: worktree.path,
     env: {
       ...withoutInheritedRepoEnvironment(gitEnvironment()),
+      ...localConfigEnvironment(worktree.path),
       SPECDOJO_SCHEDULE_PATH: context.schedulePath,
       SPECDOJO_EXECUTION_PATH: context.executionPath,
       ...productRepoEnvironment(worktree.path, worktree.repos),

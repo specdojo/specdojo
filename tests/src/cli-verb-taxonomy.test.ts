@@ -54,7 +54,12 @@ describe("CLI generation verb taxonomy", () => {
     registerConfigCommands(program);
     registerExecCommands(program);
 
-    expect(subcommandNames(program, "config")).toEqual(["init", "migrate-members", "scaffold"]);
+    expect(subcommandNames(program, "config")).toEqual([
+      "init",
+      "show",
+      "migrate-members",
+      "scaffold",
+    ]);
     expect(subcommandNames(program, "exec")).toContain("scaffold");
   });
 
