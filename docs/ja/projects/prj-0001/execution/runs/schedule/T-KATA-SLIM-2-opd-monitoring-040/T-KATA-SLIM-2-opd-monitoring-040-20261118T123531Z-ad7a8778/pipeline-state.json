@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-opd-monitoring-040",
   "run_id": "T-KATA-SLIM-2-opd-monitoring-040-20261118T123531Z-ad7a8778",
-  "updated_at": "2026-11-18T13:01:41.192Z",
+  "updated_at": "2026-11-18T13:01:59.885Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -30,11 +30,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-opd-monitoring-040/T-KATA-SLIM-2-opd-monitoring-040-20261118T123531Z-ad7a8778/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T13:01:41.192Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T13:01:59.885Z",
       "artifact_ref": null
     }
   },
