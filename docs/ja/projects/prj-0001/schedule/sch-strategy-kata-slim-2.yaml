@@ -1,0 +1,402 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-kata-slim-2
+type: project
+status: draft
+title: スケジュール戦略（残りの rulebook と recipe から文書の運用の記述を外す）
+rulebook: specdojo:sch-rulebook
+track: kata-slim-2
+scope:
+  catalogs:
+    - id: prj-0001:dct-test-specs
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml
+      local_ids:
+        - atc-index
+        - atc-init
+        - etc-index
+        - etc-provider-cli
+        - itc-index
+        - itc-catalog-schedule
+        - stc-index
+        - stc-init
+        - trc-requirements-to-specs
+        - trc-requirements-to-tests
+        - tsp-index
+        - utc-index
+        - utc-catalog
+    - id: prj-0001:dct-data-model-bdd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml
+      local_ids:
+        - bdd-project-config
+    - id: prj-0001:dct-data-model-ccd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml
+      local_ids:
+        - ccd-project-planning
+    - id: prj-0001:dct-system-design
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml
+      local_ids:
+        - typescript-instructions
+        - dss-docs-site
+        - sysd-agent-settings
+        - sysd-critical-flows
+        - sysd-cross-cutting-policy
+        - sysd-index
+    - id: prj-0001:dct-data-model-cdt
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdt.yaml
+      local_ids:
+        - cdt-register-type
+    - id: prj-0001:dct-migration-planning
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml
+      local_ids:
+        - cop-index
+        - cop-specdojo-operations
+        - dmd-index
+        - dmd-slack-records
+        - mip-index
+        - mtp-index
+        - otp-index
+        - otp-hypercare
+    - id: prj-0001:dct-planning
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml
+      local_ids:
+        - dct-index
+        - dct-data-model-ccd
+        - sch-defaults
+    - id: prj-0001:dct-glossary
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-glossary.yaml
+      local_ids:
+        - gl-common
+    - id: prj-0001:dct-external-interface-specs
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml
+      local_ids:
+        - ifx-file-agent-evidence
+        - ifx-cmd-ai-provider-cli
+        - ifx-index
+    - id: prj-0001:dct-impact-analysis
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml
+      local_ids:
+        - imp-business
+        - imp-data
+        - imp-interface
+        - imp-operations
+        - imp-test
+    - id: prj-0001:dct-non-functional-requirements
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml
+      local_ids:
+        - nfr-availability
+        - nfr-index
+        - nfr-integrity
+        - nfr-maintainability
+        - nfr-operations
+        - nfr-performance
+        - nfr-reliability
+        - nfr-security-safety
+        - nfr-usability
+    - id: prj-0001:dct-operations
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml
+      local_ids:
+        - opd-index
+        - opd-monitoring
+        - opr-index
+        - opr-agent-cli-update
+    - id: prj-0001:dct-project-management
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml
+      local_ids:
+        - pjr-index
+        - pm-change-request-log
+        - pm-issue-log
+        - pm-risk-register
+        - pm-members
+        - pm-roles
+        - pm-communication-plan
+        - pm-organization
+        - pm-plan
+        - pm-quality-management-plan
+        - pm-raci
+    - id: prj-0001:dct-system-acceptance-criteria
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml
+      local_ids:
+        - sac-reliability
+    - id: prj-0001:dct-architecture
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml
+      local_ids:
+        - tsd-index
+        - cnd-specdojo
+        - cpd-specdojo-cli
+        - cxd-specdojo
+        - ifd-specdojo
+        - tsd-specdojo-cli
+    - id: prj-0001:dct-business-acceptance-criteria
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml
+      local_ids:
+        - bac-init
+    - id: prj-0001:dct-data-flow
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+      local_ids:
+        - cdfd-overview
+        - cdfd-uc-register
+    - id: prj-0001:dct-current-state
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-current-state.yaml
+      local_ids:
+        - cdfd-jibungoto-planet
+    - id: prj-0001:dct-project-definition
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml
+      local_ids:
+        - prj-issues-and-approach
+        - prj-overview
+        - prj-scope
+        - prj-stakeholder-register
+        - prj-assumptions-constraints-dependencies
+        - prj-comparison-of-alternatives
+        - prj-success-criteria-and-acceptance-criteria
+    - id: prj-0001:dct-data-model-stsd
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml
+      local_ids:
+        - stsd-register-entry
+    - id: prj-0001:dct-business-model-bes
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml
+      local_ids:
+        - bes-routine-due
+    - id: prj-0001:dct-business-model-bps
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml
+      local_ids:
+        - bps-init-required
+    - id: prj-0001:dct-business-model-br
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml
+      local_ids:
+        - br-task-selection-strategy
+  include_kinds:
+    - work
+    - control
+    - generated
+approach_rules:
+  - local_ids:
+      - atc-index
+      - atc-init
+      - bdd-project-config
+      - ccd-project-planning
+      - typescript-instructions
+      - cdt-register-type
+      - cop-index
+      - cop-specdojo-operations
+      - dct-index
+      - dct-data-model-ccd
+      - dmd-index
+      - dmd-slack-records
+      - dss-docs-site
+      - etc-index
+      - etc-provider-cli
+      - gl-common
+      - ifx-file-agent-evidence
+      - imp-business
+      - imp-data
+      - imp-interface
+      - imp-operations
+      - imp-test
+      - itc-index
+      - itc-catalog-schedule
+      - mip-index
+      - mtp-index
+      - nfr-availability
+      - nfr-index
+      - nfr-integrity
+      - nfr-maintainability
+      - nfr-operations
+      - nfr-performance
+      - nfr-reliability
+      - nfr-security-safety
+      - nfr-usability
+      - opd-index
+      - opd-monitoring
+      - opr-index
+      - opr-agent-cli-update
+      - otp-index
+      - otp-hypercare
+      - pjr-index
+      - pm-change-request-log
+      - pm-issue-log
+      - pm-risk-register
+      - sac-reliability
+      - sch-defaults
+      - stc-index
+      - stc-init
+      - sysd-agent-settings
+      - trc-requirements-to-specs
+      - trc-requirements-to-tests
+      - tsd-index
+      - tsp-index
+      - utc-index
+      - utc-catalog
+      - bac-init
+      - cdfd-overview
+      - cdfd-jibungoto-planet
+      - cdfd-uc-register
+      - cnd-specdojo
+      - cpd-specdojo-cli
+      - cxd-specdojo
+      - ifd-specdojo
+      - ifx-cmd-ai-provider-cli
+      - ifx-index
+      - pm-members
+      - pm-roles
+      - prj-issues-and-approach
+      - prj-overview
+      - prj-scope
+      - prj-stakeholder-register
+      - stsd-register-entry
+      - sysd-critical-flows
+      - sysd-cross-cutting-policy
+      - sysd-index
+      - tsd-specdojo-cli
+      - bes-routine-due
+      - bps-init-required
+      - br-task-selection-strategy
+      - pm-communication-plan
+      - pm-organization
+      - pm-plan
+      - pm-quality-management-plan
+      - pm-raci
+      - prj-assumptions-constraints-dependencies
+      - prj-comparison-of-alternatives
+      - prj-success-criteria-and-acceptance-criteria
+    intent: improve-kata
+    kata_target: rulebook
+phase_sets:
+  rulebook-slim-pass:
+    - id: rulebook-maintenance
+      name: rulebook から運用の記述を外す
+      execution: agent
+      mode: edit
+      approach: rulebook-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "040"
+      duration_days: 0.25
+      description: "対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの [[specdojo:sld-rulebook|sld-rulebook]] である。 外す記述: 役割の表と役割の段落、status の draft 維持・ready 昇格・PO の承認・agent の禁止・公開の承認条件・改訂と廃止の手順、 文書品質の検査（prettier・lint・見出し・wikilink）を業務の検証や受入条件に入れること、未決事項の表の管理台帳の区分・担当・判断時期・追跡先の列と台帳への登録の段落、 本文要件の言い直しだけの用語の表、共通規約と同じ禁止事項。 残す記述: その型固有の判断基準と区分、標準の列と章の受入条件、良い例・悪い例、型固有の禁止事項、業務の受入確認の手順と合格条件、未決事項の論点と影響。 参照の形: 全体方針に「共通の運用」を 1 項目だけ置き、役割は適用先のメンバー定義、status・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を参照する。 章名と必須・条件付きの区分は、既存の成果物との対応を保つため原則として変えない。変える場合は理由を result に書く。 大きさは、空白を除いた文字数で今の 8 割以下を目安にし、前後の文字数を result に書く。成果物本体は変更しない。 共通の正本に足りない記述があれば、rulebook ではなく変更案として result に書く。 この段で直すのは rulebook だけとする。recipe・template・sample は commit の対象外のため変えず、合わせて直すべき点があれば変更案として result に書く。 rulebook が frontmatter の includes で取り込む記法の rulebook（*-mermaid・*-d2 など）があれば、同じ段で同じ一覧に沿って簡潔にする。ただし cdfd-mermaid-rulebook と cdfd-d2-rulebook は cdfd-rulebook の段（cdfd-jibungoto-planet）だけが直し、cdfd-overview と cdfd-uc の段では変えない。非推奨の rulebook（cld・cstd・tml）と、扱いを決める decision がある ntp・dec は変えない。"
+      agent:
+        executor: sol-executor
+  recipe-slim-pass:
+    - id: recipe-maintenance
+      name: recipe から運用の記述と言い直しを外す
+      execution: agent
+      mode: edit
+      approach: recipe-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "060"
+      duration_days: 0.25
+      description: "直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの [[specdojo:prj-charter-recipe|prj-charter-recipe]] である。 外す記述: どの成果物にも共通する文書の運用（役割の表と段落、status の昇格と承認、公開の承認条件、改訂と廃止の手順、文書品質の検査を手順や仕上げチェックの合格条件に入れること）、 未決事項の管理台帳の列（区分・担当・期限・判断時期・対応方針・追跡先）と台帳へ登録する旨の段落、 rulebook と同じ判断の言い直し（表の列の指定、必須の観点の列挙、委譲先の文書の指定、承認記録の書き方、禁止事項の言い換え）、 仕上げチェックの構造の検査（章立て・必須の列がそろっている など）、recipe 内の同じ確認の繰り返し（レビュー観点・良い例と悪い例・仕上げチェックで同じ点を確かめる、深掘り手順が全体の作成手順をなぞる）、章立てをなぞる文。 残す記述: 章を書く順番とその理由、入力の集め方（何をどこから取り出すか、誰に何を聞くか）、書き手が答える問い（各節 2 つ程度）とつまずきやすい点・聞き方のコツ、 対応のない主張を探す深掘りの順序、判断の差が具体的に分かる良い例と悪い例（ほかの章と同じ確認は 1 か所にまとめる）、型固有の対応関係を 1 項目で示す「このレシピの使い方」。 参照の形: recipe 本文に rulebook・sample への参照（wikilink、照合指示、章タイトルでの参照）を書かない（Recipe 記述標準）。判断の基準は言い直さずに外し、成果物の章名で示す。共通の運用の参照文も書かない。 上位成果物を正とする内容は「写さず参照に置き換える」とコツに書く。Recipe 記述標準の章の構成は保つ。 大きさは、空白を除いた文字数で今の 7 割以下を目安にし、前後の文字数を result に書く。成果物本体は変更しない。 この段で直すのは recipe だけとする。rulebook・sample・template は commit の対象外のため変えず、合わせて直すべき点があれば変更案として result に書く。"
+      agent:
+        executor: opus-executor
+default_phase_sets:
+  - phase_set: rulebook-slim-pass
+owner_rules:
+  - local_ids:
+      - atc-index
+      - atc-init
+      - bdd-project-config
+      - ccd-project-planning
+      - typescript-instructions
+      - cdt-register-type
+      - cop-index
+      - cop-specdojo-operations
+      - dct-index
+      - dct-data-model-ccd
+      - dmd-index
+      - dmd-slack-records
+      - dss-docs-site
+      - etc-index
+      - etc-provider-cli
+      - gl-common
+      - ifx-file-agent-evidence
+      - imp-business
+      - imp-data
+      - imp-interface
+      - imp-operations
+      - imp-test
+      - itc-index
+      - itc-catalog-schedule
+      - mip-index
+      - mtp-index
+      - nfr-availability
+      - nfr-index
+      - nfr-integrity
+      - nfr-maintainability
+      - nfr-operations
+      - nfr-performance
+      - nfr-reliability
+      - nfr-security-safety
+      - nfr-usability
+      - opd-index
+      - opd-monitoring
+      - opr-index
+      - opr-agent-cli-update
+      - otp-index
+      - otp-hypercare
+      - pjr-index
+      - pm-change-request-log
+      - pm-issue-log
+      - pm-risk-register
+      - sac-reliability
+      - sch-defaults
+      - stc-index
+      - stc-init
+      - sysd-agent-settings
+      - trc-requirements-to-specs
+      - trc-requirements-to-tests
+      - tsd-index
+      - tsp-index
+      - utc-index
+      - utc-catalog
+    owner: BA
+    phase_sets:
+      - rulebook-slim-pass
+  - local_ids:
+      - bac-init
+      - cdfd-overview
+      - cdfd-jibungoto-planet
+      - cdfd-uc-register
+      - cnd-specdojo
+      - cpd-specdojo-cli
+      - cxd-specdojo
+      - ifd-specdojo
+      - ifx-cmd-ai-provider-cli
+      - ifx-index
+      - pm-members
+      - pm-roles
+      - prj-issues-and-approach
+      - prj-overview
+      - prj-scope
+      - prj-stakeholder-register
+      - stsd-register-entry
+      - sysd-critical-flows
+      - sysd-cross-cutting-policy
+      - sysd-index
+      - tsd-specdojo-cli
+    owner: BA
+    phase_sets:
+      - rulebook-slim-pass
+      - recipe-slim-pass
+  - local_ids:
+      - bes-routine-due
+      - bps-init-required
+      - br-task-selection-strategy
+      - pm-communication-plan
+      - pm-organization
+      - pm-plan
+      - pm-quality-management-plan
+      - pm-raci
+      - prj-assumptions-constraints-dependencies
+      - prj-comparison-of-alternatives
+      - prj-success-criteria-and-acceptance-criteria
+    owner: BA
+    phase_sets:
+      - recipe-slim-pass
