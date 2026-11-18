@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-prj-assumptions-constraints-dependencies-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-prj-assumptions-constraints-dependencies-060/T-KATA-SLIM-2-prj-assumptions-constraints-dependencies-060-20261118T145907Z-44be5839/plan.md
   started_at: "2026-11-18T14:59:12.755Z"
+  completed_at: "2026-11-18T15:16:53.036Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- recipe から、rulebook で規定されている判断基準の言い直し、文書運用の共通記述、構造検査、および重複する確認事項を削除し、記述を簡略化した。
+- 具体的に、執筆順序、入力情報の取得元、聞き方のコツ、深掘り手順に焦点を当てた内容に整理した。
+- finding F001（構造検査の不整合）は、当該の検査記述を削除することで解消した。
+- finding F002 および F003 に基づき、端末利用などの例示を適切な項目（依存関係）へ移動し、矛盾する例を排除して修正した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md`: rulebook と重複する判断基準、共通の運用記述、構造検査、冗長な確認事項を削除し、執筆上のコツや深掘り手順を中心とした構成に簡略化した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 大きさ: 空白（改行を含む）と表の区切り行を除いた文字数で、4,133 字から 2,711 字（65.6%）になった。
+- F002・F003 が指していた文言は今の recipe になかったため、新しい良い例と悪い例が指摘と矛盾しないことを確かめた。解消したかは、統合の後に orchestrator が型の grade をかけ直して確かめる。
+- rulebook・sample・template に変える必要のある点はなかった。
+- 適用外の検証: `npm run lint:md`（pipeline の親 runner が実行する検査で、executor では実行しない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+recipe-maintenance
