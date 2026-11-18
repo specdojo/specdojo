@@ -1,0 +1,17 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T13:08:16Z",
+  "type": "unblock",
+  "task_id": "T-KATA-SLIM-2-stsd-register-entry-040",
+  "by": "sol-executor",
+  "msg": "resume integration from persisted pipeline state",
+  "meta": {
+    "pipeline_stage": "integrate",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-stsd-register-entry-040/T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-stsd-register-entry-040/T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-stsd-register-entry-040-20261118T120123Z-7f0e1398",
+    "claim_actor": "sol-executor",
+    "stage_actor": "opus-executor",
+    "pipeline_resume_claimed": "true"
+  }
+}
