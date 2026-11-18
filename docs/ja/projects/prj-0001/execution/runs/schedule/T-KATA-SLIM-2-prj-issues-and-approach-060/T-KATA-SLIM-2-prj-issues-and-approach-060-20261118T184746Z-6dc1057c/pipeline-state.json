@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-prj-issues-and-approach-060",
   "run_id": "T-KATA-SLIM-2-prj-issues-and-approach-060-20261118T184746Z-6dc1057c",
-  "updated_at": "2026-11-18T19:18:02.205Z",
+  "updated_at": "2026-11-18T19:18:37.896Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-prj-issues-and-approach-060/T-KATA-SLIM-2-prj-issues-and-approach-060-20261118T184746Z-6dc1057c/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T19:18:02.205Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T19:18:37.896Z",
       "artifact_ref": null
     }
   },
