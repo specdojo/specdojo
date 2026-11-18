@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-DJZD"]'
+- v: 1
+  id: reg_ce1219608a59468dbe428659b3c068d0
+  ts: "2026-11-18T11:07:26Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が推奨の A を決定した（2026-11-18、対話）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: A を採る。dec の型を非推奨にし、後継を登録簿の decision とする。作業は PJR-HVQZ
+  previous_event_id: reg_bcfd4fc6f3cc487cb6e44c8dd6192d45

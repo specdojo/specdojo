@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-3vjm-dec-deprecation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: BA
   registered_at: "2026-11-17T23:22:34Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-18T11:07:26Z"
+  conclusion: A を採る。dec の型を非推奨にし、後継を登録簿の decision とする。作業は PJR-HVQZ
   derived_from:
     - PJR-DJZD
 ---
