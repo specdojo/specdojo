@@ -1,0 +1,22 @@
+`nfr-maintainability-rulebook.md` から運用の記述を外し、空白を除いた文字数は 3,427 字から 2,504 字（73%）になりました。8 割以下の目安は満たしています。成果物本体と sample は変えていません。そのため finding F001（sample が標準の構成に従っていない）は、sample を直すまで解消しません。
+
+prettier の確認と markdownlint はどちらも問題なしでした。
+
+**外した記述**
+- Frontmatter 項目の表を外しました。この表は廃止された `title` の行と、共通の `status` の値を載せていました。代わりに「正本はドキュメントメタ情報標準と schema」と書き、この型だけの値（`type`・`rulebook`・`part_of`・`based_on`）を箇条書きにしました。
+- 用語の表の「保守性」の行を外しました。冒頭の定義の言い直しだったためです。
+- 記述ガイドの各節にあった「生成する本文の見出しは…」の行を外しました。本文構成の表の言い直しだったためです。
+- 同じ判断で、サンプル章の「適用範囲・前提条件」と「関連ドキュメント導線」の例も外しました。サンプル章は、rulebook 作成標準の経過措置に合わせて最小例（Frontmatter、要件一覧と測定方法の各 4 行）に絞りました。Frontmatter は `specdojo:` 名前空間の形に直しています。
+- 相対パスの Markdown リンクは wikilink とインラインコードに替えました。
+
+**足した記述**
+- 全体方針に「共通の運用」を 1 項目置きました。役割はメンバー定義、`status`・承認・改訂と廃止・未決事項はドキュメントメタ情報標準を参照し、整形・lint は「測定・検証方法」に含めない、という内容です。
+- 「測定・検証方法」のガイドに、要件 ID ごとに測定方法・判定タイミング・判定者を示すことを足しました。前のサンプルの表で行っていた形です。
+
+**残した記述**
+- 章名、必須の区分、判断基準、型固有の禁止事項は変えていません。
+- 未決事項の表や役割の表は、もとの rulebook にありませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`nfr-maintainability-rulebook` から運用の記述を外し、全体方針に「共通の運用」を 1 項目置いた。外したのは Frontmatter 項目の表（廃止された `title` の行と共通の `status` の値）、用語の表の言い直し、見出しの言い直しの行、サンプル章の完成例の大半。章名と必須の区分は変えていない。空白を除いた文字数は 3,427 字から 2,504 字（73%）。sample は変更の対象外のため、finding F001 は sample の変更案として handoff に残した。","handoff":["大きさ: 空白（改行を含む）を除いた文字数。表の区切り行を除くと前 3,427 字 → 後 2,504 字（73%）。区切り行を含むと前 3,966 字 → 後 2,852 字。","章名と必須の区分は変えていない（既存の成果物との対応を保つため）。第 2 章は用語の表に MTTR・変更リードタイムの定義が残るため「位置づけと用語定義」のままにした。用語の表から外したのは、冒頭の定義を言い直す「保守性」の行だけ。","外した記述: Frontmatter 項目の表（廃止された `title` の行、共通の `status` の値の列挙、相対パスの Markdown リンク）は、正本（ドキュメントメタ情報標準と `deliverable-frontmatter.schema.yaml`）への参照と、型固有の値（`specdojo.type`・`specdojo.rulebook`・`specdojo.part_of`・`specdojo.based_on`）の箇条書きに置き換えた。記述ガイドの「生成する本文の見出しは…」の行は本文構成の表の言い直しのため外した。もとの rulebook には役割の表・承認の段落・未決事項の管理台帳の列はなかった。","サンプル章は、rulebook 作成標準の経過措置（完成例を丸ごと埋め込まず、形式の輪郭が伝わる最小例に限る）に従い、Frontmatter（`specdojo:` 名前空間の形に修正）と、保守性要件一覧・測定・検証方法の各 4 行に絞った。適用範囲・前提条件と関連ドキュメント導線の例は外した。章そのものは削除していない（標準の「個別の改訂で先行して削除しない」に従った）。","F001（major/vp-qe-kata-conformance）: rulebook 側では解消できず、未解消。原因は `specdojo:nfr-maintainability-sample` が汎用の形（目的と適用範囲・入力情報・記述内容・最小記述例・未解決事項）のままで、標準の 5 章（概要（対象・目的）／適用範囲・前提条件／保守性要件一覧／測定・検証方法／関連ドキュメント導線）に従っていないこと。sample の変更案: (1) 5 章を順序どおりに置き、駄菓子屋の販売管理システムを文脈にする。(2) 要件一覧は `id`・内容・指標・基準・備考の 5 列で MTTR・変更リードタイム・一次切り分け時間などを `nfr-mnt-<連番>` で採番する。(3) 測定・検証方法は要件 ID ごとに測定方法・判定タイミング・判定者を示す。(4) 関連ドキュメント導線に `nfr-index`・`sac-*`・`opd-*`・`opr-*`・`dec-*` を置く。(5) H1 と本文から rulebook への相対リンクを外す。改訂前の rulebook のサンプル章（git の履歴にある）を下書きに使える。次のアクション: sample を直す todo を起票し、その後に再 grade する。","recipe・template は `undecided` で、対応するファイルがないため変更案はない。共通の正本への追記は不要と判断した（`part_of`・`based_on`・`status` の扱いはドキュメントメタ情報標準の成果物の任意項目と値制約で賄える）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは rulebook だけで、plan・result・個票などの履歴ファイルを変更していないため"}]}
+</specdojo_executor_evidence>
