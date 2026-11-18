@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-cdfd-uc-register-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-cdfd-uc-register-060/T-KATA-SLIM-2-cdfd-uc-register-060-20261118T200815Z-72cc2de2/plan.md
   started_at: "2026-11-18T20:08:21.354Z"
+  completed_at: "2026-11-18T20:40:55.787Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/specdojo/recipes/cdfd-uc-recipe.md` から、文書の共通運用記述（役割表、承認条件、改訂・廃止手順など）および `rulebook` と重複する判断基準の言い直しを削除し、内容をスリム化した。
+- Finding F001 に対応し、4.1 節を「導入文と目的」に変更したうえで、導入文に関する問い、コツ、良い例/悪い例、作成手順を追加した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/cdfd-uc-recipe.md`: 文書の共通運用記述、`rulebook` で定義済みの判断基準、構造検査などの冗長な記述を削除し、導入文の記述ガイドを追加してスリム化した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 大きさ（空白を除き、表の区切り行を除く）: 前 5,467 字（区切り行込み 5,770 字・16,374 B）→ 後 3,111 字（3,423 字・9,636 B）、比 56.9%。result の `進め方と実践の型の適用` に記載する。
+- F001（導入文の書き方がない）は、4.1 を「導入文と目的」に変え, 問い・コツ・良い例 / 悪い例・作成手順の最終段に導入文を入れて対応した。再 grade で解消を確認する。
+- rulebook・sample・template に合わせて直す点はなかった（template の未決事項の章に台帳の列はない）。
+- F001（導入文の書き方がない）は、4.1 を「導入文と目的」に変え、問い・コツ・良い例 / 悪い例・作成手順の最終段に導入文を入れて対応した。再 grade で解消を確認する。
+- 適用外の検証: `npm run validate:history-links`（変更は recipe だけで、plan・result・個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+「このフェーズで行うこと」に従い、`docs/ja/specdojo/recipes/cdfd-uc-recipe.md` から共通運用記述や `rulebook` と重複する言い直しを削除し、文字数を削減した。同時に、Finding F001 に基づき導入文に関する具体的ガイドを 4.1 節に追加することで、実用性を維持しつつ簡潔な recipe へ改訂した。
