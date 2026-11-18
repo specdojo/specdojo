@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060",
+  "run_id": "T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060-20261118T150132Z-a9dc8adf",
+  "updated_at": "2026-11-18T15:26:54.162Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T15:05:25.896Z",
+      "completed_at": "2026-11-18T15:07:00.734Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060-20261118T150132Z-a9dc8adf/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T15:23:33.828Z",
+      "completed_at": "2026-11-18T15:26:50.335Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060-20261118T150132Z-a9dc8adf/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T15:26:54.162Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060-20261118T150132Z-a9dc8adf/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060/T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060-20261118T150132Z-a9dc8adf/result.md"
+  }
+}
