@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-pm-raci-060",
   "run_id": "T-KATA-SLIM-2-pm-raci-060-20261118T011658Z-de965654",
-  "updated_at": "2026-11-18T01:57:55.807Z",
+  "updated_at": "2026-11-18T01:58:12.776Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-raci-060/T-KATA-SLIM-2-pm-raci-060-20261118T011658Z-de965654/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T01:57:55.807Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T01:58:12.776Z",
       "artifact_ref": null
     }
   },
