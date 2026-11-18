@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-pm-communication-plan-060",
+  "run_id": "T-KATA-SLIM-2-pm-communication-plan-060-20261118T154042Z-fd757059",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T15:42:42.677Z",
+    "completed_at": "2026-11-18T15:44:40.236Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/pm-communication-plan-recipe.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../recipes/pm-communication-plan-recipe.md        | 109 ++++++++++++---------\n 1 file changed, 60 insertions(+), 49 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/recipes/pm-communication-plan-recipe.md",
+      "status": "passed",
+      "summary": "整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親 runner が実行する（parent validation）"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "変更したのは recipe だけで、plan・result・個票を変えていない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5390 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5390 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-communication-plan-060\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .\n… output omitted …\n: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nclose timed out after 10000ms\nTests closed successfully but something prevents Vite server from exiting\nYou can try to identify the cause by enabling \"hanging-process\" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nbook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-communication-plan-060/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-communication-plan-060/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-communication-plan-060\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 997ms\n     ✓ resolves declared and reverse-linked Kata references  387ms\n[parent\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "pm-communication-plan-recipe を改訂した。rulebook の言い直し（列の指定・観点の列挙・禁止事項の言い換え）、構造の検査、同じ確認の繰り返しを外した。取り出し元の列、書く順番とその理由、各節の問い 2 つとコツ、4.5 見直し条件と未決事項、対応のない主張を探す深掘り手順、表形式のレビュー観点を置き、F001〜F004 に対応した。大きさは空白を除いて 1,594 字から 1,519 字（95.3%）で、7 割の目安には届いていない。",
+  "completion_status": "complete",
+  "handoff": [
+    "大きさ: 空白と表の区切り行を除くと 1,594 字から 1,519 字（95.3%）。区切り行を含むと 1,719 字・4,484 B から 1,751 字・4,582 B。7 割以下の目安に届かないのは、元の recipe がもともと短いことと、grade の finding（F002: 4.5 節の追加、F003: 問いと例の追加、F004: レビュー観点の表）が記述の追加を求めているため。7 割まで削ると Recipe 記述標準の「各必須章に具体項目 3 つ以上」と finding の要求を満たさなくなる。今の大きさを受け入れるかどうかを人が判断する。",
+    "外した記述: 一次対応と最終判断を区別する列の指定、エスカレーションを分ける観点の列挙（当事者価値・費用・品質・公開）、「必要に応じて」で終わらせない・関係者名簿を再掲しないという禁止事項の言い換え、仕上げチェックの構造の検査（機会・エスカレーション・情報取扱いがある）、レビュー観点・良い例・仕上げチェックで重なっていた確認、全体の作成手順の言い直し。元の recipe には、役割の表、status の昇格と承認、公開の承認条件、改訂と廃止の手順、文書品質の検査、未決事項の管理台帳の列はなかった。",
+    "finding への対応: F001 と F004 はレビュー観点を「観点」と「確認内容」の表にし、確認内容を判定できる文にした。F002 は 4.5 見直し条件と未決事項の節を足した。F003 は各節に問いを 2 つずつ置き、良い例 / 悪い例にエスカレーションの行を足した。",
+    "rulebook・sample・template に変更案はない。ただし rulebook の「6.5 見直し条件と未決事項」は見直しのきっかけを列挙しているため、recipe ではそれを言い直さず、問いの形にした。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-communication-plan-060/T-KATA-SLIM-2-pm-communication-plan-060-20261118T154042Z-fd757059/executor.log",
+      "bytes": 5964,
+      "truncated": false
+    }
+  ]
+}
