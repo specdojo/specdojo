@@ -1,0 +1,22 @@
+stc-rulebook から、全成果物に共通する運用の記述を外し、ドキュメントメタ情報標準への参照にしました。空白と表の区切り行を除いた文字数は 6,777 字から 5,416 字になり、比は 79.9% で 8 割以下の目安を満たしています。Prettier の確認は通りました。それ以外の検査は親 runner が実行します。
+
+ただし、grade の指摘 F001 は解消していません。原因の stc-sample は、この段で変えてはいけないためです。
+
+**変えた箇所（`docs/ja/specdojo/rulebooks/stc-rulebook.md` だけ）**
+- **全体方針:** 「共通の運用」を 1 項目足しました。役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはメタ情報標準を参照する形です。文書の整形・lint はケースの期待値や証跡に含めない、と 1 文で書きました。
+- **Frontmatter:** 項目の表を外し、メタ情報標準と schema を正本とする 1 文にしました。外した表には、Markdown 規約で禁止の `title` 行と、`status` の値の言い直しが含まれていました。`specdojo.` 名前空間を前提に書き直し、`based_on` の推奨ルールは残しました。
+- **言い直しの削除:** 冒頭の重複段落、トレース章と観点ケース章の前置きの文、対象外の重複した箇条を削りました。境界/環境/依存の箇条と `case_id` の規則は短くまとめました。
+- **サンプル（最小）:** 旧形式の Frontmatter（`title` あり、名前空間なし）と章外の見出しをやめ、1 つの `markdown` コードブロックに収めた最小例にしました。rulebook 記述標準が「個別の改訂で先行して削除しない」としているため、章は残しています。
+- **残したもの:** 章名、全章必須の区分、`trace_key`・`case_id`・`perspective_key` の規則、型固有の禁止事項 7 行はそのままです。
+
+**確かめられなかったこと**
+- 根拠の成果物 stc-init（`docs/ja/product/080-test-specs/050-system-test-catalog/stc-init.md`）は、このリポジトリにありませんでした。そのため、成果物の実態との突き合わせはしていません。
+- `includes` で取り込む記法の rulebook はなく、共通の正本へ足す記述も見つかりませんでした。
+
+**引き継ぎ（次の段への変更案）**
+- **F001（stc-sample）:** 本文構成の 6 章（概要・目的・対象外・境界/環境/依存・トレース・テスト観点とケース）に沿っていません。これが F001 の原因です。今の見出しは、目的と適用範囲・入力情報・記述内容・最小記述例・未解決事項です。駄菓子屋の文脈で 6 章構成に作り直す案です。あわせて、H1 と本文のリンク `../rulebooks/stc-rulebook.md` を外します（rulebook 記述標準で禁止）。
+- **recipe・template:** どちらも `undecided` のままで、変更案はありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"stc-rulebook から全成果物に共通する運用の記述（Frontmatter 項目の表と title・status の言い直し、冒頭の重複、言い直しの前置き）を外し、全体方針の「共通の運用」1 項目でドキュメントメタ情報標準を参照する形にした。章名と必須区分は変えていない。サンプル章は経過措置として残し、名前空間付き Frontmatter の最小例 1 ブロックにした。空白と表の区切り行を除く文字数は 6,777 字から 5,416 字（79.9%）。F001 の原因の stc-sample は変更対象外のため、変更案を handoff に残した。","handoff":["文字数（空白・改行と表の区切り行を除く）: 前 6,777 字 → 後 5,416 字（79.9%）。測り方は sld 試行（PJR-8S4T）と同じ。","章名と必須・条件付きの区分は変えていない（既存の stc 成果物との対応を保つため）。用語の表と役割の表は元からなかった。禁止事項 7 行はすべて stc 固有のため残した。サンプル章は rulebook-authoring-standard の「個別の改訂で先行して削除しない」に従って残した。旧形式の Frontmatter（`title` あり、`specdojo:` 名前空間なし）と章外の見出しをやめ、`specdojo:` 名前空間の Frontmatter と H1・6 章を 1 つの `markdown` コードブロックに収めた最小例にした。","Frontmatter の章は項目の表（`title` 行・`status` の値の言い直しを含む）を外し、ドキュメントメタ情報標準と `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` を正本とする参照にした。本文の相対 Markdown リンクも wikilink とパス表記に置き換えた。H1 の形式（`# 総合テストカタログ: <対象名>`）は命名規則の章へ移した。","F001（`vp-qe-kata-conformance`）は未解消。原因の `specdojo:stc-sample` は、この段では commit の対象外で変えていない。変更案: stc-sample を本文構成の 6 章（概要（`<term>`）・目的・対象外・境界/環境/依存・トレース（`trace_key` の表）・テスト観点とケース（観点・意図・条件・ケース表））で、駄菓子屋の文脈で作り直す。あわせて、H1 と本文の `../rulebooks/stc-rulebook.md` へのリンク（rulebook-authoring-standard で禁止）を外す。sample には共通の運用の参照文を書かない。","根拠の成果物 stc-init（`docs/ja/product/080-test-specs/050-system-test-catalog/stc-init.md`）はこの worktree になく、成果物との突き合わせはできなかった。recipe・template は `undecided` で変更案はない。`includes` で取り込む記法の rulebook はない。共通の正本（ドキュメントメタ情報標準）へ足す記述はないと判断した。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/stc-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは docs/ja/specdojo/rulebooks/stc-rulebook.md だけで、plan・result・個票などの履歴ファイルは変更していない"}]}
+</specdojo_executor_evidence>
