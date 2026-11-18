@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-bac-init-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-bac-init-060/T-KATA-SLIM-2-bac-init-060-20261118T161548Z-152fdaeb/plan.md
   started_at: "2026-11-18T16:15:58.386Z"
+  completed_at: "2026-11-18T16:43:28.238Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/specdojo/recipes/bac-recipe.md` から、共通の運用記述、未決事項管理台帳の詳細、および `rulebook` と重複する判断基準の言い直しを削除し、内容をスリム化した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/bac-recipe.md`: 共通の運用記述（改訂手順、引き継ぎ等）、未決事項台帳の列定義と登録手順、`rulebook` と重複する判断基準（期待結果の4要素、`_TODO_` と `_UNDECIDED_` の使い分け、対象外の参照先）、重複するレビュー観点、および仕上げチェックの構造検査を削除。各章の良い例・悪い例を統合し、文字数を削減（空白除き 3188 字 → 2229 字）。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result に前後の文字数を書く: 空白を除いて 3188 字から 2229 字（約 69.9%）。
+- rulebook・sample・template の変更案: 今回見た範囲では、変える点は見つからなかった。
+- 外した記述: 改訂の手順と QE・ARC・PO・PM への引き継ぎ、未決事項の台帳の列（判断依頼先・解消時点・追跡先）と PJR 登録の段落、rulebook と同じ判断の言い直し（期待結果の 4 要素、`_TODO_` と `_UNDECIDED_` の使い分け、対象外の参照先）、レビュー観点の重複（観測可能性、合意と継承）、仕上げチェックの構造の検査。各章の良い例・悪い例は「良い例 / 悪い例」の表にまとめた。
+- 残した記述: 使い方（Why・What・How・Trace の 1 項目）、集める情報（取り出し元の列を追加）、書く順番とその理由、各節の問い 2 つとコツ（写さず参照に置き換える、を含む）、深掘り手順の 4 段、6 観点の良い例・悪い例。
+- 適用外の検証: `npm run validate:history-links`（変更したのは docs/ja/specdojo/recipes/bac-recipe.md だけで、plan・result・個票は変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+Recipe記述標準および `rulebook` との整合性を担保しつつ、冗長な記述（共通運用、重複する判断基準、構造検査など）を徹底的に排除することで、レシピをスリム化し、書き手が集中すべき「問い」と「コツ」を明確にした。
