@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-cnd-specdojo-060",
   "run_id": "T-KATA-SLIM-2-cnd-specdojo-060-20261118T202030Z-77df87eb",
-  "updated_at": "2026-11-18T20:54:36.843Z",
+  "updated_at": "2026-11-18T20:55:13.564Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-cnd-specdojo-060/T-KATA-SLIM-2-cnd-specdojo-060-20261118T202030Z-77df87eb/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T20:54:36.843Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T20:55:13.564Z",
       "artifact_ref": null
     }
   },
