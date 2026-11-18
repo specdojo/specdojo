@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-cdfd-jibungoto-planet-060",
   "run_id": "T-KATA-SLIM-2-cdfd-jibungoto-planet-060-20261118T212429Z-78b919ea",
-  "updated_at": "2026-11-18T21:56:22.859Z",
+  "updated_at": "2026-11-18T21:57:05.452Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-cdfd-jibungoto-planet-060/T-KATA-SLIM-2-cdfd-jibungoto-planet-060-20261118T212429Z-78b919ea/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T21:56:22.859Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T21:57:05.452Z",
       "artifact_ref": null
     }
   },
