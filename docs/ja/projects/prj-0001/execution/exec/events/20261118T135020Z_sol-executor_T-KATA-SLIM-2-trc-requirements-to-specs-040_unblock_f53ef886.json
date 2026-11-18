@@ -1,0 +1,18 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T13:50:20Z",
+  "type": "unblock",
+  "task_id": "T-KATA-SLIM-2-trc-requirements-to-specs-040",
+  "by": "sol-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sol-executor",
+    "stage_actor": "sonnet-reporter",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-trc-requirements-to-specs-040/T-KATA-SLIM-2-trc-requirements-to-specs-040-20261118T121250Z-004d5b74/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-trc-requirements-to-specs-040/T-KATA-SLIM-2-trc-requirements-to-specs-040-20261118T121250Z-004d5b74/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-trc-requirements-to-specs-040-20261118T121250Z-004d5b74",
+    "pipeline_resume_claimed": "true"
+  }
+}
