@@ -17,6 +17,7 @@ import {
   type AgentLimitSignal,
 } from "../limit.js";
 import { replaceDocIndexRefs } from "../../docs/doc-index.js";
+import { localConfigEnvironment } from "../../shared/local-config.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
 import {
@@ -903,6 +904,7 @@ export function agentEnvironment(
 ): NodeJS.ProcessEnv {
   return {
     ...withoutInheritedRepoEnvironment(gitEnvironment()),
+    ...localConfigEnvironment(repoRoot),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
     ...productRepoEnvironment(worktreePath, productWorktrees),

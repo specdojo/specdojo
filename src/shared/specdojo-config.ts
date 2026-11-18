@@ -22,6 +22,13 @@ import {
   gitignorePatternsForLayouts,
   type ProjectGitignoreLayout,
 } from "./specdojo-gitignore.js";
+import {
+  applyLocalConfig,
+  formatConfigShow,
+  readLocalConfig,
+  repositoryIdentityRoot,
+  type LocalConfigOverride,
+} from "./local-config.js";
 
 export type SpecDojoRunConfig = {
   exec_defaults?: string;
@@ -301,20 +308,6 @@ export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
 
 export const KATA_AUTHORITY_PATTERN = /^(?!prj-)(?!specdojo$)[a-z][a-z0-9-]*$/;
 
-function repositoryIdentityRoot(rootDir: string): string {
-  const root = resolve(rootDir);
-  const dotGit = join(root, ".git");
-  if (!existsSync(dotGit) || statSync(dotGit).isDirectory()) return root;
-  const gitdirLine = readTextFileOrNull(dotGit)
-    ?.split(/\r?\n/)
-    .find((line) => line.startsWith("gitdir:"));
-  if (!gitdirLine) return root;
-  const gitdir = resolve(root, gitdirLine.slice("gitdir:".length).trim()).replaceAll("\\", "/");
-  const marker = "/.git/worktrees/";
-  const markerIndex = gitdir.lastIndexOf(marker);
-  return markerIndex >= 0 ? gitdir.slice(0, markerIndex) : root;
-}
-
 export function defaultKataAuthority(rootDir: string = specdojoRootDir()): string {
   const directoryName = basename(repositoryIdentityRoot(rootDir));
   const normalized = directoryName
@@ -358,6 +351,10 @@ type AgentMemberRoster = {
 export type ConfigLoadResult = {
   configPath: string;
   config: SpecDojoConfig | null;
+  /** Local config applied after the shared one (absent when none was read). */
+  localConfigPath?: string;
+  /** Values that came from the local config, in application order. */
+  localOverrides?: LocalConfigOverride[];
 };
 
 export function specdojoRootDir(startDir: string = process.cwd()): string {
@@ -1055,29 +1052,44 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
 
   const projectIds = Object.keys(parsed.projects);
   const rootDir = dirname(dirname(configPath));
+  // The local config is read after the shared one and may change only allowlisted keys
+  // (PJR-NC9R). The merged result goes through the same validation as the shared config.
+  const local = readLocalConfig(rootDir);
+  const applied = local
+    ? applyLocalConfig(parsed, local.value, local.path, REPO_KEYS)
+    : { config: parsed, overrides: [] };
+  const effective = applied.config;
   const repoErrors = projectIds
     .sort()
     .flatMap((projectId) => [
       ...validateCommitTypes(
-        parsed.projects[projectId].commit_types,
+        effective.projects[projectId].commit_types,
         `projects.${projectId}.commit_types`,
       ),
-      ...validateProjectRepos(projectId, parsed.projects[projectId], projectIds, rootDir),
+      ...validateProjectRepos(projectId, effective.projects[projectId], projectIds, rootDir),
     ]);
   const externalProjectErrors = validateExternalProjects(
-    parsed.external_projects,
+    effective.external_projects,
     projectIds,
     rootDir,
   );
   const configErrors = [...repoErrors, ...externalProjectErrors];
   if (configErrors.length > 0) {
+    const localNote = local ? ` with local overrides from ${local.path}` : "";
     throw new Error(
-      `Invalid .specdojo/specdojo.config.json (${configPath}):\n` +
+      `Invalid .specdojo/specdojo.config.json (${configPath}${localNote}):\n` +
         configErrors.map((message) => `  - ${message}`).join("\n"),
     );
   }
 
-  return { configPath, config: parsed };
+  return local
+    ? {
+        configPath,
+        config: effective,
+        localConfigPath: local.path,
+        localOverrides: applied.overrides,
+      }
+    : { configPath, config: parsed };
 }
 
 export function writeConfig(config: SpecDojoConfig): void {
@@ -1179,6 +1191,21 @@ export function registerConfigCommands(program: Command): void {
           '  6. To let tasks change the product repository, declare it under "repos" ' +
           '(e.g. { "name": "app1", "path": "../app1" }) and write targets/paths as app1:<path>.\n',
       );
+    });
+
+  cfg
+    .command("show")
+    .description(
+      "Show the effective repos and which values come from .specdojo/specdojo.local.config.json",
+    )
+    .option("--project <projectId>", "Show only one project")
+    .action((opts: { project?: string }) => {
+      try {
+        process.stdout.write(formatConfigShow(loadConfig(), opts.project));
+      } catch (error) {
+        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+        process.exitCode = 1;
+      }
     });
 
   cfg

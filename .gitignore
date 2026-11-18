@@ -100,6 +100,9 @@ packages/vscode-specdojo/out/
 # commit すると exec の merge で衝突するため tracking しない。
 .specdojo/doc-index.json
 
+# specdojo のローカル設定。環境ごとのリポジトリのパスと追加を書くため tracking しない。
+.specdojo/specdojo.local.config.json
+
 # specdojo build の生成物（generated/ 配下）。
 # catalog/register build と exec refresh が出力する派生ファイルで、timestamp 等で内容が変わる。
 # VitePress build 時（docs:build の前段 docs:generate）に再生成するため tracking しない。

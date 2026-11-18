@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-NC9R",
+  "run_id": "pjr-nc9r-20261118T021656Z-a027875d",
+  "updated_at": "2026-11-18T02:38:32.712Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T02:19:43.915Z",
+      "completed_at": "2026-11-18T02:32:23.119Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NC9R/pjr-nc9r-20261118T021656Z-a027875d/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T02:38:19.238Z",
+      "completed_at": "2026-11-18T02:38:32.712Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NC9R/pjr-nc9r-20261118T021656Z-a027875d/result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NC9R/pjr-nc9r-20261118T021656Z-a027875d/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-NC9R/pjr-nc9r-20261118T021656Z-a027875d/result.md"
+  }
+}

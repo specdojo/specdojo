@@ -16,6 +16,7 @@ import {
 import type { EvidenceValidation, ExecEvidence } from "./evidence.js";
 import type { ReporterOutput } from "./reporter.js";
 import { ensureDir, safeSlug } from "./shared.js";
+import { localConfigEnvironment } from "../shared/local-config.js";
 import { gitEnvironment, gitResult, worktreeNameFromTaskId } from "./worktree.js";
 import {
   getProjectSchedulePath,
@@ -432,6 +433,7 @@ export function worktreeEnvironment(
 ): NodeJS.ProcessEnv {
   return {
     ...gitEnvironment(),
+    ...localConfigEnvironment(repoRoot),
     SPECDOJO_SCHEDULE_PATH: resolve(worktreePath, repoRelative(repoRoot, schedulePath)),
     SPECDOJO_EXECUTION_PATH: resolve(worktreePath, repoRelative(repoRoot, executionPath)),
   };

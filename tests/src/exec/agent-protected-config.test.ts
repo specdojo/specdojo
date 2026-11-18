@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import {
   agentProtectedConfigPaths,
+  agentProtectedConfigViolation,
   captureAgentProtectedConfigSnapshot,
   changedAgentProtectedConfigPaths,
   describeAgentProtectedConfigChanges,
@@ -179,6 +180,28 @@ describe("agent protected configuration paths", () => {
     write(join(root, ".specdojo", "doc-index.json"), '{"entries":[{"id":"a"}]}\n');
 
     expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
+  });
+
+  it("blocks an executor that writes the gitignored local config (PJR-NC9R)", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    initRepository(root);
+    write(join(root, ".gitignore"), ".specdojo/specdojo.local.config.json\n");
+    write(join(root, ".specdojo", "specdojo.config.json"), '{"version":1,"projects":{}}\n');
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    // 追加したリポジトリは commit の許可範囲になるため、ignore 済みでも生成物として扱わない。
+    write(
+      join(root, ".specdojo", "specdojo.local.config.json"),
+      '{"version":1,"projects":{"prj-0001":{"repos":[{"name":"evil","path":".."}]}}}\n',
+    );
+
+    const changed = changedAgentProtectedConfigPaths(root, before);
+    expect(isAgentProtectedConfigPath(".specdojo/specdojo.local.config.json")).toBe(true);
+    expect(changed).toEqual([".specdojo/specdojo.local.config.json"]);
+    expect(agentProtectedConfigViolation(changed)).toContain(
+      ".specdojo/specdojo.local.config.json",
+    );
   });
 
   it("ignores opencode runtime artifacts created while an agent runs", () => {

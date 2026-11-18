@@ -12,6 +12,7 @@ import {
   loadConfig,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
+import { formatLocalConfigLines } from "../shared/local-config.js";
 import {
   DEFAULT_EVENT_MESSAGES,
   KNOWN_OWNER_LABELS,
@@ -105,6 +106,12 @@ export function printExecPaths(opts: { project?: string }): void {
     process.stdout.write(`exec/events : ${eventsDirForProject(projectPath)}\n`);
     process.stdout.write(`generated   : ${generatedDirForProject(projectPath)}\n`);
     process.stdout.write(`scheduler-lock: ${schedulerLockPath(projectPath)}\n`);
+    // Only with a local config, so the output stays unchanged for checkouts without one.
+    const loaded = loadConfig();
+    if (loaded.localConfigPath) {
+      const lines = formatLocalConfigLines(loaded, resolveProjectId(opts));
+      process.stdout.write(lines.map((line) => `${line}\n`).join(""));
+    }
   } catch (error) {
     printCommandError(error, false);
   }

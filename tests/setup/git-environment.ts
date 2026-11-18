@@ -11,3 +11,6 @@ delete process.env.SPECDOJO_PROJECT;
 // calls inherit them and write bookkeeping into the runner's real repository.
 delete process.env.SPECDOJO_SCHEDULE_PATH;
 delete process.env.SPECDOJO_EXECUTION_PATH;
+// The runner hands its main tree's local config to worktree children. Fixture worktrees must
+// resolve their own (or none) instead of the runner's repository settings.
+delete process.env.SPECDOJO_LOCAL_CONFIG;
