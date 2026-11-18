@@ -1,0 +1,25 @@
+`nfr-availability-rulebook` を手直ししました。運用の記述を外して共通の正本への参照にし、空白を除いた文字数は 3,314 字から 2,653 字（80.05%）になりました。目安の 8 割をわずかに超えています。成果物本体、sample・recipe・template は変えていません。
+
+**変更ファイル**: `docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md` だけです。
+
+**主な変更**
+- 全体方針に「共通の運用」を 1 項目足しました。役割は適用先のメンバー定義、`status` の昇格と承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を参照します。文書の整形・lint は「測定・検証方法」に含めないことも書きました。
+- Frontmatter の章（4.1）を書き直しました。
+  - 今の規約で使えない `title` の行と、Markdown リンクを外しました。
+  - 正本は上記の標準と schema とし、`specdojo.id` / `specdojo.type` / `specdojo.rulebook` / `specdojo.part_of` の値だけを書きました。
+  - 4.2 の `based_on` の文は、重要業務時間帯の根拠文書を挙げる意味に直しました。
+- 重複を削りました。
+  - 2.1 の自分自身を指す行を外しました。
+  - 6.5 は 2.1 の文書を参照する形にし、紐づけの表の列を書きました。
+- サンプル章（8 章）は削除せず、最小例に絞りました。
+  - Frontmatter の例を `specdojo:` 名前空間にし、`title` を外しました。
+  - 例の表は行を減らしました。可用性要件と測定方法は稼働率・RTO・RPO の各 1 行を残しています。
+- 変えていないもの: 章名、必須の区分、要件一覧の 5 列、型固有の禁止事項 3 行、用語の表（稼働率・RTO・RPO は本文要件の言い直しではないため）。役割の表や status・承認の記述は、もともとありませんでした。
+
+**grade の指摘 F001（sample が見出し構成に合っていない）は解消していません。** 原因は sample 側にあり、この段では sample を直せないためです。sample への変更案は handoff に書きました。
+
+**検証**: `npx prettier --write` と `npx markdownlint-cli2` を対象ファイルに実行し、0 件でした。整形・lint の正式な結果は、この後に親 runner が出します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-availability-rulebook を手直しした。全体方針に「共通の運用」を足し、Frontmatter の章を specdojo 名前空間・schema 正本の参照に直して `title` と Markdown リンクを外した。重複を削り、サンプル章は最小例に絞った。空白を除いた文字数は 3,314 字から 2,653 字（80.05%）。章名と必須の区分は変えていない。grade の指摘 F001 は sample 側の問題で、この段では sample を直せないため解消していない。sample への変更案は handoff に書いた。","handoff":["F001（major / `vp-qe-kata-conformance`）は未解消: `specdojo:nfr-availability-sample` が rulebook の「本文構成（標準テンプレ）」の 5 章に合っていない（今は「目的と適用範囲／入力情報／記述内容／最小記述例／未解決事項」）。この段では sample が commit の対象外のため直していない。sample への変更案: 見出しを「概要（対象・目的）／適用範囲・除外条件／可用性要件一覧（`id`・内容・指標・基準・備考）／測定・検証方法／関連ドキュメント導線」に組み替え、駄菓子屋の販売管理システムの文脈で稼働率・RTO・RPO を定量で書く。H1 と表の中にある rulebook への Markdown リンクも外す（sample へのリンクを置かない規約に合わせる）。その後、型を grade し直す。","大きさ: 空白を除いた文字数で、表の区切り行を除くと 3,314 字から 2,653 字（80.05%）。区切り行を含むと 3,821 字から 3,068 字、バイト数は 8,813 B から 6,733 B。目安の 8 割をわずかに超えたが、残りは型固有の判断基準と最小例のため、これ以上は削らなかった。","章名と必須の区分は変えていない。用語の表（稼働率・RTO・RPO）は本文要件の列定義の言い直しではないため残した。役割の表・status 昇格・承認・台帳の列は、もともとこの rulebook になかった。","サンプル章は rulebook 作成標準の経過措置に従い、章を消さずに最小例へ絞った。成果物と同じ見出しの完成例は sample へ移すこと。","共通の正本（document-metadata-standard）への追記は不要と判断した。recipe と template は `undecided` のため変更案はない。`includes` で取り込む記法の rulebook もない。成果物本体 `docs/ja/product/060-non-functional-requirements/nfr-availability.md` はまだない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md","status":"passed","summary":"対象の rulebook を整形した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"変更したのは rulebook だけで、plan・result・個票などの履歴ファイルを変えていない"}]}
+</specdojo_executor_evidence>
