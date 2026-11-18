@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-prj-scope-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-prj-scope-060/T-KATA-SLIM-2-prj-scope-060-20261118T204357Z-49f26640/plan.md
   started_at: "2026-11-18T20:44:04.050Z"
+  completed_at: "2026-11-18T21:21:09.843Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/specdojo/recipes/prj-scope-recipe.md` を更新し、文書の運用の記述および `rulebook` と重複する判断基準の言い直しを削除しました。
+- Finding F001 〜 F010 に対応し、「境界の判断基準」と「スコープ変更方針」の 2 章を条件付き（任意）とし、仕上げチェックに公開適性の確認項目を追加しました。
+- 空白と表の区切り行を除いた文字数を 3,698 字から 2,526 字（約 68.3%）に削減しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/prj-scope-recipe.md`: 運用の記述と `rulebook` と重複する判断基準の言い直しを削除し、Finding F001 〜 F010 に基づく構成の見直しおよび仕上げチェック項目の追加を実施した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 文字数の前後（空白と表の区切り行を除く）: 3,698 字から 2,526 字（68.3%）。区切り行を含めると 4,003 字から 2,825 字、バイト数は 11,747 B から 7,910 B。
+- F005・F009・F010（委譲先の文書 ID を明示する指摘）は、後続の文書 ID を書かず、委譲先の指定そのものを外して対応した。指定は `rulebook` と同じ判断の言い直しで、Recipe 記述標準は本文に `rulebook` と同じ規則を置くことを禁じているため。再評価で残る場合は、Recipe 記述標準とどちらを優先するかを利用者が決める。
+- rulebook・sample・template に合わせて直すべき点はなかった。
+- F005・F009・F010（委譲先の文書 ID を明示する指摘）は、後続の文書 ID を書かず、委譲先の指定そのものを外して対応した。指定は rulebook と同じ判断の言い直しで、Recipe 記述標準は本文に rulebook と同じ規則を置くことを禁じているため。再評価で残る場合は、Recipe 記述標準とどちらを優先するかを利用者が決める。
+- 適用外の検証: `npm run validate:history-links`（変更したのは recipe だけで、plan・result・個票を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`prj-scope-recipe.md` において、Recipe 記述標準および `rulebook` の正本性を重視し、重複する運用記述や判断基準を徹底的に排除しました。具体的には、共通の運用フロー（昇格・承認等）や、`rulebook` で定義済みの列指定・必須観点の言い換えを削除し、成果物の章名による参照に置き換えています。また、Finding に基づき、任意章を必須とする矛盾を解消し、公開適性チェックを導入することで linter および規範への適合性を高めました。
