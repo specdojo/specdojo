@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-8kxj-post-integration-build-dist
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T22:57:37Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-18T02:50:04Z"
+  conclusion: exec-defaults の pipeline.post_integration に許可リストの ID（build-dist）と paths を指定でき、統合した変更が paths に当たるときだけ親が exec のロックを持ったまま npm run build を流す。失敗時は印を置き dist-freshness で次の exec を止める。prj-0001 の exec-defaults.yaml への反映は利用者の承認待ち
 ---
 
 # PJR-8KXJ exec run の統合の後に、src が変わったら dist を自動で作り直す

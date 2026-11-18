@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d87ab6411f5a47f4811ffbcf4e5eb46a
+- v: 1
+  id: reg_053cd9e911b24052bffb540f8e914144
+  ts: "2026-11-18T02:50:04Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が PJR-NC9R の実際の exec run で、一時の exec-defaults（--exec-defaults）に build-dist を足して流し、統合の後に build-dist が passed で記録され dist が作り直されたことを確かめた（2026-11-18 11:48）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: exec-defaults の pipeline.post_integration に許可リストの ID（build-dist）と paths を指定でき、統合した変更が paths に当たるときだけ親が exec のロックを持ったまま npm run build を流す。失敗時は印を置き dist-freshness で次の exec を止める。prj-0001 の exec-defaults.yaml への反映は利用者の承認待ち
+  previous_event_id: reg_e2673bd6ab354d63bbfc401e145aa4b3
