@@ -1,0 +1,33 @@
+opd-rulebook を改訂しました。結果ファイルは作成・更新していません。lint:md などの検証は親 runner が実行します。私のほうでは対象ファイルだけに prettier と markdownlint-cli2 をかけ、指摘は 0 件でした。
+
+**変更したファイル**: `docs/ja/specdojo/rulebooks/opd-rulebook.md` だけです。
+
+**外した記述**
+- 全体方針のうち、本文構成や禁止事項と同じことを言っている箇条（SLO の定量化、RACI、監視・障害・変更・バックアップ、問い合わせの導線）。
+- Frontmatter の表。トップレベルの `title` を求めていて、Markdown の規約に反していました。代わりに正本（ドキュメントメタ情報標準と schema）への参照と、opd 固有の値だけを書きました。
+- 相対パスの Markdown リンク。wikilink とパス表記に置き換えました。
+- 12 個ある「生成する本文の見出しは…」の行。本文構成の表と同じ内容でした。
+- 番号接頭辞の任意規定。
+
+**足した記述**: 全体方針に「共通の運用」を 1 項目置きました。役割の表、`status` の扱い、未決事項の管理台帳の列は、もともとこの rulebook にありませんでした。
+
+**finding への対応**
+- F001（全 12 章が必須で、1.1 の差分方針と矛盾）: 本文構成の表を `opd-index` と `opd-<term>` の 2 列に分けました。`opd-<term>` は「概要」と「関連ドキュメント導線」を必須とし、2〜11 章を条件付きにしています（`opd-index` との差分がある章だけを置き、章番号は詰め、少なくとも 1 章は置く）。既存の term サンプル 3 件の構成に合わせた変更です。重複記載を禁止事項にも 1 行足しました。
+- F002（`opd-index-sample` の宣言漏れ）: `sample` に加え、既定例として先頭に置きました。
+- F003（`opd-sample` が必須構成に沿っていない）: 宣言から外しました。`opd-sample` は rulebook の構成に沿わず中身の説明だけのサンプルで、ファイル自体は変えていません。
+- F004（term サンプルが全 12 章を満たさない）: F001 の改訂で、3 件とも新しい必須構成を満たします。
+
+**章名と区分**: 章名は変えていません。区分は `opd-<term>` についてだけ変えました（理由は F001 のとおり）。
+
+**大きさ**（空白を除いた文字数）
+
+| 数え方 | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| 表の区切り行を除く（sld の試行と同じ） | 4,540 字 | 3,625 字 | 79.8% |
+| 区切り行を含む | 4,967 字 | 4,010 字 | 80.7% |
+
+**確認できていない点**: `opd-index-sample` は今の rulebook でも全 12 章を満たしていません（4 章だけ）。成果物本体の `opd-monitoring.md` はまだ存在しないため、照合していません。この 2 点と、sample・recipe・template への変更案は下の `handoff` に書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"opd-rulebook を改訂した。全体方針に「共通の運用」を 1 項目置き、規約に反する title を含む Frontmatter の表と重複記述を外した。F001 への対応として、本文構成の必須区分を opd-index と opd-term の 2 列に分けた（opd-term は概要と関連ドキュメント導線が必須、2〜11 章は条件付き）。F002・F003 への対応として sample の宣言を直し、opd-index-sample を先頭に足し、opd-sample を外した。空白を除いた文字数は、区切り行を除く数え方で 4,540 字から 3,625 字（79.8%）、区切り行を含めて 4,967 字から 4,010 字（80.7%）。","handoff":["章の区分の変更理由（result 用）: opd-rulebook の本文構成の表を opd-index 列と opd-term 列に分けた。opd-term では 2〜11 章を条件付きにした。F001 で指摘された 1.1 の差分方針との矛盾を解き、既存の term サンプル 3 件（monitoring・incident-management・access-control。どれも概要＋該当ドメインの章＋関連導線の構成）と規定を合わせるため。章名は変えていない。","大きさ（result 用、空白を除いた文字数）: 表の区切り行を除く数え方で 4,540 字から 3,625 字（79.8%）、区切り行を含めて 4,967 字から 4,010 字（80.7%）。","sample の宣言: F003 への対応として specdojo:opd-sample を sample の宣言から外した。opd-sample は rulebook の構成に沿わず中身の説明だけのサンプルで、ファイル自体は commit の対象外のため変えていない。変更案: opd-sample.md を廃止（deprecated）にするか、opd-index-sample と統合する。","sample の変更案: opd-index-sample.md は改訂後の rulebook でも opd-index の全 12 章必須を満たしていない（概要・SLO・RACI・導線の 4 章だけ）。運用の範囲・前提、監視、障害対応、変更管理、バックアップ、権限、定期運用、問い合わせの各章を足すか、最小の記述でよいので全章を置く必要がある。","sample の変更案: opd-index-sample.md など各 sample の本文にある「参照: ../rulebooks/opd-rulebook.md」の行は、共通の運用の参照と同じく sample 側では不要なため削る。","recipe と template は undecided のままで、変更点はない。共通の正本（ドキュメントメタ情報標準）に足すべき記述はない。","成果物本体 docs/ja/product/090-operations/opd-monitoring.md はまだ存在しないため、成果物との照合は行っていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/opd-rulebook.md","status":"passed","summary":"整形が完了した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/opd-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan・result・個票）を変更していないため"}]}
+</specdojo_executor_evidence>
