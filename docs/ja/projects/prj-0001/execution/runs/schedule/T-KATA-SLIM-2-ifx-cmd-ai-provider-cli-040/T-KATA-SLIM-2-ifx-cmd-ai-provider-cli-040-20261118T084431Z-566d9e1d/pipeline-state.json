@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040",
+  "run_id": "T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040-20261118T084431Z-566d9e1d",
+  "updated_at": "2026-11-18T09:14:11.574Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T08:47:32.078Z",
+      "completed_at": "2026-11-18T08:52:31.204Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040-20261118T084431Z-566d9e1d/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T09:13:57.166Z",
+      "completed_at": "2026-11-18T09:14:06.659Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040-20261118T084431Z-566d9e1d/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T09:14:11.574Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040-20261118T084431Z-566d9e1d/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040/T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040-20261118T084431Z-566d9e1d/result.md"
+  }
+}
