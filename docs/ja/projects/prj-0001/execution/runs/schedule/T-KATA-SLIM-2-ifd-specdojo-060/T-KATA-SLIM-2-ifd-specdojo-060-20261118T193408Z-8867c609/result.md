@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-ifd-specdojo-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-ifd-specdojo-060/T-KATA-SLIM-2-ifd-specdojo-060-20261118T193408Z-8867c609/plan.md
   started_at: "2026-11-18T19:34:18.133Z"
+  completed_at: "2026-11-18T20:05:15.708Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `ifd-recipe` を見本に沿って書き直し、記述を大幅にスリム化した。
+- 文書の運用記述、未決事項台帳の詳細列、`rulebook` と重複する判断基準、および recipe 内で繰り返されていた確認事項を削除した。
+- 執筆の順番、入力情報の収集方法、各節での問いとコツ、深掘りの手順に焦点を当てた内容に整理した。
+- 空白除いた文字数は 3,651 字から 2,529 字（約 69.3%）に削減し、8 章の構成を維持した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/ifd-recipe.md`: 運用の記述と言い直しを削除し、執筆上の問いとコツを中心とした構成にスリム化した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 大きさ（空白・改行と表の区切り行を除く）: 前 3,651 字（区切り行込み 3,959 字・11,509 B）、後 2,529 字（2,808 字・7,919 B）、比 69.3%。result の `進め方と実践の型の適用` に記録すること。
+- 根拠とした規範: `docs/ja/specdojo/standards/recipe-authoring-standard.md`（記述ガイド・禁止事項）、`docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md`（本文要件・記述ガイド・禁止事項）、手本 `docs/ja/specdojo/recipes/prj-charter-recipe.md` と PJR-7M9J の「他の recipe へ広げるときの一覧」。grade・condense の finding はなかった。
+- rulebook を正とした箇所: 詳細の値・構文の委譲、配置表と経路表の推奨列、Mermaid の表現規約、各章の良い例・悪い例は rulebook にあるため recipe から外した。
+- 変更案: rulebook・sample・template に直すべき点は見つからなかった（template は今回読んでいない）。
+- 適用外の検証: `npm run validate:history-links`（履歴蓄積ファイル（plan・result・個票）を変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`docs/ja/specdojo/standards/recipe-authoring-standard.md` および `docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md` に基づき、`rulebook` と重複する判断基準や共通の運用記述を徹底的に排除した。具体的に、詳細な列指定や表現規約などの「判断の基準」は `rulebook` への委譲とし、recipe には「書き手が答えるべき問い」と「つまずきやすい点」のみを残すことで、文字数を約 7 割まで削減しつつ実用性を維持するアプローチを採った。
