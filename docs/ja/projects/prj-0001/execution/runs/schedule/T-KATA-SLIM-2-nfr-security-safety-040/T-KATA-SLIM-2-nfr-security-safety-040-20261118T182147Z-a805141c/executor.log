@@ -1,0 +1,29 @@
+`nfr-security-safety-rulebook.md` を簡潔にしました。空白を除いた文字数は 3,538 字から 2,813 字になり、約 79.5% で 8 割以下の目安に収まっています。prettier の `--check` と markdownlint は 0 件で通りました。それ以外の検査は親 runner が実行します。対象の成果物 `nfr-security-safety.md` はまだ作られていないため、成果物との突き合わせはしていません。
+
+**外した記述と参照の形**
+
+この rulebook には、役割の表・`status` 昇格や承認・管理台帳の列・共通規約と同じ禁止事項は、もともとありませんでした。外したのは次の 2 点です。
+
+- 「推奨 Frontmatter 項目」の Markdown リンク 2 件。ドキュメントメタ情報標準への wikilink と、スキーマのパスのインラインコードに置き換えました。
+- 同じ章の表にあった `title` 行。H1 と二重に管理することになるため外し、`specdojo.*` で値を書く形にしました。書き方は改訂済みの nfr-availability の rulebook に揃えています。
+
+全体方針には「共通の運用」を 1 項目だけ足しました。役割は適用先のメンバー定義を、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照し、文書の整形・lint は「測定・検証方法」に含めないとしています。
+
+**finding への対応**
+
+- **F006（表の崩れ）**: 「関連ドキュメント導線」の行を本文構成の表に戻しました。
+- **F003（フロントマター例の形式）**: サンプルの frontmatter を `specdojo:` 名前空間にし、`title` を外して `rulebook` を足しました。
+- **F001（記述ガイドの例示不足）**: 「機密性・安全性要件一覧」に、良い例・悪い例と「基準は件数・割合・期限などの判定値で書く」という基準を足しました。「適用範囲・脅威前提」と「測定・検証方法」も、何を書くかが分かる書き方にしました。
+- **サンプル章**: 完成例をまるごと載せていたので、rulebook 作成標準の経過措置に合わせて形式の輪郭が分かる最小例に縮めました。章は削除していません。
+
+章名と必須の区分は変えていません。用語の表（機密性・安全性・認可逸脱）は、本文要件を言い直しただけのものではないため残しました。
+
+**未解消で申し送るもの**
+
+- **F004・F005（sample との乖離）**: sample の章構成（目的と適用範囲／入力情報／記述内容／最小記述例／未解決事項）が、rulebook の 5 章構成と合っていません。sample は今回直す対象外のため、変更案として残します。
+- **F002（`recipe`・`template` が `undecided`）**: nfr 系の rulebook はすべて `undecided` で、要否を判断する根拠がないため変えていません。
+- **共通の正本への追記**: 不要と判断しました。sld の試行と同じく、ドキュメントメタ情報標準で賄えます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-security-safety-rulebook.md を簡潔にした（空白除き 3,538→2,813 字、約 79.5%）。全体方針に「共通の運用」を 1 項目足し、Frontmatter 章の Markdown リンク 2 件と `title` 行を外した。F006（表の崩れ）・F003（frontmatter 例の名前空間）・F001（良い例・悪い例と基準の追加）を直し、サンプル章は最小例に縮めた。章名と必須の区分は変えていない。sample との乖離（F004・F005）と `recipe`・`template` の要否（F002）は申し送る。","handoff":["F004/F005: specdojo:nfr-security-safety-sample の章構成（目的と適用範囲／入力情報／記述内容／最小記述例／未解決事項）が、rulebook の 5 章構成（概要（対象・目的）／適用範囲・脅威前提／機密性・安全性要件一覧／測定・検証方法／関連ドキュメント導線）と合っていない。H1 の Markdown リンクも外す必要がある。sample を 5 章構成の駄菓子屋文脈の完成例に作り直すことを変更案とする（今回の段では sample を変えていない）。","F002: `recipe`・`template` は nfr 系の rulebook 9 件がすべて `undecided` で、要否を判断する根拠がないため据え置いた。nfr 系でまとめて要否を決める（例: 5 章構成が rulebook で決まるなら `not-needed`）ことを次のアクションとする。","サイズ: 空白（改行を含む）と表の区切り行を除いた文字数で、3,538 字から 2,813 字（約 79.5%）。","章名・必須の区分は変えていない。用語の表（機密性・安全性・認可逸脱）は本文要件の言い直しではないため残した。サンプル章は rulebook 作成標準の経過措置に合わせて最小例に縮め、削除はしていない。","共通の正本（document-metadata-standard）への追記は不要と判断した。成果物 nfr-security-safety.md は未作成のため、成果物の実態との突き合わせはしていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは rulebook だけで、plan・result・個票などの履歴ファイルは変更していないため"}]}
+</specdojo_executor_evidence>
