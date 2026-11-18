@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-etc-provider-cli-040",
+  "run_id": "T-KATA-SLIM-2-etc-provider-cli-040-20261118T101934Z-d8f14de7",
+  "updated_at": "2026-11-18T10:55:16.230Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T10:22:41.031Z",
+      "completed_at": "2026-11-18T10:27:05.650Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-etc-provider-cli-040/T-KATA-SLIM-2-etc-provider-cli-040-20261118T101934Z-d8f14de7/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T10:54:48.900Z",
+      "completed_at": "2026-11-18T10:55:07.390Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-etc-provider-cli-040/T-KATA-SLIM-2-etc-provider-cli-040-20261118T101934Z-d8f14de7/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T10:55:16.230Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-etc-provider-cli-040/T-KATA-SLIM-2-etc-provider-cli-040-20261118T101934Z-d8f14de7/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-etc-provider-cli-040/T-KATA-SLIM-2-etc-provider-cli-040-20261118T101934Z-d8f14de7/result.md"
+  }
+}
