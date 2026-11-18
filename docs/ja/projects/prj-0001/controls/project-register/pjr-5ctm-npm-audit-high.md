@@ -38,14 +38,27 @@ npm audit の high 15 件を解消する。配る依存（tinyglobby・fdir・pi
 - 反映の後に、orchestrator が次を確かめる。`npm audit --omit=dev` の high と moderate が 0。全体の high が上流待ちとして記録したものだけ。`npm run check`・`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration`・`npm run docs:build` が通る。
 - `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。
 
+2 回目の実行（2026-11-18）:
+
+- 1 回目の変更案のうち、`ajv-cli` を外す、`markdownlint-cli` を `^0.50.0`・`vitest` を `^4.1.12` に上げる、`overrides`（`fast-uri`・`vite`・`source-map-js`）、ルートの `engines.node` を `>=22.17` に上げる分は、orchestrator が利用者の承認のもと feature ブランチで反映した。executor はこれらを変えない。
+- 利用者の決定（2026-11-18）: `tinyglobby` を外し、`node:fs` の `globSync` へ移す（`node:fs` の `globSync` が安定版になる Node 22.17 を前提にする）。
+- `src/register/authoring-sources.ts` と、別に publish する `packages/docs-lint` の `src/glob-files.ts`・`src/deliverable-type.cjs` の `tinyglobby` の `globSync` を、`node:fs` の `globSync` へ置き換える。今の結果を保つ。ファイルだけを返す（`onlyFiles`）、ドットで始まるファイルとディレクトリを含めない（`dot: false`）、シンボリックリンクをたどらない（`followSymbolicLinks: false`）、`ignore` に当たるもの（`.git`・`node_modules` など）を除く、パスの区切りを `/` にそろえる、結果を並べ替える。
+- 置き換えた 3 か所について、上の各点を確かめる単体テストを足す。置き換えの前と同じ入力で同じ結果になることを確かめる。
+- `package.json`（ルートと `packages/docs-lint`）と lock は保護された設定のため executor は変えない。ルートと docs-lint の `dependencies` から `tinyglobby` を外す差分と、docs-lint の `engines.node` を `>=22.17` に上げる差分を、個票の対応結果に書き、報告の `handoff` にも書く。反映は orchestrator が行う。
+- 反映の後に、orchestrator が `npm audit --omit=dev` の high と moderate が 0 であることを確かめる。
+- `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` と親の検証が通る。
+- `CHANGELOG.md` は変えず、「CHANGELOG に書く事項」の節の文案を 2 回目の内容で更新する。`engines` を上げることは利用者への影響として Changed に書く。
+
 ## 4. 作業内容
 
-| No  | 作業                                                      | 担当         | 状態 | メモ                                                        |
-| --- | --------------------------------------------------------- | ------------ | ---- | ----------------------------------------------------------- |
-| 1   | 配る依存の high・moderate の直し方を調べて表に書く        | ARC          | done | `npm audit --omit=dev` 対象 4 件の直し方を決定              |
-| 2   | 開発用の high の直し方を依存ごとに決めて表に書く          | ARC          | done | 開発用 high 12 件の直し方を決定（古い版へ下げる案は不採用） |
-| 3   | `package.json`・`package-lock.json` の変更案を書く        | ARC          | done | 対応結果および `handoff` に変更案を記録                     |
-| 4   | 変更案を feature ブランチで反映し、audit と検証を確かめる | orchestrator | open | 利用者の承認後に orchestrator が feature ブランチで実施     |
+| No  | 作業                                                                          | 担当         | 状態  | メモ                                                        |
+| --- | ----------------------------------------------------------------------------- | ------------ | ----- | ----------------------------------------------------------- |
+| 1   | 配る依存の high・moderate の直し方を調べて表に書く                            | ARC          | done  | `npm audit --omit=dev` 対象 4 件の直し方を決定              |
+| 2   | 開発用の high の直し方を依存ごとに決めて表に書く                              | ARC          | done  | 開発用 high 12 件の直し方を決定（古い版へ下げる案は不採用） |
+| 3   | `package.json`・`package-lock.json` の変更案を書く                            | ARC          | done  | 対応結果および `handoff` に変更案を記録                     |
+| 4   | 変更案を feature ブランチで反映し、audit と検証を確かめる                     | orchestrator | doing | 利用者の承認後に orchestrator が feature ブランチで実施     |
+| 5   | `tinyglobby` を `node:fs` の `globSync` へ移し、テストを足す（2 回目）        | ARC          | open  | 本体と `packages/docs-lint`                                 |
+| 6   | `tinyglobby` を外す `package.json` の差分を反映し、audit を確かめる（2 回目） | orchestrator | open  | 利用者の承認の後                                            |
 
 ## 5. 対応結果
 
