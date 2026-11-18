@@ -160,6 +160,31 @@ $defs:
                     one of them, and records `not_applicable` otherwise. Without `paths`, or when
                     the change set is unknown or truncated, or when the integration targets were
                     merged into the worktree, the validation always runs.
+      post_integration:
+        type: array
+        uniqueItems: true
+        description: >
+          Fixed actions run in the integration target checkout after its merge commit, while
+          retaining the exec/lifecycle lock. Failure is recorded without undoing integration.
+          Each ID may appear only once; arbitrary commands, arguments and repositories are rejected.
+        items:
+          type: object
+          additionalProperties: false
+          required: [id, paths]
+          properties:
+            id:
+              type: string
+              enum: [build-dist]
+              description: Runs npm run build with fixed argv (no shell).
+            paths:
+              type: array
+              minItems: 1
+              items:
+                type: string
+                pattern: "\\S"
+              description: >
+                Repository-relative globs (`**`, `*`, `?`, `{a,b}`) selecting the action from
+                the actual integration commit diff, including deletions and both rename paths.
       commit_hook_skips:
         type: array
         description: >

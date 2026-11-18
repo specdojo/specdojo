@@ -13,6 +13,7 @@ import {
 import { integrationCommitSkipHooks } from "../commit-hook-skips.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
+import { integratedCommitRange, runPostIntegration } from "../post-integration.js";
 import { buildInPlaceStem } from "../plans.js";
 import { resolveProductBranches } from "../product-branches.js";
 import { registerProductMessage } from "../register-product-message.js";
@@ -39,7 +40,7 @@ import {
   traceKey,
 } from "../repo-trace.js";
 import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
-import { recordPathForRead, recordRef, taskRecordPaths } from "../run-records.js";
+import { recordPathForRead, recordRef, runLogPath, taskRecordPaths } from "../run-records.js";
 import { qualifyTaskId } from "../shared.js";
 import {
   configuredProductRepos,
@@ -149,30 +150,6 @@ export function protectResumableRegisterWorktree(
   );
 }
 
-// cleanup の再開までに別項目の commit が積まれても、対象 exec branch を最初に取り込んだ
-// first-parent commit（runner が作った merge commit）だけを post-review の差分範囲にする。
-function integratedRegisterCommitRange(
-  repoRoot: string,
-  branch: string,
-): { baseCommit: string; outputCommit: string } {
-  const tip = gitOutput(repoRoot, ["rev-parse", "--verify", `${branch}^{commit}`]).trim();
-  const outputCommit = gitOutput(repoRoot, [
-    "rev-list",
-    "--first-parent",
-    "--ancestry-path",
-    `${tip}..HEAD`,
-  ])
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .at(-1);
-  if (!outputCommit) {
-    throw new Error(`could not locate integrated commit for register branch: ${branch}`);
-  }
-  const baseCommit = gitOutput(repoRoot, ["rev-parse", `${outputCommit}^1`]).trim();
-  return { baseCommit, outputCommit };
-}
-
 type FinalizeRegisterWorktreeParams = {
   context: RegisterRunContext;
   opts: RunOpts;
@@ -224,6 +201,17 @@ async function integrateRegisterWorktreeRun(
   const { context, registerPaths, item, ticketPath, worktree, stem, agentResult, actor } = params;
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
+  const postIntegration = (baseCommit: string, outputCommit: string) =>
+    runPostIntegration({
+      entries: context.execDefaults.pipeline?.post_integration,
+      repoRoot,
+      baseCommit,
+      outputCommit,
+      logPath: runLogPath(
+        resolve(repoRoot, repoRelativePath(worktree.path, params.worktreeResultPath)),
+        "post-integration.log",
+      ),
+    });
   const bookkeepingPaths =
     typeof params.bookkeepingPaths === "function"
       ? params.bookkeepingPaths()
@@ -385,7 +373,7 @@ async function integrateRegisterWorktreeRun(
           "integrate cleanup failed",
         );
       }
-      const { baseCommit, outputCommit } = integratedRegisterCommitRange(repoRoot, worktree.branch);
+      const { baseCommit, outputCommit } = integratedCommitRange(repoRoot, worktree.branch);
       try {
         assertCommitScope(wtContext, worktree, stem, { scopeLogPath });
         const lifecyclePaths = new Set(
@@ -414,6 +402,7 @@ async function integrateRegisterWorktreeRun(
       } catch (error) {
         return blockedInReview(error, "integrate cleanup failed");
       }
+      await postIntegration(baseCommit, outputCommit);
       return deferCleanup(baseCommit, outputCommit);
     }
 
@@ -614,10 +603,12 @@ async function integrateRegisterWorktreeRun(
       };
     }
 
+    const outputCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
+    await postIntegration(baseCommit, outputCommit);
     await params.opts.onScopeIntegrated?.();
     // post-review の差分範囲は、撤去を待つ間に別項目の commit が積まれても変わらないよう、
     // merge の直後の HEAD で固定する。
-    return deferCleanup(baseCommit, gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim());
+    return deferCleanup(baseCommit, outputCommit);
   }
 
   // 失敗 / rate limit: worktree は保持し（調査・再開のため）、waiting へ遷移する。

@@ -20,6 +20,7 @@ import {
 } from "./parent-validation.js";
 import { resolveCommitHookSkips, type CommitHookSkip } from "./commit-hook-skips.js";
 import { configureIndexLockWait, DEFAULT_INDEX_LOCK_WAIT_MS } from "../shared/git.js";
+import { resolvePostIntegrationEntries, type PostIntegrationEntry } from "./post-integration.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -129,6 +130,7 @@ export type ExecDefaultsConfig = {
   pipeline?: {
     // A string runs in the project repository; `{ id, repo }` runs in the named repository.
     parent_validations?: ParentValidationEntry[];
+    post_integration?: PostIntegrationEntry[];
     parent_validation_concurrency?: number;
     // Hook commands the runner's integration commit skips once the covering parent validations
     // passed (PJR-T01P). Manual commits keep every hook.
@@ -638,6 +640,7 @@ export function loadExecDefaultsConfig(
   }
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
+  resolvePostIntegrationEntries(defaults.pipeline?.post_integration);
   resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
   resolveCommitHookSkips(
     defaults.pipeline?.commit_hook_skips,

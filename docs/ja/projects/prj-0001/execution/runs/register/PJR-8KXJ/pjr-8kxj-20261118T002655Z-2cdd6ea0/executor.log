@@ -1,0 +1,19 @@
+PJR-8KXJ はこれで完了と判断しています。前回の試行は `lint:ts` のエラー 1 件だけで止まっており、今回それを直しました。ただし `lint:ts`・`typecheck`・単体テストなどの検査は、この後に親 runner が流すので、まだ通ったことは確かめられていません。
+
+- **今回の修正:** `tests/src/exec/post-integration.test.ts` の `vi.mock` で、型を `import()` 形式で書いていた箇所がルール `consistent-type-imports` に違反していました。`import type * as WorktreeModule` に置き換え、`importOriginal<typeof WorktreeModule>()` を使う形にしています。
+- **個票:** 概要の `post_integration` をインラインコードで囲みました。
+- **前回までの実装:** 完了条件と照らし合わせ、すべてに対応が入っていることを確認しました。
+  - 設定と許可リスト: `pipeline.post_integration` は `build-dist` だけを受け付けます。
+  - 実行の条件: 統合した変更が `paths` に当たるときだけ、exec のロックを持ったまま流します。
+  - 失敗時: 統合は戻さず、`dist/.specdojo-build-failed` を置きます。次の run は `src/shared/dist-freshness.ts` の判定で止まります。
+  - その他: 単体テスト・文書・`exec-defaults.yaml` の変更案は揃っています。
+- **私が流した検査:**
+  - 2 ファイルに対する `npx eslint`: エラーなし
+  - `npx prettier --check`: 問題なし
+  - `npm run validate:history-links`: 違反なし
+
+残っているのは、`.specdojo/exec-defaults.yaml` に `build-dist` を足す変更の反映です。保護された設定なので、あなたの承認を得て feature ブランチで行ってください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"lint:ts のエラー（post-integration.test.ts の import() 型注釈）を import type に置き換えて解消した。post_integration の設定・実行・失敗時の記録・テスト・文書・変更案は前回までに完了していることを確認した。","handoff":["保護された設定の変更案: prj-0001 の `.specdojo/exec-defaults.yaml` の `pipeline` に `post_integration: [{ id: build-dist, paths: [\"src/**\", \"tsconfig*.json\"] }]` を足す。反映は利用者の承認のもと feature ブランチで行う。`package.json` の変更は不要（個票の対応結果「保護された設定の変更案」を参照）。","CHANGELOG の文案は個票の対応結果「CHANGELOG に書く事項」を参照（区分 Added）。","決めた点: 失敗の記録先は run の記録の `post-integration.log`、失敗の印 `dist/.specdojo-build-failed` を dist-freshness の判定に追加、対象は worktree 実行だけ、`paths` は必須（理由は個票の「決めた点と理由」）。"],"validations":[{"command":"npx eslint tests/src/exec/post-integration.test.ts src/exec/post-integration.ts","status":"passed","summary":"エラー・警告なし（前回の consistent-type-imports エラーを解消）"},{"command":"npx prettier --check (changed md/ts/yaml files)","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"違反なし"}],"target_coverage":[{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-8kxj-post-integration-build-dist.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-8kxj-post-integration-build-dist.md"},{"target":"docs/ja/specdojo/guides/exec-config-guide.md","status":"changed","path":"docs/ja/specdojo/guides/exec-config-guide.md"},{"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},{"target":"docs/specdojo/schemas/v1/exec-defaults.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/exec-defaults.schema.yaml"},{"target":"src/exec/agent-config.ts","status":"changed","path":"src/exec/agent-config.ts"},{"target":"src/exec/run/job.ts","status":"changed","path":"src/exec/run/job.ts"},{"target":"src/exec/run/register-worktree.ts","status":"changed","path":"src/exec/run/register-worktree.ts"},{"target":"src/exec/run/schedule-task.ts","status":"changed","path":"src/exec/run/schedule-task.ts"},{"target":"src/shared/dist-freshness.ts","status":"changed","path":"src/shared/dist-freshness.ts"},{"target":"tests/docs/specdojo/schemas/exec-defaults-schema.test.ts","status":"changed","path":"tests/docs/specdojo/schemas/exec-defaults-schema.test.ts"},{"target":"tests/src/exec/register-pipeline-e2e.integration.test.ts","status":"changed","path":"tests/src/exec/register-pipeline-e2e.integration.test.ts"},{"target":"src/exec/post-integration.ts","status":"changed","path":"src/exec/post-integration.ts"},{"target":"tests/src/exec/post-integration.test.ts","status":"changed","path":"tests/src/exec/post-integration.test.ts"}]}
+</specdojo_executor_evidence>

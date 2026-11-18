@@ -27,6 +27,7 @@ import {
   type ExecDefaultsConfig,
 } from "../agent-config.js";
 import { recordCommandEvidence } from "../evidence.js";
+import { runPostIntegration } from "../post-integration.js";
 import { formatMarkdownFile } from "../format.js";
 import {
   createPipelineState,
@@ -44,7 +45,7 @@ import {
   stripLeadingListMarker,
   updateResultStatus,
 } from "../results.js";
-import { taskRecordPrefixes } from "../run-records.js";
+import { runLogPath, taskRecordPrefixes } from "../run-records.js";
 import { type ReadyTaskView } from "../types.js";
 import {
   mergeWorktreeIntoCurrent,
@@ -846,11 +847,22 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     return;
   }
 
+  const preIntegrationCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
   mergeWorktreeIntoCurrent({
     context: { repoRoot, schedulePath, executionPath },
     worktree,
     taskId: reviewTaskId,
     message: `chore(routine): merge ${record.run_id}`,
+  });
+  await runPostIntegration({
+    entries: execDefaults.pipeline?.post_integration,
+    repoRoot,
+    baseCommit: preIntegrationCommit,
+    outputCommit: gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim(),
+    logPath: runLogPath(
+      resolve(repoRoot, relative(worktree.path, resultPath)),
+      "post-integration.log",
+    ),
   });
   removeWorktree({
     context: { repoRoot, schedulePath, executionPath },
