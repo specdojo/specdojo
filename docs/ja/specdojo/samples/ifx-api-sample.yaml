@@ -2,8 +2,6 @@
 openapi: 3.0.3
 info:
   title: 決済サービスAPI
-  description: |
-    決済サービスとの連携API仕様。
 
 x-spec-meta:
   id: specdojo:ifx-api-sample

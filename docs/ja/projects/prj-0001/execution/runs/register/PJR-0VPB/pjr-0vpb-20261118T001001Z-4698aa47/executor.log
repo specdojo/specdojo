@@ -1,0 +1,35 @@
+3 つの rulebook と 3 つの sample を編集し、個票の作業内容と対応結果を書きました。ただし、大きさの目安には 6 文書とも届いていません。
+
+**目安に届かなかった理由:** 3 つの型は sld と違い、もともと運用の記述と言い直しがほとんどありませんでした。残りは型固有の構造・値・判断基準なので、目安に合わせるためだけには削っていません。`dec-rulebook` は「共通の運用」の 1 項目を足したため、かえって増えています。
+
+| 文書 | 前 | 後 | 比 | 目安 |
+| --- | --- | --- | --- | --- |
+| `ifx-api-rulebook` | 1,620 字 | 1,542 字 | 95.2% | 80% 以下 |
+| `ifx-msg-rulebook` | 1,736 字 | 1,646 字 | 94.8% | 80% 以下 |
+| `dec-rulebook` | 858 字 | 907 字 | 105.7% | 80% 以下 |
+| `dec-sample` | 630 字 | 555 字 | 88.1% | 70% 以下 |
+| `ifx-api-sample` | 1,469 字 | 1,440 字 | 98.0% | 構造を保つ |
+| `ifx-msg-sample` | 1,350 字 | 1,314 字 | 97.3% | 構造を保つ |
+
+文字数は空白と表の区切り行を除いて数えました（PJR-8S4T と同じ数え方）。
+
+**変えたこと**
+
+- **3 つの rulebook:** `status` の値の列挙を、ドキュメントメタ情報標準への参照に置き換えました。
+  - ifx の 2 つは冒頭に参照の 1 文を置きました。ESIL の `spec_ref` との対応を 1 か所にまとめ、重複した文を外しました。
+  - `dec` は全体方針に「共通の運用」の 1 項目を置き、重複した方針と、確定の可否を述べた禁止事項を外しました。
+  - ついでに、`ifx-api` と `dec` の壊れていた表と、ifx の 2 つの見出し番号の書式を直しました。直さないと参照の形にできなかったためです。
+- **`dec-sample`:** H1 の rulebook へのリンクと、決定内容で選択肢 C の概要を繰り返していた 1 行を外しました。結論は変えていません。
+- **2 つの YAML sample:** `title` を言い直していた `info.description` だけを外しました。OpenAPI・AsyncAPI の構造は変えていません。
+- recipe・template、`dec` の非推奨の記述、保護された設定には手を付けていません。
+
+**個票に変更案として書いた 2 点（この項目では直していません）**
+
+- 2 つの YAML sample に `info.version` がありません。OpenAPI 3.0.3 と AsyncAPI 2.6.0 では必須ですが、「標準の構造を変えない」という完了条件に従いました。
+- `dec-sample` の業務文脈が共通の駄菓子屋の文脈に揃っていません。`dec` を残すかを PJR-3VJM で決めた後に扱う案です。
+
+**確認したこと:** 6 文書と個票について prettier と markdownlint が通り、`npm run validate:history-links` も終了コード 0 でした。`npm run lint:md`・`npm run lint:fm`・`npm run validate:schema` は指示どおり親の runner に任せています。作業内容の 3（型の grade）は orchestrator の担当なので、`open` のまま残しています。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifx-api・ifx-msg・dec の rulebook の status 値と運用を document-metadata-standard への参照にし、重複を外した。sample から言い直し（dec-sample の H1 リンクと決定内容の重複行、YAML の info.description）を外した。個票の作業内容と対応結果（前後の文字数、迷った点、変更案、CHANGELOG の文案）を更新した。大きさは目安に届かない（rulebook 94.8〜105.7%、dec-sample 88.1%）。理由は個票に記録した。","handoff":["大きさの目安（rulebook 8 割以下、markdown の sample 7 割以下）に届かなかった。3 つの型はもとから運用の記述と言い直しがほとんどなく、残りは型固有の構造・値・判断基準のため削らなかった（`vp-arc-conciseness`: 長さだけで削らない）。前後の文字数は個票の「大きさ」に記載した。","決めたこと: ifx の rulebook には「全体方針」の章がないため、章を新設せず冒頭に共通の運用の参照文を 1 つ置いた。rulebook 作成標準の章構成へ合わせる見直しは範囲外とした。","決めたこと: 外した記述と同じ節にあった壊れた表（ifx-api の `x-spec-meta` の表、dec の Frontmatter の表）と見出し番号の書式（`## 4.1` を `### 4.1.` に）を直した。","変更案: ifx-api-sample・ifx-msg-sample に `info.version` がない（OpenAPI 3.0.3・AsyncAPI 2.6.0 で必須、ifx-msg-rulebook の必須構造も求める）。標準の構造を変えない完了条件に従い、この項目では足していない。","変更案: dec-sample の業務文脈（管理画面の認証方式）が共通サンプル文脈（駄菓子屋）に揃っていない。dec を残すかを PJR-3VJM で決めた後に扱う。","作業内容の 3（型の grade）は open のまま。統合の後に orchestrator が流す。","保護された設定の変更は不要だった。CHANGELOG の文案は個票の「CHANGELOG に書く事項」に記載した。"],"validations":[{"command":"npx prettier --check (changed rulebooks, samples, ticket)","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 (changed md files)","status":"passed","summary":"0 issues in changed Markdown files"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; ticket pjr-0vpb valid"}]}
+</specdojo_executor_evidence>
