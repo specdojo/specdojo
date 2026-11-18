@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-opr-agent-cli-update-040",
+  "run_id": "T-KATA-SLIM-2-opr-agent-cli-update-040-20261118T092626Z-24c8d836",
+  "updated_at": "2026-11-18T09:55:47.075Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T09:29:26.529Z",
+      "completed_at": "2026-11-18T09:34:01.339Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-opr-agent-cli-update-040/T-KATA-SLIM-2-opr-agent-cli-update-040-20261118T092626Z-24c8d836/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T09:55:35.576Z",
+      "completed_at": "2026-11-18T09:55:44.091Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-opr-agent-cli-update-040/T-KATA-SLIM-2-opr-agent-cli-update-040-20261118T092626Z-24c8d836/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T09:55:47.075Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-opr-agent-cli-update-040/T-KATA-SLIM-2-opr-agent-cli-update-040-20261118T092626Z-24c8d836/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-opr-agent-cli-update-040/T-KATA-SLIM-2-opr-agent-cli-update-040-20261118T092626Z-24c8d836/result.md"
+  }
+}
