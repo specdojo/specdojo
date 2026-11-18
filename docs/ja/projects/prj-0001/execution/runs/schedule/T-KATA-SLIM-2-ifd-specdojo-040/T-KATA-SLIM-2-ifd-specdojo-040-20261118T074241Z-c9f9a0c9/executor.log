@@ -1,0 +1,22 @@
+ifd-mermaid-rulebook から運用の記述を外し、空白を除いた文字数を 3,753 字から 3,000 字（79.9%）にしました。変えたのは `docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md` だけで、Prettier と markdownlint はエラーなしです。成果物本体、recipe・template・sample には手を付けていません。
+
+**外した記述**
+- 全体方針の重複（枠だけで隔離を保証しない旨は禁止事項にあるため）。
+- 用語の表の「実行環境」と「詳細設計・運用文書」の行（全体方針と重なるため）。
+- Frontmatter の表の `id`/`type`/`status` 行と `owner` 行（共通の項目と役割の割り当てのため）。
+- 本文要件の「主確認ロール」と、未決事項の「担当・解消条件・引き継ぎ先」。
+- メモ / 将来課題の良い例にあった ARC・PO の承認の流れ（論点と影響の例に差し替えました）。
+- 禁止事項の 2 行（完成例を埋め込まない行は rulebook 作成標準と同じ内容、改訂・廃止での役割ごとの追従は共通の運用で扱うため）。
+
+**足した記述**
+- 全体方針に「共通の運用」を 1 項目置きました。役割は適用先のメンバー定義を、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照します。整形・lint は成果物の検証観点に含めないとも書きました。
+- grade の指摘 F001 に対し、表現規約へ「図の確認」を足しました。「インフラ構成図」章の全 Mermaid ブロックを `npm run lint:mermaid` で検査し、描画プレビューでラベルが読めることと、枠の包含が「配置と境界の定義」と一致することを確かめます。成果物の検証観点には含めないので、「lint を業務の検証に入れない」方針とはぶつかりません。
+
+章名と必須・条件付きの区分は変えていません。共通の正本に足す記述もありません。
+
+**残っている食い違い**
+rulebook から外した列や記述が、recipe・template・sample にまだ残っています。今回の対象外なので変更案として引き継ぎます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifd-mermaid-rulebook を sld の試行の一覧に沿って簡潔にした。役割の行、主確認ロール、未決事項の担当・引き継ぎ先、改訂時の役割の追従と共通規約と同じ禁止事項、重複する用語の行を外し、全体方針に共通の運用を 1 項目置いた。F001 は表現規約に「図の確認」（対象の章、`npm run lint:mermaid`、描画プレビューの確認点）を足して対応した。空白を除いた文字数は 3,753 字から 3,000 字（79.9%、表の区切り行は数えない）。章名と必須・条件付きの区分は変えていない。","handoff":["文字数の数え方は sld の試行と同じで、空白（改行を含む）と表の区切り行を除く。前 3,753 字、後 3,000 字、比 79.9%。","F001（`vp-dev-testability`）の対応: 5.1 節に「図の確認」を足した。「インフラ構成図」章の全 Mermaid ブロックを対象に、構文はリポジトリの `npm run lint:mermaid` で確かめ、描画プレビューで表示名・経路ラベル・枠名が読めることと、枠の包含が「配置と境界の定義」と一致することを確かめる。lint を成果物の業務の検証に入れない方針とは、全体方針の「共通の運用」で成果物の検証観点に含めないと書いて両立させた。","章名・区分: 章名と必須・条件付きの区分は変えていない（既存の `ifd-specdojo.md` との対応を保つため）。第 2 章は「位置づけと用語定義」のまま残し、本文要件の言い直しではない型固有の区別（ネットワーク境界、論理ゾーン、上位構成図）の 3 行だけを残した。","共通の正本への追記は不要と判断した。ドキュメントメタ情報標準で、外した運用の記述（status・承認・改訂と廃止・未決事項の引き継ぎ）を賄える。","変更案（template、対象外のため未変更）: `docs/ja/specdojo/templates/ifd-template.md` の検証対象の表の「主確認ロール」列と、メモ / 将来課題の表の「担当」「解消条件・引き継ぎ先」列を外し、メモの表を「対象・論点／影響（当面の扱い）」にする。","変更案（recipe、対象外のため未変更）: `docs/ja/specdojo/recipes/ifd-recipe.md` の手順 6 の「主確認ロール」、手順 7 の「担当、解消条件・引き継ぎ先」、受入の確認項目（133 行目）の「担当・解消条件」を、rulebook の「論点と影響（当面の扱い）」に合わせて直す。","変更案（sample、対象外のため未変更）: `docs/ja/specdojo/samples/ifd-sample.md` 冒頭の役割の段落（ARC・DEV・QE・PO の責務対応）を外し、検証の表の主確認ロール列と未決事項の担当・引き継ぎ先列を template の変更に合わせて外す。成果物 `ifd-specdojo.md` は今回の段では変えていない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md","status":"passed","summary":"整形済み。変更後の rulebook にエラーなし"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは rulebook だけで、plan・result・個票は変更していないため"}]}
+</specdojo_executor_evidence>
