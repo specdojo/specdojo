@@ -1,0 +1,32 @@
+品質管理計画の recipe（`docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md`）を、prj-charter の recipe の試行と同じ形に縮めました。変更したのはこの recipe だけです。成果物本体・rulebook・sample・template は変えていません。整形は Prettier で済ませました。markdownlint などの静的検査はこの後に親 runner が実行するので、その結果はまだありません。
+
+**大きさ:** 空白を除いた文字数は 2470 から 1672 になりました（約 67.7%）。目安の 7 割以下に収まり、8 章の構成も保っています。
+
+**外した記述:**
+- rulebook と同じ判断の言い直し（出口条件・証跡・記録先を別の欄にする、再判定条件と責任を別の欄にする、など）。
+- 管理計画・RACI・Schedule への追従と更新先の列挙。
+- 仕上げチェックの構造の検査（「ゲート・レビュー・是正がそろっている」）。
+- 同じ確認の繰り返し（生成物を直接編集しないこと、AI Agent に判断を委ねないことを複数の章で確かめていた分）。
+- 深掘り手順のうち、全体の作成手順をなぞる項目。
+
+**残した記述:**
+- 章を書く順番とその理由。
+- 各節の問い 2 つとコツ。成功基準の閾値は「写さず参照に置き換える」とコツに書きました。
+- 対応のない主張を探す深掘りの順序。
+- 良い例と悪い例 3 組。
+- 型固有の Why・What・How・Trace を 1 項目で示す「このレシピの使い方」。
+
+**finding への対応:**
+
+| finding | 対応 |
+| --- | --- |
+| F001 | 「作成前に集める情報」に公開対象の行を足し、4.3 の問いとレビュー観点「公開適性」で、個人情報と非公開情報が混ざっていないかを確かめるようにした |
+| F002 | 同じ表を「どの条件 ID が誰のどの変化を判定するか」のような問いの形に直し、取り出し元の列を足した |
+| F003 | 「成功基準ID」「受入条件ID」の表記揺れの原因の行は削除し、残った ID は「条件 ID」「未達 ID」に表記をそろえた |
+| F004 | 「Agent」を「AI Agent」にそろえた |
+
+rulebook・sample・template に合わせて直すべき点は見つかりませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-quality-management-plan-recipe を prj-charter の recipe の試行に合わせて縮めた。rulebook の言い直し・構造の検査・同じ確認の繰り返しを外し、F001〜F004 に対応した。空白を除いた文字数は 2470 から 1672（約 67.7%）。変更ファイルは docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md だけ。","handoff":["result に書く文字数: 変更前 2470、変更後 1672（空白を除く。約 67.7%）。","finding: F001 は「作成前に集める情報」の公開対象の行、4.3 の問い、レビュー観点「公開適性」で対応。F002 は同じ表を問いの形にし、取り出し元の列を追加。F003 は原因の行を削除し、残った ID を「条件 ID」「未達 ID」に統一。F004 は「AI Agent」に統一。","根拠: rulebook（`specdojo:pm-quality-management-plan-rulebook`）の本文要件・記述ガイド・禁止事項、Recipe 記述標準、PJR-7M9J の「他の recipe へ広げるときの一覧」、改訂済みの `prj-charter-recipe`、成果物 `prj-0001:pm-quality-management-plan`。成果物は保存先未定の証跡を未決事項として扱っており、4.3 のコツ（仮のパスを書かず未決事項へ回す）の根拠とした。","rulebook・sample・template の変更案はなし。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md","status":"passed","summary":"整形が成功した"}]}
+</specdojo_executor_evidence>
