@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-11-18T21:11:18Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-2-sysd-cross-cutting-policy-060",
+  "by": "opus-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
