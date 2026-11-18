@@ -1,0 +1,35 @@
+`docs/ja/specdojo/recipes/ifd-recipe.md` だけを書き直しました。大きさは目安の 7 割を下回っています（69.3%）。prettier と markdownlint は通っています。`npm run lint:md` などの検査はこのあと親 runner が流すので、ここでは実行していません。
+
+**大きさ**（空白と改行を除き、表の区切り行も除いた文字数）
+
+| | 前 | 後 | 比 |
+| --- | --- | --- | --- |
+| 区切り行を除く | 3,651 字 | 2,529 字 | 69.3% |
+| 区切り行を含む | 3,959 字 | 2,808 字 | — |
+| バイト数 | 11,509 B | 7,919 B | — |
+
+**外した記述**
+- rulebook と同じ判断の言い直し:
+  - 詳細の値・構文・設定・復旧操作は担当の詳細文書へ委ねる、という指示（使い方の節、技術前提の節、仕上げチェックの 3 か所）。
+  - 「詳細の委譲先」の行、配置表に書く項目の列挙、各節の良い例・悪い例のうち rulebook の記述ガイドとほぼ同じもの。
+- 未決事項の管理台帳の列（影響・担当・解消条件・引き継ぎ先）と、「誰が何を判断すれば解消できるか」という問い。
+- 運用の記述: レビュー観点の「主な確認者」の列と「改訂影響」の行、全体の作成手順にあった改訂時に追従先を洗い出す手順。
+- 同じ確認の繰り返し:
+  - 良い例・悪い例の表の「確定度」の行（接続方式の節と重複）。
+  - 深掘り手順のうち、配置・通信経路の節のコツと同じ内容の項目（コツの側に移しました）。
+  - 代替配置の確認（配置の節の問いと重複）。
+- 仕上げチェックのうち、未決事項の台帳の列や委譲の規則を確かめていた項目。
+
+**残した・足した記述**
+- 書く順番とその理由を足しました。配置 → 経路 → 図 → 技術前提 → メモの順に書き、概要は最後に書きます。図から先に描くと表が図の言い直しになり、概要を先に書くと本文の言い直しになるためです。
+- 「作成前に集める情報」の表に取り出し元の列を足しました（上位構成図、環境の管理者、連携の担当、確認の記録）。
+- 各節は問い 2 つ程度と、聞き方やつまずきやすい点のコツの形にそろえました。上位の背景は写さず参照に置き換えることもコツに書きました。
+- 深掘り手順は、対応のない主張を探す順序（外部へ出る経路 → 利用目的、配置の要素 → 上位の責務、依存を止めた場面）に書き換えました。
+- 「このレシピの使い方」は、この型の Why・What・How・Trace の対応を 1 項目で示す形にしました。
+- recipe 記述標準の 8 章の構成は保ち、本文に rulebook・sample への参照は書いていません。
+
+rulebook・sample・template と成果物本体は変えていません。result にもまだ何も書いていないので、上の前後の文字数は報告の段で result に書いてください。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"ifd-recipe を見本に沿って書き直した。運用の記述・未決事項の台帳の列・rulebook と同じ判断の言い直し・recipe 内の同じ確認の繰り返しを外し、書く順番・入力の集め方・問いとコツ・対応のない主張を探す深掘りの順序に絞った。空白を除いた文字数は 3,651 字から 2,529 字（69.3%）。8 章の構成を保ち、rulebook・sample・template・成果物本体は変更していない。","handoff":["大きさ（空白・改行と表の区切り行を除く）: 前 3,651 字（区切り行込み 3,959 字・11,509 B）、後 2,529 字（2,808 字・7,919 B）、比 69.3%。result の `進め方と実践の型の適用` に記録すること。","根拠とした規範: `docs/ja/specdojo/standards/recipe-authoring-standard.md`（記述ガイド・禁止事項）、`docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md`（本文要件・記述ガイド・禁止事項）、手本 `docs/ja/specdojo/recipes/prj-charter-recipe.md` と PJR-7M9J の「他の recipe へ広げるときの一覧」。grade・condense の finding はなかった。","rulebook を正とした箇所: 詳細の値・構文の委譲、配置表と経路表の推奨列、Mermaid の表現規約、各章の良い例・悪い例は rulebook にあるため recipe から外した。","変更案: rulebook・sample・template に直すべき点は見つからなかった（template は今回読んでいない）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/ifd-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/ifd-recipe.md","status":"passed","summary":"0 issues in 1 file"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"not run","reason":"履歴蓄積ファイル（plan・result・個票）を変更していない"}]}
+</specdojo_executor_evidence>
