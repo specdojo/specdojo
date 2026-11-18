@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T22:57:37Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: lint-ts; rate limit fallback: sol-executor -> opus-executor at 2026-11-18T00:36:06.643Z"
 ---
 
 # PJR-8KXJ exec run の統合の後に、src が変わったら dist を自動で作り直す
@@ -42,15 +43,50 @@ src を変える項目の統合の後に dist が古くなり次の run が止�
 
 ## 4. 作業内容
 
-| No  | 作業                                                    | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | `post_integration` の設定と許可リストを足す             | ARC  | open | -    |
-| 2   | 統合の後に親が流す処理と、失敗時の記録を実装する        | ARC  | open | -    |
-| 3   | 単体テストと文書を足し、`exec-defaults.yaml` の案を書く | ARC  | open | -    |
+| No  | 作業                                                    | 担当 | 状態 | メモ                                                      |
+| --- | ------------------------------------------------------- | ---- | ---- | --------------------------------------------------------- |
+| 1   | `post_integration` の設定と許可リストを足す             | ARC  | done | `src/exec/post-integration.ts`・schema・`agent-config.ts` |
+| 2   | 統合の後に親が流す処理と、失敗時の記録を実装する        | ARC  | done | register・schedule・job の worktree 統合後に実行          |
+| 3   | 単体テストと文書を足し、`exec-defaults.yaml` の案を書く | ARC  | done | 案は対応結果を参照                                        |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+- `src/exec/post-integration.ts` を追加した。`pipeline.post_integration` を `{ id, paths }` の配列として読み、ID は `build-dist` だけを許す。未知の ID・型の誤り・空の `paths`・`command` などの余分な項目・ID の重複は `loadExecDefaultsConfig` で拒否する。`exec-defaults.schema.yaml` にも同じ制約を足した。
+- `build-dist` は親検証の許可リストの `build`（`npm run build` の固定 argv）で実行する。任意のコマンドや引数は受け付けない。
+- 統合の commit の直前の HEAD と直後の HEAD の差分（`git diff --name-only --no-renames -z`）が `paths` に当たるときだけ流す。register（`src/exec/run/register-worktree.ts`）・schedule（`src/exec/run/schedule-task.ts`）・job（`src/exec/run/job.ts`）の worktree 統合の後、撤去の前に呼び、exec のロックを持ったまま流す。統合済みからの再開では `integratedCommitRange` で元の統合の commit を探して判定する。
+- 失敗しても統合は戻さない。`dist/.specdojo-build-failed` を置き、`src/shared/dist-freshness.ts` はこの印があれば stale と判定して次の `exec` を止める。成功時と手動の `npm run build`（dist を消してから作る）で印は消える。
+- 結果は run の記録の `post-integration.log`（JSON Lines、`status` は `passed` / `failed` / `skipped`）と標準出力の `[post-integration]` 行に残す。同じ統合の commit で記録済みの処理は再開時に繰り返さない。
+- 単体テスト `tests/src/exec/post-integration.test.ts` と schema のテスト、register の E2E（integration）テストを足した。
+- [[specdojo:command-reference]] と [[specdojo:exec-config-guide]] に設定と挙動を書いた。
+
+### 5.2. 決めた点と理由
+
+- 失敗の記録先は run の記録の `post-integration.log` とした。result は reporter の後に描画済みで、統合の後に書き換えると統合済みの commit と食い違うため。
+- tsc は失敗しても新しい JS を出し得るため、mtime だけでは次の run が止まらない。このため失敗の印（`dist/.specdojo-build-failed`）を dist-freshness の判定に加えた。`dist/` は Git の管理外のため commit には影響しない。
+- 対象は worktree 実行だけとした。in-place 実行は統合の merge を持たず、利用者が自分で build する運用と変わらないため。
+- `paths` は必須とした。省略時に常に流すと docs だけの統合でも build が走り、ロックの保持が長くなるため。
+
+### 5.3. 保護された設定の変更案
+
+prj-0001 の `.specdojo/exec-defaults.yaml` の `pipeline` に次を足す（利用者の承認のもと feature ブランチで反映する）。`package.json` の変更は要らない。
+
+```yaml
+pipeline:
+  post_integration:
+    - id: build-dist
+      paths: ["src/**", "tsconfig*.json"]
+```
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: Added
+- 文案: `exec run` の worktree 実行で、統合の後に `pipeline.post_integration` の固定処理（`build-dist` = `npm run build`）を、統合した変更が `paths` に当たるときだけ流せるようにした。失敗しても統合は戻さず、次の `exec` は dist-freshness の判定で止まる（PJR-8KXJ）。
+
+### 5.5. 残課題
+
+- 上記の `exec-defaults.yaml` の変更案の反映（利用者）。
 
 ## 6. 関連ドキュメント
 

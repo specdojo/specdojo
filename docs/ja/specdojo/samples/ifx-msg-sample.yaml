@@ -2,8 +2,6 @@
 asyncapi: 2.6.0
 info:
   title: 在庫変更イベント仕様
-  description: |
-    在庫が変更されたときに発行されるイベント仕様。
 
 x-spec-meta:
   id: specdojo:ifx-msg-sample
