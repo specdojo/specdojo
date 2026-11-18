@@ -71,7 +71,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - 登録簿項目の実行は既定で `exec run --register` を使う。自分で実装するのは、利用者が実装者として自分を指定した場合に限る。「着手してください」は実行経路の指示であり、自分が実装してよい根拠として扱わない。実装者が読み取れない場合は確認する。
 - 状態遷移の `--by` には、実際にその判断や作業をした主体を書く。利用者が決定・承認した記録は、役割の名前（`PO` など）ではなく人の名簿の nickname で残す。自分が確かめて close する記録や、自分で行った起票・記帳は `specdojo-orchestrator` で残す。`--by` は人と agent の名簿の nickname・alias と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）だけを受け付け、それ以外は記帳の前にエラーで止まる。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
-- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリは参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
+- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリ（`.specdojo/specdojo.local.config.json` で追加・パスを差し替えたものを含む。`specdojo config show` で確かめる）は参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
 - 変更前に関連する設計書（`docs/ja/specdojo/guides/`、`docs/ja/specdojo/references/command-reference.md`）を確認する。
 - タスクに関係しない成果物やファイルを変更しない。プロジェクトの事実を捏造しない。不明点は推測で埋めず、利用者に確認する。
