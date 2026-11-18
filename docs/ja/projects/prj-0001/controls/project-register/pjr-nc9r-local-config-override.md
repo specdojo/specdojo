@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T23:07:38Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-NC9R git で管理しないローカル用の設定（specdojo.local.config.json）で、環境ごとのリポジトリを上書きできるようにする
