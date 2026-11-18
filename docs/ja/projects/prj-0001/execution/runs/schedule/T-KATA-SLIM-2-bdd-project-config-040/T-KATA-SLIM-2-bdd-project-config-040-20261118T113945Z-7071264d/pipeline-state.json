@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-bdd-project-config-040",
   "run_id": "T-KATA-SLIM-2-bdd-project-config-040-20261118T113945Z-7071264d",
-  "updated_at": "2026-11-18T13:03:41.123Z",
+  "updated_at": "2026-11-18T13:03:57.025Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-bdd-project-config-040/T-KATA-SLIM-2-bdd-project-config-040-20261118T113945Z-7071264d/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 2,
       "started_at": "2026-11-18T13:03:41.123Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T13:03:57.025Z",
       "artifact_ref": null
     }
   },
