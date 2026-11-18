@@ -161,6 +161,8 @@ command Job の `task.steps` は、既存の Job の入力・冪等キー・atte
 
 runner は一意な Run の guard を取得し、project 実行 lock を有限時間待ってから各 command を await する。段の停止・続行は定義で決め、終了コードと必要に応じた状態ファイル判定から段を成功・失敗・延期に分類する。失敗または延期を含む attempt は Run も `failed` に確定する。lock 待ち上限超過は全段を延期として記録し、checkpoint を進めない。段の時刻・理由・evidence 参照を attempt ごとに保持する。詳細な値制約は [[specdojo:job-definition-standard|Job 定義標準]]、運用例は [[specdojo:job-sequence-guide|順次実行 Job の例]] を正本とする。
 
+その場で組む 1 回限りの順番（grade・`exec run`・`post-integration build-dist` を混ぜた予約）は Job ではなく `exec queue` が扱う。Job の段は `/bin/sh` で解釈される任意のコマンドで、`jobs_path` に置いた再利用定義と冪等キーを前提とし、再試行は先頭の段から始まる。`exec queue` は段を許可リストの specdojo コマンドに限って argv で渡し、予約ファイル（`<execution_path>/queues/<queue-id>.json`）に段ごとの状態を残して、止まった段から再開する。段の間で project 実行 lock を持ち続けないため、各段の `exec run` はそれぞれ通常どおり lock を取る。書式は [[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」を正本とする。
+
 ### 4.2. 共通の起動フロー
 
 CLI境界は次のとおりとする。
