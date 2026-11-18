@@ -92,6 +92,7 @@ import { resolveOwnerForLocalId } from "./strategy.js";
 import { buildTaskView } from "./task-view.js";
 import { registerExecTrialCommands } from "./trial.js";
 import { registerExecSmokeCommand } from "./smoke.js";
+import { registerExecQueueCommands, writeActiveQueueSummary } from "./queue-command.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { validateRunRecordLayout } from "./validate-records.js";
@@ -122,6 +123,7 @@ export function registerExecCommands(program: Command): void {
   registerExecHandoffCommands(exec);
   registerRecordMigrationCommand(exec);
   registerExecSmokeCommand(exec);
+  registerExecQueueCommands(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",
@@ -739,7 +741,7 @@ export function registerExecCommands(program: Command): void {
   );
   statusCmd.action((opts) => {
     try {
-      const { schedulePath } = resolveProjectContext(opts);
+      const { schedulePath, executionPath } = resolveProjectContext(opts);
 
       // Compute state directly from events (not from cached state.json)
       const state = loadValidatedExecState(schedulePath);
@@ -758,6 +760,7 @@ export function registerExecCommands(program: Command): void {
       if (entries.length === 0) {
         const byMsg = filterBy ? ` for ${filterBy}` : "";
         process.stdout.write(`No ${filterState} tasks${byMsg}.\n`);
+        writeActiveQueueSummary(executionPath);
         exitWithCode(true);
         return;
       }
@@ -791,6 +794,7 @@ export function registerExecCommands(program: Command): void {
           `  ${padEndDisplay(r.taskId, taskWidth)} ${padEndDisplay(r.name, nameWidth)} ${padEndDisplay(r.by, byWidth)} ${r.ts}\n`,
         );
       }
+      writeActiveQueueSummary(executionPath);
       exitWithCode(true);
     } catch (error) {
       printCommandError(error, false);

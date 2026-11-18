@@ -99,6 +99,21 @@ function recorded(logPath: string, id: string, outputCommit: string): boolean {
     });
 }
 
+/** Leave the marker that `dist-freshness` treats as stale after a failed build; clear it on success. */
+export function updateDistBuildFailureMarker(
+  repoRoot: string,
+  failed: boolean,
+  content: string,
+): void {
+  const marker = join(repoRoot, "dist", DIST_BUILD_FAILURE_MARKER);
+  if (failed) {
+    mkdirSync(dirname(marker), { recursive: true });
+    writeFileSync(marker, `${content}\n`, "utf8");
+  } else {
+    rmSync(marker, { force: true });
+  }
+}
+
 /** Caller retains the exec/lifecycle lock until this completes. Never undo a merged commit. */
 export async function runPostIntegration(params: {
   entries: readonly PostIntegrationEntry[] | undefined;
@@ -165,13 +180,11 @@ export async function runPostIntegration(params: {
     const record = records.at(-1)!;
     if (record.status !== "skipped") {
       try {
-        const marker = join(params.repoRoot, "dist", DIST_BUILD_FAILURE_MARKER);
-        if (record.status === "failed") {
-          mkdirSync(dirname(marker), { recursive: true });
-          writeFileSync(marker, `${record.output_commit}\n`, "utf8");
-        } else {
-          rmSync(marker, { force: true });
-        }
+        updateDistBuildFailureMarker(
+          params.repoRoot,
+          record.status === "failed",
+          record.output_commit,
+        );
       } catch (error) {
         log(
           `  [post-integration] could not update dist failure marker: ${redactSensitiveText(String(error))}\n`,

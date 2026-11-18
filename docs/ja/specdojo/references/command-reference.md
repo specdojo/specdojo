@@ -651,6 +651,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 | `exec resume`   | `doing`、または due な利用制限延期 task を既存 worktree で再開する                                                                               | `specdojo exec resume --project prj-0001 --due`                                                         |
 | `exec cycle`    | 延期 task 再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行する                                    | `specdojo exec cycle --project prj-0001 --loop`                                                         |
 | `exec status`   | 実行状態を表示する                                                                                                                               | `specdojo exec status --project prj-0001 --state blocked`                                               |
+| `exec queue`    | grade・`exec run`・統合の後の処理を混ぜた順番を予約し、順に流す（「実行の予約（exec queue）」を参照）                                            | `specdojo exec queue add nightly --project prj-0001 --step "exec run --register PJR-XXXX"`              |
 | `exec scaffold` | 共通レビュー観点を継承するプロジェクト差分を生成する                                                                                             | `specdojo exec scaffold --project prj-0001`                                                             |
 | `exec plan`     | plan だけを生成する                                                                                                                              | `specdojo exec plan --project prj-0001 --task <task-id>`                                                |
 | `exec archive`  | 完了済み plan を同じ run に保持する                                                                                                              | `specdojo exec archive --project prj-0001 --task <task-id>`                                             |
@@ -887,6 +888,36 @@ PJR-XXXX・PJR-YYYY
 成功時は終了コード 0 と、対象 ID・実体 actor・start / review event ID を表示します。actor は alias の解決先となる executor nickname と両 event で一致する必要があります。レートリミットは `stop` を指定して実行します。失敗時は終了コード 1 と `[smoke:preflight|targets|reopen|run|verify]`、理由を出力し、それ以降の段を実行しません。途中の記帳 commit は残ります。waiting / in-progress になった確認用個票は、run の記録を調べ、通常の `exec run --resume` などで解決してから再実行してください。
 
 close は人が各項目の完了条件を確認して `register close --commit` で行います。runner 本体を変更した場合は、統合後に build し直し、新しいプロセスで smoke を実行してください。
+
+### 7.3. 実行の予約（exec queue）
+
+`exec queue` は、grade・`exec run`（register・schedule）・統合の後の処理を混ぜた順番を予約ファイルに残し、runner が前の段の終わりを待って順に流します。予約は `<execution_path>/queues/<queue-id>.json` に残り、orchestrator のセッションが終わっても消えません。Git の管理下にあるため、記帳の commit と同じく利用者か orchestrator が commit します。
+
+| コマンド                                     | 内容                                                            |
+| -------------------------------------------- | --------------------------------------------------------------- |
+| `exec queue add <queue-id> --step <spec>...` | 予約を作る。既にある ID は拒否する                              |
+| `exec queue run <queue-id>`                  | 予約を順に流す。止まった予約は止まった段から再開する            |
+| `exec queue status [queue-id]`               | 予約の一覧、または 1 件の各段の状態・終了コード・理由を表示する |
+| `exec queue cancel <queue-id> --msg <text>`  | 予約を取り消す。流れている予約は次の段を始める前に止まる        |
+
+段は `--step <spec>`（失敗したら予約を止める）と `--step-continue <spec>`（失敗しても次の段へ進む）で、指定した順に並べます。`<spec>` は次の許可リストのどれかで、空白だけで区切ります。引用符とバックスラッシュは拒否し、シェルを通さず specdojo の CLI へ argv として渡します。`--project` を書かない段には予約の project を足します。
+
+| `<spec>` の形                 | 実行する内容                                                                                                                                   |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `grade run ...`               | `specdojo grade run ...`                                                                                                                       |
+| `exec run ...`                | `specdojo exec run ...`。`--register`・`--register-filter`・`--auto`・`--task` のどれかが要る。`--job`・`--plan` は拒否する                    |
+| `post-integration build-dist` | 統合の後の処理の `build-dist`（`npm run build` の固定 argv）を、project の exec のロックを待って取ってから流す。失敗時の印も統合の後と同じ扱い |
+
+```bash
+specdojo exec queue add nightly --project prj-0001 \
+  --step "exec run --register PJR-AAAA PJR-BBBB" \
+  --step-continue "grade run --kind rulebook --if-busy wait" \
+  --step "post-integration build-dist"
+specdojo exec queue run nightly --project prj-0001
+specdojo exec queue status nightly --project prj-0001
+```
+
+runner は自分が起動した子プロセスの終了を待ってから次の段を始めます。プロセス名の検索で待つことはしません。各段の状態（`pending`・`running`・`succeeded`・`failed`）・開始と終了の時刻・終了コードは段ごとに予約ファイルへ書きます。予約の状態は `succeeded`・`completed_with_failures`（`--step-continue` の段だけが失敗）・`stopped`（`stopped_step` と `reason` を記録）・`cancelled` のどれかで終わり、`exec queue run` は `succeeded` のときだけ終了コード 0 を返します。同じ予約は `exec/.locks/queue-<queue-id>.lock` で 1 つの runner だけが流します。runner が落ちて `running` のまま残った予約は、`status` に `running (runner not alive)` と出て、`exec queue run` で途中の段からやり直します。終わっていない予約は `exec status` の末尾の `queues:` にも 1 行ずつ出ます。
 
 ## 8. grade
 
