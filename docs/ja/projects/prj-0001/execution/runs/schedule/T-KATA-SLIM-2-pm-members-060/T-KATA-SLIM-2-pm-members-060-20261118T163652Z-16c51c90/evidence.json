@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-pm-members-060",
+  "run_id": "T-KATA-SLIM-2-pm-members-060-20261118T163652Z-16c51c90",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T16:38:49.154Z",
+    "completed_at": "2026-11-18T16:39:52.208Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/pm-members-recipe.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/recipes/pm-members-recipe.md | 101 +++++++++++++-------------\n 1 file changed, 50 insertions(+), 51 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/recipes/pm-members-recipe.md",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file",
+      "status": "not_applicable",
+      "summary": "YAML の変更なし",
+      "reason": "変更したのは Markdown の recipe だけで、*.yaml / *.yml の変更がない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルの変更なし",
+      "reason": "plan・result・個票を変更していない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5400 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5400 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-members-060\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontaine\n… output omitted …\n: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nclose timed out after 10000ms\nTests closed successfully but something prevents Vite server from exiting\nYou can try to identify the cause by enabling \"hanging-process\" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-members-060/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-members-060/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-pm-members-060\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 942ms\n     ✓ resolves declared and reverse-linked Kata references  368ms\n[parent-validation\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "docs/ja/specdojo/recipes/pm-members-recipe.md を Recipe 記述標準の 8 章構成で書き直し、運用の記述と rulebook の言い直しを外した。空白を除いた文字数（表の区切り行を除く）は 1,966 字から 1,373 字（69.8%）。",
+  "completion_status": "complete",
+  "handoff": [
+    "大きさ: 前 1,966 字、後 1,373 字（69.8%）。空白（改行を含む）と表の区切り行を除いた文字数で、PJR-7M9J と同じ測り方。",
+    "F001〜F009（`title`・`status`・`version`・`type`・`rulebook`・`display_name`・`scheduler_strategy`・`persona` の書式・nickname の許容文字が漏れているという指摘）は、Recipe 記述標準の「rulebook の構造・必須項目を recipe 側で再定義しない」と、この段の「判断の言い直しを外す」に従い、項目を足さなかった。原因だった一部の項目だけを並べた記述（全体の作成手順の 1、深掘りの問いの項目名）を外して対処した。解消の確認は統合のあとの grade で行う。",
+    "外した記述: 仕上げチェックの構造の検査（schema 検証、全員が `type: human`、必須フィールドがそろう）、ロール定義と照合して割り当てる手順の言い直し、禁止事項を言い換えた問い（agent 用フィールド、改名、`migrate-members --dry-run`）、レビュー観点と完了チェックの重複。",
+    "残した・足した記述: 作成前に集める情報の取り出し元の列、書く順番とその理由（最終判断を担う人を先に決める、使用中の nickname を集めてから名前を決める）、聞き方のコツ（本人に公開の可否を聞く、上位成果物は写さず参照に置き換える）、深掘りの順序、良い例 / 悪い例。章の構成は 6 章から Recipe 記述標準の 8 章へそろえた。",
+    "rulebook・sample・template への変更案: なし。",
+    "成果物の観察（変更なし）: prj-0001 の `pm-members.yaml` の `rules` に、agent の起動設定（command_template・command の上書き）や `stage_role` についての行が残っている。rulebook の「運用ルール」の範囲（project 固有の制約に限る）を超えるため、別の項目で見直すとよい。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-members-060/T-KATA-SLIM-2-pm-members-060-20261118T163652Z-16c51c90/executor.log",
+      "bytes": 5930,
+      "truncated": false
+    }
+  ]
+}
