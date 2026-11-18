@@ -27,6 +27,7 @@ docs/ja/sample-gcs-product・sample-gcs-projects・sample-gcs-story の古い sa
 - orchestrator の調べ（2026-11-18）: sample-gcs-product は 74 ファイル（業務仕様・外部 IF 仕様・アーキテクチャ、日本語ディレクトリ名の旧構成）、sample-gcs-story は 13 ファイル（物語、484KB）、sample-gcs-projects は .gitkeep の 3 ファイルだけ。参照は docs/ja/index.md の表の 2 行と、過去の登録簿・実行の記録（書き換えない）
 - 利用者の決定（2026-11-18）: git の履歴からの削除は履歴の書き換えと強制 push を伴い、記録に書かれた commit の hash が全部変わるため、todo では手順と影響の調べに留めて `_UNDECIDED_` で残す。実施は決めた後に利用者が行う
 - 利用者の決定（2026-11-18）: local/ は git の管理外のため、exec の worktree では移せない。反映を exec run で先に行い、統合の後に orchestrator が承認を得て local/ への複製と git rm を行う
+- 利用者の決定（2026-11-18）: git の履歴からは消さない。local/ への移動（複製と git rm）は進める
 
 ## 3. 完了条件
 
@@ -43,13 +44,13 @@ docs/ja/sample-gcs-product・sample-gcs-projects・sample-gcs-story の古い sa
 
 ## 4. 作業内容
 
-| No  | 作業                                                    | 担当         | 状態 | メモ                                                                                                         |
-| --- | ------------------------------------------------------- | ------------ | ---- | ------------------------------------------------------------------------------------------------------------ |
-| 1   | 古い sample と今の sample を型ごとに見比べる            | BA           | done | 「型ごとの反映の判断」の表                                                                                   |
-| 2   | 役に立つ記述を今の sample へ反映し、判断を表に書く      | BA           | done | `mip-index-sample` へ反映した                                                                                |
-| 3   | `docs/ja/index.md` の表から古い sample の行を外す       | BA           | done | 2 行を外した                                                                                                 |
-| 4   | 履歴から消す手順と影響を調べて書く                      | BA           | done | 「git の履歴から消す件」の節。実施は `_UNDECIDED_`                                                           |
-| 5   | 統合の後に `local/` へ複製し、`git rm` する（承認の後） | orchestrator | open | 2026-11-18 に orchestrator が `local/legacy-samples/` へ複製した（92 ファイル）。`git rm` は利用者の承認待ち |
+| No  | 作業                                                    | 担当         | 状態 | メモ                                                                                                      |
+| --- | ------------------------------------------------------- | ------------ | ---- | --------------------------------------------------------------------------------------------------------- |
+| 1   | 古い sample と今の sample を型ごとに見比べる            | BA           | done | 「型ごとの反映の判断」の表                                                                                |
+| 2   | 役に立つ記述を今の sample へ反映し、判断を表に書く      | BA           | done | `mip-index-sample` へ反映した                                                                             |
+| 3   | `docs/ja/index.md` の表から古い sample の行を外す       | BA           | done | 2 行を外した                                                                                              |
+| 4   | 履歴から消す手順と影響を調べて書く                      | BA           | done | 「git の履歴から消す件」の節。履歴からは消さないと決めた                                                  |
+| 5   | 統合の後に `local/` へ複製し、`git rm` する（承認の後） | orchestrator | done | 2026-11-18 に orchestrator が `local/legacy-samples/` へ複製し、90 ファイルの一致を確かめて `git rm` した |
 
 ## 5. 対応結果
 
@@ -86,7 +87,7 @@ docs/ja/sample-gcs-product・sample-gcs-projects・sample-gcs-story の古い sa
 
 ### 5.4. git の履歴から消す件
 
-_UNDECIDED_: 実施するかどうか。利用者が影響を見て決める。executor は履歴の書き換えも push もしていない。
+決定（2026-11-18、利用者）: git の履歴からは消さない。以下の手順と影響は、判断の材料として残す。
 
 手順（案）:
 
