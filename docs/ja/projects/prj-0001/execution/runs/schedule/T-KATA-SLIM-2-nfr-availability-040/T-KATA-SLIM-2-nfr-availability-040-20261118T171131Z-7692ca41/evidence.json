@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-nfr-availability-040",
+  "run_id": "T-KATA-SLIM-2-nfr-availability-040-20261118T171131Z-7692ca41",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T17:13:36.279Z",
+    "completed_at": "2026-11-18T17:15:43.373Z",
+    "exit_code": 0,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../rulebooks/nfr-availability-rulebook.md         | 96 ++++++++--------------\n 1 file changed, 35 insertions(+), 61 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md",
+      "status": "passed",
+      "summary": "対象の rulebook を整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴ファイルの変更なし",
+      "reason": "変更したのは rulebook だけで、plan・result・個票などの履歴ファイルを変えていない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5406 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5406 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-availability-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.conf\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devco\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-availability-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-availability-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-nfr-availability-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 1032ms\n     ✓ resolves declared and reverse-linked Kata references  319ms\n[parent-val\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "opus-executor",
+      "resumed_at": "2026-11-18T17:13:38.484Z"
+    }
+  ],
+  "final_message": "nfr-availability-rulebook を手直しした。全体方針に「共通の運用」を足し、Frontmatter の章を specdojo 名前空間・schema 正本の参照に直して `title` と Markdown リンクを外した。重複を削り、サンプル章は最小例に絞った。空白を除いた文字数は 3,314 字から 2,653 字（80.05%）。章名と必須の区分は変えていない。grade の指摘 F001 は sample 側の問題で、この段では sample を直せないため解消していない。sample への変更案は handoff に書いた。",
+  "completion_status": "complete",
+  "handoff": [
+    "F001（major / `vp-qe-kata-conformance`）は未解消: `specdojo:nfr-availability-sample` が rulebook の「本文構成（標準テンプレ）」の 5 章に合っていない（今は「目的と適用範囲／入力情報／記述内容／最小記述例／未解決事項」）。この段では sample が commit の対象外のため直していない。sample への変更案: 見出しを「概要（対象・目的）／適用範囲・除外条件／可用性要件一覧（`id`・内容・指標・基準・備考）／測定・検証方法／関連ドキュメント導線」に組み替え、駄菓子屋の販売管理システムの文脈で稼働率・RTO・RPO を定量で書く。H1 と表の中にある rulebook への Markdown リンクも外す（sample へのリンクを置かない規約に合わせる）。その後、型を grade し直す。",
+    "大きさ: 空白を除いた文字数で、表の区切り行を除くと 3,314 字から 2,653 字（80.05%）。区切り行を含むと 3,821 字から 3,068 字、バイト数は 8,813 B から 6,733 B。目安の 8 割をわずかに超えたが、残りは型固有の判断基準と最小例のため、これ以上は削らなかった。",
+    "章名と必須の区分は変えていない。用語の表（稼働率・RTO・RPO）は本文要件の列定義の言い直しではないため残した。役割の表・status 昇格・承認・台帳の列は、もともとこの rulebook になかった。",
+    "サンプル章は rulebook 作成標準の経過措置に従い、章を消さずに最小例へ絞った。成果物と同じ見出しの完成例は sample へ移すこと。",
+    "共通の正本（document-metadata-standard）への追記は不要と判断した。recipe と template は `undecided` のため変更案はない。`includes` で取り込む記法の rulebook もない。成果物本体 `docs/ja/product/060-non-functional-requirements/nfr-availability.md` はまだない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-nfr-availability-040/T-KATA-SLIM-2-nfr-availability-040-20261118T171131Z-7692ca41/executor.log",
+      "bytes": 5686,
+      "truncated": false
+    }
+  ]
+}
