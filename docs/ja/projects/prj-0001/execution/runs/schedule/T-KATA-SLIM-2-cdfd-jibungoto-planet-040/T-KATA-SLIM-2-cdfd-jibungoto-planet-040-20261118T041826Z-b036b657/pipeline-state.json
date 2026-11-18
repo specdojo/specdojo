@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-cdfd-jibungoto-planet-040",
+  "run_id": "T-KATA-SLIM-2-cdfd-jibungoto-planet-040-20261118T041826Z-b036b657",
+  "updated_at": "2026-11-18T04:52:26.127Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T04:22:13.386Z",
+      "completed_at": "2026-11-18T04:29:45.937Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-cdfd-jibungoto-planet-040/T-KATA-SLIM-2-cdfd-jibungoto-planet-040-20261118T041826Z-b036b657/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T04:52:04.464Z",
+      "completed_at": "2026-11-18T04:52:17.220Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-cdfd-jibungoto-planet-040/T-KATA-SLIM-2-cdfd-jibungoto-planet-040-20261118T041826Z-b036b657/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T04:52:26.127Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-cdfd-jibungoto-planet-040/T-KATA-SLIM-2-cdfd-jibungoto-planet-040-20261118T041826Z-b036b657/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-cdfd-jibungoto-planet-040/T-KATA-SLIM-2-cdfd-jibungoto-planet-040-20261118T041826Z-b036b657/result.md"
+  }
+}
