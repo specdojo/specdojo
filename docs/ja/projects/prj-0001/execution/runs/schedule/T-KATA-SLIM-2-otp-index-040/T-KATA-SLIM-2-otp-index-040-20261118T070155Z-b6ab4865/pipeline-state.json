@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-otp-index-040",
   "run_id": "T-KATA-SLIM-2-otp-index-040-20261118T070155Z-b6ab4865",
-  "updated_at": "2026-11-18T07:30:50.190Z",
+  "updated_at": "2026-11-18T07:31:16.783Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -30,11 +30,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-otp-index-040/T-KATA-SLIM-2-otp-index-040-20261118T070155Z-b6ab4865/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T07:30:50.190Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T07:31:16.783Z",
       "artifact_ref": null
     }
   },
