@@ -1,0 +1,29 @@
+otp-index-rulebook を直しましたが、大きさは目安を満たしていません。「今の 8 割以下」に対して、空白を除いて 1,842 字から 2,632 字（約 143%）に増えました。理由は、外せる運用の記述がもともと少なく、grade の finding 3 件の修正で足す記述が上回ったためです。
+
+変更したのは `docs/ja/specdojo/rulebooks/otp-index-rulebook.md` だけです。成果物本体の `otp-index.md` はまだ作られていないため、根拠には sample と成果物カタログ（`dct-migration-planning.yaml`）を使いました。
+
+**外した記述**
+- 用語の言い直しだけの箇条書きを、関連文書の位置づけを示す表にしました。
+- Frontmatter 表の `title:` を外しました。共通規約で禁止されているためです。
+- 空行が入って壊れていた表を直しました。
+- 全体方針に「共通の運用」を 1 項目だけ足し、役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照する形にしました。
+
+**finding への対応**
+- **F001（ID の形）**: 文書 ID を `<project-id>:otp-index` とし、成果物カタログの宣言と一致させる規則にしました。
+- **F002（`rulebook` キーの漏れ）**: 推奨 Frontmatter 項目を、メタ情報標準と schema を正本として参照する形に変えました。`specdojo.type`・`specdojo.rulebook`・`specdojo.based_on` の指定と YAML の例を載せています。
+- **F003（記述の指針が薄い）**: 記述ガイドに「事実と仮定を分ける」「判断者を書く」「閾値と期限で書く」の 3 つの基準と、3 章分の良い例・悪い例の表を足しました。
+
+**変えなかったもの**
+- 成果物の 11 章の章名と、すべて必須という区分はそのままです。各章の受入条件を本文要件の表 1 つにまとめました。
+- 禁止事項は型固有の 4 行だけを残し、それぞれに理由を足しました。
+
+**結果に記録する人に伝えること**
+- rulebook の第 5 章の名前を「本文構成（標準テンプレ）」から「本文要件」に変えました。rulebook 作成標準の標準章構成に合わせるためです。成果物の章名は変えていません。
+- sample の `otp-index-sample` は変えていません。本文要件の受入条件と比べると、「バックアップ/リストア」に保管先がなく、「権限/アカウント移行」に旧新の差分がありません。さらに「障害対応フロー」は判断・連絡・復旧・報告の流れがエスカレーションの 1 行だけで、「クローズ条件」には判断者と最終報告物がありません。合わせて直す案として残します。
+- recipe と template は `undecided` のままです。共通の正本へ足す記述は不要と判断しました。
+
+検証は、prettier の整形が通っています。履歴リンクの検査は、変えたのが履歴のファイルではないため対象外です。lint などの残りの検査は、後で親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"otp-index-rulebook を直した。用語の箇条書きを位置づけの表にし、Frontmatter 表の `title` と壊れた表を直し、「共通の運用」の参照を足した。F001（ID を `<project-id>:otp-index` に）、F002（`rulebook` キーを含む Frontmatter の参照と例）、F003（記述の判断基準と良い例・悪い例）を解消した。成果物の章名と必須の区分は変えていない。大きさは空白を除いて 1,842 字から 2,632 字（約 143%）で、8 割の目安を超えた。","handoff":["大きさ: 空白と表の区切り行を除いて前 1,842 字、後 2,632 字（約 143%）。外せる運用の記述がもともと少なく（役割・status・承認・lint・管理台帳の記述はなかった）、F001〜F003 の修正（Frontmatter の例、判断基準と良い例・悪い例）と、壊れた表を整えたことで増えた。","rulebook の第 5 章の名前を「本文構成（標準テンプレ）」から「本文要件」に変えた。rulebook-authoring-standard の標準章構成に合わせるため。成果物の 11 章の章名と、すべて必須の区分は変えていない。","sample の変更案（commit の対象外のため未変更）: `otp-index-sample` は本文要件の受入条件に対して、バックアップの保管先、権限移行の旧新の差分、障害対応フローの判断・連絡・復旧・報告の流れ、クローズ条件の判断者と最終報告物が欠けている。recipe と template は `undecided` のまま。","成果物本体の `docs/ja/projects/prj-0001/060-migration-planning/otp-index.md` はまだ作られていない。根拠には sample と成果物カタログ `dct-migration-planning.yaml` を使った。共通の正本への追記は不要と判断した。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/otp-index-rulebook.md","status":"passed","summary":"整形が完了した"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは rulebook だけで、plan・result・個票を変更していない"}]}
+</specdojo_executor_evidence>
