@@ -38,3 +38,32 @@
     - field: due
       from: ""
       to: "2026-11-30"
+- v: 1
+  id: reg_af6227b0b49c4d6abc0b1b81ba484788
+  ts: "2026-11-18T00:27:33Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_65035ef83d9745d8b2259a28d90ac0c0
+- v: 1
+  id: reg_906fd0f162ab4fd681a16b9a920e0d05
+  ts: "2026-11-18T00:44:52Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts; rate limit fallback: sol-executor -> opus-executor at 2026-11-18T00:36:06.643Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts; rate limit fallback: sol-executor -> opus-executor at 2026-11-18T00:36:06.643Z"
+  previous_event_id: reg_af6227b0b49c4d6abc0b1b81ba484788

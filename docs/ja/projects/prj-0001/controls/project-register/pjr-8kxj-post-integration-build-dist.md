@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T22:57:37Z"
   due_on: "2026-11-30"
+  block_reason: "parent validation failed: lint-ts; rate limit fallback: sol-executor -> opus-executor at 2026-11-18T00:36:06.643Z"
 ---
 
 # PJR-8KXJ exec run の統合の後に、src が変わったら dist を自動で作り直す
