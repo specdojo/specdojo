@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-sysd-index-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-sysd-index-060/T-KATA-SLIM-2-sysd-index-060-20261118T222651Z-99e5f419/plan.md
   started_at: "2026-11-18T22:27:05.357Z"
+  completed_at: "2026-11-18T22:53:38.377Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `docs/ja/specdojo/recipes/sysd-index-recipe.md` から、共通の文書運用記述、未決事項台帳の列定義、rulebook と重複する判断基準の言い直し、および冗長な確認事項を削除し、記述をスリム化した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/sysd-index-recipe.md`: 文書の運用（役割分担・承認フロー等）、台帳の列定義、rulebook の重複記述、および仕上げチェックと深掘り手順で重複していた確認項目を削除。一方で、「このレシピの使い方」の集約、情報取り出し元の明記、章作成順の理由追加、各節の問いとコツへの再構成、深掘り手順の整理を行い、Recipe 記述標準に準拠した形式に更新した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 大きさ（空白・改行を除き、表の区切り行も除く）: 前 3,239 字、後 2,265 字、比 69.9%。区切り行を含むと 3,554 字から 2,548 字、バイトは 10,039 B から 6,899 B。
+- 外した記述: DEV・QE・PO の分担、兼務時の確認と承認の分け方、公開前に PO が留保の可否を判断する例、良い例 / 悪い例の改訂・廃止行、レビュー観点の運用・承認行（いずれも共通の運用）。台帳の列（担当・判断時機・解消後の更新先）と「責任と留保」の入力行。正本候補に並べた 7 つの設計領域の列挙、非該当には理由と代替正本が要るという規則、4.2 の RDBMS の例（rulebook の言い直し）。4.4 の分離テストの例は良い例 / 悪い例の表にまとめた。仕上げチェックの変更経路の確認は深掘り手順の最初の項目と同じ確認のため外した。
+- 残した・足した記述: 「このレシピの使い方」を Why・What・How・Trace の 1 項目にした。「作成前に集める情報」に取り出し元の列を足した。全体の作成手順に章の順番の理由を入れた。各節を問い 2 つとコツ（聞き方、つまずきやすい点、背景は写さず上位文書への参照に置き換える）にした。深掘り手順を対応のない主張を探す 3 つの順序に書き換えた。Recipe 記述標準の 8 章の構成は保ち、本文に rulebook・sample への参照は書いていない。
+- rulebook・sample・template への変更案: なし。rulebook の「全体方針」に共通の運用の記述がすでにあるため、外した運用の記述はそちらで扱われる。
+- 適用外の検証: `npm run validate:history-links`（executor が変えたのは recipe だけで、plan・result・個票は変えていない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+Recipe 記述標準および `docs/ja/specdojo/guides/ryu-guide.md` に基づき、rulebook と重複する判断基準や共通の運用記述を排除し、書き手が迷わないための「問い」と「コツ」に重点を置いた構成へのスリム化を実施した。
