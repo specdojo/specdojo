@@ -1,0 +1,24 @@
+`docs/ja/specdojo/recipes/stsd-recipe.md` だけを書き直しました。空白を除いた文字数は 6,242 字から 3,131 字になり、約 50%（目安は 7 割以下）です。markdownlint（0 件）と Prettier の検査は通りました。lint・schema・テストは親 runner が後で実行するので、ここでは実行していません。
+
+**外した記述**
+
+- **共通の運用**: 公開可否、承認者、`ready` への昇格をまとめた仕上げチェックの項目。レビュー観点の「主な確認者」列。
+- **rulebook と同じ判断の言い直し**:
+  - 状態一覧・遷移表の列の指定、`T-<nn>` のラベル形式。
+  - 遷移 ID の振り直しの手順、`stateDiagram-v2` の表記、図の分割の規則。
+  - 未決事項のラベルの定義。rulebook の判断表と同じ良い例・悪い例（成立条件・目的・判定・管理場所・状態名・図の分割）。
+- **構造の検査と同じ確認の繰り返し**: 全行の列がそろっているか、図と表が一致するかといった仕上げチェックの項目。図と表の整合・現在状態を一意に決められるか・用語の整合を見るレビュー観点。成果物の章立てをなぞる段落。
+
+**残した記述・補った記述**
+
+- 「このレシピの使い方」を、STSD 固有の Why・What・How・Trace を示す 1 項目にしました。どの章で何を担うかと、状態値・遷移 ID で後からたどれることを書いています。grade の指摘 F001（この節に Why・What・How・Trace が書かれていない）への対応です。
+- 「作成前に集める情報」に取り出し元の列を足しました。
+- 「全体の作成手順」は 7 段にし、各段に理由を付けました。頭書きは最後に書きます。
+- 各節は問いを 2 つとコツに絞りました。コツには、上位成果物（CDFD・運用ガイド）を正とする内容を写さずに参照へ置き換える旨を入れています。
+- 深掘り手順は、対応のない状態・遷移を探す 5 段にしました。良い例・悪い例は rulebook と重ならない 4 観点（対象・分岐・処理待ち・補足）です。
+
+rulebook・sample・template は変えておらず、合わせて直す点は見つかりませんでした。F001 が解消したかは、統合の後に型を grade し直して確かめる必要があります。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/recipes/stsd-recipe.md` から、運用の記述、rulebook と同じ判断の言い直し、構造の検査、同じ確認の繰り返しを外し、書く順番と理由・入力の集め方・問いとコツ・深掘りの順序に絞った。「このレシピの使い方」に STSD 固有の Why・What・How・Trace を 1 項目で書き、F001 に対応した。空白を除いた文字数は 6242 字から 3131 字（約 50%）になった。rulebook・sample・template は変えておらず、合わせて直す点も見つからなかった。","handoff":["文字数（空白除く）: 変更前 6242 字 → 変更後 3131 字（約 50%）。","F001（`vp-qe-kata-conformance`）: 「このレシピの使い方」に STSD 固有の Why（目的）・What（状態一覧・状態遷移）・How（状態の判定・遷移表）・Trace（状態値・遷移 ID）を 1 項目で書いた。解消したかは、統合の後に型を grade し直して確かめる。","rulebook を正として外した主な記述: 列の指定、`T-<nn>` のラベル形式、遷移 ID の振り直しの手順、`stateDiagram-v2` の表記、図の分割の規則、rulebook の判断表と同じ良い例・悪い例、構造の検査、公開と `ready` への昇格の条件。","rulebook・sample・template への変更案: なし。"],"validations":[{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/stsd-recipe.md","status":"passed","summary":"0 issues"},{"command":"npx prettier --check docs/ja/specdojo/recipes/stsd-recipe.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルを変更していない","reason":"変更したのは recipe だけで、plan・result・個票を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更した `*.yaml` / `*.yml` ファイルがないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"`docs/ja/projects/` 配下の成果物を変更していない","reason":"変更は `docs/ja/specdojo/recipes/` だけで、`docs/ja/projects/` に及ばないため"}]}
+</specdojo_executor_evidence>
