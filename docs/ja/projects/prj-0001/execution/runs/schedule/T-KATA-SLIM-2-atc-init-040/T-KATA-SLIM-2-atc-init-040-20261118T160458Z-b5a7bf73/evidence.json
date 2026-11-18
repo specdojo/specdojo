@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-atc-init-040",
+  "run_id": "T-KATA-SLIM-2-atc-init-040-20261118T160458Z-b5a7bf73",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T16:07:10.698Z",
+    "completed_at": "2026-11-18T16:09:13.159Z",
+    "exit_code": 0,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/rulebooks/atc-rulebook.md | 330 +++++++++--------------------\n 1 file changed, 102 insertions(+), 228 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/atc-rulebook.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 docs/ja/specdojo/rulebooks/atc-rulebook.md",
+      "status": "passed",
+      "summary": "0 issues"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "not_applicable",
+      "summary": "履歴蓄積ファイルを変更していない",
+      "reason": "変更したのは rulebook だけで、plan・result・pjr 個票は変更していないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5394 file(s), 107 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 2 passed, 0 error, 0 未検査\n  flowchart: 83 passed, 0 error, 0 未検査\n  graph: 5 passed, 0 error, 0 未検査\n  stateDiagram-v2: 15 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5394 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-atc-init-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/job-worktree.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .\n… output omitted …\n: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nclose timed out after 10000ms\nTests closed successfully but something prevents Vite server from exiting\nYou can try to identify the cause by enabling \"hanging-process\" reporter. See https://vitest.dev/guide/reporters.html#hanging-process-reporter"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-atc-init-040/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-atc-init-040/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-T-KATA-SLIM-2-atc-init-040\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 1095ms\n     ✓ resolves declared and reverse-linked Kata references  375ms\n[parent-validation:\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "opus-executor",
+      "resumed_at": "2026-11-18T16:07:13.041Z"
+    }
+  ],
+  "final_message": "atc-rulebook から共通の運用の記述（想定読者の役割、status・承認・改訂、文書品質の検査）を外し、ドキュメントメタ情報標準への参照にした。F002・F006・F007・F009・F010・F011・F013・F014 を直した。章名と、すべて必須という区分は維持した。空白を除いた文字数は 6,786 字から 4,517 字（66.6%）。",
+  "completion_status": "complete",
+  "handoff": [
+    "大きさ: 空白（改行を含む）と表の区切り行を除いた文字数で、前 6,786 字、後 4,517 字（66.6%）。",
+    "章名: rulebook の章「本文構成（標準テンプレ）」を作成標準に合わせて「本文要件」にした（F013）。成果物側の 6 章の名前と、すべて必須という区分は変えていない。第 2 章「位置づけ」の導入文（図をなぞる文）は削った。",
+    "finding F001・F015（ready 化の条件と判断者）と F003（暫定ケースの報告先と担当 Role code）は、plan の方針（status・承認・未決事項の引き継ぎは共通の正本を参照）に従い、全体方針の「共通の運用」でドキュメントメタ情報標準を参照する形にした。rulebook には書いていない。",
+    "finding F004（作成者・確認者・受入合意者の Role code）は、役割の割り当てをメンバー定義が正本とするため概要の要件を「誰がどの受入判断に使うか」に置き換えた。Role code は書いていない。",
+    "finding F005・F008（lint・schema validate の手順）は、文書品質の検査を業務の検証に入れない方針のため追記していない。「共通の運用」に、整形・lint はリポジトリの検証で扱うと 1 文で書いた。",
+    "finding F009: 優先度 `P0`（不合格なら受入不可）・`P1`（重要な分岐で、不合格時は条件付き受入を判断する）と、実施形態 `manual`・`automated` の意味を rulebook で新たに決めた。`atc-index` 側に別の定義があれば、そちらに合わせる必要がある。",
+    "finding F012 の変更案（sample は commit 対象外のため未変更）: `docs/ja/specdojo/samples/atc-sample.md` を本 rulebook の 6 章（概要・受入の責務・対象外・環境/データ/外部依存・トレース・受入観点とケース）と type `test` の形に作り直す。H1 の Markdown リンクと本文の rulebook へのパス参照は外す。`relations.verifies` と、ケース表の `TR-xx` 参照・`P0`/`P1`・`manual`/`automated` を含める。",
+    "サンプル章: 作成標準の「個別の改訂で先行して削除しない」に従い、「サンプル（最小）」はトレース表とケース表 1 行の輪郭だけに縮めて残した。sample を作り直した後に消すかは人が判断する。",
+    "recipe・template は `undecided` のまま。合わせて直す点はない。共通の正本（ドキュメントメタ情報標準）への追記は不要と判断した。",
+    "対象の成果物 `docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-init.md` はまだ作られていない（成果物本体は変更しない決まりのため影響なし）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-atc-init-040/T-KATA-SLIM-2-atc-init-040-20261118T160458Z-b5a7bf73/executor.log",
+      "bytes": 7386,
+      "truncated": false
+    }
+  ]
+}
