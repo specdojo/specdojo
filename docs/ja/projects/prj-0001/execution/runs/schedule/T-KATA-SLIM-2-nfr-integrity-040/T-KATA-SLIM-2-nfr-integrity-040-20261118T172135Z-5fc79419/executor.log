@@ -1,0 +1,21 @@
+rulebook（`docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md`）を簡潔にしました。ただし大きさは 8 割以下の目安に届かず、空白を除いて 3,824 字から 3,258 字（約 85%）です。これ以上削ると、完全性の型に固有の内容（要件と検証の例、保持期間、例外条件）を削ることになるため、ここで止めました。検証は Prettier の確認だけ実行して通りました。lint などの検査は、このあと親 runner が実行します。
+
+**外した・直した記述**
+- 全体方針に「共通の運用」を 1 項目置き、役割は適用先のメンバー定義、`status` の昇格と承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照する形にしました。この型の rulebook には、もともと役割の表や承認の段落はありませんでした。
+- 第 2 章を「位置づけと用語定義（必要に応じて）」から「位置づけ」に変え、用語の表を外しました。3 語とも全体方針の言い直しで、rulebook 作成標準では用語定義を省く場合に当たるためです。成果物側の章名と、必須・条件付きの区分は変えていません。
+- Frontmatter の表から `title`（Markdown では禁止）と `status` の値の一覧（共通の正本と同じ内容）を外し、`rulebook` を足しました。相対パスの Markdown リンクは wikilink とパス表記に置き換えました。
+- 記述ガイドで節ごとに繰り返していた「生成する本文の見出しは…」は、本文構成の表と二重なので 1 文にまとめました。
+
+**サンプル章**
+作成標準が経過措置として残すよう定めているため、章は残し、最小例の範囲にしました。
+- Frontmatter の例を `specdojo:` の配下に移し、`title` を外しました。
+- 空行で 2 つに割れていた測定・検証方法の表を直しました。
+- 要件と検証の表は 7 行から代表 4 行に減らし、概要の例は 1 文にしました。
+
+**指摘への対応**
+- F002（「冔等キー」の誤記）: 「冪等キー」に直しました。
+- F001（sample が必須の 5 章構成になっていない）: sample はこの段で変える対象外のため直していません。変更案として申し送りに書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"nfr-integrity-rulebook から共通の運用の記述を外し、ドキュメントメタ情報標準への参照にした。第 2 章を「位置づけ」にして用語の表を外し、Frontmatter の表を正本に合わせ、サンプル章を最小例にした。F002 の誤記は直した。F001 は sample が変更対象外のため変更案として申し送った。空白を除いた文字数は 3,824 字から 3,258 字（約 85%）で、8 割の目安は型に固有の内容を残したため満たしていない。","handoff":["大きさ: 空白（改行を含む）を除いた文字数は、前 3,824 字、後 3,258 字（約 85.2%）。8 割の目安に届かないのは、要件と検証の例・保持期間・例外条件など完全性の型に固有の内容を残したため。","章名の変更: rulebook の第 2 章を「位置づけと用語定義（必要に応じて）」から「位置づけ」に変え、用語の表（完全性・整合性違反・監査証跡）を外した。全体方針の言い直しで、rulebook 作成標準の用語定義を省く場合に当たるため。成果物の本文の 5 章の章名と必須の区分は変えていない。","Frontmatter の表から `title`（Markdown の frontmatter では禁止）と `status` の値の一覧（共通の正本と同じ内容）を外し、`rulebook` を足した。相対パスの Markdown リンクは wikilink とパス表記に置き換えた。","サンプル章: rulebook 作成標準の経過措置に従い章は残し、最小例にした。Frontmatter の例を `specdojo:` の配下へ移して `title` を外し、空行で割れていた測定・検証方法の表を直し、要件と検証の表は代表 4 行（001・002・004・006）に、概要の例は 1 文にした。","F002（vp-ux-language-consistency）: 「冔等キー」を「冪等キー」に直した。","F001（vp-qe-kata-conformance）の変更案: docs/ja/specdojo/samples/nfr-integrity-sample.md の章構成が「目的と適用範囲・入力情報・記述内容・最小記述例・未解決事項」で、rulebook の本文構成（概要（対象・目的）／適用範囲・前提条件／完全性要件一覧／測定・検証方法／関連ドキュメント導線）に合っていない。sample をこの 5 章に組み替え、H1 の Markdown リンクと本文の rulebook へのパス参照を外すことを提案する。この段では sample は変更対象外のため直していない。","recipe と template は `undecided` で、対応するファイルがないため変更案はない。","共通の正本への追記は不要と判断した。外した記述はドキュメントメタ情報標準で賄える。","根拠となる成果物 docs/ja/product/060-non-functional-requirements/nfr-integrity.md はこの worktree に存在しないため、成果物との照合はしていない。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更したのは docs/ja/specdojo/rulebooks/ 配下の rulebook だけで、plan・result・個票の履歴ファイルは変更していないため"},{"command":"npm run validate:catalog","status":"not_applicable","summary":"docs/ja/projects/ への変更なし","reason":"変更は docs/ja/specdojo/rulebooks/ 配下だけで、docs/ja/projects/ 配下の成果物を変更していないため"}]}
+</specdojo_executor_evidence>
