@@ -1,0 +1,32 @@
+`dmd-rulebook` の改訂が終わりました。変更したのは `docs/ja/specdojo/rulebooks/dmd-rulebook.md` だけで、Prettier と markdownlint はどちらも通っています。大きさは空白を除いて 4,305 字から 3,457 字になり、比は 80.3% です。目安の 8 割をわずかに上回っています。
+
+**外した記述:**
+- 全体方針と「関連ドキュメントは必須」の言い直し。全体方針の再現性・実行と検証の段は、記述ガイドと重なっていたので 1 項目にまとめました。
+- Frontmatter の項目の表。`title` が入っていて今の標準に反し、`type`・`status` も共通の正本の再掲だったため、参照に置き換えました。
+- 相対パスの Markdown リンク。
+- 記述ガイドの各節で繰り返していた「生成する本文の見出しは…」の行。章 5 の表の 1 文にまとめました。
+- 禁止事項の重なり。変換ルールと除外ルールの未記載は 1 行に統合し、関連ドキュメントの省略は表の「必須」と重なるため外しました。
+
+**足した記述と参照の形:**
+- 全体方針に「共通の運用」を 1 項目置きました。役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎは `[[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]` を参照し、整形・lint は移行の検証に含めないと書いています。
+- 型固有の禁止事項として「文書の整形・lint を移行の検証方法に含める」を 1 行足しました。
+
+**残した記述:** 本文 10 章の見出しと必須の区分、推奨の表、変換・除外・再実行性・検証の判断基準、型固有の禁止事項は変えていません。
+
+**変えた名前:**
+- rulebook 自身の章 5 の名前は「本文構成（標準テンプレ）」から「本文要件」に変えました。rulebook 作成標準の章名に合わせるためです。成果物の見出しは変えていません。
+- ファイル名の規則を `dmd-<term>.md`、プロジェクト固有の文書 ID を `<project-id>:dmd-<term>` にしました。カタログの実際の宣言（`dmd-slack-records.md`）に合わせるためです。
+- H1 は `# データ移行設計: <対象名>` としました。外した表の `title` の形をそのまま使ったもので、別の根拠はありません。
+
+**実行していない検査:**
+- grade と review の指摘はなく、成果物（`dmd-slack-records.md`）もまだないため、成果物との照合はしていません。
+- 共通の正本に足すべき記述はなく、sample・recipe・template は変えていません。
+- `validate:history-links` と `validate:schema:file` は、対象のファイルを変えていないので適用外です。
+
+**残っている作業:**
+- `tmp/count.py` と、比較用の改訂前の写し 2 つ（`tmp/before.md`、`tmp/dmd-rulebook.before.md`）が残っています。消すコマンドが承認待ちで止まったためです。`tmp/` は commit の対象外です。
+- result は書いていません。下の handoff の記録は、runner と reporter がそこへ書き写すためのものです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"dmd-rulebook から共通の運用の記述を外し、全体方針の「共通の運用」からドキュメントメタ情報標準を参照する形にした。型固有の判断基準・章・推奨表・型固有の禁止事項は残した。空白を除く文字数は 4,305 字から 3,457 字（80.3%）。","handoff":["大きさ: 空白（改行を含む）と表の区切り行を除いた文字数で、前 4,305 字（区切り行込み 4,841 字・11,974 B）、後 3,457 字（3,933 字・9,730 B）、比 80.3%。目安の 8 割をわずかに上回るが、残りは本文 10 章の判断基準と推奨表で、削ると判断に要る記述を失うため止めた。","外した記述: 全体方針の運用方針の段落（「関連ドキュメント」必須の言い直し）、全体方針の再現性・実行と検証の段（記述ガイドと重なるため 1 項目にまとめた）、Frontmatter 項目の表（`title` を含み今の標準に反し、`type`・`status` は正本の再掲）と相対パスの Markdown リンク、記述ガイド各節の『生成する本文の見出しは…』の行（章 5 の表と重なるため 1 文にまとめた）、禁止事項の『関連ドキュメントの省略』（表の必須と重なる）。変換ルールと除外ルールの未記載の 2 行は 1 行に統合した。","足した記述: 全体方針の「共通の運用」1 項目（役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]]、整形・lint は移行の検証に含めない）と、型固有の禁止事項『文書の整形・lint を移行の検証方法に含める』。","章名の変更: 成果物の 10 章の見出しと必須の区分は変えていない。rulebook 自身の章 5 の名前は『本文構成（標準テンプレ）』から『本文要件』に変えた（rulebook-authoring-standard の標準章構成に合わせるため。成果物の見出しへの影響はない）。","命名規則の見直し: ファイル名を `dmd-020-データ移行設計-<term>.md` から `dmd-<term>.md` に、文書 ID にプロジェクト固有の `<project-id>:dmd-<term>` を足した（カタログの実際の宣言 `dmd-slack-records.md` に合わせるため）。H1 は外した Frontmatter 表の `title` の形をそのまま使い `# データ移行設計: <対象名>` とした（それ以外の根拠はない）。","根拠とした規範: pjr-8s4t の『他の型へ広げるときの一覧』、改訂済みの sld-rulebook、rulebook-authoring-standard、document-metadata-standard。grade の finding も成果物からの finding もなし（既存の grade result は pass・100 点）。成果物 `dmd-slack-records.md` はまだないため、成果物との照合はしていない。","共通の正本への追記: 不要（ドキュメントメタ情報標準で賄える）。sample・recipe・template: 変更なし。dmd-sample は運用の記述を含まず、見出しは rulebook の表と一致する。recipe・template は宣言されていない。includes で取り込む記法の rulebook はない。","後片付け: 計測用の `tmp/count.py` と、比較用の改訂前の写し `tmp/before.md`・`tmp/dmd-rulebook.before.md` が残っている（削除コマンドが承認待ちで実行できなかった。`tmp/` は commit の対象外）。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/dmd-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/dmd-rulebook.md","status":"passed","summary":"0 issues in 0 files"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴蓄積ファイルを変更していない","reason":"変更は rulebook のみで、pjr 個票・plan・result を変更していないため"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML を変更していない","reason":"変更したファイルに *.yaml / *.yml がないため"}]}
+</specdojo_executor_evidence>
