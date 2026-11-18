@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0VPB",
+  "run_id": "pjr-0vpb-20261118T001001Z-4698aa47",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-11-18T00:12:43.582Z",
+    "completed_at": "2026-11-18T00:16:35.035Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0vpb.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0vpb-kata-slim-ifx-api-msg-dec.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dec-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dec-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-msg-sample.yaml",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0vpb-kata-slim-ifx-api-msg-dec.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dec-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dec-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-api-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-msg-sample.yaml",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".../pjr-0vpb-kata-slim-ifx-api-msg-dec.md          | 58 +++++++++++++++++++---\n docs/ja/specdojo/rulebooks/dec-rulebook.md         | 19 ++-----\n docs/ja/specdojo/rulebooks/ifx-api-rulebook.md     | 34 ++++++-------\n docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md     | 36 ++++++--------\n docs/ja/specdojo/samples/dec-sample.md             |  5 +-\n docs/ja/specdojo/samples/ifx-api-sample.yaml       |  2 -\n docs/ja/specdojo/samples/ifx-msg-sample.yaml       |  2 -\n 7 files changed, 87 insertions(+), 69 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check (changed rulebooks, samples, ticket)",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint-cli2 (changed md files)",
+      "status": "passed",
+      "summary": "0 issues in changed Markdown files"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "exit 0; ticket pjr-0vpb valid"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,tools,packages}/**/*.{ts,js,mjs,cjs}, eslint.config.js)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "lint-mermaid",
+      "source": "runner",
+      "command": "npm run lint:mermaid",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:mermaid\n> node tools/lint-mermaid.mjs\n\n[mermaid 12.0.0] 5303 file(s), 135 diagram(s)\n  architecture-beta: 1 passed, 0 error, 0 未検査\n  block: 1 passed, 0 error, 0 未検査\n  classDiagram: 5 passed, 0 error, 0 未検査\n  erDiagram: 3 passed, 0 error, 0 未検査\n  flowchart: 100 passed, 0 error, 0 未検査\n  graph: 6 passed, 0 error, 0 未検査\n  sequenceDiagram: 2 passed, 0 error, 0 未検査\n  stateDiagram-v2: 17 passed, 0 error, 0 未検査"
+    },
+    {
+      "id": "lint-d2",
+      "source": "runner",
+      "command": "npm run lint:d2",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 lint:d2\n> node tools/lint-d2.mjs\n\n[d2 0.9.0] 5303 file(s), 36 diagram(s), 36 passed, 0 error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0VPB\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/devcontainer/scaffold.integration.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/exec/job-worktree.integration.test.ts\"}\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/tmux.\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.8.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/020-external-interface-specs/ifx-file-agent-evidence.yaml: schema none (no-ifx-file-schema)\ndocs/ja/specdojo/samples/ifx-api-sample\n… output omitted …\n-index.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0VPB/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0VPB/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.8.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)",
+      "reason": "skipped by change type: no changed file matches paths ({src,tests,scripts,tools}/**, packages/docs-lint/**, packages/docs-site/**, tsconfig*.json)"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.8.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0VPB\n\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/grade/grade.test.ts\"}\n[parent-validation:test-file] {\"event\":\"start\",\"file\":\"tests/src/register/commands.test.ts\"}\n ✓ tests/src/grade/grade.test.ts (69 tests) 1180ms\n     ✓ resolves declared and reverse-linked Kata references  339ms\n[parent-validation:test-file] {\"event\n… output omitted …\n 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nWARN: tml-index.yaml is deprecated. Move track domains and dependencies to register epics; use dashboard build."
+    }
+  ],
+  "final_message": "ifx-api・ifx-msg・dec の rulebook の status 値と運用を document-metadata-standard への参照にし、重複を外した。sample から言い直し（dec-sample の H1 リンクと決定内容の重複行、YAML の info.description）を外した。個票の作業内容と対応結果（前後の文字数、迷った点、変更案、CHANGELOG の文案）を更新した。大きさは目安に届かない（rulebook 94.8〜105.7%、dec-sample 88.1%）。理由は個票に記録した。",
+  "completion_status": "complete",
+  "handoff": [
+    "大きさの目安（rulebook 8 割以下、markdown の sample 7 割以下）に届かなかった。3 つの型はもとから運用の記述と言い直しがほとんどなく、残りは型固有の構造・値・判断基準のため削らなかった（`vp-arc-conciseness`: 長さだけで削らない）。前後の文字数は個票の「大きさ」に記載した。",
+    "決めたこと: ifx の rulebook には「全体方針」の章がないため、章を新設せず冒頭に共通の運用の参照文を 1 つ置いた。rulebook 作成標準の章構成へ合わせる見直しは範囲外とした。",
+    "決めたこと: 外した記述と同じ節にあった壊れた表（ifx-api の `x-spec-meta` の表、dec の Frontmatter の表）と見出し番号の書式（`## 4.1` を `### 4.1.` に）を直した。",
+    "変更案: ifx-api-sample・ifx-msg-sample に `info.version` がない（OpenAPI 3.0.3・AsyncAPI 2.6.0 で必須、ifx-msg-rulebook の必須構造も求める）。標準の構造を変えない完了条件に従い、この項目では足していない。",
+    "変更案: dec-sample の業務文脈（管理画面の認証方式）が共通サンプル文脈（駄菓子屋）に揃っていない。dec を残すかを PJR-3VJM で決めた後に扱う。",
+    "作業内容の 3（型の grade）は open のまま。統合の後に orchestrator が流す。",
+    "保護された設定の変更は不要だった。CHANGELOG の文案は個票の「CHANGELOG に書く事項」に記載した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/register/PJR-0VPB/pjr-0vpb-20261118T001001Z-4698aa47/executor.log",
+      "bytes": 5641,
+      "truncated": false
+    }
+  ]
+}
