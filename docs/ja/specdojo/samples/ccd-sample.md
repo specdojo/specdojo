@@ -28,7 +28,6 @@ specdojo:
 
 ```mermaid
 classDiagram
-direction LR
 
 class 商品 {
   商品ID: PK
