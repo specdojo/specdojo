@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ankz-ntp-mtp-overlap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: BA
   registered_at: "2026-11-17T23:23:26Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-18T11:08:19Z"
+  conclusion: A を採る。ntp の型を非推奨にし、後継を mtp-rulebook とする。作業は PJR-HVQZ
   derived_from:
     - PJR-DJZD
 ---

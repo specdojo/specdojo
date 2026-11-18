@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-DJZD"]'
+- v: 1
+  id: reg_612acfbcf3474021a833f67bbc5452fd
+  ts: "2026-11-18T11:08:19Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が推奨の A を決定した（2026-11-18、対話）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: A を採る。ntp の型を非推奨にし、後継を mtp-rulebook とする。作業は PJR-HVQZ
+  previous_event_id: reg_23d45b3c866f4ee8b119b6c6f1e5ca26
