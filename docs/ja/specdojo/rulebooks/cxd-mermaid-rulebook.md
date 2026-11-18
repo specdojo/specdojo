@@ -16,11 +16,7 @@ specdojo:
 
 C4 Context Diagram (CXD) Documentation Rules using Mermaid
 
-本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンテキスト図（システムコンテキスト）を描く際の標準ルール**です。
-
-C4 コンテキスト図は「対象システム」と、その周辺の **利用者（人）**・**外部システム**・**関係（やり取り）** を、概念レベルで合意するために用います。
-
----
+Mermaid の `flowchart` 構文で C4 コンテキスト図を描くための記法を定めます。要素の選定と責任分界は [[specdojo:cxd-rulebook|C4コンテキスト図（CXD）作成ルール]] に従います。
 
 ## 1. 全体方針
 
@@ -29,6 +25,7 @@ C4 コンテキスト図は「対象システム」と、その周辺の **利�
 - 対象は「システム境界の外側との関係」であり、内部構造（コンテナ/コンポーネント）や実装詳細は含めない。
 - 図は「正確さ（過剰な詳細）」よりも「解釈が割れないこと（合意）」を優先する。
 - 1つの図には **対象システムを1つ**だけ置く（複数対象は図を分ける）。
+- **共通の運用**: 役割の割り当ては適用先のメンバー定義に、`status`・承認・改訂と廃止・未決事項の引き継ぎは [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従います。文書の整形・lint はリポジトリの検証で扱い、業務の受入確認には含めません。
 
 ## 2. C4要素と Mermaid 記号の対応
 
@@ -42,7 +39,7 @@ C4 の要素を、以下のように Mermaid の記号にマッピングする�
 | System Boundary（境界）                  | 対象システムの範囲         | `subgraph 境界["対象システム"] ... end`                  |
 | Relationship（関係）                     | 依存・利用・連携（概念）   | `店員 -->\| "売上登録" \| 販売管理システム`              |
 
-## 2.1 標準の色分け（推奨）
+### 2.1. 標準の色分け（推奨）
 
 C4コンテキスト図は色が必須ではありませんが、読み手が「人 / 対象システム / 外部システム」を一目で区別できるよう、以下の色分けを推奨します。
 
@@ -53,7 +50,7 @@ C4コンテキスト図は色が必須ではありませんが、読み手が「
 
 Mermaid `flowchart` では `classDef` + `class`、境界は `style` を使用します。
 
-### 2.1.1 標準スタイル定義（コピーして利用）
+#### 2.1.1. 標準スタイル定義（コピーして利用）
 
 ```mermaid
 flowchart LR
@@ -69,15 +66,7 @@ flowchart LR
 
 ```
 
-```plainText
-flowchart LR
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
-### 2.1.2 適用ルール
+#### 2.1.2. 適用ルール
 
 - Personノードには `person` クラスを付ける
 - 対象システムノードには `system` クラスを付ける
@@ -100,23 +89,9 @@ flowchart LR
   style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
 ```
 
-```plainText
-flowchart LR
-  店員["店員"]
-  会計システム["会計システム"]
-  subgraph 境界["対象システム"]
-    販売管理システム("販売管理システム")
-  end
-
-  class 店員 person;
-  class 販売管理システム system;
-  class 会計システム external;
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
 ## 3. ノードのルール
 
-### 3.1 Person（人/ロール）
+### 3.1. Person（人/ロール）
 
 - **四角 `[]`** を使用する。
 - 表示ラベルは業務ロール/主体を短い日本語で表す。
@@ -132,16 +107,7 @@ flowchart LR
   class 店員,店主 person;
 ```
 
-```plainText
-flowchart LR
-  店員["👤店員"]
-  店主["👤店主"]
-
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  class 店員,店主 person;
-```
-
-### 3.2 Software System（対象システム）
+### 3.2. Software System（対象システム）
 
 - **角丸長方形 `()`** を使用する。
 - 図の中心として扱い、表示ラベルは「システム名（＋必要なら短い補足）」とする。
@@ -157,15 +123,7 @@ flowchart LR
   class 販売管理システム system;
 ```
 
-```plainText
-flowchart LR
-  販売管理システム("駄菓子屋きぬや<br>販売管理システム")
-
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  class 販売管理システム system;
-```
-
-### 3.3 External Software System（外部システム）
+### 3.3. External Software System（外部システム）
 
 - **四角 `[]`** を使用する。
 - 表示ラベルは外部システムの一般名（例: 決済、会計、EC、配送など）。
@@ -181,16 +139,7 @@ flowchart LR
   class 会計システム,決済サービス external;
 ```
 
-```plainText
-flowchart LR
-  会計システム["会計システム"]
-  決済サービス["決済サービス"]
-
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 会計システム,決済サービス external;
-```
-
-### 3.4 System Boundary（境界）
+### 3.4. System Boundary（境界）
 
 - 対象システムは **サブグラフ `subgraph ... end`** で囲う。
 - 境界内には、原則として **対象システムのノード1つ**だけを置く（コンテキスト図の過密化防止）。
@@ -208,27 +157,16 @@ flowchart LR
   style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
 ```
 
-```plainText
-flowchart LR
-  subgraph 境界["対象システム"]
-    販売管理システム("駄菓子屋きぬや<br>販売管理システム")
-  end
-
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  class 販売管理システム system;
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
 ## 4. エッジ（関係）のルール
 
-### 4.1 方向
+### 4.1. 方向
 
 - `A --> B` を基本とする。
 - 方向は「主たる依存/利用/送信の向き」が分かるように統一する。
   - 例: 人がシステムを利用する: `人 -->|"利用"| 対象システム`
   - 例: 対象システムが外部システムに連携する: `対象システム -->|"連携"| 外部システム`
 
-### 4.2 ラベル
+### 4.2. ラベル
 
 - すべてのエッジにラベルを付ける（「何の関係か」を合意するため）。
 - ラベルは **短い名詞句**または **短い動詞句**で書く。
@@ -239,7 +177,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  店員["一店員"] -->|"売上登録"| 販売管理システム("販売管理システム")
+  店員["店員"] -->|"売上登録"| 販売管理システム("販売管理システム")
   販売管理システム -->|"会計仕訳<br>連携"| 会計システム["会計システム"]
 
   classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
@@ -249,29 +187,12 @@ flowchart LR
   class 販売管理システム system;
   class 会計システム external;
 ```
-
-```plainText
-flowchart LR
-  店員["一店員"] -->|"売上登録"| 販売管理システム("販売管理システム")
-  販売管理システム -->|"会計仕訳<br>連携"| 会計システム["会計システム"]
-
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 店員 person;
-  class 販売管理システム system;
-  class 会計システム external;
-```
-
----
 
 ## 5. 命名・表記ルール
 
 - ノードIDは日本語でもよいが、記号や空白は避け、短い識別子にする（例: `販売管理システム`, `会計システム`, `店員`）。
 - 表示ラベルは `"..."` で囲ってよい（混乱を避けるため、必要に応じて統一）。
 - 同じ主体/システムは、図の中で名称を揺らさない。
-
----
 
 ## 6. 禁止事項
 
@@ -282,8 +203,6 @@ flowchart LR
 | 実装クラス/関数名、具体的な技術スタックの列挙         | 変更に弱い                        |
 | 対象システムの内部プロセス/内部データストアの詳細     | コンテナ図/コンポーネント図で表す |
 | 矢印ラベルなしの関係                                  | 合意が取れない                    |
-
----
 
 ## 7. サンプル（最小）
 
@@ -320,34 +239,6 @@ flowchart LR
   style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
 ```
 
-```plainText
-flowchart LR
-  店員["👤店員"]
-  店主["👤店主"]
-
-  会計システム["会計システム"]
-  決済サービス["決済サービス"]
-
-  subgraph 境界["対象システム"]
-    販売管理システム("駄菓子屋きぬや<br>販売管理システム")
-  end
-
-  店員 -->|"売上登録"| 販売管理システム
-  店主 -->|"商品・在庫管理"| 販売管理システム
-
-  販売管理システム -->|"会計仕訳連携"| 会計システム
-  販売管理システム -->|"決済依頼"| 決済サービス
-  決済サービス -->|"決済結果"| 販売管理システム
-
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 店員,店主 person;
-  class 販売管理システム system;
-  class 会計システム,決済サービス external;
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
 ## 8. 凡例（推奨）
 
 凡例は下記のように表現する（必要な場合のみ）。
@@ -368,30 +259,6 @@ flowchart LR
   end
 
   %% Styles
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 人 person;
-  class 対象 system;
-  class 外部 external;
-  style 境界例 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
-```plainText
-flowchart LR
-  subgraph 凡例["凡例"]
-    direction LR
-    人["👤Person<br>（人/ロール）"]
-
-    subgraph 境界例["システム境界"]
-      対象("Software System<br>（対象システム）")
-    end
-    外部["External System<br>（外部システム）"]
-
-    人 -->|"Relationship（関係）"| 対象
-    対象 -->|"Relationship（関係）"| 外部
-  end
-
   classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
   classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
   classDef external fill:#e9ecef,stroke:#495057,color:#000;
