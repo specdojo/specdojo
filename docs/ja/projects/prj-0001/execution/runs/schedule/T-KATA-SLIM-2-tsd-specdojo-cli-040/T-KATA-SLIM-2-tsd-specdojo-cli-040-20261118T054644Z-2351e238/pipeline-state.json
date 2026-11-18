@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-tsd-specdojo-cli-040",
+  "run_id": "T-KATA-SLIM-2-tsd-specdojo-cli-040-20261118T054644Z-2351e238",
+  "updated_at": "2026-11-18T06:16:33.600Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T05:49:48.803Z",
+      "completed_at": "2026-11-18T05:55:05.300Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-tsd-specdojo-cli-040/T-KATA-SLIM-2-tsd-specdojo-cli-040-20261118T054644Z-2351e238/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T06:16:21.021Z",
+      "completed_at": "2026-11-18T06:16:30.631Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-tsd-specdojo-cli-040/T-KATA-SLIM-2-tsd-specdojo-cli-040-20261118T054644Z-2351e238/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T06:16:33.600Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-tsd-specdojo-cli-040/T-KATA-SLIM-2-tsd-specdojo-cli-040-20261118T054644Z-2351e238/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-tsd-specdojo-cli-040/T-KATA-SLIM-2-tsd-specdojo-cli-040-20261118T054644Z-2351e238/result.md"
+  }
+}
