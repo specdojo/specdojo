@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-nc9r-local-config-override
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T23:07:38Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-18T03:23:17Z"
+  conclusion: .specdojo/specdojo.local.config.json で repos[].path の差し替えとローカルのリポジトリの追加ができ、worktree の子のプロセスには SPECDOJO_LOCAL_CONFIG で本体側のファイルだけを渡す。config show・where exec・evidence でローカル由来の値を示す。orchestrator の定義の文言の変更は利用者の承認待ち
 ---
 
 # PJR-NC9R git で管理しないローカル用の設定（specdojo.local.config.json）で、環境ごとのリポジトリを上書きできるようにする

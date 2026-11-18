@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fed6531394e548b2bd6a8a47208f8c56
+- v: 1
+  id: reg_9680c42df36442138c4c9755ea6588e2
+  ts: "2026-11-18T03:23:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: orchestrator が差分と個票の判断を確かめ、統合の後の dist で config show・where exec と実際の exec run（kata-slim-2 の段）が通ることを確かめた。worktree の子のプロセスに効くことは統合テストで確かめられている
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-18"
+    - field: conclusion
+      from: "-"
+      to: .specdojo/specdojo.local.config.json で repos[].path の差し替えとローカルのリポジトリの追加ができ、worktree の子のプロセスには SPECDOJO_LOCAL_CONFIG で本体側のファイルだけを渡す。config show・where exec・evidence でローカル由来の値を示す。orchestrator の定義の文言の変更は利用者の承認待ち
+  previous_event_id: reg_b6ffa5c941ef4d7e8c36e77c908d73c8
