@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_70884c94f79546a2a0c3f678900615cc
+  ts: "2026-11-18T12:18:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: npm audit の high を解消する（配る依存を先に）
+    - field: description
+      from: ""
+      to: npm audit の high 15 件を解消する。配る依存（tinyglobby・fdir・picomatch・fast-uri）を先に直し、開発用は依存ごとに上げるか外すかを決める。古い版へ下げる直し方は使わない
+    - field: input
+      from: ""
+      to: '["利用者の依頼（2026-11-18）: npm audit で high が多く出るようになったので直したい","orchestrator の調べ（2026-11-18）: npm audit は high 15・moderate 18・low 3・critical 0。--omit=dev では high 3（tinyglobby・fdir・picomatch）と moderate 1（fast-uri）。tinyglobby は実行時の依存","orchestrator の調べ（2026-11-18）: 開発用の high は vitest・markdownlint-cli・remark-cli・ajv-cli・vite・markdown-it などの推移的な依存。npm audit の直し方には vitest@3.1.4・markdownlint-cli@0.33.0 など今より古い版へ下げる案が混じる","利用者の決定（2026-11-18）: 直し方は推奨の案 1。executor が依存ごとの直し方を調べて個票の対応結果に書き、package.json・package-lock.json（保護された設定）への反映は利用者の承認のもと orchestrator が feature ブランチで行う"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-18"
+    - field: due
+      from: ""
+      to: "2026-11-30"
