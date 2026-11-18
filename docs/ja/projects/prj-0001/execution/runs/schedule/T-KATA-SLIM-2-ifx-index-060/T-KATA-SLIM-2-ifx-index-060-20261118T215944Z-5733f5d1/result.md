@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-ifx-index-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-ifx-index-060/T-KATA-SLIM-2-ifx-index-060-20261118T215944Z-5733f5d1/plan.md
   started_at: "2026-11-18T21:59:58.585Z"
+  completed_at: "2026-11-18T22:34:36.768Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `ifx-index-recipe.md` から、共通の運用の記述（PO の採否・公開判断、管理担当と承認者、`schema`・整形検査を手順と検証節に入れること）、未決事項の管理台帳の列、`rulebook` と同じ判断の言い直し、および recipe 内で重複していた確認事項を削除した。
+- 一方で、章を書く順番とその理由、入力情報の収集元（取り出し元と聞く相手）、各節における問いとコツ、深掘りの順序、および具体的で判断の差がわかる良い例と悪い例は維持し、内容を整理した。
+- 結果として、空白と表の区切り行を除いた文字数を 4,353 字から 3,006 字（69.1%）へと削減し、recipe 記述標準に準拠した構成とした。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/ifx-index-recipe.md`: 共通運用の記述および `rulebook` と重複する判断基準などの冗長な記述を削除し、執筆上のコツや具体的な正誤例にフォーカスした内容にスリム化した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 大きさ: 空白（改行を含む）と表の区切り行を除いた文字数で 4,353 字から 3,006 字（69.1%）。測り方は PJR-7M9J と同じ。
+- 迷った点: 冒頭コメントに一覧の管理担当と承認・公開判断者を書く旨は共通の運用とみなして外した。rulebook の「検証と引き渡しの判定」は受入の判定を扱うため recipe では言い直していない。
+- rulebook・sample・template に合わせて直すべき点は見当たらず、変更案はない。
+- 適用外の検証: `npm run validate:history-links`（履歴蓄積ファイル（plan・result・個票）を変更していない）
+- 適用外の検証: `npm run validate:schema:file`（YAML ファイルを変更していない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+recipe-maintenance
