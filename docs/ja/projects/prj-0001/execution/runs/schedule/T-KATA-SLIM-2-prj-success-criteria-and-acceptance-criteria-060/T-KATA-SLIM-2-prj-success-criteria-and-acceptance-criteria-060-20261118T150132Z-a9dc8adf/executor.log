@@ -1,0 +1,28 @@
+`docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md` だけを書き直しました。大きさは、空白と表の区切り行を除いた文字数で 4,129 字から 2,763 字（66.9%）になり、目安の 7 割以下に入っています。Prettier（`--write` で整形）と markdownlint はエラーなしで通りました。
+
+**外した記述**
+- rulebook と同じ判断を言い直した箇所: 条件の書き方、技術的受入を種別で分けること、承認者の扱い。
+- 全体の作成手順をなぞっていた使い方の 5 行。
+- 構造を検査する仕上げチェック: 章立てと必須表がそろっている、という項目。
+- 同じ確認の繰り返し: `_UNDECIDED_` のラベル統一（各章・良い例 / 悪い例・レビュー観点・仕上げチェックの 4 か所）、判定段階の分離、証跡。どれも 1 か所にまとめました。
+- 冒頭で章立てをなぞる文。
+
+**残した・足した記述**
+- 「作成前に集める情報」に取り出し元の列を足しました（概要・スコープ・承認者への確認など）。
+- 業務価値を最初に決める理由と、未解決事項を最後にまとめる理由。
+- 各節の問いを 2 つに絞り、「書き方」を聞き方とつまずきやすい点の「コツ」に変えました。例: 公開から半年後に何が起きていればよいかを聞く、低コストは作業時間や寄付の扱いまで続けて聞く、確認者と承認者を分けて聞く、費用の上限は試行の前に承認を取る。
+- 深掘り手順は、対応のない主張を探す順序に書き換えました。
+- 上位成果物の内容は写さず参照に置き換える、とコツに書きました。
+- 8 章の構成は保ち、本文に rulebook・sample への参照は置いていません。
+
+**finding への対応**
+- F003（recipe 自身を「本ルールブック」と呼んでいる）: その文を「本書」に直し、4.5 節のコツにまとめて解消しました。
+- F001・F002（条件を追加・変更するとき変更理由と影響範囲を書く問いがない）: 対応する問いは足していません。今の rulebook にこの要件はなく、改訂の運用はドキュメントメタ情報標準が扱うためです。plan も改訂の手順を外す記述に挙げています。古くなった指摘として見送り、再評価で閉じることを申し送りに入れました。
+
+**この段では直していない点（result の変更案向け）**
+- template（`docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md`）の未解決事項の表の列は確認していません。rulebook の項目（論点・判定への影響・保留条件・当面の扱い）と合っているか確かめる必要があります。
+- 成果物本体の未解決事項の表は「決めること・期限・責任者」と、管理台帳の列になっています。plan に従い成果物本体は変えていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md` を書き直した（空白を除いて 4,129 字から 2,763 字、66.9%）。F003 は解消し、F001・F002 は今の rulebook に要件がないため見送った。","handoff":["大きさ: 空白と表の区切り行を除いた文字数で、前 4,129 字・後 2,763 字（66.9%）。result の大きさの欄に書く。","F003 は解消: 「本ルールブック」と書いていた文を「本書」に直し、4.5 節のコツにまとめた。","F001・F002 は見送り: 今の rulebook には条件を追加・変更するとき変更理由と影響範囲を書く要件がない。改訂の運用はドキュメントメタ情報標準が扱い、plan も改訂の手順を外す記述に挙げている。古くなった指摘として扱い、次の grade の再評価で閉じる。","変更案: template（`docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md`）の未解決事項の表の列が rulebook の項目（論点・判定への影響・保留条件・当面の扱い）と合っているか確かめる。この段では確認していない。","変更案: 成果物 `prj-0001:prj-success-criteria-and-acceptance-criteria` の「例外条件と未解決事項」の表は「決めること・期限・責任者」と管理台帳の列になっている。成果物の改訂で rulebook の項目へそろえる（この段では成果物を変えない）。","rulebook と sample は変える点がなかった。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md","status":"passed","summary":"最初の check で警告が出たため --write で整形した。整形後の markdownlint もエラーなし。"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"対象外","reason":"履歴蓄積ファイル（plan・result・個票）を変更していない"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象外","reason":"YAML ファイルを変更していない"}]}
+</specdojo_executor_evidence>
