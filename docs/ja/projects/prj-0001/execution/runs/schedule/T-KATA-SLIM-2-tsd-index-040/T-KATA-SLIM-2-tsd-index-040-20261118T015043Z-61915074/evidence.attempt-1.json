@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-tsd-index-040",
+  "run_id": "T-KATA-SLIM-2-tsd-index-040-20261118T015043Z-61915074",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "rate_limited",
+    "started_at": "2026-11-18T01:53:33.141Z",
+    "completed_at": "2026-11-18T01:53:58.333Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-tsd-index-040/T-KATA-SLIM-2-tsd-index-040-20261118T015043Z-61915074/executor.attempt-1.log",
+      "bytes": 20732,
+      "truncated": false
+    }
+  ]
+}
