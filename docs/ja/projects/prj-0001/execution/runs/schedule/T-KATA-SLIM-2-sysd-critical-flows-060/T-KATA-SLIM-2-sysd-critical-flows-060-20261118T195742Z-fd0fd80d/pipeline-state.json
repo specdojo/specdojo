@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-sysd-critical-flows-060",
   "run_id": "T-KATA-SLIM-2-sysd-critical-flows-060-20261118T195742Z-fd0fd80d",
-  "updated_at": "2026-11-18T20:29:02.380Z",
+  "updated_at": "2026-11-18T20:29:28.649Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-sysd-critical-flows-060/T-KATA-SLIM-2-sysd-critical-flows-060-20261118T195742Z-fd0fd80d/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T20:29:02.380Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T20:29:28.649Z",
       "artifact_ref": null
     }
   },
