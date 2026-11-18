@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-pm-plan-060
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-pm-plan-060/T-KATA-SLIM-2-pm-plan-060-20261118T150337Z-7713e7f3/plan.md
   started_at: "2026-11-18T15:03:43.358Z"
+  completed_at: "2026-11-18T15:38:05.594Z"
   agent: opus-executor
   execution: agent
   approach: recipe-maintenance
@@ -20,16 +21,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- プロジェクト管理計画の recipe (`docs/ja/specdojo/recipes/pm-plan-recipe.md`) から、rulebook と重複する判断基準の言い直し、共通の文書運用記述、未決事項台帳への登録手順、構造検査および冗長な確認項目を削除し、内容をスリム化した。
+- 空白・改行・表の区切り行を除いた文字数は 2,216 字から 1,549 字（約 69.9%）になり、目標の 7 割以下を達成した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/recipes/pm-plan-recipe.md`: rulebook と重複する判断基準、共通運用記述、未決事項台帳への登録手順、構造検査、および冗長な確認項目を削除。一方で、情報の取り出し元、執筆順序とその理由、聞き方とつまずきやすい点、深掘りの順序などの実践的なガイドを残し、レビュー観点を BA の視点に合わせて整理した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 大きさの記録（result の実施内容へ）: 測り方は prj-charter の試行（PJR-7M9J）と同じで、空白と改行を除き、表の区切り行も除く。前 2,216 字（区切り行込み 2,459 字・6,806 B）、後 1,549 字（同 1,746 字・4,529 B）、比 69.9%。
+- rulebook・sample・template への変更案: なし。recipe から外した判断の基準（管理行の項目、判断ゲートの成立条件、正本・追従の扱い）は rulebook の本文要件と記述ガイドが持っているため、作成に支障はないと判断した。
+- レビュー観点は、plan の BA の観点（関係者・利用場面）に合わせ、rulebook の判断基準を言い直さない形として、判断者と作業者が使う場面から読む 2 行に置き換えた。
+- 適用外の検証: `npm run validate:history-links`（変更したのは docs/ja/specdojo/recipes/pm-plan-recipe.md だけで、plan・result・個票は変更していない）
+- 適用外の検証: `npm run validate:schema:file`（変更したファイルに `*.yaml` / `*.yml` がない）
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`draft` で任された範囲・提案値ごとの出典と選定理由・反映した元の指示、`fully-guided` で rulebook / recipe / sample に沿って既存成果物をどう磨き込んだか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-authoring` などの authoring 系で手本から一般化した内容・変更しなかった手本・参照の付け替えまたは見送り、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+recipe-maintenance
