@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-otp-hypercare-040",
+  "run_id": "T-KATA-SLIM-2-otp-hypercare-040-20261118T073243Z-e7078ba2",
+  "updated_at": "2026-11-18T08:00:43.810Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-18T07:35:42.818Z",
+      "completed_at": "2026-11-18T07:37:17.222Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-otp-hypercare-040/T-KATA-SLIM-2-otp-hypercare-040-20261118T073243Z-e7078ba2/evidence.json",
+      "rate_limit_events": [
+        {
+          "action": "fallback",
+          "trigger": "rate_limit",
+          "from_actor": "sol-executor",
+          "to_actor": "opus-executor",
+          "resumed_at": "2026-11-18T07:35:46.506Z"
+        }
+      ]
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "sonnet-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-18T08:00:29.910Z",
+      "completed_at": "2026-11-18T08:00:38.503Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-otp-hypercare-040/T-KATA-SLIM-2-otp-hypercare-040-20261118T073243Z-e7078ba2/result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-18T08:00:43.810Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-otp-hypercare-040/T-KATA-SLIM-2-otp-hypercare-040-20261118T073243Z-e7078ba2/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-otp-hypercare-040/T-KATA-SLIM-2-otp-hypercare-040-20261118T073243Z-e7078ba2/result.md"
+  }
+}
