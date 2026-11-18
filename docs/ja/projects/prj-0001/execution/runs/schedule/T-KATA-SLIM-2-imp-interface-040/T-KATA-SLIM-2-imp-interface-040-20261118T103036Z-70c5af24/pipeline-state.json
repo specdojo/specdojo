@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-imp-interface-040",
   "run_id": "T-KATA-SLIM-2-imp-interface-040-20261118T103036Z-70c5af24",
-  "updated_at": "2026-11-18T11:12:54.705Z",
+  "updated_at": "2026-11-18T11:13:29.340Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-imp-interface-040/T-KATA-SLIM-2-imp-interface-040-20261118T103036Z-70c5af24/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-11-18T11:12:54.705Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T11:13:29.340Z",
       "artifact_ref": null
     }
   },
