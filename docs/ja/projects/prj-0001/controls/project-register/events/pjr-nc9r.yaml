@@ -83,3 +83,16 @@
       from: "parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_ecff4cf676454ac39a179f28e9c26a39
+- v: 1
+  id: reg_b6ffa5c941ef4d7e8c36e77c908d73c8
+  ts: "2026-11-18T02:48:14Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fed6531394e548b2bd6a8a47208f8c56
