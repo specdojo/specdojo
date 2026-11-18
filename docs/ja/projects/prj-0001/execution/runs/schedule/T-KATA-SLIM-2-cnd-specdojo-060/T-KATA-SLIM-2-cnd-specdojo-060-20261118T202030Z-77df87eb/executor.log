@@ -1,0 +1,20 @@
+C4コンテナ図のレシピ（`docs/ja/specdojo/recipes/cnd-recipe.md`）を短くしました。空白を除いた文字数は 4199 から 2936 になり、約 69.9% で目標の 7 割を下回っています。markdownlint はエラー 0 件です。残りの検査は親 runner が実行します。
+
+**外したもの**
+- 役割ごとの確認依頼（BA・DEV・QE・OPS・PO）、課題を PM へ渡して登録簿で追う流れ、承認・公開の照合、文書品質の検査結果を集める項目。
+- 未決事項の台帳の列（担当・判断時点・転送先）。
+- rulebook と同じ判断の言い直し（関係表の列、境界の 6 区分の列挙、図と定義表の照合、再試行回数や復旧保証を書かないこと、境界変更が他の図へ及ぶ影響の列挙）。
+- レビュー観点の確認者の列と「判断と公開」の行。
+- 各章にあった良い例・悪い例は、「良い例 / 悪い例」の表に 7 行でまとめました。
+
+**残したもの**
+- 書く順番とその理由（目的を先に書く、定義と関係を決めてから図を描く、正常な結果を決めてから異常時を書く）。
+- 入力の取り出し元と聞く相手、各節 2 つの問いとコツ（「上位図は写さず参照に置き換える」を含む）、3 段の深掘り手順。
+- 「このレシピの使い方」は、この図固有の Why・What・How・Trace を 1 項目で示す形にしました。8 章の構成は変えていません。
+- 本文に rulebook・sample への参照はありません。
+
+成果物本体、rulebook・sample・template は変更していません。template と sample には外した運用の記述が残っているため、変更案として下の `handoff` に入れました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"cnd-recipe から共通の運用、未決事項の台帳の列、rulebook と同じ判断の言い直し、recipe 内の同じ確認の繰り返しを外した。空白を除いた文字数は 4199 から 2936（約 69.9%）になった。Recipe 記述標準の 8 章構成は保ち、本文に rulebook・sample への参照は置いていない。成果物本体、rulebook・sample・template は変更していない。","handoff":["変更ファイル: docs/ja/specdojo/recipes/cnd-recipe.md のみ。","文字数（空白除く）: 変更前 4199 → 変更後 2936（約 69.9%）。","根拠: 手本は PJR-7M9J の「他の recipe へ広げるときの一覧」と改訂済みの prj-charter-recipe.md。ほかに recipe-authoring-standard.md（章構成・参照禁止）と cnd-rulebook.md を読み、言い直しを特定した。言い直しとして外したのは、関係表の列、境界の 6 区分の列挙、図と定義表の双方向照合、再試行・復旧保証を推測で書かないこと、境界変更が他の図へ及ぶ影響の列挙。grade と condense の finding はなかった。","変更案（この段では直さない）1: cnd-template.md の「メモ / 将来課題」の表（担当ロール列、PJR の転送先と判断期限を求めるコメント）と、概要の _TODO_（作成担当・確認者・最終判断者の Role code）、改訂・廃止時の窓口の欄は共通の運用や台帳の列にあたる。rulebook の未確定事項の要件（論点・影響する要素と関係・当面の扱いと解消条件）に合わせ、列を「対象・論点」「影響範囲」「当面の扱い・解消条件」にして、役割と改訂・廃止の欄を外す案。","変更案 2: cnd-sample.md の概要冒頭にある役割ごとの確認分担（ARC・BA・DEV・QE・OPS・PO）の段落は共通の運用にあたるため、外すか短くする案。cnd-rulebook.md は変える点を見つけなかった。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/recipes/cnd-recipe.md","status":"passed","summary":"整形を適用した"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/recipes/cnd-recipe.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルは変更していない","reason":"変更したのは recipe だけで、plan・result・個票は変更していない"}]}
+</specdojo_executor_evidence>
