@@ -127,6 +127,10 @@ specdojo:
 - 2026-11-17: 業務仕様までの sample の冗長さを調べ、原因は rulebook と grade の観点が運用の記述（役割・承認・検証）を各文書に求めることと分かった。進め方は sld 1 件で試してから広げる案（C から B）とし、PJR-8S4T（BA、11/30）で sld-sample を 60%、sld-rulebook を 71% にした。読みやすさの確認は orchestrator に委ねられ、内容を確かめた（型の grade の後に close）。grade で冗長さを点数にする案は c（機械の指標と観点の強化）とし、PJR-2Q0G（DEV、11/30、8S4T の後）として起票した。
 - 2026-11-17: 残りの型は todo ではなく schedule で進めることにし、track kata-slim（18 種類・36 タスク）と epic PJR-MNM5（BA、11/30）を作った。uis の代表は VS Code の「Open Document by ID」の入力の画面（A）とし、カタログに足して PJR-3MTS（BA、11/30）として起票した。kata-slim と 3MTS は 2026-11-17 の夜に流し、型の grade まで続ける。
 - 未決のまま（2026-11-17 時点）: PJR-QJ41 の close（生成ページは docs:build で確認済み）、PJR-PEJS の空のリポジトリでの確認、PJR-39AB・Y2X4 の完了条件、PJR-BSCK（次の版で消す段を含む）。kata-slim の型の grade で出た major の扱いは朝に判断する。
+- 2026-11-18: kata-slim の 36 タスクがすべて done になった。途中の停止（rulebook の段が recipe と template も変えた、参考の kata ディレクトリを変更範囲と読んだ）は、戦略の指示と PJR-9JN6 の 2 回目で直した。PJR-3MTS は grade で major がなく close した。型の grade は 40 件のうち 35 件が pass、needs-work は 5 件（bes-sample・prj-charter-sample・prj-success-criteria-and-acceptance-criteria-sample・sld-rulebook・br-rulebook）で、指摘は記録だけにした。PJR-8S4T は sld-rulebook に major が 1 件あるため review のまま残した。
+- 2026-11-18: YAML が正本の文書の表示を PJR-2HT5（DEV）、古い駄菓子屋の sample の反映と local への移動を PJR-QTB6（BA）、概念クラス図の向きを PJR-K3Z2（BA）、統合の後の dist の作り直しを PJR-8KXJ（ARC）、作業の順番の予約を PJR-1565（ARC、8KXJ の後）、ローカル用の設定を PJR-NC9R（ARC）として起票した（いずれも 11/30）。2HT5・QTB6 は review。
+- 2026-11-18: 残りの rulebook と recipe を epic PJR-DJZD（track kata-slim-2、109 タスク）、sample と template を epic PJR-WYTX（track kata-slim-3、DJZD の後）として起票した（BA、11/30）。代表のない型のうち 8 件（cdr・dct・dss・trc 2 件・dmd・cop・otp）をカタログに足した。記法の rulebook 6 件は親の段で直し、非推奨の cld・cstd・tml は対象外とした。ifx-api・ifx-msg・dec は PJR-0VPB、mm・pr は PJR-QWG7 で個別に流す。recipe の試行 PJR-7M9J は review（69%）、template の試行 PJR-SV9G は 7M9J の close 待ち。
+- 未決のまま（2026-11-18 時点）: PJR-3VJM（dec を非推奨にするか、推奨 A）と PJR-ANKZ（ntp を mtp にまとめるか、推奨 A）の決定。PJR-QTB6 の `git rm` の承認と、git の履歴から消すかどうか。PJR-2HT5 の文書サイトでの表示の確認（dev サーバーが動いている間は docs:build を確かめられない）。PJR-8S4T の読みやすさの確認と major の扱い（8S4T が close するまで PJR-2Q0G は流せない）。
 
 ## 4. 関連ドキュメント
 
