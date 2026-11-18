@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-nfr-availability-040",
   "run_id": "T-KATA-SLIM-2-nfr-availability-040-20261118T171131Z-7692ca41",
-  "updated_at": "2026-11-18T17:42:38.000Z",
+  "updated_at": "2026-11-18T17:43:05.754Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -30,11 +30,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-nfr-availability-040/T-KATA-SLIM-2-nfr-availability-040-20261118T171131Z-7692ca41/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-18T17:42:38.000Z",
-      "completed_at": null,
+      "completed_at": "2026-11-18T17:43:05.754Z",
       "artifact_ref": null
     }
   },
