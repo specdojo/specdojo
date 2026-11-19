@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cc81d6edcf274d5caa56d7b67e83e44f
+  ts: "2026-11-19T10:03:11Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-5CTM の確認で見つけた docs-lint の依存の audit を、利用者の承認のもと別の todo として起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-lint の配る依存の npm audit を解消する
+    - field: description
+      from: ""
+      to: 別に publish する @specdojo/docs-lint の配る依存に残る npm audit の high 1 件と moderate・low を、上げる・overrides・上流待ちのどれで直すか決めて反映する
+    - field: input
+      from: ""
+      to: '["2026-11-19 に packages/docs-lint で npm audit --omit=dev を実行すると 16 件（low 3・moderate 12・high 1）。high は markdownlint-cli@0.49.1 が引く markdown-it@14.3.2（<=14.3.2、GHSA-vfgh-jcmw-g37q）。moderate には fast-uri・glob・js-yaml・katex・minimatch・smol-toml がある。","ルートの npm audit は packages/docs-lint の依存を見ないため、PJR-5CTM の完了条件の確認では検出されなかった。PJR-5CTM の executor は、ルートと同じく docs-lint の markdownlint-cli を ^0.50.0 へ上げることを勧めている。","利用者は 2026-11-19 に、5CTM の範囲を広げず別の todo として担当 ARC・期限 11 月末で起票することを承認した。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-11-19"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-5CTM"]'
+    - field: commit_type
+      from: ""
+      to: fix
+    - field: commit_scope
+      from: ""
+      to: deps
