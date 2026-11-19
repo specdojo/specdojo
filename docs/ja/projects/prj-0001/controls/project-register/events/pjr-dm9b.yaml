@@ -41,3 +41,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-MNM5"]'
+- v: 1
+  id: reg_54d8253e7703473a950e9acb0708b1ac
+  ts: "2026-11-19T10:09:34Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b82abd2e78d94a509716fe7bdc2d4464
