@@ -74,6 +74,11 @@ specdojo:
 
 - 追加: 親検証の待ち時間・実行時間、同時実行中の run/executor 数、Linux の負荷、時間切れ時の実行中テストファイルを run ごとの計測ログへ保存する。
 
+### 5.4. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に `exec smoke --register PJR-JSEY --targets PJR-8NB8,PJR-9JN6,PJR-C07H,PJR-ZK3T --executor-by sonnet-executor --reporter-by gemma26-reporter` を流し、PJR-JSEY が sonnet-executor で start から review まで通り、start と review の event の actor に実体名が記録された（fa59c521e）。
+- 2026-11-19 の並べた run（PJR-A5FY など）の `parent-validation-metrics.jsonl` に、検証ごとの開始・終了・所要時間、順番待ちの時間、動いている run と executor の数、PSI・メモリ・swap の負荷が記録されていることを確かめた。時間切れのときの記録は、時間切れが起きておらず単体テストでだけ確かめている。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-52ee-exec-watch-auto-recover]]

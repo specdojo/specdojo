@@ -71,6 +71,11 @@ specdojo:
 - 不具合修正: 並列の exec run で、完了条件の「保護された設定は変えない」「CHANGELOG.md は変えず」という文を変更範囲に含め、無関係な項目を順番待ちや未統合エラーにする誤判定を修正。
 - 不具合修正: kata を扱う exec run の変更範囲に変更許可ディレクトリ全体を自動追加せず、個別の対象ファイルで判定することで、別々の kata のタスクが互いの統合待ちや未統合エラーで止まる誤判定を修正。
 
+### 5.4. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に `exec smoke --register PJR-JSEY --targets PJR-8NB8,PJR-9JN6,PJR-C07H,PJR-ZK3T --executor-by sonnet-executor --reporter-by gemma26-reporter` を流し、PJR-JSEY が sonnet-executor で start から review まで通り、start と review の event の actor に実体名が記録された（fa59c521e）。
+- 2026-11-19 に PJR-DM9B・PJR-YGZF・PJR-A5FY を `--parallel 3` で並べて流した。3 件とも完了条件に「保護された設定は変えない」と「`CHANGELOG.md` は変えず」の文を持つが、範囲の順番待ちにならず並んで流れ、それぞれ統合された。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-mj8v-exec-serialize-overlapping-items]]

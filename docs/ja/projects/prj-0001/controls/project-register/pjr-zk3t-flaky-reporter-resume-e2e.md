@@ -80,6 +80,11 @@ PJR-8NB8 の保存ログでは、余分な呼び出しは最後の統合再開�
 
 - 不具合修正: reporter の停止・再開と統合の停止が同じ秒に記録されたとき、イベントの並び順によって統合再開時に reporter を余分に実行する問題を修正。
 
+### 5.5. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に `exec smoke --register PJR-JSEY --targets PJR-8NB8,PJR-9JN6,PJR-C07H,PJR-ZK3T --executor-by sonnet-executor --reporter-by gemma26-reporter` を流し、PJR-JSEY が sonnet-executor で start から review まで通り、start と review の event の actor に実体名が記録された（fa59c521e）。
+- 2026-11-18 から 11-19 の多数の run の親の検証で、test-integration（pipeline-e2e の reporter の再開のテストを含む）が毎回通った。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-8nb8-exec-smoke-command]]

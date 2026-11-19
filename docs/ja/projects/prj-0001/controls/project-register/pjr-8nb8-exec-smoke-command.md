@@ -85,6 +85,11 @@ npx specdojo exec smoke --project prj-0001 --register PJR-JSEY \
 
 - 追加: `specdojo exec smoke` で、統合済み項目の確認用個票への対象追記・記帳、開き直し、worktree 実行、今回の start / review と実体 actor の確認を一括実行できるようにした。確認用個票・executor・reporter の指定と dry-run に対応する。
 
+### 5.4. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に `exec smoke --register PJR-JSEY --targets PJR-8NB8,PJR-9JN6,PJR-C07H,PJR-ZK3T --executor-by sonnet-executor --reporter-by gemma26-reporter` を流し、PJR-JSEY が sonnet-executor で start から review まで通り、start と review の event の actor に実体名が記録された（fa59c521e）。
+- 本項目で足した `exec smoke` を、統合の後の develop で上のとおり実際に流し、対象の追記・記帳、JSEY の開き直し、worktree での実行、今回の start と review の event の確認が順に行われ、終了コード 0 で終わった。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-jsey-exec-run-split-smoke]]
