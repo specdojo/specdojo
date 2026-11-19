@@ -4,11 +4,12 @@ document: specdojo:cdfd-overview-recipe
 path: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 95
-graded_at: "2026-11-07T20:03:46.610Z"
+score: 97
+graded_at: "2026-11-19T20:19:24.741Z"
 graded_by: flash-high-executor
-content_hash: 5cc03323ec8b1629e0884185a438697e85c6f4968552c3157b20366259c0dbb3
+content_hash: 358de2876da829a853f19c99b1a62687722efb6c9d1e81fdad990cff2c8105aa
 categories:
   purpose:
     score: 100
@@ -25,7 +26,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 92
+    score: 100
   consistency:
     score: 75
 viewpoints:
@@ -78,8 +79,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,73 +102,13 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 9
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 57
-    anchor: "### 4.2. 適用範囲"
-    message: 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。
-    message_ja: 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 68
-    anchor: "### 4.3. プロセス領域"
-    message: 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。
-    message_ja: 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 68
-    anchor: "### 4.3. プロセス領域"
-    message: 「主な担当」について、Rulebookで定められている「採用済み Role code または組織定義にある役割名へ統一する」という制約への言及が欠けている。
-    message_ja: 「主な担当」について、Rulebookで定められている「採用済み Role code または組織定義にある役割名へ統一する」という制約への言及が欠けている。
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 80
-    anchor: ""
-    message: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
-    message_ja: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 80
-    anchor: ""
-    message: Rulebookで定められている「複数の論理データストアが物理保管を共有する場合の境界と共有相手の注記」に関する記述ガイドが欠けている。
-    message_ja: Rulebookで定められている「複数の論理データストアが物理保管を共有する場合の境界と共有相手の注記」に関する記述ガイドが欠けている。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 91
-    anchor: ""
-    message: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
-    message_ja: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
-  - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 91
-    anchor: ""
-    message: 対象範囲内の参加者から直接受け取る入力を図示省略した場合に、図直後に注記を追加するガイドが欠けている。
-    message_ja: 対象範囲内の参加者から直接受け取る入力を図示省略した場合に、図直後に注記を追加するガイドが欠けている。
-  - id: F008
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 175
+    line: 173
     anchor: "## 8. 仕上げチェック"
     message: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。
     message_ja: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。
-  - id: F009
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 46
-    anchor: "## 4. 各章の書き方"
-    message: >-
-      Recipe の章別ガイドと仕上げチェックが、Rulebook の必須要件である導入文、章冒頭の宣言、Role code、共有保管、参加者由来入力の注記、Frontmatter、および PO
-      承認記録を網羅しておらず、Template と Sample が示す記載水準を Recipe 単独では再現できない。
-    message_ja: >-
-      Recipe の章別ガイドと仕上げチェックが、Rulebook の必須要件である導入文、章冒頭の宣言、Role code、共有保管、参加者由来入力の注記、Frontmatter、および PO
-      承認記録を網羅しておらず、Template と Sample が示す記載水準を Recipe 単独では再現できない。

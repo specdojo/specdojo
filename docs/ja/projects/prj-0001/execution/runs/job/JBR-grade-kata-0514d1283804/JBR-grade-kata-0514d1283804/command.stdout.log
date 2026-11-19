@@ -1,0 +1,19 @@
+
+> specdojo@0.9.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+graded: docs/ja/specdojo/recipes/bac-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/bes-recipe.md actor=flash-high-executor verdict=pass score=98 findings=1
+graded: docs/ja/specdojo/recipes/bps-recipe.md actor=flash-high-executor verdict=pass score=97 findings=1
+graded: docs/ja/specdojo/recipes/br-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/cdfd-overview-recipe.md actor=flash-high-executor verdict=pass score=97 findings=1
+graded: docs/ja/specdojo/recipes/cdfd-recipe.md actor=flash-high-executor verdict=pass score=97 findings=1
+graded: docs/ja/specdojo/recipes/cdfd-uc-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/cnd-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/cpd-recipe.md actor=flash-high-executor verdict=pass score=90 findings=7
+graded: docs/ja/specdojo/recipes/cxd-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/ifd-recipe.md actor=flash-high-executor verdict=pass score=98 findings=1
+graded: docs/ja/specdojo/recipes/ifx-cmd-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/ifx-index-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/pm-communication-plan-recipe.md actor=flash-high-executor verdict=pass score=100 findings=0
+graded: docs/ja/specdojo/recipes/pm-members-recipe.md actor=flash-high-executor verdict=pass score=97 findings=1

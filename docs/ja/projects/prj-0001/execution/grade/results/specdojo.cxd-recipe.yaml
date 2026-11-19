@@ -4,11 +4,12 @@ document: specdojo:cxd-recipe
 path: docs/ja/specdojo/recipes/cxd-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
 score: 100
-graded_at: "2026-11-16T20:18:59.431Z"
+graded_at: "2026-11-19T20:32:13.534Z"
 graded_by: flash-high-executor
-content_hash: 36bc7f3ef2f1c08757634fdd12a75c61939ebc0001a3755b9e18608194a3ba27
+content_hash: 9613ad1b18b060adaf08914e30bacf8be1ecf19b39764ca4708d220803aaf56b
 categories:
   purpose:
     score: 100
