@@ -47,12 +47,12 @@ Dependabot（週 1 回の依存の更新と脆弱性の修正の PR）、CI の 
 
 ## 4. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ                                                                                                    |
-| --- | ---------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------- |
-| 1   | Dependabot の設定を書く                        | ARC  | done | `.github/dependabot.yml` を作った（npm 4 か所と GitHub Actions）                                        |
-| 2   | CI に配る依存の audit の関門を入れる           | ARC  | open | `.github/workflows/` は保護された設定のため executor は変えない。案を対応結果に書いた。反映は利用者承認 |
-| 3   | CodeQL の workflow を入れる                    | ARC  | open | 同上。案を対応結果に書いた。反映は利用者の承認のもと feature ブランチで行う                             |
-| 4   | GitHub の設定の手順と routine の案の調べを書く | ARC  | done | 手順を運用メモの「依存とコードのセキュリティ検査」に書き、routine の結論を対応結果に書いた              |
+| No  | 作業                                           | 担当 | 状態 | メモ                                                                                       |
+| --- | ---------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------ |
+| 1   | Dependabot の設定を書く                        | ARC  | done | `.github/dependabot.yml` を作った（npm 4 か所と GitHub Actions）                           |
+| 2   | CI に配る依存の audit の関門を入れる           | ARC  | done | 利用者の承認のもと orchestrator が反映した（ef10c4438）。PR #34 で `audit` が通った        |
+| 3   | CodeQL の workflow を入れる                    | ARC  | done | 利用者の承認のもと orchestrator が反映した（ef10c4438）。PR #34 で `analyze` が動いた      |
+| 4   | GitHub の設定の手順と routine の案の調べを書く | ARC  | done | 手順を運用メモの「依存とコードのセキュリティ検査」に書き、routine の結論を対応結果に書いた |
 
 ## 5. 対応結果
 
@@ -238,6 +238,15 @@ jobs:
 - 区分: 変更（開発の基盤。配る成果物には影響しない）。
 - 行の文案: 「依存の更新を Dependabot で週 1 回 PR にし、配る依存の `npm audit`（high 以上）を PR と npm 公開の前の関門にし、CodeQL の解析を PR ごとと週 1 回流すようにした（PJR-P318）。」
 - 案 2・3 の反映が同じリリースに入らない場合は、Dependabot の部分だけを書く。
+
+### 5.7. 反映と確認（2026-11-20）
+
+- 案 1・2 の workflow は、利用者の承認のもと orchestrator が feature ブランチで反映し、develop へ取り込んだ（ef10c4438）。
+- GitHub の設定は利用者が `gh api` で行った。orchestrator が API で読み、Dependabot alerts・Dependabot security updates・secret scanning・push protection・private vulnerability reporting が有効で、CodeQL の default setup が未設定であることを確かめた。
+- 0.9.0 のリリースの PR #34 で、`audit`（Security audit）が通り、`analyze`（CodeQL）が最後まで動いた。secret scanning の open の alert は 0 件だった。
+- CodeQL は既存のコードに 8 件の alert を出し、結果の check `CodeQL` が fail になった。src の 5 件は別の issue で直し、テストの 3 件は理由を付けて dismiss する。main にブランチの保護は無く、merge は止まらない。
+- Dependabot alerts は main の lockfile に 101 件を出した。docs-site の配る依存の high は PJR-H1PQ で直し、残りは同じ項目で 0.9.1 に扱う。
+- provenance の確かめは、0.9.0 の公開の後にリリースの todo（PJR-PAE3）で行う。
 
 ## 6. 関連ドキュメント
 
