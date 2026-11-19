@@ -1,0 +1,24 @@
+rulebook `dct-index-rulebook.md` を共通の運用の記述を外した形に仕上げました。前回までの試行で大半の改訂は済んでおり、今回は文字数を目安の 8 割以下に収める仕上げを行いました。空白を除いた文字数は 6269 から 4997（約 79.7%）です。prettier と markdownlint はこのファイルについてエラーなしです。
+
+**外した・まとめた記述**
+- 用語定義の表は本文の言い直しなので削りました。章名を「位置づけと用語定義」から「位置づけ」に変え、`domain` は論理的な管理単位だという定義だけを残しました。
+- ルート項目の `status` の意味の説明と、ARC・QE・PM の役割の段落を削りました。
+- 改訂と廃止の手順の参照と、影響確認の記録を担当・確認結果の列で整理する段落も削りました。
+- 代わりに全体方針に「共通の運用」を 1 項目だけ置き、役割は適用先のメンバー定義、`status`・承認・改訂と廃止・未決事項の引き継ぎはメタ情報標準を参照する形にしました。
+- 重複していた説明（グループの段落、キーの順序の理由、生成ビューの確認要件、影響確認の表）を短くまとめました。
+
+型固有の判断基準、良い例・悪い例、禁止事項は残しています。必須の区分は変えていません。
+
+**grade の指摘（F001）**
+「規模の決め方」に、`size` ごとの成果物セットがどこで決まるかを書きました。セットはカタログ template（`dct-*-template.yaml`）の `min_size` で決まり、scaffold は `min_size` が `size` 以下か未指定のものを取り込みます。この内容は `src/catalog/scaffold.ts` の `meetsSize` の実装で確かめました。
+
+**変えていないもの**
+- 成果物本体の `dct-index.yaml` は計画どおり変えていません。
+- rulebook の `status`（`ready`）も変えていません。
+- この rulebook は記法の rulebook を取り込んでいないので、同じ段で直す対象はありません。
+
+検査の lint や schema 検証などは、終了後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Simplified dct-index-rulebook.md by removing shared operational rules and pointing to the common sources. Resolved F001 with the min_size explanation. Non-whitespace characters 6269 -> 4997 (about 79.7%). Prettier and markdownlint pass for the file.","handoff":["Non-whitespace character count of dct-index-rulebook.md: before 6269, after 4997 (about 79.7%).","Renamed the chapter from 「位置づけと用語定義」 to 「位置づけ」 because the terminology table only restated the body requirements. Only the definition of `domain` as a logical management unit remains. Required and conditional classifications did not change.","Removed: the role paragraph (ARC/QE/PM), the explanation of `status` meanings, the reference to revision and retirement procedures, and the paragraph about impact-record columns (owner Role code and confirmation result). Replaced them with one 「共通の運用」 item in the overall policy that points to the member definitions and the document metadata standard.","F001 (`vp-po-decision-readiness`): rewrote 「メタ情報と規模の決め方」 to say that the deliverable set for each `size` is determined by the catalog template (`dct-*-template.yaml`) `min_size` and that scaffold includes entries whose `min_size` is at most `size` or unset. Verified against `meetsSize` in `src/catalog/scaffold.ts`.","The deliverable `dct-index.yaml` was not changed. The recipe is `not-needed`. No sample or template change was found necessary. No gaps were found in the common sources."],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/dct-index-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/specdojo/rulebooks/dct-index-rulebook.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed by executor","reason":"The executor changed only the rulebook under docs/ja/specdojo/rulebooks/, not a register ticket or a plan/result history file"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"No YAML changed","reason":"No `*.yaml` or `*.yml` file was changed"}],"target_coverage":[{"target":"prj-0001:dct-index","status":"unchanged","reason":"The plan says not to change the deliverable itself; only the rulebook is revised in this task"},{"target":"specdojo:dct-index-rulebook","status":"changed","path":"docs/ja/specdojo/rulebooks/dct-index-rulebook.md"}]}
+</specdojo_executor_evidence>
