@@ -4,6 +4,70 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-11-20
+
+同梱パッケージは `@specdojo/docs-lint` 0.5.0 と `@specdojo/docs-site` 0.6.0 を同時に公開します。動作に必要な Node.js は 22.17 以上です。
+
+### 利用者から見て動きが変わる点
+
+- 動作に必要な Node.js を 22.17 以上にしました。ファイル検索を `tinyglobby` から Node.js 組み込みの `fs.globSync` へ移したためです。`@specdojo/docs-lint` も 22.13 から 22.17 へ引き上げました（PJR-5CTM）。
+- `@specdojo/docs-lint` の `**` による検索は、ディレクトリへのシンボリックリンクの中へ入らなくなりました。ファイルへのシンボリックリンクは今までどおり対象です（PJR-5CTM）。
+- `@specdojo/docs-lint` の markdownlint-cli を 0.50 へ上げました。ファイルの末尾に空行が続く Markdown を MD012 として検出するようになります（PJR-A5FY）。
+- `<kind> where` は 1 版の移行期間の互換の入口になりました。`specdojo where <kind>` を使ってください。旧構文は標準エラーへ新構文と削除予定を警告します（PJR-JKQX）。
+- schedule のタスクの agent は、track に書いた値ではなく strategy の `owner_rules[].phase_overrides[].agent`・phase の `agent` から決まります。track を直接編集すると `exec validate` と `exec run --auto` が警告します（PJR-YGZF）。
+
+### 追加機能
+
+- `specdojo exec queue` を追加しました。grade・`exec run`（register・schedule）・`post-integration build-dist` を混ぜた順番を `execution/queues/<queue-id>.json` に予約し、前の段の終わりを待って順に流します。段ごとに失敗時の停止・継続を指定でき、止まった段から再開できます。進み具合は `exec queue status` と `exec status` で確かめられます（PJR-1565）。
+- `specdojo exec smoke` を追加しました。統合済みの項目を確認用の個票へ記帳し、開き直して worktree で流し、今回の start と review の event と実体の actor を確かめるところまでを 1 つのコマンドで行います。`--dry-run` に対応します（PJR-8NB8）。
+- `specdojo git -- <Git の引数>` を追加しました。Git の書き込みを runner と同じ lifecycle ロックに並べ、hook の実行中も排他します。読み取りはロックを待ちません。lefthook の scaffold は、run 中のロックのない commit を警告します（PJR-30SA）。
+- `specdojo where <kind>` で exec・catalog・schedule・timeline・job・routine の保存先を確かめられるようにしました（PJR-JKQX）。
+- git で管理しないローカル設定 `.specdojo/specdojo.local.config.json` で、`repos[].path` の差し替えとローカルのリポジトリの追加をできるようにしました。`specdojo config show` を追加し、`where exec` と executor の evidence の `local_config_overrides` でローカル由来の値を示します。`config init` は `.gitignore` にこのファイルを足します（PJR-NC9R）。
+- `exec run` の worktree 実行で、統合した変更が `paths` に当たるときだけ、統合の後に `pipeline.post_integration` の固定の処理（`build-dist` = `npm run build`）を流せるようにしました。失敗しても統合は戻さず、次の `exec` は dist の鮮度の判定で止まります（PJR-8KXJ）。
+- 1 段の時間を短くする設定を追加しました。`pipeline.parent_validations` の要素の `paths` で、executor が変えたファイルに合う検証だけを流します。`pipeline.commit_hook_skips` で、親の検証で済んだ検査の hook を統合の commit で流し直さないようにできます。`pipeline.mechanical_result: true` で、決まった形の edit の result を reporter の agent を起こさずに runner が作ります。worktree の準備の `npm ci` には `--prefer-offline --no-audit --no-fund` を付けました（PJR-T01P）。
+- register の並べた実行・join と schedule の自動実行で、変更範囲が重なる項目を、先の項目の統合の後まで待たせるようにしました。推定できない範囲は `--unknown-scope parallel|serialize` で扱いを選べます（PJR-MJ8V）。
+- command Job の `task.steps` で、exec・grade・build を順に流せるようにしました。段ごとの停止・継続、終了コードと状態ファイルによる完了の判定、ロックの有限の待機、実行時間の上限、試行ごとの段の結果を記録し、routine や cron から起動できます（PJR-V0FQ）。
+- `routine status` を追加しました。routine の状態、busy で skip した回の流し直し待ち、skip の内訳つきの直近の実行履歴を表示します（PJR-KVWH）。
+- agent の習熟度に最上位の `frontier` を追加しました。名前指定か `proficiency: frontier` を明示したときだけ使い、自動選択や rate limit の代わりの候補には含めません。provider の `by_proficiency.frontier` の設定が必要です（PJR-DGRZ）。
+- 親の検証の記録（`parent-validation-metrics.jsonl`）に、検証ごとの待ち時間と所要時間、同時に動いている run と executor の数、Linux の負荷、時間切れのときに実行中だったテストのファイルを残すようにしました（PJR-C07H）。
+- `grade run` は、完了と失敗の文書が混ざると終了コード 2、rate limit で 75 を返します。`--reference-per-kind` で、kata の各文書を同じ種別の `prj-overview` の文書と比べられます（PJR-R7BQ）。
+- `specdojo yaml-pages build` が、外部システムI/F一覧（`ifx-index*.yaml`）から表形式の表示ページを生成するようになりました。連携の一覧・連携ごとの詳細・注記を表示します（PJR-QJ41）。
+- 実装の段の型として、agent 向けのコーディング規約（言語別の instructions）の型 `cdr` の rulebook・sample・template を追加しました（PJR-981V）。
+- VS Code 拡張の「SpecDojo: Open Document by ID」の画面仕様（`uis-open-document-by-id`）を追加しました（PJR-3MTS）。
+- `@specdojo/docs-site` は、利用リポジトリに `docs/index.md` がないとき、SpecDojo の文書と project ごとのトップへのリンクを置いたトップのページを用意するようになりました。今までは `/<base>/` が 404 になっていました。`docs/` の下の project のトップ（`/ja/projects/<project-id>/`）に `index.md` がないときも、登録簿の一覧・派生ビュー・管理ログへのリンクを置いたページを用意します（PJR-PEJS）。
+
+### 変更
+
+- 実践の型の rulebook と recipe から、どの成果物にも共通する文書の運用（役割の表、status の昇格と承認、公開の条件、改訂と廃止の手順、未決事項の管理台帳の列など）と、rulebook と同じ判断の言い直しを外し、ドキュメントメタ情報標準とメンバー定義への参照にしました。型ごとの判断の基準・良い例と悪い例・禁止事項・受入の確認は残しています。変えた rulebook と recipe の 137 ファイルで、空白を除いた文字数を約 24% 減らしました（kata-slim-2）。
+- 区分ごとの生成を `build --only <区分>` にまとめました。index・catalog・schedule・register・dashboard・yaml-pages を選べます。今までの個別の build と `build --scope` は内部の互換用として残します（PJR-C4J1）。
+- `grade` の `plan`・`apply`・`translation-plan`・`localize`・`state`・`result`・`validate`、`agent launch`・`agent run`、`exec trial`・`exec slots`・`exec scheduler` を、内部用として help の一覧から外しました。コマンドは今までどおり実行できます。定期の job（`job-grade-kata`・`job-grade-deliverable`）は `grade run` で評価します（PJR-R7BQ）。
+- 画面仕様（uis）の rulebook と sample から共通の運用の記述を外し、ファイル名の規則を `uis-<term>.md` に改めました（PJR-3MTS）。
+- 概念クラス図（ccd）の向きを上から下を既定にし、ccd-mermaid-rulebook に向きの決まりを足しました（PJR-K3Z2）。
+- 移行計画の sample（`mip-index-sample`）を rulebook の章の構成で書き直しました。`docs/ja/index.md` の表から古い駄菓子屋の sample（`sample-gcs-projects/`・`sample-gcs-product/`）の行を外しました（PJR-QTB6）。
+- exec の設定の `rate_limit_policy.on_non_critical` が互換用の必須項目で、実行時には使われないことを、schema・設定ガイド・初期設定の例に書きました。受け付ける形式と動きは変えていません（PJR-DH8E）。
+- 配る依存の npm audit の high と moderate をなくしました。`tinyglobby` を依存から外し（PJR-5CTM）、`@specdojo/docs-lint` の markdownlint-cli を 0.50 へ上げました。`glob`・`minimatch` 起因の moderate は上流の修正を待ちます（PJR-A5FY）。
+- YAML を正本とする業務データ辞書・ロールとメンバーの定義・レビュー観点・外部コマンドとファイルの連携仕様・旧トラック順序計画・成果物カタログ・マイルストーンの表示ページを表形式にし、YAML の正本を折りたたんで添えるようにしました（PJR-2HT5）。
+- 用語集の YAML の表示ページを分類ごとの表にし、関連用語へのページ内リンクと YAML の正本の折りたたみを足しました（PJR-4YS7）。
+
+### 不具合修正
+
+- `register ... --commit` の `-m` を繰り返せるようにし、`git commit -m` と同じく件名と本文の段落にしました。今までは 2 つ目の `-m` だけが message になり、commitlint に拒まれて記帳だけが残っていました。commit に失敗したときは、記帳済みで未 commit のファイルを示して終了コード 1 で終わります（PJR-Y3XS）。
+- schedule のタスクの統合が、`register ... --commit` と同じ lifecycle ロックを取るようにしました。記帳の commit の途中に始まった統合が `Staged changes in integration target` で止まらなくなります（PJR-Y3XS）。
+- `register ... --commit` と `specdojo git -- commit ... -- <pathspec>` の後に、commit の hook が整形して stage したファイルが index に残らないようにしました（PJR-Y3XS）。
+- 完了条件の「保護された設定は変えない」「`CHANGELOG.md` は変えず」などの文のパスを変更範囲に含め、関係のない項目を順番待ちや未統合のエラーにしていた誤判定を直しました。kata を扱う run も、変更を許すディレクトリ全体ではなく個別の対象ファイルで範囲を判定します（PJR-9JN6）。
+- 変更範囲の推定から、生成した plan の共通の手順と生成物を外しました。範囲の重ならない項目が、共通の文の `pjr-index.md` で順番待ちになっていました（PJR-MJ8V）。
+- `kind: generated` の成果物がカタログで rulebook を宣言しているとき、rulebook-maintenance などの型の整備の段の plan が、編集対象の型を `_MISSING_`（unresolved）にせず宣言どおりに解決するようにしました（PJR-DM9B）。
+- pjr の rulebook など、登録簿の個票ではない `pjr-*.md` だけを変えた run で、executor が `npm run validate:history-links` を `not_applicable` と報告すると runner が拒んで止まる不具合を直しました（PJR-8Z71）。
+- `exec run` の register の再開で、wait の commit を結果なしでやり直した後や記帳を手で commit した後でも、executor が個票に書いた対応結果が再開の前の同期で消えないようにしました（PJR-EWZG）。
+- executor の commit の対象外の変更で止まったときの理由に、4 件目以降のパスも含めるようにしました（PJR-1Y1M）。
+- `routine` で、別の run がロックを持っていて skip した回を、済んだ回として記録しないようにしました。cron の routine は `missed_run` が `latest`・`all` のとき空いた次の `routine run --due` でその回を流し直し、interval の routine は次の回で due になります。busy の skip が 24 回を超えて続いたら、その回を済んだ回として扱います（PJR-KVWH）。
+- 夜間の job の worktree の中で止まった register の子の run を、主の作業ツリーから `exec run --register <id> --resume` で再開できるようにしました（PJR-97KE）。
+- `exec run` の worktree 実行で、統合の後の worktree と exec ブランチの撤去を lifecycle ロックの外で行うようにしました。撤去に時間がかかっても、別の項目の記帳と `specdojo git` が待たされません（PJR-NHT7）。
+- `exec run --register` で、指名した agent が難易度別の振り分けの代わりの agent と重なるとき、start の記帳や worktree の作成の前に終了コード 1 で止まるようにしました。今までは start の後に止まり、終了コード 0 で終わっていました（PJR-A61W）。
+- 文書サイトのビルドの対象から run 単位の plan と result を外し、実行記録の一覧などのリンクを GitHub の正本へ向けました。`docs:build` のメモリ不足を直しました（PJR-T4X7）。
+- reporter の停止・再開と統合の停止が同じ秒に記録されたとき、イベントの並び順によって統合の再開で reporter を余分に起動していた問題を直しました（PJR-ZK3T）。
+- runner が executor の condense の記録と `block_reason` を result の frontmatter へ書き写すとき、山括弧の語をコードの書式で包むようにしました。今までは lint-fm を落としていました（PJR-V141）。
+
 ## [0.8.0] - 2026-11-16
 
 同梱パッケージは `@specdojo/docs-site` 0.5.0 と `@specdojo/docs-lint` 0.4.1 を同時に公開します。docs-site 0.5.0 は、対話のコードブロックの描画（`chat`・`chat tui`、PJR-GZ42）と、型の文書から作るメニュー（PJR-C8J8）を含みます。docs-lint 0.4.1 は、remark の無視対象の扱い（PJR-FTRC）と履歴リンクの検査の対象の更新（PJR-C4KF）を含みます。
