@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_54d8253e7703473a950e9acb0708b1ac
+- v: 1
+  id: reg_1fc840a126314f2f9da86e483f07c40c
+  ts: "2026-11-19T14:03:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分とテストを確かめ、統合の後に 4 件の新しい plan が rulebook を解決し、最後まで流れることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: "型の整備の段では kind: generated の成果物でも宣言どおりに rulebook を解決するようにした。止まっていた 4 件を流し直し、すべて rulebook を直して統合した"
+  previous_event_id: reg_5c8850cccb6649fb9ea67020586b55c3

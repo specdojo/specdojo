@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-dm9b-generated-rulebook-target-unresolved
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-18T13:34:49Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T14:03:15Z"
+  conclusion: "型の整備の段では kind: generated の成果物でも宣言どおりに rulebook を解決するようにした。止まっていた 4 件を流し直し、すべて rulebook を直して統合した"
   derived_from:
     - PJR-MNM5
 ---
