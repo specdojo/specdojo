@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-KATA-SLIM-2-pjr-index-040
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   plan_ref: runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261118T013612Z-c19513d3/plan.md
   started_at: "2026-11-18T01:36:15.313Z"
+  completed_at: "2026-11-19T12:07:09.705Z"
   agent: sol-executor
   execution: agent
   approach: rulebook-maintenance
