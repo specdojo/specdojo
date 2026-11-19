@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a903e28b51ce4d118b014f7fa16f22a5
+- v: 1
+  id: reg_cec878726f4d456e84e9a6d6b4a1a123
+  ts: "2026-11-19T14:45:37Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が文書サイトの表示をブラウザで確かめ、close を決めた（2026-11-19）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 文書サイトに、docs/index.md がないときのトップのページと、project のトップのページを用意するようにした
+  previous_event_id: reg_e96001eb4a8a40a1b4e0239591757b6d
