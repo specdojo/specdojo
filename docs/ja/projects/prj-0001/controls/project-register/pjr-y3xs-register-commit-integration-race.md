@@ -95,6 +95,12 @@ register ... --commit の記帳の commit が exec の統合と重なると、�
 - 不具合修正: schedule の task の統合が、`register ... --commit` と同じ lifecycle ロックを取るようにした。記帳の commit の途中に始まった統合が `Staged changes in integration target` で止まらない。
 - 不具合修正: `register ... --commit` と `specdojo git -- commit ... -- <pathspec>` の後、commit の hook が整形して stage したファイルが index に残らないようにした。
 
+### 5.6. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に PJR-YGZF の close を `register close --commit` に `-m` を 2 つ（2 つ目は複数行の本文）付けて記帳し、件名と本文の両方で commit された（8f079c0ad）。commit の後の index は空だった。
+- その前の `specdojo git -- commit -m … -m … -- <個票>`（b89dac1f8）の後も、index は空だった。以前は commit のたびに hook の整形したイベントの YAML が index に残っていた。
+- 統合と記帳の取り合いは、統合中に記帳する機会がなく、実際の run では確かめていない。単体テスト（`tests/src/exec/run/schedule-integration-lock.test.ts`）で確かめた。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pm-orchestrator-playbook]]（記帳は `register ... --commit` で行う運用）
