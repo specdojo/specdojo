@@ -1,0 +1,49 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7e5d15c8b75048c4bf37ee781e55ee95
+  ts: "2026-11-19T12:48:20Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が v0.9.0 の範囲を B 案で決め、担当を PO とすることを承認したため起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 0.9.0 でリリースする
+    - field: description
+      from: ""
+      to: 0.8.0 の後の完了分（register と exec の不具合修正、exec queue・exec smoke・specdojo git、依存の audit の解消と関門、kata-slim-2 の型の簡素化など）を 0.9.0 として公開する
+    - field: input
+      from: ""
+      to: '["範囲（利用者が 2026-11-19 に B 案で決定）: 新しい機能は止め、develop に統合済みで review の項目を確かめて close してから切る。0.8.0 の後に close した項目は CHANGELOG の対象にする。","先に close する項目: runner・CLI の DM9B・8Z71・8NB8・9JN6・C07H・ZK3T、CI の P318（リリースの PR の CI で関門と CodeQL を確かめる）、文書サイトの 2HT5・PEJS・4YS7（利用者がブラウザで確かめる）。","docs-lint は tinyglobby を外し engines を 22.17 に上げ markdownlint-cli を 0.50 に上げたため 0.5.0 にする。kata-slim-2 の rulebook と recipe の簡素化は個票に属さないため、CHANGELOG に 1 行でまとめる。","0.9.0 に入れないもの: PJR-6998 の決定、kata-slim-3、SV9G、planning の track の作り直し、kata-slim-2 の後の型の grade。","手順は pm-orchestrator-playbook の「リリースの手順」に従う。push・PR の merge・タグ・npm の公開の承認は利用者が行う。期限は未定。"]'
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-11-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: depends_on
+      from: ""
+      to: '["PJR-DM9B","PJR-8Z71","PJR-8NB8","PJR-9JN6","PJR-C07H","PJR-ZK3T","PJR-P318","PJR-2HT5","PJR-PEJS","PJR-4YS7"]'
+    - field: commit_type
+      from: ""
+      to: chore
+    - field: commit_scope
+      from: ""
+      to: release
