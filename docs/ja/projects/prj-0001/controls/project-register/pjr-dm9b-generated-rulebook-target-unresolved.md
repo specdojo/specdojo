@@ -96,6 +96,12 @@ kind: generated の成果物はカタログに rulebook を宣言していても
 - 区分: 不具合修正
 - 行の文案: `kind: generated` の成果物がカタログで rulebook を宣言しているとき、rulebook-maintenance などの型の整備の段の plan が、編集対象の型を `_MISSING_`（unresolved）にせず宣言どおりに解決するようにした（PJR-DM9B）。
 
+### 5.7. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に止まっていた 4 件（利用者が `exec release` で todo に戻した）を `exec run --auto --track kata-slim-2` で流し直した。T-KATA-SLIM-2-pjr-index-040 の新しい plan では、編集対象が `kind: rulebook`・`existing`、`targets` に `specdojo:pjr-rulebook` を含む形で解決された（前は `_MISSING_`・unresolved）。
+- 4 件とも executor が対応する rulebook（pjr・pm-change-request-log・pm-issue-log・pm-risk-register）を直し、統合された（8aedf09cb・bda0967e0・09dde1e33・25440d7ef）。
+- pjr-index-040 は、runner が `pjr-rulebook.md` を履歴蓄積ファイルと誤って判定して止まったため、[[prj-0001:pjr-8z71-history-link-target-path|PJR-8Z71]] で直してから再開した。本項目とは別の不具合である。
+
 ## 6. 関連ドキュメント
 
 - `docs/ja/projects/prj-0001/schedule/sch-strategy-kata-slim-2.yaml`（止まった 4 件の段）
