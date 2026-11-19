@@ -23,11 +23,11 @@ specdojo:
 
 ## 1. 課題内容
 
-isHistoryLinkTargetPath がファイル名の pjr-*.md だけで判定するため、pjr-rulebook.md の変更でも validate:history-links を必須とし、executor の not_applicable を拒んで止まる
+isHistoryLinkTargetPath がファイル名の pjr-*.md だけで判定するため、pjr の rulebook の変更でも validate:history-links を必須とし、executor の not_applicable を拒んで止まる
 
 ## 2. 入力
 
-- 2026-11-19 の T-KATA-SLIM-2-pjr-index-040 は、executor が docs/ja/specdojo/rulebooks/pjr-rulebook.md だけを変え、npm run validate:history-links を「履歴蓄積ファイルを変更していない」と `not_applicable` で報告した。runner は executor validation failed or not run: npm run validate:history-links で 3 回止めた（plan に実行を求める指示を書き足しても opus は同じ報告をした）。
+- 2026-11-19 の T-KATA-SLIM-2-pjr-index-040 は、executor が pjr の rulebook（rulebooks のディレクトリにある、名前が pjr- で始まる Markdown）だけを変え、npm run validate:history-links を「履歴蓄積ファイルを変更していない」と `not_applicable` で報告した。runner は executor validation failed or not run: npm run validate:history-links で 3 回止めた（plan に実行を求める指示を書き足しても opus は同じ報告をした）。
 - src/exec/reporter.ts の isHistoryLinkTargetPath は /(?:^|\/)pjr-[^/]+\.md$/ でディレクトリを見ずに判定する。.github/instructions/markdown.instructions.md の履歴蓄積ファイルの対象は `controls/project-register/pjr-*.md` の個票、exec/plans・exec/results、execution/runs の plan.md・result.md で、pjr-index.md は除く。
 - 利用者は 2026-11-19 に、担当 DEV・期限 11 月末で起票し、v0.9.0 に入れることを承認した。
 
@@ -53,7 +53,7 @@ isHistoryLinkTargetPath がファイル名の pjr-*.md だけで判定するた�
 完了条件:
 
 - 履歴蓄積ファイルの判定は、登録簿の個票（`docs/ja/projects/<project>/controls/project-register/pjr-*.md`、`pjr-index.md` を除く）、`exec/plans`・`exec/results` の Markdown、`execution/runs` の `plan.md`・`result.md` だけを対象にする。`.github/instructions/markdown.instructions.md` の「履歴蓄積ファイルのリンク記法」の対象と食い違わない。
-- `docs/ja/specdojo/rulebooks/pjr-rulebook.md` など、個票のディレクトリの外の `pjr-*.md` だけを変えた run では、executor の `npm run validate:history-links` の `not_applicable` の報告を受け付ける。
+- pjr の rulebook など、個票のディレクトリの外の `pjr-*.md` だけを変えた run では、executor の `npm run validate:history-links` の `not_applicable` の報告を受け付ける。
 - 個票を変えた run で、`not_applicable` の報告を今までどおり拒む。
 - 上の 2 つを確かめる単体テストがある。
 - 本項目の統合の後、orchestrator が T-KATA-SLIM-2-pjr-index-040 を `exec resume --task` で再開して、統合まで進むことを確かめる。executor はこの再開をしない。
