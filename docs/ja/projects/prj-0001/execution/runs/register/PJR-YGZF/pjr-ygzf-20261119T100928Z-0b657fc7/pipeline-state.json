@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-YGZF",
   "run_id": "pjr-ygzf-20261119T100928Z-0b657fc7",
-  "updated_at": "2026-11-19T10:38:16.521Z",
+  "updated_at": "2026-11-19T10:38:40.513Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/register/PJR-YGZF/pjr-ygzf-20261119T100928Z-0b657fc7/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-19T10:38:16.521Z",
-      "completed_at": null,
+      "completed_at": "2026-11-19T10:38:40.513Z",
       "artifact_ref": null
     }
   },
