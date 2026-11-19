@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "T-KATA-SLIM-2-pm-risk-register-040",
   "run_id": "T-KATA-SLIM-2-pm-risk-register-040-20261119T134851Z-b1310838",
-  "updated_at": "2026-11-19T14:00:55.826Z",
+  "updated_at": "2026-11-19T14:01:14.615Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -30,11 +30,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-risk-register-040/T-KATA-SLIM-2-pm-risk-register-040-20261119T134851Z-b1310838/result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "opus-executor",
       "attempts": 1,
       "started_at": "2026-11-19T14:00:55.826Z",
-      "completed_at": null,
+      "completed_at": "2026-11-19T14:01:14.615Z",
       "artifact_ref": null
     }
   },
