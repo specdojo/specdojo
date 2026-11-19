@@ -86,6 +86,11 @@ isHistoryLinkTargetPath がファイル名の pjr-*.md だけで判定するた�
 - 区分: 不具合修正
 - 文案: `exec`: pjr の rulebook など、登録簿の個票ではない `pjr-*.md` だけを変えた run で、executor が `npm run validate:history-links` を `not_applicable` と報告すると runner が拒んで止まる不具合を修正した（PJR-8Z71）。
 
+### 5.5. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に本項目を統合して dist を作り直した後、T-KATA-SLIM-2-pjr-index-040 を `exec resume --task` で再開した。executor の `npm run validate:history-links` の `not_applicable` の報告は受け付けられ、reporter の段を通った。
+- 統合は、orchestrator が再開のために worktree の plan に書き足した部分が対象外の変更として止めた。書き足しを戻して統合だけをやり直し、統合まで進んだ。本項目の不具合とは別の、orchestrator の操作の誤りである。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:pjr-dm9b-generated-rulebook-target-unresolved|PJR-DM9B]]（由来）
