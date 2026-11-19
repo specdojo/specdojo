@@ -42,11 +42,11 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                      | 担当         | 状態 | メモ             |
-| --- | --------------------------------------------------------- | ------------ | ---- | ---------------- |
-| 1   | 配る依存の high・moderate の直し方を決めて表に書く        | ARC          | done | 対応結果の表     |
-| 2   | `package.json`・lock の変更案を書く                       | ARC          | done | コード変更は不要 |
-| 3   | 変更案を feature ブランチで反映し、audit と検証を確かめる | orchestrator | open | 利用者の承認の後 |
+| No  | 作業                                                      | 担当         | 状態 | メモ                                |
+| --- | --------------------------------------------------------- | ------------ | ---- | ----------------------------------- |
+| 1   | 配る依存の high・moderate の直し方を決めて表に書く        | ARC          | done | 対応結果の表                        |
+| 2   | `package.json`・lock の変更案を書く                       | ARC          | done | コード変更は不要                    |
+| 3   | 変更案を feature ブランチで反映し、audit と検証を確かめる | orchestrator | done | 589fdf669 で反映し 2968f4be5 で統合 |
 
 ## 5. 対応結果
 
@@ -97,6 +97,12 @@ specdojo:
 区分は `変更`。行の文案:
 
 - `@specdojo/docs-lint の markdownlint-cli を 0.50 へ上げ、配る依存の npm audit の high（markdown-it）と moderate（js-yaml・smol-toml・fast-uri）をなくしました。glob・minimatch 起因の moderate は上流の修正を待ちます（PJR-A5FY）。`
+
+### 5.6. 反映と確認の結果（orchestrator）
+
+- 変更案を、利用者の承認（2026-11-19）のもと `feature/prj-0001/docs-lint-audit` の 589fdf669 で反映し、2968f4be5 で develop へ統合した。lock は `npm install` と `npm update fast-uri` で更新し、`markdown-it` は 15.0.3、`fast-uri` は 3.1.9 に解決された。
+- `packages/docs-lint` の `npm audit --omit=dev` は 12 件（low 3・moderate 9）で high は 0 件。残りは上表で上流待ちとした `glob`・`minimatch`・`katex` 起因だけ。
+- feature ブランチで、ルートの `npm run lint:md`（markdownlint 0.50 の規則で全文書）・`npm run check`・`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`（4010 件）・`npm run test:integration`（418 件）と docs-lint の typecheck が通った。
 
 ## 6. 関連ドキュメント
 
