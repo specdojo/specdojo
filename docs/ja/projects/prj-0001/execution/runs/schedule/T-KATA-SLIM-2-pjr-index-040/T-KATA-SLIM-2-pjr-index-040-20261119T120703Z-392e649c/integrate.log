@@ -1,0 +1,3 @@
+commit-scope: integration blocked; 1 non-target changes (worktree kept):
+  docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/plan.md
+commit-scope: unresolved target doc id (no individual path; approach directory permissions still apply): specdojo:pjr-rulebook
