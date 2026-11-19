@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-pm-change-request-log-040",
+  "run_id": "T-KATA-SLIM-2-pm-change-request-log-040-20261119T131527Z-dfbc7ffe",
+  "updated_at": "2026-11-19T13:32:44.248Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 2,
+      "started_at": "2026-11-19T13:17:58.431Z",
+      "completed_at": "2026-11-19T13:19:24.251Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-change-request-log-040/T-KATA-SLIM-2-pm-change-request-log-040-20261119T131527Z-dfbc7ffe/evidence.json",
+      "rate_limit_events": [
+        {
+          "action": "fallback",
+          "trigger": "rate_limit",
+          "from_actor": "sol-executor",
+          "to_actor": "opus-executor",
+          "resumed_at": "2026-11-19T13:18:02.135Z"
+        }
+      ]
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-11-19T13:28:48.454Z",
+      "completed_at": "2026-11-19T13:32:16.692Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-change-request-log-040/T-KATA-SLIM-2-pm-change-request-log-040-20261119T131527Z-dfbc7ffe/result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "opus-executor",
+      "attempts": 1,
+      "started_at": "2026-11-19T13:32:21.215Z",
+      "completed_at": "2026-11-19T13:32:44.248Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-change-request-log-040/T-KATA-SLIM-2-pm-change-request-log-040-20261119T131527Z-dfbc7ffe/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pm-change-request-log-040/T-KATA-SLIM-2-pm-change-request-log-040-20261119T131527Z-dfbc7ffe/result.md"
+  }
+}
