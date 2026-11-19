@@ -48,7 +48,10 @@ export function scheduleKataReviewSubjects(
   const rule = strategy.approach_rules?.find((rule) => rule.local_ids.includes(task.local_id!));
   if (!rule || !["improve-kata", "bootstrap-kata-set"].includes(rule.intent)) return [];
   const rulebook = deliverable?.deliverable.rulebook;
-  const refs = resolveKataRefs(rulebook, deliverable?.deliverable.kind);
+  // improve-kata・bootstrap-kata-set の段は実践の型そのものを評価するため、kind: generated の
+  // 成果物でも宣言された rulebook を解決する（PJR-DM9B）。generated の扱いだけを外す。
+  const kind = deliverable?.deliverable.kind;
+  const refs = resolveKataRefs(rulebook, kind === "generated" ? undefined : kind);
   const subjects: KataReviewSubject[] = [{ path: refs.rulebook, label: "rulebook" }];
   const declarations = rulebook ? loadRulebookRefs(rulebook) : {};
   const declared = rulebook ? declaredKata(rulebook) : [];

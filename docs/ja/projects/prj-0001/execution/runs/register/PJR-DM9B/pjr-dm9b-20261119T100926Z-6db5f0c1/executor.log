@@ -1,0 +1,26 @@
+直しました。`kind: generated` の成果物でも、カタログで rulebook を宣言していれば、型の整備の段の plan が編集対象をその rulebook として解決します。kata-slim-2 の 4 件と同じ形の fixture で単体テストを書き、手元で通りました。型チェック・lint・単体と統合のテストの正式な結果は、このあと親の runner が出します。
+
+**原因:** `src/kata/kata.ts` の `resolveKataRefs` が、`kind: generated` のときは rulebook の宣言を見ずに参照をすべて `_MISSING_` にしていました。生成物は CLI が作るので型を参照しない、という前提の処理です。plan を作る側が成果物の kind をそのまま渡していたため、rulebook そのものを直す段でも編集対象が `_MISSING_`・`unresolved` になりました。plan の frontmatter の `rulebook: none` は plan 自身を表す固定値で、原因ではありません。
+
+**直したところ:**
+- `src/exec/plans-core.ts` に `kataRefTargetKind` と `deliverableKataRefs` を加えました。approach が rulebook・recipe・sample・template の maintenance のときだけ、`generated` の扱いを外して宣言どおりに解決します。
+- `src/exec/plans-generation.ts` の edit・review plan、`targetDocIds`、`reviewGradeSubject`、`rulebookIncludesText` は、上の関数を通すようにしました。
+- `src/exec/review-kata.ts` の improve-kata・bootstrap-kata-set の段の review 対象も、同じく宣言どおりに解決します。
+- `resolveKataRefs` 自体は変えていません。rulebook を宣言しない `generated`、`kind: work`、型の整備以外の段の結果は今までどおりで、そのこともテストで確かめています。
+
+**判断したこと:**
+- 対象は maintenance の 4 つに限り、authoring・bootstrap には広げていません。生成物を agent が書く plan になりうるためです。
+- register の型の整備で型から成果物を引く `findUniqueDeliverableForKataTarget` は変えていません。`generated` を含めると、`specdojo:pjr-rulebook` を `kind: control` の pjr-entry と共有しているため一意に決まらず、今の結果が変わるからです。そのため、register 経由で pjr-rulebook を整備するときは、今までどおり成果物の文脈なしで plan ができます。
+
+個票の対応結果には、原因・解決内容・判断・確認結果・再発防止策と、CHANGELOG の文案（区分は不具合修正）を書きました。保護された設定は変えていません。止まっている 4 件の流し直しは、統合の後に orchestrator が行います。
+
+**変更したファイル:**
+- `src/exec/plans-core.ts`
+- `src/exec/plans-generation.ts`
+- `src/exec/review-kata.ts`
+- `tests/src/exec/plans-generated-kata.test.ts`（新規）
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-dm9b-generated-rulebook-target-unresolved.md`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Cause: resolveKataRefs returned `_MISSING_` for every kind: generated deliverable. Added kataRefTargetKind and deliverableKataRefs so the four kata maintenance approaches resolve the declared rulebook, and routed edit/review plans, targets, grade subjects, rulebook includes and kata review subjects through them. Added unit tests with fixtures shaped like the four stalled kata-slim-2 deliverables. Wrote cause, fix, decisions, verification and a CHANGELOG draft in the ticket.","handoff":["Re-running the four stalled kata-slim-2 tasks (pjr-index, pm-issue-log, pm-risk-register, pm-change-request-log at phase 040) is left to the orchestrator after integration.","Decision: only the four maintenance approaches (`rulebook-maintenance`, `recipe-maintenance`, `sample-maintenance`, `template-maintenance`) ignore the generated short-circuit. Authoring, bootstrap and bootstrap-finalize are unchanged because the CLI produces generated deliverables.","Decision: `resolveKataRefs` and `findUniqueDeliverableForKataTarget` were left unchanged. Including generated deliverables in the reverse lookup would make `specdojo:pjr-rulebook` ambiguous (it is also declared by the kind: control pjr-entry) and change current behavior. Register-driven pjr-rulebook maintenance therefore still gets no deliverable context.","CHANGELOG draft (category: bug fix): when a kind: generated deliverable declares a rulebook in the catalog, kata maintenance plans such as rulebook-maintenance now resolve the declared kata instead of `_MISSING_` (unresolved) (PJR-DM9B). Recorded in the ticket; `CHANGELOG.md` was not changed.","No protected configuration was changed."],"validations":[{"command":"npx vitest run tests/src/exec/plans-generated-kata.test.ts tests/src/exec/plans.test.ts tests/src/kata","status":"passed","summary":"4 files, 166 tests passed"},{"command":"npx prettier --check src/exec/plans-core.ts src/exec/plans-generation.ts src/exec/review-kata.ts tests/src/exec/plans-generated-kata.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-dm9b-generated-rulebook-target-unresolved.md","status":"passed","summary":"All files formatted (plans-generation.ts was formatted with prettier --write first)"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/controls/project-register/pjr-dm9b-generated-rulebook-target-unresolved.md","status":"passed","summary":"0 issues"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0; the changed ticket file is valid"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"No catalog change","reason":"The only change under docs/ja/projects/ is the register ticket; no catalog or deliverable file was changed."}]}
+</specdojo_executor_evidence>
