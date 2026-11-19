@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-9jn6-change-scope-protected-list-overlap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-17T12:54:58Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T14:12:46Z"
+  conclusion: 変更範囲の推定から「変えない」と書いた節のパスを外し、保護された設定や CHANGELOG を変えないと書いた項目どうしを並べて流せるようにした
   derived_from:
     - PJR-MJ8V
   commit_type: fix

@@ -112,3 +112,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a1d40d8bb15f4bc29d4976dabeeb96af
+- v: 1
+  id: reg_173204fc62ce4af5b07902f596b50f06
+  ts: "2026-11-19T14:12:46Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 変更範囲の推定から「変えない」と書いた節のパスを外し、保護された設定や CHANGELOG を変えないと書いた項目どうしを並べて流せるようにした
+  previous_event_id: reg_536588f84c52401dbc09e58c86b20457
