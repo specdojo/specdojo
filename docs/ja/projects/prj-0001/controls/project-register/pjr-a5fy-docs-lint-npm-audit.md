@@ -38,7 +38,7 @@ specdojo:
 - 依存の版を上げるためにコードの変更が要る場合は、executor が `packages/docs-lint/src` と対応するテストを直す。
 - 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
 - 反映の後に、orchestrator が次を確かめる。`packages/docs-lint` の `npm audit --omit=dev` の high と moderate が 0、または上流待ちとして記録したものだけ。docs-lint の `npm run typecheck` と、ルートの `npm run check`・`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration`・`npm run lint:md` が通る。
-- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。
+- `CHANGELOG.md` は変えず、個票の対応結果の `### <n>.<m>. CHANGELOG に書く事項`（Markdown の連番ルールに従う）に区分（追加・変更・不具合修正など）と行の文案を書く。影響がなければ「なし」と書く。
 
 ## 4. 作業内容
 

@@ -59,7 +59,7 @@ strategy を正本とする規則に反して track を直接編集しても検�
 - 上の 2 つを確かめる単体テストがある（track を直接直した場合と直していない場合、phase_overrides がある場合とない場合）。
 - `docs/ja/specdojo/guides/schedule-design-guide.md` の「トラックへ展開する情報」の表に `agent` を足し、展開する理由（plan だけで実行できるようにするため）と、指名を変えるときは strategy を直すことを書く。
 - `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を通し、親の検証（test-integration）を通す。
-- CHANGELOG の書き方は、プロジェクトの運用メモの決まりに従う。公開済みの版の節は変えない。
+- `CHANGELOG.md` は変えず、個票の対応結果の `### <n>.<m>. CHANGELOG に書く事項`（Markdown の連番ルールに従う）に区分（追加・変更・不具合修正など）と行の文案を書く。影響がなければ「なし」と書く。
 
 ## 5. 対応結果
 
