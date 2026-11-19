@@ -86,3 +86,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4227cc66d38f4d00aa01d44cd127aba0
+- v: 1
+  id: reg_2a6a2a8cf2ba41cdac5eccaa178f3308
+  ts: "2026-11-19T14:13:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: reporter の再開の E2E テストが時々落ちる原因の、runner のイベントの再生順序を直した
+  previous_event_id: reg_3e6da0ac40294cf88891731d482c7f45

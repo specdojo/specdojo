@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zk3t-flaky-reporter-resume-e2e
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-11-17T13:24:01Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T14:13:33Z"
+  conclusion: reporter の再開の E2E テストが時々落ちる原因の、runner のイベントの再生順序を直した
   derived_from:
     - PJR-8NB8
   commit_type: test
