@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fc91a539a4174abb8542423293b9c01b
+- v: 1
+  id: reg_77cca4f516a54e3a8fc4e31e43548bb8
+  ts: "2026-11-19T11:42:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後の実際の exec run --auto で strategy どおりの claim と警告を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: track の直接の編集を exec validate と exec run --auto の前に警告し、schedule のタスクの agent を 3 経路とも strategy を正とする同じ順で解決するようにした。設計ガイドの展開の表に agent を足した
+  previous_event_id: reg_27394d2282c74c1b8c3858a52a3f8ab1

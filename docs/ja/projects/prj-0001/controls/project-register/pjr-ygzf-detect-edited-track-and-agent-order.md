@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ygzf-detect-edited-track-and-agent-order
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-18T22:17:07Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T11:42:39Z"
+  conclusion: track の直接の編集を exec validate と exec run --auto の前に警告し、schedule のタスクの agent を 3 経路とも strategy を正とする同じ順で解決するようにした。設計ガイドの展開の表に agent を足した
   derived_from:
     - PJR-X21W
   commit_type: fix
