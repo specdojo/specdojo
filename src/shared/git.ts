@@ -336,7 +336,11 @@ function abbreviate(value: string, limit: number): string {
 export function summarizeGitArguments(args: readonly string[]): string {
   const separatorIndex = args.indexOf("--");
   const head = separatorIndex === -1 ? args : args.slice(0, separatorIndex);
-  const parts = head.map((arg) => abbreviate(arg, MAX_GIT_ARGUMENT_LENGTH));
+  // 複数行の commit message などは 1 行へ畳む。改行が残ると要約が失敗理由の行から離れ、
+  // 出力の最後の行が引数の断片だけになって失敗に気づきにくい（PJR-Y3XS）。
+  const parts = head.map((arg) =>
+    abbreviate(arg.replace(/\s+/g, " ").trim(), MAX_GIT_ARGUMENT_LENGTH),
+  );
   if (separatorIndex !== -1) {
     const pathCount = args.length - separatorIndex - 1;
     parts.push(`-- ${pathCount} ${pathCount === 1 ? "path" : "paths"}`);
@@ -613,6 +617,55 @@ export function unstageCommitTargets(repoRoot: string, paths: readonly string[])
   const unique = [...new Set(paths)];
   if (unique.length === 0) return;
   gitOutput(repoRoot, ["reset", "--quiet", "--", ...unique]);
+}
+
+// `git commit -- <pathspec>`（--only）は一時 index で commit する。pre-commit hook の整形と
+// `git add`（lefthook の stage_fixed）は一時 index にだけ入り、本来の index には hook 前の内容が
+// 残る。HEAD と作業ツリーは整形後で一致するのに、index だけが整形前を staged として持ち、次の統合を
+// stagedMergeBlocker で止める（PJR-Y3XS）。commit 対象のうち作業ツリーが HEAD と一致するパスだけを
+// HEAD へ戻す。作業ツリーが HEAD と異なるパスは、利用者の作業の可能性があるため触らない。
+// 戻したパス（リポジトリルート起点）を返す。
+export function restoreIndexAfterPathspecCommit(
+  cwd: string,
+  pathspecs: readonly string[],
+  globals: readonly string[] = [],
+): string[] {
+  if (pathspecs.length === 0) return [];
+  const zeroSeparated = (output: string): string[] => output.split("\0").filter(Boolean);
+  const staged = zeroSeparated(
+    gitOutput(cwd, [
+      ...globals,
+      "diff",
+      "--cached",
+      "--no-renames",
+      "--no-relative",
+      "--name-only",
+      "-z",
+      "--",
+      ...pathspecs,
+    ]),
+  );
+  if (staged.length === 0) return [];
+  const topLiteral = (path: string): string => `:(top,literal)${path}`;
+  const differsFromHead = new Set(
+    zeroSeparated(
+      gitOutput(cwd, [
+        ...globals,
+        "diff",
+        "--no-renames",
+        "--no-relative",
+        "--name-only",
+        "-z",
+        "HEAD",
+        "--",
+        ...staged.map(topLiteral),
+      ]),
+    ),
+  );
+  const restorable = staged.filter((path) => !differsFromHead.has(path));
+  if (restorable.length === 0) return [];
+  gitOutput(cwd, [...globals, "reset", "--quiet", "--", ...restorable.map(topLiteral)]);
+  return restorable;
 }
 
 // A non-fast-forward merge requires a clean index even when staged paths do not overlap the

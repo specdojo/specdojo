@@ -88,6 +88,27 @@ import {
   type PreparedTask,
 } from "./schedule-prepare.js";
 import { type AsyncLock, type RateLimitRecoveryEvent, type RunResult } from "./shared.js";
+import { execLifecyclePoolPath } from "./lock.js";
+import { CrossProcessMutex } from "../../shared/cross-process-lock.js";
+
+// 統合の段（commit・merge・記帳）は root の index と HEAD を書き換える。register ... --commit と
+// specdojo git -- commit は project の lifecycle ロックの下で stage・commit（hook を含む）を行う。
+// 統合も同じロックを取り、記帳の commit の途中に stage 済みのファイルを stagedMergeBlocker で
+// 拒否しない（PJR-Y3XS）。プロセス内の直列化（schedule の準備との排他）は外側の lock が担う。
+export function withExecLifecycleMutex(
+  inner: AsyncLock | undefined,
+  executionPath: string,
+  owner: { actor: string; label: string },
+): AsyncLock {
+  const mutex = new CrossProcessMutex(execLifecyclePoolPath(executionPath), owner, {
+    onWait: () =>
+      process.stdout.write("  Waiting for the register lifecycle lock held by another operation\n"),
+  });
+  return {
+    runExclusive: <T>(fn: () => Promise<T> | T): Promise<T> =>
+      inner ? inner.runExclusive(() => mutex.runExclusive(fn)) : mutex.runExclusive(fn),
+  };
+}
 
 export async function runPreparedTask(
   prepared: PreparedTask,
@@ -938,7 +959,13 @@ export async function runPreparedTask(
     return effectiveResult;
   };
 
-  return runWithDeferredCleanup(lifecycleLock, finalize);
+  return runWithDeferredCleanup(
+    withExecLifecycleMutex(lifecycleLock, executionPath, {
+      actor: prepared.claimActor,
+      label: `integrate ${prepared.task.id}`,
+    }),
+    finalize,
+  );
 }
 
 // 統合の段の失敗の理由（検査の名前・commit の対象外のパス・merge の失敗など、失敗した操作の

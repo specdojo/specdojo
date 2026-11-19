@@ -189,6 +189,30 @@ const timer = setInterval(() => {
     });
   });
 
+  it("restores paths a pre-commit hook formatted and staged after a pathspec commit", async () => {
+    await fixture(async (root, _execution, children) => {
+      git(root, ["add", "file.txt"]);
+      git(root, ["commit", "-m", "initial"]);
+      writeFileSync(join(root, "file.txt"), "content   changed\n");
+      writeFileSync(join(root, "other.txt"), "staged by user\n");
+      git(root, ["add", "other.txt"]);
+      // lefthook の stage_fixed と同じく、hook が整形したファイルを git add する。
+      writeFileSync(
+        join(root, ".git/hooks/pre-commit"),
+        "#!/bin/sh\nsed -i 's/  */ /g' file.txt\ngit add file.txt\n",
+        { mode: 0o755 },
+      );
+      const wrapper = launch(root, ["--", "commit", "-m", "format on commit", "--", "file.txt"]);
+      children.push(wrapper.child);
+
+      expect(await wrapper.result, wrapper.output()).toBe(0);
+      expect(git(root, ["show", "HEAD:file.txt"])).toBe("content changed\n");
+      expect(git(root, ["diff", "--cached", "--name-only"])).toBe("other.txt\n");
+      expect(git(root, ["status", "--porcelain", "--", "file.txt"])).toBe("");
+      expect(wrapper.output()).toContain("restored hook-formatted paths");
+    });
+  });
+
   it("refuses writes without project config before changing the index", async () => {
     await fixture(async (root, _execution, children) => {
       rmSync(join(root, ".specdojo"), { recursive: true });

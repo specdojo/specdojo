@@ -530,7 +530,7 @@ specdojo schedule strategy generate \
 | `--commit-scope <scope>`     | Conventional Commits の scope を指定（`update` は `-` で削除）      | `add` / `update`                                 |
 | `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
 | `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
-| `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする                           | `add` / `update` / `renumber` / 遷移             |
+| `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする（繰り返し可）             | `add` / `update` / `renumber` / 遷移             |
 | `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
 | `--since <date>`             | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
 | `--until <date>`             | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
@@ -609,7 +609,7 @@ specdojo register add --project prj-0001 --type todo --from PJR-AB12 \
 
 kata authoring は register 専用です。Schedule の task は対象成果物を起点にするため、「新しい kata ID + 0 件以上の手本」という target 契約を損なわずに表現できません。strategy の phase に指定した場合は plan 生成時に停止します。
 
-記帳系コマンドの `--commit` は、register の worktree 実行と同じ project の `register lifecycle` 枠を取得してから、記帳、`register build` 相当の検証・派生ビュー再生成、pathspec を限定した commit を行います。commit 対象はコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの変更を含めません。対象個票・event・参照文書に開始前の未 commit 変更がある場合は、既存差分との混在を避けるため記帳前に停止します。既定件名は `docs(register PJR-XXXX): <command> <title>` で、`-m` / `--message` により上書きできます。`--dry-run --commit` は変更予定だけを表示し、枠の取得と commit は行いません。
+記帳系コマンドの `--commit` は、register の worktree 実行と同じ project の `register lifecycle` 枠を取得してから、記帳、`register build` 相当の検証・派生ビュー再生成、pathspec を限定した commit を行います。commit 対象はコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの変更を含めません。対象個票・event・参照文書に開始前の未 commit 変更がある場合は、既存差分との混在を避けるため記帳前に停止します。既定件名は `docs(register PJR-XXXX): <command> <title>` で、`-m` / `--message` により上書きできます。`git commit -m` と同じく `-m` は繰り返せ、各値を空行で区切った段落にします（1 つ目が件名、2 つ目以降が本文）。commit が hook などで失敗した場合は、原因と記帳済みで未 commit のファイルを標準エラー出力へ書き、終了コード 1 で終わります。commit の hook が整形して stage したファイルは、commit の後に index から HEAD へ戻し、staged のまま残しません。schedule の task の統合も同じ枠を取るため、記帳の commit の途中に始まった統合は、記帳の staged のファイルで失敗せずに commit の終わりを待ちます。`--dry-run --commit` は変更予定だけを表示し、枠の取得と commit は行いません。
 
 別 project への `register add` は `--commit` が必須です。対象 project の登録簿に未 commit 変更がある場合、または統合ブランチがローカルに存在しない場合は、何も書き込まず終了コード 1 で停止します。元の worktree とブランチは変更しません。`close`、`reject` など別 project の状態遷移は受け付けず、対象 project の worktree での実行を案内します。
 
@@ -1427,7 +1427,7 @@ npx specdojo devcontainer host-script
 
 ## 17. git
 
-`specdojo git [--project <id>] -- <Git の引数>` は、commit・merge・add・rm・restore・checkout などを runner・register と同じ project の `exec-lifecycle` ロックで直列化します。競合時は取得まで待ち、Git の hook が終了してから解放します。標準入出力と終了コードは Git から引き継ぎます。
+`specdojo git [--project <id>] -- <Git の引数>` は、commit・merge・add・rm・restore・checkout などを runner・register と同じ project の `exec-lifecycle` ロックで直列化します。競合時は取得まで待ち、Git の hook が終了してから解放します。標準入出力と終了コードは Git から引き継ぎます。`commit ... -- <pathspec>` が成功した後は、pre-commit の hook が整形して stage した対象のうち、作業ツリーが HEAD と一致するパスを index でも HEAD へ戻します（pathspec 付きの commit は一時 index で行われ、hook の stage は本来の index へ反映されないため）。
 
 ```bash
 specdojo git --project prj-0001 -- add docs/

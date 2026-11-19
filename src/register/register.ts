@@ -7,6 +7,7 @@ import {
   gitOutput,
   gitResult,
   repoRelative,
+  restoreIndexAfterPathspecCommit,
   stageCommitTargets,
   unstageCommitTargets,
   worktreeStatusPaths,
@@ -236,7 +237,7 @@ type RegisterMutationOptions = {
   by?: string;
   dryRun?: boolean;
   commit?: boolean;
-  message?: string;
+  message?: string[];
 };
 
 type RegisterMutationResult = {
@@ -270,7 +271,28 @@ function addRegisterCommitOptions(cmd: Command): Command {
       "Take the register lifecycle lock, rebuild views, and commit only this command's changes",
       false,
     )
-    .option("-m, --message <message>", "Override the register commit message");
+    .option(
+      "-m, --message <message>",
+      "Override the register commit message (repeatable; each value becomes a paragraph, as in git commit -m)",
+      collectRegisterCommitMessage,
+    );
+}
+
+// commander は値付きオプションの繰り返しを最後の値で上書きする。`-m <subject> -m <body>` の
+// subject が失われて body だけが commit message になり、commitlint に拒否されていた（PJR-Y3XS）。
+function collectRegisterCommitMessage(value: string, previous: string[] | undefined): string[] {
+  return [...(previous ?? []), value];
+}
+
+// git commit -m と同じく、空でない各値を段落として空行でつなぐ。
+export function registerCommitMessageFromParagraphs(
+  paragraphs: readonly string[] | undefined,
+): string | undefined {
+  const text = (paragraphs ?? [])
+    .map((paragraph) => paragraph.trim())
+    .filter((paragraph) => paragraph !== "")
+    .join("\n\n");
+  return text === "" ? undefined : text;
 }
 
 const REGISTER_COMMIT_SUBJECT_MAX_LENGTH = 100;
@@ -324,7 +346,7 @@ async function commitRegisterMutation(
   result: RegisterMutationResult,
   preexisting: ReadonlySet<string>,
   targets: ReadonlySet<string>,
-  message?: string,
+  message?: readonly string[],
 ): Promise<void> {
   const changed = worktreeStatusPaths(repoRoot).filter(
     (path) =>
@@ -353,6 +375,7 @@ async function commitRegisterMutation(
     if (interrupted)
       throw new Error(`Register commit interrupted by ${interrupted}; staged changes rolled back.`);
   };
+  let committed = false;
   try {
     stageCommitTargets(repoRoot, changed);
     await checkInterruption();
@@ -363,10 +386,14 @@ async function commitRegisterMutation(
     }
     if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
 
-    const commitMessage = message?.trim() || defaultRegisterCommitMessage(command, result);
-    if (commitMessage === "") throw new Error("Register commit message must not be empty");
+    const commitMessage =
+      registerCommitMessageFromParagraphs(message) ?? defaultRegisterCommitMessage(command, result);
     // --only は初回・amend とも指定し、開始前からある staged 変更を混ぜない。
     gitOutput(repoRoot, ["commit", "--only", "-m", commitMessage, "--", ...changed]);
+    committed = true;
+    // hook の整形は一時 index にだけ入る。HEAD と一致した対象を index でも HEAD へ戻し、
+    // 整形前の内容を staged のまま残さない（PJR-Y3XS）。
+    restoreIndexAfterPathspecCommit(repoRoot, changed);
     await checkInterruption();
 
     for (let attempt = 0; attempt < REGISTER_COMMIT_STABILIZATION_ATTEMPTS; attempt++) {
@@ -379,6 +406,7 @@ async function commitRegisterMutation(
       stageCommitTargets(repoRoot, remaining);
       await checkInterruption();
       gitOutput(repoRoot, ["commit", "--only", "--amend", "--no-edit", "--", ...remaining]);
+      restoreIndexAfterPathspecCommit(repoRoot, remaining);
       await checkInterruption();
     }
 
@@ -396,7 +424,15 @@ async function commitRegisterMutation(
     // changed は開始前に clean だった対象だけ。本文を残して、自分の stage だけを戻す。
     unstageCommitTargets(repoRoot, changed);
     await setImmediate();
-    throw error;
+    if (committed) throw error;
+    // 記帳は作業ツリーに残り commit だけが無い。最後の行に結果が出るよう、原因の後に状態を書く。
+    const cause = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Register commit failed for ${result.id}: ${cause}\n` +
+        `The register changes were written but not committed:\n` +
+        changed.map((path) => `  ${path}`).join("\n"),
+      { cause: error },
+    );
   } finally {
     signals.forEach((signal, index) => process.removeListener(signal, handlers[index]!));
   }
