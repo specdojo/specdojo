@@ -44,3 +44,29 @@
     - field: depends_on
       from: ""
       to: '["PJR-5CTM"]'
+- v: 1
+  id: reg_d304e38ba6124c67ad8f6c8fc775cc86
+  ts: "2026-11-19T11:07:12Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7c3d9bc03ca341319eb45b9ddad3b577
+- v: 1
+  id: reg_3f8378faf4bd47dba8670c70afd95540
+  ts: "2026-11-19T11:17:15Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d304e38ba6124c67ad8f6c8fc775cc86

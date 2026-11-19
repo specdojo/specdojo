@@ -1,0 +1,34 @@
+依頼された作業は完了しました。ただし `.github/workflows/` は保護された設定のため、audit の関門と CodeQL の workflow は作っていません。中身をそのまま使える案として個票に書いてあり、反映するにはあなたの承認が必要です。また、関門の判定スクリプトは一度も実行していません。sandbox で `node` を起動できなかったためです。
+
+**変更したファイル**
+- `.github/dependabot.yml`（新規。保護対象には入っていません）
+  - npm はルート、`packages/docs-lint`、`packages/docs-site`、`packages/vscode-specdojo` の 4 か所、それと GitHub Actions を、毎週月曜 9:00（Asia/Tokyo）に更新します。
+  - 開発用の依存はディレクトリごとに 1 本の PR、GitHub Actions も 1 本の PR にまとめます。
+  - まとめる設定は版の更新だけに効くので、脆弱性の修正は依存ごとに随時 PR が届きます。
+  - commit の頭は `build(deps)` / `build(deps-dev)` / `ci(deps)` で、commitlint の規則に合っています。
+- `pm-orchestrator-playbook.md`
+  - 「依存とコードのセキュリティ検査」の節を追加しました。中身は検査の一覧、Dependabot の PR の扱い方、関門を一時的に外す期限付き例外の手順、GitHub の設定手順、npm 公開時の provenance（出所の証明）の確かめ方です。
+  - リリースの手順にも、配る依存の audit を先に確かめる手順を足しました。
+- 個票 `pjr-p318-security-automation.md`
+  - 作業内容の表は 1・4 が `done`、2・3 は保護された設定のため理由を書いて `open` のままです。
+  - 対応結果に、決めた事項、workflow 3 件の案、routine の調べ、残課題、CHANGELOG の文案を書きました。
+
+**決めたこと**
+- **関門はルートの `specdojo` だけに掛けます。** `packages/docs-lint` には PJR-5CTM で範囲外とした markdown-it の high が残っていて、関門にすると PR がすべて止まるためです。`packages/*` は当面、結果を報告するだけにします。
+- **例外は workflow の環境変数 `AUDIT_EXCEPTIONS` に書きます。** 1 行が「advisory の ID・期限・登録簿の項目」で、期限を過ぎると関門はまた止まります。置き場を保護された workflow にしたので、agent は例外を足せず、必ずあなたの承認を通ります。
+- **CodeQL は `main` への push でも流します。** PR の結果を比べる基準の解析が、既定のブランチに必要なためです。
+- **Dependabot の PR は `main` 宛てのままにしました。** 脆弱性の修正は既定のブランチにしか届かないので、版の更新だけ develop 系へ向けると経路が二つに分かれるためです。届いた PR は merge せず、同じ変更を feature ブランチで取り込みます。
+- **routine による週 1 回の起票:** 今の仕組みで実現できます。routine から直接は任意のコマンドを流せませんが、routine から呼ぶ job の中にシェルの手順を書けます。ただし同じ advisory を毎週起票し直さない仕組みがなく、Dependabot や関門とも重なるため、今回は作っていません。必要になったら、`register add` に重複を避ける鍵（`--dedupe-key`）を足す項目を起票する案を書いておきました。
+
+**検証**
+- Prettier、markdownlint、`npm run validate:history-links` はすべて通りました。
+- 親 runner が流す検査は実行していません。
+
+**残っている作業**
+- workflow 案 3 件の反映（あなたの承認のもと、feature ブランチで）。反映の前に、判定スクリプトを試しの入力で確かめる必要があります。
+- GitHub の設定（あなたが行う作業）：Dependabot alerts と security updates、secret scanning と push protection、外部からの脆弱性報告の受付。CodeQL の default setup は、この workflow と並べて使えないので有効にしないでください。
+- staged publishing で provenance が付くかは確かめていません。次の公開で npm のページを見て、表示がなければ `--provenance` を足します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`.github/dependabot.yml` を作り、運用メモへ検査の運用・例外手順・GitHub 設定・provenance の手順を足した。保護された `.github/workflows/` の audit 関門と CodeQL は案として個票に書いた。routine の調べの結論も個票に書いた。","handoff":["保護された設定の変更案（利用者承認のもと orchestrator が feature ブランチで反映）: 案 1 `.github/workflows/security-audit.yml` 新規（`pull_request`・`workflow_dispatch`・`workflow_call`。ルートの `npm audit --omit=dev --audit-level=high --json` を Node 標準のスクリプトで判定し、high 以上で止める。`AUDIT_EXCEPTIONS` は「GHSA-id 期限 PJR-ID」の行で期限付きの例外。全体と packages/docs-lint・docs-site の audit は報告だけ）。案 2 `publish-specdojo.yml` に `audit` ジョブ（`uses: ./.github/workflows/security-audit.yml`）を足し、`publish` に `needs: audit`。案 3 `.github/workflows/codeql.yml` 新規（`javascript-typescript`、`build-mode: none`、PR・main への push・毎週月曜）。全文は個票の対応結果「保護された設定の変更案」にある。","案 1 の判定スクリプトは sandbox で node を起動できず未実行。反映前に、試しの入力（high・例外の期限内・期限切れ・書式誤り・該当なし）と実際の `npm audit --omit=dev --json` 出力で確かめること。`github/codeql-action` の主版（v4）も反映時に確認すること。","決めた事項: 関門はルートの specdojo だけ。docs-lint の markdown-it の high（PJR-5CTM で範囲外）が残るため packages/* は報告だけにし、その項目が閉じたら関門へ移す。Dependabot の PR は `main` 宛て（security updates が既定ブランチにしか向かないため）で、merge せず feature ブランチで取り込む運用を運用メモに書いた。","GitHub の設定は利用者が行う: Dependabot alerts と security updates（grouped security updates は無効）、secret scanning と push protection、private vulnerability reporting。CodeQL の default setup は advanced setup と並べて使えないため有効にしない。","provenance: Trusted Publishing では自動で付くが、`npm stage publish` で付くかは未確認。次の公開で npm のページを確かめ、無ければ `--provenance` を足す案を起票する。","routine の調べ: routine から直接は任意コマンドを流せないが、`kind: job` で呼ぶ `mode: command` の job から `npm audit` と `register add` を流せるので実現できる。同じ advisory の重複起票を防ぐ仕組みが無いため、必要なら `register add --dedupe-key` を足す項目を起票する。今回は routine を作らない。","CHANGELOG の文案（区分: 変更）: 依存の更新を Dependabot で週 1 回 PR にし、配る依存の `npm audit`（high 以上）を PR と npm 公開の前の関門にし、CodeQL の解析を PR ごとと週 1 回流すようにした（PJR-P318）。"],"validations":[{"command":"npx prettier --check .github/dependabot.yml docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md docs/ja/projects/prj-0001/controls/project-register/pjr-p318-security-automation.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint-cli2 docs/ja/projects/prj-0001/030-project-management/pm-orchestrator-playbook.md docs/ja/projects/prj-0001/controls/project-register/pjr-p318-security-automation.md","status":"passed","summary":"0 issues in 2 files"},{"command":"npm run validate:history-links","status":"passed","summary":"exit 0, all history files valid"}]}
+</specdojo_executor_evidence>
