@@ -1,0 +1,19 @@
+{
+  "v": 1,
+  "ts": "2026-11-19T12:26:14Z",
+  "type": "claim",
+  "task_id": "T-KATA-SLIM-2-pjr-index-040",
+  "by": "opus-executor",
+  "msg": "claim task as resumed executor opus-executor (--resume-from executor)",
+  "meta": {
+    "limit_deferred": "false",
+    "claim_actor": "sol-executor",
+    "stage_actor": "gemma-reporter",
+    "pipeline_stage": "executor",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-pjr-index-040/T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c/pipeline-state.json",
+    "pipeline_run_id": "T-KATA-SLIM-2-pjr-index-040-20261119T120703Z-392e649c",
+    "pipeline_resume_claimed": "true",
+    "previous_actor": "sol-executor"
+  }
+}
