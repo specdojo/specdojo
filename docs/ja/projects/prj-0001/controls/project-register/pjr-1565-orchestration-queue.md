@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-1565-orchestration-queue
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-17T22:58:15Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T03:49:36Z"
+  conclusion: exec queue で grade・exec run・統合の後の処理を混ぜた順番を予約して流せるようにした。実プロセスで失敗時の継続と次の段の実行を確かめ、orchestrator の定義と運用メモを exec queue を使う形に書き換えた
   depends_on:
     - PJR-8KXJ
 ---
@@ -105,6 +107,11 @@ C を選んだ。完了条件のうち、任意のシェルを受け付けない
 
 - 上記の orchestrator の定義と運用メモの変更案の反映（利用者）。
 - 予約の作成から実行までを実プロセスで通す統合テストは足していない。段の実行は差し替え可能な関数として単体テストで確かめ、CLI は `exec queue --help`・`status`・許可リスト外の段の拒否を手で確かめた。
+
+### 5.7. 反映と確認の結果（orchestrator）
+
+- 統合の後の develop で、実プロセスの予約を流して確かめた（2026-11-18）。存在しない項目を指定した `continue` の段 1（`exec run --register PJR-ZZZZ`）が exit 1 で失敗した後、段 2（`post-integration build-dist`）が始まって成功し、予約は `completed_with_failures` で終わった。`exec queue status` で各段の結果と終了コードが見えた。確かめ用の予約ファイルは記録として残さず消した。
+- 「保護された設定の変更案」の 2 つを、利用者の承認（2026-11-19）のもと `feature/prj-0001/exec-queue-docs` の 921f59801 で反映し、4868ab9ad で develop へ統合した。orchestrator の定義は本体と 10 個のラッパーへ同じ行を足し、運用メモは待機の行を置き換えた。orchestrator の定義の同期を確かめるテストを含む 17 ファイル（351 件）が通った。
 
 ## 6. 関連ドキュメント
 

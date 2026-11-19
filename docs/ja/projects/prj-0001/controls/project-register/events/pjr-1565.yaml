@@ -77,3 +77,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ba177d8fb17f4154830c56bb1b6e3929
+- v: 1
+  id: reg_4fbfb317a5634111be5f85b643379087
+  ts: "2026-11-19T03:49:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・個票・実プロセスの確認で確かめ、保護された設定の変更案を利用者の承認のもと反映した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: exec queue で grade・exec run・統合の後の処理を混ぜた順番を予約して流せるようにした。実プロセスで失敗時の継続と次の段の実行を確かめ、orchestrator の定義と運用メモを exec queue を使う形に書き換えた
+  previous_event_id: reg_d6e6ba5d1011471ab74e929cd29fbbf3
