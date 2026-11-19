@@ -1,0 +1,85 @@
+name: Security audit
+
+# 配る依存の npm audit を PR と publish の前に流し、high 以上で止める（PJR-P318）。
+# 開発用を含む全体の audit と packages/* の audit は報告だけで止めない。
+# 上流が直すまで止まる advisory は AUDIT_EXCEPTIONS に期限付きで足す（手順は運用メモ）。
+on:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    env:
+      # 1 行に 1 件、"<GHSA-id> <YYYY-MM-DD> <PJR-ID>"。期限の翌日から再び止まる。
+      AUDIT_EXCEPTIONS: ""
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Audit shipped dependencies (gate)
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm audit --omit=dev --audit-level=high --json > "$RUNNER_TEMP/audit.json" || true
+          node - "$RUNNER_TEMP/audit.json" <<'EOF'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          if (report.error) {
+            console.error(`npm audit failed: ${JSON.stringify(report.error)}`);
+            process.exit(1);
+          }
+          const today = new Date().toISOString().slice(0, 10);
+          const exceptions = new Map();
+          for (const line of (process.env.AUDIT_EXCEPTIONS ?? "").split("\n")) {
+            const [id, until, item] = line.trim().split(/\s+/);
+            if (!id) continue;
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(until ?? "") || !/^PJR-[0-9A-Z]{4}$/.test(item ?? "")) {
+              console.error(`invalid AUDIT_EXCEPTIONS line (expected "<GHSA-id> <YYYY-MM-DD> <PJR-ID>"): ${line}`);
+              process.exit(1);
+            }
+            exceptions.set(id, { until, item });
+          }
+          const failures = [];
+          for (const [name, vulnerability] of Object.entries(report.vulnerabilities ?? {})) {
+            for (const via of vulnerability.via ?? []) {
+              if (typeof via !== "object" || !["high", "critical"].includes(via.severity)) continue;
+              const id = String(via.url ?? "").split("/").pop();
+              const exception = exceptions.get(id);
+              if (exception && exception.until >= today) {
+                console.log(`excepted: ${name} ${id} until ${exception.until} (${exception.item})`);
+                continue;
+              }
+              const expired = exception ? ` (exception expired on ${exception.until}, ${exception.item})` : "";
+              failures.push(`${name}: ${via.severity} ${id} ${via.title}${expired}`);
+            }
+          }
+          if (failures.length > 0) {
+            console.error(`high or critical advisories in shipped dependencies:\n${failures.join("\n")}`);
+            process.exit(1);
+          }
+          console.log("no unexcepted high or critical advisories in shipped dependencies");
+          EOF
+
+      - name: Audit all dependencies (report only)
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: npm audit --audit-level=high | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Audit packages (report only)
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          for dir in packages/docs-lint packages/docs-site; do
+            echo "## $dir" | tee -a "$GITHUB_STEP_SUMMARY"
+            npm --prefix "$dir" audit --omit=dev --audit-level=high | tee -a "$GITHUB_STEP_SUMMARY" || true
+          done
