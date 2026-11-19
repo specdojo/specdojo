@@ -118,3 +118,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8145864c38764178b9830e41300e1b71
+- v: 1
+  id: reg_9a886e0113444356852cb5aecd12ff30
+  ts: "2026-11-19T14:13:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 親の検証の記録に、検証ごとの時刻と所要時間、順番待ち、動いている run と executor の数、負荷と、時間切れのときのテストのファイルを残すようにした
+  previous_event_id: reg_a0e0ca99a5d44f1891b582097c53eac3

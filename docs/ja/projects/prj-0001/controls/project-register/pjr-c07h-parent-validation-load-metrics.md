@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-c07h-parent-validation-load-metrics
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-17T12:22:09Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T14:13:10Z"
+  conclusion: 親の検証の記録に、検証ごとの時刻と所要時間、順番待ち、動いている run と executor の数、負荷と、時間切れのときのテストのファイルを残すようにした
   commit_type: feat
   commit_scope: exec
 ---
