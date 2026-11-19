@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-y3xs-register-commit-integration-race
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: ARC
   registered_at: "2026-11-18T12:03:53Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T11:43:29Z"
+  conclusion: schedule の統合が記帳と同じ lifecycle ロックを取るようにし、register の -m を繰り返して件名と本文にできるようにし、commit の後に hook の整形したファイルが index に残らないようにした
 ---
 
 # PJR-Y3XS register の --commit が実行中の統合を止め、-m を 2 つ付けると commit せずに終わることがある

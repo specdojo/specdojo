@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b34f368489894747acf35496adf3df96
+- v: 1
+  id: reg_833048074dbc4a1985aaaebf4ea08d0d
+  ts: "2026-11-19T11:43:29Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に -m を 2 つ付けた register close --commit と specdojo git -- commit で commit と index の空を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: schedule の統合が記帳と同じ lifecycle ロックを取るようにし、register の -m を繰り返して件名と本文にできるようにし、commit の後に hook の整形したファイルが index に残らないようにした
+  previous_event_id: reg_19f6bddd683d4442ac29d68455162204
