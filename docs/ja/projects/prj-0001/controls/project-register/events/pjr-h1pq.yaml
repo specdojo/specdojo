@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_91bca48795a5473780594a92ccda4f5c
+  ts: "2026-11-19T21:22:23Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-site などの依存の脆弱性を直す
+    - field: description
+      from: ""
+      to: Dependabot alerts を有効にして見つかった依存の脆弱性を直す。docs-site の配る依存の high（mermaid・lodash-es・puppeteer など）は 0.9.0 の前に npm audit fix で直し、vscode-specdojo・docs-lint・ルートの開発用は 0.9.1 で扱う
+    - field: input
+      from: ""
+      to: '["利用者の決定（2026-11-20）: 案 A。0.9.0 の前に docs-site の lockfile だけ npm audit fix で直し、残りは 0.9.1 で扱う","orchestrator の調べ（2026-11-20）: Dependabot alerts を有効にした直後、main に 101 件（high 35）。develop の npm audit では、配る依存はルート 0 件、docs-lint moderate 9・low 3、docs-site high 11・moderate 5・low 3、vscode-specdojo は開発用に high 10・moderate 4","orchestrator の調べ（2026-11-20）: docs-site の vite・vitepress・esbuild は直す版が無い（vitepress 1.x が古い vite に依存）。開発サーバーに関する advisory"]'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-11-20"
+    - field: due
+      from: ""
+      to: "2026-11-30"
+    - field: derived_from
+      from: ""
+      to: '["PJR-P318"]'
