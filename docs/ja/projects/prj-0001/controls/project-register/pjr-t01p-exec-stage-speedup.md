@@ -116,6 +116,20 @@ pipeline:
 - 1 段の時間の変更の前後は、上の変更案を反映した後の実 run（文書だけの変更とコードの変更の各 1 件）で測り、ここに書く。変更の前は個票の入力の kata-wave-1 の実績（準備 1.7 分・executor 6.8 分・親の検証 5.2 分・reporter 3.7 分・統合 0.25 分、hook が流れると統合 7.8 分）とする。executor の sandbox では agent と run を起動できないため、未測定である。
 - 統合の後に develop で `npm run check` が通ることを確かめる（落とした検査の見逃しの確認）。
 
+### 5.6. 統合の後の確認（orchestrator）
+
+変更案（`paths`・`commit_hook_skips`・`mechanical_result: true`）を反映した後の 2026-11-19 の実 run で、1 段の時間を `pipeline-state.json` と `parent-validation-metrics.jsonl` から測った。準備は run ID の時刻から executor の開始まで、親の検証は順番待ちを含む。
+
+| run                              | 変更の種類 | 準備 | executor | 親の検証 | reporter           | 統合 | 計      |
+| -------------------------------- | ---------- | ---- | -------- | -------- | ------------------ | ---- | ------- |
+| 変更の前（cpd-specdojo-cli-050） | 文書       | 1.7  | 6.8      | 5.2      | 3.7                | 0.25 | 17.7 分 |
+| PJR-P318                         | 文書だけ   | 5.3  | 4.7      | 2.9      | 0（runner が作成） | 0.5  | 13.4 分 |
+| PJR-DM9B                         | コード     | 3.0  | 4.3      | 8.4      | 0（runner が作成） | 0.7  | 16.3 分 |
+
+- 文書だけの PJR-P318 では、親の検証で `lint-ts`・`test-integration`・`typecheck` が skipped になり、文書の検査と `test-unit` だけが流れた。reporter の agent は起動せず、統合で hook のテストを流し直していない。
+- PJR-P318 の準備の 5.3 分は、PJR-Y3XS と並べて流し、worktree の依存の導入が重なったためである。目安の 10〜12 分には、準備を除くと届いている。
+- 統合の後の develop で `npm run check` を流すと、git の管理外の `local/` にある利用者のメモの末尾の空行（MD012、markdownlint 0.50 で検出されるようになった）だけで失敗した。管理下のファイルでは、同じ develop の内容（PJR-A5FY の feature ブランチ）で `npm run check` が通った。落とした検査による見逃しは見つからなかった。
+
 ## 6. 関連ドキュメント
 
 - [[prj-0001:sysd-agent-settings|エージェント実行・共通設計]]: 1 段の所要時間を減らす処理の設計。
