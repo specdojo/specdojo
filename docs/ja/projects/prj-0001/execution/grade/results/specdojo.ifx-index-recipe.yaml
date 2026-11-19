@@ -4,11 +4,12 @@ document: specdojo:ifx-index-recipe
 path: docs/ja/specdojo/recipes/ifx-index-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
 score: 100
-graded_at: "2026-11-16T20:26:21.452Z"
+graded_at: "2026-11-19T20:40:26.791Z"
 graded_by: flash-high-executor
-content_hash: 952139cc9b6a705888f4248e19eb503c9d1296c8b0427e38e4b7b0209f33108d
+content_hash: b6a604e64a37df13f4b729ae83efd77a88ecfcf35b80672db962ba428ce1f529
 categories:
   purpose:
     score: 100

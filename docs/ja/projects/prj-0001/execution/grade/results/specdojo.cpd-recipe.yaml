@@ -4,11 +4,12 @@ document: specdojo:cpd-recipe
 path: docs/ja/specdojo/recipes/cpd-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 85
-graded_at: "2026-11-16T20:16:42.963Z"
+score: 90
+graded_at: "2026-11-19T20:30:20.297Z"
 graded_by: flash-high-executor
-content_hash: 1c5d304c221e93dde3b7212fcd9f2c532eebf760374b1a3204fb85b044d65650
+content_hash: d43090b2b4397e9442e2f98fdc9c52d35d908401f2b2c69f68aaf3d6e5568586
 categories:
   purpose:
     score: 88
@@ -17,15 +18,15 @@ categories:
   planning:
     score: 83
   business:
-    score: 83
+    score: 92
   architecture:
-    score: 92
+    score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
-    score: 88
+    score: 100
   quality:
-    score: 75
+    score: 83
   consistency:
     score: 75
 viewpoints:
@@ -51,23 +52,23 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -81,8 +82,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,104 +105,65 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 12
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-purpose-alignment
-    line: 14
-    anchor: ""
+    line: 9
+    anchor: >-
+      - CPD は、上位図と上位の要求から分割の理由（Why）を引き継ぎ、コンポーネントの責務と境界で受け渡す情報（What）を定め、依存方向と失敗時の観測点（How）を示す。これらをコンポーネント名と関係 ID
+      でたどれるようにする（Trace）。
     message: 上位の業務目的・成功基準を recipe がどこへ遡り、rulebook の上位文書群（メタ情報標準・命名標準・構成ガイド）とどう関係するかの参照先を一行で補うべきである。
     message_ja: 上位の業務目的・成功基準を recipe がどこへ遡り、rulebook の上位文書群（メタ情報標準・命名標準・構成ガイド）とどう関係するかの参照先を一行で補うべきである。
   - id: F002
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 96
-    anchor: "| 障害の分界 | 印字応答欠落時は販売結果と紙面の確認を分ける                                     | エラーなら全部やり直す                 |"
+    line: 87
+    anchor: "問い:"
     message: 作業単位の規模・所要時間を見積もる基準（関係数や未確定範囲の取り扱い）を一行追加し、Schedule 見積に使える粒度へ高める。
     message_ja: 作業単位の規模・所要時間を見積もる基準（関係数や未確定範囲の取り扱い）を一行追加し、Schedule 見積に使える粒度へ高める。
   - id: F003
     severity: minor
     rule: vp-pm-control-reporting
-    line: 86
-    anchor: 4. 分割・共通化の採用理由を上位の目的または技術制約まで戻って確かめます。根拠を辿れない候補は仮定と確認事項へ戻します。
+    line: 92
+    anchor: "コツ:"
     message: 分類された各論点がどの PJR / Schedule / 報告先に転記され、どの Role code が担当するかを一行足して、進捗・課題・リスクの分離と担当を recipe 内で確認できる形にする。
     message_ja: 分類された各論点がどの PJR / Schedule / 報告先に転記され、どの Role code が担当するかを一行足して、進捗・課題・リスクの分離と担当を recipe 内で確認できる形にする。
   - id: F004
     severity: minor
     rule: vp-ba-business-value
-    line: 27
-    anchor: ""
+    line: 16
+    anchor: "| 必要な成果 | 利用者が確認して次へ進む結果、期待価値・成功基準の記述箇所             | 上位の要求・目的、BA    |"
     message: 「必要な成果」の問いに、期待価値・成功基準が主な方針/成果（例：失敗時の未印字引き継ぎ等の境界判断）のどれへどう応えるかという一項を足し、BA による対応確認に recipe が直接使える形にする。
     message_ja: 「必要な成果」の問いに、期待価値・成功基準が主な方針/成果（例：失敗時の未印字引き継ぎ等の境界判断）のどれへどう応えるかという一項を足し、BA による対応確認に recipe が直接使える形にする。
   - id: F005
     severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 18
-    anchor: "| 必要な成果 | 利用者は何に困り、どの結果を確認して次へ進むか。期待価値と成功基準の上位参照はどこか     |"
-    message: 概要で「何を扱わない範囲か」を確認・記述する問いを一行追加し、rulebook §5「必須・概要」の対象外要件と整合させる。
-    message_ja: 概要で「何を扱わない範囲か」を確認・記述する問いを一行追加し、rulebook §5「必須・概要」の対象外要件と整合させる。
+    rule: vp-dev-testability
+    line: 118
+    anchor: "## 7. レビュー観点"
+    message: >-
+      「メタ情報/主 rulebook、参照先の lookup 索引整合、Mermaid 構文、描画・可読性」の4項目を recipe 上に一行追加し、rulebook §6.6 と recipe の検証観点の対応を recipe
+      内で確認できる形にする。
+    message_ja: >-
+      「メタ情報/主 rulebook、参照先の lookup 索引整合、Mermaid 構文、描画・可読性」の4項目を recipe 上に一行追加し、rulebook §6.6 と recipe の検証観点の対応を recipe
+      内で確認できる形にする。
   - id: F006
     severity: minor
-    rule: vp-arc-technical-constraints
-    line: 78
-    anchor: ""
-    message: 「与える条件 → 観測する結果」という観測点の手順の前に、『依存する外部・共通機構は何か／未確認の排他・原子性・再試行保証は仮定しない』という技術前提の確認問いを一行追加し、rulebook §6.4 と整合させる。
-    message_ja: 「与える条件 → 観測する結果」という観測点の手順の前に、『依存する外部・共通機構は何か／未確認の排他・原子性・再試行保証は仮定しない』という技術前提の確認問いを一行追加し、rulebook §6.4 と整合させる。
-  - id: F007
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 96
-    anchor: "| 障害の分界 | 印字応答欠落時は販売結果と紙面の確認を分ける                                     | エラーなら全部やり直す                 |"
-    message: §5-5 の「影響先を追って更新判断・担当を残す」という主張は §3-8 と line20 で既に述べており、線144 への参照に置き換える等して反復を減らすべきである。
-    message_ja: §5-5 の「影響先を追って更新判断・担当を残す」という主張は §3-8 と line20 で既に述べており、線144 への参照に置き換える等して反復を減らすべきである。
-  - id: F008
-    severity: minor
-    rule: vp-dev-implementation-readiness
-    line: 70
-    anchor: ""
-    message: 「構成案と確認済み構成の区分（_ASSUMPTION_ レベル）」を recipe の確認項目として一行追加し、rulebook §6.1 の要件と整合させる。
-    message_ja: 「構成案と確認済み構成の区分（_ASSUMPTION_ レベル）」を recipe の確認項目として一行追加し、rulebook §6.1 の要件と整合させる。
-  - id: F009
-    severity: minor
-    rule: vp-dev-testability
-    line: 43
-    anchor: >-
-      確認対象から逆に、構成・実装・結合・業務それぞれの確認者と時点を探します。最終合意者と公開する相手・媒体・範囲を概要にまとめ、役割割当てや合意記録の参照へつなぎます。上位に成功基準が見つからないときは、BA
-      への確認事項にします。
-    message: >-
-      「メタ情報/主 rulebook、参照先の lookup 索引整合、Mermaid 構文、描画・可読性」の4項目を recipe 上に一行追加し、rulebook §6.6 と recipe の検証観点の対応を recipe
-      内で確認できる形にする。
-    message_ja: >-
-      「メタ情報/主 rulebook、参照先の lookup 索引整合、Mermaid 構文、描画・可読性」の4項目を recipe 上に一行追加し、rulebook §6.6 と recipe の検証観点の対応を recipe
-      内で確認できる形にする。
-  - id: F010
-    severity: minor
     rule: vp-qe-verifiability
-    line: 78
-    anchor: ""
+    line: 76
+    anchor: "検証観点の問い:"
     message: 「与える条件 → 観測する結果」を各境界で pass/fail として明確化し、rulebook §6.6「各行の観測結果を満たせば Pass、違反すれば Fail」との整合を recipe 上に明示すべきである。
     message_ja: 「与える条件 → 観測する結果」を各境界で pass/fail として明確化し、rulebook §6.6「各行の観測結果を満たせば Pass、違反すれば Fail」との整合を recipe 上に明示すべきである。
-  - id: F011
+  - id: F007
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 44
-    anchor: ""
+    line: 104
+    anchor: 4. 一つの変更（境界・責務・外部契約）を仮定し、関係 ID から上位図・詳細契約・観測点・作業順への影響をたどる。たどれない関係は定義を補う。
     message: >-
       「改訂なら、変更した関係から後続設計・実装・検証・作業順への影響をたどり、更新先を決める」という §3-8 の文は rulebook §6.7「変更・保守時の影響確認」に対応するが、recipe 内で §5-5
       と併せて「変更時の影響確認」を一貫して指す章またはラベルとして明示した方がよい（rulebook §6.7 対応漏れの解消のため）。
     message_ja: >-
       「改訂なら、変更した関係から後続設計・実装・検証・作業順への影響をたどり、更新先を決める」という §3-8 の文は rulebook §6.7「変更・保守時の影響確認」に対応するが、recipe 内で §5-5
       と併せて「変更時の影響確認」を一貫して指す章またはラベルとして明示した方がよい（rulebook §6.7 対応漏れの解消のため）。
-  - id: F012
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 74
-    anchor: ""
-    message: >-
-      §4.4 は rulebook §6.4「技術前提・制約と検証観点」の 2 責務（技術的前提/制約、検証観点）に recipe 内で小見出しまたは問いの区分を分け、recipe と rulebook
-      の責務対応を明示すべきである。
-    message_ja: >-
-      §4.4 は rulebook §6.4「技術前提・制約と検証観点」の 2 責務（技術的前提/制約、検証観点）に recipe 内で小見出しまたは問いの区分を分け、recipe と rulebook
-      の責務対応を明示すべきである。

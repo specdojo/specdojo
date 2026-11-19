@@ -4,11 +4,12 @@ document: specdojo:cnd-recipe
 path: docs/ja/specdojo/recipes/cnd-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
 score: 100
-graded_at: "2026-11-16T20:14:30.569Z"
+graded_at: "2026-11-19T20:26:56.302Z"
 graded_by: flash-high-executor
-content_hash: 7d925c64588c026f6850491a726968671b13b2f2e98cca0b3f4a1ca97d2a1085
+content_hash: 8bef3a57b87c97d65ee70d27ce4255217443bde4703951b75b9f3273125d0a7f
 categories:
   purpose:
     score: 100

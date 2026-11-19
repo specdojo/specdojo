@@ -4,11 +4,12 @@ document: specdojo:ifd-recipe
 path: docs/ja/specdojo/recipes/ifd-recipe.md
 target: kata
 rubric: grade-rubric-v2
+reference: specdojo:prj-overview-recipe
 verdict: pass
-score: 100
-graded_at: "2026-11-16T20:21:32.428Z"
+score: 98
+graded_at: "2026-11-19T20:36:19.930Z"
 graded_by: flash-high-executor
-content_hash: 0b097a3478aa738a62b3645978039c766707a1cee224cc2b4538dda209b85c15
+content_hash: 74db7b107d67ab16c12bbc8a785aaac2ed684bc6cb0656cbff2e937fe592cc90
 categories:
   purpose:
     score: 100
@@ -25,7 +26,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 100
 viewpoints:
@@ -81,8 +82,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,6 +105,17 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: "## 1. このレシピの使い方"
+    message: >-
+      第1章「このレシピの使い方」の具体項目が2つにとどまっており、recipe-authoring-standard
+      が求める必須章の最低3項目基準を満たしていないため、レビュー観点や仕上げチェックを用いた確認の進め方を追記すべきである。
+    message_ja: >-
+      第1章「このレシピの使い方」の具体項目が2つにとどまっており、recipe-authoring-standard
+      が求める必須章の最低3項目基準を満たしていないため、レビュー観点や仕上げチェックを用いた確認の進め方を追記すべきである。
