@@ -73,6 +73,11 @@ YAML を正本のまま、用語集と同じく yaml-pages で表形式の Markd
 
 - なし
 
+### 5.5. 統合の後の確認（orchestrator）
+
+- 2026-11-19 に develop で `specdojo yaml-pages build` を流し、`docs/ja/product/020-external-interface-specs/generated/ifx-index.md` に一覧の要約（id・状態・連携の数・詳細仕様が未整備の数）、連携の一覧（連携名・連携先・向き・種別・形式・詳細仕様・注記）、連携ごとの詳細の表が生成されることを確かめた。詳細仕様は wikilink、未整備は「未整備（TBD）」と表示された。
+- 統合の後の develop で `npm run docs:build` が通った（2026-11-18、PJR-5CTM の確認の中で実施）。
+
 ## 6. 関連ドキュメント
 
 - [[specdojo:ifx-index-rulebook]]
