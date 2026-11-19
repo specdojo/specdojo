@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-8z71-history-link-target-path
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-11-19T12:47:16Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T13:16:01Z"
+  conclusion: 履歴蓄積ファイルの判定を登録簿の個票のディレクトリに限り、pjr の rulebook などの変更で executor の適用外の報告を受け付けるようにした
   derived_from:
     - PJR-DM9B
   commit_type: fix

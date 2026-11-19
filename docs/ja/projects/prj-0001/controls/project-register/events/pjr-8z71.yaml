@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_262405edd7d947a9b8503e160c692601
+- v: 1
+  id: reg_d7579ee2236846fbb23b06e0815f37c1
+  ts: "2026-11-19T13:16:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分とテストを確かめ、統合の後に pjr-index-040 の再開で reporter の段を通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 履歴蓄積ファイルの判定を登録簿の個票のディレクトリに限り、pjr の rulebook などの変更で executor の適用外の報告を受け付けるようにした
+  previous_event_id: reg_c8cf63bc132844b496fa6b4bcaf61517
