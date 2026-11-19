@@ -134,3 +134,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e80c194ef68840dc91645ecf3a5fe7bd
+- v: 1
+  id: reg_219def7d6969494e9fa74757f45fbcc5
+  ts: "2026-11-19T12:14:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 反映後の実 run で 1 段の時間を測り、develop の check で落とした検査の見逃しがないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 親の検証を変更の種類で選び、統合の commit の hook の流し直しを省き、決まった形の result を runner が作るようにした。実 run で文書だけの 1 段が 13.4 分、コードの 1 段が 16.3 分になった
+  previous_event_id: reg_67c3439702654e94981a8283ba649823

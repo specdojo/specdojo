@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-t01p-exec-stage-speedup
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: sol-executor
   registered_at: "2026-11-14T03:31:40Z"
+  completed_at: "2026-11-19T12:14:27Z"
+  conclusion: 親の検証を変更の種類で選び、統合の commit の hook の流し直しを省き、決まった形の result を runner が作るようにした。実 run で文書だけの 1 段が 13.4 分、コードの 1 段が 16.3 分になった
   commit_type: perf
   commit_scope: exec
 ---
