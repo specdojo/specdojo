@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-P318"]'
+- v: 1
+  id: reg_9255bf93f2484c58a5bbd87951181aa4
+  ts: "2026-11-19T22:06:25Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: due
+      from: "2026-12-15"
+      to: "-"
+  previous_event_id: reg_f80e573c35dc4a1ebb129f22bda94489

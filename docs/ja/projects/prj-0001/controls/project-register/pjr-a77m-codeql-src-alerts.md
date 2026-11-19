@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-11-19T22:05:49Z"
-  due_on: "2026-12-15"
+  due_on: null
   derived_from:
     - PJR-P318
 ---
