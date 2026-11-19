@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-5ctm-npm-audit-high
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-18T12:18:01Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T03:43:56Z"
+  conclusion: 配る依存の npm audit を 0 件、全体の high を 0 件にした。tinyglobby を node:fs の globSync へ移して依存から外し、docs-lint の engines を 22.17 に上げた。docs-lint 単体の audit に残る markdown-it の high は範囲の外として別に扱う
 ---
 
 # PJR-5CTM npm audit の high を解消する（配る依存を先に）
@@ -51,14 +53,14 @@ npm audit の high 15 件を解消する。配る依存（tinyglobby・fdir・pi
 
 ## 4. 作業内容
 
-| No  | 作業                                                                          | 担当         | 状態  | メモ                                                        |
-| --- | ----------------------------------------------------------------------------- | ------------ | ----- | ----------------------------------------------------------- |
-| 1   | 配る依存の high・moderate の直し方を調べて表に書く                            | ARC          | done  | `npm audit --omit=dev` 対象 4 件の直し方を決定              |
-| 2   | 開発用の high の直し方を依存ごとに決めて表に書く                              | ARC          | done  | 開発用 high 12 件の直し方を決定（古い版へ下げる案は不採用） |
-| 3   | `package.json`・`package-lock.json` の変更案を書く                            | ARC          | done  | 対応結果および `handoff` に変更案を記録                     |
-| 4   | 変更案を feature ブランチで反映し、audit と検証を確かめる                     | orchestrator | doing | 利用者の承認後に orchestrator が feature ブランチで実施     |
-| 5   | `tinyglobby` を `node:fs` の `globSync` へ移し、テストを足す（2 回目）        | ARC          | done  | 3 か所と `tools`・`tests` の利用を移し、単体テストを追加    |
-| 6   | `tinyglobby` を外す `package.json` の差分を反映し、audit を確かめる（2 回目） | orchestrator | open  | 利用者の承認の後                                            |
+| No  | 作業                                                                          | 担当         | 状態 | メモ                                                                        |
+| --- | ----------------------------------------------------------------------------- | ------------ | ---- | --------------------------------------------------------------------------- |
+| 1   | 配る依存の high・moderate の直し方を調べて表に書く                            | ARC          | done | `npm audit --omit=dev` 対象 4 件の直し方を決定                              |
+| 2   | 開発用の high の直し方を依存ごとに決めて表に書く                              | ARC          | done | 開発用 high 12 件の直し方を決定（古い版へ下げる案は不採用）                 |
+| 3   | `package.json`・`package-lock.json` の変更案を書く                            | ARC          | done | 対応結果および `handoff` に変更案を記録                                     |
+| 4   | 変更案を feature ブランチで反映し、audit と検証を確かめる                     | orchestrator | done | feature/prj-0001/npm-audit-deps で反映し 281a5b8c9 で統合                   |
+| 5   | `tinyglobby` を `node:fs` の `globSync` へ移し、テストを足す（2 回目）        | ARC          | done | 3 か所と `tools`・`tests` の利用を移し、単体テストを追加                    |
+| 6   | `tinyglobby` を外す `package.json` の差分を反映し、audit を確かめる（2 回目） | orchestrator | done | feature/prj-0001/npm-audit-tinyglobby（945761d9f）で反映し 23fe79450 で統合 |
 
 ## 5. 対応結果
 
@@ -211,6 +213,14 @@ orchestrator が feature ブランチで上記変更案および `src/register/a
 区分は `変更`。行の文案:
 
 - `SpecDojo と @specdojo/docs-lint のファイル検索を tinyglobby から Node.js 組み込みの fs.globSync へ移し、tinyglobby を依存から外しました。これにより、配る依存の npm audit の high（tinyglobby・fdir・picomatch）と moderate（fast-uri）がなくなりました。動作に必要な Node.js は 22.17 以上です（@specdojo/docs-lint は 22.13 から引き上げ）。docs-lint の ** による検索は、ディレクトリへのシンボリックリンクの中へ入らなくなりました（PJR-5CTM）。`
+
+### 5.11. 反映と確認の結果（orchestrator）
+
+- 1 回目の変更案は `feature/prj-0001/npm-audit-deps` で反映し、281a5b8c9 で develop へ統合した。
+- 2 回目の変更案（ルートと docs-lint の依存から `tinyglobby` を外す、docs-lint の `engines.node` を `>=22.17`）は `feature/prj-0001/npm-audit-tinyglobby` の 945761d9f で反映し、23fe79450 で develop へ統合した。lock はルートと docs-lint で作り直した。
+- feature ブランチで `npm run check`・`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`（3989 件）・`npm run test:integration`・`npm run docs:build` と docs-lint の typecheck が通った。
+- 統合の後の develop で `npm audit --omit=dev` は 0 件。全体は 20 件（low 3・moderate 17）で high は 0 件。
+- 範囲の外として残る点: 別に publish する docs-lint の依存の audit では、`markdownlint-cli@0.49.1` が引く `markdown-it` の high が 1 件と moderate が残る。ルートの audit では検出されないため、本項目の範囲を広げず、別の項目で扱う。
 
 ## 6. 関連ドキュメント
 

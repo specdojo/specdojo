@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4dba454380b54d3fa2d0af1305abbd67
+- v: 1
+  id: reg_6647218af0994dcd93d2ed8035fb0dd9
+  ts: "2026-11-19T03:43:56Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 2 回の変更案を利用者の承認のもと feature ブランチで反映して統合し、audit と check・typecheck・lint・unit・integration・docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: 配る依存の npm audit を 0 件、全体の high を 0 件にした。tinyglobby を node:fs の globSync へ移して依存から外し、docs-lint の engines を 22.17 に上げた。docs-lint 単体の audit に残る markdown-it の high は範囲の外として別に扱う
+  previous_event_id: reg_b0edb9e054ed4c239e625d5d8235a57a
