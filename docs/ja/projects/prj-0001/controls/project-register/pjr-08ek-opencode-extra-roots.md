@@ -36,6 +36,10 @@ Error: The user has specified a rule which prevents you from using this specific
 - repos を宣言した project で、プロダクトのファイルの変更を求める項目を opencode-executor で exec run --register --worktree に流すと、プロダクトの worktree への Edit がすべて permission `external_directory` の deny で拒まれた
 - 環境: specdojo 0.7.0、opencode 1.19.5、Linux（devcontainer）
 - 起票案は利用者が作成した tmp/specdojo-issue-1-opencode-extra-roots.md
+- 再現の手順（検出したプロジェクトからの報告、2026-11-20）: `specdojo.config.json` の project に `repos` を宣言する（例: `path: ../<product>`）。`exec-defaults.yaml` の振り分けで executor を opencode（`opencode-executor`）にする。プロダクトのファイルの変更を求める項目を `npx specdojo exec run --register <ID> --worktree` で流す
+- opencode 1.19.5 での権限の照合（同じ報告で試した結果）: `external_directory` は、対象のディレクトリの絶対パス（例: `<worktree_base>/<task>/<repo>/*`）で照合される
+- 同じく: `edit` は、opencode の起動場所（project の worktree）からの相対パス（例: `../<repo>/a.txt`）で照合される。絶対パスのパターン `<abs>/**` の `allow` は当たらず、`"*": deny` で拒まれた
+- 同じく: opencode.json の `agent.<name>.permission` に書いても、`.opencode/agents/<name>.md` の frontmatter が後から読まれて上書きする（`opencode debug agent` で確かめた）
 
 ## 3. 影響範囲
 
@@ -61,15 +65,20 @@ Error: The user has specified a rule which prevents you from using this specific
 - `dist/exec/task-repos.js` の `agentExtraRootArguments` は、claude（`--add-dir` と `Edit(//<abs>/**)`）と、codex・antigravity・copilot（`--add-dir`）にはプロダクトの worktree を追加の root として渡すが、opencode には `[]` を返す。
 - コメントには「OpenCode's orchestrator entry injects `permission.external_directory` through its runtime config instead.」とあるが、注入しているのは `orchestrator launch` だけで、exec の executor・reviewer の起動には入っていない。
 - 配布の `templates/opencode/agents/opencode-executor.md` は `external_directory: deny` で、`edit` も `docs/**`・`src/**`・`tests/**` に限られる。
+- `orchestrator launch` の注入（`dist/commands/orchestrator.js`）は、`edit` にも絶対パスのパターンを入れている。opencode 1.19.5 では `edit` が起動場所からの相対パスで照合されるため、`external_directory` は通っても `edit` で拒まれる可能性がある（報告の推定で、未確認）。
+- opencode.json の `agent.<name>.permission` は、agent の定義ファイルの frontmatter に上書きされる。許可は agent の定義より後に効く経路（runtime config など）で渡す必要がある。
 
 対応策の内訳。
 
-- exec で opencode を起動するときも、`orchestrator launch` と同じく runtime config（`OPENCODE_CONFIG_CONTENT` など）で、その run のプロダクトの worktree だけに `external_directory` と `edit` の許可を注入する。
+- exec で opencode を起動するときも、`orchestrator launch` と同じく runtime config（`OPENCODE_CONFIG_CONTENT` など）で、その run のプロダクトの worktree だけに `external_directory` と `edit` の許可を注入する。`external_directory` には絶対パス、`edit` には起動場所からの相対パス（`../<repo>/**`）のパターンを入れる。
 - 注入できるまでの間は、プロダクトリポジトリを対象にする項目で opencode が選ばれたときに、開始する前に止める（または doctor で警告する）。
 
 完了条件の内訳。
 
 - exec で opencode を起動するとき、その run のプロダクトの worktree にだけ `external_directory` と `edit` の許可が渡る。それ以外の場所は今までどおり拒まれる
+- `external_directory` のパターンは絶対パス、`edit` のパターンは起動場所（project の worktree）からの相対パス（`../<repo>/**`）にする。照合の形は、手元の opencode で確かめられれば確かめ、確かめられない場合はそのことを個票の対応結果に書く
+- 許可は agent の定義ファイルの frontmatter に上書きされない経路で渡す
+- `orchestrator launch` の注入の `edit` のパターンも同じ照合の形になっているかを確かめる。同じ問題があれば、同じ直し方で直すか、別の項目の起票の案として個票の対応結果に書く。どちらにしたかと理由を書く
 - claude・codex・antigravity・copilot の起動の引数は変わらない
 - 上の 2 点を単体テストで確かめる
 - 対応策の 2 点目（開始前に止める・doctor で警告する）を実装するかどうかは executor が決め、理由を個票の対応結果と報告の `handoff` に書く
