@@ -11,6 +11,7 @@ import {
   livePoolHolders,
 } from "../shared/cross-process-lock.js";
 import { gitEnvironment } from "../shared/git-environment.js";
+import { restoreIndexAfterPathspecCommit } from "../shared/git.js";
 import {
   getProjectExecutionPath,
   specdojoRootDir,
@@ -89,6 +90,17 @@ export function inspectGitArguments(args: readonly string[]): {
     .slice(index + 1)
     .some((arg) => arg === "--output" || arg.startsWith("--output="));
   return { globals, needsLock: customConfig || !READ_COMMANDS.has(command) || writesOutput };
+}
+
+// `commit ... -- <pathspec>` の pathspec を返す。`--` の無い commit や commit 以外は空を返す。
+// pathspec 付きの commit は一時 index で行われ、hook が整形した内容が本来の index に残るため、
+// 呼び出し側が commit の後に index を戻す対象にする（PJR-Y3XS）。
+export function commitPathspecs(args: readonly string[]): string[] {
+  const { globals } = inspectGitArguments(args);
+  if (args[globals.length] !== "commit") return [];
+  const rest = args.slice(globals.length + 1);
+  const separator = rest.indexOf("--");
+  return separator === -1 ? [] : rest.slice(separator + 1);
 }
 
 // Avoid loading .env: a transparent Git wrapper must not alter the caller's credentials or env.
@@ -183,7 +195,18 @@ export async function runSerializedGit(
         process.stderr.write("Waiting for the exec-lifecycle lock held by another operation\n"),
     },
   );
-  return mutex.runExclusive(() => runGitChild(args, cwd, true));
+  const pathspecs = commitPathspecs(args);
+  return mutex.runExclusive(async () => {
+    const code = await runGitChild(args, cwd, true);
+    if (code !== 0 || pathspecs.length === 0) return code;
+    const restored = restoreIndexAfterPathspecCommit(cwd, pathspecs, globals);
+    if (restored.length > 0) {
+      process.stderr.write(
+        `[specdojo] restored hook-formatted paths left in the index after commit: ${restored.join(", ")}\n`,
+      );
+    }
+    return code;
+  });
 }
 
 export function registerGitCommand(program: Command): void {

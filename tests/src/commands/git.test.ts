@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { Command } from "commander";
 import {
+  commitPathspecs,
   gitExecutionPath,
   inspectGitArguments,
   registerGitCommand,
@@ -19,6 +20,19 @@ import {
   tryAcquireLock,
 } from "../../../src/shared/cross-process-lock.js";
 import { gitEnvironment } from "../../../src/shared/git-environment.js";
+
+describe("commitPathspecs", () => {
+  it("returns the pathspec after -- of a commit, skipping global options", () => {
+    expect(
+      commitPathspecs(["-C", "repo", "commit", "-m", "subject", "--", "a.md", "b.yaml"]),
+    ).toEqual(["a.md", "b.yaml"]);
+  });
+
+  it("returns nothing for a commit without -- or for other commands", () => {
+    expect(commitPathspecs(["commit", "-m", "subject"])).toEqual([]);
+    expect(commitPathspecs(["add", "--", "a.md"])).toEqual([]);
+  });
+});
 
 describe("Git argument classification", () => {
   it.each(["status", "log", "diff", "show", "ls-files", "rev-parse"])(
