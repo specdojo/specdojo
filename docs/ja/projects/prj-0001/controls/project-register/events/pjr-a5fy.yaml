@@ -73,3 +73,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b2e5ff62dc3e4294ababc3920428164a
+- v: 1
+  id: reg_6e7c3668132b4fbe94c2fcb41713e401
+  ts: "2026-11-19T11:56:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 変更案を利用者の承認のもと feature ブランチで反映して統合し、audit と lint:md・check・typecheck・lint・unit・integration を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: docs-lint の markdownlint-cli を ^0.50.0 へ上げ、配る依存の audit の high を 0 件にした。残る moderate・low は上流待ちとして記録した
+  previous_event_id: reg_adc26e33054c4322862aaa91d1263fda

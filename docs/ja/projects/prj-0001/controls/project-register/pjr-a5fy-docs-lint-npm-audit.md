@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-a5fy-docs-lint-npm-audit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-19T10:03:09Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T11:56:23Z"
+  conclusion: docs-lint の markdownlint-cli を ^0.50.0 へ上げ、配る依存の audit の high を 0 件にした。残る moderate・low は上流待ちとして記録した
   derived_from:
     - PJR-5CTM
   commit_type: fix
