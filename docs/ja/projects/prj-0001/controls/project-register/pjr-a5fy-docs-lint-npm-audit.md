@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: ARC
@@ -44,13 +44,59 @@ specdojo:
 
 | No  | 作業                                                      | 担当         | 状態 | メモ             |
 | --- | --------------------------------------------------------- | ------------ | ---- | ---------------- |
-| 1   | 配る依存の high・moderate の直し方を決めて表に書く        | ARC          | open | -                |
-| 2   | `package.json`・lock の変更案を書く                       | ARC          | open | -                |
+| 1   | 配る依存の high・moderate の直し方を決めて表に書く        | ARC          | done | 対応結果の表     |
+| 2   | `package.json`・lock の変更案を書く                       | ARC          | done | コード変更は不要 |
 | 3   | 変更案を feature ブランチで反映し、audit と検証を確かめる | orchestrator | open | 利用者の承認の後 |
 
 ## 5. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 5.1. 実施内容
+
+2026-11-19 に `npm audit --prefix packages/docs-lint --omit=dev` を実行し、入力と同じ 16 件（low 3・moderate 12・high 1）を確かめた。各依存の解決版と依存元の版指定は `packages/docs-lint/package-lock.json` で調べ、ルートで `markdownlint-cli@0.50.0` が引く版はルートの `package-lock.json` で調べた。修正版は GitHub Advisory Database で確かめた。`npm view` は sandbox で実行できなかったため、レジストリの最新版は調べていない。
+
+### 5.2. 配る依存の直し方
+
+| 依存                                                                                                               | 重大度   | 今の版                 | 直し方                                    | 理由・追跡先                                                                                                                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------ | -------- | ---------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `markdown-it`                                                                                                      | high     | 14.3.2                 | 上げる（`markdownlint-cli` を `^0.50.0`） | `markdownlint-cli@0.50.0` は `markdown-it` を `~15.0.3` で引く（GHSA-vfgh-jcmw-g37q・GHSA-gfr2-rv44-r23c は 14.3.2 以下）。ルートの lock で 15.0.3 に解決されている。                                                                                      |
+| `js-yaml`（`markdownlint-cli` の下）                                                                               | moderate | 5.2.3                  | 上げる（同上）                            | 0.50.0 は `~5.5.0` で引く（GHSA-r3ph-w7gj-g6xm は 5.0.0〜5.4.0）。直接の依存の `js-yaml@5.4.3` は範囲の外。                                                                                                                                                |
+| `smol-toml`                                                                                                        | moderate | 1.7.2                  | 上げる（同上）                            | 0.50.0 は `~1.9.1` で引く（GHSA-r4xh-jqrq-34v2 は 1.8.0 以下）。                                                                                                                                                                                           |
+| `fast-uri`                                                                                                         | moderate | 3.1.8                  | 上げる（lock の解決版を 3.1.9）           | `ajv` の指定 `^3.0.1` の中に修正版 3.1.9 がある。`package.json` は変えず lock だけ更新する。                                                                                                                                                               |
+| `minimatch`（`markdownlint-cli` の下）                                                                             | moderate | 10.2.6                 | 上流待ち                                  | 修正版は 11.0.1 だけ（GHSA-g3hv-75wg-m249、7.0.0〜11.0.0）。`markdownlint-cli@0.50.0` も `~10.2.6` で引く。追跡先は DavidAnson/markdownlint-cli。                                                                                                          |
+| `glob`・`minimatch`（`glob`・`@npmcli/map-workspaces` の下）                                                       | moderate | 10.5.0・9.0.9          | 上流待ち                                  | 修正版は `glob` 14.0.2・`minimatch` 11.0.1 だけ（GHSA-3g3m-2fjr-6pw4、9.0.0〜14.0.1）。`unified-engine`・`@npmcli/map-workspaces`・`@npmcli/package-json` が `glob` を `^10` で引く。追跡先は unifiedjs/unified-engine と npm/cli の `@npmcli/config` 系。 |
+| `unified-engine`・`unified-args`・`remark-cli`・`@npmcli/config`・`@npmcli/package-json`・`@npmcli/map-workspaces` | moderate | 11.2.2 ほか            | 上流待ち（`glob`・`minimatch` に連動）    | 自身の脆弱性ではなく `glob`・`minimatch` 起因。`npm audit fix --force` は `remark-cli@11.0.0` への格下げを示すため使わない。                                                                                                                               |
+| `markdownlint-cli`                                                                                                 | moderate | 0.49.1                 | 上げる（`^0.50.0`）＋上流待ち             | 上げると `js-yaml`・`smol-toml`・`markdown-it` 起因は消え、`minimatch` 起因だけが残る。`npm audit fix --force` の `0.33.0` への格下げは使わない。                                                                                                          |
+| `katex`・`micromark-extension-math`・`markdownlint`                                                                | low      | 0.16.47・3.1.0・0.41.1 | 上流待ち（完了条件の対象外の low）        | 修正版は `katex` 0.18.2（GHSA-238p-pmpm-9mq7）。`micromark-extension-math` が `^0.16.0` で引く。`markdownlint` は構文の `math()` だけを使い、`katex` の描画は呼ばない。追跡先は micromark/micromark-extension-math。                                       |
+
+反映の後に残る見込みは、`minimatch`・`glob` 起因の moderate と `katex` 起因の low で、すべて上流待ちとして上表に記録したもの。ルートの全体の `npm audit` に残るものと同じ。
+
+### 5.3. 変更案
+
+`packages/docs-lint/package.json`:
+
+```diff
+   "dependencies": {
+     ...
+     "js-yaml": "^5.4.3",
+-    "markdownlint-cli": "^0.49.1",
++    "markdownlint-cli": "^0.50.0",
+     "remark": "^15.0.1",
+```
+
+`devDependencies`・`overrides` は変えない。`packages/docs-lint/package-lock.json` は `npm install --prefix packages/docs-lint` の後に `npm update fast-uri --prefix packages/docs-lint` で更新する。
+
+### 5.4. executor が決めた点
+
+1. `overrides` は使わない。publish したパッケージの `overrides` は利用者の環境に効かず、配る依存の audit を直せない。残る `glob`・`minimatch`・`katex` の修正版は依存元の指定と major（0.x では minor）が違い、このリポジトリの lock だけに強制すると `remark-cli`・`markdownlint` の動作を保証できない。
+2. `fast-uri` はルートと違い `overrides` でなく lock の更新にする。利用者は `ajv` の `^3.0.1` で修正版を解決でき、`package.json` に書く必要がない。
+3. コードの変更は要らないと判断した。markdownlint 0.42 も `parser` を持たないカスタムルールに `params.tokens`（markdown-it のトークン）を渡す。ルールの単体テスト `tests/packages/docs-lint/markdownlint-rule-no-chinese-glyphs.test.ts` は、ルートに入っている `markdownlint@0.42.2`・`markdown-it@15.0.3` で動いている。
+4. ルートの `npm run lint:md` は `packages/docs-lint/node_modules/.bin` の `markdownlint` を使うため、反映後は 0.50.0 の規則で全文書を検査することになる。sandbox では実行できなかったため、反映後の `npm run lint:md` で orchestrator が確かめる。
+
+### 5.5. CHANGELOG に書く事項
+
+区分は `変更`。行の文案:
+
+- `@specdojo/docs-lint の markdownlint-cli を 0.50 へ上げ、配る依存の npm audit の high（markdown-it）と moderate（js-yaml・smol-toml・fast-uri）をなくしました。glob・minimatch 起因の moderate は上流の修正を待ちます（PJR-A5FY）。`
 
 ## 6. 関連ドキュメント
 
