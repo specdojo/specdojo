@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qj41-ifx-index-yaml-pages
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-15T09:31:50Z"
+  completed_at: "2026-11-19T12:12:07Z"
+  conclusion: ifx-index の YAML から表形式の閲覧ページを yaml-pages build で生成するようにした
   commit_type: feat
   commit_scope: docs
 ---
