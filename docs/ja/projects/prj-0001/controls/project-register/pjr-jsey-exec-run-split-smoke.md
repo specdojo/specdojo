@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
@@ -119,8 +119,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-11-16 22:53 | PJR-DGRZ | sonnet-executor        |
 | 2026-11-17 12:06 | PJR-MJ8V | sonnet-executor        |
 | 2026-11-17 13:38 | PJR-R7BQ | sonnet-executor        |
+| 2026-11-19 23:07 | PJR-9JN6 | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最も新しく統合された PJR-R7BQ とした（統合コミット `bfa55b5d5`、2026-11-17 13:33 JST。実行時点で `review`）。この worktree の HEAD に含まれることを確認した。実行した executor は `sonnet-executor` である。
+今回の確認対象は、対象一覧のうち最も新しく統合された PJR-9JN6 とした（完了 commit `94418aa1d`、2026-11-18 00:35 JST。実行時点で `review`）。この worktree の HEAD に含まれることを確認した。実行した executor は `sonnet-executor` である。
 
 申し送り: executor が変更した成果物は本個票のみ。親 runner の検証（lint-ts・lint-fm・lint-md・lint-mermaid・lint-d2・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
