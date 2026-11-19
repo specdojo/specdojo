@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d304e38ba6124c67ad8f6c8fc775cc86
+- v: 1
+  id: reg_58355d79826749b49718cef73a2027fe
+  ts: "2026-11-19T22:05:19Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "orchestrator が workflow を反映し、PR #34 の CI と GitHub の設定を API で確かめた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-20"
+    - field: conclusion
+      from: "-"
+      to: "Dependabot・配る依存の audit の関門・CodeQL を入れ、PR #34 で関門と解析が動くことと GitHub の設定を確かめた"
+  previous_event_id: reg_3f8378faf4bd47dba8670c70afd95540

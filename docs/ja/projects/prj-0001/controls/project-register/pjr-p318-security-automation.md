@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-p318-security-automation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-11-18T12:18:15Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T22:05:19Z"
+  conclusion: "Dependabot・配る依存の audit の関門・CodeQL を入れ、PR #34 で関門と解析が動くことと GitHub の設定を確かめた"
   derived_from:
     - PJR-5CTM
   depends_on:
