@@ -119,8 +119,50 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 3. 各対象の個票の対応結果から、見出しの文言「CHANGELOG に書く事項」（Markdown の連番ルールにより `### <n>.<m>. CHANGELOG に書く事項` のように書かれている）を探して集め、区分（追加・変更・不具合修正など）と行の文案を、CHANGELOG の `## [<版>] - <日付>` の節へまとめる。影響が『なし』と残った項目は対象から外す。個別に `## [Unreleased]` へ書かれていた行（旧方）もここへ取り込み、取り込んだ分は `## [Unreleased]` から消す。
 4. 漏れを確かめる。手順 2 で決めた範囲の close 済み項目の個票について、register event の `close` 件数と集めた個票の件数を照合し、未確認の項目が残っていないかを確かめる。また、「なし」以外の文案が書かれた項目がすべて手順 3 の節に漏れなく取り込まれていることを確かめてから、手順 5 の feature ブランチへの commit に進む。
 5. feature ブランチ（`feature/prj-0001/release-v<版>`）で `npm version <版> --no-git-tag-version --ignore-scripts` と、手順 3 でまとめた `## [<版>] - <日付>` の節を commit する。docs-lint に変更があれば、その版も上げる。
-6. そのブランチで `npm ci`（`packages/*` も）をしてから `npm run check` を流す。
+6. そのブランチで `npm ci`（`packages/*` も）をしてから `npm run check` を流す。`npm audit --omit=dev --audit-level=high` も流し、公開の workflow の関門で止まらないことを先に確かめる（「依存とコードのセキュリティ検査」）。
 7. `npm pack` した tarball を空のリポジトリに入れ、`init` と、その版で変えた機能（lefthook、名簿の雛形など）、`register add` と `exec run --register` を確かめる。
 8. feature ブランチを develop へ `--no-ff` で取り込み、PR の本文を作って、push と PR 作成のコマンドを利用者に渡す。
 9. 利用者が PR を merge commit でマージし、タグを付けて push し、`npm stage` で公開を承認する。
 10. npm の `latest`、タグで起動した workflow の結果、npm から入れた版での導入を確かめ、リリースの todo を close する。
+
+## 10. 依存とコードのセキュリティ検査
+
+PJR-P318 で入れた定期の検査と、その扱いである。workflow の定義（`security-audit.yml`・`codeql.yml`）は保護された設定のため、変えるときは利用者の承認のもと feature ブランチで行う。
+
+### 10.1. 検査の一覧
+
+| 検査                      | 設定                                   | いつ流れるか                      | 止めるか                                                   |
+| ------------------------- | -------------------------------------- | --------------------------------- | ---------------------------------------------------------- |
+| 依存の版の更新            | `.github/dependabot.yml`               | 毎週月曜 9:00（Asia/Tokyo）       | 止めない。PR が届く                                        |
+| 脆弱性の修正              | リポジトリの設定（security updates）   | advisory が出たとき               | 止めない。依存ごとの PR が届く                             |
+| 配る依存の audit          | `.github/workflows/security-audit.yml` | PR と `publish-specdojo.yml` の前 | ルートの `npm audit --omit=dev` に high 以上があれば止める |
+| 開発用・packages の audit | 同上                                   | 同上                              | 止めない。結果を workflow の summary に出す                |
+| CodeQL                    | `.github/workflows/codeql.yml`         | PR、`main` への push、毎週月曜    | 止めない。結果は Security タブの code scanning に出る      |
+
+### 10.2. Dependabot の PR の扱い
+
+- PR は既定のブランチ（`main`）へ届く。中身を確かめたら、PR を merge せず、同じ変更を develop 系の feature ブランチで取り込んでから通常の昇格に乗せる。取り込んだ PR は閉じる。
+- 開発用の依存はディレクトリごとに 1 本の PR、GitHub Actions は 1 本の PR にまとまる。配る依存（`dependencies`）の版の更新と脆弱性の修正は依存ごとに届く。
+- `package.json`・`package-lock.json` は保護された設定のため、取り込みは agent の run ではなく orchestrator が行う。取り込んだ後に `npm run check` と `npm audit --omit=dev --audit-level=high` を流す。
+
+### 10.3. audit の関門の例外
+
+上流が直すまで関門が止まり続ける場合だけ、期限付きの例外を足す。
+
+1. 該当の advisory を扱う登録簿項目を起票する（上流の追跡先と、期限までにすることを書く）。
+2. `security-audit.yml` の `AUDIT_EXCEPTIONS` に 1 行足す。書式は `<GHSA-id> <YYYY-MM-DD> <PJR-ID>` で、期限は長くても 30 日とする。
+3. 期限を過ぎると関門は再び止まる。延ばすときは登録簿項目に理由を書き、期限を書き換える。直ったら行を消す。
+
+### 10.4. GitHub の設定（利用者が行う）
+
+リポジトリの Settings の Advanced Security（Code security）で、次を有効にする。
+
+- Dependabot alerts と Dependabot security updates（脆弱性の修正の PR）。grouped security updates は無効のままにし、修正を依存ごとに届かせる。
+- Secret scanning と push protection。push protection で止まった push は、秘密を消してから push し直す。誤検知の場合だけ理由を選んで通す。
+- Private vulnerability reporting（外から脆弱性を知らせてもらう窓口）。
+- CodeQL の default setup は有効にしない。`codeql.yml`（advanced setup）と並べて使えない。
+
+### 10.5. npm publish の provenance
+
+- 公開の workflow は Trusted Publishing（`id-token: write`）を使う。公開リポジトリから Trusted Publishing で公開すると、provenance は自動で付く。
+- staged publishing（`npm stage publish`）でも付くかは確かめていない。公開した版の npm のページに provenance の表示があるかを確かめ、無ければ `npm stage publish` に `--provenance` を足す。
