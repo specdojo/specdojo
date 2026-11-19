@@ -3,7 +3,11 @@ import { basename, join } from "node:path";
 import { createProviderCapacityTracker, loadExecDefaultsConfig } from "../agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
 import { claimOwnerOf, readAllEventFiles, foldEventsToState } from "../events.js";
-import { buildScheduleIndex, findStaleGeneratedTracks } from "../schedule/schedule.js";
+import {
+  buildScheduleIndex,
+  findEditedGeneratedTrackWarnings,
+  findStaleGeneratedTracks,
+} from "../schedule/schedule.js";
 import { buildInitialStateFromStrategy } from "../schedule/initial.js";
 import { scheduleTrackNames } from "../schedule/gantt-chart-scope.js";
 import { readReadySnapshot } from "../schedule/ready.js";
@@ -14,9 +18,9 @@ import { extractLocalId, extractPhaseSuffix } from "../../schedule/phase-sets.js
 import { resolveWorktreeBase } from "../worktree.js";
 import {
   buildPhaseModeIndex,
-  resolveAgentAssignment,
   resolveAgentPipeline,
   resolveApproach,
+  resolveScheduledTaskAgent,
   resolveTaskCapabilities,
   resolveTaskExecution,
   resolveTaskMode,
@@ -121,6 +125,12 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
     if (!tracks.includes(track)) {
       throw new Error(`Unknown schedule track: ${track}. Available tracks: ${tracks.join(", ")}`);
     }
+  }
+
+  // A directly edited track only warns: runs resolve agents from the strategy regardless, and the
+  // same difference also appears after a catalog change that has not been rebuilt yet.
+  for (const warning of findEditedGeneratedTrackWarnings(schedulePath, repoRoot)) {
+    process.stdout.write(`[run] WARN: ${warning}\n`);
   }
 
   const execDefaults = loadExecDefaultsConfig(
@@ -497,15 +507,9 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
         task.phase_suffix,
         task.phase_set,
       );
-    task.agent =
-      task.agent ??
-      resolveAgentAssignment(
-        task.local_id,
-        task.id,
-        phaseModeIndex,
-        task.phase_suffix,
-        task.phase_set,
-      );
+    const agent = resolveScheduledTaskAgent(task, phaseModeIndex);
+    if (agent === undefined) delete task.agent;
+    else task.agent = agent;
   }
 
   // If the task is already in "doing" state and --by is not specified,

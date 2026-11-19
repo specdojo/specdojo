@@ -63,7 +63,31 @@ strategy を正本とする規則に反して track を直接編集しても検�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- track の内容の検出: `src/exec/schedule/schedule.ts` に `findEditedGeneratedTracks` と `findEditedGeneratedTrackWarnings` を足した。strategy を持つ track ごとに `buildScheduleTrack`（`schedule build` と同じ生成）で作り直し、track の `tasks` と `settings` を比べる。違いは `<タスク>: <項目>`（`agent` などの変更）、`<タスク>: missing`、`<タスク>: not generated` で示す。タスクは `id`、`id` がなければ `local_id`・`phase_suffix`・`phase_set`・`cycle`・`iteration` で照合する。警告には track 名・違う項目（10 件まで、残りは件数）・`specdojo schedule build --track <track> --force` を出す。`exec validate`（`validateAll`）と、`exec run --auto` の前（`runBatchMode` の開始時）で出す。track がない・strategy より古い場合は既存の鮮度の警告に任せ、strategy を作り直せない場合は `schedule build` のエラーに任せる。
+- 止めずに警告にとどめた理由: agent は下のとおり実行時に strategy から解決するので、直接直した `agent` が実行に効くことはない。比較では直接の編集と、作り直していないカタログの変更を区別できない。止めると、カタログを変えるたびに `exec refresh` と `exec cycle` の validate が全 track で止まる。
+- agent の解決の順: `src/exec/strategy.ts` に `resolveScheduledTaskAgent` を足した。strategy を持つ track のタスクは、pass の `agent`、`owner_rules[].phase_overrides[].agent`、phase の `agent` の順で解決し、track や ready.json に写った `agent` は使わない。strategy のない track のタスクだけはタスク自身の `agent` を使う。ready の作り直し（`src/exec/schedule/schedule.ts`）・タスクの表示（`src/exec/task-view.ts`）・実行（`src/exec/run/schedule-mode.ts`）の 3 経路をこの関数にそろえた。`--executor-by` / `--reporter-by` が先に効き、指名がなければ自動選択になる順は `src/exec/run/schedule-prepare.ts` のまま変えていない。
+- 設計ガイド: `docs/ja/specdojo/guides/schedule-design-guide.md` の「トラックへ展開する情報」の表に `agent` を足し、展開する理由（plan だけで実行者を確かめられる）と、指名を変えるときは strategy を直して作り直すこと、直接直すと警告することを書いた。agent の解決の順の記述を、`phase_overrides` を含む 1 つの順と 3 経路で同じことに直した。
+
+### 5.2. 確認結果
+
+- 単体テスト: `tests/src/exec/schedule/validation.test.ts`（track を直した場合と直していない場合、`phase_overrides` がある場合とない場合、strategy より古い track）、`tests/src/exec/strategy.test.ts`（`resolveScheduledTaskAgent`：phase の `agent`、`phase_overrides`、strategy に指名がない場合、strategy のない track）、`tests/src/exec/task-view.test.ts`（タスクの表示で track を直した場合と直していない場合、`phase_overrides`）を足し、関連するテストとあわせて通った。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` は親 runner が実行する。
+- 実プロジェクトで `exec validate --schedule-only` を実行すると、`sch-track-planning.yaml` が strategy から作り直した結果と違うと警告した（`sch-defaults-020` の `depends_on`、`tml-index` の 4 タスクが生成されない）。`sch-track-kata-slim-2.yaml` は警告されなかった。
+
+### 5.3. 再発防止策
+
+- track を直接直すと、`exec validate` と `exec run --auto` の前に警告が出る。直した `agent` は実行に使われない。
+
+### 5.4. 迷った点と次のアクション
+
+- `sch-track-planning.yaml` の違いは、本項目の範囲外として作り直していない。`schedule build --track planning --force` で作り直すか、別の項目で扱うかをオーケストレーターが決める。
+- ready の作り直し（`writeGeneratedCore`）と実行（`runManualMode`）の経路は、共通の `resolveScheduledTaskAgent` の単体テストで確かめた。経路ごとの単体テストはタスクの表示だけにした。
+
+### 5.5. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: schedule のタスクの agent を、ready の作り直し・タスクの表示・実行のどれでも strategy の `phase_overrides`・phase の `agent` の順で解決するようにし、track を直接編集したときに `exec validate` と `exec run --auto` が作り直した結果との違いを警告するようにした。
 
 ## 6. 関連ドキュメント
 

@@ -148,14 +148,15 @@ specdojo schedule strategy generate --project <project-id> --track <track> \
 
 `sch-strategy-<track>.yaml`（生成入力）から `sch-track-<track>.yaml`（生成物）への展開では、タスク単位で確定する実行情報だけを展開します。
 
-| 展開する情報       | 理由                                                     |
-| ------------------ | -------------------------------------------------------- |
-| `name`             | 実行者が作業を識別するために必要                         |
-| `description`      | エージェント・人間が実行時に参照するフェーズ指示         |
-| `target_local_ids` | 横断タスクの対象成果物群を plan / commit scope へ渡す    |
-| `owner`            | 誰が実行するかを決定するために必要                       |
-| `duration_days`    | CPM 計算に必要                                           |
-| `depends_on`       | 実行順序の決定に必要。タスク ID に解決済みの形で展開する |
+| 展開する情報       | 理由                                                                                                                  |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `name`             | 実行者が作業を識別するために必要                                                                                      |
+| `description`      | エージェント・人間が実行時に参照するフェーズ指示                                                                      |
+| `target_local_ids` | 横断タスクの対象成果物群を plan / commit scope へ渡す                                                                 |
+| `owner`            | 誰が実行するかを決定するために必要                                                                                    |
+| `duration_days`    | CPM 計算に必要                                                                                                        |
+| `depends_on`       | 実行順序の決定に必要。タスク ID に解決済みの形で展開する                                                              |
+| `agent`            | phase の `agent` と `owner_rules[].phase_overrides[].agent` を解決した指名。plan だけで実行者を確かめられるようにする |
 
 トラック全体に共通する生成ルールや設計意図は strategy に留めます。
 
@@ -165,6 +166,8 @@ specdojo schedule strategy generate --project <project-id> --track <track> \
 | `owner_rules`                     | どの `local_id` を誰が担当するかのルール。トラックには展開しない |
 | `cross_domain_dependencies`       | 依存関係の設計意図。トラックには解決済み `depends_on` として反映 |
 | `phase_gates`・`group_milestones` | 生成ロジック。トラックにはマイルストーンとして展開済み           |
+
+`agent` もトラックへ展開しますが、実行時の解決は strategy を正とし、トラックの値では上書きしません。指名を変えるときは strategy を直し、`schedule build --track <track> --force` で作り直します。トラックを直接直すと、`exec validate` と `exec run --auto` が strategy から作り直した結果との違いを警告します。
 
 `description` をトラックへ展開するのは、エージェントや人間が plan ファイルだけを読んで実行できるようにするためです。strategy を参照させる方式は plan 生成時にファイルが 2 つ必要になり、自己完結性が損なわれます。
 
@@ -320,7 +323,7 @@ phase_sets:
 - pipeline を指定した phase は agent 実行専用です。`execution: human` と併用できません。
 - `mode` と `approach` は phase 全体へ適用し、各 stage の agent 選択要件は stage 内の `capabilities` と `proficiency` で定義します。
 - 通常は `stage_role` と実行要件に一致する member を実行時に自動選択します。provider の利用枠を phase ごとに計画する場合は、phase の `agent.executor` / `agent.reporter` に `.specdojo/agent-members.yaml` の nickname を指定します。
-- `agent` と `agent_pipeline` は併用できます。`--executor-by` / `--reporter-by`、phase の `agent`、stage の `capabilities` / `proficiency` による自動選択の順で解決します。`owner_rules[].phase_overrides[].agent` では成果物単位に指名を上書きできます。
+- `agent` と `agent_pipeline` は併用できます。`--executor-by` / `--reporter-by`、成果物単位に指名を上書きする `owner_rules[].phase_overrides[].agent`、phase の `agent`、stage の `capabilities` / `proficiency` による自動選択の順で解決します。ready の作り直し・タスクの表示・実行のどれでも同じ順で、strategy を持つトラックでは、トラックへ展開した `agent` を使いません（トラックへ展開する情報を参照）。
 - by-name の agent が rate limit になった場合は別 agent へ自動フォールバックせず、タスクを待機状態にします。再開時も同じ agent を使い、緊急の差し替えだけを CLI の stage override で行います。
 - 登録簿の項目（`exec run --register`）は per-item のパイプライン宣言を持たないため、`agent_pipeline` の YAML 定義は使いません。代わりに `--executor-by <nickname>` と `--reporter-by <nickname>` を両方指定すると、同じ executor/reporter 2段階（evidence の受け渡し・result 描画を含む）で実行します。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `exec run` を参照します。
 

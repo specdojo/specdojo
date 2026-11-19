@@ -439,6 +439,27 @@ export function resolveAgentAssignment(
   return undefined;
 }
 
+/**
+ * Resolves the agent pinned on a scheduled task for ready.json, task views and runs alike.
+ * A track generated from a strategy takes the strategy as the source of truth, so the agent copied
+ * into the track (or a cached ready.json) is ignored there: a pass agent, then
+ * `owner_rules[].phase_overrides[].agent`, then the phase agent. Only a task whose track has no
+ * strategy keeps the agent written on the task itself. CLI overrides and auto-selection apply later.
+ */
+export function resolveScheduledTaskAgent(
+  task: {
+    id: string;
+    local_id?: string;
+    phase_suffix?: string;
+    phase_set?: string;
+    agent?: string | AgentAssignment;
+  },
+  index: PhaseModeIndex,
+): string | AgentAssignment | undefined {
+  if (taskTrack(task.id, index) === undefined) return task.agent;
+  return resolveAgentAssignment(task.local_id, task.id, index, task.phase_suffix, task.phase_set);
+}
+
 /** Resolves the optional executor/reporter pipeline declared on a phase. */
 export function resolveAgentPipeline(
   localId: string | undefined,

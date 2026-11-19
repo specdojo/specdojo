@@ -18,6 +18,7 @@ import {
   formatDays,
   listFilesRecursive,
   readJson,
+  readYaml,
   toArtifactPath,
   toScheduleFilePath,
   writeJson,
@@ -44,14 +45,16 @@ import { writeScheduleHashAndDiff } from "./hash.js";
 import { buildInitialStateFromStrategy } from "./initial.js";
 import {
   buildPhaseModeIndex,
-  resolveAgentAssignment,
   resolveAgentPipeline,
   resolveApproach,
+  resolveScheduledTaskAgent,
   resolveTaskCapabilities,
   resolveTaskExecution,
   resolveTaskMode,
   resolveTaskProficiency,
 } from "../strategy.js";
+import { buildScheduleTrack } from "../../schedule/build.js";
+import { specdojoRootDir } from "../../shared/specdojo-config.js";
 
 export type StaleGeneratedTrack = {
   track: string;
@@ -99,6 +102,135 @@ export function findStaleGeneratedTrackWarnings(projectPath: string): string[] {
   );
 }
 
+export type EditedGeneratedTrack = {
+  track: string;
+  strategyFile: string;
+  trackFile: string;
+  // `<task id>: <field>` for a changed field, `<task id>: missing` / `<task id>: not generated`
+  // for a task only on one side, and `settings` for the track settings.
+  differences: string[];
+};
+
+function normalizeYamlValue(value: unknown): unknown {
+  return JSON.parse(JSON.stringify(value ?? null)) as unknown;
+}
+
+function asRecordList(value: unknown): Record<string, unknown>[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (item): item is Record<string, unknown> =>
+      typeof item === "object" && item !== null && !Array.isArray(item),
+  );
+}
+
+// Phase tasks carry no explicit id in the track; identify them the same way the schedule index
+// does (local_id + phase suffix), qualified by phase set and cycle so repeated phases stay apart.
+function taskKey(task: Record<string, unknown>, index: number): string {
+  if (typeof task.id === "string" && task.id) return task.id;
+  if (typeof task.local_id !== "string" || !task.local_id) return `tasks[${index}]`;
+  const parts = [`${task.local_id}-${String(task.phase_suffix ?? "")}`];
+  if (task.phase_set !== undefined) parts.push(`phase_set=${String(task.phase_set)}`);
+  if (task.cycle !== undefined) parts.push(`cycle=${String(task.cycle)}`);
+  if (task.iteration !== undefined) parts.push(`iteration=${String(task.iteration)}`);
+  return parts.join(" ");
+}
+
+function diffTrackTasks(generated: unknown, actual: unknown): string[] {
+  const expectedTasks = new Map(asRecordList(generated).map((t, i) => [taskKey(t, i), t]));
+  const actualTasks = new Map(asRecordList(actual).map((t, i) => [taskKey(t, i), t]));
+  const differences: string[] = [];
+  const ids = [...new Set([...expectedTasks.keys(), ...actualTasks.keys()])].sort();
+  for (const id of ids) {
+    const expected = expectedTasks.get(id);
+    const current = actualTasks.get(id);
+    if (!current) {
+      differences.push(`${id}: missing`);
+      continue;
+    }
+    if (!expected) {
+      differences.push(`${id}: not generated`);
+      continue;
+    }
+    const fields = [...new Set([...Object.keys(expected), ...Object.keys(current)])].sort();
+    for (const field of fields) {
+      if (JSON.stringify(expected[field]) !== JSON.stringify(current[field])) {
+        differences.push(`${id}: ${field}`);
+      }
+    }
+  }
+  return differences;
+}
+
+// Detect generated tracks whose content no longer matches what `schedule build` would produce from
+// the strategy (and catalogs), such as a direct edit of the track. Tracks that are missing or older
+// than their strategy are reported by findStaleGeneratedTracks instead, and a strategy that cannot be
+// built is left to `schedule build` to report, so this detector never duplicates those messages.
+export function findEditedGeneratedTracks(
+  projectPath: string,
+  baseDir: string = specdojoRootDir(),
+): EditedGeneratedTrack[] {
+  const staleTracks = new Set(findStaleGeneratedTracks(projectPath).map((stale) => stale.track));
+  const files = listFilesRecursive(projectPath);
+  const trackFiles = new Map<string, string>();
+  for (const file of files) {
+    const match = basename(file).match(/^sch-track-(.+)\.yaml$/);
+    if (match) trackFiles.set(match[1], file);
+  }
+
+  const edited: EditedGeneratedTrack[] = [];
+  for (const strategyFile of files) {
+    const match = basename(strategyFile).match(/^sch-strategy-(.+)\.yaml$/);
+    if (!match) continue;
+    const track = match[1];
+    const trackFile = trackFiles.get(track);
+    if (!trackFile || staleTracks.has(track)) continue;
+
+    let generated: ReturnType<typeof buildScheduleTrack>;
+    try {
+      generated = buildScheduleTrack(strategyFile, baseDir);
+    } catch {
+      continue;
+    }
+    if (generated.errors.length > 0) continue;
+
+    const actual = readYaml(trackFile);
+    if (typeof actual !== "object" || actual === null || Array.isArray(actual)) continue;
+    const actualDoc = actual as Record<string, unknown>;
+
+    const differences = diffTrackTasks(normalizeYamlValue(generated.tasks), actualDoc.tasks);
+    const expectedSettings =
+      generated.startDate !== null ? { start_date: generated.startDate } : {};
+    if (
+      JSON.stringify(normalizeYamlValue(expectedSettings)) !==
+      JSON.stringify(normalizeYamlValue(actualDoc.settings ?? {}))
+    ) {
+      differences.push("settings");
+    }
+    if (differences.length > 0) edited.push({ track, strategyFile, trackFile, differences });
+  }
+
+  return edited.sort((a, b) => a.track.localeCompare(b.track));
+}
+
+const MAX_REPORTED_TRACK_DIFFERENCES = 10;
+
+export function findEditedGeneratedTrackWarnings(
+  projectPath: string,
+  baseDir: string = specdojoRootDir(),
+): string[] {
+  return findEditedGeneratedTracks(projectPath, baseDir).map((edited) => {
+    const shown = edited.differences.slice(0, MAX_REPORTED_TRACK_DIFFERENCES);
+    const rest = edited.differences.length - shown.length;
+    return (
+      `${basename(edited.trackFile)} (track ${edited.track}) differs from the result rebuilt from ` +
+      `${basename(edited.strategyFile)} (direct edit, or a catalog change not rebuilt yet; ` +
+      `change the strategy instead of the track): ` +
+      `${shown.join(", ")}${rest > 0 ? ` (+${rest} more)` : ""}. ` +
+      `Run: specdojo schedule build --track ${edited.track} --force`
+    );
+  });
+}
+
 export function validateAll(projectPath: string): ValidateResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -110,6 +242,7 @@ export function validateAll(projectPath: string): ValidateResult {
     warnings.push(`No schedule nodes loaded from sch-*.yaml under: ${projectPath}`);
   }
   warnings.push(...findStaleGeneratedTrackWarnings(projectPath));
+  warnings.push(...findEditedGeneratedTrackWarnings(projectPath));
 
   for (const node of schedule.nodes.values()) {
     for (const dep of node.depends_on) {
@@ -383,14 +516,9 @@ export function writeGeneratedCore(
       task.phase_set,
     );
     if (agentPipeline !== undefined) task.agent_pipeline = agentPipeline;
-    const agent = resolveAgentAssignment(
-      task.local_id,
-      task.id,
-      phaseModeIndex,
-      task.phase_suffix,
-      task.phase_set,
-    );
-    if (agent !== undefined) task.agent = agent;
+    const agent = resolveScheduledTaskAgent(task, phaseModeIndex);
+    if (agent === undefined) delete task.agent;
+    else task.agent = agent;
   }
   writeReadyFiles(projectPath, readySnapshot);
 
