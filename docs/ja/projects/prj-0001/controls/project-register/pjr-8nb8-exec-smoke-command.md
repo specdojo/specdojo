@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-8nb8-exec-smoke-command
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-11-17T12:21:33Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T14:12:23Z"
+  conclusion: exec smoke を足し、JSEY の手順（対象の追記・開き直し・worktree 実行・start と review の確認）を 1 つのコマンドで流せるようにした
   derived_from:
     - PJR-JSEY
   commit_type: feat

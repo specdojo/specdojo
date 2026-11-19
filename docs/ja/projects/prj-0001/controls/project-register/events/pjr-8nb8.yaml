@@ -153,3 +153,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2b65ce14bbeb4e7d9c9a404bb610fbbf
+- v: 1
+  id: reg_feceffae8b5e4bc9be51a3d97ddf3231
+  ts: "2026-11-19T14:12:23Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分と個票で確かめ、統合の後に exec smoke と実際の run で動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: exec smoke を足し、JSEY の手順（対象の追記・開き直し・worktree 実行・start と review の確認）を 1 つのコマンドで流せるようにした
+  previous_event_id: reg_18f87095779642dcb1b3b8a0834158a2
