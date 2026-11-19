@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "task_id": "T-KATA-SLIM-2-dct-index-040",
+  "run_id": "T-KATA-SLIM-2-dct-index-040-20261118T114948Z-58cb7210",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "rate_limited",
+    "started_at": "2026-11-18T13:28:15.151Z",
+    "completed_at": "2026-11-18T13:28:43.891Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../result.md                                      | 25 ++++--\n docs/ja/specdojo/rulebooks/dct-index-rulebook.md   | 89 +++++++++-------------\n 2 files changed, 56 insertions(+), 58 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/runs/schedule/T-KATA-SLIM-2-dct-index-040/T-KATA-SLIM-2-dct-index-040-20261118T114948Z-58cb7210/executor.attempt-2.log",
+      "bytes": 25095,
+      "truncated": false
+    }
+  ]
+}

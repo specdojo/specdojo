@@ -1,0 +1,21 @@
+`dct-index-rulebook.md` から共通の運用の記述を外し、F001 も直しました。検証は親 runner に任せていて、こちらでは prettier の整形だけ実行し、エラーは出ていません。
+
+**大きさ**: 空白を除いた文字数（表の区切り行を除く）は 5,209 字から 4,202 字になり、約 80.7% です。目安の 8 割をわずかに上回っています。
+
+**主な変更点**
+
+- **外した記述**:
+  - 5.4 の ARC・QE・PM の役割の段落と、影響確認の記録の段落（`担当 Role code` の列を含む）。
+  - 改訂・廃止はメタ情報標準を参照するという文。
+  - `status` の意味をメタ情報標準へ委ねるという但し書き。
+  - 第 2 章の用語の表。中身が全体方針と本文要件の言い直しだったためです。
+- **足した記述**: 全体方針に「共通の運用」を 1 項目置きました。役割は適用先のメンバー定義、`status` の昇格と承認・改訂と廃止・未決事項の引き継ぎはドキュメントメタ情報標準を参照する形で、sld と同じ書き方です。
+- **章名の変更**: 第 2 章を「位置づけと用語定義」から「位置づけ」にしました。用語の表を外したためで、rulebook 作成標準の「用語定義が不要な場合は章を `位置づけ` とする」に当たります。ほかの章名と必須の区分は変えていません。
+- **重複の整理**: 全体方針・本文要件・記述ガイド・良い例と悪い例の表のあいだで同じことを書いていた文を、1 か所にまとめるか削りました。型固有の判断基準、良い例・悪い例、禁止事項（8 行すべて）は残しています。
+- **F001 の修正**: 5.1 に、規模ごとの成果物セットはカタログ template（`dct-*-template.yaml`）の `min_size` で決まることを書きました。scaffold は `min_size` が `size` 以下か未指定のものを取り込みます。この挙動は `src/catalog/scaffold.ts` と `dct.schema.yaml` で確かめました。あわせて、出どころのない「変更理由を実行記録へ残す」を外しました。
+
+recipe は `not-needed`、template ファイルはなく、sample に運用の記述はないので変えていません。共通の正本へ足すべき記述もありません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`dct-index-rulebook.md` から役割の段落、改訂・廃止の参照、`担当 Role code` の列と記録の段落、用語の表、重複した記述を外した。全体方針に「共通の運用」を 1 項目置き、F001 は 5.1 にカタログ template の `min_size` による規模の比べ方を書いて直した。空白を除いた文字数（表の区切り行を除く）は 5,209 字から 4,202 字（約 80.7%）。第 2 章は用語の表を外したため「位置づけと用語定義」から「位置づけ」に変えた（rulebook 作成標準の規定による）。ほかの章名と必須の区分は変えていない。","handoff":["result の大きさ欄へ: 空白を除いた文字数（表の区切り行を除く）は編集前 5,209 字、編集後 4,202 字（約 80.7%）。","result の章の変更欄へ: 第 2 章を「位置づけと用語定義」から「位置づけ」にした。用語の表が全体方針と本文要件の言い直しで、rulebook-authoring-standard の「用語定義が不要な場合は章を `位置づけ` とする」に当たるため。ほかの章名と必須の区分は変えていない。","F001 の対応: 5.1 に、`size` ごとの成果物セットはカタログ template（`docs/ja/specdojo/templates/dct-*-template.yaml`）の章と成果物の `min_size` で決まり、scaffold は `min_size` が `size` 以下か未指定のものを取り込むことを書いた。根拠は `src/catalog/scaffold.ts` の `meetsSize` と `docs/specdojo/schemas/v1/dct.schema.yaml` の `min_size`。","recipe は `not-needed`、`dct-index-template.yaml` は存在せず、`dct-index-sample.yaml` に役割・承認の運用記述はないため、recipe・template・sample の変更案はない。共通の正本（document-metadata-standard）への追記案もない。"],"validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/dct-index-rulebook.md","status":"passed","summary":"整形を適用した。エラーなし"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"YAML の変更なし","reason":"変更したのは Markdown の rulebook だけで、`*.yaml` は変えていない"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"履歴ファイルの変更なし","reason":"plan・result・個票を変えていない"}]}
+</specdojo_executor_evidence>
