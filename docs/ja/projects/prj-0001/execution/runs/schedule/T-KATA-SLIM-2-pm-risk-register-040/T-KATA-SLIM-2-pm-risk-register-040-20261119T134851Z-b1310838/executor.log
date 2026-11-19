@@ -1,0 +1,38 @@
+リスク登録簿の rulebook（`docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md`）を直しました。ただし大きさは 8 割以下の目安に届かず、逆に増えています。空白と表の区切り行を除いた文字数で、前は 1,296 字、後は 1,846 字（142%）です。元の rulebook に外せる運用の記述がほとんどなく、指摘への対応と、個票から生成する位置づけの説明を足したためです。同じ段の課題ログの rulebook も同じ理由で 123% に増えています。
+
+**外したもの**
+- 用語の表（`pm-plan`・`pm-risk-register`・`pm-issue-log` の説明の言い直し）。第 2 章の名前は「位置づけと用語定義」から「位置づけ」に変えました。
+- Frontmatter の表（`status` の値の列挙を含む）。代わりにドキュメントメタ情報標準を参照する 1 項目にしました。
+
+**足したもの**
+- 全体方針に「共通の運用」の 1 項目。
+- 位置づけ（指摘 F013・F014・F005）: 登録簿を使うプロジェクトでは、リスク 1 件を `item_type: risk` の個票に書き、`register build` が一覧を生成します。生成物の rulebook は `specdojo:pjr-rulebook` とし、直接編集しません。顕在化したリスクは課題ログへ、計画の変更が要るものは変更要求ログへ起票します。
+- 記述ガイド:
+  - 優先度とステータスは登録簿の `priority`・`item_status` の値を使う（F007）。
+  - 発生確率と影響度の組み合わせから優先度を決める対応表を書く（F011）。
+  - 対応策に期限と完了条件を書き、受容する場合は判断した者と許容する残存影響を書く（F001・F003）。
+  - 見直しが行われなかったときの連絡先を書く（F017）。
+  - 関連ドキュメントに、影響を受ける成果物と、リスクから起票した課題・変更要求を書く（F004）。
+- 禁止事項に 2 行: 顕在化したリスクを課題として起票せず放置すること、生成された `pm-risk-register.md` を直すこと。
+
+**変えていないもの**
+- 本文の 6 章の章名と必須の区分。既存の成果物との対応を保つためです。
+- 成果物本体、template、sample。
+
+**検証**
+- prettier は通りました（rulebook 1 ファイルが対象）。
+- `npm run validate:history-links` は、この段で plan・result・個票を変えていないため対象外です。
+- lint などの残りの検査は、このあと runner が実行します。
+
+**result に回すこと**
+- 大きさの前後と、増えた理由。
+- 章名「推奨 Frontmatter 項目」は変えていません（F015）。
+- template の Frontmatter は rulebook として `specdojo:pjr-rulebook` を指しており、本書を指していません。template の宣言を分けるかは template の段で決める変更案です。
+- sample の変更案として、優先度とステータスの値を登録簿の値にそろえることと、優先度の対応表・完了条件・連絡先を足すことを渡します。
+- F002・F008・F009・F010・F016 は共通の運用（メンバー定義とドキュメントメタ情報標準）とリポジトリの検証で扱うため、本書には足していません。
+- F006 は冒頭文に、回避する業務上の影響（納期・品質）を書いて対応しました。
+- 共通の正本への追記と、保護された設定の変更は不要でした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"pm-risk-register-rulebook を直した。用語の表と Frontmatter の表を外し、共通の運用を参照する 1 項目を置いた。登録簿から生成する位置づけ（pjr-rulebook）と、評価・対応・監視の判断基準を足した。章名と必須の区分は変えていない（第 2 章の名前だけ『位置づけ』に変えた）。大きさは 1,296 字から 1,846 字（142%）で、8 割の目安を超えた。","handoff":["大きさ: 空白と表の区切り行を除いた文字数で、前 1,296 字、後 1,846 字（142%）。8 割の目安を超えた。理由は、元の rulebook に外す記述がほとんどなく（外せたのは用語の表と Frontmatter の表だけ）、F001・F003〜F005・F007・F011・F013・F014・F017 の対応と、登録簿から生成する位置づけの節を足す必要があったため。","章名と必須の区分は変えていない。第 2 章の名前を『位置づけと用語定義』から『位置づけ』に変え、用語の表（`pm-plan`・`pm-risk-register`・`pm-issue-log` の言い直し）を外した。F015 の章名『推奨 Frontmatter 項目』は、既存の成果物との対応を保つため変えていない。章の中身はドキュメントメタ情報標準への参照にした。","F013・F014: rulebook 側では、登録簿を使うプロジェクトでは `item_type: risk` の個票から `register build` が生成し、生成物は `rulebook: specdojo:pjr-rulebook` とし直接編集しないと位置づけに書いた。template（`specdojo:pm-risk-register-template`）が派生ビューである点とは矛盾しなくなった。template の宣言を単独の登録簿用と生成ビュー用に分けるかは、template を対象とする段で判断する（変更案）。","sample の変更案（この段の対象外）: (1) 優先度とステータスを登録簿の `priority`・`item_status` の値にそろえる。(2) 評価基準に、発生確率と影響度の組み合わせから優先度を決める対応表を置く。(3) 対応計画に期限・完了条件と、受容する場合の判断者・残存影響を書く。(4) モニタリングに、見直しが行われなかったときの連絡先を書く。","F001・F002・F008・F016: 承認・公開・ready への昇格・役割の区別は、共通の運用（メンバー定義とドキュメントメタ情報標準）に任せた。リスク固有の意思決定者として、再評価を判断する者と受容を判断した者を書かせる形にした。F009・F010: 改訂の手順と文書の検査は、共通の正本とリポジトリの検証で扱うため、rulebook には足していない。F006: 冒頭文に、回避する業務上の影響（納期・品質）を書いた。","共通の正本への追記は不要と判断した。保護された設定の変更も不要だった。"],"validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npm run validate:history-links","status":"not_applicable","summary":"No history file changed by executor","reason":"executor は plan・result・個票などの履歴ファイルを変更していない（変更は rulebook のみ）"}]}
+</specdojo_executor_evidence>
