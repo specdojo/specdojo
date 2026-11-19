@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7370140ff77e4e05915fb2b6fdd73483
+- v: 1
+  id: reg_e989ca6f3ce949eaa818c6031878a1f7
+  ts: "2026-11-19T14:44:53Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が文書サイトの表示をブラウザで確かめ、close を決めた（2026-11-19）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-19"
+    - field: conclusion
+      from: "-"
+      to: YAML が正本の文書の表示ページを表形式にし、YAML の正本を折りたたみで添えるようにした
+  previous_event_id: reg_65feaa1771054d07a1a8f21b72732c20

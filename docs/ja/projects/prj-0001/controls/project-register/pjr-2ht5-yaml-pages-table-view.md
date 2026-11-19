@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2ht5-yaml-pages-table-view
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-17T22:38:22Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-19T14:44:53Z"
+  conclusion: YAML が正本の文書の表示ページを表形式にし、YAML の正本を折りたたみで添えるようにした
 ---
 
 # PJR-2HT5 YAML が正本の文書を、VitePress で表＋YAML 正本（折りたたみ）の形で表示する
