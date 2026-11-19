@@ -1,0 +1,42 @@
+レビューの判定は **`complete-with-findings`** です。Job Run は統合できます。成果物と result ファイルは変更していません。
+
+**評価結果の鮮度**
+- `grade list --target kata --project prj-0001` を `--changed-only` で実行した出力に、今回の 15 件は 1 件も含まれません。`--dependency-changed` と `--incomplete` の出力は空でした。
+- `grade state --exhausted` の出力も空です。上限に達した文書はありません。
+
+**判断根拠**
+- **出力範囲:** `e32d007..a6f6b17` の差分は 22 ファイルで、すべてこの Run の出力です。
+  - 内訳は、採点結果ファイル（`grade/results/specdojo.*-recipe.yaml`）15 件の変更、Run JSON の追加、Run ディレクトリの記録 6 件（plan / result / evidence / pipeline-state / stdout / stderr）の追加です。
+  - recipe などの型そのものの変更や、対象外の変更はありません。
+- **記録の整合:**
+  - Run JSON は `state: succeeded`、`exit_code: 0`。
+  - pipeline-state は executor・reporter とも `succeeded`。
+  - evidence の `job-command` は `passed`（exit 0）。
+  - result.md は `status: complete`。
+  - 4 つの記録は互いに矛盾しません。result.md の変更ファイル表は採点結果ファイル 15 件と Run JSON の 16 件で、evidence の `changes` と一致します。
+- **未完了・失敗:** ありません。
+  - stdout に `graded:` が 15 行あり、選択上限の 15 件と一致します。
+  - `resumed complete:` / `retry exhausted:` の行はありません。
+  - stderr に `grade run incomplete:` / `grade run stopped by rate limit:` の行はありません。
+  - 終了コードは 75 でも 2 でもないので、`partial` には当たりません。
+- **評価に使った agent:** コマンドは `--by agy-expert-executor` ですが、採点結果ファイルの `graded_by` は `flash-high-executor` です。`.specdojo/agent-members.yaml` で `agy-expert-executor` は `alias_of: flash-high-executor` と定義されているので、問題ありません。
+- **verdict と score の分布:**
+  - 15 件すべて `pass` で、score は 90〜100（100 が 7 件、97〜98 が 7 件、cpd-recipe が 90）。
+  - finding は計 13 件ですべて minor です（cpd 7、bes・bps・cdfd-overview・cdfd・ifd・pm-members が各 1）。
+  - 前回と比べて改善しています。cpd は 85 から 90 になり finding が 12 件から 7 件に、pm-members は finding が 9 件から 1 件に減りました。
+  - すべての採点結果ファイルに `reference: specdojo:prj-overview-recipe` が加わっています。`--reference-per-kind` の効果と見られます。
+
+**finding と改善指示（統合は妨げない）**
+1. 採点の finding は 13 件すべて minor で、`blocker` / `major` は 0 件です。このタスクの完了は妨げません。手直しの候補は cpd-recipe の 7 件（`vp-po-purpose-alignment`、`vp-dev-testability`、`vp-qe-verifiability` など）です。
+2. stderr に `grade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta` が 7 回出ています。7 回の `grade list` が、それぞれ同じ理由でこのファイルを飛ばしたものと見られます。採点の失敗ではありません。ただし、この sample は型の評価からずっと漏れ続けるため、ルートの `type` か `x-spec-meta` を足すかどうかを登録簿で扱うよう勧めます。
+3. `--changed-only` の対象はまだ 216 件残っています。上限 15 件の Run が順に片付ける前提の想定内の残りですが、今後も Run が続く必要があります。
+4. score が 90 以上に集中し、全件 `pass` です。評価が甘い方へ偏っている可能性はありますが、1 回の Run からは判断できません。採点し直してはいません。
+
+**確認できなかった範囲**
+- 選択に使った `logs/grade/jobs/JBR-grade-kata-0514d1283804/selection.txt` は commit に含まれず、中身を見ていません。
+- `bes`・`bps`・`cdfd*`・`ifd`・`pm-communication-plan` などの採点結果ファイルは、stat 以外の差分を細かく読んでいません。`graded:` 行の verdict・score・finding 件数と照らし合わせただけです。
+- result.md は Run JSON の行数を「+61」としていますが、commit の差分は +64 行です。evidence を作った後に Run JSON が最終状態に更新されたためと見られ、確認はしていません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Job Run（succeeded、exit 0）を統合できる。差分 e32d007..a6f6b17 は22ファイルで、採点結果ファイル `grade/results/specdojo.*-recipe.yaml` 15件の変更、Run JSON の追加、Run ディレクトリの記録6件の追加だけからなり、対象外の変更はない。stdout に `graded:` が15行（全件 pass、score 90〜100、100が7件、finding はすべて minor の計13件で cpd-recipe が7件）。`retry exhausted:`・`resumed complete:`・`grade run incomplete:`・rate limit の行はなく、未完了・失敗した文書はない。鮮度: `grade list --target kata --project prj-0001` の `--changed-only` 出力に15件は含まれず、`--dependency-changed`・`--incomplete`・`grade state --exhausted` の出力は空。`--by agy-expert-executor` は agent-members.yaml で `alias_of: flash-high-executor` と定義され、`graded_by` と整合する。Run JSON・pipeline-state・evidence・result.md の状態は互いに整合する。finding（統合は妨げない）: (1) 採点の minor finding 13件、手直し候補は cpd-recipe の7件、(2) stderr に `docs/ja/specdojo/samples/job-sequence.yaml` が metadata type を持たないため skipped と7回出ている（7回の `grade list` によるものと見られ、採点の失敗ではない）、(3) `--changed-only` の対象が216件残り、上限15件の Run を続ける必要がある、(4) 全件 pass・score 90以上への集中は評価が甘い方への偏りの可能性があるが、1回の Run では判断できない。確認できなかった範囲: commit に含まれない `logs/grade/jobs/JBR-grade-kata-0514d1283804/selection.txt` の中身、cpd・bac・pm-members 以外の採点結果ファイルの差分の詳細（`graded:` 行との照合のみ）、result.md の Run JSON の行数（+61）と commit の差分（+64）のずれの原因（evidence 作成後の Run JSON 更新と見られるが未確認）。","handoff":["`docs/ja/specdojo/samples/job-sequence.yaml` は、ルートの metadata type も `x-spec-meta` もないため型の grade の対象から外れ続けている。付与するかどうかを登録簿で判断する。","cpd-recipe に minor finding が7件残っている（`vp-po-purpose-alignment`、`vp-dev-testability`、`vp-qe-verifiability` など）。手直しするかどうかを判断する。","`--changed-only` の対象が216件残っている。上限15件の Run を続ける必要がある。"],"validations":[{"command":"git diff --name-status e32d00785460b9cc6227a831a39d70af557cc13b..a6f6b173e6d9b8521fa64c9de31c75dbf828311e","status":"passed","summary":"22ファイル。採点結果ファイル15件の変更、Run JSON の追加、Run ディレクトリの記録6件の追加で、対象外の変更なし"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"216件を出力。今回採点した15件はいずれも含まれず、最新である"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"出力なし"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし。評価パイプラインの未完了はない"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし。retry exhausted の文書はない"}]}
+</specdojo_executor_evidence>
