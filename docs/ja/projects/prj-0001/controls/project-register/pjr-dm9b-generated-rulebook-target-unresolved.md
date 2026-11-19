@@ -62,7 +62,39 @@ kind: generated の成果物はカタログに rulebook を宣言していても
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 原因
+
+`src/kata/kata.ts` の `resolveKataRefs` は、`targetKind` が `generated` だと rulebook の宣言を見ずに 4 種の参照をすべて `_MISSING_` にする。生成物は CLI が作るので実践の型を参照しない、という前提の短絡である。plan 生成（`src/exec/plans-generation.ts` の edit・review plan）、`targets` の組み立て（`src/exec/plans-core.ts` の `targetDocIds`）、review の前段の grade 対象（`reviewGradeSubject`）、`rulebookIncludesText`、improve-kata の段の review 対象（`src/exec/review-kata.ts`）は、成果物の kind をそのまま渡していた。そのため、型そのものを整備する段でも短絡が効き、編集対象が `_MISSING_`・`unresolved` になった。plan の frontmatter の `rulebook: none` は plan 自身の rulebook を表す固定値で、原因ではない。
+
+### 5.2. 解決内容
+
+- `src/exec/plans-core.ts` に `kataRefTargetKind` と `deliverableKataRefs` を加えた。approach が型の整備の段（`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance`）のときだけ、`generated` の短絡を外して宣言どおりに解決する。
+- edit・review plan の参照と `rulebookIncludesText`、`targetDocIds`、`reviewGradeSubject` は、上の関数を通して解決する。
+- `src/exec/review-kata.ts` の improve-kata・bootstrap-kata-set の段の review 対象も、`generated` の短絡を外して解決する。この段は型そのものを評価するためである。
+- `resolveKataRefs` の既定の動き（`generated` は `_MISSING_`）は変えていない。rulebook を宣言しない `generated` と、`kind: work` の成果物の結果、型の整備以外の段での `generated` の結果も変わらない。
+- 保護された設定は変えていない。
+
+### 5.3. 判断した点
+
+- 対象の段は、型の整備の 4 つの maintenance に限った。authoring・bootstrap・bootstrap-finalize は新しく型を作るか、成果物と型を合わせて確定する段である。`generated` の成果物では CLI が生成物を作るので、広げると生成物を agent が書く plan になりうるからである。必要になれば別の項目で扱う。
+- `resolveKataRefs` そのものは変えず、approach を知る plan 側で分けた。`schedule` の kata 判定（`src/schedule/approach.ts` が `generated` を `not-needed` とする扱い）など、approach を持たない呼び出し側の結果を変えないためである。
+- `findUniqueDeliverableForKataTarget`（register の型の整備で、型から成果物を逆に引く処理）は変えていない。`generated` を含めると、`specdojo:pjr-rulebook` のように `kind: control` の成果物と同じ rulebook を宣言する場合に一意でなくなり、今の結果が変わるからである。
+
+### 5.4. 確認結果
+
+- `tests/src/exec/plans-generated-kata.test.ts` を加えた。kata-slim-2 の 4 件（pjr-index・pm-issue-log・pm-risk-register・pm-change-request-log）と同じ形の fixture（`kind: generated` で rulebook を宣言）を使う。rulebook-maintenance の edit plan が `docs/ja/specdojo/rulebooks/<id>.md`・`existing` を示し、`targets` に rulebook を含むことを確かめる。review plan が rulebook を示すことも確かめる。
+- 同じテストで、rulebook を宣言しない `generated` が今までどおり `_MISSING_`・`unresolved` のままであること、`kind: work` の解決と、型の整備以外の段での `generated` の `targets` が変わらないことを確かめる。
+- 関連する既存テスト（`tests/src/exec/plans.test.ts`、`tests/src/kata/`）は通った。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` は親の runner が実行する。
+- 止まっている 4 件の流し直しは、統合の後に orchestrator が行う。
+
+### 5.5. 再発防止策
+
+型の整備の段かどうかで参照の解決を分ける判断を `kataRefTargetKind` の 1 か所にまとめ、plan 生成の呼び出し側はそこを通す。上のテストで、`generated` の宣言ありと宣言なしの両方の結果を固定した。
+
+### 5.6. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 行の文案: `kind: generated` の成果物がカタログで rulebook を宣言しているとき、rulebook-maintenance などの型の整備の段の plan が、編集対象の型を `_MISSING_`（unresolved）にせず宣言どおりに解決するようにした（PJR-DM9B）。
 
 ## 6. 関連ドキュメント
 

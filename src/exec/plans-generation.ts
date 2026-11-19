@@ -3,7 +3,7 @@ import { expandPlanConventions } from "../shared/plan-conventions.js";
 import { dirname, resolve } from "node:path";
 import type { CriteriaItem } from "../catalog/types.js";
 import { isAuthoringApproach, type AuthoringKind } from "../kata/authoring.js";
-import { resolveDeliverableSchemaRef, resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import { resolveDeliverableSchemaRef, type KataRefs } from "../kata/kata.js";
 import { registerInputSection } from "../register/input.js";
 import { isPlanningApproach } from "../register/planning.js";
 import type { ReviewGradeOutcome } from "../review/grade.js";
@@ -18,6 +18,7 @@ import {
   deliverableBasedOn,
   deliverableBrief,
   deliverableDependsOn,
+  deliverableKataRefs,
   deliverableName,
   deliverableOverview,
   deliverablePath,
@@ -34,6 +35,7 @@ import {
   implementationEvidence,
   injectCommonConventions,
   kataRefState,
+  kataRefTargetKind,
   loadPlanTemplate,
   loadRoles,
   loadViewpoints,
@@ -103,9 +105,7 @@ function buildEditPlanMarkdown(
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
   const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap, deliverable?.deliverable.rulebook);
-  const refs =
-    planOverrides?.refs ??
-    resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const refs = planOverrides?.refs ?? deliverableKataRefs(deliverable, task.approach);
   const usesOptionalImplementationEvidence =
     task.approach === "draft" ||
     task.approach === "fully-guided" ||
@@ -142,7 +142,7 @@ function buildEditPlanMarkdown(
     _RULEBOOK_STATE_: kataRefState(refs.rulebook),
     _RULEBOOK_INCLUDES_: rulebookIncludesText(
       deliverable?.deliverable.rulebook,
-      deliverable?.deliverable.kind,
+      kataRefTargetKind(deliverable?.deliverable.kind, task.approach),
     ),
     _RECIPE_REF_: refs.recipe,
     _RECIPE_STATE_: kataRefState(refs.recipe),
@@ -277,7 +277,7 @@ function buildReviewPlanMarkdown(
     ...(targets.length > 0 ? { targets } : {}),
   };
 
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const refs = deliverableKataRefs(deliverable, task.approach);
   const applicableCriteria = applicableReviewCriteria(
     criteria,
     vpMap,
@@ -301,7 +301,7 @@ function buildReviewPlanMarkdown(
     _RULEBOOK_REF_: refs.rulebook,
     _RULEBOOK_INCLUDES_: rulebookIncludesText(
       deliverable?.deliverable.rulebook,
-      deliverable?.deliverable.kind,
+      kataRefTargetKind(deliverable?.deliverable.kind, task.approach),
     ),
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
