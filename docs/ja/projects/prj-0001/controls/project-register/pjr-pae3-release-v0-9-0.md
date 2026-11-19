@@ -12,6 +12,7 @@ specdojo:
   difficulty: medium
   owner: PO
   registered_at: "2026-11-19T12:48:18Z"
+  due_on: "2026-11-30"
   depends_on:
     - PJR-DM9B
     - PJR-8Z71
