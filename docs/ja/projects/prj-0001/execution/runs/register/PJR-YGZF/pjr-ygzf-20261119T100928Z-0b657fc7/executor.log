@@ -1,0 +1,26 @@
+実装は終わりました。直接編集された track を検出するようにし、どの経路でも schedule のタスクの agent が同じ順で決まるようにしました。私が実行した検査は通っています。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`・`npm run test:integration` はまだ実行しておらず、親 runner が実行します。
+
+**track の直接編集の検出**
+- `exec validate` と `exec run --auto` の開始時に、strategy を持つ track を `schedule build` と同じ処理で作り直し、`tasks` と `settings` を比べます。
+- 違いがあると警告を出します。警告には track 名、違う項目（例: `doc-090 phase_set=review: agent`）、`specdojo schedule build --track <track> --force` が入ります。
+- 止めずに警告にとどめました。下の修正で agent は実行時に strategy から決まるので、直接直しても実行には効きません。また、この比較では直接の編集とカタログの変更を区別できません。止めると、カタログを変えるたびに `exec refresh` と `exec cycle` が止まります。
+
+**agent の解決の順**
+- `resolveScheduledTaskAgent` を新しく作り、ready の作り直し・タスクの表示・実行の 3 経路をこれにそろえました。
+- 順は `--executor-by` / `--reporter-by` → `owner_rules[].phase_overrides[].agent` → phase の `agent` → 自動選択です。
+- strategy を持つ track では、track や `ready.json` に書かれた `agent` は使いません。strategy を持たない track だけは、従来どおりタスクに書かれた `agent` を使います。
+
+**ドキュメントと個票**
+- `schedule-design-guide.md` の「トラックへ展開する情報」の表に `agent` を足しました。展開する理由と、指名を変えるときは strategy を直すことも書きました。agent の解決の順の記述も直しています。
+- 個票の対応結果に、解決内容、確認結果、警告にとどめた理由、CHANGELOG の区分（不具合修正）と文案を書きました。
+
+**テスト**
+- 新しい単体テストを `validation.test.ts`、`strategy.test.ts`、新規の `task-view.test.ts` に入れました。track を直した場合と直していない場合、`phase_overrides` がある場合とない場合を確かめています。
+- 経路ごとのテストはタスクの表示だけです。ready の作り直しと実行は、共通関数のテストで確かめています。
+
+**決めていただきたいこと**
+実プロジェクトで `exec validate` を実行したところ、`sch-track-planning.yaml` が strategy から作り直した結果と違うと警告が出ました（`sch-defaults-020` の `depends_on` と、`tml-index` の 4 タスク）。範囲外のため作り直していません。`schedule build --track planning --force` で作り直すか、別の項目にするかを決めてください。`sch-track-kata-slim-2.yaml` には警告は出ませんでした。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Detection of directly edited schedule tracks (warning in exec validate and before exec run --auto) and a single strategy-first agent resolution (resolveScheduledTaskAgent) across ready rebuild, task view and run are implemented; unit tests, schedule-design-guide and the ticket's response section are updated.","handoff":["Detection outcome: tracks that differ from the strategy rebuild only produce a warning and do not stop the run. Reason: agents are always resolved from the strategy at runtime, so a direct edit has no effect on execution; the comparison cannot tell a direct edit from a catalog change that has not been rebuilt, so stopping would halt `exec refresh` / `exec cycle` validate on every catalog change.","Unresolved: in the actual project, `exec validate --schedule-only` warns that `sch-track-planning.yaml` differs from the result rebuilt from the strategy (`depends_on` of `sch-defaults-020`, 4 `tml-index` tasks not generated). Out of scope, so not rebuilt. Next action: the orchestrator decides whether to run `specdojo schedule build --track planning --force` or file a separate item.","Ready rebuild (`writeGeneratedCore`) and run (`runManualMode`) are verified through the unit tests of the shared `resolveScheduledTaskAgent`; only task view (`buildTaskView`) has a per-path unit test.","CHANGELOG (written in the ticket's 'CHANGELOG に書く事項'): category bug fix. Draft line: schedule のタスクの agent を、ready の作り直し・タスクの表示・実行のどれでも strategy の `phase_overrides`・phase の `agent` の順で解決するようにし、track を直接編集したときに `exec validate` と `exec run --auto` が作り直した結果との違いを警告するようにした。"],"validations":[{"command":"npx prettier --check (changed md/ts files)","status":"passed","summary":"All 9 changed Markdown/TypeScript files use Prettier code style"},{"command":"npm run validate:history-links","status":"passed","summary":"Exit 0; the changed ticket and all history files are valid"},{"command":"npx vitest run tests/src/exec/task-view.test.ts tests/src/exec/strategy.test.ts tests/src/exec/schedule/validation.test.ts","status":"passed","summary":"23 tests passed (new tests for edited-track detection and agent order)"},{"command":"npx vitest run tests/src/schedule/build.test.ts tests/src/job/job.test.ts tests/src/exec/trial.test.ts tests/src/exec/frontier.test.ts tests/src/exec/run tests/src/exec/exec.test.ts tests/src/exec/schedule","status":"passed","summary":"Related existing tests: 31 files, 411 tests passed"},{"command":"npx tsx src/specdojo.ts exec validate --project prj-0001 --schedule-only","status":"passed","summary":"OK; emits a difference warning only for sch-track-planning.yaml, none for sch-track-kata-slim-2.yaml"}]}
+</specdojo_executor_evidence>

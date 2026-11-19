@@ -8,6 +8,7 @@ import {
   resolveAgentPipeline,
   resolveApproach,
   resolveOwnerForLocalId,
+  resolveScheduledTaskAgent,
   resolveTaskExecution,
   resolveTaskMode,
   resolveTaskProficiency,
@@ -276,5 +277,108 @@ describe("agent pipeline metadata", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("resolveScheduledTaskAgent", () => {
+  let dir: string;
+
+  beforeEach(() => {
+    dir = mkdtempSync(join(tmpdir(), "specdojo-strategy-scheduled-agent-"));
+    writeFileSync(
+      join(dir, "sch-strategy-launch.yaml"),
+      [
+        "kind: strategy",
+        "track: launch",
+        "phase_sets:",
+        "  review-pass:",
+        "    - id: review",
+        "      task_suffix: '090'",
+        "      agent:",
+        "        executor: phase-executor",
+        "  draft-pass:",
+        "    - id: draft",
+        "      task_suffix: '010'",
+        "owner_rules:",
+        "  - local_ids: [doc]",
+        "    owner: ARC",
+        "    phase_sets: [draft-pass, review-pass]",
+        "  - local_ids: [special]",
+        "    owner: ARC",
+        "    phase_set: review-pass",
+        "    phase_overrides:",
+        "      - phase: review",
+        "        agent:",
+        "          executor: override-executor",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+  });
+
+  afterEach(() => {
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("uses the phase agent over an agent edited into the track", () => {
+    const index = buildPhaseModeIndex(dir);
+
+    const actual = resolveScheduledTaskAgent(
+      {
+        id: "T-LAUNCH-doc-090",
+        local_id: "doc",
+        phase_suffix: "090",
+        phase_set: "review-pass",
+        agent: { executor: "edited-executor" },
+      },
+      index,
+    );
+
+    expect(actual).toEqual({ executor: "phase-executor" });
+  });
+
+  it("uses phase_overrides over the phase agent and the track agent", () => {
+    const index = buildPhaseModeIndex(dir);
+
+    const actual = resolveScheduledTaskAgent(
+      {
+        id: "T-LAUNCH-special-090",
+        local_id: "special",
+        phase_suffix: "090",
+        phase_set: "review-pass",
+        agent: { executor: "edited-executor" },
+      },
+      index,
+    );
+
+    expect(actual).toEqual({ executor: "override-executor" });
+  });
+
+  it("drops a track agent when the strategy pins none, leaving auto-selection", () => {
+    const index = buildPhaseModeIndex(dir);
+
+    const actual = resolveScheduledTaskAgent(
+      {
+        id: "T-LAUNCH-doc-010",
+        local_id: "doc",
+        phase_suffix: "010",
+        phase_set: "draft-pass",
+        agent: { executor: "edited-executor" },
+      },
+      index,
+    );
+
+    expect(actual).toBeUndefined();
+  });
+
+  it("keeps the task agent for a track without a strategy", () => {
+    const index = buildPhaseModeIndex(dir);
+
+    const actual = resolveScheduledTaskAgent(
+      { id: "T-MANUAL-doc-010", local_id: "doc", phase_suffix: "010", agent: "manual-executor" },
+      index,
+    );
+
+    expect(actual).toBe("manual-executor");
   });
 });
