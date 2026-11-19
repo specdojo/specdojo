@@ -326,7 +326,7 @@ tasks:
       - T-KATA-SLIM-2-prj-scope-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -350,7 +350,7 @@ tasks:
       - T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060
     owner: BA
     agent:
-      executor: argon-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -398,7 +398,7 @@ tasks:
       - T-KATA-SLIM-2-bac-init-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -447,7 +447,7 @@ tasks:
       - T-KATA-SLIM-2-bac-init-040
     owner: BA
     agent:
-      executor: opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -494,7 +494,7 @@ tasks:
       - T-KATA-SLIM-2-trc-requirements-to-specs-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -541,7 +541,7 @@ tasks:
       - T-KATA-SLIM-2-bdd-project-config-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -634,7 +634,7 @@ tasks:
       - T-KATA-SLIM-2-cdfd-overview-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -730,7 +730,7 @@ tasks:
       - T-KATA-SLIM-2-sysd-critical-flows-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -777,7 +777,7 @@ tasks:
       - T-KATA-SLIM-2-sysd-cross-cutting-policy-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -916,7 +916,7 @@ tasks:
       - T-KATA-SLIM-2-cdfd-jibungoto-planet-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -1180,7 +1180,7 @@ tasks:
     depends_on: []
     owner: BA
     agent:
-      executor: argon-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1204,7 +1204,7 @@ tasks:
       - T-KATA-SLIM-2-dct-index-040
     owner: BA
     agent:
-      executor: opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1344,7 +1344,7 @@ tasks:
       - T-KATA-SLIM-2-ifx-cmd-ai-provider-cli-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -1487,7 +1487,7 @@ tasks:
       - T-KATA-SLIM-2-prj-assumptions-constraints-dependencies-060
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1511,7 +1511,7 @@ tasks:
       - T-KATA-SLIM-2-prj-issues-and-approach-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -1535,7 +1535,7 @@ tasks:
       - T-KATA-SLIM-2-prj-issues-and-approach-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -1558,7 +1558,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1583,7 +1583,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1608,7 +1608,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1633,7 +1633,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1658,7 +1658,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: argon-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1683,7 +1683,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1708,7 +1708,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: argon-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1734,7 +1734,7 @@ tasks:
       - T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060
     owner: BA
     agent:
-      executor: opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1759,7 +1759,7 @@ tasks:
       - T-KATA-SLIM-2-prj-comparison-of-alternatives-060
     owner: BA
     agent:
-      executor: argon-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -1926,7 +1926,7 @@ tasks:
       - T-KATA-SLIM-2-pm-roles-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -1997,7 +1997,7 @@ tasks:
       - T-KATA-SLIM-2-prj-stakeholder-register-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -2021,7 +2021,7 @@ tasks:
       - T-KATA-SLIM-2-prj-stakeholder-register-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -2044,7 +2044,7 @@ tasks:
       - T-KATA-SLIM-2-pm-plan-060
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -2092,7 +2092,7 @@ tasks:
       - T-KATA-SLIM-2-pm-members-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -2231,7 +2231,7 @@ tasks:
       - T-KATA-SLIM-2-prj-success-criteria-and-acceptance-criteria-060
     owner: BA
     agent:
-      executor: opus-executor
+      executor: sol-executor
     description: >-
       対応する rulebook から、どの成果物にも共通する文書の運用の記述を外し、共通の正本への参照にする。 手本は sld
       の試行（[[prj-0001:pjr-8s4t-sld-kata-slim-pilot|PJR-8S4T]] の対応結果の「他の型へ広げるときの一覧」）と、 改訂済みの
@@ -2325,7 +2325,7 @@ tasks:
       - T-KATA-SLIM-2-cnd-specdojo-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -2372,7 +2372,7 @@ tasks:
       - T-KATA-SLIM-2-cpd-specdojo-cli-040
     owner: BA
     agent:
-      executor: agy-opus-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -2419,7 +2419,7 @@ tasks:
       - T-KATA-SLIM-2-ifd-specdojo-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
@@ -2489,7 +2489,7 @@ tasks:
       - T-KATA-SLIM-2-tsd-specdojo-cli-040
     owner: BA
     agent:
-      executor: argon-executor
+      executor: opus-executor
     description: >-
       直した rulebook に沿い、対応する recipe から文書の運用の記述と、rulebook と同じ判断の言い直しを外す。 手本は prj-charter の recipe
       の試行（[[prj-0001:pjr-7m9j-recipe-slim-pilot-prj-charter|PJR-7M9J]] の対応結果の「他の recipe へ広げるときの一覧」）と、改訂済みの
