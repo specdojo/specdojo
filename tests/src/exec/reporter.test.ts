@@ -994,6 +994,39 @@ describe("reporter structured output", () => {
     );
 
     it.each([
+      "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "docs/ja/specdojo/samples/pjr-sample.md",
+      "docs/ja/projects/prj-0001/controls/project-register/pjr-index.md",
+    ])(
+      "does not block validate:history-links reported as not_applicable when only %s outside the ticket files changed",
+      (path) => {
+        const input = evidence();
+        input.changes = [{ path, status: "M" }];
+        input.attempt_changes = [{ path, status: "M" }];
+        input.validations = [
+          {
+            source: "executor",
+            command: "npm run validate:history-links",
+            status: "not_applicable",
+            summary: "履歴蓄積ファイルを変更していない",
+            reason: "変更が個票・plan・result に及ばないため",
+          },
+        ];
+
+        expect(
+          deriveReporterFacts(input, {
+            packageScripts: {
+              "validate:history-links":
+                "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+            },
+            packageDependencies: new Set(["@specdojo/docs-lint"]),
+            specdojoConfig: catalogConfig,
+          }),
+        ).toMatchObject({ outcome: "complete", block_reason: "" });
+      },
+    );
+
+    it.each([
       {
         command: "npm run validate:history-links",
         changes: [

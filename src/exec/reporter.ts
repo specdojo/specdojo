@@ -587,7 +587,7 @@ function isHistoryLinkTargetPath(path: string): boolean {
     return false;
   }
   return (
-    /(?:^|\/)pjr-[^/]+\.md$/u.test(normalized) ||
+    /^docs\/ja\/projects\/.+\/controls\/project-register\/pjr-[^/]+\.md$/u.test(normalized) ||
     /^docs\/ja\/projects\/.+\/exec\/(?:plans|results)\/.+\.md$/u.test(normalized) ||
     (isRunRecordPath(normalized) && /\/(plan|result)\.md$/u.test(normalized))
   );
@@ -631,7 +631,7 @@ const CHANGE_SCOPED_VALIDATIONS: readonly ChangeScopedValidation[] = [
   },
   {
     pathCondition:
-      "履歴蓄積ファイル（pjr-*.md など、pjr-index.md と runner が書く plan・result を除く）",
+      "履歴蓄積ファイル（登録簿の個票 controls/project-register/pjr-*.md など、pjr-index.md と runner が書く plan・result を除く）",
     matchesCommand: (command) =>
       /^npm run validate:history-links(?:\s|$)/u.test(command) ||
       /^(?:npx\s+)?specdojo-docs-lint\s+history-links(?:\s|$)/u.test(command) ||

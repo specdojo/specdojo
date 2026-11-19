@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: easy
   owner: DEV
@@ -64,7 +64,27 @@ isHistoryLinkTargetPath がファイル名の pjr-*.md だけで判定するた�
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `src/exec/reporter.ts` の `isHistoryLinkTargetPath` で、ファイル名の `pjr-*.md` だけを見る判定を `docs/ja/projects/<project>/controls/project-register/pjr-*.md` に限る判定へ変えた。`pjr-index.md` の除外、`exec/plans`・`exec/results`、`execution/runs` の `plan.md`・`result.md` の判定は変えていない。対象は `.github/instructions/markdown.instructions.md` の「履歴蓄積ファイルのリンク記法」と `packages/docs-lint/src/validate-history-links.ts` の既定 glob に揃う。
+- runner が理由に使う適用条件の文言を「登録簿の個票 controls/project-register/pjr-*.md など」に改めた。
+- 迷った点: 個票のディレクトリは `docs/ja/projects/` の下だけを対象とした。`validate:history-links` の既定 glob がこの範囲しか検査しないため、その外の `pjr-*.md` に実行を求めても検査対象にならない。
+
+### 5.2. 確認結果
+
+- `tests/src/exec/reporter.test.ts` に、pjr の rulebook・sample・`pjr-index.md` だけを変えた run で `npm run validate:history-links` の `not_applicable` を受け付けるテストを足した。修正前のコードでは rulebook と sample の 2 件が失敗し、修正後は通ることを確かめた。
+- 個票を変えた run で `not_applicable` を拒む既存のテスト（still blocks ...）は修正後も通る。
+- T-KATA-SLIM-2-pjr-index-040 の `exec resume --task` による再開は、本項目の統合の後に orchestrator が行う（executor は実施しない）。
+- 保護された設定は変えていない。
+
+### 5.3. 再発防止策
+
+- 履歴蓄積ファイルの判定をディレクトリ込みで行い、型の文書など個票以外の `pjr-*.md` を対象から外すテストを置いた。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: `exec`: pjr の rulebook など、登録簿の個票ではない `pjr-*.md` だけを変えた run で、executor が `npm run validate:history-links` を `not_applicable` と報告すると runner が拒んで止まる不具合を修正した（PJR-8Z71）。
 
 ## 6. 関連ドキュメント
 
