@@ -173,6 +173,7 @@ npx specdojo exec validate --project <project-id>
 
 - `exec run --register` は `--worktree` で流す。同時に流すのは 2〜3 件までとする。親の検証は 1 件ずつ順に流れ、並行が多いと負荷で統合テストが時間切れになる。
 - 時間のかかる run は background で流し、終わりの通知を待つ。途中経過を何度も見に行かない。
+- grade・`exec run`・build を順に流すときは、待ち合わせのシェルスクリプトを書かず `specdojo exec queue add <queue-id> --step "..."` で予約し、`specdojo exec queue run <queue-id>` を background で流す。進み具合は `exec queue status <queue-id>` か `exec status` の `queues:` で確かめる。止まった予約は原因を直してから同じ `exec queue run` で再開する。
 - プロセスを探す・止めるときに `pkill -f`・`pgrep -f` を使わない。探す文字列を含む自分のシェルにも一致し、自分を止める。
 - 統合の後に `src` が dist より新しくなると、次の run は始まる前に止まる。dist を作り直してから流す。
 - 記帳は `register ... --commit` で行う。登録簿の lifecycle のロックを取るため、実行中の run と取り合わない。

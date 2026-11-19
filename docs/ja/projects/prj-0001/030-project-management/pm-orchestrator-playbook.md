@@ -39,7 +39,7 @@ npx specdojo exec run --project prj-0001 --register <PJR-ID> --worktree \
 - 新方（PJR-EPQ3）では項目ごとに `CHANGELOG.md` を変えない。実装の範囲が重なる項目は runner が先行項目の統合まで待たせる。個票の入力・完了条件に対象の相対パスを書き、推定できない項目も直列化したい列には `--unknown-scope serialize` を付ける。推定と再開の規則は [[specdojo:exec-operation-guide|exec運用ガイド]] の「変更範囲が重なる項目の順番待ち」に従う。
 - 旧方の行（未公開の版の節へ直接書いた `CHANGELOG.md`）が残っている間は、その項目は新方と混ぜて並べる場合、まだ `CHANGELOG.md` を書くため衝突の可能性が残る。リリースまでに旧方の行を集めて `## [Unreleased]` へまとめた後（第 9 節）に列を組むのが安全である。
 - 統合の commit のときにも検査が走る。並行の検証と重なると、`tests/src/exec/pipeline-e2e.integration.test.ts` などの E2E が時間切れで落ちることがある。落ちた場合は、負荷が下がってから `--resume` で統合からやり直す。
-- 列の終わりを待って次を流す待機を書くときは、相手のプロセスを `pgrep -f` のパターンで探さない（`落とし穴` を参照）。実行のログや出力ファイルに結果の行が出たことで判定するか、プロセスの番号で待つ。
+- 列の終わりを待って次を流すときは、待機のスクリプトを書かず `exec queue` で予約する（[[specdojo:command-reference|コマンドリファレンス]] の「実行の予約（exec queue）」）。予約ファイル（`execution/queues/<queue-id>.json`）は記帳と同じく commit する。どうしても待機を書く場合も、相手のプロセスを `pgrep -f` のパターンで探さない（`落とし穴` を参照）。
 
 ## 4. agent の使い分けと癖
 
