@@ -47,3 +47,16 @@
     - field: commit_scope
       from: ""
       to: deps
+- v: 1
+  id: reg_b2e5ff62dc3e4294ababc3920428164a
+  ts: "2026-11-19T10:14:30Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cc81d6edcf274d5caa56d7b67e83e44f
