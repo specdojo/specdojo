@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-4ys7-glossary-yaml-page-table
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-12T13:33:36Z"
+  completed_at: "2026-11-19T14:46:57Z"
+  conclusion: 用語集の YAML の表示ページを分類ごとの表にし、関連用語へのページ内リンクと YAML の正本の折りたたみを足した
   derived_from:
     - PJR-6XQ4
   commit_type: feat
