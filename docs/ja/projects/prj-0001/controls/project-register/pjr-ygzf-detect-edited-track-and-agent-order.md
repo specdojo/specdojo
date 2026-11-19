@@ -89,6 +89,12 @@ strategy を正本とする規則に反して track を直接編集しても検�
 - 区分: 不具合修正
 - 文案: schedule のタスクの agent を、ready の作り直し・タスクの表示・実行のどれでも strategy の `phase_overrides`・phase の `agent` の順で解決するようにし、track を直接編集したときに `exec validate` と `exec run --auto` が作り直した結果との違いを警告するようにした。
 
+### 5.6. 統合の後の確認（orchestrator）
+
+- 2026-11-19 の `exec run --auto --track kata-slim-2` で、T-KATA-SLIM-2-dct-data-model-ccd-040 は strategy の段の指定どおり sol-executor で claim され、上限を検知して opus-executor に切り替わって完了した。
+- 同じ run の開始時と `exec validate` で、`sch-track-planning.yaml` が strategy から作り直した結果と違うという警告が出た。作り直した `sch-track-kata-slim-2.yaml` には出なかった。
+- `sch-track-planning.yaml` の違いの扱いは本項目の範囲の外とし、別に決める。
+
 ## 6. 関連ドキュメント
 
 - [[specdojo:sch-rulebook]]（strategy を SSOT とし、track を直接編集しない規則）
