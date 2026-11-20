@@ -140,9 +140,10 @@ describe("buildOrchestratorLaunch", () => {
       "/workspace/app1/**": "allow",
       "/workspace/admin-ui/**": "allow",
     });
+    // OpenCode matches edit by the path relative to its cwd (PJR-08EK).
     expect(config.agent["specdojo-orchestrator"].permission?.edit).toEqual({
-      "/workspace/app1/**": "allow",
-      "/workspace/admin-ui/**": "allow",
+      "../app1/**": "allow",
+      "../admin-ui/**": "allow",
     });
     expect(launch.env.OPENCODE_CONFIG_CONTENT).not.toContain("/workspace/undeclared");
   });

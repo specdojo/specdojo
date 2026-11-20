@@ -645,6 +645,7 @@ export async function runWithRetry(
           candidate.command,
           candidate.provider,
           productRoots.map((root) => root.path),
+          { cwd, env },
         ),
         prompt,
         detection,
