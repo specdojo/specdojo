@@ -1,0 +1,24 @@
+検証コマンド（typecheck、test:unit、lint:ts）の完了を待機しています。
+検証コマンド（validate:history-links）の完了を待機しています。
+プロジェクト登録簿の項目 **PJR-SW7T**「型の一覧をまとめて grade する指定を用意する」の executor 実装および検証を完了しました。
+
+### 実施内容
+1. **型文書解決関数の追加 (`src/grade/targets.ts`)**:
+   - `resolveKataDocuments`: 指定された型の名前（接頭辞）に対して、`docs/ja/specdojo/rulebooks/${name}-rulebook.md` および `docs/ja/specdojo/samples/${name}-sample.*`（または rulebook frontmatter で指定された sample）を解決。
+   - `resolveKataBatchTargets`: 複数の型名を順序を保持して解決し、未知の型名が含まれる場合は実行前にまとめて `Unknown kata: ...` エラーをスロー。
+2. **CLI オプション `--kata` の追加 (`src/grade/command-shared.ts`, `src/grade/command-run.ts`)**:
+   - `--target kata` 時に型の名前（接頭辞）を複数指定できる repeatable オプション `--kata <name>`（カンマ区切りも受け付け）を登録・連携。
+   - `--target deliverable` での指定や `--path` との併用をバリデーションして拒否。
+3. **評価ループと結果集計・終了コード制御 (`src/grade/run.ts`)**:
+   - 1 つの型で失敗や rate limit が発生してもループを中断せず、残りの型・文書の評価を継続。
+   - ループ完了後、型ごとの結果（`完了 (complete)`、`失敗 (failed)`、`未実行 (pending)`）を `kata results:` として標準出力に一覧表示。
+   - 終了コードを制御（rate limit 発生時は 75、完了と失敗が混在した場合は 2、全件失敗時は 1）。
+4. **単体テストの追加 (`tests/src/grade/run.test.ts`)**:
+   - 複数型の順次評価、未知の型名の事前エラー、失敗混在時の継続と終了コード 2、rate limit 時の継続と終了コード 75、引数バリデーションのテストを追加し通過を確認。
+5. **ドキュメント・個票の改訂**:
+   - `docs/ja/specdojo/references/command-reference.md`: `grade run` の節に `--kata` オプションの説明と使用例を追記。
+   - `docs/ja/projects/prj-0001/controls/project-register/pjr-sw7t-grade-kata-batch.md`: 作業内容表および対応結果（実施内容、判断事項、CHANGELOG に書く事項）を更新。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-SW7T 型の一覧をまとめて grade する指定 (--kata) の実装、テスト、ドキュメント改訂を完了しました。","handoff":["オプション名は完了条件の例示に従い --kata <name>（repeatable / カンマ区切り対応）を採用しました。","型名の解決は docs/ja/specdojo/rulebooks/${name}-rulebook.md および docs/ja/specdojo/samples/${name}-sample.*（または rulebook frontmatter で指定された sample）を対象とし、pjr のように sample が元々ない型は rulebook のみ、両方ある型は両方を対象としました。いずれも存在しない場合は実行前にまとめてエラーとしました。","型ごとの結果集計は全文書完了を「完了 (complete)」、1つでも失敗があれば「失敗 (failed)」、未完了があれば「未実行 (pending)」として終了時に一覧表示しました。","終了コードは rate limit が発生した場合は 75 を優先し、rate limit がなく完了と失敗が混在した場合は 2、すべて失敗の場合は 1 としました。","CHANGELOG に書く事項: 区分「追加」、文案「`specdojo grade run --target kata` に、型名の一覧を指定して rulebook と sample の組を順に評価できる `--kata <name>` オプションを追加」。"],"validations":[{"command":"npm run validate:history-links","status":"passed","summary":"変更した個票を含む履歴ファイルのリンク検証を通過"}]}
+</specdojo_executor_evidence>

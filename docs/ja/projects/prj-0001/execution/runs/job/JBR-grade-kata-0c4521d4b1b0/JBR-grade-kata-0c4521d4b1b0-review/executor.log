@@ -1,0 +1,36 @@
+レビューが終わりました。判定は `complete-with-findings` で、この Job Run の出力は統合できます。ただし、評価結果の中に後で対応が要る finding が残っています。review result は作成も編集もしていません。作成は reporter 側で行います。
+
+**確認したこと**
+- **出力範囲:** 差分は22ファイルで、すべてこの Job Run の出力です。内訳は評価結果ファイルの更新13件と新規2件、Run JSON、Run 記録（plan・result・evidence・pipeline state・stdout と stderr のログ）です。成果物（recipe 本体など）や src への変更は含まれていません。
+- **記録の整合:** Run JSON、evidence、pipeline state の状態はいずれも `succeeded`、終了コード 0 です。stdout の `graded:` 15行に出る verdict と score は、評価結果ファイルの値とすべて一致します。
+- **agent 名:** `--by agy-expert-executor` で起動したのに記録上の actor は `flash-high-executor` です。`.specdojo/agent-members.yaml` で前者が後者の alias として定義されているので、矛盾ではありません。
+- **未完了・失敗:** 終了コードは 0 です。stderr に `grade run incomplete:`・`grade run stopped by rate limit:`・`grade run partial/failed`、stdout に `retry exhausted:` はどれも出ていません。`grade list --incomplete` と `grade state --exhausted` もこの15件を出力しませんでした。再開や手作業での対応は要りません。
+- **評価結果の鮮度:** `--changed-only` で出たのは対象外の `sysd-index-recipe.md` と `tsd-recipe.md` だけでした。`--dependency-changed` と `--rubric-outdated` に該当する15件はありません。出力 commit 以降、recipe も変わっていません。
+
+**score と verdict の分布**
+- 15件中、pass が14件、needs-work が1件です（`prj-stakeholder-register-recipe`、score 96、major 1件）。
+- score は93〜100で、100点が8件あります。前回より上がった文書が多く、次の3件は needs-work から pass に変わりました。
+  - `prj-assumptions-constraints-dependencies`：93 → 100
+  - `prj-comparison-of-alternatives`：87 → 100
+  - `prj-scope`：81 → 97
+- 15件とも `content_hash` が変わっており、上の3件の recipe は T-KATA-SLIM-2 タスクで編集済みでした。score の上昇は文書の手直しで説明がつきます。
+- 前回 `agy-expert-executor` の名前で記録されていた8件は、今回 alias 先の `flash-high-executor` として記録されています。採点した agent が実際に変わったかどうかまでは調べていません。
+- 下がったのは `pm-raci-recipe` だけです（100 → 93、finding 3件）。
+- 評価設定の見直しが必要なほどの偏りは見当たりませんでした。ただし、100点かつ finding 0件の文書が多いので、甘く採点していないかは続けて見ていく価値があります。
+
+**後で対応が要る finding**
+1. `prj-stakeholder-register-recipe` が needs-work です。major 1件、minor 2件で、どれも sample と recipe の食い違いです。
+   - major 1件：試利用の時期が食い違っています（リリース前 / リリース後）。
+   - minor 2件：「週次相談」が重複して書かれている点と、承認者欄が「-」になっている点です。
+   - これは評価結果として記録されており、このタスクの完了は妨げません。別の個票で recipe か sample を直す必要があります。
+2. stderr に `grade: skipped docs/ja/specdojo/samples/job-sequence.yaml: YAML grade target requires metadata type at the root or x-spec-meta` が7回出ています。この YAML には評価対象に必要なメタデータがなく、Run のたびに同じ警告が出ます。メタデータを足すか、選択対象から外すか、判断が必要です。
+3. evidence の `diff_summary` は `files_changed: 16` なのに、`summary` には13ファイル分しかありません。git に未登録だった新規3件が集計から漏れたためで、記録の表記がずれているだけです。
+
+**確認できなかった範囲**
+- 評価結果の中身が妥当かどうかは、規約上レビューでは判定していません。
+- `grade state --path` で文書ごとの連続失敗回数は調べていません。上限到達の文書が0件なので必要ありませんでした。
+- `--rulebook-changed`・`--unreviewed`・`--ungraded` は手元で再実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"レビュー完了。verdict=complete-with-findings。差分（3b1d776..809cdd0、22ファイル）はこの Job Run の出力だけで構成されている。内訳は評価結果ファイルの更新13件と新規2件、Run JSON、Run 記録（plan・result・evidence・pipeline state・stdout と stderr のログ）。Run JSON、evidence、pipeline state はいずれも `succeeded`・終了コード 0 で整合する。stdout の `graded:` 15行の verdict と score は評価結果ファイルとすべて一致する。`agy-expert-executor` は `.specdojo/agent-members.yaml` で `flash-high-executor` の alias なので、actor の記録とは矛盾しない。stderr に incomplete・rate limit・partial・failed の行はなく、stdout に `retry exhausted:` もない。`grade list --incomplete` と `grade state --exhausted` も該当0件で、未完了や再試行上限の文書はない。評価結果の鮮度：`--changed-only` で出たのは対象外の sysd-index-recipe.md と tsd-recipe.md だけで、`--dependency-changed` と `--rubric-outdated` も該当15件なし。出力 commit 以降 recipe は変わっていない。分布は pass 14件、needs-work 1件（prj-stakeholder-register-recipe、score 96、major 1件）で、score は93〜100（100点8件）。needs-work から pass に変わった3件（prj-assumptions-constraints-dependencies、prj-comparison-of-alternatives、prj-scope）は T-KATA-SLIM-2 で recipe を編集済みで、15件とも `content_hash` が変わっているため、score の上昇は文書の手直しで説明がつく。前回 `agy-expert-executor` で記録されていた8件は今回 alias 先の `flash-high-executor` として記録されているが、採点した agent が実際に変わったかは調べていない。評価設定の見直しが必要な偏りは見当たらない。確認できなかった範囲：評価内容の妥当性（規約上レビューでは判定しない）、`grade state --path` による文書ごとの連続失敗回数（上限到達0件のため不要）、`--rulebook-changed`・`--unreviewed`・`--ungraded` の手元での再実行。","handoff":["prj-stakeholder-register-recipe が needs-work（major 1件・minor 2件）。いずれも sample と recipe の食い違い（試利用の時期、週次相談の重複記載、承認者欄の「-」）で、別の個票で recipe か sample を直す必要がある。","docs/ja/specdojo/samples/job-sequence.yaml は YAML の評価対象に必要なメタデータ（root または x-spec-meta の type）がないため、Run のたびに skip 警告が7回出る。メタデータを足すか選択対象から外すかの判断が必要。","evidence.json の `diff_summary` は `files_changed: 16` だが、`summary` には git 未登録だった新規3件が入らず13ファイル分しかない。記録の表記のずれ。"],"validations":[{"command":"git diff --stat 3b1d776ffaede53a9705a034276a6ec1f98fc875..809cdd09e36d5ab1f1328efc869d519a7a5f1735","status":"passed","summary":"22 files changed、すべて評価結果ファイルと Job Run の記録"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"出力は sysd-index-recipe.md と tsd-recipe.md だけで、今回評価した15件は含まれない"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"今回評価した15件は該当なし"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"該当なし（job-sequence.yaml の skip 警告のみ）"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"該当なし"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --rubric-outdated","status":"passed","summary":"今回評価した15件は該当なし"}]}
+</specdojo_executor_evidence>

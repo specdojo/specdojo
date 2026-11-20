@@ -7,6 +7,8 @@ import { collectResolvedDeliverables, loadCatalogDocs } from "../catalog/build.j
 import { isTrashedPath, resolveBasePath } from "../catalog/paths.js";
 import { listFilesRecursive } from "../shared/fs.js";
 import { gradeContentHash } from "./result.js";
+import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
+import { resolveAuthoredKataPathIfExists } from "../kata/authoring.js";
 import {
   GRADE_TARGETS,
   KATA_DIRS,
@@ -618,4 +620,124 @@ export function sourceHashesChanged(
   current: Readonly<Record<string, string>>,
 ): boolean {
   return Object.entries(current).some(([key, hash]) => stored?.[key] !== hash);
+}
+
+/** Resolve rulebook and sample documents for a single kata name or prefix. */
+export function resolveKataDocuments(
+  kataName: string,
+  rootDir: string = specdojoRootDir(),
+): string[] {
+  const normalized = kataName.trim().replace(/-rulebook(\.md)?$/, "");
+  if (!normalized) return [];
+
+  const found: string[] = [];
+
+  // 1. rulebook
+  const rulebookCandidate = join(rootDir, `docs/ja/specdojo/rulebooks/${normalized}-rulebook.md`);
+  if (existsSync(rulebookCandidate)) {
+    found.push(repoRelativePath(rulebookCandidate));
+  } else {
+    const authored = resolveAuthoredKataPathIfExists(
+      `${normalized}-rulebook`,
+      "rulebook",
+      "md",
+      rootDir,
+    );
+    if (authored && existsSync(authored.absolutePath)) {
+      found.push(repoRelativePath(authored.absolutePath));
+    }
+  }
+
+  // 2. sample
+  let foundSample = false;
+  if (found.length > 0) {
+    const rulebookPath = resolve(rootDir, found[0]!);
+    try {
+      const content = readFileSync(rulebookPath, "utf8");
+      const fm = readSpecdojoNamespace(content);
+      if (fm.sample && typeof fm.sample === "string") {
+        if (fm.sample !== "not-needed" && fm.sample !== "none" && fm.sample !== "undecided") {
+          const sampleId = fm.sample;
+          const extensions: ("md" | "yaml" | "yml" | "json")[] = ["md", "yaml", "yml", "json"];
+          for (const ext of extensions) {
+            const authored = resolveAuthoredKataPathIfExists(sampleId, "sample", ext, rootDir);
+            if (authored && existsSync(authored.absolutePath)) {
+              found.push(repoRelativePath(authored.absolutePath));
+              foundSample = true;
+              break;
+            }
+          }
+        } else {
+          // Explicitly not-needed or none
+          foundSample = true;
+        }
+      }
+    } catch {
+      // Ignore rulebook read error and fall through to filename lookup
+    }
+  }
+
+  if (!foundSample) {
+    const sampleExtensions = ["md", "yaml", "yml", "json"];
+    for (const ext of sampleExtensions) {
+      const sampleCandidate = join(rootDir, `docs/ja/specdojo/samples/${normalized}-sample.${ext}`);
+      if (existsSync(sampleCandidate)) {
+        found.push(repoRelativePath(sampleCandidate));
+        break;
+      }
+    }
+  }
+
+  // Fallback for sample-only kata without rulebook
+  if (found.length === 0) {
+    const sampleExtensions = ["md", "yaml", "yml", "json"];
+    for (const ext of sampleExtensions) {
+      const sampleCandidate = join(rootDir, `docs/ja/specdojo/samples/${normalized}-sample.${ext}`);
+      if (existsSync(sampleCandidate)) {
+        found.push(repoRelativePath(sampleCandidate));
+        break;
+      }
+    }
+  }
+
+  return found;
+}
+
+/**
+ * Validate and resolve target documents for multiple kata names.
+ * Unknown kata names cause an error before execution.
+ */
+export function resolveKataBatchTargets(
+  kataNames: string[],
+  rootDir: string = specdojoRootDir(),
+): { documentsByKata: Map<string, string[]>; allDocuments: string[] } {
+  const documentsByKata = new Map<string, string[]>();
+  const unknown: string[] = [];
+
+  for (const rawName of kataNames) {
+    const name = rawName.trim();
+    if (!name) continue;
+    if (documentsByKata.has(name)) continue;
+    const docs = resolveKataDocuments(name, rootDir);
+    if (docs.length === 0) {
+      unknown.push(name);
+    } else {
+      documentsByKata.set(name, docs);
+    }
+  }
+
+  if (unknown.length > 0) {
+    throw new Error(`Unknown kata: ${unknown.join(", ")}`);
+  }
+
+  const allDocuments: string[] = [];
+  for (const docs of documentsByKata.values()) {
+    for (const doc of docs) {
+      if (!allDocuments.includes(doc)) {
+        allDocuments.push(doc);
+      }
+    }
+  }
+
+  return { documentsByKata, allDocuments };
 }

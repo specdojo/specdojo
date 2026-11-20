@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "run_id": "JBR-grade-kata-0c4521d4b1b0",
+  "job_id": "job-grade-kata",
+  "idempotency_key": "job-grade-kata:command-v10:2026-11-20T20:00:00.000Z:all:15:true:true:true:true:true:true:true",
+  "project_id": "prj-0001",
+  "trigger": "routine",
+  "scheduled_at": "2026-11-20T20:00:00.000Z",
+  "created_at": "2026-11-20T20:01:30.253Z",
+  "updated_at": "2026-11-20T20:49:47.725Z",
+  "state": "succeeded",
+  "inputs": {
+    "period": "2026-W47",
+    "kind": "all",
+    "limit": 15,
+    "dependency_changed": true,
+    "rulebook_changed": true,
+    "unreviewed": true,
+    "changed_only": true,
+    "ungraded": true,
+    "incomplete": true,
+    "rubric_outdated": true
+  },
+  "task": {
+    "mode": "command",
+    "precondition": {
+      "command": "selection=$(\n  if [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ]; then\n    '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001\n  else\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --dependency-changed || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --rulebook-changed || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --unreviewed || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --changed-only || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --ungraded || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --incomplete || exit $?\n      # 上限到達文書は処理対象外だが、report-only Job を起動するため precondition に含める。\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade state --target kata --project prj-0001 --exhausted || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --rubric-outdated || exit $?\n    fi\n  fi\n)\nprintf '%s\\n' \"$selection\" | LC_ALL=C sort -u | awk -v kind=\"all\" -v limit=\"15\" '\n  NF && (kind == \"all\" || index($0, \"docs/ja/specdojo/\" kind \"s/\") == 1) {\n    if (limit == 0 || selected < limit) {\n      print\n      selected++\n    }\n  }\n'",
+      "skip_when": "empty-output"
+    },
+    "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\n# 選択は Run ごとに固定する。同じ job_run_id の再試行は、保存した選択で grade run を再開する。\n# 選択条件の結果は和集合とし、条件がないときだけ全件を対象にする（precondition と同じ）。\nrun_dir=logs/grade/jobs/JBR-grade-kata-0c4521d4b1b0\nmkdir -p \"$run_dir\"\nif [ ! -f \"$run_dir/selection.txt\" ]; then\n  : >\"$run_dir/exhausted.txt\"\n  if [ \"true\" = \"true\" ]; then\n    # 上限到達の文書は grade run へ渡さず、報告だけにする。\n    '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade state --target kata --project prj-0001 --exhausted >\"$run_dir/exhausted.txt\" || exit 1\n  fi\n  selection=$(\n    if [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001\n    else\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --dependency-changed || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --rulebook-changed || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --unreviewed || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --changed-only || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --ungraded || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --incomplete || exit $?\n      fi\n      if [ \"true\" = \"true\" ]; then\n        '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --rubric-outdated || exit $?\n      fi\n      cat \"$run_dir/exhausted.txt\"\n    fi\n  ) || exit 1\n  printf '%s\\n' \"$selection\" | LC_ALL=C sort -u | awk -v kind=\"all\" -v limit=\"15\" '\n    NF && (kind == \"all\" || index($0, \"docs/ja/specdojo/\" kind \"s/\") == 1) && (limit == 0 || selected < limit) {\n      print\n      selected++\n    }\n  ' >\"$run_dir/limited.txt\"\n  awk 'FILENAME == ARGV[1] { if (NF) exhausted[$0] = 1; next } !($0 in exhausted)' \"$run_dir/exhausted.txt\" \"$run_dir/limited.txt\" >\"$run_dir/selection.tmp\"\n  awk 'FILENAME == ARGV[1] { if (NF) exhausted[$0] = 1; next } $0 in exhausted' \"$run_dir/exhausted.txt\" \"$run_dir/limited.txt\" >\"$run_dir/retry-exhausted.txt\"\n  mv \"$run_dir/selection.tmp\" \"$run_dir/selection.txt\"\nfi\nwhile IFS= read -r document; do\n  printf 'retry exhausted: %s\\n' \"$document\"\ndone <\"$run_dir/retry-exhausted.txt\"\nset --\nwhile IFS= read -r document; do\n  [ -n \"$document\" ] && set -- \"$@\" --path \"$document\"\ndone <\"$run_dir/selection.txt\"\nif [ \"$#\" -eq 0 ]; then\n  printf 'grade run: no documents to grade run_id=%s\\n' 'JBR-grade-kata-0c4521d4b1b0'\n  exit 0\nfi\n# grade run は、完了した文書と失敗した文書が混在すると 2、rate limit で止まると 75 を返す。\nif '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade run --run-id JBR-grade-kata-0c4521d4b1b0 --target kata --project prj-0001 --kind all --reference-per-kind --by agy-expert-executor \"$@\"; then\n  :\nelse\n  grade_status=$?\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade run partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-0c4521d4b1b0' \"$grade_status\" >&2\n  else\n    printf 'grade run failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-0c4521d4b1b0' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "partial_exit_code": 2,
+    "analysis": {
+      "agent": "gemma-reporter",
+      "description": "runner が記録した command evidence の終了コードと、`grade run` の出力（stdout の\n`graded:`・`resumed complete:`・`retry exhausted:` の行、stderr の\n`grade run incomplete:`・`grade run stopped by rate limit:` に続く文書ごとの行）から\n次を判断して報告する。\n\n- 終了コード75（rate limit）または中断で未完了の文書が残っているか。残る場合は同じ\n  `--run-id` で再開できる状態かを確認する。\n- 失敗した文書があるか。ある場合は agent 側の失敗と、executor の marker を機械変換\n  できず拒否したもののいずれかへ切り分ける。\n- Run が `partial` の場合は、`graded:` の文書が1件以上あり、失敗した各文書が\n  pipeline state に記録されて次の Run の `--incomplete` で選択できるかを確認する。\n- `retry exhausted:` の文書があるか。ある場合は `grade state --path` で連続失敗回数を\n  確かめ、人手での原因解消または state の再開判断を促す。\n- agy 単段の verdict と score の分布に、評価設定の見直しを要する偏りがあるか。\n\n選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、\n観測した事実と未確認の範囲を分けて報告する。"
+    },
+    "paths": [
+      "docs/ja/specdojo/rulebooks",
+      "docs/ja/specdojo/recipes",
+      "docs/ja/specdojo/samples",
+      "docs/ja/specdojo/templates"
+    ],
+    "owner": "ARC",
+    "review": {
+      "agent": {
+        "executor": "claude-expert-review-executor",
+        "reporter": "claude-reporter"
+      }
+    }
+  },
+  "checkpoint_before": {},
+  "plan_ref": "runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/plan.md",
+  "result_ref": "runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-11-20T20:01:30.253Z",
+      "status": "succeeded",
+      "completed_at": "2026-11-20T20:45:22.436Z",
+      "result_ref": "runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0/evidence.json",
+      "exit_code": 0
+    }
+  ],
+  "review": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0-review/plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/runs/job/JBR-grade-kata-0c4521d4b1b0/JBR-grade-kata-0c4521d4b1b0-review/result.md",
+    "branch": "exec/prj-0001-JBR-grade-kata-0c4521d4b1b0",
+    "verdict": "complete-with-findings",
+    "reviewed_at": "2026-11-20T20:49:47.725Z"
+  }
+}

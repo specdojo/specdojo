@@ -119,7 +119,7 @@ docs だけの項目や、runner の通らないコード（kata、docs-site な
 3. 各対象の個票の対応結果から、見出しの文言「CHANGELOG に書く事項」（Markdown の連番ルールにより `### <n>.<m>. CHANGELOG に書く事項` のように書かれている）を探して集め、区分（追加・変更・不具合修正など）と行の文案を、CHANGELOG の `## [<版>] - <日付>` の節へまとめる。影響が『なし』と残った項目は対象から外す。個別に `## [Unreleased]` へ書かれていた行（旧方）もここへ取り込み、取り込んだ分は `## [Unreleased]` から消す。
 4. 漏れを確かめる。手順 2 で決めた範囲の close 済み項目の個票について、register event の `close` 件数と集めた個票の件数を照合し、未確認の項目が残っていないかを確かめる。また、「なし」以外の文案が書かれた項目がすべて手順 3 の節に漏れなく取り込まれていることを確かめてから、手順 5 の feature ブランチへの commit に進む。
 5. feature ブランチ（`feature/prj-0001/release-v<版>`）で `npm version <版> --no-git-tag-version --ignore-scripts` と、手順 3 でまとめた `## [<版>] - <日付>` の節を commit する。docs-lint に変更があれば、その版も上げる。
-6. そのブランチで `npm ci`（`packages/*` も）をしてから `npm run check` を流す。`npm audit --omit=dev --audit-level=high` も流し、公開の workflow の関門で止まらないことを先に確かめる（「依存とコードのセキュリティ検査」）。
+6. そのブランチで `npm ci`（`packages/*` も）をしてから `npm run check` を流す。`npm run test:integration` は、`npm run check` 内の `npm test`（`vitest run`）が unit と integration の両方を流すため重複しており、重ねて流さず外す（約 180 秒短縮）。`npm audit --omit=dev --audit-level=high` も流し、公開の workflow の関門で止まらないことを先に確かめる（「依存とコードのセキュリティ検査」）。ドキュメントの公開前確認が必要な場合は `npm run docs:build` を流す。
 7. `npm pack` した tarball を空のリポジトリに入れ、`init` と、その版で変えた機能（lefthook、名簿の雛形など）、`register add` と `exec run --register` を確かめる。
 8. feature ブランチを develop へ `--no-ff` で取り込み、PR の本文を作って、push と PR 作成のコマンドを利用者に渡す。
 9. 利用者が PR を merge commit でマージし、タグを付けて push し、`npm stage` で公開を承認する。stage の ID は公開の workflow のログ（`staged with id`）にある。承認は 2FA を通した経路で行う（npmjs.com、または手元の端末で `npx -y npm@^11.15.0 login` の後に `npx -y npm@^11.15.0 stage approve <stage-id>`）。npm 11.15 より前には `npm stage` が無く、2FA を迂回する token では 401 になる。
