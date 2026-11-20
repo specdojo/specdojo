@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: review
   priority: low
   difficulty: medium
   registered_at: "2026-11-13T14:08:23Z"
