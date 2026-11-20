@@ -4980,3 +4980,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_66145441c7504b31a9a09d0e0e49785d
+- v: 1
+  id: reg_7f9c72e82b8a449ea5caa192167edccf
+  ts: "2026-11-20T22:52:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec smoke の結果（58cd14ecb）と記録の actor を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: PJR-8NB8・9JN6・C07H・ZK3T の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
+      to: PJR-QQRH・PJR-V277 の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_313eac094abb40bab2e4148e741461fe

@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-8NB8・9JN6・C07H・ZK3T の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
+  completed_at: "2026-11-20T22:52:28Z"
+  conclusion: PJR-QQRH・PJR-V277 の統合後に、exec smoke から sonnet-executor で start から review まで通り、actor に実体名が記録された
   autopilot: approved
 ---
 
