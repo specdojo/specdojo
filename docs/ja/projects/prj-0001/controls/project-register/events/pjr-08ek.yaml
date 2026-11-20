@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_773b1800333b4f45bc612b791daa99a1
+- v: 1
+  id: reg_5c055229d120488b810417b55683dbfb
+  ts: "2026-11-20T13:27:48Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: opus-executor の実装を統合し、orchestrator が opencode debug agent と候補の版の実際の run 2 件で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-20"
+    - field: conclusion
+      from: "-"
+      to: exec の opencode の起動でも、その run のプロダクトの worktree だけに許可を注入するようにした。候補の版で、書けることと外は拒まれることを実際の run で確かめた
+  previous_event_id: reg_e54c26f3d387494eb2ceea8780827615

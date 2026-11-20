@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-08ek-opencode-extra-roots
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-18T12:17:01Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T13:27:48Z"
+  conclusion: exec の opencode の起動でも、その run のプロダクトの worktree だけに許可を注入するようにした。候補の版で、書けることと外は拒まれることを実際の run で確かめた
 ---
 
 # PJR-08EK exec で opencode の executor がプロダクトリポジトリの worktree を編集できない
