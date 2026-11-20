@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: sol-executor
   registered_at: "2026-11-13T14:07:54Z"
-  block_reason: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
   commit_type: docs
   commit_scope: orchestrator
 ---

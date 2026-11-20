@@ -105,3 +105,32 @@
       from: "-"
       to: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
   previous_event_id: reg_0a3804fff41e43728803ba2ba3f2a3d7
+- v: 1
+  id: reg_b4b9d7b330464292b9874b873ea9b9ed
+  ts: "2026-11-20T23:40:54Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+      to: "-"
+  previous_event_id: reg_cdcbe24102cd477295704383310d1189
+- v: 1
+  id: reg_338fc8edbca643f1a4bfc43708d3d10a
+  ts: "2026-11-20T23:41:30Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b4b9d7b330464292b9874b873ea9b9ed

@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-70SS
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: runs/register/PJR-70SS/pjr-70ss-20261120T164600Z-e469c19b/plan.md
   started_at: "2026-11-20T16:46:00.914Z"
-  completed_at: "2026-11-20T23:37:16.715Z"
+  completed_at: "2026-11-20T23:41:04.246Z"
   agent: flash-high-executor
-  block_reason: "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
 ---
 
 # Edit Result
