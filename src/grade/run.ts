@@ -379,9 +379,21 @@ async function runGradeUnlocked(
         // A rate limit is not a document failure: keep the stage retryable in this run id.
         document.status = "pending";
         writeState(statePath, state);
-        rateLimited = true;
-        rateLimitedActor = actualActor;
-        continue;
+        if (documentsByKata) {
+          rateLimited = true;
+          rateLimitedActor = actualActor;
+          continue;
+        }
+        const unstarted = state.documents
+          .filter((item) => item.status !== "complete")
+          .map((item) => item.path);
+        throw new GradeRunIncompleteError(
+          [
+            `grade run stopped by rate limit: agent=${actualActor} run_id=${opts.runId}; rerun with the same --run-id to resume`,
+            ...unstarted.map((path) => `grade run remaining: ${path}`),
+          ].join("\n"),
+          GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+        );
       }
       writeFileSync(join(stageDirectory, "executor-output.txt"), execution.stdout, "utf8");
       if (execution.result !== "success")

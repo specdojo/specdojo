@@ -379,6 +379,24 @@ describe("native grade run", () => {
     ).toMatchObject({ graded_by: "actual-grader" });
   });
 
+  it("stops immediately at a rate limit without running subsequent documents when --kata is not specified", async () => {
+    const other = GRADE_RUN_DOCUMENT.replace("example", "other");
+    writeFileSync(
+      other,
+      readFileSync(GRADE_RUN_DOCUMENT, "utf8").replace("test:example", "test:other"),
+    );
+    executePlan.mockResolvedValueOnce({
+      actor: "actual-grader",
+      command: "test",
+      execution: { result: "rate_limit", exitCode: 1, stdout: "", stderr: "limit" },
+    });
+    await expect(grade({ ...options, paths: [GRADE_RUN_DOCUMENT, other] })).rejects.toMatchObject({
+      exitCode: GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+      message: expect.stringMatching(/rate limit[\s\S]*grade run remaining: /),
+    });
+    expect(executePlan).toHaveBeenCalledTimes(1);
+  });
+
   it("compares each Kata document with the same-kind prj-overview document", async () => {
     const reference = "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md";
     writeFileSync(
