@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { Command } from "commander";
+import { warnDeprecated } from "../shared/deprecation.js";
 import { readSpecdojoNamespace } from "../shared/frontmatter-namespace.js";
 import { listFilesRecursive } from "../shared/fs.js";
 import { gitEnvironment } from "../shared/git.js";
@@ -255,11 +256,17 @@ export function applyRecordMigration(repoRoot: string, plan: RecordMigration): v
 export function registerRecordMigrationCommand(exec: Command): void {
   const command = exec
     .command("migrate-records")
-    .description("Move tracked legacy run records with git mv");
+    .description(
+      "Deprecated: legacy run record migration is no longer needed; standard layout is execution/runs/ (will be removed in 0.10.0)",
+    );
   addProjectOptions(command);
   command.option("--dry-run", "List moves and reference updates without writing", false);
   command.action((opts) => {
     try {
+      warnDeprecated(
+        "exec migrate-records",
+        "Legacy run record migration is no longer needed as execution/runs/ is standard. This command will be removed in 0.10.0.",
+      );
       const { executionPath } = resolveProjectContext(opts);
       const root = specdojoRootDir();
       const plan = planRecordMigration(root, executionPath, resolveProjectId(opts));

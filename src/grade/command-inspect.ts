@@ -1,4 +1,5 @@
 import { type Command } from "commander";
+import { warnDeprecated } from "../shared/deprecation.js";
 import {
   addGradeSelectionOptions as addSelection,
   commandError,
@@ -130,7 +131,9 @@ export function registerGradeInspectionCommands(grade: Command): void {
 
   grade
     .command("migrate")
-    .description("Move legacy inline grade snapshots and findings to result sidecars")
+    .description(
+      "Deprecated: inline grade migration is no longer needed; result sidecars are standard (will be removed in 0.10.0)",
+    )
     .option("--target <target>", "Restrict migration to kata or deliverable", requireTarget)
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .option(
@@ -142,6 +145,10 @@ export function registerGradeInspectionCommands(grade: Command): void {
     .option("--dry-run", "List updates without writing", false)
     .action((options) => {
       try {
+        warnDeprecated(
+          "grade migrate",
+          "Inline grade migration is no longer needed as result sidecars are standard. Use grade run instead. This command will be removed in 0.10.0.",
+        );
         const changed = migrateInlineGrades({
           project: options.project,
           target: options.target,

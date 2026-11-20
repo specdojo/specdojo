@@ -73,3 +73,19 @@
       from: "-"
       to: "parent validation failed: lint-md, test-integration"
   previous_event_id: reg_5ea54e251e014d3daf7ffa3ab624570a
+- v: 1
+  id: reg_1f25a5c46c8a410aa37eca352f1bbf3e
+  ts: "2026-11-20T23:02:39Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md, test-integration"
+      to: "-"
+  previous_event_id: reg_39f70e3ded424f65b169b26b96721efc

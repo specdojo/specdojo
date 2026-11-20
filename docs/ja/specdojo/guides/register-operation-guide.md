@@ -426,7 +426,7 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 - 異なる項目の並行実行は別の個票とイベントファイルへ書くため共有ログ競合を起こしません。同じ項目を複数 worktree で変更してイベントファイルが競合した場合は、統合時に両側のイベントの和集合で解決します。
 - exec event と共通化するのは UTC 秒精度、version、actor、reason、追記・検証の原則です。exec は task state の SSOT で 1 event 1 JSON、Register は現在値を個票に維持し項目別 YAML 配列を監査履歴とするため、保存形式と fold 処理は共通化しません。
 - 生成物（`generated/` 配下）は追跡対象外のため、PR の差分にも Git 履歴にも現れません。レビュー対象は個票と `events/` 配下の項目別ログです。
-- 既存プロジェクトは移行前でも動作し、event のない個票は Git 履歴から再構成します。`register migrate --dry-run` で件数を確認し、`register migrate` で復元可能な Git 履歴を決定的な event ID へ変換します。浅い clone などで履歴が不足する場合は無理に合成せず Git フォールバックを維持します。
+- 既存プロジェクトは移行前でも動作し、event のない個票は Git 履歴から再構成します。`register migrate` は非推奨であり、次の版（0.10.0）で削除予定です（現在は個別個票ファイルと外部イベントファイルが標準形式のため新規移行は不要です）。旧データを移行する場合は `register migrate --dry-run` で件数を確認し、`register migrate` で復元可能な Git 履歴を決定的な event ID へ変換します。浅い clone などで履歴が不足する場合は無理に合成せず Git フォールバックを維持します。
 - 分離前の CLI は `events/` を読まないため、ロールバック時も項目別ログを削除せず、分離対応版の CLI を再適用して履歴を維持します。
 - 個票へ移行する前（`pjr-index.md` の表が正本だった期間）の履歴は、削除済みの一覧ファイルの履歴に残ります。`git log -p --follow -- <登録簿ディレクトリ>/pjr-index.md` で参照します。
 
