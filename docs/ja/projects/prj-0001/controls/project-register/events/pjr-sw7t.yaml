@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_48772060908046a3b4b9b939b917065b
+- v: 1
+  id: reg_d261550d89504d6a9c7ed3fe30596064
+  ts: "2026-11-20T23:59:52Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register を 2 回で対応。1 回目（70f77db93）と 2 回目（82675a5cb）の差分・単体テスト・個票を完了条件と照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: grade run --target kata に --kata `<name>` を足し、型ごとの rulebook と sample を順に評価して結果を一覧にする。rate limit の後も続けるのは --kata のときだけで、それ以外は従来どおりその場で止まる
+  previous_event_id: reg_2601e09a515d44c5a84ed4a529c079c0

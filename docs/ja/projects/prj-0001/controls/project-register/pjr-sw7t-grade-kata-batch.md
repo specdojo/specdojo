@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-sw7t-grade-kata-batch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   registered_at: "2026-11-13T14:08:23Z"
+  completed_at: "2026-11-20T23:59:52Z"
+  conclusion: grade run --target kata に --kata `<name>` を足し、型ごとの rulebook と sample を順に評価して結果を一覧にする。rate limit の後も続けるのは --kata のときだけで、それ以外は従来どおりその場で止まる
   commit_type: feat
   commit_scope: grade
 ---
