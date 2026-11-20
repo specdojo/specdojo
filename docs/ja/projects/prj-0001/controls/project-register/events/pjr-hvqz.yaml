@@ -41,3 +41,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-3VJM","PJR-ANKZ"]'
+- v: 1
+  id: reg_6fed41c05cb9446b868b66513c6d90d9
+  ts: "2026-11-20T16:59:58Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0dc29f54256841e386a19c66ffdd0a50
+- v: 1
+  id: reg_39ef9daeb63a4cd480bd5009590f4cfe
+  ts: "2026-11-20T17:17:32Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6fed41c05cb9446b868b66513c6d90d9
