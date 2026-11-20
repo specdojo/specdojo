@@ -67,3 +67,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_29cf071b409349bb989b6d7371c7dc36
+- v: 1
+  id: reg_2f40acc7654f43bf9a9a63f2aa56416d
+  ts: "2026-11-20T22:53:06Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register で対応。完了条件を差分（32ac80af6）と個票で確かめ、統合後に PJR-JSEY の smoke でプロダクトを対象にしない項目が従来どおり review に進むことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-11-21"
+    - field: conclusion
+      from: "-"
+      to: 権限で拒否された出力やプロダクトの変更なしを runner が検出し、review に進めず waiting と block_reason を残す。exec status に警告を出す
+  previous_event_id: reg_2b5a0d7d9b1742f59c993c279e10cba2
