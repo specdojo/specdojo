@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-h1pq-dependency-vulnerabilities
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-11-19T21:22:21Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T12:45:05Z"
+  conclusion: docs-site・vscode-specdojo・docs-lint・ルートの依存を lockfile の範囲で直し、配る依存の high を 0 件にした。major の変更が要る件と vitepress は理由を記録して残す
   derived_from:
     - PJR-P318
 ---
@@ -57,12 +59,26 @@ Dependabot alerts を有効にして見つかった依存の脆弱性を直す�
 - 確認: `npm run docs:build` と `npm run check`（265 ファイル、4,441 テスト）が通った。
 - 公開する package に lockfile は入らないため、利用者が入れる版は今回の更新と同じになる。2026-11-19 の空のリポジトリでの確認でも mermaid 12.3.0・zod 4.6.7・lodash-es 4.18.1・puppeteer 25.18.1 が入り、docs-site の build が通っていた。
 
-### 5.2. 残りの件（0.9.1 で扱う）
+### 5.2. 残りの件（0.9.1、2026-11-20）
 
-- vscode-specdojo の開発用の依存（high 10・moderate 4）。
-- docs-lint の配る依存（moderate 9・low 3）。
-- ルートの開発用の依存（moderate 17・low 3）。
-- docs-site の vite・vitepress・esbuild。vitepress の次の major（vite の新しい版に依存する版）へ移すかを判断する。
+- `feature/prj-0001/deps-audit-fix-091` で、`packages/vscode-specdojo`・`packages/docs-lint`・ルートの lockfile に `npm audit fix` を流し、develop へ取り込んだ（ee1927e8a、a681b08c1）。`package.json` は変えていない。
+- vscode-specdojo（開発用）: Dependabot の PR #30〜#33 の分（undici 7.30.2、qs 6.17.1、fast-uri 3.1.9、@azure/msal-node 7.2.3、@azure/identity 4.14.1）と、markdown-it・js-yaml・minimatch など 23 件を上げた。
+- docs-lint（配る依存）: chokidar 3→4、unified-engine 11.3.0 などに上げ、使わなくなった依存を 25 件外した。ルート（開発用）は eslint 10.15.0、typescript-eslint 8.73.0 と、docs-lint と同じ分を上げた。
+- 3 か所とも配る依存の high は 0 件になった。
+- 確認: worktree で `npm ci`（ルートと 3 つの package）、`npm run build`、`npm run check`（266 ファイル、4,458 テスト）、`npm run test:integration`（39 ファイル、422 テスト）、`npm run docs:build`、vscode-specdojo の `compile`、docs-lint の CLI の起動が通った。
+
+### 5.3. 直さずに残す件と理由（利用者の決定、2026-11-20）
+
+- 残りは major の変更か版を下げることでしか直せないため、0.9.1 では直さない。上流の版が出たら別に起票する。
+  - vscode-specdojo（開発用）: `@vscode/vsce`・glob・minimatch の moderate 3 件。`@vscode/vsce` 4 への major の変更が要る。
+  - docs-lint とルート: `@npmcli/*`・glob・minimatch・remark-cli・unified-args・unified-engine・markdownlint-cli・markdownlint・katex・micromark-extension-math の moderate と low 12 件。npm が示す直し方は remark-cli 11・markdownlint-cli 0.33 へ下げることで、採らない。
+- docs-site の vite（high）・vitepress・esbuild: vitepress の安定版は 1.6.4 で古い vite 5 に依存し、2 系はまだ alpha（2.0.0-alpha.21）。advisory は開発サーバー（`specdojo-docs-site dev`）に関するもので、`build` には関わらない。0.9.1 では 1.6.4 のままとし、2 系の安定版が出たら移行を起票する。
+- Dependabot の PR #30〜#33 は、この取り込みが main に入った後に閉じる。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: 変更
+- 文案: 依存の脆弱性を直すため、`@specdojo/docs-site`（mermaid・lodash-es・puppeteer など）と `@specdojo/docs-lint`（chokidar 4 など）の依存を新しくした。docs-site の vite の advisory は開発サーバーに関するもので、vitepress の 2 系の安定版を待つ（PJR-H1PQ）。
 
 ## 6. 関連ドキュメント
 

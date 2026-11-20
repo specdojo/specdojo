@@ -31,7 +31,13 @@ PJR-3VJM と PJR-ANKZ の決定に従い、dec の型を登録簿の decision �
 
 ## 3. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- PJR-3VJM と PJR-ANKZ の決定（どちらも案 A）に従い、`dec-rulebook.md`・`dec-sample.md` と `ntp-rulebook.md`・`ntp-sample.md` の frontmatter の `status` を `deprecated` にする。本文の先頭に、非推奨であることと後継（dec は登録簿の decision、ntp は `mtp-rulebook`）を 1 段落で書く。
+- 型のファイルは消さない（消すのは次の版以降で、別の項目で扱う）。
+- 入力に挙げた参照元（`pm-review-viewpoints.yaml`、`dss-sample` の dec の参照、yaml-pages のテストの snapshot）を後継へ向ける。ほかに参照元が見つかった場合も後継へ向け、個票の対応結果に一覧を書く。
+- `npm run validate:schema` と `npm run lint:md`・`npm run lint:fm` が通る。
+- 迷った点は executor が決め、決めた内容と理由を個票の対応結果に書く。pipeline では報告の `handoff` にも書く。
+- `CHANGELOG.md` は変えず、個票の対応結果の「CHANGELOG に書く事項」の節に区分と行の文案を書く。
+- 親の検証が通る。
 
 ## 4. 作業内容
 

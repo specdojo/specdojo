@@ -418,7 +418,9 @@ async function agent(opts: AgentOpts): Promise<void> {
   requireInsideWorktree(context.repoRoot, worktree);
   const resolved = resolveAgent(context, opts.task, opts);
   const productDirs = (worktree.repos ?? []).map((product) => product.path);
-  const command = withAgentExtraRoots(resolved.command, resolved.provider, productDirs);
+  const command = withAgentExtraRoots(resolved.command, resolved.provider, productDirs, {
+    cwd: worktree.path,
+  });
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] actor: ${resolved.actor}\n`);
     process.stdout.write(`[dry-run] command: ${command}\n`);

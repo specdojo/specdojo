@@ -214,3 +214,13 @@ export function redactSensitiveText(value: string): string {
     value,
   );
 }
+
+// 正規表現のメタ文字をエスケープし、外から入る値をリテラルとして埋め込めるようにする。
+export function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Markdown 表のセルへ入れる文字列をエスケープする。先に `\` を `\\` にしてから `|` を `\|` にする。
+export function escapeMarkdownTableCell(cell: string): string {
+  return cell.replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
+}

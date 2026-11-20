@@ -5,6 +5,11 @@ import { type Command } from "commander";
 import { agentExtraRootArguments, resolveProductRepos } from "../exec/task-repos.js";
 import { antigravitySessionArguments } from "../exec/antigravity-session.js";
 import {
+  OPENCODE_CONFIG_CONTENT_ENV,
+  opencodeAgentNameFromArguments,
+  opencodeExtraRootConfig,
+} from "../exec/opencode-permissions.js";
+import {
   loadConfig,
   resolveExternalProjects,
   specdojoRootDir,
@@ -37,10 +42,6 @@ interface OrchestratorSignalProcess {
   off(signal: NodeJS.Signals, listener: () => void): unknown;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
 function resolveOrchestratorProjectId(
   config: SpecDojoConfig,
   projectOption: string | undefined,
@@ -63,91 +64,13 @@ function resolveOrchestratorProjectId(
 }
 
 function opencodeAgentName(args: readonly string[]): string {
-  let selected: string | undefined;
-  for (let index = 0; index < args.length; index += 1) {
-    const arg = args[index];
-    if (arg === "--agent") {
-      selected = args[index + 1];
-      index += 1;
-    } else if (arg.startsWith("--agent=")) {
-      selected = arg.slice("--agent=".length);
-    }
-  }
-  if (!selected?.trim()) {
+  const selected = opencodeAgentNameFromArguments(args);
+  if (!selected) {
     throw new Error(
       "OpenCode orchestrator launch requires --agent <name> so repository permissions can be scoped to that agent.",
     );
   }
-  return selected.trim();
-}
-
-function inlineOpenCodeConfig(
-  current: string | undefined,
-  agentName: string,
-  repoRoots: readonly string[],
-): string {
-  let config: Record<string, unknown> = {};
-  if (current?.trim()) {
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(current);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Invalid OPENCODE_CONFIG_CONTENT: ${message}`);
-    }
-    if (!isRecord(parsed)) {
-      throw new Error("Invalid OPENCODE_CONFIG_CONTENT: top-level value must be an object");
-    }
-    config = parsed;
-  }
-
-  const agents = config.agent === undefined ? {} : config.agent;
-  if (!isRecord(agents)) {
-    throw new Error("Invalid OPENCODE_CONFIG_CONTENT: agent must be an object");
-  }
-  const selectedAgent = agents[agentName] === undefined ? {} : agents[agentName];
-  if (!isRecord(selectedAgent)) {
-    throw new Error(`Invalid OPENCODE_CONFIG_CONTENT: agent.${agentName} must be an object`);
-  }
-  const permission = selectedAgent.permission === undefined ? {} : selectedAgent.permission;
-  if (!isRecord(permission)) {
-    throw new Error(
-      `Invalid OPENCODE_CONFIG_CONTENT: agent.${agentName}.permission must be an object`,
-    );
-  }
-
-  const externalDirectory: Record<string, "allow" | "deny"> = { "*": "deny" };
-  const currentEdit = permission.edit;
-  let edit: Record<string, unknown> = {};
-  if (isRecord(currentEdit)) {
-    edit = { ...currentEdit };
-  } else if (typeof currentEdit === "string") {
-    edit = { "*": currentEdit };
-  } else if (currentEdit !== undefined) {
-    throw new Error(
-      `Invalid OPENCODE_CONFIG_CONTENT: agent.${agentName}.permission.edit must be a string or object`,
-    );
-  }
-  for (const repoRoot of repoRoots) {
-    const pattern = `${resolve(repoRoot).replaceAll("\\", "/")}/**`;
-    externalDirectory[pattern] = "allow";
-    edit[pattern] = "allow";
-  }
-
-  return JSON.stringify({
-    ...config,
-    agent: {
-      ...agents,
-      [agentName]: {
-        ...selectedAgent,
-        permission: {
-          ...permission,
-          external_directory: externalDirectory,
-          edit,
-        },
-      },
-    },
-  });
+  return selected;
 }
 
 export function buildOrchestratorLaunch(options: {
@@ -171,10 +94,11 @@ export function buildOrchestratorLaunch(options: {
       }),
     );
   } else if (options.provider === "opencode" && options.repoRoots.length > 0) {
-    env.OPENCODE_CONFIG_CONTENT = inlineOpenCodeConfig(
-      env.OPENCODE_CONFIG_CONTENT,
+    env[OPENCODE_CONFIG_CONTENT_ENV] = opencodeExtraRootConfig(
+      env[OPENCODE_CONFIG_CONTENT_ENV],
       opencodeAgentName(args),
       options.repoRoots,
+      options.cwd,
     );
   } else {
     args.push(...agentExtraRootArguments(options.provider, options.repoRoots));

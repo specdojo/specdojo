@@ -16,6 +16,7 @@ import { isDctCatalogFileName, type DctDoc, type DctSection } from "../catalog/t
 import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { gitOutput } from "../shared/git.js";
+import { escapeRegExp } from "../shared/text.js";
 
 export type TrashPlan = {
   localId: string;
@@ -87,7 +88,7 @@ function resolveTrashDestination(oldDocPath: string, projectId: string): string 
 // re-serializing the whole document (which would drop comments/formatting).
 function rewriteCatalogPath(rawYaml: string, localId: string, newDocPath: string): string {
   const lines = rawYaml.split("\n");
-  const startRe = new RegExp(`^(\\s*)- local_id:\\s*${localId}\\s*$`);
+  const startRe = new RegExp(`^(\\s*)- local_id:\\s*${escapeRegExp(localId)}\\s*$`);
 
   let itemIndent: string | null = null;
   let startIndex = -1;

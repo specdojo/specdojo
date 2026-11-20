@@ -111,6 +111,22 @@ describe("renderResultTraceBody", () => {
     expect(new Set(rows.map((row) => row.length)).size).toBe(1);
   });
 
+  it("keeps the column count when a cell ends with a backslash or contains a backslash-pipe", () => {
+    const body = renderResultTraceBody({
+      traceKey: "prj-0001:PJR-30SW",
+      traces: [
+        { ...MERGED, integrationBranch: "rel\\" },
+        { ...MERGED, integrationBranch: "a\\|b" },
+      ],
+      recordedAt: "2026-10-01T00:00:00.000Z",
+    });
+    const rows = body.split("\n").filter((line) => line.startsWith("| "));
+
+    expect(rows[2]).toContain("rel\\\\");
+    expect(rows[3]).toContain("a\\\\\\|b");
+    expect(new Set(rows.map((row) => row.length)).size).toBe(1);
+  });
+
   it("passes markdownlint with the default line length when appended to a result", () => {
     const body = renderResultTraceBody({
       traceKey: "prj-0001:PJR-30SW",

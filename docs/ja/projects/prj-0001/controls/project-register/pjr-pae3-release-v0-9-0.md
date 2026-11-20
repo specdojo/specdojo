@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-pae3-release-v0-9-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: PO
   registered_at: "2026-11-19T12:48:18Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T10:56:09Z"
+  conclusion: specdojo 0.9.0・docs-lint 0.5.0・docs-site 0.6.0 を provenance 付きで公開し、npm から入れた版の動作を確かめた
   depends_on:
     - PJR-DM9B
     - PJR-8Z71
@@ -55,13 +57,13 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                                          | 担当         | 状態 | メモ                                      |
-| --- | ------------------------------------------------------------- | ------------ | ---- | ----------------------------------------- |
-| 1   | 先に close する項目を確かめて close する                      | orchestrator | done | P318 だけはリリースの PR の CI で確かめる |
-| 2   | CHANGELOG の節を集めて書き、件数を照合する                    | orchestrator | done | 対応結果のとおり                          |
-| 3   | release ブランチで版を上げ、check・audit・npm pack を確かめる | orchestrator | done | c1c73d8ca、55643298d で develop へ統合    |
-| 4   | push・PR の merge・タグ・npm の公開の承認                     | PO           | open | 利用者                                    |
-| 5   | 公開後の確認                                                  | orchestrator | open | -                                         |
+| No  | 作業                                                          | 担当         | 状態 | メモ                                                     |
+| --- | ------------------------------------------------------------- | ------------ | ---- | -------------------------------------------------------- |
+| 1   | 先に close する項目を確かめて close する                      | orchestrator | done | P318 だけはリリースの PR の CI で確かめる                |
+| 2   | CHANGELOG の節を集めて書き、件数を照合する                    | orchestrator | done | 対応結果のとおり                                         |
+| 3   | release ブランチで版を上げ、check・audit・npm pack を確かめる | orchestrator | done | c1c73d8ca、55643298d で develop へ統合                   |
+| 4   | push・PR の merge・タグ・npm の公開の承認                     | PO           | done | 利用者が行った（PR #34、タグ 3 つ、npm の stage の承認） |
+| 5   | 公開後の確認                                                  | orchestrator | done | 対応結果の「公開と公開後の確認」のとおり                 |
 
 ## 5. 対応結果
 
@@ -69,7 +71,7 @@ specdojo:
 
 - runner・CLI の DM9B・8Z71・8NB8・9JN6・C07H・ZK3T は、統合の後に `exec smoke` と実際の run で確かめて close した（2026-11-19）。
 - 文書サイトの 2HT5・PEJS・4YS7 は、利用者がブラウザで確かめて close した（2026-11-19）。
-- P318 は、リリースの PR の CI で audit の関門と CodeQL が動くのを確かめてから close する。
+- P318 は、リリースの PR #34 の CI で audit の関門と CodeQL が動くのを確かめて close した（2026-11-20）。
 
 ### 5.2. CHANGELOG の集め方と照合
 
@@ -82,6 +84,20 @@ specdojo:
 - `feature/prj-0001/release-v0.9.0` で specdojo を 0.9.0、`@specdojo/docs-lint` を 0.5.0、`@specdojo/docs-site` を 0.6.0 に上げ、CHANGELOG の 0.9.0 の節を書いた（c1c73d8ca）。55643298d で develop へ統合した。
 - ルートと `packages/*` の `npm ci`、`npm run check`、`npm audit --omit=dev --audit-level=high`、`npm run test:integration`、`npm run docs:build` が通った。
 - 3 つの tarball を空の Git リポジトリへ入れ、`init --yes --provider claude --exec`、`-m` を 2 つ付けた `register add --commit`（件名と本文で commit され、index は空）、`exec run --register`（claude の executor・reporter で start から review、統合まで）、`kata show`（簡素化した pjr-rulebook、新しい cdr-rulebook）、`exec queue`・`exec smoke` の help、`specdojo git`、`where exec`、`specdojo-docs-lint markdownlint`、`specdojo-docs-site build`（トップのページと project のトップのページが生成された）を確かめた。
+
+### 5.4. リリースの PR で足した対応
+
+- Dependabot alerts を有効にした後、docs-site の配る依存に high 11 件があると分かった。利用者の決定（案 A）で、0.9.0 の前に docs-site の lockfile を `npm audit fix` で直した（PJR-H1PQ、bcca5023f、e43095b63）。残りは H1PQ で 0.9.1 に扱う。
+- CodeQL は既存のコードに 8 件の alert を出した。src の 5 件は PJR-A77M で 0.9.1 に直す。テストの 3 件は利用者が「used in tests」で dismiss した。結果の check `CodeQL` は fail のまま merge した（main にブランチの保護は無い）。
+- vscode-specdojo の開発用の依存への Dependabot の PR 4 件（#30〜#33）は merge せず、0.9.1 で H1PQ として develop に取り込む。
+
+### 5.5. 公開と公開後の確認（2026-11-20）
+
+- 利用者が PR #34 を merge commit で merge し（e160d8a39）、`v0.9.0`・`docs-lint-v0.5.0`・`docs-site-v0.6.0` のタグを e160d8a39 に付けて push した。
+- タグで起動した 4 つの workflow（specdojo・docs-lint・docs-site の公開と、文書サイトの deploy）が成功した。specdojo の公開では `audit` の関門が通ってから stage された。
+- 3 つの package は staged publishing で stage され、ログに provenance の署名が出ていた。利用者が npm の stage を承認した。手元の npm 11.12.1 には `npm stage` が無く、`npx npm@^11.15.0` でも手元の token では 401 になったため、利用者は 2FA を通した経路で承認した。
+- npm の `latest` は specdojo 0.9.0、`@specdojo/docs-lint` 0.5.0、`@specdojo/docs-site` 0.6.0 になり、3 つとも provenance（`https://slsa.dev/provenance/v1`）が付いている。staged publishing でも provenance は付くため、`--provenance` を足す案は要らない。
+- 空の Git リポジトリへ npm から 3 つを入れ、`--version`（0.9.0）、`config init`、`register scaffold`・`add`・`build`、`kata list`（`node_modules` から解決）、`specdojo-docs-lint`・`specdojo-docs-site` の起動を確かめた。`npm audit --omit=dev` は 0 件だった。
 
 ## 6. 関連ドキュメント
 
