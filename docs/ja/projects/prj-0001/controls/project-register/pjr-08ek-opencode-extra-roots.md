@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-11-18T12:17:01Z"
   due_on: "2026-11-30"
+  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/runs/register/PJR-08EK/pjr-08ek-20261120T113146Z-491757ba/result.md:40:241 error MD034/…"
 ---
 
 # PJR-08EK exec で opencode の executor がプロダクトリポジトリの worktree を編集できない
@@ -43,13 +44,13 @@ Error: The user has specified a rule which prevents you from using this specific
 
 ## 3. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                           |
+| ------------ | ---------------------------------------------------------------------------------------------- |
+| スコープ     | exec の opencode 起動（executor・reviewer・reporter）と `orchestrator launch` の opencode 注入 |
+| スケジュール | 影響なし                                                                                       |
+| コスト       | 影響なし                                                                                       |
+| 品質         | `repos` を宣言した project で opencode の executor がプロダクトの worktree を編集できる        |
+| 関係者       | opencode を executor に振り分けている利用者                                                    |
 
 ## 4. 対応方針
 
@@ -87,8 +88,33 @@ Error: The user has specified a rule which prevents you from using this specific
 
 ## 5. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 5.1. 解決内容
+
+- `src/exec/opencode-permissions.ts` を新設し、`orchestrator launch` にあった注入処理（`inlineOpenCodeConfig`）をここへ移して exec と共用にした。`external_directory` は `{"*": "deny", "<abs>/**": "allow"}`、`edit` は継承した値に `../<repo>/**`（起動場所からの相対パス）の `allow` を足す。
+- `withAgentExtraRoots` は、provider が opencode でプロダクトの worktree があるとき、`OPENCODE_CONFIG_CONTENT='<json>'` を起動コマンドの前に付ける。対象の agent は起動コマンドの `--agent` から取り、継承した `OPENCODE_CONFIG_CONTENT` の他項目は保持する。呼び出し元（`exec/run/agent.ts`・`exec/run/in-place.ts`・`exec/worktree-command.ts`）は作業ディレクトリを渡す。
+- 経路は inline config（`OPENCODE_CONFIG_CONTENT`）。opencode の公式ドキュメントでは、inline config は `.opencode` ディレクトリ（agent の定義）より後に読み込まれる（<https://opencode.ai/docs/config>）。そのため agent の定義ファイルの frontmatter に上書きされない。`opencode.json` の `agent.<name>.permission` は使わない。
+- `agentExtraRootArguments` は変えていない。claude・codex・antigravity・copilot の起動の引数は従来どおり（単体テストで確認）。
+- `orchestrator launch`: `edit` に絶対パス（`<abs>/**`）が入っていて、exec と同じ問題があった。同じ関数を使う形に直し、`edit` を起動場所（SpecDojo root）からの相対パスにした。理由は、同じ照合の形の問題を同じ処理で直せば、二つの経路が別々に壊れることがないため。
+- 対応策の 2 点目（開始前に止める・doctor で警告）: 注入を実装したので、プロダクトリポジトリを対象にする項目を一律に止めることはしない。ただし opencode の起動コマンドに `--agent <name>` が無いと許可の範囲を決められないため、その場合だけ `withAgentExtraRoots` がエラーを投げて起動前に止める。doctor の警告は追加していない。
+- 参照文書の opencode の記述（「許可には agent 定義の変更が必要」など）を今の動きに合わせた。
+- e2e の fixture（`register-pipeline-e2e.integration.test.ts`）の opencode の `command_template` に `--agent fake-opencode-agent` を足した。足さないと、上の起動前のエラーで止まる。
+
+### 5.2. 確認結果
+
+- 単体テスト: `tests/src/exec/task-repos.test.ts` に、opencode でプロダクトの worktree だけが許可されること（絶対パスの `external_directory`、相対パスの `edit`、それ以外は `"*": deny`）、継承した設定とのマージ、`--agent` が無い場合の失敗、claude・codex・antigravity・copilot の引数が変わらないことを足した。`tests/src/exec/opencode-permissions.test.ts` を新設した。`tests/src/commands/orchestrator.test.ts` の `edit` の期待値を相対パスにした。対象の 3 ファイルを vitest で実行し、すべて通った。
+- 照合の形は、手元の opencode で確かめられなかった。executor の sandbox では opencode CLI を起動できない。相対パス・絶対パスの形は報告（opencode 1.19.5）の試験結果に合わせた。inline config が agent の frontmatter より後に効くことも公式ドキュメントで確かめただけで、実機では確かめていない。
+
+### 5.3. 再発防止策
+
+- opencode の許可のパターンの生成を 1 つのモジュールにまとめ、exec と `orchestrator launch` で共用する。
+
+### 5.4. CHANGELOG に書く事項
+
+- 区分: 不具合修正
+- 文案: `repos` を宣言した project で、exec の opencode の executor がプロダクトの worktree を編集できなかった問題を修正。runner は起動時の `OPENCODE_CONFIG_CONTENT` で、その run のプロダクトの worktree だけに `external_directory` と `edit` の許可を渡す。`orchestrator launch` の `edit` の許可も、起動場所からの相対パスにそろえた。opencode の `command_template` には `--agent <name>` が必要になった（PJR-08EK）
 
 ## 6. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:specdojo-config-reference]]
+- [[specdojo:command-reference]]
+- [[specdojo:orchestrator-operation-guide]]
