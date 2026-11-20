@@ -40,9 +40,9 @@
     "rebuild": "npm run package && code --uninstall-extension specdojo.vscode-specdojo; code --install-extension vscode-specdojo-0.1.0.vsix"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/vscode": "^1.85.0",
-    "@vscode/vsce": "^3.9.1",
-    "typescript": "^5.0.0"
+    "@types/node": "^26.6.6",
+    "@types/vscode": "^1.146.0",
+    "@vscode/vsce": "^4.1.1",
+    "typescript": "^7.0.2"
   }
 }
