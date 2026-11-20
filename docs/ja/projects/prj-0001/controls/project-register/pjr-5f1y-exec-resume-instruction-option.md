@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:18Z"
+  block_reason: "executor validation failed or not run: npm run validate:schema:file"
   commit_type: feat
   commit_scope: exec
 ---
