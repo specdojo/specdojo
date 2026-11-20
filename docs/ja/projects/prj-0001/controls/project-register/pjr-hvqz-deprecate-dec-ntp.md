@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-hvqz-deprecate-dec-ntp
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: BA
   registered_at: "2026-11-18T11:04:45Z"
   due_on: "2026-11-30"
+  completed_at: "2026-11-20T22:47:22Z"
+  conclusion: dec と ntp の rulebook・sample を deprecated にし、後継への案内を書いた。dss-sample の参照を登録簿の decision へ向けた
   derived_from:
     - PJR-3VJM
     - PJR-ANKZ
