@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { dump } from "js-yaml";
 import { Command } from "commander";
@@ -662,5 +662,201 @@ describe("native grade run", () => {
     }
     await grade(request);
     expect(executePlan).toHaveBeenCalledTimes(4);
+  });
+
+  describe("batch kata grading (--kata)", () => {
+    function setupKata(name: string, withSample = true): { rulebook: string; sample?: string } {
+      const rulebookRel = `docs/ja/specdojo/rulebooks/${name}-rulebook.md`;
+      const rulebookPath = join(root, rulebookRel);
+      mkdirSync(dirname(rulebookPath), { recursive: true });
+      writeFileSync(
+        rulebookPath,
+        `---\nspecdojo:\n  id: test:${name}-rulebook\n  type: rulebook\n  status: draft\n  rulebook: none\n---\n\n# ${name} Rulebook\n`,
+        "utf8",
+      );
+      let sampleRel: string | undefined;
+      if (withSample) {
+        sampleRel = `docs/ja/specdojo/samples/${name}-sample.md`;
+        const samplePath = join(root, sampleRel);
+        mkdirSync(dirname(samplePath), { recursive: true });
+        writeFileSync(
+          samplePath,
+          `---\nspecdojo:\n  id: test:${name}-sample\n  type: sample\n  status: draft\n  rulebook: test:${name}-rulebook\n---\n\n# ${name} Sample\n`,
+          "utf8",
+        );
+      }
+      return { rulebook: rulebookRel, sample: sampleRel };
+    }
+
+    it("evaluates rulebook and sample pairs in order for multiple kata", async () => {
+      setupKata("alpha");
+      setupKata("beta");
+      const stdoutSpy = vi.spyOn(process.stdout, "write");
+
+      const result = await grade({
+        target: "kata",
+        project: "test",
+        runId: "kata-batch-success",
+        kata: ["alpha", "beta"],
+      });
+
+      expect(executePlan).toHaveBeenCalledTimes(4);
+      expect(result.documents.map((d) => d.path)).toEqual([
+        "docs/ja/specdojo/rulebooks/alpha-rulebook.md",
+        "docs/ja/specdojo/samples/alpha-sample.md",
+        "docs/ja/specdojo/rulebooks/beta-rulebook.md",
+        "docs/ja/specdojo/samples/beta-sample.md",
+      ]);
+      expect(result.documents.every((d) => d.status === "complete")).toBe(true);
+
+      const stdoutOutput = stdoutSpy.mock.calls.map((c) => String(c[0])).join("");
+      expect(stdoutOutput).toContain("kata results:\n");
+      expect(stdoutOutput).toContain("alpha: 完了 (complete)\n");
+      expect(stdoutOutput).toContain("beta: 完了 (complete)\n");
+      stdoutSpy.mockRestore();
+    });
+
+    it("rejects unknown kata names before execution", async () => {
+      setupKata("alpha");
+
+      await expect(
+        grade({
+          target: "kata",
+          project: "test",
+          runId: "kata-unknown",
+          kata: ["alpha", "unknown-one", "unknown-two"],
+        }),
+      ).rejects.toThrow("Unknown kata: unknown-one, unknown-two");
+
+      expect(executePlan).not.toHaveBeenCalled();
+    });
+
+    it("does not skip remaining kata on failure and exits with code 2 for mixed results", async () => {
+      setupKata("alpha");
+      setupKata("beta");
+      const stdoutSpy = vi.spyOn(process.stdout, "write");
+
+      // alpha-rulebook fails
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "failure", exitCode: 1, stdout: "", stderr: "failed" },
+      });
+      // alpha-sample succeeds
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+      });
+      // beta-rulebook succeeds
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+      });
+      // beta-sample succeeds
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+      });
+
+      await expect(
+        grade({
+          target: "kata",
+          project: "test",
+          runId: "kata-mixed-failure",
+          kata: ["alpha", "beta"],
+        }),
+      ).rejects.toMatchObject({
+        exitCode: GRADE_RUN_PARTIAL_EXIT_CODE,
+        message: expect.stringMatching(/grade run incomplete: completed=3 failed=1/),
+      });
+
+      // All 4 documents were evaluated without skipping beta
+      expect(executePlan).toHaveBeenCalledTimes(4);
+
+      const stdoutOutput = stdoutSpy.mock.calls.map((c) => String(c[0])).join("");
+      expect(stdoutOutput).toContain("kata results:\n");
+      expect(stdoutOutput).toContain("alpha: 失敗 (failed)\n");
+      expect(stdoutOutput).toContain("beta: 完了 (complete)\n");
+      stdoutSpy.mockRestore();
+    });
+
+    it("does not skip remaining kata on rate limit and exits with code 75", async () => {
+      setupKata("alpha");
+      setupKata("beta");
+      const stdoutSpy = vi.spyOn(process.stdout, "write");
+
+      // alpha-rulebook rate-limited
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "rate_limit", exitCode: 1, stdout: "", stderr: "rate limited" },
+      });
+      // alpha-sample succeeds
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+      });
+      // beta-rulebook succeeds
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+      });
+      // beta-sample succeeds
+      executePlan.mockResolvedValueOnce({
+        actor: "actual-grader",
+        command: "test",
+        execution: { result: "success", exitCode: 0, stdout: GRADE_RUN_MARKERS, stderr: "" },
+      });
+
+      await expect(
+        grade({
+          target: "kata",
+          project: "test",
+          runId: "kata-rate-limit",
+          kata: ["alpha", "beta"],
+        }),
+      ).rejects.toMatchObject({
+        exitCode: GRADE_RUN_RATE_LIMIT_EXIT_CODE,
+        message: expect.stringMatching(/grade run stopped by rate limit/),
+      });
+
+      // Did not skip remaining kata
+      expect(executePlan).toHaveBeenCalledTimes(4);
+
+      const stdoutOutput = stdoutSpy.mock.calls.map((c) => String(c[0])).join("");
+      expect(stdoutOutput).toContain("kata results:\n");
+      expect(stdoutOutput).toContain("alpha: 未実行 (pending)\n");
+      expect(stdoutOutput).toContain("beta: 完了 (complete)\n");
+      stdoutSpy.mockRestore();
+    });
+
+    it("rejects --kata when target is deliverable", async () => {
+      await expect(
+        grade({
+          target: "deliverable",
+          project: "test",
+          runId: "kata-err-target",
+          kata: ["alpha"],
+        }),
+      ).rejects.toThrow("--kata is only valid for kata");
+    });
+
+    it("rejects both --path and --kata specified together", async () => {
+      setupKata("alpha");
+      await expect(
+        grade({
+          target: "kata",
+          project: "test",
+          runId: "kata-err-both",
+          paths: ["docs/ja/specdojo/rulebooks/alpha-rulebook.md"],
+          kata: ["alpha"],
+        }),
+      ).rejects.toThrow("Use either --path or --kata");
+    });
   });
 });
