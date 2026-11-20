@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   registered_at: "2026-11-13T14:08:18Z"
-  block_reason: "executor validation failed or not run: npm run validate:schema:file"
   commit_type: feat
   commit_scope: exec
 ---
@@ -75,7 +74,7 @@ specdojo:
 
 ### 5.4. 残課題
 
-- なし
+- 本項目の外の既存の不足として、`pipeline-state.schema.yaml` には `src/exec/pipeline-state.ts` が書く `artifacts` の項目が無い。そのため実際の run の `pipeline-state.json` は `npm run validate:schema:file` で `must NOT have additional properties` になる。本項目では `artifacts` を除き `resume_notes` を足した state で schema への適合を確かめた。schema への `artifacts` の追加は別の項目で扱う。
 
 ## 6. 関連ドキュメント
 

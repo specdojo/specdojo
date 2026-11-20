@@ -28,6 +28,24 @@ properties:
     additionalProperties:
       type: string
       minLength: 1
+  # Instructions added to the plan by `exec run --resume --resume-from executor --resume-note`.
+  # One entry per resume; later resumes carry the earlier entries over.
+  resume_notes:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [at, notes]
+      properties:
+        at:
+          type: string
+          format: date-time
+        notes:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            minLength: 1
   stages:
     type: object
     additionalProperties: false

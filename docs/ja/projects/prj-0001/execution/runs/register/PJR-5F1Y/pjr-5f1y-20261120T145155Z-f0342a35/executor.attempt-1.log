@@ -1,0 +1,37 @@
+`exec run --register` に `--resume-note <text>` を足しました。`--resume --resume-from executor` で executor から再開するときに、再開の指示を run の plan へ入れられます。必須の検証（`npm run typecheck`・`npm run lint:ts`・`npm run test:unit`）は sandbox では実行していません。結果は、この後に親 runner が実行する分を待ちます。
+
+**動き**
+- 指示は worktree の plan の、共通規約の参照の行の前に `## 再開の指示（<日時>）` の節として入ります。参照の行とその後ろは変えません。オプションを繰り返すと 1 つの節に箇条書きで並びます。参照の無い古い形式の plan では末尾に足します。
+- 次の場合は、project の解決・lock・register の状態変更より前にエラーで止めます。
+  - `--resume-from executor` または `--resume` が無い
+  - `--register` の ID が 1 件でない
+  - `--register-filter` と一緒に指定した
+  - 文字列が空
+- 足した指示と日時は `pipeline-state.json` の `resume_notes` に残り、次の再開でも前回までの分を引き継ぎます。
+
+**変更ファイル**
+- 新規: `src/exec/run/resume-notes.ts`、テスト `tests/src/exec/run/resume-notes.test.ts`
+- 変更: `src/exec/run/register-command.ts`、`src/exec/run/register-resume.ts`、`src/exec/run/agent-pipeline.ts`、`src/exec/run/shared.ts`、`src/exec/pipeline-state.ts`、`src/shared/plan-conventions.ts`、`docs/specdojo/schemas/v1/pipeline-state.schema.yaml`
+- 文書: コマンドリファレンスと exec 運用ガイドの、register の再開の節
+- 個票: 作業内容の表（全行 `done`）、対応結果（決めた内容、CHANGELOG の文案）、関連ドキュメント
+
+**決めた点**（個票と `handoff` にも記載）
+- **対象**: 完了条件のとおり `exec run --register` だけにしました。題名にある schedule の `exec resume --task` は対象外です。
+- **ID 1 件**: 指示は項目ごとの内容なので、ID は 1 件に限りました。
+- **挿入先**: worktree の plan です。executor からの再開ではこれが prompt の入力になり、統合でも plan の変更が許されるためです。
+- **挿入のタイミング**: register の `start` の後、executor を起動する直前です。それより前の段で再開を断った場合は、plan を変えません。
+
+**sandbox で確かめたこと**
+- 開発中の確認として次を実行しました。
+  - 対象ファイルの `npx eslint` と `npx tsc -b --noEmit`: エラーなし。ESLint の行数の warning が 4 件出ました。いずれも既存の長い関数で、今回の追加で少し伸びたものです。
+  - `tests/src/exec` と `tests/src/shared` の unit テスト: 1985 件すべて通過
+  - 変更した Markdown 3 件の markdownlint: 指摘なし
+  - `npm run validate:history-links`: 違反の行なし。終了コードは取得できなかったため、記録は `not_run` にしました。
+- `npm run validate:schema:file` は、他の検証に任せて実行していません。schema を変えたので本来は対象です。
+- runner が並べる確定の結果では、上の 2 件が `not_run` になります。runner はこれを検証失敗として扱い、タスクを先へ進めない可能性があります。
+
+`CHANGELOG.md` は変えていません。区分 Added の文案を個票の「CHANGELOG に書く事項」に書きました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"Added --resume-note <text> (repeatable) to exec run --register --resume --resume-from executor. Notes are inserted before the plan conventions reference in the worktree plan, invalid combinations stop before launch, and the notes with their timestamp are recorded in pipeline-state.json resume_notes. Unit tests, schema, command reference, exec operation guide, and the ticket are updated. typecheck, lint:ts, and test:unit were not run in the sandbox and are left to the parent runner.","handoff":["Decision: the option is named `--resume-note <text>` and is limited to `exec run --register`, as the completion conditions specify. Schedule `exec resume --task` was not extended; handle that in a separate item if needed.","Decision: `--resume-note` requires exactly one `--register` ID, cannot be combined with `--register-filter`, and requires `--resume --resume-from executor`. A note is item-specific, so applying the same note to several items is rejected.","Decision: the record is `resume_notes` (an array of `at` and `notes`) in `pipeline-state.json`. Later resumes carry earlier entries over even though the previous state is archived to `pipeline-state.attempt-N.json`. The schema and `isPipelineState` were extended accordingly.","Decision: the section is written to the worktree plan, which is the prompt input for an executor resume and is allowed by the commit scope (`allowEditedPlan`). It is inserted after register start and before the executor launch, and the prompt is rebuilt from the updated plan. Plans without a conventions reference get the section appended at the end. The heading is unnumbered to match the existing runner-written section for change-scope waits.","CHANGELOG draft (Added): `exec run --register <PJR-ID> --resume --resume-from executor` に `--resume-note <text>`（繰り返し可）を追加。再開の前に、run の plan の共通規約の参照の前へ再開の指示の節を足し、指示と日時を `pipeline-state.json` の `resume_notes` に記録する（PJR-5F1Y）。","Validation note: two plan-applicable checks were not completed as recorded commands. (1) `npm run validate:history-links` was run, but the sandbox prevented capturing its exit code; its output contained no non-valid lines. (2) `npm run validate:schema:file` was not run for the changed `pipeline-state.schema.yaml`. Both are reported as `not_run`, which the runner treats as validation failure. Run them before or during review if the task does not advance."],"validations":[{"command":"npx prettier --write (changed md/ts/yaml files)","status":"passed","summary":"Formatted all changed files; only register-resume.ts and the ticket were reformatted"},{"command":"npx markdownlint-cli2 (changed md files)","status":"passed","summary":"0 issues in the ticket, command reference, and exec operation guide"},{"command":"npm run validate:history-links","status":"not_run","summary":"The command ran and its output contained no non-valid lines, but the sandbox blocked capturing the exit code, so it is recorded as not run"},{"command":"npm run validate:schema:file","status":"not_run","summary":"Not run for the changed pipeline-state.schema.yaml; the new resume_notes field was checked against the schema with Ajv only in the unit test"},{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec tests/src/shared","status":"passed","summary":"111 files, 1985 tests passed (development check; parent test:unit is authoritative)"},{"command":"npx eslint (changed ts files)","status":"passed","summary":"0 errors; 4 max-lines-per-function warnings, all in existing long functions that this change lengthened slightly"}]}
+</specdojo_executor_evidence>
